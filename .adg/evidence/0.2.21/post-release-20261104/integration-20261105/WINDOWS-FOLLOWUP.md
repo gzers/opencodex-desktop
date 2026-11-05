@@ -1,3 +1,13 @@
+# 当前交接：已安装候选重启链通过，生产交付未完成
+
+最新Windows代码705d69ca2、证据4d754fd85已接收，172项摘要一致；新管理器冷快照就绪修复合入bfcf85f0b。Mac本机31后端/3构建器/fmt通过，新CI42051476515待终态，新增路径Mac原生尚待。
+
+Windows使用明确本地标识2.97.0-post021.ownerquery.1，真实安装后保存/错误重试/待改名继续/默认重启成功，新旧引用及日常摘要有读回。但尚无上游稳定发行；管理器托管安装拒绝预发布版本后缀，首次改名knownModels.updatedAt漂移仍需复核，不能把本地候选通过当整版可发布。完整结果/限制见windows-runtime-delivery-20261105/FINAL-HANDOFF.md和integration-audit/review.json。当前用户未授权公开上游PR或采用新的生产来源，本轮不发布/不改日常配置或真实同步。
+
+旧CI42018439722只覆盖旧产品树，仍是历史有效通过，不能代替新冷快照修复集成验收。下面内容留作历史，不覆盖本段。
+
+---
+
 # Windows可取用补丁（当前入口）
 
 - 仓库gzers/opencodex-desktop，分支codex/post021-runtime-patch-handoff。

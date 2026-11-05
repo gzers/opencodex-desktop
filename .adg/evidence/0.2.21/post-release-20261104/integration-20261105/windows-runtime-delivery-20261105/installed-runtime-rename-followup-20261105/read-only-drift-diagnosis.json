@@ -1,0 +1,23 @@
+{
+  "configSha256": "7bc0325021b0add8f8e18286dbdc69b627c11a358da254e47e0d760e98022889",
+  "providerNames": [
+    "Post021AdminRenamed"
+  ],
+  "defaultProvider": "Post021AdminRenamed",
+  "renameJournalComparisons": [
+    {
+      "image": "sandbox\\backups\\model-config\\rename-4f828d87-e002-405d-9891-0803b3ab9809\\0.after",
+      "sha256": "f8bc28376a645fc3c92bbc5f6b88310a79f75c117ec0eb26f61ff52a38c7ed33",
+      "changedPaths": [
+        {
+          "path": "/modelDiscovery/knownModels/Post021AdminRenamed/updatedAt",
+          "beforeSha256": "3facc2333f023ba46ba053f3b43e5c5f88649640fa61a07f612f1069462b261c",
+          "afterSha256": "0ca22ecc673ac2a8da31d7869aa0dfe6842657661f18ebba333f3a10a45bca88"
+        }
+      ]
+    }
+  ],
+  "pendingSha256": "143165f3fba5ee7499e7805605c1be74e0b545e763e0f9a0f2c68dc78ffbe27e",
+  "runtimeVersion": "2.97.0-post021.ownerquery.1",
+  "secretPolicy": "Only changed JSON paths and value digests; no raw config, credentials or history exported"
+}

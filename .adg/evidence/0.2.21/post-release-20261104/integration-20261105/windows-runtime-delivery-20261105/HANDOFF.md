@@ -1,0 +1,31 @@
+最终回交以FINAL-HANDOFF.md、readiness-fixed-native-20261105/result.json及readback.json为准：本地候选原生恢复链已通过。以下准备/失败按时间保留，不覆盖最终结果。
+
+## 2026-11-05 新增原生结果与冷快照修复
+
+实际Administrator运行已执行：2.97.0-post021.ownerquery.1真实保存65558、停服务明确错误、保存保持及原通知重试通过；正式主进程92496→108108，其他账号关键进程/15119配置摘要未变。默认桌面/appserver查询984/934ms。后续渠道改名保存成功，但第一次激活因配置字节变化拒绝；只读镜像差异仅/modelDiscovery/knownModels/Post021AdminRenamed/updatedAt。一次显式重试又被客户端身份守卫拒绝（原错误未携带细分字段），旧客户端与待处理意图均保留；当前客户端仍引用旧名，不计改名完成。失败截图、配置/进程摘要及只读诊断原件完整保留。
+
+公开绑定只读诊断证明同一原生CLI路径存在、SHA925c7d...、版本0.166.0-alpha.6、statecurrent/installedtrue。源码getCodexRuntimeSnapshot在冷缓存先返回versionnull后异步刷新，可重现同类身份拒绝；旧现场该次快照未直接记录为空版本，因果结论以新候选实测继续核对。在完全隔离的真实进程中复现同一路径首次null、216ms后实际版本。按IMP30W2新增独有CLIENT-READINESS任务，代码b82b78e1f只在cache_refresh读取官方settings时对明确pending形态作最多5秒只读等待；原身份、路径、管理实例、配置漂移及10s/8s进程查询上限不变。冷读/超时反例先红；修后31项Windows后端及fmt/Clippy-Dwarnings通过。未重复旧材质/同步全量验收。
+
+本地Rust1.99/MSVCABI+缓存LLVMlld-link/xwinSDK构建custom-protocol调试候选，重建未变UI，61,224,960字节、SHA8711a6b9195971dc5477ede64df60fec9e5ea36e080e454ef40a1f16c870c49a，内嵌提交b82b78e1f及复制链已核验。首个构建因PATH漏Git未嵌提交号，被准入守卫拒绝、未交给Admin；失败二进制仅本地保留，日志/摘要附证，修环境后重建。CRT缺发行PDB的链接警告保留，不冒称官方发行包或完成发行构建。
+
+交付限制新增实测：真实管理器离线预检通过该TGZ，但托管安装因版本探针截断预发布后缀而version_mismatch拒绝，沙箱原来源仍unresolved；独立npm安装/Node入口通过不能扩大成托管安装通过。生产交付优先等待上游发布稳定新版本；若要以本地预发布包为生产来源，须明确采用并处理版本探针兼容性。本轮没有对外PR/fork、发布、合并main或更改日常安装来源。
+
+POST021-READINESS-FIXED.ps1已准备：精确停止旧隔离管理器30804/639294604444368260/原fa9df83a路径，保持当前服务69172和正式客户端108108，使用新候选真实保存65569再处理原待改名和默认重启。当前等待该Administrator入口执行，不把准备写成通过。下文早期准备结论仅留历史。
+
+Windows自动重启运行包接续（477d7edea / Mac补丁d5a6aaf99）。
+
+只补本轮运行包查询与交付；上一轮材质、面板、云范围及完整CI不重复。治理读取4c39841f3，交付后补读2beea169f更新。独立上游dev完整检出0a30c551，ZIP导出Mac补丁保持35703字节、SHA256 0d8eaaec8c361d914fb901db2c8ef6a36702ce3c7ec209cb3f255817f8e32bb7，十个后像全部精确匹配。补丁不在管理器源码中应用，仅在.toolchain隔离上游副本应用。
+
+两条查询已由GetOwner逐进程RPC换为同句柄SID、原生路径和创建时间；保留10s/8s、窄候选正则、同包根/当前用户、PID换代、祖先链、未知拒绝及原退出/激活流程，保留桌面base64命令行供兼容PAC上下文判断。新query直接嵌入TypeScript，分发不依赖相邻PS1。Windows110定向通过/2POSIX专属跳过，兼容启动+布局15通过；完整dev类型2317文件、Git索引隐私与结构检查通过。安装后的实际嵌入脚本PS5正反例通过，真实当前用户appserver约1028ms。完整affected-import图240秒未终结，1032pass/0fail只是中间记录，仍留上游CI缺验。
+
+安装交付：注册表最新正式包2.97.0 / Git cab7eb7原归档完整性核验，仍含旧GetOwner。使用它的完整原包作为基底，只替换已审阅的三个运行源码，改为明确本地预发布2.97.0-post021.ownerquery.1并更新compatibility-version摘要；其它文件逐字保持，GUI仍取原包。生成opencodex-2.97.0-post021.ownerquery.1.tgz，SHA256 c8b1d4b7e78792df0b693ed5eda8e3fb0e9da6159a5643da1591abd65519e5ec，15405720字节。独立npm12.2.2/Node24工具、空user/global npmrc、独立缓存与前缀、ignore-scripts实际安装102依赖，2522包文件摘要核验；移除PATH外部Bun后Node bin入口仍exit0/正确版本。制品manifest、原包integrity、lock/Node/Bun摘要附证。15MB二进制仅留本机.toolchain/post021-runtime-delivery-20261105/installable-local1，源码构建器可复现，不将它冒称上游正式包。
+
+正式交付仍需维护者集成并发布新的@bitkyc08/opencodex版本；如选择自建归档/分叉为生产安装来源，须先明确采用与维护责任。本次没有对外fork/PR/issue、发布、合并main、修改正式npm来源或覆盖日常已装包。
+
+隔离Administrator现有测试资料已获授权，正式MSIX26.1029.7803.0；继续使用已验证产品apps树相同的MSVC fa9df83a及精确30804管理器。已准备POST021-INSTALLED-RUNTIME.ps1，核对当前测试服务56436/创建639294667532287570、正式测试主进程92496/创建639294668232896800，并实际运行保存65558→受控服务停机失败→恢复同候选后原通知重试→渠道公开输入改为Post021AdminRenamed→保存/默认重启/模型引用读回。全过程只走真实管理器公开动作与默认运行包流程，不注入restart/adapter/IO；比对其它账号客户端/appserver代际及15119配置摘要。当前等待Administrator会话执行结果，不能把准备、负例或旧2.84候选通过当本轮完整通过。无真实同步或推理。
+
+失败保留：首次安装策略测试因测试驱动regex转义错误失败，修驱动后通过，运行源码未动；ignore-scripts使本地Bun依赖shim未配置，bun run门禁首尝试exit255，使用既有已核验Bun直接执行同脚本后passed；全导入图预算超时不写通过。历史长期任务误停日常Bun原件仍保留，不作整个会话零副作用证明。
+
+回交代码codex/post021-windows-final / d54517eaf73ab2e06ca9556043ef665cac3e60ba（构建与保护测试02c7bcdef、隔离入口d54517eaf）；当前Administrator实测待执行，RCP保持failed，不生成CERT。
+
+最新代码705d69ca2（工具接续），产品修复b82b78e1f、apps树1ddc5117a0ee13b4a87c546302ade0c98221bd5d，与已核验EXE完全同产品源。只读诊断另外确认旧隔离CLI启动器仍指2.84；新接续入口会对原marker摘要准入后，仅对齐这份测试启动器到同一已安装2.97候选并读回版本，不涉及生产来源。新入口尚待Administrator执行。

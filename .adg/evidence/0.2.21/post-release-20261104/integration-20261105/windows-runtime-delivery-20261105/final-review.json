@@ -1,0 +1,36 @@
+{
+  "result": "windows-local-candidate-functional-handoff-passed",
+  "acceptanceScope": "Contribution evidence; not formal runtime or whole release acceptance",
+  "codeSha": "705d69ca2ce5a2eed0a304dec0bbbc0bedef5d82",
+  "productFix": "b82b78e1f8727262e5c364d26f698432614a90d3",
+  "nativeManager": {
+    "result": "passed-fixed-native-installed-runtime-rename-restart",
+    "acceptance": true,
+    "owner": "EZIO-MINI\\Administrator",
+    "startedAtUtc": "2026-11-05T14:41:14.906Z",
+    "managerSha256": "8711a6b9195971dc5477ede64df60fec9e5ea36e080e454ef40a1f16c870c49a",
+    "managerBuildCommit": "b82b78e1f8727262e5c364d26f698432614a90d3",
+    "runtimeVersion": "2.97.0-post021.ownerquery.1",
+    "limit": "Local MSVC-ABI debug candidate with rebuilt unchanged UI; not release/installer or upstream published runtime",
+    "managerPid": 107832,
+    "finishedAtUtc": "2026-11-05T14:43:34.938Z"
+  },
+  "runtimeArtifactSha256": "c8b1d4b7e78792df0b693ed5eda8e3fb0e9da6159a5643da1591abd65519e5ec",
+  "nativeClientRootBefore": 108108,
+  "nativeClientRootAfter": 51156,
+  "nativeClientConfigSha256": "94a794a73a494775c1671330f1b19f0efa76419086845e208955d1dd67452593",
+  "newReference": true,
+  "oldReferenceAbsent": true,
+  "pendingCleared": true,
+  "otherOwnerChanges": [],
+  "dailyConfigHashesUnchanged": true,
+  "dailyProxyGenerationUnchanged": true,
+  "allRequiredUserActionsObserved": true,
+  "remaining": [
+    "Upstream integration and stable published runtime; no externalPR/fork/publication performed",
+    "Native manager prerelease install rejects suffix due numericversionprobe; npm test installationpassed",
+    "Samefinalintegratedsource affectedMac/native/fullCI and officialrelease/upgrade/signature gates",
+    "Originalfirst-renameupdatedAtdrift retained forintegrationreview; restoredpendingintent pathpassed, no claimoffreshfullrenamematrixrerun"
+  ],
+  "evidence": "FINAL-HANDOFF.md"
+}

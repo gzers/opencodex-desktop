@@ -1,10 +1,10 @@
 {
   "status": "in_progress",
   "releaseReady": false,
-  "codeHead": "477d7edeab74c04ad2d2cbc1c075442bfd49123b",
-  "productIntegrationCommit": "f97b2a92d223d71166ff6e5eb762bec6a794237c",
-  "productFixCommit": "4e6614ee316bf5391dfe5be38ae0b490e1330fa3",
-  "appsTree": "a8bb18f9ff2781dbbfe67f91473a298f3cd74ae6",
+  "codeHead": "bfcf85f0bb4d78b5a9e5929326bdccd2aa808be2",
+  "productIntegrationCommit": "bfcf85f0bb4d78b5a9e5929326bdccd2aa808be2",
+  "productFixCommit": "b82b78e1f8727262e5c364d26f698432614a90d3",
+  "appsTree": "1ddc5117a0ee13b4a87c546302ade0c98221bd5d",
   "authoritativeScope": "DMD-OPENCODEX-POST021 latest AC-P21-02 hardware exception; IMP-30 current entry",
   "activeTask": "TASK-OPENCODEX-POST021-INTEGRATION-HARDWARE-20261105",
   "historicalSnapshot": "integrated-b99a94f10-20261105/historical-validation-before-b99a94f10.json",
@@ -49,6 +49,14 @@
       "evidence": "integrated-b99a94f10-20261105/ci-run.json"
     },
     "latestToolCI": {
+      "run": 42051476515,
+      "head": "bfcf85f0bb4d78b5a9e5929326bdccd2aa808be2",
+      "result": "queued at admission",
+      "localRustCacheRefresh": 31,
+      "localRuntimeBuilder": 3,
+      "review": "windows-runtime-delivery-20261105/integration-audit/review.json"
+    },
+    "previousToolCI": {
       "run": 42018439722,
       "head": "477d7edeab74c04ad2d2cbc1c075442bfd49123b",
       "result": "completed success",
@@ -60,15 +68,6 @@
       "windowsBackend": "success incl native credentials, runtime upgrade/reinstall, MSVC/final EXE, Node24/22 recovery and genuine ordinary account",
       "candidateArtifact": 13413501369,
       "exeSha256": "0ee6a1879b72028605de99a5efad8fca2439cb4531b395c928b9fa7e084ec2f5"
-    },
-    "previousToolCI": {
-      "run": 42011443834,
-      "head": "4251e5c528567c1c4ee1cdd382737d9a81992441",
-      "result": "failure",
-      "frontend": "71 protocol / 197 files / 1291 Vitest / typecheck / build passed",
-      "backend": "success",
-      "windowsBackend": "failure at ordinary-account native menu hit guard",
-      "evidence": "ci-menu-projection-477d7edea/review.json"
     }
   },
   "hardwareException": {
@@ -79,19 +78,25 @@
     "productionPerformanceFixClaim": false
   },
   "runtimeDependency": {
-    "state": "local-source-candidate-verified-not-published",
-    "basePackage": "@bitkyc08/opencodex@2.84.0",
+    "state": "installed-local-runtime-candidate-functional-chain-verified;not-production-managed-or-upstream-delivered",
+    "basePackage": "@bitkyc08/opencodex@2.97.0",
     "upstream": "lidge-jun/opencodex",
     "checkedDev": "0a30c551304927c93c26a96c034bd39a166c7460",
     "prBase": "dev",
     "authorizationToSendUpstreamPr": "pending",
     "review": "integrated-b99a94f10-20261105/upstream-dev-review.json",
-    "localPortPreparation": "upstream-runtime-prep-0a30c551/runtime-owner-dev-prep-review.json; 109+12 tests and typecheck, not complete dev/native/released runtime"
+    "localPortPreparation": "upstream-runtime-prep-0a30c551/runtime-owner-dev-prep-review.json; 109+12 tests and typecheck, not complete dev/native/released runtime",
+    "candidate": "2.97.0-post021.ownerquery.1",
+    "candidateSha256": "c8b1d4b7e78792df0b693ed5eda8e3fb0e9da6159a5643da1591abd65519e5ec",
+    "windowsFinalReview": "windows-runtime-delivery-20261105/integration-audit/review.json",
+    "managerInstall": "rejected prerelease suffix mismatch; old sandbox source retained"
   },
   "pending": [
-    "Deliver desktop/app-server owner-query fixes in an installable integrated runtime, then verify actual default restart",
+    "New integrated CI and affected macOS native validation for cold version-readiness fix",
+    "Review first fresh rename knownModels.updatedAt drift; candidate proved restored pending-intent continuation",
+    "Deliver actual installable production runtime via upstream or explicitly adopted source; current managed prerelease install rejects suffix",
     "Freeze new release version; exact installers, v0.2.21 upgrade, updater signatures/manifests and rollback",
-    "Unified public release and truthful final TASK/RCP/CERT closure"
+    "Unified release and truthful final TASK/RCP/CERT closure"
   ],
   "boundaries": "No daily config or real WebDAV/inference. Authorized disposable-account default restart is distinct from daily Codex. Prior daily Bun cleanup incident and missing pre/post bytes remain preserved; no all-history zero-side-effect claim.",
   "reuse": {

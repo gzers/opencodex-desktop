@@ -1,0 +1,24 @@
+14 | assert.equal(root,resolve('D:/Users/Administrator/WorkSpace/Test/post021-formal-20261105-1518'))
+15 | assert.equal(plan.candidateKind,'local-installable-candidate-not-upstream-published')
+16 | const ps=join(process.env.SystemRoot??'C:/Windows','System32/WindowsPowerShell/v1.0/powershell.exe')
+17 | const psFile=(name,args=[])=>execFileSync(ps,['-NoProfile','-NonInteractive','-File',fileURLToPath(new URL(name,import.meta.url)),...args],{encoding:'utf8',windowsHide:true,timeout:90000})
+18 | const owner=execFileSync(ps,['-NoProfile','-Command','[Security.Principal.WindowsIdentity]::GetCurrent().Name'],{encoding:'utf8',windowsHide:true,timeout:15000}).trim()
+19 | assert.equal(owner.toLowerCase(),'ezio-mini\\administrator','Use Administrator login session, not an elevated15119 terminal')
+            ^
+AssertionError: Use Administrator login session, not an elevated15119 terminal
++ actual - expected
+
++ 'ezio-mini\\15119'
+- 'ezio-mini\\administrator'
+              ^
+
+ generatedMessage: false,
+     actual: "ezio-mini\\15119",
+   expected: "ezio-mini\\administrator",
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\post021-windows-materials\test\smoke\post021-windows-final\formal-installed-runtime-validation.mjs:19:8
+
+Bun v1.4.4 (Windows x64)

@@ -1,0 +1,21 @@
+{
+  "scan": "upstream scanText over contribution evidence",
+  "findings": [
+    {
+      "kind": "home-path",
+      "path": "baseline.json",
+      "meaning": "User-authorized disposable Administrator test root"
+    },
+    {
+      "kind": "home-path",
+      "path": "DELIVERY-STATUS.json",
+      "meaning": "Manual test entry under user-authorized root"
+    },
+    {
+      "kind": "home-path",
+      "path": "wrong-owner-validation.stderr.log",
+      "meaning": "Guard negative diagnostic includes same explicit test root"
+    }
+  ],
+  "disposition": "Retain required Windows test provenance; no credential/auth/history contents found. Source-tree privacy scan separately passed."
+}

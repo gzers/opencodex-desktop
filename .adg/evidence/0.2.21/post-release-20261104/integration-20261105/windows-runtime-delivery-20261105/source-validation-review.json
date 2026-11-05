@@ -1,0 +1,56 @@
+{
+  "upstreamBase": "0a30c551304927c93c26a96c034bd39a166c7460",
+  "patchCommit": "d5a6aaf991262ef6205e7dd68cefae69d62033d8",
+  "patchSha256": "0d8eaaec8c361d914fb901db2c8ef6a36702ce3c7ec209cb3f255817f8e32bb7",
+  "retrieval": "git archive ZIP and binary Expand-Archive; SHA checked; no text redirection",
+  "exactPostimages": 10,
+  "completeDevCheckout": true,
+  "checks": [
+    {
+      "command": "bun test ./tests/clients/windows-process-identity.test.ts ./tests/clients/desktop-app-restart.test.ts ./tests/codex-integration/codex-app-server-processes.test.ts",
+      "result": "110 pass /2 POSIX-only skipped /0 fail",
+      "native": "Both desktop separator-membership fixtures and real current-user PowerShell appserver enumeration executed"
+    },
+    {
+      "command": "bun check --no-script --noEmit",
+      "result": "2317files passed"
+    },
+    {
+      "command": "bun test ./tests/test-layout.test.ts ./tests/clients/desktop-compatibility-launch.test.ts",
+      "result": "15pass /0fail including Windows activation validation with no application launch"
+    },
+    {
+      "command": "python build-installable-runtime-candidate.test.py",
+      "result": "3pass; integrity/source/link/overwrite rejection and deterministic artifact identity"
+    }
+  ],
+  "failedAttempts": [
+    {
+      "command": "bun run privacy:scan; bun run structure:check",
+      "result": "exit255: local dependency Bun shim not materialized by ignore-scripts install; no source-check result at that step",
+      "resolution": "Use verified Bun executable to execute exact underlying scripts directly; both passed; no force reinstall or source relaxation"
+    }
+  ],
+  "runtimeArtifact": "2.97.0-post021.ownerquery.1 local prerelease; original npm2.97 archive plus only3 reviewed runtime files, package version/candidate metadata and corrected compatibility manifest",
+  "productionDelivery": "Upstream maintainer release still required; no public PR/fork, package publication, daily installation source change or main merge",
+  "at": "2026-11-05T13:41:00.196682+00:00",
+  "additionalChecks": [
+    {
+      "check": "installed embedded queries with PS5 negative policy harness",
+      "result": "desktop and app-server passed SID/path/creation/vanish/reuse/live-unknown/no-partial-output",
+      "initialFailure": "Harness regex escaped slash incorrectly; first failed output preserved. No package source or reviewed patch changed."
+    },
+    {
+      "check": "installed Node bin entry with no external Bun onPATH",
+      "result": "exit0, exact local prerelease version; bundled dependency usable"
+    },
+    {
+      "check": "upstream affected import graph",
+      "result": "incomplete at240s;1032passlines/0faillines beforetimeout; no success claim; complete CI stillpending"
+    },
+    {
+      "check": "wrong owner full-driver and exact-service-stop",
+      "result": "15119 rejected before output/process mutation"
+    }
+  ]
+}

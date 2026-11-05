@@ -1,0 +1,50 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-POST021-WINDOWS-CLIENT-READINESS-20261105",
+  "task_id": "TASK-OPENCODEX-POST021-WINDOWS-CLIENT-READINESS-20261105",
+  "task_digest": "4bbfc44665e4cd385e713b104461ce2e617124f2b14a7452d02b8d9363cc91bb",
+  "task_summary_digest": "d1c32046d321a6bdee2e24fab2c0c5288e9f55186e838e7a33804f05cc1a65b8",
+  "baseline_digest": "8d930417d6a58b3923c56e13a17e20daefcadf1be57fe155934d6630c2852157",
+  "result": "failed",
+  "changed_paths": [],
+  "checks": [
+    {
+      "name": "review:actual-native-rename-retry-readback",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:bounded-readiness-and-original-identity-guards",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:other-owner-boundary",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:real-cold-snapshot-reproduction",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:targeted-windows-backend",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/HANDOFF.md"
+    }
+  ],
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-09",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/HANDOFF.md"
+    }
+  ],
+  "fact_impacts": [],
+  "completed_at": "2026-11-05T14:10:36.657860+00:00",
+  "summary": "已复现，限定W2写集，冷快照有界等待与新原生回归待实现。",
+  "revision": 1,
+  "summary_digest": "75a59dc17632a0c61fb919d647fc78c9301fe5bb40ce3a4b3b6b6d2a950ce961",
+  "content_digest": "fa13ea5aeae7d652bcd3a36667203f02b71da17da504a7a1df007c8d93027baf"
+}

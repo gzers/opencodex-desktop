@@ -1,0 +1,35 @@
+
+running 4 tests
+test modules::model_config::cache_refresh::client_runtime_readiness::tests::binding_failure_propagates_without_a_second_read ... ok
+test modules::model_config::cache_refresh::client_runtime_readiness::tests::ready_or_malformed_snapshots_are_not_retried_or_rewritten ... ok
+test modules::model_config::cache_refresh::client_runtime_readiness::tests::still_pending_or_a_hung_read_is_bounded_and_remains_unconfirmed ... FAILED
+test modules::model_config::cache_refresh::client_runtime_readiness::tests::cold_snapshot_settles_before_identity_validation ... FAILED
+
+successes:
+
+successes:
+    modules::model_config::cache_refresh::client_runtime_readiness::tests::binding_failure_propagates_without_a_second_read
+    modules::model_config::cache_refresh::client_runtime_readiness::tests::ready_or_malformed_snapshots_are_not_retried_or_rewritten
+
+failures:
+
+---- modules::model_config::cache_refresh::client_runtime_readiness::tests::still_pending_or_a_hung_read_is_bounded_and_remains_unconfirmed stdout ----
+
+thread 'modules::model_config::cache_refresh::client_runtime_readiness::tests::still_pending_or_a_hung_read_is_bounded_and_remains_unconfirmed' (92756) panicked at src\modules\model_config\client_runtime_readiness.rs:90:31:
+called `Result::unwrap_err()` on an `Ok` value: Object {"codexRuntime": Object {"path": String("C:\\Bound\\codex.exe"), "source": String("environment"), "version": Null}}
+
+---- modules::model_config::cache_refresh::client_runtime_readiness::tests::cold_snapshot_settles_before_identity_validation stdout ----
+
+thread 'modules::model_config::cache_refresh::client_runtime_readiness::tests::cold_snapshot_settles_before_identity_validation' (18308) panicked at src\modules\model_config\client_runtime_readiness.rs:49:9:
+assertion `left == right` failed
+  left: Null
+ right: "0.166.0-alpha.6"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    modules::model_config::cache_refresh::client_runtime_readiness::tests::cold_snapshot_settles_before_identity_validation
+    modules::model_config::cache_refresh::client_runtime_readiness::tests::still_pending_or_a_hung_read_is_bounded_and_remains_unconfirmed
+
+test result: FAILED. 2 passed; 2 failed; 0 ignored; 0 measured; 1003 filtered out; finished in 0.00s
+

@@ -1,0 +1,52 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-POST021-WINDOWS-RUNTIME-DELIVERY-20261105",
+  "task_id": "TASK-OPENCODEX-POST021-WINDOWS-RUNTIME-DELIVERY-20261105",
+  "task_digest": "4010ada006fe57d77f6d4fa85bedb44b2ab688ae7208859f8e78ad2778670361",
+  "task_summary_digest": "af7869aaa6d8eda6ca4c99f3439ec414a1904f531375e5f7cdf10f246ddb9f73",
+  "baseline_digest": "bea4e7eb99d46e6e4eb1f5aeee9c57c42e462b8c418d8bd5161819c103604b1b",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/baseline.json"
+  ],
+  "checks": [
+    {
+      "name": "review:installable-artifact-provenance",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/baseline.json"
+    },
+    {
+      "name": "review:isolated-save-restart-rename-retry",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/baseline.json"
+    },
+    {
+      "name": "review:other-owner-boundary",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/baseline.json"
+    },
+    {
+      "name": "review:query-identity-and-timeouts",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/baseline.json"
+    },
+    {
+      "name": "review:upstream-native-port",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/baseline.json"
+    }
+  ],
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-09",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/baseline.json"
+    }
+  ],
+  "fact_impacts": [],
+  "completed_at": "2026-11-05T13:21:56.285323+00:00",
+  "summary": "已取得指定代码与最新治理，完整上游dev检出；Mac新版补丁仅私有临时路径，等待可取用原件。正式npm2.97仍含GetOwner查询，不冒称原包修复。",
+  "revision": 1,
+  "summary_digest": "b00c732f8cc275b5cd46292803ba8440837a35d3dfca6ea674cac181f4827318",
+  "content_digest": "6b55f49df528c90f91f29dbc5c2b815e480f5e79bd68096dc3a396cfb90a5309"
+}

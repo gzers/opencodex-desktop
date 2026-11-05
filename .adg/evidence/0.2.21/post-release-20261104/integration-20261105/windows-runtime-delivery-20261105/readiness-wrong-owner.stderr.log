@@ -1,0 +1,24 @@
+10 | import {assertModelSandbox} from '../windows-model-ui.mjs'
+11 | const [planFile]=process.argv.slice(2),plan=JSON.parse(await readFile(planFile,'utf8')),root=resolve(plan.runRoot)
+12 | assert.equal(root,resolve('D:/Users/Administrator/WorkSpace/Test/post021-formal-20261105-1518'))
+13 | const ps=join(process.env.SystemRoot??'C:/Windows','System32/WindowsPowerShell/v1.0/powershell.exe')
+14 | const owner=execFileSync(ps,['-NoProfile','-Command','[Security.Principal.WindowsIdentity]::GetCurrent().Name'],{encoding:'utf8',windowsHide:true,timeout:15000}).trim()
+15 | assert.equal(owner.toLowerCase(),'ezio-mini\\administrator')
+            ^
+AssertionError: Expected values to be strictly equal:
++ actual - expected
+
++ 'ezio-mini\\15119'
+- 'ezio-mini\\administrator'
+              ^
+
+ generatedMessage: true,
+     actual: "ezio-mini\\15119",
+   expected: "ezio-mini\\administrator",
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\post021-windows-materials\test\smoke\post021-windows-final\formal-readiness-fixed-native.mjs:15:8
+
+Bun v1.4.4 (Windows x64)

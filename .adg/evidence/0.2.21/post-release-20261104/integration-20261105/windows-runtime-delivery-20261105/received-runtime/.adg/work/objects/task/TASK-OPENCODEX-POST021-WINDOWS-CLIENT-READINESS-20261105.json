@@ -1,0 +1,46 @@
+{
+  "kind": "TASK",
+  "id": "TASK-OPENCODEX-POST021-WINDOWS-CLIENT-READINESS-20261105",
+  "title": "Windows改名重启等待官方客户端冷快照就绪",
+  "state": "in_progress",
+  "result": "pending",
+  "summary": "真实2.97源候选首次改名激活在配置时间戳变化后拒绝，后续又被冷settings的version:null身份守卫拒绝。复现真实冷读至216ms就绪，按IMP30 W2允许cache_refresh及必要management/client路径修有界只读等待；保留所有身份/配置漂移保护。",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-30",
+  "demand_ids": [
+    "DMD-OPENCODEX-POST021"
+  ],
+  "owner": "windows-msvc-followup-chat-01a1a68a",
+  "baseline_digest": "8d930417d6a58b3923c56e13a17e20daefcadf1be57fe155934d6630c2852157",
+  "write_scope": [
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/**",
+    "apps/desktop/tauri/src/modules/model_config/cache_refresh.rs",
+    "apps/desktop/tauri/src/modules/model_config/client_runtime_readiness.rs",
+    "test/smoke/post021-windows-final/**"
+  ],
+  "required_checks": [
+    "review:real-cold-snapshot-reproduction",
+    "review:bounded-readiness-and-original-identity-guards",
+    "review:targeted-windows-backend",
+    "review:actual-native-rename-retry-readback",
+    "review:other-owner-boundary"
+  ],
+  "acceptance_ids": [
+    "AC-P21-09"
+  ],
+  "acceptance_bindings": [
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-09",
+      "criterion_digest": "be98e9a1cf0b6c4c728b3cfd000b64aa4a83099905281d671d7958bf80f74f59"
+    }
+  ],
+  "fact_writeback": {
+    "mode": "none",
+    "targets": []
+  },
+  "imported_receipt_digest": null,
+  "certificate_digest": null,
+  "revision": 1,
+  "summary_digest": "d1c32046d321a6bdee2e24fab2c0c5288e9f55186e838e7a33804f05cc1a65b8",
+  "content_digest": "4bbfc44665e4cd385e713b104461ce2e617124f2b14a7452d02b8d9363cc91bb"
+}

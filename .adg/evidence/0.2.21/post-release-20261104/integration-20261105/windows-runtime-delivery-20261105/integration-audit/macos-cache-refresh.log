@@ -1,0 +1,72 @@
+   Compiling objc2-exception-helper v0.1.1
+   Compiling ring v0.17.14
+   Compiling objc2 v0.6.4
+   Compiling opencodex-desktop v0.2.21 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+   Compiling objc2-foundation v0.3.2
+   Compiling wry v0.57.0
+   Compiling objc2-core-foundation v0.3.2
+   Compiling block2 v0.6.2
+   Compiling dispatch2 v0.3.1
+   Compiling rustls v0.23.45
+   Compiling objc2-core-graphics v0.3.2
+   Compiling rustls-webpki v0.103.15
+   Compiling tokio-rustls v0.26.6
+   Compiling rustls-platform-verifier v0.7.1
+   Compiling hyper-rustls v0.27.10
+   Compiling reqwest v0.13.5
+   Compiling reqwest v0.12.28
+   Compiling objc2-quartz-core v0.3.2
+   Compiling objc2-app-kit v0.3.2
+   Compiling objc2-web-kit v0.3.2
+   Compiling tao v0.37.1
+   Compiling muda v0.20.0
+   Compiling window-vibrancy v0.8.1
+   Compiling objc2-osa-kit v0.3.2
+   Compiling rfd v0.16.0
+   Compiling osakit v0.3.1
+   Compiling tauri-runtime v2.12.1
+   Compiling tray-icon v0.25.1
+   Compiling tauri-runtime-wry v2.12.1
+   Compiling tauri v2.12.1
+   Compiling tauri-plugin-fs v2.6.0
+   Compiling tauri-plugin-process v2.4.0
+   Compiling tauri-plugin-updater v2.13.1
+   Compiling tauri-plugin-dialog v2.8.1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 31.48s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-b0644f1dff90c839)
+
+running 31 tests
+test modules::model_config::cache_refresh::client_runtime_readiness::tests::binding_failure_propagates_without_a_second_read ... ok
+test modules::model_config::cache_refresh::client_runtime_readiness::tests::a_binding_change_during_the_pending_window_is_never_retried ... ok
+test modules::model_config::cache_refresh::client_runtime_readiness::tests::cold_snapshot_settles_before_identity_validation ... ok
+test modules::model_config::cache_refresh::client_runtime_readiness::tests::ready_or_malformed_snapshots_are_not_retried_or_rewritten ... ok
+test modules::model_config::cache_refresh::client_selection_rename::tests::executable_policy_rejects_windows_wrappers_before_spawn ... ok
+test modules::model_config::cache_refresh::client_runtime_readiness::tests::still_pending_or_a_hung_read_is_bounded_and_remains_unconfirmed ... ok
+test modules::model_config::cache_refresh::tests::app_server_partial_failure_prevents_overall_restart_success ... ok
+test modules::model_config::cache_refresh::tests::changed_runtime_after_response_is_not_reported_as_a_restart ... ok
+test modules::model_config::cache_refresh::tests::corrupt_record_and_missing_management_token_are_distinct_and_never_send_restart ... ok
+test modules::model_config::cache_refresh::tests::current_client_binding_requires_owned_absolute_paths_and_validated_runtime ... ok
+test modules::model_config::cache_refresh::tests::current_selection_never_moves_a_same_named_external_route_to_our_provider ... ok
+test modules::model_config::cache_refresh::tests::cache_only_executes_cli_without_restart_or_management_binding_and_redacts_output ... ok
+test modules::model_config::cache_refresh::tests::dedicated_restart_checks_runtime_binding_and_does_not_expand_generic_request_scope ... ok
+test modules::model_config::cache_refresh::tests::enumeration_failure_is_incomplete_even_with_top_level_success_and_desktop_relaunch ... ok
+test modules::model_config::cache_refresh::tests::explicit_restart_posts_even_when_cache_is_unchanged_and_needs_no_cli ... ok
+test modules::model_config::cache_refresh::tests::desktop_refused_blocked_not_found_and_other_skips_are_not_restarts ... ok
+test modules::model_config::cache_refresh::tests::explicit_restart_reconciles_exact_pending_and_clears_only_after_verified_restart ... ok
+test modules::model_config::cache_refresh::tests::invalid_json_and_empty_http_200_are_errors ... ok
+test modules::model_config::cache_refresh::tests::malformed_admin_token_prevents_restart ... ok
+test modules::model_config::cache_refresh::tests::http_errors_and_redirects_never_accept_even_a_successful_body_or_echo_error_text ... ok
+test modules::model_config::cache_refresh::tests::missing_runtime_record_reports_the_actual_precondition_without_touching_saved_files ... ok
+test modules::model_config::cache_refresh::tests::no_app_servers_does_not_prevent_a_verified_desktop_restart ... ok
+test modules::model_config::cache_refresh::tests::runtime_record_removed_after_attestation_invalidates_the_bound_owner ... ok
+test modules::model_config::cache_refresh::tests::stale_record_for_an_exited_listener_is_not_reported_as_a_missing_file ... ok
+test modules::model_config::cache_refresh::tests::stopped_some_desktop_processes_or_failed_relaunch_is_incomplete ... ok
+test modules::model_config::cache_refresh::tests::top_level_success_with_nothing_running_or_missing_desktop_never_claims_restart ... ok
+test modules::model_config::cache_refresh::tests::unknown_or_missing_desktop_reason_has_a_fixed_redacted_fallback ... ok
+test modules::model_config::cache_refresh::tests::untrusted_runtime_proof_never_reaches_restart_or_reads_admin_token ... ok
+test modules::model_config::cache_refresh::tests::upstream_runtime_username_mask_requires_one_unambiguous_bound_identity ... ok
+test modules::model_config::cache_refresh::tests::warning_states_that_live_conversations_end ... ok
+test modules::model_config::cache_refresh::tests::malformed_or_contradictory_http_200_responses_are_rejected ... ok
+
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 1195 filtered out; finished in 4.51s
+
