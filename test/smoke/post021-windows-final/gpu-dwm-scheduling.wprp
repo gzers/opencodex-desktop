@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WindowsPerformanceRecorder Version="1.0">
+  <Profiles>
+    <EventCollector Id="OcxGpuEvents" Name="OpenCodeX GPU scheduling diagnostics">
+      <BufferSize Value="1024" />
+      <Buffers Value="256" />
+    </EventCollector>
+    <!-- GUIDs and keywords match the local WPR GPU/DesktopComposition export.
+         Explicit providers avoid the built-in system-call, page-fault, disk-IO
+         and stack collection. Keep all PIDs: GPU completion runs in the kernel. -->
+    <EventProvider Id="DxgKrnl" Name="802ec45a-1e99-4b83-9920-87c98277ba9d" Level="5">
+      <Keywords><Keyword Value="0x277" /></Keywords>
+      <CaptureStateOnStart Timeout="10"><Keyword Value="0x277" /></CaptureStateOnStart>
+    </EventProvider>
+    <EventProvider Id="DwmCore" Name="9e9bba3c-2e38-40cb-99f4-9e8281425164" Level="6">
+      <Keywords><Keyword Value="0x1ffff" /></Keywords>
+    </EventProvider>
+    <EventProvider Id="Dxgi" Name="ca11c036-0102-4a2d-a6ad-f03cfed5d3c9" Level="6">
+      <Keywords><Keyword Value="0xf" /></Keywords>
+    </EventProvider>
+    <EventProvider Id="DirectComposition" Name="c44219d0-f344-11df-a5e2-b307dfd72085">
+      <Keywords><Keyword Value="0x44" /></Keywords>
+    </EventProvider>
+    <EventProvider Id="Win32k" Name="8c416c79-d49b-4f01-a467-e56d3aa8234c">
+      <Keywords><Keyword Value="0x42e3000" /></Keywords>
+    </EventProvider>
+    <Profile Id="OcxGpuScheduling.Verbose.File" Name="OcxGpuScheduling" Description="GPU scheduling and desktop composition; no system collector or stacks" LoggingMode="File" DetailLevel="Verbose">
+      <Collectors>
+        <EventCollectorId Value="OcxGpuEvents">
+          <EventProviders>
+            <EventProviderId Value="DxgKrnl" />
+            <EventProviderId Value="DwmCore" />
+            <EventProviderId Value="Dxgi" />
+            <EventProviderId Value="DirectComposition" />
+            <EventProviderId Value="Win32k" />
+          </EventProviders>
+        </EventCollectorId>
+      </Collectors>
+    </Profile>
+  </Profiles>
+</WindowsPerformanceRecorder>

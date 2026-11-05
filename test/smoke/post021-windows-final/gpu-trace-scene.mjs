@@ -22,6 +22,12 @@ const session = await connect(endpoint)
 const evaluate = (fn, ...args) => session.evaluate('(' + fn.toString() + ')(' + args.map(v => JSON.stringify(v)).join(',') + ')')
 const report = { result: 'waiting-for-administrator', acceptance: false, scene: 'Original 30s high/dark static overview; unchanged browser scheduling' }
 const save = (name, value) => writeFile(join(output, name), JSON.stringify(value, null, 2) + '\n')
+let foregroundSince = null
+const heartbeat = async () => {
+  const foreground = await session.invoke('app_foreground'), now = new Date().toISOString()
+  foregroundSince = foreground ? foregroundSince ?? now : null
+  await save('scene-foreground.json', { at: now, foregroundSince, foreground, pid: expected.pid, createdAtUtcTicks: expected.createdAtUtcTicks })
+}
 try {
   assertModelSandbox({ about: await session.invoke('app_about'), dataRoot: await session.invoke('get_data_root_config') }, sandbox)
   await evaluate(async () => {
@@ -40,6 +46,7 @@ try {
   await save('scene-ready.json', { at: new Date().toISOString(), pid: expected.pid, ready: true, waitLimitSeconds: 3600 })
   let started
   while (Date.now() < deadline) {
+    await heartbeat()
     started = await readCollectorStart(join(output, 'capture/collector-started.json'))
     if (started?.recorderStarted) break
     await new Promise(r => setTimeout(r, 500))
@@ -47,11 +54,12 @@ try {
   assert(started?.recorderStarted, 'No successful administrator recording observed in 3600s; no sample performed')
   for (const key of ['pid', 'exe', 'createdAtUtcTicks', 'sessionId', 'ownerDomain', 'ownerUser']) assert.equal(started.targetAtStart[key], expected[key], 'Collector target mismatch: ' + key)
   assert.equal(started.targetExeSha256, expected.sha256)
+  Object.assign(report, { collectorInstance: started.instanceName, collectorStartedAtUtc: started.startedAtUtc })
   assertCaptureOverlap(started)
   while (Date.now() < Date.parse(started.startedAtUtc) + 10000 && !await session.invoke('app_foreground')) await new Promise(r => setTimeout(r, 200))
   assert(await session.invoke('app_foreground'), 'Native test window not foreground')
   assertCaptureOverlap(started)
-  Object.assign(report, { result: 'sampling', collectorInstance: started.instanceName, collectorStartedAtUtc: started.startedAtUtc, startedAtUtc: new Date().toISOString() })
+  Object.assign(report, { result: 'sampling', startedAtUtc: new Date().toISOString() })
   await save('scene-started.json', report)
   report.sample = await sample(false); report.endedAtUtc = new Date().toISOString()
   assert(report.sample.foreground, 'Lost native foreground')

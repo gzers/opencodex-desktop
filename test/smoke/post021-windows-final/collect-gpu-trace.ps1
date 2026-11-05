@@ -1,6 +1,7 @@
 param(
     [Parameter(Mandatory)][string]$TargetIdentityFile,
     [Parameter(Mandatory)][string]$OutputDirectory,
+    [string]$ForegroundReadyFile,
     [ValidateRange(5,45)][int]$DurationSeconds=30,
     [switch]$PlanOnly
 )
@@ -29,6 +30,11 @@ function Assert-ChildPath([string]$Path,[string]$Boundary){
 }
 Assert-ChildPath $taskOutput $taskEvidence
 Assert-ChildPath $taskIdentityPath $taskEvidence
+if($ForegroundReadyFile){
+    $taskForegroundPath=[IO.Path]::GetFullPath($ForegroundReadyFile)
+    Assert-ChildPath $taskForegroundPath $taskEvidence
+    if((Split-Path -Parent $taskForegroundPath) -ine (Split-Path -Parent $taskIdentityPath)){throw 'Foreground heartbeat must share the exact target handoff directory'}
+}
 if(Test-Path -LiteralPath $taskOutput){throw 'Fresh evidence directory required; previous traces are immutable'}
 $taskIdentity=Get-Content -LiteralPath $taskIdentityPath -Raw -Encoding utf8|ConvertFrom-Json
 $taskExe=[IO.Path]::GetFullPath([string]$taskIdentity.exe)
@@ -61,6 +67,25 @@ function Read-OwnedTarget {
     return [ordered]@{pid=$taskP.ProcessId;exe=$taskP.ExecutablePath;createdAtUtcTicks=[string]$taskP.CreationDate.ToUniversalTime().Ticks;sessionId=$taskP.SessionId;ownerDomain=$taskOwner.Domain;ownerUser=$taskOwner.User}
 }
 $taskBefore=Read-OwnedTarget
+$taskProfile=Join-Path $PSScriptRoot 'gpu-dwm-scheduling.wprp'
+if(!(Test-Path -LiteralPath $taskProfile)){throw 'Reviewed GPU scheduling profile is missing'}
+$taskProfileHash=(Get-FileHash -LiteralPath $taskProfile -Algorithm SHA256).Hash.ToLowerInvariant()
+. (Join-Path $PSScriptRoot 'gpu-foreground-admission.ps1')
+$taskForeground=$null
+if($ForegroundReadyFile -and !$PlanOnly){
+    Write-Output 'Waiting up to120s for isolated OpenCodeX foreground. Switch now; recording starts only after3s stable foreground.'
+    $taskForegroundDeadline=[datetimeoffset]::UtcNow.AddSeconds(120)
+    while([datetimeoffset]::UtcNow -lt $taskForegroundDeadline){
+        $taskCandidate=$null
+        try{$taskCandidate=Get-Content -LiteralPath $taskForegroundPath -Raw -Encoding utf8|ConvertFrom-Json}catch{}
+        if(Test-GpuForegroundHeartbeat $taskCandidate $taskIdentity ([datetimeoffset]::UtcNow)){
+            $taskForeground=$taskCandidate;break
+        }
+        Start-Sleep -Milliseconds 200
+    }
+    if(!$taskForeground){throw 'No fresh stable native foreground heartbeat; no recording started'}
+    $taskBefore=Read-OwnedTarget
+}
 $taskInstance='ocx-post021-gpu-'+[guid]::NewGuid().ToString('N')
 $taskWpr=Join-Path ([Environment]::GetFolderPath('System')) 'wpr.exe'
 if(!(Test-Path -LiteralPath $taskWpr)){throw 'Windows Performance Recorder is unavailable'}
@@ -90,10 +115,12 @@ function Invoke-Recorder([string[]]$Arguments,[string]$Name,[int]$WaitMillisecon
 $taskReport=[ordered]@{
     result='failed';acceptance=$false;planOnly=[bool]$PlanOnly;targetBefore=$taskBefore
     targetExeSha256=$taskIdentity.sha256;durationSeconds=$DurationSeconds
-    profiles=@('GPU','DesktopComposition');traceScope='Scheduling/composition only; no FileIO/Registry/Network profile'
+    profiles=@('OcxGpuScheduling');profilePath=$taskProfile;profileSha256=$taskProfileHash
+    traceScope='Five explicit event providers; no system collector or stacks. Machine-wide scheduling metadata stays local.'
     instanceName=$taskInstance
     rawTracePolicy='ETL stays local for review; do not publish machine-wide trace automatically'
     appProcessAction='none';dailyConfigAction='none';recorderStarted=$false;recorderStopped=$false
+    foregroundAdmission=$taskForeground
 }
 $taskStarted=$false
 try{
@@ -106,7 +133,7 @@ try{
     }
     # Instance name MUST be the last argument on every mutating command. A
     # concurrent administrator's default or other named recording is never ours.
-    $taskReport.proposedStart=@('-start','GPU','-start','DesktopComposition','-filemode','-recordtempto',$taskOutput,'-instancename',$taskInstance)
+    $taskReport.proposedStart=@('-start',($taskProfile+'!OcxGpuScheduling'),'-filemode','-recordtempto',$taskOutput,'-instancename',$taskInstance)
     $taskReport.recoveryStop=@($taskWpr,'-stop',(Join-Path $taskOutput 'gpu-dwm.etl'),'-instancename',$taskInstance)
     Write-Report 'collector-start-intent.json' $taskReport
     if($PlanOnly){$taskReport.result='plan-validated-no-recording';return}
