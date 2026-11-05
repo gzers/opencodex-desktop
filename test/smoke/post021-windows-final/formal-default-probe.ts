@@ -11,7 +11,7 @@ const owner=execFileSync(ps,['-NoProfile','-Command','[Security.Principal.Window
 assert.equal(owner.toLowerCase(),plan.expectedOwner.toLowerCase())
 const output=join(root,'default-process-probe-'+new Date().toISOString().replace(/[^0-9]/g,''));mkdirSync(output)
 const {windowsDesktopAppAdapter:adapter,windowsDefaultExec:originalExec}=await import(pathToFileURL(join(plan.officialPackage,'src/codex/desktop-app/windows.ts')).href)
-const report:any={result:'running-readonly',acceptance:false,owner,startedAtUtc:new Date().toISOString(),calls:[],processActions:'none; discover/list only; no restart methods invoked'}
+const report:any={result:'running-readonly',acceptance:false,owner,startedAtUtc:new Date().toISOString(),candidateKind:plan.candidateKind??null,adapterSha256:createHash('sha256').update(readFileSync(join(plan.officialPackage,'src/codex/desktop-app/windows.ts'))).digest('hex'),calls:[],processActions:'none; discover/list only; no restart methods invoked'}
 let phase='discovery'
 const observer=(extended=false)=>(file:string,args:string[],options:any)=>{
  const start=performance.now(),entry:any={phase,extendedDiagnosticOnly:extended,file,timeout:extended?60000:options?.timeout,scriptSha256:createHash('sha256').update(args.join('\n')).digest('hex')}
