@@ -1,0 +1,64 @@
+{
+  "acceptance": false,
+  "windowUtc": [
+    "2026-11-05T06:50:00.615Z",
+    "2026-11-05T06:50:30.625Z"
+  ],
+  "nodeOrdinal": 0,
+  "roleAggregates": {
+    "other-session": {
+      "dmaSlices": 10405,
+      "sumWallMs": 26521.6944,
+      "unionWallMs": 18386.1674,
+      "p50WallMs": 2.3095,
+      "p95WallMs": 6.1267,
+      "maxWallMs": 31.0087,
+      "preemptedSlices": 1627,
+      "boundaryOrphans": 0
+    },
+    "unknown-session": {
+      "dmaSlices": 228,
+      "sumWallMs": 1389.1478,
+      "unionWallMs": 1389.1478,
+      "p50WallMs": 5.2947,
+      "p95WallMs": 10.4323,
+      "maxWallMs": 33.1114,
+      "preemptedSlices": 9,
+      "boundaryOrphans": 0
+    },
+    "target-webview": {
+      "dmaSlices": 910,
+      "sumWallMs": 6060.765,
+      "unionWallMs": 5072.1698,
+      "p50WallMs": 5.2,
+      "p95WallMs": 25.4813,
+      "maxWallMs": 36.0375,
+      "preemptedSlices": 520,
+      "boundaryOrphans": 0
+    },
+    "target-session-DWM": {
+      "dmaSlices": 209,
+      "sumWallMs": 4728.5679,
+      "unionWallMs": 4728.4864,
+      "p50WallMs": 23.5988,
+      "p95WallMs": 28.4837,
+      "maxWallMs": 32.9417,
+      "preemptedSlices": 16,
+      "boundaryOrphans": 0
+    },
+    "same-session-other": {
+      "dmaSlices": 43,
+      "sumWallMs": 118.03490000000001,
+      "unionWallMs": 99.9909,
+      "p50WallMs": 1.15,
+      "p95WallMs": 11.313,
+      "maxWallMs": 14.369,
+      "preemptedSlices": 7,
+      "boundaryOrphans": 0
+    }
+  },
+  "allSliceUnionWallMs": 21778.4836,
+  "windowMs": 30010.0,
+  "method": "Context ownership from traceDCStart; session from currentlyliveprocess whosecreationpredates sample. MatchDMA175/176context+submission/completionID and sum/union observedwall slices. No unrelatedprocess identifiers published.",
+  "limitations": "DMA wall spans/preemptions are nothardwareGPUutilization; aggregates show overlappingactivity and schedulingcontext only. No causality proof that removing unrelatedactivity fixes performance; no process/configuration changes performed."
+}

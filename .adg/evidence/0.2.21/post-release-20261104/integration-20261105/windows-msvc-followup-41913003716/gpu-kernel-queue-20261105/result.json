@@ -1,0 +1,99 @@
+{
+  "result": "valid-paired-kernel-trace-performance-failed",
+  "acceptance": false,
+  "codeCommit": "f8941ae26e85936e66adf8ceb4d72967170f513b",
+  "binarySha256": "fa9df83a55153f764673781e85167093d20602fd2e34742c69f6b2f5b37f9c68",
+  "productAppsTree": "a8bb18f9ff2781dbbfe67f91473a298f3cd74ae6",
+  "recording": {
+    "startUtc": "2026-11-05T06:50:00.3121139+00:00",
+    "finishedUtc": "2026-11-05T06:50:52.4314681+00:00",
+    "instance": "ocx-post021-gpu-c57245625b88404abd36743c4b326977",
+    "bytes": 344981504,
+    "sha256": "fdb119e3cee1df550f5b46125c5caab19a867944202de4421d4f427e0aa5227d",
+    "recorderStopped": true,
+    "stopExitCode": 0,
+    "rawEtlUploaded": false,
+    "profileSha256": "efeecec9f9546e5158c48d2fef2a261f4b43db3a1f58fbde123809f44714e2d7"
+  },
+  "sample": {
+    "durationMs": 30001.799999713898,
+    "B": 16.666666666666668,
+    "samples": 194,
+    "p50": 157.30000000074506,
+    "p95": 230.90000000037253,
+    "max": 289,
+    "over6B": 160,
+    "draws": 195,
+    "foreground": true,
+    "strategy": {
+      "setting": "high",
+      "effective": "high",
+      "visible": true,
+      "lightAllowed": true,
+      "ambientAllowed": true,
+      "animated": true,
+      "solid": false
+    },
+    "diagnostics": {
+      "callbackCostMs": {
+        "samples": 195,
+        "p50": 0,
+        "p95": 0.09999990463256836,
+        "max": 0.2999997138977051
+      },
+      "callbackDispatchDelayMs": {
+        "samples": 195,
+        "p50": 5.79999990388751,
+        "p95": 13.299999618902802,
+        "max": 69.19999990426004
+      },
+      "actualScrollRange": null,
+      "note": "Callback cost excludes later style/layout/paint/GPU work; dispatch delay alone cannot identify the bottleneck. Acceptance still uses the original frame-interval budget."
+    }
+  },
+  "ownershipMethod": "Native targetPID75988 path/create/session/owner/hash, WebView GPU PID76176 creation/parentchain, DxgKrnlDCStart Device hProcessId and Context hDevice; kernel events assigned bycontext, not headerPID. Currentprocess creation predating scene required for session grouping.",
+  "rootCauseEvidence": {
+    "established": "Substantial GPU command scheduling delay within exact30s slowframe window and longDWM presentation wait.",
+    "targetHardwareQueueSubmitToFirstDmaP95Ms": 639.5639,
+    "targetHardwareQueueSubmitToCompleteP95Ms": 668.4418,
+    "targetDmaSliceWallP95Ms": 25.4813,
+    "dwmDxgiPresentWallP95Ms": 226.3144,
+    "otherSessionNode0DmaWallUnionMs": 18386.1674,
+    "targetNode0PreemptedSlices": 520,
+    "targetNode0TotalSlices": 910,
+    "interpretation": "SharedGPU scheduling contention is evidenced as a contributor; no controlledquiet-GPU counterfactual yet, so notsole/finalcause orproductionfix. DMAwallspans are notGPUhardwareutilization. No remoteclientpresentationlatency measured."
+  },
+  "verification": {
+    "nativeProcessTraceEvents": 2716921,
+    "nativeProcessTraceExitCode": 0,
+    "headerEventsLost": 0,
+    "providerPresence": "1750636DxgKrnl and32241Win32k events; omittedNonPagedMemory corrected in actualcapture",
+    "independentPointerFreeCsvRows": 4235,
+    "duplicateQueueStarts": 0,
+    "frameAcceptance": "failed-originalp95-andlongframebudgets"
+  },
+  "privacy": "Raw345MB ETL andotherprocesssessionmap staylocal. Sharedload published onlybyrole aggregate; no unrelatedprocessnames,PIDs,commandlines,pointers orrawkernelcontext IDs. Ownedwindow timing CSV has relative numericpairs only.",
+  "sources": {
+    "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-msvc-followup\\etl-scheduling-analysis-v2.cpp": {
+      "bytes": 4048,
+      "sha256": "dee128bbbbefc6424a98ed2e70f0824021d346bd37de936c49d5ebd5d6660dc7",
+      "location": "local diagnostic source; no raw ETL or other-sessionprocessmap uploaded"
+    },
+    "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-msvc-followup\\analyze-gpu-queues.py": {
+      "bytes": 6817,
+      "sha256": "0cde08fb8ad41b90e10f7f5a74606049579b874e2ef99c3c4ba73625d01b0d6e",
+      "location": "local diagnostic source; no raw ETL or other-sessionprocessmap uploaded"
+    },
+    "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-msvc-followup\\analyze-gpu-sharing.py": {
+      "bytes": 3586,
+      "sha256": "eff67cd3e8ce9dfd5821ea37d96133c42cdf817111a28f064f699595e87dc535",
+      "location": "local diagnostic source; no raw ETL or other-sessionprocessmap uploaded"
+    }
+  },
+  "next": [
+    "User can coordinate10minutequietGPUwindow; timepending. Compare exactsame originalMSVC scenes/tier/glass/budgets before anyproductionfix claim.",
+    "User states disposableformalCodex account/environmentprepared; account/machine/session/repopath details requested, notyetreceived. No defaultrestartperformed."
+  ],
+  "dailyProcessAction": "none duringthiscapture; originalhistoricalBunmisstop retained inprior evidence, no globalzero-side-effectclaim",
+  "at": "2026-11-05T06:59:31.993664+00:00"
+}

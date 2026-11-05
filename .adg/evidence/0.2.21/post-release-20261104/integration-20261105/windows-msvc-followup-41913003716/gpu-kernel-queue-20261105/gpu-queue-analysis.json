@@ -1,0 +1,230 @@
+{
+  "acceptance": false,
+  "windowUtc": [
+    "2026-11-05T06:50:00.615Z",
+    "2026-11-05T06:50:30.625Z"
+  ],
+  "method": "Read DxgKrnl DCStart Device(hProcessId,hDevice,pDxgAdapter) and Context(hDevice,hContext,NodeOrdinal). Match queue starts178/244/245 to stop180 by context+SubmitSequence; DMA175/176 bycontext+submission/completionID. CropexactsceneUTC and exclude unmatched boundary events. Queue/DMA wall slices are observedETW wall times, notGPU utilization orhardware duration.",
+  "admittedContextCount": 15,
+  "contexts": [
+    {
+      "role": "target-webview-gpu",
+      "pid": 76176,
+      "nodeOrdinal": 0,
+      "adapterTypeRaw": 811,
+      "queueSubmitToCompleteMs": {
+        "samples": 1182,
+        "p50": 459.0052,
+        "p95": 661.0523,
+        "max": 759.512
+      },
+      "queueSubmitToFirstDmaStartMs": {
+        "samples": 384,
+        "p50": 428.268,
+        "p95": 639.5639,
+        "max": 741.6814
+      },
+      "dmaWallSliceMs": {
+        "samples": 910,
+        "p50": 5.2,
+        "p95": 25.4813,
+        "max": 36.0375
+      }
+    },
+    {
+      "role": "session2-dwm",
+      "pid": 4040,
+      "nodeOrdinal": 0,
+      "adapterTypeRaw": 811,
+      "queueSubmitToCompleteMs": {
+        "samples": 377,
+        "p50": 113.7442,
+        "p95": 184.8802,
+        "max": 231.1007
+      },
+      "queueSubmitToFirstDmaStartMs": {
+        "samples": 0,
+        "p50": null,
+        "p95": null,
+        "max": null
+      },
+      "dmaWallSliceMs": {
+        "samples": 0,
+        "p50": null,
+        "p95": null,
+        "max": null
+      }
+    },
+    {
+      "role": "session2-dwm",
+      "pid": 4040,
+      "nodeOrdinal": 0,
+      "adapterTypeRaw": 811,
+      "queueSubmitToCompleteMs": {
+        "samples": 597,
+        "p50": 26.5581,
+        "p95": 34.3212,
+        "max": 46.0802
+      },
+      "queueSubmitToFirstDmaStartMs": {
+        "samples": 193,
+        "p50": 2.0869,
+        "p95": 6.8717,
+        "max": 22.286
+      },
+      "dmaWallSliceMs": {
+        "samples": 209,
+        "p50": 23.5988,
+        "p95": 28.4837,
+        "max": 32.9417
+      }
+    }
+  ],
+  "duplicateQueueStarts": 0,
+  "queueByPacketKind": {
+    "(4040, 178, 0)": {
+      "submitToCompleteMs": {
+        "samples": 193,
+        "p50": 26.6576,
+        "p95": 34.4108,
+        "max": 46.0802
+      },
+      "submitToDmaStartMs": {
+        "samples": 193,
+        "p50": 2.0869,
+        "p95": 6.8717,
+        "max": 22.286
+      }
+    },
+    "(4040, 245, None)": {
+      "submitToCompleteMs": {
+        "samples": 596,
+        "p50": 28.1918,
+        "p95": 164.1056,
+        "max": 231.1007
+      },
+      "submitToDmaStartMs": {
+        "samples": 0,
+        "p50": null,
+        "p95": null,
+        "max": null
+      }
+    },
+    "(4040, 244, None)": {
+      "submitToCompleteMs": {
+        "samples": 185,
+        "p50": 114.122,
+        "p95": 184.8802,
+        "max": 231.0991
+      },
+      "submitToDmaStartMs": {
+        "samples": 0,
+        "p50": null,
+        "p95": null,
+        "max": null
+      }
+    },
+    "(76176, 244, None)": {
+      "submitToCompleteMs": {
+        "samples": 222,
+        "p50": 419.384,
+        "p95": 613.8865,
+        "max": 719.5515
+      },
+      "submitToDmaStartMs": {
+        "samples": 0,
+        "p50": null,
+        "p95": null,
+        "max": null
+      }
+    },
+    "(76176, 178, 0)": {
+      "submitToCompleteMs": {
+        "samples": 384,
+        "p50": 466.4893,
+        "p95": 668.4418,
+        "max": 759.5041
+      },
+      "submitToDmaStartMs": {
+        "samples": 384,
+        "p50": 428.268,
+        "p95": 639.5639,
+        "max": 741.6814
+      }
+    },
+    "(76176, 245, None)": {
+      "submitToCompleteMs": {
+        "samples": 384,
+        "p50": 466.4929,
+        "p95": 668.4461,
+        "max": 759.512
+      },
+      "submitToDmaStartMs": {
+        "samples": 0,
+        "p50": null,
+        "p95": null,
+        "max": null
+      }
+    },
+    "(76176, 178, 7)": {
+      "submitToCompleteMs": {
+        "samples": 192,
+        "p50": 464.8477,
+        "p95": 663.5812,
+        "max": 758.0415
+      },
+      "submitToDmaStartMs": {
+        "samples": 0,
+        "p50": null,
+        "p95": null,
+        "max": null
+      }
+    }
+  },
+  "dxgiPresentWallMs": {
+    "76176": {
+      "samples": 195,
+      "p50": 2.0898,
+      "p95": 23.6942,
+      "max": 66.5039
+    },
+    "4040": {
+      "samples": 188,
+      "p50": 154.669,
+      "p95": 226.3144,
+      "max": 276.1258
+    }
+  },
+  "lastIndirectPresentCompletionToDwmReturnMs": {
+    "samples": 188,
+    "p50": 154.3358,
+    "p95": 226.0634,
+    "max": 275.7693
+  },
+  "indirectCompletionPresentWindows": 188,
+  "pairedDwmPresents": 188,
+  "eventCountsByAdmittedPidAndId": {
+    "(4040, 180)": 976,
+    "(76176, 180)": 1200,
+    "(76176, 175)": 910,
+    "(4040, 178)": 193,
+    "(4040, 245)": 597,
+    "(76176, 176)": 910,
+    "(4040, 175)": 209,
+    "(4040, 176)": 209,
+    "(4040, 244)": 186,
+    "(76176, 244)": 226,
+    "(76176, 178)": 585,
+    "(76176, 245)": 390
+  },
+  "queuePreemptionAndTimeout": {
+    "(4040, 'preempted')": 0,
+    "(4040, 'timeout')": 0,
+    "(76176, 'preempted')": 0,
+    "(76176, 'timeout')": 0
+  },
+  "unmatchedBoundaryEvents": {
+    "queueStopWithoutStart": 20
+  },
+  "limitations": "No event-based GPU utilization calculation or remoteclient presentation latency. Kernel context ownership is from state capture, currentprocessidentity independentlyverified. Does not assign unrelatedprocess work to thisapplication."
+}
