@@ -776,33 +776,22 @@ impl VersionProbe for FixedVersionProbe {
     }
 }
 
-/// 从任意输出里取出第一个 semver；取不到返回 `None`。
+/// Read a complete SemVer token. Never truncate a prerelease/build suffix: the
+/// verified package manifest must equal the executable's actual version.
 pub fn extract_semver(text: &str) -> Option<String> {
-    let bytes = text.as_bytes();
-    let mut index = 0usize;
-    while index < bytes.len() {
-        if bytes[index].is_ascii_digit() {
-            let start = index;
-            let mut end = index;
-            while end < bytes.len() && (bytes[end].is_ascii_digit() || bytes[end] == b'.') {
-                end += 1;
-            }
-            let candidate = &text[start..end];
-            let parts: Vec<&str> = candidate.split('.').collect();
-            if parts.len() >= 3
-                && parts.iter().all(|part| !part.is_empty())
-                && parts
-                    .iter()
-                    .all(|part| part.chars().all(|ch| ch.is_ascii_digit()))
-            {
-                return Some(candidate.to_string());
-            }
-            index = end.max(index + 1);
-        } else {
-            index += 1;
-        }
-    }
-    None
+    static VERSION: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(concat!(
+            r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)",
+            r"(?:-(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)",
+            r"(?:\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?",
+            r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$",
+        ))
+        .expect("constant SemVer token pattern")
+    });
+    text.split(|c: char| c.is_whitespace() || matches!(c, '(' | ')' | '[' | ']' | ',' | ';'))
+        .map(|token| token.strip_prefix('v').unwrap_or(token))
+        .find(|token| VERSION.is_match(token))
+        .map(str::to_owned)
 }
 
 /// 真实 npm 适配器：受控环境 + 可选代理 + 临时 `--userconfig`。
@@ -3493,6 +3482,38 @@ mod tests {
         assert_eq!(extract_semver("no version here"), None);
         assert_eq!(extract_semver("2.5"), None);
         assert_eq!(extract_semver(""), None);
+    }
+
+    #[test]
+    fn version_probe_preserves_prerelease_and_build_identity() {
+        for version in [
+            "2.97.0-post021.ownerquery.1",
+            "0.166.0-alpha.6",
+            "2.97.0-post021.ownerquery.1+build.01",
+            "2.97.0+build.01",
+        ] {
+            assert_eq!(
+                extract_semver(&format!("opencodex {version}\n")).as_deref(),
+                Some(version),
+                "a local prerelease must never be reported as its stable base"
+            );
+        }
+    }
+
+    #[test]
+    fn version_probe_never_accepts_a_truncated_or_malformed_version() {
+        for text in [
+            "2.97.0.1",
+            "2.97.0-",
+            "2.97.0-post021..1",
+            "2.97.0-01",
+            "02.97.0",
+            "2.97.0+",
+            "2.97.0+build..1",
+            "2.97.0-post021_owner",
+        ] {
+            assert_eq!(extract_semver(text), None, "{text}");
+        }
     }
 
     #[test]
