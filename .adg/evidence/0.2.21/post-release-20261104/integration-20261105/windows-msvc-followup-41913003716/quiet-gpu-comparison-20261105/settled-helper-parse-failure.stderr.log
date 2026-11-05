@@ -1,0 +1,8 @@
+D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\post021-msvc-followup\sample-quiet-static-settled.mjs:3
+const c=await connect('http://127.0.0.1:9455'),out=new URL('./quiet-gpu-20261105-155011/static-settled.json',import.meta.url),report={acceptance:false,startedAtUtc:new Date().toISOString(),scope:'Original30s static highdark sample after quietwindow settling; no product flags/style/shader change'};try{if(!await c.invoke('app_foreground'))throw Error('Native foreground missing');const source=await readFile(new URL('../../post021-windows-materials/apps/desktop/ui/qa/windows-materials.mjs',import.meta.url),'utf8'),start=source.indexOf('async function performanceSample(scroll) {'),end=source.indexOf('
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ^
+
+SyntaxError: Invalid or unexpected token
+    at checkSyntax (node:internal/main/check_syntax:84:5)
+
+Node.js v24.22.1

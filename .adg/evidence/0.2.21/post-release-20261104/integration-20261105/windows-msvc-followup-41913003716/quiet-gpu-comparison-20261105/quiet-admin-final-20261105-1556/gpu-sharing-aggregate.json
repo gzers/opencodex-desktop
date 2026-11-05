@@ -1,0 +1,54 @@
+{
+  "acceptance": false,
+  "windowUtc": [
+    "2026-11-05T08:00:57.622Z",
+    "2026-11-05T08:01:27.643Z"
+  ],
+  "nodeOrdinal": 0,
+  "roleAggregates": {
+    "target-webview": {
+      "dmaSlices": 3391,
+      "sumWallMs": 17087.3464,
+      "unionWallMs": 12707.814,
+      "p50WallMs": 4.3745,
+      "p95WallMs": 11.3005,
+      "maxWallMs": 20.8425,
+      "preemptedSlices": 1939,
+      "boundaryOrphans": 0
+    },
+    "other-session": {
+      "dmaSlices": 11850,
+      "sumWallMs": 32994.7828,
+      "unionWallMs": 22974.5477,
+      "p50WallMs": 2.3908,
+      "p95WallMs": 9.3507,
+      "maxWallMs": 23.1444,
+      "preemptedSlices": 2281,
+      "boundaryOrphans": 2
+    },
+    "target-session-DWM": {
+      "dmaSlices": 622,
+      "sumWallMs": 8591.4098,
+      "unionWallMs": 8587.9275,
+      "p50WallMs": 13.7628,
+      "p95WallMs": 15.6871,
+      "maxWallMs": 25.2883,
+      "preemptedSlices": 5,
+      "boundaryOrphans": 0
+    },
+    "same-session-other": {
+      "dmaSlices": 40,
+      "sumWallMs": 90.25319999999999,
+      "unionWallMs": 89.3481,
+      "p50WallMs": 1.3266,
+      "p95WallMs": 9.5145,
+      "maxWallMs": 14.5177,
+      "preemptedSlices": 5,
+      "boundaryOrphans": 0
+    }
+  },
+  "allSliceUnionWallMs": 29157.7619,
+  "windowMs": 30020.9998,
+  "method": "Context ownership from traceDCStart; session from currentlyliveprocess whosecreationpredates sample. MatchDMA175/176context+submission/completionID and sum/union observedwall slices. No unrelatedprocess identifiers published.",
+  "limitations": "DMA wall spans/preemptions are nothardwareGPUutilization; aggregates show overlappingactivity and schedulingcontext only. No causality proof that removing unrelatedactivity fixes performance; no process/configuration changes performed."
+}
