@@ -7,11 +7,16 @@ completion_summary: null
 dmd_refs: ["DMD-OPENCODEX-POST021"]
 demand_ids: ["DMD-OPENCODEX-POST021"]
 task_ids: ["TASK-OPENCODEX-POST021-INTEGRATION-HARDWARE-20261105", "TASK-OPENCODEX-POST021-LOCAL-20261104", "TASK-OPENCODEX-POST021-CHANNELS-20261104", "TASK-OPENCODEX-POST021-CHANNEL-PROTOTYPE-20261104", "TASK-OPENCODEX-POST021-INTEGRATION-20261105", "TASK-OPENCODEX-POST021-WINDOWS-HUB-20261104", "TASK-OPENCODEX-POST021-WINDOWS-MATERIALS-20261104", "TASK-OPENCODEX-POST021-WINDOWS-PANEL-20261104", "TASK-OPENCODEX-POST021-WINDOWS-RESTART-20261104", "TASK-OPENCODEX-POST021-WINDOWS-RESTART-FEEDBACK-20261104", "TASK-OPENCODEX-POST021-WINDOWS-STICKY-20261104", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-20261105", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-PROBE-20261105", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-RENAME-PROBE-20261105", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-SYNC-PROBE-20261105"]
-summary: "新Windows回交已集成且CI/Mac复验通过；采用用户硬件例外，仍待正式运行包补丁交付和发行原包门。"
+summary: "Windows回交已集成；普通账号菜单探针缺少解析就绪前置已补，等待新CI原生复验；上游运行包交付及发行门仍待。"
 ---
 # 0.2.21发布后双线修复与集成发布计划
 
 ## 当前接续：b99a94f10已接收，运行包交付仍待（2026-11-05）
+
+最新验证接续：4251e5c52的CI42011443834最终failure，普通账号model-menu点击前严格守卫拒绝：连续三帧坐标y552.25，鼠标尚未按下时目标上移36px至top499.25，旧坐标落到summary。viewport/scroll未变，零按下事件；保留原始轨迹和135份原生证据，一份测试EXE只记哈希。前端1291/71协议、Mac完整后端、Windows回归/凭据/运行包升级重装/MSVC/final EXE及Node24/22恢复均通过，不能替代最后普通账号失败。
+
+模型详情初始挂载不代表异步projection完成；ModelRuleFields的占位说明在effective到达后消失并出现有效值表。477d7edea仅补原生驱动等待真实“当前草稿有效值与来源”caption，再采坐标；保留三帧稳定、按下前命中、单次真实点击和移动/遮挡拒绝，不加坐标偏移或重试。两个新增反例在修复前失败，修复后20定向/73全协议通过；夹具的急切帧推进已与真实wait先检查的语义一致，原严格帧号断言保持，中间失败留存。此就绪条件修复不冒称已排除所有布局变化，Windows原生仍待CI42018439722终态。产品apps树与f97相同，Mac有效原生证据按未变源复用；上游补丁授权和正式运行包交付仍未完成。审计ci-menu-projection-477d7edea/review.json。
+
 
 以下为最新采用，后文按时间留作历史。用户当前明确确认“是，采用该硬件例外”；共享GPU/RDP绝对帧率不再阻断本批，旧failed数值及未做生产性能优化的结论保留，功能玻璃/回退/交互/后台恢复仍必需。AC-P21-02已经回写，新集成TASK-OPENCODEX-POST021-INTEGRATION-HARDWARE-20261105绑定新口径；原冻结集成TASK不重绑、不虚假关闭。
 

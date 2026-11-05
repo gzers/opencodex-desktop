@@ -1,7 +1,7 @@
 {
   "status": "in_progress",
   "releaseReady": false,
-  "codeHead": "4251e5c528567c1c4ee1cdd382737d9a81992441",
+  "codeHead": "477d7edeab74c04ad2d2cbc1c075442bfd49123b",
   "productIntegrationCommit": "f97b2a92d223d71166ff6e5eb762bec6a794237c",
   "productFixCommit": "4e6614ee316bf5391dfe5be38ae0b490e1330fa3",
   "appsTree": "a8bb18f9ff2781dbbfe67f91473a298f3cd74ae6",
@@ -49,13 +49,21 @@
       "evidence": "integrated-b99a94f10-20261105/ci-run.json"
     },
     "latestToolCI": {
+      "run": 42018439722,
+      "head": "477d7edeab74c04ad2d2cbc1c075442bfd49123b",
+      "result": "queued at admission",
+      "localProtocol": 73,
+      "nativeWindows": "pending",
+      "review": "ci-menu-projection-477d7edea/review.json"
+    },
+    "previousToolCI": {
       "run": 42011443834,
       "head": "4251e5c528567c1c4ee1cdd382737d9a81992441",
-      "result": "in_progress",
+      "result": "failure",
       "frontend": "71 protocol / 197 files / 1291 Vitest / typecheck / build passed",
-      "backend": "in_progress",
-      "windowsBackend": "in_progress",
-      "evidence": "integrated-b99a94f10-20261105/ci-4251e5c52-jobs-current.json"
+      "backend": "success",
+      "windowsBackend": "failure at ordinary-account native menu hit guard",
+      "evidence": "ci-menu-projection-477d7edea/review.json"
     }
   },
   "hardwareException": {
@@ -75,7 +83,7 @@
     "review": "integrated-b99a94f10-20261105/upstream-dev-review.json"
   },
   "pending": [
-    "Latest tool-only CI terminal checks",
+    "Current menu-readiness probe fix needs final Windows ordinary-account native result and CI terminal checks",
     "Deliver desktop/app-server owner-query fixes in an installable integrated runtime, then verify actual default restart",
     "Freeze new release version; exact installers, v0.2.21 upgrade, updater signatures/manifests and rollback",
     "Unified public release and truthful final TASK/RCP/CERT closure"

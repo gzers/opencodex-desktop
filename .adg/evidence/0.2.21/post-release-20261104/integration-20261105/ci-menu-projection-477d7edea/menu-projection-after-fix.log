@@ -1,0 +1,53 @@
+✔ overview accepts either complete cards or the real settled setup gate, never an empty or partial page (0.872125ms)
+✔ writes require the exact admitted immutable and saved sandbox, never a relative root or another account directory (0.685792ms)
+✔ invalid native roots are rejected before invoking any application command (0.609292ms)
+✔ 020 and 021 require the native keyboard/menu checks while older admitted images retain baseline behavior (0.27025ms)
+✔ native acceptance rejects unadmitted versions before IPC, while 020 and 021 enter the CDP driver (0.311792ms)
+✔ 021 uses public native AppModal/header X; the 020 upgrade image keeps its own mask/dialog contract (0.328834ms)
+✔ 0.2.20 executes the actual default-confirmation driver through its real layer transition (0.976ms)
+✔ 0.2.21 executes the actual default-confirmation driver through its real layer transition (0.33025ms)
+✔ 021 refuses a third layer, incorrect parent/child, duplicate AppModal or any legacy mask before committing (1.958417ms)
+✔ native file writes require both saved and immutable model homes inside the admitted sandbox (0.244125ms)
+✔ export containment handles Windows canonical prefixes while rejecting siblings, root files and traversal (0.171875ms)
+✔ task preview JSON begins after the instruction section even when receipt instructions contain braces (0.531125ms)
+✔ native Save evidence requires changed file bytes and one exact backup without losing prior backups (6.13975ms)
+✔ native rename Save distinguishes one exact prewrite backup from its recovery journal (2.606917ms)
+✖ actual native menu driver waits through moving frames, rechecks a composite hit, then sends exactly one pointer click (2.563417ms)
+✔ native menu waits for delayed effective projection before sampling the trigger geometry (1.821541ms)
+✔ native menu never samples or clicks when effective projection does not become ready (0.648084ms)
+✔ native menu driver refuses movement or occlusion after stable frames before pressing, retaining the failed guard (1.692ms)
+✔ continually moving menu geometry never receives pointer input (1.353459ms)
+✔ a real pointer click that does not open the inner menu retains the original failure and never retries (1.228917ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 19
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 75.383958
+
+✖ failing tests:
+
+test at test/smoke/windows-model-ui.test.mjs:203:1
+✖ actual native menu driver waits through moving frames, rechecks a composite hit, then sends exactly one pointer click (2.563417ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   2,
+      3,
+      4,
+  -   5
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/windows-model-ui.test.mjs:209:43)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 2, 3, 4 ],
+    expected: [ 3, 4, 5 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

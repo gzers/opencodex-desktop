@@ -1,0 +1,48 @@
+{
+  "oldHead": "4251e5c528567c1c4ee1cdd382737d9a81992441",
+  "oldCI": 42011443834,
+  "oldCIResult": "failure",
+  "failedJob": 127191208464,
+  "failedStep": "Windows ordinary-account final EXE smoke",
+  "passedBeforeFailure": [
+    "frontend 71 protocol /1291 Vitest/typecheck/build",
+    "Mac complete backend",
+    "Windows backend regression/native credentials/runtime upgrade-offline reinstall/MSVC candidate/final EXE/Node24 and Node22 install recovery"
+  ],
+  "traceFacts": {
+    "pointFrame": 7,
+    "stableFrames": [
+      5,
+      6,
+      7
+    ],
+    "oldY": 552.25,
+    "newTop": 499.25,
+    "oldTop": 535.25,
+    "deltaY": -36,
+    "viewportChanged": false,
+    "scrollChanged": false,
+    "sameGeometry": false,
+    "sameHit": false,
+    "pressedEvents": 0
+  },
+  "scope": "Actual late layout movement is proven. Async projection changes detail DOM and was not awaited; this is a demonstrated missing readiness precondition, not proof that every possible late layout cause is eliminated. Native recheck still required.",
+  "fix": "Wait for real resolved-values caption before scroll/geometry sampling; preserve stable frames, immediate composite hit check and single pointer press. No coordinate offset, no retries or product/CSS changes.",
+  "compatibility": "caption exists in v0.2.20 and v0.2.21 sources; their native checks remain mandatory",
+  "redTests": {
+    "newTestsFailed": 2,
+    "originalTestsPassed": 18
+  },
+  "afterFixtureAdjustment": "The new wait exposed a fixture-only eager frame advance; mock now evaluates immediately like actual CDP wait. Original exact stable-frame/trace assertions unchanged; intermediate failed log retained.",
+  "fixedTests": {
+    "focused": 20,
+    "allProtocol": 73,
+    "failed": 0
+  },
+  "newHead": "477d7edeab74c04ad2d2cbc1c075442bfd49123b",
+  "appsTree": "a8bb18f9ff2781dbbfe67f91473a298f3cd74ae6",
+  "newCI": 42018439722,
+  "newCIState": "queued at admission; native result pending",
+  "published": false,
+  "upstreamPrAuthorization": "still pending user explicit response"
+}

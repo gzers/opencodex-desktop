@@ -1,0 +1,58 @@
+✔ overview accepts either complete cards or the real settled setup gate, never an empty or partial page (1.103834ms)
+✔ writes require the exact admitted immutable and saved sandbox, never a relative root or another account directory (0.703375ms)
+✔ invalid native roots are rejected before invoking any application command (0.638917ms)
+✔ 020 and 021 require the native keyboard/menu checks while older admitted images retain baseline behavior (0.289875ms)
+✔ native acceptance rejects unadmitted versions before IPC, while 020 and 021 enter the CDP driver (0.31175ms)
+✔ 021 uses public native AppModal/header X; the 020 upgrade image keeps its own mask/dialog contract (0.3895ms)
+✔ 0.2.20 executes the actual default-confirmation driver through its real layer transition (1.18125ms)
+✔ 0.2.21 executes the actual default-confirmation driver through its real layer transition (0.687875ms)
+✔ 021 refuses a third layer, incorrect parent/child, duplicate AppModal or any legacy mask before committing (2.018625ms)
+✔ native file writes require both saved and immutable model homes inside the admitted sandbox (0.262833ms)
+✔ export containment handles Windows canonical prefixes while rejecting siblings, root files and traversal (0.172625ms)
+✔ task preview JSON begins after the instruction section even when receipt instructions contain braces (0.55275ms)
+✔ native Save evidence requires changed file bytes and one exact backup without losing prior backups (6.416792ms)
+✔ native rename Save distinguishes one exact prewrite backup from its recovery journal (2.806291ms)
+✔ actual native menu driver waits through moving frames, rechecks a composite hit, then sends exactly one pointer click (2.743875ms)
+✖ native menu waits for delayed effective projection before sampling the trigger geometry (1.228792ms)
+✖ native menu never samples or clicks when effective projection does not become ready (1.654875ms)
+✔ native menu driver refuses movement or occlusion after stable frames before pressing, retaining the failed guard (2.035709ms)
+✔ continually moving menu geometry never receives pointer input (1.362417ms)
+✔ a real pointer click that does not open the inner menu retains the original failure and never retries (1.090667ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 18
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 70.550541
+
+✖ failing tests:
+
+test at test/smoke/windows-model-ui.test.mjs:215:1
+✖ native menu waits for delayed effective projection before sampling the trigger geometry (1.228792ms)
+  AssertionError [ERR_ASSERTION]: must wait for the known projection-dependent layout before acquiring coordinates
+      at TestContext.<anonymous> (file:///Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/windows-model-ui.test.mjs:220:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test/smoke/windows-model-ui.test.mjs:224:1
+✖ native menu never samples or clicks when effective projection does not become ready (1.654875ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/windows-model-ui.test.mjs:227:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /projection resolved before geometry sampling/,
+    operator: 'rejects',
+    diff: 'simple'
+  }

@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Native model menu target moved or became occluded before pointer input
+    at clickNativeModelMenu (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-model-ui.mjs:92:3)
+    at async verifyWindowsModelUi (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-model-ui.mjs:241:3)
+    at async file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-webview.mjs:101:56 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.22.2
+WebView smoke failed: 1
+at <ScriptBlock>, D:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-startup.ps1: line 131
+at <ScriptBlock>, D:\a\opencodex-desktop\opencodex-desktop\test\out\windows-ordinary\ordinary-child.ps1: line 65
