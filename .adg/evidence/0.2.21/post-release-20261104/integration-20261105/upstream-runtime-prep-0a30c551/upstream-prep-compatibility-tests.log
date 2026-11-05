@@ -1,0 +1,23 @@
+bun test v1.4.4 (38afee6c8)
+
+tests/clients/desktop-compatibility-launch.test.ts:
+(pass) Codex Desktop compatibility package launch > a same-shape PAC without a live runtime owner refuses before restart [0.71ms]
+(pass) Codex Desktop compatibility package launch > activation tolerates a BOM and preceding warnings but normalizes invalid or timed-out output [1.08ms]
+(pass) Codex Desktop compatibility package launch > the shipped Windows restart adapter captures and reapplies an active compatibility PAC [0.29ms]
+(pass) Codex Desktop compatibility package launch > an explicitly unreadable root command line survives parsing and refuses context capture [0.07ms]
+(pass) Codex Desktop compatibility package launch > helper arguments cannot override the main app and conflicting roots refuse before a stop [0.05ms]
+(pass) Codex Desktop compatibility package launch > a foreign same-shape endpoint and an invalidated owner refuse capture [0.03ms]
+(pass) Codex Desktop compatibility package launch > a stopped or replaced runtime cannot reuse a previously captured restart context [0.06ms]
+(pass) Codex Desktop compatibility package launch > accepts only canonical owned-shape loopback PAC URLs [0.05ms]
+(pass) Codex Desktop compatibility package launch > uses Windows package activation with PAC arguments and requires package readback [0.09ms]
+(pass) Codex Desktop compatibility package launch > an existing app or failed process discovery refuses before activation [0.04ms]
+(pass) Codex Desktop compatibility package launch > unverified activation or the wrong package publisher cannot report success [0.04ms]
+(pass) Codex Desktop compatibility package launch > non-Windows and armed tests never reach the real native app [0.02ms]
+(skip) Codex Desktop compatibility activation on real Windows > (unnamed)
+(skip) Codex Desktop compatibility activation on real Windows > the real Windows parser and COM service accept the adapter without launching an app
+
+ 12 pass
+ 2 skip
+ 0 fail
+ 53 expect() calls
+Ran 14 tests across 1 file. [119.00ms]

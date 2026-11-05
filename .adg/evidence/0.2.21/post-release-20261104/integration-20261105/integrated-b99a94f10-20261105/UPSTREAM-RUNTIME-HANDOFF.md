@@ -16,3 +16,8 @@ Mac补丁重放和4项协议测试通过，仅注入exec回调，非Windows原�
 ## 只读接续核对：上游实际集成分支
 
 已按MAINTAINERS.md核对，外部贡献PR应基于最新dev并以draft提交，不能从main直接开功能PR。固定dev提交0a30c551304927c93c26a96c034bd39a166c7460的桌面及app-server文件仍含逐进程GetOwner，两份Git blob身份和SHA256已验证，见upstream-dev-review.json。因此尚不能用“dev已经修复”解除本批运行包依赖；2.84补丁移植时须保留dev新增的命令行/兼容上下文。尚未创建fork、PR、issue或发送外部消息，等待当前用户明确授权。
+
+
+## 已有可审阅的本地dev移植补丁
+
+本机隔离准备已完成，详情在../upstream-runtime-prep-0a30c551/HANDOFF.md及runtime-owner-dev-prep-review.json。补丁留于/private/tmp/post021-final-integration-20261105/runtime-owner-dev-0a30c551-local.patch，SHA256 0d8eaaec8c361d914fb901db2c8ef6a36702ce3c7ec209cb3f255817f8e32bb7；源码未复制为本产品运行实现，也未对外提交。十文件修改前像/新增路径与固定dev一致，git apply检查和后像字节回放通过；109定向/12兼容启动通过，5项Windows专属未执行。Bun类型2306文件通过，查询构造器解释/编译同输出通过，十文件scanText无发现。完整dev分支、真实Windows原生、Git索引门和正式包尚待；当前材料不是发布依赖完成证据。上游模板PR预览已按Summary/Verification/Checklist准备，授权仍待。
