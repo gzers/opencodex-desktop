@@ -1,5 +1,6 @@
 param(
     [string]$ExpectedUser='Administrator',
+    [string]$TestRoot,
     [Parameter(Mandatory)][string]$OutputDirectory
 )
 $ErrorActionPreference='Stop'
@@ -10,9 +11,10 @@ $taskUser=$taskIdentity.Name.Split('\')[-1]
 if($taskUser -ine $ExpectedUser){throw 'Wrong Windows owner; run this preflight inside the authorized test account'}
 $taskWorkspace=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../../..'))
 $taskBoundary=Join-Path $taskWorkspace '.toolchain/post021-msvc-followup'
+if($TestRoot){$taskBoundary=[IO.Path]::GetFullPath($TestRoot)}
 $taskOutput=[IO.Path]::GetFullPath($OutputDirectory)
 if(!$taskOutput.StartsWith($taskBoundary+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase)){
-    throw 'Output must be a fresh child of the owned followup directory'
+    throw 'Output must be a fresh child of the explicit test root'
 }
 $taskAncestor=$taskOutput
 while($taskAncestor){
