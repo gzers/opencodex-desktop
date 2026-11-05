@@ -2,6 +2,7 @@ param(
     [Parameter(Mandatory)][string]$TargetIdentityFile,
     [Parameter(Mandatory)][string]$OutputDirectory,
     [string]$ForegroundReadyFile,
+    [ValidateRange(10,1800)][int]$ForegroundWaitSeconds=120,
     [ValidateRange(5,45)][int]$DurationSeconds=30,
     [switch]$PlanOnly
 )
@@ -73,8 +74,8 @@ $taskProfileHash=(Get-FileHash -LiteralPath $taskProfile -Algorithm SHA256).Hash
 . (Join-Path $PSScriptRoot 'gpu-foreground-admission.ps1')
 $taskForeground=$null
 if($ForegroundReadyFile -and !$PlanOnly){
-    Write-Output 'Waiting up to120s for isolated OpenCodeX foreground. Switch now; recording starts only after3s stable foreground.'
-    $taskForegroundDeadline=[datetimeoffset]::UtcNow.AddSeconds(120)
+    Write-Output ('Waiting up to'+$ForegroundWaitSeconds+'s for isolated OpenCodeX foreground. Recording starts only after3s stable foreground.')
+    $taskForegroundDeadline=[datetimeoffset]::UtcNow.AddSeconds($ForegroundWaitSeconds)
     while([datetimeoffset]::UtcNow -lt $taskForegroundDeadline){
         $taskCandidate=$null
         try{$taskCandidate=Get-Content -LiteralPath $taskForegroundPath -Raw -Encoding utf8|ConvertFrom-Json}catch{}
