@@ -1,0 +1,1 @@
+Administrator实际候选defaultlist于2026-11-05T08:57:21Z执行，原10000ms上限内1260.3851ms成功返回11个本账号正式Codex进程；sourcecandidateSHAe78f89e已核对，延长只读结果集合及原生创建精度完全相同。原Appx424ms成功，未requestQuit/forceStop/relaunch。当前只关闭Admin查询超时问题，不能据此关闭真实默认重启。候选service切换和public重试入口已准备，尚待执行。原发布2.84.0仍failed，候选不是正式发行版本。

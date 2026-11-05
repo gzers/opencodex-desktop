@@ -1,0 +1,143 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-POST021-WINDOWS-HARDWARE-CLOSEOUT-20261105",
+  "task_id": "TASK-OPENCODEX-POST021-WINDOWS-HARDWARE-CLOSEOUT-20261105",
+  "task_digest": "345ba03f279a952c89c4924f5113c5256bc944dfc52c8c707754f7fb6b60f16a",
+  "task_summary_digest": "1f8b32eeb0491f1798ccdf52fd33aabf4a27c518369f069f1c63e326feee4fbc",
+  "baseline_digest": "ae5dafff0a8a17effe3c3c951ba1bda25c1015e95b4c0a83e506e7d969d1b1c3",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/HANDOFF.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/USER-HARDWARE-DECISION.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/connection-normal.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/dark-high-connection-injected-fallback.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/dark-high-connection.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/dark-high-detail-sticky.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/dark-high-injected-fallback.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/dark-high-select-portal.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/dark-high-settings-feedback.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/dark-low-connection.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/dark-low-detail-sticky.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/dark-low-select-portal.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/dark-low-settings-feedback.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/dark-mid-connection.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/dark-mid-detail-sticky.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/dark-mid-select-portal.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/dark-mid-settings-feedback.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/dialog-matrix.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/fallback.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/light-high-connection.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/light-high-detail-sticky.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/light-high-select-portal.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/light-high-settings-feedback.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/light-low-connection.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/light-low-detail-sticky.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/light-low-select-portal.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/light-low-settings-feedback.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/light-mid-connection.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/light-mid-detail-sticky.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/light-mid-select-portal.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/light-mid-settings-feedback.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/native-dialog-final.jpg",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/production-matrix.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/restore.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/review.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-admin-probe-20261105/HANDOFF.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-admin-probe-20261105/previous-receipt-revision2.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-admin-probe-20261105/probe.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-admin-probe-20261105/review.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-candidate-20261105/HANDOFF.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-candidate-20261105/candidate-adapter-tests.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-candidate-20261105/candidate-default-current-owner.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-candidate-20261105/candidate-file-manifest.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-candidate-20261105/candidate-probe-entry-before-owner-message.ps1",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-candidate-20261105/candidate-restart-wrong-owner.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-candidate-20261105/native-owner.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-candidate-20261105/native-owner.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-candidate-20261105/owner-policy.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-candidate-20261105/owner-policy.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-candidate-20261105/patch-apply-verified.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-candidate-20261105/patch-check.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-candidate-20261105/patch-check.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-candidate-20261105/previous-receipt-revision1.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-candidate-20261105/review.json",
+    "test/smoke/post021-windows-final/build-runtime-probe-candidate.mjs",
+    "test/smoke/post021-windows-final/formal-candidate-restart.mjs",
+    "test/smoke/post021-windows-final/formal-default-probe.ts",
+    "test/smoke/post021-windows-final/formal-msix-service.ts",
+    "test/smoke/post021-windows-final/runtime-probe-candidate.test.ts",
+    "test/smoke/post021-windows-final/runtime-windows-owner-probe.patch",
+    "test/smoke/post021-windows-final/windows-desktop-owner-probe.ps1",
+    "test/smoke/post021-windows-final/windows-desktop-owner-probe.test.ps1"
+  ],
+  "checks": [
+    {
+      "name": "review:daily-boundary",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:hardware-user-exception",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:materials-functional-native",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:patch-integrity",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-candidate-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:runtime-candidate-default-restart",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:runtime-native-probe-candidate",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-admin-probe-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:runtime-original-failure-preserved",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/runtime-native-owner-candidate-20261105/HANDOFF.md"
+    }
+  ],
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-01",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-02",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-06",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-09",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-10",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/HANDOFF.md"
+    }
+  ],
+  "fact_impacts": [],
+  "completed_at": "2026-11-05T08:58:57.128334+00:00",
+  "summary": "用户硬件例外已绑定，新MSVC材质功能6生产/6dialog/2fallback通过，原帧率失败仅参考。14d3f397d提供原生SID/path/create默认查询本地运行包候选，PS5策略/Bun测试及patch精确重放通过，原10秒内当前账号14进程实测1.17秒；原发布包未改。Admin首次误用15119被守卫拒绝，等待正确账号只读和真实候选默认重启/新进程/配置读回，不生成完成证书。 Administrator候选default进程查询实际1260ms/11进程通过原10秒限，与扩展只读结果完全一致；该项由failed改passed，真实候选默认重启仍待执行。",
+  "revision": 3,
+  "summary_digest": "292c7144f36f942fcb00cea2ddd20ec03e98764592ec004c7ae1787a39ddbf53",
+  "content_digest": "0479ecc3bc5d84407eee64603e03e7c5a7bb7e8d9774be01615e22108244eb84"
+}

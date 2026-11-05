@@ -1,0 +1,21 @@
+Owner probe policy passed: owner/SID, sibling boundary, gone, generation change, native path/image mismatch, unknown owner, no partial stdout
+App-server probe policy passed: SID, narrow match, gone/reused, generation/path, live unknown, top-level failure, no partial output
+bun test v1.4.4 (38afee6c8)
+
+post021-windows-materials\test\smoke\post021-windows-final\runtime-probe-candidate.test.ts:
+(pass) candidate sends hex root and native owner probe with original bounded timeout [13.91ms]
+(pass) unreadable native identity stays unknown, never an empty process list [0.30ms]
+(pass) same-prefix neighboring package is still rejected after query [0.72ms]
+(pass) app-server candidate keeps narrow source regexes and rejects incomplete output [1.24ms]
+
+post021-windows-materials\test\smoke\post021-windows-final\formal-restart-observation.test.mjs:
+(pass) a real public error is terminal even when no invoke observer exists [2.89ms]
+(pass) closed notice alone cannot certify restart [0.61ms]
+
+post021-windows-materials\test\smoke\post021-windows-final\formal-native-ready.test.mjs:
+(pass) native commands wait beyond an initial blank WebView [0.17ms]
+(pass) a WebView that never mounts fails before any native command [2.46ms]
+
+ 8 pass
+ 0 fail
+Ran 8 tests across 3 files. [477.00ms]

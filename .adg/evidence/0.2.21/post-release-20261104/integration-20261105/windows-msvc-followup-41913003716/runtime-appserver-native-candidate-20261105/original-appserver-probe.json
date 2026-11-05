@@ -1,0 +1,37 @@
+{
+  "result": "read-only",
+  "acceptance": false,
+  "startedAtUtc": "2026-11-05T09:04:02.248Z",
+  "candidateKind": "local-runtime-source-candidate-not-published2.84.0",
+  "queries": [
+    {
+      "timeoutMs": 8000,
+      "diagnosticExtended": false,
+      "scriptSha256": "588272a42add75525fb7be21a7fb2f806829f823e3bd8bd3dfe7e4761f1a5c1e",
+      "code": "ETIMEDOUT",
+      "status": null,
+      "signal": "SIGTERM",
+      "stderrBytes": 0,
+      "stdoutBytes": 0,
+      "result": "failed",
+      "message": "spawnSync C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe ETIMEDOUT",
+      "elapsedMs": 8028.216600000001
+    },
+    {
+      "timeoutMs": 60000,
+      "diagnosticExtended": true,
+      "scriptSha256": "588272a42add75525fb7be21a7fb2f806829f823e3bd8bd3dfe7e4761f1a5c1e",
+      "result": "failed",
+      "message": "windows_enum_incomplete",
+      "elapsedMs": 13009.4278
+    }
+  ],
+  "actions": "No restart/kill/config write; only snapshot/catalog-state queries",
+  "defaultCatalogState": {
+    "state": "unknown",
+    "processes": [],
+    "catalogMtimeMs": null
+  },
+  "defaultCatalogElapsedMs": 8020.9627,
+  "finishedAtUtc": "2026-11-05T09:04:31.308Z"
+}
