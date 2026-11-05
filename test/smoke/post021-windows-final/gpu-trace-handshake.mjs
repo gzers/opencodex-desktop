@@ -1,5 +1,12 @@
 import { readFile } from 'node:fs/promises'
 
+export function handshakeWaitSeconds(value = '3600') {
+  if (!/^[0-9]+$/.test(value) || Number(value) < 1 || Number(value) > 43200) {
+    throw Error('Administrator handshake wait must be 1..43200 seconds')
+  }
+  return Number(value)
+}
+
 // Accept historical Windows PowerShell 5.1 UTF-8 output too. A partial write
 // may be retried; permissions and other IO errors must remain visible.
 export async function readCollectorStart(file) {

@@ -4,10 +4,11 @@ import { join, relative, isAbsolute } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { connect } from './cdp-session.mjs'
 import { assertModelSandbox } from '../windows-model-ui.mjs'
-import { readCollectorStart, assertCaptureOverlap } from './gpu-trace-handshake.mjs'
+import { readCollectorStart, assertCaptureOverlap, handshakeWaitSeconds } from './gpu-trace-handshake.mjs'
 
-const [endpoint, sandboxRoot, outputRoot] = process.argv.slice(2)
-assert(endpoint && sandboxRoot && outputRoot, 'Usage: node gpu-trace-scene.mjs <CDP endpoint> <sandbox> <fresh owned output directory>')
+const [endpoint, sandboxRoot, outputRoot, waitArgument] = process.argv.slice(2)
+const waitSeconds = handshakeWaitSeconds(waitArgument)
+assert(endpoint && sandboxRoot && outputRoot, 'Usage: node gpu-trace-scene.mjs <CDP endpoint> <sandbox> <fresh owned output directory> [administrator wait seconds, max43200]')
 const tools = await realpath(fileURLToPath(new URL('../../../../.toolchain/', import.meta.url)))
 const output = await realpath(outputRoot), sandbox = await realpath(sandboxRoot)
 const child = (root, path) => { const part = relative(root, path); return part && part !== '..' && !part.startsWith('..\\') && !part.startsWith('../') && !isAbsolute(part) }
@@ -42,8 +43,8 @@ try {
   const start = source.indexOf('async function performanceSample(scroll) {'), end = source.indexOf('\nconst results = ', start)
   assert(start >= 0 && end > start, 'Original QA sampler not found')
   const sample = new Function('evaluate', source.slice(start, end) + ';return performanceSample')(evaluate)
-  const deadline = Date.now() + 3600000
-  await save('scene-ready.json', { at: new Date().toISOString(), pid: expected.pid, ready: true, waitLimitSeconds: 3600 })
+  const deadline = Date.now() + waitSeconds * 1000
+  await save('scene-ready.json', { at: new Date().toISOString(), pid: expected.pid, ready: true, waitLimitSeconds: waitSeconds, expiresAtUtc: new Date(deadline).toISOString() })
   let started
   while (Date.now() < deadline) {
     await heartbeat()
@@ -51,7 +52,7 @@ try {
     if (started?.recorderStarted) break
     await new Promise(r => setTimeout(r, 500))
   }
-  assert(started?.recorderStarted, 'No successful administrator recording observed in 3600s; no sample performed')
+  assert(started?.recorderStarted, 'No successful administrator recording observed in ' + waitSeconds + 's; no sample performed')
   for (const key of ['pid', 'exe', 'createdAtUtcTicks', 'sessionId', 'ownerDomain', 'ownerUser']) assert.equal(started.targetAtStart[key], expected[key], 'Collector target mismatch: ' + key)
   assert.equal(started.targetExeSha256, expected.sha256)
   Object.assign(report, { collectorInstance: started.instanceName, collectorStartedAtUtc: started.startedAtUtc })

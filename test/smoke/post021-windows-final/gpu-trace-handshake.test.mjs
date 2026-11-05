@@ -3,7 +3,13 @@ import { mkdtemp, writeFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
-import { readCollectorStart, assertCaptureOverlap } from './gpu-trace-handshake.mjs'
+import { readCollectorStart, assertCaptureOverlap, handshakeWaitSeconds } from './gpu-trace-handshake.mjs'
+
+test('administrator wait is bounded independently of capture and frame budgets', () => {
+  assert.equal(handshakeWaitSeconds(), 3600)
+  assert.equal(handshakeWaitSeconds('43200'), 43200)
+  for (const value of ['0', '-1', '43201', 'Infinity', '1.5', '']) assert.throws(() => handshakeWaitSeconds(value))
+})
 
 test('PS5 BOM, PS7 UTF-8 and incomplete handshake writes', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'ocx-gpu-handshake-')), file = join(dir, 'started.json')
