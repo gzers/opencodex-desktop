@@ -65,22 +65,25 @@ $taskInstance='ocx-post021-gpu-'+[guid]::NewGuid().ToString('N')
 $taskWpr=Join-Path ([Environment]::GetFolderPath('System')) 'wpr.exe'
 if(!(Test-Path -LiteralPath $taskWpr)){throw 'Windows Performance Recorder is unavailable'}
 New-Item -ItemType Directory -Path $taskOutput|Out-Null
-function Invoke-Recorder([string[]]$Arguments,[string]$Name){
+function Write-Report([string]$Name,$Value){
+    # PS5 Set-Content -Encoding utf8 emits a BOM. Use the same UTF-8 wire
+    # format in PS5 and PS7 so the ordinary Node sampler can read it.
+    [IO.File]::WriteAllText((Join-Path $taskOutput $Name),($Value|ConvertTo-Json -Depth 8),[Text.UTF8Encoding]::new($false))
+}
+function Invoke-Recorder([string[]]$Arguments,[string]$Name,[int]$WaitMilliseconds=20000){
     $taskStdout=Join-Path $taskOutput ($Name+'.stdout.log')
     $taskStderr=Join-Path $taskOutput ($Name+'.stderr.log')
-    $taskInfo=[Diagnostics.ProcessStartInfo]::new()
-    $taskInfo.FileName=$taskWpr
-    $taskInfo.Arguments=($Arguments|ForEach-Object {'"'+$_+'"'}) -join ' '
-    $taskInfo.UseShellExecute=$false;$taskInfo.CreateNoWindow=$true
-    $taskInfo.WindowStyle=[Diagnostics.ProcessWindowStyle]::Hidden
-    $taskInfo.RedirectStandardOutput=$true;$taskInfo.RedirectStandardError=$true
-    $taskP=[Diagnostics.Process]::Start($taskInfo)
+    # File redirection survives an observation timeout; disposing an unread
+    # pipe would lose the eventual merge result. Never kill a timed-out WPR.
+    $taskP=Start-Process -FilePath $taskWpr -ArgumentList (($Arguments|ForEach-Object {'"'+$_+'"'}) -join ' ') -WindowStyle Hidden -PassThru -RedirectStandardOutput $taskStdout -RedirectStandardError $taskStderr
+    # Keep the native handle open before a short-lived status command exits.
+    # Windows PowerShell 5.1 can otherwise return a null ExitCode.
+    $taskHandle=$taskP.Handle
     try{
-        $taskOut=$taskP.StandardOutput.ReadToEndAsync();$taskErr=$taskP.StandardError.ReadToEndAsync()
-        if(!$taskP.WaitForExit(20000)){throw ('Recorder command still running after20s; inspect its PID '+$taskP.Id+' before recovery. No automatic cancel or process kill.')}
-        $taskOutText=$taskOut.GetAwaiter().GetResult();$taskErrText=$taskErr.GetAwaiter().GetResult()
-        [IO.File]::WriteAllText($taskStdout,$taskOutText)
-        [IO.File]::WriteAllText($taskStderr,$taskErrText)
+        Write-Report ($Name+'.process.json') ([ordered]@{pid=$taskP.Id;exe=$taskWpr;createdAtUtcTicks=[string]$taskP.StartTime.ToUniversalTime().Ticks;arguments=$Arguments;observedAtUtc=[datetimeoffset]::UtcNow.ToString('o')})
+        if(!$taskP.WaitForExit($WaitMilliseconds)){throw ('Recorder command still running after '+$WaitMilliseconds+'ms; inspect '+$Name+'.process.json and PID '+$taskP.Id+' before recovery. No automatic cancel or process kill.')}
+        $taskP.WaitForExit()
+        $taskOutText=[IO.File]::ReadAllText($taskStdout);$taskErrText=[IO.File]::ReadAllText($taskStderr)
         return [ordered]@{arguments=$Arguments;exitCode=$taskP.ExitCode;stdout=$taskOutText;stderr=$taskErrText}
     }finally{$taskP.Dispose()}
 }
@@ -105,7 +108,7 @@ try{
     # concurrent administrator's default or other named recording is never ours.
     $taskReport.proposedStart=@('-start','GPU','-start','DesktopComposition','-filemode','-recordtempto',$taskOutput,'-instancename',$taskInstance)
     $taskReport.recoveryStop=@($taskWpr,'-stop',(Join-Path $taskOutput 'gpu-dwm.etl'),'-instancename',$taskInstance)
-    $taskReport|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $taskOutput 'collector-start-intent.json') -Encoding utf8
+    Write-Report 'collector-start-intent.json' $taskReport
     if($PlanOnly){$taskReport.result='plan-validated-no-recording';return}
     $taskPrincipal=[Security.Principal.WindowsPrincipal]::new([Security.Principal.WindowsIdentity]::GetCurrent())
     if(!$taskPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){
@@ -118,7 +121,7 @@ try{
     if($taskReport.start.exitCode -ne 0){throw 'GPU/DWM profile admission failed; preserve logs; no policy adjustment attempted'}
     $taskStarted=$true;$taskReport.recorderStarted=$true
     $taskReport.startedAtUtc=[datetimeoffset]::UtcNow.ToString('o')
-    $taskReport|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $taskOutput 'collector-started.json') -Encoding utf8
+    Write-Report 'collector-started.json' $taskReport
     Write-Output ('GPU/DWM trace active for '+$DurationSeconds+'s. Keep the isolated test window foreground; run the planned scene in its existing session.')
     Start-Sleep -Seconds $DurationSeconds
     $taskReport.targetAtEnd=Read-OwnedTarget
@@ -130,7 +133,7 @@ try{
     if($taskStarted){
         $taskTrace=Join-Path $taskOutput 'gpu-dwm.etl'
         try{
-            $taskReport.stop=Invoke-Recorder @('-stop',$taskTrace,'-instancename',$taskInstance) 'stop'
+            $taskReport.stop=Invoke-Recorder @('-stop',$taskTrace,'-instancename',$taskInstance) 'stop' 60000
             $taskReport.recorderStopped=($taskReport.stop.exitCode -eq 0)
             if(!$taskReport.recorderStopped){$taskReport.result='failed';$taskReport.stopError='Owned recording did not confirm stop; manual inspection required, no automatic cancel'}
             if(Test-Path -LiteralPath $taskTrace){
@@ -140,7 +143,7 @@ try{
         }catch{$taskReport.result='failed';$taskReport.stopError=$_.Exception.Message}
     }
     $taskReport.finishedAtUtc=[datetimeoffset]::UtcNow.ToString('o')
-    $taskReport|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $taskOutput 'collector-result.json') -Encoding utf8
+    Write-Report 'collector-result.json' $taskReport
 }
 if($taskReport.result -eq 'failed'){
     throw 'Collector did not confirm a complete owned recording; inspect collector-result.json and its named recovery command'
