@@ -7,6 +7,7 @@ import {createHash} from 'node:crypto'
 import {connect} from './cdp-session.mjs'
 import {assertModelSandbox} from '../windows-model-ui.mjs'
 import {waitForNativeReady} from './formal-native-ready.mjs'
+import {observePublicRestart} from './formal-restart-observation.mjs'
 const [planFile]=process.argv.slice(2),plan=JSON.parse(await readFile(planFile,'utf8')),root=resolve(plan.runRoot)
 assert.equal(root,resolve('D:/Users/Administrator/WorkSpace/Test/post021-formal-20261105-1518'))
 const ps=join(process.env.SystemRoot??'C:/Windows','System32/WindowsPowerShell/v1.0/powershell.exe')
@@ -40,7 +41,7 @@ try{
  assertModelSandbox({about:await cdp.invoke('app_about'),dataRoot:await cdp.invoke('get_data_root_config')},join(root,'sandbox'))
  const currentPolicy=await cdp.invoke('model_file_snapshot')
  assert.equal(currentPolicy.policyDigest,saved.afterDigest,'Saved policy drifted after real Save')
- assert.equal(await evaluate(()=>window.__formalRefresh?.length),0,'Previous restart result exists; do not repeat')
+ assert.equal((await evaluate(observePublicRestart)).state,'pending','A previous public restart result exists; do not repeat')
  const visible=await evaluate(()=>[...document.querySelectorAll('dialog[open] button')].some(b=>b.textContent.trim()==='确认重启'&&!b.disabled))
  assert(visible,'Actual pending public confirmation no longer available; no artificial notice created')
  const shot=async name=>{const s=await cdp.call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,name+'.png'),Buffer.from(s.data,'base64'))}
@@ -48,8 +49,8 @@ try{
  report.requestedAtUtc=new Date().toISOString();await save('request-started.json',report)
  await evaluate(()=>[...document.querySelectorAll('dialog[open] button')].find(b=>b.textContent.trim()==='确认重启'&&!b.disabled).click())
  let outcome;const deadline=Date.now()+150000
- while(Date.now()<deadline){outcome=await evaluate(()=>window.__formalRefresh?.[0]);if(outcome)break;await new Promise(r=>setTimeout(r,300))}
- await save('production-restart-result.json',outcome??{result:'no-native-result-before-deadline'})
+ while(Date.now()<deadline){outcome=await evaluate(observePublicRestart);if(outcome.state!=='pending')break;await new Promise(r=>setTimeout(r,300))}
+ await save('production-restart-result.json',{source:'public UI; not a raw native result',observation:outcome??{state:'deadline'}})
  const after=await snapshot('process-after-restart')
  const beforeShells=before.own.filter(p=>win32.basename(p.path??'').toLowerCase()==='chatgpt.exe')
  const newShells=after.own.filter(p=>win32.basename(p.path??'').toLowerCase()==='chatgpt.exe'&&!beforeShells.some(s=>s.pid===p.pid&&s.createdAtUtcTicks===p.createdAtUtcTicks))
@@ -60,7 +61,7 @@ try{
  const config=await readFile('C:/Users/Administrator/.codex/config.toml','utf8'),disk=JSON.parse(await readFile(join(root,'sandbox','opencodex-home','config.json'),'utf8'))
  await save('config-readback.json',{contextWindow:disk.providers.Post021AdminFixture.contextWindow,policyDigest:(await cdp.invoke('model_file_snapshot')).policyDigest,codexConfigSha256:createHash('sha256').update(config).digest('hex'),codexConfigBytes:Buffer.byteLength(config),routingContainsLocalPort:config.includes('127.0.0.1:'+plan.servicePort),scope:'Disk/native-manager readback after actual default-adapter action; model generation/picker refresh not asserted'})
  await shot('after-default-restart')
- assert(outcome?.result?.success&&outcome.result.restarted,'Production manager did not confirm complete default restart')
+ assert(outcome?.state==='ui-confirmed','Production manager did not confirm complete default restart')
  assert.equal(oldSurvivors.length,0,'Old formal shell generation survived')
  const expectedImageRoot=win32.dirname(win32.resolve(initial.formalBefore[0].path)).toLowerCase()+win32.sep
  assert(newShells.length&&newShells.every(p=>p.sessionId===1&&win32.resolve(p.path).toLowerCase().startsWith(expectedImageRoot)),'New formal package generation not proved')

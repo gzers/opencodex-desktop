@@ -4,6 +4,7 @@ import {join,win32} from 'node:path'
 import {createHash} from 'node:crypto'
 import {assertModelSandbox} from '../windows-model-ui.mjs'
 import {waitForNativeReady} from './formal-native-ready.mjs'
+import {observePublicRestart} from './formal-restart-observation.mjs'
 export async function verifyNative({cdp,plan,root,preflight,snapshot,api,report,managerPid,shells,save}){
  const sleep=ms=>new Promise(r=>setTimeout(r,ms)),hash=data=>createHash('sha256').update(data).digest('hex')
  const env={OPENCODEX_HOME:join(root,'sandbox','opencodex-home')}
@@ -24,8 +25,6 @@ export async function verifyNative({cdp,plan,root,preflight,snapshot,api,report,
  await evaluate(()=>{const m=document.querySelector('#app').__vue_app__.config.globalProperties.$pinia._s.get('model-config');const c=m.channelDraft.channels.find(c=>c.connection.providerId==='Post021AdminFixture');if(!c)throw Error('Fixture draft missing');c.defaults.contextWindow={mode:'custom',value:65547}})
  await wait(()=>{const b=document.querySelector('[aria-label="保存渠道草稿"]');return b&&!b.disabled},'public Save enabled')
  await shot('01-before-real-save')
- // Observe only the final IPC result. Forward the original command unchanged.
- await evaluate(()=>{const api=window.__TAURI_INTERNALS__,original=api.invoke.bind(api);window.__formalRefresh=[];api.invoke=async(cmd,args,options)=>{try{const value=await original(cmd,args,options);if(cmd==='model_policy_refresh_cache')window.__formalRefresh.push({result:value,at:new Date().toISOString()});return value}catch(e){if(cmd==='model_policy_refresh_cache')window.__formalRefresh.push({error:String(e),at:new Date().toISOString()});throw e}}})
  await evaluate(()=>document.querySelector('[aria-label="保存渠道草稿"]').click())
  await wait(()=>[...document.querySelectorAll('button')].some(b=>b.textContent.trim()==='立即重启 Codex'),'actual Save result notice')
  const saved=await cdp.invoke('model_file_snapshot')
@@ -38,9 +37,10 @@ export async function verifyNative({cdp,plan,root,preflight,snapshot,api,report,
  const finalBefore=await snapshot('process-before-restart')
  assert(finalBefore.own.some(p=>shells.some(s=>s.pid===p.pid&&s.createdAtUtcTicks===p.createdAtUtcTicks)),'Formal target changed before restart')
  await evaluate(()=>[...document.querySelectorAll('dialog[open] button')].find(b=>b.textContent.trim()==='确认重启').click())
- const outcome=await wait(()=>window.__formalRefresh?.[0],'official default restart result',150000)
- await save('production-restart-result.json',outcome)
- assert(outcome.result?.success && outcome.result?.restarted,'Production manager did not confirm complete default restart')
+ let observed;const restartDeadline=Date.now()+150000
+ while(Date.now()<restartDeadline){observed=await evaluate(observePublicRestart);if(observed.state!=='pending')break;await sleep(300)}
+ await save('production-restart-result.json',{source:'public UI; not a raw native result',observation:observed})
+ assert(observed?.state==='ui-confirmed','Production manager did not confirm complete default restart')
  const after=await snapshot('process-after-restart')
  assert(shells.every(s=>!after.own.some(p=>p.pid===s.pid&&p.createdAtUtcTicks===s.createdAtUtcTicks)),'Old formal shell generation survived')
  const replacements=after.own.filter(p=>win32.basename(p.path??'').toLowerCase()==='chatgpt.exe' && !shells.some(s=>s.pid===p.pid&&s.createdAtUtcTicks===p.createdAtUtcTicks))
