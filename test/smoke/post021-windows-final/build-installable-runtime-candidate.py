@@ -2,7 +2,8 @@
 
 Inputs: registry metadata, its original tgz, reviewed source checkout, Mac port
 review JSON, and a fresh output directory. The three runtime files must match
-the supplied review exactly. All other release files retain their original bytes.
+the supplied review exactly. A separately reviewed provider-reload baseline fix
+may be included in a new candidate revision. Other files retain original bytes.
 """
 import base64
 import gzip
@@ -30,6 +31,11 @@ def json_bytes(value):
 def build(registry_path, archive_path, source_root, review_path, output_root):
     registry = json.loads(Path(registry_path).read_bytes())
     review = json.loads(Path(review_path).read_bytes())
+    extra = review.get('extraRuntimePaths', [])
+    assert extra in ([], ['src/config/live-reconcile.ts']), 'Unapproved extra runtime path'
+    runtime_paths = (*RUNTIME_PATHS, *extra)
+    revision = review.get('candidateRevision', 1)
+    assert type(revision) is int and 1 <= revision <= 99, 'Invalid candidate revision'
     source_root, output_root = Path(source_root).resolve(), Path(output_root).resolve()
     assert not output_root.exists(), 'A fresh output directory is required'
     archive = Path(archive_path).read_bytes()
@@ -54,7 +60,7 @@ def build(registry_path, archive_path, source_root, review_path, output_root):
     assert package['name'] == registry['name'] and package['version'] == registry['version']
     original = dict(files)
     by_path = {row['path']: row for row in review['files']}
-    for name in RUNTIME_PATHS:
+    for name in runtime_paths:
         expected = by_path[name]
         if expected['beforeSha256'] is None:
             assert name not in files, 'New helper already exists in the release'
@@ -65,7 +71,7 @@ def build(registry_path, archive_path, source_root, review_path, output_root):
         data = candidate_path.read_bytes()
         assert sha(data) == expected['afterSha256'], 'Candidate source drift: ' + name
         files[name], modes[name] = data, 0o644
-    version = registry['version'] + '-post021.ownerquery.1'
+    version = registry['version'] + '-post021.ownerquery.' + str(revision)
     identity = {
         'kind': 'local-installable-candidate-not-upstream-published',
         'basePublishedVersion': registry['version'],
@@ -73,7 +79,7 @@ def build(registry_path, archive_path, source_root, review_path, output_root):
         'baseTarballSha256': sha(archive),
         'portTargetDev': review['targetDev'],
         'reviewedPatchSha256': review['patchSha256'],
-        'runtimeFiles': {name: sha(files[name]) for name in RUNTIME_PATHS},
+        'runtimeFiles': {name: sha(files[name]) for name in runtime_paths},
     }
     package.update(version=version, post021Candidate=identity)
     files['package.json'] = json_bytes(package)
@@ -83,11 +89,11 @@ def build(registry_path, archive_path, source_root, review_path, output_root):
     manifest = json.loads(files[COMPATIBILITY_MANIFEST])
     records = {row['path']: row for row in manifest['files']}
     assert len(records) == len(manifest['files']) and 'package.json' in records
-    for name in ('package.json', *RUNTIME_PATHS):
+    for name in ('package.json', *runtime_paths):
         records[name] = {'path': name, 'sha256': sha(files[name])}
     manifest['files'] = [records[key] for key in sorted(records, key=lambda x: x.encode())]
     files[COMPATIBILITY_MANIFEST] = json_bytes(manifest)
-    allowed = {'package.json', COMPATIBILITY_MANIFEST, *RUNTIME_PATHS}
+    allowed = {'package.json', COMPATIBILITY_MANIFEST, *runtime_paths}
     assert all(name in allowed or data == original[name] for name, data in files.items())
     output_root.mkdir(parents=True)
     target = output_root / ('opencodex-' + version + '.tgz')

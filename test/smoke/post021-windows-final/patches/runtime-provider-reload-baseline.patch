@@ -1,0 +1,149 @@
+--- a/src/config/live-reconcile.ts
++++ b/src/config/live-reconcile.ts
+@@ -177,7 +177,33 @@
+   observeAccountAutoPauseRevisions(config, persistedConfig ?? readRawConfigJson() ?? { accountAutoPausePolicyRevisions: null }, pauseBefore);
+   const baseline = liveConfigBaseline.get(config);
+   if (baseline) baseline.providers[name] = structuredClone(provider);
+-  if (persistedConfig) refreshPreservedProviderOwner(config, persistedConfig);
++  if (persistedConfig) {
++    // Reload may introduce a freshly renamed provider into this long-lived
++    // instance. Its disk baseline was renamed in the same saved transaction.
++    // Adopt that provider's observations before convergence; otherwise the
++    // absent live baseline bootstraps a new updatedAt and rewrites config.json.
++    adoptProviderDiscovery(config, persistedConfig, name);
++    if (baseline) adoptProviderDiscovery(baseline, persistedConfig, name);
++    refreshPreservedProviderOwner(config, persistedConfig);
++  }
++}
++
++function adoptProviderDiscovery(target: OcxConfig, saved: OcxConfig, name: string): void {
++  for (const key of ["knownModels", "recentArrivals"] as const) {
++    const rows = saved.modelDiscovery?.[key];
++    if (rows && Object.hasOwn(rows, name)) {
++      const discovery = target.modelDiscovery ??= {};
++      // The two maps have different row types; selecting the key before
++      // assigning retains their exact schema without changing sibling rows.
++      if (key === "knownModels") {
++        (discovery.knownModels ??= {})[name] = structuredClone(saved.modelDiscovery!.knownModels![name]!);
++      } else {
++        (discovery.recentArrivals ??= {})[name] = structuredClone(saved.modelDiscovery!.recentArrivals![name]!);
++      }
++    } else if (target.modelDiscovery?.[key]) {
++      delete target.modelDiscovery[key]![name];
++    }
++  }
+ }
+ 
+ /** Adopt only the committed next-start preference; preserve unrelated pending live edits. */
+--- /dev/null
++++ b/tests/server/provider-reload-discovery.test.ts
+@@ -0,0 +1,79 @@
++import { afterEach, beforeEach, expect, spyOn, test } from 'bun:test';
++import { ManagementRequest as Request } from '../helpers/management-auth';
++import { readFileSync } from 'node:fs';
++import { loadConfig, saveConfig } from '../../src/config';
++import { saveConfigPreservingClaudeCode } from '../../src/config/live-reconcile';
++import { handleManagementAPI } from '../../src/server/management-api';
++import * as destinations from '../../src/lib/destination-policy';
++import { LOCAL_PROVIDER_RELOAD_NAME_HEADER, LOCAL_PROVIDER_RELOAD_PATH } from '../../src/lib/local-provider-reload-contract';
++import { reconcileSuccessfulModelDiscoveries } from '../../src/providers/new-model-policy';
++import { catalogConvergenceFactory } from '../helpers/catalog-convergence';
++import { createTempHome, type TempHome } from '../helpers/temp-home';
++import type { OcxConfig } from '../../src/types';
++
++const stamp = '2026-01-01T00:00:00.000Z';
++let home: TempHome;
++let dns: ReturnType<typeof spyOn>;
++beforeEach(() => {
++  home = createTempHome('ocx-reload-discovery-');
++  dns = spyOn(destinations, 'providerDestinationResolvedError').mockResolvedValue(null);
++});
++afterEach(() => { dns.mockRestore(); home.remove(); });
++const bytes = () => readFileSync(home.path('config.json'));
++const request = () => new Request('http://127.0.0.1' + LOCAL_PROVIDER_RELOAD_PATH, {
++  method: 'POST', headers: { [LOCAL_PROVIDER_RELOAD_NAME_HEADER]: 'renamed' },
++});
++
++function initial(): OcxConfig {
++  return { port: 0, hostname: '127.0.0.1', defaultProvider: 'original', providers: {
++    original: { adapter: 'openai-chat', baseUrl: 'https://fixture.invalid/v1', models: ['raw-model'], selectedModels: ['raw-model'] },
++    sibling: { adapter: 'openai-chat', baseUrl: 'https://sibling.invalid/v1', models: ['sibling-model'] },
++  }, modelDiscovery: { knownModels: {
++    original: { ids: ['raw-model'], removed: [], updatedAt: stamp },
++    sibling: { ids: ['sibling-model'], removed: [], updatedAt: stamp },
++  } } };
++}
++
++test('reload of a freshly renamed provider uses its persisted discovery baseline before catalog convergence', async () => {
++  saveConfig(initial());
++  const live = loadConfig();
++  const saved = loadConfig();
++  saved.providers.renamed = saved.providers.original!; delete saved.providers.original;
++  saved.defaultProvider = 'renamed';
++  saved.modelDiscovery!.knownModels!.renamed = saved.modelDiscovery!.knownModels!.original!;
++  delete saved.modelDiscovery!.knownModels!.original;
++  saveConfig(saved);
++  const before = bytes();
++  let entered = false;
++  const req = request();
++  const response = await handleManagementAPI(req, new URL(req.url), live, {
++    createManagementConvergeCodex: config => catalogConvergenceFactory(() => {
++      entered = true;
++      const mutable = config as OcxConfig;
++      const changed = reconcileSuccessfulModelDiscoveries({ config: mutable,
++        models: [{ provider: 'renamed', id: 'raw-model' }], authoritativeProviders: ['renamed'], now: '2026-11-05T00:00:00.000Z' });
++      if (changed) saveConfigPreservingClaudeCode(mutable);
++    })(config),
++  }, 'local-provider-reload-capability');
++  expect(response?.status).toBe(200); expect(entered).toBe(true);
++  expect(live.modelDiscovery?.knownModels?.renamed?.updatedAt).toBe(stamp);
++  expect(bytes()).toEqual(before);
++});
++
++test('reload rebases only the target observations and retains unrelated pending live discoveries', async () => {
++  const saved = initial();
++  saved.providers.renamed = saved.providers.original!; delete saved.providers.original;
++  saved.defaultProvider = 'renamed';
++  saved.modelDiscovery!.knownModels!.renamed = saved.modelDiscovery!.knownModels!.original!;
++  delete saved.modelDiscovery!.knownModels!.original;
++  saveConfig(saved);
++  const live = loadConfig();
++  live.modelDiscovery!.knownModels!.renamed!.updatedAt = 'stale-live';
++  live.modelDiscovery!.knownModels!.sibling!.ids.push('pending-sibling');
++  const before = bytes(), req = request();
++  const response = await handleManagementAPI(req, new URL(req.url), live, { createManagementConvergeCodex: catalogConvergenceFactory() }, 'local-provider-reload-capability');
++  expect(response?.status).toBe(200);
++  expect(live.modelDiscovery?.knownModels?.renamed?.updatedAt).toBe(stamp);
++  expect(live.modelDiscovery?.knownModels?.sibling?.ids).toEqual(['sibling-model', 'pending-sibling']);
++  expect(bytes()).toEqual(before);
++});
+--- a/scripts/test-layout/layout-clients.json
++++ b/scripts/test-layout/layout-clients.json
+@@ -1,4 +1,5 @@
+ {
++  "provider-reload-discovery.test.ts": "server",
+   "windows-process-identity.test.ts": "clients",
+   "omo-responses-loop.test.ts": "clients",
+   "codex-launcher-endpoint.test.ts": "codex-integration",
+--- a/tests/fixtures/test-layout-expected.json
++++ b/tests/fixtures/test-layout-expected.json
+@@ -1,4 +1,4 @@
+-{ "windows-process-identity.test.ts": "clients", "kimi-monthly-quota.test.ts": "providers", "sync-fanout.test.ts": "cli", "sync-command-fanout.test.ts": "cli", "link-pinned-sync-argv.test.ts": "clients", "sync-link-status.test.ts": "cli", "sync-fanout-process.test.ts": "cli", "codex-installation-acl.test.ts": "codex-integration", "codex-installation-id.test.ts": "codex-integration", "codex-installation-wire.test.ts": "codex-integration", "codex-installation-failover.test.ts": "responses", "lmstudio-system-policy.test.ts": "config", "openai-chat-single-system.test.ts": "adapters/openai", "update-reclaim-authorizer.test.ts": "update", "update-capability-policy.test.ts": "update", "update-service-home.test.ts": "update", "update-service-home-policy.test.ts": "update", "update-home-recovery.test.ts": "update", "update-recovery-authority.test.ts": "update", "update-recovery-boundaries.test.ts": "update", "update-home-launcher.test.ts": "update", "update-home-worker.test.ts": "update", "update-mutation-boundaries.test.ts": "update", "update-mutation-guard.test.ts": "update", "update-guarded-ops.test.ts": "update", "update-effect-authority.test.ts": "update", "update-windows-wrapper-authority.test.ts": "update", "update-mutation-scanner.test.ts": "update", "refreshed-upstream-deadlines.test.ts": "responses", "local-upstream-deadlines.test.ts": "responses", "service-desktop-recovery.test.ts": "service", "provider-input-modalities.test.ts": "providers", "turn-membership.test.ts": "responses", "turn-membership-ingress.test.ts": "responses", "workbuddy-quota.test.ts": "providers", "workbuddy-login.test.ts": "oauth", "workbuddy-adapter.test.ts": "adapters", "workbuddy-provider.test.ts": "providers", "link-tunnel-history.test.ts": "clients", "link-readiness.test.ts": "clients", "link-diagnostics.test.ts": "clients", "combo-description.test.ts": "routing", "combo-description-catalog.test.ts": "codex-integration", "catalog-auto-review-override.test.ts": "codex-integration", "management-auto-review-settings.test.ts": "server", "management-auto-review-auth.test.ts": "server", "prefer-model-alias-ids.test.ts": "server", "responses-mimo-envelope.test.ts": "responses", "responses-call-id-linkage.test.ts": "responses", "responses-phase-inference.test.ts": "responses",
++{ "provider-reload-discovery.test.ts": "server", "windows-process-identity.test.ts": "clients", "kimi-monthly-quota.test.ts": "providers", "sync-fanout.test.ts": "cli", "sync-command-fanout.test.ts": "cli", "link-pinned-sync-argv.test.ts": "clients", "sync-link-status.test.ts": "cli", "sync-fanout-process.test.ts": "cli", "codex-installation-acl.test.ts": "codex-integration", "codex-installation-id.test.ts": "codex-integration", "codex-installation-wire.test.ts": "codex-integration", "codex-installation-failover.test.ts": "responses", "lmstudio-system-policy.test.ts": "config", "openai-chat-single-system.test.ts": "adapters/openai", "update-reclaim-authorizer.test.ts": "update", "update-capability-policy.test.ts": "update", "update-service-home.test.ts": "update", "update-service-home-policy.test.ts": "update", "update-home-recovery.test.ts": "update", "update-recovery-authority.test.ts": "update", "update-recovery-boundaries.test.ts": "update", "update-home-launcher.test.ts": "update", "update-home-worker.test.ts": "update", "update-mutation-boundaries.test.ts": "update", "update-mutation-guard.test.ts": "update", "update-guarded-ops.test.ts": "update", "update-effect-authority.test.ts": "update", "update-windows-wrapper-authority.test.ts": "update", "update-mutation-scanner.test.ts": "update", "refreshed-upstream-deadlines.test.ts": "responses", "local-upstream-deadlines.test.ts": "responses", "service-desktop-recovery.test.ts": "service", "provider-input-modalities.test.ts": "providers", "turn-membership.test.ts": "responses", "turn-membership-ingress.test.ts": "responses", "workbuddy-quota.test.ts": "providers", "workbuddy-login.test.ts": "oauth", "workbuddy-adapter.test.ts": "adapters", "workbuddy-provider.test.ts": "providers", "link-tunnel-history.test.ts": "clients", "link-readiness.test.ts": "clients", "link-diagnostics.test.ts": "clients", "combo-description.test.ts": "routing", "combo-description-catalog.test.ts": "codex-integration", "catalog-auto-review-override.test.ts": "codex-integration", "management-auto-review-settings.test.ts": "server", "management-auto-review-auth.test.ts": "server", "prefer-model-alias-ids.test.ts": "server", "responses-mimo-envelope.test.ts": "responses", "responses-call-id-linkage.test.ts": "responses", "responses-phase-inference.test.ts": "responses",
+     "codex-installation-live-content.test.ts": "codex-integration",
+     "codex-installation-invalid-account.test.ts": "codex-integration",
+     "codex-installation-sidecars.test.ts": "codex-integration",
+--- a/structure/config.md
++++ b/structure/config.md
+@@ -598,3 +598,11 @@
+ 
+ Stored Direct substitution follows the [credential identity contract](providers/openai-accounts.md#sidecars-management-and-ui): both synchronous and asynchronous materializers discard the caller account header before applying the stored credential; ordinary native Direct passthrough is unchanged.
+ Proxy activation and credential-safe CLI output follow [Proxy Configuration](config-proxy.md). The experimental `chatgptDesktop` leaf accepts only optional boolean `appServerShim`, default off. Malformed reads disable this leaf; live writes reject malformed values and unknown keys. `src/config/diagnostics.ts` reports the reason a whole `chatgptDesktop` block is dropped on both normal and salvaged reads; salvage retains its fallback source and schema error. Its activation and local executable boundary follow [ChatGPT Desktop](clients/chatgpt-desktop.md). `claudeCode.subagentModelForce` is an optional safe roster-style id. Invalid hand edits degrade with a warning without losing other config; stale but syntactically valid targets remain stored for repair and are skipped at launch. Management force updates are field-scoped against current disk state, preserving concurrent Claude sibling edits. A config absent at request start uses canonical create-only initialization; a racing file or invalid initial state refuses the save, and an existing-file mutation never recreates deleted config. Clearing removes only that leaf. A malformed `asideProfileSync` still loads as `{ allProfiles: false }`, which turns every Aside profile off, so `warnDegradedTopLevelOptIns` in `src/config/load-degrade.ts` now reports it once per load without echoing a key or value.
++
++
++Provider reload adopts only its saved provider-scoped model-discovery observations through
++`src/config/live-reconcile.ts`, together with the same provider's live merge baseline.
++Known-model timestamps and recent arrivals for a renamed provider are available before catalog convergence;
++unrelated pending sibling observations remain untouched. Reload still rechecks the exact disk generation after
++DNS admission and does not publish configuration bytes. An unavailable or changed source refuses before adoption.
++`tests/server/provider-reload-discovery.test.ts` covers first rename, unchanged bytes and sibling preservation.

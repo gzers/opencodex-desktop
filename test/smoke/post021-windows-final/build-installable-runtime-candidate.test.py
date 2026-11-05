@@ -97,5 +97,31 @@ class CandidateDeliveryTests(unittest.TestCase):
             self.build()
         self.assertEqual(marker.read_bytes(), b'unchanged')
 
+    def test_reviewed_baseline_fix_gets_a_distinct_revision_and_exact_manifest(self):
+        name = 'src/config/live-reconcile.ts'
+        before, after = b'original provider adoption', b'reviewed provider discovery adoption'
+        self.files[name] = before
+        target = self.source / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(after)
+        self.review.update(candidateRevision=2, extraRuntimePaths=[name])
+        self.review['files'].append({'path': name, 'beforeSha256': builder.sha(before), 'afterSha256': builder.sha(after)})
+        self.review_path.write_bytes(builder.json_bytes(self.review))
+        self.write_archive()
+        result = self.build()
+        self.assertEqual(result['version'], '2.97.0-post021.ownerquery.2')
+        self.assertEqual(result['runtimeFiles'][name], builder.sha(after))
+        with tarfile.open(self.root / 'output' / result['archive']) as tar:
+            self.assertEqual(tar.extractfile('package/' + name).read(), after)
+            self.assertEqual(tar.extractfile('package/gui/dist/index.html').read(), self.files['gui/dist/index.html'])
+
+    def test_unreviewed_additions_or_invalid_revision_are_rejected(self):
+        for extra, revision in [(['src/unrelated.ts'], 2), ([], 0), ([], True), ([], '2')]:
+            self.review.update(extraRuntimePaths=extra, candidateRevision=revision)
+            self.review_path.write_bytes(builder.json_bytes(self.review))
+            with self.assertRaises(AssertionError):
+                self.build()
+            self.assertFalse((self.root / 'output').exists())
+
 if __name__ == '__main__':
     unittest.main()
