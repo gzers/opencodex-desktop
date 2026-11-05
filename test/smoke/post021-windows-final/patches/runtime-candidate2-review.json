@@ -40,7 +40,9 @@
     "after": "140 route tests passed; typecheck passed; manager strict timestamp-only drift test passed",
     "nativeWindows": "new supplemental patch not yet exercised natively on Windows",
     "productionRuntimeFixed": false,
-    "docBase": "Release config doc drift detected; rebased onto fixeddev original before patch replay, no unrelated changes removed"
+    "docBase": "Release config doc drift detected; rebased onto fixeddev original before patch replay, no unrelated changes removed",
+    "strictManagerGuard": "20 saved_runtime_reconcile tests passed incl timestamp-only drift rejection before further mutation; pending sentinels retained",
+    "realManagerInstaller": "macOS real RuntimeInstaller+SystemNpmRunner+RealVersionProbe: candidate1 and candidate2 each passed stable→offline prerelease, exact entry/source full version, failed install kept package/entry/source, isolated uninstall; not Windows native verification"
   },
   "remaining": [
     "Native Windows fresh rename using new combined installed candidate2",
@@ -97,5 +99,19 @@
       "afterSha256": "add7d37b092c27f691a461f0a047bc1b88af1bc07c19fe5f91027a2f3a0efbd3",
       "beforeGitBlob": "a59d456ba66758505bfec6d61bfd624a10b291bd"
     }
-  ]
+  ],
+  "expectedArchive": {
+    "version": "2.97.0-post021.ownerquery.2",
+    "archive": "opencodex-2.97.0-post021.ownerquery.2.tgz",
+    "sha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957",
+    "bytes": 15406072,
+    "changedFiles": [
+      "package.json",
+      "src/codex/app-server-processes.ts",
+      "src/codex/desktop-app/windows.ts",
+      "src/codex/windows-process-identity.ts",
+      "src/config/live-reconcile.ts",
+      "src/generated/compatibility-version.json"
+    ]
+  }
 }

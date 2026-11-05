@@ -3,6 +3,7 @@
 use std::path::PathBuf;
 
 use opencodex_desktop_lib::modules::runtime::{
+    archive::declared_version,
     install::{
         InstallRequest, InstallSource, NullProgressSink, RealVersionProbe, RuntimeInstaller,
         SystemNpmRunner, VersionProbe,
@@ -19,6 +20,8 @@ fn actual_managed_prerelease_install_preserves_full_version_and_survives_failure
     let node = PathBuf::from(std::env::var_os("OCX_TEST_RUNTIME_NODE").expect("explicit Node"));
     let npm = PathBuf::from(std::env::var_os("OCX_TEST_RUNTIME_NPM").expect("explicit npm"));
     assert!(archive.is_absolute() && node.is_absolute() && npm.is_absolute());
+    let expected = declared_version(&archive).expect("explicit prerelease archive filename");
+    assert!(expected.starts_with("2.97.0-post021.ownerquery."));
     let root = tempfile::Builder::new()
         .prefix("ocx-prerelease 安装 ")
         .tempdir()
@@ -64,19 +67,18 @@ fn actual_managed_prerelease_install_preserves_full_version_and_survives_failure
             node_path: Some(node),
         })
         .expect("the full prerelease version must match the archive manifest");
-    let expected = "2.97.0-post021.ownerquery.1";
     assert_eq!(candidate.version, expected);
     assert!(!candidate.scripts_enabled);
     assert_eq!(
         probe.probe(None, &candidate.entry).as_deref(),
-        Some(expected)
+        Some(expected.as_str())
     );
     let handle = RuntimeHandle::initialize(&data, Vec::new());
     let resolution = handle.refresh();
     assert_eq!(resolution.kind, RuntimeSourceKind::Managed);
     assert_eq!(
         handle.store().load().resolved_version.as_deref(),
-        Some(expected)
+        Some(expected.as_str())
     );
     let entry_before = std::fs::read(&candidate.entry).unwrap();
     let package_path = prefix.join("node_modules/@bitkyc08/opencodex/package.json");
@@ -98,7 +100,7 @@ fn actual_managed_prerelease_install_preserves_full_version_and_survives_failure
     assert!(bad.is_err());
     assert_eq!(
         probe.probe(None, &candidate.entry).as_deref(),
-        Some(expected)
+        Some(expected.as_str())
     );
     assert_eq!(std::fs::read(&candidate.entry).unwrap(), entry_before);
     assert_eq!(std::fs::read(package_path).unwrap(), package_before);
@@ -107,7 +109,7 @@ fn actual_managed_prerelease_install_preserves_full_version_and_survives_failure
     assert_eq!(after.path, resolution.path);
     assert_eq!(
         handle.store().load().resolved_version.as_deref(),
-        Some(expected)
+        Some(expected.as_str())
     );
     uninstall_managed(&data, &prefix, &candidate.entry).unwrap();
     println!("PASS: real managed stable→prerelease/offline entry/source version; failed install preserved candidate; isolated uninstall");
