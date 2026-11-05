@@ -1,0 +1,305 @@
+{
+  "scenario": "panel",
+  "result": "pass",
+  "root": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-windows-final-msvc-41913003716/perf/sandbox",
+  "checks": [
+    "real isolated Tauri binding",
+    "early reentry remains alive and ready",
+    "two route reopens ready",
+    "panel observation preserves config bytes"
+  ],
+  "facts": {
+    "about": {
+      "name": "OpenCodeX Desktop",
+      "version": "0.2.21",
+      "identifier": "com.gzers.opencodex.desktop",
+      "platform": "Windows",
+      "framework": "Tauri v2",
+      "license": "MIT License"
+    },
+    "dataRoot": {
+      "activeDataRoot": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-41913003716\\perf\\sandbox",
+      "opencodexHomeMode": "inside",
+      "opencodexHome": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-41913003716\\perf\\sandbox\\opencodex-home",
+      "currentDataRoot": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-41913003716\\perf\\sandbox",
+      "currentOpencodexHome": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-41913003716\\perf\\sandbox\\opencodex-home",
+      "runtimeActive": true
+    }
+  },
+  "status": {
+    "matrix": {
+      "runtime": "running",
+      "connection": "unconfigured",
+      "operation": "idle"
+    },
+    "facts": {
+      "health": "healthy",
+      "runtime_label": null,
+      "opencodex_home": null,
+      "data_root": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-41913003716\\perf\\sandbox\\opencodex-home",
+      "protection": "none",
+      "reboot_safe": false,
+      "service_present": false,
+      "shim_present": false,
+      "version_drift": null,
+      "startup_status": null
+    },
+    "port": 60444,
+    "pid": "52696",
+    "can_start": false,
+    "can_stop": true,
+    "can_restart": true,
+    "source": "live"
+  },
+  "reentry": {
+    "elapsedMs": 69.2999997138977,
+    "earlyReentryRequested": true
+  },
+  "trace": {
+    "id": 16,
+    "startedAt": 2729336.4000000954,
+    "outcome": "visible-ready",
+    "phases": [
+      {
+        "phase": "preferences-start",
+        "elapsedMs": 0.19999980926513672
+      },
+      {
+        "phase": "preferences-ready",
+        "elapsedMs": 0.2999997138977051
+      },
+      {
+        "phase": "status-ready",
+        "elapsedMs": 0.2999997138977051
+      },
+      {
+        "phase": "address-ready",
+        "elapsedMs": 0.5
+      },
+      {
+        "phase": "native-request",
+        "elapsedMs": 2
+      },
+      {
+        "phase": "native:queued:0.0",
+        "elapsedMs": 521.8999996185303
+      },
+      {
+        "phase": "native:owner-lock:24.0",
+        "elapsedMs": 522
+      },
+      {
+        "phase": "native:runtime-address:34.0",
+        "elapsedMs": 522
+      },
+      {
+        "phase": "native:browser-environment:43.0",
+        "elapsedMs": 522
+      },
+      {
+        "phase": "native:native-view:500.0",
+        "elapsedMs": 522
+      },
+      {
+        "phase": "native:visible:508.0",
+        "elapsedMs": 522
+      },
+      {
+        "phase": "native-request",
+        "elapsedMs": 522
+      },
+      {
+        "phase": "navigation-start",
+        "elapsedMs": 549.5
+      },
+      {
+        "phase": "native:queued:0.0",
+        "elapsedMs": 577.5
+      },
+      {
+        "phase": "native:owner-lock:8.0",
+        "elapsedMs": 577.5999999046326
+      },
+      {
+        "phase": "native:runtime-address:25.0",
+        "elapsedMs": 577.5999999046326
+      },
+      {
+        "phase": "native:native-view:34.0",
+        "elapsedMs": 577.5999999046326
+      },
+      {
+        "phase": "native:visible:43.0",
+        "elapsedMs": 577.5999999046326
+      },
+      {
+        "phase": "navigation-ready",
+        "elapsedMs": 684.1999998092651
+      },
+      {
+        "phase": "visible-ready",
+        "elapsedMs": 684.2999997138977
+      }
+    ]
+  },
+  "reopens": [
+    {
+      "id": 17,
+      "startedAt": 2730467.5,
+      "outcome": "visible-ready",
+      "phases": [
+        {
+          "phase": "preferences-start",
+          "elapsedMs": 0.09999990463256836
+        },
+        {
+          "phase": "preferences-ready",
+          "elapsedMs": 0.09999990463256836
+        },
+        {
+          "phase": "status-ready",
+          "elapsedMs": 0.09999990463256836
+        },
+        {
+          "phase": "address-ready",
+          "elapsedMs": 0.09999990463256836
+        },
+        {
+          "phase": "native-request",
+          "elapsedMs": 2
+        },
+        {
+          "phase": "native:queued:0.0",
+          "elapsedMs": 64.5
+        },
+        {
+          "phase": "native:owner-lock:9.0",
+          "elapsedMs": 64.59999990463257
+        },
+        {
+          "phase": "native:runtime-address:17.0",
+          "elapsedMs": 64.59999990463257
+        },
+        {
+          "phase": "native:native-view:25.0",
+          "elapsedMs": 64.59999990463257
+        },
+        {
+          "phase": "native:visible:33.0",
+          "elapsedMs": 64.59999990463257
+        },
+        {
+          "phase": "visible-ready",
+          "elapsedMs": 64.59999990463257
+        },
+        {
+          "phase": "native-request",
+          "elapsedMs": 64.59999990463257
+        },
+        {
+          "phase": "native:queued:0.0",
+          "elapsedMs": 107.90000009536743
+        },
+        {
+          "phase": "native:owner-lock:8.0",
+          "elapsedMs": 107.90000009536743
+        },
+        {
+          "phase": "native:runtime-address:16.0",
+          "elapsedMs": 107.90000009536743
+        },
+        {
+          "phase": "native:native-view:25.0",
+          "elapsedMs": 107.90000009536743
+        },
+        {
+          "phase": "native:visible:33.0",
+          "elapsedMs": 108
+        },
+        {
+          "phase": "visible-ready",
+          "elapsedMs": 108
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "startedAt": 2731607.0999999046,
+      "outcome": "visible-ready",
+      "phases": [
+        {
+          "phase": "preferences-start",
+          "elapsedMs": 0.19999980926513672
+        },
+        {
+          "phase": "preferences-ready",
+          "elapsedMs": 0.19999980926513672
+        },
+        {
+          "phase": "status-ready",
+          "elapsedMs": 0.19999980926513672
+        },
+        {
+          "phase": "address-ready",
+          "elapsedMs": 0.3000001907348633
+        },
+        {
+          "phase": "native-request",
+          "elapsedMs": 2.1999998092651367
+        },
+        {
+          "phase": "native:queued:0.0",
+          "elapsedMs": 69.30000019073486
+        },
+        {
+          "phase": "native:owner-lock:34.0",
+          "elapsedMs": 69.30000019073486
+        },
+        {
+          "phase": "native:runtime-address:38.0",
+          "elapsedMs": 69.30000019073486
+        },
+        {
+          "phase": "native:native-view:41.0",
+          "elapsedMs": 69.30000019073486
+        },
+        {
+          "phase": "native:visible:45.0",
+          "elapsedMs": 69.30000019073486
+        },
+        {
+          "phase": "visible-ready",
+          "elapsedMs": 69.40000009536743
+        },
+        {
+          "phase": "native-request",
+          "elapsedMs": 69.40000009536743
+        },
+        {
+          "phase": "native:queued:0.0",
+          "elapsedMs": 108
+        },
+        {
+          "phase": "native:owner-lock:6.0",
+          "elapsedMs": 108
+        },
+        {
+          "phase": "native:runtime-address:13.0",
+          "elapsedMs": 108
+        },
+        {
+          "phase": "native:native-view:20.0",
+          "elapsedMs": 108
+        },
+        {
+          "phase": "native:visible:27.0",
+          "elapsedMs": 108
+        },
+        {
+          "phase": "visible-ready",
+          "elapsedMs": 108
+        }
+      ]
+    }
+  ]
+}

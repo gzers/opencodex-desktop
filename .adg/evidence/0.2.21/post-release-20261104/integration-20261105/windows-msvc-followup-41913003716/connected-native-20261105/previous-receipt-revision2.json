@@ -1,0 +1,143 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-POST021-WINDOWS-MSVC-FOLLOWUP-20261105",
+  "task_id": "TASK-OPENCODEX-POST021-WINDOWS-MSVC-FOLLOWUP-20261105",
+  "task_digest": "ab1d8f88248c36f1bffd6d32e8b90980bfb2713fbe3bd91fdd38b94e3f411a3b",
+  "task_summary_digest": "55f4100e87a83927612e30caff34df95c52c94a5d5592a6c98fa560031b22799",
+  "baseline_digest": "ebc3505db5fdb12d25fa1ec3df90489571b290b57e66adeeb17434d4163d0f8f",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/HANDOFF.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/artifact-manifest.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/candidate/candidate.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/check-summary.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/ci-verified-metadata.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/cleanup-precision-diagnostic.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/cleanup-refusal-diagnostic.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/cloud-fixture-generation.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/cloud-fixtures/fixture-manifest.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/cloud-fixtures/initial/config-v1-8d637029529aa2fc52dbfddf7d04b2a4b8aec983bc2cfd47642ee0072a9f27f9.ocxd",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/cloud-fixtures/initial/config-v1-latest.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/cloud-fixtures/initial/etags.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/cloud-fixtures/later/config-v1-eccfa932ee921dffb530d2f9182eb349170ed9b79f750f170796f79e1cd1c111.ocxd",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/cloud-fixtures/later/config-v1-latest.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/cloud-fixtures/later/etags.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/first-scope-input-manifest.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/first-scope-input/config.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/first-scope-input/expected-first-scope.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/first-scope-input/model-channel-layout.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/first-scope-input/model-family-templates.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/fixture-preflight.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/formal-restart-admission-summary.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/governance-snapshot/IMP-30.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/governance-snapshot/WINDOWS-FOLLOWUP.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/governance-sources.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/https-server-preflight/metadata.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/https-server-preflight/previous-receipt-revision1.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/https-server-preflight/report.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/https-server-preflight/requests.jsonl",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/https-server-preflight/stage.txt",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/https-server-preflight/verify-https-server.py",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/invalid-disconnected-sample/driver.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/invalid-disconnected-sample/performance-failed.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/launch.py",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/msix-admission.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/msix-admission.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/msix-admission.ts",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/native-launch/app.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/native-launch/launch.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/owned-cleanup-result.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/perf-owned-cleanup-admission.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/performance-classification.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/performance-preflight/driver.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/performance-preflight/performance-failed.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/post-cleanup-observation.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/prepare-local-scope.py",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/protocol-tests.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/rdp-session.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/source-identity.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/trace-preflight/driver.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/trace-preflight/trace-summary.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/verify-fixtures.py",
+    "apps/desktop/ui/qa/windows-materials.mjs",
+    "test/smoke/post021-windows-final/cdp-session.mjs",
+    "test/smoke/post021-windows-final/cloud-fixture.mjs",
+    "test/smoke/post021-windows-final/cloud-readonly-server.py",
+    "test/smoke/post021-windows-final/trace-performance.mjs"
+  ],
+  "checks": [
+    {
+      "name": "review:cloud-first-scope",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/HANDOFF.md"
+    },
+    {
+      "name": "review:formal-msix-restart",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/HANDOFF.md"
+    },
+    {
+      "name": "review:msvc-identity",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/HANDOFF.md"
+    },
+    {
+      "name": "review:owned-cleanup",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/HANDOFF.md"
+    },
+    {
+      "name": "review:panel-native-races",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/HANDOFF.md"
+    },
+    {
+      "name": "review:performance-original-budget",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/HANDOFF.md"
+    },
+    {
+      "name": "review:performance-root-cause",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/HANDOFF.md"
+    },
+    {
+      "name": "review:scope-no-expansion",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/HANDOFF.md"
+    }
+  ],
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-01",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-02",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-06",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-09",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-10",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/HANDOFF.md"
+    }
+  ],
+  "fact_impacts": [],
+  "completed_at": "2026-11-04T23:54:35.353695+00:00",
+  "summary": "候选身份/本轮精确归属清理通过；71协议通过及离线云端夹具准备不代替原生验收。RDP会话断开，性能样本无效，面板/云端范围原生未执行；正式MSIX默认重启无法证明一次性账号而未准入。保留旧失败与日常Bun误停事件，TASK保持in_progress，不出CERT。 后续补充两阶段HTTPS只读服务9请求预检通过，仅基础设施验证；代码b42d03e03，所有原生待验状态不变。",
+  "revision": 2,
+  "summary_digest": "051ebd8817eb673575c87cbd3703d000ef8db780b9dfe656ac248157d26dcfd0",
+  "content_digest": "715ad0ab7ee149f06eb23cb7caa5ac9c7d1c508df1db48d4e789b19db2644ee6"
+}

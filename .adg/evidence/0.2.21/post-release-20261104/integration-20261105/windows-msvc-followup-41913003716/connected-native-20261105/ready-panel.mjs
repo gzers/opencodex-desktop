@@ -1,0 +1,2 @@
+import{connect}from '../../../post021-windows-materials/test/smoke/post021-windows-final/cdp-session.mjs'
+const c=await connect('http://127.0.0.1:9450');try{await c.evaluate("(async()=>{const p=document.querySelector('#app').__vue_app__.config.globalProperties.$pinia;p._s.get('routes').go('panel');await new Promise(r=>setTimeout(r,600));if(!p._s.get('panel').loaded)throw Error('ready panel required')})()")}finally{c.close()}

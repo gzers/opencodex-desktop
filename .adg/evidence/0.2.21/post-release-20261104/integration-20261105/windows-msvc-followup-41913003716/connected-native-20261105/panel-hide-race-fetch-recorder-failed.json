@@ -1,0 +1,851 @@
+{
+  "result": "fail",
+  "fixture": "Actual public close handler after native fetch submitted; original fetch/payload/response retained, no injected delay or mock",
+  "cases": [
+    {
+      "i": 0,
+      "notificationOpen": true,
+      "loaded": true,
+      "trace": {
+        "id": 4,
+        "startedAt": 475592.09999990463,
+        "outcome": "visible-ready",
+        "phases": [
+          {
+            "phase": "preferences-start",
+            "elapsedMs": 0.09999990463256836
+          },
+          {
+            "phase": "preferences-ready",
+            "elapsedMs": 0.19999980926513672
+          },
+          {
+            "phase": "status-ready",
+            "elapsedMs": 0.19999980926513672
+          },
+          {
+            "phase": "address-ready",
+            "elapsedMs": 0.19999980926513672
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 1.4000000953674316
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:owner-lock:9.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:runtime-address:19.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:native-view:28.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:visible:38.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 58.59999990463257
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 58.90000009536743
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:owner-lock:9.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:runtime-address:19.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:native-view:29.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:visible:38.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 916.9000000953674
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 971.5999999046326
+          },
+          {
+            "phase": "native:owner-lock:10.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native:runtime-address:19.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native:native-view:29.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native:visible:38.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 84560.19999980927
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:owner-lock:9.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:runtime-address:21.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:native-view:30.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:visible:39.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 152058
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 152114.59999990463
+          },
+          {
+            "phase": "native:owner-lock:10.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "native:runtime-address:20.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "native:native-view:29.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "native:visible:39.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 152114.69999980927
+          }
+        ]
+      }
+    },
+    {
+      "i": 1,
+      "notificationOpen": true,
+      "loaded": true,
+      "trace": {
+        "id": 4,
+        "startedAt": 475592.09999990463,
+        "outcome": "visible-ready",
+        "phases": [
+          {
+            "phase": "preferences-start",
+            "elapsedMs": 0.09999990463256836
+          },
+          {
+            "phase": "preferences-ready",
+            "elapsedMs": 0.19999980926513672
+          },
+          {
+            "phase": "status-ready",
+            "elapsedMs": 0.19999980926513672
+          },
+          {
+            "phase": "address-ready",
+            "elapsedMs": 0.19999980926513672
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 1.4000000953674316
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:owner-lock:9.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:runtime-address:19.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:native-view:28.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:visible:38.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 58.59999990463257
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 58.90000009536743
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:owner-lock:9.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:runtime-address:19.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:native-view:29.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:visible:38.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 916.9000000953674
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 971.5999999046326
+          },
+          {
+            "phase": "native:owner-lock:10.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native:runtime-address:19.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native:native-view:29.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native:visible:38.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 84560.19999980927
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:owner-lock:9.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:runtime-address:21.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:native-view:30.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:visible:39.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 152058
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 152114.59999990463
+          },
+          {
+            "phase": "native:owner-lock:10.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "native:runtime-address:20.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "native:native-view:29.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "native:visible:39.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 152114.69999980927
+          }
+        ]
+      }
+    },
+    {
+      "i": 2,
+      "notificationOpen": true,
+      "loaded": true,
+      "trace": {
+        "id": 4,
+        "startedAt": 475592.09999990463,
+        "outcome": "visible-ready",
+        "phases": [
+          {
+            "phase": "preferences-start",
+            "elapsedMs": 0.09999990463256836
+          },
+          {
+            "phase": "preferences-ready",
+            "elapsedMs": 0.19999980926513672
+          },
+          {
+            "phase": "status-ready",
+            "elapsedMs": 0.19999980926513672
+          },
+          {
+            "phase": "address-ready",
+            "elapsedMs": 0.19999980926513672
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 1.4000000953674316
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:owner-lock:9.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:runtime-address:19.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:native-view:28.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:visible:38.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 58.59999990463257
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 58.90000009536743
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:owner-lock:9.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:runtime-address:19.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:native-view:29.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:visible:38.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 916.9000000953674
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 971.5999999046326
+          },
+          {
+            "phase": "native:owner-lock:10.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native:runtime-address:19.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native:native-view:29.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native:visible:38.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 84560.19999980927
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:owner-lock:9.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:runtime-address:21.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:native-view:30.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:visible:39.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 152058
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 152114.59999990463
+          },
+          {
+            "phase": "native:owner-lock:10.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "native:runtime-address:20.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "native:native-view:29.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "native:visible:39.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 152114.69999980927
+          }
+        ]
+      }
+    },
+    {
+      "i": 3,
+      "notificationOpen": true,
+      "loaded": true,
+      "trace": {
+        "id": 4,
+        "startedAt": 475592.09999990463,
+        "outcome": "visible-ready",
+        "phases": [
+          {
+            "phase": "preferences-start",
+            "elapsedMs": 0.09999990463256836
+          },
+          {
+            "phase": "preferences-ready",
+            "elapsedMs": 0.19999980926513672
+          },
+          {
+            "phase": "status-ready",
+            "elapsedMs": 0.19999980926513672
+          },
+          {
+            "phase": "address-ready",
+            "elapsedMs": 0.19999980926513672
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 1.4000000953674316
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:owner-lock:9.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:runtime-address:19.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:native-view:28.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:visible:38.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 58.59999990463257
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 58.90000009536743
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:owner-lock:9.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:runtime-address:19.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:native-view:29.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:visible:38.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 916.9000000953674
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 971.5999999046326
+          },
+          {
+            "phase": "native:owner-lock:10.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native:runtime-address:19.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native:native-view:29.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native:visible:38.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 84560.19999980927
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:owner-lock:9.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:runtime-address:21.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:native-view:30.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:visible:39.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 152058
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 152114.59999990463
+          },
+          {
+            "phase": "native:owner-lock:10.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "native:runtime-address:20.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "native:native-view:29.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "native:visible:39.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 152114.69999980927
+          }
+        ]
+      }
+    },
+    {
+      "i": 4,
+      "notificationOpen": true,
+      "loaded": true,
+      "trace": {
+        "id": 4,
+        "startedAt": 475592.09999990463,
+        "outcome": "visible-ready",
+        "phases": [
+          {
+            "phase": "preferences-start",
+            "elapsedMs": 0.09999990463256836
+          },
+          {
+            "phase": "preferences-ready",
+            "elapsedMs": 0.19999980926513672
+          },
+          {
+            "phase": "status-ready",
+            "elapsedMs": 0.19999980926513672
+          },
+          {
+            "phase": "address-ready",
+            "elapsedMs": 0.19999980926513672
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 1.4000000953674316
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:owner-lock:9.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:runtime-address:19.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:native-view:28.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "native:visible:38.0",
+            "elapsedMs": 58.5
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 58.59999990463257
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 58.90000009536743
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:owner-lock:9.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:runtime-address:19.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:native-view:29.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native:visible:38.0",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 110.40000009536743
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 916.9000000953674
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 971.5999999046326
+          },
+          {
+            "phase": "native:owner-lock:10.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native:runtime-address:19.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native:native-view:29.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native:visible:38.0",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 971.8000001907349
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 84560.19999980927
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:owner-lock:9.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:runtime-address:21.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:native-view:30.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native:visible:39.0",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 84617.40000009537
+          },
+          {
+            "phase": "native-request",
+            "elapsedMs": 152058
+          },
+          {
+            "phase": "native:queued:0.0",
+            "elapsedMs": 152114.59999990463
+          },
+          {
+            "phase": "native:owner-lock:10.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "native:runtime-address:20.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "native:native-view:29.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "native:visible:39.0",
+            "elapsedMs": 152114.69999980927
+          },
+          {
+            "phase": "visible-ready",
+            "elapsedMs": 152114.69999980927
+          }
+        ]
+      }
+    }
+  ],
+  "transport": [],
+  "error": {
+    "message": "incomplete real IPC observations",
+    "stack": "AssertionError [ERR_ASSERTION]: incomplete real IPC observations\n    at file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-msvc-followup/connected-native/panel-hide-race-fetch.mjs:8:27"
+  }
+}
