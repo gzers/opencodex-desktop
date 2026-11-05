@@ -1,0 +1,73 @@
+{
+  "startedAtUtc": "2026-11-05T13:56:21.959Z",
+  "managerPid": 106776,
+  "managerSha256": "fa9df83a55153f764673781e85167093d20602fd2e34742c69f6b2f5b37f9c68",
+  "runtimeVersion": "2.97.0-post021.ownerquery.1",
+  "tarballSha256": "c8b1d4b7e78792df0b693ed5eda8e3fb0e9da6159a5643da1591abd65519e5ec",
+  "scope": "Actual isolated native managed offline installer; no service or Codex launch",
+  "facts": {
+    "about": {
+      "name": "OpenCodeX Desktop",
+      "version": "0.2.21",
+      "identifier": "com.gzers.opencodex.desktop",
+      "platform": "Windows",
+      "framework": "Tauri v2",
+      "license": "MIT License"
+    },
+    "dataRoot": {
+      "activeDataRoot": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-runtime-delivery-20261105\\native-managed-install-20261105\\sandbox",
+      "opencodexHomeMode": "inside",
+      "opencodexHome": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-runtime-delivery-20261105\\native-managed-install-20261105\\sandbox\\opencodex-home",
+      "currentDataRoot": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-runtime-delivery-20261105\\native-managed-install-20261105\\sandbox",
+      "currentOpencodexHome": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-runtime-delivery-20261105\\native-managed-install-20261105\\sandbox\\opencodex-home",
+      "runtimeActive": true
+    }
+  },
+  "before": {
+    "kind": "unresolved",
+    "path": null,
+    "version": null,
+    "resolvedAt": "2026-11-05T13:56:03Z",
+    "insideDataRoot": false,
+    "managedEntry": null,
+    "managedPrefix": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-runtime-delivery-20261105\\native-managed-install-20261105\\sandbox\\runtime\\opencodex",
+    "defaultPrefix": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-runtime-delivery-20261105\\native-managed-install-20261105\\sandbox\\runtime\\opencodex",
+    "explicitPath": null,
+    "history": []
+  },
+  "preview": {
+    "ok": true,
+    "fileName": "opencodex-2.97.0-post021.ownerquery.1.tgz",
+    "fileSize": 15405720,
+    "version": "2.97.0-post021.ownerquery.1",
+    "sha256Prefix": "c8b1d4b7e78792df",
+    "rejectionCode": null,
+    "message": "离线包校验通过"
+  },
+  "result": "rejected",
+  "error": "{\"exceptionId\":1,\"text\":\"Uncaught (in promise)\",\"lineNumber\":0,\"columnNumber\":0,\"exception\":{\"type\":\"object\",\"className\":\"Object\",\"description\":\"Object\",\"objectId\":\"2686688143445054569.2.1\",\"preview\":{\"type\":\"object\",\"description\":\"Object\",\"overflow\":false,\"properties\":[{\"name\":\"code\",\"type\":\"number\",\"value\":\"14\"},{\"name\":\"message\",\"type\":\"string\",\"value\":\"managed runtime operation failed: version_mismatch; 版本不一致：期望 2.97.0-post021.ownerquery.1，实际 2.97.0\"}]}}}",
+  "elapsedMs": 15953.5814,
+  "after": {
+    "kind": "unresolved",
+    "path": null,
+    "version": null,
+    "resolvedAt": "2026-11-05T13:56:03Z",
+    "insideDataRoot": false,
+    "managedEntry": null,
+    "managedPrefix": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-runtime-delivery-20261105\\native-managed-install-20261105\\sandbox\\runtime\\opencodex",
+    "defaultPrefix": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-runtime-delivery-20261105\\native-managed-install-20261105\\sandbox\\runtime\\opencodex",
+    "explicitPath": null,
+    "history": [
+      {
+        "action": "install",
+        "result": "failed",
+        "package": "@bitkyc08/opencodex",
+        "version": "latest",
+        "target": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-runtime-delivery-20261105\\native-managed-install-20261105\\sandbox\\runtime\\opencodex",
+        "at": "2026-11-05T13:56:38Z",
+        "reason": "版本不一致：期望 2.97.0-post021.ownerquery.1，实际 2.97.0"
+      }
+    ]
+  },
+  "finishedAtUtc": "2026-11-05T13:56:38.030Z"
+}

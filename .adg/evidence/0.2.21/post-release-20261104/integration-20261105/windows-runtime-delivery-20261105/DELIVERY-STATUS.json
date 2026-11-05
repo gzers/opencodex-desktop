@@ -1,14 +1,26 @@
 {
   "runtimeCandidateInstalled": true,
   "sourcePortWindowsChecks": "passed",
-  "realIsolatedSaveRestartRenameRetry": "pending Administrator execution",
+  "realIsolatedSaveRestartRenameRetry": "passed-local-candidate; actualsave65558/servicefailure/retry; fixedmanagerrealsave65569/pendingrenameactivation/defaultMSIXrestart/configreadback",
   "upstreamPublishedRuntimeFixed": false,
   "requires": "Maintainer integration and published registry version, or explicit decision to change production installation source",
   "localTarballSha256": "c8b1d4b7e78792df0b693ed5eda8e3fb0e9da6159a5643da1591abd65519e5ec",
   "localArtifactPath": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-runtime-delivery-20261105\\installable-local1\\opencodex-2.97.0-post021.ownerquery.1.tgz",
   "dailySourceChanged": false,
   "codeBranch": "codex/post021-windows-final",
-  "codeSha": "d54517eaf73ab2e06ca9556043ef665cac3e60ba",
+  "codeSha": "705d69ca2ce5a2eed0a304dec0bbbc0bedef5d82",
   "artifactBuilderCommit": "02c7bcdef",
-  "manualEntry": "D:/Users/Administrator/WorkSpace/Test/POST021-INSTALLED-RUNTIME.ps1"
+  "manualEntry": "D:/Users/Administrator/WorkSpace/Test/POST021-READINESS-FIXED.ps1",
+  "managedInstall": "actual native offline preview passed; managedinstall rejected localprerelease versiontruncation; existing isolatedsourceunchanged",
+  "latestNativeCandidateSha256": "8711a6b9195971dc5477ede64df60fec9e5ea36e080e454ef40a1f16c870c49a",
+  "productFixCommit": "b82b78e1f8727262e5c364d26f698432614a90d3",
+  "nativeRootTransition": "108108 -> 51156",
+  "isolatedCliAligned": true,
+  "productionSourceChanged": false,
+  "remaining": [
+    "Upstream integration and stable published runtime; no externalPR/fork/publication performed",
+    "Native manager prerelease install rejects suffix due numericversionprobe; npm test installationpassed",
+    "Samefinalintegratedsource affectedMac/native/fullCI and officialrelease/upgrade/signature gates",
+    "Originalfirst-renameupdatedAtdrift retained forintegrationreview; restoredpendingintent pathpassed, no claimoffreshfullrenamematrixrerun"
+  ]
 }

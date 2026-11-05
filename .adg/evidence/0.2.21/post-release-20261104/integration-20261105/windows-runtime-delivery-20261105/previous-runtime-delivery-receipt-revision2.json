@@ -1,0 +1,99 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-POST021-WINDOWS-RUNTIME-DELIVERY-20261105",
+  "task_id": "TASK-OPENCODEX-POST021-WINDOWS-RUNTIME-DELIVERY-20261105",
+  "task_digest": "4010ada006fe57d77f6d4fa85bedb44b2ab688ae7208859f8e78ad2778670361",
+  "task_summary_digest": "af7869aaa6d8eda6ca4c99f3439ec414a1904f531375e5f7cdf10f246ddb9f73",
+  "baseline_digest": "bea4e7eb99d46e6e4eb1f5aeee9c57c42e462b8c418d8bd5161819c103604b1b",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/DELIVERY-STATUS.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/HANDOFF.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/baseline.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/candidate-artifact-manifest.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/candidate-bundled-entry-review.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/candidate-bundled-entry.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/candidate-bundled-entry.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/candidate-install-review.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/candidate-installed-entry.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/candidate-installed-entry.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/candidate-npm-install.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/candidate-npm-install.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/governance-snapshot/DMD-OPENCODEX-POST021.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/governance-snapshot/HANDOFF-updated-2beea169f.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/governance-snapshot/HANDOFF.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/governance-snapshot/IMP-OPENCODEX-DESKTOP-30.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/governance-snapshot/WINDOWS-FOLLOWUP.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/installed-current-owner-probe.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/installed-policy-appserver-policy.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/installed-policy-desktop-policy.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/installed-policy-review.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/mac-port-review.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/manifest.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/npm-tool-identity.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/previous-receipt-revision1.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/privacy-scan.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/privacy-scan.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/registry-latest.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/registry-original-review.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/source-gates.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/source-validation-review.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/structure-check.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/structure-check.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/test-harness-initial-appserver-failure.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/test-harness-initial-appserver-failure.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/upstream-import-graph-tests.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/upstream-import-graph-tests.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/upstream-import-graph-tests.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/wrong-owner-stop.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/wrong-owner-stop.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/wrong-owner-validation.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/wrong-owner-validation.stdout.log",
+    "test/smoke/post021-windows-final/build-installable-runtime-candidate.py",
+    "test/smoke/post021-windows-final/build-installable-runtime-candidate.test.py",
+    "test/smoke/post021-windows-final/formal-installed-runtime-validation.mjs",
+    "test/smoke/post021-windows-final/formal-msix-service.ts",
+    "test/smoke/post021-windows-final/formal-owned-service-stop.ps1",
+    "test/smoke/post021-windows-final/verify-installed-owner-policy.mjs"
+  ],
+  "checks": [
+    {
+      "name": "review:installable-artifact-provenance",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:isolated-save-restart-rename-retry",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:other-owner-boundary",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:query-identity-and-timeouts",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:upstream-native-port",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/HANDOFF.md"
+    }
+  ],
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-09",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/baseline.json"
+    }
+  ],
+  "fact_impacts": [],
+  "completed_at": "2026-11-05T13:41:01.154240+00:00",
+  "summary": "固定dev/Mac补丁十文件原像后像核验，Windows原生/策略/兼容/类型/隐私结构通过。可安装本地预发布2.97.0-post021.ownerquery.1已由独立npm安装、2522文件核对、无外部Bun入口通过；仍不是上游正式运行包。全导入图240秒不完整保留；隔离Administrator真实保存/失败重试/改名重启等待手动入口执行，未关闭AC09。",
+  "revision": 2,
+  "summary_digest": "0f2605106d3e03427b3a001c49e7835576947db201115bd7c5bb8ef8bb862c25",
+  "content_digest": "623c0250eeedf465348ddb35a21af6c15c6566018995186ae44620342328fc13"
+}

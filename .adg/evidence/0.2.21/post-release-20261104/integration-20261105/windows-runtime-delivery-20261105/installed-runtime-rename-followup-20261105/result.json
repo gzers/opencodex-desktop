@@ -1,0 +1,13 @@
+{
+  "result": "failed",
+  "acceptance": false,
+  "owner": "EZIO-MINI\\Administrator",
+  "startedAtUtc": "2026-11-05T13:58:12.992Z",
+  "runtimeVersion": "2.97.0-post021.ownerquery.1",
+  "actions": "Read-only structural diagnosis, then one guarded existing public retry; no reseed, resave, service switch or second client launch",
+  "error": {
+    "message": "Expected values to be strictly equal:\n\u001b[32mactual\u001b[39m \u001b[31mexpected\u001b[39m\n\n\u001b[39m'\u001b[39m\u001b[31mu\u001b[39m\u001b[31mi\u001b[39m\u001b[31m-\u001b[39m\u001b[31mc\u001b[39m\u001b[31mo\u001b[39m\u001b[31mn\u001b[39m\u001b[39mf\u001b[39m\u001b[32ma\u001b[39m\u001b[39mi\u001b[39m\u001b[32ml\u001b[39m\u001b[31mr\u001b[39m\u001b[31mm\u001b[39m\u001b[39me\u001b[39m\u001b[39md\u001b[39m\u001b[39m'\u001b[39m\n",
+    "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\u001b[32mactual\u001b[39m \u001b[31mexpected\u001b[39m\n\n\u001b[39m'\u001b[39m\u001b[31mu\u001b[39m\u001b[31mi\u001b[39m\u001b[31m-\u001b[39m\u001b[31mc\u001b[39m\u001b[31mo\u001b[39m\u001b[31mn\u001b[39m\u001b[39mf\u001b[39m\u001b[32ma\u001b[39m\u001b[39mi\u001b[39m\u001b[32ml\u001b[39m\u001b[31mr\u001b[39m\u001b[31mm\u001b[39m\u001b[39me\u001b[39m\u001b[39md\u001b[39m\u001b[39m'\u001b[39m\n\n    at D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\post021-windows-materials\\test\\smoke\\post021-windows-final\\formal-installed-rename-followup.mjs:69:9"
+  },
+  "finishedAtUtc": "2026-11-05T13:59:10.368Z"
+}

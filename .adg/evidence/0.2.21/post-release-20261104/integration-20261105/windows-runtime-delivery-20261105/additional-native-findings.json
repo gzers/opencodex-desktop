@@ -1,0 +1,11 @@
+{
+  "kind": "additional-discovered-delivery-gap",
+  "nativeManager": "MSVC fa9df83a; isolatedPID106776/CDP9470",
+  "archivePreview": "actualRustreader passed; correct prerelease andSHA",
+  "managedInstall": "actualofflinemanagerrejected: expected2.97.0-post021.ownerquery.1 found2.97.0",
+  "cause": "install.rs::extract_semver discards prerelease beforeverify_package requires exactmatch",
+  "transaction": "native runtime_source before/afterunresolved; failedhistoryretained; nooldprefix replaced",
+  "distinction": "Independentnpm installation andbundledentrypassed; notamanagedinstallpass",
+  "resolution": "Preferupstreamstable release; changingproductioninstallation source or acceptinglocalprerelease requires explicitadoption; parsercompatibility wouldneed separatecode/nativevalidation",
+  "renameAttempt": "actualsave65558 andcontrolledofflinefailure/retry passed; subsequentrenamefirstrestartrefused saved_runtime_drift; config/pendingretained; followupdiagnosisandoneexistingpublicretryprepared,notyetobserved"
+}

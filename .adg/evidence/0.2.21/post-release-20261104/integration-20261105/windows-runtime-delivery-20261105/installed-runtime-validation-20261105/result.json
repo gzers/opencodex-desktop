@@ -1,0 +1,16 @@
+{
+  "result": "failed",
+  "acceptance": false,
+  "owner": "EZIO-MINI\\Administrator",
+  "startedAtUtc": "2026-11-05T13:46:52.904Z",
+  "runtimeVersion": "2.97.0-post021.ownerquery.1",
+  "tarballSha256": "c8b1d4b7e78792df0b693ed5eda8e3fb0e9da6159a5643da1591abd65519e5ec",
+  "upstreamPatchSha256": "0d8eaaec8c361d914fb901db2c8ef6a36702ce3c7ec209cb3f255817f8e32bb7",
+  "checks": [],
+  "error": {
+    "message": "Complete public restart not confirmed\n\u001b[32mactual\u001b[39m \u001b[31mexpected\u001b[39m\n\n\u001b[39m'\u001b[39m\u001b[31mu\u001b[39m\u001b[31mi\u001b[39m\u001b[31m-\u001b[39m\u001b[31mc\u001b[39m\u001b[31mo\u001b[39m\u001b[31mn\u001b[39m\u001b[39mf\u001b[39m\u001b[32ma\u001b[39m\u001b[39mi\u001b[39m\u001b[32ml\u001b[39m\u001b[31mr\u001b[39m\u001b[31mm\u001b[39m\u001b[39me\u001b[39m\u001b[39md\u001b[39m\u001b[39m'\u001b[39m\n",
+    "stack": "AssertionError [ERR_ASSERTION]: Complete public restart not confirmed\n\u001b[32mactual\u001b[39m \u001b[31mexpected\u001b[39m\n\n\u001b[39m'\u001b[39m\u001b[31mu\u001b[39m\u001b[31mi\u001b[39m\u001b[31m-\u001b[39m\u001b[31mc\u001b[39m\u001b[31mo\u001b[39m\u001b[31mn\u001b[39m\u001b[39mf\u001b[39m\u001b[32ma\u001b[39m\u001b[39mi\u001b[39m\u001b[32ml\u001b[39m\u001b[31mr\u001b[39m\u001b[31mm\u001b[39m\u001b[39me\u001b[39m\u001b[39md\u001b[39m\u001b[39m'\u001b[39m\n\n    at restartThroughPublic (D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\post021-windows-materials\\test\\smoke\\post021-windows-final\\formal-installed-runtime-validation.mjs:110:10)"
+  },
+  "finishedAtUtc": "2026-11-05T13:49:24.638Z",
+  "limit": "Installable local prerelease candidate only; no upstream release, production source change, model inference or real sync. Authorized test processes retained."
+}
