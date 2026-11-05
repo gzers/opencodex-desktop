@@ -1,0 +1,13 @@
+# 管理员录制与停止成功；原生前台条件未满足
+
+管理员回报已执行admin-paired-20261105-1228入口。本地04:40:17.2779628Z开始45秒命名录制，target75988身份与原MSVC哈希一致，正常stop exit0，原stdout明确successfully saved。ETL2878341120字节，SHA ba62d5203c3794ea27aff8b62f09dc728b1ebe5238c8704fce99d41fe3d80749，原件仅留本机。无需重复stop或清理录制。
+
+BOM修复确已生效：普通采样器读到启动信号，但至04:40:27.394Z原生app_foreground仍未满足，在30秒样本前以Native test window not foreground失败。无scene-started/无性能样本，不能把录制成功扩大为性能或场景通过。管理员执行并非未发生；该失败原件保留，旧入口退役，新管理器75988未停止。
+
+原生ProcessTrace完整读取64336282事件、exit0、头EventsLost0，但还存在265112条Kernel-EventTracing Lost Event记录。实际解码最先两条属于PCA file tracing session、provider edd08927-9cc4-4e65-b970-c2560fb5c289，status3221225495；不能据此断言本次WPR的GPU事件丢失，也不能只凭头部值宣称全轨完整，全部通知尚未逐一归属。本机filtered/GPU数值轨迹不上传，其指针/其它应用调度信息保留本机；只交聚合及经过筛选的代表记录。缺有效前台样本和目标present链，仍无法定位生产瓶颈。
+
+纠正先前采集范围说明：实际Windows wpr -exportprofile GPU+DesktopComposition导出含SystemCall、AllFaults、DiskIO、采样/调度及栈；前版traceScope仅称调度/合成而未列隐含项，不准确。导出OS配方保留为证据，不是源码副本；原ETL均未发布。新代码dedd94312改为明确五个事件提供器（DxgKrnl/DWM/DXGI/DirectComposition/Win32k），无SystemCollector/SystemProvider或栈。WPR实际profiledetails成功，PS5实际PlanOnly成功；不声称新实际录制已成功或开销已测得。
+
+前台流程改为普通采样器发布绑定PID/createUTCticks的原生心跳，管理员入口最多等待120秒，检测新鲜且连续3秒foreground后才开始。采样仍保留原10秒/45秒重叠守卫、原30秒/B/p95≤2B/over6B0；不会以后台或时间不足样本计通过。PS5实际正例与8项反例通过（后台、陈旧/未来时间、换PID/创建时间、短前台和坏时间），Node两项握手测试通过。新目录admin-foreground-20261105-1246，采样PID44760，04:47:12.834Z就绪，等待3600秒；截至记录尚无新capture。用户需在管理员shell运行新入口，然后切到隔离OpenCodeX窗口保持60秒，无需抢10秒切换。
+
+产品apps树仍a8bb18f9ff2781dbbfe67f91473a298f3cd74ae6，原MSVC面板修复/云端范围通过项不扩大。RDP生产性能修复、有效原生前后性能矩阵及正式默认MSIX在一次性owner/session中的重启/读回仍未完成。TASK in_progress、RCP总体failed、无CERT；未合并main、未发布、未改日常配置或执行真实同步。
