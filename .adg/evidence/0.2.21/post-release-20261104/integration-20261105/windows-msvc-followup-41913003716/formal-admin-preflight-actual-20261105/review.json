@@ -1,0 +1,26 @@
+{
+  "result": "administrator-owner-session-preflight-confirmed",
+  "acceptance": false,
+  "owner": "EZIO-MINI\\Administrator",
+  "session": 1,
+  "package": {
+    "name": "OpenAI.Codex",
+    "version": "26.1029.7803.0",
+    "family": "OpenAI.Codex_2p2nqsd0c76g0",
+    "installLocation": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0"
+  },
+  "ownCodexProcesses": 0,
+  "otherOwnerCodexCount": 14,
+  "ancestryError": null,
+  "existingConfig": {
+    "path": "C:\\Users\\Administrator\\.codex\\config.toml",
+    "exists": true,
+    "bytes": 679,
+    "sha256": "49cee81e48b6d5f0d737f7d598f2932c37d61afc3db8a309343b122850b91df2"
+  },
+  "existingCodexState": true,
+  "isolationConcern": "Administrator has preexistingconfig/login/history. Default runtimewindowsadapter relaunches shell:AppsFolder packageentry without explicit isolatedCODEX_HOME orElectronuserdata propagation. Do not assume caller env survivesactivation; no actualrestart executed.",
+  "userClarificationPending": "Whether Administrator existingCodexdata are disposabletestdata ormustbepreserved. Original15119 dailyconfiguration andprocesses remainexcluded.",
+  "credentialHandling": "No password included inthisrecord orscripts; user manually ran the preflight",
+  "at": "2026-11-05T07:09:46.541386+00:00"
+}
