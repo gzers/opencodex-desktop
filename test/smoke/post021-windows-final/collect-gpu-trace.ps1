@@ -96,7 +96,9 @@ $taskStarted=$false
 try{
     $taskReport.statusBefore=Invoke-Recorder @('-status') 'status-before'
     $taskStatus=([string]$taskReport.statusBefore.stdout)+' '+([string]$taskReport.statusBefore.stderr)
-    if($taskReport.statusBefore.exitCode -ne 0 -or $taskStatus -notmatch '(?i)WPR is not recording|WPR 未在记录|WPR 未录制'){
+    # Keep this file ASCII so Windows PowerShell 5.1 can parse UTF-8 without
+    # a BOM. Regex Unicode escapes preserve localized status admission.
+    if($taskReport.statusBefore.exitCode -ne 0 -or $taskStatus -notmatch '(?i)WPR is not recording|WPR \u672a\u5728\u8bb0\u5f55|WPR \u672a\u5f55\u5236'){
         throw 'An existing recorder or unknown recorder state is present; no start/stop/cancel issued'
     }
     # Instance name MUST be the last argument on every mutating command. A
