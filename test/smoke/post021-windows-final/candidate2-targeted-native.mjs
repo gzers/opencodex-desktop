@@ -24,6 +24,8 @@ const output=join(root,'evidence');await mkdir(output,{recursive:false})
 const save=(name,v)=>writeFile(join(output,name+'.json'),JSON.stringify(v,null,2)+'\n')
 const report={result:'running',acceptance:false,startedAtUtc:new Date().toISOString(),account,manager:candidate,runtimeVersion:manifest.version,tarballSha256:manifest.sha256,checks:[]}
 await save('started',report)
+assert.equal(sha(await readFile(plan.codexExe)),plan.codexExeSha256,'Previously reviewed official client bytes changed')
+await save('official-client-version',{path:plan.codexExe,sha256:plan.codexExeSha256,version:execFileSync(plan.codexExe,['--version'],{encoding:'utf8',windowsHide:true,timeout:10000}).trim(),scope:'Read-only --version; no client launch or inference'})
 const sandbox=join(root,'sandbox'),home=join(sandbox,'home'),ocxHome=join(sandbox,'opencodex-home'),packageRoot=join(sandbox,'runtime/opencodex/node_modules/@bitkyc08/opencodex')
 const snapshot=async name=>{const v=JSON.parse(execFileSync(ps,['-NoProfile','-NonInteractive','-File',fileURLToPath(new URL('./formal-msix-snapshot.ps1',import.meta.url))],{encoding:'utf8',windowsHide:true,timeout:90000}));await save(name,v);assert.equal(v.owner.toLowerCase(),account.owner.toLowerCase());assert.equal(v.sessionId,1);assert.equal(v.unknownOwnerCount,0);return v}
 const shells=v=>v.own.filter(p=>win32.basename(p.path??'').toLowerCase()==='chatgpt.exe')
