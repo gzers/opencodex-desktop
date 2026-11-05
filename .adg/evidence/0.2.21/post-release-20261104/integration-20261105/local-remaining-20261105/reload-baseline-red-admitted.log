@@ -1,0 +1,36 @@
+bun test v1.4.4 (38afee6c8)
+
+tests/server/provider-reload-discovery.test.ts:
+54 |         models: [{ provider: 'renamed', id: 'raw-model' }], authoritativeProviders: ['renamed'], now: '2026-11-05T00:00:00.000Z' });
+55 |       if (changed) saveConfigPreservingClaudeCode(mutable);
+56 |     })(config),
+57 |   }, 'local-provider-reload-capability');
+58 |   expect(response?.status).toBe(200); expect(entered).toBe(true);
+59 |   expect(live.modelDiscovery?.knownModels?.renamed?.updatedAt).toBe(stamp);
+                                                                    ^
+error: expect(received).toBe(expected)
+
+Expected: "2026-01-01T00:00:00.000Z"
+Received: "2026-11-05T00:00:00.000Z"
+
+      at <anonymous> (/private/tmp/post021-runtime-prep-cab7eb7/tests/server/provider-reload-discovery.test.ts:59:64)
+(fail) reload of a freshly renamed provider uses its persisted discovery baseline before catalog convergence [34.14ms]
+71 |   live.modelDiscovery!.knownModels!.renamed!.updatedAt = 'stale-live';
+72 |   live.modelDiscovery!.knownModels!.sibling!.ids.push('pending-sibling');
+73 |   const before = bytes(), req = request();
+74 |   const response = await handleManagementAPI(req, new URL(req.url), live, { createManagementConvergeCodex: catalogConvergenceFactory() }, 'local-provider-reload-capability');
+75 |   expect(response?.status).toBe(200);
+76 |   expect(live.modelDiscovery?.knownModels?.renamed?.updatedAt).toBe(stamp);
+                                                                    ^
+error: expect(received).toBe(expected)
+
+Expected: "2026-01-01T00:00:00.000Z"
+Received: "stale-live"
+
+      at <anonymous> (/private/tmp/post021-runtime-prep-cab7eb7/tests/server/provider-reload-discovery.test.ts:76:64)
+(fail) reload rebases only the target observations and retains unrelated pending live discoveries [3.49ms]
+
+ 0 pass
+ 2 fail
+ 5 expect() calls
+Ran 2 tests across 1 file. [381.00ms]

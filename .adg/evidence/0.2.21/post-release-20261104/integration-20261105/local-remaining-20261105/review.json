@@ -1,0 +1,85 @@
+{
+  "head": "ca46bc1f3c35988d206e1a2949c708d4f23aab50",
+  "productCommit": "2b860292e",
+  "nativeBuild": "58c49b8f43e33ad620bef52a58ce744f4b8fe77b",
+  "nativeSourceEquivalence": {
+    "rustSource": "d9116521a2bf872ecfeb0a803b159072dbe314d0",
+    "uiSource": "038a482766b7d8fe0432b8522590cf8976a64db4",
+    "finalVsNative": "same runtime and UI source trees; later commit only test/generation review metadata"
+  },
+  "installFix": {
+    "rootCause": "extract_semver stopped at stable numeric core",
+    "behavior": "full strict SemVer token with prerelease/build; malformed/truncated identities rejected; exact manifest/entry equality remains",
+    "red": 2,
+    "libraryTestsPassed": 34,
+    "realManagedCandidate1": "pass stable registry→offline candidate.1 full entry/source version, failure preservation and isolated uninstall",
+    "realManagedCandidate2": "same real chain with installed candidate.2 passed",
+    "liveServiceOrCodexStarted": false
+  },
+  "renameDriftFix": {
+    "rootCause": "upstream reload adopted provider row but not same saved provider-scoped model-discovery baseline; subsequent convergence bootstrapped updatedAt",
+    "admittedRedRouteTests": 2,
+    "initialFixtureFailure": "HTTP403 because original native Request lacked test management-origin helper; original log retained separately",
+    "after": "140 provider route tests passed, typecheck and5changed-file privacy scan passed",
+    "sourceChange": "upstream local candidate only; target knownModels/recentArrivals plus matching live merge baseline, unrelated pending siblings retained; no disk rewrite in reload",
+    "managerGuard": "20 HTTP reconciliation tests passed incl timestamp-only drift rejection; pending/cache sentinels retained",
+    "windowsNativeOfNewFix": "pending fresh first rename test; old restored pending-intent result not reused as new success"
+  },
+  "builder": {
+    "testsPassed": 5,
+    "newExtraRuntimePathAllowlist": [
+      "src/config/live-reconcile.ts"
+    ],
+    "candidateRevision": 2,
+    "expectedArchive": {
+      "version": "2.97.0-post021.ownerquery.2",
+      "archive": "opencodex-2.97.0-post021.ownerquery.2.tgz",
+      "sha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957",
+      "bytes": 15406072,
+      "changedFiles": [
+        "package.json",
+        "src/codex/app-server-processes.ts",
+        "src/codex/desktop-app/windows.ts",
+        "src/codex/windows-process-identity.ts",
+        "src/config/live-reconcile.ts",
+        "src/generated/compatibility-version.json"
+      ]
+    },
+    "artifactStatus": "local test candidate only; no release or production source adoption",
+    "originalArchiveIntegrity": "registry sha512 andSHA1 verified by builder",
+    "runtimeFilesReplaced": 4,
+    "otherReleaseFiles": "unchanged except explicit package identity and compatibility manifest"
+  },
+  "patchDelivery": {
+    "branch": "codex/post021-sync-fixes",
+    "directory": "test/smoke/post021-windows-final/patches",
+    "applyOrder": [
+      "runtime-owner-dev-0a30c551.patch",
+      "runtime-provider-reload-baseline.patch"
+    ],
+    "supplementSha256": "efe2dc2cce0f1d9b18b250cccf633e4b762ee7156bc6c5ef411e881acceecbf5",
+    "combinedDigest": "3d23278260afe59f6b0715db4a158f59e7eb1d7c65e7e6a72e13c91c0ce4edc8",
+    "replay": "5 supplemental file afterimages exact; new runtime beforeimage matches fixeddev and npm2.97; config-doc release drift detected and preserved with dev preimage"
+  },
+  "macNative": {
+    "result": "pass",
+    "checks": 12,
+    "report": "macos-native/ocx021-mac-native-68378e63-7bdc-4b1b-8d00-6e5d47f8b1ca/report.json",
+    "scope": "actual save notice/restart missing-service error/retry/cancel and config unchanged; no daily restart/network; dark/high only, reuse unchanged other material scenes",
+    "coldReadiness": "five readiness tests and31 cache_refresh Mac backend checks from received fix passed; no claim of actual upstream cold CLI native runtime capture on Mac"
+  },
+  "clippy": "allworkspace/alltargets -Dwarnings passed before final test-only archive version parameter change; final actual test compiled/passed",
+  "releaseReady": false,
+  "remaining": [
+    "Final new-head CI; current previous bfcf run is not final-head proof",
+    "Windows real manager offline install of candidate2 and fresh rename→first confirmation→restart/config readback; no adapter/IO substitutes",
+    "Upstream stable runtime delivery or explicitly adopted separately maintained production source",
+    "New release version freeze, final installers/upgrade/signatures/update channel/rollback then unified publication"
+  ],
+  "boundaries": "No daily configuration/provider/auth/sync/inference or day-to-day Codex restart. No public upstream fork/PR; no production source change.",
+  "currentCI": {
+    "id": 42056342409,
+    "head": "ca46bc1f3c35988d206e1a2949c708d4f23aab50",
+    "state": "queued at admission"
+  }
+}

@@ -1,0 +1,36 @@
+bun test v1.4.4 (38afee6c8)
+
+tests/server/provider-reload-discovery.test.ts:
+52 |       const changed = reconcileSuccessfulModelDiscoveries({ config: mutable,
+53 |         models: [{ provider: 'renamed', id: 'raw-model' }], authoritativeProviders: ['renamed'], now: '2026-11-05T00:00:00.000Z' });
+54 |       if (changed) saveConfigPreservingClaudeCode(mutable);
+55 |     })(config),
+56 |   }, 'local-provider-reload-capability');
+57 |   expect(response?.status).toBe(200); expect(entered).toBe(true);
+                                ^
+error: expect(received).toBe(expected)
+
+Expected: 200
+Received: 403
+
+      at <anonymous> (/private/tmp/post021-runtime-prep-cab7eb7/tests/server/provider-reload-discovery.test.ts:57:28)
+(fail) reload of a freshly renamed provider uses its persisted discovery baseline before catalog convergence [19.42ms]
+69 |   const live = loadConfig();
+70 |   live.modelDiscovery!.knownModels!.renamed!.updatedAt = 'stale-live';
+71 |   live.modelDiscovery!.knownModels!.sibling!.ids.push('pending-sibling');
+72 |   const before = bytes(), req = request();
+73 |   const response = await handleManagementAPI(req, new URL(req.url), live, { createManagementConvergeCodex: catalogConvergenceFactory() }, 'local-provider-reload-capability');
+74 |   expect(response?.status).toBe(200);
+                                ^
+error: expect(received).toBe(expected)
+
+Expected: 200
+Received: 403
+
+      at <anonymous> (/private/tmp/post021-runtime-prep-cab7eb7/tests/server/provider-reload-discovery.test.ts:74:28)
+(fail) reload rebases only the target observations and retains unrelated pending live discoveries [2.31ms]
+
+ 0 pass
+ 2 fail
+ 2 expect() calls
+Ran 2 tests across 1 file. [310.00ms]

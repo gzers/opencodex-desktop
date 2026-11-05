@@ -7,9 +7,23 @@ completion_summary: null
 dmd_refs: ["DMD-OPENCODEX-POST021"]
 demand_ids: ["DMD-OPENCODEX-POST021"]
 task_ids: ["TASK-OPENCODEX-POST021-INTEGRATION-HARDWARE-20261105", "TASK-OPENCODEX-POST021-LOCAL-20261104", "TASK-OPENCODEX-POST021-CHANNELS-20261104", "TASK-OPENCODEX-POST021-CHANNEL-PROTOTYPE-20261104", "TASK-OPENCODEX-POST021-INTEGRATION-20261105", "TASK-OPENCODEX-POST021-WINDOWS-HUB-20261104", "TASK-OPENCODEX-POST021-WINDOWS-MATERIALS-20261104", "TASK-OPENCODEX-POST021-WINDOWS-PANEL-20261104", "TASK-OPENCODEX-POST021-WINDOWS-RESTART-20261104", "TASK-OPENCODEX-POST021-WINDOWS-RESTART-FEEDBACK-20261104", "TASK-OPENCODEX-POST021-WINDOWS-STICKY-20261104", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-20261105", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-PROBE-20261105", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-RENAME-PROBE-20261105", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-SYNC-PROBE-20261105"]
-summary: "Windows已安装本地候选重启链回交并合入；新集成CI/Mac复验、首次改名漂移和正式运行包安装交付仍待。"
+summary: "本机安装版本与首次改名基线源头已修，真实Mac安装/原生通过；新CI和Windows候选2定向、正式运行包及发行门仍待。"
 ---
 # 0.2.21发布后双线修复与集成发布计划
+
+
+## 2026-11-05 本机剩余项修复完成，转Windows定向验收（最新）
+
+用户明确“继续剩余任务”。本机代码ca46bc1f3已推送，包含2b860292e托管安装版本修复与58c49b8f4源头基线补丁交付；未改变DMD既有验收、原型布局或日常安装来源，整版仍in_progress。
+
+- 安装版本：extract_semver原先只取数字core，将2.97.0-post021.ownerquery.1当2.97.0。现读取完整SemVer，预发布/build保留，畸形/截断拒绝，manifest与入口仍严格相等。两个先红反例后绿，34安装库测试通过。Mac全新临时HOME/缓存/前缀，用实际RuntimeInstaller+SystemNpmRunner+RealVersionProbe先装正式2.97，再离线装候选.1/.2，两次真实入口/来源完整版本及失败安装保留/隔离卸载通过，不启动服务或Codex。
+- 首次改名漂移：上游reload只接收保存的provider行，没有接收同渠道已保存knownModels/recentArrivals；目录收敛对新渠道重新bootstrap updatedAt。真实管理路由+实际发现转换的两个准入反例先红，源头同步该渠道观察与live merge baseline后，140路由测试、类型及5文件隐私扫描通过。其他渠道待处理观察保持；管理器20项HTTP协调测试包含仅updatedAt变化仍拒绝，未删除字段或放宽全文件校验。初次测试漏用origin准入助手HTTP403原件保留，不作根因证明。
+- 新本地候选2.97.0-post021.ownerquery.2：原npm2.97完整性核验，只替换4个审阅runtime源、显式包身份及compatibility清单，其它原包字节不变。SHA256 bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957，15,406,072字节。旧查询补丁后追加runtime-provider-reload-baseline.patch，SHA efe2dc2cce0f1d9b18b250cccf633e4b762ee7156bc6c5ef411e881acceecbf5；5后像回放一致，config源/文档固定dev前像已核对。候选仍是隔离测试制品，不是上游正式发布或生产安装源采用。
+- Mac原生：58c49b8f4实际WKWebView12检查通过，真实保存通知、缺运行记录错误/重试/取消、配置保持和隔离清理有证据；当前HEAD与该包Rust/UI运行源码树一致，仅后来测试/交接元数据不同。冷pending5秒逻辑由同源31后端覆盖，不冒称Mac已运行真实上游冷CLI原生场景。Clippy allworkspace/alltargets通过，后续测试参数化已实际编译执行。
+
+检查点：新CI42056342409排队；当前Windows需要按本段HEAD和候选.2只补真实管理器离线安装及全新改名首次确认/重启/新旧引用读回、其他账号和日常摘要保护。不能用旧恢复pending成功当本轮新首次通过，不重跑已通过材质/同步全量。取得原MSVC同源候选后执行；源码/制品身份缺失时不冒充验收。上游稳定发行或正式自建来源采用仍未完成，之后才版本冻结和最终发行安装升级/签名/回退/统一发布。本轮未公开PR/fork、未合并main、未发布。
+
+证据local-remaining-20261105/review.json；Windows执行入口同目录WINDOWS-TARGETED.md。运行补丁/构建器/审阅JSON均已在codex/post021-sync-fixes的test/smoke/post021-windows-final/交付，不依赖Mac临时路径。
 
 
 ## 2026-11-05 Windows已安装运行包贡献回交（最新）

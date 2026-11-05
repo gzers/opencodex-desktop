@@ -1,0 +1,559 @@
+bun test v1.4.4 (38afee6c8)
+
+tests/server/provider-reload-discovery.test.ts:
+(pass) reload of a freshly renamed provider uses its persisted discovery baseline before catalog convergence [25.69ms]
+(pass) reload rebases only the target observations and retains unrelated pending live discoveries [3.15ms]
+
+tests/server/management-provider-validation.test.ts:
+(pass) relative send paths at the management write boundary > rejects invalid responsesPath values through the shared management validator [1.30ms]
+(pass) relative send paths at the management write boundary > rejects invalid chatCompletionsPath values through the shared management validator [0.40ms]
+(pass) relative send paths at the management write boundary > create rejects invalid responsesPath before changing memory or disk [4.23ms]
+(pass) relative send paths at the management write boundary > replace rejects invalid responsesPath before changing memory or disk [2.29ms]
+(pass) relative send paths at the management write boundary > create rejects invalid chatCompletionsPath before changing memory or disk [2.14ms]
+(pass) relative send paths at the management write boundary > replace rejects invalid chatCompletionsPath before changing memory or disk [2.19ms]
+(pass) relative send paths at the management write boundary > PATCH revalidates an existing invalid responsesPath without changing state [2.18ms]
+(pass) relative send paths at the management write boundary > PATCH revalidates an existing invalid chatCompletionsPath without changing state [1.72ms]
+(pass) relative send paths at the management write boundary > valid relative send paths remain persistable and reloadable [5.37ms]
+(pass) provider quota routing state > projects bound inference state without mutating display reports [2.22ms]
+(pass) provider quota routing state > single-key capacity recovers on refresh and an uncapped key drops its old cap [1.18ms]
+(pass) provider quota routing state > rechecks current credential scope: authorization [1.35ms]
+(pass) provider quota routing state > rechecks current credential scope: x-api-key [0.97ms]
+(pass) provider quota routing state > rechecks current credential scope: x-goog-api-key [1.59ms]
+(pass) provider quota routing state > rechecks current credential scope: key-pool [3.25ms]
+(pass) provider quota routing state > rechecks current credential scope: oauth [0.75ms]
+(pass) provider quota routing state > reads a provider row replaced while the quota probe is awaiting publication [0.61ms]
+(pass) provider quota routing state > search-only and MCP-only display windows have no inference authority [1.18ms]
+(pass) provider quota routing state > model-specific diagnostic windows do not produce provider-wide routing evidence [0.63ms]
+(pass) provider quota routing state > an exhausted OAuth account report stays display-only [3.88ms]
+(pass) provider quota routing state > cached responses respect reset boundaries, persistent blockers and evidence expiry [0.93ms]
+(pass) provider management validation > provider reload adopts only the validated disk row without rewriting config [4.00ms]
+(pass) provider management validation > provider reload rejects an untrusted principal and a disk rewrite during DNS validation [4.16ms]
+(pass) provider management validation > service-tier validation and public projection stay in the management boundary [0.51ms]
+(pass) provider management validation > validates and exposes structured-output model opt-outs [0.77ms]
+(pass) provider management validation > normalizes hand-edited structured-output model opt-outs at load [0.85ms]
+(pass) provider management validation > validates, exposes, and normalizes retainModels (#1690) [1.72ms]
+(pass) provider management validation > validates, exposes, and normalizes tool-bearing reasoning-effort opt-outs [0.81ms]
+(pass) provider management validation > provider management validates annotateEmptyToolOutputs as boolean [0.27ms]
+🚀 opencodex proxy running on http://localhost:57434
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider POST rejects a non-boolean annotateEmptyToolOutputs at the management boundary [40.63ms]
+🚀 opencodex proxy running on http://localhost:57436
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+[opencodex] Provider model discovery for "relay" threw DestinationDnsResolutionError [urlClass=provider-models, fallback=configured].
+[opencodex] Provider model discovery for "relay" threw DestinationDnsResolutionError [urlClass=provider-models, fallback=configured].
+[opencodex] Provider model discovery for "relay" threw DestinationDnsResolutionError [urlClass=provider-models, fallback=configured].
+[opencodex] Provider model discovery for "relay" threw DestinationDnsResolutionError [urlClass=provider-models, fallback=configured].
+(pass) provider management validation > provider PATCH sets, clears, and rejects annotateEmptyToolOutputs [133.50ms]
+(pass) provider management validation > provider management validates and patches auto-review selectors [7.07ms]
+(pass) provider management validation > a clear sharing a normalized key with a set is rejected instead of racing on order [2.11ms]
+(pass) provider management validation > canonical openai provider rejects auto-review fields [0.31ms]
+(pass) provider management validation > provider POST overwrite preserves auto-review selectors when omitted [4.60ms]
+(pass) provider management validation > provider management rejects modelCosts rows with extra fields [0.43ms]
+(pass) provider management validation > provider management validates model hosted-tool preferences [0.63ms]
+(pass) provider management validation > provider management permits snapshot repair only on canonical OpenAI forward seeds [0.59ms]
+(pass) provider management validation > provider management validates retryOn429 bounds and unknown keys [0.72ms]
+(pass) provider management validation > provider management redacts provider names from auto-compaction validation errors [0.28ms]
+(pass) provider management validation > provider discovery status is additive and omitted before an attempt [0.49ms]
+(pass) provider management validation > provider discovery stays ok while entitlement status changes independently [3.04ms]
+🚀 opencodex proxy running on http://localhost:57440
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider management rejects externally supplied forward auth providers [20.91ms]
+🚀 opencodex proxy running on http://localhost:57442
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+[opencodex] Provider model discovery for "custom-costs" threw DestinationDnsResolutionError [urlClass=provider-models, fallback=configured].
+[opencodex] Provider model discovery for "custom-costs" threw DestinationDnsResolutionError [urlClass=provider-models, fallback=configured].
+(pass) provider management validation > provider POST overwrite preserves modelCosts when the payload omits it [108.64ms]
+🚀 opencodex proxy running on http://localhost:57446
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+[opencodex] Provider model discovery for "custom-display" threw DestinationDnsResolutionError [urlClass=provider-models, fallback=configured].
+[opencodex] Provider model discovery for "custom-display" threw DestinationDnsResolutionError [urlClass=provider-models, fallback=configured].
+(pass) provider management validation > provider POST overwrite preserves modelDisplayNames when the payload omits it [35.44ms]
+🚀 opencodex proxy running on http://localhost:57448
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider POST rejects unsafe submitted modelDisplayNames [23.86ms]
+🚀 opencodex proxy running on http://localhost:57452
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+[opencodex] Provider model discovery for "custom-failover" threw DestinationDnsResolutionError [urlClass=provider-models, fallback=configured].
+[opencodex] Provider model discovery for "custom-failover" threw DestinationDnsResolutionError [urlClass=provider-models, fallback=configured].
+(pass) provider management validation > provider POST overwrite preserves the account-failover opt-out when the payload omits it (#2568d) [35.59ms]
+🚀 opencodex proxy running on http://localhost:57454
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > canonical OpenAI can set, clear, and persist annotateEmptyToolOutputs via PATCH [32.60ms]
+🚀 opencodex proxy running on http://localhost:57457
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > full provider edit preserves aliases owned by the dedicated APIs [24.80ms]
+🚀 opencodex proxy running on http://localhost:57459
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > general provider writes cannot introduce a provider alias collision [19.27ms]
+🚀 opencodex proxy running on http://localhost:57461
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > general provider writes reject reserved duplicate and invalid model aliases [19.19ms]
+🚀 opencodex proxy running on http://localhost:57463
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > canonical openai PATCH and POST reject auto-review fields in every clear form [25.81ms]
+🚀 opencodex proxy running on http://localhost:57467
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > malformed alias overlays return bounded 4xx without config persistence [25.83ms]
+🚀 opencodex proxy running on http://localhost:57469
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > canonical transport tampering stays rejected with persisted alias overlays [24.14ms]
+🚀 opencodex proxy running on http://localhost:57471
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > unrelated non-openai provider edits preserve persisted alias overlays [24.33ms]
+🚀 opencodex proxy running on http://localhost:57473
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > canonical OpenAI with defaultAliases can still PATCH modelContextWindows [24.56ms]
+🚀 opencodex proxy running on http://localhost:57475
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > canonical OpenAI with selectedModels can still PATCH modelContextWindows [24.63ms]
+🚀 opencodex proxy running on http://localhost:57478
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > canonical OpenAI with selectedModels still rejects transport tampering [20.72ms]
+🚀 opencodex proxy running on http://localhost:57481
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > canonical OpenAI with selectedModels still rejects allowPrivateNetwork [31.75ms]
+🚀 opencodex proxy running on http://localhost:57483
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > canonical OpenAI with selectedModels still rejects a headers overlay [37.33ms]
+🚀 opencodex proxy running on http://localhost:57485
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+[opencodex] Provider model discovery for "deepseek" failed with HTTP 401 [urlClass=provider-models, fallback=configured].
+[opencodex] Provider model discovery for "deepseek" failed with HTTP 401 [urlClass=provider-models, fallback=configured].
+⚠️  config.json provider "deepseek": configured baseUrl https://api.deepseek.com/… is ignored because this provider's endpoint is fixed at https://api.deepseek.com/. A URL saved for a different account or region is a common cause of 401s here — drop it, or use the provider whose endpoint matches.
+[opencodex] Provider model discovery for "deepseek" failed with HTTP 401 [urlClass=provider-models, fallback=configured].
+(pass) provider management validation > provider POST overwrite preserves an explicit annotateEmptyToolOutputs: false [396.45ms]
+🚀 opencodex proxy running on http://localhost:57502
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+[opencodex] Provider model discovery for "opencode-go" failed with HTTP 401 [urlClass=provider-models, fallback=configured].
+[opencodex] Provider model discovery for "opencode-go" failed with HTTP 401 [urlClass=provider-models, fallback=configured].
+(pass) provider management validation > provider POST overwrite preserves hand-edited context windows (#1409) > an omitted modelContextWindows keeps the user's map, without registry seed keys [3441.75ms]
+🚀 opencodex proxy running on http://localhost:57540
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+[opencodex] Provider model discovery for "opencode-go" failed with HTTP 401 [urlClass=provider-models, fallback=configured].
+[opencodex] Provider model discovery for "opencode-go" failed with HTTP 401 [urlClass=provider-models, fallback=configured].
+(pass) provider management validation > provider POST overwrite preserves hand-edited context windows (#1409) > an omitted modelContextTiers keeps the saved map [1957.02ms]
+🚀 opencodex proxy running on http://localhost:57550
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+[opencodex] Provider model discovery for "opencode-go" failed with HTTP 401 [urlClass=provider-models, fallback=configured].
+[opencodex] Provider model discovery for "opencode-go" failed with HTTP 401 [urlClass=provider-models, fallback=configured].
+(pass) provider management validation > provider POST overwrite preserves hand-edited context windows (#1409) > a submitted modelContextWindows updates that key and keeps the others [1777.58ms]
+🚀 opencodex proxy running on http://localhost:57569
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+[opencodex] Provider model discovery for "opencode-go" failed with HTTP 401 [urlClass=provider-models, fallback=configured].
+[opencodex] Provider model discovery for "opencode-go" failed with HTTP 401 [urlClass=provider-models, fallback=configured].
+(pass) provider management validation > provider POST overwrite preserves hand-edited context windows (#1409) > an omitted contextWindow keeps the user's scalar [3894.35ms]
+🚀 opencodex proxy running on http://localhost:57584
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+[opencodex] Provider model discovery for "opencode-go" failed with HTTP 401 [urlClass=provider-models, fallback=configured].
+[opencodex] Provider model discovery for "opencode-go" failed with HTTP 401 [urlClass=provider-models, fallback=configured].
+(pass) provider management validation > provider POST overwrite preserves hand-edited context windows (#1409) > a submitted contextWindow still wins [1656.67ms]
+🚀 opencodex proxy running on http://localhost:57590
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+[opencodex] Provider model discovery for "opencode-go" failed with HTTP 401 [urlClass=provider-models, fallback=configured].
+(pass) provider management validation > provider POST overwrite preserves hand-edited context windows (#1409) > a brand-new provider still receives the registry seed [867.11ms]
+🚀 opencodex proxy running on http://localhost:57596
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+[opencodex] Provider model discovery for "opencode-go" failed with HTTP 401 [urlClass=provider-models, fallback=configured].
+[opencodex] Provider model discovery for "opencode-go" failed with HTTP 401 [urlClass=provider-models, fallback=configured].
+(pass) provider management validation > provider POST overwrite preserves hand-edited context windows (#1409) > PATCH can still delete a key with an explicit null [2064.35ms]
+🚀 opencodex proxy running on http://localhost:57610
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider management accepts modelCosts on the canonical openai provider [30.11ms]
+🚀 opencodex proxy running on http://localhost:57612
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+[opencodex] Provider model discovery for "custom-max-input" threw DestinationDnsResolutionError [urlClass=provider-models, fallback=configured].
+[opencodex] Provider model discovery for "custom-summary-capability" threw DestinationDnsResolutionError [urlClass=provider-models, fallback=configured].
+[opencodex] Provider model discovery for "custom-summary-delivery" threw DestinationDnsResolutionError [urlClass=provider-models, fallback=configured].
+[opencodex] Provider model discovery for "custom-mixed-gateway" threw DestinationDnsResolutionError [urlClass=provider-models, fallback=configured].
+(pass) provider management validation > provider management rejects runtime metadata and accepts only canonical OpenAI option seeds [97.03ms]
+🚀 opencodex proxy running on http://localhost:57614
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider management does not persist registry-only static auth headers for meta-muse [114.05ms]
+🚀 opencodex proxy running on http://localhost:57618
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+[opencodex] replacing conflicting live OpenAI API metadata for openai-apikey/gpt-5.5 with trusted registry metadata
+[opencodex] replacing conflicting live OpenAI API metadata for openai-apikey/gpt-5.6 with trusted registry metadata
+[opencodex] replacing conflicting live OpenAI API metadata for openai-apikey/gpt-5.6-sol with trusted registry metadata
+[opencodex] replacing conflicting live OpenAI API metadata for openai-apikey/gpt-5.6-terra with trusted registry metadata
+[opencodex] replacing conflicting live OpenAI API metadata for openai-apikey/gpt-5.6-luna with trusted registry metadata
+[opencodex] replacing conflicting live OpenAI API metadata for openai-apikey/gpt-5.6-sol-pro with trusted registry metadata
+[opencodex] replacing conflicting live OpenAI API metadata for openai-apikey/gpt-5.6-terra-pro with trusted registry metadata
+[opencodex] replacing conflicting live OpenAI API metadata for openai-apikey/gpt-5.6-luna-pro with trusted registry metadata
+[opencodex] replacing conflicting live OpenAI API metadata for openai-apikey/daybreak-red-latest with trusted registry metadata
+[opencodex] replacing conflicting live OpenAI API metadata for openai-apikey/daybreak-blue-latest with trusted registry metadata
+[opencodex] replacing conflicting live OpenAI API metadata for openai-apikey/gpt-6-astra with trusted registry metadata
+[opencodex] replacing conflicting live OpenAI API metadata for openai-apikey/gpt-6.1-sol with trusted registry metadata
+[opencodex] replacing conflicting live OpenAI API metadata for openai-apikey/gpt-6.1-terra with trusted registry metadata
+[opencodex] replacing conflicting live OpenAI API metadata for openai-apikey/gpt-6-sol with trusted registry metadata
+[opencodex] replacing conflicting live OpenAI API metadata for openai-apikey/gpt-6-luna with trusted registry metadata
+(pass) provider management validation > management selections preserve an OpenAI API Pro selected id without wire rewriting [164.38ms]
+🚀 opencodex proxy running on http://localhost:57620
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider management rejects namespace-breaking or reserved provider names [26.74ms]
+(pass) provider management validation > provider management rejects names owned by a Codex account namespace without mutating config [2.22ms]
+🚀 opencodex proxy running on http://localhost:57624
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider management rejects base URLs with embedded credentials [37.77ms]
+🚀 opencodex proxy running on http://localhost:57626
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider management rejects invalid or non-http base URLs [43.99ms]
+🚀 opencodex proxy running on http://localhost:57628
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider management rejects private-network destinations without explicit opt-in [37.84ms]
+🚀 opencodex proxy running on http://localhost:57630
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+[opencodex] Provider model discovery for "custom-local" returned an authoritative empty catalog; no models will be exposed.
+(pass) provider management validation > provider management allows private-network destinations only with explicit opt-in [48.67ms]
+🚀 opencodex proxy running on http://localhost:57632
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider management always rejects metadata endpoints [36.07ms]
+🚀 opencodex proxy running on http://localhost:57634
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+[opencodex] Provider model discovery for "patch-test" returned an authoritative empty catalog; no models will be exposed.
+(pass) provider management validation > provider PATCH can enable allowPrivateNetwork and then change baseUrl to localhost [48.02ms]
+🚀 opencodex proxy running on http://localhost:57636
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+[opencodex] Provider model discovery for "private-toggle" returned an authoritative empty catalog; no models will be exposed.
+(pass) provider management validation > provider PATCH rejects disabling allowPrivateNetwork while baseUrl is private [28.86ms]
+🚀 opencodex proxy running on http://localhost:57639
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+[opencodex] Provider model discovery for "discovery-toggle" returned an authoritative empty catalog; no models will be exposed.
+(pass) provider management validation > provider PATCH persists liveModels and provider metadata exposes the normalized state [33.15ms]
+🚀 opencodex proxy running on http://localhost:57643
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider PATCH persists and clears structured-output model opt-outs [72.36ms]
+🚀 opencodex proxy running on http://localhost:57645
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider management rejects sensitive or injectable provider headers [25.07ms]
+🚀 opencodex proxy running on http://localhost:57647
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider deletion does not treat inherited object keys as configured providers [26.24ms]
+🚀 opencodex proxy running on http://localhost:57649
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider deletion removes the deleted provider's OAuth credential [25.96ms]
+🚀 opencodex proxy running on http://localhost:57651
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider deletion removes stale provider context caps [25.03ms]
+🚀 opencodex proxy running on http://localhost:57653
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider deletion removes that provider's custom models (#1273) [25.36ms]
+🚀 opencodex proxy running on http://localhost:57655
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider management switches the default and reassigns it when removed [28.17ms]
+🚀 opencodex proxy running on http://localhost:57657
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider management rejects POST setDefault for a disabled provider [93.66ms]
+🚀 opencodex proxy running on http://localhost:57663
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider management refuses to delete the default when only a disabled replacement remains [27.43ms]
+🚀 opencodex proxy running on http://localhost:57665
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider management can disable and re-enable non-default providers [28.44ms]
+🚀 opencodex proxy running on http://localhost:57667
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider management rejects disabling the default provider [21.03ms]
+🚀 opencodex proxy running on http://localhost:57669
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider management accepts canonical OpenAI modes and rejects legacy Multi [22.61ms]
+(pass) provider management validation > canonical OpenAI POST passes allowBenchmarkAddresses into destination resolution [4.14ms]
+(pass) provider management validation > canonical OpenAI POST still rejects non-benchmark private destination answers [1.87ms]
+(pass) provider management validation > canonical OpenAI PATCH passes allowBenchmarkAddresses into destination resolution [1.91ms]
+(pass) provider management validation > PATCH destination benchmark exception stays scoped to the canonical openai row [0.69ms]
+(pass) provider management validation > canonical OpenAI PATCH still rejects non-benchmark private destination answers [0.60ms]
+🚀 opencodex proxy running on http://localhost:57671
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > disabled-only PATCH cannot re-enable a noncanonical openai row unchanged [18.55ms]
+🚀 opencodex proxy running on http://localhost:57673
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > disabled-only PATCH re-enables canonical openai and fills missing pool mode [21.53ms]
+(pass) provider management validation > disabled OpenAI recovery accepts pure Clash fake-IP via destination check [2.99ms]
+(pass) provider management validation > disabled OpenAI recovery rejects loopback, RFC1918, and metadata and stays disabled [5.56ms]
+(pass) provider management validation > disabled OpenAI recovery ignores persisted allowPrivateNetwork for DNS guard [2.70ms]
+(pass) provider management validation > disabled OpenAI recovery strips allowPrivateNetwork after successful re-enable [3.16ms]
+🚀 opencodex proxy running on http://localhost:57675
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > disabled-only PATCH normalizes uppercase host before save-and-reload [21.50ms]
+🚀 opencodex proxy running on http://localhost:57677
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > disabled-only PATCH normalizes explicit :443 port before save-and-reload [25.57ms]
+(pass) provider management validation > provider mode PATCH is strict, persists live state, clears caches and affinity, and primes Pool only [4.13ms]
+(pass) provider management validation > xAI wire selection reports effective state and persists later Chat opt-in across provider overwrite [8.75ms]
+(pass) provider management validation > provider PATCH field-mask edits non-reserved providers and rejects unsafe fields (WP040) [154.19ms]
+(pass) provider management validation > provider management exposes and persists context-window hints for Models GUI (#1073) [8.64ms]
+(pass) provider management validation > provider PATCH manages custom headers with merge and clear semantics [79.83ms]
+(pass) provider management validation > GET /api/providers exposes hasHeaders but never header names or values (#959) [1.64ms]
+(pass) provider management validation > provider PATCH merges headers case-insensitively [5.18ms]
+(pass) provider management validation > provider PATCH clear keeps registry static headers [3.48ms]
+(pass) provider management validation > concurrent provider PATCHes serialize mixed fields and per-model soft budgets [6.77ms]
+🚀 opencodex proxy running on http://localhost:57688
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider context-cap API persists toggles and annotates model rows [35.98ms]
+🚀 opencodex proxy running on http://localhost:57690
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+(pass) provider management validation > provider context-cap API supports global value and set-all toggles [52.31ms]
+(pass) provider transport option management contract (#1668, #2816) > POST accepts a valid upstreamHttpVersion and persists it; GET exposes it [4.29ms]
+(pass) provider transport option management contract (#1668, #2816) > POST with upstreamHttpVersion: null persists nothing and survives a reload [4.27ms]
+(pass) provider transport option management contract (#1668, #2816) > a config already holding upstreamHttpVersion: null still loads [2.27ms]
+(pass) provider transport option management contract (#1668, #2816) > POST rejects an invalid upstreamHttpVersion at the write boundary without persisting [2.44ms]
+(pass) provider transport option management contract (#1668, #2816) > PATCH sets, then clears upstreamHttpVersion with live + disk persistence [4.57ms]
+(pass) provider transport option management contract (#1668, #2816) > safeConfigDTO exposes upstreamHttpVersion without leaking it into the live row [2.94ms]
+(pass) provider transport option management contract (#1668, #2816) > providerManagementConfigError rejects invalid upstreamHttpVersion values [0.46ms]
+(pass) provider transport option management contract (#1668, #2816) > upstreamWebsocket round-trips through POST, GET, and PATCH [5.49ms]
+(pass) provider transport option management contract (#1668, #2816) > POST overwrite preserves omitted upstreamWebsocket and honors explicit false [6.63ms]
+(pass) OpenAI provider cap remembers an explicit window across off, reload, and on [9.14ms]
+(pass) remembered provider context selections > first enable ignores inherited remembered values for toString [6.95ms]
+(pass) remembered provider context selections > first enable ignores inherited remembered values for valueOf [7.58ms]
+(pass) remembered provider context selections > setAll payload {
+  value: 600000,
+  setAll: true,
+} preserves or replaces a disabled selection as documented [4.44ms]
+(pass) remembered provider context selections > setAll payload {
+  setAll: true,
+} preserves or replaces a disabled selection as documented [3.28ms]
+(pass) remembered provider context selections > an active-only legacy selection survives off, reload and implicit enable [4.91ms]
+(pass) remembered provider context selections > rejected cap requests leave active and disabled selections untouched in memory and on disk [1.85ms]
+(pass) remembered provider context selections > DELETE removal forgets active and disabled selections in persisted and live state [6.28ms]
+(pass) remembered provider context selections > editor removal forgets active and disabled selections in persisted and live state [7.93ms]
+(pass) raw provider editor normalizes reviewer clears before live adoption [77.51ms]
+(pass) model capability PATCH merges axes while strict replacement and DTO state agree [19.74ms]
+
+ 140 pass
+ 0 fail
+ 1109 expect() calls
+Ran 140 tests across 2 files. [19.09s]

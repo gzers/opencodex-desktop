@@ -1,0 +1,34 @@
+   Compiling opencodex-desktop v0.2.21 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.51s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-b0644f1dff90c839)
+
+running 3 tests
+test modules::runtime::install::tests::version_probe_never_accepts_a_truncated_or_malformed_version ... FAILED
+test modules::runtime::install::tests::version_probe_preserves_prerelease_and_build_identity ... FAILED
+test modules::runtime::install::tests::real_version_probe_rejects_nonzero_exit_even_when_stdout_has_version ... ok
+
+failures:
+
+---- modules::runtime::install::tests::version_probe_never_accepts_a_truncated_or_malformed_version stdout ----
+
+thread 'modules::runtime::install::tests::version_probe_never_accepts_a_truncated_or_malformed_version' (129929894) panicked at src/modules/runtime/install.rs:3526:13:
+assertion `left == right` failed: 2.97.0.1
+  left: Some("2.97.0.1")
+ right: None
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- modules::runtime::install::tests::version_probe_preserves_prerelease_and_build_identity stdout ----
+
+thread 'modules::runtime::install::tests::version_probe_preserves_prerelease_and_build_identity' (129929895) panicked at src/modules/runtime/install.rs:3506:13:
+assertion `left == right` failed: a local prerelease must never be reported as its stable base
+  left: Some("2.97.0")
+ right: Some("2.97.0-post021.ownerquery.1")
+
+
+failures:
+    modules::runtime::install::tests::version_probe_never_accepts_a_truncated_or_malformed_version
+    modules::runtime::install::tests::version_probe_preserves_prerelease_and_build_identity
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 1225 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`
