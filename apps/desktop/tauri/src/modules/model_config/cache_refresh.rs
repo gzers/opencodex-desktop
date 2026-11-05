@@ -12,6 +12,8 @@ use std::path::Path;
 use std::time::Duration;
 #[path = "client_npm_runtime.rs"]
 pub mod client_npm_runtime;
+#[path = "client_runtime_readiness.rs"]
+mod client_runtime_readiness;
 #[path = "client_selection_rename.rs"]
 pub mod client_selection_rename;
 #[path = "saved_runtime_reconcile.rs"]
@@ -325,7 +327,7 @@ pub async fn prepare_saved_rename_restart(
     let selection = if preparation.mapping.is_empty() {
         None
     } else {
-        let settings = management.public_settings().await?;
+        let settings = client_runtime_readiness::read_settings(&management).await?;
         let integration = management.codex_integration().await?;
         let binding = client_binding(&settings, &integration)?;
         match binding {
