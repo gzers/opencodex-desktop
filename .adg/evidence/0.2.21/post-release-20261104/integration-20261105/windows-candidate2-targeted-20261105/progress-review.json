@@ -1,5 +1,5 @@
 {
-  "result": "prepared-awaiting-Administrator-native-execution",
+  "result": "first-native-run-failed-before-mutation; guarded-attempt2-awaiting-Administrator",
   "codeBaseline": "ca46bc1f3c35988d206e1a2949c708d4f23aab50",
   "artifactVersion": "2.97.0-post021.ownerquery.2",
   "artifactSha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957",
@@ -10,7 +10,8 @@
     "upstreamSupplementalRoute": "2pass onWindows; realroute+discoverytransition",
     "realWindowsRuntimeInstaller": "1pass actual isolated stable2.97→offlinecandidate2/fullentry/sourceversion/failureretainsentrypackageandsource/uninstall",
     "strictReconcile": "19pass; includes updatedAt-onlydrift stillrefused andpendingretained",
-    "driverAdmission": "Wrongowner15119 rejectedbeforedata/processmutation"
+    "driverAdmission": "Wrongowner15119 rejectedbeforedata/processmutation",
+    "dailyCrossAccountGuard": "Signature, challenge, timestamp, SID/session/path negative cases passed; real 15119 signed challenge and original hashes passed; attempt2 wrongowner rejected before output."
   },
   "nonEvidence": "Initial unix-onlyinstalllibfilterselected0 onWindows; preservedbutnotcountedpassing",
   "nativeManager": {
@@ -22,11 +23,11 @@
     "appsTree": "ca89905344d0d29e761bcb8ffa24d22769c9cb4c",
     "embeddedCommitAndParentVerified": true
   },
-  "freshRename": "Notrun; new sandboxpreparedwithoutpending andnewtargetlabel",
+  "freshRename": "Notrun; no installed package/config/pending yet. Same-source binary unchanged.",
   "ciRun": 42056342409,
-  "at": "2026-11-05T16:24:37.285130+00:00",
-  "AdministratorRun": "Pendingmanualentry; notyetexecuted",
-  "codeSha": "9f4f967e0ca091ad44e045173bf3ff5cc279ed57",
+  "at": "2026-11-05T23:15:45.315379+00:00",
+  "AdministratorRun": "Attempt1 failed at cross-account daily proxy read before manager/backup/install/service stop; exact failed bytes preserved. Attempt2 prepared and manual entry requested.",
+  "codeSha": "02a6910e93e62f6aa9b9139757019aff88662965",
   "ci": "42056342409 completed/success;5applicablejobs success;releasebuild skipped byoriginalcondition",
   "pendingEntry": "D:/Users/Administrator/WorkSpace/Test/POST021-CANDIDATE2-TARGETED.ps1"
 }

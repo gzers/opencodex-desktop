@@ -10,4 +10,8 @@ CI42056342409终态success，五适用job成功，发行build按原分支条件s
 
 全新根D:/Users/Administrator/WorkSpace/Test/post021-candidate2-targeted-20261105已准备Node/npm/独立缓存/候选/本轮原MSVC。入口POST021-CANDIDATE2-TARGETED.ps1只允许Administrator登录会话/SID/session1，15119执行驱动和停止守卫均已验证先拒绝。运行后：真实离线预检/托管安装/2522文件和完整managed版本，失败安装保留；精确停止旧隔离服务69172，可信键盘输入Post021AdminFresh2并实际保存，取消确认须保留保存/pending和客户端，首次确认须全文件SHA及knownModels/recentArrivals稳定、新引用/旧引用消失/pending清除及正式代际替换。另一次正常保存独立验证服务不可达和原通知重试。逐段保护其它账号关键进程、两份日常配置摘要及日常代理66908的SID/path/session/create。不删除时间字段、不放宽字节守卫、不自动多次重试冒充首次。
 
-当前没有本轮evidence/started.json；旧隔离服务/客户端保持原代际。仅准备和源码/安装内核通过，真实窗口托管安装、全新首次改名与本轮取消/失败重试尚待，不关闭AC09。需要Administrator运行入口并回复结果。正式运行包发布/生产来源采用及桌面发行安装升级/签名/回退仍归集成线；不公开PR/fork、不合并main、不发布、不改日常配置或来源、不真实同步/推理。
+2026-11-06 07:09（Asia/Shanghai）首次Administrator真实运行：账号/SID/session1、制品和正式CLI版本均核验，随后读取15119日常代理config.json遇EPERM。失败在备份/新管理器/安装/服务停止/保存之前，checks为空且无managerPid；五份原始JSON保留attempt1-native-failed/。日常两文件SHA、原测试服务69172/正式客户端51156和日常代理66908的代际仍与基线相同。跨账号不可读属于测试证据采集路径问题，不判定运行包安装或重启产品失败。
+
+接续代码02a6910e93e62f6aa9b9139757019aff88662965已推送。改由15119只读观察器读取固定两路径并用内存Ed25519密钥签署随机挑战/时间戳/账号SID/session/路径及SHA，Administrator按固定公钥、新挑战和20秒新鲜度校验；不改ACL、不传配置原文、不复用旧摘要、不放宽原基线。签名篡改、重放、过期、错误SID/session/run/path负例以及真实往返通过。原失败摘要精确匹配且backup/runtime/config/pending全不存在才准入evidence-attempt2，不覆盖第一次。错误15119运行仍在输出目录/任何修改前拒绝。脚本有效观察窗口12小时，须Administrator自己的会话执行同一POST021-CANDIDATE2-TARGETED.ps1。
+
+目前等待接续：真实窗口托管安装、全新首次改名与本轮取消/失败重试仍未完成，不关闭AC09。正式运行包发布/生产来源采用及桌面发行安装升级/签名/回退仍归集成线；不公开PR/fork、不合并main、不发布、不改日常配置或来源、不真实同步/推理。
