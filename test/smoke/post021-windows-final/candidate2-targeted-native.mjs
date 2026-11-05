@@ -9,6 +9,7 @@ import {connect} from './cdp-session.mjs'
 import {waitForNativeReady} from './formal-native-ready.mjs'
 import {observePublicRestart} from './formal-restart-observation.mjs'
 import {assertModelSandbox} from '../windows-model-ui.mjs'
+import {requestDailySnapshot} from './candidate2-daily-guard.mjs'
 const [planFile]=process.argv.slice(2),plan=JSON.parse(await readFile(planFile,'utf8')),root=resolve(plan.runRoot)
 assert.equal(root,resolve('D:/Users/Administrator/WorkSpace/Test/post021-candidate2-targeted-20261105'))
 const ps=join(process.env.SystemRoot??'C:/Windows','System32/WindowsPowerShell/v1.0/powershell.exe')
@@ -20,7 +21,15 @@ const manifest=JSON.parse(await readFile(plan.artifactManifest,'utf8')),candidat
 assert.equal(manifest.version,'2.97.0-post021.ownerquery.2');assert.equal(manifest.sha256,'bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957')
 assert.equal(sha(await readFile(plan.artifactArchive)),manifest.sha256);assert.equal(sha(await readFile(plan.managerExe)),candidate.sha256)
 assert.equal(candidate.appsTree,plan.managerAppsTree);assert.equal(candidate.requestedHead,'ca46bc1f3c35988d206e1a2949c708d4f23aab50')
-const output=join(root,'evidence');await mkdir(output,{recursive:false})
+// Only the recorded pre-mutation permission failure can enter attempt2.
+// Preserve attempt1 in place, and reject reuse after any installation/save.
+assert.equal(plan.evidenceDirectory,'evidence-attempt2')
+const priorBytes=await readFile(join(root,'evidence/result.json')),prior=JSON.parse(priorBytes)
+assert.equal(sha(priorBytes),plan.resumeAdmission.priorResultSha256)
+assert.equal(prior.result,'failed');assert.deepEqual(prior.checks,[]);assert.equal(prior.managerPid,undefined)
+assert.equal(prior.error.message,"EPERM: operation not permitted, open 'D:/Software/Develop/OpenCodeX Desktop/data/opencodex-home/config.json'")
+for(const path of ['private-backup','sandbox/runtime','sandbox/manager-state/provider-client-renames.json','sandbox/opencodex-home/config.json'])await assert.rejects(access(join(root,path)),e=>e.code==='ENOENT','Attempt2 only resumes before test mutations: '+path)
+const output=join(root,plan.evidenceDirectory);await mkdir(output,{recursive:false})
 const save=(name,v)=>writeFile(join(output,name+'.json'),JSON.stringify(v,null,2)+'\n')
 const report={result:'running',acceptance:false,startedAtUtc:new Date().toISOString(),account,manager:candidate,runtimeVersion:manifest.version,tarballSha256:manifest.sha256,checks:[]}
 await save('started',report)
@@ -49,8 +58,9 @@ try{
  const other=initial.other.filter(p=>['chatgpt.exe','codex.exe','opencodex-desktop.exe'].includes(win32.basename(p.path??'').toLowerCase()))
  const readDailyProxy=()=>JSON.parse(psCall('$p=Get-CimInstance Win32_Process -Filter \'ProcessId='+plan.protectedProxy.pid+'\';if(!$p){throw \'Protected daily proxy missing\'};$s=Invoke-CimMethod -InputObject $p -MethodName GetOwnerSid -ErrorAction Stop;if($s.ReturnValue -ne 0){throw \'Protected SID unreadable\'};[ordered]@{pid=$p.ProcessId;path=$p.ExecutablePath;createdAtUtcTicks=[string]$p.CreationDate.ToUniversalTime().Ticks;sessionId=$p.SessionId;sid=$s.Sid}|ConvertTo-Json -Compress'))
  const proxyBefore=readDailyProxy();assert.equal(proxyBefore.pid,plan.protectedProxy.pid);assert.equal(proxyBefore.createdAtUtcTicks,plan.protectedProxy.createdAtUtcTicks);assert.equal(proxyBefore.sessionId,2);assert.equal(win32.resolve(proxyBefore.path).toLowerCase(),win32.resolve(plan.protectedProxy.path).toLowerCase());await save('protected-daily-proxy-before',proxyBefore)
- const daily=[];for(const path of plan.protectedConfigPaths){const b=await readFile(path);daily.push({path,bytes:b.length,sha256:sha(b)})}await save('protected-configs-before',daily)
- const boundary=async(v,name)=>{const changes=other.filter(p=>!v.other.some(q=>q.pid===p.pid&&q.createdAtUtcTicks===p.createdAtUtcTicks));const hashes=[];for(const row of daily)hashes.push({...row,afterSha256:sha(await readFile(row.path))});const dailyProxy=readDailyProxy();await save(name,{otherOwnerChanges:changes,protectedConfigs:hashes,dailyProxy});assert.deepEqual(dailyProxy,proxyBefore);assert.equal(changes.length,0);assert(hashes.every(x=>x.sha256===x.afterSha256))}
+ const observed=await requestDailySnapshot(plan.dailyGuard,plan.protectedConfigPaths),daily=observed.value.configs
+ assert.deepEqual(daily,plan.protectedConfigBaseline,'Daily configs changed since preparation');await save('protected-configs-before',observed)
+ const boundary=async(v,name)=>{const changes=other.filter(p=>!v.other.some(q=>q.pid===p.pid&&q.createdAtUtcTicks===p.createdAtUtcTicks));const fresh=await requestDailySnapshot(plan.dailyGuard,plan.protectedConfigPaths);const dailyProxy=readDailyProxy();await save(name,{otherOwnerChanges:changes,protectedConfigs:fresh,dailyProxy});assert.deepEqual(dailyProxy,proxyBefore);assert.equal(changes.length,0);assert.deepEqual(fresh.value.configs,daily,'Daily config bytes changed')}
  const backup=join(root,'private-backup');await mkdir(backup);await copyFile('C:/Users/Administrator/.codex/config.toml',join(backup,'config.before.toml'))
  const managerEnv={...env,OPENCODEX_SANDBOX:'1',OPENCODEX_SANDBOX_ROOT:sandbox,OPENCODEX_SANDBOX_BOUNDARY:root,OPENCODEX_WINDOWS_SMOKE_CDP_PORT:String(plan.cdpPort),APPDATA:join(root,'manager-profile/Roaming'),LOCALAPPDATA:join(root,'manager-profile/Local'),TEMP:join(root,'temp'),TMP:join(root,'temp')}
  const so=await open(join(output,'manager.stdout.log'),'wx'),se=await open(join(output,'manager.stderr.log'),'wx');manager=spawn(plan.managerExe,[],{cwd:root,env:managerEnv,detached:true,windowsHide:false,stdio:['ignore',so.fd,se.fd]});await so.close();await se.close();report.managerPid=manager.pid
