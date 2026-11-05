@@ -1,0 +1,24 @@
+{
+  "at": "2026-11-05T23:24:10.067294+00:00",
+  "result": "user-reported-run; no-attempt2-output-or-live-driver-observed; cause-unknown-await-console",
+  "codeSha": "51fd6d3574ef58a64ac4ecb9ea838f4792158433",
+  "observed": {
+    "evidenceAttempt2Exists": false,
+    "privateBackupExists": false,
+    "sandboxRuntimeExists": false,
+    "serviceConfigExists": false
+  },
+  "checks": {
+    "readonlyPreoutputArtifactAndPriorAdmission": "passed-in15119-notAdministrator",
+    "launcherWindowsPowerShellParser": "passed",
+    "launcherWrongOwnerNegative": "actual15119session2 rejected before driver/environment; agent test explicitly"
+  },
+  "request": "Asked user for original complete console output and not to rerun; no automatic retry performed",
+  "remaining": [
+    "ActualAdministrator-entry",
+    "NativeManagedInstall",
+    "FreshRenameFirstConfirm",
+    "CancelFailureRetryBoundary"
+  ],
+  "scope": "No new installation, service stop, config writes, daily changes, inference or sync"
+}

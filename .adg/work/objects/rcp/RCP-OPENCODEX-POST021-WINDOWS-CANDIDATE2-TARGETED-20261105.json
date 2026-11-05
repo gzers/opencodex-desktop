@@ -31,11 +31,17 @@
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/governance-snapshot/IMP-OPENCODEX-DESKTOP-30.md",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/governance-snapshot/WINDOWS-TARGETED.md",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/isolated-preparation.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/launcher-agent-wrong-owner-negative.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/live-log-observation.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/manifest.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/native-admission.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/patch-application-review.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/preoutput-admission-readonly.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/preoutput-admission-readonly.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/preoutput-diagnostics-preparation.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/preoutput-observation.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/prior-receipts/rcp-revision4.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/prior-receipts/rcp-revision5.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/progress-review.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/real-installer-test-review.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/real-installer-test.stderr.log",
@@ -52,6 +58,7 @@
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/wrong-owner-stop.stderr.log",
     "test/smoke/post021-windows-final/candidate2-daily-guard.mjs",
     "test/smoke/post021-windows-final/candidate2-daily-guard.test.mjs",
+    "test/smoke/post021-windows-final/candidate2-launch.ps1",
     "test/smoke/post021-windows-final/candidate2-owned-stop.ps1",
     "test/smoke/post021-windows-final/candidate2-service.ts",
     "test/smoke/post021-windows-final/candidate2-targeted-native.mjs"
@@ -96,9 +103,9 @@
     }
   ],
   "fact_impacts": [],
-  "completed_at": "2026-11-05T23:15:45.329411+00:00",
-  "summary": "首次Administrator运行在启动管理器前读取日常文件EPERM，原失败五JSON保留，无安装/服务停止/保存。改用15119签名随机挑战摘要并验证真实往返/过期重放身份负例及错误账号拒绝，严格基线不变；接续入口已备仍待管理员实际安装/全新改名首次确认/取消重试，AC09不关闭。代码02a6910e93e62f6aa9b9139757019aff88662965",
-  "revision": 5,
-  "summary_digest": "972a21f79a7273328c54d9cf9635cde3a4e19b505c712328354b084c41ebcad4",
-  "content_digest": "480bc5a575cfd0e2b49f00c71704e36a256ecc7638843351743aadce0248922d"
+  "completed_at": "2026-11-05T23:24:10.067294+00:00",
+  "summary": "用户回复接续已运行但无attempt2启动/安装/保存输出，尚不能确定启动前退出原因；已请求原控制台并避免盲目重跑。只读制品/准入复核通过，补入口持久日志及错误账号负例，安装/全新首次改名/取消重试仍待。代码51fd6d3574ef58a64ac4ecb9ea838f4792158433",
+  "revision": 6,
+  "summary_digest": "ffb1beb598403c2fd658dfb8342851aadc126fb37b9dc3712553451aea13a2ce",
+  "content_digest": "731fb6cc52006d8b4e5e3217b578350e41d32ed3f6f49a6fab3c1f4fa83af18b"
 }

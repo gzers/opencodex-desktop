@@ -1,5 +1,5 @@
 {
-  "count": 42,
+  "count": 48,
   "files": [
     {
       "path": "acquisition.json",
@@ -113,13 +113,18 @@
     },
     {
       "path": "HANDOFF.md",
-      "bytes": 4366,
-      "sha256": "45b4fdbdc47cca0f83194ab92734341cfa0d68bd9037e82fb9721a7689b4467f"
+      "bytes": 5096,
+      "sha256": "f93fa07478df0e0521a2a3451a27407954c4bf3df63877ee972e1db7cb451879"
     },
     {
       "path": "isolated-preparation.json",
       "bytes": 805,
       "sha256": "d7b4fc23131a417643b7f60b95f2119cce5135116fd91d092bca5663ebd6b94c"
+    },
+    {
+      "path": "launcher-agent-wrong-owner-negative.json",
+      "bytes": 400,
+      "sha256": "659e662ec3ba01fcef266efd6ddd4721588c72ea88c6b7d2e08122acefc31463"
     },
     {
       "path": "live-log-observation.json",
@@ -137,14 +142,39 @@
       "sha256": "827e8a0176df36bc00694b8802c0abb69c616fa16d3dc568204ac40252b46163"
     },
     {
+      "path": "preoutput-admission-readonly.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "preoutput-admission-readonly.stdout.log",
+      "bytes": 430,
+      "sha256": "aba62de206e9dea60d0cf05d9f261f4c5682bbbc6d1e090da60114a3920ffef0"
+    },
+    {
+      "path": "preoutput-diagnostics-preparation.json",
+      "bytes": 521,
+      "sha256": "1455d5bdd18ac97c4e3d888dca9df72b775645496682efb9000ee3c01ab31bd0"
+    },
+    {
+      "path": "preoutput-observation.json",
+      "bytes": 1016,
+      "sha256": "979b221162d5a341a7abea2215bcc5c0d80b3cdcc754bb98cc2585663de51993"
+    },
+    {
       "path": "prior-receipts/rcp-revision4.json",
       "bytes": 7026,
       "sha256": "1c0dc5112f1d1505aaecc7572eccc32509f8d3e1082f6f56e96851de490b085d"
     },
     {
+      "path": "prior-receipts/rcp-revision5.json",
+      "bytes": 9147,
+      "sha256": "329e4317874262ded917d908d66efecc61dd638fcc5bbf7585eb0cfb3b05ef83"
+    },
+    {
       "path": "progress-review.json",
-      "bytes": 2276,
-      "sha256": "ace40b33a8107aa7976a296cae3b838d488bb7339e231044a7e9c3825bc9cd3c"
+      "bytes": 2272,
+      "sha256": "66f7a3ed0f1f2522b96a1085857baf5e93a95307a691af409eb9e93b5a4c5a41"
     },
     {
       "path": "real-installer-test-review.json",
