@@ -1,0 +1,70 @@
+{
+  "kind": "TASK",
+  "id": "TASK-OPENCODEX-POST021-WINDOWS-HARDWARE-CLOSEOUT-20261105",
+  "title": "Windows硬件条件材质收口与正式重启查询候选验证",
+  "state": "in_progress",
+  "result": "pending",
+  "summary": "接续MSVCFOLLOWUP冻结任务；用户取消本机绝对帧率作为硬阻断，保留原失败数据。按硬件功能条件验材质，修复并核实正式默认重启探针；原发布包与本地候选分开标识，不改同步业务或日常15119配置，不合并发布。",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-30",
+  "demand_ids": [
+    "DMD-OPENCODEX-POST021"
+  ],
+  "owner": "windows-msvc-followup-chat-01a1a68a",
+  "baseline_digest": "ae5dafff0a8a17effe3c3c951ba1bda25c1015e95b4c0a83e506e7d969d1b1c3",
+  "write_scope": [
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/**",
+    "test/smoke/post021-windows-final/**"
+  ],
+  "required_checks": [
+    "review:daily-boundary",
+    "review:hardware-user-exception",
+    "review:materials-functional-native",
+    "review:patch-integrity",
+    "review:runtime-candidate-default-restart",
+    "review:runtime-native-probe-candidate",
+    "review:runtime-original-failure-preserved"
+  ],
+  "acceptance_ids": [
+    "AC-P21-01",
+    "AC-P21-02",
+    "AC-P21-06",
+    "AC-P21-09",
+    "AC-P21-10"
+  ],
+  "acceptance_bindings": [
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-01",
+      "criterion_digest": "93e234ff42d457bc7cb7212117d3f35e700907a36ecd39f1d9b356cf784187b4"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-02",
+      "criterion_digest": "1d31867128ec40d740f0f82f8c32abd17c167b461348ed564e3cbd5931b9c4d6"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-06",
+      "criterion_digest": "74e1bb24932a1f55e73be8bbe648c32570ffcbe763fc754ac1072f9363ae61e4"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-09",
+      "criterion_digest": "be98e9a1cf0b6c4c728b3cfd000b64aa4a83099905281d671d7958bf80f74f59"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-10",
+      "criterion_digest": "1b2d3994f43aa133222bd4f37bb0a50ca85e9c222390330a19fdd703fb782de3"
+    }
+  ],
+  "fact_writeback": {
+    "mode": "none",
+    "targets": []
+  },
+  "imported_receipt_digest": null,
+  "certificate_digest": null,
+  "revision": 1,
+  "summary_digest": "1f8b32eeb0491f1798ccdf52fd33aabf4a27c518369f069f1c63e326feee4fbc",
+  "content_digest": "345ba03f279a952c89c4924f5113c5256bc944dfc52c8c707754f7fb6b60f16a"
+}
