@@ -25,15 +25,39 @@ try {
     if (location.hash !== '#panel' || !pinia._s.get('panel').loaded || pinia._s.get('panel').loadTrace.outcome !== 'visible-ready') {
       throw Error('Begin with an actually loaded native panel; loading/retry is a separate scenario')
     }
-    const original = window.chrome.webview.postMessage
+    const original = window.chrome.webview.postMessage, originalFetch = window.fetch
     const trace = window.__panelTransportTrace = [], cases = []
     let serial = 0, closeNext = false
+    function submit(request, transport) {
+      const id = ++serial
+      const begin = { id, event: 'native-submit', at: performance.now(), action: request?.action, reload: request?.reload, transport }
+      trace.push(begin)
+      return begin
+    }
+    function closePending(begin) {
+      if (begin.action !== 'hide' || !closeNext) return
+      closeNext = false
+      queueMicrotask(() => {
+        const button = document.querySelector('.notification-panel.show button[aria-label="收起通知中心到铃铛"]')
+        if (!button) { trace.push({ id: begin.id, event: 'missing-public-close', at: performance.now() }); return }
+        button.click()
+        trace.push({ id: begin.id, event: 'public-close', at: performance.now() })
+      })
+    }
+    window.fetch = function (url, options) {
+      if (!String(url).includes('/sync_embedded_panel')) return originalFetch.call(this, url, options)
+      const payload = JSON.parse(options.body), begin = submit(payload.request, 'custom-protocol-fetch')
+      const result = originalFetch.call(this, url, options)
+      closePending(begin)
+      result.then(response => response.clone().json().then(value => {
+        trace.push({ id: begin.id, event: 'native-result', at: performance.now(), value, status: response.status })
+      })).catch(error => trace.push({ id: begin.id, event: 'transport-error', at: performance.now(), message: String(error) }))
+      return result
+    }
     window.chrome.webview.postMessage = function (raw) {
       const message = JSON.parse(raw)
       if (message.cmd !== 'sync_embedded_panel') return original.call(this, raw)
-      const id = ++serial, request = message.payload.request
-      const begin = { id, event: 'native-submit', at: performance.now(), action: request?.action, reload: request?.reload }
-      trace.push(begin)
+      const begin = submit(message.payload.request, 'postMessage'), id = begin.id
       // Observe the actual one-shot callbacks without changing their values,
       // delivery time, registration identity, or the native request payload.
       for (const [kind, key] of [['native-result', 'callback'], ['native-error', 'error']]) {
@@ -44,15 +68,7 @@ try {
         })
       }
       const result = original.call(this, raw)
-      if (begin.action === 'hide' && closeNext) {
-        closeNext = false
-        queueMicrotask(() => {
-          const button = document.querySelector('.notification-panel.show button[aria-label="收起通知中心到铃铛"]')
-          if (!button) { trace.push({ id, event: 'missing-public-close', at: performance.now() }); return }
-          button.click()
-          trace.push({ id, event: 'public-close', at: performance.now() })
-        })
-      }
+      closePending(begin)
       return result
     }
     try {
@@ -74,7 +90,7 @@ try {
         })
       }
       return { cases, transport: trace }
-    } finally { window.chrome.webview.postMessage = original; closeNext = false }
+    } finally { window.chrome.webview.postMessage = original; window.fetch = originalFetch; closeNext = false }
   }
   const result = await session.evaluate('(' + run.toString() + ')()')
   report.cases = result.cases; report.transport = result.transport
