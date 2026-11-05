@@ -1,0 +1,11 @@
+# CI终态与剩余外部条件（2026-11-05）
+
+代码6a3a64f02792e0756340bd3fbb5d817f67888a43的run41951027259五项适用job全部completed/success，build按原条件skipped；Windows包括完整回归、构建、原生探针、安装恢复、Node22与普通账号阶段。run41945970332原Mac单测失败仅重跑后的最新attempt也五项success，原失败日志保持。终态job/step元数据见ci-final-after-expiry.json，未将后续采集工具头adb1d7a82冒称完整CI已测。
+
+产品apps树未因后续test/smoke采集工具变更。面板修复正式MSVC原生证据见native-msvc-retry-fixed-20261105；云端首次精确本地/云端并集、后续新增不扩选和明确范围保持见connected-native-20261105；这些局部通过不能关闭全部AC。
+
+仍缺两项：原预算下RDP性能实际根因和生产修复；正式Codex默认adapter在一次性Windows用户/会话中的隔离重启与配置读回。性能现有静止/滚动/弹窗原失败保持，取消帧率限制的rAF改善未代表RDP呈现改善，拒绝采用。GPU系统追踪普通账号0xc5585011；用户选择本机管理员手动采集，但首次600秒等待没有收到成功录制，目标和采样器已结束，旧入口已退役，不再复用PID95732。
+
+当前测试根无存活进程，WPR not recording，工作区干净；没有提权、策略改写、日常配置/真实同步、合并main或发布操作。连续多轮核验同一外部条件未满足，目标可标blocked而非complete；治理TASK仍in_progress，RCP总体failed，未生成CERT。
+
+恢复条件：管理员在本机已打开可运行采集器的管理员PowerShell后回复“管理员已就绪”；本对话才重新启动已核验MSVC隔离实例，生成全新PID/创建时间/owner/session身份、新capture目录及30秒采样器，并给出新的实际命令。正式默认重启需要另行提供可证明一次性用户/会话与进程祖先归属，不能用日常同包实例或CODEX_HOME伪隔离替代。目标完整范围不缩减，恢复后继续。

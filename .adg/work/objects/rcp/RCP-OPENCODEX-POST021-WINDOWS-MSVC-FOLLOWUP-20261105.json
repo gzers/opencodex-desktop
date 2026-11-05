@@ -18,6 +18,9 @@
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/candidate-watch-20261105/retest-contract.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/candidate/candidate.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/check-summary.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/ci-final-and-blocked-20261105/HANDOFF.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/ci-final-and-blocked-20261105/ci-final-after-expiry.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/ci-final-and-blocked-20261105/previous-receipt-revision9.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/ci-verified-metadata.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/cleanup-precision-diagnostic.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/cleanup-refusal-diagnostic.json",
@@ -573,9 +576,9 @@
     }
   ],
   "fact_impacts": [],
-  "completed_at": "2026-11-05T02:38:59.508911+00:00",
-  "summary": "新原MSVC41944607861/artifact13380187718同源核验后，旧候选严格重试反例失败保留，新候选手动重试645.586ms、服务PID/config字节保护、旧导航迟到、双端口快速/正常重开及各5轮浮层竞态通过。云端范围有效证据保留。本轮精确清理通过；性能仍原预算失败且未修复，正式默认重启缺隔离会话；候选轮五项适用CI在只重跑失败快速job后均success，初次失败原件及下一工具轮Mac单测失败保留。总体failed/全部整AC failed，TASK仍in_progress，无CERT。 性能续查：仅取消帧率限制的有效前台反例静止max3150ms/10个over6B，仍失败；60Hz提交对照中途失去前台而拒绝，未计改善。WPR GPU启动策略错误0xc5585011，未录制/改策略；等待可持续前台时段及可用GPU排程证据，未将定位当修复。 用户提供连续前台窗口后的诊断三场景实际完成，静止仍3个over6B，RemoteFX中位约7fps，不采用取消帧率限制/60Hzcap作为产品修复；系统GPU调度追踪仍策略拒绝，等待外部采集条件。 用户确认有管理员或测试环境协助后，准备独立WPR实例GPU/DWM采集器及存活目标身份工具，5项路径/陈旧PID拒绝检查通过；管理员采集和性能修复仍未执行，待确认协作方式，不计完成。 本机管理员协助方式已明确，新MSVC存活目标PID95732身份/PlanOnly实际通过；采样器等待管理员手动录制启动，尚无ETL/新性能结果，不改变失败状态。 本次管理员采集等待600s于本地10:37:15到期，未录制/未采样；WPR idle核对后按原创建时间/owner精确停止95732，旧入口已退役。后续须管理员就绪后重新绑定新身份/采样器，不复用过期PID。",
-  "revision": 9,
-  "summary_digest": "2dfb5d93c0773f012c7a9be0e7eb6311fd7ffa544dd117783973169a55e3ce60",
-  "content_digest": "87bd0d39578df21d9423f8c94000102682879307afd3935db33a8f1c960d15d6"
+  "completed_at": "2026-11-05T02:41:38.328592+00:00",
+  "summary": "新原MSVC41944607861/artifact13380187718同源核验后，旧候选严格重试反例失败保留，新候选手动重试645.586ms、服务PID/config字节保护、旧导航迟到、双端口快速/正常重开及各5轮浮层竞态通过。云端范围有效证据保留。本轮精确清理通过；性能仍原预算失败且未修复，正式默认重启缺隔离会话；候选轮五项适用CI在只重跑失败快速job后均success，初次失败原件及下一工具轮Mac单测失败保留。总体failed/全部整AC failed，TASK仍in_progress，无CERT。 性能续查：仅取消帧率限制的有效前台反例静止max3150ms/10个over6B，仍失败；60Hz提交对照中途失去前台而拒绝，未计改善。WPR GPU启动策略错误0xc5585011，未录制/改策略；等待可持续前台时段及可用GPU排程证据，未将定位当修复。 用户提供连续前台窗口后的诊断三场景实际完成，静止仍3个over6B，RemoteFX中位约7fps，不采用取消帧率限制/60Hzcap作为产品修复；系统GPU调度追踪仍策略拒绝，等待外部采集条件。 用户确认有管理员或测试环境协助后，准备独立WPR实例GPU/DWM采集器及存活目标身份工具，5项路径/陈旧PID拒绝检查通过；管理员采集和性能修复仍未执行，待确认协作方式，不计完成。 本机管理员协助方式已明确，新MSVC存活目标PID95732身份/PlanOnly实际通过；采样器等待管理员手动录制启动，尚无ETL/新性能结果，不改变失败状态。 本次管理员采集等待600s于本地10:37:15到期，未录制/未采样；WPR idle核对后按原创建时间/owner精确停止95732，旧入口已退役。后续须管理员就绪后重新绑定新身份/采样器，不复用过期PID。 6a3a64f02整轮CI与1d40单失败job重跑均最终五项success，原失败保持；采集工具后续头不冒称同HEAD全测。性能需管理员实际GPU/DWM采集且首次等待过期，正式重启需一次性Windows owner/session；无剩余独立工作，目标按外部条件blocked，非complete，TASK仍in_progress。",
+  "revision": 10,
+  "summary_digest": "5e509436dcd8b6e42be4fd509afe12a4f39a341ea71765e14dc841eed3606bcc",
+  "content_digest": "f5adae9c07c4120d888122540d2fee86fccc267d24ee0e37e82f20aecb069e57"
 }
