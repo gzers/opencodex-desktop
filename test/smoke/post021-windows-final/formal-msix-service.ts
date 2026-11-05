@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict'
-import {readFileSync,writeFileSync,appendFileSync} from 'node:fs'
+import {readFileSync,writeFileSync,appendFileSync,existsSync} from 'node:fs'
 import {join,resolve} from 'node:path'
 import {pathToFileURL} from 'node:url'
 import {execFileSync} from 'node:child_process'
 import {randomBytes,createHash} from 'node:crypto'
 
-const [planFile,runRoot]=process.argv.slice(2),plan=JSON.parse(readFileSync(planFile,'utf8'))
+const [planFile,runRoot,attemptRoot=runRoot]=process.argv.slice(2),plan=JSON.parse(readFileSync(planFile,'utf8'))
 const root=resolve(runRoot),home=join(root,'sandbox','opencodex-home')
+const artifacts=resolve(attemptRoot)
 assert(root.startsWith(resolve('D:/Users/Administrator/WorkSpace/Test')+'\\'))
 assert.equal(resolve(process.env.OPENCODEX_HOME??''),resolve(home))
 assert.equal(resolve(process.env.CODEX_HOME??''),resolve('C:/Users/Administrator/.codex'))
@@ -18,12 +19,18 @@ assert.equal(JSON.parse(readFileSync(join(official,'package.json'),'utf8')).vers
 const {getDefaultConfig}=await load('src/config.ts')
 const config=getDefaultConfig()
 Object.assign(config,{port:plan.servicePort,bindHost:'127.0.0.1',hostname:'127.0.0.1',codexAutoStart:false,oauthOpenBrowser:false,syncOnStart:false,autoUpdate:false,claudeCodeEnabled:false,websockets:false,defaultProvider:'Post021AdminFixture',clientIntegrations:{codex:false,grok:false,claude:false},providers:{Post021AdminFixture:{adapter:'openai-chat',baseUrl:'http://127.0.0.1:'+plan.fixturePort+'/v1',authMode:'key',allowPrivateNetwork:true,models:['raw-model'],selectedModels:['raw-model'],contextWindow:65536}},modelDiscovery:{knownModels:{Post021AdminFixture:{ids:['raw-model'],removed:[],updatedAt:new Date().toISOString()}}}})
-writeFileSync(join(home,'config.json'),JSON.stringify(config,null,2))
+if(existsSync(join(home,'config.json'))){
+ const existing=JSON.parse(readFileSync(join(home,'config.json'),'utf8'))
+ assert.equal(existing.port,plan.servicePort)
+ assert.equal(existing.defaultProvider,'Post021AdminFixture')
+ assert(Object.keys(existing.providers).every(name=>name==='Post021AdminFixture'))
+ assert.equal(existing.providers.Post021AdminFixture.baseUrl,'http://127.0.0.1:'+plan.fixturePort+'/v1')
+}else writeFileSync(join(home,'config.json'),JSON.stringify(config,null,2))
 // Only model-list reads are implemented; generation and every other operation
 // fail locally. No actual provider, WebDAV or inference service is contacted.
 const fixture=Bun.serve({hostname:'127.0.0.1',port:plan.fixturePort,fetch(request){
  const path=new URL(request.url).pathname
- appendFileSync(join(root,'fixture-requests.jsonl'),JSON.stringify({at:new Date().toISOString(),method:request.method,path})+'\n')
+ appendFileSync(join(artifacts,'fixture-requests.jsonl'),JSON.stringify({at:new Date().toISOString(),method:request.method,path})+'\n')
  if(request.method==='GET'&&path==='/v1/models')return Response.json({object:'list',data:[{id:'raw-model',object:'model',owned_by:'synthetic'}]})
  return Response.json({error:{message:'Local formal-restart fixture does not implement generation'}},{status:405})
 }})
@@ -35,6 +42,6 @@ const server=startServer(plan.servicePort,{localAttestationSecret:secret,readine
 writeFileSync(join(home,'runtime-port.json'),JSON.stringify({pid:process.pid,port:server.port,attestationSecret:secret}))
 const {syncModelsToCodex}=await load('src/codex/sync.ts')
 const startup=await runStartupReadinessSync(readinessGate,()=>syncModelsToCodex(server.port,undefined,null))
-writeFileSync(join(root,'service-ready.json'),JSON.stringify({owner:actual,pid:process.pid,port:server.port,package:'2.84.0',home,readiness:readinessGate.getStatus(),startupStatus:startup?.status,restartImplementation:'published defaults; no adapter or IO overrides',restartSourceSha256:createHash('sha256').update(readFileSync(join(official,'src/codex/desktop-app/windows.ts'))).digest('hex')},null,2))
+writeFileSync(join(artifacts,'service-ready.json'),JSON.stringify({owner:actual,pid:process.pid,port:server.port,package:'2.84.0',home,readiness:readinessGate.getStatus(),startupStatus:startup?.status,restartImplementation:'published defaults; no adapter or IO overrides',restartSourceSha256:createHash('sha256').update(readFileSync(join(official,'src/codex/desktop-app/windows.ts'))).digest('hex')},null,2))
 const shutdown=()=>{fixture.stop(true);server.stop(true);process.exit(0)}
 process.on('SIGTERM',shutdown)
