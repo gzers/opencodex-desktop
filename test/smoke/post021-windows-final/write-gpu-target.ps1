@@ -9,6 +9,18 @@ $taskTools=Join-Path $taskWorkspace '.toolchain'
 $taskEvidence=Join-Path $taskTools 'post021-msvc-followup'
 $taskLaunchPath=[IO.Path]::GetFullPath($LaunchManifest)
 $taskOutput=[IO.Path]::GetFullPath($OutputFile)
+foreach($taskPath in @($taskLaunchPath,$taskOutput)){
+    $taskAncestor=$taskPath
+    while($taskAncestor){
+        if((Test-Path -LiteralPath $taskAncestor) -and
+           ((Get-Item -LiteralPath $taskAncestor -Force).Attributes -band [IO.FileAttributes]::ReparsePoint)){
+            throw 'Launch and identity paths cannot traverse a reparse point'
+        }
+        $taskNext=Split-Path -Parent $taskAncestor
+        if($taskNext -eq $taskAncestor){break}
+        $taskAncestor=$taskNext
+    }
+}
 if(!$taskOutput.StartsWith($taskEvidence+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase)){
     throw 'Target identity must be saved below the owned followup directory'
 }
