@@ -1,0 +1,44 @@
+{
+  "result": "waiting-for-new-administrator-capture",
+  "acceptance": false,
+  "codeCommit": "f8941ae26e85936e66adf8ceb4d72967170f513b",
+  "expiredSampler": {
+    "pid": 80928,
+    "finishedUtc": "2026-11-05T06:04:00.427Z",
+    "result": "failed",
+    "captureStarted": false,
+    "samplePerformed": false,
+    "processObserved": "absent at2026-11-05T14:35:42+08:00; terminal scene-result inspected before replacement"
+  },
+  "replacement": {
+    "pid": 65756,
+    "ready": {
+      "at": "2026-11-05T06:37:40.786Z",
+      "pid": 75988,
+      "ready": true,
+      "waitLimitSeconds": 43200,
+      "expiresAtUtc": "2026-11-05T18:37:40.786Z"
+    },
+    "targetPid": 75988,
+    "targetIdentity": "Same live originalMSVC process revalidated path/create/session/owner/hash; new target file. No application restart.",
+    "shortEntry": "same .toolchain/POST021-ADMIN.ps1 now delegates new1437 handoff"
+  },
+  "foregroundWaitFailure": {
+    "markerUtc": "2026-11-05T06:38:30.8736542+00:00",
+    "observedAtLocal": "2026-11-05T14:41:29+08:00",
+    "userResult": "No fresh stable native foreground heartbeat; no recording started",
+    "explanation": "Marker was older than120s when reply handled; no capture directory. Do not treat it as live recorder or stop administrator shell."
+  },
+  "changes": "Separate bounded collaboration waits: Node1..43200s (default3600), collector foreground10..1800s (default120). New ready file records expiry. Original45s recording and30s/B/p95/over6B performance gates unchanged.",
+  "verification": [
+    "3Nodehandshake tests passed",
+    "actualPS5PlanOnly withforeground1800 exit0 no recording",
+    "diffCheck passed"
+  ],
+  "remaining": [
+    "ActualnonpagedGPU/DxgKrnl/Win32k capture",
+    "RDP production performance rootcause andfix underoriginalbudgets",
+    "FormaldefaultMSIX restart inprovendisposableWindowsowner/session"
+  ],
+  "at": "2026-11-05T06:48:34.422395+00:00"
+}
