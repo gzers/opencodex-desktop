@@ -241,6 +241,7 @@ async function captureDialog(name) {
 }
 async function performanceSample(scroll) {
   return evaluate(async scroll => {
+    if (!await window.__TAURI_INTERNALS__.invoke('app_foreground')) throw Error('native foreground required before performance sample; reconnect/unlock RDP first')
     const p = document.querySelector('#app').__vue_app__.config.globalProperties.$pinia, effects = p._s.get('effects')
     const main = document.querySelector('.main'), intervals = [], longTasks = [], callbackCosts = [], dispatchDelays = [], scrollPositions = [], originalRaf = requestAnimationFrame
     const observer = new PerformanceObserver(list => longTasks.push(...list.getEntries().map(entry => ({ start: entry.startTime, duration: entry.duration }))))
@@ -350,6 +351,7 @@ try {
     await evaluate(async () => { document.querySelector('#app').__vue_app__.config.globalProperties.$pinia._s.get('routes').go('settings', { section: 'upgrade' }); await new Promise(resolve => setTimeout(resolve, 350)) })
     await clickText('查看管理器更新'); results.cases.push(await captureDialog('update-center-view'))
   } else if (phase === 'performance-modal') {
+    assert(await evaluate(() => window.__TAURI_INTERNALS__.invoke('app_foreground')), 'native foreground required before performance setup; reconnect/unlock RDP first')
     await removeFixtures(); await closeConnection(); await configure('dark', 'high')
     await evaluate(async () => {
       const p = document.querySelector('#app').__vue_app__.config.globalProperties.$pinia
@@ -360,6 +362,7 @@ try {
     results.cases.push({ name: 'modal-overview-high', ...await performanceSample(false) })
     for (const result of results.cases) { assert(result.foreground, 'performance sample lost native foreground'); assert(result.p95 <= 2 * result.B, 'existing modal p95 <= 2B budget failed'); assert.equal(result.over6B, 0, 'long modal frame requires analysis') }
   } else if (phase === 'performance') {
+    assert(await evaluate(() => window.__TAURI_INTERNALS__.invoke('app_foreground')), 'native foreground required before performance setup; reconnect/unlock RDP first')
     await removeFixtures(); await closeConnection(); await configure('dark', 'high')
     await evaluate(async () => {
       const p = document.querySelector('#app').__vue_app__.config.globalProperties.$pinia

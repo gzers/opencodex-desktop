@@ -511,10 +511,17 @@ pub async fn sync_embedded_panel(
         // before initial navigation, and wry's URL getter panics in that state.
         if let Some(url) = url.as_ref() {
             let origin = url.origin().ascii_serialization();
-            if idle.origin != origin {
+            // WebView2 can leave Reload queued behind an initial navigation
+            // that has not received response headers. An explicit retry of a
+            // still-unready view must abandon that navigation, not wait for it.
+            let retry_pending = request.reload && !lifetime.2.load(Ordering::Acquire);
+            if idle.origin != origin || retry_pending {
                 if let Some(existing) = app.get_webview(PANEL_VIEW_LABEL) {
                     existing.close()?;
                     lifetime.2.store(false, Ordering::Release);
+                    if retry_pending {
+                        panel_log(&app, "retry; retired pending navigation");
+                    }
                 }
                 // Keep the previous identity if close fails, so a retry cannot
                 // reuse a view belonging to the previous service origin.
@@ -524,8 +531,8 @@ pub async fn sync_embedded_panel(
         if request.action == PanelAction::Show {
             lifetime.3.store(generation, Ordering::Release);
         }
-        let view = if let Some(view) = app.get_webview(PANEL_VIEW_LABEL) {
-            view
+        let (view, created) = if let Some(view) = app.get_webview(PANEL_VIEW_LABEL) {
+            (view, false)
         } else {
             lifetime.2.store(false, Ordering::Release);
             // A retired view may finish navigation after its replacement is
@@ -639,7 +646,7 @@ pub async fn sync_embedded_panel(
                 &app,
                 &format!("creating embedded view; origin={origin_label}"),
             );
-            window
+            let view = window
                 .add_child(
                     builder,
                     // add_child initially shows its native view. Keep it clipped
@@ -650,7 +657,8 @@ pub async fn sync_embedded_panel(
                 )
                 .inspect_err(|error| {
                     panel_log(&app, &format!("embedded view creation failed; {error}"));
-                })?
+                })?;
+            (view, true)
         };
         mark_panel_phase(&app, started, "native-view", &mut timings);
         if lifetime.1.load(Ordering::Acquire) != generation {
@@ -688,8 +696,12 @@ pub async fn sync_embedded_panel(
         view.eval(format!("window.__ocxdPanelState = {detail}; window.dispatchEvent(new CustomEvent('ocxd-panel-state', {{detail:{detail}}}))"))?;
         if request.action == PanelAction::Show {
             if request.reload {
-                lifetime.2.store(false, Ordering::Release);
-                view.reload()?;
+                // A fresh view is already navigating to the retry URL. Reload
+                // here would enqueue a second navigation before its first load.
+                if !created {
+                    lifetime.2.store(false, Ordering::Release);
+                    view.reload()?;
+                }
             }
             view.show()?;
             if request.reload {
