@@ -1,0 +1,178 @@
+{
+  "result": "administrator-recording-complete-scene-foreground-failed",
+  "acceptance": false,
+  "codeCommit": "dedd94312c10851f52a0db2839a70861da237c1c",
+  "files": {
+    "test/smoke/post021-windows-final/collect-gpu-trace.ps1": {
+      "bytes": 11381,
+      "sha256": "64e2c3019b11eca62897653b87ff94ec068380d0007de634b32b44e56dab4871"
+    },
+    "test/smoke/post021-windows-final/gpu-dwm-scheduling.wprp": {
+      "bytes": 2063,
+      "sha256": "94aa411770d6dbaeef123aea8aa8439aca7cf0d70c42e3e56320eca68c96c468"
+    },
+    "test/smoke/post021-windows-final/gpu-foreground-admission.ps1": {
+      "bytes": 600,
+      "sha256": "8fa2cfa065d499319957827038bb106ed40cbc7cae7d56e83940c77f4f5d232c"
+    },
+    "test/smoke/post021-windows-final/gpu-foreground-admission.test.ps1": {
+      "bytes": 1145,
+      "sha256": "8d77c75516fc9bbdcbb7e38f5d14d3617ef9d953c048f745d2b02e30b3e0fd1c"
+    },
+    "test/smoke/post021-windows-final/gpu-trace-scene.mjs": {
+      "bytes": 5663,
+      "sha256": "4842e6db15cd1d50ba3fc98304680746a27cbcf65bf382df6f775e4e55d7f8bf"
+    }
+  },
+  "recording": {
+    "instance": "ocx-post021-gpu-275815ec6b7448d597db0d624fd78507",
+    "startedAtUtc": "2026-11-05T04:40:17.2779628+00:00",
+    "finishedAtUtc": "2026-11-05T04:41:42.0352302+00:00",
+    "recorderStarted": true,
+    "recorderStopped": true,
+    "stopExitCode": 0,
+    "bytes": 2878341120,
+    "sha256": "ba62d5203c3794ea27aff8b62f09dc728b1ebe5238c8704fce99d41fe3d80749",
+    "rawEtlPublished": false
+  },
+  "scene": {
+    "result": "failed",
+    "acceptance": false,
+    "scene": "Original 30s high/dark static overview; unchanged browser scheduling",
+    "error": {
+      "message": "Native test window not foreground",
+      "stack": "AssertionError [ERR_ASSERTION]: Native test window not foreground\n    at file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/post021-windows-final/gpu-trace-scene.mjs:52:3"
+    },
+    "finishedAtUtc": "2026-11-05T04:40:27.394Z"
+  },
+  "actual30sSample": false,
+  "traceReview": {
+    "nativeProcessTraceEvents": 64336282,
+    "nativeProcessTraceExitCode": 0,
+    "headerEventsLost": 0,
+    "eventTypeCount": 479,
+    "lostEventRecords": 265112,
+    "lostEventScope": "First two decoded records identify provider edd08927-9cc4-4e65-b970-c2560fb5c289 and PCA file tracing session, status3221225495. Do not equate all loss notifications with loss in the owned WPR session. No full loss attribution yet.",
+    "topEventTypes": [
+      {
+        "descriptor": "ce1dbfb4-137e-4da6-87b0-3f59aa102cbc/0/2/51",
+        "provider": "",
+        "task": "",
+        "opcode": "",
+        "events": 24288451
+      },
+      {
+        "descriptor": "ce1dbfb4-137e-4da6-87b0-3f59aa102cbc/0/2/52",
+        "provider": "",
+        "task": "",
+        "opcode": "",
+        "events": 24023701
+      },
+      {
+        "descriptor": "3d6fa8d3-fe05-11d0-9dda-00c04fd7ba7c/0/2/11",
+        "provider": "MSNT_SystemTrace",
+        "task": "PageFault",
+        "opcode": "DemandZeroFault",
+        "events": 3151262
+      },
+      {
+        "descriptor": "3d6fa8d3-fe05-11d0-9dda-00c04fd7ba7c/0/2/10",
+        "provider": "MSNT_SystemTrace",
+        "task": "PageFault",
+        "opcode": "TransitionFault",
+        "events": 3093585
+      },
+      {
+        "descriptor": "def2fe46-7bd6-4b80-bd94-f57fe20d0ce3/0/2/32",
+        "provider": "MSNT_SystemTrace",
+        "task": "StackWalk",
+        "opcode": "Stack",
+        "events": 2476343
+      },
+      {
+        "descriptor": "3d6fa8d1-fe05-11d0-9dda-00c04fd7ba7c/0/5/36",
+        "provider": "",
+        "task": "",
+        "opcode": "",
+        "events": 1971545
+      },
+      {
+        "descriptor": "3d6fa8d1-fe05-11d0-9dda-00c04fd7ba7c/0/2/50",
+        "provider": "MSNT_SystemTrace",
+        "task": "Thread",
+        "opcode": "ReadyThread",
+        "events": 1065521
+      },
+      {
+        "descriptor": "802ec45a-1e99-4b83-9920-87c98277ba9d/105/0/1",
+        "provider": "Microsoft-Windows-DxgKrnl",
+        "task": "Profiler",
+        "opcode": "Start ",
+        "events": 326391
+      },
+      {
+        "descriptor": "802ec45a-1e99-4b83-9920-87c98277ba9d/106/0/2",
+        "provider": "Microsoft-Windows-DxgKrnl",
+        "task": "Profiler",
+        "opcode": "Stop ",
+        "events": 326388
+      },
+      {
+        "descriptor": "b675ec37-bdb6-4648-bc92-f3fdc74d3ca2/19/0/0",
+        "provider": "Microsoft-Windows-Kernel-EventTracing",
+        "task": "Lost Event ",
+        "opcode": "信息 ",
+        "events": 265112
+      },
+      {
+        "descriptor": "9e9bba3c-2e38-40cb-99f4-9e8281425164/182/0/0",
+        "provider": "Microsoft-Windows-Dwm-Core",
+        "task": "ETWGUID_DRAWING_CONTEXT_STATE",
+        "opcode": "信息 ",
+        "events": 258920
+      },
+      {
+        "descriptor": "9e9bba3c-2e38-40cb-99f4-9e8281425164/333/0/0",
+        "provider": "Microsoft-Windows-Dwm-Core",
+        "task": "ETWGUID_VISUAL_RENDERCONTENT",
+        "opcode": "信息 ",
+        "events": 251555
+      }
+    ],
+    "targetHeaderPidFilteredRecords": 255758,
+    "targetHeaderPidFilterLimitation": "Cannot attribute kernel work by headerPID or prove foreground continuity; no target presentation latency acceptance"
+  },
+  "scopeCorrection": {
+    "previousClaim": "Scheduling/composition only; no FileIO/Registry/Network profile",
+    "actualBuiltInExport": "GPU+DesktopComposition includes SystemProvider SystemCall,AllFaults,DiskIO,ProcessThread,CSwitch,SampledProfile,ReadyThread and stacks. The previous statement was incomplete. Raw ETLs stayed local.",
+    "newConfiguration": "Exactly5 event providers, no SystemProvider/SystemCollector/stacks, confirmed by WPR profile details. Preserve original product performance gates."
+  },
+  "newForegroundGate": {
+    "waitSeconds": 120,
+    "requiredContinuousForegroundSeconds": 3,
+    "maxHeartbeatAgeSecondsExclusive": 2,
+    "boundTo": [
+      "PID",
+      "processCreationUTCticks",
+      "same explicit handoff directory"
+    ],
+    "sceneGuard": "Native app_foreground remains required; old10s overlap guard remains after successful recorder start",
+    "samplerPid": 44760,
+    "readyAtUtc": "2026-11-05T04:47:12.834Z",
+    "newRealCapture": "not observed at report preparation; new administrator manual entry prepared"
+  },
+  "checks": {
+    "actualWindowsPowerShell51ForegroundAdmission": "one stable positive plus8 stale/identity/background/malformed negatives passed",
+    "actualWindowsPowerShell51PlanOnly": "final explicit profile exit0 no recording",
+    "wprProfileDetails": "five exact providers accepted; no system collector listed",
+    "nodeHandshake": "2tests passed",
+    "diffCheck": "passed"
+  },
+  "productAppsTree": "a8bb18f9ff2781dbbfe67f91473a298f3cd74ae6",
+  "remaining": [
+    "Valid30s native foreground sample paired with low-overheadGPU scheduling trace",
+    "Evidence-backed RDP production performance fix with original budgets static/scroll/modal and nativepresentation",
+    "FormalCodex MSIX default adapter restart in proven disposable Windows owner/session"
+  ],
+  "at": "2026-11-05T04:52:20.974243+00:00"
+}

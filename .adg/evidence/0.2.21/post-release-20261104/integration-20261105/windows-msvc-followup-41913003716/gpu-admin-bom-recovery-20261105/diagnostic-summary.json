@@ -1,0 +1,168 @@
+{
+  "result": "diagnostic-only-no-paired-sample",
+  "acceptance": false,
+  "wprStartUtc": "2026-11-05T04:21:23.6300359+00:00",
+  "collectorOriginalResult": "failed; stop observation exceeded20s; original bytes retained",
+  "postObservation": {
+    "namedInstance": "WPR is not recording",
+    "stopProcess87260": "absent at12:23+08; no kill/cancel issued",
+    "etlExistsStable": true,
+    "nativeProcessTraceExit": 0,
+    "events": 86150096,
+    "headerEventsLost": 0,
+    "headerStartFiletime": 134383260813795504,
+    "headerEndFiletime": 134383261312836404,
+    "filteredRecords": 317814,
+    "filteredRecordCountsByAdmittedPid": {
+      "4040": 317622,
+      "76176": 105,
+      "16336": 26,
+      "75988": 61
+    }
+  },
+  "localRawEtl": {
+    "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-msvc-followup\\admin-ready-20261105-114650\\capture\\gpu-dwm.etl",
+    "bytes": 3744464896,
+    "sha256": "838a55bda613e0471f7e36385046e3a17dbeb6a015858e3810a8ba51af7fec75",
+    "published": false
+  },
+  "parser": {
+    "sourceLocalPath": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-msvc-followup\\etl-target-analysis.cpp",
+    "sourceSha256": "eabd06fb689a6e1167b69289e8549cd48a04c2813a45659ca2369db337102fdf",
+    "method": "Windows OpenTrace/ProcessTrace with TDH manifest names; only admitted manager descendants and session2 DWM events exported locally",
+    "rawTargetTsvSha256": "969f189223f4c07fdfbe216b39fce2efd2036ea2bd5ce8cd46fea08370ae7d5d",
+    "limitation": "Header-PID filtering does not attribute kernel-context GPU work; no target-present chain reconstructed. Sparse target events and no paired scene cannot establish foreground load or product bottleneck."
+  },
+  "dwmCadence": [
+    {
+      "pid": 4040,
+      "provider": "Microsoft-Windows-DxgKrnl",
+      "eventId": 318,
+      "task": "DWMVsyncCountWait",
+      "events": 2819,
+      "interEventMs": {
+        "p50": 15.6559,
+        "p95": 29.9062,
+        "max": 729.6114
+      },
+      "interpretation": "Event cadence only; not target-window frame latency or acceptance"
+    },
+    {
+      "pid": 4040,
+      "provider": "Microsoft-Windows-DxgKrnl",
+      "eventId": 184,
+      "task": "Present",
+      "events": 776,
+      "interEventMs": {
+        "p50": 17.2596,
+        "p95": 358.099,
+        "max": 654.656
+      },
+      "interpretation": "Event cadence only; not target-window frame latency or acceptance"
+    },
+    {
+      "pid": 4040,
+      "provider": "Microsoft-Windows-DXGI",
+      "eventId": 42,
+      "task": "Present",
+      "events": 766,
+      "interEventMs": {
+        "p50": 17.1761,
+        "p95": 358.3552,
+        "max": 654.6251
+      },
+      "interpretation": "Event cadence only; not target-window frame latency or acceptance"
+    },
+    {
+      "pid": 4040,
+      "provider": "Microsoft-Windows-DXGI",
+      "eventId": 43,
+      "task": "Present",
+      "events": 766,
+      "interEventMs": {
+        "p50": 17.4388,
+        "p95": 357.9891,
+        "max": 654.3585
+      },
+      "interpretation": "Event cadence only; not target-window frame latency or acceptance"
+    },
+    {
+      "pid": 4040,
+      "provider": "Microsoft-Windows-Dwm-Core",
+      "eventId": 10,
+      "task": "SCHEDULE_PROCESS_FRAME",
+      "events": 2802,
+      "interEventMs": {
+        "p50": 15.6288,
+        "p95": 29.4556,
+        "max": 190.7865
+      },
+      "interpretation": "Event cadence only; not target-window frame latency or acceptance"
+    },
+    {
+      "pid": 4040,
+      "provider": "Microsoft-Windows-Dwm-Core",
+      "eventId": 318,
+      "task": "PROCESS_EXPRESSIONS",
+      "events": 2802,
+      "interEventMs": {
+        "p50": 15.6477,
+        "p95": 29.4765,
+        "max": 191.255
+      },
+      "interpretation": "Event cadence only; not target-window frame latency or acceptance"
+    },
+    {
+      "pid": 4040,
+      "provider": "Microsoft-Windows-Dwm-Core",
+      "eventId": 43,
+      "task": "ETWGUID_OCCLUSIONEVENT",
+      "events": 2867,
+      "interEventMs": {
+        "p50": 15.6345,
+        "p95": 29.3744,
+        "max": 191.6035
+      },
+      "interpretation": "Event cadence only; not target-window frame latency or acceptance"
+    },
+    {
+      "pid": 4040,
+      "provider": "Microsoft-Windows-Dwm-Core",
+      "eventId": 42,
+      "task": "ETWGUID_DIRTYREGIONEVENT",
+      "events": 838,
+      "interEventMs": {
+        "p50": 16.5428,
+        "p95": 311.9169,
+        "max": 654.6175
+      },
+      "interpretation": "Event cadence only; not target-window frame latency or acceptance"
+    },
+    {
+      "pid": 4040,
+      "provider": "Microsoft-Windows-Dwm-Core",
+      "eventId": 304,
+      "task": "ETWGUID_PRESENT",
+      "events": 765,
+      "interEventMs": {
+        "p50": 17.4522,
+        "p95": 357.9825,
+        "max": 654.3479
+      },
+      "interpretation": "Event cadence only; not target-window frame latency or acceptance"
+    }
+  ],
+  "causeOfMissingSample": "PS5 UTF8 BOM rejected by original Node plain JSON.parse; parse failure silently retried. Sampler terminated only after exact PID/path/create/session/owner validation. No sample or foreground guarantee claimed.",
+  "fixCommit": "5fb4e83a9338e5d5ea60c37e8bde0c8ec99e4c05",
+  "checks": [
+    "Node handshake tests2passed",
+    "actual PS5 PlanOnly exit0; UTF8withoutBOM JSON parses; no recording",
+    "actual previous PS5 BOM handoff parsed and expired scene rejected before sample",
+    "actual PS5 forced observation timeout retains process identity and eventualstdout; no kill"
+  ],
+  "harnessFailureRetained": "Start-Process initial PS5 ExitCode was null: rejected status safely; caching native handle fixed actualPlanOnly. Failed result and stderr retained.",
+  "newCapture": "ready; actual administrator execution pending",
+  "performance": "not fixed; original budgets retained",
+  "formalRestart": "still missing proven disposableWindows owner/session; dailyMSIX untouched",
+  "at": "2026-11-05T04:35:09.377760+00:00"
+}

@@ -1,0 +1,73 @@
+{
+  "result": "passed-server-preflight-only",
+  "nativeAcceptance": false,
+  "at": "2026-11-04T23:53:48.505925+00:00",
+  "requests": [
+    {
+      "path": "/native021-only/config-v1-latest.json",
+      "method": "GET",
+      "status": 401,
+      "etag": null,
+      "bytes": 0
+    },
+    {
+      "path": "/native021-only/config-v1-latest.json",
+      "method": "GET",
+      "status": 200,
+      "etag": "\"8aaec99dce40152be2507651f0f1eae635a4c564b7ccbe701f75b6df02ec5ecf\"",
+      "bytes": 180
+    },
+    {
+      "path": "/native021-only/config-v1-8d637029529aa2fc52dbfddf7d04b2a4b8aec983bc2cfd47642ee0072a9f27f9.ocxd",
+      "method": "GET",
+      "status": 200,
+      "etag": "\"8d637029529aa2fc52dbfddf7d04b2a4b8aec983bc2cfd47642ee0072a9f27f9\"",
+      "bytes": 4642
+    },
+    {
+      "path": "/native021-only/config-v1-latest.json",
+      "method": "GET",
+      "status": 200,
+      "etag": "\"562c4c60083e0b430c457a54beebf96fe7499964acfb93954424b647f92c7aa6\"",
+      "bytes": 180
+    },
+    {
+      "path": "/native021-only/config-v1-eccfa932ee921dffb530d2f9182eb349170ed9b79f750f170796f79e1cd1c111.ocxd",
+      "method": "GET",
+      "status": 200,
+      "etag": "\"eccfa932ee921dffb530d2f9182eb349170ed9b79f750f170796f79e1cd1c111\"",
+      "bytes": 8278
+    },
+    {
+      "path": "/native021-only/config-v1-latest.json",
+      "method": "PUT",
+      "status": 405,
+      "etag": null,
+      "bytes": 0
+    },
+    {
+      "path": "/native021-only/config-v1-latest.json",
+      "method": "DELETE",
+      "status": 405,
+      "etag": null,
+      "bytes": 0
+    },
+    {
+      "path": "/native021-only/../fixture-manifest.json",
+      "method": "GET",
+      "status": 404,
+      "etag": null,
+      "bytes": 0
+    },
+    {
+      "path": "/native021-only/config-v1-latest.json",
+      "method": "GET",
+      "status": 503,
+      "etag": null,
+      "bytes": 0
+    }
+  ],
+  "payloadBytesUnchanged": true,
+  "rawCredentialsLogged": false,
+  "serverThreadStopped": true
+}

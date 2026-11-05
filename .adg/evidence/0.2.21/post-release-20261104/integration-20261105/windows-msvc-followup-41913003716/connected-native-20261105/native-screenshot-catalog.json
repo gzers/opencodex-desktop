@@ -1,0 +1,23 @@
+{
+  "source": "sky native Windows window capture; filenames alone do not prove scenario",
+  "entries": {
+    "native-overview-before.png": "Valid original MSVC baseline; actual foreground overview.",
+    "native-modal-before.png": "Valid actual public WebDAV dialog, original MSVC high/dark; performance failed.",
+    "native-panel60444-ready.png": "Actual 60444 child loaded; official first-use modal still visible; not the unobstructed dashboard.",
+    "native-panel60444-dashboard.png": "Valid 60444 dashboard after closing informational modal without switching configuration.",
+    "native-panel60446-ready.png": "Actual 60446 child loaded; official first-use modal visible.",
+    "native-panel-notification-open.png": "Valid manager notification visible while native child hidden.",
+    "native-panel-hide-race-restored.png": "Valid actual dashboard restored after five measured Hide-pending/public-close races.",
+    "native-cloud-first-failed.png": "Not admissible cloud screenshot: occluded target capture returned foreground panel image. Actual fixture-error text is in cloud-first/sync-setup.json.",
+    "native-cloud-first-exact-union.png": "Valid activated isolated target: 2/2 channels, 18/18 templates; independent exact ID proof in cloud-first-corrected.json.",
+    "native-cloud-later-counts.png": "Valid actual later catalogue: 2/3 channels, 18/19 templates.",
+    "native-cloud-explicit-subset-reopen.png": "Valid actual later catalogue with explicit subset: 1/3 channels, 17/19 templates; cloud rows remain unchecked.",
+    "native-background-resume.png": "Valid foreground overview after native minimize/restore; mesh-background/resumed JSON carries actual draw counts.",
+    "native-panel-delayed-failure.png": "Filename is early: actual service-stopped state, not page-load timeout.",
+    "native-panel-load-timeout.png": "Filename is inaccurate: actual official first-use modal; not timeout evidence.",
+    "native-panel-real-load-timeout.png": "Filename is inaccurate: actual official first-use modal; not timeout evidence.",
+    "native-panel-origin-timeout.png": "Valid controlled 20s delayed new-origin load, 8s timeout with healthy service.",
+    "native-panel-retry60-timeout.png": "Valid controlled 60s delayed new-origin load, 8s timeout before manual retry.",
+    "native-panel-manual-retry-restored.png": "Filename is inaccurate: actual repeat load failure after manual retry, not restored. Preserved as failure evidence."
+  }
+}

@@ -1,0 +1,2913 @@
+{
+  "phase": "production-matrix",
+  "expectation": "fixed",
+  "target": {
+    "id": "EB80976FEF3D747407BEF1158BB50487",
+    "url": "http://tauri.localhost/#overview"
+  },
+  "cases": [
+    {
+      "theme": "light",
+      "tier": "high",
+      "feedback": {
+        ".setting-row": [
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 241,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 241,
+              "right": 1131,
+              "bottom": 306.8984375,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 314.8984375,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 314.8984375,
+              "right": 1131,
+              "bottom": 380.796875,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 388.796875,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 388.796875,
+              "right": 1131,
+              "bottom": 454.6953125,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 462.6953125,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 462.6953125,
+              "right": 1131,
+              "bottom": 528.59375,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 536.59375,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 536.59375,
+              "right": 1131,
+              "bottom": 602.4921875,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 610.4921875,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 610.4921875,
+              "right": 1131,
+              "bottom": 676.390625,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          }
+        ],
+        ".notification-panel": [
+          {
+            "classes": "notification-panel show",
+            "rect": {
+              "x": 760,
+              "y": 56,
+              "width": 400,
+              "height": 166,
+              "top": 56,
+              "right": 1160,
+              "bottom": 222,
+              "left": 760
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.notif-layer",
+            "nativeDialog": false
+          }
+        ],
+        ".toast": [
+          {
+            "classes": "toast show has-notification-countdown",
+            "rect": {
+              "x": 760,
+              "y": 230,
+              "width": 400,
+              "height": 48,
+              "top": 230,
+              "right": 1160,
+              "bottom": 278,
+              "left": 760
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "12px",
+            "parent": "DIV.notif-host",
+            "nativeDialog": false
+          }
+        ],
+        ".process-progress": [
+          {
+            "classes": "process-progress done has-notification-countdown",
+            "rect": {
+              "x": 760,
+              "y": 286,
+              "width": 400,
+              "height": 84,
+              "top": 286,
+              "right": 1160,
+              "bottom": 370,
+              "left": 760
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.notif-layer",
+            "nativeDialog": false
+          },
+          {
+            "classes": "process-progress",
+            "rect": {
+              "x": 760,
+              "y": 378,
+              "width": 400,
+              "height": 125.9453125,
+              "top": 378,
+              "right": 1160,
+              "bottom": 503.9453125,
+              "left": 760
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.notif-layer",
+            "nativeDialog": false
+          }
+        ],
+        ".process-progress .notif-ctl": [
+          {
+            "classes": "btn notif-ctl",
+            "rect": {
+              "x": 775,
+              "y": 331,
+              "width": 98.4296875,
+              "height": 24,
+              "top": 331,
+              "right": 873.4296875,
+              "bottom": 355,
+              "left": 775
+            },
+            "blur": "blur(6px)",
+            "background": "rgba(13, 13, 13, 0.06)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          },
+          {
+            "classes": "btn ghost notif-ctl",
+            "rect": {
+              "x": 881.4296875,
+              "y": 331,
+              "width": 42,
+              "height": 24,
+              "top": 331,
+              "right": 923.4296875,
+              "bottom": 355,
+              "left": 881.4296875
+            },
+            "blur": "blur(6px)",
+            "background": "rgba(13, 13, 13, 0.06)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          },
+          {
+            "classes": "btn ghost notif-ctl",
+            "rect": {
+              "x": 775,
+              "y": 464.9453125,
+              "width": 42,
+              "height": 24,
+              "top": 464.9453125,
+              "right": 817,
+              "bottom": 488.9453125,
+              "left": 775
+            },
+            "blur": "blur(6px)",
+            "background": "rgba(13, 13, 13, 0.06)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          },
+          {
+            "classes": "btn notif-ctl",
+            "rect": {
+              "x": 825,
+              "y": 464.9453125,
+              "width": 86,
+              "height": 24,
+              "top": 464.9453125,
+              "right": 911,
+              "bottom": 488.9453125,
+              "left": 825
+            },
+            "blur": "blur(6px)",
+            "background": "rgba(13, 13, 13, 0.06)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "detail": {
+        ".detail-workspace-head": [
+          {
+            "classes": "detail-workspace-head",
+            "rect": {
+              "x": 245,
+              "y": 58,
+              "width": 925,
+              "height": 74.5,
+              "top": 58,
+              "right": 1170,
+              "bottom": 132.5,
+              "left": 245
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.detail-workspace",
+            "nativeDialog": false
+          }
+        ],
+        ".detail-collapse": [
+          {
+            "classes": "btn ghost btn-sm detail-collapse",
+            "rect": {
+              "x": 269,
+              "y": 147,
+              "width": 144,
+              "height": 28,
+              "top": 147,
+              "right": 413,
+              "bottom": 175,
+              "left": 269
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "12px",
+            "parent": "DIV.detail-navigation-scroll",
+            "nativeDialog": false
+          }
+        ],
+        ".sticky-page-tabs": [
+          {
+            "classes": "sticky-page-tabs",
+            "rect": {
+              "x": 245,
+              "y": 1,
+              "width": 925,
+              "height": 57,
+              "top": 1,
+              "right": 1170,
+              "bottom": 58,
+              "left": 245
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "SECTION.models-page",
+            "nativeDialog": false
+          }
+        ],
+        ".select-trigger": [
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 364,
+              "width": 110,
+              "height": 34,
+              "top": 364,
+              "right": 549,
+              "bottom": 398,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 406,
+              "width": 110,
+              "height": 34,
+              "top": 406,
+              "right": 549,
+              "bottom": 440,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 448,
+              "width": 110,
+              "height": 34,
+              "top": 448,
+              "right": 549,
+              "bottom": 482,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 490,
+              "width": 110,
+              "height": 34,
+              "top": 490,
+              "right": 549,
+              "bottom": 524,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 636,
+              "width": 346.5,
+              "height": 34,
+              "top": 636,
+              "right": 785.5,
+              "bottom": 670,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "menu": {
+        ".select-menu-portal": [
+          {
+            "classes": "select-menu select-menu-portal",
+            "rect": {
+              "x": 439,
+              "y": 404,
+              "width": 110,
+              "height": 100,
+              "top": 404,
+              "right": 549,
+              "bottom": 504,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.app-window is-windows",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "fixtures": "Toast/task/save notice are synthetic in-memory signals; the displayed components and handlers are production. No backend save, measurement, sync or restart is called."
+    },
+    {
+      "theme": "light",
+      "tier": "mid",
+      "feedback": {
+        ".setting-row": [
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 61,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 61,
+              "right": 1131,
+              "bottom": 126.8984375,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 134.8984375,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 134.8984375,
+              "right": 1131,
+              "bottom": 200.796875,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 208.796875,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 208.796875,
+              "right": 1131,
+              "bottom": 274.6953125,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 282.6953125,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 282.6953125,
+              "right": 1131,
+              "bottom": 348.59375,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 356.59375,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 356.59375,
+              "right": 1131,
+              "bottom": 422.4921875,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 430.4921875,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 430.4921875,
+              "right": 1131,
+              "bottom": 496.390625,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 604.890625,
+              "width": 847,
+              "height": 83.296875,
+              "top": 604.890625,
+              "right": 1131,
+              "bottom": 688.1875,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 696.1875,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 696.1875,
+              "right": 1131,
+              "bottom": 762.0859375,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          }
+        ],
+        ".notification-panel": [
+          {
+            "classes": "notification-panel show",
+            "rect": {
+              "x": 760,
+              "y": 56,
+              "width": 400,
+              "height": 166,
+              "top": 56,
+              "right": 1160,
+              "bottom": 222,
+              "left": 760
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.notif-layer",
+            "nativeDialog": false
+          }
+        ],
+        ".toast": [
+          {
+            "classes": "toast show has-notification-countdown",
+            "rect": {
+              "x": 760,
+              "y": 230,
+              "width": 400,
+              "height": 48,
+              "top": 230,
+              "right": 1160,
+              "bottom": 278,
+              "left": 760
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "12px",
+            "parent": "DIV.notif-host",
+            "nativeDialog": false
+          }
+        ],
+        ".process-progress": [
+          {
+            "classes": "process-progress done has-notification-countdown",
+            "rect": {
+              "x": 760,
+              "y": 286,
+              "width": 400,
+              "height": 84,
+              "top": 286,
+              "right": 1160,
+              "bottom": 370,
+              "left": 760
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.notif-layer",
+            "nativeDialog": false
+          },
+          {
+            "classes": "process-progress",
+            "rect": {
+              "x": 760,
+              "y": 378,
+              "width": 400,
+              "height": 125.9453125,
+              "top": 378,
+              "right": 1160,
+              "bottom": 503.9453125,
+              "left": 760
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.notif-layer",
+            "nativeDialog": false
+          }
+        ],
+        ".process-progress .notif-ctl": [
+          {
+            "classes": "btn notif-ctl",
+            "rect": {
+              "x": 775,
+              "y": 331,
+              "width": 98.4296875,
+              "height": 24,
+              "top": 331,
+              "right": 873.4296875,
+              "bottom": 355,
+              "left": 775
+            },
+            "blur": "blur(6px)",
+            "background": "rgba(13, 13, 13, 0.06)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          },
+          {
+            "classes": "btn ghost notif-ctl",
+            "rect": {
+              "x": 881.4296875,
+              "y": 331,
+              "width": 42,
+              "height": 24,
+              "top": 331,
+              "right": 923.4296875,
+              "bottom": 355,
+              "left": 881.4296875
+            },
+            "blur": "blur(6px)",
+            "background": "rgba(13, 13, 13, 0.06)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          },
+          {
+            "classes": "btn ghost notif-ctl",
+            "rect": {
+              "x": 775,
+              "y": 464.9453125,
+              "width": 42,
+              "height": 24,
+              "top": 464.9453125,
+              "right": 817,
+              "bottom": 488.9453125,
+              "left": 775
+            },
+            "blur": "blur(6px)",
+            "background": "rgba(13, 13, 13, 0.06)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          },
+          {
+            "classes": "btn notif-ctl",
+            "rect": {
+              "x": 825,
+              "y": 464.9453125,
+              "width": 86,
+              "height": 24,
+              "top": 464.9453125,
+              "right": 911,
+              "bottom": 488.9453125,
+              "left": 825
+            },
+            "blur": "blur(6px)",
+            "background": "rgba(13, 13, 13, 0.06)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "detail": {
+        ".detail-workspace-head": [
+          {
+            "classes": "detail-workspace-head",
+            "rect": {
+              "x": 245,
+              "y": 58,
+              "width": 925,
+              "height": 74.5,
+              "top": 58,
+              "right": 1170,
+              "bottom": 132.5,
+              "left": 245
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.detail-workspace",
+            "nativeDialog": false
+          }
+        ],
+        ".detail-collapse": [
+          {
+            "classes": "btn ghost btn-sm detail-collapse",
+            "rect": {
+              "x": 269,
+              "y": 147,
+              "width": 144,
+              "height": 28,
+              "top": 147,
+              "right": 413,
+              "bottom": 175,
+              "left": 269
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "12px",
+            "parent": "DIV.detail-navigation-scroll",
+            "nativeDialog": false
+          }
+        ],
+        ".sticky-page-tabs": [
+          {
+            "classes": "sticky-page-tabs",
+            "rect": {
+              "x": 245,
+              "y": 1,
+              "width": 925,
+              "height": 57,
+              "top": 1,
+              "right": 1170,
+              "bottom": 58,
+              "left": 245
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "SECTION.models-page",
+            "nativeDialog": false
+          }
+        ],
+        ".select-trigger": [
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 364,
+              "width": 110,
+              "height": 34,
+              "top": 364,
+              "right": 549,
+              "bottom": 398,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 406,
+              "width": 110,
+              "height": 34,
+              "top": 406,
+              "right": 549,
+              "bottom": 440,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 448,
+              "width": 110,
+              "height": 34,
+              "top": 448,
+              "right": 549,
+              "bottom": 482,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 490,
+              "width": 110,
+              "height": 34,
+              "top": 490,
+              "right": 549,
+              "bottom": 524,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 636,
+              "width": 346.5,
+              "height": 34,
+              "top": 636,
+              "right": 785.5,
+              "bottom": 670,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "menu": {
+        ".select-menu-portal": [
+          {
+            "classes": "select-menu select-menu-portal",
+            "rect": {
+              "x": 439,
+              "y": 404,
+              "width": 110,
+              "height": 100,
+              "top": 404,
+              "right": 549,
+              "bottom": 504,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "13px",
+            "parent": "DIV.app-window is-windows",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "fixtures": "Toast/task/save notice are synthetic in-memory signals; the displayed components and handlers are production. No backend save, measurement, sync or restart is called."
+    },
+    {
+      "theme": "light",
+      "tier": "low",
+      "feedback": {
+        ".setting-row": [
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 61,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 61,
+              "right": 1131,
+              "bottom": 126.8984375,
+              "left": 284
+            },
+            "blur": "none",
+            "background": "rgb(255, 255, 255)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 134.8984375,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 134.8984375,
+              "right": 1131,
+              "bottom": 200.796875,
+              "left": 284
+            },
+            "blur": "none",
+            "background": "rgb(255, 255, 255)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 208.796875,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 208.796875,
+              "right": 1131,
+              "bottom": 274.6953125,
+              "left": 284
+            },
+            "blur": "none",
+            "background": "rgb(255, 255, 255)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 282.6953125,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 282.6953125,
+              "right": 1131,
+              "bottom": 348.59375,
+              "left": 284
+            },
+            "blur": "none",
+            "background": "rgb(255, 255, 255)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 356.59375,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 356.59375,
+              "right": 1131,
+              "bottom": 422.4921875,
+              "left": 284
+            },
+            "blur": "none",
+            "background": "rgb(255, 255, 255)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 430.4921875,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 430.4921875,
+              "right": 1131,
+              "bottom": 496.390625,
+              "left": 284
+            },
+            "blur": "none",
+            "background": "rgb(255, 255, 255)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 604.890625,
+              "width": 847,
+              "height": 83.296875,
+              "top": 604.890625,
+              "right": 1131,
+              "bottom": 688.1875,
+              "left": 284
+            },
+            "blur": "none",
+            "background": "rgb(255, 255, 255)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 696.1875,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 696.1875,
+              "right": 1131,
+              "bottom": 762.0859375,
+              "left": 284
+            },
+            "blur": "none",
+            "background": "rgb(255, 255, 255)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          }
+        ],
+        ".notification-panel": [
+          {
+            "classes": "notification-panel show",
+            "rect": {
+              "x": 760,
+              "y": 56,
+              "width": 400,
+              "height": 166,
+              "top": 56,
+              "right": 1160,
+              "bottom": 222,
+              "left": 760
+            },
+            "blur": "none",
+            "background": "rgb(255, 255, 255)",
+            "font": "13px",
+            "parent": "DIV.notif-layer",
+            "nativeDialog": false
+          }
+        ],
+        ".toast": [
+          {
+            "classes": "toast show has-notification-countdown",
+            "rect": {
+              "x": 760,
+              "y": 230,
+              "width": 400,
+              "height": 48,
+              "top": 230,
+              "right": 1160,
+              "bottom": 278,
+              "left": 760
+            },
+            "blur": "none",
+            "background": "rgb(255, 255, 255)",
+            "font": "12px",
+            "parent": "DIV.notif-host",
+            "nativeDialog": false
+          }
+        ],
+        ".process-progress": [
+          {
+            "classes": "process-progress done has-notification-countdown",
+            "rect": {
+              "x": 760,
+              "y": 286,
+              "width": 400,
+              "height": 84,
+              "top": 286,
+              "right": 1160,
+              "bottom": 370,
+              "left": 760
+            },
+            "blur": "none",
+            "background": "rgb(255, 255, 255)",
+            "font": "13px",
+            "parent": "DIV.notif-layer",
+            "nativeDialog": false
+          },
+          {
+            "classes": "process-progress",
+            "rect": {
+              "x": 760,
+              "y": 378,
+              "width": 400,
+              "height": 125.9453125,
+              "top": 378,
+              "right": 1160,
+              "bottom": 503.9453125,
+              "left": 760
+            },
+            "blur": "none",
+            "background": "rgb(255, 255, 255)",
+            "font": "13px",
+            "parent": "DIV.notif-layer",
+            "nativeDialog": false
+          }
+        ],
+        ".process-progress .notif-ctl": [
+          {
+            "classes": "btn notif-ctl",
+            "rect": {
+              "x": 775,
+              "y": 331,
+              "width": 98.4296875,
+              "height": 24,
+              "top": 331,
+              "right": 873.4296875,
+              "bottom": 355,
+              "left": 775
+            },
+            "blur": "none",
+            "background": "rgba(13, 13, 13, 0.06)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          },
+          {
+            "classes": "btn ghost notif-ctl",
+            "rect": {
+              "x": 881.4296875,
+              "y": 331,
+              "width": 42,
+              "height": 24,
+              "top": 331,
+              "right": 923.4296875,
+              "bottom": 355,
+              "left": 881.4296875
+            },
+            "blur": "none",
+            "background": "rgba(13, 13, 13, 0.06)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          },
+          {
+            "classes": "btn ghost notif-ctl",
+            "rect": {
+              "x": 775,
+              "y": 464.9453125,
+              "width": 42,
+              "height": 24,
+              "top": 464.9453125,
+              "right": 817,
+              "bottom": 488.9453125,
+              "left": 775
+            },
+            "blur": "none",
+            "background": "rgba(13, 13, 13, 0.06)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          },
+          {
+            "classes": "btn notif-ctl",
+            "rect": {
+              "x": 825,
+              "y": 464.9453125,
+              "width": 86,
+              "height": 24,
+              "top": 464.9453125,
+              "right": 911,
+              "bottom": 488.9453125,
+              "left": 825
+            },
+            "blur": "none",
+            "background": "rgba(13, 13, 13, 0.06)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "detail": {
+        ".detail-workspace-head": [
+          {
+            "classes": "detail-workspace-head",
+            "rect": {
+              "x": 245,
+              "y": 58,
+              "width": 925,
+              "height": 74.5,
+              "top": 58,
+              "right": 1170,
+              "bottom": 132.5,
+              "left": 245
+            },
+            "blur": "none",
+            "background": "rgb(255, 255, 255)",
+            "font": "13px",
+            "parent": "DIV.detail-workspace",
+            "nativeDialog": false
+          }
+        ],
+        ".detail-collapse": [
+          {
+            "classes": "btn ghost btn-sm detail-collapse",
+            "rect": {
+              "x": 269,
+              "y": 147,
+              "width": 144,
+              "height": 28,
+              "top": 147,
+              "right": 413,
+              "bottom": 175,
+              "left": 269
+            },
+            "blur": "none",
+            "background": "rgb(255, 255, 255)",
+            "font": "12px",
+            "parent": "DIV.detail-navigation-scroll",
+            "nativeDialog": false
+          }
+        ],
+        ".sticky-page-tabs": [
+          {
+            "classes": "sticky-page-tabs",
+            "rect": {
+              "x": 245,
+              "y": 1,
+              "width": 925,
+              "height": 57,
+              "top": 1,
+              "right": 1170,
+              "bottom": 58,
+              "left": 245
+            },
+            "blur": "none",
+            "background": "rgb(255, 255, 255)",
+            "font": "13px",
+            "parent": "SECTION.models-page",
+            "nativeDialog": false
+          }
+        ],
+        ".select-trigger": [
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 364,
+              "width": 110,
+              "height": 34,
+              "top": 364,
+              "right": 549,
+              "bottom": 398,
+              "left": 439
+            },
+            "blur": "none",
+            "background": "rgb(244, 244, 244)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 406,
+              "width": 110,
+              "height": 34,
+              "top": 406,
+              "right": 549,
+              "bottom": 440,
+              "left": 439
+            },
+            "blur": "none",
+            "background": "rgb(244, 244, 244)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 448,
+              "width": 110,
+              "height": 34,
+              "top": 448,
+              "right": 549,
+              "bottom": 482,
+              "left": 439
+            },
+            "blur": "none",
+            "background": "rgb(244, 244, 244)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 490,
+              "width": 110,
+              "height": 34,
+              "top": 490,
+              "right": 549,
+              "bottom": 524,
+              "left": 439
+            },
+            "blur": "none",
+            "background": "rgb(244, 244, 244)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 636,
+              "width": 346.5,
+              "height": 34,
+              "top": 636,
+              "right": 785.5,
+              "bottom": 670,
+              "left": 439
+            },
+            "blur": "none",
+            "background": "rgb(244, 244, 244)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "menu": {
+        ".select-menu-portal": [
+          {
+            "classes": "select-menu select-menu-portal",
+            "rect": {
+              "x": 439,
+              "y": 404,
+              "width": 110,
+              "height": 100,
+              "top": 404,
+              "right": 549,
+              "bottom": 504,
+              "left": 439
+            },
+            "blur": "none",
+            "background": "rgb(255, 255, 255)",
+            "font": "13px",
+            "parent": "DIV.app-window is-windows",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "fixtures": "Toast/task/save notice are synthetic in-memory signals; the displayed components and handlers are production. No backend save, measurement, sync or restart is called."
+    },
+    {
+      "theme": "dark",
+      "tier": "high",
+      "feedback": {
+        ".setting-row": [
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 61,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 61,
+              "right": 1131,
+              "bottom": 126.8984375,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 134.8984375,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 134.8984375,
+              "right": 1131,
+              "bottom": 200.796875,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 208.796875,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 208.796875,
+              "right": 1131,
+              "bottom": 274.6953125,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 282.6953125,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 282.6953125,
+              "right": 1131,
+              "bottom": 348.59375,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 356.59375,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 356.59375,
+              "right": 1131,
+              "bottom": 422.4921875,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 430.4921875,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 430.4921875,
+              "right": 1131,
+              "bottom": 496.390625,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 604.890625,
+              "width": 847,
+              "height": 83.296875,
+              "top": 604.890625,
+              "right": 1131,
+              "bottom": 688.1875,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 696.1875,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 696.1875,
+              "right": 1131,
+              "bottom": 762.0859375,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          }
+        ],
+        ".notification-panel": [
+          {
+            "classes": "notification-panel show",
+            "rect": {
+              "x": 760,
+              "y": 56,
+              "width": 400,
+              "height": 166,
+              "top": 56,
+              "right": 1160,
+              "bottom": 222,
+              "left": 760
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.notif-layer",
+            "nativeDialog": false
+          }
+        ],
+        ".toast": [
+          {
+            "classes": "toast show has-notification-countdown",
+            "rect": {
+              "x": 760,
+              "y": 230,
+              "width": 400,
+              "height": 48,
+              "top": 230,
+              "right": 1160,
+              "bottom": 278,
+              "left": 760
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "12px",
+            "parent": "DIV.notif-host",
+            "nativeDialog": false
+          }
+        ],
+        ".process-progress": [
+          {
+            "classes": "process-progress done has-notification-countdown",
+            "rect": {
+              "x": 760,
+              "y": 286,
+              "width": 400,
+              "height": 84,
+              "top": 286,
+              "right": 1160,
+              "bottom": 370,
+              "left": 760
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.notif-layer",
+            "nativeDialog": false
+          },
+          {
+            "classes": "process-progress",
+            "rect": {
+              "x": 760,
+              "y": 378,
+              "width": 400,
+              "height": 125.9453125,
+              "top": 378,
+              "right": 1160,
+              "bottom": 503.9453125,
+              "left": 760
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.notif-layer",
+            "nativeDialog": false
+          }
+        ],
+        ".process-progress .notif-ctl": [
+          {
+            "classes": "btn notif-ctl",
+            "rect": {
+              "x": 775,
+              "y": 331,
+              "width": 98.4296875,
+              "height": 24,
+              "top": 331,
+              "right": 873.4296875,
+              "bottom": 355,
+              "left": 775
+            },
+            "blur": "blur(6px)",
+            "background": "rgba(255, 255, 255, 0.1)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          },
+          {
+            "classes": "btn ghost notif-ctl",
+            "rect": {
+              "x": 881.4296875,
+              "y": 331,
+              "width": 42,
+              "height": 24,
+              "top": 331,
+              "right": 923.4296875,
+              "bottom": 355,
+              "left": 881.4296875
+            },
+            "blur": "blur(6px)",
+            "background": "rgba(255, 255, 255, 0.1)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          },
+          {
+            "classes": "btn ghost notif-ctl",
+            "rect": {
+              "x": 775,
+              "y": 464.9453125,
+              "width": 42,
+              "height": 24,
+              "top": 464.9453125,
+              "right": 817,
+              "bottom": 488.9453125,
+              "left": 775
+            },
+            "blur": "blur(6px)",
+            "background": "rgba(255, 255, 255, 0.1)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          },
+          {
+            "classes": "btn notif-ctl",
+            "rect": {
+              "x": 825,
+              "y": 464.9453125,
+              "width": 86,
+              "height": 24,
+              "top": 464.9453125,
+              "right": 911,
+              "bottom": 488.9453125,
+              "left": 825
+            },
+            "blur": "blur(6px)",
+            "background": "rgba(255, 255, 255, 0.1)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "detail": {
+        ".detail-workspace-head": [
+          {
+            "classes": "detail-workspace-head",
+            "rect": {
+              "x": 245,
+              "y": 58,
+              "width": 925,
+              "height": 74.5,
+              "top": 58,
+              "right": 1170,
+              "bottom": 132.5,
+              "left": 245
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.detail-workspace",
+            "nativeDialog": false
+          }
+        ],
+        ".detail-collapse": [
+          {
+            "classes": "btn ghost btn-sm detail-collapse",
+            "rect": {
+              "x": 269,
+              "y": 147,
+              "width": 144,
+              "height": 28,
+              "top": 147,
+              "right": 413,
+              "bottom": 175,
+              "left": 269
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "12px",
+            "parent": "DIV.detail-navigation-scroll",
+            "nativeDialog": false
+          }
+        ],
+        ".sticky-page-tabs": [
+          {
+            "classes": "sticky-page-tabs",
+            "rect": {
+              "x": 245,
+              "y": 1,
+              "width": 925,
+              "height": 57,
+              "top": 1,
+              "right": 1170,
+              "bottom": 58,
+              "left": 245
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "SECTION.models-page",
+            "nativeDialog": false
+          }
+        ],
+        ".select-trigger": [
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 364,
+              "width": 110,
+              "height": 34,
+              "top": 364,
+              "right": 549,
+              "bottom": 398,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 406,
+              "width": 110,
+              "height": 34,
+              "top": 406,
+              "right": 549,
+              "bottom": 440,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 448,
+              "width": 110,
+              "height": 34,
+              "top": 448,
+              "right": 549,
+              "bottom": 482,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 490,
+              "width": 110,
+              "height": 34,
+              "top": 490,
+              "right": 549,
+              "bottom": 524,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 636,
+              "width": 346.5,
+              "height": 34,
+              "top": 636,
+              "right": 785.5,
+              "bottom": 670,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "menu": {
+        ".select-menu-portal": [
+          {
+            "classes": "select-menu select-menu-portal",
+            "rect": {
+              "x": 439,
+              "y": 404,
+              "width": 110,
+              "height": 100,
+              "top": 404,
+              "right": 549,
+              "bottom": 504,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.app-window is-windows",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "fixtures": "Toast/task/save notice are synthetic in-memory signals; the displayed components and handlers are production. No backend save, measurement, sync or restart is called."
+    },
+    {
+      "theme": "dark",
+      "tier": "mid",
+      "feedback": {
+        ".setting-row": [
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 61,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 61,
+              "right": 1131,
+              "bottom": 126.8984375,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 134.8984375,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 134.8984375,
+              "right": 1131,
+              "bottom": 200.796875,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 208.796875,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 208.796875,
+              "right": 1131,
+              "bottom": 274.6953125,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 282.6953125,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 282.6953125,
+              "right": 1131,
+              "bottom": 348.59375,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 356.59375,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 356.59375,
+              "right": 1131,
+              "bottom": 422.4921875,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 430.4921875,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 430.4921875,
+              "right": 1131,
+              "bottom": 496.390625,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 604.890625,
+              "width": 847,
+              "height": 83.296875,
+              "top": 604.890625,
+              "right": 1131,
+              "bottom": 688.1875,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 696.1875,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 696.1875,
+              "right": 1131,
+              "bottom": 762.0859375,
+              "left": 284
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          }
+        ],
+        ".notification-panel": [
+          {
+            "classes": "notification-panel show",
+            "rect": {
+              "x": 760,
+              "y": 56,
+              "width": 400,
+              "height": 166,
+              "top": 56,
+              "right": 1160,
+              "bottom": 222,
+              "left": 760
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.notif-layer",
+            "nativeDialog": false
+          }
+        ],
+        ".toast": [
+          {
+            "classes": "toast show has-notification-countdown",
+            "rect": {
+              "x": 760,
+              "y": 230,
+              "width": 400,
+              "height": 48,
+              "top": 230,
+              "right": 1160,
+              "bottom": 278,
+              "left": 760
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "12px",
+            "parent": "DIV.notif-host",
+            "nativeDialog": false
+          }
+        ],
+        ".process-progress": [
+          {
+            "classes": "process-progress done has-notification-countdown",
+            "rect": {
+              "x": 760,
+              "y": 286,
+              "width": 400,
+              "height": 84,
+              "top": 286,
+              "right": 1160,
+              "bottom": 370,
+              "left": 760
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.notif-layer",
+            "nativeDialog": false
+          },
+          {
+            "classes": "process-progress",
+            "rect": {
+              "x": 760,
+              "y": 378,
+              "width": 400,
+              "height": 125.9453125,
+              "top": 378,
+              "right": 1160,
+              "bottom": 503.9453125,
+              "left": 760
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.notif-layer",
+            "nativeDialog": false
+          }
+        ],
+        ".process-progress .notif-ctl": [
+          {
+            "classes": "btn notif-ctl",
+            "rect": {
+              "x": 775,
+              "y": 331,
+              "width": 98.4296875,
+              "height": 24,
+              "top": 331,
+              "right": 873.4296875,
+              "bottom": 355,
+              "left": 775
+            },
+            "blur": "blur(6px)",
+            "background": "rgba(255, 255, 255, 0.1)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          },
+          {
+            "classes": "btn ghost notif-ctl",
+            "rect": {
+              "x": 881.4296875,
+              "y": 331,
+              "width": 42,
+              "height": 24,
+              "top": 331,
+              "right": 923.4296875,
+              "bottom": 355,
+              "left": 881.4296875
+            },
+            "blur": "blur(6px)",
+            "background": "rgba(255, 255, 255, 0.1)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          },
+          {
+            "classes": "btn ghost notif-ctl",
+            "rect": {
+              "x": 775,
+              "y": 464.9453125,
+              "width": 42,
+              "height": 24,
+              "top": 464.9453125,
+              "right": 817,
+              "bottom": 488.9453125,
+              "left": 775
+            },
+            "blur": "blur(6px)",
+            "background": "rgba(255, 255, 255, 0.1)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          },
+          {
+            "classes": "btn notif-ctl",
+            "rect": {
+              "x": 825,
+              "y": 464.9453125,
+              "width": 86,
+              "height": 24,
+              "top": 464.9453125,
+              "right": 911,
+              "bottom": 488.9453125,
+              "left": 825
+            },
+            "blur": "blur(6px)",
+            "background": "rgba(255, 255, 255, 0.1)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "detail": {
+        ".detail-workspace-head": [
+          {
+            "classes": "detail-workspace-head",
+            "rect": {
+              "x": 245,
+              "y": 58,
+              "width": 925,
+              "height": 74.5,
+              "top": 58,
+              "right": 1170,
+              "bottom": 132.5,
+              "left": 245
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.detail-workspace",
+            "nativeDialog": false
+          }
+        ],
+        ".detail-collapse": [
+          {
+            "classes": "btn ghost btn-sm detail-collapse",
+            "rect": {
+              "x": 269,
+              "y": 147,
+              "width": 144,
+              "height": 28,
+              "top": 147,
+              "right": 413,
+              "bottom": 175,
+              "left": 269
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "12px",
+            "parent": "DIV.detail-navigation-scroll",
+            "nativeDialog": false
+          }
+        ],
+        ".sticky-page-tabs": [
+          {
+            "classes": "sticky-page-tabs",
+            "rect": {
+              "x": 245,
+              "y": 1,
+              "width": 925,
+              "height": 57,
+              "top": 1,
+              "right": 1170,
+              "bottom": 58,
+              "left": 245
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "SECTION.models-page",
+            "nativeDialog": false
+          }
+        ],
+        ".select-trigger": [
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 364,
+              "width": 110,
+              "height": 34,
+              "top": 364,
+              "right": 549,
+              "bottom": 398,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 406,
+              "width": 110,
+              "height": 34,
+              "top": 406,
+              "right": 549,
+              "bottom": 440,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 448,
+              "width": 110,
+              "height": 34,
+              "top": 448,
+              "right": 549,
+              "bottom": 482,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 490,
+              "width": 110,
+              "height": 34,
+              "top": 490,
+              "right": 549,
+              "bottom": 524,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 636,
+              "width": 346.5,
+              "height": 34,
+              "top": 636,
+              "right": 785.5,
+              "bottom": 670,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "menu": {
+        ".select-menu-portal": [
+          {
+            "classes": "select-menu select-menu-portal",
+            "rect": {
+              "x": 439,
+              "y": 404,
+              "width": 110,
+              "height": 100,
+              "top": 404,
+              "right": 549,
+              "bottom": 504,
+              "left": 439
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "DIV.app-window is-windows",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "fixtures": "Toast/task/save notice are synthetic in-memory signals; the displayed components and handlers are production. No backend save, measurement, sync or restart is called."
+    },
+    {
+      "theme": "dark",
+      "tier": "low",
+      "feedback": {
+        ".setting-row": [
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 61,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 61,
+              "right": 1131,
+              "bottom": 126.8984375,
+              "left": 284
+            },
+            "blur": "none",
+            "background": "rgb(38, 38, 38)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 134.8984375,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 134.8984375,
+              "right": 1131,
+              "bottom": 200.796875,
+              "left": 284
+            },
+            "blur": "none",
+            "background": "rgb(38, 38, 38)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 208.796875,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 208.796875,
+              "right": 1131,
+              "bottom": 274.6953125,
+              "left": 284
+            },
+            "blur": "none",
+            "background": "rgb(38, 38, 38)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 282.6953125,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 282.6953125,
+              "right": 1131,
+              "bottom": 348.59375,
+              "left": 284
+            },
+            "blur": "none",
+            "background": "rgb(38, 38, 38)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 356.59375,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 356.59375,
+              "right": 1131,
+              "bottom": 422.4921875,
+              "left": 284
+            },
+            "blur": "none",
+            "background": "rgb(38, 38, 38)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 430.4921875,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 430.4921875,
+              "right": 1131,
+              "bottom": 496.390625,
+              "left": 284
+            },
+            "blur": "none",
+            "background": "rgb(38, 38, 38)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 604.890625,
+              "width": 847,
+              "height": 83.296875,
+              "top": 604.890625,
+              "right": 1131,
+              "bottom": 688.1875,
+              "left": 284
+            },
+            "blur": "none",
+            "background": "rgb(38, 38, 38)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          },
+          {
+            "classes": "setting-row",
+            "rect": {
+              "x": 284,
+              "y": 696.1875,
+              "width": 847,
+              "height": 65.8984375,
+              "top": 696.1875,
+              "right": 1131,
+              "bottom": 762.0859375,
+              "left": 284
+            },
+            "blur": "none",
+            "background": "rgb(38, 38, 38)",
+            "font": "13px",
+            "parent": "DIV.setting-list",
+            "nativeDialog": false
+          }
+        ],
+        ".notification-panel": [
+          {
+            "classes": "notification-panel show",
+            "rect": {
+              "x": 760,
+              "y": 56,
+              "width": 400,
+              "height": 166,
+              "top": 56,
+              "right": 1160,
+              "bottom": 222,
+              "left": 760
+            },
+            "blur": "none",
+            "background": "rgb(38, 38, 38)",
+            "font": "13px",
+            "parent": "DIV.notif-layer",
+            "nativeDialog": false
+          }
+        ],
+        ".toast": [
+          {
+            "classes": "toast show has-notification-countdown",
+            "rect": {
+              "x": 760,
+              "y": 230,
+              "width": 400,
+              "height": 48,
+              "top": 230,
+              "right": 1160,
+              "bottom": 278,
+              "left": 760
+            },
+            "blur": "none",
+            "background": "rgb(38, 38, 38)",
+            "font": "12px",
+            "parent": "DIV.notif-host",
+            "nativeDialog": false
+          }
+        ],
+        ".process-progress": [
+          {
+            "classes": "process-progress done has-notification-countdown",
+            "rect": {
+              "x": 760,
+              "y": 286,
+              "width": 400,
+              "height": 84,
+              "top": 286,
+              "right": 1160,
+              "bottom": 370,
+              "left": 760
+            },
+            "blur": "none",
+            "background": "rgb(38, 38, 38)",
+            "font": "13px",
+            "parent": "DIV.notif-layer",
+            "nativeDialog": false
+          },
+          {
+            "classes": "process-progress",
+            "rect": {
+              "x": 760,
+              "y": 378,
+              "width": 400,
+              "height": 125.9453125,
+              "top": 378,
+              "right": 1160,
+              "bottom": 503.9453125,
+              "left": 760
+            },
+            "blur": "none",
+            "background": "rgb(38, 38, 38)",
+            "font": "13px",
+            "parent": "DIV.notif-layer",
+            "nativeDialog": false
+          }
+        ],
+        ".process-progress .notif-ctl": [
+          {
+            "classes": "btn notif-ctl",
+            "rect": {
+              "x": 775,
+              "y": 331,
+              "width": 98.4296875,
+              "height": 24,
+              "top": 331,
+              "right": 873.4296875,
+              "bottom": 355,
+              "left": 775
+            },
+            "blur": "none",
+            "background": "rgba(255, 255, 255, 0.1)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          },
+          {
+            "classes": "btn ghost notif-ctl",
+            "rect": {
+              "x": 881.4296875,
+              "y": 331,
+              "width": 42,
+              "height": 24,
+              "top": 331,
+              "right": 923.4296875,
+              "bottom": 355,
+              "left": 881.4296875
+            },
+            "blur": "none",
+            "background": "rgba(255, 255, 255, 0.1)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          },
+          {
+            "classes": "btn ghost notif-ctl",
+            "rect": {
+              "x": 775,
+              "y": 464.9453125,
+              "width": 42,
+              "height": 24,
+              "top": 464.9453125,
+              "right": 817,
+              "bottom": 488.9453125,
+              "left": 775
+            },
+            "blur": "none",
+            "background": "rgba(255, 255, 255, 0.1)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          },
+          {
+            "classes": "btn notif-ctl",
+            "rect": {
+              "x": 825,
+              "y": 464.9453125,
+              "width": 86,
+              "height": 24,
+              "top": 464.9453125,
+              "right": 911,
+              "bottom": 488.9453125,
+              "left": 825
+            },
+            "blur": "none",
+            "background": "rgba(255, 255, 255, 0.1)",
+            "font": "11px",
+            "parent": "DIV.process-progress-actions",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "detail": {
+        ".detail-workspace-head": [
+          {
+            "classes": "detail-workspace-head",
+            "rect": {
+              "x": 245,
+              "y": 58,
+              "width": 925,
+              "height": 74.5,
+              "top": 58,
+              "right": 1170,
+              "bottom": 132.5,
+              "left": 245
+            },
+            "blur": "none",
+            "background": "rgb(38, 38, 38)",
+            "font": "13px",
+            "parent": "DIV.detail-workspace",
+            "nativeDialog": false
+          }
+        ],
+        ".detail-collapse": [
+          {
+            "classes": "btn ghost btn-sm detail-collapse",
+            "rect": {
+              "x": 269,
+              "y": 147,
+              "width": 144,
+              "height": 28,
+              "top": 147,
+              "right": 413,
+              "bottom": 175,
+              "left": 269
+            },
+            "blur": "none",
+            "background": "rgb(38, 38, 38)",
+            "font": "12px",
+            "parent": "DIV.detail-navigation-scroll",
+            "nativeDialog": false
+          }
+        ],
+        ".sticky-page-tabs": [
+          {
+            "classes": "sticky-page-tabs",
+            "rect": {
+              "x": 245,
+              "y": 1,
+              "width": 925,
+              "height": 57,
+              "top": 1,
+              "right": 1170,
+              "bottom": 58,
+              "left": 245
+            },
+            "blur": "none",
+            "background": "rgb(38, 38, 38)",
+            "font": "13px",
+            "parent": "SECTION.models-page",
+            "nativeDialog": false
+          }
+        ],
+        ".select-trigger": [
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 364,
+              "width": 110,
+              "height": 34,
+              "top": 364,
+              "right": 549,
+              "bottom": 398,
+              "left": 439
+            },
+            "blur": "none",
+            "background": "rgb(48, 48, 48)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 406,
+              "width": 110,
+              "height": 34,
+              "top": 406,
+              "right": 549,
+              "bottom": 440,
+              "left": 439
+            },
+            "blur": "none",
+            "background": "rgb(48, 48, 48)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 448,
+              "width": 110,
+              "height": 34,
+              "top": 448,
+              "right": 549,
+              "bottom": 482,
+              "left": 439
+            },
+            "blur": "none",
+            "background": "rgb(48, 48, 48)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 490,
+              "width": 110,
+              "height": 34,
+              "top": 490,
+              "right": 549,
+              "bottom": 524,
+              "left": 439
+            },
+            "blur": "none",
+            "background": "rgb(48, 48, 48)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          },
+          {
+            "classes": "select-trigger",
+            "rect": {
+              "x": 439,
+              "y": 636,
+              "width": 346.5,
+              "height": 34,
+              "top": 636,
+              "right": 785.5,
+              "bottom": 670,
+              "left": 439
+            },
+            "blur": "none",
+            "background": "rgb(48, 48, 48)",
+            "font": "12px",
+            "parent": "DIV.select",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "menu": {
+        ".select-menu-portal": [
+          {
+            "classes": "select-menu select-menu-portal",
+            "rect": {
+              "x": 439,
+              "y": 404,
+              "width": 110,
+              "height": 100,
+              "top": 404,
+              "right": 549,
+              "bottom": 504,
+              "left": 439
+            },
+            "blur": "none",
+            "background": "rgb(38, 38, 38)",
+            "font": "13px",
+            "parent": "DIV.app-window is-windows",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "fixtures": "Toast/task/save notice are synthetic in-memory signals; the displayed components and handlers are production. No backend save, measurement, sync or restart is called."
+    }
+  ],
+  "binding": {
+    "activeDataRoot": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\sandbox",
+    "opencodexHomeMode": "inside",
+    "opencodexHome": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\sandbox\\opencodex-home",
+    "currentDataRoot": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\sandbox",
+    "currentOpencodexHome": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\sandbox\\opencodex-home",
+    "runtimeActive": true
+  },
+  "environment": {
+    "about": {
+      "name": "OpenCodeX Desktop",
+      "version": "0.2.21",
+      "identifier": "com.gzers.opencodex.desktop",
+      "platform": "Windows",
+      "framework": "Tauri v2",
+      "license": "MIT License"
+    },
+    "native": {
+      "platform": "Windows",
+      "material": "mica",
+      "reason": "mica",
+      "theme": "dark",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": true,
+      "nativeCaption": true,
+      "backdropAttribute": 2,
+      "dwmResult": 0
+    },
+    "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+    "dpr": 2,
+    "viewport": {
+      "width": 1180,
+      "height": 760
+    },
+    "gpu": {
+      "vendor": "Google Inc. (Intel)",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics 770 (0x00004680) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    "supports": true,
+    "webkitSupports": false,
+    "root": {
+      "effects": "high",
+      "glowRender": "mesh",
+      "theme": "dark",
+      "nativeMaterial": "mica",
+      "route": "overview",
+      "overviewSize": "standard"
+    }
+  },
+  "result": "passed"
+}

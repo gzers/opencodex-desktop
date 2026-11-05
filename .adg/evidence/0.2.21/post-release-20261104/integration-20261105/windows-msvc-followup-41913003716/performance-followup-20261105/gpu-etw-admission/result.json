@@ -1,0 +1,22 @@
+{
+  "preflight": {
+    "args": [
+      "-status"
+    ],
+    "exitCode": 0,
+    "stdout": "\nMicrosoft Windows Performance Recorder Version 10.0.26100 (CoreSystem)\nCopyright (c) 2024 Microsoft Corporation. All rights reserved.\n\nWPR is not recording\n",
+    "stderr": ""
+  },
+  "scope": "GPU/desktop composition scheduling diagnostics; no file/network/registry provider requested",
+  "start": {
+    "args": [
+      "-start",
+      "GPU",
+      "-filemode"
+    ],
+    "exitCode": 3310899217,
+    "stdout": "",
+    "stderr": "\n\tFailed to enable the policy to profile system performance.\n\n\n\tProfile Id: GPU.Verbose.File\n\t\n\tError code: 0xc5585011\n\t\n\tFailed to enable the policy to profile system performance.\n\n\t\n\t\n"
+  },
+  "at": 1793843864.2892992
+}

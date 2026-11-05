@@ -1,0 +1,10 @@
+Could not load opencodex config at D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\post021-windows-final-msvc-41913003716\perf\sandbox\opencodex-home\config.json: providers.local-fixture.baseUrl: baseUrl points to a loopback address; set allowPrivateNetwork:true only for intentionally local/self-hosted providers. Using default config. A backup was written to D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\post021-windows-final-msvc-41913003716\perf\sandbox\opencodex-home\config.json.invalid-2026-11-05T00-22-05-594Z.
+Could not load opencodex config at D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\post021-windows-final-msvc-41913003716\perf\sandbox\opencodex-home\config.json: providers.local-fixture.baseUrl: baseUrl points to a loopback address; set allowPrivateNetwork:true only for intentionally local/self-hosted providers. Using default config. A backup was written to D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\post021-windows-final-msvc-41913003716\perf\sandbox\opencodex-home\config.json.invalid-2026-11-05T00-22-07-622Z.
+🚀 opencodex proxy running on http://localhost:60444
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+{"pid":70296,"port":60444,"home":"D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-41913003716\\perf\\sandbox\\opencodex-home","officialPackage":"2.84.0","restartDisabledByFixture":true,"at":"2026-11-05T00:22:10.747Z"}
+🔐 Claude intercept proxy active on http://127.0.0.1:60544 (CONNECT api.anthropic.com → local TLS)

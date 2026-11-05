@@ -1,0 +1,57 @@
+{
+  "result": "failed",
+  "acceptance": false,
+  "owner": "EZIO-MINI\\Administrator",
+  "startedAtUtc": "2026-11-05T07:20:10.594Z",
+  "checks": [],
+  "servicePid": 83124,
+  "formalBefore": [
+    {
+      "pid": 92676,
+      "parentPid": 2108,
+      "path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe",
+      "createdAtUtcTicks": "639294600401407910",
+      "sessionId": 1,
+      "owner": "EZIO-MINI\\Administrator"
+    },
+    {
+      "pid": 424,
+      "parentPid": 92676,
+      "path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe",
+      "createdAtUtcTicks": "639294600403309790",
+      "sessionId": 1,
+      "owner": "EZIO-MINI\\Administrator"
+    },
+    {
+      "pid": 80024,
+      "parentPid": 92676,
+      "path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe",
+      "createdAtUtcTicks": "639294600411098160",
+      "sessionId": 1,
+      "owner": "EZIO-MINI\\Administrator"
+    },
+    {
+      "pid": 88972,
+      "parentPid": 92676,
+      "path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe",
+      "createdAtUtcTicks": "639294600411237870",
+      "sessionId": 1,
+      "owner": "EZIO-MINI\\Administrator"
+    },
+    {
+      "pid": 57724,
+      "parentPid": 92676,
+      "path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe",
+      "createdAtUtcTicks": "639294600411785870",
+      "sessionId": 1,
+      "owner": "EZIO-MINI\\Administrator"
+    }
+  ],
+  "managerPid": 99740,
+  "error": {
+    "message": "{\"exceptionId\":1,\"text\":\"Uncaught\",\"lineNumber\":0,\"columnNumber\":27,\"scriptId\":\"4\",\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"TypeError\",\"description\":\"TypeError: Cannot read properties of undefined (reading 'invoke')\\n    at <anonymous>:1:28\",\"objectId\":\"4663468634691754208.1.2\"}}",
+    "stack": "Error: {\"exceptionId\":1,\"text\":\"Uncaught\",\"lineNumber\":0,\"columnNumber\":27,\"scriptId\":\"4\",\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"TypeError\",\"description\":\"TypeError: Cannot read properties of undefined (reading 'invoke')\\n    at <anonymous>:1:28\",\"objectId\":\"4663468634691754208.1.2\"}}\n    at evaluate (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/post021-windows-final/cdp-session.mjs:48:40)\n    at async file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/post021-windows-final/formal-msix-run.mjs:94:21"
+  },
+  "finishedAtUtc": "2026-11-05T07:21:18.264Z",
+  "cleanup": "Processes and authorized testprofile retained for inspection; no broadkill orrestore. Privatebackup stayslocal."
+}

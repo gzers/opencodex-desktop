@@ -1,0 +1,9 @@
+file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/post021-windows-final/cdp-session.mjs:48
+    if (result.exceptionDetails) throw Error(JSON.stringify(result.exceptionDetails))
+                                       ^
+
+Error: {"exceptionId":2,"text":"Uncaught (in promise) Error: foreground required","lineNumber":0,"columnNumber":0,"exception":{"type":"object","subtype":"error","className":"Error","description":"Error: foreground required\n    at <anonymous>:1:85","objectId":"8692166081344839423.2.1"}}
+    at Object.evaluate (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/post021-windows-final/cdp-session.mjs:48:40)
+    at async file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-msvc-followup/connected-native/diagnose-composition.mjs:10:29
+
+Node.js v24.22.1

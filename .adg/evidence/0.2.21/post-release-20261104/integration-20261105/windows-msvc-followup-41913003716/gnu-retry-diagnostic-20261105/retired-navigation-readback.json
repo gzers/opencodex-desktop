@@ -1,0 +1,164 @@
+{
+  "scope": "GNU diagnostic only; verify retired navigation cannot overwrite replacement after original60s delay",
+  "before": {
+    "id": 6,
+    "startedAt": 88815.39999961853,
+    "outcome": "visible-ready",
+    "phases": [
+      {
+        "phase": "preferences-start",
+        "elapsedMs": 0.10000038146972656
+      },
+      {
+        "phase": "preferences-ready",
+        "elapsedMs": 0.10000038146972656
+      },
+      {
+        "phase": "status-ready",
+        "elapsedMs": 0.10000038146972656
+      },
+      {
+        "phase": "address-ready",
+        "elapsedMs": 0.20000028610229492
+      },
+      {
+        "phase": "native-request",
+        "elapsedMs": 1.5
+      },
+      {
+        "phase": "native:queued:0.0",
+        "elapsedMs": 69.80000019073486
+      },
+      {
+        "phase": "native:owner-lock:10.0",
+        "elapsedMs": 69.80000019073486
+      },
+      {
+        "phase": "native:runtime-address:20.0",
+        "elapsedMs": 69.80000019073486
+      },
+      {
+        "phase": "native:native-view:29.0",
+        "elapsedMs": 69.90000009536743
+      },
+      {
+        "phase": "native:visible:38.0",
+        "elapsedMs": 69.90000009536743
+      },
+      {
+        "phase": "visible-ready",
+        "elapsedMs": 69.90000009536743
+      },
+      {
+        "phase": "native-request",
+        "elapsedMs": 666.3000001907349
+      },
+      {
+        "phase": "native:queued:0.0",
+        "elapsedMs": 732.4000000953674
+      },
+      {
+        "phase": "native:owner-lock:9.0",
+        "elapsedMs": 732.5
+      },
+      {
+        "phase": "native:runtime-address:19.0",
+        "elapsedMs": 732.5
+      },
+      {
+        "phase": "native:native-view:28.0",
+        "elapsedMs": 732.5
+      },
+      {
+        "phase": "native:visible:37.0",
+        "elapsedMs": 732.5
+      },
+      {
+        "phase": "visible-ready",
+        "elapsedMs": 732.5
+      }
+    ]
+  },
+  "after": {
+    "id": 6,
+    "startedAt": 88815.39999961853,
+    "outcome": "visible-ready",
+    "phases": [
+      {
+        "phase": "preferences-start",
+        "elapsedMs": 0.10000038146972656
+      },
+      {
+        "phase": "preferences-ready",
+        "elapsedMs": 0.10000038146972656
+      },
+      {
+        "phase": "status-ready",
+        "elapsedMs": 0.10000038146972656
+      },
+      {
+        "phase": "address-ready",
+        "elapsedMs": 0.20000028610229492
+      },
+      {
+        "phase": "native-request",
+        "elapsedMs": 1.5
+      },
+      {
+        "phase": "native:queued:0.0",
+        "elapsedMs": 69.80000019073486
+      },
+      {
+        "phase": "native:owner-lock:10.0",
+        "elapsedMs": 69.80000019073486
+      },
+      {
+        "phase": "native:runtime-address:20.0",
+        "elapsedMs": 69.80000019073486
+      },
+      {
+        "phase": "native:native-view:29.0",
+        "elapsedMs": 69.90000009536743
+      },
+      {
+        "phase": "native:visible:38.0",
+        "elapsedMs": 69.90000009536743
+      },
+      {
+        "phase": "visible-ready",
+        "elapsedMs": 69.90000009536743
+      },
+      {
+        "phase": "native-request",
+        "elapsedMs": 666.3000001907349
+      },
+      {
+        "phase": "native:queued:0.0",
+        "elapsedMs": 732.4000000953674
+      },
+      {
+        "phase": "native:owner-lock:9.0",
+        "elapsedMs": 732.5
+      },
+      {
+        "phase": "native:runtime-address:19.0",
+        "elapsedMs": 732.5
+      },
+      {
+        "phase": "native:native-view:28.0",
+        "elapsedMs": 732.5
+      },
+      {
+        "phase": "native:visible:37.0",
+        "elapsedMs": 732.5
+      },
+      {
+        "phase": "visible-ready",
+        "elapsedMs": 732.5
+      }
+    ]
+  },
+  "result": "pass",
+  "waitedMs": 52,
+  "oldNavigationDelayMs": 60000
+}

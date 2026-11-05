@@ -1,0 +1,311 @@
+{
+  "acceptance": false,
+  "sampleCoverageUtc": {
+    "start": "2026-11-05T05:00:11.471Z",
+    "end": "2026-11-05T05:00:41.495Z",
+    "collectorStart": "2026-11-05T05:00:11.2883086+00:00"
+  },
+  "frameBudget": {
+    "durationMs": 30008.5,
+    "B": 16.666666666666668,
+    "samples": 220,
+    "p50": 145.29999999981374,
+    "p95": 236.29999999981374,
+    "max": 272.8999999994412,
+    "over6B": 155,
+    "draws": 221,
+    "foreground": true,
+    "strategy": {
+      "setting": "high",
+      "effective": "high",
+      "visible": true,
+      "lightAllowed": true,
+      "ambientAllowed": true,
+      "animated": true,
+      "solid": false
+    },
+    "diagnostics": {
+      "callbackCostMs": {
+        "samples": 221,
+        "p50": 0,
+        "p95": 0.09999990463256836,
+        "max": 0.6000003814697266
+      },
+      "callbackDispatchDelayMs": {
+        "samples": 221,
+        "p50": 5.699999904260039,
+        "p95": 13.399999713525176,
+        "max": 130.09999999962747
+      },
+      "actualScrollRange": null,
+      "note": "Callback cost excludes later style/layout/paint/GPU work; dispatch delay alone cannot identify the bottleneck. Acceptance still uses the original frame-interval budget."
+    }
+  },
+  "etl": {
+    "events": 977244,
+    "nativeConsumerExitCode": 0,
+    "headerEventsLost": 0,
+    "providerCounts": {
+      "MSNT_SystemTrace": 8,
+      "9b79ee91-b5fd-41c0-a243-4248e266e9d0": 71,
+      "Microsoft-Windows-Dwm-Core": 906549,
+      "bbccf6c1-6cd1-48c4-80ff-839482e37671": 128,
+      "Microsoft-Windows-DirectComposition": 45748,
+      "Microsoft-Windows-DXGI": 24737,
+      "ed54dff8-c409-4cf6-bf83-05e1e61a09c4": 3
+    },
+    "kernelEventTracingLossRecords": 0,
+    "sha256": "e472c735e3847ef0ab6670cc07c4e2fdece31929e2628fd39a97dd8046bf4bb2",
+    "bytes": 136314880,
+    "published": false
+  },
+  "phaseTiming": [
+    {
+      "phase": "dwm-dxgi-present",
+      "pid": 4040,
+      "provider": "Microsoft-Windows-DXGI",
+      "startId": 42,
+      "stopId": 43,
+      "durationMs": {
+        "samples": 204,
+        "p50": 145.0036,
+        "p95": 223.7611,
+        "max": 258.8077
+      },
+      "startCadenceMs": {
+        "samples": 204,
+        "p50": 149.0322,
+        "p95": 228.4096,
+        "max": 262.1093
+      },
+      "unpairedStopsAtLeftBoundary": 1,
+      "unpairedStartsAtRightBoundary": 1,
+      "overlappingStarts": 0
+    },
+    {
+      "phase": "webview-gpu-dxgi-present",
+      "pid": 76176,
+      "provider": "Microsoft-Windows-DXGI",
+      "startId": 42,
+      "stopId": 43,
+      "durationMs": {
+        "samples": 220,
+        "p50": 1.9154,
+        "p95": 30.2176,
+        "max": 49.0631
+      },
+      "startCadenceMs": {
+        "samples": 219,
+        "p50": 147.8802,
+        "p95": 238.2759,
+        "max": 275.0876
+      },
+      "unpairedStopsAtLeftBoundary": 0,
+      "unpairedStartsAtRightBoundary": 0,
+      "overlappingStarts": 0
+    },
+    {
+      "phase": "dwm-wait-vblank",
+      "pid": 4040,
+      "provider": "Microsoft-Windows-Dwm-Core",
+      "startId": 6,
+      "stopId": 7,
+      "durationMs": {
+        "samples": 279,
+        "p50": 0.0131,
+        "p95": 22.1701,
+        "max": 40.7208
+      },
+      "startCadenceMs": {
+        "samples": 278,
+        "p50": 136.2491,
+        "p95": 222.1198,
+        "max": 263.5902
+      },
+      "unpairedStopsAtLeftBoundary": 0,
+      "unpairedStartsAtRightBoundary": 0,
+      "overlappingStarts": 0
+    },
+    {
+      "phase": "dwm-wait-work",
+      "pid": 4040,
+      "provider": "Microsoft-Windows-Dwm-Core",
+      "startId": 8,
+      "stopId": 9,
+      "durationMs": {
+        "samples": 279,
+        "p50": 0.0119,
+        "p95": 0.0297,
+        "max": 0.072
+      },
+      "startCadenceMs": {
+        "samples": 278,
+        "p50": 136.2447,
+        "p95": 222.1115,
+        "max": 263.5911
+      },
+      "unpairedStopsAtLeftBoundary": 0,
+      "unpairedStartsAtRightBoundary": 0,
+      "overlappingStarts": 0
+    },
+    {
+      "phase": "dwm-process-frame",
+      "pid": 4040,
+      "provider": "Microsoft-Windows-Dwm-Core",
+      "startId": 10,
+      "stopId": 12,
+      "durationMs": {
+        "samples": 278,
+        "p50": 131.0526,
+        "p95": 219.6619,
+        "max": 263.5498
+      },
+      "startCadenceMs": {
+        "samples": 278,
+        "p50": 131.1062,
+        "p95": 219.7095,
+        "max": 263.5923
+      },
+      "unpairedStopsAtLeftBoundary": 1,
+      "unpairedStartsAtRightBoundary": 1,
+      "overlappingStarts": 0
+    },
+    {
+      "phase": "dwm-schedule-render",
+      "pid": 4040,
+      "provider": "Microsoft-Windows-Dwm-Core",
+      "startId": 13,
+      "stopId": 14,
+      "durationMs": {
+        "samples": 278,
+        "p50": 129.0658,
+        "p95": 218.4943,
+        "max": 262.2602
+      },
+      "startCadenceMs": {
+        "samples": 278,
+        "p50": 130.2936,
+        "p95": 220.4906,
+        "max": 263.0165
+      },
+      "unpairedStopsAtLeftBoundary": 1,
+      "unpairedStartsAtRightBoundary": 1,
+      "overlappingStarts": 0
+    },
+    {
+      "phase": "dwm-schedule-present",
+      "pid": 4040,
+      "provider": "Microsoft-Windows-Dwm-Core",
+      "startId": 15,
+      "stopId": 16,
+      "durationMs": {
+        "samples": 278,
+        "p50": 129.1703,
+        "p95": 218.6216,
+        "max": 262.339
+      },
+      "startCadenceMs": {
+        "samples": 278,
+        "p50": 130.294,
+        "p95": 220.4914,
+        "max": 263.0161
+      },
+      "unpairedStopsAtLeftBoundary": 1,
+      "unpairedStartsAtRightBoundary": 1,
+      "overlappingStarts": 0
+    },
+    {
+      "phase": "dwm-vblank-loop",
+      "pid": 4040,
+      "provider": "Microsoft-Windows-Dwm-Core",
+      "startId": 79,
+      "stopId": 80,
+      "durationMs": {
+        "samples": 278,
+        "p50": 136.2199,
+        "p95": 222.083,
+        "max": 263.5779
+      },
+      "startCadenceMs": {
+        "samples": 278,
+        "p50": 136.2443,
+        "p95": 222.1109,
+        "max": 263.5909
+      },
+      "unpairedStopsAtLeftBoundary": 1,
+      "unpairedStartsAtRightBoundary": 1,
+      "overlappingStarts": 0
+    },
+    {
+      "phase": "dwm-process-queue",
+      "pid": 4040,
+      "provider": "Microsoft-Windows-Dwm-Core",
+      "startId": 54,
+      "stopId": 56,
+      "durationMs": {
+        "samples": 279,
+        "p50": 0.0024,
+        "p95": 0.0076,
+        "max": 1.6476
+      },
+      "startCadenceMs": {
+        "samples": 278,
+        "p50": 131.075,
+        "p95": 219.7156,
+        "max": 263.6009
+      },
+      "unpairedStopsAtLeftBoundary": 0,
+      "unpairedStartsAtRightBoundary": 0,
+      "overlappingStarts": 0
+    },
+    {
+      "phase": "dwm-render",
+      "pid": 4040,
+      "provider": "Microsoft-Windows-Dwm-Core",
+      "startId": 59,
+      "stopId": 60,
+      "durationMs": {
+        "samples": 205,
+        "p50": 1.6548,
+        "p95": 2.952,
+        "max": 4.0258
+      },
+      "startCadenceMs": {
+        "samples": 204,
+        "p50": 148.7527,
+        "p95": 228.7901,
+        "max": 262.8471
+      },
+      "unpairedStopsAtLeftBoundary": 0,
+      "unpairedStartsAtRightBoundary": 0,
+      "overlappingStarts": 0
+    },
+    {
+      "phase": "dwm-cvi",
+      "pid": 4040,
+      "provider": "Microsoft-Windows-Dwm-Core",
+      "startId": 205,
+      "stopId": 206,
+      "durationMs": {
+        "samples": 205,
+        "p50": 0.0026,
+        "p95": 0.0066,
+        "max": 0.0116
+      },
+      "startCadenceMs": {
+        "samples": 204,
+        "p50": 148.7527,
+        "p95": 228.7902,
+        "max": 262.8469
+      },
+      "unpairedStopsAtLeftBoundary": 0,
+      "unpairedStartsAtRightBoundary": 0,
+      "overlappingStarts": 0
+    }
+  ],
+  "interpretation": "Observed long DWM DXGI Present wall times and application presentation cadence track the slow frame intervals. DWM render and sampler callback durations are much shorter. This narrows the investigation to desktop presentation waiting; CPU/GPU scheduling, RDP transfer, and driver attribution are not proven. DXGI wall duration is not measured GPU execution time or actual remote display latency.",
+  "captureLimitation": "No DxgKrnl or Win32k events; NonPagedMemory was omitted in the explicit profile. Corrected before next capture. Do not claim complete GPU scheduling capture.",
+  "consumerSourceLocal": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-msvc-followup\\etl-scheduling-analysis-v2.cpp",
+  "consumerSourceSha256": "dee128bbbbefc6424a98ed2e70f0824021d346bd37de936c49d5ebd5d6660dc7",
+  "method": "Windows ProcessTrace converts timestamps to FILETIME; crop exact30s scene UTC; pair provider/start/stop IDs by PID and TID, require no overlapping starts; exclude boundary orphans; p95 sorted floor(N*.95)."
+}

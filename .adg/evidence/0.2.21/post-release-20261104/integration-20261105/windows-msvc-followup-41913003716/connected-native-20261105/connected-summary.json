@@ -1,0 +1,49 @@
+{
+  "overall": "incomplete",
+  "codeHead": "1d40d73e8307a85d8d54b0c619011ef5a974713f",
+  "currentAppsTree": "a8bb18f9ff2781dbbfe67f91473a298f3cd74ae6",
+  "baselineRun": "41913003716",
+  "baselineArtifact": "13366782216",
+  "baselineBuildCommit": "127543d2d0d9c2725f1a357710cd43bc69e3c44d",
+  "baselineNative": {
+    "panelPortsRapidReopen": "passed60444/60446",
+    "loadedPanelOverlayRace": "passed5 actual submissions/close/callback order",
+    "timeoutOriginal8s": "passed-observation8.0s; late20s completes and restores",
+    "manualRetryAfterPendingNavigation": "failed; fix4e6614ee3 pushed but no new native EXE yet",
+    "cloudExactUnion": "passed2channels18templates",
+    "cloudLaterNoExpansion": "passed2/3channels18/19templates",
+    "explicitSubsetReopen": "passed1/3channels17/19templates; actual transfer_choices readback",
+    "remoteRequests": {
+      "GET": 33,
+      "nonGET": 0,
+      "all200": true
+    },
+    "backgroundStopResume": "passed49/0/36 draws in separate5s samples",
+    "performance30s": {
+      "staticP95Ms": 181.2,
+      "scrollP95Ms": 142.2,
+      "modalP95Ms": 174,
+      "limitP95Ms": 33.333333333333336,
+      "accepted": false
+    }
+  },
+  "productFix": {
+    "commit": "4e6614ee316bf5391dfe5be38ae0b490e1330fa3",
+    "behavior": "Explicit reload retires pending initial view; a newly created view is not reloaded twice",
+    "PR": 70,
+    "draft": true,
+    "candidateRun": "41944607861",
+    "nativeAfterFix": "pending"
+  },
+  "checks": {
+    "frontendPanel": "8passed",
+    "rustPanelGNU": "12passed",
+    "localLibClippy": "passed",
+    "nativeBuildGNU": "failedlink-export-limit258649over65535; no product binary",
+    "CI": "frontend/release-tools success; two backends running; smoke failed controlled parent readiness, retry refused while parentrun running"
+  },
+  "performanceFix": "not-achieved; GPU/compositor wait localization only, no product rendering change adopted",
+  "formalRestart": "not-executed; no disposable current-user MSIX/session proved",
+  "cleanup": "all current owned paths/PIDs/creation times/owners checked and stopped; no test-root remnants; daily liveness observed; prior daily Bun incident retained",
+  "at": "2026-11-05T01:09:59.266725+00:00"
+}

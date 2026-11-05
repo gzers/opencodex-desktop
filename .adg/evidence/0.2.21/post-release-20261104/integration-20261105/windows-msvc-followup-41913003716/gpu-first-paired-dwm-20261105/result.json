@@ -1,0 +1,65 @@
+{
+  "result": "valid-paired30s-static-high-performance-failed",
+  "acceptance": false,
+  "codeCommit": "785eccf6c9870c437f4f4ece0f9e61ae91704d06",
+  "sample": {
+    "durationMs": 30008.5,
+    "samples": 220,
+    "B": 16.666666666666668,
+    "p50": 145.29999999981374,
+    "p95": 236.29999999981374,
+    "max": 272.8999999994412,
+    "over6B": 155,
+    "draws": 221,
+    "foreground": true,
+    "strategy": {
+      "setting": "high",
+      "effective": "high",
+      "visible": true,
+      "lightAllowed": true,
+      "ambientAllowed": true,
+      "animated": true,
+      "solid": false
+    },
+    "diagnostics": {
+      "callbackCostMs": {
+        "samples": 221,
+        "p50": 0,
+        "p95": 0.09999990463256836,
+        "max": 0.6000003814697266
+      },
+      "callbackDispatchDelayMs": {
+        "samples": 221,
+        "p50": 5.699999904260039,
+        "p95": 13.399999713525176,
+        "max": 130.09999999962747
+      },
+      "actualScrollRange": null,
+      "note": "Callback cost excludes later style/layout/paint/GPU work; dispatch delay alone cannot identify the bottleneck. Acceptance still uses the original frame-interval budget."
+    }
+  },
+  "coverage": "Exact30s within45s recording; native stable3s admission and start/end true. No continuous foreground/presentation audit claimed.",
+  "etl": {
+    "bytes": 136314880,
+    "sha256": "e472c735e3847ef0ab6670cc07c4e2fdece31929e2628fd39a97dd8046bf4bb2",
+    "recorderStopped": true,
+    "published": false
+  },
+  "analysis": "paired-dwm-analysis.json and pointer-free paired-phase-timing.csv",
+  "interpretation": "DWM DXGI Present wall p95=223.7611ms, DWM render p95=2.952ms; WebViewGPU DXGI submission cadence p95=238.2759ms. Desktop presentation waiting is supported; final GPU/RDP/driver cause is unproven.",
+  "missingKernelEvents": "NonPagedMemory omitted from explicit profile; actual trace has no DxgKrnl/Win32k.785eccf6c fixes profile, actual new capture pending.",
+  "references": [
+    "https://learn.microsoft.com/en-us/windows-hardware/test/wpt/2-system-and-event-provider-definitions",
+    "https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/capture-and-view-tracelogging-data"
+  ],
+  "priorFailures": [
+    "No stable foreground heartbeat: actual live test window activation produced true and PS5admittedtrue; two same-title manager windows exist; user previous choice unknown.",
+    "Missing separator opencodex-desktop.toolchain produced ObjectNotFound; script not executed."
+  ],
+  "next": "admin-gpu-20261105-1304/sampler80928 waits; manualadministrator shortentry .toolchain/POST021-ADMIN.ps1, then assistant exactpath window activation",
+  "remaining": [
+    "Evidence-backed production performance fix and original30s static/scroll/modal before-after native presentation",
+    "FormalMSIX default restart and config readback in proven disposableWindows owner/session"
+  ],
+  "at": "2026-11-05T05:07:55.972528+00:00"
+}

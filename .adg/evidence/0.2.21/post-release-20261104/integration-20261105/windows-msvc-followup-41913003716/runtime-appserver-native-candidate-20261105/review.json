@@ -1,0 +1,28 @@
+{
+  "result": "passed-local-source-candidate-default-restart",
+  "desktopRestartV1": "old92676gone/new48960; config65547readback; overallfailedbecauseappserverunknown",
+  "originalAppserver": "8sETIMEDOUT8028ms; extended13sreturnswindows_enum_incomplete",
+  "candidateAdmin": {
+    "defaultElapsedMs": 1038.8336,
+    "state": "fresh",
+    "catalogElapsedMs": 1985.7540000000004
+  },
+  "scope": "local-source-candidate2.84.0; publishedpackageunchanged; original8sbound; regex/parser/state/signalcodeunchanged",
+  "pending": "Upstream runtime integration and final integrated cross-platform/release checks belong integration owner",
+  "at": "2026-11-05T09:13:20.851945+00:00",
+  "oldDesktopRoot": 48960,
+  "newDesktopRoot": 92496,
+  "otherOwnerDesktopChanges": [],
+  "contextWindow": 65547,
+  "policyDigest": "sha256:ca86fc387c769cac83b0ef6a3733c9f92b46833015ea5378d70c4ce83361e36f",
+  "codexConfigSha256": "c6cf534cf1d98eda7f8a076631731c4dbbc0ccf04c4ec26ef084d2b576ba4eaa",
+  "checks": {
+    "powershell5IdentityPolicies": "desktop and appserver passed",
+    "bunTests": "8 passed 0 failed",
+    "patchReplay": "bytes exact",
+    "nativeDefaultRetry": "public success and new OS generations"
+  },
+  "acceptanceScope": "Windows contribution candidate validation only; no global AC06 closure; original published2.84.0 failures preserved",
+  "codeCommit": "8b9cca86a71827aca50da076eb32fd17479b1512",
+  "branch": "codex/post021-windows-final"
+}

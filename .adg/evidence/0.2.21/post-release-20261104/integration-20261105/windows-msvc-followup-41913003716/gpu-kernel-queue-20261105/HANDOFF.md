@@ -1,0 +1,13 @@
+# 内核GPU调度配对：原性能预算仍失败
+
+2026-11-05 14:49管理员使用更新后的1800秒前台等待入口，标记绑定采样器65756。assistant在用户回信后再次按测试EXE路径置前原生窗口，nativeheartbeat连续3秒准入；同一manager75988及GPU子进程76176身份未变。录制06:50:00.3121139Z开始，scene06:50:00.615Z至06:50:30.625Z，30秒全部落在45秒录制内；正常stop exit0，344981504字节ETL SHA fdb119e3cee1df550f5b46125c5caab19a867944202de4421d4f427e0aa5227d，仅留本机。没有重复录制、cancel或停止日常进程。
+
+非分页提供器修复在实际轨迹生效：ProcessTrace读取2716921事件exit0，DxgKrnl1750636、Win32k32241，头EventsLost0；不把未采丢失通知等同全局无损。原高档/动画/非实底保持，sample前台true，30001.8ms、194间隔、p50=157.3ms、p95=230.9ms、max289ms、over6B160、draws195。callbackCost p95=0.1ms、max0.3ms。原B/p95≤2B/over6B0门失败，不降预算，不把采集成功作为产品通过。
+
+从DeviceDCStart的hProcessId、hDevice、pDxgAdapter及ContextDCStart的hContext/NodeOrdinal绑定GPU工作归属，不用完成事件headerPID猜测拥有者。目标WebView在硬件node0的命令包178/PacketType0，384个完整submit/complete配对，p95=668.4418ms；首次DMA开始只计一次，submit→firstDMA p95=639.5639ms。910个DMA壁钟切片p95=25.4813ms，520个切片标记preempted。DWM同窗口DXGI Present壁钟p95=226.3144ms。全部4235个自有角色/相对时间CSV配对无地址，独立重新分组复算通过、dur=end-start、位于场景窗口，重复QueueStart0；边界孤儿留报告。DMA切片墙钟不是GPU执行利用率，不将其直接相加称GPU占用百分比。
+
+只在同一adapter/node0以DCStart上下文及实际存活进程创建时间≤scene绑定会话，发布role聚合：其他登录会话10405个DMA切片，墙钟区间并集18386.1674ms/30秒；目标WebView并集5072.1698ms，DWM4728.4864ms，角色间可重叠，不能相加视作硬件利用率。该证据证明并发GPU调度活动及本应用长排队，共享争用参与卡顿有依据，但未通过安静窗口反事实证明唯一/最终根因；不称产品性能已修复，也不称完整远程投递时延已测得。未命名或上传其他用户的程序/PID/命令/指针，原ETL及sessionmap只留本机。
+
+用户已答复可协调约10分钟其他会话自愿暂停GPU密集工作的时段，具体时段待告知；不会由本对话停止其日常进程、断开会话或改系统策略。用户还明确已准备可丢弃测试账号/环境，已请求账号或机器名、登录状态及仓库路径；仍未收到环境归属细节，所以正式MSIX默认重启尚未执行，不以管理员shell或日常15119实例代替。可在等待时准备只读身份与adapter准入。
+
+当前代码f8941ae26，仅test/smoke诊断修复；产品apps树仍a8bb18f9ff2781dbbfe67f91473a298f3cd74ae6，原MSVC面板修复/云端并集范围通过项保持。生产性能修复、原30秒static/scroll/modal预算前后矩阵及正式默认MSIX重启读回继续未完成。TASKin_progress、RCPfailed、无CERT，不发布、不合并main、不真实同步、不改日常配置。原历史误停Bun事件原件继续保留，不宣称全批零副作用。

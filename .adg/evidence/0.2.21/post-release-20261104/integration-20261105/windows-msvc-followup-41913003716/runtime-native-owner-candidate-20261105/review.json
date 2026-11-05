@@ -1,0 +1,52 @@
+{
+  "result": "local-runtime-candidate-prepared-and-current-owner-query-passed",
+  "acceptance": false,
+  "codeCommit": "14d3f397d57264326016f38ad63d48a1828200c0",
+  "kind": "local-runtime-source-candidate-not-published2.84.0",
+  "baseVersion": "2.84.0",
+  "candidateAdapterSha256": "e78f89eaee6372b6bcdddf78d32e736d2eb3740ed0a79add0760feb85f966ffb",
+  "originalAdapterSha256": "0c794535ff163d5da262d1d7e33e1aff1e072952889e9421cda9438b0380e207",
+  "timeoutMs": 10000,
+  "verifiedPackageFileCount": 2020,
+  "onlyChangedPackageFiles": [
+    {
+      "path": "src/codex/desktop-app/windows.ts",
+      "sourceSha256": "0c794535ff163d5da262d1d7e33e1aff1e072952889e9421cda9438b0380e207",
+      "candidateSha256": "e78f89eaee6372b6bcdddf78d32e736d2eb3740ed0a79add0760feb85f966ffb",
+      "bytes": 10035
+    },
+    {
+      "path": "src/codex/desktop-app/windows-desktop-owner-probe.ps1",
+      "sourceSha256": null,
+      "candidateSha256": "069a15da6d2a5d10ec4e7b443a55faf4a6392660bb9642ba4e915bfa48f28bf1",
+      "bytes": 4788
+    }
+  ],
+  "actualCurrentOwnerDefaultQuery": {
+    "owner": "15119",
+    "elapsedMs": 1172.3755,
+    "processCount": 14,
+    "defaultTimeoutMs": 10000,
+    "knownDailyRootReadOnlyObserved": 38560,
+    "processAction": "none; discovery/list only"
+  },
+  "actualWindowsPowerShell51Standalone": "Nativequery14processesapproximately1435ms, no restart orconfigwrites",
+  "mechanism": "OneCIMsnapshotforparentIDs; OpenProcessQUERY_LIMITED_INFORMATION handle establishes GetProcessTimes creation, QueryFullProcessImageName image, OpenProcessToken/GetTokenInformation TokenUserSID. Samehandle closedinfinally. SIDmatchescurrentidentity, packagepathboundary/name/CIMgenerationmatch; failbeforepublishingpartialstdout. No tokenprivilegeorpolicychange.",
+  "unchangedDefaultPaths": "Original10000msbound, packageparser, rootShells, identityrecheck, ancestry, requestQuit, forceStop andAUMIDrelaunch unchanged. Packagecopyandpatchexplicitlocalcandidate; originalpackagebytesuntouched.",
+  "checks": [
+    "PS5policy: currentSIDandforeignSID,pathboundary,gone,generationchanged,nativeimagemismatch,unknownowner,no partialstdout",
+    "Bun3adaptertests:hexUnicode/quote-safe root,original10stimeout,unknownnull,sameprefixneighborrejected",
+    "gitapplycheck0andappliedtwofilesbyteidenticaltocandidate",
+    "Actualcandidatequerycurrentowner1.17s/14processes; nostop/quit/relaunch methods"
+  ],
+  "failedHarnessAttemptPreserved": "Firstnormalizedlineendingpatchreplaydidnotmatchrawbytes; finalrawpatchretainslineendingsandexactreplaypassed. No acceptingchangedbytesasidentical.",
+  "userWrongOwnerAttempt": "User ran candidateprobe under15119; pre-actionownercheckrefused beforeprobe/output/restart. Adminentrynowreadableownererror. CorrectAdministratorloginrunrequestedagain, resultpending.",
+  "pending": [
+    "Administratorreadonlycandidatequeryunderoriginal10s",
+    "Actualdefaultadapterrestartthroughcandidateofficialservice andexistingpublicretry",
+    "Newprocessgenerationandconfigreadback",
+    "Upstream/runtimeintegrationofreviewablepatch; notpublishedrelease"
+  ],
+  "materialAcceptance": "UserhardwareexceptionandfinalMSVCfunctionalrecheckinhardware-aware-closeout-20261105; numericbudgetnotdeliveryblocker, oldfaileddataretained.",
+  "at": "2026-11-05T08:55:07.203971+00:00"
+}

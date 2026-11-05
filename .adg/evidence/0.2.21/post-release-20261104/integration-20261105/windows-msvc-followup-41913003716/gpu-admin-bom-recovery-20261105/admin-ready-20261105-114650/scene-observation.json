@@ -1,0 +1,28 @@
+{
+  "result": "failed-no-paired-sample",
+  "acceptance": false,
+  "cause": "PS5 UTF8 BOM rejected by plain JSON.parse in waiting Node sampler; exceptions were silently caught",
+  "successfulAdminStart": true,
+  "sceneStartedExists": false,
+  "terminatedSampler": {
+    "result": "stopped-exact-owned-process",
+    "admission": {
+      "pid": 63992,
+      "path": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+      "createdAt": "2026-11-05T11:47:14.1831910+08:00",
+      "session": 2,
+      "owner": {
+        "Domain": "EZIO-MINI",
+        "ReturnValue": 0,
+        "User": "15119",
+        "PSComputerName": null
+      },
+      "commandLine": "\"C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe\" .toolchain/post021-msvc-followup/admin-ready-scene-114650.mjs"
+    },
+    "handleCreated": "2026-11-05T11:47:14.1831916+08:00",
+    "tickDelta": 6,
+    "exited": true,
+    "at": "2026-11-05T12:25:29.2847419+08:00"
+  },
+  "observedAt": "2026-11-05T04:27:39.185504+00:00"
+}

@@ -1,0 +1,29 @@
+{
+  "result": "fail",
+  "fixture": "Actual notification public handlers; native IPC unchanged, no delayed or mocked responses",
+  "cases": [],
+  "error": {
+    "message": "{\"exceptionId\":1,\"text\":\"Uncaught (in promise) Error: actual Hide/close/Show ordering or ready state failed at 0\",\"lineNumber\":0,\"columnNumber\":0,\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"Error\",\"description\":\"Error: actual Hide/close/Show ordering or ready state failed at 0\\n    at <anonymous>:1:1618\",\"objectId\":\"8692166081344839423.2.1\"}}",
+    "stack": "Error: {\"exceptionId\":1,\"text\":\"Uncaught (in promise) Error: actual Hide/close/Show ordering or ready state failed at 0\",\"lineNumber\":0,\"columnNumber\":0,\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"Error\",\"description\":\"Error: actual Hide/close/Show ordering or ready state failed at 0\\n    at <anonymous>:1:1618\",\"objectId\":\"8692166081344839423.2.1\"}}\n    at Object.evaluate (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/post021-windows-final/cdp-session.mjs:48:40)\n    at async file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-msvc-followup/connected-native/panel-hide-race.mjs:7:10"
+  },
+  "ipc": [
+    {
+      "at": 473668.09999990463,
+      "event": "native-event",
+      "detail": {
+        "generation": 3,
+        "kind": "load",
+        "value": "loading"
+      }
+    },
+    {
+      "at": 473803.69999980927,
+      "event": "native-event",
+      "detail": {
+        "generation": 4,
+        "kind": "load",
+        "value": "ready"
+      }
+    }
+  ]
+}

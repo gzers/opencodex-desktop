@@ -1,0 +1,87 @@
+﻿{
+    "result":  "failed",
+    "acceptance":  false,
+    "planOnly":  false,
+    "targetBefore":  {
+                         "pid":  75988,
+                         "exe":  "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\opencodex-desktop.exe",
+                         "createdAtUtcTicks":  "639294472023734550",
+                         "sessionId":  2,
+                         "ownerDomain":  "EZIO-MINI",
+                         "ownerUser":  "15119"
+                     },
+    "targetExeSha256":  "fa9df83a55153f764673781e85167093d20602fd2e34742c69f6b2f5b37f9c68",
+    "durationSeconds":  45,
+    "profiles":  [
+                     "GPU",
+                     "DesktopComposition"
+                 ],
+    "traceScope":  "Scheduling/composition only; no FileIO/Registry/Network profile",
+    "instanceName":  "ocx-post021-gpu-e852f6158aae4f24826299274bafc445",
+    "rawTracePolicy":  "ETL stays local for review; do not publish machine-wide trace automatically",
+    "appProcessAction":  "none",
+    "dailyConfigAction":  "none",
+    "recorderStarted":  true,
+    "recorderStopped":  false,
+    "statusBefore":  {
+                         "arguments":  [
+                                           "-status"
+                                       ],
+                         "exitCode":  0,
+                         "stdout":  "\r\nMicrosoft Windows Performance Recorder Version 10.0.26100 (CoreSystem)\r\nCopyright (c) 2024 Microsoft Corporation. All rights reserved.\r\n\r\nWPR is not recording\r\n",
+                         "stderr":  ""
+                     },
+    "proposedStart":  [
+                          "-start",
+                          "GPU",
+                          "-start",
+                          "DesktopComposition",
+                          "-filemode",
+                          "-recordtempto",
+                          "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-msvc-followup\\admin-ready-20261105-114650\\capture",
+                          "-instancename",
+                          "ocx-post021-gpu-e852f6158aae4f24826299274bafc445"
+                      ],
+    "recoveryStop":  [
+                         "C:\\WINDOWS\\system32\\wpr.exe",
+                         "-stop",
+                         "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-msvc-followup\\admin-ready-20261105-114650\\capture\\gpu-dwm.etl",
+                         "-instancename",
+                         "ocx-post021-gpu-e852f6158aae4f24826299274bafc445"
+                     ],
+    "targetAtStart":  {
+                          "pid":  75988,
+                          "exe":  "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\opencodex-desktop.exe",
+                          "createdAtUtcTicks":  "639294472023734550",
+                          "sessionId":  2,
+                          "ownerDomain":  "EZIO-MINI",
+                          "ownerUser":  "15119"
+                      },
+    "start":  {
+                  "arguments":  [
+                                    "-start",
+                                    "GPU",
+                                    "-start",
+                                    "DesktopComposition",
+                                    "-filemode",
+                                    "-recordtempto",
+                                    "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-msvc-followup\\admin-ready-20261105-114650\\capture",
+                                    "-instancename",
+                                    "ocx-post021-gpu-e852f6158aae4f24826299274bafc445"
+                                ],
+                  "exitCode":  0,
+                  "stdout":  "",
+                  "stderr":  ""
+              },
+    "startedAtUtc":  "2026-11-05T04:21:23.6300359+00:00",
+    "targetAtEnd":  {
+                        "pid":  75988,
+                        "exe":  "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\opencodex-desktop.exe",
+                        "createdAtUtcTicks":  "639294472023734550",
+                        "sessionId":  2,
+                        "ownerDomain":  "EZIO-MINI",
+                        "ownerUser":  "15119"
+                    },
+    "stopError":  "Recorder command still running after20s; inspect its PID 87260 before recovery. No automatic cancel or process kill.",
+    "finishedAtUtc":  "2026-11-05T04:22:30.3419578+00:00"
+}

@@ -1,0 +1,53 @@
+{
+    "result":  "plan-validated-no-recording",
+    "acceptance":  false,
+    "planOnly":  true,
+    "targetBefore":  {
+                         "pid":  75988,
+                         "exe":  "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\opencodex-desktop.exe",
+                         "createdAtUtcTicks":  "639294472023734550",
+                         "sessionId":  2,
+                         "ownerDomain":  "EZIO-MINI",
+                         "ownerUser":  "15119"
+                     },
+    "targetExeSha256":  "fa9df83a55153f764673781e85167093d20602fd2e34742c69f6b2f5b37f9c68",
+    "durationSeconds":  45,
+    "profiles":  [
+                     "OcxGpuScheduling"
+                 ],
+    "profilePath":  "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\post021-windows-materials\\test\\smoke\\post021-windows-final\\gpu-dwm-scheduling.wprp",
+    "profileSha256":  "e8715cabe4e9a2c4246e4e146a80f0df2a13c2a0cb776b66816427796af6690d",
+    "traceScope":  "Five explicit event providers; no system collector or stacks. Machine-wide scheduling metadata stays local.",
+    "instanceName":  "ocx-post021-gpu-125f6fdf245c46b2b43e645c3808222b",
+    "rawTracePolicy":  "ETL stays local for review; do not publish machine-wide trace automatically",
+    "appProcessAction":  "none",
+    "dailyConfigAction":  "none",
+    "recorderStarted":  false,
+    "recorderStopped":  false,
+    "foregroundAdmission":  null,
+    "statusBefore":  {
+                         "arguments":  [
+                                           "-status"
+                                       ],
+                         "exitCode":  0,
+                         "stdout":  "\r\nMicrosoft Windows Performance Recorder Version 10.0.26100 (CoreSystem)\r\nCopyright (c) 2024 Microsoft Corporation. All rights reserved.\r\n\r\nWPR is not recording\r\n",
+                         "stderr":  ""
+                     },
+    "proposedStart":  [
+                          "-start",
+                          "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\post021-windows-materials\\test\\smoke\\post021-windows-final\\gpu-dwm-scheduling.wprp!OcxGpuScheduling",
+                          "-filemode",
+                          "-recordtempto",
+                          "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-msvc-followup\\admin-foreground-20261105-1246\\plan-ps51",
+                          "-instancename",
+                          "ocx-post021-gpu-125f6fdf245c46b2b43e645c3808222b"
+                      ],
+    "recoveryStop":  [
+                         "C:\\WINDOWS\\system32\\wpr.exe",
+                         "-stop",
+                         "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-msvc-followup\\admin-foreground-20261105-1246\\plan-ps51\\gpu-dwm.etl",
+                         "-instancename",
+                         "ocx-post021-gpu-125f6fdf245c46b2b43e645c3808222b"
+                     ],
+    "finishedAtUtc":  "2026-11-05T04:46:19.5578112+00:00"
+}

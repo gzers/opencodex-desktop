@@ -1,0 +1,2 @@
+import{connect}from '../../../post021-windows-materials/test/smoke/post021-windows-final/cdp-session.mjs'
+const c=await connect('http://127.0.0.1:9450');try{console.log(JSON.stringify(await c.evaluate("({descriptor:Object.getOwnPropertyDescriptor(window.__TAURI_INTERNALS__,'invoke'),invoke:String(window.__TAURI_INTERNALS__.invoke).slice(0,2500),keys:Object.keys(window.__TAURI_INTERNALS__)})"),null,2))}finally{c.close()}

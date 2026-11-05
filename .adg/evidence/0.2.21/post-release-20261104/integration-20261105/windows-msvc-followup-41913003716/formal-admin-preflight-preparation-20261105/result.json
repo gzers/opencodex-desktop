@@ -1,0 +1,23 @@
+{
+  "result": "prepared-readonly-not-formal-restart",
+  "acceptance": false,
+  "codeCommit": "42c031c3fdcde0a7fb91a60f322cf669a0b86944",
+  "authorizedTestAccount": "Administrator",
+  "userSpecifiedTestRoot": "D:/Users/Administrator/WorkSpace/Test",
+  "currentExecutionOwner": "EZIO-MINI\\15119",
+  "currentExecutionSession": 2,
+  "currentOwnCodexProcessCount": 14,
+  "currentExistingState": true,
+  "packageCount": 1,
+  "administratorLogonOrCredentialUse": "not performed; no secure cross-account credential entry tool available; no password stored in artifacts",
+  "actualChecks": [
+    "WindowsPowerShell5.1 defaultAdministrator owner guard rejects current15119 before output creation",
+    "currentowner15119 explicitreadonly probe exits0, packages and state observed, no restart",
+    "explicitTestRoot PS5readonly positive exits0",
+    "AdministratorTestRoot wrapper rejectscurrent15119",
+    "diffcheck passed"
+  ],
+  "scope": "Preflight records only package/owner/session/create/ancestry/configdigest, never starts/stops apps or changes configuration. No defaultadapter restart performed.",
+  "pending": "User manually runs Administrator desktop entry; do not equate elevated15119 with Administrator. Then review disposable profile and plan exactSave/defaultrestart/configreadback. GPUquietwindow time remains pending.",
+  "at": "2026-11-05T07:07:20.476658+00:00"
+}

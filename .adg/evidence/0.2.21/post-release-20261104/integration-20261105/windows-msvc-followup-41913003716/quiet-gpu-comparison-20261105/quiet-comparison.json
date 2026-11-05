@@ -1,0 +1,158 @@
+{
+  "result": "improved-but-all-three-scenes-fail-originalbudget",
+  "acceptance": false,
+  "sameExecutableSha256": "fa9df83a55153f764673781e85167093d20602fd2e34742c69f6b2f5b37f9c68",
+  "sameNativePid": 75988,
+  "sameGpuPid": 76176,
+  "sameSandbox": ".toolchain/post021-windows-final-msvc-retry-41944607861/fixed/sandbox",
+  "coordinatedScenes": [
+    {
+      "name": "static-overview-high",
+      "durationMs": 30001.5,
+      "samples": 789,
+      "B": 16.666666666666668,
+      "p50": 31.300000000745058,
+      "p95": 84.80000000074506,
+      "max": 174.80000000074506,
+      "over6B": 20,
+      "draws": 790,
+      "foreground": true,
+      "strategy": {
+        "setting": "high",
+        "effective": "high",
+        "visible": true,
+        "lightAllowed": true,
+        "ambientAllowed": true,
+        "animated": true,
+        "solid": false
+      },
+      "diagnostics": {
+        "callbackCostMs": {
+          "samples": 790,
+          "p50": 0,
+          "p95": 0.09999990463256836,
+          "max": 0.20000028610229492
+        },
+        "callbackDispatchDelayMs": {
+          "samples": 790,
+          "p50": 3.5,
+          "p95": 13.300000000745058,
+          "max": 39.19999961927533
+        },
+        "actualScrollRange": null,
+        "note": "Callback cost excludes later style/layout/paint/GPU work; dispatch delay alone cannot identify the bottleneck. Acceptance still uses the original frame-interval budget."
+      }
+    },
+    {
+      "name": "scroll-detail-high",
+      "durationMs": 30002.400000095367,
+      "samples": 1422,
+      "B": 16.666666666666668,
+      "p50": 16.5,
+      "p95": 45.399999998509884,
+      "max": 81.69999999925494,
+      "over6B": 0,
+      "draws": 0,
+      "foreground": true,
+      "strategy": {
+        "setting": "high",
+        "effective": "high",
+        "visible": true,
+        "lightAllowed": true,
+        "ambientAllowed": true,
+        "animated": true,
+        "solid": false
+      },
+      "diagnostics": {
+        "callbackCostMs": {
+          "samples": 1423,
+          "p50": 0.09999990463256836,
+          "p95": 0.20000028610229492,
+          "max": 2.9000000953674316
+        },
+        "callbackDispatchDelayMs": {
+          "samples": 1423,
+          "p50": 1.399999713525176,
+          "p95": 12.19999990426004,
+          "max": 33.69999980926514
+        },
+        "actualScrollRange": {
+          "min": 3.5,
+          "max": 900,
+          "available": 4215
+        },
+        "note": "Callback cost excludes later style/layout/paint/GPU work; dispatch delay alone cannot identify the bottleneck. Acceptance still uses the original frame-interval budget."
+      }
+    },
+    {
+      "name": "modal-overview-high",
+      "durationMs": 30001.099999904633,
+      "samples": 709,
+      "B": 16.666666666666668,
+      "p50": 39.80000000074506,
+      "p95": 78.20000000111759,
+      "max": 174.80000000074506,
+      "over6B": 6,
+      "draws": 710,
+      "foreground": true,
+      "strategy": {
+        "setting": "high",
+        "effective": "high",
+        "visible": true,
+        "lightAllowed": true,
+        "ambientAllowed": true,
+        "animated": true,
+        "solid": false
+      },
+      "diagnostics": {
+        "callbackCostMs": {
+          "samples": 710,
+          "p50": 0,
+          "p95": 0,
+          "max": 0.10000038146972656
+        },
+        "callbackDispatchDelayMs": {
+          "samples": 710,
+          "p50": 3.400000000372529,
+          "p95": 13.499999618157744,
+          "max": 43.19999990426004
+        },
+        "actualScrollRange": null,
+        "note": "Callback cost excludes later style/layout/paint/GPU work; dispatch delay alone cannot identify the bottleneck. Acceptance still uses the original frame-interval budget."
+      }
+    }
+  ],
+  "pairedStatic": {
+    "beforeWindowUtc": [
+      "2026-11-05T06:50:00.615Z",
+      "2026-11-05T06:50:30.625Z"
+    ],
+    "afterWindowUtc": [
+      "2026-11-05T08:00:57.622Z",
+      "2026-11-05T08:01:27.643Z"
+    ],
+    "beforeP95": 230.90000000037253,
+    "afterP95": 78.40000000037253,
+    "beforeOver6B": 160,
+    "afterOver6B": 16
+  },
+  "queueHardwareSubmitToFirstDmaP95Ms": {
+    "before": 639.5639,
+    "after": 160.0615
+  },
+  "queueHardwareSubmitToCompleteP95Ms": {
+    "before": 668.4418,
+    "after": 189.189
+  },
+  "dwmDxgiPresentWallP95Ms": {
+    "before": 226.3144,
+    "after": 49.9225
+  },
+  "otherSessionDmaWallUnionMs": {
+    "before": 18386.1674,
+    "after": 22974.5477
+  },
+  "interpretation": "Observedscheduling/presentwaitimproves substantially butp95andlongframegatesremainfailed. Sharednodeother-sessionactivitypersisted; cannotcertifyfullyidleGPUorattributechangeuniquelytoreducedotheruserwork. DMAwallspansareNOTGPUhardwareutilization. Administratorformaltestappscreatedbetweensessionsareanuncontrolleddifference. No productionfixperformed.",
+  "timingLimit": "Initialthreecaseswithinapprox15:50-15:53 coordination; finalpairedstatic16:00:57-16:01:27 aftermanualsecondrelease. Userrespondedtorunandhold60s; exactother-sessionquietcontinuityunknown, measuredactivityreported.",
+  "webglTimer": "Separate8s/40querydiagnostic, restoredoriginaldrawfunction; not30sacceptanceorstandaloneproof ofshadercost."
+}

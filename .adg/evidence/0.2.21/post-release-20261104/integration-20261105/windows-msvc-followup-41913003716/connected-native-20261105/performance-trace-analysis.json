@@ -1,0 +1,33 @@
+{
+  "scope": "Trace intervals are diagnostics, not direct shader cost or final root cause",
+  "events": {
+    "ProxyMain::BeginMainFrame": {
+      "count": 164,
+      "wallMs": 427.3219999999997,
+      "threadCpuMs": 388.0830000000001,
+      "maxWallMs": 19.057,
+      "maxCpuMs": 18.604
+    },
+    "SkiaOutputSurfaceImplOnGpu::FinishPaintRenderPass": {
+      "count": 464,
+      "wallMs": 8701.330000000007,
+      "threadCpuMs": 393.2669999999997,
+      "maxWallMs": 171.07,
+      "maxCpuMs": 3.57
+    },
+    "DXGISwapChainImageBacking::Present": {
+      "count": 158,
+      "wallMs": 383.23099999999994,
+      "threadCpuMs": 44.992999999999974,
+      "maxWallMs": 90.605,
+      "maxCpuMs": 0.632
+    }
+  },
+  "traceSha256": "b2948dae68fa621e687603ce1f07d968aad07664840673b1c532481c7405fddd",
+  "caveats": [
+    "Trace-scene output save failed because Node import.meta.dir was undefined; actual scroll was observed in preceding baseline and trace input executed, but this trace has no saved interval report.",
+    "Callback CPU excludes later style/layout/paint and GPU.",
+    "GPU wall time with short thread CPU suggests waits; not enough to assign driver versus DWM versus RDP.",
+    "No production performance change adopted from diagnostic injections."
+  ]
+}

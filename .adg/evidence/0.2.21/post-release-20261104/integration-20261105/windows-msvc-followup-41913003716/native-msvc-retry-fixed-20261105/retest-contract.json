@@ -1,0 +1,24 @@
+{
+  "preparedOnly": true,
+  "expectedAppsTree": "a8bb18f9ff2781dbbfe67f91473a298f3cd74ae6",
+  "candidateRuns": [
+    "41944607861",
+    "41945970332"
+  ],
+  "originalCandidate": {
+    "run": "41913003716",
+    "buildCommit": "127543d2d0d9c2725f1a357710cd43bc69e3c44d",
+    "exeSha256": "dd6f37cf2f6094cf9254ead08217cf8456e190cb213d3198c1b528172f1a0184"
+  },
+  "assertions": [
+    "New EXE must have current apps tree; never reuse original EXE as after-fix evidence",
+    "Keep root independent, client integrations disabled, status-only diagnostic source",
+    "Delay official /web response headers60s while /healthz remains real and healthy",
+    "Wait actual timeout8s, change delay gate to ready then click production retry within old request delay",
+    "Require new HTTP request, new native view and visible-ready before original8s deadline",
+    "Test stale navigation cannot replace readiness; five real overlay races; normal reopens",
+    "Compare service PID and config bytes before/after retry; no service process action"
+  ],
+  "remainingPerformance": "No accepted production fix; original budgets and blur unchanged",
+  "formalRestart": "Default adapter not admitted in daily same-package user; disposable account/session required"
+}

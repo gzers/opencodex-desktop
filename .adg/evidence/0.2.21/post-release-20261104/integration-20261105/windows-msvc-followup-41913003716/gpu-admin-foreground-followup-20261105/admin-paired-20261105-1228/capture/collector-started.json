@@ -1,0 +1,77 @@
+{
+    "result":  "failed",
+    "acceptance":  false,
+    "planOnly":  false,
+    "targetBefore":  {
+                         "pid":  75988,
+                         "exe":  "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\opencodex-desktop.exe",
+                         "createdAtUtcTicks":  "639294472023734550",
+                         "sessionId":  2,
+                         "ownerDomain":  "EZIO-MINI",
+                         "ownerUser":  "15119"
+                     },
+    "targetExeSha256":  "fa9df83a55153f764673781e85167093d20602fd2e34742c69f6b2f5b37f9c68",
+    "durationSeconds":  45,
+    "profiles":  [
+                     "GPU",
+                     "DesktopComposition"
+                 ],
+    "traceScope":  "Scheduling/composition only; no FileIO/Registry/Network profile",
+    "instanceName":  "ocx-post021-gpu-275815ec6b7448d597db0d624fd78507",
+    "rawTracePolicy":  "ETL stays local for review; do not publish machine-wide trace automatically",
+    "appProcessAction":  "none",
+    "dailyConfigAction":  "none",
+    "recorderStarted":  true,
+    "recorderStopped":  false,
+    "statusBefore":  {
+                         "arguments":  [
+                                           "-status"
+                                       ],
+                         "exitCode":  0,
+                         "stdout":  "\r\nMicrosoft Windows Performance Recorder Version 10.0.26100 (CoreSystem)\r\nCopyright (c) 2024 Microsoft Corporation. All rights reserved.\r\n\r\nWPR is not recording\r\n",
+                         "stderr":  ""
+                     },
+    "proposedStart":  [
+                          "-start",
+                          "GPU",
+                          "-start",
+                          "DesktopComposition",
+                          "-filemode",
+                          "-recordtempto",
+                          "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-msvc-followup\\admin-paired-20261105-1228\\capture",
+                          "-instancename",
+                          "ocx-post021-gpu-275815ec6b7448d597db0d624fd78507"
+                      ],
+    "recoveryStop":  [
+                         "C:\\WINDOWS\\system32\\wpr.exe",
+                         "-stop",
+                         "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-msvc-followup\\admin-paired-20261105-1228\\capture\\gpu-dwm.etl",
+                         "-instancename",
+                         "ocx-post021-gpu-275815ec6b7448d597db0d624fd78507"
+                     ],
+    "targetAtStart":  {
+                          "pid":  75988,
+                          "exe":  "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\opencodex-desktop.exe",
+                          "createdAtUtcTicks":  "639294472023734550",
+                          "sessionId":  2,
+                          "ownerDomain":  "EZIO-MINI",
+                          "ownerUser":  "15119"
+                      },
+    "start":  {
+                  "arguments":  [
+                                    "-start",
+                                    "GPU",
+                                    "-start",
+                                    "DesktopComposition",
+                                    "-filemode",
+                                    "-recordtempto",
+                                    "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-msvc-followup\\admin-paired-20261105-1228\\capture",
+                                    "-instancename",
+                                    "ocx-post021-gpu-275815ec6b7448d597db0d624fd78507"
+                                ],
+                  "exitCode":  0,
+                  "stdout":  "",
+                  "stderr":  ""
+              },
+    "startedAtUtc":  "2026-11-05T04:40:17.2779628+00:00"
+}

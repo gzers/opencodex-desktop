@@ -1,0 +1,225 @@
+{
+  "scenario": "panel",
+  "result": "pass",
+  "root": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-windows-final-gnu-retry/fixed/sandbox",
+  "checks": [
+    "real isolated Tauri binding",
+    "early reentry remains alive and ready",
+    "two route reopens ready",
+    "panel observation preserves config bytes"
+  ],
+  "facts": {
+    "about": {
+      "name": "OpenCodeX Desktop",
+      "version": "0.2.21",
+      "identifier": "com.gzers.opencodex.desktop",
+      "platform": "Windows",
+      "framework": "Tauri v2",
+      "license": "MIT License"
+    },
+    "dataRoot": {
+      "activeDataRoot": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-gnu-retry\\fixed\\sandbox",
+      "opencodexHomeMode": "inside",
+      "opencodexHome": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-gnu-retry\\fixed\\sandbox\\opencodex-home",
+      "currentDataRoot": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-gnu-retry\\fixed\\sandbox",
+      "currentOpencodexHome": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-gnu-retry\\fixed\\sandbox\\opencodex-home",
+      "runtimeActive": true
+    }
+  },
+  "status": {
+    "matrix": {
+      "runtime": "running",
+      "connection": "unconfigured",
+      "operation": "idle"
+    },
+    "facts": {
+      "health": "healthy",
+      "runtime_label": null,
+      "opencodex_home": null,
+      "data_root": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-gnu-retry\\fixed\\sandbox\\opencodex-home",
+      "protection": "none",
+      "reboot_safe": false,
+      "service_present": false,
+      "shim_present": false,
+      "version_drift": null,
+      "startup_status": null
+    },
+    "port": 60444,
+    "pid": "24776",
+    "can_start": false,
+    "can_stop": true,
+    "can_restart": true,
+    "source": "live"
+  },
+  "reentry": {
+    "elapsedMs": 938.7999997138977,
+    "earlyReentryRequested": true
+  },
+  "trace": {
+    "id": 2,
+    "startedAt": 33279.40000009537,
+    "outcome": "visible-ready",
+    "phases": [
+      {
+        "phase": "preferences-start",
+        "elapsedMs": 0.09999990463256836
+      },
+      {
+        "phase": "preferences-ready",
+        "elapsedMs": 0.09999990463256836
+      },
+      {
+        "phase": "status-ready",
+        "elapsedMs": 0.09999990463256836
+      },
+      {
+        "phase": "address-ready",
+        "elapsedMs": 0.20000028610229492
+      },
+      {
+        "phase": "native-request",
+        "elapsedMs": 1.0999999046325684
+      },
+      {
+        "phase": "native:queued:1.0",
+        "elapsedMs": 389.2000002861023
+      },
+      {
+        "phase": "native:owner-lock:27.0",
+        "elapsedMs": 389.2000002861023
+      },
+      {
+        "phase": "native:runtime-address:39.0",
+        "elapsedMs": 389.2000002861023
+      },
+      {
+        "phase": "native:browser-environment:51.0",
+        "elapsedMs": 389.30000019073486
+      },
+      {
+        "phase": "native:native-view:364.0",
+        "elapsedMs": 389.30000019073486
+      },
+      {
+        "phase": "native:visible:375.0",
+        "elapsedMs": 389.30000019073486
+      },
+      {
+        "phase": "navigation-start",
+        "elapsedMs": 423.59999990463257
+      },
+      {
+        "phase": "navigation-ready",
+        "elapsedMs": 546.7000002861023
+      },
+      {
+        "phase": "visible-ready",
+        "elapsedMs": 546.8000001907349
+      }
+    ]
+  },
+  "reopens": [
+    {
+      "id": 3,
+      "startedAt": 34601.5,
+      "outcome": "visible-ready",
+      "phases": [
+        {
+          "phase": "preferences-start",
+          "elapsedMs": 0.10000038146972656
+        },
+        {
+          "phase": "preferences-ready",
+          "elapsedMs": 0.20000028610229492
+        },
+        {
+          "phase": "status-ready",
+          "elapsedMs": 0.20000028610229492
+        },
+        {
+          "phase": "address-ready",
+          "elapsedMs": 0.3000001907348633
+        },
+        {
+          "phase": "native-request",
+          "elapsedMs": 3.700000286102295
+        },
+        {
+          "phase": "native:queued:0.0",
+          "elapsedMs": 78.40000009536743
+        },
+        {
+          "phase": "native:owner-lock:10.0",
+          "elapsedMs": 78.5
+        },
+        {
+          "phase": "native:runtime-address:21.0",
+          "elapsedMs": 78.5
+        },
+        {
+          "phase": "native:native-view:32.0",
+          "elapsedMs": 78.5
+        },
+        {
+          "phase": "native:visible:42.0",
+          "elapsedMs": 78.5
+        },
+        {
+          "phase": "visible-ready",
+          "elapsedMs": 78.60000038146973
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "startedAt": 35899.60000038147,
+      "outcome": "visible-ready",
+      "phases": [
+        {
+          "phase": "preferences-start",
+          "elapsedMs": 0.09999990463256836
+        },
+        {
+          "phase": "preferences-ready",
+          "elapsedMs": 0.09999990463256836
+        },
+        {
+          "phase": "status-ready",
+          "elapsedMs": 0.09999990463256836
+        },
+        {
+          "phase": "address-ready",
+          "elapsedMs": 0.19999980926513672
+        },
+        {
+          "phase": "native-request",
+          "elapsedMs": 2
+        },
+        {
+          "phase": "native:queued:0.0",
+          "elapsedMs": 174.7999997138977
+        },
+        {
+          "phase": "native:owner-lock:9.0",
+          "elapsedMs": 175
+        },
+        {
+          "phase": "native:runtime-address:20.0",
+          "elapsedMs": 175
+        },
+        {
+          "phase": "native:native-view:30.0",
+          "elapsedMs": 175
+        },
+        {
+          "phase": "native:visible:40.0",
+          "elapsedMs": 175
+        },
+        {
+          "phase": "visible-ready",
+          "elapsedMs": 175.19999980926514
+        }
+      ]
+    }
+  ]
+}

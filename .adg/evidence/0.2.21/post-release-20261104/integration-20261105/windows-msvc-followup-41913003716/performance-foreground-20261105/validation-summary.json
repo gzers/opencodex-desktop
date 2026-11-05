@@ -1,0 +1,70 @@
+{
+  "result": "failed-original-budget",
+  "at": "2026-11-05T02:15:33.526549+00:00",
+  "userAvailability": "User explicitly provided about2minutes foreground window; announced end and stopped own test process",
+  "sourceCandidate": "OriginalMSVC41913003716/artifact13366782216",
+  "exeSha256": "dd6f37cf2f6094cf9254ead08217cf8456e190cb213d3198c1b528172f1a0184",
+  "diagnosticOnly": true,
+  "modifications": [
+    "test-process disable-frame-rate-limit flag",
+    "temporary60Hz submission cap on decorative motion-mesh WebGL contexts; rAF acceptance sampling unchanged"
+  ],
+  "cases": [
+    {
+      "name": "static-overview-high",
+      "durationMs": 30018.900000095367,
+      "samples": 42385,
+      "p95": 1.6999999999970896,
+      "max": 123.89999999999418,
+      "over6B": 3,
+      "foreground": true,
+      "draws": 42386
+    },
+    {
+      "name": "scroll-detail-high",
+      "durationMs": 30003,
+      "samples": 8090,
+      "p95": 17,
+      "max": 66.19999999999709,
+      "over6B": 0,
+      "foreground": true,
+      "draws": 0
+    },
+    {
+      "name": "modal-overview-high",
+      "durationMs": 30012.699999809265,
+      "samples": 40676,
+      "p95": 2,
+      "max": 63.40000000000873,
+      "over6B": 0,
+      "foreground": true,
+      "draws": 40677
+    }
+  ],
+  "rdpCounters30points": {
+    "input frames/second": {
+      "min": 3.984307406847391,
+      "median": 6.981516529973695,
+      "max": 8.9900929176048
+    },
+    "output frames/second": {
+      "min": 3.984307406847391,
+      "median": 6.9779989143007555,
+      "max": 8.9900929176048
+    },
+    "average encoding time": {
+      "min": 4.0,
+      "median": 14.0,
+      "max": 198.0
+    }
+  },
+  "notes": [
+    "QA draws counts drawArrays attempts before inner temporary cap, not actual submitted draws; own context stats separate and span installation lifetime, not exact30second window.",
+    "Submillisecond rAF times under disabled frame limit do not prove actual native/RDP frame presentation.",
+    "RDP counters are same-session contemporaneous observations, not controlled before/after causal proof; second RDP session also active.",
+    "Static3over6B violates unchanged acceptance. No production shader, tier, blur or startup flag change adopted.",
+    "WPR GPU policy admission0xc5585011 remains unavailable; no strategy/security changes or recording left active."
+  ],
+  "productionFix": "not-achieved",
+  "formalRestart": "Disposable same-package owner/session unavailable; not executed"
+}

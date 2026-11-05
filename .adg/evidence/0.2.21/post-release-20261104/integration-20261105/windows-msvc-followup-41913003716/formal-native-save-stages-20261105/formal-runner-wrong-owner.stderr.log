@@ -1,0 +1,21 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Run inside Administrator login session
++ actual - expected
+
++ 'ezio-mini\\15119'
+- 'ezio-mini\\administrator'
+              ^
+
+    at file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/post021-windows-final/formal-msix-run.mjs:19:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'ezio-mini\\15119',
+  expected: 'ezio-mini\\administrator',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.22.1

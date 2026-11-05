@@ -1,0 +1,1121 @@
+{
+  "root": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-windows-final-msvc-41913003716/perf/sandbox",
+  "durationMs": 20000,
+  "result": "captured-diagnostic-only",
+  "acceptance": false,
+  "target": {
+    "id": "FCF12D03206CD5899B25CC223665DE56",
+    "url": "http://tauri.localhost/#models"
+  },
+  "foregroundBefore": true,
+  "foregroundAfter": true,
+  "traceEvents": 185602,
+  "processes": [
+    {
+      "args": {
+        "name": "swapper"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 0,
+      "tid": 0,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "Compositor"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 100048,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "CrBrowserMain"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 71700,
+      "tid": 48332,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "PerfettoTrace"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 71700,
+      "tid": 39624,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "Chrome_IOThread"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 71700,
+      "tid": 71548,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "CrRendererMain"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 95176,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "PerfettoTrace"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 103868,
+      "tid": 55332,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "Chrome_ChildIOThread"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 103868,
+      "tid": 102980,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "PerfettoTrace"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 59196,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "Chrome_ChildIOThread"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 16452,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "Chrome_DevToolsHandlerThread"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 71700,
+      "tid": 28920,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolBackgroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 71700,
+      "tid": 54772,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 73960,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "CrGpuMain"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 103868,
+      "tid": 72060,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "VizCompositorThread"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 103868,
+      "tid": 91788,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "GpuVSyncThread"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 103868,
+      "tid": 57640,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 71700,
+      "tid": 28832,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolServiceThread"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 97752,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 83224,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 65924,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 81036,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 73608,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 31872,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 17372,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 23324,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 96456,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 61836,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 49284,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 90968,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 104876,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 25244,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 80928,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 51308,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 57720,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 48428,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolForegroundWorker"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 94672,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "CacheThread_BlockFile"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 71700,
+      "tid": 39400,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "GpuWatchdog"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 103868,
+      "tid": 61700,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "ThreadPoolServiceThread"
+      },
+      "cat": "__metadata",
+      "name": "thread_name",
+      "ph": "M",
+      "pid": 71700,
+      "tid": 105876,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "Renderer"
+      },
+      "cat": "__metadata",
+      "name": "process_name",
+      "ph": "M",
+      "pid": 40024,
+      "tid": 0,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "Browser"
+      },
+      "cat": "__metadata",
+      "name": "process_name",
+      "ph": "M",
+      "pid": 71700,
+      "tid": 0,
+      "ts": 0
+    },
+    {
+      "args": {
+        "name": "GPU Process"
+      },
+      "cat": "__metadata",
+      "name": "process_name",
+      "ph": "M",
+      "pid": 103868,
+      "tid": 0,
+      "ts": 0
+    }
+  ],
+  "longest": [
+    {
+      "pid": 103868,
+      "tid": 72060,
+      "name": "ThreadControllerImpl::RunTask",
+      "count": 1400,
+      "totalMs": 9347.040000000059,
+      "maxMs": 171.437
+    },
+    {
+      "pid": 103868,
+      "tid": 72060,
+      "name": "Edge_RunTask",
+      "count": 1359,
+      "totalMs": 9344.760000000053,
+      "maxMs": 171.435
+    },
+    {
+      "pid": 103868,
+      "tid": 72060,
+      "name": "Scheduler::RunTask",
+      "count": 757,
+      "totalMs": 9217.344000000008,
+      "maxMs": 171.433
+    },
+    {
+      "pid": 103868,
+      "tid": 72060,
+      "name": "SkiaOutputSurfaceImplOnGpu::FinishPaintRenderPass",
+      "count": 464,
+      "totalMs": 8701.330000000007,
+      "maxMs": 171.07
+    },
+    {
+      "pid": 103868,
+      "tid": 72060,
+      "name": "SkiaOutputSurfaceImplOnGpu::SwapBuffers",
+      "count": 158,
+      "totalMs": 447.19199999999995,
+      "maxMs": 90.916
+    },
+    {
+      "pid": 103868,
+      "tid": 72060,
+      "name": "Graphics.Pipeline",
+      "count": 316,
+      "totalMs": 397.2279999999999,
+      "maxMs": 90.675
+    },
+    {
+      "pid": 103868,
+      "tid": 72060,
+      "name": "SkiaOutputDevice->ScheduleOverlays()",
+      "count": 158,
+      "totalMs": 386.2839999999999,
+      "maxMs": 90.623
+    },
+    {
+      "pid": 103868,
+      "tid": 72060,
+      "name": "DXGISwapChainImageBacking::Present",
+      "count": 158,
+      "totalMs": 383.23099999999994,
+      "maxMs": 90.605
+    },
+    {
+      "pid": 103868,
+      "tid": 57640,
+      "name": "ThreadControllerImpl::RunTask",
+      "count": 579,
+      "totalMs": 9944.373,
+      "maxMs": 31.492
+    },
+    {
+      "pid": 103868,
+      "tid": 57640,
+      "name": "Edge_RunTask",
+      "count": 579,
+      "totalMs": 9940.075999999995,
+      "maxMs": 31.48
+    },
+    {
+      "pid": 71700,
+      "tid": 48332,
+      "name": "MessagePumpForUI DispatchMessage",
+      "count": 38619,
+      "totalMs": 2515.4640000000068,
+      "maxMs": 24.964
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "ThreadControllerImpl::RunTask",
+      "count": 1654,
+      "totalMs": 461.4709999999948,
+      "maxMs": 19.071
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "Edge_RunTask",
+      "count": 1548,
+      "totalMs": 455.1019999999942,
+      "maxMs": 19.064
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "ProxyMain::BeginMainFrame",
+      "count": 164,
+      "totalMs": 427.3219999999997,
+      "maxMs": 19.057
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "WebFrameWidgetImpl::BeginMainFrame",
+      "count": 164,
+      "totalMs": 253.81300000000007,
+      "maxMs": 10.496
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "Blink.Animate.UpdateTime",
+      "count": 164,
+      "totalMs": 178.41999999999993,
+      "maxMs": 10.043
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "PageAnimator::serviceScriptedAnimations",
+      "count": 164,
+      "totalMs": 177.62400000000008,
+      "maxMs": 10.04
+    },
+    {
+      "pid": 40024,
+      "tid": 73960,
+      "name": "ThreadPool_RunTask",
+      "count": 103,
+      "totalMs": 24.723999999999997,
+      "maxMs": 5.867
+    },
+    {
+      "pid": 40024,
+      "tid": 73960,
+      "name": "Edge_RunTask",
+      "count": 102,
+      "totalMs": 24.041,
+      "maxMs": 5.848
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "LocalFrameView::RunAccessibilitySteps",
+      "count": 164,
+      "totalMs": 21.80500000000002,
+      "maxMs": 5.621
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "Blink.Accessibility.UpdateTime",
+      "count": 164,
+      "totalMs": 21.52100000000001,
+      "maxMs": 5.617
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "AsyncTask Run",
+      "count": 646,
+      "totalMs": 173.58700000000016,
+      "maxMs": 5.362
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "EventDispatch",
+      "count": 587,
+      "totalMs": 81.51099999999998,
+      "maxMs": 5.36
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "FunctionCall",
+      "count": 8324,
+      "totalMs": 149.58399999999844,
+      "maxMs": 4.707
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "FrameRequestCallbackCollection::ExecuteFrameCallbacks",
+      "count": 164,
+      "totalMs": 92.77000000000004,
+      "maxMs": 4.645
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "Document::UpdateStyleAndLayout",
+      "count": 4736,
+      "totalMs": 54.40499999999975,
+      "maxMs": 4.616
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "Blink.ForcedStyleAndLayout.UpdateTime",
+      "count": 4060,
+      "totalMs": 50.89199999999793,
+      "maxMs": 4.613
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "LocalFrameView::UpdateStyleAndLayout",
+      "count": 2069,
+      "totalMs": 49.820999999999074,
+      "maxMs": 4.608
+    },
+    {
+      "pid": 71700,
+      "tid": 48332,
+      "name": "ThreadControllerImpl::RunTask",
+      "count": 265,
+      "totalMs": 51.307,
+      "maxMs": 4.379
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "FireAnimationFrame",
+      "count": 323,
+      "totalMs": 92.35900000000001,
+      "maxMs": 4.379
+    },
+    {
+      "pid": 71700,
+      "tid": 48332,
+      "name": "Edge_RunTask",
+      "count": 265,
+      "totalMs": 49.60100000000003,
+      "maxMs": 4.372
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "Blink.Style.UpdateTime",
+      "count": 83,
+      "totalMs": 40.113,
+      "maxMs": 4.166
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "UpdateLayoutTree",
+      "count": 83,
+      "totalMs": 39.78600000000001,
+      "maxMs": 4.155
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "Document::updateStyle",
+      "count": 83,
+      "totalMs": 38.41,
+      "maxMs": 4.126
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "Document::recalcStyle",
+      "count": 71,
+      "totalMs": 36.18400000000001,
+      "maxMs": 3.948
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "WebFrameWidgetImpl::UpdateLifecycle",
+      "count": 164,
+      "totalMs": 122.84800000000006,
+      "maxMs": 3.785
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "LocalFrameView::RunPaintLifecyclePhase",
+      "count": 164,
+      "totalMs": 102.271,
+      "maxMs": 3.197
+    },
+    {
+      "pid": 103868,
+      "tid": 91788,
+      "name": "ThreadControllerImpl::RunTask",
+      "count": 1424,
+      "totalMs": 278.5619999999993,
+      "maxMs": 2.92
+    },
+    {
+      "pid": 103868,
+      "tid": 91788,
+      "name": "Edge_RunTask",
+      "count": 1421,
+      "totalMs": 271.3029999999983,
+      "maxMs": 2.917
+    },
+    {
+      "pid": 103868,
+      "tid": 91788,
+      "name": "DisplayScheduler::OnBeginFrameDeadline",
+      "count": 259,
+      "totalMs": 211.51600000000033,
+      "maxMs": 2.916
+    }
+  ],
+  "totalWork": [
+    {
+      "pid": 103868,
+      "tid": 57640,
+      "name": "ThreadControllerImpl::RunTask",
+      "count": 579,
+      "totalMs": 9944.373,
+      "maxMs": 31.492
+    },
+    {
+      "pid": 103868,
+      "tid": 57640,
+      "name": "Edge_RunTask",
+      "count": 579,
+      "totalMs": 9940.075999999995,
+      "maxMs": 31.48
+    },
+    {
+      "pid": 103868,
+      "tid": 72060,
+      "name": "ThreadControllerImpl::RunTask",
+      "count": 1400,
+      "totalMs": 9347.040000000059,
+      "maxMs": 171.437
+    },
+    {
+      "pid": 103868,
+      "tid": 72060,
+      "name": "Edge_RunTask",
+      "count": 1359,
+      "totalMs": 9344.760000000053,
+      "maxMs": 171.435
+    },
+    {
+      "pid": 103868,
+      "tid": 72060,
+      "name": "Scheduler::RunTask",
+      "count": 757,
+      "totalMs": 9217.344000000008,
+      "maxMs": 171.433
+    },
+    {
+      "pid": 103868,
+      "tid": 72060,
+      "name": "SkiaOutputSurfaceImplOnGpu::FinishPaintRenderPass",
+      "count": 464,
+      "totalMs": 8701.330000000007,
+      "maxMs": 171.07
+    },
+    {
+      "pid": 71700,
+      "tid": 48332,
+      "name": "MessagePumpForUI DispatchMessage",
+      "count": 38619,
+      "totalMs": 2515.4640000000068,
+      "maxMs": 24.964
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "ThreadControllerImpl::RunTask",
+      "count": 1654,
+      "totalMs": 461.4709999999948,
+      "maxMs": 19.071
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "Edge_RunTask",
+      "count": 1548,
+      "totalMs": 455.1019999999942,
+      "maxMs": 19.064
+    },
+    {
+      "pid": 103868,
+      "tid": 72060,
+      "name": "SkiaOutputSurfaceImplOnGpu::SwapBuffers",
+      "count": 158,
+      "totalMs": 447.19199999999995,
+      "maxMs": 90.916
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "ProxyMain::BeginMainFrame",
+      "count": 164,
+      "totalMs": 427.3219999999997,
+      "maxMs": 19.057
+    },
+    {
+      "pid": 103868,
+      "tid": 72060,
+      "name": "Graphics.Pipeline",
+      "count": 316,
+      "totalMs": 397.2279999999999,
+      "maxMs": 90.675
+    },
+    {
+      "pid": 103868,
+      "tid": 72060,
+      "name": "SkiaOutputDevice->ScheduleOverlays()",
+      "count": 158,
+      "totalMs": 386.2839999999999,
+      "maxMs": 90.623
+    },
+    {
+      "pid": 103868,
+      "tid": 72060,
+      "name": "DXGISwapChainImageBacking::Present",
+      "count": 158,
+      "totalMs": 383.23099999999994,
+      "maxMs": 90.605
+    },
+    {
+      "pid": 103868,
+      "tid": 91788,
+      "name": "ThreadControllerImpl::RunTask",
+      "count": 1424,
+      "totalMs": 278.5619999999993,
+      "maxMs": 2.92
+    },
+    {
+      "pid": 103868,
+      "tid": 91788,
+      "name": "Edge_RunTask",
+      "count": 1421,
+      "totalMs": 271.3029999999983,
+      "maxMs": 2.917
+    },
+    {
+      "pid": 103868,
+      "tid": 91788,
+      "name": "Graphics.Pipeline",
+      "count": 1156,
+      "totalMs": 267.02499999999964,
+      "maxMs": 2.906
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "WebFrameWidgetImpl::BeginMainFrame",
+      "count": 164,
+      "totalMs": 253.81300000000007,
+      "maxMs": 10.496
+    },
+    {
+      "pid": 103868,
+      "tid": 91788,
+      "name": "DisplayScheduler::OnBeginFrameDeadline",
+      "count": 259,
+      "totalMs": 211.51600000000033,
+      "maxMs": 2.916
+    },
+    {
+      "pid": 103868,
+      "tid": 91788,
+      "name": "DisplayScheduler::DrawAndSwap",
+      "count": 158,
+      "totalMs": 211.11100000000005,
+      "maxMs": 2.914
+    },
+    {
+      "pid": 103868,
+      "tid": 91788,
+      "name": "Display::DrawAndSwap",
+      "count": 158,
+      "totalMs": 210.84399999999988,
+      "maxMs": 2.911
+    },
+    {
+      "pid": 40024,
+      "tid": 100048,
+      "name": "ThreadControllerImpl::RunTask",
+      "count": 2209,
+      "totalMs": 209.19499999999826,
+      "maxMs": 2.477
+    },
+    {
+      "pid": 40024,
+      "tid": 100048,
+      "name": "Edge_RunTask",
+      "count": 2174,
+      "totalMs": 203.59899999999968,
+      "maxMs": 2.475
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "Blink.Animate.UpdateTime",
+      "count": 164,
+      "totalMs": 178.41999999999993,
+      "maxMs": 10.043
+    },
+    {
+      "pid": 103868,
+      "tid": 91788,
+      "name": "DirectRenderer::DrawFrame",
+      "count": 158,
+      "totalMs": 178.03099999999995,
+      "maxMs": 2.514
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "PageAnimator::serviceScriptedAnimations",
+      "count": 164,
+      "totalMs": 177.62400000000008,
+      "maxMs": 10.04
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "AsyncTask Run",
+      "count": 646,
+      "totalMs": 173.58700000000016,
+      "maxMs": 5.362
+    },
+    {
+      "pid": 103868,
+      "tid": 91788,
+      "name": "DirectRenderer::DrawRenderPass",
+      "count": 464,
+      "totalMs": 168.0299999999998,
+      "maxMs": 1.74
+    },
+    {
+      "pid": 40024,
+      "tid": 100048,
+      "name": "Graphics.Pipeline",
+      "count": 685,
+      "totalMs": 158.28599999999992,
+      "maxMs": 2.429
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "FunctionCall",
+      "count": 8324,
+      "totalMs": 149.58399999999844,
+      "maxMs": 4.707
+    },
+    {
+      "pid": 103868,
+      "tid": 57640,
+      "name": "WinVSyncProvider::GetVSyncIntervalIfAvailable",
+      "count": 580,
+      "totalMs": 139.44200000000004,
+      "maxMs": 1.081
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "WebFrameWidgetImpl::UpdateLifecycle",
+      "count": 164,
+      "totalMs": 122.84800000000006,
+      "maxMs": 3.785
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "LocalFrameView::RunPaintLifecyclePhase",
+      "count": 164,
+      "totalMs": 102.271,
+      "maxMs": 3.197
+    },
+    {
+      "pid": 40024,
+      "tid": 100048,
+      "name": "ProxyImpl::ScheduledActionDraw",
+      "count": 160,
+      "totalMs": 100.479,
+      "maxMs": 2.452
+    },
+    {
+      "pid": 40024,
+      "tid": 100048,
+      "name": "MainFrame.Draw",
+      "count": 160,
+      "totalMs": 100.16700000000003,
+      "maxMs": 2.451
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "FrameRequestCallbackCollection::ExecuteFrameCallbacks",
+      "count": 164,
+      "totalMs": 92.77000000000004,
+      "maxMs": 4.645
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "FireAnimationFrame",
+      "count": 323,
+      "totalMs": 92.35900000000001,
+      "maxMs": 4.379
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "EventDispatch",
+      "count": 587,
+      "totalMs": 81.51099999999998,
+      "maxMs": 5.36
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "EventHandler::handleMouseMoveEvent",
+      "count": 160,
+      "totalMs": 72.75899999999997,
+      "maxMs": 2.032
+    },
+    {
+      "pid": 40024,
+      "tid": 95176,
+      "name": "LocalFrameView::pushPaintArtifactToCompositor",
+      "count": 164,
+      "totalMs": 67.67399999999998,
+      "maxMs": 0.905
+    }
+  ]
+}

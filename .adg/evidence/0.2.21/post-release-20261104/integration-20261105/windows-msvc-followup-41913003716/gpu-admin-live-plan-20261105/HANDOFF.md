@@ -1,0 +1,9 @@
+# 本机管理员手动采集：已完成存活目标准入，等待执行
+
+用户确认由本机管理员手动运行采集脚本。本对话未提权或修改系统策略。新MSVC候选fa9df83a55153f764673781e85167093d20602fd2e34742c69f6b2f5b37f9c68已在隔离fixed根启动，本次PID95732、session2，创建时间/owner/UTC ticks见target.json；PlanOnly实际成功，WPR当时not recording，recorderStarted=false。身份不是永久许可，采集前脚本重新核对，进程退出/重启后拒绝。
+
+管理员手动入口RUN-ADMIN.ps1指向独立capture新目录，45秒GPU/DesktopComposition录制；脚本随机实例名独立stop，不停止日常/其他录制。普通账号采样器已准备原30秒high/dark静止概览，不加帧率开关或装饰提交注入。观察到collector-started.json后最多10秒等待目标前台，再采30秒；600秒总等待有界，超时不采样。scene-ready所记UTC02:27:14.875，即本地10:27:14.875，至约10:37:14.875结束等待。
+
+至本次取证仍无capture启动文件，没有管理员实际录制、ETL或新性能结果。静止性能原失败和正式默认Codex隔离重启缺验均不变；不把PlanOnly或采集工具测试计通过。用户只需在自己的管理员shell运行已给出的绝对路径命令，启动消息后切回隔离测试窗口45秒，当前会话会接续读取原始结果。
+
+代码新增身份路径目录联接检查提交adb1d7a82075a1119cfcc4e3c32511278e39ac19，collector-identity-junction-check.json为实际拒绝反例，未写文件、未操作应用/WPR。原采集器边界测试、陈旧PID拒绝及0xc5585011普通账号错误保持原件。

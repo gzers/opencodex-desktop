@@ -1,0 +1,52 @@
+{
+  "result": "read-only",
+  "acceptance": false,
+  "startedAtUtc": "2026-11-05T09:10:33.299Z",
+  "candidateKind": "local-runtime-source-candidate-not-published2.84.0",
+  "sourceSha256": "c4a83c0f7db90d2826f613fc07d9e6cc1834cfc226f1cf4e78dd84acf859a1b4",
+  "queries": [
+    {
+      "timeoutMs": 8000,
+      "diagnosticExtended": false,
+      "scriptSha256": "c7e4495818a7cc8d0b4a2b8ec8e36bc03d3042c0c1a6754572cfe7045be4f7f2",
+      "result": "success",
+      "totalCandidates": 4,
+      "appServers": [
+        {
+          "pid": 3100,
+          "owner": "EZIO-MINI\\Administrator",
+          "commandSha256": "f572bc58d9f3fde1751701b96ebf41fde85958b008ceeec1c4becd51029d64ba"
+        }
+      ],
+      "elapsedMs": 1038.8336
+    },
+    {
+      "timeoutMs": 60000,
+      "diagnosticExtended": true,
+      "scriptSha256": "c7e4495818a7cc8d0b4a2b8ec8e36bc03d3042c0c1a6754572cfe7045be4f7f2",
+      "result": "success",
+      "totalCandidates": 4,
+      "appServers": [
+        {
+          "pid": 3100,
+          "owner": "EZIO-MINI\\Administrator",
+          "commandSha256": "f572bc58d9f3fde1751701b96ebf41fde85958b008ceeec1c4becd51029d64ba"
+        }
+      ],
+      "elapsedMs": 940.3176999999998
+    }
+  ],
+  "actions": "No restart/kill/config write; only snapshot/catalog-state queries",
+  "defaultCatalogState": {
+    "state": "fresh",
+    "processes": [
+      {
+        "pid": 3100,
+        "startedAtMs": 1793869293963
+      }
+    ],
+    "catalogMtimeMs": 1793864072450.687
+  },
+  "defaultCatalogElapsedMs": 1985.7540000000004,
+  "finishedAtUtc": "2026-11-05T09:10:37.264Z"
+}

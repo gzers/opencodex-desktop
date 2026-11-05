@@ -1,0 +1,217 @@
+{
+  "scenario": "panel",
+  "result": "pass",
+  "root": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-windows-final-msvc-retry-41944607861/fixed/sandbox",
+  "checks": [
+    "real isolated Tauri binding",
+    "early reentry remains alive and ready",
+    "two route reopens ready",
+    "panel observation preserves config bytes"
+  ],
+  "facts": {
+    "about": {
+      "name": "OpenCodeX Desktop",
+      "version": "0.2.21",
+      "identifier": "com.gzers.opencodex.desktop",
+      "platform": "Windows",
+      "framework": "Tauri v2",
+      "license": "MIT License"
+    },
+    "dataRoot": {
+      "activeDataRoot": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\sandbox",
+      "opencodexHomeMode": "inside",
+      "opencodexHome": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\sandbox\\opencodex-home",
+      "currentDataRoot": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\sandbox",
+      "currentOpencodexHome": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\sandbox\\opencodex-home",
+      "runtimeActive": true
+    }
+  },
+  "status": {
+    "matrix": {
+      "runtime": "running",
+      "connection": "unconfigured",
+      "operation": "idle"
+    },
+    "facts": {
+      "health": "healthy",
+      "runtime_label": null,
+      "opencodex_home": null,
+      "data_root": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\sandbox\\opencodex-home",
+      "protection": "none",
+      "reboot_safe": false,
+      "service_present": false,
+      "shim_present": false,
+      "version_drift": null,
+      "startup_status": null
+    },
+    "port": 60444,
+    "pid": "103464",
+    "can_start": false,
+    "can_stop": true,
+    "can_restart": true,
+    "source": "live"
+  },
+  "reentry": {
+    "elapsedMs": 331.30000019073486,
+    "earlyReentryRequested": true
+  },
+  "trace": {
+    "id": 4,
+    "startedAt": 108623.5,
+    "outcome": "visible-ready",
+    "phases": [
+      {
+        "phase": "preferences-start",
+        "elapsedMs": 0.19999980926513672
+      },
+      {
+        "phase": "preferences-ready",
+        "elapsedMs": 0.19999980926513672
+      },
+      {
+        "phase": "status-ready",
+        "elapsedMs": 0.19999980926513672
+      },
+      {
+        "phase": "address-ready",
+        "elapsedMs": 0.5
+      },
+      {
+        "phase": "native-request",
+        "elapsedMs": 2.0999999046325684
+      },
+      {
+        "phase": "native:queued:0.0",
+        "elapsedMs": 94.40000009536743
+      },
+      {
+        "phase": "native:owner-lock:27.0",
+        "elapsedMs": 94.5
+      },
+      {
+        "phase": "native:runtime-address:37.0",
+        "elapsedMs": 94.5
+      },
+      {
+        "phase": "native:native-view:45.0",
+        "elapsedMs": 94.5
+      },
+      {
+        "phase": "native:visible:78.0",
+        "elapsedMs": 94.5
+      },
+      {
+        "phase": "visible-ready",
+        "elapsedMs": 94.59999990463257
+      }
+    ]
+  },
+  "reopens": [
+    {
+      "id": 5,
+      "startedAt": 109659,
+      "outcome": "visible-ready",
+      "phases": [
+        {
+          "phase": "preferences-start",
+          "elapsedMs": 0
+        },
+        {
+          "phase": "preferences-ready",
+          "elapsedMs": 0.09999990463256836
+        },
+        {
+          "phase": "status-ready",
+          "elapsedMs": 0.09999990463256836
+        },
+        {
+          "phase": "address-ready",
+          "elapsedMs": 0.19999980926513672
+        },
+        {
+          "phase": "native-request",
+          "elapsedMs": 2.9000000953674316
+        },
+        {
+          "phase": "native:queued:0.0",
+          "elapsedMs": 70.59999990463257
+        },
+        {
+          "phase": "native:owner-lock:6.0",
+          "elapsedMs": 70.69999980926514
+        },
+        {
+          "phase": "native:runtime-address:14.0",
+          "elapsedMs": 70.69999980926514
+        },
+        {
+          "phase": "native:native-view:25.0",
+          "elapsedMs": 70.69999980926514
+        },
+        {
+          "phase": "native:visible:38.0",
+          "elapsedMs": 70.80000019073486
+        },
+        {
+          "phase": "visible-ready",
+          "elapsedMs": 70.80000019073486
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "startedAt": 110803.30000019073,
+      "outcome": "visible-ready",
+      "phases": [
+        {
+          "phase": "preferences-start",
+          "elapsedMs": 0.19999980926513672
+        },
+        {
+          "phase": "preferences-ready",
+          "elapsedMs": 0.19999980926513672
+        },
+        {
+          "phase": "status-ready",
+          "elapsedMs": 0.2999997138977051
+        },
+        {
+          "phase": "address-ready",
+          "elapsedMs": 0.39999961853027344
+        },
+        {
+          "phase": "native-request",
+          "elapsedMs": 3.799999713897705
+        },
+        {
+          "phase": "native:queued:0.0",
+          "elapsedMs": 77.69999980926514
+        },
+        {
+          "phase": "native:owner-lock:10.0",
+          "elapsedMs": 77.7999997138977
+        },
+        {
+          "phase": "native:runtime-address:20.0",
+          "elapsedMs": 77.7999997138977
+        },
+        {
+          "phase": "native:native-view:30.0",
+          "elapsedMs": 77.7999997138977
+        },
+        {
+          "phase": "native:visible:40.0",
+          "elapsedMs": 77.7999997138977
+        },
+        {
+          "phase": "visible-ready",
+          "elapsedMs": 77.7999997138977
+        },
+        {
+          "phase": "native-request",
+          "elapsedMs": 78.39999961853027
+        }
+      ]
+    }
+  ]
+}

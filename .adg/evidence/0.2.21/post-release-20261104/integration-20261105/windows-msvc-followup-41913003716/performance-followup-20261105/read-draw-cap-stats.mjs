@@ -1,0 +1,3 @@
+import{connect}from '../../post021-windows-materials/test/smoke/post021-windows-final/cdp-session.mjs'
+import{writeFile}from'node:fs/promises'
+const c=await connect('http://127.0.0.1:9452');try{const r=await c.evaluate("(()=>{const s=window.__nativeDiagDraw;if(!s)return{installed:false};const v=[...s.intervals].sort((a,b)=>a-b);return{diagnosticOnly:true,at:s.at,submitted:s.submitted,skipped:s.skipped,submissionIntervals:{count:v.length,min:v[0],p95:v[Math.floor(v.length*.95)],max:v.at(-1)},note:'Acceptance sample lost foreground; draw cap is not a verified product change.'}})()");await writeFile(new URL('./rate-draw-cap-stats.json',import.meta.url),JSON.stringify(r,null,2));console.log(JSON.stringify(r))}finally{c.close()}

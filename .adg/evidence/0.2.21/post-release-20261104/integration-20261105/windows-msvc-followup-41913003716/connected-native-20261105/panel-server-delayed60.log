@@ -1,0 +1,8 @@
+🚀 opencodex proxy running on http://localhost:60446
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+{"pid":24620,"port":60446,"home":"D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-41913003716\\perf\\sandbox\\opencodex-home","officialPackage":"2.84.0","restartDisabledByFixture":true,"at":"2026-11-05T00:49:33.361Z"}
+🔐 Claude intercept proxy active on http://127.0.0.1:60546 (CONNECT api.anthropic.com → local TLS)

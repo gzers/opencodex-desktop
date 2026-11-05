@@ -1,0 +1,11 @@
+# 正式客户端真实启动及公共保存通过；默认重启尚待
+
+用户明确Administrator现有Codex资料为可丢弃测试数据。管理员在session1手动运行POST021-FORMAL，原config.toml仅备份到测试run/private-backup，原配置679字节摘要随附、不上传原内容或auth/history。测试路由指向loopback60470，合成模型源60471只实现GET/v1/models，其它方法405；不执行真实同步或推理。运行包2.84.0服务没有managementApi/restartDesktopApp/adapter/processIO覆写，正式包26.1029.7803.0以注册AUMID启动，owner/session/path/create证明保留；15119日常实例排除。
+
+首次原管理器99740及服务83124启动，但驱动在Tauri桥未初始化时invoke报错，保存前失败；之后helpers实际消失，未确认原因，不据意图重启活进程。e7338d2ca等待Tauri/Vue就绪并在已确认旧helpers退出、原正式客户端代次仍存活后重建测试helpers30804/32180；不重播配置初始化或第二次正式客户端启动。新helpers使用detached，驱动失败后实际仍在。
+
+真实公共渠道Save成功：before/after policyDigest不同，contextWindow65547读回，通知来自publicSave，不调用showSaved。原生确认框截图随附，是真实MSVCWebView截图、非headless，但并非完整Windows桌面捕获，不拿它代替材质/性能实屏门。默认restart尚未被调用：确认框打开后进程快照遇短命codex.exe在枚举与GetOwner之间退出，CIM0x80041002使driver失败；原件保留。
+
+93d9942e9修snapshot：GetOwner失败后按PID/create重查，明确消失/换代记录竞态，仍活但归属未知继续拒绝。真实PS5回归fake覆盖gone/reused/liveunknown/own/other，读回仍保留各结果；当前正式默认重启未因此计passed。POST021-FORMAL-RESTART仅允许这份已保存策略、原helper/正式客户端代次、现有publicconfirmation与空restart结果接续，不重复Save或重放初始化。等待用户在Administrator运行，随后检查真实退出/重开与配置readback。
+
+官方服务日志有可选Claudeintercept的LocalCAowner/ACL检查失败警告，保留原文；没有为它修改系统策略、信任或权限。TASKin_progress/RCPfailed、无CERT；性能GPU争用配对证据已另交，但空闲窗口反事实与生产修复仍待；不合并main、不发布、不操作15119日常配置或进程。

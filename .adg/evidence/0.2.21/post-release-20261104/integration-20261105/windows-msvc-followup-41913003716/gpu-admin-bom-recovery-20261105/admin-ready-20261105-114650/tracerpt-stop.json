@@ -1,0 +1,20 @@
+{
+  "result": "stopped-exact-owned-process",
+  "admission": {
+    "pid": 95112,
+    "path": "C:\\Windows\\System32\\tracerpt.exe",
+    "createdAt": "2026-11-05T12:25:52.4587980+08:00",
+    "session": 2,
+    "owner": {
+      "Domain": "EZIO-MINI",
+      "ReturnValue": 0,
+      "User": "15119",
+      "PSComputerName": null
+    },
+    "commandLine": "\"C:\\Windows\\System32\\tracerpt.exe\" D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-msvc-followup/admin-ready-20261105-114650/capture/gpu-dwm.etl -o NUL -summary D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-msvc-followup/admin-ready-20261105-114650/etl-summary.txt -y"
+  },
+  "handleCreated": "2026-11-05T12:25:52.4587987+08:00",
+  "tickDelta": 7,
+  "exited": true,
+  "at": "2026-11-05T12:33:10.7245227+08:00"
+}

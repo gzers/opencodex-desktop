@@ -1,0 +1,17 @@
+{
+  "result": "failed",
+  "acceptance": false,
+  "owner": "EZIO-MINI\\Administrator",
+  "startedAtUtc": "2026-11-05T07:26:41.122Z",
+  "checks": [],
+  "previousFailure": "Initial formal-result preserved; no config backup/seed or formal-app launch replay",
+  "servicePid": 32180,
+  "managerPid": 30804,
+  "policyBefore": "sha256:52d5e962ed76d631ac9263ecbadb98ed3b723199ff29b2ea739d19082458720f",
+  "error": {
+    "message": "Command failed: C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -NoProfile -NonInteractive -File D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\post021-windows-materials\\test\\smoke\\post021-windows-final\\formal-msix-snapshot.ps1\nInvoke-CimMethod : �Ҳ��� \r\n����λ�� D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\post021-windows-materials\\test\\smoke\\post021-windows-fin\r\nal\\formal-msix-snapshot.ps1:8 �ַ�: 16\r\n+ ...  $taskOwner=Invoke-CimMethod -InputObject $taskP -MethodName GetOwner ...\r\n+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : ObjectNotFound: (Win32_Process: ...ndle = \"17188\"):CimInstance) [Invoke-CimMethod], CimE \r\n   xception\r\n    + FullyQualifiedErrorId : HRESULT 0x80041002,Microsoft.Management.Infrastructure.CimCmdlets.InvokeCimMethodCommand\r\n \r\n",
+    "stack": "Error: Command failed: C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -NoProfile -NonInteractive -File D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\post021-windows-materials\\test\\smoke\\post021-windows-final\\formal-msix-snapshot.ps1\nInvoke-CimMethod : �Ҳ��� \r\n����λ�� D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\post021-windows-materials\\test\\smoke\\post021-windows-fin\r\nal\\formal-msix-snapshot.ps1:8 �ַ�: 16\r\n+ ...  $taskOwner=Invoke-CimMethod -InputObject $taskP -MethodName GetOwner ...\r\n+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : ObjectNotFound: (Win32_Process: ...ndle = \"17188\"):CimInstance) [Invoke-CimMethod], CimE \r\n   xception\r\n    + FullyQualifiedErrorId : HRESULT 0x80041002,Microsoft.Management.Infrastructure.CimCmdlets.InvokeCimMethodCommand\r\n \r\n\n    at genericNodeError (node:internal/errors:986:15)\n    at wrappedFn (node:internal/errors:540:14)\n    at checkExecSyncError (node:child_process:943:11)\n    at execFileSync (node:child_process:979:15)\n    at snapshot (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/post021-windows-final/formal-msix-recover.mjs:23:25)\n    at verifyNative (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/post021-windows-final/formal-msix-verify.mjs:38:26)\n    at async file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/post021-windows-final/formal-msix-recover.mjs:61:2"
+  },
+  "finishedAtUtc": "2026-11-05T07:29:00.509Z",
+  "cleanup": "Detached exact testhelpers and authorizedAdministratorclient retained; no globalkill/configreseed/secondformalclientlaunch."
+}

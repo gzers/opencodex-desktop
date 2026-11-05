@@ -1,0 +1,34 @@
+{
+  "status": "prepared-not-admin-executed",
+  "codeCommit": "3fdff5040034536d542e30c539ec08824e6d3148",
+  "files": {
+    "test/smoke/post021-windows-final/collect-gpu-trace.ps1": {
+      "bytes": 9256,
+      "sha256": "04de8036cc68309f9918ae28fd1f4d8ab5a71f9b5771b58eee4e05f45c1b4d40"
+    },
+    "test/smoke/post021-windows-final/write-gpu-target.ps1": {
+      "bytes": 2992,
+      "sha256": "969f6965f4432598a14d8d42fff1e1de5b2373fc63b2749881c87d59e63119b9"
+    }
+  },
+  "userStatement": "有管理员或测试环境可协助",
+  "pending": "User to identify local administrator collection versus another disposable Windows environment",
+  "profilePlan": [
+    "GPU",
+    "DesktopComposition"
+  ],
+  "recordingMutationExecuted": false,
+  "targetProcessAction": "none",
+  "guardsValidated": [
+    "syntax",
+    "outside-boundary",
+    "same-prefix-neighbor",
+    "parent-escape",
+    "junction-ancestor",
+    "stale-recorded-PID"
+  ],
+  "positivePlanOnly": "not-executed; requires newly launched exact target identity",
+  "evidencePolicy": "Raw machine-wide ETL remains local for review; do not publish automatically",
+  "currentProductAppsTree": "a8bb18f9ff2781dbbfe67f91473a298f3cd74ae6",
+  "at": "2026-11-05T02:24:05.008494+00:00"
+}

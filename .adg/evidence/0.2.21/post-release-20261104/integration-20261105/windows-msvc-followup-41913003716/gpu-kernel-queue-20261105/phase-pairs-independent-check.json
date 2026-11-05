@@ -1,0 +1,129 @@
+{
+  "result": "passed",
+  "rows": 4235,
+  "checks": [
+    "all durations equal end-start",
+    "all rows within exactsceneUTC window",
+    "duplicateQueueStarts0",
+    "independently regrouped hardwarequeue latency matches summary"
+  ],
+  "groups": [
+    {
+      "phase": "dmaWallSlice",
+      "role": "target-webview",
+      "packetKind": "",
+      "samples": 910,
+      "p50": 5.2,
+      "p95": 25.4813,
+      "max": 36.0375
+    },
+    {
+      "phase": "queueSubmitToFirstDma",
+      "role": "target-session-DWM",
+      "packetKind": "(178, 0)",
+      "samples": 193,
+      "p50": 2.0869,
+      "p95": 6.8717,
+      "max": 22.286
+    },
+    {
+      "phase": "dmaWallSlice",
+      "role": "target-session-DWM",
+      "packetKind": "",
+      "samples": 209,
+      "p50": 23.5988,
+      "p95": 28.4837,
+      "max": 32.9417
+    },
+    {
+      "phase": "queueSubmitToComplete",
+      "role": "target-session-DWM",
+      "packetKind": "(178, 0)",
+      "samples": 193,
+      "p50": 26.6576,
+      "p95": 34.4108,
+      "max": 46.0802
+    },
+    {
+      "phase": "queueSubmitToComplete",
+      "role": "target-session-DWM",
+      "packetKind": "(245, None)",
+      "samples": 596,
+      "p50": 28.1918,
+      "p95": 164.1056,
+      "max": 231.1007
+    },
+    {
+      "phase": "dxgiPresent",
+      "role": "target-webview",
+      "packetKind": "",
+      "samples": 195,
+      "p50": 2.0898,
+      "p95": 23.6942,
+      "max": 66.5039
+    },
+    {
+      "phase": "dxgiPresent",
+      "role": "target-session-DWM",
+      "packetKind": "",
+      "samples": 188,
+      "p50": 154.669,
+      "p95": 226.3144,
+      "max": 276.1258
+    },
+    {
+      "phase": "queueSubmitToComplete",
+      "role": "target-session-DWM",
+      "packetKind": "(244, None)",
+      "samples": 185,
+      "p50": 114.122,
+      "p95": 184.8802,
+      "max": 231.0991
+    },
+    {
+      "phase": "queueSubmitToComplete",
+      "role": "target-webview",
+      "packetKind": "(244, None)",
+      "samples": 222,
+      "p50": 419.384,
+      "p95": 613.8865,
+      "max": 719.5515
+    },
+    {
+      "phase": "queueSubmitToFirstDma",
+      "role": "target-webview",
+      "packetKind": "(178, 0)",
+      "samples": 384,
+      "p50": 428.268,
+      "p95": 639.5639,
+      "max": 741.6814
+    },
+    {
+      "phase": "queueSubmitToComplete",
+      "role": "target-webview",
+      "packetKind": "(178, 0)",
+      "samples": 384,
+      "p50": 466.4893,
+      "p95": 668.4418,
+      "max": 759.5041
+    },
+    {
+      "phase": "queueSubmitToComplete",
+      "role": "target-webview",
+      "packetKind": "(245, None)",
+      "samples": 384,
+      "p50": 466.4929,
+      "p95": 668.4461,
+      "max": 759.512
+    },
+    {
+      "phase": "queueSubmitToComplete",
+      "role": "target-webview",
+      "packetKind": "(178, 7)",
+      "samples": 192,
+      "p50": 464.8477,
+      "p95": 663.5812,
+      "max": 758.0415
+    }
+  ]
+}
