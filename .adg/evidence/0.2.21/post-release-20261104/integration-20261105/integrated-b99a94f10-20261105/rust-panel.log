@@ -1,0 +1,26 @@
+   Compiling opencodex-desktop v0.2.21 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 21.81s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-b0644f1dff90c839)
+
+running 18 tests
+test commands::about::query_ownership_tests::failed_panel_commit_does_not_publish_unpersisted_result ... ok
+test commands::about::query_ownership_tests::frozen_storage_refuses_panel_setup_and_query_before_side_effects ... ok
+test commands::panel::tests::bounds_follow_shell_zoom_instead_of_fixed_sidebar_width ... ok
+test commands::panel::tests::bounds_never_cover_shell_controls_or_escape_window ... ok
+test commands::panel::tests::corner_radius_follows_interface_scale ... ok
+test commands::panel::tests::idle_reclaim_requires_same_generation_hidden_view_and_elapsed_deadline ... ok
+test commands::panel::tests::load_callbacks_require_the_current_view_and_owned_navigation ... ok
+test commands::panel::tests::native_caption_panel_starts_at_client_top_without_covering_macos_overlay ... ok
+test commands::panel::tests::navigation_cannot_escape_the_panel_origin ... ok
+test commands::panel::tests::only_runtime_local_panel_urls_are_accepted ... ok
+test commands::panel::tests::panel_state_detail_normalizes_theme_and_keeps_scale ... ok
+test commands::panel::tests::repeated_show_before_navigation_keeps_origin_and_resume_state ... ok
+test commands::panel::tests::show_rejection_reason_names_runtime_and_missing_port ... ok
+test commands::panel::tests::theme_setting_syncs_through_the_official_storage_key ... ok
+test commands::workspace::tests::local_panel_browser_fallback_is_runtime_port_allowlist ... ok
+test commands::about::query_ownership_tests::accepted_panel_query_commits_success_or_failure_after_observer_abort ... ok
+test modules::update::release_notes::tests::panel_repository_and_exact_version_are_verified_before_release_and_cache_hit_has_zero_requests ... ok
+test modules::data_root::migration::tests::unresolved_panel_protection_blocks_copy_without_changing_source_or_target ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 1203 filtered out; finished in 0.15s
+

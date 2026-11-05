@@ -1,19 +1,20 @@
 {
   "completion_summary": null,
-  "content_digest": "ff20b80a52ee8079125966eadb21feee2f44d20ac198243c29c09edf59d57ea5",
+  "content_digest": "d8c65c1377f14f5203ec60986665907502e8e4076eaada4d01943ecfe7fa9875",
   "demand_ids": [
     "DMD-OPENCODEX-POST021"
   ],
   "id": "IMP-OPENCODEX-DESKTOP-30",
   "kind": "IMP",
-  "revision": 31,
-  "source_digest": "cce10a99801cd561ca8e4172e1ca028b32f2f67af805a5943044c7fc4d0c2473",
+  "revision": 32,
+  "source_digest": "b9bbc017dbe7b637d636a24b94a5e8a37927ade99f16e8919d076e0f847c3bf3",
   "source_path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-30.md",
-  "source_revision": 31,
+  "source_revision": 32,
   "state": "in_progress",
-  "summary": "双线已集成且最新完整CI通过；仍待Windows切源实屏、RDP性能、正式客户端默认重启及发行原包门。",
-  "summary_digest": "0c89cfa76ba47e5a42b2d518b77ee57e4d51b8b6fe8d998b531a0ab7de452c94",
+  "summary": "新Windows回交已集成且CI/Mac复验通过；采用用户硬件例外，仍待正式运行包补丁交付和发行原包门。",
+  "summary_digest": "eeb1ccfb14cc4dee137ccbade9146eeb94d02f6fcc3dfd9146f9e6d80abe0a30",
   "task_ids": [
+    "TASK-OPENCODEX-POST021-INTEGRATION-HARDWARE-20261105",
     "TASK-OPENCODEX-POST021-LOCAL-20261104",
     "TASK-OPENCODEX-POST021-CHANNELS-20261104",
     "TASK-OPENCODEX-POST021-CHANNEL-PROTOTYPE-20261104",

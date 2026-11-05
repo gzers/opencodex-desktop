@@ -1,0 +1,76 @@
+{
+  "codeHead": "f97b2a92d223d71166ff6e5eb762bec6a794237c",
+  "windowsContribution": "8b9cca86a71827aca50da076eb32fd17479b1512",
+  "docsContribution": "b99a94f10",
+  "appsTree": "a8bb18f9ff2781dbbfe67f91473a298f3cd74ae6",
+  "evidenceManifest": {
+    "count": 883,
+    "passed": true
+  },
+  "codeMerge": "no-conflict",
+  "ci": {
+    "id": 42003613998,
+    "result": "success",
+    "jobs": [
+      [
+        "release-tools",
+        "success"
+      ],
+      [
+        "backend-windows",
+        "success"
+      ],
+      [
+        "frontend",
+        "success"
+      ],
+      [
+        "windows-smoke-evidence",
+        "success"
+      ],
+      [
+        "backend",
+        "success"
+      ],
+      [
+        "build",
+        "skipped"
+      ]
+    ]
+  },
+  "localRustPanel": {
+    "passed": 18,
+    "failed": 0
+  },
+  "localMacNative": {
+    "checks": 15,
+    "result": "pass",
+    "scope": "actual official 2.84 child WKWebView load and reopen; config unchanged; owned cleanup"
+  },
+  "hardwareException": {
+    "source": "current user explicit answer: 是，采用该硬件例外",
+    "effect": "absolute RDP p95/over6B no longer release blocker for this shared GPU host; original failed measurements preserved; functional material requirements remain"
+  },
+  "runtimeDependency": {
+    "package": "@bitkyc08/opencodex",
+    "candidateBase": "2.84.0",
+    "desktopAndAppserverPatches": "validated local source candidate only",
+    "upstreamRepository": "lidge-jun/opencodex",
+    "pushPermission": false,
+    "integratedPublishedRuntime": false,
+    "latestRepositoryStillUsesGetOwner": true
+  },
+  "releaseReady": false,
+  "published": false,
+  "pending": [
+    "upstream runtime patch delivery/available integrated package",
+    "final installer/upgrade/update signature/rollback/public release"
+  ],
+  "toolHead": "4251e5c52",
+  "runtimePatchReplay": {
+    "filesVerified": 2021,
+    "changedPaths": 4,
+    "pureProtocolPassed": 4,
+    "nativeWindowsEvidence": "source candidate from contribution only; not rerun on Mac"
+  }
+}

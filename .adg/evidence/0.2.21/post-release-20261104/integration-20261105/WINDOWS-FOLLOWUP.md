@@ -1,3 +1,15 @@
+# 最新接收：Windows b99a94f10已集成（2026-11-05）
+
+Windows代码8b9cca86a、证据b99a94f10已接收，883项manifest全通过；集成f97b2a92d / apps树a8bb18f9ff2781dbbfe67f91473a298f3cd74ae6。完整CI42003613998五项适用job成功，Mac面板原生15检查及Rust定向18项通过。Windows切源/浮层/重试与首次精确云端范围已有有效证据，不重复要求已完成补验。
+
+用户在本对话明确采用共享GPU/RDP硬件例外：绝对p95/长帧不再硬阻断发布，原失败数据不改写，不宣称性能优化；功能玻璃/回退/焦点/后台恢复要求保持。原冻结TASK不改，新TASK-INTEGRATION-HARDWARE-20261105承接最新采用。
+
+当前剩余：正式运行包源补丁交付。Windows真实默认重启在本地源候选通过，但两个补丁还没进入@bitkyc08/opencodex正式包。当前凭据无上游lidge-jun/opencodex写权限，未公开提交PR/issue。详见integrated-b99a94f10-20261105/UPSTREAM-RUNTIME-HANDOFF.md、runtime-patch-review.json与review.json。取得可安装集成包后继续隔离默认重启及最终发行原包/升级/签名/回退/统一发布；尚未冻结新版本或合并main。
+
+下文全部保留为历史，旧“仍待Windows切源/首次范围、必须原绝对帧率”等不得覆盖本段当前结论。
+
+---
+
 # 当前Windows接续：完整CI通过后的实际缺验
 
 最新代码c990717931aa37ed66ca99e42bf5cf4f470069bb，CI run41913003716已completed/success，Mac前后端、Windows完整安装恢复/Node22.20/普通账号矩阵都通过。以下为最新有效入口，下面旧候选和失败历史仅留溯源。

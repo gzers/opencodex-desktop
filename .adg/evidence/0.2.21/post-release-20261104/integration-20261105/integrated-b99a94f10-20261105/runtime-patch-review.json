@@ -1,0 +1,37 @@
+{
+  "baseVersion": "2.84.0",
+  "filesVerified": 2021,
+  "changes": [
+    {
+      "path": "src/codex/app-server-processes.ts",
+      "sourceSha256": "d1878571eb414445b43e51937ddb2b5c3cf76f8f24ce78e857cb7e617a06f87e",
+      "candidateSha256": "c4a83c0f7db90d2826f613fc07d9e6cc1834cfc226f1cf4e78dd84acf859a1b4",
+      "bytes": 57386
+    },
+    {
+      "path": "src/codex/desktop-app/windows.ts",
+      "sourceSha256": "0c794535ff163d5da262d1d7e33e1aff1e072952889e9421cda9438b0380e207",
+      "candidateSha256": "e78f89eaee6372b6bcdddf78d32e736d2eb3740ed0a79add0760feb85f966ffb",
+      "bytes": 10035
+    },
+    {
+      "path": "src/codex/desktop-app/windows-desktop-owner-probe.ps1",
+      "sourceSha256": null,
+      "candidateSha256": "069a15da6d2a5d10ec4e7b443a55faf4a6392660bb9642ba4e915bfa48f28bf1",
+      "bytes": 4788
+    },
+    {
+      "path": "src/codex/windows-appserver-owner-probe.ps1",
+      "sourceSha256": null,
+      "candidateSha256": "fa49cb2f0e42a00a84f304511feefe07989ececc31fe1805428cff45e1ec0bc5",
+      "bytes": 4689
+    }
+  ],
+  "scope": "isolated source copy, no service executed, no package installed or published",
+  "tests": {
+    "passed": 4,
+    "failed": 0,
+    "method": "injected exec callback only; Unix uses upstream test seam for PowerShell resolver; not native Windows execution"
+  },
+  "originalFailures": "bun not on PATH; next native trusted Windows resolver unavailable on Mac before injected exec; originals retained; test seam restored after suite"
+}

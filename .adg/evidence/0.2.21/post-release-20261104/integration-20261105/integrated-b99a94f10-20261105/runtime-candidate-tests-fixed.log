@@ -1,0 +1,11 @@
+bun test v1.4.2 (744846f84)
+
+test/smoke/post021-windows-final/runtime-probe-candidate.test.ts:
+(pass) candidate sends hex root and native owner probe with original bounded timeout [2.52ms]
+(pass) unreadable native identity stays unknown, never an empty process list [0.12ms]
+(pass) same-prefix neighboring package is still rejected after query [0.11ms]
+(pass) app-server candidate keeps narrow source regexes and rejects incomplete output [0.32ms]
+
+ 4 pass
+ 0 fail
+Ran 4 tests across 1 file. [128.00ms]
