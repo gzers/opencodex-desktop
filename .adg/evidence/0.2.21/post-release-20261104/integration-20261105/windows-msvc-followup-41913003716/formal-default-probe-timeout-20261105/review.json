@@ -1,0 +1,51 @@
+{
+  "result": "real-save-and-readback-passed-official-default-restart-failed",
+  "acceptance": false,
+  "codeCommit": "40831f67b97e04ef50c5f8ea53763e5e8340e953",
+  "productAppsTree": "a8bb18f9ff2781dbbfe67f91473a298f3cd74ae6",
+  "formalPackage": "OpenAI.Codex26.1029.7803.0",
+  "testOwner": "Administrator/session1",
+  "runtimePackage": "@bitkyc08/opencodex2.84.0",
+  "actualUserAction": "User reports alreadyclickedrestart; actualpublicconfirmation shows fixedproductionerror saying officialdesktopprocessprobeunavailable and restartnotexecuted. Completiondriver reachedstateaftermanualaction and refusedanotherclick. No automaticretryofuncertainaction.",
+  "defaultFailure": {
+    "discoveryElapsedMs": 325.1222,
+    "defaultProbeElapsedMs": 10019.2164,
+    "defaultTimeoutMs": 10000,
+    "error": "ETIMEDOUT",
+    "stdoutBytesBeforeTimeout": 1249,
+    "stderrBytes": 0,
+    "defaultReturn": null
+  },
+  "diagnosticCountercheck": {
+    "sameScriptSha256": "81188dc59b319d639ddea8409805848b3b525763d19f12097ce1941acc241fe7",
+    "extendedReadonlyLimitMs": 60000,
+    "elapsedMs": 14017.066600000002,
+    "resultProcesses": 11,
+    "rootPid92676GenerationUnchanged": true,
+    "scope": "Diagnostic discover/list only. Default adapter source unchanged; extendedprobe doesnotcallrestart and doesnotcountasdefaultacceptance."
+  },
+  "establishedCause": "Default10s timeout expires before a valid Administrator-owned11processenumeration completes14.017s. Package discovery works325ms; no filemissing/panelpreconditionevidence. Validownershipresultwithlongerreadonlywait disproves treatingnullasabsence orimmediatepermissionfailure. PerprocessGetOwnerCIMfanout observed in source; precise perRPCcostnot separatelymeasured.",
+  "readback": {
+    "result": "real-native-post-failure-readback",
+    "at": "2026-11-05T07:41:23.991Z",
+    "policyDigest": "sha256:ca86fc387c769cac83b0ef6a3733c9f92b46833015ea5378d70c4ce83361e36f",
+    "channel": {
+      "providerId": "Post021AdminFixture",
+      "contextWindow": {
+        "mode": "custom",
+        "value": 65547
+      }
+    },
+    "formalRestartConfirmed": false,
+    "diskAccessFrom15119": "Denied by official per-user file ACL; no permission changes attempted"
+  },
+  "observerCorrection": "Tauri.__TAURI_INTERNALS__.invoke descriptorwritablefalse/configurablefalse; priorassignment silentlyineffective. Empty__formalRefresh arraywas not evidenceofnorequest. 40831f67b removesoverride andobservesactualpublicerror/successcomponentstate; OSgenerationchecksremainrequired. Earlierreportbytesretained, notrewritten.",
+  "neededIntegrationFix": "PublishedruntimeWindowsdefaultprocessquerymustcompletewithinitsboundedprobe oruseappropriatelyreviewedtimeout. Preferbatch/nativeowneridentityreadwhilepreservingcurrentuser,path,creationandancestryguards. Do notpatchinstalledpackageandcallitoriginal2.84; requiresrealruntimefix/versionedcandidate/defaultregression beforeclaimingacceptance. NotanOpenCodeXbusinessorWebDAVchange.",
+  "remaining": [
+    "Officialdefaultrestartactualoldexit/newlaunchandpostrestartreadback",
+    "QuietsharedGPUcounterfactualandproductionperformancefixoriginalbudget",
+    "Finalintegration/releasegatesownedbylocalintegrator"
+  ],
+  "processesRetained": "AuthorizedAdministratorformalroot92676,testservice32180,manager30804retained. No broadkill, no15119dailyprocesssignals. Staleentriesguardagainstreplay; originalprivateconfigbackup localonly.",
+  "at": "2026-11-05T07:42:50.185491+00:00"
+}

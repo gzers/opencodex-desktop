@@ -1,0 +1,24 @@
+ 6 | import {createHash} from 'node:crypto'
+ 7 | const [planFile]=process.argv.slice(2),plan=JSON.parse(readFileSync(planFile,'utf8')),root=resolve(plan.runRoot)
+ 8 | assert.equal(root,resolve('D:/Users/Administrator/WorkSpace/Test/post021-formal-20261105-1518'))
+ 9 | const ps=join(process.env.SystemRoot!,'System32/WindowsPowerShell/v1.0/powershell.exe')
+10 | const owner=execFileSync(ps,['-NoProfile','-Command','[Security.Principal.WindowsIdentity]::GetCurrent().Name'],{encoding:'utf8',windowsHide:true,timeout:15000}).trim()
+11 | assert.equal(owner.toLowerCase(),plan.expectedOwner.toLowerCase())
+            ^
+AssertionError: Expected values to be strictly equal:
++ actual - expected
+
++ 'ezio-mini\\15119'
+- 'ezio-mini\\administrator'
+              ^
+
+ generatedMessage: true,
+     actual: "ezio-mini\\15119",
+   expected: "ezio-mini\\administrator",
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\post021-windows-materials\test\smoke\post021-windows-final\formal-default-probe.ts:11:8
+
+Bun v1.4.4 (Windows x64)

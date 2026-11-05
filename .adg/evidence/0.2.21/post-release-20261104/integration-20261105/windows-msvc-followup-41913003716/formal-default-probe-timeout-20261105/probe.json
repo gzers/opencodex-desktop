@@ -1,0 +1,119 @@
+{
+  "result": "default-process-probe-failed",
+  "acceptance": false,
+  "owner": "EZIO-MINI\\Administrator",
+  "startedAtUtc": "2026-11-05T07:36:52.348Z",
+  "calls": [
+    {
+      "phase": "discovery",
+      "extendedDiagnosticOnly": false,
+      "file": "C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "timeout": 10000,
+      "scriptSha256": "954b242b4384615cdeb8135b2c9b17de005615119949ac445b3cc11f1265b2a3",
+      "exit": "success",
+      "stdoutBytes": 137,
+      "elapsedMs": 325.1222
+    },
+    {
+      "phase": "default-list",
+      "extendedDiagnosticOnly": false,
+      "file": "C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "timeout": 10000,
+      "scriptSha256": "81188dc59b319d639ddea8409805848b3b525763d19f12097ce1941acc241fe7",
+      "exit": "error",
+      "code": "ETIMEDOUT",
+      "status": null,
+      "signal": "SIGTERM",
+      "message": "spawnSync C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\powershell.exe ETIMEDOUT",
+      "stdoutBytes": 1249,
+      "stderrBytes": 0,
+      "elapsedMs": 10019.2164
+    },
+    {
+      "phase": "extended-readonly-list",
+      "extendedDiagnosticOnly": true,
+      "file": "C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "timeout": 60000,
+      "scriptSha256": "81188dc59b319d639ddea8409805848b3b525763d19f12097ce1941acc241fe7",
+      "exit": "success",
+      "stdoutBytes": 1527,
+      "elapsedMs": 14017.066600000002
+    }
+  ],
+  "processActions": "none; discover/list only; no restart methods invoked",
+  "install": {
+    "id": "OpenAI.Codex_2p2nqsd0c76g0",
+    "root": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0",
+    "relaunch": "OpenAI.Codex_2p2nqsd0c76g0!App"
+  },
+  "defaultList": null,
+  "extendedReadonlyList": [
+    {
+      "pid": 92676,
+      "parentPid": 2108,
+      "createdAt": "2026-11-05T15:20:40.1407910+08:00",
+      "executable": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+    },
+    {
+      "pid": 424,
+      "parentPid": 92676,
+      "createdAt": "2026-11-05T15:20:40.3309790+08:00",
+      "executable": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+    },
+    {
+      "pid": 80024,
+      "parentPid": 92676,
+      "createdAt": "2026-11-05T15:20:41.1098160+08:00",
+      "executable": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+    },
+    {
+      "pid": 88972,
+      "parentPid": 92676,
+      "createdAt": "2026-11-05T15:20:41.1237870+08:00",
+      "executable": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+    },
+    {
+      "pid": 57724,
+      "parentPid": 92676,
+      "createdAt": "2026-11-05T15:20:41.1785870+08:00",
+      "executable": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+    },
+    {
+      "pid": 96732,
+      "parentPid": 92676,
+      "createdAt": "2026-11-05T15:20:49.0159530+08:00",
+      "executable": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+    },
+    {
+      "pid": 21304,
+      "parentPid": 92676,
+      "createdAt": "2026-11-05T15:20:49.9334270+08:00",
+      "executable": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+    },
+    {
+      "pid": 93780,
+      "parentPid": 92676,
+      "createdAt": "2026-11-05T15:20:50.9427010+08:00",
+      "executable": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+    },
+    {
+      "pid": 103828,
+      "parentPid": 92676,
+      "createdAt": "2026-11-05T15:21:00.3028140+08:00",
+      "executable": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+    },
+    {
+      "pid": 87268,
+      "parentPid": 92676,
+      "createdAt": "2026-11-05T15:21:00.3137030+08:00",
+      "executable": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+    },
+    {
+      "pid": 86688,
+      "parentPid": 92676,
+      "createdAt": "2026-11-05T15:23:41.1478380+08:00",
+      "executable": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+    }
+  ],
+  "finishedAtUtc": "2026-11-05T07:37:16.715Z"
+}

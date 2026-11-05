@@ -1,0 +1,24 @@
+10 | assert(root.startsWith(resolve('D:/Users/Administrator/WorkSpace/Test')+'\\'))
+11 | assert.equal(resolve(process.env.OPENCODEX_HOME??''),resolve(home))
+12 | assert.equal(resolve(process.env.CODEX_HOME??''),resolve('C:/Users/Administrator/.codex'))
+13 | const ps=join(process.env.SystemRoot!,'System32/WindowsPowerShell/v1.0/powershell.exe')
+14 | const actual=execFileSync(ps,['-NoProfile','-Command','[Security.Principal.WindowsIdentity]::GetCurrent().Name'],{encoding:'utf8',windowsHide:true,timeout:15000}).trim()
+15 | assert.equal(actual.toLowerCase(),plan.expectedOwner.toLowerCase())
+            ^
+AssertionError: Expected values to be strictly equal:
++ actual - expected
+
++ 'ezio-mini\\15119'
+- 'ezio-mini\\administrator'
+              ^
+
+ generatedMessage: true,
+     actual: "ezio-mini\\15119",
+   expected: "ezio-mini\\administrator",
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\post021-windows-materials\test\smoke\post021-windows-final\formal-msix-service.ts:15:8
+
+Bun v1.4.4 (Windows x64)
