@@ -1,0 +1,169 @@
+{
+  "result": "pass",
+  "scope": "Controlled HTTP response-header delay; actual manager retry, real IPC, no service restart",
+  "serviceBefore": {
+    "matrix": {
+      "runtime": "running",
+      "connection": "unconfigured",
+      "operation": "idle"
+    },
+    "facts": {
+      "health": "healthy",
+      "runtime_label": null,
+      "opencodex_home": null,
+      "data_root": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-gnu-retry\\fixed\\sandbox\\opencodex-home",
+      "protection": "none",
+      "reboot_safe": false,
+      "service_present": false,
+      "shim_present": false,
+      "version_drift": null,
+      "startup_status": null
+    },
+    "port": 60444,
+    "pid": "101720",
+    "can_start": false,
+    "can_stop": true,
+    "can_restart": true,
+    "source": "live"
+  },
+  "timeout": {
+    "frame": "官方面板加载失败\nOpenCodex 正在运行，内嵌页面未能加载。\n重试加载\n浏览器打开",
+    "trace": {
+      "id": 1,
+      "startedAt": 47394.89999961853,
+      "outcome": "timeout",
+      "phases": [
+        {
+          "phase": "preferences-start",
+          "elapsedMs": 0
+        },
+        {
+          "phase": "preferences-ready",
+          "elapsedMs": 0.10000038146972656
+        },
+        {
+          "phase": "status-ready",
+          "elapsedMs": 0.10000038146972656
+        },
+        {
+          "phase": "address-ready",
+          "elapsedMs": 0.20000028610229492
+        },
+        {
+          "phase": "native-request",
+          "elapsedMs": 3.1000003814697266
+        },
+        {
+          "phase": "native:queued:0.0",
+          "elapsedMs": 295.7000002861023
+        },
+        {
+          "phase": "native:owner-lock:16.0",
+          "elapsedMs": 295.80000019073486
+        },
+        {
+          "phase": "native:runtime-address:32.0",
+          "elapsedMs": 295.80000019073486
+        },
+        {
+          "phase": "native:browser-environment:47.0",
+          "elapsedMs": 295.80000019073486
+        },
+        {
+          "phase": "native:native-view:268.0",
+          "elapsedMs": 295.80000019073486
+        },
+        {
+          "phase": "native:visible:281.0",
+          "elapsedMs": 295.80000019073486
+        },
+        {
+          "phase": "load-failed",
+          "elapsedMs": 8001.5
+        },
+        {
+          "phase": "timeout",
+          "elapsedMs": 8001.5
+        }
+      ]
+    }
+  },
+  "retryStartedAt": "2026-11-05T01:33:28.885Z",
+  "restored": {
+    "frame": "官方面板已嵌入主窗口",
+    "trace": {
+      "id": 2,
+      "startedAt": 55412.39999961853,
+      "outcome": "visible-ready",
+      "phases": [
+        {
+          "phase": "native-request",
+          "elapsedMs": 1.200000286102295
+        },
+        {
+          "phase": "native:queued:0.0",
+          "elapsedMs": 234.80000019073486
+        },
+        {
+          "phase": "native:owner-lock:19.0",
+          "elapsedMs": 234.80000019073486
+        },
+        {
+          "phase": "native:runtime-address:29.0",
+          "elapsedMs": 234.80000019073486
+        },
+        {
+          "phase": "native:browser-environment:49.0",
+          "elapsedMs": 234.80000019073486
+        },
+        {
+          "phase": "native:native-view:199.0",
+          "elapsedMs": 234.80000019073486
+        },
+        {
+          "phase": "native:visible:220.0",
+          "elapsedMs": 234.80000019073486
+        },
+        {
+          "phase": "navigation-start",
+          "elapsedMs": 253.90000009536743
+        },
+        {
+          "phase": "navigation-ready",
+          "elapsedMs": 391.2000002861023
+        },
+        {
+          "phase": "visible-ready",
+          "elapsedMs": 391.30000019073486
+        }
+      ]
+    }
+  },
+  "retryElapsedMs": 424.72829999999885,
+  "serviceAfter": {
+    "matrix": {
+      "runtime": "running",
+      "connection": "unconfigured",
+      "operation": "idle"
+    },
+    "facts": {
+      "health": "healthy",
+      "runtime_label": null,
+      "opencodex_home": null,
+      "data_root": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-gnu-retry\\fixed\\sandbox\\opencodex-home",
+      "protection": "none",
+      "reboot_safe": false,
+      "service_present": false,
+      "shim_present": false,
+      "version_drift": null,
+      "startup_status": null
+    },
+    "port": 60444,
+    "pid": "101720",
+    "can_start": false,
+    "can_stop": true,
+    "can_restart": true,
+    "source": "live"
+  },
+  "visible": "官方面板已嵌入主窗口"
+}

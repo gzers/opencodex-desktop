@@ -1,0 +1,257 @@
+{
+  "scenario": "panel",
+  "result": "pass",
+  "root": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-windows-final-msvc-retry-41944607861/fixed/sandbox",
+  "checks": [
+    "real isolated Tauri binding",
+    "early reentry remains alive and ready",
+    "two route reopens ready",
+    "panel observation preserves config bytes"
+  ],
+  "facts": {
+    "about": {
+      "name": "OpenCodeX Desktop",
+      "version": "0.2.21",
+      "identifier": "com.gzers.opencodex.desktop",
+      "platform": "Windows",
+      "framework": "Tauri v2",
+      "license": "MIT License"
+    },
+    "dataRoot": {
+      "activeDataRoot": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\sandbox",
+      "opencodexHomeMode": "inside",
+      "opencodexHome": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\sandbox\\opencodex-home",
+      "currentDataRoot": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\sandbox",
+      "currentOpencodexHome": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\sandbox\\opencodex-home",
+      "runtimeActive": true
+    }
+  },
+  "status": {
+    "matrix": {
+      "runtime": "running",
+      "connection": "unconfigured",
+      "operation": "idle"
+    },
+    "facts": {
+      "health": "healthy",
+      "runtime_label": null,
+      "opencodex_home": null,
+      "data_root": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final-msvc-retry-41944607861\\fixed\\sandbox\\opencodex-home",
+      "protection": "none",
+      "reboot_safe": false,
+      "service_present": false,
+      "shim_present": false,
+      "version_drift": null,
+      "startup_status": null
+    },
+    "port": 60446,
+    "pid": "37768",
+    "can_start": false,
+    "can_stop": true,
+    "can_restart": true,
+    "source": "live"
+  },
+  "reentry": {
+    "elapsedMs": 110.69999980926514,
+    "earlyReentryRequested": true
+  },
+  "trace": {
+    "id": 8,
+    "startedAt": 169667,
+    "outcome": "visible-ready",
+    "phases": [
+      {
+        "phase": "preferences-start",
+        "elapsedMs": 0
+      },
+      {
+        "phase": "preferences-ready",
+        "elapsedMs": 0
+      },
+      {
+        "phase": "status-ready",
+        "elapsedMs": 0
+      },
+      {
+        "phase": "address-ready",
+        "elapsedMs": 0.09999990463256836
+      },
+      {
+        "phase": "native-request",
+        "elapsedMs": 1.6999998092651367
+      },
+      {
+        "phase": "native:queued:0.0",
+        "elapsedMs": 276.59999990463257
+      },
+      {
+        "phase": "native:owner-lock:9.0",
+        "elapsedMs": 276.69999980926514
+      },
+      {
+        "phase": "native:runtime-address:20.0",
+        "elapsedMs": 276.69999980926514
+      },
+      {
+        "phase": "native:browser-environment:31.0",
+        "elapsedMs": 276.69999980926514
+      },
+      {
+        "phase": "native:native-view:246.0",
+        "elapsedMs": 276.69999980926514
+      },
+      {
+        "phase": "native:visible:256.0",
+        "elapsedMs": 276.69999980926514
+      },
+      {
+        "phase": "native-request",
+        "elapsedMs": 276.90000009536743
+      },
+      {
+        "phase": "navigation-start",
+        "elapsedMs": 298.80000019073486
+      },
+      {
+        "phase": "native:queued:0.0",
+        "elapsedMs": 338.09999990463257
+      },
+      {
+        "phase": "native:owner-lock:10.0",
+        "elapsedMs": 338.19999980926514
+      },
+      {
+        "phase": "native:runtime-address:29.0",
+        "elapsedMs": 338.19999980926514
+      },
+      {
+        "phase": "native:native-view:39.0",
+        "elapsedMs": 338.19999980926514
+      },
+      {
+        "phase": "native:visible:49.0",
+        "elapsedMs": 338.19999980926514
+      },
+      {
+        "phase": "navigation-ready",
+        "elapsedMs": 528.3000001907349
+      },
+      {
+        "phase": "visible-ready",
+        "elapsedMs": 528.4000000953674
+      }
+    ]
+  },
+  "reopens": [
+    {
+      "id": 9,
+      "startedAt": 170627.5,
+      "outcome": "visible-ready",
+      "phases": [
+        {
+          "phase": "preferences-start",
+          "elapsedMs": 0
+        },
+        {
+          "phase": "preferences-ready",
+          "elapsedMs": 0
+        },
+        {
+          "phase": "status-ready",
+          "elapsedMs": 0
+        },
+        {
+          "phase": "address-ready",
+          "elapsedMs": 0.09999990463256836
+        },
+        {
+          "phase": "native-request",
+          "elapsedMs": 1.9000000953674316
+        },
+        {
+          "phase": "native:queued:0.0",
+          "elapsedMs": 93.09999990463257
+        },
+        {
+          "phase": "native:owner-lock:9.0",
+          "elapsedMs": 93.19999980926514
+        },
+        {
+          "phase": "native:runtime-address:19.0",
+          "elapsedMs": 93.19999980926514
+        },
+        {
+          "phase": "native:native-view:29.0",
+          "elapsedMs": 93.19999980926514
+        },
+        {
+          "phase": "native:visible:38.0",
+          "elapsedMs": 93.19999980926514
+        },
+        {
+          "phase": "visible-ready",
+          "elapsedMs": 93.19999980926514
+        },
+        {
+          "phase": "native-request",
+          "elapsedMs": 93.30000019073486
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "startedAt": 171869.09999990463,
+      "outcome": "visible-ready",
+      "phases": [
+        {
+          "phase": "preferences-start",
+          "elapsedMs": 0.09999990463256836
+        },
+        {
+          "phase": "preferences-ready",
+          "elapsedMs": 0.20000028610229492
+        },
+        {
+          "phase": "status-ready",
+          "elapsedMs": 0.20000028610229492
+        },
+        {
+          "phase": "address-ready",
+          "elapsedMs": 0.20000028610229492
+        },
+        {
+          "phase": "native-request",
+          "elapsedMs": 2.200000286102295
+        },
+        {
+          "phase": "native:queued:0.0",
+          "elapsedMs": 79.09999990463257
+        },
+        {
+          "phase": "native:owner-lock:9.0",
+          "elapsedMs": 79.2000002861023
+        },
+        {
+          "phase": "native:runtime-address:22.0",
+          "elapsedMs": 79.2000002861023
+        },
+        {
+          "phase": "native:native-view:32.0",
+          "elapsedMs": 79.2000002861023
+        },
+        {
+          "phase": "native:visible:41.0",
+          "elapsedMs": 79.2000002861023
+        },
+        {
+          "phase": "visible-ready",
+          "elapsedMs": 79.30000019073486
+        },
+        {
+          "phase": "native-request",
+          "elapsedMs": 79.7000002861023
+        }
+      ]
+    }
+  ]
+}

@@ -1,10 +1,45 @@
 {
-  "count": 259,
+  "count": 411,
   "files": [
     {
       "path": "candidate/candidate.json",
       "bytes": 601,
       "sha256": "3a5705525060242603b19f5d4ba66fc1cff1d2ca1e80b3a696671327d86192a2"
+    },
+    {
+      "path": "candidate-watch-20261105/acquisition-verified.json",
+      "bytes": 990,
+      "sha256": "c88e4e638a1b22e974f21601ab7194d89b16d1fbb9ed83f41424cb43ae834d2e"
+    },
+    {
+      "path": "candidate-watch-20261105/acquisition.json",
+      "bytes": 1865,
+      "sha256": "6e8a49b38366d809ac45f5715386a4dd031d6a5300949c7b61692b3921b3f88a"
+    },
+    {
+      "path": "candidate-watch-20261105/fixed-artifact-metadata.json",
+      "bytes": 755,
+      "sha256": "321c216b1cfeea6b5d4cf1cb7d820f4454707832f434665fc2681314a9d49a10"
+    },
+    {
+      "path": "candidate-watch-20261105/latest.json",
+      "bytes": 494,
+      "sha256": "49b7a52a04994ffdd94317de86a879c8d7e944621de90a38be97fb0dfc25e3bf"
+    },
+    {
+      "path": "candidate-watch-20261105/observer-first-exit.json",
+      "bytes": 244,
+      "sha256": "174c28937b734c65b22bb842af53a8b0c35c946ff2fa35ab0a2fc85e2f78d1e0"
+    },
+    {
+      "path": "candidate-watch-20261105/observer-second.log",
+      "bytes": 1979,
+      "sha256": "16e112accef29907d9aa0aed860acc9d3d708836f0afcb29954d4faff64a49b1"
+    },
+    {
+      "path": "candidate-watch-20261105/retest-contract.json",
+      "bytes": 1270,
+      "sha256": "1a95a6b0b31d5043356a91bdb22c6a3d789b1ad02519fb8bcef4849ff1a6bc9c"
     },
     {
       "path": "check-summary.json",
@@ -67,6 +102,26 @@
       "sha256": "39589fb95c8fdb71cbec96108a5c1a5ffc5cf7ec6ffd82629817e9ae2bd4b9fb"
     },
     {
+      "path": "connected-native-20261105/angle-gl-diagnostic/performance-failed.json",
+      "bytes": 22358,
+      "sha256": "a36cfd2eb13878b000c91f3ccc30f80836f826511f7f16df371e450c20afbe29"
+    },
+    {
+      "path": "connected-native-20261105/angle-gl-requested-launch.json",
+      "bytes": 3029,
+      "sha256": "150c2570b0d796a2dd2af2f3ec0939293578d16f9bfb0e696753a8e33a980c76"
+    },
+    {
+      "path": "connected-native-20261105/baseline-angle-admission.json",
+      "bytes": 509,
+      "sha256": "13c3b3fd25f04054631f9040f18f46a7ace5a78078703460190155c0232a55c6"
+    },
+    {
+      "path": "connected-native-20261105/baseline-angle-stop.json",
+      "bytes": 737,
+      "sha256": "4238db4918693f088374ccf1be5d536b312f4efb8b82f52b7431465909c331b7"
+    },
+    {
       "path": "connected-native-20261105/baseline-dcomp-admission.json",
       "bytes": 509,
       "sha256": "d418596bc5a345e0b830f1b4e3dbd677be13cd8a9718b245b709950c8c236a06"
@@ -80,6 +135,16 @@
       "path": "connected-native-20261105/baseline-final-native-app.log",
       "bytes": 32128,
       "sha256": "c10332b4725c78d2d89f1367b9d59132761f107a84c5af667fe88ca71b2cc6a5"
+    },
+    {
+      "path": "connected-native-20261105/baseline-rate-admission.json",
+      "bytes": 509,
+      "sha256": "b417c6be2ce16728f5fbe7ea5ca6caf955fb1ee5c6ddaa1ede8785909f5c6188"
+    },
+    {
+      "path": "connected-native-20261105/baseline-rate-stop.json",
+      "bytes": 737,
+      "sha256": "093b6a9fc1d7e5c52a22863b75ea8f0d9aa958d823543e212eac416247839016"
     },
     {
       "path": "connected-native-20261105/baseline-software-admission.json",
@@ -102,14 +167,34 @@
       "sha256": "c4524d27799642b430b037447f805d09a842c1f1404292c25c6369873256745d"
     },
     {
+      "path": "connected-native-20261105/ci-current-backend-mac-failed.log",
+      "bytes": 275684,
+      "sha256": "38ced93f457549912bdced996a19e96fe2712f106958e1120e339945a7bce33a"
+    },
+    {
+      "path": "connected-native-20261105/ci-retry-backend-mac.log",
+      "bytes": 319744,
+      "sha256": "287c90f20e1abfdcc7215ee30d88262262ef8112b99353d30278956057622cbd"
+    },
+    {
+      "path": "connected-native-20261105/ci-retry-backend-windows.log",
+      "bytes": 1461461,
+      "sha256": "ec8b42cb42c8a3b867bd839a2a96ec2f4dc86c629959bbeed8ab2f533fac67b4"
+    },
+    {
+      "path": "connected-native-20261105/ci-retry-frontend.log",
+      "bytes": 74400,
+      "sha256": "f8d315d08601d538406c251430d01e1efcbeaa69a6dc57ebde3ea09213c06395"
+    },
+    {
       "path": "connected-native-20261105/ci-smoke-first-failed.log",
       "bytes": 29030,
       "sha256": "697769d8f765ce2de44818359a8eb53f35713a9e59b0958cd5ba676e955f62e6"
     },
     {
       "path": "connected-native-20261105/ci-smoke-rerun-request.json",
-      "bytes": 241,
-      "sha256": "d2648d2e38aea982389ff6a951ce4fedb1c11a0425c4ddf2ed28d6efa9461413"
+      "bytes": 140,
+      "sha256": "a2a14bd2042143e652ca96c17decbe10acd00a34d60ed072232f9b4247ed6d31"
     },
     {
       "path": "connected-native-20261105/cloud-business-invariants.json",
@@ -312,6 +397,11 @@
       "sha256": "d18c464dedd506f3f567606867d8f161bf3493c06525b12ab886504cb11f7f74"
     },
     {
+      "path": "connected-native-20261105/display-modes-readonly.json",
+      "bytes": 730,
+      "sha256": "8e3b0e3f8ab49fbf8247bafb11c2aab534e19559c9469ec788bdba77c20bab2b"
+    },
+    {
       "path": "connected-native-20261105/first-library-invalid-original.json",
       "bytes": 125831,
       "sha256": "96b786a750d5307e62d7fdc1948bfd266435b4d8b3cda505f20ee8aa20267379"
@@ -325,6 +415,31 @@
       "path": "connected-native-20261105/fix-ci-runs.json",
       "bytes": 292,
       "sha256": "e19b7854746655b820c13a5b2015e27ecb75836c601a3e96912fc005d864064b"
+    },
+    {
+      "path": "connected-native-20261105/frontend-retry-build.log",
+      "bytes": 5223,
+      "sha256": "9475fca2e4f72208e4650f3021b8b723534d7b7a32c4a1615c66bd7d3780b5d4"
+    },
+    {
+      "path": "connected-native-20261105/frontend-retry-rebuild.log",
+      "bytes": 845,
+      "sha256": "18e9f42dee4cbb0d0ccee9e650c7ee884859de0219659faa6e83293c062d9fba"
+    },
+    {
+      "path": "connected-native-20261105/frontend-retry-typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "connected-native-20261105/gnu-rebuilt-ui-preparation.log",
+      "bytes": 12791,
+      "sha256": "5762a917f1b2f1218bd4bdf648b6e01030258c5a7461130774a94778084f38bc"
+    },
+    {
+      "path": "connected-native-20261105/gnu-retry-preparation.log",
+      "bytes": 12746,
+      "sha256": "dbaa2f170ad1b6068bb172be0542d7e525802c3c467e36a65b8a741ab248ee3c"
     },
     {
       "path": "connected-native-20261105/gpu-disabled-commandlines.json",
@@ -972,6 +1087,21 @@
       "sha256": "dd63a60753762831baa644ed5f3efcab430f5b9e1b9375e64550d77341f8e136"
     },
     {
+      "path": "connected-native-20261105/rate-only-diagnostic/performance-failed.json",
+      "bytes": 2537,
+      "sha256": "8ff812fa0ac54eaf59e271df24355c311ff119eddf4af80d385212c06a2e33d2"
+    },
+    {
+      "path": "connected-native-20261105/rate-only-diagnostic.log",
+      "bytes": 485,
+      "sha256": "59e51fa400f6e2be080b58ed7af936a75c2bc48023bedbc80312ad15f0c3c63e"
+    },
+    {
+      "path": "connected-native-20261105/rate-only-launch.json",
+      "bytes": 3041,
+      "sha256": "c326f265ac4817f657294f5526f39d2acf2604f30edbed63f59537ea4b15db2b"
+    },
+    {
       "path": "connected-native-20261105/rdp-connected-10s.json",
       "bytes": 16080,
       "sha256": "c830ea5ab1c4e211ac03e99b6d0e690769ec05d9e988ddacffc5e9a71ad42c83"
@@ -1142,6 +1272,291 @@
       "sha256": "c4c6adc9e58f2a9fa01a7bf8a58c59afa46081457ca3bb51dda6a5835be9a74d"
     },
     {
+      "path": "gnu-rebuilt-diagnostic-20261105/identity.json",
+      "bytes": 14353,
+      "sha256": "4b90f0bb462c619e54f6f9d80bab23db1e2ba631d2ef39c90daadb1603d050ff"
+    },
+    {
+      "path": "gnu-rebuilt-diagnostic-20261105/native-app.log",
+      "bytes": 1063,
+      "sha256": "16433b3d8f30f74e54b89b60c00a0c69131b2dcdf647c482b2fcf107b41c4b4d"
+    },
+    {
+      "path": "gnu-rebuilt-diagnostic-20261105/overlay/panel-hide-race.json",
+      "bytes": 471,
+      "sha256": "5233ff8c8615a4f56159d500e940bc9473cfb23509aa01031e05394675669a59"
+    },
+    {
+      "path": "gnu-rebuilt-diagnostic-20261105/overlay.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "gnu-rebuilt-diagnostic-20261105/owned-6864-admission.json",
+      "bytes": 504,
+      "sha256": "0020ecb45f6651ed3deb440242943d3793f8ee250a36a1552d3c04171655d79d"
+    },
+    {
+      "path": "gnu-rebuilt-diagnostic-20261105/owned-6864-stop.json",
+      "bytes": 732,
+      "sha256": "1fe771b8e25da16f8f11533a394b581be33359d69e1b75fbe38d91e2abf901a0"
+    },
+    {
+      "path": "gnu-rebuilt-diagnostic-20261105/owned-87372-admission.json",
+      "bytes": 512,
+      "sha256": "5833c571845cdda3afbe7a5adabb3d76e6958f99a2e9dbd39777e7ded60f27c5"
+    },
+    {
+      "path": "gnu-rebuilt-diagnostic-20261105/owned-87372-stop.json",
+      "bytes": 740,
+      "sha256": "7e6e38a87c37e145e2803e63e0bbf009dc050717d701a4a4180e924347c6f0f1"
+    },
+    {
+      "path": "gnu-rebuilt-diagnostic-20261105/panel-gate.txt",
+      "bytes": 7,
+      "sha256": "4e038efff74b800492174f4b0dd591138d197713bd3314c210db3fb876377736"
+    },
+    {
+      "path": "gnu-rebuilt-diagnostic-20261105/panel-service-60444.json",
+      "bytes": 296,
+      "sha256": "550bcfd36e8ce2f993fc81f454e1ad3b2541d435d6af4c3946557431256a3f0c"
+    },
+    {
+      "path": "gnu-rebuilt-diagnostic-20261105/retry/panel-retry-navigation.json",
+      "bytes": 1011,
+      "sha256": "dd7a4ee219c1b3ec20151935355682c030a83c4d7a2843281a3b8827bde432c2"
+    },
+    {
+      "path": "gnu-rebuilt-diagnostic-20261105/retry.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "gnu-rebuilt-diagnostic-20261105/server.log",
+      "bytes": 664,
+      "sha256": "0e3bab996104aead5d76ac6be413b7aeb6bd5805e511552086da971131bae424"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/assembly-limits.json",
+      "bytes": 611,
+      "sha256": "b797dcaf5ff8c83010137465fa075db976cd6647cbb6ad183a84f681efd431b0"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/gnu-rebuilt-ui-build.jsonl.gz",
+      "bytes": 27500,
+      "sha256": "948d9bfeb8b14a57e009ab9af1f03294af0a47f7410100641f1121e3e6fab378"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/gnu-rebuilt-ui-build.jsonl.gz.identity.json",
+      "bytes": 201,
+      "sha256": "7d007a66d8bed6a2d24925b02396d82632e28b6dcfb71c114885e29de4faccfa"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/gnu-rlib-diagnostic-build.jsonl.gz",
+      "bytes": 27341,
+      "sha256": "b68141d0f9daaa69262594478387d300f7c1dcf624dc100e1ccd0e43c51afa2e"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/gnu-rlib-diagnostic-build.jsonl.gz.identity.json",
+      "bytes": 201,
+      "sha256": "90288b31f2cf115a219fa23b68322ff9ed00fe5a9575197da291c67a8440dc4c"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/initial-assembly-identity.json",
+      "bytes": 14305,
+      "sha256": "369d80a1837f52526f3bd03f695c4da5b16d3c6984e557f5591093fd7cb68bd0"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/inspect-overlay.mjs",
+      "bytes": 592,
+      "sha256": "8f3836e42474ae20bc4b0f693515deedc61acd021698c628917d89dfbbc8b271"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/launch.json",
+      "bytes": 2886,
+      "sha256": "3b8b157da757ce7a1200173a2b32940e4b532570f4733e915f26ee6625ee873b"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/native-app.log",
+      "bytes": 5058,
+      "sha256": "19897c02a389c9393f33621e06de4734dd6fbbb7eef92fcc8c8e6a8e27c0d34b"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/native-resumed-app.log",
+      "bytes": 9001,
+      "sha256": "5592b95fe0dfae9a02dfc1dea0004217ae6af6bbae32855ddbfbfc66db89f782"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/native-retry-restored-diagnostic.png",
+      "bytes": 58524,
+      "sha256": "5d01118206a6e67b86fdcb782f1828fdf2e1c90805dcd39b06d5c243c50e6310"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/overlay/panel-hide-race.json",
+      "bytes": 14183,
+      "sha256": "e33d97a264cbbe1820a2ae35dc98cd651ed2c19816dd9e62dfa5e226c13112a7"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/overlay-dual/panel-hide-race.json",
+      "bytes": 18551,
+      "sha256": "3aa38696abe86213001a9d5befb2661eed11f8eb268cab8bd7c4aaa3405e6ad5"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/overlay-dual.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/overlay.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/owned-101720-admission.json",
+      "bytes": 505,
+      "sha256": "3e9459600353862b9f2a18d1bca24245bc6b2f12811c428809485dde35628d48"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/owned-101720-stop.json",
+      "bytes": 733,
+      "sha256": "1ed0e0249bf51bf9fbaee1853e1da837382eef70443fa82f88429710ff7d71cc"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/owned-24776-admission.json",
+      "bytes": 504,
+      "sha256": "7fc42a2758bad9f6c884214c42082ca6ec041979ac7a853b28523f280b1d0378"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/owned-24776-stop.json",
+      "bytes": 732,
+      "sha256": "375386ea3f34db595a761a8e3b47367fd114725ae9a62545614222cdb6b864ba"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/owned-51172-admission.json",
+      "bytes": 489,
+      "sha256": "791fa5af750d012535ca0ad081e45597e6fa58756533c602bb432f3585f61b41"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/owned-51172-stop.json",
+      "bytes": 717,
+      "sha256": "7e7c34fe36a89dbc735ebbca987931c88332b68ddd1021af9899c90f40212a23"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/owned-84304-admission.json",
+      "bytes": 489,
+      "sha256": "c6185d1bb87d54a0cc32adfc661056f18103d3ec28db29124154ba2e31a67d79"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/owned-84304-stop.json",
+      "bytes": 717,
+      "sha256": "2cdecd09ffc55cd5700620b16856422fe746858f1f3b876e09012b37dd7a6e1e"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/panel-delay.jsonl",
+      "bytes": 98,
+      "sha256": "517079ecabf14a970121d25f0e9490943facd55d8a74d4df3ef86d067762562d"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/panel-gate.txt",
+      "bytes": 7,
+      "sha256": "4e038efff74b800492174f4b0dd591138d197713bd3314c210db3fb876377736"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/panel-requests.jsonl",
+      "bytes": 318,
+      "sha256": "5d01800cfb237fcdfff48050583de6d476d9a0d1643cf837ce13ce7c43d4ba57"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/panel-service-60444.json",
+      "bytes": 288,
+      "sha256": "a2c64fdd92f4cd642fb0a151e3b2e67c9ed11a07349e40ce8e50f46432a287b9"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/panel-service-resume-60444.json",
+      "bytes": 288,
+      "sha256": "a2c64fdd92f4cd642fb0a151e3b2e67c9ed11a07349e40ce8e50f46432a287b9"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/rebuilt-frontend-manifest.json",
+      "bytes": 4236,
+      "sha256": "db67f48c8238c4a922ab36f4e516714dcef0743a140089c6d1e329a65d12044b"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/reopens/panel-overlay-open.png",
+      "bytes": 60840,
+      "sha256": "25146833257c8824643a86c84b1bcbdcddb07899d008358c5a68a4ddc716599e"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/reopens/panel-result.png",
+      "bytes": 33610,
+      "sha256": "a764150bb50452b4fbf3d250d60b806f1ab6c46b69556a76bbdc35e1be47c30a"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/reopens/panel.json",
+      "bytes": 5788,
+      "sha256": "47152b974dcd090750faa5fa42c80c6622ccaa6329926f9e597796f1ab18199e"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/reopens-resume/panel-overlay-open.png",
+      "bytes": 60840,
+      "sha256": "25146833257c8824643a86c84b1bcbdcddb07899d008358c5a68a4ddc716599e"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/reopens-resume/panel-result.png",
+      "bytes": 33610,
+      "sha256": "a764150bb50452b4fbf3d250d60b806f1ab6c46b69556a76bbdc35e1be47c30a"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/reopens-resume/panel.json",
+      "bytes": 6004,
+      "sha256": "84e638043ce831e8b40234bf13c4f4a8643dafce2f3b502c00792303b4ca093b"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/reopens-resume.log",
+      "bytes": 188,
+      "sha256": "357ad4ca5f962bc38269ca762f49b85dbd27b99b868b124c226ffb583c188209"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/reopens.log",
+      "bytes": 188,
+      "sha256": "357ad4ca5f962bc38269ca762f49b85dbd27b99b868b124c226ffb583c188209"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/retired-navigation-readback.json",
+      "bytes": 3724,
+      "sha256": "56b2ee72f1a0fdb56c54b5daa7beced078f944bb20d7459463c21ed70a711677"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/retired-navigation-readback.mjs",
+      "bytes": 1320,
+      "sha256": "7c04c189f91662e41c39da079b4c732c520ae9230b14a8718d54278ed8cafbb8"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/retry/panel-retry-navigation.json",
+      "bytes": 4544,
+      "sha256": "f7ea564f09df56f7b247047ddf7403ed23164063d39c0f53d09b4a00ef930feb"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/retry/timeout-observed.json",
+      "bytes": 1447,
+      "sha256": "66a55f6cedc1faa0dbfc1a84a8f69642b52e41ad92a9d1d1132b2eba6f923040"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/retry.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/server-resume.log",
+      "bytes": 656,
+      "sha256": "3d7e2a42460aa7ad48f88d51ca9cedfbe40637379b30ca550980b8363c204294"
+    },
+    {
+      "path": "gnu-retry-diagnostic-20261105/server.log",
+      "bytes": 657,
+      "sha256": "65e06bfd7821b82584aafea2a6d607d7b32136adec91a138788a720671cb26a0"
+    },
+    {
       "path": "governance-snapshot/IMP-30.md",
       "bytes": 38431,
       "sha256": "cce10a99801cd561ca8e4172e1ca028b32f2f67af805a5943044c7fc4d0c2473"
@@ -1230,6 +1645,351 @@
       "path": "native-launch/launch.json",
       "bytes": 2645,
       "sha256": "ec91bb4eed569509e3178902bfb0cc1c796bccbd2f7dae882f88d642c752930b"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/acquisition-verified.json",
+      "bytes": 990,
+      "sha256": "c88e4e638a1b22e974f21601ab7194d89b16d1fbb9ed83f41424cb43ae834d2e"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/candidate.json",
+      "bytes": 601,
+      "sha256": "ef0b65ad8d4ed061eb6feb64bfabf1006e4fb742dd76c6c53425720cf3bb3ee0"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/ci-jobs-after-smoke-rerun.json",
+      "bytes": 12918,
+      "sha256": "1f074023a66f6e0e47cf15f814f3014149e46473773848ee9510425e108cfee6"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/ci-jobs-candidate-run.json",
+      "bytes": 12918,
+      "sha256": "46038798731db221db71383e36e27e415dc4b54a8e87950454d527f59f434015"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/ci-jobs-tool-run.json",
+      "bytes": 12159,
+      "sha256": "3a4e6581292313a95c23accb49d40aa483952a44f84fcbd457e3f636cc762dfa"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/ci-smoke-rerun-success.log",
+      "bytes": 31494,
+      "sha256": "70be570b48ee1feecff5dc56fa66f1ea73657711b33c476840d2c9807f86d6a8"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/cleanup-final.json",
+      "bytes": 665,
+      "sha256": "4f9880bb145df3278dfb41ce5694f85d002e2d1ece5f09f9366c8b3af5de373b"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/delivery-summary.json",
+      "bytes": 2175,
+      "sha256": "c78ba895712ed023a12435d765bdef37a52daf2d1ddc6cdf634224114dacbc32"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/fixed-artifact-metadata.json",
+      "bytes": 755,
+      "sha256": "321c216b1cfeea6b5d4cf1cb7d820f4454707832f434665fc2681314a9d49a10"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/HANDOFF.md",
+      "bytes": 6718,
+      "sha256": "e9c88f03e62aacf37df5cc3da639db9c2fae9fc62dbcf385ccc3455a0374dc16"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/launch-fixed.py",
+      "bytes": 3689,
+      "sha256": "34209f948a8c6c26d774c6afc00216c0315b721cd7b0955b1b7ff05a19626b8f"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/launch.json",
+      "bytes": 3001,
+      "sha256": "7876d1ba41dbf11271ec74dd7103610d05946c149187d66a11a709a26cd5211e"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/native-app.log",
+      "bytes": 14726,
+      "sha256": "bcae46d36720a128e3b56eda2cbfb1102a6fc6f62a535106b67f82068820d211"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/native-dashboard60444-msvc.png",
+      "bytes": 74813,
+      "sha256": "f991c33dbd68a157183c1728ffdd1c655d94e7b36ac91fc13dcbf50798f4bade"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/native-dashboard60446-msvc.png",
+      "bytes": 74759,
+      "sha256": "7783b6c7e2c8fc78ae0f09169d4f63d6cebcdd0bee7dcbc2b6a218f515080240"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/native-retry-restored-msvc.png",
+      "bytes": 58430,
+      "sha256": "ffa201130c4beb9b5c74595ffd75134c97ca3e4ff2877e1a0fc8351e92528127"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/native-validation-summary.json",
+      "bytes": 1869,
+      "sha256": "5c679b4b240417bdc5fd70b27e6e94ea9d12c4a32e38dfd1fa7f80368c1d41cc"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/overlay/panel-hide-race.json",
+      "bytes": 35240,
+      "sha256": "884955f17a23eed7493a165678670a1d0de9a327bfc2c781086bb29d98c25784"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/overlay.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/overlay60446/panel-hide-race.json",
+      "bytes": 39075,
+      "sha256": "45c66db33adcfc67ab326babec42e555cbc36529e6b457d2d5af1e76fe0ea8df"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/overlay60446.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/owned-21784-admission.json",
+      "bytes": 515,
+      "sha256": "b844afd02d3e8e73677fa6ac1da79b5ca96bb4cd638639a29b0c4460056bcb2f"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/owned-21784-stop.json",
+      "bytes": 743,
+      "sha256": "d92f11f8b629795ef404aa8c459fec6391a8d4ba2b9f6dba9652034341b78618"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/owned-37768-admission.json",
+      "bytes": 506,
+      "sha256": "e3e68a99e843c74e055d7e6aad9f9bb58cd526639303746760ad61410501fc4a"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/owned-37768-stop.json",
+      "bytes": 734,
+      "sha256": "322f2ef14716ec92829667b762b9e9644049e0a6ab7e6aac7a41ca4c90f1cee6"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/panel-delay.jsonl",
+      "bytes": 98,
+      "sha256": "9f4ccc4a350652d935a2b82291e46a62429d567e84b3d4edf2d7faa8d23e1f48"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/panel-gate.txt",
+      "bytes": 6,
+      "sha256": "ed1a545bb85e55816bbf9566b028b2a0bc456b88f49f6f266c0401048824194b"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/panel-requests.jsonl",
+      "bytes": 318,
+      "sha256": "fbc558100b7b2e4943d804517cd5d06514c3aca13e59dff4e3bc7266cc171ccd"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/panel-server-fixed.ts",
+      "bytes": 3093,
+      "sha256": "22b577c63636b5a5bc92059e86818be095117144c18cc372b002f43bffc2c1ea"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/panel-service-60444.json",
+      "bytes": 302,
+      "sha256": "1083c33d6ce825a096a270cd3eba40756e89e1a22109714643ce0dab86c97fee"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/panel-service-60446.json",
+      "bytes": 301,
+      "sha256": "2757baeed1df5afcb50ad416fb828c8413b689c80a66df76d23d57e5bce5f410"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/previous-receipt-revision3.json",
+      "bytes": 45000,
+      "sha256": "a485ed477ad2eb17569f4c658b193a929cb7abd874b0bb4ab15f70a84b305546"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/reopens60444/panel-overlay-open.png",
+      "bytes": 60840,
+      "sha256": "25146833257c8824643a86c84b1bcbdcddb07899d008358c5a68a4ddc716599e"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/reopens60444/panel-result.png",
+      "bytes": 33610,
+      "sha256": "a764150bb50452b4fbf3d250d60b806f1ab6c46b69556a76bbdc35e1be47c30a"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/reopens60444/panel.json",
+      "bytes": 5907,
+      "sha256": "a899d6e6735e03e83d54bdab39eff2e1c7d71a38b8531701569ae847b766289b"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/reopens60444.log",
+      "bytes": 188,
+      "sha256": "357ad4ca5f962bc38269ca762f49b85dbd27b99b868b124c226ffb583c188209"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/reopens60446/panel-overlay-open.png",
+      "bytes": 60840,
+      "sha256": "25146833257c8824643a86c84b1bcbdcddb07899d008358c5a68a4ddc716599e"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/reopens60446/panel-result.png",
+      "bytes": 33610,
+      "sha256": "a764150bb50452b4fbf3d250d60b806f1ab6c46b69556a76bbdc35e1be47c30a"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/reopens60446/panel.json",
+      "bytes": 6876,
+      "sha256": "86a7e7c1c89c4fcd9d91d626a4a7f584258ef56b8e3c163e8566a55fd6638e54"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/reopens60446.log",
+      "bytes": 188,
+      "sha256": "357ad4ca5f962bc38269ca762f49b85dbd27b99b868b124c226ffb583c188209"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/retest-contract.json",
+      "bytes": 1270,
+      "sha256": "1a95a6b0b31d5043356a91bdb22c6a3d789b1ad02519fb8bcef4849ff1a6bc9c"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/retired-navigation-original-label.json",
+      "bytes": 4039,
+      "sha256": "1d8e6f8161072716db5066152da06cefde8c7bd74ebba8cb7d81fbceccdfcb4f"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/retired-navigation-readback.json",
+      "bytes": 4265,
+      "sha256": "9dc103cad101e4cce985faf5c7550008ce45cda9503a682eaae95ec02b669a82"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/retired-navigation-readback.mjs",
+      "bytes": 1319,
+      "sha256": "d6d4b77003d84865c1f0a425c0ef234fcd8d6b9f82671e0b1839706f0ce0b70a"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/retry/panel-retry-navigation.json",
+      "bytes": 5196,
+      "sha256": "7f915799af989177e1971cbccd6ea9e1ba4ecac63a9ff9c3063a1388334e8e79"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/retry/timeout-observed.json",
+      "bytes": 2032,
+      "sha256": "42eeb28ac8d5e84fa9920563a4c81bf1e13754bdfe24cd824fb838ab98484741"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/retry.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/server60444.log",
+      "bytes": 670,
+      "sha256": "68e1cced0bf0b24b46ef2dffffc429dcb9c10ee10269c75e42dcfca16f1d92fd"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/server60446.log",
+      "bytes": 669,
+      "sha256": "4b6882ad8353b1ef7b56c906dd6c007c67699dea283633d3a2f1faf82143d1d3"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/service60444-admission.json",
+      "bytes": 507,
+      "sha256": "5039159c0eff1c0caa357edb2103ab15ac05e67379f9c6d4d88503fefcbae96c"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/service60444-stop.json",
+      "bytes": 735,
+      "sha256": "5059299549d53b1d70865880e4ee0fa02c8e407ff713a85a2e028709087a331b"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/stop-owned-fixed.ps1",
+      "bytes": 1892,
+      "sha256": "d16984dc66d97c367b9ca22944945298e6bc82b1f07a33bfec55081a698a2346"
+    },
+    {
+      "path": "native-msvc-retry-fixed-20261105/verify-fixed-native.py",
+      "bytes": 2429,
+      "sha256": "691f642a792da20fb4df63b902829c6176d1be1a4e7ca4d1a7e237e4101136db"
+    },
+    {
+      "path": "native-retry-negative-20261105/driver-classification.json",
+      "bytes": 474,
+      "sha256": "1d6fd8d2b4cc5ec0813b3a2c79a9cb45d07670c17b778f4e6effab815115eac8"
+    },
+    {
+      "path": "native-retry-negative-20261105/native-app.log",
+      "bytes": 1881,
+      "sha256": "faa59c297bd0e2fec899ec16b9ae798d223de495d0a4b6ba795c5764060ebd74"
+    },
+    {
+      "path": "native-retry-negative-20261105/native-retry-rejected-before-fix.png",
+      "bytes": 29431,
+      "sha256": "21b0b1bfa83a3d7c8c8ed754b36ecf207d3f0ce457b89db29e73befb40a7da8e"
+    },
+    {
+      "path": "native-retry-negative-20261105/negative-proof.json",
+      "bytes": 539,
+      "sha256": "b74bba17e0c74b03ef9579e08e850ef7397f274bd91a4129bbce8b790e0b8576"
+    },
+    {
+      "path": "native-retry-negative-20261105/owned-74648-admission.json",
+      "bytes": 509,
+      "sha256": "68a426409dfc7b5ff94c021c6bbe5c8259a5f0d2ae350eef668a74438c13d326"
+    },
+    {
+      "path": "native-retry-negative-20261105/owned-74648-stop.json",
+      "bytes": 737,
+      "sha256": "85284ee51a3937a1d7df372b7f38b4e7929ee772d5c1e0571061e7153b8d460f"
+    },
+    {
+      "path": "native-retry-negative-20261105/owned-83220-admission.json",
+      "bytes": 503,
+      "sha256": "02b0e113dea0f6459b624acc24ba7c2906ebd101c3df4d344fb48b7c6e7274f3"
+    },
+    {
+      "path": "native-retry-negative-20261105/owned-83220-stop.json",
+      "bytes": 731,
+      "sha256": "c75f590756d99e5df56269ebca8cc3ef97874dccc35f34d7895b35b21de5094e"
+    },
+    {
+      "path": "native-retry-negative-20261105/panel-delay.jsonl",
+      "bytes": 98,
+      "sha256": "8f89edbd42ba126cebff37515cc0ae9275565694acf732d8f46e8ca0d2b4ae56"
+    },
+    {
+      "path": "native-retry-negative-20261105/panel-gate.txt",
+      "bytes": 6,
+      "sha256": "ed1a545bb85e55816bbf9566b028b2a0bc456b88f49f6f266c0401048824194b"
+    },
+    {
+      "path": "native-retry-negative-20261105/panel-requests.jsonl",
+      "bytes": 106,
+      "sha256": "85f64dc9e844b256d8b36d510318b6b0b75befb4388a01e16572a62d70b018b1"
+    },
+    {
+      "path": "native-retry-negative-20261105/panel-service-60444.json",
+      "bytes": 295,
+      "sha256": "e80b6111759046b33302cde916467e6e2718100162d5f5a1241afbe08e893088"
+    },
+    {
+      "path": "native-retry-negative-20261105/retry/panel-retry-navigation.json",
+      "bytes": 3802,
+      "sha256": "e25a1ccbb6472f6de1b5b6792bc1091a777db50113552e12f1732bb9f08a3f0f"
+    },
+    {
+      "path": "native-retry-negative-20261105/retry/timeout-observed.json",
+      "bytes": 2053,
+      "sha256": "137fe46f88988d0b61d4f1409e4a277839be53cc2873d2f3578cc67856681d6b"
+    },
+    {
+      "path": "native-retry-negative-20261105/retry.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "native-retry-negative-20261105/server.log",
+      "bytes": 663,
+      "sha256": "a536ce2cd65a8302951f81a466557bb460385a36448005de11ffb53eb0ea92fd"
     },
     {
       "path": "owned-cleanup-result.json",
