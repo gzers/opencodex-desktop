@@ -16,11 +16,20 @@ const ps=join(process.env.SystemRoot??'C:/Windows','System32/WindowsPowerShell/v
 const owner=execFileSync(ps,['-NoProfile','-Command','[Security.Principal.WindowsIdentity]::GetCurrent().Name'],{encoding:'utf8',windowsHide:true,timeout:15000}).trim()
 assert.equal(owner.toLowerCase(),plan.expectedOwner.toLowerCase(),'Administrator login required')
 const probe=JSON.parse(await readFile(probeFile,'utf8'))
-assert.equal(probe.result,'default-process-probe-observed');assert.equal(probe.candidateKind,plan.candidateKind)
-assert.equal(probe.adapterSha256,plan.candidateAdapterSha256);assert(probe.defaultList?.length)
-assert.equal(probe.calls.find(c=>c.phase==='default-list').timeout,10000)
+const withAppserver=plan.candidateRevision===2
+assert.equal(probe.candidateKind,plan.candidateKind)
+if(withAppserver){
+ assert.equal(probe.result,'read-only');assert.equal(probe.sourceSha256,plan.candidateAppserverSha256)
+ assert.equal(probe.queries.find(q=>q.timeoutMs===8000)?.result,'success')
+ assert.equal(probe.defaultCatalogState?.state,'fresh');assert(probe.defaultCatalogState.processes.length)
+ assert.equal(createHash('sha256').update(await readFile(join(plan.officialPackage,'src/codex/app-server-processes.ts'))).digest('hex'),plan.candidateAppserverSha256)
+}else{
+ assert.equal(probe.result,'default-process-probe-observed')
+ assert.equal(probe.adapterSha256,plan.candidateAdapterSha256);assert(probe.defaultList?.length)
+ assert.equal(probe.calls.find(c=>c.phase==='default-list').timeout,10000)
+}
 assert.equal(createHash('sha256').update(await readFile(join(plan.officialPackage,'src/codex/desktop-app/windows.ts'))).digest('hex'),plan.candidateAdapterSha256)
-const output=join(root,'owner-probe-candidate-restart');await mkdir(output,{recursive:false})
+const output=join(root,withAppserver?'owner-probes-v2-candidate-restart':'owner-probe-candidate-restart');await mkdir(output,{recursive:false})
 const save=(name,value)=>writeFile(join(output,name),JSON.stringify(value,null,2)+'\n')
 const snapshot=async name=>{
  const value=JSON.parse(execFileSync(ps,['-NoProfile','-NonInteractive','-File',fileURLToPath(new URL('./formal-msix-snapshot.ps1',import.meta.url))],{encoding:'utf8',windowsHide:true,timeout:90000}))
@@ -32,14 +41,18 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms))
 let service,cdp
 try{
  const before=await snapshot('process-before-service-switch')
- const old=JSON.parse(await readFile(join(root,'bootstrap-recovery','formal-result.json'),'utf8'))
+ const old=JSON.parse(await readFile(join(root,withAppserver?'owner-probe-candidate-restart/result.json':'bootstrap-recovery/formal-result.json'),'utf8'))
  const original=JSON.parse(await readFile(join(root,'formal-result.json'),'utf8'))
- assert(original.formalBefore.every(s=>before.own.some(p=>p.pid===s.pid&&p.createdAtUtcTicks===s.createdAtUtcTicks)),'Original authorized client generation changed')
+ if(withAppserver){
+  assert.equal(plan.currentFormalIdentity?.pid,48960)
+  assert.equal(plan.currentFormalIdentity?.createdAtUtcTicks,'639294660907534870')
+  assert(before.own.some(p=>p.pid===plan.currentFormalIdentity.pid&&p.createdAtUtcTicks===plan.currentFormalIdentity.createdAtUtcTicks),'Current authorized client generation changed')
+ }else assert(original.formalBefore.every(s=>before.own.some(p=>p.pid===s.pid&&p.createdAtUtcTicks===s.createdAtUtcTicks)),'Original authorized client generation changed')
  const oldHealth=await(await fetch('http://127.0.0.1:'+plan.servicePort+'/healthz',{signal:AbortSignal.timeout(10000)})).json()
  assert.equal(oldHealth.pid,old.servicePid)
  const oldServicePid=old.servicePid;assert(Number.isSafeInteger(oldServicePid)&&oldServicePid>0)
  assert.equal(plan.serviceSwitchIdentity?.pid,oldServicePid)
- assert.equal(plan.serviceSwitchIdentity?.createdAtUtcTicks,'639294604342922550','Exact previously observed test-service generation required')
+ assert.equal(plan.serviceSwitchIdentity?.createdAtUtcTicks,withAppserver?'639294660168471770':'639294604342922550','Exact previously observed test-service generation required')
  // Only retire this exact owned test service after owner/session/image/create
  // and command-line admission. Never use a package-wide or fixed-PID kill.
  const stopScript=[
@@ -77,7 +90,7 @@ try{
  const saved=await cdp.invoke('model_file_snapshot')
  assert.equal(saved.policy.channels.find(c=>c.connection.providerId==='Post021AdminFixture').defaults.contextWindow.value,65547)
  const state=await evaluate(observePublicRestart)
- assert.equal(state.state,'failed');assert(state.error.includes('官方无法读取 Codex 桌面进程'),'Unexpected error; do not retry a different operation')
+ assert.equal(state.state,'failed');assert(state.error.includes(withAppserver?'官方无法读取 Codex app-server':'官方无法读取 Codex 桌面进程'),'Unexpected error; do not retry a different operation')
  const shot=async name=>{const value=await cdp.call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,name+'.png'),Buffer.from(value.data,'base64'))}
  const finalBefore=await snapshot('process-before-public-retry')
  const oldShells=finalBefore.own.filter(p=>win32.basename(p.path??'').toLowerCase()==='chatgpt.exe')

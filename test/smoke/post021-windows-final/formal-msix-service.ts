@@ -18,6 +18,7 @@ const official=plan.officialPackage,load=async(path:string)=>import(pathToFileUR
 assert.equal(JSON.parse(readFileSync(join(official,'package.json'),'utf8')).version,'2.84.0')
 const adapterSha256=createHash('sha256').update(readFileSync(join(official,'src/codex/desktop-app/windows.ts'))).digest('hex')
 if(plan.candidateKind){assert.equal(plan.candidateKind,'local-runtime-source-candidate-not-published2.84.0');assert.equal(adapterSha256,plan.candidateAdapterSha256)}
+if(plan.candidateAppserverSha256)assert.equal(createHash('sha256').update(readFileSync(join(official,'src/codex/app-server-processes.ts'))).digest('hex'),plan.candidateAppserverSha256)
 const {getDefaultConfig}=await load('src/config.ts')
 const config=getDefaultConfig()
 Object.assign(config,{port:plan.servicePort,bindHost:'127.0.0.1',hostname:'127.0.0.1',codexAutoStart:false,oauthOpenBrowser:false,syncOnStart:false,autoUpdate:false,claudeCodeEnabled:false,websockets:false,defaultProvider:'Post021AdminFixture',clientIntegrations:{codex:false,grok:false,claude:false},providers:{Post021AdminFixture:{adapter:'openai-chat',baseUrl:'http://127.0.0.1:'+plan.fixturePort+'/v1',authMode:'key',allowPrivateNetwork:true,models:['raw-model'],selectedModels:['raw-model'],contextWindow:65536}},modelDiscovery:{knownModels:{Post021AdminFixture:{ids:['raw-model'],removed:[],updatedAt:new Date().toISOString()}}}})

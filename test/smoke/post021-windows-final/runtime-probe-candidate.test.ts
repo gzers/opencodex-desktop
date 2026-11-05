@@ -27,3 +27,16 @@ test('same-prefix neighboring package is still rejected after query',()=>{
  assert.equal(adapter.listProcesses(()=>good.replace(install.root,install.root+'-other'),install).length,0)
  assert.equal(adapter.listProcesses(()=>'',install).length,0)
 })
+const {listWindowsSnapshots,parseWindowsSnapshotOutput}=await import(pathToFileURL(join(resolve(candidate),'src/codex/app-server-processes.ts')).href)
+test('app-server candidate keeps narrow source regexes and rejects incomplete output',()=>{
+ let calls=0
+ const rows=listWindowsSnapshots((script:string)=>{
+  calls++;assert(script.includes('GetTokenInformation'));assert(!script.includes('Invoke-CimMethod'))
+  assert(script.includes('$taskBasenameMatch='));assert(script.includes('$taskCodeModeMatch='))
+  assert(script.includes('Still-live candidate owner identity unavailable'))
+  return '42\tD:\\Fixture\\codex.exe app-server\tFixture\\Test'
+ })
+ assert.equal(calls,1);assert.equal(rows[0].pid,42)
+ assert.throws(()=>parseWindowsSnapshotOutput('42\tD:\\Fixture\\codex.exe app-server\tFixture\\Test\n__OCX_ENUM_INCOMPLETE__'),/windows_enum_incomplete/)
+ assert.throws(()=>listWindowsSnapshots(()=>{throw Error('native query timeout')}),/native query timeout/)
+})
