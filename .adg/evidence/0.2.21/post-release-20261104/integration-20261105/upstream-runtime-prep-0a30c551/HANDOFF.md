@@ -1,3 +1,15 @@
+# Windows可取用补丁（当前入口）
+
+- 仓库gzers/opencodex-desktop，分支codex/post021-runtime-patch-handoff。
+- 提交d5a6aaf991262ef6205e7dd68cefae69d62033d8。
+- 文件test/smoke/post021-windows-final/patches/runtime-owner-dev-0a30c551.patch；35,703字节。
+- SHA256：0d8eaaec8c361d914fb901db2c8ef6a36702ce3c7ec209cb3f255817f8e32bb7。
+- manifest.json同目录含原/后像摘要、上游固定dev和未完项；不在管理器仓库应用补丁，须在隔离上游checkout核对基线后使用。
+
+在Windows现有仓库fetch该分支后，用git archive --format=zip --output=runtime-patch.zip origin/codex/post021-runtime-patch-handoff test/smoke/post021-windows-final/patches，再用Expand-Archive解压及Get-FileHash核验；避免PowerShell文本重定向改写patch编码。Git blob与ZIP提取均已复验原SHA。用户仅授权可取用贡献分支，本次没有创建上游fork/PR/issue或发布。旧/private/tmp路径仅保留本机溯源，不再是唯一交付位置。
+
+---
+
 # 本地运行包补丁预备结果
 
 私有补丁路径、SHA及十个变更文件摘要取runtime-owner-dev-prep-review.json；不把补丁源码复制为本项目实现，不表示它已提交上游或已成为正式依赖。补丁在隔离目录准备，未创建fork/PR/issue，未发布或改用户运行包来源。

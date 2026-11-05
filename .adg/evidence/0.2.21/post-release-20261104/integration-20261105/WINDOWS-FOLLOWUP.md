@@ -1,3 +1,15 @@
+# Windows可取用补丁（当前入口）
+
+- 仓库gzers/opencodex-desktop，分支codex/post021-runtime-patch-handoff。
+- 提交d5a6aaf991262ef6205e7dd68cefae69d62033d8。
+- 文件test/smoke/post021-windows-final/patches/runtime-owner-dev-0a30c551.patch；35,703字节。
+- SHA256：0d8eaaec8c361d914fb901db2c8ef6a36702ce3c7ec209cb3f255817f8e32bb7。
+- manifest.json同目录含原/后像摘要、上游固定dev和未完项；不在管理器仓库应用补丁，须在隔离上游checkout核对基线后使用。
+
+在Windows现有仓库fetch该分支后，用git archive --format=zip --output=runtime-patch.zip origin/codex/post021-runtime-patch-handoff test/smoke/post021-windows-final/patches，再用Expand-Archive解压及Get-FileHash核验；避免PowerShell文本重定向改写patch编码。Git blob与ZIP提取均已复验原SHA。用户仅授权可取用贡献分支，本次没有创建上游fork/PR/issue或发布。旧/private/tmp路径仅保留本机溯源，不再是唯一交付位置。
+
+---
+
 # 当前结果：477d7edea完整CI通过，运行包交付待（2026-11-05）
 
 CI42018439722已completed/success。Windows普通账号最终EXE通过，菜单三帧稳定/即时命中/五次可信事件、取消/Escape及真实业务回归通过；Windows后端/凭据/运行包升级重装/MSVC/final EXE/Node24及22矩阵均通过。候选artifact13413501369、EXE SHA0ee6a1879b72028605de99a5efad8fca2439cb4531b395c928b9fa7e084ec2f5，内嵌4eb8cae1、apps树a8bb18f9一致；174份最终原生证据原字节保存，一个测试EXE只记哈希。旧4251失败与探针前后回归保持。
