@@ -1,0 +1,43 @@
+{
+  "result": "verified-candidate-download-only",
+  "at": "2026-11-05T16:27:34.604947+00:00",
+  "artifact": {
+    "id": 13431169501,
+    "node_id": "MDg6QXJ0aWZhY3QxMzQzMTE2OTUwMQ==",
+    "name": "windows-msvc-candidate",
+    "size_in_bytes": 7080438,
+    "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/artifacts/13431169501",
+    "archive_download_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/artifacts/13431169501/zip",
+    "expired": false,
+    "digest": "sha256:c5acd34fc5db9e178ea59e935cb9fa6f36f81d7a7e6dd5afe91e1b615c454fc4",
+    "created_at": "2026-11-05T16:22:06Z",
+    "updated_at": "2026-11-05T16:22:06Z",
+    "expires_at": "2027-02-03T15:34:26Z",
+    "workflow_run": {
+      "id": 42056342409,
+      "repository_id": 1369202675,
+      "head_repository_id": 1369202675,
+      "head_branch": "codex/post021-sync-fixes",
+      "head_sha": "ca46bc1f3c35988d206e1a2949c708d4f23aab50"
+    }
+  },
+  "candidate": {
+    "schemaVersion": 1,
+    "runId": "42056342409",
+    "runAttempt": "1",
+    "requestedHead": "ca46bc1f3c35988d206e1a2949c708d4f23aab50",
+    "checkedCommit": "56141aecef1608eb44d44dd8ff0eaef84b96676f",
+    "appsTree": "ca89905344d0d29e761bcb8ffa24d22769c9cb4c",
+    "target": "x86_64-pc-windows-msvc",
+    "profile": "release; custom-protocol",
+    "executable": "opencodex-desktop.exe",
+    "sha256": "f62c474c06cb3fe2f77fe23d38e99c0783d86e727dbd538cfe7b4d36dd8c347d",
+    "bytes": 15296000,
+    "scope": "Native validation candidate only; not an installer, signed updater or release acceptance result"
+  },
+  "zipSha256": "c5acd34fc5db9e178ea59e935cb9fa6f36f81d7a7e6dd5afe91e1b615c454fc4",
+  "exeSha256": "f62c474c06cb3fe2f77fe23d38e99c0783d86e727dbd538cfe7b4d36dd8c347d",
+  "currentAppsTree": "ca89905344d0d29e761bcb8ffa24d22769c9cb4c",
+  "notExecuted": true,
+  "nativeAfterFix": "pending"
+}

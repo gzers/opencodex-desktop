@@ -1,0 +1,45 @@
+{
+  "kind": "TASK",
+  "id": "TASK-OPENCODEX-POST021-WINDOWS-CANDIDATE2-TARGETED-20261105",
+  "title": "Windows候选2真实托管安装与全新改名首次重启定向补验",
+  "state": "in_progress",
+  "result": "pending",
+  "summary": "读取ca46bc1f3/最新IMP30，严格应用两份运行补丁和候选2构建摘要。仅补同源管理器安装、全新改名首次确认、时间基线及失败取消/跨账号保护，不重复旧全量、不发布。",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-30",
+  "demand_ids": [
+    "DMD-OPENCODEX-POST021"
+  ],
+  "owner": "windows-msvc-followup-chat-01a1a68a",
+  "baseline_digest": "690575db1bf7341180d373a49cfcf5618c0df4b28ce5cf9ae31e9a997e3cf24a",
+  "write_scope": [
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/**",
+    "test/smoke/post021-windows-final/**"
+  ],
+  "required_checks": [
+    "review:source-and-artifact-identity",
+    "review:native-managed-install-full-version",
+    "review:install-failure-preservation",
+    "review:fresh-rename-first-confirm",
+    "review:failure-retry-cancellation",
+    "review:other-owner-daily-boundary"
+  ],
+  "acceptance_ids": [
+    "AC-P21-09"
+  ],
+  "acceptance_bindings": [
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-09",
+      "criterion_digest": "be98e9a1cf0b6c4c728b3cfd000b64aa4a83099905281d671d7958bf80f74f59"
+    }
+  ],
+  "fact_writeback": {
+    "mode": "none",
+    "targets": []
+  },
+  "imported_receipt_digest": null,
+  "certificate_digest": null,
+  "revision": 1,
+  "summary_digest": "f9106870f50874814d6136897f9f3512a8ef940a58b312482284c50934cc2f1d",
+  "content_digest": "50883d41e310b5d7ae41d32d7bb81016fd7d731b9efcf7cd29152a570844c5e0"
+}

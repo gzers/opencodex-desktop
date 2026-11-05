@@ -1,0 +1,24 @@
+12 | const [planFile]=process.argv.slice(2),plan=JSON.parse(await readFile(planFile,'utf8')),root=resolve(plan.runRoot)
+13 | assert.equal(root,resolve('D:/Users/Administrator/WorkSpace/Test/post021-candidate2-targeted-20261105'))
+14 | const ps=join(process.env.SystemRoot??'C:/Windows','System32/WindowsPowerShell/v1.0/powershell.exe')
+15 | const psCall=script=>execFileSync(ps,['-NoProfile','-NonInteractive','-Command',script],{encoding:'utf8',windowsHide:true,timeout:20000})
+16 | const account=JSON.parse(psCall('[ordered]@{owner=[Security.Principal.WindowsIdentity]::GetCurrent().Name;sid=[Security.Principal.WindowsIdentity]::GetCurrent().User.Value;sessionId=(Get-Process -Id $PID).SessionId}|ConvertTo-Json -Compress'))
+17 | assert.equal(account.owner.toLowerCase(),'ezio-mini\\administrator');assert.equal(account.sessionId,1)
+            ^
+AssertionError: Expected values to be strictly equal:
++ actual - expected
+
++ 'ezio-mini\\15119'
+- 'ezio-mini\\administrator'
+              ^
+
+ generatedMessage: true,
+     actual: "ezio-mini\\15119",
+   expected: "ezio-mini\\administrator",
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\post021-windows-materials\test\smoke\post021-windows-final\candidate2-targeted-native.mjs:17:8
+
+Bun v1.4.4 (Windows x64)

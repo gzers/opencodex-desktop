@@ -1,0 +1,18 @@
+{
+  "result": "passed",
+  "upstreamBase": "0a30c551304927c93c26a96c034bd39a166c7460",
+  "firstPatchExistingPostimagesVerified": 10,
+  "secondPatchPreimagesVerified": 5,
+  "secondPatchPostimagesVerified": 5,
+  "patches": [
+    {
+      "file": "runtime-owner-dev-0a30c551.patch",
+      "sha256": "0d8eaaec8c361d914fb901db2c8ef6a36702ce3c7ec209cb3f255817f8e32bb7"
+    },
+    {
+      "file": "runtime-provider-reload-baseline.patch",
+      "sha256": "efe2dc2cce0f1d9b18b250cccf633e4b762ee7156bc6c5ef411e881acceecbf5"
+    }
+  ],
+  "noDailyRuntimeModified": true
+}
