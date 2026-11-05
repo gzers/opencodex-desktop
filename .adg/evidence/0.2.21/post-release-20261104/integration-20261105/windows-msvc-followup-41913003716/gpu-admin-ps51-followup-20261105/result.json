@@ -1,0 +1,19 @@
+{
+  "codeCommit": "aa52a17b201de7df1c9a4feee608047839d6a522",
+  "collectorCanonicalSha256": "1ec39a1236c440c88a32fcd51ec1960d68fa1f30bb374077d1c95670eb224fda",
+  "result": "compatibility-fixed-capture-not-executed",
+  "userReportedFailure": "WindowsPowerShell parser error collect-gpu-trace.ps1 line100 unexpected An and missing closing parenthesis",
+  "cause": "UTF8-without-BOM nonASCII localized regex decoded using ANSI by WindowsPowerShell5.1; PS7-only parsing did not catch it",
+  "fix": "ASCII-only script with regex Unicode escapes; fail-closed recorder state predicate preserved",
+  "actualVerification": "WindowsPowerShell5.1.26100.33438 parser and PlanOnly executed against livePID52416 successfully, no recording",
+  "harnessFailure": "First PS5child inherited PS7module path, Get-FileHash unavailable; test-child env then restored to WindowsPowerShell built-in module paths only, no persistent machine setting changed",
+  "waitExpiredLocal": "2026-11-05T11:44:37.247+08:00",
+  "recordingObserved": false,
+  "performanceSampleExecuted": false,
+  "cleanup": "Exact original path/PID52416/create/session/owner checked; process stopped after WPR not recording; old entry retired",
+  "remaining": [
+    "Actual administrator GPU/DWM capture",
+    "Production performance fix under original budget",
+    "FormalCodex default adapter restart in proven disposable user/session"
+  ]
+}
