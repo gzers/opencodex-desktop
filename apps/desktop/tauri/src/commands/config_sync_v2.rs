@@ -21,7 +21,7 @@ impl SharedConfigSyncV2 {
             SyncServiceV2::production(root, home).map(Arc::new),
         ))
     }
-    fn service(&self) -> SyncResult<Arc<SyncServiceV2>> {
+    pub(crate) fn service(&self) -> SyncResult<Arc<SyncServiceV2>> {
         self.0.as_ref().clone()
     }
 }
@@ -118,7 +118,20 @@ pub async fn config_v2_confirm(
     service: tauri::State<'_, SharedConfigSyncV2>,
 ) -> SyncResult<OperationFact> {
     let service = service.service()?;
-    run(async move { service.confirm(request).await }, true).await
+    let original = service.session_operation_id(&request.session_id)?;
+    run(
+        async move {
+            let result = service.confirm(request).await;
+            crate::modules::model_config::feedback::v2::emit_sync(
+                service.desktop_root(),
+                &result,
+                original.as_deref(),
+            );
+            result
+        },
+        true,
+    )
+    .await
 }
 #[tauri::command]
 pub async fn config_v2_result(
@@ -136,8 +149,17 @@ pub async fn config_v2_verify(
 ) -> SyncResult<OperationFact> {
     let service = service.service()?;
     let passphrase = read_passphrase.map(Zeroizing::new);
+    let original = operation_id.clone();
     run(
-        async move { service.verify(operation_id, passphrase).await },
+        async move {
+            let result = service.verify(operation_id.clone(), passphrase).await;
+            crate::modules::model_config::feedback::v2::emit_sync(
+                service.desktop_root(),
+                &result,
+                Some(&original),
+            );
+            result
+        },
         true,
     )
     .await
@@ -150,8 +172,17 @@ pub async fn config_v2_resume(
 ) -> SyncResult<OperationFact> {
     let service = service.service()?;
     let passphrase = read_passphrase.map(Zeroizing::new);
+    let original = request.operation_id.clone();
     run(
-        async move { service.resume_original(request, passphrase).await },
+        async move {
+            let result = service.resume_original(request, passphrase).await;
+            crate::modules::model_config::feedback::v2::emit_sync(
+                service.desktop_root(),
+                &result,
+                Some(&original),
+            );
+            result
+        },
         true,
     )
     .await
@@ -199,7 +230,20 @@ pub async fn config_v2_recovery_confirm(
     service: tauri::State<'_, SharedConfigSyncV2>,
 ) -> SyncResult<crate::modules::model_config::sync_v2::types::RecoveryReceipt> {
     let service = service.service()?;
-    run(async move { service.recovery_confirm(request).await }, true).await
+    let original = service.recovery_operation_id(&request.session_id)?;
+    run(
+        async move {
+            let result = service.recovery_confirm(request).await;
+            crate::modules::model_config::feedback::v2::emit_recovery(
+                service.desktop_root(),
+                &result,
+                &original,
+            );
+            result
+        },
+        true,
+    )
+    .await
 }
 #[tauri::command]
 pub async fn config_v2_recovery_result(
@@ -224,8 +268,19 @@ pub async fn config_v2_resume_receive(
 ) -> SyncResult<OperationFact> {
     let service = service.service()?;
     let passphrase = read_passphrase.map(Zeroizing::new);
+    let original = operation_id.clone();
     run(
-        async move { service.resume_receive(operation_id, passphrase).await },
+        async move {
+            let result = service
+                .resume_receive(operation_id.clone(), passphrase)
+                .await;
+            crate::modules::model_config::feedback::v2::emit_sync(
+                service.desktop_root(),
+                &result,
+                Some(&original),
+            );
+            result
+        },
         true,
     )
     .await

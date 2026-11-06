@@ -6,19 +6,15 @@ import TemplateComparisonDialog from '@/features/models/TemplateComparisonDialog
 import ExtensionDetailModal from '@/features/extensions/components/ExtensionDetailModal.vue'
 import TransferBackups from '@/features/backup/TransferBackups.vue'
 import NotificationCenter from '@/features/notifications/components/NotificationCenter.vue'
-import { transferResultApi } from '@/features/sync/modelTransfer'
+import {transferBackupV2Api,type RestorePreviewV2} from '@/features/backup/api-v2'
 import { useOperationTasks } from '@/app/feedback/tasks'
 import { installNativeDialogStub } from './helpers/nativeDialog'
 
 const invoke = vi.hoisted(() => vi.fn())
 vi.mock('@tauri-apps/api/core', () => ({ invoke }))
-vi.mock('@/features/sync/modelTransfer', async original => ({
-  ...await original<typeof import('@/features/sync/modelTransfer')>(),
-  transferResultApi: { backups: vi.fn(), previewRestore: vi.fn(), restore: vi.fn() },
-}))
 const mounted: VueWrapper[] = []
 beforeEach(() => { setActivePinia(createPinia()); installNativeDialogStub(); vi.clearAllMocks() })
-afterEach(() => { mounted.splice(0).forEach(w => w.unmount()); document.body.innerHTML = '' })
+afterEach(() => { mounted.splice(0).forEach(w => w.unmount()); vi.restoreAllMocks();document.body.innerHTML = '' })
 function render(component: Parameters<typeof mount>[0], props = {}) { const w = mount(component, { props, attachTo: document.body }); mounted.push(w); return w }
 function dialog() { return new DOMWrapper(document.body).get('dialog[open]') }
 async function exit(channel: string) {
@@ -58,15 +54,15 @@ describe('POST-09 remaining owned consumer guards', () => {
   })
 
   it.each(['x', 'escape', 'backdrop', 'cancel'])('guards restore %s while checking its baseline, then cancels without writing', async channel => {
-    vi.mocked(transferResultApi.backups).mockResolvedValue([{ id: 'fixture', groups: ['channels'], ready: true }] as never)
-    let finish!: (value: string) => void
-    vi.mocked(transferResultApi.previewRestore).mockReturnValue(new Promise(resolve => { finish = resolve }))
-    const w = render(TransferBackups); await flushPromises()
+    vi.spyOn(transferBackupV2Api,'list').mockResolvedValue([{id:'fixture',groups:['channels'],enabled:true,ready:true}]);vi.spyOn(transferBackupV2Api,'restore');vi.spyOn(transferBackupV2Api,'operations').mockResolvedValue([])
+    let finish!:(value:RestorePreviewV2)=>void
+    vi.spyOn(transferBackupV2Api,'preview').mockReturnValue(new Promise(resolve => { finish = resolve }))
+    const w = render(TransferBackups,{dialogOwner:true}); await flushPromises()
     await w.findAll('button').find(b => b.text() === '恢复所选范围')!.trigger('click'); await flushPromises()
     await exit(channel); expect(document.querySelector('dialog[open]')).not.toBeNull()
-    finish('fixture-baseline'); await flushPromises(); await exit(channel)
+    finish({restoreId:'fixture-restore',planDigest:'fixture-digest',groups:['channels']}); await flushPromises(); await exit(channel)
     expect(document.querySelector('dialog[open]')).toBeNull()
-    expect(transferResultApi.restore).not.toHaveBeenCalled()
+    expect(transferBackupV2Api.restore).not.toHaveBeenCalled()
   })
 
   it.each(['x', 'escape', 'backdrop', 'cancel'])('cancels notification cleanup through %s without clearing tasks or calling IPC', async channel => {

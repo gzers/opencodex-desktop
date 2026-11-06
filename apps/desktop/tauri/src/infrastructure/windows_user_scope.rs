@@ -13,6 +13,8 @@ use std::{
     path::{Component, Path, PathBuf},
     ptr,
 };
+#[cfg(test)]
+use windows_sys::Win32::UI::Shell::{FOLDERID_LocalAppData, SHGetKnownFolderPath};
 use windows_sys::Win32::{
     Foundation::{CloseHandle, LocalFree, HANDLE},
     Security::{
@@ -20,7 +22,7 @@ use windows_sys::Win32::{
         TOKEN_QUERY, TOKEN_USER,
     },
     System::Threading::{GetCurrentProcess, GetCurrentThread, OpenProcessToken, OpenThreadToken},
-    UI::Shell::{FOLDERID_LocalAppData, GetUserProfileDirectoryW, SHGetKnownFolderPath},
+    UI::Shell::GetUserProfileDirectoryW,
 };
 
 #[link(name = "advapi32")]

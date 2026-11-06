@@ -2,6 +2,7 @@
 //! UI supplies only listed groups and opaque IDs. Images never cross IPC.
 use super::*;
 use crate::modules::model_config::{
+    content_versions::{self as versions, SaveState},
     model_transaction_v2::{self as transactions, TargetV2, WriteV2},
     schema::{ModelError, ModelResult},
     schema_v2, source_v2, store_v2,
@@ -45,6 +46,15 @@ pub struct RestoreReceiptV2 {
     pub completed_groups: Vec<String>,
     pub refresh_file_snapshot: bool,
     pub failure_code: Option<String>,
+}
+#[derive(Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RestoreOperationV2 {
+    pub restore_id: String,
+    pub original_operation_id: String,
+    pub plan_digest: String,
+    pub groups: Vec<String>,
+    pub receipt: Option<RestoreReceiptV2>,
 }
 #[derive(Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -118,6 +128,28 @@ struct Progress {
     backups: Vec<BackupRef>,
     completed: BTreeSet<usize>,
     receipt: Option<RestoreReceiptV2>,
+    #[serde(default)]
+    clock_time: Option<String>,
+    #[serde(default)]
+    deltas: BTreeMap<String, StateDelta>,
+    #[serde(default)]
+    clocks: Vec<ClockStep>,
+    #[serde(default)]
+    versioned: BTreeSet<String>,
+}
+#[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct StateDelta {
+    before: SaveState,
+    after: SaveState,
+}
+#[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct ClockStep {
+    group: String,
+    ledger_before: Option<Vec<u8>>,
+    ledger_after: Option<Vec<u8>>,
+    applied: bool,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -323,6 +355,14 @@ fn groups(s: &SelectionV2) -> Vec<String> {
     g.into_iter().collect()
 }
 fn validate_record(d: &Path, h: &Path, r: &Record) -> ModelResult<Journal> {
+    validate_record_at(d, h, r, true)
+}
+fn validate_record_at(
+    d: &Path,
+    h: &Path,
+    r: &Record,
+    current_targets: bool,
+) -> ModelResult<Journal> {
     if r.version != 2 || r.root != d || r.home != h || r.groups != groups(&r.selection) {
         return Err(bad("scope_backup_binding"));
     }
@@ -344,15 +384,17 @@ fn validate_record(d: &Path, h: &Path, r: &Record) -> ModelResult<Journal> {
         }
         return Ok(j);
     }
-    let addresses = participant_addresses(d, h, &r.id, &r.selection)?;
-    let participant: Vec<_> = r
-        .rows
-        .iter()
-        .filter(|row| row.address.model.is_none())
-        .map(|row| row.address.clone())
-        .collect();
-    if participant != addresses {
-        return Err(bad("scope_backup_target_changed"));
+    if current_targets {
+        let addresses = participant_addresses(d, h, &r.id, &r.selection)?;
+        let participant: Vec<_> = r
+            .rows
+            .iter()
+            .filter(|row| row.address.model.is_none())
+            .map(|row| row.address.clone())
+            .collect();
+        if participant != addresses {
+            return Err(bad("scope_backup_target_changed"));
+        }
     }
     let mut seen = BTreeSet::new();
     for row in &r.rows {
@@ -368,7 +410,9 @@ fn validate_record(d: &Path, h: &Path, r: &Record) -> ModelResult<Journal> {
                 return Err(bad("scope_backup_model_target"));
             }
         }
-        safety::check_path(&row.address.anchor, &row.address.path, true)?;
+        if current_targets {
+            safety::check_path(&row.address.anchor, &row.address.path, true)?;
+        }
         if row.address.model.is_none() {
             verify_before_tree(row, &j)?;
         }
@@ -755,15 +799,32 @@ fn selected(r: &Record, groups: &[String]) -> ModelResult<Vec<usize>> {
         .collect())
 }
 fn model_check(d: &Path, h: &Path, r: &Record, selected: &[usize]) -> ModelResult<()> {
-    if !selected.iter().any(|i| r.rows[*i].address.model.is_some()) {
-        return Ok(());
+    if selected.iter().any(|i| r.rows[*i].address.model.is_some()) {
+        model_state(d, h, r, selected, false)?;
     }
+    Ok(())
+}
+fn model_state(
+    d: &Path,
+    h: &Path,
+    r: &Record,
+    selected: &[usize],
+    original_after: bool,
+) -> ModelResult<SaveState> {
     let intended = |target: &TargetV2| -> ModelResult<Option<Vec<u8>>> {
         if let Some(i) = selected
             .iter()
             .find(|i| r.rows[**i].address.model.as_ref() == Some(target))
         {
-            return bytes(&r.rows[*i].before);
+            let selected_image = if original_after {
+                r.after
+                    .as_ref()
+                    .and_then(|images| images.get(*i))
+                    .ok_or_else(|| bad("scope_restore_not_ready"))?
+            } else {
+                &r.rows[*i].before
+            };
+            return bytes(selected_image);
         }
         let (anchor, path) = model_path(d, h, target)?;
         bytes(&images::image(&anchor, &path)?)
@@ -789,6 +850,7 @@ fn model_check(d: &Path, h: &Path, r: &Record, selected: &[usize]) -> ModelResul
     if !raw.is_object() {
         return Err(bad("scope_restore_dependency"));
     }
+    let mut source_ledger = None;
     if let Some(b) = intended(&TargetV2::Manager(store_v2::LEDGER_PATH.into()))? {
         let ledger: store_v2::LedgerFileV2 = serde_json::from_value(parse(&b)?)?;
         if ledger.schema_version != 2
@@ -803,15 +865,41 @@ fn model_check(d: &Path, h: &Path, r: &Record, selected: &[usize]) -> ModelResul
         {
             return Err(bad("scope_restore_dependency"));
         }
+        source_ledger = Some(ledger.ledger);
     } else if !policy.channels.is_empty() {
         return Err(bad("scope_restore_dependency"));
     }
-    if let Some(b) = intended(&TargetV2::Manager(store_v2::MAPPING_PATH.into()))? {
+    let mappings = if let Some(b) = intended(&TargetV2::Manager(store_v2::MAPPING_PATH.into()))? {
         let mappings = serde_json::from_value(parse(&b)?)?;
         crate::modules::model_config::protocol_groups::validate_mappings_v2(&mappings)
             .map_err(|_| bad("scope_restore_dependency"))?;
-    }
-    Ok(())
+        mappings
+    } else {
+        crate::modules::model_config::protocol_groups::MappingFileV2::default()
+    };
+    let bindings = policy
+        .channels
+        .iter()
+        .map(
+            |channel| crate::modules::model_config::provider_import::ProviderBindingV2 {
+                channel_id: channel.id.clone(),
+                provider_id: channel.connection.provider_id.clone(),
+            },
+        )
+        .collect::<Vec<_>>();
+    let observed = crate::modules::model_config::provider_import::read_policy_v2(
+        &raw,
+        &schema_v2::digest(
+            &schema_v2::canonical_bytes(&raw).map_err(|_| bad("scope_restore_save_state"))?,
+        ),
+        &policy,
+        source_ledger.as_ref(),
+        &mappings,
+        &bindings,
+    )
+    .map_err(|_| bad("scope_restore_save_state"))?;
+    super::super::config_file::v2::saved_state(&library, &observed, &raw)
+        .map_err(|_| bad("scope_restore_save_state"))
 }
 pub fn preview(
     d: &Path,
@@ -843,7 +931,8 @@ pub fn preview(
         let current = images::image(&a.anchor, &a.path)?;
         // Explicit conservative policy: any later target edit requires a fresh user decision.
         let guard = image(&a.anchor, &a.path).map_err(local_error)?;
-        if current != after[*i]
+        if (!matches!(&a.model,Some(TargetV2::Manager(relative)) if relative==versions::SAVED_VERSIONS_PATH)
+            && current != after[*i])
             || original_guards[*i]
                 .as_ref()
                 .is_some_and(|original| &guard != original)
@@ -873,6 +962,356 @@ pub fn preview(
         groups,
     })
 }
+/// Owned v2 restore journals only. Historical receipts never inspect today's
+/// business configuration, allocate a replacement plan, or grant new targets.
+pub fn operations(
+    d: &Path,
+    h: &Path,
+    original: Option<&str>,
+) -> ModelResult<Vec<RestoreOperationV2>> {
+    let (d, h) = roots(d, h)?;
+    if let Some(original) = original {
+        id(original)?;
+    }
+    let directory = d.join(PLANS);
+    safety::check_path(&d, &directory, true)?;
+    if !directory.exists() {
+        return Ok(vec![]);
+    }
+    let mut names = BTreeSet::new();
+    let mut count = 0;
+    for entry in std::fs::read_dir(&directory)? {
+        count += 1;
+        if count > 1024 {
+            return Err(bad("scope_restore_limit"));
+        }
+        let entry = entry?;
+        safety::check_path(&d, &entry.path(), false)?;
+        let name = entry
+            .file_name()
+            .into_string()
+            .map_err(|_| bad("scope_restore_journal"))?;
+        let base = name.strip_suffix(".lock").unwrap_or(&name);
+        let (restore, suffix) = if let Some(restore) = base.strip_suffix(".plan.json") {
+            (restore, "plan")
+        } else if let Some(restore) = base.strip_suffix(".progress.json") {
+            (restore, "progress")
+        } else {
+            return Err(bad("scope_restore_journal"));
+        };
+        id(restore)?;
+        if suffix == "progress" && !plan_path(&d, restore, "plan")?.exists() {
+            return Err(bad("scope_restore_journal"));
+        }
+        if suffix == "plan" && !name.ends_with(".lock") {
+            names.insert(restore.to_string());
+        }
+    }
+    if names.len() > 256 {
+        return Err(bad("scope_restore_limit"));
+    }
+    let mut result = vec![];
+    for restore_id in names {
+        let p: Plan = read(&plan_path(&d, &restore_id, "plan")?)?;
+        if p.version != 2 || p.id != restore_id || p.root != d || p.home != h {
+            return Err(bad("scope_restore_plan"));
+        }
+        let r: Record = read(&record_path(&d, &p.original)?)?;
+        if r.id != p.original || digest(&r)? != p.source_digest {
+            return Err(bad("scope_restore_source_stale"));
+        }
+        validate_record_at(&d, &h, &r, false)?;
+        let indices = selected(&r, &p.groups)?;
+        if indices.len() != p.guards.len() {
+            return Err(bad("scope_restore_plan"));
+        }
+        let plan_digest = digest(&p)?;
+        let path = plan_path(&d, &restore_id, "progress")?;
+        let receipt = if path.exists() {
+            let progress: Progress = read(&path)?;
+            if progress.plan_digest != plan_digest
+                || progress.completed.iter().any(|i| !indices.contains(i))
+            {
+                return Err(bad("scope_restore_journal"));
+            }
+            if let Some(stored) = &progress.receipt {
+                let expected = receipt(&p, &indices, &r, &progress, stored.failure_code.clone());
+                if encode(stored)? != encode(&expected)? {
+                    return Err(bad("scope_restore_receipt"));
+                }
+            }
+            progress.receipt
+        } else {
+            None
+        };
+        if original.is_none_or(|original| original == p.original) {
+            result.push(RestoreOperationV2 {
+                restore_id,
+                original_operation_id: p.original,
+                plan_digest,
+                groups: p.groups,
+                receipt,
+            });
+        }
+    }
+    Ok(result)
+}
+fn ledger_bytes(d: &Path) -> ModelResult<Option<Vec<u8>>> {
+    let path = d.join(versions::SAVED_VERSIONS_PATH);
+    safety::check_path(d, &path, true)?;
+    match std::fs::symlink_metadata(&path) {
+        Ok(_) => Ok(Some(safety::read_file(&path, 8 * 1024 * 1024)?)),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(None),
+        Err(e) => Err(e.into()),
+    }
+}
+fn group_state(d: &Path, r: &Record, group: &str, original_after: bool) -> ModelResult<SaveState> {
+    // Rehydrate only this backend-frozen group's private images. Reuse real
+    // portable owners and the v2 codec's atom rules, never derive keys by name.
+    let stage_parent = d.join(DIRECTORY).join(&r.id);
+    let stage = tempfile::Builder::new()
+        .prefix("save-state-")
+        .tempdir_in(&stage_parent)?;
+    let root = stage.path().join("D");
+    let home = stage.path().join("H");
+    crate::infrastructure::platform::create_private_dir_all(&root, 0o700)?;
+    crate::infrastructure::platform::create_private_dir_all(&home, 0o700)?;
+    let mut settings = portable_manager::Settings::default();
+    let mut assets = portable_assets::Assets::default();
+    for (i, row) in r
+        .rows
+        .iter()
+        .enumerate()
+        .filter(|(_, row)| row.address.group == group && row.address.model.is_none())
+    {
+        let material = if original_after {
+            r.after
+                .as_ref()
+                .and_then(|a| a.get(i))
+                .ok_or_else(|| bad("scope_restore_not_ready"))?
+        } else {
+            &row.before
+        };
+        if let Some(name) = group.strip_prefix("skill:") {
+            if material.directory && material.exists {
+                let path = root.join("skill");
+                images::write_image(&root, &path, &Image::default(), material)?;
+                // The participant's actual source target is canonical. When
+                // both copies exist they must describe the same saved object.
+                let skill = portable_assets::snapshot_skill(&path, name, true, true)?;
+                if assets.skills.is_empty() {
+                    assets.skills.push(skill);
+                } else if assets.skills[0].digest != skill.digest {
+                    return Err(bad("scope_restore_asset_state"));
+                }
+                std::fs::remove_dir_all(path)?;
+            }
+            continue;
+        }
+        let Some(raw) = bytes(material)? else {
+            continue;
+        };
+        match group {
+            "preferences" => {
+                settings.preferences = Some(
+                    crate::modules::preferences::preferences_from_document(
+                        &serde_json::from_slice(&raw)?,
+                    )
+                    .map_err(|_| bad("scope_restore_save_state"))?,
+                )
+            }
+            "extensions" => {
+                let projection: crate::modules::extensions::projection::ExtensionProjection =
+                    serde_json::from_slice(&raw)?;
+                if projection.fingerprint.fingerprint != projection.config.fingerprint() {
+                    return Err(bad("scope_restore_save_state"));
+                }
+                let path = root.join(crate::modules::extensions::projection::CONFIG_RELATIVE_PATH);
+                atomic_write(&path, &raw, 0o600)?;
+                settings.extensions = portable_manager::export(
+                    &root,
+                    &portable_manager::Scope {
+                        extensions: true,
+                        ..Default::default()
+                    },
+                )?
+                .extensions;
+            }
+            "accounts" => settings.accounts = serde_json::from_slice(&raw)?,
+            "webdav" => {
+                let candidates: Vec<portable_manager::Candidate> = serde_json::from_slice(&raw)?;
+                settings.webdav = candidates.into_iter().map(|c| c.endpoint).collect();
+                settings.webdav.sort_by(|a, b| a.id.cmp(&b.id));
+                settings.webdav.dedup_by(|a, b| a == b);
+            }
+            "mcp" => {
+                let relative = row
+                    .address
+                    .path
+                    .strip_prefix(&r.root)
+                    .map_err(|_| bad("scope_restore_asset_state"))?;
+                atomic_write(&root.join(relative), &raw, 0o600)?;
+                let selected = r
+                    .selection
+                    .mcp_sources
+                    .iter()
+                    .map(|m| m.name.clone())
+                    .collect::<Vec<_>>();
+                let sources = selected
+                    .iter()
+                    .map(|n| (n.clone(), "managed".into()))
+                    .collect();
+                assets = portable_assets::export_with_credential_scope(
+                    &root,
+                    &home,
+                    &[],
+                    &selected,
+                    &sources,
+                    false,
+                    true,
+                    Some(&[]),
+                )?
+                .0;
+            }
+            _ => return Err(bad("scope_restore_save_state")),
+        }
+    }
+    let payload = super::super::portable_v2::ModelPayloadV2 {
+        templates: vec![],
+        policy: None,
+    };
+    let objects = SavedObjects::capture(
+        file_objects_v2::CapturedObjects {
+            models: super::super::portable_v2::PortableModelsV2 {
+                format: "OCXD_MODEL_PACKAGE".into(),
+                format_version: 6,
+                schema_version: 2,
+                created_at: "2026-11-07T00:00:00Z".into(),
+                digest: schema_v2::digest(
+                    &schema_v2::canonical_bytes(&payload)
+                        .map_err(|_| bad("scope_restore_save_state"))?,
+                ),
+                payload,
+            },
+            manager: settings,
+            assets,
+            channel_keys: file_objects_v2::SecretValues::new(),
+            channel_authorizations: BTreeMap::new(),
+            webdav_passwords: file_objects_v2::SecretValues::new(),
+            content_versions: vec![],
+        },
+        Some(&ActualAuthorization),
+    )?;
+    file_objects_v2::save_state(&objects)
+}
+fn freeze_clocks(
+    d: &Path,
+    h: &Path,
+    r: &Record,
+    p: &Plan,
+    indices: &[usize],
+    progress: &mut Progress,
+) -> ModelResult<()> {
+    let mut expected = BTreeMap::new();
+    if indices.iter().any(|i| r.rows[*i].address.model.is_some()) {
+        expected.insert(
+            "@models".into(),
+            StateDelta {
+                before: model_state(d, h, r, indices, true)?,
+                after: model_state(d, h, r, indices, false)?,
+            },
+        );
+    }
+    for group in &p.groups {
+        if indices
+            .iter()
+            .any(|i| r.rows[*i].address.group == *group && r.rows[*i].address.model.is_none())
+        {
+            expected.insert(
+                group.clone(),
+                StateDelta {
+                    before: group_state(d, r, group, true)?,
+                    after: group_state(d, r, group, false)?,
+                },
+            );
+        }
+    }
+    if progress.clock_time.is_some() {
+        if encode(&progress.deltas)? != encode(&expected)? {
+            return Err(bad("scope_restore_clock_state"));
+        }
+    } else {
+        progress.clock_time =
+            Some(chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Nanos, true));
+        progress.deltas = expected;
+    }
+    Ok(())
+}
+fn clock_step(d: &Path, p: &Plan, group: &str, progress: &mut Progress) -> ModelResult<ClockStep> {
+    if let Some(step) = progress.clocks.iter().find(|s| s.group == group) {
+        return Ok(step.clone());
+    }
+    let delta = progress
+        .deltas
+        .get(group)
+        .ok_or_else(|| bad("scope_restore_clock_state"))?;
+    let planned = versions::plan_save_at(
+        d,
+        &delta.before,
+        &delta.after,
+        progress
+            .clock_time
+            .as_deref()
+            .ok_or_else(|| bad("scope_restore_clock_state"))?,
+        &p.id,
+    )?;
+    let after = if delta.before == delta.after {
+        planned.before.clone()
+    } else {
+        Some(planned.after)
+    };
+    let step = ClockStep {
+        group: group.into(),
+        ledger_before: planned.before,
+        ledger_after: after,
+        applied: false,
+    };
+    progress.clocks.push(step.clone());
+    Ok(step)
+}
+fn write_clock(
+    d: &Path,
+    h: &Path,
+    p: &Plan,
+    group: &str,
+    progress: &mut Progress,
+) -> ModelResult<()> {
+    let step = clock_step(d, p, group, progress)?;
+    let current = ledger_bytes(d)?;
+    if current != step.ledger_after {
+        if current != step.ledger_before {
+            return Err(bad("scope_restore_clock_stale"));
+        }
+        transactions::commit_protected_restore(
+            d,
+            h,
+            vec![WriteV2 {
+                target: TargetV2::Manager(versions::SAVED_VERSIONS_PATH.into()),
+                before: step.ledger_before,
+                after: step.ledger_after.clone(),
+            }],
+        )
+        .map_err(|e| bad(&e.code))?;
+    }
+    if ledger_bytes(d)? != step.ledger_after {
+        return Err(bad("scope_restore_clock_readback"));
+    }
+    if let Some(stored) = progress.clocks.iter_mut().find(|s| s.group == group) {
+        stored.applied = true;
+    }
+    progress.versioned.insert(group.into());
+    Ok(())
+}
 fn verify_protection(d: &Path, progress: &Progress) -> ModelResult<()> {
     for proof in &progress.backups {
         if !proof.directory.starts_with(d.join("backups")) {
@@ -901,17 +1340,22 @@ fn receipt(
     progress: &Progress,
     failure_code: Option<String>,
 ) -> RestoreReceiptV2 {
-    let completed_groups = p
-        .groups
-        .iter()
-        .filter(|group| {
-            indices
-                .iter()
-                .filter(|i| &r.rows[**i].address.group == *group)
-                .all(|i| progress.completed.contains(i))
-        })
-        .cloned()
-        .collect();
+    let completed_groups =
+        p.groups
+            .iter()
+            .filter(|group| {
+                indices
+                    .iter()
+                    .filter(|i| &r.rows[**i].address.group == *group)
+                    .all(|i| progress.completed.contains(i))
+                    && (progress.clock_time.is_none()
+                        || progress.versioned.contains(*group)
+                        || (r.rows.iter().any(|row| {
+                            &row.address.group == *group && row.address.model.is_some()
+                        }) && progress.versioned.contains("@models")))
+            })
+            .cloned()
+            .collect();
     let applied = progress.completed.len() == indices.len() && failure_code.is_none();
     RestoreReceiptV2 {
         restore_id: p.id.clone(),
@@ -951,7 +1395,6 @@ fn with_locks<T>(
     let _config = TargetFileLock::lock(&h.join("config.json"))?;
     let store = store_v2::StoreV2::new(d);
     let _model = store.lock().map_err(|_| bad("scope_restore_model_lock"))?;
-    let _versions = super::super::content_versions::lock_versions(d)?;
     let _preferences = backup::manager::acquire_preferences_transaction(d)?;
     let asset_path = d.join("manager-state/extension-assets-transaction");
     checked(d, &asset_path).map_err(local_error)?;
@@ -971,6 +1414,7 @@ fn with_locks<T>(
             TargetFileLock::lock(path).map_err(Into::into)
         })
         .collect::<ModelResult<Vec<_>>>()?;
+    let _versions = versions::lock_versions(d)?;
     run()
 }
 pub fn restore(
@@ -1013,6 +1457,10 @@ pub fn restore(
             backups: vec![],
             completed: BTreeSet::new(),
             receipt: None,
+            clock_time: None,
+            deltas: BTreeMap::new(),
+            clocks: vec![],
+            versioned: BTreeSet::new(),
         }
     };
     let r = record(&d, &h, &p.original)?;
@@ -1048,6 +1496,15 @@ pub fn restore(
             .as_ref()
             .ok_or_else(|| bad("scope_restore_not_ready"))?;
         for (slot, i) in indices.iter().enumerate() {
+            if matches!(&r.rows[*i].address.model,Some(TargetV2::Manager(relative)) if relative==versions::SAVED_VERSIONS_PATH)
+            {
+                if !progress.protected
+                    && image(&d, &r.rows[*i].address.path).map_err(local_error)? != p.guards[slot]
+                {
+                    return Err(bad("scope_restore_stale"));
+                }
+                continue;
+            }
             let a = &r.rows[*i].address;
             let current = images::image(&a.anchor, &a.path)?;
             if progress.completed.contains(i) {
@@ -1064,6 +1521,8 @@ pub fn restore(
             }
         }
         model_check(&d, &h, &r, &indices)?;
+        freeze_clocks(&d, &h, &r, &p, &indices, &mut progress)?;
+        save(&d, &progress_path, &progress)?;
         if !progress.protected {
             // Protect and verify ALL currently selected targets before the first business write.
             for i in &indices {
@@ -1072,6 +1531,12 @@ pub fn restore(
                     .backups
                     .extend(protect_tree(&d, &a.anchor, &a.path).map_err(local_error)?);
             }
+            // Every restore also updates the existing version ledger. Protect
+            // that derived target even for manager-only or templates-only scope.
+            progress.backups.extend(
+                protect_tree(&d, &d, &d.join(versions::SAVED_VERSIONS_PATH))
+                    .map_err(local_error)?,
+            );
             verify_protection(&d, &progress)?;
             for (slot, i) in indices.iter().enumerate() {
                 let a = &r.rows[*i].address;
@@ -1096,8 +1561,11 @@ pub fn restore(
             .filter(|i| !progress.completed.contains(i))
             .collect();
         if !unfinished.is_empty() {
-            let writes = unfinished
+            let clock = clock_step(&d, &p, "@models", &mut progress)?;
+            save(&d, &progress_path, &progress)?;
+            let mut writes = unfinished
                 .iter()
+                .filter(|i|!matches!(&r.rows[**i].address.model,Some(TargetV2::Manager(relative)) if relative==versions::SAVED_VERSIONS_PATH))
                 .map(|i| {
                     Ok(WriteV2 {
                         target: r.rows[*i]
@@ -1110,6 +1578,11 @@ pub fn restore(
                     })
                 })
                 .collect::<ModelResult<Vec<_>>>()?;
+            writes.push(WriteV2 {
+                target: TargetV2::Manager(versions::SAVED_VERSIONS_PATH.into()),
+                before: clock.ledger_before.clone(),
+                after: clock.ledger_after.clone(),
+            });
             if let Err(error) = transactions::commit_protected_restore(&d, &h, writes) {
                 let result = receipt(&p, &indices, &r, &progress, Some(error.code));
                 progress.receipt = Some(result.clone());
@@ -1118,11 +1591,20 @@ pub fn restore(
             }
             for i in unfinished {
                 let a = &r.rows[i].address;
-                if images::image(&a.anchor, &a.path)? != r.rows[i].before {
+                if matches!(&a.model,Some(TargetV2::Manager(relative)) if relative==versions::SAVED_VERSIONS_PATH)
+                {
+                    if ledger_bytes(&d)? != clock.ledger_after {
+                        return Err(bad("scope_restore_clock_readback"));
+                    }
+                } else if images::image(&a.anchor, &a.path)? != r.rows[i].before {
                     return Err(bad("scope_restore_model_readback"));
                 }
                 progress.completed.insert(i);
             }
+            if let Some(step) = progress.clocks.iter_mut().find(|s| s.group == "@models") {
+                step.applied = true;
+            }
+            progress.versioned.insert("@models".into());
             save(&d, &progress_path, &progress)?;
         }
         for i in &indices {
@@ -1160,6 +1642,35 @@ pub fn restore(
             }
             progress.completed.insert(*i);
             save(&d, &progress_path, &progress)?;
+            let group = &r.rows[*i].address.group;
+            if indices
+                .iter()
+                .filter(|index| r.rows[**index].address.group == *group)
+                .all(|index| progress.completed.contains(index))
+            {
+                let _ = clock_step(&d, &p, group, &mut progress)?;
+                save(&d, &progress_path, &progress)?;
+                if let Err(error) = write_clock(&d, &h, &p, group, &mut progress) {
+                    let partial = receipt(&p, &indices, &r, &progress, Some(error.code));
+                    progress.receipt = Some(partial.clone());
+                    save(&d, &progress_path, &progress)?;
+                    return Ok(partial);
+                }
+                save(&d, &progress_path, &progress)?;
+            }
+        }
+        for group in progress.deltas.keys().cloned().collect::<Vec<_>>() {
+            if !progress.versioned.contains(&group) {
+                let _ = clock_step(&d, &p, &group, &mut progress)?;
+                save(&d, &progress_path, &progress)?;
+                if let Err(error) = write_clock(&d, &h, &p, &group, &mut progress) {
+                    let partial = receipt(&p, &indices, &r, &progress, Some(error.code));
+                    progress.receipt = Some(partial.clone());
+                    save(&d, &progress_path, &progress)?;
+                    return Ok(partial);
+                }
+                save(&d, &progress_path, &progress)?;
+            }
         }
         let result = receipt(&p, &indices, &r, &progress, None);
         progress.receipt = Some(result.clone());

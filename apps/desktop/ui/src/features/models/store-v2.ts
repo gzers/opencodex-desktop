@@ -120,7 +120,7 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
     if(fileBusy.value||saving.value||fileDirty.value||pendingRows.value.length||fileNeedsReconcile.value)throw new Error('当前有未保存渠道或型号输入，已保留，请先处理后重新读取。')
     const context=JSON.stringify({file:fileContext(),rows:modelRows.value})
     fileBusy.value=true;fileError.value=''
-    try{const value=await modelV2Api.fileSnapshot();if(context!==JSON.stringify({file:fileContext(),rows:modelRows.value})){fileNeedsReconcile.value=true;throw new Error('读取恢复结果期间有新的明确输入，当前输入保持。')}acceptFile(value);fileNeedsReconcile.value=false}
+    try{const value=await modelV2Api.fileSnapshot();if(context!==JSON.stringify({file:fileContext(),rows:modelRows.value})){fileNeedsReconcile.value=true;throw new Error('读取恢复结果期间有新的明确输入，当前输入保持。')}acceptFile(value);for(const state of Object.values(modelRows.value))state.buffers=Object.create(null);fileNeedsReconcile.value=false}
     catch(cause){fileError.value=message(cause);throw cause}finally{fileBusy.value=false}
   }
   async function ensureFileDraft(){
@@ -129,6 +129,13 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
     const request=expectedFile()
     openingDraft=(async()=>{const value=await modelV2Api.beginDraft(request);acceptFile(value)})()
     try{await openingDraft}finally{openingDraft=null}
+  }
+  async function beginChannelSession(){
+    if(file.value?.draft)return true
+    if(fileBusy.value||fileNeedsReconcile.value)return false
+    if(!file.value){await loadChannels();return canSaveFile.value}
+    fileBusy.value=true;fileError.value=''
+    try{await ensureFileDraft();return true}catch(cause){fileError.value=message(cause);return false}finally{fileBusy.value=false}
   }
   async function loadChannels(discardLocal=false){
     if(fileBusy.value)return
@@ -339,5 +346,5 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
     stagedConnectionIntents.value=[...stagedConnectionIntents.value.filter(item=>item.channelId!==result.channelId),{...immutableIntent,channelId:result.channelId}]
     return result
   }
-  return {canReleaseCleanSession,releaseCleanSessionForSavedMutation,reloadSavedFacts,discardChannels,assertHistoryReady,acceptHistory,policyNotificationTarget,dismissPreview,externalTasks,externalCurrentId,externalNotificationTarget,protectsRevision,discardNew,modelRows,pendingRows,rowsFor,projectFile,adoptProjection,fileContext,effectiveRows,active,loading,saving,previewBusy,snapshot,draft,error,previewError,issues,preview,previewModelId,previewChannelId,editGeneration,dirty,canLoad,canPreview,canSave,canDiscover,canStageConnection,stagedConnectionIntents,configureServices,start,setContent,setLabel,setDefault,reset,close,load,open,setPreviewTarget,requestPreview,save,discover,stageConnection,file,fileBusy,fileError,fileNeedsReconcile,channels,channelIntents,modelEdits,readResults,channelEditorId,channelSearch,fileDirty,channelDirty,canSaveFile,loadChannels,readExisting,queueChannel,queueModel,explicitRules,setSelection,saveChannels,channelCapabilities,configureChannelCapabilities,copyChannel,viewCredential,stageCredential,pendingCredentialKinds,keyBuffer,setKeyBuffer,credentialInputRevision,view,copyTemplate,changeLibrary,templateAction,executionPreference,executionPreferenceRevision,loadAgentSettings,bindAgent,agentSessions,agentSession,runAgent,stopAgent,restoreAgent,acceptAgent}
+  return {beginChannelSession,canReleaseCleanSession,releaseCleanSessionForSavedMutation,reloadSavedFacts,discardChannels,assertHistoryReady,acceptHistory,policyNotificationTarget,dismissPreview,externalTasks,externalCurrentId,externalNotificationTarget,protectsRevision,discardNew,modelRows,pendingRows,rowsFor,projectFile,adoptProjection,fileContext,effectiveRows,active,loading,saving,previewBusy,snapshot,draft,error,previewError,issues,preview,previewModelId,previewChannelId,editGeneration,dirty,canLoad,canPreview,canSave,canDiscover,canStageConnection,stagedConnectionIntents,configureServices,start,setContent,setLabel,setDefault,reset,close,load,open,setPreviewTarget,requestPreview,save,discover,stageConnection,file,fileBusy,fileError,fileNeedsReconcile,channels,channelIntents,modelEdits,readResults,channelEditorId,channelSearch,fileDirty,channelDirty,canSaveFile,loadChannels,readExisting,queueChannel,queueModel,explicitRules,setSelection,saveChannels,channelCapabilities,configureChannelCapabilities,copyChannel,viewCredential,stageCredential,pendingCredentialKinds,keyBuffer,setKeyBuffer,credentialInputRevision,view,copyTemplate,changeLibrary,templateAction,executionPreference,executionPreferenceRevision,loadAgentSettings,bindAgent,agentSessions,agentSession,runAgent,stopAgent,restoreAgent,acceptAgent}
 })
