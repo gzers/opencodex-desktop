@@ -16,6 +16,9 @@ pub struct PortableConnectionV2 {
     pub enabled: bool,
     pub allow_private_network: bool,
     pub auth_mode: Option<String>,
+    /// Validated public source material only; never a channel protocol or key.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub provider: Option<serde_json::Value>,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -138,6 +141,7 @@ pub fn export_portable_models_v2(
             enabled: channel.connection.enabled,
             allow_private_network: channel.connection.allow_private_network,
             auth_mode: channel.connection.auth_mode.clone(),
+            provider: None,
         });
         let selection = match &channel.selection {
             ModelSelection::Whitelist(ids) => ModelSelection::Whitelist(
@@ -274,6 +278,18 @@ pub fn validate_portable_models_v2(package: &PortableModelsV2) -> Result<()> {
             }
             if channel.family_scope.is_some() && channel.connection.is_some() {
                 return Err(error("model_source_invalid"));
+            }
+            if let Some(public) = channel
+                .connection
+                .as_ref()
+                .and_then(|c| c.provider.as_ref())
+            {
+                validate_public_source_v2(channel, public)?;
+                if channel.model_subset.is_some()
+                    && scoped_public_source_v2(channel, public)? != *public
+                {
+                    return Err(error("model_public_source_scope"));
+                }
             }
             if let Some(subset) = &channel.model_subset {
                 let selected: BTreeSet<_> = subset.iter().collect();
@@ -414,4 +430,226 @@ pub fn merge_library_v2(local: &LibraryV2, incoming: &LibraryV2) -> Result<Libra
     }
     validate_library_v2(&merged)?;
     Ok(merged)
+}
+
+fn validate_public_source_v2(
+    channel: &PortableChannelV2,
+    public: &serde_json::Value,
+) -> Result<()> {
+    super::provider_fields::validate_public(public).map_err(|err| error(&err.code))?;
+    if public.get("adapter").is_some_and(|v| !v.is_string()) {
+        return Err(error("model_source_invalid"));
+    }
+    if let Some(url) = public.get("baseUrl") {
+        let url = url.as_str().ok_or_else(|| error("model_source_invalid"))?;
+        if !channel
+            .connection
+            .as_ref()
+            .is_some_and(|c| c.nodes.iter().any(|node| node.url == url))
+        {
+            return Err(error("model_public_source_direction"));
+        }
+    }
+    Ok(())
+}
+/// Reuse the established transfer field scoper. This DTO bridge carries no
+/// credentials, chosen template, or matching authority and calls no resolver.
+fn scoped_public_source_v2(
+    channel: &PortableChannelV2,
+    public: &serde_json::Value,
+) -> Result<serde_json::Value> {
+    let Some(subset) = &channel.model_subset else {
+        return Ok(public.clone());
+    };
+    for key in [
+        "modelAliases",
+        "modelDisplayNames",
+        "modelAdapters",
+        "modelSupportsServiceTier",
+        "modelContextWindows",
+        "modelContextTiers",
+        "modelInputModalities",
+        "modelCapabilities",
+        "modelAutoCompactTokenLimits",
+        "modelMaxOutputTokens",
+        "modelCosts",
+        "modelOpenRouterRouting",
+        "modelVercelGatewayRouting",
+        "modelReasoningEfforts",
+        "modelSuppressSyntheticMax",
+        "modelDefaultReasoningEfforts",
+        "modelPinnedReasoningEfforts",
+        "modelSupportsReasoningSummaries",
+        "modelSupportsVerbosity",
+        "modelReasoningSummaryDelivery",
+        "modelPreferHostedTools",
+        "modelReasoningEffortMap",
+    ] {
+        if public.get(key).is_some_and(|v| !v.is_object()) {
+            return Err(error("model_public_source_scope"));
+        }
+    }
+    let connection = channel
+        .connection
+        .as_ref()
+        .ok_or_else(|| error("model_public_source_scope"))?;
+    if public.get("liveModels").is_some_and(|v| !v.is_boolean()) {
+        return Err(error("model_public_source_scope"));
+    }
+    let source_models: [&str; 3] = ["models", "retainModels", "selectedModels"];
+    let mut observed_ids = BTreeSet::new();
+    for key in source_models {
+        if let Some(value) = public.get(key) {
+            for id in value
+                .as_array()
+                .ok_or_else(|| error("model_public_source_scope"))?
+            {
+                observed_ids.insert(
+                    id.as_str()
+                        .ok_or_else(|| error("model_public_source_scope"))?
+                        .to_string(),
+                );
+            }
+        }
+    }
+    let preset = public
+        .get("modelPreset")
+        .cloned()
+        .map(|mut marker| {
+            let fields = marker
+                .as_object_mut()
+                .ok_or_else(|| error("model_public_source_scope"))?;
+            if !matches!(
+                fields.get("mode").and_then(serde_json::Value::as_str),
+                Some("preset" | "all" | "custom")
+            ) {
+                return Err(error("model_public_source_scope"));
+            }
+            fields.insert("mode".into(), serde_json::json!("custom"));
+            Ok(marker)
+        })
+        .transpose()?;
+    // modelPreset is a provider marker, not a raw-model-keyed map. Avoid the
+    // old scoper's broad model* object rule and restore it after narrowing.
+    let mut bridge_public = public.clone();
+    bridge_public.as_object_mut().unwrap().remove("modelPreset");
+    let bridge = super::transfer::PortableChannel {
+        family_scope: None,
+        id: channel.id.clone(),
+        label: channel.label.clone(),
+        // Scope filtering does not resolve protocols; the literal source value
+        // remains material only. There is no fabricated fallback protocol.
+        protocol: public
+            .get("adapter")
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or_default()
+            .into(),
+        model_subset: None,
+        connection: Some(super::transfer::PortableConnection {
+            nodes: connection.nodes.clone(),
+            provider: Some(bridge_public),
+        }),
+        selection: channel.selection.clone(),
+        model_order: channel.model_order.clone(),
+        discovered: channel
+            .models
+            .iter()
+            .map(|m| super::schema::DiscoveredModel {
+                id: m.raw_model_id.clone(),
+                label: m.label.clone(),
+                rules: ModelRules::default(),
+            })
+            .collect(),
+        template_refs: vec![],
+        model_refs: BTreeMap::new(),
+        defaults: ModelRules::default(),
+        overrides: BTreeMap::new(),
+        family_overrides: BTreeMap::new(),
+        naming: channel.naming.clone(),
+    };
+    let scoped =
+        super::transfer::restrict_models(&bridge, subset).map_err(|err| error(&err.code))?;
+    let mut public = scoped
+        .connection
+        .and_then(|c| c.provider)
+        .ok_or_else(|| error("model_public_source_scope"))?;
+    let fields = public
+        .as_object_mut()
+        .ok_or_else(|| error("model_source_invalid"))?;
+    let wanted: BTreeSet<_> = subset.iter().collect();
+    fields.insert("liveModels".into(), serde_json::json!(false));
+    if let Some(preset) = preset {
+        fields.insert("modelPreset".into(), preset);
+    }
+    // Existing restrict_models handles every model* object, exact model IDs,
+    // models/selectedModels, newModelPolicy and defaultModel. Extend its same
+    // explicit mask to the other known declarations/deny lists and review ref.
+    for (key, value) in fields.iter_mut() {
+        if key != "liveModels" && (key == "retainModels" || key.ends_with("Models")) {
+            let list = value
+                .as_array_mut()
+                .ok_or_else(|| error("model_public_source_scope"))?;
+            if list.iter().any(|v| !v.is_string()) {
+                return Err(error("model_public_source_scope"));
+            }
+            list.retain(|v| {
+                v.as_str()
+                    .is_some_and(|id| wanted.iter().any(|wanted| wanted.as_str() == id))
+            });
+        }
+    }
+    if fields.get("defaultModel").is_some_and(|v| !v.is_string()) {
+        return Err(error("model_public_source_scope"));
+    }
+    if fields
+        .get("defaultModel")
+        .and_then(serde_json::Value::as_str)
+        .is_some_and(|id| !wanted.iter().any(|wanted| wanted.as_str() == id))
+    {
+        fields.remove("defaultModel");
+    }
+    // Fixed npm 2.97.0 types/provider.ts: exact upstream model IDs map
+    // to independent review catalog selectors. Values are not scope IDs.
+    if let Some(value) = fields.get_mut("autoReviewModelOverrides") {
+        let map = value
+            .as_object_mut()
+            .ok_or_else(|| error("model_public_source_scope"))?;
+        if map.values().any(|v| !v.is_string() && !v.is_null()) {
+            return Err(error("model_public_source_scope"));
+        }
+        map.retain(|id, _| {
+            wanted.contains(id)
+                || (!observed_ids.contains(id)
+                    && wanted
+                        .iter()
+                        .any(|raw| raw.contains('/') && raw.replace('/', "-") == *id))
+        });
+    }
+    Ok(public)
+}
+/// Attach only validated, explicitly captured source objects to selected
+/// channels. Scope narrowing is pure and payload digests are always refreshed.
+pub fn attach_public_sources_v2(
+    package: &PortableModelsV2,
+    sources: &BTreeMap<String, serde_json::Value>,
+) -> Result<PortableModelsV2> {
+    validate_portable_models_v2(package)?;
+    let mut next = package.clone();
+    for (id, public) in sources {
+        let channel = next
+            .payload
+            .policy
+            .as_mut()
+            .and_then(|p| p.channels.iter_mut().find(|c| &c.id == id))
+            .ok_or_else(|| error("model_public_source_scope"))?;
+        if channel.family_scope.is_some() || channel.connection.is_none() {
+            return Err(error("model_public_source_scope"));
+        }
+        validate_public_source_v2(channel, public)?;
+        let public = scoped_public_source_v2(channel, public)?;
+        channel.connection.as_mut().unwrap().provider = Some(public);
+    }
+    next.digest = digest(&canonical_bytes(&next.payload)?);
+    validate_portable_models_v2(&next)?;
+    Ok(next)
 }
