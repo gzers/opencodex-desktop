@@ -904,3 +904,123 @@ mod tests {
         assert!(desired(&library, &policy).is_err());
     }
 }
+
+// v2 entry points are deliberately additive. v1 call sites remain untouched
+// until L0 switches the actual read/compile/save transaction together.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct RuntimeMappingV2 {
+    pub channel_id: String,
+    pub protocol: super::schema_v2::ProtocolV2,
+    pub wire_profile_digest: String,
+    pub provider_id: String,
+    pub anchor: bool,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct MappingFileV2 {
+    pub schema_version: u32,
+    pub mappings: Vec<RuntimeMappingV2>,
+}
+impl Default for MappingFileV2 {
+    fn default() -> Self {
+        Self {
+            schema_version: 2,
+            mappings: vec![],
+        }
+    }
+}
+pub fn validate_mappings_v2(file: &MappingFileV2) -> super::schema_v2::Result<()> {
+    use super::schema_v2::{check_id, error, valid_digest};
+    if file.schema_version != 2 {
+        return Err(error("model_schema_unsupported"));
+    }
+    if file.mappings.len() > 8192 {
+        return Err(error("model_limit"));
+    }
+    let mut keys = BTreeSet::new();
+    let mut providers = BTreeSet::new();
+    let mut anchors = BTreeSet::new();
+    for mapping in &file.mappings {
+        check_id(&mapping.channel_id)?;
+        if !valid_digest(&mapping.wire_profile_digest)
+            || mapping.provider_id.trim().is_empty()
+            || mapping.provider_id.len() > 512
+            || mapping.provider_id.chars().any(char::is_control)
+            || !keys.insert((
+                &mapping.channel_id,
+                &mapping.protocol,
+                &mapping.wire_profile_digest,
+            ))
+            || !providers.insert(&mapping.provider_id)
+            || mapping.anchor && !anchors.insert(&mapping.channel_id)
+        {
+            return Err(error("model_runtime_mapping_conflict"));
+        }
+    }
+    Ok(())
+}
+/// Only L0 supplies newly allocated identities. A preview never creates one.
+pub fn plan_mappings_v2(
+    existing: &MappingFileV2,
+    groups: &[super::source_v2::ProtocolGroupPlanV2],
+    allocated: &[RuntimeMappingV2],
+) -> super::schema_v2::Result<MappingFileV2> {
+    use super::schema_v2::error;
+    validate_mappings_v2(existing)?;
+    let mut next = existing.clone();
+    for mapping in allocated {
+        if let Some(old) = next.mappings.iter().find(|old| {
+            old.channel_id == mapping.channel_id
+                && old.protocol == mapping.protocol
+                && old.wire_profile_digest == mapping.wire_profile_digest
+        }) {
+            if old != mapping {
+                return Err(error("model_runtime_mapping_conflict"));
+            }
+        } else {
+            next.mappings.push(mapping.clone());
+        }
+    }
+    validate_mappings_v2(&next)?;
+    for group in groups {
+        if !next.mappings.iter().any(|m| {
+            m.channel_id == group.channel_id
+                && m.protocol == group.protocol
+                && m.wire_profile_digest == group.wire_profile_digest
+        }) {
+            return Err(error("model_runtime_mapping_conflict"));
+        }
+    }
+    next.mappings.sort_by(|a, b| {
+        (&a.channel_id, &a.protocol, &a.wire_profile_digest).cmp(&(
+            &b.channel_id,
+            &b.protocol,
+            &b.wire_profile_digest,
+        ))
+    });
+    Ok(next)
+}
+pub fn mapping_for_group_v2<'a>(
+    file: &'a MappingFileV2,
+    group: &super::source_v2::ProtocolGroupPlanV2,
+) -> super::schema_v2::Result<&'a RuntimeMappingV2> {
+    validate_mappings_v2(file)?;
+    file.mappings
+        .iter()
+        .find(|m| {
+            m.channel_id == group.channel_id
+                && m.protocol == group.protocol
+                && m.wire_profile_digest == group.wire_profile_digest
+        })
+        .ok_or_else(|| super::schema_v2::error("model_runtime_mapping_conflict"))
+}
+
+pub fn mapping_marker_v2(mapping: &RuntimeMappingV2) -> String {
+    format!(
+        "OpenCodeX v2 channel={} protocol={} wire={}",
+        mapping.channel_id,
+        mapping.protocol.as_str(),
+        mapping.wire_profile_digest
+    )
+}

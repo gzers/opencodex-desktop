@@ -17,6 +17,7 @@ pub mod status_source;
 pub(crate) mod storage_writers;
 pub mod tray_controller;
 pub mod webdav_client;
+pub mod webdav_config_v2;
 
 pub mod app_activity;
 pub mod window_appearance;

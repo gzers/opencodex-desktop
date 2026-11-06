@@ -92,7 +92,9 @@ pub fn at(mut err: MatchErrorV2, channel: &str, model: &str) -> MatchErrorV2 {
     err
 }
 pub fn json_error(err: serde_json::Error) -> MatchErrorV2 {
-    error(if err.to_string().contains("unknown field") {
+    error(if err.to_string().contains("duplicate JSON object key") {
+        "model_json_duplicate_key"
+    } else if err.to_string().contains("unknown field") {
         "model_unknown_field"
     } else {
         "model_source_invalid"
@@ -547,7 +549,8 @@ pub fn validate_library_v2(library: &LibraryV2) -> Result<()> {
     Ok(())
 }
 pub fn seed_library_v2() -> Result<LibraryV2> {
-    let library = serde_json::from_str(include_str!("seed_v2.json")).map_err(json_error)?;
+    let library = serde_json::from_value(parse_strict_json_v2(include_bytes!("seed_v2.json"))?)
+        .map_err(json_error)?;
     validate_library_v2(&library)?;
     Ok(library)
 }
@@ -702,4 +705,99 @@ pub fn save_revision_plan_v2(
     }
     validate_library_v2(&next)?;
     Ok(next)
+}
+
+/// Strict recursive JSON decoder shared by every v2 file/package boundary.
+/// serde_json::Value alone would silently keep the last duplicate object key.
+pub fn parse_strict_json_v2(bytes: &[u8]) -> Result<Value> {
+    if bytes.len() > 32 * 1024 * 1024 {
+        return Err(error("model_limit"));
+    }
+    struct Unique(Value);
+    impl<'de> Deserialize<'de> for Unique {
+        fn deserialize<D: serde::Deserializer<'de>>(
+            decoder: D,
+        ) -> std::result::Result<Self, D::Error> {
+            struct Visitor;
+            impl<'de> serde::de::Visitor<'de> for Visitor {
+                type Value = Unique;
+                fn expecting(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                    f.write_str("JSON with unique object keys")
+                }
+                fn visit_bool<E: serde::de::Error>(
+                    self,
+                    value: bool,
+                ) -> std::result::Result<Unique, E> {
+                    Ok(Unique(Value::Bool(value)))
+                }
+                fn visit_i64<E: serde::de::Error>(
+                    self,
+                    value: i64,
+                ) -> std::result::Result<Unique, E> {
+                    Ok(Unique(Value::Number(value.into())))
+                }
+                fn visit_u64<E: serde::de::Error>(
+                    self,
+                    value: u64,
+                ) -> std::result::Result<Unique, E> {
+                    Ok(Unique(Value::Number(value.into())))
+                }
+                fn visit_f64<E: serde::de::Error>(
+                    self,
+                    value: f64,
+                ) -> std::result::Result<Unique, E> {
+                    serde_json::Number::from_f64(value)
+                        .map(|n| Unique(Value::Number(n)))
+                        .ok_or_else(|| E::custom("invalid JSON number"))
+                }
+                fn visit_str<E: serde::de::Error>(
+                    self,
+                    value: &str,
+                ) -> std::result::Result<Unique, E> {
+                    Ok(Unique(Value::String(value.into())))
+                }
+                fn visit_string<E: serde::de::Error>(
+                    self,
+                    value: String,
+                ) -> std::result::Result<Unique, E> {
+                    Ok(Unique(Value::String(value)))
+                }
+                fn visit_unit<E: serde::de::Error>(self) -> std::result::Result<Unique, E> {
+                    Ok(Unique(Value::Null))
+                }
+                fn visit_none<E: serde::de::Error>(self) -> std::result::Result<Unique, E> {
+                    Ok(Unique(Value::Null))
+                }
+                fn visit_seq<A: serde::de::SeqAccess<'de>>(
+                    self,
+                    mut sequence: A,
+                ) -> std::result::Result<Unique, A::Error> {
+                    let mut values = Vec::new();
+                    while let Some(Unique(value)) = sequence.next_element::<Unique>()? {
+                        values.push(value);
+                    }
+                    Ok(Unique(Value::Array(values)))
+                }
+                fn visit_map<A: serde::de::MapAccess<'de>>(
+                    self,
+                    mut object: A,
+                ) -> std::result::Result<Unique, A::Error> {
+                    let mut values = serde_json::Map::new();
+                    while let Some(key) = object.next_key::<String>()? {
+                        if values.contains_key(&key) {
+                            return Err(serde::de::Error::custom("duplicate JSON object key"));
+                        }
+                        let Unique(value) = object.next_value::<Unique>()?;
+                        values.insert(key, value);
+                    }
+                    Ok(Unique(Value::Object(values)))
+                }
+            }
+            decoder.deserialize_any(Visitor)
+        }
+    }
+    let mut decoder = serde_json::Deserializer::from_slice(bytes);
+    let Unique(value) = Unique::deserialize(&mut decoder).map_err(json_error)?;
+    decoder.end().map_err(json_error)?;
+    Ok(value)
 }
