@@ -115,11 +115,12 @@ try{
  Set-Item Function:Get-TwoUserProcessFact -Value $originalGetProcess
  if($oldGetProcess){Set-Item Function:Get-Process -Value $oldGetProcess.ScriptBlock}else{Remove-Item Function:Get-Process}
 }
+$taskHelperSource=Get-Content -LiteralPath $taskHelper -Raw
+Assert-Test ($taskHelperSource.Contains(".codex-desktop/opencodex/home")) 'actual-v2-home-leaf-is-home'
+Assert-Test ($taskHelperSource.Contains("Windows UI CLI capability boundary changed")) 'windows-ui-cli-remains-disabled-with-isolated-pipe-fixture'
+
 $result=[ordered]@{schemaVersion=1;result='pass-static-only';checks=$taskChecks.ToArray();checksPassed=$taskChecks.Count;nativeExecuted=$false;accountsCreated=$false;managerStarted=$false;twoSidNativePassed=$false;runtimeProxyPortIsolation='not-verified';host=$PSVersionTable.OS;powershell=$PSVersionTable.PSVersion.ToString();files=@()}
 foreach($f in @($taskMain,$taskHelper,$PSCommandPath)){$result.files+=@{path=$f;sha256=(Get-FileHash -LiteralPath $f -Algorithm SHA256).Hash.ToLowerInvariant()}}
 $result|ConvertTo-Json -Depth 9|Set-Content -LiteralPath (Join-Path $taskOutput 'static-tests.json') -Encoding utf8
 $result|ConvertTo-Json -Depth 9
 
-$taskHelperSource=Get-Content -LiteralPath $taskHelper -Raw
-Assert-Test ($taskHelperSource.Contains(".codex-desktop/opencodex/home")) 'actual-v2-home-leaf-is-home'
-Assert-Test ($taskHelperSource.Contains("Windows UI CLI capability boundary changed")) 'windows-ui-cli-remains-disabled-with-isolated-pipe-fixture'
