@@ -69,6 +69,98 @@ struct Stored {
     protection: String,
 }
 
+/// Explicit D-bound read for snapshot/endpoint owners. It neither configures
+/// the process singleton nor reads its cache; another root cannot reuse a value.
+pub fn load_optional_at(
+    root: &Path,
+    purpose: &str,
+    ref_id: &str,
+) -> Result<Option<Zeroizing<String>>, AppError> {
+    if !root.is_absolute()
+        || root
+            .components()
+            .any(|c| matches!(c, std::path::Component::ParentDir))
+    {
+        return Err(AppError::NotConfigured);
+    }
+    if ![WEBDAV_CREDENTIAL_PURPOSE, ENCRYPTION_PASSWORD_PURPOSE].contains(&purpose) {
+        return Err(AppError::NotConfigured);
+    }
+    let account = account_key(purpose, ref_id)?;
+    let path = path_for(root, &account);
+    crate::modules::backup::safety::check_path(root, &path, true)?;
+    let bytes = match std::fs::symlink_metadata(&path) {
+        Ok(_) => Zeroizing::new(crate::modules::backup::safety::read_file(
+            &path,
+            1024 * 1024,
+        )?),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+        Err(_) => return Err(AppError::NotConfigured),
+    };
+    decode(&bytes, &account).map(Some)
+}
+
+#[cfg(test)]
+mod explicit_root_tests {
+    use super::*;
+    #[test]
+    fn explicit_reads_never_reuse_another_roots_cache_or_create_missing_files() {
+        let temp = tempfile::tempdir().unwrap();
+        let a = temp.path().join("a");
+        let b = temp.path().join("b");
+        std::fs::create_dir_all(&a).unwrap();
+        std::fs::create_dir_all(&b).unwrap();
+        let reference = crate::infrastructure::keychain::new_ref_id();
+        let account = account_key(WEBDAV_CREDENTIAL_PURPOSE, &reference).unwrap();
+        for (root, value) in [(&a, "a-synthetic"), (&b, "b-synthetic")] {
+            let file = path_for(root, &account);
+            std::fs::create_dir_all(file.parent().unwrap()).unwrap();
+            std::fs::write(file, encode(&account, value).unwrap()).unwrap();
+        }
+        cache()
+            .lock()
+            .unwrap()
+            .insert(account.clone(), Zeroizing::new("wrong-cached-value".into()));
+        assert_eq!(
+            load_optional_at(&a, WEBDAV_CREDENTIAL_PURPOSE, &reference)
+                .unwrap()
+                .unwrap()
+                .as_str(),
+            "a-synthetic"
+        );
+        assert_eq!(
+            load_optional_at(&b, WEBDAV_CREDENTIAL_PURPOSE, &reference)
+                .unwrap()
+                .unwrap()
+                .as_str(),
+            "b-synthetic"
+        );
+        let missing = temp.path().join("missing");
+        std::fs::create_dir_all(&missing).unwrap();
+        assert!(
+            load_optional_at(&missing, WEBDAV_CREDENTIAL_PURPOSE, &reference)
+                .unwrap()
+                .is_none()
+        );
+        assert_eq!(std::fs::read_dir(&missing).unwrap().count(), 0);
+        cache().lock().unwrap().remove(&account);
+    }
+    #[cfg(unix)]
+    #[test]
+    fn explicit_read_refuses_symlink_outside_root() {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().join("root");
+        std::fs::create_dir_all(root.join("manager-state")).unwrap();
+        std::os::unix::fs::symlink(temp.path(), root.join(CREDENTIALS_DIR)).unwrap();
+        assert!(load_optional_at(
+            &root,
+            WEBDAV_CREDENTIAL_PURPOSE,
+            &crate::infrastructure::keychain::new_ref_id()
+        )
+        .is_err());
+    }
+}
+
 fn encode(account: &str, password: &str) -> Result<Vec<u8>, AppError> {
     #[cfg(windows)]
     let (value, protection) = (dpapi::protect(password)?, "dpapi");
