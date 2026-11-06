@@ -28,12 +28,14 @@ fn fixture_pin(path: &Path) -> RecoverySourcePin {
     )
     .unwrap()
 }
+#[cfg(unix)]
 struct Source {
     path: PathBuf,
     pin: RecoverySourcePin,
     receiver: SharedOfflineDrop,
     copies: Mutex<Vec<PathBuf>>,
 }
+#[cfg(unix)]
 impl SourceResolver for Source {
     fn resolve(
         &self,

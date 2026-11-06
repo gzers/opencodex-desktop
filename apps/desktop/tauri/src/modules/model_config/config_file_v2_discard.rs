@@ -58,7 +58,7 @@ fn discard_with_store(
         }
         let directory = root.join(DISCARDS);
         safety::check_path(root, &directory, true).map_err(io)?;
-        std::fs::create_dir_all(&directory).map_err(io)?;
+        crate::infrastructure::platform::create_private_dir_all(&directory, 0o700).map_err(io)?;
         crate::infrastructure::platform::set_mode(&directory, 0o700).map_err(io)?;
         let tombstone = directory.join(format!("{}.json", uuid::Uuid::new_v4()));
         safety::check_path(root, &tombstone, true).map_err(io)?;

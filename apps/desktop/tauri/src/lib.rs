@@ -577,9 +577,13 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             commands::config_file_transfer_v2::catalog_config_file_v2,
+            commands::config_file_transfer_v2::file_v2_read_scope,
+            commands::config_file_transfer_v2::file_v2_save_scope,
             commands::config_file_transfer_v2::prepare_config_file_export_v2,
             commands::config_file_transfer_v2::prepare_draft_config_file_export_v2,
             commands::config_file_transfer_v2::save_config_file_export_v2,
+            commands::config_file_transfer_v2::config_file_export_output_v2,
+            commands::config_file_transfer_v2::open_config_file_export_directory_v2,
             commands::config_file_transfer_v2::cancel_config_file_export_v2,
             commands::config_file_transfer_v2::open_config_file_import_v2,
             commands::config_file_transfer_v2::reselect_config_file_import_v2,
@@ -639,6 +643,7 @@ pub fn run() {
             commands::model_config_v2::model_v2_stage_connection,
             commands::model_config_v2::model_v2_file_save,
             commands::model_config_v2::model_v2_file_project,
+            commands::model_config_v2::model_v2_file_discard,
             commands::model_config_v2::model_v2_file_history,
             commands::model_config_v2::model_v2_file_history_prepare,
             commands::model_config_v2::model_v2_file_history_accept,

@@ -626,6 +626,68 @@ fn source_inventory_dtos_expose_exact_references_and_per_source_binding_without_
     )
     .is_err());
 }
+#[test]
+fn inventory_dtos_keep_key_and_authorization_independent_for_cloud_and_default_old_fields() {
+    let e = Env::new();
+    let saved = capture::capture(
+        &e.root,
+        &e.home,
+        &capture::CaptureRequestV2 {
+            selection: e.backend.selection.clone(),
+            mcp_clients: Default::default(),
+            assets_reviewed: false,
+        },
+        &CatalogNeverCredentials,
+    )
+    .unwrap()
+    .objects;
+    let id = e.backend.selection.channels[0].portable_channel_id.clone();
+    let row = entries_from(&saved, true)
+        .into_iter()
+        .find(|r| r.id == id)
+        .unwrap();
+    assert!(!row.key_available && !row.authorization_available && !row.secret_available);
+    let mut old = serde_json::to_value(&row).unwrap();
+    old.as_object_mut().unwrap().remove("keyAvailable");
+    old.as_object_mut()
+        .unwrap()
+        .remove("authorizationAvailable");
+    let old: ObjectEntryV2 = serde_json::from_value(old).unwrap();
+    assert!(!old.key_available && !old.authorization_available);
+    let mut parts = saved.into_captured();
+    parts
+        .channel_keys
+        .insert(id.clone(), Zeroizing::new("synthetic-cloud-key".into()))
+        .unwrap();
+    let keyed = SavedObjects::capture(parts, Some(&host::PayloadAuthorizationV2)).unwrap();
+    let row = entries_from(&keyed, false)
+        .into_iter()
+        .find(|r| r.id == id)
+        .unwrap();
+    assert!(
+        row.available_cloud && !row.available_local && row.key_available && row.secret_available
+    );
+    assert!(!row.authorization_available);
+    let mut parts = keyed.into_captured();
+    parts.channel_keys = file_objects_v2::SecretValues::new();
+    parts.channel_authorizations.insert(
+        id.clone(),
+        serde_json::from_value(json!({
+            "activeId":null,"fields":{"headers":{"X-Fixture":"synthetic-cloud-authorization"}}
+        }))
+        .unwrap(),
+    );
+    let authorized = SavedObjects::capture(parts, Some(&host::PayloadAuthorizationV2)).unwrap();
+    let row = entries_from(&authorized, false)
+        .into_iter()
+        .find(|r| r.id == id)
+        .unwrap();
+    assert!(row.authorization_available && row.secret_available);
+    assert!(!row.key_available);
+    let public = serde_json::to_string(&row).unwrap();
+    assert!(!public.contains("synthetic-cloud-authorization"));
+    assert!(!public.contains("synthetic-cloud-key"));
+}
 fn production_service(e: &Env) -> SyncServiceV2 {
     SyncServiceV2::new(
         e.root.clone(),
@@ -1422,6 +1484,20 @@ fn local_file_catalog_needs_no_endpoint_and_preserves_actual_saved_ids_models_an
     let mut raw: serde_json::Value =
         serde_json::from_slice(&std::fs::read(e.home.join("config.json")).unwrap()).unwrap();
     raw["providers"]["fixture"]["apiKey"] = json!("synthetic-unselected-local-key");
+    raw["codexAccounts"] = json!([{
+        "id":"work-slot", "email":"metadata@example.test", "chatgptAccountId":"work-tenant"
+    }]);
+    let legacy_id = uuid::Uuid::new_v4().to_string();
+    let blocked_id = uuid::Uuid::new_v4().to_string();
+    std::fs::write(
+        e.root.join(crate::modules::sync::portable_accounts::IMPORTED),
+        serde_json::to_vec(&json!([
+            {"id":legacy_id,"provider":"chatgpt","subject":null,"label":"Legacy","email":null},
+            {"id":blocked_id,"provider":"muse","subject":"blocked-subject","label":"Foreign owner","email":null,
+             "origin":{"version":1,"accountPlatform":"muse","owner":"platform-native","authKind":"oauth",
+                "sourceNamespace":"oauth-account-pool","sourceAccountId":"foreign-slot","tenant":null}}
+        ])).unwrap(),
+    ).unwrap();
     std::fs::write(
         e.home.join("config.json"),
         serde_json::to_vec(&raw).unwrap(),
@@ -1447,6 +1523,39 @@ fn local_file_catalog_needs_no_endpoint_and_preserves_actual_saved_ids_models_an
         e.backend.selection.channels[0].portable_channel_id
     );
     assert!(channel.secret_available);
+    assert!(channel.key_available);
+    assert!(!channel.authorization_available);
+    assert_eq!(catalog.accounts.len(), 3);
+    let accounts = &catalog.accounts;
+    let local = accounts.iter().find(|a| a.local_source).unwrap();
+    assert!(local.information_supported);
+    assert_eq!(local.account.provider, "chatgpt");
+    assert_eq!(
+        local.account.email.as_deref(),
+        Some("metadata@example.test")
+    );
+    let origin = local.account.origin.as_ref().unwrap();
+    assert_eq!(origin.account_platform, "chatgpt");
+    assert_eq!(origin.owner, "opencodex");
+    assert_eq!(origin.source_namespace, "codex-account-pool");
+    assert_eq!(origin.source_account_id, "work-slot");
+    assert_eq!(origin.tenant.as_deref(), Some("work-tenant"));
+    assert_eq!(origin.auth_kind, "oauth");
+    let legacy = accounts.iter().find(|a| a.account.id == legacy_id).unwrap();
+    assert!(legacy.information_supported);
+    assert!(legacy.account.origin.is_none());
+    let blocked = accounts
+        .iter()
+        .find(|a| a.account.id == blocked_id)
+        .unwrap();
+    assert!(!blocked.information_supported);
+    assert!(!catalog.entries.iter().any(|entry| entry.id == blocked_id));
+    for row in accounts {
+        assert_eq!(
+            row.information_supported,
+            crate::modules::sync::portable_accounts::information_supported(&row.account)
+        );
+    }
     assert_eq!(channel.models[0].raw_model_id, "fixture-model");
     assert!(channel.available_local);
     assert!(!channel.available_cloud);
@@ -1470,6 +1579,18 @@ fn local_file_catalog_needs_no_endpoint_and_preserves_actual_saved_ids_models_an
     let public = serde_json::to_string(&catalog).unwrap();
     assert!(!public.contains("synthetic-unselected-local-key"));
     assert!(!public.contains("credentialRef"));
+    assert!(!public.contains("accessToken"));
+    assert!(!public.contains("refreshToken"));
+    let value = serde_json::to_value(&catalog).unwrap();
+    assert_eq!(
+        value["accounts"][0]["informationSupported"],
+        catalog.accounts[0].information_supported
+    );
+    assert!(value["entries"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|entry| entry["keyAvailable"] == true && entry["authorizationAvailable"] == false));
 }
 #[test]
 fn local_file_catalog_lists_webdav_candidates_and_password_availability_without_reading_values() {
@@ -1504,7 +1625,33 @@ fn local_file_catalog_lists_webdav_candidates_and_password_availability_without_
     let candidate = &catalog.webdav_connections[0];
     assert_eq!(candidate.id, "default");
     assert!(candidate.password_available);
+    let channel = catalog
+        .entries
+        .iter()
+        .find(|row| row.kind == ObjectKindV2::Channel)
+        .unwrap();
+    assert!(!channel.key_available);
+    assert!(!channel.authorization_available);
+    let mut raw: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(e.home.join("config.json")).unwrap()).unwrap();
+    raw["providers"]["fixture"]["headers"] =
+        json!({"X-Fixture":"synthetic-unselected-authorization"});
+    std::fs::write(
+        e.home.join("config.json"),
+        serde_json::to_vec(&raw).unwrap(),
+    )
+    .unwrap();
+    let catalog = backend.local_file_catalog().unwrap();
+    let channel = catalog
+        .entries
+        .iter()
+        .find(|row| row.kind == ObjectKindV2::Channel)
+        .unwrap();
+    assert!(channel.secret_available);
+    assert!(!channel.key_available);
+    assert!(channel.authorization_available);
     let public = serde_json::to_string(&catalog).unwrap();
+    assert!(!public.contains("synthetic-unselected-authorization"));
     assert!(!public.contains("not decoded"));
     assert!(!public.contains(CREDS));
     assert!(!public.contains("accountKey"));
@@ -1527,7 +1674,7 @@ fn local_file_catalog_keeps_conflicting_mcp_per_source_choices_without_endpoint_
     std::fs::create_dir_all(e.home.join(".hermes")).unwrap();
     std::fs::write(
         e.home.join(".codex/config.toml"),
-        "[mcp_servers.localfixture]\ncommand = 'codex-command'\n",
+        "[mcp_servers.localfixture]\ncommand = 'codex-command'\n[mcp_servers.localfixture.env]\nTOKEN = 'synthetic-unselected-mcp-token'\n",
     )
     .unwrap();
     std::fs::write(
@@ -1553,10 +1700,17 @@ fn local_file_catalog_keeps_conflicting_mcp_per_source_choices_without_endpoint_
         .iter()
         .all(|s| super::super::schema_v2::valid_digest(&s.definition_digest)));
     assert!(!mcp.differing_fields.is_empty());
-    assert!(catalog
+    let row = catalog
         .entries
         .iter()
-        .any(|e| e.kind == ObjectKindV2::Mcp && e.id == "localfixture"));
+        .find(|e| e.kind == ObjectKindV2::Mcp && e.id == "localfixture")
+        .unwrap();
+    assert!(row.secret_available);
+    assert!(!row.key_available);
+    assert!(!row.authorization_available);
+    assert!(!serde_json::to_string(&catalog)
+        .unwrap()
+        .contains("synthetic-unselected-mcp-token"));
     assert_eq!(e.remote.gets.load(Ordering::SeqCst), 0);
 }
 #[tokio::test]

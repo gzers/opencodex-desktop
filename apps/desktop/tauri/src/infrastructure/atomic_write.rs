@@ -19,9 +19,13 @@ pub fn atomic_write(target: &Path, data: &[u8], permissions: u32) -> Result<(), 
             reason: "target has no parent directory".to_string(),
         })?;
 
-    std::fs::create_dir_all(parent).map_err(|error| AppError::AtomicWrite {
-        reason: format!("create parent directory: {}", error),
-    })?;
+    if !parent.is_dir() {
+        crate::infrastructure::platform::create_private_dir_all(parent, 0o700).map_err(
+            |error| AppError::AtomicWrite {
+                reason: format!("create parent directory: {}", error),
+            },
+        )?;
+    }
 
     let temp_path = create_temp_sibling(target, permissions)?;
     let result = write_and_replace(&temp_path, target, data, permissions);
@@ -49,12 +53,7 @@ fn create_temp_sibling(target: &Path, permissions: u32) -> Result<PathBuf, AppEr
                 })?
                 .as_nanos()
         ));
-        match OpenOptions::new()
-            .create_new(true)
-            .write(true)
-            .create_mode(permissions)
-            .open(&candidate)
-        {
+        match crate::infrastructure::platform::create_new_private_file(&candidate, permissions) {
             Ok(_) => return Ok(candidate),
             Err(error) if error.kind() == io::ErrorKind::AlreadyExists => continue,
             Err(error) => {

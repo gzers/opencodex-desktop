@@ -96,6 +96,11 @@ struct Plan {
     id: String,
     binding: Binding,
     entries: Vec<Entry>,
+    #[serde(default, skip_serializing_if = "is_false")]
+    protected_restore: bool,
+}
+fn is_false(value: &bool) -> bool {
+    !*value
 }
 #[derive(Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
@@ -179,8 +184,9 @@ fn target_key(t: &TargetV2) -> Result<String> {
         }
     })
 }
-fn deletion_allowed(t: &TargetV2) -> bool {
+fn deletion_allowed(t: &TargetV2, protected_restore: bool) -> bool {
     matches!(t, TargetV2::Manager(p) if p == DRAFT)
+        || protected_restore && matches!(t, TargetV2::OfficialConfig | TargetV2::Manager(_))
 }
 fn target_limit(target: &TargetV2) -> usize {
     if matches!(target, TargetV2::ManagerOperationReceipt(_)) {
@@ -397,7 +403,17 @@ impl Dir {
             let path = self.path.join(name);
             let mut created = false;
             if create {
-                match std::fs::create_dir(&path) {
+                #[cfg(windows)]
+                let made = if secret {
+                    crate::infrastructure::windows_private_create::create_private_dir_all(
+                        &path, 0o700,
+                    )
+                } else {
+                    std::fs::create_dir(&path)
+                };
+                #[cfg(not(windows))]
+                let made = std::fs::create_dir(&path);
+                match made {
                     Ok(()) => created = true,
                     Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => (),
                     Err(_) => return Err(fault("model_transaction_io")),
@@ -463,7 +479,21 @@ impl Dir {
                     options.access_mode(0x40000000 | 0x00040000 | 0x00020000);
                 }
             }
-            options.open(self.path.join(name))
+            #[cfg(windows)]
+            {
+                if create {
+                    crate::infrastructure::platform::create_new_private_file(
+                        &self.path.join(name),
+                        0o600,
+                    )
+                } else {
+                    options.open(self.path.join(name))
+                }
+            }
+            #[cfg(not(windows))]
+            {
+                options.open(self.path.join(name))
+            }
         };
         match opened {
             Ok(f) => {
@@ -841,7 +871,8 @@ fn validate_journal(j: &Journal, m: &Marker, binding: &Binding) -> Result<()> {
     let mut total = 0;
     for e in &j.plan.entries {
         if !seen.insert(target_key(&e.target)?)
-            || (e.after.is_none() && !deletion_allowed(&e.target))
+            || j.plan.protected_restore && matches!(e.target, TargetV2::ManagerOperationReceipt(_))
+            || (e.after.is_none() && !deletion_allowed(&e.target, j.plan.protected_restore))
         {
             return Err(fault("model_transaction_target_invalid"));
         }
@@ -974,6 +1005,25 @@ fn finish(
 /// Prepare durable exact images, check every before twice, then per-file CAS,
 /// atomic replacement and readback. No target locks are acquired here.
 pub fn commit(root: &Path, home: &Path, writes: Vec<WriteV2>) -> Result<()> {
+    commit_mode(root, home, writes, false)
+}
+/// Trusted backup owner only. Caller must verify original protected images,
+/// selected dependency graph and current-after CAS before constructing writes.
+/// This mode is persisted in the same immutable plan for interrupted recovery;
+/// receipt targets and arbitrary Manager paths remain forbidden.
+pub(crate) fn commit_protected_restore(
+    root: &Path,
+    home: &Path,
+    writes: Vec<WriteV2>,
+) -> Result<()> {
+    commit_mode(root, home, writes, true)
+}
+fn commit_mode(
+    root: &Path,
+    home: &Path,
+    writes: Vec<WriteV2>,
+    protected_restore: bool,
+) -> Result<()> {
     if writes.len() > MAX_FILES {
         return Err(fault("model_transaction_limit"));
     }
@@ -981,7 +1031,8 @@ pub fn commit(root: &Path, home: &Path, writes: Vec<WriteV2>) -> Result<()> {
     let mut total = 0;
     for w in &writes {
         if !seen.insert(target_key(&w.target)?)
-            || (w.after.is_none() && !deletion_allowed(&w.target))
+            || protected_restore && matches!(w.target, TargetV2::ManagerOperationReceipt(_))
+            || (w.after.is_none() && !deletion_allowed(&w.target, protected_restore))
         {
             return Err(fault("model_transaction_target_invalid"));
         }
@@ -1021,6 +1072,7 @@ pub fn commit(root: &Path, home: &Path, writes: Vec<WriteV2>) -> Result<()> {
     let mut j = Journal {
         version: 2,
         plan: Plan {
+            protected_restore,
             id: id.clone(),
             binding: c.binding()?,
             entries: writes

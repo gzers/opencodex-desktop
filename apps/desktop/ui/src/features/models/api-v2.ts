@@ -45,6 +45,9 @@ export interface ReadExistingRequestV2 {expectedSource:string;expectedLibrary:st
 export interface ReadExistingResponseV2 {snapshot:FileSnapshotV2;results:ReadMatchDtoV2[]}
 export type ChannelIntentV2={kind:'rename';channelId:string;name:string}|{kind:'set_selection';channelId:string;selection:ModelSelectionV2}|{kind:'set_enabled';channelId:string;enabled:boolean}|{kind:'set_order';channelId:string;rawModelIds:string[]}|{kind:'set_defaults';channelId:string;rules:RulesV2}|{kind:'set_family_defaults';channelId:string;templateId:string;rules:RulesV2}|{kind:'set_naming';channelId:string;rawModelId:string;alias:string|null;displayName:string|null}|{kind:'set_template_refs';channelId:string;references:RefV2[]}|{kind:'delete';channelId:string}|{kind:'set_active_node';channelId:string;nodeId:string}
 export interface FileSaveRequestV2 {expected:ReadBaseV2;edits:ModelEditV2[];channelIntents:ChannelIntentV2[];scopeChannelId?:string|null}
+export interface ModelHistoryEntryV2 {id:string;createdAt:string|null;phase:'applying'|'rolling_back'|'committed'|'rolled_back';channelLabels:string[];recoverable:boolean}
+export interface ModelHistoryPrepareV2 {sourceId:string;side:'before'|'after';scope:'affected'|'all';restoreDefaults:boolean;expected:ReadBaseV2}
+export interface ModelHistoryPlanV2 {recoveryId:string;sourceId:string;side:'before'|'after';scope:'affected'|'all';restoreDefaults:boolean;changes:{field:string;before:unknown;after:unknown}[];defaultChanges:{field:string;before:unknown;after:unknown}[];channelLabels:string[];notices:string[];requiresRuntimeReview:boolean;targetDigest:string}
 // L0/L1 frozen readonly contract. Registration/normal-crate SHA is tracked separately.
 export interface DraftProjectionV2 {expected:ReadBaseV2;effective:EffectiveModelV2[];intended:PolicyV2;digest:string}
 export interface StageConnectionRequestV2 {expected:ReadBaseV2|null;expectedSource:string;expectedLibrary:string;channelId:string|null;name:string;url:string;nodes?:ConnectionV2['nodes'];activeNodeId?:string;authMode:'key'|'none';apiKey:string|null;rawModelIds:string[];selectedModelIds:string[]}
@@ -143,6 +146,10 @@ export const modelV2Api={
   readExisting:(request:ReadExistingRequestV2)=>invoke<ReadExistingResponseV2>('model_v2_read_existing',{request}),
   stageConnection:(request:StageConnectionRequestV2)=>invoke<FileSnapshotV2>('model_v2_stage_connection',{request}),
   fileSave:(request:FileSaveRequestV2)=>invoke<FileSnapshotV2>('model_v2_file_save',{request}),
+  discardFile:(expected:ReadBaseV2)=>invoke<FileSnapshotV2>('model_v2_file_discard',{expected}),
+  fileHistory:()=>invoke<ModelHistoryEntryV2[]>('model_v2_file_history'),
+  prepareHistory:(request:ModelHistoryPrepareV2)=>invoke<ModelHistoryPlanV2>('model_v2_file_history_prepare',{request}),
+  acceptHistory:(recoveryId:string)=>invoke<FileSnapshotV2>('model_v2_file_history_accept',{recoveryId}),
   fileProject:(request:FileSaveRequestV2)=>invoke<DraftProjectionV2>('model_v2_file_project',{request}),
   copyChannel:(request:{expected:ReadBaseV2;channelId:string;name:string;reuseSourceKey:boolean})=>invoke<FileSnapshotV2>('model_v2_copy_channel',{request}),
   credentialView:(channelId:string)=>invoke<{configured:boolean;value:string;source:string;viewable:boolean}>('model_v2_credential_view',{channelId}),

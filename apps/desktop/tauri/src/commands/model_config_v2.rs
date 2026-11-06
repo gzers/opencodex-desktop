@@ -888,3 +888,20 @@ pub async fn model_v2_file_history_accept(
     )
     .await
 }
+
+#[tauri::command]
+pub async fn model_v2_file_discard(
+    expected: crate::modules::model_config::source_v2::ReadBaseV2,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::config_file::v2::FileSnapshotV2> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        true,
+        move |root, home| {
+            crate::modules::model_config::config_file::v2::discard(root, home, expected)
+        },
+    )
+    .await
+}

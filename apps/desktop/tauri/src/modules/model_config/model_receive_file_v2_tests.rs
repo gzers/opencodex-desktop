@@ -1704,3 +1704,34 @@ fn first_receive_preserves_explicit_no_secret_auth_mode_and_allows_second_receiv
         assert!(f.raw()["providers"]["received"].get("apiKey").is_none());
     }
 }
+
+#[test]
+fn backup_images_require_actual_protection_and_keep_original_before_after_without_receipt_targets()
+{
+    let f = Fixture::new();
+    let objects = simple(&["a"]);
+    let handle = f.prepare(OP, &objects, &selection());
+    assert!(f.host.protected_images(OP, &handle).is_err());
+    f.host.protect(OP, &handle, true).unwrap();
+    let expected = f.host.protected_images(OP, &handle).unwrap();
+    assert_eq!(expected.len(), 6);
+    assert!(matches!(expected[0].target, TargetV2::OfficialConfig));
+    assert!(expected
+        .iter()
+        .all(|w| !matches!(w.target, TargetV2::ManagerOperationReceipt(_))));
+    f.host.apply_once(OP, &objects, &handle, true).unwrap();
+    let before = std::fs::read(f.host.home.join("config.json")).unwrap();
+    let images = f.host.scope_backup_images(OP, &handle).unwrap().unwrap();
+    assert_eq!(images.len(), expected.len());
+    for (a, b) in images.iter().zip(&expected) {
+        assert!(a.target == b.target);
+        assert_eq!(a.before, b.before);
+        assert_eq!(a.after, b.after);
+    }
+    assert_eq!(
+        std::fs::read(f.host.home.join("config.json")).unwrap(),
+        before
+    );
+    let other = ModelApplyPlanHandle::new(digest(b"wrong handle")).unwrap();
+    assert!(f.host.protected_images(OP, &other).is_err());
+}

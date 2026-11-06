@@ -65,6 +65,16 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           npm --prefix ../ui run build
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      # Produce the complete 0.2.23 closure before compilation, matching release pins.
+      - name: Stage complete 0.2.23 offline runtime
+        if: steps.identity.outputs.version == '0.2.23'
+        run: |
+          $taskNode = (Get-Command node).Source
+          $taskNpm = node -e 'const p=require("node:path"),f=require("node:fs"),d=p.dirname(process.execPath);const a=[p.join(d,"node_modules/npm/bin/npm-cli.js"),p.join(d,"../lib/node_modules/npm/bin/npm-cli.js")];const n=a.find(x=>f.existsSync(x));if(!n)process.exit(1);process.stdout.write(p.resolve(n))'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python ../../../.github/scripts/stage_runtime_bundle_023.py --platform win32-x64 --build-node $taskNode --npm-cli $taskNpm --output ../../../test/out/windows-candidate/runtime-stage
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          'OCXD_REQUIRE_RUNTIME_BUNDLE=1' >> $env:GITHUB_ENV
       - name: Freeze and record dependency resolution
         run: |
           New-Item -ItemType Directory -Force ../../../test/out/windows-candidate | Out-Null
@@ -89,7 +99,12 @@ jobs:
           # Invoke its JavaScript entry through the native node executable.
           $taskTauriCli = Join-Path (npm root --global) '@tauri-apps/cli/tauri.js'
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          node $taskTauriCli build --bundles nsis,msi -- --locked
+          $taskBuildArgs = @('build','--bundles','nsis,msi')
+          if ((Get-Content tauri.conf.json -Raw | ConvertFrom-Json).version -ceq '0.2.23') {
+            $taskBuildArgs += @('--config','tauri.runtime-bundle.conf.json')
+          }
+          $taskBuildArgs += @('--','--locked')
+          node $taskTauriCli @taskBuildArgs
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Install, verify final EXE and uninstall on isolated runner
         run: |

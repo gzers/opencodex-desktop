@@ -14,6 +14,7 @@ import AgentPanel from '@/features/models/AgentPanel.vue'
 import BatchAgentDialog from '@/features/models/BatchAgentDialog.vue'
 import AgentExecutionField from '@/features/models/AgentExecutionField.vue'
 import ExternalTaskDialog from '@/features/models/ExternalTaskDialog.vue'
+import ModelSaveHistory from '@/features/backup/ModelSaveHistory.vue'
 import {useModelsV2Store} from '@/features/models/store-v2'
 import {useModelViewPosition} from '@/features/models/useViewPosition'
 import {useModalStore} from '@/app/modal/store'
@@ -104,6 +105,7 @@ onBeforeUnmount(()=>{disposed=true;toolSequence++;usageSequence++;librarySequenc
           <section id="model-source" tabindex="-1"><h2>来源与版本</h2><p>{{models.draft.baseRevision?'基于确切已保存版本；保存生成新版本。':'新建未保存模版。'}}</p><p>{{models.draft.baseRevision}}</p><details v-for="(source,index) in models.draft.content.sources" :key="index"><summary>{{source.field}} · {{source.recordedAt}}</summary><p>{{source.url}}</p><p>{{source.note}}</p></details><label class="model-inline"><input type="checkbox" :checked="models.draft.makeDefault" :disabled="models.saving" @change="models.setDefault(($event.target as HTMLInputElement).checked)" />将本次新版本设为默认保存版本</label></section></div>
       </DetailWorkspace><AgentPanel v-if="models.snapshot" v-show="agentOpen" :draft="models.draft" :snapshot="models.snapshot" :generation="models.editGeneration" :session-key="'template:'+models.draft.templateId" :active="agentOpen" @close="closeAgent" @external="openAction('external_task')" /></div>
     </template>
+    <UiDialog :open="!!models.policyNotificationTarget" title="模型配置原保存记录" wide @close="models.policyNotificationTarget=null"><ModelSaveHistory v-if="models.policyNotificationTarget" :initial-operation-id="models.policyNotificationTarget.operationId" @go="models.policyNotificationTarget=null" /></UiDialog>
     <ExternalTaskDialog v-if="models.snapshot" :open="externalOpen" :snapshot="models.snapshot" :draft="editing?models.draft:null" :generation="models.editGeneration" :selected="models.view.selectedTemplates" :versions="models.view.selectedVersions" @close="externalOpen=false" />
     <BatchAgentDialog v-if="models.snapshot" :open="batchOpen" :snapshot="models.snapshot" :selected="models.view.selectedTemplates" :versions="models.view.selectedVersions" @close="batchOpen=false" />
     <UiDialog panel-class="model-version-manager" :open="!!historyTemplate" :title="'版本管理 · '+(historyTemplate?.label??'')" wide :busy="models.saving||libraryWriting" @close="historyId=''">
