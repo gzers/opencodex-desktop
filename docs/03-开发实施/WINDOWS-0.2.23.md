@@ -7,11 +7,19 @@
 ## 当前基线与获取
 
 - 仓库：gzers/opencodex-desktop。
-- 代码：远端codex/0.2.23-integration，明确基线a3d0be94e26d3293bea902586344b59700ad9b2d（后继仅测试采样/候选资产名校验；产品候选42286888610按41ab81694继续收集失败证据，不重开原失败运行）。
+- 代码：远端codex/0.2.23-integration，明确基线f3f54b7bb36e644cea0b832f5b09c1276b79c8ee（测试执行器Windows反斜杠准入修正；新候选42291427105实际验证，原候选终态及原因见R12）。
 - 文档：远端docs/governance-main，以包含本条R2指令的提交为准；读取本文件、TEAM、IMP-31/32及0.2.23-contracts/L0-paths-runtime-v1.md。
 - Windows代码贡献分支：codex/0.2.23-windows；文档/脱敏证据使用独立docs/0.2.23-windows分支。若已有自己的改动，先保留并合并上述明确代码基线，不重置或覆盖工作树。
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
 - 此为0.2.23实施基线，尚非最终安装候选；版本清单仍待L0统一更新。是否取得新代码以完整SHA及实际diff为准，不能仅看软件显示版本。
+
+## R12 Windows执行器路径误拒已修，新候选继续（2026-11-07）
+
+原候选42286888610已终态failure：未进入普通SID整套Rust测试，也未创建该套件账号/生成安装器。原job128129908397实际在Assert-TwoUserLocalPath拒绝标准盘符反斜杠路径，字符类只转义斜杠，导致合法D:\a\repo也拒绝；不是这轮产品回归断言失败。提权private-create13项及三nativecred组实际通过。原ZIP714778072bytes，SHA256 88260d4cce4ce4dbbbaf3eb8f82b5d5c58d2efa269657edcdc7c534dace12ba2已原样下载核对，日志/有界文字回执见[r14](../../.adg/evidence/0.2.23/team/L0/r14-windows-native-path-admission-20261107/manifest.json)。连接器512MiB上限拒取时改用gh原字节下载，未截断或解压运行其中程序。
+
+f3f54b7bb只修测试路径准入：纯字面校验先对分隔符等价核对，再由OS解析，绝对盘符/正反斜杠/混用/Unicode有效；relative/UNC/device/根/父遍历/ADS/control继续拒绝，不改产品权限、owner或日常目录。108项双用户检查及85项普通执行器检查过；新候选42291427105基于精确修复继续真实MSVC/普通SID全部binary、提权专项、安装及两用户端口，不复跑原失败配方。真实套件终态仍待，不能把脚本检查冒整版通过。
+
+当前CI42287979356前端已success，Windows backend因同执行器误拒failure，Mac backend回归仍运行。后继新源码CI继续；未合main/未tag/未发布，日常配置/真实同步边界保持。
 
 ## R11 前端真实CI通过与候选资产名校验（2026-11-07）
 

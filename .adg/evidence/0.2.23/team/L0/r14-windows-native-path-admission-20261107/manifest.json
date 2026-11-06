@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "source": "f3f54b7bb",
+  "original": {
+    "run": 42286888610,
+    "job": 128129908397,
+    "source": "41ab81694c1cce4e05bd78309b4ff2b8a5eb82da",
+    "conclusion": "failure",
+    "regression": "blocked before suite/account creation at Assert-TwoUserLocalPath",
+    "cause": "[\\/] escaped slash only, so normal Windows backslash absolute paths refused",
+    "nativePrivateCreation": "13 passed",
+    "nativeCredential": "provider_auth_native,channel_rename_native,native_secure_store passed",
+    "noInstallerGenerated": true,
+    "artifact": {
+      "id": 13538618649,
+      "bytes": 714778072,
+      "sha256": "88260d4cce4ce4dbbbaf3eb8f82b5d5c58d2efa269657edcdc7c534dace12ba2",
+      "zip": "/tmp/ocxd023-candidate5-evidence-13538618649.zip",
+      "download": "connector512MiB limit refused; gh retrieved original ZIP; size and digest verified; only bounded text extracted"
+    }
+  },
+  "fix": {
+    "productOrPermissionsChanged": false,
+    "testSpelling": "pure cross-host lexical check replaces separators only for validation, rejects relative/UNC/device/traversal/ADS/control/root paths before OS canonicalization",
+    "twoUserChecks": 108,
+    "ordinaryRunnerChecks": 85,
+    "actualWindowsRerun": "required; no pass inferred"
+  },
+  "files": [
+    {
+      "file": "local/ocxd023-windows-candidate-fifth-job.log",
+      "source": "/tmp/ocxd023-windows-candidate-fifth-job.log",
+      "bytes": 131311,
+      "sha256": "8623f6589db54c2f5b6624168f77d9366148ba6bfdab88805a58ec4025c112de"
+    },
+    {
+      "file": "local/ocxd023-path-spelling-two-user-tests.log",
+      "source": "/tmp/ocxd023-path-spelling-two-user-tests.log",
+      "bytes": 11593,
+      "sha256": "fbc23027eb370bb3bbbe6fbe7191a382c188b09e846632058c46879aac8e9ab2"
+    },
+    {
+      "file": "local/ocxd023-path-spelling-ordinary-tests.log",
+      "source": "/tmp/ocxd023-path-spelling-ordinary-tests.log",
+      "bytes": 9091,
+      "sha256": "1030da264b163dfe2292ef66ed8c7ae0ebd5863d91d2fb021d42db4f7783ff1a"
+    },
+    {
+      "file": "two-user/static-tests.json",
+      "source": "/private/tmp/ocxd023-path-spelling-two-user-tests/static-tests.json",
+      "bytes": 11561,
+      "sha256": "93e6661f233cad8b333d1964de7ddbfb417f7cd99c8dcf241ecc008e8d166a9b"
+    },
+    {
+      "file": "ordinary/static-tests.json",
+      "source": "/private/tmp/ocxd023-path-spelling-ordinary-tests/static-tests.json",
+      "bytes": 9091,
+      "sha256": "1030da264b163dfe2292ef66ed8c7ae0ebd5863d91d2fb021d42db4f7783ff1a"
+    },
+    {
+      "file": "local/artifact-verification.json",
+      "source": "/tmp/ocxd023-candidate5-bounded-evidence/artifact-verification.json",
+      "bytes": 343,
+      "sha256": "5b4f59b596f84db2baf6e3e1b0ef4b8a7da2fc31cace3b685b0855a3a7b4e6b5"
+    }
+  ],
+  "release": "not published"
+}
