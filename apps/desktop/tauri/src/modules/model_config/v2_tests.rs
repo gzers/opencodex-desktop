@@ -1107,3 +1107,57 @@ fn frozen_nineteen_unmatched_models_keep_original_configuration() {
     }
     assert_eq!(ids.len(), 19);
 }
+
+#[test]
+fn strict_json_rejects_duplicate_keys_at_every_depth_and_escaped_aliases() {
+    for bytes in [
+        br#"{"schemaVersion":1,"schemaVersion":2}"#.as_slice(),
+        br#"{"source":{"fields":{"protocol":1,"protocol":2}}}"#.as_slice(),
+        br#"[{"a":null,"a":false}]"#.as_slice(),
+        br#"{"a":1,"\u0061":2}"#.as_slice(),
+    ] {
+        assert_eq!(
+            parse_strict_json_v2(bytes).unwrap_err().code,
+            "model_json_duplicate_key"
+        );
+    }
+    let valid = br#"{"a":[null,false,true,1,-1,1.5,{"a":"text"}],"b":{"a":2}}"#;
+    assert_eq!(
+        parse_strict_json_v2(valid).unwrap(),
+        serde_json::from_slice::<Value>(valid).unwrap()
+    );
+    assert!(parse_strict_json_v2(b"{} {}").is_err());
+    let deep = format!("{}null{}", "[".repeat(256), "]".repeat(256));
+    assert!(parse_strict_json_v2(deep.as_bytes()).is_err());
+}
+#[test]
+fn portable_decoder_rejects_duplicate_version_and_nested_source_keys() {
+    let library = seed_library_v2().unwrap();
+    let p = policy(&["unmatched"]);
+    let scope = ModelExportScopeV2 {
+        channel_ids: [CHANNEL.into()].into(),
+        ..Default::default()
+    };
+    let package = export_portable_models_v2(&library, &p, &scope).unwrap();
+    let raw = String::from_utf8(encode_portable_models_v2(&package).unwrap()).unwrap();
+    let duplicate = raw.replacen(
+        "\"formatVersion\":6",
+        "\"formatVersion\":1,\"formatVersion\":6",
+        1,
+    );
+    assert_ne!(raw, duplicate);
+    assert_eq!(
+        decode_portable_models_v2(duplicate.as_bytes())
+            .unwrap_err()
+            .code,
+        "model_json_duplicate_key"
+    );
+    let duplicate = raw.replacen("\"source\":", "\"source\":{},\"source\":", 1);
+    assert_ne!(raw, duplicate);
+    assert_eq!(
+        decode_portable_models_v2(duplicate.as_bytes())
+            .unwrap_err()
+            .code,
+        "model_json_duplicate_key"
+    );
+}

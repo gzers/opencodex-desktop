@@ -84,7 +84,7 @@ pub fn empty_policy_v2() -> PolicyV2 {
     }
 }
 fn decode<T: serde::de::DeserializeOwned>(bytes: &[u8]) -> Result<T> {
-    let value: serde_json::Value = serde_json::from_slice(bytes).map_err(json_error)?;
+    let value = parse_strict_json_v2(bytes)?;
     if value["schemaVersion"] != 2 {
         return Err(error("model_schema_unsupported"));
     }

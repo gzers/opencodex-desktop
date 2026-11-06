@@ -579,3 +579,39 @@ fn external_materialized_capability_edit_is_source_not_a_manual_override() {
         SourceKindV2::ExternalFileEdit
     );
 }
+
+#[test]
+fn every_store_document_rejects_duplicate_json_without_rewriting_the_file() {
+    for path in [
+        LIBRARY_PATH,
+        POLICY_PATH,
+        DRAFT_PATH,
+        LEDGER_PATH,
+        MAPPING_PATH,
+    ] {
+        let temp = tempfile::tempdir().unwrap();
+        std::fs::create_dir_all(temp.path().join("manager-state")).unwrap();
+        let bytes = br#"{"schemaVersion":1,"schemaVersion":2}"#;
+        let file = temp.path().join(path);
+        std::fs::write(&file, bytes).unwrap();
+        assert_eq!(
+            StoreV2::new(temp.path()).snapshot().unwrap_err().code,
+            "model_json_duplicate_key",
+            "{path}"
+        );
+        assert_eq!(std::fs::read(file).unwrap(), bytes);
+    }
+    let temp = tempfile::tempdir().unwrap();
+    std::fs::create_dir_all(temp.path().join("manager-state")).unwrap();
+    let p = imported(&config());
+    let json = String::from_utf8(canonical_bytes(&p).unwrap()).unwrap();
+    let duplicate = json.replacen("\"source\":", "\"source\":{},\"source\":", 1);
+    assert_ne!(json, duplicate);
+    let path = temp.path().join(POLICY_PATH);
+    std::fs::write(&path, duplicate.as_bytes()).unwrap();
+    assert_eq!(
+        StoreV2::new(temp.path()).snapshot().unwrap_err().code,
+        "model_json_duplicate_key"
+    );
+    assert_eq!(std::fs::read(path).unwrap(), duplicate.as_bytes());
+}
