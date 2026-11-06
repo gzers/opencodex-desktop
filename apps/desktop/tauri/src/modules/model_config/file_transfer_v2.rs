@@ -2367,3 +2367,7 @@ mod optional_summary_wire {
         Option::<summary_wire::Wire>::deserialize(d).map(|v| v.map(summary_wire::Wire::summary))
     }
 }
+
+#[path = "file_transfer_v2_output.rs"]
+mod output;
+pub use output::ExportOutputV2;
