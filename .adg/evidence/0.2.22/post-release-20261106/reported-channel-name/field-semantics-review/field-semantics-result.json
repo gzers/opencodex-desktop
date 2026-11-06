@@ -1,0 +1,40 @@
+{
+  "runtimeArchive": "opencodex-2.97.0-post021.ownerquery.2.tgz",
+  "runtimeArchiveSha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957",
+  "method": "Actual function declarations from hash-verified runtime archive; TypeScript transpilation in VM. Actual manager channelRename.ts module; only protectedChannel mocked false for custom fixture.",
+  "cases": {
+    "displayNameOnly": "Krill-1/gpt-6.1-sol",
+    "actualKeyRename": "Krill/gpt-6.1-sol",
+    "freshRename": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "label": "Krill",
+      "connection": {
+        "providerId": "Krill"
+      }
+    },
+    "inheritedSameLabel": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "label": "Krill",
+      "connection": {
+        "providerId": "Krill-1"
+      }
+    },
+    "revertToSavedLabel": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "label": "Krill",
+      "connection": {
+        "providerId": "Krill-1"
+      }
+    }
+  },
+  "sourceHashes": {
+    "managerRename": "8529c84a2f0e9b32c86aac92516b0481f1606f8f537ea5745e94aea523e82393",
+    "runtimeDeriveEntry": "39c8b95208f0aaf0cedfb782626b2446a6885cc556c2c54c66b8cdaf26145baa",
+    "runtimeSlugCodec": "b3fbe9cfdad3a5ccde17d25820066a5175ee7fd709ae12b5817df735c71020e0"
+  },
+  "limits": [
+    "No actual daily configuration/catalog read or modified",
+    "No full runtime catalog pipeline, server reload, Codex restart or picker UI run",
+    "Establishes field semantics and reproducible conditional path; not user现场root cause"
+  ]
+}

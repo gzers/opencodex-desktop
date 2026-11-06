@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-06",
+  "issue": "S22-POST-02",
+  "softwareCommit": "0c57500f8f46ea50655c782c3f04334a39167abb",
+  "runtime": "2.97.0-post021.ownerquery.2",
+  "source": "Locally retained adopted release archive; verified SHA256 bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957 before source extraction",
+  "checks": [
+    {
+      "command": "npm test -- --run tests/channel-rename.test.ts",
+      "result": "11 passed,1 test file",
+      "boundary": "Vue component and frontend unit tests; no real config write"
+    },
+    {
+      "command": "cargo test --lib post021_unicode_name_with_internal_key_saves_and_reopens_with_exact_references -- --exact modules::model_config::config_file::rename_tests::post021_unicode_name_with_internal_key_saves_and_reopens_with_exact_references --nocapture --test-threads=1",
+      "result": "1 passed",
+      "boundary": "Real save/snapshot on tempfile with in-memory credentials; existing non-ASCII names use internal provider key"
+    },
+    {
+      "command": "cargo test --lib production_provider_rename_transaction_in_memory_credential_process -- --nocapture --test-threads=1",
+      "result": "1 passed including child process cases",
+      "boundary": "Real save/readback/migration/rollback/recovery on tempfile; process-local credential store; fixed runtime executable not executed"
+    },
+    {
+      "command": "node check.cjs",
+      "result": "5 synthetic cases passed",
+      "boundary": "Actual extracted runtime naming/slug functions and manager rename module; custom-channel protectedChannel=false stub; not full runtime or native picker"
+    }
+  ],
+  "conclusions": [
+    "Ordinary custom-channel raw name or manager label alone does not alter routed model prefix; provider key does",
+    "Fresh current-code Krill-1→Krill updates providerId; backend has real transactional rename path, not a universal label-only implementation",
+    "Existing labelKrill/providerKrill-1 same-name input no-ops; temporarily editing then reverting to saved label restores old providerId",
+    "Actual user active config, runtime version/reload and catalog remain unverified"
+  ],
+  "productChanges": false,
+  "dailyConfigAccess": false,
+  "realWebDav": false,
+  "nativeCodexRestart": false
+}
