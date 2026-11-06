@@ -912,3 +912,29 @@ async fn external_only_create_buffer_appends_one_new_template_with_user_locks() 
 
     assert!(f.state.calls.lock().unwrap().is_empty());
 }
+
+#[tokio::test]
+async fn executor_routing_comes_from_private_record_and_external_cannot_generate_internally() {
+    let f = Fixture::new().await;
+    let intent = f.intent(Scene::UpdateModels);
+    let internal = prepare_run(&f.root, &f.context, intent.clone()).unwrap();
+    assert!(!requires_external_authority(&f.root, &internal.run_id).unwrap());
+    let external = prepare_external(&f.root, &f.context, intent.clone()).unwrap();
+    assert!(requires_external_authority(&f.root, &external.task_id).unwrap());
+    assert_eq!(
+        generate(&f.root, &f.context, &external.task_id)
+            .await
+            .unwrap_err()
+            .code,
+        "model_agent_run_state"
+    );
+    assert_eq!(
+        read_record(&f.root, &external.task_id).unwrap().phase,
+        RunPhaseV2::Prepared
+    );
+    assert!(f.state.calls.lock().unwrap().is_empty());
+    assert!(requires_external_authority(&f.root, &uuid::Uuid::new_v4().to_string()).is_err());
+    let mut injected = serde_json::to_value(intent).unwrap();
+    injected["executor"] = json!("internal");
+    assert!(serde_json::from_value::<GenerateIntentV2>(injected).is_err());
+}
