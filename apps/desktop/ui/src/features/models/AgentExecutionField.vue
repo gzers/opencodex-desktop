@@ -3,72 +3,36 @@ import {computed,onBeforeUnmount,onMounted,ref,watch} from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import ModelPicker,{type ModelChoice} from './ModelPicker.vue'
-import {modelApi,errorText,type AgentSettings,type ExecutionDirectory,type ModelProjection} from './api'
-import {useModelsStore} from './store'
-const settings=defineModel<AgentSettings|null>({default:null})
-defineProps<{disabled?:boolean;compact?:boolean}>()
-const error=ref('');const busy=ref(false);const open=ref(false);const configuring=ref(false)
-const loading=ref(false)
-const candidate=ref<AgentSettings|null>(null);const directory=ref<ExecutionDirectory|null>(null)
-const models=useModelsStore()
-/**
- * 打开选择器先用模型配置里已保存的渠道/型号即时呈现，避免每次等 Tauri 目录往返。
- * 这里只做显示与初选；真正写入时后端仍按官方目录与渠道身份重新绑定校验。
- */
-const localDirectory=computed<ExecutionDirectory>(()=>{
- const policy=models.snapshot?.policy
- if(!policy)return {channels:[],rows:[]}
- const channels=policy.channels.filter(c=>c.connection.enabled)
- return {
-  channels:channels.map(c=>({id:c.id,label:c.label,providerId:c.connection.providerId})),
-  rows:channels.flatMap(c=>c.discovered.map((model):ModelProjection=>({channelId:c.id,providerId:c.connection.providerId,modelId:model.id,label:model.label,enabled:true,selected:true,discovered:true,templateRef:null,rules:model.rules,source:{}}))),
- }
-})
-const allRows=computed(()=>directory.value?.rows??localDirectory.value.rows)
-const channels=computed(()=>directory.value?.channels??localDirectory.value.channels)
-let disposed=false
-let directoryRequest=0
+import {modelV2Api,type AgentSettingsV2,type ExecutionDirectoryV2} from './api-v2'
+import {errorText} from './api'
+import {useModelsV2Store} from './store-v2'
+const settings=defineModel<AgentSettingsV2|null>({default:null})
+const props=defineProps<{disabled?:boolean;compact?:boolean}>()
+const error=ref(''),busy=ref(false),open=ref(false),configuring=ref(false),loading=ref(false)
+const candidate=ref<AgentSettingsV2|null>(null),directory=ref<ExecutionDirectoryV2|null>(null)
+const models=useModelsV2Store()
+const allRows=computed(()=>directory.value?.rows??[]),channels=computed(()=>directory.value?.channels??[])
+let disposed=false,directoryRequest=0
 onBeforeUnmount(()=>{disposed=true;directoryRequest++})
-watch(()=>models.executionPreferenceRevision,revision=>{if(revision)settings.value=models.executionPreference?{...models.executionPreference}:null},{flush:'sync',immediate:true})
-onMounted(async()=>{const revision=models.executionPreferenceRevision;busy.value=true;try{const value=await modelApi.agentSettings();if(!disposed&&models.executionPreferenceRevision===revision)settings.value=value}catch(cause){if(!disposed&&models.executionPreferenceRevision===revision)error.value=errorText(cause)}finally{if(!disposed)busy.value=false}})
-const current=computed<ModelChoice[]>(()=>{const value=candidate.value;const channel=channels.value.find(c=>c.providerId===value?.providerId);return value?[{channelId:value.channelId??channel?.id??value.providerId,modelId:value.modelId,...(value.reasoningEffort===null?{}:{reasoningEffort:value.reasoningEffort}),...(value.fast===null?{}:{fast:value.fast})}]:[]})
-function configure(){if(busy.value)return;candidate.value=settings.value?{...settings.value}:null;error.value='';configuring.value=true}
+watch(()=>models.executionPreferenceRevision,()=>{settings.value=models.executionPreference?{...models.executionPreference}:null},{flush:'sync'})
+onMounted(async()=>{busy.value=true;try{await models.loadAgentSettings();if(!disposed)settings.value=models.executionPreference?{...models.executionPreference}:null}catch(cause){if(!disposed)error.value=errorText(cause)}finally{if(!disposed)busy.value=false}})
+const current=computed<ModelChoice[]>(()=>{const value=candidate.value;return value?.channelId?[{channelId:value.channelId,modelId:value.modelId,...(value.reasoningEffort===null?{}:{reasoningEffort:value.reasoningEffort}),...(value.fast===null?{}:{fast:value.fast})}]:[]})
+function configure(){if(busy.value||props.disabled)return;candidate.value=settings.value?{...settings.value}:null;error.value='';configuring.value=true}
 function closePicker(){open.value=false;directoryRequest++;loading.value=false}
 function closeConfiguration(){if(busy.value)return;closePicker();configuring.value=false;candidate.value=null}
-// File loads/saves replace the saved policy, including layout-only renames whose
-// file digest is unchanged. Unsaved channel/Key buffers are not execution facts.
-watch([()=>models.snapshot?.policyDigest,()=>models.snapshot?.policy],()=>{
- directoryRequest++
- directory.value=null
- loading.value=false
- if(open.value)void refreshDirectory()
-},{flush:'sync'})
-async function refreshDirectory(){
- const request=++directoryRequest
- directory.value=null
- error.value=''
- loading.value=true
- try{
-  const actual=await modelApi.executionDirectory()
-  if(!disposed&&request===directoryRequest)directory.value=actual
- }catch(cause){
-  if(!disposed&&request===directoryRequest)error.value=errorText(cause)
- }finally{if(!disposed&&request===directoryRequest)loading.value=false}
-}
-function browse(){if(busy.value)return;error.value='';open.value=true;void refreshDirectory()}
-function choose(picks:ModelChoice[]){if(loading.value||error.value)return;const pick=picks[0];if(!pick||pick.nativeModelId)return;const row=directory.value?.rows.find(r=>r.channelId===pick.channelId&&r.modelId===pick.modelId);if(!row||row.unavailableReason||!row.enabled||!row.connectionDigest)return;candidate.value={channelId:pick.channelId,connectionDigest:row.connectionDigest,providerId:row.providerId,modelId:pick.modelId!,reasoningEffort:pick.reasoningEffort??null,fast:pick.fast??null};open.value=false}
-async function save(){if(!candidate.value||busy.value)return;busy.value=true;error.value='';try{const value=await modelApi.saveAgentSettings({...candidate.value});models.publishExecutionPreference(value);if(!disposed)configuring.value=false}catch(cause){if(!disposed)error.value=errorText(cause)}finally{if(!disposed)busy.value=false}}
-/** 档位中文名；与原型 levels 表一致，未知值原样显示。 */
+watch(()=>[models.file?.sourceDigest,models.file?.rootRevision,models.file?.savedPolicy],()=>{directoryRequest++;directory.value=null;loading.value=false;if(open.value)void refreshDirectory()},{flush:'sync'})
+async function refreshDirectory(){const request=++directoryRequest;directory.value=null;error.value='';loading.value=true;try{const actual=await modelV2Api.executionDirectory();if(actual.dtoVersion!==2)throw new Error('执行目录格式不支持，已有偏好保持。');if(!disposed&&request===directoryRequest)directory.value=actual}catch(cause){if(!disposed&&request===directoryRequest)error.value=errorText(cause)}finally{if(!disposed&&request===directoryRequest)loading.value=false}}
+function browse(){if(busy.value||props.disabled)return;error.value='';open.value=true;void refreshDirectory()}
+function choose(picks:ModelChoice[]){if(loading.value||error.value)return;const pick=picks[0];if(!pick||pick.nativeModelId)return;const matches=directory.value?.rows.filter(row=>row.channelId===pick.channelId&&row.modelId===pick.modelId&&!row.nativeModelId)??[];if(matches.length!==1){error.value='执行目录身份不唯一或已变化，请重新读取。';return}const row=matches[0]!;if(row.unavailableReason||!row.selected||!row.enabled||!row.pickerVisible||!row.connectionDigest||!row.actualSelector||row.protocol.kind!=='resolved'){error.value=row.unavailableReason??'此模型尚无可核验的执行绑定。';return}candidate.value={channelId:row.channelId,connectionDigest:row.connectionDigest,providerId:row.providerId,modelId:row.modelId,reasoningEffort:pick.reasoningEffort??null,fast:pick.fast??null};open.value=false}
+async function save(){if(!candidate.value||busy.value||props.disabled)return;busy.value=true;error.value='';try{const value=await models.bindAgent({...candidate.value});if(!disposed){settings.value=value;configuring.value=false}}catch(cause){if(!disposed)error.value=errorText(cause)}finally{if(!disposed)busy.value=false}}
 const EFFORTS:Record<string,string>={none:'无',minimal:'最低',low:'低',medium:'中',high:'高',xhigh:'极高',max:'最高'}
-const committedRow=computed(()=>{const value=settings.value;if(!value)return null;return allRows.value.find(r=>r.providerId===value.providerId&&r.modelId===value.modelId&&(!value.channelId||r.channelId===value.channelId))??null})
-const channelName=computed(()=>{const value=settings.value;if(!value)return '';return channels.value.find(c=>c.id===value.channelId||c.providerId===value.providerId)?.label??value.providerId})
-/** 继承时取模型默认档位，并标记「（模型默认）」。 */
-const effort=computed(()=>{const value=settings.value;if(!value)return{text:'',inherited:false};const inherited=value.reasoningEffort===null;const actual=inherited?(committedRow.value?.rules.defaultEffort.mode==='custom'?committedRow.value.rules.defaultEffort.value:null):value.reasoningEffort;return{text:actual?EFFORTS[actual]??actual:'未知',inherited}})
-/** 快速模式的能力与选择是两回事：摘要说选择，事实卡说能力。 */
-const fastCapability=computed<'supported'|'unsupported'|'unknown'>(()=>{const rules=committedRow.value?.rules.fast;if(!rules)return 'unknown';if(rules.mode!=='custom')return 'unknown';return rules.value?'supported':'unsupported'})
+const committedRow=computed(()=>{const value=settings.value;return !value?null:allRows.value.find(row=>row.channelId===value.channelId&&row.providerId===value.providerId&&row.modelId===value.modelId)??null})
+const channelName=computed(()=>{const value=settings.value;return !value?'':channels.value.find(c=>c.id===value.channelId)?.label??value.providerId})
+const effort=computed(()=>{const value=settings.value;if(!value)return{text:'',inherited:false};const inherited=value.reasoningEffort===null,actual=inherited?(committedRow.value?.rules.defaultEffort.mode==='custom'?committedRow.value.rules.defaultEffort.value:null):value.reasoningEffort;return{text:actual?EFFORTS[actual]??actual:'未知',inherited}})
+const fastCapability=computed<'supported'|'unsupported'|'unknown'>(()=>{const rule=committedRow.value?.rules.fast;return !rule||rule.mode!=='custom'?'unknown':rule.value?'supported':'unsupported'})
 const fastCapabilityText=computed(()=>fastCapability.value==='supported'?'可用':fastCapability.value==='unsupported'?'不可用':'未知')
-const fastSummary=computed(()=>{const value=settings.value;if(!value)return '';if(fastCapability.value==='supported')return value.fast?'快速已开启':'快速已关闭';if(fastCapability.value==='unsupported')return value.fast?'已选快速 · 当前模型不支持':'不支持快速模式';return value.fast?'已选快速 · 能力待核对':'快速能力待核对'})
-const summary=computed(()=>{if(!settings.value)return '尚未选择执行模型 · 请配置执行模型';return channelName.value+' / '+settings.value.modelId+' · '+effort.value.text+(effort.value.inherited?'（模型默认）':'')+' · '+fastSummary.value})
+const fastSummary=computed(()=>!settings.value?'':fastCapability.value==='supported'?(settings.value.fast?'快速已开启':'快速已关闭'):settings.value.fast?'已选快速 · 当前能力待核对':'快速能力待核对')
+const summary=computed(()=>!settings.value?'尚未选择执行模型 · 请配置执行模型':channelName.value+' / '+settings.value.modelId+' · '+effort.value.text+(effort.value.inherited?'（模型默认）':'')+' · '+fastSummary.value)
 </script>
 <template>
  <div class="model-execution" :class="{'is-compact':compact}">
@@ -83,12 +47,12 @@ const summary=computed(()=>{if(!settings.value)return '尚未选择执行模型 
    </div>
    <details class="model-execution-more"><summary>{{ settings ? '执行模型与适用范围' : '为什么需要执行模型' }}</summary>
     <p v-if="!settings" class="model-execution-empty">尚未选择执行模型。自动填充与模版检查需要先配置一个可用的执行模型。</p>
-    <div v-else class="model-execution-body"><dl class="model-execution-facts"><div><dt>执行渠道</dt><dd>{{ channelName }}</dd></div><div><dt>型号</dt><dd>{{ settings.modelId }}</dd></div><div><dt>推理档位</dt><dd>{{ effort.text }}<template v-if="effort.inherited">（模型默认）</template></dd></div><div><dt>快速模式</dt><dd>{{ fastCapabilityText }} · {{ fastSummary }}</dd></div></dl><div class="model-execution-usage"><h4>适用范围</h4><ul><li>模版自动填充、单个更新、所选更新与批量检查共用此设置。</li><li>不改变 Codex 的命名、搜索与子 Agent 配置。</li><li>修改只影响之后启动的任务；已启动任务继续使用启动时的设置。</li></ul></div><div class="model-execution-note"><strong>与运行配置的边界</strong><p>保存的是本机执行偏好，写入 manager-state/preferences.json 的 modelTemplateAgent 分区；不进入默认同步或普通导出。</p></div></div>
+    <div v-else class="model-execution-body"><dl class="model-execution-facts"><div><dt>执行渠道</dt><dd>{{ channelName }}</dd></div><div><dt>型号</dt><dd>{{ settings.modelId }}</dd><dt>实际执行绑定</dt><dd>{{committedRow?.actualSelector??'尚未重新读取实际目录'}}</dd></div><div><dt>推理档位</dt><dd>{{ effort.text }}<template v-if="effort.inherited">（模型默认）</template></dd></div><div><dt>快速模式</dt><dd>{{ fastCapabilityText }} · {{ fastSummary }}</dd></div></dl><div class="model-execution-usage"><h4>适用范围</h4><ul><li>模版自动填充、单个更新、所选更新与批量检查共用此设置。</li><li>不改变 Codex 的命名、搜索与子 Agent 配置。</li><li>修改只影响之后启动的任务；已启动任务继续使用启动时的设置。</li></ul></div><div class="model-execution-note"><strong>与运行配置的边界</strong><p>保存的是本机执行偏好，写入 manager-state/preferences.json 的 modelTemplateAgent 分区；不进入默认同步或普通导出。</p></div></div>
     <p v-if="error&&!configuring" role="alert" class="model-error">{{ error }}</p>
    </details>
   </template>
   <UiDialog :open="configuring" title="Agent 配置" panel-class="agent-execution-dialog" :busy="busy" @close="closeConfiguration"><p>模型模版助手 · 本机共用</p><UiButton :loading="busy" @click="browse">{{ candidate?candidate.providerId+' / '+candidate.modelId:'选择执行模型' }}</UiButton><p v-if="candidate">{{ summary }}</p><p>此设置用于下一次自动填充、持续纠偏和批量模版检查。</p><p v-if="error" role="alert" class="model-error">{{ error }}</p><template #actions="{ close }"><UiButton :disabled="busy" @click="close">取消</UiButton><UiButton variant="primary" :disabled="!candidate" :loading="busy" @click="save">保存共用设置</UiButton></template></UiDialog>
-  <ModelPicker :open="open" :loading="loading" :error="open?error:undefined" @retry="browse" :rows="allRows" :channels="channels" :current="current" reasoning title="执行模型" @close="closePicker" @confirm="choose" />
+  <ModelPicker :open="open" :loading="loading" :error="open?error:undefined" @retry="browse" :rows="[]" :execution-rows="allRows" :channels="channels" :current="current" reasoning title="执行模型" @close="closePicker" @confirm="choose" />
  </div>
 </template>
 <style scoped>
