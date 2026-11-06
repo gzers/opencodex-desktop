@@ -956,7 +956,7 @@ mod native {
     }
     impl Host for PlatformHost {
         fn owner(&self) -> AppResult<String> {
-            crate::infrastructure::windows_user_scope::current_user_sid()
+            crate::infrastructure::windows_startup_root::user_scope::current_user_sid()
                 .map_err(|e| io("query recovery current SID", e))
         }
         fn process(&self, pid: u32) -> AppResult<Option<ProcessIdentity>> {
@@ -1428,7 +1428,7 @@ mod native {
                 if !rows.len().is_multiple_of(472) {
                     return Err(fail("recovery_listener_query", "系统 TCP 表 ABI 不受支持"));
                 }
-                for row in rows.chunks_exact(472) {
+                for row in rows.as_chunks::<472>().0 {
                     if row[..4] != 472u32.to_ne_bytes() {
                         return Err(fail(
                             "recovery_listener_query",

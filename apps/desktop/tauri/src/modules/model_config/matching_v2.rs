@@ -72,7 +72,7 @@ pub fn parse_name_v2(layout: &NameLayoutV2, input: &str, sensitive: bool) -> Opt
     let mut components: Vec<String> = vec![body[..i].into()];
     let mut joiners = vec![];
     let mut starts = vec![0];
-    while i + 1 < bytes.len() && [b'.', b'-'].contains(&bytes[i]) && bytes[i + 1].is_ascii_digit() {
+    while i + 1 < bytes.len() && b".-".contains(&bytes[i]) && bytes[i + 1].is_ascii_digit() {
         joiners.push(bytes[i]);
         i += 1;
         let start = i;
