@@ -322,6 +322,23 @@ pub fn validate_content_v2(content: &TemplateContentV2) -> Result<()> {
             return Err(error("model_selector_duplicate"));
         }
     }
+    // Exact IDs and pinned source identities are concrete overlap witnesses.
+    // General selector overlap is still checked for every actual resolution.
+    let witnesses: BTreeSet<_> = content
+        .condition_overrides
+        .iter()
+        .flat_map(|c| {
+            std::iter::once(c.source_exact_id.as_str()).chain(c.selector.all.iter().filter_map(
+                |a| match a {
+                    SelectorAtomV2::ExactId { value } => Some(value.as_str()),
+                    _ => None,
+                },
+            ))
+        })
+        .collect();
+    for witness in witnesses {
+        condition_v2(content, witness)?;
+    }
     Ok(())
 }
 pub fn matching_view_v2(channel: &ChannelV2, raw: &str) -> Result<String> {
