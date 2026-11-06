@@ -3,14 +3,13 @@ import {computed,onBeforeUnmount,ref,watch} from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
-import {useModelsStore} from './store'
 import {useModelsV2Store} from './store-v2'
 import {errorText,type ChannelPolicy} from './api'
-import type {ChannelConnectionEditIntentV2,TemporaryDiscoveryKind} from './api-v2'
-const props=defineProps<{original?:ChannelPolicy}>()
-const original=props.original?JSON.parse(JSON.stringify(props.original)) as ChannelPolicy:undefined
+import type {ChannelConnectionEditIntentV2,TemporaryDiscoveryKind,ChannelV2} from './api-v2'
+const props=defineProps<{original?:ChannelPolicy|ChannelV2}>()
+const original=props.original?JSON.parse(JSON.stringify(props.original)) as ChannelPolicy|ChannelV2:undefined
 const emit=defineEmits<{close:[];added:[string]}>()
-const savedView=useModelsStore(),store=useModelsV2Store()
+const store=useModelsV2Store()
 const step=ref(1),label=ref(original?.label??''),authMode=ref<'key'|'none'>(original?.connection.authMode==='none'?'none':'key'),apiKey=ref(''),keyVisible=ref(false)
 const discoveryKind=ref<TemporaryDiscoveryKind|''>(''),discoveryReadId=ref<string|null>(null)
 const nodes=ref<{id:string;name:string;url:string}[]>(original?JSON.parse(JSON.stringify(original.connection.nodes)):[])
@@ -29,7 +28,7 @@ watch(discoveryKind,()=>{generation++;discovering.value=false;discoveryReadId.va
 onBeforeUnmount(()=>{disposed=true;generation++;apiKey.value='';keyVisible.value=false})
 function connectionError(){
  if(!label.value.trim()||[...label.value.trim()].length>80||new TextEncoder().encode(label.value.trim()).length>256)return '请填写渠道名称，名称不能过长'
- const existing=savedView.channelDraft?.channels??savedView.snapshot?.policy.channels??[]
+ const existing=store.channels
  if(existing.filter(c=>c.id!==original?.id).some(c=>c.label.trim().toLowerCase()===label.value.trim().toLowerCase()))return '渠道名称已存在'
  try{const parsed=new URL(url.value);if(!['http:','https:'].includes(parsed.protocol)||!parsed.hostname||parsed.username||parsed.password||parsed.search||parsed.hash||/\/(responses|chat\/completions|messages)\/?$/.test(parsed.pathname))return '填写不含凭据、参数或生成接口路径的 HTTP/HTTPS 服务基地址'}catch{return '请填写有效服务基地址'}
  if(original){
@@ -49,7 +48,7 @@ async function discover(){
  const sequence=++generation;discovering.value=true;error.value='';status.value=''
  try{const result=await store.discover({kind:discoveryKind.value,url:url.value,authMode:authMode.value,apiKey:needsKey.value?apiKey.value:null})
   if(disposed||sequence!==generation)return
-  const previous=models.value;models.value=result.models.map(m=>({id:m.id,label:previous.find(old=>old.id===m.id)?.label??m.label}));discoveryReadId.value=result.readId
+  const previous=models.value;models.value=result.models.map(m=>({id:m.id,label:previous.find(old=>old.id===m.id)?.label??m.label}));discoveryReadId.value=result.readId??null
   for(const old of previous)if(selected.value.includes(old.id)&&!models.value.some(m=>m.id===old.id))models.value.push(old)
   status.value=result.models.length?'已读取 '+result.models.length+' 个型号；新发现型号默认不选。':'清单为空，可重试、返回修改连接或手动添加精确 ID。'
  }catch(cause){if(!disposed&&sequence===generation)error.value=errorText(cause)}finally{if(sequence===generation)discovering.value=false}
@@ -63,7 +62,7 @@ async function join(){
  if(!selected.value.length){error.value='请选择至少一个精确型号';return}
  busy.value=true;error.value=''
  try{
-  if(original&&JSON.stringify(savedView.channelDraft?.channels.find(c=>c.id===original.id))!==JSON.stringify(original))throw new Error('原渠道草稿已变化，请关闭后重新编辑连接。')
+  if(original&&JSON.stringify(store.channels.find(c=>c.id===original.id))!==JSON.stringify(original))throw new Error('原渠道草稿已变化，请关闭后重新编辑连接。')
   const intent:ChannelConnectionEditIntentV2={channelId:id,kind:original?'edit_connection':'create',label:label.value.trim(),nodes:original?JSON.parse(JSON.stringify(nodes.value)):[{id:nodeId,name:'默认节点',url:url.value}],activeNodeId:original?activeNode.value:nodeId,authMode:authMode.value,selectedModelIds:[...selected.value],modelOrder:[...new Set([...(original?.modelOrder??[]),...models.value.map(m=>m.id)])],modelLabels:Object.fromEntries(models.value.map(m=>[m.id,m.label])),discoveryReadId:discoveryReadId.value}
   const result=await store.stageConnection(intent,needsKey.value?{action:'replace',value:apiKey.value}:{action:'unchanged'})
   if(disposed)return
@@ -86,7 +85,7 @@ function close(){if(busy.value)return;generation++;apiKey.value='';keyVisible.va
   </div>
   <template v-else>
    <div class="model-field-title"><strong>{{ label }}</strong><UiButton :loading="discovering" :disabled="busy||!store.canDiscover" @click="discover">获取模型列表</UiButton><UiButton v-if="discovering" @click="generation++;discovering=false">取消等待</UiButton></div>
-   <label>本次清单获取方式<UiSelectField v-model="discoveryKind" label="本次清单获取方式" :disabled="busy||discovering" :options="[{value:'',label:'请选择本次获取方式'},{value:'compatible_models',label:'兼容模型清单'},{value:'google_models',label:'Google 模型清单'},{value:'ollama_models',label:'Ollama 模型清单'}]" /></label>
+   <label>本次清单获取方式<UiSelectField v-model="discoveryKind" label="本次清单获取方式" :disabled="busy||discovering" :options="[{value:'',label:'请选择本次获取方式'},{value:'compatible_models',label:'兼容模型清单'},{value:'anthropic_models',label:'Anthropic 模型清单'},{value:'google_models',label:'Google 模型清单'},{value:'ollama_models',label:'Ollama 模型清单'}]" /></label>
    <p class="model-muted">只影响本次清单读取，不保存为渠道或模型请求协议。未选择时仍可手动添加精确 ID。</p>
    <p v-if="!store.canDiscover" role="status" class="model-muted">清单获取暂不可用，可以继续手动填写精确 ID。</p>
    <div class="model-inline"><input v-model="query" class="input" type="search" aria-label="新渠道型号搜索" placeholder="搜索型号或名称" /><label><input v-model="onlySelected" type="checkbox" :disabled="discovering" />仅已选</label></div>
