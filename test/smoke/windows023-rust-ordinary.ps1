@@ -126,7 +126,11 @@ try{
  $taskProcess=Start-Process -FilePath (Join-Path $PSHOME 'pwsh.exe') -Credential $credential -LoadUserProfile -UseNewEnvironment -Environment $taskChildEnvironment -WorkingDirectory $evidence -ArgumentList @('-NoLogo','-NoProfile','-NonInteractive','-File',('"'+(Join-Path $code 'profile-bootstrap.ps1')+'"'),'-InputFile',('"'+$config+'"')) -RedirectStandardOutput (Join-Path $evidence 'bootstrap.stdout.log') -RedirectStandardError (Join-Path $evidence 'bootstrap.stderr.log') -PassThru
  $taskFact=Get-TwoUserProcessFact $taskProcess $taskUser.SID.Value;$taskLedger[[int]$taskFact.pid]=$taskFact
  $taskReport.nativeSuiteExecuted=$true;$until=[datetime]::UtcNow.AddSeconds($SuiteTimeoutSeconds+120)
- while(!$taskProcess.HasExited){try{Add-TwoUserDescendants $taskFact $taskLedger}catch{if(!$taskProcess.HasExited){throw}};if([datetime]::UtcNow -gt $until){throw 'Ordinary suite controller envelope exhausted'};Start-Sleep -Milliseconds 100}
+ # The child publishes tests' native identities before resuming them. A parent
+ # CIM scan can catch that deliberately suspended loader without an image,
+ # racing the authoritative ledger. Observe the exact wrapper here; merge
+ # the child ledger below, and retain any untracked live SID process on cleanup.
+ while(!$taskProcess.HasExited){try{$null=Assert-TwoUserLive $taskFact}catch{if(!$taskProcess.HasExited){throw}};if([datetime]::UtcNow -gt $until){throw 'Ordinary suite controller envelope exhausted'};Start-Sleep -Milliseconds 100}
  $taskExit=$taskProcess.ExitCode
  $child=Get-Content -LiteralPath (Join-Path $evidence 'ordinary-suite.json') -Raw|ConvertFrom-Json
  if($child.accountSid -cne $taskUser.SID.Value -or $child.expectedCommit -cne $ExpectedCommit -or $child.exitCode -ne $taskExit -or !(Test-TwoUserSamePath $child.profile $taskProfile)){throw 'Child suite receipt does not match actual process exit/identity'}
@@ -134,6 +138,7 @@ try{
  $taskReport.result=$child.result
 }catch{
  $taskReport.failureCode='ordinary_suite_build_provision_or_execution_failed';$taskReport.failureType=$_.Exception.GetType().FullName;$taskReport.failureLine=$_.InvocationInfo.ScriptLineNumber
+ $taskReport.failureSourceLeaf=[IO.Path]::GetFileName($_.InvocationInfo.ScriptName)
  $taskReport.failureHResult=[int]$_.Exception.HResult
  if($_.Exception.InnerException){$taskReport.innerFailureHResult=[int]$_.Exception.InnerException.HResult}
  if($taskExit -eq 0){$taskExit=1}
