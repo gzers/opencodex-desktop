@@ -6,8 +6,8 @@ import { createServer, type ViteDevServer } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { createRequire } from 'node:module'
 import { execFileSync } from 'node:child_process'
-import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
-import { homedir, tmpdir } from 'node:os'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -20,17 +20,11 @@ const cases = ['light', 'dark'].flatMap(theme => ['high', 'mid', 'low'].flatMap(
   [1180, 560].map(width => ({ theme, effects, width, name: theme + ' ' + effects + ' ' + (width > 600 ? 'wide' : 'narrow') }))))
 let server: ViteDevServer
 let base = ''
-// The repository's existing QA also discovers host-installed Playwright; no new package dependency.
+// Use the declared, locked test tool on both clean CI and developer machines.
 function playwright(): any {
-  const cache = path.join(homedir(), '.npm', '_npx')
-  const candidates = [path.join(ui, 'node_modules', 'playwright-core'),
-    ...(existsSync(cache) ? readdirSync(cache).map(name => path.join(cache, name, 'node_modules', 'playwright-core')) : [])]
-  for (const dir of candidates) {
-    if (!existsSync(path.join(dir, 'package.json'))) continue
-    const api = createRequire(path.join(dir, 'package.json'))('playwright-core')
-    if (engines.every(engine => existsSync(api[engine].executablePath()))) return api
-  }
-  throw new Error('Real Chromium and WebKit builds are required for dialog glass pixel tests.')
+  const api = createRequire(import.meta.url)('playwright-core')
+  if (engines.every(engine => existsSync(api[engine].executablePath()))) return api
+  throw new Error('Real Chromium and WebKit builds are required. Run npm exec -- playwright-core install chromium webkit in apps/desktop/ui.')
 }
 const swift = prefix + 'owned-window.swift'
 const entry = [
