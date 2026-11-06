@@ -2,6 +2,10 @@
 import {escapeHtml} from '@/lib/html'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch, toRef } from 'vue'
 import AgentExecutionField from '@/features/models/AgentExecutionField.vue'
+import ConditionEditor from '@/features/models/ConditionEditor.vue'
+import ConditionPreview from '@/features/models/ConditionPreview.vue'
+import {useModelsV2Store} from '@/features/models/store-v2'
+import type {TemplateV2} from '@/features/models/api-v2'
 import AppTopbar from '@/components/AppTopbar.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
 import DetailWorkspace from '@/components/layout/DetailWorkspace.vue'
@@ -21,6 +25,14 @@ import { emptyRules, errorText, modelApi, versionLabel, type MatchPreview, type 
 import { useModelViewPosition } from '@/features/models/useViewPosition'
 import { useModalStore } from '@/app/modal/store'
 const models = useModelsStore()
+const modelsV2=useModelsV2Store()
+function openV2(){tab.value='templates';void modelsV2.open()}
+function startV2(template?:TemplateV2){
+ if(modelsV2.dirty){modal.open({title:'切换模版',body:'放弃当前未保存修改并打开所选模版？',confirmLabel:'放弃并打开',onConfirm:()=>modelsV2.start(template)});return}
+ modelsV2.start(template)
+}
+function closeV2(){if(modelsV2.dirty){modal.open({title:'离开条件模版编辑',body:'当前草稿保留，返回后可继续编辑。',confirmLabel:'保留并返回',onConfirm:()=>modelsV2.close()});return}modelsV2.close()}
+function saveV2(){const generation=modelsV2.editGeneration;modal.open({title:'保存模版新版本',body:'保存当前规则为独立版本，历史版本保持；不会后台改写渠道配置。',confirmLabel:'确认保存',onConfirm:()=>{if(generation!==modelsV2.editGeneration){modelsV2.error='确认后输入已改变，请重新核对；草稿保持。';return}return modelsV2.save()}})}
 const modal=useModalStore()
 const page = ref<HTMLElement | null>(null)
 const tab = toRef(models.view,'tab')
@@ -177,7 +189,26 @@ function prepareDelete() {
 <template>
   <section ref="page" class="models-page">
     <AppTopbar />
-    <StickyTabs><div class="model-tabs-line"><div class="model-tabs ext-tabs" role="tablist" aria-label="模型配置"><button class="tab" :class="{ active: tab === 'channels' }" role="tab" :aria-selected="tab === 'channels'" @click="tab = 'channels'">渠道模型</button><button class="tab" :class="{ active: tab === 'templates' }" role="tab" :aria-selected="tab === 'templates'" @click="tab = 'templates'">模型模版</button></div><div id="model-tabs-actions"></div><AgentExecutionField compact v-if="tab==='templates'&&!models.view.templateEditor" /></div></StickyTabs>
+    <StickyTabs><div class="model-tabs-line"><div class="model-tabs ext-tabs" role="tablist" aria-label="模型配置"><button class="tab" :class="{ active: tab === 'channels' }" role="tab" :aria-selected="tab === 'channels'" @click="tab = 'channels'">渠道模型</button><button class="tab" :class="{ active: tab === 'templates' }" role="tab" :aria-selected="tab === 'templates'" @click="tab = 'templates'">模型模版</button></div><UiButton size="sm" :disabled="modelsV2.saving" @click="openV2">条件模版</UiButton><div id="model-tabs-actions"></div><AgentExecutionField compact v-if="!modelsV2.active&&tab==='templates'&&!models.view.templateEditor" /></div></StickyTabs>
+    <section v-if="modelsV2.active&&tab==='templates'" class="model-form models-v2" aria-label="条件模版配置">
+      <div class="model-toolbar"><h2>条件模版</h2><div class="model-inline"><UiButton :disabled="modelsV2.loading||!modelsV2.canLoad" @click="modelsV2.load">重新读取</UiButton><UiButton :disabled="modelsV2.saving" @click="startV2()">新建模版</UiButton><UiButton :disabled="modelsV2.saving" @click="closeV2">返回</UiButton></div></div>
+      <p v-if="modelsV2.error" role="alert" class="model-error">{{modelsV2.error}}</p>
+      <p v-if="modelsV2.loading" role="status">正在读取保存模版…</p>
+      <div v-if="modelsV2.snapshot" class="model-inline"><UiButton v-for="item in modelsV2.snapshot.library.templates" :key="item.id" :disabled="modelsV2.saving" @click="startV2(item)">{{item.label}}</UiButton></div>
+      <template v-if="modelsV2.draft">
+        <label>模版名称<input class="input" aria-label="条件模版名称" :value="modelsV2.draft.label" :disabled="modelsV2.saving" @input="modelsV2.setLabel(($event.target as HTMLInputElement).value)" /></label>
+        <label>说明<textarea class="input" :value="modelsV2.draft.content.description" :disabled="modelsV2.saving" @input="modelsV2.setContent({...modelsV2.draft!.content,description:($event.target as HTMLTextAreaElement).value})" /></label>
+        <h2>族通用规则</h2><ModelRuleFields :model-value="modelsV2.draft.content.commonRules" :disabled="modelsV2.saving" @update:model-value="modelsV2.setContent({...modelsV2.draft!.content,commonRules:$event})" />
+        <ConditionEditor :model-value="modelsV2.draft.content" :issues="modelsV2.issues" :disabled="modelsV2.saving" @update:model-value="modelsV2.setContent" @preview="modelsV2.requestPreview" />
+        <div class="model-columns"><label>原始模型 ID<input class="input" aria-label="条件预览原始ID" :value="modelsV2.previewModelId" :disabled="modelsV2.saving" @input="modelsV2.setPreviewTarget(($event.target as HTMLInputElement).value,modelsV2.previewChannelId)" /></label><label>渠道 ID<input class="input" aria-label="条件预览渠道ID" :value="modelsV2.previewChannelId" :disabled="modelsV2.saving" @input="modelsV2.setPreviewTarget(modelsV2.previewModelId,($event.target as HTMLInputElement).value)" /></label></div>
+        <UiButton :disabled="!modelsV2.canPreview||modelsV2.previewBusy||modelsV2.saving" @click="modelsV2.requestPreview">核对当前条件</UiButton>
+        <ConditionPreview :result="modelsV2.preview" :busy="modelsV2.previewBusy" :error="modelsV2.previewError" :issues="modelsV2.issues" @retry="modelsV2.requestPreview" />
+        <label class="model-inline"><input type="checkbox" :checked="modelsV2.draft.makeDefault" :disabled="modelsV2.saving" @change="modelsV2.setDefault(($event.target as HTMLInputElement).checked)" />将本次新版本设为默认保存版本</label>
+        <div class="model-inline"><UiButton :disabled="modelsV2.saving||!modelsV2.dirty" @click="modelsV2.reset">还原本次修改</UiButton><UiButton variant="primary" :disabled="!modelsV2.canSave||modelsV2.saving||!modelsV2.dirty" @click="saveV2">保存新版本</UiButton></div>
+      </template>
+      <p v-else class="model-muted">选择一个明确保存版本，或创建条件模版草稿。旧格式不会被自动转换。</p>
+    </section>
+    <template v-else>
     <p v-if="models.error" class="model-error" role="alert">{{ models.error }}</p>
     <div v-if="!models.snapshot" class="model-empty"><p>{{ models.busy ? '正在读取模型配置…' : '模型配置读取未完成' }}</p><UiButton :disabled="models.busy" @click="models.load">重新读取</UiButton></div>
     <ChannelsView v-if="models.snapshot" v-show="tab==='channels'" :active="tab==='channels'" actions-target="#model-tabs-actions" />
@@ -231,6 +262,7 @@ function prepareDelete() {
     <TemplateComparisonDialog :open="compareOpen" :template="compareTemplate" :draft="draft" :library-digest="models.snapshot?.libraryDigest??''" @close="compareOpen=false" />
     <ExternalTaskDialog v-if="models.snapshot" :open="externalOpen" :snapshot="models.snapshot" :draft="externalDraft??models.draft" :dirty="!!externalDraft||models.dirty" :selected="selectedTemplates" @close="externalOpen = false" />
     <BatchAgentDialog v-if="models.snapshot" :open="batchOpen" :snapshot="models.snapshot" :selected="selectedTemplates" :versions="models.selected" @close="batchOpen=false" />
+    </template>
   </section>
 </template>
 <style>

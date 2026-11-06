@@ -615,3 +615,234 @@ fn every_store_document_rejects_duplicate_json_without_rewriting_the_file() {
     );
     assert_eq!(std::fs::read(path).unwrap(), duplicate.as_bytes());
 }
+
+#[test]
+fn existing_split_groups_follow_the_logical_connection_credential_rotation() {
+    let library = seed_library_v2().unwrap();
+    let raw = config();
+    let before = imported(&raw);
+    let intended = apply_explicit_edits_v2(
+        &matched(&library, &before),
+        &[ModelEditV2::SetOverride {
+            channel_id: CHANNEL.into(),
+            raw_model_id: "gpt-6-sol".into(),
+            field: "protocol".into(),
+            value: json!("openai-responses"),
+        }],
+    )
+    .unwrap();
+    let mappings = mapping_for(&library, &before, &intended);
+    let first = compile_file_v2(&library, &before, &intended, &raw, &mappings, &auth()).unwrap();
+    let mut rotated = first.next_config.clone();
+    rotated["providers"]["vendor"]["apiKey"] = json!("rotated-synthetic");
+    rotated["providers"]["vendor"]["headers"] = json!({"x-fixture":"rotated"});
+    let next =
+        compile_file_v2(&library, &intended, &intended, &rotated, &mappings, &auth()).unwrap();
+    assert_eq!(
+        next.next_config["providers"]["vendor-responses"]["apiKey"],
+        "rotated-synthetic"
+    );
+    assert_eq!(
+        next.next_config["providers"]["vendor-responses"]["headers"],
+        json!({"x-fixture":"rotated"})
+    );
+    assert_eq!(
+        next.next_config["providers"]["other"],
+        raw["providers"]["other"]
+    );
+    let mut cleared = next.next_config.clone();
+    cleared["providers"]["vendor"]
+        .as_object_mut()
+        .unwrap()
+        .remove("apiKey");
+    cleared["providers"]["vendor"]
+        .as_object_mut()
+        .unwrap()
+        .remove("headers");
+    let no_auth =
+        compile_file_v2(&library, &intended, &intended, &cleared, &mappings, &auth()).unwrap();
+    assert!(no_auth.next_config["providers"]["vendor-responses"]
+        .get("apiKey")
+        .is_none());
+    assert!(no_auth.next_config["providers"]["vendor-responses"]
+        .get("headers")
+        .is_none());
+}
+
+#[test]
+fn persistent_anchor_can_park_and_return_without_reassigning_any_group_identity() {
+    let library = seed_library_v2().unwrap();
+    let raw = config();
+    let before = imported(&raw);
+    let split = apply_explicit_edits_v2(
+        &matched(&library, &before),
+        &[ModelEditV2::SetOverride {
+            channel_id: CHANNEL.into(),
+            raw_model_id: "gpt-6-sol".into(),
+            field: "protocol".into(),
+            value: json!("openai-responses"),
+        }],
+    )
+    .unwrap();
+    let mapping = mapping_for(&library, &before, &split);
+    let first = compile_file_v2(&library, &before, &split, &raw, &mapping, &auth()).unwrap();
+    let only_responses = apply_explicit_edits_v2(
+        &split,
+        &[ModelEditV2::SetOverride {
+            channel_id: CHANNEL.into(),
+            raw_model_id: "vendor/custom".into(),
+            field: "protocol".into(),
+            value: json!("openai-responses"),
+        }],
+    )
+    .unwrap();
+    let parked = compile_file_v2(
+        &library,
+        &split,
+        &only_responses,
+        &first.next_config,
+        &mapping,
+        &auth(),
+    )
+    .unwrap();
+    assert_eq!(parked.mappings, first.mappings);
+    assert_eq!(parked.next_config["providers"]["vendor"]["disabled"], true);
+    assert_eq!(
+        parked.next_config["providers"]["vendor"]["models"],
+        json!([])
+    );
+    assert_eq!(
+        parked.next_config["providers"]["vendor"]["selectedModels"],
+        json!([])
+    );
+    assert_eq!(
+        parked.next_config["providers"]["vendor"]["note"],
+        "original note"
+    );
+    assert_eq!(
+        parked.next_config["providers"]["vendor"]["apiKey"],
+        raw["providers"]["vendor"]["apiKey"]
+    );
+    assert_eq!(
+        parked.next_config["providers"]["vendor"]["unknownVendor"],
+        raw["providers"]["vendor"]["unknownVendor"]
+    );
+    assert_eq!(parked.next_config["defaultProvider"], "vendor-responses");
+    assert_eq!(
+        parked.next_config["defaultModel"],
+        "vendor-responses/gpt-6-sol"
+    );
+    let reopened = read_policy_v2(
+        &parked.next_config,
+        &digest(b"parked"),
+        &parked.policy,
+        Some(&parked.ledger),
+        &mapping,
+        &bindings(),
+    )
+    .unwrap();
+    assert!(reopened.channels[0].connection.enabled);
+    assert_eq!(reopened.channels[0].models.len(), 2);
+    let same = compile_file_v2(
+        &library,
+        &reopened,
+        &reopened,
+        &parked.next_config,
+        &mapping,
+        &auth(),
+    )
+    .unwrap();
+    assert_eq!(same.next_config, parked.next_config);
+    let back = apply_explicit_edits_v2(
+        &reopened,
+        &[
+            ModelEditV2::ClearOverride {
+                channel_id: CHANNEL.into(),
+                raw_model_id: "vendor/custom".into(),
+                field: "protocol".into(),
+            },
+            ModelEditV2::ClearOverride {
+                channel_id: CHANNEL.into(),
+                raw_model_id: "gpt-6-sol".into(),
+                field: "protocol".into(),
+            },
+        ],
+    )
+    .unwrap();
+    let returned = compile_file_v2(
+        &library,
+        &reopened,
+        &back,
+        &parked.next_config,
+        &mapping,
+        &auth(),
+    )
+    .unwrap();
+    assert_eq!(returned.mappings, first.mappings);
+    assert_eq!(returned.next_config["defaultProvider"], "vendor");
+    assert_eq!(returned.next_config["defaultModel"], "vendor/gpt-6-sol");
+    assert_eq!(
+        returned.next_config["providers"]["vendor"]["disabled"],
+        false
+    );
+    assert_eq!(
+        returned.next_config["providers"]["vendor-responses"]["disabled"],
+        true
+    );
+    let reopened = read_policy_v2(
+        &returned.next_config,
+        &digest(b"returned"),
+        &returned.policy,
+        Some(&returned.ledger),
+        &mapping,
+        &bindings(),
+    )
+    .unwrap();
+    assert!(reopened.channels[0].connection.enabled);
+    assert_eq!(reopened.channels[0].models.len(), 2);
+    assert!(reopened.channels[0]
+        .models
+        .iter()
+        .all(|m| m.explicit_overrides.protocol == super::schema::Field::Inherit));
+}
+
+#[test]
+fn no_resolved_active_group_parks_existing_identity_without_inventing_models() {
+    let library = seed_library_v2().unwrap();
+    let raw = config();
+    let before = imported(&raw);
+    let mapping = mapping_for(&library, &before, &before);
+    let first = compile_file_v2(&library, &before, &before, &raw, &mapping, &auth()).unwrap();
+    let mut pending = before.clone();
+    pending.channels[0].selection = super::schema::ModelSelection::None;
+    for model in &mut pending.channels[0].models {
+        model.source.fields.clear();
+        model.binding = None;
+    }
+    let parked = compile_file_v2(
+        &library,
+        &before,
+        &pending,
+        &first.next_config,
+        &mapping,
+        &auth(),
+    )
+    .unwrap();
+    assert!(parked.plan.groups.is_empty());
+    assert_eq!(parked.mappings, first.mappings);
+    assert_eq!(parked.next_config["defaultProvider"], "vendor");
+    assert!(parked.next_config.get("defaultModel").is_none());
+    assert_eq!(parked.next_config["providers"]["vendor"]["disabled"], true);
+    assert_eq!(
+        parked.next_config["providers"]["vendor"]["models"],
+        json!([])
+    );
+    assert_eq!(
+        parked.next_config["providers"]["vendor"]["note"],
+        "original note"
+    );
+    assert_eq!(
+        parked.next_config["providers"]["vendor"]["apiKey"],
+        raw["providers"]["vendor"]["apiKey"]
+    );
+}

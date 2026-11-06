@@ -158,6 +158,33 @@ pub fn compile_file_v2(
         {
             return Err(error("model_runtime_mapping_conflict"));
         }
+        if !mapping.anchor {
+            let connection = original
+                .get(&channel.connection.provider_id)
+                .and_then(Value::as_object)
+                .ok_or_else(|| error("model_runtime_mapping_conflict"))?;
+            // All groups belong to this exact logical connection. An existing
+            // split provider must not keep a revoked/rotated key or header.
+            for key in [
+                "apiKey",
+                "apiKeyPool",
+                "headers",
+                "proxy",
+                "authMode",
+                "apiKeyTransport",
+                "apiKeyPoolStrategy",
+                "keyOptional",
+            ] {
+                match connection.get(key) {
+                    Some(value) => {
+                        row.insert(key.into(), value.clone());
+                    }
+                    None => {
+                        row.remove(key);
+                    }
+                }
+            }
+        }
         row.insert("adapter".into(), json!(group.protocol.as_str()));
         if !mapping.anchor {
             row.insert(
@@ -348,12 +375,12 @@ pub fn compile_file_v2(
             g.channel_id == mapping.channel_id
                 && g.protocol == mapping.protocol
                 && g.wire_profile_digest == mapping.wire_profile_digest
-        }) || mapping.anchor
-        {
+        }) {
             continue;
         }
         if let Some(row) = next["providers"].get_mut(&mapping.provider_id) {
-            if row["note"] != super::protocol_groups::mapping_marker_v2(mapping) {
+            if !mapping.anchor && row["note"] != super::protocol_groups::mapping_marker_v2(mapping)
+            {
                 return Err(error("model_runtime_mapping_conflict"));
             }
             let row = row
@@ -429,17 +456,39 @@ pub fn compile_file_v2(
     }
     if let Some(id) = &intended.default_channel_id {
         if let Some(groups) = active_by_channel.get(id) {
-            let anchor = mappings
-                .mappings
-                .iter()
-                .find(|m| {
-                    m.channel_id == *id
-                        && m.anchor
-                        && groups.iter().any(|(p, _)| p == &m.provider_id)
-                })
-                .map(|m| &m.provider_id)
+            let routed = next
+                .get("defaultModel")
+                .and_then(Value::as_str)
+                .and_then(|slug| {
+                    groups.iter().find(|(provider, ids)| {
+                        ids.iter()
+                            .any(|model| slug == format!("{provider}/{model}"))
+                    })
+                });
+            let chosen = routed
+                .or_else(|| groups.iter().min_by(|a, b| a.0.cmp(&b.0)))
+                .map(|(provider, _)| provider)
                 .ok_or_else(|| error("model_runtime_mapping_conflict"))?;
-            next["defaultProvider"] = json!(anchor);
+            next["defaultProvider"] = json!(chosen);
+        } else if let Some(anchor) = mappings
+            .mappings
+            .iter()
+            .find(|m| m.channel_id == *id && m.anchor)
+        {
+            // Keep the explicit parked connection identity, never manufacture
+            // a runnable model/protocol just to satisfy a default reference.
+            next["defaultProvider"] = json!(anchor.provider_id);
+            if next
+                .get("defaultModel")
+                .and_then(Value::as_str)
+                .is_some_and(|slug| {
+                    mappings.mappings.iter().any(|m| {
+                        m.channel_id == *id && slug.starts_with(&(m.provider_id.clone() + "/"))
+                    })
+                })
+            {
+                next.as_object_mut().unwrap().remove("defaultModel");
+            }
         }
     }
     let mut targets = vec![];
