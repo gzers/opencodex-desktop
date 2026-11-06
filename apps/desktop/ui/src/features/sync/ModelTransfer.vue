@@ -9,6 +9,9 @@ import { useModelsStore } from '@/features/models/store'
 import {useAppStore} from '@/stores/app'
 import { errorText, versionLabel, type ChannelPolicy, type ModelPolicy } from '@/features/models/api'
 import { modelTransferApi,assetDetailApi,type AssetDetail, transferFileDialog, cloudCatalogApi,type CloudSyncCatalog, transferResultApi, importCredentialChoiceApi, transferProtectionApi, transferChoiceApi, type TransferChoice,type TransferResult, scopeFor,remoteScope,defaultIncludedMcp,type McpConflict, accountInformationLabel, accountInformationSupported, accountTransferLabel, accountPlatforms, type AccountCatalogEntry, type ChannelImportMapping, type DraftCandidate, type FamilyScope, type FilePlan, type IncomingPlan, type ManagerScope, type RemoteOptions, type TransferScope, type UploadPlan, type SyncChange, type SyncPreview } from './modelTransfer'
+import ConfigSyncPreviewV2 from './ConfigSyncPreviewV2.vue'
+import {useConfigSyncV2Store} from './store-v2'
+import type {ScopeRequestV2} from './api-v2'
 import {getSyncConfig} from './api'
 import {useSyncStore} from './store'
 import {recordSyncActivity,recordRemoteVersion} from './activity'
@@ -19,9 +22,15 @@ import type { SyncCheck } from './modelTransfer'
 import type { ObservationToken } from './observation'
 const props = defineProps<{ retryReceipt?:TransferResult; refreshReceipt?:TransferResult; source?:'saved'|'draft'; remote?: boolean; importOnly?: boolean; importOpen?: boolean; actionOnly?: boolean }>()
 const emit = defineEmits<{ 'update:importOpen': [value: boolean]; close:[] }>()
+const configV2=useConfigSyncV2Store(),syncStore=useSyncStore()
+async function configCatalog(read:string|null=null,write:string|null=null){configV2.secrets(read,write);await configV2.loadCatalog()}
+async function configPrepare(read:string|null,write:string|null){configV2.secrets(read,write);await configV2.prepare()}
+function configReview(value:boolean){configV2.setScope({...JSON.parse(JSON.stringify(configV2.scope)) as ScopeRequestV2,assetsReviewed:value})}
+watch(()=>configV2.scopeEditRevision,()=>{if(props.remote&&configV2.catalog&&!configV2.catalogBusy)void configV2.persistScope()})
+watch(()=>syncStore.pendingAction,async()=>{if(props.remote&&syncStore.takeAction('sync')){await configV2.loadCatalog();if(!configV2.error)await configV2.prepare();if(props.actionOnly)emit('close')}},{flush:'post'})
 const pickOpen = ref(false)
 const models = useModelsStore()
-const app=useAppStore();const syncStore=useSyncStore()
+const app=useAppStore()
 const busy = ref(false)
 const error = ref('')
 const directionCheck = ref<SyncCheck | null>(null)
@@ -229,7 +238,7 @@ function initializeDefaultScope(){
  allTemplates.value=false;allChannels.value=false;allSkills.value=false;allMcps.value=false;exportKeys.value=false;extensionCredentials.value=false;
 }
 
-onMounted(async () => { if(!props.importOnly&&!props.actionOnly){void transferResultApi.readMode(props.remote?'webdav':'file').then(value=>{if(value)syncStore.rememberResult(value.id,!!props.remote)}).catch(()=>{})}if(props.retryReceipt||props.refreshReceipt){await loadRetry();return}if(props.importOnly&&!props.actionOnly)return; try{if (!models.snapshot) await models.load();if(!props.remote)await getSyncConfig().then(config=>{activeWebdav.value=!!config.endpoint}).catch(()=>{});else{if(!syncStore.config)await syncStore.loadConfig();await loadScope()}}finally{catalogueLoading.value=false;await begin()} })
+onMounted(async () => { if(props.remote){await configV2.loadCatalog();if(props.actionOnly&&syncStore.takeAction('sync')){if(!configV2.error)await configV2.prepare();emit('close')}return} if(!props.importOnly&&!props.actionOnly){void transferResultApi.readMode(props.remote?'webdav':'file').then(value=>{if(value)syncStore.rememberResult(value.id,!!props.remote)}).catch(()=>{})}if(props.retryReceipt||props.refreshReceipt){await loadRetry();return}if(props.importOnly&&!props.actionOnly)return; try{if (!models.snapshot) await models.load();if(!props.remote)await getSyncConfig().then(config=>{activeWebdav.value=!!config.endpoint}).catch(()=>{});else{if(!syncStore.config)await syncStore.loadConfig();await loadScope()}}finally{catalogueLoading.value=false;await begin()} })
 // S18-01：概览卡片的「同步 / 导出」进入本页后执行一次；条件未满足时就地提示，不静默忽略。
 watch(()=>[syncStore.pendingAction,catalogueLoading.value,remoteScopeLoaded.value,selectionReady.value] as const,()=>{
  if(props.retryReceipt||props.refreshReceipt||props.importOnly&&!props.actionOnly||catalogueLoading.value||!selectionReady.value)return
@@ -245,9 +254,8 @@ watch(()=>[syncStore.pendingAction,catalogueLoading.value,remoteScopeLoaded.valu
 async function loadAssets(){try{const catalog=await modelTransferApi.extensionCatalog();if(!catalog||!Array.isArray(catalog.skills)||!Array.isArray(catalog.mcps)||![...catalog.skills,...catalog.mcps].every(name=>typeof name==='string'))throw {message:'扩展目录返回结构无效，请重新读取；未扩大配置范围'};assetCatalog.value=catalog;assetError.value=''}catch(cause){assetError.value=errorText(cause)}}
 function assetScope(){return hasAssets.value?{skillNames:skillNames.value,mcpNames:mcpNames.value,extensionCredentials:extensionCredentials.value,credentialIds:credentialIds.value,...(Object.keys(selectedMcpSources()).length?{mcpSources:selectedMcpSources()}:{})}:{}}
 function remoteOptions(){return {templateIds:[...templateIds.value],...(accountIds.value.length?{accountIds:accountIds.value}:{}),preferences:managerPreferences.value,extensions:managerExtensions.value,includeKeys:exportKeys.value,credentialIds:credentialIds.value,...assetScope(),...(allTemplates.value||allChannels.value||allSkills.value||allMcps.value?{allTemplates:allTemplates.value,allChannels:allChannels.value,allSkills:allSkills.value,allMcps:allMcps.value}:{}),passphrase:remoteEncrypted.value?remotePassword.value||undefined:undefined}}
-let scopeRevision:string|null=null;
-async function loadScope(){const token=syncStore.observationToken();scopeRevision=token.revision;try{const scope=await modelTransferApi.loadRemoteScope();if(!syncStore.matchesConfig(token)){remoteScopeLoaded.value=false;scopeReadError.value='连接已改变，请重新读取范围目录。';return}accountIds.value=scope.accountIds??[];templateIds.value=scope.templateIds;channelIds.value=scope.channelIds;channelModels.value=scope.channelModels??{};channelFamilies.value=scope.channelFamilies??{};managerPreferences.value=scope.preferences;managerExtensions.value=false;exportKeys.value=scope.includeKeys;skillNames.value=scope.skillNames??[];mcpNames.value=scope.mcpNames??[];mcpSources.value=scope.mcpSources??{};extensionCredentials.value=scope.extensionCredentials??false;allTemplates.value=scope.allTemplates??false;allChannels.value=scope.allChannels??false;allSkills.value=scope.allSkills??false;allMcps.value=scope.allMcps??false;remoteScopeLoaded.value=true;scopeReadError.value=''}catch(cause){remoteScopeLoaded.value=false;scopeReadError.value=errorText(cause)}}
-watch(()=>[syncStore.observationToken().revision,busy.value,catalogueLoading.value] as const,([revision,working,loading])=>{if(props.remote&&!props.importOnly&&!working&&!loading&&scopeRevision!==revision){remoteScopeLoaded.value=false;selectionReady.value=false;void begin()}});
+
+async function loadScope(){const token=syncStore.observationToken();try{const scope=await modelTransferApi.loadRemoteScope();if(!syncStore.matchesConfig(token)){remoteScopeLoaded.value=false;scopeReadError.value='连接已改变，请重新读取范围目录。';return}accountIds.value=scope.accountIds??[];templateIds.value=scope.templateIds;channelIds.value=scope.channelIds;channelModels.value=scope.channelModels??{};channelFamilies.value=scope.channelFamilies??{};managerPreferences.value=scope.preferences;managerExtensions.value=false;exportKeys.value=scope.includeKeys;skillNames.value=scope.skillNames??[];mcpNames.value=scope.mcpNames??[];mcpSources.value=scope.mcpSources??{};extensionCredentials.value=scope.extensionCredentials??false;allTemplates.value=scope.allTemplates??false;allChannels.value=scope.allChannels??false;allSkills.value=scope.allSkills??false;allMcps.value=scope.allMcps??false;remoteScopeLoaded.value=true;scopeReadError.value=''}catch(cause){remoteScopeLoaded.value=false;scopeReadError.value=errorText(cause)}}
 function currentChoice():TransferChoice{return {preferences:managerPreferences.value,extensions:managerExtensions.value,selectedIds:choiceScopeKeys(),credentialIds:[...credentialIds.value],versions:{...versions.value},mcpSources:{...mcpSources.value},includeGlobal:includeGlobal.value,webdavPasswords:webdavPasswords.value,channelModels:{...channelModels.value},channelFamilies:{...channelFamilies.value}}}
 function restoreChoice(choice:TransferChoice){updateScopeKeys(choice.selectedIds.filter(id=>id!==scopeKey('manager','extensions')));managerPreferences.value=choice.preferences??choice.selectedIds.includes(scopeKey('manager','preferences'));managerExtensions.value=false;channelModels.value=choice.channelModels??{};channelFamilies.value=choice.channelFamilies??{};credentialIds.value=[...choice.credentialIds];versions.value={...choice.versions};mcpSources.value={...choice.mcpSources};webdavPasswords.value=choice.webdavPasswords;exportKeys.value=credentialChannels.value.some(x=>credentialIds.value.includes(x.id));extensionCredentials.value=credentialExtensions.value.some(x=>credentialIds.value.includes(x.id))}
 async function persistChoice(){if(!selectionReady.value||props.importOnly||exportSource.value==='draft'||props.remote&&!remoteScopeLoaded.value)return;const current=++choiceRevision;const choice=JSON.parse(JSON.stringify(currentChoice()));choiceWrite=choiceWrite.catch(()=>{}).then(async()=>{try{await transferChoiceApi.save(!!props.remote,choice);if(current===choiceRevision)choiceError.value=''}catch{choiceError.value='本机范围未保存，请重试；当前选择已保留。'}});await choiceWrite}
@@ -484,6 +492,8 @@ async function closePreview() { if (!busy.value) { await discardPendingFilePlans
 </script>
 <template>
   <article class="model-transfer">
+    <template v-if="remote"><slot name="connection" /><ConfigSyncPreviewV2 :workspace="!actionOnly" :open="false" :preview="null" :catalog="configV2.catalog" :scope="configV2.scope" :loading="configV2.catalogBusy" :busy="configV2.previewBusy" :error="configV2.error" :scope-error="configV2.scopeError" :has-result="!!configV2.fact" @catalog="configCatalog" @prepare="configPrepare" @toggle="configV2.toggleEntry" @mcp="configV2.setMcpClient" @subset="configV2.channelSubset" @option="configV2.channelOption" @credential="configV2.credentialEntry" @revision="configV2.templateRevision" @default="configV2.adoptDefault" @global="configV2.setScope({...configV2.scope,selection:{...configV2.scope.selection,includeGlobalTemplateRefs:$event}})" @review="configReview" @result="configV2.resultOpen=true" @recovery="configV2.recoveryOpen=true" @connection="syncStore.openConnection()" /></template>
+    <template v-else>
     <template v-if="!importOnly&&!actionOnly">
     <div class="card-head"><div><h2>{{ remote ? '设备间同步' : '导入与导出' }}</h2><p>{{ remote ? '较新版本覆盖所选范围，确认前可查看变化。' : '按下方范围导出配置；导入时在所选文件内选择范围。' }}</p></div><div class="sync-head-actions"><UiButton v-if="currentResultId" variant="ghost" :disabled="busy" @click="syncStore.openResult(currentResultId)">查看结果</UiButton><template v-if="remote"><UiButton variant="primary" :disabled="remoteActionsDisabled" :loading="busy" @click="startSync">{{ busy?'同步中…':'同步' }}</UiButton></template><template v-else><UiButton :disabled="busy||catalogueLoading||!models.snapshot" @click="openImport">导入配置</UiButton><UiButton variant="primary" :disabled="!selectionReady||!!choiceError||busy||!models.snapshot||catalogueLoading||!hasScope||!familyScopesValid||(exportSource==='draft'&&!channelIds.length)" @click="prepare">导出配置</UiButton></template></div></div>
     <slot name="connection" />
@@ -598,6 +608,7 @@ async function closePreview() { if (!busy.value) { await discardPendingFilePlans
       </template>
     </UiDialog>
 
+    </template>
   </article>
 </template>
 <style scoped>
