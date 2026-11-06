@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "kind": "partial-integration-evidence",
+  "codeHead": "7d8ffc416392d07c7701a8e42a461991483ad0a9",
+  "note": "Logs are exact source bytes; some checks include explicitly identified pending worktree changes. No final acceptance or release claim. Full UI initial failures retained.",
+  "files": [
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r2-20261107/ocxd023-full-lib-first.log",
+      "source": "/tmp/ocxd023-full-lib-first.log",
+      "sha256": "e1d120cde749918e58269756fa39af51fd136bd98fc94ac3328c9682280556ef",
+      "bytes": 157557
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r2-20261107/ocxd023-full-lib-second.log",
+      "source": "/tmp/ocxd023-full-lib-second.log",
+      "sha256": "22797245f68f43db76b12d39baebc14099ea134e5e12c4719c29f6420ce40621",
+      "bytes": 198812
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r2-20261107/ocxd023-ui-full-current.log",
+      "source": "/tmp/ocxd023-ui-full-current.log",
+      "sha256": "543246bac45cb50d547b39cdb27d35fa538dd7354abd6ad14c40df3ef1bfa19f",
+      "bytes": 414142
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r2-20261107/ocxd023-root-credentials-write.log",
+      "source": "/tmp/ocxd023-root-credentials-write.log",
+      "sha256": "84108f642725b017cfdaab2af8b71d25b3f91a4536de56d53b9f0b9e979f0690",
+      "bytes": 1398
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r2-20261107/ocxd023-identity-integrated-final.log",
+      "source": "/tmp/ocxd023-identity-integrated-final.log",
+      "sha256": "813008dd8a6d4d3507c16a6ccc7284fe5e670927072349c3c6ca76cebdf1d027",
+      "bytes": 2977
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r2-20261107/ocxd023-filetransfer-integrated.log",
+      "source": "/tmp/ocxd023-filetransfer-integrated.log",
+      "sha256": "49ee6475ac66636039b02da0654dc12771f01b5e49f76ca3b64bb279f9a1674e",
+      "bytes": 2570
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r2-20261107/ocxd023-runtime-stage-tests.log",
+      "source": "/tmp/ocxd023-runtime-stage-tests.log",
+      "sha256": "dec5673ee7ead0e86a249ea046dba60aab31a8206a43fedeb035ab8449b4e26d",
+      "bytes": 100
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r2-20261107/ocxd023-release-runtime-tests.log",
+      "source": "/tmp/ocxd023-release-runtime-tests.log",
+      "sha256": "f1c22e019a9a4cf203356bcfb916df4e7c34bcd726dba87db5f2383919eb8755",
+      "bytes": 364
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r2-20261107/ocxd023-startup-bundle-check.log",
+      "source": "/tmp/ocxd023-startup-bundle-check.log",
+      "sha256": "4d496b1ce20e046bee5c47b014400522ae9fe969e8bfba81f93d5c0077794bf8",
+      "bytes": 198
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r2-20261107/ocxd023-bundle-real.log",
+      "source": "/tmp/ocxd023-bundle-real.log",
+      "sha256": "b49960aff36231ec5cfe639f1382a18d10fac0efb4b847a07ae980d0d49c9a31",
+      "bytes": 614
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r2-20261107/ocxd023-local-apply-nonmodel-tests.log",
+      "source": "/tmp/ocxd023-local-apply-nonmodel-tests.log",
+      "sha256": "1e33c818320ee003336bcacf5a39bfa72c976d51e2c59c35ddc724ebf21908e7",
+      "bytes": 3959
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r2-20261107/ocxd023-local-apply-nonmodel-freeze.json",
+      "source": "/tmp/ocxd023-local-apply-nonmodel-freeze.json",
+      "sha256": "ba696a21c8a5f85fc577235e6b4e2e7a412102b37501547ff86a8d53116bfd0f",
+      "bytes": 1041
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r2-20261107/L1-external-cli-receipt.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-external-cli-receipt.md",
+      "sha256": "c06f844e21e7c9f1791d4991e07a9c4819b2f40c00b9dab40da9f47ec84c8748",
+      "bytes": 4545
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r2-20261107/L1-external-cli-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-external-cli-manifest.json",
+      "sha256": "e3602d6d729c08a16cb9a70cc42ecffb57238bc4d139542392f0b2538f5c60ea",
+      "bytes": 3182
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r2-20261107/external_task_client.py",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/external_task_client.py",
+      "sha256": "0a9f6975d08057e5de49df5ac568c761d62744872cbd25c48f356914fd1c36f5",
+      "bytes": 4644
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r2-20261107/broker-v2-cli-first-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/broker-v2-cli-first-tests.log",
+      "sha256": "e0be395bcdaf81db532d831a9d602fa0ed01eb6debf04a2aa90a1fe160ca2ad1",
+      "bytes": 1945
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r2-20261107/broker-v2-cli-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/broker-v2-cli-clippy.log",
+      "sha256": "e222b660ff1927bfa9f2c80dc75f2fb59046b6965c40d7f439aacb24dc3a35d7",
+      "bytes": 201
+    }
+  ]
+}

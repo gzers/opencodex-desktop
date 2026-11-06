@@ -1,0 +1,26 @@
+{
+  "task": "LocalApplication mapped non-model absent-target admission",
+  "files": [
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/sync_local_v2.rs",
+      "sha256": "b2f72ddc34a9da8198405e3ae3194607a2eff82e96389aaf74034dc3973e9a28",
+      "bytes": 45990
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/sync_local_v2_tests.rs",
+      "sha256": "baaedf67ffc67b4df62e4fdba5344e4f3779569bbaff1efbd99a573bf3cd0aa3",
+      "bytes": 55342
+    }
+  ],
+  "testResult": {
+    "passed": 28,
+    "failed": 0,
+    "log": "/tmp/ocxd023-local-apply-nonmodel-tests.log"
+  },
+  "ordinaryNewUnchanged": true,
+  "rustfmt": "passed",
+  "diffCheck": "passed",
+  "snapshot": "/tmp/ocxd023-local-apply-nonmodel",
+  "gitCommitPerformed": false,
+  "scope": "Only sync_local_v2.rs and sync_local_v2_tests.rs; no mapper/Host/receive/source implementation/public commands/Cargo/docs changes."
+}

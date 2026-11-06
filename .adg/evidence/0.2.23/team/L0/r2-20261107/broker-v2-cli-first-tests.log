@@ -1,0 +1,20 @@
+   Compiling opencodex-desktop v0.2.22 (/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 46.57s
+     Running unittests src/lib.rs (/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/batch2-crate-target/debug/deps/opencodex_desktop_lib-7a7e9249d8736667)
+
+running 9 tests
+test modules::model_config::broker::tests::final_authority_guard_serializes_revocation_with_acceptance ... ok
+test modules::model_config::broker::tests::private_grants_reject_root_rebinding_unknown_schema_duplicates_and_symlinks ... ok
+test modules::model_config::broker::tests::fixed_context_expiry_and_old_persisted_tasks_do_not_gain_v2_authority ... ok
+external-cli action=submit pid=79240 exit=Some(0): external-cli: proof/context/contract/preflight/submit verified
+test modules::model_config::broker::tests::activation_proof_origin_host_and_scoped_bearer_use_the_existing_listener ... ok
+test modules::model_config::broker::tests::public_bundle_and_resume_share_one_listener_without_implicit_activation ... ok
+test modules::model_config::broker::tests::strict_raw_v2_submit_creates_review_receipts_and_preserves_same_id_bytes ... ok
+test modules::model_config::broker::tests::revoking_an_accepted_task_withdraws_transport_without_undoing_the_revision ... ok
+test modules::model_config::broker::tests::reports_are_review_only_and_strict_json_scope_and_body_limits_fail_closed ... ok
+external-cli action=submit pid=79245 exit=Some(0): external-cli: proof/context/contract/preflight/submit verified
+external-cli action=receipt pid=79246 exit=Some(0): external-cli: proof/receipt recovered without submit
+test modules::model_config::broker::tests::restart_reuses_one_descriptor_recovers_receipts_and_never_activates_prepared_tasks ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 1696 filtered out; finished in 1.91s
+
