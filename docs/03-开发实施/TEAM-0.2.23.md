@@ -113,3 +113,8 @@ L1新增实际消费者批次独占：provider_import.rs、protocol_groups.rs仅
 L0内部辅助执行者分别独占data_root/{mod,bootstrap,layout,startup_v2}.rs及commands/data_root.rs，和runtime/install.rs及commands/runtime.rs；仍由L0负责审核与提交，不建立新的跨对话版本来源。其他L0文件由总控写入。此辅助分解不扩大L1/L2/L3/Windows写集。
 
 扩大目录回归首轮68项为39过/29失败，主要暴露旧自动修复/旧绑定/版本及路径断言与新合同冲突；保留失败结果并继续逐项处理，不以局部新测试通过替代全模块验收。
+
+
+### Windows R1 Git放行补记
+
+代码codex/0.2.23-integration@9e69f4598512aac0c4e068b9f9f9c08ede906a28已真实推送；WINDOWS-0.2.23.md已由前序R0等待状态改为R1平台开发与隔离验证。新增Windows SID/Profile/ACL helper及endpoint.rs的Windows适配逐项授权见该唯一入口，L0保留platform.rs/公共注册。后继完整离线运行包/制品验收仍须另给明确摘要；当前不以版本显示或本机未提交文件作为Windows基线。
