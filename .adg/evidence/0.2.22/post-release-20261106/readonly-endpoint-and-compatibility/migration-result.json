@@ -1,0 +1,17 @@
+{
+  "tests": 8,
+  "errors": 0,
+  "failures": 0,
+  "threadStopped": true,
+  "portClosed": true,
+  "port": 59715,
+  "candidateOnly": true,
+  "noETagConditions": true,
+  "requests": 313,
+  "limits": [
+    "V2 protocol not implemented or adopted",
+    "Old clients cannot readV2 and cannot be remotely blocked with same credentials; upgrade-all or explicit separate generation policy required",
+    "V1 latest drift is detectable on next new-client read; not an atomic old-client freeze",
+    "Only modeled coexistence, no remote write/migration occurred"
+  ]
+}

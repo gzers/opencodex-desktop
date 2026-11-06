@@ -1,0 +1,79 @@
+{
+  "timeUtc": "2026-11-06T03:39:33.678058+00:00",
+  "methodsAllowed": [
+    "GET",
+    "PROPFIND"
+  ],
+  "remoteMutations": false,
+  "requests": [
+    {
+      "kind": "directory-depth1-1",
+      "method": "PROPFIND",
+      "status": 207,
+      "bytes": 1156,
+      "etagKind": "missing",
+      "bodySha256": "75b5d5031efe52695c484c283b838a1684d6a39bdbad453b0c89101892213ddd"
+    },
+    {
+      "kind": "directory-depth1-2",
+      "method": "PROPFIND",
+      "status": 207,
+      "bytes": 1156,
+      "etagKind": "missing",
+      "bodySha256": "75b5d5031efe52695c484c283b838a1684d6a39bdbad453b0c89101892213ddd"
+    },
+    {
+      "kind": "latest-pointer-first",
+      "method": "GET",
+      "status": 200,
+      "bytes": 180,
+      "etagKind": "strong-shaped",
+      "bodySha256": "0114805e817cbf99830165390275c48eb5d0f5c65998a3b89289553b4f67e3e3"
+    },
+    {
+      "kind": "current-payload-digest-check",
+      "method": "GET",
+      "status": 200,
+      "bytes": 7819672,
+      "etagKind": "strong-shaped",
+      "bodySha256": "38be960a958a619191c6823563ed7515852762953756b49bbfe4d7bc1ac0c32c"
+    },
+    {
+      "kind": "latest-pointer-final",
+      "method": "GET",
+      "status": 200,
+      "bytes": 180,
+      "etagKind": "strong-shaped",
+      "bodySha256": "0114805e817cbf99830165390275c48eb5d0f5c65998a3b89289553b4f67e3e3"
+    }
+  ],
+  "endpointIdentity": "configured-active-endpoint-only",
+  "directoryResults": [
+    {
+      "responseCount": 3,
+      "configFileCount": 2,
+      "currentPointerListed": true
+    },
+    {
+      "responseCount": 3,
+      "configFileCount": 2,
+      "currentPointerListed": true
+    }
+  ],
+  "twoListingsSameObservedConfigNames": true,
+  "pointerStructureValid": true,
+  "payloadMatchesPointerDigest": true,
+  "payloadBytes": 7819672,
+  "currentPointerIsLastLocalOperation": true,
+  "lastLocalReceiptError": "publication_unconfirmed",
+  "pointerContentStableDuringProbe": true,
+  "limits": [
+    "Read-only observation at this time, not original failed request replay",
+    "Depth1 returns existing file enumeration only; does not prove fresh-upload visibility latency or complete consistency under concurrent writes",
+    "No writes, endpoint edits, service/Codex restart, password print or raw remote body saved",
+    "No claim this confirms Windows endpoint state or recovery/migration product implementation"
+  ],
+  "localInputBytesUnchanged": true,
+  "localFilesRead": 5,
+  "secretsSavedOrPrinted": false
+}

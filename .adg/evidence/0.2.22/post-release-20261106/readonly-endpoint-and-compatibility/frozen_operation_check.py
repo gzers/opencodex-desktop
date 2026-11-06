@@ -1,0 +1,7 @@
+from pathlib import Path
+import json,hashlib,uuid
+p=Path(__file__).parent;r=json.loads((p/'readonly-probe-result.json').read_text())
+anchor=Path('/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop');metaPath=anchor/'manager-state/data-root.json';metaBytes=metaPath.read_bytes();root=Path(json.loads(metaBytes)['active_data_root']);idx=root/'manager-state/transfer-results/latest-webdav.json';ib=idx.read_bytes();op=json.loads(ib);uuid.UUID(op)
+planPath=root/'manager-state/config-uploads'/(op+'.json');planBytes=planPath.read_bytes();plan=json.loads(planBytes);bodyPath=planPath.with_suffix('.ocxdconf');body=bodyPath.read_bytes();localhash=hashlib.sha256(body).hexdigest();payload=next(x for x in r['requests'] if x['kind']=='current-payload-digest-check')
+out={'frozenPlanExists':True,'planPhase':plan['view']['phase'],'localFrozenPayloadBytes':len(body),'frozenPayloadMatchesPlanDigest':plan['fileDigest']=='sha256:'+localhash,'frozenPayloadMatchesRemoteObservedContent':localhash==payload['bodySha256'],'originalOperationMatchesLatestObservedPointer':r['currentPointerIsLastLocalOperation'],'localInputsUnchanged':metaPath.read_bytes()==metaBytes and idx.read_bytes()==ib and planPath.read_bytes()==planBytes and hashlib.sha256(bodyPath.read_bytes()).hexdigest()==localhash,'noBodyOrCredentialSaved':True,'noRemoteRequest':True}
+(p/'frozen-operation-check.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+chr(10));print(json.dumps(out,ensure_ascii=False,indent=2))

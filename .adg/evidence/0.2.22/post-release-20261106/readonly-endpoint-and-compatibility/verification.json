@@ -1,0 +1,94 @@
+{
+  "date": "2026-11-06",
+  "timeZone": "Asia/Shanghai",
+  "checkedAtClientTime": "2026-11-06 11:39:33 +08:00",
+  "scope": "Continue confirming unresolved file discovery and new/old-client behavior; read-only active configured endpoint; no production migration",
+  "softwareCommit": "0c57500f8f46ea50655c782c3f04334a39167abb",
+  "realEndpoint": {
+    "TLS": "default certificate validation; redirects denied",
+    "requestMethods": {
+      "PROPFIND-Depth1": 2,
+      "GET": 3
+    },
+    "remoteWrites": 0,
+    "currentListing": [
+      "HTTP207 twice",
+      "3 responses each including collection;2 config files; latest pointer included",
+      "same observed configuration filenames in both reads"
+    ],
+    "content": [
+      "Latest pointer HTTP200; valid original format and UUID/digest",
+      "Payload HTTP200;7819672bytes;SHA256 matches pointer",
+      "Pointer repeatedGET content stable",
+      "Current pointer operation equals last local failed upload operation",
+      "Original frozen payload hash equals observed remote payload and local plan fileDigest",
+      "Local frozen plan still publishing; latest result still publication_unconfirmed/failed"
+    ],
+    "ETagObservation": "Current two GET pointer responses and payload GET have strong-shaped ETag; directory responses missing ETag. Observation does not establish ETag cause of earlier failure.",
+    "privacy": "Endpoint and credentials read solely in memory for configured destination. No password/account/path or raw body logged/saved; snapshots read only as bytes for digest, not unpacked.",
+    "unmodified": "Relevant local endpoint/credential/operation metadata and frozen payload rehashed unchanged; no app receipt correction made"
+  },
+  "compatibilityModel": {
+    "checks": "8 passed",
+    "protocol": "candidate-only separate immutable v2 commit/data files preserving v1 pointer/payload",
+    "confirmed": [
+      "V1 preserved during explicit bootstrap; new commits never rewrite old pointer",
+      "Old clients still see V1, cannot see V2; fake transparent compatibility is false",
+      "Old write after cutover detectable by stored legacy baseline; candidate refuses silent ordinary sync until review",
+      "Explicit old-change import becomes a separate conflicting branch; explicit choice references both parents and retains both payloads",
+      "Concurrent initial migration produces two stored heads, no silent overwriting",
+      "Old write in check→commit window detected later, both V1/V2 contents remain",
+      "Unreadable/corrupt V1 is not empty; original V2 operation can be read without additional PUT"
+    ],
+    "notImplemented": "No protocol/product code changed, no real remote writes, no migration performed"
+  },
+  "recommendedHandoff": [
+    "Use direct file content and frozen operation digest/identity for confirmation; observed original upload could be confirmed by this rule",
+    "Require actual server listing when immutable per-operation commits adopted; current endpoint supports existing Depth1 listing, not yet fresh-write visibility measured",
+    "Before cutover, coordinate upgrading all writing clients; preserve/read old format for explicit import; do not bidirectionally mirror old/new latest files",
+    "If older clients continue, detect V1 drift and require review/import rather than silently overwriting V2. Same credentials cannot remotely block unchanged old binary.",
+    "Real writes/version migration need later authorized implementation and acceptance; no live sync performed here"
+  ],
+  "remainingLimits": [
+    "Original transient publication confirmation HTTP failure not replayed; current readability is not historical failure proof",
+    "No fresh upload to real server, no actual concurrency/cache latency measurement; complete/eventual enumeration under writes remains to validate with authorized isolated remote fixture later",
+    "Upgrade-all/format-generation cutoff is a product deployment choice still requiring adoption before migration",
+    "Read-only current success does not update local app receipt nor mean current unsaved edits are synced",
+    "Actual install mismatch origin and native picker reload still not attributed by these endpoint checks"
+  ],
+  "setupNote": "Local original-plan inspection initially used snake_case field; source declares camelCase, corrected to fileDigest; final checks passed. No file values printed.",
+  "artifacts": {
+    "migration-request-trace.json": {
+      "bytes": 78573,
+      "sha256": "ad76f092cec0b574ac782987bda8ab96c4bd4db100003cd3841ada6aff144701"
+    },
+    "readonly-probe-result.json": {
+      "bytes": 2456,
+      "sha256": "d2b9d71f0352e88018148b855314cba0a8e5e13cdfcab9be67ef3673547ebc90"
+    },
+    "readonly_probe.py": {
+      "bytes": 6671,
+      "sha256": "648cd7d78eb86f35a4a941e7744941536d38a623aa30caa23bda3d2d3c288bd5"
+    },
+    "frozen-operation-check.json": {
+      "bytes": 344,
+      "sha256": "a154a8ed75cf830cfa2e294874d851881a0f7d91084224864bfa7c17e1655b38"
+    },
+    "migration-tests.txt": {
+      "bytes": 946,
+      "sha256": "812bff79373983a4ac393857b88724859e34711e3ecac7bf61437c3701397869"
+    },
+    "migration-result.json": {
+      "bytes": 558,
+      "sha256": "471e562356f17a0f2666edf8d603c530118cf172e6e6106cc80067e8dac00689"
+    },
+    "frozen_operation_check.py": {
+      "bytes": 1499,
+      "sha256": "2779fce9ecfd71ab9773e9c9399bd63689154b0a330e7ce02c86826ec53080ab"
+    },
+    "migration_simulation.py": {
+      "bytes": 19008,
+      "sha256": "0977edc462d10efa501665ae40fa8e993d3f244bcb38d9faaaff691aac20690c"
+    }
+  }
+}

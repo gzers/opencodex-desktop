@@ -1,0 +1,13 @@
+test_bootstrap_reads_legacy_preserves_v1_and_does_not_write_legacy_pointer (__main__.MigrationCases) ... ok
+test_candidate_reconciliation_reads_existing_operation_without_republishing (__main__.MigrationCases) ... ok
+test_explicit_old_change_import_creates_conflict_then_choice_preserves_both (__main__.MigrationCases) ... ok
+test_legacy_client_continues_to_read_legacy_and_cannot_silently_consume_new_protocol (__main__.MigrationCases) ... ok
+test_old_client_write_after_cutover_is_detected_and_new_sync_blocks (__main__.MigrationCases) ... ok
+test_old_write_between_candidate_check_and_commit_is_detected_after_commit (__main__.MigrationCases) ... ok
+test_two_devices_bootstrapping_same_legacy_do_not_overwrite_each_other (__main__.MigrationCases) ... ok
+test_unreadable_or_corrupt_legacy_is_not_treated_as_empty (__main__.MigrationCases) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.722s
+
+OK
