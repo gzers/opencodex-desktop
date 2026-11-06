@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "task": "TASK-023-ACCEPTANCE",
+  "source": "a3d0be94e26d3293bea902586344b59700ad9b2d",
+  "scope": "partial owned-residue cleanup, not the whole final cleanup gate",
+  "facts": {
+    "obsoleteMacCopies": "two exact binary SHA matches and no live matching process; removed677546736bytes; original evidence r4/r7 retained",
+    "completedMainFixtures": "four exact outputs removed with owner/type/file/link inventory; original passed/failed logs in r7/r10",
+    "retained": "latest native candidate, folder DMG, shared caches/tools, all evidence and all other work",
+    "dailySoftwareOrConfigChanged": false
+  },
+  "files": [
+    {
+      "source": "/tmp/ocxd023-obsolete-native-candidate-cleanup.json",
+      "file": "ocxd023-obsolete-native-candidate-cleanup.json",
+      "bytes": 1114,
+      "sha256": "9b52fb64e24a6922a6a173c661bb2b7bbec937cd20c9603a5e7a37e5c0fe81f7"
+    },
+    {
+      "source": "/tmp/ocxd023-completed-main-fixture-cleanup.json",
+      "file": "ocxd023-completed-main-fixture-cleanup.json",
+      "bytes": 6600,
+      "sha256": "384c8c3bdf88e96179a992fad8548f3eb019542ba95877fbf4582af5b2de0a76"
+    }
+  ]
+}

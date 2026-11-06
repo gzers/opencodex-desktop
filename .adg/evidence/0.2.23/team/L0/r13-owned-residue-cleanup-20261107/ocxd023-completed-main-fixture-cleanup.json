@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "scope": "only four exact Main-created fixture outputs after terminal tests; original pass/failure logs and receipts archived in r7/r10; links unlinked without traversal",
+  "roots": [
+    {
+      "root": "/private/tmp/ocxd023-final-retention-fixtures",
+      "result": "removed-task-owned-fixture",
+      "inventory": [
+        {
+          "path": "synthetic U with spaces",
+          "kind": "directory"
+        },
+        {
+          "path": "synthetic U with spaces/empty",
+          "kind": "directory"
+        },
+        {
+          "path": "synthetic U with spaces/seed.bin",
+          "kind": "file",
+          "bytes": 4,
+          "sha256": "3d1f57c984978ef98a18378c8166c1cb8ede02c03eeb6aee7e2f121dfeee3e56"
+        }
+      ]
+    },
+    {
+      "root": "/private/tmp/ocxd023-final-retention-fixtures-canonical",
+      "result": "removed-task-owned-fixture",
+      "inventory": [
+        {
+          "path": "022-program",
+          "kind": "directory"
+        },
+        {
+          "path": "022-program/changed",
+          "kind": "file",
+          "bytes": 18,
+          "sha256": "b322aee015708fdc2739b9835900d910519d9c0ca5363731c398501bf82d9852"
+        },
+        {
+          "path": "022-program/opencodex-desktop.exe",
+          "kind": "file",
+          "bytes": 35,
+          "sha256": "7dea96a1d9549410254dfb6eb9c6fb58ccbed3db4193845bd8649e7f564dc190"
+        },
+        {
+          "path": "block-fixture",
+          "kind": "directory"
+        },
+        {
+          "path": "block-fixture/before-msi-block-U.json",
+          "kind": "file",
+          "bytes": 127,
+          "sha256": "10d56d49715a7ec21fc178bd34589d4fda40b872aedbaf4311d45dd40b7315ef"
+        },
+        {
+          "path": "block-fixture/before-msi-block-old-program.json",
+          "kind": "file",
+          "bytes": 133,
+          "sha256": "62a9c967144f41f3333144a005c972a318193fc99e4af6811411eb6e58327c56"
+        },
+        {
+          "path": "block-fixture/candidate-machine-context-block.json",
+          "kind": "file",
+          "bytes": 294,
+          "sha256": "2f0ca5a08c9b4784850cf1060a11caf08b3ced348cd5c2b4c4ea24c365f3ce4c"
+        },
+        {
+          "path": "block-fixture/candidate-machine-context-block.log",
+          "kind": "file",
+          "bytes": 24,
+          "sha256": "f1be0d9a74193e37ed5c9deb7245ae5f9b10f94e4d20ad1672f6161556918924"
+        },
+        {
+          "path": "external",
+          "kind": "directory"
+        },
+        {
+          "path": "external/untouched",
+          "kind": "file",
+          "bytes": 17,
+          "sha256": "a2ab4ca78e8876a912551eb6da163b07f245e812500c148ef2c73f1e83d5d903"
+        },
+        {
+          "path": "fixture-receipt.json",
+          "kind": "file",
+          "bytes": 1039,
+          "sha256": "3aa6e5c1681d73c9dcec250471c71211ede43a068f6c6a4f2f6f0f169eb9e2ac"
+        },
+        {
+          "path": "installer-mocks",
+          "kind": "directory"
+        },
+        {
+          "path": "installer-mocks/execution-attempt.json",
+          "kind": "file",
+          "bytes": 508,
+          "sha256": "863290cc4b8eb1b034d7d9dbe12291ded795e13c48c9bcb05dae8e54c9cf930b"
+        },
+        {
+          "path": "installer-mocks/synthetic-no-migration-U-inventory.json",
+          "kind": "file",
+          "bytes": 5,
+          "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed"
+        },
+        {
+          "path": "migration-U",
+          "kind": "directory"
+        },
+        {
+          "path": "migration-U/copied-old-seed",
+          "kind": "file",
+          "bytes": 29,
+          "sha256": "1d3d5ec957cb1b40e88973763bd202aa1b311a1bce55a534f8f344e6f66a7e7d"
+        },
+        {
+          "path": "old-synthetic-data",
+          "kind": "file",
+          "bytes": 29,
+          "sha256": "1d3d5ec957cb1b40e88973763bd202aa1b311a1bce55a534f8f344e6f66a7e7d"
+        },
+        {
+          "path": "synthetic U with spaces",
+          "kind": "directory"
+        },
+        {
+          "path": "synthetic U with spaces/link",
+          "kind": "link",
+          "target": "/private/tmp/ocxd023-final-retention-fixtures-canonical/external"
+        },
+        {
+          "path": "synthetic U with spaces/seed.bin",
+          "kind": "file",
+          "bytes": 4,
+          "sha256": "3d1f57c984978ef98a18378c8166c1cb8ede02c03eeb6aee7e2f121dfeee3e56"
+        }
+      ]
+    },
+    {
+      "root": "/private/tmp/ocxd023-final-ordinary-static",
+      "result": "removed-task-owned-fixture",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "kind": "file",
+          "bytes": 5505,
+          "sha256": "5ae16d5dba7cfb9d521783288741c5ac50b36b5ba8509a28d7f1dfd4f49a2da4"
+        },
+        {
+          "path": "static-tests.json",
+          "kind": "file",
+          "bytes": 9091,
+          "sha256": "1030da264b163dfe2292ef66ed8c7ae0ebd5863d91d2fb021d42db4f7783ff1a"
+        }
+      ]
+    },
+    {
+      "root": "/private/tmp/ocxd023-two-user-ports-main-review",
+      "result": "removed-task-owned-fixture",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "kind": "file",
+          "bytes": 4750,
+          "sha256": "66f5730f154942662adb61e7c1d591803b5e7489af05b5db108f00489c480474"
+        },
+        {
+          "path": "changed-ordinary.ps1",
+          "kind": "file",
+          "bytes": 12360,
+          "sha256": "d40cd6ec70a7f8a7fcf3e68d4ce5050ddf6055f9e7eb4c5a04c250bc013bf41b"
+        },
+        {
+          "path": "driver-fixture.mjs",
+          "kind": "file",
+          "bytes": 14564,
+          "sha256": "b1cc7c5122d0ee116417f4e0d1fa8be060512273ec0928d5d6bd1a694fecddfd"
+        },
+        {
+          "path": "static-tests.json",
+          "kind": "file",
+          "bytes": 9996,
+          "sha256": "f28f365e45010ea953ee21a7a50b57db443ca8256df2b0b23240c5bb3b50154f"
+        },
+        {
+          "path": "tree-fixture",
+          "kind": "directory"
+        },
+        {
+          "path": "tree-fixture/one.txt",
+          "kind": "file",
+          "bytes": 8,
+          "sha256": "7f8b1dfc466b6249f06cbe55c9174df2578e7754da793fded244ef5cba2a38f1"
+        },
+        {
+          "path": "windows-cdp.mjs",
+          "kind": "file",
+          "bytes": 3419,
+          "sha256": "a4cde3cb25455b2627f238ea3678c40c42191b9af47c464491f4f2f311caf7dd"
+        }
+      ]
+    }
+  ],
+  "excluded": [
+    "daily configuration and applications",
+    "latest native candidate and DMG",
+    "shared caches and tools",
+    "other contributors fixture directories",
+    "all original evidence"
+  ]
+}
