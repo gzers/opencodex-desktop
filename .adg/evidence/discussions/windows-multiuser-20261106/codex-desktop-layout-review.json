@@ -1,0 +1,40 @@
+{
+  "date": "2026-11-06",
+  "timeZone": "Asia/Shanghai",
+  "latestUserRoot": ".codex-desktop",
+  "macOSDefault": "<current-user-home>/.codex-desktop",
+  "windowsDefault": "<current-user-profile>\\.codex-desktop",
+  "instanceHome": "<active-user-data-root>/opencodex-home",
+  "oldDesignSuperseded": {
+    "commit": "74e8a6aa2",
+    "root": ".opencodex-desktop/data",
+    "reason": "User explicitly changed directory name and placed original HOME under that config root; intermediate data layer no longer required for upstream namespace coexistence"
+  },
+  "roleBoundaries": {
+    "desktop": "manager-state/backups/logs/cache/sync-state/exports",
+    "opencodex": "opencodex-home config/auth/usage/runtime records/locks, no binaries",
+    "codexClient": "Original CODEX_HOME or user/.codex unchanged",
+    "upstreamHomeRegistry": "Original user/.opencodex/ocx-homes maintained by runtime, not channels",
+    "upstreamDesktopNamespace": "Original user/.opencodex-desktop untouched",
+    "programs": "Existing Desktop/runtime prefix and launcher retained independently"
+  },
+  "checks": {
+    "bothOSTreesPresent": true,
+    "noExtraDataLayer": true,
+    "systemHomeNotOverridden": true,
+    "configAndExecutableSeparate": true,
+    "migrationAndFailurePreservationPlanned": true,
+    "sensitiveDataPermissionsOSSpecific": true,
+    "codeWorkingTreeClean": true,
+    "linksExist": true
+  },
+  "sourceFilesSha256": {
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/20261106-Desktop用户配置目录结构设计.md": "fa4dc35cc83bc4debfe6205d54cd3b23b7342ef33eaf2289eb7f839ed4f05eaa",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/20261106-Windows多用户数据根与代理归属分析.md": "7152d9b8f1c3e3a1b04f91bfb84b59107f8d24debcc7a377b2fe3afcb1f49a41"
+  },
+  "limitations": [
+    "Design only; no user directory created/moved",
+    "No schema/locator/WindowsSID or port behavior implemented",
+    "No change to0.2.23scope or current core default facts; noTASK/CI/release run"
+  ]
+}
