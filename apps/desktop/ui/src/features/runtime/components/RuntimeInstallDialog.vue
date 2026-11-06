@@ -192,7 +192,7 @@ function formatBytes(size: number) {
       <div class="wiz-block">
         <span class="wiz-label">安装源</span>
         <label class="wiz-choice install-source-choice" :class="{ on: installSource === 'registry' }"><input v-model="installSource" :disabled="offlineReading" type="radio" value="registry"><span><b>联网安装</b><small>官方包 @bitkyc08/opencodex</small></span></label>
-        <label class="wiz-choice install-source-choice" :class="{ on: installSource === 'offline' }"><input v-model="installSource" :disabled="offlineReading" type="radio" value="offline"><span><b>导入离线包</b><small>网络不通时用官方 .tgz</small></span></label>
+        <label class="wiz-choice install-source-choice" :class="{ on: installSource === 'offline' }"><input v-model="installSource" :disabled="offlineReading" type="radio" value="offline"><span><b>导入离线包</b><small>官方或本项目维护的 .tgz</small></span></label>
 
         <div v-if="installSource === 'offline'" class="wiz-drop" data-testid="wiz-offline" @dragover.prevent @drop.prevent="dropOfflineFile">
           <p>把 <code>opencodex-&lt;version&gt;.tgz</code> 拖到这里，或选择文件</p>
@@ -202,7 +202,7 @@ function formatBytes(size: number) {
             {{ app.offlinePreview.ok ? `SHA-256 ${app.offlinePreview.sha256Prefix}…` : app.offlinePreview.message }}
           </p>
           <p class="wiz-hint">离线包不联网，但仍会写入数据根内的私有前缀；不匹配时拒绝，不回退成「任意 tgz 都装」。</p>
-          <details class="wiz-more"><summary>下载地址</summary><p>npm 包页面：https://www.npmjs.com/package/@bitkyc08/opencodex</p></details>
+          <details class="wiz-more"><summary>下载地址</summary><p>本项目维护的修复包：桌面版本下载页中的 opencodex-*.tgz，需手动导入安装。</p><p>上游官方包：https://www.npmjs.com/package/@bitkyc08/opencodex</p></details>
         </div>
         <div v-if="installSource === 'offline'" class="wiz-actions"><UiButton class="btn ghost" type="button" :disabled="offlineReading" @click="chooseOfflinePackage">选择文件…</UiButton><UiButton class="btn ghost" type="button" :disabled="offlineReading || !app.offlinePreview" @click="clearOfflinePackage">清除</UiButton></div>
 

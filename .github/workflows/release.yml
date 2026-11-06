@@ -132,3 +132,37 @@ jobs:
           name: release-windows-installer-evidence
           path: test/out/release-windows-installer
           if-no-files-found: warn
+
+  maintained-runtime:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Reproduce adopted offline runtime from pinned original and patches
+        run: python3 .github/scripts/build_maintained_runtime.py test/out/maintained-runtime
+      - name: Install pinned signing CLI
+        run: npm install --global @tauri-apps/cli@2.11.4
+      - name: Sign and attach maintained runtime to the same draft release
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+        run: |
+          set -euo pipefail
+          tauri signer sign test/out/maintained-runtime/*.tgz
+          gh release upload "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
+            test/out/maintained-runtime/*.tgz test/out/maintained-runtime/*.sig \
+            test/out/maintained-runtime/maintained-runtime.json \
+            test/out/maintained-runtime/maintained-runtime.sha256
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: maintained-runtime-build-evidence
+          path: test/out/maintained-runtime
+          if-no-files-found: error
