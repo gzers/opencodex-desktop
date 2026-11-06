@@ -116,6 +116,8 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           projectPath: apps/desktop/tauri
+          # Custom installer templates are reviewed against this exact bundler.
+          tauriScript: npx --yes @tauri-apps/cli@2.11.4
           tagName: ${{ steps.notes.outputs.tag }}
           releaseName: 'OpenCodeX Desktop ${{ steps.notes.outputs.tag }}'
           releaseBody: ${{ steps.notes.outputs.body }}
