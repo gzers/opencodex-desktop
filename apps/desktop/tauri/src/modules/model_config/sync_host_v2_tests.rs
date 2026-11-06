@@ -704,7 +704,7 @@ impl LocalApplication for SourceOnlyLocal {
         self.0.current_source()
     }
     fn target_digest(&self, _: &str) -> SyncResult<Digest> {
-        panic!("not a local apply test")
+        Ok(digest(b"synthetic-current-local-target"))
     }
     fn apply_once(
         &self,
@@ -1647,4 +1647,65 @@ fn endpoint_ids_are_bounded_opaque_strings_not_operation_uuids() {
         "default"
     )
     .is_err());
+}
+#[tokio::test]
+async fn download_prepare_freezes_explicit_backup_preference_without_publishing() {
+    let root = tempfile::tempdir().unwrap();
+    let tx = tempfile::tempdir().unwrap();
+    let store = super::super::sync_v2::store::Store::open(tx.path()).unwrap();
+    save_endpoint(
+        root.path(),
+        endpoint("default", CRED, "https://fixture.example.test"),
+    );
+    let resolver = EndpointResolverV2::new(
+        root.path().into(),
+        Arc::new(EndpointVault::new(root.path())),
+    )
+    .unwrap();
+    let bound = resolver.resolve_active().unwrap();
+    let provider = Arc::new(Capture::new(objects(8192, false)));
+    let mut cloud = baseline(objects(4096, false), None);
+    let remote = MemoryRemote::default();
+    seed_cloud(&remote, &cloud);
+    cloud.head.digest = digest(
+        remote
+            .files
+            .lock()
+            .unwrap()
+            .get(SyncRelativePath::commit(B, O).unwrap().as_str())
+            .unwrap(),
+    );
+    let preview = preview_semantics(
+        provider.as_ref(),
+        selection(),
+        CloudMaterialV2::Valid(&cloud),
+        &SessionSecretsV2::default(),
+        Some(DirectionV2::Download),
+    )
+    .unwrap();
+    let codec = HostPayloadCodecV2::new(provider, preview, SessionSecretsV2::default());
+    let local = SourceOnlyLocal(codec.current_source_provider().unwrap());
+    let graph = super::super::sync_v2::SyncContext::new(
+        &store,
+        &remote,
+        &codec,
+        &local,
+        bound.handle().clone(),
+    )
+    .unwrap()
+    .observe_remote(ObserveRequest {
+        connection_id: bound.handle().id.clone(),
+    })
+    .await
+    .unwrap();
+    let session = HostSessionV2::new(codec, &bound, graph).unwrap();
+    let HostPreparationV2::Download(plan) = session
+        .prepare_with_backup(&resolver, &store, &remote, &local, false)
+        .await
+        .unwrap()
+    else {
+        panic!("download")
+    };
+    assert!(!plan.backup_before_update);
+    assert_eq!(remote.writes.load(Ordering::SeqCst), 0);
 }
