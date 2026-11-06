@@ -1068,7 +1068,7 @@ fn retained_refs_ignore_unadopted_library_revisions_parents_and_decoy_nested_ref
         Phase::Committed,
     );
     assert!(retained_refs(&f).unwrap().is_empty());
-    let mut policy = retained_policy(&[adopted.clone()], &[], None, None);
+    let mut policy = retained_policy(std::slice::from_ref(&adopted), &[], None, None);
     policy["channels"][0]["models"][0]["source"] = serde_json::json!({"publicContent":{"reference":unrelated,"templateRefs":[retained_ref(4)]}});
     retained_history(
         &f,
@@ -1092,8 +1092,8 @@ fn retained_refs_protect_both_images_in_every_valid_phase() {
             &f,
             vec![retained_write(
                 POLICY,
-                Some(retained_policy(&[a.clone()], &[], None, None)),
-                Some(retained_policy(&[b.clone()], &[], None, None)),
+                Some(retained_policy(std::slice::from_ref(&a), &[], None, None)),
+                Some(retained_policy(std::slice::from_ref(&b), &[], None, None)),
             )],
             phase,
         );
@@ -1108,8 +1108,8 @@ fn retained_refs_are_available_after_real_commit_rollback_and_pre_marker_interru
         let f = Fixture::new();
         let a = retained_ref(1);
         let b = retained_ref(2);
-        let before = retained_policy(&[a.clone()], &[], None, None);
-        let after = retained_policy(&[b.clone()], &[], None, None);
+        let before = retained_policy(std::slice::from_ref(&a), &[], None, None);
+        let after = retained_policy(std::slice::from_ref(&b), &[], None, None);
         fs::write(f.root.join(POLICY), serde_json::to_vec(&before).unwrap()).unwrap();
         let writes = vec![retained_write(POLICY, Some(before), Some(after))];
         let h = hook(move |e| match (state, e) {
@@ -1417,7 +1417,7 @@ fn retained_refs_collect_draft_after_as_well_as_before_without_following_arbitra
     let a = retained_ref(1);
     let b = retained_ref(2);
     let before = retained_draft(
-        retained_policy(&[a.clone()], &[], None, None),
+        retained_policy(std::slice::from_ref(&a), &[], None, None),
         serde_json::Value::Null,
     );
     let mut after = retained_draft(
@@ -1822,7 +1822,12 @@ fn operation_receipt_free_fields_never_become_retained_template_dependencies() {
         vec![retained_write(
             POLICY,
             None,
-            Some(retained_policy(&[adopted.clone()], &[], None, None)),
+            Some(retained_policy(
+                std::slice::from_ref(&adopted),
+                &[],
+                None,
+                None,
+            )),
         )],
         Phase::Committed,
     );
