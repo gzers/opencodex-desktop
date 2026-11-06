@@ -5,10 +5,9 @@ import {
   getSyncConfig,
   saveSyncEndpoint as saveSyncEndpointCommand,
   testSyncConnection as testSyncConnectionCommand,
-  remoteVersionApi,
   type SaveSyncEndpointRequest, type SyncConfigDto, type SyncOperationResultDto,
 } from './api'
-import { runSyncNow as runSyncNowCommand } from '@/platform/workspace'
+import {useConfigSyncV2Store} from './store-v2'
 import { endpointBinding, persistObservation, readObservation, type ConnectionObservation, type ObservationDetails, type ObservationToken, type ObservedState, type WebdavState } from './observation'
 
 function failedStatus(message: string): SyncOperationResultDto {
@@ -33,7 +32,7 @@ export const useSyncStore = defineStore('sync', {
   actions: {
     openConnection() { this.connectionOpen = true },
     rememberResult(id: string, remote: boolean) { this.lastResultId = id; if (remote) this.webdavResultId = id; else this.fileResultId = id },
-    openResult(id?: string) { this.resultId = id ?? this.lastResultId; this.resultOpen = true },
+    openResult(id?: string) {const target=id??this.lastResultId;const owner=useConfigSyncV2Store();if(target&&(target===owner.fact?.operationId||target===this.webdavResultId)){owner.resultOpen=true;void owner.readResult(target);return}this.resultId=target;this.resultOpen=true},
     closeResult() { this.resultOpen = false },
     setWebdavState(next: ConnectionState) { this.webdavState = next },
     requestAction(action: 'sync' | 'export' | 'connection') { this.pendingAction = action },
@@ -45,6 +44,7 @@ export const useSyncStore = defineStore('sync', {
       const before = endpointBinding(this.config?.endpoint), after = endpointBinding(config.endpoint)
       this.config = config; this.configReadError = ''
       if (before !== after || invalidate) {
+        useConfigSyncV2Store().endpointChanged()
         this.observationGeneration++
         this.observation = invalidate ? null : readObservation(after)
         this.status = null
@@ -89,9 +89,12 @@ export const useSyncStore = defineStore('sync', {
       const sequence = this.observationSequence
       const current = () => request === this.versionRequest && this.ownsObservation(token) && sequence === this.observationSequence
       try {
-        const value = await remoteVersionApi.read()
-        if (!current()) return false
-        this.recordObservation(token, 'connected', { source: 'version-check', remoteTime: value.remoteSavedAt, remoteExists: value.remoteExists, remoteRevision: value.remoteRevision, remoteRead: value.remoteExists ? 'present' : 'absent', remoteObservedAt: new Date().toISOString() })
+        const owner=useConfigSyncV2Store();await owner.loadCatalog()
+        if(!current())return false
+        if(owner.error||!owner.catalog)throw new Error(owner.error||'目录不可读')
+        const state=owner.catalog.cloudState
+        if(['incomplete','invalid'].includes(state))throw new Error('目录读取不完整或内容无效')
+        this.recordObservation(token,['conflict','initialization_ambiguous'].includes(state)?'conflict':'connected',{source:'version-check',remoteTime:null,remoteExists:!['empty','generation_empty'].includes(state),remoteRead:['incomplete','invalid'].includes(state)?'failed':['empty','generation_empty'].includes(state)?'absent':'present'})
         return true
       } catch {
         if (current()) this.recordObservation(token, 'failed', { source: 'version-check', remoteRead: 'failed', remoteObservedAt: new Date().toISOString() })
@@ -154,20 +157,8 @@ export const useSyncStore = defineStore('sync', {
       } finally { this.testing = false; this.endObservation(token) }
     },
     async runNow(): Promise<boolean> {
-      if (this.running) return false
-      const token = this.observationToken(); this.running = true; this.beginObservation(token, 'syncing')
-      try {
-        const status = await runSyncNowCommand()
-        if (this.ownsObservation(token)) this.status = status
-        if (status.connectionState === 'conflict') this.recordObservation(token, 'conflict', { source: 'sync' })
-        else if (status.operationState === 'succeeded' && status.connectionState === 'synced') this.recordObservation(token, 'synced', { source: 'sync' })
-        else if (status.operationState === 'failed' || status.connectionState === 'failed') this.recordObservation(token, 'failed', { source: 'sync' })
-        else if (status.connectionState === 'synced') this.recordObservation(token, 'connected', { source: 'sync' })
-        return status.connectionState === 'synced' && status.operationState === 'succeeded'
-      } catch {
-        if (this.ownsObservation(token)) this.status = failedStatus('同步执行未完成；可能已有内容应用或上传，请检查同步状态与本地内容后重试。')
-        this.recordObservation(token, 'failed', { source: 'sync' }); return false
-      } finally { this.running = false; this.endObservation(token) }
+      // Every user entry prepares the same central preview. Never executes a v1 pipe.
+      const owner=useConfigSyncV2Store();await owner.loadCatalog();if(owner.error)return false;await owner.prepare();return false
     },
   },
 })
