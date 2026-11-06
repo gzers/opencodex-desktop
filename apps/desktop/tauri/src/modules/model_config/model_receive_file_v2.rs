@@ -266,6 +266,30 @@ fn objects_hash(objects: &SavedObjects) -> Result<String> {
     ))
 }
 impl ReceiveFileHostV2 {
+    /// Original typed images only after actual backup protection. This is not
+    /// public-path authority and never replaces the source with today's bytes.
+    pub fn protected_images(
+        &self,
+        id: &str,
+        handle: &ModelApplyPlanHandle,
+    ) -> ModelResult<Vec<WriteV2>> {
+        (|| -> Result<_> {
+            let bytes = self
+                .private_read(&self.dir(id)?.join("plan.json"), MAX_MANIFEST)?
+                .ok_or_else(|| fail("model_receive_plan_missing"))?;
+            let original: Frozen = decoded(&bytes)?;
+            let frozen = self.load_with_namespace(id, handle, &original.namespace_adoption)?;
+            if !self.protection(id, handle, true, &frozen)? {
+                return Err(fail("model_receive_protection_missing"));
+            }
+            let writes = self.writes(id, &frozen, handle)?;
+            Ok(writes
+                .into_iter()
+                .filter(|w| !matches!(w.target, TargetV2::ManagerOperationReceipt(_)))
+                .collect())
+        })()
+        .map_err(model_error)
+    }
     fn binding_hash(&self) -> Result<String> {
         let mut rows: Vec<_> = self
             .bindings

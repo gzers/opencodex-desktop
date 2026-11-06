@@ -980,6 +980,7 @@ fn retained_history(f: &Fixture, writes: Vec<WriteV2>, phase: Phase) -> PathBuf 
     let journal = Journal {
         version: 2,
         plan: Plan {
+            protected_restore: false,
             id,
             binding: c.binding().unwrap(),
             entries: writes
@@ -2019,4 +2020,77 @@ fn identity_mapping_limits_deletion_and_alternate_paths_remain_rejected() {
     assert!(!f.root.join(IDENTITY_MAPPING).exists());
     assert!(operation_receipt_path(&f, &id).exists());
     assert!(f.pending().exists());
+}
+
+#[test]
+fn protected_restore_exact_absence_is_distinct_from_ordinary_delete_and_receipts_remain_forbidden()
+{
+    let f = Fixture::new();
+    let writes = || {
+        vec![
+            WriteV2 {
+                target: TargetV2::OfficialConfig,
+                before: Some(OLD_CONFIG.to_vec()),
+                after: None,
+            },
+            WriteV2 {
+                target: TargetV2::Manager(POLICY.into()),
+                before: Some(OLD_POLICY.to_vec()),
+                after: None,
+            },
+        ]
+    };
+    code(
+        commit(&f.root, &f.home, writes()),
+        "model_transaction_target_invalid",
+    );
+    assert_eq!(fs::read(f.home.join("config.json")).unwrap(), OLD_CONFIG);
+    commit_protected_restore(&f.root, &f.home, writes()).unwrap();
+    assert!(!f.home.join("config.json").exists());
+    assert!(!f.root.join(POLICY).exists());
+    let receipt = WriteV2 {
+        target: TargetV2::ManagerOperationReceipt("11111111-1111-4111-8111-111111111111".into()),
+        before: None,
+        after: Some(b"not a restore target".to_vec()),
+    };
+    code(
+        commit_protected_restore(&f.root, &f.home, vec![receipt]),
+        "model_transaction_target_invalid",
+    );
+}
+#[test]
+fn interrupted_protected_restore_keeps_mode_and_replays_only_the_exact_original_absent_plan() {
+    let f = Fixture::new();
+    let _guard = hook(|e| {
+        if e == TestEvent::AfterApply(0) {
+            TestAction::Interrupt
+        } else {
+            TestAction::Continue
+        }
+    });
+    let writes = vec![
+        WriteV2 {
+            target: TargetV2::OfficialConfig,
+            before: Some(OLD_CONFIG.to_vec()),
+            after: None,
+        },
+        WriteV2 {
+            target: TargetV2::Manager(POLICY.into()),
+            before: Some(OLD_POLICY.to_vec()),
+            after: None,
+        },
+    ];
+    code(
+        commit_protected_restore(&f.root, &f.home, writes),
+        "model_transaction_test_interrupted",
+    );
+    drop(_guard);
+    let marker: Marker = decode(&fs::read(f.pending()).unwrap()).unwrap();
+    let journal: Journal = decode(&fs::read(f.dir().join(JOURNAL)).unwrap()).unwrap();
+    assert!(journal.plan.protected_restore);
+    assert_eq!(marker.plan_digest, checksum(&journal.plan).unwrap());
+    assert!(recover(&f.root, &f.home).unwrap());
+    assert!(!f.home.join("config.json").exists());
+    assert!(!f.root.join(POLICY).exists());
+    assert!(!f.pending().exists());
 }

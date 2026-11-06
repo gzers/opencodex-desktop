@@ -582,6 +582,8 @@ pub fn run() {
             commands::config_file_transfer_v2::prepare_config_file_export_v2,
             commands::config_file_transfer_v2::prepare_draft_config_file_export_v2,
             commands::config_file_transfer_v2::save_config_file_export_v2,
+            commands::config_file_transfer_v2::config_file_export_output_v2,
+            commands::config_file_transfer_v2::open_config_file_export_directory_v2,
             commands::config_file_transfer_v2::cancel_config_file_export_v2,
             commands::config_file_transfer_v2::open_config_file_import_v2,
             commands::config_file_transfer_v2::reselect_config_file_import_v2,

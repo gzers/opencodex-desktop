@@ -623,7 +623,7 @@ pub(crate) fn write_image(
     }
     Ok(())
 }
-fn owned_intermediate(live: &Image, before: &Image, after: &Image) -> bool {
+pub(crate) fn owned_intermediate(live: &Image, before: &Image, after: &Image) -> bool {
     live.files
         .keys()
         .chain(before.files.keys())
