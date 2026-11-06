@@ -27,6 +27,8 @@ pub mod source_v2;
 pub mod portable_v2;
 pub mod compiler_v2;
 pub mod store_v2;
+pub mod template_ops_v2;
+pub mod agent_proposal_v2;
 pub mod model_transaction_v2;
 #[cfg(test)]
 mod v2_tests;

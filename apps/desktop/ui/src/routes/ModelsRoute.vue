@@ -1,268 +1,80 @@
 <script setup lang="ts">
-import {escapeHtml} from '@/lib/html'
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch, toRef } from 'vue'
-import AgentExecutionField from '@/features/models/AgentExecutionField.vue'
-import ConditionEditor from '@/features/models/ConditionEditor.vue'
-import ConditionPreview from '@/features/models/ConditionPreview.vue'
-import {useModelsV2Store} from '@/features/models/store-v2'
-import type {TemplateV2} from '@/features/models/api-v2'
+import {computed,onBeforeUnmount,onMounted,ref,toRef,watch} from 'vue'
 import AppTopbar from '@/components/AppTopbar.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
 import DetailWorkspace from '@/components/layout/DetailWorkspace.vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
-import ModelRuleFields from '@/features/models/ModelRuleFields.vue'
 import ChannelsView from '@/features/models/ChannelsView.vue'
-import TemplateComparisonDialog from '@/features/models/TemplateComparisonDialog.vue'
-import TemplateUsageDialog from '@/features/models/TemplateUsageDialog.vue'
-import ExternalTaskDialog from '@/features/models/ExternalTaskDialog.vue'
-import AgentPanel from '@/features/models/AgentPanel.vue'
-import {createAgentViewContext} from '@/features/models/agentView'
-import BatchAgentDialog from '@/features/models/BatchAgentDialog.vue'
-import { useModelsStore } from '@/features/models/store'
-import { emptyRules, errorText, modelApi, versionLabel, type MatchPreview, type Pattern, type Revision, type Template, type OwnerTaskResult } from '@/features/models/api'
-import { useModelViewPosition } from '@/features/models/useViewPosition'
-import { useModalStore } from '@/app/modal/store'
-const models = useModelsStore()
-const modelsV2=useModelsV2Store()
-function openV2(){tab.value='templates';void modelsV2.open()}
-function startV2(template?:TemplateV2){
- if(modelsV2.dirty){modal.open({title:'切换模版',body:'放弃当前未保存修改并打开所选模版？',confirmLabel:'放弃并打开',onConfirm:()=>modelsV2.start(template)});return}
- modelsV2.start(template)
-}
-function closeV2(){if(modelsV2.dirty){modal.open({title:'离开条件模版编辑',body:'当前草稿保留，返回后可继续编辑。',confirmLabel:'保留并返回',onConfirm:()=>modelsV2.close()});return}modelsV2.close()}
-function saveV2(){const generation=modelsV2.editGeneration;modal.open({title:'保存模版新版本',body:'保存当前规则为独立版本，历史版本保持；不会后台改写渠道配置。',confirmLabel:'确认保存',onConfirm:()=>{if(generation!==modelsV2.editGeneration){modelsV2.error='确认后输入已改变，请重新核对；草稿保持。';return}return modelsV2.save()}})}
-const modal=useModalStore()
-const page = ref<HTMLElement | null>(null)
-const tab = toRef(models.view,'tab')
-useModelViewPosition(page,()=>tab.value==='templates'?(models.view.templateEditor&&models.draft?'template:'+models.view.templatePosition:'templates'):(modelsV2.channelEditorId?'channel:'+modelsV2.channelEditorId:'channels'))
-watch(()=>models.policyNotificationTarget,target=>{if(target)tab.value='channels'},{immediate:true})
-const agentOpen = ref(false)
-const agentTrigger = ref<HTMLElement | null>(null)
-function openAgent(event:MouseEvent){agentTrigger.value=event.currentTarget as HTMLElement;agentOpen.value=true}
-async function closeAgent(){agentOpen.value=false;await nextTick();const trigger=agentTrigger.value?.isConnected?agentTrigger.value:page.value?.querySelector<HTMLElement>('[aria-label="Agent自动填充"]');trigger?.focus({preventScroll:true})}
-const agentVisible=computed(()=>agentOpen.value&&tab.value==='templates'&&models.view.templateEditor)
-const batchOpen=ref(false)
-const externalOpen = ref(false)
-const externalDraft=ref<import('@/features/models/api').TemplateDraft|null>(null)
-function openExternalContext(value:import('@/features/models/api').TemplateDraft){externalDraft.value=value;externalOpen.value=true}
-watch(externalOpen,open=>{if(!open)externalDraft.value=null})
-const receiptOpen = ref(false)
-const receiptResult = ref<OwnerTaskResult | null>(null)
-const receiptError = ref('')
-let receiptSequence = 0
-watch(() => models.notificationTarget, async target => {
-  if (!target) return
-  const sequence = ++receiptSequence; receiptOpen.value = true; receiptError.value = ''; receiptResult.value = null
-  try { const result = await modelApi.externalResult(target.taskId,target.submissionId); if (sequence === receiptSequence) receiptResult.value = result }
-  catch (cause) { if (sequence === receiptSequence) receiptError.value = errorText(cause) }
-}, { immediate: true })
-const selectedTemplates = toRef(models.view,'selectedTemplates')
-const search = toRef(models.view,'templateSearch')
-const draft = computed(() => models.draft)
-const editingTemplate=computed(()=>models.snapshot?.library.templates.find(t=>t.id===draft.value?.templateId))
-const editingRevisionLabel=computed(()=>{const revision=editingTemplate.value?.revisions.find(r=>r.id===draft.value?.baseRevision);return revision?versionLabel(revision):'新建未保存'})
-// Read back through the reactive store: returning the assignment expression
-// would cache the raw object during the first session and bypass nested updates.
-const agentView=computed(()=>{const key=models.draftSession;models.view.agentViews[key]??=createAgentViewContext();return models.view.agentViews[key]!})
-const templateNavigation=computed(()=>{const key='template:'+models.draftSession;models.view.navigation[key]??={collapsed:false,activeId:'model-basic'};return models.view.navigation[key]!})
-const templateSections=[{id:'model-basic',label:'基本信息'},{id:'model-matching',label:'匹配规则'},{id:'model-rules',label:'通用配置'},{id:'model-variants',label:'版本或后缀'},{id:'model-source',label:'来源与版本'}]
-const templates = computed(() => models.snapshot?.library.templates.filter(t => t.label.toLowerCase().includes(search.value.toLowerCase())) ?? [])
-const usage=ref<{templateId:string;revisionId:string}>()
-const managerId = ref('')
-const manager = computed(() => models.snapshot?.library.templates.find(t => t.id === managerId.value))
-const selectedIds = ref<string[]>([])
-const historySearch = ref('')
-const confirmDelete = ref(false)
-const deletion = ref<{ library: string; policy: string; workspace: string; template: string; ids: string[] } | null>(null)
-const historyError = ref('')
-const versions = computed(() => [...(manager.value?.revisions ?? [])].reverse().filter(r => versionLabel(r).includes(historySearch.value) || r.changes.some(c => c.field.includes(historySearch.value))))
-const selectedVersions = computed(() => manager.value?.revisions.filter(r => (deletion.value?.ids ?? selectedIds.value).includes(r.id)) ?? [])
-const compareOpen=ref(false)
-const compareTemplate=computed(()=>models.snapshot?.library.templates.find(t=>t.id===draft.value?.templateId)??null)
-const previewOpen = ref(false)
-const sampleChannel = ref('')
-const sampleModel = ref('')
-const preview = ref<MatchPreview | null>(null)
-const previewError = ref('')
-const previewBusy = ref(false)
-let previewSequence = 0
-function closeMatchPreview() { previewOpen.value = false; previewSequence++; previewBusy.value = false }
-function closeReceipt() { receiptOpen.value = false; receiptSequence++ }
-const kinds = [{ value: 'prefix', label: '前缀' }, { value: 'exact', label: '精确' }, { value: 'glob', label: '通配符' }]
-let stopChanges: (() => void) | undefined
-let disposed = false
-onMounted(async () => {
-  if(tab.value==='templates'&&!modelsV2.active)void models.load()
-  try {
-    const { listen } = await import('@tauri-apps/api/event')
-    const stop = await listen('model-config-changed', () => { if(tab.value==='channels')void modelsV2.loadChannels();else if(modelsV2.active)void modelsV2.load();else void models.load() })
-    if (disposed) stop(); else stopChanges = stop
-  } catch { /* Explicit IPC errors remain visible through the saved-state read. */ }
-})
-onBeforeUnmount(() => { disposed = true; previewSequence++; receiptSequence++; stopChanges?.() })
-function edit(t?: Template, revisionId?: string, copy = false) { if(models.busy)return;models.edit(t, revisionId, copy);models.view.templatePosition=models.draftSession;models.view.templateEditor=true;managerId.value='' }
-function cancelNewTemplate(){
- if(!draft.value||draft.value.templateId||models.busy)return
- const baseline=JSON.stringify(draft.value),session=models.draftSession
- modal.open({title:'取消新建模版',body:'放弃当前未保存的新建内容？原模版、其他编辑缓冲和渠道草稿保持。',confirmLabel:'放弃新建',onConfirm:()=>{if(models.busy||JSON.stringify(models.draft)!==baseline||models.draftSession!==session){models.error='取消确认已过期，当前输入保留';return}models.leave()}})
-}
-function restoreTemplate(){
-  const baseline=JSON.stringify(models.draft),session=models.draftSession
-  modal.open({title:'还原模版修改',body:'还原当前模版到本次编辑的起点？其他模版与渠道草稿保持。',confirmLabel:'还原修改',onConfirm:()=>{if(JSON.stringify(models.draft)!==baseline||models.draftSession!==session){models.error='还原确认已过期，请重新核对';return}models.restoreTemplate()}})
-}
-function current(t: Template) { return t.revisions.find(r=>r.id===models.selected[t.id])??t.revisions.find(r=>r.id===t.defaultRevision)??t.revisions.at(-1)! }
-function versionLocked(t:Template){return models.busy||t.revisions.some(r=>models.protectsRevision(t.id,r.id))}
-/** 编辑器内切换已保存版本：有未保存修改时禁止，切换后重建编辑基准。 */
-function switchEditingVersion(id:string){
-  const t = editingTemplate.value
-  if (!t || id === '__manage__') return
-  if (models.dirty) return
-  const revision = t.revisions.find(r => r.id === id)
-  if (!revision) return
-  models.edit(t, revision.id)
-  models.view.templatePosition = models.draftSession
-  models.view.templateEditor = true
-}
-function chooseVersion(t:Template,id:string){if(versionLocked(t))return;if(id==='__manage__'){manage(t);return}if(t.revisions.some(r=>r.id===id))models.selected[t.id]=id}
-function choices(t: Template) {
-  const ids = new Set([...t.revisions.slice(-5).map(r => r.id), current(t).id, t.defaultRevision])
-  return [...t.revisions].reverse().filter(r => ids.has(r.id)).map(r => ({ value: r.id, label: versionLabel(r,t.source==='builtin'&&r===t.revisions[0])+(t.defaultRevision===r.id&&!(t.source==='builtin'&&r===t.revisions[0])?' · 默认':'') })).concat([{value:'__manage__',label:'版本管理…'}])
-}
-function manage(t: Template) { managerId.value = t.id; selectedIds.value = []; historySearch.value = ''; confirmDelete.value = false; deletion.value = null; historyError.value = '' }
-function cancelDelete() { if (!models.busy) { confirmDelete.value = false; deletion.value = null } }
-function closeVersionManager() { if (!models.busy) { cancelDelete(); managerId.value = '' } }
-const commonLocks=computed(()=>draft.value?.content.lockedFields.filter(key=>key.startsWith('rules.')).map(key=>key.slice(6))??[])
-function setCommonLocks(values:string[]){if(draft.value)draft.value.content.lockedFields=[...draft.value.content.lockedFields.filter(key=>!key.startsWith('rules.')),...values.map(key=>'rules.'+key)]}
-function contentLock(field:string){if(!draft.value)return;const fields=draft.value.content.lockedFields;draft.value.content.lockedFields=fields.includes(field)?fields.filter(key=>key!==field):[...fields,field]}
-function protectedReason(t: Template, r: Revision) {
-  if (t.source === 'builtin' && r === t.revisions[0]) return '内置基线'
-  if (t.defaultRevision === r.id) return '默认版本'
-  if (models.protectsRevision(t.id,r.id)) return '未保存编辑基准'
-  for(const [name,policy] of [['已提交策略',models.snapshot?.policy],['工作区草稿',models.channelDraft]] as const){if(policy&&[...policy.templateRefs,...policy.channels.flatMap(c=>[...c.templateRefs,...Object.values(c.modelRefs)])].some(ref=>ref.templateId===t.id&&ref.revisionId===r.id))return name+'引用'}
-  return ''
-}
-async function makeDefault(t:Template,r:Revision){
- if(!models.snapshot||models.busy)return
- const baseline=models.snapshot.libraryDigest,template=t.id,revision=r.id
- // Native AppModal nests above the manager; cancellation retains its selection and trigger.
- modal.open({title:'设为默认版本',body:'以后选择采用「'+escapeHtml(t.label)+'」时默认选择 '+versionLabel(r)+'；当前浏览版本、已有渠道和单模型精确引用保持。',confirmLabel:'设为默认',onConfirm:async()=>{
-  if(!models.snapshot||models.snapshot.libraryDigest!==baseline||!models.snapshot.library.templates.some(t=>t.id===template&&t.revisions.some(r=>r.id===revision))){historyError.value='默认版本确认已过期，请重新核对';return}
-  if(models.busy)return
-  models.busy=true;historyError.value=''
-  try{models.snapshot=await modelApi.setDefault(baseline,template,revision)}catch(cause){historyError.value=errorText(cause)}finally{models.busy=false}
- }})
-}
-async function remove() {
-  if (!models.snapshot || !manager.value || models.busy) return
-  if (!deletion.value) return
-  const { library: libraryDigest, policy: policyDigest, workspace: workspaceDigest, template: id, ids } = deletion.value
-  const policy=models.channelDraft
-  const refs=[...(policy?.templateRefs??[]),...(policy?.channels.flatMap(c=>[...c.templateRefs,...Object.values(c.modelRefs)])??[])]
-  if(refs.some(ref=>ref.templateId===id&&ids.includes(ref.revisionId))){historyError.value='当前渠道编辑仍采用所选版本，未删除';return}
-  models.busy = true; historyError.value = ''
-  try {
-    models.snapshot = await modelApi.delete(libraryDigest, policyDigest, workspaceDigest, id, ids)
-    if (draft.value?.templateId === id && ids.includes(draft.value.baseRevision ?? '')) models.leave()
-    selectedIds.value = []; confirmDelete.value = false; deletion.value = null
-    if (!models.snapshot.library.templates.some(t => t.id === id)) managerId.value = ''
-  } catch (e) { historyError.value = errorText(e) } finally { models.busy = false }
-}
-async function checkMatch() {
-  if (!draft.value || previewBusy.value) return
-  const request = ++previewSequence
-  previewBusy.value = true; previewError.value = ''; preview.value = null
-  try {
-    const result = await modelApi.preview(JSON.parse(JSON.stringify(draft.value.content)), sampleChannel.value, sampleModel.value)
-    if (!disposed && request === previewSequence && previewOpen.value) preview.value = result
-  } catch (e) { if (!disposed && request === previewSequence && previewOpen.value) previewError.value = errorText(e) }
-  finally { if (!disposed && request === previewSequence) previewBusy.value = false }
-}
-function addVariant() { draft.value?.content.variants.push({ id: crypto.randomUUID(), name: '', suffix: '', rules: emptyRules(), lockedFields: [] }) }
-function prepareDelete() {
-  if (!models.snapshot || !manager.value || models.busy || !selectedIds.value.length) return
-  deletion.value = { library: models.snapshot.libraryDigest, policy: models.snapshot.policyDigest, workspace: models.snapshot.workspaceDigest, template: manager.value.id, ids: [...selectedIds.value] }
-  confirmDelete.value = true
-}
+import ConditionEditor from '@/features/models/ConditionEditor.vue'
+import ConditionPreview from '@/features/models/ConditionPreview.vue'
+import ModelRuleFields from '@/features/models/ModelRuleFields.vue'
+import AgentExecutionField from '@/features/models/AgentExecutionField.vue'
+import {useModelsV2Store} from '@/features/models/store-v2'
+import {useModelViewPosition} from '@/features/models/useViewPosition'
+import {useModalStore} from '@/app/modal/store'
+import type {TemplateV2,RevisionV2,TemplateActionIntentV2,TemplateActionViewV2,RefV2} from '@/features/models/api-v2'
+const models=useModelsV2Store(),modal=useModalStore(),page=ref<HTMLElement|null>(null)
+const tab=toRef(models.view,'tab'),search=toRef(models.view,'templateSearch')
+const editing=computed(()=>models.view.templateEditor&&!!models.draft)
+const templates=computed(()=>models.snapshot?.library.templates.filter(t=>t.label.toLowerCase().includes(search.value.toLowerCase()))??[])
+const sections=[{id:'model-basic',label:'基本信息'},{id:'model-matching',label:'匹配范围与条件'},{id:'model-rules',label:'族通用配置'},{id:'model-preview',label:'匹配预览'},{id:'model-source',label:'来源与版本'}]
+useModelViewPosition(page,()=>tab.value==='channels'?(models.channelEditorId?'channel:'+models.channelEditorId:'channels'):(editing.value?'template:'+models.draft?.templateId:'templates'))
+const historyId=ref(''),historySelection=ref<string[]>([]),historySearch=ref('')
+const historyTemplate=computed(()=>models.snapshot?.library.templates.find(t=>t.id===historyId.value))
+const compareOpen=ref(false),compareRevision=ref('')
+const editingTemplate=computed(()=>models.snapshot?.library.templates.find(t=>t.id===models.draft?.templateId))
+const comparison=computed(()=>editingTemplate.value?.revisions.find(r=>r.id===compareRevision.value))
+const toolOpen=ref(false),toolBusy=ref(false),toolError=ref(''),toolResult=ref<TemplateActionViewV2|null>(null),toolIntent=ref<TemplateActionIntentV2|null>(null)
+let toolSequence=0,toolDraftGeneration=0,disposed=false,stopChanges:(()=>void)|undefined
+function selected(t:TemplateV2){const id=models.view.selectedVersions[t.id]??t.defaultRevision;return t.revisions.find(r=>r.id===id)}
+function choices(t:TemplateV2){return [{value:'',label:'请选择明确保存版本'},...t.revisions.slice().reverse().map(r=>({value:r.id,label:r.createdAt+' · '+r.id.slice(0,8)+(t.defaultRevision===r.id?' · 默认':'')}))]}
+function reference(t:TemplateV2,r:RevisionV2):RefV2{return {templateId:t.id,revisionId:r.id,digest:r.digest}}
+function start(t?:TemplateV2,revision?:RevisionV2){const generation=models.editGeneration;const begin=()=>{if(generation!==models.editGeneration){models.error='编辑基准已变化，当前输入保持。';return}models.start(t,revision?.id??(t?selected(t)?.id:undefined));if(models.draft)models.view.templateEditor=true};if(models.dirty){modal.open({title:'切换模版',body:'放弃当前未保存的修改并打开所选版本？',confirmLabel:'放弃并打开',onConfirm:begin})}else begin()}
+function create(){const generation=models.editGeneration;const begin=()=>{if(generation!==models.editGeneration)return;models.start();models.view.templateEditor=true};if(models.dirty)modal.open({title:'新建模版',body:'放弃当前未保存修改并创建新模版？',confirmLabel:'放弃并新建',onConfirm:begin});else begin()}
+function back(){models.view.templateEditor=false}
+function cancelNew(){const generation=models.editGeneration;modal.open({title:'取消新建模版',body:'放弃当前未保存的新建内容？其他模版与渠道草稿保持。',confirmLabel:'放弃新建',onConfirm:()=>{if(generation!==models.editGeneration){models.error='确认已过期，输入保持。';return}models.draft=null;models.view.templateEditor=false}})}
+function restore(){const generation=models.editGeneration;modal.open({title:'还原模版修改',body:'还原当前模版到本次编辑起点？其它缓冲与渠道草稿保持。',confirmLabel:'还原修改',onConfirm:()=>{if(generation!==models.editGeneration){models.error='还原确认已过期，当前编辑保持。';return}models.reset()}})}
+function save(){const generation=models.editGeneration;modal.open({title:'保存模版新版本',body:'确认后保存为独立版本，历史版本保持，不后台重匹配渠道。',confirmLabel:'确认保存',onConfirm:()=>{if(generation!==models.editGeneration){models.error='保存确认已过期，请重新核对。';return}return models.save()}})}
+function history(t:TemplateV2){historyId.value=t.id;historySelection.value=[];historySearch.value=''}
+function compare(){compareRevision.value=models.draft?.baseRevision??'';compareOpen.value=true}
+function openAction(kind:TemplateActionIntentV2['kind'],t?:TemplateV2,r?:RevisionV2){const target=t??editingTemplate.value,buffer=models.draft;toolIntent.value={kind,expectedLibrary:models.snapshot?.libraryDigest??'',templateId:target?.id??buffer?.templateId??'',references:t?(r?[reference(t,r)]:t.revisions.filter(v=>historySelection.value.includes(v.id)).map(v=>reference(t,v))):target&&buffer?.baseRevision?target.revisions.filter(v=>v.id===buffer.baseRevision).map(v=>reference(target,v)):[],content:buffer?JSON.parse(JSON.stringify(buffer.content)):null,label:target?.label??buffer?.label??''};if(kind==='agent_audit'&&!editing.value){const pool=models.snapshot?.library.templates??[];const targets=models.view.selectedTemplates.length?pool.filter(t=>models.view.selectedTemplates.includes(t.id)):pool;toolIntent.value.targets=targets.map(t=>({templateId:t.id,label:t.label,reference:selected(t)?reference(t,selected(t)!):null}));toolIntent.value.label=models.view.selectedTemplates.length?'检查所选模版':'检查全部模版';toolIntent.value.templateId='';toolIntent.value.references=[];toolIntent.value.content=null}toolDraftGeneration=models.editGeneration;toolResult.value=null;toolError.value='';toolOpen.value=true;toolSequence++}
+function closeTool(){toolOpen.value=false;toolSequence++;toolBusy.value=false}
+async function runAction(){if(!toolIntent.value||toolBusy.value)return;const request=++toolSequence;toolBusy.value=true;toolError.value='';try{const value=await models.templateAction(toolIntent.value);if(request===toolSequence&&toolOpen.value)toolResult.value=value}catch(cause){if(request===toolSequence&&toolOpen.value)toolError.value=cause instanceof Error?cause.message:'操作尚未就绪，当前版本与编辑保持。'}finally{if(request===toolSequence)toolBusy.value=false}}
+function applyProposal(){const proposal=toolResult.value?.proposal;if(!proposal||!models.draft)return;if(toolDraftGeneration!==models.editGeneration){toolError.value='建议形成后编辑已变化，未覆盖当前草稿；请重新核对。';return}models.setLabel(proposal.label);models.setContent(proposal.content);closeTool()}
+const actionTitle=computed(()=>({set_default:'设置已保存默认版本',delete_versions:'删除所选版本',agent_fill:'Agent 自动填充',agent_audit:'模版检查',external_task:'外部任务',usage:'匹配与使用'})[toolIntent.value?.kind??'usage'])
+watch(tab,value=>{if(value==='templates')void models.load()})
+onMounted(async()=>{if(tab.value==='templates')void models.load();try{const {listen}=await import('@tauri-apps/api/event');const stop=await listen('model-config-changed',()=>{if(tab.value==='channels')void models.loadChannels();else void models.load()});if(disposed)stop();else stopChanges=stop}catch{/* Consumer displays actual service failures. */}})
+onBeforeUnmount(()=>{disposed=true;toolSequence++;stopChanges?.()})
 </script>
 <template>
   <section ref="page" class="models-page">
     <AppTopbar />
-    <StickyTabs><div class="model-tabs-line"><div class="model-tabs ext-tabs" role="tablist" aria-label="模型配置"><button class="tab" :class="{ active: tab === 'channels' }" role="tab" :aria-selected="tab === 'channels'" @click="tab = 'channels'">渠道模型</button><button class="tab" :class="{ active: tab === 'templates' }" role="tab" :aria-selected="tab === 'templates'" @click="tab = 'templates'">模型模版</button></div><UiButton size="sm" :disabled="modelsV2.saving" @click="openV2">条件模版</UiButton><div id="model-tabs-actions"></div><AgentExecutionField compact v-if="!modelsV2.active&&tab==='templates'&&!models.view.templateEditor" /></div></StickyTabs>
-    <section v-if="modelsV2.active&&tab==='templates'" class="model-form models-v2" aria-label="条件模版配置">
-      <div class="model-toolbar"><h2>条件模版</h2><div class="model-inline"><UiButton :disabled="modelsV2.loading||!modelsV2.canLoad" @click="modelsV2.load">重新读取</UiButton><UiButton :disabled="modelsV2.saving" @click="startV2()">新建模版</UiButton><UiButton :disabled="modelsV2.saving" @click="closeV2">返回</UiButton></div></div>
-      <p v-if="modelsV2.error" role="alert" class="model-error">{{modelsV2.error}}</p>
-      <p v-if="modelsV2.loading" role="status">正在读取保存模版…</p>
-      <div v-if="modelsV2.snapshot" class="model-inline"><UiButton v-for="item in modelsV2.snapshot.library.templates" :key="item.id" :disabled="modelsV2.saving" @click="startV2(item)">{{item.label}}</UiButton></div>
-      <template v-if="modelsV2.draft">
-        <label>模版名称<input class="input" aria-label="条件模版名称" :value="modelsV2.draft.label" :disabled="modelsV2.saving" @input="modelsV2.setLabel(($event.target as HTMLInputElement).value)" /></label>
-        <label>说明<textarea class="input" :value="modelsV2.draft.content.description" :disabled="modelsV2.saving" @input="modelsV2.setContent({...modelsV2.draft!.content,description:($event.target as HTMLTextAreaElement).value})" /></label>
-        <h2>族通用规则</h2><ModelRuleFields :model-value="modelsV2.draft.content.commonRules" :disabled="modelsV2.saving" @update:model-value="modelsV2.setContent({...modelsV2.draft!.content,commonRules:$event})" />
-        <ConditionEditor :model-value="modelsV2.draft.content" :issues="modelsV2.issues" :disabled="modelsV2.saving" @update:model-value="modelsV2.setContent" @preview="modelsV2.requestPreview" />
-        <div class="model-columns"><label>原始模型 ID<input class="input" aria-label="条件预览原始ID" :value="modelsV2.previewModelId" :disabled="modelsV2.saving" @input="modelsV2.setPreviewTarget(($event.target as HTMLInputElement).value,modelsV2.previewChannelId)" /></label><label>渠道 ID<input class="input" aria-label="条件预览渠道ID" :value="modelsV2.previewChannelId" :disabled="modelsV2.saving" @input="modelsV2.setPreviewTarget(modelsV2.previewModelId,($event.target as HTMLInputElement).value)" /></label></div>
-        <UiButton :disabled="!modelsV2.canPreview||modelsV2.previewBusy||modelsV2.saving" @click="modelsV2.requestPreview">核对当前条件</UiButton>
-        <ConditionPreview :result="modelsV2.preview" :busy="modelsV2.previewBusy" :error="modelsV2.previewError" :issues="modelsV2.issues" @retry="modelsV2.requestPreview" />
-        <label class="model-inline"><input type="checkbox" :checked="modelsV2.draft.makeDefault" :disabled="modelsV2.saving" @change="modelsV2.setDefault(($event.target as HTMLInputElement).checked)" />将本次新版本设为默认保存版本</label>
-        <div class="model-inline"><UiButton :disabled="modelsV2.saving||!modelsV2.dirty" @click="modelsV2.reset">还原本次修改</UiButton><UiButton variant="primary" :disabled="!modelsV2.canSave||modelsV2.saving||!modelsV2.dirty" @click="saveV2">保存新版本</UiButton></div>
-      </template>
-      <p v-else class="model-muted">选择一个明确保存版本，或创建条件模版草稿。旧格式不会被自动转换。</p>
-    </section>
+    <StickyTabs><div class="model-tabs-line"><div class="model-tabs ext-tabs" role="tablist" aria-label="模型配置"><button class="tab" :class="{active:tab==='channels'}" role="tab" :aria-selected="tab==='channels'" @click="tab='channels'">渠道模型</button><button class="tab" :class="{active:tab==='templates'}" role="tab" :aria-selected="tab==='templates'" @click="tab='templates'">模型模版</button></div><div id="model-tabs-actions"></div><AgentExecutionField v-if="tab==='templates'&&!editing" compact /></div></StickyTabs>
+    <ChannelsView v-if="tab==='channels'" actions-target="#model-tabs-actions" />
     <template v-else>
-    <p v-if="tab==='templates'&&models.error" class="model-error" role="alert">{{ models.error }}</p>
-    <div v-if="tab==='templates'&&!models.snapshot" class="model-empty"><p>{{ models.busy ? '正在读取模型配置…' : '模型配置读取未完成' }}</p><UiButton :disabled="models.busy" @click="models.load">重新读取</UiButton></div>
-    <ChannelsView v-if="tab==='channels'" :active="tab==='channels'" actions-target="#model-tabs-actions" />
-    <template v-if="models.snapshot&&tab==='templates'&&(!draft||!models.view.templateEditor)">
-      <div class="model-toolbar"><input class="input" v-model="search" type="search" placeholder="搜索模版" aria-label="搜索模版" /><div class="model-inline"><UiButton v-if="draft" @click="models.view.templateEditor=true">继续编辑</UiButton><UiButton variant="primary" @click="edit()">新建模版</UiButton><UiButton @click="batchOpen=true">{{ selectedTemplates.length?'检查勾选更新':'检查全部更新' }}</UiButton><UiButton @click="externalOpen = true">外部任务</UiButton></div></div>
-      <div class="model-table-scroll"><table class="model-table ui-table ui-table-fixed template-table"><colgroup><col class="ui-selection-col"/><col class="template-name-col"/><col class="template-version-col"/><col class="template-actions-col"/></colgroup><thead><tr><th class="ui-selection-cell"><span class="sr-only">选择</span></th><th>模版</th><th>版本</th><th>操作</th></tr></thead><tbody><tr v-for="t in templates" :key="t.id">
-        <td class="ui-selection-cell"><input v-model="selectedTemplates" type="checkbox" :value="t.id" :aria-label="'勾选'+t.label" /></td><td><div class="template-title"><strong>{{ t.label }}</strong><span class="tag">{{ t.source === 'builtin' ? '内置' : '自建' }}</span></div><small>{{ t.source === 'builtin' && current(t) === t.revisions[0] ? '内置基线' : current(t).changes.map(c => c.field).slice(0, 3).join('、') || '内容变更依据缺失' }}</small></td>
-        <td><UiSelectField :model-value="current(t).id" :options="choices(t)" :label="`${t.label}保存版本`" size="sm" :disabled="versionLocked(t)" @update:model-value="chooseVersion(t,$event)" /></td>
-        <td><div class="ui-row-actions"><UiButton size="sm" :data-model-focus="'template:'+t.id" @click="edit(t, current(t).id)">编辑</UiButton><UiButton size="sm" @click="edit(t, current(t).id, true)">复制</UiButton><UiButton size="sm" @click="manage(t)">版本管理</UiButton><UiButton size="sm" @click="usage={templateId:t.id,revisionId:current(t).id}">匹配与使用</UiButton></div></td>
-      </tr></tbody></table></div><p v-if="!templates.length" class="model-empty">没有匹配的模版</p><p class="model-footer-note">版本按北京时间精确到秒，并附唯一短标识；保存不覆盖旧版。下拉显示最近 5 个版本及当前/默认，其余在版本管理中选择。</p>
-    </template>
-    <template v-if="models.snapshot&&tab==='templates'&&draft&&models.view.templateEditor">
-      <DetailWorkspace v-model:collapsed="templateNavigation.collapsed" v-model:active-id="templateNavigation.activeId" label="模版导航" :sections="templateSections"><template #header><UiButton variant="ghost" @click="models.view.templateEditor=false">返回</UiButton><div class="model-identity"><div class="model-inline"><span class="tag">{{ editingTemplate?.source==='builtin'?'内置':'自建' }}</span><input v-model="draft.label" aria-label="模版名称" placeholder="模版名称" class="input model-name" :disabled="models.busy" /></div><small class="model-muted">编辑基于 {{ editingRevisionLabel }}</small></div><UiSelectField v-if="editingTemplate&&editingTemplate.revisions.length>1" :model-value="draft.baseRevision??''" :options="choices(editingTemplate)" label="模版版本" size="sm" :disabled="versionLocked(editingTemplate)||models.dirty" @update:model-value="switchEditingVersion($event)" /><UiButton v-if="editingTemplate" size="sm" :disabled="!compareTemplate||models.busy" @click="compareOpen=true">与版本比较</UiButton><UiButton v-if="editingTemplate" size="sm" @click="manage(editingTemplate)">版本管理</UiButton><span class="tag">{{ models.dirty ? '未保存修改' : models.status || (draft.templateId ? '未修改' : '新建未保存') }}</span></template>
-      <template #actions="{collapsed}">
-       <UiButton class="model-editor-action" size="sm" aria-label="Agent自动填充" title="Agent自动填充" :disabled="models.busy" @click="openAgent" :aria-expanded="agentOpen" aria-controls="model-agent-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5Z"/></svg><span v-if="!collapsed">Agent自动填充</span></UiButton>
-       <UiButton class="model-editor-action" size="sm" aria-label="外部任务" title="外部任务" :disabled="models.busy" @click="externalOpen=true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7M21 3 10 14M10 5H4v15h15v-6"/></svg><span v-if="!collapsed">外部任务</span></UiButton>
-       <UiButton class="model-editor-action" size="sm" aria-label="复制模版" :title="models.hasNewTemplate?'先保存或放弃已有新建模版，再复制':'以当前编辑内容新建独立模版'" :disabled="models.hasNewTemplate||!draft.templateId||models.busy" @click="models.copyCurrentTemplate();models.view.templatePosition=models.draftSession"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V3H3v13h5"/></svg><span v-if="!collapsed">复制模版</span></UiButton>
-       <UiButton v-if="!draft.templateId" class="model-editor-action" size="sm" variant="ghost" aria-label="取消新建" title="放弃当前未保存的新建模版" :disabled="models.busy" @click="cancelNewTemplate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg><span v-if="!collapsed">取消新建</span></UiButton>
-
+      <p v-if="models.error" class="model-error" role="alert">{{models.error}}</p><p v-if="models.loading" role="status">正在读取保存模版…</p>
+      <template v-if="!editing">
+        <div class="model-toolbar"><input v-model="search" class="input" type="search" aria-label="搜索模版" placeholder="搜索模版" /><div class="model-inline"><UiButton v-if="models.draft" @click="models.view.templateEditor=true">继续编辑</UiButton><UiButton :disabled="models.loading" @click="models.load">重新读取</UiButton><UiButton variant="primary" :disabled="models.saving" @click="create">新建模版</UiButton><UiButton :disabled="!models.snapshot" @click="openAction('agent_audit')">{{models.view.selectedTemplates.length?'检查勾选更新':'检查全部更新'}}</UiButton><UiButton @click="openAction('external_task')">外部任务</UiButton></div></div>
+        <div class="model-template-list"><article v-for="t in templates" :key="t.id" class="model-template"><div class="model-inline"><label><input v-model="models.view.selectedTemplates" type="checkbox" :value="t.id" />{{t.label}}</label><span class="tag">{{t.source==='builtin'?'内置':'自建'}}</span><UiSelectField :model-value="models.view.selectedVersions[t.id]??t.defaultRevision??''" :options="choices(t)" :label="t.label+'保存版本'" :disabled="models.saving||models.dirty" @update:model-value="models.view.selectedVersions[t.id]=$event" /></div><p class="model-muted">{{selected(t)?.content.description??'请选择明确保存版本；不取任意最新候选。'}}</p><div class="model-inline"><UiButton :disabled="!selected(t)||models.saving" @click="start(t,selected(t))">编辑</UiButton><UiButton @click="history(t)">版本管理</UiButton><UiButton :disabled="!selected(t)" @click="openAction('usage',t,selected(t))">匹配与使用</UiButton><UiButton :disabled="!selected(t)||t.defaultRevision===selected(t)?.id" @click="openAction('set_default',t,selected(t))">{{t.defaultRevision===selected(t)?.id?'当前默认':'设为默认'}}</UiButton></div></article></div><p v-if="models.snapshot&&!templates.length" class="model-muted">暂无符合条件的模版；可新建，不转换旧格式库。</p>
       </template>
-      <template #primary="{collapsed}"><UiButton class="model-editor-action" size="sm" variant="ghost" aria-label="还原修改" title="还原修改" :disabled="!models.dirty||models.busy" @click="restoreTemplate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9a8 8 0 1 1 0 7M4 3v6h6"/></svg><span v-if="!collapsed">还原修改</span></UiButton><UiButton class="model-editor-action" size="sm" variant="primary" aria-label="保存" title="保存" :loading="models.busy" :disabled="!models.dirty&&!!draft.templateId" @click="models.save"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h13l3 3v15H4zM8 3v6h8V3M8 21v-8h8v8"/></svg><span v-if="!collapsed">保存</span></UiButton></template>
-      <div class="model-form">
-        <section id="model-basic" tabindex="-1"><h2>基本信息</h2><label>说明<textarea class="input" v-model="draft.content.description" rows="3" :disabled="models.busy" /></label><label class="model-inline"><input type="checkbox" :checked="draft.content.lockedFields.includes('description')" :disabled="models.busy" @change="contentLock('description')" />锁定说明</label></section>
-        <section id="model-matching" tabindex="-1"><div class="model-field-title"><h2>匹配规则</h2><UiButton size="sm" :disabled="models.busy" @click="previewOpen=true">匹配预览</UiButton></div><div v-for="kind in (['include','exclude'] as const)" :key="kind"><div class="model-field-title"><strong>{{ kind === 'include' ? '包含' : '排除' }}</strong><UiButton size="sm" :disabled="models.busy" @click="draft.content.matching[kind].push({ kind: 'prefix', value: '' })">添加规则</UiButton></div>
-          <div v-for="(p, i) in draft.content.matching[kind]" :key="i" class="model-pattern"><UiSelectField :model-value="p.kind" :options="kinds" label="匹配类型" :disabled="models.busy" @update:model-value="p.kind = $event as Pattern['kind']" /><input class="input" v-model="p.value" :aria-label="`${kind}规则${i + 1}`" placeholder="原始模型ID或匹配文本" :disabled="models.busy" /><UiButton size="sm" variant="ghost" :disabled="models.busy" @click="draft.content.matching[kind].splice(i, 1)">移除</UiButton></div></div>
-          <label class="model-inline"><input v-model="draft.content.matching.caseSensitive" type="checkbox" :disabled="models.busy" />区分大小写</label>
-          <div class="model-columns"><label>渠道范围<UiSelectField :model-value="draft.content.matching.channelMode" :options="[{value:'all',label:'全部渠道'},{value:'whitelist',label:'仅所选渠道'},{value:'blacklist',label:'排除所选渠道'}]" label="渠道范围" :disabled="models.busy" @update:model-value="draft.content.matching.channelMode = $event as 'all' | 'whitelist' | 'blacklist'" /></label><label>优先级<input class="input" v-model.number="draft.content.matching.priority" type="number" :disabled="models.busy" /></label></div>
-          <fieldset v-if="draft.content.matching.channelMode !== 'all'"><legend>选择渠道</legend><label v-for="channel in models.channelDraft?.channels ?? []" :key="channel.id" class="model-inline"><input v-model="draft.content.matching.channels" type="checkbox" :value="channel.id" :disabled="models.busy" />{{ channel.label }}</label><p v-if="!models.channelDraft?.channels.length" class="model-muted">暂无渠道，可先保存规则。</p><p v-for="id in draft.content.matching.channels.filter(id => !models.channelDraft?.channels.some(c => c.id === id))" :key="id" class="model-muted">已失效渠道引用 · {{ id.slice(0,8) }}</p></fieldset>
-        </section>
-        <section id="model-rules" tabindex="-1"><h2>通用配置</h2><ModelRuleFields v-model="draft.content.rules" :locked-fields="commonLocks" :disabled="models.busy" @update:locked-fields="setCommonLocks" /></section>
-        <section id="model-variants" tabindex="-1"><div class="model-field-title"><h2>版本或后缀</h2><UiButton size="sm" :disabled="models.busy" @click="addVariant">新增版本或后缀</UiButton></div><p v-if="!draft.content.variants.length" class="model-muted">暂无型号差异规则</p>
-          <article v-for="(v, i) in draft.content.variants" :key="v.id" class="model-variant"><div class="model-columns"><label>名称<input class="input" v-model="v.name" :disabled="models.busy" /></label><label>原始ID字面后缀<input class="input" v-model="v.suffix" :disabled="models.busy" /></label></div><ModelRuleFields v-model="v.rules" v-model:locked-fields="v.lockedFields" :disabled="models.busy" /><UiButton size="sm" variant="danger" :disabled="models.busy" @click="draft.content.variants.splice(i, 1)">移除此项</UiButton></article>
-        </section>
-        <section id="model-source" tabindex="-1"><h2>来源与版本</h2><p>{{ draft.templateId ? '基于已保存版本编辑；保存产生独立版本。' : '自建模版，保存后生成独立身份。' }}</p><p v-if="draft.baseRevision" class="mono">{{ draft.baseRevision }}</p><details v-for="(source,index) in draft.content.sources" :key="index" class="model-source-record"><summary>{{ source.field }} · {{ source.recordedAt.slice(0,10) }}</summary><p v-if="source.url" class="mono">{{ source.url }}</p><p>{{ source.note }}</p></details></section>
-      </div></DetailWorkspace>
+      <div v-else-if="models.draft" class="model-v2-workspace" :class="{'with-agent':toolOpen&&toolIntent?.kind==='agent_fill'}"><DetailWorkspace label="模版" :sections="sections" v-model:collapsed="models.view.templateNavCollapsed" v-model:active-id="models.view.templateSection">
+        <template #header><UiButton size="sm" variant="ghost" @click="back">返回模版列表</UiButton><input class="input model-name" aria-label="模版名称" :value="models.draft.label" :disabled="models.saving" @input="models.setLabel(($event.target as HTMLInputElement).value)" /><UiSelectField v-if="editingTemplate" :model-value="models.draft.baseRevision??''" :options="choices(editingTemplate)" label="模版版本" :disabled="models.dirty||models.saving" @update:model-value="start(editingTemplate,editingTemplate!.revisions.find(r=>r.id===$event))" /><UiButton :disabled="!editingTemplate" @click="compare">与版本比较</UiButton><UiButton v-if="editingTemplate" @click="history(editingTemplate)">版本管理</UiButton><span class="tag">{{models.dirty?'未保存修改':'未修改'}}</span></template>
+        <template #actions><UiButton size="sm" aria-label="Agent自动填充" @click="openAction('agent_fill')">Agent 自动填充</UiButton><UiButton size="sm" @click="openAction('external_task')">外部任务</UiButton><UiButton size="sm" :disabled="models.saving" @click="models.copyTemplate()">复制模版</UiButton><UiButton v-if="!models.draft.baseRevision" size="sm" @click="cancelNew">取消新建</UiButton></template>
+        <template #primary><UiButton size="sm" :disabled="models.saving||!models.dirty" @click="restore">还原修改</UiButton><UiButton size="sm" variant="primary" :disabled="models.saving||!models.canSave||!models.dirty||!models.draft.label.trim()" @click="save">保存</UiButton></template>
+        <div class="model-form"><section id="model-basic" tabindex="-1"><h2>基本信息</h2><label>说明<textarea class="input" :value="models.draft.content.description" :disabled="models.saving" @input="models.setContent({...models.draft!.content,description:($event.target as HTMLTextAreaElement).value})" /></label></section>
+          <section id="model-matching" tabindex="-1"><ConditionEditor :model-value="models.draft.content" :issues="models.issues" :disabled="models.saving" @update:model-value="models.setContent" @preview="models.requestPreview" /></section>
+          <section id="model-rules" tabindex="-1"><h2>族通用配置</h2><ModelRuleFields :model-value="models.draft.content.commonRules" :locked-fields="models.draft.content.lockedFields" :disabled="models.saving" @update:model-value="models.setContent({...models.draft!.content,commonRules:$event})" @update:locked-fields="models.setContent({...models.draft!.content,lockedFields:$event})" /></section>
+          <section id="model-preview" tabindex="-1"><h2>匹配预览</h2><div class="model-columns"><label>原始模型 ID<input class="input" aria-label="原始模型ID" :value="models.previewModelId" @input="models.setPreviewTarget(($event.target as HTMLInputElement).value,models.previewChannelId)" /></label><label>渠道 ID<input class="input" aria-label="渠道ID" :value="models.previewChannelId" @input="models.setPreviewTarget(models.previewModelId,($event.target as HTMLInputElement).value)" /></label></div><UiButton :disabled="models.previewBusy||models.saving" @click="models.requestPreview">检查匹配</UiButton><ConditionPreview :result="models.preview" :busy="models.previewBusy" :error="models.previewError" :issues="models.issues" @retry="models.requestPreview" /></section>
+          <section id="model-source" tabindex="-1"><h2>来源与版本</h2><p>{{models.draft.baseRevision?'基于确切已保存版本；保存生成新版本。':'新建未保存模版。'}}</p><p>{{models.draft.baseRevision}}</p><details v-for="(source,index) in models.draft.content.sources" :key="index"><summary>{{source.field}} · {{source.recordedAt}}</summary><p>{{source.url}}</p><p>{{source.note}}</p></details><label class="model-inline"><input type="checkbox" :checked="models.draft.makeDefault" :disabled="models.saving" @change="models.setDefault(($event.target as HTMLInputElement).checked)" />将本次新版本设为默认保存版本</label></section></div>
+      </DetailWorkspace><aside v-if="toolOpen&&toolIntent?.kind==='agent_fill'" class="model-v2-agent" aria-label="Agent 自动填充面板"><div class="model-field-title"><h2>Agent 自动填充</h2><UiButton size="sm" @click="closeTool">收起助手</UiButton></div><AgentExecutionField compact /><p>基于当前确切版本与编辑内容生成建议；接受到草稿后仍需正常保存。</p><p v-if="toolError" role="alert" class="model-error">{{toolError}}</p><p v-if="toolResult?.report">{{toolResult.report}}</p><template v-if="toolResult?.proposal"><h3>待比较的建议</h3><pre class="model-v2-comparison">{{JSON.stringify(toolResult.proposal.content,null,2)}}</pre><UiButton @click="applyProposal">接受建议到编辑草稿</UiButton></template><UiButton :disabled="toolBusy" :loading="toolBusy" @click="runAction">开始填充</UiButton></aside></div>
     </template>
-    <TemplateUsageDialog v-if="usage" :template-id="usage.templateId" :revision-id="usage.revisionId" @close="usage=undefined" />
-    <UiDialog :open="!!manager" :title="'版本管理 · ' + (manager?.label ?? '')" :busy="models.busy" wide panel-class="model-version-manager" @close="closeVersionManager"><template v-if="manager">
-      <p v-if="historyError" role="alert" class="model-error">{{ historyError }}</p>
-      <div class="model-toolbar"><input class="input" v-model="historySearch" type="search" placeholder="搜索时间、标识或变更字段" aria-label="搜索版本" /><span>已选 {{ selectedIds.length }} 项</span></div>
-      <article v-for="r in versions" :key="r.id" class="model-version"><label><input v-model="selectedIds" type="checkbox" :value="r.id" :disabled="!!protectedReason(manager, r) || models.busy" /><span>{{ versionLabel(r, manager.source === 'builtin' && r === manager.revisions[0]) }}<small>{{ protectedReason(manager,r) || r.changes.map(c => c.field).join('、') || '内容变更依据缺失' }}</small></span></label><div class="model-inline"><UiButton size="sm" :disabled="models.busy" @click="edit(manager, r.id)">编辑</UiButton><UiButton size="sm" :disabled="models.busy || manager.defaultRevision === r.id" @click="makeDefault(manager,r)">{{ manager.defaultRevision === r.id ? '当前默认' : '设为默认' }}</UiButton></div></article>
-    </template><template #actions><UiButton variant="danger" :disabled="!selectedIds.length" :loading="models.busy" @click="prepareDelete">删除所选版本</UiButton></template></UiDialog>
-    <UiDialog :open="confirmDelete && !!manager" title="确认删除所选版本？" :busy="models.busy" panel-class="model-version-delete" @close="cancelDelete">
-      <ul><li v-for="r in selectedVersions" :key="r.id">{{ versionLabel(r) }}</li></ul><p>确认后删除这些版本，已有依赖会再次核对。</p>
-      <p v-if="historyError" role="alert" class="model-error">{{ historyError }}</p>
-      <template #actions="{ close }"><UiButton variant="ghost" :disabled="models.busy" @click="close">取消</UiButton><UiButton variant="danger" :loading="models.busy" @click="remove">确认删除</UiButton></template>
+    <UiDialog :open="!!historyTemplate" :title="'版本管理 · '+(historyTemplate?.label??'')" wide @close="historyId=''">
+      <template v-if="historyTemplate"><input v-model="historySearch" class="input" aria-label="搜索版本" placeholder="搜索版本时间或标识" /><article v-for="r in historyTemplate.revisions.slice().reverse().filter(r=>(r.createdAt+' '+r.id).includes(historySearch))" :key="r.id" class="model-version"><label><input v-model="historySelection" type="checkbox" :value="r.id" :disabled="r.origin.kind==='builtin'||historyTemplate.defaultRevision===r.id" />{{r.createdAt}} · {{r.id.slice(0,8)}}<span v-if="historyTemplate.defaultRevision===r.id"> · 当前默认</span></label><div class="model-inline"><UiButton @click="start(historyTemplate,r);historyId=''">编辑</UiButton><UiButton :disabled="historyTemplate.defaultRevision===r.id" @click="openAction('set_default',historyTemplate,r)">设为默认</UiButton></div></article><UiButton variant="danger" :disabled="!historySelection.length" @click="openAction('delete_versions',historyTemplate)">删除所选版本</UiButton></template>
     </UiDialog>
-    <UiDialog :open="previewOpen" title="匹配预览" panel-class="model-match-preview" @close="closeMatchPreview"><div class="model-form"><label>渠道ID<input class="input" v-model="sampleChannel" aria-label="渠道ID" /></label><label>原始模型ID<input class="input" v-model="sampleModel" aria-label="原始模型ID" /></label><p v-if="previewError" class="model-error" role="alert">{{ previewError }}</p><p v-if="preview" role="status">{{ preview.reason }}{{ preview.variantId ? ' · 已叠加最长后缀规则' : '' }}</p></div><template #actions><UiButton variant="primary" :loading="previewBusy" :disabled="!sampleModel" @click="checkMatch">检查匹配</UiButton></template></UiDialog>
-    <AgentPanel v-if="models.snapshot && models.draft" :key="models.draftSession" v-show="agentVisible" :draft="models.draft" :snapshot="models.snapshot" :active="agentVisible" :view-context="agentView" @close="closeAgent" @apply="models.draft = $event" @external="openExternalContext" />
-    <UiDialog :open="receiptOpen" title="外部任务结果" panel-class="model-task-result" @close="closeReceipt"><p v-if="receiptError" class="model-error" role="alert">{{ receiptError }}</p><template v-if="receiptResult"><p>目标：{{ receiptResult.task.targets.map(t => t.label).join('、') || '新建模版' }}</p><p>状态：{{ !receiptResult.receipt ? '结果待核对' : ({saved:'已保存',unchanged:'无内容变化',report:'检查报告',rejected:'提交被拒绝，未保存'}[receiptResult.receipt.state] ?? '待核对') }}</p><p v-if="receiptResult.receipt?.report" class="model-task-report">{{ receiptResult.receipt.report }}</p><p v-for="outcome in receiptResult.receipt?.outcomes ?? []" :key="outcome.revisionId">保存版本 · {{ outcome.revisionId }}</p></template></UiDialog>
-    <TemplateComparisonDialog :open="compareOpen" :template="compareTemplate" :draft="draft" :library-digest="models.snapshot?.libraryDigest??''" @close="compareOpen=false" />
-    <ExternalTaskDialog v-if="models.snapshot" :open="externalOpen" :snapshot="models.snapshot" :draft="externalDraft??models.draft" :dirty="!!externalDraft||models.dirty" :selected="selectedTemplates" @close="externalOpen = false" />
-    <BatchAgentDialog v-if="models.snapshot" :open="batchOpen" :snapshot="models.snapshot" :selected="selectedTemplates" :versions="models.selected" @close="batchOpen=false" />
-    </template>
+    <UiDialog :open="compareOpen" title="与保存版本比较" wide @close="compareOpen=false"><template v-if="models.draft"><UiSelectField :model-value="compareRevision" :options="editingTemplate?choices(editingTemplate):[]" label="比较来源版本" @update:model-value="compareRevision=$event" /><p v-if="!comparison" role="alert">请选择可核验的精确保存版本；不猜测已缺失的内容。</p><div v-else class="model-columns"><section><h3>保存版本 · {{comparison.id.slice(0,8)}}</h3><pre class="model-v2-comparison">{{JSON.stringify(comparison.content,null,2)}}</pre></section><section><h3>当前未保存编辑</h3><pre class="model-v2-comparison">{{JSON.stringify(models.draft.content,null,2)}}</pre></section></div></template></UiDialog>
+    <UiDialog :open="toolOpen&&toolIntent?.kind!=='agent_fill'" :title="actionTitle" wide :busy="toolBusy&&(toolIntent?.kind==='set_default'||toolIntent?.kind==='delete_versions')" @close="closeTool"><p>{{toolIntent?.label}} · 基于确切版本与当前编辑，旧版本保持。</p><ul v-if="toolIntent?.targets"><li v-for="target in toolIntent.targets" :key="target.templateId">{{target.label}} · {{target.reference?.revisionId??'缺少明确保存版本，需先核对'}}</li></ul><p v-if="toolIntent?.kind==='set_default'">将所选已保存版本设为默认；不后台重配渠道。</p><p v-if="toolIntent?.kind==='delete_versions'">确认后由后端核对精确依赖；有引用的版本不会被静默移除。</p><p v-if="toolError" role="alert" class="model-error">{{toolError}}</p><p v-if="toolResult?.report">{{toolResult.report}}</p><template v-if="toolResult?.proposal"><h3>待比较的建议</h3><pre class="model-v2-comparison">{{JSON.stringify(toolResult.proposal.content,null,2)}}</pre><UiButton @click="applyProposal">接受建议到编辑草稿</UiButton></template><template #actions="{close}"><UiButton :disabled="toolBusy&&(toolIntent?.kind==='set_default'||toolIntent?.kind==='delete_versions')" @click="close">关闭</UiButton><UiButton variant="primary" :disabled="toolBusy" :loading="toolBusy" @click="runAction">{{toolIntent?.kind==='set_default'||toolIntent?.kind==='delete_versions'?'确认操作':'开始核对'}}</UiButton></template></UiDialog>
   </section>
 </template>
 <style>
@@ -315,4 +127,7 @@ function prepareDelete() {
 
 <style>
 @container detail-content (max-width:520px){.model-rule-fields,.model-columns{grid-template-columns:minmax(0,1fr)}.model-pattern{grid-template-columns:minmax(0,1fr)}.model-pattern>button{justify-self:end}}
+</style>
+<style scoped>
+.model-v2-workspace{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;min-width:0}.model-v2-workspace.with-agent{grid-template-columns:minmax(0,1fr) minmax(260px,340px)}.model-v2-agent{min-width:0;position:sticky;top:16px;align-self:start;max-height:75vh;overflow:auto;padding:16px;border:1px solid var(--border);border-radius:12px;background:var(--panel);display:grid;gap:12px}@media(max-width:1100px){.model-v2-workspace.with-agent{grid-template-columns:minmax(0,1fr)}.model-v2-agent{position:static;max-height:none}}.model-v2-comparison{white-space:pre-wrap;overflow-wrap:anywhere;max-height:52vh;overflow:auto;background:var(--panel);border:1px solid var(--border);padding:12px;border-radius:8px;font-size:var(--text-caption)}
 </style>
