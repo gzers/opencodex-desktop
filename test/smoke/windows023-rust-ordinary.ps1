@@ -164,6 +164,7 @@ try{
  if($taskAccess){try{$taskAccess.Dispose();$taskReport.desktopAclRestored=$true}catch{$taskRetain=$true}}
  $restored=$true;$aclErrors=@();for($i=$taskChanges.Count-1;$i -ge 0;$i--){try{Restore-RustOrdinaryReadAccess $taskChanges[$i]}catch{$restored=$false;$aclErrors+=@{path=$taskChanges[$i].path;type=$_.Exception.GetType().FullName;hResult=[int]$_.Exception.HResult;readbackDiffers=($_.Exception.Message -ceq 'Exact original read-ACL restoration readback differs');diagnostic=$_.Exception.Data['aclRestoreDiagnostic']}}}
  $taskReport.aclRestoreErrors=$aclErrors
+ $taskReport.aclRestoration=@($taskChanges|ForEach-Object {$_.aclRestoreDiagnostic})
  $taskReport.sourceOrArtifactAclRestored=$restored
  if($taskUser -and !$taskRetain){try{
   $current=Get-LocalUser -SID $taskUser.SID.Value

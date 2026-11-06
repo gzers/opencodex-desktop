@@ -103,6 +103,36 @@ try{
  $change=@{path='fixture-only';accessSddl='original-access'}
  $caught=$null;try{Restore-RustOrdinaryReadAccess $change}catch{$caught=$_}
  Check ($null -ne $caught -and $change.aclRestoreDiagnostic.stage -ceq 'write-access' -and $null -eq $change.aclRestoreDiagnostic.readbackAccessSddl) 'ACL-write-failure-distinguished-from-readback-drift'
+ # Actual preflight4 DACL; fixture only, never apply it to any real object.
+ $aclState.setFails=$false
+ $actualOriginal='D:(A;;FA;;;BA)(A;OICIID;FA;;;BA)(A;OICIID;FA;;;SY)(A;OICIIOID;GA;;;CO)(A;OICIID;0x1200a9;;;BU)(A;CIID;LC;;;BU)(A;CIID;DC;;;BU)'
+ $actualReadback='D:AI'+$actualOriginal.Substring(2)
+ $aclState.readbackOverride=$actualReadback
+ $change=@{path='preflight4-DACL-fixture-only';accessSddl=$actualOriginal}
+ Restore-RustOrdinaryReadAccess $change
+ Check ($change.aclRestoreDiagnostic.restorationKind -ceq 'normalized-auto-inherited-only' -and $change.aclRestoreDiagnostic.exact -eq $false -and $change.aclRestoreDiagnostic.readbackDiffers -eq $true) 'actual-preflight4-only-AI-addition-reported-normalized-never-exact'
+ Check ($change.aclRestoreDiagnostic.orderedAceTextUnchanged -eq $true -and $change.aclRestoreDiagnostic.protectionUnchanged -eq $true -and [int][Security.AccessControl.ControlFlags]::DiscretionaryAclAutoInherited -eq 0x0400) 'AI-is-specific-control-0400-and-all-ordered-ACE-text-retained'
+ Check ($change.aclRestoreDiagnostic.nativeDescriptorVerified -eq [bool]$IsWindows) 'native-RawSecurityDescriptor-verification-only-on-Windows-not-claimed-on-Mac'
+ $counterexamples=@(
+  @{name='protection-added';original=$actualOriginal;readback=$actualReadback.Replace('D:AI','D:PAI')},
+  @{name='protection-removed';original=$actualOriginal.Replace('D:','D:P');readback=$actualReadback},
+  @{name='auto-inherit-request-added';original=$actualOriginal;readback=$actualReadback.Replace('D:AI','D:ARAI')},
+  @{name='AI-removed';original=$actualReadback;readback=$actualOriginal},
+  @{name='OI-removed';original=$actualOriginal;readback=$actualReadback.Replace('OICIID','CIID')},
+  @{name='CI-removed';original=$actualOriginal;readback=$actualReadback.Replace('OICIID','OIID')},
+  @{name='IO-removed';original=$actualOriginal;readback=$actualReadback.Replace('OICIIOID','OICIID')},
+  @{name='ID-removed';original=$actualOriginal;readback=$actualReadback.Replace('OICIID','OICI')},
+  @{name='access-mask-changed';original=$actualOriginal;readback=$actualReadback.Replace('0x1200a9','FA')},
+  @{name='SID-changed';original=$actualOriginal;readback=$actualReadback.Replace(';;;BU',';;;BA')},
+  @{name='ACE-order-changed';original=$actualOriginal;readback=$actualReadback.Replace('(A;CIID;LC;;;BU)(A;CIID;DC;;;BU)','(A;CIID;DC;;;BU)(A;CIID;LC;;;BU)')},
+  @{name='extra-ACE';original=$actualOriginal;readback=($actualReadback+'(A;;FA;;;WD)')}
+ )
+ foreach($case in $counterexamples){
+  $aclState.readbackOverride=$case.readback
+  $change=@{path='counterexample-only';accessSddl=$case.original}
+  Refuses {Restore-RustOrdinaryReadAccess $change} ('ACL-AI-exception-refuses-'+$case.name)
+  Check ($change.aclRestoreDiagnostic.restorationKind -ceq 'unverified' -and $change.aclRestoreDiagnostic.exact -eq $false) ('ACL-counterexample-never-verified-'+$case.name)
+ }
 }finally{
  if($oldGetAcl){Set-Item Function:Get-Acl $oldGetAcl.ScriptBlock}else{Remove-Item Function:Get-Acl}
  if($oldSetAcl){Set-Item Function:Set-Acl $oldSetAcl.ScriptBlock}else{Remove-Item Function:Set-Acl}

@@ -107,7 +107,7 @@ function Add-RustOrdinaryReadAccess([string]$Path,[string]$Sid,$Changes) {
 # Suspend ONLY our newly created test process until its real token/identity is
 # recorded. This removes the fast zero-test-binary observation race, not tests.
 function Restore-RustOrdinaryReadAccess($Change) {
- $diagnostic=[ordered]@{path=$Change.path;stage='read-before';originalAccessSddl=$Change.accessSddl;readbackAccessSddl=$null;readbackDiffers=$null}
+ $diagnostic=[ordered]@{path=$Change.path;stage='read-before';originalAccessSddl=$Change.accessSddl;readbackAccessSddl=$null;readbackDiffers=$null;restorationKind='unverified';exact=$false}
  $Change|Add-Member -NotePropertyName aclRestoreDiagnostic -NotePropertyValue $diagnostic -Force
  try{
   $acl=Get-Acl -LiteralPath $Change.path
@@ -117,10 +117,40 @@ function Restore-RustOrdinaryReadAccess($Change) {
   $diagnostic.stage='readback';$actual=Get-Acl -LiteralPath $Change.path
   $diagnostic.readbackAccessSddl=$actual.GetSecurityDescriptorSddlForm([Security.AccessControl.AccessControlSections]::Access)
   $diagnostic.stage='compare'
-  # Diagnostic only: retain strict rejection until actual DACL evidence explains
-  # the drift. SDDL contains ordered ACEs, protection and inheritance flags.
   $diagnostic.readbackDiffers=$diagnostic.readbackAccessSddl -cne $Change.accessSddl
-  if($diagnostic.readbackDiffers){throw 'Exact original read-ACL restoration readback differs'}
+  if($diagnostic.readbackDiffers){
+   # preflight4: Windows Set-Acl adds SE_DACL_AUTO_INHERITED (AI, 0x0400),
+   # recording automatic inheritance processing, not a protection/access rule.
+   # Admit ONLY original D:(... -> D:AI(... with the complete ordered ACE text
+   # unchanged. Never remove P/AR, sort ACEs, expand masks or normalize SID text.
+   $original=[string]$Change.accessSddl
+   if(!$original.StartsWith('D:(',[StringComparison]::Ordinal) -or
+      ![StringComparer]::Ordinal.Equals($diagnostic.readbackAccessSddl,('D:AI'+$original.Substring(2)))){throw 'Exact original read-ACL restoration readback differs'}
+   $diagnostic.allowedControlDelta='DiscretionaryAclAutoInherited(0x0400)'
+   $diagnostic.orderedAceTextUnchanged=$true
+   $diagnostic.protectionUnchanged=$true
+   $diagnostic.nativeDescriptorVerified=$false
+   if($IsWindows){
+    $before=[Security.AccessControl.RawSecurityDescriptor]::new($original)
+    $after=[Security.AccessControl.RawSecurityDescriptor]::new($diagnostic.readbackAccessSddl)
+    $controlDelta=[int]$before.ControlFlags -bxor [int]$after.ControlFlags
+    $protected=[int][Security.AccessControl.ControlFlags]::DiscretionaryAclProtected
+    if($controlDelta -ne 0x0400 -or ([int]$before.ControlFlags -band 0x0400) -ne 0 -or
+       ([int]$after.ControlFlags -band 0x0400) -eq 0 -or
+       ([int]$before.ControlFlags -band $protected) -ne ([int]$after.ControlFlags -band $protected) -or
+       $null -eq $before.DiscretionaryAcl -or $null -eq $after.DiscretionaryAcl){throw 'Exact original read-ACL restoration readback differs'}
+    $oldAcl=[byte[]]::new($before.DiscretionaryAcl.BinaryLength)
+    $newAcl=[byte[]]::new($after.DiscretionaryAcl.BinaryLength)
+    $before.DiscretionaryAcl.GetBinaryForm($oldAcl,0);$after.DiscretionaryAcl.GetBinaryForm($newAcl,0)
+    if([Convert]::ToHexString($oldAcl) -cne [Convert]::ToHexString($newAcl)){throw 'Exact original read-ACL restoration readback differs'}
+    $diagnostic.nativeDescriptorVerified=$true
+    $diagnostic.originalControlFlags=[int]$before.ControlFlags
+    $diagnostic.readbackControlFlags=[int]$after.ControlFlags
+   }
+   $diagnostic.restorationKind='normalized-auto-inherited-only'
+  }else{
+   $diagnostic.restorationKind='exact';$diagnostic.exact=$true
+  }
   $diagnostic.stage='verified'
  }catch{
   # DACL-only SDDL and stage contain no password/token. Main may archive this
