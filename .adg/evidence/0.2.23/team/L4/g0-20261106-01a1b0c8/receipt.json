@@ -1,0 +1,87 @@
+{
+  "date": "2026-11-06",
+  "timezone": "Asia/Shanghai",
+  "role": "L4",
+  "items": [
+    "WIN23-00",
+    "DIR-00 G0 input",
+    "IMP-31 stage A / P23-10"
+  ],
+  "status": "g0_readonly_returned_r1_not_authorized",
+  "source_thread_id": "01a1b0c8-944d-75d0-9a8b-c2e46c8963a1",
+  "repository": "gzers/opencodex-desktop",
+  "document_ref": "docs/governance-main",
+  "document_sha": "956e4cb4accbe4e80857f2e49da336e4127202fd",
+  "code_readonly_sha": "0c57500f8f46ea50655c782c3f04334a39167abb",
+  "local_docs_head": "988d8c107b41d4a9debc849dbe8ed38a21e35f90",
+  "local_code_head": "9c5db679a9114a5b5dd4424eac19c496d465e61d",
+  "source_files": [
+    {
+      "path": "docs/03-开发实施/TEAM-0.2.23.md",
+      "sha256": "a52020ee3693c5b7698c33448d71d3badbd20aea91a84ff742d6607b4ccf6fa0"
+    },
+    {
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-31.md",
+      "sha256": "7be2b68dc6209071472563e3dba740d0aaa83b5b34f5e220f23a38c2201d8f16"
+    },
+    {
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-32.md",
+      "sha256": "6c2c06789e77632218ac69af50a59dbedd29c680247cb27981c9f1e348c2f19b"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "L4-G0-20261106.md",
+      "sha256": "9ccfd688568dc6eceaf574ab2bb7264b85befa44e3f8ebdcffd666cae7179724"
+    },
+    {
+      "file": "host-observations.json",
+      "sha256": "9a752b95a30a9f2ad78dc4b4128b9687047b3e8f54ebab735762cb3669a3e980"
+    }
+  ],
+  "checks": {
+    "fixed_git_sources": "verified",
+    "source_byte_hashes": "verified",
+    "profile_sid_sessions": "observed",
+    "acl_and_install_constraints": "observed_and_source_reviewed",
+    "two_distinct_accounts": "present",
+    "second_account_execution_channel": "not_verified",
+    "simultaneous_product_execution": "not_run",
+    "native_credential_and_pipe_isolation": "not_run",
+    "msvc_build": "not_run_environment_not_ready",
+    "installer_and_update_tests": "not_run",
+    "product_test_count": 0
+  },
+  "remaining_dependencies": [
+    "L0 R1 contract/code SHA and exclusive file ownership",
+    "second real-user execution/evidence channel and same-SID multi-session condition",
+    "private isolated test ACL policy; existing user profiles and workspace ACL unsuitable for file-denial proof",
+    "installation-scope runtime maintenance and update-retention contract",
+    "single new runtime revision/hash and Node dependency supply",
+    "MSVC/SDK and Windows installer disposable verification environment"
+  ],
+  "side_effects": {
+    "git_fetch": true,
+    "tracked_files_modified": [],
+    "product_code_modified": false,
+    "shared_governance_modified": false,
+    "new_branch_or_worktree": false,
+    "committed_or_pushed": false,
+    "daily_configuration_changed": false,
+    "acl_registry_accounts_changed": false,
+    "real_sync_or_inference": false,
+    "product_or_test_service_started": false,
+    "cleanup_executed": false,
+    "published": false
+  },
+  "cleanup": {
+    "status": "not_applicable_no_test_resources_created",
+    "daily_processes_untouched": true
+  },
+  "delivery": {
+    "kind": "local_external_artifact_and_unapplied_git_patch",
+    "synced": false,
+    "l0_received": false,
+    "proposed_archive_prefix": ".adg/evidence/0.2.23/team/L4/g0-20261106-01a1b0c8"
+  }
+}

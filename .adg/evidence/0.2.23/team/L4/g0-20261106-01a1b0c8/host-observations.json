@@ -1,0 +1,307 @@
+{
+  "observedAtUtc": "2026-11-06T12:28:31.5603321+00:00",
+  "scope": "WIN23-00 read-only G0; no product execution",
+  "current": {
+    "name": "EZIO-MINI\\15119",
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+    "elevated": false,
+    "sessionId": 2,
+    "osProfile": "C:\\Users\\15119",
+    "USERPROFILE": "C:\\Users\\15119",
+    "APPDATA": "C:\\Users\\15119\\AppData\\Roaming",
+    "LOCALAPPDATA": "C:\\Users\\15119\\AppData\\Local",
+    "CODEX_HOME": null
+  },
+  "os": {
+    "caption": "Microsoft Windows Server 2025 Datacenter",
+    "version": "10.0.26100",
+    "build": "26100",
+    "architecture": "64 位"
+  },
+  "users": [
+    {
+      "name": "15119",
+      "enabled": true,
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001"
+    },
+    {
+      "name": "Administrator",
+      "enabled": true,
+      "sid": "S-1-5-21-587408064-856152790-2583328096-500"
+    },
+    {
+      "name": "liangjh23",
+      "enabled": true,
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1002"
+    }
+  ],
+  "profiles": [
+    {
+      "LocalPath": "C:\\Users\\Administrator",
+      "SID": "S-1-5-21-587408064-856152790-2583328096-500",
+      "Loaded": true
+    },
+    {
+      "LocalPath": "C:\\Users\\liangjh23",
+      "SID": "S-1-5-21-587408064-856152790-2583328096-1002",
+      "Loaded": true
+    },
+    {
+      "LocalPath": "C:\\Users\\15119",
+      "SID": "S-1-5-21-587408064-856152790-2583328096-1001",
+      "Loaded": true
+    }
+  ],
+  "sessions": [
+    " USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME",
+    " administrator         console             1  Active    8+03:37  2026/10/10 9:16",
+    ">15119                 rdp-tcp#0           2  Active          4  2026/10/10 9:18",
+    " liangjh23                                 3  Disc      1+02:43  2026/10/10 9:55"
+  ],
+  "administrators": [
+    {
+      "name": "EZIO-MINI\\15119",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001"
+    },
+    {
+      "name": "EZIO-MINI\\Administrator",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-500"
+    }
+  ],
+  "newDefaultExists": false,
+  "oldHkcuPointerExists": true,
+  "aclObservations": [
+    {
+      "path": "C:/Users/15119",
+      "owner": "NT AUTHORITY\\SYSTEM",
+      "protected": true,
+      "access": [
+        {
+          "identity": "NT AUTHORITY\\SYSTEM",
+          "rights": "FullControl",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "BUILTIN\\Administrators",
+          "rights": "FullControl",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "EZIO-MINI\\15119",
+          "rights": "FullControl",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "S-1-15-3-65536-599108337-2355189375-1353122160-3480128286-3345335107-485756383-4087318168-230526575",
+          "rights": "Traverse, Synchronize",
+          "type": "Allow",
+          "inherited": false
+        }
+      ]
+    },
+    {
+      "path": "C:/Users/liangjh23",
+      "owner": "NT AUTHORITY\\SYSTEM",
+      "protected": true,
+      "access": [
+        {
+          "identity": "NT AUTHORITY\\SYSTEM",
+          "rights": "FullControl",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "BUILTIN\\Administrators",
+          "rights": "FullControl",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "EZIO-MINI\\15119",
+          "rights": "FullControl",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "EZIO-MINI\\liangjh23",
+          "rights": "FullControl",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "S-1-15-3-65536-599108337-2355189375-1353122160-3480128286-3345335107-485756383-4087318168-230526575",
+          "rights": "Traverse, Synchronize",
+          "type": "Allow",
+          "inherited": false
+        }
+      ]
+    },
+    {
+      "path": "C:/Program Files",
+      "owner": "NT SERVICE\\TrustedInstaller",
+      "protected": true,
+      "access": [
+        {
+          "identity": "CREATOR OWNER",
+          "rights": "268435456",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "NT AUTHORITY\\SYSTEM",
+          "rights": "268435456",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "NT AUTHORITY\\SYSTEM",
+          "rights": "Modify, Synchronize",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "BUILTIN\\Administrators",
+          "rights": "268435456",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "BUILTIN\\Administrators",
+          "rights": "Modify, Synchronize",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "BUILTIN\\Users",
+          "rights": "-1610612736",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "BUILTIN\\Users",
+          "rights": "ReadAndExecute, Synchronize",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "NT SERVICE\\TrustedInstaller",
+          "rights": "268435456",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "NT SERVICE\\TrustedInstaller",
+          "rights": "FullControl",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "APPLICATION PACKAGE AUTHORITY\\ALL APPLICATION PACKAGES",
+          "rights": "ReadAndExecute, Synchronize",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "APPLICATION PACKAGE AUTHORITY\\ALL APPLICATION PACKAGES",
+          "rights": "-1610612736",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "APPLICATION PACKAGE AUTHORITY\\所有受限制的应用程序包",
+          "rights": "ReadAndExecute, Synchronize",
+          "type": "Allow",
+          "inherited": false
+        },
+        {
+          "identity": "APPLICATION PACKAGE AUTHORITY\\所有受限制的应用程序包",
+          "rights": "-1610612736",
+          "type": "Allow",
+          "inherited": false
+        }
+      ]
+    },
+    {
+      "path": "C:/Users/15119/AppData/Local/OpenCodeX Desktop",
+      "owner": "EZIO-MINI\\15119",
+      "protected": false,
+      "access": [
+        {
+          "identity": "EZIO-MINI\\CodexSandboxUsers",
+          "rights": "ReadAndExecute, Synchronize",
+          "type": "Allow",
+          "inherited": true
+        },
+        {
+          "identity": "NT AUTHORITY\\SYSTEM",
+          "rights": "FullControl",
+          "type": "Allow",
+          "inherited": true
+        },
+        {
+          "identity": "BUILTIN\\Administrators",
+          "rights": "FullControl",
+          "type": "Allow",
+          "inherited": true
+        },
+        {
+          "identity": "EZIO-MINI\\15119",
+          "rights": "FullControl",
+          "type": "Allow",
+          "inherited": true
+        }
+      ]
+    },
+    {
+      "path": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop",
+      "owner": "EZIO-MINI\\15119",
+      "protected": false,
+      "access": [
+        {
+          "identity": "BUILTIN\\Administrators",
+          "rights": "FullControl",
+          "type": "Allow",
+          "inherited": true
+        },
+        {
+          "identity": "NT AUTHORITY\\SYSTEM",
+          "rights": "FullControl",
+          "type": "Allow",
+          "inherited": true
+        },
+        {
+          "identity": "NT AUTHORITY\\Authenticated Users",
+          "rights": "Modify, Synchronize",
+          "type": "Allow",
+          "inherited": true
+        }
+      ]
+    }
+  ],
+  "services": [
+    {
+      "name": "seclogon",
+      "status": "Running"
+    },
+    {
+      "name": "TermService",
+      "status": "Running"
+    }
+  ],
+  "installedProductProcesses": [
+    {
+      "ProcessName": "opencodex-desktop",
+      "Id": 41396,
+      "SessionId": 2,
+      "Path": "C:\\Users\\15119\\AppData\\Local\\OpenCodeX Desktop\\opencodex-desktop.exe"
+    }
+  ],
+  "localRustToolchains": [
+    "stable-x86_64-pc-windows-gnu"
+  ],
+  "vswhereAtStandardPath": false,
+  "toolsInCurrentPath": []
+}

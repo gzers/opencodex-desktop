@@ -1,0 +1,94 @@
+{
+  "date": "2026-11-06",
+  "timezone": "Asia/Shanghai",
+  "role": "L4",
+  "item": "WIN23-00",
+  "kind": "G0 Git contribution; no R1 implementation",
+  "document_sha": "0c7999b57e0591bcacc1dfa80602bf1cbdffa9e8",
+  "code_readonly_sha": "0c57500f8f46ea50655c782c3f04334a39167abb",
+  "target_branch": "docs/0.2.23-windows-g0",
+  "archive_prefix": ".adg/evidence/0.2.23/team/L4/g0-20261106-01a1b0c8",
+  "shared_policy_revision": 5,
+  "shared_policy_digest": "15e1da8e987aabe23a4a0ca5f50b9c27bdb06f138caaa1352fd5dff54c6b7229",
+  "source_files": [
+    {
+      "path": "docs/03-开发实施/WINDOWS-0.2.23.md",
+      "sha256": "a35b9acc13ca956d82f49f6c96a57c5b4c01aed5482660cf17078a3e0c055f07",
+      "git_blob": "b2e7d06417b4b5c511b56a355b2cfdbae8794dd2"
+    },
+    {
+      "path": "docs/03-开发实施/0.2.23-contracts/L0-paths-runtime-v1.md",
+      "sha256": "a6259da756fd2067c32557656ec7953eb340c323fc6f9d8e13ad141f976457e0",
+      "git_blob": "769620adc2693033af5231b3f0f5797f7a586024"
+    },
+    {
+      "path": "docs/03-开发实施/TEAM-0.2.23.md",
+      "sha256": "076ed3d40432eca8dc30c3088fda5acdfa643f7a6ed6a504650a9e968ac3087b",
+      "git_blob": "4a4c2f2c38aa351a06fc640aa6cd06b4b047d7de"
+    },
+    {
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-31.md",
+      "sha256": "0e7df208b05d9fa9db1edff897f27b7c754cf6bfdf03fd4af1a9f9f1a8e7b8a6",
+      "git_blob": "0ed7117776ff3f9af7ed85b1f2d51fb3e44a8442"
+    },
+    {
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-32.md",
+      "sha256": "c9f0663421c0e93a4e49581bc4f3bb2fe754d31225813dff7455ec384c18a4c4",
+      "git_blob": "79fd4cf234e41054a4a1e38103d90da53fa4a268"
+    },
+    {
+      "path": ".adg/shared-path-policy.json",
+      "sha256": "23301cd455fdc603b82ce922a531008e9e4f8606667452015e2031f1fb472cbc",
+      "git_blob": "40a39f2f159d31f364542956ba218e50d099d89d"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/g0-freeze/release-batches.json",
+      "sha256": "56399e750d9aba2272f58d80eca1ac8251e8d1c59130362a115dcc336aa20e54",
+      "git_blob": "da5390dda699729b6bb14125de41d80b76e07ed7"
+    }
+  ],
+  "os_api_observation": {
+    "profile": "C:/Users/15119",
+    "localAppData": "C:/Users/15119/AppData/Local",
+    "v1DefaultInstallationRoot": "C:/Users/15119/AppData/Local/Programs/OpenCodeX Desktop"
+  },
+  "installer_templates": [
+    {
+      "repository": "tauri-apps/tauri",
+      "ref": "@tauri-apps/cli-v2.11.4",
+      "path": "crates/tauri-bundler/src/bundle/windows/msi/main.wxs",
+      "git_blob": "dec39dadb4bc9160d108d19094987ada2a6eb996",
+      "observed": "perMachine; ProgramFiles; previous HKCU InstallDir search"
+    },
+    {
+      "repository": "tauri-apps/tauri",
+      "ref": "tauri-cli-v2.11.4",
+      "path": "crates/tauri-bundler/src/bundle/windows/nsis/installer.nsi",
+      "git_blob": "d372e3c391770cf231db974422a1e4f8adaac3a6",
+      "observed": "currentUser default LOCALAPPDATA/productName; no Programs segment"
+    }
+  ],
+  "historical_artifacts": [
+    "L4-G0-20261106.md",
+    "host-observations.json",
+    "receipt.json"
+  ],
+  "current_addendum": "L4-G0-L0-v1-补充回交.md",
+  "test_execution": {
+    "productTests": 0,
+    "msvcBuilds": 0,
+    "installersRun": 0,
+    "crossSidProductExecution": false,
+    "trueSyncOrInference": false
+  },
+  "remaining": [
+    "R1 code/interface SHA and exclusive files",
+    "second SID execution/evidence channel and same SID multi-session condition",
+    "private synthetic test ACLs without changing daily profiles",
+    "MSVC/SDK and disposable installer environment",
+    "single runtime revision/hash and bundled dependency supply",
+    "L0 NSIS/WiX default install context and runtime update retention"
+  ],
+  "formal_shared_files_changed": [],
+  "delivery_verification": "Verify branch commit and blob hashes through Git after contribution; L0 acceptance/integration not implied"
+}
