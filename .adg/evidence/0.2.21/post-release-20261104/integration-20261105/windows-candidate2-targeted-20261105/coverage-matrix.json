@@ -1,0 +1,162 @@
+{
+  "result": "passed-targeted-contribution",
+  "codeSha": "63f9dbe265568ba608da631aa83739bf5691755a",
+  "atUtc": "2026-11-06T00:24:54.656002+00:00",
+  "checks": [
+    {
+      "name": "review:source-and-artifact-identity",
+      "status": "passed",
+      "evidence": "native-attempt2/manager-identity.json",
+      "observed": "CI42056342409/artifact13431169501; originalMSVC embedded56141aec andca46apps tree; fullcandidate.2 tarballSHA, 2522installedfilepostimages"
+    },
+    {
+      "name": "review:native-managed-install-full-version",
+      "status": "passed",
+      "evidence": "native-attempt2/managed-install-readback.json",
+      "observed": "Actual manager preview+install_runtime offline; managed source, explicitPathnull, fullversion2.97.0-post021.ownerquery.2; actual entry version andSHA"
+    },
+    {
+      "name": "review:install-failure-preservation",
+      "status": "passed",
+      "evidence": "native-attempt2/failed-install-preservation.json",
+      "observed": "Deliberate invalid not_gzip rejected; same managed source/path/version; entry/package/all2522files unchanged"
+    },
+    {
+      "name": "review:fresh-rename-first-confirm",
+      "status": "passed",
+      "evidence": "native-attempt2/fresh-first-confirm-readback.json",
+      "observed": "Trusted native WebView input; absentpending/newtargetbeforestart; firstactualconfirmation1; stable savedbytes/knownModels/recentArrivals; newrefoldabsentpendingcleared; actual MSIX generations replaced"
+    },
+    {
+      "name": "review:failure-retry-cancellation",
+      "status": "passed",
+      "evidence": "native-independent-review.json",
+      "observed": "RealCancel retainedsavedbytes/pending andclient; controlled exactservice stop gives savedbutunreachable message no managebackups; samepublicretry afterrestoration succeeds and65591readback"
+    },
+    {
+      "name": "review:other-owner-daily-boundary",
+      "status": "passed",
+      "evidence": "native-attempt2/07-service-retry-boundary.json",
+      "observed": "Fivefreshsigned15119hashcheckpoints; fourboundaries nootherownerchanged; dailyproxySID/path/session/PIDcreate same; observer exits itself"
+    }
+  ],
+  "fixtureRequests": [
+    {
+      "at": "2026-11-06T00:18:09.544Z",
+      "method": "GET",
+      "path": "/v1/models"
+    },
+    {
+      "at": "2026-11-06T00:19:03.952Z",
+      "method": "GET",
+      "path": "/v1/models"
+    },
+    {
+      "at": "2026-11-06T00:19:04.598Z",
+      "method": "GET",
+      "path": "/v1/models"
+    },
+    {
+      "at": "2026-11-06T00:20:43.818Z",
+      "method": "GET",
+      "path": "/v1/models"
+    }
+  ],
+  "inferenceRequests": 0,
+  "realSyncPerformed": false,
+  "runtimeVersion": "2.97.0-post021.ownerquery.2",
+  "tarballSha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957",
+  "managerSha256": "f62c474c06cb3fe2f77fe23d38e99c0783d86e727dbd538cfe7b4d36dd8c347d",
+  "savedConfigSha256": "a0e6ad819b5e36d99dad85e303a37f1d11417adee1eaaaac1dd35993bf5ab955",
+  "configWatchObservations": 14,
+  "knownModelsUpdatedAt": "2026-11-05T00:00:00.000Z",
+  "firstConfirmationCount": 1,
+  "newReference": true,
+  "oldReferenceAbsent": true,
+  "pendingCleared": true,
+  "finalContextWindow": 65591,
+  "remainingOutsideContribution": [
+    "Production official runtime release or reviewed maintained offline source adoption",
+    "Final desktop installer/upgrade/signing/update/rollback and shared integration closure"
+  ],
+  "retainedTestProcesses": {
+    "manager": {
+      "pid": 91648,
+      "path": "D:\\Users\\Administrator\\WorkSpace\\Test\\post021-candidate2-targeted-20261105\\opencodex-desktop.exe",
+      "createdAtUtcTicks": "639295210576514310",
+      "sessionId": 1,
+      "owner": "EZIO-MINI\\Administrator",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+      "sha256": "f62c474c06cb3fe2f77fe23d38e99c0783d86e727dbd538cfe7b4d36dd8c347d",
+      "commandMarker": ""
+    },
+    "service": {
+      "pid": 108104,
+      "path": "D:\\Users\\Administrator\\WorkSpace\\Test\\post021-candidate2-targeted-20261105\\tools\\bun.exe",
+      "createdAtUtcTicks": "639295212397499160",
+      "sessionId": 1,
+      "owner": "EZIO-MINI\\Administrator",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+      "sha256": "cb1d8e6564e655e49d30cead359750a1cbbd12f42651caa4b62244d7bd93c244",
+      "commandMarker": "candidate2-service.ts"
+    },
+    "formalGenerations": [
+      {
+        "pid": 64728,
+        "parentPid": 2108,
+        "path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe",
+        "createdAtUtcTicks": "639295212841132180",
+        "sessionId": 1,
+        "owner": "EZIO-MINI\\Administrator"
+      },
+      {
+        "pid": 3340,
+        "parentPid": 64728,
+        "path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe",
+        "createdAtUtcTicks": "639295212842661480",
+        "sessionId": 1,
+        "owner": "EZIO-MINI\\Administrator"
+      },
+      {
+        "pid": 108648,
+        "parentPid": 64728,
+        "path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe",
+        "createdAtUtcTicks": "639295212849705820",
+        "sessionId": 1,
+        "owner": "EZIO-MINI\\Administrator"
+      },
+      {
+        "pid": 91060,
+        "parentPid": 64728,
+        "path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe",
+        "createdAtUtcTicks": "639295212849854650",
+        "sessionId": 1,
+        "owner": "EZIO-MINI\\Administrator"
+      },
+      {
+        "pid": 18656,
+        "parentPid": 64728,
+        "path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe",
+        "createdAtUtcTicks": "639295212850419170",
+        "sessionId": 1,
+        "owner": "EZIO-MINI\\Administrator"
+      },
+      {
+        "pid": 99740,
+        "parentPid": 64728,
+        "path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe",
+        "createdAtUtcTicks": "639295212870996640",
+        "sessionId": 1,
+        "owner": "EZIO-MINI\\Administrator"
+      },
+      {
+        "pid": 19168,
+        "parentPid": 64728,
+        "path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe",
+        "createdAtUtcTicks": "639295212877323740",
+        "sessionId": 1,
+        "owner": "EZIO-MINI\\Administrator"
+      }
+    ]
+  }
+}

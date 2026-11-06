@@ -1,5 +1,5 @@
 {
-  "result": "user-reported-run; no-attempt2-output-or-live-driver-observed; cause-unknown-await-console",
+  "result": "passed-native-candidate2-targeted",
   "codeBaseline": "ca46bc1f3c35988d206e1a2949c708d4f23aab50",
   "artifactVersion": "2.97.0-post021.ownerquery.2",
   "artifactSha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957",
@@ -23,11 +23,16 @@
     "appsTree": "ca89905344d0d29e761bcb8ffa24d22769c9cb4c",
     "embeddedCommitAndParentVerified": true
   },
-  "freshRename": "Notrun; no installed package/config/pending yet. Same-source binary unchanged.",
+  "freshRename": "Entirelyfreshrename, firstactualconfirmation1 passedexactbytes+timebaseline+newoldrefs+pending+MSIXgenerations",
   "ciRun": 42056342409,
-  "at": "2026-11-05T23:24:10.067294+00:00",
-  "AdministratorRun": "User reported attempt2 run; no new evidence directory/live driver/config/runtime/backup observed. Cause unknown; asked complete console, do not repeat yet.",
-  "codeSha": "51fd6d3574ef58a64ac4ecb9ea838f4792158433",
+  "at": "2026-11-06T00:24:54.656002+00:00",
+  "AdministratorRun": "2026-11-06T00:17:12.294Z..00:21:51.350Z, AdministratorSID500/session1, actual driverexit0",
+  "codeSha": "63f9dbe265568ba608da631aa83739bf5691755a",
   "ci": "42056342409 completed/success;5applicablejobs success;releasebuild skipped byoriginalcondition",
-  "pendingEntry": "D:/Users/Administrator/WorkSpace/Test/POST021-CANDIDATE2-TARGETED.ps1"
+  "pendingEntry": "D:/Users/Administrator/WorkSpace/Test/POST021-CANDIDATE2-TARGETED.ps1",
+  "nativeChecks": "Allsixrequiredchecks passed; seecoverage-matrix.json",
+  "remaining": [
+    "Production official runtime release or reviewed maintained offline source adoption",
+    "Final desktop installer/upgrade/signing/update/rollback and shared integration closure"
+  ]
 }
