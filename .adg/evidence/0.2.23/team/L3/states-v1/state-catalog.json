@@ -1,0 +1,522 @@
+{
+  "format": "l3-design-state-catalog-v1",
+  "productionDto": false,
+  "status": "controlled_draft_not_integrated",
+  "sourceDocCommit": "956e4cb4accbe4e80857f2e49da336e4127202fd",
+  "stateCount": 63,
+  "groups": {
+    "COND": 11,
+    "READ": 8,
+    "DIR-UI": 8,
+    "INSTALL": 11,
+    "SYNC": 16,
+    "AMBIG": 5,
+    "FORK": 4
+  },
+  "states": [
+    {
+      "id": "COND-01",
+      "visibleContentAndControls": "新覆盖项，名称空；第一条条件未选类型；字段全部继承",
+      "primaryActionAndPrerequisites": "“预览匹配”在样例与条件完整后可用；“保存”禁用",
+      "secondaryActionsAndExit": "添加条件、返回；取消保留原保存版本",
+      "resultAndReopen": "草稿校验，不产生 revision",
+      "flow": "3. 模版条件覆盖与命中预览"
+    },
+    {
+      "id": "COND-02",
+      "visibleContentAndControls": "已选名称结构，数字版本文本、名称片段与不限/版本前/后；AND 固定提示",
+      "primaryActionAndPrerequisites": "条件合法可预览",
+      "secondaryActionsAndExit": "删除条件、调整字段；返回不丢当前缓冲",
+      "resultAndReopen": "局部版本等价说明持续可见",
+      "flow": "3. 模版条件覆盖与命中预览"
+    },
+    {
+      "id": "COND-03",
+      "visibleContentAndControls": "字面前缀/后缀/完整 ID 条件；旧字面后缀原文不变",
+      "primaryActionAndPrerequisites": "预览；保存新版本",
+      "secondaryActionsAndExit": "显式改条件类型前保留原文",
+      "resultAndReopen": "不自动数字化，不修改旧 revision",
+      "flow": "3. 模版条件覆盖与命中预览"
+    },
+    {
+      "id": "COND-04",
+      "visibleContentAndControls": "条件命中；原始 ID 与匹配视图分列；逐字段来源链",
+      "primaryActionAndPrerequisites": "保存新版本，满足整份模版合法及基准未变",
+      "secondaryActionsAndExit": "修改条件、返回",
+      "resultAndReopen": "保存预览只展示真实差异；确认才写",
+      "flow": "3. 模版条件覆盖与命中预览"
+    },
+    {
+      "id": "COND-05",
+      "visibleContentAndControls": "族命中但条件不命中；具体失败条件及族通用继承结果",
+      "primaryActionAndPrerequisites": "合法规则仍可保存；未命中不强行扩能力",
+      "secondaryActionsAndExit": "更换合成 ID、继续编辑",
+      "resultAndReopen": "不改未知型号；不把无命中当规则错误",
+      "flow": "3. 模版条件覆盖与命中预览"
+    },
+    {
+      "id": "COND-06",
+      "visibleContentAndControls": "精确尾部/规格不符、版本段数或前导零不同；标明差异位置",
+      "primaryActionAndPrerequisites": "继续编辑或更换样例；不自动修正 ID",
+      "secondaryActionsAndExit": "查看完整原始 ID",
+      "resultAndReopen": "不向 mini/未来版本外溢参数",
+      "flow": "3. 模版条件覆盖与命中预览"
+    },
+    {
+      "id": "COND-07",
+      "visibleContentAndControls": "无可用结构/多个结构歧义/版本位置不可识别，错误定位到字段",
+      "primaryActionAndPrerequisites": "修正结构；相关无效草稿保存禁用",
+      "secondaryActionsAndExit": "保留输入、取消编辑",
+      "resultAndReopen": "不随意抽取日期或构建号充当版本",
+      "flow": "3. 模版条件覆盖与命中预览"
+    },
+    {
+      "id": "COND-08",
+      "visibleContentAndControls": "等价条件重复或无决胜规则的重叠；列出相关覆盖项与字段",
+      "primaryActionAndPrerequisites": "修正规则后再预览；存在阻断错误时保存禁用",
+      "secondaryActionsAndExit": "跳转相关项，保留两份草稿",
+      "resultAndReopen": "不按数组顺序/后缀长度选赢家",
+      "flow": "3. 模版条件覆盖与命中预览"
+    },
+    {
+      "id": "COND-09",
+      "visibleContentAndControls": "协议来源链显示导入事实/通用/条件/人工；缺失或不支持明确标记",
+      "primaryActionAndPrerequisites": "“配置协议”进入受影响单模型自定义；有效规则草稿可保留",
+      "secondaryActionsAndExit": "恢复继承可回到真实下层事实",
+      "resultAndReopen": "执行门禁只作用受影响路由，是否整批保存阻断由 DTO 给出",
+      "flow": "3. 模版条件覆盖与命中预览"
+    },
+    {
+      "id": "COND-10",
+      "visibleContentAndControls": "新规则保存基准失效、格式不支持或预览请求失败",
+      "primaryActionAndPrerequisites": "“重新读取比较”仅对允许基准可用；失败不清草稿",
+      "secondaryActionsAndExit": "关闭、保留当前编辑",
+      "resultAndReopen": "不丢未知字段或覆盖历史版本；晚回不套另一会话",
+      "flow": "3. 模版条件覆盖与命中预览"
+    },
+    {
+      "id": "COND-11",
+      "visibleContentAndControls": "预览中，输入修改后旧结果标过期，不沿用旧绿色命中",
+      "primaryActionAndPrerequisites": "当前请求完成且输入基准相同才展示可用结果",
+      "secondaryActionsAndExit": "停止等待、编辑条件、关闭",
+      "resultAndReopen": "generation/session 保护；不以旧预览允许保存/执行",
+      "flow": "3. 模版条件覆盖与命中预览"
+    },
+    {
+      "id": "READ-01",
+      "visibleContentAndControls": "第一步连接表单，无渠道/节点协议控件；认证方式与 Key 状态",
+      "primaryActionAndPrerequisites": "名称、URL 和认证合法后下一步",
+      "secondaryActionsAndExit": "取消、Key 显示/清空",
+      "resultAndReopen": "不调用真实发现或落正式凭据",
+      "flow": "4. 渠道与读取自动匹配的相邻状态"
+    },
+    {
+      "id": "READ-02",
+      "visibleContentAndControls": "第二步临时清单方式未选；模型搜索/仅已选/手动 ID 可见",
+      "primaryActionAndPrerequisites": "选择方式后获取；手工有效精确 ID 可加入草稿",
+      "secondaryActionsAndExit": "上一步、取消；清单方式不持久化",
+      "resultAndReopen": "返回保留本会话输入，重新新建恢复未选",
+      "flow": "4. 渠道与读取自动匹配的相邻状态"
+    },
+    {
+      "id": "READ-03",
+      "visibleContentAndControls": "清单加载/认证失败/无接口/空分别反馈；无空成功替换",
+      "primaryActionAndPrerequisites": "合法结果可加入草稿；异常可重试读取",
+      "secondaryActionsAndExit": "停止等待、手工 ID、上一步",
+      "resultAndReopen": "旧结果过期；未选模型不自动选中",
+      "flow": "4. 渠道与读取自动匹配的相邻状态"
+    },
+    {
+      "id": "READ-04",
+      "visibleContentAndControls": "读取现有渠道进行中；原渠道草稿仍可见",
+      "primaryActionAndPrerequisites": "等待或按当前界面编辑权限继续",
+      "secondaryActionsAndExit": "关闭/取消等待",
+      "resultAndReopen": "读取期间有新编辑则结果不覆盖，提示重新读取",
+      "flow": "4. 渠道与读取自动匹配的相邻状态"
+    },
+    {
+      "id": "READ-05",
+      "visibleContentAndControls": "读取成功自动更新草稿；计数与来源可查看，标“未保存”",
+      "primaryActionAndPrerequisites": "正常保存预览；确认才写配置",
+      "secondaryActionsAndExit": "取消保存、继续编辑、放弃草稿",
+      "resultAndReopen": "无单独采用确认；重复读取无额外差异",
+      "flow": "4. 渠道与读取自动匹配的相邻状态"
+    },
+    {
+      "id": "READ-06",
+      "visibleContentAndControls": "手工值/人工模版版本保留；未知/冲突/缺默认/缺 revision 列原因",
+      "primaryActionAndPrerequisites": "无关成功项正常保存，具体可保存范围按 DTO",
+      "secondaryActionsAndExit": "查看原配置、选择明确保存版本",
+      "resultAndReopen": "不禁用或清空剩余 19 个未匹配 ID",
+      "flow": "4. 渠道与读取自动匹配的相邻状态"
+    },
+    {
+      "id": "READ-07",
+      "visibleContentAndControls": "格式错误、必要引用缺失、读取失败/空、或读取基准失效",
+      "primaryActionAndPrerequisites": "重新读取/修正新 HOME 内源文件；不显示成功空渠道",
+      "secondaryActionsAndExit": "保留现有草稿、关闭说明",
+      "resultAndReopen": "保存基线及连接/Key/原 ID/选择顺序保持",
+      "flow": "4. 渠道与读取自动匹配的相邻状态"
+    },
+    {
+      "id": "READ-08",
+      "visibleContentAndControls": "来源协议/模版协议/条件/人工在模型明细可追溯；未知显示待配置",
+      "primaryActionAndPrerequisites": "设置受影响单模型协议或按允许范围保存草稿",
+      "secondaryActionsAndExit": "恢复继承、返回列表",
+      "resultAndReopen": "不把普通导入 custom 标成用户锁定；不隐藏回退",
+      "flow": "4. 渠道与读取自动匹配的相邻状态"
+    },
+    {
+      "id": "DIR-UI-01",
+      "visibleContentAndControls": "正在读取路径；两区骨架或“正在读取”，无猜测路径",
+      "primaryActionAndPrerequisites": "刷新完成后按能力启用",
+      "secondaryActionsAndExit": "离开设置",
+      "resultAndReopen": "不落默认路径，不初始化旧根",
+      "flow": "5. 目录与程序位置"
+    },
+    {
+      "id": "DIR-UI-02",
+      "visibleContentAndControls": "实际数据根/HOME/config.json/程序入口，逐项状态有效",
+      "primaryActionAndPrerequisites": "查看/复制真实完整路径；允许的目标可打开",
+      "secondaryActionsAndExit": "刷新；跳安装/模型页",
+      "resultAndReopen": "使用同一根修订；跨页路径来源一致",
+      "flow": "5. 目录与程序位置"
+    },
+    {
+      "id": "DIR-UI-03",
+      "visibleContentAndControls": "首次用户根未初始化或新安装程序缺失；分别说明",
+      "primaryActionAndPrerequisites": "仅显式“初始化用户目录”或“安装 OpenCodex”",
+      "secondaryActionsAndExit": "取消",
+      "resultAndReopen": "prepare 只读，确认执行才创建本次对象",
+      "flow": "5. 目录与程序位置"
+    },
+    {
+      "id": "DIR-UI-04",
+      "visibleContentAndControls": "路径不可读/无权限/损坏/未知结构；具体受影响对象",
+      "primaryActionAndPrerequisites": "按后端能力重新检查或进入恢复",
+      "secondaryActionsAndExit": "复制脱敏诊断、关闭",
+      "resultAndReopen": "不当空、不回退旧根、不自动覆盖现有文件",
+      "flow": "5. 目录与程序位置"
+    },
+    {
+      "id": "DIR-UI-05",
+      "visibleContentAndControls": "显式选择新版数据根/HOME后的只读校验与影响列表",
+      "primaryActionAndPrerequisites": "“确认使用此位置”仅在新合同合法且保护条件满足时可用",
+      "secondaryActionsAndExit": "取消返回原路径",
+      "resultAndReopen": "无 migrate_data 或扫描旧资料；失败保留原绑定",
+      "flow": "5. 目录与程序位置"
+    },
+    {
+      "id": "DIR-UI-06",
+      "visibleContentAndControls": "切换后等待重启/记录待核验，当前生效和待生效位置分列",
+      "primaryActionAndPrerequisites": "重启/核对记录由 DTO 能力决定",
+      "secondaryActionsAndExit": "稍后、查看原因",
+      "resultAndReopen": "重开按实际当前/待生效修订展示，不把目标伪称已生效",
+      "flow": "5. 目录与程序位置"
+    },
+    {
+      "id": "DIR-UI-07",
+      "visibleContentAndControls": "手工 JSON 恢复说明：先放新 HOME，再读取现有渠道",
+      "primaryActionAndPrerequisites": "“读取现有渠道”跳既有入口",
+      "secondaryActionsAndExit": "复制当前配置文件位置、返回",
+      "resultAndReopen": "非任意文件导入器；错误进入 READ-07",
+      "flow": "5. 目录与程序位置"
+    },
+    {
+      "id": "DIR-UI-08",
+      "visibleContentAndControls": "端口冲突或服务拥有权不符，仍显示真实目录",
+      "primaryActionAndPrerequisites": "按后端提供的端口/归属恢复动作处理",
+      "secondaryActionsAndExit": "查看原因、刷新",
+      "resultAndReopen": "不称另一用户管理器锁占用，不误停别人进程",
+      "flow": "5. 目录与程序位置"
+    },
+    {
+      "id": "INSTALL-01",
+      "visibleContentAndControls": "诊断读取中/失败；不存在可用诊断时无恢复确认",
+      "primaryActionAndPrerequisites": "“重新诊断”只读",
+      "secondaryActionsAndExit": "关闭",
+      "resultAndReopen": "不删除清单后让错误消失",
+      "flow": "6. 安装身份失配与恢复"
+    },
+    {
+      "id": "INSTALL-02",
+      "visibleContentAndControls": "包/入口/清单/来源逐项一致或失配；实际目标完整可查",
+      "primaryActionAndPrerequisites": "失配且可恢复时“选择恢复来源”",
+      "secondaryActionsAndExit": "查看详情、返回",
+      "resultAndReopen": "一致时不宣称需要修复；缺包可走正常安装",
+      "flow": "6. 安装身份失配与恢复"
+    },
+    {
+      "id": "INSTALL-03",
+      "visibleContentAndControls": "选择受支持注册源版本或离线包，未核验态",
+      "primaryActionAndPrerequisites": "“核对来源”只读，须满足选择条件",
+      "secondaryActionsAndExit": "返回诊断、取消",
+      "resultAndReopen": "不扫描/绑定旧 runtime，不自动联网安装",
+      "flow": "6. 安装身份失配与恢复"
+    },
+    {
+      "id": "INSTALL-04",
+      "visibleContentAndControls": "来源有效及明确版本/摘要；或来源错误/无权限/摘要不符",
+      "primaryActionAndPrerequisites": "有效时“查看恢复预览”；无效时禁用下一步",
+      "secondaryActionsAndExit": "重新选择、取消",
+      "resultAndReopen": "不降低包体/清单校验，不丢失败原因",
+      "flow": "6. 安装身份失配与恢复"
+    },
+    {
+      "id": "INSTALL-05",
+      "visibleContentAndControls": "确认页展示目标/来源、将保护对象、服务停止影响和未决前置",
+      "primaryActionAndPrerequisites": "“确认恢复”仅所有预检满足，执行先创建保护备份",
+      "secondaryActionsAndExit": "上一步、取消/X/Escape",
+      "resultAndReopen": "取消零安装/零备份；预检不是备份已完成",
+      "flow": "6. 安装身份失配与恢复"
+    },
+    {
+      "id": "INSTALL-06",
+      "visibleContentAndControls": "执行创建保护备份中/失败；保留原安装和来源信息",
+      "primaryActionAndPrerequisites": "失败后按能力重试原操作或重新预览",
+      "secondaryActionsAndExit": "可安全取消时取消；否则查看结果",
+      "resultAndReopen": "保护未完成不得进入替换；不先停止不属于本次服务",
+      "flow": "6. 安装身份失配与恢复"
+    },
+    {
+      "id": "INSTALL-07",
+      "visibleContentAndControls": "服务仍占用/其它用户使用/目标权限不足；明确阻断对象",
+      "primaryActionAndPrerequisites": "后端准入恢复后“重新核对”",
+      "secondaryActionsAndExit": "保留现场、关闭结果",
+      "resultAndReopen": "不强杀其它用户进程；不假称恢复完成",
+      "flow": "6. 安装身份失配与恢复"
+    },
+    {
+      "id": "INSTALL-08",
+      "visibleContentAndControls": "下载/解包/替换/核验的真实阶段与进度；未知比例用不定进度",
+      "primaryActionAndPrerequisites": "仅后端允许时“停止后续操作”",
+      "secondaryActionsAndExit": "进入不可中断段则说明可关闭进度后继续查结果",
+      "resultAndReopen": "不能承诺撤回已替换内容；关联原恢复 ID",
+      "flow": "6. 安装身份失配与恢复"
+    },
+    {
+      "id": "INSTALL-09",
+      "visibleContentAndControls": "包/入口/清单/来源均核验一致，保护记录已确认；可能需要重启",
+      "primaryActionAndPrerequisites": "按能力“完成”或“重启并重新检查”",
+      "secondaryActionsAndExit": "查看备份位置/核验详情",
+      "resultAndReopen": "成功根据真实读回；新运行版本独立于 Desktop 版本",
+      "flow": "6. 安装身份失配与恢复"
+    },
+    {
+      "id": "INSTALL-10",
+      "visibleContentAndControls": "替换失败/结果未知/回滚未确认；原原因与保留备份可见",
+      "primaryActionAndPrerequisites": "后端给出的“核对原恢复 / 恢复备份 / 重新预览”",
+      "secondaryActionsAndExit": "查看日志、关闭",
+      "resultAndReopen": "不清空失败材料、不重复新安装；不把退出称成功回滚",
+      "flow": "6. 安装身份失配与恢复"
+    },
+    {
+      "id": "INSTALL-11",
+      "visibleContentAndControls": "重开后读到原恢复处理中/待核对/已完成结果",
+      "primaryActionAndPrerequisites": "只对原恢复 ID 查询；具体动作由能力决定",
+      "secondaryActionsAndExit": "关闭结果、查看详情",
+      "resultAndReopen": "不默认重新执行；原备份和阶段持续可查",
+      "flow": "6. 安装身份失配与恢复"
+    },
+    {
+      "id": "SYNC-01",
+      "visibleContentAndControls": "读取云端/比较中，旧差异失效；来源、范围、时间待确定",
+      "primaryActionAndPrerequisites": "确认禁用",
+      "secondaryActionsAndExit": "取消等待、关闭",
+      "resultAndReopen": "prepare/测试全只读；晚回不套新端点/范围",
+      "flow": "7. 同步：预览、首次上传与原操作"
+    },
+    {
+      "id": "SYNC-02",
+      "visibleContentAndControls": "有效配置与可靠时间；来源下拉及真实变化清单",
+      "primaryActionAndPrerequisites": "对应确认上传/下载；下载默认备份",
+      "secondaryActionsAndExit": "切换方向、取消",
+      "resultAndReopen": "重开重新按当前事实预选，不记上次强制方向",
+      "flow": "7. 同步：预览、首次上传与原操作"
+    },
+    {
+      "id": "SYNC-03",
+      "visibleContentAndControls": "时间未知但云端有效，默认下载；时间行“未知”",
+      "primaryActionAndPrerequisites": "确认下载；可明确切到有内容的本机上传",
+      "secondaryActionsAndExit": "取消、查看范围",
+      "resultAndReopen": "不伪造时间；强制方向不绕过摘要/来源校验",
+      "flow": "7. 同步：预览、首次上传与原操作"
+    },
+    {
+      "id": "SYNC-04",
+      "visibleContentAndControls": "已成功核实空目录、本机有所选内容；明确初始化说明",
+      "primaryActionAndPrerequisites": "“初始化并上传”，确认执行才创建 G",
+      "secondaryActionsAndExit": "切来源、取消/X/Escape",
+      "resultAndReopen": "取消不建 G；执行前再次核实目录仍可初始化",
+      "flow": "7. 同步：预览、首次上传与原操作"
+    },
+    {
+      "id": "SYNC-05",
+      "visibleContentAndControls": "唯一 G、暂无有效提交且无坏提交；有本机所选内容",
+      "primaryActionAndPrerequisites": "“确认上传”，复用该 G",
+      "secondaryActionsAndExit": "取消、重新读取",
+      "resultAndReopen": "不再新建 G；孤立材料有独立说明，不算配置",
+      "flow": "7. 同步：预览、首次上传与原操作"
+    },
+    {
+      "id": "SYNC-06",
+      "visibleContentAndControls": "双方所选皆空/来源不存在/所选内容一致分别显示",
+      "primaryActionAndPrerequisites": "确认禁用或仅“完成”关闭，无写入",
+      "secondaryActionsAndExit": "改范围/合法来源、取消",
+      "resultAndReopen": "同内容无远端写/无本机替换/无备份",
+      "flow": "7. 同步：预览、首次上传与原操作"
+    },
+    {
+      "id": "SYNC-07",
+      "visibleContentAndControls": "认证失败/断网/损坏/旧或未知格式/列举不完整/超限，分类原因",
+      "primaryActionAndPrerequisites": "对应“重新读取 / 核对连接 / 查看原因”",
+      "secondaryActionsAndExit": "取消、保留当前范围",
+      "resultAndReopen": "不降级空目录，不自动清空，不用目录权限包办错误",
+      "flow": "7. 同步：预览、首次上传与原操作"
+    },
+    {
+      "id": "SYNC-08",
+      "visibleContentAndControls": "来源、范围、端点、代次或本机摘要在预览后变化",
+      "primaryActionAndPrerequisites": "“重新比较”；旧确认失效",
+      "secondaryActionsAndExit": "保留原选择、取消",
+      "resultAndReopen": "不自动更新父集合后悄悄发布",
+      "flow": "7. 同步：预览、首次上传与原操作"
+    },
+    {
+      "id": "SYNC-09",
+      "visibleContentAndControls": "同名 MCP 多客户端定义不同；列客户端与差异字段，不列秘密值",
+      "primaryActionAndPrerequisites": "明确选择来源或暂不同步该项后重算；无未决选中项才确认",
+      "secondaryActionsAndExit": "查看脱敏差异、取消",
+      "resultAndReopen": "冻结客户端/定义摘要；不可默选同名任一方",
+      "flow": "7. 同步：预览、首次上传与原操作"
+    },
+    {
+      "id": "SYNC-10",
+      "visibleContentAndControls": "执行尚未发送网络写；阶段和操作号可查",
+      "primaryActionAndPrerequisites": "合法时继续执行；“取消本次操作”仅在后端确认未发送时可用",
+      "secondaryActionsAndExit": "关闭结果不伪称取消",
+      "resultAndReopen": "进入可能发送阶段立即切 SYNC-11",
+      "flow": "7. 同步：预览、首次上传与原操作"
+    },
+    {
+      "id": "SYNC-11",
+      "visibleContentAndControls": "已可能发送载荷/提交，超时或停止后状态待核对",
+      "primaryActionAndPrerequisites": "“核对原上传”只读；可停止后续动作",
+      "secondaryActionsAndExit": "关闭并保留待核对记录",
+      "resultAndReopen": "不显示已撤回；同 O 重开，不能默认新建上传/自动重传",
+      "flow": "7. 同步：预览、首次上传与原操作"
+    },
+    {
+      "id": "SYNC-12",
+      "visibleContentAndControls": "原提交/载荷已核验存储，本次所选当前观察一致",
+      "primaryActionAndPrerequisites": "“完成”；详情分别显示存储与本次关系",
+      "secondaryActionsAndExit": "查看操作记录",
+      "resultAndReopen": "不称所有设备永久最新；观察时间与保存时间分开",
+      "flow": "7. 同步：预览、首次上传与原操作"
+    },
+    {
+      "id": "SYNC-13",
+      "visibleContentAndControls": "原上传已存储，但本机后来修改/远端已有后继/当前关系未知",
+      "primaryActionAndPrerequisites": "“查看待同步内容”重新开只读预览",
+      "secondaryActionsAndExit": "查看原操作、完成",
+      "resultAndReopen": "不更改原存储事实；当前关系独立更新",
+      "flow": "7. 同步：预览、首次上传与原操作"
+    },
+    {
+      "id": "SYNC-14",
+      "visibleContentAndControls": "原载荷可读但提交未确认/暂不可见/身份字节冲突",
+      "primaryActionAndPrerequisites": "安全时只读核对原上传；身份冲突停止重试写入",
+      "secondaryActionsAndExit": "查看保留材料、关闭",
+      "resultAndReopen": "不以一次 404 判没发送，不覆盖同 ID 不同内容",
+      "flow": "7. 同步：预览、首次上传与原操作"
+    },
+    {
+      "id": "SYNC-15",
+      "visibleContentAndControls": "本地回执读取失败/损坏；或原端点已更换、认证失效",
+      "primaryActionAndPrerequisites": "读取本地回执零网络；核对原上传须原绑定可用",
+      "secondaryActionsAndExit": "按能力恢复原连接、查看原因",
+      "resultAndReopen": "不把旧 O 发到新端点；当前范围/MCP变更不阻断原 O 只读核对",
+      "flow": "7. 同步：预览、首次上传与原操作"
+    },
+    {
+      "id": "SYNC-16",
+      "visibleContentAndControls": "下载确认后本机/远端基准变化，或备份/应用失败",
+      "primaryActionAndPrerequisites": "“重新比较 / 核对原下载”按 DTO 能力提供",
+      "secondaryActionsAndExit": "保留备份与结果，关闭",
+      "resultAndReopen": "未选对象和未保存编辑保持；不重新覆盖过期目标",
+      "flow": "7. 同步：预览、首次上传与原操作"
+    },
+    {
+      "id": "AMBIG-01",
+      "visibleContentAndControls": "多 G，普通上传/下载应用停用；每分支可读性列表",
+      "primaryActionAndPrerequisites": "可读分支“查看恢复内容”，不默认选赢家",
+      "secondaryActionsAndExit": "选择新目录、关闭",
+      "resultAndReopen": "原目录只读保留，无 DELETE/MKCOL/决议图动作",
+      "flow": "8. 多代次歧义与提交分叉"
+    },
+    {
+      "id": "AMBIG-02",
+      "visibleContentAndControls": "专用恢复内容计划只读加载/成功；对象/依赖/缺项明确",
+      "primaryActionAndPrerequisites": "可完整恢复的选定范围“导出恢复文件”",
+      "secondaryActionsAndExit": "返回分支、关闭",
+      "resultAndReopen": "不把坏分支或缺依赖包装为完整可恢复",
+      "flow": "8. 多代次歧义与提交分叉"
+    },
+    {
+      "id": "AMBIG-03",
+      "visibleContentAndControls": "导出确认、目标文件与具体范围；导出失败原因",
+      "primaryActionAndPrerequisites": "明确目标后“确认导出”；失败按原计划重新核对",
+      "secondaryActionsAndExit": "取消、重新选目标",
+      "resultAndReopen": "取消零文件写；成功只表示恢复文件已导出",
+      "flow": "8. 多代次歧义与提交分叉"
+    },
+    {
+      "id": "AMBIG-04",
+      "visibleContentAndControls": "新目录只读核实中/非空/不可读；原目录事实保留",
+      "primaryActionAndPrerequisites": "仅核实空且新来源明确后进入 SYNC-04",
+      "secondaryActionsAndExit": "改目录、返回",
+      "resultAndReopen": "不自动清旧/新目录，不拿错误当空",
+      "flow": "8. 多代次歧义与提交分叉"
+    },
+    {
+      "id": "AMBIG-05",
+      "visibleContentAndControls": "恢复材料已选但上传来源尚未确认或仍有未保存草稿",
+      "primaryActionAndPrerequisites": "“核对本机恢复来源”走既有受控流程；确认上传禁用",
+      "secondaryActionsAndExit": "查看导出文件说明、返回",
+      "resultAndReopen": "不自动导入/保存/上传导出文件；不默用其它本机来源",
+      "flow": "8. 多代次歧义与提交分叉"
+    },
+    {
+      "id": "FORK-01",
+      "visibleContentAndControls": "同 G 多有效头，所有已观察头列表与差异；无默认选择",
+      "primaryActionAndPrerequisites": "选择合法内容后“预览解决方案”只读",
+      "secondaryActionsAndExit": "逐头只读查看、取消",
+      "resultAndReopen": "普通两项来源下拉不能替代本步骤",
+      "flow": "8. 多代次歧义与提交分叉"
+    },
+    {
+      "id": "FORK-02",
+      "visibleContentAndControls": "解决预览，所选内容、完整父集合、所选及范围外影响",
+      "primaryActionAndPrerequisites": "“确认解决并发布”仅 viewDigest/头及范围基准有效",
+      "secondaryActionsAndExit": "返回选择、取消",
+      "resultAndReopen": "确认才新操作写入，原分支不删除",
+      "flow": "8. 多代次歧义与提交分叉"
+    },
+    {
+      "id": "FORK-03",
+      "visibleContentAndControls": "确认前新增头/数据变化，或确认后又有并发决议",
+      "primaryActionAndPrerequisites": "“重新比较冲突”；已存储结果另列",
+      "secondaryActionsAndExit": "查看原操作、关闭",
+      "resultAndReopen": "不称冲突永远解决，不忽略迟到分支",
+      "flow": "8. 多代次歧义与提交分叉"
+    },
+    {
+      "id": "FORK-04",
+      "visibleContentAndControls": "分支不可读/摘要坏/依赖缺失/超预算，不能完整展示影响",
+      "primaryActionAndPrerequisites": "按能力“重新读取 / 导出可恢复内容”",
+      "secondaryActionsAndExit": "查看原因、关闭",
+      "resultAndReopen": "未可核验部分不静默截断，不无依据放行决议",
+      "flow": "8. 多代次歧义与提交分叉"
+    }
+  ]
+}

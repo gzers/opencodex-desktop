@@ -1,7 +1,7 @@
 ---
 id: "IMP-OPENCODEX-DESKTOP-32"
 object_kind: "implementation.change"
-state: "planned"
+state: "in_progress"
 title: "用户目录重划与新版路径实施清单"
 target_version: "0.2.23"
 demand_ids: ["DMD-OPENCODEX-USER-DIRECTORY"]
@@ -60,3 +60,5 @@ DIR-00→DIR-01→DIR-02/03；DIR-04依赖配置及运行消费者，DIR-05依�
 DIR-04恢复与AC-MATCH-07入口联合核对：源JSON连接、认证、原始ID及选择完整可读，随后自动模版匹配进入草稿；不要求匹配后的有效参数与源字节完全相同。软件读取链尚未实现，具体来源/人工覆盖区分由MATCH-01冻结。路径/安装来源只由本专题解析，P23-05复用，避免双写；见[一致性审计](0.2.23-开发前一致性审计.md)。
 
 默认集成结构已定，见[数据与状态 §1.5](../02-项目核心/数据与状态.md#15-desktop集成程序结构0223目标待打包验证)。DIR-00仍需冻结真实安装根/权限、首装运行包供应/离线能力和两类更新映射；macOS可独立更新的runtime在签名.app之外但属于Desktop受管安装根，不能用独立外部旧安装兜底。
+
+2026-11-06执行授权更新：用户已明确目标模式完成文档/开发/测试/发布，并授权总控直接协调本机L1/L2/L3，Windows独立Git协作。现进入阶段A具体合同冻结，相关R1分批放行，不再要求用户重复授权开工；真实业务同步/日常配置/旧数据清理仍不执行。L0路径/运行合同见[合同v1](0.2.23-contracts/L0-paths-runtime-v1.md)。生产项只有实际验收后才完成。

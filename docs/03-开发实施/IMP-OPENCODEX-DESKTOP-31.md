@@ -1,7 +1,7 @@
 ---
 id: "IMP-OPENCODEX-DESKTOP-31"
 object_kind: "implementation.change"
-state: "planned"
+state: "in_progress"
 title: "0.2.23 发布后修复、用户目录与模型模版总计划"
 target_version: "0.2.23"
 demand_ids: ["DMD-OPENCODEX-POST022", "DMD-OPENCODEX-USER-DIRECTORY", "DMD-OPENCODEX-TEMPLATE-MATCHING"]
@@ -97,3 +97,5 @@ P23-11最新入口要求：读取现有渠道成功即按模版自动更新草�
 程序安装补充已确认：OpenCodex默认集成Desktop安装根/runtime，用户配置仍按.codex-desktop分区。P23-10 DIR-00/03须闭合真实双端打包、首装供应和独立运行包/本体更新保留，默认结构不再作为未决方向；具体物理映射/权限尚待验证，不能宣称G0全部完成。
 
 多对话协作文件见[TEAM-0.2.23](TEAM-0.2.23.md)：一主四贡献（模版、同步、前端/原型、Windows），按本计划A～F分批放行；TEAM只管写集/角色/回交，不另立顺序或任务状态。实际派发前须冻结可取得的代码/文档/合同和有效写集，当前未创建对话或执行任务。
+
+2026-11-06执行授权更新：用户已明确目标模式完成文档/开发/测试/发布，并授权总控直接协调本机L1/L2/L3，Windows独立Git协作。现进入阶段A具体合同冻结，相关R1分批放行，不再要求用户重复授权开工；真实业务同步/日常配置/旧数据清理仍不执行。L0路径/运行合同见[合同v1](0.2.23-contracts/L0-paths-runtime-v1.md)。生产项只有实际验收后才完成。

@@ -1,0 +1,89 @@
+{
+  "format": "l3-prototype-state-handoff-v1",
+  "date": "2026-11-06",
+  "timezone": "Asia/Shanghai",
+  "role": "L3",
+  "sourceThreadId": "01a1b0c0-f5de-7c53-89a3-cad653af6685",
+  "receiverThreadId": "01a194d0-c25e-7dc1-9b80-ff1bf74bcd1d",
+  "status": "state_draft_ready_for_L0_DTO_and_file_freeze",
+  "sourceDocCommit": "956e4cb4accbe4e80857f2e49da336e4127202fd",
+  "codeReferenceOnly": "0c57500f8f46ea50655c782c3f04334a39167abb",
+  "decisionSource": "Current L0 delegation; initialization, recovery and four-layer protocol decisions supersede older candidate omissions. macOS physical mapping remains proposed.",
+  "sourceFilesAtCommit": {
+    "docs/03-开发实施/TEAM-0.2.23.md": "a52020ee3693c5b7698c33448d71d3badbd20aea91a84ff742d6607b4ccf6fa0",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-31.md": "7be2b68dc6209071472563e3dba740d0aaa83b5b34f5e220f23a38c2201d8f16",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-32.md": "6c2c06789e77632218ac69af50a59dbedd29c680247cb27981c9f1e348c2f19b",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-33.md": "8ae72d7ded25973dd1063209172b3a3e28dad60253fc6b35544dfe42d5164483",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "f099e67c22b44ed7bdfa58deed70fe0d91fa09b55514b7adde3faf568d4eadf9",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.js": "7b9fa5555b330ced88b419d1d8324b4719b3394b8a0ee9de8dfd107262f3c1fa",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.js": "72e94d236d638f60b8f3673a36b5bcea2176cd05b0e0c09884961314338bb578",
+    ".adg/evidence/0.2.23/team/L2/g0-20261106/L2-G0-20261106.md": "395450a4e577f1c8c659debfd762f55cde1be6b3389eda6f928d2dfe2654836b"
+  },
+  "artifacts": {
+    "FILE-PLAN.md": {
+      "sha256": "2269eff54675d194129d7f625aef897f1ad4a2d790f166866f54f524ed468583",
+      "bytes": 4768
+    },
+    "L3-PROTOTYPE-STATES.md": {
+      "sha256": "6355e1e757783f82558a2c7b52feff5ed8ca3d8ce6dcc6f67483a57abfe0ad88",
+      "bytes": 32953
+    },
+    "state-catalog.json": {
+      "sha256": "4c8bd6c54c52ca16a7d36abd1097a3ab948fa7bb08653fd29cede6ae3b6a541f",
+      "bytes": 28322
+    }
+  },
+  "proposedNewPrototypeFiles": [
+    "model-condition-editor-023.js",
+    "directory-runtime-023.js",
+    "runtime-recovery-023.js",
+    "sync-recovery-023.js",
+    "model-conditions-023.test.cjs",
+    "directory-runtime-023.test.cjs",
+    "runtime-recovery-023.test.cjs",
+    "sync-recovery-023.test.cjs"
+  ],
+  "proposedModifiedPrototypeFiles": [
+    "model-config.js",
+    "sync-config.js",
+    "index.html"
+  ],
+  "optionalHookOwnerDecision": "maintenance-ui.js remains read-only unless L0 explicitly assigns a minimal hook",
+  "validation": {
+    "kind": "document_consistency_only",
+    "passed": true,
+    "stateCount": 63,
+    "uniqueStateIds": 63,
+    "groupCounts": {
+      "COND": 11,
+      "READ": 8,
+      "DIR-UI": 8,
+      "INSTALL": 11,
+      "SYNC": 16,
+      "AMBIG": 5,
+      "FORK": 4
+    },
+    "nonemptyStateColumns": true,
+    "contiguousGroupIds": true,
+    "proposedNewNamesAbsentAtSourceCommit": true,
+    "authoringIssues": [
+      "Initial inline generator failed Python parsing on newline escaping before writing output; corrected.",
+      "First document filename check omitted multi-dot test names; corrected regex. No product or document semantic failure."
+    ],
+    "productionTestsRun": 0,
+    "browserOrVisualTestsRun": 0
+  },
+  "scope": {
+    "sharedRepoFilesWritten": false,
+    "prototypeCodeWritten": false,
+    "productionCodeWritten": false,
+    "sharedIndexTouched": false,
+    "networkRequestsMade": false,
+    "temporaryServersStarted": 0,
+    "runtimeOrUserConfigAccessed": false,
+    "secondExecutablePrototypeCreated": false,
+    "prototypeAdopted": false,
+    "productionAcceptancePassed": false
+  },
+  "nextGate": "L0 final DTO, clean docs contribution root, explicit prototype files, source/adoption digest and R1 release"
+}
