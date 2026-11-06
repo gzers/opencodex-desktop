@@ -807,6 +807,7 @@ pub fn provision(
         descriptor_bytes,
         expected_descriptor_sha256,
         false,
+        None,
     )
 }
 fn provision_inner(
@@ -816,7 +817,12 @@ fn provision_inner(
     descriptor_bytes: &[u8],
     expected: &str,
     inject_activation_failure: bool,
+    installation_user_home: Option<&Path>,
 ) -> AppResult<ProvisionResult> {
+    #[cfg(target_os = "macos")]
+    crate::modules::data_root::layout::validate_macos_installation_root(i, installation_user_home)?;
+    #[cfg(not(target_os = "macos"))]
+    let _ = installation_user_home;
     roots(i, d)?;
     // A second user may validate a read-only installed I without acquiring a write lock.
     if fs::symlink_metadata(i.join(PENDING)).is_ok() {
