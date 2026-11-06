@@ -1,0 +1,1599 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:opencodex:sync:l2:dto:1",
+  "title": "L2 config-v2 immutable graph protocol DTO v1",
+  "description": "Structural contract. PROTOCOL.md defines graph/hash/guard and allowed-action invariants. Root accepts a named DTO via {$ref: #/$defs/<Name>}.",
+  "$defs": {
+    "Uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "Timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$",
+      "maxLength": 40
+    },
+    "SchemaRef": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "pattern": "^[A-Z][A-Z0-9_]{0,79}$"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295
+        }
+      },
+      "required": [
+        "format",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "ModelSchemaRef": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "pattern": "^[A-Z][A-Z0-9_]{0,79}$"
+        },
+        "formatVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295
+        },
+        "schemaVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295
+        }
+      },
+      "required": [
+        "format",
+        "formatVersion",
+        "schemaVersion"
+      ],
+      "additionalProperties": false
+    },
+    "PayloadSchemaRef": {
+      "type": "object",
+      "properties": {
+        "envelope": {
+          "$ref": "#/$defs/SchemaRef"
+        },
+        "document": {
+          "$ref": "#/$defs/SchemaRef"
+        },
+        "model": {
+          "$ref": "#/$defs/ModelSchemaRef"
+        }
+      },
+      "required": [
+        "envelope",
+        "document",
+        "model"
+      ],
+      "additionalProperties": false
+    },
+    "Generation": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "const": "OCXD_CONFIG_GENERATION"
+        },
+        "formatVersion": {
+          "const": 1
+        },
+        "generationId": {
+          "$ref": "#/$defs/Uuid"
+        }
+      },
+      "required": [
+        "format",
+        "formatVersion",
+        "generationId"
+      ],
+      "additionalProperties": false
+    },
+    "GenerationRef": {
+      "type": "object",
+      "properties": {
+        "generationId": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "generationId",
+        "digest"
+      ],
+      "additionalProperties": false
+    },
+    "CommitRef": {
+      "type": "object",
+      "properties": {
+        "operationId": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "operationId",
+        "digest"
+      ],
+      "additionalProperties": false
+    },
+    "Resolution": {
+      "type": "object",
+      "properties": {
+        "selectionMode": {
+          "enum": [
+            "head",
+            "merged"
+          ]
+        },
+        "selectedHead": {
+          "$ref": "#/$defs/CommitRef"
+        },
+        "scopeDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "previewDigest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "selectionMode",
+        "scopeDigest",
+        "previewDigest"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "selectionMode": {
+                "const": "head"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "selectedHead"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "selectedHead"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Commit": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "const": "OCXD_CONFIG_COMMIT"
+        },
+        "formatVersion": {
+          "const": 1
+        },
+        "generationId": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "operationId": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "parents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CommitRef"
+          },
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "payloadDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "payloadBytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 67108864
+        },
+        "payloadSchema": {
+          "$ref": "#/$defs/PayloadSchemaRef"
+        },
+        "intent": {
+          "enum": [
+            "update",
+            "resolve"
+          ]
+        },
+        "resolution": {
+          "$ref": "#/$defs/Resolution"
+        }
+      },
+      "required": [
+        "format",
+        "formatVersion",
+        "generationId",
+        "operationId",
+        "parents",
+        "payloadDigest",
+        "payloadBytes",
+        "payloadSchema",
+        "intent"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "intent": {
+                "const": "resolve"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "resolution"
+            ],
+            "properties": {
+              "parents": {
+                "minItems": 2
+              }
+            }
+          },
+          "else": {
+            "not": {
+              "required": [
+                "resolution"
+              ]
+            },
+            "properties": {
+              "parents": {
+                "maxItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Relation": {
+      "type": "object",
+      "properties": {
+        "local": {
+          "enum": [
+            "not_compared",
+            "observed_equal",
+            "changed",
+            "unknown"
+          ]
+        },
+        "remote": {
+          "enum": [
+            "unknown",
+            "observed_equal",
+            "descendant",
+            "conflict",
+            "initialization_ambiguous",
+            "generation_changed"
+          ]
+        }
+      },
+      "required": [
+        "local",
+        "remote"
+      ],
+      "additionalProperties": false
+    },
+    "RecoveryAction": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "verify_original_upload",
+            "refresh_remote",
+            "repreview_upload",
+            "repreview_download",
+            "choose_conflict_source",
+            "prepare_recovery_download",
+            "prepare_recovery_export",
+            "select_empty_directory",
+            "resume_original_upload",
+            "return_to_original_connection",
+            "unlock_payload",
+            "inspect_local_protection",
+            "free_remote_space",
+            "retry_later",
+            "inspect_error_details"
+          ]
+        },
+        "operationId": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "recoveryPlanId": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "generation": {
+          "$ref": "#/$defs/GenerationRef"
+        },
+        "head": {
+          "$ref": "#/$defs/CommitRef"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "verify_original_upload",
+                  "resume_original_upload"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "operationId"
+            ]
+          }
+        }
+      ]
+    },
+    "SyncFailure": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "enum": [
+            "sync_generation_ambiguous",
+            "sync_generation_changed",
+            "sync_listing_incomplete",
+            "sync_remote_invalid",
+            "sync_remote_conflict",
+            "sync_operation_unknown",
+            "sync_operation_collision",
+            "sync_source_changed",
+            "sync_scope_changed",
+            "sync_endpoint_changed",
+            "sync_payload_schema_unsupported",
+            "sync_payload_invalid",
+            "sync_limit",
+            "sync_remote_full",
+            "sync_auth_required",
+            "sync_network",
+            "sync_collection_missing",
+            "sync_passphrase_required",
+            "sync_passphrase_invalid",
+            "sync_plan_expired",
+            "sync_plan_changed",
+            "sync_local_changed",
+            "sync_backup_failed",
+            "sync_journal_invalid",
+            "sync_local_state_io",
+            "sync_cancelled"
+          ]
+        },
+        "step": {
+          "enum": [
+            "observe",
+            "initialize",
+            "source_guard",
+            "payload_put",
+            "payload_get",
+            "commit_put",
+            "commit_get",
+            "verify",
+            "download_guard",
+            "apply_local",
+            "persist",
+            "decode",
+            "recovery"
+          ]
+        },
+        "retryability": {
+          "enum": [
+            "never",
+            "after_refresh",
+            "same_operation_read_only",
+            "same_operation_guarded"
+          ]
+        },
+        "cause": {
+          "enum": [
+            "missing",
+            "unauthorized",
+            "forbidden",
+            "timeout",
+            "disconnected",
+            "tls",
+            "redirect",
+            "invalid_listing",
+            "invalid_href",
+            "partial_response",
+            "too_large",
+            "insufficient_storage",
+            "server",
+            "protocol",
+            "invalid_json",
+            "invalid_digest",
+            "missing_parent",
+            "cycle",
+            "unsupported_schema",
+            "source_changed",
+            "scope_changed",
+            "binding_changed",
+            "local_io",
+            "backup",
+            "passphrase",
+            "cancelled",
+            "expired",
+            "collision",
+            "generation_changed",
+            "generation_ambiguous"
+          ]
+        },
+        "httpStatus": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 599
+        },
+        "recoveryActions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RecoveryAction"
+          },
+          "minItems": 0,
+          "maxItems": 8
+        }
+      },
+      "required": [
+        "code",
+        "step",
+        "retryability",
+        "recoveryActions"
+      ],
+      "additionalProperties": false
+    },
+    "RecoveryCandidate": {
+      "type": "object",
+      "properties": {
+        "generation": {
+          "$ref": "#/$defs/GenerationRef"
+        },
+        "head": {
+          "$ref": "#/$defs/CommitRef"
+        }
+      },
+      "required": [
+        "generation",
+        "head"
+      ],
+      "additionalProperties": false
+    },
+    "RemoteObservation": {
+      "type": "object",
+      "properties": {
+        "dtoVersion": {
+          "const": 1
+        },
+        "bindingId": {
+          "$ref": "#/$defs/Digest"
+        },
+        "state": {
+          "enum": [
+            "empty",
+            "generation_empty",
+            "ready",
+            "conflict",
+            "initialization_ambiguous",
+            "incomplete",
+            "invalid"
+          ]
+        },
+        "generation": {
+          "$ref": "#/$defs/GenerationRef"
+        },
+        "generations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GenerationRef"
+          },
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "heads": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CommitRef"
+          },
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "orphanCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "staleCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "viewDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "observedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "problems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SyncFailure"
+          },
+          "minItems": 0,
+          "maxItems": 64
+        },
+        "recoveryCandidates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RecoveryCandidate"
+          },
+          "minItems": 0,
+          "maxItems": 4096
+        },
+        "recoveryActions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RecoveryAction"
+          },
+          "minItems": 0,
+          "maxItems": 8
+        }
+      },
+      "required": [
+        "dtoVersion",
+        "bindingId",
+        "state",
+        "generations",
+        "heads",
+        "orphanCount",
+        "staleCount",
+        "viewDigest",
+        "observedAt",
+        "problems",
+        "recoveryCandidates",
+        "recoveryActions"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "empty"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "generations": {
+                "maxItems": 0
+              },
+              "heads": {
+                "maxItems": 0
+              }
+            },
+            "not": {
+              "required": [
+                "generation"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "generation_empty",
+                  "ready",
+                  "conflict"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "generation"
+            ],
+            "properties": {
+              "generations": {
+                "minItems": 1,
+                "maxItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "ready"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "heads": {
+                "minItems": 1,
+                "maxItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "conflict"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "heads": {
+                "minItems": 2
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "initialization_ambiguous"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "generations": {
+                "minItems": 2
+              },
+              "heads": {
+                "maxItems": 0
+              }
+            },
+            "not": {
+              "required": [
+                "generation"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "generation_empty"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "heads": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SourceGuard": {
+      "type": "object",
+      "properties": {
+        "savedSourceDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "scopeDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "mcpSourcesDigest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "savedSourceDigest",
+        "scopeDigest",
+        "mcpSourcesDigest"
+      ],
+      "additionalProperties": false
+    },
+    "OperationFact": {
+      "type": "object",
+      "properties": {
+        "dtoVersion": {
+          "const": 1
+        },
+        "operationId": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "kind": {
+          "enum": [
+            "upload",
+            "download"
+          ]
+        },
+        "phase": {
+          "enum": [
+            "prepared",
+            "initialization_may_be_written",
+            "generation_verified",
+            "payload_may_be_written",
+            "payload_verified",
+            "commit_may_be_written",
+            "settled",
+            "cancelled_before_write"
+          ]
+        },
+        "lastWriteStep": {
+          "enum": [
+            "none",
+            "generation",
+            "payload",
+            "commit"
+          ]
+        },
+        "storageStatus": {
+          "enum": [
+            "not_attempted",
+            "unknown",
+            "stored",
+            "invalid"
+          ]
+        },
+        "localApplyStatus": {
+          "enum": [
+            "not_applicable",
+            "not_attempted",
+            "unknown",
+            "applied",
+            "invalid"
+          ]
+        },
+        "relation": {
+          "$ref": "#/$defs/Relation"
+        },
+        "generation": {
+          "$ref": "#/$defs/GenerationRef"
+        },
+        "payloadDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "commit": {
+          "$ref": "#/$defs/CommitRef"
+        },
+        "storedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "observation": {
+          "$ref": "#/$defs/RemoteObservation"
+        },
+        "failure": {
+          "$ref": "#/$defs/SyncFailure"
+        },
+        "recoveryActions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RecoveryAction"
+          },
+          "minItems": 0,
+          "maxItems": 8
+        }
+      },
+      "required": [
+        "dtoVersion",
+        "operationId",
+        "kind",
+        "phase",
+        "lastWriteStep",
+        "storageStatus",
+        "localApplyStatus",
+        "relation",
+        "payloadDigest",
+        "recoveryActions"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "storageStatus": {
+                "const": "stored"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "generation",
+              "commit",
+              "storedAt"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "phase": {
+                "const": "cancelled_before_write"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "lastWriteStep": {
+                "const": "none"
+              },
+              "storageStatus": {
+                "const": "not_attempted"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "upload"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "localApplyStatus": {
+                "const": "not_applicable"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ObserveRequest": {
+      "type": "object",
+      "properties": {
+        "connectionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "connectionId"
+      ],
+      "additionalProperties": false
+    },
+    "OperationRequest": {
+      "type": "object",
+      "properties": {
+        "operationId": {
+          "$ref": "#/$defs/Uuid"
+        }
+      },
+      "required": [
+        "operationId"
+      ],
+      "additionalProperties": false
+    },
+    "PrepareUploadRequest": {
+      "type": "object",
+      "properties": {
+        "connectionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "expectedViewDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "sourceGuard": {
+          "$ref": "#/$defs/SourceGuard"
+        },
+        "initializeOnConfirm": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "connectionId",
+        "expectedViewDigest",
+        "sourceGuard",
+        "initializeOnConfirm"
+      ],
+      "additionalProperties": false
+    },
+    "UploadPlan": {
+      "type": "object",
+      "properties": {
+        "dtoVersion": {
+          "const": 1
+        },
+        "operationId": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "planDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "bindingId": {
+          "$ref": "#/$defs/Digest"
+        },
+        "initialization": {
+          "enum": [
+            "none",
+            "on_confirm"
+          ]
+        },
+        "generation": {
+          "$ref": "#/$defs/GenerationRef"
+        },
+        "parents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CommitRef"
+          },
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "intent": {
+          "enum": [
+            "update",
+            "resolve"
+          ]
+        },
+        "resolution": {
+          "$ref": "#/$defs/Resolution"
+        },
+        "payloadDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "payloadBytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 67108864
+        },
+        "payloadSchema": {
+          "$ref": "#/$defs/PayloadSchemaRef"
+        },
+        "protectionMode": {
+          "enum": [
+            "plain",
+            "protected"
+          ]
+        },
+        "sourceGuard": {
+          "$ref": "#/$defs/SourceGuard"
+        },
+        "expectedViewDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "preparedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "expiresAt": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "dtoVersion",
+        "operationId",
+        "planDigest",
+        "bindingId",
+        "initialization",
+        "parents",
+        "intent",
+        "payloadDigest",
+        "payloadBytes",
+        "payloadSchema",
+        "protectionMode",
+        "sourceGuard",
+        "expectedViewDigest",
+        "preparedAt",
+        "expiresAt"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "initialization": {
+                "const": "on_confirm"
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "generation"
+              ]
+            },
+            "properties": {
+              "intent": {
+                "const": "update"
+              },
+              "parents": {
+                "maxItems": 0
+              }
+            }
+          },
+          "else": {
+            "required": [
+              "generation"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "intent": {
+                "const": "resolve"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "resolution"
+            ],
+            "properties": {
+              "parents": {
+                "minItems": 2
+              },
+              "initialization": {
+                "const": "none"
+              }
+            }
+          },
+          "else": {
+            "not": {
+              "required": [
+                "resolution"
+              ]
+            },
+            "properties": {
+              "parents": {
+                "maxItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ConfirmUploadRequest": {
+      "type": "object",
+      "properties": {
+        "operationId": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "planDigest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "operationId",
+        "planDigest"
+      ],
+      "additionalProperties": false
+    },
+    "ResumeUploadRequest": {
+      "type": "object",
+      "properties": {
+        "operationId": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "expectedViewDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "planDigest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "operationId",
+        "expectedViewDigest",
+        "planDigest"
+      ],
+      "additionalProperties": false
+    },
+    "PrepareResolutionRequest": {
+      "type": "object",
+      "properties": {
+        "connectionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "generation": {
+          "$ref": "#/$defs/GenerationRef"
+        },
+        "heads": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CommitRef"
+          },
+          "minItems": 2,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "expectedViewDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "sourceGuard": {
+          "$ref": "#/$defs/SourceGuard"
+        },
+        "resolution": {
+          "$ref": "#/$defs/Resolution"
+        }
+      },
+      "required": [
+        "connectionId",
+        "generation",
+        "heads",
+        "expectedViewDigest",
+        "sourceGuard",
+        "resolution"
+      ],
+      "additionalProperties": false
+    },
+    "PrepareDownloadRequest": {
+      "type": "object",
+      "properties": {
+        "connectionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "generation": {
+          "$ref": "#/$defs/GenerationRef"
+        },
+        "head": {
+          "$ref": "#/$defs/CommitRef"
+        },
+        "expectedViewDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "scopeDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "backupBeforeUpdate": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "connectionId",
+        "generation",
+        "head",
+        "expectedViewDigest",
+        "scopeDigest",
+        "backupBeforeUpdate"
+      ],
+      "additionalProperties": false
+    },
+    "DownloadPlan": {
+      "type": "object",
+      "properties": {
+        "dtoVersion": {
+          "const": 1
+        },
+        "operationId": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "planDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "bindingId": {
+          "$ref": "#/$defs/Digest"
+        },
+        "generation": {
+          "$ref": "#/$defs/GenerationRef"
+        },
+        "head": {
+          "$ref": "#/$defs/CommitRef"
+        },
+        "payloadDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "scopeDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "targetDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "expectedViewDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "backupBeforeUpdate": {
+          "type": "boolean"
+        },
+        "preparedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "expiresAt": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "dtoVersion",
+        "operationId",
+        "planDigest",
+        "bindingId",
+        "generation",
+        "head",
+        "payloadDigest",
+        "scopeDigest",
+        "targetDigest",
+        "expectedViewDigest",
+        "backupBeforeUpdate",
+        "preparedAt",
+        "expiresAt"
+      ],
+      "additionalProperties": false
+    },
+    "ConfirmDownloadRequest": {
+      "type": "object",
+      "properties": {
+        "operationId": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "planDigest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "operationId",
+        "planDigest"
+      ],
+      "additionalProperties": false
+    },
+    "PrepareRecoveryRequest": {
+      "type": "object",
+      "properties": {
+        "connectionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "sourceBindingId": {
+          "$ref": "#/$defs/Digest"
+        },
+        "generation": {
+          "$ref": "#/$defs/GenerationRef"
+        },
+        "head": {
+          "$ref": "#/$defs/CommitRef"
+        },
+        "expectedViewDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "scopeDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "mode": {
+          "enum": [
+            "download",
+            "export"
+          ]
+        },
+        "backupBeforeUpdate": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "connectionId",
+        "sourceBindingId",
+        "generation",
+        "head",
+        "expectedViewDigest",
+        "scopeDigest",
+        "mode",
+        "backupBeforeUpdate"
+      ],
+      "additionalProperties": false
+    },
+    "RecoveryPlan": {
+      "type": "object",
+      "properties": {
+        "dtoVersion": {
+          "const": 1
+        },
+        "recoveryPlanId": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "planDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "kind": {
+          "enum": [
+            "recovery_download",
+            "recovery_export"
+          ]
+        },
+        "sourceBindingId": {
+          "$ref": "#/$defs/Digest"
+        },
+        "generation": {
+          "$ref": "#/$defs/GenerationRef"
+        },
+        "head": {
+          "$ref": "#/$defs/CommitRef"
+        },
+        "payloadDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "payloadSchema": {
+          "$ref": "#/$defs/PayloadSchemaRef"
+        },
+        "scopeDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "targetDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "expectedViewDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "backupBeforeUpdate": {
+          "type": "boolean"
+        },
+        "preparedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "expiresAt": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "dtoVersion",
+        "recoveryPlanId",
+        "planDigest",
+        "kind",
+        "sourceBindingId",
+        "generation",
+        "head",
+        "payloadDigest",
+        "payloadSchema",
+        "scopeDigest",
+        "expectedViewDigest",
+        "backupBeforeUpdate",
+        "preparedAt",
+        "expiresAt"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "recovery_download"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "targetDigest"
+            ]
+          }
+        }
+      ]
+    },
+    "ConfirmRecoveryRequest": {
+      "type": "object",
+      "properties": {
+        "recoveryPlanId": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "planDigest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "recoveryPlanId",
+        "planDigest"
+      ],
+      "additionalProperties": false
+    },
+    "RecoveryReceipt": {
+      "type": "object",
+      "properties": {
+        "dtoVersion": {
+          "const": 1
+        },
+        "recoveryPlanId": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "kind": {
+          "enum": [
+            "recovery_download",
+            "recovery_export"
+          ]
+        },
+        "outcome": {
+          "enum": [
+            "applied",
+            "exported",
+            "unknown",
+            "failed"
+          ]
+        },
+        "sourceBindingId": {
+          "$ref": "#/$defs/Digest"
+        },
+        "generation": {
+          "$ref": "#/$defs/GenerationRef"
+        },
+        "head": {
+          "$ref": "#/$defs/CommitRef"
+        },
+        "payloadDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "artifactId": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "finishedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "failure": {
+          "$ref": "#/$defs/SyncFailure"
+        },
+        "recoveryActions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RecoveryAction"
+          },
+          "minItems": 0,
+          "maxItems": 8
+        }
+      },
+      "required": [
+        "dtoVersion",
+        "recoveryPlanId",
+        "kind",
+        "outcome",
+        "sourceBindingId",
+        "generation",
+        "head",
+        "payloadDigest",
+        "finishedAt",
+        "recoveryActions"
+      ],
+      "additionalProperties": false
+    },
+    "Journal": {
+      "type": "object",
+      "properties": {
+        "journalVersion": {
+          "const": 1
+        },
+        "operationId": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "plan": {
+          "$ref": "#/$defs/UploadPlan"
+        },
+        "fact": {
+          "$ref": "#/$defs/OperationFact"
+        },
+        "rootRevision": {
+          "$ref": "#/$defs/Digest"
+        },
+        "connectionRevision": {
+          "$ref": "#/$defs/Digest"
+        },
+        "payloadHandle": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "generationBytesUtf8": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 65536
+        },
+        "commitBytesUtf8": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 65536
+        },
+        "executionDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "previousFailures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SyncFailure"
+          },
+          "minItems": 0,
+          "maxItems": 64
+        }
+      },
+      "required": [
+        "journalVersion",
+        "operationId",
+        "plan",
+        "fact",
+        "rootRevision",
+        "connectionRevision",
+        "payloadHandle",
+        "previousFailures"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "commitBytesUtf8"
+            ]
+          },
+          "then": {
+            "required": [
+              "executionDigest",
+              "generationBytesUtf8"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/Generation"
+    },
+    {
+      "$ref": "#/$defs/Commit"
+    },
+    {
+      "$ref": "#/$defs/RemoteObservation"
+    },
+    {
+      "$ref": "#/$defs/OperationFact"
+    },
+    {
+      "$ref": "#/$defs/UploadPlan"
+    },
+    {
+      "$ref": "#/$defs/DownloadPlan"
+    },
+    {
+      "$ref": "#/$defs/RecoveryPlan"
+    },
+    {
+      "$ref": "#/$defs/RecoveryReceipt"
+    },
+    {
+      "$ref": "#/$defs/Journal"
+    }
+  ]
+}

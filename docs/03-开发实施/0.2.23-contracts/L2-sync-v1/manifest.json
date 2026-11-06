@@ -1,0 +1,116 @@
+{
+  "contractId": "OCXD_CONFIG_SYNC_L2_CONTRACT",
+  "revision": 1,
+  "files": [
+    {
+      "path": "PROTOCOL.md",
+      "bytes": 27266,
+      "sha256": "633be8fddd7ffdaf93fc22527cc1a0be1f18091df1e29e0e4cc6f417eb375b3f"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1889,
+      "sha256": "b0457c2242a8d9d3a55ac8579e2c81dbc1bae6821a03c69e701787ae701e0d34"
+    },
+    {
+      "path": "budgets.json",
+      "bytes": 1074,
+      "sha256": "d20af830a920026c358119389a505c5c84dc13d29d078bf648c1c2c7fb6743bc"
+    },
+    {
+      "path": "dto.schema.json",
+      "bytes": 35692,
+      "sha256": "8cb8e77ca274146af3156d103fecc465a1f7a088417485bcbddb22bef887b14e"
+    },
+    {
+      "path": "error-policy.json",
+      "bytes": 5964,
+      "sha256": "5945d6beb14a43c7109e45afbbf5f224782bd47094314e3800f93b75fa44d312"
+    },
+    {
+      "path": "examples.json",
+      "bytes": 66730,
+      "sha256": "e8410f65a27f43f2006014149f2a3e515aefff4f4875103627c69c09708daecb"
+    },
+    {
+      "path": "validation.json",
+      "bytes": 1535,
+      "sha256": "72eddff5734423df94e023defa58b61b1f7b6df0906c48c7ad517437786b4bdd"
+    },
+    {
+      "path": "verify_contract.py",
+      "bytes": 9805,
+      "sha256": "0bb9ff66f12002ea861d4f2fda2d3f72713ab319829b999203ec0a21956ee9db"
+    }
+  ],
+  "date": "2026-11-06",
+  "timezone": "Asia/Shanghai",
+  "status": "ready_for_L0_freeze_R1_pending",
+  "role": "L2",
+  "sourceThreadId": "01a1b0c0-de8a-73c3-acec-a566da6f5ce6",
+  "controllerThreadId": "01a194d0-c25e-7dc1-9b80-ff1bf74bcd1d",
+  "documentBaseline": "956e4cb4accbe4e80857f2e49da336e4127202fd",
+  "referenceCodeBaseline": "0c57500f8f46ea50655c782c3f04334a39167abb",
+  "priorG0ArtifactSha256": "395450a4e577f1c8c659debfd762f55cde1be6b3389eda6f928d2dfe2654836b",
+  "contractDigest": "sha256:8f082326a1503b66b6b7a4eefc13dcba1610780205c3ddb17c1e8dc64ded5267",
+  "digestRecipe": "sha256 of UTF-8 compact JSON with sorted object keys for {contractId,revision,files}; files sorted by path. manifest itself excluded.",
+  "validationRuntime": {
+    "python": "3",
+    "jsonschema": "4.26.0"
+  },
+  "validation": {
+    "status": "passed",
+    "scope": "contract schema and synthetic serialization only; not application or real-WebDAV validation",
+    "dtoDefinitions": 33,
+    "validExamples": 30,
+    "exactByteVectors": 7,
+    "structuredHashVectors": 10,
+    "graphChecks": 2,
+    "errorPolicies": 26,
+    "negativeChecks": [
+      "ETag is not a wire field",
+      "unknown wire version",
+      "invalid UUID version",
+      "uppercase digest",
+      "oversized payload",
+      "duplicate parent",
+      "resolve needs two parents",
+      "update cannot masquerade as resolve",
+      "head resolution needs explicit selected head",
+      "prepare must not preallocate generation",
+      "prepare does not contain secret bytes",
+      "stored needs commit evidence",
+      "stored needs observation time",
+      "possible commit send cannot be cancelled-before-write",
+      "relation must retain separate axes",
+      "no generic success storage state",
+      "upload cannot claim local download application",
+      "no clear-remote recovery action",
+      "original verify needs original operation ID",
+      "ambiguous generations cannot expose ordinary selected generation",
+      "empty cannot hide existing generations",
+      "verify does not accept current MCP choice",
+      "confirm cannot silently change initialization consent",
+      "recovery download requires local target protection",
+      "private frozen commit requires execution digest",
+      "selected resolution head must be a parent",
+      "cross-generation ancestry must fail"
+    ],
+    "networkUsed": false,
+    "productionCodeChanged": false
+  },
+  "ownership": {
+    "networkDepth1File": "L0 single writer",
+    "modelPayloadSchemaAndCodec": "L1 owner via L0 codec registry",
+    "productionCodeWriteAuthorization": "R1 not yet received"
+  },
+  "sideEffects": {
+    "sharedRepositoryWrites": false,
+    "productionCodeChanges": false,
+    "liveWebDavAccess": false,
+    "dailyConfigOrKeyAccess": false,
+    "remoteDeleteOrClear": false,
+    "servicesOrPortsStarted": false
+  },
+  "delivery": "local controlled artifact; no commit or push by L2"
+}

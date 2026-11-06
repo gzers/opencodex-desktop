@@ -1,0 +1,33 @@
+{
+  "contractVersion": 1,
+  "payloadFileMaxBytes": 67108864,
+  "decodedDocumentMaxBytes": 33554432,
+  "generationMaxBytes": 65536,
+  "commitMaxBytes": 65536,
+  "generationMarkersMaxCount": 64,
+  "commitsPerGenerationMaxCount": 4096,
+  "parentsMaxCount": 64,
+  "headsMaxCount": 64,
+  "listingMaxEntriesIncludingSelf": 10000,
+  "listingMaxXmlBytes": 16777216,
+  "observationMetadataGetMaxBytes": 33554432,
+  "observationMaxRequests": 8192,
+  "concurrentRequestsMaxCount": 4,
+  "requestTimeoutMs": 30000,
+  "observationOrVerifyDeadlineMs": 90000,
+  "stableListingMaxRounds": 3,
+  "getMissingMaxAttemptsPerFile": 3,
+  "readRetryDelaysMs": [
+    100,
+    300
+  ],
+  "unattemptedPlanMaxAgeMs": 900000,
+  "recoveryActionsMaxCount": 8,
+  "journalFailureHistoryMaxCount": 64,
+  "notes": [
+    "First exhausted bound stops evaluation; no truncation into a ready/empty view.",
+    "No automatic GC/DELETE/MKCOL.",
+    "Potentially sent operations never expire into new identities.",
+    "All current-generation graph node and parent budgets apply to recovery branch validation."
+  ]
+}

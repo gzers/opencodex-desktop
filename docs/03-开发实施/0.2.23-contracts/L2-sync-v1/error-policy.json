@@ -1,0 +1,203 @@
+{
+  "contractVersion": 1,
+  "note": "These are allow-lists, not actions to auto-run. Runtime removes actions whose guards fail. retryability is the default for the failure; a separately confirmed resume requires same_operation_guarded and all write guards.",
+  "policies": {
+    "sync_generation_ambiguous": {
+      "retryability": "after_refresh",
+      "allowedRecoveryKinds": [
+        "prepare_recovery_download",
+        "prepare_recovery_export",
+        "select_empty_directory",
+        "verify_original_upload"
+      ]
+    },
+    "sync_generation_changed": {
+      "retryability": "after_refresh",
+      "allowedRecoveryKinds": [
+        "verify_original_upload",
+        "refresh_remote",
+        "repreview_upload"
+      ]
+    },
+    "sync_listing_incomplete": {
+      "retryability": "after_refresh",
+      "allowedRecoveryKinds": [
+        "refresh_remote",
+        "retry_later"
+      ]
+    },
+    "sync_remote_invalid": {
+      "retryability": "never",
+      "allowedRecoveryKinds": [
+        "inspect_error_details",
+        "prepare_recovery_export"
+      ]
+    },
+    "sync_remote_conflict": {
+      "retryability": "after_refresh",
+      "allowedRecoveryKinds": [
+        "choose_conflict_source",
+        "refresh_remote",
+        "verify_original_upload"
+      ]
+    },
+    "sync_operation_unknown": {
+      "retryability": "same_operation_read_only",
+      "allowedRecoveryKinds": [
+        "verify_original_upload",
+        "retry_later",
+        "resume_original_upload"
+      ]
+    },
+    "sync_operation_collision": {
+      "retryability": "never",
+      "allowedRecoveryKinds": [
+        "inspect_error_details",
+        "repreview_upload"
+      ]
+    },
+    "sync_source_changed": {
+      "retryability": "after_refresh",
+      "allowedRecoveryKinds": [
+        "repreview_upload",
+        "verify_original_upload"
+      ]
+    },
+    "sync_scope_changed": {
+      "retryability": "after_refresh",
+      "allowedRecoveryKinds": [
+        "repreview_upload",
+        "verify_original_upload"
+      ]
+    },
+    "sync_endpoint_changed": {
+      "retryability": "after_refresh",
+      "allowedRecoveryKinds": [
+        "return_to_original_connection",
+        "refresh_remote"
+      ]
+    },
+    "sync_payload_schema_unsupported": {
+      "retryability": "never",
+      "allowedRecoveryKinds": [
+        "inspect_error_details"
+      ]
+    },
+    "sync_payload_invalid": {
+      "retryability": "never",
+      "allowedRecoveryKinds": [
+        "inspect_error_details",
+        "repreview_upload"
+      ]
+    },
+    "sync_limit": {
+      "retryability": "after_refresh",
+      "allowedRecoveryKinds": [
+        "inspect_error_details",
+        "select_empty_directory"
+      ]
+    },
+    "sync_remote_full": {
+      "retryability": "same_operation_read_only",
+      "allowedRecoveryKinds": [
+        "free_remote_space",
+        "verify_original_upload"
+      ]
+    },
+    "sync_auth_required": {
+      "retryability": "after_refresh",
+      "allowedRecoveryKinds": [
+        "return_to_original_connection",
+        "retry_later"
+      ]
+    },
+    "sync_network": {
+      "retryability": "same_operation_read_only",
+      "allowedRecoveryKinds": [
+        "retry_later",
+        "verify_original_upload"
+      ]
+    },
+    "sync_collection_missing": {
+      "retryability": "after_refresh",
+      "allowedRecoveryKinds": [
+        "return_to_original_connection"
+      ]
+    },
+    "sync_passphrase_required": {
+      "retryability": "after_refresh",
+      "allowedRecoveryKinds": [
+        "unlock_payload"
+      ]
+    },
+    "sync_passphrase_invalid": {
+      "retryability": "after_refresh",
+      "allowedRecoveryKinds": [
+        "unlock_payload"
+      ]
+    },
+    "sync_plan_expired": {
+      "retryability": "after_refresh",
+      "allowedRecoveryKinds": [
+        "repreview_upload",
+        "refresh_remote"
+      ]
+    },
+    "sync_plan_changed": {
+      "retryability": "after_refresh",
+      "allowedRecoveryKinds": [
+        "repreview_upload",
+        "refresh_remote"
+      ]
+    },
+    "sync_local_changed": {
+      "retryability": "after_refresh",
+      "allowedRecoveryKinds": [
+        "repreview_download",
+        "inspect_local_protection"
+      ]
+    },
+    "sync_backup_failed": {
+      "retryability": "after_refresh",
+      "allowedRecoveryKinds": [
+        "inspect_local_protection"
+      ]
+    },
+    "sync_journal_invalid": {
+      "retryability": "never",
+      "allowedRecoveryKinds": [
+        "inspect_local_protection",
+        "verify_original_upload"
+      ]
+    },
+    "sync_local_state_io": {
+      "retryability": "same_operation_read_only",
+      "allowedRecoveryKinds": [
+        "inspect_local_protection",
+        "verify_original_upload"
+      ]
+    },
+    "sync_cancelled": {
+      "retryability": "after_refresh",
+      "allowedRecoveryKinds": [
+        "repreview_upload"
+      ]
+    }
+  },
+  "actionGuards": {
+    "verify_original_upload": "original operation identity and safe original binding resolvable; never PUT",
+    "resume_original_upload": "original frozen bytes, original sole generation, source/scope/MCP unchanged, parents unchanged excluding own writes, fresh view and explicit confirmation",
+    "prepare_recovery_download": "explicit valid selected GenerationRef/CommitRef and decode/target protection available",
+    "prepare_recovery_export": "explicit valid selected GenerationRef/CommitRef and supported codec available",
+    "select_empty_directory": "UI selection only; no automatic mkdir/delete/upload; preserve current ambiguous directory",
+    "free_remote_space": "instructions only; no application remote delete",
+    "choose_conflict_source": "explicit preview of all observed heads; then prepare_resolution; not an auto-merge",
+    "inspect_local_protection": "no raw secrets or uncontrolled paths in public error details"
+  },
+  "forbiddenRecoveryKinds": [
+    "clear_remote",
+    "delete_remote",
+    "overwrite_conflicting_id",
+    "downgrade_payload"
+  ]
+}

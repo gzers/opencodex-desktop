@@ -1,0 +1,1311 @@
+{
+  "notice": "Synthetic DTO and exact hash vectors only. Payload strings are NOT codec-importable OCXDCONF files. payloadSchema demonstrates historical layer values, NOT approval of the new L1 registry. View/plan digests follow canonical_v1; generation/commit digests hash exact byte vectors. No network or real configuration is represented.",
+  "records": [
+    {
+      "name": "generation",
+      "type": "Generation",
+      "value": {
+        "format": "OCXD_CONFIG_GENERATION",
+        "formatVersion": 1,
+        "generationId": "00000000-0000-4000-8000-000000000001"
+      }
+    },
+    {
+      "name": "other-generation",
+      "type": "Generation",
+      "value": {
+        "format": "OCXD_CONFIG_GENERATION",
+        "formatVersion": 1,
+        "generationId": "00000000-0000-4000-8000-000000000002"
+      }
+    },
+    {
+      "name": "commit-101",
+      "type": "Commit",
+      "value": {
+        "format": "OCXD_CONFIG_COMMIT",
+        "formatVersion": 1,
+        "generationId": "00000000-0000-4000-8000-000000000001",
+        "operationId": "00000000-0000-4000-8000-000000000101",
+        "parents": [],
+        "payloadDigest": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891",
+        "payloadBytes": 28,
+        "payloadSchema": {
+          "envelope": {
+            "format": "OCXDCONF",
+            "version": 3
+          },
+          "document": {
+            "format": "OCXD_CONFIG_OBJECTS",
+            "version": 2
+          },
+          "model": {
+            "format": "OCXD_MODEL_CONFIG",
+            "formatVersion": 5,
+            "schemaVersion": 1
+          }
+        },
+        "intent": "update"
+      }
+    },
+    {
+      "name": "commit-102",
+      "type": "Commit",
+      "value": {
+        "format": "OCXD_CONFIG_COMMIT",
+        "formatVersion": 1,
+        "generationId": "00000000-0000-4000-8000-000000000001",
+        "operationId": "00000000-0000-4000-8000-000000000102",
+        "parents": [],
+        "payloadDigest": "sha256:4d4e9adbdcd718573c8617d77007f6f8ae20693b7d73595d8ea608955ea9b300",
+        "payloadBytes": 28,
+        "payloadSchema": {
+          "envelope": {
+            "format": "OCXDCONF",
+            "version": 3
+          },
+          "document": {
+            "format": "OCXD_CONFIG_OBJECTS",
+            "version": 2
+          },
+          "model": {
+            "format": "OCXD_MODEL_CONFIG",
+            "formatVersion": 5,
+            "schemaVersion": 1
+          }
+        },
+        "intent": "update"
+      }
+    },
+    {
+      "name": "commit-103",
+      "type": "Commit",
+      "value": {
+        "format": "OCXD_CONFIG_COMMIT",
+        "formatVersion": 1,
+        "generationId": "00000000-0000-4000-8000-000000000001",
+        "operationId": "00000000-0000-4000-8000-000000000103",
+        "parents": [
+          {
+            "operationId": "00000000-0000-4000-8000-000000000101",
+            "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+          },
+          {
+            "operationId": "00000000-0000-4000-8000-000000000102",
+            "digest": "sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4"
+          }
+        ],
+        "payloadDigest": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891",
+        "payloadBytes": 28,
+        "payloadSchema": {
+          "envelope": {
+            "format": "OCXDCONF",
+            "version": 3
+          },
+          "document": {
+            "format": "OCXD_CONFIG_OBJECTS",
+            "version": 2
+          },
+          "model": {
+            "format": "OCXD_MODEL_CONFIG",
+            "formatVersion": 5,
+            "schemaVersion": 1
+          }
+        },
+        "intent": "resolve",
+        "resolution": {
+          "selectionMode": "head",
+          "selectedHead": {
+            "operationId": "00000000-0000-4000-8000-000000000101",
+            "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+          },
+          "scopeDigest": "sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33",
+          "previewDigest": "sha256:326b735d929e032938cbc0b1a713854a022fc8350cdad7abd2ab2db634338b87"
+        }
+      }
+    },
+    {
+      "name": "empty-observation",
+      "type": "RemoteObservation",
+      "value": {
+        "dtoVersion": 1,
+        "bindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "state": "empty",
+        "generations": [],
+        "heads": [],
+        "orphanCount": 0,
+        "staleCount": 0,
+        "viewDigest": "sha256:024f8a67e6e0a4d76d9792ca50a6c8d20153c97a67d8bb947dc092124f4bcc0f",
+        "observedAt": "2026-11-06T09:00:00Z",
+        "problems": [],
+        "recoveryCandidates": [],
+        "recoveryActions": []
+      }
+    },
+    {
+      "name": "parallel-heads",
+      "type": "RemoteObservation",
+      "value": {
+        "dtoVersion": 1,
+        "bindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "state": "conflict",
+        "generations": [
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+          }
+        ],
+        "heads": [
+          {
+            "operationId": "00000000-0000-4000-8000-000000000101",
+            "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+          },
+          {
+            "operationId": "00000000-0000-4000-8000-000000000102",
+            "digest": "sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4"
+          }
+        ],
+        "orphanCount": 0,
+        "staleCount": 0,
+        "viewDigest": "sha256:6ef337462ec187e1e68974d66291709300befc4020ee979f1839e28820d28df5",
+        "observedAt": "2026-11-06T09:00:00Z",
+        "problems": [],
+        "recoveryCandidates": [],
+        "recoveryActions": [],
+        "generation": {
+          "generationId": "00000000-0000-4000-8000-000000000001",
+          "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+        }
+      }
+    },
+    {
+      "name": "ambiguous-generations",
+      "type": "RemoteObservation",
+      "value": {
+        "dtoVersion": 1,
+        "bindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "state": "initialization_ambiguous",
+        "generations": [
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+          },
+          {
+            "generationId": "00000000-0000-4000-8000-000000000002",
+            "digest": "sha256:cecb3b5c7391eff3e1891cc364025d92d37dd6cf573ffc30d5ffa8516504d7e3"
+          }
+        ],
+        "heads": [],
+        "orphanCount": 0,
+        "staleCount": 0,
+        "viewDigest": "sha256:a540fa6ac9a7b76623e36d2fcdc27a0ee4c04eb6193403545a629cca0312b934",
+        "observedAt": "2026-11-06T09:00:00Z",
+        "problems": [
+          {
+            "code": "sync_generation_ambiguous",
+            "step": "observe",
+            "retryability": "after_refresh",
+            "recoveryActions": [
+              {
+                "kind": "prepare_recovery_export"
+              },
+              {
+                "kind": "prepare_recovery_download"
+              },
+              {
+                "kind": "select_empty_directory"
+              }
+            ]
+          }
+        ],
+        "recoveryCandidates": [
+          {
+            "generation": {
+              "generationId": "00000000-0000-4000-8000-000000000001",
+              "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+            },
+            "head": {
+              "operationId": "00000000-0000-4000-8000-000000000101",
+              "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+            }
+          },
+          {
+            "generation": {
+              "generationId": "00000000-0000-4000-8000-000000000001",
+              "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+            },
+            "head": {
+              "operationId": "00000000-0000-4000-8000-000000000102",
+              "digest": "sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4"
+            }
+          }
+        ],
+        "recoveryActions": []
+      }
+    },
+    {
+      "name": "read-only-prepare-no-generation",
+      "type": "UploadPlan",
+      "value": {
+        "dtoVersion": 1,
+        "operationId": "00000000-0000-4000-8000-000000000101",
+        "planDigest": "sha256:84172405bab4ed1cc14ff2f7752ed0579efcf7b2493aa9286be734bad70e8353",
+        "bindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "initialization": "on_confirm",
+        "parents": [],
+        "intent": "update",
+        "payloadDigest": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891",
+        "payloadBytes": 28,
+        "payloadSchema": {
+          "envelope": {
+            "format": "OCXDCONF",
+            "version": 3
+          },
+          "document": {
+            "format": "OCXD_CONFIG_OBJECTS",
+            "version": 2
+          },
+          "model": {
+            "format": "OCXD_MODEL_CONFIG",
+            "formatVersion": 5,
+            "schemaVersion": 1
+          }
+        },
+        "protectionMode": "plain",
+        "sourceGuard": {
+          "savedSourceDigest": "sha256:28494f608f01a6181d57fb54e3f2870d486edeed1af8a3c399592d3552dddb2e",
+          "scopeDigest": "sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33",
+          "mcpSourcesDigest": "sha256:2aaeeaec143010512bd217e1407d3b784ed129bf500c54f9ef90dff33eaa860a"
+        },
+        "expectedViewDigest": "sha256:024f8a67e6e0a4d76d9792ca50a6c8d20153c97a67d8bb947dc092124f4bcc0f",
+        "preparedAt": "2026-11-06T09:00:00Z",
+        "expiresAt": "2026-11-06T09:15:00Z"
+      }
+    },
+    {
+      "name": "stored-but-local-changed-and-remote-conflict",
+      "type": "OperationFact",
+      "value": {
+        "dtoVersion": 1,
+        "operationId": "00000000-0000-4000-8000-000000000101",
+        "kind": "upload",
+        "phase": "settled",
+        "lastWriteStep": "commit",
+        "storageStatus": "stored",
+        "localApplyStatus": "not_applicable",
+        "relation": {
+          "local": "changed",
+          "remote": "conflict"
+        },
+        "generation": {
+          "generationId": "00000000-0000-4000-8000-000000000001",
+          "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+        },
+        "payloadDigest": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891",
+        "commit": {
+          "operationId": "00000000-0000-4000-8000-000000000101",
+          "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+        },
+        "storedAt": "2026-11-06T09:00:00Z",
+        "observation": {
+          "dtoVersion": 1,
+          "bindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+          "state": "conflict",
+          "generations": [
+            {
+              "generationId": "00000000-0000-4000-8000-000000000001",
+              "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+            }
+          ],
+          "heads": [
+            {
+              "operationId": "00000000-0000-4000-8000-000000000101",
+              "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+            },
+            {
+              "operationId": "00000000-0000-4000-8000-000000000102",
+              "digest": "sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4"
+            }
+          ],
+          "orphanCount": 0,
+          "staleCount": 0,
+          "viewDigest": "sha256:6ef337462ec187e1e68974d66291709300befc4020ee979f1839e28820d28df5",
+          "observedAt": "2026-11-06T09:00:00Z",
+          "problems": [],
+          "recoveryCandidates": [],
+          "recoveryActions": [],
+          "generation": {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+          }
+        },
+        "recoveryActions": [
+          {
+            "kind": "choose_conflict_source"
+          },
+          {
+            "kind": "repreview_upload"
+          }
+        ]
+      }
+    },
+    {
+      "name": "cancelled-before-network",
+      "type": "OperationFact",
+      "value": {
+        "dtoVersion": 1,
+        "operationId": "00000000-0000-4000-8000-000000000101",
+        "kind": "upload",
+        "phase": "cancelled_before_write",
+        "lastWriteStep": "none",
+        "storageStatus": "not_attempted",
+        "localApplyStatus": "not_applicable",
+        "relation": {
+          "local": "not_compared",
+          "remote": "unknown"
+        },
+        "payloadDigest": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891",
+        "recoveryActions": [
+          {
+            "kind": "repreview_upload"
+          }
+        ]
+      }
+    },
+    {
+      "name": "possible-send-cancel-keeps-unknown",
+      "type": "OperationFact",
+      "value": {
+        "dtoVersion": 1,
+        "operationId": "00000000-0000-4000-8000-000000000101",
+        "kind": "upload",
+        "phase": "commit_may_be_written",
+        "lastWriteStep": "commit",
+        "storageStatus": "unknown",
+        "localApplyStatus": "not_applicable",
+        "relation": {
+          "local": "not_compared",
+          "remote": "unknown"
+        },
+        "generation": {
+          "generationId": "00000000-0000-4000-8000-000000000001",
+          "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+        },
+        "payloadDigest": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891",
+        "observation": {
+          "dtoVersion": 1,
+          "bindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+          "state": "conflict",
+          "generations": [
+            {
+              "generationId": "00000000-0000-4000-8000-000000000001",
+              "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+            }
+          ],
+          "heads": [
+            {
+              "operationId": "00000000-0000-4000-8000-000000000101",
+              "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+            },
+            {
+              "operationId": "00000000-0000-4000-8000-000000000102",
+              "digest": "sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4"
+            }
+          ],
+          "orphanCount": 0,
+          "staleCount": 0,
+          "viewDigest": "sha256:46e09e49a4cf9bf353c82bb786df564308a322b86c8569e619e31d4f21febbf6",
+          "observedAt": "2026-11-06T09:00:00Z",
+          "problems": [],
+          "recoveryCandidates": [],
+          "recoveryActions": [],
+          "generation": {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+          }
+        },
+        "recoveryActions": [
+          {
+            "kind": "verify_original_upload",
+            "operationId": "00000000-0000-4000-8000-000000000101"
+          }
+        ],
+        "failure": {
+          "code": "sync_operation_unknown",
+          "step": "commit_put",
+          "retryability": "same_operation_read_only",
+          "cause": "timeout",
+          "recoveryActions": [
+            {
+              "kind": "verify_original_upload",
+              "operationId": "00000000-0000-4000-8000-000000000101"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "ambiguous-read-only-recovery-export",
+      "type": "RecoveryPlan",
+      "value": {
+        "dtoVersion": 1,
+        "recoveryPlanId": "00000000-0000-4000-8000-000000000901",
+        "planDigest": "sha256:df7aaa615681ba4a78f917389af7f14b8f1964e80e5d4c8b8f2d9a88bfe68307",
+        "kind": "recovery_export",
+        "sourceBindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "generation": {
+          "generationId": "00000000-0000-4000-8000-000000000001",
+          "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+        },
+        "head": {
+          "operationId": "00000000-0000-4000-8000-000000000101",
+          "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+        },
+        "payloadDigest": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891",
+        "payloadSchema": {
+          "envelope": {
+            "format": "OCXDCONF",
+            "version": 3
+          },
+          "document": {
+            "format": "OCXD_CONFIG_OBJECTS",
+            "version": 2
+          },
+          "model": {
+            "format": "OCXD_MODEL_CONFIG",
+            "formatVersion": 5,
+            "schemaVersion": 1
+          }
+        },
+        "scopeDigest": "sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33",
+        "expectedViewDigest": "sha256:a540fa6ac9a7b76623e36d2fcdc27a0ee4c04eb6193403545a629cca0312b934",
+        "backupBeforeUpdate": true,
+        "preparedAt": "2026-11-06T09:00:00Z",
+        "expiresAt": "2026-11-06T09:15:00Z"
+      }
+    },
+    {
+      "name": "observe-call",
+      "type": "ObserveRequest",
+      "value": {
+        "connectionId": "synthetic-connection"
+      }
+    },
+    {
+      "name": "verify-original-call",
+      "type": "OperationRequest",
+      "value": {
+        "operationId": "00000000-0000-4000-8000-000000000101"
+      }
+    },
+    {
+      "name": "prepare-upload-call",
+      "type": "PrepareUploadRequest",
+      "value": {
+        "connectionId": "synthetic-connection",
+        "expectedViewDigest": "sha256:024f8a67e6e0a4d76d9792ca50a6c8d20153c97a67d8bb947dc092124f4bcc0f",
+        "sourceGuard": {
+          "savedSourceDigest": "sha256:28494f608f01a6181d57fb54e3f2870d486edeed1af8a3c399592d3552dddb2e",
+          "scopeDigest": "sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33",
+          "mcpSourcesDigest": "sha256:2aaeeaec143010512bd217e1407d3b784ed129bf500c54f9ef90dff33eaa860a"
+        },
+        "initializeOnConfirm": true
+      }
+    },
+    {
+      "name": "confirm-upload-call",
+      "type": "ConfirmUploadRequest",
+      "value": {
+        "operationId": "00000000-0000-4000-8000-000000000101",
+        "planDigest": "sha256:84172405bab4ed1cc14ff2f7752ed0579efcf7b2493aa9286be734bad70e8353"
+      }
+    },
+    {
+      "name": "resume-same-upload-call",
+      "type": "ResumeUploadRequest",
+      "value": {
+        "operationId": "00000000-0000-4000-8000-000000000101",
+        "expectedViewDigest": "sha256:a120de838a70cba6d3ecde18b9c8a1d73fe3d1b482fbc1321d348665d56b8cbb",
+        "planDigest": "sha256:84172405bab4ed1cc14ff2f7752ed0579efcf7b2493aa9286be734bad70e8353"
+      }
+    },
+    {
+      "name": "prepare-resolution-call",
+      "type": "PrepareResolutionRequest",
+      "value": {
+        "connectionId": "synthetic-connection",
+        "generation": {
+          "generationId": "00000000-0000-4000-8000-000000000001",
+          "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+        },
+        "heads": [
+          {
+            "operationId": "00000000-0000-4000-8000-000000000101",
+            "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+          },
+          {
+            "operationId": "00000000-0000-4000-8000-000000000102",
+            "digest": "sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4"
+          }
+        ],
+        "expectedViewDigest": "sha256:6ef337462ec187e1e68974d66291709300befc4020ee979f1839e28820d28df5",
+        "sourceGuard": {
+          "savedSourceDigest": "sha256:28494f608f01a6181d57fb54e3f2870d486edeed1af8a3c399592d3552dddb2e",
+          "scopeDigest": "sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33",
+          "mcpSourcesDigest": "sha256:2aaeeaec143010512bd217e1407d3b784ed129bf500c54f9ef90dff33eaa860a"
+        },
+        "resolution": {
+          "selectionMode": "head",
+          "selectedHead": {
+            "operationId": "00000000-0000-4000-8000-000000000101",
+            "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+          },
+          "scopeDigest": "sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33",
+          "previewDigest": "sha256:326b735d929e032938cbc0b1a713854a022fc8350cdad7abd2ab2db634338b87"
+        }
+      }
+    },
+    {
+      "name": "prepare-download-call",
+      "type": "PrepareDownloadRequest",
+      "value": {
+        "connectionId": "synthetic-connection",
+        "generation": {
+          "generationId": "00000000-0000-4000-8000-000000000001",
+          "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+        },
+        "head": {
+          "operationId": "00000000-0000-4000-8000-000000000103",
+          "digest": "sha256:c3b3a59cf075b3d6e056bbecbb72e82e0d32100de18685ac62e55c04b785adc7"
+        },
+        "expectedViewDigest": "sha256:0b418fbd409dd3d15f5a28a0ff422056f7fc433aca82fd6869212c1f0f2b6171",
+        "scopeDigest": "sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33",
+        "backupBeforeUpdate": true
+      }
+    },
+    {
+      "name": "download-plan",
+      "type": "DownloadPlan",
+      "value": {
+        "dtoVersion": 1,
+        "operationId": "00000000-0000-4000-8000-000000000201",
+        "bindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "generation": {
+          "generationId": "00000000-0000-4000-8000-000000000001",
+          "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+        },
+        "head": {
+          "operationId": "00000000-0000-4000-8000-000000000103",
+          "digest": "sha256:c3b3a59cf075b3d6e056bbecbb72e82e0d32100de18685ac62e55c04b785adc7"
+        },
+        "payloadDigest": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891",
+        "scopeDigest": "sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33",
+        "targetDigest": "sha256:60715ee6cbe92b3ce9e4e4dab6e6513b33194b099b0728ab1991ba5db9337aae",
+        "expectedViewDigest": "sha256:0b418fbd409dd3d15f5a28a0ff422056f7fc433aca82fd6869212c1f0f2b6171",
+        "backupBeforeUpdate": true,
+        "preparedAt": "2026-11-06T09:00:00Z",
+        "expiresAt": "2026-11-06T09:15:00Z",
+        "planDigest": "sha256:9c0005e4e42a75e148118663280786124df6a57abeb9326e12ff972c2ace84b1"
+      }
+    },
+    {
+      "name": "confirm-download-call",
+      "type": "ConfirmDownloadRequest",
+      "value": {
+        "operationId": "00000000-0000-4000-8000-000000000201",
+        "planDigest": "sha256:9c0005e4e42a75e148118663280786124df6a57abeb9326e12ff972c2ace84b1"
+      }
+    },
+    {
+      "name": "prepare-recovery-call",
+      "type": "PrepareRecoveryRequest",
+      "value": {
+        "connectionId": "synthetic-connection",
+        "sourceBindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "generation": {
+          "generationId": "00000000-0000-4000-8000-000000000001",
+          "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+        },
+        "head": {
+          "operationId": "00000000-0000-4000-8000-000000000101",
+          "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+        },
+        "expectedViewDigest": "sha256:a540fa6ac9a7b76623e36d2fcdc27a0ee4c04eb6193403545a629cca0312b934",
+        "scopeDigest": "sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33",
+        "mode": "download",
+        "backupBeforeUpdate": true
+      }
+    },
+    {
+      "name": "recovery-download-plan",
+      "type": "RecoveryPlan",
+      "value": {
+        "dtoVersion": 1,
+        "recoveryPlanId": "00000000-0000-4000-8000-000000000901",
+        "planDigest": "sha256:dba70a5eb9e8e72b81c97dbf73eb505c83653cc4056523902f88382f77cdf9b4",
+        "kind": "recovery_download",
+        "sourceBindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "generation": {
+          "generationId": "00000000-0000-4000-8000-000000000001",
+          "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+        },
+        "head": {
+          "operationId": "00000000-0000-4000-8000-000000000101",
+          "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+        },
+        "payloadDigest": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891",
+        "payloadSchema": {
+          "envelope": {
+            "format": "OCXDCONF",
+            "version": 3
+          },
+          "document": {
+            "format": "OCXD_CONFIG_OBJECTS",
+            "version": 2
+          },
+          "model": {
+            "format": "OCXD_MODEL_CONFIG",
+            "formatVersion": 5,
+            "schemaVersion": 1
+          }
+        },
+        "scopeDigest": "sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33",
+        "expectedViewDigest": "sha256:a540fa6ac9a7b76623e36d2fcdc27a0ee4c04eb6193403545a629cca0312b934",
+        "backupBeforeUpdate": true,
+        "preparedAt": "2026-11-06T09:00:00Z",
+        "expiresAt": "2026-11-06T09:15:00Z",
+        "targetDigest": "sha256:60715ee6cbe92b3ce9e4e4dab6e6513b33194b099b0728ab1991ba5db9337aae"
+      }
+    },
+    {
+      "name": "confirm-recovery-call",
+      "type": "ConfirmRecoveryRequest",
+      "value": {
+        "recoveryPlanId": "00000000-0000-4000-8000-000000000901",
+        "planDigest": "sha256:dba70a5eb9e8e72b81c97dbf73eb505c83653cc4056523902f88382f77cdf9b4"
+      }
+    },
+    {
+      "name": "recovery-export-receipt",
+      "type": "RecoveryReceipt",
+      "value": {
+        "dtoVersion": 1,
+        "recoveryPlanId": "00000000-0000-4000-8000-000000000901",
+        "kind": "recovery_export",
+        "outcome": "exported",
+        "sourceBindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "generation": {
+          "generationId": "00000000-0000-4000-8000-000000000001",
+          "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+        },
+        "head": {
+          "operationId": "00000000-0000-4000-8000-000000000101",
+          "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+        },
+        "payloadDigest": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891",
+        "artifactId": "00000000-0000-4000-8000-000000000902",
+        "finishedAt": "2026-11-06T09:00:00Z",
+        "recoveryActions": [
+          {
+            "kind": "select_empty_directory"
+          }
+        ]
+      }
+    },
+    {
+      "name": "private-journal",
+      "type": "Journal",
+      "value": {
+        "journalVersion": 1,
+        "operationId": "00000000-0000-4000-8000-000000000101",
+        "plan": {
+          "dtoVersion": 1,
+          "operationId": "00000000-0000-4000-8000-000000000101",
+          "planDigest": "sha256:84172405bab4ed1cc14ff2f7752ed0579efcf7b2493aa9286be734bad70e8353",
+          "bindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+          "initialization": "on_confirm",
+          "parents": [],
+          "intent": "update",
+          "payloadDigest": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891",
+          "payloadBytes": 28,
+          "payloadSchema": {
+            "envelope": {
+              "format": "OCXDCONF",
+              "version": 3
+            },
+            "document": {
+              "format": "OCXD_CONFIG_OBJECTS",
+              "version": 2
+            },
+            "model": {
+              "format": "OCXD_MODEL_CONFIG",
+              "formatVersion": 5,
+              "schemaVersion": 1
+            }
+          },
+          "protectionMode": "plain",
+          "sourceGuard": {
+            "savedSourceDigest": "sha256:28494f608f01a6181d57fb54e3f2870d486edeed1af8a3c399592d3552dddb2e",
+            "scopeDigest": "sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33",
+            "mcpSourcesDigest": "sha256:2aaeeaec143010512bd217e1407d3b784ed129bf500c54f9ef90dff33eaa860a"
+          },
+          "expectedViewDigest": "sha256:024f8a67e6e0a4d76d9792ca50a6c8d20153c97a67d8bb947dc092124f4bcc0f",
+          "preparedAt": "2026-11-06T09:00:00Z",
+          "expiresAt": "2026-11-06T09:15:00Z"
+        },
+        "fact": {
+          "dtoVersion": 1,
+          "operationId": "00000000-0000-4000-8000-000000000101",
+          "kind": "upload",
+          "phase": "settled",
+          "lastWriteStep": "commit",
+          "storageStatus": "stored",
+          "localApplyStatus": "not_applicable",
+          "relation": {
+            "local": "changed",
+            "remote": "conflict"
+          },
+          "generation": {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+          },
+          "payloadDigest": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891",
+          "commit": {
+            "operationId": "00000000-0000-4000-8000-000000000101",
+            "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+          },
+          "storedAt": "2026-11-06T09:00:00Z",
+          "observation": {
+            "dtoVersion": 1,
+            "bindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+            "state": "conflict",
+            "generations": [
+              {
+                "generationId": "00000000-0000-4000-8000-000000000001",
+                "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+              }
+            ],
+            "heads": [
+              {
+                "operationId": "00000000-0000-4000-8000-000000000101",
+                "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+              },
+              {
+                "operationId": "00000000-0000-4000-8000-000000000102",
+                "digest": "sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4"
+              }
+            ],
+            "orphanCount": 0,
+            "staleCount": 0,
+            "viewDigest": "sha256:6ef337462ec187e1e68974d66291709300befc4020ee979f1839e28820d28df5",
+            "observedAt": "2026-11-06T09:00:00Z",
+            "problems": [],
+            "recoveryCandidates": [],
+            "recoveryActions": [],
+            "generation": {
+              "generationId": "00000000-0000-4000-8000-000000000001",
+              "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+            }
+          },
+          "recoveryActions": [
+            {
+              "kind": "choose_conflict_source"
+            },
+            {
+              "kind": "repreview_upload"
+            }
+          ]
+        },
+        "rootRevision": "sha256:334b82b17955e37546a679dd0f6ad78e8f06180daf7ce013cb2fb845ca9829ea",
+        "connectionRevision": "sha256:fb1eb2287360ab9af1d67500ae429af3b222557d3448ad60376322935bc9c10c",
+        "payloadHandle": "00000000-0000-4000-8000-000000000903",
+        "generationBytesUtf8": "{\"format\":\"OCXD_CONFIG_GENERATION\",\"formatVersion\":1,\"generationId\":\"00000000-0000-4000-8000-000000000001\"}",
+        "commitBytesUtf8": "{\"format\":\"OCXD_CONFIG_COMMIT\",\"formatVersion\":1,\"generationId\":\"00000000-0000-4000-8000-000000000001\",\"operationId\":\"00000000-0000-4000-8000-000000000101\",\"parents\":[],\"payloadDigest\":\"sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891\",\"payloadBytes\":28,\"payloadSchema\":{\"envelope\":{\"format\":\"OCXDCONF\",\"version\":3},\"document\":{\"format\":\"OCXD_CONFIG_OBJECTS\",\"version\":2},\"model\":{\"format\":\"OCXD_MODEL_CONFIG\",\"formatVersion\":5,\"schemaVersion\":1}},\"intent\":\"update\"}",
+        "executionDigest": "sha256:cac6b3ad1ea65acef7eb23c7902c743e2207418c8dcf78da8368da8018921eb3",
+        "previousFailures": []
+      }
+    },
+    {
+      "name": "capacity-error",
+      "type": "SyncFailure",
+      "value": {
+        "code": "sync_remote_full",
+        "step": "payload_put",
+        "retryability": "same_operation_read_only",
+        "cause": "insufficient_storage",
+        "httpStatus": 507,
+        "recoveryActions": [
+          {
+            "kind": "free_remote_space"
+          },
+          {
+            "kind": "verify_original_upload",
+            "operationId": "00000000-0000-4000-8000-000000000101"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ready-after-resolution",
+      "type": "RemoteObservation",
+      "value": {
+        "dtoVersion": 1,
+        "bindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "state": "ready",
+        "generations": [
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+          }
+        ],
+        "heads": [
+          {
+            "operationId": "00000000-0000-4000-8000-000000000103",
+            "digest": "sha256:c3b3a59cf075b3d6e056bbecbb72e82e0d32100de18685ac62e55c04b785adc7"
+          }
+        ],
+        "orphanCount": 0,
+        "staleCount": 0,
+        "viewDigest": "sha256:0b418fbd409dd3d15f5a28a0ff422056f7fc433aca82fd6869212c1f0f2b6171",
+        "observedAt": "2026-11-06T09:00:00Z",
+        "problems": [],
+        "recoveryCandidates": [],
+        "recoveryActions": [],
+        "generation": {
+          "generationId": "00000000-0000-4000-8000-000000000001",
+          "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+        }
+      }
+    },
+    {
+      "name": "same-operation-resume-observation",
+      "type": "RemoteObservation",
+      "value": {
+        "dtoVersion": 1,
+        "bindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "state": "generation_empty",
+        "generations": [
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+          }
+        ],
+        "heads": [],
+        "orphanCount": 1,
+        "staleCount": 0,
+        "viewDigest": "sha256:a120de838a70cba6d3ecde18b9c8a1d73fe3d1b482fbc1321d348665d56b8cbb",
+        "observedAt": "2026-11-06T09:00:00Z",
+        "problems": [],
+        "recoveryCandidates": [],
+        "recoveryActions": [],
+        "generation": {
+          "generationId": "00000000-0000-4000-8000-000000000001",
+          "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+        }
+      }
+    }
+  ],
+  "exactByteVectors": [
+    {
+      "name": "config-v2-generation-00000000-0000-4000-8000-000000000001.json",
+      "utf8": "{\"format\":\"OCXD_CONFIG_GENERATION\",\"formatVersion\":1,\"generationId\":\"00000000-0000-4000-8000-000000000001\"}",
+      "sha256": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+    },
+    {
+      "name": "config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000101.ocxdconf",
+      "utf8": "L2 synthetic frozen bytes A\n",
+      "sha256": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891"
+    },
+    {
+      "name": "config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000102.ocxdconf",
+      "utf8": "L2 synthetic frozen bytes B\n",
+      "sha256": "sha256:4d4e9adbdcd718573c8617d77007f6f8ae20693b7d73595d8ea608955ea9b300"
+    },
+    {
+      "name": "config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000103.ocxdconf",
+      "utf8": "L2 synthetic frozen bytes A\n",
+      "sha256": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891"
+    },
+    {
+      "name": "config-v2-commit-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000101.json",
+      "utf8": "{\"format\":\"OCXD_CONFIG_COMMIT\",\"formatVersion\":1,\"generationId\":\"00000000-0000-4000-8000-000000000001\",\"operationId\":\"00000000-0000-4000-8000-000000000101\",\"parents\":[],\"payloadDigest\":\"sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891\",\"payloadBytes\":28,\"payloadSchema\":{\"envelope\":{\"format\":\"OCXDCONF\",\"version\":3},\"document\":{\"format\":\"OCXD_CONFIG_OBJECTS\",\"version\":2},\"model\":{\"format\":\"OCXD_MODEL_CONFIG\",\"formatVersion\":5,\"schemaVersion\":1}},\"intent\":\"update\"}",
+      "sha256": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+    },
+    {
+      "name": "config-v2-commit-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000102.json",
+      "utf8": "{\"format\":\"OCXD_CONFIG_COMMIT\",\"formatVersion\":1,\"generationId\":\"00000000-0000-4000-8000-000000000001\",\"operationId\":\"00000000-0000-4000-8000-000000000102\",\"parents\":[],\"payloadDigest\":\"sha256:4d4e9adbdcd718573c8617d77007f6f8ae20693b7d73595d8ea608955ea9b300\",\"payloadBytes\":28,\"payloadSchema\":{\"envelope\":{\"format\":\"OCXDCONF\",\"version\":3},\"document\":{\"format\":\"OCXD_CONFIG_OBJECTS\",\"version\":2},\"model\":{\"format\":\"OCXD_MODEL_CONFIG\",\"formatVersion\":5,\"schemaVersion\":1}},\"intent\":\"update\"}",
+      "sha256": "sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4"
+    },
+    {
+      "name": "config-v2-commit-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000103.json",
+      "utf8": "{\"format\":\"OCXD_CONFIG_COMMIT\",\"formatVersion\":1,\"generationId\":\"00000000-0000-4000-8000-000000000001\",\"operationId\":\"00000000-0000-4000-8000-000000000103\",\"parents\":[{\"operationId\":\"00000000-0000-4000-8000-000000000101\",\"digest\":\"sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded\"},{\"operationId\":\"00000000-0000-4000-8000-000000000102\",\"digest\":\"sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4\"}],\"payloadDigest\":\"sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891\",\"payloadBytes\":28,\"payloadSchema\":{\"envelope\":{\"format\":\"OCXDCONF\",\"version\":3},\"document\":{\"format\":\"OCXD_CONFIG_OBJECTS\",\"version\":2},\"model\":{\"format\":\"OCXD_MODEL_CONFIG\",\"formatVersion\":5,\"schemaVersion\":1}},\"intent\":\"resolve\",\"resolution\":{\"selectionMode\":\"head\",\"selectedHead\":{\"operationId\":\"00000000-0000-4000-8000-000000000101\",\"digest\":\"sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded\"},\"scopeDigest\":\"sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33\",\"previewDigest\":\"sha256:326b735d929e032938cbc0b1a713854a022fc8350cdad7abd2ab2db634338b87\"}}",
+      "sha256": "sha256:c3b3a59cf075b3d6e056bbecbb72e82e0d32100de18685ac62e55c04b785adc7"
+    }
+  ],
+  "hashMaterials": [
+    {
+      "name": "empty-observation",
+      "kind": "view",
+      "material": {
+        "hashDomain": "OCXD_CONFIG_VIEW_V1",
+        "bindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "state": "empty",
+        "generations": [],
+        "commits": [],
+        "heads": [],
+        "fileNames": [],
+        "problems": []
+      },
+      "canonicalUtf8": "{\"bindingId\":\"sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9\",\"commits\":[],\"fileNames\":[],\"generations\":[],\"hashDomain\":\"OCXD_CONFIG_VIEW_V1\",\"heads\":[],\"problems\":[],\"state\":\"empty\"}",
+      "digest": "sha256:024f8a67e6e0a4d76d9792ca50a6c8d20153c97a67d8bb947dc092124f4bcc0f"
+    },
+    {
+      "name": "parallel-heads",
+      "kind": "view",
+      "material": {
+        "hashDomain": "OCXD_CONFIG_VIEW_V1",
+        "bindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "state": "conflict",
+        "generations": [
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+          }
+        ],
+        "commits": [
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "operationId": "00000000-0000-4000-8000-000000000101",
+            "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+          },
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "operationId": "00000000-0000-4000-8000-000000000102",
+            "digest": "sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4"
+          }
+        ],
+        "heads": [
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "operationId": "00000000-0000-4000-8000-000000000101",
+            "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+          },
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "operationId": "00000000-0000-4000-8000-000000000102",
+            "digest": "sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4"
+          }
+        ],
+        "fileNames": [
+          "config-v2-commit-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000101.json",
+          "config-v2-commit-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000102.json",
+          "config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000101.ocxdconf",
+          "config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000102.ocxdconf",
+          "config-v2-generation-00000000-0000-4000-8000-000000000001.json"
+        ],
+        "problems": []
+      },
+      "canonicalUtf8": "{\"bindingId\":\"sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9\",\"commits\":[{\"digest\":\"sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded\",\"generationId\":\"00000000-0000-4000-8000-000000000001\",\"operationId\":\"00000000-0000-4000-8000-000000000101\"},{\"digest\":\"sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4\",\"generationId\":\"00000000-0000-4000-8000-000000000001\",\"operationId\":\"00000000-0000-4000-8000-000000000102\"}],\"fileNames\":[\"config-v2-commit-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000101.json\",\"config-v2-commit-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000102.json\",\"config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000101.ocxdconf\",\"config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000102.ocxdconf\",\"config-v2-generation-00000000-0000-4000-8000-000000000001.json\"],\"generations\":[{\"digest\":\"sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb\",\"generationId\":\"00000000-0000-4000-8000-000000000001\"}],\"hashDomain\":\"OCXD_CONFIG_VIEW_V1\",\"heads\":[{\"digest\":\"sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded\",\"generationId\":\"00000000-0000-4000-8000-000000000001\",\"operationId\":\"00000000-0000-4000-8000-000000000101\"},{\"digest\":\"sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4\",\"generationId\":\"00000000-0000-4000-8000-000000000001\",\"operationId\":\"00000000-0000-4000-8000-000000000102\"}],\"problems\":[],\"state\":\"conflict\"}",
+      "digest": "sha256:6ef337462ec187e1e68974d66291709300befc4020ee979f1839e28820d28df5"
+    },
+    {
+      "name": "ambiguous-generations",
+      "kind": "view",
+      "material": {
+        "hashDomain": "OCXD_CONFIG_VIEW_V1",
+        "bindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "state": "initialization_ambiguous",
+        "generations": [
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+          },
+          {
+            "generationId": "00000000-0000-4000-8000-000000000002",
+            "digest": "sha256:cecb3b5c7391eff3e1891cc364025d92d37dd6cf573ffc30d5ffa8516504d7e3"
+          }
+        ],
+        "commits": [
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "operationId": "00000000-0000-4000-8000-000000000101",
+            "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+          },
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "operationId": "00000000-0000-4000-8000-000000000102",
+            "digest": "sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4"
+          }
+        ],
+        "heads": [
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "operationId": "00000000-0000-4000-8000-000000000101",
+            "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+          },
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "operationId": "00000000-0000-4000-8000-000000000102",
+            "digest": "sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4"
+          }
+        ],
+        "fileNames": [
+          "config-v2-commit-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000101.json",
+          "config-v2-commit-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000102.json",
+          "config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000101.ocxdconf",
+          "config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000102.ocxdconf",
+          "config-v2-generation-00000000-0000-4000-8000-000000000001.json",
+          "config-v2-generation-00000000-0000-4000-8000-000000000002.json"
+        ],
+        "problems": [
+          {
+            "code": "sync_generation_ambiguous",
+            "step": "observe"
+          }
+        ]
+      },
+      "canonicalUtf8": "{\"bindingId\":\"sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9\",\"commits\":[{\"digest\":\"sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded\",\"generationId\":\"00000000-0000-4000-8000-000000000001\",\"operationId\":\"00000000-0000-4000-8000-000000000101\"},{\"digest\":\"sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4\",\"generationId\":\"00000000-0000-4000-8000-000000000001\",\"operationId\":\"00000000-0000-4000-8000-000000000102\"}],\"fileNames\":[\"config-v2-commit-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000101.json\",\"config-v2-commit-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000102.json\",\"config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000101.ocxdconf\",\"config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000102.ocxdconf\",\"config-v2-generation-00000000-0000-4000-8000-000000000001.json\",\"config-v2-generation-00000000-0000-4000-8000-000000000002.json\"],\"generations\":[{\"digest\":\"sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb\",\"generationId\":\"00000000-0000-4000-8000-000000000001\"},{\"digest\":\"sha256:cecb3b5c7391eff3e1891cc364025d92d37dd6cf573ffc30d5ffa8516504d7e3\",\"generationId\":\"00000000-0000-4000-8000-000000000002\"}],\"hashDomain\":\"OCXD_CONFIG_VIEW_V1\",\"heads\":[{\"digest\":\"sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded\",\"generationId\":\"00000000-0000-4000-8000-000000000001\",\"operationId\":\"00000000-0000-4000-8000-000000000101\"},{\"digest\":\"sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4\",\"generationId\":\"00000000-0000-4000-8000-000000000001\",\"operationId\":\"00000000-0000-4000-8000-000000000102\"}],\"problems\":[{\"code\":\"sync_generation_ambiguous\",\"step\":\"observe\"}],\"state\":\"initialization_ambiguous\"}",
+      "digest": "sha256:a540fa6ac9a7b76623e36d2fcdc27a0ee4c04eb6193403545a629cca0312b934"
+    },
+    {
+      "name": "read-only-prepare-no-generation",
+      "kind": "plan",
+      "material": {
+        "dtoVersion": 1,
+        "operationId": "00000000-0000-4000-8000-000000000101",
+        "bindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "initialization": "on_confirm",
+        "parents": [],
+        "intent": "update",
+        "payloadDigest": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891",
+        "payloadBytes": 28,
+        "payloadSchema": {
+          "envelope": {
+            "format": "OCXDCONF",
+            "version": 3
+          },
+          "document": {
+            "format": "OCXD_CONFIG_OBJECTS",
+            "version": 2
+          },
+          "model": {
+            "format": "OCXD_MODEL_CONFIG",
+            "formatVersion": 5,
+            "schemaVersion": 1
+          }
+        },
+        "protectionMode": "plain",
+        "sourceGuard": {
+          "savedSourceDigest": "sha256:28494f608f01a6181d57fb54e3f2870d486edeed1af8a3c399592d3552dddb2e",
+          "scopeDigest": "sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33",
+          "mcpSourcesDigest": "sha256:2aaeeaec143010512bd217e1407d3b784ed129bf500c54f9ef90dff33eaa860a"
+        },
+        "expectedViewDigest": "sha256:024f8a67e6e0a4d76d9792ca50a6c8d20153c97a67d8bb947dc092124f4bcc0f",
+        "preparedAt": "2026-11-06T09:00:00Z",
+        "expiresAt": "2026-11-06T09:15:00Z"
+      },
+      "canonicalUtf8": "{\"bindingId\":\"sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9\",\"dtoVersion\":1,\"expectedViewDigest\":\"sha256:024f8a67e6e0a4d76d9792ca50a6c8d20153c97a67d8bb947dc092124f4bcc0f\",\"expiresAt\":\"2026-11-06T09:15:00Z\",\"initialization\":\"on_confirm\",\"intent\":\"update\",\"operationId\":\"00000000-0000-4000-8000-000000000101\",\"parents\":[],\"payloadBytes\":28,\"payloadDigest\":\"sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891\",\"payloadSchema\":{\"document\":{\"format\":\"OCXD_CONFIG_OBJECTS\",\"version\":2},\"envelope\":{\"format\":\"OCXDCONF\",\"version\":3},\"model\":{\"format\":\"OCXD_MODEL_CONFIG\",\"formatVersion\":5,\"schemaVersion\":1}},\"preparedAt\":\"2026-11-06T09:00:00Z\",\"protectionMode\":\"plain\",\"sourceGuard\":{\"mcpSourcesDigest\":\"sha256:2aaeeaec143010512bd217e1407d3b784ed129bf500c54f9ef90dff33eaa860a\",\"savedSourceDigest\":\"sha256:28494f608f01a6181d57fb54e3f2870d486edeed1af8a3c399592d3552dddb2e\",\"scopeDigest\":\"sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33\"}}",
+      "digest": "sha256:84172405bab4ed1cc14ff2f7752ed0579efcf7b2493aa9286be734bad70e8353"
+    },
+    {
+      "name": "ambiguous-read-only-recovery-export",
+      "kind": "plan",
+      "material": {
+        "dtoVersion": 1,
+        "recoveryPlanId": "00000000-0000-4000-8000-000000000901",
+        "kind": "recovery_export",
+        "sourceBindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "generation": {
+          "generationId": "00000000-0000-4000-8000-000000000001",
+          "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+        },
+        "head": {
+          "operationId": "00000000-0000-4000-8000-000000000101",
+          "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+        },
+        "payloadDigest": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891",
+        "payloadSchema": {
+          "envelope": {
+            "format": "OCXDCONF",
+            "version": 3
+          },
+          "document": {
+            "format": "OCXD_CONFIG_OBJECTS",
+            "version": 2
+          },
+          "model": {
+            "format": "OCXD_MODEL_CONFIG",
+            "formatVersion": 5,
+            "schemaVersion": 1
+          }
+        },
+        "scopeDigest": "sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33",
+        "expectedViewDigest": "sha256:a540fa6ac9a7b76623e36d2fcdc27a0ee4c04eb6193403545a629cca0312b934",
+        "backupBeforeUpdate": true,
+        "preparedAt": "2026-11-06T09:00:00Z",
+        "expiresAt": "2026-11-06T09:15:00Z"
+      },
+      "canonicalUtf8": "{\"backupBeforeUpdate\":true,\"dtoVersion\":1,\"expectedViewDigest\":\"sha256:a540fa6ac9a7b76623e36d2fcdc27a0ee4c04eb6193403545a629cca0312b934\",\"expiresAt\":\"2026-11-06T09:15:00Z\",\"generation\":{\"digest\":\"sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb\",\"generationId\":\"00000000-0000-4000-8000-000000000001\"},\"head\":{\"digest\":\"sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded\",\"operationId\":\"00000000-0000-4000-8000-000000000101\"},\"kind\":\"recovery_export\",\"payloadDigest\":\"sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891\",\"payloadSchema\":{\"document\":{\"format\":\"OCXD_CONFIG_OBJECTS\",\"version\":2},\"envelope\":{\"format\":\"OCXDCONF\",\"version\":3},\"model\":{\"format\":\"OCXD_MODEL_CONFIG\",\"formatVersion\":5,\"schemaVersion\":1}},\"preparedAt\":\"2026-11-06T09:00:00Z\",\"recoveryPlanId\":\"00000000-0000-4000-8000-000000000901\",\"scopeDigest\":\"sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33\",\"sourceBindingId\":\"sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9\"}",
+      "digest": "sha256:df7aaa615681ba4a78f917389af7f14b8f1964e80e5d4c8b8f2d9a88bfe68307"
+    },
+    {
+      "name": "download-plan",
+      "kind": "plan",
+      "material": {
+        "dtoVersion": 1,
+        "operationId": "00000000-0000-4000-8000-000000000201",
+        "bindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "generation": {
+          "generationId": "00000000-0000-4000-8000-000000000001",
+          "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+        },
+        "head": {
+          "operationId": "00000000-0000-4000-8000-000000000103",
+          "digest": "sha256:c3b3a59cf075b3d6e056bbecbb72e82e0d32100de18685ac62e55c04b785adc7"
+        },
+        "payloadDigest": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891",
+        "scopeDigest": "sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33",
+        "targetDigest": "sha256:60715ee6cbe92b3ce9e4e4dab6e6513b33194b099b0728ab1991ba5db9337aae",
+        "expectedViewDigest": "sha256:0b418fbd409dd3d15f5a28a0ff422056f7fc433aca82fd6869212c1f0f2b6171",
+        "backupBeforeUpdate": true,
+        "preparedAt": "2026-11-06T09:00:00Z",
+        "expiresAt": "2026-11-06T09:15:00Z"
+      },
+      "canonicalUtf8": "{\"backupBeforeUpdate\":true,\"bindingId\":\"sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9\",\"dtoVersion\":1,\"expectedViewDigest\":\"sha256:0b418fbd409dd3d15f5a28a0ff422056f7fc433aca82fd6869212c1f0f2b6171\",\"expiresAt\":\"2026-11-06T09:15:00Z\",\"generation\":{\"digest\":\"sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb\",\"generationId\":\"00000000-0000-4000-8000-000000000001\"},\"head\":{\"digest\":\"sha256:c3b3a59cf075b3d6e056bbecbb72e82e0d32100de18685ac62e55c04b785adc7\",\"operationId\":\"00000000-0000-4000-8000-000000000103\"},\"operationId\":\"00000000-0000-4000-8000-000000000201\",\"payloadDigest\":\"sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891\",\"preparedAt\":\"2026-11-06T09:00:00Z\",\"scopeDigest\":\"sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33\",\"targetDigest\":\"sha256:60715ee6cbe92b3ce9e4e4dab6e6513b33194b099b0728ab1991ba5db9337aae\"}",
+      "digest": "sha256:9c0005e4e42a75e148118663280786124df6a57abeb9326e12ff972c2ace84b1"
+    },
+    {
+      "name": "recovery-download-plan",
+      "kind": "plan",
+      "material": {
+        "dtoVersion": 1,
+        "recoveryPlanId": "00000000-0000-4000-8000-000000000901",
+        "kind": "recovery_download",
+        "sourceBindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "generation": {
+          "generationId": "00000000-0000-4000-8000-000000000001",
+          "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+        },
+        "head": {
+          "operationId": "00000000-0000-4000-8000-000000000101",
+          "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+        },
+        "payloadDigest": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891",
+        "payloadSchema": {
+          "envelope": {
+            "format": "OCXDCONF",
+            "version": 3
+          },
+          "document": {
+            "format": "OCXD_CONFIG_OBJECTS",
+            "version": 2
+          },
+          "model": {
+            "format": "OCXD_MODEL_CONFIG",
+            "formatVersion": 5,
+            "schemaVersion": 1
+          }
+        },
+        "scopeDigest": "sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33",
+        "expectedViewDigest": "sha256:a540fa6ac9a7b76623e36d2fcdc27a0ee4c04eb6193403545a629cca0312b934",
+        "backupBeforeUpdate": true,
+        "preparedAt": "2026-11-06T09:00:00Z",
+        "expiresAt": "2026-11-06T09:15:00Z",
+        "targetDigest": "sha256:60715ee6cbe92b3ce9e4e4dab6e6513b33194b099b0728ab1991ba5db9337aae"
+      },
+      "canonicalUtf8": "{\"backupBeforeUpdate\":true,\"dtoVersion\":1,\"expectedViewDigest\":\"sha256:a540fa6ac9a7b76623e36d2fcdc27a0ee4c04eb6193403545a629cca0312b934\",\"expiresAt\":\"2026-11-06T09:15:00Z\",\"generation\":{\"digest\":\"sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb\",\"generationId\":\"00000000-0000-4000-8000-000000000001\"},\"head\":{\"digest\":\"sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded\",\"operationId\":\"00000000-0000-4000-8000-000000000101\"},\"kind\":\"recovery_download\",\"payloadDigest\":\"sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891\",\"payloadSchema\":{\"document\":{\"format\":\"OCXD_CONFIG_OBJECTS\",\"version\":2},\"envelope\":{\"format\":\"OCXDCONF\",\"version\":3},\"model\":{\"format\":\"OCXD_MODEL_CONFIG\",\"formatVersion\":5,\"schemaVersion\":1}},\"preparedAt\":\"2026-11-06T09:00:00Z\",\"recoveryPlanId\":\"00000000-0000-4000-8000-000000000901\",\"scopeDigest\":\"sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33\",\"sourceBindingId\":\"sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9\",\"targetDigest\":\"sha256:60715ee6cbe92b3ce9e4e4dab6e6513b33194b099b0728ab1991ba5db9337aae\"}",
+      "digest": "sha256:dba70a5eb9e8e72b81c97dbf73eb505c83653cc4056523902f88382f77cdf9b4"
+    },
+    {
+      "name": "ready-after-resolution",
+      "kind": "view",
+      "material": {
+        "hashDomain": "OCXD_CONFIG_VIEW_V1",
+        "bindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "state": "ready",
+        "generations": [
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+          }
+        ],
+        "commits": [
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "operationId": "00000000-0000-4000-8000-000000000101",
+            "digest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded"
+          },
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "operationId": "00000000-0000-4000-8000-000000000102",
+            "digest": "sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4"
+          },
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "operationId": "00000000-0000-4000-8000-000000000103",
+            "digest": "sha256:c3b3a59cf075b3d6e056bbecbb72e82e0d32100de18685ac62e55c04b785adc7"
+          }
+        ],
+        "heads": [
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "operationId": "00000000-0000-4000-8000-000000000103",
+            "digest": "sha256:c3b3a59cf075b3d6e056bbecbb72e82e0d32100de18685ac62e55c04b785adc7"
+          }
+        ],
+        "fileNames": [
+          "config-v2-commit-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000101.json",
+          "config-v2-commit-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000102.json",
+          "config-v2-commit-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000103.json",
+          "config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000101.ocxdconf",
+          "config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000102.ocxdconf",
+          "config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000103.ocxdconf",
+          "config-v2-generation-00000000-0000-4000-8000-000000000001.json"
+        ],
+        "problems": []
+      },
+      "canonicalUtf8": "{\"bindingId\":\"sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9\",\"commits\":[{\"digest\":\"sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded\",\"generationId\":\"00000000-0000-4000-8000-000000000001\",\"operationId\":\"00000000-0000-4000-8000-000000000101\"},{\"digest\":\"sha256:af3697e6bca946fb00096215862eb327b1b966f473cb192b0c990db8472c18b4\",\"generationId\":\"00000000-0000-4000-8000-000000000001\",\"operationId\":\"00000000-0000-4000-8000-000000000102\"},{\"digest\":\"sha256:c3b3a59cf075b3d6e056bbecbb72e82e0d32100de18685ac62e55c04b785adc7\",\"generationId\":\"00000000-0000-4000-8000-000000000001\",\"operationId\":\"00000000-0000-4000-8000-000000000103\"}],\"fileNames\":[\"config-v2-commit-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000101.json\",\"config-v2-commit-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000102.json\",\"config-v2-commit-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000103.json\",\"config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000101.ocxdconf\",\"config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000102.ocxdconf\",\"config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000103.ocxdconf\",\"config-v2-generation-00000000-0000-4000-8000-000000000001.json\"],\"generations\":[{\"digest\":\"sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb\",\"generationId\":\"00000000-0000-4000-8000-000000000001\"}],\"hashDomain\":\"OCXD_CONFIG_VIEW_V1\",\"heads\":[{\"digest\":\"sha256:c3b3a59cf075b3d6e056bbecbb72e82e0d32100de18685ac62e55c04b785adc7\",\"generationId\":\"00000000-0000-4000-8000-000000000001\",\"operationId\":\"00000000-0000-4000-8000-000000000103\"}],\"problems\":[],\"state\":\"ready\"}",
+      "digest": "sha256:0b418fbd409dd3d15f5a28a0ff422056f7fc433aca82fd6869212c1f0f2b6171"
+    },
+    {
+      "name": "same-operation-resume-observation",
+      "kind": "view",
+      "material": {
+        "hashDomain": "OCXD_CONFIG_VIEW_V1",
+        "bindingId": "sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9",
+        "state": "generation_empty",
+        "generations": [
+          {
+            "generationId": "00000000-0000-4000-8000-000000000001",
+            "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+          }
+        ],
+        "commits": [],
+        "heads": [],
+        "fileNames": [
+          "config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000101.ocxdconf",
+          "config-v2-generation-00000000-0000-4000-8000-000000000001.json"
+        ],
+        "problems": []
+      },
+      "canonicalUtf8": "{\"bindingId\":\"sha256:d47e0ebe462369de5a78c657672f6d826d207602cc8d2af3834f7bada4ecb8c9\",\"commits\":[],\"fileNames\":[\"config-v2-data-00000000-0000-4000-8000-000000000001-00000000-0000-4000-8000-000000000101.ocxdconf\",\"config-v2-generation-00000000-0000-4000-8000-000000000001.json\"],\"generations\":[{\"digest\":\"sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb\",\"generationId\":\"00000000-0000-4000-8000-000000000001\"}],\"hashDomain\":\"OCXD_CONFIG_VIEW_V1\",\"heads\":[],\"problems\":[],\"state\":\"generation_empty\"}",
+      "digest": "sha256:a120de838a70cba6d3ecde18b9c8a1d73fe3d1b482fbc1321d348665d56b8cbb"
+    }
+  ],
+  "executionHashVector": {
+    "name": "private-journal",
+    "material": {
+      "hashDomain": "OCXD_CONFIG_EXECUTION_V1",
+      "operationId": "00000000-0000-4000-8000-000000000101",
+      "planDigest": "sha256:84172405bab4ed1cc14ff2f7752ed0579efcf7b2493aa9286be734bad70e8353",
+      "generation": {
+        "generationId": "00000000-0000-4000-8000-000000000001",
+        "digest": "sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb"
+      },
+      "commitDigest": "sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded",
+      "payloadDigest": "sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891"
+    },
+    "canonicalUtf8": "{\"commitDigest\":\"sha256:97cebd062c1dd5cd29970944749a14b1542efc11d6c5ec358bce0653f8e11ded\",\"generation\":{\"digest\":\"sha256:208e5b88555cb1a0c63d64b296d9e835966b9f0a0868f811d411b47dd7e9e2fb\",\"generationId\":\"00000000-0000-4000-8000-000000000001\"},\"hashDomain\":\"OCXD_CONFIG_EXECUTION_V1\",\"operationId\":\"00000000-0000-4000-8000-000000000101\",\"payloadDigest\":\"sha256:6802505a7fcf94c5cbf8e47d337d0cfc0b6ca69fdf8680a520a2a3e215b95891\",\"planDigest\":\"sha256:84172405bab4ed1cc14ff2f7752ed0579efcf7b2493aa9286be734bad70e8353\"}",
+    "digest": "sha256:cac6b3ad1ea65acef7eb23c7902c743e2207418c8dcf78da8368da8018921eb3"
+  }
+}
