@@ -1,0 +1,75 @@
+{
+  "date": "2026-11-06",
+  "topic": "Windows OS-user isolation;Desktop-owned OPENCODEX_HOME and delegated upstream port policy",
+  "authorization": "User now permits recording analysis; earlier explicit exclusion from0.2.23 scope retained. No design adoption/implementation inferred.",
+  "codeCommit": "0c57500f8f46ea50655c782c3f04334a39167abb",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/lib.rs": "7ff58e77d9e3c2aa834578b7791e2637b46148118d7ec54c00d5391c059d5266",
+    "apps/desktop/tauri/src/modules/data_root/bootstrap.rs": "b089b4d0dbf5abc1d2a7a8c6f6e597a29f98933239b6799eb51ac8f74338fc4f",
+    "apps/desktop/tauri/src/infrastructure/windows_startup_root.rs": "952e7fdbc33d086953168e478b963e921f44382ffdc73d53f5888ed2671ce0cc",
+    "apps/desktop/tauri/src/modules/data_root/mod.rs": "de793e1226eca7939cd407922b69f6b31ffe8e969cc2a6e2eb6a4b6dd637de83",
+    "apps/desktop/tauri/src/infrastructure/process_runner.rs": "2114ee8d96b618e654ef47fd40ff699175841342f412c52774aa693a686c4e94",
+    "apps/desktop/tauri/src/modules/process/mod.rs": "876f8fadba6f333eb1bed08ebf46c4204d11c67e7c3f76396ba4ab2650481230",
+    "apps/desktop/tauri/src/modules/model_config/config_file.rs": "e1a32499ed62a76b3c6c3e89e72f837463a6df097249c9ee3420732c1e67f938",
+    "apps/desktop/tauri/src/modules/runtime/mod.rs": "22e78a22b6ea503687f4aee1405e81aa4b7f5fd82752515a80964d6d25a2bc51",
+    "apps/desktop/tauri/src/modules/instance/mod.rs": "9a6da6821d107992d4d8a1380e5af77dab71c12db95c0c08109188f3bb5e5c59",
+    "apps/desktop/tauri/src/infrastructure/credentials.rs": "d12f3fbac86018e48c03b0f5454d3bd259e4c422f7c12f9f8555bfd8b18b3d42"
+  },
+  "pinnedRuntime": {
+    "version": "2.97.0-post021.ownerquery.2",
+    "archiveSha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957",
+    "sourceSha256": {
+      "src/config/paths.ts": "a22d54bac86ea5c27c0ae93a089e6de1e87c7c3dc74a1e8a9a73204d9ff17686",
+      "src/cli/index.ts": "423274a5113a497bfa3cf76ef33b3b6feceda0d9878e6b7eaa79e9c8cbae41c4",
+      "src/cli/dispatch.ts": "72d1b6c49c10904a89c6c97b39a0424e1dbd318e85fe98dc8a9ca59f4677be8c"
+    }
+  },
+  "findings": [
+    "Desktop sets OPENCODEX_HOME to resolved inside/external binding;OS user HOME separate and not replaced by Desktop data root",
+    "Internal official config is <activeDataRoot>/opencodex-home/config.json;UI saves to same source, not a separate channel copy",
+    "Managed runtime package/launcher under runtime differs from configuration HOME;explicit/discovered executable still receives resolved HOME",
+    "Observed macOS internal data root is user-scoped;Windowsnew default picks executable-parent/data when old user platform root absent;HKCU pointer alone does not isolate resulting files",
+    "Startup semaphore is userSID-scoped,app.lock is dataRoot-scoped;two OSusers selecting same physical root conflict; screenshot does not distinguish sameuser launch from crossuser sharedroot",
+    "Bare upstream start default uses config.port or10100 and busy holder policies can refuse;config-directory isolation alone cannot guarantee concurrent peruser proxy start",
+    "Reuse upstream listener/config/auth/owner lifecycle as single authority. Need Desktop context isolation and validation of upstream multiOSuser constraints rather than build another proxy or assume automatic port hop solves it"
+  ],
+  "proposalStatus": "discussion-only; do not change adopted Windows install-adjacent default or0.2.23 pending6item scope",
+  "futureValidation": [
+    "Windowsdistinct SID profiles/anchor/root/HOME actually independent;portable explicit share behavior documented",
+    "Two current upstream processes independentHOME but same preferred10100;prove refusal or distinct own endpoints with explicit port config",
+    "Process owner/endpoint token/client config belong to correct user;no foreign stop/reuse on health200",
+    "No ordinary config/WebDAV transfer of machine ports,PID or runtime binding;retain per-user credentials and state",
+    "Same-user elevated vs standard and multipleRDPsessions behavior distinguished from differentOSusers"
+  ],
+  "externalReferences": [
+    {
+      "project": "AiMaMi",
+      "ref": "add37271e29ba81ee17f15f444a24925af50bb87",
+      "url": "https://github.com/borawong/AiMaMi/blob/add37271e29ba81ee17f15f444a24925af50bb87/src-tauri/src/platform/paths.rs",
+      "verified": "CODEX_HOME otherwise currenthome/.codex;settings undercodexmate",
+      "portPolicy": "README confirms local relay;insufficient publicimplementation evidence for current multiuser port allocation"
+    },
+    {
+      "project": "OpenCodex",
+      "url": "https://github.com/lidge-jun/opencodex/blob/main/src/config/paths.ts",
+      "verified": "OPENCODEX_HOME otherwise homedir/.opencodex;local pinned maintenance archive also checked",
+      "portUrl": "https://github.com/lidge-jun/opencodex/blob/main/src/cli/dispatch.ts",
+      "note": "Online main observed in preceding discussion;may evolve independently frompinned runtime"
+    },
+    {
+      "project": "Superba",
+      "ref": "3ecc0db00f0b536ee070d6cb1c56e01566b3115a",
+      "url": "https://github.com/krill-lab/superba/blob/3ecc0db00f0b536ee070d6cb1c56e01566b3115a/crates/superba-router/src/port.rs",
+      "verified": "Data-dir-seeded17000–19999candidateorder,bindability,persistedconfig port;notnative multiuser testedhere"
+    }
+  ],
+  "noChanges": {
+    "productCode": true,
+    "dailyConfig": true,
+    "networkService": true,
+    "osRegistry": true,
+    "versionsOrBranches": true,
+    "scopeDmdImp023": true
+  },
+  "evidence": "Only current path metadata, source hashes and reported image saved;no credentials/businessconfig content"
+}
