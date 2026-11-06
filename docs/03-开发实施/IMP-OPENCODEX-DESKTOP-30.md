@@ -2,14 +2,25 @@
 id: "IMP-OPENCODEX-DESKTOP-30"
 object_kind: "implementation.change"
 title: "0.2.21发布后双线修复与集成发布计划"
-state: "in_progress"
-completion_summary: null
+state: "completed"
+completion_summary: "0.2.22十项发布后修复与维护运行包交付完成；双端原包/真实升级、签名、回退依据及同源CI通过，已晋升stable/Latest。"
 dmd_refs: ["DMD-OPENCODEX-POST021"]
 demand_ids: ["DMD-OPENCODEX-POST021"]
 task_ids: ["TASK-OPENCODEX-022-FINAL-20261106"]
-summary: "已采用本项目维护运行包，修复发行冻结0.2.22；贡献及同源CI/原生通过，最终发行验收与发布进行中。"
+summary: "0.2.22十项发布后修复与维护运行包交付完成；双端原包/真实升级、签名、回退依据及同源CI通过，已晋升stable/Latest。"
 ---
 # 0.2.21发布后双线修复与集成发布计划
+
+## 2026-11-06 0.2.22正式稳定发布完成（最终）
+
+0.2.22十项发布后修复与维护运行包交付完成；双端原包/真实升级、签名、回退依据及同源CI通过，已晋升stable/Latest。
+
+PR69合并main aae00ae187d2932fcf91f4392103a5e3712ec264，tag源1b5c8402dc340540711efa2c2c2037bce673a479不移动；验收工具头fa035fb52与原包运行源码相同。最终CI42141370911五项适用job全部success；原首次Windows脚本版本准入失败保留，新四格42141381151对同一原资产通过，MSI/NSIS OTA42143838979与Mac17项同自动进程升级通过。运行包2.97.0-post021.ownerquery.2由用户明确采用，固定SHA bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957；12公开资产/四独立包签名及tag/Latest/beta匿名读回一致。stable晋升run 42147404254成功；不重打包、不换密钥、不覆盖旧tag。
+
+旧0.2.21原包/保护备份保留，Mac旧版读取升级后8文件副本及运行包实际回退上游2.97已验证。维护包需用户明确离线安装并重启OpenCodex服务；npm联网安装/官方更新仍会取上游2.97，尚非自动维护更新通道。RDP硬件例外按原采用，原绝对帧率失败不改成成功；并行未来原型/多Agent/额度未纳入。本次未操作日常配置/Key/真实同步或推理，长期历史误停事件仍保留。
+
+证据以release-0.2.22-20261106/stable-public-verification.json、acceptance-matrix.json和最终TASK/RCP/CERT为准。旧阶段待验语句仅为历史，不覆盖本节。
+
 
 ## 2026-11-06 正式采用维护运行包并冻结0.2.22（当前决定）
 

@@ -1,11 +1,24 @@
 ---
 id: "REL-OPENCODEX-DESKTOP-25"
 object_kind: "release"
-state: "in_progress"
+state: "verified"
 title: "0.2.22同步材质渠道与运行包修复发布"
-summary: "已采用维护运行包并公开测试通道；原包/双端OTA通过，最终WindowsCI与stable晋升仍待。"
+summary: "0.2.22十项修复、维护运行包、双端原包/真实升级及回退验收通过，已正式晋升stable/Latest。"
 ---
 # 0.2.22 发布记录
+
+## 最终稳定发布（2026-11-06）
+
+发布说明源补充提交0c57500f8f46ea50655c782c3f04334a39167abb已推送main，仅CHANGELOG补齐公开安装指南的服务重启/官方更新边界，产品源码、tag和制品均未改变，无需重复代码测试。
+
+0.2.22已正式晋升stable/Latest。PR69合并aae00ae187d2932fcf91f4392103a5e3712ec264，发行tag源1b5c8402dc340540711efa2c2c2037bce673a479保持；最终验收头fa035fb52与合并main整树相同，CI42141370911五适用job全部success。新main推送的重复CI不替代本次已完成的最终源CI，纯发布说明补充不改变任何运行源码或资产。
+
+Stable发布run42147404254成功，再次核验三桌面更新包及维护运行包签名；12资产ID/字节/摘要与草稿完全相同。tag、Latest、beta三份清单匿名读回一致，维护tgz匿名下载15,406,072字节且SHA256 bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957一致。四Windows原包格、两Windows实际OTA、Mac17项同自动新进程OTA/8文件保持及本机回退依据通过。
+
+TASK-OPENCODEX-022-FINAL-20261106、RCP-OPENCODEX-022-FINAL-20261106和CERT-OPENCODEX-022-FINAL-20261106实际关闭，9项必需检查/10AC/3事实回写均通过；DMD-POST021与IMP-30已完成。历史任务/失败/原RDP性能失败保留，本次采用硬件例外和显式离线维护来源，不伪称上游正式包已修。安装后需先重启OpenCodex服务；官方更新仍会取上游版本，维护说明已在Release与CHANGELOG明确。
+
+证据：release-0.2.22-20261106/stable-public-verification.json、governance-closeout.json与正式TASK/RCP/CERT。以下为本版执行中阶段记录，所有“待CI/Latest0.2.21/待晋升”只属于历史，不覆盖本节。
+
 
 https://github.com/gzers/opencodex-desktop/releases/tag/v0.2.22
 

@@ -44,10 +44,11 @@
       "scope": "Read-only startup/manual version observation under connection revision and true failed/no snapshot/unknown states"
     },
     "AC-P21-06": {
-      "result": "pending-final-ci-and-stable",
+      "result": "passed",
       "evidence": [
-        "release-status.json",
+        "stable-public-verification.json",
         "draft-asset-verification.json",
+        "ci-final-run.json",
         "macos-ota/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/report.json",
         "windows-ota"
       ],
@@ -86,5 +87,6 @@
       "scope": "Cold navigation explicit retry, source switch/fast reopen/overlay restoration, actual ready state and bounded failure, unchanged final source"
     }
   },
-  "stableReady": false
+  "stableReady": true,
+  "stableReleased": true
 }

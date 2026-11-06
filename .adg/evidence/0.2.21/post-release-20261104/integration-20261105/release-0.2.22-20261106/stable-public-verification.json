@@ -1,0 +1,109 @@
+{
+  "result": "passed",
+  "stableVersion": "0.2.22",
+  "stableRun": 42147404254,
+  "stableRunResult": "success",
+  "releaseId": 435948372,
+  "mainSha": "aae00ae187d2932fcf91f4392103a5e3712ec264",
+  "prMerged": true,
+  "tagSource": "1b5c8402dc340540711efa2c2c2037bce673a479",
+  "finalCiRun": 42141370911,
+  "finalCiResult": "success",
+  "assetsUnchanged": true,
+  "assets": [
+    {
+      "id": 715405255,
+      "name": "latest.json",
+      "size": 5696,
+      "digest": "sha256:67dc25d3d0dfd96bba8083e6271a16ce6370737e588df580440869181beade34"
+    },
+    {
+      "id": 715436357,
+      "name": "maintained-runtime.json",
+      "size": 1711,
+      "digest": "sha256:ea2672601878f44e70e0d4130ea8b8301b39ed2ba98189d8028e66976a85edb3"
+    },
+    {
+      "id": 715436358,
+      "name": "maintained-runtime.sha256",
+      "size": 108,
+      "digest": "sha256:2c22862f44ddc44ded7e76e70ea2b419ff5c0840b9c8f077f40a80e97213961e"
+    },
+    {
+      "id": 715436356,
+      "name": "opencodex-2.97.0-post021.ownerquery.2.tgz",
+      "size": 15406072,
+      "digest": "sha256:bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957"
+    },
+    {
+      "id": 715436360,
+      "name": "opencodex-2.97.0-post021.ownerquery.2.tgz.sig",
+      "size": 436,
+      "digest": "sha256:1f46a2938791b7c387569eff8e66fca4d67b8b514e531ecfb15b3a7fee21087b"
+    },
+    {
+      "id": 715403607,
+      "name": "OpenCodeX.Desktop_0.2.22_aarch64.dmg",
+      "size": 7093834,
+      "digest": "sha256:a2fb9815e5ef8aa2a1b3073b824d771f4817c4adb2c4e730fee9b50a85f35c03"
+    },
+    {
+      "id": 715405138,
+      "name": "OpenCodeX.Desktop_0.2.22_x64-setup.exe",
+      "size": 5323941,
+      "digest": "sha256:0b824645ac1b1c3eacab58a3a7fcfededfc910104ac282cfd99c7855b4f97895"
+    },
+    {
+      "id": 715405172,
+      "name": "OpenCodeX.Desktop_0.2.22_x64-setup.exe.sig",
+      "size": 452,
+      "digest": "sha256:e87a60dbae2e1d7b0f16fdae221d22edec124685a3f60393ec8c55282d8156c2"
+    },
+    {
+      "id": 715405068,
+      "name": "OpenCodeX.Desktop_0.2.22_x64_en-US.msi",
+      "size": 7467008,
+      "digest": "sha256:204a9a8fa5d365de118cbf443ebae007fe062127b47281a5aa4e68e8e6ee81b3"
+    },
+    {
+      "id": 715405117,
+      "name": "OpenCodeX.Desktop_0.2.22_x64_en-US.msi.sig",
+      "size": 452,
+      "digest": "sha256:c86543f29b0ef3e5cb6ffa32c7c0d7f139ed599dd3af517a4ae21401d560305e"
+    },
+    {
+      "id": 715403654,
+      "name": "OpenCodeX.Desktop_aarch64.app.tar.gz",
+      "size": 7229653,
+      "digest": "sha256:e2d2f58f679757c9b8bc1b7c97531accbe1eccfd9afe5159ded042354887b590"
+    },
+    {
+      "id": 715403725,
+      "name": "OpenCodeX.Desktop_aarch64.app.tar.gz.sig",
+      "size": 440,
+      "digest": "sha256:2b64e9aebc06fa8a3878972724c463c6cc3c150063feef8017be0c6d36a82488"
+    }
+  ],
+  "manifests": {
+    "tag": {
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.2.22/latest.json",
+      "sha256": "67dc25d3d0dfd96bba8083e6271a16ce6370737e588df580440869181beade34",
+      "anonymous": true
+    },
+    "stable": {
+      "url": "https://github.com/gzers/opencodex-desktop/releases/latest/download/latest.json",
+      "sha256": "67dc25d3d0dfd96bba8083e6271a16ce6370737e588df580440869181beade34",
+      "anonymous": true
+    },
+    "beta": {
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/beta/latest.json",
+      "sha256": "67dc25d3d0dfd96bba8083e6271a16ce6370737e588df580440869181beade34",
+      "anonymous": true
+    }
+  },
+  "runtimeAnonymousSha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957",
+  "runtimeAnonymousBytes": 15406072,
+  "publishedAt": "2026-11-06T01:16:24Z",
+  "verifiedAtUtc": "2026-11-06T02:01:11.163749+00:00",
+  "scope": "Same original12assets; old-trust signatures verified before stable by publisher; tag/Latest/beta and maintained runtime read anonymously with ordinary TLS, no credentials"
+}

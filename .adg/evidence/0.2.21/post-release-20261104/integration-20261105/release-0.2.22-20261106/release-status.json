@@ -3,8 +3,8 @@
   "source": "1b5c8402dc340540711efa2c2c2037bce673a479",
   "validationHead": "fa035fb52d6aeaf772d64c73563e1d750cea0bfb",
   "releaseId": 435948372,
-  "channel": "public candidate / beta; Latest0.2.21 preserved",
-  "releaseReadyForStable": false,
+  "channel": "stable/Latest and beta0.2.22",
+  "releaseReadyForStable": true,
   "checks": {
     "desktopRuntimeSignaturePolicy": "passed12assets; exact uploaded bytes",
     "windowsOriginalInstallerMatrix": {
@@ -27,18 +27,16 @@
     "runtimeRollback": "actual stable→patched offline→intentional failure retention→stable/patch removal/config preservation passed",
     "finalCi": {
       "run": 42141370911,
-      "passed": [
-        "frontend",
-        "backend",
-        "release-tools",
-        "windows-smoke-evidence"
-      ],
-      "windows": "backend regression passed; credential/install/finalEXE matrices still running"
+      "result": "success",
+      "applicableJobs": 5,
+      "build": "skipped PR condition; real Release build separately verified"
     }
   },
   "limits": [
     "No claim that old RDP absolute frame budget passed; adopted hardware exception retained",
     "Runtime requires explicit offline installation and service restart; npm source unchanged, standard upstream2.97 stable is considered newer and must not be mistaken for patched runtime",
     "No public upstream PR, no daily config/source/process mutation, no real sync/inference"
-  ]
+  ],
+  "stablePublished": true,
+  "mainSha": "aae00ae187d2932fcf91f4392103a5e3712ec264"
 }

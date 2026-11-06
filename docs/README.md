@@ -12,6 +12,8 @@
 
 ## 当前发布与执行结果
 
+- 2026-11-06：[0.2.22发布后修复与维护运行包](03-开发实施/REL-OPENCODEX-DESKTOP-25.md)已完成原包、签名、双端真实0.2.21→0.2.22升级及回退依据；最终CI42141370911通过，已正式晋升stable/Latest0.2.22；十项验收与TASK/RCP/CERT完成。范围[DMD-POST021](01-需求管理/需求/DMD-OPENCODEX-POST021.md)，顺序[IMP-30](03-开发实施/IMP-OPENCODEX-DESKTOP-30.md)，[原清单当前十项](04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md#post021-current)。
+
 - 2026-10-21：[0.2.1公共UI与原型还原修复](03-开发实施/REL-OPENCODEX-DESKTOP-12.md)已公开并晋升stable，main/tag fbd6e1d1；15项适用验收、723项前端、双平台源与实际制品、原公钥验签及匿名全部资产核对通过。实施与边界沿[IMP-22](03-开发实施/IMP-OPENCODEX-DESKTOP-22.md)。
 
 - 2026-10-21：[0.2.0模型配置与范围同步发布](03-开发实施/REL-OPENCODEX-DESKTOP-11.md)已公开并晋升stable，main/tag f1bbe7d9；完整CI、双平台安装/版本回读、原公钥验签、匿名通道/资产核对通过。实施沿[IMP-21](03-开发实施/IMP-OPENCODEX-DESKTOP-21.md)，长期DMD及旧版未验边界各自保留。

@@ -64,8 +64,8 @@
     "AC-P21-10"
   ],
   "baseline_digest": "8dfe1ac25b5592b3f0250e09a46bb750d82bec290c767042c15ad7f57b68aa85",
-  "certificate_digest": null,
-  "content_digest": "64c086b6f87df3f8a8318552d03b810e3004a73633cd4bf12e765d6723b879a6",
+  "certificate_digest": "5b57aa9871ef9f060b64d7746d0f977f974932bbbec10a8a99cb1f54dc3a3a9c",
+  "content_digest": "97523ab896536f964e935f7a06d9bdbeed12a2a0da9b54a6d03b503306a43904",
   "demand_ids": [
     "DMD-OPENCODEX-POST021"
   ],
@@ -91,7 +91,7 @@
   },
   "id": "TASK-OPENCODEX-022-FINAL-20261106",
   "implementation_id": "IMP-OPENCODEX-DESKTOP-30",
-  "imported_receipt_digest": null,
+  "imported_receipt_digest": "3fd0a7282481afcf2084c507a0e00ab9647f5b96ec2dc61cfde6f70a0e35ffc1",
   "kind": "TASK",
   "owner": "local-final-integration",
   "required_checks": [
@@ -105,11 +105,11 @@
     "review:release-artifacts-upgrade",
     "review:windows-native"
   ],
-  "result": "pending",
-  "revision": 2,
-  "state": "in_progress",
+  "result": "succeeded",
+  "revision": 3,
+  "state": "completed",
   "summary": "承接明确采用维护包后的十AC与全部发行门；纠正前任务遗漏当前交接摘要写域，冻结历史合约不修改。",
-  "summary_digest": "275846e1937777f5d4e80d7145c480da53b9de16e88df70942b6a46719feb057",
+  "summary_digest": "a7f5c85af03954434e7c80edf996b58b0ed42c0cda0b4908125cce5cb070f856",
   "title": "0.2.22最终发行与完整事实回写",
   "write_scope": [
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/**",

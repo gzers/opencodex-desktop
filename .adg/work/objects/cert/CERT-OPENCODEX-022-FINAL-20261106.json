@@ -1,0 +1,134 @@
+{
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-01",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/release-0.2.22-20261106/acceptance-matrix.json",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-P21-02",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/release-0.2.22-20261106/acceptance-matrix.json",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-P21-03",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/release-0.2.22-20261106/acceptance-matrix.json",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-P21-04",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/release-0.2.22-20261106/acceptance-matrix.json",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-P21-05",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/release-0.2.22-20261106/acceptance-matrix.json",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-P21-06",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/release-0.2.22-20261106/acceptance-matrix.json",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-P21-07",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/release-0.2.22-20261106/acceptance-matrix.json",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-P21-08",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/release-0.2.22-20261106/acceptance-matrix.json",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-P21-09",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/release-0.2.22-20261106/acceptance-matrix.json",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-P21-10",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/release-0.2.22-20261106/acceptance-matrix.json",
+      "status": "passed"
+    }
+  ],
+  "checks": [
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/integration-audit/review.json",
+      "name": "review:contribution-evidence",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/release-0.2.22-20261106/ci-final-run.json",
+      "name": "review:integrated-regression",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/release-0.2.22-20261106/native-final/ocx021-mac-native-075be57f-31f5-49ef-a082-1ab017de9f9d/report.json",
+      "name": "review:macos-native",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/release-0.2.22-20261106/draft-asset-verification.json",
+      "name": "review:maintained-runtime-delivery",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/review.json",
+      "name": "review:material-functional-hardware-exception",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/coverage-matrix.json",
+      "name": "review:packaged-client-restart",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/release-0.2.22-20261106/stable-public-verification.json",
+      "name": "review:public-release",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/release-0.2.22-20261106/release-status.json",
+      "name": "review:release-artifacts-upgrade",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/release-0.2.22-20261106/windows-original-installers/received-manifest.json",
+      "name": "review:windows-native",
+      "status": "passed"
+    }
+  ],
+  "closed_task_summary_digest": "a7f5c85af03954434e7c80edf996b58b0ed42c0cda0b4908125cce5cb070f856",
+  "content_digest": "5b57aa9871ef9f060b64d7746d0f977f974932bbbec10a8a99cb1f54dc3a3a9c",
+  "fact_impacts": [
+    {
+      "after_digest": "b6245e3711c61689128d80ee0a20b4a8ea3014b815ba32a661bc3488cfb939d2",
+      "path": "docs/01-需求管理/需求/DMD-OPENCODEX-POST021.md",
+      "summary": "0.2.22十项发布后修复与维护运行包交付完成；双端原包/真实升级、签名、回退依据及同源CI通过，已晋升stable/Latest。",
+      "target": "0"
+    },
+    {
+      "after_digest": "1c59b46392a33910066e34ac535e94e402288e82bc82d14eb208909d19645fe9",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-30.md",
+      "summary": "0.2.22十项发布后修复与维护运行包交付完成；双端原包/真实升级、签名、回退依据及同源CI通过，已晋升stable/Latest。",
+      "target": "1"
+    },
+    {
+      "after_digest": "d4c93887a96ba8850e97509ab83deb4c151ef456101a014ebdb6e3f80fb68db7",
+      "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md",
+      "summary": "0.2.22十项发布后修复与维护运行包交付完成；双端原包/真实升级、签名、回退依据及同源CI通过，已晋升stable/Latest。",
+      "target": "2"
+    }
+  ],
+  "id": "CERT-OPENCODEX-022-FINAL-20261106",
+  "kind": "CERT",
+  "receipt_digest": "3fd0a7282481afcf2084c507a0e00ab9647f5b96ec2dc61cfde6f70a0e35ffc1",
+  "receipt_id": "RCP-OPENCODEX-022-FINAL-20261106",
+  "result": "succeeded",
+  "revision": 1,
+  "summary_digest": "4c7be93aac039c7502ae8de66f025376d34bd5553433f55d0a8ed866dc5c63df",
+  "task_digest_before_close": "64c086b6f87df3f8a8318552d03b810e3004a73633cd4bf12e765d6723b879a6",
+  "task_id": "TASK-OPENCODEX-022-FINAL-20261106",
+  "task_summary_digest": "275846e1937777f5d4e80d7145c480da53b9de16e88df70942b6a46719feb057",
+  "verified_at": "2026-11-06T02:02:19.137963+00:00"
+}
