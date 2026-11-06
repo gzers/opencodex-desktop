@@ -10,6 +10,10 @@ $taskMain=Join-Path $PSScriptRoot 'windows023-two-user-native.ps1'
 $taskChecks=[Collections.Generic.List[object]]::new()
 function Assert-Test([bool]$Condition,[string]$Name){if(!$Condition){throw ('Offline contract failed: '+$Name)};$taskChecks.Add(@{name=$Name;result='pass'})}
 function Assert-Throws([scriptblock]$Action,[string]$Name){$caught=$false;try{& $Action|Out-Null}catch{$caught=$true};Assert-Test $caught $Name}
+$emptyPath=Join-Path $taskOutput 'empty-ledger.json';Write-TwoUserJson $emptyPath @()
+Assert-Test ((Get-Content -LiteralPath $emptyPath -Raw).Trim() -ceq '[]') 'empty-ledger-is-a-real-JSON-array-not-missing-file'
+$singlePath=Join-Path $taskOutput 'one-ledger.json';Write-TwoUserJson $singlePath @(@{pid=42})
+Assert-Test ((Get-Content -LiteralPath $singlePath -Raw).Trim().StartsWith('[')) 'single-ledger-retains-array-container'
 foreach($file in @($taskMain,$taskHelper,$PSCommandPath)){
  $tokens=$null;$errors=$null
  $null=[Management.Automation.Language.Parser]::ParseFile($file,[ref]$tokens,[ref]$errors)

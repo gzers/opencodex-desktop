@@ -164,7 +164,7 @@ function Invoke-TwoUserCli([string]$Cli,[string[]]$Arguments) {
 }
 function Write-TwoUserJson([string]$Path,$Value) {
  $temp=$Path+'.writing-'+[guid]::NewGuid().ToString('N')
- $Value|ConvertTo-Json -Depth 15|Set-Content -LiteralPath $temp -Encoding utf8
+ ConvertTo-Json -InputObject $Value -Depth 15|Set-Content -LiteralPath $temp -Encoding utf8
  [IO.File]::Move($temp,$Path,$true)
 }
 function Get-TwoUserRuntimeDriverText {
