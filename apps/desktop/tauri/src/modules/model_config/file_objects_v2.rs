@@ -168,6 +168,18 @@ impl Drop for WireObjects {
         for m in &mut self.assets.mcps {
             erase_value(&mut m.definition);
         }
+        // A rejected caller capture may have smuggled a credential into an
+        // unknown model source field. Clear those dynamic values on rejection
+        // too, even though the actual L1 validator never accepts that field.
+        if let Some(policy) = &mut self.models.payload.policy {
+            for channel in &mut policy.channels {
+                for model in &mut channel.models {
+                    for field in model.source.fields.values_mut() {
+                        erase_value(&mut field.value);
+                    }
+                }
+            }
+        }
     }
 }
 pub struct SavedObjects {
@@ -547,10 +559,10 @@ fn sections(w: &WireObjects) -> Vec<String> {
 fn secret_count(w: &WireObjects) -> usize {
     w.channel_keys.len()
         + w.webdav_passwords.len()
-        + w.channel_authorizations
-            .values()
-            .filter(|a| a.has_secret_material())
-            .count()
+        // A portable authorization can contain proxy credentials or executor
+        // secrets even when the legacy has_secret_material() only sees pools/
+        // headers. Treat every opaque auth object as one protected secret scope.
+        + w.channel_authorizations.len()
         + portable_assets::secret_count(&w.assets)
 }
 struct BoundedBuffer {
