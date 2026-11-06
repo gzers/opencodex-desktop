@@ -202,7 +202,7 @@ function Invoke-TwoUserChild([string]$InputFile) {
  if($copy.sha256 -cne $original.sha256){throw 'Full private installation copy differs'}
  Write-TwoUserJson (Join-Path $out 'installation-copy.json') $copy
  $exe=Join-Path $installed $c.executableName;$cli=Join-Path $installed 'ocxd.exe'
- $root=Join-Path $nativeProfile '.codex-desktop/desktop';$nativeHome=Join-Path $nativeProfile '.codex-desktop/opencodex'
+ $root=Join-Path $nativeProfile '.codex-desktop/desktop';$nativeHome=Join-Path $nativeProfile '.codex-desktop/opencodex/home'
  $ledger=[Collections.Generic.Dictionary[int,object]]::new();$manager=$null
  $result=[ordered]@{ephemeralGuard=$c.ephemeralGuard;sid=$sid;profile=$nativeProfile;processHome=$env:USERPROFILE;localAppData=$env:LOCALAPPDATA;desktopRoot=$root;opencodexHome=$nativeHome;installation=$installed;result='fail';runtimeProxyVerification='not-verified';sandbox=$false}
  $start={
@@ -254,7 +254,10 @@ function Invoke-TwoUserChild([string]$InputFile) {
   $document.cli=@{cli_enabled=$true};$document.shell=@{auto_panel=$false;launch_main=$true;launch_with_codex=$false};$document.updates=@{app_update_auto_check=$false}
   $document|ConvertTo-Json -Depth 12|Set-Content -LiteralPath $prefs -Encoding utf8
   $manager=& $start;$live=& $screen $manager 'live'
-  if($live.facts.cliEnabled -ne $true){throw 'Isolated CLI preference not effective'}
+  # Windows product UI deliberately keeps CLI disabled. This isolated raw
+  # preference enables only the backend pipe fixture; the actual ocxd calls
+  # below prove it is effective without claiming a supported UI CLI toggle.
+  if($live.facts.cliEnabled -ne $false){throw 'Windows UI CLI capability boundary changed'}
   $pointer=Join-Path $root 'manager-location.json';$metadata=Join-Path $root 'manager-state/data-root.json'
   $location=Get-Content -LiteralPath $pointer -Raw|ConvertFrom-Json;$meta=Get-Content -LiteralPath $metadata -Raw|ConvertFrom-Json
   if($location.schemaVersion -ne 1 -or !(Test-TwoUserSamePath $location.activeRoot (Join-Path $nativeProfile '.codex-desktop')) -or $meta.structure_version -cne '2'){throw 'Actual fixed pointer/structure2 missing'}

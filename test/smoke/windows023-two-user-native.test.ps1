@@ -119,3 +119,7 @@ $result=[ordered]@{schemaVersion=1;result='pass-static-only';checks=$taskChecks.
 foreach($f in @($taskMain,$taskHelper,$PSCommandPath)){$result.files+=@{path=$f;sha256=(Get-FileHash -LiteralPath $f -Algorithm SHA256).Hash.ToLowerInvariant()}}
 $result|ConvertTo-Json -Depth 9|Set-Content -LiteralPath (Join-Path $taskOutput 'static-tests.json') -Encoding utf8
 $result|ConvertTo-Json -Depth 9
+
+$taskHelperSource=Get-Content -LiteralPath $taskHelper -Raw
+Assert-Test ($taskHelperSource.Contains(".codex-desktop/opencodex/home")) 'actual-v2-home-leaf-is-home'
+Assert-Test ($taskHelperSource.Contains("Windows UI CLI capability boundary changed")) 'windows-ui-cli-remains-disabled-with-isolated-pipe-fixture'
