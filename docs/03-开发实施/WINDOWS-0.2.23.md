@@ -1,17 +1,32 @@
 # Windows Git协作任务：0.2.23
 
-2026-11-06，用户已授权整版开发/测试/发布，Windows独立Git协作，由L0统一集成。本文是L4唯一可重读任务入口；范围与验收仍归IMP-32 WIN23-00～04。
+2026-11-07，用户已授权整版开发/测试/发布，Windows独立Git协作，由L0统一集成。本文是L4唯一可重读任务入口；范围与验收仍归IMP-32 WIN23-00～04。
 
-**当前已放行 R1 Windows 平台开发与隔离验证。** 前序“只读核对、等待R1”已被本条替代。代码分支已真实推送，不能继续用0c57500f8或本机旧分支作为新实现。
+**当前已放行 R2 Windows 集成影响与原生边界补验。** R1贡献已接收并集成，前序R1独占编码派发仅作为来源保留；本轮操作与写集以本节R2为准。代码已真实推送，不以旧R1基线或软件显示版本判断是否取得新实现。
 
 ## 当前基线与获取
 
 - 仓库：gzers/opencodex-desktop。
-- 代码：远端codex/0.2.23-integration，明确基线9e69f4598512aac0c4e068b9f9f9c08ede906a28。
-- 文档：远端docs/governance-main，以包含本条R1指令的提交为准；读取本文件、TEAM、IMP-31/32及0.2.23-contracts/L0-paths-runtime-v1.md。
+- 代码：远端codex/0.2.23-integration，明确基线33d2c65b58ba8880d6deea7b52d69117238c3d33。
+- 文档：远端docs/governance-main，以包含本条R2指令的提交为准；读取本文件、TEAM、IMP-31/32及0.2.23-contracts/L0-paths-runtime-v1.md。
 - Windows代码贡献分支：codex/0.2.23-windows；文档/脱敏证据使用独立docs/0.2.23-windows分支。若已有自己的改动，先保留并合并上述明确代码基线，不重置或覆盖工作树。
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
 - 此为0.2.23实施基线，尚非最终安装候选；版本清单仍待L0统一更新。是否取得新代码以完整SHA及实际diff为准，不能仅看软件显示版本。
+
+## R2 当前派发（2026-11-07）
+
+已接收并集成Windows代码codex/0.2.23-windows@42d2a4a1770a5be1050dec3de641efab77a65917，证据docs/0.2.23-windows@f7c54ad2b7027b209ff99a4374a4d4f6cf9179d0；代码原提交911310f1、0c2d1a1d、42d2a4a1对应集成c8e7ac62e、0f3d670d5、7d1ace177。R1证据按原字节归档于[回交目录](../../.adg/evidence/0.2.23/team/L4/r1-20261106-01a1b0c8/)，集成文档提交1a45c44c92c00af9adac00ac66c0bdf821c6eda6。R1的97项GNU检查通过只证明其实际覆盖范围；同一SID的RDP会话不作为两用户证明，GNU复制EXE不作为正式安装包。
+
+本次集成基线已包含04511769c的平台hook（实际Profile/ACL及连接前服务SID验证）与f0f76b7a4的Windows条件编译修正。先在独立代码树fetch并合入明确基线，确认该SHA是当前HEAD祖先；保留贡献分支已有改动，禁止reset覆盖。
+
+1. **现在可执行**：使用当前集成源码，在Windows原生MSVC工具链编译/运行受影响检查，补验两真实SID并行、同SID跨会话/提权单实例、跨SID凭据拒绝、pipe及CLI身份验证、整机端口冲突与进程归属不误连误停。报告真实账号/SID关系，证据脱敏；缺少第二用户权限时明确未验，不以模拟通过代替。
+2. **现在可执行**：检查本基线中已集成的R1实现与L0 hook是否正确组合。必要修复仅限R1已列Windows专属文件与test/smoke/windows023-*；platform.rs、lib.rs、runtime核心、Cargo/版本/发行工作流仍归L0。需要公共修正时提供精确接口/最小补丁需求，不并发改共享文件。
+3. **待后继制品**：MSVC正式NSIS/MSI的安装、从0.2.22更新、卸载保留数据以及完整离线runtime供应，以L0后继交付的安装包/资源描述符摘要为准。本次源码交接不是最终安装候选；不能将隔离夹具或本机缺失的Mac临时路径记作制品交付。仓库已提供.github/runtime-platforms-023.json、.github/scripts/build_desktop_runtime_bundle.py与build_runtime_023.py，可读配方核对，最终stage/发行接线仍由L0完成。
+4. **待共享材质补丁**：本机发现WebKit高效果弹窗透字，公共组件正在独立修复。该补丁尚未纳入本次SHA，因此暂不重复验玻璃；补丁集成后只对受影响WebView2弹窗做有条件的小范围复验，不重做普通页面。
+
+运行包名称版本已确定2.97.0-desktop023.names.1，包SHA256为afb72a4c792c1ca70a0fcd9209d212c78249281d2d7bc42f8eee63aa4464b26b。本条用于后继制品对照，不表示tgz或完整bundle已上传可下载；L0必须提供真实可取位置后再做制品验收。
+
+平台检查保持隔离，不改日常配置、不做真实WebDAV或上游推理、不接管其它用户端口/服务、不自行发布。回交到代码codex/0.2.23-windows及证据docs/0.2.23-windows，明确依赖基线、完整SHA、命令/结果、未完项与清理回执。每批可交付成果完成即提交推送，并更新本入口；只在本机commit或聊天报“完成”不算交付。
 
 ## 共享基础已经具备
 
@@ -21,9 +36,9 @@ U=当前用户HOME/.codex-desktop，D=U/desktop，H=U/opencodex/home；固定指
 
 本机共享检查：data_root 55、IPC 48、workspace 8通过；安装器38项普通检查及固定I布局真实npm6项通过。首轮全Rust回归1333通过、10失败、10忽略：其中4项正是windows_startup_root旧规则测试，另5项目录/IPC消费者已由本机修正，1项200ms进程夹具在隔离重跑通过；保留首轮失败，不把这些数字当整版验收。
 
-## L4 独占写集与本批任务
+## R1 历史写集与来源（不作为R2重复开发指令）
 
-逐文件单写，L0在本批不写下列文件：
+以下为R1已派发与接收的写集；R2的可改范围见前述新派发节：
 
 1. apps/desktop/tauri/src/infrastructure/windows_startup_root.rs：退役注册表/安装旁data/旧绑定链恢复逻辑及旧测试，接当前OS用户Profile/SID；保留lib仍使用的defer_main契约。旧四项默认路径测试改为真正验证新版规则及无旧扫描/无副作用，不通过ignore遮盖。
 2. apps/desktop/tauri/src/infrastructure/windows_user_scope.rs（按需新增，由windows_startup_root.rs内部path模块引入）：实际Token SID、Profile/LocalAppData、目录拥有者及当前用户ACL辅助。固定待接接口：windows_startup_root::current_user_profile()->std::io::Result<PathBuf>；protect_current_user_path(path:&Path,mode:u32)->std::io::Result<()>。保护新用户数据及私有文件，拒绝接管其它用户根；不修改日常配置。L0据此接infrastructure/platform.rs，不直接由L4改该共享文件。
@@ -40,4 +55,4 @@ U=当前用户HOME/.codex-desktop，D=U/desktop，H=U/opencodex/home；固定指
 
 真实SID/安装器环境不足时如实分开报告，不用同用户两个RDP会话冒充两用户。普通UI/共享算法不重复做平台专项。隔离数据、保留失败/成功及清理证据；不运行真实业务同步/推理，不改日常配置或自动清理旧数据，不自行发布。
 
-回交必须推到可取得的代码/文档贡献分支，给完整SHA、依赖基线、合同、环境/命令/结果、未完原生/制品项及清理回执。不能只给Windows本地临时路径。L0核验后统一集成，再提供R4实际运行包/安装候选补验。
+回交必须推到可取得的代码/文档贡献分支，给完整SHA、依赖基线、合同、环境/命令/结果、未完原生/制品项及清理回执。不能只给Windows本地临时路径。L0核验后统一集成；R2缺口及R4实际运行包/安装候选仍按前述新派发节继续。

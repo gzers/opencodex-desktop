@@ -1,6 +1,6 @@
 # 0.2.23 多对话团队协作文件
 
-2026-11-06，Asia/Shanghai。**团队已进入R0资料核对，产品开发尚未启动。** 用户要求分析多对话协作并准备团队文件；本文拥有责任边界、启动条件和回交合同，不复制需求验收，不维护第二份任务状态。
+2026-11-06，Asia/Shanghai。**团队已进入开发与分批集成，Windows按唯一任务入口执行R2补验。** 前序R0/G0段落作为过程来源保留；本文拥有责任边界、启动条件和回交合同，不复制需求验收，不维护第二份任务状态。
 
 执行阶段/整版顺序唯一归[IMP-31](IMP-OPENCODEX-DESKTOP-31.md#3-实施顺序与并行边界)，目录及Windows细目归[IMP-32](IMP-OPENCODEX-DESKTOP-32.md)，模版细目归[IMP-33](IMP-OPENCODEX-DESKTOP-33.md)。范围/验收归[DMD-POST022](../01-需求管理/需求/DMD-OPENCODEX-POST022.md)、[DMD-USER-DIRECTORY](../01-需求管理/需求/DMD-OPENCODEX-USER-DIRECTORY.md)、[DMD-TEMPLATE-MATCHING](../01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md)。本文件不授权发布、真实同步或修改日常配置。
 
@@ -118,3 +118,8 @@ L0内部辅助执行者分别独占data_root/{mod,bootstrap,layout,startup_v2}.r
 ### Windows R1 Git放行补记
 
 代码codex/0.2.23-integration@9e69f4598512aac0c4e068b9f9f9c08ede906a28已真实推送；WINDOWS-0.2.23.md已由前序R0等待状态改为R1平台开发与隔离验证。新增Windows SID/Profile/ACL helper及endpoint.rs的Windows适配逐项授权见该唯一入口，L0保留platform.rs/公共注册。后继完整离线运行包/制品验收仍须另给明确摘要；当前不以版本显示或本机未提交文件作为Windows基线。
+
+
+### 2026-11-07 Windows R2 真实推送交接
+
+Windows R1代码及证据已集成；此前入口未随代码批次更新，已更正唯一任务入口WINDOWS-0.2.23.md至R2。当前已推送代码基线33d2c65b58ba8880d6deea7b52d69117238c3d33，包含实际Profile/ACL及IPC服务SID接线。Windows现在可继续MSVC和真实SID/凭据/pipe/端口原生边界补验；完整安装包与公共材质补丁待L0后继交付，不能将缺失制品项打勾。每批代码与文档及时推送，并提供远端确认的SHA；本机路径或只commit不算跨设备交付。
