@@ -1369,7 +1369,10 @@ fn materialize_sources(
             }
             row["disabled"] = json!(!c.enabled);
             row["allowPrivateNetwork"] = json!(c.allow_private_network);
-            if s.include_key || s.include_authorization {
+            if s.include_key || s.include_authorization
+                || b.mode == ReceiveBindingModeV2::New
+                    && matches!(c.auth_mode.as_deref(), Some("none" | "local"))
+            {
                 channel.connection.auth_mode = c.auth_mode.clone();
                 if let Some(mode) = &c.auth_mode {
                     row["authMode"] = json!(mode);

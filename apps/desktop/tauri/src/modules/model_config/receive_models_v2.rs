@@ -555,6 +555,14 @@ pub fn plan_with_namespace_adoption(
             }
             next.connection.nodes = connection.nodes.clone();
             next.connection.active_node_id = connection.active_node_id.clone();
+            // A newly created no-auth/local source has no existing credential
+            // authority to preserve. Keep its explicit public direction instead
+            // of silently converting it to the absent-field default "key".
+            if old.is_none() && !scope.include_key && !scope.include_authorization
+                && matches!(connection.auth_mode.as_deref(), Some("none" | "local"))
+            {
+                next.connection.auth_mode = connection.auth_mode.clone();
+            }
             // Portable enabled/private-network flags confer no local authority.
             // L0 adopts auth/activation together with the actual outer material.
             if scope.include_key || scope.include_authorization {
