@@ -264,6 +264,9 @@ pub struct FileTransferOwnerV2 {
     passwords: Option<Arc<dyn RootScopedWebDavPasswordInstallerV2>>,
 }
 impl FileTransferOwnerV2 {
+    pub fn desktop_root(&self) -> &Path {
+        &self.d
+    }
     pub fn new(d: PathBuf, h: PathBuf, credentials: Arc<Credentials>) -> ModelResult<Self> {
         for p in [&d, &h] {
             if !p.is_absolute() || !safety::inspect(p)?.is_dir() {

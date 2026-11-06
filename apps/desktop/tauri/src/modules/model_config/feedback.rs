@@ -488,3 +488,6 @@ mod migration_notice_tests {
         assert!(publish_migration_notice(root.path(), &store(), &result).unwrap());
     }
 }
+
+#[path = "feedback_v2.rs"]
+pub(crate) mod v2;
