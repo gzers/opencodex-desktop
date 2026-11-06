@@ -118,7 +118,8 @@ try{
   $acl.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new([Security.Principal.SecurityIdentifier]::new($taskUser.SID.Value),$rights,$inherit,'None','Allow'));Set-Acl -LiteralPath $path -AclObject $acl
  }
  $config=Join-Path $evidence 'input.json'
- Write-TwoUserJson $config @{ephemeralGuard=$true;accountSid=$taskUser.SID.Value;profile=$taskProfile;profileOnly=$false;nativeHelper=(Join-Path $code 'windows023-rust-ordinary-helper.ps1');code=$code;evidence=$evidence;commit=$ExpectedCommit;artifacts=$taskArtifacts;runtimeDlls=@($taskDlls.Values);testArguments=$TestArguments;suiteTimeoutSeconds=$SuiteTimeoutSeconds;node=$taskNode;nodeSha256=$taskReport.node.sha256}
+ $parentRunnerObservation=@{kind='ordinary-runner-parent-observation-v1';githubActions=$env:GITHUB_ACTIONS;runnerEnvironment=$env:RUNNER_ENVIRONMENT;runnerTemp=$env:RUNNER_TEMP;imageOS=$env:ImageOS}
+ Write-TwoUserJson $config @{ephemeralGuard=$true;parentRunnerObservation=$parentRunnerObservation;accountSid=$taskUser.SID.Value;profile=$taskProfile;profileOnly=$false;nativeHelper=(Join-Path $code 'windows023-rust-ordinary-helper.ps1');code=$code;evidence=$evidence;commit=$ExpectedCommit;artifacts=$taskArtifacts;runtimeDlls=@($taskDlls.Values);testArguments=$TestArguments;suiteTimeoutSeconds=$SuiteTimeoutSeconds;node=$taskNode;nodeSha256=$taskReport.node.sha256}
  $credential=[pscredential]::new(($env:COMPUTERNAME+'\'+$taskName),$taskSecure)
  $taskChildEnvironment=@{GITHUB_ACTIONS='true';RUNNER_ENVIRONMENT='github-hosted';ImageOS=$env:ImageOS;RUNNER_TEMP=$taskOutput;TEMP=(Join-Path $taskProfile 'AppData/Local/Temp');TMP=(Join-Path $taskProfile 'AppData/Local/Temp')}
  $taskReport.stage='run-ordinary-suite'
@@ -161,7 +162,7 @@ try{
   if($untracked.Count){$taskRetain=$true}
  }
  if($taskAccess){try{$taskAccess.Dispose();$taskReport.desktopAclRestored=$true}catch{$taskRetain=$true}}
- $restored=$true;$aclErrors=@();for($i=$taskChanges.Count-1;$i -ge 0;$i--){try{Restore-RustOrdinaryReadAccess $taskChanges[$i]}catch{$restored=$false;$aclErrors+=@{path=$taskChanges[$i].path;type=$_.Exception.GetType().FullName;hResult=[int]$_.Exception.HResult;readbackDiffers=($_.Exception.Message -ceq 'Exact original read-ACL restoration readback differs')}}}
+ $restored=$true;$aclErrors=@();for($i=$taskChanges.Count-1;$i -ge 0;$i--){try{Restore-RustOrdinaryReadAccess $taskChanges[$i]}catch{$restored=$false;$aclErrors+=@{path=$taskChanges[$i].path;type=$_.Exception.GetType().FullName;hResult=[int]$_.Exception.HResult;readbackDiffers=($_.Exception.Message -ceq 'Exact original read-ACL restoration readback differs');diagnostic=$_.Exception.Data['aclRestoreDiagnostic']}}}
  $taskReport.aclRestoreErrors=$aclErrors
  $taskReport.sourceOrArtifactAclRestored=$restored
  if($taskUser -and !$taskRetain){try{

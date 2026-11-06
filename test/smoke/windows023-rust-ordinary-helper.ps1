@@ -1,6 +1,12 @@
 # Test-only support. Library mode performs no provisioning or process launch.
 param([ValidateSet('Library','Child')][string]$Mode='Library',[string]$ConfigPath)
-function Assert-RustOrdinaryEphemeral {
+function Assert-RustOrdinaryEphemeral($ParentContext=$null) {
+ if($null -ne $ParentContext){
+  # RunAs may drop custom environment even with -Environment. This is an
+  # explicit parent observation, never a claim those fields were inherited.
+  if(!$IsWindows -or $ParentContext.kind -cne 'ordinary-runner-parent-observation-v1' -or $ParentContext.githubActions -cne 'true' -or $ParentContext.runnerEnvironment -cne 'github-hosted' -or [string]::IsNullOrWhiteSpace($ParentContext.runnerTemp) -or [string]::IsNullOrWhiteSpace($ParentContext.imageOS)){throw 'Parent-observed ephemeral runner context is incomplete'}
+  return
+ }
  if(!$IsWindows -or $env:GITHUB_ACTIONS -cne 'true' -or $env:RUNNER_ENVIRONMENT -cne 'github-hosted' -or [string]::IsNullOrWhiteSpace($env:RUNNER_TEMP) -or [string]::IsNullOrWhiteSpace($env:ImageOS)){throw 'Only a fresh GitHub-hosted ephemeral Windows runner is admitted'}
 }
 function Get-RustOrdinaryBuildArguments([string[]]$CargoArguments,[string]$ManifestPath) {
@@ -101,11 +107,27 @@ function Add-RustOrdinaryReadAccess([string]$Path,[string]$Sid,$Changes) {
 # Suspend ONLY our newly created test process until its real token/identity is
 # recorded. This removes the fast zero-test-binary observation race, not tests.
 function Restore-RustOrdinaryReadAccess($Change) {
- $acl=Get-Acl -LiteralPath $Change.path
- $acl.SetSecurityDescriptorSddlForm($Change.accessSddl,[Security.AccessControl.AccessControlSections]::Access)
- Set-Acl -LiteralPath $Change.path -AclObject $acl
- $readback=(Get-Acl -LiteralPath $Change.path).GetSecurityDescriptorSddlForm([Security.AccessControl.AccessControlSections]::Access)
- if($readback -cne $Change.accessSddl){throw 'Exact original read-ACL restoration readback differs'}
+ $diagnostic=[ordered]@{path=$Change.path;stage='read-before';originalAccessSddl=$Change.accessSddl;readbackAccessSddl=$null;readbackDiffers=$null}
+ $Change|Add-Member -NotePropertyName aclRestoreDiagnostic -NotePropertyValue $diagnostic -Force
+ try{
+  $acl=Get-Acl -LiteralPath $Change.path
+  $diagnostic.stage='set-original-access'
+  $acl.SetSecurityDescriptorSddlForm($Change.accessSddl,[Security.AccessControl.AccessControlSections]::Access)
+  $diagnostic.stage='write-access';Set-Acl -LiteralPath $Change.path -AclObject $acl
+  $diagnostic.stage='readback';$actual=Get-Acl -LiteralPath $Change.path
+  $diagnostic.readbackAccessSddl=$actual.GetSecurityDescriptorSddlForm([Security.AccessControl.AccessControlSections]::Access)
+  $diagnostic.stage='compare'
+  # Diagnostic only: retain strict rejection until actual DACL evidence explains
+  # the drift. SDDL contains ordered ACEs, protection and inheritance flags.
+  $diagnostic.readbackDiffers=$diagnostic.readbackAccessSddl -cne $Change.accessSddl
+  if($diagnostic.readbackDiffers){throw 'Exact original read-ACL restoration readback differs'}
+  $diagnostic.stage='verified'
+ }catch{
+  # DACL-only SDDL and stage contain no password/token. Main may archive this
+  # object from Changes or Exception.Data without serializing raw exceptions.
+  $_.Exception.Data['aclRestoreDiagnostic']=$diagnostic
+  throw
+ }
 }
 function Initialize-RustOrdinaryLaunch {
  if(!('OcxRustOrdinaryLaunch' -as [type])){Add-Type -TypeDefinition @'
@@ -193,7 +215,6 @@ function Start-RustOrdinaryCaptured([string]$Executable,[string[]]$Arguments,[st
  }finally{if($pending){$pending.Dispose();$pending.Process.Dispose()};$outFile.Dispose();$errFile.Dispose()}
 }
 function Invoke-RustOrdinaryChild([string]$InputFile) {
- Assert-RustOrdinaryEphemeral
  $c=Get-Content -LiteralPath $InputFile -Raw|ConvertFrom-Json
  . (Join-Path $c.code 'windows023-two-user-native-helper.ps1')
  . (Join-Path $c.code 'windows-process-token.ps1')
@@ -205,6 +226,9 @@ function Invoke-RustOrdinaryChild([string]$InputFile) {
  $principal=[Security.Principal.WindowsPrincipal]::new([Security.Principal.WindowsIdentity]::GetCurrent())
  if($principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){throw 'Ordinary suite account is administrator'}
  if(!(Test-TwoUserSamePath $env:USERPROFILE $c.profile) -or (Split-Path -Leaf $c.profile) -notlike 'ocxacc*'){throw 'Actual registered new Profile required'}
+ Assert-RustOrdinaryEphemeral $c.parentRunnerObservation
+ if($c.commit -cnotmatch '^[0-9a-f]{40}$' -or !(Test-TwoUserSamePath (Split-Path -Parent $InputFile) $c.evidence)){throw 'Original parent observation is not bound to this child input'}
+ $null=Assert-TwoUserUnder $c.parentRunnerObservation.runnerTemp $c.evidence
  $null=Assert-TwoUserUnder $c.profile $env:TEMP
  if(!(Test-TwoUserSamePath $env:TEMP (Join-Path $env:LOCALAPPDATA 'Temp')) -or !(Test-TwoUserSamePath $env:LOCALAPPDATA (Join-Path $c.profile 'AppData/Local'))){throw 'Actual token Profile TEMP/KnownFolder differs'}
  if(!(Test-Path -LiteralPath $env:TEMP -PathType Container)){throw 'Own registered TEMP missing'}
@@ -215,7 +239,7 @@ function Invoke-RustOrdinaryChild([string]$InputFile) {
  if((Get-FileHash -LiteralPath $c.node -Algorithm SHA256).Hash -ine $c.nodeSha256){throw 'Real fixture Node bytes changed'}
  $env:RUST_BACKTRACE='1';$env:PATH=$PSHOME+';'+(Split-Path -Parent $c.node)+';'+(Join-Path $env:SystemRoot 'System32')
  $ledger=[Collections.Generic.Dictionary[int,object]]::new();$results=[Collections.Generic.List[object]]::new();$exitCode=0
- $report=[ordered]@{schemaVersion=1;result='fail';scope='binaries';fullWorkspacePassed=$false;nativeExecuted=$true;accountSid=$sid;tokenUser=$sid;tokenOwner=$tokenOwner;profile=$env:USERPROFILE;home=$env:HOME;temp=$env:TEMP;expectedCommit=$c.commit;testArguments=@($c.testArguments);docTestsExecuted=$false;allBinariesAttempted=$false;cleanup='pending';exitCode=1;tests=@()}
+ $report=[ordered]@{schemaVersion=1;result='fail';scope='binaries';fullWorkspacePassed=$false;nativeExecuted=$true;runnerAdmissionSource='explicit-parent-observation-after-parent-CI-guard';accountSid=$sid;tokenUser=$sid;tokenOwner=$tokenOwner;profile=$env:USERPROFILE;home=$env:HOME;temp=$env:TEMP;expectedCommit=$c.commit;testArguments=@($c.testArguments);docTestsExecuted=$false;allBinariesAttempted=$false;cleanup='pending';exitCode=1;tests=@()}
  try{
   $probe=Join-Path $env:TEMP ('rust-ordinary-owner-'+[guid]::NewGuid().ToString('N'))
   New-Item -ItemType Directory -Path $probe|Out-Null

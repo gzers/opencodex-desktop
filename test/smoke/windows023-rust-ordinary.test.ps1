@@ -82,15 +82,27 @@ Check ($helper.Contains('accessSddl=$acl.GetSecurityDescriptorSddlForm') -and $h
 # Actual restoration function with a pure ACL fixture: no OS ACL calls on Mac.
 $oldGetAcl=Get-Item Function:Get-Acl -ErrorAction SilentlyContinue
 $oldSetAcl=Get-Item Function:Set-Acl -ErrorAction SilentlyContinue
-$aclState=@{sddl='temporary-grant';sets=0}
+$aclState=@{sddl='temporary-grant';sets=0;readbackOverride=$null;setFails=$false}
 $fakeAcl=[pscustomobject]@{}
 $fakeAcl|Add-Member ScriptMethod SetSecurityDescriptorSddlForm {param($sddl,$section) $aclState.sddl=$sddl}
-$fakeAcl|Add-Member ScriptMethod GetSecurityDescriptorSddlForm {param($section) $aclState.sddl}
+$fakeAcl|Add-Member ScriptMethod GetSecurityDescriptorSddlForm {param($section) if($aclState.readbackOverride){$aclState.readbackOverride}else{$aclState.sddl}}
 try{
  function Get-Acl {param($LiteralPath) $fakeAcl}
- function Set-Acl {param($LiteralPath,$AclObject) $aclState.sets++}
- Restore-RustOrdinaryReadAccess @{path='fixture-only';accessSddl='original-access'}
+ function Set-Acl {param($LiteralPath,$AclObject) $aclState.sets++;if($aclState.setFails){throw 'Fixture write-access failure'}}
+ $change=@{path='fixture-only';accessSddl='original-access'}
+ Restore-RustOrdinaryReadAccess $change
  Check ($aclState.sddl -ceq 'original-access' -and $aclState.sets -eq 1) 'exact-DACL-restoration-pure-fixture'
+ Check ($change.aclRestoreDiagnostic.stage -ceq 'verified' -and $change.aclRestoreDiagnostic.readbackDiffers -eq $false) 'ACL-diagnostic-equal-readback-remains-verified'
+ $aclState.readbackOverride='different-ordered-ACE-or-control-flags'
+ $change=@{path='fixture-only';accessSddl='original-access'}
+ $caught=$null;try{Restore-RustOrdinaryReadAccess $change}catch{$caught=$_}
+ Check ($null -ne $caught -and $change.aclRestoreDiagnostic.stage -ceq 'compare' -and $change.aclRestoreDiagnostic.readbackDiffers -eq $true) 'ACL-drift-still-fails-no-semantic-bypass'
+ $diagnostic=$caught.Exception.Data['aclRestoreDiagnostic']
+ Check ($diagnostic.originalAccessSddl -ceq 'original-access' -and $diagnostic.readbackAccessSddl -ceq $aclState.readbackOverride -and $diagnostic.path -ceq 'fixture-only') 'ACL-error-retains-exact-original-and-readback-DACL-only'
+ $aclState.readbackOverride=$null;$aclState.setFails=$true
+ $change=@{path='fixture-only';accessSddl='original-access'}
+ $caught=$null;try{Restore-RustOrdinaryReadAccess $change}catch{$caught=$_}
+ Check ($null -ne $caught -and $change.aclRestoreDiagnostic.stage -ceq 'write-access' -and $null -eq $change.aclRestoreDiagnostic.readbackAccessSddl) 'ACL-write-failure-distinguished-from-readback-drift'
 }finally{
  if($oldGetAcl){Set-Item Function:Get-Acl $oldGetAcl.ScriptBlock}else{Remove-Item Function:Get-Acl}
  if($oldSetAcl){Set-Item Function:Set-Acl $oldSetAcl.ScriptBlock}else{Remove-Item Function:Set-Acl}
