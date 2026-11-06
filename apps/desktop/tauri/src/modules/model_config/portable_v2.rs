@@ -381,7 +381,7 @@ pub fn decode_portable_models_v2(bytes: &[u8]) -> Result<PortableModelsV2> {
     if bytes.len() > MAX_DOCUMENT_BYTES {
         return Err(error("model_limit"));
     }
-    let header: serde_json::Value = serde_json::from_slice(bytes).map_err(json_error)?;
+    let header = parse_strict_json_v2(bytes)?;
     if header["format"] != PORTABLE_FORMAT
         || header["formatVersion"] != PORTABLE_VERSION
         || header["schemaVersion"] != SCHEMA_VERSION
