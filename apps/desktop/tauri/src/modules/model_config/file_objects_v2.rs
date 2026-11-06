@@ -494,7 +494,8 @@ pub fn encode_document(
 }
 
 /// Device-local semantic identity, never a credential display value. It excludes
-/// only transport/model package creation time/digest and save-event receipts.
+/// transport/model package time/digest, save-event receipts, and source.evidence
+/// provenance. Source values, explicit intent and exact references remain bound.
 /// Model source/explicit/bindings, immutable revision contents and all secret
 /// values remain bound; encryption randomness can never fabricate a change.
 pub fn semantic_digest(objects: &SavedObjects) -> ModelResult<String> {
@@ -502,6 +503,7 @@ pub fn semantic_digest(objects: &SavedObjects) -> ModelResult<String> {
         serde_json::to_value(&objects.wire)
             .map_err(|_| codec_error("portable_objects_v2_format"))?,
     );
+    strip_channel_evidence(&mut value.0);
     let root = value
         .0
         .as_object_mut()
@@ -532,6 +534,187 @@ pub fn semantic_digest(objects: &SavedObjects) -> ModelResult<String> {
     }
     let bytes = secret_canonical(&value.0)?;
     Ok(digest(&bytes))
+}
+/// Pure semantic save atoms. Keys use the existing content_versions::key
+/// algorithm but ALL categories are v2-domain tagged. No receipt, clock, nonce,
+/// or evidence-only source re-read can manufacture a save event.
+pub fn save_state(objects: &SavedObjects) -> ModelResult<super::content_versions::SaveState> {
+    let mut tree = SecretJson(
+        serde_json::to_value(&objects.wire)
+            .map_err(|_| codec_error("portable_objects_v2_format"))?,
+    );
+    strip_channel_evidence(&mut tree.0);
+    let value = &tree.0;
+    let mut out = super::content_versions::SaveState::new();
+    let channels = value
+        .pointer("/models/payload/policy/channels")
+        .and_then(Value::as_array);
+    for channel in channels.into_iter().flatten() {
+        atom(
+            &mut out,
+            &serde_json::json!([
+                "v2-channel",
+                channel["id"],
+                channel["modelSubset"],
+                channel["familyScope"]
+            ]),
+            channel,
+        )?;
+    }
+    for template in value
+        .pointer("/models/payload/templates")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+    {
+        for revision in template["revisions"].as_array().into_iter().flatten() {
+            atom(
+                &mut out,
+                &serde_json::json!(["v2-template", template["id"], revision["id"]]),
+                revision,
+            )?;
+        }
+    }
+    if let Some(policy) = value
+        .pointer("/models/payload/policy")
+        .and_then(Value::as_object)
+    {
+        let global = SecretJson(
+            serde_json::json!({"channelOrder":policy.get("channelOrder"),"templateRefs":policy.get("templateRefs"),"defaultChannelId":policy.get("defaultChannelId")}),
+        );
+        atom(&mut out, &serde_json::json!(["v2-global"]), &global.0)?;
+    }
+    for category in ["preferences", "extensions"] {
+        if !value["manager"][category].is_null() {
+            atom(
+                &mut out,
+                &serde_json::json!([format!("v2-{category}")]),
+                &value["manager"][category],
+            )?;
+        }
+    }
+    for endpoint in value["manager"]["webdav"].as_array().into_iter().flatten() {
+        atom(
+            &mut out,
+            &serde_json::json!(["v2-webdav", endpoint["id"]]),
+            endpoint,
+        )?;
+    }
+    for account in &objects.wire.manager.accounts {
+        let item = SecretJson(
+            crate::modules::sync::portable_accounts::comparison_value(account)
+                .map_err(|e| codec_error(&e.code))?,
+        );
+        let mut identity = SecretJson(item.0.clone());
+        if let Some(fields) = identity.0.as_object_mut() {
+            for key in ["label", "email"] {
+                if let Some(mut removed) = fields.remove(key) {
+                    erase_value(&mut removed);
+                }
+            }
+        }
+        atom(
+            &mut out,
+            &serde_json::json!(["v2-accounts", identity.0]),
+            &item.0,
+        )?;
+    }
+    for skill in value["assets"]["skills"].as_array().into_iter().flatten() {
+        atom(
+            &mut out,
+            &serde_json::json!(["v2-skills", skill["name"]]),
+            skill,
+        )?;
+    }
+    for mcp in value["assets"]["mcps"].as_array().into_iter().flatten() {
+        let mut public = SecretJson(mcp.clone());
+        let secrets = public
+            .0
+            .as_object_mut()
+            .and_then(|m| m.remove("secrets"))
+            .map(SecretJson)
+            .ok_or_else(|| codec_error("portable_objects_v2_format"))?;
+        atom(
+            &mut out,
+            &serde_json::json!(["v2-mcps", mcp["name"]]),
+            &public.0,
+        )?;
+        if secrets.0.as_object().is_some_and(|s| !s.is_empty()) {
+            let material =
+                SecretJson(serde_json::json!({"public":public.0,"credentials":secrets.0}));
+            atom(
+                &mut out,
+                &serde_json::json!(["v2-mcpSecrets", mcp["name"]]),
+                &material.0,
+            )?;
+        }
+    }
+    for category in ["channelKeys", "channelAuthorizations"] {
+        for (id, credential) in value[category].as_object().into_iter().flatten() {
+            let channel = channels
+                .into_iter()
+                .flatten()
+                .find(|c| c["id"].as_str() == Some(id))
+                .ok_or_else(|| codec_error("credential_scope"))?;
+            let material =
+                SecretJson(serde_json::json!({"channel":channel,"credential":credential}));
+            atom(
+                &mut out,
+                &serde_json::json!([
+                    format!("v2-{category}"),
+                    id,
+                    channel["modelSubset"],
+                    channel["familyScope"]
+                ]),
+                &material.0,
+            )?;
+        }
+    }
+    for (id, secret) in value["webdavPasswords"].as_object().into_iter().flatten() {
+        atom(
+            &mut out,
+            &serde_json::json!(["v2-webdavPasswords", id]),
+            secret,
+        )?;
+    }
+    Ok(out)
+}
+fn atom(
+    out: &mut super::content_versions::SaveState,
+    identity: &Value,
+    value: &Value,
+) -> ModelResult<()> {
+    let key = super::content_versions::key(identity).map_err(|e| codec_error(&e.code))?;
+    let hash = digest(&secret_canonical(value)?);
+    if out.insert(key, hash).is_some() {
+        return Err(codec_error("content_version"));
+    }
+    Ok(())
+}
+/// Remove only trace evidence attached to model source FIELDS. Never remove
+/// source values, model bindings, source model IDs, or immutable revision data.
+fn strip_channel_evidence(root: &mut Value) {
+    if let Some(channels) = root
+        .pointer_mut("/models/payload/policy/channels")
+        .and_then(Value::as_array_mut)
+    {
+        for channel in channels {
+            for model in channel["models"].as_array_mut().into_iter().flatten() {
+                if let Some(fields) = model
+                    .pointer_mut("/source/fields")
+                    .and_then(Value::as_object_mut)
+                {
+                    for field in fields.values_mut() {
+                        if let Some(fields) = field.as_object_mut() {
+                            if let Some(mut evidence) = fields.remove("evidence") {
+                                erase_value(&mut evidence);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 fn sections(w: &WireObjects) -> Vec<String> {
     let mut out = vec!["models".into()];
