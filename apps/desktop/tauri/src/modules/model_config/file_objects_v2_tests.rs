@@ -624,3 +624,24 @@ fn file_objects_v2_model_explicit_intent_remains_in_semantic_identity() {
     let restored = SavedObjects::capture(parts, None).unwrap();
     assert_eq!(previous, semantic_digest(&restored).unwrap());
 }
+#[test]
+fn file_objects_v2_proxy_only_authorization_still_counts_as_secret_scope() {
+    struct Host;
+    impl AuthorizationValidator for Host {
+        fn validate(&self, _: &PortableChannelV2, auth: &PortableAuthorization) -> ModelResult<()> {
+            crate::modules::model_config::provider_auth::validate_portable(
+                &json!({"baseUrl":"https://fixture.example.test/v1","adapter":"openai"}),
+                auth,
+            )
+        }
+    }
+    let auth:PortableAuthorization=serde_json::from_value(json!({"activeId":null,"fields":{"proxy":"http://fixture:synthetic-password@proxy.example.test:8080"}})).unwrap();
+    assert!(!auth.has_secret_material()); // legacy helper misses proxy material
+    let mut input = capture();
+    input.channel_authorizations.insert(CHANNEL.into(), auth);
+    let o = SavedObjects::capture(input, Some(&Host)).unwrap();
+    let file = encode(&o, OP, TIME, None, Some(&Host)).unwrap();
+    let opened = portable_file::open(file.bytes(), None).unwrap();
+    assert_eq!(opened.manifest.secret_objects, 1);
+    decode(file.bytes(), None, &supported_schema(), Some(&Host)).unwrap();
+}
