@@ -555,6 +555,51 @@ pub fn seed_library_v2() -> Result<LibraryV2> {
     Ok(library)
 }
 
+/// Pure shared Agent lock checker. It never creates a revision or relaxes
+/// the root/condition lock sets. Call content validation before this function.
+pub fn validate_agent_locks_v2(old: &TemplateContentV2, after: &TemplateContentV2) -> Result<()> {
+    let old_json = serde_json::to_value(old).map_err(json_error)?;
+    let new_json = serde_json::to_value(after).map_err(json_error)?;
+    for locked in &old.locked_fields {
+        let path = if locked == "rules" {
+            "/commonRules".into()
+        } else if locked == "variants" {
+            "/conditionOverrides".into()
+        } else if let Some(key) = locked.strip_prefix("rules.") {
+            format!("/commonRules/{key}")
+        } else {
+            format!("/{}", locked.replace('.', "/"))
+        };
+        if old_json.pointer(&path) != new_json.pointer(&path) {
+            return Err(error("model_locked_field"));
+        }
+    }
+    for condition in &old.condition_overrides {
+        if condition.locked_fields.is_empty() {
+            continue;
+        }
+        let next = after
+            .condition_overrides
+            .iter()
+            .find(|c| c.id == condition.id)
+            .ok_or_else(|| error("model_locked_field"))?;
+        let old = rules_values(&condition.rules)?;
+        let new = rules_values(&next.rules)?;
+        if condition
+            .locked_fields
+            .iter()
+            .any(|key| old.get(key) != new.get(key))
+            || next.locked_fields != condition.locked_fields
+        {
+            return Err(error("model_locked_field"));
+        }
+    }
+    if after.locked_fields != old.locked_fields {
+        return Err(error("model_locked_field"));
+    }
+    Ok(())
+}
+
 /// Immutable revision append plan; IDs and time are supplied by the transaction owner.
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -614,46 +659,7 @@ pub fn save_revision_plan_v2(
                 .find(|r| Some(&r.id) == request.base_revision.as_ref())
                 .unwrap()
                 .content;
-            let old_json = serde_json::to_value(old).map_err(json_error)?;
-            let new_json = serde_json::to_value(&request.content).map_err(json_error)?;
-            for locked in &old.locked_fields {
-                let path = if locked == "rules" {
-                    "/commonRules".into()
-                } else if locked == "variants" {
-                    "/conditionOverrides".into()
-                } else if let Some(key) = locked.strip_prefix("rules.") {
-                    format!("/commonRules/{key}")
-                } else {
-                    format!("/{}", locked.replace('.', "/"))
-                };
-                if old_json.pointer(&path) != new_json.pointer(&path) {
-                    return Err(error("model_locked_field"));
-                }
-            }
-            for condition in &old.condition_overrides {
-                if condition.locked_fields.is_empty() {
-                    continue;
-                }
-                let next = request
-                    .content
-                    .condition_overrides
-                    .iter()
-                    .find(|c| c.id == condition.id)
-                    .ok_or_else(|| error("model_locked_field"))?;
-                let old = rules_values(&condition.rules)?;
-                let new = rules_values(&next.rules)?;
-                if condition
-                    .locked_fields
-                    .iter()
-                    .any(|key| old.get(key) != new.get(key))
-                    || next.locked_fields != condition.locked_fields
-                {
-                    return Err(error("model_locked_field"));
-                }
-            }
-            if request.content.locked_fields != old.locked_fields {
-                return Err(error("model_locked_field"));
-            }
+            validate_agent_locks_v2(old, &request.content)?;
         }
     }
     let prior = existing.and_then(|t| {
