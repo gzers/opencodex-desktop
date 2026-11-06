@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "original": {
+    "run": 42312502433,
+    "source": "eeb452913b0c6f94e9e0af59a19074f031942e45",
+    "result": "failure",
+    "parentObservationAdmission": "passed; next failure in WriteTwoUserJson File.Move line168",
+    "emptyLedgerReproduction": "@() pipeline produced no JSON/no file; originalFileMoveFileNotFound recreated on Mac",
+    "daclDiff": "three roots originalD: vs readbackD:AI; all orderedACEbytes identical; strict rejection kept pending restoration design"
+  },
+  "followup": {
+    "source": "91a97f99f",
+    "realRun": 42313153160,
+    "change": "ConvertTo-Json -InputObject Value preserves empty and singleton array; no permissions or product change",
+    "nativeResult": "pending"
+  },
+  "files": [
+    {
+      "file": "ocxd023-preflight4-evidence.zip",
+      "bytes": 93100,
+      "sha256": "491f8a7f9cd4fc0ebaf636ad35ff097f6f50033d2f930086ca5f94cd4d449c2b"
+    },
+    {
+      "file": "bootstrap.stderr.log",
+      "zipMember": "native/ordinary/bootstrap.stderr.log",
+      "bytes": 327,
+      "sha256": "345ddc80e0d76661fa84dcfb38f0d71870f05d23d64864594d69366f4261729c"
+    },
+    {
+      "file": "child-admission-failure.json",
+      "zipMember": "native/ordinary/child-admission-failure.json",
+      "bytes": 398,
+      "sha256": "8c6510cfc1b80096068667fc2986df0318acb45d6a66afb7f8f343b85b518de0"
+    },
+    {
+      "file": "rust-ordinary.json",
+      "zipMember": "native/rust-ordinary.json",
+      "bytes": 5154,
+      "sha256": "e52a1c999a1762728fb6558c761d5c3b90d63e57573aaad5c16b1b0fdb3c66b4"
+    },
+    {
+      "file": "ocxd023-empty-json-ledger-tests.log",
+      "bytes": 12102,
+      "sha256": "e25d60e0c19bbb84a3bfe17fb346b1fed24c4f09be4b91eacda9436b72b94ce5"
+    },
+    {
+      "file": "ocxd023-empty-json-ordinary-tests.log",
+      "bytes": 9499,
+      "sha256": "0a4665ed060dea614497eb22932832f78bbd5d66e941a20fc52bf3aa8785f262"
+    },
+    {
+      "file": "ocxd023-parent-admission-acl-diagnostic-final.log",
+      "bytes": 9499,
+      "sha256": "41c09d6207a33cc6f2cfde09778ace95429ae99d9c9e59e379c16bd9b1d37051"
+    }
+  ],
+  "fullSoftwarePassed": false
+}

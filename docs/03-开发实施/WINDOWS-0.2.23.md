@@ -13,6 +13,16 @@
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
 - 此为0.2.23实施基线，尚非最终安装候选；版本清单仍待L0统一更新。是否取得新代码以完整SHA及实际diff为准，不能仅看软件显示版本。
 
+## R15 普通执行器已到原生暂停态身份边界（2026-11-07）
+
+后继91a97f99f修空JSON数组：pipeline在空进程账本时不生成tempfile，File.Move因此失败；同函数实际空数组复现，改InputObject并保持单项数组容器，不改产品。[r20](../../.adg/evidence/0.2.23/team/L0/r20-preflight-ledger-and-dacl-20261107/manifest.json)保留原ZIP与实际DACL原/读回证据。
+
+1eb5c9225只接受D:→D:AI自动继承状态补记，全部ACE文本/顺序、Windows ACL二进制和保护位必须相同；报告normalized-auto-inherited-only/exact=false，不将真正访问权限或继承变更放过，116纯正反例通过。d5048038a将已验证父观测上下文贯穿暂停态启动函数，并再核当前OS SID。[r21](../../.adg/evidence/0.2.23/team/L0/r21-ordinary-launch-context-20261107/manifest.json)保留原回执。
+
+实际短run42313538716已证明sourceOrArtifactAclRestored=true、accountAndProfileRemoved=true、sourceBytesUnchanged=true，真实SID=TokenOwner/Profile/TEMP/fresh directory owner通过。但未产生完成的Rust test回执；在暂停态进程retained kernel映像/时间及ordinary elevation通过后，CIM复合路径/拥有者/时间对照拒绝。不能猜具体哪字段或把空stdout当测试通过。下一后继直接用同一retained句柄读实际TokenUser，CIM阳性矛盾仍拒并保留诊断，实际快验后再进入全软件suite。[r22](../../.adg/evidence/0.2.23/team/L0/r22-ordinary-native-identity-boundary-20261107/manifest.json)原日志/ZIP保持。
+
+目前所有改动限测试执行器/CI，不改产品权限或日常配置；软件49binary、安装/相邻和显式MSI切换、卸载保留及两SID端口未关闭，不发布。
+
 ## R14 快速原生预检的真实环境与清理缺口（2026-11-07）
 
 第一次短run42310763513证实CreateProfile HRESULT0及actual KnownFolders通过，父子普通账号pwsh已启动，但未产生Rust suite回执；账户/Profile已清、源码未变，DACL读回不一致仍判cleanup-failed，不能算通过。[r18原ZIP/回执](../../.adg/evidence/0.2.23/team/L0/r18-ordinary-preflight-first-native-20261107/manifest.json)。

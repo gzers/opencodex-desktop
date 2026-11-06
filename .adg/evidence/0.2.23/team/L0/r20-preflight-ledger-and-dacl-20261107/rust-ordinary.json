@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "ephemeralGuard": true,
+  "result": "cleanup-failed",
+  "scope": "binaries",
+  "fullWorkspacePassed": false,
+  "expectedCommit": "eeb452913b0c6f94e9e0af59a19074f031942e45",
+  "nativeSuiteExecuted": true,
+  "allBinariesAttempted": false,
+  "docTestsExecuted": false,
+  "adminSpecializedGroups": "must-run-independently-in-parent-always-path",
+  "cargoArguments": [
+    "--locked",
+    "--workspace",
+    "--features",
+    "integration-test",
+    "--no-fail-fast"
+  ],
+  "testArguments": [],
+  "suiteTimeoutSeconds": 2400,
+  "sourceOrArtifactAclRestored": false,
+  "desktopAclRestored": true,
+  "accountAndProfileRemoved": true,
+  "exitCode": 1,
+  "stage": "run-ordinary-suite",
+  "node": {
+    "sha256": "5cba0ea928508c65ddadefc0681d2fb6d95f1f3beea4428f04397631140ee8e5",
+    "path": "C:\\hostedtoolcache\\windows\\node\\26.8.1\\x64\\node.exe",
+    "version": "v26.8.1"
+  },
+  "harnessContract": "metadata-covered-default-libtest-only; custom/ambiguous harness refused",
+  "runtimeDlls": [],
+  "artifacts": [
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-ordinary-preflight\\target\\debug\\deps\\windows023_ordinary_preflight-791569d65fb88844.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows023-ordinary-preflight#0.1.0",
+      "target": "windows023_ordinary_preflight",
+      "kinds": [
+        "lib"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-ordinary-preflight",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-ordinary-preflight\\Cargo.toml",
+      "packageName": "windows023-ordinary-preflight",
+      "packageVersion": "0.1.0",
+      "sha256": "de10b4e052ee20017a578ad2bfe457bff972f78c26479fb25826445ff0ba00cf"
+    }
+  ],
+  "createProfileHResult": 0,
+  "accountSid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+  "profile": "C:\\Users\\ocxacc232f2433ac",
+  "failureCode": "ordinary_suite_build_provision_or_execution_failed",
+  "failureType": "System.Management.Automation.ItemNotFoundException",
+  "failureLine": 131,
+  "failureHResult": -2146233087,
+  "remainingNewSidProcesses": [],
+  "aclRestoreErrors": [
+    {
+      "type": "System.Management.Automation.RuntimeException",
+      "path": "D:\\a\\_temp\\ocxd023-preflight-native-541e09312bea4a4391cf267471fa82e0",
+      "readbackDiffers": true,
+      "hResult": -2146233087,
+      "diagnostic": {
+        "path": "D:\\a\\_temp\\ocxd023-preflight-native-541e09312bea4a4391cf267471fa82e0",
+        "stage": "compare",
+        "originalAccessSddl": "D:(A;;FA;;;BA)(A;OICIID;FA;;;BA)(A;OICIID;FA;;;SY)(A;OICIIOID;GA;;;CO)(A;OICIID;0x1200a9;;;BU)(A;CIID;LC;;;BU)(A;CIID;DC;;;BU)",
+        "readbackAccessSddl": "D:AI(A;;FA;;;BA)(A;OICIID;FA;;;BA)(A;OICIID;FA;;;SY)(A;OICIIOID;GA;;;CO)(A;OICIID;0x1200a9;;;BU)(A;CIID;LC;;;BU)(A;CIID;DC;;;BU)",
+        "readbackDiffers": true
+      }
+    },
+    {
+      "type": "System.Management.Automation.RuntimeException",
+      "path": "D:\\a\\_temp\\ocxd023-preflight-native-541e09312bea4a4391cf267471fa82e0\\code",
+      "readbackDiffers": true,
+      "hResult": -2146233087,
+      "diagnostic": {
+        "path": "D:\\a\\_temp\\ocxd023-preflight-native-541e09312bea4a4391cf267471fa82e0\\code",
+        "stage": "compare",
+        "originalAccessSddl": "D:(A;;FA;;;BA)(A;OICIID;FA;;;BA)(A;OICIID;FA;;;SY)(A;OICIIOID;GA;;;CO)(A;OICIID;0x1200a9;;;BU)(A;CIID;LC;;;BU)(A;CIID;DC;;;BU)",
+        "readbackAccessSddl": "D:AI(A;;FA;;;BA)(A;OICIID;FA;;;BA)(A;OICIID;FA;;;SY)(A;OICIIOID;GA;;;CO)(A;OICIID;0x1200a9;;;BU)(A;CIID;LC;;;BU)(A;CIID;DC;;;BU)",
+        "readbackDiffers": true
+      }
+    },
+    {
+      "type": "System.Management.Automation.RuntimeException",
+      "path": "D:\\a\\opencodex-desktop\\opencodex-desktop",
+      "readbackDiffers": true,
+      "hResult": -2146233087,
+      "diagnostic": {
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop",
+        "stage": "compare",
+        "originalAccessSddl": "D:(A;;FA;;;BA)(A;OICIID;FA;;;BA)(A;OICIID;FA;;;SY)(A;OICIIOID;GA;;;CO)(A;OICIID;0x1200a9;;;BU)(A;CIID;LC;;;BU)(A;CIID;DC;;;BU)",
+        "readbackAccessSddl": "D:AI(A;;FA;;;BA)(A;OICIID;FA;;;BA)(A;OICIID;FA;;;SY)(A;OICIIOID;GA;;;CO)(A;OICIID;0x1200a9;;;BU)(A;CIID;LC;;;BU)(A;CIID;DC;;;BU)",
+        "readbackDiffers": true
+      }
+    }
+  ],
+  "sourceBytesUnchanged": true,
+  "cleanup": [
+    {
+      "process": {
+        "pid": 5808,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296047861735730",
+        "sessionId": 2
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 7072,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+        "creationTicks": "639296047861699385",
+        "sessionId": 2
+      },
+      "result": "stopped-or-exited"
+    }
+  ]
+}

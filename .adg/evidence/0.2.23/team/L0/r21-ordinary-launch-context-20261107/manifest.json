@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "original": {
+    "run": 42313153160,
+    "source": "91a97f99f708d0b17b5fd795d16f174e01a230ae",
+    "ordinaryChildAdmission": "passed actual SID=TokenOwner/Profile/TEMP/freshDirectoryOwner",
+    "rustBinaryAttempted": false,
+    "failure": "nested Start-RustOrdinaryCaptured called environment-only guard without already validated parent context"
+  },
+  "changes": {
+    "aclSource": "1eb5c9225",
+    "aclRule": "Only D: to D:AI, orderedACEtext+binaryidentical, protectionunchanged, exactfalse normalized label retained;116pure checks; nativeconfirmationpending",
+    "launchSource": "d5048038a",
+    "launchRule": "same explicit admitted parent context propagated, current OS SID rechecked before CreateProcess; no deadlines/tests dropped",
+    "nativeRun": 42313538716,
+    "nativeStatusAtCollection": "started; not passed"
+  },
+  "files": [
+    {
+      "file": "ocxd023-preflight5-evidence.zip",
+      "source": "/tmp/ocxd023-preflight5-evidence.zip",
+      "bytes": 93287,
+      "sha256": "cc5a7fc64cede904f19e48451ba469cc07c9b9e5b5691558d1844cf3bd0ea91c"
+    },
+    {
+      "file": "ocxd023-launch-parent-context-tests.log",
+      "source": "/tmp/ocxd023-launch-parent-context-tests.log",
+      "bytes": 12201,
+      "sha256": "fcaec0dc2e5ee8353f78395546d9b75fd462beaf8c79b0b9a5430dd4552624cb"
+    },
+    {
+      "file": "ocxd023-acl-ai-main-review.log",
+      "source": "/tmp/ocxd023-acl-ai-main-review.log",
+      "bytes": 12201,
+      "sha256": "17f4f6b9d7b4055d73b8c1538bf5b6f3d3ebd1f3d574346d2a4f988a70f42627"
+    },
+    {
+      "file": "ocxd023-rust-ordinary-acl-ai-static.log",
+      "source": "/tmp/ocxd023-rust-ordinary-acl-ai-static.log",
+      "bytes": 12201,
+      "sha256": "fb79340f7e12739ce1f133dc4f2c0e30d433e55d8c28b67367eeef4c0a951a93"
+    },
+    {
+      "file": "ordinary-suite.json",
+      "zipMember": "native/ordinary/ordinary-suite.json",
+      "bytes": 1000,
+      "sha256": "1c8d637603dcf6e3565111d4ff89f5b08328740a87b7c9574292b445b30ae6e1"
+    },
+    {
+      "file": "rust-ordinary.json",
+      "zipMember": "native/rust-ordinary.json",
+      "bytes": 6013,
+      "sha256": "f3066b8078137ebf6418322a55d0abeed9d0ac3b07ffe48616d8fedce03e6947"
+    }
+  ],
+  "fullSoftwarePassed": false,
+  "release": "not published"
+}

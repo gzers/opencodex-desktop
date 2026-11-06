@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "run": 42313538716,
+  "source": "d5048038a9fccb46e56e75fec45c062f4a0957b6",
+  "result": "failure",
+  "facts": {
+    "profileAdmission": "pass",
+    "freshDirectoryOwnerMatchesTokenUser": true,
+    "sourceOrArtifactAclRestored": true,
+    "accountAndProfileRemoved": true,
+    "sourceBytesUnchanged": true,
+    "rustTestOutput": "test1stdout/stderrpresentbutempty; no completedtestreceipt",
+    "failure": "StartRustOrdinaryCaptured:CIMpath/owner/time composite check rejected at231 after retainedkernelimage/time and ordinaryelevation probes; actual failingCIMfieldnotyetreported",
+    "fullSoftwarePassed": false
+  },
+  "files": [
+    {
+      "file": "ocxd023-preflight6-evidence.zip",
+      "bytes": 106974,
+      "sha256": "79c4098f166eda6f171eeb7be7ea8b1a880c3b29a5cd624195d33e9a6ed45a54"
+    },
+    {
+      "file": "ordinary-suite.json",
+      "zipMember": "native/ordinary/ordinary-suite.json",
+      "bytes": 1001,
+      "sha256": "e8be4be200871ab20f9135f63f6d3cf3cdfda4bfdd202d380bd3b94e09ad145d"
+    },
+    {
+      "file": "owned-processes.json",
+      "zipMember": "native/ordinary/owned-processes.json",
+      "bytes": 4,
+      "sha256": "a5338d955b09046ec0b16f3a9625b7955c763aae07dc722e474e6078745f932f"
+    },
+    {
+      "file": "test-1.stderr.log",
+      "zipMember": "native/ordinary/test-1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "test-1.stdout.log",
+      "zipMember": "native/ordinary/test-1.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "rust-ordinary.json",
+      "zipMember": "native/rust-ordinary.json",
+      "bytes": 564003,
+      "sha256": "46660d9518ed2a6b2e0cfdc4995fd4e07a4acd77880a0979e35b53174671dbbd"
+    }
+  ],
+  "next": "readTokenUserthroughsame retainedkernelhandle, keeppositiveCIMcontradictionsdiagnostic and exactprocesscleanup; nativepending"
+}
