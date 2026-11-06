@@ -1,0 +1,22 @@
+{
+  "date": "2026-11-06",
+  "pinnedRuntime": "2.97.0-post021.ownerquery.2",
+  "ownerRegistrySourceSha256": "7d60f8374a9587f99aa5730264d36ad62f30a8adf025a2cdfb2bbbd0c3fe64ff",
+  "meaning": "~/.opencodex/ocx-homes/<home-path-hash>.json contains home locator plus v1; actual config remains <home>/config.json; protected runtime record still required to prove ownership",
+  "currentUpstreamReference": "https://github.com/lidge-jun/opencodex/blob/main/src/config/owner-registry.ts",
+  "localMacOSOnly": {
+    "registryDirectoryExists": true,
+    "boundedEntriesInspected": 1,
+    "entries": [
+      {
+        "validHomePointer": true,
+        "pointsToDesktopInternalHome": true,
+        "pointsToExistingHome": true,
+        "bytesUnchanged": true
+      }
+    ]
+  },
+  "sensitiveRead": "Only small home-locator JSON inspected, no runtime-port secrets/config/credentials or contents copied",
+  "writesOrNetworkServiceMutations": false,
+  "planStatus": "User requested revised Desktop config placement, not product implementation; executables remain existing Desktop-managed locations; no0.2.23scope amendment"
+}
