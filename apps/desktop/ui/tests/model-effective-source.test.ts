@@ -1,49 +1,23 @@
 import {afterEach,beforeEach,describe,expect,it,vi} from 'vitest'
-import {mount,flushPromises} from '@vue/test-utils'
-import {createPinia,setActivePinia} from 'pinia'
-import {reactive} from 'vue'
+import {mount,flushPromises,type VueWrapper} from '@vue/test-utils'
+import {defineComponent,h,reactive} from 'vue'
 import ChannelEditor from '@/features/models/ChannelEditor.vue'
 import ModelRuleFields from '@/features/models/ModelRuleFields.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
-import {emptyContent,emptyRules,modelApi,type ChannelPolicy,type ModelProjection,type Template} from '@/features/models/api'
-vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{project:vi.fn(),discover:vi.fn(),forgetCredential:vi.fn()}}))
-let pinia:ReturnType<typeof createPinia>
-beforeEach(()=>{pinia=createPinia();setActivePinia(pinia);vi.mocked(modelApi.project).mockResolvedValue({rows:[],knownActiveModels:0,exactCatalogCount:null,notices:[]})})
-afterEach(()=>pinia._s.forEach(store=>store.$dispose()))
-function fixture(){
- const channel=reactive<ChannelPolicy>({id:'channel',label:'测试渠道',templateRefs:[{templateId:'family',revisionId:'version'}],modelRefs:{},connection:{providerId:'custom',protocol:'openai-chat',nodes:[{id:'node',name:'主站',url:'https://example.test'}],activeNodeId:'node',credentialRef:null,enabled:true,allowPrivateNetwork:false},selection:{mode:'whitelist',models:['raw/a','raw/b']},modelOrder:['raw/a','raw/b'],discovered:['raw/a','raw/b'].map(id=>({id,label:id,rules:emptyRules()})),defaults:emptyRules(),overrides:{},familyOverrides:{}})
- const template:Template={id:'family',label:'自建族',source:'user',defaultRevision:'version',revisions:[{id:'version',savedLabel:'自建族',createdAt:'2026-10-20',digest:'fixture',content:emptyContent(),baseRevision:null,changes:[]}]}
- const rows:ModelProjection[]=channel.discovered.map(m=>({channelId:'channel',providerId:'custom',modelId:m.id,label:m.id,enabled:true,selected:true,discovered:true,templateRef:m.id==='raw/a'?{templateId:'family',revisionId:'version'}:null,rules:{...emptyRules(),fast:{mode:'custom',value:false}},source:{fast:'单模型覆盖'}}))
- return {channel,template,rows}
-}
+import {emptyRules,type ModelProjection} from '@/features/models/api'
+import {modelV2Api} from '@/features/models/api-v2'
+import {workspaceBackend,workspaceId as id,withWorkspaceModels,copyWorkspace} from './helpers/modelWorkspaceV2'
+const ipc=vi.hoisted(()=>vi.fn())
+vi.mock('@tauri-apps/api/core',()=>({invoke:ipc}))
+let backend:ReturnType<typeof workspaceBackend>,store:Awaited<ReturnType<ReturnType<typeof workspaceBackend>['load']>>,wrappers:VueWrapper[]=[]
+const dialog={props:['open'],template:'<section v-if="open"><slot/><slot name="actions" :close="() => $emit(&quot;close&quot;)"/></section>'}
+const button=(w:Pick<VueWrapper,'findAll'>,text:string)=>w.findAll('button').find(b=>b.text()===text)!
+beforeEach(async()=>{backend=workspaceBackend(ipc,['channel']);const fixture=withWorkspaceModels(backend.current,['raw/a','raw/b']),t=fixture.library.templates[0]!,r=t.revisions[0]!,reference={templateId:t.id,revisionId:r.id,digest:r.digest};fixture.savedPolicy.channels[0]!.selection={mode:'whitelist',models:['raw/a','raw/b']};fixture.savedPolicy.channels[0]!.models[0]={...fixture.savedPolicy.channels[0]!.models[0]!,binding:{kind:'auto_read',reference}};fixture.savedPolicy.channels[0]!.familyOverrides[t.id]=emptyRules();fixture.effective=fixture.effective.map((row,index)=>index===0?{...row,binding:{kind:'auto_read',reference}}:row);backend.current=fixture;store=await backend.load();vi.spyOn(modelV2Api,'fileProject')})
+afterEach(()=>{wrappers.splice(0).forEach(w=>w.unmount());vi.restoreAllMocks()})
+function render(){const view=reactive({projectionBusy:false,projectionError:''});const root=mount(defineComponent({setup:()=>()=>h(ChannelEditor,{channel:store.channels[0]!,effective:store.effectiveRows,...view,onIntent:store.queueChannel})}),{global:{stubs:{NodePicker:true,ModelRuleFields:true,UiSelectField:true,UiDialog:dialog}}});wrappers.push(root);return {wrapper:root.getComponent(ChannelEditor),view}}
 describe('model family and effective sources',()=>{
- it('accepts alias on blur through the common validator while raw identity and other model settings remain stable',async()=>{
-  const {channel,template,rows}=fixture();const wrapper=mount(ChannelEditor,{props:{channel,templates:[template],projection:rows},global:{stubs:{NodePicker:true,ModelRuleFields:true,UiSelectField:true}}})
-  const input=wrapper.get('input[aria-label="raw/a路由别名"]');await input.setValue('short-a');expect(channel.naming?.['raw/a']).toBeUndefined();await input.trigger('blur');await flushPromises()
-  expect(channel.naming?.['raw/a']).toEqual({alias:'short-a'});expect(channel.discovered[0]!.id).toBe('raw/a');expect(channel.selection).toEqual({mode:'whitelist',models:['raw/a','raw/b']});expect(channel.naming?.['raw/b']).toBeUndefined();expect(modelApi.project).toHaveBeenCalled();wrapper.unmount()
- })
- it('uses the resolved adopted family for filtering and keeps rows while a new projection is pending',async()=>{
-  const {channel,template,rows}=fixture();const wrapper=mount(ChannelEditor,{props:{channel,templates:[template],projection:rows},global:{stubs:{NodePicker:true,ModelRuleFields:true,UiSelectField:true}}})
-  const selector=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='渠道内型号族筛选')!
-  selector.vm.$emit('update:modelValue','family');await wrapper.vm.$nextTick();expect(wrapper.findAll('tr[data-model]')).toHaveLength(1)
-  expect(wrapper.get('button[aria-label="raw/a下移"]').attributes('disabled')).toBeDefined()
-  const before=wrapper.get('tr[data-model] input').element
-  await wrapper.setProps({projectionBusy:true});expect(wrapper.get('tr[data-model] input').element).toBe(before)
-  await wrapper.setProps({projectionBusy:false,projectionError:'conflict'});expect(wrapper.findAll('tr[data-model]')).toHaveLength(1);expect(wrapper.text()).toContain('有效值暂不可确定')
-  const familyFields=wrapper.findAllComponents(ModelRuleFields)[1]!
-  familyFields.vm.$emit('update:modelValue',{...emptyRules(),fast:{mode:'custom',value:false}});await wrapper.vm.$nextTick();expect(channel.familyOverrides.family?.fast).toEqual({mode:'custom',value:false})
-  wrapper.unmount()
- })
- it('shows inheritance, unknown and explicit false against only server-provided effective sources',()=>{
-  const {rows}=fixture();const rules={...emptyRules(),contextWindow:{mode:'custom' as const,value:4096}}
-  const wrapper=mount(ModelRuleFields,{props:{modelValue:rules,effective:rows[0]},global:{stubs:{UiSelectField:true}}})
-  const table=wrapper.get('table');expect(table.text()).toContain('当前草稿有效值与来源');expect(table.text()).toContain('未知（无声明或覆盖）');expect(table.text()).toContain('不支持');expect(table.text()).toContain('单模型覆盖');expect(table.text()).toContain('4096');wrapper.unmount()
- })
- it('adds a manual exact ID only after confirmation and keeps its input DOM stable',async()=>{
-  const {channel,template,rows}=fixture();const dialog={props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'}
-  const wrapper=mount(ChannelEditor,{props:{channel,templates:[template],projection:rows},global:{stubs:{NodePicker:true,ModelRuleFields:true,UiSelectField:true,UiDialog:dialog}}})
-  await wrapper.findAll('button').find(b=>b.text()==='手动添加ID')!.trigger('click');const input=wrapper.findAll('label').find(l=>l.text()==='原始模型ID')!.get('input');const element=input.element
-  await input.setValue('new/raw');expect(input.element).toBe(element);expect(channel.discovered).toHaveLength(2)
-  await wrapper.findAll('button').find(b=>b.text()==='添加型号')!.trigger('click');expect(channel.discovered.at(-1)?.id).toBe('new/raw');expect(channel.selection).toEqual({mode:'whitelist',models:['raw/a','raw/b']});wrapper.unmount()
- })
+ it('accepts alias on blur through the common v2 readonly validator while raw identity and other settings remain stable',async()=>{const {wrapper:w}=render(),before=copyWorkspace(store.channels[0]!.models);const input=w.get('input[aria-label="raw/a路由别名"]');await input.setValue('short-a');expect(store.channels[0]!.naming['raw/a']).toBeUndefined();await input.trigger('blur');await flushPromises();expect(store.channels[0]!.naming['raw/a']).toEqual({alias:'short-a'});expect(store.channels[0]!.models).toEqual(before);expect(store.channels[0]!.selection).toEqual({mode:'whitelist',models:['raw/a','raw/b']});expect(store.channels[0]!.naming['raw/b']).toBeUndefined();expect(modelV2Api.fileProject).toHaveBeenCalledOnce();expect(ipc.mock.calls.some(c=>c[0]==='model_v2_file_save')).toBe(false)})
+ it('filters by the backend-resolved family and keeps row DOM while a new projection is pending or fails',async()=>{const {wrapper:w,view}=render();w.findAllComponents(UiSelectField).find(c=>c.props('label')==='渠道内型号族筛选')!.vm.$emit('update:modelValue',id('template'));await flushPromises();expect(w.findAll('tr[data-model]')).toHaveLength(1);expect(w.get('button[aria-label="raw/a下移"]').attributes('disabled')).toBeDefined();const before=w.get('tr[data-model] input').element;view.projectionBusy=true;await flushPromises();expect(w.get('tr[data-model] input').element).toBe(before);view.projectionBusy=false;view.projectionError='conflict';await flushPromises();expect(w.findAll('tr[data-model]')).toHaveLength(1);expect(w.text()).toContain('有效值暂不可确定');w.findAllComponents(ModelRuleFields)[1]!.vm.$emit('update:modelValue',{...emptyRules(),fast:{mode:'custom',value:false}});await flushPromises();expect(store.channels[0]!.familyOverrides[id('template')]?.fast).toEqual({mode:'custom',value:false})})
+ it('shows inheritance, unknown and explicit false against only server-provided effective sources',()=>{const row:ModelProjection={channelId:'channel',providerId:'custom',modelId:'raw/a',label:'raw/a',enabled:true,selected:true,discovered:true,templateRef:null,rules:{...emptyRules(),fast:{mode:'custom',value:false}},source:{fast:'单模型覆盖'}};const rules={...emptyRules(),contextWindow:{mode:'custom' as const,value:4096}};const w=mount(ModelRuleFields,{props:{modelValue:rules,effective:row},global:{stubs:{UiSelectField:true}}});wrappers.push(w);const table=w.get('table');expect(table.text()).toContain('当前草稿有效值与来源');expect(table.text()).toContain('未知（无声明或覆盖）');expect(table.text()).toContain('不支持');expect(table.text()).toContain('单模型覆盖');expect(table.text()).toContain('4096')})
+ it('adds a manual exact ID only after confirmation and keeps its input DOM stable',async()=>{const {wrapper:w}=render();await button(w,'手动添加精确ID').trigger('click');const input=w.get('input[aria-label="新增精确模型ID"]'),element=input.element;await input.setValue('new/raw');expect(input.element).toBe(element);expect(store.channels[0]!.models).toHaveLength(2);await button(w,'确认加入草稿').trigger('click');await flushPromises();expect(store.channels[0]!.models.at(-1)?.rawModelId).toBe('new/raw');expect(store.channels[0]!.selection).toEqual({mode:'whitelist',models:['raw/a','raw/b']});expect(ipc.mock.calls.filter(c=>c[0]==='model_v2_stage_connection')).toHaveLength(1);expect(ipc.mock.calls.some(c=>c[0]==='model_v2_file_save')).toBe(false)})
 })
