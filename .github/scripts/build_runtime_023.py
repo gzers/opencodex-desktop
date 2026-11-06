@@ -92,10 +92,10 @@ def patched_files(original, review):
             target = source/name
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(files[name])
-        command = ['git', 'apply', '--no-index', '--whitespace=error']
+        command = ['git', '-c', 'core.autocrlf=false', 'apply', '--no-index', '--whitespace=error']
         subprocess.run([*command, '--check', str(PATCH)], cwd=source, check=True, capture_output=True)
         subprocess.run([*command, str(PATCH)], cwd=source, check=True, capture_output=True)
-        actual = sorted(str(p.relative_to(source)) for p in source.rglob('*') if p.is_file())
+        actual = sorted(p.relative_to(source).as_posix() for p in source.rglob('*') if p.is_file())
         require(actual == list(SOURCE_PATHS), 'Patch changed unapproved paths')
         for row in review['files']:
             data = (source/row['path']).read_bytes()
