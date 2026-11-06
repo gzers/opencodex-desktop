@@ -1,0 +1,107 @@
+{
+  "date": "2026-11-06",
+  "result": "audit_complete; G0_allowed_as_preparation_not_whole_version_ready",
+  "scope": "self-review, no code/runtime/network operations",
+  "documentChecks": {
+    "yamlObjects": 6,
+    "uniqueAcceptanceIds": 21,
+    "localLinks": 219,
+    "diffCheck": true,
+    "clarifiedDependencyModelAcyclic": true,
+    "dependencyModel": {
+      "P23-00": [],
+      "P23-01": [],
+      "DIR-00": [],
+      "MATCH-01": [],
+      "DIR-01": [
+        "DIR-00"
+      ],
+      "DIR-02": [
+        "DIR-01"
+      ],
+      "DIR-03": [
+        "DIR-00",
+        "DIR-01"
+      ],
+      "MATCH-02": [
+        "MATCH-01",
+        "DIR-02"
+      ],
+      "MATCH-03": [
+        "MATCH-01",
+        "MATCH-02",
+        "P23-00"
+      ],
+      "P23-02": [
+        "P23-00"
+      ],
+      "P23-03": [
+        "P23-01",
+        "MATCH-02"
+      ],
+      "P23-04": [
+        "MATCH-01",
+        "MATCH-02"
+      ],
+      "P23-05": [
+        "P23-01",
+        "DIR-03"
+      ],
+      "P23-06": [
+        "P23-00",
+        "MATCH-01"
+      ],
+      "P23-07": [
+        "P23-02",
+        "P23-06"
+      ],
+      "MATCH-04": [
+        "MATCH-02",
+        "MATCH-03"
+      ],
+      "DIR-07": [
+        "DIR-02",
+        "DIR-03"
+      ],
+      "MATCH-05": [
+        "MATCH-04"
+      ],
+      "P23-08": [
+        "P23-03",
+        "P23-04",
+        "P23-05",
+        "P23-07",
+        "DIR-07",
+        "MATCH-05"
+      ],
+      "P23-09": [
+        "P23-08"
+      ]
+    }
+  },
+  "fixed": [
+    "unrelated prototype scope labels restored: README9+UI1",
+    "prototype status and prior hash labelled as historical",
+    "P23-04/MATCH single form owner",
+    "DIR foundation reused by P23-05",
+    "schema/transport freeze moved to MATCH-01/P23-00 to avoid circular implementation wait"
+  ],
+  "outstanding": [
+    "model protocol source and explicit override provenance",
+    "formal template schema and full condition editing prototype",
+    "dual-platform new program layout/location schema",
+    "formal noETag generation/init/conflict protocol",
+    "new runtime package/projection source and recovery prototype",
+    "explicit inclusion of ignored new docs before cross-client handoff"
+  ],
+  "changedFiles": {
+    "docs/03-开发实施/0.2.23-开发前一致性审计.md": "973b0899f610aaf3c1f3700117148bfaa65881f979696cd6d5b1d3bba0daecdf",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-31.md": "5e0ca3c787ce35de495728e4886ec9973e3a347e157e7e4d910ce1e79da318c6",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-32.md": "46a84779b21d45add872e12f4638a54d1d897a0688d433bf1ae797bbf89c4963",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-33.md": "08c569217f2ba5cdee63032768c40a71d0448cfa7b29a588018b03b5d5ac681b",
+    "docs/02-项目核心/UI规范.md": "a4e1d7908b55d53e85182926603b9aca4471c7e69f4c002c6ed01271bbf32b22",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md": "9e83dafca3f9286c94fdfe40d902a81cfe399e30fa8dbc43e7bd62c238bc13d9"
+  },
+  "historicalEvidence": "not rewritten",
+  "newProductTests": "not run for document-only audit"
+}

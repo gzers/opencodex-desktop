@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-06",
+  "readiness": "G0_design_can_start; whole_version_not_ready_for_unqualified_product_implementation",
+  "source_review_only": true,
+  "product_tests_not_rerun": true,
+  "target": "0.2.23",
+  "data_facts": {
+    "templates": 17,
+    "common_protocol_inherit": 17,
+    "variant_overrides": 58,
+    "variant_protocol_inherit": 51,
+    "variant_protocol_custom": 7,
+    "candidate_format": "ocxd-model-template-candidate-v1",
+    "candidate_production_support": "pending_0.2.23_implementation"
+  },
+  "untracked_ignored_artifacts": [
+    {
+      "file": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-32.md",
+      "tracked": false,
+      "ignore_rule": ".gitignore:33:/docs/\tdocs/03-开发实施/IMP-OPENCODEX-DESKTOP-32.md"
+    },
+    {
+      "file": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-33.md",
+      "tracked": false,
+      "ignore_rule": ".gitignore:33:/docs/\tdocs/03-开发实施/IMP-OPENCODEX-DESKTOP-33.md"
+    },
+    {
+      "file": "docs/01-需求管理/需求/DMD-OPENCODEX-USER-DIRECTORY.md",
+      "tracked": false,
+      "ignore_rule": ".gitignore:33:/docs/\tdocs/01-需求管理/需求/DMD-OPENCODEX-USER-DIRECTORY.md"
+    },
+    {
+      "file": "docs/01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md",
+      "tracked": false,
+      "ignore_rule": ".gitignore:33:/docs/\tdocs/01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md"
+    },
+    {
+      "file": "docs/04-项目资料/01-项目支撑资料/06-问题记录/模型模版通用匹配配置/model-templates.0.2.23.candidate.json",
+      "tracked": false,
+      "ignore_rule": ".gitignore:33:/docs/\tdocs/04-项目资料/01-项目支撑资料/06-问题记录/模型模版通用匹配配置/model-templates.0.2.23.candidate.json"
+    }
+  ],
+  "scope_correction": {
+    "prototype_README_historical_unassigned_lines_restored": 9,
+    "UI_spec_unrelated_conversation_scope_line_restored": 1,
+    "historical_receipts_unchanged": true
+  },
+  "files": {
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-31.md": "144b14f5d11f63d9586410efde29b28d586d600fbbe0d68fea7b81099b727f99",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-32.md": "83aef3ee9fbbf753f05fea9d1034d3fa2464db9023ffbbf6fbb8a8241f77a05f",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-33.md": "e97016c7004f7786c3a6922b56e3225bd44412f9cb8ff5165ca4d11c77ca3bf0",
+    "docs/01-需求管理/需求/DMD-OPENCODEX-POST022.md": "746c22dd9a07626487621107d9b20d3dbf7596a539202a2ae98aa964bf3b08cf",
+    "docs/01-需求管理/需求/DMD-OPENCODEX-USER-DIRECTORY.md": "5951b25e22bc27b8fb761f2714fcc5558a8397183d8d55d4d3dfec764390e7d2",
+    "docs/01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md": "2fe4bd4dac8d102590c436357164a711e7b38f3da292140fc812ba813b98d637",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/模型模版通用匹配配置/model-templates.0.2.23.candidate.json": "aeeec2078ff1416f587019c376cc06b17259550e47db199f1e59a7fff8aae68b",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.js": "7b9fa5555b330ced88b419d1d8324b4719b3394b8a0ee9de8dfd107262f3c1fa"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-06",
+  "status": "plan_consistency_checked",
+  "stages": [
+    "A shared G0",
+    "B path/runtime foundation",
+    "C shared core",
+    "D UI/workflows",
+    "E focused/native validation",
+    "F integration/release gate"
+  ],
+  "windows_required_scope": [
+    "SID/Profile and per-user admission",
+    "data locks/IPC/credential ownership",
+    "installed runtime launcher/process/port",
+    "NSIS/MSI changed deployment/update/uninstall",
+    "actual two distinct SID native acceptance"
+  ],
+  "parallel_start": "Windows constraints in G0; coding after corresponding contracts freeze, no wait for unrelated local completion",
+  "new_windows_thread_or_task_created": false,
+  "production_development_started": false,
+  "runtime_or_native_checks_executed": false,
+  "local_links_checked": 82,
+  "files": {
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-31.md": "277cf56339432708474337041d6bcffed4b284d6769b326a237634bc98c87d1a",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-32.md": "6c2c06789e77632218ac69af50a59dbedd29c680247cb27981c9f1e348c2f19b",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-33.md": "8ae72d7ded25973dd1063209172b3a3e28dad60253fc6b35544dfe42d5164483",
+    "docs/03-开发实施/0.2.23-开发前一致性审计.md": "9b2b5f3617a6f271d5bd545483194e81a19e36d9863f0cfbb7adc65c61601b59",
+    "docs/03-开发实施/README.md": "e937071abae62ab29272a252700b674443c88b02f80a3a5a08c2ac8838d45d1b"
+  }
+}
