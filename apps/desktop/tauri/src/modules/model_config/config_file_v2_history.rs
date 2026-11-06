@@ -103,7 +103,7 @@ fn persist(d: &Path, r: &Record) -> Result<()> {
 fn target_digest(policy: &PolicyV2, library: Option<&LibraryV2>) -> Result<String> {
     Ok(digest(&canonical_bytes(&(policy, library))?))
 }
-fn with_state<T>(
+pub(super) fn with_state<T>(
     d: &Path,
     h: &Path,
     expected: Option<&ReadBaseV2>,
