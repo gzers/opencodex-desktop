@@ -37,7 +37,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        kind: [nsis, msi]
+        include:
+          - {kind: nsis, scenario: adjacent}
+          - {kind: nsis, scenario: fresh023}
+          - {kind: msi, scenario: adjacent}
+          - {kind: msi, scenario: explicit-conversion}
+          - {kind: msi, scenario: fresh023}
     runs-on: windows-latest
     timeout-minutes: 35
     defaults:
@@ -62,8 +67,9 @@ jobs:
           OCXD_ARTIFACT_BYTES: ${{ inputs.artifact_bytes }}
           OCXD_ARTIFACT_SHA256: ${{ inputs.artifact_sha256 }}
           OCXD_INSTALLER_KIND: ${{ matrix.kind }}
+          OCXD_INSTALLER_SCENARIO: ${{ matrix.scenario }}
         run: |
-          python test/smoke/windows023-retention-ci-admit.py $env:OCXD_INSTALLER_KIND --candidate-run $env:OCXD_CANDIDATE_RUN --candidate-attempt $env:OCXD_CANDIDATE_ATTEMPT --candidate-head $env:OCXD_CANDIDATE_HEAD --artifact-id $env:OCXD_ARTIFACT_ID --artifact-bytes $env:OCXD_ARTIFACT_BYTES --artifact-sha256 $env:OCXD_ARTIFACT_SHA256
+          python test/smoke/windows023-retention-ci-admit.py $env:OCXD_INSTALLER_KIND --scenario $env:OCXD_INSTALLER_SCENARIO --candidate-run $env:OCXD_CANDIDATE_RUN --candidate-attempt $env:OCXD_CANDIDATE_ATTEMPT --candidate-head $env:OCXD_CANDIDATE_HEAD --artifact-id $env:OCXD_ARTIFACT_ID --artifact-bytes $env:OCXD_ARTIFACT_BYTES --artifact-sha256 $env:OCXD_ARTIFACT_SHA256
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify actual default upgrade uninstall and reinstall
         run: |
@@ -76,7 +82,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: windows023-retention-${{ matrix.kind }}-${{ github.sha }}
+          name: windows023-retention-${{ matrix.kind }}-${{ matrix.scenario }}-${{ github.sha }}
           path: test/out/windows023-installer-retention
           if-no-files-found: warn
           retention-days: 14
