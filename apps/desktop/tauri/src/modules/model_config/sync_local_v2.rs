@@ -37,7 +37,11 @@ pub trait SourceSnapshotProviderV2: Send + Sync {
     /// Recovery proof for unfinished NON-model writes after the model receipt.
     /// Check the frozen revision or THIS operation's receipted after-revision,
     /// never the original Absent fact or current capture. Otherwise fail closed.
-    fn verify_applied_mapping(&self, _operation_id: &str, _binding: &LocalTargetBindingV2) -> ModelResult<()> {
+    fn verify_applied_mapping(
+        &self,
+        _operation_id: &str,
+        _binding: &LocalTargetBindingV2,
+    ) -> ModelResult<()> {
         Err(invalid("host_mapping_changed", "映射恢复需要独立版本证明"))
     }
 }
@@ -807,18 +811,13 @@ impl LocalApplicationV2 {
         {
             return Err(failure(ErrorCode::SyncScopeChanged));
         }
-        // Only channel identities may cross domains. Keep all other explicit
-        // choices/context and the existing actual MCP digest relationship.
-        let mut remote = selection.clone();
-        let mut local = capture.selection.clone();
-        remote.channels.clear();
-        local.channels.clear();
-        for s in [&mut remote, &mut local] {
-            for m in &mut s.mcp_sources {
-                m.definition_digest.clear();
-            }
-        }
-        if remote != local {
+        // The owner-issued binding freezes BOTH exact scopes. Local capture
+        // can omit absent non-model objects while receive keeps remote choices.
+        // Their actual before/absent images are frozen by the target/helpers;
+        // do not widen choices or reconstruct the mapper's filtering here.
+        if (!selection.skill_names.is_empty() || !selection.mcp_sources.is_empty())
+            && !capture.assets_reviewed
+        {
             return Err(failure(ErrorCode::SyncScopeChanged));
         }
         for slot in &binding.slots {
@@ -987,11 +986,11 @@ impl LocalApplicationV2 {
             }
             return Ok(j);
         }
-        if !export && self.target_digest(scope)? != expected {
-            return Err(failure(ErrorCode::SyncLocalChanged));
-        }
         if !export {
             self.verify_mapping(false)?;
+        }
+        if !export && self.target_digest(scope)? != expected {
+            return Err(failure(ErrorCode::SyncLocalChanged));
         }
         if !export {
             for p in [

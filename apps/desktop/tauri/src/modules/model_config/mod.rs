@@ -55,6 +55,8 @@ pub mod store;
 pub mod sync_state;
 pub mod sync_v2;
 pub mod sync_host_v2;
+pub mod sync_service_v2;
+pub mod sync_identity_v2;
 pub mod sync_local_v2;
 pub mod receive_models_v2;
 pub mod tasks;
