@@ -426,3 +426,59 @@ pub async fn model_v2_discover(request: DiscoverInputV2) -> Result<DiscoveryResp
         elapsed_ms: result.elapsed_ms,
     })
 }
+
+#[tauri::command]
+pub async fn model_v2_stage_credential(
+    request: crate::modules::model_config::config_file::v2::StageCredentialV2,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::config_file::v2::FileSnapshotV2> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        true,
+        move |root, home| {
+            crate::modules::model_config::config_file::v2::stage_credential(root, home, request)
+        },
+    )
+    .await
+}
+#[tauri::command]
+pub async fn model_v2_credential_view(
+    channel_id: String,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::config_file::CredentialView> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        false,
+        move |root, home| {
+            crate::modules::model_config::config_file::v2::credential_view(root, home, &channel_id)
+        },
+    )
+    .await
+}
+#[tauri::command]
+pub async fn model_v2_measure_nodes(
+    request: crate::modules::model_config::config_file::v2::MeasurementIntentV2,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::measurements::ResultSet> {
+    let prepared = file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        false,
+        move |root, home| {
+            crate::modules::model_config::config_file::v2::prepare_measurements(root, home, request)
+        },
+    )
+    .await?;
+    crate::modules::model_config::measurements::measure(prepared)
+        .await
+        .map_err(|e| {
+            let mut err = error(&e.code);
+            err.issues[0].message = e.message;
+            err
+        })
+}
