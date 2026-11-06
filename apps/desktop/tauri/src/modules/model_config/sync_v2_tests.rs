@@ -12,6 +12,7 @@ struct Remote {
     files: Mutex<BTreeMap<String, Vec<u8>>>,
     writes: AtomicUsize,
     reads: AtomicUsize,
+    read_paths: Mutex<Vec<String>>,
     lose_commit_response: std::sync::atomic::AtomicBool,
     lose_generation_response: std::sync::atomic::AtomicBool,
     hide: Mutex<BTreeSet<String>>,
@@ -81,6 +82,10 @@ impl ConfigSyncTransport for Remote {
         _: ReadLimits,
     ) -> Result<FileRead, SyncTransportError> {
         self.reads.fetch_add(1, Ordering::SeqCst);
+        self.read_paths
+            .lock()
+            .unwrap()
+            .push(path.as_str().to_owned());
         tokio::time::sleep(Duration::from_millis(
             self.get_delay_ms.load(Ordering::SeqCst) as u64,
         ))
@@ -1519,4 +1524,182 @@ async fn concurrent_conflict_resolutions_form_two_new_heads_and_keep_original_br
     for (name, bytes) in original {
         assert_eq!(e.remote.files.lock().unwrap().get(&name), Some(&bytes));
     }
+}
+#[tokio::test]
+async fn head_resolution_fetches_only_selected_payload_but_commits_all_observed_parents() {
+    let e = Env::new();
+    let g = seed_generation(&e.remote);
+    let a = seed_commit(&e.remote, &g, vec![], b"chosen payload");
+    let b = seed_commit(&e.remote, &g, vec![], b"not granted to codec");
+    let unselected = SyncRelativePath::data(&g.generation_id, &b.operation_id).unwrap();
+    e.remote.files.lock().unwrap().remove(unselected.as_str());
+    let cx = e.cx();
+    let o = cx
+        .observe_remote(ObserveRequest {
+            connection_id: "synthetic".into(),
+        })
+        .await
+        .unwrap();
+    let parents = o.heads.clone();
+    e.remote.read_paths.lock().unwrap().clear();
+    let p = cx
+        .prepare_resolution(PrepareResolutionRequest {
+            connection_id: "synthetic".into(),
+            generation: g.clone(),
+            heads: parents.clone(),
+            expected_view_digest: o.view_digest,
+            source_guard: e.local.current_source().unwrap(),
+            resolution: Resolution {
+                selection_mode: SelectionMode::Head,
+                selected_head: Some(a.clone()),
+                scope_digest: digest(b"scope"),
+                preview_digest: digest(b"explicit outside-scope preview"),
+            },
+        })
+        .await
+        .unwrap();
+    assert_eq!(p.parents, parents);
+    assert_eq!(p.parents.len(), 2);
+    let paths = e.remote.read_paths.lock().unwrap().clone();
+    assert!(!paths.iter().any(|path| path == unselected.as_str()));
+    assert!(paths.iter().any(|path| path
+        == SyncRelativePath::data(&g.generation_id, &a.operation_id)
+            .unwrap()
+            .as_str()));
+    let result = cx
+        .publish_upload(ConfirmUploadRequest {
+            operation_id: p.operation_id.clone(),
+            plan_digest: p.plan_digest,
+        })
+        .await
+        .unwrap();
+    assert_eq!(result.storage_status, StorageStatus::Stored);
+    let c: Commit = store::decode(
+        e.remote
+            .files
+            .lock()
+            .unwrap()
+            .get(
+                SyncRelativePath::commit(&g.generation_id, &p.operation_id)
+                    .unwrap()
+                    .as_str(),
+            )
+            .unwrap(),
+    )
+    .unwrap();
+    assert_eq!(c.parents, parents);
+    assert_eq!(c.resolution.unwrap().selected_head, Some(a));
+}
+#[tokio::test]
+async fn selected_head_requires_exact_parent_digest_and_late_conflict_rejects_old_plan() {
+    let e = Env::new();
+    let g = seed_generation(&e.remote);
+    let a = seed_commit(&e.remote, &g, vec![], b"a");
+    seed_commit(&e.remote, &g, vec![], b"b");
+    let cx = e.cx();
+    let o = cx
+        .observe_remote(ObserveRequest {
+            connection_id: "synthetic".into(),
+        })
+        .await
+        .unwrap();
+    let make = |head| PrepareResolutionRequest {
+        connection_id: "synthetic".into(),
+        generation: g.clone(),
+        heads: o.heads.clone(),
+        expected_view_digest: o.view_digest.clone(),
+        source_guard: e.local.current_source().unwrap(),
+        resolution: Resolution {
+            selection_mode: SelectionMode::Head,
+            selected_head: head,
+            scope_digest: digest(b"scope"),
+            preview_digest: digest(b"all-parent-preview"),
+        },
+    };
+    let mut wrong = a.clone();
+    wrong.digest = digest(b"not exact commit bytes");
+    assert_eq!(
+        cx.prepare_resolution(make(Some(wrong)))
+            .await
+            .unwrap_err()
+            .code,
+        ErrorCode::SyncRemoteConflict
+    );
+    assert_eq!(
+        cx.prepare_resolution(make(None)).await.unwrap_err().code,
+        ErrorCode::SyncRemoteConflict
+    );
+    let p = cx.prepare_resolution(make(Some(a))).await.unwrap();
+    seed_commit(&e.remote, &g, vec![], b"late third branch");
+    let before = e.remote.writes.load(Ordering::SeqCst);
+    assert!(cx
+        .publish_upload(ConfirmUploadRequest {
+            operation_id: p.operation_id,
+            plan_digest: p.plan_digest
+        })
+        .await
+        .is_err());
+    assert_eq!(before, e.remote.writes.load(Ordering::SeqCst));
+}
+#[tokio::test]
+async fn generic_merged_resolution_keeps_full_payload_inputs_and_parent_set() {
+    struct MergedCodec {
+        inputs: AtomicUsize,
+    }
+    impl PayloadCodec for MergedCodec {
+        fn supported_schemas(&self) -> Vec<PayloadSchemaRef> {
+            vec![schema()]
+        }
+        fn freeze_selected(
+            &self,
+            _: &SourceGuard,
+            inputs: &[PayloadInput],
+            resolution: Option<&Resolution>,
+        ) -> SyncResult<FrozenPayload> {
+            assert_eq!(resolution.unwrap().selection_mode, SelectionMode::Merged);
+            self.inputs.store(inputs.len(), Ordering::SeqCst);
+            Ok(FrozenPayload {
+                bytes: b"explicit generic merged codec".to_vec(),
+                schema: schema(),
+                protection_mode: ProtectionMode::Plain,
+            })
+        }
+        fn inspect_and_validate(&self, _: &[u8], _: &PayloadSchemaRef) -> SyncResult<()> {
+            Ok(())
+        }
+    }
+    let e = Env::new();
+    let g = seed_generation(&e.remote);
+    seed_commit(&e.remote, &g, vec![], b"a");
+    seed_commit(&e.remote, &g, vec![], b"b");
+    let codec = MergedCodec {
+        inputs: AtomicUsize::new(0),
+    };
+    let mut cx = SyncContext::new(&e.store, &e.remote, &codec, &e.local, connection()).unwrap();
+    cx.budgets.get_attempts = 1;
+    let o = cx
+        .observe_remote(ObserveRequest {
+            connection_id: "synthetic".into(),
+        })
+        .await
+        .unwrap();
+    let p = cx
+        .prepare_resolution(PrepareResolutionRequest {
+            connection_id: "synthetic".into(),
+            generation: g,
+            heads: o.heads,
+            expected_view_digest: o.view_digest,
+            source_guard: e.local.current_source().unwrap(),
+            resolution: Resolution {
+                selection_mode: SelectionMode::Merged,
+                selected_head: None,
+                scope_digest: digest(b"scope"),
+                preview_digest: digest(b"explicit generic composition"),
+            },
+        })
+        .await
+        .unwrap();
+    assert_eq!(codec.inputs.load(Ordering::SeqCst), 2);
+    assert_eq!(p.parents.len(), 2);
+    assert_eq!(p.resolution.unwrap().selection_mode, SelectionMode::Merged);
 }
