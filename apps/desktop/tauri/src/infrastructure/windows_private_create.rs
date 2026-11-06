@@ -26,8 +26,7 @@ use windows_sys::Win32::{
         CreateDirectoryW, CreateFileW, GetFileInformationByHandle, GetFileType,
         BY_HANDLE_FILE_INFORMATION, CREATE_NEW, FILE_ALL_ACCESS, FILE_ATTRIBUTE_DIRECTORY,
         FILE_ATTRIBUTE_NORMAL, FILE_ATTRIBUTE_REPARSE_POINT, FILE_FLAG_BACKUP_SEMANTICS,
-        FILE_FLAG_OPEN_REPARSE_POINT, FILE_READ_ATTRIBUTES, FILE_SHARE_READ, FILE_SHARE_WRITE,
-        FILE_TYPE_DISK,
+        FILE_FLAG_OPEN_REPARSE_POINT, FILE_SHARE_READ, FILE_SHARE_WRITE, FILE_TYPE_DISK,
     },
 };
 
@@ -54,6 +53,7 @@ extern "system" {
     ) -> u32;
 }
 const READ_CONTROL: u32 = 0x0002_0000;
+const GENERIC_READ: u32 = 0x8000_0000;
 const GENERIC_READ_WRITE: u32 = 0xc000_0000;
 const OWNER_AND_DACL: u32 = 1 | 4;
 const SYSTEM_SID: &str = "S-1-5-18";
@@ -234,8 +234,12 @@ fn information(
 }
 fn open_directory(path: &Path, security: bool) -> io::Result<File> {
     let file = OpenOptions::new()
-        .access_mode(FILE_READ_ATTRIBUTES | if security { READ_CONTROL } else { 0 })
-        .share_mode(FILE_SHARE_READ | FILE_SHARE_WRITE) // No FILE_SHARE_DELETE: pin this ancestor.
+        // Attribute-only opens do not participate in the data-access sharing
+        // check: Windows can rename that directory despite no SHARE_DELETE.
+        // GENERIC_READ maps to FILE_LIST_DIRECTORY plus read metadata/control,
+        // so the retained handle participates in delete/rename share admission.
+        .access_mode(GENERIC_READ | if security { READ_CONTROL } else { 0 })
+        .share_mode(FILE_SHARE_READ | FILE_SHARE_WRITE) // Intentionally no FILE_SHARE_DELETE.
         .custom_flags(FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT)
         .open(path)?;
     information(&file, true, false)?;
@@ -469,6 +473,7 @@ mod tests {
             GetSecurityDescriptorLength, GetTokenInformation, TokenElevation, TokenOwner,
             TOKEN_ELEVATION, TOKEN_OWNER, TOKEN_QUERY,
         },
+        Storage::FileSystem::FILE_READ_ATTRIBUTES,
         System::Threading::{GetCurrentProcess, OpenProcessToken},
     };
 
@@ -731,10 +736,74 @@ mod tests {
     fn native_pinned_ancestor_cannot_be_renamed_during_create_or_validation() {
         let t = tempfile::tempdir().unwrap();
         let parent = fixture_dir(&t, "pinned");
-        let pins = pin_parents(&parent.join("leaf")).unwrap();
-        assert!(std::fs::rename(&parent, parent.with_file_name("moved")).is_err());
+        let leaf = parent.join("leaf");
+        let moved = parent.with_file_name("moved");
+        let pins = pin_parents(&leaf).unwrap();
+        let held = pins.last().unwrap();
+        let before = information(held, true, false).unwrap();
+        let race_parent = parent.clone();
+        let race_moved = moved.clone();
+        // A real competing pathname rename must fail while the stronger handle
+        // is held, not merely after a metadata-only path check.
+        let rename = std::thread::spawn(move || std::fs::rename(race_parent, race_moved))
+            .join()
+            .unwrap();
+        assert!(
+            rename.is_err(),
+            "ancestor rename escaped the retained directory handle"
+        );
+        let created = create_new_private_file(&leaf, 0o600).unwrap();
+        verify_private_handle(&created, false).unwrap();
+        let at_path = open_directory(&parent, false).unwrap();
+        let after = information(&at_path, true, false).unwrap();
+        assert_eq!(
+            (
+                before.dwVolumeSerialNumber,
+                before.nFileIndexHigh,
+                before.nFileIndexLow
+            ),
+            (
+                after.dwVolumeSerialNumber,
+                after.nFileIndexHigh,
+                after.nFileIndexLow
+            )
+        );
+        assert!(leaf.is_file());
+        assert!(!moved.exists());
+        assert!(!moved.join("leaf").exists());
+        drop(created);
+        drop(at_path);
         drop(pins);
-        std::fs::rename(&parent, parent.with_file_name("moved")).unwrap();
+        std::fs::rename(&parent, &moved).unwrap();
+        assert!(moved.join("leaf").is_file());
+    }
+
+    #[test]
+    fn native_system_directory_ancestors_allow_read_pins_without_security_changes() {
+        let mut units = vec![0u16; 32768];
+        let n = unsafe { GetSystemDirectoryW(units.as_mut_ptr(), units.len() as u32) } as usize;
+        assert!(n > 0 && n < units.len());
+        use std::os::windows::ffi::OsStringExt;
+        let system = std::path::PathBuf::from(std::ffi::OsString::from_wide(&units[..n]));
+        let directory = open_directory(&system, true).unwrap();
+        let before = security_bytes(&directory);
+        let pins = pin_parents(&system.join("read-only-pin-probe")).unwrap();
+        let held = information(pins.last().unwrap(), true, false).unwrap();
+        let original = information(&directory, true, false).unwrap();
+        assert_eq!(
+            (
+                held.dwVolumeSerialNumber,
+                held.nFileIndexHigh,
+                held.nFileIndexLow
+            ),
+            (
+                original.dwVolumeSerialNumber,
+                original.nFileIndexHigh,
+                original.nFileIndexLow
+            )
+        );
+        assert_eq!(security_bytes(&directory), before);
+        // No file or directory is created in the system-owned ancestor.
     }
 
     #[test]

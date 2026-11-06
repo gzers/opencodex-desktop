@@ -67,7 +67,7 @@ pub fn import_migration_with_root(
 }
 
 /// Lossless path bytes are transient hash input, never notification fields.
-#[cfg(test)]
+#[cfg(all(test, unix))]
 pub(crate) fn export_candidate(document_sha256: &str, target: &std::path::Path) -> Vec<u8> {
     [
         document_sha256.as_bytes(),
@@ -76,7 +76,7 @@ pub(crate) fn export_candidate(document_sha256: &str, target: &std::path::Path) 
     ]
     .concat()
 }
-#[cfg(test)]
+#[cfg(all(test, unix))]
 pub(crate) fn import_candidate(document_sha256: &str, home: &std::path::Path) -> Vec<u8> {
     [
         document_sha256.as_bytes(),

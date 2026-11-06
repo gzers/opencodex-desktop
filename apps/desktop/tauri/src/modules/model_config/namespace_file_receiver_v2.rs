@@ -85,6 +85,13 @@ impl NamespaceReceiveV2 for SystemNamespaceReceiveV2 {
     }
 }
 impl ModelApplyV2 for NamespaceFileHostV2 {
+    fn scope_backup_images(
+        &self,
+        id: &str,
+        handle: &ModelApplyPlanHandle,
+    ) -> ModelResult<Option<Vec<super::model_transaction_v2::WriteV2>>> {
+        self.host.protected_images(id, handle).map(Some)
+    }
     fn prepare(
         &self,
         id: &str,
