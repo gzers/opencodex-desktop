@@ -852,7 +852,7 @@ pub async fn model_v2_file_history(
         data_root.0.clone(),
         context.opencodex_home.clone(),
         false,
-        move |root, home| crate::modules::model_config::config_file::v2::history::list(root, home),
+        crate::modules::model_config::config_file::v2::history::list,
     )
     .await
 }
