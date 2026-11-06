@@ -2460,6 +2460,13 @@ impl ReceiveFactoryV2 {
     }
 }
 impl super::sync_local_v2::ModelApplyV2 for ReceiveFactoryV2 {
+    fn scope_backup_images(
+        &self,
+        id: &str,
+        handle: &super::sync_local_v2::ModelApplyPlanHandle,
+    ) -> ModelResult<Option<Vec<super::model_transaction_v2::WriteV2>>> {
+        self.receiver(id)?.protected_images(id, handle).map(Some)
+    }
     fn prepare(
         &self,
         id: &str,
@@ -2566,6 +2573,19 @@ struct RemainingModelV2 {
     handle: super::sync_local_v2::ModelApplyPlanHandle,
 }
 impl super::sync_local_v2::ModelApplyV2 for RemainingModelV2 {
+    fn scope_backup_images(
+        &self,
+        id: &str,
+        handle: &super::sync_local_v2::ModelApplyPlanHandle,
+    ) -> ModelResult<Option<Vec<super::model_transaction_v2::WriteV2>>> {
+        if id != self.operation_id || handle != &self.handle {
+            return Err(invalid(
+                "sync_remaining_operation",
+                "恢复保护图不属于原操作",
+            ));
+        }
+        self.receiver.protected_images(id, handle).map(Some)
+    }
     fn prepare(
         &self,
         _: &str,
