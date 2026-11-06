@@ -5,6 +5,7 @@ import SettingsRoute from '@/routes/SettingsRoute.vue'
 import { useRouteStore } from '@/stores/routes'
 import { useRuntimeStore } from '@/features/runtime/store'
 import type { RuntimeProtectionStatus } from '@/features/runtime/api'
+import type { PathsSnapshotV2 } from '@/features/data-root/api'
 
 const { invoke, open } = vi.hoisted(() => ({ invoke: vi.fn(), open: vi.fn() }))
 vi.mock('@tauri-apps/api/core', () => ({ invoke: (...args: unknown[]) => invoke(...args) }))
@@ -19,17 +20,30 @@ function deferred<T>() {
   const promise = new Promise<T>(done => { resolve = done })
   return { promise, resolve }
 }
+const paths: PathsSnapshotV2 = { schemaVersion: 1,
+  aggregateRoot: { path: '/fixtures/U', status: 'missing' }, desktopRoot: { path: '/fixtures/U/desktop', status: 'missing' },
+  opencodexHome: { path: '/fixtures/H', status: 'valid' }, configPath: { path: '/fixtures/H/config.json', status: 'missing' },
+  installationRoot: { path: '/fixtures/I', status: 'valid' }, managerExecutable: { path: '/fixtures/I/desktop', status: 'valid' },
+  runtimePrefix: { path: '/fixtures/runtime', status: 'valid' }, runtimeEntry: { path: '/fixtures/runtime/bin/ocx', status: 'valid' },
+  program: { packageVersion: '2.51.0', manifestVersion: '2.51.0', sourceVersion: '2.51.0', consistency: 'consistent' },
+  currentAggregateRoot: '/fixtures/U', pendingRestart: false,
+}
 function setup(status: RuntimeProtectionStatus = pending) {
   const pinia = createPinia()
   setActivePinia(pinia)
   const runtime = useRuntimeStore()
   runtime.source = {
-    kind: 'managed', path: '/data/runtime/bin/ocx', version: '2.51.0', resolvedAt: null,
-    insideDataRoot: true, managedEntry: '/data/runtime/bin/ocx',
-    managedPrefix: '/data/runtime/opencodex', defaultPrefix: '/data/runtime/opencodex',
+    kind: 'managed', path: '/fixtures/runtime/bin/ocx', version: '2.51.0', resolvedAt: null,
+    insideDataRoot: false, managedEntry: '/fixtures/runtime/bin/ocx',
+    managedPrefix: '/fixtures/runtime', defaultPrefix: '/fixtures/runtime',
     explicitPath: '/selected/bin/ocx', history: [],
   }
-  invoke.mockImplementation(async (command: string) => command === 'runtime_protection_status' ? status : null)
+  invoke.mockImplementation(async (command: string) => {
+    if (command === 'runtime_protection_status') return status
+    if (command === 'model_paths_v2_snapshot') return structuredClone(paths)
+    if (command === 'get_data_root_config') return { aggregateRoot: '/fixtures/U', activeDataRoot: '/fixtures/U/desktop', currentDataRoot: '/fixtures/U/desktop', opencodexHome: '/fixtures/H', currentOpencodexHome: '/fixtures/H', opencodexHomeMode: 'external', runtimeActive: true }
+    return null
+  })
   useRouteStore().go('settings', { section: 'installation' })
   return { runtime, wrapper: mount(SettingsRoute, { global: { plugins: [pinia] } }) }
 }
@@ -47,9 +61,12 @@ describe('local panel protection status and retry', () => {
     const warning = wrapper.get('[data-testid="runtime-protection"]')
     expect(warning.text()).toContain('面板更新保护核对')
     expect(warning.text()).toContain(status.state === 'unreadable' ? '记录与备份均保留' : '备份')
-    for (const testid of ['runtime-install', 'runtime-import-offline', 'runtime-uninstall', 'data-root-migrate', 'runtime-change-source', 'runtime-restore-source']) {
+    for (const testid of ['runtime-install', 'runtime-import-offline', 'runtime-uninstall', 'paths-select', 'paths-initialize', 'runtime-change-source', 'runtime-restore-source']) {
       expect(wrapper.get('[data-testid="' + testid + '"]').attributes('disabled')).toBeDefined()
     }
+    const home = wrapper.findAll('button').find(button => button.text() === '设置 OpenCodex HOME')!
+    expect(home.attributes('disabled')).toBeDefined()
+    expect(wrapper.find('#data-root-input').exists()).toBe(false)
     if (status.state === 'unreadable') expect(warning.text()).not.toContain('bk_exact')
     const diagnosis = warning.findAll('button').find(button => button.text() === '查看诊断')!
     await diagnosis.trigger('click')
@@ -91,8 +108,9 @@ describe('local panel protection status and retry', () => {
     const { runtime, wrapper } = setup(none)
     await flushPromises()
     open.mockResolvedValue('/selected/new/ocx')
-    invoke.mockImplementation(async command => command === 'set_runtime_source'
-      ? { ...runtime.source, explicitPath: '/selected/new/ocx' } : null)
+    const read = invoke.getMockImplementation()!
+    invoke.mockImplementation(async (command, ...args) => command === 'set_runtime_source'
+      ? { ...runtime.source, explicitPath: '/selected/new/ocx' } : read(command, ...args))
     await wrapper.get('[data-testid="runtime-change-source"]').trigger('click')
     await flushPromises()
     expect(invoke).toHaveBeenCalledWith('set_runtime_source', { path: '/selected/new/ocx' })
@@ -105,7 +123,7 @@ describe('local panel protection status and retry', () => {
     invoke.mockRejectedValueOnce({ message: '保护记录读取失败' })
     await runtime.loadProtection()
     expect(runtime.protection).toEqual(pending)
-    expect(wrapper.get('[role="alert"]').text()).toContain('保护记录读取失败')
+    expect(wrapper.get('[data-testid="runtime-protection"] [role="alert"]').text()).toContain('保护记录读取失败')
     expect(wrapper.get('[data-testid="runtime-install"]').attributes('disabled')).toBeDefined()
     wrapper.unmount()
   })

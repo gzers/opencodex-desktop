@@ -56,6 +56,16 @@ jobs:
         with:
           targets: ${{ matrix.rust_targets }}
 
+      - name: Stage complete pinned platform runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          node_bin="$(node -p 'process.execPath')"
+          npm_cli="$(node -e 'const p=require("node:path"),fs=require("node:fs");const n=process.execPath;const paths=[p.join(p.dirname(n),"node_modules/npm/bin/npm-cli.js"),p.join(p.dirname(n),"../lib/node_modules/npm/bin/npm-cli.js")];const hit=paths.find(v=>fs.existsSync(v));if(!hit)process.exit(1);process.stdout.write(p.resolve(hit))')"
+          if [ "$RUNNER_OS" = Windows ]; then platform=win32-x64; else platform=darwin-arm64; fi
+          python3 .github/scripts/stage_runtime_bundle_023.py --platform "$platform" --build-node "$node_bin" --npm-cli "$npm_cli" --output test/out/runtime-stage
+          echo "OCXD_REQUIRE_RUNTIME_BUNDLE=1" >> "$GITHUB_ENV"
+
       - name: 安装前端依赖
         run: npm --prefix apps/desktop/ui ci
 
@@ -110,7 +120,7 @@ jobs:
           releaseBody: ${{ steps.notes.outputs.body }}
           releaseDraft: true
           prerelease: true
-          args: --config tauri.updater.conf.json ${{ matrix.args }}
+          args: --config tauri.updater.conf.json --config tauri.runtime-bundle.conf.json ${{ matrix.args }}
 
       - name: Verify sealed macOS application bundle and packaged resources
         if: runner.os == 'macOS'
@@ -150,8 +160,18 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-      - name: Reproduce adopted offline runtime from pinned original and patches
-        run: python3 .github/scripts/build_maintained_runtime.py test/out/maintained-runtime
+      - name: Reproduce maintained base and Desktop names runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PYRUNTIME'
+          import hashlib,pathlib,urllib.request
+          p=pathlib.Path("test/out/base-runtime.tgz");p.parent.mkdir(parents=True,exist_ok=True)
+          with urllib.request.urlopen("https://github.com/gzers/opencodex-desktop/releases/download/v0.2.22/opencodex-2.97.0-post021.ownerquery.2.tgz",timeout=60) as r: data=r.read(32*1024*1024+1)
+          assert len(data)<=32*1024*1024 and hashlib.sha256(data).hexdigest()=="bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957"
+          p.write_bytes(data)
+          PYRUNTIME
+          python3 .github/scripts/build_runtime_023.py test/out/maintained-runtime --archive test/out/base-runtime.tgz
       - name: Install pinned signing CLI
         run: npm install --global @tauri-apps/cli@2.11.4
       - name: Sign and attach maintained runtime to the same draft release

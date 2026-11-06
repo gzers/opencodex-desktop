@@ -650,29 +650,57 @@ pub async fn model_v2_agent_accept(
         context.opencodex_home.clone(),
         true,
         move |root, home| {
-            let response_digest = digest(request.reviewed_response.as_bytes());
-            if let Ok(receipt) = crate::modules::model_config::agent_runtime_v2::mark_accepted(
+            let accept =
+                || -> Result<crate::modules::model_config::agent_runtime_v2::GeneratedReviewV2> {
+                    let response_digest = digest(request.reviewed_response.as_bytes());
+                    if let Ok(receipt) =
+                        crate::modules::model_config::agent_runtime_v2::mark_accepted(
+                            root,
+                            &context,
+                            &request.run_id,
+                            &response_digest,
+                        )
+                    {
+                        return Ok(receipt);
+                    }
+                    let plan = crate::modules::model_config::agent_runtime_v2::prepare_accept(
+                        root,
+                        &context,
+                        &request.run_id,
+                        &request.expected_library,
+                        request.reviewed_response.as_bytes(),
+                    )?;
+                    crate::modules::model_config::config_file::v2::accept_agent_library(
+                        root, home, &plan,
+                    )?;
+                    crate::modules::model_config::agent_runtime_v2::mark_accepted(
+                        root,
+                        &context,
+                        &request.run_id,
+                        &plan.response_digest,
+                    )
+                };
+            if crate::modules::model_config::agent_runtime_v2::requires_external_authority(
                 root,
-                &context,
                 &request.run_id,
-                &response_digest,
-            ) {
-                return Ok(receipt);
+            )? {
+                crate::modules::model_config::broker::with_external_authority(
+                    root,
+                    &context,
+                    &request.run_id,
+                    || {
+                        accept().map_err(|e| {
+                            crate::modules::model_config::schema::invalid(
+                                &e.code,
+                                "外部任务审阅或保存未完成，原记录保持",
+                            )
+                        })
+                    },
+                )
+                .map_err(|e| error(&e.code))
+            } else {
+                accept()
             }
-            let plan = crate::modules::model_config::agent_runtime_v2::prepare_accept(
-                root,
-                &context,
-                &request.run_id,
-                &request.expected_library,
-                request.reviewed_response.as_bytes(),
-            )?;
-            crate::modules::model_config::config_file::v2::accept_agent_library(root, home, &plan)?;
-            crate::modules::model_config::agent_runtime_v2::mark_accepted(
-                root,
-                &context,
-                &request.run_id,
-                &plan.response_digest,
-            )
         },
     )
     .await
@@ -722,4 +750,78 @@ pub async fn model_v2_agent_buffer(
         },
     )
     .await
+}
+
+#[tauri::command]
+pub async fn model_v2_external_prepare(
+    request: crate::modules::model_config::agent_runtime_v2::GenerateIntentV2,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::broker::ExternalBrokerBundleV2> {
+    let _admission = crate::infrastructure::storage_writers::global()
+        .admit()
+        .map_err(|_| error("model_storage"))?;
+    crate::modules::model_config::broker::prepare_external_broker(
+        data_root.0.clone(),
+        context.inner().clone(),
+        request,
+    )
+    .await
+    .map_err(|e| error(&e.code))
+}
+#[tauri::command]
+pub async fn model_v2_external_activate(
+    task_id: String,
+    prepared_ticket: String,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<()> {
+    let context = context.inner().clone();
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        true,
+        move |root, _| {
+            crate::modules::model_config::broker::activate_external(
+                root,
+                &context,
+                &task_id,
+                &prepared_ticket,
+            )
+            .map_err(|e| error(&e.code))
+        },
+    )
+    .await
+}
+#[tauri::command]
+pub async fn model_v2_external_revoke(
+    task_id: String,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<()> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        true,
+        move |root, _| {
+            crate::modules::model_config::broker::revoke_external(root, &task_id)
+                .map_err(|e| error(&e.code))
+        },
+    )
+    .await
+}
+
+#[tauri::command]
+pub async fn model_v2_file_project(
+    request: crate::modules::model_config::config_file::v2::SaveRequestV2,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::config_file::v2::export::DraftProjectionV2> {
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::model_config::config_file::v2::export::project(&root, &home, request)
+    })
+    .await
+    .map_err(|_| error("model_storage"))?
 }

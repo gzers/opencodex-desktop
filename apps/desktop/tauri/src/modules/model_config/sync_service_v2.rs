@@ -4,7 +4,7 @@
 use super::{
     file_objects_v2::{self, PublicSummary, SavedObjects},
     objects_overlay_v2::{ChannelSelectionV2, McpSourceSelectionV2, SelectionV2},
-    schema::ModelResult,
+    schema::{invalid, ModelResult},
     sync_host_v2::{
         self as host, CaptureProviderV2, DirectionV2, EndpointCredentialsV2, EndpointResolverV2,
         HostPayloadCodecV2, HostPreparationV2, HostSessionV2, OriginalUploadOwnerV2,
@@ -164,6 +164,7 @@ pub struct CatalogV2 {
     pub cloud_state: RemoteState,
     pub heads: Vec<CommitRef>,
     pub recovery_actions: Vec<RecoveryAction>,
+    pub observation: RemoteObservation,
 }
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -206,12 +207,42 @@ pub struct PreviewV2 {
     pub cloud_summary: Option<PublicSummary>,
     pub plan: ServicePlanV2,
 }
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ResumePreflightV2 {
+    pub request: ResumeUploadRequest,
+    pub can_resume: bool,
+    pub reason: String,
+    pub observation: RemoteObservation,
+}
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct RecoveryRequestV2 {
+    pub selection: SelectionV2,
+    pub mcp_clients: BTreeMap<String, String>,
+    pub assets_reviewed: bool,
+    pub generation: GenerationRef,
+    pub head: CommitRef,
+    pub mode: RecoveryMode,
+    pub backup_before_update: bool,
+}
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RecoveryPreviewV2 {
+    pub session_id: String,
+    pub plan: RecoveryPlan,
+    pub entries: Vec<DiffEntryV2>,
+}
 /// Capture inventory and per-plan composition belong to the SAME saved/identity/
 /// receive owner. The production adapter below is added only against L0's fixed
 /// committed modules. Injection is also used for isolated deterministic failures.
 pub struct InventoryV2 {
     pub objects: SavedObjects,
     pub mcp_sources: Vec<McpSourceEntryV2>,
+    pub key_channel_ids: BTreeSet<String>,
+    pub authorization_channel_ids: BTreeSet<String>,
+    pub credential_skill_names: BTreeSet<String>,
+    pub credential_mcp_names: BTreeSet<String>,
 }
 pub struct CompositionV2 {
     pub provider: Arc<dyn CaptureProviderV2>,
@@ -220,12 +251,13 @@ pub struct CompositionV2 {
     pub diff: Vec<DiffEntryV2>,
 }
 pub trait ServiceBackendV2: Send + Sync {
-    fn inventory(&self) -> ModelResult<InventoryV2>;
+    fn inventory(&self, connection: &ConnectionHandle) -> ModelResult<InventoryV2>;
     fn compose(
         &self,
         request: &PreviewRequestV2,
         connection: &ConnectionHandle,
         cloud: Option<&SavedObjects>,
+        read_passphrase: Option<Zeroizing<String>>,
     ) -> ModelResult<CompositionV2>;
     /// Id is the one produced by core.prepare_download. The production bridge
     /// must call MappingPreview.after_adoption(id) lazily, never preallocate a
@@ -242,6 +274,7 @@ pub trait ServiceBackendV2: Send + Sync {
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 struct ScopeRecordV2 {
     version: u32,
+    root_digest: Digest,
     initialized: bool,
     request: ScopeRequestV2,
 }
@@ -337,11 +370,23 @@ impl ServiceFilesV2 {
         name: &str,
     ) -> SyncResult<Option<T>> {
         let p = self.path(name)?;
-        let bytes = match std::fs::read(p) {
-            Ok(v) => v,
+        let mut options = std::fs::OpenOptions::new();
+        options.read(true);
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::OpenOptionsExt;
+            options.custom_flags(libc::O_NOFOLLOW);
+        }
+        let file = match options.open(p) {
+            Ok(f) => f,
             Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(None),
             Err(_) => return Err(failure(ErrorCode::SyncLocalStateIo, Step::Persist)),
         };
+        use std::io::Read;
+        let mut bytes = Vec::new();
+        file.take(4 * 1024 * 1024 + 1)
+            .read_to_end(&mut bytes)
+            .map_err(|_| failure(ErrorCode::SyncLocalStateIo, Step::Persist))?;
         if bytes.len() > 4 * 1024 * 1024 {
             return Err(failure(ErrorCode::SyncLimit, Step::Persist));
         }
@@ -383,6 +428,13 @@ struct SessionV2 {
     gate: AsyncMutex<()>,
     cancelled: AtomicBool,
     connection: ConnectionHandle,
+}
+struct RecoverySessionV2 {
+    plan: RecoveryPlan,
+    connection: ConnectionHandle,
+    local: Arc<dyn LocalApplication>,
+    passphrase: Option<Zeroizing<String>>,
+    gate: AsyncMutex<()>,
 }
 struct LimitedTransportV2 {
     inner: Arc<dyn ConfigSyncTransport>,
@@ -439,6 +491,7 @@ pub struct SyncServiceV2 {
     store: Arc<Store>,
     files: Arc<ServiceFilesV2>,
     sessions: Mutex<BTreeMap<String, Arc<SessionV2>>>,
+    recoveries: Mutex<BTreeMap<String, Arc<RecoverySessionV2>>>,
     slots: Arc<Semaphore>,
 }
 fn err(code: ErrorCode, step: Step) -> SyncFailure {
@@ -482,6 +535,7 @@ impl SyncServiceV2 {
             store,
             files,
             sessions: Default::default(),
+            recoveries: Default::default(),
             slots: Arc::new(Semaphore::new(4)),
         })
     }
@@ -494,6 +548,28 @@ impl SyncServiceV2 {
         let mut service = Self::new(root, backend, transport.clone(), credentials)?;
         service.file_transport = Some(transport);
         Ok(service)
+    }
+    /// Construct once for the active explicit D/H under L0 storage admission.
+    /// The service never reads process HOME or configures the global vault root.
+    pub fn production(root: PathBuf, home: PathBuf) -> SyncResult<Self> {
+        let backend = Arc::new(
+            ProductionServiceBackendV2::new(
+                root.clone(),
+                home,
+                Arc::new(super::saved_objects_capture_v2::SystemCaptureCredentialsV2),
+            )
+            .map_err(host::map_host_error)?,
+        );
+        let transport = Arc::new(
+            crate::infrastructure::webdav_config_v2::FileWebDavTransport::new()
+                .map_err(|e| transport_failure(e, Step::Observe))?,
+        );
+        Self::with_file_transport(
+            root,
+            backend,
+            transport,
+            Arc::new(SystemEndpointCredentialsV2),
+        )
     }
     pub fn production_credentials() -> Arc<dyn EndpointCredentialsV2> {
         Arc::new(SystemEndpointCredentialsV2)
@@ -533,15 +609,22 @@ impl SyncServiceV2 {
         .await
     }
     async fn graph(&self, connection: &ConnectionHandle) -> SyncResult<graph::Graph> {
-        graph::observe(
-            &graph::Network {
-                transport: self.transport.as_ref(),
-                connection,
-                limits: &Budgets::default(),
-                slots: &self.slots,
-            },
-            &self.store,
-        )
+        let transport = self.transport.clone();
+        let connection = connection.clone();
+        let slots = self.slots.clone();
+        let store = self.store.clone();
+        let runtime = tokio::runtime::Handle::current();
+        blocking(move || {
+            runtime.block_on(graph::observe(
+                &graph::Network {
+                    transport: transport.as_ref(),
+                    connection: &connection,
+                    limits: &Budgets::default(),
+                    slots: &slots,
+                },
+                &store,
+            ))
+        })
         .await
     }
     async fn cloud(
@@ -619,9 +702,15 @@ impl SyncServiceV2 {
         &self,
         read_passphrase: Option<Zeroizing<String>>,
     ) -> SyncResult<CatalogV2> {
-        let backend = self.backend.clone();
-        let inventory = blocking(move || backend.inventory().map_err(host::map_host_error)).await?;
         let (connection, _) = self.active().await?;
+        let backend = self.backend.clone();
+        let inventory_connection = connection.clone();
+        let inventory = blocking(move || {
+            backend
+                .inventory(&inventory_connection)
+                .map_err(host::map_host_error)
+        })
+        .await?;
         let graph = self.graph(&connection).await?;
         let payload = if graph.observation.state == RemoteState::Conflict
             || graph.observation.state == RemoteState::InitializationAmbiguous
@@ -647,6 +736,53 @@ impl SyncServiceV2 {
             None => None,
         };
         let mut entries = entries_from(&inventory.objects, true);
+        for row in &mut entries {
+            if row.kind == ObjectKindV2::Channel {
+                row.secret_available |= inventory.key_channel_ids.contains(&row.id)
+                    || inventory.authorization_channel_ids.contains(&row.id);
+            }
+        }
+        for source in &inventory.mcp_sources {
+            if !entries
+                .iter()
+                .any(|e| e.kind == ObjectKindV2::Mcp && e.id == source.name)
+            {
+                entries.push(ObjectEntryV2 {
+                    kind: ObjectKindV2::Mcp,
+                    id: source.name.clone(),
+                    label: source.name.clone(),
+                    available_local: true,
+                    available_cloud: false,
+                    model_ids: vec![],
+                    models: vec![],
+                    family_ids: vec![],
+                    revisions: vec![],
+                    default_revision: None,
+                    secret_available: inventory.credential_mcp_names.contains(&source.name),
+                });
+            }
+        }
+        for name in &inventory.credential_skill_names {
+            if !entries
+                .iter()
+                .any(|e| e.kind == ObjectKindV2::Skill && e.id == *name)
+            {
+                entries.push(ObjectEntryV2 {
+                    kind: ObjectKindV2::Skill,
+                    id: name.clone(),
+                    label: name.clone(),
+                    available_local: true,
+                    available_cloud: false,
+                    model_ids: vec![],
+                    models: vec![],
+                    family_ids: vec![],
+                    revisions: vec![],
+                    default_revision: None,
+                    secret_available: true,
+                });
+            }
+        }
+
         if let Some(cloud) = &cloud {
             for remote in entries_from(cloud, false) {
                 if let Some(old) = entries
@@ -696,7 +832,75 @@ impl SyncServiceV2 {
         let selected = match saved {
             Some(s) => s,
             None => {
-                let request = initial_scope(&inventory.objects, cloud.as_ref());
+                let mut request = initial_scope(&inventory.objects, cloud.as_ref());
+                for channel in &mut request.selection.channels {
+                    if !channel.include_key && !channel.include_authorization {
+                        if inventory
+                            .authorization_channel_ids
+                            .contains(&channel.portable_channel_id)
+                        {
+                            channel.include_authorization = true;
+                        } else if inventory
+                            .key_channel_ids
+                            .contains(&channel.portable_channel_id)
+                        {
+                            channel.include_key = true;
+                        }
+                    }
+                }
+                for name in &inventory.credential_skill_names {
+                    if !request.selection.skill_names.contains(name) {
+                        request.selection.skill_names.push(name.clone());
+                    }
+                    if !request
+                        .selection
+                        .extension_credentials
+                        .skill_names
+                        .contains(name)
+                    {
+                        request
+                            .selection
+                            .extension_credentials
+                            .skill_names
+                            .push(name.clone());
+                    }
+                }
+                for name in &inventory.credential_mcp_names {
+                    if request
+                        .selection
+                        .mcp_sources
+                        .iter()
+                        .any(|m| m.name == *name)
+                        && !request
+                            .selection
+                            .extension_credentials
+                            .mcp_names
+                            .contains(name)
+                    {
+                        request
+                            .selection
+                            .extension_credentials
+                            .mcp_names
+                            .push(name.clone());
+                    }
+                }
+                for mcp in &inventory.mcp_sources {
+                    if mcp.differing_fields.is_empty() {
+                        if let Some(source) = mcp.sources.first() {
+                            if request
+                                .selection
+                                .mcp_sources
+                                .iter()
+                                .any(|m| m.name == mcp.name)
+                            {
+                                request
+                                    .mcp_clients
+                                    .insert(mcp.name.clone(), source.source.clone());
+                            }
+                        }
+                    }
+                }
+
                 // A conflict/ambiguous initialization is not a successful initial
                 // directory read and cannot persist a truncated initial selection.
                 if !matches!(
@@ -719,7 +923,8 @@ impl SyncServiceV2 {
                     RemoteState::Conflict | RemoteState::InitializationAmbiguous
                 ),
             cloud_state: graph.observation.state,
-            heads: graph.observation.heads,
+            heads: graph.observation.heads.clone(),
+            observation: graph.observation.clone(),
             recovery_actions: graph.observation.recovery_actions,
         })
     }
@@ -728,7 +933,11 @@ impl SyncServiceV2 {
         blocking(move || {
             let record: Option<ScopeRecordV2> = files.read("scope.json")?;
             match record {
-                Some(r) if r.version == 2 && r.initialized => Ok(Some(r.request)),
+                Some(r)
+                    if r.version == 2 && r.root_digest == files.root_digest && r.initialized =>
+                {
+                    Ok(Some(r.request))
+                }
                 Some(_) => Err(err(ErrorCode::SyncJournalInvalid, Step::Persist)),
                 None => Ok(None),
             }
@@ -745,6 +954,7 @@ impl SyncServiceV2 {
                 "scope.json",
                 ScopeRecordV2 {
                     version: 2,
+                    root_digest: files.root_digest.clone(),
                     initialized: true,
                     request,
                 },
@@ -793,7 +1003,7 @@ impl SyncServiceV2 {
                 })
                 .transpose()?;
             backend
-                .compose(&request_copy, &conn, decoded.as_ref())
+                .compose(&request_copy, &conn, decoded.as_ref(), read)
                 .map_err(host::map_host_error)
         })
         .await?;
@@ -819,6 +1029,17 @@ impl SyncServiceV2 {
         })
         .await?;
         let public = preview.decision.clone();
+        let mut public_diff = composition.diff.clone();
+        if public.no_change {
+            for row in &mut public_diff {
+                if !matches!(
+                    row.status,
+                    DiffStatusV2::Unavailable | DiffStatusV2::SourceRequired
+                ) {
+                    row.status = DiffStatusV2::Unchanged;
+                }
+            }
+        }
         let codec = HostPayloadCodecV2::new(composition.provider.clone(), preview, secrets.host());
         let bound = {
             let resolver = self.resolver.clone();
@@ -915,7 +1136,7 @@ impl SyncServiceV2 {
             cloud_saved_time: public.cloud_saved_time,
             no_change: public.no_change,
             backup_before_update: request.backup_before_update,
-            entries: composition.diff,
+            entries: public_diff,
             local_summary: public.local_summary,
             cloud_summary: public.cloud_summary,
             plan,
@@ -1018,6 +1239,330 @@ impl SyncServiceV2 {
                 transport.as_ref(),
                 &HistoricalOnlyLocal,
             ))
+        })
+        .await
+    }
+    pub async fn resume_preflight(
+        &self,
+        operation_id: String,
+        read_passphrase: Option<Zeroizing<String>>,
+    ) -> SyncResult<ResumePreflightV2> {
+        require_uuid(&operation_id)?;
+        let store = self.store.clone();
+        let id = operation_id.clone();
+        let j = blocking(move || store.journal(&id)).await?;
+        let files = self.files.clone();
+        let id = operation_id.clone();
+        let r: OriginalRecordV2 = blocking(move || {
+            files
+                .read(&format!("{id}.original.json"))?
+                .ok_or_else(|| err(ErrorCode::SyncEndpointChanged, Step::Verify))
+        })
+        .await?;
+        if r.root_digest != self.files.root_digest
+            || r.operation_id != operation_id
+            || r.version != 2
+        {
+            return Err(err(ErrorCode::SyncJournalInvalid, Step::Verify));
+        }
+        let handle = r.handle.handle();
+        let expected = handle.clone();
+        let resolver = self.resolver.clone();
+        let file = self.file_transport.clone();
+        blocking(move || {
+            let bound = resolver.restore_original(r.endpoint, &expected)?;
+            if let Some(file) = file {
+                bound.bind_file_transport(&file)?;
+            }
+            Ok(())
+        })
+        .await?;
+        let graph = self.graph(&handle).await?;
+        let request = ResumeUploadRequest {
+            operation_id: operation_id.clone(),
+            plan_digest: j.plan.plan_digest.clone(),
+            expected_view_digest: graph.observation.view_digest.clone(),
+        };
+        let mut reason = String::new();
+        if j.fact.storage_status == StorageStatus::Stored {
+            reason = "already_stored".into();
+        } else if graph.observation.state == RemoteState::InitializationAmbiguous {
+            reason = "initialization_ambiguous".into();
+        } else if graph.observation.generation.as_ref() != j.fact.generation.as_ref() {
+            reason = "generation_changed".into();
+        } else if graph.observation.heads != j.plan.parents {
+            reason = "remote_changed".into();
+        } else if self
+            .store
+            .payload(&j.payload_handle, &j.plan.payload_digest)
+            .is_err()
+        {
+            reason = "original_material_missing".into();
+        }
+        if reason.is_empty() {
+            let parent = j
+                .plan
+                .resolution
+                .as_ref()
+                .and_then(|r| r.selected_head.as_ref())
+                .or(j.plan.parents.first());
+            let bytes = if let Some(parent) = parent {
+                let g = j
+                    .fact
+                    .generation
+                    .as_ref()
+                    .ok_or_else(|| err(ErrorCode::SyncGenerationChanged, Step::Verify))?;
+                let node = graph.node(g, parent)?;
+                let limits = Budgets::default();
+                let bytes = graph::Network {
+                    transport: self.transport.as_ref(),
+                    connection: &handle,
+                    limits: &limits,
+                    slots: &self.slots,
+                }
+                .get_retry(
+                    &SyncRelativePath::data(&g.generation_id, &parent.operation_id)?,
+                    limits.payload_bytes,
+                    Step::PayloadGet,
+                )
+                .await?;
+                if store::digest(&bytes) != node.commit.payload_digest
+                    || bytes.len() as u64 != node.commit.payload_bytes
+                {
+                    return Err(err(ErrorCode::SyncRemoteInvalid, Step::PayloadGet));
+                }
+                Some(Zeroizing::new(bytes))
+            } else {
+                None
+            };
+            let backend = self.backend.clone();
+            let conn = handle.clone();
+            let old = r.request;
+            let trusted = blocking(move || {
+                let cloud = bytes
+                    .map(|b| {
+                        file_objects_v2::decode(
+                            &b,
+                            read_passphrase.as_ref().map(|s| s.as_str()),
+                            &file_objects_v2::supported_schema(),
+                            Some(&host::PayloadAuthorizationV2),
+                        )
+                        .map(|d| d.objects)
+                        .map_err(host::map_host_error)
+                    })
+                    .transpose()?;
+                backend
+                    .compose(
+                        &PreviewRequestV2 {
+                            selection: old.selection,
+                            mcp_clients: old.mcp_clients,
+                            assets_reviewed: old.assets_reviewed,
+                            selected_head: None,
+                            forced_direction: Some(ServiceDirectionV2::Upload),
+                            backup_before_update: true,
+                        },
+                        &conn,
+                        cloud.as_ref(),
+                        read_passphrase,
+                    )
+                    .map_err(host::map_host_error)
+            })
+            .await;
+            match trusted {
+                Ok(c) => {
+                    if c.local.root_revision()? != j.root_revision
+                        || c.local.current_source()? != j.plan.source_guard
+                    {
+                        reason = "source_changed".into();
+                    }
+                }
+                Err(_) => reason = "source_changed".into(),
+            }
+        }
+        let can_resume = reason.is_empty();
+        if can_resume {
+            reason = "ready".into();
+        }
+        Ok(ResumePreflightV2 {
+            request,
+            can_resume,
+            reason,
+            observation: graph.observation,
+        })
+    }
+    /// Only the initialization-ambiguous graph's verified candidates are legal;
+    /// no automatic winner/latest and no remote clear/move is performed.
+    pub async fn recovery_preview(
+        &self,
+        request: RecoveryRequestV2,
+        read_passphrase: Option<Zeroizing<String>>,
+    ) -> SyncResult<RecoveryPreviewV2> {
+        let (connection, _) = self.active().await?;
+        let graph = self.graph(&connection).await?;
+        if graph.observation.state != RemoteState::InitializationAmbiguous
+            || !graph
+                .observation
+                .recovery_candidates
+                .iter()
+                .any(|c| c.generation == request.generation && c.head == request.head)
+        {
+            return Err(err(ErrorCode::SyncGenerationAmbiguous, Step::Recovery));
+        }
+        let node = graph.node(&request.generation, &request.head)?;
+        let limits = Budgets::default();
+        let bytes = graph::Network {
+            transport: self.transport.as_ref(),
+            connection: &connection,
+            limits: &limits,
+            slots: &self.slots,
+        }
+        .get_retry(
+            &SyncRelativePath::data(
+                &request.generation.generation_id,
+                &request.head.operation_id,
+            )?,
+            limits.payload_bytes,
+            Step::PayloadGet,
+        )
+        .await?;
+        if store::digest(&bytes) != node.commit.payload_digest
+            || bytes.len() as u64 != node.commit.payload_bytes
+        {
+            return Err(err(ErrorCode::SyncRemoteInvalid, Step::Recovery));
+        }
+        let backend = self.backend.clone();
+        let r = request.clone();
+        let conn = connection.clone();
+        let pass = copy_secret(&read_passphrase);
+        let composition = blocking(move || {
+            let cloud = file_objects_v2::decode(
+                &bytes,
+                pass.as_ref().map(|s| s.as_str()),
+                &file_objects_v2::supported_schema(),
+                Some(&host::PayloadAuthorizationV2),
+            )
+            .map_err(host::map_host_error)?;
+            backend
+                .compose(
+                    &PreviewRequestV2 {
+                        selection: r.selection,
+                        mcp_clients: r.mcp_clients,
+                        assets_reviewed: r.assets_reviewed,
+                        selected_head: Some(r.head),
+                        forced_direction: Some(ServiceDirectionV2::Download),
+                        backup_before_update: r.backup_before_update,
+                    },
+                    &conn,
+                    Some(&cloud.objects),
+                    pass,
+                )
+                .map_err(host::map_host_error)
+        })
+        .await?;
+        let current = composition.local.current_source()?;
+        let codec = ReadOnlyCodecV2 {
+            read_passphrase: copy_secret(&read_passphrase),
+        };
+        let plan = super::sync_v2::SyncContext::new(
+            &self.store,
+            self.transport.as_ref(),
+            &codec,
+            composition.local.as_ref(),
+            connection.clone(),
+        )?
+        .prepare_recovery(PrepareRecoveryRequest {
+            connection_id: connection.id.clone(),
+            source_binding_id: connection.binding_id.clone(),
+            generation: request.generation,
+            head: request.head,
+            expected_view_digest: graph.observation.view_digest,
+            scope_digest: current.scope_digest,
+            mode: request.mode,
+            backup_before_update: request.backup_before_update,
+        })
+        .await?;
+        let backend = self.backend.clone();
+        let id = plan.recovery_plan_id.clone();
+        let prepared = CompositionV2 {
+            provider: composition.provider.clone(),
+            local: composition.local.clone(),
+            remote_scope: composition.remote_scope.clone(),
+            diff: vec![],
+        };
+        blocking(move || {
+            backend
+                .prepared_operation(&id, &prepared)
+                .map_err(host::map_host_error)
+        })
+        .await?;
+        let session_id = uuid::Uuid::new_v4().to_string();
+        self.recoveries
+            .lock()
+            .map_err(|_| err(ErrorCode::SyncLocalStateIo, Step::Persist))?
+            .insert(
+                session_id.clone(),
+                Arc::new(RecoverySessionV2 {
+                    plan: plan.clone(),
+                    connection,
+                    local: composition.local,
+                    passphrase: read_passphrase,
+                    gate: AsyncMutex::new(()),
+                }),
+            );
+        Ok(RecoveryPreviewV2 {
+            session_id,
+            plan,
+            entries: composition.diff,
+        })
+    }
+    pub async fn recovery_confirm(&self, request: ConfirmRequestV2) -> SyncResult<RecoveryReceipt> {
+        require_uuid(&request.session_id)?;
+        let recovery = self
+            .recoveries
+            .lock()
+            .map_err(|_| err(ErrorCode::SyncLocalStateIo, Step::Persist))?
+            .get(&request.session_id)
+            .cloned()
+            .ok_or_else(|| err(ErrorCode::SyncPlanExpired, Step::Recovery))?;
+        let _gate = recovery.gate.lock().await;
+        if recovery.plan.plan_digest != request.plan_digest {
+            return Err(err(ErrorCode::SyncPlanChanged, Step::Recovery));
+        }
+        let resolver = self.resolver.clone();
+        let store = self.store.clone();
+        let transport = self.transport.clone();
+        let runtime = tokio::runtime::Handle::current();
+        let original = recovery.clone();
+        blocking(move || {
+            runtime.block_on(async {
+                resolver.resolve_original(&original.connection)?;
+                let codec = ReadOnlyCodecV2 {
+                    read_passphrase: copy_secret(&original.passphrase),
+                };
+                super::sync_v2::SyncContext::new(
+                    &store,
+                    transport.as_ref(),
+                    &codec,
+                    original.local.as_ref(),
+                    original.connection.clone(),
+                )?
+                .apply_recovery(ConfirmRecoveryRequest {
+                    recovery_plan_id: original.plan.recovery_plan_id.clone(),
+                    plan_digest: original.plan.plan_digest.clone(),
+                })
+                .await
+            })
+        })
+        .await
+    }
+    pub async fn recovery_result(&self, recovery_plan_id: String) -> SyncResult<RecoveryReceipt> {
+        require_uuid(&recovery_plan_id)?;
+        let store = self.store.clone();
+        blocking(move || {
+            store
+                .receive(&recovery_plan_id)?
+                .receipt
+                .ok_or_else(|| err(ErrorCode::SyncJournalInvalid, Step::Recovery))
         })
         .await
     }
@@ -1140,6 +1685,7 @@ impl SyncServiceV2 {
                     },
                     &conn,
                     cloud.as_ref(),
+                    pass,
                 )
                 .map_err(host::map_host_error)
         })
@@ -1538,3 +2084,941 @@ impl LocalApplication for HistoricalOnlyLocal {
 #[cfg(test)]
 #[path = "sync_service_v2_tests.rs"]
 mod tests;
+
+/// Production saved-object composer. Every mutable file/model/credential rule
+/// stays with its existing owner. This adapter only supplies immutable context
+/// and turns the exact core operation ID into the receiver's participant ID.
+pub struct ProductionServiceBackendV2 {
+    root: PathBuf,
+    home: PathBuf,
+    credentials: Arc<dyn super::saved_objects_capture_v2::CaptureCredentialsV2 + Send + Sync>,
+}
+impl ProductionServiceBackendV2 {
+    pub fn new(
+        root: PathBuf,
+        home: PathBuf,
+        credentials: Arc<dyn super::saved_objects_capture_v2::CaptureCredentialsV2 + Send + Sync>,
+    ) -> ModelResult<Self> {
+        if !root.is_absolute() || !root.is_dir() || !home.is_absolute() || !home.is_dir() {
+            return Err(invalid("capture_root_invalid", "同步尚未绑定合法用户根"));
+        }
+        Ok(Self {
+            root,
+            home,
+            credentials,
+        })
+    }
+}
+/// Keep the actual issued mapping facts alive for upload sessions too. The
+/// mapper intentionally uses Weak issued records; a binding hash alone is not
+/// permission and must never be reconstructed as one.
+struct OwnedMappingCaptureV2 {
+    inner: host::MappedCaptureProviderV2,
+    _preview: Arc<super::sync_identity_v2::MappingPreviewV2>,
+}
+impl CaptureProviderV2 for OwnedMappingCaptureV2 {
+    fn capture_saved(&self, s: &SelectionV2) -> ModelResult<host::HostCapturedV2> {
+        self.inner.capture_saved(s)
+    }
+    fn target_binding(&self, s: &SelectionV2) -> ModelResult<Option<host::LocalTargetBindingV2>> {
+        self.inner.target_binding(s)
+    }
+    fn verify_target(&self, b: &host::LocalTargetBindingV2) -> ModelResult<()> {
+        self.inner.verify_target(b)
+    }
+}
+/// Private reconstruction inputs issued by THIS service. A checksum here is
+/// not a model adoption receipt or mapping authority: owner proof getters must
+/// validate these exact descriptors against their own journals/transactions.
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct DownloadContextV2 {
+    version: u32,
+    operation_id: String,
+    root_digest: Digest,
+    home_digest: Digest,
+    original_binding_bytes: Vec<u8>,
+    receive_bindings: Vec<StoredReceiveBindingV2>,
+    mapping_before: Option<Vec<u8>>,
+    mapping_after: Vec<u8>,
+    model_handle: String,
+    local_capture: ScopeRequestV2,
+    remote_scope: SelectionV2,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct StoredReceiveBindingV2 {
+    portable_channel_id: String,
+    local_channel_id: String,
+    provider_id: String,
+    mode: String,
+}
+impl DownloadContextV2 {
+    fn receiver(
+        &self,
+        root: &Path,
+        home: &Path,
+    ) -> ModelResult<super::config_file::v2::receive::ReceiveFileHostV2> {
+        use super::{
+            config_file::v2::receive::{IdentityMappingWriteV2, ReceiveFileHostV2},
+            receive_models_v2::{ReceiveBindingModeV2, ReceiveBindingV2},
+        };
+        require_uuid(&self.operation_id)
+            .map_err(|_| invalid("sync_identity_operation", "原操作身份无效"))?;
+        let files = ServiceFilesV2::new(root)
+            .map_err(|_| invalid("sync_identity_read", "原接收根无法读取"))?;
+        let home_digest = store::digest(
+            home.canonicalize()
+                .map_err(|_| invalid("sync_identity_read", "原配置根无法读取"))?
+                .to_string_lossy()
+                .as_bytes(),
+        );
+        if self.version != 2
+            || self.root_digest != files.root_digest
+            || self.home_digest != home_digest
+        {
+            return Err(invalid("host_mapping_changed", "原接收根绑定不一致"));
+        }
+        let mut sources = BTreeSet::new();
+        let mut targets = BTreeSet::new();
+        let mut bindings = Vec::new();
+        for b in &self.receive_bindings {
+            super::schema_v2::check_id(&b.portable_channel_id)
+                .map_err(|_| invalid("sync_identity_read", "原身份材料损坏"))?;
+            super::schema_v2::check_id(&b.local_channel_id)
+                .map_err(|_| invalid("sync_identity_read", "原身份材料损坏"))?;
+            if b.provider_id.is_empty()
+                || b.provider_id.len() > 512
+                || !sources.insert(&b.portable_channel_id)
+                || !targets.insert(&b.local_channel_id)
+            {
+                return Err(invalid("sync_identity_read", "原接收身份冲突"));
+            }
+            let mode = match b.mode.as_str() {
+                "new" => ReceiveBindingModeV2::New,
+                "existing" => ReceiveBindingModeV2::Existing,
+                _ => return Err(invalid("sync_identity_read", "原接收模式无效")),
+            };
+            bindings.push(ReceiveBindingV2 {
+                portable_channel_id: b.portable_channel_id.clone(),
+                local_channel_id: b.local_channel_id.clone(),
+                provider_id: b.provider_id.clone(),
+                mode,
+            });
+        }
+        Ok(ReceiveFileHostV2 {
+            root: root.into(),
+            home: home.into(),
+            bindings,
+            trusted_mapping_write: Some(IdentityMappingWriteV2 {
+                before: self.mapping_before.clone(),
+                after: self.mapping_after.clone(),
+            }),
+        })
+    }
+}
+struct ReceiveFactoryV2 {
+    root: PathBuf,
+    home: PathBuf,
+    preview: Arc<super::sync_identity_v2::MappingPreviewV2>,
+    hosts: Mutex<BTreeMap<String, Arc<super::config_file::v2::receive::ReceiveFileHostV2>>>,
+    handles: Mutex<BTreeMap<String, super::sync_local_v2::ModelApplyPlanHandle>>,
+}
+impl ReceiveFactoryV2 {
+    fn receiver(
+        &self,
+        id: &str,
+    ) -> ModelResult<Arc<super::config_file::v2::receive::ReceiveFileHostV2>> {
+        use super::config_file::v2::receive::ReceiveFileHostV2;
+        super::schema_v2::check_id(id)
+            .map_err(|_| invalid("sync_identity_operation", "操作身份无效"))?;
+        let mut hosts = self
+            .hosts
+            .lock()
+            .map_err(|_| invalid("sync_identity_read", "接收操作状态不可用"))?;
+        if let Some(host) = hosts.get(id) {
+            return Ok(host.clone());
+        }
+        // This is the SAME ID generated by prepare_download. No second UUID,
+        // moved head, reissued mapping preview or ad-hoc identity write exists.
+        let host = Arc::new(ReceiveFileHostV2 {
+            root: self.root.clone(),
+            home: self.home.clone(),
+            bindings: self.preview.receive_bindings().to_vec(),
+            trusted_mapping_write: Some(self.preview.after_adoption(id)?),
+        });
+        hosts.insert(id.into(), host.clone());
+        Ok(host)
+    }
+    fn verify_applied(&self, id: &str, binding: &host::LocalTargetBindingV2) -> ModelResult<()> {
+        use super::sync_local_v2::{ModelApplyStatus, ModelApplyV2};
+        if *binding != *self.preview.binding() {
+            return Err(invalid("host_mapping_changed", "原接收目标绑定已改变"));
+        }
+        let handle = self
+            .handles
+            .lock()
+            .map_err(|_| invalid("sync_identity_read", "原接收状态不可用"))?
+            .get(id)
+            .cloned()
+            .ok_or_else(|| invalid("host_mapping_changed", "原模型采用回执缺失"))?;
+        let receiver = self
+            .hosts
+            .lock()
+            .map_err(|_| invalid("sync_identity_read", "原接收状态不可用"))?
+            .get(id)
+            .cloned()
+            .ok_or_else(|| invalid("host_mapping_changed", "原接收操作缺失"))?;
+        if !matches!(receiver.status(id, &handle)?, ModelApplyStatus::Applied(_)) {
+            return Err(invalid(
+                "host_mapping_changed",
+                "原模型尚未采用，不能读取后继映射作为原证明",
+            ));
+        }
+        self.preview.verify_adopted(id)
+    }
+}
+impl super::sync_local_v2::ModelApplyV2 for ReceiveFactoryV2 {
+    fn prepare(
+        &self,
+        id: &str,
+        objects: &SavedObjects,
+        scope: &SelectionV2,
+        expected_target: &str,
+    ) -> ModelResult<super::sync_local_v2::ModelApplyPlanHandle> {
+        let receiver = self.receiver(id)?;
+        let handle = receiver.prepare(id, objects, scope, expected_target)?;
+        let mapping = receiver
+            .trusted_mapping_write
+            .as_ref()
+            .ok_or_else(|| invalid("sync_identity_read", "原接收映射材料缺失"))?;
+        let files = ServiceFilesV2::new(&self.root)
+            .map_err(|_| invalid("sync_identity_read", "原接收上下文无法保存"))?;
+        let local = self.preview.local_capture_request();
+        let context = DownloadContextV2 {
+            version: 2,
+            operation_id: id.into(),
+            root_digest: files.root_digest.clone(),
+            home_digest: store::digest(
+                self.home
+                    .canonicalize()
+                    .map_err(|_| invalid("sync_identity_read", "原配置根无法读取"))?
+                    .to_string_lossy()
+                    .as_bytes(),
+            ),
+            original_binding_bytes: store::canonical(self.preview.binding())
+                .map_err(|_| invalid("sync_identity_read", "原目标绑定无法冻结"))?,
+            receive_bindings: receiver
+                .bindings
+                .iter()
+                .map(|b| StoredReceiveBindingV2 {
+                    portable_channel_id: b.portable_channel_id.clone(),
+                    local_channel_id: b.local_channel_id.clone(),
+                    provider_id: b.provider_id.clone(),
+                    mode: match b.mode {
+                        super::receive_models_v2::ReceiveBindingModeV2::New => "new",
+                        super::receive_models_v2::ReceiveBindingModeV2::Existing => "existing",
+                    }
+                    .into(),
+                })
+                .collect(),
+            mapping_before: mapping.before.clone(),
+            mapping_after: mapping.after.clone(),
+            model_handle: handle.token().into(),
+            local_capture: ScopeRequestV2 {
+                selection: local.selection,
+                mcp_clients: local.mcp_clients,
+                assets_reviewed: local.assets_reviewed,
+            },
+            remote_scope: self.preview.binding().remote_scope.clone(),
+        };
+        // Save before protect/apply. On re-open this record can reconstruct the
+        // same receiver, but only its own Applied proof may authorize recovery.
+        files
+            .write(&format!("{id}.download-context.json"), context)
+            .map_err(|_| invalid("sync_identity_read", "原接收上下文未持久保存"))?;
+        let roundtrip: DownloadContextV2 = files
+            .read(&format!("{id}.download-context.json"))
+            .map_err(|_| invalid("sync_identity_read", "原接收上下文读回失败"))?
+            .ok_or_else(|| invalid("sync_identity_read", "原接收上下文缺失"))?;
+        let exact = roundtrip.receiver(&self.root, &self.home)?;
+        if roundtrip.operation_id != id
+            || roundtrip.model_handle != handle.token()
+            || exact.bindings != receiver.bindings
+        {
+            return Err(invalid("sync_identity_read", "原接收上下文读回不一致"));
+        }
+        self.handles
+            .lock()
+            .map_err(|_| invalid("sync_identity_read", "接收操作状态不可用"))?
+            .insert(id.into(), handle.clone());
+        Ok(handle)
+    }
+    fn protect(
+        &self,
+        id: &str,
+        handle: &super::sync_local_v2::ModelApplyPlanHandle,
+        backup: bool,
+    ) -> ModelResult<()> {
+        self.receiver(id)?.protect(id, handle, backup)
+    }
+    fn apply_once(
+        &self,
+        id: &str,
+        objects: &SavedObjects,
+        handle: &super::sync_local_v2::ModelApplyPlanHandle,
+        backup: bool,
+    ) -> ModelResult<super::sync_local_v2::ModelApplyReceipt> {
+        self.receiver(id)?.apply_once(id, objects, handle, backup)
+    }
+    fn status(
+        &self,
+        id: &str,
+        handle: &super::sync_local_v2::ModelApplyPlanHandle,
+    ) -> ModelResult<super::sync_local_v2::ModelApplyStatus> {
+        self.receiver(id)?.status(id, handle)
+    }
+}
+struct MappedSourceBridgeV2 {
+    provider: Arc<dyn CaptureProviderV2>,
+    scope: SelectionV2,
+    binding: host::LocalTargetBindingV2,
+    receiver: Arc<ReceiveFactoryV2>,
+}
+impl super::sync_local_v2::SourceSnapshotProviderV2 for MappedSourceBridgeV2 {
+    fn current(
+        &self,
+        _: &Path,
+        _: &Path,
+        _: &super::saved_objects_capture_v2::CaptureRequestV2,
+    ) -> ModelResult<SourceGuard> {
+        self.provider
+            .capture_saved(&self.scope)
+            .map(|c| c.source_guard)
+    }
+    fn root(
+        &self,
+        d: &Path,
+        h: &Path,
+        _: &super::saved_objects_capture_v2::CaptureRequestV2,
+    ) -> ModelResult<String> {
+        super::config_file::v2::with_saved_config(d, h, |_, _, _, _, _, revision| {
+            Ok(revision.to_owned())
+        })
+        .map_err(|e| invalid(&e.code, "根绑定无法核对"))
+    }
+    fn target(
+        &self,
+        _: &Path,
+        _: &Path,
+        _: &super::saved_objects_capture_v2::CaptureRequestV2,
+    ) -> ModelResult<String> {
+        self.provider.verify_target(&self.binding)?;
+        Ok(self.binding.digest.clone())
+    }
+    fn verify_applied_mapping(
+        &self,
+        id: &str,
+        binding: &host::LocalTargetBindingV2,
+    ) -> ModelResult<()> {
+        self.receiver.verify_applied(id, binding)
+    }
+}
+impl ProductionServiceBackendV2 {
+    fn inventory_request(
+        &self,
+    ) -> ModelResult<(
+        super::saved_objects_capture_v2::CaptureRequestV2,
+        Vec<McpSourceEntryV2>,
+    )> {
+        use crate::modules::sync::{portable_accounts, portable_assets};
+        let mut selection = super::config_file::v2::with_saved_config(
+            &self.root,
+            &self.home,
+            |library, policy, _, _, _, _| {
+                let channels = policy
+                    .channels
+                    .iter()
+                    .filter(|c| {
+                        !matches!(
+                            c.connection.provider_id.to_ascii_lowercase().as_str(),
+                            "openai" | "chatgpt" | "openai-multi" | "combo"
+                        )
+                    })
+                    .map(|c| ChannelSelectionV2 {
+                        portable_channel_id: c.id.clone(),
+                        model_ids: None,
+                        family_ids: None,
+                        include_connection: true,
+                        include_key: false,
+                        include_authorization: false,
+                    })
+                    .collect();
+                let template_refs = library
+                    .templates
+                    .iter()
+                    .flat_map(|t| {
+                        t.revisions.iter().map(move |r| super::schema_v2::RefV2 {
+                            template_id: t.id.clone(),
+                            revision_id: r.id.clone(),
+                            digest: r.digest.clone(),
+                        })
+                    })
+                    .collect();
+                Ok(SelectionV2 {
+                    channels,
+                    template_refs,
+                    ..Default::default()
+                })
+            },
+        )
+        .map_err(|e| invalid(&e.code, "已保存模型目录无法读取"))?;
+        fn exists(root: &Path, relative: &str) -> ModelResult<bool> {
+            let p = root.join(relative);
+            match std::fs::symlink_metadata(&p) {
+                Ok(m) if m.file_type().is_symlink() || !m.is_file() => {
+                    Err(invalid("capture_source_invalid", "目录来源不是普通文件"))
+                }
+                Ok(_) => Ok(true),
+                Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(false),
+                Err(_) => Err(invalid("capture_source_invalid", "目录来源无法读取")),
+            }
+        }
+        selection.manager.preferences = exists(
+            &self.root,
+            crate::modules::preferences::PREFERENCES_RELATIVE_PATH,
+        )?;
+        selection.manager.extensions = exists(
+            &self.root,
+            crate::modules::extensions::projection::CONFIG_RELATIVE_PATH,
+        )?;
+        selection.manager.account_ids = portable_accounts::catalog(&self.root, &self.home)?
+            .into_iter()
+            .filter(|a| a.information_supported)
+            .map(|a| a.account.id)
+            .collect();
+        let catalog = portable_assets::catalog(&self.root, &self.home)?;
+        // Non-secret Skills can be captured for public inventory without a vault
+        // read. Sensitive SKILL.md remains listed by the asset catalog below;
+        // adopting its content requires an explicit credential scope.
+        let mut sources = Vec::new();
+        let mut clients = BTreeMap::new();
+        let names: BTreeSet<_> = catalog
+            .mcps
+            .into_iter()
+            .chain(portable_assets::stored_names(&self.root)?)
+            .collect();
+        for name in names {
+            let details = portable_assets::detail(&self.root, &self.home, "mcps", &name, None)?;
+            let mut options = Vec::new();
+            for source in &details.clients {
+                let (assets, conflicts) = portable_assets::export_with_credential_scope(
+                    &self.root,
+                    &self.home,
+                    &[],
+                    std::slice::from_ref(&name),
+                    &BTreeMap::from([(name.clone(), source.clone())]),
+                    false,
+                    false,
+                    Some(&[]),
+                )?;
+                if !conflicts.is_empty() || assets.mcps.len() != 1 {
+                    return Err(invalid("mcp_source", "目录来源需要重新确认"));
+                }
+                options.push(McpSourceOptionV2 {
+                    source: source.clone(),
+                    definition_digest: super::objects_overlay_v2::mcp_source_digest(
+                        &assets.mcps[0],
+                    )?,
+                });
+            }
+            if details.conflicts.is_empty() {
+                if let Some(chosen) = options.first() {
+                    selection.mcp_sources.push(McpSourceSelectionV2 {
+                        name: name.clone(),
+                        definition_digest: chosen.definition_digest.clone(),
+                    });
+                    clients.insert(name.clone(), chosen.source.clone());
+                }
+            }
+            sources.push(McpSourceEntryV2 {
+                name,
+                sources: options,
+                differing_fields: details.conflicts,
+            });
+        }
+        for name in catalog.skills {
+            match portable_assets::export_with_credential_scope(
+                &self.root,
+                &self.home,
+                std::slice::from_ref(&name),
+                &[],
+                &Default::default(),
+                false,
+                false,
+                Some(&[]),
+            ) {
+                Ok(_) => selection.skill_names.push(name),
+                Err(e) if e.code == "asset_secret" => {}
+                Err(e) => return Err(e),
+            }
+        }
+        Ok((
+            super::saved_objects_capture_v2::CaptureRequestV2 {
+                selection,
+                mcp_clients: clients,
+                assets_reviewed: false,
+            },
+            sources,
+        ))
+    }
+}
+impl ServiceBackendV2 for ProductionServiceBackendV2 {
+    fn inventory(&self, connection: &ConnectionHandle) -> ModelResult<InventoryV2> {
+        let (request, mcp_sources) = self.inventory_request()?;
+        let identity = Arc::new(super::sync_identity_v2::SyncIdentityOwnerV2::new(
+            self.root.clone(),
+            self.home.clone(),
+            connection.binding_id.clone(),
+            self.credentials.clone(),
+        )?);
+        let mapping = identity.freeze_preview(DirectionV2::Upload, request, None)?;
+        let actual = super::saved_objects_capture_v2::capture(
+            &self.root,
+            &self.home,
+            &mapping.local_capture_request(),
+            self.credentials.as_ref(),
+        )?;
+        let objects = host::TrustedMappingOwnerV2::project_saved_to_remote(
+            identity.as_ref(),
+            actual.objects,
+            mapping.binding(),
+        )?;
+        let (local_keys, local_auth) = super::config_file::v2::with_saved_config(
+            &self.root,
+            &self.home,
+            |_, policy, _, raw, _, _| {
+                let mut keys = BTreeSet::new();
+                let mut auth = BTreeSet::new();
+                for channel in &policy.channels {
+                    if let Some(provider) = raw
+                        .get("providers")
+                        .and_then(|v| v.get(&channel.connection.provider_id))
+                    {
+                        let private = [
+                            "apiKeyPool",
+                            "headers",
+                            "queryParams",
+                            "proxy",
+                            "mcpServers",
+                            "desktopExecutor",
+                        ]
+                        .iter()
+                        .any(|field| {
+                            provider.get(*field).is_some_and(|v| match v {
+                                serde_json::Value::Null => false,
+                                serde_json::Value::String(s) => !s.is_empty(),
+                                serde_json::Value::Array(a) => !a.is_empty(),
+                                serde_json::Value::Object(m) => !m.is_empty(),
+                                _ => true,
+                            })
+                        });
+                        if private {
+                            auth.insert(channel.id.clone());
+                        } else if provider
+                            .get("apiKey")
+                            .and_then(serde_json::Value::as_str)
+                            .is_some_and(|s| !s.is_empty())
+                        {
+                            keys.insert(channel.id.clone());
+                        }
+                    }
+                }
+                Ok((keys, auth))
+            },
+        )
+        .map_err(|e| invalid(&e.code, "凭据范围目录无法读取"))?;
+        let projected = |ids: BTreeSet<String>| -> BTreeSet<String> {
+            ids.into_iter()
+                .filter_map(|id| {
+                    mapping
+                        .binding()
+                        .slots
+                        .iter()
+                        .find(|s| s.local_id == id)
+                        .map(|s| s.portable_id.clone())
+                })
+                .collect()
+        };
+        let asset_catalog = crate::modules::sync::portable_assets::catalog(&self.root, &self.home)?;
+        Ok(InventoryV2 {
+            objects,
+            mcp_sources,
+            key_channel_ids: projected(local_keys),
+            authorization_channel_ids: projected(local_auth),
+            credential_skill_names: asset_catalog.credential_skills.into_iter().collect(),
+            credential_mcp_names: asset_catalog.credential_mcps.into_iter().collect(),
+        })
+    }
+    fn compose(
+        &self,
+        request: &PreviewRequestV2,
+        connection: &ConnectionHandle,
+        cloud: Option<&SavedObjects>,
+        read_passphrase: Option<Zeroizing<String>>,
+    ) -> ModelResult<CompositionV2> {
+        use super::{sync_identity_v2::SyncIdentityOwnerV2, sync_local_v2::LocalApplicationV2};
+        let identity = Arc::new(SyncIdentityOwnerV2::new(
+            self.root.clone(),
+            self.home.clone(),
+            connection.binding_id.clone(),
+            self.credentials.clone(),
+        )?);
+        let input_request = super::saved_objects_capture_v2::CaptureRequestV2 {
+            selection: request.selection.clone(),
+            mcp_clients: request.mcp_clients.clone(),
+            assets_reviewed: request.assets_reviewed,
+        };
+        // A genuinely empty remote has no receive authority to resolve first.
+        // Its explicit local upload selection goes straight through Upload.
+        // With valid cloud material the owner translates portable -> actual
+        // local identities before direction selection; no label inference.
+        let (direction, mapping) = if cloud.is_none() {
+            (
+                DirectionV2::Upload,
+                Arc::new(identity.freeze_preview(DirectionV2::Upload, input_request, None)?),
+            )
+        } else {
+            let receive_mapping =
+                Arc::new(identity.freeze_preview(DirectionV2::Download, input_request, cloud)?);
+            let actual_local = super::saved_objects_capture_v2::capture(
+                &self.root,
+                &self.home,
+                &receive_mapping.local_capture_request(),
+                self.credentials.as_ref(),
+            )?;
+            let projected_local = host::TrustedMappingOwnerV2::project_saved_to_remote(
+                identity.as_ref(),
+                actual_local.objects,
+                receive_mapping.binding(),
+            )?;
+            let direction = match &request.forced_direction {
+                Some(d) => d.host(),
+                None => host::automatic_direction_from_saved(
+                    &projected_local,
+                    cloud,
+                    &request.selection,
+                )
+                .map_err(|_| invalid("capture_source_invalid", "保存事实无法判断方向"))?,
+            };
+            let mapping = if direction == DirectionV2::Upload {
+                if receive_mapping
+                    .binding()
+                    .slots
+                    .iter()
+                    .any(|s| matches!(s.expected, host::TargetExpectationV2::ExpectedAbsent(_)))
+                {
+                    return Err(invalid(
+                        "capture_selection_missing",
+                        "上传来源缺少明确已保存对象",
+                    ));
+                }
+                Arc::new(identity.freeze_preview(
+                    DirectionV2::Upload,
+                    receive_mapping.local_capture_request(),
+                    None,
+                )?)
+            } else {
+                receive_mapping
+            };
+            (direction, mapping)
+        };
+        let local_capture = mapping.local_capture_request();
+        let actual = Arc::new(
+            host::SavedCaptureProviderV2::new(
+                self.root.clone(),
+                self.home.clone(),
+                local_capture_for_copy(&local_capture)?,
+                self.credentials.clone(),
+            )
+            .map_err(|_| invalid("capture_scope_invalid", "本机捕获选区无效"))?,
+        );
+        let mapped = Arc::new(OwnedMappingCaptureV2 {
+            inner: host::MappedCaptureProviderV2::new(
+                actual,
+                identity.clone(),
+                mapping.binding().clone(),
+            )
+            .map_err(|_| invalid("host_mapping_changed", "映射选区未通过核验"))?,
+            _preview: mapping.clone(),
+        });
+        let remote_scope = mapping.binding().remote_scope.clone();
+        let source = mapped.capture_saved(&remote_scope)?;
+        let receiver = Arc::new(ReceiveFactoryV2 {
+            root: self.root.clone(),
+            home: self.home.clone(),
+            preview: mapping.clone(),
+            hosts: Default::default(),
+            handles: Default::default(),
+        });
+        let source_bridge = Arc::new(MappedSourceBridgeV2 {
+            provider: mapped.clone(),
+            scope: remote_scope.clone(),
+            binding: mapping.binding().clone(),
+            receiver: receiver.clone(),
+        });
+        let local: Arc<dyn LocalApplication> = if direction == DirectionV2::Download {
+            Arc::new(
+                LocalApplicationV2::new_mapped(
+                    self.root.clone(),
+                    self.home.clone(),
+                    remote_scope.clone(),
+                    local_capture,
+                    source.source_guard.scope_digest.clone(),
+                    source_bridge,
+                    receiver,
+                    read_passphrase,
+                    mapping.binding().clone(),
+                    identity,
+                )
+                .map_err(|_| invalid("host_mapping_changed", "实际接收目标无法绑定"))?,
+            )
+        } else {
+            Arc::new(UploadSourceLocalV2 {
+                provider: host::CurrentSourceProviderV2::new(
+                    mapped.clone(),
+                    remote_scope.clone(),
+                    source.root_revision.clone(),
+                )
+                .map_err(|_| invalid("capture_scope_invalid", "上传来源无法绑定"))?,
+            })
+        };
+        let diff = semantic_diff(&remote_scope, &source.objects, cloud, direction)?;
+        Ok(CompositionV2 {
+            provider: mapped,
+            local,
+            remote_scope,
+            diff,
+        })
+    }
+}
+fn local_capture_for_copy(
+    r: &super::saved_objects_capture_v2::CaptureRequestV2,
+) -> ModelResult<super::saved_objects_capture_v2::CaptureRequestV2> {
+    Ok(super::saved_objects_capture_v2::CaptureRequestV2 {
+        selection: r.selection.clone(),
+        mcp_clients: r.mcp_clients.clone(),
+        assets_reviewed: r.assets_reviewed,
+    })
+}
+struct UploadSourceLocalV2 {
+    provider: host::CurrentSourceProviderV2,
+}
+impl LocalApplication for UploadSourceLocalV2 {
+    fn root_revision(&self) -> SyncResult<Digest> {
+        self.provider.root_revision()
+    }
+    fn current_source(&self) -> SyncResult<SourceGuard> {
+        self.provider.current_source()
+    }
+    fn target_digest(&self, _: &str) -> SyncResult<Digest> {
+        Err(err(ErrorCode::SyncPlanChanged, Step::DownloadGuard))
+    }
+    fn apply_once(
+        &self,
+        _: &str,
+        _: &[u8],
+        _: &PayloadSchemaRef,
+        _: &str,
+        _: &str,
+        _: bool,
+    ) -> SyncResult<()> {
+        Err(err(ErrorCode::SyncPlanChanged, Step::ApplyLocal))
+    }
+    fn export_once(&self, _: &str, _: &[u8], _: &PayloadSchemaRef, _: &str) -> SyncResult<String> {
+        Err(err(ErrorCode::SyncPlanChanged, Step::ApplyLocal))
+    }
+}
+fn semantic_diff(
+    selection: &SelectionV2,
+    local: &SavedObjects,
+    cloud: Option<&SavedObjects>,
+    direction: DirectionV2,
+) -> ModelResult<Vec<DiffEntryV2>> {
+    let left = file_objects_v2::save_state(local)?;
+    let right = cloud
+        .map(file_objects_v2::save_state)
+        .transpose()?
+        .unwrap_or_default();
+    let mut rows = Vec::new();
+    let mut add = |kind: ObjectKindV2, id: String, key: serde_json::Value| -> ModelResult<()> {
+        let key = super::content_versions::key(&key)?;
+        let (before, after) = if direction == DirectionV2::Download {
+            (left.get(&key), right.get(&key))
+        } else {
+            (right.get(&key), left.get(&key))
+        };
+        let status = match (before, after) {
+            (_, None) => DiffStatusV2::Unavailable,
+            (None, Some(_)) => DiffStatusV2::Add,
+            (Some(a), Some(b)) if a == b => DiffStatusV2::Unchanged,
+            _ => DiffStatusV2::Update,
+        };
+        rows.push(DiffEntryV2 {
+            kind,
+            id,
+            status,
+            before_digest: None,
+            after_digest: None,
+        });
+        Ok(())
+    };
+    for c in &selection.channels {
+        add(
+            ObjectKindV2::Channel,
+            c.portable_channel_id.clone(),
+            serde_json::json!([
+                "v2-channel",
+                c.portable_channel_id,
+                c.model_ids,
+                c.family_ids
+            ]),
+        )?;
+    }
+    for r in &selection.template_refs {
+        add(
+            ObjectKindV2::Template,
+            r.template_id.clone(),
+            serde_json::json!(["v2-template", r.template_id, r.revision_id]),
+        )?;
+    }
+    if selection.manager.preferences {
+        add(
+            ObjectKindV2::Preferences,
+            "preferences".into(),
+            serde_json::json!(["v2-preferences"]),
+        )?;
+    }
+    if selection.manager.extensions {
+        add(
+            ObjectKindV2::Extensions,
+            "extensions".into(),
+            serde_json::json!(["v2-extensions"]),
+        )?;
+    }
+    for reference in &selection.adopt_template_defaults {
+        add(
+            ObjectKindV2::Template,
+            reference.template_id.clone(),
+            serde_json::json!(["v2-template-meta", reference.template_id]),
+        )?;
+    }
+    for id in &selection.manager.account_ids {
+        let account = local
+            .partitions()
+            .manager
+            .accounts
+            .iter()
+            .find(|a| a.id == *id)
+            .or_else(|| {
+                cloud.and_then(|c| c.partitions().manager.accounts.iter().find(|a| a.id == *id))
+            })
+            .ok_or_else(|| invalid("overlay_selection_missing", "所选账户信息不存在"))?;
+        add(
+            ObjectKindV2::Account,
+            id.clone(),
+            serde_json::json!([
+                "v2-accounts",
+                super::objects_overlay_v2::account_source_identity(account)?
+            ]),
+        )?;
+    }
+    for name in &selection.skill_names {
+        add(
+            ObjectKindV2::Skill,
+            name.clone(),
+            serde_json::json!(["v2-skills", name]),
+        )?;
+    }
+    for m in &selection.mcp_sources {
+        add(
+            ObjectKindV2::Mcp,
+            m.name.clone(),
+            serde_json::json!(["v2-mcps", m.name]),
+        )?;
+    }
+    // Credential-only changes are real selected changes even when the public
+    // channel/MCP atom is identical. Compare private values only in memory;
+    // never put secret hashes or strings into a public diff entry.
+    for channel_scope in &selection.channels {
+        let key = &channel_scope.portable_channel_id;
+        let l = local.partitions();
+        let r = cloud.map(SavedObjects::partitions);
+        let key_changed = channel_scope.include_key
+            && l.channel_keys.get(key) != r.as_ref().and_then(|p| p.channel_keys.get(key));
+        let auth_changed = if channel_scope.include_authorization {
+            let a = l
+                .channel_authorizations
+                .get(key)
+                .map(|v| serde_json::to_vec(v).map(Zeroizing::new))
+                .transpose()
+                .map_err(|_| invalid("portable_objects_v2_format", "授权差异无法核对"))?;
+            let b = r
+                .as_ref()
+                .and_then(|p| p.channel_authorizations.get(key))
+                .map(|v| serde_json::to_vec(v).map(Zeroizing::new))
+                .transpose()
+                .map_err(|_| invalid("portable_objects_v2_format", "授权差异无法核对"))?;
+            a != b
+        } else {
+            false
+        };
+        if let Some(row) = rows
+            .iter_mut()
+            .find(|row| row.kind == ObjectKindV2::Channel && row.id == *key)
+        {
+            let target = if direction == DirectionV2::Download {
+                Some(local)
+            } else {
+                cloud
+            };
+            let target_has = target.is_some_and(|o| {
+                o.models()
+                    .payload
+                    .policy
+                    .iter()
+                    .flat_map(|p| &p.channels)
+                    .any(|c| c.id == *key)
+            });
+            if target_has && matches!(row.status, DiffStatusV2::Add) {
+                row.status = DiffStatusV2::Update;
+            }
+            if (key_changed || auth_changed) && matches!(row.status, DiffStatusV2::Unchanged) {
+                row.status = DiffStatusV2::Update;
+            }
+        }
+    }
+    for name in &selection.extension_credentials.mcp_names {
+        let a = local
+            .partitions()
+            .assets
+            .mcps
+            .iter()
+            .find(|m| m.name == *name)
+            .map(|m| &m.secrets.0);
+        let b = cloud
+            .and_then(|c| c.partitions().assets.mcps.iter().find(|m| m.name == *name))
+            .map(|m| &m.secrets.0);
+        if a != b {
+            if let Some(row) = rows
+                .iter_mut()
+                .find(|r| r.kind == ObjectKindV2::Mcp && r.id == *name)
+            {
+                if matches!(row.status, DiffStatusV2::Unchanged) {
+                    row.status = DiffStatusV2::Update;
+                }
+            }
+        }
+    }
+    Ok(rows)
+}

@@ -210,12 +210,26 @@ pub fn run() {
             let runtime_executable: crate::infrastructure::runtime_executable::SharedRuntimeExecutable =
                 runtime.clone();
             app.manage(runtime.clone());
-
             // 托管安装 / 卸载的进行态（取消 + 同一时刻只允许一个写者）。
             let runtime_install = crate::state::SharedRuntimeInstall::new();
             app.manage(runtime_install.clone());
-            app.manage(crate::modules::runtime::offline_drop::SharedOfflineDrop::default());
-            crate::commands::runtime::reconcile_startup(data_root.clone(), runtime_install);
+            // Acquire the shared admission before dispatching large offline I/O.
+            if !crate::modules::test_sandbox::enabled() {
+                if let Some(pin) = option_env!("OCXD_BUNDLED_RUNTIME_DESCRIPTOR_SHA256") {
+                    let source_events = app.handle().clone();
+                    if crate::modules::runtime::startup_bundle::start(
+                        install_root.clone(), data_root.clone(),
+                        app.path().resource_dir()?.join("runtime-bundle"), pin,
+                        runtime.clone(), runtime_install.clone(),
+                        move || crate::commands::runtime::broadcast_source_changed(&source_events),
+                    ).is_err() {
+                        record_window_event(&data_root, "integrated runtime provisioning not started; installer busy");
+                    }
+                }
+            }
+            let offline_drop = crate::modules::runtime::offline_drop::SharedOfflineDrop::default();
+            app.manage(offline_drop.clone());
+            crate::commands::runtime::reconcile_startup(data_root.clone(), runtime_install.clone());
             #[cfg(windows)]
             app.manage(crate::commands::update::SharedPendingUpdate::new(None));
             app.manage(crate::commands::update_schedule::SharedSchedule::default());
@@ -372,6 +386,21 @@ pub fn run() {
                 working_directory: home.clone(),
                 opencodex_home,
             });
+            app.manage(crate::commands::config_file_transfer_v2::SharedConfigFileTransferV2(
+                std::sync::Arc::new(std::sync::Mutex::new(
+                    crate::modules::model_config::file_transfer_v2::FileTransferOwnerV2::new(
+                        data_root.clone(), crate::modules::data_root::resolve_opencodex_home(&runtime_config),
+                        std::sync::Arc::new(crate::modules::model_config::saved_objects_capture_v2::SystemCaptureCredentialsV2),
+                    ).map_err(|e| crate::errors::AppError::FileSystem {
+                        operation: "initialize configuration file owner".into(), detail: e.code,
+                    })?.with_draft_capture(std::sync::Arc::new(
+                        crate::modules::model_config::config_file::v2::export::ConfigDraftFileCaptureV2,
+                    )),
+                )),
+            ));
+            app.manage(crate::commands::config_sync_v2::SharedConfigSyncV2::production(
+                data_root.clone(), crate::modules::data_root::resolve_opencodex_home(&runtime_config),
+            ));
             crate::modules::model_config::broker::resume(data_root.clone());
 
             app.manage(crate::infrastructure::app_activity::AppActivity::default());
@@ -530,6 +559,17 @@ pub fn run() {
             }
         })
         .invoke_handler(tauri::generate_handler![
+            commands::config_file_transfer_v2::prepare_config_file_export_v2,
+            commands::config_file_transfer_v2::prepare_draft_config_file_export_v2,
+            commands::config_file_transfer_v2::save_config_file_export_v2,
+            commands::config_file_transfer_v2::cancel_config_file_export_v2,
+            commands::config_file_transfer_v2::open_config_file_import_v2,
+            commands::config_file_transfer_v2::reselect_config_file_import_v2,
+            commands::config_file_transfer_v2::confirm_config_file_import_v2,
+            commands::config_file_transfer_v2::cancel_config_file_import_v2,
+            commands::config_file_transfer_v2::reopen_config_file_export_v2,
+            commands::config_file_transfer_v2::reopen_config_file_import_v2,
+            commands::config_file_transfer_v2::recoverable_config_file_operations_v2,
             commands::model_transfer::model_transfer_export,
             commands::model_transfer::model_transfer_protect,
             commands::model_transfer::model_transfer_discard_unattempted,
@@ -545,8 +585,19 @@ pub fn run() {
             commands::model_transfer::portable_asset_detail,
             commands::model_transfer::portable_account_catalog,
             commands::model_transfer::portable_channel_catalog,
-            commands::model_transfer::config_sync_scope,
-            commands::model_transfer::config_sync_observe,
+            commands::config_sync_v2::config_v2_catalog,
+            commands::config_sync_v2::config_v2_read_scope,
+            commands::config_sync_v2::config_v2_save_scope,
+            commands::config_sync_v2::config_v2_preview,
+            commands::config_sync_v2::config_v2_confirm,
+            commands::config_sync_v2::config_v2_result,
+            commands::config_sync_v2::config_v2_verify,
+            commands::config_sync_v2::config_v2_resume,
+            commands::config_sync_v2::config_v2_resume_preflight,
+            commands::config_sync_v2::config_v2_cancel,
+            commands::config_sync_v2::config_v2_recovery_preview,
+            commands::config_sync_v2::config_v2_recovery_confirm,
+            commands::config_sync_v2::config_v2_recovery_result,
             commands::model_transfer::transfer_choices,
             commands::model_transfer::transfer_result,
             commands::model_transfer::open_transfer_export_directory,
@@ -558,13 +609,6 @@ pub fn run() {
             commands::model_transfer::save_transfer_choices,
             commands::model_transfer::transfer_protection,
             commands::model_transfer::save_transfer_protection,
-            commands::model_transfer::config_sync_save_scope,
-            commands::model_transfer::config_sync_prepare,
-            commands::model_transfer::config_sync_publish,
-            commands::model_transfer::config_sync_download,
-            commands::model_transfer::config_sync_latest_upload,
-            commands::model_transfer::config_sync_check,
-            commands::model_transfer::config_sync_catalog,
             commands::model_config::model_config_snapshot,
             commands::model_config_v2::model_v2_validate_content,
             commands::model_config_v2::model_v2_library,
@@ -575,6 +619,7 @@ pub fn run() {
             commands::model_config_v2::model_v2_begin_draft,
             commands::model_config_v2::model_v2_stage_connection,
             commands::model_config_v2::model_v2_file_save,
+            commands::model_config_v2::model_v2_file_project,
             commands::model_config_v2::model_v2_copy_channel,
             commands::model_config_v2::model_v2_discover,
             commands::model_config_v2::model_v2_stage_credential,
@@ -591,6 +636,9 @@ pub fn run() {
             commands::model_config_v2::model_v2_agent_stop,
             commands::model_config_v2::model_v2_agent_latest,
             commands::model_config_v2::model_v2_agent_accept,
+            commands::model_config_v2::model_v2_external_prepare,
+            commands::model_config_v2::model_v2_external_activate,
+            commands::model_config_v2::model_v2_external_revoke,
             commands::model_config::model_file_snapshot,
             commands::model_config::model_file_save,
             commands::model_config::model_file_credential,
@@ -698,7 +746,6 @@ pub fn run() {
             commands::sync::test_sync_connection,
             commands::sync::test_sync_candidate,
             commands::sync::get_sync_status,
-            commands::sync::run_sync_now,
             commands::workspace::get_managed_path_targets,
             commands::workspace::open_managed_path,
             commands::workspace::open_external_link,

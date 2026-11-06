@@ -670,6 +670,52 @@ fn has_selected_cloud(
     }
     true
 }
+/// Direction-only bridge for the production mapping owner. Reuses the same
+/// selected-atom completeness/time rules BEFORE choosing an upload/download
+/// identity mapping; no transport timestamps or new semantic engine.
+pub fn automatic_direction_from_saved(
+    local: &SavedObjects,
+    cloud: Option<&SavedObjects>,
+    scope: &SelectionV2,
+) -> SyncResult<DirectionV2> {
+    let atoms = file_objects_v2::save_state(local).map_err(map_host_error)?;
+    let Some(cloud) = cloud else {
+        return Ok(DirectionV2::Upload);
+    };
+    if atoms.is_empty() || !has_selected_cloud(local, scope, local) {
+        return Ok(DirectionV2::Download);
+    }
+    let local_domain: Vec<_> = local
+        .models()
+        .payload
+        .policy
+        .iter()
+        .flat_map(|p| p.channels.iter().map(|c| &c.id))
+        .collect();
+    let cloud_domain: Vec<_> = cloud
+        .models()
+        .payload
+        .policy
+        .iter()
+        .flat_map(|p| p.channels.iter().map(|c| &c.id))
+        .collect();
+    if local_domain != cloud_domain {
+        return Ok(DirectionV2::Download);
+    }
+    let l = saved_time(local, atoms.keys().cloned()).map_err(map_host_error)?;
+    let r = saved_time(cloud, atoms.keys().cloned()).map_err(map_host_error)?;
+    Ok(
+        match (
+            l.as_deref()
+                .and_then(|s| chrono::DateTime::parse_from_rfc3339(s).ok()),
+            r.as_deref()
+                .and_then(|s| chrono::DateTime::parse_from_rfc3339(s).ok()),
+        ) {
+            (Some(l), Some(r)) if l > r => DirectionV2::Upload,
+            _ => DirectionV2::Download,
+        },
+    )
+}
 /// Read-only semantic decision, BEFORE prepare/encryption/publication. Invalid
 /// cloud/credentials propagate as real errors; a valid unknown-time cloud wins
 /// the default, but application remains gated by exact selected material.
@@ -1544,12 +1590,11 @@ impl HostSessionV2 {
         local: &dyn LocalApplication,
     ) -> SyncResult<OperationFact> {
         resolver.resolve_original(&self.connection)?;
-        if let Some(binding) = &self.codec.preview.target_binding {
-            self.codec
-                .provider
-                .verify_target(binding)
-                .map_err(map_host_error)?;
-        }
+        // The local participant owns target/mapping proof and recovery. After
+        // its model transaction is Applied, the original Absent fact must NOT
+        // block remaining assets or an already-applied same-O receipt. The
+        // participant checks the frozen pre-state before new writes and its
+        // exact adopted revision/receipt for recovery; never bypass it here.
         self.context(store, transport, local)?
             .apply_download(r)
             .await
