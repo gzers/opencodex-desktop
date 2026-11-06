@@ -37,6 +37,9 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
   const stagedConnectionIntents=shallowRef<readonly ChannelConnectionEditIntentV2[]>([])
   const executionPreference=ref<AgentSettingsV2|null>(null),executionPreferenceRevision=ref(0)
   const agentSessions=ref<Record<string,AgentSessionV2>>({})
+  const externalCurrentId=ref(''),externalNotificationTarget=ref<{taskId:string}|null>(null)
+  const policyNotificationTarget=ref<{operationId:string}|null>(null)
+  const externalTasks=ref<Record<string,{request:Pick<GenerateIntentV2,'targets'|'scene'|'allowNew'|'expectedLibrary'>;expiresAt:string;activated:boolean;revoked:boolean}>>({})
   const agentSequences=new Map<string,number>(),agentStops=new Set<string>()
   let preferenceRead:Promise<void>|null=null
   function agentSession(key:string):AgentSessionV2 {if(!agentSessions.value[key])agentSessions.value[key]={input:'',history:[],sources:[],ticket:null,result:null,preparing:false,generating:false,stopping:false,accepting:false,error:'',status:'',inputGeneration:null,expectedLibrary:'',acceptRequest:null};return agentSessions.value[key]!}
@@ -199,6 +202,7 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
     catch(cause){if(seq===readSequence)error.value=message(cause)}finally{if(seq===readSequence)loading.value=false}
   }
   async function open(){active.value=true;await load()}
+  function dismissPreview(){previewSequence++;preview.value=null;previewBusy.value=false;previewError.value='';issues.value=[]}
   function setPreviewTarget(rawModelId:string,channelId:string){previewModelId.value=rawModelId;previewChannelId.value=channelId;invalidate()}
   async function requestPreview(){
     const reader=services.value.previewConditions;if(!draft.value||!reader){previewError.value=serviceUnavailableV2().message;return}
@@ -298,5 +302,5 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
     stagedConnectionIntents.value=[...stagedConnectionIntents.value.filter(item=>item.channelId!==result.channelId),{...immutableIntent,channelId:result.channelId}]
     return result
   }
-  return {protectsRevision,discardNew,modelRows,pendingRows,rowsFor,projectFile,adoptProjection,fileContext,effectiveRows,active,loading,saving,previewBusy,snapshot,draft,error,previewError,issues,preview,previewModelId,previewChannelId,editGeneration,dirty,canLoad,canPreview,canSave,canDiscover,canStageConnection,stagedConnectionIntents,configureServices,start,setContent,setLabel,setDefault,reset,close,load,open,setPreviewTarget,requestPreview,save,discover,stageConnection,file,fileBusy,fileError,fileNeedsReconcile,channels,channelIntents,modelEdits,readResults,channelEditorId,channelSearch,fileDirty,channelDirty,canSaveFile,loadChannels,readExisting,queueChannel,queueModel,explicitRules,setSelection,saveChannels,channelCapabilities,configureChannelCapabilities,copyChannel,viewCredential,stageCredential,pendingCredentialKinds,keyBuffer,setKeyBuffer,credentialInputRevision,view,copyTemplate,changeLibrary,templateAction,executionPreference,executionPreferenceRevision,loadAgentSettings,bindAgent,agentSessions,agentSession,runAgent,stopAgent,restoreAgent,acceptAgent}
+  return {policyNotificationTarget,dismissPreview,externalTasks,externalCurrentId,externalNotificationTarget,protectsRevision,discardNew,modelRows,pendingRows,rowsFor,projectFile,adoptProjection,fileContext,effectiveRows,active,loading,saving,previewBusy,snapshot,draft,error,previewError,issues,preview,previewModelId,previewChannelId,editGeneration,dirty,canLoad,canPreview,canSave,canDiscover,canStageConnection,stagedConnectionIntents,configureServices,start,setContent,setLabel,setDefault,reset,close,load,open,setPreviewTarget,requestPreview,save,discover,stageConnection,file,fileBusy,fileError,fileNeedsReconcile,channels,channelIntents,modelEdits,readResults,channelEditorId,channelSearch,fileDirty,channelDirty,canSaveFile,loadChannels,readExisting,queueChannel,queueModel,explicitRules,setSelection,saveChannels,channelCapabilities,configureChannelCapabilities,copyChannel,viewCredential,stageCredential,pendingCredentialKinds,keyBuffer,setKeyBuffer,credentialInputRevision,view,copyTemplate,changeLibrary,templateAction,executionPreference,executionPreferenceRevision,loadAgentSettings,bindAgent,agentSessions,agentSession,runAgent,stopAgent,restoreAgent,acceptAgent}
 })

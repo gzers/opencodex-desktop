@@ -61,6 +61,8 @@ export interface ResearchSourceV2 {url:string;retrievedAt:string;text:string;lin
 export interface EditingBufferInputV2 {target:RefV2|null;label:string;content:TemplateContentV2;generation:number}
 export interface EditingBufferV2 extends EditingBufferInputV2 {digest:string}
 export interface GenerateIntentV2 {scene:AgentSceneV2;targets:RefV2[];allowNew:boolean;expectedLibrary:string;requirements:string;history:AgentMessageV2[];sources:ResearchSourceV2[];buffer?:EditingBufferV2|null}
+export interface ExternalBrokerBundleV2 {taskId:string;content:string;preparedTicket:string;expiresAt:string}
+export interface ExternalRunViewV2 {dtoVersion:2;taskId:string;scene:AgentSceneV2;expectedLibrary:string;targets:RefV2[];allowNew:boolean;result:GeneratedReviewV2}
 export type RunPhaseV2='prepared'|'running'|'review'|'stopped'|'failed'|'accepted'
 export interface RunTicketV2 {dtoVersion:2;runId:string;phase:RunPhaseV2;expectedLibrary:string;rootRevision:string;sourceDigest:string}
 export interface ContentProposalV2 {target:RefV2|null;label:string;contentVersion:2;content:TemplateContentV2}
@@ -151,6 +153,10 @@ export const modelV2Api={
   executionDirectory:()=>invoke<ExecutionDirectoryV2>('model_v2_execution_directory'),
   agentSettings:()=>invoke<AgentSettingsV2|null>('model_agent_preferences'),
   bindAgent:(settings:AgentSettingsV2)=>invoke<AgentSettingsV2>('model_v2_bind_agent',{settings}),
+  externalPrepare:(request:GenerateIntentV2)=>invoke<ExternalBrokerBundleV2>('model_v2_external_prepare',{request}),
+  externalActivate:(taskId:string,preparedTicket:string)=>invoke<void>('model_v2_external_activate',{taskId,preparedTicket}),
+  externalRevoke:(taskId:string)=>invoke<void>('model_v2_external_revoke',{taskId}),
+  externalRun:(taskId:string)=>invoke<ExternalRunViewV2>('model_v2_external_run',{taskId}),
   agentBuffer:(request:EditingBufferInputV2)=>invoke<EditingBufferV2>('model_v2_agent_buffer',{request}),
   agentPrepare:(request:GenerateIntentV2)=>invoke<RunTicketV2>('model_v2_agent_prepare',{request}),
   agentGenerate:(runId:string)=>invoke<GeneratedReviewV2>('model_v2_agent_generate',{runId}),
