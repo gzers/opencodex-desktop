@@ -435,6 +435,7 @@ fn copied_draft_export_reuses_actual_public_seed_without_copying_key_or_saving()
         &f.d,
         &f.h,
         CopyChannelV2 {
+            reuse_source_key: false,
             expected: f.draft.base.clone(),
             channel_id: f.id(),
             name: "Draft Copy".into(),
