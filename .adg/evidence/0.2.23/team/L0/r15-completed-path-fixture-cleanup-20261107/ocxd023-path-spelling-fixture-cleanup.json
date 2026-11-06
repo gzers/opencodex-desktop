@@ -1,0 +1,61 @@
+{
+  "scope": "two completed Main fixtures only; static receipts and original pass logs already archived r14; no daily data or shared cache",
+  "rows": [
+    {
+      "path": "/private/tmp/ocxd023-path-spelling-two-user-tests",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "sha256": "66f5730f154942662adb61e7c1d591803b5e7489af05b5db108f00489c480474",
+          "bytes": 4750
+        },
+        {
+          "path": "changed-ordinary.ps1",
+          "sha256": "d40cd6ec70a7f8a7fcf3e68d4ce5050ddf6055f9e7eb4c5a04c250bc013bf41b",
+          "bytes": 12360
+        },
+        {
+          "path": "driver-fixture.mjs",
+          "sha256": "b1cc7c5122d0ee116417f4e0d1fa8be060512273ec0928d5d6bd1a694fecddfd",
+          "bytes": 14564
+        },
+        {
+          "path": "static-tests.json",
+          "sha256": "93e6661f233cad8b333d1964de7ddbfb417f7cd99c8dcf241ecc008e8d166a9b",
+          "bytes": 11561
+        },
+        {
+          "path": "tree-fixture",
+          "kind": "dir"
+        },
+        {
+          "path": "tree-fixture/one.txt",
+          "sha256": "7f8b1dfc466b6249f06cbe55c9174df2578e7754da793fded244ef5cba2a38f1",
+          "bytes": 8
+        },
+        {
+          "path": "windows-cdp.mjs",
+          "sha256": "a4cde3cb25455b2627f238ea3678c40c42191b9af47c464491f4f2f311caf7dd",
+          "bytes": 3419
+        }
+      ],
+      "removed": true
+    },
+    {
+      "path": "/private/tmp/ocxd023-path-spelling-ordinary-tests",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "sha256": "5ae16d5dba7cfb9d521783288741c5ac50b36b5ba8509a28d7f1dfd4f49a2da4",
+          "bytes": 5505
+        },
+        {
+          "path": "static-tests.json",
+          "sha256": "1030da264b163dfe2292ef66ed8c7ae0ebd5863d91d2fb021d42db4f7783ff1a",
+          "bytes": 9091
+        }
+      ],
+      "removed": true
+    }
+  ]
+}
