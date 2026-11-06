@@ -1447,6 +1447,17 @@ impl HostSessionV2 {
         transport: &dyn ConfigSyncTransport,
         local: &dyn LocalApplication,
     ) -> SyncResult<HostPreparationV2> {
+        self.prepare_with_backup(resolver, store, transport, local, true)
+            .await
+    }
+    pub async fn prepare_with_backup(
+        &self,
+        resolver: &EndpointResolverV2,
+        store: &super::sync_v2::store::Store,
+        transport: &dyn ConfigSyncTransport,
+        local: &dyn LocalApplication,
+        backup_before_update: bool,
+    ) -> SyncResult<HostPreparationV2> {
         resolver.resolve_original(&self.connection)?;
         self.admit_new_write()?;
         if self.codec.preview.decision.no_change {
@@ -1516,7 +1527,7 @@ impl HostSessionV2 {
                         .clone(),
                     expected_view_digest: self.observation.view_digest.clone(),
                     scope_digest: preview.source_guard.scope_digest.clone(),
-                    backup_before_update: true,
+                    backup_before_update,
                 })
                 .await
                 .map(HostPreparationV2::Download)

@@ -692,6 +692,11 @@ pub fn latest(root: &Path, template_id: Option<&str>) -> Result<Option<Generated
     }
     Ok(Some(review_dto(&record)))
 }
+/// L0 routes acceptance from this private backend record, never a UI executor
+/// flag. Errors must propagate; an unreadable/unknown record is not internal.
+pub fn requires_external_authority(root: &Path, run_id: &str) -> Result<bool> {
+    Ok(read_record(root, run_id)?.executor == ExecutorV2::External)
+}
 pub fn prepare_accept(
     root: &Path,
     context: &ProcessContext,

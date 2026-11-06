@@ -583,6 +583,7 @@ pub fn run() {
             commands::model_config_v2::model_v2_change_library,
             commands::model_config_v2::model_v2_template_usage,
             commands::model_config_v2::model_v2_execution_directory,
+            commands::data_paths_v2::model_paths_v2_snapshot,
             commands::model_config_v2::model_v2_bind_agent,
             commands::model_config_v2::model_v2_agent_prepare,
             commands::model_config_v2::model_v2_agent_buffer,
