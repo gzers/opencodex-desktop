@@ -2116,6 +2116,96 @@ impl CaptureProviderV2 for OwnedMappingCaptureV2 {
         self.inner.verify_target(b)
     }
 }
+/// Private reconstruction inputs issued by THIS service. A checksum here is
+/// not a model adoption receipt or mapping authority: owner proof getters must
+/// validate these exact descriptors against their own journals/transactions.
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct DownloadContextV2 {
+    version: u32,
+    operation_id: String,
+    root_digest: Digest,
+    home_digest: Digest,
+    original_binding_bytes: Vec<u8>,
+    receive_bindings: Vec<StoredReceiveBindingV2>,
+    mapping_before: Option<Vec<u8>>,
+    mapping_after: Vec<u8>,
+    model_handle: String,
+    local_capture: ScopeRequestV2,
+    remote_scope: SelectionV2,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct StoredReceiveBindingV2 {
+    portable_channel_id: String,
+    local_channel_id: String,
+    provider_id: String,
+    mode: String,
+}
+impl DownloadContextV2 {
+    fn receiver(
+        &self,
+        root: &Path,
+        home: &Path,
+    ) -> ModelResult<super::config_file::v2::receive::ReceiveFileHostV2> {
+        use super::{
+            config_file::v2::receive::{IdentityMappingWriteV2, ReceiveFileHostV2},
+            receive_models_v2::{ReceiveBindingModeV2, ReceiveBindingV2},
+        };
+        require_uuid(&self.operation_id)
+            .map_err(|_| invalid("sync_identity_operation", "原操作身份无效"))?;
+        let files = ServiceFilesV2::new(root)
+            .map_err(|_| invalid("sync_identity_read", "原接收根无法读取"))?;
+        let home_digest = store::digest(
+            home.canonicalize()
+                .map_err(|_| invalid("sync_identity_read", "原配置根无法读取"))?
+                .to_string_lossy()
+                .as_bytes(),
+        );
+        if self.version != 2
+            || self.root_digest != files.root_digest
+            || self.home_digest != home_digest
+        {
+            return Err(invalid("host_mapping_changed", "原接收根绑定不一致"));
+        }
+        let mut sources = BTreeSet::new();
+        let mut targets = BTreeSet::new();
+        let mut bindings = Vec::new();
+        for b in &self.receive_bindings {
+            super::schema_v2::check_id(&b.portable_channel_id)
+                .map_err(|_| invalid("sync_identity_read", "原身份材料损坏"))?;
+            super::schema_v2::check_id(&b.local_channel_id)
+                .map_err(|_| invalid("sync_identity_read", "原身份材料损坏"))?;
+            if b.provider_id.is_empty()
+                || b.provider_id.len() > 512
+                || !sources.insert(&b.portable_channel_id)
+                || !targets.insert(&b.local_channel_id)
+            {
+                return Err(invalid("sync_identity_read", "原接收身份冲突"));
+            }
+            let mode = match b.mode.as_str() {
+                "new" => ReceiveBindingModeV2::New,
+                "existing" => ReceiveBindingModeV2::Existing,
+                _ => return Err(invalid("sync_identity_read", "原接收模式无效")),
+            };
+            bindings.push(ReceiveBindingV2 {
+                portable_channel_id: b.portable_channel_id.clone(),
+                local_channel_id: b.local_channel_id.clone(),
+                provider_id: b.provider_id.clone(),
+                mode,
+            });
+        }
+        Ok(ReceiveFileHostV2 {
+            root: root.into(),
+            home: home.into(),
+            bindings,
+            trusted_mapping_write: Some(IdentityMappingWriteV2 {
+                before: self.mapping_before.clone(),
+                after: self.mapping_after.clone(),
+            }),
+        })
+    }
+}
 struct ReceiveFactoryV2 {
     root: PathBuf,
     home: PathBuf,
@@ -2185,9 +2275,68 @@ impl super::sync_local_v2::ModelApplyV2 for ReceiveFactoryV2 {
         scope: &SelectionV2,
         expected_target: &str,
     ) -> ModelResult<super::sync_local_v2::ModelApplyPlanHandle> {
-        let handle = self
-            .receiver(id)?
-            .prepare(id, objects, scope, expected_target)?;
+        let receiver = self.receiver(id)?;
+        let handle = receiver.prepare(id, objects, scope, expected_target)?;
+        let mapping = receiver
+            .trusted_mapping_write
+            .as_ref()
+            .ok_or_else(|| invalid("sync_identity_read", "原接收映射材料缺失"))?;
+        let files = ServiceFilesV2::new(&self.root)
+            .map_err(|_| invalid("sync_identity_read", "原接收上下文无法保存"))?;
+        let local = self.preview.local_capture_request();
+        let context = DownloadContextV2 {
+            version: 2,
+            operation_id: id.into(),
+            root_digest: files.root_digest.clone(),
+            home_digest: store::digest(
+                self.home
+                    .canonicalize()
+                    .map_err(|_| invalid("sync_identity_read", "原配置根无法读取"))?
+                    .to_string_lossy()
+                    .as_bytes(),
+            ),
+            original_binding_bytes: store::canonical(self.preview.binding())
+                .map_err(|_| invalid("sync_identity_read", "原目标绑定无法冻结"))?,
+            receive_bindings: receiver
+                .bindings
+                .iter()
+                .map(|b| StoredReceiveBindingV2 {
+                    portable_channel_id: b.portable_channel_id.clone(),
+                    local_channel_id: b.local_channel_id.clone(),
+                    provider_id: b.provider_id.clone(),
+                    mode: match b.mode {
+                        super::receive_models_v2::ReceiveBindingModeV2::New => "new",
+                        super::receive_models_v2::ReceiveBindingModeV2::Existing => "existing",
+                    }
+                    .into(),
+                })
+                .collect(),
+            mapping_before: mapping.before.clone(),
+            mapping_after: mapping.after.clone(),
+            model_handle: handle.token().into(),
+            local_capture: ScopeRequestV2 {
+                selection: local.selection,
+                mcp_clients: local.mcp_clients,
+                assets_reviewed: local.assets_reviewed,
+            },
+            remote_scope: self.preview.binding().remote_scope.clone(),
+        };
+        // Save before protect/apply. On re-open this record can reconstruct the
+        // same receiver, but only its own Applied proof may authorize recovery.
+        files
+            .write(&format!("{id}.download-context.json"), context)
+            .map_err(|_| invalid("sync_identity_read", "原接收上下文未持久保存"))?;
+        let roundtrip: DownloadContextV2 = files
+            .read(&format!("{id}.download-context.json"))
+            .map_err(|_| invalid("sync_identity_read", "原接收上下文读回失败"))?
+            .ok_or_else(|| invalid("sync_identity_read", "原接收上下文缺失"))?;
+        let exact = roundtrip.receiver(&self.root, &self.home)?;
+        if roundtrip.operation_id != id
+            || roundtrip.model_handle != handle.token()
+            || exact.bindings != receiver.bindings
+        {
+            return Err(invalid("sync_identity_read", "原接收上下文读回不一致"));
+        }
         self.handles
             .lock()
             .map_err(|_| invalid("sync_identity_read", "接收操作状态不可用"))?
