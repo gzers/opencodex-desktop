@@ -639,6 +639,7 @@ pub fn run() {
             commands::model_config_v2::model_v2_stage_connection,
             commands::model_config_v2::model_v2_file_save,
             commands::model_config_v2::model_v2_file_project,
+            commands::model_config_v2::model_v2_file_discard,
             commands::model_config_v2::model_v2_file_history,
             commands::model_config_v2::model_v2_file_history_prepare,
             commands::model_config_v2::model_v2_file_history_accept,

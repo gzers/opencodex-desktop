@@ -3,7 +3,6 @@
 //! 使用 FZ-39 冻结的 `app.lock` 机制：独占文件锁（Unix `flock` /
 //! Windows `LockFileEx`），非阻塞获取，进程退出或崩溃时由操作系统释放。
 
-use std::fs::OpenOptions;
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -27,17 +26,13 @@ impl AppInstanceLock {
     }
 
     pub(crate) fn acquire_named(state_dir: &Path, name: &str) -> Result<Self, AppError> {
-        std::fs::create_dir_all(state_dir)
+        crate::infrastructure::platform::create_private_dir_all(state_dir, 0o700)
             .map_err(|error| admission_io("create manager-state directory", error))?;
 
         let lock_path = state_dir.join(name);
-        let mut file = OpenOptions::new()
-            .create(true)
-            .read(true)
-            .write(true)
-            .truncate(false)
-            .open(&lock_path)
-            .map_err(|error| admission_io("open instance lock", error))?;
+        let mut file =
+            crate::infrastructure::platform::open_or_create_private_file(&lock_path, 0o600)
+                .map_err(|error| admission_io("open instance lock", error))?;
 
         match file.try_lock() {
             Ok(()) => {}

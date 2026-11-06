@@ -2747,3 +2747,7 @@ pub mod export;
 
 #[path = "config_file_v2_history.rs"]
 pub mod history;
+
+#[path = "config_file_v2_discard.rs"]
+mod draft_discard;
+pub use draft_discard::discard;
