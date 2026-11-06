@@ -23,11 +23,14 @@ impl AppInstanceLock {
     /// `data_root` 是应用数据根的绝对路径；实际锁文件为
     /// `<data_root>/manager-state/app.lock`。
     pub fn acquire(data_root: &Path) -> Result<Self, AppError> {
-        let state_dir = data_root.join("manager-state");
-        std::fs::create_dir_all(&state_dir)
+        Self::acquire_named(&data_root.join("manager-state"), "app.lock")
+    }
+
+    pub(crate) fn acquire_named(state_dir: &Path, name: &str) -> Result<Self, AppError> {
+        std::fs::create_dir_all(state_dir)
             .map_err(|error| admission_io("create manager-state directory", error))?;
 
-        let lock_path = state_dir.join("app.lock");
+        let lock_path = state_dir.join(name);
         let mut file = OpenOptions::new()
             .create(true)
             .read(true)

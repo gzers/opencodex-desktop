@@ -516,6 +516,13 @@ async fn observe_inner(net: &Network<'_>, store: &Store) -> SyncResult<Graph> {
                     let path = SyncRelativePath::commit(g, &id)?;
                     names.insert(path.as_str().into());
                     let bytes = meter.get(net, &path).await?;
+                    if seen
+                        .commits
+                        .get(path.as_str())
+                        .is_some_and(|old| *old != digest(&bytes))
+                    {
+                        return Err(failure(ErrorCode::SyncOperationCollision, Step::Observe));
+                    }
                     let c: Commit = decode(&bytes)?;
                     validate_commit(&c, g, &id, net.limits)?;
                     todo.extend(c.parents.iter().map(|p| p.operation_id.clone()));
@@ -577,7 +584,9 @@ async fn observe_inner(net: &Network<'_>, store: &Store) -> SyncResult<Graph> {
             if problems.iter().any(|e| {
                 matches!(
                     e.code,
-                    ErrorCode::SyncRemoteInvalid | ErrorCode::SyncGenerationChanged
+                    ErrorCode::SyncRemoteInvalid
+                        | ErrorCode::SyncGenerationChanged
+                        | ErrorCode::SyncOperationCollision
                 )
             }) {
                 RemoteState::Invalid
@@ -618,6 +627,19 @@ async fn observe_inner(net: &Network<'_>, store: &Store) -> SyncResult<Graph> {
         allheads.sort_by(|a, b| {
             (&a.generation_id, &a.operation_id).cmp(&(&b.generation_id, &b.operation_id))
         });
+        // Repeated malformed names must not produce an unbounded public error
+        // array. Preserve each distinct stable reason/step; file names remain
+        // fully bound in the view digest and the scan is still invalid.
+        problems.sort_by_key(|p| (p.code, p.step));
+        problems.dedup_by_key(|p| (p.code, p.step));
+        for p in &mut problems {
+            p.recovery_actions.retain(|a| {
+                !matches!(
+                    a.kind,
+                    RecoveryKind::VerifyOriginalUpload | RecoveryKind::ResumeOriginalUpload
+                )
+            });
+        }
         let mut ps: Vec<_> = problems
             .iter()
             .map(|p| {
@@ -676,6 +698,21 @@ async fn observe_inner(net: &Network<'_>, store: &Store) -> SyncResult<Graph> {
                 &Seen {
                     generations: generations.clone(),
                     names: names.clone(),
+                    commits: nodes
+                        .values()
+                        .map(|n| {
+                            (
+                                SyncRelativePath::commit(
+                                    &n.commit.generation_id,
+                                    &n.commit.operation_id,
+                                )
+                                .expect("validated UUID")
+                                .as_str()
+                                .to_string(),
+                                n.reference.digest.clone(),
+                            )
+                        })
+                        .collect(),
                 },
             )?;
         }

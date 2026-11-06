@@ -16,6 +16,8 @@ pub mod execution_directory;
 pub mod feedback;
 pub mod file_exports;
 pub mod file_objects;
+pub mod file_objects_v2;
+pub mod objects_overlay_v2;
 pub mod legacy_migration;
 pub mod management;
 pub mod matching;
@@ -23,8 +25,13 @@ pub mod schema_v2;
 pub mod matching_v2;
 pub mod source_v2;
 pub mod portable_v2;
+pub mod compiler_v2;
+pub mod store_v2;
+pub mod model_transaction_v2;
 #[cfg(test)]
 mod v2_tests;
+#[cfg(test)]
+mod consumer_v2_tests;
 pub mod measurements;
 mod operations;
 pub mod portable_channels;

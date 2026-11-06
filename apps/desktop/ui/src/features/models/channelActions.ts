@@ -1,5 +1,5 @@
 import type {ChannelPolicy} from './api'
-export function protectedChannel(channel:ChannelPolicy){
+export function protectedChannel(channel:{connection:{providerId:string;authMode?:string|null}}){
  return ['openai','chatgpt','openai-multi','combo'].includes(channel.connection.providerId)||['oauth','forward'].includes(channel.connection.authMode??'')
 }
 export function copyChannel(source:ChannelPolicy,label:string,reuseKey:boolean):ChannelPolicy{

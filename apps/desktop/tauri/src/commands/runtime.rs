@@ -61,8 +61,42 @@ fn discovered_executables() -> (Option<PathBuf>, Option<PathBuf>) {
     let Some(paths) = crate::types::discovery_paths::default_paths() else {
         return (None, None);
     };
-    let validated = |path: &Path| crate::modules::runtime::paths::validate_executable(path).ok();
+    let validated = |path: &Path| {
+        let path = std::fs::canonicalize(path).ok()?;
+        crate::modules::runtime::paths::validate_executable(&path).ok()
+    };
     (validated(&paths.node), validated(&paths.npm))
+}
+
+fn fixed_executables(root: &Path) -> AppResult<(PathBuf, PathBuf)> {
+    let (node, npm) = crate::modules::runtime::install::managed_dependency_paths(root);
+    for path in [&node, &npm] {
+        crate::modules::backup::safety::check_path(root, path, false).map_err(|_| {
+            AppError::RuntimeManaged {
+                code: "managed_dependency_missing".into(),
+                detail: format!("集成运行依赖缺失或路径不可信：{}", path.display()),
+            }
+        })?;
+    }
+    crate::modules::runtime::paths::validate_executable(&node).map_err(|_| {
+        AppError::RuntimeManaged {
+            code: "node_missing".into(),
+            detail: "当前 Desktop 集成的 Node 缺失或不可执行".into(),
+        }
+    })?;
+    crate::modules::backup::safety::read_file(&npm, 1024 * 1024)?;
+    Ok((node, npm))
+}
+
+/// v2 never discovers dependencies. Legacy handles retain their test behavior.
+pub fn managed_executables(
+    handle: &RuntimeHandle,
+) -> AppResult<(Option<PathBuf>, Option<PathBuf>)> {
+    if !handle.resolver_managed_only() {
+        return Ok(discovered_executables());
+    }
+    let (node, npm) = fixed_executables(handle.installation_root())?;
+    Ok((Some(node), Some(npm)))
 }
 
 /// 把安装进度转发成 Tauri 事件；凭据已在内核里掩码。
@@ -136,8 +170,14 @@ fn source_dto(handle: &RuntimeHandle, data_root: &Path) -> RuntimeSourceDto {
     let record = handle.store().load();
     // 卸载与「重装同版本」按**安装记录登记的**前缀定位（`FZ-51`）：
     // `FZ-47` 允许自定义前缀，那时前缀不再是数据根的默认位置。
-    let managed_prefix = record.installed_prefix(data_root);
-    let managed_entry = data_root.join(crate::modules::runtime::MANAGED_ENTRY_RELATIVE);
+    let managed_prefix = if handle.resolver_managed_only() {
+        handle
+            .installation_root()
+            .join(crate::modules::runtime::MANAGED_PREFIX_RELATIVE)
+    } else {
+        record.installed_prefix(data_root)
+    };
+    let managed_entry = handle.managed_entry().to_path_buf();
     RuntimeSourceDto {
         kind: resolution.kind,
         inside_data_root: resolution
@@ -154,10 +194,7 @@ fn source_dto(handle: &RuntimeHandle, data_root: &Path) -> RuntimeSourceDto {
         managed_entry: matches!(resolution.kind, RuntimeSourceKind::Managed)
             .then(|| managed_entry.to_string_lossy().into_owned()),
         managed_prefix: managed_prefix.to_string_lossy().into_owned(),
-        default_prefix: data_root
-            .join(crate::modules::runtime::MANAGED_PREFIX_RELATIVE)
-            .to_string_lossy()
-            .into_owned(),
+        default_prefix: managed_prefix.to_string_lossy().into_owned(),
         explicit_path: handle
             .explicit_path()
             .map(|path| path.to_string_lossy().into_owned()),
@@ -498,10 +535,20 @@ async fn install_managed_runtime(
         code: "bad_source".to_string(),
         detail: "安装源必须是 registry 或 offline".to_string(),
     })?;
-    let prefix = request
-        .prefix_path()
-        // 缺省沿用安装记录登记的前缀（自定义前缀安装后不要悄悄回到默认位置）。
-        .unwrap_or_else(|| handle.store().load().installed_prefix(&data_root_path));
+    let prefix = if handle.resolver_managed_only() {
+        let expected = handle.installation_root().join("runtime/opencodex");
+        if request.prefix_path().is_some_and(|p| p != expected) {
+            return Err(AppError::RuntimeManaged {
+                code: "invalid_install_root".into(),
+                detail: "运行程序必须安装在当前 Desktop 的 runtime/opencodex 目录".into(),
+            });
+        }
+        expected
+    } else {
+        request
+            .prefix_path()
+            .unwrap_or_else(|| handle.store().load().installed_prefix(&data_root_path))
+    };
     let requested_version = request
         .version
         .clone()
@@ -531,7 +578,7 @@ async fn install_managed_runtime(
             })?,
         },
     };
-    let (node_path, npm_path) = discovered_executables();
+    let (node_path, npm_path) = managed_executables(&handle)?;
     let install_request = InstallRequest {
         prefix: prefix.clone(),
         source,
@@ -619,6 +666,8 @@ async fn install_managed_runtime(
                 &probe,
                 node_path.clone(),
             );
+            installer.installation_root = handle_ref.resolver_managed_only()
+                .then(|| handle_ref.installation_root().to_path_buf());
             installer.cancel = mutation.cancel.clone();
             installer.attempt_id = receipt.as_ref().map(|r| r.attempt_id());
             match installer.install(&install_request) {
@@ -716,7 +765,7 @@ pub async fn install_official_update(
     install: tauri::State<'_, SharedRuntimeInstall>,
 ) -> AppResult<RuntimeInstallOutcomeDto> {
     // 1. 只读远端查询：与官方版本卡片（U-03）共用同一来源与代理策略，解析出确定版本。
-    let npm = crate::modules::about::remote::discovered_npm().ok_or(AppError::NotConfigured)?;
+    let query_handle = handle.inner().clone();
     let environment =
         crate::modules::preferences::network_environment_for_app(&app, home.0.clone());
     let working = home.0.clone();
@@ -724,8 +773,8 @@ pub async fn install_official_update(
     let logs = data_root.0.join("logs/runtime-query");
     // npm view may write its cache; the blocking worker must own admission.
     let remote = super::run_blocking("official update metadata", move || {
-        crate::modules::about::remote::query_remote_latest(
-            &npm,
+        query_runtime_remote_latest(
+            &query_handle,
             &working,
             &cache,
             &logs,
@@ -779,17 +828,12 @@ pub async fn plan_runtime_uninstall(
     data_root: tauri::State<'_, SharedDataRoot>,
     context: tauri::State<'_, SharedProcessContext>,
 ) -> AppResult<RuntimeUninstallPlanDto> {
-    let resolution = handle.current();
+    let handle_ref = handle.inner().clone();
     let ocx = context.executable().ok();
     let data_root_path = data_root.0.clone();
     let home = context.opencodex_home.clone();
     let plan = crate::commands::run_readonly("plan runtime uninstall", move || {
-        Ok(uninstall::plan_uninstall(
-            &data_root_path,
-            &home,
-            resolution.kind,
-            resolution.path.as_deref(),
-        ))
+        managed_uninstall_plan(&handle_ref, &data_root_path, &home)
     })
     .await?;
     Ok(RuntimeUninstallPlanDto::from_plan(&plan, ocx.as_deref()))
@@ -836,9 +880,12 @@ pub async fn uninstall_runtime(
         })?
     };
 
-    let resolution = handle.current();
     let ocx = context.executable().ok();
-    let npm = discovered_executables().1;
+    let npm = if handle.resolver_managed_only() {
+        None
+    } else {
+        discovered_executables().1
+    };
     let opencodex_home = context.opencodex_home.clone();
     let data_root_path = data_root.0.clone();
     let home_dir = home.0.clone();
@@ -848,12 +895,7 @@ pub async fn uninstall_runtime(
         clean_data: request.clean_data,
         confirmed: request.confirmed(),
     };
-    let plan = uninstall::plan_uninstall(
-        &data_root_path,
-        &opencodex_home,
-        resolution.kind,
-        resolution.path.as_deref(),
-    );
+    let plan = managed_uninstall_plan(&handle, &data_root_path, &opencodex_home)?;
 
     let commands = uninstall::SystemUninstallCommands {
         home: Some(home_dir),
@@ -903,6 +945,14 @@ pub async fn uninstall_runtime(
                 return Err(AppError::RuntimeManaged {
                     code: "stop_unconfirmed".to_string(),
                     detail: "代理停止尚未确认，未进入卸载步骤".to_string(),
+                });
+            }
+            if handle_ref.resolver_managed_only()
+                && managed_uninstall_plan(&handle_ref, &data_root_path, &opencodex_home)? != plan
+            {
+                return Err(AppError::RuntimeManaged {
+                    code: "uninstall_plan_changed".into(),
+                    detail: "受管程序或卸载方案已改变，请重新预览".into(),
                 });
             }
             let outcome = uninstall::execute_uninstall(
@@ -1168,4 +1218,169 @@ mod tests {
         assert!(!request.allow_scripts);
         assert!(request.offline_archive().is_none());
     }
+}
+
+/// v2 plans use I for program objects and D for backup/state. Never classify a
+/// legacy/external program or derive an installation prefix from runtime history.
+fn managed_uninstall_plan(
+    handle: &RuntimeHandle,
+    data_root: &Path,
+    home: &Path,
+) -> AppResult<uninstall::UninstallPlan> {
+    let resolution = handle.current();
+    if !handle.resolver_managed_only() {
+        return Ok(uninstall::plan_uninstall(
+            data_root,
+            home,
+            resolution.kind,
+            resolution.path.as_deref(),
+        ));
+    }
+    let root = handle.installation_root();
+    let (node, _) = crate::modules::runtime::install::managed_dependency_paths(root);
+    crate::modules::runtime::install::validate_managed_installation(root, Some(&node))?;
+    let entry = root.join(crate::modules::runtime::MANAGED_ENTRY_RELATIVE);
+    if resolution.kind != RuntimeSourceKind::Managed
+        || resolution.path.as_deref() != Some(entry.as_path())
+    {
+        return Err(AppError::RuntimeManaged {
+            code: "uninstall_source_unresolved".into(),
+            detail: "当前受管来源未核验；请先诊断或恢复安装".into(),
+        });
+    }
+    let prefix = root.join(crate::modules::runtime::MANAGED_PREFIX_RELATIVE);
+    let mut plan = uninstall::plan_uninstall(data_root, home, RuntimeSourceKind::Unresolved, None);
+    plan.source_kind = RuntimeSourceKind::Managed;
+    plan.source_path = Some(entry.to_string_lossy().into_owned());
+    plan.remove_objects = vec![
+        prefix.to_string_lossy().into_owned(),
+        entry.to_string_lossy().into_owned(),
+    ];
+    plan.owner = uninstall::BodyOwner::Managed { prefix, entry };
+    Ok(plan)
+}
+
+// Pure backend entry points. Main registers IPC wrappers and holds operation
+// objects by ID, shared install/storage/preferences leases and process ownership.
+// A client must never supply a deserialized RuntimeRecoveryOperation.
+pub fn prepare_runtime_recovery(
+    installer: &RuntimeInstaller<'_>,
+    source: crate::modules::runtime::install::RuntimeRecoverySource,
+    npm: PathBuf,
+    service: &dyn crate::modules::runtime::install::RecoveryServiceBoundary,
+) -> AppResult<crate::modules::runtime::install::RuntimeRecoveryOperation> {
+    validate_recovery_dependencies(installer, Some(&npm))?;
+    installer
+        .prepare_recovery(source, npm, service)
+        .map_err(AppError::from)
+}
+pub fn apply_runtime_recovery(
+    installer: &RuntimeInstaller<'_>,
+    operation: &mut crate::modules::runtime::install::RuntimeRecoveryOperation,
+    confirmation: &str,
+    service: &dyn crate::modules::runtime::install::RecoveryServiceBoundary,
+) -> AppResult<crate::modules::runtime::install::InstallOutcome> {
+    let (node, npm) = operation.dependency_paths();
+    validate_recovery_dependencies(installer, Some(npm))?;
+    if installer.node_path.as_deref() != Some(node) {
+        return Err(AppError::RuntimeManaged {
+            code: "managed_dependency_mismatch".into(),
+            detail: "冻结恢复操作的 Node 与当前集成依赖不一致".into(),
+        });
+    }
+    installer
+        .apply_recovery(operation, confirmation, service)
+        .map_err(AppError::from)
+}
+pub fn runtime_recovery_status(
+    data_root: &Path,
+    operation_id: &str,
+) -> AppResult<crate::modules::runtime::install::RuntimeRecoveryStatus> {
+    crate::modules::runtime::install::RuntimeRecoveryOperation::read_status(data_root, operation_id)
+        .map_err(AppError::from)
+}
+pub fn cancel_runtime_recovery(
+    operation: &mut crate::modules::runtime::install::RuntimeRecoveryOperation,
+) -> AppResult<crate::modules::runtime::install::RuntimeRecoveryStatus> {
+    operation.cancel().map_err(AppError::from)
+}
+
+fn validate_recovery_dependencies(
+    installer: &RuntimeInstaller<'_>,
+    requested_npm: Option<&Path>,
+) -> AppResult<()> {
+    let root = installer
+        .installation_root
+        .as_deref()
+        .ok_or_else(|| AppError::RuntimeManaged {
+            code: "installation_context_missing".into(),
+            detail: "恢复需要可信 Desktop 安装上下文".into(),
+        })?;
+    let (node, npm) = fixed_executables(root)?;
+    if installer.node_path.as_deref() != Some(node.as_path())
+        || requested_npm.is_some_and(|path| path != npm)
+    {
+        return Err(AppError::RuntimeManaged {
+            code: "managed_dependency_mismatch".into(),
+            detail: "恢复只能使用当前 Desktop 集成的固定 Node/npm".into(),
+        });
+    }
+    Ok(())
+}
+
+/// The remote query engine accepts a launcher, so bind the selected Node/CLI in
+/// a private short-lived launcher while retaining its timeout, logs and proxy.
+/// No CLI shebang, shell lookup, discovered Node or inherited PATH is used.
+pub fn query_runtime_remote_latest(
+    handle: &RuntimeHandle,
+    working_directory: &Path,
+    cache: &Path,
+    logs: &Path,
+    environment: &crate::modules::process::EnvironmentPolicy,
+    tag: &str,
+) -> AppResult<crate::modules::about::remote::OfficialRemoteLatest> {
+    let (node, npm) = managed_executables(handle)?;
+    let npm = npm.ok_or(AppError::NotConfigured)?;
+    if !handle.resolver_managed_only() {
+        return crate::modules::about::remote::query_remote_latest(
+            &npm,
+            working_directory,
+            cache,
+            logs,
+            environment,
+            tag,
+        );
+    }
+    let node = node.ok_or(AppError::NotConfigured)?;
+    let desktop_root = handle
+        .store()
+        .path()
+        .parent()
+        .and_then(Path::parent)
+        .ok_or(AppError::NotConfigured)?;
+    crate::modules::backup::safety::check_path(desktop_root, cache, true)?;
+    std::fs::create_dir_all(cache).map_err(|e| AppError::FileSystem {
+        operation: "create query cache".into(),
+        detail: e.to_string(),
+    })?;
+    let launcher_directory = tempfile::Builder::new()
+        .prefix("managed-npm-query-")
+        .tempdir_in(cache)
+        .map_err(|e| AppError::FileSystem {
+            operation: "create fixed npm launcher".into(),
+            detail: e.to_string(),
+        })?;
+    let launcher = launcher_directory
+        .path()
+        .join(if cfg!(windows) { "npm.cmd" } else { "npm.sh" });
+    let script = crate::modules::runtime::install::entry_script(Some(&node), &npm);
+    crate::infrastructure::atomic_write::atomic_write(&launcher, script.as_bytes(), 0o700)?;
+    crate::modules::about::remote::query_remote_latest(
+        &launcher,
+        working_directory,
+        cache,
+        logs,
+        environment,
+        tag,
+    )
 }
