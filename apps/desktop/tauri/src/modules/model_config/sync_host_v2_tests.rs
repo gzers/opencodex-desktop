@@ -1235,3 +1235,331 @@ async fn original_upload_owner_reopens_existing_journal_without_preview_or_any_c
     assert_eq!(captures, provider.calls.load(Ordering::SeqCst));
     assert_eq!(puts, remote.writes.load(Ordering::SeqCst));
 }
+struct ChannelMapping {
+    revision: Digest,
+    valid: std::sync::atomic::AtomicBool,
+    checks: AtomicUsize,
+}
+impl TrustedMappingOwnerV2 for ChannelMapping {
+    fn verify(&self, binding: &LocalTargetBindingV2) -> ModelResult<()> {
+        self.checks.fetch_add(1, Ordering::SeqCst);
+        if !self.valid.load(Ordering::SeqCst) || binding.mapping_revision != self.revision {
+            return Err(super::super::schema::invalid(
+                "host_mapping_changed",
+                "target absent/present fact changed",
+            ));
+        }
+        Ok(())
+    }
+    fn project_saved_to_remote(
+        &self,
+        objects: SavedObjects,
+        binding: &LocalTargetBindingV2,
+    ) -> ModelResult<SavedObjects> {
+        self.verify(binding)?;
+        let mut parts = objects.into_captured();
+        if let Some(policy) = &mut parts.models.payload.policy {
+            for ch in &mut policy.channels {
+                let slot = binding
+                    .slots
+                    .iter()
+                    .find(|s| s.local_id == ch.id)
+                    .ok_or_else(|| {
+                        super::super::schema::invalid(
+                            "host_mapping_required",
+                            "no exact channel pair",
+                        )
+                    })?;
+                ch.id = slot.portable_id.clone();
+            }
+            for id in &mut policy.channel_order {
+                if let Some(pair) = binding.slots.iter().find(|s| s.local_id == *id) {
+                    *id = pair.portable_id.clone();
+                }
+            }
+            if let Some(id) = &mut policy.default_channel_id {
+                if let Some(pair) = binding.slots.iter().find(|s| s.local_id == *id) {
+                    *id = pair.portable_id.clone();
+                }
+            }
+        }
+        parts.models.digest =
+            super::super::schema_v2::digest(&canonical_bytes(&parts.models.payload).unwrap());
+        SavedObjects::capture(parts, None)
+    }
+}
+struct MappedApplyLocal {
+    source: CurrentSourceProviderV2,
+    binding: LocalTargetBindingV2,
+    owner: Arc<ChannelMapping>,
+    applied: std::sync::atomic::AtomicBool,
+}
+impl LocalApplication for MappedApplyLocal {
+    fn root_revision(&self) -> SyncResult<Digest> {
+        self.source.root_revision()
+    }
+    fn current_source(&self) -> SyncResult<SourceGuard> {
+        self.source.current_source()
+    }
+    fn target_digest(&self, _: &str) -> SyncResult<Digest> {
+        self.owner.verify(&self.binding).map_err(map_host_error)?;
+        Ok(self.binding.digest.clone())
+    }
+    fn apply_once(
+        &self,
+        _: &str,
+        bytes: &[u8],
+        schema: &PayloadSchemaRef,
+        _: &str,
+        expected: &str,
+        backup: bool,
+    ) -> SyncResult<()> {
+        self.owner.verify(&self.binding).map_err(map_host_error)?;
+        assert!(backup);
+        assert_eq!(expected, self.binding.digest);
+        let incoming =
+            file_objects_v2::decode(bytes, None, schema, None).map_err(map_host_error)?;
+        assert_eq!(
+            incoming
+                .objects
+                .models()
+                .payload
+                .policy
+                .as_ref()
+                .unwrap()
+                .channels[0]
+                .id,
+            self.binding.slots[0].portable_id
+        );
+        assert_eq!(
+            self.binding.slots[0].portable_id,
+            self.binding.slots[0].local_id
+        );
+        self.applied.store(true, Ordering::SeqCst);
+        Ok(())
+    }
+    fn export_once(&self, _: &str, _: &[u8], _: &PayloadSchemaRef, _: &str) -> SyncResult<Uuid> {
+        panic!("not exporting")
+    }
+}
+fn seed_cloud(remote: &MemoryRemote, input: &PayloadInput) -> GenerationRef {
+    let g = Generation {
+        format: "OCXD_CONFIG_GENERATION".into(),
+        format_version: 1,
+        generation_id: B.into(),
+    };
+    let gb = super::super::sync_v2::store::canonical(&g).unwrap();
+    let gr = GenerationRef {
+        generation_id: B.into(),
+        digest: digest(&gb),
+    };
+    let c = Commit {
+        format: "OCXD_CONFIG_COMMIT".into(),
+        format_version: 1,
+        generation_id: B.into(),
+        operation_id: input.head.operation_id.clone(),
+        parents: vec![],
+        payload_digest: digest(&input.bytes),
+        payload_bytes: input.bytes.len() as u64,
+        payload_schema: file_objects_v2::supported_schema(),
+        intent: Intent::Update,
+        resolution: None,
+    };
+    let cb = super::super::sync_v2::store::canonical(&c).unwrap();
+    let mut files = remote.files.lock().unwrap();
+    files.insert(SyncRelativePath::generation(B).unwrap().as_str().into(), gb);
+    files.insert(
+        SyncRelativePath::data(B, &input.head.operation_id)
+            .unwrap()
+            .as_str()
+            .into(),
+        input.bytes.clone(),
+    );
+    files.insert(
+        SyncRelativePath::commit(B, &input.head.operation_id)
+            .unwrap()
+            .as_str()
+            .into(),
+        cb,
+    );
+    gr
+}
+#[tokio::test]
+async fn first_install_remote_channel_local_explicit_empty_defaults_download_and_applies_through_mapping(
+) {
+    let temp = tempfile::tempdir().unwrap();
+    let root = temp.path().join("D");
+    let home = temp.path().join("H");
+    let tx = temp.path().join("T");
+    std::fs::create_dir_all(root.join("manager-state")).unwrap();
+    std::fs::create_dir_all(&home).unwrap();
+    let remote_scope = selection();
+    let local_scope = SelectionV2::default();
+    let local_request = super::super::saved_objects_capture_v2::CaptureRequestV2 {
+        selection: local_scope.clone(),
+        mcp_clients: Default::default(),
+        assets_reviewed: false,
+    };
+    let actual = Arc::new(
+        SavedCaptureProviderV2::new(
+            root.clone(),
+            home,
+            local_request,
+            Arc::new(super::super::saved_objects_capture_v2::SystemCaptureCredentialsV2),
+        )
+        .unwrap(),
+    );
+    let mapping = Arc::new(ChannelMapping {
+        revision: digest(b"mapping-revision"),
+        valid: std::sync::atomic::AtomicBool::new(true),
+        checks: AtomicUsize::new(0),
+    });
+    let binding = LocalTargetBindingV2::freeze(
+        mapping.revision.clone(),
+        local_scope,
+        remote_scope.clone(),
+        DirectionV2::Download,
+        vec![TargetSlotV2 {
+            kind: "channel".into(),
+            portable_id: A.into(),
+            local_id: A.into(),
+            expected: TargetExpectationV2::ExpectedAbsent(digest(
+                b"exact locked absent channel slot",
+            )),
+        }],
+    )
+    .unwrap();
+    let mapped =
+        Arc::new(MappedCaptureProviderV2::new(actual, mapping.clone(), binding.clone()).unwrap());
+    let remote = MemoryRemote::default();
+    let mut cloud = baseline(objects(4096, false), None);
+    seed_cloud(&remote, &cloud);
+    let commit_bytes = remote
+        .files
+        .lock()
+        .unwrap()
+        .get(SyncRelativePath::commit(B, O).unwrap().as_str())
+        .unwrap()
+        .clone();
+    cloud.head.digest = digest(&commit_bytes);
+    let preview = preview_semantics(
+        mapped.as_ref(),
+        remote_scope,
+        CloudMaterialV2::Valid(&cloud),
+        &SessionSecretsV2::default(),
+        None,
+    )
+    .unwrap();
+    assert_eq!(preview.decision.chosen_direction, DirectionV2::Download);
+    assert_eq!(
+        preview.decision.automatic_reason,
+        AutomaticReasonV2::LocalEmpty
+    );
+    assert!(preview.decision.can_download);
+    assert!(!preview.decision.can_upload);
+    assert!(!preview.decision.no_change);
+    assert_eq!(preview.target_binding().unwrap().digest, binding.digest);
+    save_endpoint(&root, endpoint(A, CRED, "https://fixture.example.test"));
+    let resolver =
+        EndpointResolverV2::new(root.clone(), Arc::new(EndpointVault::new(&root))).unwrap();
+    let bound = resolver.resolve_active().unwrap();
+    let store = super::super::sync_v2::store::Store::open(&tx).unwrap();
+    let codec = HostPayloadCodecV2::new(mapped, preview, SessionSecretsV2::default());
+    let local = MappedApplyLocal {
+        source: codec.current_source_provider().unwrap(),
+        binding,
+        owner: mapping,
+        applied: std::sync::atomic::AtomicBool::new(false),
+    };
+    let observation = super::super::sync_v2::SyncContext::new(
+        &store,
+        &remote,
+        &codec,
+        &local,
+        bound.handle().clone(),
+    )
+    .unwrap()
+    .observe_remote(ObserveRequest {
+        connection_id: bound.handle().id.clone(),
+    })
+    .await
+    .unwrap();
+    let session = HostSessionV2::new(codec, &bound, observation).unwrap();
+    let HostPreparationV2::Download(plan) = session
+        .prepare(&resolver, &store, &remote, &local)
+        .await
+        .unwrap()
+    else {
+        panic!("download must not be disabled for absent local channel")
+    };
+    assert_eq!(remote.writes.load(Ordering::SeqCst), 0);
+    assert!(!local.applied.load(Ordering::SeqCst));
+    let result = session
+        .apply_download(
+            ConfirmDownloadRequest {
+                operation_id: plan.operation_id,
+                plan_digest: plan.plan_digest,
+            },
+            &resolver,
+            &store,
+            &remote,
+            &local,
+        )
+        .await
+        .unwrap();
+    assert_eq!(result.local_apply_status, LocalApplyStatus::Applied);
+    assert!(local.applied.load(Ordering::SeqCst));
+    assert_eq!(remote.writes.load(Ordering::SeqCst), 0);
+}
+#[test]
+fn expected_absent_mapping_unknown_or_changed_target_does_not_turn_into_empty_capture() {
+    let capture = Arc::new(Capture::new(objects(8192, false)));
+    let owner = Arc::new(ChannelMapping {
+        revision: digest(b"map"),
+        valid: std::sync::atomic::AtomicBool::new(true),
+        checks: AtomicUsize::new(0),
+    });
+    let binding = LocalTargetBindingV2::freeze(
+        owner.revision.clone(),
+        selection(),
+        selection(),
+        DirectionV2::Upload,
+        vec![TargetSlotV2 {
+            kind: "channel".into(),
+            portable_id: A.into(),
+            local_id: A.into(),
+            expected: TargetExpectationV2::Present(digest(b"present atom")),
+        }],
+    )
+    .unwrap();
+    let mapped = MappedCaptureProviderV2::new(capture.clone(), owner.clone(), binding).unwrap();
+    owner.valid.store(false, Ordering::SeqCst);
+    let before = capture.calls.load(Ordering::SeqCst);
+    assert_eq!(
+        preview_semantics(
+            &mapped,
+            selection(),
+            CloudMaterialV2::Empty,
+            &SessionSecretsV2::default(),
+            None
+        )
+        .err()
+        .unwrap()
+        .code,
+        ErrorCode::SyncScopeChanged
+    );
+    assert_eq!(before, capture.calls.load(Ordering::SeqCst));
+    let invalid = LocalTargetBindingV2::freeze(
+        digest(b"map"),
+        SelectionV2::default(),
+        selection(),
+        DirectionV2::Download,
+        vec![TargetSlotV2 {
+            kind: "channel".into(),
+            portable_id: A.into(),
+            local_id: A.into(),
+            expected: TargetExpectationV2::Present(digest(b"not actually selected local present")),
+        }],
+    );
+    assert!(invalid.is_err());
+}

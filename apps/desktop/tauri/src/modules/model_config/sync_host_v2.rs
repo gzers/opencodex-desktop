@@ -23,6 +23,201 @@ pub struct HostCapturedV2 {
 }
 pub trait CaptureProviderV2: Send + Sync {
     fn capture_saved(&self, selection: &SelectionV2) -> ModelResult<HostCapturedV2>;
+    /// None denotes the legacy SAME identity domain only, never an implicit
+    /// mapping. A mapped provider must also verify the trusted target facts.
+    fn target_binding(
+        &self,
+        _selection: &SelectionV2,
+    ) -> ModelResult<Option<LocalTargetBindingV2>> {
+        Ok(None)
+    }
+    fn verify_target(&self, _binding: &LocalTargetBindingV2) -> ModelResult<()> {
+        Err(super::schema::invalid(
+            "host_mapping_required",
+            "需要后端目标映射校验",
+        ))
+    }
+}
+/// Host-only identity contract, NOT a new transfer/document/IPC format. L0's
+/// mapping owner freezes/validates these fields and persists identities only
+/// with the successful apply transaction. No label/email matching occurs here.
+#[derive(Clone, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct LocalTargetBindingV2 {
+    pub mapping_revision: Digest,
+    pub local_scope: SelectionV2,
+    pub remote_scope: SelectionV2,
+    pub direction: DirectionV2,
+    pub slots: Vec<TargetSlotV2>,
+    pub digest: Digest,
+}
+#[derive(Clone, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TargetSlotV2 {
+    pub kind: String,
+    pub portable_id: String,
+    pub local_id: String,
+    pub expected: TargetExpectationV2,
+}
+#[derive(Clone, PartialEq, Eq, Serialize)]
+#[serde(tag = "kind", content = "digest", rename_all = "snake_case")]
+pub enum TargetExpectationV2 {
+    Present(Digest),
+    ExpectedAbsent(Digest),
+}
+impl LocalTargetBindingV2 {
+    pub fn freeze(
+        mapping_revision: Digest,
+        local_scope: SelectionV2,
+        remote_scope: SelectionV2,
+        direction: DirectionV2,
+        slots: Vec<TargetSlotV2>,
+    ) -> SyncResult<Self> {
+        require_digest(&mapping_revision)?;
+        validate_remote_selection(&local_scope)?;
+        validate_remote_selection(&remote_scope)?;
+        if direction == DirectionV2::NoChange || slots.len() > 10000 {
+            return Err(failure(ErrorCode::SyncScopeChanged, Step::SourceGuard));
+        }
+        let mut identities = std::collections::BTreeSet::new();
+        let mut locals = std::collections::BTreeSet::new();
+        for slot in &slots {
+            if slot.kind != "channel"
+                || slot.portable_id.is_empty()
+                || slot.local_id.is_empty()
+                || !identities.insert((slot.kind.clone(), slot.portable_id.clone()))
+                || !locals.insert((slot.kind.clone(), slot.local_id.clone()))
+            {
+                return Err(failure(ErrorCode::SyncScopeChanged, Step::SourceGuard));
+            }
+            require_uuid(&slot.portable_id)?;
+            require_uuid(&slot.local_id)?;
+            if !remote_scope
+                .channels
+                .iter()
+                .any(|c| c.portable_channel_id == slot.portable_id)
+            {
+                return Err(failure(ErrorCode::SyncScopeChanged, Step::SourceGuard));
+            }
+            let local_present = local_scope
+                .channels
+                .iter()
+                .any(|c| c.portable_channel_id == slot.local_id);
+            if matches!(slot.expected, TargetExpectationV2::Present(_)) != local_present {
+                return Err(failure(ErrorCode::SyncScopeChanged, Step::SourceGuard));
+            }
+            match &slot.expected {
+                TargetExpectationV2::Present(d) | TargetExpectationV2::ExpectedAbsent(d) => {
+                    require_digest(d)?;
+                }
+            }
+        }
+        if remote_scope.channels.len() != slots.len()
+            || local_scope.channels.iter().any(|c| {
+                !slots.iter().any(|s| {
+                    s.local_id == c.portable_channel_id
+                        && matches!(s.expected, TargetExpectationV2::Present(_))
+                })
+            })
+        {
+            return Err(failure(ErrorCode::SyncScopeChanged, Step::SourceGuard));
+        }
+        let material = serde_json::json!({"domain":"OCXD_LOCAL_TARGET_BINDING_V2","mappingRevision":mapping_revision,"localScope":local_scope,"remoteScope":remote_scope,"direction":direction,"slots":slots});
+        let digest = digest(&super::sync_v2::store::canonical(&material)?);
+        Ok(Self {
+            mapping_revision,
+            local_scope,
+            remote_scope,
+            direction,
+            slots,
+            digest,
+        })
+    }
+    fn validate(&self, remote: &SelectionV2) -> SyncResult<()> {
+        let fresh = Self::freeze(
+            self.mapping_revision.clone(),
+            self.local_scope.clone(),
+            self.remote_scope.clone(),
+            self.direction.clone(),
+            self.slots.clone(),
+        )?;
+        if self.remote_scope != *remote || self.digest != fresh.digest {
+            return Err(failure(ErrorCode::SyncScopeChanged, Step::SourceGuard));
+        }
+        Ok(())
+    }
+}
+/// L0 owns actual locked mapping/expected-present-or-absent facts and stable
+/// portable<->local IDs. Projection rewrites only identity references through
+/// that mapping owner and must return a strictly validated SavedObjects. No
+/// model matcher, target allocator, disk mapping writer or fallback is copied.
+pub trait TrustedMappingOwnerV2: Send + Sync {
+    fn verify(&self, binding: &LocalTargetBindingV2) -> ModelResult<()>;
+    fn project_saved_to_remote(
+        &self,
+        objects: SavedObjects,
+        binding: &LocalTargetBindingV2,
+    ) -> ModelResult<SavedObjects>;
+}
+pub struct MappedCaptureProviderV2 {
+    local: Arc<dyn CaptureProviderV2>,
+    mapping: Arc<dyn TrustedMappingOwnerV2>,
+    binding: LocalTargetBindingV2,
+}
+impl MappedCaptureProviderV2 {
+    pub fn new(
+        local: Arc<dyn CaptureProviderV2>,
+        mapping: Arc<dyn TrustedMappingOwnerV2>,
+        binding: LocalTargetBindingV2,
+    ) -> SyncResult<Self> {
+        binding.validate(&binding.remote_scope)?;
+        mapping.verify(&binding).map_err(map_host_error)?;
+        Ok(Self {
+            local,
+            mapping,
+            binding,
+        })
+    }
+}
+impl CaptureProviderV2 for MappedCaptureProviderV2 {
+    fn capture_saved(&self, remote: &SelectionV2) -> ModelResult<HostCapturedV2> {
+        self.binding.validate(remote).map_err(|_| {
+            super::schema::invalid("host_mapping_changed", "远端与本机选区映射已变化")
+        })?;
+        self.mapping.verify(&self.binding)?;
+        let local = self.local.capture_saved(&self.binding.local_scope)?;
+        let objects = self
+            .mapping
+            .project_saved_to_remote(local.objects, &self.binding)?;
+        self.mapping.verify(&self.binding)?;
+        let saved_source_digest=digest(&super::sync_v2::store::canonical(&serde_json::json!({"domain":"OCXD_MAPPED_SAVED_SOURCE_V2","localSaved":local.source_guard.saved_source_digest,"targetBinding":self.binding.digest})).map_err(|_|super::schema::invalid("host_mapping_changed","目标事实无法核对"))?);
+        let scope_digest=digest(&super::sync_v2::store::canonical(&serde_json::json!({"domain":"OCXD_MAPPED_SCOPE_V2","localScopeGuard":local.source_guard.scope_digest,"targetBinding":self.binding})).map_err(|_|super::schema::invalid("host_mapping_changed","目标范围无法核对"))?);
+        Ok(HostCapturedV2 {
+            objects,
+            source_guard: SourceGuard {
+                saved_source_digest,
+                scope_digest,
+                mcp_sources_digest: local.source_guard.mcp_sources_digest,
+            },
+            root_revision: local.root_revision,
+        })
+    }
+    fn target_binding(&self, remote: &SelectionV2) -> ModelResult<Option<LocalTargetBindingV2>> {
+        self.binding
+            .validate(remote)
+            .map_err(|_| super::schema::invalid("host_mapping_changed", "目标范围已改变"))?;
+        self.mapping.verify(&self.binding)?;
+        Ok(Some(self.binding.clone()))
+    }
+    fn verify_target(&self, binding: &LocalTargetBindingV2) -> ModelResult<()> {
+        if *binding != self.binding {
+            return Err(super::schema::invalid(
+                "host_mapping_changed",
+                "目标绑定已改变",
+            ));
+        }
+        self.mapping.verify(binding)
+    }
 }
 /// Production adapter to the ONE immutable, registered saved-object capture
 /// implementation. The request, D/H and credential owner are fixed for this
@@ -210,6 +405,7 @@ pub struct HostPreviewV2 {
     source_guard: SourceGuard,
     root_revision: Digest,
     baseline: Option<BaselineBindingV2>,
+    target_binding: Option<LocalTargetBindingV2>,
 }
 impl HostPreviewV2 {
     pub fn source_guard(&self) -> &SourceGuard {
@@ -217,6 +413,9 @@ impl HostPreviewV2 {
     }
     pub fn root_revision(&self) -> &str {
         &self.root_revision
+    }
+    pub fn target_binding(&self) -> Option<&LocalTargetBindingV2> {
+        self.target_binding.as_ref()
     }
     pub fn baseline(&self) -> Option<&BaselineBindingV2> {
         self.baseline.as_ref()
@@ -236,6 +435,10 @@ fn capture_checked(
     selection: &SelectionV2,
 ) -> SyncResult<HostCapturedV2> {
     validate_remote_selection(selection)?;
+    if let Some(binding) = provider.target_binding(selection).map_err(map_host_error)? {
+        binding.validate(selection)?;
+        provider.verify_target(&binding).map_err(map_host_error)?;
+    }
     let captured = provider.capture_saved(selection).map_err(map_host_error)?;
     require_guard(&captured.source_guard)?;
     require_digest(&captured.root_revision)?;
@@ -263,7 +466,9 @@ pub fn map_host_error(error: ModelError) -> SyncFailure {
         "capture_stale" | "capture_source_changed" | "model_read_stale" | "model_save_stale" => {
             (ErrorCode::SyncSourceChanged, Cause::SourceChanged)
         }
-        "mcp_source"
+        "host_mapping_changed"
+        | "host_mapping_required"
+        | "mcp_source"
         | "capture_scope_invalid"
         | "capture_mcp_source_changed"
         | "overlay_scope_invalid" => (ErrorCode::SyncScopeChanged, Cause::ScopeChanged),
@@ -407,6 +612,9 @@ fn has_selected_cloud(
             .iter()
             .find(|a| a.id == *id)
         else {
+            if parts.manager.accounts.iter().any(|a| a.id == *id) {
+                continue;
+            }
             return false;
         };
         let candidates: Vec<_> = parts
@@ -472,6 +680,13 @@ pub fn preview_semantics(
     secrets: &SessionSecretsV2,
     forced: Option<DirectionV2>,
 ) -> SyncResult<HostPreviewV2> {
+    let target_binding = provider
+        .target_binding(&selection)
+        .map_err(map_host_error)?;
+    if let Some(binding) = &target_binding {
+        binding.validate(&selection)?;
+        provider.verify_target(binding).map_err(map_host_error)?;
+    }
     let captured = capture_checked(provider, &selection)?;
     let guard = captured.source_guard.clone();
     let root = captured.root_revision.clone();
@@ -479,7 +694,11 @@ pub fn preview_semantics(
     let local_atoms = file_objects_v2::save_state(&captured.objects).map_err(map_host_error)?;
     let local_time =
         saved_time(&captured.objects, local_atoms.keys().cloned()).map_err(map_host_error)?;
-    let can_upload = !local_atoms.is_empty();
+    let can_upload = !local_atoms.is_empty()
+        && has_selected_cloud(&captured.objects, &selection, &captured.objects)
+        && target_binding
+            .as_ref()
+            .is_none_or(|b| b.direction == DirectionV2::Upload);
     let (baseline, binding) = match cloud {
         CloudMaterialV2::Empty => (None, None),
         CloudMaterialV2::Unavailable(e) => return Err(e),
@@ -534,14 +753,28 @@ pub fn preview_semantics(
         .map(file_objects_v2::semantic_digest)
         .transpose()
         .map_err(map_host_error)?;
-    let projected = objects_overlay_v2::overlay_selected(
-        baseline,
-        captured.objects,
-        selection.clone(),
-        Some(&PayloadAuthorizationV2),
-    )
-    .map_err(map_host_error)?;
-    let after = file_objects_v2::semantic_digest(&projected).map_err(map_host_error)?;
+    let mapped_receive = target_binding
+        .as_ref()
+        .is_some_and(|b| b.direction == DirectionV2::Download);
+    let after = if mapped_receive {
+        // A receive mapping may have no local objects at all. Never overlay
+        // remote selections onto missing local UUIDs just to fabricate a diff.
+        // The incoming complete payload is validated above; L0 produces the
+        // exact mapped receive diff and applies with this target binding.
+        let _ = baseline
+            .as_ref()
+            .ok_or_else(|| failure(ErrorCode::SyncPlanChanged, Step::DownloadGuard))?;
+        file_objects_v2::semantic_digest(&captured.objects).map_err(map_host_error)?
+    } else {
+        let projected = objects_overlay_v2::overlay_selected(
+            baseline,
+            captured.objects,
+            selection.clone(),
+            Some(&PayloadAuthorizationV2),
+        )
+        .map_err(map_host_error)?;
+        file_objects_v2::semantic_digest(&projected).map_err(map_host_error)?
+    };
     let no_change =
         before.as_ref().is_some_and(|v| *v == after) || binding.is_none() && !can_upload;
     let (mut chosen, mut reason) = if no_change {
@@ -614,6 +847,7 @@ pub fn preview_semantics(
         source_guard: guard,
         root_revision: root,
         baseline: binding,
+        target_binding,
     })
 }
 /// The actual PayloadCodec used by SyncContext. Immutable selection, expected
@@ -681,6 +915,14 @@ impl HostPayloadCodecV2 {
                 if binding.head == input.head && binding.payload_digest == digest(&input.bytes) => {
             }
             _ => return Err(failure(ErrorCode::SyncPlanChanged, Step::SourceGuard)),
+        }
+        if self
+            .provider
+            .target_binding(&self.preview.selection)
+            .map_err(map_host_error)?
+            != self.preview.target_binding
+        {
+            return Err(failure(ErrorCode::SyncScopeChanged, Step::SourceGuard));
         }
         let local = capture_checked(self.provider.as_ref(), &self.preview.selection)?;
         snapshot_guard_matches(&local, guard, &self.preview.root_revision)?;
@@ -1273,6 +1515,25 @@ impl HostSessionV2 {
             }
             _ => Err(failure(ErrorCode::SyncPlanChanged, Step::SourceGuard)),
         }
+    }
+    pub async fn apply_download(
+        &self,
+        r: ConfirmDownloadRequest,
+        resolver: &EndpointResolverV2,
+        store: &super::sync_v2::store::Store,
+        transport: &dyn ConfigSyncTransport,
+        local: &dyn LocalApplication,
+    ) -> SyncResult<OperationFact> {
+        resolver.resolve_original(&self.connection)?;
+        if let Some(binding) = &self.codec.preview.target_binding {
+            self.codec
+                .provider
+                .verify_target(binding)
+                .map_err(map_host_error)?;
+        }
+        self.context(store, transport, local)?
+            .apply_download(r)
+            .await
     }
     pub async fn publish_upload(
         &self,
