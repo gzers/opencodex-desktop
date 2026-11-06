@@ -1087,3 +1087,153 @@ async fn production_initialization_ambiguity_exposes_readonly_candidates_and_can
         RecoveryOutcome::Applied
     );
 }
+#[tokio::test]
+async fn production_backup_failure_preserves_actual_target_and_retries_same_operation_after_protection_restored(
+) {
+    let source = Env::new();
+    let mut request = source.request();
+    crate::modules::preferences::PreferencesStore::new(&source.root)
+        .save(&crate::modules::preferences::Preferences::default())
+        .unwrap();
+    request.selection.manager.preferences = true;
+    let upload = production_service(&source);
+    let p = upload
+        .preview(request.clone(), ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    upload
+        .confirm(ConfirmRequestV2 {
+            session_id: p.session_id,
+            plan_digest: p.plan_digest,
+        })
+        .await
+        .unwrap();
+    let mut target = Env::new();
+    target.remote = source.remote.clone();
+    empty_existing_fixture(&target);
+    let prefs = crate::modules::preferences::Preferences {
+        theme: "dark".into(),
+        ..Default::default()
+    };
+    crate::modules::preferences::PreferencesStore::new(&target.root)
+        .save(&prefs)
+        .unwrap();
+    let preference_path = target
+        .root
+        .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH);
+    let before = std::fs::read(&preference_path).unwrap();
+    let download = production_service(&target);
+    request.forced_direction = Some(ServiceDirectionV2::Download);
+    let p = download
+        .preview(request, ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    let ServicePlanV2::Download(plan) = p.plan.clone() else {
+        panic!("download")
+    };
+    std::fs::write(
+        target.root.join("backups"),
+        b"synthetic protection obstruction",
+    )
+    .unwrap();
+    let confirmation = ConfirmRequestV2 {
+        session_id: p.session_id.clone(),
+        plan_digest: p.plan_digest.clone(),
+    };
+    let err = download.confirm(confirmation.clone()).await.err().unwrap();
+    assert!(matches!(
+        err.code,
+        ErrorCode::SyncBackupFailed | ErrorCode::SyncLocalStateIo
+    ));
+    assert_eq!(std::fs::read(&preference_path).unwrap(), before);
+    assert!(!target.home.join("config.json").exists());
+    assert!(!target
+        .root
+        .join("manager-state/model-receive-v2")
+        .join(&plan.operation_id)
+        .join("receipt.json")
+        .exists());
+    std::fs::remove_file(target.root.join("backups")).unwrap();
+    let result = download.confirm(confirmation).await.unwrap();
+    assert_eq!(result.operation_id, plan.operation_id);
+    assert_eq!(result.local_apply_status, LocalApplyStatus::Applied);
+    assert!(target.home.join("config.json").exists());
+}
+#[tokio::test]
+async fn production_recovery_export_reads_chosen_branch_and_preserves_all_business_targets_and_remote_files(
+) {
+    let source = Env::new();
+    let upload = production_service(&source);
+    let p = upload
+        .preview(source.request(), ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    upload
+        .confirm(ConfirmRequestV2 {
+            session_id: p.session_id,
+            plan_digest: p.plan_digest,
+        })
+        .await
+        .unwrap();
+    let marker = Generation {
+        format: "OCXD_CONFIG_GENERATION".into(),
+        format_version: 1,
+        generation_id: "88888888-8888-4888-8888-888888888888".into(),
+    };
+    source.remote.files.lock().unwrap().insert(
+        SyncRelativePath::generation(&marker.generation_id)
+            .unwrap()
+            .as_str()
+            .into(),
+        store::canonical(&marker).unwrap(),
+    );
+    let remote_before = source.remote.files.lock().unwrap().clone();
+    let mut target = Env::new();
+    target.remote = source.remote.clone();
+    empty_existing_fixture(&target);
+    let service = production_service(&target);
+    let catalog = service.catalog(None).await.unwrap();
+    let candidate = &catalog.observation.recovery_candidates[0];
+    let request = source.request();
+    let p = service
+        .recovery_preview(
+            RecoveryRequestV2 {
+                selection: request.selection,
+                mcp_clients: request.mcp_clients,
+                assets_reviewed: request.assets_reviewed,
+                generation: candidate.generation.clone(),
+                head: candidate.head.clone(),
+                mode: RecoveryMode::Export,
+                backup_before_update: true,
+            },
+            None,
+        )
+        .await
+        .unwrap();
+    let fact = service
+        .recovery_confirm(ConfirmRequestV2 {
+            session_id: p.session_id,
+            plan_digest: p.plan.plan_digest,
+        })
+        .await
+        .unwrap();
+    assert_eq!(fact.outcome, RecoveryOutcome::Exported);
+    let export = target
+        .root
+        .join("exports")
+        .join(format!("{}.ocxdconf", fact.artifact_id.unwrap()));
+    let bytes = std::fs::read(export).unwrap();
+    file_objects_v2::decode(
+        &bytes,
+        None,
+        &file_objects_v2::supported_schema(),
+        Some(&host::PayloadAuthorizationV2),
+    )
+    .unwrap();
+    assert!(!target.home.join("config.json").exists());
+    assert!(!target
+        .root
+        .join("manager-state/sync-identity-mappings-v2.json")
+        .exists());
+    assert_eq!(*source.remote.files.lock().unwrap(), remote_before);
+}
