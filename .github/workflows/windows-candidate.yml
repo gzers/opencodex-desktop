@@ -27,7 +27,9 @@ jobs:
   package:
     if: github.event_name != 'workflow_dispatch' || inputs.purpose == 'candidate'
     runs-on: windows-latest
-    timeout-minutes: 45
+    # Full offline closure, MSVC debug/release builds and actual two-user
+    # services share this job. Product start/stop and smoke deadlines stay fixed.
+    timeout-minutes: 90
     defaults:
       run:
         shell: pwsh
