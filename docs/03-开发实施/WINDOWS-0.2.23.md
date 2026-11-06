@@ -7,11 +7,21 @@
 ## 当前基线与获取
 
 - 仓库：gzers/opencodex-desktop。
-- 代码：远端codex/0.2.23-integration，明确基线2bbe1aa92dd824a6c14e7f02caafb7a1e4f27c00。
+- 代码：远端codex/0.2.23-integration，明确基线abc374831f5df3b70d118b226a5d82702f17b516。
 - 文档：远端docs/governance-main，以包含本条R2指令的提交为准；读取本文件、TEAM、IMP-31/32及0.2.23-contracts/L0-paths-runtime-v1.md。
 - Windows代码贡献分支：codex/0.2.23-windows；文档/脱敏证据使用独立docs/0.2.23-windows分支。若已有自己的改动，先保留并合并上述明确代码基线，不重置或覆盖工作树。
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
 - 此为0.2.23实施基线，尚非最终安装候选；版本清单仍待L0统一更新。是否取得新代码以完整SHA及实际diff为准，不能仅看软件显示版本。
+
+## R3 追加：真实创建拥有者与最新集成（2026-11-07）
+
+本节接续R2，不重复已完成贡献。Windows已推code400c4e7f4/证据baeb7e0bc，L0已接收原GNU108项、R2实际MSVC provider_auth_native失败及CI终态；原typed ACL修e011ae2ee已集成为87b10dd7e。原失败为新临时文件owner与TokenUser不符，提权TokenOwner是否Admins仍必须由实际日志证实，不能把解释写成已证根因。
+
+代码现在提供d07079683显式TokenUser owner/User+SYSTEM私有DACL创建及abc374831完整私有发布者接线；原子写、锁、固定用户分区、事务镜像、凭据元数据和离线运行包解压都沿同一创建边界，不接管既有其它owner。已存在拥有者仍核对、外owner/重解析/hardlink拒绝，未通过接受Administrators/SYSTEM或关闭权限校验过门。原始Windows回交与后继编译/回归证据见[本批manifest](../../.adg/evidence/0.2.23/team/L0/windows-r3-handoff-20261107/manifest.json)。
+
+Windows可继续：fetch并合入上述明确代码基线，按现R1专属写集补原生事实。先运行infrastructure::windows_private_create::tests（12项，包含TokenUser/TokenOwner/elevation/刚创建owner/DACL读回、已有外owner保持、重解析/hardlink/Unicode/非截断重开），再跑provider_auth_native及原凭据/rename/native_secure_store失败组。CI已加always实际创建测试，草稿PR #72用于当前集成树真实构建与回归；无需在旧PR #71反复验旧源码。L0下一批7bf84fe31已修Windows归属模块路径及新版Clippy诊断，不扩大用户数据权限。二账户/SID与正式安装器原有验收仍未关闭；缺受控第二账户环境如实回交，不用一个SID多会话冒充。
+
+本机已通过atomic2、locks3、instance6、data_root42、modelTxn63、bundle25、actualLocalApply与完整workspace严格Clippy；这些不代替Windows实跑。完整离线供应stage已在仓库，后继正式安装候选仍按真实签名/摘要交付，不以Mac临时文件路径替代。后续最小公共材质复验仍按R2，不重复全站逻辑。保留所有旧失败和清理限制，不自行发布/真实同步/修改日常配置。
 
 ## R2 当前派发（2026-11-07）
 

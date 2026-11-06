@@ -1,0 +1,432 @@
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\commands\about.rs:168:
+     let Some(home) = app.try_state::<crate::state::SharedHomeDir>() else {
+         return Err(AppError::NotConfigured);
+     };
+-    let runtime=app.state::<std::sync::Arc<crate::modules::runtime::RuntimeHandle>>().inner().clone();
++    let runtime = app
++        .state::<std::sync::Arc<crate::modules::runtime::RuntimeHandle>>()
++        .inner()
++        .clone();
+     let environment = crate::modules::preferences::network_environment_for_app(app, home.0.clone());
+     let working = home.0.clone();
+     let cache = app
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\commands\mod.rs:4:
+ pub mod backup;
+ pub mod cleanup;
+ pub mod codex_shim;
+-pub mod data_root;
+ pub mod data_paths_v2;
++pub mod data_root;
+ pub mod discovery;
+ pub mod doctor;
+ pub(crate) mod event_delivery;
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\modules\model_config\config_file_v2.rs:1:
+ //! Authoritative v2 draft/config boundary. Raw providers never cross IPC.
++#[path = "model_receive_file_v2.rs"]
++pub mod receive;
+ #[cfg(test)]
+ #[path = "config_file_v2_tests.rs"]
+ mod tests;
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\modules\model_config\config_file_v2.rs:5:
+-#[path="model_receive_file_v2.rs"]
+-pub mod receive;
+ use crate::modules::model_config::{
+     compiler_v2, matching_v2,
+     protocol_groups::{self, MappingFileV2, RuntimeMappingV2},
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\modules\model_config\file_objects_v2.rs:96:
+     }
+     /// Transfer ownership during a trusted identity projection without cloning
+     /// secret values or exposing an IPC/Debug representation.
+-    pub fn into_entries(self) -> impl Iterator<Item=(String,Zeroizing<String>)> {
++    pub fn into_entries(self) -> impl Iterator<Item = (String, Zeroizing<String>)> {
+         self.values.into_iter()
+     }
+ }
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\modules\model_config\mod.rs:2:
+ //! No runtime, credentials, discovery or provider calls occur in the local store.
+ pub mod agent;
+ pub mod agent_conversation;
++pub mod agent_proposal_v2;
++pub mod agent_runtime_v2;
+ pub mod broker;
+ pub mod cache_refresh;
+ pub(crate) mod channel_actions;
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\modules\model_config\mod.rs:8:
+ pub mod compiler;
++pub mod compiler_v2;
+ pub mod config_file;
+ mod config_file_mapping;
+ pub mod config_remote;
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\modules\model_config\mod.rs:12:
++#[cfg(test)]
++mod consumer_v2_tests;
+ pub mod content_versions;
++pub mod credential_references_v2;
+ pub mod discovery;
+ pub mod discovery_config;
+ pub mod execution_directory;
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\modules\model_config\mod.rs:18:
+ pub mod file_exports;
+ pub mod file_objects;
+ pub mod file_objects_v2;
+-pub mod objects_overlay_v2;
+ pub mod legacy_migration;
+ pub mod management;
+ pub mod matching;
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\modules\model_config\mod.rs:25:
+-pub mod schema_v2;
+ pub mod matching_v2;
+-pub mod source_v2;
+-pub mod credential_references_v2;
+-pub mod saved_objects_capture_v2;
+-pub mod portable_v2;
+-pub mod compiler_v2;
+-pub mod store_v2;
+-pub mod template_ops_v2;
+-pub mod agent_proposal_v2;
+-pub mod agent_runtime_v2;
+-pub mod model_transaction_v2;
+-#[cfg(test)]
+-mod v2_tests;
+-#[cfg(test)]
+-mod consumer_v2_tests;
+ pub mod measurements;
++pub mod model_transaction_v2;
++pub mod objects_overlay_v2;
+ mod operations;
+ pub mod portable_channels;
++pub mod portable_v2;
+ mod protocol_groups;
+ pub mod provider_auth;
+ pub mod provider_fields;
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\modules\model_config\mod.rs:47:
+ pub mod provider_import;
++pub mod receive_models_v2;
+ pub mod recovery;
+ mod remote;
+ mod research_receipts;
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\modules\model_config\mod.rs:51:
+ pub mod runtime;
+ pub mod runtime_history;
++pub mod saved_objects_capture_v2;
+ pub mod schema;
++pub mod schema_v2;
++pub mod source_v2;
+ pub mod store;
+-pub mod sync_state;
+-pub mod sync_v2;
++pub mod store_v2;
+ pub mod sync_host_v2;
+ pub mod sync_local_v2;
+-pub mod receive_models_v2;
++pub mod sync_state;
++pub mod sync_v2;
+ pub mod tasks;
++pub mod template_ops_v2;
+ pub mod transfer;
+ pub mod transfer_backup;
+ pub mod transfer_choices;
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\modules\model_config\mod.rs:65:
+ pub mod transfer_results;
+ pub mod upstream;
+ pub mod usage;
++#[cfg(test)]
++mod v2_tests;
+ 
+ pub use schema::*;
+ pub use store::ModelStore;
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\modules\model_config\provider_auth.rs:1612:
+ }
+ /// Internal materialization for the shared protected file transaction.
+ /// No keychain writes or executable provider authority are created here.
+-pub(super) fn portable_file_fields(public:&serde_json::Value,value:&PortableAuthorization)->ModelResult<serde_json::Value>{
+-    let auth=portable_auth(public,value)?;
+-    let mut fields=private_fields(&auth)?;
+-    if let Some(key)=&auth.api_key{fields["apiKey"]=serde_json::json!(key);}
++pub(super) fn portable_file_fields(
++    public: &serde_json::Value,
++    value: &PortableAuthorization,
++) -> ModelResult<serde_json::Value> {
++    let auth = portable_auth(public, value)?;
++    let mut fields = private_fields(&auth)?;
++    if let Some(key) = &auth.api_key {
++        fields["apiKey"] = serde_json::json!(key);
++    }
+     Ok(fields)
+ }
+ pub fn export_portable(
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\modules\model_config\sync_local_v2.rs:37:
+     /// Recovery proof for unfinished NON-model writes after the model receipt.
+     /// Check the frozen revision or THIS operation's receipted after-revision,
+     /// never the original Absent fact or current capture. Otherwise fail closed.
+-    fn verify_applied_mapping(&self, _operation_id: &str, _binding: &LocalTargetBindingV2) -> ModelResult<()> {
++    fn verify_applied_mapping(
++        &self,
++        _operation_id: &str,
++        _binding: &LocalTargetBindingV2,
++    ) -> ModelResult<()> {
+         Err(invalid("host_mapping_changed", "映射恢复需要独立版本证明"))
+     }
+ }
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\modules\model_config\sync_local_v2_tests.rs:852:
+ 
+ // Actual Host dual-domain composition, only mapping facts/model transaction fake.
+ use super::super::sync_host_v2::{
+-    self, CurrentSourceProviderV2, MappedCaptureProviderV2,
+-    SavedCaptureProviderV2, TargetSlotV2,
++    self, CurrentSourceProviderV2, MappedCaptureProviderV2, SavedCaptureProviderV2, TargetSlotV2,
+ };
+ struct MappedOwner {
+     revision: String,
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\modules\model_config\sync_local_v2_tests.rs:1226:
+     assert_eq!(m.f.models.applies.load(SeqCst), 1);
+ }
+ 
+-struct FrozenMappedSource { guard: SourceGuard, root: String }
++struct FrozenMappedSource {
++    guard: SourceGuard,
++    root: String,
++}
+ impl SourceSnapshotProviderV2 for FrozenMappedSource {
+-    fn current(&self, _: &Path, _: &Path, _: &CaptureRequestV2) -> ModelResult<SourceGuard> { Ok(self.guard.clone()) }
+-    fn root(&self, _: &Path, _: &Path, _: &CaptureRequestV2) -> ModelResult<String> { Ok(self.root.clone()) }
+-    fn target(&self, _: &Path, _: &Path, _: &CaptureRequestV2) -> ModelResult<String> { Ok(self.guard.saved_source_digest.clone()) }
++    fn current(&self, _: &Path, _: &Path, _: &CaptureRequestV2) -> ModelResult<SourceGuard> {
++        Ok(self.guard.clone())
++    }
++    fn root(&self, _: &Path, _: &Path, _: &CaptureRequestV2) -> ModelResult<String> {
++        Ok(self.root.clone())
++    }
++    fn target(&self, _: &Path, _: &Path, _: &CaptureRequestV2) -> ModelResult<String> {
++        Ok(self.guard.saved_source_digest.clone())
++    }
+ }
+-struct DriftAfterPrepare { models: Arc<Models>, owner: Arc<MappedOwner>, revision: bool }
++struct DriftAfterPrepare {
++    models: Arc<Models>,
++    owner: Arc<MappedOwner>,
++    revision: bool,
++}
+ impl ModelApplyV2 for DriftAfterPrepare {
+-    fn prepare(&self, id: &str, objects: &SavedObjects, s: &SelectionV2, expected: &str) -> ModelResult<ModelApplyPlanHandle> {
++    fn prepare(
++        &self,
++        id: &str,
++        objects: &SavedObjects,
++        s: &SelectionV2,
++        expected: &str,
++    ) -> ModelResult<ModelApplyPlanHandle> {
+         let h = self.models.prepare(id, objects, s, expected)?;
+-        if self.revision { self.owner.revision_valid.store(false, SeqCst); } else { self.owner.absent_valid.store(false, SeqCst); }
++        if self.revision {
++            self.owner.revision_valid.store(false, SeqCst);
++        } else {
++            self.owner.absent_valid.store(false, SeqCst);
++        }
+         Ok(h)
+     }
+-    fn protect(&self, id: &str, h: &ModelApplyPlanHandle, b: bool) -> ModelResult<()> { self.models.protect(id, h, b) }
+-    fn apply_once(&self, id: &str, objects: &SavedObjects, h: &ModelApplyPlanHandle, b: bool) -> ModelResult<ModelApplyReceipt> {
++    fn protect(&self, id: &str, h: &ModelApplyPlanHandle, b: bool) -> ModelResult<()> {
++        self.models.protect(id, h, b)
++    }
++    fn apply_once(
++        &self,
++        id: &str,
++        objects: &SavedObjects,
++        h: &ModelApplyPlanHandle,
++        b: bool,
++    ) -> ModelResult<ModelApplyReceipt> {
+         self.models.apply_once(id, objects, h, b)
+     }
+-    fn status(&self, id: &str, h: &ModelApplyPlanHandle) -> ModelResult<ModelApplyStatus> { self.models.status(id, h) }
++    fn status(&self, id: &str, h: &ModelApplyPlanHandle) -> ModelResult<ModelApplyStatus> {
++        self.models.status(id, h)
++    }
+ }
+ #[test]
+ fn mapped_owner_is_independent_of_capture_and_rechecked_before_protect() {
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\modules\model_config\sync_local_v2_tests.rs:1250:
+     for revision in [true, false] {
+         let m = MappedFixture::new(true);
+         let r: CaptureRequestV2 = serde_json::from_slice(&m.f.capture_json).unwrap();
+-        let source = Arc::new(FrozenMappedSource { guard: m.source.current(&m.f.d, &m.f.h, &r).unwrap(),
+-            root: m.source.root(&m.f.d, &m.f.h, &r).unwrap() });
+-        let models = Arc::new(DriftAfterPrepare { models: m.f.models.clone(), owner: m.owner.clone(), revision });
+-        let host = LocalApplicationV2::new_mapped(m.f.d.clone(), m.f.h.clone(), m.f.selection.clone(), r,
+-            m.f.scope.clone(), source, models, None, m.binding.clone(), m.owner.clone()).unwrap();
++        let source = Arc::new(FrozenMappedSource {
++            guard: m.source.current(&m.f.d, &m.f.h, &r).unwrap(),
++            root: m.source.root(&m.f.d, &m.f.h, &r).unwrap(),
++        });
++        let models = Arc::new(DriftAfterPrepare {
++            models: m.f.models.clone(),
++            owner: m.owner.clone(),
++            revision,
++        });
++        let host = LocalApplicationV2::new_mapped(
++            m.f.d.clone(),
++            m.f.h.clone(),
++            m.f.selection.clone(),
++            r,
++            m.f.scope.clone(),
++            source,
++            models,
++            None,
++            m.binding.clone(),
++            m.owner.clone(),
++        )
++        .unwrap();
+         let theme = m.f.theme();
+-        assert_eq!(m.f.apply(&host).unwrap_err().code, ErrorCode::SyncPlanChanged);
+-        assert_eq!(m.f.models.prepares.load(SeqCst), 1); assert_eq!(m.f.models.applies.load(SeqCst), 0);
+-        assert_eq!(m.f.theme(), theme); assert_eq!(host.progress(OP).unwrap(), Some(LocalProgressV2::Prepared));
++        assert_eq!(
++            m.f.apply(&host).unwrap_err().code,
++            ErrorCode::SyncPlanChanged
++        );
++        assert_eq!(m.f.models.prepares.load(SeqCst), 1);
++        assert_eq!(m.f.models.applies.load(SeqCst), 0);
++        assert_eq!(m.f.theme(), theme);
++        assert_eq!(host.progress(OP).unwrap(), Some(LocalProgressV2::Prepared));
+     }
+ }
+ 
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\modules\runtime\mod.rs:6:
+ //! 优先级（`FZ-48`）：用户显式指定 > 托管安装 > 自动发现候选。**不读取 PATH**。
+ 
+ pub mod archive;
+-pub mod install;
+ pub mod bundled;
++pub mod install;
+ pub(crate) mod offline_drop;
+ pub mod paths;
+ pub(crate) mod protection;
+Diff in \\?\C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\tests\runtime_bundle_real.rs:1:
+ //! Explicit artifact acceptance. Temporary I/D/H only; never starts a service.
+-#![cfg(feature="integration-test")]
+-use opencodex_desktop_lib::modules::runtime::{self,bundled::{self,ProvisionResult}};
+-use std::{path::PathBuf,process::{Command,Stdio},time::{Duration,Instant}};
++#![cfg(feature = "integration-test")]
++use opencodex_desktop_lib::modules::runtime::{
++    self,
++    bundled::{self, ProvisionResult},
++};
++use std::{
++    path::PathBuf,
++    process::{Command, Stdio},
++    time::{Duration, Instant},
++};
+ 
+ #[test]
+-#[ignore="requires an explicitly supplied pinned complete platform bundle"]
+-fn complete_bundle_provisions_and_runs_readonly_without_external_node_or_bun(){
+-    let archive=PathBuf::from(std::env::var_os("OCXD_RUNTIME_BUNDLE_ARCHIVE").expect("explicit archive"));
+-    let descriptor=std::fs::read(std::env::var_os("OCXD_RUNTIME_BUNDLE_MANIFEST").expect("explicit manifest")).unwrap();
+-    let pin=std::env::var("OCXD_RUNTIME_BUNDLE_MANIFEST_SHA256").expect("pinned descriptor digest");
+-    let temp=tempfile::tempdir().unwrap();let root=temp.path().canonicalize().unwrap();
+-    let install=root.join("program/OpenCodeX Desktop");let data=root.join("profile/.codex-desktop/desktop");let home=root.join("profile/.codex-desktop/opencodex/home");
+-    std::fs::create_dir_all(&install).unwrap();std::fs::create_dir_all(data.join("manager-state")).unwrap();std::fs::create_dir_all(&home).unwrap();
+-    let sentinel=br#"{"providers":{},"unrelated":{"keep":true}}"#;std::fs::write(home.join("config.json"),sentinel).unwrap();
+-    let version=bundled::verify_bundle(&archive,&descriptor,&pin).unwrap().version;
+-    assert!(matches!(bundled::provision(&install,&data,&archive,&descriptor,&pin).unwrap(),ProvisionResult::Installed{..}));
+-    let (node,_)=runtime::install::managed_dependency_paths(&install);
+-    runtime::install::validate_managed_installation(&install,Some(&node)).unwrap();
+-    assert!(matches!(bundled::provision(&install,&data,&archive,&descriptor,&pin).unwrap(),ProvisionResult::AlreadyInstalled{..}));
+-    for args in [vec!["--version"],vec!["config","validate"]]{
+-        let output=root.join(if args.len()==1{"version.out"}else{"validation.out"});let file=std::fs::File::create(&output).unwrap();
+-        let mut command=Command::new(install.join(runtime::MANAGED_ENTRY_RELATIVE));
+-        command.args(&args).env_clear().env("HOME",root.join("profile")).env("OPENCODEX_HOME",&home)
+-            .env("XDG_CONFIG_HOME",root.join("profile/.config")).env("XDG_CACHE_HOME",root.join("profile/.cache"))
+-            .env("PATH",opencodex_desktop_lib::infrastructure::platform::controlled_path(Vec::<PathBuf>::new(),None))
+-            .env("NO_PROXY","*").env("CI","1").current_dir(&home).stdin(Stdio::null()).stdout(Stdio::from(file.try_clone().unwrap())).stderr(Stdio::from(file));
+-        let mut child=command.spawn().unwrap();let deadline=Instant::now()+Duration::from_secs(30);
+-        let status=loop{if let Some(status)=child.try_wait().unwrap(){break status;}if Instant::now()>deadline{let _=child.kill();let _=child.wait();panic!("readonly bundled command exceeded deadline");}std::thread::sleep(Duration::from_millis(25));};
+-        let observed=std::fs::read_to_string(&output).unwrap();assert!(status.success(),"readonly command failed: {observed}");
+-        if args.len()==1{assert!(observed.contains(&version),"version differs from pinned bundle");}
++#[ignore = "requires an explicitly supplied pinned complete platform bundle"]
++fn complete_bundle_provisions_and_runs_readonly_without_external_node_or_bun() {
++    let archive =
++        PathBuf::from(std::env::var_os("OCXD_RUNTIME_BUNDLE_ARCHIVE").expect("explicit archive"));
++    let descriptor =
++        std::fs::read(std::env::var_os("OCXD_RUNTIME_BUNDLE_MANIFEST").expect("explicit manifest"))
++            .unwrap();
++    let pin =
++        std::env::var("OCXD_RUNTIME_BUNDLE_MANIFEST_SHA256").expect("pinned descriptor digest");
++    let temp = tempfile::tempdir().unwrap();
++    let root = temp.path().canonicalize().unwrap();
++    let install = root.join("program/OpenCodeX Desktop");
++    let data = root.join("profile/.codex-desktop/desktop");
++    let home = root.join("profile/.codex-desktop/opencodex/home");
++    std::fs::create_dir_all(&install).unwrap();
++    std::fs::create_dir_all(data.join("manager-state")).unwrap();
++    std::fs::create_dir_all(&home).unwrap();
++    let sentinel = br#"{"providers":{},"unrelated":{"keep":true}}"#;
++    std::fs::write(home.join("config.json"), sentinel).unwrap();
++    let version = bundled::verify_bundle(&archive, &descriptor, &pin)
++        .unwrap()
++        .version;
++    assert!(matches!(
++        bundled::provision(&install, &data, &archive, &descriptor, &pin).unwrap(),
++        ProvisionResult::Installed { .. }
++    ));
++    let (node, _) = runtime::install::managed_dependency_paths(&install);
++    runtime::install::validate_managed_installation(&install, Some(&node)).unwrap();
++    assert!(matches!(
++        bundled::provision(&install, &data, &archive, &descriptor, &pin).unwrap(),
++        ProvisionResult::AlreadyInstalled { .. }
++    ));
++    for args in [vec!["--version"], vec!["config", "validate"]] {
++        let output = root.join(if args.len() == 1 {
++            "version.out"
++        } else {
++            "validation.out"
++        });
++        let file = std::fs::File::create(&output).unwrap();
++        let mut command = Command::new(install.join(runtime::MANAGED_ENTRY_RELATIVE));
++        command
++            .args(&args)
++            .env_clear()
++            .env("HOME", root.join("profile"))
++            .env("OPENCODEX_HOME", &home)
++            .env("XDG_CONFIG_HOME", root.join("profile/.config"))
++            .env("XDG_CACHE_HOME", root.join("profile/.cache"))
++            .env(
++                "PATH",
++                opencodex_desktop_lib::infrastructure::platform::controlled_path(
++                    Vec::<PathBuf>::new(),
++                    None,
++                ),
++            )
++            .env("NO_PROXY", "*")
++            .env("CI", "1")
++            .current_dir(&home)
++            .stdin(Stdio::null())
++            .stdout(Stdio::from(file.try_clone().unwrap()))
++            .stderr(Stdio::from(file));
++        let mut child = command.spawn().unwrap();
++        let deadline = Instant::now() + Duration::from_secs(30);
++        let status = loop {
++            if let Some(status) = child.try_wait().unwrap() {
++                break status;
++            }
++            if Instant::now() > deadline {
++                let _ = child.kill();
++                let _ = child.wait();
++                panic!("readonly bundled command exceeded deadline");
++            }
++            std::thread::sleep(Duration::from_millis(25));
++        };
++        let observed = std::fs::read_to_string(&output).unwrap();
++        assert!(status.success(), "readonly command failed: {observed}");
++        if args.len() == 1 {
++            assert!(
++                observed.contains(&version),
++                "version differs from pinned bundle"
++            );
++        }
+     }
+-    assert_eq!(std::fs::read(home.join("config.json")).unwrap(),sentinel);
++    assert_eq!(std::fs::read(home.join("config.json")).unwrap(), sentinel);
+ }
+ 

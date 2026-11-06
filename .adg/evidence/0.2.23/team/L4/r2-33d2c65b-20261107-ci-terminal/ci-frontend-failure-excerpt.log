@@ -1,0 +1,299 @@
+2026-11-06T16:18:01.6368360Z [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 147 [49m[22m[31m⎯⎯⎯⎯⎯⎯[39m
+2026-11-06T16:18:01.6374440Z [41m[1m FAIL [22m[49m tests/channel-detail-save-flow.test.ts[2m > [22mcurrent-channel Save navigation and state[2m > [22mdiscards a delayed list preview after entering detail
+2026-11-06T16:18:01.6375870Z [41m[1m FAIL [22m[49m tests/channel-detail-save-flow.test.ts[2m > [22mcurrent-channel Save navigation and state[2m > [22mdiscards a delayed list preview after entering inactive route
+2026-11-06T16:18:01.6446410Z [41m[1m FAIL [22m[49m tests/channel-detail-save-flow.test.ts[2m > [22mcurrent-channel Save navigation and state[2m > [22mkeeps clean A disabled when B has edits, including stale emitted events
+2026-11-06T16:18:01.6476220Z [41m[1m FAIL [22m[49m tests/channel-detail-save-flow.test.ts[2m > [22mcurrent-channel Save navigation and state[2m > [22mwrites A without a preview and returns to list with B still dirty
+2026-11-06T16:18:01.6499250Z [41m[1m FAIL [22m[49m tests/channel-detail-save-flow.test.ts[2m > [22mcurrent-channel Save navigation and state[2m > [22mkeeps the detail and input on file failure
+2026-11-06T16:18:01.6584640Z [41m[1m FAIL [22m[49m tests/channel-detail-save-flow.test.ts[2m > [22mcurrent-channel Save navigation and state[2m > [22mdoes not navigate on a late receipt after other detail
+2026-11-06T16:18:01.6585940Z [41m[1m FAIL [22m[49m tests/channel-detail-save-flow.test.ts[2m > [22mcurrent-channel Save navigation and state[2m > [22mdoes not navigate on a late receipt after inactive route
+2026-11-06T16:18:01.6587190Z [41m[1m FAIL [22m[49m tests/channel-detail-save-flow.test.ts[2m > [22mcurrent-channel Save navigation and state[2m > [22mdoes not navigate on a late receipt after later input
+2026-11-06T16:18:01.6605960Z [41m[1m FAIL [22m[49m tests/channel-detail-save-flow.test.ts[2m > [22mcurrent-channel Save navigation and state[2m > [22mkeeps the clean list Save disabled after saving the only edited channel
+2026-11-06T16:18:01.6643750Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mWP85 direct channel editing[2m > [22mkeeps only Save in the sidebar and receives current-channel status without a duplicate status line
+2026-11-06T16:18:01.6656200Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mWP85 direct channel editing[2m > [22medits the channel directly and leaves discovery and detection in their sections
+2026-11-06T16:18:01.6686910Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mcurrent-channel Key intent across file refreshes[2m > [22mretains replacement and clear intents when a saved-file read ends in success
+2026-11-06T16:18:01.6688410Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mcurrent-channel Key intent across file refreshes[2m > [22mretains replacement and clear intents when a saved-file read ends in failure
+2026-11-06T16:18:01.6724780Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mcurrent-channel Key intent across file refreshes[2m > [22mrestores the latest store intent, including edits made during a success read
+2026-11-06T16:18:01.6729790Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mcurrent-channel Key intent across file refreshes[2m > [22mrestores the latest store intent, including edits made during a failure read
+2026-11-06T16:18:01.6738520Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mcurrent-channel Key intent across file refreshes[2m > [22muses the saved file digest rather than unrelated snapshot changes to refresh the Key
+2026-11-06T16:18:01.6751920Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mcurrent-channel Key intent across file refreshes[2m > [22mignores an older credential success after switching channels and refreshing again
+2026-11-06T16:18:01.6753760Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mcurrent-channel Key intent across file refreshes[2m > [22mignores an older credential failure after switching channels and refreshing again
+2026-11-06T16:18:01.6761840Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mcurrent-channel Key intent across file refreshes[2m > [22mkeeps revealed and emptied input behind origin validation while only explicit clear deletes the Key
+2026-11-06T16:18:01.6781510Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mdiscovery cancellation and late responses[2m > [22mkeeps a cancelled success from changing a later discovery
+2026-11-06T16:18:01.6782850Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mdiscovery cancellation and late responses[2m > [22mkeeps a cancelled failure from changing a later discovery
+2026-11-06T16:18:01.6789240Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mdiscovery cancellation and late responses[2m > [22mignores discovery after its url binding changes
+2026-11-06T16:18:01.6790460Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mdiscovery cancellation and late responses[2m > [22mignores discovery after its protocol binding changes
+2026-11-06T16:18:01.6791720Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mdiscovery cancellation and late responses[2m > [22mignores discovery after its node binding changes
+2026-11-06T16:18:01.6793110Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mdiscovery cancellation and late responses[2m > [22mignores discovery after its channel binding changes
+2026-11-06T16:18:01.6795580Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mdiscovery cancellation and late responses[2m > [22mignores discovery after its unmount binding changes
+2026-11-06T16:18:01.6801540Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mcurrent-channel row buffers and selection confirmation[2m > [22muses replacement rowState in both the table and pending-row guard
+2026-11-06T16:18:01.6809660Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mcurrent-channel row buffers and selection confirmation[2m > [22mkeeps fallback row buffers with their channel when the same instance switches channels
+2026-11-06T16:18:01.6817600Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mcurrent-channel row buffers and selection confirmation[2m > [22minvalidates an open selection confirmation after a channel change
+2026-11-06T16:18:01.6819030Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mcurrent-channel row buffers and selection confirmation[2m > [22minvalidates an open selection confirmation after a rowState change
+2026-11-06T16:18:01.6820450Z [41m[1m FAIL [22m[49m tests/channel-editor-direct.test.ts[2m > [22mcurrent-channel row buffers and selection confirmation[2m > [22minvalidates an open selection confirmation after a pending change
+2026-11-06T16:18:01.6826420Z [41m[1m FAIL [22m[49m tests/channel-key-edit.test.ts[2m > [22mediting an existing channel Key[2m > [22mloads the stored value masked, lets the eye reveal and hide it without changing configuration
+2026-11-06T16:18:01.6888530Z [41m[1m FAIL [22m[49m tests/channel-key-edit.test.ts[2m > [22mediting an existing channel Key[2m > [22mrecords replacing or clearing only the Key as a saveable edit without fetching a model list
+2026-11-06T16:18:01.6894150Z [41m[1m FAIL [22m[49m tests/channel-key-edit.test.ts[2m > [22mediting an existing channel Key[2m > [22mretains the entered value and its save intent when model discovery fails
+2026-11-06T16:18:01.6901150Z [41m[1m FAIL [22m[49m tests/channel-key-edit.test.ts[2m > [22mediting an existing channel Key[2m > [22muses the newly saved Key as the baseline for a second edit without leaving the editor
+2026-11-06T16:18:01.6909040Z [41m[1m FAIL [22m[49m tests/channel-key-edit.test.ts[2m > [22mediting an existing channel Key[2m > [22mkeeps loaded Keys behind backend origin validation after the node URL changes
+2026-11-06T16:18:01.6914880Z [41m[1m FAIL [22m[49m tests/channel-rename.test.ts[2m > [22mAC02 direct provider rename[2m > [22mupdates name and provider together, previews full original model ID and retains credential origin before Save
+2026-11-06T16:18:01.6923260Z [41m[1m FAIL [22m[49m tests/channel-rename.test.ts[2m > [22mAC02 direct provider rename[2m > [22maccepts unique name 渠道名称 and allocates its internal key
+2026-11-06T16:18:01.6924390Z [41m[1m FAIL [22m[49m tests/channel-rename.test.ts[2m > [22mAC02 direct provider rename[2m > [22maccepts unique name Has Space and allocates its internal key
+2026-11-06T16:18:01.6925500Z [41m[1m FAIL [22m[49m tests/channel-rename.test.ts[2m > [22mAC02 direct provider rename[2m > [22maccepts unique name openai and allocates its internal key
+2026-11-06T16:18:01.6926590Z [41m[1m FAIL [22m[49m tests/channel-rename.test.ts[2m > [22mAC02 direct provider rename[2m > [22maccepts unique name bad/id and allocates its internal key
+2026-11-06T16:18:01.6927770Z [41m[1m FAIL [22m[49m tests/channel-rename.test.ts[2m > [22mAC02 direct provider rename[2m > [22maccepts unique name _bad and allocates its internal key
+2026-11-06T16:18:01.6928900Z [41m[1m FAIL [22m[49m tests/channel-rename.test.ts[2m > [22mAC02 direct provider rename[2m > [22maccepts unique name bad- and allocates its internal key
+2026-11-06T16:18:01.6930070Z [41m[1m FAIL [22m[49m tests/channel-rename.test.ts[2m > [22mAC02 direct provider rename[2m > [22maccepts unique name policy and allocates its internal key
+2026-11-06T16:18:01.6931290Z [41m[1m FAIL [22m[49m tests/channel-rename.test.ts[2m > [22mAC02 direct provider rename[2m > [22maccepts unique name constructor and allocates its internal key
+2026-11-06T16:18:01.6938650Z [41m[1m FAIL [22m[49m tests/channel-rename.test.ts[2m > [22mAC02 direct provider rename[2m > [22mkeeps explicit provider intent when reopening a draft and performs no persistence on return
+2026-11-06T16:18:01.6942800Z [41m[1m FAIL [22m[49m tests/channels-view-copy.test.ts[2m > [22m渠道列表与原型一致的入口口径[2m > [22m保存即预览：列表与详情都只有一个保存入口
+2026-11-06T16:18:01.7039260Z [41m[1m FAIL [22m[49m tests/channels-view-copy.test.ts[2m > [22m渠道列表与原型一致的入口口径[2m > [22m确认即关闭；弹窗内不再显示保存错误块或过程说明
+2026-11-06T16:18:01.7192190Z [41m[1m FAIL [22m[49m tests/component-inventory.test.mjs[2m > [22mcomplete component source ownership[2m > [22mregisters every public visual/helper source and traces actual production and development imports
+2026-11-06T16:18:01.7198260Z [41m[1m FAIL [22m[49m tests/data-root.test.ts[2m > [22mdata root integration[2m > [22mreports failure without modifying target
+2026-11-06T16:18:01.7204370Z [41m[1m FAIL [22m[49m tests/data-root.test.ts[2m > [22mdata root integration[2m > [22mdistinguishes unverified runtime from busy work without saving a binding
+2026-11-06T16:18:01.7211210Z [41m[1m FAIL [22m[49m tests/data-root.test.ts[2m > [22mdata root integration[2m > [22mlatches an uncertain migration result across rereads and blocks HOME edits
+2026-11-06T16:18:01.7215610Z [41m[1m FAIL [22m[49m tests/data-root.test.ts[2m > [22mdata root integration[2m > [22mreports a partial-copy failure without changing the active config
+2026-11-06T16:18:01.7221760Z [41m[1m FAIL [22m[49m tests/data-root.test.ts[2m > [22mdata root integration[2m > [22mdoes not send concurrent path commands while migration is running
+2026-11-06T16:18:01.7227690Z [41m[1m FAIL [22m[49m tests/default-channel-retired.test.ts[2m > [22m默认渠道已退役[2m > [22m保存范围说明不再宣称包含默认渠道
+2026-11-06T16:18:01.7233430Z [41m[1m FAIL [22m[49m tests/file-channel-save.test.ts[2m > [22mcurrent-file channel saves[2m > [22msilently closes an old preview after all edits are restored to saved values
+2026-11-06T16:18:01.7250270Z [41m[1m FAIL [22m[49m tests/file-channel-save.test.ts[2m > [22mcurrent-file channel saves[2m > [22mconfirms the preview and writes the current file exactly once
+2026-11-06T16:18:01.7275730Z [41m[1m FAIL [22m[49m tests/file-channel-save.test.ts[2m > [22mcurrent-file channel saves[2m > [22msaves a Key-only edit independently of model discovery
+2026-11-06T16:18:01.7294620Z [41m[1m FAIL [22m[49m tests/file-channel-save.test.ts[2m > [22mcurrent-file channel saves[2m > [22madopts modeled fields in memory, then uses the existing Save with the actual file digest and receipt
+2026-11-06T16:18:01.7296130Z [41m[1m FAIL [22m[49m tests/file-channel-save.test.ts[2m > [22mcurrent-file channel saves[2m > [22madopts raw material only in memory, then uses the existing Save with the actual file digest and receipt
+2026-11-06T16:18:01.7313860Z [41m[1m FAIL [22m[49m tests/file-channel-save.test.ts[2m > [22mcurrent-file channel saves[2m > [22mretains edits on a real file conflict and reports an unsuccessful write
+2026-11-06T16:18:01.7333570Z [41m[1m FAIL [22m[49m tests/file-channel-save.test.ts[2m > [22mcurrent-file channel saves[2m > [22mdeleting a different channel preserves the official default reference
+2026-11-06T16:18:01.7336280Z [41m[1m FAIL [22m[49m tests/install-discovery-source.test.ts[2m > [22m安装发现不再把托管安装报成未发现[2m > [22m可执行文件与安装形态同时参考运行来源
+2026-11-06T16:18:01.7570710Z [2m Test Files [22m [1m[31m27 failed[39m[22m[2m | [22m[1m[32m177 passed[39m[22m[90m (204)[39m
+2026-11-06T16:18:01.7571380Z [2m      Tests [22m [1m[31m147 failed[39m[22m[2m | [22m[1m[32m1231 passed[39m[22m[90m (1378)[39m
+2026-11-06T16:18:01.7572340Z [2m   Duration [22m 81.73s[2m (environment 51%, tests 30%, import 12%, transform 6%, worker 1%)[22m
+2026-11-06T16:18:01.7621910Z ##[error]Error: Unable to get [data-testid="policy-save"] within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.7668270Z ##[error]Error: Unable to get [data-testid="policy-save"] within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.7682530Z ##[error]Error: Unable to get .detail-save within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.7697950Z ##[error]Error: Unable to get .detail-save within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.7711360Z ##[error]Error: Unable to get .detail-save within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.7724670Z ##[error]Error: Unable to get specified component within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.7738030Z ##[error]Error: Unable to get specified component within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.7751790Z ##[error]Error: Unable to get specified component within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.7765480Z ##[error]Error: Unable to get .detail-save within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.7767960Z ##[error]AssertionError: expected [] to have a length of 1 but got +0
+2026-11-06T16:18:01.7770880Z ##[error]Error: Unable to get #channel-config within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7774030Z ##[error]Error: Unable to get input[aria-label="API Key"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7777080Z ##[error]Error: Unable to get input[aria-label="API Key"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7780240Z ##[error]Error: Unable to get input[aria-label="API Key"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7786920Z ##[error]Error: Unable to get input[aria-label="API Key"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7790070Z ##[error]Error: Unable to get input[aria-label="API Key"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7792960Z ##[error]Error: Unable to get input[aria-label="API Key"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7795820Z ##[error]Error: Unable to get input[aria-label="API Key"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7798910Z ##[error]Error: Unable to get input[aria-label="API Key"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7812680Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:01.7814340Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:01.7815790Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:01.7817260Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:01.7818690Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:01.7820060Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:01.7821500Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:01.7824250Z ##[error]Error: Unable to get specified component within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7826980Z ##[error]Error: Unable to get input[aria-label="model路由别名"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7828850Z ##[error]TypeError: Cannot read properties of undefined (reading 'vm')
+2026-11-06T16:18:01.7830400Z ##[error]TypeError: Cannot read properties of undefined (reading 'vm')
+2026-11-06T16:18:01.7831870Z ##[error]TypeError: Cannot read properties of undefined (reading 'vm')
+2026-11-06T16:18:01.7834490Z ##[error]Error: Unable to get input[aria-label="API Key"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7837110Z ##[error]Error: Unable to get input[aria-label="API Key"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7839800Z ##[error]Error: Unable to get input[aria-label="API Key"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7842430Z ##[error]Error: Unable to get input[aria-label="API Key"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7843930Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:01.7847020Z ##[error]Error: Unable to get input[maxlength="80"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7851460Z ##[error]Error: Unable to get input[maxlength="80"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7854700Z ##[error]Error: Unable to get input[maxlength="80"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7857790Z ##[error]Error: Unable to get input[maxlength="80"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7860870Z ##[error]Error: Unable to get input[maxlength="80"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7863790Z ##[error]Error: Unable to get input[maxlength="80"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7867030Z ##[error]Error: Unable to get input[maxlength="80"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7869940Z ##[error]Error: Unable to get input[maxlength="80"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7872860Z ##[error]Error: Unable to get input[maxlength="80"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7875970Z ##[error]Error: Unable to get input[maxlength="80"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.7926060Z ##[error]AssertionError: expected '<script setup lang="ts">\nimport {com…' to contain '<SelectorPreviewDialog'
+2026-11-06T16:18:01.7973590Z ##[error]AssertionError: expected '<script setup lang="ts">\nimport {com…' to contain 'previewOpen.value=false;previewProjec…'
+2026-11-06T16:18:01.7977630Z ##[error]AssertionError: expected [ …(4) ] to deeply equal ArrayContaining{…}
+2026-11-06T16:18:01.7979230Z ##[error]AssertionError: expected '用户目录校验或初始化未完成；请重新读取实际位置核对。' to contain '未修改目标目录'
+2026-11-06T16:18:01.7980950Z ##[error]AssertionError: expected '不支持数据迁移；请明确选择新版目录，仅切换引用。' to contain '未能确认面板运行状态'
+2026-11-06T16:18:01.7982470Z ##[error]AssertionError: expected false to be true // Object.is equality
+2026-11-06T16:18:01.7984180Z ##[error]AssertionError: expected '不支持数据迁移；请明确选择新版目录，仅切换引用。' to contain '未完成副本'
+2026-11-06T16:18:01.7985520Z ##[error]AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+2026-11-06T16:18:01.7987210Z ##[error]AssertionError: expected false to be true // Object.is equality
+2026-11-06T16:18:01.7998920Z ##[error]Error: Unable to get [data-testid="policy-save"] within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.8010730Z ##[error]Error: Unable to get [data-testid="policy-save"] within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.8025030Z ##[error]Error: Unable to get [data-testid="policy-save"] within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.8038170Z ##[error]Error: Unable to get [data-testid="policy-save"] within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.8055130Z ##[error]Error: Unable to get [data-testid="policy-save"] within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.8069560Z ##[error]Error: Unable to get [data-testid="policy-save"] within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.8071080Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:01.8405380Z [41m[1m FAIL [22m[49m tests/install-discovery-source.test.ts[2m > [22m安装发现不再把托管安装报成未发现[2m > [22m版本优先取运行来源解析出的版本
+2026-11-06T16:18:01.8831000Z [41m[1m FAIL [22m[49m tests/model-channel-scoped-save.test.ts[2m > [22mchannel-scoped shared store saves[2m > [22mabsorbs the latest locked layout from a metadata-only A receipt even when the file digest is unchanged
+2026-11-06T16:18:01.8838910Z [41m[1m FAIL [22m[49m tests/model-channel-scoped-save.test.ts[2m > [22mchannel-scoped shared store saves[2m > [22muses the scoped receipt as the next global-save baseline while retaining all global draft changes
+2026-11-06T16:18:01.8846650Z [41m[1m FAIL [22m[49m tests/model-draft-ordering.test.ts[2m > [22mmodel draft ordering and explicit selection[2m > [22mrequires confirmation when leaving all and restores the checkbox if cancelled
+2026-11-06T16:18:01.8850760Z [41m[1m FAIL [22m[49m tests/model-draft-ordering.test.ts[2m > [22mmodel draft ordering and explicit selection[2m > [22mblocks reordering while search or an enabled-only filter is active and retains absent slots
+2026-11-06T16:18:01.8854780Z [41m[1m FAIL [22m[49m tests/model-effective-source.test.ts[2m > [22mmodel family and effective sources[2m > [22maccepts alias on blur through the common validator while raw identity and other model settings remain stable
+2026-11-06T16:18:01.8857300Z [41m[1m FAIL [22m[49m tests/model-effective-source.test.ts[2m > [22mmodel family and effective sources[2m > [22muses the resolved adopted family for filtering and keeps rows while a new projection is pending
+2026-11-06T16:18:01.8858880Z [41m[1m FAIL [22m[49m tests/model-effective-source.test.ts[2m > [22mmodel family and effective sources[2m > [22madds a manual exact ID only after confirmation and keeps its input DOM stable
+2026-11-06T16:18:01.8860600Z [41m[1m FAIL [22m[49m tests/model-file-compat.test.ts[2m > [22mexplicit history adapter using the actual file models UI[2m > [22misolates all legacy baselines through compare, accept, runtime save and file reload, then uses only file saves
+2026-11-06T16:18:01.8868590Z [41m[1m FAIL [22m[49m tests/model-file-compat.test.ts[2m > [22mexplicit history adapter using the actual file models UI[2m > [22msaves an authorization-only historical target even when the visible channel policy is unchanged
+2026-11-06T16:18:01.8876960Z [41m[1m FAIL [22m[49m tests/model-file-compat.test.ts[2m > [22mexplicit history adapter using the actual file models UI[2m > [22mretains a failed recovery draft, then allows an ordinary file save after explicit discard despite old plans
+2026-11-06T16:18:01.8885310Z [41m[1m FAIL [22m[49m tests/model-file-compat.test.ts[2m > [22mexplicit history adapter using the actual file models UI[2m > [22mretains the original plan after a partial result and rechecks that plan on explicit retry
+2026-11-06T16:18:01.8886190Z [41m[1m FAIL [22m[49m tests/model-file-compat.test.ts[2m > [22mexplicit history adapter using the actual file models UI[2m > [22mretains the original plan after a unknown result and rechecks that plan on explicit retry
+2026-11-06T16:18:01.8899460Z [41m[1m FAIL [22m[49m tests/model-file-compat.test.ts[2m > [22mexplicit history adapter using the actual file models UI[2m > [22mretains a committed recovery until file reload succeeds and never repeats the runtime write
+2026-11-06T16:18:01.8907790Z [41m[1m FAIL [22m[49m tests/model-file-compat.test.ts[2m > [22mexplicit history adapter using the actual file models UI[2m > [22mrejects channel edits mixed into an accepted historical target without losing input or using either writer
+2026-11-06T16:18:01.8908710Z [41m[1m FAIL [22m[49m tests/model-file-compat.test.ts[2m > [22mexplicit history adapter using the actual file models UI[2m > [22mrejects key edits mixed into an accepted historical target without losing input or using either writer
+2026-11-06T16:18:01.8916930Z [41m[1m FAIL [22m[49m tests/model-file-compat.test.ts[2m > [22mchannel copy with actual-file credentials[2m > [22mreads a saved Key once before adding the copy, stages it only in memory and writes it only on explicit Save
+2026-11-06T16:18:01.8919030Z [41m[1m FAIL [22m[49m tests/model-file-compat.test.ts[2m > [22mchannel copy with actual-file credentials[2m > [22muses the source pending replace without reading an older saved Key
+2026-11-06T16:18:01.8919740Z [41m[1m FAIL [22m[49m tests/model-file-compat.test.ts[2m > [22mchannel copy with actual-file credentials[2m > [22muses the source pending clear without reading an older saved Key
+2026-11-06T16:18:01.8921760Z [41m[1m FAIL [22m[49m tests/model-file-compat.test.ts[2m > [22mchannel copy with actual-file credentials[2m > [22mcopies local authorization without fetching a stale Key
+2026-11-06T16:18:01.8922430Z [41m[1m FAIL [22m[49m tests/model-file-compat.test.ts[2m > [22mchannel copy with actual-file credentials[2m > [22mcopies none authorization without fetching a stale Key
+2026-11-06T16:18:01.8924480Z [41m[1m FAIL [22m[49m tests/model-file-compat.test.ts[2m > [22mchannel copy with actual-file credentials[2m > [22mretains copy input on unreadable credentials and displays only a fixed error
+2026-11-06T16:18:01.8925220Z [41m[1m FAIL [22m[49m tests/model-file-compat.test.ts[2m > [22mchannel copy with actual-file credentials[2m > [22mretains copy input on failed credentials and displays only a fixed error
+2026-11-06T16:18:01.8927300Z [41m[1m FAIL [22m[49m tests/model-file-compat.test.ts[2m > [22mchannel copy with actual-file credentials[2m > [22mcopies without a Key when reuse is declined, even with a pending replacement
+2026-11-06T16:18:01.8929580Z [41m[1m FAIL [22m[49m tests/model-node-measurements.test.ts[2m > [22mnode measurements remain tied to their connection inputs[2m > [22mreturns measurements without switching nodes, discovering models or enabling a channel
+2026-11-06T16:18:01.8932930Z [41m[1m FAIL [22m[49m tests/model-node-measurements.test.ts[2m > [22mnode measurements remain tied to their connection inputs[2m > [22mcancels the pending run and ignores late results after a URL or credential change
+2026-11-06T16:18:01.8936430Z [41m[1m FAIL [22m[49m tests/model-node-measurements.test.ts[2m > [22mnode measurements remain tied to their connection inputs[2m > [22minvalidates a request when the running provider changes, preserving node and model identity
+2026-11-06T16:18:01.8939750Z [41m[1m FAIL [22m[49m tests/model-node-measurements.test.ts[2m > [22mnode measurements remain tied to their connection inputs[2m > [22mignores a late stop error after invalidation and a new request
+2026-11-06T16:18:01.8942560Z [41m[1m FAIL [22m[49m tests/model-projection-owner.test.ts[2m > [22mchannel projection owner[2m > [22mignores the previous channel request after switching targets and never mutates the draft
+2026-11-06T16:18:01.8943960Z [41m[1m FAIL [22m[49m tests/model-save-result-flow.test.ts[2m > [22m渠道确认保存到全局结果宿主的完整点击链（模拟文件 API）[2m > [22m实际编辑、打开预览、确认保存后只出现全局卡；稍后彻底结束，新编辑仍显示 dirty
+2026-11-06T16:18:01.8953940Z [41m[1m FAIL [22m[49m tests/model-table-workspace.test.ts[2m > [22mchannel model row workspace[2m > [22mseparates action selection from visibility and retains row buffers across collapse, filter and remount
+2026-11-06T16:18:01.8956440Z [41m[1m FAIL [22m[49m tests/model-table-workspace.test.ts[2m > [22mchannel model row workspace[2m > [22mreverts only a rejected alias while preserving pending rule input and original IDs
+2026-11-06T16:18:01.8959010Z [41m[1m FAIL [22m[49m tests/model-table-workspace.test.ts[2m > [22mchannel model row workspace[2m > [22mrejects all batch changes on validation failure or a stale confirmation and keeps exact hidden selections
+2026-11-06T16:18:01.8961560Z [41m[1m FAIL [22m[49m tests/model-table-workspace.test.ts[2m > [22mchannel model row workspace[2m > [22mapplies only explicit batch fields atomically and preserves naming, references, order and untouched rules
+2026-11-06T16:18:01.8964110Z [41m[1m FAIL [22m[49m tests/model-table-workspace.test.ts[2m > [22mchannel model row workspace[2m > [22mcancels model detail without discarding an existing row buffer and rejects a late validator result
+2026-11-06T16:18:01.8966600Z [41m[1m FAIL [22m[49m tests/model-view-context.test.ts[2m > [22mmodel view context[2m > [22mreacts to navigation changes on the first edit session, without requiring a route remount
+2026-11-06T16:18:01.8968180Z [41m[1m FAIL [22m[49m tests/model-view-context.test.ts[2m > [22mmodel view context[2m > [22mcancels a new copy only after current confirmation, retaining the source and refusing a stale discard
+2026-11-06T16:18:01.8969740Z [41m[1m FAIL [22m[49m tests/model-view-context.test.ts[2m > [22mmodel view context[2m > [22mreturns to the template list without discarding dirty input and restores it after route remount
+2026-11-06T16:18:01.8970980Z [41m[1m FAIL [22m[49m tests/post05-channel-list.test.ts[2m > [22mPOST05 列表实际消费者[2m > [22m保留选择列与四列，检测位于操作列，选择节点只改草稿
+2026-11-06T16:18:01.8974970Z [41m[1m FAIL [22m[49m tests/post05-channel-list.test.ts[2m > [22mPOST05 列表实际消费者[2m > [22m离开渠道页只关闭观察，回到渠道页可继续查看同一检测
+2026-11-06T16:18:01.8984160Z [41m[1m FAIL [22m[49m tests/post05-channel-list.test.ts[2m > [22mPOST05 列表实际消费者[2m > [22m搜索隐藏行不销毁检测，回到列表重开保留结果
+2026-11-06T16:18:01.8984610Z [41m[1m FAIL [22m[49m tests/post05-channel-list.test.ts[2m > [22mPOST05 列表实际消费者[2m > [22m进入详情不销毁检测，回到列表重开保留结果
+2026-11-06T16:18:01.8999200Z [41m[1m FAIL [22m[49m tests/post05-channel-list.test.ts[2m > [22mPOST05 列表实际消费者[2m > [22m保留既有官方/专用认证保护：openai/key
+2026-11-06T16:18:01.8999670Z [41m[1m FAIL [22m[49m tests/post05-channel-list.test.ts[2m > [22mPOST05 列表实际消费者[2m > [22m保留既有官方/专用认证保护：fixture/oauth
+2026-11-06T16:18:01.9000150Z [41m[1m FAIL [22m[49m tests/post05-channel-list.test.ts[2m > [22mPOST05 列表实际消费者[2m > [22m保留既有官方/专用认证保护：fixture/forward
+2026-11-06T16:18:01.9009330Z [41m[1m FAIL [22m[49m tests/post05-channel-list.test.ts[2m > [22mPOST05 列表实际消费者[2m > [22m未保存改名检测仍绑定已保存凭据归属，保存来源变化后旧结果失效
+2026-11-06T16:18:01.9018590Z [41m[1m FAIL [22m[49m tests/post05-node-detection.test.ts[2m > [22mPOST05 公共模态节点检测（全部为模拟API）[2m > [22m结果就地更新，焦点、节点身份与窗口保持；滚动和resize不触发关闭
+2026-11-06T16:18:01.9021360Z [41m[1m FAIL [22m[49m tests/post05-node-detection.test.ts[2m > [22mPOST05 公共模态节点检测（全部为模拟API）[2m > [22mX关闭观察不停止请求，重开保留结果和选择
+2026-11-06T16:18:01.9021880Z [41m[1m FAIL [22m[49m tests/post05-node-detection.test.ts[2m > [22mPOST05 公共模态节点检测（全部为模拟API）[2m > [22mEscape关闭观察不停止请求，重开保留结果和选择
+2026-11-06T16:18:01.9022380Z [41m[1m FAIL [22m[49m tests/post05-node-detection.test.ts[2m > [22mPOST05 公共模态节点检测（全部为模拟API）[2m > [22m遮罩关闭观察不停止请求，重开保留结果和选择
+2026-11-06T16:18:01.9025390Z [41m[1m FAIL [22m[49m tests/post05-node-detection.test.ts[2m > [22mPOST05 公共模态节点检测（全部为模拟API）[2m > [22m一键检测与停止分离，停止后保留已完成结果，不选择节点
+2026-11-06T16:18:01.9028180Z [41m[1m FAIL [22m[49m tests/post05-node-detection.test.ts[2m > [22mPOST05 公共模态节点检测（全部为模拟API）[2m > [22m连接变更使晚回失效，独立只读示例默认不能检测或切换
+2026-11-06T16:18:01.9031060Z [41m[1m FAIL [22m[49m tests/post05-node-detection.test.ts[2m > [22mPOST05 公共模态节点检测（全部为模拟API）[2m > [22m明确允许只读检测时，readonly只拦选择而不拦模型清单读取
+2026-11-06T16:18:01.9034460Z [41m[1m FAIL [22m[49m tests/post09-remaining-editors.test.ts[2m > [22mPOST-09 remaining model editors[2m > [22mdiscards only the temporary execution choice through x
+2026-11-06T16:18:01.9035150Z [41m[1m FAIL [22m[49m tests/post09-remaining-editors.test.ts[2m > [22mPOST-09 remaining model editors[2m > [22mdiscards only the temporary execution choice through escape
+2026-11-06T16:18:01.9035850Z [41m[1m FAIL [22m[49m tests/post09-remaining-editors.test.ts[2m > [22mPOST-09 remaining model editors[2m > [22mdiscards only the temporary execution choice through backdrop
+2026-11-06T16:18:01.9036530Z [41m[1m FAIL [22m[49m tests/post09-remaining-editors.test.ts[2m > [22mPOST-09 remaining model editors[2m > [22mdiscards only the temporary execution choice through cancel
+2026-11-06T16:18:01.9039550Z [41m[1m FAIL [22m[49m tests/post09-remaining-editors.test.ts[2m > [22mPOST-09 remaining model editors[2m > [22mcloses a loading picker first and ignores its late directory without closing settings
+2026-11-06T16:18:01.9042440Z [41m[1m FAIL [22m[49m tests/post09-remaining-editors.test.ts[2m > [22mPOST-09 remaining model editors[2m > [22mkeeps an explicitly submitted execution preference save guarded against x
+2026-11-06T16:18:01.9043240Z [41m[1m FAIL [22m[49m tests/post09-remaining-editors.test.ts[2m > [22mPOST-09 remaining model editors[2m > [22mkeeps an explicitly submitted execution preference save guarded against escape
+2026-11-06T16:18:01.9044010Z [41m[1m FAIL [22m[49m tests/post09-remaining-editors.test.ts[2m > [22mPOST-09 remaining model editors[2m > [22mkeeps an explicitly submitted execution preference save guarded against backdrop
+2026-11-06T16:18:01.9044770Z [41m[1m FAIL [22m[49m tests/post09-remaining-editors.test.ts[2m > [22mPOST-09 remaining model editors[2m > [22mkeeps an explicitly submitted execution preference save guarded against cancel
+2026-11-06T16:18:01.9047790Z [41m[1m FAIL [22m[49m tests/post09-remaining-editors.test.ts[2m > [22mPOST-09 remaining model editors[2m > [22mcancels a detail through x while preserving pre-existing row input and the channel draft
+2026-11-06T16:18:01.9048660Z [41m[1m FAIL [22m[49m tests/post09-remaining-editors.test.ts[2m > [22mPOST-09 remaining model editors[2m > [22mcancels a detail through escape while preserving pre-existing row input and the channel draft
+2026-11-06T16:18:01.9049740Z [41m[1m FAIL [22m[49m tests/post09-remaining-editors.test.ts[2m > [22mPOST-09 remaining model editors[2m > [22mcancels a detail through backdrop while preserving pre-existing row input and the channel draft
+2026-11-06T16:18:01.9050710Z [41m[1m FAIL [22m[49m tests/post09-remaining-editors.test.ts[2m > [22mPOST-09 remaining model editors[2m > [22mcancels a detail through cancel while preserving pre-existing row input and the channel draft
+2026-11-06T16:18:01.9053960Z [41m[1m FAIL [22m[49m tests/post09-remaining-editors.test.ts[2m > [22mPOST-09 remaining model editors[2m > [22mkeeps detail validation guarded and applies the draft only once after it passes
+2026-11-06T16:18:01.9057020Z [41m[1m FAIL [22m[49m tests/post09-remaining-editors.test.ts[2m > [22mPOST-09 remaining model editors[2m > [22mkeeps batch validation guarded and applies the draft only once after it passes
+2026-11-06T16:18:01.9072530Z [41m[1m FAIL [22m[49m tests/post09-remaining-model-hosts.test.ts[2m > [22mPOST-09 remaining version/preview/result consumers[2m > [22mcancels deletion through x without closing version management or deleting selected versions
+2026-11-06T16:18:01.9074200Z [41m[1m FAIL [22m[49m tests/post09-remaining-model-hosts.test.ts[2m > [22mPOST-09 remaining version/preview/result consumers[2m > [22mcancels deletion through escape without closing version management or deleting selected versions
+2026-11-06T16:18:01.9075890Z [41m[1m FAIL [22m[49m tests/post09-remaining-model-hosts.test.ts[2m > [22mPOST-09 remaining version/preview/result consumers[2m > [22mcancels deletion through native-cancel without closing version management or deleting selected versions
+2026-11-06T16:18:01.9077620Z [41m[1m FAIL [22m[49m tests/post09-remaining-model-hosts.test.ts[2m > [22mPOST-09 remaining version/preview/result consumers[2m > [22mcancels deletion through backdrop without closing version management or deleting selected versions
+2026-11-06T16:18:01.9079220Z [41m[1m FAIL [22m[49m tests/post09-remaining-model-hosts.test.ts[2m > [22mPOST-09 remaining version/preview/result consumers[2m > [22mcancels deletion through cancel without closing version management or deleting selected versions
+2026-11-06T16:18:01.9089590Z [41m[1m FAIL [22m[49m tests/post09-remaining-model-hosts.test.ts[2m > [22mPOST-09 remaining version/preview/result consumers[2m > [22mguards an actual pending delete and keeps the captured target/digests
+2026-11-06T16:18:01.9096860Z [41m[1m FAIL [22m[49m tests/post09-remaining-model-hosts.test.ts[2m > [22mPOST-09 remaining version/preview/result consumers[2m > [22mkeeps the manager under default confirmation and returns focus to its actual trigger
+2026-11-06T16:18:01.9103510Z [41m[1m FAIL [22m[49m tests/post09-remaining-model-hosts.test.ts[2m > [22mPOST-09 remaining version/preview/result consumers[2m > [22mdoes not let a dismissed match request populate a reopened preview or change the template buffer
+2026-11-06T16:18:01.9109240Z [41m[1m FAIL [22m[49m tests/post09-remaining-model-hosts.test.ts[2m > [22mPOST-09 remaining version/preview/result consumers[2m > [22mcloses an external result observer without changing saved or draft state
+2026-11-06T16:18:01.9169990Z [41m[1m FAIL [22m[49m tests/runtime-protection.test.ts[2m > [22mlocal panel protection status and retry[2m > [22mkeeps pending visible and disables installation, uninstall and directory changes
+2026-11-06T16:18:01.9228410Z [41m[1m FAIL [22m[49m tests/runtime-protection.test.ts[2m > [22mlocal panel protection status and retry[2m > [22mkeeps verified_pending visible and disables installation, uninstall and directory changes
+2026-11-06T16:18:01.9289170Z [41m[1m FAIL [22m[49m tests/runtime-protection.test.ts[2m > [22mlocal panel protection status and retry[2m > [22mkeeps unreadable visible and disables installation, uninstall and directory changes
+2026-11-06T16:18:01.9338580Z [41m[1m FAIL [22m[49m tests/runtime-protection.test.ts[2m > [22mlocal panel protection status and retry[2m > [22mshows transport failures as unknown rather than a clean protection state
+2026-11-06T16:18:01.9341700Z [41m[1m FAIL [22m[49m tests/technical-input-autocapitalize.test.ts[2m > [22mtechnical text inputs disable OS auto-capitalization[2m > [22mdata-root path fields are not auto-capitalized
+2026-11-06T16:18:01.9344740Z [41m[1m FAIL [22m[49m tests/ui021-public-patterns.test.ts[2m > [22m0.2.1 public patterns[2m > [22muses one public primary save in the channel sidebar without changing its save intent
+2026-11-06T16:18:01.9347450Z [41m[1m FAIL [22m[49m tests/windows-path-surfaces.test.ts[2m > [22mWindows path presentation keeps action/storage identities[2m > [22mrenders and copies readable data paths while opening the original backend value
+2026-11-06T16:18:01.9591470Z ##[error]AssertionError: expected '<script setup lang="ts">\nimport UiBu…' to contain 'source.kind !== \'unresolved\''
+2026-11-06T16:18:01.9821850Z ##[error]AssertionError: expected '<script setup lang="ts">\nimport UiBu…' to contain '(fromSource ? source!.version : repor…'
+2026-11-06T16:18:01.9832800Z ##[error]Error: Unable to get [data-testid="policy-save"] within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.9843190Z ##[error]Error: Unable to get [data-testid="policy-save"] within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.9845540Z ##[error]Error: Unable to get button[aria-label="b启用状态"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.9847820Z ##[error]Error: Unable to get input[aria-label="搜索渠道内型号"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.9850010Z ##[error]Error: Unable to get input[aria-label="raw/a路由别名"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:01.9851130Z ##[error]TypeError: Cannot read properties of undefined (reading 'vm')
+2026-11-06T16:18:01.9852260Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:01.9863540Z ##[error]Error: Unable to get [data-testid="policy-save"] within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.9877990Z ##[error]Error: Unable to get [data-testid="policy-save"] within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.9894780Z ##[error]Error: Unable to get [data-testid="policy-save"] within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.9910450Z ##[error]Error: Unable to get [data-testid="policy-save"] within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.9923830Z ##[error]Error: Unable to get [data-testid="policy-save"] within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.9936950Z ##[error]Error: Unable to get [data-testid="policy-save"] within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.9949370Z ##[error]Error: Unable to get [data-testid="policy-save"] within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.9961410Z ##[error]Error: Unable to get [data-testid="policy-save"] within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:01.9963370Z ##[error]AssertionError: button: 复制: expected undefined to be defined
+2026-11-06T16:18:01.9965230Z ##[error]AssertionError: button: 复制: expected undefined to be defined
+2026-11-06T16:18:01.9966910Z ##[error]AssertionError: button: 复制: expected undefined to be defined
+2026-11-06T16:18:01.9968570Z ##[error]AssertionError: button: 复制: expected undefined to be defined
+2026-11-06T16:18:01.9970230Z ##[error]AssertionError: button: 复制: expected undefined to be defined
+2026-11-06T16:18:01.9972020Z ##[error]AssertionError: button: 复制: expected undefined to be defined
+2026-11-06T16:18:01.9973780Z ##[error]AssertionError: button: 复制: expected undefined to be defined
+2026-11-06T16:18:01.9975610Z ##[error]AssertionError: button: 复制: expected undefined to be defined
+2026-11-06T16:18:01.9977180Z ##[error]AssertionError: expected "vi.fn()" to be called with arguments: [ ObjectContaining{…} ]
+2026-11-06T16:18:01.9978520Z ##[error]AssertionError: expected "vi.fn()" to be called with arguments: [ '' ]
+2026-11-06T16:18:01.9979840Z ##[error]AssertionError: expected "vi.fn()" to be called with arguments: [ '' ]
+2026-11-06T16:18:01.9980940Z ##[error]TypeError: rejectStop is not a function
+2026-11-06T16:18:01.9982230Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:01.9994940Z ##[error]Error: Unable to get .channel-enable-cell button within: <div>
+2026-11-06T16:18:01.9998090Z ##[error]Error: Unable to get input[aria-label="操作选择 raw/b"] within: <div data-v-6df0b110="" class="channel-model-table-v2">
+2026-11-06T16:18:02.0000540Z ##[error]Error: Unable to get tr[data-model="raw/a"] within: <div data-v-6df0b110="" class="channel-model-table-v2">
+2026-11-06T16:18:02.0003140Z ##[error]Error: Unable to get input[aria-label="选择当前型号结果"] within: <div data-v-6df0b110="" class="channel-model-table-v2">
+2026-11-06T16:18:02.0005450Z ##[error]Error: Unable to get input[aria-label="选择当前型号结果"] within: <div data-v-6df0b110="" class="channel-model-table-v2">
+2026-11-06T16:18:02.0007760Z ##[error]Error: Unable to get tr[data-model="raw/a"] within: <div data-v-6df0b110="" class="channel-model-table-v2">
+2026-11-06T16:18:02.0008880Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0009990Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0011090Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0012720Z ##[error]AssertionError: expected [ '渠道', '当前服务节点', '状态与数量', '操作' ] to deeply equal [ '', '渠道', '模型', '启用', '操作' ]
+2026-11-06T16:18:02.0024470Z ##[error]Error: Unable to get .channel-node-detect within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:02.0035720Z ##[error]Error: Unable to get .channel-node-detect within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:02.0046760Z ##[error]Error: Unable to get .channel-node-detect within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:02.0057860Z ##[error]Error: Unable to get .channel-node-detect within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:02.0068830Z ##[error]Error: Unable to get .channel-node-detect within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:02.0080070Z ##[error]Error: Unable to get .channel-node-detect within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:02.0091440Z ##[error]Error: Unable to get .channel-node-detect within: <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+2026-11-06T16:18:02.0092760Z ##[error]TypeError: Cannot read properties of undefined (reading '0')
+2026-11-06T16:18:02.0093920Z ##[error]TypeError: Cannot read properties of undefined (reading '0')
+2026-11-06T16:18:02.0095060Z ##[error]TypeError: Cannot read properties of undefined (reading '0')
+2026-11-06T16:18:02.0096210Z ##[error]TypeError: Cannot read properties of undefined (reading '0')
+2026-11-06T16:18:02.0097370Z ##[error]TypeError: Cannot read properties of undefined (reading '0')
+2026-11-06T16:18:02.0098520Z ##[error]TypeError: Cannot read properties of undefined (reading '0')
+2026-11-06T16:18:02.0100860Z ##[error]AssertionError: expected '节点测试渠道 · 节点检测一键检测节点检测服务尚未就绪，未发送请求。✓当前…' to contain '8 ms'
+2026-11-06T16:18:02.0102560Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0104030Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0105480Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0106910Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0108350Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0109780Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0111220Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0112650Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0114080Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0115460Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0116640Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0129420Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0130700Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0131860Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0134170Z ##[error]Error: Unable to get input[aria-label="操作选择 raw/a"] within: <div data-v-6df0b110="" class="channel-model-table-v2">
+2026-11-06T16:18:02.0136030Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0138410Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0140660Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0142850Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0144720Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0146690Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0148200Z ##[error]TypeError: Cannot read properties of undefined (reading 'trigger')
+2026-11-06T16:18:02.0149350Z ##[error]TypeError: Cannot read properties of null (reading 'library')
+2026-11-06T16:18:02.0176190Z ##[error]Error: Unable to get dialog.model-task-result[open] within: <body>
+2026-11-06T16:18:02.0208130Z ##[error]Error: Unable to get [data-testid="data-root-migrate"] within: <!--teleport start-->
+2026-11-06T16:18:02.0242640Z ##[error]Error: Unable to get [data-testid="data-root-migrate"] within: <!--teleport start-->
+2026-11-06T16:18:02.0275390Z ##[error]Error: Unable to get [data-testid="data-root-migrate"] within: <!--teleport start-->
+2026-11-06T16:18:02.0277750Z ##[error]AssertionError: expected '目录快照结构版本暂不支持。 尚无可用快照；未推断路径或缺失状态。' to contain '保护记录读取失败'
+2026-11-06T16:18:02.0279480Z ##[error]AssertionError: 缺少输入框 #external-home-input: expected false to be true // Object.is equality
+2026-11-06T16:18:02.0282210Z ##[error]Error: Unable to get .detail-navigation-primary button[aria-label="保存渠道草稿"] within: <section data-v-85785940="" class="channel-editor-v2">
+2026-11-06T16:18:02.0285700Z ##[error]AssertionError: expected "vi.fn()" to be called with arguments: [ 'get_managed_path_targets' ]
+2026-11-06T16:18:02.0290260Z ##[error]Process completed with exit code 1.

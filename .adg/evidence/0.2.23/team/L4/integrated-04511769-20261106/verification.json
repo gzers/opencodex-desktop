@@ -1,0 +1,130 @@
+{
+  "date": "2026-11-06",
+  "timezone": "Asia/Shanghai",
+  "role": "L4",
+  "kind": "pinned integrated source plus one typed-FFI patch; GNU native logic evidence",
+  "documentSHA": "7bba1822eaec26b1b07891806baf6fb398cf2a9f",
+  "integrationSHA": "04511769c1f20154c58e5ef92d7c6e399aeb1fbf",
+  "codeContributionBranch": "codex/0.2.23-windows",
+  "codeContributionSHA": "e011ae2ee582d738fb148b7370e39e41c60c8467",
+  "initialL4ContributionSHA": "42d2a4a1770a5be1050dec3de641efab77a65917",
+  "initialIntegrationMechanism": "cherry-pick c8e7ac62e/0f3d670d5/7d1ace177; verify byte equality rather than ancestry",
+  "patchFiles": [
+    "apps/desktop/tauri/src/infrastructure/windows_user_scope.rs"
+  ],
+  "tests": [
+    {
+      "path": "product-startup-with-manifest.log",
+      "passed": 10,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "path": "infrastructure-platform-ffi-final.log",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "path": "modules-data_root-ffi-final.log",
+      "passed": 36,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "path": "modules-ipc-ffi-final.log",
+      "passed": 44,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "path": "modules-instance-ffi-final.log",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "path": "infrastructure-atomic_write-ffi-final.log",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "path": "infrastructure-credentials-ffi-final.log",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "path": "cli-tests/product-startup-with-manifest.log",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0
+    }
+  ],
+  "uniqueChecksPassed": 108,
+  "toolchain": "x86_64-pc-windows-gnu",
+  "ffiClashWarningsRemoved": true,
+  "helperClippy": "-D warnings pass; helper library only",
+  "productionLibCompile": "pass; 17 unrelated warnings retained",
+  "cliCompile": "pass; warnings retained; three parser/confirmation tests only",
+  "fullProjectStrictClippy": "not run / not claimed",
+  "firstBaselineRun": {
+    "source": "integration SHA without patch",
+    "passed": 105,
+    "initialLibExeSha256": "9f4572a24261e9b67fac4144cae01b9dd55dbef0158e170164e6b08b26d69592",
+    "initialAdaptedExeSha256": "19ab1de0ec648db9a0349bf53a0ae7f9b0ecdd1fd64fe47b64613ced0ed536dd"
+  },
+  "finalLibExecutable": {
+    "kind": "GNU native libtest harness only; not MSVC or product/release acceptance",
+    "source": "C:\\Users\\15119\\.codex\\visualizations\\2026\\11\\06\\01a1b0c8-944d-75d0-9a8b-c2e46c8963a1\\L4-R1-20261106\\product-target\\debug\\deps\\opencodex_desktop_lib-5f6910f5f1f817d1.exe",
+    "sourceSha256": "ed248e366eb48f7133115fb0b55f0a2b2282412afd0a04e0f1ea6247ea11dc3b",
+    "adapted": "C:\\Users\\15119\\.codex\\visualizations\\2026\\11\\06\\01a1b0c8-944d-75d0-9a8b-c2e46c8963a1\\L4-R2-04511769-20261106\\native-product-tests\\product-tests.exe",
+    "adaptedSha256": "b4dd4d47a2bb960ee4e9e062ce908d737cdd1047b3e9651b91d3ca6458084247",
+    "change": "RT_MANIFEST 24/1 neutral; Common Controls v6 dependency only",
+    "loaderSource": "C:\\Users\\15119\\.codex\\visualizations\\2026\\11\\06\\01a1b0c8-944d-75d0-9a8b-c2e46c8963a1\\L4-R1-20261106\\product-target\\debug\\WebView2Loader.dll",
+    "loaderSha256": "86545b66cdb0603bc26b626fb9ad610cb6e71f28d468f5ea66df23b03dda96d5"
+  },
+  "cliExecutable": {
+    "kind": "GNU native libtest harness only; not MSVC or product/release acceptance",
+    "source": "C:\\Users\\15119\\.codex\\visualizations\\2026\\11\\06\\01a1b0c8-944d-75d0-9a8b-c2e46c8963a1\\L4-R1-20261106\\product-target\\debug\\deps\\ocxd-030ba1b9b66e6cbb.exe",
+    "sourceSha256": "497c2a7f46d186c190967b874ac1fc672dea3b240100e4acfd4894e45ddb6078",
+    "adapted": "C:\\Users\\15119\\.codex\\visualizations\\2026\\11\\06\\01a1b0c8-944d-75d0-9a8b-c2e46c8963a1\\L4-R2-04511769-20261106\\cli-tests\\native-product-tests\\product-tests.exe",
+    "adaptedSha256": "28c1bb031c9fc1d0899c1aaf60b54c562b16c1497542e1dd063071630975ed58",
+    "change": "RT_MANIFEST 24/1 neutral; Common Controls v6 dependency only",
+    "loaderSource": "C:\\Users\\15119\\.codex\\visualizations\\2026\\11\\06\\01a1b0c8-944d-75d0-9a8b-c2e46c8963a1\\L4-R1-20261106\\product-target\\debug\\WebView2Loader.dll",
+    "loaderSha256": "86545b66cdb0603bc26b626fb9ad610cb6e71f28d468f5ea66df23b03dda96d5"
+  },
+  "workingTreeAfterAttempt": "clean; restored contribution branch",
+  "cleanup": {
+    "status": "retained_policy_blocked",
+    "scope": "Only this attempt isolated-test-temp; no daily data",
+    "path": "C:/Users/15119/.codex/visualizations/2026/11/06/01a1b0c8-944d-75d0-9a8b-c2e46c8963a1/L4-R2-04511769-20261106/isolated-test-temp",
+    "observedRemainingTopLevelDirectories": [
+      ".tmpmMQSMA",
+      ".tmpTz0SAn"
+    ],
+    "action": "PowerShell removal after absolute-path and reparse checks",
+    "toolOutcome": "Rejected before execution: blocked by policy",
+    "moreSpecificReasonProvided": false,
+    "retried": false,
+    "dailyProductProcess": {
+      "pid": 41396,
+      "sessionId": 2,
+      "untouched": true
+    },
+    "generatedCheckoutSchemas": "archived outside checkout; tracked schema restored; generated Windows schema removed before cleanup rejection",
+    "sourceCheckoutClean": true
+  },
+  "pending": [
+    "L0 integrate typed ACL FFI patch",
+    "second account controlled execution channel",
+    "real two SID GUI/IPC/DPAPI/ports/process ownership proof",
+    "same SID cross session/elevation proof",
+    "MSVC SDK build",
+    "complete offline runtime and NSIS/MSI candidate hashes"
+  ],
+  "noActualDailyConfigSyncInferenceOrRelease": true,
+  "lastObservedIntegration": "5e0c8bc796e304860059fad4a83a891b78a1e7af",
+  "finalAcceptance": false
+}

@@ -1,0 +1,64 @@
+{
+  "date": "2026-11-07",
+  "timezone": "Asia/Shanghai",
+  "role": "L4",
+  "documentSHA": "d707d28888f065a2a88a0c6f67f31f3608409d02",
+  "baseline": "33d2c65b58ba8880d6deea7b52d69117238c3d33",
+  "codeBranch": "codex/0.2.23-windows",
+  "headSHA": "400c4e7f4a765b18e4406ba889d13fe5021ccb9b",
+  "mergeParents": [
+    "e011ae2ee582d738fb148b7370e39e41c60c8467",
+    "33d2c65b58ba8880d6deea7b52d69117238c3d33"
+  ],
+  "baselineAncestorVerified": true,
+  "actualDiffFromBaseline": [
+    "apps/desktop/tauri/src/infrastructure/windows_user_scope.rs"
+  ],
+  "mergeResolution": "stage3==original L4 helper and stage2==tested typed ACL fix; retain typed helper",
+  "pr": {
+    "number": 71,
+    "draft": true,
+    "base": "codex/0.2.23-integration",
+    "head": "codex/0.2.23-windows",
+    "mergeRef": "74583c49f1a137d05b28c78d0bbf01a272ab45d9"
+  },
+  "ci": {
+    "runId": 42249148982,
+    "headSHA": "400c4e7f4a765b18e4406ba889d13fe5021ccb9b",
+    "status": "in_progress",
+    "backendWindows": {
+      "jobId": 127999232404,
+      "format": "failed",
+      "ordinaryClippyRegression": "skipped",
+      "alwaysCredentialStep": "in_progress"
+    },
+    "smoke": {
+      "jobId": 127999232579,
+      "result": "success",
+      "productTwoSidEvidence": false
+    },
+    "releaseTools": "success"
+  },
+  "artifact": {
+    "id": 13517894778,
+    "name": "windows-process-token-evidence",
+    "digest": "sha256:0bcb5b163cfe2d985b55a01a43c71bd7fbdadec618c0535e8729d4d4135ba96d",
+    "sizeBytes": 6911,
+    "localZipVerified": false,
+    "localDownloadIssue": "DNS failure for GitHub redirect and connector temporary file domain",
+    "decodedJobLogSaved": true
+  },
+  "msvcCompilationPassed": false,
+  "nativeR2Acceptance": false,
+  "remaining": [
+    "CI run 42249148982 active; await terminal and preserve exact logs",
+    "L0 formatting fixes in 10 shared files and new pinned source SHA",
+    "second user controlled execution channel still not supplied",
+    "actual two SID and same SID cross-session/elevation tests",
+    "final MSVC NSIS/MSI/runtime resource descriptors and hashes"
+  ],
+  "dailyDataChanged": false,
+  "realSyncInferenceOrRelease": false,
+  "sourceWorkingTreeClean": true,
+  "priorTempCleanup": "unchanged retained_policy_blocked; no retry"
+}

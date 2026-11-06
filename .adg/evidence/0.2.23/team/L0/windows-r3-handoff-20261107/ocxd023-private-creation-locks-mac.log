@@ -1,0 +1,11 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.75s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-a2321b53a9e89887)
+
+running 3 tests
+test infrastructure::locking::tests::lock_path_uses_frozen_suffix ... ok
+test infrastructure::locking::tests::owning_handle_reads_bounded_metadata_without_releasing_the_lock ... ok
+test infrastructure::locking::tests::target_lock_serializes_writers ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 1852 filtered out; finished in 0.03s
+
