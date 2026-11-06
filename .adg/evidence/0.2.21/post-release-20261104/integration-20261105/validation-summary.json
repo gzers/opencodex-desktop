@@ -95,8 +95,8 @@
     "firstRenameDrift": "Windows fresh rename first confirmation passed exact saved config bytes and discovery baseline, new/old refs, pending and actual MSIX generation checks"
   },
   "pending": [
-    "Production runtime source/maintenance adoption or upstream stable including fixes",
-    "Version freeze and final installer/upgrade/signing/update/rollback/unified release"
+    "Final 0.2.22 source checks and signed desktop/runtime artifacts",
+    "Actual installers/upgrade/update manifest/rollback and unified release"
   ],
   "boundaries": "No daily config or real WebDAV/inference. Authorized disposable-account default restart is distinct from daily Codex. Prior daily Bun cleanup incident and missing pre/post bytes remain preserved; no all-history zero-side-effect claim.",
   "reuse": {
@@ -119,5 +119,14 @@
     "previous": "1ddc5117a0ee13b4a87c546302ade0c98221bd5d",
     "verified": "ca89905344d0d29e761bcb8ffa24d22769c9cb4c",
     "evidence": "git rev-parse ca46bc1f3:apps HEAD:apps and Windows artifact metadata all ca89905344d0d29e761bcb8ffa24d22769c9cb4c; prior stale summary retained in audit snapshot"
+  },
+  "releaseVersion": "0.2.22",
+  "productionRuntimeAdoption": {
+    "acceptedByUser": true,
+    "source": "project-maintained-release-offline-archive",
+    "version": "2.97.0-post021.ownerquery.2",
+    "sha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957",
+    "installation": "Existing explicit offline import; registry/default/daily sources unchanged",
+    "maintenance": "gzers/opencodex-desktop"
   }
 }

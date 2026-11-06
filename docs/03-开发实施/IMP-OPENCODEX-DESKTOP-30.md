@@ -6,10 +6,21 @@ state: "in_progress"
 completion_summary: null
 dmd_refs: ["DMD-OPENCODEX-POST021"]
 demand_ids: ["DMD-OPENCODEX-POST021"]
-task_ids: ["TASK-OPENCODEX-POST021-INTEGRATION-HARDWARE-20261105", "TASK-OPENCODEX-POST021-LOCAL-20261104", "TASK-OPENCODEX-POST021-CHANNELS-20261104", "TASK-OPENCODEX-POST021-CHANNEL-PROTOTYPE-20261104", "TASK-OPENCODEX-POST021-INTEGRATION-20261105", "TASK-OPENCODEX-POST021-WINDOWS-HUB-20261104", "TASK-OPENCODEX-POST021-WINDOWS-MATERIALS-20261104", "TASK-OPENCODEX-POST021-WINDOWS-PANEL-20261104", "TASK-OPENCODEX-POST021-WINDOWS-RESTART-20261104", "TASK-OPENCODEX-POST021-WINDOWS-RESTART-FEEDBACK-20261104", "TASK-OPENCODEX-POST021-WINDOWS-STICKY-20261104", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-20261105", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-PROBE-20261105", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-RENAME-PROBE-20261105", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-SYNC-PROBE-20261105"]
-summary: "Windows候选2托管安装、首次改名重启及保护验收已接收；相同产品源CI通过，生产运行包采用与最终发行门仍待。"
+task_ids: ["TASK-OPENCODEX-022-MAINTAINED-RELEASE-20261106"]
+summary: "已采用本项目维护运行包，修复发行冻结0.2.22；贡献及同源CI/原生通过，最终发行验收与发布进行中。"
 ---
 # 0.2.21发布后双线修复与集成发布计划
+
+## 2026-11-06 正式采用维护运行包并冻结0.2.22（当前决定）
+
+本次正式来源采用由后继任务TASK-OPENCODEX-022-MAINTAINED-RELEASE-20261106承接全部十项AC及最终发行门，替代旧TASK-OPENCODEX-POST021-INTEGRATION-HARDWARE-20261105的当前集成指派；原任务及冻结契约保持历史未完成状态，不伪写为通过。当前IMP任务集合只列后继的唯一验收归属，原贡献任务/接收证据与历史指派完整保留于原文和historical-imp-task-assignment.json。
+
+用户已明确“同意采用”本项目维护的修复运行包。正式交付采用已验的2.97.0-post021.ownerquery.2（15,406,072字节，SHA256 bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957），作为桌面Release独立可下载离线归档。保留预发布后缀和原始包体，清楚说明本项目维护、非上游正式版本；不上传npm、不覆盖上游版本、不公开上游PR。构建器从固定上游2.97.0原包与已审阅补丁复现同一归档，再签名/核验后发布。修订跟进、与上游后续合并及兼容性由本项目承担维护。
+
+用户仍通过现有“导入离线包”明确选择并确认安装；不静默改变日常来源或已装包，不自动迁移Key/配置。软件的离线包说明同步消除“仅官方包”误导，原流程/布局/准入与取消守卫保持；发布说明明确只有升级管理器不足以取得上游运行包修复。既有registry安装继续对应上游官方包。
+
+集成线按IMP-30 G4冻结未占用的新发行号0.2.22（发现版与原问题编号继续0.2.21）。运行包本次完整版本保持2.97.0-post021.ownerquery.2，不以桌面版号替换。后续完成草稿发行构建/实际运行包完整性和签名、桌面原安装/从0.2.21升级/更新清单/回退，全部必需证据到齐后统一发布；旧候选/局部证书不替代整版关闭。此前“不采用生产来源”的段落仅为历史，当前采用以本节为准。证据仍归integration-20261105/release-0.2.22-20261106/。
+
 
 ## 2026-11-06 Windows候选2接收与最终发布依赖（最新）
 

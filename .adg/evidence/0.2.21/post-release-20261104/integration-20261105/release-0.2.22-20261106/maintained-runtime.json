@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "maintainer": "gzers/opencodex-desktop",
+  "version": "2.97.0-post021.ownerquery.2",
+  "archive": "opencodex-2.97.0-post021.ownerquery.2.tgz",
+  "sha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957",
+  "bytes": 15406072,
+  "baseVersion": "2.97.0",
+  "baseGitHead": "cab7eb7d0332ae0ebb4289d7c6bac1de666b6e40",
+  "baseSha256": "3859a64198a05b0ebdbac0593b0cc6b675ec14f32b69ee100cda7a173404e552",
+  "installation": "explicit-offline-import",
+  "upstreamPublished": false,
+  "kind": "project-maintained-offline-runtime",
+  "source": "https://registry.npmjs.org/@bitkyc08%2fopencodex/2.97.0",
+  "patches": [
+    {
+      "file": "runtime-owner-dev-0a30c551.patch",
+      "sha256": "0d8eaaec8c361d914fb901db2c8ef6a36702ce3c7ec209cb3f255817f8e32bb7"
+    },
+    {
+      "file": "runtime-provider-reload-baseline.patch",
+      "sha256": "efe2dc2cce0f1d9b18b250cccf633e4b762ee7156bc6c5ef411e881acceecbf5"
+    }
+  ],
+  "runtimeFiles": {
+    "src/codex/desktop-app/windows.ts": "28ccd53fed43024f5c296319b40f399c6de387b5b5103de1dde64288414d53af",
+    "src/codex/app-server-processes.ts": "26eccdd713947e955e2e806f1932882b7044d62483344843ab8dd750c69bbd96",
+    "src/codex/windows-process-identity.ts": "aa3430263504f5c190c30e2937004ce0b8e3818ca6adc3b8842668436e93e322",
+    "src/config/live-reconcile.ts": "056c6ff1e783a80f52cdb51101bed4f64728f29a0eb152fdfbc86ddc8cc95c0d"
+  },
+  "changedFiles": [
+    "package.json",
+    "src/codex/app-server-processes.ts",
+    "src/codex/desktop-app/windows.ts",
+    "src/codex/windows-process-identity.ts",
+    "src/config/live-reconcile.ts",
+    "src/generated/compatibility-version.json"
+  ],
+  "originalCandidateIdentityRetained": true
+}

@@ -142,8 +142,8 @@
     },
     {
       "path": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/integration-audit/PRODUCTION-RUNTIME-DECISION.md",
-      "bytes": 2642,
-      "sha256": "b38fe15f8d60765873552d7f626fa747cac9a54f14e3585f89555f2ae5ee71cc"
+      "bytes": 2869,
+      "sha256": "14554e8dcc8c972a71265fcb0bd615290bcf410fef5c5281115c6f29aaf8f380"
     },
     {
       "path": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/integration-audit/ci-jobs.json",
@@ -632,5 +632,6 @@
     }
   ],
   "count": 126,
-  "scope": "All received originals and local audit files except this manifest; original manifest remains unchanged"
+  "scope": "All received originals and local audit files except this manifest; original manifest remains unchanged",
+  "adoptionUpdate": "Only locally authored decision note changed after explicit user adoption; all imported original Windows evidence bytes remain unchanged. Prior derived manifest preserved in release evidence."
 }

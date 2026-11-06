@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "mode": "prepare",
+  "result": "prepared-awaiting-parent-publication",
+  "from": "0.2.21",
+  "to": "0.2.22",
+  "channel": "existing production beta",
+  "container": "/private/tmp/ocx021-mac-ota-bdcea51f-6ed3-4e9a-a128-d32dee30237f",
+  "root": "/private/tmp/ocx021-mac-ota-bdcea51f-6ed3-4e9a-a128-d32dee30237f/root",
+  "environment": {
+    "PATH": "/usr/bin:/bin:/usr/sbin:/sbin",
+    "LANG": "en_US.UTF-8",
+    "USER": "ezio",
+    "LOGNAME": "ezio",
+    "HOME": "/private/tmp/ocx021-mac-ota-bdcea51f-6ed3-4e9a-a128-d32dee30237f/root/home",
+    "CFFIXED_USER_HOME": "/private/tmp/ocx021-mac-ota-bdcea51f-6ed3-4e9a-a128-d32dee30237f/root/home",
+    "TMP": "/private/tmp/ocx021-mac-ota-bdcea51f-6ed3-4e9a-a128-d32dee30237f/root/tmp",
+    "TEMP": "/private/tmp/ocx021-mac-ota-bdcea51f-6ed3-4e9a-a128-d32dee30237f/root/tmp",
+    "TMPDIR": "/private/tmp/ocx021-mac-ota-bdcea51f-6ed3-4e9a-a128-d32dee30237f/root/tmp/",
+    "CODEX_HOME": "/private/tmp/ocx021-mac-ota-bdcea51f-6ed3-4e9a-a128-d32dee30237f/root/home/.codex",
+    "OPENCODEX_HOME": "/private/tmp/ocx021-mac-ota-bdcea51f-6ed3-4e9a-a128-d32dee30237f/root/opencodex-home",
+    "XDG_CONFIG_HOME": "/private/tmp/ocx021-mac-ota-bdcea51f-6ed3-4e9a-a128-d32dee30237f/root/home/.config",
+    "XDG_CACHE_HOME": "/private/tmp/ocx021-mac-ota-bdcea51f-6ed3-4e9a-a128-d32dee30237f/root/home/.cache",
+    "OPENCODEX_SANDBOX": "1",
+    "OPENCODEX_SANDBOX_ROOT": "/private/tmp/ocx021-mac-ota-bdcea51f-6ed3-4e9a-a128-d32dee30237f/root",
+    "OPENCODEX_SANDBOX_BOUNDARY": "/private/tmp/ocx021-mac-ota-bdcea51f-6ed3-4e9a-a128-d32dee30237f"
+  },
+  "app": "/private/tmp/ocx021-mac-ota-bdcea51f-6ed3-4e9a-a128-d32dee30237f/installed/OpenCodeX Desktop.app",
+  "checks": [
+    {
+      "name": "baseline0.2.21-old-trust-signature",
+      "status": "pass",
+      "archiveSha256": "681e23f37f2c2cf52eb1d5dc409d988557fa0917afc42dd8c8a49eed302fd3c1",
+      "signatureSha256": "1772edb33c4aa9f35e84fdf4f80b52af89d4e0c73891792c298d995bf609b4f0",
+      "publicKeySource": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc"
+    },
+    {
+      "name": "baseline0.2.21-original-bundle",
+      "status": "pass",
+      "version": "0.2.21",
+      "embeddedSource": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "binarySha256": "275dface26a0d1ab483a67303eb30df3253f1f050163548c51289f1812b8457e",
+      "fileCount": 7,
+      "signature": "deep strict passed"
+    },
+    {
+      "name": "native-permissions",
+      "status": "pass",
+      "axTrusted": true,
+      "locked": false,
+      "onConsole": true,
+      "screenCaptureAllowed": true
+    },
+    {
+      "name": "direct-network-denied",
+      "status": "pass",
+      "allowedProductionTlsHosts": [
+        "api.github.com",
+        "github-releases.githubusercontent.com",
+        "github.com",
+        "objects.githubusercontent.com",
+        "release-assets.githubusercontent.com"
+      ],
+      "localTunnelPort": 60861,
+      "appTraffic": "Only real TLS CONNECT, no interception"
+    },
+    {
+      "name": "prepared-not-executed",
+      "status": "pass",
+      "baselineOriginal": "0.2.21/6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "freshRoot": "/private/tmp/ocx021-mac-ota-bdcea51f-6ed3-4e9a-a128-d32dee30237f/root",
+      "nativeHelperReusedUnmodified": true,
+      "betaNetworkQueried": false,
+      "appLaunched": false
+    },
+    {
+      "name": "owned-process-cleanup",
+      "status": "pass",
+      "remaining": [],
+      "oldAndAutomaticNewIncluded": true,
+      "daily80916SignalsSent": 0
+    },
+    {
+      "name": "baseline-original-remained-immutable",
+      "status": "pass",
+      "binarySha256": "275dface26a0d1ab483a67303eb30df3253f1f050163548c51289f1812b8457e"
+    }
+  ],
+  "otaExecuted": false,
+  "targetSource": null,
+  "publicationAuthorized": false,
+  "scriptSha256": "7096675a09e69f48435280168b88a9418416b2a2aeda5b70566cab91394d62e5",
+  "nativeHelperSha256": "83b125f54b1d0bb9280a96bb84907955276d8ff2991dd001abe908950b5a5eb1",
+  "monitorSha256": "cd4072b0a145a1441e542f9aeac16531f9a33a97ee67a18816e0017e5d37fa8f",
+  "startedAt": "2026-11-06T00:47:41.487401+00:00",
+  "methodOnlyReference": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/final-candidate-updates-20261104/macos-adjacent-ota/ota-result.json",
+  "sameVersionAcceptanceReuse": false,
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "finishedAt": "2026-11-06T00:47:47.667211+00:00"
+}

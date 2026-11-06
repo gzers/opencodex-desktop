@@ -67,6 +67,8 @@
 - **Latest (always the newest)**: <https://github.com/gzers/opencodex-desktop/releases/latest>
 - All releases and history: <https://github.com/gzers/opencodex-desktop/releases>
 
+Starting with 0.2.22, the release also provides the project-maintained `opencodex-2.97.0-post021.ownerquery.2.tgz` runtime, based on upstream 2.97.0 and identified as a separate revision. For the client restart and rename fixes, update the manager, then explicitly install this archive through “Install OpenCodex → Import offline package” and restart. Updating the manager does not replace the runtime; online installation still uses the official upstream package. Each release includes its full version, SHA256, signature and maintenance information.
+
 Artifacts are produced by GitHub Actions when a tag is pushed:
 
 | Platform | File | Notes |

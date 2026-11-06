@@ -1,0 +1,21 @@
+{
+  "codeCommit": "1b5c8402dc340540711efa2c2c2037bce673a479",
+  "runtimeRebuild": {
+    "result": "passed",
+    "sha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957",
+    "method": "Pinned original npm archive, verified hashes, apply only four runtime source paths from committed patches, deterministic existing builder; no temporary upstream checkout dependency"
+  },
+  "checks": {
+    "maintainedRuntimeSignatureAndPublicGuards": 9,
+    "existingPublisher": 29,
+    "frontendTypecheckBuild": "passed",
+    "focusedUiTests": 65,
+    "releaseAcceptanceAdmissionGuards": 9
+  },
+  "sourceTestOnlyFollowup": "df86a720f0140f801716e688da6e91a31e720395",
+  "live": {
+    "release": 42138917336,
+    "ci": 42138893326
+  },
+  "scope": "No public release, source switch, daily config write or real sync/inference yet"
+}
