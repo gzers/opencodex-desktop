@@ -17,9 +17,8 @@ use crate::modules::ipc::{IpcRequest, IpcResponse, MAX_IPC_FRAME_BYTES};
 
 pub const SOCKET_RELATIVE_PATH: &str = "ipc/opencodex.ipc";
 
-/// Windows named pipe 的稳定身份前缀。实际名称还包含当前账户的稳定摘要，
-/// 避免不同账户的客户端意外连接到同一个可见名称；访问控制仍由 named pipe
-/// 的创建者默认 DACL 和 reject_remote_clients 共同承担。
+/// Windows named pipe 身份由真实 TokenUser SID 派生。显式 DACL 限制连接，
+/// 服务端在执行业务前再次核对客户端 token；命名摘要不代替访问控制。
 #[cfg(any(windows, test))]
 const WINDOWS_PIPE_IDENTITY: &str = "OpenCodeXDesktop";
 
@@ -31,6 +30,7 @@ fn windows_pipe_identity(
 ) -> Result<String, AppError> {
     use sha2::{Digest, Sha256};
     let mut digest = Sha256::new();
+    digest.update(b"windows-user-sid-v2\0");
     digest.update(account.as_bytes());
     let identity = if sandbox_enabled {
         let root = sandbox_root
@@ -127,6 +127,7 @@ where
     })
 }
 
+#[cfg(unix)]
 async fn handle_stream<T, S>(mut stream: T, service: &mut S) -> Result<(), AppError>
 where
     T: AsyncRead + AsyncWrite + Unpin,
@@ -279,103 +280,130 @@ mod platform {
 #[cfg(windows)]
 mod platform {
     use super::*;
+    use crate::infrastructure::windows_startup_root::user_scope;
+    use std::os::windows::io::AsRawHandle;
     use tokio::net::windows::named_pipe::{NamedPipeServer, PipeMode, ServerOptions};
 
-    /// Named pipe 名称不使用 C/D 盘路径；默认 DACL 绑定创建者的 Windows
-    /// 安全边界，且服务端拒绝远程客户端。账户摘要只用于稳定区分同机账户。
+    fn fs_error(operation: &str, error: std::io::Error) -> AppError {
+        AppError::FileSystem {
+            operation: operation.into(),
+            detail: error.to_string(),
+        }
+    }
+
+    /// The process token SID is stable across sessions and same-account elevation;
+    /// no environment account name or caller-supplied data root selects daily IPC.
     pub fn pipe_name() -> Result<String, AppError> {
-        let account = std::env::var_os("USERNAME")
-            .map(|value| value.to_string_lossy().into_owned())
-            .unwrap_or_else(|| "unknown-user".to_string());
+        let sid =
+            user_scope::current_user_sid().map_err(|e| fs_error("resolve Windows IPC SID", e))?;
         windows_pipe_identity(
-            &account,
+            &sid,
             crate::modules::test_sandbox::enabled(),
             crate::modules::test_sandbox::sandbox_root().as_deref(),
         )
     }
 
     fn create_server(name: &str, first: bool) -> std::io::Result<NamedPipeServer> {
+        let security = user_scope::private_pipe_security()?;
+        let mut attributes = security.attributes();
         let mut options = ServerOptions::new();
         options
             .pipe_mode(PipeMode::Byte)
             .reject_remote_clients(true)
             .first_pipe_instance(first)
-            .max_instances(1);
-        options.create(name)
+            .max_instances(2);
+        // SAFETY: both the SECURITY_ATTRIBUTES and its descriptor are retained for
+        // CreateNamedPipeW; Windows copies them and no inheritable handle escapes.
+        unsafe {
+            options.create_with_security_attributes_raw(
+                name,
+                (&mut attributes as *mut windows_sys::Win32::Security::SECURITY_ATTRIBUTES).cast(),
+            )
+        }
     }
 
-    /// Windows named pipe 端点；每处理一个请求就创建下一个 server instance。
     pub struct IpcEndpoint {
         pipe_name: String,
         server: Option<NamedPipeServer>,
         pub requests_served: Arc<AtomicU64>,
     }
-
     impl IpcEndpoint {
         pub fn bind(_cache_root: &Path) -> Result<Self, AppError> {
             Self::bind_name(pipe_name()?)
         }
-
         fn bind_name(pipe_name: String) -> Result<Self, AppError> {
-            let server = create_server(&pipe_name, true).map_err(|error| AppError::FileSystem {
-                operation: "bind Windows IPC named pipe".to_string(),
-                detail: error.to_string(),
-            })?;
+            let server = create_server(&pipe_name, true)
+                .map_err(|e| fs_error("bind Windows IPC named pipe", e))?;
             Ok(Self {
                 pipe_name,
                 server: Some(server),
                 requests_served: Arc::new(AtomicU64::new(0)),
             })
         }
-
         pub fn endpoint_name(&self) -> &str {
             &self.pipe_name
         }
-
         pub async fn accept_once<S>(&mut self, service: &mut S) -> Result<u64, AppError>
         where
             S: crate::modules::ipc::service::IpcExecutor<serde_json::Value>,
         {
-            let server = self.server.take().ok_or(AppError::InstanceLockConflict)?;
-            server
-                .connect()
-                .await
-                .map_err(|error| AppError::FileSystem {
-                    operation: "accept Windows IPC named pipe".to_string(),
-                    detail: error.to_string(),
-                })?;
-            let result = handle_stream(server, service).await;
-            self.server = Some(create_server(&self.pipe_name, false).map_err(|error| {
-                AppError::FileSystem {
-                    operation: "rebind Windows IPC named pipe".to_string(),
-                    detail: error.to_string(),
-                }
-            })?);
+            let mut server = self.server.take().ok_or(AppError::InstanceLockConflict)?;
+            let result = async {
+                server
+                    .connect()
+                    .await
+                    .map_err(|e| fs_error("accept Windows IPC named pipe", e))?;
+                // ImpersonateNamedPipeClient authenticates the last data read.
+                // Bound parsing precedes identity, but business execution and any
+                // response follow it. No await happens under the client token.
+                let request = read_request(&mut server).await?;
+                user_scope::verify_pipe_client(server.as_raw_handle())
+                    .map_err(|e| fs_error("validate Windows IPC client SID", e))?;
+                let response = service.execute_ipc(request).await;
+                write_response(&mut server, &response).await
+            }
+            .await;
+            // Keep our authenticated namespace handle alive until its replacement
+            // exists. The old client may still be reading its response, so permit
+            // exactly one replacement instance instead of disconnecting/discarding
+            // unread bytes or dropping the namespace between requests.
+            let replacement = create_server(&self.pipe_name, false)
+                .map_err(|e| fs_error("rebind Windows IPC named pipe", e))?;
+            drop(server);
+            self.server = Some(replacement);
             result?;
             Ok(self.requests_served.fetch_add(1, Ordering::SeqCst) + 1)
         }
     }
-
     #[cfg(test)]
     mod tests {
         use super::*;
+        use crate::modules::ipc::{service::IpcService, IpcCommand};
         use tokio::net::windows::named_pipe::ClientOptions;
-
+        fn request() -> IpcRequest {
+            IpcRequest {
+                request_id: "req_00000000-0000-0000-0000-000000000001".into(),
+                command: IpcCommand::Status,
+                args: Default::default(),
+                confirm: false,
+                contract_version: 1,
+                secret: None,
+            }
+        }
         #[tokio::test]
-        async fn sandbox_pipes_bind_separately_and_reject_duplicate_owners() {
-            let first = tempfile::tempdir().unwrap();
-            let second = tempfile::tempdir().unwrap();
-            let first_name = windows_pipe_identity("test-user", true, Some(first.path())).unwrap();
-            let second_name =
-                windows_pipe_identity("test-user", true, Some(second.path())).unwrap();
-            let endpoint = IpcEndpoint::bind_name(first_name.clone()).unwrap();
-            let other = IpcEndpoint::bind_name(second_name).unwrap();
+        async fn isolated_pipes_reject_duplicate_owners_and_keep_real_token_identity() {
+            let a = tempfile::tempdir().unwrap();
+            let b = tempfile::tempdir().unwrap();
+            let sid = user_scope::current_user_sid().unwrap();
+            let name = windows_pipe_identity(&sid, true, Some(a.path())).unwrap();
+            let endpoint = IpcEndpoint::bind_name(name.clone()).unwrap();
+            let other =
+                IpcEndpoint::bind_name(windows_pipe_identity(&sid, true, Some(b.path())).unwrap())
+                    .unwrap();
             assert_ne!(endpoint.endpoint_name(), other.endpoint_name());
-            assert!(IpcEndpoint::bind_name(first_name.clone()).is_err());
-
-            // A real pipe connection proves that the isolated name is usable.
-            // No GUI instance or production account endpoint is started.
-            let client = ClientOptions::new().open(&first_name).unwrap();
+            assert!(IpcEndpoint::bind_name(name.clone()).is_err());
+            let client = ClientOptions::new().open(&name).unwrap();
+            user_scope::verify_pipe_server(client.as_raw_handle()).unwrap();
             tokio::time::timeout(
                 std::time::Duration::from_secs(2),
                 endpoint.server.as_ref().unwrap().connect(),
@@ -384,14 +412,141 @@ mod platform {
             .unwrap()
             .unwrap();
             drop(client);
-            drop(endpoint);
-            drop(other);
+        }
+        #[tokio::test]
+        async fn anonymous_peer_is_rejected_before_business_and_next_peer_still_works() {
+            let root = tempfile::tempdir().unwrap();
+            let sid = user_scope::current_user_sid().unwrap();
+            let name = windows_pipe_identity(&sid, true, Some(root.path())).unwrap();
+            let mut endpoint = IpcEndpoint::bind_name(name.clone()).unwrap();
+            struct NeverExecute;
+            #[async_trait::async_trait]
+            impl crate::modules::ipc::service::IpcExecutor<serde_json::Value> for NeverExecute {
+                async fn execute_ipc(&mut self, _: IpcRequest) -> IpcResponse<serde_json::Value> {
+                    panic!("unauthenticated request reached business execution")
+                }
+            }
+            let server = tokio::spawn(async move {
+                let error = endpoint.accept_once(&mut NeverExecute).await.unwrap_err();
+                assert!(
+                    matches!(error, AppError::FileSystem { ref operation, .. } if operation == "validate Windows IPC client SID")
+                );
+                assert_eq!(endpoint.requests_served.load(Ordering::SeqCst), 0);
+                {
+                    let mut thread_token = std::ptr::null_mut();
+                    let opened = unsafe {
+                        windows_sys::Win32::System::Threading::OpenThreadToken(
+                            windows_sys::Win32::System::Threading::GetCurrentThread(),
+                            windows_sys::Win32::Security::TOKEN_QUERY,
+                            1,
+                            &mut thread_token,
+                        )
+                    };
+                    if opened != 0 {
+                        unsafe {
+                            windows_sys::Win32::Foundation::CloseHandle(thread_token);
+                        }
+                        panic!("IPC validation left its worker impersonating the client");
+                    }
+                    assert_eq!(std::io::Error::last_os_error().raw_os_error(), Some(1008));
+                }
+                let mut service = IpcService::for_tests();
+                endpoint.accept_once(&mut service).await.unwrap();
+                assert_eq!(endpoint.requests_served.load(Ordering::SeqCst), 1);
+            });
+            let mut anonymous = ClientOptions::new()
+                .security_qos_flags(0)
+                .open(&name)
+                .unwrap();
+            let bytes = serde_json::to_vec(&request()).unwrap();
+            anonymous
+                .write_all(&(bytes.len() as u64).to_be_bytes())
+                .await
+                .unwrap();
+            anonymous.write_all(&bytes).await.unwrap();
+            let mut response = [0; 8];
+            let rejected = tokio::time::timeout(
+                std::time::Duration::from_secs(2),
+                anonymous.read(&mut response),
+            )
+            .await
+            .unwrap();
+            assert!(
+                matches!(rejected, Ok(0) | Err(_)),
+                "unauthenticated client received response bytes"
+            );
+            drop(anonymous);
+            let mut client = ClientOptions::new()
+                .security_qos_flags(0x10000)
+                .open(&name)
+                .unwrap();
+            client
+                .write_all(&(bytes.len() as u64).to_be_bytes())
+                .await
+                .unwrap();
+            client.write_all(&bytes).await.unwrap();
+            let size = client.read_u64().await.unwrap();
+            let mut bytes = vec![0; size as usize];
+            client.read_exact(&mut bytes).await.unwrap();
+            let response: IpcResponse<serde_json::Value> = serde_json::from_slice(&bytes).unwrap();
+            assert!(response.ok);
+            server.await.unwrap();
+        }
+        #[tokio::test]
+        async fn authenticated_request_and_reopen_preserve_wire_contract() {
+            let root = tempfile::tempdir().unwrap();
+            let sid = user_scope::current_user_sid().unwrap();
+            let name = windows_pipe_identity(&sid, true, Some(root.path())).unwrap();
+            let mut endpoint = IpcEndpoint::bind_name(name.clone()).unwrap();
+            let server = tokio::spawn(async move {
+                let mut service = IpcService::for_tests();
+                endpoint.accept_once(&mut service).await.unwrap();
+                endpoint.accept_once(&mut service).await.unwrap();
+                endpoint.requests_served.load(Ordering::SeqCst)
+            });
+            for _ in 0..2 {
+                let mut client = loop {
+                    match ClientOptions::new()
+                        .security_qos_flags(0x0011_0000)
+                        .open(&name)
+                    {
+                        Ok(client) => break client,
+                        Err(e) if e.raw_os_error() == Some(231) => tokio::task::yield_now().await,
+                        Err(e) => panic!("connect isolated pipe: {e}"),
+                    }
+                };
+                let bytes = serde_json::to_vec(&request()).unwrap();
+                client
+                    .write_all(&(bytes.len() as u64).to_be_bytes())
+                    .await
+                    .unwrap();
+                client.write_all(&bytes).await.unwrap();
+                let size = client.read_u64().await.unwrap();
+                let mut response = vec![0; size as usize];
+                client.read_exact(&mut response).await.unwrap();
+                let response: IpcResponse<serde_json::Value> =
+                    serde_json::from_slice(&response).unwrap();
+                assert!(response.ok);
+                assert_eq!(response.request_id, request().request_id);
+                drop(client);
+            }
+            assert_eq!(server.await.unwrap(), 2);
         }
     }
 }
 
 #[cfg(windows)]
 pub use platform::pipe_name;
+
+/// Authenticate a CLI connection before sending its first request. The shared
+/// CLI entrypoint owns the call; server-side identity checks are independent.
+#[cfg(windows)]
+pub fn verify_windows_server(file: &std::fs::File) -> std::io::Result<()> {
+    use std::os::windows::io::AsRawHandle;
+    crate::infrastructure::windows_startup_root::user_scope::verify_pipe_server(
+        file.as_raw_handle(),
+    )
+}
 #[cfg(unix)]
 pub use platform::socket_path;
 pub use platform::IpcEndpoint;
@@ -401,16 +556,16 @@ mod windows_identity_tests {
     use super::*;
 
     #[test]
-    fn daily_pipe_identity_is_unchanged_and_ignores_sandbox_root_without_opt_in() {
+    fn daily_identity_is_sid_scoped_and_independent_of_roots() {
         let root = tempfile::tempdir().unwrap();
-        let expected = r"\\.\pipe\OpenCodeXDesktop-f85ac825d102b9f2d546aa16";
+        let sid = "S-1-5-21-1-2-3-1001";
         assert_eq!(
-            windows_pipe_identity("test-user", false, None).unwrap(),
-            expected
+            windows_pipe_identity(sid, false, None).unwrap(),
+            windows_pipe_identity(sid, false, Some(root.path())).unwrap()
         );
-        assert_eq!(
-            windows_pipe_identity("test-user", false, Some(root.path())).unwrap(),
-            expected
+        assert_ne!(
+            windows_pipe_identity(sid, false, None).unwrap(),
+            windows_pipe_identity("S-1-5-21-1-2-3-1002", false, None).unwrap()
         );
     }
 
@@ -418,24 +573,29 @@ mod windows_identity_tests {
     fn sandbox_pipe_is_root_scoped_and_invalid_root_never_selects_daily_pipe() {
         let first = tempfile::tempdir().unwrap();
         let second = tempfile::tempdir().unwrap();
-        let daily = windows_pipe_identity("test-user", false, None).unwrap();
-        let isolated = windows_pipe_identity("test-user", true, Some(first.path())).unwrap();
+        let daily = windows_pipe_identity("S-1-5-21-1-2-3-1001", false, None).unwrap();
+        let isolated =
+            windows_pipe_identity("S-1-5-21-1-2-3-1001", true, Some(first.path())).unwrap();
         assert_ne!(isolated, daily);
         assert!(isolated.starts_with(r"\\.\pipe\OpenCodeXDesktop-Sandbox-"));
         assert_ne!(
             isolated,
-            windows_pipe_identity("test-user", true, Some(second.path())).unwrap()
+            windows_pipe_identity("S-1-5-21-1-2-3-1001", true, Some(second.path())).unwrap()
         );
         assert_eq!(
             isolated,
-            windows_pipe_identity("test-user", true, Some(&first.path().join("."))).unwrap()
+            windows_pipe_identity("S-1-5-21-1-2-3-1001", true, Some(&first.path().join(".")))
+                .unwrap()
         );
         for invalid in [None, Some(Path::new("relative"))] {
-            assert!(windows_pipe_identity("test-user", true, invalid).is_err());
+            assert!(windows_pipe_identity("S-1-5-21-1-2-3-1001", true, invalid).is_err());
         }
-        assert!(
-            windows_pipe_identity("test-user", true, Some(&first.path().join("missing"))).is_err()
-        );
+        assert!(windows_pipe_identity(
+            "S-1-5-21-1-2-3-1001",
+            true,
+            Some(&first.path().join("missing"))
+        )
+        .is_err());
     }
 }
 

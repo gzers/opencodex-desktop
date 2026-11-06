@@ -693,3 +693,87 @@ fn node_measurement_uses_explicit_kind_and_only_acknowledged_node_ids() {
         matches!(prepare_measurements_with_store(&root,&home,request,&FakeDraftCredentials::default()),Err(e)if e.code=="model_node_credential_unconfirmed")
     );
 }
+
+#[test]
+fn existing_revision_default_and_delete_use_exact_dependencies_without_latest_fallback() {
+    let (_t, root, home) = fixture(raw());
+    let original = library_snapshot(&root, &home).unwrap();
+    let id = uuid::Uuid::new_v4().to_string();
+    let rev = uuid::Uuid::new_v4().to_string();
+    let library = save_revision(
+        &root,
+        &home,
+        &SaveRevisionRequestV2 {
+            expected_library: original.digests.library,
+            template_id: id.clone(),
+            base_revision: None,
+            revision_id: rev.clone(),
+            created_at: chrono::Utc::now().to_rfc3339(),
+            label: "user template".into(),
+            content: original.library.templates[0].revisions[0].content.clone(),
+            make_default: false,
+            origin: crate::modules::model_config::schema::SaveOrigin::Manual,
+        },
+    )
+    .unwrap();
+    let reference = RefV2 {
+        template_id: id.clone(),
+        revision_id: rev.clone(),
+        digest: library
+            .templates
+            .iter()
+            .find(|t| t.id == id)
+            .unwrap()
+            .revisions[0]
+            .digest
+            .clone(),
+    };
+    let library = change_library(
+        &root,
+        &home,
+        LibraryChangeV2 {
+            expected_library: digest(&canonical_bytes(&library).unwrap()),
+            intent: LibraryIntentV2::SetDefault {
+                reference: reference.clone(),
+            },
+        },
+    )
+    .unwrap();
+    let usage = template_usage(&root, &home, &id, &rev).unwrap();
+    assert!(usage.is_default);
+    assert!(usage.references.is_empty());
+    assert!(change_library(
+        &root,
+        &home,
+        LibraryChangeV2 {
+            expected_library: digest(&canonical_bytes(&library).unwrap()),
+            intent: LibraryIntentV2::DeleteRevisions {
+                template_id: id.clone(),
+                revision_ids: vec![rev.clone()]
+            }
+        }
+    )
+    .is_err());
+    let library = change_library(
+        &root,
+        &home,
+        LibraryChangeV2 {
+            expected_library: digest(&canonical_bytes(&library).unwrap()),
+            intent: LibraryIntentV2::ClearDefault { reference },
+        },
+    )
+    .unwrap();
+    let library = change_library(
+        &root,
+        &home,
+        LibraryChangeV2 {
+            expected_library: digest(&canonical_bytes(&library).unwrap()),
+            intent: LibraryIntentV2::DeleteRevisions {
+                template_id: id.clone(),
+                revision_ids: vec![rev],
+            },
+        },
+    )
+    .unwrap();
+    assert!(!library.templates.iter().any(|t| t.id == id));
+}

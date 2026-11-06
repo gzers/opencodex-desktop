@@ -1109,6 +1109,13 @@ fn inherit_receipts(
             r.revision_id
         ]))?;
     }
+    // Selecting a revision is not authority to date/adopt template metadata.
+    // This API currently has only one explicit metadata adoption operation:
+    // adopt_template_defaults. Other/new template meta stays unknown.
+    for r in &s.adopt_template_defaults {
+        allow(serde_json::json!(["v2-template-meta", r.template_id]))?;
+    }
+
     if !s.channels.is_empty() || s.include_global_template_refs {
         allow(serde_json::json!(["v2-global"]))?;
     }

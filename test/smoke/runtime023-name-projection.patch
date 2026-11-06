@@ -1,0 +1,88 @@
+--- a/src/codex/catalog/derive-entry.ts
++++ b/src/codex/catalog/derive-entry.ts
+@@ -66,12 +66,22 @@
+  * collision suppressed it and the canonical slug stands. This is the raw-slug path only -- a
+  * configured `modelAliases` entry is labeled by the effective-alias path in
+  * catalog/provider-fetch.ts (#2960) and keeps the canonical provider name. All other providers
+- * keep the raw slug exactly as before.
++ * keep the raw slug unless a persisted channel display name was captured. Explicit
++ * aliases and later model display-name overrides retain their existing precedence.
+  */
+ function routedDisplayName(slug: string, model?: CatalogModel, config?: Pick<OcxConfig, "providers">): string {
+   const slash = slug.indexOf("/");
+   if (slash <= 0) return slug;
+   const provider = slug.slice(0, slash);
++  // Apply only to an ordinary canonical routed row. A name may contain Unicode,
++  // spaces or slashes; neither it nor the original wire id is used to rewrite slug.
++  const channelName = model?.providerDisplayName;
++  // A null decision also owns the canonical label after alias collision suppression.
++  const hasProviderAlias = model?.providerAlias !== undefined;
++  if (channelName && model && model.provider === provider && model.provider !== COMBO_NAMESPACE
++    && !model.alias && !model.nativeAlias && !hasProviderAlias) {
++    return `${channelName}/${model.id}`;
++  }
+   let modelId = slug.slice(slash + 1);
+   if (provider === "google-antigravity") {
+     if (model?.providerAlias === null) return slug;
+--- a/src/codex/catalog/gather-capture.ts
++++ b/src/codex/catalog/gather-capture.ts
+@@ -546,6 +546,7 @@
+     models: [...(prov.models ?? [])].sort(),
+     retain: [...(prov.retainModels ?? [])].sort(),
+     selected: [...(prov.selectedModels ?? [])].sort(),
++    providerDisplayName: typeof prov.name === "string" ? prov.name.trim() : null,
+     displayNames: prov.modelDisplayNames ?? null,
+     defaultModel: prov.defaultModel ?? null,
+     ctx: prov.contextWindow ?? null,
+--- a/src/codex/catalog/model-hints.ts
++++ b/src/codex/catalog/model-hints.ts
+@@ -300,6 +300,11 @@
+     ...(effectiveAlias !== undefined ? { effectiveAlias } : {}),
+   });
+   const displayName = configuredModelDisplayName(prov, model.id);
++  // Official OpenAI surfaces keep their native naming contract. Names are presentation
++  // data from the captured provider, never identifiers and never discovered metadata.
++  const providerDisplayName = name !== OPENAI_CODEX_PROVIDER_ID && name !== OPENAI_API_PROVIDER_ID
++    && name !== COMBO_NAMESPACE && typeof prov.name === "string" && prov.name.trim()
++    ? prov.name.trim() : undefined;
+   // The alias decision is resolved once at flight admission (captureProviderGather) and threaded
+   // through as `effectiveAlias`. Re-deriving it here would read PROVIDER_REGISTRY after admission,
+   // which is exactly the authority leak tests/codex-integration/codex-gather-authority.test.ts
+@@ -352,6 +357,7 @@
+     supportsUltraFastTier: _staleUltraFastTier,
+     supportsFlexTier: _staleFlexTier,
+     fastTierDescription: _staleFastTierDescription,
++    providerDisplayName: _staleProviderDisplayName,
+     providerAlias: _staleProviderAlias,
+     suppressSyntheticMax: _staleSuppressSyntheticMax,
+     supportsReasoning: _staleSupportsReasoning,
+@@ -382,6 +388,7 @@
+       ? { contextCap: previousContextCap, contextCapped: previousContextCapped } : {}),
+     ...(inferredWindow ? { contextWindowInference: inferredWindow } : {}),
+     ...(displayName !== undefined ? { displayName } : {}),
++    ...(providerDisplayName !== undefined ? { providerDisplayName } : {}),
+     ...(providerAlias !== undefined ? { providerAlias } : {}),
+     ...(hintedWindow !== undefined ? { contextWindow: hintedWindow } : {}),
+     ...(inputModalities ? { inputModalities } : {}),
+--- a/src/codex/catalog/parsing.ts
++++ b/src/codex/catalog/parsing.ts
+@@ -84,6 +84,8 @@
+ export interface CatalogModel {
+   id: string;
+   provider: string;
++  /** Current persisted channel label, used only for the default routed picker name. */
++  providerDisplayName?: string;
+   /** Canonical or configured short alias for the provider segment. */
+   providerAlias?: string | null;
+   /** Public Codex-facing slug override (used by combo aliases). */
+--- a/src/types/provider.ts
++++ b/src/types/provider.ts
+@@ -307,6 +307,8 @@
+   anthropicAccountPool?: AnthropicAccountPoolConfig;
+   /** Optional browser-compatible outbound TLS profile; disabled by default. */
+   tlsProfile?: "antigravity-browser";
++  /** Persisted display-only channel name; never a provider key or routing alias. */
++  name?: string;
+   /** Optional short provider namespace used only at request/catalog presentation time. */
+   alias?: string;
+   /** Native model id -> short, slash-free request alias. */

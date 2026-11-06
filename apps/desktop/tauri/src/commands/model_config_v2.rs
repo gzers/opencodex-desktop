@@ -482,3 +482,244 @@ pub async fn model_v2_measure_nodes(
             err
         })
 }
+
+#[tauri::command]
+pub async fn model_v2_change_library(
+    request: crate::modules::model_config::config_file::v2::LibraryChangeV2,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<LibraryResponseV2> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        true,
+        move |root, home| {
+            let library =
+                crate::modules::model_config::config_file::v2::change_library(root, home, request)?;
+            let library_digest = digest(&canonical_bytes(&library)?);
+            Ok(LibraryResponseV2 {
+                dto_version: 2,
+                library,
+                library_digest,
+            })
+        },
+    )
+    .await
+}
+#[tauri::command]
+pub async fn model_v2_template_usage(
+    template_id: String,
+    revision_id: String,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::template_ops_v2::UsageReportV2> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        false,
+        move |root, home| {
+            crate::modules::model_config::config_file::v2::template_usage(
+                root,
+                home,
+                &template_id,
+                &revision_id,
+            )
+        },
+    )
+    .await
+}
+
+#[tauri::command]
+pub async fn model_v2_execution_directory(
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::execution_directory_v2::ExecutionDirectoryV2> {
+    let root = data_root.0.clone();
+    let context = context.inner().clone();
+    let saved = {
+        let c = context.clone();
+        tauri::async_runtime::spawn_blocking(move || {
+            crate::modules::model_config::execution_directory_v2::capture_saved(&root, &c)
+        })
+        .await
+        .map_err(|_| error("model_execution_unavailable"))??
+    };
+    let live = crate::modules::model_config::upstream::snapshot(&context)
+        .await
+        .map_err(|e| error(&e.code))?;
+    crate::modules::model_config::execution_directory_v2::build(&saved, &live)
+}
+#[tauri::command]
+pub async fn model_v2_bind_agent(
+    settings: crate::modules::model_config::agent::AgentSettings,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::agent::AgentSettings> {
+    let root = data_root.0.clone();
+    let context = context.inner().clone();
+    let saved = {
+        let r = root.clone();
+        let c = context.clone();
+        tauri::async_runtime::spawn_blocking(move || {
+            crate::modules::model_config::execution_directory_v2::capture_saved(&r, &c)
+        })
+        .await
+        .map_err(|_| error("model_execution_unavailable"))??
+    };
+    let live = crate::modules::model_config::upstream::snapshot(&context)
+        .await
+        .map_err(|e| error(&e.code))?;
+    let bound =
+        crate::modules::model_config::execution_directory_v2::bind(&saved, &live, settings)?;
+    let settings = bound.settings().clone();
+    file_work(
+        root,
+        context.opencodex_home.clone(),
+        true,
+        move |root, _| {
+            crate::modules::model_config::agent::save_settings(root, settings)
+                .map_err(|e| error(&e.code))
+        },
+    )
+    .await
+}
+#[tauri::command]
+pub async fn model_v2_agent_prepare(
+    request: crate::modules::model_config::agent_runtime_v2::GenerateIntentV2,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::agent_runtime_v2::RunTicketV2> {
+    let context = context.inner().clone();
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        true,
+        move |root, _| {
+            crate::modules::model_config::agent_runtime_v2::prepare_run(root, &context, request)
+        },
+    )
+    .await
+}
+#[tauri::command]
+pub async fn model_v2_agent_generate(
+    run_id: String,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::agent_runtime_v2::GeneratedReviewV2> {
+    let _admission = crate::infrastructure::storage_writers::global()
+        .admit()
+        .map_err(|_| error("model_storage"))?;
+    crate::modules::model_config::agent_runtime_v2::generate(&data_root.0, &context, &run_id).await
+}
+#[tauri::command]
+pub fn model_v2_agent_stop(run_id: String) -> Result<()> {
+    crate::modules::model_config::agent_runtime_v2::stop(&run_id)
+}
+#[tauri::command]
+pub async fn model_v2_agent_latest(
+    template_id: Option<String>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<Option<crate::modules::model_config::agent_runtime_v2::GeneratedReviewV2>> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        false,
+        move |root, _| {
+            crate::modules::model_config::agent_runtime_v2::latest(root, template_id.as_deref())
+        },
+    )
+    .await
+}
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct AcceptAgentV2 {
+    pub run_id: String,
+    pub expected_library: String,
+    pub reviewed_response: String,
+}
+#[tauri::command]
+pub async fn model_v2_agent_accept(
+    request: AcceptAgentV2,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::agent_runtime_v2::GeneratedReviewV2> {
+    let context = context.inner().clone();
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        true,
+        move |root, home| {
+            let response_digest = digest(request.reviewed_response.as_bytes());
+            if let Ok(receipt) = crate::modules::model_config::agent_runtime_v2::mark_accepted(
+                root,
+                &context,
+                &request.run_id,
+                &response_digest,
+            ) {
+                return Ok(receipt);
+            }
+            let plan = crate::modules::model_config::agent_runtime_v2::prepare_accept(
+                root,
+                &context,
+                &request.run_id,
+                &request.expected_library,
+                request.reviewed_response.as_bytes(),
+            )?;
+            crate::modules::model_config::config_file::v2::accept_agent_library(root, home, &plan)?;
+            crate::modules::model_config::agent_runtime_v2::mark_accepted(
+                root,
+                &context,
+                &request.run_id,
+                &plan.response_digest,
+            )
+        },
+    )
+    .await
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct BufferRequestV2 {
+    pub target: Option<RefV2>,
+    pub label: String,
+    pub content: TemplateContentV2,
+    pub generation: u64,
+}
+#[tauri::command]
+pub async fn model_v2_agent_buffer(
+    request: BufferRequestV2,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::agent_runtime_v2::EditingBufferV2> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        false,
+        move |root, home| {
+            let state =
+                crate::modules::model_config::config_file::v2::library_snapshot(root, home)?;
+            if request.label.trim().is_empty() || request.label.len() > 1024 {
+                return Err(error("model_source_invalid"));
+            }
+            matching_v2::validate_content_v2(&request.content)?;
+            if let Some(reference) = &request.target {
+                let saved = revision(&state.library, reference)?;
+                crate::modules::model_config::schema_v2::validate_editing_buffer_v2(
+                    Some(&saved.content),
+                    &request.content,
+                )?;
+            }
+            let mut buffer = crate::modules::model_config::agent_runtime_v2::EditingBufferV2 {
+                target: request.target,
+                label: request.label,
+                content: request.content,
+                digest: String::new(),
+                generation: request.generation,
+            };
+            buffer.digest = crate::modules::model_config::agent_runtime_v2::buffer_digest(&buffer)?;
+            Ok(buffer)
+        },
+    )
+    .await
+}

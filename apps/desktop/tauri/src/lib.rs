@@ -210,6 +210,7 @@ pub fn run() {
             let runtime_executable: crate::infrastructure::runtime_executable::SharedRuntimeExecutable =
                 runtime.clone();
             app.manage(runtime.clone());
+
             // 托管安装 / 卸载的进行态（取消 + 同一时刻只允许一个写者）。
             let runtime_install = crate::state::SharedRuntimeInstall::new();
             app.manage(runtime_install.clone());
@@ -579,6 +580,16 @@ pub fn run() {
             commands::model_config_v2::model_v2_stage_credential,
             commands::model_config_v2::model_v2_credential_view,
             commands::model_config_v2::model_v2_measure_nodes,
+            commands::model_config_v2::model_v2_change_library,
+            commands::model_config_v2::model_v2_template_usage,
+            commands::model_config_v2::model_v2_execution_directory,
+            commands::model_config_v2::model_v2_bind_agent,
+            commands::model_config_v2::model_v2_agent_prepare,
+            commands::model_config_v2::model_v2_agent_buffer,
+            commands::model_config_v2::model_v2_agent_generate,
+            commands::model_config_v2::model_v2_agent_stop,
+            commands::model_config_v2::model_v2_agent_latest,
+            commands::model_config_v2::model_v2_agent_accept,
             commands::model_config::model_file_snapshot,
             commands::model_config::model_file_save,
             commands::model_config::model_file_credential,

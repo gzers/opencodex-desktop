@@ -555,6 +555,99 @@ pub fn seed_library_v2() -> Result<LibraryV2> {
     Ok(library)
 }
 
+/// Pure shared Agent lock checker. It never creates a revision or relaxes
+/// the root/condition lock sets. Call content validation before this function.
+pub fn validate_agent_locks_v2(old: &TemplateContentV2, after: &TemplateContentV2) -> Result<()> {
+    let old_json = serde_json::to_value(old).map_err(json_error)?;
+    let new_json = serde_json::to_value(after).map_err(json_error)?;
+    for locked in &old.locked_fields {
+        let path = if locked == "rules" {
+            "/commonRules".into()
+        } else if locked == "variants" {
+            "/conditionOverrides".into()
+        } else if let Some(key) = locked.strip_prefix("rules.") {
+            format!("/commonRules/{key}")
+        } else {
+            format!("/{}", locked.replace('.', "/"))
+        };
+        if old_json.pointer(&path) != new_json.pointer(&path) {
+            return Err(error("model_locked_field"));
+        }
+    }
+    for condition in &old.condition_overrides {
+        if condition.locked_fields.is_empty() {
+            continue;
+        }
+        let next = after
+            .condition_overrides
+            .iter()
+            .find(|c| c.id == condition.id)
+            .ok_or_else(|| error("model_locked_field"))?;
+        let old = rules_values(&condition.rules)?;
+        let new = rules_values(&next.rules)?;
+        if condition
+            .locked_fields
+            .iter()
+            .any(|key| old.get(key) != new.get(key))
+            || next.locked_fields != condition.locked_fields
+        {
+            return Err(error("model_locked_field"));
+        }
+    }
+    if after.locked_fields != old.locked_fields {
+        return Err(error("model_locked_field"));
+    }
+    Ok(())
+}
+
+/// Validate a human editing baseline against the exact saved content. Only
+/// additional locks are trusted; all previously protected values remain fixed.
+pub fn validate_editing_buffer_v2(
+    saved: Option<&TemplateContentV2>,
+    buffer: &TemplateContentV2,
+) -> Result<()> {
+    super::matching_v2::validate_content_v2(buffer)?;
+    let Some(saved) = saved else {
+        return Ok(());
+    };
+    if !saved.locked_fields.is_subset(&buffer.locked_fields) {
+        return Err(error("model_locked_field"));
+    }
+    let mut view = buffer.clone();
+    view.locked_fields = saved.locked_fields.clone();
+    for condition in &mut view.condition_overrides {
+        let prior = saved
+            .condition_overrides
+            .iter()
+            .find(|c| c.id == condition.id);
+        if prior.is_some_and(|p| !p.locked_fields.is_subset(&condition.locked_fields)) {
+            return Err(error("model_locked_field"));
+        }
+        condition.locked_fields = prior.map(|p| p.locked_fields.clone()).unwrap_or_default();
+    }
+    validate_agent_locks_v2(saved, &view)
+}
+/// The response cannot acquire lock authority, including on a previously
+/// unlocked or newly added condition. Values use the original shared checker.
+pub fn validate_buffer_proposal_locks_v2(
+    buffer: &TemplateContentV2,
+    after: &TemplateContentV2,
+) -> Result<()> {
+    validate_agent_locks_v2(buffer, after)?;
+    for condition in &after.condition_overrides {
+        let old = buffer
+            .condition_overrides
+            .iter()
+            .find(|c| c.id == condition.id);
+        if old.map(|c| &c.locked_fields) != Some(&condition.locked_fields)
+            && !(old.is_none() && condition.locked_fields.is_empty())
+        {
+            return Err(error("model_locked_field"));
+        }
+    }
+    Ok(())
+}
+
 /// Immutable revision append plan; IDs and time are supplied by the transaction owner.
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -572,6 +665,28 @@ pub struct SaveRevisionRequestV2 {
 pub fn save_revision_plan_v2(
     library: &LibraryV2,
     request: &SaveRevisionRequestV2,
+) -> Result<LibraryV2> {
+    save_revision_plan_inner_v2(library, request, None)
+}
+/// Backend-only human baseline, never supplied by the model response. The
+/// original library and exact saved parent remain untouched.
+pub fn save_revision_plan_with_buffer_v2(
+    library: &LibraryV2,
+    request: &SaveRevisionRequestV2,
+    trusted_buffer: &TemplateContentV2,
+) -> Result<LibraryV2> {
+    if !matches!(
+        request.origin,
+        super::schema::SaveOrigin::InternalAgent(_) | super::schema::SaveOrigin::ExternalTask(_)
+    ) {
+        return Err(error("model_agent_target_scope"));
+    }
+    save_revision_plan_inner_v2(library, request, Some(trusted_buffer))
+}
+fn save_revision_plan_inner_v2(
+    library: &LibraryV2,
+    request: &SaveRevisionRequestV2,
+    trusted_buffer: Option<&TemplateContentV2>,
 ) -> Result<LibraryV2> {
     validate_library_v2(library)?;
     if request.expected_library != digest(&canonical_bytes(library)?) {
@@ -614,46 +729,18 @@ pub fn save_revision_plan_v2(
                 .find(|r| Some(&r.id) == request.base_revision.as_ref())
                 .unwrap()
                 .content;
-            let old_json = serde_json::to_value(old).map_err(json_error)?;
-            let new_json = serde_json::to_value(&request.content).map_err(json_error)?;
-            for locked in &old.locked_fields {
-                let path = if locked == "rules" {
-                    "/commonRules".into()
-                } else if locked == "variants" {
-                    "/conditionOverrides".into()
-                } else if let Some(key) = locked.strip_prefix("rules.") {
-                    format!("/commonRules/{key}")
-                } else {
-                    format!("/{}", locked.replace('.', "/"))
-                };
-                if old_json.pointer(&path) != new_json.pointer(&path) {
-                    return Err(error("model_locked_field"));
-                }
+            if let Some(buffer) = trusted_buffer {
+                validate_editing_buffer_v2(Some(old), buffer)?;
+                validate_buffer_proposal_locks_v2(buffer, &request.content)?;
+            } else {
+                validate_agent_locks_v2(old, &request.content)?;
             }
-            for condition in &old.condition_overrides {
-                if condition.locked_fields.is_empty() {
-                    continue;
-                }
-                let next = request
-                    .content
-                    .condition_overrides
-                    .iter()
-                    .find(|c| c.id == condition.id)
-                    .ok_or_else(|| error("model_locked_field"))?;
-                let old = rules_values(&condition.rules)?;
-                let new = rules_values(&next.rules)?;
-                if condition
-                    .locked_fields
-                    .iter()
-                    .any(|key| old.get(key) != new.get(key))
-                    || next.locked_fields != condition.locked_fields
-                {
-                    return Err(error("model_locked_field"));
-                }
-            }
-            if request.content.locked_fields != old.locked_fields {
-                return Err(error("model_locked_field"));
-            }
+        }
+    }
+    if existing.is_none() {
+        if let Some(buffer) = trusted_buffer {
+            validate_editing_buffer_v2(None, buffer)?;
+            validate_buffer_proposal_locks_v2(buffer, &request.content)?;
         }
     }
     let prior = existing.and_then(|t| {
