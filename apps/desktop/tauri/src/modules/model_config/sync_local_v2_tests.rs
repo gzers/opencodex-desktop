@@ -1568,3 +1568,70 @@ fn mapped_non_model_absence_is_frozen_by_real_helper_not_inferred_from_empty_cap
     assert_eq!(std::fs::read(host.manager_path(OP)).unwrap(), manager);
     assert_eq!(m.f.models.applies.load(SeqCst), 0);
 }
+
+#[test]
+fn local_model_journal_witness_is_read_only_and_does_not_claim_applied() {
+    let m = MappedFixture::new(true);
+    let host = m.host().unwrap();
+    m.f.models.cut_after_apply.store(true, SeqCst);
+    assert!(m.f.apply(&host).is_err());
+    let j = host.load(OP).unwrap().unwrap();
+    assert_eq!(j.progress, LocalProgressV2::Protected);
+    let handle = j.model.unwrap();
+    // A local witness is still only journal context when the independent
+    // participant receipt is unavailable. Identity restore needs the REAL proof.
+    std::fs::remove_file(m.f.models.receipt(OP)).unwrap();
+    let before = std::fs::read(host.path(OP).unwrap()).unwrap();
+    let witness =
+        LocalApplicationV2::local_model_journal_proof(&m.f.d, &m.f.h, OP, &handle).unwrap();
+    assert_eq!(witness.binding_digest(), m.binding.digest);
+    assert_eq!(witness.operation_id(), OP);
+    witness.verify_current().unwrap();
+    assert_eq!(std::fs::read(host.path(OP).unwrap()).unwrap(), before);
+    let wrong = ModelApplyPlanHandle::new(hash(b"other plan")).unwrap();
+    assert!(LocalApplicationV2::local_model_journal_proof(&m.f.d, &m.f.h, OP, &wrong).is_err());
+    assert!(
+        LocalApplicationV2::local_model_journal_proof(&m.f.d, &m.f.h, EXPORT, &handle).is_err()
+    );
+    assert!(!host.path(EXPORT).unwrap().exists());
+}
+
+#[test]
+fn local_model_witness_rejects_corruption_wrong_home_and_changed_original_context() {
+    let m = MappedFixture::new(true);
+    let host = m.host().unwrap();
+    m.f.models.cut_after_apply.store(true, SeqCst);
+    assert!(m.f.apply(&host).is_err());
+    let j = host.load(OP).unwrap().unwrap();
+    let handle = j.model.as_ref().unwrap().clone();
+    let witness =
+        LocalApplicationV2::local_model_journal_proof(&m.f.d, &m.f.h, OP, &handle).unwrap();
+    let before = std::fs::read(host.path(OP).unwrap()).unwrap();
+    let other_home = m.f._temp.path().join("other-H");
+    std::fs::create_dir(&other_home).unwrap();
+    assert!(
+        LocalApplicationV2::local_model_journal_proof(&m.f.d, &other_home, OP, &handle).is_err()
+    );
+    let mut corrupt = before.clone();
+    corrupt.push(10);
+    atomic_write(&host.path(OP).unwrap(), &corrupt, 0o600).unwrap();
+    assert!(LocalApplicationV2::local_model_journal_proof(&m.f.d, &m.f.h, OP, &handle).is_err());
+    atomic_write(&host.path(OP).unwrap(), &before, 0o600).unwrap();
+    let mut changed = host.load(OP).unwrap().unwrap();
+    changed.expected_target = hash(b"new baseline forbidden");
+    host.save(changed).unwrap();
+    assert!(witness.verify_current().is_err());
+    atomic_write(&host.path(OP).unwrap(), &before, 0o600).unwrap();
+    witness.verify_current().unwrap();
+    #[cfg(unix)]
+    {
+        let path = host.path(OP).unwrap();
+        std::fs::remove_file(&path).unwrap();
+        let outside = m.f._temp.path().join("outside-journal");
+        atomic_write(&outside, &before, 0o600).unwrap();
+        std::os::unix::fs::symlink(&outside, &path).unwrap();
+        assert!(
+            LocalApplicationV2::local_model_journal_proof(&m.f.d, &m.f.h, OP, &handle).is_err()
+        );
+    }
+}
