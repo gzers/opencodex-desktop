@@ -1,9 +1,9 @@
 //! Authoritative v2 draft/config boundary. Raw providers never cross IPC.
+#[path = "model_receive_file_v2.rs"]
+pub mod receive;
 #[cfg(test)]
 #[path = "config_file_v2_tests.rs"]
 mod tests;
-#[path="model_receive_file_v2.rs"]
-pub mod receive;
 use crate::modules::model_config::{
     compiler_v2, matching_v2,
     protocol_groups::{self, MappingFileV2, RuntimeMappingV2},
@@ -671,44 +671,9 @@ fn auth_bindings(raw: &Value, policy: &PolicyV2) -> Result<Vec<ProtocolAuthBindi
         })
         .collect()
 }
-pub fn save(root: &Path, home: &Path, request: SaveRequestV2) -> Result<FileSnapshotV2> {
-    save_with_credentials(root, home, request, &SystemDraftCredentialsV2)
-}
-pub fn save_with_credentials(
-    root: &Path,
-    home: &Path,
-    request: SaveRequestV2,
-    vault: &dyn DraftCredentialStoreV2,
-) -> Result<FileSnapshotV2> {
-    use crate::modules::model_config::model_transaction_v2::{self, TargetV2, WriteV2};
-    let _versions = crate::modules::model_config::content_versions::file_saves::admit(root, home)
-        .map_err(io)?;
-    let _rename = super::channel_rename::admit(root, home).map_err(io)?;
-    let _config = TargetFileLock::lock(&home.join("config.json")).map_err(io)?;
-    let store = StoreV2::new(root);
-    let locked = store.lock()?;
-    {
-        let _recovery_versions =
-            crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
-        recover_model_transactions(root, home)?;
-    }
-    let state = locked.snapshot_unlocked()?;
-    let (mut raw, bytes) = read_raw(home)?;
-    let original_config = raw.clone();
-    let source = source_digest(&bytes);
-    let revision = root_revision(root, home)?;
-    let draft = state
-        .draft
-        .as_ref()
-        .ok_or_else(|| error("model_save_stale"))?;
-    if draft.base != request.expected
-        || source != request.expected.source_digest
-        || state.digests.library != request.expected.library_digest
-        || revision != request.expected.root_revision
-        || policy_semantic_digest_v2(&state.policy)? != request.expected.policy_digest
-    {
-        return Err(error("model_save_stale"));
-    }
+// Shared pure draft transformations. The save path keeps its original guards,
+// credential handling and transaction order; read-only children reuse these.
+fn validate_save_scope_v2(request: &SaveRequestV2) -> Result<()> {
     if let Some(scope) = &request.scope_channel_id {
         check_id(scope)?;
         for edit in &request.edits {
@@ -740,15 +705,16 @@ pub fn save_with_credentials(
             }
         }
     }
-    let before_observed = provider_import::read_policy_v2(
-        &raw,
-        &source,
-        &state.policy,
-        state.ledger.as_ref(),
-        &state.mappings,
-        &bindings(root, &raw, &state.policy, Some(draft), &state.mappings)?,
-    )?;
-    let before_save_state = saved_state(&state.library, &before_observed, &raw)?;
+    Ok(())
+}
+fn transform_draft_v2(
+    root: &Path,
+    source: &str,
+    state: &StoreSnapshotV2,
+    draft: &DraftV2,
+    raw: &mut Value,
+    request: &mut SaveRequestV2,
+) -> Result<(PolicyV2, MappingFileV2)> {
     let edited = apply_explicit_edits_v2(&draft.policy, &request.edits)?;
     let mut intended = if let Some(scope) = &request.scope_channel_id {
         let mut p = state.policy.clone();
@@ -781,7 +747,7 @@ pub fn save_with_credentials(
             if state.policy.channels.iter().any(|c| c.id == channel.id) {
                 return Err(error("model_save_stale"));
             }
-            let seed = copied_seed(root, &raw, channel, &source)?.unwrap_or_else(
+            let seed = copied_seed(root, raw, channel, source)?.unwrap_or_else(
                 || json!({"name":channel.label,"disabled":true,"models":[],"selectedModels":[]}),
             );
             raw["providers"]
@@ -793,7 +759,7 @@ pub fn save_with_credentials(
     let mut mappings = state.mappings.clone();
     // Name is the product authority: even an already-equal historical label/key
     // pair is reconciled on explicit Save, rather than waiting for another edit.
-    for intent in request.channel_intents {
+    for intent in std::mem::take(&mut request.channel_intents) {
         match intent {
             ChannelIntentV2::SetActiveNode {
                 channel_id,
@@ -940,7 +906,7 @@ pub fn save_with_credentials(
                 }
             }
             ChannelIntentV2::Rename { channel_id, name } => {
-                rename(&mut raw, &mut intended, &mut mappings, &channel_id, &name)?
+                rename(raw, &mut intended, &mut mappings, &channel_id, &name)?
             }
             ChannelIntentV2::SetSelection {
                 channel_id,
@@ -995,8 +961,74 @@ pub fn save_with_credentials(
         .map(|c| (c.id.clone(), c.label.clone()))
         .collect::<Vec<_>>();
     for (id, name) in reconcile_names {
-        rename(&mut raw, &mut intended, &mut mappings, &id, &name)?;
+        rename(raw, &mut intended, &mut mappings, &id, &name)?;
     }
+    Ok((intended, mappings))
+}
+fn project_connection_v2(provider: &mut Value, channel: &ChannelV2) {
+    if let Some(node) = channel
+        .connection
+        .nodes
+        .iter()
+        .find(|n| n.id == channel.connection.active_node_id)
+    {
+        provider["baseUrl"] = json!(node.url);
+    }
+    provider["disabled"] = json!(!channel.connection.enabled);
+    if let Some(mode) = &channel.connection.auth_mode {
+        provider["authMode"] = json!(mode);
+    }
+}
+pub fn save(root: &Path, home: &Path, request: SaveRequestV2) -> Result<FileSnapshotV2> {
+    save_with_credentials(root, home, request, &SystemDraftCredentialsV2)
+}
+pub fn save_with_credentials(
+    root: &Path,
+    home: &Path,
+    mut request: SaveRequestV2,
+    vault: &dyn DraftCredentialStoreV2,
+) -> Result<FileSnapshotV2> {
+    use crate::modules::model_config::model_transaction_v2::{self, TargetV2, WriteV2};
+    let _versions = crate::modules::model_config::content_versions::file_saves::admit(root, home)
+        .map_err(io)?;
+    let _rename = super::channel_rename::admit(root, home).map_err(io)?;
+    let _config = TargetFileLock::lock(&home.join("config.json")).map_err(io)?;
+    let store = StoreV2::new(root);
+    let locked = store.lock()?;
+    {
+        let _recovery_versions =
+            crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
+        recover_model_transactions(root, home)?;
+    }
+    let state = locked.snapshot_unlocked()?;
+    let (mut raw, bytes) = read_raw(home)?;
+    let original_config = raw.clone();
+    let source = source_digest(&bytes);
+    let revision = root_revision(root, home)?;
+    let draft = state
+        .draft
+        .as_ref()
+        .ok_or_else(|| error("model_save_stale"))?;
+    if draft.base != request.expected
+        || source != request.expected.source_digest
+        || state.digests.library != request.expected.library_digest
+        || revision != request.expected.root_revision
+        || policy_semantic_digest_v2(&state.policy)? != request.expected.policy_digest
+    {
+        return Err(error("model_save_stale"));
+    }
+    validate_save_scope_v2(&request)?;
+    let before_observed = provider_import::read_policy_v2(
+        &raw,
+        &source,
+        &state.policy,
+        state.ledger.as_ref(),
+        &state.mappings,
+        &bindings(root, &raw, &state.policy, Some(draft), &state.mappings)?,
+    )?;
+    let before_save_state = saved_state(&state.library, &before_observed, &raw)?;
+    let (intended, mut mappings) =
+        transform_draft_v2(root, &source, &state, draft, &mut raw, &mut request)?;
     for channel in &intended.channels {
         let provider = raw
             .get_mut("providers")
@@ -1006,18 +1038,7 @@ pub fn save_with_credentials(
         if protected(&channel.connection.provider_id, provider) {
             continue;
         }
-        if let Some(node) = channel
-            .connection
-            .nodes
-            .iter()
-            .find(|n| n.id == channel.connection.active_node_id)
-        {
-            provider["baseUrl"] = json!(node.url);
-        }
-        provider["disabled"] = json!(!channel.connection.enabled);
-        if let Some(mode) = &channel.connection.auth_mode {
-            provider["authMode"] = json!(mode);
-        }
+        project_connection_v2(provider, channel);
         if let Some(edit) = draft.credential_edits.get(&channel.id) {
             match edit {
                 DraftCredentialEditV2::Replace { credential_ref } => {

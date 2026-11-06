@@ -15,6 +15,7 @@ pub(crate) fn start(
     descriptor_pin: &'static str,
     runtime: Arc<RuntimeHandle>,
     install: SharedRuntimeInstall,
+    ready: impl FnOnce() + Send + 'static,
 ) -> AppResult<()> {
     let storage = crate::infrastructure::storage_writers::global().admit()?;
     let lease = install.acquire().ok_or(AppError::RuntimeManaged {
@@ -49,6 +50,7 @@ pub(crate) fn start(
                 descriptor_pin,
             )?;
             runtime.refresh();
+            ready();
             Ok(())
         })();
         let message = match &result {
