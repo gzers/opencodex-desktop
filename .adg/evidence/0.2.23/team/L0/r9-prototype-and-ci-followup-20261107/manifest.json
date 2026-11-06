@@ -1,0 +1,339 @@
+{
+  "schemaVersion": 1,
+  "source": "678fd312afbcfb01998e529244b0618baacd4af4",
+  "facts": {
+    "frontend": {
+      "files": 214,
+      "passed": 1570,
+      "failed": 0,
+      "typecheckAndBuild": "pass",
+      "glassWithLockedBrowserTool": 28
+    },
+    "backendWorkspaceAt751d": {
+      "targets": 52,
+      "passed": 2189,
+      "failed": 0,
+      "ignored": 36,
+      "libraryPassed": 1950
+    },
+    "subsequentStartupConsumer": {
+      "source": "41390aa7a",
+      "testsPassed": 8,
+      "strictClippy": "pass",
+      "nativePrompt": "implemented; actual visible prompt pending unlocked native screen"
+    },
+    "portableTestParent": {
+      "source": "678fd312a",
+      "ipcPassed": 17,
+      "strictClippy": "pass",
+      "WindowsExecuted": false
+    },
+    "prototypeConditionalTrace": {
+      "frontend": "54fc4779a then6f49fc783",
+      "actualRustBackend": "9c6da8e2c",
+      "realBrowserChecks": "51+5 each engine; diagnostic fold follow-up8 each engine",
+      "adoptedPrototype": "900a11bb995cb0f9cd3dfe2ebedfcbdc08ffa094",
+      "review": "scoped AC-MATCH-05 product/component condition trace coverage accepted; no native app or full-version acceptance inferred"
+    },
+    "ciFailuresPreserved": {
+      "frontend4f087": "missing Chromium/WebKit tool, now pinned1.64.0 and declared installation step; actual28 local pass, new CI pending",
+      "candidate3cc92": "1299passed/368failed/5ignored. 106 explicit owner,196 missing Windows /tmp path,4NotConfigured,62 further transaction/assertion failures need actual ordinary-token rerun. Never counted as pass."
+    }
+  },
+  "files": [
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/browser-attempt-01.json",
+      "file": "ac-match-05-trace/browser-attempt-01.json",
+      "bytes": 16493172,
+      "sha256": "6d9f31c784d05ec3fac0ce0fce5051c4baf2d13cf336ac30664b3c3720a2b33f"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/browser-results.json",
+      "file": "ac-match-05-trace/browser-results.json",
+      "bytes": 31318020,
+      "sha256": "a757a89497e933e5190cfb81ecd60e3a7a6228ad3a27d71d6e3c6085d7b0281c"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/build.log",
+      "file": "ac-match-05-trace/build.log",
+      "bytes": 5069,
+      "sha256": "37d4514553f818d7b85ec0e9b9f6e4037a074b06b24692b31e61843cb6ebcb2e"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/chromium-results.json",
+      "file": "ac-match-05-trace/chromium-results.json",
+      "bytes": 15107589,
+      "sha256": "b65723cf280e5cec8e084e7268fe754828fea3994b697c02c82851f386c9489b"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/component-entry.mjs",
+      "file": "ac-match-05-trace/component-entry.mjs",
+      "bytes": 8427,
+      "sha256": "f17a083ca27a1ab590fc94af3b28974e895087f746e13e5a721c8731ee579f59"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/component-server.mjs",
+      "file": "ac-match-05-trace/component-server.mjs",
+      "bytes": 3385,
+      "sha256": "541ad9ea052f0a07d7775a58046814926a7fb012caa0e2debc93e9d7f7d376d9"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/components.browser.cjs",
+      "file": "ac-match-05-trace/components.browser.cjs",
+      "bytes": 16892,
+      "sha256": "c746fcf752979f69de8037bca3adc891587c87a7da2bbbbabc3204a074475277"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/driver-build.log",
+      "file": "ac-match-05-trace/driver-build.log",
+      "bytes": 227,
+      "sha256": "b23f284599590176f30e56e13649607bb7c34aa4fa09acf2ff14bed2bfacd2b5"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/driver-prepare.log",
+      "file": "ac-match-05-trace/driver-prepare.log",
+      "bytes": 1106,
+      "sha256": "9c59a5926c906d0675f093621e2971ba7bb6d6976e84d196885190b2bf79a6a5"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/driver-source-manifest.json",
+      "file": "ac-match-05-trace/driver-source-manifest.json",
+      "bytes": 1106,
+      "sha256": "9c59a5926c906d0675f093621e2971ba7bb6d6976e84d196885190b2bf79a6a5"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/evidence-validation.json",
+      "file": "ac-match-05-trace/evidence-validation.json",
+      "bytes": 1503,
+      "sha256": "d6e5b67fdbc87376495fef798731bfdc2544afae0c50904b1f3b704221ab69a3"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/frozen-cases-replay.json",
+      "file": "ac-match-05-trace/frozen-cases-replay.json",
+      "bytes": 1100,
+      "sha256": "e5892d0490c6b58ca3590da2e3da877493d17f1d02f82f0e2bb80fc98a643e37"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/handoff-manifest.json",
+      "file": "ac-match-05-trace/handoff-manifest.json",
+      "bytes": 19474,
+      "sha256": "53a88caf82c92ff6f6dd729fbadbb5b5e38eac062c4ff644ed16005c0c8bc8ad"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/native-receipts.ndjson",
+      "file": "ac-match-05-trace/native-receipts.ndjson",
+      "bytes": 1693717,
+      "sha256": "2e6d66f25bad10ee74f8948ac6997d9e27f21f1604befa1eba30d6577230f0f3"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/prepare-driver.py",
+      "file": "ac-match-05-trace/prepare-driver.py",
+      "bytes": 3939,
+      "sha256": "46997c367dbfa2a9042c7b25c4f8dc9a05f0ac9816f30a9e1a58e6812bf6d641"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/route-browser-results.json",
+      "file": "ac-match-05-trace/route-browser-results.json",
+      "bytes": 63076,
+      "sha256": "a6c6a00227739c682362e24c601cc30fbf8f5872d45752ec7a972ed2781b7af1"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/route.browser.cjs",
+      "file": "ac-match-05-trace/route.browser.cjs",
+      "bytes": 4402,
+      "sha256": "03f7a008e7372ac773b8f77005aa4fc8a6f7352cf4404aeef727e94ea2e6c663"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/typecheck.log",
+      "file": "ac-match-05-trace/typecheck.log",
+      "bytes": 61,
+      "sha256": "34334a2ae2240d33b9dcb6e3616de893f91814a7d0572dfa5ea9e9149458d264"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/ui-full.log",
+      "file": "ac-match-05-trace/ui-full.log",
+      "bytes": 802,
+      "sha256": "fd0680efd60967a67a0ad88c3572afdd388f08285a768dc526629dab7cb6f225"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/verify-evidence.py",
+      "file": "ac-match-05-trace/verify-evidence.py",
+      "bytes": 2786,
+      "sha256": "0fb9907ceef8186b9558a7b387227550c1e4a83ef5fabcd29947e80db247b108"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-trace/webkit-results.json",
+      "file": "ac-match-05-trace/webkit-results.json",
+      "bytes": 15107585,
+      "sha256": "157f1bd99e5054b65ed74e64d6ca6c5145d911b74985c702fd53a3b50dae120d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-diagnostics/browser-results.json",
+      "file": "ac-match-05-diagnostics/browser-results.json",
+      "bytes": 64870,
+      "sha256": "e01b595bde73ed9cb0e03ec128feee360e48be60fbab5c101424f8d4d51e9b94"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-diagnostics/build.log",
+      "file": "ac-match-05-diagnostics/build.log",
+      "bytes": 5069,
+      "sha256": "fe64945459da09ad48624a469f5bf024eddbc2816b11127aa2b97178785ba0d3"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-diagnostics/component-entry.mjs",
+      "file": "ac-match-05-diagnostics/component-entry.mjs",
+      "bytes": 8427,
+      "sha256": "f17a083ca27a1ab590fc94af3b28974e895087f746e13e5a721c8731ee579f59"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-diagnostics/component-server.mjs",
+      "file": "ac-match-05-diagnostics/component-server.mjs",
+      "bytes": 3425,
+      "sha256": "f348a6f2b3398ed741b50115fa8e02261f6cc7d9bd61bb42ea673a22f5d23002"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-diagnostics/diagnostics.browser.cjs",
+      "file": "ac-match-05-diagnostics/diagnostics.browser.cjs",
+      "bytes": 7484,
+      "sha256": "b892acf3f0146b63d75c1af66c23d71d4623412c3e982e14e2e0e1d8198a44b0"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-diagnostics/evidence-validation.json",
+      "file": "ac-match-05-diagnostics/evidence-validation.json",
+      "bytes": 1500,
+      "sha256": "03165994bddd6bbc32839d1e6ebfeb99797189a6a84bd6c2ea0ea85b975f027c"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-diagnostics/handoff-manifest.json",
+      "file": "ac-match-05-diagnostics/handoff-manifest.json",
+      "bytes": 6054,
+      "sha256": "e0aeb28d55112e164f04d9019f76bff2b0d5f7a7d769ec5644f380deb342ec49"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-diagnostics/native-receipts.ndjson",
+      "file": "ac-match-05-diagnostics/native-receipts.ndjson",
+      "bytes": 130309,
+      "sha256": "d9218da352461e591754d33421256c1444c40ea6beb6b08c28d4f498b38c3338"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-diagnostics/targeted-tests.log",
+      "file": "ac-match-05-diagnostics/targeted-tests.log",
+      "bytes": 331,
+      "sha256": "97487bca4f16bb3e3898f7053d171631b044126a43300eaf45c12bf5d896e4e7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ac-match-05-diagnostics/verify-evidence.py",
+      "file": "ac-match-05-diagnostics/verify-evidence.py",
+      "bytes": 2786,
+      "sha256": "0fb9907ceef8186b9558a7b387227550c1e4a83ef5fabcd29947e80db247b108"
+    },
+    {
+      "source": "/tmp/ocxd023-final-trace-layout-workspace.log",
+      "file": "local/ocxd023-final-trace-layout-workspace.log",
+      "bytes": 266954,
+      "sha256": "76310031c338353d6b35d81070583f05f93dbbb03ceeee2dc96d295bd8738040"
+    },
+    {
+      "source": "/tmp/ocxd023-final-trace-layout-clippy.log",
+      "file": "local/ocxd023-final-trace-layout-clippy.log",
+      "bytes": 252,
+      "sha256": "50a20fd98b76c60867e71ced9df34dc7a2387a7f44feb901b11696752b26f337"
+    },
+    {
+      "source": "/tmp/ocxd023-native-install-rejection-clippy.log",
+      "file": "local/ocxd023-native-install-rejection-clippy.log",
+      "bytes": 198,
+      "sha256": "f82058cfcc7c883fb5aa0db2697da3fa7ad650621c2cc302aacbc94873d680a2"
+    },
+    {
+      "source": "/tmp/ocxd023-native-install-rejection-startup-tests.log",
+      "file": "local/ocxd023-native-install-rejection-startup-tests.log",
+      "bytes": 1176,
+      "sha256": "8e2ced6ee8fd1925639ef6167b0207577a9a0d8b82f2bfce8605c962dcf3cd82"
+    },
+    {
+      "source": "/tmp/ocxd023-pinned-browser-glass-tests.log",
+      "file": "local/ocxd023-pinned-browser-glass-tests.log",
+      "bytes": 292,
+      "sha256": "2bb913ccad059d27149d43c0fbaacc2fbe0c95bebbf45ab2ea8c8bdee74c107b"
+    },
+    {
+      "source": "/tmp/ocxd023-pinned-browser-typecheck.log",
+      "file": "local/ocxd023-pinned-browser-typecheck.log",
+      "bytes": 61,
+      "sha256": "34334a2ae2240d33b9dcb6e3616de893f91814a7d0572dfa5ea9e9149458d264"
+    },
+    {
+      "source": "/tmp/ocxd023-final-integrated-ui-1570.log",
+      "file": "local/ocxd023-final-integrated-ui-1570.log",
+      "bytes": 811,
+      "sha256": "4aa203877e5f1f8dde5eed61fd317079a1fd82323c41564bee27b877b9198fcc"
+    },
+    {
+      "source": "/tmp/ocxd023-final-integrated-ui-build.log",
+      "file": "local/ocxd023-final-integrated-ui-build.log",
+      "bytes": 4978,
+      "sha256": "537dd89ae197a869569655a866a91d02a32e671ca6085599a017473a9afc194e"
+    },
+    {
+      "source": "/tmp/ocxd023-portable-fixture-ipc-tests.log",
+      "file": "local/ocxd023-portable-fixture-ipc-tests.log",
+      "bytes": 2536,
+      "sha256": "3c88414931c43ab07d64a667cf1f5b5219e78f3caab4b2a863c0164c642994e9"
+    },
+    {
+      "source": "/tmp/ocxd023-portable-fixture-clippy.log",
+      "file": "local/ocxd023-portable-fixture-clippy.log",
+      "bytes": 252,
+      "sha256": "ae74735046ff64259f72ee110fa58d067a2ce7370006a25766c8bcd5199cf3ad"
+    },
+    {
+      "source": "/tmp/ocxd023-mac-install-root-freeze.json",
+      "file": "local/ocxd023-mac-install-root-freeze.json",
+      "bytes": 2505,
+      "sha256": "e8a157798ae1994914bdeba784a82789b62cf879e9c20cc8bceff5318bfc1fae"
+    },
+    {
+      "source": "/tmp/ocxd023-mac-install-root-layout-frozen.log",
+      "file": "local/ocxd023-mac-install-root-layout-frozen.log",
+      "bytes": 1553,
+      "sha256": "eedb91e7cf749fb3bb6cece1aa334fcef07d8870e82da825c728d2e19b0e99d1"
+    },
+    {
+      "source": "/tmp/ocxd023-mac-install-root-bundled-frozen.log",
+      "file": "local/ocxd023-mac-install-root-bundled-frozen.log",
+      "bytes": 3553,
+      "sha256": "5ec8da799e01ff7111e6025952fc3459668ff93f4a8fa75eb64800d1db39f9a3"
+    },
+    {
+      "source": "/tmp/ocxd023-mac-install-root-red.log",
+      "file": "local/ocxd023-mac-install-root-red.log",
+      "bytes": 1181,
+      "sha256": "a5d481c0e80725745cac3cbd4df1dd16d4aea78833d0f8cfe2522b85159a8b2d"
+    },
+    {
+      "source": "/tmp/ocxd023-ci-4f087-frontend-job-raw.log",
+      "file": "local/ocxd023-ci-4f087-frontend-job-raw.log",
+      "bytes": 76792,
+      "sha256": "760919735760e9fc60f95fa16ac2555b3420b72f1792cd8d44e08ca05dbc3d71"
+    },
+    {
+      "source": "/tmp/ocxd023-windows-candidate-third-job-raw.log",
+      "file": "local/ocxd023-windows-candidate-third-job-raw.log",
+      "bytes": 675421,
+      "sha256": "f07de55dce924444c0243a63f6ded5a343a300ba3e0f6cdcf47aa3f9a5efd7e8"
+    },
+    {
+      "source": "/tmp/ocxd023-windows-candidate-third-failures.json",
+      "file": "local/ocxd023-windows-candidate-third-failures.json",
+      "bytes": 228054,
+      "sha256": "8c598697c61e2e82a002566e34608ddc97adefa41f5b1ca70a0ebcea5307582b"
+    }
+  ],
+  "pending": [
+    "Mac unlocked native visual/prompt",
+    "original-None restore sync policy decision",
+    "Windows ordinary-user full suite and installer default/upgrade/retention actual acceptance",
+    "final artifacts signatures and publication"
+  ]
+}

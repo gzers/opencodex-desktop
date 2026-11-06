@@ -1,0 +1,41 @@
+import {createApp,ref,h} from 'vue';
+import {createPinia,setActivePinia} from 'pinia';
+import ModelsRoute from '@/routes/ModelsRoute.vue';
+import ConditionEditor from '@/features/models/ConditionEditor.vue';
+import ConditionPreview from '@/features/models/ConditionPreview.vue';
+import {emptyContentV2,emptyRulesV2} from '@/features/models/api-v2';
+import {useModelsV2Store} from '@/features/models/store-v2';
+import '@/styles/tokens.css';import '@/styles/base.css';import '@/styles/materials.css';import '@/styles/effects.css';
+const copy=v=>JSON.parse(JSON.stringify(v));
+const pinia=createPinia();setActivePinia(pinia);const store=useModelsV2Store();
+const scene=ref('matched'),disabled=ref(false),calls=[],receipts=[];let pending=[];
+const frozenCases=await fetch('/__frozen-cases').then(r=>r.json());
+const scenes=['matched','joiner','before','after','tail','arity','conflict','duplicate','missing','unsupported','empty','stale','network_error','malformed','wrong_id','generic','outside','date','build','substring','layout_failure','atom_failure','all_conditions',...frozenCases.flatMap((c,i)=>c.request.rawModelIds.map((raw,j)=>'frozen/'+i+'/'+j))];
+function contentFor(s){const c=emptyContentV2();c.matching.include=[{kind:'prefix',value:'gpt-'}];c.description='Isolated deterministic input; actual frozen Rust preview process.';c.commonRules={...emptyRulesV2(),contextWindow:{mode:'custom',value:128000},inputModalities:{mode:'custom',value:['text']},reasoningEfforts:{mode:'custom',value:[]}};c.nameLayouts=[{id:'44444444-4444-4444-8444-444444444444',literalPrefix:s==='before'?'claude-opus-':'gpt-',versionCapture:'complete_numeric_components',numericJoiners:['.','-'],tailCapture:'literal_remainder',trailingDatePolicy:'retain_valid_YYYYMMDD_after_hyphen',ambiguousNumericTail:'no_equivalence'}];c.conditionOverrides=[{id:'55555555-5555-4555-8555-555555555555',name:'Sol 6.1',selector:{all:[{kind:'numeric_version',components:s==='before'?['5','5']:['6','1']},{kind:'literal_segment',value:s==='before'?'opus':'sol',position:s==='before'?'before_version':s==='after'?'after_version':'any',boundary:'hyphen_or_string_edge'}],layoutId:'44444444-4444-4444-8444-444444444444',literalTail:s==='before'?'':'-sol'},rules:{...emptyRulesV2(),protocol:{mode:'custom',value:'openai-responses'},fast:{mode:'custom',value:false},fastWire:{mode:'custom',value:null}},lockedFields:[],sourceExactId:s==='before'?'claude-opus-5.5':'gpt-6.1-sol',scope:'known_identity_only'}];if(s==='before')c.matching.include[0].value='claude-';if(['conflict','duplicate'].includes(s))c.conditionOverrides.push({...copy(c.conditionOverrides[0]),id:'66666666-6666-4666-8666-666666666666',name:'Second'});if(s==='conflict')c.conditionOverrides[1].selector={all:[{kind:'exact_id',value:'gpt-6.1-sol'}]};if(s==='all_conditions'){c.conditionOverrides.push({...copy(c.conditionOverrides[0]),id:'77777777-7777-4777-8777-777777777777',name:'Other exact',selector:{all:[{kind:'exact_id',value:'other-exact-id'}]}});}if(s==='atom_failure')c.conditionOverrides[0].selector.all[0].components=['6','10'];if(s==='missing')c.conditionOverrides[0].rules.protocol={mode:'inherit'};if(s==='unsupported')c.conditionOverrides[0].rules.protocol={mode:'custom',value:'unknown-adapter'};if(s==='empty'){c.conditionOverrides[0].name='';c.conditionOverrides[0].selector={all:[]};}return c;}
+const rawFor=s=>({joiner:'gpt-6-1-sol',before:'claude-opus-5.5',tail:'gpt-6.1-sol-mini',arity:'gpt-6.10-sol',outside:'other-6.1-sol',date:'gpt-6.1-sol-20261107',build:'gpt-6.1-sol-build001',substring:'gpt-6.1-solid',layout_failure:'gpt-sol-6.1'}[s]??'gpt-6.1-sol');
+window.__TAURI_INTERNALS__={invoke:async(command,args={})=>{
+ if(location.search.includes('route')){if(command==='plugin:event|listen')return 1;if(command==='plugin:event|unlisten')return;if(command==='model_agent_preferences')return null;if(command==='model_v2_library')return {dtoVersion:2,library:{schemaVersion:2,templates:[],submissionReceipts:{}},libraryDigest:'sha256:'+'d'.repeat(64)};}
+ if(!['model_v2_validate_content','model_v2_preview_conditions'].includes(command))throw new Error('Forbidden fixture command: '+command);
+ const s=scene.value;calls.push({command,args:copy(args),scene:s});
+ if(s==='network_error'&&command==='model_v2_preview_conditions')throw new Error('隔离传输故障：当前输入保持。');
+ const http=await fetch('/__rust-preview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({command,args})});const envelope=await http.json();receipts.push({scene:s,command,envelope:copy(envelope)});
+ if(!envelope.ok)throw envelope.error;
+ let value=envelope.value;
+ if(command==='model_v2_preview_conditions'){
+  if(s==='malformed'){value=copy(value);delete value.rows[0].conditions;}
+  if(s==='wrong_id'){value=copy(value);value.rows[0].rawModelId='corrupt-transport-id';}
+  if(s==='stale')return new Promise(resolve=>pending.push(()=>resolve(value)));
+ }
+ return value;
+},transformCallback:()=>1,unregisterCallback:()=>{}};
+function setScene(s){if(s.startsWith('frozen/')){const [,i,j]=s.split('/'),c=frozenCases[Number(i)];scene.value=s;disabled.value=false;store.start();store.setLabel(c.case);store.setContent(copy(c.request.content));store.setPreviewTarget(c.request.rawModelIds[Number(j)],c.request.channelId);return;}scene.value=s;disabled.value=false;store.start();store.setLabel('Fixture template');store.setContent(contentFor(s));store.setPreviewTarget(rawFor(s),'33333333-3333-4333-8333-333333333333');}
+setScene('matched');
+window.acMatch05={store,calls,receipts,scenes,frozenCases,setScene,pendingCount:()=>pending.length,release(){for(const done of pending.splice(0))done();},snapshot(){return copy({draft:store.draft,preview:store.preview,error:store.previewError,issues:store.issues,calls,receipts});}};
+const App={setup(){return ()=>h('main',[
+ h('header',[h('h1','AC-MATCH-05 正式组件真实 Rust 核对'),h('p','隔离输入 · 正式 store / IPC 适配器 · 冻结 Rust 预览函数'),h('label',['夹具场景',h('select',{'aria-label':'夹具场景',value:scene.value,onChange:e=>setScene(e.target.value)},scenes.map(s=>h('option',s)))]),h('label',[h('input',{type:'checkbox','aria-label':'禁用编辑',checked:disabled.value,onChange:e=>disabled.value=e.target.checked}),'禁用编辑'])]),
+ h(ConditionEditor,{modelValue:store.draft.content,issues:store.issues,disabled:disabled.value,'onUpdate:modelValue':store.setContent,onPreview:store.requestPreview}),
+ h('section',{class:'preview-target'},[h('label',['原始模型 ID',h('input',{class:'input','aria-label':'预览原始ID',value:store.previewModelId,onInput:e=>store.setPreviewTarget(e.target.value,store.previewChannelId)})]),h('button',{class:'btn','aria-label':'取消预览',onClick:store.dismissPreview},'取消预览')]),
+ h(ConditionPreview,{result:store.preview,busy:store.previewBusy,error:store.previewError,issues:store.issues,disabled:disabled.value,onRetry:store.requestPreview})
+]);}};if(location.search.includes('route')){store.view.tab='templates';store.view.templateEditor=true;createApp({render:()=>h('main',{class:'main'},[h(ModelsRoute)])}).use(pinia).mount('#app');}else createApp(App).use(pinia).mount('#app');
+
+const style=document.createElement('style');style.textContent='body{display:block;overflow:auto;height:auto}#app{padding:24px;box-sizing:border-box}main{max-width:1000px;margin:auto;display:grid;gap:24px;color:var(--text)}header{display:grid;gap:12px}h1{font-size:20px}label{display:grid;gap:8px}.input,select{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:8px;min-height:34px;padding:8px;box-sizing:border-box}.model-columns{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}.model-field-title,.model-inline{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.model-muted{color:var(--muted)}.model-rule-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px}.model-field-wide{grid-column:1/-1}.model-error{color:var(--danger,#d35454)}.model-table{width:100%;border-collapse:collapse}.model-table td,.model-table th{text-align:left;padding:10px;border-bottom:1px solid var(--border)}.condition-preview{padding:20px;border:1px solid var(--border);border-radius:12px}.condition-editor{background:var(--panel);padding:20px;border:1px solid var(--border);border-radius:12px}';document.head.append(style);

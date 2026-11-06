@@ -7,11 +7,19 @@
 ## 当前基线与获取
 
 - 仓库：gzers/opencodex-desktop。
-- 代码：远端codex/0.2.23-integration，明确基线7cbb0daf710fc81de24952f96274c7ee8e740ede（含同源条件trace与恢复后方向实证；默认安装路径仍在补齐，正式制品另看下文）。
+- 代码：远端codex/0.2.23-integration，明确基线678fd312afbcfb01998e529244b0618baacd4af4（完整trace/默认折叠呈现、Mac安装位置保护及临时目录修正已集成；Windows普通用户suite/安装默认路径仍待后继制品）。
 - 文档：远端docs/governance-main，以包含本条R2指令的提交为准；读取本文件、TEAM、IMP-31/32及0.2.23-contracts/L0-paths-runtime-v1.md。
 - Windows代码贡献分支：codex/0.2.23-windows；文档/脱敏证据使用独立docs/0.2.23-windows分支。若已有自己的改动，先保留并合并上述明确代码基线，不重置或覆盖工作树。
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
 - 此为0.2.23实施基线，尚非最终安装候选；版本清单仍待L0统一更新。是否取得新代码以完整SHA及实际diff为准，不能仅看软件显示版本。
+
+## R8 原型补齐与真实CI失败后继（2026-11-07）
+
+代码678fd312afbcfb01998e529244b0618baacd4af4已推送。模型条件预览已接真实同源Rust匹配视图/族/前置/全部原子三态，L3实际ModelsRoute与双引擎对照及原型默认折叠诊断通过；完整UI214文件1570项、类型/构建通过。冻结后端751d全workspace52目标2189项通过、0失败、36条件忽略；后继Mac启动消费8项、临时目录IPC17项与strictClippy通过。原失败、真实输入/输出和后继范围见[r9](../../.adg/evidence/0.2.23/team/L0/r9-prototype-and-ci-followup-20261107/manifest.json)。
+
+第三候选42277944499基于cc92的实际Windows回归失败1299过/368失败/5忽略，未生成安装器。逐类核出106项明确owner不符、196项测试硬编码/tmp在Windows盘符路径不存在、4项NotConfigured及62项事务/断言类仍需实际后继确认。普通完整回归将放到新真实普通SID/Profile/TEMP执行，提权创建13项仍独立验证；不接受Admins作为用户、不repair已存在外owner、不删除或skip失败用例。678fd312a已将11处测试临时parent接Windows实际temp_dir，Unix仍保持短/tmp防IPC路径超限，未修改产品目录规则。
+
+CI4f前端失败为没有声明安装真实Chromium/WebKit，非页面断言通过。10b5e1905已锁playwright-core1.64.0并在CI安装对应浏览器，28项原像素断言本机实跑通过；后继CI仍待实跑，原失败保留。Windows安装默认模板与MSI跨安装上下文处理继续按R7，不能因共享逻辑已绿而跳过本版触发的平台边界。
 
 ## R7 最后清单对照发现的安装默认路径缺口（2026-11-07）
 

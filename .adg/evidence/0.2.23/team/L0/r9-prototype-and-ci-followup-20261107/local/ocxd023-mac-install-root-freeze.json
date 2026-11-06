@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "status": "frozen-targeted-tests-pass",
+  "frozenUtc": "2026-11-06T19:45:26.849804+00:00",
+  "baseHead": "7cbb0daf710fc81de24952f96274c7ee8e740ede",
+  "files": [
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/src/modules/data_root/layout.rs",
+      "sha256": "4885bad2509b379b3bef0c537c758c2a407d64d406bcff23874b6decd43aaaa2",
+      "bytes": 18504
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/src/modules/runtime/bundled.rs",
+      "sha256": "d370c0d7e79c1a4577e7fe512a48a3acbf10b0f07cf5247ecac3247522a48960",
+      "bytes": 43742
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/src/modules/runtime/bundled_tests.rs",
+      "sha256": "d467d3f5dc5d2492599bb2d6a55eb5253d47092874d1e9806ee1166fbdb05fd5",
+      "bytes": 31385
+    }
+  ],
+  "rootCause": "Layout accepted direct container parent of macOS app; startup_bundle called bundled provision without container admission before lock/stage/runtime writes.",
+  "guardCode": "macos_install_container",
+  "defaultExample": "~/Applications/OpenCodeX Desktop/",
+  "guardOrder": [
+    "bootstrap resolve_default_startup calls Layout::installation_root before startup_v2::resolve_with_install writes U",
+    "bundled provision_inner validates macOS I before roots, archive reads, mkdir, lock, pending/stage, runtime or D persistence"
+  ],
+  "tests": {
+    "layout": 11,
+    "bundled": 27,
+    "logs": [
+      "/tmp/ocxd023-mac-install-root-layout-frozen.log",
+      "/tmp/ocxd023-mac-install-root-bundled-frozen.log"
+    ],
+    "redBeforeFix": "/tmp/ocxd023-mac-install-root-red.log",
+    "format": "rustfmt check passed",
+    "whitespace": "git diff --check passed"
+  },
+  "dailyUserWrites": false,
+  "applicationLaunches": false,
+  "fullBackendTestsRun": false,
+  "windowsNativeRun": false,
+  "diagnosticLimit": "Existing Tauri setup/build error chain retains stable code/detail; no new GUI error view. Existing background worker log is generic; normal invalid-container startup is rejected before worker.",
+  "sharedIndex": "untouched; commit will use --only for exact three files",
+  "commit": "751d30c2096d8f90b08e68669ffbf4a2860c16e3",
+  "committedPaths": [
+    "apps/desktop/tauri/src/modules/data_root/layout.rs",
+    "apps/desktop/tauri/src/modules/runtime/bundled.rs",
+    "apps/desktop/tauri/src/modules/runtime/bundled_tests.rs"
+  ]
+}

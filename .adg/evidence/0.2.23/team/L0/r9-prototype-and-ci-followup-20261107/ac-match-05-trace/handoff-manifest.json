@@ -1,0 +1,256 @@
+{
+  "role": "L3",
+  "batch": "AC-MATCH-05 actual Rust trace and production component comparison",
+  "status": "scoped_ui_verification_passed_for_L0_acceptance_review",
+  "createdAt": "2026-11-06T19:47:41.909219+00:00",
+  "uiCommit": "54fc4779a7616a525ccaf10e2c2f4b787c2e4a66",
+  "uiBranch": "codex/0.2.23-ui",
+  "backendContribution": "9c6da8e2c1ee38992f42b83d4428079dccb4afd3",
+  "backendMergeCommit": "9d692a29a00e810cf0290884ae28c2431c1b7481",
+  "adoptedPrototype": {
+    "commit": "900a11bb995cb0f9cd3dfe2ebedfcbdc08ffa094",
+    "file": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-condition-editor-023.js",
+    "sha256": "a9d476776afca6263217efe6c25296faa266b526114cf7f524b1e51fd0b6cb74"
+  },
+  "productionChanges": [
+    "apps/desktop/ui/src/features/models/ConditionPreview.vue",
+    "apps/desktop/ui/src/features/models/api-v2.ts",
+    "apps/desktop/ui/src/features/models/store-v2.ts",
+    "apps/desktop/ui/tests/model-condition-preview-v2.test.ts",
+    "apps/desktop/ui/tests/post09-remaining-model-hosts.test.ts"
+  ],
+  "productionFileSha256": {
+    "apps/desktop/ui/src/features/models/ConditionPreview.vue": "7e92a91c4ee2ae2ea19fd3a676bd223a0ef6a4ac85065943d7acb01bc501ea27",
+    "apps/desktop/ui/src/features/models/api-v2.ts": "8011c1316ead8e70f29c2bd684a86f538615ef9ecb7244f75c6217522ad8e6d6",
+    "apps/desktop/ui/src/features/models/store-v2.ts": "68b3161e44f975c19f1e2cb7f0c8a96590c554e2fbe51a5dfe4426b024c2c73b",
+    "apps/desktop/ui/tests/model-condition-preview-v2.test.ts": "143c4814cca678963d8dab500067d8534cd00a5f2b6fd0364cb1e980be4eeef6",
+    "apps/desktop/ui/tests/post09-remaining-model-hosts.test.ts": "e9158547bfde5e8a62fcd07fb53c57f200494fe33b7911d16925d61fd6307444"
+  },
+  "validation": {
+    "targetedTests": {
+      "files": 2,
+      "passed": 22
+    },
+    "fullUiTests": {
+      "files": 214,
+      "passed": 1569,
+      "failed": 0
+    },
+    "typecheck": "passed",
+    "build": "passed; existing dynamic-import/chunk-size warnings retained",
+    "backendSourceAndArtifactHashes": "all matched producer contract",
+    "frozenCasesReplay": "14 groups identical: 12 success / 23 rows + 2 structured Err",
+    "wireSchemaValidation": {
+      "success": 128,
+      "error": 50,
+      "validate": 140
+    }
+  },
+  "browser": [
+    {
+      "engine": "chromium",
+      "width": 1180,
+      "height": 760,
+      "theme": "light",
+      "componentChecks": 51,
+      "componentStatus": "passed",
+      "routeChecks": 5,
+      "routeStatus": "passed",
+      "pageErrors": [],
+      "consoleWarningsOrErrors": [],
+      "routeHeight": 850
+    },
+    {
+      "engine": "webkit",
+      "width": 900,
+      "height": 760,
+      "theme": "dark",
+      "componentChecks": 51,
+      "componentStatus": "passed",
+      "routeChecks": 5,
+      "routeStatus": "passed",
+      "pageErrors": [],
+      "consoleWarningsOrErrors": [],
+      "routeHeight": 850
+    }
+  ],
+  "screenshots": 92,
+  "comparison": [
+    {
+      "prototype": "NameLayout / numeric separators",
+      "actual": "Real editor add/prefix/reference/remove; fixed numericJoiners [.,-] as adopted; complete string components, leading zero and arity preserved",
+      "evidence": [
+        "components.browser.cjs",
+        "chromium-numeric-editor-light.png",
+        "frozen-cases-replay.json"
+      ]
+    },
+    {
+      "prototype": "Name any/before/after + AND",
+      "actual": "All 23 frozen success rows compared exactly; actual position and numeric edits rerun frozen Rust preview and change outcomes",
+      "evidence": [
+        "browser-results.json",
+        "chromium-actual-edit-position-light.png",
+        "webkit-frozen-name_before_version-0-dark.png"
+      ]
+    },
+    {
+      "prototype": "Reasons / matching view / all outcomes",
+      "actual": "Direct family, summary, preconditions and atom reasonCode/reason; false and null distinct; all source-ordered conditions and actual applied flag shown",
+      "evidence": [
+        "chromium-frozen-layout_and_tail_prerequisites-0-light.png",
+        "webkit-all_conditions-dark.png",
+        "evidence-validation.json"
+      ]
+    },
+    {
+      "prototype": "Source / explicit values",
+      "actual": "Frozen wire fieldOrigins and effective rules copied exactly. Live Rust common/condition origins and false/null/empty-reasoning display; source/manual origin rendering remains covered by focused component tests and earlier preflight",
+      "evidence": [
+        "model-condition-preview-v2.test.ts in UI commit",
+        "browser-results.json"
+      ]
+    },
+    {
+      "prototype": "Errors / cancel / late reply",
+      "actual": "Structured invalid-layout/runtime-overlap keep content, no pseudo-success; partial DTO and wrong identity rejected. Real ModelsRoute return-to-list -> continue rejects delayed actual reply",
+      "evidence": [
+        "route-browser-results.json",
+        "webkit-actual-route-overlap-dark.png",
+        "chromium-actual-route-return-late-light.png"
+      ]
+    }
+  ],
+  "backendExecution": "Compiled unchanged production Rust preview_conditions DTO/function block with unchanged schema/matcher/source modules, checksummed against producer. Browser uses production default store/API adapter. Only desktop IPC transport replaced by loopback POST to isolated read-only driver; no renderer matcher/reason generation.",
+  "network": "No external request; only local asset GET and loopback Rust transport POST. No synchronization, credential/config writes or save commands.",
+  "limits": [
+    "Scoped real components / ModelsRoute in browser with isolated read-only Rust pure function; not native Tauri WebView/system/packaged-app acceptance.",
+    "Applied flag explains this preview and grants no save authority. No saved revision is manufactured.",
+    "Producer pure content preview has no source model/manual override inputs. Such origins are tested at component-rendering level; this evidence does not fabricate them in native receipts.",
+    "No change to public UI components, production Rust, backend semantics, daily config or governance docs.",
+    "Final full-release and AC acceptance decision belongs to L0.",
+    "28 selected-ID frozen sample proof is owned by L1; not inferred from this UI evidence."
+  ],
+  "preservedAttempts": [
+    "browser-attempt-01.json preserves supplemental synthetic input rejection (empty inputModalities); corrected legal fixture uses empty reasoningEfforts. All official frozen cases already passed in first attempt.",
+    "driver-build.log final build succeeds; unrelated portable module was removed from isolated driver includes after initial build error."
+  ],
+  "cleanup": "All owned browsers and loopback Vite server stopped.",
+  "pushed": true,
+  "evidenceSha256": {
+    "browser-attempt-01.json": "6d9f31c784d05ec3fac0ce0fce5051c4baf2d13cf336ac30664b3c3720a2b33f",
+    "browser-results.json": "a757a89497e933e5190cfb81ecd60e3a7a6228ad3a27d71d6e3c6085d7b0281c",
+    "build.log": "37d4514553f818d7b85ec0e9b9f6e4037a074b06b24692b31e61843cb6ebcb2e",
+    "chromium-actual-edit-numeric-light.png": "bd05885af14c040d010a36263dbf213953c33260ebd82404143dab7f43e4e6ac",
+    "chromium-actual-edit-position-light.png": "a7248a9db5e3b1976933baca52420fb375f68c0c9409341e86e35165344d9f3b",
+    "chromium-actual-route-overlap-light.png": "e9f819e2d2138ed498f5e7d13f478563adf8ab791be780a80e6b9a9f49537cfb",
+    "chromium-actual-route-return-late-light.png": "35180c55cb92742ca4e6768c3f26849361f0891be8ec72eee50c06bfbabe2238",
+    "chromium-actual-route-trace-light.png": "3731ee75503cd50127a84cc6a26e61b534e6e12286911e24dce059216effaf91",
+    "chromium-all_conditions-light.png": "b8ff3ba0c224138edd01d17b22ea50c5c6fe7153f6535f51a4aeb35ba3159b8e",
+    "chromium-atom_failure-light.png": "87c6f5555da1238139d803521573adb0ea1efacbc7d4b27e42b229c8fee61817",
+    "chromium-busy-light.png": "d90debfd7209e3815056bf4f572373d5ef72d34047eedd01c6d7b5980d8954a2",
+    "chromium-cancelled-late-reply-light.png": "beba9f9a7d6adf1a60d134477dd7d0d86a21779bbfce823133dfb202511b4380",
+    "chromium-duplicate-light.png": "ccd3326fe63589b8e8fc9cb378ec753731aaf5cbb674b4c871fea5592d48c27c",
+    "chromium-empty-light.png": "fee201806e49474e7af03c6b79899c7aaed344c239b4162af15656fecbf76966",
+    "chromium-frozen-all_and_atoms-0-light.png": "c3ed36142a3ce05617c2a08ec47e03e153538f7a03b3ef4752d82dc531993249",
+    "chromium-frozen-all_and_atoms-1-light.png": "aa81c0272606c6850d109a0d0c3038ee64a1b292f5aa1da3c5876ea9ee87c2f2",
+    "chromium-frozen-complete_numeric_boundaries-0-light.png": "93b6508503be32e16d55c079f6e7419a4e8baeead7fa1f8ac44ece7aa58c8580",
+    "chromium-frozen-complete_numeric_boundaries-1-light.png": "546219535ee385bca86d6988580481a7a038b2965520a23465d567b00edd3b64",
+    "chromium-frozen-complete_numeric_boundaries-2-light.png": "d4cba47c4d3257e9e641c3956c9b225178017a8b3d551f60494282f3c846441c",
+    "chromium-frozen-complete_numeric_boundaries-3-light.png": "8a37b180a51d19dba0afe77ac29073eb5e26edb1c211519a215341e637ec31fa",
+    "chromium-frozen-complete_numeric_boundaries-4-light.png": "6da235be0a9149a1e28d693a61865518444278ec5b49841a6e54374340d620d1",
+    "chromium-frozen-family_channel_scope-0-light.png": "0e2c2d48bab1cbfef41b1ecf55b39594e6c2486f1890aecb35e9c8568ce8339b",
+    "chromium-frozen-family_excluded-0-light.png": "d1326230c3d4a54491b07a49a2586ea617e8a747bebf7528b2dfabca821ff283",
+    "chromium-frozen-family_include_and_repeated_prefix-0-light.png": "18c864b1cbe8c5cbd937ce0529ab210a9f9ad5637e0b8561a0ee038eb50c04f2",
+    "chromium-frozen-family_include_and_repeated_prefix-1-light.png": "3298f9861675e160683797a8959301a121fd098bf728deff16582c5c5cea2289",
+    "chromium-frozen-invalid_layout_reference-0-light.png": "18f78764fc5e25ad77f0f26986ac7636cd0c57c54ff203cedcba945d7c82aa72",
+    "chromium-frozen-layout_and_tail_prerequisites-0-light.png": "fc3b986b3928abc1f7a1e09f33ba81783f3c5e25bda1d4457dbad171cefc5818",
+    "chromium-frozen-layout_and_tail_prerequisites-1-light.png": "f542ee0b0a86ef9a44c7dfb8b15f4e9010bd73e72b8b5bda72bc2fe8422c9e24",
+    "chromium-frozen-literal_segment_boundary-0-light.png": "92d8cab50d7afd7a0411f58c7bac309af6644aad63ffab9b62a80052cac78a2d",
+    "chromium-frozen-literal_segment_boundary-1-light.png": "1aad32ee13215860d5b1df700fd64140e60e78e40a1655e8deaccbcb9aed46c4",
+    "chromium-frozen-literal_segment_boundary-2-light.png": "d556d6481bcb5d2fbe33881e5812d45a37ff121ca4630447c9a5dc17d77150a9",
+    "chromium-frozen-name_after_version-0-light.png": "bfb826e14a7f2ee1e1138e08e33c59b922ee27eb5b576e2e95254813c258158f",
+    "chromium-frozen-name_any-0-light.png": "646110873d55e8671ff7af87d68384692d97871ce1acc25169e52fd6d1f30b4a",
+    "chromium-frozen-name_before_version-0-light.png": "684b668af77e5bb26aadc738cc504bd671eeab41a94025da0e661c0e6027756a",
+    "chromium-frozen-name_before_version-1-light.png": "ed5223f24ec41d7d24348a0764e4b1d1c08f94d875eb1637e161d88919e99ea3",
+    "chromium-frozen-numeric_joiners-0-light.png": "54021873a800772d5205c3b9e590a0c966daeae30c1f4717069d448a5e41e37c",
+    "chromium-frozen-numeric_joiners-1-light.png": "714b9dfbfb45ff584bfbcb41610d24bebb7dd9dc32147e21a601c88d22bf0162",
+    "chromium-frozen-runtime_overlap_error-0-light.png": "7241aa74591feb41d5a8e0ac8fec21c4fff9ad9fdb68c7113b0cbae8f928aef4",
+    "chromium-frozen-wrong_name_position-0-light.png": "6c3f43d437a6e6dc84d011164b0f0a0f2095a2be38fdb0d9872a13545ba51797",
+    "chromium-layout_failure-light.png": "3dc29c947a333fc430e59c4115e59d4b3ec2a5c95d59ab0632af922a27a3a936",
+    "chromium-malformed-light.png": "88f182d9849c7ad9ec766bb12a120d6cfa0fc04e5afa408d3a2ccea1a0c1fa15",
+    "chromium-matched-light.png": "f76521e80d3a1ea831d036ba1412e25d8a700e9837be618d496dddb3655c031e",
+    "chromium-missing-layout-light.png": "0cc93fe2f536609406548f9ae5448d800c5def03d40e0b8c730eb65f7ed473d0",
+    "chromium-missing-light.png": "12a7dc11778d550cc522375635e154940569eebd54970ea219dd4d9c2f4e6a77",
+    "chromium-network_error-light.png": "70afcac6b70b51087144922de8391aaf3d11671acb263525a0be7565da2bf1e0",
+    "chromium-numeric-editor-light.png": "f8aedb99b1bee2383992e912d3b5de06df67e5e31a40b912d03a60bf597d2457",
+    "chromium-position-editor-light.png": "3af75aee7b3e79f4690997419f0bf126fa93674f4cc89eb9104c5b23b28761c3",
+    "chromium-results.json": "b65723cf280e5cec8e084e7268fe754828fea3994b697c02c82851f386c9489b",
+    "chromium-unsupported-light.png": "b8c0f366339d4317984684c018a0b55b4f3fc3402311b4923dc9f6c89d6c5dd5",
+    "chromium-wrong_id-light.png": "faa61b98239a17c7e34bf1740db53a0c4412ec8db8d9ff75fe2d6da08faf4224",
+    "component-entry.mjs": "f17a083ca27a1ab590fc94af3b28974e895087f746e13e5a721c8731ee579f59",
+    "component-server.mjs": "541ad9ea052f0a07d7775a58046814926a7fb012caa0e2debc93e9d7f7d376d9",
+    "components.browser.cjs": "c746fcf752979f69de8037bca3adc891587c87a7da2bbbbabc3204a074475277",
+    "driver-build.log": "b23f284599590176f30e56e13649607bb7c34aa4fa09acf2ff14bed2bfacd2b5",
+    "driver-prepare.log": "9c59a5926c906d0675f093621e2971ba7bb6d6976e84d196885190b2bf79a6a5",
+    "driver-source-manifest.json": "9c59a5926c906d0675f093621e2971ba7bb6d6976e84d196885190b2bf79a6a5",
+    "evidence-validation.json": "d6e5b67fdbc87376495fef798731bfdc2544afae0c50904b1f3b704221ab69a3",
+    "frozen-cases-replay.json": "e5892d0490c6b58ca3590da2e3da877493d17f1d02f82f0e2bb80fc98a643e37",
+    "native-receipts.ndjson": "2e6d66f25bad10ee74f8948ac6997d9e27f21f1604befa1eba30d6577230f0f3",
+    "prepare-driver.py": "46997c367dbfa2a9042c7b25c4f8dc9a05f0ac9816f30a9e1a58e6812bf6d641",
+    "route-browser-results.json": "a6c6a00227739c682362e24c601cc30fbf8f5872d45752ec7a972ed2781b7af1",
+    "route.browser.cjs": "03f7a008e7372ac773b8f77005aa4fc8a6f7352cf4404aeef727e94ea2e6c663",
+    "typecheck.log": "34334a2ae2240d33b9dcb6e3616de893f91814a7d0572dfa5ea9e9149458d264",
+    "ui-full.log": "fd0680efd60967a67a0ad88c3572afdd388f08285a768dc526629dab7cb6f225",
+    "verify-evidence.py": "0fb9907ceef8186b9558a7b387227550c1e4a83ef5fabcd29947e80db247b108",
+    "webkit-actual-edit-numeric-dark.png": "3a54c9adb7adf5a181045865bfc64b432a7db5572aea8efd03b4ea0d07515ec4",
+    "webkit-actual-edit-position-dark.png": "c81f994f704d87d611afc8c4e99c33786d7ba0e1b9d5d9450e5dc2ba2a903cab",
+    "webkit-actual-route-overlap-dark.png": "dc6b3c2be3b3fa8888cd0dfdbb351070cdac0f5b26979aa4e8dd33b824841123",
+    "webkit-actual-route-return-late-dark.png": "e9abd859ccc76275ae56731dbd786d40dff948a71a1adec535247fe8313a6413",
+    "webkit-actual-route-trace-dark.png": "3b06d27a43034c4080e5041cd18ad2b6960b5f430c1dfe629f4661cd33a1e06f",
+    "webkit-all_conditions-dark.png": "b653354273077336f9e4cbdbeca045a7e3823f15414cd882a5017f9bd6f977fb",
+    "webkit-atom_failure-dark.png": "98e7dffa34e161492b6bca7225cef6d6b053498995613f314b70023168ff3448",
+    "webkit-busy-dark.png": "2b64a3224f52801d899e7982eeccda690f8f03110ea3af57a07aa8fbfa0ccdc4",
+    "webkit-cancelled-late-reply-dark.png": "a581f0ce163a76fad45a2eec0c6535a2cb7db6bd6dd4b63f0ae83c44a679bc8e",
+    "webkit-duplicate-dark.png": "9e604179ad1fa90902a2cd233f755f47c029995c46460fb6e19c934ea409ddc2",
+    "webkit-empty-dark.png": "64bfa5386c09b39891fce2d33caa654475d186a05951d281ee97f2257429e93d",
+    "webkit-frozen-all_and_atoms-0-dark.png": "229fd6534f920cb9effba175fe8701f1b60476fe91a3d9e0f2028561d0b020c8",
+    "webkit-frozen-all_and_atoms-1-dark.png": "ef8fc33d498edeafd01862034d2ff09ea0137efb6bfcdfe66921a3854059404f",
+    "webkit-frozen-complete_numeric_boundaries-0-dark.png": "07002ba0cfb7b96784d9e5adde5deb8dfc01791eb43e7650c28bbd7fa4785a8c",
+    "webkit-frozen-complete_numeric_boundaries-1-dark.png": "356acc41e7b97f4817e92eb45e28fa8a473d44a1019c07999f7a7a8fcee9244e",
+    "webkit-frozen-complete_numeric_boundaries-2-dark.png": "c3c2cb4457d5b9d48fea5518b14cb5796206a11a5e67431d2b884ba480badb53",
+    "webkit-frozen-complete_numeric_boundaries-3-dark.png": "1a6f0cada77fc368c5b0f71406dc78c1675340024d19a426694eb6b2ee399cf9",
+    "webkit-frozen-complete_numeric_boundaries-4-dark.png": "cdfc7f54c627cd215781f2308f9c5ac8870db06bad525b56f041995f192b032d",
+    "webkit-frozen-family_channel_scope-0-dark.png": "ee6f416ced748638bf40efb59676a5504e8957009e0f59b2f503fb12f9eed931",
+    "webkit-frozen-family_excluded-0-dark.png": "6b1e200ec045d65028784e300d5c25c96ae7cbfcf0ef5b031a716d32699c609a",
+    "webkit-frozen-family_include_and_repeated_prefix-0-dark.png": "b614c1f02fc0dd0e0cf77c1bedf7409dcb946aa6149f9100e0f4c33545c51cf2",
+    "webkit-frozen-family_include_and_repeated_prefix-1-dark.png": "0b3da742a7017e6b225bc19a6fd3a5c1d36f57518dd9eec539e40ce316aac062",
+    "webkit-frozen-invalid_layout_reference-0-dark.png": "a889e1ad46e2eb7916359363bfab23390a28214cfbc01d73ba6f592a86058b23",
+    "webkit-frozen-layout_and_tail_prerequisites-0-dark.png": "2fe50556099925f88735c9eead0f2bfb9ec1b6799ed53ad50f022d00eeaa0924",
+    "webkit-frozen-layout_and_tail_prerequisites-1-dark.png": "b3a85c50ac80cdbc298180a66204c3515e43daf988247e3dcbc372481a1e5fd0",
+    "webkit-frozen-literal_segment_boundary-0-dark.png": "cb7e3374eab58038fbe2765e359242f0b35893a0e1fba6e0224f52d32ab9bfd4",
+    "webkit-frozen-literal_segment_boundary-1-dark.png": "c23dc11ede1b9bb2f634d45edfe724de1e1343e6028025821f8afa7cf1b697b9",
+    "webkit-frozen-literal_segment_boundary-2-dark.png": "af16f3df51cca1aca2df9a5869fcc66265698f596a9b5ad218e08d2d8974e1f2",
+    "webkit-frozen-name_after_version-0-dark.png": "67487a6e0a243637f8e65918213610db3605e7aff1d26339ddf7482cbe28a76c",
+    "webkit-frozen-name_any-0-dark.png": "a2cfc01e4bcedeaee4f5e5b6f2adb6911ebcc88c4f37133e2560c0d5ebf7c378",
+    "webkit-frozen-name_before_version-0-dark.png": "9fb2a66419cde62a9d7584e5947af0c25ed45c01fb860f635b428bde46778b64",
+    "webkit-frozen-name_before_version-1-dark.png": "80fd514e956d1857d9c799406f32f2c74004c2779b19d0737d8661a51c6b2c56",
+    "webkit-frozen-numeric_joiners-0-dark.png": "578a43492c9bf59f50d7ba5aaa7cef7ca104d36902e1dbc86a0d8b6f8f10c267",
+    "webkit-frozen-numeric_joiners-1-dark.png": "afe4b7e94386736e626cd94edc197a3874b8353c50e805b35419ea8928aa2512",
+    "webkit-frozen-runtime_overlap_error-0-dark.png": "9b9087df41b793cfef01dd4d09c810fb7b09dfe6b09a292c01810d3189a5f2f2",
+    "webkit-frozen-wrong_name_position-0-dark.png": "f3942620295c0f6401330c1033edf410e11a6f9105a9c56555b0cf57f3636459",
+    "webkit-layout_failure-dark.png": "901efbe5eccb5ddb01ce33b8ae14b4d31216fe801716bf0be5c22386dc4b0c93",
+    "webkit-malformed-dark.png": "038062a482e898eb070f14fd23b485b9b0b057cc9d145b2689912c89324f547c",
+    "webkit-matched-dark.png": "7029b9bfdaf216fc450a6a7511fd72cede7642dfdf9653f71c564ecb45c7f1c3",
+    "webkit-missing-dark.png": "7b0d05a4a41e6f58b2a7a2b56ea469479af96a65e60e40c0c5eb2207b2ef6530",
+    "webkit-missing-layout-dark.png": "64f93a84724eb4efc171b10c9769dde88d055e51268d5deb12d28ed705241d78",
+    "webkit-network_error-dark.png": "38b34ea70335f7bd0049bd58d31a204e1ce6d9df0d360d42f218f562f84a9400",
+    "webkit-numeric-editor-dark.png": "48bc1120f069e7bafc7387acab349530e43ae46d85c60a01f6d042a900aa6a9d",
+    "webkit-position-editor-dark.png": "05d13c01f0e5bf067f190c2e05159be628efdbf9f5a39b6ed266a626b73631b0",
+    "webkit-results.json": "157f1bd99e5054b65ed74e64d6ca6c5145d911b74985c702fd53a3b50dae120d",
+    "webkit-unsupported-dark.png": "23dce4cf4aa0232719fd6c391fbdc3a07c2eb98309972615762970cfdb78a1a3",
+    "webkit-wrong_id-dark.png": "b06ebb5bc543ac55f0706f2ee27a6c66bfda146f594287fceb3166716916aeb5"
+  },
+  "remoteVerified": "origin refs/heads/codex/0.2.23-ui = 54fc4779a7616a525ccaf10e2c2f4b787c2e4a66",
+  "worktreeClean": true
+}

@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "artifactSha256": {
+    "L1-condition-trace-contract.json": "4b3e026a3c37b9e7f82c071181921cf57ef35049e9a4c9b8d9051c1f18b32395",
+    "condition-preview.trace.schema.json": "8a12967cc1ed3d52e328796952227c1f399b7aacee8585370607e71480a089a4",
+    "condition-preview.error.schema.json": "6e8a71b4c19e5e78009d256d2e4872ba17c32249793a756d823414ff4d7e1fe2",
+    "condition-preview.real-cases.json": "974c837759b7c932456b2a9288b51b9af08ac27df3439da8dde7518da7bee01c"
+  },
+  "producerCommit": "9c6da8e2c1ee38992f42b83d4428079dccb4afd3",
+  "producerSourceSha256": {
+    "apps/desktop/tauri/src/modules/model_config/matching_v2.rs": "71f6553360f546339a218abf9f821e3b286eba41fb1e2656aa99be10b53ed282",
+    "apps/desktop/tauri/src/modules/model_config/matching_v2_trace_tests.rs": "8a78f7e4ac728423e3d7167a43e3fc9fec677ea4fb7fde2d31988bdbb18d5ed9",
+    "apps/desktop/tauri/src/commands/model_config_v2.rs": "5fe9b38749ea24978ea487a2a9a2dc1444cc885a42d608b1c59196055a2d519c",
+    "apps/desktop/tauri/src/commands/model_config_v2_trace_tests.rs": "fe1cc2e32a3ecd66185649a29e5f221851cd478b68712d8add8e3ccb4ee7ae4a"
+  },
+  "frozenCases": 14,
+  "frozenSuccessRows": 23,
+  "nativeReceiptsValidated": {
+    "success": 10,
+    "error": 2,
+    "validate": 12
+  },
+  "nativeRawIdsUnchanged": true,
+  "validation": "Draft7 success/error wire schemas from producer, applied independently to every native receipt, including preserved failed harness attempts. No renderer-computed matching results."
+}

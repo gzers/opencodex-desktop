@@ -1,0 +1,92 @@
+{
+  "role": "L3",
+  "batch": "AC-MATCH-05 adopted prototype diagnostic disclosure",
+  "status": "completed_scoped_verification",
+  "uiCommit": "6f49fc783a0a163028d30be9209d83d3e13be0bf",
+  "branch": "codex/0.2.23-ui",
+  "pushed": true,
+  "remoteVerified": "6f49fc783a0a163028d30be9209d83d3e13be0bf",
+  "worktreeClean": true,
+  "changedFiles": [
+    "apps/desktop/ui/src/features/models/ConditionPreview.vue",
+    "apps/desktop/ui/tests/model-condition-preview-v2.test.ts"
+  ],
+  "productionFileSha256": {
+    "apps/desktop/ui/src/features/models/ConditionPreview.vue": "cfed353d86415e5530c4c2863766b39010b2462566995a64a0b3d6c48a738b32",
+    "apps/desktop/ui/tests/model-condition-preview-v2.test.ts": "36a3c269b8da997c69a9e1bf163909aa468f1edebcae030179dbfac620d687aa"
+  },
+  "priorContribution": "54fc4779a7616a525ccaf10e2c2f4b787c2e4a66",
+  "priorEvidencePreserved": "../ac-match-05-trace/handoff-manifest.json",
+  "prototypeRule": "Adopted model-condition-editor-023.js lines 76-77: Chinese reasons by default, condition IDs and exact diagnostics in folded details. No acceptance rule changes.",
+  "behavior": {
+    "default": "Original backend Chinese summary/family/condition/precondition/atom reasons and three-state/applicable/applied labels. No trace reasonCode or conditionId UUID in default innerText.",
+    "details": "Native default-closed details named 条件标识与匹配诊断. JSON holds unmodified summary reasonCode, full family and every ordered condition including conditionId, precondition/atom codes and statuses. Browser checks parse it and compare exact DTO data, expand/close without mutation.",
+    "errors": "Existing structured issue code and fieldPath preserved inline.",
+    "layout": "pre-wrap / overflow-wrap only in owned component; expanded JSON fits 640px route without page overflow."
+  },
+  "checks": {
+    "targeted": "1 file / 13 tests passed",
+    "typecheck": "passed via npm run build (vue-tsc --noEmit)",
+    "build": "passed; existing dynamic-import / chunk-size warnings retained",
+    "browser": [
+      {
+        "engine": "chromium",
+        "width": 1180,
+        "height": 850,
+        "theme": "light",
+        "status": "passed",
+        "checks": 8,
+        "pageErrors": [],
+        "consoleWarningsOrErrors": []
+      },
+      {
+        "engine": "webkit",
+        "width": 640,
+        "height": 850,
+        "theme": "dark",
+        "status": "passed",
+        "checks": 8,
+        "pageErrors": [],
+        "consoleWarningsOrErrors": []
+      }
+    ],
+    "wireSchema": "All 24 native receipts independently validated against unchanged frozen Draft7 producer schema; 10 preview success, 2 intentional overlap Err, 12 content validation success."
+  },
+  "screenshots": 16,
+  "nativeBackend": "Unchanged frozen production Rust pure preview driver from ../ac-match-05-trace; production route and default store/API adapter, isolated loopback transport. Source/artifact hashes independently verified again in evidence-validation.json.",
+  "limits": [
+    "No native Tauri WebView/packaged-app claim; browser ModelsRoute and actual isolated Rust preview function.",
+    "No API/store/Rust/public-component/docs/daily configuration changes.",
+    "No frontend reason inference or trace changes.",
+    "Previous contribution evidence retained; this receipt is the bounded presentation follow-up."
+  ],
+  "cleanup": "All owned Playwright browsers and loopback Vite server stopped.",
+  "createdAt": "2026-11-06T19:55:29.920004+00:00",
+  "evidenceSha256": {
+    "browser-results.json": "e01b595bde73ed9cb0e03ec128feee360e48be60fbab5c101424f8d4d51e9b94",
+    "build.log": "fe64945459da09ad48624a469f5bf024eddbc2816b11127aa2b97178785ba0d3",
+    "chromium-closed-light.png": "e574df58a3251a180fc8f0eb9cda86b6c33de0801c54170f3e3ad87829175042",
+    "chromium-default-light.png": "e574df58a3251a180fc8f0eb9cda86b6c33de0801c54170f3e3ad87829175042",
+    "chromium-expanded-light.png": "1845650299094de8fe6e8b24b49625e09edd213cfbc524895d63176d93bc3b96",
+    "chromium-long-expanded-light.png": "702ab73d290534d474a0f42f6a9b37feb0ce77d46a22950dea05f4717a44d966",
+    "chromium-long-route-default-light.png": "6be8a11f67de89ca7320dbe4bcf836bac4af83c0b7ea06c07cd15e66f50b41ea",
+    "chromium-overlap-error-light.png": "a22b45bd46d4b6116f7a9929c61bbb5e362096014c3a61b01982ad4a512a536a",
+    "chromium-precondition-null-light.png": "5dd6e9787bae45420ba82648ed3388ebd4ddff022355ecc87d39a534a05a55f6",
+    "chromium-route-default-light.png": "909549b26e6b883d39fbead9ac65ac4db67085f3951a41516889cc6e21797e88",
+    "component-entry.mjs": "f17a083ca27a1ab590fc94af3b28974e895087f746e13e5a721c8731ee579f59",
+    "component-server.mjs": "f348a6f2b3398ed741b50115fa8e02261f6cc7d9bd61bb42ea673a22f5d23002",
+    "diagnostics.browser.cjs": "b892acf3f0146b63d75c1af66c23d71d4623412c3e982e14e2e0e1d8198a44b0",
+    "evidence-validation.json": "03165994bddd6bbc32839d1e6ebfeb99797189a6a84bd6c2ea0ea85b975f027c",
+    "native-receipts.ndjson": "d9218da352461e591754d33421256c1444c40ea6beb6b08c28d4f498b38c3338",
+    "targeted-tests.log": "97487bca4f16bb3e3898f7053d171631b044126a43300eaf45c12bf5d896e4e7",
+    "verify-evidence.py": "0fb9907ceef8186b9558a7b387227550c1e4a83ef5fabcd29947e80db247b108",
+    "webkit-closed-dark.png": "88ae12e07290f9020c16553354e39b52e56d900a1b26304ac7f041935b15f2fc",
+    "webkit-default-dark.png": "71a18d67549074a6c225a3ca9f16dd90c8ab8e6235fda59cf93730df4e46b39f",
+    "webkit-expanded-dark.png": "df24e83eb13ad5802fa10dc0511c37205b924035ea1195e23acc807cec755ae3",
+    "webkit-long-expanded-dark.png": "11aaa812665c78befcec08b215d5a5eb305ad60c8a471bc657a2fd85ce7f4ff6",
+    "webkit-long-route-default-dark.png": "d1deaadbd0bc9e89af164835854b86954ffa186c67fe249d6e21c89873de8354",
+    "webkit-overlap-error-dark.png": "4bb24d83fb90c28f026b784a04b38491b223f6e7714b751136422c7526d9e797",
+    "webkit-precondition-null-dark.png": "5a518e33c83d4ebfdf94ec1d6186ee098dd93c6dc51ce3926aafe224b8420126",
+    "webkit-route-default-dark.png": "304c1198a0f060bde549182a7e57e14ccf9ebcfada335bd934393f1cc068afcb"
+  }
+}
