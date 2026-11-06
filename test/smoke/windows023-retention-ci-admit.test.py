@@ -108,8 +108,8 @@ class AdmissionTests(unittest.TestCase):
                 admit.prepare(None)
             download.assert_not_called()
 
-    def make_archive(self, kind="msi", mutate=None, member=None, extra=None, payload=b"synthetic installer; NEVER executable"):
-        name = f"OpenCodeX.Desktop_0.2.23_x64{'-setup.exe' if kind == 'nsis' else '_en-US.msi'}"
+    def make_archive(self, kind="msi", mutate=None, member=None, extra=None, payload=b"synthetic installer; NEVER executable", product="OpenCodeX Desktop"):
+        name = f"{product}_0.2.23_x64{'-setup.exe' if kind == 'nsis' else '_en-US.msi'}"
         row = {"kind": kind, "name": name, "result": "pass", "productVersion": "0.2.23", "firstScreen": "pass",
                "bytes": len(payload), "sha256": hashlib.sha256(payload).hexdigest(),
                "installedExecutableSha256": "d" * 64, "expectedInstalledExecutableSha256": "d" * 64}
@@ -140,6 +140,13 @@ class AdmissionTests(unittest.TestCase):
         for kind in admit.BASELINE:
             self.extract(self.make_archive(kind), kind)
 
+    def test_candidate_uses_raw_packager_name_not_github_asset_rewrite(self):
+        # Pinned tauri-bundler 2.9.4 uses settings.product_name() unchanged.
+        # Published baseline assets have dots; upload-artifact preserves spaces.
+        for kind in admit.BASELINE:
+            with self.subTest(kind=kind), self.assertRaises(ValueError):
+                self.extract(self.make_archive(kind, product="OpenCodeX.Desktop"), kind)
+
     def test_receipt_version_source_and_installed_hash_cannot_be_faked(self):
         for key, value in (("version", "0.1.10"), ("sourceCommit", "f" * 40), ("result", "fail"), ("installers", [])):
             with self.subTest(key=key), self.assertRaises(ValueError):
@@ -154,7 +161,7 @@ class AdmissionTests(unittest.TestCase):
         for member in ("../evil.msi", "/abs.msi", "C:/evil.msi", "a\\evil.msi", "a./evil.msi", "a /evil.msi"):
             with self.subTest(member=member), self.assertRaises(ValueError):
                 self.extract(self.make_archive(member=member))
-        name = "OpenCodeX.Desktop_0.2.23_x64_en-US.msi"
+        name = "OpenCodeX Desktop_0.2.23_x64_en-US.msi"
         with self.assertRaises(ValueError):
             self.extract(self.make_archive(extra=("elsewhere/" + name, "duplicate")))
         with self.assertRaises(ValueError):

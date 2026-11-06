@@ -138,7 +138,9 @@ def extract_candidate(archive, kind, head, downloads, output):
     rows = [row for row in receipt.get("installers", []) if row.get("kind") == kind]
     require(len(rows) == 1, "Candidate installer kind ambiguous")
     row = rows[0]
-    name = f"OpenCodeX.Desktop_0.2.23_x64{'-setup.exe' if kind == 'nsis' else '_en-US.msi'}"
+    # The fixed bundler uses product_name() unchanged. Actions upload-artifact
+    # retains spaces, unlike the public GitHub release asset name normalization.
+    name = f"OpenCodeX Desktop_0.2.23_x64{'-setup.exe' if kind == 'nsis' else '_en-US.msi'}"
     require(row.get("name") == name and row.get("result") == "pass"
             and row.get("productVersion") == "0.2.23" and row.get("firstScreen") == "pass"
             and type(row.get("bytes")) is int and row["bytes"] > 0
