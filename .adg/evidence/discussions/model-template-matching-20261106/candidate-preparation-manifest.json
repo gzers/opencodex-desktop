@@ -1,0 +1,82 @@
+{
+  "date": "2026-11-06",
+  "status": "passed_configuration_preparation_and_document_checks_only",
+  "targetVersion": "0.2.23",
+  "scope": "P23-11 / MATCH-00 prepared; MATCH-01..05 pending",
+  "candidate": {
+    "status": "passed_candidate_config_only",
+    "candidateSha256": "87bfce88da91ea0aceef7b9a61b26050ec86f66fea80dea70141eacc58a91f18",
+    "format": "ocxd-model-template-candidate-v1",
+    "targetVersion": "0.2.23",
+    "productionReaderSupport": "pending_0.2.23_implementation",
+    "templates": 17,
+    "generalAndRetainedExactIncludeRules": 34,
+    "sourceExactIncludeRules": 78,
+    "allOriginalSeedIdsRetained": 78,
+    "knownParameterOverridesPreserved": 58,
+    "structuredOverrides": 47,
+    "frozenLocalRows": 246,
+    "uniqueModelsMatched": 133,
+    "localRowAssignmentsSameAsEarlierAnalysis": true,
+    "knownOverridesMatchedOnFrozenRows": 79,
+    "syntheticVersionAndFamilyBoundaries": 57,
+    "literalPositionAndBoundaryCases": 8,
+    "invalidConfigsRejected": 6,
+    "unknownCapabilitySpilloverNegatives": 4,
+    "validationMethod": "stdlib strict fields + pinned source equality + data-driven candidate interpreter; not an installed JSON-Schema/production reader",
+    "dailyConfigReadsOrWrites": 0,
+    "networkRequests": 0,
+    "scope": "Prepared file and offline checks only; prototype/Schema adoption/product integration still pending."
+  },
+  "documentation": {
+    "documents": 14,
+    "local_links_checked": 360,
+    "anchors_checked": 0,
+    "errors": [],
+    "diff_check": true
+  },
+  "yamlRelations": "Ruby YAML parser passed DMD/IMP-31/IMP-33 versions/states/AC ids/relations",
+  "productionCodeChanged": false,
+  "dailyConfigReadsOrWritesThisPreparation": 0,
+  "networkRequests": 0,
+  "prototypeChangedThisPreparation": false,
+  "newTaskOrRelease": false,
+  "temporaryBytecodeResidue": false,
+  "preservedLimitations": [
+    "Current production reader cannot load candidate format.",
+    "Frozen name family labels are not supplier capability certification.",
+    "Unknown model inherits, known capabilities only pinned source values.",
+    "Channel namespace candidates require explicit channel UUID binding/adoption."
+  ],
+  "preparationCorrections": [
+    {
+      "issue": "Initial generator included trailing v/k/m prefix marker as a complete literal segment for some families.",
+      "correction": "Only complete pre-version literal segments emitted; all 58 source selectors verified."
+    },
+    {
+      "issue": "First candidate copied old caseSensitive=true, differing from prior case-insensitive general-family experiment.",
+      "correction": "Explicit false in new candidate revisions; DeepSeek-V4-Flash-0731 covered without changing raw ID or old revision; final246-row replay identical."
+    }
+  ],
+  "files": {
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/模型模版通用匹配配置/README.md": "1180297299c676d1eb5a861faf4e1893f161bf876c55397088222ef8704e52b4",
+    "docs/01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md": "e5ee6f79f0063b9551fb09f661381a77c60d574a1f041e6bb06a249482accc09",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-33.md": "a04eb4513fb59c68fdb5a15f020c6ade8b108ee51723e9497c2a5eb1707d4826",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-31.md": "bb4203197ce5b836f982fbdb717c6ec89c48ccdb9dab0e25641a56f6e76eb3e4",
+    "docs/03-开发实施/README.md": "fedec3e6e4e2a3ff1ee9a990207698570bed30727e3f359fbf3a4034578e2a39",
+    "docs/01-需求管理/README.md": "4d38cf324efe23831004a1a7a469ea8dc1e10be8d3fa860d323ae1cc4adf50c3",
+    "docs/01-需求管理/需求/DMD-OPENCODEX-POST022.md": "c120f75be14570ca792b1d0a73e890ae486a6c06a759f3f6412ca447db06c403",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/专题-模型模版通用匹配-待分析.md": "4c45250bacb953d932ea99afef6eab288deb80ee8459aed1d5fde49acacee8d6",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/20261106-模型模版通用匹配可行性验证.md": "aeb70a4804a48280646b5a33363254046115361cf37f83fca378e901c462f430",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md": "a949089490e576f39eac53f4d9be2b1448b1cbfdd222f84fbb1bc7f958a9e554",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.22-bugs.md": "71db0dd46e73c2c092fd7e6c57a3cfb5dcf555a508ea71962ebc48a061a31ad4",
+    "docs/02-项目核心/数据与状态.md": "34b9ea305235f2bb6a65ffdf622a42db75f46ad23d51c7e417da4dc2ea144009",
+    "docs/02-项目核心/契约字段.md": "8a821447a7e96943786ec7b07c27de4b87d0324253d6fefcbfc1e4e35e7423a2",
+    "docs/02-项目核心/UI规范.md": "e0bbf57bf429c04d408e2a505d4845b0ef76ead6b698e5b5931115edaefbea62",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/模型模版通用匹配配置/model-templates.0.2.23.candidate.json": "87bfce88da91ea0aceef7b9a61b26050ec86f66fea80dea70141eacc58a91f18",
+    ".adg/evidence/discussions/model-template-matching-20261106/prepare-candidate-config.py": "2ed753d8839dda47e1c894bb9811361384a1bd3406e2bba836afcb328fe8dc84",
+    ".adg/evidence/discussions/model-template-matching-20261106/validate-candidate-config.py": "e45a81207164569939ff3950eb76eb2854765fd25ee93e94f9f355565a35727a",
+    ".adg/evidence/discussions/model-template-matching-20261106/candidate-config-validation.json": "f86f8da9719226ebdf6a19c30288062aff2def52c66715c6256ad6ac40dc584a",
+    ".adg/evidence/discussions/model-template-matching-20261106/candidate-config-model-results.json": "1a0a4a91e0ada5baaafaacff6c83dd30721dc9874e1f26c69405dd8648537332"
+  }
+}

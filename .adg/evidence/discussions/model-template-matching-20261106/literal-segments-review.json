@@ -1,0 +1,304 @@
+{
+  "status": "passed-limited-naming-experiment",
+  "synthetic_cases": 16,
+  "synthetic_passed": 16,
+  "cases": [
+    {
+      "case": "claude_literal_before",
+      "raw_model_id": "claude-opus-5-5",
+      "family": "Claude",
+      "numeric_version": "5.5",
+      "literal_segment": "opus",
+      "position": "any",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "claude_dotted",
+      "raw_model_id": "claude-opus-5.5",
+      "family": "Claude",
+      "numeric_version": "5.5",
+      "literal_segment": "opus",
+      "position": "any",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "claude_position_before",
+      "raw_model_id": "claude-opus-5-5",
+      "family": "Claude",
+      "numeric_version": "5.5",
+      "literal_segment": "opus",
+      "position": "before_version",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "claude_not_suffix",
+      "raw_model_id": "claude-opus-5-5",
+      "family": "Claude",
+      "numeric_version": "5.5",
+      "literal_segment": "opus",
+      "position": "after_version",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "gpt_literal_after",
+      "raw_model_id": "gpt-6-sol",
+      "family": "GPT",
+      "numeric_version": "6",
+      "literal_segment": "sol",
+      "position": "any",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "gpt_position_after",
+      "raw_model_id": "gpt-6-sol",
+      "family": "GPT",
+      "numeric_version": "6",
+      "literal_segment": "sol",
+      "position": "after_version",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "gpt_not_prefix",
+      "raw_model_id": "gpt-6-sol",
+      "family": "GPT",
+      "numeric_version": "6",
+      "literal_segment": "sol",
+      "position": "before_version",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "version_dot_dash",
+      "raw_model_id": "gpt-6-1-sol",
+      "family": "GPT",
+      "numeric_version": "6.1",
+      "literal_segment": "sol",
+      "position": "any",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "inside_name_not_fragment",
+      "raw_model_id": "gpt-6-solar",
+      "family": "GPT",
+      "numeric_version": "6",
+      "literal_segment": "sol",
+      "position": "any",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "series_boundary",
+      "raw_model_id": "claude-opusplus-5-5",
+      "family": "Claude",
+      "numeric_version": "5.5",
+      "literal_segment": "opus",
+      "position": "any",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "version_boundary",
+      "raw_model_id": "claude-opus-5-50",
+      "family": "Claude",
+      "numeric_version": "5.5",
+      "literal_segment": "opus",
+      "position": "any",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "wrong_family",
+      "raw_model_id": "gpt-5.5-opus",
+      "family": "Claude",
+      "numeric_version": "5.5",
+      "literal_segment": "opus",
+      "position": "any",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "no_automatic_spelling_fix",
+      "raw_model_id": "claude-opus-5-5",
+      "family": "Claude",
+      "numeric_version": "5.5",
+      "literal_segment": "oups",
+      "position": "any",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "date_kept",
+      "raw_model_id": "claude-opus-5-5-20261106",
+      "family": "Claude",
+      "numeric_version": "5.5",
+      "literal_segment": "opus",
+      "position": "before_version",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "series_and_version_are_and",
+      "raw_model_id": "claude-sonnet-5-5",
+      "family": "Claude",
+      "numeric_version": "5.5",
+      "literal_segment": "opus",
+      "position": "any",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "no_implicit_reorder",
+      "raw_model_id": "claude-5-5-opus",
+      "family": "Claude",
+      "numeric_version": "5.5",
+      "literal_segment": "opus",
+      "position": "any",
+      "expected": false,
+      "actual": false
+    }
+  ],
+  "real_saved_examples": [
+    {
+      "rule": {
+        "family": "Claude",
+        "version": "5.5",
+        "literal_segment": "opus",
+        "position": "before_version"
+      },
+      "rows": [
+        {
+          "provider": "A6api",
+          "raw_model_id": "claude-opus-5-5"
+        },
+        {
+          "provider": "FeiMao-Claude",
+          "raw_model_id": "claude-opus-5-5"
+        }
+      ],
+      "unique_ids": [
+        "claude-opus-5-5"
+      ]
+    },
+    {
+      "rule": {
+        "family": "GPT",
+        "version": "6",
+        "literal_segment": "sol",
+        "position": "after_version"
+      },
+      "rows": [
+        {
+          "provider": "A6api",
+          "raw_model_id": "gpt-6-sol"
+        },
+        {
+          "provider": "Ciii-1",
+          "raw_model_id": "gpt-6-sol"
+        },
+        {
+          "provider": "Ciii-2",
+          "raw_model_id": "gpt-6-sol"
+        },
+        {
+          "provider": "CodeKey",
+          "raw_model_id": "gpt-6-sol"
+        },
+        {
+          "provider": "FeiMao",
+          "raw_model_id": "gpt-6-sol"
+        },
+        {
+          "provider": "Input-1",
+          "raw_model_id": "gpt-6-sol"
+        },
+        {
+          "provider": "Input-2",
+          "raw_model_id": "gpt-6-sol"
+        },
+        {
+          "provider": "Krill-1",
+          "raw_model_id": "gpt-6-sol"
+        },
+        {
+          "provider": "Krill-2",
+          "raw_model_id": "gpt-6-sol"
+        },
+        {
+          "provider": "MDJK",
+          "raw_model_id": "gpt-6-sol"
+        }
+      ],
+      "unique_ids": [
+        "gpt-6-sol"
+      ]
+    },
+    {
+      "rule": {
+        "family": "GPT",
+        "version": "6.1",
+        "literal_segment": "sol",
+        "position": "after_version"
+      },
+      "rows": [
+        {
+          "provider": "A6api",
+          "raw_model_id": "gpt-6.1-sol"
+        },
+        {
+          "provider": "Ciii-1",
+          "raw_model_id": "gpt-6.1-sol"
+        },
+        {
+          "provider": "Ciii-2",
+          "raw_model_id": "gpt-6.1-sol"
+        },
+        {
+          "provider": "CodeKey",
+          "raw_model_id": "gpt-6.1-sol"
+        },
+        {
+          "provider": "FeiMao",
+          "raw_model_id": "gpt-6.1-sol"
+        },
+        {
+          "provider": "Input-1",
+          "raw_model_id": "gpt-6.1-sol"
+        },
+        {
+          "provider": "Input-2",
+          "raw_model_id": "gpt-6.1-sol"
+        },
+        {
+          "provider": "Krill-1",
+          "raw_model_id": "gpt-6.1-sol"
+        },
+        {
+          "provider": "Krill-2",
+          "raw_model_id": "gpt-6.1-sol"
+        },
+        {
+          "provider": "MDJK",
+          "raw_model_id": "gpt-6.1-sol"
+        }
+      ],
+      "unique_ids": [
+        "gpt-6.1-sol"
+      ]
+    }
+  ],
+  "limits": [
+    "Literal conditions support any/before-version/after-version within declared family syntax; NOT global suffix-only.",
+    "Any-position predicate does not reorder names or declare all token permutations identical.",
+    "Current illustrative grammar retains known family layout; new layouts require explicit syntax declarations.",
+    "Literal token boundary here is explicitly hyphen; dot/hyphen equivalence remains limited to numeric version slots.",
+    "No automatic spelling correction or supplier/capability identity assertions.",
+    "Production and prototype unchanged; previous analysis files preserved."
+  ]
+}

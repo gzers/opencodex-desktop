@@ -1,0 +1,392 @@
+{
+  "separator": [
+    {
+      "case": "dot_dash_gpt",
+      "a": "gpt-5.5",
+      "b": "gpt-5-5",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "dot_dash_claude",
+      "a": "claude-fable-5.1",
+      "b": "claude-fable-5-1",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "same_spec",
+      "a": "gpt-5.5-mini",
+      "b": "gpt-5-5-mini",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "three_components",
+      "a": "gpt-5.5.1",
+      "b": "gpt-5-5-1",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "same_dated_build",
+      "a": "claude-haiku-4.5-20251001",
+      "b": "claude-haiku-4-5-20251001",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "gpt_minor",
+      "a": "gpt-6.1-sol",
+      "b": "gpt-6-1-sol",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "qwen_version_before_size",
+      "a": "qwen3.8-27b",
+      "b": "qwen3-8-27b",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "deepseek_version",
+      "a": "deepseek-v4.1-flash",
+      "b": "deepseek-v4-1-flash",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "gemini_version",
+      "a": "gemini-3.5-flash",
+      "b": "gemini-3-5-flash",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "glm_version",
+      "a": "glm-5.3-flash",
+      "b": "glm-5-3-flash",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "kimi_version",
+      "a": "kimi-k2.7-code",
+      "b": "kimi-k2-7-code",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "minimax_version",
+      "a": "MiniMax-M3.1-Flash",
+      "b": "minimax-m3-1-flash",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "different_major",
+      "a": "gpt-5.5",
+      "b": "gpt-15.5",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "different_minor",
+      "a": "gpt-5.5",
+      "b": "gpt-5.50",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "patch_not_minor",
+      "a": "gpt-5.5",
+      "b": "gpt-5.5.1",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "dashed_patch_not_minor",
+      "a": "gpt-5.5",
+      "b": "gpt-5-5-1",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "missing_separator",
+      "a": "gpt-5.5",
+      "b": "gpt-55",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "underscore_not_declared",
+      "a": "gpt-5.5",
+      "b": "gpt-5_5",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "space_not_declared",
+      "a": "gpt-5.5",
+      "b": "gpt-5 5",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "any_char_not_separator",
+      "a": "gpt-5.5",
+      "b": "gpt-5x5",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "different_spec",
+      "a": "gpt-5.5-mini",
+      "b": "gpt-5-5-pro",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "suffix_is_not_version",
+      "a": "gpt-5.5-mini",
+      "b": "gpt-5.5-mini.1",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "family_not_substring",
+      "a": "gpt-5.5",
+      "b": "notgpt-5-5",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "channel_prefix_not_implicit",
+      "a": "gpt-5.5",
+      "b": "vendor-gpt-5-5",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "series_not_same",
+      "a": "claude-opus-5.5",
+      "b": "claude-sonnet-5-5",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "family_not_same",
+      "a": "gpt-5.5",
+      "b": "glm-5-5",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "build_not_ignored",
+      "a": "claude-haiku-4.5",
+      "b": "claude-haiku-4-5-20251001",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "date_not_equated",
+      "a": "claude-haiku-4.5-20251001",
+      "b": "claude-haiku-4-5-20251002",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "build_date_delimiters_not_global",
+      "a": "claude-haiku-4.5-20251001",
+      "b": "claude-haiku-4-5-2025-10-01",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "invalid_date_not_build",
+      "a": "claude-haiku-4.5",
+      "b": "claude-haiku-4-5-20251301",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "leading_zero_not_folded",
+      "a": "gpt-5.5",
+      "b": "gpt-05-5",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "version_zero_not_folded",
+      "a": "gpt-5.5",
+      "b": "gpt-5-05",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "date_suffix_ambiguous",
+      "a": "grok-4.20",
+      "b": "grok-4.20-0309",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "ambiguous_date_slots_not_equated",
+      "a": "grok-4.20-0309",
+      "b": "grok-4-20-0309",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "ambiguous_six_digit_build",
+      "a": "gpt-5.5-260915",
+      "b": "gpt-5-5-260915",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "rolling_alias_not_proven",
+      "a": "gpt-5.5",
+      "b": "gpt-5.5-latest",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "tag_not_punctuation_normalized",
+      "a": "gpt-5.5-code-mini",
+      "b": "gpt-5-5-code.mini",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "non_ascii_separator",
+      "a": "gpt-5.5",
+      "b": "gpt-5–5",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "qualified_number",
+      "a": "gpt-5.5",
+      "b": "gpt-5.5b",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "date_in_other_name",
+      "a": "gpt-5.5",
+      "b": "model-2026-05-05",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "review_task_not_model",
+      "a": "gpt-5.5",
+      "b": "codex-auto-review",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "retain_quantization",
+      "a": "qwen3.8-27b-q6",
+      "b": "qwen3-8-27b-q8",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "retain_model_size",
+      "a": "qwen3.8-27b",
+      "b": "qwen3-8-72b",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "unparsed_symbolic_id",
+      "a": "gpt-reserve",
+      "b": "gpt-reserve",
+      "expected": false,
+      "actual": false
+    }
+  ],
+  "family_boundaries": [
+    {
+      "provider": "other",
+      "model": "notgpt-5.5",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "provider": "other",
+      "model": "backup-gpt-5.5",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "provider": "other",
+      "model": "qwenish-3.8",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "provider": "other",
+      "model": "hypothesis-3",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "provider": "other",
+      "model": "doubao-seedream-5",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "provider": "other",
+      "model": "text-embedding-3-large",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "provider": "other",
+      "model": "claudette-5.5",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "provider": "other",
+      "model": "aixj-gpt-5.5",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "provider": "other",
+      "model": "qwen５.５",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "provider": "GZGG-NewApi",
+      "model": "aixj-gpt-5.5",
+      "expected": "GPT",
+      "actual": "GPT"
+    },
+    {
+      "provider": "GZGG-NewApi",
+      "model": "ciii-gpt-gpt-5.6-terra",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "provider": "other",
+      "model": "mygemini-3.8",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "provider": "other",
+      "model": "gemini-embedding-2-preview",
+      "expected": "Gemini",
+      "actual": "Gemini"
+    }
+  ]
+}

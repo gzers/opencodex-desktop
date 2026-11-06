@@ -1,0 +1,17 @@
+{
+  "status": "completed_with_source_hash_drift_disclosed",
+  "original_file_bytes_unchanged": {
+    "data_root_metadata": true,
+    "config": false,
+    "layout": true
+  },
+  "model_and_selection_projection_unchanged": true,
+  "production_code_checkout_clean": true,
+  "production_template_library_file_present": false,
+  "network_requests": 0,
+  "remote_mutations": 0,
+  "test_servers_started": 0,
+  "temporary_rust_workspace_removed": true,
+  "daily_config_write_commands": 0,
+  "whole_config_hash_drift": "Observed during analysis; no production config writes performed by analysis commands. Cause not investigated; no rollback/overwrite attempted. Frozen model-ID projection still identical. Do not claim whole config byte invariance."
+}

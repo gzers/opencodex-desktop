@@ -1,0 +1,696 @@
+{
+  "summary": {
+    "status": "passed_candidate_config_only",
+    "candidateSha256": "aeeec2078ff1416f587019c376cc06b17259550e47db199f1e59a7fff8aae68b",
+    "format": "ocxd-model-template-candidate-v1",
+    "targetVersion": "0.2.23",
+    "productionReaderSupport": "pending_0.2.23_implementation",
+    "templates": 17,
+    "generalAndRetainedExactIncludeRules": 34,
+    "sourceExactIncludeRules": 78,
+    "allOriginalSeedIdsRetained": 78,
+    "knownParameterOverridesPreserved": 58,
+    "structuredOverrides": 47,
+    "frozenLocalRows": 246,
+    "uniqueModelsMatched": 133,
+    "localRowAssignmentsSameAsEarlierAnalysis": true,
+    "knownOverridesMatchedOnFrozenRows": 79,
+    "syntheticVersionAndFamilyBoundaries": 57,
+    "literalPositionAndBoundaryCases": 8,
+    "invalidConfigsRejected": 6,
+    "unknownCapabilitySpilloverNegatives": 4,
+    "validationMethod": "stdlib strict fields + pinned source equality + data-driven candidate interpreter; not an installed JSON-Schema/production reader",
+    "dailyConfigReadsOrWrites": 0,
+    "networkRequests": 0,
+    "scope": "Prepared file and offline checks only; prototype/Schema adoption/product integration still pending."
+  },
+  "preservedParameters": [
+    {
+      "templateId": "837c8133-76e9-4bdf-a68c-9637331c4d43",
+      "overrideId": "2660fb7c-dcb3-43c4-bbfe-f5fd2a3e6c9b",
+      "sourceExactId": "gpt-6-astra",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "837c8133-76e9-4bdf-a68c-9637331c4d43",
+      "overrideId": "549f12b2-2f58-434d-bf98-814a4935bf20",
+      "sourceExactId": "gpt-6.1-sol",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "837c8133-76e9-4bdf-a68c-9637331c4d43",
+      "overrideId": "8112514a-ce72-47b8-bb40-c2d6bc22d3a7",
+      "sourceExactId": "gpt-6-luna",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "837c8133-76e9-4bdf-a68c-9637331c4d43",
+      "overrideId": "fdcb0aa3-7513-4f79-a5d4-247e233adde5",
+      "sourceExactId": "gpt-6-sol",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "961df482-3cbe-421d-a268-caa768de2fc6",
+      "overrideId": "e81e03ce-ca23-4b8b-a124-57394f58bab3",
+      "sourceExactId": "claude-fable-5-1",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "961df482-3cbe-421d-a268-caa768de2fc6",
+      "overrideId": "3d3ca373-350d-4ea7-8dac-fddacfbfd729",
+      "sourceExactId": "claude-opus-5-5",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "961df482-3cbe-421d-a268-caa768de2fc6",
+      "overrideId": "48dd6394-b195-49e2-b0f1-f58aee3cb33a",
+      "sourceExactId": "claude-sonnet-5-5",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "961df482-3cbe-421d-a268-caa768de2fc6",
+      "overrideId": "f66dd527-dd74-4cb6-8021-6fa8e3d6b913",
+      "sourceExactId": "claude-haiku-5-5",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "e4182850-f6b6-4597-b06a-935a23fc19de",
+      "overrideId": "368f5f5a-9197-46ba-bc50-f4df200a6bc5",
+      "sourceExactId": "gemini-3.8-flash",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "e4182850-f6b6-4597-b06a-935a23fc19de",
+      "overrideId": "11b12da7-2747-4442-a3f7-db1aefa03950",
+      "sourceExactId": "gemini-3.5-flash",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "e4182850-f6b6-4597-b06a-935a23fc19de",
+      "overrideId": "011d7c2f-0a7e-4d6d-bef9-5de00b1ac6d3",
+      "sourceExactId": "gemini-3.6-flash",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "e4182850-f6b6-4597-b06a-935a23fc19de",
+      "overrideId": "22dd7f7b-d3d0-4d50-9079-62a9250ef576",
+      "sourceExactId": "gemini-3.7-flash",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "e4182850-f6b6-4597-b06a-935a23fc19de",
+      "overrideId": "0490058a-caa9-44d4-a4be-d080e0bd90dd",
+      "sourceExactId": "gemini-3.5-flash-lite",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "e93e0572-8a01-499e-b9c1-7f44bbe512ea",
+      "overrideId": "43358f88-e076-434d-b953-cef5eacf3378",
+      "sourceExactId": "glm-5.3",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "e93e0572-8a01-499e-b9c1-7f44bbe512ea",
+      "overrideId": "7dd338eb-23fc-4a03-a5a7-51d8745f91e0",
+      "sourceExactId": "glm-5.3-flash",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "e93e0572-8a01-499e-b9c1-7f44bbe512ea",
+      "overrideId": "0b89159c-24cc-41e3-95b5-24f5cb8cd5c5",
+      "sourceExactId": "glm-5.3-flashx",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "e93e0572-8a01-499e-b9c1-7f44bbe512ea",
+      "overrideId": "bf970c87-2e16-47d7-90df-7620da22730e",
+      "sourceExactId": "glm-5.2",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "e93e0572-8a01-499e-b9c1-7f44bbe512ea",
+      "overrideId": "0d721c00-c448-421e-89c2-77d7fc83d637",
+      "sourceExactId": "glm-5",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "f42bcbe3-9758-4512-a0e1-fc7809b505b4",
+      "overrideId": "3454b88e-1c52-4283-8348-17a1efce6fec",
+      "sourceExactId": "hy3",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "f42bcbe3-9758-4512-a0e1-fc7809b505b4",
+      "overrideId": "9c25cbe3-f3df-4709-b5da-7ebe32c2a0fe",
+      "sourceExactId": "hy4-preview",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "061c63d1-8cfe-4eaa-bceb-37ca808cd7c8",
+      "overrideId": "0e768678-4bd2-4a1d-afe7-7f9d42af44a2",
+      "sourceExactId": "doubao-seed-2-1-pro-260915",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "061c63d1-8cfe-4eaa-bceb-37ca808cd7c8",
+      "overrideId": "c112d90a-263d-47ba-b472-ab2ec50667c9",
+      "sourceExactId": "doubao-seed-2-1-lite-260915",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "061c63d1-8cfe-4eaa-bceb-37ca808cd7c8",
+      "overrideId": "52868202-0f9c-442e-8e4d-6c08910cd755",
+      "sourceExactId": "doubao-seed-2-1-turbo-260628",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "061c63d1-8cfe-4eaa-bceb-37ca808cd7c8",
+      "overrideId": "8e888356-a8e3-4145-84b5-4411adc0c6a4",
+      "sourceExactId": "doubao-seed-evolving",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "061c63d1-8cfe-4eaa-bceb-37ca808cd7c8",
+      "overrideId": "041ae2ab-3cdb-408b-b438-bbe60b3443b1",
+      "sourceExactId": "doubao-seed-2-0-lite-260428",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "061c63d1-8cfe-4eaa-bceb-37ca808cd7c8",
+      "overrideId": "ed7a3523-71e4-471b-85e8-5c4170d06d43",
+      "sourceExactId": "doubao-seed-2-0-mini-260428",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "061c63d1-8cfe-4eaa-bceb-37ca808cd7c8",
+      "overrideId": "c80014e9-9ba1-401c-816b-e727d5cd0a1f",
+      "sourceExactId": "doubao-seed-2-0-pro-260215",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "061c63d1-8cfe-4eaa-bceb-37ca808cd7c8",
+      "overrideId": "976b79f7-1b3f-4863-8d09-03fa41c5426b",
+      "sourceExactId": "doubao-seed-2-0-code-preview-260215",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "48b7e309-2ecb-42af-b8c1-e65a883764ab",
+      "overrideId": "79ee17cc-6320-48ee-a76f-5cc8710ee0dd",
+      "sourceExactId": "qwen3.8-max",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "48b7e309-2ecb-42af-b8c1-e65a883764ab",
+      "overrideId": "a73f2d36-7780-449c-8747-d34d6384445a",
+      "sourceExactId": "qwen3.8-flash",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "48b7e309-2ecb-42af-b8c1-e65a883764ab",
+      "overrideId": "2e3443a0-69b5-43b7-99f0-7d7a3af734d5",
+      "sourceExactId": "qwen3.7-plus",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "48b7e309-2ecb-42af-b8c1-e65a883764ab",
+      "overrideId": "afb07420-ecdc-4cbc-b212-a3249cdc516a",
+      "sourceExactId": "qwen3.7-flash",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "48b7e309-2ecb-42af-b8c1-e65a883764ab",
+      "overrideId": "942c4345-9565-4b26-b35a-a4620d535ae3",
+      "sourceExactId": "qwen3.7-max",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "48b7e309-2ecb-42af-b8c1-e65a883764ab",
+      "overrideId": "8ae29a70-3b2a-4dca-bb51-eb4ac243b9b0",
+      "sourceExactId": "qwen3.6-plus",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "48b7e309-2ecb-42af-b8c1-e65a883764ab",
+      "overrideId": "706b776d-47bc-49d1-be7a-833c9976ab95",
+      "sourceExactId": "qwen3.6-flash",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "48b7e309-2ecb-42af-b8c1-e65a883764ab",
+      "overrideId": "9440d40d-c430-4341-acd9-69646feeaf01",
+      "sourceExactId": "qwen3.5-plus",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "48b7e309-2ecb-42af-b8c1-e65a883764ab",
+      "overrideId": "95264799-64df-49ee-9ba2-374df73d3045",
+      "sourceExactId": "qwen3.5-flash",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "48b7e309-2ecb-42af-b8c1-e65a883764ab",
+      "overrideId": "f2c007df-f61d-4b6d-b8b0-bab9fcd43e61",
+      "sourceExactId": "qwen3-coder-flash",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "ec0b21a6-e038-437c-816e-ce2567c3a264",
+      "overrideId": "a8618b91-f8c2-42bc-ab0e-1b31ea46106f",
+      "sourceExactId": "deepseek-flash",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "ec0b21a6-e038-437c-816e-ce2567c3a264",
+      "overrideId": "2d237fce-d5a2-4169-89bf-a9ee77cb81d5",
+      "sourceExactId": "deepseek-v4-pro",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "ec0b21a6-e038-437c-816e-ce2567c3a264",
+      "overrideId": "ab1ab4e2-d784-42aa-9153-4a71823b5e65",
+      "sourceExactId": "deepseek-v4-flash",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "ec0b21a6-e038-437c-816e-ce2567c3a264",
+      "overrideId": "99600e39-5ccd-4ebf-86dd-3b6709728b1e",
+      "sourceExactId": "deepseek-v4-flash-vision-exp",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "3528cd7b-89e4-4b8d-8609-fd294ef7958a",
+      "overrideId": "40ab2e8a-1089-449a-8401-5d023be6bbbb",
+      "sourceExactId": "kimi-k3",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "3528cd7b-89e4-4b8d-8609-fd294ef7958a",
+      "overrideId": "2cfc0f2b-68e0-4866-a098-c18a187e9ba9",
+      "sourceExactId": "kimi-k2.6",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "3528cd7b-89e4-4b8d-8609-fd294ef7958a",
+      "overrideId": "9b9d91aa-9ec6-429e-8a79-4e5c7cada5fa",
+      "sourceExactId": "kimi-k2.7-code",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "4d612ef5-e45b-4379-b03f-8c5a81954c7e",
+      "overrideId": "ba89d514-f427-4464-be5c-7ebf88804536",
+      "sourceExactId": "MiniMax-M3.1-Flash-Preview",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "4d612ef5-e45b-4379-b03f-8c5a81954c7e",
+      "overrideId": "9218ac88-e227-45f9-babe-36bd736e3771",
+      "sourceExactId": "MiniMax-M3",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "4d612ef5-e45b-4379-b03f-8c5a81954c7e",
+      "overrideId": "b67de1dc-0776-44a2-b16b-48253a120078",
+      "sourceExactId": "MiniMax-M2.7",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "4d612ef5-e45b-4379-b03f-8c5a81954c7e",
+      "overrideId": "f3747e24-ef66-4908-ba97-78bd45b5f94f",
+      "sourceExactId": "MiniMax-M2.7-highspeed",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "4d612ef5-e45b-4379-b03f-8c5a81954c7e",
+      "overrideId": "01afae6b-4787-4061-bf2f-e96537f62457",
+      "sourceExactId": "MiniMax-M2.5",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "4d612ef5-e45b-4379-b03f-8c5a81954c7e",
+      "overrideId": "cc41c98f-53b7-4bd0-847e-01d256a1ec78",
+      "sourceExactId": "MiniMax-M2.5-highspeed",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "c2efe090-d091-418b-aa1e-92c5c5f7eabf",
+      "overrideId": "85ea2573-645d-429e-bdfc-f349f807b49b",
+      "sourceExactId": "ernie-5.0",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "c2efe090-d091-418b-aa1e-92c5c5f7eabf",
+      "overrideId": "aef1641f-d5e3-49dd-a590-1f0f6c44ffd8",
+      "sourceExactId": "ernie-5.0-thinking-preview",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "04018546-d99e-430a-afd3-92d8a151472c",
+      "overrideId": "82c076c8-e460-4223-bf0f-73964f37bec0",
+      "sourceExactId": "step-3.5-flash",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "0bf7408b-2197-4a98-9a9e-5dd218953594",
+      "overrideId": "bf958042-1b3e-4517-a6b9-97916ba1cdaa",
+      "sourceExactId": "mimo-v2.5-pro",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "ec0d785e-989b-458c-9f2b-35e15874b863",
+      "overrideId": "11d1a67d-e5b7-47cb-b829-b829ff1629e1",
+      "sourceExactId": "grok-4.7",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "ec0d785e-989b-458c-9f2b-35e15874b863",
+      "overrideId": "5c274d72-a05c-4ac8-8921-789709869c42",
+      "sourceExactId": "grok-4.6",
+      "parametersPreserved": true
+    },
+    {
+      "templateId": "ec0d785e-989b-458c-9f2b-35e15874b863",
+      "overrideId": "481e0d93-bbd7-445d-a0e8-27b531793c40",
+      "sourceExactId": "grok-4.5",
+      "parametersPreserved": true
+    }
+  ],
+  "syntheticBoundaries": [
+    {
+      "case": "dot_dash_gpt",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "dot_dash_claude",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "same_spec",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "three_components",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "same_dated_build",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "gpt_minor",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "qwen_version_before_size",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "deepseek_version",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "gemini_version",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "glm_version",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "kimi_version",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "minimax_version",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "case": "different_major",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "different_minor",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "patch_not_minor",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "dashed_patch_not_minor",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "missing_separator",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "underscore_not_declared",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "space_not_declared",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "any_char_not_separator",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "different_spec",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "suffix_is_not_version",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "family_not_substring",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "channel_prefix_not_implicit",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "series_not_same",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "family_not_same",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "build_not_ignored",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "date_not_equated",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "build_date_delimiters_not_global",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "invalid_date_not_build",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "leading_zero_not_folded",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "version_zero_not_folded",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "date_suffix_ambiguous",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "ambiguous_date_slots_not_equated",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "ambiguous_six_digit_build",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "rolling_alias_not_proven",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "tag_not_punctuation_normalized",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "non_ascii_separator",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "qualified_number",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "date_in_other_name",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "review_task_not_model",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "retain_quantization",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "retain_model_size",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "unparsed_symbolic_id",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "case": "family:other:notgpt-5.5",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "case": "family:other:backup-gpt-5.5",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "case": "family:other:qwenish-3.8",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "case": "family:other:hypothesis-3",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "case": "family:other:doubao-seedream-5",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "case": "family:other:text-embedding-3-large",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "case": "family:other:claudette-5.5",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "case": "family:other:aixj-gpt-5.5",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "case": "family:other:qwen５.５",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "case": "family:GZGG-NewApi:aixj-gpt-5.5",
+      "expected": "GPT",
+      "actual": "GPT"
+    },
+    {
+      "case": "family:GZGG-NewApi:ciii-gpt-gpt-5.6-terra",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "case": "family:other:mygemini-3.8",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "case": "family:other:gemini-embedding-2-preview",
+      "expected": "Gemini",
+      "actual": "Gemini"
+    }
+  ],
+  "rejectedMalformedCandidates": [
+    {
+      "case": "candidate_activated",
+      "rejected": true,
+      "reason": "activation must remain disabled"
+    },
+    {
+      "case": "missing_template",
+      "rejected": true,
+      "reason": "17 baseline template identities retained"
+    },
+    {
+      "case": "guessed_common_parameter",
+      "rejected": true,
+      "reason": "no guessed common capabilities"
+    },
+    {
+      "case": "unknown_numeric_separator",
+      "rejected": true,
+      "reason": "layout semantics"
+    },
+    {
+      "case": "equivalent_duplicate",
+      "rejected": true,
+      "reason": "equivalent duplicate selector"
+    },
+    {
+      "case": "missing_source_override",
+      "rejected": true,
+      "reason": "all known overrides retained"
+    }
+  ]
+}

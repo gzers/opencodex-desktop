@@ -1,0 +1,3860 @@
+{
+  "format": "ocxd-model-template-candidate-v1",
+  "targetVersion": "0.2.23",
+  "stage": "prepared_not_activated",
+  "productionReaderSupport": "pending_0.2.23_implementation",
+  "source": {
+    "codeCommit": "0c57500f8f46ea50655c782c3f04334a39167abb",
+    "seedSha256": "a5a1159359a26103eb3dbb499b44c8a326fb10c80e7057a7aac2ebb7acd04abf",
+    "modelSnapshotSha256": "023e3e0711c4f9cb656ce78b7c006ec0656b22ccf65cc31b1c41ee332ef82e27"
+  },
+  "semantics": {
+    "rawModelId": "preserve_for_requests_and_routing",
+    "matchingCase": "case_insensitive_in_new_candidate_revision_only",
+    "channelProtocolProperty": false,
+    "modelProtocolResolution": [
+      "adopted_template_common",
+      "matched_condition_override",
+      "explicit_single_model"
+    ],
+    "unresolvedModelProtocol": "needs_explicit_configuration_before_using_affected_route",
+    "listDiscoveryAdapter": "independent_of_model_request_protocol",
+    "runtimeProviderAdapter": "derive_from_final_model_protocol_not_channel_default",
+    "groupOperator": "all",
+    "excludePriority": "before_include",
+    "literalPositionDefault": "any",
+    "versionEquivalence": "only_declared_numeric_slot",
+    "versionComponents": "strings_preserve_leading_zeroes_and_full_arity",
+    "unknownFamily": "keep_existing_config",
+    "unknownVariant": "inherit_common_only",
+    "samePriorityOverlap": "error",
+    "equivalentDuplicateSelector": "error",
+    "autoAdoptTemplates": true,
+    "adoptionTrigger": "successful_read_existing_channels",
+    "adoptionTarget": "unsaved_draft",
+    "automaticPersistentWrite": false,
+    "readVersionSelection": "explicit_reference_else_designated_saved_default",
+    "manualSingleModelOverrides": "preserve_explicit_only",
+    "unmatchedReadModel": "preserve_existing",
+    "autoRewriteSavedRevisions": false,
+    "namespaceMapping": "explicit_channel_only_matching_view",
+    "unlistedProtocolsOrCapabilities": "do_not_infer_from_name"
+  },
+  "channelNamespaceCandidates": [
+    {
+      "providerId": "GZGG-NewApi",
+      "channelUuidBinding": "resolve_current_binding_before_adoption",
+      "removeLeadingPrefixes": [
+        "aixj-",
+        "btka-",
+        "ciii-",
+        "input-",
+        "siliconflow-",
+        "gxlq-bailian-",
+        "gxlq-local-",
+        "gzgg-local-ezio-itx-",
+        "gzgg-local-ezio-pc-",
+        "gzgg-local-strata-"
+      ],
+      "requestModelId": "unchanged",
+      "approvalState": "candidate_for_explicit_adoption"
+    }
+  ],
+  "unmatchedPolicy": {
+    "action": "leave_existing",
+    "coverageCompletionRequired": false,
+    "frozenSampleUnassignedIds": 18,
+    "frozenSampleRepeatedPrefixIds": 1,
+    "repeatedPrefixHandling": "do_not_collapse_or_map",
+    "networkDiscoveryRequired": false
+  },
+  "templates": [
+    {
+      "templateId": "837c8133-76e9-4bdf-a68c-9637331c4d43",
+      "familyKey": "GPT",
+      "label": "GPT",
+      "candidateRevisionId": "b031652a-df29-5345-897c-bc481c03d123",
+      "revisionState": "candidate",
+      "sourceContentSha256": "5ddd6e62133d2cc56ac9a3b9d1376dc7077d7761fb1a318d5c50d63d60933b68",
+      "content": {
+        "description": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+        "matching": {
+          "channelMode": "all",
+          "channels": [],
+          "caseSensitive": false,
+          "priority": 0,
+          "include": [
+            {
+              "kind": "prefix",
+              "value": "gpt-"
+            }
+          ],
+          "exclude": []
+        },
+        "nameLayouts": [
+          {
+            "id": "layout-3360ada3f393",
+            "literalPrefix": "gpt-",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          }
+        ],
+        "commonRules": {
+          "protocol": {
+            "mode": "inherit"
+          },
+          "contextWindow": {
+            "mode": "inherit"
+          },
+          "inputModalities": {
+            "mode": "inherit"
+          },
+          "reasoningEfforts": {
+            "mode": "inherit"
+          },
+          "defaultEffort": {
+            "mode": "inherit"
+          },
+          "fast": {
+            "mode": "inherit"
+          }
+        },
+        "conditionOverrides": [
+          {
+            "id": "2660fb7c-dcb3-43c4-bbfe-f5fd2a3e6c9b",
+            "name": "gpt-6-astra",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "6"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "astra",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-3360ada3f393",
+              "literalTail": "-astra"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "custom",
+                "value": 1050000
+              },
+              "inputModalities": {
+                "mode": "custom",
+                "value": [
+                  "text",
+                  "image"
+                ]
+              },
+              "reasoningEfforts": {
+                "mode": "custom",
+                "value": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "gpt-6-astra",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "549f12b2-2f58-434d-bf98-814a4935bf20",
+            "name": "gpt-6.1-sol",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "6",
+                    "1"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "sol",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-3360ada3f393",
+              "literalTail": "-sol"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "custom",
+                "value": 1050000
+              },
+              "inputModalities": {
+                "mode": "custom",
+                "value": [
+                  "text",
+                  "image"
+                ]
+              },
+              "reasoningEfforts": {
+                "mode": "custom",
+                "value": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "defaultEffort": {
+                "mode": "custom",
+                "value": "medium"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "gpt-6.1-sol",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "8112514a-ce72-47b8-bb40-c2d6bc22d3a7",
+            "name": "gpt-6-luna",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "6"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "luna",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-3360ada3f393",
+              "literalTail": "-luna"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "custom",
+                "value": 1050000
+              },
+              "inputModalities": {
+                "mode": "custom",
+                "value": [
+                  "text",
+                  "image"
+                ]
+              },
+              "reasoningEfforts": {
+                "mode": "custom",
+                "value": [
+                  "none",
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "defaultEffort": {
+                "mode": "custom",
+                "value": "medium"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "gpt-6-luna",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "fdcb0aa3-7513-4f79-a5d4-247e233adde5",
+            "name": "gpt-6-sol",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "6"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "sol",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-3360ada3f393",
+              "literalTail": "-sol"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "custom",
+                "value": 1050000
+              },
+              "inputModalities": {
+                "mode": "custom",
+                "value": [
+                  "text",
+                  "image"
+                ]
+              },
+              "reasoningEfforts": {
+                "mode": "custom",
+                "value": [
+                  "none",
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "defaultEffort": {
+                "mode": "custom",
+                "value": "medium"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "gpt-6-sol",
+            "scope": "known_identity_only"
+          }
+        ]
+      }
+    },
+    {
+      "templateId": "961df482-3cbe-421d-a268-caa768de2fc6",
+      "familyKey": "Claude",
+      "label": "Claude",
+      "candidateRevisionId": "cce34685-5050-5d10-9b1e-3d099ae8be5f",
+      "revisionState": "candidate",
+      "sourceContentSha256": "f2adb012095e9aee17375747d59c01e73c70395b5927575565c61a45c941a153",
+      "content": {
+        "description": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+        "matching": {
+          "channelMode": "all",
+          "channels": [],
+          "caseSensitive": false,
+          "priority": 0,
+          "include": [
+            {
+              "kind": "prefix",
+              "value": "claude-"
+            }
+          ],
+          "exclude": []
+        },
+        "nameLayouts": [
+          {
+            "id": "layout-c97b65f133a0",
+            "literalPrefix": "claude-opus-",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          },
+          {
+            "id": "layout-373a6330ab37",
+            "literalPrefix": "claude-sonnet-",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          },
+          {
+            "id": "layout-f8f448764d02",
+            "literalPrefix": "claude-haiku-",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          },
+          {
+            "id": "layout-0df730760964",
+            "literalPrefix": "claude-fable-",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          },
+          {
+            "id": "layout-d762e4c284b7",
+            "literalPrefix": "claude-mythos-",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          }
+        ],
+        "commonRules": {
+          "protocol": {
+            "mode": "inherit"
+          },
+          "contextWindow": {
+            "mode": "inherit"
+          },
+          "inputModalities": {
+            "mode": "inherit"
+          },
+          "reasoningEfforts": {
+            "mode": "inherit"
+          },
+          "defaultEffort": {
+            "mode": "inherit"
+          },
+          "fast": {
+            "mode": "inherit"
+          }
+        },
+        "conditionOverrides": [
+          {
+            "id": "e81e03ce-ca23-4b8b-a124-57394f58bab3",
+            "name": "claude-fable-5-1",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "5",
+                    "1"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "fable",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-0df730760964",
+              "literalTail": ""
+            },
+            "rules": {
+              "protocol": {
+                "mode": "custom",
+                "value": "anthropic"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "custom",
+                "value": [
+                  "text",
+                  "image"
+                ]
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "custom",
+                "value": "high"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "claude-fable-5-1",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "3d3ca373-350d-4ea7-8dac-fddacfbfd729",
+            "name": "claude-opus-5-5",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "5",
+                    "5"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "opus",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-c97b65f133a0",
+              "literalTail": ""
+            },
+            "rules": {
+              "protocol": {
+                "mode": "custom",
+                "value": "anthropic"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "custom",
+                "value": [
+                  "text",
+                  "image"
+                ]
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "custom",
+                "value": "medium"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "claude-opus-5-5",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "48dd6394-b195-49e2-b0f1-f58aee3cb33a",
+            "name": "claude-sonnet-5-5",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "5",
+                    "5"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "sonnet",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-373a6330ab37",
+              "literalTail": ""
+            },
+            "rules": {
+              "protocol": {
+                "mode": "custom",
+                "value": "anthropic"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "custom",
+                "value": [
+                  "text",
+                  "image"
+                ]
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "custom",
+                "value": "high"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "claude-sonnet-5-5",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "f66dd527-dd74-4cb6-8021-6fa8e3d6b913",
+            "name": "claude-haiku-5-5",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "5",
+                    "5"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "haiku",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-f8f448764d02",
+              "literalTail": ""
+            },
+            "rules": {
+              "protocol": {
+                "mode": "custom",
+                "value": "anthropic"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "custom",
+                "value": [
+                  "text",
+                  "image"
+                ]
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "custom",
+                "value": "medium"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "claude-haiku-5-5",
+            "scope": "known_identity_only"
+          }
+        ]
+      }
+    },
+    {
+      "templateId": "e4182850-f6b6-4597-b06a-935a23fc19de",
+      "familyKey": "Gemini",
+      "label": "Gemini",
+      "candidateRevisionId": "9e9c5dd0-629e-5060-b19f-32a78b53c7a4",
+      "revisionState": "candidate",
+      "sourceContentSha256": "441f390514b2808dfc123b24dc223afa69375292c9b3982fe27ec5cd8058c528",
+      "content": {
+        "description": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+        "matching": {
+          "channelMode": "all",
+          "channels": [],
+          "caseSensitive": false,
+          "priority": 0,
+          "include": [
+            {
+              "kind": "prefix",
+              "value": "gemini-"
+            }
+          ],
+          "exclude": []
+        },
+        "nameLayouts": [
+          {
+            "id": "layout-0a040fd7caa3",
+            "literalPrefix": "gemini-",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          },
+          {
+            "id": "layout-a173c687f765",
+            "literalPrefix": "gemini-omni-",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          }
+        ],
+        "commonRules": {
+          "protocol": {
+            "mode": "inherit"
+          },
+          "contextWindow": {
+            "mode": "inherit"
+          },
+          "inputModalities": {
+            "mode": "inherit"
+          },
+          "reasoningEfforts": {
+            "mode": "inherit"
+          },
+          "defaultEffort": {
+            "mode": "inherit"
+          },
+          "fast": {
+            "mode": "inherit"
+          }
+        },
+        "conditionOverrides": [
+          {
+            "id": "368f5f5a-9197-46ba-bc50-f4df200a6bc5",
+            "name": "gemini-3.8-flash",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3",
+                    "8"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "flash",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-0a040fd7caa3",
+              "literalTail": "-flash"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "custom",
+                "value": [
+                  "low",
+                  "medium",
+                  "high"
+                ]
+              },
+              "defaultEffort": {
+                "mode": "custom",
+                "value": "medium"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "gemini-3.8-flash",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "11b12da7-2747-4442-a3f7-db1aefa03950",
+            "name": "gemini-3.5-flash",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3",
+                    "5"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "flash",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-0a040fd7caa3",
+              "literalTail": "-flash"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "gemini-3.5-flash",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "011d7c2f-0a7e-4d6d-bef9-5de00b1ac6d3",
+            "name": "gemini-3.6-flash",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3",
+                    "6"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "flash",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-0a040fd7caa3",
+              "literalTail": "-flash"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "gemini-3.6-flash",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "22dd7f7b-d3d0-4d50-9079-62a9250ef576",
+            "name": "gemini-3.7-flash",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3",
+                    "7"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "flash",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-0a040fd7caa3",
+              "literalTail": "-flash"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "gemini-3.7-flash",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "0490058a-caa9-44d4-a4be-d080e0bd90dd",
+            "name": "gemini-3.5-flash-lite",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3",
+                    "5"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "flash",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "lite",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-0a040fd7caa3",
+              "literalTail": "-flash-lite"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "gemini-3.5-flash-lite",
+            "scope": "known_identity_only"
+          }
+        ]
+      }
+    },
+    {
+      "templateId": "e93e0572-8a01-499e-b9c1-7f44bbe512ea",
+      "familyKey": "GLM",
+      "label": "智谱 GLM",
+      "candidateRevisionId": "6866c0dc-fcb8-5365-8a57-0c77af245ff2",
+      "revisionState": "candidate",
+      "sourceContentSha256": "c9cdc2a61226621a58a0c3e3607d77b5cb0782e51bb63ef3702d8ed5a5472261",
+      "content": {
+        "description": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+        "matching": {
+          "channelMode": "all",
+          "channels": [],
+          "caseSensitive": false,
+          "priority": 0,
+          "include": [
+            {
+              "kind": "exact",
+              "value": "glm"
+            },
+            {
+              "kind": "prefix",
+              "value": "glm-"
+            }
+          ],
+          "exclude": []
+        },
+        "nameLayouts": [
+          {
+            "id": "layout-ebf5594a0e0a",
+            "literalPrefix": "glm-",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          }
+        ],
+        "commonRules": {
+          "protocol": {
+            "mode": "inherit"
+          },
+          "contextWindow": {
+            "mode": "inherit"
+          },
+          "inputModalities": {
+            "mode": "inherit"
+          },
+          "reasoningEfforts": {
+            "mode": "inherit"
+          },
+          "defaultEffort": {
+            "mode": "inherit"
+          },
+          "fast": {
+            "mode": "inherit"
+          }
+        },
+        "conditionOverrides": [
+          {
+            "id": "43358f88-e076-434d-b953-cef5eacf3378",
+            "name": "glm-5.3",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "5",
+                    "3"
+                  ]
+                }
+              ],
+              "layoutId": "layout-ebf5594a0e0a",
+              "literalTail": ""
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "custom",
+                "value": [
+                  "text"
+                ]
+              },
+              "reasoningEfforts": {
+                "mode": "custom",
+                "value": [
+                  "low",
+                  "high",
+                  "max"
+                ]
+              },
+              "defaultEffort": {
+                "mode": "custom",
+                "value": "max"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "glm-5.3",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "7dd338eb-23fc-4a03-a5a7-51d8745f91e0",
+            "name": "glm-5.3-flash",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "5",
+                    "3"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "flash",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-ebf5594a0e0a",
+              "literalTail": "-flash"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "custom",
+                "value": [
+                  "low",
+                  "high",
+                  "max"
+                ]
+              },
+              "defaultEffort": {
+                "mode": "custom",
+                "value": "max"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "glm-5.3-flash",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "0b89159c-24cc-41e3-95b5-24f5cb8cd5c5",
+            "name": "glm-5.3-flashx",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "5",
+                    "3"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "flashx",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-ebf5594a0e0a",
+              "literalTail": "-flashx"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "custom",
+                "value": [
+                  "low",
+                  "high",
+                  "max"
+                ]
+              },
+              "defaultEffort": {
+                "mode": "custom",
+                "value": "max"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "glm-5.3-flashx",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "bf970c87-2e16-47d7-90df-7620da22730e",
+            "name": "glm-5.2",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "5",
+                    "2"
+                  ]
+                }
+              ],
+              "layoutId": "layout-ebf5594a0e0a",
+              "literalTail": ""
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "custom",
+                "value": [
+                  "text"
+                ]
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "glm-5.2",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "0d721c00-c448-421e-89c2-77d7fc83d637",
+            "name": "glm-5",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "5"
+                  ]
+                }
+              ],
+              "layoutId": "layout-ebf5594a0e0a",
+              "literalTail": ""
+            },
+            "rules": {
+              "protocol": {
+                "mode": "custom",
+                "value": "openai-chat"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "custom",
+                "value": [
+                  "text"
+                ]
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "glm-5",
+            "scope": "known_identity_only"
+          }
+        ]
+      }
+    },
+    {
+      "templateId": "f42bcbe3-9758-4512-a0e1-fc7809b505b4",
+      "familyKey": "HY",
+      "label": "腾讯混元 HY",
+      "candidateRevisionId": "192194da-18ea-5a3b-be75-b1830627c58f",
+      "revisionState": "candidate",
+      "sourceContentSha256": "08597080f51624d2adb2bfcefed5928ce6cd387d714be61c53e9912c70fe702f",
+      "content": {
+        "description": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+        "matching": {
+          "channelMode": "all",
+          "channels": [],
+          "caseSensitive": false,
+          "priority": 0,
+          "include": [
+            {
+              "kind": "ascii_numeric_prefix",
+              "value": "hy"
+            }
+          ],
+          "exclude": []
+        },
+        "nameLayouts": [
+          {
+            "id": "layout-02b9fee20b66",
+            "literalPrefix": "hy",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          }
+        ],
+        "commonRules": {
+          "protocol": {
+            "mode": "inherit"
+          },
+          "contextWindow": {
+            "mode": "inherit"
+          },
+          "inputModalities": {
+            "mode": "inherit"
+          },
+          "reasoningEfforts": {
+            "mode": "inherit"
+          },
+          "defaultEffort": {
+            "mode": "inherit"
+          },
+          "fast": {
+            "mode": "inherit"
+          }
+        },
+        "conditionOverrides": [
+          {
+            "id": "3454b88e-1c52-4283-8348-17a1efce6fec",
+            "name": "hy3",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3"
+                  ]
+                }
+              ],
+              "layoutId": "layout-02b9fee20b66",
+              "literalTail": ""
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "custom",
+                "value": [
+                  "text"
+                ]
+              },
+              "reasoningEfforts": {
+                "mode": "custom",
+                "value": [
+                  "none",
+                  "low",
+                  "high"
+                ]
+              },
+              "defaultEffort": {
+                "mode": "custom",
+                "value": "high"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "hy3",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "9c25cbe3-f3df-4709-b5da-7ebe32c2a0fe",
+            "name": "hy4-preview",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "4"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "preview",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-02b9fee20b66",
+              "literalTail": "-preview"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "custom",
+                "value": [
+                  "text"
+                ]
+              },
+              "reasoningEfforts": {
+                "mode": "custom",
+                "value": [
+                  "none",
+                  "high"
+                ]
+              },
+              "defaultEffort": {
+                "mode": "custom",
+                "value": "high"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "hy4-preview",
+            "scope": "known_identity_only"
+          }
+        ]
+      }
+    },
+    {
+      "templateId": "061c63d1-8cfe-4eaa-bceb-37ca808cd7c8",
+      "familyKey": "DoubaoSeed",
+      "label": "豆包 Seed",
+      "candidateRevisionId": "3bf9e804-f541-56e2-a090-6b799aa9e16f",
+      "revisionState": "candidate",
+      "sourceContentSha256": "72ec5782ac711b9788a9a484265eab6a2b8321b394fc6df33b8a3b91d294ce21",
+      "content": {
+        "description": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+        "matching": {
+          "channelMode": "all",
+          "channels": [],
+          "caseSensitive": false,
+          "priority": 0,
+          "include": [
+            {
+              "kind": "prefix",
+              "value": "doubao-seed-"
+            }
+          ],
+          "exclude": []
+        },
+        "nameLayouts": [],
+        "commonRules": {
+          "protocol": {
+            "mode": "inherit"
+          },
+          "contextWindow": {
+            "mode": "inherit"
+          },
+          "inputModalities": {
+            "mode": "inherit"
+          },
+          "reasoningEfforts": {
+            "mode": "inherit"
+          },
+          "defaultEffort": {
+            "mode": "inherit"
+          },
+          "fast": {
+            "mode": "inherit"
+          }
+        },
+        "conditionOverrides": [
+          {
+            "id": "0e768678-4bd2-4a1d-afe7-7f9d42af44a2",
+            "name": "doubao-seed-2-1-pro-260915",
+            "selector": {
+              "all": [
+                {
+                  "kind": "exact_id",
+                  "value": "doubao-seed-2-1-pro-260915"
+                }
+              ]
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "doubao-seed-2-1-pro-260915",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "c112d90a-263d-47ba-b472-ab2ec50667c9",
+            "name": "doubao-seed-2-1-lite-260915",
+            "selector": {
+              "all": [
+                {
+                  "kind": "exact_id",
+                  "value": "doubao-seed-2-1-lite-260915"
+                }
+              ]
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "doubao-seed-2-1-lite-260915",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "52868202-0f9c-442e-8e4d-6c08910cd755",
+            "name": "doubao-seed-2-1-turbo-260628",
+            "selector": {
+              "all": [
+                {
+                  "kind": "exact_id",
+                  "value": "doubao-seed-2-1-turbo-260628"
+                }
+              ]
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "doubao-seed-2-1-turbo-260628",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "8e888356-a8e3-4145-84b5-4411adc0c6a4",
+            "name": "doubao-seed-evolving",
+            "selector": {
+              "all": [
+                {
+                  "kind": "exact_id",
+                  "value": "doubao-seed-evolving"
+                }
+              ]
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "doubao-seed-evolving",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "041ae2ab-3cdb-408b-b438-bbe60b3443b1",
+            "name": "doubao-seed-2-0-lite-260428",
+            "selector": {
+              "all": [
+                {
+                  "kind": "exact_id",
+                  "value": "doubao-seed-2-0-lite-260428"
+                }
+              ]
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "doubao-seed-2-0-lite-260428",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "ed7a3523-71e4-471b-85e8-5c4170d06d43",
+            "name": "doubao-seed-2-0-mini-260428",
+            "selector": {
+              "all": [
+                {
+                  "kind": "exact_id",
+                  "value": "doubao-seed-2-0-mini-260428"
+                }
+              ]
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "doubao-seed-2-0-mini-260428",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "c80014e9-9ba1-401c-816b-e727d5cd0a1f",
+            "name": "doubao-seed-2-0-pro-260215",
+            "selector": {
+              "all": [
+                {
+                  "kind": "exact_id",
+                  "value": "doubao-seed-2-0-pro-260215"
+                }
+              ]
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "doubao-seed-2-0-pro-260215",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "976b79f7-1b3f-4863-8d09-03fa41c5426b",
+            "name": "doubao-seed-2-0-code-preview-260215",
+            "selector": {
+              "all": [
+                {
+                  "kind": "exact_id",
+                  "value": "doubao-seed-2-0-code-preview-260215"
+                }
+              ]
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "doubao-seed-2-0-code-preview-260215",
+            "scope": "known_identity_only"
+          }
+        ]
+      }
+    },
+    {
+      "templateId": "48b7e309-2ecb-42af-b8c1-e65a883764ab",
+      "familyKey": "Qwen",
+      "label": "千问 Qwen",
+      "candidateRevisionId": "36e9df85-7657-5e33-a399-8a17287c0a53",
+      "revisionState": "candidate",
+      "sourceContentSha256": "4084048f127dcdf3dbbe260d8f72738f91aeb73d05be286f9fd77bb306162c4e",
+      "content": {
+        "description": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+        "matching": {
+          "channelMode": "all",
+          "channels": [],
+          "caseSensitive": false,
+          "priority": 0,
+          "include": [
+            {
+              "kind": "prefix",
+              "value": "qwen-"
+            },
+            {
+              "kind": "ascii_numeric_prefix",
+              "value": "qwen"
+            }
+          ],
+          "exclude": []
+        },
+        "nameLayouts": [
+          {
+            "id": "layout-67f2d2251462",
+            "literalPrefix": "qwen",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          },
+          {
+            "id": "layout-56e61fef2d5e",
+            "literalPrefix": "qwen-",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          }
+        ],
+        "commonRules": {
+          "protocol": {
+            "mode": "inherit"
+          },
+          "contextWindow": {
+            "mode": "inherit"
+          },
+          "inputModalities": {
+            "mode": "inherit"
+          },
+          "reasoningEfforts": {
+            "mode": "inherit"
+          },
+          "defaultEffort": {
+            "mode": "inherit"
+          },
+          "fast": {
+            "mode": "inherit"
+          }
+        },
+        "conditionOverrides": [
+          {
+            "id": "79ee17cc-6320-48ee-a76f-5cc8710ee0dd",
+            "name": "qwen3.8-max",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3",
+                    "8"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "max",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-67f2d2251462",
+              "literalTail": "-max"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "qwen3.8-max",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "a73f2d36-7780-449c-8747-d34d6384445a",
+            "name": "qwen3.8-flash",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3",
+                    "8"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "flash",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-67f2d2251462",
+              "literalTail": "-flash"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "qwen3.8-flash",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "2e3443a0-69b5-43b7-99f0-7d7a3af734d5",
+            "name": "qwen3.7-plus",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3",
+                    "7"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "plus",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-67f2d2251462",
+              "literalTail": "-plus"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "qwen3.7-plus",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "afb07420-ecdc-4cbc-b212-a3249cdc516a",
+            "name": "qwen3.7-flash",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3",
+                    "7"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "flash",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-67f2d2251462",
+              "literalTail": "-flash"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "qwen3.7-flash",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "942c4345-9565-4b26-b35a-a4620d535ae3",
+            "name": "qwen3.7-max",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3",
+                    "7"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "max",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-67f2d2251462",
+              "literalTail": "-max"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "qwen3.7-max",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "8ae29a70-3b2a-4dca-bb51-eb4ac243b9b0",
+            "name": "qwen3.6-plus",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3",
+                    "6"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "plus",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-67f2d2251462",
+              "literalTail": "-plus"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "qwen3.6-plus",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "706b776d-47bc-49d1-be7a-833c9976ab95",
+            "name": "qwen3.6-flash",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3",
+                    "6"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "flash",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-67f2d2251462",
+              "literalTail": "-flash"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "qwen3.6-flash",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "9440d40d-c430-4341-acd9-69646feeaf01",
+            "name": "qwen3.5-plus",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3",
+                    "5"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "plus",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-67f2d2251462",
+              "literalTail": "-plus"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "qwen3.5-plus",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "95264799-64df-49ee-9ba2-374df73d3045",
+            "name": "qwen3.5-flash",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3",
+                    "5"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "flash",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-67f2d2251462",
+              "literalTail": "-flash"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "qwen3.5-flash",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "f2c007df-f61d-4b6d-b8b0-bab9fcd43e61",
+            "name": "qwen3-coder-flash",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "coder",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "flash",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-67f2d2251462",
+              "literalTail": "-coder-flash"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "qwen3-coder-flash",
+            "scope": "known_identity_only"
+          }
+        ]
+      }
+    },
+    {
+      "templateId": "ec0b21a6-e038-437c-816e-ce2567c3a264",
+      "familyKey": "DeepSeek",
+      "label": "DeepSeek",
+      "candidateRevisionId": "06569cc2-efcc-50f4-b0d4-69fa966ab902",
+      "revisionState": "candidate",
+      "sourceContentSha256": "4f3d5081dbdcac30c296b879ff2c16d8b595658d9fa9dc961619f1a03d9cce2c",
+      "content": {
+        "description": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+        "matching": {
+          "channelMode": "all",
+          "channels": [],
+          "caseSensitive": false,
+          "priority": 0,
+          "include": [
+            {
+              "kind": "prefix",
+              "value": "deepseek-"
+            }
+          ],
+          "exclude": []
+        },
+        "nameLayouts": [
+          {
+            "id": "layout-6b92d84d97a8",
+            "literalPrefix": "deepseek-v",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          }
+        ],
+        "commonRules": {
+          "protocol": {
+            "mode": "inherit"
+          },
+          "contextWindow": {
+            "mode": "inherit"
+          },
+          "inputModalities": {
+            "mode": "inherit"
+          },
+          "reasoningEfforts": {
+            "mode": "inherit"
+          },
+          "defaultEffort": {
+            "mode": "inherit"
+          },
+          "fast": {
+            "mode": "inherit"
+          }
+        },
+        "conditionOverrides": [
+          {
+            "id": "a8618b91-f8c2-42bc-ab0e-1b31ea46106f",
+            "name": "deepseek-flash",
+            "selector": {
+              "all": [
+                {
+                  "kind": "exact_id",
+                  "value": "deepseek-flash"
+                }
+              ]
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "custom",
+                "value": [
+                  "text",
+                  "image"
+                ]
+              },
+              "reasoningEfforts": {
+                "mode": "custom",
+                "value": [
+                  "low",
+                  "high",
+                  "max"
+                ]
+              },
+              "defaultEffort": {
+                "mode": "custom",
+                "value": "high"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "deepseek-flash",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "2d237fce-d5a2-4169-89bf-a9ee77cb81d5",
+            "name": "deepseek-v4-pro",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "4"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "pro",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-6b92d84d97a8",
+              "literalTail": "-pro"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "custom",
+                "value": [
+                  "text"
+                ]
+              },
+              "reasoningEfforts": {
+                "mode": "custom",
+                "value": [
+                  "low",
+                  "high",
+                  "max"
+                ]
+              },
+              "defaultEffort": {
+                "mode": "custom",
+                "value": "high"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "deepseek-v4-pro",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "ab1ab4e2-d784-42aa-9153-4a71823b5e65",
+            "name": "deepseek-v4-flash",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "4"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "flash",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-6b92d84d97a8",
+              "literalTail": "-flash"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "deepseek-v4-flash",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "99600e39-5ccd-4ebf-86dd-3b6709728b1e",
+            "name": "deepseek-v4-flash-vision-exp",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "4"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "flash",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "vision",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "exp",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-6b92d84d97a8",
+              "literalTail": "-flash-vision-exp"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "deepseek-v4-flash-vision-exp",
+            "scope": "known_identity_only"
+          }
+        ]
+      }
+    },
+    {
+      "templateId": "3528cd7b-89e4-4b8d-8609-fd294ef7958a",
+      "familyKey": "Kimi",
+      "label": "Kimi / Moonshot",
+      "candidateRevisionId": "66ac76de-4a4d-5060-8e9e-0b293b74ce90",
+      "revisionState": "candidate",
+      "sourceContentSha256": "9c721b0b408597b496310e4f757bf08b5c3159b7126580f3792baa9d9dc29a52",
+      "content": {
+        "description": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+        "matching": {
+          "channelMode": "all",
+          "channels": [],
+          "caseSensitive": false,
+          "priority": 0,
+          "include": [
+            {
+              "kind": "prefix",
+              "value": "kimi-"
+            },
+            {
+              "kind": "prefix",
+              "value": "moonshot-"
+            }
+          ],
+          "exclude": []
+        },
+        "nameLayouts": [
+          {
+            "id": "layout-95e9940930f8",
+            "literalPrefix": "kimi-k",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          }
+        ],
+        "commonRules": {
+          "protocol": {
+            "mode": "inherit"
+          },
+          "contextWindow": {
+            "mode": "inherit"
+          },
+          "inputModalities": {
+            "mode": "inherit"
+          },
+          "reasoningEfforts": {
+            "mode": "inherit"
+          },
+          "defaultEffort": {
+            "mode": "inherit"
+          },
+          "fast": {
+            "mode": "inherit"
+          }
+        },
+        "conditionOverrides": [
+          {
+            "id": "40ab2e8a-1089-449a-8401-5d023be6bbbb",
+            "name": "kimi-k3",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3"
+                  ]
+                }
+              ],
+              "layoutId": "layout-95e9940930f8",
+              "literalTail": ""
+            },
+            "rules": {
+              "protocol": {
+                "mode": "custom",
+                "value": "openai-chat"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "custom",
+                "value": [
+                  "text",
+                  "image"
+                ]
+              },
+              "reasoningEfforts": {
+                "mode": "custom",
+                "value": [
+                  "low",
+                  "high",
+                  "max"
+                ]
+              },
+              "defaultEffort": {
+                "mode": "custom",
+                "value": "max"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "kimi-k3",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "2cfc0f2b-68e0-4866-a098-c18a187e9ba9",
+            "name": "kimi-k2.6",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "2",
+                    "6"
+                  ]
+                }
+              ],
+              "layoutId": "layout-95e9940930f8",
+              "literalTail": ""
+            },
+            "rules": {
+              "protocol": {
+                "mode": "custom",
+                "value": "openai-chat"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "custom",
+                "value": [
+                  "text",
+                  "image",
+                  "video"
+                ]
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "kimi-k2.6",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "9b9d91aa-9ec6-429e-8a79-4e5c7cada5fa",
+            "name": "kimi-k2.7-code",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "2",
+                    "7"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "code",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-95e9940930f8",
+              "literalTail": "-code"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "kimi-k2.7-code",
+            "scope": "known_identity_only"
+          }
+        ]
+      }
+    },
+    {
+      "templateId": "4d612ef5-e45b-4379-b03f-8c5a81954c7e",
+      "familyKey": "MiniMax",
+      "label": "MiniMax",
+      "candidateRevisionId": "84a215ed-f8e8-5cf3-8e13-c34d6563b7fd",
+      "revisionState": "candidate",
+      "sourceContentSha256": "51d9f080a68f5b0694183f9dab2228cac56ade6d0a8333e18e4bba0bc3795943",
+      "content": {
+        "description": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+        "matching": {
+          "channelMode": "all",
+          "channels": [],
+          "caseSensitive": false,
+          "priority": 0,
+          "include": [
+            {
+              "kind": "prefix",
+              "value": "minimax-"
+            }
+          ],
+          "exclude": []
+        },
+        "nameLayouts": [
+          {
+            "id": "layout-bf774de3bcd9",
+            "literalPrefix": "minimax-m",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          },
+          {
+            "id": "layout-0cdaf3efb271",
+            "literalPrefix": "minimax-h",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          }
+        ],
+        "commonRules": {
+          "protocol": {
+            "mode": "inherit"
+          },
+          "contextWindow": {
+            "mode": "inherit"
+          },
+          "inputModalities": {
+            "mode": "inherit"
+          },
+          "reasoningEfforts": {
+            "mode": "inherit"
+          },
+          "defaultEffort": {
+            "mode": "inherit"
+          },
+          "fast": {
+            "mode": "inherit"
+          }
+        },
+        "conditionOverrides": [
+          {
+            "id": "ba89d514-f427-4464-be5c-7ebf88804536",
+            "name": "MiniMax-M3.1-Flash-Preview",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3",
+                    "1"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "flash",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "preview",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-bf774de3bcd9",
+              "literalTail": "-flash-preview"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "custom",
+                "value": 1000000
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "custom",
+                "value": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "defaultEffort": {
+                "mode": "custom",
+                "value": "max"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "MiniMax-M3.1-Flash-Preview",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "9218ac88-e227-45f9-babe-36bd736e3771",
+            "name": "MiniMax-M3",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3"
+                  ]
+                }
+              ],
+              "layoutId": "layout-bf774de3bcd9",
+              "literalTail": ""
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "custom",
+                "value": 1000000
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "MiniMax-M3",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "b67de1dc-0776-44a2-b16b-48253a120078",
+            "name": "MiniMax-M2.7",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "2",
+                    "7"
+                  ]
+                }
+              ],
+              "layoutId": "layout-bf774de3bcd9",
+              "literalTail": ""
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "custom",
+                "value": 204800
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "MiniMax-M2.7",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "f3747e24-ef66-4908-ba97-78bd45b5f94f",
+            "name": "MiniMax-M2.7-highspeed",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "2",
+                    "7"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "highspeed",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-bf774de3bcd9",
+              "literalTail": "-highspeed"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "custom",
+                "value": 204800
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "MiniMax-M2.7-highspeed",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "01afae6b-4787-4061-bf2f-e96537f62457",
+            "name": "MiniMax-M2.5",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "2",
+                    "5"
+                  ]
+                }
+              ],
+              "layoutId": "layout-bf774de3bcd9",
+              "literalTail": ""
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "custom",
+                "value": 204800
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "MiniMax-M2.5",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "cc41c98f-53b7-4bd0-847e-01d256a1ec78",
+            "name": "MiniMax-M2.5-highspeed",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "2",
+                    "5"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "highspeed",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-bf774de3bcd9",
+              "literalTail": "-highspeed"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "custom",
+                "value": 204800
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "MiniMax-M2.5-highspeed",
+            "scope": "known_identity_only"
+          }
+        ]
+      }
+    },
+    {
+      "templateId": "c2efe090-d091-418b-aa1e-92c5c5f7eabf",
+      "familyKey": "ERNIE",
+      "label": "百度 ERNIE",
+      "candidateRevisionId": "f433286b-d609-55f7-979a-4b34ee8cfbdd",
+      "revisionState": "candidate",
+      "sourceContentSha256": "0a5d1d0c02358f6118bd09bda0ee9f413a65fbc73c589a00f2e6cd693fcf6abd",
+      "content": {
+        "description": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+        "matching": {
+          "channelMode": "all",
+          "channels": [],
+          "caseSensitive": false,
+          "priority": 0,
+          "include": [
+            {
+              "kind": "prefix",
+              "value": "ernie-"
+            }
+          ],
+          "exclude": []
+        },
+        "nameLayouts": [],
+        "commonRules": {
+          "protocol": {
+            "mode": "inherit"
+          },
+          "contextWindow": {
+            "mode": "inherit"
+          },
+          "inputModalities": {
+            "mode": "inherit"
+          },
+          "reasoningEfforts": {
+            "mode": "inherit"
+          },
+          "defaultEffort": {
+            "mode": "inherit"
+          },
+          "fast": {
+            "mode": "inherit"
+          }
+        },
+        "conditionOverrides": [
+          {
+            "id": "85ea2573-645d-429e-bdfc-f349f807b49b",
+            "name": "ernie-5.0",
+            "selector": {
+              "all": [
+                {
+                  "kind": "exact_id",
+                  "value": "ernie-5.0"
+                }
+              ]
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "ernie-5.0",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "aef1641f-d5e3-49dd-a590-1f0f6c44ffd8",
+            "name": "ernie-5.0-thinking-preview",
+            "selector": {
+              "all": [
+                {
+                  "kind": "exact_id",
+                  "value": "ernie-5.0-thinking-preview"
+                }
+              ]
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "ernie-5.0-thinking-preview",
+            "scope": "known_identity_only"
+          }
+        ]
+      }
+    },
+    {
+      "templateId": "04018546-d99e-430a-afd3-92d8a151472c",
+      "familyKey": "Step",
+      "label": "阶跃 Step",
+      "candidateRevisionId": "c9629d41-aba7-5f8d-b5f5-54583c04b80b",
+      "revisionState": "candidate",
+      "sourceContentSha256": "14b4ca329ec143a08fdfe5338d15fe6b426b942919c50bd362a43e9e8dd112e8",
+      "content": {
+        "description": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+        "matching": {
+          "channelMode": "all",
+          "channels": [],
+          "caseSensitive": false,
+          "priority": 0,
+          "include": [
+            {
+              "kind": "prefix",
+              "value": "step-"
+            },
+            {
+              "kind": "exact",
+              "value": "Step 5 Preview"
+            }
+          ],
+          "exclude": []
+        },
+        "nameLayouts": [
+          {
+            "id": "layout-2ad327d46f76",
+            "literalPrefix": "step-",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          }
+        ],
+        "commonRules": {
+          "protocol": {
+            "mode": "inherit"
+          },
+          "contextWindow": {
+            "mode": "inherit"
+          },
+          "inputModalities": {
+            "mode": "inherit"
+          },
+          "reasoningEfforts": {
+            "mode": "inherit"
+          },
+          "defaultEffort": {
+            "mode": "inherit"
+          },
+          "fast": {
+            "mode": "inherit"
+          }
+        },
+        "conditionOverrides": [
+          {
+            "id": "82c076c8-e460-4223-bf0f-73964f37bec0",
+            "name": "step-3.5-flash",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "3",
+                    "5"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "flash",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-2ad327d46f76",
+              "literalTail": "-flash"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "step-3.5-flash",
+            "scope": "known_identity_only"
+          }
+        ]
+      }
+    },
+    {
+      "templateId": "0bf7408b-2197-4a98-9a9e-5dd218953594",
+      "familyKey": "MiMo",
+      "label": "小米 MiMo",
+      "candidateRevisionId": "bffdd13a-e37a-5a76-b879-f8b759a24f09",
+      "revisionState": "candidate",
+      "sourceContentSha256": "b1370071de0f13f9c06b0a9141296fb349e64bc7b58062557a81db53d8a660b9",
+      "content": {
+        "description": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+        "matching": {
+          "channelMode": "all",
+          "channels": [],
+          "caseSensitive": false,
+          "priority": 0,
+          "include": [
+            {
+              "kind": "prefix",
+              "value": "mimo-"
+            }
+          ],
+          "exclude": []
+        },
+        "nameLayouts": [
+          {
+            "id": "layout-b6b444d46ce6",
+            "literalPrefix": "mimo-v",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          }
+        ],
+        "commonRules": {
+          "protocol": {
+            "mode": "inherit"
+          },
+          "contextWindow": {
+            "mode": "inherit"
+          },
+          "inputModalities": {
+            "mode": "inherit"
+          },
+          "reasoningEfforts": {
+            "mode": "inherit"
+          },
+          "defaultEffort": {
+            "mode": "inherit"
+          },
+          "fast": {
+            "mode": "inherit"
+          }
+        },
+        "conditionOverrides": [
+          {
+            "id": "bf958042-1b3e-4517-a6b9-97916ba1cdaa",
+            "name": "mimo-v2.5-pro",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "2",
+                    "5"
+                  ]
+                },
+                {
+                  "kind": "literal_segment",
+                  "value": "pro",
+                  "position": "any",
+                  "boundary": "hyphen_or_string_edge"
+                }
+              ],
+              "layoutId": "layout-b6b444d46ce6",
+              "literalTail": "-pro"
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "mimo-v2.5-pro",
+            "scope": "known_identity_only"
+          }
+        ]
+      }
+    },
+    {
+      "templateId": "ec0d785e-989b-458c-9f2b-35e15874b863",
+      "familyKey": "Grok",
+      "label": "Grok",
+      "candidateRevisionId": "7abd4b1b-7a4a-5107-9fef-1f4340ce222d",
+      "revisionState": "candidate",
+      "sourceContentSha256": "0ae4406c4924e488caf20472d47da40760426e9521f55326f5d00a52c49be725",
+      "content": {
+        "description": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+        "matching": {
+          "channelMode": "all",
+          "channels": [],
+          "caseSensitive": false,
+          "priority": 0,
+          "include": [
+            {
+              "kind": "prefix",
+              "value": "grok-"
+            }
+          ],
+          "exclude": []
+        },
+        "nameLayouts": [
+          {
+            "id": "layout-b1d2f13f18f3",
+            "literalPrefix": "grok-",
+            "versionCapture": "complete_numeric_components",
+            "numericJoiners": [
+              ".",
+              "-"
+            ],
+            "tailCapture": "literal_remainder",
+            "trailingDatePolicy": "retain_valid_YYYYMMDD_after_hyphen",
+            "ambiguousNumericTail": "no_equivalence"
+          }
+        ],
+        "commonRules": {
+          "protocol": {
+            "mode": "inherit"
+          },
+          "contextWindow": {
+            "mode": "inherit"
+          },
+          "inputModalities": {
+            "mode": "inherit"
+          },
+          "reasoningEfforts": {
+            "mode": "inherit"
+          },
+          "defaultEffort": {
+            "mode": "inherit"
+          },
+          "fast": {
+            "mode": "inherit"
+          }
+        },
+        "conditionOverrides": [
+          {
+            "id": "11d1a67d-e5b7-47cb-b829-b829ff1629e1",
+            "name": "grok-4.7",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "4",
+                    "7"
+                  ]
+                }
+              ],
+              "layoutId": "layout-b1d2f13f18f3",
+              "literalTail": ""
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "custom",
+                "value": 500000
+              },
+              "inputModalities": {
+                "mode": "custom",
+                "value": [
+                  "text",
+                  "image"
+                ]
+              },
+              "reasoningEfforts": {
+                "mode": "custom",
+                "value": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh"
+                ]
+              },
+              "defaultEffort": {
+                "mode": "custom",
+                "value": "high"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "grok-4.7",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "5c274d72-a05c-4ac8-8921-789709869c42",
+            "name": "grok-4.6",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "4",
+                    "6"
+                  ]
+                }
+              ],
+              "layoutId": "layout-b1d2f13f18f3",
+              "literalTail": ""
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "grok-4.6",
+            "scope": "known_identity_only"
+          },
+          {
+            "id": "481e0d93-bbd7-445d-a0e8-27b531793c40",
+            "name": "grok-4.5",
+            "selector": {
+              "all": [
+                {
+                  "kind": "numeric_version",
+                  "components": [
+                    "4",
+                    "5"
+                  ]
+                }
+              ],
+              "layoutId": "layout-b1d2f13f18f3",
+              "literalTail": ""
+            },
+            "rules": {
+              "protocol": {
+                "mode": "inherit"
+              },
+              "contextWindow": {
+                "mode": "inherit"
+              },
+              "inputModalities": {
+                "mode": "inherit"
+              },
+              "reasoningEfforts": {
+                "mode": "inherit"
+              },
+              "defaultEffort": {
+                "mode": "inherit"
+              },
+              "fast": {
+                "mode": "inherit"
+              }
+            },
+            "lockedFields": [],
+            "sourceExactId": "grok-4.5",
+            "scope": "known_identity_only"
+          }
+        ]
+      }
+    },
+    {
+      "templateId": "5910381f-9f57-4c6c-abc7-5162139fa200",
+      "familyKey": "Mistral",
+      "label": "Mistral / Devstral",
+      "candidateRevisionId": "ba2665c3-1be6-589a-9b92-eff3da7a52a9",
+      "revisionState": "candidate",
+      "sourceContentSha256": "f994374eff3cb4e9f89d97bde53408f89bdcaed1d958730079688d5a62adae90",
+      "content": {
+        "description": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+        "matching": {
+          "channelMode": "all",
+          "channels": [],
+          "caseSensitive": false,
+          "priority": 0,
+          "include": [
+            {
+              "kind": "prefix",
+              "value": "mistral-"
+            },
+            {
+              "kind": "prefix",
+              "value": "devstral-"
+            },
+            {
+              "kind": "exact",
+              "value": "Mistral Large 4"
+            },
+            {
+              "kind": "exact",
+              "value": "Mistral Medium 3.5"
+            },
+            {
+              "kind": "exact",
+              "value": "Devstral 2"
+            }
+          ],
+          "exclude": []
+        },
+        "nameLayouts": [],
+        "commonRules": {
+          "protocol": {
+            "mode": "inherit"
+          },
+          "contextWindow": {
+            "mode": "inherit"
+          },
+          "inputModalities": {
+            "mode": "inherit"
+          },
+          "reasoningEfforts": {
+            "mode": "inherit"
+          },
+          "defaultEffort": {
+            "mode": "inherit"
+          },
+          "fast": {
+            "mode": "inherit"
+          }
+        },
+        "conditionOverrides": []
+      }
+    },
+    {
+      "templateId": "85f3649e-6532-403b-b573-8bf39cc3c9ab",
+      "familyKey": "Gemma",
+      "label": "Gemma",
+      "candidateRevisionId": "711458ef-f138-5e0e-92f4-9004950989a4",
+      "revisionState": "candidate",
+      "sourceContentSha256": "3a07de05c810f13a57fea33ad44d924e8b652b42792915b16fcb8b92c32a6053",
+      "content": {
+        "description": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+        "matching": {
+          "channelMode": "all",
+          "channels": [],
+          "caseSensitive": false,
+          "priority": 0,
+          "include": [
+            {
+              "kind": "prefix",
+              "value": "gemma-"
+            },
+            {
+              "kind": "ascii_numeric_prefix",
+              "value": "gemma"
+            },
+            {
+              "kind": "exact",
+              "value": "google/gemma-4-E2B-it"
+            },
+            {
+              "kind": "exact",
+              "value": "google/gemma-4-E4B-it"
+            },
+            {
+              "kind": "exact",
+              "value": "google/gemma-4-12B-it"
+            },
+            {
+              "kind": "exact",
+              "value": "google/gemma-4-26B-A4B-it"
+            },
+            {
+              "kind": "exact",
+              "value": "google/gemma-4-31B-it"
+            }
+          ],
+          "exclude": []
+        },
+        "nameLayouts": [],
+        "commonRules": {
+          "protocol": {
+            "mode": "inherit"
+          },
+          "contextWindow": {
+            "mode": "inherit"
+          },
+          "inputModalities": {
+            "mode": "inherit"
+          },
+          "reasoningEfforts": {
+            "mode": "inherit"
+          },
+          "defaultEffort": {
+            "mode": "inherit"
+          },
+          "fast": {
+            "mode": "inherit"
+          }
+        },
+        "conditionOverrides": []
+      }
+    },
+    {
+      "templateId": "626989ec-73e3-41a8-90e3-810dfb200b73",
+      "familyKey": "Llama",
+      "label": "Llama",
+      "candidateRevisionId": "4341f75f-2a9c-5a13-ba2c-970aeaafeb92",
+      "revisionState": "candidate",
+      "sourceContentSha256": "c6b324af7d2e85e7189c95ebae1af329ecdc2ae7157c0b40bd1fe65c72c68afe",
+      "content": {
+        "description": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+        "matching": {
+          "channelMode": "all",
+          "channels": [],
+          "caseSensitive": false,
+          "priority": 0,
+          "include": [
+            {
+              "kind": "prefix",
+              "value": "llama-"
+            },
+            {
+              "kind": "ascii_numeric_prefix",
+              "value": "llama"
+            },
+            {
+              "kind": "exact",
+              "value": "Llama 4 Scout"
+            },
+            {
+              "kind": "exact",
+              "value": "Llama 4 Maverick"
+            }
+          ],
+          "exclude": []
+        },
+        "nameLayouts": [],
+        "commonRules": {
+          "protocol": {
+            "mode": "inherit"
+          },
+          "contextWindow": {
+            "mode": "inherit"
+          },
+          "inputModalities": {
+            "mode": "inherit"
+          },
+          "reasoningEfforts": {
+            "mode": "inherit"
+          },
+          "defaultEffort": {
+            "mode": "inherit"
+          },
+          "fast": {
+            "mode": "inherit"
+          }
+        },
+        "conditionOverrides": []
+      }
+    }
+  ]
+}

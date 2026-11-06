@@ -1,0 +1,24 @@
+{
+  "release_source": "0c57500f8f46ea50655c782c3f04334a39167abb",
+  "targeted_existing_test": {
+    "command": "cargo test --locked --lib modules::model_config::tests::glob_is_literal_and_channels_exclusions_and_suffixes_are_explained -- --exact",
+    "result": "passed",
+    "executed": 1,
+    "filtered": 1227
+  },
+  "initial_filter_attempt": {
+    "command": "cargo test --locked --lib glob_is_literal_and_channels_exclusions_and_suffixes_are_explained -- --exact",
+    "executed": 0,
+    "filtered": 1228,
+    "result": "not validation; rerun with qualified name"
+  },
+  "analysis_script_initial_attempt": {
+    "result": "SyntaxError before execution; missing outer dict brace corrected",
+    "data_or_runtime_operations": 0
+  },
+  "initial_readback_attempt": {
+    "result": "Whole-config digest differed; no pass claimed. Projected model and selection equality separately verified.",
+    "daily_config_rollback": false
+  },
+  "new_candidate_implementation": "isolated Python proof of concept only; not Rust/production integration"
+}

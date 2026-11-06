@@ -1,0 +1,483 @@
+{
+  "status": "naming-rule-feasibility-passed-with-explicit-limits",
+  "providers": 26,
+  "providers_with_local_models": 15,
+  "providers_without_local_models": 11,
+  "channel_model_rows": 246,
+  "unique_ids": 152,
+  "explicitly_selected_unique_ids": 28,
+  "baseline_seed_family_count": 17,
+  "baseline_include_rule_kinds": {
+    "exact": 78
+  },
+  "coverage_unique": {
+    "baseline_potential_exact_seed": 42,
+    "general_direct": 107,
+    "with_explicit_channel_namespace_candidates": 133,
+    "manually_annotated_supported_naming_families": 134,
+    "unassigned_other_families_or_special_tasks": 18,
+    "requires_manual_review": 1
+  },
+  "coverage_rows": {
+    "baseline": 85,
+    "direct": 194,
+    "with_declared_namespace_candidates": 220
+  },
+  "incorrect_family_predictions_against_manual_naming_labels": 0,
+  "active_template_adoption": {
+    "global_template_ref_count": 0,
+    "channel_template_ref_count": 0,
+    "per_model_template_ref_count": 0
+  },
+  "current_common_rules_all_inherit": true,
+  "parsed_version_rows": 201,
+  "real_dot_dash_pairs": [
+    {
+      "a": "claude-fable-5-1",
+      "b": "claude-fable-5.1",
+      "meaning": "same naming structure under explicit version rule; supplier/capability identity NOT proven"
+    }
+  ],
+  "synthetic_separator_cases": 44,
+  "synthetic_separator_passed": 44,
+  "synthetic_family_boundary_cases": 13,
+  "synthetic_family_boundary_passed": 13,
+  "duplicate_equivalent_variant_detected": true,
+  "scope_limits": [
+    "Current saved local list only; 11 providers have no local models; no discovery network calls.",
+    "152-ID inventory informed rule design: this is an exhaustive replay, NOT a blind held-out validation of future providers.",
+    "Manual expectations label visible model-name families, NOT vendor identity, protocol, context window, reasoning or other capabilities.",
+    "Namespace declarations are explicit candidates requiring user confirmation before production adoption.",
+    "Zero active templateRefs/modelRefs: baseline counts are potential rule coverage, NOT currently broken runtime configurations.",
+    "Version equivalence applies ONLY inside an explicit anchored numeric slot and preserves series/spec/build/tail and numeric component strings.",
+    "4/6-digit date-like suffixes remain ambiguous and are not silently stripped.",
+    "No production code, template library, adopted revision or model config changes."
+  ],
+  "by_channel": [
+    {
+      "provider": "A6api",
+      "local_model_count": 119,
+      "baseline_potential_family_matches": 42,
+      "general_direct_matches": 101,
+      "general_with_declared_namespace_matches": 101,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "AgentRouter-1",
+      "local_model_count": 0,
+      "baseline_potential_family_matches": 0,
+      "general_direct_matches": 0,
+      "general_with_declared_namespace_matches": 0,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "AgentRouter-2",
+      "local_model_count": 0,
+      "baseline_potential_family_matches": 0,
+      "general_direct_matches": 0,
+      "general_with_declared_namespace_matches": 0,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "AgentRouter-3",
+      "local_model_count": 0,
+      "baseline_potential_family_matches": 0,
+      "general_direct_matches": 0,
+      "general_with_declared_namespace_matches": 0,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "Ciii-1",
+      "local_model_count": 10,
+      "baseline_potential_family_matches": 3,
+      "general_direct_matches": 9,
+      "general_with_declared_namespace_matches": 9,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "Ciii-2",
+      "local_model_count": 10,
+      "baseline_potential_family_matches": 4,
+      "general_direct_matches": 9,
+      "general_with_declared_namespace_matches": 9,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "CodeKey",
+      "local_model_count": 3,
+      "baseline_potential_family_matches": 3,
+      "general_direct_matches": 3,
+      "general_with_declared_namespace_matches": 3,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "FeiMao",
+      "local_model_count": 7,
+      "baseline_potential_family_matches": 3,
+      "general_direct_matches": 6,
+      "general_with_declared_namespace_matches": 6,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "FeiMao-CNM",
+      "local_model_count": 4,
+      "baseline_potential_family_matches": 2,
+      "general_direct_matches": 4,
+      "general_with_declared_namespace_matches": 4,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "FeiMao-Claude",
+      "local_model_count": 10,
+      "baseline_potential_family_matches": 9,
+      "general_direct_matches": 10,
+      "general_with_declared_namespace_matches": 10,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "GZGG-NewApi",
+      "local_model_count": 29,
+      "baseline_potential_family_matches": 0,
+      "general_direct_matches": 2,
+      "general_with_declared_namespace_matches": 28,
+      "namespace_dependent_count": 27,
+      "review_needed": 1
+    },
+    {
+      "provider": "Input-1",
+      "local_model_count": 15,
+      "baseline_potential_family_matches": 4,
+      "general_direct_matches": 14,
+      "general_with_declared_namespace_matches": 14,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "Input-2",
+      "local_model_count": 15,
+      "baseline_potential_family_matches": 4,
+      "general_direct_matches": 14,
+      "general_with_declared_namespace_matches": 14,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "JustDoWoker-1",
+      "local_model_count": 3,
+      "baseline_potential_family_matches": 1,
+      "general_direct_matches": 3,
+      "general_with_declared_namespace_matches": 3,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "JustDoWoker-2",
+      "local_model_count": 3,
+      "baseline_potential_family_matches": 1,
+      "general_direct_matches": 3,
+      "general_with_declared_namespace_matches": 3,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "Krill-1",
+      "local_model_count": 8,
+      "baseline_potential_family_matches": 3,
+      "general_direct_matches": 7,
+      "general_with_declared_namespace_matches": 7,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "Krill-2",
+      "local_model_count": 7,
+      "baseline_potential_family_matches": 3,
+      "general_direct_matches": 6,
+      "general_with_declared_namespace_matches": 6,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "MDJK",
+      "local_model_count": 3,
+      "baseline_potential_family_matches": 3,
+      "general_direct_matches": 3,
+      "general_with_declared_namespace_matches": 3,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "Pite",
+      "local_model_count": 0,
+      "baseline_potential_family_matches": 0,
+      "general_direct_matches": 0,
+      "general_with_declared_namespace_matches": 0,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "SeekAi-1",
+      "local_model_count": 0,
+      "baseline_potential_family_matches": 0,
+      "general_direct_matches": 0,
+      "general_with_declared_namespace_matches": 0,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "SeekAi-2",
+      "local_model_count": 0,
+      "baseline_potential_family_matches": 0,
+      "general_direct_matches": 0,
+      "general_with_declared_namespace_matches": 0,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "SeekAi-3",
+      "local_model_count": 0,
+      "baseline_potential_family_matches": 0,
+      "general_direct_matches": 0,
+      "general_with_declared_namespace_matches": 0,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "TokEasy",
+      "local_model_count": 0,
+      "baseline_potential_family_matches": 0,
+      "general_direct_matches": 0,
+      "general_with_declared_namespace_matches": 0,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "Vsllm",
+      "local_model_count": 0,
+      "baseline_potential_family_matches": 0,
+      "general_direct_matches": 0,
+      "general_with_declared_namespace_matches": 0,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "YunShu",
+      "local_model_count": 0,
+      "baseline_potential_family_matches": 0,
+      "general_direct_matches": 0,
+      "general_with_declared_namespace_matches": 0,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    },
+    {
+      "provider": "openai",
+      "local_model_count": 0,
+      "baseline_potential_family_matches": 0,
+      "general_direct_matches": 0,
+      "general_with_declared_namespace_matches": 0,
+      "namespace_dependent_count": 0,
+      "review_needed": 0
+    }
+  ],
+  "uncovered": [
+    {
+      "provider": "GZGG-NewApi",
+      "raw_model_id": "ciii-gpt-gpt-5.6-terra",
+      "explicitly_selected": false,
+      "expected_naming_family": "GPT",
+      "baseline_potential_seed_families": [],
+      "baseline_potential_variant_ids": [],
+      "direct_general_family": null,
+      "candidate_naming_family": null,
+      "matching_view": "gpt-gpt-5.6-terra",
+      "channel_namespace": "ciii-",
+      "namespace_status": "candidate_unconfirmed_do_not_adopt",
+      "reason": "ambiguous_repeated_family_marker",
+      "parsed_version": null,
+      "capability_parameters_changed": false
+    }
+  ],
+  "rule_design": {
+    "family_rules": {
+      "GPT": {
+        "prefix": [
+          "gpt-"
+        ]
+      },
+      "Claude": {
+        "prefix": [
+          "claude-"
+        ]
+      },
+      "Gemini": {
+        "prefix": [
+          "gemini-"
+        ]
+      },
+      "GLM": {
+        "prefix": [
+          "glm-"
+        ],
+        "exact": [
+          "glm"
+        ]
+      },
+      "Qwen": {
+        "number_after": [
+          "qwen"
+        ],
+        "prefix": [
+          "qwen-"
+        ]
+      },
+      "HY": {
+        "number_after": [
+          "hy"
+        ]
+      },
+      "DeepSeek": {
+        "prefix": [
+          "deepseek-"
+        ]
+      },
+      "Kimi": {
+        "prefix": [
+          "kimi-",
+          "moonshot-"
+        ]
+      },
+      "MiniMax": {
+        "prefix": [
+          "minimax-"
+        ]
+      },
+      "Step": {
+        "prefix": [
+          "step-"
+        ]
+      },
+      "MiMo": {
+        "prefix": [
+          "mimo-"
+        ]
+      },
+      "Grok": {
+        "prefix": [
+          "grok-"
+        ]
+      },
+      "DoubaoSeed": {
+        "prefix": [
+          "doubao-seed-"
+        ]
+      },
+      "ERNIE": {
+        "prefix": [
+          "ernie-"
+        ]
+      },
+      "Mistral": {
+        "prefix": [
+          "mistral-",
+          "devstral-"
+        ]
+      },
+      "Gemma": {
+        "prefix": [
+          "gemma-"
+        ],
+        "number_after": [
+          "gemma"
+        ]
+      },
+      "Llama": {
+        "prefix": [
+          "llama-"
+        ],
+        "number_after": [
+          "llama"
+        ]
+      }
+    },
+    "channel_scoped_namespace_candidates": {
+      "GZGG-NewApi": [
+        "aixj-",
+        "btka-",
+        "ciii-",
+        "input-",
+        "siliconflow-",
+        "gxlq-bailian-",
+        "gxlq-local-",
+        "gzgg-local-ezio-itx-",
+        "gzgg-local-ezio-pc-",
+        "gzgg-local-strata-"
+      ]
+    },
+    "version_grammar_candidates": [
+      [
+        "GPT",
+        "^(gpt-)(.*)$"
+      ],
+      [
+        "Claude",
+        "^(claude-(?:opus|sonnet|haiku|fable|mythos)-)(.*)$"
+      ],
+      [
+        "Gemini",
+        "^(gemini-(?:omni-)?)(.*)$"
+      ],
+      [
+        "GLM",
+        "^(glm-)(.*)$"
+      ],
+      [
+        "HY",
+        "^(hy)(.*)$"
+      ],
+      [
+        "Qwen",
+        "^(qwen-?)(.*)$"
+      ],
+      [
+        "DeepSeek",
+        "^(deepseek-v)(.*)$"
+      ],
+      [
+        "Kimi",
+        "^(kimi-k)(.*)$"
+      ],
+      [
+        "MiniMax",
+        "^(minimax-[mh])(.*)$"
+      ],
+      [
+        "MiMo",
+        "^(mimo-v)(.*)$"
+      ],
+      [
+        "Grok",
+        "^(grok-)(.*)$"
+      ],
+      [
+        "Step",
+        "^(step-)(.*)$"
+      ]
+    ],
+    "allowed_numeric_separators": [
+      ".",
+      "-"
+    ],
+    "case_policy": "current default case insensitive; explicit case-sensitive rules remain available",
+    "unknown_capability_policy": "inherit/unknown, no inferred values"
+  }
+}
