@@ -278,3 +278,43 @@ pub async fn catalog_config_file_v2(
     .await
     .map_err(|_| invalid("file_inventory", "本机配置目录读取中断，当前选择保持"))?
 }
+
+#[tauri::command]
+pub async fn file_v2_read_scope(
+    data_root: tauri::State<'_, crate::state::SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> ModelResult<Option<crate::modules::model_config::sync_service_v2::ScopeRequestV2>> {
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::model_config::file_scope_v2::read(&root, &home)
+    })
+    .await
+    .map_err(|_| invalid("file_scope_read", "本机文件范围读取中断"))?
+}
+#[tauri::command]
+pub async fn file_v2_save_scope(
+    selection: SelectionV2,
+    mcp_clients: std::collections::BTreeMap<String, String>,
+    assets_reviewed: bool,
+    data_root: tauri::State<'_, crate::state::SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> ModelResult<()> {
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        crate::modules::model_config::file_scope_v2::save(
+            &root,
+            &home,
+            crate::modules::model_config::sync_service_v2::ScopeRequestV2 {
+                selection,
+                mcp_clients,
+                assets_reviewed,
+            },
+        )
+    })
+    .await
+    .map_err(|_| invalid("file_scope_save", "本机文件范围保存中断，当前选择保持"))?
+}
