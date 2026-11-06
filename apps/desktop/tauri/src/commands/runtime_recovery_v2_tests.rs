@@ -548,10 +548,17 @@ mod native {
                 .unwrap(),
             )
             .unwrap();
-            let expected_major = std::env::var("OPENCODEX_TEST_NPM_MAJOR").unwrap_or_else(|_| "6".into());
-            assert!(["6", "11"].contains(&expected_major.as_str()), "explicit supported fixture npm major");
-            assert_eq!(npm_json["version"].as_str().unwrap().split('.').next(), Some(expected_major.as_str()),
-                "native fixture must use the explicitly selected npm major");
+            let expected_major =
+                std::env::var("OPENCODEX_TEST_NPM_MAJOR").unwrap_or_else(|_| "6".into());
+            assert!(
+                ["6", "11"].contains(&expected_major.as_str()),
+                "explicit supported fixture npm major"
+            );
+            assert_eq!(
+                npm_json["version"].as_str().unwrap().split('.').next(),
+                Some(expected_major.as_str()),
+                "native fixture must use the explicitly selected npm major"
+            );
             let (node, npm) = crate::modules::runtime::install::managed_dependency_paths(&i);
             std::fs::create_dir_all(node.parent().unwrap()).unwrap();
             std::fs::copy(supplied_node, &node).unwrap();

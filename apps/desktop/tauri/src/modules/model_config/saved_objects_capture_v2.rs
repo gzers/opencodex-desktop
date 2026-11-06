@@ -504,7 +504,11 @@ pub(crate) fn scope_digest(r: &CaptureRequestV2) -> ModelResult<String> {
 }
 /// Copy original per-model public values from every actual protocol group,
 /// including unknown nested children. Never rebuild them from ModelRules.
-pub(crate) fn public_source(raw: &Value, channel: &ChannelV2, mappings: &MappingFileV2) -> ModelResult<Value> {
+pub(crate) fn public_source(
+    raw: &Value,
+    channel: &ChannelV2,
+    mappings: &MappingFileV2,
+) -> ModelResult<Value> {
     let provider = |id: &str| {
         raw.get("providers")
             .and_then(|p| p.get(id))
