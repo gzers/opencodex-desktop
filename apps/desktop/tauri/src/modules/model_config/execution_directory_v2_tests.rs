@@ -295,7 +295,7 @@ fn production_saved_capture_ignores_bad_draft_and_releases_locks_before_runtime_
     let source = std::fs::read(f.context.opencodex_home.join("config.json")).unwrap();
     let saved = capture_saved(&f.root, &f.context).unwrap();
     assert_eq!(saved.policy.channels.len(), 1);
-    assert_eq!(saved.policy.channels[0].connection.enabled, true);
+    assert!(saved.policy.channels[0].connection.enabled);
     assert!(!format!("{saved:?}").contains("DO_NOT_LEAK_CAPTURE_SECRET"));
     assert_eq!(
         source,
