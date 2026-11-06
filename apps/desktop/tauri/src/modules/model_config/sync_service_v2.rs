@@ -269,6 +269,10 @@ pub struct CompositionV2 {
     pub diff: Vec<DiffEntryV2>,
 }
 pub trait ServiceBackendV2: Send + Sync {
+    /// Trusted configured H, not an IPC path or a descriptor restored from JSON.
+    fn configured_home(&self) -> Option<PathBuf> {
+        None
+    }
     fn inventory(&self, connection: &ConnectionHandle) -> ModelResult<InventoryV2>;
     fn compose(
         &self,
@@ -1584,6 +1588,141 @@ impl SyncServiceV2 {
         })
         .await
     }
+    /// Resume only the original model-Applied receive's remaining participants.
+    /// No preview, current config/capture, network, new mapping, or new operation
+    /// is consulted. Own context descriptors are mandatory but never sufficient:
+    /// the local journal AND real model receipt issue two separate typed proofs.
+    pub async fn resume_receive(
+        &self,
+        operation_id: String,
+        read_passphrase: Option<Zeroizing<String>>,
+    ) -> SyncResult<OperationFact> {
+        require_uuid(&operation_id)?;
+        let files = self.files.clone();
+        let root = self.root.clone();
+        let home = self
+            .backend
+            .configured_home()
+            .ok_or_else(|| err(ErrorCode::SyncPlanChanged, Step::Recovery))?;
+        let store = self.store.clone();
+        blocking(move || {
+            let original: OriginalRecordV2 = files
+                .read(&format!("{operation_id}.original.json"))?
+                .ok_or_else(|| err(ErrorCode::SyncEndpointChanged, Step::Recovery))?;
+            let context: DownloadContextV2 = files
+                .read(&format!("{operation_id}.download-context.json"))?
+                .ok_or_else(|| err(ErrorCode::SyncJournalInvalid, Step::Recovery))?;
+            if original.operation_id != operation_id
+                || original.root_digest != files.root_digest
+                || context.operation_id != operation_id
+                || original.version != 2
+            {
+                return Err(err(ErrorCode::SyncJournalInvalid, Step::Recovery));
+            }
+            let record = store.receive(&operation_id)?;
+            let plan = record
+                .download
+                .as_ref()
+                .ok_or_else(|| err(ErrorCode::SyncPlanChanged, Step::Recovery))?;
+            if plan.operation_id != operation_id
+                || plan.binding_id != original.handle.binding_id
+                || plan.scope_digest.is_empty()
+            {
+                return Err(err(ErrorCode::SyncJournalInvalid, Step::Recovery));
+            }
+            let home = home
+                .canonicalize()
+                .map_err(|_| err(ErrorCode::SyncLocalStateIo, Step::Recovery))?;
+            let receiver = Arc::new(
+                context
+                    .receiver(&root, &home)
+                    .map_err(host::map_host_error)?,
+            );
+            let handle =
+                super::sync_local_v2::ModelApplyPlanHandle::new(context.model_handle.clone())
+                    .map_err(host::map_host_error)?;
+            let local_proof = super::sync_local_v2::LocalApplicationV2::local_model_journal_proof(
+                &root,
+                &home,
+                &operation_id,
+                &handle,
+            )?;
+            let model_proof = receiver
+                .applied_mapping_proof(&operation_id, &handle)
+                .map_err(host::map_host_error)?;
+            let owner = Arc::new(
+                super::sync_identity_v2::SyncIdentityOwnerV2::new(
+                    root.clone(),
+                    home.clone(),
+                    original.handle.binding_id.clone(),
+                    Arc::new(super::saved_objects_capture_v2::SystemCaptureCredentialsV2),
+                )
+                .map_err(host::map_host_error)?,
+            );
+            let proof = owner
+                .restore_adopted(&context.original_binding_bytes, local_proof, &model_proof)
+                .map_err(host::map_host_error)?;
+            if proof.operation_id() != operation_id
+                || proof.scope() != plan.scope_digest
+                || proof.expected_target() != plan.target_digest
+            {
+                return Err(err(ErrorCode::SyncOperationCollision, Step::Recovery));
+            }
+            let source = Arc::new(RemainingSourceBridgeV2 {
+                proof: proof.clone(),
+            });
+            let models = Arc::new(RemainingModelV2 {
+                receiver,
+                operation_id: operation_id.clone(),
+                handle,
+            });
+            let capture = super::saved_objects_capture_v2::CaptureRequestV2 {
+                selection: context.local_capture.selection,
+                mcp_clients: context.local_capture.mcp_clients,
+                assets_reviewed: context.local_capture.assets_reviewed,
+            };
+            let local = super::sync_local_v2::LocalApplicationV2::new_mapped_remaining(
+                root,
+                home,
+                context.remote_scope,
+                capture,
+                plan.scope_digest.clone(),
+                source,
+                models,
+                read_passphrase,
+                proof,
+            )?;
+            let bytes =
+                Zeroizing::new(store.payload(&record.payload_handle, &plan.payload_digest)?);
+            // Root/source/selection are checked by the owner-issued historical
+            // proofs, not reconstructed from today's edited source or old Absent.
+            local.apply_once(
+                &operation_id,
+                &bytes,
+                &record.payload_schema,
+                &plan.scope_digest,
+                &plan.target_digest,
+                plan.backup_before_update,
+            )?;
+            let mut final_record = store.receive(&operation_id)?;
+            let fact = final_record
+                .fact
+                .as_mut()
+                .ok_or_else(|| err(ErrorCode::SyncJournalInvalid, Step::Recovery))?;
+            fact.phase = Phase::Settled;
+            fact.local_apply_status = LocalApplyStatus::Applied;
+            fact.failure = None;
+            fact.recovery_actions.clear();
+            fact.relation = Relation {
+                local: LocalRelation::Unknown,
+                remote: RemoteRelation::Unknown,
+            };
+            let result = fact.clone();
+            store.save_receive(&operation_id, &final_record)?;
+            Ok(result)
+        })
+        .await
+    }
     /// Public cross-restart recovery keyed by the ORIGINAL operation, never a
     /// UI-invented session. Verify stored results first without today's source;
     /// only a genuinely unfinished same-O write reconstructs trusted guards.
@@ -2106,10 +2245,14 @@ mod tests;
 /// Production saved-object composer. Every mutable file/model/credential rule
 /// stays with its existing owner. This adapter only supplies immutable context
 /// and turns the exact core operation ID into the receiver's participant ID.
+#[cfg(test)]
+type AfterModelFaultV2 = Arc<dyn Fn(&str) -> ModelResult<()> + Send + Sync>;
 pub struct ProductionServiceBackendV2 {
     root: PathBuf,
     home: PathBuf,
     credentials: Arc<dyn super::saved_objects_capture_v2::CaptureCredentialsV2 + Send + Sync>,
+    #[cfg(test)]
+    after_model_fault: Option<AfterModelFaultV2>,
 }
 impl ProductionServiceBackendV2 {
     pub fn new(
@@ -2124,6 +2267,8 @@ impl ProductionServiceBackendV2 {
             root,
             home,
             credentials,
+            #[cfg(test)]
+            after_model_fault: None,
         })
     }
 }
@@ -2397,12 +2542,128 @@ impl super::sync_local_v2::ModelApplyV2 for ReceiveFactoryV2 {
         self.receiver(id)?.status(id, handle)
     }
 }
+struct RemainingModelV2 {
+    receiver: Arc<super::config_file::v2::receive::ReceiveFileHostV2>,
+    operation_id: String,
+    handle: super::sync_local_v2::ModelApplyPlanHandle,
+}
+impl super::sync_local_v2::ModelApplyV2 for RemainingModelV2 {
+    fn prepare(
+        &self,
+        _: &str,
+        _: &SavedObjects,
+        _: &SelectionV2,
+        _: &str,
+    ) -> ModelResult<super::sync_local_v2::ModelApplyPlanHandle> {
+        Err(invalid(
+            "sync_remaining_new_model_forbidden",
+            "恢复不允许准备新模型写入",
+        ))
+    }
+    fn protect(
+        &self,
+        _: &str,
+        _: &super::sync_local_v2::ModelApplyPlanHandle,
+        _: bool,
+    ) -> ModelResult<()> {
+        Err(invalid(
+            "sync_remaining_new_model_forbidden",
+            "恢复不允许新增模型保护阶段",
+        ))
+    }
+    fn apply_once(
+        &self,
+        _: &str,
+        _: &SavedObjects,
+        _: &super::sync_local_v2::ModelApplyPlanHandle,
+        _: bool,
+    ) -> ModelResult<super::sync_local_v2::ModelApplyReceipt> {
+        Err(invalid(
+            "sync_remaining_new_model_forbidden",
+            "恢复不允许重写模型",
+        ))
+    }
+    fn status(
+        &self,
+        id: &str,
+        handle: &super::sync_local_v2::ModelApplyPlanHandle,
+    ) -> ModelResult<super::sync_local_v2::ModelApplyStatus> {
+        if id != self.operation_id || handle != &self.handle {
+            return Err(invalid(
+                "sync_remaining_operation",
+                "恢复模型回执不属于原操作",
+            ));
+        }
+        self.receiver.status(id, handle)
+    }
+}
+struct RemainingSourceBridgeV2 {
+    proof: Arc<super::sync_identity_v2::AdoptedMappingProofV2>,
+}
+impl super::sync_local_v2::SourceSnapshotProviderV2 for RemainingSourceBridgeV2 {
+    fn current(
+        &self,
+        _: &Path,
+        _: &Path,
+        _: &super::saved_objects_capture_v2::CaptureRequestV2,
+    ) -> ModelResult<SourceGuard> {
+        Err(invalid(
+            "sync_remaining_source_forbidden",
+            "恢复不得重捕获当前来源",
+        ))
+    }
+    fn root(
+        &self,
+        d: &Path,
+        h: &Path,
+        _: &super::saved_objects_capture_v2::CaptureRequestV2,
+    ) -> ModelResult<String> {
+        let d = d
+            .canonicalize()
+            .map_err(|_| invalid("capture_root_invalid", "原用户根无法核验"))?;
+        let h = h
+            .canonicalize()
+            .map_err(|_| invalid("capture_root_invalid", "原配置根无法核验"))?;
+        let expected = store::digest(
+            &super::schema_v2::canonical_bytes(&(d, h))
+                .map_err(|_| invalid("capture_root_invalid", "原根无法核验"))?,
+        );
+        if expected != self.proof.root_revision() {
+            return Err(invalid("capture_root_invalid", "原根身份改变"));
+        }
+        Ok(self.proof.root_revision().into())
+    }
+    fn target(
+        &self,
+        _: &Path,
+        _: &Path,
+        _: &super::saved_objects_capture_v2::CaptureRequestV2,
+    ) -> ModelResult<String> {
+        Err(invalid(
+            "sync_remaining_target_forbidden",
+            "恢复不得把当前目标变成原事实",
+        ))
+    }
+    fn verify_applied_mapping(
+        &self,
+        id: &str,
+        binding: &host::LocalTargetBindingV2,
+    ) -> ModelResult<()> {
+        if binding != self.proof.binding() {
+            return Err(invalid("host_mapping_changed", "恢复目标不属于原采用"));
+        }
+        self.proof.verify_adopted(id)
+    }
+}
 struct MappedSourceBridgeV2 {
     provider: Arc<dyn CaptureProviderV2>,
     scope: SelectionV2,
     binding: host::LocalTargetBindingV2,
     receiver: Arc<ReceiveFactoryV2>,
+    #[cfg(test)]
+    after_model_fault: Option<AfterModelFaultV2>,
 }
+
 impl super::sync_local_v2::SourceSnapshotProviderV2 for MappedSourceBridgeV2 {
     fn current(
         &self,
@@ -2439,7 +2700,15 @@ impl super::sync_local_v2::SourceSnapshotProviderV2 for MappedSourceBridgeV2 {
         id: &str,
         binding: &host::LocalTargetBindingV2,
     ) -> ModelResult<()> {
-        self.receiver.verify_applied(id, binding)
+        self.receiver.verify_applied(id, binding)?;
+        // Deterministic test-only interruption AFTER the actual model receipt
+        // and adopted mapping proof, BEFORE non-model participant work. This
+        // never fabricates Applied or supplies a production recovery bypass.
+        #[cfg(test)]
+        if let Some(fault) = &self.after_model_fault {
+            fault(id)?;
+        }
+        Ok(())
     }
 }
 impl ProductionServiceBackendV2 {
@@ -2750,6 +3019,9 @@ impl ProductionServiceBackendV2 {
     }
 }
 impl ServiceBackendV2 for ProductionServiceBackendV2 {
+    fn configured_home(&self) -> Option<PathBuf> {
+        Some(self.home.clone())
+    }
     fn inventory(&self, connection: &ConnectionHandle) -> ModelResult<InventoryV2> {
         let (request, mcp_sources) = self.inventory_request()?;
         let identity = Arc::new(super::sync_identity_v2::SyncIdentityOwnerV2::new(
@@ -2770,50 +3042,7 @@ impl ServiceBackendV2 for ProductionServiceBackendV2 {
             actual.objects,
             mapping.binding(),
         )?;
-        let (local_keys, local_auth) = super::config_file::v2::with_saved_config(
-            &self.root,
-            &self.home,
-            |_, policy, _, raw, _, _| {
-                let mut keys = BTreeSet::new();
-                let mut auth = BTreeSet::new();
-                for channel in &policy.channels {
-                    if let Some(provider) = raw
-                        .get("providers")
-                        .and_then(|v| v.get(&channel.connection.provider_id))
-                    {
-                        let private = [
-                            "apiKeyPool",
-                            "headers",
-                            "queryParams",
-                            "proxy",
-                            "mcpServers",
-                            "desktopExecutor",
-                        ]
-                        .iter()
-                        .any(|field| {
-                            provider.get(*field).is_some_and(|v| match v {
-                                serde_json::Value::Null => false,
-                                serde_json::Value::String(s) => !s.is_empty(),
-                                serde_json::Value::Array(a) => !a.is_empty(),
-                                serde_json::Value::Object(m) => !m.is_empty(),
-                                _ => true,
-                            })
-                        });
-                        if private {
-                            auth.insert(channel.id.clone());
-                        } else if provider
-                            .get("apiKey")
-                            .and_then(serde_json::Value::as_str)
-                            .is_some_and(|s| !s.is_empty())
-                        {
-                            keys.insert(channel.id.clone());
-                        }
-                    }
-                }
-                Ok((keys, auth))
-            },
-        )
-        .map_err(|e| invalid(&e.code, "凭据范围目录无法读取"))?;
+        let (local_keys, local_auth) = self.credential_availability()?;
         let projected = |ids: BTreeSet<String>| -> BTreeSet<String> {
             ids.into_iter()
                 .filter_map(|id| {
@@ -2859,56 +3088,55 @@ impl ServiceBackendV2 for ProductionServiceBackendV2 {
         // Its explicit local upload selection goes straight through Upload.
         // With valid cloud material the owner translates portable -> actual
         // local identities before direction selection; no label inference.
-        let (direction, mapping) = if cloud.is_none() {
-            (
-                DirectionV2::Upload,
-                Arc::new(identity.freeze_preview(DirectionV2::Upload, input_request, None)?),
-            )
-        } else {
-            let receive_mapping =
-                Arc::new(identity.freeze_preview(DirectionV2::Download, input_request, cloud)?);
-            let actual_local = super::saved_objects_capture_v2::capture(
-                &self.root,
-                &self.home,
-                &receive_mapping.local_capture_request(),
-                self.credentials.as_ref(),
-            )?;
-            let projected_local = host::TrustedMappingOwnerV2::project_saved_to_remote(
-                identity.as_ref(),
-                actual_local.objects,
-                receive_mapping.binding(),
-            )?;
-            let direction = match &request.forced_direction {
-                Some(d) => d.host(),
-                None => host::automatic_direction_from_saved(
-                    &projected_local,
-                    cloud,
-                    &request.selection,
-                )
-                .map_err(|_| invalid("capture_source_invalid", "保存事实无法判断方向"))?,
-            };
-            let mapping = if direction == DirectionV2::Upload {
-                if receive_mapping
-                    .binding()
-                    .slots
-                    .iter()
-                    .any(|s| matches!(s.expected, host::TargetExpectationV2::ExpectedAbsent(_)))
-                {
-                    return Err(invalid(
-                        "capture_selection_missing",
-                        "上传来源缺少明确已保存对象",
-                    ));
-                }
-                Arc::new(identity.freeze_preview(
-                    DirectionV2::Upload,
-                    receive_mapping.local_capture_request(),
-                    None,
-                )?)
+        let (direction, mapping) =
+            if let Some(cloud) = cloud {
+                let receive_mapping =
+                    Arc::new(identity.freeze_preview_adopting_same_ids(input_request, cloud)?);
+                let actual_local = super::saved_objects_capture_v2::capture(
+                    &self.root,
+                    &self.home,
+                    &receive_mapping.local_capture_request(),
+                    self.credentials.as_ref(),
+                )?;
+                let projected_local = host::TrustedMappingOwnerV2::project_saved_to_remote(
+                    identity.as_ref(),
+                    actual_local.objects,
+                    receive_mapping.binding(),
+                )?;
+                let direction = match &request.forced_direction {
+                    Some(d) => d.host(),
+                    None => host::automatic_direction_from_saved(
+                        &projected_local,
+                        Some(cloud),
+                        &request.selection,
+                    )
+                    .map_err(|_| invalid("capture_source_invalid", "保存事实无法判断方向"))?,
+                };
+                let mapping =
+                    if direction == DirectionV2::Upload {
+                        if receive_mapping.binding().slots.iter().any(|s| {
+                            matches!(s.expected, host::TargetExpectationV2::ExpectedAbsent(_))
+                        }) {
+                            return Err(invalid(
+                                "capture_selection_missing",
+                                "上传来源缺少明确已保存对象",
+                            ));
+                        }
+                        Arc::new(identity.freeze_preview(
+                            DirectionV2::Upload,
+                            receive_mapping.local_capture_request(),
+                            None,
+                        )?)
+                    } else {
+                        receive_mapping
+                    };
+                (direction, mapping)
             } else {
-                receive_mapping
+                (
+                    DirectionV2::Upload,
+                    Arc::new(identity.freeze_preview(DirectionV2::Upload, input_request, None)?),
+                )
             };
-            (direction, mapping)
-        };
         let local_capture = mapping.local_capture_request();
         let actual = Arc::new(
             host::SavedCaptureProviderV2::new(
@@ -2942,6 +3170,8 @@ impl ServiceBackendV2 for ProductionServiceBackendV2 {
             scope: remote_scope.clone(),
             binding: mapping.binding().clone(),
             receiver: receiver.clone(),
+            #[cfg(test)]
+            after_model_fault: self.after_model_fault.clone(),
         });
         let local: Arc<dyn LocalApplication> = if direction == DirectionV2::Download {
             Arc::new(
