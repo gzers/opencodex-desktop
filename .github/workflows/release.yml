@@ -50,7 +50,8 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          # Bundle resolution must use the same Node/npm pair as the pinned closure.
+          node-version: 26.8.1
 
       - uses: dtolnay/rust-toolchain@stable
         with:

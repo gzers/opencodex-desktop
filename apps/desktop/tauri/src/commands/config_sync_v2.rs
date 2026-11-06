@@ -21,7 +21,7 @@ impl SharedConfigSyncV2 {
             SyncServiceV2::production(root, home).map(Arc::new),
         ))
     }
-    fn service(&self) -> SyncResult<Arc<SyncServiceV2>> {
+    pub(crate) fn service(&self) -> SyncResult<Arc<SyncServiceV2>> {
         self.0.as_ref().clone()
     }
 }

@@ -581,6 +581,7 @@ pub fn run() {
             commands::scope_backup_v2::transfer_v2_backup_preview,
             commands::scope_backup_v2::transfer_v2_backup_restore,
             commands::config_file_transfer_v2::catalog_config_file_v2,
+            commands::config_file_transfer_v2::result_owner_v2,
             commands::config_file_transfer_v2::file_v2_read_scope,
             commands::config_file_transfer_v2::file_v2_save_scope,
             commands::config_file_transfer_v2::prepare_config_file_export_v2,
