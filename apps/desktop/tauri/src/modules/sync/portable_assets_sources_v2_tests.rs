@@ -430,3 +430,120 @@ fn sources_v2_actual_manager_source_config_is_checked_without_touching_client_fi
         "asset_config"
     );
 }
+#[test]
+fn sources_v2_binding_paths_recheck_chosen_disappearance_and_unknown_scope() {
+    let f = Fixture::new();
+    f.managed(json!({"command":"managed"}), false);
+    f.client("codex", json!({"command":"client"}));
+    let choices = BTreeMap::from([(NAME.into(), "codex".into())]);
+    let before =
+        saved_source_paths(f.root.path(), f.home.path(), &[], &[NAME.into()], &choices).unwrap();
+    assert_eq!(before, vec![f.home.path().join(".codex/config.toml")]);
+    fs::remove_file(&before[0]).unwrap();
+    assert_eq!(
+        saved_source_paths(f.root.path(), f.home.path(), &[], &[NAME.into()], &choices)
+            .err()
+            .unwrap()
+            .code,
+        "mcp_source"
+    );
+    assert_eq!(
+        detail(f.root.path(), f.home.path(), "mcps", NAME, Some("codex"))
+            .err()
+            .unwrap()
+            .code,
+        "mcp_source"
+    );
+    assert_eq!(
+        saved_source_paths(
+            f.root.path(),
+            f.home.path(),
+            &[],
+            &[NAME.into()],
+            &BTreeMap::from([("other".into(), "managed".into())])
+        )
+        .err()
+        .unwrap()
+        .code,
+        "mcp_source"
+    );
+}
+#[cfg(unix)]
+#[test]
+fn sources_v2_selected_symlink_is_refused_without_managed_fallback() {
+    let f = Fixture::new();
+    f.managed(json!({"command":"managed"}), false);
+    f.client("codex", json!({"command":"client"}));
+    let path = f.home.path().join(".codex/config.toml");
+    let target = f.home.path().join("external.toml");
+    fs::rename(&path, &target).unwrap();
+    std::os::unix::fs::symlink(&target, &path).unwrap();
+    let before = fs::read(&target).unwrap();
+    assert_eq!(
+        f.export(Some("codex"), false, None).err().unwrap().code,
+        "mcp_read"
+    );
+    let (managed, _) = f.export(Some("managed"), false, None).unwrap();
+    assert_eq!(managed.mcps[0].definition["command"], "managed");
+    assert_eq!(before, fs::read(target).unwrap());
+    assert!(f.vault.reads.borrow().is_empty());
+}
+#[test]
+fn sources_v2_secret_url_is_bound_to_chosen_managed_public_service() {
+    let mut f = Fixture::new();
+    fs::create_dir_all(f.root.path().join("manager-state")).unwrap();
+    let stored = StoredMcp {
+        name: NAME.into(),
+        definition: json!({"url":"https://fixture.example.test/mcp"}),
+        secret_fields: vec!["/url".into()],
+        references: BTreeMap::from([("/url".into(), REF.into())]),
+    };
+    fs::write(
+        f.root.path().join(MCP_STORE),
+        serde_json::to_vec(&vec![stored]).unwrap(),
+    )
+    .unwrap();
+    f.vault.values.insert(
+        REF.into(),
+        "https://different.example.test/mcp?token=synthetic-secret".into(),
+    );
+    assert_eq!(
+        f.export(Some("managed"), true, None).err().unwrap().code,
+        "extension_credential"
+    );
+    assert_eq!(*f.vault.reads.borrow(), vec![REF]);
+    f.vault.values.insert(
+        REF.into(),
+        "https://fixture.example.test/mcp?token=synthetic-secret".into(),
+    );
+    let (assets, _) = f.export(Some("managed"), true, None).unwrap();
+    assert_eq!(
+        assets.mcps[0].definition["url"],
+        "https://fixture.example.test/mcp"
+    );
+    assert!(assets.mcps[0].secrets.0["/url"].contains("synthetic-secret"));
+}
+#[test]
+fn sources_v2_valid_global_credential_scope_does_not_expand_this_batch() {
+    let f = Fixture::new();
+    f.managed(json!({"command":"managed"}), true);
+    let ids = [
+        format!("channel:{OTHER_REF}"),
+        "mcp:other".into(),
+        "skill:other".into(),
+    ];
+    let (assets, _) = f.export(Some("managed"), true, Some(&ids)).unwrap();
+    assert_eq!(assets.mcps.len(), 1);
+    assert!(assets.mcps[0].secrets.0.is_empty());
+    assert!(f.vault.reads.borrow().is_empty());
+    assert_eq!(
+        f.export(Some("managed"), true, Some(&["unknown:value".into()]))
+            .err()
+            .unwrap()
+            .code,
+        "credential_scope"
+    );
+    assert!(f
+        .export(Some("managed"), true, Some(&["channel:not-a-uuid".into()]))
+        .is_err());
+}
