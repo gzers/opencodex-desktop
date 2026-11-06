@@ -1171,3 +1171,66 @@ fn namespace_adoption_is_an_explicit_whole_channel_intent_never_an_implicit_impo
         Some("file_namespace_scope_invalid")
     );
 }
+
+#[test]
+fn import_inventory_preserves_only_actual_public_account_platform_metadata() {
+    let f = Fixture::new(false);
+    let request = CaptureRequestV2 {
+        selection: SelectionV2 {
+            usage: UsageV2::LocalFile,
+            ..Default::default()
+        },
+        mcp_clients: Default::default(),
+        assets_reviewed: false,
+    };
+    // An authenticated wrapper supplies account metadata; UI never names the
+    // provider/origin to be adopted or supplies a credential identity.
+    let mut captured = saved_objects_capture_v2::capture(&f.d, &f.h, &request, &NoCredentials)
+        .unwrap()
+        .objects
+        .into_captured();
+    let account = portable_accounts::AccountInfo {
+        id: "11111111-1111-4111-8111-111111111111".into(),
+        provider: "chatgpt".into(),
+        subject: Some("synthetic-subject".into()),
+        label: "Synthetic account".into(),
+        email: None,
+        origin: Some(portable_accounts::AccountOrigin {
+            version: 1,
+            account_platform: "chatgpt".into(),
+            owner: "opencodex".into(),
+            auth_kind: "oauth".into(),
+            source_namespace: "codex-account-pool".into(),
+            source_account_id: "fixture-slot".into(),
+            tenant: None,
+        }),
+    };
+    captured.manager.accounts.push(account.clone());
+    let objects = SavedObjects::capture(captured, Some(&Auth)).unwrap();
+    let file = codec::encode(
+        &objects,
+        "99999999-9999-4999-8999-999999999999",
+        "2026-11-07T00:00:00Z",
+        None,
+        Some(&Auth),
+    )
+    .unwrap();
+    let preview = f
+        .owner()
+        .prepare_import(
+            file.into_bytes().to_vec(),
+            None,
+            Some(request.selection.clone()),
+            ImportBindingsV2::default(),
+        )
+        .unwrap();
+    let item = preview
+        .objects
+        .iter()
+        .find(|o| o.kind == "account")
+        .unwrap();
+    assert_eq!(item.account_info.as_ref(), Some(&account));
+    assert!(item.information_supported);
+    assert_eq!(item.label, "Synthetic account");
+    assert!(!serde_json::to_string(item).unwrap().contains("accessToken"));
+}

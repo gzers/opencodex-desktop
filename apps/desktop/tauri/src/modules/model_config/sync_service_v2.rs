@@ -110,6 +110,10 @@ pub struct ObjectEntryV2 {
     pub revisions: Vec<super::schema_v2::RefV2>,
     pub default_revision: Option<super::schema_v2::RefV2>,
     pub secret_available: bool,
+    #[serde(default)]
+    pub key_available: bool,
+    #[serde(default)]
+    pub authorization_available: bool,
 }
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -246,6 +250,7 @@ pub struct FileConnectionEntryV2 {
 #[derive(Clone, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct LocalFileCatalogV2 {
+    pub accounts: Vec<crate::modules::sync::portable_accounts::CatalogEntry>,
     pub entries: Vec<ObjectEntryV2>,
     pub mcp_sources: Vec<McpSourceEntryV2>,
     pub webdav_connections: Vec<FileConnectionEntryV2>,
@@ -358,7 +363,7 @@ impl ServiceFilesV2 {
                 }
             }
         }
-        std::fs::create_dir_all(&directory)
+        crate::infrastructure::platform::create_private_dir_all(&directory, 0o700)
             .map_err(|_| failure(ErrorCode::SyncLocalStateIo, Step::Persist))?;
         let root_digest = store::digest(
             root.canonicalize()
@@ -430,13 +435,7 @@ impl ServiceFilesV2 {
             return Err(failure(ErrorCode::SyncLimit, Step::Persist));
         }
         let target = self.path(name)?;
-        let mut f = tempfile::NamedTempFile::new_in(&self.directory)
-            .map_err(|_| failure(ErrorCode::SyncLocalStateIo, Step::Persist))?;
-        use std::io::Write;
-        f.write_all(&bytes)
-            .and_then(|_| f.as_file().sync_all())
-            .map_err(|_| failure(ErrorCode::SyncLocalStateIo, Step::Persist))?;
-        f.persist(target)
+        crate::infrastructure::atomic_write::atomic_write(&target, &bytes, 0o600)
             .map_err(|_| failure(ErrorCode::SyncLocalStateIo, Step::Persist))?;
         Ok(())
     }
@@ -760,8 +759,10 @@ impl SyncServiceV2 {
         let mut entries = entries_from(&inventory.objects, true);
         for row in &mut entries {
             if row.kind == ObjectKindV2::Channel {
-                row.secret_available |= inventory.key_channel_ids.contains(&row.id)
-                    || inventory.authorization_channel_ids.contains(&row.id);
+                row.key_available |= inventory.key_channel_ids.contains(&row.id);
+                row.authorization_available |=
+                    inventory.authorization_channel_ids.contains(&row.id);
+                row.secret_available |= row.key_available || row.authorization_available;
             }
         }
         for source in &inventory.mcp_sources {
@@ -780,6 +781,8 @@ impl SyncServiceV2 {
                     family_ids: vec![],
                     revisions: vec![],
                     default_revision: None,
+                    key_available: false,
+                    authorization_available: false,
                     secret_available: inventory.credential_mcp_names.contains(&source.name),
                 });
             }
@@ -800,9 +803,18 @@ impl SyncServiceV2 {
                     family_ids: vec![],
                     revisions: vec![],
                     default_revision: None,
+                    key_available: false,
+                    authorization_available: false,
                     secret_available: true,
                 });
             }
+        }
+        for row in &mut entries {
+            row.secret_available |= match row.kind {
+                ObjectKindV2::Skill => inventory.credential_skill_names.contains(&row.id),
+                ObjectKindV2::Mcp => inventory.credential_mcp_names.contains(&row.id),
+                _ => false,
+            };
         }
 
         if let Some(cloud) = &cloud {
@@ -813,6 +825,8 @@ impl SyncServiceV2 {
                 {
                     old.available_cloud = true;
                     old.secret_available |= remote.secret_available;
+                    old.key_available |= remote.key_available;
+                    old.authorization_available |= remote.authorization_available;
                     for model in remote.models {
                         if let Some(existing) = old
                             .models
@@ -1954,6 +1968,8 @@ fn entries_from(objects: &SavedObjects, local: bool) -> Vec<ObjectEntryV2> {
             family_ids: vec![],
             revisions: vec![],
             default_revision: None,
+            key_available: false,
+            authorization_available: false,
             secret_available,
             available_local: local,
             available_cloud: !local,
@@ -2025,6 +2041,8 @@ fn entries_from(objects: &SavedObjects, local: bool) -> Vec<ObjectEntryV2> {
     for row in &mut out {
         match row.kind {
             ObjectKindV2::Channel => {
+                row.key_available = p.channel_keys.get(&row.id).is_some();
+                row.authorization_available = p.channel_authorizations.contains_key(&row.id);
                 if let Some(c) = p
                     .models
                     .payload
@@ -2742,6 +2760,8 @@ impl ProductionServiceBackendV2 {
                     family_ids: vec![],
                     revisions: vec![],
                     default_revision: None,
+                    key_available: false,
+                    authorization_available: false,
                     secret_available: assets.credential_mcps.contains(&source.name),
                 });
             }
@@ -2762,14 +2782,23 @@ impl ProductionServiceBackendV2 {
                     family_ids: vec![],
                     revisions: vec![],
                     default_revision: None,
+                    key_available: false,
+                    authorization_available: false,
                     secret_available: true,
                 });
             }
         }
         let (keys, authorizations) = self.credential_availability()?;
         for e in &mut entries {
+            e.secret_available |= match e.kind {
+                ObjectKindV2::Skill => assets.credential_skills.contains(&e.id),
+                ObjectKindV2::Mcp => assets.credential_mcps.contains(&e.id),
+                _ => false,
+            };
             if e.kind == ObjectKindV2::Channel {
-                e.secret_available |= keys.contains(&e.id) || authorizations.contains(&e.id);
+                e.key_available |= keys.contains(&e.id);
+                e.authorization_available |= authorizations.contains(&e.id);
+                e.secret_available |= e.key_available || e.authorization_available;
             }
         }
         let settings = crate::modules::sync::portable_manager::export(
@@ -2818,6 +2847,7 @@ impl ProductionServiceBackendV2 {
             });
         }
         Ok(LocalFileCatalogV2 {
+            accounts: crate::modules::sync::portable_accounts::catalog(&self.root, &self.home)?,
             entries,
             mcp_sources,
             webdav_connections,

@@ -111,7 +111,8 @@ pub fn store_at(root: &Path, purpose: &str, ref_id: &str, password: &str) -> Res
     let path = path_for(root, &account);
     crate::modules::backup::safety::check_path(root, &path, true)?;
     for dir in [root.join("manager-state"), root.join(CREDENTIALS_DIR)] {
-        std::fs::create_dir_all(&dir).map_err(|_| AppError::NotConfigured)?;
+        crate::infrastructure::platform::create_private_dir_all(&dir, 0o700)
+            .map_err(|_| AppError::NotConfigured)?;
         crate::modules::backup::safety::check_path(root, &dir, false)?;
         crate::infrastructure::platform::set_mode(&dir, 0o700)
             .map_err(|_| AppError::NotConfigured)?;
@@ -369,7 +370,8 @@ fn store(purpose: &str, ref_id: &str, password: &str) -> Result<(), AppError> {
     let root = root()?;
     let account = account_key(purpose, ref_id)?;
     let dir = root.join(CREDENTIALS_DIR);
-    std::fs::create_dir_all(&dir).map_err(|_| AppError::NotConfigured)?;
+    crate::infrastructure::platform::create_private_dir_all(&dir, 0o700)
+        .map_err(|_| AppError::NotConfigured)?;
     crate::infrastructure::platform::set_mode(&dir, 0o700).map_err(|_| AppError::NotConfigured)?;
     let bytes = encode(&account, password)?;
     crate::infrastructure::atomic_write::atomic_write(&path_for(root, &account), &bytes, 0o600)?;

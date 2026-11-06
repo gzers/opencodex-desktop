@@ -236,6 +236,12 @@ pub fn create_private_dir_all(path: &Path, mode: u32) -> io::Result<()> {
     #[cfg(windows)]
     {
         match std::fs::symlink_metadata(path) {
+            Ok(metadata) if !metadata.is_dir() => {
+                return Err(io::Error::new(
+                    io::ErrorKind::AlreadyExists,
+                    "private directory target is not a directory",
+                ));
+            }
             Ok(_) => {
                 crate::infrastructure::windows_startup_root::protect_current_user_path(path, mode)?
             }

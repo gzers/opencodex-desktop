@@ -16,7 +16,9 @@ use crate::modules::{
         sync_local_v2::{ModelApplyPlanHandle, ModelApplyReceipt, ModelApplyStatus, ModelApplyV2},
     },
 };
-use std::{fs::OpenOptions, io::Write, path::PathBuf};
+#[cfg(windows)]
+use std::fs::OpenOptions;
+use std::{io::Write, path::PathBuf};
 use zeroize::Zeroize;
 
 const MAX_IMAGE: usize = 32 * 1024 * 1024;
@@ -591,14 +593,14 @@ impl ReceiveFileHostV2 {
         }
         let parent = dir.parent().ok_or_else(|| fail("model_receive_path"))?;
         let existed = parent.exists();
-        std::fs::create_dir_all(parent).map_err(io)?;
+        crate::infrastructure::platform::create_private_dir_all(parent, 0o700).map_err(io)?;
         safety::check_path(&self.root, parent, false).map_err(io)?;
         if existed {
             private(parent, true)?;
         } else {
             restrict(parent, true)?;
         }
-        std::fs::create_dir(&dir).map_err(io)?;
+        crate::infrastructure::platform::create_private_dir_all(&dir, 0o700).map_err(io)?;
         restrict(&dir, true)?;
         for (i, w) in writes.iter().enumerate() {
             if let Some(b) = &w.before {
@@ -1542,15 +1544,9 @@ fn restrict(path: &Path, directory: bool) -> Result<()> {
 }
 fn publish(root: &Path, path: &Path, bytes: &[u8]) -> Result<()> {
     safety::check_path(root, path, true).map_err(io)?;
-    let mut options = OpenOptions::new();
-    options.create_new(true).write(true);
-    #[cfg(unix)]
-    {
-        use std::os::unix::fs::OpenOptionsExt;
-        options.mode(0o600).custom_flags(libc::O_NOFOLLOW);
-    }
-    let mut f = options.open(path).map_err(io)?;
-    restrict(path, false)?;
+    let mut f =
+        crate::infrastructure::platform::create_new_private_file(path, 0o600).map_err(io)?;
+    private(path, false)?;
     f.write_all(bytes).map_err(io)?;
     f.sync_all().map_err(io)?;
     safety::sync_directories(
