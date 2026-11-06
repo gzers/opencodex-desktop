@@ -61,6 +61,13 @@ export interface ConditionPreviewView {
 }
 export interface ConditionPreviewInput {content:TemplateContentV2;channelId:string;rawModelId:string}
 export interface LibraryViewV2 {dtoVersion:2;library:LibraryV2;libraryDigest:string}
+export type LibraryIntentV2={kind:'set_default';reference:RefV2}|{kind:'clear_default';reference:RefV2}|{kind:'delete_revisions';templateId:string;revisionIds:string[]}
+export interface LibraryChangeV2 {expectedLibrary:string;intent:LibraryIntentV2}
+export type UsageStateV2='saved'|'draft'|'additional'|'library'
+export type UsageKindV2='global_reference'|'channel_reference'|'manual'|'auto_read'|'additional_exact'|'base_revision'
+export interface RevisionUseV2 {state:UsageStateV2;kind:UsageKindV2;reference:RefV2;channelId:string|null;rawModelId:string|null;dependentRevision:RefV2|null}
+export interface UsageModelV2 {state:UsageStateV2;channelId:string;channelLabel:string;rawModelId:string;matched:boolean;matchedConditionId:string|null;bindingKind:UsageKindV2|null;usingQueriedRevision:boolean;issues:MatchIssueV2[]}
+export interface UsageReportV2 {dtoVersion:2;reference:RefV2;libraryDigest:string;savedPolicyDigest:string;draftPolicyDigest:string|null;isDefault:boolean;builtinInitial:boolean;references:RevisionUseV2[];models:UsageModelV2[]}
 export interface RevisionEditIntentV2 {expectedLibrary:string;templateId:string;baseRevision:string|null;label:string;content:TemplateContentV2;makeDefault:boolean}
 export interface PreviewConditionsResponseV2 {dtoVersion:2;previewOnly:true;contentDigest:string;rows:{rawModelId:string;familyMatched:boolean;matchedConditionId:string|null;rules:RulesV2;protocol:ProtocolStateV2;fieldOrigins:Record<string,FieldOriginV2>}[]}
 export type TemporaryDiscoveryKind = 'compatible_models'|'anthropic_models'|'google_models'|'ollama_models'
@@ -98,6 +105,8 @@ export function serviceUnavailableV2():Error {return new Error('此操作暂不�
 // Public command signatures supplied by L0. Preview references are in-memory only.
 export const modelV2Api={
   library:()=>invoke<LibraryViewV2>('model_v2_library'),
+  changeLibrary:(request:LibraryChangeV2)=>invoke<LibraryViewV2>('model_v2_change_library',{request}),
+  templateUsage:(templateId:string,revisionId:string)=>invoke<UsageReportV2>('model_v2_template_usage',{templateId,revisionId}),
   validateContent:(content:TemplateContentV2)=>invoke<void>('model_v2_validate_content',{content}),
   previewConditions:(content:TemplateContentV2,rawModelIds:string[],channelId:string)=>invoke<PreviewConditionsResponseV2>('model_v2_preview_conditions',{request:{content,rawModelIds,channelId}}),
   saveRevision:(request:RevisionEditIntentV2)=>invoke<LibraryViewV2>('model_v2_save_revision',{request}),
