@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "source": "07ed8b21b193e09453a1d9a9a049da659679a91e",
+  "uiSource": "3d62840826ab0852802094a715f5a226b26ae488",
+  "uiSourceHashesVerified": true,
+  "files": [
+    {
+      "source": "/tmp/ocxd023-final-workspace-tests.log",
+      "file": "ocxd023-final-workspace-tests.log",
+      "bytes": 234974,
+      "sha256": "a00cfdd3cbd54bc90e3929fe83dc62cc6016f10e47e6c94bd8ea7337711cc27c"
+    },
+    {
+      "source": "/tmp/ocxd023-final-integration-target-tests.log",
+      "file": "ocxd023-final-integration-target-tests.log",
+      "bytes": 31718,
+      "sha256": "6f1c5c4716bae28b74c9a062137b493e85a1ae8ce72f80c1d2a0a8dc8c1c993b"
+    },
+    {
+      "source": "/tmp/ocxd023-v2-integration-fixture-recheck.log",
+      "file": "ocxd023-v2-integration-fixture-recheck.log",
+      "bytes": 1138,
+      "sha256": "4b9d05a3568a093806de974ec64dfbf7309e4fc6d0cd88da414ce749bd6184c4"
+    },
+    {
+      "source": "/tmp/ocxd023-result-owner-final-public-tests.log",
+      "file": "ocxd023-result-owner-final-public-tests.log",
+      "bytes": 1565,
+      "sha256": "4b0786aa18b9dd998690e74dec983584e2429a8f1708c74042d9faa3b46dd30f"
+    },
+    {
+      "source": "/tmp/ocxd023-result-owner-final-public-clippy.log",
+      "file": "ocxd023-result-owner-final-public-clippy.log",
+      "bytes": 198,
+      "sha256": "e5847d084c95f529dece22226f1bb5f738fc6db5f1b749bbfba8185d383ca1f3"
+    },
+    {
+      "source": "/tmp/ocxd023-result-owner-v2-evidence.json",
+      "file": "ocxd023-result-owner-v2-evidence.json",
+      "bytes": 2968,
+      "sha256": "d443a28a89e2c88d3bb7ec2ca894d4fdf595235bf5e49991ba4ade7e75713e57"
+    },
+    {
+      "source": "/tmp/ocxd023-windows-candidate-second-job.log",
+      "file": "ocxd023-windows-candidate-second-job.log",
+      "bytes": 73657,
+      "sha256": "14fe8026b8a3c798238c5ec02ae3cabe28fac37478d7029252ddb0b22c692505"
+    },
+    {
+      "source": "/tmp/ocxd023-final-integrated-frontend-build.log",
+      "file": "ocxd023-final-integrated-frontend-build.log",
+      "bytes": 4978,
+      "sha256": "5b6233caf82b2c828cb4773abb3f2dcb49c81ade1f975616a8ea4c2dfc2faeff"
+    },
+    {
+      "source": "/tmp/ocxd023-mac-release-candidate-build.log",
+      "file": "ocxd023-mac-release-candidate-build.log",
+      "bytes": 17515,
+      "sha256": "c95960589d7218ea25ab51e8f7e51806850007ccd71260ed23ddfba9767273c9"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-result-owner-v2/handoff-manifest.json",
+      "file": "ui-handoff-manifest.json",
+      "bytes": 6156,
+      "sha256": "f72609a4fceb78a30b3fa67cb0b68669954b4668e2d0547324956de996325194"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-result-owner-v2/browser-results.json",
+      "file": "ui-browser-results.json",
+      "bytes": 1896,
+      "sha256": "53638d5f9732ad2006812b55de92daba6f5a7f6c31838d2fedf2f2b126cfd839"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-result-owner-v2/ui-full.log",
+      "file": "ui-ui-full.log",
+      "bytes": 750,
+      "sha256": "e538e2e0e77d0ca3ed4a26c7ff26f47a01718821016d01f9f2242718ff38e5e5"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-result-owner-v2/typecheck.log",
+      "file": "ui-typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-result-owner-v2/build.log",
+      "file": "ui-build.log",
+      "bytes": 4998,
+      "sha256": "cba2eb8f2992e72ebf6e8454f681959e6d4a1c1fde1cf66f795d8840b840136d"
+    }
+  ],
+  "facts": {
+    "library": {
+      "passed": 1915,
+      "failed": 0,
+      "ignored": 13
+    },
+    "integrationSweep": {
+      "passed": 234,
+      "failed": 1,
+      "ignored": 23,
+      "targets": 46,
+      "failure": "logs old fixture attempted obsolete active-root redirect; original log retained"
+    },
+    "fixtureRecheck": {
+      "passed": 8,
+      "failed": 0,
+      "targets": [
+        "app_startup_wiring",
+        "logs"
+      ]
+    },
+    "ui": {
+      "files": 214,
+      "passed": 1563,
+      "failed": 0,
+      "unhandled": 0
+    },
+    "nativeOwner": {
+      "passed": 9,
+      "failed": 0
+    },
+    "macAppBuild": "passed; notarization skipped because no signing-account credentials; visual acceptance pending screen unlock",
+    "windowsCandidate2": "failed npm resolver version mismatch, fixed Node26.8.1/npm11.19 workflow26b0e5dcb",
+    "windowsCandidate3": "42277944499 in progress at collection; terminal state must be queried"
+  },
+  "pending": [
+    "user decision on originally-absent object restore and cross-device deletion",
+    "Mac unlocked screen for actual native visual review",
+    "Windows installers and two actual SID runtime port proof",
+    "final-source artifacts, upgrade, signatures and publication"
+  ],
+  "release": "not published"
+}

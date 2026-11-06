@@ -1,0 +1,32 @@
+[
+  {
+    "engine": "chromium",
+    "width": 1180,
+    "theme": "light",
+    "checks": [
+      "toast file result first resolves backend owner and then reads original plan/output only",
+      "unknown ordinary sync fact stays unknown, using its original operation ID without verification or write",
+      "RecoveryPlanId resolves to recovery receipt and does not borrow ordinary sync O or today’s source",
+      "scope restore progress ID reads exact backend operations and opens one global partial-restore observer",
+      "owner IO error displays readback failure, retains all original receipts and performs no fallback",
+      "explicit retry only repeats owner identification and the selected read-only getter"
+    ],
+    "errors": [],
+    "limits": "Actual toast/controller/shared result UI and invoke wrappers, using deterministic result-owner/getter fixtures. No native storage authentication, network or recovery writes are performed."
+  },
+  {
+    "engine": "webkit",
+    "width": 900,
+    "theme": "dark",
+    "checks": [
+      "toast file result first resolves backend owner and then reads original plan/output only",
+      "unknown ordinary sync fact stays unknown, using its original operation ID without verification or write",
+      "RecoveryPlanId resolves to recovery receipt and does not borrow ordinary sync O or today’s source",
+      "scope restore progress ID reads exact backend operations and opens one global partial-restore observer",
+      "owner IO error displays readback failure, retains all original receipts and performs no fallback",
+      "explicit retry only repeats owner identification and the selected read-only getter"
+    ],
+    "errors": [],
+    "limits": "Actual toast/controller/shared result UI and invoke wrappers, using deterministic result-owner/getter fixtures. No native storage authentication, network or recovery writes are performed."
+  }
+]

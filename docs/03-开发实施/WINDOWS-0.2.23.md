@@ -7,11 +7,19 @@
 ## 当前基线与获取
 
 - 仓库：gzers/opencodex-desktop。
-- 代码：远端codex/0.2.23-integration，明确基线511463f75b10f5db9736adfa9be1ebefa7d98357。
+- 代码：远端codex/0.2.23-integration，明确基线07ed8b21b193e09453a1d9a9a049da659679a91e（包含结果归属消费者3d6284082及v2目录测试夹具修正）。
 - 文档：远端docs/governance-main，以包含本条R2指令的提交为准；读取本文件、TEAM、IMP-31/32及0.2.23-contracts/L0-paths-runtime-v1.md。
 - Windows代码贡献分支：codex/0.2.23-windows；文档/脱敏证据使用独立docs/0.2.23-windows分支。若已有自己的改动，先保留并合并上述明确代码基线，不重置或覆盖工作树。
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
 - 此为0.2.23实施基线，尚非最终安装候选；版本清单仍待L0统一更新。是否取得新代码以完整SHA及实际diff为准，不能仅看软件显示版本。
+
+## R5 结果归属消费者与安装配方后继（2026-11-07）
+
+当前代码07ed8b21b已推送集成分支，包含后端cc92eebf2只读结果归属与前端3d6284082四类原操作结果路由。前端214文件1563项通过、类型检查/构建通过，Chromium/WebKit各6条流程通过；此页面夹具证据不冒原生存储/权限证明。后端实际owner九项与workspace严格Clippy通过；核心库1915项通过、13忽略，集成扫测保留旧logs夹具失败，改为新D/H分区后app_startup_wiring和logs共8项通过。详细日志见[r6原字节及摘要](../../.adg/evidence/0.2.23/team/L0/r6-result-owner-integration-20261107/manifest.json)。
+
+第二安装候选42276834374停在npm resolver version mismatch，未生成安装器；后继26b0e5dcb固定构建Node26.8.1/npm11.19。第三候选42277944499基于cc92eebf2，已通过完整离线运行包stage，正在Windows回归；必须等待实际终态与安装/双SID证明，不将本条当作安装通过。此前各失败保留，不重复运行原换行失败配方。
+
+两真实用户的实际runtime端口验证与相邻0.2.22升级/卸载保留工具由L0继续补齐，最终候选须带明确源SHA和资产摘要再回交。当前无需重复已通过的共享模型或全站材质；Windows继续按R2独占范围及真实平台缺口执行，禁止真实业务同步/日常配置改写/自行发布。
 
 ## R4 当前集成候选与真实MSVC结果（2026-11-07）
 

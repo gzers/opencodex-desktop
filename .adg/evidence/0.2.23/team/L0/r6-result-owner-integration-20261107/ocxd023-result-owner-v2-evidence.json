@@ -1,0 +1,54 @@
+{
+  "root": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes",
+  "scope": [
+    "result_owner_v2.rs",
+    "result_owner_v2_tests.rs"
+  ],
+  "frozen": true,
+  "committed": false,
+  "sha256": {
+    "result_owner_v2.rs": "5135c2c13e34d1c7bbe349d9786f199652962fc0b563b914928055daf740a98b",
+    "result_owner_v2_tests.rs": "8504b5c82719fa9b762d6e1f109a41d4114d100ed4838343158ac164e3dccf85"
+  },
+  "signature": "resolve(&Path D, &Path H, &str original_id, &mut FileTransferOwnerV2, &SyncServiceV2) -> ModelResult<Option<ResultOwnerV2>>",
+  "dto": "Serialize only {operationId,kind}, kind is snake_case file|sync|recovery|scope_restore. No endpoint/path/receipt/digest fields or Deserialize authority.",
+  "contract": [
+    "Canonical fixed D matches both managed owners; canonical H matches FileOwner.upstream_home and actual SyncService backend upstream_home; missing/mismatched context is error.",
+    "FileOwner.owns_record authenticates existing sealed record with read-only recovery key access; no reopen/preview/plan is issued by resolver.",
+    "SyncService.inspect_result_owner reads positive presence then canonical Store records, never catches SyncJournalInvalid as absence.",
+    "Scope restore uses existing bounded operations(D,H,None) validation of actual plan/source/progress; corrupt unrelated restore errors propagate.",
+    "Only every-owner positive absence returns None. Multiple domains under same UUID fail result_owner_ambiguous; no first-owner routing.",
+    "No startup initialization, writes, network requests, clock or UUID allocation in resolver."
+  ],
+  "validation": {
+    "actualApp": true,
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "apps/desktop/tauri/Cargo.toml",
+      "--offline",
+      "--locked",
+      "--features",
+      "integration-test",
+      "--lib",
+      "result_owner_v2::tests",
+      "--",
+      "--test-threads=1"
+    ],
+    "target": "Existing shared apps/desktop/tauri/target; no new target or dependency build",
+    "exitCode": 0,
+    "exitAuthority": "write_stdin session 41831 reported exit_code 0; full terminal log has completed test result",
+    "passed": 9,
+    "failed": 0,
+    "ignored": 0,
+    "warnings": false,
+    "log": "/tmp/ocxd023-result-owner-v2-tests.log",
+    "coverage": "Real v6 FileOwner export+MemoryRecoveryKey, actual canonical download/recovery Store records, actual preference import+guarded scope restore plan; all route reads compare before/after tree bytes+directories; all positive absence, corrupted/auth-invalid records, canonical ID/digest mismatch, collision, unsafe record type, corrupted unrelated scope plan, wrong H."
+  },
+  "preservedFailures": [
+    "/tmp/ocxd023-result-owner-v2-initial-fixture-failed.log",
+    "/tmp/ocxd023-result-owner-v2-codec-signature-failed.log"
+  ],
+  "mainOwned": "Parent module/command registration and FileOwner/Service getters; none modified by this task. Full lib1930 background not restarted."
+}

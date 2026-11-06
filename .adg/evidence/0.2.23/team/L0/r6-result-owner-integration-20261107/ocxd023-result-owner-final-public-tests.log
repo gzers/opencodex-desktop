@@ -1,0 +1,17 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 39.83s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-a2321b53a9e89887)
+
+running 9 tests
+test modules::model_config::result_owner_v2::tests::actual_download_and_recovery_records_route_without_reading_payload_or_network ... ok
+test modules::model_config::result_owner_v2::tests::actual_preferences_import_issues_scope_restore_owner_without_result_side_effects ... ok
+test modules::model_config::result_owner_v2::tests::actual_record_wrong_id_and_plan_digest_are_errors_not_missing ... ok
+test modules::model_config::result_owner_v2::tests::all_actual_stores_positively_missing_is_none_and_readonly ... ok
+test modules::model_config::result_owner_v2::tests::authenticated_file_record_owns_original_id_without_reopen_or_key_creation ... ok
+test modules::model_config::result_owner_v2::tests::corrupt_unrelated_restore_and_record_io_are_not_positive_absence ... ok
+test modules::model_config::result_owner_v2::tests::corrupted_file_or_sync_record_never_falls_back_to_another_owner ... ok
+test modules::model_config::result_owner_v2::tests::valid_uuid_owned_by_two_domains_is_ambiguous_not_first_match ... ok
+test modules::model_config::result_owner_v2::tests::wrong_fixed_home_is_rejected_instead_of_routing_another_context ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 1928 filtered out; finished in 4.22s
+

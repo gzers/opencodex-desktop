@@ -1,0 +1,91 @@
+{
+  "role": "L3",
+  "commit": "3d62840826ab0852802094a715f5a226b26ae488",
+  "publicBackendCommit": "cc92eebf2664ed04f53eab42c4849731b2587a11",
+  "checks": {
+    "wholeUIFiles": 214,
+    "wholeUITestsPassed": 1563,
+    "failed": 0,
+    "unhandled": 0,
+    "newResultOwnerCases": 23,
+    "typecheck": "passed",
+    "build": "passed"
+  },
+  "browser": [
+    {
+      "engine": "chromium",
+      "width": 1180,
+      "theme": "light",
+      "checks": [
+        "toast file result first resolves backend owner and then reads original plan/output only",
+        "unknown ordinary sync fact stays unknown, using its original operation ID without verification or write",
+        "RecoveryPlanId resolves to recovery receipt and does not borrow ordinary sync O or today’s source",
+        "scope restore progress ID reads exact backend operations and opens one global partial-restore observer",
+        "owner IO error displays readback failure, retains all original receipts and performs no fallback",
+        "explicit retry only repeats owner identification and the selected read-only getter"
+      ],
+      "errors": [],
+      "limits": "Actual toast/controller/shared result UI and invoke wrappers, using deterministic result-owner/getter fixtures. No native storage authentication, network or recovery writes are performed."
+    },
+    {
+      "engine": "webkit",
+      "width": 900,
+      "theme": "dark",
+      "checks": [
+        "toast file result first resolves backend owner and then reads original plan/output only",
+        "unknown ordinary sync fact stays unknown, using its original operation ID without verification or write",
+        "RecoveryPlanId resolves to recovery receipt and does not borrow ordinary sync O or today’s source",
+        "scope restore progress ID reads exact backend operations and opens one global partial-restore observer",
+        "owner IO error displays readback failure, retains all original receipts and performs no fallback",
+        "explicit retry only repeats owner identification and the selected read-only getter"
+      ],
+      "errors": [],
+      "limits": "Actual toast/controller/shared result UI and invoke wrappers, using deterministic result-owner/getter fixtures. No native storage authentication, network or recovery writes are performed."
+    }
+  ],
+  "behavior": [
+    "Every result action resolves the backend owner, including IDs remembered under a stale UI category.",
+    "Exactly one of file/sync/recovery/scope_restore read-only getter paths runs; null and owner IO/schema/collision errors never fall back.",
+    "Original result payloads survive owner/getter errors; stale ownership or payload responses cannot replace a later selection.",
+    "Global scope restore dialog is hosted once and is available from notification/progress entry points on all routes.",
+    "No output paths, endpoint guesses, prepare/verify/resume or restore actions are sent to the owner getter."
+  ],
+  "limits": [
+    "Renderer flows use deterministic fixtures; native authentication and storage-owner inspection remain backend owner proof.",
+    "No release or daily user config changes performed."
+  ],
+  "cleanup": {
+    "browsersClosed": true,
+    "owned43137Stopped": true
+  },
+  "sourceHashes": {
+    "apps/desktop/ui/src/features/backup/TransferBackups.vue": "4711cb86ad8aa2cdaea589deded5a9c425c264e3667757fac0fd278e26dda403",
+    "apps/desktop/ui/src/features/backup/transfer-backups-v2.ts": "0f88fe7b17b328dcaba27a38e995614cd5df3f2c455ae3ad4aad909898c40929",
+    "apps/desktop/ui/src/features/sync/SyncDialogHost.vue": "13ef519ad50affe6773d0fea9167762aea38312867c07df324696ebdfcf7c977",
+    "apps/desktop/ui/src/features/sync/file-store-v2.ts": "b617890f459b1064b9051774c5e5413c9dba292580bd7413cde7a948b620c6b1",
+    "apps/desktop/ui/src/features/sync/result-owner-v2.ts": "e8d14887a31541d12e988340a9964f8f0293574f644f85e4527ba10ce9f7ccdd",
+    "apps/desktop/ui/src/features/sync/store-v2.ts": "de3e9e55bd10ed10fd9fe8259de51fab9e908055390658b1274361d9d0fe7f99",
+    "apps/desktop/ui/src/features/sync/store.ts": "c2463d2f584a278fc4645e0a455de0c58f77f1d0fc15b1c7c427271069317084",
+    "apps/desktop/ui/tests/helpers/fileWorkspaceV2.ts": "554170011c6bee9feb2f76b3d12d95130e94369d09bda5e8dfa5f9f07a224768",
+    "apps/desktop/ui/tests/post09-owned-consumers.test.ts": "71c758375030b953dddb74feedad34f38286811ffb64e3fed533cdff0ec99df9",
+    "apps/desktop/ui/tests/result-owner-v2.test.ts": "54d36d2ca16a1512515501f55122336c10d38b87cef8676dc96455a06b2e0fd3",
+    "apps/desktop/ui/tests/sync-v2-entry.test.ts": "33b56e0d959933319ac8d8b5ca6da3aee42b20290933e5768f6a7c241d6f19a1",
+    "apps/desktop/ui/tests/transfer-backups-v2.test.ts": "9426c1d8386e5a93676bcf618ca65932fa31761dfde9dc5c13dcb3e4cfb65648",
+    "apps/desktop/ui/tests/transfer-notification-v2.test.ts": "7b29e1b6578a12760ef8cbe5a1c2dba46e0deb4f3e8905f08f6e8b1147709a3e"
+  },
+  "evidenceHashes": {
+    "webkit-recovery-dark.png": "2d0ea2cd011cacd56f656626e657c3d7ebe9cbb421d2cbbe483bd84c9a1d359c",
+    "webkit-scope-dark.png": "4f459e46175e454e24f3e0c02c57da03917499a9cd94bac14283b769564a6d03",
+    "browser.cjs": "784d8c6fbc6d51a01666cc7a5675f93e580dace1ada975441f0073737a08093e",
+    "ui-full.log": "e538e2e0e77d0ca3ed4a26c7ff26f47a01718821016d01f9f2242718ff38e5e5",
+    "typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "chromium-recovery-light.png": "d10cf695f1c89411db168950ad677f3150b950f7a59af810afa202049b8da4d4",
+    "webkit-owner-error-dark.png": "0e476acfff48e7fa1512b70200bbd479700a0d095ecf3f2a9537c7bc9eb5fe98",
+    "component-entry.mjs": "e88cb1ad33d58093a40c5cb212aed8c23d9ef6c7671b937980552f9b12a7cf50",
+    "chromium-scope-light.png": "f366d53786234803ce1e1491c8fe71374d8ea751fb471a26b8fedaa64c083508",
+    "component-server.mjs": "45e8c8af5e11489f08b2509966e98b223a1c5f90d4c4a743d99a9e5aa3521160",
+    "browser-results.json": "53638d5f9732ad2006812b55de92daba6f5a7f6c31838d2fedf2f2b126cfd839",
+    "chromium-owner-error-light.png": "ad15d67db67c1167dd57ad68fdcc810d2c401a4d7886092d95dbaa46f48e8153",
+    "build.log": "cba2eb8f2992e72ebf6e8454f681959e6d4a1c1fde1cf66f795d8840b840136d"
+  }
+}
