@@ -15,13 +15,13 @@ const LIMIT: u64 = 128 * 1024 * 1024;
 type Target = (String, PathBuf, PathBuf);
 #[derive(Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-struct Image {
-    exists: bool,
-    directory: bool,
+pub(crate) struct Image {
+    pub(crate) exists: bool,
+    pub(crate) directory: bool,
     #[serde(with = "file_bytes")]
-    files: BTreeMap<String, Vec<u8>>,
+    pub(crate) files: BTreeMap<String, Vec<u8>>,
     #[serde(default)]
-    executable: BTreeSet<String>,
+    pub(crate) executable: BTreeSet<String>,
 }
 mod file_bytes {
     use super::*;
@@ -140,7 +140,7 @@ fn targets(root: &Path, id: &str) -> ModelResult<Vec<Target>> {
     out.retain(|(_, _, p)| seen.insert(p.clone()));
     Ok(out)
 }
-fn image(base: &Path, target: &Path) -> ModelResult<Image> {
+pub(crate) fn image(base: &Path, target: &Path) -> ModelResult<Image> {
     safety::check_path(base, target, true)?;
     let meta = match std::fs::symlink_metadata(target) {
         Ok(m) => m,
@@ -552,7 +552,12 @@ fn merge_bytes(
         .map(|v| serde_json::to_vec_pretty(&v).map_err(Into::into))
         .transpose()
 }
-fn write_image(base: &Path, target: &Path, current: &Image, next: &Image) -> ModelResult<()> {
+pub(crate) fn write_image(
+    base: &Path,
+    target: &Path,
+    current: &Image,
+    next: &Image,
+) -> ModelResult<()> {
     if image(base, target)? != *current {
         return Err(invalid(
             "scope_restore_conflict",

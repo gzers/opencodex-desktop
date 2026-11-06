@@ -44,6 +44,7 @@ fn read_selected(path: &Path) -> ModelResult<Zeroizing<Vec<u8>>> {
         64 * 1024 * 1024,
     )?))
 }
+#[cfg(test)]
 fn write_and_verify(path: &Path, bytes: &[u8]) -> ModelResult<String> {
     if !path.is_absolute() {
         return Err(invalid("file_path", "请选择本机文件位置"));
@@ -96,26 +97,39 @@ pub async fn prepare_draft_config_file_export_v2(
 #[tauri::command]
 pub async fn save_config_file_export_v2(
     operation_id: String,
+    destination: Option<String>,
     app: tauri::AppHandle,
     owner: tauri::State<'_, SharedConfigFileTransferV2>,
-) -> ModelResult<Option<FileTransferReceiptV2>> {
+) -> ModelResult<Option<crate::modules::model_config::file_transfer_v2::ExportOutputV2>> {
     work(owner.inner().clone(), move |owner| {
-        // Cancellation leaves the prepared bytes untouched and creates no file.
-        let Some(path) = app
-            .dialog()
-            .file()
-            .set_title("导出配置")
-            .set_file_name("OpenCodex.ocxdconf")
-            .add_filter("OpenCodex 配置", &["ocxdconf"])
-            .blocking_save_file()
-        else {
-            return Ok(None);
+        let custom = match destination.as_deref() {
+            None | Some("default") => false,
+            Some("custom") => true,
+            _ => return Err(invalid("file_destination", "请选择默认或自定义导出目录")),
         };
-        let path = path
-            .into_path()
-            .map_err(|_| invalid("file_path", "请选择本机文件位置"))?;
-        let digest = write_and_verify(&path, owner.bytes(&operation_id)?)?;
-        owner.finish_export(&operation_id, &digest).map(Some)
+        // Original attempts retain the first native choice and exact package.
+        if owner.has_export_destination(&operation_id)? {
+            return owner.save_export_at(&operation_id, None).map(Some);
+        }
+        let directory = if custom {
+            let Some(path) = app
+                .dialog()
+                .file()
+                .set_title("选择导出目录")
+                .blocking_pick_folder()
+            else {
+                return Ok(None);
+            };
+            Some(
+                path.into_path()
+                    .map_err(|_| invalid("file_path", "请选择本机目录"))?,
+            )
+        } else {
+            None
+        };
+        owner
+            .save_export_at(&operation_id, directory.as_deref())
+            .map(Some)
     })
     .await
 }
@@ -317,4 +331,28 @@ pub async fn file_v2_save_scope(
     })
     .await
     .map_err(|_| invalid("file_scope_save", "本机文件范围保存中断，当前选择保持"))?
+}
+
+#[tauri::command]
+pub async fn config_file_export_output_v2(
+    operation_id: String,
+    owner: tauri::State<'_, SharedConfigFileTransferV2>,
+) -> ModelResult<Option<crate::modules::model_config::file_transfer_v2::ExportOutputV2>> {
+    work(owner.inner().clone(), move |owner| {
+        owner.export_output(&operation_id)
+    })
+    .await
+}
+#[tauri::command]
+pub async fn open_config_file_export_directory_v2(
+    operation_id: String,
+    owner: tauri::State<'_, SharedConfigFileTransferV2>,
+) -> ModelResult<bool> {
+    work(owner.inner().clone(), move |owner| {
+        let directory = owner.export_directory(&operation_id)?;
+        crate::commands::workspace::open_path(&directory)
+            .map_err(|_| invalid("export_directory", "无法打开本次导出目录"))?;
+        Ok(true)
+    })
+    .await
 }
