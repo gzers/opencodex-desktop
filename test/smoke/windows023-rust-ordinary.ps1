@@ -34,6 +34,12 @@ $taskChanges=[Collections.Generic.List[object]]::new();$taskAccess=$null;$taskUs
 $taskLedger=[Collections.Generic.Dictionary[int,object]]::new();$taskRetain=$false;$taskExit=1
 $taskReport=[ordered]@{schemaVersion=1;ephemeralGuard=$taskEphemeralGuard;result='fail';scope='binaries';fullWorkspacePassed=$false;expectedCommit=$ExpectedCommit;nativeSuiteExecuted=$false;allBinariesAttempted=$false;docTestsExecuted=$false;adminSpecializedGroups='must-run-independently-in-parent-always-path';cargoArguments=$CargoArguments;testArguments=$TestArguments;suiteTimeoutSeconds=$SuiteTimeoutSeconds;sourceOrArtifactAclRestored=$false;desktopAclRestored=$false;accountAndProfileRemoved=$false;exitCode=1}
 try{
+ $taskReport.stage='source-policy'
+ $nodeVersion=(& $taskNode --version).Trim()
+ $nodePin=Read-TwoUserRuntimePolicy (Join-Path $taskRepo '.github/runtime-platforms-023.json')
+ if($LASTEXITCODE -ne 0 -or $nodeVersion -cne ('v'+$nodePin.node.version)){throw 'Real source-pinned Node required for unchanged native fixtures'}
+ $taskReport.node=@{path=$taskNode;sha256=(Get-FileHash -LiteralPath $taskNode -Algorithm SHA256).Hash.ToLowerInvariant();version=$nodeVersion}
+ $taskReport.stage='compile-test-binaries'
  # Compilation stays in the parent administrator. Exact JSON artifacts, not globs.
  & $taskCargo metadata --manifest-path $taskManifest --locked --no-deps --format-version 1 > (Join-Path $taskOutput 'cargo-metadata.json') 2> (Join-Path $taskOutput 'cargo-metadata.stderr.log')
  if($LASTEXITCODE -ne 0){throw 'Cargo metadata failed'}
@@ -56,11 +62,8 @@ try{
  }}
  $taskReport.runtimeDlls=@($taskDlls.Values)
  $taskReport.artifacts=$taskArtifacts
- $nodeVersion=(& $taskNode --version).Trim()
- $nodePin=Get-Content -LiteralPath (Join-Path $taskRepo '.github/runtime-platforms-023.json') -Raw|ConvertFrom-Json
- if($LASTEXITCODE -ne 0 -or $nodeVersion -cne ('v'+$nodePin.node.version)){throw 'Real source-pinned Node required for unchanged native fixtures'}
- $taskReport.node=@{path=$taskNode;sha256=(Get-FileHash -LiteralPath $taskNode -Algorithm SHA256).Hash.ToLowerInvariant();version=$nodeVersion}
  Write-TwoUserJson (Join-Path $taskOutput 'frozen-artifacts.json') @{expectedCommit=$ExpectedCommit;artifacts=$taskArtifacts;runtimeDlls=@($taskDlls.Values);testArguments=$TestArguments;node=$taskReport.node}
+ $taskReport.stage='provision-ordinary-account'
  $parts=Get-RustOrdinaryBootstrap (Join-Path $PSScriptRoot 'windows-ordinary-startup.ps1')
  if(!('OcxNativeProfileProvision' -as [type])){Add-Type -TypeDefinition $parts.ProfileType}
  if(!('OcxTemporaryDesktopAccess' -as [type])){Add-Type -TypeDefinition $parts.DesktopType}
@@ -103,6 +106,7 @@ try{
   # Only known artifact/source directories; never alter an ancestor user Profile.
   while($parent -and ($parent -ieq $taskRepo -or $parent.StartsWith($taskRepo+'\',[StringComparison]::OrdinalIgnoreCase) -or $parent -ieq $code)){[void]$directories.Add($parent);$parent=Split-Path -Parent $parent}
  }
+ $taskReport.stage='grant-exact-read-access'
  foreach($path in @($directories)+@($read)){Add-RustOrdinaryReadAccess $path $taskUser.SID.Value $taskChanges}
  foreach($path in @($taskOutput,$evidence)){
   $acl=Get-Acl -LiteralPath $path;$taskChanges.Add([pscustomobject]@{path=$path;accessSddl=$acl.GetSecurityDescriptorSddlForm([Security.AccessControl.AccessControlSections]::Access)})
@@ -114,6 +118,7 @@ try{
  Write-TwoUserJson $config @{ephemeralGuard=$true;accountSid=$taskUser.SID.Value;profile=$taskProfile;profileOnly=$false;nativeHelper=(Join-Path $code 'windows023-rust-ordinary-helper.ps1');code=$code;evidence=$evidence;commit=$ExpectedCommit;artifacts=$taskArtifacts;runtimeDlls=@($taskDlls.Values);testArguments=$TestArguments;suiteTimeoutSeconds=$SuiteTimeoutSeconds;node=$taskNode;nodeSha256=$taskReport.node.sha256}
  $credential=[pscredential]::new(($env:COMPUTERNAME+'\'+$taskName),$taskSecure)
  $taskChildEnvironment=@{GITHUB_ACTIONS='true';RUNNER_ENVIRONMENT='github-hosted';ImageOS=$env:ImageOS;RUNNER_TEMP=$taskOutput;TEMP=(Join-Path $taskProfile 'AppData/Local/Temp');TMP=(Join-Path $taskProfile 'AppData/Local/Temp')}
+ $taskReport.stage='run-ordinary-suite'
  $taskProcess=Start-Process -FilePath (Join-Path $PSHOME 'pwsh.exe') -Credential $credential -LoadUserProfile -UseNewEnvironment -Environment $taskChildEnvironment -WorkingDirectory $evidence -ArgumentList @('-NoLogo','-NoProfile','-NonInteractive','-File',('"'+(Join-Path $code 'profile-bootstrap.ps1')+'"'),'-InputFile',('"'+$config+'"')) -RedirectStandardOutput (Join-Path $evidence 'bootstrap.stdout.log') -RedirectStandardError (Join-Path $evidence 'bootstrap.stderr.log') -PassThru
  $taskFact=Get-TwoUserProcessFact $taskProcess $taskUser.SID.Value;$taskLedger[[int]$taskFact.pid]=$taskFact
  $taskReport.nativeSuiteExecuted=$true;$until=[datetime]::UtcNow.AddSeconds($SuiteTimeoutSeconds+120)
@@ -175,5 +180,8 @@ try{
  $taskReport.cleanup=$cleanup.ToArray();$taskReport.exitCode=$taskExit
  if($taskSecure){$taskSecure.Dispose()};if($taskProcess){$taskProcess.Dispose()}
  Write-TwoUserJson (Join-Path $taskOutput 'rust-ordinary.json') $taskReport
+ # Bounded public diagnostics are available in the job log before artifact upload.
+ # Never serialize the credential, raw exception message, environment or test data.
+ [ordered]@{result=$taskReport.result;stage=$taskReport.stage;failureCode=$taskReport.failureCode;failureType=$taskReport.failureType;failureLine=$taskReport.failureLine;nativeSuiteExecuted=$taskReport.nativeSuiteExecuted;allBinariesAttempted=$taskReport.allBinariesAttempted;exitCode=$taskExit}|ConvertTo-Json -Compress|Write-Output
 }
 exit $taskExit

@@ -41,7 +41,7 @@ try {
   $stream=[IO.File]::OpenRead($tool)
   try{$reader=[IO.BinaryReader]::new($stream);if($reader.ReadUInt16() -ne 0x5a4d){throw 'NotReady: native Windows executable required'}}finally{$stream.Dispose()}
  }
- $nodePin=Get-Content -LiteralPath (Join-Path $taskRepo '.github/runtime-platforms-023.json') -Raw|ConvertFrom-Json
+ $nodePin=Read-TwoUserRuntimePolicy (Join-Path $taskRepo '.github/runtime-platforms-023.json')
  $nodeVersion=(& $taskNode --version).Trim()
  if($LASTEXITCODE -ne 0 -or $nodeVersion -cne ('v'+$nodePin.node.version)){throw 'NotReady: real test-driver Node does not match source-pinned version'}
  $taskSummary.nodeVersion=$nodeVersion

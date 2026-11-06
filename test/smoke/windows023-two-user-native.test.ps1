@@ -34,6 +34,12 @@ $fixture=Join-Path $taskOutput 'changed-ordinary.ps1'
 (Get-Content -LiteralPath (Join-Path $PSScriptRoot 'windows-ordinary-startup.ps1') -Raw).Replace(' if($c.profileOnly){exit 0}',' if($c.changedBoundary){exit 0}')|Set-Content -LiteralPath $fixture
 Assert-Throws {Get-TwoUserReuseParts $fixture} 'upstream-reuse-drift-fails-closed'
 $main=Get-Content -LiteralPath $taskMain -Raw;$helper=Get-Content -LiteralPath $taskHelper -Raw
+ $policyPath=Join-Path $PSScriptRoot '../../.github/runtime-platforms-023.json'
+ $policyBytes=Get-FileHash -LiteralPath $policyPath -Algorithm SHA256
+ $policy=Read-TwoUserRuntimePolicy $policyPath
+ Assert-Test ($policy.node.version -ceq '26.8.1' -and $policy.packageLock.packages.Contains('') -and $policy.packageLock.packages[''].name) 'actual-runtime-policy-preserves-empty-npm-root-key'
+ Assert-Test ((Get-FileHash -LiteralPath $policyPath -Algorithm SHA256).Hash -ceq $policyBytes.Hash) 'actual-runtime-policy-reader-is-read-only'
+ Assert-Test ($main.Contains('Read-TwoUserRuntimePolicy (Join-Path $taskRepo') -and (Get-Content (Join-Path $PSScriptRoot 'windows023-rust-ordinary.ps1') -Raw).Contains('Read-TwoUserRuntimePolicy (Join-Path $taskRepo')) 'both-native-controllers-consume-same-dictionary-policy-reader'
 Assert-Test ($main.IndexOf('Restricted to an ephemeral Windows Actions runner') -lt $main.IndexOf('New-Item')) 'CI-guard-before-mutation'
 Assert-Test ($main.IndexOf('$taskEphemeralGuard=') -lt $main.IndexOf('New-LocalUser') -and $main.Contains('ephemeralGuard=$taskEphemeralGuard') -and $helper.Contains('Controller ephemeralGuard missing')) 'ephemeralGuard-before-any-account-and-child-recheck'
 Assert-Test ($helper.Contains('launch_main=$true') -and !$helper.Contains('launch_main=$false') -and $helper.Contains('auto_panel=$false')) 'isolated-CLI-restart-preserves-visible-main-window'

@@ -21,6 +21,13 @@ function Get-TwoUserReuseParts([string]$OrdinaryScript) {
 function Assert-TwoUserChildGuard {
  if(!$IsWindows -or $env:GITHUB_ACTIONS -cne 'true' -or [string]::IsNullOrWhiteSpace($env:RUNNER_TEMP)){throw 'Disposable Windows Actions runner required'}
 }
+function Read-TwoUserRuntimePolicy([string]$Path) {
+ # npm lockfiles intentionally use packages[''] for the root package. A
+ # PSCustomObject cannot represent that legal key; preserve the complete map.
+ $policy=Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json -AsHashtable
+ if($policy.schemaVersion -ne 1 -or $policy.node.version -notmatch '^\d+\.\d+\.\d+$'){throw 'Source-pinned runtime policy is invalid'}
+ $policy
+}
 function Test-TwoUserLocalSpelling([string]$Path) {
  if([string]::IsNullOrWhiteSpace($Path)){return $false}
  # Normalize separators for the lexical test only. In a .NET regex [\/]
