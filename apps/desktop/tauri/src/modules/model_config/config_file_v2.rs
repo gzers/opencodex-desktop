@@ -2615,3 +2615,6 @@ pub fn accept_agent_library(
     }
     commit_library_change(root, home, &locked, &state, plan.library.clone())
 }
+
+#[path = "config_file_v2_export.rs"]
+pub mod export;
