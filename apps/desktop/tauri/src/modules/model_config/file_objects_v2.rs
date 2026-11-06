@@ -567,6 +567,16 @@ pub fn save_state(objects: &SavedObjects) -> ModelResult<super::content_versions
         .into_iter()
         .flatten()
     {
+        // Metadata adoption is a real semantic save, independent of when any
+        // immutable revision was originally authored. Never borrow its clock.
+        let metadata = SecretJson(
+            serde_json::json!({"label":template["label"],"source":template["source"],"defaultRevision":template["defaultRevision"]}),
+        );
+        atom(
+            &mut out,
+            &serde_json::json!(["v2-template-meta", template["id"]]),
+            &metadata.0,
+        )?;
         for revision in template["revisions"].as_array().into_iter().flatten() {
             atom(
                 &mut out,

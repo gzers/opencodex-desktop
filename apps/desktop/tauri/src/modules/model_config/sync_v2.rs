@@ -267,10 +267,31 @@ impl<'a> SyncContext<'a> {
         if resolution.is_some() && graph.observation.state != RemoteState::Conflict {
             return Err(failure(ErrorCode::SyncRemoteConflict, Step::SourceGuard));
         }
+        // A Head resolution only grants the codec the explicitly selected
+        // payload. All observed heads STILL become immutable commit parents.
+        // Generic Merged codecs retain the full set; the production host opts
+        // out of automatic merging separately, without changing this format.
+        let payload_heads: Vec<_> = match resolution.as_ref() {
+            Some(Resolution {
+                selection_mode: SelectionMode::Head,
+                selected_head: Some(head),
+                ..
+            }) => {
+                if !graph.observation.heads.contains(head) {
+                    return Err(failure(ErrorCode::SyncRemoteConflict, Step::SourceGuard));
+                }
+                vec![head]
+            }
+            Some(Resolution {
+                selection_mode: SelectionMode::Head,
+                ..
+            }) => return Err(failure(ErrorCode::SyncRemoteConflict, Step::SourceGuard)),
+            _ => graph.observation.heads.iter().collect(),
+        };
         let mut inputs = Vec::new();
         let mut total_bytes = 0usize;
         if let Some(g) = &graph.observation.generation {
-            for h in &graph.observation.heads {
+            for h in payload_heads {
                 let bytes = self.fetch(g, h, &graph).await?;
                 total_bytes = total_bytes.saturating_add(bytes.len());
                 if total_bytes > self.budgets.payload_bytes {

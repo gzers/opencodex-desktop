@@ -1,6 +1,12 @@
-; Default uninstall and updater replacement preserve every data root.
-; Run before Tauri removes ocxd.exe or the main executable.
+; Program files belong to I; user data belongs to the current SID's U/desktop.
+; L0 supplies the NSIS/WiX default-I template and offline runtime deployment.
+; Never use Tauri's independent legacy AppData deletion for this product.
+; Run before Tauri removes the fixed, installed v2 cleanup helper.
 !macro NSIS_HOOK_PREUNINSTALL
+  ${If} $UpdateMode = 1
+    ; A remembered checkbox must not make an updater delete current/legacy data.
+    StrCpy $DeleteAppDataCheckboxState 0
+  ${EndIf}
   ${If} $DeleteAppDataCheckboxState = 1
   ${AndIf} $UpdateMode <> 1
     nsExec::ExecToStack '"$INSTDIR\ocxd.exe" --uninstall-manager-data --confirm'
@@ -11,13 +17,9 @@
       SetErrorLevel 1
       Abort
     ${EndIf}
-    DeleteRegKey SHCTX "${MANUPRODUCTKEY}"
-    DeleteRegKey /ifempty SHCTX "${MANUKEY}"
-    DeleteRegValue HKCU "${MANUPRODUCTKEY}" "Installer Language"
-    DeleteRegKey /ifempty HKCU "${MANUPRODUCTKEY}"
-    DeleteRegKey /ifempty HKCU "${MANUKEY}"
-    ; The helper removes only validated manager roots and the matching startup
-    ; pointer. Do not run Tauri's independent recursive AppData deletion after it.
+    ; The v2 helper validates the current user's fixed location and owned roots,
+    ; and retains external HOME and unknown files. Product install registration
+    ; is left to Tauri; this hook never removes legacy startup registry values.
     StrCpy $DeleteAppDataCheckboxState 0
   ${EndIf}
 !macroend

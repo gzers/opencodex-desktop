@@ -2,6 +2,8 @@
 #[cfg(test)]
 #[path = "config_file_v2_tests.rs"]
 mod tests;
+#[path="model_receive_file_v2.rs"]
+pub mod receive;
 use crate::modules::model_config::{
     compiler_v2, matching_v2,
     protocol_groups::{self, MappingFileV2, RuntimeMappingV2},
@@ -273,7 +275,7 @@ pub fn snapshot(root: &Path, home: &Path) -> Result<FileSnapshotV2> {
     {
         let _recovery_versions =
             crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
-        crate::modules::model_config::model_transaction_v2::recover(root, home)?;
+        recover_model_transactions(root, home)?;
     }
     let (_, bytes) = read_raw(home)?;
     view(
@@ -294,7 +296,7 @@ pub fn read_existing(root: &Path, home: &Path, request: ReadRequestV2) -> Result
     {
         let _recovery_versions =
             crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
-        crate::modules::model_config::model_transaction_v2::recover(root, home)?;
+        recover_model_transactions(root, home)?;
     }
     let state = locked.snapshot_unlocked()?;
     let (raw, bytes) = read_raw(home)?;
@@ -688,10 +690,11 @@ pub fn save_with_credentials(
     {
         let _recovery_versions =
             crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
-        model_transaction_v2::recover(root, home)?;
+        recover_model_transactions(root, home)?;
     }
     let state = locked.snapshot_unlocked()?;
     let (mut raw, bytes) = read_raw(home)?;
+    let original_config = raw.clone();
     let source = source_digest(&bytes);
     let revision = root_revision(root, home)?;
     let draft = state
@@ -1039,13 +1042,34 @@ pub fn save_with_credentials(
     validate_policy_v2(&intended)?;
     let plan = plan_materialization_v2(&state.library, &state.policy, &intended)?;
     mappings = allocate_mappings(&raw, &intended, &plan.groups, &mappings)?;
-    let compiled = compiler_v2::compile_file_v2(
+    let mut compiled = compiler_v2::compile_file_v2(
         &state.library,
         &state.policy,
         &intended,
         &raw,
         &mappings,
         &auth_bindings(&raw, &intended)?,
+    )?;
+    let reference_sources = reference_moves(&original_config, &compiled.next_config)?;
+    let reference_plan = if reference_sources.is_empty() {
+        None
+    } else {
+        Some(
+            crate::modules::model_config::credential_references_v2::prepare(
+                root,
+                home,
+                &original_config,
+                &mut compiled.next_config,
+                &reference_sources,
+                &crate::modules::model_config::credential_references_v2::SystemVault,
+            )
+            .map_err(io)?,
+        )
+    };
+    compiled.ledger = finalize_materialization_ledger_v2(
+        &compiled.policy,
+        &compiled.next_config,
+        &compiled.targets,
     )?;
     let after = canonical_bytes(&compiled.next_config)?;
     let mut writes = locked
@@ -1157,8 +1181,31 @@ pub fn save_with_credentials(
             after: Some(planned.after),
         });
     }
-    model_transaction_v2::commit(root, home, writes)?;
-    let (_, bytes) = read_raw(home)?;
+    let result = model_transaction_v2::commit(root, home, writes);
+    let (actual, readback) = read_raw(home)?;
+    if let Some(plan) = &reference_plan {
+        if result.is_ok() {
+            crate::modules::model_config::credential_references_v2::finish(
+                root,
+                home,
+                plan,
+                &actual,
+                &crate::modules::model_config::credential_references_v2::SystemVault,
+            )
+            .map_err(io)?;
+        } else {
+            crate::modules::model_config::credential_references_v2::abort(
+                root,
+                home,
+                plan,
+                &actual,
+                &crate::modules::model_config::credential_references_v2::SystemVault,
+            )
+            .map_err(io)?;
+        }
+    }
+    result?;
+    let bytes = readback;
     view(locked.snapshot_unlocked()?, source_digest(&bytes), revision)
 }
 
@@ -1274,7 +1321,7 @@ pub fn stage_connection(
     {
         let _recovery_versions =
             crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
-        crate::modules::model_config::model_transaction_v2::recover(root, home)?;
+        recover_model_transactions(root, home)?;
     }
     let state = locked.snapshot_unlocked()?;
     let (raw, bytes) = read_raw(home)?;
@@ -1538,7 +1585,7 @@ pub fn begin_draft(root: &Path, home: &Path, request: ReadRequestV2) -> Result<F
     {
         let _recovery_versions =
             crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
-        crate::modules::model_config::model_transaction_v2::recover(root, home)?;
+        recover_model_transactions(root, home)?;
     }
     let state = locked.snapshot_unlocked()?;
     let (raw, bytes) = read_raw(home)?;
@@ -1652,7 +1699,7 @@ pub fn copy_channel(root: &Path, home: &Path, request: CopyChannelV2) -> Result<
     {
         let _recovery_versions =
             crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
-        crate::modules::model_config::model_transaction_v2::recover(root, home)?;
+        recover_model_transactions(root, home)?;
     }
     let state = locked.snapshot_unlocked()?;
     let (raw, bytes) = read_raw(home)?;
@@ -1773,7 +1820,7 @@ pub(crate) fn saved_state(
             })
         })
         .collect();
-    let models = portable_v2::export_portable_models_v2(
+    let mut models = portable_v2::export_portable_models_v2(
         library,
         policy,
         &ModelExportScopeV2 {
@@ -1783,6 +1830,21 @@ pub(crate) fn saved_state(
             ..Default::default()
         },
     )?;
+    let public_sources = policy
+        .channels
+        .iter()
+        .filter(|c| channel_ids.contains(&c.id))
+        .filter_map(|c| {
+            crate::modules::model_config::provider_fields::public_from_raw(
+                &raw["providers"][&c.connection.provider_id],
+            )
+            .ok()
+            .map(|public| (c.id.clone(), public))
+        })
+        .collect::<BTreeMap<_, _>>();
+    if !public_sources.is_empty() {
+        models = portable_v2::attach_public_sources_v2(&models, &public_sources)?;
+    }
     let mut keys = SecretValues::new();
     for channel in policy
         .channels
@@ -1824,7 +1886,7 @@ pub fn library_snapshot(root: &Path, home: &Path) -> Result<StoreSnapshotV2> {
     {
         let _recovery_versions =
             crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
-        crate::modules::model_config::model_transaction_v2::recover(root, home)?;
+        recover_model_transactions(root, home)?;
     }
     locked.snapshot_unlocked()
 }
@@ -1833,10 +1895,7 @@ pub fn save_revision(
     home: &Path,
     request: &SaveRevisionRequestV2,
 ) -> Result<LibraryV2> {
-    use crate::modules::model_config::{
-        content_versions,
-        model_transaction_v2::{self, TargetV2, WriteV2},
-    };
+    use crate::modules::model_config::content_versions;
     let _admission = content_versions::file_saves::admit(root, home).map_err(io)?;
     let _rename = super::channel_rename::admit(root, home).map_err(io)?;
     let _config = TargetFileLock::lock(&home.join("config.json")).map_err(io)?;
@@ -1845,10 +1904,23 @@ pub fn save_revision(
     {
         let _recovery_versions =
             crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
-        model_transaction_v2::recover(root, home)?;
+        recover_model_transactions(root, home)?;
     }
     let state = locked.snapshot_unlocked()?;
     let next = save_revision_plan_v2(&state.library, request)?;
+    commit_library_change(root, home, &locked, &state, next)
+}
+fn commit_library_change(
+    root: &Path,
+    home: &Path,
+    locked: &store_v2::LockedStoreV2<'_>,
+    state: &StoreSnapshotV2,
+    next: LibraryV2,
+) -> Result<LibraryV2> {
+    use crate::modules::model_config::{
+        content_versions,
+        model_transaction_v2::{self, TargetV2, WriteV2},
+    };
     let empty = store_v2::empty_policy_v2();
     let before = saved_state(&state.library, &empty, &json!({}))?;
     let after = saved_state(&next, &empty, &json!({}))?;
@@ -1882,6 +1954,91 @@ pub fn save_revision(
     model_transaction_v2::commit(root, home, writes)?;
     Ok(locked.snapshot_unlocked()?.library)
 }
+#[derive(Deserialize)]
+#[serde(
+    tag = "kind",
+    rename_all = "snake_case",
+    rename_all_fields = "camelCase",
+    deny_unknown_fields
+)]
+pub enum LibraryIntentV2 {
+    SetDefault {
+        reference: RefV2,
+    },
+    ClearDefault {
+        reference: RefV2,
+    },
+    DeleteRevisions {
+        template_id: String,
+        revision_ids: Vec<String>,
+    },
+}
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct LibraryChangeV2 {
+    pub expected_library: String,
+    pub intent: LibraryIntentV2,
+}
+pub fn change_library(root: &Path, home: &Path, request: LibraryChangeV2) -> Result<LibraryV2> {
+    let _admission = crate::modules::model_config::content_versions::file_saves::admit(root, home)
+        .map_err(io)?;
+    let _rename = super::channel_rename::admit(root, home).map_err(io)?;
+    let _config = TargetFileLock::lock(&home.join("config.json")).map_err(io)?;
+    let store = StoreV2::new(root);
+    let locked = store.lock()?;
+    {
+        let _versions =
+            crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
+        recover_model_transactions(root, home)?;
+    }
+    let state = locked.snapshot_unlocked()?;
+    use crate::modules::model_config::template_ops_v2 as ops;
+    let next = match request.intent {
+        LibraryIntentV2::SetDefault { reference } => {
+            ops::set_default(&state.library, &request.expected_library, &reference)?
+        }
+        LibraryIntentV2::ClearDefault { reference } => {
+            ops::clear_default(&state.library, &request.expected_library, &reference)?
+        }
+        LibraryIntentV2::DeleteRevisions {
+            template_id,
+            revision_ids,
+        } => {
+            let dependencies =
+                crate::modules::model_config::model_transaction_v2::retained_template_refs(
+                    root, home,
+                )?;
+            ops::delete_revisions(
+                &state.library,
+                &request.expected_library,
+                &template_id,
+                &revision_ids,
+                &state.policy,
+                state.draft.as_ref().map(|d| &d.policy),
+                &dependencies,
+            )?
+        }
+    };
+    commit_library_change(root, home, &locked, &state, next)
+}
+pub fn template_usage(
+    root: &Path,
+    home: &Path,
+    template_id: &str,
+    revision_id: &str,
+) -> Result<crate::modules::model_config::template_ops_v2::UsageReportV2> {
+    let snapshot = library_snapshot(root, home)?;
+    let dependencies =
+        crate::modules::model_config::model_transaction_v2::retained_template_refs(root, home)?;
+    crate::modules::model_config::template_ops_v2::usage(
+        &snapshot.library,
+        &snapshot.policy,
+        snapshot.draft.as_ref().map(|d| &d.policy),
+        template_id,
+        revision_id,
+        &dependencies,
+    )
+}
 
 /// Internal capture boundary: only actual saved config/metadata, never a draft.
 /// The closure cannot turn a caller-supplied path or policy into source authority.
@@ -1895,6 +2052,7 @@ pub(crate) fn with_saved_config<T>(
         "manager-state/saved-file-save-pending.json",
         "manager-state/provider-rename-pending.json",
         "manager-state/model-transaction-v2.pending.json",
+        "manager-state/credential-references-v2.pending.json",
     ];
     let locks = pending
         .iter()
@@ -2002,7 +2160,7 @@ pub fn stage_credential_with_store(
     {
         let _versions =
             crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
-        crate::modules::model_config::model_transaction_v2::recover(root, home)?;
+        recover_model_transactions(root, home)?;
     }
     let state = locked.snapshot_unlocked()?;
     let (raw, bytes) = read_raw(home)?;
@@ -2141,7 +2299,7 @@ pub fn credential_view_with_store(
     {
         let _versions =
             crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
-        crate::modules::model_config::model_transaction_v2::recover(root, home)?;
+        recover_model_transactions(root, home)?;
     }
     let state = locked.snapshot_unlocked()?;
     let (raw, bytes) = read_raw(home)?;
@@ -2252,7 +2410,7 @@ pub fn prepare_measurements_with_store(
     {
         let _versions =
             crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
-        crate::modules::model_config::model_transaction_v2::recover(root, home)?;
+        recover_model_transactions(root, home)?;
     }
     let state = locked.snapshot_unlocked()?;
     let (raw, bytes) = read_raw(home)?;
@@ -2345,4 +2503,115 @@ pub fn prepare_measurements_with_store(
         provider_id: None,
         home: None,
     })
+}
+
+fn reference_moves(
+    original: &Value,
+    next: &Value,
+) -> Result<Vec<crate::modules::model_config::credential_references_v2::ReferenceSourceV2>> {
+    fn refs(value: &Value, out: &mut BTreeSet<String>) {
+        match value {
+            Value::String(v) if v.starts_with("keychain:") => {
+                out.insert(v[9..].to_owned());
+            }
+            Value::Object(v) => v.values().for_each(|v| refs(v, out)),
+            Value::Array(v) => v.iter().for_each(|v| refs(v, out)),
+            _ => {}
+        }
+    }
+    let mut moves = vec![];
+    for (target, row) in next["providers"].as_object().into_iter().flatten() {
+        let mut accounts = BTreeSet::new();
+        for field in crate::modules::model_config::provider_fields::PRIVATE {
+            if let Some(value) = row.get(*field) {
+                refs(value, &mut accounts);
+            }
+        }
+        let sources = accounts
+            .iter()
+            .filter(|a| a.as_str() != target && !a.starts_with(&(target.clone() + "/")))
+            .map(|a| {
+                original["providers"]
+                    .as_object()
+                    .into_iter()
+                    .flatten()
+                    .filter(|(id, _)| {
+                        a.as_str() == id.as_str() || a.starts_with(&((*id).clone() + "/"))
+                    })
+                    .max_by_key(|(id, _)| id.len())
+                    .map(|(id, _)| id.clone())
+                    .ok_or_else(|| error("model_credential_reference"))
+            })
+            .collect::<Result<BTreeSet<_>>>()?;
+        if sources.len() > 1 {
+            return Err(error("model_credential_reference"));
+        }
+        if let Some(source) = sources.first() {
+            moves.push(
+                crate::modules::model_config::credential_references_v2::ReferenceSourceV2 {
+                    source_provider_id: source.clone(),
+                    target_provider_id: target.clone(),
+                },
+            );
+        }
+    }
+    Ok(moves)
+}
+
+fn recover_model_transactions(root: &Path, home: &Path) -> Result<()> {
+    crate::modules::model_config::model_transaction_v2::recover(root, home)?;
+    let (actual, _) = read_raw(home)?;
+    crate::modules::model_config::credential_references_v2::recover(
+        root,
+        home,
+        &actual,
+        &crate::modules::model_config::credential_references_v2::SystemVault,
+    )
+    .map_err(io)?;
+    Ok(())
+}
+
+/// Only the trusted run owner can construct ApprovedSavePlanV2. Recheck all
+/// immutable facts under the same file/model locks before publishing its library.
+pub fn accept_agent_library(
+    root: &Path,
+    home: &Path,
+    plan: &crate::modules::model_config::agent_runtime_v2::ApprovedSavePlanV2,
+) -> Result<LibraryV2> {
+    let _admission = crate::modules::model_config::content_versions::file_saves::admit(root, home)
+        .map_err(io)?;
+    let _rename = super::channel_rename::admit(root, home).map_err(io)?;
+    let _config = TargetFileLock::lock(&home.join("config.json")).map_err(io)?;
+    let store = StoreV2::new(root);
+    let locked = store.lock()?;
+    {
+        let _versions =
+            crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
+        recover_model_transactions(root, home)?;
+    }
+    let state = locked.snapshot_unlocked()?;
+    let (_, bytes) = read_raw(home)?;
+    if state.digests.library != plan.expected_library
+        || source_digest(&bytes) != plan.expected_source
+        || root_revision(root, home)? != plan.expected_root_revision
+    {
+        return Err(error("model_save_stale"));
+    }
+    validate_library_v2(&plan.library)?;
+    for template in &state.library.templates {
+        let next = plan
+            .library
+            .templates
+            .iter()
+            .find(|t| t.id == template.id)
+            .ok_or_else(|| error("model_agent_commit_unconfirmed"))?;
+        if template
+            .revisions
+            .iter()
+            .any(|r| !next.revisions.contains(r))
+        {
+            return Err(error("model_agent_commit_unconfirmed"));
+        }
+    }
+    commit_library_change(root, home, &locked, &state, plan.library.clone())
 }
