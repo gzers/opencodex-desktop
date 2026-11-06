@@ -67,7 +67,7 @@ const checkGroups:Record<string,string[]>={
  'menu.actions':['tests/select-menu.test.ts'],
  'data.tree':['tests/ui-tree-table.test.ts','tests/sync-object-tree.test.ts'],
  'model.selection':['tests/model-components.test.ts','tests/model-selection.test.ts'],
- 'node.selection':['tests/model-node-picker.test.ts','tests/channel-node-select.test.ts'],
+ 'node.selection':['tests/model-node-picker.test.ts','tests/channel-node-select.test.ts','tests/node-measurement-v2.test.ts','tests/post05-node-detection.test.ts','tests/post05-channel-list.test.ts'],
  'feedback.notification':['tests/notification-center.test.ts','tests/notification-actions.test.ts'],
  'overlay.modal-host':['tests/app-modal.test.ts'],
  'pattern.card':['tests/ui021-public-patterns.test.ts','tests/ui-components.test.ts'],

@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
+import UiSelectField from '@/components/ui/UiSelectField.vue'
 import { useNodeMeasurements, nodeMeasurementError } from './useNodeMeasurements'
 import type { ChannelPolicy } from './api'
+import type { ChannelV2, DiscoveryKindV2, ReadBaseV2 } from './api-v2'
 
-const props = defineProps<{ channel: ChannelPolicy; open: boolean; disabled?: boolean; readonly?: boolean; measurementDisabled?: boolean; credentialProviderId?: string }>()
-const emit = defineEmits<{ close: [] }>()
+const props = defineProps<{ channel: ChannelPolicy|ChannelV2; expected?: ReadBaseV2|null; open: boolean; disabled?: boolean; readonly?: boolean; measurementDisabled?: boolean; credentialProviderId?: string }>()
+const emit = defineEmits<{ close: []; select: [id:string] }>()
 // 生命周期归渠道所有，表格筛选、详情导航和关闭观察都不销毁测量。
-// 未保存改名仍按稳定 channel.id 查到的已保存 provider 取凭据；不读取或展示 Key。
-const measurement = reactive(useNodeMeasurements(() => ({ ...props.channel, connection: { ...props.channel.connection, providerId: props.credentialProviderId ?? props.channel.connection.providerId } }), () => ''))
+// 只交稳定渠道/节点ID和可信草稿基准；临时方式不从旧协议推断。
+const discoveryKind=ref<DiscoveryKindV2|''>('')
+const measurementDisabled=computed(()=>props.measurementDisabled||!props.expected||!('models' in props.channel)||!discoveryKind.value)
+const measurement = reactive(useNodeMeasurements(() => props.channel, () => '', {expected:()=>props.expected??null,discoveryKind:()=>discoveryKind.value,enabled:()=>!props.measurementDisabled}))
 function text(id: string) {
   if (measurement.pending.includes(id)) return '检测中…'
   const result = measurement.results[id]
@@ -19,17 +23,19 @@ function text(id: string) {
 }
 function choose(id: string) {
   if (!props.open || props.disabled || props.readonly || !props.channel.connection.nodes.some(node => node.id === id)) return
-  props.channel.connection.activeNodeId = id
+  if('models' in props.channel)emit('select',id)
+  else props.channel.connection.activeNodeId = id
   emit('close')
 }
 function measure(ids: string[]) {
-  if (props.open && !props.disabled && !props.measurementDisabled) void measurement.measure(ids)
+  if (props.open && !props.disabled && !measurementDisabled.value) void measurement.measure(ids)
 }
 </script>
 
 <template>
   <UiDialog :open="open" :title="channel.label + ' · 节点检测'" panel-class="channel-node-dialog" @close="emit('close')">
     <div class="channel-node-detection">
+      <UiSelectField v-if="'models' in channel" v-model="discoveryKind" label="本次节点清单获取方式" :disabled="!!measurement.run||disabled||props.measurementDisabled" :options="[{value:'',label:'请选择本次获取方式'},{value:'openai_list',label:'兼容模型清单'},{value:'anthropic_list',label:'Anthropic 模型清单'},{value:'google_list',label:'Google 模型清单'},{value:'ollama_list',label:'Ollama 模型清单'}]" />
       <div class="channel-node-toolbar">
         <UiButton size="sm" :disabled="disabled || measurementDisabled || !!measurement.run || !channel.connection.nodes.length" @click="measure(channel.connection.nodes.map(node => node.id))">一键检测</UiButton>
         <UiButton v-if="measurement.run" size="sm" @click="measurement.stop">停止</UiButton>
