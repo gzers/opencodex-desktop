@@ -1516,3 +1516,86 @@ fn selected_account_receipt_uses_same_source_identity_after_baseline_id_preserva
         file_objects_v2::save_state(&result).unwrap()[&key]
     );
 }
+
+#[test]
+fn template_metadata_save_atom_changes_independently_of_immutable_revision_atoms() {
+    let (old, _, reference, _) = template_pair();
+    let mut original = input(vec![]);
+    original.models.payload.templates = vec![old];
+    rehash(&mut original);
+    let original = saved(original);
+    let state = file_objects_v2::save_state(&original).unwrap();
+    let key =
+        super::super::content_versions::key(&json!(["v2-template-meta", reference.template_id]))
+            .unwrap();
+    let revision = super::super::content_versions::key(&json!([
+        "v2-template",
+        reference.template_id,
+        reference.revision_id
+    ]))
+    .unwrap();
+    let mut changed = original.into_captured();
+    changed.models.payload.templates[0].default_revision = None;
+    rehash(&mut changed);
+    let changed = saved(changed);
+    let next = file_objects_v2::save_state(&changed).unwrap();
+    assert_ne!(state[&key], next[&key]);
+    assert_eq!(state[&revision], next[&revision]);
+    let mut changed = changed.into_captured();
+    changed.models.payload.templates[0].label = "new template label".into();
+    rehash(&mut changed);
+    let renamed = file_objects_v2::save_state(&saved(changed)).unwrap();
+    assert_ne!(next[&key], renamed[&key]);
+    assert_eq!(next[&revision], renamed[&revision]);
+}
+#[test]
+fn default_metadata_receipt_requires_explicit_adoption_not_just_revision_selection() {
+    let (old, newer, _, second) = template_pair();
+    let template_id = second.template_id.clone();
+    let key =
+        super::super::content_versions::key(&json!(["v2-template-meta", template_id])).unwrap();
+    let make_local = || {
+        let mut l = input(vec![]);
+        l.models.payload.templates = vec![newer.clone()];
+        rehash(&mut l);
+        let objects = saved(l);
+        let state = file_objects_v2::save_state(&objects).unwrap();
+        let mut l = objects.into_captured();
+        l.content_versions = vec![receipt(
+            key.clone(),
+            state[&key].clone(),
+            "2026-11-06T19:00:00Z",
+        )];
+        saved(l)
+    };
+    let make_base = || {
+        let mut b = input(vec![]);
+        b.models.payload.templates = vec![old.clone()];
+        rehash(&mut b);
+        saved(b)
+    };
+    let mut selection = SelectionV2 {
+        template_refs: vec![second.clone()],
+        ..Default::default()
+    };
+    let result =
+        overlay_selected(Some(make_base()), make_local(), selection.clone(), None).unwrap();
+    assert!(!result
+        .partitions()
+        .content_versions
+        .iter()
+        .any(|v| v.scope_key == key));
+    selection.adopt_template_defaults = vec![second];
+    let result = overlay_selected(Some(make_base()), make_local(), selection, None).unwrap();
+    let version = result
+        .partitions()
+        .content_versions
+        .iter()
+        .find(|v| v.scope_key == key)
+        .unwrap();
+    assert_eq!(version.saved_at, "2026-11-06T19:00:00Z");
+    assert_eq!(
+        file_objects_v2::save_state(&result).unwrap()[&key],
+        version.content_digest
+    );
+}
