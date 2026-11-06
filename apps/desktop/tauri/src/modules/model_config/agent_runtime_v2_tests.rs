@@ -1,3 +1,5 @@
+//! Unix official-CLI fixture; native Windows execution remains L4-owned.
+#![cfg(unix)]
 use super::*;
 use crate::{
     infrastructure::runtime_executable::FixedRuntimeExecutable,
@@ -475,7 +477,7 @@ async fn trusted_buffer_preserves_new_locks_in_one_real_append_and_rejects_forge
     );
     assert!(!f.root.join(LIBRARY_PATH).exists());
     let record = read_record(&f.root, &ticket.run_id).unwrap();
-    let context = proposal_context(&record, false).unwrap();
+    let context = proposal_context(&record).unwrap();
     assert!(
         !parse_validate_proposal_v2(saved.library(), &bytes, &context)
             .unwrap()
@@ -606,4 +608,307 @@ async fn invalid_attestation_and_oversized_envelope_fail_closed() {
         "model_limit"
     );
     assert!(!f.root.join(LIBRARY_PATH).exists());
+}
+
+fn external_wire(proposal: &AgentProposalV2, submission_id: &str) -> Vec<u8> {
+    canonical_bytes(&ExternalSubmissionV2 {
+        contract_version: 2,
+        submission_id: submission_id.into(),
+        response: serde_json::to_value(proposal).unwrap(),
+    })
+    .unwrap()
+}
+#[cfg(unix)]
+#[tokio::test]
+async fn external_facade_is_data_only_idempotent_and_uses_trusted_external_origin() {
+    let f = Fixture::new().await;
+    // External tasks have no dependency on internal model preferences or a
+    // reachable inference service. The existing broker auth is L0-owned.
+    std::fs::remove_file(
+        f.root
+            .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH),
+    )
+    .unwrap();
+    f.server.abort();
+    let proposal = f.proposal();
+    let task = prepare_external(&f.root, &f.context, f.intent(Scene::UpdateModels)).unwrap();
+    assert_eq!(task.dto_version, 2);
+    assert_eq!(task.targets[0].reference, f.reference);
+    assert_eq!(task.contract["contractVersion"], 2);
+    let record = read_record(&f.root, &task.task_id).unwrap();
+    assert!(record.settings.is_none());
+    assert_eq!(record.executor, ExecutorV2::External);
+    let context_bytes = canonical_bytes(&task).unwrap();
+    assert!(!String::from_utf8(context_bytes)
+        .unwrap()
+        .contains("SOURCE-KEY-MUST-NOT-ENTER-PROMPT"));
+    let submission_id = uuid::Uuid::new_v4().to_string();
+    let bytes = external_wire(&proposal, &submission_id);
+    let before = std::fs::read(record_path(&f.root, &task.task_id).unwrap()).unwrap();
+    let preflight = preflight_external(&f.root, &f.context, &task.task_id, &bytes).unwrap();
+    assert!(preflight.review.unwrap().valid);
+    assert_eq!(
+        before,
+        std::fs::read(record_path(&f.root, &task.task_id).unwrap()).unwrap()
+    );
+    assert!(receipt_external(&f.root, &task.task_id, &submission_id)
+        .unwrap()
+        .is_none());
+    let receipt = submit_external_review(&f.root, &f.context, &task.task_id, &bytes).unwrap();
+    assert_eq!(receipt.result.phase, RunPhaseV2::Review);
+    assert!(!f.root.join(LIBRARY_PATH).exists());
+    assert!(!f.root.join(DRAFT_PATH).exists());
+    let retry = submit_external_review(&f.root, &f.context, &task.task_id, &bytes).unwrap();
+    assert_eq!(
+        canonical_bytes(&receipt).unwrap(),
+        canonical_bytes(&retry).unwrap()
+    );
+    assert_eq!(
+        receipt_external(&f.root, &task.task_id, &submission_id)
+            .unwrap()
+            .unwrap()
+            .submission_digest,
+        receipt.submission_digest
+    );
+    let mut changed = proposal.clone();
+    changed.proposals[0].content.description.push_str("changed");
+    assert_eq!(
+        submit_external_review(
+            &f.root,
+            &f.context,
+            &task.task_id,
+            &external_wire(&changed, &submission_id)
+        )
+        .unwrap_err()
+        .code,
+        "model_agent_submission_conflict"
+    );
+    let plan = prepare_accept(
+        &f.root,
+        &f.context,
+        &task.task_id,
+        &task.expected_library,
+        &canonical_bytes(&proposal).unwrap(),
+    )
+    .unwrap();
+    let new = plan.review.proposals[0].planned_revision.as_ref().unwrap();
+    assert!(
+        matches!(&revision(&plan.library, new).unwrap().origin, super::super::schema::SaveOrigin::ExternalTask(id) if id == &task.task_id)
+    );
+    assert!(f.state.calls.lock().unwrap().is_empty());
+    revoke_external(&f.root, &task.task_id).unwrap();
+    assert_eq!(
+        submit_external_review(&f.root, &f.context, &task.task_id, &bytes)
+            .unwrap_err()
+            .code,
+        "model_agent_run_state"
+    );
+    assert!(prepare_accept(
+        &f.root,
+        &f.context,
+        &task.task_id,
+        &task.expected_library,
+        &canonical_bytes(&proposal).unwrap()
+    )
+    .is_err());
+}
+#[cfg(unix)]
+#[tokio::test]
+async fn external_report_expiry_stale_state_and_unknown_fields_are_enforced() {
+    let f = Fixture::new().await;
+    let task = prepare_external(&f.root, &f.context, f.intent(Scene::CheckOnly)).unwrap();
+    let id = uuid::Uuid::new_v4().to_string();
+    let value = json!({"contractVersion":2,"submissionId":id,"response":{"contractVersion":2,"expectedLibrary":task.expected_library,"report":{"summary":"external checked","issues":[]}}});
+    let bytes = canonical_bytes(&value).unwrap();
+    let receipt = submit_external_review(&f.root, &f.context, &task.task_id, &bytes).unwrap();
+    assert!(receipt.result.review.is_none());
+    assert_eq!(receipt.result.report.unwrap().summary, "external checked");
+    assert!(prepare_accept(
+        &f.root,
+        &f.context,
+        &task.task_id,
+        &task.expected_library,
+        &bytes
+    )
+    .is_err());
+    let mut bad = value.clone();
+    bad["origin"] = json!("internal_agent");
+    assert!(external_submission(&canonical_bytes(&bad).unwrap()).is_err());
+    assert!(external_submission(
+        br#"{"contractVersion":2,"contractVersion":2,"submissionId":"x","response":{}}"#
+    )
+    .is_err());
+    let mut record = read_record(&f.root, &task.task_id).unwrap();
+    record.expires_at = "2000-01-01T00:00:00Z".into();
+    persist(&f.root, &record).unwrap();
+    assert_eq!(
+        receipt_external(&f.root, &task.task_id, &id)
+            .unwrap_err()
+            .code,
+        "model_agent_expired"
+    );
+    assert_eq!(
+        external_context(&f.root, &task.task_id).unwrap_err().code,
+        "model_agent_expired"
+    );
+    let task = prepare_external(&f.root, &f.context, f.intent(Scene::UpdateModels)).unwrap();
+    let mut proposal = f.proposal();
+    let id = uuid::Uuid::new_v4().to_string();
+    // A preflight never silently replaces a stale exact target.
+    proposal.proposals[0].target.as_mut().unwrap().digest = digest(b"wrong ref");
+    assert!(preflight_external(
+        &f.root,
+        &f.context,
+        &task.task_id,
+        &external_wire(&proposal, &id),
+    )
+    .is_err());
+    assert!(submit_external_review(
+        &f.root,
+        &f.context,
+        &task.task_id,
+        &external_wire(&proposal, &id)
+    )
+    .is_err());
+    assert_eq!(
+        read_record(&f.root, &task.task_id).unwrap().phase,
+        RunPhaseV2::Prepared
+    );
+    let path = f.context.opencodex_home.join("config.json");
+    let mut source: Value = parse_strict_json_v2(&std::fs::read(&path).unwrap()).unwrap();
+    source["providers"]["fixture"]["baseUrl"] = json!("https://changed.invalid");
+    std::fs::write(path, canonical_bytes(&source).unwrap()).unwrap();
+    assert_eq!(
+        preflight_external(
+            &f.root,
+            &f.context,
+            &task.task_id,
+            &external_wire(&proposal, &id)
+        )
+        .unwrap_err()
+        .code,
+        "model_save_stale"
+    );
+    assert!(!f.root.join(LIBRARY_PATH).exists());
+    assert!(f.state.calls.lock().unwrap().is_empty());
+}
+#[test]
+fn saved_to_buffer_cannot_remove_locks_change_protected_values_or_delete_locked_conditions() {
+    let library = seed_library_v2().unwrap();
+    let mut old = library.templates[0].revisions[0].content.clone();
+    old.locked_fields.insert("description".into());
+    old.condition_overrides[0]
+        .locked_fields
+        .insert("contextWindow".into());
+    for mutation in 0..4 {
+        let mut buffer = old.clone();
+        match mutation {
+            0 => {
+                buffer.locked_fields.clear();
+            }
+            1 => {
+                buffer.description.push_str("changed");
+            }
+            2 => {
+                buffer.condition_overrides[0].locked_fields.clear();
+            }
+            _ => {
+                buffer.condition_overrides.remove(0);
+            }
+        }
+        assert_eq!(
+            validate_editing_buffer_v2(Some(&old), &buffer)
+                .unwrap_err()
+                .code,
+            "model_locked_field"
+        );
+    }
+}
+
+#[cfg(unix)]
+#[tokio::test]
+async fn external_only_create_buffer_appends_one_new_template_with_user_locks() {
+    let f = Fixture::new().await;
+    let mut proposal = f.proposal();
+    proposal.proposals[0].target = None;
+    proposal.proposals[0].label = "New human buffer template".into();
+    proposal.proposals[0]
+        .content
+        .locked_fields
+        .insert("description".into());
+    let mut buffer = EditingBufferV2 {
+        target: None,
+        label: proposal.proposals[0].label.clone(),
+        content: proposal.proposals[0].content.clone(),
+        digest: String::new(),
+        generation: 1,
+    };
+    buffer.digest = buffer_digest(&buffer).unwrap();
+    let mut intent = f.intent(Scene::PrivateModels);
+    intent.targets.clear();
+    intent.allow_new = true;
+    intent.buffer = Some(buffer);
+    let task = prepare_external(&f.root, &f.context, intent).unwrap();
+    let bytes = external_wire(&proposal, &uuid::Uuid::new_v4().to_string());
+    submit_external_review(&f.root, &f.context, &task.task_id, &bytes).unwrap();
+    // Owner review may edit an unlocked label. Receipt identity still refers
+    // to the original submission, while the displayed review digest follows
+    // the exact accepted bytes.
+    proposal.proposals[0].label.push_str(" reviewed by owner");
+    let plan = prepare_accept(
+        &f.root,
+        &f.context,
+        &task.task_id,
+        &task.expected_library,
+        &canonical_bytes(&proposal).unwrap(),
+    )
+    .unwrap();
+    let new_ref = plan.review.proposals[0].planned_revision.as_ref().unwrap();
+    let new = revision(&plan.library, new_ref).unwrap();
+    assert!(new.base_revision.is_none());
+    assert!(new.content.locked_fields.contains("description"));
+    assert_ne!(new_ref.template_id, f.reference.template_id);
+    let mut wrong = plan.library.clone();
+    wrong
+        .templates
+        .iter_mut()
+        .find(|t| t.id == new_ref.template_id)
+        .unwrap()
+        .revisions[0]
+        .origin = super::super::schema::SaveOrigin::Manual;
+    std::fs::write(f.root.join(LIBRARY_PATH), canonical_bytes(&wrong).unwrap()).unwrap();
+    assert_eq!(
+        mark_accepted(&f.root, &f.context, &task.task_id, &plan.response_digest)
+            .unwrap_err()
+            .code,
+        "model_agent_commit_unconfirmed"
+    );
+    std::fs::write(
+        f.root.join(LIBRARY_PATH),
+        canonical_bytes(&plan.library).unwrap(),
+    )
+    .unwrap();
+    assert_eq!(
+        mark_accepted(&f.root, &f.context, &task.task_id, &plan.response_digest)
+            .unwrap()
+            .phase,
+        RunPhaseV2::Accepted
+    );
+    let receipt = receipt_external(
+        &f.root,
+        &task.task_id,
+        &serde_json::from_slice::<ExternalSubmissionV2>(&bytes)
+            .unwrap()
+            .submission_id,
+    )
+    .unwrap()
+    .unwrap();
+    assert_eq!(receipt.result.phase, RunPhaseV2::Accepted);
+    assert_ne!(receipt.submission_digest, plan.response_digest);
+    assert_eq!(
+        receipt.result.response_digest.as_deref(),
+        Some(plan.response_digest.as_str())
+    );
+
+    assert!(f.state.calls.lock().unwrap().is_empty());
 }
