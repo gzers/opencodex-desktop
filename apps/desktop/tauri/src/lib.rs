@@ -576,6 +576,9 @@ pub fn run() {
             }
         })
         .invoke_handler(tauri::generate_handler![
+            commands::scope_backup_v2::transfer_v2_backup_list,
+            commands::scope_backup_v2::transfer_v2_backup_preview,
+            commands::scope_backup_v2::transfer_v2_backup_restore,
             commands::config_file_transfer_v2::catalog_config_file_v2,
             commands::config_file_transfer_v2::file_v2_read_scope,
             commands::config_file_transfer_v2::file_v2_save_scope,
@@ -625,10 +628,6 @@ pub fn run() {
             commands::model_transfer::transfer_result,
             commands::model_transfer::open_transfer_export_directory,
             commands::model_transfer::import_credential_choices,
-            commands::model_transfer::transfer_backup_status,
-            commands::model_transfer::list_transfer_backups,
-            commands::model_transfer::preview_transfer_restore,
-            commands::model_transfer::restore_transfer_backup,
             commands::model_transfer::save_transfer_choices,
             commands::model_transfer::transfer_protection,
             commands::model_transfer::save_transfer_protection,
