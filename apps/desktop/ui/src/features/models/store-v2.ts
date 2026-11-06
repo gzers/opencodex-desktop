@@ -2,7 +2,7 @@ import {computed,ref,shallowRef} from 'vue'
 import {defineStore} from 'pinia'
 import {createModelRowsState,pendingModelRows,type ModelRowsState} from './modelRows'
 import {
-  emptyContentV2,serviceUnavailableV2,modelV2Api,reviewedAgentResponseV2,type ModelV2Services,type LibraryViewV2,type TemplateContentV2,
+  emptyContentV2,serviceUnavailableV2,modelV2Api,conditionPreviewViewV2,reviewedAgentResponseV2,type ModelV2Services,type LibraryViewV2,type TemplateContentV2,
   type TemplateV2,type ConditionPreviewView,type MatchIssueV2,type ChannelConnectionEditIntentV2,
   type ChannelDiscoveryInputV2,
   type FileSnapshotV2,type ReadExistingRequestV2,type ChannelIntentV2,type ModelEditV2,type ModelSelectionV2,type DraftProjectionV2,
@@ -23,9 +23,7 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
     validateContent:async content=>{await modelV2Api.validateContent(content);return []},
     previewConditions:async input=>{
       const response=await modelV2Api.previewConditions(input.content,[input.rawModelId],input.channelId)
-      if(response.dtoVersion!==2||response.previewOnly!==true||response.rows.length!==1)throw new Error('预览回执不完整，当前输入保持。')
-      const row=response.rows[0]!
-      return {rawModelId:row.rawModelId,matchingView:null,matched:row.familyMatched,reason:row.familyMatched?(row.matchedConditionId?'命中族及条件覆盖':'命中族，使用通用规则'):'未命中族范围',conditions:row.matchedConditionId?[{conditionId:row.matchedConditionId,matched:true,reason:'解析器确认命中此覆盖项',atoms:[]}]:[],effective:null,configuration:{rules:row.rules,protocol:row.protocol,fieldOrigins:row.fieldOrigins},issues:[]}
+      return conditionPreviewViewV2(response,input)
     },
     saveRevision:modelV2Api.saveRevision,
   })

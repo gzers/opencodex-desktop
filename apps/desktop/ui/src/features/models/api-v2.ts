@@ -79,8 +79,9 @@ export interface GeneratedReviewV2 {dtoVersion:2;runId:string;phase:RunPhaseV2;e
 // View-only props and explicit editing intents below are not IPC wire contracts.
 // The L0 adapter will supply these services after public commands are registered.
 export interface ConditionPreviewView {
-  rawModelId:string;matchingView:string|null;matched:boolean;reason:string
-  conditions:readonly {conditionId:string;matched:boolean;reason:string;atoms:readonly {index:number;matched:boolean;reason:string}[]}[]
+  rawModelId:string;matchingView:string;matched:boolean;reasonCode:string;reason:string
+  family:Readonly<FamilyMatchTraceV2>
+  conditions:readonly ConditionMatchTraceV2[]
   effective:Readonly<EffectiveModelV2>|null;issues:readonly MatchIssueV2[]
   configuration?:Readonly<Pick<EffectiveModelV2,'rules'|'protocol'|'fieldOrigins'>>
 }
@@ -94,7 +95,34 @@ export interface RevisionUseV2 {state:UsageStateV2;kind:UsageKindV2;reference:Re
 export interface UsageModelV2 {state:UsageStateV2;channelId:string;channelLabel:string;rawModelId:string;matched:boolean;matchedConditionId:string|null;bindingKind:UsageKindV2|null;usingQueriedRevision:boolean;issues:MatchIssueV2[]}
 export interface UsageReportV2 {dtoVersion:2;reference:RefV2;libraryDigest:string;savedPolicyDigest:string;draftPolicyDigest:string|null;isDefault:boolean;builtinInitial:boolean;references:RevisionUseV2[];models:UsageModelV2[]}
 export interface RevisionEditIntentV2 {expectedLibrary:string;templateId:string;baseRevision:string|null;label:string;content:TemplateContentV2;makeDefault:boolean}
-export interface PreviewConditionsResponseV2 {dtoVersion:2;previewOnly:true;contentDigest:string;rows:{rawModelId:string;familyMatched:boolean;matchedConditionId:string|null;rules:RulesV2;protocol:ProtocolStateV2;fieldOrigins:Record<string,FieldOriginV2>}[]}
+export interface FamilyMatchTraceV2 {matched:boolean;reasonCode:string;reason:string}
+export interface MatchStepTraceV2 {matched:boolean|null;reasonCode:string;reason:string}
+export interface ConditionMatchTraceV2 extends MatchStepTraceV2 {
+  conditionId:string;applicable:boolean;applied:boolean
+  preconditions:(MatchStepTraceV2&{kind:'layout'|'literal_tail'})[]
+  atoms:(MatchStepTraceV2&{index:number;kind:SelectorAtomV2['kind']})[]
+}
+export interface PreviewConditionsResponseV2 {dtoVersion:2;previewOnly:true;contentDigest:string;rows:{rawModelId:string;matchingView:string;familyMatched:boolean;family:FamilyMatchTraceV2;reasonCode:string;reason:string;conditions:ConditionMatchTraceV2[];matchedConditionId:string|null;rules:RulesV2;protocol:ProtocolStateV2;fieldOrigins:Record<string,FieldOriginV2>}[]}
+
+// Reject missing/partial trace receipts. Never fill old DTOs with inferred explanations.
+export function conditionPreviewViewV2(response:PreviewConditionsResponseV2,input:ConditionPreviewInput):ConditionPreviewView {
+  const record=(v:unknown):v is Record<string,unknown>=>typeof v==='object'&&v!==null
+  const reason=(v:unknown)=>record(v)&&typeof v.reasonCode==='string'&&typeof v.reason==='string'
+  const step=(v:unknown)=>record(v)&&reason(v)&&(typeof v.matched==='boolean'||v.matched===null)
+  const incomplete=()=>new Error('预览回执缺少完整匹配过程，当前输入已保留。请重新核对。')
+  if(!response||response.dtoVersion!==2||response.previewOnly!==true||!Array.isArray(response.rows)||response.rows.length!==1)throw incomplete()
+  const row=response.rows[0]!
+  if(!row||typeof row.rawModelId!=='string'||typeof row.matchingView!=='string'||typeof row.familyMatched!=='boolean'||!reason(row)||!record(row.family)||!reason(row.family)||typeof row.family.matched!=='boolean'||!Array.isArray(row.conditions))throw incomplete()
+  if(row.conditions.length!==input.content.conditionOverrides.length)throw incomplete()
+  for(const [index,condition] of row.conditions.entries()){
+    const expected=input.content.conditionOverrides[index]!
+    if(!condition||condition.conditionId!==expected.id||!step(condition)||typeof condition.applicable!=='boolean'||typeof condition.applied!=='boolean'||!Array.isArray(condition.preconditions)||!Array.isArray(condition.atoms)||condition.atoms.length!==expected.selector.all.length)throw incomplete()
+    const expectedPreconditions=expected.selector.layoutId?['layout','literal_tail']:[]
+    if(condition.preconditions.length!==expectedPreconditions.length||condition.preconditions.some((p,at)=>!p||!step(p)||p.kind!==expectedPreconditions[at]))throw incomplete()
+    if(condition.atoms.some((a,at)=>!a||!step(a)||a.index!==at||a.kind!==expected.selector.all[at]!.kind))throw incomplete()
+  }
+  return {rawModelId:row.rawModelId,matchingView:row.matchingView,matched:row.familyMatched,family:row.family,reasonCode:row.reasonCode,reason:row.reason,conditions:row.conditions,effective:null,configuration:{rules:row.rules,protocol:row.protocol,fieldOrigins:row.fieldOrigins},issues:[]}
+}
 export type TemporaryDiscoveryKind = 'compatible_models'|'anthropic_models'|'google_models'|'ollama_models'
 export interface ChannelConnectionEditIntentV2 {
   channelId:string;kind:'create'|'edit_connection';label:string
