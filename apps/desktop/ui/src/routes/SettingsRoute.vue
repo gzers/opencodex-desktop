@@ -16,6 +16,8 @@ import { useRuntimeStore } from '@/features/runtime/store'
 import { useRouteStore } from '@/stores/routes'
 import UiSegmented from '@/components/ui/UiSegmented.vue'
 import AgentExecutionField from '@/features/models/AgentExecutionField.vue'
+import RuntimeRecoveryEntry from '@/features/runtime/RuntimeRecoveryEntry.vue'
+import RuntimeRecoveryHost from '@/features/runtime/RuntimeRecoveryHost.vue'
 import { settingsSections } from '@/navigation'
 import { checkNetworkProxy, type PreferencesDto } from '@/features/preferences/api'
 import { getCodexShimStatus, setCodexShim, type CodexShimDto } from '@/features/codex-shim/api'
@@ -859,6 +861,7 @@ function restoreGeneralDefaults() {
 </script>
 
 <template>
+  <RuntimeRecoveryHost :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" />
   <UpdateCenter ref="updateCenter" v-model:open="updateOpen" :target="updateTarget" />
   <section class="route-section active">
     <AppTopbar />
@@ -937,7 +940,7 @@ function restoreGeneralDefaults() {
           <dt>包 / 清单 / 来源</dt><dd v-if="dataRoots.paths">{{ dataRoots.paths.program.packageVersion ?? '未记录' }} / {{ dataRoots.paths.program.manifestVersion ?? '未记录' }} / {{ dataRoots.paths.program.sourceVersion ?? '未记录' }}</dd><dd v-else>尚未读取</dd>
           <dt>程序有效性</dt><dd data-testid="program-validity">{{ programValidity }}</dd>
         </dl>
-        <div class="runtime-actions"><UiButton class="btn primary" data-testid="runtime-install" :disabled="protectionBlocked || restartPending" @click="openInstallModal('registry')">诊断与恢复安装</UiButton><UiButton class="btn ghost" data-testid="paths-refresh" @click="refreshPaths">刷新位置</UiButton></div>
+        <div class="runtime-actions"><UiButton class="btn primary" data-testid="runtime-install" :disabled="protectionBlocked || restartPending" @click="openInstallModal('registry')">安装程序</UiButton><RuntimeRecoveryEntry :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" /><UiButton class="btn ghost" data-testid="paths-refresh" @click="refreshPaths">刷新位置</UiButton></div>
         <div v-if="protectionBlocked || runtimeProtection.protectionLoading || runtimeProtection.protectionFeedback" class="setting-row" data-testid="runtime-protection" :aria-busy="runtimeProtection.protectionLoading || runtimeProtection.protectionRetrying">
           <div>
             <div class="setting-title">面板更新保护核对</div>
