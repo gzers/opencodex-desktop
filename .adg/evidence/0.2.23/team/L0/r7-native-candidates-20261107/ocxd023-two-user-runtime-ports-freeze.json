@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "status": "source-frozen-static-pass-windows-native-pending",
+  "atUtc": "2026-11-06T19:27:50.044273+00:00",
+  "baseHead": "62d698b2c9016970759f5f8283aee902c49f923e",
+  "files": [
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows023-two-user-native.ps1",
+      "sha256": "659575ade487d7871c420ebe06fca7427c503103cb715cf1b4fb1e09c096a839",
+      "bytes": 19266
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows023-two-user-native-helper.ps1",
+      "sha256": "314151de8e28c2ad660c2abda4f1c169274d93fe9b6ad1679b4b769694a93cf9",
+      "bytes": 55613
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows023-two-user-native.test.ps1",
+      "sha256": "e4f9902970beb53b24cf64c2285516262d9ff9f9789f37986871bc51f0aec054",
+      "bytes": 17513
+    }
+  ],
+  "checksPassed": 92,
+  "staticReceipt": "/tmp/ocxd023-two-user-ports-static-frozen/static-tests.json",
+  "staticLog": "/tmp/ocxd023-two-user-ports-static-frozen.log",
+  "nativeExecuted": false,
+  "fullVersionGatePassed": false,
+  "parameters": [
+    "Executable",
+    "Node",
+    "OutputDirectory",
+    "ExpectedCommit",
+    "VerifyRuntimePorts (switch, ASCII, default false)"
+  ],
+  "nativeCommand": "pwsh -NoLogo -NoProfile -File test/smoke/windows023-two-user-native.ps1 -Executable \"<actual staged Desktop.exe>\" -Node \"<source-pinned actual node.exe>\" -OutputDirectory \"$env:RUNNER_TEMP/ocxd023-two-user-ports-<unique>\" -ExpectedCommit \"<full lowercase 40-character candidate source SHA>\" -VerifyRuntimePorts",
+  "conditions": [
+    "ephemeral Windows Actions runner only; guard before provisioning and in child",
+    "own Profile/.codex-desktop/opencodex/home, no runner business writes",
+    "public process_action confirm=true, genuine installed managed runtime only",
+    "A start; B conflict on A port rejected with public diagnostic; A original generation unchanged",
+    "B starts free distinct loopback port; two distinct native SIDs and own H; live identity/listener and production attestation overlap >=6s",
+    "B same-manager stop leaves exact original A healthy; A stop; per-account terminal proof",
+    "fullVersionGatePassed only after explicit flag + all above facts + exact owned cleanup and source/ACL readback"
+  ],
+  "unverified": [
+    "No Windows service or account was started on Mac; candidate workflow must execute real port protocol.",
+    "Synthetic DPAPI remains an OS sub-scope check; never substitutes for runtime-port proof."
+  ],
+  "priorLogsRetained": true,
+  "scope": "only three windows023-two-user-native scripts",
+  "commit": "8bad37615c07aed9a453aceed05144fbce7212fb"
+}

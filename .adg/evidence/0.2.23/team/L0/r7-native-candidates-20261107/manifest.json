@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "source": "4f087eaeab7e5c8fbb8a00805e904efb7131f4ac",
+  "facts": {
+    "twoUserScripts": "8bad37615c07aed9a453aceed05144fbce7212fb; 92 static and pure fixture checks passed; native not yet executed",
+    "workflow": "48b3070b2 passes VerifyRuntimePorts and requires actual fullVersionGatePassed; 4f087eaea extends build-job envelope only, production start/stop deadlines unchanged",
+    "candidate4": {
+      "run": 42280143310,
+      "source": "48b3070b2f2885b3fea4c0decaef27ac78738867",
+      "stateAtCollection": "in_progress",
+      "notFinalSource": true
+    },
+    "releaseTools": {
+      "passed": 38,
+      "failed": 0
+    },
+    "macNative": {
+      "source": "07ed8b21b193e09453a1d9a9a049da659679a91e",
+      "releaseProfile": true,
+      "signedBundleVerification": "pass, ad-hoc signature; no notarization",
+      "actualIsolatedStartup": "pass",
+      "screenLocked": true,
+      "visualAcceptance": "pending",
+      "ownedProcessesStopped": true,
+      "sandboxRootRemoved": true
+    }
+  },
+  "files": [
+    {
+      "source": "/tmp/ocxd023-two-user-runtime-ports-freeze.json",
+      "file": "ocxd023-two-user-runtime-ports-freeze.json",
+      "bytes": 2769,
+      "sha256": "306e739a6bc426e0b64d5e56cab6b006710affd4f3a465cbb786fef8dbd38718"
+    },
+    {
+      "source": "/tmp/ocxd023-two-user-ports-static-frozen/static-tests.json",
+      "file": "static-tests.json",
+      "bytes": 9996,
+      "sha256": "aa8d89c67650cda0ebca942b1c43950f37757ca76acbf1f6c498bbaf49fc9f8c"
+    },
+    {
+      "source": "/tmp/ocxd023-two-user-ports-static-frozen.log",
+      "file": "ocxd023-two-user-ports-static-frozen.log",
+      "bytes": 10028,
+      "sha256": "fd154c9075ebe20c0d80d7a43f976119709f32690054b7311424fe9c9daec471"
+    },
+    {
+      "source": "/tmp/ocxd023-two-user-ports-main-review.log",
+      "file": "ocxd023-two-user-ports-main-review.log",
+      "bytes": 10028,
+      "sha256": "61e02a97b68fdcd2978e9a4287f1bc5462c2921e19b6772261c358ad5c180cb7"
+    },
+    {
+      "source": "/tmp/ocxd023-release-facts-tools-tests.log",
+      "file": "ocxd023-release-facts-tools-tests.log",
+      "bytes": 137,
+      "sha256": "7a0cfd52265d9c1d81759447c1342eeec3feb8ce04036e39c2e444b5dd1c69c3"
+    },
+    {
+      "source": "/tmp/ocxd023-mac-integrated-result-owner-build.log",
+      "file": "ocxd023-mac-integrated-result-owner-build.log",
+      "bytes": 7278,
+      "sha256": "763bf5dd724e87085973870dc5ad442dbbf33240dc122d4c94663793e7cb8838"
+    },
+    {
+      "source": "/tmp/ocxd023-mac-integrated-release-seal.json",
+      "file": "ocxd023-mac-integrated-release-seal.json",
+      "bytes": 647,
+      "sha256": "2c56bcd00173b274be49651f03573bd5b8b21c34bff0c2bc2eacfadb9d56f125"
+    },
+    {
+      "source": "/tmp/ocxd023-native-release-bootstrap-evidence/app.log",
+      "file": "native-app.log",
+      "bytes": 106,
+      "sha256": "16aeddfb0f6f9ed21fa3db398c08f34f78d2ebe8ee2418d49255f96717db6779"
+    },
+    {
+      "source": "/tmp/ocxd023-native-release-bootstrap-evidence/ax-compile.log",
+      "file": "native-ax-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/tmp/ocxd023-native-release-bootstrap-evidence/capwin-compile.log",
+      "file": "native-capwin-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/tmp/ocxd023-native-release-bootstrap-evidence/network-denial.log",
+      "file": "native-network-denial.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "source": "/tmp/ocxd023-native-release-bootstrap-evidence/report.json",
+      "file": "native-report.json",
+      "bytes": 1194,
+      "sha256": "c38b8353dae4a3624302cfb276db39926132e5329d6e20d118954a788beb0570"
+    },
+    {
+      "source": "/tmp/ocxd023-native-release-bootstrap-evidence/stdout.log",
+      "file": "native-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "notClaimed": [
+    "Windows native services/ports",
+    "final-source installer or adjacent upgrade",
+    "Mac visual acceptance",
+    "scope-deletion semantics",
+    "release publication"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "kind": "isolated release-profile native bootstrap, visual acceptance separate",
+  "app": "/private/tmp/ocxd023-native-release-jn2iqir2/OpenCodeX Desktop.app",
+  "root": "/private/tmp/ocxd023-native-startup-hiugsbq0",
+  "version": "0.2.23",
+  "checks": [
+    "actual native process stayed alive through startup metadata",
+    "actual sandbox U/data desktop and opencodex/home split with fixed v2 pointer"
+  ],
+  "permissions": {
+    "axTrusted": true,
+    "locked": true,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "visualChecks": "deferred: screen locked; bootstrap validation only",
+  "pid": 89842,
+  "pointer": {
+    "schemaVersion": 1,
+    "activeRoot": "/private/tmp/ocxd023-native-startup-hiugsbq0/data"
+  },
+  "metadata": {
+    "structure_version": "2",
+    "opencodex_home_mode": "inside"
+  },
+  "startupEvent": "2026-11-06T19:29:40.155Z [manager] startup version=0.2.23 commit=07ed8b21b193e09453a1d9a9a049da659679a91e",
+  "result": "pass",
+  "ownedExit": -15,
+  "binarySha256": "764800b4e9e0488a2244bf3b90a9d118769eee72e3688a8688ba5e38a2997f9b",
+  "cleanup": "task-owned subprocess exited; sandbox evidence root removed after recording"
+}
