@@ -19,6 +19,11 @@ struct Remote {
     before_put: Mutex<Option<(String, Vec<u8>)>>,
     commit_barrier: Mutex<Option<Arc<tokio::sync::Barrier>>>,
     generation_barrier: Mutex<Option<Arc<tokio::sync::Barrier>>>,
+    lose_payload_response: std::sync::atomic::AtomicBool,
+    fail_list: Mutex<Option<TransportKind>>,
+    list_delay_ms: AtomicUsize,
+    get_delay_ms: AtomicUsize,
+    vanish_unknown: std::sync::atomic::AtomicBool,
 }
 fn terr(kind: TransportKind) -> SyncTransportError {
     SyncTransportError {
@@ -34,7 +39,26 @@ impl ConfigSyncTransport for Remote {
         _: &ConnectionHandle,
         _: ListLimits,
     ) -> Result<ChildListing, SyncTransportError> {
-        let files = self.files.lock().unwrap();
+        if let Some(kind) = self.fail_list.lock().unwrap().take() {
+            return Err(terr(kind));
+        }
+        tokio::time::sleep(Duration::from_millis(
+            self.list_delay_ms.load(Ordering::SeqCst) as u64,
+        ))
+        .await;
+        let mut files = self.files.lock().unwrap();
+        if self.vanish_unknown.swap(false, Ordering::SeqCst) {
+            files.remove("unknown-business.json");
+            return Ok(ChildListing {
+                entries: vec![ChildEntry {
+                    name: "unknown-business.json".into(),
+                    is_collection: false,
+                    content_length: Some(4),
+                }],
+                http_status: 207,
+                response_bytes: 100,
+            });
+        }
         let hide = self.hide.lock().unwrap();
         Ok(ChildListing {
             entries: files
@@ -57,6 +81,10 @@ impl ConfigSyncTransport for Remote {
         _: ReadLimits,
     ) -> Result<FileRead, SyncTransportError> {
         self.reads.fetch_add(1, Ordering::SeqCst);
+        tokio::time::sleep(Duration::from_millis(
+            self.get_delay_ms.load(Ordering::SeqCst) as u64,
+        ))
+        .await;
         self.files
             .lock()
             .unwrap()
@@ -96,6 +124,11 @@ impl ConfigSyncTransport for Remote {
             .lock()
             .unwrap()
             .insert(path.as_str().into(), body.to_vec());
+        if path.as_str().contains("-data-")
+            && self.lose_payload_response.swap(false, Ordering::SeqCst)
+        {
+            return Err(terr(TransportKind::Timeout));
+        }
         if path.as_str().contains("-commit-")
             && self.lose_commit_response.swap(false, Ordering::SeqCst)
         {
@@ -1067,4 +1100,423 @@ async fn changed_payload_is_not_confirmed_and_original_id_is_never_overwritten()
         ErrorCode::SyncOperationCollision
     );
     assert_eq!(before, e.remote.writes.load(Ordering::SeqCst));
+}
+#[tokio::test]
+async fn whole_publish_deadline_is_not_reset_by_repeated_observations() {
+    let e = Env::new();
+    let p = e.plan().await;
+    e.remote.list_delay_ms.store(12, Ordering::SeqCst);
+    e.remote.get_delay_ms.store(3, Ordering::SeqCst);
+    let mut cx = e.cx();
+    cx.budgets.observation_ms = 85;
+    assert!(cx
+        .publish_upload(ConfirmUploadRequest {
+            operation_id: p.operation_id.clone(),
+            plan_digest: p.plan_digest
+        })
+        .await
+        .is_err());
+    let j = e.store.journal(&p.operation_id).unwrap();
+    assert!(j.fact.failure.is_some());
+    assert_ne!(j.fact.storage_status, StorageStatus::Stored);
+    // The failure, rather than a completed publication, proves later observe
+    // calls did not each obtain a fresh full command deadline.
+}
+#[tokio::test]
+async fn whole_prepare_download_deadline_is_shared_between_read_and_recheck() {
+    let e = Env::new();
+    e.upload().await;
+    let o = e
+        .cx()
+        .observe_remote(ObserveRequest {
+            connection_id: "synthetic".into(),
+        })
+        .await
+        .unwrap();
+    e.remote.list_delay_ms.store(30, Ordering::SeqCst);
+    e.remote.get_delay_ms.store(15, Ordering::SeqCst);
+    let mut cx = e.cx();
+    cx.budgets.observation_ms = 210;
+    let err = cx
+        .prepare_download(PrepareDownloadRequest {
+            connection_id: "synthetic".into(),
+            generation: o.generation.unwrap(),
+            head: o.heads[0].clone(),
+            expected_view_digest: o.view_digest,
+            scope_digest: digest(b"scope"),
+            backup_before_update: true,
+        })
+        .await
+        .unwrap_err();
+    assert_eq!(err.cause, Some(Cause::Timeout));
+}
+#[tokio::test]
+async fn whole_verify_deadline_preserves_historical_stored_evidence() {
+    let e = Env::new();
+    let f = e.upload().await;
+    let stored_at = f.stored_at.clone();
+    let before = e.remote.writes.load(Ordering::SeqCst);
+    e.remote.list_delay_ms.store(15, Ordering::SeqCst);
+    e.remote.get_delay_ms.store(15, Ordering::SeqCst);
+    let mut cx = e.cx();
+    cx.budgets.observation_ms = 90;
+    assert!(cx
+        .verify_original_upload(OperationRequest {
+            operation_id: f.operation_id.clone()
+        })
+        .await
+        .is_err());
+    let original = e.store.journal(&f.operation_id).unwrap();
+    assert_eq!(original.fact.storage_status, StorageStatus::Stored);
+    assert_eq!(original.fact.stored_at, stored_at);
+    assert_eq!(e.remote.writes.load(Ordering::SeqCst), before);
+}
+#[tokio::test]
+async fn unknown_business_name_seen_in_listing_union_is_never_empty() {
+    let e = Env::new();
+    e.remote
+        .files
+        .lock()
+        .unwrap()
+        .insert("unknown-business.json".into(), b"data".to_vec());
+    e.remote.vanish_unknown.store(true, Ordering::SeqCst);
+    let o = e
+        .cx()
+        .observe_remote(ObserveRequest {
+            connection_id: "synthetic".into(),
+        })
+        .await
+        .unwrap();
+    assert_eq!(o.state, RemoteState::Invalid);
+    assert_eq!(e.remote.writes.load(Ordering::SeqCst), 0);
+}
+#[tokio::test]
+async fn seen_root_commit_identity_cannot_be_silently_replaced() {
+    let e = Env::new();
+    let g = seed_generation(&e.remote);
+    let head = seed_commit(&e.remote, &g, vec![], b"original");
+    e.cx()
+        .observe_remote(ObserveRequest {
+            connection_id: "synthetic".into(),
+        })
+        .await
+        .unwrap();
+    let path = SyncRelativePath::commit(&g.generation_id, &head.operation_id).unwrap();
+    let mut c: Commit =
+        store::decode(e.remote.files.lock().unwrap().get(path.as_str()).unwrap()).unwrap();
+    c.payload_digest = digest(b"external replacement");
+    e.remote
+        .files
+        .lock()
+        .unwrap()
+        .insert(path.as_str().into(), canonical(&c).unwrap());
+    let o = e
+        .cx()
+        .observe_remote(ObserveRequest {
+            connection_id: "synthetic".into(),
+        })
+        .await
+        .unwrap();
+    assert_eq!(o.state, RemoteState::Invalid);
+    assert!(o
+        .problems
+        .iter()
+        .any(|p| p.code == ErrorCode::SyncOperationCollision));
+}
+#[tokio::test]
+async fn resume_cannot_write_through_changed_connection_or_root_revision() {
+    struct DifferentRoot<'a>(&'a Local);
+    impl LocalApplication for DifferentRoot<'_> {
+        fn root_revision(&self) -> SyncResult<Digest> {
+            Ok(digest(b"new root"))
+        }
+        fn current_source(&self) -> SyncResult<SourceGuard> {
+            self.0.current_source()
+        }
+        fn target_digest(&self, s: &str) -> SyncResult<Digest> {
+            self.0.target_digest(s)
+        }
+        fn apply_once(
+            &self,
+            _: &str,
+            _: &[u8],
+            _: &PayloadSchemaRef,
+            _: &str,
+            _: &str,
+            _: bool,
+        ) -> SyncResult<()> {
+            unreachable!()
+        }
+        fn export_once(
+            &self,
+            _: &str,
+            _: &[u8],
+            _: &PayloadSchemaRef,
+            _: &str,
+        ) -> SyncResult<Uuid> {
+            unreachable!()
+        }
+    }
+    let e = Env::new();
+    let p = e.plan().await;
+    e.remote
+        .lose_generation_response
+        .store(true, Ordering::SeqCst);
+    assert!(e
+        .cx()
+        .publish_upload(ConfirmUploadRequest {
+            operation_id: p.operation_id.clone(),
+            plan_digest: p.plan_digest.clone()
+        })
+        .await
+        .is_err());
+    let o = e
+        .cx()
+        .observe_remote(ObserveRequest {
+            connection_id: "synthetic".into(),
+        })
+        .await
+        .unwrap();
+    let before = e.remote.writes.load(Ordering::SeqCst);
+    let mut changed = connection();
+    changed.revision = digest(b"changed credential configuration");
+    let mut cx = SyncContext::new(&e.store, &e.remote, &e.codec, &e.local, changed).unwrap();
+    cx.budgets.get_attempts = 1;
+    let req = ResumeUploadRequest {
+        operation_id: p.operation_id.clone(),
+        plan_digest: p.plan_digest.clone(),
+        expected_view_digest: o.view_digest,
+    };
+    assert_eq!(
+        cx.resume_original_upload(req.clone())
+            .await
+            .unwrap_err()
+            .code,
+        ErrorCode::SyncEndpointChanged
+    );
+    let root = DifferentRoot(&e.local);
+    let mut cx = SyncContext::new(&e.store, &e.remote, &e.codec, &root, connection()).unwrap();
+    cx.budgets.get_attempts = 1;
+    assert_eq!(
+        cx.resume_original_upload(req).await.unwrap_err().code,
+        ErrorCode::SyncPlanChanged
+    );
+    assert_eq!(before, e.remote.writes.load(Ordering::SeqCst));
+}
+#[tokio::test]
+async fn corrupt_aggregate_state_does_not_erase_previous_receipt_or_accept_new_baseline() {
+    let e = Env::new();
+    let f = e.upload().await;
+    let binding = connection().binding_id;
+    std::fs::write(
+        e.dir.path().join(format!("{}.seen.json", &binding[7..])),
+        b"{malformed",
+    )
+    .unwrap();
+    let before = e.remote.writes.load(Ordering::SeqCst);
+    assert_eq!(
+        e.cx()
+            .observe_remote(ObserveRequest {
+                connection_id: "synthetic".into()
+            })
+            .await
+            .unwrap_err()
+            .code,
+        ErrorCode::SyncJournalInvalid
+    );
+    let verified = e
+        .cx()
+        .verify_original_upload(OperationRequest {
+            operation_id: f.operation_id,
+        })
+        .await
+        .unwrap();
+    assert_eq!(verified.storage_status, StorageStatus::Stored);
+    assert!(verified.failure.is_some());
+    assert_eq!(before, e.remote.writes.load(Ordering::SeqCst));
+}
+#[tokio::test]
+async fn lost_payload_response_resumes_same_id_without_reuploading_frozen_bytes() {
+    let e = Env::new();
+    let p = e.plan().await;
+    e.remote.lose_payload_response.store(true, Ordering::SeqCst);
+    let cx = e.cx();
+    assert!(cx
+        .publish_upload(ConfirmUploadRequest {
+            operation_id: p.operation_id.clone(),
+            plan_digest: p.plan_digest.clone()
+        })
+        .await
+        .is_err());
+    assert_eq!(
+        e.store
+            .journal(&p.operation_id)
+            .unwrap()
+            .fact
+            .last_write_step,
+        WriteStep::Payload
+    );
+    let before = e.remote.writes.load(Ordering::SeqCst);
+    let o = cx
+        .observe_remote(ObserveRequest {
+            connection_id: "synthetic".into(),
+        })
+        .await
+        .unwrap();
+    let result = cx
+        .resume_original_upload(ResumeUploadRequest {
+            operation_id: p.operation_id.clone(),
+            plan_digest: p.plan_digest,
+            expected_view_digest: o.view_digest,
+        })
+        .await
+        .unwrap();
+    assert_eq!(result.operation_id, p.operation_id);
+    assert_eq!(result.storage_status, StorageStatus::Stored);
+    assert_eq!(before + 1, e.remote.writes.load(Ordering::SeqCst));
+}
+#[tokio::test]
+async fn original_verification_distinguishes_descendant_and_local_later_save() {
+    let e = Env::new();
+    let original = e.upload().await;
+    let g = original.generation.clone().unwrap();
+    seed_commit(
+        &e.remote,
+        &g,
+        vec![original.commit.clone().unwrap()],
+        b"successor",
+    );
+    e.local.source.lock().unwrap().saved_source_digest = digest(b"new local save");
+    let before = e.remote.writes.load(Ordering::SeqCst);
+    let cx = e.cx();
+    let verified = cx
+        .verify_original_upload(OperationRequest {
+            operation_id: original.operation_id.clone(),
+        })
+        .await
+        .unwrap();
+    assert_eq!(verified.storage_status, StorageStatus::Stored);
+    assert_eq!(verified.relation.remote, RemoteRelation::Descendant);
+    assert_eq!(verified.relation.local, LocalRelation::NotCompared);
+    let relation = cx
+        .assess_current_relation(OperationRequest {
+            operation_id: original.operation_id,
+        })
+        .unwrap();
+    assert_eq!(relation.local, LocalRelation::Changed);
+    assert_eq!(relation.remote, RemoteRelation::Descendant);
+    assert_eq!(before, e.remote.writes.load(Ordering::SeqCst));
+}
+#[tokio::test]
+async fn authentication_failure_is_not_empty_or_an_unbound_original_verify_action() {
+    let e = Env::new();
+    *e.remote.fail_list.lock().unwrap() = Some(TransportKind::Unauthorized);
+    let err = e
+        .cx()
+        .observe_remote(ObserveRequest {
+            connection_id: "synthetic".into(),
+        })
+        .await
+        .unwrap_err();
+    assert_eq!(err.code, ErrorCode::SyncAuthRequired);
+    assert_eq!(err.cause, Some(Cause::Unauthorized));
+    *e.remote.fail_list.lock().unwrap() = Some(TransportKind::Timeout);
+    let err = e
+        .cx()
+        .prepare_upload(PrepareUploadRequest {
+            connection_id: "synthetic".into(),
+            expected_view_digest: digest(b"unknown"),
+            source_guard: e.local.current_source().unwrap(),
+            initialize_on_confirm: true,
+        })
+        .await
+        .unwrap_err();
+    assert_eq!(err.code, ErrorCode::SyncNetwork);
+    assert!(!err.recovery_actions.iter().any(|a| matches!(
+        a.kind,
+        RecoveryKind::VerifyOriginalUpload | RecoveryKind::ResumeOriginalUpload
+    )));
+    assert_eq!(e.remote.writes.load(Ordering::SeqCst), 0);
+}
+#[tokio::test]
+async fn corrupted_metadata_with_duplicate_fields_never_admits_a_root() {
+    let e = Env::new();
+    let g = new_id();
+    let json = format!(
+        r#"{{"format":"OCXD_CONFIG_GENERATION","formatVersion":1,"generationId":"{g}","generationId":"{g}"}}"#
+    );
+    e.remote.files.lock().unwrap().insert(
+        SyncRelativePath::generation(&g).unwrap().as_str().into(),
+        json.into_bytes(),
+    );
+    let o = e
+        .cx()
+        .observe_remote(ObserveRequest {
+            connection_id: "synthetic".into(),
+        })
+        .await
+        .unwrap();
+    assert_eq!(o.state, RemoteState::Invalid);
+    assert_eq!(e.remote.writes.load(Ordering::SeqCst), 0);
+}
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+async fn concurrent_conflict_resolutions_form_two_new_heads_and_keep_original_branches() {
+    let e = Env::new();
+    let g = seed_generation(&e.remote);
+    let a = seed_commit(&e.remote, &g, vec![], b"choice A");
+    let b = seed_commit(&e.remote, &g, vec![], b"choice B");
+    let original = e.remote.files.lock().unwrap().clone();
+    let temp = tempfile::tempdir().unwrap();
+    let store = Store::open(temp.path()).unwrap();
+    let codec = Codec::new();
+    let local = Local::new();
+    let first = e.cx();
+    let mut second = SyncContext::new(&store, &e.remote, &codec, &local, connection()).unwrap();
+    second.budgets.get_attempts = 1;
+    let o = first
+        .observe_remote(ObserveRequest {
+            connection_id: "synthetic".into(),
+        })
+        .await
+        .unwrap();
+    let make = |head| PrepareResolutionRequest {
+        connection_id: "synthetic".into(),
+        generation: g.clone(),
+        heads: o.heads.clone(),
+        expected_view_digest: o.view_digest.clone(),
+        source_guard: e.local.current_source().unwrap(),
+        resolution: Resolution {
+            selection_mode: SelectionMode::Head,
+            selected_head: Some(head),
+            scope_digest: digest(b"scope"),
+            preview_digest: digest(b"preview both"),
+        },
+    };
+    let p1 = first.prepare_resolution(make(a.clone())).await.unwrap();
+    let p2 = second.prepare_resolution(make(b.clone())).await.unwrap();
+    *e.remote.commit_barrier.lock().unwrap() = Some(Arc::new(tokio::sync::Barrier::new(2)));
+    let (left, right) = tokio::join!(
+        first.publish_upload(ConfirmUploadRequest {
+            operation_id: p1.operation_id.clone(),
+            plan_digest: p1.plan_digest
+        }),
+        second.publish_upload(ConfirmUploadRequest {
+            operation_id: p2.operation_id.clone(),
+            plan_digest: p2.plan_digest
+        })
+    );
+    assert_eq!(left.unwrap().storage_status, StorageStatus::Stored);
+    assert_eq!(right.unwrap().storage_status, StorageStatus::Stored);
+    let o = first
+        .observe_remote(ObserveRequest {
+            connection_id: "synthetic".into(),
+        })
+        .await
+        .unwrap();
+    assert_eq!(o.state, RemoteState::Conflict);
+    assert_eq!(o.heads.len(), 2);
+    assert!(!o.heads.contains(&a) && !o.heads.contains(&b));
+    for (name, bytes) in original {
+        assert_eq!(e.remote.files.lock().unwrap().get(&name), Some(&bytes));
+    }
 }

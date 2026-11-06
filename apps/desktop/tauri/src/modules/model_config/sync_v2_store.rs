@@ -8,7 +8,7 @@ use serde::{
 use serde_json::Value;
 use sha2::{Digest as _, Sha256};
 use std::{
-    collections::BTreeSet,
+    collections::{BTreeMap, BTreeSet},
     fmt,
     fs::{self, File, OpenOptions},
     io::{Read, Write},
@@ -116,6 +116,8 @@ struct Record<T> {
 pub struct Seen {
     pub generations: Vec<GenerationRef>,
     pub names: BTreeSet<String>,
+    #[serde(default)]
+    pub commits: BTreeMap<String, Digest>,
 }
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -310,6 +312,35 @@ impl Store {
             || j.plan.operation_id != id
             || j.fact.operation_id != id
             || plan_digest(&j.plan)? != j.plan.plan_digest
+            || j.journal_version != 1
+            || j.plan.dto_version != 1
+            || j.fact.dto_version != 1
+            || j.fact.payload_digest != j.plan.payload_digest
+            || j.fact.kind != OperationKind::Upload
+            || j.fact.local_apply_status != LocalApplyStatus::NotApplicable
+            || j.previous_failures.len() > 64
+            || (j.plan.initialization == Initialization::OnConfirm
+                && (j.plan.generation.is_some() || !j.plan.parents.is_empty()))
+            || (j.plan.initialization == Initialization::None
+                && j.plan.generation != j.fact.generation)
+        {
+            return Err(failure(ErrorCode::SyncJournalInvalid, Step::Persist));
+        }
+        require_uuid(&j.payload_handle)?;
+        require_digest(&j.root_revision)?;
+        require_digest(&j.connection_revision)?;
+        require_guard(&j.plan.source_guard)?;
+        if j.fact.last_write_step != WriteStep::None
+            && (j.generation_bytes_utf8.is_none() || j.commit_bytes_utf8.is_none())
+        {
+            return Err(failure(ErrorCode::SyncJournalInvalid, Step::Persist));
+        }
+        if j.fact.phase == Phase::CancelledBeforeWrite && j.fact.last_write_step != WriteStep::None
+        {
+            return Err(failure(ErrorCode::SyncJournalInvalid, Step::Persist));
+        }
+        if j.fact.storage_status == StorageStatus::Stored
+            && (j.fact.commit.is_none() || j.fact.stored_at.is_none())
         {
             return Err(failure(ErrorCode::SyncJournalInvalid, Step::Persist));
         }
@@ -330,8 +361,24 @@ impl Store {
         }
         if let Some(ref bytes) = j.commit_bytes_utf8 {
             let c: Commit = decode(bytes.as_bytes())?;
+            let generation = j
+                .fact
+                .generation
+                .as_ref()
+                .ok_or_else(|| failure(ErrorCode::SyncJournalInvalid, Step::Persist))?;
+            super::graph::validate_commit(&c, &generation.generation_id, id, &Budgets::default())?;
             if c.operation_id != id
                 || c.payload_digest != j.plan.payload_digest
+                || c.payload_bytes != j.plan.payload_bytes
+                || c.parents != j.plan.parents
+                || c.payload_schema != j.plan.payload_schema
+                || c.intent != j.plan.intent
+                || c.resolution != j.plan.resolution
+                || j.fact.commit.as_ref()
+                    != Some(&CommitRef {
+                        operation_id: id.into(),
+                        digest: digest(bytes.as_bytes()),
+                    })
                 || execution_digest(&j, &c)? != j.execution_digest.clone().unwrap_or_default()
             {
                 return Err(failure(ErrorCode::SyncJournalInvalid, Step::Persist));
