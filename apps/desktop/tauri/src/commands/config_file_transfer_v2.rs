@@ -73,16 +73,22 @@ pub async fn prepare_draft_config_file_export_v2(
     expected: ReadBaseV2,
     request: CaptureRequestV2,
     passphrase: Option<String>,
+    edits: Option<Vec<crate::modules::model_config::source_v2::ModelEditV2>>,
+    channel_intents: Option<Vec<crate::modules::model_config::config_file::v2::ChannelIntentV2>>,
     owner: tauri::State<'_, SharedConfigFileTransferV2>,
 ) -> ModelResult<ExportPlanV2> {
     let passphrase = passphrase.map(Zeroizing::new);
     work(owner.inner().clone(), move |owner| {
-        owner.prepare_draft_export(
+        owner.prepare_draft_export_with_intents(
             DraftExportRequestV2 {
                 expected,
                 capture: request,
             },
             passphrase,
+            crate::modules::model_config::file_transfer_v2::DraftFileIntentsV2 {
+                edits: edits.unwrap_or_default(),
+                channel_intents: channel_intents.unwrap_or_default(),
+            },
         )
     })
     .await
