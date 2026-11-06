@@ -1068,3 +1068,451 @@ fn restoring_existing_model_content_is_a_new_frozen_save_and_actual_capture_uplo
         Some(time)
     );
 }
+
+/// This transport has an immutable synthetic graph and rejects every PUT.
+/// It cannot contact a server or confirm the prepared download.
+struct AbsentPreviewRemote {
+    files: BTreeMap<String, Vec<u8>>,
+    reads: std::sync::atomic::AtomicUsize,
+    writes: std::sync::atomic::AtomicUsize,
+}
+#[async_trait::async_trait]
+impl ConfigSyncTransport for AbsentPreviewRemote {
+    async fn list_children(
+        &self,
+        _: &ConnectionHandle,
+        _: ListLimits,
+    ) -> std::result::Result<ChildListing, SyncTransportError> {
+        self.reads.fetch_add(1, Ordering::SeqCst);
+        Ok(ChildListing {
+            http_status: 207,
+            response_bytes: 100,
+            entries: self
+                .files
+                .iter()
+                .map(|(name, bytes)| ChildEntry {
+                    name: name.clone(),
+                    is_collection: false,
+                    content_length: Some(bytes.len() as u64),
+                })
+                .collect(),
+        })
+    }
+    async fn get_file(
+        &self,
+        _: &ConnectionHandle,
+        path: &SyncRelativePath,
+        _: ReadLimits,
+    ) -> std::result::Result<FileRead, SyncTransportError> {
+        self.reads.fetch_add(1, Ordering::SeqCst);
+        self.files
+            .get(path.as_str())
+            .map(|bytes| FileRead {
+                http_status: 200,
+                body: bytes.clone(),
+            })
+            .ok_or(SyncTransportError {
+                kind: TransportKind::NotFound,
+                http_status: Some(404),
+                delivery: Delivery::ResponseReceived,
+            })
+    }
+    async fn put_file(
+        &self,
+        _: &ConnectionHandle,
+        _: &SyncRelativePath,
+        _: &[u8],
+        _: WriteLimits,
+    ) -> std::result::Result<PutResponse, SyncTransportError> {
+        self.writes.fetch_add(1, Ordering::SeqCst);
+        panic!("read-only None restoration probe must not publish a remote file")
+    }
+}
+struct AbsentPreviewEndpointCredentials;
+impl crate::modules::model_config::sync_host_v2::EndpointCredentialsV2
+    for AbsentPreviewEndpointCredentials
+{
+    fn read_password(
+        &self,
+        _: &Path,
+        _: &crate::modules::sync::config::SyncEndpointConfig,
+    ) -> ModelResult<Zeroizing<String>> {
+        Ok(Zeroizing::new("synthetic-readonly-probe-password".into()))
+    }
+}
+fn absent_probe_tree(d: &Path, h: &Path) -> BTreeMap<String, String> {
+    let mut output = BTreeMap::new();
+    for (label, root) in [("D", d), ("H", h)] {
+        let mut state = BTreeMap::new();
+        tree(root, root, &mut state, &mut (64 * 1024 * 1024)).unwrap();
+        for (path, value) in state {
+            output.insert(
+                format!("{label}/{}", path.strip_prefix(root).unwrap().display()),
+                value,
+            );
+        }
+    }
+    output
+}
+async fn original_none_probe(group: &str) {
+    use crate::modules::model_config::{
+        content_versions, sync_host_v2 as host,
+        sync_service_v2::{self as service, ServiceBackendV2},
+        sync_v2::store,
+    };
+    use crate::modules::sync::config::*;
+    let f = Fixture::new();
+    // Actual source/receive material, with matching known Saved clocks for
+    // every portable atom. No timestamp is derived from a local mtime/header.
+    let mut parts = file_objects_v2::decode(
+        &f.payload,
+        None,
+        &file_objects_v2::supported_schema(),
+        Some(&ActualAuthorization),
+    )
+    .unwrap()
+    .objects
+    .into_captured();
+    parts.manager.webdav.clear();
+    let objects = SavedObjects::capture(parts, Some(&ActualAuthorization)).unwrap();
+    let atoms = file_objects_v2::save_state(&objects).unwrap();
+    let mut parts = objects.into_captured();
+    parts.content_versions = atoms
+        .into_iter()
+        .map(|(scope_key, content_digest)| content_versions::Version {
+            scope_key,
+            content_digest,
+            revision: 1,
+            saved_at: "2026-11-01T00:00:00Z".into(),
+            time_kind: content_versions::TimeKind::Saved,
+            trusted_floor: Some("2026-11-01T00:00:00Z".into()),
+            last_event: Some("77777777-7777-4777-8777-777777777777".into()),
+        })
+        .collect();
+    let cloud = SavedObjects::capture(parts, Some(&ActualAuthorization)).unwrap();
+    let cloud_atoms = file_objects_v2::save_state(&cloud).unwrap();
+    assert!(cloud_atoms.iter().all(|(key, content)| cloud
+        .partitions()
+        .content_versions
+        .iter()
+        .any(|v| &v.scope_key == key && &v.content_digest == content && v.instant().is_some())));
+    let credential_ref = "cred_aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+    let endpoint = SyncEndpointConfig {
+        endpoint_id: "default".into(),
+        url: "https://readonly-probe.invalid".into(),
+        remote_path: "fixture".into(),
+        username: "synthetic".into(),
+        credential_ref: CredentialRef {
+            ref_id: credential_ref.into(),
+            backend: "keychain".into(),
+            service_name: crate::infrastructure::keychain::keychain_service_name().into(),
+            account_key: crate::infrastructure::keychain::account_key(
+                crate::infrastructure::keychain::WEBDAV_CREDENTIAL_PURPOSE,
+                credential_ref,
+            )
+            .unwrap(),
+            purpose: crate::infrastructure::keychain::WEBDAV_CREDENTIAL_PURPOSE.into(),
+            created_at: "2026-11-01T00:00:00Z".into(),
+            updated_at: "2026-11-01T00:00:00Z".into(),
+        },
+        tls_policy: TLS_POLICY_VERIFY_REQUIRED.into(),
+        legacy_encryption: String::new(),
+        conflict_policy: CONFLICT_POLICY_ASK.into(),
+    };
+    SyncConfigStore::new(&f.d)
+        .save_config(&SyncConfig {
+            schema_version: 1,
+            endpoints: vec![endpoint.clone()],
+        })
+        .unwrap();
+    let resolver =
+        host::EndpointResolverV2::new(f.d.clone(), Arc::new(AbsentPreviewEndpointCredentials))
+            .unwrap();
+    let connection = resolver.resolve_active().unwrap().handle().clone();
+    let generation_id = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+    let cloud_operation_id = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
+    let encoded = file_objects_v2::encode(
+        &cloud,
+        cloud_operation_id,
+        "2026-11-01T00:00:00Z",
+        None,
+        Some(&ActualAuthorization),
+    )
+    .unwrap();
+    let generation = Generation {
+        format: "OCXD_CONFIG_GENERATION".into(),
+        format_version: 1,
+        generation_id: generation_id.into(),
+    };
+    let commit = Commit {
+        format: "OCXD_CONFIG_COMMIT".into(),
+        format_version: 1,
+        generation_id: generation_id.into(),
+        operation_id: cloud_operation_id.into(),
+        parents: vec![],
+        payload_digest: encoded.file_digest.clone(),
+        payload_bytes: encoded.bytes().len() as u64,
+        payload_schema: file_objects_v2::supported_schema(),
+        intent: Intent::Update,
+        resolution: None,
+    };
+    let commit_bytes = store::canonical(&commit).unwrap();
+    let material = PayloadInput {
+        head: CommitRef {
+            operation_id: cloud_operation_id.into(),
+            digest: store::digest(&commit_bytes),
+        },
+        bytes: encoded.bytes().to_vec(),
+    };
+    let remote = Arc::new(AbsentPreviewRemote {
+        files: BTreeMap::from([
+            (
+                SyncRelativePath::generation(generation_id)
+                    .unwrap()
+                    .as_str()
+                    .to_string(),
+                store::canonical(&generation).unwrap(),
+            ),
+            (
+                SyncRelativePath::data(generation_id, cloud_operation_id)
+                    .unwrap()
+                    .as_str()
+                    .to_string(),
+                encoded.bytes().to_vec(),
+            ),
+            (
+                SyncRelativePath::commit(generation_id, cloud_operation_id)
+                    .unwrap()
+                    .as_str()
+                    .to_string(),
+                commit_bytes,
+            ),
+        ]),
+        reads: Default::default(),
+        writes: Default::default(),
+    });
+    let scope = if group == "channels" {
+        SelectionV2 {
+            usage: UsageV2::RemoteSync,
+            channels: f.selection.channels.clone(),
+            template_refs: f.selection.template_refs.clone(),
+            ..Default::default()
+        }
+    } else {
+        SelectionV2 {
+            usage: UsageV2::RemoteSync,
+            manager: ManagerSelectionV2 {
+                extensions: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        }
+    };
+    let request = service::PreviewRequestV2 {
+        selection: scope.clone(),
+        mcp_clients: BTreeMap::new(),
+        assets_reviewed: false,
+        selected_head: None,
+        forced_direction: Some(service::ServiceDirectionV2::Download),
+        backup_before_update: true,
+    };
+    let backend = service::ProductionServiceBackendV2::new(
+        f.d.clone(),
+        f.h.clone(),
+        Arc::new(NeverCaptureSecrets),
+    )
+    .unwrap();
+    let composition = backend
+        .compose(&request, &connection, Some(&cloud), None)
+        .unwrap();
+    let initial_binding = composition
+        .provider
+        .target_binding(&composition.remote_scope)
+        .unwrap()
+        .unwrap();
+    let local_id = initial_binding
+        .slots
+        .first()
+        .map(|slot| slot.local_id.clone());
+    let source = composition.local.current_source().unwrap();
+    let target = composition
+        .local
+        .target_digest(&source.scope_digest)
+        .unwrap();
+    composition
+        .local
+        .apply_once(
+            OP,
+            encoded.bytes(),
+            &file_objects_v2::supported_schema(),
+            &source.scope_digest,
+            &target,
+            true,
+        )
+        .unwrap();
+    drop(composition);
+    let restored_path = if group == "channels" {
+        f.h.join("config.json")
+    } else {
+        f.d.join(crate::modules::extensions::projection::CONFIG_RELATIVE_PATH)
+    };
+    assert!(restored_path.exists());
+    let plan = preview(&f.d, &f.h, OP, &[group.to_string()]).unwrap();
+    let result = restore(&f.d, &f.h, &plan.restore_id, &plan.plan_digest).unwrap();
+    assert!(result.status == RestoreStatusV2::Applied);
+    assert!(!restored_path.exists());
+    let original: Record = read(&record_path(&f.d, OP).unwrap()).unwrap();
+    let business_before = original
+        .rows
+        .iter()
+        .map(|row| {
+            (
+                &row.address.path,
+                images::image(&row.address.anchor, &row.address.path).unwrap(),
+            )
+        })
+        .collect::<BTreeMap<_, _>>();
+    let before = absent_probe_tree(&f.d, &f.h);
+    let mut direct_scope = scope.clone();
+    if let Some(local_id) = &local_id {
+        direct_scope.channels[0].portable_channel_id = local_id.clone();
+    }
+    let capture_request = CaptureRequestV2 {
+        selection: direct_scope,
+        mcp_clients: BTreeMap::new(),
+        assets_reviewed: false,
+    };
+    let direct =
+        match saved_objects_capture_v2::capture(&f.d, &f.h, &capture_request, &NeverCaptureSecrets)
+        {
+            Ok(_) => "ok".to_string(),
+            Err(error) => error.code,
+        };
+    assert_eq!(
+        direct,
+        if group == "channels" {
+            "model_source_invalid"
+        } else {
+            "capture_source_invalid"
+        }
+    );
+    let mut automatic = request;
+    automatic.forced_direction = None;
+    let composition = backend
+        .compose(&automatic, &connection, Some(&cloud), None)
+        .unwrap();
+    let mapped_capture = composition
+        .provider
+        .capture_saved(&composition.remote_scope)
+        .unwrap();
+    let local_objects = mapped_capture.objects.summary();
+    let mapped_binding = composition
+        .provider
+        .target_binding(&composition.remote_scope)
+        .unwrap()
+        .unwrap();
+    let mapping_direction = mapped_binding.direction.clone();
+    let prepared = host::preview_semantics(
+        composition.provider.as_ref(),
+        composition.remote_scope.clone(),
+        host::CloudMaterialV2::Valid(&material),
+        &host::SessionSecretsV2::default(),
+        None,
+    )
+    .unwrap();
+    let host_decision = prepared.decision.clone();
+    let client = service::SyncServiceV2::new(
+        f.d.clone(),
+        Arc::new(
+            service::ProductionServiceBackendV2::new(
+                f.d.clone(),
+                f.h.clone(),
+                Arc::new(NeverCaptureSecrets),
+            )
+            .unwrap(),
+        ),
+        remote.clone(),
+        Arc::new(AbsentPreviewEndpointCredentials),
+    )
+    .unwrap();
+    let service_preview = client
+        .preview(automatic, service::ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    let prepared_operation = match &service_preview.plan {
+        service::ServicePlanV2::Download(plan) => plan.operation_id.clone(),
+        other => panic!("expected actual download preparation: {other:?}"),
+    };
+    let business_after = original
+        .rows
+        .iter()
+        .map(|row| {
+            (
+                &row.address.path,
+                images::image(&row.address.anchor, &row.address.path).unwrap(),
+            )
+        })
+        .collect::<BTreeMap<_, _>>();
+    assert!(business_before == business_after);
+    assert!(!restored_path.exists());
+    assert_eq!(remote.writes.load(Ordering::SeqCst), 0);
+    assert!(matches!(mapping_direction, DirectionV2::Download));
+    assert!(matches!(
+        host_decision.chosen_direction,
+        DirectionV2::Download
+    ));
+    assert!(matches!(
+        service_preview.chosen_direction,
+        DirectionV2::Download
+    ));
+    let after = absent_probe_tree(&f.d, &f.h);
+    let added = after
+        .keys()
+        .filter(|path| !before.contains_key(*path))
+        .cloned()
+        .collect::<Vec<_>>();
+    let changed = before
+        .iter()
+        .filter(|(path, value)| after.get(*path) != Some(*value))
+        .map(|(path, _)| path.clone())
+        .collect::<Vec<_>>();
+    assert!(changed.is_empty());
+    assert!(added
+        .iter()
+        .all(|path| path.starts_with("D/manager-state/sync-service-v2/")
+            || path == "D/manager-state/sync-v2-transactions"
+            || path.starts_with("D/manager-state/sync-v2-transactions/")));
+    let fixture_root = f._temp.path().to_path_buf();
+    println!("NONE_RESTORE_PROBE {}",serde_json::to_string(&json!({
+        "group":group,"originalOperationId":OP,"restoreId":plan.restore_id,"restorePlanDigest":plan.plan_digest,
+        "restoreStatus":"applied","originalTargetWasNone":true,"targetAbsentAfterRestore":true,
+        "originalRemoteScope":scope,"directActualCapture":direct,"mappedCaptureSummary":local_objects,
+        "mappingDirection":mapping_direction,"mappingSlots":mapped_binding.slots,"hostPreview":host_decision,
+        "servicePreviewChosenDirection":service_preview.chosen_direction,"servicePreviewReason":service_preview.automatic_reason,
+        "preparedDownloadOperationId":prepared_operation,"confirmationCalled":false,"businessImagesUnchangedDuringPreview":true,
+        "remoteReads":remote.reads.load(Ordering::SeqCst),"remotePuts":remote.writes.load(Ordering::SeqCst),
+        "previewAddedPaths":added,"previewChangedOrRemovedPaths":changed,
+        "scopeAdjustedAfterRestore":false,"realNetworkUsed":false,"policyOrAcAcceptance":false,
+    })).unwrap());
+    drop(client);
+    drop(composition);
+    drop(backend);
+    drop(resolver);
+    drop(f);
+    assert!(!fixture_root.exists());
+    println!(
+        "NONE_RESTORE_CLEANUP {}",
+        serde_json::to_string(&json!({"group":group,"fixtureRoot":fixture_root,"removed":true}))
+            .unwrap()
+    );
+}
+#[tokio::test]
+async fn original_none_channel_restore_rejects_direct_capture_but_actual_service_prepares_download()
+{
+    original_none_probe("channels").await;
+}
+#[tokio::test]
+async fn original_none_extension_restore_rejects_direct_capture_but_actual_service_prepares_download(
+) {
+    original_none_probe("extensions").await;
+}
