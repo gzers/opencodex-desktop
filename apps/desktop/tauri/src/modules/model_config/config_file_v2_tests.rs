@@ -470,3 +470,226 @@ fn explicit_delete_removes_only_owned_channel_routes_and_can_keep_other_draft() 
         .iter()
         .any(|c| c.connection.provider_id == "unmanaged"));
 }
+
+#[derive(Default)]
+struct FakeDraftCredentials(std::sync::Mutex<BTreeMap<String, String>>);
+impl DraftCredentialStoreV2 for FakeDraftCredentials {
+    fn put(&self, id: &str, value: &str) -> Result<()> {
+        self.0.lock().unwrap().insert(id.into(), value.into());
+        Ok(())
+    }
+    fn get(&self, id: &str) -> Result<Zeroizing<String>> {
+        self.0
+            .lock()
+            .unwrap()
+            .get(id)
+            .cloned()
+            .map(Zeroizing::new)
+            .ok_or_else(|| error("model_credential_missing"))
+    }
+    fn remove(&self, id: &str) -> Result<()> {
+        self.0.lock().unwrap().remove(id);
+        Ok(())
+    }
+}
+#[test]
+fn explicit_key_only_replace_preserves_other_pool_slots_and_clear_keeps_auth_mode() {
+    let mut file = raw();
+    file["providers"]["Krill-1"]["apiKeyPool"] = json!([{"id":"first","key":"synthetic-only-never-return","label":"active","future":7},{"id":"other","key":"other-synthetic","future":8}]);
+    let (_t, root, home) = fixture(file.clone());
+    let s = begin(&root, &home);
+    let id = s.draft.as_ref().unwrap().policy.channels[0].id.clone();
+    let vault = FakeDraftCredentials::default();
+    let staged = stage_credential_with_store(
+        &root,
+        &home,
+        StageCredentialV2 {
+            expected: s.draft.unwrap().base,
+            channel_id: id.clone(),
+            action: "replace".into(),
+            value: Some("new-synthetic".into()),
+        },
+        &vault,
+    )
+    .unwrap();
+    assert_eq!(read_raw(&home).unwrap().0, file);
+    assert!(!serde_json::to_string(&staged)
+        .unwrap()
+        .contains("new-synthetic"));
+    let view = credential_view_with_store(&root, &home, &id, &vault).unwrap();
+    assert_eq!(view.value, "new-synthetic");
+    let saved = save_with_credentials(
+        &root,
+        &home,
+        SaveRequestV2 {
+            expected: staged.draft.unwrap().base,
+            edits: vec![],
+            channel_intents: vec![],
+            scope_channel_id: None,
+        },
+        &vault,
+    )
+    .unwrap();
+    let (raw, _) = read_raw(&home).unwrap();
+    assert_eq!(raw["providers"]["Krill"]["apiKey"], "new-synthetic");
+    assert_eq!(
+        raw["providers"]["Krill"]["apiKeyPool"][0]["key"],
+        "new-synthetic"
+    );
+    assert_eq!(raw["providers"]["Krill"]["apiKeyPool"][0]["future"], 7);
+    assert_eq!(
+        raw["providers"]["Krill"]["apiKeyPool"][1],
+        file["providers"]["Krill-1"]["apiKeyPool"][1]
+    );
+    let next = begin_draft(&root, &home, request(&saved)).unwrap();
+    let cleared = stage_credential_with_store(
+        &root,
+        &home,
+        StageCredentialV2 {
+            expected: next.draft.unwrap().base,
+            channel_id: id.clone(),
+            action: "clear".into(),
+            value: None,
+        },
+        &vault,
+    )
+    .unwrap();
+    assert_eq!(
+        cleared.draft.as_ref().unwrap().policy.channels[0]
+            .connection
+            .auth_mode
+            .as_deref(),
+        Some("key")
+    );
+    assert_eq!(
+        read_raw(&home).unwrap().0["providers"]["Krill"]["apiKey"],
+        "new-synthetic"
+    );
+    let again = read_existing(&root, &home, request(&cleared))
+        .unwrap()
+        .snapshot;
+    assert!(matches!(
+        again.draft.as_ref().unwrap().credential_edits.get(&id),
+        Some(DraftCredentialEditV2::Clear)
+    ));
+    save_with_credentials(
+        &root,
+        &home,
+        SaveRequestV2 {
+            expected: again.draft.unwrap().base,
+            edits: vec![],
+            channel_intents: vec![],
+            scope_channel_id: None,
+        },
+        &vault,
+    )
+    .unwrap();
+    let (raw, _) = read_raw(&home).unwrap();
+    assert!(raw["providers"]["Krill"].get("apiKey").is_none());
+    assert!(raw["providers"]["Krill"].get("apiKeyPool").is_none());
+    assert_eq!(raw["providers"]["Krill"]["authMode"], "key");
+}
+#[test]
+fn saved_capture_source_identity_is_stable_and_unaffected_by_unsaved_channel_name() {
+    let (_t, root, home) = fixture(raw());
+    let source =
+        || with_saved_config(&root, &home, |_, policy, _, _, _, _| Ok(policy.clone())).unwrap();
+    let first = source();
+    assert_eq!(source(), first);
+    let draft = begin(&root, &home);
+    let saved_id = first.channels[0].id.clone();
+    assert_eq!(
+        draft.draft.as_ref().unwrap().policy.channels[0].id,
+        saved_id
+    );
+    let mut staged = draft.draft.unwrap();
+    staged.policy.channels[0].label = "unsaved display".into();
+    let expected = staged.base.clone();
+    staged.base.draft_generation += 1;
+    StoreV2::new(&root)
+        .stage_draft(Some(&expected), staged)
+        .unwrap();
+    assert_eq!(source().channels[0].label, "Krill");
+    assert_eq!(source().channels[0].id, saved_id);
+}
+
+#[test]
+fn saved_capture_ignores_corrupt_draft_and_never_recovers_pending_business_writes() {
+    let (_t, root, home) = fixture(raw());
+    let before = std::fs::read(home.join("config.json")).unwrap();
+    std::fs::write(
+        root.join(store_v2::DRAFT_PATH),
+        b"invalid uncommitted draft",
+    )
+    .unwrap();
+    let capture = with_saved_config(&root, &home, |_, p, _, _, _, _| Ok(p.clone())).unwrap();
+    assert_eq!(capture.channels[0].label, "Krill");
+    assert_eq!(
+        std::fs::read(root.join(store_v2::DRAFT_PATH)).unwrap(),
+        b"invalid uncommitted draft"
+    );
+    std::fs::write(
+        root.join("manager-state/model-transaction-v2.pending.json"),
+        b"unconfirmed frozen operation",
+    )
+    .unwrap();
+    assert!(
+        matches!(with_saved_config(&root,&home,|_,_,_,_,_,_|Ok(())),Err(e)if e.code=="model_transaction_pending")
+    );
+    assert_eq!(std::fs::read(home.join("config.json")).unwrap(), before);
+    assert_eq!(
+        std::fs::read(root.join("manager-state/model-transaction-v2.pending.json")).unwrap(),
+        b"unconfirmed frozen operation"
+    );
+}
+#[test]
+fn node_measurement_uses_explicit_kind_and_only_acknowledged_node_ids() {
+    let (_t, root, home) = fixture(raw());
+    let started = begin(&root, &home);
+    let d = started.draft.as_ref().unwrap();
+    let c = &d.policy.channels[0];
+    let request = MeasurementIntentV2 {
+        expected: d.base.clone(),
+        channel_id: c.id.clone(),
+        node_ids: vec![c.connection.active_node_id.clone()],
+        discovery_kind: "google_list".into(),
+        run_id: uuid::Uuid::new_v4().to_string(),
+    };
+    let captured =
+        prepare_measurements_with_store(&root, &home, request, &FakeDraftCredentials::default())
+            .unwrap();
+    assert_eq!(captured.protocol, "google");
+    assert_eq!(
+        captured.api_key.as_deref(),
+        Some("synthetic-only-never-return")
+    );
+    assert!(captured.provider_id.is_none());
+    assert!(captured.home.is_none());
+    let request = MeasurementIntentV2 {
+        expected: d.base.clone(),
+        channel_id: c.id.clone(),
+        node_ids: vec![uuid::Uuid::new_v4().to_string()],
+        discovery_kind: "openai_list".into(),
+        run_id: uuid::Uuid::new_v4().to_string(),
+    };
+    assert!(
+        matches!(prepare_measurements_with_store(&root,&home,request,&FakeDraftCredentials::default()),Err(e)if e.code=="model_node_missing")
+    );
+    let mut changed = d.clone();
+    let expected = changed.base.clone();
+    changed.base.draft_generation += 1;
+    changed.policy.channels[0].connection.nodes[0].url = "https://other.fixture.invalid".into();
+    StoreV2::new(&root)
+        .stage_draft(Some(&expected), changed.clone())
+        .unwrap();
+    let request = MeasurementIntentV2 {
+        expected: changed.base,
+        channel_id: c.id.clone(),
+        node_ids: vec![c.connection.active_node_id.clone()],
+        discovery_kind: "openai_list".into(),
+        run_id: uuid::Uuid::new_v4().to_string(),
+    };
+    assert!(
+        matches!(prepare_measurements_with_store(&root,&home,request,&FakeDraftCredentials::default()),Err(e)if e.code=="model_node_credential_unconfirmed")
+    );
+}
