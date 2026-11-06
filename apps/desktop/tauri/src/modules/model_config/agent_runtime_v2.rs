@@ -1050,3 +1050,34 @@ pub fn revoke_external(root: &Path, task_id: &str) -> Result<()> {
 #[cfg(test)]
 #[path = "agent_runtime_v2_tests.rs"]
 mod tests;
+
+/// Read-only Desktop observation of one original external run. It never exports
+/// the broker ticket, bearer, prompt history or executable authority; accepting
+/// its result still requires the broker's separately checked active grant.
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ExternalRunViewV2 {
+    pub dto_version: u32,
+    pub task_id: String,
+    pub scene: Scene,
+    pub expected_library: String,
+    pub targets: Vec<RefV2>,
+    pub allow_new: bool,
+    pub result: GeneratedReviewV2,
+}
+pub fn external_run_view(root: &Path, task_id: &str) -> Result<ExternalRunViewV2> {
+    let record = read_record(root, task_id)?;
+    if record.executor != ExecutorV2::External {
+        return Err(error("model_agent_run_identity"));
+    }
+    let result = review_dto(&record);
+    Ok(ExternalRunViewV2 {
+        dto_version: 2,
+        task_id: record.run_id,
+        scene: record.intent.scene,
+        expected_library: record.intent.expected_library,
+        targets: record.intent.targets,
+        allow_new: record.intent.allow_new,
+        result,
+    })
+}

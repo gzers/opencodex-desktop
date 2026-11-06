@@ -639,6 +639,7 @@ pub fn run() {
             commands::model_config_v2::model_v2_external_prepare,
             commands::model_config_v2::model_v2_external_activate,
             commands::model_config_v2::model_v2_external_revoke,
+            commands::model_config_v2::model_v2_external_run,
             commands::model_config::model_file_snapshot,
             commands::model_config::model_file_save,
             commands::model_config::model_file_credential,
