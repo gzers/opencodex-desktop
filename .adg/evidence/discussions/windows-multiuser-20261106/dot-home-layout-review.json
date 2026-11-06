@@ -1,0 +1,76 @@
+{
+  "date": "2026-11-06",
+  "timeZone": "Asia/Shanghai",
+  "proposal": "Windows%USERPROFILE%/.opencodex-desktop andmacOS~/.opencodex-desktop unified root; dedicateddata subtree",
+  "programPlacement": "Retain existing Desktop/OpenCodex executable location; explicit runtime binding independent of config data root",
+  "namingObservation": "Dot-home names are common for developer tools, not a universal native GUI standard.Official Windows/Applemainstream data locations remain AppData/ApplicationSupport; choosing dot-home is projectUX decision.",
+  "upstreamNamespace": "Original OpenCodex Desktop already uses~/.opencodex-desktop/cli.json andPOSIXbin/path.sh. Our proposal owns onlymanager-location.json,manager-startup.lock,data/ and never replaces upstream entries or wipes root. Existing conflictingdata ownership must refuse.",
+  "sources": [
+    {
+      "url": "https://code.visualstudio.com/docs/configure/settings",
+      "supports": "VSCode user settings inWindowsAPPDATA rather than claim majority dot-home"
+    },
+    {
+      "url": "https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/MacOSXDirectories/MacOSXDirectories.html",
+      "supports": "Apple recommends per-userApplicationSupport withbundle identifier"
+    },
+    {
+      "url": "https://learn.microsoft.com/windows/win32/shell/knownfolderid",
+      "supports": "Windowsknown-folder per-user data areas"
+    },
+    {
+      "url": "https://github.com/lidge-jun/opencodex/blob/main/desktop/src-tauri/src/cli_command.rs",
+      "supports": "root=home.join(.opencodex-desktop),cli.json accessed; fetchedcurrent public source thisturn"
+    },
+    {
+      "url": "https://github.com/lidge-jun/opencodex/blob/main/src/lib/desktop-cli-record.mjs",
+      "supports": "Desktop CLI record underdot-home,USERPROFILEonWindows; fetchedcurrent public source thisturn"
+    }
+  ],
+  "existingLocalUpstreamSourceHashes": {
+    "desktop/src-tauri/src/cli_command.rs": {
+      "sha256": "a0ff72b01cebe6f6184d4e0a5ee88b59929c29a65d5b5bd98c0a6b7636885a64",
+      "referencesDotDesktopRoot": true,
+      "referencesCliRecord": true,
+      "referencesOwnerRegistry": false
+    },
+    "desktop/src-tauri/src/cli_command_posix.rs": {
+      "sha256": "fb174da7b9693dc4ac3b004571830fa97b7b5b4582762137f2f29757731341ba",
+      "referencesDotDesktopRoot": false,
+      "referencesCliRecord": false,
+      "referencesOwnerRegistry": false
+    },
+    "src/lib/desktop-cli-record.mjs": {
+      "sha256": "d8648b7634245d8bd61380206c39ad513643178d9e76078250e2e1aedb580914",
+      "referencesDotDesktopRoot": true,
+      "referencesCliRecord": true,
+      "referencesOwnerRegistry": false
+    },
+    "src/config/owner-registry.ts": {
+      "sha256": "7d60f8374a9587f99aa5730264d36ad62f30a8adf025a2cdfb2bbbd0c3fe64ff",
+      "referencesDotDesktopRoot": false,
+      "referencesCliRecord": false,
+      "referencesOwnerRegistry": true
+    }
+  },
+  "currentProductUnchanged": true,
+  "boundaries": [
+    "Documentation design only; no user root files created/migrated",
+    "No code/bundleidentifier/OSregistration or0.2.23scope change",
+    "Native WebView/OS credential files remain user-scoped OS-managed locations, not forced into dot-root",
+    "Dotprefixdoes not implyWindows hidden attribute or encryption; enforce ACL/DPAPI separately"
+  ],
+  "status": "proposedcomplete directory design, implementation/migration details need successorauthorization",
+  "designFile": "docs/04-项目资料/01-项目支撑资料/06-问题记录/20261106-Desktop用户配置目录结构设计.md",
+  "designSha256": "0eae8b5c8ffd2c73539a311f5161c55ab050e4147e2a5970b58ada02eaeb04cf",
+  "checks": {
+    "bothOSTreesPresent": true,
+    "dedicatedDataSubtree": true,
+    "upstreamCliRootEntriesReserved": true,
+    "oneStartupPointerPlanned": true,
+    "runtimeProgramBindingNotMoved": true,
+    "OSManagedDataException": true,
+    "migrationAndOwnershipRules": true,
+    "newLocalLinksChecked": true
+  }
+}
