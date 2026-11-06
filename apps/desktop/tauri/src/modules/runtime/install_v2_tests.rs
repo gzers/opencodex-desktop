@@ -245,6 +245,50 @@ impl Fixture {
         // never mask a changed I launcher, even with exactly the expected bytes.
         drop(receipt);
         drop(guard);
+        // Same-size executable replacement must fail by content, without ever
+        // running the changed Node, writing metadata, or releasing protection.
+        let original_node = std::fs::read(&self.node).unwrap();
+        let original_modified = std::fs::metadata(&self.node).unwrap().modified().unwrap();
+        let marker = self.temp.path().join("changed-node-was-executed");
+        let mut replacement = format!(
+            "#!/bin/sh\nprintf executed > '{}'\nexit 93\n",
+            marker.display()
+        )
+        .into_bytes();
+        replacement.resize(original_node.len(), b' ');
+        std::fs::write(&self.node, &replacement).unwrap();
+        std::fs::File::options()
+            .write(true)
+            .open(&self.node)
+            .unwrap()
+            .set_times(std::fs::FileTimes::new().set_modified(original_modified))
+            .unwrap();
+        let manifest_path = self.prefix().join(MANIFEST_FILENAME);
+        let manifest_before = std::fs::read(&manifest_path).unwrap();
+        let entry_before = std::fs::read(self.entry()).unwrap();
+        let record_path = recovery_record_path(&self.d);
+        let record_before = std::fs::read(&record_path).unwrap();
+        let calls = self.probe.calls.load(Ordering::SeqCst);
+        assert!(validate_managed_installation(&self.i, Some(&self.node)).is_err());
+        let mut reopened = PanelProtection::load(&self.d).unwrap().unwrap();
+        let receipt_before = serde_json::to_vec(&reopened).unwrap();
+        let guard = manager::acquire_preferences_transaction(&self.d).unwrap();
+        assert!(reopened.reconcile(&self.d, &guard).is_err());
+        assert_eq!(
+            serde_json::to_vec(&PanelProtection::load(&self.d).unwrap().unwrap()).unwrap(),
+            receipt_before
+        );
+        assert!(self.installer().install(&self.request()).is_err());
+        assert_eq!(self.probe.calls.load(Ordering::SeqCst), calls);
+        assert!(!marker.exists());
+        assert_eq!(std::fs::read(&self.node).unwrap(), replacement);
+        assert_eq!(std::fs::read(&manifest_path).unwrap(), manifest_before);
+        assert_eq!(std::fs::read(self.entry()).unwrap(), entry_before);
+        assert_eq!(std::fs::read(&record_path).unwrap(), record_before);
+        assert_eq!(protection::status(&self.d).state, ProtectionState::Pending);
+        std::fs::write(&self.node, original_node).unwrap();
+        validate_managed_installation(&self.i, Some(&self.node)).unwrap();
+        drop(guard);
         let good_entry = std::fs::read(self.entry()).unwrap();
         let decoy = self.d.join(MANAGED_ENTRY_RELATIVE);
         std::fs::create_dir_all(decoy.parent().unwrap()).unwrap();
@@ -267,7 +311,7 @@ impl Fixture {
             .append(true)
             .open(&self.log)
             .unwrap();
-        writeln!(log, "protection reopen: corrupt I + valid D refused; restored I + missing D verified; state remained in D; HOME unchanged").unwrap();
+        writeln!(log, "protection reopen: same-size Node replacement refused without execution/metadata writes; restored Node revalidated; corrupt I + valid D refused; restored I + missing D verified; state remained in D; HOME unchanged").unwrap();
     }
     fn mismatch(&self) {
         let package = self.prefix().join(PACKAGE_SUBPATH).join("package.json");

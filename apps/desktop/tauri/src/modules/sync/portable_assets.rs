@@ -733,9 +733,37 @@ pub fn export_with_credential_scope(
     reviewed: bool,
     credential_ids: Option<&[String]>,
 ) -> ModelResult<(Assets, Vec<McpConflict>)> {
+    export_with_credential_scope_using(
+        root,
+        home,
+        skills,
+        mcps,
+        sources,
+        include_secrets,
+        reviewed,
+        credential_ids,
+        &SystemCredentials,
+    )
+}
+/// Same production export pipeline with an explicit credential provider. Only
+/// the final selected managed source may invoke read(); install() is never used.
+/// root/home and real client definitions remain injected exactly as before.
+#[allow(clippy::too_many_arguments)]
+pub fn export_with_credential_scope_using(
+    root: &Path,
+    home: &Path,
+    skills: &[String],
+    mcps: &[String],
+    sources: &BTreeMap<String, String>,
+    include_secrets: bool,
+    reviewed: bool,
+    credential_ids: Option<&[String]>,
+    credentials: &impl Credentials,
+) -> ModelResult<(Assets, Vec<McpConflict>)> {
     if !home.is_absolute() || !home.is_dir() {
         return Err(invalid("asset_home", "扩展读源未绑定有效主目录"));
     }
+    validate_export_scope(skills, mcps, sources, credential_ids)?;
     let mut conflicts = vec![];
     let config = config(root)?;
     let targets = CLIENT_IDS.map(|client| ClientTarget::user_target(client, home, true, true));
@@ -765,78 +793,242 @@ pub fn export_with_credential_scope(
     for server in mcps {
         let include_secrets = include_secrets
             && credential_ids.is_none_or(|ids| ids.contains(&format!("mcp:{server}")));
-        name(server)?;
-        if let Some(stored) = mcp_store(root)?
-            .into_iter()
-            .find(|stored| stored.name == *server)
-        {
-            if include_secrets {
-                let resolved = resolve_mcp(root, server, &targets)?
-                    .ok_or_else(|| invalid("mcp_source", "受管MCP定义无法解析"))?;
-                result.mcps.push(split_mcp(resolved, true, reviewed)?);
-            } else {
-                result.mcps.push(Mcp {
-                    name: stored.name,
-                    definition: stored.definition,
-                    secret_fields: stored.secret_fields,
-                    secrets: Default::default(),
-                    warnings: vec![],
-                });
-            }
-            continue;
-        }
-        let mut found = vec![];
-        for target in &targets {
-            if let Some(definition) = discovery::read_server_definition(target, server)
-                .map_err(|_| invalid("mcp_read", "MCP源配置无法安全读取"))?
-            {
-                found.push((client_key(target.client_id), definition));
-            }
-        }
-        let chosen = if let Some(source) = sources.get(server) {
-            Some(
-                found
-                    .iter()
-                    .find(|(client, _)| client == source)
-                    .map(|(_, definition)| definition.clone())
-                    .ok_or_else(|| {
-                        invalid(
-                            "mcp_source",
-                            format!("所选来源客户端中已没有MCP「{server}」，请重新选择"),
-                        )
-                    })?,
-            )
-        } else {
-            let mut distinct: Vec<&discovery::RawServerDefinition> = vec![];
-            for (_, definition) in &found {
-                if !distinct.iter().any(|old| old.value == definition.value) {
-                    distinct.push(definition);
-                }
-            }
-            match distinct.len() {
-                0 => return Err(invalid("mcp_source", "所选MCP定义不存在")),
-                1 => Some(distinct[0].clone()),
-                _ => {
-                    conflicts.push(McpConflict {
-                        name: server.clone(),
-                        clients: found.iter().map(|(client, _)| client.clone()).collect(),
-                        fields: differing_fields(
-                            &distinct.iter().map(|d| &d.value).collect::<Vec<_>>(),
-                        ),
-                    });
-                    None
-                }
-            }
-        };
-        if let Some(definition) = chosen {
-            result
-                .mcps
-                .push(split_mcp(definition, include_secrets, reviewed)?);
+        let candidates = export_mcp_candidates(
+            root,
+            &targets,
+            server,
+            sources.get(server).map(String::as_str),
+            reviewed,
+        )?;
+        match choose_export_mcp(&candidates, server) {
+            Ok(index) => result.mcps.push(materialize_export_mcp(
+                &candidates[index],
+                include_secrets,
+                reviewed,
+                credentials,
+            )?),
+            Err(conflict) => conflicts.push(conflict),
         }
     }
     validate(&result)?;
     Ok((result, conflicts))
 }
+/// Validate the actual source/scope input before any client or vault read.
+fn validate_export_scope(
+    skills: &[String],
+    mcps: &[String],
+    sources: &BTreeMap<String, String>,
+    credential_ids: Option<&[String]>,
+) -> ModelResult<()> {
+    if skills.len() > 500 || mcps.len() > 1000 {
+        return Err(invalid("asset_limit", "扩展选择超过数量上限"));
+    }
+    let mut selected = BTreeSet::new();
+    for (kind, names) in [("skill", skills), ("mcp", mcps)] {
+        for value in names {
+            name(value)?;
+            if !selected.insert((kind, value.to_lowercase())) {
+                return Err(invalid("asset_identity", "扩展选区身份重复或大小写冲突"));
+            }
+        }
+    }
+    for (server, source) in sources {
+        if !mcps.contains(server)
+            || (source != "managed" && !CLIENT_IDS.iter().any(|id| client_key(*id) == *source))
+        {
+            return Err(invalid("mcp_source", "采用来源不属于所选MCP或不是已知来源"));
+        }
+    }
+    if let Some(ids) = credential_ids {
+        // Existing file/sync callers pass one global credential allow-list,
+        // including channel IDs and assets not in this local sub-batch. Validate
+        // its syntax, but never expand this batch or read those other values.
+        let mut seen = BTreeSet::new();
+        for id in ids {
+            if !seen.insert(id) {
+                return Err(invalid("credential_scope", "凭据选择身份重复"));
+            }
+            match id.split_once(':') {
+                Some(("channel", value)) => require_uuid(value)?,
+                Some(("skill" | "mcp", value)) => name(value)?,
+                _ => return Err(invalid("credential_scope", "凭据选择身份格式无效")),
+            }
+        }
+    }
+    Ok(())
+}
+struct ExportMcpCandidate {
+    source: String,
+    public: Mcp,
+    raw: Option<discovery::RawServerDefinition>,
+    references: BTreeMap<String, String>,
+    path: PathBuf,
+}
+impl Drop for ExportMcpCandidate {
+    fn drop(&mut self) {
+        fn erase(v: &mut Value) {
+            match v {
+                Value::String(s) => s.zeroize(),
+                Value::Array(a) => a.iter_mut().for_each(erase),
+                Value::Object(m) => m.values_mut().for_each(erase),
+                _ => (),
+            }
+        }
+        if let Some(raw) = &mut self.raw {
+            erase(&mut raw.value);
+        }
+    }
+}
+fn export_mcp_candidates(
+    root: &Path,
+    targets: &[ClientTarget],
+    server: &str,
+    chosen: Option<&str>,
+    reviewed: bool,
+) -> ModelResult<Vec<ExportMcpCandidate>> {
+    let mut found = Vec::new();
+    // An explicit client choice never has to inspect or resolve an unrelated
+    // managed record (or another client's unreadable/malformed file).
+    if chosen.is_none() || chosen == Some("managed") {
+        if let Some(stored) = mcp_store(root)?.into_iter().find(|s| s.name == server) {
+            let mut fields = stored.secret_fields;
+            fields.sort();
+            if fields.windows(2).any(|w| w[0] == w[1]) {
+                return Err(invalid("mcp_store", "受管MCP凭据路径重复"));
+            }
+            let public = Mcp {
+                name: stored.name,
+                definition: stored.definition,
+                secret_fields: fields,
+                secrets: Default::default(),
+                warnings: vec![],
+            };
+            validate(&Assets {
+                skills: vec![],
+                mcps: vec![public.clone()],
+            })?;
+            found.push(ExportMcpCandidate {
+                source: "managed".into(),
+                public,
+                raw: None,
+                references: stored.references,
+                path: root.join(MCP_STORE),
+            });
+        }
+    }
+    for target in targets {
+        let key = client_key(target.client_id);
+        if chosen.is_some_and(|c| c != key) {
+            continue;
+        }
+        if let Some(raw) = discovery::read_server_definition(target, server)
+            .map_err(|_| invalid("mcp_read", "MCP源配置无法安全读取"))?
+        {
+            let public = split_mcp(raw.clone(), false, reviewed)?;
+            found.push(ExportMcpCandidate {
+                source: key,
+                public,
+                raw: Some(raw),
+                references: Default::default(),
+                path: target.mcp_config_path.clone(),
+            });
+        }
+    }
+    if found.is_empty() {
+        return Err(invalid(
+            "mcp_source",
+            "所选来源中的MCP已消失或不存在，请重新选择",
+        ));
+    }
+    Ok(found)
+}
+fn same_secret_paths(a: &Mcp, b: &Mcp) -> bool {
+    a.secret_fields == b.secret_fields
+}
+fn proven_same_export_mcp(a: &ExportMcpCandidate, b: &ExportMcpCandidate) -> bool {
+    if a.public.definition != b.public.definition || !same_secret_paths(&a.public, &b.public) {
+        return false;
+    }
+    if a.public.secret_fields.is_empty() {
+        return true;
+    }
+    match (&a.raw, &b.raw) {
+        (Some(a), Some(b)) => a.value == b.value,
+        _ => false,
+    }
+}
+fn choose_export_mcp(
+    candidates: &[ExportMcpCandidate],
+    server: &str,
+) -> Result<usize, McpConflict> {
+    if candidates.len() == 1 {
+        return Ok(0);
+    }
+    let first = &candidates[0];
+    if candidates.iter().all(|c| proven_same_export_mcp(first, c)) {
+        return Ok(0);
+    }
+    let mut fields = differing_fields(
+        &candidates
+            .iter()
+            .map(|c| &c.public.definition)
+            .collect::<Vec<_>>(),
+    );
+    if candidates.iter().any(|c| {
+        !same_secret_paths(&first.public, &c.public)
+            || (!c.public.secret_fields.is_empty() && !proven_same_export_mcp(first, c))
+    }) {
+        fields.push("credentials".into());
+        fields.push("source".into());
+    }
+    fields.sort();
+    fields.dedup();
+    Err(McpConflict {
+        name: server.into(),
+        clients: candidates.iter().map(|c| c.source.clone()).collect(),
+        fields,
+    })
+}
+fn materialize_export_mcp(
+    candidate: &ExportMcpCandidate,
+    include_secrets: bool,
+    reviewed: bool,
+    credentials: &impl Credentials,
+) -> ModelResult<Mcp> {
+    if !include_secrets {
+        return Ok(candidate.public.clone());
+    }
+    if let Some(raw) = &candidate.raw {
+        return split_mcp(raw.clone(), true, reviewed);
+    }
+    // Managed selection must never borrow a same-named client's credentials.
+    // Its own references are the only proof of which secret source was chosen.
+    let mut resolved = discovery::RawServerDefinition {
+        name: candidate.public.name.clone(),
+        value: candidate.public.definition.clone(),
+    };
+    for path in &candidate.public.secret_fields {
+        let reference = candidate.references.get(path).ok_or_else(|| {
+            invalid(
+                "extension_credential",
+                "所选受管定义缺少自身凭据引用，未从其他来源借用",
+            )
+        })?;
+        let value = zeroize::Zeroizing::new(credentials.read(reference)?);
+        set_pointer(&mut resolved.value, path, Value::String(value.to_string()))?;
+    }
+    let out = split_mcp(resolved, true, reviewed)?;
+    if out.definition != candidate.public.definition
+        || out.secret_fields != candidate.public.secret_fields
+    {
+        return Err(invalid(
+            "extension_credential",
+            "受管凭据与所选公开定义或路径不匹配",
+        ));
+    }
+    Ok(out)
+}
+
 fn mcp_store(root: &Path) -> ModelResult<Vec<StoredMcp>> {
     let path = root.join(MCP_STORE);
     safety::check_path(root, &path, true)?;
@@ -1025,37 +1217,38 @@ pub fn saved_source_paths(
     mcps: &[String],
     sources: &BTreeMap<String, String>,
 ) -> ModelResult<Vec<PathBuf>> {
+    if !home.is_absolute() || !home.is_dir() {
+        return Err(invalid("asset_home", "扩展读源未绑定有效主目录"));
+    }
+    validate_export_scope(skills, mcps, sources, None)?;
     let source = source_dir(root, home)?;
-    let mut out = vec![];
+    let mut out = Vec::new();
     for skill in skills {
         let p = source.join(skill);
         out.push(if p.exists() {
             p
         } else {
             discovery::skills_store_dir(root).join(skill)
-        })
+        });
     }
-    let stored = mcp_store(root)?;
-    for name in mcps {
-        if stored.iter().any(|m| m.name == *name) {
-            out.push(root.join(MCP_STORE));
-            continue;
-        }
-        for id in CLIENT_IDS {
-            if sources.get(name).is_some_and(|c| *c != client_key(id)) {
-                continue;
-            }
-            let target = ClientTarget::user_target(id, home, true, true);
-            if discovery::read_server_definition(&target, name)
-                .map_err(|_| invalid("mcp_read", "MCP来源无法读取"))?
-                .is_some()
-            {
-                out.push(target.mcp_config_path)
-            }
-        }
+    let targets = CLIENT_IDS.map(|id| ClientTarget::user_target(id, home, true, true));
+    for server in mcps {
+        let candidates = export_mcp_candidates(
+            root,
+            &targets,
+            server,
+            sources.get(server).map(String::as_str),
+            false,
+        )?;
+        // Without an explicit choice, every actual candidate contributes to the
+        // observed source set, including ones whose later change could conflict.
+        out.extend(candidates.iter().map(|c| c.path.clone()));
     }
+    out.sort();
+    out.dedup();
     Ok(out)
 }
+
 fn skill_digest(path: &Path, skill: &Skill) -> ModelResult<Option<String>> {
     match std::fs::symlink_metadata(path) {
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(None),
@@ -1726,7 +1919,7 @@ pub fn detail(
     chosen: Option<&str>,
 ) -> ModelResult<Detail> {
     name(label)?;
-    if chosen.is_some_and(|c| !CLIENT_IDS.iter().any(|id| client_key(*id) == c)) {
+    if chosen.is_some_and(|c| c != "managed" && !CLIENT_IDS.iter().any(|id| client_key(*id) == c)) {
         return Err(invalid("mcp_source", "采用来源无效"));
     }
     if kind == "skills" {
@@ -1755,46 +1948,38 @@ pub fn detail(
     if kind != "mcps" {
         return Err(invalid("asset_detail", "资源类型无效"));
     }
-    let targets = CLIENT_IDS.map(|id| ClientTarget::user_target(id, home, true, true));
-    let mut fields = BTreeSet::new();
-    let mut clients = vec![];
-    let mut definitions = vec![];
-    for target in &targets {
-        if let Some(definition) = discovery::read_server_definition(target, label)
-            .map_err(|_| invalid("mcp_read", "定义来源无法读取"))?
-        {
-            clients.push(client_key(target.client_id));
-            let raw = definition.value.clone();
-            let public = split_mcp(definition, false, false)?;
-            fields.extend(
-                public
-                    .definition
-                    .as_object()
-                    .into_iter()
-                    .flat_map(|o| o.keys().cloned()),
-            );
-            definitions.push(raw);
-        }
+    if !home.is_absolute() || !home.is_dir() {
+        return Err(invalid("asset_home", "扩展读源未绑定有效主目录"));
     }
-    let stored = mcp_store(root)?.into_iter().find(|m| m.name == label);
-    let source = if let Some(stored) = stored {
-        fields.extend(
-            stored
+    let targets = CLIENT_IDS.map(|id| ClientTarget::user_target(id, home, true, true));
+    // Explicit choices inspect ONLY that source; unchosen sources cannot grant
+    // authority, shadow it, leak credentials, or block it with a parse error.
+    let candidates = export_mcp_candidates(root, &targets, label, chosen, false)?;
+    let fields: BTreeSet<_> = candidates
+        .iter()
+        .flat_map(|c| {
+            c.public
                 .definition
                 .as_object()
                 .into_iter()
-                .flat_map(|o| o.keys().cloned()),
-        );
-        "受管定义".to_owned()
+                .flat_map(|o| o.keys().cloned())
+        })
+        .collect();
+    let clients = candidates.iter().map(|c| c.source.clone()).collect();
+    let conflicts = choose_export_mcp(&candidates, label)
+        .err()
+        .map(|c| c.fields)
+        .unwrap_or_default();
+    let source = if chosen == Some("managed")
+        || candidates.len() == 1 && candidates[0].source == "managed"
+    {
+        "受管定义".into()
     } else if let Some(chosen) = chosen {
         format!("已记住采用来源：{chosen}")
+    } else if !conflicts.is_empty() {
+        "多个来源待选择".into()
     } else {
-        "客户端源定义".into()
-    };
-    let conflicts = if definitions.len() > 1 {
-        differing_fields(&definitions.iter().collect::<Vec<_>>())
-    } else {
-        vec![]
+        "等价来源定义".into()
     };
     Ok(Detail {
         source,
@@ -1806,6 +1991,7 @@ pub fn detail(
         warnings: vec![],
     })
 }
+
 pub fn catalog(root: &Path, home: &Path) -> ModelResult<Catalog> {
     let source = source_dir(root, home)?;
     let targets = CLIENT_IDS.map(|id| ClientTarget::user_target(id, home, true, true));
@@ -2710,3 +2896,7 @@ mod tests {
             .contains("fixture-secret"));
     }
 }
+
+#[cfg(test)]
+#[path = "portable_assets_sources_v2_tests.rs"]
+mod sources_v2_tests;

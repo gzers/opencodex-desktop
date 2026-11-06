@@ -1,110 +1,22 @@
-import { installNativeDialogStub } from './helpers/nativeDialog'
-import { beforeEach,describe,expect,it,vi } from 'vitest'
-import { mount,flushPromises } from '@vue/test-utils'
-import { createPinia,setActivePinia } from 'pinia'
-import { defineComponent,onMounted } from 'vue'
-import UiDialog from '@/components/ui/UiDialog.vue'
+import {beforeEach,expect,it,vi} from 'vitest'
+import {mount,flushPromises} from '@vue/test-utils'
+import {createPinia,setActivePinia} from 'pinia'
 import BatchAgentDialog from '@/features/models/BatchAgentDialog.vue'
-import { emptyContent,emptyRules,modelApi,type ModelSnapshot,type Submission } from '@/features/models/api'
-import { useModelsStore } from '@/features/models/store'
-vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{generate:vi.fn(),acceptAgentReview:vi.fn(),stopGeneration:vi.fn(),latestAgentResult:vi.fn()}}))
-const settings=defineComponent({emits:['update:modelValue'],setup(_,{emit}){onMounted(()=>emit('update:modelValue',{providerId:'fixture',modelId:'fixture-model',reasoningEffort:null,fast:null}));return()=>null}})
-const dialog={template:'<div><slot/><slot name="actions" :close="$emit.bind(null, &quot;close&quot;)" /></div>'}
-function snapshot():ModelSnapshot{return {library:{schemaVersion:1,templates:['one','two'].map(id=>({id,label:id,source:'user' as const,defaultRevision:id+'-v',revisions:[{id:id+'-v',createdAt:'2026-10-13T00:00:00Z',savedLabel:id,content:emptyContent(),digest:id,baseRevision:null,changes:[]}]}))},policy:{schemaVersion:1,channels:[],templateRefs:[]},libraryDigest:'base',policyDigest:'policy',workspaceDigest:'workspace',workspace:null}}
-function result(base:ModelSnapshot):Submission{return {submissionId:'fixture-run',contractVersion:1,report:'两个模版有建议',proposals:base.library.templates.map(t=>({templateId:t.id,baseRevision:t.revisions[0]!.id,label:t.label,content:{...emptyContent(),description:'建议说明'}}))}}
-beforeEach(()=>{setActivePinia(createPinia());vi.clearAllMocks()})
-function render(base:ModelSnapshot,selected:string[]=[]){useModelsStore().snapshot=base;return mount(BatchAgentDialog,{props:{open:true,snapshot:base,selected,versions:{}},global:{stubs:{UiDialog:dialog,AgentExecutionField:settings}}})}
-describe('internal batch suggestions require review',()=>{
- it('keeps the file snapshot and edits made while a legacy agent commit is pending',async()=>{
-  const base=snapshot()
-  base.policyDigest='actual-config-file';base.workspaceDigest='no-file-workspace'
-  base.policy.channels=[{id:'file-channel',label:'Actual file channel',templateRefs:[],modelRefs:{},connection:{providerId:'file-provider',protocol:'openai-chat',nodes:[{id:'node',name:'Main',url:'https://file.example.test/v1'}],activeNodeId:'node',credentialRef:null,enabled:true,allowPrivateNetwork:false},selection:{mode:'all'},modelOrder:[],discovered:[],defaults:emptyRules(),overrides:{},familyOverrides:{}}]
-  const wrapper=render(base),store=useModelsStore()
-  store.restoreChannels();store.edit(base.library.templates[0])
-  const channelDraft=store.channelDraft!,templateDraft=store.draft!,session=store.draftSession
-  const legacy=snapshot();legacy.libraryDigest='saved-library'
-  legacy.library.templates[0]!.revisions.push({...legacy.library.templates[0]!.revisions[0]!,id:'agent-version',content:{...emptyContent(),description:'Saved agent suggestion'}})
-  legacy.policyDigest='retired-manager-policy';legacy.workspaceDigest='retired-workspace'
-  legacy.workspace={basePolicy:'retired-manager-policy',policy:legacy.policy}
-  let finish!: (value:Awaited<ReturnType<typeof modelApi.acceptAgentReview>>)=>void
-  vi.mocked(modelApi.generate).mockResolvedValue(result(base))
-  vi.mocked(modelApi.acceptAgentReview).mockReturnValue(new Promise(resolve=>{finish=resolve}))
-  await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='检查更新')!.trigger('click');await flushPromises()
-  await wrapper.findAll('button').find(b=>b.text()==='另存所选建议版本')!.trigger('click');await flushPromises()
-  expect(modelApi.acceptAgentReview).toHaveBeenCalledTimes(1)
-  channelDraft.channels[0]!.label='Unsaved channel edit'
-  channelDraft.channels[0]!.selection={mode:'whitelist',models:['pending-model']}
-  store.editCredential('file-channel','pending-test-key','saved-test-key')
-  templateDraft.content.description='Unsaved template edit'
-  finish({snapshot:legacy,outcomes:[{templateId:'one',revisionId:'agent-version',changed:true}]});await flushPromises()
-  expect(store.snapshot).toEqual({...base,library:legacy.library,libraryDigest:legacy.libraryDigest})
-  expect(store.enabledChannels.map(c=>c.id)).toEqual(['file-channel'])
-  expect(store.channelDraft).toBe(channelDraft)
-  expect(store.channelDraft!.channels[0]).toMatchObject({label:'Unsaved channel edit',selection:{mode:'whitelist',models:['pending-model']}})
-  expect(store.channelBaseline).toBe('actual-config-file')
-  expect(store.credentialEdits).toEqual({'file-channel':{channelId:'file-channel',action:'replace',value:'pending-test-key'}})
-  expect(store.channelDirty).toBe(true)
-  expect(store.draft).toBe(templateDraft);expect(store.draft!.content.description).toBe('Unsaved template edit')
-  expect(store.draftSession).toBe(session);expect(store.dirty).toBe(true)
-  wrapper.unmount()
- })
- it('freezes saved targets and does not save or adopt anything before confirmation',async()=>{
-  const base=snapshot();const store=useModelsStore();const wrapper=render(base);store.edit();store.draft!.label='保留未保存人工输入'
-  vi.mocked(modelApi.generate).mockResolvedValue(result(base));vi.mocked(modelApi.acceptAgentReview).mockResolvedValue({snapshot:{...base,libraryDigest:'saved'},outcomes:[{templateId:'one',revisionId:'new-one',changed:true},{templateId:'two',revisionId:'new-two',changed:true}]})
-  await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='检查更新')!.trigger('click');await flushPromises()
-  expect(modelApi.generate).toHaveBeenCalledWith(expect.any(String),expect.objectContaining({targets:[{templateId:'one',revisionId:'one-v'},{templateId:'two',revisionId:'two-v'}],buffers:[],allowNew:false,expectedLibrary:'base'}),[])
-  expect(modelApi.acceptAgentReview).not.toHaveBeenCalled();expect(store.snapshot!.policy).toEqual(base.policy)
-  await wrapper.findAll('button').find(b=>b.text()==='另存所选建议版本')!.trigger('click');await flushPromises()
-  expect(modelApi.acceptAgentReview).toHaveBeenCalledWith(expect.objectContaining({expectedLibrary:'base',proposals:expect.arrayContaining([expect.objectContaining({templateId:'one'}),expect.objectContaining({templateId:'two'})])}));expect(store.draft!.label).toBe('保留未保存人工输入');wrapper.unmount()
- })
- it('retries the identical reviewed run after an uncertain save instead of generating a second operation',async()=>{
-  const base=snapshot();const wrapper=render(base,['one']);const generated=result(base);generated.proposals=generated.proposals.slice(0,1);vi.mocked(modelApi.generate).mockResolvedValue(generated)
-  vi.mocked(modelApi.acceptAgentReview).mockRejectedValueOnce({message:'结果待核对'}).mockResolvedValue({snapshot:base,outcomes:[{templateId:'one',revisionId:'new',changed:true}]})
-  await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='检查更新')!.trigger('click');await flushPromises()
-  expect(vi.mocked(modelApi.generate).mock.calls[0]![1].targets).toEqual([{templateId:'one',revisionId:'one-v'}])
-  await wrapper.findAll('button').find(b=>b.text()==='另存所选建议版本')!.trigger('click');await flushPromises()
-  expect(wrapper.text()).toContain('结果待核对');await wrapper.findAll('button').find(b=>b.text()==='核对原保存结果')!.trigger('click');await flushPromises()
-  expect(modelApi.generate).toHaveBeenCalledTimes(1);expect(vi.mocked(modelApi.acceptAgentReview).mock.calls[0]).toEqual(vi.mocked(modelApi.acceptAgentReview).mock.calls[1]);wrapper.unmount()
- })
- it('keeps suggestions visible but refuses adoption when the local saved baseline advances',async()=>{
-  const base=snapshot();const wrapper=render(base);vi.mocked(modelApi.generate).mockResolvedValue(result(base));await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='检查更新')!.trigger('click');await flushPromises()
-  await wrapper.setProps({snapshot:{...base,libraryDigest:'newer'}})
-  expect(wrapper.text()).toContain('当前建议保留');expect(wrapper.findAll('button').find(b=>b.text()==='另存所选建议版本')!.attributes('disabled')).toBeDefined();expect(modelApi.acceptAgentReview).not.toHaveBeenCalled();wrapper.unmount()
- })
- it('recovers the persisted saved target snapshots without making a model request or applying them',async()=>{
-  const base=snapshot();vi.mocked(modelApi.latestAgentResult).mockResolvedValue({runId:'recovered',createdAt:'2026-10-18T00:00:00Z',expectedLibrary:'base',targets:base.library.templates.map(t=>({templateId:t.id,label:t.label,revision:t.revisions[0]!,buffer:null})),scene:'update_models',result:result(base),reviewed:false})
-  const wrapper=render(base);await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='恢复上次建议')!.trigger('click');await flushPromises()
-  expect(modelApi.latestAgentResult).toHaveBeenCalledExactlyOnceWith(null);expect(wrapper.text()).toContain('建议说明');expect(modelApi.generate).not.toHaveBeenCalled();expect(modelApi.acceptAgentReview).not.toHaveBeenCalled();wrapper.unmount()
- })
-})
-
-
-describe('POST-09 batch generation observation', () => {
- it('closing and unmounting an in-flight observer do not stop generation or apply late suggestions',async()=>{
-  const base=snapshot();let finish!:(value:Submission)=>void
-  vi.mocked(modelApi.generate).mockReturnValue(new Promise(resolve=>{finish=resolve}))
-  const wrapper=render(base);await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='检查更新')!.trigger('click');await flushPromises()
-  wrapper.findComponent(UiDialog).vm.$emit('close');expect(wrapper.emitted('close')).toHaveLength(1)
-  wrapper.unmount();finish(result(base));await flushPromises()
-  expect(modelApi.stopGeneration).not.toHaveBeenCalled();expect(modelApi.acceptAgentReview).not.toHaveBeenCalled();expect(useModelsStore().snapshot).toEqual(base)
- })
- it('only the explicit stop action cancels the generated run',async()=>{
-  const base=snapshot();vi.mocked(modelApi.generate).mockReturnValue(new Promise(()=>{}));vi.mocked(modelApi.stopGeneration).mockResolvedValue(undefined)
-  const wrapper=render(base);await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='检查更新')!.trigger('click');await flushPromises()
-  const id=vi.mocked(modelApi.generate).mock.calls[0]![0]
-  await wrapper.findAll('button').find(b=>b.text()==='停止检查')!.trigger('click');await flushPromises()
-  expect(modelApi.stopGeneration).toHaveBeenCalledExactlyOnceWith(id);expect(wrapper.emitted('close')).toBeUndefined();wrapper.unmount()
- })
-})
-
-
-it('shows a saved batch result as a view without an empty or exit footer',async()=>{
- installNativeDialogStub();const base=snapshot();useModelsStore().snapshot=base
- vi.mocked(modelApi.generate).mockResolvedValue(result(base));vi.mocked(modelApi.acceptAgentReview).mockResolvedValue({snapshot:base,outcomes:[{templateId:'one',revisionId:'new',changed:true}]})
- const wrapper=mount(BatchAgentDialog,{props:{open:true,snapshot:base,selected:[],versions:{}},global:{stubs:{AgentExecutionField:settings}},attachTo:document.body})
- try{
-  await flushPromises();(document.querySelector('dialog footer .primary') as HTMLButtonElement).click();await flushPromises()
-  const save=[...document.querySelectorAll('dialog footer button')].find(b=>b.textContent?.includes('另存所选建议版本')) as HTMLButtonElement
-  save.click();await flushPromises();expect(document.querySelector('dialog[open] footer')).toBeNull();expect(document.querySelector('dialog[open] header .modal-close')).not.toBeNull()
- }finally{wrapper.unmount();document.body.innerHTML=''}
-})
+import UiSelectField from '@/components/ui/UiSelectField.vue'
+import {useModelsV2Store} from '@/features/models/store-v2'
+import {reviewedAgentResponseV2} from '@/features/models/api-v2'
+import {useModalStore} from '@/app/modal/store'
+import {agentLibrary,agentReview,agentReport,agentSettings,agentId,agentHash,copyAgent} from './helpers/modelAgentV2'
+const ipc=vi.hoisted(()=>vi.fn())
+vi.mock('@tauri-apps/api/core',()=>({invoke:ipc}))
+const dialog={props:['open'],template:'<section v-if="open"><slot/><slot name="actions" :close="$emit.bind(null,&quot;close&quot;)"/></section>'}
+function render(library=agentLibrary()){const store=useModelsV2Store();store.snapshot=library;store.executionPreference=agentSettings();return mount(BatchAgentDialog,{props:{open:true,snapshot:library,selected:[],versions:{}},global:{stubs:{UiDialog:dialog,UiSelectField:true,AgentExecutionField:true}}})}
+function button(w:ReturnType<typeof render>,label:string){return w.findAll('button').find(b=>b.text()===label)!}
+beforeEach(()=>{setActivePinia(createPinia());ipc.mockReset();ipc.mockImplementation(async(command)=>{if(command==='model_v2_agent_prepare')return {dtoVersion:2,runId:agentId(9),phase:'prepared',expectedLibrary:agentHash(1),sourceDigest:agentHash(4),rootRevision:agentHash(5)};if(command==='model_v2_agent_generate')return agentReport();if(command==='model_v2_agent_latest')return agentReport();if(command==='model_v2_library')return agentLibrary();throw new Error('Unexpected legacy command '+command)})})
+it('CheckOnly uses exact saved defaults, returns a report and cannot make a proposal/save request',async()=>{const w=render();try{await button(w,'开始检查').trigger('click');await flushPromises();const request=ipc.mock.calls[0]![1].request;expect(request.scene).toBe('check_only');expect(request.targets).toEqual([{templateId:agentId(1),revisionId:agentId(2),digest:agentHash(2)}]);expect(request.allowNew).toBe(false);expect(request).not.toHaveProperty('buffer');expect(w.text()).toContain('检查完成，没有配置写入');expect(w.findAll('button').some(b=>b.text()==='接受本次完整建议')).toBe(false);expect(ipc.mock.calls.some(c=>c[0]==='model_v2_agent_accept'||String(c[0]).includes('save'))).toBe(false);await useModelsV2Store().acceptAgent('batch:v2',null);expect(ipc.mock.calls.some(c=>c[0]==='model_v2_agent_accept')).toBe(false)}finally{w.unmount()}})
+it('no default or explicit saved revision never falls back to newest, and missing selection blocks the whole requested scope',async()=>{const lib=agentLibrary();lib.library.templates[0]!.defaultRevision=null;const w=render(lib);try{expect(w.text()).toContain('不会自动取 latest');expect(button(w,'开始检查').attributes('disabled')).toBeDefined();expect(ipc).not.toHaveBeenCalled()}finally{w.unmount()}})
+it('batch suggestion generation preserves target order and only accepts through one confirmed v2 review',async()=>{const old=ipc.getMockImplementation()!;ipc.mockImplementation(async(command,args)=>command==='model_v2_agent_generate'?agentReview():command==='model_v2_agent_accept'?agentReview('accepted'):old(command,args));const w=render();try{w.findAllComponents(UiSelectField).find(c=>c.props('label')==='Agent 本次任务')!.vm.$emit('update:modelValue','update_models');await flushPromises();await button(w,'生成建议').trigger('click');await flushPromises();await button(w,'接受本次完整建议').trigger('click');expect(ipc.mock.calls.some(c=>c[0]==='model_v2_agent_accept')).toBe(false);useModalStore().resolve('confirm');await flushPromises();expect(ipc.mock.calls.find(c=>c[0]==='model_v2_agent_accept')![1].request).toMatchObject({runId:agentId(9),expectedLibrary:agentHash(1)});expect(useModelsV2Store().agentSession('batch:v2').result?.phase).toBe('accepted');expect(w.text()).toContain('原任务建议已接受保存')}finally{w.unmount()}})
+it('review reconstruction sorts backend indexes, retains exact targets/count and never sends planned revision/origin as authority',()=>{const review=agentReview();const second=copyAgent(review.review!.proposals[0]!);second.index=1;second.proposal.target={templateId:agentId(20),revisionId:agentId(21),digest:agentHash(2)};review.review!.proposals=[second,review.review!.proposals[0]!];const parsed=JSON.parse(reviewedAgentResponseV2(review));expect(parsed.proposals.map((p:{target:{templateId:string}})=>p.target.templateId)).toEqual([agentId(1),agentId(20)]);expect(parsed.proposals).toHaveLength(2);expect(parsed.proposals[0]).not.toHaveProperty('plannedRevision');expect(parsed.proposals[0]).not.toHaveProperty('origin');expect(()=>reviewedAgentResponseV2(agentReport())).toThrow('检查报告不能用于保存')})
+it('an interrupted accept checks the original run, does not invent a new accept request and retains exact reviewed bytes',async()=>{const store=useModelsV2Store();store.snapshot=agentLibrary();const session=store.agentSession('batch:v2');session.result=agentReview();const old=ipc.getMockImplementation()!;ipc.mockImplementation(async(command,args)=>{if(command==='model_v2_agent_accept')throw {code:'model_storage'};if(command==='model_v2_agent_latest')return agentReview('accepted');return old(command,args)});await store.acceptAgent('batch:v2',null);const request=copyAgent(session.acceptRequest);expect(session.result?.phase).toBe('review');await store.acceptAgent('batch:v2',null);expect(ipc.mock.calls.filter(c=>c[0]==='model_v2_agent_accept')).toHaveLength(1);expect(ipc).toHaveBeenCalledWith('model_v2_agent_latest',{templateId:null});expect(session.acceptRequest).toEqual(request);expect(session.result?.phase).toBe('accepted')})
+it('a backend generation error keeps the entered requirements and the last review instead of manufacturing empty success',async()=>{const store=useModelsV2Store();const w=render();store.agentSession('batch:v2').input='保留要求';store.agentSession('batch:v2').result=agentReview();const old=ipc.getMockImplementation()!;ipc.mockImplementation(async(command,args)=>{if(command==='model_v2_agent_generate')throw {code:'model_execution_unavailable'};return old(command,args)});try{await button(w,'开始检查').trigger('click');await flushPromises();expect(store.agentSession('batch:v2').input).toBe('保留要求');expect(store.agentSession('batch:v2').result?.runId).toBe(agentId(9));expect(store.agentSession('batch:v2').error).toContain('model_execution_unavailable');expect(store.agentSession('batch:v2').ticket?.runId).toBe(agentId(9));expect(ipc.mock.calls.some(c=>c[0]==='model_v2_agent_accept')).toBe(false)}finally{w.unmount()}})
+it('an unresolved accept blocks starting another run or restoring a different latest review, keeping its exact request',async()=>{const store=useModelsV2Store();store.snapshot=agentLibrary();const session=store.agentSession('batch:v2');session.result=agentReview();session.acceptRequest={runId:agentId(9),expectedLibrary:agentHash(1),reviewedResponse:reviewedAgentResponseV2(agentReview())};const before=copyAgent(session.acceptRequest);await store.runAgent('batch:v2',{scene:'check_only',targets:[{templateId:agentId(1),revisionId:agentId(2),digest:agentHash(2)}],allowNew:false,expectedLibrary:agentHash(1),requirements:'检查',history:[],sources:[]});expect(ipc).not.toHaveBeenCalled();ipc.mockResolvedValue({...agentReview(),runId:agentId(99)});await store.restoreAgent('batch:v2',null);expect(session.result?.runId).toBe(agentId(9));expect(session.acceptRequest).toEqual(before);expect(session.error).toContain('不是待核对的原接受任务')})

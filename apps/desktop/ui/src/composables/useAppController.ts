@@ -132,8 +132,10 @@ export function useAppController(initialize = false) {
       } else if (route === 'extensions') {
         await Promise.all([app.loadExtensions(), app.loadExtensionConfig()])
       } else if (route === 'models') {
-        const { useModelsStore } = await import('@/features/models/store')
-        await useModelsStore().load()
+        const { useModelsV2Store } = await import('@/features/models/store-v2')
+        const models=useModelsV2Store()
+        await models.loadChannels()
+        await models.load()
       } else if (route === 'logs') {
         if (routes.diagnosticsTab === 'notifications') await app.loadNotifications()
         else if (routes.diagnosticsTab === 'doctor') await runDoctor()

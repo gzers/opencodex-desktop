@@ -21,6 +21,7 @@ fn c(id: &str, ids: &[&str]) -> PortableChannelV2 {
             enabled: true,
             allow_private_network: false,
             auth_mode: Some("key".into()),
+            provider: None,
         }),
         model_subset: None,
         family_scope: None,
@@ -1194,5 +1195,407 @@ fn partial_scope_does_not_materialize_unselected_implicit_order_or_replace_share
     assert_eq!(
         code(overlay_selected(Some(saved(b)), saved(l), s, None)),
         "overlay_shared_connection_conflict"
+    );
+}
+fn provider_input(subset: bool, path: &str) -> CapturedObjects {
+    let mut value = input(vec![c(A, if subset { &["a"] } else { &["a", "b"] })]);
+    let channel = &mut value.models.payload.policy.as_mut().unwrap().channels[0];
+    if subset {
+        channel.model_subset = Some(vec!["a".into()]);
+    }
+    let connection = channel.connection.as_mut().unwrap();
+    connection.nodes = vec![super::super::schema::ServiceNode {
+        id: NODE.into(),
+        name: "fixture".into(),
+        url: "https://fixture.example.test/v1".into(),
+    }];
+    connection.active_node_id = NODE.into();
+    rehash(&mut value);
+    let public = json!({"baseUrl":"https://fixture.example.test/v1","adapter":"openai-chat","responsesPath":path,"statelessResponses":true,"models":["a","b"],"selectedModels":["a","b"],"modelAliases":{"a":"alias-a","b":"alias-b"}});
+    value.models =
+        portable_v2::attach_public_sources_v2(&value.models, &BTreeMap::from([(A.into(), public)]))
+            .unwrap();
+    value
+}
+#[test]
+fn published_provider_material_is_preserved_in_whole_connection_and_never_spreads_from_subset() {
+    let base = saved(provider_input(false, "/old/responses"));
+    let local = saved(provider_input(false, "/new/responses"));
+    let result = overlay_selected(Some(base), local, selection(A), None).unwrap();
+    let public = result.models().payload.policy.as_ref().unwrap().channels[0]
+        .connection
+        .as_ref()
+        .unwrap()
+        .provider
+        .as_ref()
+        .unwrap();
+    assert_eq!(public["responsesPath"], "/new/responses");
+    assert_eq!(public["statelessResponses"], true);
+    assert_eq!(public["modelAliases"]["b"], "alias-b");
+    let source = provider_input(true, "/subset/responses");
+    let provider = source.models.payload.policy.as_ref().unwrap().channels[0]
+        .connection
+        .as_ref()
+        .unwrap()
+        .provider
+        .as_ref()
+        .unwrap();
+    assert!(provider["modelAliases"].get("b").is_none());
+    let mut scope = selection(A);
+    scope.channels[0].model_ids = Some(vec!["a".into()]);
+    assert_eq!(
+        code(overlay_selected(
+            Some(saved(provider_input(false, "/old/responses"))),
+            saved(source),
+            scope.clone(),
+            None
+        )),
+        "overlay_shared_connection_conflict"
+    );
+    scope.channels[0].include_connection = false;
+    let result = overlay_selected(
+        Some(saved(provider_input(false, "/old/responses"))),
+        saved(provider_input(true, "/subset/responses")),
+        scope,
+        None,
+    )
+    .unwrap();
+    let public = result.models().payload.policy.as_ref().unwrap().channels[0]
+        .connection
+        .as_ref()
+        .unwrap()
+        .provider
+        .as_ref()
+        .unwrap();
+    assert_eq!(public["responsesPath"], "/old/responses");
+    assert_eq!(public["modelAliases"]["b"], "alias-b");
+    let connection = serde_json::to_value(
+        &result.models().payload.policy.as_ref().unwrap().channels[0].connection,
+    )
+    .unwrap();
+    assert!(connection.get("protocol").is_none());
+}
+#[test]
+fn provider_gate_rejects_private_material_and_save_atom_binds_public_transport_fields() {
+    let base = saved(provider_input(false, "/old"));
+    let before = file_objects_v2::save_state(&base).unwrap();
+    let changed = saved(provider_input(false, "/new"));
+    let after = file_objects_v2::save_state(&changed).unwrap();
+    let key = super::super::content_versions::key(&json!(["v2-channel", A, null, null])).unwrap();
+    assert_ne!(before[&key], after[&key]);
+    let mut private = provider_input(false, "/old");
+    private.models.payload.policy.as_mut().unwrap().channels[0]
+        .connection
+        .as_mut()
+        .unwrap()
+        .provider
+        .as_mut()
+        .unwrap()["apiKey"] = json!("synthetic-never-public");
+    rehash(&mut private);
+    assert!(SavedObjects::capture(private, None).is_err());
+}
+fn account(id: &str, subject: Option<&str>, slot: &str) -> portable_accounts::AccountInfo {
+    portable_accounts::AccountInfo {
+        id: id.into(),
+        provider: "chatgpt".into(),
+        subject: subject.map(str::to_owned),
+        label: "same-name".into(),
+        email: Some("same@example.test".into()),
+        origin: Some(portable_accounts::AccountOrigin {
+            version: 1,
+            account_platform: "chatgpt".into(),
+            owner: "opencodex".into(),
+            auth_kind: "oauth".into(),
+            source_namespace: "codex-account-pool".into(),
+            source_account_id: slot.into(),
+            tenant: Some("fixture-tenant".into()),
+        }),
+    }
+}
+fn account_selection(id: &str) -> SelectionV2 {
+    let mut scope = SelectionV2::default();
+    scope.manager.account_ids = vec![id.into()];
+    scope
+}
+#[test]
+fn selected_account_information_updates_by_exact_source_subject_and_preserves_unselected_accounts()
+{
+    let mut b = input(vec![]);
+    b.manager.accounts = vec![
+        account(A, Some("subject-one"), "old-slot"),
+        account(B, Some("subject-two"), "unselected-slot"),
+    ];
+    let untouched = b.manager.accounts[1].clone();
+    let mut local = input(vec![]);
+    let mut incoming = account(NODE, Some("subject-one"), "other-device-slot");
+    incoming.label = "new-selected-name".into();
+    incoming.email = Some("new@example.test".into());
+    local.manager.accounts = vec![incoming];
+    let result =
+        overlay_selected(Some(saved(b)), saved(local), account_selection(NODE), None).unwrap();
+    let accounts = &result.partitions().manager.accounts;
+    assert_eq!(accounts.len(), 2);
+    assert_eq!(accounts[0].id, A);
+    assert_eq!(accounts[0].label, "new-selected-name");
+    assert_eq!(
+        accounts[0].origin.as_ref().unwrap().source_account_id,
+        "old-slot"
+    );
+    assert_eq!(accounts[1], untouched);
+    assert!(result.partitions().channel_keys.is_empty());
+    assert!(result.partitions().channel_authorizations.is_empty());
+    let json = String::from_utf8(
+        file_objects_v2::encode_document(&result, None)
+            .unwrap()
+            .to_vec(),
+    )
+    .unwrap();
+    for key in ["accessToken", "refreshToken", "cookie", "credentialRef"] {
+        assert!(!json.contains(&format!("\"{key}\"")));
+    }
+}
+#[test]
+fn account_only_selection_works_and_name_or_email_never_associates_different_subjects() {
+    let mut b = input(vec![]);
+    b.manager.accounts = vec![account(A, Some("first-subject"), "slot")];
+    let mut local = input(vec![]);
+    local.manager.accounts = vec![account(B, Some("second-subject"), "slot")];
+    let result =
+        overlay_selected(Some(saved(b)), saved(local), account_selection(B), None).unwrap();
+    assert_eq!(result.partitions().manager.accounts.len(), 2);
+    assert_eq!(
+        result.partitions().manager.accounts[0].subject.as_deref(),
+        Some("first-subject")
+    );
+    assert_eq!(
+        result.partitions().manager.accounts[1].subject.as_deref(),
+        Some("second-subject")
+    );
+    assert!(result.models().payload.policy.is_some());
+    let mut local = input(vec![]);
+    local.manager.accounts = vec![account(A, Some("new-subject"), "slot")];
+    let result = overlay_selected(None, saved(local), account_selection(A), None).unwrap();
+    assert!(result.models().payload.policy.is_none());
+    assert_eq!(result.partitions().manager.accounts.len(), 1);
+    assert!(result.partitions().assets.mcps.is_empty());
+}
+#[test]
+fn account_ambiguity_and_legacy_slot_remapping_require_explicit_host_decision() {
+    let mut b = input(vec![]);
+    let mut legacy = account(B, Some("same-subject"), "legacy-slot");
+    legacy.origin = None;
+    b.manager.accounts = vec![account(A, Some("same-subject"), "known-slot"), legacy];
+    let mut local = input(vec![]);
+    local.manager.accounts = vec![account(B, Some("same-subject"), "new-slot")];
+    assert_eq!(
+        code(overlay_selected(
+            Some(saved(b)),
+            saved(local),
+            account_selection(B),
+            None
+        )),
+        "overlay_account_ambiguous"
+    );
+    let mut b = input(vec![]);
+    b.manager.accounts = vec![account(A, None, "old-slot")];
+    let mut local = input(vec![]);
+    local.manager.accounts = vec![account(A, None, "new-slot")];
+    assert_eq!(
+        code(overlay_selected(
+            Some(saved(b)),
+            saved(local),
+            account_selection(A),
+            None
+        )),
+        "overlay_account_mapping_required"
+    );
+    let mut b = input(vec![]);
+    b.manager.accounts = vec![account(A, None, "same-slot")];
+    let mut local = input(vec![]);
+    local.manager.accounts = vec![account(B, None, "same-slot")];
+    let result =
+        overlay_selected(Some(saved(b)), saved(local), account_selection(B), None).unwrap();
+    assert_eq!(result.partitions().manager.accounts.len(), 2); // no bare-slot inference
+}
+#[test]
+fn missing_unsupported_and_conflicting_account_identities_are_rejected_without_login_payloads() {
+    assert_eq!(
+        code(overlay_selected(
+            None,
+            saved(input(vec![])),
+            account_selection(A),
+            None
+        )),
+        "overlay_selection_missing"
+    );
+    let mut local = input(vec![]);
+    let mut unsupported = account(A, Some("s"), "slot");
+    unsupported.provider = "unsupported-fixture".into();
+    unsupported.origin = None;
+    local.manager.accounts = vec![unsupported];
+    assert_eq!(
+        code(overlay_selected(
+            None,
+            saved(local),
+            account_selection(A),
+            None
+        )),
+        "overlay_account_unsupported"
+    );
+    let mut b = input(vec![]);
+    b.manager.accounts = vec![account(A, Some("old-subject"), "slot")];
+    let mut local = input(vec![]);
+    local.manager.accounts = vec![account(A, Some("different-subject"), "slot")];
+    assert_eq!(
+        code(overlay_selected(
+            Some(saved(b)),
+            saved(local),
+            account_selection(A),
+            None
+        )),
+        "overlay_account_identity_conflict"
+    );
+    let mut json = serde_json::to_value(account(A, Some("s"), "slot")).unwrap();
+    json["accessToken"] = json!("not-account-info");
+    assert!(serde_json::from_value::<portable_accounts::AccountInfo>(json).is_err());
+}
+#[test]
+fn account_save_atoms_ignore_name_for_identity_and_ignore_device_slot_for_known_subject() {
+    let mut first = input(vec![]);
+    first.manager.accounts = vec![account(A, Some("subject"), "slot-a")];
+    let first = saved(first);
+    let old = file_objects_v2::save_state(&first).unwrap();
+    let mut second = input(vec![]);
+    second.manager.accounts = vec![account(B, Some("subject"), "slot-b")];
+    let same = file_objects_v2::save_state(&saved(second)).unwrap();
+    assert_eq!(old, same);
+    let mut named = input(vec![]);
+    let mut a = account(B, Some("subject"), "slot-b");
+    a.label = "updated-name".into();
+    named.manager.accounts = vec![a];
+    let changed = file_objects_v2::save_state(&saved(named)).unwrap();
+    assert_eq!(
+        old.keys().collect::<Vec<_>>(),
+        changed.keys().collect::<Vec<_>>()
+    );
+    assert_ne!(
+        old.values().collect::<Vec<_>>(),
+        changed.values().collect::<Vec<_>>()
+    );
+    let mut other = input(vec![]);
+    other.manager.accounts = vec![account(B, Some("another-subject"), "slot-b")];
+    let different = file_objects_v2::save_state(&saved(other)).unwrap();
+    assert_ne!(
+        old.keys().collect::<Vec<_>>(),
+        different.keys().collect::<Vec<_>>()
+    );
+}
+#[test]
+fn selected_account_receipt_uses_same_source_identity_after_baseline_id_preservation() {
+    let mut b = input(vec![]);
+    b.manager.accounts = vec![account(A, Some("subject"), "cloud-slot")];
+    let mut l = input(vec![]);
+    let mut info = account(B, Some("subject"), "local-slot");
+    info.label = "new-label".into();
+    l.manager.accounts = vec![info.clone()];
+    let source = saved(l);
+    let atoms = file_objects_v2::save_state(&source).unwrap();
+    let key = super::super::content_versions::key(&json!([
+        "v2-accounts",
+        account_source_identity(&info).unwrap()
+    ]))
+    .unwrap();
+    let mut l = source.into_captured();
+    l.content_versions = vec![receipt(key.clone(), atoms[&key].clone(), TIME)];
+    let result = overlay_selected(Some(saved(b)), saved(l), account_selection(B), None).unwrap();
+    assert_eq!(result.partitions().manager.accounts[0].id, A);
+    assert_eq!(result.partitions().content_versions[0].scope_key, key);
+    assert_eq!(result.partitions().content_versions[0].saved_at, TIME);
+    assert_eq!(
+        result.partitions().content_versions[0].content_digest,
+        file_objects_v2::save_state(&result).unwrap()[&key]
+    );
+}
+
+#[test]
+fn template_metadata_save_atom_changes_independently_of_immutable_revision_atoms() {
+    let (old, _, reference, _) = template_pair();
+    let mut original = input(vec![]);
+    original.models.payload.templates = vec![old];
+    rehash(&mut original);
+    let original = saved(original);
+    let state = file_objects_v2::save_state(&original).unwrap();
+    let key =
+        super::super::content_versions::key(&json!(["v2-template-meta", reference.template_id]))
+            .unwrap();
+    let revision = super::super::content_versions::key(&json!([
+        "v2-template",
+        reference.template_id,
+        reference.revision_id
+    ]))
+    .unwrap();
+    let mut changed = original.into_captured();
+    changed.models.payload.templates[0].default_revision = None;
+    rehash(&mut changed);
+    let changed = saved(changed);
+    let next = file_objects_v2::save_state(&changed).unwrap();
+    assert_ne!(state[&key], next[&key]);
+    assert_eq!(state[&revision], next[&revision]);
+    let mut changed = changed.into_captured();
+    changed.models.payload.templates[0].label = "new template label".into();
+    rehash(&mut changed);
+    let renamed = file_objects_v2::save_state(&saved(changed)).unwrap();
+    assert_ne!(next[&key], renamed[&key]);
+    assert_eq!(next[&revision], renamed[&revision]);
+}
+#[test]
+fn default_metadata_receipt_requires_explicit_adoption_not_just_revision_selection() {
+    let (old, newer, _, second) = template_pair();
+    let template_id = second.template_id.clone();
+    let key =
+        super::super::content_versions::key(&json!(["v2-template-meta", template_id])).unwrap();
+    let make_local = || {
+        let mut l = input(vec![]);
+        l.models.payload.templates = vec![newer.clone()];
+        rehash(&mut l);
+        let objects = saved(l);
+        let state = file_objects_v2::save_state(&objects).unwrap();
+        let mut l = objects.into_captured();
+        l.content_versions = vec![receipt(
+            key.clone(),
+            state[&key].clone(),
+            "2026-11-06T19:00:00Z",
+        )];
+        saved(l)
+    };
+    let make_base = || {
+        let mut b = input(vec![]);
+        b.models.payload.templates = vec![old.clone()];
+        rehash(&mut b);
+        saved(b)
+    };
+    let mut selection = SelectionV2 {
+        template_refs: vec![second.clone()],
+        ..Default::default()
+    };
+    let result =
+        overlay_selected(Some(make_base()), make_local(), selection.clone(), None).unwrap();
+    assert!(!result
+        .partitions()
+        .content_versions
+        .iter()
+        .any(|v| v.scope_key == key));
+    selection.adopt_template_defaults = vec![second];
+    let result = overlay_selected(Some(make_base()), make_local(), selection, None).unwrap();
+    let version = result
+        .partitions()
+        .content_versions
+        .iter()
+        .find(|v| v.scope_key == key)
+        .unwrap();
+    assert_eq!(version.saved_at, "2026-11-06T19:00:00Z");
+    assert_eq!(
+        file_objects_v2::save_state(&result).unwrap()[&key],
+        version.content_digest
     );
 }

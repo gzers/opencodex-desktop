@@ -13,15 +13,22 @@ use std::{
 use zeroize::{Zeroize, Zeroizing};
 
 const MAX_IMAGE: usize = 32 * 1024 * 1024;
+const MAX_RECEIPT: usize = 32 * 1024;
+const RECEIVE: &str = "model-receive-v2";
 const MAX_TOTAL: usize = 128 * 1024 * 1024;
 const MAX_FILES: usize = 8;
 const MAX_JOURNAL: usize = 64 * 1024;
 const MAX_MARKER: usize = 4096;
+const MAX_RETAINED_TRANSACTIONS: usize = 256;
+// Cumulative journal bytes plus dependency-bearing Policy/Draft image bytes.
+const MAX_RETAINED_METADATA: usize = 32 * 1024 * 1024;
+const MAX_RETAINED_ITEMS: usize = 65536;
+const MAX_REF_ARRAY: usize = 4096;
 const PENDING: &str = "model-transaction-v2.pending.json";
 const TRANSACTIONS: &str = "model-transactions-v2";
 const JOURNAL: &str = "journal.json";
 const DRAFT: &str = "manager-state/model-config-draft.json";
-const MANAGERS: [&str; 8] = [
+const MANAGERS: [&str; 9] = [
     "manager-state/model-policy.json",
     "manager-state/model-materialization-ledger.json",
     "manager-state/model-protocol-mappings.json",
@@ -30,6 +37,7 @@ const MANAGERS: [&str; 8] = [
     "manager-state/model-channel-layout.json",
     "manager-state/model-execution-source-ids.json",
     "manager-state/saved-content-versions.json",
+    "manager-state/sync-identity-mappings-v2.json",
 ];
 
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -42,6 +50,9 @@ const MANAGERS: [&str; 8] = [
 pub enum TargetV2 {
     OfficialConfig,
     Manager(String),
+    /// Canonical UUID4 operation ID, never a path. Only
+    /// manager-state/model-receive-v2/<id>/receipt.json is addressable.
+    ManagerOperationReceipt(String),
 }
 /// Raw images may contain credentials: intentionally no Debug/Serialize/Clone.
 pub struct WriteV2 {
@@ -153,6 +164,7 @@ fn uuid4(id: &str) -> bool {
 fn target_name(t: &TargetV2) -> Result<&str> {
     match t {
         TargetV2::OfficialConfig => Ok("config.json"),
+        TargetV2::ManagerOperationReceipt(id) if uuid4(id) => Ok("receipt.json"),
         TargetV2::Manager(p) if MANAGERS.contains(&p.as_str()) => Ok(&p["manager-state/".len()..]),
         _ => Err(fault("model_transaction_target_invalid")),
     }
@@ -162,10 +174,26 @@ fn target_key(t: &TargetV2) -> Result<String> {
     Ok(match t {
         TargetV2::OfficialConfig => "official".into(),
         TargetV2::Manager(p) => p.clone(),
+        TargetV2::ManagerOperationReceipt(id) => {
+            format!("manager-state/{RECEIVE}/{id}/receipt.json")
+        }
     })
 }
 fn deletion_allowed(t: &TargetV2) -> bool {
     matches!(t, TargetV2::Manager(p) if p == DRAFT)
+}
+fn target_limit(target: &TargetV2) -> usize {
+    if matches!(target, TargetV2::ManagerOperationReceipt(_)) {
+        MAX_RECEIPT
+    } else {
+        MAX_IMAGE
+    }
+}
+fn target_budget(target: &TargetV2, total: &mut usize, size: usize) -> Result<()> {
+    if size > target_limit(target) {
+        return Err(fault("model_transaction_limit"));
+    }
+    budget(total, size)
 }
 fn budget(total: &mut usize, size: usize) -> Result<()> {
     *total = total
@@ -680,11 +708,30 @@ impl Context {
             .as_ref()
             .ok_or_else(|| fault("model_transaction_io"))
     }
+    fn receipt_dir(&self, id: &str, create: bool) -> Result<Option<Dir>> {
+        if !uuid4(id) {
+            return Err(fault("model_transaction_target_invalid"));
+        }
+        self.live()?;
+        let Some(manager) = &self.manager else {
+            return Ok(None);
+        };
+        let Some(receive) = manager.child(RECEIVE, create, true)? else {
+            return Ok(None);
+        };
+        let operation = receive.child(id, create, true)?;
+        receive.live()?;
+        Ok(operation)
+    }
     fn read(&self, target: &TargetV2) -> Result<Option<Bytes>> {
         self.live()?;
         let name = target_name(target)?;
         match target {
             TargetV2::OfficialConfig => self.home.read(name, MAX_IMAGE, false),
+            TargetV2::ManagerOperationReceipt(id) => self
+                .receipt_dir(id, false)?
+                .map(|d| d.read(name, MAX_RECEIPT, true))
+                .unwrap_or(Ok(None)),
             TargetV2::Manager(_) => self
                 .manager
                 .as_ref()
@@ -699,11 +746,28 @@ impl Context {
         after: Option<&[u8]>,
     ) -> Result<()> {
         self.live()?;
+        let receipt;
         let dir = match target {
+            TargetV2::ManagerOperationReceipt(id) => {
+                receipt = self.receipt_dir(id, after.is_some())?;
+                let Some(dir) = &receipt else {
+                    return if before.is_none() && after.is_none() {
+                        Ok(())
+                    } else {
+                        Err(fault("model_transaction_cas"))
+                    };
+                };
+                dir
+            }
             TargetV2::OfficialConfig => &self.home,
             TargetV2::Manager(_) => self.manager()?,
         };
-        dir.replace(target_name(target)?, before, after, false)
+        dir.replace(
+            target_name(target)?,
+            before,
+            after,
+            matches!(target, TargetV2::ManagerOperationReceipt(_)),
+        )
     }
 }
 fn image(bytes: &Option<Vec<u8>>) -> Option<Image> {
@@ -782,7 +846,7 @@ fn validate_journal(j: &Journal, m: &Marker, binding: &Binding) -> Result<()> {
             return Err(fault("model_transaction_target_invalid"));
         }
         for i in [&e.before, &e.after].into_iter().flatten() {
-            budget(&mut total, i.bytes)?;
+            target_budget(&e.target, &mut total, i.bytes)?;
             if !schema_v2::valid_digest(&i.digest) {
                 return Err(fault("model_transaction_journal_invalid"));
             }
@@ -922,7 +986,7 @@ pub fn commit(root: &Path, home: &Path, writes: Vec<WriteV2>) -> Result<()> {
             return Err(fault("model_transaction_target_invalid"));
         }
         for b in [&w.before, &w.after].into_iter().flatten() {
-            budget(&mut total, b.len())?;
+            target_budget(&w.target, &mut total, b.len())?;
         }
     }
     let mut c = Context::open(root, home)?;
@@ -1030,6 +1094,261 @@ pub fn recover(root: &Path, home: &Path) -> Result<bool> {
     legal_states(&c, &entries)?;
     finish(&c, &dir, &mut j, &entries, &marker_bytes, true)?;
     Ok(true)
+}
+
+/// Exact adoption dependencies retained by this root/home's local transaction
+/// history. All valid phases retain BOTH images: even an uncommitted/rolled-back
+/// plan is kept for diagnosis and explicit historical restoration. Library
+/// images/parent chains are storage history, not evidence of template adoption.
+///
+/// Read-only and lock-free under the caller's admission/config/model locks. No
+/// pending recovery, directory creation, historical-root discovery or truncation.
+/// Metadata means journals plus dependency-bearing Policy/Draft images; both
+/// count against the cumulative 32 MiB scan budget before image allocation.
+pub fn retained_template_refs(root: &Path, home: &Path) -> Result<Vec<schema_v2::RefV2>> {
+    let c = Context::open(root, home)?;
+    let Some(manager) = &c.manager else {
+        return Ok(vec![]);
+    };
+    let Some(transactions) = manager.child(TRANSACTIONS, false, true)? else {
+        return Ok(vec![]);
+    };
+    let binding = c.binding()?;
+    // Enumerate only this fixed directory, never payload trees or old backups.
+    // Materialize a bounded name list first: do not return a successful prefix.
+    let mut names = Vec::new();
+    transactions.live()?;
+    for entry in io(std::fs::read_dir(&transactions.path))? {
+        let entry = io(entry)?;
+        if names.len() == MAX_RETAINED_TRANSACTIONS {
+            return Err(error("model_limit"));
+        }
+        let name = entry
+            .file_name()
+            .into_string()
+            .map_err(|_| fault("model_transaction_path_invalid"))?;
+        if !uuid4(&name) {
+            return Err(fault("model_transaction_path_invalid"));
+        }
+        let metadata = io(std::fs::symlink_metadata(entry.path()))?;
+        supported(&metadata)?;
+        if !metadata.is_dir() {
+            return Err(fault("model_transaction_path_invalid"));
+        }
+        names.push(name);
+    }
+    names.sort_unstable();
+    transactions.live()?;
+    let mut scan = RetainedScan {
+        metadata: 0,
+        items: 0,
+        refs: BTreeSet::new(),
+    };
+    for id in names {
+        c.live()?;
+        transactions.live()?;
+        let dir = transactions
+            .child(&id, false, true)?
+            .ok_or_else(|| fault("model_transaction_journal_invalid"))?;
+        let remaining = MAX_RETAINED_METADATA - scan.metadata;
+        let bytes = dir
+            .read(JOURNAL, MAX_JOURNAL.min(remaining), true)
+            .map_err(retained_limit)?
+            .ok_or_else(|| fault("model_transaction_journal_invalid"))?;
+        scan.charge(bytes.len())?;
+        let journal: Journal = decode(&bytes)?;
+        // Historical directories have no pending marker. Bind validation to the
+        // directory's canonical UUID, current anchors and checksummed plan.
+        let marker = Marker {
+            version: 2,
+            id,
+            binding: Binding {
+                root: binding.root.clone(),
+                home: binding.home.clone(),
+            },
+            plan_digest: checksum(&journal.plan)?,
+        };
+        validate_journal(&journal, &marker, &binding).map_err(retained_limit)?;
+        for (index, entry) in journal.plan.entries.iter().enumerate() {
+            let TargetV2::Manager(name) = &entry.target else {
+                continue;
+            };
+            if name != "manager-state/model-policy.json" && name != DRAFT {
+                continue;
+            }
+            for (before, expected) in [(true, &entry.before), (false, &entry.after)] {
+                if let Some(image) = expected {
+                    scan.charge(image.bytes)?;
+                }
+                // Use the declared, already-charged size as a hard read limit;
+                // a corrupt larger file must not bypass the metadata budget.
+                let image = scan.image(&dir, &image_name(index, before), expected)?;
+                if let Some(image) = image {
+                    let value = schema_v2::parse_strict_json_v2(&image)
+                        .map_err(|_| fault("model_transaction_payload_invalid"))?;
+                    if name == DRAFT {
+                        scan.draft(&value)?;
+                    } else {
+                        scan.policy(&value)?;
+                    }
+                }
+            }
+        }
+        dir.live()?;
+    }
+    c.live()?;
+    transactions.live()?;
+    Ok(scan.refs.into_iter().collect())
+}
+
+fn retained_limit(err: schema_v2::MatchErrorV2) -> schema_v2::MatchErrorV2 {
+    if err.code == "model_transaction_limit" {
+        error("model_limit")
+    } else {
+        err
+    }
+}
+
+struct RetainedScan {
+    metadata: usize,
+    items: usize,
+    refs: BTreeSet<schema_v2::RefV2>,
+}
+impl RetainedScan {
+    fn image(&self, dir: &Dir, name: &str, expected: &Option<Image>) -> Result<Option<Bytes>> {
+        let limit = expected.as_ref().map_or(0, |image| image.bytes);
+        let bytes = dir.read(name, limit, true).map_err(|err| {
+            if err.code == "model_transaction_limit" {
+                fault("model_transaction_backup_invalid")
+            } else {
+                err
+            }
+        })?;
+        match (expected, &bytes) {
+            (None, None) => (),
+            (Some(image), Some(bytes))
+                if bytes.len() == image.bytes && schema_v2::digest(bytes) == image.digest => {}
+            _ => return Err(fault("model_transaction_backup_invalid")),
+        }
+        Ok(bytes)
+    }
+    fn charge(&mut self, bytes: usize) -> Result<()> {
+        self.metadata = self
+            .metadata
+            .checked_add(bytes)
+            .ok_or_else(|| error("model_limit"))?;
+        if self.metadata > MAX_RETAINED_METADATA {
+            return Err(error("model_limit"));
+        }
+        Ok(())
+    }
+    fn item(&mut self) -> Result<()> {
+        self.items += 1;
+        if self.items > MAX_RETAINED_ITEMS {
+            return Err(error("model_limit"));
+        }
+        Ok(())
+    }
+    fn version(value: &serde_json::Value) -> Result<()> {
+        if !value.is_object() {
+            return Err(fault("model_transaction_payload_invalid"));
+        }
+        if value
+            .get("schemaVersion")
+            .and_then(serde_json::Value::as_u64)
+            != Some(2)
+        {
+            return Err(fault("model_transaction_version"));
+        }
+        Ok(())
+    }
+    fn array<'a>(value: &'a serde_json::Value, field: &str) -> Result<&'a Vec<serde_json::Value>> {
+        let values = value
+            .get(field)
+            .and_then(serde_json::Value::as_array)
+            .ok_or_else(|| fault("model_transaction_payload_invalid"))?;
+        if values.len() > MAX_REF_ARRAY {
+            return Err(error("model_limit"));
+        }
+        Ok(values)
+    }
+    fn reference(&mut self, value: &serde_json::Value) -> Result<()> {
+        self.item()?;
+        // Bound strings before cloning into a typed exact RefV2. Unknown fields
+        // in the reference itself are refused by RefV2's strict deserializer.
+        for (key, len) in [("templateId", 36), ("revisionId", 36), ("digest", 71)] {
+            if value
+                .get(key)
+                .and_then(serde_json::Value::as_str)
+                .is_none_or(|s| s.len() != len)
+            {
+                return Err(fault("model_transaction_reference_invalid"));
+            }
+        }
+        let r: schema_v2::RefV2 = serde_json::from_value(value.clone())
+            .map_err(|_| fault("model_transaction_reference_invalid"))?;
+        if !schema_v2::valid_id(&r.template_id)
+            || !schema_v2::valid_id(&r.revision_id)
+            || !schema_v2::valid_digest(&r.digest)
+        {
+            return Err(fault("model_transaction_reference_invalid"));
+        }
+        self.refs.insert(r);
+        Ok(())
+    }
+    fn references(&mut self, value: &serde_json::Value) -> Result<()> {
+        for r in Self::array(value, "templateRefs")? {
+            self.reference(r)?;
+        }
+        Ok(())
+    }
+    fn policy(&mut self, value: &serde_json::Value) -> Result<()> {
+        Self::version(value)?;
+        self.references(value)?;
+        for channel in Self::array(value, "channels")? {
+            self.item()?;
+            self.references(channel)?;
+            for model in Self::array(channel, "models")? {
+                self.item()?;
+                if !model.is_object() {
+                    return Err(fault("model_transaction_payload_invalid"));
+                }
+                if let Some(binding) = model.get("binding").filter(|v| !v.is_null()) {
+                    let kind = binding.get("kind").and_then(serde_json::Value::as_str);
+                    if !matches!(kind, Some("manual" | "auto_read"))
+                        || binding.as_object().is_none_or(|o| o.len() != 2)
+                    {
+                        return Err(fault("model_transaction_reference_invalid"));
+                    }
+                    self.reference(
+                        binding
+                            .get("reference")
+                            .ok_or_else(|| fault("model_transaction_reference_invalid"))?,
+                    )?;
+                }
+            }
+        }
+        Ok(())
+    }
+    fn draft(&mut self, value: &serde_json::Value) -> Result<()> {
+        Self::version(value)?;
+        if value
+            .pointer("/base/dtoVersion")
+            .and_then(serde_json::Value::as_u64)
+            != Some(2)
+        {
+            return Err(fault("model_transaction_version"));
+        }
+        self.policy(
+            value
+                .get("policy")
+                .ok_or_else(|| fault("model_transaction_payload_invalid"))?,
+        )?;
+        if let Some(baseline) = value.get("observedBaseline").filter(|v| !v.is_null()) {
+            self.policy(baseline)?;
+        }
+        Ok(())
+    }
 }
 
 #[cfg(test)]

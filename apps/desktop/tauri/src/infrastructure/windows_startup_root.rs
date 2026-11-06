@@ -7,6 +7,7 @@ pub(crate) mod user_scope;
 pub(crate) use user_scope::{current_user_profile, protect_current_user_path};
 
 /// No WebView command may run with half-initialized business state.
+#[cfg(windows)]
 pub(crate) fn defer_main(
     config: &mut tauri::utils::config::Config,
 ) -> Option<tauri::utils::config::WindowConfig> {

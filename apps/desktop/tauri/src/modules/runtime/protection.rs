@@ -48,6 +48,46 @@ fn digest(root: &Path, path: &Path, limit: u64) -> AppResult<String> {
     safety::check_path(root, path, false)?;
     Ok(format!("{:x}", Sha256::digest(read_owned(path, limit)?)))
 }
+
+const MAX_NODE_BYTES: u64 = 512 * 1024 * 1024;
+
+/// Hash the opened, single-link regular file with bounded memory and I/O.
+/// The fixed-I admission remains the caller's responsibility; legacy isolated
+/// fixtures may inject an explicit dependency outside I, never a PATH lookup.
+fn node_digest(root: &Path, node: &Path) -> AppResult<String> {
+    let anchor = if node.starts_with(root) {
+        root
+    } else {
+        node.parent().ok_or_else(fail)?
+    };
+    safety::check_path(anchor, node, false)?;
+    let file = safety::open_file(node, false)?;
+    safety::require_single_link(&file)?;
+    let expected_bytes = file.metadata().map_err(|_| fail())?.len();
+    if expected_bytes == 0 || expected_bytes > MAX_NODE_BYTES {
+        return Err(fail());
+    }
+    let mut reader = file.take(MAX_NODE_BYTES + 1);
+    let mut hash = Sha256::new();
+    let mut buffer = [0u8; 64 * 1024];
+    let mut bytes = 0u64;
+    loop {
+        let count = reader.read(&mut buffer).map_err(|_| fail())?;
+        if count == 0 {
+            break;
+        }
+        bytes += count as u64;
+        if bytes > MAX_NODE_BYTES || bytes > expected_bytes {
+            return Err(fail());
+        }
+        hash.update(&buffer[..count]);
+    }
+    if bytes != expected_bytes || reader.get_ref().metadata().map_err(|_| fail())?.len() != bytes {
+        return Err(fail());
+    }
+    safety::require_single_link(reader.get_ref())?;
+    Ok(format!("{:x}", hash.finalize()))
+}
 fn valid_digest(value: &str) -> bool {
     value.len() == 64
         && value
@@ -84,13 +124,14 @@ fn valid_bin(path: &str) -> bool {
 }
 
 /// Written to the installed manifest only after package probe and final activation.
-/// Hashes detect changed metadata/launcher/script; this is not a package signature.
+/// Hashes detect changed Node/metadata/launcher/script; this is not a package signature.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ActivationProof {
     attempt_id: String,
     bin: String,
     node: PathBuf,
+    node_sha256: String,
     entry_sha256: String,
     package_sha256: String,
     bin_sha256: String,
@@ -101,6 +142,7 @@ impl ActivationProof {
             || !valid_bin(&self.bin)
             || !valid_absolute(&self.node)
             || self.node.as_os_str().len() > 4096
+            || !valid_digest(&self.node_sha256)
             || !valid_digest(&self.entry_sha256)
             || !valid_digest(&self.package_sha256)
             || !valid_digest(&self.bin_sha256)
@@ -138,6 +180,7 @@ pub(super) fn activation_proof(
         attempt_id: attempt_id.into(),
         bin: bin.into(),
         node: node.into(),
+        node_sha256: node_digest(root, node)?,
         entry_sha256: digest(root, &root.join(MANAGED_ENTRY_RELATIVE), 64 * 1024)?,
         package_sha256: digest(prefix, &package.join("package.json"), 64 * 1024)?,
         bin_sha256: digest(prefix, &package.join(bin), 16 * 1024 * 1024)?,
@@ -852,6 +895,74 @@ mod tests {
         receipt.discard(root.path()).unwrap();
         assert!(PanelProtection::load(root.path()).unwrap().is_none());
         assert_active(root.path(), &receipt);
+    }
+
+    #[test]
+    fn node_digest_is_required_strict_and_persisted_in_verified_receipt() {
+        let (root, _guard, mut receipt) = fixture();
+        activate(root.path(), &receipt, &receipt.attempt_id);
+        let proof = receipt.activation().unwrap();
+        let bytes = std::fs::read(receipt.node.as_ref().unwrap()).unwrap();
+        assert_eq!(proof.node_sha256, format!("{:x}", Sha256::digest(bytes)));
+        let good = serde_json::to_value(&proof).unwrap();
+        for bad_hash in [
+            "".to_string(),
+            "a".repeat(63),
+            "a".repeat(65),
+            "G".repeat(64),
+            "A".repeat(64),
+        ] {
+            let mut bad = good.clone();
+            bad["node_sha256"] = bad_hash.into();
+            assert!(serde_json::from_value::<ActivationProof>(bad)
+                .unwrap()
+                .validate()
+                .is_err());
+        }
+        let mut missing = good;
+        missing.as_object_mut().unwrap().remove("node_sha256");
+        assert!(serde_json::from_value::<ActivationProof>(missing).is_err());
+        receipt.verified = Some(proof);
+        receipt.save(root.path()).unwrap();
+        assert_eq!(
+            PanelProtection::load(root.path())
+                .unwrap()
+                .unwrap()
+                .verified,
+            receipt.verified
+        );
+    }
+
+    #[test]
+    fn node_hash_rejects_empty_and_over_budget_files_before_reading_payload() {
+        let root = tempfile::tempdir().unwrap();
+        let node = root.path().join("node");
+        let file = std::fs::File::create(&node).unwrap();
+        assert!(node_digest(root.path(), &node).is_err());
+        // Sparse: enforce the exact bundle limit without allocating 512 MiB.
+        file.set_len(MAX_NODE_BYTES + 1).unwrap();
+        assert!(node_digest(root.path(), &node).is_err());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn linked_node_never_releases_protection_or_touches_link_target() {
+        for hard in [false, true] {
+            let (root, guard, mut receipt) = fixture();
+            activate(root.path(), &receipt, &receipt.attempt_id);
+            let node = receipt.node.as_ref().unwrap();
+            let target = root.path().join("original-node");
+            let original = std::fs::read(node).unwrap();
+            std::fs::rename(node, &target).unwrap();
+            if hard {
+                std::fs::hard_link(&target, node).unwrap();
+            } else {
+                std::os::unix::fs::symlink(&target, node).unwrap();
+            }
+            assert!(receipt.reconcile(root.path(), &guard).is_err());
+            assert_eq!(std::fs::read(target).unwrap(), original);
+            assert_active(root.path(), &receipt);
+        }
     }
 
     #[cfg(unix)]

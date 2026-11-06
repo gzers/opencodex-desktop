@@ -1161,3 +1161,301 @@ fn portable_decoder_rejects_duplicate_version_and_nested_source_keys() {
         "model_json_duplicate_key"
     );
 }
+
+fn public_source_fixture() -> Value {
+    json!({"adapter":"openai-chat","responsesPath":"/custom/responses","statelessResponses":true,"models":["vendor/a","vendor/b"],"liveModels":true,"modelPreset":{"mode":"preset","appliedVersion":7,"appliedAt":"2026-11-06T12:00:00Z"},"retainModels":["vendor/a","vendor/b"],"selectedModels":["vendor/a","vendor/b"],"newModelPolicy":"on","defaultModel":"vendor/b","autoReviewModel":"review-provider/default-review","autoReviewModelOverrides":{"vendor/a":"review-provider/review-a","vendor/b":"review-provider/review-b"},"defaultAliases":false,"alias":"shared-provider-alias","modelAliases":{"vendor/a":"route-a","vendor/b":"route-b"},"modelDisplayNames":{"vendor/a":"A","vendor/b":"B"},"modelAdapters":{"vendor/a":"openai-chat","vendor/b":"openai-responses"},"modelCapabilities":{"vendor/a":{"inputModalities":["text"],"futureDetail":{"keep":"a"}},"vendor/b":{"inputModalities":["text","image"],"futureDetail":{"keep":"b"}}},"noReasoningModels":["vendor/a","vendor/b"],"noTemperatureModels":["vendor/b"],"noVisionModels":["vendor/a","vendor/b"],"note":"public source note"})
+}
+#[test]
+fn portable_public_source_is_optional_and_preserves_complete_public_objects() {
+    let library = seed_library_v2().unwrap();
+    let p = policy(&["vendor/a", "vendor/b"]);
+    let scope = ModelExportScopeV2 {
+        channel_ids: [CHANNEL.into()].into(),
+        ..Default::default()
+    };
+    let package = export_portable_models_v2(&library, &p, &scope).unwrap();
+    assert!(package.payload.policy.as_ref().unwrap().channels[0]
+        .connection
+        .as_ref()
+        .unwrap()
+        .provider
+        .is_none());
+    assert!(
+        !serde_json::to_value(&package).unwrap()["payload"]["policy"]["channels"][0]["connection"]
+            .as_object()
+            .unwrap()
+            .contains_key("provider")
+    );
+    let original = package.clone();
+    let public = public_source_fixture();
+    let attached =
+        attach_public_sources_v2(&package, &[(CHANNEL.into(), public.clone())].into()).unwrap();
+    assert_eq!(package, original);
+    assert_ne!(attached.digest, package.digest);
+    assert_eq!(attached.created_at, package.created_at);
+    assert_eq!(
+        attached.payload.policy.as_ref().unwrap().channels[0]
+            .connection
+            .as_ref()
+            .unwrap()
+            .provider
+            .as_ref(),
+        Some(&public)
+    );
+    assert_eq!(
+        decode_portable_models_v2(&encode_portable_models_v2(&attached).unwrap()).unwrap(),
+        attached
+    );
+    let same = attach_public_sources_v2(&attached, &[(CHANNEL.into(), public)].into()).unwrap();
+    assert_eq!(same, attached);
+}
+#[test]
+fn portable_public_subset_reuses_raw_id_maps_and_bounds_every_known_model_list() {
+    let library = seed_library_v2().unwrap();
+    let p = policy(&["vendor/a", "vendor/b"]);
+    let scope = ModelExportScopeV2 {
+        channel_models: [(CHANNEL.into(), ["vendor/a".into()].into())].into(),
+        ..Default::default()
+    };
+    let package = export_portable_models_v2(&library, &p, &scope).unwrap();
+    let public = public_source_fixture();
+    let attached = attach_public_sources_v2(&package, &[(CHANNEL.into(), public)].into()).unwrap();
+    let connection = attached.payload.policy.as_ref().unwrap().channels[0]
+        .connection
+        .as_ref()
+        .unwrap();
+    let public = connection.provider.as_ref().unwrap();
+    assert_eq!(public["responsesPath"], "/custom/responses");
+    assert_eq!(public["statelessResponses"], true);
+    assert_eq!(
+        public["modelCapabilities"]["vendor/a"]["futureDetail"],
+        json!({"keep":"a"})
+    );
+    assert!(public["modelCapabilities"].get("vendor/b").is_none());
+    assert!(public["modelAliases"].get("vendor/b").is_none());
+    assert_eq!(public["alias"], "shared-provider-alias");
+    assert_eq!(public["defaultAliases"], false);
+    for key in [
+        "models",
+        "retainModels",
+        "selectedModels",
+        "noReasoningModels",
+        "noVisionModels",
+    ] {
+        assert_eq!(public[key], json!(["vendor/a"]), "{key}");
+    }
+    assert_eq!(public["noTemperatureModels"], json!([]));
+    assert_eq!(public["newModelPolicy"], "off");
+    assert_eq!(public["liveModels"], false);
+    assert_eq!(
+        public["modelPreset"],
+        json!({"mode":"custom","appliedVersion":7,"appliedAt":"2026-11-06T12:00:00Z"})
+    );
+    assert!(public.get("defaultModel").is_none());
+    assert_eq!(public["autoReviewModel"], "review-provider/default-review");
+    assert_eq!(
+        public["autoReviewModelOverrides"],
+        json!({"vendor/a":"review-provider/review-a"})
+    );
+    let encoded = encode_portable_models_v2(&attached).unwrap();
+    assert!(!String::from_utf8(encoded).unwrap().contains("vendor/b"));
+    let mut tampered = attached.clone();
+    tampered.payload.policy.as_mut().unwrap().channels[0]
+        .connection
+        .as_mut()
+        .unwrap()
+        .provider
+        .as_mut()
+        .unwrap()["retainModels"] = json!(["vendor/a", "vendor/b"]);
+    tampered.digest = digest(&canonical_bytes(&tampered.payload).unwrap());
+    assert_eq!(
+        validate_portable_models_v2(&tampered).unwrap_err().code,
+        "model_public_source_scope"
+    );
+}
+#[test]
+fn portable_public_source_rejects_secrets_unknown_fields_outside_scopes_and_family_connections() {
+    let library = seed_library_v2().unwrap();
+    let p = policy(&["vendor/a"]);
+    let scope = ModelExportScopeV2 {
+        channel_ids: [CHANNEL.into()].into(),
+        ..Default::default()
+    };
+    let package = export_portable_models_v2(&library, &p, &scope).unwrap();
+    for public in [
+        json!({"apiKey":"fixture-secret"}),
+        json!({"modelCapabilities":{"vendor/a":{"token":"fixture-secret"}}}),
+        json!({"futureUnsupportedPublicField":true}),
+        json!({"baseUrl":"https://user:password@example.invalid"}),
+    ] {
+        assert!(attach_public_sources_v2(&package, &[(CHANNEL.into(), public)].into()).is_err());
+    }
+    assert_eq!(
+        attach_public_sources_v2(
+            &package,
+            &[(READ.into(), json!({"adapter":"openai-chat"}))].into()
+        )
+        .unwrap_err()
+        .code,
+        "model_public_source_scope"
+    );
+    let mut p = policy(&["gpt-6-sol"]);
+    pin(&library, &mut p, "gpt-6-sol", false);
+    let family = p.channels[0].models[0]
+        .binding
+        .as_ref()
+        .unwrap()
+        .reference()
+        .template_id
+        .clone();
+    let scope = ModelExportScopeV2 {
+        channel_families: [(CHANNEL.into(), [family].into())].into(),
+        ..Default::default()
+    };
+    let family = export_portable_models_v2(&library, &p, &scope).unwrap();
+    assert_eq!(
+        attach_public_sources_v2(
+            &family,
+            &[(CHANNEL.into(), json!({"adapter":"openai-chat"}))].into()
+        )
+        .unwrap_err()
+        .code,
+        "model_public_source_scope"
+    );
+}
+#[test]
+fn portable_public_adapter_remains_source_material_and_cannot_replace_manual_protocol() {
+    let library = seed_library_v2().unwrap();
+    let mut p = policy(&["vendor/a"]);
+    p.channels[0].models[0].explicit_overrides.protocol = Field::Custom("openai-responses".into());
+    let scope = ModelExportScopeV2 {
+        channel_ids: [CHANNEL.into()].into(),
+        ..Default::default()
+    };
+    let package = export_portable_models_v2(&library, &p, &scope).unwrap();
+    let attached = attach_public_sources_v2(
+        &package,
+        &[(
+            CHANNEL.into(),
+            json!({"adapter":"openai-chat","statelessResponses":true}),
+        )]
+        .into(),
+    )
+    .unwrap();
+    let row = &attached.payload.policy.as_ref().unwrap().channels[0];
+    assert_eq!(
+        row.connection.as_ref().unwrap().provider.as_ref().unwrap()["adapter"],
+        "openai-chat"
+    );
+    assert_eq!(
+        row.models[0].explicit_overrides.protocol,
+        Field::Custom("openai-responses".into())
+    );
+    let effective = resolve_effective_model_v2(&library, &p.channels[0], &row.models[0]).unwrap();
+    assert!(matches!(
+        effective.protocol,
+        ProtocolStateV2::Resolved {
+            value: ProtocolV2::OpenaiResponses,
+            origin: FieldOriginV2::ExplicitModel
+        }
+    ));
+}
+
+#[test]
+fn portable_review_override_keys_are_scoped_but_external_selector_values_are_untouched() {
+    let library = seed_library_v2().unwrap();
+    let p = policy(&["vendor/a", "vendor/b"]);
+    let scope = ModelExportScopeV2 {
+        channel_models: [(CHANNEL.into(), ["vendor/a".into()].into())].into(),
+        ..Default::default()
+    };
+    let package = export_portable_models_v2(&library, &p, &scope).unwrap();
+    let public = json!({"adapter":"openai-chat","models":["vendor/a","vendor/b"],"autoReviewModel":"external/default-review","autoReviewModelOverrides":{"vendor-a":"other-provider/review/with/slash","vendor/a":null,"vendor/b":"must-not-copy","vendor-b":"must-not-copy-either"}});
+    let attached =
+        attach_public_sources_v2(&package, &[(CHANNEL.into(), public.clone())].into()).unwrap();
+    let source = attached.payload.policy.as_ref().unwrap().channels[0]
+        .connection
+        .as_ref()
+        .unwrap()
+        .provider
+        .as_ref()
+        .unwrap();
+    assert_eq!(source["autoReviewModel"], "external/default-review");
+    assert_eq!(
+        source["autoReviewModelOverrides"],
+        json!({"vendor-a":"other-provider/review/with/slash","vendor/a":null})
+    );
+    let mut collision = public;
+    collision["models"] = json!(["vendor/a", "vendor-a", "vendor/b"]);
+    let attached =
+        attach_public_sources_v2(&package, &[(CHANNEL.into(), collision)].into()).unwrap();
+    let source = attached.payload.policy.as_ref().unwrap().channels[0]
+        .connection
+        .as_ref()
+        .unwrap()
+        .provider
+        .as_ref()
+        .unwrap();
+    assert_eq!(source["autoReviewModelOverrides"], json!({"vendor/a":null}));
+}
+#[test]
+fn portable_public_known_model_maps_and_denial_lists_never_keep_unselected_definitions() {
+    let library = seed_library_v2().unwrap();
+    let p = policy(&["vendor/a", "vendor/b"]);
+    let scope = ModelExportScopeV2 {
+        channel_models: [(CHANNEL.into(), ["vendor/a".into()].into())].into(),
+        ..Default::default()
+    };
+    let package = export_portable_models_v2(&library, &p, &scope).unwrap();
+    let mut public = public_source_fixture();
+    // Values are opaque public JSON here; this verifies field scoping rather
+    // than claiming each vendor-specific runtime value has been exercised.
+    for key in super::provider_fields::PUBLIC.iter().filter(|k| {
+        k.starts_with("model")
+            && ![
+                "models",
+                "modelPreset",
+                "modelSuffixBracketStrip",
+                "modelReasoningEffortsAuthoritative",
+            ]
+            .contains(k)
+    }) {
+        public[*key] = json!({"vendor/a":{"opaque":"keep-a"},"vendor/b":{"opaque":"drop-b"}});
+    }
+    for key in super::provider_fields::PUBLIC
+        .iter()
+        .filter(|k| k.ends_with("Models") && **k != "liveModels")
+    {
+        public[*key] = json!(["vendor/a", "vendor/b"]);
+    }
+    let attached = attach_public_sources_v2(&package, &[(CHANNEL.into(), public)].into()).unwrap();
+    let source = attached.payload.policy.as_ref().unwrap().channels[0]
+        .connection
+        .as_ref()
+        .unwrap()
+        .provider
+        .as_ref()
+        .unwrap();
+    for (key, value) in source.as_object().unwrap() {
+        if key.starts_with("model") && key != "modelPreset" && value.is_object() {
+            assert!(value.get("vendor/a").is_some(), "{key}");
+            assert!(value.get("vendor/b").is_none(), "{key}");
+        }
+        if key.ends_with("Models") && key != "liveModels" {
+            assert_eq!(*value, json!(["vendor/a"]), "{key}");
+        }
+    }
+    let mut bad = attached.clone();
+    bad.payload.policy.as_mut().unwrap().channels[0]
+        .connection
+        .as_mut()
+        .unwrap()
+        .provider
+        .as_mut()
+        .unwrap()["modelCapabilities"] = json!("wrong-shape");
+    bad.digest = digest(&canonical_bytes(&bad.payload).unwrap());
+    assert_eq!(
+        validate_portable_models_v2(&bad).unwrap_err().code,
+        "model_public_source_scope"
+    );
+}

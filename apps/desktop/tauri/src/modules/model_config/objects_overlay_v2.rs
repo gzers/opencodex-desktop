@@ -8,6 +8,7 @@ use super::{
     schema_v2::{self, LibraryV2, RefV2, TemplateV2},
 };
 use crate::modules::sync::{
+    portable_accounts,
     portable_assets::{self, Assets, Mcp, Skill},
     portable_manager,
 };
@@ -55,6 +56,7 @@ pub struct ChannelSelectionV2 {
 pub struct ManagerSelectionV2 {
     pub preferences: bool,
     pub extensions: bool,
+    pub account_ids: Vec<String>,
     pub webdav_ids: Vec<String>,
     pub webdav_password_ids: Vec<String>,
 }
@@ -147,6 +149,7 @@ fn validate_selection(s: &SelectionV2) -> ModelResult<()> {
     {
         return Err(err("overlay_scope_invalid"));
     }
+    set(&s.manager.account_ids, 1000)?;
     set(&s.manager.webdav_ids, 256)?;
     set(&s.manager.webdav_password_ids, 256)?;
     if s.usage == UsageV2::RemoteSync
@@ -401,6 +404,7 @@ pub fn overlay_selected(
     let result = SavedObjects::capture(out, auth)?;
     let result = inherit_receipts(
         result,
+        &local.manager.accounts,
         &local.content_versions,
         &local_atoms,
         &selection,
@@ -768,11 +772,106 @@ fn check_channel_names(policy: &PortablePolicyV2) -> ModelResult<()> {
 fn endpoint_binding_eq(a: &portable_manager::Endpoint, b: &portable_manager::Endpoint) -> bool {
     a.url == b.url && a.remote_path == b.remote_path && a.username == b.username
 }
+/// Same-source information identity, not an authorization or a login grant.
+/// Unknown-origin/unknown-subject rows retain their exact portable UUID/slot
+/// identity. No label, email or bare native slot can prove a cross-device match.
+pub fn account_source_identity(
+    account: &portable_accounts::AccountInfo,
+) -> ModelResult<serde_json::Value> {
+    let mut value = portable_accounts::comparison_value(account).map_err(|e| err(&e.code))?;
+    let fields = value
+        .as_object_mut()
+        .ok_or_else(|| err("overlay_account_identity_conflict"))?;
+    fields.remove("label");
+    fields.remove("email");
+    Ok(value)
+}
+fn overlay_accounts(
+    base: &mut Vec<portable_accounts::AccountInfo>,
+    local: &[portable_accounts::AccountInfo],
+    selected: &[String],
+) -> ModelResult<()> {
+    portable_accounts::validate(base).map_err(|e| err(&e.code))?;
+    portable_accounts::validate(local).map_err(|e| err(&e.code))?;
+    let mut touched = BTreeSet::new();
+    for id in selected {
+        let incoming = local
+            .iter()
+            .find(|a| a.id == *id)
+            .ok_or_else(|| err("overlay_selection_missing"))?;
+        if !portable_accounts::information_supported(incoming) {
+            return Err(err("overlay_account_unsupported"));
+        }
+        let exact = base.iter().position(|a| a.id == incoming.id);
+        let matches: Vec<_> = base
+            .iter()
+            .enumerate()
+            .filter(|(_, a)| portable_accounts::same_subject(a, incoming))
+            .map(|(i, _)| i)
+            .collect();
+        if matches.len() > 1 {
+            return Err(err("overlay_account_ambiguous"));
+        }
+        if exact.is_some() && !matches.is_empty() && exact != matches.first().copied() {
+            return Err(err("overlay_account_identity_conflict"));
+        }
+        if let Some(index) = matches.first().copied().or(exact) {
+            let previous = &base[index];
+            let proven_subject = previous.origin.is_some()
+                && incoming.origin.is_some()
+                && incoming.subject.is_some()
+                && portable_accounts::same_subject(previous, incoming);
+            let exact_identity = previous.id == incoming.id
+                && account_source_identity(previous)? == account_source_identity(incoming)?;
+            if !proven_subject && !exact_identity {
+                if previous.subject.is_none()
+                    || incoming.subject.is_none()
+                    || previous.origin.is_none()
+                    || incoming.origin.is_none()
+                {
+                    return Err(err("overlay_account_mapping_required"));
+                }
+                return Err(err("overlay_account_identity_conflict"));
+            }
+            if !touched.insert(previous.id.clone()) {
+                return Err(err("overlay_account_ambiguous"));
+            }
+            let mut merged = incoming.clone();
+            merged.id = previous.id.clone();
+            if proven_subject {
+                // This is descriptive source metadata; never retarget the
+                // baseline's native slot or invent any login material.
+                merged
+                    .origin
+                    .as_mut()
+                    .expect("proven origin")
+                    .source_account_id = previous
+                    .origin
+                    .as_ref()
+                    .expect("proven origin")
+                    .source_account_id
+                    .clone();
+            }
+            base[index] = merged;
+        } else {
+            if !touched.insert(incoming.id.clone()) {
+                return Err(err("overlay_account_ambiguous"));
+            }
+            base.push(incoming.clone());
+        }
+    }
+    portable_accounts::validate(base).map_err(|e| err(&e.code))
+}
 fn overlay_manager(
     out: &mut CapturedObjects,
     local: &CapturedObjects,
     scope: &ManagerSelectionV2,
 ) -> ModelResult<()> {
+    overlay_accounts(
+        &mut out.manager.accounts,
+        &local.manager.accounts,
+        &scope.account_ids,
+    )?;
     if scope.preferences {
         out.manager.preferences = Some(
             local
@@ -965,6 +1064,7 @@ fn merge_skill(
 }
 fn inherit_receipts(
     result: SavedObjects,
+    local_accounts: &[portable_accounts::AccountInfo],
     local: &[super::content_versions::Version],
     local_atoms: &super::content_versions::SaveState,
     s: &SelectionV2,
@@ -1009,6 +1109,13 @@ fn inherit_receipts(
             r.revision_id
         ]))?;
     }
+    // Selecting a revision is not authority to date/adopt template metadata.
+    // This API currently has only one explicit metadata adoption operation:
+    // adopt_template_defaults. Other/new template meta stays unknown.
+    for r in &s.adopt_template_defaults {
+        allow(serde_json::json!(["v2-template-meta", r.template_id]))?;
+    }
+
     if !s.channels.is_empty() || s.include_global_template_refs {
         allow(serde_json::json!(["v2-global"]))?;
     }
@@ -1018,6 +1125,18 @@ fn inherit_receipts(
     if s.manager.extensions {
         allow(serde_json::json!(["v2-extensions"]))?;
     }
+    for source in s
+        .manager
+        .account_ids
+        .iter()
+        .filter_map(|id| local_accounts.iter().find(|a| a.id == *id))
+    {
+        allow(serde_json::json!([
+            "v2-accounts",
+            account_source_identity(source)?
+        ]))?;
+    }
+
     for id in &s.manager.webdav_ids {
         allow(serde_json::json!(["v2-webdav", id]))?;
     }
