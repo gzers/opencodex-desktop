@@ -387,6 +387,7 @@
   return '<dl class="sx-detail-list sx-snapshot-facts sx-source-facts"><dt><label for="sxDirection">本次来源</label></dt><dd><div class="sx-source-field"><select id="sxDirection" name="sxDirection" aria-label="本次来源"'+(blocked?' disabled':'')+'>'+[['upload','本机配置 → 云端（上传）'],['download','云端配置 → 本机（下载）']].map(([value,label])=>'<option value="'+value+'"'+(mode===value?' selected':'')+'>'+label+'</option>').join('')+'</select></div></dd></dl>';
  }
  function syncPreview(mode='auto'){
+  if(window.syncRecovery023){const mapped=({'normal':'ready','download':'ready','remote-empty':'empty','same-time':'unknown-time','legacy-mtime':'unknown-time','invalid-time':'unknown-time','unbound-version':'unknown-time','clock-skew':'unknown-time','network-error':'network','backup-fail':'backup-failed','write-fail':'download-stale'})[scenario]||scenario;window.syncRecovery023.setScope([...closure(scopes.webdav).ids]);window.syncRecovery023.open(mapped);return;}
   mode=['upload','download'].includes(mode)?mode:'auto';
   catalog=collect();pruneUnavailablePlatforms();rememberScope();refreshLocalVersions();const decision=savedContentDecision(),ids=closure(scopes.webdav).ids;
   const blocked=scenario==='network-error',manual=mode!=='auto',fallback=!manual&&decision.status==='unknown';
@@ -417,7 +418,7 @@
    const backup=!!$('#sxPreviewBackup')?.checked,picked=pickedSources();
    const rows=frozen.rows.map(x=>!x.conflict?x:picked[x.id]?{...x,mcpSource:picked[x.id]}:{...x,direction:'skip',deferred:true,reason:'未选择来源，本次未同步'});
    closeModal();startUpdate('webdav',rows,frozen.secrets,{encrypted:frozen.encrypted},undefined,{backup,source:frozen.source,snapshot:frozen.snapshot,scenario:frozen.scenario,agentPlatforms:frozen.agentPlatforms});
-  },{mode:changed?'confirm':'view',hideConfirm:!changed,cancelLabel:'取消',annotationText:'S22-POST-01最新采用：原来源行改为本次来源下拉，上传/下载两项。可靠保存时间可判新则预选新版；无法判新时云端有有效配置默认下载，否则默认上传；读取失败不能当作空云端。切换重算预览，不直接执行；确认才更新所选范围。下载默认备份，取消/X/Escape不执行，重开按当前事实重新预选。时间未知仍显示未知，不绕过强ETag/CAS、范围/连接/内容变化及凭据保护；仅内存原型，软件未实现。'});
+  },{mode:changed?'confirm':'view',hideConfirm:!changed,cancelLabel:'取消',annotationText:'S22-POST-01最新采用：原来源行改为本次来源下拉，上传/下载两项。可靠保存时间可判新则预选新版；无法判新时云端有有效配置默认下载，否则默认上传；读取失败不能当作空云端。切换重算预览，不直接执行；确认才更新所选范围。下载默认备份，取消/X/Escape不执行，重开按当前事实重新预选。时间未知仍显示未知；采用无ETag文件/代次/内容校验，范围/连接/内容及凭据保护保持；仅内存原型，软件未实现。'});
   preview=frozen;$('#modalConfirm').disabled=!changed;bindDirection();
  }
  function versionFacts(decision){return '<dl class="sx-detail-list sx-version-facts">'+['local','remote'].map(side=>{const v=decision.contentVersions[side],known=v.timeKind==='saved'&&v.bound!==false&&!v.clockSkew&&Number.isFinite(Date.parse(v.savedAt));return '<dt>'+(side==='local'?'本机':'云端')+'保存时间</dt><dd>'+esc(known?v.savedAt.replace('T',' ').replace(/\.\d{3}Z$/,' UTC'):'未知')+'</dd>';}).join('')+'</dl>';}
@@ -588,7 +589,7 @@
  document.addEventListener('click',e=>{
   const el=e.target.closest('[data-sx]');if(!el||el.disabled)return;const a=el.dataset.sx,id=el.dataset.id;
   if(a==='extensions'){closeModal();setRoute('extensions');return;}
-  if(a==='result-details')resultDetails();
+  if(a==='result-details'){if(tab==='webdav'&&window.syncRecovery023?.controller.state().fact)window.syncRecovery023.open();else resultDetails();}
   else if(a==='preview-close')closeModal();
   else if(a==='retry')retryFailed();
   else if(a==='receipt-retry'){if(failedRun?.id===Number(id)){closeModal();retryFailed();}}

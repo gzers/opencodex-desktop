@@ -1,0 +1,8 @@
+const {test}=require('node:test'),assert=require('node:assert/strict');
+const recovery=require('./runtime-recovery-023.js');
+const prepare=c=>{c.source('offline');return c.prepare();};
+test('prepare/cancel before confirmation never backs up or replaces installation',()=>{const c=recovery.create();prepare(c);c.cancel();assert.equal(c.state().backups,0);assert.equal(c.state().replacements,0);assert.equal(c.state().operation,null);});
+test('source mismatch cannot create an executable plan',()=>{const c=recovery.create();c.scene('source-invalid');assert.equal(prepare(c),null);});
+test('backup failure stops before replacing; occupied other user is never stopped',()=>{for(const scene of ['backup-failed','occupied','permission']){const c=recovery.create();c.scene(scene);c.apply(prepare(c));c.next();c.next();assert.equal(c.state().replacements,0,scene);assert.ok(c.state().operation.failure,scene);}});
+test('replacement cannot claim retraction and status reopens the same operation',()=>{const c=recovery.create();c.apply(prepare(c));const id=c.state().operation.operationId;c.next();c.next();assert.equal(c.cancel(),'cannot_retract');assert.equal(c.status().operationId,id);c.next();c.next();assert.equal(c.state().operation.phase,'done');assert.equal(c.state().operation.needsRestart,true);});
+test('unknown replacement preserves failure and verifies original instead of reinstalling',()=>{const c=recovery.create();c.scene('replace-failed');c.apply(prepare(c));c.next();c.next();c.next();assert.equal(c.state().operation.phase,'unknown');c.verify();assert.match(c.state().operation.failure,/首次失败/);assert.equal(c.state().replacements,1);});
