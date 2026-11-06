@@ -1503,3 +1503,20 @@ fn applied_mapping_proof_requires_original_manifest_and_receipt_even_after_later
     assert!(f.host.applied_mapping_proof(OP, &handle).is_err());
     assert_eq!(f.business(), before);
 }
+
+#[test]
+fn first_receive_preserves_explicit_no_secret_auth_mode_and_allows_second_receive() {
+    for mode in ["none", "local"] {
+        let mut f = Fixture::new();
+        let mut c = channel(&["a"]);
+        c.connection.as_mut().unwrap().auth_mode = Some(mode.into());
+        let objects = objects(c, vec![], false, None);
+        f.apply(OP, &objects, &selection(), false);
+        assert_eq!(f.raw()["providers"]["received"]["authMode"], mode);
+        assert!(f.raw()["providers"]["received"].get("apiKey").is_none());
+        f.existing();
+        f.apply(OP2, &objects, &selection(), false);
+        assert_eq!(f.raw()["providers"]["received"]["authMode"], mode);
+        assert!(f.raw()["providers"]["received"].get("apiKey").is_none());
+    }
+}

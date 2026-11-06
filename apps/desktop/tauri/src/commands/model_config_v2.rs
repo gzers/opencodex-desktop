@@ -825,3 +825,20 @@ pub async fn model_v2_file_project(
     .await
     .map_err(|_| error("model_storage"))?
 }
+
+#[tauri::command]
+pub async fn model_v2_external_run(
+    task_id: String,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::agent_runtime_v2::ExternalRunViewV2> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        false,
+        move |root, _| {
+            crate::modules::model_config::agent_runtime_v2::external_run_view(root, &task_id)
+        },
+    )
+    .await
+}
