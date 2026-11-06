@@ -111,7 +111,7 @@ impl Fixture {
     fn new() -> Self {
         let temp = tempfile::Builder::new()
             .prefix("ocxd-l2-v2-scope-restore-")
-            .tempdir_in("/tmp")
+            .tempdir_in(crate::modules::test_sandbox::temporary_parent())
             .unwrap();
         let d = temp.path().join("D");
         let h = temp.path().join("H");

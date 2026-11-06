@@ -511,7 +511,7 @@ mod native {
         fn new() -> Self {
             let root = tempfile::Builder::new()
                 .prefix("ocxd023-runtime-recovery-ipc-fixture-")
-                .tempdir_in("/tmp")
+                .tempdir_in(crate::modules::test_sandbox::temporary_parent())
                 .unwrap();
             let i = root.path().join("Desktop I");
             let d = root.path().join("user/desktop");
