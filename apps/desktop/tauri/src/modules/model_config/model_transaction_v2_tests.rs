@@ -922,3 +922,910 @@ fn versions_file_deletion_is_rejected_in_commit_and_checksummed_recovery() {
     assert!(fs::read(f.root.join(POLICY)).unwrap() == OLD_POLICY);
     assert!(f.pending().exists());
 }
+
+fn retained_ref(n: u128) -> schema_v2::RefV2 {
+    schema_v2::RefV2 {
+        template_id: uuid::Uuid::from_u128(0x550e8400_e29b_41d4_a716_446655440000 + n).to_string(),
+        revision_id: uuid::Uuid::from_u128(0x660e8400_e29b_41d4_a716_446655440000 + n).to_string(),
+        digest: schema_v2::digest(&n.to_le_bytes()),
+    }
+}
+fn retained_policy(
+    global: &[schema_v2::RefV2],
+    channel: &[schema_v2::RefV2],
+    manual: Option<&schema_v2::RefV2>,
+    auto: Option<&schema_v2::RefV2>,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": 2, "templateRefs": global, "defaultChannelId": null,
+        "pendingRemovals": [], "recoveryId": null,
+        "channels": [{"id": "550e8400-e29b-41d4-a716-446655440000", "label": "retained channel",
+            "templateRefs": channel, "models": [
+                {"rawModelId": "manual-model", "binding": manual.map(|reference| serde_json::json!({"kind":"manual", "reference":reference}))},
+                {"rawModelId": "auto-model", "binding": auto.map(|reference| serde_json::json!({"kind":"auto_read", "reference":reference}))}
+            ]}]
+    })
+}
+fn retained_draft(policy: serde_json::Value, baseline: serde_json::Value) -> serde_json::Value {
+    serde_json::json!({"schemaVersion":2, "base":{"dtoVersion":2}, "policy":policy, "observedBaseline":baseline})
+}
+fn retained_write(
+    path: &str,
+    before: Option<serde_json::Value>,
+    after: Option<serde_json::Value>,
+) -> WriteV2 {
+    WriteV2 {
+        target: TargetV2::Manager(path.into()),
+        before: before.map(|v| serde_json::to_vec(&v).unwrap()),
+        after: after.map(|v| serde_json::to_vec(&v).unwrap()),
+    }
+}
+// Produce real, protected exact-image history without changing business targets.
+// Historical scans intentionally do not require a pending marker or live CAS.
+fn retained_history(f: &Fixture, writes: Vec<WriteV2>, phase: Phase) -> PathBuf {
+    let c = Context::open(&f.root, &f.home).unwrap();
+    let base = c
+        .manager()
+        .unwrap()
+        .child(TRANSACTIONS, true, true)
+        .unwrap()
+        .unwrap();
+    let id = uuid::Uuid::new_v4().to_string();
+    let dir = base.child(&id, true, true).unwrap().unwrap();
+    let rollback_count = if matches!(phase, Phase::RollingBack | Phase::RolledBack) {
+        writes.len()
+    } else {
+        0
+    };
+    let journal = Journal {
+        version: 2,
+        plan: Plan {
+            id,
+            binding: c.binding().unwrap(),
+            entries: writes
+                .iter()
+                .map(|w| Entry {
+                    target: w.target.clone(),
+                    before: image(&w.before),
+                    after: image(&w.after),
+                })
+                .collect(),
+        },
+        phase,
+        rollback_count,
+    };
+    for (i, w) in writes.iter().enumerate() {
+        for (before, bytes) in [(true, &w.before), (false, &w.after)] {
+            if let Some(bytes) = bytes {
+                dir.create(&image_name(i, before), bytes).unwrap();
+            }
+        }
+    }
+    save_journal(&dir, &journal).unwrap();
+    dir.path.clone()
+}
+fn retained_refs(f: &Fixture) -> Result<Vec<schema_v2::RefV2>> {
+    retained_template_refs(&f.root, &f.home)
+}
+fn retained_rewrite(dir: &Path, edit: impl FnOnce(&mut Journal)) {
+    let dir = Dir::anchor(dir).unwrap();
+    let bytes = dir.read(JOURNAL, MAX_JOURNAL, true).unwrap().unwrap();
+    let mut j: Journal = decode(&bytes).unwrap();
+    edit(&mut j);
+    save_journal(&dir, &j).unwrap();
+}
+
+#[test]
+fn retained_refs_return_sorted_exact_global_channel_manual_auto_and_draft_images() {
+    let f = Fixture::new();
+    let refs: Vec<_> = (1..=9).map(retained_ref).collect();
+    let mut same_ids_new_digest = refs[0].clone();
+    same_ids_new_digest.digest = schema_v2::digest(b"different exact revision content");
+    let before = retained_policy(
+        &[refs[3].clone(), refs[0].clone()],
+        &[refs[2].clone()],
+        Some(&refs[1]),
+        Some(&refs[4]),
+    );
+    let after = retained_policy(
+        &[same_ids_new_digest.clone(), refs[0].clone()],
+        &[],
+        None,
+        Some(&refs[5]),
+    );
+    let draft = retained_draft(
+        retained_policy(&[refs[6].clone()], &[], None, Some(&refs[7])),
+        retained_policy(&[refs[8].clone()], &[], None, None),
+    );
+    retained_history(
+        &f,
+        vec![
+            retained_write(POLICY, Some(before), Some(after)),
+            retained_write(DRAFT, Some(draft), None),
+        ],
+        Phase::Committed,
+    );
+    let mut expected = refs;
+    expected.push(same_ids_new_digest);
+    expected.sort();
+    assert_eq!(retained_refs(&f).unwrap(), expected);
+    assert!(!f.pending().exists());
+    f.before();
+}
+#[test]
+fn retained_refs_ignore_unadopted_library_revisions_parents_and_decoy_nested_refs() {
+    let f = Fixture::new();
+    let adopted = retained_ref(1);
+    let unrelated = retained_ref(2);
+    let library = serde_json::json!({"schemaVersion":2,"templates":[{"id":unrelated.template_id,"revisions":[{"id":unrelated.revision_id,"digest":unrelated.digest,"baseRevision":retained_ref(3).revision_id}]}]});
+    retained_history(
+        &f,
+        vec![retained_write(
+            "manager-state/model-family-templates.json",
+            Some(library.clone()),
+            Some(library),
+        )],
+        Phase::Committed,
+    );
+    assert!(retained_refs(&f).unwrap().is_empty());
+    let mut policy = retained_policy(&[adopted.clone()], &[], None, None);
+    policy["channels"][0]["models"][0]["source"] = serde_json::json!({"publicContent":{"reference":unrelated,"templateRefs":[retained_ref(4)]}});
+    retained_history(
+        &f,
+        vec![retained_write(POLICY, None, Some(policy))],
+        Phase::Committed,
+    );
+    assert_eq!(retained_refs(&f).unwrap(), vec![adopted]);
+}
+#[test]
+fn retained_refs_protect_both_images_in_every_valid_phase() {
+    for phase in [
+        Phase::Applying,
+        Phase::Committed,
+        Phase::RollingBack,
+        Phase::RolledBack,
+    ] {
+        let f = Fixture::new();
+        let a = retained_ref(1);
+        let b = retained_ref(2);
+        retained_history(
+            &f,
+            vec![retained_write(
+                POLICY,
+                Some(retained_policy(&[a.clone()], &[], None, None)),
+                Some(retained_policy(&[b.clone()], &[], None, None)),
+            )],
+            phase,
+        );
+        assert_eq!(retained_refs(&f).unwrap(), vec![a, b]);
+        f.before();
+        assert!(!f.pending().exists());
+    }
+}
+#[test]
+fn retained_refs_are_available_after_real_commit_rollback_and_pre_marker_interruption() {
+    for state in 0..3 {
+        let f = Fixture::new();
+        let a = retained_ref(1);
+        let b = retained_ref(2);
+        let before = retained_policy(&[a.clone()], &[], None, None);
+        let after = retained_policy(&[b.clone()], &[], None, None);
+        fs::write(f.root.join(POLICY), serde_json::to_vec(&before).unwrap()).unwrap();
+        let writes = vec![retained_write(POLICY, Some(before), Some(after))];
+        let h = hook(move |e| match (state, e) {
+            (1, TestEvent::AfterApply(0)) => TestAction::Fail,
+            (2, TestEvent::Prepared) => TestAction::Interrupt,
+            _ => TestAction::Continue,
+        });
+        let result = commit(&f.root, &f.home, writes);
+        drop(h);
+        match state {
+            0 => result.unwrap(),
+            1 => code(result, "model_transaction_write"),
+            _ => code(result, "model_transaction_test_interrupted"),
+        }
+        assert_eq!(retained_refs(&f).unwrap(), vec![a, b]);
+        assert!(!f.pending().exists());
+    }
+}
+#[test]
+fn retained_refs_missing_directories_return_empty_with_zero_creates_or_modification() {
+    let f = Fixture::new();
+    let manager = f.root.join("manager-state");
+    let before = fs::metadata(&manager).unwrap().modified().unwrap();
+    assert!(retained_refs(&f).unwrap().is_empty());
+    assert_eq!(fs::metadata(&manager).unwrap().modified().unwrap(), before);
+    assert!(!manager.join(TRANSACTIONS).exists());
+    f.before();
+    fs::remove_dir_all(&manager).unwrap();
+    let before = fs::metadata(&f.root).unwrap().modified().unwrap();
+    assert!(retained_refs(&f).unwrap().is_empty());
+    assert!(!manager.exists());
+    assert_eq!(fs::metadata(&f.root).unwrap().modified().unwrap(), before);
+}
+#[test]
+fn retained_refs_reject_checksum_corruption_unknown_versions_and_missing_journal() {
+    for variant in 0..3 {
+        let f = Fixture::new();
+        let dir = retained_history(
+            &f,
+            vec![retained_write(
+                POLICY,
+                None,
+                Some(retained_policy(&[retained_ref(1)], &[], None, None)),
+            )],
+            Phase::Committed,
+        );
+        match variant {
+            0 => {
+                let path = dir.join(JOURNAL);
+                let mut v: serde_json::Value =
+                    serde_json::from_slice(&fs::read(&path).unwrap()).unwrap();
+                v["value"]["phase"] = "applying".into();
+                fs::write(path, serde_json::to_vec(&v).unwrap()).unwrap();
+                code(retained_refs(&f), "model_transaction_checksum");
+            }
+            1 => {
+                retained_rewrite(&dir, |j| j.version = 3);
+                code(retained_refs(&f), "model_transaction_version");
+            }
+            _ => {
+                fs::remove_file(dir.join(JOURNAL)).unwrap();
+                code(retained_refs(&f), "model_transaction_journal_invalid");
+            }
+        }
+        f.before();
+        assert!(dir.exists());
+    }
+}
+#[test]
+fn retained_refs_reject_unknown_payload_versions_duplicate_json_and_invalid_typed_refs() {
+    for variant in 0..7 {
+        let f = Fixture::new();
+        let mut policy = retained_policy(&[retained_ref(1)], &[], None, None);
+        match variant {
+            0 => policy["schemaVersion"] = 1.into(),
+            1 => policy["templateRefs"][0]["revisionId"] = "../invalid".into(),
+            2 => policy["templateRefs"][0]["digest"] = "invalid".into(),
+            3 => policy["templateRefs"][0]["extra"] = true.into(),
+            4 => {
+                policy["channels"][0]["models"][0]["binding"] =
+                    serde_json::json!({"kind":"future_binding","reference":retained_ref(2)})
+            }
+            5 => policy["channels"] = serde_json::Value::Null,
+            _ => (),
+        }
+        let mut bytes = serde_json::to_vec(&policy).unwrap();
+        if variant == 6 {
+            bytes = String::from_utf8(bytes)
+                .unwrap()
+                .replace(
+                    "\"schemaVersion\":2",
+                    "\"schemaVersion\":2,\"schemaVersion\":2",
+                )
+                .into_bytes();
+        }
+        retained_history(
+            &f,
+            vec![WriteV2 {
+                target: TargetV2::Manager(POLICY.into()),
+                before: None,
+                after: Some(bytes),
+            }],
+            Phase::Committed,
+        );
+        code(
+            retained_refs(&f),
+            match variant {
+                0 => "model_transaction_version",
+                5 | 6 => "model_transaction_payload_invalid",
+                _ => "model_transaction_reference_invalid",
+            },
+        );
+        f.before();
+    }
+    let f = Fixture::new();
+    let mut draft = retained_draft(
+        retained_policy(&[], &[], None, None),
+        serde_json::Value::Null,
+    );
+    draft["base"]["dtoVersion"] = 3.into();
+    retained_history(
+        &f,
+        vec![retained_write(DRAFT, Some(draft), None)],
+        Phase::RolledBack,
+    );
+    code(retained_refs(&f), "model_transaction_version");
+}
+#[test]
+fn retained_refs_verify_exact_payload_digests_and_sizes_without_modifying_evidence() {
+    for variant in 0..3 {
+        let f = Fixture::new();
+        let dir = retained_history(
+            &f,
+            vec![retained_write(
+                POLICY,
+                None,
+                Some(retained_policy(&[retained_ref(1)], &[], None, None)),
+            )],
+            Phase::Committed,
+        );
+        let path = dir.join("0.after");
+        match variant {
+            0 => fs::write(&path, b"corrupt").unwrap(),
+            1 => fs::remove_file(&path).unwrap(),
+            _ => retained_rewrite(&dir, |j| {
+                j.plan.entries[0].after.as_mut().unwrap().bytes += 1
+            }),
+        }
+        code(retained_refs(&f), "model_transaction_backup_invalid");
+        f.before();
+        assert!(dir.exists());
+    }
+}
+#[test]
+fn retained_refs_wrong_home_root_copy_or_directory_id_binding_is_not_empty_success() {
+    let f = Fixture::new();
+    let dir = retained_history(
+        &f,
+        vec![retained_write(
+            POLICY,
+            None,
+            Some(retained_policy(&[retained_ref(1)], &[], None, None)),
+        )],
+        Phase::Committed,
+    );
+    let other = Fixture::new();
+    code(
+        retained_template_refs(&f.root, &other.home),
+        "model_transaction_binding",
+    );
+    retained_rewrite(&dir, |j| {
+        j.plan.binding.root = Context::open(&other.root, &other.home)
+            .unwrap()
+            .binding()
+            .unwrap()
+            .root
+    });
+    code(retained_refs(&f), "model_transaction_binding");
+    let f = Fixture::new();
+    let dir = retained_history(
+        &f,
+        vec![retained_write(
+            POLICY,
+            None,
+            Some(retained_policy(&[], &[], None, None)),
+        )],
+        Phase::Committed,
+    );
+    retained_rewrite(&dir, |j| j.plan.id = uuid::Uuid::new_v4().to_string());
+    code(retained_refs(&f), "model_transaction_journal_invalid");
+}
+#[test]
+fn retained_refs_cap_is_complete_at_256_and_errors_on_the_257th_without_pagination() {
+    let f = Fixture::new();
+    for i in 0..MAX_RETAINED_TRANSACTIONS {
+        retained_history(
+            &f,
+            vec![retained_write(
+                POLICY,
+                None,
+                Some(retained_policy(&[retained_ref(i as u128)], &[], None, None)),
+            )],
+            Phase::Committed,
+        );
+    }
+    assert_eq!(retained_refs(&f).unwrap().len(), MAX_RETAINED_TRANSACTIONS);
+    retained_history(
+        &f,
+        vec![retained_write(
+            POLICY,
+            None,
+            Some(retained_policy(&[retained_ref(1000)], &[], None, None)),
+        )],
+        Phase::Committed,
+    );
+    code(retained_refs(&f), "model_limit");
+    f.before();
+}
+#[test]
+fn retained_refs_cumulative_metadata_budget_includes_journals_and_all_selected_images() {
+    let f = Fixture::new();
+    for _ in 0..2 {
+        let mut bytes =
+            serde_json::to_vec(&retained_policy(&[retained_ref(1)], &[], None, None)).unwrap();
+        bytes.resize(MAX_RETAINED_METADATA / 2, b' ');
+        retained_history(
+            &f,
+            vec![WriteV2 {
+                target: TargetV2::Manager(POLICY.into()),
+                before: None,
+                after: Some(bytes),
+            }],
+            Phase::Committed,
+        );
+    }
+    code(retained_refs(&f), "model_limit");
+    f.before();
+}
+#[test]
+fn retained_refs_bound_typed_reference_arrays_and_do_not_return_a_partial_prefix() {
+    let f = Fixture::new();
+    let mut policy = retained_policy(&[retained_ref(1)], &[], None, None);
+    policy["templateRefs"] =
+        serde_json::to_value(vec![retained_ref(1); MAX_REF_ARRAY + 1]).unwrap();
+    retained_history(
+        &f,
+        vec![retained_write(POLICY, None, Some(policy))],
+        Phase::Committed,
+    );
+    code(retained_refs(&f), "model_limit");
+}
+#[cfg(unix)]
+#[test]
+fn retained_refs_reject_unsafe_directory_names_files_symlinks_and_public_directories() {
+    use std::os::unix::fs::{symlink, PermissionsExt};
+    for variant in 0..6 {
+        let f = Fixture::new();
+        let dir = retained_history(
+            &f,
+            vec![retained_write(
+                POLICY,
+                None,
+                Some(retained_policy(&[retained_ref(1)], &[], None, None)),
+            )],
+            Phase::Committed,
+        );
+        let base = dir.parent().unwrap();
+        match variant {
+            0 => fs::create_dir(base.join("not-a-uuid")).unwrap(),
+            1 => fs::write(
+                base.join(uuid::Uuid::new_v4().to_string()),
+                b"not a directory",
+            )
+            .unwrap(),
+            2 => symlink(&dir, base.join(uuid::Uuid::new_v4().to_string())).unwrap(),
+            3 => {
+                let path = dir.join(JOURNAL);
+                let outside = f._temp.path().join("outside-journal");
+                fs::rename(&path, &outside).unwrap();
+                symlink(outside, path).unwrap();
+            }
+            4 => {
+                let path = dir.join("0.after");
+                let outside = f._temp.path().join("outside-image");
+                fs::rename(&path, &outside).unwrap();
+                symlink(outside, path).unwrap();
+            }
+            _ => fs::set_permissions(&dir, fs::Permissions::from_mode(0o755)).unwrap(),
+        }
+        assert!(retained_refs(&f).is_err());
+        f.before();
+        assert!(dir.exists());
+    }
+    let f = Fixture::new();
+    let actual = f._temp.path().join("outside-history");
+    fs::create_dir(&actual).unwrap();
+    symlink(&actual, f.root.join("manager-state").join(TRANSACTIONS)).unwrap();
+    assert!(retained_refs(&f).is_err());
+    assert_eq!(fs::read_dir(actual).unwrap().count(), 0);
+}
+
+#[test]
+fn retained_refs_collect_draft_after_as_well_as_before_without_following_arbitrary_ref_fields() {
+    let f = Fixture::new();
+    let a = retained_ref(1);
+    let b = retained_ref(2);
+    let before = retained_draft(
+        retained_policy(&[a.clone()], &[], None, None),
+        serde_json::Value::Null,
+    );
+    let mut after = retained_draft(
+        retained_policy(&[], &[], Some(&b), None),
+        serde_json::Value::Null,
+    );
+    after["base"]["libraryDigest"] = retained_ref(3).digest.into();
+    after["credentialEdits"] = serde_json::json!({"public-ref":{"reference":retained_ref(4)}});
+    retained_history(
+        &f,
+        vec![retained_write(DRAFT, Some(before), Some(after))],
+        Phase::Applying,
+    );
+    assert_eq!(retained_refs(&f).unwrap(), vec![a, b]);
+    f.before();
+}
+#[test]
+fn retained_refs_bound_journal_reads_and_reject_oversized_unexpected_images() {
+    let f = Fixture::new();
+    let dir = retained_history(
+        &f,
+        vec![retained_write(
+            POLICY,
+            None,
+            Some(retained_policy(&[retained_ref(1)], &[], None, None)),
+        )],
+        Phase::Committed,
+    );
+    let unexpected = Dir::anchor(&dir).unwrap();
+    unexpected
+        .create("0.before", b"unexpected image bytes")
+        .unwrap();
+    code(retained_refs(&f), "model_transaction_backup_invalid");
+    let f = Fixture::new();
+    let dir = retained_history(
+        &f,
+        vec![retained_write(
+            POLICY,
+            None,
+            Some(retained_policy(&[], &[], None, None)),
+        )],
+        Phase::Committed,
+    );
+    fs::write(dir.join(JOURNAL), vec![b' '; MAX_JOURNAL + 1]).unwrap();
+    code(retained_refs(&f), "model_limit");
+}
+
+fn operation_receipt_path(f: &Fixture, id: &str) -> PathBuf {
+    f.root
+        .join("manager-state")
+        .join(RECEIVE)
+        .join(id)
+        .join("receipt.json")
+}
+fn operation_receipt_seed(f: &Fixture, id: &str, bytes: &[u8]) {
+    let c = Context::open(&f.root, &f.home).unwrap();
+    c.receipt_dir(id, true)
+        .unwrap()
+        .unwrap()
+        .create("receipt.json", bytes)
+        .unwrap();
+}
+fn receive_seven_writes(f: &Fixture, id: &str, receipt_before: Option<Vec<u8>>) -> Vec<WriteV2> {
+    let receipt=serde_json::to_vec(&serde_json::json!({"operationId":id,"payloadDigest":schema_v2::digest(b"fixed-payload"),"planDigest":schema_v2::digest(b"fixed-plan"),"configDigest":schema_v2::digest(NEW_CONFIG)})).unwrap();
+    let mut writes = vec![WriteV2 {
+        target: TargetV2::OfficialConfig,
+        before: Some(OLD_CONFIG.to_vec()),
+        after: Some(NEW_CONFIG.to_vec()),
+    }];
+    for name in [
+        "manager-state/model-family-templates.json",
+        POLICY,
+        "manager-state/model-materialization-ledger.json",
+        "manager-state/model-protocol-mappings.json",
+        VERSIONS,
+    ] {
+        writes.push(WriteV2 {
+            target: TargetV2::Manager(name.into()),
+            before: fs::read(f.root.join(name)).ok(),
+            after: Some(b"receive-exact-image".to_vec()),
+        });
+    }
+    writes.push(WriteV2 {
+        target: TargetV2::ManagerOperationReceipt(id.into()),
+        before: receipt_before,
+        after: Some(receipt),
+    });
+    assert_eq!(writes.len(), 7);
+    writes
+}
+#[test]
+fn operation_receipt_seven_file_interrupt_recovery_pairs_exact_receipt_with_config() {
+    for (cut, existing) in [(0, false), (5, false), (6, true)] {
+        let f = Fixture::new();
+        let id = uuid::Uuid::new_v4().to_string();
+        let before = existing.then(|| b"original receipt image\r\n".to_vec());
+        if let Some(bytes) = &before {
+            operation_receipt_seed(&f, &id, bytes);
+        }
+        let writes = receive_seven_writes(&f, &id, before.clone());
+        let expected = writes[6].after.as_ref().unwrap().clone();
+        let h = hook(move |e| {
+            if e == TestEvent::AfterApply(cut) {
+                TestAction::Interrupt
+            } else {
+                TestAction::Continue
+            }
+        });
+        code(
+            commit(&f.root, &f.home, writes),
+            "model_transaction_test_interrupted",
+        );
+        drop(h);
+        let dir = f.dir();
+        if cut < 6 {
+            assert!(fs::read(operation_receipt_path(&f, &id)).ok() == before);
+        }
+        assert!(f.recover().unwrap());
+        assert!(fs::read(f.home.join("config.json")).unwrap() == NEW_CONFIG);
+        assert!(fs::read(operation_receipt_path(&f, &id)).unwrap() == expected);
+        assert!(fs::read(dir.join("6.before")).ok() == before);
+        assert!(fs::read(dir.join("6.after")).unwrap() == expected);
+        assert!(fs::read(dir.join("0.before")).unwrap() == OLD_CONFIG);
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            let path = operation_receipt_path(&f, &id);
+            for directory in [
+                path.parent().unwrap(),
+                path.parent().unwrap().parent().unwrap(),
+            ] {
+                assert_eq!(
+                    fs::metadata(directory).unwrap().permissions().mode() & 0o777,
+                    0o700
+                );
+            }
+            assert_eq!(
+                fs::metadata(path).unwrap().permissions().mode() & 0o777,
+                0o600
+            );
+        }
+        assert!(!f.pending().exists());
+        assert!(!f.recover().unwrap());
+    }
+    // A fresh receipt must also disappear when a later in-process failure rolls
+    // back publication; its creation never makes it a separately committed fact.
+    let f = Fixture::new();
+    let id = uuid::Uuid::new_v4().to_string();
+    let h = hook(|e| {
+        if e == TestEvent::AfterApply(6) {
+            TestAction::Fail
+        } else {
+            TestAction::Continue
+        }
+    });
+    code(
+        commit(&f.root, &f.home, receive_seven_writes(&f, &id, None)),
+        "model_transaction_write",
+    );
+    drop(h);
+    f.before();
+    assert!(!operation_receipt_path(&f, &id).exists());
+    assert!(!f.pending().exists());
+}
+#[test]
+fn operation_receipt_rejects_uuid_paths_deletion_limits_unknown_variants_and_symlinks() {
+    let f = Fixture::new();
+    let id = uuid::Uuid::new_v4().to_string();
+    for invalid in [
+        "../escape".to_string(),
+        format!("{id}/receipt.json"),
+        format!("manager-state/{RECEIVE}/{id}/receipt.json"),
+        format!("{id}\\receipt.json"),
+        id.to_uppercase(),
+        "550e8400-e29b-11d4-a716-446655440000".into(),
+    ] {
+        code(
+            commit(
+                &f.root,
+                &f.home,
+                vec![WriteV2 {
+                    target: TargetV2::ManagerOperationReceipt(invalid),
+                    before: None,
+                    after: Some(vec![]),
+                }],
+            ),
+            "model_transaction_target_invalid",
+        );
+    }
+    code(
+        commit(
+            &f.root,
+            &f.home,
+            vec![WriteV2 {
+                target: TargetV2::Manager(format!("manager-state/{RECEIVE}/{id}/receipt.json")),
+                before: None,
+                after: Some(vec![]),
+            }],
+        ),
+        "model_transaction_target_invalid",
+    );
+    code(
+        commit(
+            &f.root,
+            &f.home,
+            vec![WriteV2 {
+                target: TargetV2::ManagerOperationReceipt(id.clone()),
+                before: None,
+                after: None,
+            }],
+        ),
+        "model_transaction_target_invalid",
+    );
+    for before in [false, true] {
+        let bytes = vec![0; MAX_RECEIPT + 1];
+        let w = if before {
+            WriteV2 {
+                target: TargetV2::ManagerOperationReceipt(id.clone()),
+                before: Some(bytes),
+                after: Some(vec![]),
+            }
+        } else {
+            WriteV2 {
+                target: TargetV2::ManagerOperationReceipt(id.clone()),
+                before: None,
+                after: Some(bytes),
+            }
+        };
+        code(commit(&f.root, &f.home, vec![w]), "model_transaction_limit");
+    }
+    assert!(!f.root.join("manager-state").join(RECEIVE).exists());
+    f.before();
+    let target = TargetV2::ManagerOperationReceipt(id.clone());
+    let wire = serde_json::to_value(&target).unwrap();
+    assert_eq!(
+        wire,
+        serde_json::json!({"kind":"manager_operation_receipt","relative":id})
+    );
+    assert!(serde_json::from_value::<TargetV2>(
+        serde_json::json!({"kind":"future_receipt","relative":id})
+    )
+    .is_err());
+    assert!(serde_json::from_value::<TargetV2>(
+        serde_json::json!({"kind":"manager_operation_receipt","relative":id,"path":"elsewhere"})
+    )
+    .is_err());
+    // The exact 32 KiB boundary remains accepted; the adapter interprets no body.
+    commit(
+        &f.root,
+        &f.home,
+        vec![WriteV2 {
+            target,
+            before: None,
+            after: Some(vec![b' '; MAX_RECEIPT]),
+        }],
+    )
+    .unwrap();
+    assert_eq!(
+        fs::metadata(operation_receipt_path(&f, &id)).unwrap().len(),
+        MAX_RECEIPT as u64
+    );
+    for (bad_id, deletion) in [(false, false), (true, false), (false, true)] {
+        let f = Fixture::new();
+        f.interrupted();
+        f.rewrite_journal(|j| {
+            let index = if deletion { 2 } else { 1 };
+            j.plan.entries[index].target = TargetV2::ManagerOperationReceipt(if bad_id {
+                "../escape".into()
+            } else {
+                uuid::Uuid::new_v4().to_string()
+            });
+            if !deletion && !bad_id {
+                j.plan.entries[index].after.as_mut().unwrap().bytes = MAX_RECEIPT + 1;
+            }
+        });
+        code(
+            f.recover(),
+            if deletion || bad_id {
+                "model_transaction_target_invalid"
+            } else {
+                "model_transaction_limit"
+            },
+        );
+        assert!(fs::read(f.root.join(POLICY)).unwrap() == OLD_POLICY);
+    }
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::symlink;
+        for component in 0..3 {
+            let f = Fixture::new();
+            let id = uuid::Uuid::new_v4().to_string();
+            let outside = f._temp.path().join("outside");
+            fs::create_dir(&outside).unwrap();
+            if component == 0 {
+                symlink(&outside, f.root.join("manager-state").join(RECEIVE)).unwrap();
+            } else {
+                let c = Context::open(&f.root, &f.home).unwrap();
+                let receive = c
+                    .manager()
+                    .unwrap()
+                    .child(RECEIVE, true, true)
+                    .unwrap()
+                    .unwrap();
+                if component == 1 {
+                    symlink(&outside, receive.path.join(&id)).unwrap();
+                } else {
+                    let operation = receive.child(&id, true, true).unwrap().unwrap();
+                    fs::write(outside.join("file"), b"outside untouched").unwrap();
+                    symlink(outside.join("file"), operation.path.join("receipt.json")).unwrap();
+                }
+            }
+            assert!(commit(&f.root, &f.home, receive_seven_writes(&f, &id, None)).is_err());
+            f.before();
+            assert!(!f.pending().exists());
+            if component == 2 {
+                assert!(fs::read(outside.join("file")).unwrap() == b"outside untouched");
+            }
+        }
+    }
+}
+#[test]
+fn operation_receipt_before_cas_and_unknown_after_preserve_external_edits() {
+    let f = Fixture::new();
+    let id = uuid::Uuid::new_v4().to_string();
+    operation_receipt_seed(&f, &id, b"original");
+    code(
+        commit(&f.root, &f.home, receive_seven_writes(&f, &id, None)),
+        "model_transaction_cas",
+    );
+    f.before();
+    assert!(fs::read(operation_receipt_path(&f, &id)).unwrap() == b"original");
+    assert!(!f.root.join("manager-state").join(TRANSACTIONS).exists());
+    let path = operation_receipt_path(&f, &id);
+    let h = hook(move |e| {
+        if e == TestEvent::BeforeApply(6) {
+            fs::write(&path, b"external receipt").unwrap();
+        }
+        TestAction::Continue
+    });
+    code(
+        commit(
+            &f.root,
+            &f.home,
+            receive_seven_writes(&f, &id, Some(b"original".to_vec())),
+        ),
+        "model_transaction_compensation_conflict",
+    );
+    drop(h);
+    f.before();
+    assert!(fs::read(operation_receipt_path(&f, &id)).unwrap() == b"external receipt");
+    code(f.recover(), "model_transaction_external_change");
+    fs::write(operation_receipt_path(&f, &id), b"original").unwrap();
+    assert!(f.recover().unwrap());
+    f.before();
+    // A crash after both images reached disk must not let replay overwrite a
+    // subsequent receipt edit or silently reapply config over an external edit.
+    let f = Fixture::new();
+    let id = uuid::Uuid::new_v4().to_string();
+    let writes = receive_seven_writes(&f, &id, None);
+    let expected = writes[6].after.clone().unwrap();
+    let h = hook(|e| {
+        if e == TestEvent::AfterApply(6) {
+            TestAction::Interrupt
+        } else {
+            TestAction::Continue
+        }
+    });
+    code(
+        commit(&f.root, &f.home, writes),
+        "model_transaction_test_interrupted",
+    );
+    drop(h);
+    fs::write(operation_receipt_path(&f, &id), b"external receipt").unwrap();
+    code(f.recover(), "model_transaction_external_change");
+    assert!(fs::read(f.home.join("config.json")).unwrap() == NEW_CONFIG);
+    assert!(fs::read(operation_receipt_path(&f, &id)).unwrap() == b"external receipt");
+    fs::write(operation_receipt_path(&f, &id), &expected).unwrap();
+    fs::write(f.home.join("config.json"), b"external config").unwrap();
+    code(f.recover(), "model_transaction_external_change");
+    assert!(fs::read(f.home.join("config.json")).unwrap() == b"external config");
+    assert!(fs::read(operation_receipt_path(&f, &id)).unwrap() == expected);
+}
+#[test]
+fn operation_receipt_free_fields_never_become_retained_template_dependencies() {
+    let f = Fixture::new();
+    let id = uuid::Uuid::new_v4().to_string();
+    let adopted = retained_ref(1);
+    let unrelated = retained_ref(2);
+    let bytes=serde_json::to_vec(&serde_json::json!({"operationId":id,"templateRefs":[unrelated],"policy":retained_policy(&[retained_ref(3)],&[],None,None),"reference":retained_ref(4)})).unwrap();
+    retained_history(
+        &f,
+        vec![WriteV2 {
+            target: TargetV2::ManagerOperationReceipt(id),
+            before: None,
+            after: Some(bytes),
+        }],
+        Phase::Committed,
+    );
+    assert!(retained_refs(&f).unwrap().is_empty());
+    retained_history(
+        &f,
+        vec![retained_write(
+            POLICY,
+            None,
+            Some(retained_policy(&[adopted.clone()], &[], None, None)),
+        )],
+        Phase::Committed,
+    );
+    assert_eq!(retained_refs(&f).unwrap(), vec![adopted]);
+    f.before();
+}
