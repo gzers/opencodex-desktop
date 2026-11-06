@@ -3,12 +3,12 @@ import { computed, ref, watch } from 'vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import ModelChoiceOptions from './ModelChoiceOptions.vue'
-import {originLabelV2,type EffectiveModelV2} from './api-v2'
+import {originLabelV2,type EffectiveModelV2,type ExecutionRowV2} from './api-v2'
 import type { ModelProjection } from './api'
 export type ModelChoice = ({channelId:string;modelId:string;nativeModelId?:never}|{nativeModelId:string;channelId?:never;modelId?:never}) & {reasoningEffort?:string;fast?:boolean}
-const props = defineProps<{ open: boolean; rows: ModelProjection[]; v2Rows?:readonly EffectiveModelV2[];channels: { id: string; label: string;providerId?:string }[]; multiple?: boolean; ordered?: boolean; reasoning?: boolean; current?: ModelChoice[]; title?: string;recommendations?:ModelChoice[];loading?:boolean;error?:string }>()
+const props = defineProps<{ open: boolean; rows: ModelProjection[]; v2Rows?:readonly EffectiveModelV2[];executionRows?:readonly ExecutionRowV2[];channels: { id: string; label: string;providerId?:string }[]; multiple?: boolean; ordered?: boolean; reasoning?: boolean; current?: ModelChoice[]; title?: string;recommendations?:ModelChoice[];loading?:boolean;error?:string }>()
 const emit = defineEmits<{ close: []; confirm: [choices: ModelChoice[]];retry:[] }>()
-const catalogRows=computed<ModelProjection[]>(()=>props.v2Rows?props.v2Rows.map(row=>({channelId:row.channelId,providerId:props.channels.find(c=>c.id===row.channelId)?.providerId??'',modelId:row.rawModelId,label:row.rawModelId,enabled:row.enabled,selected:row.selected,discovered:row.observed,pickerVisible:row.selected,templateRef:row.binding?{templateId:row.binding.reference.templateId,revisionId:row.binding.reference.revisionId}:null,rules:JSON.parse(JSON.stringify(row.rules)) as ModelProjection['rules'],source:Object.fromEntries(Object.entries(row.fieldOrigins).map(([key,value])=>[key,originLabelV2(value)])),unavailableReason:row.protocol.kind==='missing'?'模型请求协议待配置':row.protocol.kind==='unsupported'?'模型协议暂不支持':null})):props.rows)
+const catalogRows=computed<ModelProjection[]>(()=>props.executionRows?props.executionRows.map(row=>({channelId:row.channelId,providerId:row.providerId,modelId:row.modelId,label:row.label,nativeModelId:row.nativeModelId,enabled:row.enabled,selected:row.selected,discovered:true,pickerVisible:row.pickerVisible,aliases:row.aliases,connectionDigest:row.connectionDigest,templateRef:null,rules:JSON.parse(JSON.stringify(row.rules)) as ModelProjection['rules'],source:{},unavailableReason:row.unavailableReason??(row.nativeModelId?'原生模型不支持此 Agent 绑定':!row.selected?'模型未公开':!row.enabled?'渠道停用':!row.actualSelector||!row.connectionDigest?'实际执行绑定尚未核验':row.protocol.kind!=='resolved'?'请求协议未解析':null)})):props.v2Rows?props.v2Rows.map(row=>({channelId:row.channelId,providerId:props.channels.find(c=>c.id===row.channelId)?.providerId??'',modelId:row.rawModelId,label:row.rawModelId,enabled:row.enabled,selected:row.selected,discovered:row.observed,pickerVisible:row.selected,templateRef:row.binding?{templateId:row.binding.reference.templateId,revisionId:row.binding.reference.revisionId}:null,rules:JSON.parse(JSON.stringify(row.rules)) as ModelProjection['rules'],source:Object.fromEntries(Object.entries(row.fieldOrigins).map(([key,value])=>[key,originLabelV2(value)])),unavailableReason:row.protocol.kind==='missing'?'模型请求协议待配置':row.protocol.kind==='unsupported'?'模型协议暂不支持':null})):props.rows)
 const search=ref('');const channelSearch=ref('');const channel=ref('');const picks=ref<ModelChoice[]>([]);const focused=ref('');const table=ref<HTMLElement|null>(null)
 type SortColumn='model'|'channel'|'context'|'effort'|'state'|'recommendation'
 const sorting=ref<SortColumn|null>(null);const descending=ref(false)
@@ -39,7 +39,7 @@ const available=(row:ModelProjection)=>catalogReady()&&row.enabled&&(!!props.v2R
 const chosen=(row:ModelProjection)=>picks.value.some(p=>key(p)===key(row))
 watch(()=>props.open,value=>{if(value){picks.value=props.current?.map(p=>({...p}))??[];search.value='';channelSearch.value='';channel.value='';focused.value='';sorting.value=null;descending.value=false}},{immediate:true})
 // 渠道列表只保留仍有可选型号的渠道；隐藏或停用渠道不再出现在选择器里。
-const channelRows=computed(()=>{const usable=new Set(catalogRows.value.filter(row=>row.pickerVisible!==false&&row.enabled&&(!!props.v2Rows||row.discovered)&&!row.unavailableReason).map(row=>row.channelId));return props.channels.filter(c=>usable.has(c.id)&&(c.label+' '+c.id).toLowerCase().includes(channelSearch.value.toLowerCase()))})
+const channelRows=computed(()=>{const usable=new Set(catalogRows.value.filter(row=>row.pickerVisible!==false&&row.enabled&&(!!props.v2Rows||row.discovered)&&!row.unavailableReason).map(row=>row.channelId));return props.channels.filter(c=>(!!props.executionRows||usable.has(c.id))&&(c.label+' '+c.id).toLowerCase().includes(channelSearch.value.toLowerCase()))})
 /** 与原型 model-picker.js:146 一致：渠道行右侧显示当前搜索命中的模型数量。 */
 const channelCount=(id:string)=>catalogRows.value.filter(row=>(id==='all'||row.channelId===id)&&modelMatches(row)).length
 function effort(row:ModelProjection){if(row.rules.noReasoning?.mode==='custom'&&row.rules.noReasoning.value)return undefined;return (props.reasoning?picks.value.find(p=>key(p)===key(row))?.reasoningEffort:undefined)??(row.rules.defaultEffort.mode==='custom'?row.rules.defaultEffort.value:undefined)}
@@ -55,7 +55,7 @@ function sortValue(row:ModelProjection,column:SortColumn):string|number|undefine
 // 已保存但如今失效的选择仍留在“已选模型”里，并在那里写明原因。
 function modelMatches(row:ModelProjection){return (row.label+' '+modelIdentity(row)+' '+row.modelId+' '+(row.aliases??[]).join(' ')+' '+channelLabel(row.channelId)).toLowerCase().includes(search.value.toLowerCase())}
 const rows=computed(()=>{
- const values=catalogRows.value.filter(row=>available(row)&&(!channel.value||row.channelId===channel.value)&&modelMatches(row))
+ const values=catalogRows.value.filter(row=>(!!props.executionRows||available(row))&&(!channel.value||row.channelId===channel.value)&&modelMatches(row))
  const column=sorting.value;if(!column)return values
  return values.map((row,index)=>({row,index})).sort((a,b)=>{
   const left=sortValue(a.row,column);const right=sortValue(b.row,column)
@@ -82,7 +82,7 @@ function problem(pick:ModelChoice):string{
  if(props.loading)return '目录读取中';if(props.error)return '目录读取失败'
  const row=catalogRows.value.find(row=>key(row)===key(pick));if(!row)return '型号已缺失，请重新选择'
  if(row.unavailableReason)return row.unavailableReason;
- if(!row.enabled)return '渠道停用';if(props.v2Rows&&row.pickerVisible===false)return '该模型当前未公开';if(!props.v2Rows&&!row.discovered)return '型号未发现'
+ if(!row.enabled)return '渠道停用';if((props.v2Rows||props.executionRows)&&row.pickerVisible===false)return '该模型当前未公开';if(!props.v2Rows&&!row.discovered)return '型号未发现'
  if(props.reasoning&&pick.reasoningEffort&&((row.rules.noReasoning?.mode==='custom'&&row.rules.noReasoning.value)||row.rules.reasoningEfforts.mode!=='custom'||!row.rules.reasoningEfforts.value.includes(pick.reasoningEffort)))return '原推理档位已不支持'
  if(props.reasoning&&pick.fast===true&&(row.rules.fast.mode!=='custom'||!row.rules.fast.value))return 'Fast能力已变化'
  return ''

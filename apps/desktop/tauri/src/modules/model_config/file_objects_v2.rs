@@ -94,6 +94,11 @@ impl SecretValues {
     pub fn is_empty(&self) -> bool {
         self.values.is_empty()
     }
+    /// Transfer ownership during a trusted identity projection without cloning
+    /// secret values or exposing an IPC/Debug representation.
+    pub fn into_entries(self) -> impl Iterator<Item=(String,Zeroizing<String>)> {
+        self.values.into_iter()
+    }
 }
 fn serialize_secrets<S: Serializer>(v: &SecretValues, s: S) -> Result<S::Ok, S::Error> {
     s.collect_map(v.values.iter().map(|(key, value)| (key, value.as_str())))

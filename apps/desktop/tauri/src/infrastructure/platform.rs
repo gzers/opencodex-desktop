@@ -1,7 +1,7 @@
 //! 跨平台文件系统辅助：权限位与符号链接。
 //!
-//! Windows 没有 Unix 权限位语义（访问控制由 ACL 按用户目录继承），
-//! 因此权限相关调用在 Windows 上退化为 no-op，而不是报错；符号链接按
+//! Windows 通过实际用户 token SID 校验拥有者并设置私有 ACL；
+//! 不接管其它拥有者、不用环境变量代替账户身份。符号链接按
 //! 平台选择 `symlink`（Unix）或 `symlink_file`（Windows）。
 
 use std::fs::OpenOptions;
@@ -16,8 +16,18 @@ pub fn home_dir() -> Option<PathBuf> {
     isolated_home(
         crate::modules::test_sandbox::enabled(),
         crate::modules::test_sandbox::sandbox_root().as_deref(),
-        dirs::home_dir,
+        current_profile,
     )
+}
+fn current_profile() -> Option<PathBuf> {
+    #[cfg(windows)]
+    {
+        crate::infrastructure::windows_startup_root::current_user_profile().ok()
+    }
+    #[cfg(not(windows))]
+    {
+        dirs::home_dir()
+    }
 }
 fn isolated_home(
     sandbox_enabled: bool,
@@ -203,7 +213,7 @@ impl OpenOptionsModeExt for OpenOptions {
     }
 }
 
-/// 设置文件或目录的权限位；Windows 上 no-op。
+/// Unix permission bits; Windows enforces the current token's private ACL.
 pub fn set_mode(path: &Path, mode: u32) -> io::Result<()> {
     #[cfg(unix)]
     {
@@ -212,7 +222,11 @@ pub fn set_mode(path: &Path, mode: u32) -> io::Result<()> {
         permissions.set_mode(mode);
         std::fs::set_permissions(path, permissions)
     }
-    #[cfg(not(unix))]
+    #[cfg(windows)]
+    {
+        crate::infrastructure::windows_startup_root::protect_current_user_path(path, mode)
+    }
+    #[cfg(not(any(unix, windows)))]
     {
         let _ = (path, mode);
         Ok(())

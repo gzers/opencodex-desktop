@@ -1,16 +1,19 @@
 import {computed,ref,shallowRef} from 'vue'
 import {defineStore} from 'pinia'
 import {
-  emptyContentV2,serviceUnavailableV2,modelV2Api,type ModelV2Services,type LibraryViewV2,type TemplateContentV2,
+  emptyContentV2,serviceUnavailableV2,modelV2Api,reviewedAgentResponseV2,type ModelV2Services,type LibraryViewV2,type TemplateContentV2,
   type TemplateV2,type ConditionPreviewView,type MatchIssueV2,type ChannelConnectionEditIntentV2,
   type ChannelDiscoveryInputV2,
   type FileSnapshotV2,type ReadExistingRequestV2,type ChannelIntentV2,type ModelEditV2,type ModelSelectionV2,
   type TemplateActionIntentV2,
+  type LibraryChangeV2,
+  type AgentSettingsV2,type GenerateIntentV2,type GeneratedReviewV2,type RunTicketV2,type EditingBufferInputV2,type AgentMessageV2,type ResearchSourceV2,
 } from './api-v2'
 
 const clone=<T>(value:T):T=>JSON.parse(JSON.stringify(value)) as T
 const message=(cause:unknown)=>cause instanceof Error?cause.message:typeof cause==='object'&&cause!==null&&'code' in cause?String(cause.code):'操作未完成，当前输入已保留。'
 export interface RevisionBufferV2 {templateId:string;baseRevision:string|null;label:string;content:TemplateContentV2;makeDefault:boolean}
+export interface AgentSessionV2 {input:string;history:AgentMessageV2[];sources:ResearchSourceV2[];researchQuery?:string;researchUrls?:string;ticket:RunTicketV2|null;result:GeneratedReviewV2|null;preparing:boolean;generating:boolean;stopping:boolean;accepting:boolean;error:string;status:string;inputGeneration:number|null;expectedLibrary:string;acceptRequest:{runId:string;expectedLibrary:string;reviewedResponse:string}|null;view?:{scrollTop:number;selectionStart:number;selectionEnd:number;maximized:boolean}}
 
 export const useModelsV2Store=defineStore('models-v2',()=>{
   // This adapter is supplied by L0 after command registration. No invented invoke.
@@ -31,6 +34,13 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
   const preview=shallowRef<ConditionPreviewView|null>(null)
   const previewModelId=ref(''),previewChannelId=ref(''),editGeneration=ref(0)
   const stagedConnectionIntents=shallowRef<readonly ChannelConnectionEditIntentV2[]>([])
+  const executionPreference=ref<AgentSettingsV2|null>(null),executionPreferenceRevision=ref(0)
+  const agentSessions=ref<Record<string,AgentSessionV2>>({})
+  const agentSequences=new Map<string,number>(),agentStops=new Set<string>()
+  let preferenceRead:Promise<void>|null=null
+  function agentSession(key:string):AgentSessionV2 {if(!agentSessions.value[key])agentSessions.value[key]={input:'',history:[],sources:[],ticket:null,result:null,preparing:false,generating:false,stopping:false,accepting:false,error:'',status:'',inputGeneration:null,expectedLibrary:'',acceptRequest:null};return agentSessions.value[key]!}
+  async function loadAgentSettings(){if(preferenceRead)return preferenceRead;const revision=executionPreferenceRevision.value;preferenceRead=(async()=>{const value=await modelV2Api.agentSettings();if(revision===executionPreferenceRevision.value)executionPreference.value=value})().finally(()=>{preferenceRead=null});return preferenceRead}
+  async function bindAgent(settings:AgentSettingsV2){const value=await modelV2Api.bindAgent(clone(settings));executionPreference.value=value;executionPreferenceRevision.value++;return value}
   const file=shallowRef<FileSnapshotV2|null>(null),fileBusy=ref(false),fileError=ref(''),fileNeedsReconcile=ref(false)
   const channelIntents=ref<ChannelIntentV2[]>([]),modelEdits=ref<ModelEditV2[]>([])
   const readResults=shallowRef<readonly import('./api-v2').ReadMatchDtoV2[]>([])
@@ -43,8 +53,8 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
   function keyBuffer(channelId:string){const value=keyBuffers.get(channelId);return value?{...value}:null}
   function setKeyBuffer(channelId:string,value:{action:'replace'|'clear';value?:string}|null){if(value)keyBuffers.set(channelId,{...value,sourceGuard:keySourceGuard()});else keyBuffers.delete(channelId);keyBufferVersion.value++}
   const view=ref({tab:'channels' as 'channels'|'templates',templateSearch:'',templateEditor:false,templateNavCollapsed:false,templateSection:'model-basic',selectedVersions:{} as Record<string,string>,selectedTemplates:[] as string[]})
-  // Registered/compiled together with L0 baseline a3a20621d29318353bfe8afe624222d0b4b12584.
-  const channelCapabilities=ref({scopedSave:true,defaults:true,naming:true,templateRefs:true,copy:true,delete:true,credential:false,measure:false,activeNode:false})
+  // Key/node commands and active-node intent registered/compiled in L0 f9a79297192e1c8ee1e66569ae51299128e8ff8e.
+  const channelCapabilities=ref({scopedSave:true,defaults:true,naming:true,templateRefs:true,copy:true,delete:true,credential:true,measure:true,activeNode:true})
   function configureChannelCapabilities(value:Partial<typeof channelCapabilities.value>){channelCapabilities.value={...channelCapabilities.value,...value}}
   let fileSequence=0,fileGeneration=0,openingDraft:Promise<void>|null=null
   const channels=computed(()=>{
@@ -92,7 +102,7 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
   async function saveChannels(scopeChannelId?:string){
     if(!canSaveFile.value||!file.value?.draft)return
     const scoped=channelCapabilities.value.scopedSave?scopeChannelId:undefined
-    for(const [id,edit] of [...keyBuffers]){if(scoped&&id!==scoped)continue;if(edit.sourceGuard!==keySourceGuard()){fileError.value='Key 编辑期间来源基准已变化，输入仍保留；请重新核对该渠道与凭据意图。';return}try{await stageCredential(id,edit.action,edit.value);setKeyBuffer(id,null)}catch(cause){fileError.value=message(cause);return}}
+    for(const [id,edit] of [...keyBuffers]){if(scoped&&id!==scoped)continue;if(edit.sourceGuard!==keySourceGuard()){fileError.value='Key 编辑期间来源基准已变化，输入仍保留；请重新核对该渠道与凭据意图。';return}try{await stageCredential(id,edit.action,edit.value);if(keyBuffers.get(id)===edit)setKeyBuffer(id,null)}catch(cause){fileError.value=message(cause);return}}
     if(!file.value?.draft)return
     const localChannel=channels.value.find(c=>c.id===scopeChannelId)
     if(localChannel&&!channelIntents.value.some(i=>(i.kind==='rename'||i.kind==='delete')&&i.channelId===localChannel.id))queueChannel({kind:'rename',channelId:localChannel.id,name:localChannel.label})
@@ -185,6 +195,65 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
     }catch(cause){error.value=message(cause);if(typeof cause==='object'&&cause!==null&&'issues' in cause&&Array.isArray(cause.issues))issues.value=cause.issues as MatchIssueV2[]}finally{saving.value=false}
   }
   async function discover(input:ChannelDiscoveryInputV2){const reader=services.value.previewChannel;if(!reader)throw serviceUnavailableV2();return reader(input)}
+  function agentResult(value:GeneratedReviewV2,runId?:string){if(value.dtoVersion!==2||runId&&value.runId!==runId||value.review&&value.review.expectedLibrary!==value.expectedLibrary)throw new Error('Agent 回执身份或版本不符，当前输入保持。');return value}
+  async function runAgent(key:string,request:GenerateIntentV2,buffer?:EditingBufferInputV2){
+    const session=agentSession(key);if(session.preparing||session.generating||session.accepting||session.stopping)return
+    if(session.acceptRequest&&session.result?.phase!=='accepted'){session.error='原接受保存尚未确认，请先核对原任务；未新建生成任务。';return}
+    const intent=clone(request),sequence=(agentSequences.get(key)??0)+1;agentSequences.set(key,sequence);agentStops.delete(key)
+    session.preparing=true;session.error='';session.status='正在准备受控任务';session.inputGeneration=buffer?.generation??null;session.expectedLibrary=intent.expectedLibrary
+    try{
+      if(buffer){const value=await modelV2Api.agentBuffer(clone(buffer));if(sequence!==agentSequences.get(key))return;if(JSON.stringify({target:value.target,label:value.label,content:value.content,generation:value.generation})!==JSON.stringify(buffer)||!/^sha256:[0-9a-f]{64}$/.test(value.digest))throw new Error('编辑缓冲摘要回执不属于当前输入，未继续准备任务。');intent.buffer=value}
+      if(agentStops.has(key)){session.status='已停止本次准备；未发起生成。';return}
+      const ticket=await modelV2Api.agentPrepare(intent)
+      if(ticket.dtoVersion!==2||ticket.expectedLibrary!==intent.expectedLibrary||ticket.phase!=='prepared')throw new Error('任务准备回执不完整，未发起生成。')
+      if(sequence!==agentSequences.get(key))return
+      session.ticket=ticket;session.preparing=false
+      if(agentStops.has(key)){session.status='已停止等待；准备记录保留，未发起生成。';return}
+      session.generating=true;session.status='正在执行原任务；未写入模版库。'
+      const result=agentResult(await modelV2Api.agentGenerate(ticket.runId),ticket.runId)
+      if(sequence!==agentSequences.get(key))return
+      if(result.expectedLibrary!==intent.expectedLibrary)throw new Error('建议不属于本次库基准，原输入保持。')
+      if(intent.scene==='check_only'&&result.phase==='review'&&(!result.report||result.review))throw new Error('检查任务返回了不允许的建议保存内容，未采用。')
+      if(result.review?.proposals.some(item=>item.proposal.target?!intent.targets.some(target=>JSON.stringify(target)===JSON.stringify(item.proposal.target)):!intent.allowNew||intent.targets.length>0))throw new Error('建议目标超出本次精确范围，未采用。')
+      session.result=result;session.acceptRequest=null;session.error=result.errorCode??''
+      session.status=result.phase==='review'?(result.report?'检查报告已返回，没有配置写入。':'建议待审阅，尚未保存。'):result.phase==='stopped'?'原任务已停止。':result.phase==='failed'?'原任务未完成，输入与历史结果保持。':'原任务结果已返回。'
+    }catch(cause){if(sequence===agentSequences.get(key)){session.error=message(cause);session.status='任务未确认完成；当前输入与原任务身份保留。'}}
+    finally{if(sequence===agentSequences.get(key)){session.preparing=false;session.generating=false}}
+  }
+  async function stopAgent(key:string){const session=agentSession(key);agentStops.add(key);if(session.preparing){session.status='正在停止本次等待；不会在准备回执后自动发起生成。';return}if(!session.generating||!session.ticket||session.stopping)return;session.stopping=true;try{await modelV2Api.agentStop(session.ticket.runId);agentSequences.set(key,(agentSequences.get(key)??0)+1);session.generating=false;session.status='已停止原任务；既有结果保留，可重新读取结果。'}catch(cause){session.error=message(cause)}finally{session.stopping=false}}
+  async function restoreAgent(key:string,templateId:string|null){const session=agentSession(key);if(session.preparing||session.generating||session.accepting)return;const sequence=(agentSequences.get(key)??0)+1;agentSequences.set(key,sequence);session.preparing=true;session.error='';try{const value=await modelV2Api.agentLatest(templateId);if(sequence!==agentSequences.get(key))return;if(!value){session.status='没有可恢复的原任务结果。';return}agentResult(value);if(session.acceptRequest&&value.runId!==session.acceptRequest.runId)throw new Error('最新结果不是待核对的原接受任务，原请求与建议保持。');if(templateId&&value.review&&!value.review.proposals.some(p=>p.proposal.target?.templateId===templateId))throw new Error('上次结果不属于当前模版，未替换当前结果。');session.result=value;session.status=value.phase==='accepted'?'原任务已接受保存；当前编辑缓冲保持。':'原任务结果已恢复；原始未发送输入保持，需重新核对目标与库基准。'}catch(cause){if(sequence===agentSequences.get(key))session.error=message(cause)}finally{if(sequence===agentSequences.get(key))session.preparing=false}}
+  async function acceptAgent(key:string,templateId:string|null){
+    const session=agentSession(key),result=session.result;if(!result||session.preparing||session.generating||session.accepting||saving.value)return
+    if(result.report){session.error='检查报告没有可保存建议，未发起接受。';return}
+    session.accepting=true;session.error='';saving.value=true
+    try{
+      if(session.acceptRequest){const latest=await modelV2Api.agentLatest(templateId);if(latest?.runId===session.acceptRequest.runId&&latest.phase==='accepted'){session.result=agentResult(latest);session.status='原接受操作已核对成功，未重复保存。';await load();return}if(!latest||latest.runId!==session.acceptRequest.runId)throw new Error('原任务结果尚无法安全核对，未重建或替换接受请求。')}
+      if(!session.acceptRequest){if(snapshot.value?.libraryDigest!==result.expectedLibrary)throw {code:'model_save_stale'};session.acceptRequest={runId:result.runId,expectedLibrary:result.expectedLibrary,reviewedResponse:reviewedAgentResponseV2(result)}}
+      const accepted=agentResult(await modelV2Api.agentAccept(clone(session.acceptRequest)),session.acceptRequest.runId)
+      if(accepted.phase!=='accepted')throw new Error('接受结果尚未确认，原请求与输入已保留。')
+      session.result=accepted;session.status='建议已按原任务另存版本；当前编辑与默认采用保持。';await load()
+    }catch(cause){session.error=message(cause);session.status='接受保存未确认完成；原审阅内容和精确请求已保留。'}finally{session.accepting=false;saving.value=false}
+  }
+  async function changeLibrary(request:LibraryChangeV2){
+    if(saving.value)throw new Error('模版保存正在处理，请稍后重试。')
+    if(snapshot.value?.libraryDigest!==request.expectedLibrary)throw {code:'model_save_stale',issues:[]}
+    if(request.intent.kind==='delete_revisions'&&draft.value?.templateId===request.intent.templateId&&draft.value.baseRevision&&request.intent.revisionIds.includes(draft.value.baseRevision))throw {code:'model_revision_in_use',issues:[]}
+    saving.value=true
+    try{
+      const result=await modelV2Api.changeLibrary(clone(request))
+      if(result.dtoVersion!==2||result.library.schemaVersion!==2)throw new Error('模版变更回执格式不支持，当前库与编辑保持。')
+      const intent=request.intent
+      if(intent.kind==='set_default'&&result.library.templates.find(t=>t.id===intent.reference.templateId)?.defaultRevision!==intent.reference.revisionId)throw new Error('默认版本变更尚未核对到明确回执，当前库保持。')
+      if(intent.kind==='clear_default'&&result.library.templates.find(t=>t.id===intent.reference.templateId)?.defaultRevision!==null)throw new Error('清除默认版本尚未核对到明确回执，当前库保持。')
+      if(intent.kind==='delete_revisions'&&result.library.templates.find(t=>t.id===intent.templateId)?.revisions.some(r=>intent.revisionIds.includes(r.id)))throw new Error('删除结果未完整确认，当前版本选择保持。')
+      snapshot.value=result
+      // Rebase only this successful metadata operation, and only while its exact
+      // editor dependency survives. External reads still cannot rebase an edit.
+      const base=draft.value?.baseRevision
+      if(baseLibraryDigest===request.expectedLibrary&&(!base||result.library.templates.find(t=>t.id===draft.value?.templateId)?.revisions.some(r=>r.id===base)))baseLibraryDigest=result.libraryDigest
+      return result
+    }finally{saving.value=false}
+  }
   async function templateAction(intent:TemplateActionIntentV2){const handler=services.value.templateAction;if(!handler)throw serviceUnavailableV2();const value=await handler(clone(intent));if(value.library){if(value.library.dtoVersion!==2||value.library.library.schemaVersion!==2)throw new Error('返回的模版格式不支持，当前编辑保持。');snapshot.value=value.library}return value}
   async function stageConnection(intent:ChannelConnectionEditIntentV2,credential:{action:'replace';value:string}|{action:'unchanged'}){
     const writer=services.value.stageConnection;if(!writer)throw serviceUnavailableV2()
@@ -194,5 +263,5 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
     stagedConnectionIntents.value=[...stagedConnectionIntents.value.filter(item=>item.channelId!==result.channelId),{...immutableIntent,channelId:result.channelId}]
     return result
   }
-  return {active,loading,saving,previewBusy,snapshot,draft,error,previewError,issues,preview,previewModelId,previewChannelId,editGeneration,dirty,canLoad,canPreview,canSave,canDiscover,canStageConnection,stagedConnectionIntents,configureServices,start,setContent,setLabel,setDefault,reset,close,load,open,setPreviewTarget,requestPreview,save,discover,stageConnection,file,fileBusy,fileError,fileNeedsReconcile,channels,channelIntents,modelEdits,readResults,channelEditorId,channelSearch,fileDirty,canSaveFile,loadChannels,readExisting,queueChannel,queueModel,explicitRules,setSelection,saveChannels,channelCapabilities,configureChannelCapabilities,copyChannel,viewCredential,stageCredential,pendingCredentialKinds,keyBuffer,setKeyBuffer,credentialInputRevision,view,copyTemplate,templateAction}
+  return {active,loading,saving,previewBusy,snapshot,draft,error,previewError,issues,preview,previewModelId,previewChannelId,editGeneration,dirty,canLoad,canPreview,canSave,canDiscover,canStageConnection,stagedConnectionIntents,configureServices,start,setContent,setLabel,setDefault,reset,close,load,open,setPreviewTarget,requestPreview,save,discover,stageConnection,file,fileBusy,fileError,fileNeedsReconcile,channels,channelIntents,modelEdits,readResults,channelEditorId,channelSearch,fileDirty,canSaveFile,loadChannels,readExisting,queueChannel,queueModel,explicitRules,setSelection,saveChannels,channelCapabilities,configureChannelCapabilities,copyChannel,viewCredential,stageCredential,pendingCredentialKinds,keyBuffer,setKeyBuffer,credentialInputRevision,view,copyTemplate,changeLibrary,templateAction,executionPreference,executionPreferenceRevision,loadAgentSettings,bindAgent,agentSessions,agentSession,runAgent,stopAgent,restoreAgent,acceptAgent}
 })

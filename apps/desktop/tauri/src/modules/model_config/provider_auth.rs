@@ -1610,6 +1610,14 @@ pub fn validate_portable(
 ) -> ModelResult<()> {
     portable_auth(public, value).map(|_| ())
 }
+/// Internal materialization for the shared protected file transaction.
+/// No keychain writes or executable provider authority are created here.
+pub(super) fn portable_file_fields(public:&serde_json::Value,value:&PortableAuthorization)->ModelResult<serde_json::Value>{
+    let auth=portable_auth(public,value)?;
+    let mut fields=private_fields(&auth)?;
+    if let Some(key)=&auth.api_key{fields["apiKey"]=serde_json::json!(key);}
+    Ok(fields)
+}
 pub fn export_portable(
     root: &Path,
     provider: &str,

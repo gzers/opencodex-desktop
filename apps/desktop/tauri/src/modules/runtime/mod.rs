@@ -7,6 +7,7 @@
 
 pub mod archive;
 pub mod install;
+pub mod bundled;
 pub(crate) mod offline_drop;
 pub mod paths;
 pub(crate) mod protection;

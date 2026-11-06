@@ -5,6 +5,7 @@ pub mod backup;
 pub mod cleanup;
 pub mod codex_shim;
 pub mod data_root;
+pub mod data_paths_v2;
 pub mod discovery;
 pub mod doctor;
 pub(crate) mod event_delivery;
