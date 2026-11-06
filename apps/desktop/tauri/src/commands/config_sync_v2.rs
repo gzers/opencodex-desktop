@@ -175,7 +175,7 @@ pub async fn config_v2_resume_preflight(
     let passphrase = read_passphrase.map(Zeroizing::new);
     run(
         async move { service.resume_preflight(operation_id, passphrase).await },
-        false,
+        true,
     )
     .await
 }

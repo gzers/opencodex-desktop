@@ -1,25 +1,17 @@
-import {afterEach,beforeEach,describe,expect,it,vi} from 'vitest'
+import {beforeEach,describe,expect,it,vi} from 'vitest'
 import {flushPromises,mount} from '@vue/test-utils'
-import {createPinia,setActivePinia} from 'pinia'
 import ChannelsView from '@/features/models/ChannelsView.vue'
 import ChannelEditor from '@/features/models/ChannelEditor.vue'
-import {useModelsStore} from '@/features/models/store'
-import {modelApi,emptyRules,type ChannelPolicy,type DraftProjection,type ModelSnapshot} from '@/features/models/api'
-vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{latestPolicy:vi.fn(),project:vi.fn(),stage:vi.fn()}}))
-let pinia:ReturnType<typeof createPinia>
-beforeEach(()=>{pinia=createPinia();setActivePinia(pinia);vi.clearAllMocks();vi.useFakeTimers();vi.mocked(modelApi.latestPolicy).mockResolvedValue(null)})
-afterEach(()=>{pinia._s.forEach(store=>store.$dispose());vi.useRealTimers()})
-const make=(id:string)=>({id,label:id,templateRefs:[],modelRefs:{},connection:{providerId:id,protocol:'openai-chat',nodes:[],activeNodeId:'',credentialRef:null,enabled:false,allowPrivateNetwork:false},selection:{mode:'none'},modelOrder:[],discovered:[],defaults:emptyRules(),overrides:{},familyOverrides:{}} as ChannelPolicy)
+import {modelV2Api,type DraftProjectionV2} from '@/features/models/api-v2'
+import {workspaceBackend,workspaceId as id,copyWorkspace,deferredWorkspace} from './helpers/modelWorkspaceV2'
+const ipc=vi.hoisted(()=>vi.fn())
+vi.mock('@tauri-apps/api/core',()=>({invoke:ipc}))
+let backend:ReturnType<typeof workspaceBackend>
+beforeEach(()=>{backend=workspaceBackend(ipc,['first','second'])})
 describe('channel projection owner',()=>{
- it('ignores the previous channel request after switching targets and never mutates the draft',async()=>{
-  const store=useModelsStore();store.acceptTransfer({policy:{schemaVersion:1,templateRefs:[],channels:[make('first'),make('second')]},workspace:null,policyDigest:'p',workspaceDigest:'w',libraryDigest:'l',library:{schemaVersion:1,templates:[]}} as ModelSnapshot)
-  const frozen=JSON.stringify(store.channelDraft)
-  let finishFirst!:(value:DraftProjection)=>void
-  vi.mocked(modelApi.project).mockReturnValueOnce(new Promise(resolve=>finishFirst=resolve)).mockResolvedValueOnce({rows:[],knownActiveModels:0,exactCatalogCount:null,notices:[]})
-  const wrapper=mount(ChannelsView,{global:{stubs:{ChannelEditor:true,ClientLoadStatus:true,NewChannelDialog:true,ModelPicker:true,UiSelectField:true,UiDialog:true}}});await flushPromises()
-  await wrapper.findAll('button').find(b=>b.text()==='编辑')!.trigger('click');await vi.advanceTimersByTimeAsync(210)
-  wrapper.findComponent(ChannelEditor).vm.$emit('close');await wrapper.vm.$nextTick();await wrapper.findAll('button').filter(b=>b.text()==='编辑')[1]!.trigger('click');await vi.advanceTimersByTimeAsync(210);await flushPromises()
-  finishFirst({rows:[{channelId:'first'}] as never,knownActiveModels:0,exactCatalogCount:null,notices:[]});await flushPromises()
-  expect(wrapper.findComponent(ChannelEditor).props('channel').id).toBe('second');expect(wrapper.findComponent(ChannelEditor).props('projection')).toEqual([]);expect(wrapper.findComponent(ChannelEditor).props('projectionBusy')).toBe(false);expect(JSON.stringify(store.channelDraft)).toBe(frozen);wrapper.unmount()
+ it('ignores the previous channel validation after switching targets and never mutates the server draft or queues',async()=>{
+  const store=await backend.load(),frozen=copyWorkspace(store.file),pending=deferredWorkspace<DraftProjectionV2>(),spy=vi.spyOn(modelV2Api,'fileProject').mockReturnValueOnce(pending.promise)
+  const w=mount(ChannelsView,{global:{stubs:{NewChannelDialog:true,ModelRuleFields:true,ModelPicker:true,UiSelectField:true,UiDialog:true}}})
+  try{await flushPromises();await w.findAll('button').find(b=>b.text()==='编辑')!.trigger('click');await w.get('input[aria-label="vendor/raw-model路由别名"]').setValue('first-pending');await w.get('input[aria-label="vendor/raw-model路由别名"]').trigger('blur');await flushPromises();expect(spy).toHaveBeenCalledOnce();const response=backend.projectResult(spy.mock.calls[0]![0]);await w.get('button[aria-label="返回渠道列表"]').trigger('click');await w.findAll('button').filter(b=>b.text()==='编辑')[1]!.trigger('click');await flushPromises();pending.resolve(response);await flushPromises();expect(w.getComponent(ChannelEditor).props('channel').id).toBe(id('second'));expect(w.get<HTMLInputElement>('input[aria-label="vendor/raw-model路由别名"]').element.value).toBe('');expect(store.file).toEqual(frozen);expect(store.channelIntents).toEqual([]);expect(store.modelEdits).toEqual([]);expect(store.effectiveRows).toEqual(frozen!.effective);expect(store.modelRows[id('first')]!.buffers['vendor/raw-model']!.naming.alias).toBe('first-pending');expect(ipc.mock.calls.some(c=>c[0]==='model_v2_file_save')).toBe(false)}finally{w.unmount();spy.mockRestore()}
  })
 })
