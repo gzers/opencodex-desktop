@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "role": "L2",
+  "version": "0.2.23",
+  "recordedAtUtc": "2026-11-06T18:58:13.080293+00:00",
+  "commits": {
+    "restore": "26484af3066c95e20b0c8116ad0d87f5f725e863",
+    "operations": "c8280f15535a8e75dea7caf5ab5c06e799eac054",
+    "clock": "d3c838759d7d153f6ced2be3a94a94e1fc21d0d4"
+  },
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_local_v2.rs",
+      "sha256": "8d44b7f6730ca8c38942880daaa4e793249d0a924f4c45afb26f85c27d1772f7"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_local_v2_restore.rs",
+      "sha256": "771dcb6ceced814c347cb34a4e6e8827ebc03a77d41479d534b0e34055335062"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_local_v2_restore_tests.rs",
+      "sha256": "0462e57383e00db3b7183f0856b6b3288878abd7c27980e250ec52b817a9e866"
+    }
+  ],
+  "checks": {
+    "restoreClockOperationsTests": 13,
+    "strictNormalCrateClippy": "passed",
+    "rustfmt": "passed",
+    "diffCheck": "passed",
+    "longServiceSuiteRerun": false,
+    "actualCapturedPresentRestoreVsKnownOldCloudDirection": "Upload",
+    "sameRestoreIdLedgerAndTimeByteIdentical": true,
+    "partialOnlyCompletedGroupsHaveNewClock": true,
+    "operationsReopensOriginalPartialAndKeepsSuccessWithBadCurrentConfig": true
+  },
+  "commands": [
+    "CARGO_TARGET_DIR=/tmp/ocxd-l2-restore-clock-target cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib sync_local_v2::restore:: -- --nocapture",
+    "CARGO_TARGET_DIR=/tmp/ocxd-l2-restore-clock-target cargo clippy --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib --tests --no-deps -- -D warnings"
+  ],
+  "limitations": [
+    "OriginalNone restoration remains actual local deletion; cross-device deletion propagation not authorized or implemented",
+    "Unknown-cloud default Download remains existing shared direction policy",
+    "Historical old version-ledger restoration description superseded by this actual new-save-clock contribution"
+  ],
+  "workingTreeClean": true,
+  "cleanup": {
+    "removedOnly": "/tmp/ocxd-l2-restore-clock-target",
+    "absenceVerified": true,
+    "activeOwnTargetProcessBeforeDeletion": false,
+    "archivedLogs": 9,
+    "originalLogsRetained": true,
+    "sharedCachesAndOtherAgentTargetsRetained": true
+  },
+  "realWebdav": false,
+  "dailyData": false,
+  "remoteClear": false,
+  "publish": false
+}

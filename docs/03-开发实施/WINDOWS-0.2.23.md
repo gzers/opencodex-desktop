@@ -7,11 +7,23 @@
 ## 当前基线与获取
 
 - 仓库：gzers/opencodex-desktop。
-- 代码：远端codex/0.2.23-integration，明确基线abc374831f5df3b70d118b226a5d82702f17b516。
+- 代码：远端codex/0.2.23-integration，明确基线511463f75b10f5db9736adfa9be1ebefa7d98357。
 - 文档：远端docs/governance-main，以包含本条R2指令的提交为准；读取本文件、TEAM、IMP-31/32及0.2.23-contracts/L0-paths-runtime-v1.md。
 - Windows代码贡献分支：codex/0.2.23-windows；文档/脱敏证据使用独立docs/0.2.23-windows分支。若已有自己的改动，先保留并合并上述明确代码基线，不重置或覆盖工作树。
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
 - 此为0.2.23实施基线，尚非最终安装候选；版本清单仍待L0统一更新。是否取得新代码以完整SHA及实际diff为准，不能仅看软件显示版本。
+
+## R4 当前集成候选与真实MSVC结果（2026-11-07）
+
+代码基线已真实推送511463f75b10f5db9736adfa9be1ebefa7d98357，包含范围备份/原操作通知、实际用户创建与13项原生检查、平台Clippy后继修正、完整随包资源及候选安装配方。草稿PR #72统一接CI，不在旧PR #71反复核旧源码。
+
+实际Windows/MSVC CI run42270824847：private-create 13/13通过，已记录提权TokenOwner=Administrators而刚创建owner=TokenUser；provider_auth_native、channel_rename_native、native_secure_store三组均通过。整体job仍失败于当时平台Clippy，不代表安装/两用户通过。现后继0635f8dfb已按平台收束imports、UTF16迭代及仅Unix使用的故障夹具；后继真实CI继续核，不以MacClippy替代Windows执行。
+
+完整Windows候选首次run42275126707停在Reviewed patch changed，尚未生成安装包：是Windows checkout换行影响受摘要约束的补丁，修复511463f75固定patch LF、git apply autocrlf与跨平台POSIX相对路径。修后重新用固定原tgz实际双重构建，产物仍15406751 bytes、SHA256 afb72a4c792c1ca70a0fcd9209d212c78249281d2d7bc42f8eee63aa4464b26b，无同版本字节漂移。第二候选run42276834374基于精确511463f75已启动，状态以Actions实际终态为准。
+
+候选脚本仅在临时Actions runner创建两个临时真实普通账户，验证重叠GUI、Profile/配置/pipe/DPAPI隔离及同SID重复打开，完成后清理账号/进程/ACL；静态57项通过不当原生通过。完整代理端口隔离仍需实际runtime，不用synthetic DPAPI子范围冒整版完成。构建配方会随候选stage固定完整资源，不要求Windows读取Mac临时路径。保持本入口既有独占写集、无真实WebDAV/日常配置/发布的边界，原失败全部保留。
+
+本批可拉取证据见[manifest](../../.adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/manifest.json)。最终软件候选尚未发布；若贡献需要公共文件改动继续回交L0，勿恢复旧迁移或旧格式写入口。
 
 ## R3 追加：真实创建拥有者与最新集成（2026-11-07）
 

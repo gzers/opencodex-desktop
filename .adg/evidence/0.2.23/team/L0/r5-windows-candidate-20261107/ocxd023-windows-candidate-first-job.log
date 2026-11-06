@@ -1,0 +1,586 @@
+package	Set up job	﻿2026-11-06T18:56:00.5426360Z Current runner version: '2.338.2'
+package	Set up job	2026-11-06T18:56:00.5485277Z ##[group]Runner Image Provisioner
+package	Set up job	2026-11-06T18:56:00.5486131Z Hosted Compute Agent
+package	Set up job	2026-11-06T18:56:00.5486622Z Version: 20261103.629
+package	Set up job	2026-11-06T18:56:00.5487220Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+package	Set up job	2026-11-06T18:56:00.5487905Z Build Date: 2026-11-03T17:26:59Z
+package	Set up job	2026-11-06T18:56:00.5488505Z Worker ID: {cce681d0-7560-4cd7-a129-a1cb9aba1693}
+package	Set up job	2026-11-06T18:56:00.5489120Z Region: westus3
+package	Set up job	2026-11-06T18:56:00.5489573Z Cloud: Azure
+package	Set up job	2026-11-06T18:56:00.5490042Z ##[endgroup]
+package	Set up job	2026-11-06T18:56:00.5491279Z ##[group]Operating System
+package	Set up job	2026-11-06T18:56:00.5491837Z Microsoft Windows Server 2025
+package	Set up job	2026-11-06T18:56:00.5492368Z 10.0.26100
+package	Set up job	2026-11-06T18:56:00.5492863Z Datacenter
+package	Set up job	2026-11-06T18:56:00.5493354Z ##[endgroup]
+package	Set up job	2026-11-06T18:56:00.5493850Z ##[group]Runner Image
+package	Set up job	2026-11-06T18:56:00.5494347Z Image: windows-2025-vs2026
+package	Set up job	2026-11-06T18:56:00.5495359Z Version: 20261103.298.1
+package	Set up job	2026-11-06T18:56:00.5496416Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+package	Set up job	2026-11-06T18:56:00.5498384Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+package	Set up job	2026-11-06T18:56:00.5499249Z ##[endgroup]
+package	Set up job	2026-11-06T18:56:00.5500321Z ##[group]GITHUB_TOKEN Permissions
+package	Set up job	2026-11-06T18:56:00.5502142Z Contents: read
+package	Set up job	2026-11-06T18:56:00.5502701Z Metadata: read
+package	Set up job	2026-11-06T18:56:00.5503170Z ##[endgroup]
+package	Set up job	2026-11-06T18:56:00.5505383Z Secret source: Actions
+package	Set up job	2026-11-06T18:56:00.5506203Z Cache mode: write
+package	Set up job	2026-11-06T18:56:00.5506910Z Prepare workflow directory
+package	Set up job	2026-11-06T18:56:00.5980263Z Prepare all required actions
+package	Set up job	2026-11-06T18:56:00.6028684Z Getting action download info
+package	Set up job	2026-11-06T18:56:00.9332461Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+package	Set up job	2026-11-06T18:56:01.1192309Z Download action repository 'actions/setup-node@v5' (SHA:a0853c24544627f65ddf259abe73b1d18a591444)
+package	Set up job	2026-11-06T18:56:01.3447297Z Download action repository 'dtolnay/rust-toolchain@stable' (SHA:b725eda525362e7cf34af9a7243cac1e3f01a7ec)
+package	Set up job	2026-11-06T18:56:01.6135868Z Download action repository 'Swatinem/rust-cache@v2' (SHA:d1527c8f67ef9af357290475d4af4b0fab8f12e0)
+package	Set up job	2026-11-06T18:56:02.2610000Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+package	Set up job	2026-11-06T18:56:02.7073788Z Complete job name: package
+package	Run actions/checkout@v5	﻿2026-11-06T18:56:02.9058447Z ##[group]Run actions/checkout@v5
+package	Run actions/checkout@v5	2026-11-06T18:56:02.9060434Z with:
+package	Run actions/checkout@v5	2026-11-06T18:56:02.9061535Z   repository: gzers/opencodex-desktop
+package	Run actions/checkout@v5	2026-11-06T18:56:02.9070655Z   token: ***
+package	Run actions/checkout@v5	2026-11-06T18:56:02.9071404Z   ssh-strict: true
+package	Run actions/checkout@v5	2026-11-06T18:56:02.9072076Z   ssh-user: git
+package	Run actions/checkout@v5	2026-11-06T18:56:02.9073040Z   persist-credentials: true
+package	Run actions/checkout@v5	2026-11-06T18:56:02.9073795Z   clean: true
+package	Run actions/checkout@v5	2026-11-06T18:56:02.9074485Z   sparse-checkout-cone-mode: true
+package	Run actions/checkout@v5	2026-11-06T18:56:02.9075291Z   fetch-depth: 1
+package	Run actions/checkout@v5	2026-11-06T18:56:02.9075944Z   fetch-tags: false
+package	Run actions/checkout@v5	2026-11-06T18:56:02.9076790Z   show-progress: true
+package	Run actions/checkout@v5	2026-11-06T18:56:02.9077665Z   lfs: false
+package	Run actions/checkout@v5	2026-11-06T18:56:02.9078391Z   submodules: false
+package	Run actions/checkout@v5	2026-11-06T18:56:02.9079175Z   set-safe-directory: true
+package	Run actions/checkout@v5	2026-11-06T18:56:02.9079978Z   allow-unsafe-pr-checkout: false
+package	Run actions/checkout@v5	2026-11-06T18:56:02.9081346Z ##[endgroup]
+package	Run actions/checkout@v5	2026-11-06T18:56:03.0569918Z Syncing repository: gzers/opencodex-desktop
+package	Run actions/checkout@v5	2026-11-06T18:56:03.0572401Z ##[group]Getting Git version info
+package	Run actions/checkout@v5	2026-11-06T18:56:03.0573484Z Working directory is 'D:\a\opencodex-desktop\opencodex-desktop'
+package	Run actions/checkout@v5	2026-11-06T18:56:03.1421682Z [command]"C:\Program Files\Git\bin\git.exe" version
+package	Run actions/checkout@v5	2026-11-06T18:56:03.4606905Z git version 2.56.0.windows.4
+package	Run actions/checkout@v5	2026-11-06T18:56:03.4659069Z ##[endgroup]
+package	Run actions/checkout@v5	2026-11-06T18:56:03.4679492Z Temporarily overriding HOME='D:\a\_temp\3c66f757-de5d-436f-80e8-58576f94f176' before making global git config changes
+package	Run actions/checkout@v5	2026-11-06T18:56:03.4680410Z Adding repository directory to the temporary git global config as a safe directory
+package	Run actions/checkout@v5	2026-11-06T18:56:03.4690022Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+package	Run actions/checkout@v5	2026-11-06T18:56:03.5341708Z Deleting the contents of 'D:\a\opencodex-desktop\opencodex-desktop'
+package	Run actions/checkout@v5	2026-11-06T18:56:03.5348443Z ##[group]Initializing the repository
+package	Run actions/checkout@v5	2026-11-06T18:56:03.5357430Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\opencodex-desktop\opencodex-desktop
+package	Run actions/checkout@v5	2026-11-06T18:56:03.6305775Z Initialized empty Git repository in D:/a/opencodex-desktop/opencodex-desktop/.git/
+package	Run actions/checkout@v5	2026-11-06T18:56:03.6366707Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/gzers/opencodex-desktop
+package	Run actions/checkout@v5	2026-11-06T18:56:03.7196667Z ##[endgroup]
+package	Run actions/checkout@v5	2026-11-06T18:56:03.7197371Z ##[group]Disabling automatic garbage collection
+package	Run actions/checkout@v5	2026-11-06T18:56:03.7207483Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+package	Run actions/checkout@v5	2026-11-06T18:56:03.7603758Z ##[endgroup]
+package	Run actions/checkout@v5	2026-11-06T18:56:03.7604373Z ##[group]Setting up auth
+package	Run actions/checkout@v5	2026-11-06T18:56:03.7616407Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+package	Run actions/checkout@v5	2026-11-06T18:56:03.8015203Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+package	Run actions/checkout@v5	2026-11-06T18:56:05.2069048Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+package	Run actions/checkout@v5	2026-11-06T18:56:05.2474339Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+package	Run actions/checkout@v5	2026-11-06T18:56:05.8264281Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+package	Run actions/checkout@v5	2026-11-06T18:56:05.8676191Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+package	Run actions/checkout@v5	2026-11-06T18:56:06.4547030Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+package	Run actions/checkout@v5	2026-11-06T18:56:06.4951911Z ##[endgroup]
+package	Run actions/checkout@v5	2026-11-06T18:56:06.4952367Z ##[group]Fetching the repository
+package	Run actions/checkout@v5	2026-11-06T18:56:06.4963816Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +418ad25f55d9a8e26b2ffdd681b9a07b9ee284c4:refs/remotes/origin/codex/0.2.23-integration
+package	Run actions/checkout@v5	2026-11-06T18:56:08.4963453Z From https://github.com/gzers/opencodex-desktop
+package	Run actions/checkout@v5	2026-11-06T18:56:08.4964362Z  * [new ref]         418ad25f55d9a8e26b2ffdd681b9a07b9ee284c4 -> origin/codex/0.2.23-integration
+package	Run actions/checkout@v5	2026-11-06T18:56:08.5010119Z ##[endgroup]
+package	Run actions/checkout@v5	2026-11-06T18:56:08.5010599Z ##[group]Determining the checkout info
+package	Run actions/checkout@v5	2026-11-06T18:56:08.5012215Z ##[endgroup]
+package	Run actions/checkout@v5	2026-11-06T18:56:08.5021643Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+package	Run actions/checkout@v5	2026-11-06T18:56:08.5580611Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+package	Run actions/checkout@v5	2026-11-06T18:56:08.5996125Z ##[group]Checking out the ref
+package	Run actions/checkout@v5	2026-11-06T18:56:08.6005566Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B codex/0.2.23-integration refs/remotes/origin/codex/0.2.23-integration
+package	Run actions/checkout@v5	2026-11-06T18:56:08.9933652Z Switched to a new branch 'codex/0.2.23-integration'
+package	Run actions/checkout@v5	2026-11-06T18:56:09.0025137Z branch 'codex/0.2.23-integration' set up to track 'origin/codex/0.2.23-integration'.
+package	Run actions/checkout@v5	2026-11-06T18:56:09.0080674Z ##[endgroup]
+package	Run actions/checkout@v5	2026-11-06T18:56:09.0582259Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+package	Run actions/checkout@v5	2026-11-06T18:56:09.1129489Z 418ad25f55d9a8e26b2ffdd681b9a07b9ee284c4
+package	Read candidate version	﻿2026-11-06T18:56:09.1629130Z ##[group]Run $taskVersion = (Get-Content -LiteralPath tauri.conf.json -Raw | ConvertFrom-Json).version
+package	Read candidate version	2026-11-06T18:56:09.1630211Z ^[[36;1m$taskVersion = (Get-Content -LiteralPath tauri.conf.json -Raw | ConvertFrom-Json).version^[[0m
+package	Read candidate version	2026-11-06T18:56:09.1630859Z ^[[36;1mif ($taskVersion -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$') { throw 'Invalid candidate version' }^[[0m
+package	Read candidate version	2026-11-06T18:56:09.1632063Z ^[[36;1m"version=$taskVersion" >> $env:GITHUB_OUTPUT^[[0m
+package	Read candidate version	2026-11-06T18:56:09.2188754Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+package	Read candidate version	2026-11-06T18:56:09.2189162Z ##[endgroup]
+package	Verify process-token evidence and all Windows smoke syntax	﻿2026-11-06T18:56:09.7558242Z ##[group]Run & ../../../test/smoke/windows-process-token.test.ps1 -OutputDirectory ../../../test/out/windows-candidate/process-token
+package	Verify process-token evidence and all Windows smoke syntax	2026-11-06T18:56:09.7559266Z ^[[36;1m& ../../../test/smoke/windows-process-token.test.ps1 -OutputDirectory ../../../test/out/windows-candidate/process-token^[[0m
+package	Verify process-token evidence and all Windows smoke syntax	2026-11-06T18:56:09.7634804Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+package	Verify process-token evidence and all Windows smoke syntax	2026-11-06T18:56:09.7635183Z ##[endgroup]
+package	Run actions/setup-node@v5	﻿2026-11-06T18:56:27.9281160Z ##[group]Run actions/setup-node@v5
+package	Run actions/setup-node@v5	2026-11-06T18:56:27.9281599Z with:
+package	Run actions/setup-node@v5	2026-11-06T18:56:27.9281788Z   node-version: 24
+package	Run actions/setup-node@v5	2026-11-06T18:56:27.9281986Z   always-auth: false
+package	Run actions/setup-node@v5	2026-11-06T18:56:27.9282182Z   check-latest: false
+package	Run actions/setup-node@v5	2026-11-06T18:56:27.9285157Z   token: ***
+package	Run actions/setup-node@v5	2026-11-06T18:56:27.9285354Z   package-manager-cache: true
+package	Run actions/setup-node@v5	2026-11-06T18:56:27.9285583Z ##[endgroup]
+package	Run actions/setup-node@v5	2026-11-06T18:56:28.1526623Z Found in cache @ C:\hostedtoolcache\windows\node\24.22.2\x64
+package	Run actions/setup-node@v5	2026-11-06T18:56:28.1534158Z (node:6112) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+package	Run actions/setup-node@v5	2026-11-06T18:56:28.1535292Z (Use `node --trace-deprecation ...` to show where the warning was created)
+package	Run actions/setup-node@v5	2026-11-06T18:56:28.1538095Z ##[group]Environment details
+package	Run actions/setup-node@v5	2026-11-06T18:56:32.5087945Z node: v24.22.2
+package	Run actions/setup-node@v5	2026-11-06T18:56:32.5088322Z npm: 11.19.1
+package	Run actions/setup-node@v5	2026-11-06T18:56:32.5088514Z yarn: 1.22.22
+package	Run actions/setup-node@v5	2026-11-06T18:56:32.5089355Z ##[endgroup]
+package	Run dtolnay/rust-toolchain@stable	﻿2026-11-06T18:56:32.5797522Z ##[group]Run dtolnay/rust-toolchain@stable
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.5798201Z with:
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.5798422Z   components: rustfmt, clippy
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.5798672Z   toolchain: stable
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.5798864Z ##[endgroup]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.5870833Z ##[start-action display=Parse toolchain version;id=__dtolnay_rust-toolchain.parse]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6030746Z ##[group]Run if [[ -z $toolchain ]]; then
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6031075Z ^[[36;1mif [[ -z $toolchain ]]; then^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6031564Z ^[[36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6032065Z ^[[36;1m  echo "'toolchain' is a required input" >&2^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6032330Z ^[[36;1m  exit 1^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6032631Z ^[[36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6033011Z ^[[36;1m  if [[ Windows == macOS ]]; then^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6033496Z ^[[36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6034020Z ^[[36;1m  else^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6034375Z ^[[36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6034799Z ^[[36;1m  fi^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6035059Z ^[[36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6035526Z ^[[36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6035954Z ^[[36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6036425Z ^[[36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6036867Z ^[[36;1melse^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6037036Z ^[[36;1m  delimiter=EOF^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6037309Z ^[[36;1m  while [[ $toolchain == *$delimiter* ]]; do delimiter+=_; done^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6037770Z ^[[36;1m  printf 'toolchain<<%s\n%s\n%s\n' "$delimiter" "$toolchain" "$delimiter" >> $GITHUB_OUTPUT^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6038137Z ^[[36;1mfi^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6054890Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6055264Z env:
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6055444Z   toolchain: stable
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.6055627Z ##[endgroup]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.7710788Z ##[end-action id=__dtolnay_rust-toolchain.parse;outcome=success;conclusion=success;duration_ms=183]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.7713316Z ##[start-action display=Set $CARGO_HOME;id=__dtolnay_rust-toolchain.__run]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.7851212Z ##[group]Run echo CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.7851815Z ^[[36;1mecho CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.7866262Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.7866685Z ##[endgroup]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.8276288Z ##[end-action id=__dtolnay_rust-toolchain.__run;outcome=success;conclusion=success;duration_ms=56]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.8278409Z ##[start-action display=Install rustup if needed;id=__dtolnay_rust-toolchain.__run_2]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.8286638Z ##[end-action id=__dtolnay_rust-toolchain.__run_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.8288573Z ##[start-action display=Install rustup if needed on windows;id=__dtolnay_rust-toolchain.__run_3]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.8414683Z ##[group]Run if ! command -v rustup &>/dev/null; then
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.8415050Z ^[[36;1mif ! command -v rustup &>/dev/null; then^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.8415767Z ^[[36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://win.rustup.rs/x86_64 --output 'D:\a\_temp\rustup-init.exe'^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.8416565Z ^[[36;1m  'D:\a\_temp\rustup-init.exe' --default-toolchain none --no-modify-path -y^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.8418991Z ^[[36;1m  echo "$CARGO_HOME\bin" >> $GITHUB_PATH^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.8419247Z ^[[36;1mfi^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.8433552Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.8433947Z env:
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.8434147Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.8434387Z ##[endgroup]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.8985739Z ##[end-action id=__dtolnay_rust-toolchain.__run_3;outcome=success;conclusion=success;duration_ms=69]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9000239Z ##[start-action display=rustup toolchain install stable;id=__dtolnay_rust-toolchain.__run_4]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9124256Z ##[group]Run set -f  # split targets and components on commas and whitespace, without glob expansion
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9125169Z ^[[36;1mset -f  # split targets and components on commas and whitespace, without glob expansion^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9125676Z ^[[36;1mflags=()^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9125921Z ^[[36;1mfor t in ${targets//,/ }; do flags+=(--target "$t"); done^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9126661Z ^[[36;1mfor c in ${components//,/ }; do flags+=(--component "$c"); done^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9127129Z ^[[36;1mif [[ $toolchain == nightly && -n $components ]]; then flags+=(--allow-downgrade); fi^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9127533Z ^[[36;1mlog=$(mktemp)^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9127756Z ^[[36;1mtrap 'rm -f "$log"' EXIT^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9127999Z ^[[36;1mfor attempt in 1 2 3 4 5; do^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9128545Z ^[[36;1m  if rustup toolchain install "$toolchain" "${flags[@]}" --profile minimal --no-self-update --force-non-host 2>&1 | tee "$log"; then^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9129072Z ^[[36;1m    break^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9129252Z ^[[36;1m  else^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9129432Z ^[[36;1m    status=$?^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9129626Z ^[[36;1m  fi^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9129896Z ^[[36;1m  if [[ $attempt == 5 ]] || ! grep -Fq 'checksum failed for ' "$log" \^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9130404Z ^[[36;1m      || ! grep -Fq 'this is likely due to an ongoing update of the official release server' "$log"; then^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9130858Z ^[[36;1m    exit "$status"^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9131059Z ^[[36;1m  fi^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9131382Z ^[[36;1m  echo "Retrying rustup toolchain install in 30 seconds (retry $attempt of 4)" >&2^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9131991Z ^[[36;1m  sleep 30^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9132175Z ^[[36;1mdone^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9146239Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9146893Z env:
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9147115Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9147370Z   toolchain: stable
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9147551Z   targets: 
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9147738Z   components: rustfmt, clippy
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9147959Z   RUSTUP_PERMIT_COPY_RENAME: 1
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:32.9148184Z ##[endgroup]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:36.3478307Z info: syncing channel updates for stable-x86_64-pc-windows-msvc
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:36.8877881Z info: latest update on 2026-10-15 for version 1.99.1 (58cf8f9c3 2026-10-13)
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:36.9035370Z info: component clippy is up to date
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:36.9035859Z info: component rustfmt is up to date
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:36.9036142Z 
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:36.9354178Z   stable-x86_64-pc-windows-msvc unchanged - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:36.9354792Z 
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:36.9676698Z ##[end-action id=__dtolnay_rust-toolchain.__run_4;outcome=success;conclusion=success;duration_ms=4067]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:36.9682888Z ##[start-action display=rustup default stable;id=__dtolnay_rust-toolchain.__run_5]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:36.9822847Z ##[group]Run rustup default "$toolchain" --force-non-host
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:36.9823233Z ^[[36;1mrustup default "$toolchain" --force-non-host^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:36.9837847Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:36.9838228Z env:
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:36.9838425Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:36.9839394Z   toolchain: stable
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:36.9839581Z ##[endgroup]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.0598603Z info: using existing install for stable-x86_64-pc-windows-msvc
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.0646501Z info: default toolchain set to stable-x86_64-pc-windows-msvc
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.0646902Z 
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.0882896Z   stable-x86_64-pc-windows-msvc unchanged - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.0883327Z 
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.0976399Z ##[end-action id=__dtolnay_rust-toolchain.__run_5;outcome=success;conclusion=success;duration_ms=129]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.0980551Z ##[start-action display=Create cachekey;id=__dtolnay_rust-toolchain.rustc-version]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.1109784Z ##[group]Run DATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.1110618Z ^[[36;1mDATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.1111271Z ^[[36;1mHASH=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-hash: //p')^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.1111747Z ^[[36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.1125990Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.1126376Z env:
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.1126573Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.1126827Z   toolchain: stable
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.1127008Z ##[endgroup]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.9265612Z ##[end-action id=__dtolnay_rust-toolchain.rustc-version;outcome=success;conclusion=success;duration_ms=828]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.9268200Z ##[start-action display=Disable incremental compilation;id=__dtolnay_rust-toolchain.__run_6]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.9417082Z ##[group]Run if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.9417469Z ^[[36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.9417777Z ^[[36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.9418058Z ^[[36;1mfi^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.9440122Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.9440495Z env:
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.9440693Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.9441712Z ##[endgroup]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.9877951Z ##[end-action id=__dtolnay_rust-toolchain.__run_6;outcome=success;conclusion=success;duration_ms=60]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:37.9880142Z ##[start-action display=Enable colors in Cargo output;id=__dtolnay_rust-toolchain.__run_7]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0038004Z ##[group]Run if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0038372Z ^[[36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0038676Z ^[[36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0038941Z ^[[36;1mfi^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0060142Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0060510Z env:
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0060722Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0060965Z   CARGO_INCREMENTAL: 0
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0061155Z ##[endgroup]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0490899Z ##[end-action id=__dtolnay_rust-toolchain.__run_7;outcome=success;conclusion=success;duration_ms=60]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0495317Z ##[start-action display=Enable Cargo sparse registry;id=__dtolnay_rust-toolchain.__run_8]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0668237Z ##[group]Run # implemented in 1.66, stabilized in 1.68, made default in 1.70
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0668746Z ^[[36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0669608Z ^[[36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol ]; then^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0670262Z ^[[36;1m  if rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[89]\.'; then^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0670760Z ^[[36;1m    touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0671424Z ^[[36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0671913Z ^[[36;1m  elif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[67]\.'; then^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0672446Z ^[[36;1m    touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0672883Z ^[[36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0673196Z ^[[36;1m  fi^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0673373Z ^[[36;1mfi^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0686916Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0687291Z env:
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0687528Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0687776Z   CARGO_INCREMENTAL: 0
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0688286Z   CARGO_TERM_COLOR: always
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0688497Z   toolchain: stable
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.0688684Z ##[endgroup]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.2764707Z ##[end-action id=__dtolnay_rust-toolchain.__run_8;outcome=success;conclusion=success;duration_ms=226]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.2768484Z ##[start-action display=Work around spurious network errors in curl 8.0;id=__dtolnay_rust-toolchain.__run_9]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.2907118Z ##[group]Run # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.2907834Z ^[[36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.2908418Z ^[[36;1mif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.7[01]\.'; then^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.2908861Z ^[[36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.2909162Z ^[[36;1mfi^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.2923350Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.2923740Z env:
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.2923948Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.2924211Z   CARGO_INCREMENTAL: 0
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.2924437Z   CARGO_TERM_COLOR: always
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.2924644Z   toolchain: stable
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.2924853Z ##[endgroup]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.4030643Z ##[end-action id=__dtolnay_rust-toolchain.__run_9;outcome=success;conclusion=success;duration_ms=126]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.4037548Z ##[start-action display=rustc +stable --version --verbose;id=__dtolnay_rust-toolchain.__run_10]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.4200522Z ##[group]Run rustc +"$toolchain" --version --verbose
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.4200874Z ^[[36;1mrustc +"$toolchain" --version --verbose^[[0m
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.4215263Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.4215656Z env:
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.4215858Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.4216111Z   CARGO_INCREMENTAL: 0
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.4216317Z   CARGO_TERM_COLOR: always
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.4216524Z   toolchain: stable
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.4216715Z ##[endgroup]
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.5097497Z rustc 1.99.1 (58cf8f9c3 2026-10-13)
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.5098026Z binary: rustc
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.5098436Z commit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.5098905Z commit-date: 2026-10-13
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.5099327Z host: x86_64-pc-windows-msvc
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.5099671Z release: 1.99.1
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.5101124Z LLVM version: 23.1.1
+package	Run dtolnay/rust-toolchain@stable	2026-11-06T18:56:38.5247975Z ##[end-action id=__dtolnay_rust-toolchain.__run_10;outcome=success;conclusion=success;duration_ms=120]
+package	Verify strict bundle identity checks	﻿2026-11-06T18:56:38.5414911Z ##[group]Run node --test ../../../test/smoke/windows-bundle-identity.test.mjs
+package	Verify strict bundle identity checks	2026-11-06T18:56:38.5415536Z ^[[36;1mnode --test ../../../test/smoke/windows-bundle-identity.test.mjs^[[0m
+package	Verify strict bundle identity checks	2026-11-06T18:56:38.5415931Z ^[[36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }^[[0m
+package	Verify strict bundle identity checks	2026-11-06T18:56:38.5533176Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+package	Verify strict bundle identity checks	2026-11-06T18:56:38.5533536Z env:
+package	Verify strict bundle identity checks	2026-11-06T18:56:38.5533748Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+package	Verify strict bundle identity checks	2026-11-06T18:56:38.5534007Z   CARGO_INCREMENTAL: 0
+package	Verify strict bundle identity checks	2026-11-06T18:56:38.5534205Z   CARGO_TERM_COLOR: always
+package	Verify strict bundle identity checks	2026-11-06T18:56:38.5534902Z ##[endgroup]
+package	Verify strict bundle identity checks	2026-11-06T18:56:39.4601583Z ✔ accepts exact NSIS and MSI package bytes (4.9644ms)
+package	Verify strict bundle identity checks	2026-11-06T18:56:39.4603190Z ✔ rejects changed application payload (1.006ms)
+package	Verify strict bundle identity checks	2026-11-06T18:56:39.4604054Z ✔ rejects wrong package marker or unchanged EXE (1.3274ms)
+package	Verify strict bundle identity checks	2026-11-06T18:56:39.4605346Z ✔ rejects missing or ambiguous original marker (0.2015ms)
+package	Verify strict bundle identity checks	2026-11-06T18:56:39.4606898Z ✔ rejects unsupported bundle kind (0.6163ms)
+package	Verify strict bundle identity checks	2026-11-06T18:56:39.4608899Z ✔ OTA recovers only the frozen original hash from its exact installer marker (0.4818ms)
+package	Verify strict bundle identity checks	2026-11-06T18:56:39.4610183Z ✔ OTA rejects wrong package kind, changed payload, missing marker and another source EXE (0.3513ms)
+package	Verify strict bundle identity checks	2026-11-06T18:56:39.4759289Z ℹ tests 7
+package	Verify strict bundle identity checks	2026-11-06T18:56:39.4761161Z ℹ suites 0
+package	Verify strict bundle identity checks	2026-11-06T18:56:39.4761564Z ℹ pass 7
+package	Verify strict bundle identity checks	2026-11-06T18:56:39.4761872Z ℹ fail 0
+package	Verify strict bundle identity checks	2026-11-06T18:56:39.4763172Z ℹ cancelled 0
+package	Verify strict bundle identity checks	2026-11-06T18:56:39.4764563Z ℹ skipped 0
+package	Verify strict bundle identity checks	2026-11-06T18:56:39.4764924Z ℹ todo 0
+package	Verify strict bundle identity checks	2026-11-06T18:56:39.4765265Z ℹ duration_ms 149.0047
+package	Run Swatinem/rust-cache@v2	﻿2026-11-06T18:56:39.6099819Z ##[group]Run Swatinem/rust-cache@v2
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6100169Z with:
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6100397Z   workspaces: apps/desktop/tauri -> target
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6100909Z   cache-on-failure: true
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6101124Z   prefix-key: v0-rust
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6101318Z   add-job-id-key: true
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6101537Z   add-rust-environment-hash-key: true
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6101786Z   cache-targets: true
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6101993Z   cache-all-crates: false
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6102218Z   cache-workspace-crates: false
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6102429Z   save-if: true
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6102612Z   cache-provider: github
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6102806Z   cache-bin: true
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6102975Z   lookup-only: false
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6103162Z   cmd-format: {0}
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6103334Z env:
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6103517Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6103756Z   CARGO_INCREMENTAL: 0
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6103949Z   CARGO_TERM_COLOR: always
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:39.6104193Z ##[endgroup]
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8116011Z ##[group]Cache Configuration
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8117888Z Cache Provider:
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8129248Z     github
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8129894Z Workspaces:
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8131683Z     D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8132313Z Cache Paths:
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8132699Z     C:\Users\runneradmin\.cargo\bin
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8133198Z     C:\Users\runneradmin\.cargo\.crates.toml
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8133729Z     C:\Users\runneradmin\.cargo\.crates2.json
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8134242Z     C:\Users\runneradmin\.cargo\registry
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8134723Z     C:\Users\runneradmin\.cargo\git
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8135366Z     D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8135977Z Restore Key:
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8136745Z     v0-rust-package-Windows_NT-x64-e70cdc14
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8137276Z Cache Key:
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8138044Z     v0-rust-package-Windows_NT-x64-e70cdc14-4cd12942
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8138624Z .. Prefix:
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8139018Z   - v0-rust-package-Windows_NT-x64
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8139517Z .. Environment considered:
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8139925Z   - Rust Versions:
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8140804Z     - 1.99.1 x86_64-pc-windows-msvc 58cf8f9c35b355199727627d07ae34a4e2846d67
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8141506Z   - CARGO_HOME
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8141860Z   - CARGO_INCREMENTAL
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8142231Z   - CARGO_TERM_COLOR
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8142613Z .. Lockfiles considered:
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8144298Z   - D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\Cargo.lock
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8145250Z   - D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\Cargo.toml
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8147340Z ##[endgroup]
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8147800Z 
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:41.8148208Z ... Restoring cache ...
+package	Run Swatinem/rust-cache@v2	2026-11-06T18:56:42.1433139Z No cache found.
+package	Install pinned CLI and frontend	﻿2026-11-06T18:56:42.1715029Z ##[group]Run npm install --global @tauri-apps/cli@2.11.4
+package	Install pinned CLI and frontend	2026-11-06T18:56:42.1715519Z ^[[36;1mnpm install --global @tauri-apps/cli@2.11.4^[[0m
+package	Install pinned CLI and frontend	2026-11-06T18:56:42.1715867Z ^[[36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }^[[0m
+package	Install pinned CLI and frontend	2026-11-06T18:56:42.1716164Z ^[[36;1mnpm --prefix ../ui ci^[[0m
+package	Install pinned CLI and frontend	2026-11-06T18:56:42.1716436Z ^[[36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }^[[0m
+package	Install pinned CLI and frontend	2026-11-06T18:56:42.1716733Z ^[[36;1mnpm --prefix ../ui run build^[[0m
+package	Install pinned CLI and frontend	2026-11-06T18:56:42.1717024Z ^[[36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }^[[0m
+package	Install pinned CLI and frontend	2026-11-06T18:56:42.1786758Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+package	Install pinned CLI and frontend	2026-11-06T18:56:42.1787116Z env:
+package	Install pinned CLI and frontend	2026-11-06T18:56:42.1787325Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+package	Install pinned CLI and frontend	2026-11-06T18:56:42.1787578Z   CARGO_INCREMENTAL: 0
+package	Install pinned CLI and frontend	2026-11-06T18:56:42.1787781Z   CARGO_TERM_COLOR: always
+package	Install pinned CLI and frontend	2026-11-06T18:56:42.1787999Z   CACHE_ON_FAILURE: true
+package	Install pinned CLI and frontend	2026-11-06T18:56:42.1788200Z ##[endgroup]
+package	Install pinned CLI and frontend	2026-11-06T18:56:45.5626942Z 
+package	Install pinned CLI and frontend	2026-11-06T18:56:45.5627544Z added 2 packages in 3s
+package	Install pinned CLI and frontend	2026-11-06T18:56:45.5627896Z 
+package	Install pinned CLI and frontend	2026-11-06T18:56:45.5629307Z 1 package is looking for funding
+package	Install pinned CLI and frontend	2026-11-06T18:56:45.5630212Z   run `npm fund` for details
+package	Install pinned CLI and frontend	2026-11-06T18:56:48.6872428Z npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+package	Install pinned CLI and frontend	2026-11-06T18:56:52.0601789Z 
+package	Install pinned CLI and frontend	2026-11-06T18:56:52.0602788Z added 146 packages, and audited 147 packages in 5s
+package	Install pinned CLI and frontend	2026-11-06T18:56:52.0603243Z 
+package	Install pinned CLI and frontend	2026-11-06T18:56:52.0604965Z 27 packages are looking for funding
+package	Install pinned CLI and frontend	2026-11-06T18:56:52.0605593Z   run `npm fund` for details
+package	Install pinned CLI and frontend	2026-11-06T18:56:52.0806933Z 
+package	Install pinned CLI and frontend	2026-11-06T18:56:52.0807605Z 8 vulnerabilities (7 moderate, 1 high)
+package	Install pinned CLI and frontend	2026-11-06T18:56:52.0807855Z 
+package	Install pinned CLI and frontend	2026-11-06T18:56:52.0808068Z To address all issues (including breaking changes), run:
+package	Install pinned CLI and frontend	2026-11-06T18:56:52.0808403Z   npm audit fix --force
+package	Install pinned CLI and frontend	2026-11-06T18:56:52.0808545Z 
+package	Install pinned CLI and frontend	2026-11-06T18:56:52.0808650Z Run `npm audit` for details.
+package	Install pinned CLI and frontend	2026-11-06T18:56:52.4680538Z 
+package	Install pinned CLI and frontend	2026-11-06T18:56:52.4682040Z > opencodex-desktop-ui@0.2.23 build
+package	Install pinned CLI and frontend	2026-11-06T18:56:52.4682724Z > vue-tsc --noEmit && vite build
+package	Install pinned CLI and frontend	2026-11-06T18:56:52.4683008Z 
+package	Install pinned CLI and frontend	2026-11-06T18:57:07.4702798Z ^[[36mvite v8.3.0 ^[[32mbuilding client environment for production...^[[36m^[[39m
+package	Install pinned CLI and frontend	2026-11-06T18:57:07.4845591Z transforming...
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.7496409Z ✓ 349 modules transformed.
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.8174291Z rendering chunks...
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9304436Z computing gzip size...
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9379340Z dist/index.html                                     1.07 kB │ gzip:   0.43 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9380152Z dist/assets/ConnectionDialog-BKg8FI3T.css           0.47 kB │ gzip:   0.24 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9380808Z dist/assets/ImportedConnections-Bw10PPf4.css        0.48 kB │ gzip:   0.25 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9381418Z dist/assets/TransferBackups-BdzFSC7V.css            1.28 kB │ gzip:   0.43 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9382034Z dist/assets/SyncRoute-CbiJC7y8.css                  1.45 kB │ gzip:   0.54 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9382629Z dist/assets/ModelSaveHistory-D0E3qsOy.css           1.53 kB │ gzip:   0.49 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9383274Z dist/assets/ModelsRoute-BT7is3Mg.css               18.99 kB │ gzip:   3.73 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9383864Z dist/assets/index-CcBwaY8A.css                    138.60 kB │ gzip:  24.51 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9384439Z dist/assets/rolldown-runtime-DK3Fl9T5.js            0.15 kB │ gzip:   0.15 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9385044Z dist/assets/preload-helper-BZ1Pz5am.js              1.21 kB │ gzip:   0.69 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9385606Z dist/assets/core-DNNVStWM.js                        2.85 kB │ gzip:   1.14 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9386169Z dist/assets/SyncRoute-_0Hjcihs.js                   2.99 kB │ gzip:   1.41 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9386745Z dist/assets/ImportedConnections-xCWO_y6C.js         3.15 kB │ gzip:   1.58 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9387319Z dist/assets/api-DJ3SDe3A.js                         4.55 kB │ gzip:   1.82 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9387862Z dist/assets/pinia-B8tPejl1.js                       5.99 kB │ gzip:   2.83 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9392431Z dist/assets/ConnectionDialog-BnRU7phy.js            6.55 kB │ gzip:   2.71 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9393371Z dist/assets/ModelSaveHistory-huettnTr.js            8.65 kB │ gzip:   3.75 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9394155Z dist/assets/TransferBackups-DhJ-GVtZ.js            14.86 kB │ gzip:   5.56 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9395164Z dist/assets/reactivity.esm-bundler-CiLpcgQX.js     20.90 kB │ gzip:   7.86 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9396066Z dist/assets/store-DIK3Rray.js                      27.98 kB │ gzip:   4.72 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9396903Z dist/assets/runtime-core.esm-bundler-soTStIfQ.js   43.51 kB │ gzip:  17.94 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9401432Z ^[[33m^[[33m[INEFFECTIVE_DYNAMIC_IMPORT] ^[[0msrc/features/models/store-v2.ts is dynamically imported by src/composables/useAppController.ts but also statically imported by src/features/backup/ModelSaveHistory.vue?vue&type=script&setup=true&lang.ts, src/features/backup/transfer-backups-v2.ts, src/features/models/AgentExecutionField.vue?vue&type=script&setup=true&lang.ts, src/features/models/AgentPanel.vue?vue&type=script&setup=true&lang.ts, src/features/models/BatchAgentDialog.vue?vue&type=script&setup=true&lang.ts, ..., dynamic import will not move module into another chunk.
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9403552Z ^[[39m
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9403864Z ^[[33m[plugin builtin:vite-reporter] 
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9404271Z (!) Some chunks are larger than 500 kB after minification. Consider:
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9404714Z - Using dynamic import() to code-split the application
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9405435Z - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9406259Z - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.^[[39m
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9410760Z ^[[33m^[[33m[INEFFECTIVE_DYNAMIC_IMPORT] ^[[0msrc/features/sync/store.ts is dynamically imported by src/composables/useAppController.ts but also statically imported by src/app/bootstrap.ts, src/components/TaskProgressHost.vue?vue&type=script&setup=true&lang.ts, src/components/ToastHost.vue?vue&type=script&setup=true&lang.ts, src/features/sync/ConnectionDialog.vue?vue&type=script&setup=true&lang.ts, src/features/sync/ModelTransfer.vue?vue&type=script&setup=true&lang.ts, ..., dynamic import will not move module into another chunk.
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9413842Z ^[[39m
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9415792Z ^[[33m^[[33m[INEFFECTIVE_DYNAMIC_IMPORT] ^[[0msrc/features/preferences/store.ts is dynamically imported by src/components/AppTopbar.vue?vue&type=script&setup=true&lang.ts but also statically imported by src/features/migration/store.ts, src/features/updates/useUpdateScheduler.ts, src/stores/app.ts, dynamic import will not move module into another chunk.
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9417046Z ^[[39m
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9417493Z dist/assets/ModelsRoute-C5O6Igmu.js               181.17 kB │ gzip:  51.96 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9418081Z dist/assets/index-B22CaN_l.js                     599.46 kB │ gzip: 188.93 kB
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9419136Z 
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9423322Z ^[[33m^[[33m[INEFFECTIVE_DYNAMIC_IMPORT] ^[[0msrc/features/updates/update.ts is dynamically imported by src/features/updates/store.ts but also statically imported by src/features/backup/BackupManagement.vue?vue&type=script&setup=true&lang.ts, src/features/updates/UpdateCenter.vue?vue&type=script&setup=true&lang.ts, src/features/updates/useUpdateScheduler.ts, src/routes/OverviewRoute.vue?vue&type=script&setup=true&lang.ts, dynamic import will not move module into another chunk.
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9428299Z ^[[39m
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9431529Z ^[[33m^[[33m[INEFFECTIVE_DYNAMIC_IMPORT] ^[[0mnode_modules/@tauri-apps/api/event.js is dynamically imported by src/app/appearance/effects.ts, src/app/lifecycle/store.ts, src/components/TaskProgressHost.vue?vue&type=script&setup=true&lang.ts, src/features/notifications/store.ts, src/features/runtime/store.ts, ... but also statically imported by src/app/appearance/nativeWindow.ts, dynamic import will not move module into another chunk.
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9435323Z ^[[39m
+package	Install pinned CLI and frontend	2026-11-06T18:57:08.9436625Z ^[[32m✓ built in 1.47s^[[39m
+package	Stage complete 0.2.23 offline runtime	﻿2026-11-06T18:57:09.3260924Z ##[group]Run $taskNode = (Get-Command node).Source
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:09.3261429Z ^[[36;1m$taskNode = (Get-Command node).Source^[[0m
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:09.3262492Z ^[[36;1m$taskNpm = node -e 'const p=require("node:path"),f=require("node:fs"),d=p.dirname(process.execPath);const a=[p.join(d,"node_modules/npm/bin/npm-cli.js"),p.join(d,"../lib/node_modules/npm/bin/npm-cli.js")];const n=a.find(x=>f.existsSync(x));if(!n)process.exit(1);process.stdout.write(p.resolve(n))'^[[0m
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:09.3263568Z ^[[36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }^[[0m
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:09.3264378Z ^[[36;1mpython ../../../.github/scripts/stage_runtime_bundle_023.py --platform win32-x64 --build-node $taskNode --npm-cli $taskNpm --output ../../../test/out/windows-candidate/runtime-stage^[[0m
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:09.3265147Z ^[[36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }^[[0m
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:09.3265493Z ^[[36;1m'OCXD_REQUIRE_RUNTIME_BUNDLE=1' >> $env:GITHUB_ENV^[[0m
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:09.3340466Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:09.3340925Z env:
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:09.3341138Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:09.3341412Z   CARGO_INCREMENTAL: 0
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:09.3341626Z   CARGO_TERM_COLOR: always
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:09.3341844Z   CACHE_ON_FAILURE: true
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:09.3342057Z ##[endgroup]
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9605444Z Traceback (most recent call last):
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9606358Z   File "D:\a\opencodex-desktop\opencodex-desktop\.github\scripts\build_runtime_023.py", line 177, in <module>
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9608179Z     result = build(args.output, args.archive, args.original)
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9655722Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9656635Z   File "D:\a\opencodex-desktop\opencodex-desktop\.github\scripts\build_runtime_023.py", line 141, in build
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9658231Z     results = [canonical_archive(patched_files(original, review), modes) for _ in range(2)]
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9659079Z                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9660542Z   File "D:\a\opencodex-desktop\opencodex-desktop\.github\scripts\build_runtime_023.py", line 85, in patched_files
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9661214Z     require(sha(PATCH.read_bytes()) == review['patchSha256'], 'Reviewed patch changed')
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9662055Z   File "D:\a\opencodex-desktop\opencodex-desktop\.github\scripts\build_runtime_023.py", line 38, in require
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9662796Z     raise ValueError(message)
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9663113Z ValueError: Reviewed patch changed
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9834633Z Traceback (most recent call last):
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9835351Z   File "D:\a\opencodex-desktop\opencodex-desktop\.github\scripts\stage_runtime_bundle_023.py", line 56, in <module>
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9838127Z     a=p.parse_args();print(json.dumps(stage(a.platform,a.build_node.resolve(),a.npm_cli.resolve(),a.output.resolve(),a.base),indent=2))
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9840044Z                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9840930Z   File "D:\a\opencodex-desktop\opencodex-desktop\.github\scripts\stage_runtime_bundle_023.py", line 34, in stage
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9842673Z     subprocess.run(['python3',str(ROOT/'.github/scripts/build_runtime_023.py'),str(names),'--archive',str(original)],check=True)
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:12.9843797Z   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\subprocess.py", line 571, in run
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:13.0239069Z     raise CalledProcessError(retcode, process.args,
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:13.0241319Z subprocess.CalledProcessError: Command '['python3', 'D:\\a\\opencodex-desktop\\opencodex-desktop\\.github\\scripts\\build_runtime_023.py', 'D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-candidate\\runtime-stage\\maintained-runtime', '--archive', 'D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-candidate\\runtime-stage\\base-runtime.tgz']' returned non-zero exit status 1.
+package	Stage complete 0.2.23 offline runtime	2026-11-06T18:57:13.0877502Z ##[error]Process completed with exit code 1.
+package	Preserve package evidence	﻿2026-11-06T18:57:13.1214625Z ##[group]Run actions/upload-artifact@v4
+package	Preserve package evidence	2026-11-06T18:57:13.1215020Z with:
+package	Preserve package evidence	2026-11-06T18:57:13.1215218Z   name: windows-candidate-evidence
+package	Preserve package evidence	2026-11-06T18:57:13.1215473Z   if-no-files-found: error
+package	Preserve package evidence	2026-11-06T18:57:13.1215695Z   retention-days: 14
+package	Preserve package evidence	2026-11-06T18:57:13.1215903Z   path: test/out/windows-candidate
+package	Preserve package evidence	2026-11-06T18:57:13.1216136Z   compression-level: 6
+package	Preserve package evidence	2026-11-06T18:57:13.1216327Z   overwrite: false
+package	Preserve package evidence	2026-11-06T18:57:13.1216524Z   include-hidden-files: false
+package	Preserve package evidence	2026-11-06T18:57:13.1216725Z env:
+package	Preserve package evidence	2026-11-06T18:57:13.1216905Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+package	Preserve package evidence	2026-11-06T18:57:13.1217159Z   CARGO_INCREMENTAL: 0
+package	Preserve package evidence	2026-11-06T18:57:13.1217361Z   CARGO_TERM_COLOR: always
+package	Preserve package evidence	2026-11-06T18:57:13.1217566Z   CACHE_ON_FAILURE: true
+package	Preserve package evidence	2026-11-06T18:57:13.1217764Z ##[endgroup]
+package	Preserve package evidence	2026-11-06T18:57:13.3248424Z (node:2580) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+package	Preserve package evidence	2026-11-06T18:57:13.3249213Z (Use `node --trace-deprecation ...` to show where the warning was created)
+package	Preserve package evidence	2026-11-06T18:57:13.3348904Z With the provided path, there will be 2 files uploaded
+package	Preserve package evidence	2026-11-06T18:57:13.3355431Z Artifact name is valid!
+package	Preserve package evidence	2026-11-06T18:57:13.3356804Z Root directory input is valid!
+package	Preserve package evidence	2026-11-06T18:57:13.6967116Z Beginning upload of artifact content to blob storage
+package	Preserve package evidence	2026-11-06T18:57:13.9885828Z (node:2580) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+package	Preserve package evidence	2026-11-06T18:57:15.1025889Z Uploaded bytes 8388608
+package	Preserve package evidence	2026-11-06T18:57:15.4323636Z Uploaded bytes 15409446
+package	Preserve package evidence	2026-11-06T18:57:15.4970851Z Finished uploading artifact content to blob storage!
+package	Preserve package evidence	2026-11-06T18:57:15.4972034Z SHA256 digest of uploaded artifact zip is 1ba8dce47cbdcdffb6f40150e20c87e541f6e815cbc630d0e64f49e2f36689b3
+package	Preserve package evidence	2026-11-06T18:57:15.4975390Z Finalizing artifact upload
+package	Preserve package evidence	2026-11-06T18:57:15.9320764Z Artifact windows-candidate-evidence.zip successfully finalized. Artifact ID 13531269778
+package	Preserve package evidence	2026-11-06T18:57:15.9321841Z Artifact windows-candidate-evidence has been successfully uploaded! Final size is 15409446 bytes. Artifact ID is 13531269778
+package	Preserve package evidence	2026-11-06T18:57:15.9333664Z Artifact download URL: https://github.com/gzers/opencodex-desktop/actions/runs/42275126707/artifacts/13531269778
+package	Post Run Swatinem/rust-cache@v2	﻿2026-11-06T18:57:15.9724383Z Post job cleanup.
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1379319Z ##[group]Cache Configuration
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1383374Z Cache Provider:
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1383696Z     github
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1383979Z Workspaces:
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1384496Z     D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1385084Z Cache Paths:
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1385478Z     C:\Users\runneradmin\.cargo\bin
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1385915Z     C:\Users\runneradmin\.cargo\.crates.toml
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1386355Z     C:\Users\runneradmin\.cargo\.crates2.json
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1386885Z     C:\Users\runneradmin\.cargo\registry
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1387666Z     C:\Users\runneradmin\.cargo\git
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1388315Z     D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1388838Z Restore Key:
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1389655Z     v0-rust-package-Windows_NT-x64-e70cdc14
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1390044Z Cache Key:
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1390395Z     v0-rust-package-Windows_NT-x64-e70cdc14-4cd12942
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1390863Z .. Prefix:
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1391179Z   - v0-rust-package-Windows_NT-x64
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1391646Z .. Environment considered:
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1392019Z   - Rust Versions:
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1392542Z     - 1.99.1 x86_64-pc-windows-msvc 58cf8f9c35b355199727627d07ae34a4e2846d67
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1393093Z   - CARGO_HOME
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1393388Z   - CARGO_INCREMENTAL
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1393702Z   - CARGO_TERM_COLOR
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1394043Z .. Lockfiles considered:
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1394586Z   - D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\Cargo.lock
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1395353Z   - D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\Cargo.toml
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1395917Z ##[endgroup]
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:57:16.1396036Z 
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:58:36.9509952Z ... Cleaning D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target ...
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:58:36.9517173Z ... Cleaning cargo registry (cache-all-crates: false) ...
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:58:44.7609730Z ... Cleaning cargo/bin ...
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:58:44.7693899Z ... Cleaning cargo git cache ...
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:58:44.7701881Z ... Saving cache ...
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:58:44.8756528Z [command]"C:\Program Files\Git\usr\bin\tar.exe" --posix -cf cache.tzst --exclude cache.tzst -P -C D:/a/opencodex-desktop/opencodex-desktop --files-from manifest.txt --force-local --use-compress-program "zstd -T0"
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:58:48.2563749Z Sent 13631488 of 116381445 (11.7%), 13.0 MBs/sec
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:58:49.2610357Z Sent 108331008 of 116381445 (93.1%), 51.6 MBs/sec
+package	Post Run Swatinem/rust-cache@v2	2026-11-06T18:58:49.9664748Z Sent 116381445 of 116381445 (100.0%), 40.9 MBs/sec
+package	Post Run actions/checkout@v5	﻿2026-11-06T18:58:50.2969670Z Post job cleanup.
+package	Post Run actions/checkout@v5	2026-11-06T18:58:50.4792068Z [command]"C:\Program Files\Git\bin\git.exe" version
+package	Post Run actions/checkout@v5	2026-11-06T18:58:50.5159700Z git version 2.56.0.windows.4
+package	Post Run actions/checkout@v5	2026-11-06T18:58:50.5234359Z Temporarily overriding HOME='D:\a\_temp\1d5c469c-0c29-4ffd-8624-70ecefbcdb43' before making global git config changes
+package	Post Run actions/checkout@v5	2026-11-06T18:58:50.5235287Z Adding repository directory to the temporary git global config as a safe directory
+package	Post Run actions/checkout@v5	2026-11-06T18:58:50.5245860Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+package	Post Run actions/checkout@v5	2026-11-06T18:58:50.5656576Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+package	Post Run actions/checkout@v5	2026-11-06T18:58:50.6082799Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+package	Post Run actions/checkout@v5	2026-11-06T18:58:51.2655185Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+package	Post Run actions/checkout@v5	2026-11-06T18:58:51.3028561Z http.https://github.com/.extraheader
+package	Post Run actions/checkout@v5	2026-11-06T18:58:51.3095664Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+package	Post Run actions/checkout@v5	2026-11-06T18:58:51.3525933Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+package	Post Run actions/checkout@v5	2026-11-06T18:58:51.9618954Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+package	Post Run actions/checkout@v5	2026-11-06T18:58:52.0021249Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+package	Complete job	﻿2026-11-06T18:58:52.6512093Z Cleaning up orphan processes
+package	Complete job	2026-11-06T18:58:52.7055814Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

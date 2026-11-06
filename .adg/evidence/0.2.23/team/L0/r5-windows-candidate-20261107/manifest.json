@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "codeBaseline": "511463f75b10f5db9736adfa9be1ebefa7d98357",
+  "pr": "https://github.com/gzers/opencodex-desktop/pull/72",
+  "nativeCI": {
+    "run": 42270824847,
+    "head": "cce22dc665af07ebcbfc2cd27e17701fbd1b4318",
+    "privateCreate": "13 passed, real Windows MSVC execution",
+    "credentialRenameSecureStore": "three explicit groups passed",
+    "overall": "failure; remaining platform Clippy, no full package acceptance"
+  },
+  "candidateFirst": {
+    "run": 42275126707,
+    "head": "418ad25f55d9a8e26b2ffdd681b9a07b9ee284c4",
+    "result": "failed at reviewed patch hash; line-ending portability fixed in 511463f75"
+  },
+  "candidateSecond": {
+    "run": 42276834374,
+    "head": "511463f75b10f5db9736adfa9be1ebefa7d98357",
+    "status": "live at observation; not final acceptance"
+  },
+  "stillPending": [
+    "User decision for restore-to-absence versus cross-device deletion propagation",
+    "Mac screen unlock for native visual QA",
+    "Final Windows full candidate, two SID/process/port and installer gates",
+    "Final same-tree complete tests and signed public release artifacts"
+  ],
+  "files": [
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/ocxd023-ci653-0.log",
+      "source": "/tmp/ocxd023-ci653-0.log",
+      "bytes": 135129,
+      "sha256": "6ed6398a111c7bbec168a4eea9eaef28e70ea2402bbfb54ec676691eb46ed1cb"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/ocxd023-ci653-1.log",
+      "source": "/tmp/ocxd023-ci653-1.log",
+      "bytes": 79007,
+      "sha256": "1aef2f6b829008164c5a47844ccf0035c4849ed23a297242854059f3c1a3d9ca"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/ocxd023-windows-candidate-first-job.log",
+      "source": "/tmp/ocxd023-windows-candidate-first-job.log",
+      "bytes": 72612,
+      "sha256": "e63d2225de94b9d91453e20001daf43464cfc8fc1f3d964c39993f1412a55ae7"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/ocxd023-windows-candidate-run.json",
+      "source": "/tmp/ocxd023-windows-candidate-run.json",
+      "bytes": 5323,
+      "sha256": "da1cc4abc93795929713695507973b8ddfcd9ed37f2a5e1008bd500842d7141e"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/ocxd023-windows-candidate-latest.json",
+      "source": "/tmp/ocxd023-windows-candidate-latest.json",
+      "bytes": 5432,
+      "sha256": "5b52b1360f6d033968652e2c20a572e72c1ee2d6d2ead5c6b14f634f80484adb"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/ocxd023-windows-candidate-second-current.json",
+      "source": "/tmp/ocxd023-windows-candidate-second-current.json",
+      "bytes": 5139,
+      "sha256": "d8475a199b7bf6ea3bbf37ebf4366bdc453c4466a74c8b6c70536512b947aeaa"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/ocxd023-runtime-portable-rebuild.log",
+      "source": "/tmp/ocxd023-runtime-portable-rebuild.log",
+      "bytes": 832,
+      "sha256": "bb056ccb6ab066e0702d9b83a73e1bb54b3c8c86d674fe479f03b67c541c53d3"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/ocxd023-runtime-portable-rebuild-context.json",
+      "source": "/tmp/ocxd023-runtime-portable-rebuild-context.json",
+      "bytes": 209,
+      "sha256": "47309e5132ee5e5fda2302ae8c0da5a4e5677105ce7e6246b6c20158f899d4ca"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/ocxd023-runtime-repro-portability-tests.log",
+      "source": "/tmp/ocxd023-runtime-repro-portability-tests.log",
+      "bytes": 117,
+      "sha256": "e42647a95b4bb21a99954d14495ae2a8dd7c10060f6c42f78b8541aa62359601"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/ocxd023-release-tools-final.log",
+      "source": "/tmp/ocxd023-release-tools-final.log",
+      "bytes": 334,
+      "sha256": "76ea03fe90afb1afdb7d79416decacf5b010578598e23f664abbdc32a16e7881"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/ocxd023-retired-public-handler.json",
+      "source": "/tmp/ocxd023-retired-public-handler.json",
+      "bytes": 3740,
+      "sha256": "7a4a7b8d80cb809b51651ef49c80c32b672a2da9a68ddf753ad037a2972da84a"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/ocxd023-final-public-boundary-clippy.log",
+      "source": "/tmp/ocxd023-final-public-boundary-clippy.log",
+      "bytes": 198,
+      "sha256": "b91236237095e394b2273a740a599cb258961c775116d4f865c8edcb85b02795"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/ocxd023-ui-final-public-boundary.log",
+      "source": "/tmp/ocxd023-ui-final-public-boundary.log",
+      "bytes": 811,
+      "sha256": "bd32e075c20c16f0888fda50ab0a79f188983cf54f3da9e608a2628d023cf903"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/ocxd023-feedback-final-tests.log",
+      "source": "/tmp/ocxd023-feedback-final-tests.log",
+      "bytes": 3010,
+      "sha256": "43739637873140058c939cc37e247e0964c272216cf515414a90c88ebd157e73"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/restore-clock/clock-original-ledger-assertion-failed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-clock-operations-evidence/clock-original-ledger-assertion-failed.log",
+      "bytes": 2823,
+      "sha256": "73172f88a89f627da75111add64b3dcd4ff121174ce51029328b496cf28eeb81"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/restore-clock/API.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-clock-operations-evidence/API.md",
+      "bytes": 4070,
+      "sha256": "9030be111b69137fddae4b67284a66b207535c567b87d254650457a852f1ba48"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/restore-clock/all-13-restore-clock-operations-passed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-clock-operations-evidence/all-13-restore-clock-operations-passed.log",
+      "bytes": 2404,
+      "sha256": "b3ff9de9f86a306bb51ff17cb42854606425aa10a3a84c60028a6a3aa9bff45c"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/restore-clock/clock-observed-policy-diagnostic.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-clock-operations-evidence/clock-observed-policy-diagnostic.log",
+      "bytes": 5181,
+      "sha256": "922ea36dd032da819a6ad75e7ce853eefacf9ef27562fea377aba501d9c86236"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/restore-clock/failure-history.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-clock-operations-evidence/failure-history.md",
+      "bytes": 1323,
+      "sha256": "58692cfc3240c5c0ffb022c77b519b216494603939d3dfecade1130b3ace1dbf"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/restore-clock/operations-reopen-partial-passed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-clock-operations-evidence/operations-reopen-partial-passed.log",
+      "bytes": 11006,
+      "sha256": "785b5f386fb96d75ccbde1f1c1ae4025a73313872ecd906432c0fb99beb7590b"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/restore-clock/clock-direction-original-diagnostic.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-clock-operations-evidence/clock-direction-original-diagnostic.log",
+      "bytes": 4802,
+      "sha256": "8b50df11ac1e7f91ac255ca5cfe35ba30886020048bef6fd3066a289877bb690"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/restore-clock/clock-direction-first-failed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-clock-operations-evidence/clock-direction-first-failed.log",
+      "bytes": 1288,
+      "sha256": "0b296e9795b1645864000796b4471813ce3a5f6e24f03b1676723f1b4a4b37c3"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/restore-clock/normal-crate-strict-clippy-passed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-clock-operations-evidence/normal-crate-strict-clippy-passed.log",
+      "bytes": 8922,
+      "sha256": "0dceb4fdb42b98418e97ef05f2ef1d0cadf283f4944de28d5633721f088592d6"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/restore-clock/manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-clock-operations-evidence/manifest.json",
+      "bytes": 2101,
+      "sha256": "75878d563b67234f452abd363d5490f77aa36fc965384ba2cc366af9da16c933"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/restore-clock/clock-ledger-guard-old-after-failed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-clock-operations-evidence/clock-ledger-guard-old-after-failed.log",
+      "bytes": 1298,
+      "sha256": "d38235586b79116806535b381ea9a7c5d6e08746b10f59338880fc38b15164c3"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/restore-clock/receipt.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-clock-operations-evidence/receipt.json",
+      "bytes": 2405,
+      "sha256": "56e2d414b6e99c6b57b372bd9829f002610a38ef662c165a2a4610ce131177b4"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r5-windows-candidate-20261107/restore-clock/clock-actual-capture-direction-passed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-clock-operations-evidence/clock-actual-capture-direction-passed.log",
+      "bytes": 591,
+      "sha256": "dd0d15a951acba40886fb7ed3c1d0d417043474e2ef8cb12c380464d84db4f6f"
+    }
+  ]
+}

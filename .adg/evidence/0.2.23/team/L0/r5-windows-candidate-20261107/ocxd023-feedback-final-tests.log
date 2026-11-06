@@ -1,0 +1,28 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 36.91s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-a2321b53a9e89887)
+
+running 20 tests
+test modules::model_config::feedback::v2::tests::actual_download_remote_stored_is_not_local_applied ... ok
+test modules::model_config::feedback::v2::tests::actual_invalid_status_is_terminal_failure_not_pending_or_success ... ok
+test modules::model_config::feedback::v2::tests::actual_upload_stored_is_success_and_pending_is_review_not_success ... ok
+test modules::model_config::feedback::v2::tests::cancellation_and_prepared_nochange_have_no_operation_receipt_event ... ok
+test modules::model_config::feedback::v2::tests::dedicated_recovery_real_outcome_and_kind_settle_only_original_plan_id ... ok
+test modules::model_config::feedback::v2::tests::dedicated_recovery_unknown_warning_then_real_receipt_resolves_original_bell_without_digest_leak ... ok
+test modules::model_config::feedback::v2::tests::file_success_requires_actual_matching_receipt_and_folder_cancel_is_silent ... ok
+test modules::model_config::feedback::v2::tests::four_facts_remain_independent_under_remote_advance_conflict_and_current_unknown ... ok
+test modules::model_config::feedback::v2::tests::malformed_or_future_fact_cannot_publish_owned_identity ... ok
+test modules::model_config::feedback::v2::tests::original_failure_uses_original_uuid_and_unknown_result_is_review ... ok
+test modules::model_config::feedback::v2::tests::raw_failure_without_backend_original_operation_remains_in_dialog ... ok
+test modules::model_config::feedback::v2::tests::readonly_or_nonowned_inputs_do_not_manufacture_event_or_touch_store ... ok
+test modules::model_config::feedback::v2::tests::registered_directory_open_event_is_separate_from_export_result_and_same_original_o ... ok
+test modules::model_config::feedback::v2::tests::registry_export_import_failure_then_receipt_success_resolves_same_candidate ... ok
+test modules::model_config::feedback::v2::tests::registry_pending_warning_persists_original_result_action_and_dedupes_same_candidate ... ok
+test modules::model_config::feedback::v2::tests::registry_same_operation_success_resolves_only_its_own_failure_not_other_o ... ok
+test modules::model_config::feedback::v2::tests::registry_success_body_never_claims_latest_or_equal_for_unknown_current_relation ... ok
+test modules::model_config::feedback::v2::tests::scoped_restore_real_status_preserves_original_restore_progress_without_import_title_or_new_notice ... ok
+test modules::model_config::feedback::v2::tests::upload_cannot_borrow_download_apply_or_download_borrow_upload_store ... ok
+test modules::model_config::feedback::v2::tests::upload_possible_generation_or_payload_write_is_never_success_without_stored ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 1908 filtered out; finished in 0.10s
+
