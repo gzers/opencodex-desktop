@@ -1,0 +1,16 @@
+
+running 10 tests
+test infrastructure::windows_startup_root::tests::legacy_default_selection_is_rejected_without_creating_install_data ... ok
+test infrastructure::windows_startup_root::tests::malformed_fixed_location_fails_without_fallback_or_repair ... ok
+test infrastructure::windows_startup_root::tests::same_user_relaunch_cannot_create_second_writer_or_rewrite_pointer ... ok
+test infrastructure::windows_startup_root::tests::v2_partitions_preserve_unrelated_legacy_material ... ok
+test infrastructure::windows_startup_root::user_scope::tests::invalid_path_and_pipe_fail_closed ... ok
+test infrastructure::windows_startup_root::user_scope::tests::junction_cannot_redirect_permission_changes_into_another_tree ... ok
+test infrastructure::windows_startup_root::user_scope::tests::private_directory_does_not_rewrite_existing_child_security ... ok
+test infrastructure::windows_startup_root::user_scope::tests::private_file_remains_readable_and_missing_path_is_not_created ... ok
+test infrastructure::windows_startup_root::user_scope::tests::spoofed_user_environment_cannot_change_token_identity ... ok
+test infrastructure::windows_startup_root::user_scope::tests::token_folders_and_sid_are_real_absolute_os_values ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 1303 filtered out; finished in 0.30s
+
+

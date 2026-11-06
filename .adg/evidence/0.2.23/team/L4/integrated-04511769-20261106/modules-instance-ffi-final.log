@@ -1,0 +1,11 @@
+
+running 6 tests
+test modules::instance::tests::first_instance_acquires_lock ... ok
+test modules::instance::tests::lock_is_released_after_drop ... ok
+test modules::instance::tests::lock_metadata_contains_pid ... ok
+test modules::instance::tests::losing_instance_does_not_truncate_running_instance_identity ... ok
+test modules::instance::tests::permission_denial_is_typed_without_localized_message_matching ... ok
+test modules::instance::tests::second_instance_is_blocked_with_conflict_error ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 1307 filtered out; finished in 0.01s
+

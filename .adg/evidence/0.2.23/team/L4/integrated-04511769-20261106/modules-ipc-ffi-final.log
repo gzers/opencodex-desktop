@@ -1,0 +1,83 @@
+
+running 44 tests
+test modules::ipc::audit::tests::retention_keeps_ninety_days_and_max_records ... ok
+test modules::ipc::audit::tests::rotates_five_megabyte_logs_five_times ... ok
+test modules::ipc::audit::tests::writes_sanitized_record_as_jsonl ... ok
+test modules::ipc::endpoint::platform::tests::anonymous_peer_is_rejected_before_business_and_next_peer_still_works ... ok
+test modules::ipc::endpoint::platform::tests::authenticated_request_and_reopen_preserve_wire_contract ... ok
+test modules::ipc::endpoint::platform::tests::isolated_pipes_reject_duplicate_owners_and_keep_real_token_identity ... ok
+test modules::ipc::endpoint::windows_identity_tests::daily_identity_is_sid_scoped_and_independent_of_roots ... ok
+test modules::ipc::endpoint::windows_identity_tests::sandbox_pipe_is_root_scoped_and_invalid_root_never_selects_daily_pipe ... ok
+test modules::ipc::service::tests::backup_list_lock_wait_keeps_executor_responsive_and_survives_observer_drop ... ok
+test modules::ipc::service::tests::binding_refuses_busy_writer_and_validation_failure_reopens_admission ... ok
+test modules::ipc::service::tests::busy_frozen_and_unconfirmed_cli_sync_do_not_execute_or_write_audit ... ok
+
+thread 'tokio-rt-worker' (17076) panicked at src\modules\ipc\service.rs:2080:37:
+injected backup panic
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test modules::ipc::service::tests::cancelled_backup_observer_keeps_admission_through_real_terminal_and_audit ... ok
+
+thread 'tokio-rt-worker' (17076) panicked at src\modules\ipc\service.rs:1204:34:
+injected terminal panic
+test modules::ipc::service::tests::cancelled_sync_observer_keeps_admissions_until_terminal_and_audit_for_each_result ... ok
+test modules::ipc::service::tests::cli_backup_honours_saved_cleanup_mode_and_retains_pins_and_legacy_transactions ... ok
+test modules::ipc::service::tests::cli_backup_rejects_missing_corrupt_source_or_policy_without_fake_success_or_cleanup ... ok
+test modules::ipc::service::tests::cli_backup_uses_manual_scope_verified_source_and_complete_metadata_listing ... ok
+test modules::ipc::service::tests::cli_binding_busy_frozen_and_unconfirmed_never_execute_or_audit ... ok
+
+thread 'tokio-rt-worker' (17076) panicked at src\modules\ipc\service.rs:2591:38:
+isolated binding projection panic
+
+thread 'tokio-rt-worker' (17076) panicked at src\modules\ipc\service.rs:2591:38:
+isolated binding projection panic
+test modules::ipc::service::tests::cli_binding_owns_runtime_and_exclusive_storage_until_terminal_audit ... ok
+test modules::ipc::service::tests::cli_lifecycle_projects_only_matching_terminal_and_preserves_context_and_wire_contract ... ok
+test modules::ipc::service::tests::cli_lifecycle_rejects_busy_frozen_unconfirmed_and_unsafe_arguments ... ok
+test modules::ipc::service::tests::cli_lifecycle_reuses_registered_events_and_recovers_only_exact_action_and_candidate ... ok
+
+thread 'tokio-rt-worker' (17076) panicked at src\modules\ipc\service.rs:1563:46:
+isolated lifecycle worker panic
+
+thread 'tokio-rt-worker' (17076) panicked at src\modules\ipc\service.rs:1563:46:
+isolated lifecycle worker panic
+
+thread 'tokio-rt-worker' (17076) panicked at src\modules\ipc\service.rs:1563:46:
+isolated lifecycle worker panic
+test modules::ipc::service::tests::cli_lifecycle_worker_survives_disconnect_and_holds_both_gates_through_audit ... ok
+test modules::ipc::service::tests::cli_migration_is_explicitly_unsupported_without_reading_or_changing_files ... ok
+test modules::ipc::service::tests::cli_migration_refusal_does_not_wait_for_legacy_file_locks_or_create_targets ... ok
+test modules::ipc::service::tests::cli_migration_rejects_unconfirmed_frozen_and_invalid_requests_without_file_mutation ... ok
+
+thread 'tokio-rt-worker' (17076) panicked at src\modules\ipc\service.rs:2497:38:
+isolated query panic
+
+thread 'tokio-rt-worker' (17076) panicked at src\modules\ipc\service.rs:2497:38:
+isolated query panic
+
+thread 'tokio-rt-worker' (17076) panicked at src\modules\ipc\service.rs:2497:38:
+isolated query panic
+test modules::ipc::service::tests::cli_queries_survive_disconnect_and_audit_only_admitted_roots ... ok
+test modules::ipc::service::tests::cli_root_migrate_is_unsupported_before_status_audit_or_target_creation ... ok
+test modules::ipc::service::tests::cli_update_projects_truthful_terminal_status_and_keeps_three_field_dto ... ok
+
+thread 'tokio-rt-worker' (72580) panicked at src\modules\ipc\service.rs:2352:34:
+isolated CLI update panic
+test modules::ipc::service::tests::cli_update_query_survives_disconnect_through_commit_and_terminal_audit ... ok
+test modules::ipc::service::tests::cli_update_requires_real_gui_and_frozen_query_has_no_side_effects ... ok
+test modules::ipc::service::tests::frozen_and_unconfirmed_cli_backup_do_not_execute_or_write_audit ... ok
+test modules::ipc::service::tests::passphrase_required_is_reported_distinctly ... ok
+test modules::ipc::service::tests::public_status_lock_wait_keeps_executor_responsive_and_survives_disconnect ... ok
+test modules::ipc::service::tests::sync_projection_preserves_conflicts_readback_failure_and_typed_network_errors ... ok
+test modules::ipc::service::tests::sync_run_without_endpoint_reports_failure_instead_of_fake_success ... ok
+test modules::ipc::tests::audit_record_never_captures_argument_values ... ok
+test modules::ipc::tests::audit_retention_matches_fz40 ... ok
+test modules::ipc::tests::cli_json_has_no_extra_top_level_fields ... ok
+test modules::ipc::tests::cli_parser_only_accepts_frozen_commands ... ok
+test modules::ipc::tests::confirm_false_is_rejected_with_exit_code_four ... ok
+test modules::ipc::tests::contract_version_must_match_one ... ok
+test modules::ipc::tests::failed_response_keeps_sanitized_error_and_exit_code ... ok
+test modules::ipc::tests::frozen_command_set_matches_fz34 ... ok
+test modules::ipc::tests::ipc_response_shape_is_frozen ... ok
+
+test result: ok. 44 passed; 0 failed; 0 ignored; 0 measured; 1269 filtered out; finished in 2.31s
+
