@@ -7,6 +7,10 @@
 复杂变化按需建立 `IMP-*`；`REL-*` 与 `RUN-*` 只记录需要长期查阅的人类结论。
 <!-- project-governance:managed-end -->
 
+## 长期工程规范
+
+- [测试与验收规范](测试与验收规范.md)：按改动影响选测；Windows原生补验有条件触发，优先复用适用证据；明确页面、共享逻辑、系统边界及发布检查的区别。
+
 ## 实施计划入口
 
 - [0.2.22同步、材质、渠道与重启修复](IMP-OPENCODEX-DESKTOP-30.md)：十项修复与Windows交付已集成，用户明确采用独立离线维护运行包；原包/签名、Windows四安装格及Mac/MSI/NSIS真实相邻升级通过，最终CI42141370911通过，beta/stable/Latest均为0.2.22，十项验收及正式TASK/RCP/CERT已关闭；[当前清单](../04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md#post021-current)、[REL-25](REL-OPENCODEX-DESKTOP-25.md)。
