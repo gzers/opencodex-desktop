@@ -7,6 +7,8 @@ export interface FileConnectionV2 {id:string;label:string;url:string;remotePath:
 export interface LocalFileCatalogV2 {accounts:AccountCatalogEntryV2[];entries:ObjectEntryV2[];mcpSources:McpSourceEntryV2[];webdavConnections:FileConnectionV2[];source:'saved'}
 export interface FileExportPlanV2 {id:string;scope:SelectionV2;summary:PublicSummaryV2;encrypted:boolean;filename:string;schema:PayloadSchemaRefV2;digest:string;length:number}
 export interface FileReceiptV2 {operationId:string;planDigest:string;fileDigest:string;length:number}
+export type ExportDestinationV2='default'|'custom'
+export interface ExportOutputV2 {operationId:string;receipt:FileReceiptV2;path:string;directory:string;filename:string}
 export type FileChannelBindingV2={kind:'existing';portableChannelId:string;localChannelId:string}|{kind:'new';portableChannelId:string}
 export interface FileImportBindingsV2 {channels:FileChannelBindingV2[];mcpClients:Record<string,string>;assetsReviewed:boolean;adoptNamespaceChannelIds:string[]}
 export const emptyFileBindingsV2=():FileImportBindingsV2=>({channels:[],mcpClients:{},assetsReviewed:false,adoptNamespaceChannelIds:[]})
@@ -19,7 +21,9 @@ export const configFileV2Api={
  saveScope:(request:ScopeRequestV2)=>invoke<void>('file_v2_save_scope',{selection:request.selection,mcpClients:request.mcpClients,assetsReviewed:request.assetsReviewed}),
  prepareExport:(request:ScopeRequestV2,passphrase:string|null)=>invoke<FileExportPlanV2>('prepare_config_file_export_v2',{request,passphrase}),
  prepareDraftExport:(expected:ReadBaseV2,request:ScopeRequestV2,passphrase:string|null,edits:ModelEditV2[]=[],channelIntents:ChannelIntentV2[]=[])=>invoke<FileExportPlanV2>('prepare_draft_config_file_export_v2',{expected,request,passphrase,edits,channelIntents}),
- saveExport:(operationId:string)=>invoke<FileReceiptV2|null>('save_config_file_export_v2',{operationId}),
+ saveExport:(operationId:string,destination:ExportDestinationV2='default')=>invoke<ExportOutputV2|null>('save_config_file_export_v2',{operationId,destination}),
+ exportOutput:(operationId:string)=>invoke<ExportOutputV2|null>('config_file_export_output_v2',{operationId}),
+ openExportDirectory:(operationId:string)=>invoke<boolean>('open_config_file_export_directory_v2',{operationId}),
  cancelExport:(operationId:string)=>invoke<boolean>('cancel_config_file_export_v2',{operationId}),
  openImport:(passphrase:string|null,scope:SelectionV2|null,bindings:FileImportBindingsV2)=>invoke<FileImportPreviewV2|null>('open_config_file_import_v2',{passphrase,scope,bindings}),
  reselectImport:(operationId:string,expectedPlanDigest:string,scope:SelectionV2,bindings:FileImportBindingsV2)=>invoke<FileImportPreviewV2>('reselect_config_file_import_v2',{operationId,expectedPlanDigest,scope,bindings}),
