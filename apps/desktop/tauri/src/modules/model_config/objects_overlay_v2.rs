@@ -476,7 +476,7 @@ fn reorder_selected(
         }
     }
     for id in source.iter().chain(&available) {
-        if avail.contains(id) && !out.contains(id) {
+        if selected.contains(id) && avail.contains(id) && !out.contains(id) {
             out.push(id.clone());
         }
     }
@@ -542,6 +542,12 @@ fn merge_channel(
         return Ok(out);
     };
     let mut out = base.clone();
+    // A partial model/family selection is not authority to replace a shared
+    // service/public-provider object. In particular an exported subset must
+    // never erase or spread per-model public fields of the other models.
+    if !whole && scope.include_connection && base.connection != source.connection {
+        return Err(err("overlay_shared_connection_conflict"));
+    }
     if scope.model_ids.is_some() {
         if base.family_scope.is_some() || source.defaults != base.defaults {
             return Err(err("overlay_shared_rules_conflict"));

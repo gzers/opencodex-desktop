@@ -951,3 +951,248 @@ fn selected_channel_name_collision_with_unselected_channel_is_not_silently_renam
         "overlay_channel_name_conflict"
     );
 }
+#[test]
+fn family_fragment_updates_only_declared_family_and_preserves_channel_wide_rules() {
+    let (old, newer, first, second) = template_pair();
+    let mut base = input(vec![c(A, &["a", "b"])]);
+    base.models.payload.templates = vec![old];
+    let base_channel = &mut base.models.payload.policy.as_mut().unwrap().channels[0];
+    base_channel.defaults.context_window = Field::Custom(4096);
+    for m in &mut base_channel.models {
+        m.binding = Some(ModelBindingV2::Manual {
+            reference: first.clone(),
+        });
+    }
+    base_channel.template_refs = vec![first.clone()];
+    let b = base_channel.models[1].clone();
+    rehash(&mut base);
+    let mut local = input(vec![c(A, &["a"])]);
+    local.models.payload.templates = vec![newer];
+    let ch = &mut local.models.payload.policy.as_mut().unwrap().channels[0];
+    ch.connection = None;
+    ch.family_scope = Some(vec![first.template_id.clone()]);
+    ch.models[0].binding = Some(ModelBindingV2::Manual {
+        reference: second.clone(),
+    });
+    ch.template_refs = vec![second.clone()];
+    ch.family_overrides.insert(
+        first.template_id.clone(),
+        ModelRules {
+            context_window: Field::Custom(8192),
+            ..Default::default()
+        },
+    );
+    rehash(&mut local);
+    let mut scope = selection(A);
+    scope.channels[0].include_connection = false;
+    scope.channels[0].family_ids = Some(vec![first.template_id.clone()]);
+    let result = overlay_selected(Some(saved(base)), saved(local), scope, None).unwrap();
+    let ch = &result.models().payload.policy.as_ref().unwrap().channels[0];
+    assert_eq!(ch.defaults.context_window, Field::Custom(4096));
+    assert_eq!(ch.models[1], b);
+    assert_eq!(ch.models[0].binding.as_ref().unwrap().reference(), &second);
+    assert_eq!(
+        ch.family_overrides[&first.template_id].context_window,
+        Field::Custom(8192)
+    );
+    assert!(ch.family_scope.is_none());
+}
+struct HostAuthorization;
+impl file_objects_v2::AuthorizationValidator for HostAuthorization {
+    fn validate(
+        &self,
+        _: &PortableChannelV2,
+        auth: &super::super::provider_auth::PortableAuthorization,
+    ) -> ModelResult<()> {
+        super::super::provider_auth::validate_portable(
+            &json!({"baseUrl":"https://fixture.example.test/v1","adapter":"openai"}),
+            auth,
+        )
+    }
+}
+fn with_auth(value: &str) -> CapturedObjects {
+    let mut input = input(vec![c(A, &["a"])]);
+    let authorization =
+        serde_json::from_value(json!({"activeId":null,"fields":{"headers":{"X-Fixture":value}}}))
+            .unwrap();
+    input.channel_authorizations.insert(A.into(), authorization);
+    input
+}
+#[test]
+fn channel_authorization_is_independent_and_never_switches_forms_implicitly() {
+    let base = SavedObjects::capture(with_auth("old-secret"), Some(&HostAuthorization)).unwrap();
+    let local = SavedObjects::capture(with_auth("new-secret"), Some(&HostAuthorization)).unwrap();
+    let result =
+        overlay_selected(Some(base), local, selection(A), Some(&HostAuthorization)).unwrap();
+    let auth = serde_json::to_value(&result.partitions().channel_authorizations[A]).unwrap();
+    assert_eq!(auth["fields"]["headers"]["X-Fixture"], "old-secret");
+    let base = SavedObjects::capture(with_auth("old-secret"), Some(&HostAuthorization)).unwrap();
+    let local = SavedObjects::capture(with_auth("new-secret"), Some(&HostAuthorization)).unwrap();
+    let mut scope = selection(A);
+    scope.channels[0].include_authorization = true;
+    let result = overlay_selected(Some(base), local, scope, Some(&HostAuthorization)).unwrap();
+    let auth = serde_json::to_value(&result.partitions().channel_authorizations[A]).unwrap();
+    assert_eq!(auth["fields"]["headers"]["X-Fixture"], "new-secret");
+    let base = SavedObjects::capture(with_auth("old-secret"), Some(&HostAuthorization)).unwrap();
+    let mut source = input(vec![c(A, &["a"])]);
+    source
+        .channel_keys
+        .insert(A.into(), Zeroizing::new("local-key".into()))
+        .unwrap();
+    let mut scope = selection(A);
+    scope.channels[0].include_key = true;
+    assert_eq!(
+        code(overlay_selected(
+            Some(base),
+            saved(source),
+            scope,
+            Some(&HostAuthorization)
+        )),
+        "overlay_credential_conflict"
+    );
+}
+#[test]
+fn explicit_but_missing_preferences_keys_credentials_and_sources_are_errors() {
+    let mut scope = SelectionV2::default();
+    scope.manager.preferences = true;
+    assert_eq!(
+        code(overlay_selected(None, saved(input(vec![])), scope, None)),
+        "overlay_selection_missing"
+    );
+    let mut scope = SelectionV2::default();
+    scope.manager.extensions = true;
+    assert_eq!(
+        code(overlay_selected(None, saved(input(vec![])), scope, None)),
+        "overlay_selection_missing"
+    );
+    let mut scope = selection(A);
+    scope.channels[0].include_key = true;
+    assert_eq!(
+        code(overlay_selected(
+            None,
+            saved(input(vec![c(A, &["a"])])),
+            scope,
+            None
+        )),
+        "overlay_selection_missing"
+    );
+    let mut local = input(vec![]);
+    local.assets.mcps.push(mcp("fixture", None));
+    let h = mcp_source_digest(&local.assets.mcps[0]).unwrap();
+    let scope = SelectionV2 {
+        mcp_sources: vec![McpSourceSelectionV2 {
+            name: "fixture".into(),
+            definition_digest: h,
+        }],
+        extension_credentials: ExtensionCredentialsV2 {
+            mcp_names: vec!["fixture".into()],
+            ..Default::default()
+        },
+        ..Default::default()
+    };
+    assert_eq!(
+        code(overlay_selected(None, saved(local), scope, None)),
+        "overlay_selection_missing"
+    );
+    let scope = SelectionV2 {
+        extension_credentials: ExtensionCredentialsV2 {
+            skill_names: vec!["unselected".into()],
+            ..Default::default()
+        },
+        ..Default::default()
+    };
+    assert_eq!(
+        code(overlay_selected(None, saved(input(vec![])), scope, None)),
+        "overlay_scope_invalid"
+    );
+}
+#[test]
+fn explicit_global_references_preserve_unselected_channel_order_and_default() {
+    let (old, newer, first, second) = template_pair();
+    let mut base = input(vec![c(A, &["a"]), c(B, &["b"])]);
+    base.models.payload.templates = vec![old];
+    let policy = base.models.payload.policy.as_mut().unwrap();
+    policy.template_refs = vec![first];
+    policy.default_channel_id = Some(B.into());
+    rehash(&mut base);
+    let mut local = input(vec![c(A, &["a"])]);
+    local.models.payload.templates = vec![newer];
+    let policy = local.models.payload.policy.as_mut().unwrap();
+    policy.template_refs = vec![second.clone()];
+    policy.default_channel_id = Some(A.into());
+    rehash(&mut local);
+    let scope = SelectionV2 {
+        include_global_template_refs: true,
+        ..Default::default()
+    };
+    let result = overlay_selected(Some(saved(base)), saved(local), scope, None).unwrap();
+    let policy = result.models().payload.policy.as_ref().unwrap();
+    assert_eq!(policy.channel_order, vec![A, B]);
+    assert_eq!(policy.default_channel_id.as_deref(), Some(B));
+    assert_eq!(policy.template_refs, vec![second]);
+    assert_eq!(policy.channels.len(), 2);
+}
+#[test]
+fn save_state_v2_key_and_auth_bind_normalized_channel_without_evidence_noise() {
+    let mut input = input(vec![c(A, &["a"])]);
+    input
+        .channel_keys
+        .insert(A.into(), Zeroizing::new("fixture-secret".into()))
+        .unwrap();
+    let original = saved(input);
+    let state = file_objects_v2::save_state(&original).unwrap();
+    let key =
+        super::super::content_versions::key(&json!(["v2-channelKeys", A, null, null])).unwrap();
+    assert!(state.contains_key(&key));
+    let mut newer = original.into_captured();
+    newer.models.payload.policy.as_mut().unwrap().channels[0].models[0]
+        .source
+        .fields
+        .get_mut("protocol")
+        .unwrap()
+        .evidence
+        .source_digest = schema_v2::digest(b"fresh observation");
+    rehash(&mut newer);
+    let normalized = saved(newer);
+    assert_eq!(state, file_objects_v2::save_state(&normalized).unwrap());
+    let old = SavedObjects::capture(with_auth("first-secret"), Some(&HostAuthorization)).unwrap();
+    let new = SavedObjects::capture(with_auth("second-secret"), Some(&HostAuthorization)).unwrap();
+    let old_state = file_objects_v2::save_state(&old).unwrap();
+    let new_state = file_objects_v2::save_state(&new).unwrap();
+    let channel =
+        super::super::content_versions::key(&json!(["v2-channel", A, null, null])).unwrap();
+    let auth =
+        super::super::content_versions::key(&json!(["v2-channelAuthorizations", A, null, null]))
+            .unwrap();
+    assert_eq!(old_state[&channel], new_state[&channel]);
+    assert_ne!(old_state[&auth], new_state[&auth]);
+}
+#[test]
+fn partial_scope_does_not_materialize_unselected_implicit_order_or_replace_shared_connection() {
+    let mut b = input(vec![c(A, &["a", "b"])]);
+    b.models.payload.policy.as_mut().unwrap().channels[0].model_order = vec!["a".into()];
+    rehash(&mut b);
+    let mut l = input(vec![c(A, &["a"])]);
+    l.models.payload.policy.as_mut().unwrap().channels[0].model_subset = Some(vec!["a".into()]);
+    rehash(&mut l);
+    let mut s = selection(A);
+    s.channels[0].model_ids = Some(vec!["a".into()]);
+    s.channels[0].include_connection = false;
+    let result = overlay_selected(Some(saved(b)), saved(l), s, None).unwrap();
+    assert_eq!(
+        result.models().payload.policy.as_ref().unwrap().channels[0].model_order,
+        vec!["a"]
+    );
+    let b = input(vec![c(A, &["a", "b"])]);
+    let mut l = input(vec![c(A, &["a"])]);
+    let ch = &mut l.models.payload.policy.as_mut().unwrap().channels[0];
+    ch.model_subset = Some(vec!["a".into()]);
+    ch.connection.as_mut().unwrap().auth_mode = Some("none".into());
+    rehash(&mut l);
+    let mut s = selection(A);
+    s.channels[0].model_ids = Some(vec!["a".into()]);
+    assert_eq!(
+        code(overlay_selected(Some(saved(b)), saved(l), s, None)),
+        "overlay_shared_connection_conflict"
+    );
+}
