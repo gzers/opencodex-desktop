@@ -1,0 +1,115 @@
+{
+  "date": "2026-11-06",
+  "timeZone": "Asia/Shanghai",
+  "targetDesktopVersion": "0.2.23",
+  "discoveryVersion": "0.2.22",
+  "auditKind": "self-review of planning, no independent reviewer/execution task",
+  "inputDocCommit": "e01dc177bcbaa88bb0d4c7326d855d55dd7c61da",
+  "codeBaseline": "0c57500f8f46ea50655c782c3f04334a39167abb",
+  "demand": {
+    "id": "DMD-OPENCODEX-POST022",
+    "state": "pending",
+    "acceptanceIds": [
+      "AC-P22-01",
+      "AC-P22-02",
+      "AC-P22-03",
+      "AC-P22-04",
+      "AC-P22-05",
+      "AC-P22-06",
+      "AC-P22-07",
+      "AC-P22-08"
+    ]
+  },
+  "implementation": {
+    "id": "IMP-OPENCODEX-DESKTOP-31",
+    "state": "planned",
+    "items": {
+      "P23-00": "待设计",
+      "P23-01": "待设计",
+      "P23-02": "待开发",
+      "P23-03": "待开发",
+      "P23-04": "待开发",
+      "P23-05": "待开发",
+      "P23-06": "待开发",
+      "P23-07": "待开发",
+      "P23-08": "待验证",
+      "P23-09": "待授权"
+    }
+  },
+  "coverage": {
+    "S22-POST-01": "P23-02",
+    "S22-POST-02": "P23-03",
+    "S22-POST-03": "P23-04",
+    "S22-POST-04": "P23-05",
+    "S22-POST-05": "P23-06",
+    "S22-POST-06": "P23-07"
+  },
+  "prototype": {
+    "commit": "cde9cc52a",
+    "sha256": {
+      "index.html": "f099e67c22b44ed7bdfa58deed70fe0d91fa09b55514b7adde3faf568d4eadf9",
+      "sync-config.js": "72e94d236d638f60b8f3673a36b5bcea2176cd05b0e0c09884961314338bb578",
+      "model-config.js": "14b0f738cb683c78474d3bd7212b28f1ef1b817b4cce16b4119180c7b0332f8f"
+    },
+    "routes": [
+      "#models wizard step1/step2",
+      "#sync?tab=webdav preview/source dropdown"
+    ],
+    "boundary": "Concurrent overview/maintenance drafts excluded; later explicit noETag decisions override historical annotations; missing states planned G0"
+  },
+  "findings": [
+    {
+      "id": "AUD23-01",
+      "result": "Fixed target desktop0.2.23; retained discovery0.2.22 IDs/history/evidence"
+    },
+    {
+      "id": "AUD23-02",
+      "result": "Six issues map to work/acceptance, full wizard and whole sync modal retained"
+    },
+    {
+      "id": "AUD23-03",
+      "status": "open-pre-design",
+      "result": "G0 formalWebDAV file protocol/generation/bootstrap conflict and recovery states required; candidate11 real checks not product implementation"
+    },
+    {
+      "id": "AUD23-04",
+      "status": "open-pre-design",
+      "result": "G0 real saved-name runtime display mapping/new revision/delivery source required; currentownerquery.2 not claimed sufficient"
+    },
+    {
+      "id": "AUD23-05",
+      "status": "open-pre-design",
+      "result": "G0 recovery UI/prototype diagnosis/source selection/confirm/failure/success required; core install tests not UI orchestration acceptance"
+    },
+    {
+      "id": "AUD23-06",
+      "result": "Windows conditional-impact selection/evidence reuse; release build/signature requirements retained"
+    },
+    {
+      "id": "AUD23-07",
+      "result": "No legacy migration; later user empty-directory init order retained; no production clearing during planning"
+    },
+    {
+      "id": "AUD23-08",
+      "result": "No code/version/branch change, no TASK/release. Cleanup and final same-source acceptance explicit"
+    }
+  ],
+  "verification": {
+    "frontMatterParsed": true,
+    "eightUniqueAcceptance": true,
+    "tenUniqueFiveColumnItems": true,
+    "sixIssuesCovered": true,
+    "linksChecked": 21,
+    "prototypeCommitHashesMatch": true,
+    "codeTreeClean": true
+  },
+  "sourceFilesSha256": {
+    "docs/01-需求管理/需求/DMD-OPENCODEX-POST022.md": "07952fc9f033b84703b7ca3d01ee1319dc154a1f03270f36b556dfc1ef45adba",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-31.md": "6992f141dba562018f75477223548f3b299866f6af7ad9d09bfb5f84c6fee65f",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.22-bugs.md": "333fc211b8ef061775fcd871e1f884cf77f3d4b7b444f8bd3900e25ee791b385",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/同步直接更新原型说明.md": "8db7d68e2e816e520c256c2c63550be8e6c779379a7a8f30b25b6d6f08ba0407",
+    "docs/01-需求管理/README.md": "198ab5aa271114e7621b3ef7695cc2643f021b2dab70c18791185b5951dd794f",
+    "docs/03-开发实施/README.md": "69f9b923784e05e37d652280da7604996f0ca0bdf8181611c7b57903e2a50c20"
+  },
+  "conclusion": "Plan coverage/dependencies complete after corrections;3G0 design closures remain. Not all design frozen or ready to code; user explicitly no development."
+}
