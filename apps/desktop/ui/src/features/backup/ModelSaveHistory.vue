@@ -1,33 +1,39 @@
 <script setup lang="ts">
-import {computed,onMounted,ref} from 'vue'
+import {computed,onMounted,ref,watch} from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
-import {errorText,modelApi,type ModelHistoryEntry,type ModelRecoveryPreview,type ModelSnapshot} from '@/features/models/api'
-import {useModelsStore} from '@/features/models/store'
+import {errorText} from '@/features/models/api'
+import {modelV2Api as modelApi,type ModelHistoryEntryV2 as ModelHistoryEntry,type ModelHistoryPlanV2 as ModelRecoveryPreview,type ReadBaseV2} from '@/features/models/api-v2'
+import {useModelsV2Store as useModelsStore} from '@/features/models/store-v2'
 import {useRouteStore} from '@/stores/routes'
+const props=defineProps<{initialOperationId?:string}>(),emit=defineEmits<{go:[]}>()
 const models=useModelsStore();const routes=useRouteStore()
-const records=ref<ModelHistoryEntry[]>([]);const query=ref('');const error=ref('');const busy=ref(false)
+const records=ref<ModelHistoryEntry[]>([]);const query=ref(props.initialOperationId??'');const error=ref('');const busy=ref(false)
 const selected=ref<ModelHistoryEntry|null>(null);const side=ref<'before'|'after'>('before');const scope=ref<'affected'|'all'>('affected');const restoreDefaults=ref(false)
-const preview=ref<ModelRecoveryPreview|null>(null);const restored=ref(false)
-const recoveryBaseline=ref<ModelSnapshot|null>(null)
+const preview=ref<ModelRecoveryPreview|null>(null);const restored=ref(false),runtimeReviewed=ref(false)
+const recoveryBaseline=ref<ReadBaseV2|null>(null)
 const visible=computed(()=>records.value.filter(r=>(r.createdAt+' '+r.id+' '+r.channelLabels.join(' ')).toLowerCase().includes(query.value.toLowerCase())))
 async function perform(action:()=>Promise<void>){if(busy.value)return;busy.value=true;error.value='';try{await action()}catch(cause){error.value=errorText(cause)}finally{busy.value=false}}
-async function refresh(){await perform(async()=>{records.value=await modelApi.policyHistory()})}
+async function refresh(){await perform(async()=>{records.value=await modelApi.fileHistory()})}
+watch(()=>props.initialOperationId,value=>{query.value=value??''})
+function go(){models.channelEditorId='';models.view.tab='channels';routes.go('models');emit('go')}
 function choose(record:ModelHistoryEntry){selected.value=record;side.value='before';scope.value='affected';restoreDefaults.value=false;invalidate();error.value=''}
-function invalidate(){preview.value=null;recoveryBaseline.value=null;restored.value=false}
+function invalidate(){preview.value=null;recoveryBaseline.value=null;restored.value=false;runtimeReviewed.value=false}
 async function compare(){if(!selected.value)return;await perform(async()=>{
- models.assertRecoveryReady()
- if(!models.snapshot)await models.load()
- if(!models.snapshot)throw {message:'无法读取当前模型配置'}
- const snapshot=await modelApi.loadRecoveryBaseline()
- models.assertRecoveryReady()
- preview.value=await modelApi.prepareRecovery({sourceId:selected.value!.id,side:side.value,scope:scope.value,restoreDefaults:restoreDefaults.value,expectedLibrary:snapshot.libraryDigest,expectedPolicy:snapshot.policyDigest,expectedWorkspace:snapshot.workspaceDigest})
- recoveryBaseline.value=snapshot
+ models.assertHistoryReady()
+ if(!models.file)await models.loadChannels()
+ models.assertHistoryReady()
+ const expected=models.file?.draft?.base;if(!expected)throw new Error('无法读取可信渠道草稿基准')
+ const request={sourceId:selected.value!.id,side:side.value,scope:scope.value,restoreDefaults:restoreDefaults.value,expected:JSON.parse(JSON.stringify(expected))}
+ const value=await modelApi.prepareHistory(request)
+ models.assertHistoryReady()
+ if(JSON.stringify(models.file?.draft?.base)!==JSON.stringify(expected)||value.sourceId!==request.sourceId||value.side!==request.side||value.scope!==request.scope||value.restoreDefaults!==request.restoreDefaults)throw new Error('恢复基准或目标已变化，当前输入保持，请重新比较。')
+ preview.value=value;recoveryBaseline.value=request.expected;runtimeReviewed.value=false
 })}
-async function accept(){if(!preview.value||!recoveryBaseline.value)return;await perform(async()=>{await models.acceptHistoricalRecovery(preview.value!.id,preview.value!.sourceId);restored.value=true})}
+async function accept(){if(!preview.value||!recoveryBaseline.value||preview.value.requiresRuntimeReview&&!runtimeReviewed.value)return;await perform(async()=>{if(JSON.stringify(models.file?.draft?.base)!==JSON.stringify(recoveryBaseline.value))throw new Error('恢复预览已过期，请重新比较；当前输入保持。');await models.acceptHistory(preview.value!.recoveryId);restored.value=true})}
 function close(){if(!busy.value){selected.value=null;invalidate();error.value=''}}
-function date(value:string){return new Date(value).toLocaleString()}
+function date(value:string|null){return value&&Number.isFinite(Date.parse(value))?new Date(value).toLocaleString():'保存时间未知'}
 function field(value:string){const name=value.split('/').at(-1)??value;return ({connection:'连接与节点',templateRefs:'模版采用',modelRefs:'单模型采用',selection:'模型选择',modelOrder:'模型顺序',discovered:'模型定义',defaults:'渠道默认能力',overrides:'单模型覆盖',familyOverrides:'模型族覆盖',label:'渠道名称',channelOrder:'渠道组顺序',globalTemplateRefs:'全局模版采用'} as Record<string,string>)[name]??(value.startsWith('default/')?'模版默认版本':'渠道对象')}
 function content(value:unknown):string{
  if(value===null||value===undefined)return '无'
@@ -52,15 +58,16 @@ onMounted(()=>void refresh())
   <input v-model="query" class="input" type="search" aria-label="搜索模型保存记录" placeholder="搜索时间、渠道或记录标识" />
   <p v-if="error&&!selected" class="model-history-error" role="alert">{{ error }}</p>
   <p v-if="!busy&&!visible.length">暂无符合条件的保存记录。</p>
-  <ul class="model-history-list"><li v-for="record in visible" :key="record.id"><div><strong>{{ date(record.createdAt) }}</strong><span>{{ record.channelLabels.join('、')||'全局配置' }}</span><small>{{ record.phase==='committed'?'已成功保存':record.phase==='compensated'?'本次写入已撤回':'待核对的执行记录' }}{{ record.phase==='committed'&&!record.recoverable?' · 缺少组合基线':'' }}</small><code>{{ record.id }}</code></div><UiButton size="sm" :disabled="busy||!record.recoverable" @click="choose(record)">生成恢复草稿</UiButton></li></ul>
+  <ul class="model-history-list"><li v-for="record in visible" :key="record.id"><div><strong>{{ date(record.createdAt) }}</strong><span>{{ record.channelLabels.join('、')||'全局配置' }}</span><small>{{ record.phase==='committed'?'已成功保存':record.phase==='rolled_back'?'本次写入已撤回':'待核对的执行记录' }}{{ record.phase==='committed'&&!record.recoverable?' · 缺少组合基线':'' }}</small><code>{{ record.id }}</code></div><UiButton size="sm" :disabled="busy||!record.recoverable" @click="choose(record)">生成恢复草稿</UiButton></li></ul>
   <UiDialog :open="!!selected" title="恢复模型配置到草稿" :busy="busy" wide @close="close">
    <p v-if="selected">保存记录：{{ date(selected.createdAt) }}</p>
    <div class="model-recovery-controls"><UiSelectField v-model="side" label="恢复目标" :disabled="busy||restored" :options="[{value:'before',label:'本次保存前的配置'},{value:'after',label:'本次成功保存的配置'}]" @update:model-value="invalidate" /><UiSelectField v-model="scope" label="恢复范围" :disabled="busy||restored" :options="[{value:'affected',label:'仅本次影响范围'},{value:'all',label:'完整渠道策略'}]" @update:model-value="invalidate" /></div>
    <label><input v-model="restoreDefaults" type="checkbox" :disabled="busy||restored" @change="invalidate" />同时恢复该快照的模版默认指针</label>
    <p v-if="error" class="model-history-error" role="alert">{{ error }}</p>
    <template v-if="preview"><p>影响渠道：{{ preview.channelLabels.join('、')||'全局配置或渠道移除' }}</p><p v-for="notice in preview.notices" :key="notice">{{ notice }}</p><p v-if="!preview.requiresRuntimeReview&&!preview.changes.length&&!preview.defaultChanges.length">所选目标与当前草稿相同。</p><div v-for="(change,index) in [...preview.changes,...preview.defaultChanges]" :key="index" class="model-recovery-change"><h4>{{ field(change.field) }}</h4><div class="model-recovery-values"><div><strong>当前</strong><pre>{{ content(change.before) }}</pre></div><div><strong>恢复后</strong><pre>{{ content(change.after) }}</pre></div></div></div></template>
+   <label v-if="preview?.requiresRuntimeReview&&!restored"><input v-model="runtimeReviewed" type="checkbox" :disabled="busy" />已核对本机来源、恢复方向与完整目标；保存后需重启生效</label>
    <p v-if="restored" role="status">已放入渠道草稿，运行配置尚未改变。</p>
-   <template #actions="{ close: requestClose }"><UiButton v-if="!restored" :disabled="busy" @click="requestClose">取消</UiButton><UiButton v-if="restored" variant="primary" @click="routes.go('models')">前往模型页保存</UiButton><UiButton v-else-if="!preview" variant="primary" :loading="busy" @click="compare">比较恢复差异</UiButton><UiButton v-else variant="primary" :loading="busy" :disabled="!preview.requiresRuntimeReview&&!preview.changes.length&&!preview.defaultChanges.length" @click="accept">放入恢复草稿</UiButton></template>
+   <template #actions="{ close: requestClose }"><UiButton v-if="!restored" :disabled="busy" @click="requestClose">取消</UiButton><UiButton v-if="restored" variant="primary" @click="go">前往模型页保存</UiButton><UiButton v-else-if="!preview" variant="primary" :loading="busy" @click="compare">比较恢复差异</UiButton><UiButton v-else variant="primary" :loading="busy" :disabled="preview.requiresRuntimeReview&&!runtimeReviewed||!preview.requiresRuntimeReview&&!preview.changes.length&&!preview.defaultChanges.length" @click="accept">放入恢复草稿</UiButton></template>
   </UiDialog>
  </section>
 </template>

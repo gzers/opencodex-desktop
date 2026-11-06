@@ -1,141 +1,41 @@
 import {afterEach,beforeEach,describe,expect,it,vi} from 'vitest'
 import {flushPromises,mount,type VueWrapper} from '@vue/test-utils'
-import {createPinia,setActivePinia} from 'pinia'
 import {defineComponent,watch} from 'vue'
 import ModelSaveHistory from '@/features/backup/ModelSaveHistory.vue'
 import ChannelsView from '@/features/models/ChannelsView.vue'
-import SelectorPreviewDialog from '@/features/models/SelectorPreviewDialog.vue'
-import {emptyRules,type ChannelPolicy,type CredentialView,type ModelPolicy,type ModelSnapshot,type SavePlan} from '@/features/models/api'
-import {useModelsStore} from '@/features/models/store'
 import {useModelsV2Store} from '@/features/models/store-v2'
-import {workspaceBackend,workspaceId as wid,deferredWorkspace,copyWorkspace} from './helpers/modelWorkspaceV2'
-import type {FileSnapshotV2} from '@/features/models/api-v2'
+import {workspaceBackend,workspaceId as wid,workspaceHash,deferredWorkspace,copyWorkspace} from './helpers/modelWorkspaceV2'
+import type {FileSnapshotV2,ModelHistoryPlanV2} from '@/features/models/api-v2'
 import {useModelSaveFeedback} from '@/app/feedback/modelSave'
 import {useFeedbackStore} from '@/app/feedback/store'
-import {useModalStore} from '@/app/modal/store'
-
 const ipc=vi.hoisted(()=>vi.fn())
 vi.mock('@tauri-apps/api/core',()=>({invoke:ipc}))
 vi.mock('@/stores/routes',()=>({useRouteStore:()=>({go:vi.fn()})}))
-const dialog=defineComponent({props:['open','title'],template:'<section v-if="open" :data-dialog-title="title"><slot/><slot name="actions"/></section>'})
-const clone=<T,>(value:T):T=>JSON.parse(JSON.stringify(value))
-function channel():ChannelPolicy{return {id:'source',label:'Actual file channel',templateRefs:[],modelRefs:{},connection:{providerId:'custom',protocol:'openai-chat',authMode:'key',nodes:[{id:'node',name:'Default',url:'https://example.test'}],activeNodeId:'node',credentialRef:null,enabled:true,allowPrivateNetwork:false},selection:{mode:'whitelist',models:['a']},modelOrder:['a'],discovered:[{id:'a',label:'a',rules:emptyRules()}],defaults:emptyRules(),overrides:{},familyOverrides:{}}}
-function file():ModelSnapshot{return {library:{schemaVersion:1,templates:[]},libraryDigest:'library',policy:{schemaVersion:1,templateRefs:[],channels:[channel()]},policyDigest:'actual-config-file',workspaceDigest:'empty-workspace',workspace:null}}
-function legacy():ModelSnapshot{const s=file();s.policy.channels[0]!.label='Old manager channel';return {...s,policyDigest:'legacy-policy',workspaceDigest:'legacy-workspace'}}
-function recovered():ModelSnapshot{const s=legacy(),policy=clone(s.policy);policy.recoveryId='recovery-id';policy.channels[0]!.label='Historical channel';return {...s,libraryDigest:'accepted-library',workspaceDigest:'accepted-workspace',workspace:{basePolicy:'legacy-policy',policy}}}
-function restoredFile():ModelSnapshot{const s=file();s.libraryDigest='accepted-library';s.policy.channels[0]!.label='Historical channel';return {...s,policyDigest:'restored-config-file'}}
-function plan(phase:string,error:string|null=null):SavePlan{return {id:'runtime-recovery-plan',phase,error,catalogCount:1,currentCatalogCount:1,changedChannels:['Historical channel'],historySource:'successful-save'}}
-const savedKey=():CredentialView=>({configured:true,viewable:true,value:'fixture-saved-key',source:'config-file'})
-let currentFile:ModelSnapshot
-let accepted:ModelSnapshot
-let overrides:Record<string,((args:Record<string,unknown>)=>unknown)|undefined>
-let wrappers:VueWrapper[]
-const calls=(command:string)=>ipc.mock.calls.filter(call=>call[0]===command)
+const dialog=defineComponent({props:['open','title'],template:'<section v-if="open" :data-dialog-title="title"><slot/><slot name="actions" :close="() => $emit(&quot;close&quot;)"/></section>'})
+const clone=copyWorkspace
+const historyId=wid('successful-save'),recoveryId=wid('recovery')
+function plan():ModelHistoryPlanV2{return {recoveryId,sourceId:historyId,side:'before',scope:'affected',restoreDefaults:false,requiresRuntimeReview:true,changes:[{field:'channel/label',before:'source',after:'Historical channel'}],defaultChanges:[],channelLabels:['Historical channel'],notices:['核对本机来源和原恢复方向；不恢复旧Key。'],targetDigest:workspaceHash(9)}}
+let backend:ReturnType<typeof workspaceBackend>,models:ReturnType<typeof useModelsV2Store>,overrides:Record<string,((args:any)=>unknown)|undefined>,wrappers:VueWrapper[],physicalWrites:number
+const calls=(command:string)=>ipc.mock.calls.filter(c=>c[0]===command)
 function render(component:typeof ModelSaveHistory|typeof ChannelsView){const w=mount(component,{global:{stubs:{UiDialog:dialog,UiSelectField:true,ChannelEditor:true,ChannelNodeSelect:true}}});wrappers.push(w);return w}
-function button(w:VueWrapper,text:string){const result=w.findAll('button').find(node=>node.text()===text);expect(result,'button: '+text).toBeDefined();return result!}
+function button(w:VueWrapper,text:string){const value=w.findAll('button').find(b=>b.text()===text);expect(value,'button: '+text).toBeDefined();return value!}
 async function compareHistory(){const w=render(ModelSaveHistory);await flushPromises();await button(w,'生成恢复草稿').trigger('click');await button(w,'比较恢复差异').trigger('click');await flushPromises();return w}
-async function acceptHistory(){const w=await compareHistory();await button(w,'放入恢复草稿').trigger('click');await flushPromises();expect(useModelsStore().historicalRecovery?.id).toBe('recovery-id');return w}
-async function previewSave(w:VueWrapper){await flushPromises();await w.get('[data-testid="policy-save"]').trigger('click');await flushPromises();expect(w.findAll('[data-dialog-title="保存预览"]')).toHaveLength(1);expect(w.findAll('.channels-view > p[role="status"]')).toHaveLength(0);expect(w.text()).not.toContain('保存历史恢复')}
+async function acceptHistory(){const w=await compareHistory();const accept=button(w,'放入恢复草稿');expect(accept.attributes('disabled')).toBeDefined();await w.findAll('label').find(l=>l.text().includes('已核对本机来源'))!.get('input').setValue(true);await accept.trigger('click');await flushPromises();expect(models.file!.draft!.policy.recoveryId).toBe(recoveryId);return w}
+async function previewSave(w:VueWrapper){await flushPromises();await w.get('[data-testid="policy-save"]').trigger('click');await flushPromises();expect(w.findAll('[data-dialog-title="保存当前渠道草稿"]')).toHaveLength(1)}
 async function confirmSave(w:VueWrapper){await previewSave(w);await button(w,'确认保存').trigger('click');await flushPromises()}
-
-beforeEach(async()=>{
-  setActivePinia(createPinia());vi.clearAllMocks();currentFile=file();accepted=recovered();overrides={};wrappers=[]
-  ipc.mockImplementation(async(command:string,args:Record<string,unknown>={})=>{
-    if(overrides[command])return overrides[command]!(args)
-    if(command==='model_file_snapshot')return clone(currentFile)
-    if(command==='model_config_snapshot')return legacy()
-    if(command==='model_policy_history')return [{id:'successful-save',createdAt:'2026-10-19T00:00:00Z',phase:'committed',channelLabels:['Historical channel'],recoverable:true}]
-    if(command==='model_policy_recovery_prepare')return {id:'recovery-id',sourceId:'successful-save',side:'before',scope:'affected',restoreDefaults:false,requiresRuntimeReview:true,changes:[],defaultChanges:[],channelLabels:['Historical channel'],notices:[]}
-    if(command==='model_policy_recovery_accept')return clone(accepted)
-    if(command==='model_policy_preview')return {rows:[],knownActiveModels:1,exactCatalogCount:1,notices:[]}
-    if(command==='model_agent_directory')return {channels:[],rows:[]}
-    if(command==='model_policy_prepare')return plan('prepared')
-    if(command==='model_policy_apply'||command==='model_policy_result'){currentFile=restoredFile();return plan('committed')}
-    if(command==='model_file_save'){const request=args.request as {policy:ModelPolicy};currentFile={...currentFile,policy:clone(request.policy),policyDigest:'ordinary-saved-file'};return {changed:true,snapshot:clone(currentFile)}}
-    if(command==='model_file_credential')return savedKey()
-    if(command==='model_policy_save_blocked')return undefined
-    if(command==='model_policy_latest')throw {code:'plan_incomplete',message:'Old plan must not block file saves'}
-    throw new Error('Unexpected IPC: '+command)
-  })
-  await useModelsStore().load()
+function commitRecovery(){const next=clone(backend.current);next.savedPolicy=clone(next.draft!.policy);next.savedPolicy.recoveryId=null;next.draft=null;next.sourceDigest=workspaceHash(6);backend.current=next;physicalWrites++;return next}
+async function handler(command:string,args:any={}){if(overrides[command])return overrides[command]!(args);if(command==='model_v2_file_history')return [{id:historyId,createdAt:null,phase:'committed',channelLabels:['Historical channel'],recoverable:true}];if(command==='model_v2_file_history_prepare')return plan();if(command==='model_v2_file_history_accept'){const next=clone(backend.current);next.draft!.policy.recoveryId=recoveryId;next.draft!.policy.channels[0]!.label='Historical channel';next.draft!.base={...next.draft!.base,draftGeneration:next.draft!.base.draftGeneration+1};backend.current=next;return clone(next)}if(command==='model_v2_file_save'&&backend.current.draft?.policy.recoveryId){expect(args.request.edits).toEqual([]);expect(args.request.channelIntents).toEqual([]);expect(args.request.scopeChannelId).toBeNull();return commitRecovery()}return backend.handler(command,args)}
+beforeEach(async()=>{backend=workspaceBackend(ipc,['source']);models=await backend.load();overrides={};wrappers=[];physicalWrites=0;ipc.mockClear();ipc.mockImplementation(handler)})
+afterEach(()=>{wrappers.forEach(w=>w.unmount());vi.restoreAllMocks()})
+describe('explicit v2 history adapter using actual channel UI',()=>{
+ it('keeps saved facts isolated through compare/accept and uses only the v2 file writer for recovery and subsequent ordinary saves',async()=>{const original=clone(models.file),seen:string[]=[];const stop=watch(()=>models.file?.sourceDigest,value=>{if(value)seen.push(value)},{flush:'sync'});const history=await acceptHistory();expect(history.text()).toContain('保存时间未知');expect(history.text()).not.toContain('1970');expect(calls('model_v2_file_history_prepare')[0]![1]).toEqual({request:{sourceId:historyId,side:'before',scope:'affected',restoreDefaults:false,expected:original!.draft!.base}});expect(models.file!.savedPolicy).toEqual(original!.savedPolicy);expect(models.file!.sourceDigest).toBe(original!.sourceDigest);const acceptedBase=clone(models.file!.draft!.base),w=render(ChannelsView);await confirmSave(w);expect(calls('model_v2_file_save')[0]![1].request).toEqual({expected:acceptedBase,edits:[],channelIntents:[],scopeChannelId:null});expect(models.file!.savedPolicy.channels[0]!.label).toBe('Historical channel');expect(models.file!.draft!.policy.recoveryId).toBeNull();models.queueChannel({kind:'rename',channelId:wid('source'),name:'ordinary rename'});await confirmSave(w);expect(calls('model_v2_file_save')).toHaveLength(2);expect(calls('model_v2_file_save')[1]![1].request.channelIntents[0].name).toBe('ordinary rename');expect(ipc.mock.calls.every(c=>String(c[0]).startsWith('model_v2_'))).toBe(true);expect(seen).toContain(workspaceHash(6));stop()})
+ it('saves an authorization-only historical target even when visible channel fields are unchanged, without restoring or exposing an old Key',async()=>{overrides.model_v2_file_history_prepare=()=>({...plan(),changes:[]});overrides.model_v2_file_history_accept=()=>{const next=clone(backend.current);next.draft!.policy.recoveryId=recoveryId;backend.current=next;return next};await acceptHistory();expect(models.channelDirty(wid('source'))).toBe(false);expect(models.fileDirty).toBe(true);const w=render(ChannelsView);await confirmSave(w);expect(calls('model_v2_file_save')).toHaveLength(1);expect(calls('model_v2_stage_credential')).toHaveLength(0);expect(calls('model_v2_credential_view')).toHaveLength(0);expect(models.fileDirty).toBe(false)})
+ it('retains failed recovery, then explicitly discards the entire server draft and permits an ordinary save on a new draft identity',async()=>{await acceptHistory();const before=clone(models.file!.draft!.base);overrides.model_v2_file_save=()=>{throw {code:'model_history_restore_failed'}};const w=render(ChannelsView);await confirmSave(w);expect(models.file!.draft!.policy.recoveryId).toBe(recoveryId);expect(models.fileError).toBe('model_history_restore_failed');delete overrides.model_v2_file_save;await models.discardChannels();expect(calls('model_v2_file_discard')).toEqual([['model_v2_file_discard',{expected:before}]]);expect(models.file!.draft!.base.draftId).not.toBe(before.draftId);expect(models.file!.draft!.policy.recoveryId).toBeNull();models.queueChannel({kind:'rename',channelId:wid('source'),name:'ordinary after discard'});await confirmSave(w);expect(models.file!.savedPolicy.channels[0]!.label).toBe('ordinary after discard');expect(physicalWrites).toBe(0)})
+ it.each(['partial','unknown'])('retains the original recovery request after a %s outcome and retries the same guarded operation',async outcome=>{await acceptHistory();const original=clone(models.file);overrides.model_v2_file_save=()=>{throw {code:'model_history_'+outcome}};const w=render(ChannelsView);await confirmSave(w);expect(models.file).toEqual(original);const request=clone(calls('model_v2_file_save')[0]![1]);delete overrides.model_v2_file_save;await confirmSave(w);expect(calls('model_v2_file_save')[1]![1]).toEqual(request);expect(physicalWrites).toBe(1);expect(models.file!.savedPolicy.channels[0]!.label).toBe('Historical channel')})
+ it('retains a committed recovery until readback succeeds and replays its original request without rebuilding the physical write',async()=>{await acceptHistory();let committed:FileSnapshotV2|undefined;overrides.model_v2_file_save=()=>{if(!committed){committed=commitRecovery();throw {code:'model_history_readback_pending'}}return clone(committed)};const w=render(ChannelsView);await confirmSave(w);expect(models.file!.draft!.policy.recoveryId).toBe(recoveryId);const request=clone(calls('model_v2_file_save')[0]![1]);await confirmSave(w);expect(calls('model_v2_file_save')[1]![1]).toEqual(request);expect(physicalWrites).toBe(1);expect(models.file!.savedPolicy.channels[0]!.label).toBe('Historical channel');expect(models.file!.draft!.policy.recoveryId).toBeNull()})
+ it('rejects a historical accept if a newer Key input appears after review, preserving the actual file and input',async()=>{const w=await compareHistory(),before=clone(models.file);await w.findAll('label').find(l=>l.text().includes('已核对本机来源'))!.get('input').setValue(true);models.setKeyBuffer(wid('source'),{action:'replace',value:'new-private-key'});await button(w,'放入恢复草稿').trigger('click');await flushPromises();expect(calls('model_v2_file_history_accept')).toHaveLength(0);expect(models.file).toEqual(before);expect(models.keyBuffer(wid('source'))?.value).toBe('new-private-key');expect(w.text()).toContain('当前输入已保留')})
+ it.each(['channel','key'])('rejects %s edits mixed into an accepted historical target without losing input or calling a writer',async kind=>{await acceptHistory();if(kind==='key')models.setKeyBuffer(wid('source'),{action:'replace',value:'new-private-key'});else models.queueChannel({kind:'rename',channelId:wid('source'),name:'new unsaved label'});const draft=clone(models.file),intents=clone(models.channelIntents),key=models.keyBuffer(wid('source')),w=render(ChannelsView);const shown=vi.spyOn(useModelSaveFeedback(),'showSaved');await confirmSave(w);expect(models.file).toEqual(draft);expect(models.channelIntents).toEqual(intents);expect(models.keyBuffer(wid('source'))).toEqual(key);expect(calls('model_v2_file_save')).toHaveLength(0);expect(calls('model_v2_stage_credential')).toHaveLength(0);expect(shown).not.toHaveBeenCalled();expect(useFeedbackStore().toast).toContain('未写入');expect(w.text()).toContain('当前输入已保留')})
 })
-afterEach(()=>{for(const w of wrappers)w.unmount();vi.restoreAllMocks()})
-
-describe('explicit history adapter using the actual file models UI',()=>{
-  it('isolates all legacy baselines through compare, accept, runtime save and file reload, then uses only file saves',async()=>{
-    const models=useModelsStore(),seen:string[]=[]
-    const stop=watch(()=>models.snapshot?.policyDigest,value=>{if(value)seen.push(value)},{flush:'sync'})
-    await acceptHistory()
-    expect(ipc).toHaveBeenCalledWith('model_policy_recovery_prepare',{request:{sourceId:'successful-save',side:'before',scope:'affected',restoreDefaults:false,expectedLibrary:'library',expectedPolicy:'legacy-policy',expectedWorkspace:'legacy-workspace'}})
-    expect(models.snapshot?.policy).toEqual(file().policy);expect(models.snapshot?.workspace).toBeNull();expect(models.snapshot?.policyDigest).toBe('actual-config-file');expect(models.channelBaseline).toBe('actual-config-file')
-    expect(models.historicalRecovery).toMatchObject({libraryDigest:'accepted-library',policyDigest:'legacy-policy',workspaceDigest:'accepted-workspace'})
-    await models.load();expect(models.channelDraft).toEqual(accepted.workspace!.policy)
-    const w=render(ChannelsView);await previewSave(w)
-    const before=clone(models.channelDraft)
-    w.getComponent(SelectorPreviewDialog).vm.$emit('toggle-channel','source');w.getComponent(SelectorPreviewDialog).vm.$emit('toggle-model','source','a')
-    expect(models.channelDraft).toEqual(before)
-    expect(useModelSaveFeedback().open).toBe(false)
-    await button(w,'确认保存').trigger('click');await flushPromises()
-    expect(ipc).toHaveBeenCalledWith('model_policy_prepare',{policy:accepted.workspace!.policy,expectedLibrary:'accepted-library',expectedPolicy:'legacy-policy',expectedWorkspace:'accepted-workspace'})
-    expect(ipc).toHaveBeenCalledWith('model_policy_apply',{planId:'runtime-recovery-plan'})
-    expect(models.snapshot).toEqual(restoredFile());expect(models.channelBaseline).toBe('restored-config-file');expect(models.historicalRecovery).toBeNull();expect(models.channelDirty).toBe(false);expect(models.channelDraft?.recoveryId).toBeUndefined();expect(useModelSaveFeedback().revision).toBe(1)
-    expect(calls('model_file_save')).toHaveLength(0);expect(calls('model_policy_stage')).toHaveLength(0);expect(seen).not.toContain('legacy-policy')
-    models.channelDraft!.channels[0]!.label='Ordinary new edit';await confirmSave(w)
-    expect(calls('model_file_save')).toHaveLength(1);expect(calls('model_file_save')[0]![1].request.expectedFile).toBe('restored-config-file')
-    expect(calls('model_config_snapshot')).toHaveLength(1);expect(calls('model_policy_prepare')).toHaveLength(1);expect(calls('model_policy_latest')).toHaveLength(0);expect(calls('model_policy_result')).toHaveLength(0);expect(useModelSaveFeedback().revision).toBe(2);stop()
-  })
-
-  it('saves an authorization-only historical target even when the visible channel policy is unchanged',async()=>{
-    accepted.workspace!.policy={...clone(file().policy),recoveryId:'recovery-id'}
-    await acceptHistory();const models=useModelsStore();expect(models.channelDirty).toBe(true)
-    const w=render(ChannelsView);await confirmSave(w)
-    expect(calls('model_policy_prepare')[0]![1].policy.recoveryId).toBe('recovery-id');expect(calls('model_policy_apply')).toHaveLength(1);expect(calls('model_file_save')).toHaveLength(0);expect(useModelSaveFeedback().open).toBe(true)
-  })
-
-  it('retains a failed recovery draft, then allows an ordinary file save after explicit discard despite old plans',async()=>{
-    overrides.model_policy_prepare=()=>{throw {code:'plan_incomplete',message:'Historical plan needs review'}}
-    await acceptHistory();const models=useModelsStore(),draft=clone(models.channelDraft),w=render(ChannelsView);await confirmSave(w)
-    expect(models.channelDraft).toEqual(draft);expect(models.snapshot?.policyDigest).toBe('actual-config-file');expect(models.historicalRecovery).not.toBeNull();expect(useModelSaveFeedback().open).toBe(false);expect(w.text()).toContain('Historical plan needs review');expect(calls('model_file_save')).toHaveLength(0)
-    await button(w,'还原修改').trigger('click');useModalStore().resolve('confirm');await flushPromises()
-    expect(models.historicalRecovery).toBeNull();models.channelDraft!.channels[0]!.label='ordinary';await confirmSave(w)
-    expect(calls('model_file_save')).toHaveLength(1);expect(calls('model_policy_prepare')).toHaveLength(1);expect(calls('model_policy_latest')).toHaveLength(0);expect(useModelSaveFeedback().revision).toBe(1)
-  })
-
-  it.each(['partial','unknown'])('retains the original plan after a %s result and rechecks that plan on explicit retry',async outcome=>{
-    overrides.model_policy_apply=()=>{if(outcome==='unknown')throw {message:'History transport interrupted'};return plan('history_authorizations','management_unknown')}
-    await acceptHistory();const models=useModelsStore(),draft=clone(models.channelDraft),w=render(ChannelsView);await confirmSave(w)
-    expect(models.channelDraft).toEqual(draft);expect(models.historicalRecovery?.plan?.id).toBe('runtime-recovery-plan');expect(models.snapshot?.policyDigest).toBe('actual-config-file');expect(useModelSaveFeedback().open).toBe(false)
-    await confirmSave(w)
-    expect(ipc).toHaveBeenCalledWith('model_policy_result',{planId:'runtime-recovery-plan'});expect(calls('model_policy_prepare')).toHaveLength(1);expect(calls('model_policy_apply')).toHaveLength(1);expect(calls('model_file_save')).toHaveLength(0);expect(models.snapshot).toEqual(restoredFile());expect(models.historicalRecovery).toBeNull();expect(useModelSaveFeedback().revision).toBe(1)
-  })
-
-  it('retains a committed recovery until file reload succeeds and never repeats the runtime write',async()=>{
-    await acceptHistory();const models=useModelsStore(),w=render(ChannelsView)
-    overrides.model_file_snapshot=()=>{throw {message:'read failed'}}
-    await confirmSave(w)
-    expect(models.historicalRecovery?.plan?.phase).toBe('committed');expect(models.snapshot?.policyDigest).toBe('actual-config-file');expect(useModelSaveFeedback().open).toBe(false);expect(useFeedbackStore().toast).toContain('历史恢复已提交');expect(useFeedbackStore().toast).not.toContain('未写入')
-    delete overrides.model_file_snapshot;await confirmSave(w)
-    expect(models.snapshot).toEqual(restoredFile());expect(models.historicalRecovery).toBeNull();expect(calls('model_policy_prepare')).toHaveLength(1);expect(calls('model_policy_apply')).toHaveLength(1);expect(calls('model_policy_result')).toHaveLength(0);expect(useModelSaveFeedback().revision).toBe(1)
-  })
-
-  it('retains Key input created during recovery acceptance without installing the legacy response',async()=>{
-    let finish!:(value:ModelSnapshot)=>void
-    overrides.model_policy_recovery_accept=()=>new Promise<ModelSnapshot>(resolve=>{finish=resolve})
-    const w=await compareHistory();await button(w,'放入恢复草稿').trigger('click');await flushPromises()
-    const models=useModelsStore();models.editCredential('source','fixture-new-key','')
-    finish(recovered());await flushPromises()
-    expect(models.credentialEdits.source?.value).toBe('fixture-new-key');expect(models.historicalRecovery).toBeNull();expect(models.snapshot?.policy).toEqual(file().policy);expect(w.text()).toContain('当前输入已保留')
-  })
-
-  it.each(['channel','key'])('rejects %s edits mixed into an accepted historical target without losing input or using either writer',async kind=>{
-    await acceptHistory();const models=useModelsStore()
-    if(kind==='key')models.editCredential('source','fixture-new-key','')
-    else models.channelDraft!.channels[0]!.label='new unsaved label'
-    const draft=clone(models.channelDraft),keys=clone(models.credentialEdits),w=render(ChannelsView);await confirmSave(w)
-    expect(models.channelDraft).toEqual(draft);expect(models.credentialEdits).toEqual(keys);expect(calls('model_policy_prepare')).toHaveLength(0);expect(calls('model_file_save')).toHaveLength(0);expect(useModelSaveFeedback().open).toBe(false);expect(w.text()).toContain('当前输入已保留')
-  })
-})
-
 describe('channel copy with actual-file credentials',()=>{
  let backend:ReturnType<typeof workspaceBackend>,models:ReturnType<typeof useModelsV2Store>
  beforeEach(async()=>{backend=workspaceBackend(ipc,['source']);models=await backend.load()})
