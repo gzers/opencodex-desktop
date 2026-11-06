@@ -7,11 +7,21 @@
 ## 当前基线与获取
 
 - 仓库：gzers/opencodex-desktop。
-- 代码：远端codex/0.2.23-integration，明确基线f3f54b7bb36e644cea0b832f5b09c1276b79c8ee（测试执行器Windows反斜杠准入修正；新候选42291427105实际验证，原候选终态及原因见R12）。
+- 代码：远端codex/0.2.23-integration，明确基线e5d7de53dabd972a9482229c2771d01186c71366（执行器JSON空键修正、Profile HRESULT诊断与真实快速预检，产品全套/安装仍未过）。
 - 文档：远端docs/governance-main，以包含本条R2指令的提交为准；读取本文件、TEAM、IMP-31/32及0.2.23-contracts/L0-paths-runtime-v1.md。
 - Windows代码贡献分支：codex/0.2.23-windows；文档/脱敏证据使用独立docs/0.2.23-windows分支。若已有自己的改动，先保留并合并上述明确代码基线，不重置或覆盖工作树。
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
 - 此为0.2.23实施基线，尚非最终安装候选；版本清单仍待L0统一更新。是否取得新代码以完整SHA及实际diff为准，不能仅看软件显示版本。
+
+## R13 普通执行器继续按真实错误修复（2026-11-07）
+
+Mac真实CI42287979356 backend128133660321成功：严格Clippy/fmt、冷进程用例单跑及其余workspace共2189过/0失败/36条件忽略；前端已1570过。该PR合并树与采用源码树一致，不外推Windows。
+
+Windows f3f CI回执显示49个测试二进制编译后、nativeSuiteExecuted=false，在策略JSON解析失败：npm packageLock.packages合法空键不支持PSCustomObject。主线同策略实证复现，9ea247411以共享字典解析保留完整结构，策略字节/摘要不改；111+85工具检查过。后继候选42294816371越过解析，但在CreateProfile返回非0 HRESULT时停止（stage provision-ordinary-account, line81），原错误未记录HRESULT，不伪称已知确切系统原因。78e769对齐原已实测260缓冲调用并记录HRESULT/innerHRESULT；仍待原生证实。详细实际日志/回执见[r16证据](../../.adg/evidence/0.2.23/team/L0/r16-mac-ci-and-runtime-policy-reader-20261107/manifest.json)。
+
+为缩短执行器本身排障，新增2028c2ef2零依赖默认Rust libtest夹具，验证实际Profile/HOME/TEMP、敏感环境未继承、精确自身child及owned临时文件清理；本机2+1过及0doctest真实执行仅证明夹具，无fullSoftwarePassed。GitHub仅允许调度默认分支已注册的workflow和choice，因此快速预检统一走现有windows-candidate.yml：purpose=native-ui，admission_run=ordinary-preflight-023；该组合只运行ordinary-preflight job，旧native-ui job明确排除，非candidate安装流程。e5d7de53d已真实推送，实际短run42310763513已启动。原先新workflow调度404/新增choice422均保留为未启动，不记执行通过。
+
+023保留安装也统一接现有入口purpose=installer-retention；admission_run为以mode=retention023开头的结构JSON，含精确candidate_run/attempt/head与artifact ID/bytes/SHA；旧019流程明确排除该标记。新单独workflow文件退役，无需提前合main才能测试。代码边界与所有产品/安装/双SID正式门保持，先完成真实短预检，再继续全部49产品binary；未发布。
 
 ## R12 Windows执行器路径误拒已修，新候选继续（2026-11-07）
 

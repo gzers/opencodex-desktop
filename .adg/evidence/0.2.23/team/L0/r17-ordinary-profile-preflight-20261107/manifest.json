@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "source": "e5d7de53dabd972a9482229c2771d01186c71366",
+  "fixture": "2028c2ef2d2b59907811db690e7a986fdc136a6d",
+  "actualPreflightRun": 42310763513,
+  "actualStatusAtCollection": "started; native result not known",
+  "dispatch": {
+    "workflow": "windows-candidate.yml",
+    "purpose": "native-ui",
+    "admission_run": "ordinary-preflight-023",
+    "native-ui-normal": "excluded for exact preflight marker",
+    "standalone-workflow": "404 default registration; choiceordinary-preflight422 both not executed"
+  },
+  "local": {
+    "libTests": 2,
+    "exactChild": 1,
+    "doctests": 0,
+    "fullSoftwarePassed": false
+  },
+  "unchanged": "Full49productbinary,actualinstall/upgrade/retention/twoSIDports remainmandatory",
+  "files": [
+    {
+      "file": "ocxd023-ordinary-preflight-freeze.json",
+      "source": "/tmp/ocxd023-ordinary-preflight-freeze.json",
+      "bytes": 1156,
+      "sha256": "22e99b719dffd66cf107772c0d93c04489426c658c7d0968e5dae27edd7faee9"
+    },
+    {
+      "file": "ocxd023-ordinary-preflight-local-test-final.log",
+      "source": "/tmp/ocxd023-ordinary-preflight-local-test-final.log",
+      "bytes": 958,
+      "sha256": "e37ce020fc26c67f763875d6eb0a8644df0bc3774ed8b5946279634f67d29e32"
+    },
+    {
+      "file": "ocxd023-ordinary-preflight-local-result.json",
+      "source": "/tmp/ocxd023-ordinary-preflight-local-result.json",
+      "bytes": 223,
+      "sha256": "8ab5f82d7183a3823c4e6f80186b76b532066fae37832edcef8633901104f6db"
+    }
+  ]
+}
