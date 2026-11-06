@@ -1,0 +1,640 @@
+{
+  "schemaVersion": 1,
+  "source": "b23696b80655421a82e95d506c755723f6b0efcd",
+  "contribution": "abe49106ec36094cdf595b81a67751f5e4c37e01",
+  "productionHashesVerified": true,
+  "assertionBlockPreserved": true,
+  "originalCI": "42285840940 failed; original ZIP retained with verified bytes",
+  "controlReproduction": "same684px window14failed/14passed",
+  "correctedLocal": "normal28passed;684px28passed; original product style/thresholds unchanged",
+  "clippedNegative": "375px native /288px visible probe outside area correctly refused;13expectedfail/15passed",
+  "newCI": 42287979356,
+  "newCIStatusAtCollection": "in_progress, no pass claim",
+  "windowsCandidateUntouched": 42286888610,
+  "files": [
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/handoff-manifest.json",
+      "file": "handoff-manifest.json",
+      "bytes": 42806,
+      "sha256": "4d5deea4be811e46bba2402da85e0116d2633e88569b4424001e283a122a9395"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/original-analysis.json",
+      "file": "original-analysis.json",
+      "bytes": 3022,
+      "sha256": "b6daf986268712e7bee052361ad4c53be5009ff63137c8b4f36fe12a2c73d45b"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/assertion-preservation.json",
+      "file": "assertion-preservation.json",
+      "bytes": 266,
+      "sha256": "2ce2aa7c19be26e518d90cb6aeed74673f1e613f4dd564da052f4900fdcf2825"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/frontend-dialog-pixel-evidence.zip",
+      "file": "frontend-dialog-pixel-evidence.zip",
+      "bytes": 4483964,
+      "sha256": "3347fdaaa741d6a414a33ad37e949490de608dae817a2b348f8e4d1c6195f8fe"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/before/legacy.log",
+      "file": "before/legacy.log",
+      "bytes": 5670,
+      "sha256": "2489a7da320c468d81b672975075579302f18614379ceedbf183216ed48f42b6"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/constrained.log",
+      "file": "after/constrained.log",
+      "bytes": 283,
+      "sha256": "62361c70f90bc60194e771c9f1ef685096f5fb786d5a77b6b7431091f0360d92"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/normal.log",
+      "file": "after/normal.log",
+      "bytes": 283,
+      "sha256": "25cc7b44607880f4453a77011ba5bb91cd1c0173eec4a3511ff5f6c138861cba"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/typecheck.log",
+      "file": "after/typecheck.log",
+      "bytes": 61,
+      "sha256": "34334a2ae2240d33b9dcb6e3616de893f91814a7d0572dfa5ea9e9149458d264"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/clipped.log",
+      "file": "guard/clipped.log",
+      "bytes": 4953,
+      "sha256": "3fb782d2370a208f6ced4ab21b58f946a4a6224396003494152369de0ae27f75"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/original-annotated-chromium-light-high-wide.png",
+      "file": "original-annotated-chromium-light-high-wide.png",
+      "bytes": 86936,
+      "sha256": "c4a44b305233c865bb4be06a05265094fd5af9900afd6a57ea61db62da5345fa"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/original-annotated-chromium-light-low-wide.png",
+      "file": "original-annotated-chromium-light-low-wide.png",
+      "bytes": 66251,
+      "sha256": "3436d1bc53369e04eca7bed885c497ab872fc4bd3b1f8836290860f84782686c"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-results.json",
+      "file": "after/ocxd023-dialog-glass-constrained-results.json",
+      "bytes": 52570,
+      "sha256": "87ff5e98c71cced064b4b32386779bd16d260899fe8b551e7a3f6894a2ab7e07"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-results.json",
+      "file": "after/ocxd023-dialog-glass-normal-results.json",
+      "bytes": 52587,
+      "sha256": "fdcd0fb8532fde44ae4bf75f383112a592a5a9ca6745fc1ea33be922532351ed"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-results.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-results.json",
+      "bytes": 29782,
+      "sha256": "43ef81e20aa7638c5f803510f984227e068f875e427cf5b6ac55cc5746bc2be2"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-webkit-stack-no-filter-control-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-webkit-stack-no-filter-control-geometry.json",
+      "bytes": 456,
+      "sha256": "c53b8f65c37063461866b095fdc7b4a8825944f3004c1acaa15613241b1582f4"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-chromium-light-mid-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-chromium-light-mid-wide-geometry.json",
+      "bytes": 460,
+      "sha256": "a9634b50647e5405db12e55e7c3a6400f989b4e1e68538a29489686fd9b36f94"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-webkit-light-low-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-webkit-light-low-narrow-geometry.json",
+      "bytes": 455,
+      "sha256": "2ed58217955ba162099e3ee6146dbbeb268302c39a3c923ba9af493c56e15be7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-chromium-light-low-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-chromium-light-low-narrow-geometry.json",
+      "bytes": 454,
+      "sha256": "d49a5f7f65519c80feba6e3e3dde466000f795aa6184fa93e07037abe438f0e8"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-webkit-stack-zoom-scroll-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-webkit-stack-zoom-scroll-geometry.json",
+      "bytes": 456,
+      "sha256": "c53b8f65c37063461866b095fdc7b4a8825944f3004c1acaa15613241b1582f4"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-chromium-dark-high-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-chromium-dark-high-narrow-geometry.json",
+      "bytes": 454,
+      "sha256": "95f9f6b419ed870cf4bf397eb81f3d80a54c022cda9f7ba0370209b33c1b3e70"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-chromium-light-mid-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-chromium-light-mid-narrow-geometry.json",
+      "bytes": 454,
+      "sha256": "95f9f6b419ed870cf4bf397eb81f3d80a54c022cda9f7ba0370209b33c1b3e70"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-webkit-dark-mid-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-webkit-dark-mid-wide-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-webkit-light-low-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-webkit-light-low-wide-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-webkit-dark-mid-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-webkit-dark-mid-narrow-geometry.json",
+      "bytes": 455,
+      "sha256": "2ed58217955ba162099e3ee6146dbbeb268302c39a3c923ba9af493c56e15be7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-webkit-light-high-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-webkit-light-high-narrow-geometry.json",
+      "bytes": 455,
+      "sha256": "2ed58217955ba162099e3ee6146dbbeb268302c39a3c923ba9af493c56e15be7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-chromium-wide-dialog-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-chromium-wide-dialog-geometry.json",
+      "bytes": 460,
+      "sha256": "a9634b50647e5405db12e55e7c3a6400f989b4e1e68538a29489686fd9b36f94"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-chromium-light-mid-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-chromium-light-mid-wide-geometry.json",
+      "bytes": 460,
+      "sha256": "fe4e92331d38c11db003e752a2744ded059233392ff244e8bf2743663e2d0d9a"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-webkit-light-low-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-webkit-light-low-narrow-geometry.json",
+      "bytes": 455,
+      "sha256": "2ed58217955ba162099e3ee6146dbbeb268302c39a3c923ba9af493c56e15be7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-chromium-stack-zoom-scroll-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-chromium-stack-zoom-scroll-geometry.json",
+      "bytes": 454,
+      "sha256": "2cff4d4cd474fe86756b3e83c60ec93d95e240bc28b8a3259e3c089866f57950"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-webkit-light-high-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-webkit-light-high-wide-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-chromium-dark-low-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-chromium-dark-low-wide-geometry.json",
+      "bytes": 460,
+      "sha256": "fe4e92331d38c11db003e752a2744ded059233392ff244e8bf2743663e2d0d9a"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-chromium-light-high-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-chromium-light-high-narrow-geometry.json",
+      "bytes": 454,
+      "sha256": "d49a5f7f65519c80feba6e3e3dde466000f795aa6184fa93e07037abe438f0e8"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-chromium-dark-mid-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-chromium-dark-mid-wide-geometry.json",
+      "bytes": 460,
+      "sha256": "a9634b50647e5405db12e55e7c3a6400f989b4e1e68538a29489686fd9b36f94"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-webkit-light-low-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-webkit-light-low-wide-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-chromium-dark-mid-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-chromium-dark-mid-narrow-geometry.json",
+      "bytes": 454,
+      "sha256": "d49a5f7f65519c80feba6e3e3dde466000f795aa6184fa93e07037abe438f0e8"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-webkit-dark-high-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-webkit-dark-high-wide-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-chromium-dark-low-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-chromium-dark-low-narrow-geometry.json",
+      "bytes": 454,
+      "sha256": "95f9f6b419ed870cf4bf397eb81f3d80a54c022cda9f7ba0370209b33c1b3e70"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-webkit-wide-dialog-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-webkit-wide-dialog-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-chromium-wide-dialog-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-chromium-wide-dialog-geometry.json",
+      "bytes": 460,
+      "sha256": "fe4e92331d38c11db003e752a2744ded059233392ff244e8bf2743663e2d0d9a"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-chromium-light-high-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-chromium-light-high-wide-geometry.json",
+      "bytes": 460,
+      "sha256": "a9634b50647e5405db12e55e7c3a6400f989b4e1e68538a29489686fd9b36f94"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-webkit-dark-mid-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-webkit-dark-mid-wide-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-webkit-dark-low-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-webkit-dark-low-narrow-geometry.json",
+      "bytes": 455,
+      "sha256": "2ed58217955ba162099e3ee6146dbbeb268302c39a3c923ba9af493c56e15be7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-webkit-dark-high-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-webkit-dark-high-wide-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-webkit-stack-no-filter-control-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-webkit-stack-no-filter-control-geometry.json",
+      "bytes": 456,
+      "sha256": "c53b8f65c37063461866b095fdc7b4a8825944f3004c1acaa15613241b1582f4"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-chromium-light-mid-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-chromium-light-mid-narrow-geometry.json",
+      "bytes": 454,
+      "sha256": "d49a5f7f65519c80feba6e3e3dde466000f795aa6184fa93e07037abe438f0e8"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-chromium-light-high-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-chromium-light-high-narrow-geometry.json",
+      "bytes": 454,
+      "sha256": "95f9f6b419ed870cf4bf397eb81f3d80a54c022cda9f7ba0370209b33c1b3e70"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-webkit-light-mid-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-webkit-light-mid-narrow-geometry.json",
+      "bytes": 455,
+      "sha256": "2ed58217955ba162099e3ee6146dbbeb268302c39a3c923ba9af493c56e15be7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-webkit-stack-zoom-scroll-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-webkit-stack-zoom-scroll-geometry.json",
+      "bytes": 456,
+      "sha256": "c53b8f65c37063461866b095fdc7b4a8825944f3004c1acaa15613241b1582f4"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-webkit-dark-high-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-webkit-dark-high-narrow-geometry.json",
+      "bytes": 455,
+      "sha256": "2ed58217955ba162099e3ee6146dbbeb268302c39a3c923ba9af493c56e15be7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-webkit-wide-dialog-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-webkit-wide-dialog-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-chromium-stack-zoom-scroll-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-chromium-stack-zoom-scroll-geometry.json",
+      "bytes": 454,
+      "sha256": "96157e03eef7927c2d566a577e748bdc448f4c8a37cbd2bd9ff3abea3a0e673f"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-chromium-dark-high-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-chromium-dark-high-wide-geometry.json",
+      "bytes": 460,
+      "sha256": "fe4e92331d38c11db003e752a2744ded059233392ff244e8bf2743663e2d0d9a"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-chromium-light-low-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-chromium-light-low-narrow-geometry.json",
+      "bytes": 454,
+      "sha256": "95f9f6b419ed870cf4bf397eb81f3d80a54c022cda9f7ba0370209b33c1b3e70"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-chromium-dark-high-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-chromium-dark-high-narrow-geometry.json",
+      "bytes": 454,
+      "sha256": "d49a5f7f65519c80feba6e3e3dde466000f795aa6184fa93e07037abe438f0e8"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-webkit-light-mid-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-webkit-light-mid-narrow-geometry.json",
+      "bytes": 455,
+      "sha256": "2ed58217955ba162099e3ee6146dbbeb268302c39a3c923ba9af493c56e15be7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-webkit-dark-low-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-webkit-dark-low-wide-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-webkit-dark-low-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-webkit-dark-low-narrow-geometry.json",
+      "bytes": 455,
+      "sha256": "2ed58217955ba162099e3ee6146dbbeb268302c39a3c923ba9af493c56e15be7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-webkit-light-high-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-webkit-light-high-narrow-geometry.json",
+      "bytes": 455,
+      "sha256": "2ed58217955ba162099e3ee6146dbbeb268302c39a3c923ba9af493c56e15be7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-chromium-dark-high-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-chromium-dark-high-wide-geometry.json",
+      "bytes": 460,
+      "sha256": "a9634b50647e5405db12e55e7c3a6400f989b4e1e68538a29489686fd9b36f94"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-webkit-dark-high-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-webkit-dark-high-narrow-geometry.json",
+      "bytes": 455,
+      "sha256": "2ed58217955ba162099e3ee6146dbbeb268302c39a3c923ba9af493c56e15be7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-chromium-dark-mid-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-chromium-dark-mid-narrow-geometry.json",
+      "bytes": 454,
+      "sha256": "95f9f6b419ed870cf4bf397eb81f3d80a54c022cda9f7ba0370209b33c1b3e70"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-chromium-stack-no-filter-control-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-chromium-stack-no-filter-control-geometry.json",
+      "bytes": 454,
+      "sha256": "96157e03eef7927c2d566a577e748bdc448f4c8a37cbd2bd9ff3abea3a0e673f"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-chromium-light-low-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-chromium-light-low-wide-geometry.json",
+      "bytes": 460,
+      "sha256": "a9634b50647e5405db12e55e7c3a6400f989b4e1e68538a29489686fd9b36f94"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-chromium-dark-low-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-chromium-dark-low-narrow-geometry.json",
+      "bytes": 454,
+      "sha256": "d49a5f7f65519c80feba6e3e3dde466000f795aa6184fa93e07037abe438f0e8"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-chromium-light-high-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-chromium-light-high-wide-geometry.json",
+      "bytes": 460,
+      "sha256": "fe4e92331d38c11db003e752a2744ded059233392ff244e8bf2743663e2d0d9a"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-webkit-dark-low-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-webkit-dark-low-wide-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-webkit-light-mid-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-webkit-light-mid-wide-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-chromium-light-low-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-chromium-light-low-wide-geometry.json",
+      "bytes": 460,
+      "sha256": "fe4e92331d38c11db003e752a2744ded059233392ff244e8bf2743663e2d0d9a"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-webkit-dark-mid-narrow-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-webkit-dark-mid-narrow-geometry.json",
+      "bytes": 455,
+      "sha256": "2ed58217955ba162099e3ee6146dbbeb268302c39a3c923ba9af493c56e15be7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-normal-chromium-dark-low-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-normal-chromium-dark-low-wide-geometry.json",
+      "bytes": 460,
+      "sha256": "a9634b50647e5405db12e55e7c3a6400f989b4e1e68538a29489686fd9b36f94"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-webkit-light-high-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-webkit-light-high-wide-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-chromium-stack-no-filter-control-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-chromium-stack-no-filter-control-geometry.json",
+      "bytes": 454,
+      "sha256": "2cff4d4cd474fe86756b3e83c60ec93d95e240bc28b8a3259e3c089866f57950"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-webkit-light-mid-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-webkit-light-mid-wide-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/after/ocxd023-dialog-glass-constrained-chromium-dark-mid-wide-geometry.json",
+      "file": "after/ocxd023-dialog-glass-constrained-chromium-dark-mid-wide-geometry.json",
+      "bytes": 460,
+      "sha256": "fe4e92331d38c11db003e752a2744ded059233392ff244e8bf2743663e2d0d9a"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-webkit-dark-mid-wide-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-webkit-dark-mid-wide-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-chromium-dark-low-narrow-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-chromium-dark-low-narrow-geometry.json",
+      "bytes": 453,
+      "sha256": "efa9736ff2546741fe77c364fb8a47db3df3e9f0831b9ba8355671ce33545193"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-chromium-light-low-wide-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-chromium-light-low-wide-geometry.json",
+      "bytes": 459,
+      "sha256": "567e484021058ad0102fe5f7c6f25e6838c16e55e3f0f7bd9ace56e1ceb06129"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-chromium-light-low-narrow-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-chromium-light-low-narrow-geometry.json",
+      "bytes": 453,
+      "sha256": "efa9736ff2546741fe77c364fb8a47db3df3e9f0831b9ba8355671ce33545193"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-chromium-stack-zoom-scroll-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-chromium-stack-zoom-scroll-geometry.json",
+      "bytes": 453,
+      "sha256": "a9073726961bfbe4ecc227d6d26a1276acff6f379db61e4da380c2cfa554f8d9"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-webkit-light-high-wide-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-webkit-light-high-wide-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-chromium-wide-dialog-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-chromium-wide-dialog-geometry.json",
+      "bytes": 459,
+      "sha256": "567e484021058ad0102fe5f7c6f25e6838c16e55e3f0f7bd9ace56e1ceb06129"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-chromium-dark-mid-wide-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-chromium-dark-mid-wide-geometry.json",
+      "bytes": 459,
+      "sha256": "567e484021058ad0102fe5f7c6f25e6838c16e55e3f0f7bd9ace56e1ceb06129"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-webkit-dark-mid-narrow-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-webkit-dark-mid-narrow-geometry.json",
+      "bytes": 455,
+      "sha256": "2ed58217955ba162099e3ee6146dbbeb268302c39a3c923ba9af493c56e15be7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-chromium-dark-high-wide-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-chromium-dark-high-wide-geometry.json",
+      "bytes": 459,
+      "sha256": "567e484021058ad0102fe5f7c6f25e6838c16e55e3f0f7bd9ace56e1ceb06129"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-webkit-light-mid-wide-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-webkit-light-mid-wide-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-webkit-light-mid-narrow-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-webkit-light-mid-narrow-geometry.json",
+      "bytes": 455,
+      "sha256": "2ed58217955ba162099e3ee6146dbbeb268302c39a3c923ba9af493c56e15be7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-webkit-light-high-narrow-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-webkit-light-high-narrow-geometry.json",
+      "bytes": 455,
+      "sha256": "2ed58217955ba162099e3ee6146dbbeb268302c39a3c923ba9af493c56e15be7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-webkit-dark-high-narrow-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-webkit-dark-high-narrow-geometry.json",
+      "bytes": 455,
+      "sha256": "2ed58217955ba162099e3ee6146dbbeb268302c39a3c923ba9af493c56e15be7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-webkit-wide-dialog-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-webkit-wide-dialog-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-chromium-dark-low-wide-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-chromium-dark-low-wide-geometry.json",
+      "bytes": 459,
+      "sha256": "567e484021058ad0102fe5f7c6f25e6838c16e55e3f0f7bd9ace56e1ceb06129"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-chromium-light-high-wide-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-chromium-light-high-wide-geometry.json",
+      "bytes": 459,
+      "sha256": "567e484021058ad0102fe5f7c6f25e6838c16e55e3f0f7bd9ace56e1ceb06129"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-webkit-light-low-wide-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-webkit-light-low-wide-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-chromium-dark-mid-narrow-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-chromium-dark-mid-narrow-geometry.json",
+      "bytes": 453,
+      "sha256": "efa9736ff2546741fe77c364fb8a47db3df3e9f0831b9ba8355671ce33545193"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-chromium-light-high-narrow-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-chromium-light-high-narrow-geometry.json",
+      "bytes": 453,
+      "sha256": "efa9736ff2546741fe77c364fb8a47db3df3e9f0831b9ba8355671ce33545193"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-chromium-dark-high-narrow-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-chromium-dark-high-narrow-geometry.json",
+      "bytes": 453,
+      "sha256": "efa9736ff2546741fe77c364fb8a47db3df3e9f0831b9ba8355671ce33545193"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-chromium-light-mid-narrow-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-chromium-light-mid-narrow-geometry.json",
+      "bytes": 453,
+      "sha256": "efa9736ff2546741fe77c364fb8a47db3df3e9f0831b9ba8355671ce33545193"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-webkit-dark-low-wide-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-webkit-dark-low-wide-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-webkit-stack-zoom-scroll-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-webkit-stack-zoom-scroll-geometry.json",
+      "bytes": 456,
+      "sha256": "c53b8f65c37063461866b095fdc7b4a8825944f3004c1acaa15613241b1582f4"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-webkit-dark-low-narrow-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-webkit-dark-low-narrow-geometry.json",
+      "bytes": 455,
+      "sha256": "2ed58217955ba162099e3ee6146dbbeb268302c39a3c923ba9af493c56e15be7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-chromium-light-mid-wide-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-chromium-light-mid-wide-geometry.json",
+      "bytes": 459,
+      "sha256": "567e484021058ad0102fe5f7c6f25e6838c16e55e3f0f7bd9ace56e1ceb06129"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-webkit-light-low-narrow-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-webkit-light-low-narrow-geometry.json",
+      "bytes": 455,
+      "sha256": "2ed58217955ba162099e3ee6146dbbeb268302c39a3c923ba9af493c56e15be7"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-webkit-stack-no-filter-control-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-webkit-stack-no-filter-control-geometry.json",
+      "bytes": 456,
+      "sha256": "c53b8f65c37063461866b095fdc7b4a8825944f3004c1acaa15613241b1582f4"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-webkit-dark-high-wide-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-webkit-dark-high-wide-geometry.json",
+      "bytes": 461,
+      "sha256": "187d4882d7da24dee9a1fd74d4523f76e44bdaa5432c29a7e2665c1f3adc8d0d"
+    },
+    {
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/guard/ocxd023-dialog-glass-clipped-chromium-stack-no-filter-control-geometry.json",
+      "file": "guard/ocxd023-dialog-glass-clipped-chromium-stack-no-filter-control-geometry.json",
+      "bytes": 453,
+      "sha256": "a9073726961bfbe4ecc227d6d26a1276acff6f379db61e4da380c2cfa554f8d9"
+    }
+  ]
+}

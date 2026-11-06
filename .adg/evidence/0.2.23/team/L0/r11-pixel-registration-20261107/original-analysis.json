@@ -1,0 +1,143 @@
+{
+  "ciRun": 42285840940,
+  "ciStatus": "FAILED_PRESERVED_NOT_RERUN",
+  "method": "Original immutable CI image bytes measured at legacy row and registered probe row from same production fixture/684px controlled window. DPR mapped by exact image width ratio; annotation is derived, originals untouched.",
+  "rows": [
+    {
+      "name": "chromium-light-high-wide",
+      "image": {
+        "width": 1182,
+        "height": 684
+      },
+      "scale": 1,
+      "registeredOrigin": {
+        "left": 0,
+        "top": 87
+      },
+      "probeFromIdenticalControlledFixture": {
+        "x": 331,
+        "y": 328.5,
+        "width": 518,
+        "height": 150
+      },
+      "sample": {
+        "x": 343,
+        "width": 494,
+        "wrongY": 138,
+        "correctY": 441
+      },
+      "wrong": {
+        "range": 199,
+        "maxStep": 199,
+        "normalizedStep": 1
+      },
+      "correct": {
+        "range": 57,
+        "maxStep": 3,
+        "normalizedStep": 0.05263157894736842
+      }
+    },
+    {
+      "name": "chromium-light-high-narrow",
+      "image": {
+        "width": 562,
+        "height": 684
+      },
+      "scale": 1,
+      "registeredOrigin": {
+        "left": 0,
+        "top": 87
+      },
+      "probeFromIdenticalControlledFixture": {
+        "x": 37,
+        "y": 328.5,
+        "width": 486,
+        "height": 150
+      },
+      "sample": {
+        "x": 49,
+        "width": 462,
+        "wrongY": 138,
+        "correctY": 441
+      },
+      "wrong": {
+        "range": 199,
+        "maxStep": 199,
+        "normalizedStep": 1
+      },
+      "correct": {
+        "range": 57,
+        "maxStep": 3,
+        "normalizedStep": 0.05263157894736842
+      }
+    },
+    {
+      "name": "chromium-light-low-wide",
+      "image": {
+        "width": 1182,
+        "height": 684
+      },
+      "scale": 1,
+      "registeredOrigin": {
+        "left": 0,
+        "top": 87
+      },
+      "probeFromIdenticalControlledFixture": {
+        "x": 331,
+        "y": 328.5,
+        "width": 518,
+        "height": 150
+      },
+      "sample": {
+        "x": 343,
+        "width": 494,
+        "wrongY": 138,
+        "correctY": 441
+      },
+      "wrong": {
+        "range": 199,
+        "maxStep": 199,
+        "normalizedStep": 1
+      },
+      "correct": {
+        "range": 0,
+        "maxStep": 0,
+        "normalizedStep": 0
+      }
+    },
+    {
+      "name": "chromium-light-low-narrow",
+      "image": {
+        "width": 562,
+        "height": 684
+      },
+      "scale": 1,
+      "registeredOrigin": {
+        "left": 0,
+        "top": 87
+      },
+      "probeFromIdenticalControlledFixture": {
+        "x": 37,
+        "y": 328.5,
+        "width": 486,
+        "height": 150
+      },
+      "sample": {
+        "x": 49,
+        "width": 462,
+        "wrongY": 138,
+        "correctY": 441
+      },
+      "wrong": {
+        "range": 199,
+        "maxStep": 199,
+        "normalizedStep": 1
+      },
+      "correct": {
+        "range": 0,
+        "maxStep": 0,
+        "normalizedStep": 0
+      }
+    }
+  ]
+}

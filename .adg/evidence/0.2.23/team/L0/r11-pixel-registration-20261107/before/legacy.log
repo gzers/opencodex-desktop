@@ -1,0 +1,86 @@
+
+ RUN  v5.0.0 /Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/dialog-pixel-ci2880/before
+
+ ❯ legacy.test.ts (28 tests | 14 failed) 20829ms
+   ❯ chromium native dialog glass (14)
+     × light high wide blurs actual background and preserves readable contrast 880ms
+     × light high narrow blurs actual background and preserves readable contrast 639ms
+     × light mid wide blurs actual background and preserves readable contrast 620ms
+     × light mid narrow blurs actual background and preserves readable contrast 607ms
+     × light low wide blurs actual background and preserves readable contrast 593ms
+     × light low narrow blurs actual background and preserves readable contrast 580ms
+     × dark high wide blurs actual background and preserves readable contrast 615ms
+     × dark high narrow blurs actual background and preserves readable contrast 599ms
+     × dark mid wide blurs actual background and preserves readable contrast 625ms
+     × dark mid narrow blurs actual background and preserves readable contrast 595ms
+     × dark low wide blurs actual background and preserves readable contrast 610ms
+     × dark low narrow blurs actual background and preserves readable contrast 614ms
+     × keeps the existing wide dialog size and material 495ms
+     × retains stack, scroll, footer, X, focus, zoom, busy and close guards 528ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 14 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  legacy.test.ts > chromium native dialog glass > light high wide blurs actual background and preserves readable contrast
+ FAIL  legacy.test.ts > chromium native dialog glass > light high narrow blurs actual background and preserves readable contrast
+ FAIL  legacy.test.ts > chromium native dialog glass > light mid wide blurs actual background and preserves readable contrast
+ FAIL  legacy.test.ts > chromium native dialog glass > light mid narrow blurs actual background and preserves readable contrast
+ FAIL  legacy.test.ts > chromium native dialog glass > dark high wide blurs actual background and preserves readable contrast
+ FAIL  legacy.test.ts > chromium native dialog glass > dark high narrow blurs actual background and preserves readable contrast
+ FAIL  legacy.test.ts > chromium native dialog glass > dark mid wide blurs actual background and preserves readable contrast
+ FAIL  legacy.test.ts > chromium native dialog glass > dark mid narrow blurs actual background and preserves readable contrast
+AssertionError: pixel edge is blurred rather than a sharp alpha-tinted step: expected 1 to be less than 0.18
+ ❯ legacy.test.ts:140:102
+    138|     } else {
+    139|       expect(measured.range, 'glass retains measurable low-frequency b…
+    140|       expect(measured.normalizedStep, 'pixel edge is blurred rather th…
+       |                                                                                                      ^
+    141|     }
+    142|     expect(measured.outsideNormalizedStep, 'background outside the dia…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/14]⎯
+
+ FAIL  legacy.test.ts > chromium native dialog glass > light low wide blurs actual background and preserves readable contrast
+ FAIL  legacy.test.ts > chromium native dialog glass > light low narrow blurs actual background and preserves readable contrast
+ FAIL  legacy.test.ts > chromium native dialog glass > dark low wide blurs actual background and preserves readable contrast
+ FAIL  legacy.test.ts > chromium native dialog glass > dark low narrow blurs actual background and preserves readable contrast
+AssertionError: low effects use the solid recipe: expected 199 to be less than 2
+ ❯ legacy.test.ts:136:66
+    134|     expect(modal.native).toBe(true); expect(modal.x).toBeGreaterThanOr…
+    135|     if (scenario.effects === 'low') {
+    136|       expect(measured.range, 'low effects use the solid recipe').toBeL…
+       |                                                                  ^
+    137|       expect(measured.colors.root || measured.colors.prefixed).toBe('n…
+    138|     } else {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/14]⎯
+
+ FAIL  legacy.test.ts > chromium native dialog glass > keeps the existing wide dialog size and material
+AssertionError: expected 1 to be less than 0.18
+ ❯ legacy.test.ts:154:37
+    152|     const shot = await capture(page, engine + '-wide-dialog')
+    153|     const measured = await pixels(page, shot, '#dialog-one')
+    154|     expect(measured.normalizedStep).toBeLessThan(.18)
+       |                                     ^
+    155|     expect(measured.textContrast).toBeGreaterThanOrEqual(4.5); expect(…
+    156|     evidence.push({ engine, wideDialog: measured })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/14]⎯
+
+ FAIL  legacy.test.ts > chromium native dialog glass > retains stack, scroll, footer, X, focus, zoom, busy and close guards
+AssertionError: expected 0.907608695652174 to be less than 0.18
+ ❯ legacy.test.ts:178:42
+    176|     const stackedPixels = await pixels(page, stacked, '#dialog-two')
+    177|     expect(stackedPixels.range).toBeGreaterThan(8)
+    178|     expect(stackedPixels.normalizedStep).toBeLessThan(.18)
+       |                                          ^
+    179|     await page.locator('#dialog-two').evaluate((e: HTMLElement) => { e…
+    180|     const unfiltered = await capture(page, engine + '-stack-no-filter-…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/14]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  14 failed | 14 passed (28)
+   Start at  04:18:39
+   Duration  20.97s (tests 100%)
+
