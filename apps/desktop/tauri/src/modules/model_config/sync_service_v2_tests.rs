@@ -1310,3 +1310,174 @@ fn selected_key_and_mcp_secret_only_changes_are_visible_as_updates_without_secre
         assert!(!public.contains(&store::digest(value.as_bytes())));
     }
 }
+struct CatalogNeverCredentials;
+impl capture::CaptureCredentialsV2 for CatalogNeverCredentials {
+    fn channel_key(
+        &self,
+        _: &Path,
+        _: &capture::SelectedKeySourceV2<'_>,
+    ) -> ModelResult<Zeroizing<String>> {
+        panic!("catalog must not read selected key")
+    }
+    fn authorization(
+        &self,
+        _: &Path,
+        _: &str,
+        _: &serde_json::Value,
+        _: &serde_json::Value,
+    ) -> ModelResult<super::super::provider_auth::PortableAuthorization> {
+        panic!("catalog must not read authorization")
+    }
+    fn webdav_password(&self, _: &Path, _: &str) -> ModelResult<Zeroizing<String>> {
+        panic!("catalog must not read endpoint password")
+    }
+}
+#[test]
+fn local_file_catalog_needs_no_endpoint_and_preserves_actual_saved_ids_models_and_exact_template_refs(
+) {
+    let e = Env::new();
+    std::fs::remove_file(
+        e.root
+            .join(crate::modules::sync::config::SYNC_ENDPOINTS_RELATIVE_PATH),
+    )
+    .unwrap();
+    let mut raw: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(e.home.join("config.json")).unwrap()).unwrap();
+    raw["providers"]["fixture"]["apiKey"] = json!("synthetic-unselected-local-key");
+    std::fs::write(
+        e.home.join("config.json"),
+        serde_json::to_vec(&raw).unwrap(),
+    )
+    .unwrap();
+    let before = std::fs::read(e.home.join("config.json")).unwrap();
+    let backend = ProductionServiceBackendV2::new(
+        e.root.clone(),
+        e.home.clone(),
+        Arc::new(CatalogNeverCredentials),
+    )
+    .unwrap();
+    let catalog = backend.local_file_catalog().unwrap();
+    assert_eq!(catalog.source, "saved");
+    assert!(catalog.webdav_connections.is_empty());
+    let channel = catalog
+        .entries
+        .iter()
+        .find(|e| e.kind == ObjectKindV2::Channel)
+        .unwrap();
+    assert_eq!(
+        channel.id,
+        e.backend.selection.channels[0].portable_channel_id
+    );
+    assert!(channel.secret_available);
+    assert_eq!(channel.models[0].raw_model_id, "fixture-model");
+    assert!(channel.available_local);
+    assert!(!channel.available_cloud);
+    assert_eq!(std::fs::read(e.home.join("config.json")).unwrap(), before);
+    assert_eq!(e.remote.gets.load(Ordering::SeqCst), 0);
+    assert!(!e
+        .root
+        .join("manager-state/sync-identity-mappings-v2.json")
+        .exists());
+    for template in catalog
+        .entries
+        .iter()
+        .filter(|e| e.kind == ObjectKindV2::Template)
+    {
+        assert!(template
+            .revisions
+            .iter()
+            .all(|r| r.template_id == template.id
+                && super::super::schema_v2::valid_digest(&r.digest)));
+    }
+    let public = serde_json::to_string(&catalog).unwrap();
+    assert!(!public.contains("synthetic-unselected-local-key"));
+    assert!(!public.contains("credentialRef"));
+}
+#[test]
+fn local_file_catalog_lists_webdav_candidates_and_password_availability_without_reading_values() {
+    let e = Env::new();
+    let endpoint = crate::modules::sync::config::SyncConfigStore::new(&e.root)
+        .load()
+        .unwrap()
+        .active()
+        .unwrap()
+        .clone();
+    let account = crate::infrastructure::keychain::account_key(
+        crate::infrastructure::keychain::WEBDAV_CREDENTIAL_PURPOSE,
+        &endpoint.credential_ref.ref_id,
+    )
+    .unwrap();
+    let dir = e.root.join("manager-state/credentials");
+    std::fs::create_dir_all(&dir).unwrap();
+    let path = dir.join(format!("{account}.json"));
+    std::fs::write(
+        &path,
+        b"deliberately not decoded unselected synthetic password file",
+    )
+    .unwrap();
+    let backend = ProductionServiceBackendV2::new(
+        e.root.clone(),
+        e.home.clone(),
+        Arc::new(CatalogNeverCredentials),
+    )
+    .unwrap();
+    let catalog = backend.local_file_catalog().unwrap();
+    assert_eq!(catalog.webdav_connections.len(), 1);
+    let candidate = &catalog.webdav_connections[0];
+    assert_eq!(candidate.id, "default");
+    assert!(candidate.password_available);
+    let public = serde_json::to_string(&catalog).unwrap();
+    assert!(!public.contains("not decoded"));
+    assert!(!public.contains(CREDS));
+    assert!(!public.contains("accountKey"));
+    assert_eq!(e.remote.gets.load(Ordering::SeqCst), 0);
+    assert_eq!(
+        std::fs::read(path).unwrap(),
+        b"deliberately not decoded unselected synthetic password file"
+    );
+}
+#[test]
+fn local_file_catalog_keeps_conflicting_mcp_per_source_choices_without_endpoint_or_default_selection(
+) {
+    let e = Env::new();
+    std::fs::remove_file(
+        e.root
+            .join(crate::modules::sync::config::SYNC_ENDPOINTS_RELATIVE_PATH),
+    )
+    .unwrap();
+    std::fs::create_dir_all(e.home.join(".codex")).unwrap();
+    std::fs::create_dir_all(e.home.join(".hermes")).unwrap();
+    std::fs::write(
+        e.home.join(".codex/config.toml"),
+        "[mcp_servers.localfixture]\ncommand = 'codex-command'\n",
+    )
+    .unwrap();
+    std::fs::write(
+        e.home.join(".hermes/config.yaml"),
+        "mcp_servers:\n  localfixture:\n    command: hermes-command\n",
+    )
+    .unwrap();
+    let backend = ProductionServiceBackendV2::new(
+        e.root.clone(),
+        e.home.clone(),
+        Arc::new(CatalogNeverCredentials),
+    )
+    .unwrap();
+    let catalog = backend.local_file_catalog().unwrap();
+    let mcp = catalog
+        .mcp_sources
+        .iter()
+        .find(|m| m.name == "localfixture")
+        .unwrap();
+    assert_eq!(mcp.sources.len(), 2);
+    assert!(mcp
+        .sources
+        .iter()
+        .all(|s| super::super::schema_v2::valid_digest(&s.definition_digest)));
+    assert!(!mcp.differing_fields.is_empty());
+    assert!(catalog
+        .entries
+        .iter()
+        .any(|e| e.kind == ObjectKindV2::Mcp && e.id == "localfixture"));
+    assert_eq!(e.remote.gets.load(Ordering::SeqCst), 0);
+}

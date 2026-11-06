@@ -233,6 +233,24 @@ pub struct RecoveryPreviewV2 {
     pub plan: RecoveryPlan,
     pub entries: Vec<DiffEntryV2>,
 }
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct FileConnectionEntryV2 {
+    pub id: String,
+    pub label: String,
+    pub url: String,
+    pub remote_path: String,
+    pub username: String,
+    pub password_available: bool,
+}
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct LocalFileCatalogV2 {
+    pub entries: Vec<ObjectEntryV2>,
+    pub mcp_sources: Vec<McpSourceEntryV2>,
+    pub webdav_connections: Vec<FileConnectionEntryV2>,
+    pub source: String,
+}
 /// Capture inventory and per-plan composition belong to the SAME saved/identity/
 /// receive owner. The production adapter below is added only against L0's fixed
 /// committed modules. Injection is also used for isolated deterministic failures.
@@ -2425,6 +2443,164 @@ impl super::sync_local_v2::SourceSnapshotProviderV2 for MappedSourceBridgeV2 {
     }
 }
 impl ProductionServiceBackendV2 {
+    /// Saved-only LocalFile inventory. Requires NO active endpoint and performs
+    /// NO network or credential-value read. Local UUIDs remain actual local IDs;
+    /// there is no RemoteSync namespace mapper involved in a file catalog.
+    pub fn local_file_catalog(&self) -> ModelResult<LocalFileCatalogV2> {
+        let (mut request, mcp_sources) = self.inventory_request()?;
+        request.selection.usage = super::objects_overlay_v2::UsageV2::LocalFile;
+        let captured = super::saved_objects_capture_v2::capture(
+            &self.root,
+            &self.home,
+            &request,
+            self.credentials.as_ref(),
+        )?;
+        let mut entries = entries_from(&captured.objects, true);
+        let assets = crate::modules::sync::portable_assets::catalog(&self.root, &self.home)?;
+        for source in &mcp_sources {
+            if !entries
+                .iter()
+                .any(|e| e.kind == ObjectKindV2::Mcp && e.id == source.name)
+            {
+                entries.push(ObjectEntryV2 {
+                    kind: ObjectKindV2::Mcp,
+                    id: source.name.clone(),
+                    label: source.name.clone(),
+                    available_local: true,
+                    available_cloud: false,
+                    model_ids: vec![],
+                    models: vec![],
+                    family_ids: vec![],
+                    revisions: vec![],
+                    default_revision: None,
+                    secret_available: assets.credential_mcps.contains(&source.name),
+                });
+            }
+        }
+        for name in &assets.credential_skills {
+            if !entries
+                .iter()
+                .any(|e| e.kind == ObjectKindV2::Skill && e.id == *name)
+            {
+                entries.push(ObjectEntryV2 {
+                    kind: ObjectKindV2::Skill,
+                    id: name.clone(),
+                    label: name.clone(),
+                    available_local: true,
+                    available_cloud: false,
+                    model_ids: vec![],
+                    models: vec![],
+                    family_ids: vec![],
+                    revisions: vec![],
+                    default_revision: None,
+                    secret_available: true,
+                });
+            }
+        }
+        let (keys, authorizations) = self.credential_availability()?;
+        for e in &mut entries {
+            if e.kind == ObjectKindV2::Channel {
+                e.secret_available |= keys.contains(&e.id) || authorizations.contains(&e.id);
+            }
+        }
+        let settings = crate::modules::sync::portable_manager::export(
+            &self.root,
+            &crate::modules::sync::portable_manager::Scope {
+                webdav: true,
+                ..Default::default()
+            },
+        )?;
+        let config = crate::modules::sync::config::SyncConfigStore::new(&self.root)
+            .load()
+            .map_err(|_| invalid("capture_source_invalid", "文件连接目录无法读取"))?;
+        let mut webdav_connections = Vec::new();
+        for e in settings.webdav {
+            let endpoint = config
+                .endpoints
+                .iter()
+                .find(|entry| entry.endpoint_id == e.id)
+                .ok_or_else(|| invalid("capture_source_invalid", "文件连接目录不一致"))?;
+            // Availability is the presence of the exact root-bound credential
+            // record only. Never open/decrypt it or query Keychain for a catalog.
+            let account = crate::infrastructure::keychain::account_key(
+                crate::infrastructure::keychain::WEBDAV_CREDENTIAL_PURPOSE,
+                &endpoint.credential_ref.ref_id,
+            )
+            .map_err(|_| invalid("capture_source_invalid", "连接凭据引用无效"))?;
+            let path = self
+                .root
+                .join("manager-state/credentials")
+                .join(format!("{account}.json"));
+            crate::modules::backup::safety::check_path(&self.root, &path, true)
+                .map_err(|_| invalid("capture_source_invalid", "连接凭据可用性路径无效"))?;
+            let password_available = match std::fs::symlink_metadata(&path) {
+                Ok(m) if m.is_file() && !m.file_type().is_symlink() => true,
+                Ok(_) => return Err(invalid("capture_source_invalid", "连接凭据记录类型无效")),
+                Err(err) if err.kind() == std::io::ErrorKind::NotFound => false,
+                Err(_) => return Err(invalid("capture_source_invalid", "连接凭据记录可用性未知")),
+            };
+            webdav_connections.push(FileConnectionEntryV2 {
+                id: e.id.clone(),
+                label: e.id,
+                url: e.url,
+                remote_path: e.remote_path,
+                username: e.username,
+                password_available,
+            });
+        }
+        Ok(LocalFileCatalogV2 {
+            entries,
+            mcp_sources,
+            webdav_connections,
+            source: "saved".into(),
+        })
+    }
+    fn credential_availability(&self) -> ModelResult<(BTreeSet<String>, BTreeSet<String>)> {
+        super::config_file::v2::with_saved_config(
+            &self.root,
+            &self.home,
+            |_, policy, _, raw, _, _| {
+                let mut keys = BTreeSet::new();
+                let mut auth = BTreeSet::new();
+                for channel in &policy.channels {
+                    if let Some(provider) = raw
+                        .get("providers")
+                        .and_then(|p| p.get(&channel.connection.provider_id))
+                    {
+                        let any_private = [
+                            "apiKeyPool",
+                            "headers",
+                            "queryParams",
+                            "proxy",
+                            "mcpServers",
+                            "desktopExecutor",
+                        ]
+                        .iter()
+                        .any(|field| {
+                            provider.get(*field).is_some_and(|value| match value {
+                                serde_json::Value::Null => false,
+                                serde_json::Value::String(s) => !s.is_empty(),
+                                serde_json::Value::Array(a) => !a.is_empty(),
+                                serde_json::Value::Object(o) => !o.is_empty(),
+                                _ => true,
+                            })
+                        });
+                        if any_private {
+                            auth.insert(channel.id.clone());
+                        } else if provider
+                            .get("apiKey")
+                            .and_then(serde_json::Value::as_str)
+                            .is_some_and(|s| !s.is_empty())
+                        {
+                            keys.insert(channel.id.clone());
+                        }
+                    }
+                }
+                Ok((keys, auth))
+            },
+        )
+        .map_err(|e| invalid(&e.code, "凭据范围目录无法读取"))
+    }
     fn inventory_request(
         &self,
     ) -> ModelResult<(
