@@ -247,3 +247,28 @@ mod tests {
         assert_eq!(std::fs::read(&target).unwrap(), b"preserve");
     }
 }
+
+/// Local inventory has no WebDAV dependency. Stable source identity bookkeeping
+/// is local metadata, so it holds the same fixed-root admission as preparation.
+#[tauri::command]
+pub async fn catalog_config_file_v2(
+    data_root: tauri::State<'_, crate::state::SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> ModelResult<crate::modules::model_config::sync_service_v2::LocalFileCatalogV2> {
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        crate::modules::model_config::sync_service_v2::ProductionServiceBackendV2::new(
+            root,
+            home,
+            Arc::new(
+                crate::modules::model_config::saved_objects_capture_v2::SystemCaptureCredentialsV2,
+            ),
+        )?
+        .local_file_catalog()
+    })
+    .await
+    .map_err(|_| invalid("file_inventory", "本机配置目录读取中断，当前选择保持"))?
+}

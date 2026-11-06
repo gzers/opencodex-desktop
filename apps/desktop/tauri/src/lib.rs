@@ -576,6 +576,7 @@ pub fn run() {
             }
         })
         .invoke_handler(tauri::generate_handler![
+            commands::config_file_transfer_v2::catalog_config_file_v2,
             commands::config_file_transfer_v2::prepare_config_file_export_v2,
             commands::config_file_transfer_v2::prepare_draft_config_file_export_v2,
             commands::config_file_transfer_v2::save_config_file_export_v2,
