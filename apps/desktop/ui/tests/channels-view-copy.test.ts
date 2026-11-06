@@ -15,14 +15,14 @@ describe('渠道列表与原型一致的入口口径', () => {
     expect(source).not.toContain('models.channelDraft.defaultChannelId=defaultChannel.id')
   })
 
-  it('保存即预览：列表与详情都只有一个保存入口', () => {
+  it('列表确认与详情直接保存均只有一个入口', () => {
     // UI 规范 §38.1：删除独立预览按钮与激活数胶囊，Tab 右侧为 状态 → 还原修改 → 保存。
     expect(source).not.toContain('预览选择器')
     expect(editor).not.toContain('预览选择器')
     expect(editor).not.toContain("emit('preview')")
     expect(source).not.toContain("previewSource")
-    expect(source).toContain('<SelectorPreviewDialog')
-    expect(source).toContain('@confirm="confirmSave"')
+    expect(source).toContain('data-testid="policy-save"');expect(source).toContain('@save="saveDetail"')
+    expect(source).toContain('@click="confirmSave"')
   })
 
   it('预览不提供来源切换与数量折叠', () => {
@@ -34,7 +34,7 @@ describe('渠道列表与原型一致的入口口径', () => {
   })
 
   it('确认即关闭；弹窗内不再显示保存错误块或过程说明', () => {
-    expect(source).toContain('previewOpen.value=false;previewProjection.value=null')
+    expect(source).toContain('saveOpen.value=false;await models.saveChannels(saveScope.value)')
     expect(source).not.toContain('确认后会先备份')
     expect(source).not.toContain('基准已变化，请关闭并重新打开保存预览')
   })
