@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "codeBaseline": "894b2237f100854440da3fc4ce73bf78fa6f23ca",
+  "status": "partial-integration-not-final-acceptance",
+  "note": "Exact logs retained, including original failures and fixture corrections. Full third Rust run still active; not archived as completed here. Native Windows and final publication gates remain.",
+  "files": [
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-ui-full-second.log",
+      "source": "/tmp/ocxd023-ui-full-second.log",
+      "sha256": "b4af85982f3f1ad49b948cd4f6d96360ba8a3c000c77f673818f4074d43d37dc",
+      "bytes": 100946
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-integrated-clippy-current.log",
+      "source": "/tmp/ocxd023-integrated-clippy-current.log",
+      "sha256": "18df739a960a11985106c5b2e3a0d338c3e4cc06b0823695846300ff52ba3aff",
+      "bytes": 198
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-public-index-check.log",
+      "source": "/tmp/ocxd023-public-index-check.log",
+      "sha256": "0165e06be61b2ebd2e4d0248f6216cad4202c5523fcc2465337cf61ccfad3bad",
+      "bytes": 230
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-public-file-commands.log",
+      "source": "/tmp/ocxd023-public-file-commands.log",
+      "sha256": "cb0d2bf62863b17889cfc5fafc726eb85c15dec0090b3c62b952188adfb7ba67",
+      "bytes": 4612
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-public-file-commands-second.log",
+      "source": "/tmp/ocxd023-public-file-commands-second.log",
+      "sha256": "070eef7cce07b2e9b2f45980be7823dcec5a2a7ec61a9c615a27df8d755f1afe",
+      "bytes": 672
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-mapping-receipt-proof.log",
+      "source": "/tmp/ocxd023-mapping-receipt-proof.log",
+      "sha256": "92ac6b28401be18640405850d475561e87c5234af8b305f370220631d828a430",
+      "bytes": 1386
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-mapping-receipt-proof-second.log",
+      "source": "/tmp/ocxd023-mapping-receipt-proof-second.log",
+      "sha256": "3cfff1209b04ac5b7caa60ef37fd6d1d831ffcc6b866aa755a26a677e2396b48",
+      "bytes": 1070
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-identity-restore-main.log",
+      "source": "/tmp/ocxd023-identity-restore-main.log",
+      "sha256": "6fd98bc3f9c4e87625cad44ec62a137ca691371ee752e48238fee896455646f4",
+      "bytes": 4433
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-same-id-owned-registry.log",
+      "source": "/tmp/ocxd023-same-id-owned-registry.log",
+      "sha256": "1103989c206ebcd4558e8d0a59298bbb2fff057d7740b836183b988426f6b3d9",
+      "bytes": 1055
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-same-id-owned-registry-second.log",
+      "source": "/tmp/ocxd023-same-id-owned-registry-second.log",
+      "sha256": "3a9588940d5c2982a49720c4d4810e56f6324c0e50731623f8947a874ec77038",
+      "bytes": 627
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-local-remaining-main.log",
+      "source": "/tmp/ocxd023-local-remaining-main.log",
+      "sha256": "5bc77ef829f6ffc4b16907220c2265b86505ee8b5d437ad39bf21febb699d956",
+      "bytes": 4308
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-original-external-view.log",
+      "source": "/tmp/ocxd023-original-external-view.log",
+      "sha256": "90ebe1fa16ed458a1f1bad5bd89fe9f39b0bf573b8d14d2d321ed415e2754e8f",
+      "bytes": 566
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-noauth-repeat-receive.log",
+      "source": "/tmp/ocxd023-noauth-repeat-receive.log",
+      "sha256": "4bb9312b0f6f103665b8d5534087c0a2bad509f9d193e1964f3e63489e29eff3",
+      "bytes": 573
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-startup-real-worker.log",
+      "source": "/tmp/ocxd023-startup-real-worker.log",
+      "sha256": "a185a36350c8b125aff77bde4ed5fdae7f556aa9873181104b41ba1be9122c29",
+      "bytes": 1206
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-startup-real-worker-second.log",
+      "source": "/tmp/ocxd023-startup-real-worker-second.log",
+      "sha256": "90f353705318677fd40ba5bf987bcce374a9f70625a7d5a2c1ac9cc31ff63ce3",
+      "bytes": 557
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-runtime-recovery-public-main.log",
+      "source": "/tmp/ocxd023-runtime-recovery-public-main.log",
+      "sha256": "6d907003bfa8a2653179b5fad89d3decf0d80e1f21ea5f8b44959c31c7fcc10b",
+      "bytes": 2113
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-runtime-recovery-public-native-main.log",
+      "source": "/tmp/ocxd023-runtime-recovery-public-native-main.log",
+      "sha256": "7902ab435d282e8e8d14395b9faa8d45d2c9cef2bfdc8dd8cee355bc69e3eb0c",
+      "bytes": 1302
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-runtime-recovery-public-npm6-main.log",
+      "source": "/tmp/ocxd023-runtime-recovery-public-npm6-main.log",
+      "sha256": "eb7f141357a777522c55e8ce5a99fafd44b4471ebe2b69f8d5737cb2a8a22336",
+      "bytes": 549
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-runtime-recovery-production-npm11-main.log",
+      "source": "/tmp/ocxd023-runtime-recovery-production-npm11-main.log",
+      "sha256": "3dec1a4b476aed342b589ad5eabf0b8c620574a829dabc26539ba414a2d0acc7",
+      "bytes": 550
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-cli-sync-v2-service-tests.log",
+      "source": "/tmp/ocxd023-cli-sync-v2-service-tests.log",
+      "sha256": "bcdae8a16bd463681f85ce57adbae8405185666c29c306705270df95d04e0d9e",
+      "bytes": 7278
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-cli-sync-v2-result.json",
+      "source": "/tmp/ocxd023-cli-sync-v2-result.json",
+      "sha256": "65551ddc69ae6ff7b6d1dac183223296dcbd3a08782be02e8ff8147a53b912b5",
+      "bytes": 1736
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-dialog-glass-freeze-tests.log",
+      "source": "/tmp/ocxd023-dialog-glass-freeze-tests.log",
+      "sha256": "1de1f7fd7a0844e36c2500bc34d4bbad47b56320d9d6edb29a22b71fe57fc4f1",
+      "bytes": 501
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-dialog-glass-freeze-results.json",
+      "source": "/tmp/ocxd023-dialog-glass-freeze-results.json",
+      "sha256": "90ff36d8ec559e64432848163cfb7a36d837bb5eb76f5ba6411439a39890f599",
+      "bytes": 24397
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-dialog-glass-webkit-before-after.png",
+      "source": "/tmp/ocxd023-dialog-glass-webkit-before-after.png",
+      "sha256": "4c870f0fa5bfb462e9beeb9da54f4824bf3665839b3d73fc8e3fad895074fd3d",
+      "bytes": 412690
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-ui-settings-five-result.json",
+      "source": "/tmp/ocxd023-ui-settings-five-result.json",
+      "sha256": "07bf2e5c7fba1c83f892d4777c5b8e5c5e85a3a1cf0801e56d6176cc11280c70",
+      "bytes": 1922
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-ui-settings-five-tests.log",
+      "source": "/tmp/ocxd023-ui-settings-five-tests.log",
+      "sha256": "d2633c9ca55e816145ab60341b340a86cf5b7c33aa8e1b6ac0c5f11e4e6b6445",
+      "bytes": 732
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-namespace-receiver-evidence.json",
+      "source": "/tmp/ocxd023-namespace-receiver-evidence.json",
+      "sha256": "45c36aac81d1ff38d134af6b0aa3d0f423b80b4c9654f90bbfeebf848b0b5b44",
+      "bytes": 2918
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-namespace-receiver-integrated-tests.log",
+      "source": "/tmp/ocxd023-namespace-receiver-integrated-tests.log",
+      "sha256": "6905610089fe4504d527ceff87a55628294efe0b3c71ed5e94b3136a52622de0",
+      "bytes": 2032
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r3-20261107/ocxd023-filetransfer-recovery-tests.log",
+      "source": "/tmp/ocxd023-filetransfer-recovery-tests.log",
+      "sha256": "c9615d5f8bc8ed8629f8f681e3fddef4c3eabcb1f49fdcf011b175a65d8bd1f1",
+      "bytes": 3612
+    }
+  ]
+}

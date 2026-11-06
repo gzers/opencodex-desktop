@@ -1,0 +1,23 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.12s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-a2321b53a9e89887)
+
+running 2 tests
+test commands::runtime_recovery_v2::tests::native::facade_real_core_preview_refusal_leases_apply_failure_and_reopen ... FAILED
+test commands::runtime_recovery_v2_owner::tests::local_process::actual_process_uid_creation_h_attestation_and_preserving_stop ... ok
+
+failures:
+
+---- commands::runtime_recovery_v2::tests::native::facade_real_core_preview_refusal_leases_apply_failure_and_reopen stdout ----
+
+thread 'commands::runtime_recovery_v2::tests::native::facade_real_core_preview_refusal_leases_apply_failure_and_reopen' (134181089) panicked at src/commands/runtime_recovery_v2_tests.rs:551:13:
+native fixture must use npm6
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    commands::runtime_recovery_v2::tests::native::facade_real_core_preview_refusal_leases_apply_failure_and_reopen
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 1831 filtered out; finished in 3.58s
+
+error: test failed, to rerun pass `--lib`

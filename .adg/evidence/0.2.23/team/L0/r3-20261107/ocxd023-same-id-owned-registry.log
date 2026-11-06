@@ -1,0 +1,18 @@
+    Blocking waiting for file lock on artifact directory
+   Compiling opencodex-desktop v0.2.22 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0599]: the method `as_deref` exists for enum `std::option::Option<modules::model_config::config_file::v2::receive::Image>`, but its trait bounds were not satisfied
+   --> src/modules/model_config/model_receive_file_v2.rs:744:52
+    |
+136 | struct Image {
+    | ------------ doesn't satisfy `_: Deref`
+...
+744 |             if let Some(registry_bytes) = identity.as_deref() {
+    |                                                    ^^^^^^^^
+    |
+    = note: the following trait bounds were not satisfied:
+            `modules::model_config::config_file::v2::receive::Image: Deref`
+note: the trait `Deref` must be implemented
+   --> /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/core/src/ops/deref.rs:139:0
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

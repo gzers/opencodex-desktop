@@ -1,0 +1,1357 @@
+
+> opencodex-desktop-ui@0.2.22 test
+> vitest --run
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/file-channel-save.test.ts (9 tests | 7 failed) 142ms
+   ❯ current-file channel saves (9)
+     × silently closes an old preview after all edits are restored to saved values 49ms
+     × confirms the preview and writes the current file exactly once 15ms
+     × saves a Key-only edit independently of model discovery 22ms
+     × adopts modeled fields in memory, then uses the existing Save with the actual file digest and receipt 17ms
+     × adopts raw material only in memory, then uses the existing Save with the actual file digest and receipt 14ms
+     × retains edits on a real file conflict and reports an unsuccessful write 6ms
+     × deleting a different channel preserves the official default reference 4ms
+ ❯ tests/model-channel-scoped-save.test.ts (50 tests | 2 failed) 374ms
+   ❯ channel-scoped shared store saves (31)
+     × absorbs the latest locked layout from a metadata-only A receipt even when the file digest is unchanged 88ms
+     × uses the scoped receipt as the next global-save baseline while retaining all global draft changes 45ms
+ ❯ tests/model-file-compat.test.ts (17 tests | 16 failed) 409ms
+   ❯ explicit history adapter using the actual file models UI (9)
+     × isolates all legacy baselines through compare, accept, runtime save and file reload, then uses only file saves 88ms
+     × saves an authorization-only historical target even when the visible channel policy is unchanged 23ms
+     × retains a failed recovery draft, then allows an ordinary file save after explicit discard despite old plans 30ms
+     × retains the original plan after a partial result and rechecks that plan on explicit retry 29ms
+     × retains the original plan after a unknown result and rechecks that plan on explicit retry 45ms
+     × retains a committed recovery until file reload succeeds and never repeats the runtime write 40ms
+     × rejects channel edits mixed into an accepted historical target without losing input or using either writer 18ms
+     × rejects key edits mixed into an accepted historical target without losing input or using either writer 18ms
+   ❯ channel copy with actual-file credentials (8)
+     × reads a saved Key once before adding the copy, stages it only in memory and writes it only on explicit Save 5ms
+     × uses the source pending replace without reading an older saved Key 5ms
+     × uses the source pending clear without reading an older saved Key 8ms
+     × copies local authorization without fetching a stale Key 7ms
+     × copies none authorization without fetching a stale Key 45ms
+     × retains copy input on unreadable credentials and displays only a fixed error 9ms
+     × retains copy input on failed credentials and displays only a fixed error 4ms
+     × copies without a Key when reuse is declined, even with a pending replacement 4ms
+ ❯ tests/channels-view-copy.test.ts (7 tests | 2 failed) 12ms
+   ❯ 渠道列表与原型一致的入口口径 (6)
+     × 保存即预览：列表与详情都只有一个保存入口 5ms
+     × 确认即关闭；弹窗内不再显示保存错误块或过程说明 5ms
+ ❯ tests/default-channel-retired.test.ts (2 tests | 1 failed) 4ms
+   ❯ 默认渠道已退役 (2)
+     × 保存范围说明不再宣称包含默认渠道 2ms
+ ❯ tests/model-save-result-flow.test.ts (1 test | 1 failed) 75ms
+   ❯ 渠道确认保存到全局结果宿主的完整点击链（模拟文件 API） (1)
+     × 实际编辑、打开预览、确认保存后只出现全局卡；稍后彻底结束，新编辑仍显示 dirty 73ms
+ ❯ tests/model-view-context.test.ts (4 tests | 3 failed) 48ms
+   ❯ model view context (4)
+     × reacts to navigation changes on the first edit session, without requiring a route remount 24ms
+     × cancels a new copy only after current confirmation, retaining the source and refusing a stale discard 4ms
+     × returns to the template list without discarding dirty input and restores it after route remount 4ms
+ ❯ tests/post09-remaining-model-hosts.test.ts (9 tests | 9 failed) 139ms
+   ❯ POST-09 remaining version/preview/result consumers (9)
+     × cancels deletion through x without closing version management or deleting selected versions 40ms
+     × cancels deletion through escape without closing version management or deleting selected versions 12ms
+     × cancels deletion through native-cancel without closing version management or deleting selected versions 12ms
+     × cancels deletion through backdrop without closing version management or deleting selected versions 13ms
+     × cancels deletion through cancel without closing version management or deleting selected versions 10ms
+     × guards an actual pending delete and keeps the captured target/digests 13ms
+     × keeps the manager under default confirmation and returns focus to its actual trigger 8ms
+     × does not let a dismissed match request populate a reopened preview or change the template buffer 7ms
+     × closes an external result observer without changing saved or draft state 23ms
+ ❯ tests/model-transfer.test.ts (45 tests | 13 failed) 1534ms
+   ❯ model transfer review (45)
+     × keeps a cloud-only template selected through the actual first range save/check flow 34ms
+     × shows scope inline without preparing or writing on mount, and blocks writes until the saved remote scope is known 11ms
+     × does not overwrite an unreadable saved WebDAV scope with initial defaults; an explicit reload can recover 9ms
+     × restores and saves the same explicit family scope for this WebDAV device 10ms
+     × retains the original operation ID after uncertain WebDAV publication 6ms
+     × saves the device scope on 同步, previews a newer local snapshot and publishes only after 确认更新 10ms
+     × downloads a newer remote snapshot, backs up first when ticked, and never writes on cancel 8ms
+     × uses only the shared header X when the selected range is already the same 5ms
+     × blocks every write when direction is undetermined: unreliable_save_time 9ms
+     × blocks every write when direction is undetermined: same_instant_different_content 6ms
+     × uses the unchanged check directly without staging upload or download 7ms
+     × asks for the MCP source inside the sync preview and skips an unpicked conflict 5ms
+     × uses the separate content password inside the remote preview without adopting 5ms
+ ❯ tests/sync-prototype-020.test.ts (8 tests | 2 failed) 411ms
+   ❯ S20 adopted prototype regressions (8)
+     × toolbar contains search and tree selection instead of cancelled presets 46ms
+     × does not permit confirmation when a synchronization diff is unknown 7ms
+ ❯ tests/sync.test.ts (9 tests | 6 failed) 44ms
+   ❯ sync conflict notification refresh (1)
+     × reloads notifications after a sync run 23ms
+   ❯ sync terminal result is not command acknowledgement (5)
+     × projects synced / succeeded without inventing success 4ms
+     × projects failed / failed without inventing success 2ms
+     × projects conflict / cancelled without inventing success 2ms
+     × projects synced / validating without inventing success 2ms
+     × reports an uncertain failed execution and still refreshes its notifications 2ms
+ ❯ tests/sync-result.test.ts (5 tests | 1 failed) 108ms
+   ❯ transfer result is a read-only receipt with explicit original-operation actions (5)
+     × retries an uncertain upload by its original ID without preparing another snapshot 34ms
+ ❯ tests/post021-sync.test.ts (4 tests | 2 failed) 144ms
+   ❯ post021 remote observations (4)
+     × startup reads an already configured snapshot once without running a sync 9ms
+     × does not network without configuration; failed read can be explicitly retried 1ms
+ ❯ tests/workspace.test.ts (4 tests | 1 failed) 12ms
+   ❯ workspace settings contracts (4)
+     × runs sync once and projects status without losing local content on failure 5ms
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 66 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/channels-view-copy.test.ts > 渠道列表与原型一致的入口口径 > 保存即预览：列表与详情都只有一个保存入口
+AssertionError: expected '<script setup lang="ts">\nimport {com…' to contain '<SelectorPreviewDialog'
+
+- Expected
++ Received
+
+- <SelectorPreviewDialog
++ <script setup lang="ts">
++ import {computed,onMounted,ref,watch} from 'vue'
++ import UiButton from '@/components/ui/UiButton.vue'
++ import UiDialog from '@/components/ui/UiDialog.vue'
++ import ChannelEditor from './ChannelEditor.vue'
++ import ChannelNodeSelect from './ChannelNodeSelect.vue'
++ import {protectedChannel} from './channelActions'
++ import ModelPicker from './ModelPicker.vue'
++ import NewChannelDialog from './NewChannelDialog.vue'
++ import {useModelSaveFeedback} from '@/app/feedback/modelSave'
++ import {useFeedbackStore} from '@/app/feedback/store'
++ import {useModelsV2Store} from './store-v2'
++ import {channelNameErrorV2} from './channelRename'
++ const props=withDefaults(defineProps<{actionsTarget?:string;active?:boolean}>(),{active:true})
++ const models=useModelsV2Store(),nodeOpenId=ref(''),selectedChannelIds=ref<string[]>([]),newChannelOpen=ref(false),saveOpen=ref(false),pickerOpen=ref(false),copyId=ref(''),copyName=ref(''),copyError=ref(''),deleteId=ref(''),saveScope=ref<string|undefined>()
++ const editor=computed(()=>models.channels.find(c=>c.id===models.channelEditorId))
++ const filtered=computed(()=>models.channels.filter(c=>(c.label+' '+c.id).toLowerCase().includes(models.channelSearch.toLowerCase())))
++ const nameErrors=computed(()=>models.channels.map(c=>channelNameErrorV2(c.label,c.id,models.channels)).filter(Boolean))
++ const counts=computed(()=>models.readResults.reduce((total,result)=>{for(const key of Object.keys(total) as (keyof typeof total)[])total[key]+=result.counts[key];return total},{total:0,matched:0,manualPreserved:0,unmatched:0,missingDefault:0,missingDependency:0,conflict:0,changed:0,protocolPending:0}))
++ let reviewBase=''
++ function currentReview(){return JSON.stringify({scope:saveScope.value,credentialInputRevision:models.credentialInputRevision,base:models.file?.draft?.base,source:models.file?.sourceDigest,library:models.file?.libraryDigest,channelIntents:models.channelIntents,edits:models.modelEdits})}
++ function prepareSave(scope?:string){if(props.active===false||!models.canSaveFile||models.pendingRows.length||nameErrors.value.length||!scope&&!!editor.value)return;if(scope&&!models.channelIntents.some(i=>i.channelId===scope&&(i.kind==='rename'||i.kind==='delete'))){const channel=models.channels.find(c=>c.id===scope);if(channel)models.queueChannel({kind:'rename',channelId:scope,name:channel.label})}saveScope.value=models.channelCapabilities.scopedSave?scope:undefined;reviewBase=currentReview();saveOpen.value=true}
++ async function confirmSave(){if(!saveOpen.value||props.active===false||editor.value)return;if(!models.fileDirty){saveOpen.value=false;return}if(reviewBase!==currentReview()){models.fileError='保存预览已过期，当前输入已保留，请重新核对。';return}saveOpen.value=false;await models.saveChannels(saveScope.value);if(models.fileError)useFeedbackStore().showToast('未写入：'+models.fileError,{kind:'error'});else useModelSaveFeedback().showSaved()}
++ const isActive=()=>props.active!==false
++ async function saveDetail(){const channel=editor.value;if(!channel||!isActive()||models.fileBusy||!models.canSaveFile||!models.channelDirty(channel.id)||channelNameErrorV2(channel.label,channel.id,models.channels)||protectedChannel(channel))return;const id=channel.id;await models.saveChannels(id);if(models.fileError){useFeedbackStore().showToast('未写入：'+models.fileError,{kind:'error'});return}useModelSaveFeedback().showSaved();if(isActive()&&models.channelEditorId===id&&!models.channelDirty(id))models.channelEditorId=''}
++ watch(()=>[models.channelEditorId,props.active],()=>{saveOpen.value=false})
++ async function discardLocal(){await models.loadChannels(true)}
++ function selectVisibleChannels(checked:boolean){const visible=new Set(filtered.value.map(c=>c.id));selectedChannelIds.value=checked?[...new Set([...selectedChannelIds.value,...visible])]:selectedChannelIds.value.filter(id=>!visible.has(id))}
++ function openCopy(id:string){copyId.value=id;copyName.value=(models.channels.find(c=>c.id===id)?.label??'渠道')+' 副本';copyError.value=''}
++ async function confirmCopy(){const error=channelNameErrorV2(copyName.value,'',models.channels);if(error){copyError.value=error;return}try{const id=await models.copyChannel(copyId.value,copyName.value.trim());copyId.value='';models.channelEditorId=id}catch(cause){copyError.value=cause instanceof Error?cause.message:'复制未完成，原件保持。'}}
++ async function confirmDelete(){if(models.fileBusy||!deleteId.value||!models.channelCapabilities.delete||!models.channelCapabilities.scopedSave)return;models.queueChannel({kind:'delete',channelId:deleteId.value});await models.saveChannels(deleteId.value);if(!models.fileError){deleteId.value='';models.channelEditorId=''}}
++ onMounted(()=>{if(props.active!==false&&!models.file)void models.loadChannels()})
++ </script>
++ <template>
++   <section class="channels-v2" aria-label="渠道模型配置">
++     <p v-if="models.fileError" role="alert" class="model-error">{{models.fileError}}</p>
++     <p v-if="models.fileBusy" role="status">正在核对当前渠道与草稿…</p>
++     <p v-if="models.fileNeedsReconcile" role="alert" class="model-error">读取期间有新的明确编辑，当前输入保持。请核对来源后重新读取。</p>
++     <div class="model-toolbar"><div class="model-inline"><UiButton :disabled="models.fileBusy||!models.file||!!models.channelIntents.length||!!models.modelEdits.length" @click="pickerOpen=true">预览当前模型目录</UiButton><UiButton :loading="models.fileBusy" :disabled="models.fileBusy" @click="models.loadChannels()">刷新当前快照</UiButton><UiButton :disabled="models.fileBusy||!models.file" @click="models.readExisting">读取现有渠道</UiButton><UiButton :disabled="models.fileBusy||!models.file" @click="newChannelOpen=true">新增渠道</UiButton></div><div class="model-inline"><UiButton :disabled="models.fileBusy||!models.channelIntents.length&&!models.modelEdits.length" @click="discardLocal">还原本地明确编辑</UiButton><UiButton variant="primary" data-testid="policy-save" :disabled="props.active===false||!!editor||!models.canSaveFile||!models.fileDirty||!!nameErrors.length||!!models.pendingRows.length" @click="prepareSave()">保存配置</UiButton></div></div>
++     <p v-if="models.readResults.length" role="status">上次成功读取 · 自动匹配 {{counts.matched}} · 更新草稿 {{counts.changed}} · 保留人工 {{counts.manualPreserved}} · 未匹配 {{counts.unmatched}} · 缺默认版本 {{counts.missingDefault}} · 缺依赖 {{counts.missingDependency}} · 冲突 {{counts.conflict}} · 协议待配置 {{counts.protocolPending}}。保存配置后才生效。</p>
++     <p v-if="models.file?.draft" class="model-muted">当前为服务端草稿；普通快照/开始编辑不重新选择模版。只有“读取现有渠道”才自动匹配已保存模版。</p>
++     <ChannelEditor v-if="editor" :channel="editor" :channels="models.channels" :effective="models.effectiveRows" :busy="models.fileBusy" :dirty="models.channelDirty(editor.id)" :save-disabled="props.active===false||!models.canSaveFile||!models.channelDirty(editor.id)||models.pendingRows.some(row=>row.channel===editor!.id)" @close="models.channelEditorId=''" @save="saveDetail" @intent="models.queueChannel" @edit="models.queueModel" />
++     <template v-else>
++       <input v-model="models.channelSearch" class="input" type="search" aria-label="搜索渠道" placeholder="搜索渠道名称或标识" />
++       <div class="model-table-scroll"><table class="model-table"><thead><tr><th><input type="checkbox" aria-label="选择当前渠道结果" :checked="filtered.length>0&&filtered.every(c=>selectedChannelIds.includes(c.id))" :indeterminate="filtered.some(c=>selectedChannelIds.includes(c.id))&&!filtered.every(c=>selectedChannelIds.includes(c.id))" @change="selectVisibleChannels(($event.target as HTMLInputElement).checked)" /></th><th>渠道</th><th>模型</th><th>启用</th><th>操作</th></tr></thead><tbody><tr v-for="channel in filtered" :key="channel.id"><td><input v-model="selectedChannelIds" type="checkbox" :value="channel.id" :aria-label="'选择渠道 '+channel.label" /></td><td><strong>{{channel.label}}</strong><small>{{channel.id}}</small><small>{{channel.connection.nodes.find(n=>n.id===channel.connection.activeNodeId)?.name??'无当前节点'}} · {{channel.connection.nodes.find(n=>n.id===channel.connection.activeNodeId)?.url??'未配置'}}</small></td><td>已选 {{channel.selection.mode==='all'?channel.models.length:channel.selection.mode==='whitelist'?channel.selection.models.length:0}} / {{channel.models.length}}</td><td><label><input type="checkbox" :aria-label="'启用渠道 '+channel.label" :checked="channel.connection.enabled" :disabled="models.fileBusy||protectedChannel(channel)" @change="models.queueChannel({kind:'set_enabled',channelId:channel.id,enabled:($event.target as HTMLInputElement).checked})" />{{channel.connection.enabled?'已启用':'已停用'}}</label></td><td><div class="model-inline"><UiButton size="sm" :disabled="models.fileBusy" @click="models.channelEditorId=channel.id">编辑</UiButton><UiButton size="sm" class="channel-node-detect" :aria-label="'检测 '+channel.label+' 服务节点'" aria-haspopup="dialog" :aria-expanded="nodeOpenId===channel.id" :disabled="props.active===false||!channel.connection.nodes.length" @click="nodeOpenId=channel.id">检测</UiButton><UiButton size="sm" :disabled="models.fileBusy||protectedChannel(channel)||!models.channelCapabilities.copy" title="复制到草稿，由后端保全同源凭据" @click="openCopy(channel.id)">复制</UiButton><UiButton size="sm" :disabled="models.fileBusy||protectedChannel(channel)||!models.channelCapabilities.delete||!models.channelCapabilities.scopedSave" @click="deleteId=channel.id">删除</UiButton></div></td></tr></tbody></table></div>
++       <p v-if="models.file&&!models.channels.length&&!models.fileBusy" class="model-muted">当前没有可编辑渠道。可明确读取新 HOME 的配置，或新增渠道；读取失败不会显示为成功空列表。</p>
++       <p v-if="!models.file&&!models.fileBusy" class="model-muted">渠道快照尚未就绪，请重新读取。</p>
++     </template>
++     <ModelPicker :open="pickerOpen" :rows="[]" :v2-rows="models.file?.effective" :channels="models.channels.map(c=>({id:c.id,label:c.label,providerId:c.connection.providerId}))" title="当前服务端渠道模型目录" @close="pickerOpen=false" @confirm="pickerOpen=false" />
++     <NewChannelDialog v-if="newChannelOpen" @close="newChannelOpen=false" @added="models.channelEditorId=$event" />
++     <ChannelNodeSelect v-for="channel in models.channels" :key="channel.id" :channel="channel" :expected="models.file?.draft?.base" :open="nodeOpenId===channel.id" :show-trigger="false" :active="props.active!==false&&!editor&&filtered.some(c=>c.id===channel.id)" :readonly="protectedChannel(channel)||models.fileBusy||!models.channelCapabilities.activeNode" :measurement-disabled="protectedChannel(channel)||models.fileBusy||!models.channelCapabilities.measure" @close="nodeOpenId=''" @select="models.queueChannel({kind:'set_active_node',channelId:channel.id,nodeId:$event})" />
++     <UiDialog :open="!!copyId" title="复制渠道到草稿" :busy="models.fileBusy" @close="copyId=''">
++       <p>复制当前服务端渠道来源、模型人工设置及精确引用。新管理身份和运行键由后端生成，不复制 Key 明文到界面；正式配置需后续保存。</p><label>新渠道名称<input v-model="copyName" class="input" aria-label="复制渠道名称" :disabled="models.fileBusy" /></label><p v-if="copyError" class="model-error" role="alert">{{copyError}}</p>
++       <template #actions="{close}"><UiButton :disabled="models.fileBusy" @click="close">取消</UiButton><UiButton variant="primary" :disabled="models.fileBusy||!models.channelCapabilities.copy" @click="confirmCopy">确认复制到草稿</UiButton></template>
++     </UiDialog>
++     <UiDialog :open="!!deleteId" title="确认删除渠道" :busy="models.fileBusy" @close="deleteId=''">
++       <p>将删除 {{models.channels.find(c=>c.id===deleteId)?.label}}，并由同一事务核对该渠道及受影响引用。其他渠道草稿保留；失败保留原件。</p><p v-if="models.fileError" class="model-error" role="alert">{{models.fileError}}</p>
++       <template #actions="{close}"><UiButton :disabled="models.fileBusy" @click="close">取消</UiButton><UiButton variant="danger" :disabled="models.fileBusy||!models.channelCapabilities.delete||!models.channelCapabilities.scopedSave" @click="confirmDelete">确认删除渠道</UiButton></template>
++     </UiDialog>
++     <UiDialog :open="saveOpen" :title="saveScope?'保存当前渠道':'保存当前渠道草稿'" wide :busy="models.fileBusy" @close="saveOpen=false">
++       <p>{{saveScope?'本次只提交当前渠道，其他草稿保留。':'本次提交当前服务端草稿及以下明确编辑。'}}渠道名、运行键与模型配置由同一事务核对；未确认前不写正式配置。</p>
++       <p v-if="models.fileError" role="alert" class="model-error">{{models.fileError}}</p>
++       <ul><li v-for="channel in models.channels.filter(c=>(!saveScope||c.id===saveScope)&&JSON.stringify(c)!==JSON.stringify(models.file?.savedPolicy.channels.find(saved=>saved.id===c.id)))" :key="channel.id">{{channel.label}} · 有草稿变化</li><li v-for="(intent,index) in models.channelIntents.filter(i=>!saveScope||i.channelId===saveScope)" :key="'c'+index">{{models.channels.find(c=>c.id===intent.channelId)?.label??intent.channelId}} · {{intent.kind==='rename'?'名称 / 实际运行键':intent.kind==='set_enabled'?'启停':intent.kind==='set_selection'?'模型公开范围':intent.kind==='set_order'?'模型顺序':intent.kind==='set_defaults'?'非协议渠道默认':intent.kind==='set_family_defaults'?'非协议族设置':intent.kind==='set_naming'?'模型命名':intent.kind==='set_template_refs'?'精确模版候选':intent.kind==='set_active_node'?'当前服务节点':'删除渠道'}}</li><li v-for="(action,id) in models.pendingCredentialKinds" v-show="!saveScope||id===saveScope" :key="'key'+id">{{models.channels.find(c=>c.id===id)?.label??id}} · API Key · {{action==='clear'?'明确清空':'明确替换'}}</li><li v-for="(edit,index) in models.modelEdits.filter(e=>!saveScope||e.channelId===saveScope)" :key="'m'+index">{{edit.rawModelId}} · {{'field'in edit?edit.field:'明确模版引用'}} · {{edit.kind==='clear_override'?'恢复继承':'明确人工设置'}}</li></ul>
++       <p v-if="!models.fileDirty" class="model-muted">没有待保存修改；明确详情保存仍会核对名称与运行键。</p>
++       <template #actions="{close}"><UiButton :disabled="models.fileBusy" @click="close">取消</UiButton><UiButton variant="primary" :disabled="!models.canSaveFile||!!nameErrors.length" :loading="models.fileBusy" @click="confirmSave">确认保存</UiButton></template>
++     </UiDialog>
++   </section>
++ </template>
++ <style scoped>
++ .channels-v2{display:grid;gap:var(--space-4);min-width:0}.channels-v2 .model-table-scroll{overflow:auto}.channels-v2 table{width:100%;min-width:660px}.channels-v2 th,.channels-v2 td{padding:12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border)}.channels-v2 small{display:block;overflow-wrap:anywhere;color:var(--muted)}.channels-v2 label{display:flex;gap:var(--space-2);align-items:center}.channels-v2 li{overflow-wrap:anywhere}
++ </style>
++
+
+ ❯ tests/channels-view-copy.test.ts:24:20
+     22|     expect(editor).not.toContain("emit('preview')")
+     23|     expect(source).not.toContain("previewSource")
+     24|     expect(source).toContain('<SelectorPreviewDialog')
+       |                    ^
+     25|     expect(source).toContain('@confirm="confirmSave"')
+     26|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/66]⎯
+
+ FAIL  tests/channels-view-copy.test.ts > 渠道列表与原型一致的入口口径 > 确认即关闭；弹窗内不再显示保存错误块或过程说明
+AssertionError: expected '<script setup lang="ts">\nimport {com…' to contain 'previewOpen.value=false;previewProjec…'
+
+- Expected
++ Received
+
+- previewOpen.value=false;previewProjection.value=null
++ <script setup lang="ts">
++ import {computed,onMounted,ref,watch} from 'vue'
++ import UiButton from '@/components/ui/UiButton.vue'
++ import UiDialog from '@/components/ui/UiDialog.vue'
++ import ChannelEditor from './ChannelEditor.vue'
++ import ChannelNodeSelect from './ChannelNodeSelect.vue'
++ import {protectedChannel} from './channelActions'
++ import ModelPicker from './ModelPicker.vue'
++ import NewChannelDialog from './NewChannelDialog.vue'
++ import {useModelSaveFeedback} from '@/app/feedback/modelSave'
++ import {useFeedbackStore} from '@/app/feedback/store'
++ import {useModelsV2Store} from './store-v2'
++ import {channelNameErrorV2} from './channelRename'
++ const props=withDefaults(defineProps<{actionsTarget?:string;active?:boolean}>(),{active:true})
++ const models=useModelsV2Store(),nodeOpenId=ref(''),selectedChannelIds=ref<string[]>([]),newChannelOpen=ref(false),saveOpen=ref(false),pickerOpen=ref(false),copyId=ref(''),copyName=ref(''),copyError=ref(''),deleteId=ref(''),saveScope=ref<string|undefined>()
++ const editor=computed(()=>models.channels.find(c=>c.id===models.channelEditorId))
++ const filtered=computed(()=>models.channels.filter(c=>(c.label+' '+c.id).toLowerCase().includes(models.channelSearch.toLowerCase())))
++ const nameErrors=computed(()=>models.channels.map(c=>channelNameErrorV2(c.label,c.id,models.channels)).filter(Boolean))
++ const counts=computed(()=>models.readResults.reduce((total,result)=>{for(const key of Object.keys(total) as (keyof typeof total)[])total[key]+=result.counts[key];return total},{total:0,matched:0,manualPreserved:0,unmatched:0,missingDefault:0,missingDependency:0,conflict:0,changed:0,protocolPending:0}))
++ let reviewBase=''
++ function currentReview(){return JSON.stringify({scope:saveScope.value,credentialInputRevision:models.credentialInputRevision,base:models.file?.draft?.base,source:models.file?.sourceDigest,library:models.file?.libraryDigest,channelIntents:models.channelIntents,edits:models.modelEdits})}
++ function prepareSave(scope?:string){if(props.active===false||!models.canSaveFile||models.pendingRows.length||nameErrors.value.length||!scope&&!!editor.value)return;if(scope&&!models.channelIntents.some(i=>i.channelId===scope&&(i.kind==='rename'||i.kind==='delete'))){const channel=models.channels.find(c=>c.id===scope);if(channel)models.queueChannel({kind:'rename',channelId:scope,name:channel.label})}saveScope.value=models.channelCapabilities.scopedSave?scope:undefined;reviewBase=currentReview();saveOpen.value=true}
++ async function confirmSave(){if(!saveOpen.value||props.active===false||editor.value)return;if(!models.fileDirty){saveOpen.value=false;return}if(reviewBase!==currentReview()){models.fileError='保存预览已过期，当前输入已保留，请重新核对。';return}saveOpen.value=false;await models.saveChannels(saveScope.value);if(models.fileError)useFeedbackStore().showToast('未写入：'+models.fileError,{kind:'error'});else useModelSaveFeedback().showSaved()}
++ const isActive=()=>props.active!==false
++ async function saveDetail(){const channel=editor.value;if(!channel||!isActive()||models.fileBusy||!models.canSaveFile||!models.channelDirty(channel.id)||channelNameErrorV2(channel.label,channel.id,models.channels)||protectedChannel(channel))return;const id=channel.id;await models.saveChannels(id);if(models.fileError){useFeedbackStore().showToast('未写入：'+models.fileError,{kind:'error'});return}useModelSaveFeedback().showSaved();if(isActive()&&models.channelEditorId===id&&!models.channelDirty(id))models.channelEditorId=''}
++ watch(()=>[models.channelEditorId,props.active],()=>{saveOpen.value=false})
++ async function discardLocal(){await models.loadChannels(true)}
++ function selectVisibleChannels(checked:boolean){const visible=new Set(filtered.value.map(c=>c.id));selectedChannelIds.value=checked?[...new Set([...selectedChannelIds.value,...visible])]:selectedChannelIds.value.filter(id=>!visible.has(id))}
++ function openCopy(id:string){copyId.value=id;copyName.value=(models.channels.find(c=>c.id===id)?.label??'渠道')+' 副本';copyError.value=''}
++ async function confirmCopy(){const error=channelNameErrorV2(copyName.value,'',models.channels);if(error){copyError.value=error;return}try{const id=await models.copyChannel(copyId.value,copyName.value.trim());copyId.value='';models.channelEditorId=id}catch(cause){copyError.value=cause instanceof Error?cause.message:'复制未完成，原件保持。'}}
++ async function confirmDelete(){if(models.fileBusy||!deleteId.value||!models.channelCapabilities.delete||!models.channelCapabilities.scopedSave)return;models.queueChannel({kind:'delete',channelId:deleteId.value});await models.saveChannels(deleteId.value);if(!models.fileError){deleteId.value='';models.channelEditorId=''}}
++ onMounted(()=>{if(props.active!==false&&!models.file)void models.loadChannels()})
++ </script>
++ <template>
++   <section class="channels-v2" aria-label="渠道模型配置">
++     <p v-if="models.fileError" role="alert" class="model-error">{{models.fileError}}</p>
++     <p v-if="models.fileBusy" role="status">正在核对当前渠道与草稿…</p>
++     <p v-if="models.fileNeedsReconcile" role="alert" class="model-error">读取期间有新的明确编辑，当前输入保持。请核对来源后重新读取。</p>
++     <div class="model-toolbar"><div class="model-inline"><UiButton :disabled="models.fileBusy||!models.file||!!models.channelIntents.length||!!models.modelEdits.length" @click="pickerOpen=true">预览当前模型目录</UiButton><UiButton :loading="models.fileBusy" :disabled="models.fileBusy" @click="models.loadChannels()">刷新当前快照</UiButton><UiButton :disabled="models.fileBusy||!models.file" @click="models.readExisting">读取现有渠道</UiButton><UiButton :disabled="models.fileBusy||!models.file" @click="newChannelOpen=true">新增渠道</UiButton></div><div class="model-inline"><UiButton :disabled="models.fileBusy||!models.channelIntents.length&&!models.modelEdits.length" @click="discardLocal">还原本地明确编辑</UiButton><UiButton variant="primary" data-testid="policy-save" :disabled="props.active===false||!!editor||!models.canSaveFile||!models.fileDirty||!!nameErrors.length||!!models.pendingRows.length" @click="prepareSave()">保存配置</UiButton></div></div>
++     <p v-if="models.readResults.length" role="status">上次成功读取 · 自动匹配 {{counts.matched}} · 更新草稿 {{counts.changed}} · 保留人工 {{counts.manualPreserved}} · 未匹配 {{counts.unmatched}} · 缺默认版本 {{counts.missingDefault}} · 缺依赖 {{counts.missingDependency}} · 冲突 {{counts.conflict}} · 协议待配置 {{counts.protocolPending}}。保存配置后才生效。</p>
++     <p v-if="models.file?.draft" class="model-muted">当前为服务端草稿；普通快照/开始编辑不重新选择模版。只有“读取现有渠道”才自动匹配已保存模版。</p>
++     <ChannelEditor v-if="editor" :channel="editor" :channels="models.channels" :effective="models.effectiveRows" :busy="models.fileBusy" :dirty="models.channelDirty(editor.id)" :save-disabled="props.active===false||!models.canSaveFile||!models.channelDirty(editor.id)||models.pendingRows.some(row=>row.channel===editor!.id)" @close="models.channelEditorId=''" @save="saveDetail" @intent="models.queueChannel" @edit="models.queueModel" />
++     <template v-else>
++       <input v-model="models.channelSearch" class="input" type="search" aria-label="搜索渠道" placeholder="搜索渠道名称或标识" />
++       <div class="model-table-scroll"><table class="model-table"><thead><tr><th><input type="checkbox" aria-label="选择当前渠道结果" :checked="filtered.length>0&&filtered.every(c=>selectedChannelIds.includes(c.id))" :indeterminate="filtered.some(c=>selectedChannelIds.includes(c.id))&&!filtered.every(c=>selectedChannelIds.includes(c.id))" @change="selectVisibleChannels(($event.target as HTMLInputElement).checked)" /></th><th>渠道</th><th>模型</th><th>启用</th><th>操作</th></tr></thead><tbody><tr v-for="channel in filtered" :key="channel.id"><td><input v-model="selectedChannelIds" type="checkbox" :value="channel.id" :aria-label="'选择渠道 '+channel.label" /></td><td><strong>{{channel.label}}</strong><small>{{channel.id}}</small><small>{{channel.connection.nodes.find(n=>n.id===channel.connection.activeNodeId)?.name??'无当前节点'}} · {{channel.connection.nodes.find(n=>n.id===channel.connection.activeNodeId)?.url??'未配置'}}</small></td><td>已选 {{channel.selection.mode==='all'?channel.models.length:channel.selection.mode==='whitelist'?channel.selection.models.length:0}} / {{channel.models.length}}</td><td><label><input type="checkbox" :aria-label="'启用渠道 '+channel.label" :checked="channel.connection.enabled" :disabled="models.fileBusy||protectedChannel(channel)" @change="models.queueChannel({kind:'set_enabled',channelId:channel.id,enabled:($event.target as HTMLInputElement).checked})" />{{channel.connection.enabled?'已启用':'已停用'}}</label></td><td><div class="model-inline"><UiButton size="sm" :disabled="models.fileBusy" @click="models.channelEditorId=channel.id">编辑</UiButton><UiButton size="sm" class="channel-node-detect" :aria-label="'检测 '+channel.label+' 服务节点'" aria-haspopup="dialog" :aria-expanded="nodeOpenId===channel.id" :disabled="props.active===false||!channel.connection.nodes.length" @click="nodeOpenId=channel.id">检测</UiButton><UiButton size="sm" :disabled="models.fileBusy||protectedChannel(channel)||!models.channelCapabilities.copy" title="复制到草稿，由后端保全同源凭据" @click="openCopy(channel.id)">复制</UiButton><UiButton size="sm" :disabled="models.fileBusy||protectedChannel(channel)||!models.channelCapabilities.delete||!models.channelCapabilities.scopedSave" @click="deleteId=channel.id">删除</UiButton></div></td></tr></tbody></table></div>
++       <p v-if="models.file&&!models.channels.length&&!models.fileBusy" class="model-muted">当前没有可编辑渠道。可明确读取新 HOME 的配置，或新增渠道；读取失败不会显示为成功空列表。</p>
++       <p v-if="!models.file&&!models.fileBusy" class="model-muted">渠道快照尚未就绪，请重新读取。</p>
++     </template>
++     <ModelPicker :open="pickerOpen" :rows="[]" :v2-rows="models.file?.effective" :channels="models.channels.map(c=>({id:c.id,label:c.label,providerId:c.connection.providerId}))" title="当前服务端渠道模型目录" @close="pickerOpen=false" @confirm="pickerOpen=false" />
++     <NewChannelDialog v-if="newChannelOpen" @close="newChannelOpen=false" @added="models.channelEditorId=$event" />
++     <ChannelNodeSelect v-for="channel in models.channels" :key="channel.id" :channel="channel" :expected="models.file?.draft?.base" :open="nodeOpenId===channel.id" :show-trigger="false" :active="props.active!==false&&!editor&&filtered.some(c=>c.id===channel.id)" :readonly="protectedChannel(channel)||models.fileBusy||!models.channelCapabilities.activeNode" :measurement-disabled="protectedChannel(channel)||models.fileBusy||!models.channelCapabilities.measure" @close="nodeOpenId=''" @select="models.queueChannel({kind:'set_active_node',channelId:channel.id,nodeId:$event})" />
++     <UiDialog :open="!!copyId" title="复制渠道到草稿" :busy="models.fileBusy" @close="copyId=''">
++       <p>复制当前服务端渠道来源、模型人工设置及精确引用。新管理身份和运行键由后端生成，不复制 Key 明文到界面；正式配置需后续保存。</p><label>新渠道名称<input v-model="copyName" class="input" aria-label="复制渠道名称" :disabled="models.fileBusy" /></label><p v-if="copyError" class="model-error" role="alert">{{copyError}}</p>
++       <template #actions="{close}"><UiButton :disabled="models.fileBusy" @click="close">取消</UiButton><UiButton variant="primary" :disabled="models.fileBusy||!models.channelCapabilities.copy" @click="confirmCopy">确认复制到草稿</UiButton></template>
++     </UiDialog>
++     <UiDialog :open="!!deleteId" title="确认删除渠道" :busy="models.fileBusy" @close="deleteId=''">
++       <p>将删除 {{models.channels.find(c=>c.id===deleteId)?.label}}，并由同一事务核对该渠道及受影响引用。其他渠道草稿保留；失败保留原件。</p><p v-if="models.fileError" class="model-error" role="alert">{{models.fileError}}</p>
++       <template #actions="{close}"><UiButton :disabled="models.fileBusy" @click="close">取消</UiButton><UiButton variant="danger" :disabled="models.fileBusy||!models.channelCapabilities.delete||!models.channelCapabilities.scopedSave" @click="confirmDelete">确认删除渠道</UiButton></template>
++     </UiDialog>
++     <UiDialog :open="saveOpen" :title="saveScope?'保存当前渠道':'保存当前渠道草稿'" wide :busy="models.fileBusy" @close="saveOpen=false">
++       <p>{{saveScope?'本次只提交当前渠道，其他草稿保留。':'本次提交当前服务端草稿及以下明确编辑。'}}渠道名、运行键与模型配置由同一事务核对；未确认前不写正式配置。</p>
++       <p v-if="models.fileError" role="alert" class="model-error">{{models.fileError}}</p>
++       <ul><li v-for="channel in models.channels.filter(c=>(!saveScope||c.id===saveScope)&&JSON.stringify(c)!==JSON.stringify(models.file?.savedPolicy.channels.find(saved=>saved.id===c.id)))" :key="channel.id">{{channel.label}} · 有草稿变化</li><li v-for="(intent,index) in models.channelIntents.filter(i=>!saveScope||i.channelId===saveScope)" :key="'c'+index">{{models.channels.find(c=>c.id===intent.channelId)?.label??intent.channelId}} · {{intent.kind==='rename'?'名称 / 实际运行键':intent.kind==='set_enabled'?'启停':intent.kind==='set_selection'?'模型公开范围':intent.kind==='set_order'?'模型顺序':intent.kind==='set_defaults'?'非协议渠道默认':intent.kind==='set_family_defaults'?'非协议族设置':intent.kind==='set_naming'?'模型命名':intent.kind==='set_template_refs'?'精确模版候选':intent.kind==='set_active_node'?'当前服务节点':'删除渠道'}}</li><li v-for="(action,id) in models.pendingCredentialKinds" v-show="!saveScope||id===saveScope" :key="'key'+id">{{models.channels.find(c=>c.id===id)?.label??id}} · API Key · {{action==='clear'?'明确清空':'明确替换'}}</li><li v-for="(edit,index) in models.modelEdits.filter(e=>!saveScope||e.channelId===saveScope)" :key="'m'+index">{{edit.rawModelId}} · {{'field'in edit?edit.field:'明确模版引用'}} · {{edit.kind==='clear_override'?'恢复继承':'明确人工设置'}}</li></ul>
++       <p v-if="!models.fileDirty" class="model-muted">没有待保存修改；明确详情保存仍会核对名称与运行键。</p>
++       <template #actions="{close}"><UiButton :disabled="models.fileBusy" @click="close">取消</UiButton><UiButton variant="primary" :disabled="!models.canSaveFile||!!nameErrors.length" :loading="models.fileBusy" @click="confirmSave">确认保存</UiButton></template>
++     </UiDialog>
++   </section>
++ </template>
++ <style scoped>
++ .channels-v2{display:grid;gap:var(--space-4);min-width:0}.channels-v2 .model-table-scroll{overflow:auto}.channels-v2 table{width:100%;min-width:660px}.channels-v2 th,.channels-v2 td{padding:12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border)}.channels-v2 small{display:block;overflow-wrap:anywhere;color:var(--muted)}.channels-v2 label{display:flex;gap:var(--space-2);align-items:center}.channels-v2 li{overflow-wrap:anywhere}
++ </style>
++
+
+ ❯ tests/channels-view-copy.test.ts:37:20
+     35|
+     36|   it('确认即关闭；弹窗内不再显示保存错误块或过程说明', () => {
+     37|     expect(source).toContain('previewOpen.value=false;previewProjectio…
+       |                    ^
+     38|     expect(source).not.toContain('确认后会先备份')
+     39|     expect(source).not.toContain('基准已变化，请关闭并重新打开保存预览')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/66]⎯
+
+ FAIL  tests/default-channel-retired.test.ts > 默认渠道已退役 > 保存范围说明不再宣称包含默认渠道
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/default-channel-retired.test.ts:25:72
+     23|     // 普通保存不再有独立范围核对弹窗，也不强制选择默认渠道。
+     24|     expect(source.includes('调整本次保存范围')).toBe(false)
+     25|     expect(source.includes('models.saveAllChannels(frozen,expected)'))…
+       |                                                                        ^
+     26|   })
+     27| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/66]⎯
+
+ FAIL  tests/file-channel-save.test.ts > current-file channel saves > silently closes an old preview after all edits are restored to saved values
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ tests/file-channel-save.test.ts:20:55
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/66]⎯
+
+ FAIL  tests/file-channel-save.test.ts > current-file channel saves > confirms the preview and writes the current file exactly once
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ confirm tests/file-channel-save.test.ts:14:187
+
+ ❯ tests/file-channel-save.test.ts:30:98
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/66]⎯
+
+ FAIL  tests/file-channel-save.test.ts > current-file channel saves > saves a Key-only edit independently of model discovery
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ confirm tests/file-channel-save.test.ts:14:187
+
+ ❯ tests/file-channel-save.test.ts:36:42
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/66]⎯
+
+ FAIL  tests/file-channel-save.test.ts > current-file channel saves > adopts modeled fields in memory, then uses the existing Save with the actual file digest and receipt
+ FAIL  tests/file-channel-save.test.ts > current-file channel saves > adopts raw material only in memory, then uses the existing Save with the actual file digest and receipt
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ confirm tests/file-channel-save.test.ts:14:187
+
+ ❯ tests/file-channel-save.test.ts:54:42
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/66]⎯
+
+ FAIL  tests/file-channel-save.test.ts > current-file channel saves > retains edits on a real file conflict and reports an unsuccessful write
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ confirm tests/file-channel-save.test.ts:14:187
+
+ ❯ tests/file-channel-save.test.ts:68:42
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/66]⎯
+
+ FAIL  tests/file-channel-save.test.ts > current-file channel saves > deleting a different channel preserves the official default reference
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ tests/file-channel-save.test.ts:78:92
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/66]⎯
+
+ FAIL  tests/model-channel-scoped-save.test.ts > channel-scoped shared store saves > absorbs the latest locked layout from a metadata-only A receipt even when the file digest is unchanged
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ tests/model-channel-scoped-save.test.ts:463:75
+    461|     try{
+    462|       await flushPromises();await wrapper.get('[data-testid="policy-sa…
+    463|       await wrapper.findAll('button').find(button=>button.text()==='确认…
+       |                                                                           ^
+    464|       const [expected,policy,,scope]=vi.mocked(modelApi.writeFile).moc…
+    465|       expect(expected).toBe('file-0');expect(scope).toBeUndefined()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/66]⎯
+
+ FAIL  tests/model-channel-scoped-save.test.ts > channel-scoped shared store saves > uses the scoped receipt as the next global-save baseline while retaining all global draft changes
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ tests/model-channel-scoped-save.test.ts:583:75
+    581|     try{
+    582|       await flushPromises();await wrapper.get('[data-testid="policy-sa…
+    583|       await wrapper.findAll('button').find(button=>button.text()==='确认…
+       |                                                                           ^
+    584|       expect(modelApi.writeFile).toHaveBeenCalledTimes(2)
+    585|       expect(vi.mocked(modelApi.writeFile).mock.calls[1]).toEqual(['fi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/66]⎯
+
+ FAIL  tests/model-file-compat.test.ts > explicit history adapter using the actual file models UI > isolates all legacy baselines through compare, accept, runtime save and file reload, then uses only file saves
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ previewSave tests/model-file-compat.test.ts:35:194
+
+ ❯ tests/model-file-compat.test.ts:72:34
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/66]⎯
+
+ FAIL  tests/model-file-compat.test.ts > explicit history adapter using the actual file models UI > saves an authorization-only historical target even when the visible channel policy is unchanged
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ previewSave tests/model-file-compat.test.ts:35:194
+
+ ❯ confirmSave tests/model-file-compat.test.ts:36:42
+ ❯ tests/model-file-compat.test.ts:90:34
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/66]⎯
+
+ FAIL  tests/model-file-compat.test.ts > explicit history adapter using the actual file models UI > retains a failed recovery draft, then allows an ordinary file save after explicit discard despite old plans
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ previewSave tests/model-file-compat.test.ts:35:194
+
+ ❯ confirmSave tests/model-file-compat.test.ts:36:42
+ ❯ tests/model-file-compat.test.ts:96:113
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/66]⎯
+
+ FAIL  tests/model-file-compat.test.ts > explicit history adapter using the actual file models UI > retains the original plan after a partial result and rechecks that plan on explicit retry
+ FAIL  tests/model-file-compat.test.ts > explicit history adapter using the actual file models UI > retains the original plan after a unknown result and rechecks that plan on explicit retry
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ previewSave tests/model-file-compat.test.ts:35:194
+
+ ❯ confirmSave tests/model-file-compat.test.ts:36:42
+ ❯ tests/model-file-compat.test.ts:105:113
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/66]⎯
+
+ FAIL  tests/model-file-compat.test.ts > explicit history adapter using the actual file models UI > retains a committed recovery until file reload succeeds and never repeats the runtime write
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ previewSave tests/model-file-compat.test.ts:35:194
+
+ ❯ confirmSave tests/model-file-compat.test.ts:36:42
+ ❯ tests/model-file-compat.test.ts:114:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/66]⎯
+
+ FAIL  tests/model-file-compat.test.ts > explicit history adapter using the actual file models UI > rejects channel edits mixed into an accepted historical target without losing input or using either writer
+ FAIL  tests/model-file-compat.test.ts > explicit history adapter using the actual file models UI > rejects key edits mixed into an accepted historical target without losing input or using either writer
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ previewSave tests/model-file-compat.test.ts:35:194
+
+ ❯ confirmSave tests/model-file-compat.test.ts:36:42
+ ❯ tests/model-file-compat.test.ts:133:102
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/66]⎯
+
+ FAIL  tests/model-file-compat.test.ts > channel copy with actual-file credentials > reads a saved Key once before adding the copy, stages it only in memory and writes it only on explicit Save
+AssertionError: button: 复制: expected undefined to be defined
+ ❯ button tests/model-file-compat.test.ts:32:138
+
+ ❯ openCopy tests/model-file-compat.test.ts:37:56
+ ❯ tests/model-file-compat.test.ts:142:64
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/66]⎯
+
+ FAIL  tests/model-file-compat.test.ts > channel copy with actual-file credentials > uses the source pending replace without reading an older saved Key
+ FAIL  tests/model-file-compat.test.ts > channel copy with actual-file credentials > uses the source pending clear without reading an older saved Key
+AssertionError: button: 复制: expected undefined to be defined
+ ❯ button tests/model-file-compat.test.ts:32:138
+
+ ❯ openCopy tests/model-file-compat.test.ts:37:56
+ ❯ tests/model-file-compat.test.ts:155:86
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/66]⎯
+
+ FAIL  tests/model-file-compat.test.ts > channel copy with actual-file credentials > copies local authorization without fetching a stale Key
+ FAIL  tests/model-file-compat.test.ts > channel copy with actual-file credentials > copies none authorization without fetching a stale Key
+AssertionError: button: 复制: expected undefined to be defined
+ ❯ button tests/model-file-compat.test.ts:32:138
+
+ ❯ openCopy tests/model-file-compat.test.ts:37:56
+ ❯ tests/model-file-compat.test.ts:164:40
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/66]⎯
+
+ FAIL  tests/model-file-compat.test.ts > channel copy with actual-file credentials > retains copy input on unreadable credentials and displays only a fixed error
+ FAIL  tests/model-file-compat.test.ts > channel copy with actual-file credentials > retains copy input on failed credentials and displays only a fixed error
+AssertionError: button: 复制: expected undefined to be defined
+ ❯ button tests/model-file-compat.test.ts:32:138
+
+ ❯ openCopy tests/model-file-compat.test.ts:37:56
+ ❯ tests/model-file-compat.test.ts:170:64
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/66]⎯
+
+ FAIL  tests/model-file-compat.test.ts > channel copy with actual-file credentials > copies without a Key when reuse is declined, even with a pending replacement
+AssertionError: button: 复制: expected undefined to be defined
+ ❯ button tests/model-file-compat.test.ts:32:138
+
+ ❯ openCopy tests/model-file-compat.test.ts:37:56
+ ❯ tests/model-file-compat.test.ts:175:127
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/66]⎯
+
+ FAIL  tests/model-save-result-flow.test.ts > 渠道确认保存到全局结果宿主的完整点击链（模拟文件 API） > 实际编辑、打开预览、确认保存后只出现全局卡；稍后彻底结束，新编辑仍显示 dirty
+Error: Unable to get .channel-enable-cell button within: <div>
+  <main>
+    <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+      <p data-v-840f478a="" role="alert" class="model-error">Cannot read properties of undefined (reading 'dtoVersion')</p>
+      <!--v-if-->
+      <!--v-if-->
+      <div data-v-840f478a="" class="model-toolbar">
+        <div data-v-840f478a="" class="model-inline"><button data-v-840f478a="" class="btn" type="button" disabled="">
+            <!--v-if--><span class="btn-content">预览当前模型目录</span>
+          </button><button data-v-840f478a="" class="btn" type="button">
+            <!--v-if--><span class="btn-content">刷新当前快照</span>
+          </button><button data-v-840f478a="" class="btn" type="button" disabled="">
+            <!--v-if--><span class="btn-content">读取现有渠道</span>
+          </button><button data-v-840f478a="" class="btn" type="button" disabled="">
+            <!--v-if--><span class="btn-content">新增渠道</span>
+          </button></div>
+        <div data-v-840f478a="" class="model-inline"><button data-v-840f478a="" class="btn" type="button" disabled="">
+            <!--v-if--><span class="btn-content">还原本地明确编辑</span>
+          </button><button data-v-840f478a="" class="btn primary" type="button" disabled="" data-testid="policy-save">
+            <!--v-if--><span class="btn-content">保存配置</span>
+          </button></div>
+      </div>
+      <!--v-if-->
+      <!--v-if--><input data-v-840f478a="" class="input" type="search" aria-label="搜索渠道" placeholder="搜索渠道名称或标识">
+      <div data-v-840f478a="" class="model-table-scroll">
+        <table data-v-840f478a="" class="model-table">
+          <thead data-v-840f478a="">
+            <tr data-v-840f478a="">
+              <th data-v-840f478a=""><input data-v-840f478a="" type="checkbox" aria-label="选择当前渠道结果"></th>
+              <th data-v-840f478a="">渠道</th>
+              <th data-v-840f478a="">模型</th>
+              <th data-v-840f478a="">启用</th>
+              <th data-v-840f478a="">操作</th>
+            </tr>
+          </thead>
+          <tbody data-v-840f478a=""></tbody>
+        </table>
+      </div>
+      <!--v-if-->
+      <p data-v-840f478a="" class="model-muted">渠道快照尚未就绪，请重新读取。</p>
+      <!--teleport start-->
+      <!--teleport end-->
+      <!--v-if-->
+      <!--teleport start-->
+      <!--teleport end-->
+      <!--teleport start-->
+      <!--teleport end-->
+      <!--teleport start-->
+      <!--teleport end-->
+    </section>
+  </main>
+  <div class="notif-layer">
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+</div>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/model-save-result-flow.test.ts:52:19
+     50|   it('实际编辑、打开预览、确认保存后只出现全局卡；稍后彻底结束，新编辑仍显示 dirty', async () => {
+     51|     await flushPromises()
+     52|     await wrapper.get('.channel-enable-cell button').trigger('click')
+       |                   ^
+     53|     expect(useModelsStore().channelDirty).toBe(true)
+     54|     await wrapper.findAll('button').find(node => node.text() === '保存')…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/66]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > keeps a cloud-only template selected through the actual first range save/check flow
+Error: Unable to get input[aria-label="搜索配置对象"] within: <article data-v-9510aeb3="" class="model-transfer">
+  <section data-v-0899aec3="" class="config-sync-workspace-v2" aria-label="WebDAV配置同步">
+    <div data-v-0899aec3="" class="sync-workspace-toolbar">
+      <div data-v-0899aec3="">
+        <h2 data-v-0899aec3="">配置同步</h2>
+        <p data-v-0899aec3="">先预览所选配置的来源与真实变化，确认后更新。</p>
+      </div>
+      <div data-v-0899aec3=""><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">重新读取目录</span>
+        </button><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">连接设置</span>
+        </button>
+        <!--v-if-->
+      </div>
+    </div>
+    <!--v-if-->
+    <p data-v-0899aec3="" class="model-error" role="alert">Cannot read properties of undefined (reading 'invoke')</p>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3="">搜索范围<input data-v-0899aec3="" class="input" type="search" aria-label="搜索同步对象"></label>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">包含全局精确模版候选引用</label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">已核对所选扩展与 MCP 来源范围</label>
+    <details data-v-0899aec3="">
+      <summary data-v-0899aec3="">受保护配置的本次口令</summary><label data-v-0899aec3="">读取云端口令<input data-v-0899aec3="" class="input" type="password" autocomplete="off" aria-label="读取云端口令"></label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">本次上传启用保护</label>
+      <!--v-if-->
+      <p data-v-0899aec3="">口令仅传本次服务会话，不进入范围偏好或日志。</p>
+    </details>
+    <div data-v-0899aec3="" class="sync-workspace-footer"><button data-v-0899aec3="" class="btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">同步</span>
+      </button></div>
+  </section>
+  <!--v-if-->
+</article>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/model-transfer.test.ts:45:19
+     43|     vi.mocked(modelTransferApi.checkSync).mockResolvedValue({source:'u…
+     44|     const wrapper=render(true);await flushPromises()
+     45|     await wrapper.get('input[aria-label="搜索配置对象"]').setValue('仅云端模版')
+       |                   ^
+     46|     expect((wrapper.get('input[aria-label="选择 仅云端模版"]').element as HTM…
+     47|     await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/66]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > shows scope inline without preparing or writing on mount, and blocks writes until the saved remote scope is known
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/model-transfer.test.ts:97:65
+     95|     vi.mocked(modelTransferApi.loadRemoteScope).mockReturnValue(new Pr…
+     96|     const wrapper=render(true);await flushPromises()
+     97|     expect(wrapper.find('section[aria-label="同步范围"]').exists()).toBe(t…
+       |                                                                 ^
+     98|     expect(wrapper.find('.sync-scope-credentials').exists()).toBe(true)
+     99|     const save=()=>wrapper.findAll('button').find(b=>b.text()==='同步')!
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/66]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > does not overwrite an unreadable saved WebDAV scope with initial defaults; an explicit reload can recover
+AssertionError: expected '配置同步先预览所选配置的来源与真实变化，确认后更新。重新读取目录连接设置C…' to contain '范围读取失败'
+
+Expected: "范围读取失败"
+Received: "配置同步先预览所选配置的来源与真实变化，确认后更新。重新读取目录连接设置Cannot read properties of undefined (reading 'invoke')搜索范围包含全局精确模版候选引用已核对所选扩展与 MCP 来源范围受保护配置的本次口令读取云端口令本次上传启用保护口令仅传本次服务会话，不进入范围偏好或日志。同步"
+
+ ❯ tests/model-transfer.test.ts:120:80
+    118|     const wrapper=render(true);await flushPromises()
+    119|     const save=()=>wrapper.findAll('button').find(b=>b.text()==='同步')!
+    120|     expect(save().attributes('disabled')).toBeDefined();expect(wrapper…
+       |                                                                                ^
+    121|     expect(modelTransferApi.saveRemoteScope).not.toHaveBeenCalled()
+    122|     vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({tem…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/66]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > restores and saves the same explicit family scope for this WebDAV device
+AssertionError: expected "vi.fn()" to be called with arguments: [ ObjectContaining{…} ]
+
+Number of calls: 0
+
+ ❯ tests/model-transfer.test.ts:157:46
+    155|     vi.mocked(modelTransferApi.prepareUpload).mockResolvedValue({id:'u…
+    156|     await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger(…
+    157|     expect(modelTransferApi.saveRemoteScope).toHaveBeenCalledWith(expe…
+       |                                              ^
+    158|     expect(modelTransferApi.publish).not.toHaveBeenCalled();wrapper.un…
+    159|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/66]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > retains the original operation ID after uncertain WebDAV publication
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ tests/model-transfer.test.ts:384:209
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/66]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > saves the device scope on 同步, previews a newer local snapshot and publishes only after 确认更新
+Error: Unable to get input[aria-label="搜索配置对象"] within: <article data-v-9510aeb3="" class="model-transfer">
+  <section data-v-0899aec3="" class="config-sync-workspace-v2" aria-label="WebDAV配置同步">
+    <div data-v-0899aec3="" class="sync-workspace-toolbar">
+      <div data-v-0899aec3="">
+        <h2 data-v-0899aec3="">配置同步</h2>
+        <p data-v-0899aec3="">先预览所选配置的来源与真实变化，确认后更新。</p>
+      </div>
+      <div data-v-0899aec3=""><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">重新读取目录</span>
+        </button><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">连接设置</span>
+        </button>
+        <!--v-if-->
+      </div>
+    </div>
+    <!--v-if-->
+    <p data-v-0899aec3="" class="model-error" role="alert">Cannot read properties of undefined (reading 'invoke')</p>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3="">搜索范围<input data-v-0899aec3="" class="input" type="search" aria-label="搜索同步对象"></label>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">包含全局精确模版候选引用</label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">已核对所选扩展与 MCP 来源范围</label>
+    <details data-v-0899aec3="">
+      <summary data-v-0899aec3="">受保护配置的本次口令</summary><label data-v-0899aec3="">读取云端口令<input data-v-0899aec3="" class="input" type="password" autocomplete="off" aria-label="读取云端口令"></label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">本次上传启用保护</label>
+      <!--v-if-->
+      <p data-v-0899aec3="">口令仅传本次服务会话，不进入范围偏好或日志。</p>
+    </details>
+    <div data-v-0899aec3="" class="sync-workspace-footer"><button data-v-0899aec3="" class="btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">同步</span>
+      </button></div>
+  </section>
+  <!--v-if-->
+</article>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ chooseExport tests/model-transfer.test.ts:24:133
+
+ ❯ tests/model-transfer.test.ts:428:76
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/66]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > downloads a newer remote snapshot, backs up first when ticked, and never writes on cancel
+Error: Unable to get input[aria-label="搜索配置对象"] within: <article data-v-9510aeb3="" class="model-transfer">
+  <section data-v-0899aec3="" class="config-sync-workspace-v2" aria-label="WebDAV配置同步">
+    <div data-v-0899aec3="" class="sync-workspace-toolbar">
+      <div data-v-0899aec3="">
+        <h2 data-v-0899aec3="">配置同步</h2>
+        <p data-v-0899aec3="">先预览所选配置的来源与真实变化，确认后更新。</p>
+      </div>
+      <div data-v-0899aec3=""><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">重新读取目录</span>
+        </button><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">连接设置</span>
+        </button>
+        <!--v-if-->
+      </div>
+    </div>
+    <!--v-if-->
+    <p data-v-0899aec3="" class="model-error" role="alert">Cannot read properties of undefined (reading 'invoke')</p>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3="">搜索范围<input data-v-0899aec3="" class="input" type="search" aria-label="搜索同步对象"></label>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">包含全局精确模版候选引用</label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">已核对所选扩展与 MCP 来源范围</label>
+    <details data-v-0899aec3="">
+      <summary data-v-0899aec3="">受保护配置的本次口令</summary><label data-v-0899aec3="">读取云端口令<input data-v-0899aec3="" class="input" type="password" autocomplete="off" aria-label="读取云端口令"></label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">本次上传启用保护</label>
+      <!--v-if-->
+      <p data-v-0899aec3="">口令仅传本次服务会话，不进入范围偏好或日志。</p>
+    </details>
+    <div data-v-0899aec3="" class="sync-workspace-footer"><button data-v-0899aec3="" class="btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">同步</span>
+      </button></div>
+  </section>
+  <!--v-if-->
+</article>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ chooseExport tests/model-transfer.test.ts:24:133
+
+ ❯ tests/model-transfer.test.ts:441:76
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/66]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > uses only the shared header X when the selected range is already the same
+Error: Unable to get input[aria-label="搜索配置对象"] within: <article data-v-9510aeb3="" class="model-transfer">
+  <section data-v-0899aec3="" class="config-sync-workspace-v2" aria-label="WebDAV配置同步">
+    <div data-v-0899aec3="" class="sync-workspace-toolbar">
+      <div data-v-0899aec3="">
+        <h2 data-v-0899aec3="">配置同步</h2>
+        <p data-v-0899aec3="">先预览所选配置的来源与真实变化，确认后更新。</p>
+      </div>
+      <div data-v-0899aec3=""><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">重新读取目录</span>
+        </button><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">连接设置</span>
+        </button>
+        <!--v-if-->
+      </div>
+    </div>
+    <!--v-if-->
+    <p data-v-0899aec3="" class="model-error" role="alert">Cannot read properties of undefined (reading 'invoke')</p>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3="">搜索范围<input data-v-0899aec3="" class="input" type="search" aria-label="搜索同步对象"></label>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">包含全局精确模版候选引用</label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">已核对所选扩展与 MCP 来源范围</label>
+    <details data-v-0899aec3="">
+      <summary data-v-0899aec3="">受保护配置的本次口令</summary><label data-v-0899aec3="">读取云端口令<input data-v-0899aec3="" class="input" type="password" autocomplete="off" aria-label="读取云端口令"></label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">本次上传启用保护</label>
+      <!--v-if-->
+      <p data-v-0899aec3="">口令仅传本次服务会话，不进入范围偏好或日志。</p>
+    </details>
+    <div data-v-0899aec3="" class="sync-workspace-footer"><button data-v-0899aec3="" class="btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">同步</span>
+      </button></div>
+  </section>
+  <!--v-if-->
+</article>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ chooseExport tests/model-transfer.test.ts:24:133
+
+ ❯ tests/model-transfer.test.ts:456:76
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/66]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > blocks every write when direction is undetermined: unreliable_save_time
+ FAIL  tests/model-transfer.test.ts > model transfer review > blocks every write when direction is undetermined: same_instant_different_content
+Error: Unable to get input[aria-label="搜索配置对象"] within: <article data-v-9510aeb3="" class="model-transfer">
+  <section data-v-0899aec3="" class="config-sync-workspace-v2" aria-label="WebDAV配置同步">
+    <div data-v-0899aec3="" class="sync-workspace-toolbar">
+      <div data-v-0899aec3="">
+        <h2 data-v-0899aec3="">配置同步</h2>
+        <p data-v-0899aec3="">先预览所选配置的来源与真实变化，确认后更新。</p>
+      </div>
+      <div data-v-0899aec3=""><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">重新读取目录</span>
+        </button><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">连接设置</span>
+        </button>
+        <!--v-if-->
+      </div>
+    </div>
+    <!--v-if-->
+    <p data-v-0899aec3="" class="model-error" role="alert">Cannot read properties of undefined (reading 'invoke')</p>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3="">搜索范围<input data-v-0899aec3="" class="input" type="search" aria-label="搜索同步对象"></label>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">包含全局精确模版候选引用</label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">已核对所选扩展与 MCP 来源范围</label>
+    <details data-v-0899aec3="">
+      <summary data-v-0899aec3="">受保护配置的本次口令</summary><label data-v-0899aec3="">读取云端口令<input data-v-0899aec3="" class="input" type="password" autocomplete="off" aria-label="读取云端口令"></label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">本次上传启用保护</label>
+      <!--v-if-->
+      <p data-v-0899aec3="">口令仅传本次服务会话，不进入范围偏好或日志。</p>
+    </details>
+    <div data-v-0899aec3="" class="sync-workspace-footer"><button data-v-0899aec3="" class="btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">同步</span>
+      </button></div>
+  </section>
+  <!--v-if-->
+</article>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ chooseExport tests/model-transfer.test.ts:24:133
+
+ ❯ tests/model-transfer.test.ts:466:54
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/66]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > uses the unchanged check directly without staging upload or download
+Error: Unable to get input[aria-label="搜索配置对象"] within: <article data-v-9510aeb3="" class="model-transfer">
+  <section data-v-0899aec3="" class="config-sync-workspace-v2" aria-label="WebDAV配置同步">
+    <div data-v-0899aec3="" class="sync-workspace-toolbar">
+      <div data-v-0899aec3="">
+        <h2 data-v-0899aec3="">配置同步</h2>
+        <p data-v-0899aec3="">先预览所选配置的来源与真实变化，确认后更新。</p>
+      </div>
+      <div data-v-0899aec3=""><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">重新读取目录</span>
+        </button><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">连接设置</span>
+        </button>
+        <!--v-if-->
+      </div>
+    </div>
+    <!--v-if-->
+    <p data-v-0899aec3="" class="model-error" role="alert">Cannot read properties of undefined (reading 'invoke')</p>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3="">搜索范围<input data-v-0899aec3="" class="input" type="search" aria-label="搜索同步对象"></label>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">包含全局精确模版候选引用</label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">已核对所选扩展与 MCP 来源范围</label>
+    <details data-v-0899aec3="">
+      <summary data-v-0899aec3="">受保护配置的本次口令</summary><label data-v-0899aec3="">读取云端口令<input data-v-0899aec3="" class="input" type="password" autocomplete="off" aria-label="读取云端口令"></label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">本次上传启用保护</label>
+      <!--v-if-->
+      <p data-v-0899aec3="">口令仅传本次服务会话，不进入范围偏好或日志。</p>
+    </details>
+    <div data-v-0899aec3="" class="sync-workspace-footer"><button data-v-0899aec3="" class="btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">同步</span>
+      </button></div>
+  </section>
+  <!--v-if-->
+</article>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ chooseExport tests/model-transfer.test.ts:24:133
+
+ ❯ tests/model-transfer.test.ts:478:54
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/66]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > asks for the MCP source inside the sync preview and skips an unpicked conflict
+Error: Unable to get input[aria-label="搜索配置对象"] within: <article data-v-9510aeb3="" class="model-transfer">
+  <section data-v-0899aec3="" class="config-sync-workspace-v2" aria-label="WebDAV配置同步">
+    <div data-v-0899aec3="" class="sync-workspace-toolbar">
+      <div data-v-0899aec3="">
+        <h2 data-v-0899aec3="">配置同步</h2>
+        <p data-v-0899aec3="">先预览所选配置的来源与真实变化，确认后更新。</p>
+      </div>
+      <div data-v-0899aec3=""><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">重新读取目录</span>
+        </button><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">连接设置</span>
+        </button>
+        <!--v-if-->
+      </div>
+    </div>
+    <!--v-if-->
+    <p data-v-0899aec3="" class="model-error" role="alert">Cannot read properties of undefined (reading 'invoke')</p>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3="">搜索范围<input data-v-0899aec3="" class="input" type="search" aria-label="搜索同步对象"></label>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">包含全局精确模版候选引用</label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">已核对所选扩展与 MCP 来源范围</label>
+    <details data-v-0899aec3="">
+      <summary data-v-0899aec3="">受保护配置的本次口令</summary><label data-v-0899aec3="">读取云端口令<input data-v-0899aec3="" class="input" type="password" autocomplete="off" aria-label="读取云端口令"></label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">本次上传启用保护</label>
+      <!--v-if-->
+      <p data-v-0899aec3="">口令仅传本次服务会话，不进入范围偏好或日志。</p>
+    </details>
+    <div data-v-0899aec3="" class="sync-workspace-footer"><button data-v-0899aec3="" class="btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">同步</span>
+      </button></div>
+  </section>
+  <!--v-if-->
+</article>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ chooseExport tests/model-transfer.test.ts:24:133
+
+ ❯ tests/model-transfer.test.ts:488:76
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/66]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > uses the separate content password inside the remote preview without adopting
+Error: Unable to get input[aria-label="导入解密口令"] within: <article data-v-9510aeb3="" class="model-transfer">
+  <section data-v-0899aec3="" class="config-sync-workspace-v2" aria-label="WebDAV配置同步">
+    <div data-v-0899aec3="" class="sync-workspace-toolbar">
+      <div data-v-0899aec3="">
+        <h2 data-v-0899aec3="">配置同步</h2>
+        <p data-v-0899aec3="">先预览所选配置的来源与真实变化，确认后更新。</p>
+      </div>
+      <div data-v-0899aec3=""><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">重新读取目录</span>
+        </button><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">连接设置</span>
+        </button>
+        <!--v-if-->
+      </div>
+    </div>
+    <!--v-if-->
+    <p data-v-0899aec3="" class="model-error" role="alert">Cannot read properties of undefined (reading 'invoke')</p>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3="">搜索范围<input data-v-0899aec3="" class="input" type="search" aria-label="搜索同步对象"></label>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">包含全局精确模版候选引用</label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">已核对所选扩展与 MCP 来源范围</label>
+    <details data-v-0899aec3="">
+      <summary data-v-0899aec3="">受保护配置的本次口令</summary><label data-v-0899aec3="">读取云端口令<input data-v-0899aec3="" class="input" type="password" autocomplete="off" aria-label="读取云端口令"></label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">本次上传启用保护</label>
+      <!--v-if-->
+      <p data-v-0899aec3="">口令仅传本次服务会话，不进入范围偏好或日志。</p>
+    </details>
+    <div data-v-0899aec3="" class="sync-workspace-footer"><button data-v-0899aec3="" class="btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">同步</span>
+      </button></div>
+  </section>
+  <!--v-if-->
+</article>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/model-transfer.test.ts:497:165
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/66]⎯
+
+ FAIL  tests/model-view-context.test.ts > model view context > reacts to navigation changes on the first edit session, without requiring a route remount
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ tests/model-view-context.test.ts:19:29
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/66]⎯
+
+ FAIL  tests/model-view-context.test.ts > model view context > cancels a new copy only after current confirmation, retaining the source and refusing a stale discard
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ tests/model-view-context.test.ts:28:29
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/66]⎯
+
+ FAIL  tests/model-view-context.test.ts > model view context > returns to the template list without discarding dirty input and restores it after route remount
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ tests/model-view-context.test.ts:37:90
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/66]⎯
+
+ FAIL  tests/post021-sync.test.ts > post021 remote observations > startup reads an already configured snapshot once without running a sync
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ tests/post021-sync.test.ts:21:35
+     19|     primeAppData(app as unknown as Parameters<typeof primeAppData>[0])…
+     20|     primeAppData(app as unknown as Parameters<typeof primeAppData>[0])…
+     21|     expect(remoteVersionApi.read).toHaveBeenCalledTimes(1)
+       |                                   ^
+     22|     expect(store.webdavState).toBe('connected'); expect(store.running)…
+     23|     expect(remoteVersionHint(store.observation)).toBe('已读取 · 保存时间未知')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/66]⎯
+
+ FAIL  tests/post021-sync.test.ts > post021 remote observations > does not network without configuration; failed read can be explicitly retried
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ tests/post021-sync.test.ts:33:75
+     31|     store.adoptConfig(config()); vi.mocked(remoteVersionApi.read).mock…
+     32|     await store.inspectRemoteVersion(true); expect(remoteVersionHint(s…
+     33|     await store.inspectRemoteVersion(true); expect(remoteVersionApi.re…
+       |                                                                           ^
+     34|     vi.mocked(remoteVersionApi.read).mockResolvedValue({ remoteExists:…
+     35|     await store.inspectRemoteVersion(); expect(remoteVersionHint(store…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/66]⎯
+
+ FAIL  tests/post09-remaining-model-hosts.test.ts > POST-09 remaining version/preview/result consumers > cancels deletion through x without closing version management or deleting selected versions
+ FAIL  tests/post09-remaining-model-hosts.test.ts > POST-09 remaining version/preview/result consumers > cancels deletion through escape without closing version management or deleting selected versions
+ FAIL  tests/post09-remaining-model-hosts.test.ts > POST-09 remaining version/preview/result consumers > cancels deletion through native-cancel without closing version management or deleting selected versions
+ FAIL  tests/post09-remaining-model-hosts.test.ts > POST-09 remaining version/preview/result consumers > cancels deletion through backdrop without closing version management or deleting selected versions
+ FAIL  tests/post09-remaining-model-hosts.test.ts > POST-09 remaining version/preview/result consumers > cancels deletion through cancel without closing version management or deleting selected versions
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ manager tests/post09-remaining-model-hosts.test.ts:31:64
+     29| function body() { return new DOMWrapper(document.body) }
+     30| function button(label: string, within: Pick<DOMWrapper<Element>, 'find…
+     31| async function manager() { await render(); await button('版本管理').trigge…
+       |                                                                ^
+     32| async function deleting() {
+     33|   const parent = await manager(); await parent.get('input[type=checkbo…
+ ❯ deleting tests/post09-remaining-model-hosts.test.ts:33:18
+ ❯ tests/post09-remaining-model-hosts.test.ts:48:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/66]⎯
+
+ FAIL  tests/post09-remaining-model-hosts.test.ts > POST-09 remaining version/preview/result consumers > guards an actual pending delete and keeps the captured target/digests
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ manager tests/post09-remaining-model-hosts.test.ts:31:64
+     29| function body() { return new DOMWrapper(document.body) }
+     30| function button(label: string, within: Pick<DOMWrapper<Element>, 'find…
+     31| async function manager() { await render(); await button('版本管理').trigge…
+       |                                                                ^
+     32| async function deleting() {
+     33|   const parent = await manager(); await parent.get('input[type=checkbo…
+ ❯ deleting tests/post09-remaining-model-hosts.test.ts:33:18
+ ❯ tests/post09-remaining-model-hosts.test.ts:58:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[42/66]⎯
+
+ FAIL  tests/post09-remaining-model-hosts.test.ts > POST-09 remaining version/preview/result consumers > keeps the manager under default confirmation and returns focus to its actual trigger
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ manager tests/post09-remaining-model-hosts.test.ts:31:64
+     29| function body() { return new DOMWrapper(document.body) }
+     30| function button(label: string, within: Pick<DOMWrapper<Element>, 'find…
+     31| async function manager() { await render(); await button('版本管理').trigge…
+       |                                                                ^
+     32| async function deleting() {
+     33|   const parent = await manager(); await parent.get('input[type=checkbo…
+ ❯ tests/post09-remaining-model-hosts.test.ts:71:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[43/66]⎯
+
+ FAIL  tests/post09-remaining-model-hosts.test.ts > POST-09 remaining version/preview/result consumers > does not let a dismissed match request populate a reopened preview or change the template buffer
+TypeError: Cannot read properties of null (reading 'library')
+ ❯ tests/post09-remaining-model-hosts.test.ts:80:80
+     78|
+     79|   it('does not let a dismissed match request populate a reopened previ…
+     80|     await render(); const store = useModelsStore(); store.edit(store.s…
+       |                                                                                ^
+     81|     store.draft!.label = '未保存模版'; await flushPromises(); await button(…
+     82|     let finish!: (value: Awaited<ReturnType<typeof modelApi.preview>>)…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[44/66]⎯
+
+ FAIL  tests/post09-remaining-model-hosts.test.ts > POST-09 remaining version/preview/result consumers > closes an external result observer without changing saved or draft state
+Error: Unable to get dialog.model-task-result[open] within: <body>
+  <div data-v-app="">
+    <section data-v-623b0b90="" class="models-page" style="--page-tabs-inset-top: 0px; --page-tabs-inset-left: 0px; --page-tabs-inset-right: 0px; --page-tabs-height: 0px;">
+      <app-topbar-stub data-v-623b0b90="" compact="false"></app-topbar-stub>
+      <div data-v-710133bf="" data-v-623b0b90="" class="sticky-page-tabs">
+        <div data-v-623b0b90="" class="model-tabs-line">
+          <div data-v-623b0b90="" class="model-tabs ext-tabs" role="tablist" aria-label="模型配置"><button data-v-623b0b90="" class="tab active" role="tab" aria-selected="true">渠道模型</button><button data-v-623b0b90="" class="tab" role="tab" aria-selected="false">模型模版</button></div>
+          <div data-v-623b0b90="" id="model-tabs-actions"></div>
+          <!--v-if-->
+        </div>
+      </div>
+      <channels-view-stub data-v-623b0b90="" actionstarget="#model-tabs-actions" active="true"></channels-view-stub>
+      <!--v-if-->
+      <!--teleport start-->
+      <!--teleport end-->
+      <!--teleport start-->
+      <!--teleport end-->
+      <!--teleport start-->
+      <!--teleport end-->
+      <!--teleport start-->
+      <!--teleport end-->
+      <!--teleport start-->
+      <!--teleport end-->
+    </section>
+    <!--teleport start-->
+    <!--teleport end-->
+  </div>
+  <dialog data-v-f2b1bc8e="" class="ui-dialog wide" aria-labelledby="v-0" role="dialog" tabindex="-1">
+    <header data-v-f2b1bc8e="" class="ui-dialog-header">
+      <h2 data-v-f2b1bc8e="" id="v-0">版本管理 · </h2>
+      <div data-v-f2b1bc8e="" class="ui-dialog-header-actions"><button data-v-f2b1bc8e="" type="button" class="icon-btn ui-icon-control modal-close" aria-label="关闭" aria-busy="false" title="关闭"><svg data-v-f2b1bc8e="" viewBox="0 0 24 24" aria-hidden="true">
+            <path data-v-f2b1bc8e="" d="m6 6 12 12M18 6 6 18"></path>
+          </svg></button></div>
+    </header>
+    <div data-v-f2b1bc8e="" class="ui-dialog-content"></div>
+    <!---->
+  </dialog>
+  <dialog data-v-f2b1bc8e="" class="ui-dialog wide" aria-labelledby="v-1" role="dialog" tabindex="-1">
+    <header data-v-f2b1bc8e="" class="ui-dialog-header">
+      <h2 data-v-f2b1bc8e="" id="v-1">删除所选版本</h2>
+      <div data-v-f2b1bc8e="" class="ui-dialog-header-actions"><button data-v-f2b1bc8e="" type="button" class="icon-btn ui-icon-control modal-close" aria-label="关闭" aria-busy="false" title="关闭"><svg data-v-f2b1bc8e="" viewBox="0 0 24 24" aria-hidden="true">
+            <path data-v-f2b1bc8e="" d="m6 6 12 12M18 6 6 18"></path>
+          </svg></button></div>
+    </header>
+    <div data-v-f2b1bc8e="" class="ui-dialog-content">
+      <p data-v-623b0b90=""> · 更改默认只影响下一次明确读取的版本选择，不后台重配渠道。</p>
+      <!--v-if-->
+      <!--v-if-->
+      <!--v-if-->
+      <!--v-if-->
+    </div>
+    <footer data-v-f2b1bc8e=""><button data-v-623b0b90="" class="btn" type="button">
+        <!--v-if--><span class="btn-content">取消</span>
+      </button><button data-v-623b0b90="" class="btn primary" type="button">
+        <!--v-if--><span class="btn-content">确认操作</span>
+      </button></footer>
+  </dialog>
+  <dialog data-v-f2b1bc8e="" class="ui-dialog wide" aria-labelledby="v-2" role="dialog" tabindex="-1">
+    <header data-v-f2b1bc8e="" class="ui-dialog-header">
+      <h2 data-v-f2b1bc8e="" id="v-2">精确版本使用关系</h2>
+      <div data-v-f2b1bc8e="" class="ui-dialog-header-actions"><button data-v-f2b1bc8e="" type="button" class="icon-btn ui-icon-control modal-close" aria-label="关闭" aria-busy="false" title="关闭"><svg data-v-f2b1bc8e="" viewBox="0 0 24 24" aria-hidden="true">
+            <path data-v-f2b1bc8e="" d="m6 6 12 12M18 6 6 18"></path>
+          </svg></button></div>
+    </header>
+    <div data-v-f2b1bc8e="" class="ui-dialog-content"></div>
+    <footer data-v-f2b1bc8e=""><button data-v-623b0b90="" class="btn" type="button">
+        <!--v-if--><span class="btn-content">重新读取报告</span>
+      </button></footer>
+  </dialog>
+  <dialog data-v-f2b1bc8e="" class="ui-dialog wide" aria-labelledby="v-3" role="dialog" tabindex="-1">
+    <header data-v-f2b1bc8e="" class="ui-dialog-header">
+      <h2 data-v-f2b1bc8e="" id="v-3">与保存版本比较</h2>
+      <div data-v-f2b1bc8e="" class="ui-dialog-header-actions"><button data-v-f2b1bc8e="" type="button" class="icon-btn ui-icon-control modal-close" aria-label="关闭" aria-busy="false" title="关闭"><svg data-v-f2b1bc8e="" viewBox="0 0 24 24" aria-hidden="true">
+            <path data-v-f2b1bc8e="" d="m6 6 12 12M18 6 6 18"></path>
+          </svg></button></div>
+    </header>
+    <div data-v-f2b1bc8e="" class="ui-dialog-content"></div>
+    <!---->
+  </dialog>
+  <dialog data-v-f2b1bc8e="" class="ui-dialog wide" aria-labelledby="v-4" role="dialog" tabindex="-1">
+    <header data-v-f2b1bc8e="" class="ui-dialog-header">
+      <h2 data-v-f2b1bc8e="" id="v-4">匹配与使用</h2>
+      <div data-v-f2b1bc8e="" class="ui-dialog-header-actions"><button data-v-f2b1bc8e="" type="button" class="icon-btn ui-icon-control modal-close" aria-label="关闭" aria-busy="false" title="关闭"><svg data-v-f2b1bc8e="" viewBox="0 0 24 24" aria-hidden="true">
+            <path data-v-f2b1bc8e="" d="m6 6 12 12M18 6 6 18"></path>
+          </svg></button></div>
+    </header>
+    <div data-v-f2b1bc8e="" class="ui-dialog-content">
+      <p data-v-623b0b90=""> · 基于确切版本与当前编辑，旧版本保持。</p>
+      <!--v-if-->
+      <!--v-if-->
+      <!--v-if-->
+      <!--v-if-->
+      <!--v-if-->
+      <!--v-if-->
+    </div>
+    <footer data-v-f2b1bc8e=""><button data-v-623b0b90="" class="btn" type="button">
+        <!--v-if--><span class="btn-content">关闭</span>
+      </button><button data-v-623b0b90="" class="btn primary" type="button">
+        <!--v-if--><span class="btn-content">开始核对</span>
+      </button></footer>
+  </dialog>
+  <dialog data-v-f2b1bc8e="" class="ui-dialog app-modal-dialog" aria-labelledby="v-5" role="dialog" tabindex="-1">
+    <header data-v-f2b1bc8e="" class="ui-dialog-header">
+      <h2 data-v-f2b1bc8e="" id="v-5"></h2>
+      <div data-v-f2b1bc8e="" class="ui-dialog-header-actions"><button data-v-f2b1bc8e="" type="button" class="icon-btn ui-icon-control modal-close" aria-label="关闭" aria-busy="false" title="关闭"><svg data-v-f2b1bc8e="" viewBox="0 0 24 24" aria-hidden="true">
+            <path data-v-f2b1bc8e="" d="m6 6 12 12M18 6 6 18"></path>
+          </svg></button></div>
+    </header>
+    <div data-v-f2b1bc8e="" class="ui-dialog-content"></div>
+    <!---->
+  </dialog>
+</body>
+ ❯ DOMWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/post09-remaining-model-hosts.test.ts:96:27
+     94|     vi.mocked(modelApi.externalResult).mockResolvedValue({ task: { tar…
+     95|     store.notificationTarget = { taskId: 'fixture-task', submissionId:…
+     96|     const result = body().get('dialog.model-task-result[open]'); expec…
+       |                           ^
+     97|     await exit('x', 'dialog.model-task-result[open]')
+     98|     expect(JSON.stringify(store.snapshot)).toBe(before); expect(useMod…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[45/66]⎯
+
+ FAIL  tests/sync-prototype-020.test.ts > S20 adopted prototype regressions > toolbar contains search and tree selection instead of cancelled presets
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/sync-prototype-020.test.ts:20:186
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[46/66]⎯
+
+ FAIL  tests/sync-prototype-020.test.ts > S20 adopted prototype regressions > does not permit confirmation when a synchronization diff is unknown
+TypeError: Cannot read properties of undefined (reading 'attributes')
+ ❯ tests/sync-prototype-020.test.ts:52:56
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[47/66]⎯
+
+ FAIL  tests/sync-result.test.ts > transfer result is a read-only receipt with explicit original-operation actions > retries an uncertain upload by its original ID without preparing another snapshot
+AssertionError: expected "vi.fn()" to be called once with arguments: [ 'original-operation' ]
+
+Number of calls: 0
+
+ ❯ tests/sync-result.test.ts:14:601
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[48/66]⎯
+
+ FAIL  tests/sync.test.ts > sync conflict notification refresh > reloads notifications after a sync run
+AssertionError: expected 'configured' to be 'conflict' // Object.is equality
+
+Expected: "conflict"
+Received: "configured"
+
+ ❯ tests/sync.test.ts:100:29
+     98|     const app = useAppStore()
+     99|     expect(await app.runSyncNow()).toBe(false)
+    100|     expect(app.webdavState).toBe('conflict')
+       |                             ^
+    101|     await new Promise(resolve => setTimeout(resolve, 0))
+    102|     expect(invoke).toHaveBeenCalledWith('run_sync_now')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[49/66]⎯
+
+ FAIL  tests/sync.test.ts > sync terminal result is not command acknowledgement > projects synced / succeeded without inventing success
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/sync.test.ts:126:36
+    124|     invoke.mockImplementation((command: string) => Promise.resolve(com…
+    125|     const app = useAppStore()
+    126|     expect(await app.runSyncNow()).toBe(expected)
+       |                                    ^
+    127|     expect(app.webdavState).toBe(operationState==='validating'?'connec…
+    128|     expect(app.syncStatus?.message).toBe(result.message)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[50/66]⎯
+
+ FAIL  tests/sync.test.ts > sync terminal result is not command acknowledgement > projects failed / failed without inventing success
+AssertionError: expected 'configured' to be 'failed' // Object.is equality
+
+Expected: "failed"
+Received: "configured"
+
+ ❯ tests/sync.test.ts:127:29
+    125|     const app = useAppStore()
+    126|     expect(await app.runSyncNow()).toBe(expected)
+    127|     expect(app.webdavState).toBe(operationState==='validating'?'connec…
+       |                             ^
+    128|     expect(app.syncStatus?.message).toBe(result.message)
+    129|     expect(useSyncStore().running).toBe(false)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[51/66]⎯
+
+ FAIL  tests/sync.test.ts > sync terminal result is not command acknowledgement > projects conflict / cancelled without inventing success
+AssertionError: expected 'configured' to be 'conflict' // Object.is equality
+
+Expected: "conflict"
+Received: "configured"
+
+ ❯ tests/sync.test.ts:127:29
+    125|     const app = useAppStore()
+    126|     expect(await app.runSyncNow()).toBe(expected)
+    127|     expect(app.webdavState).toBe(operationState==='validating'?'connec…
+       |                             ^
+    128|     expect(app.syncStatus?.message).toBe(result.message)
+    129|     expect(useSyncStore().running).toBe(false)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[52/66]⎯
+
+ FAIL  tests/sync.test.ts > sync terminal result is not command acknowledgement > projects synced / validating without inventing success
+AssertionError: expected 'configured' to be 'connected' // Object.is equality
+
+Expected: "connected"
+Received: "configured"
+
+ ❯ tests/sync.test.ts:127:29
+    125|     const app = useAppStore()
+    126|     expect(await app.runSyncNow()).toBe(expected)
+    127|     expect(app.webdavState).toBe(operationState==='validating'?'connec…
+       |                             ^
+    128|     expect(app.syncStatus?.message).toBe(result.message)
+    129|     expect(useSyncStore().running).toBe(false)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[53/66]⎯
+
+ FAIL  tests/sync.test.ts > sync terminal result is not command acknowledgement > reports an uncertain failed execution and still refreshes its notifications
+AssertionError: expected 'configured' to be 'failed' // Object.is equality
+
+Expected: "failed"
+Received: "configured"
+
+ ❯ tests/sync.test.ts:138:29
+    136|     const app = useAppStore()
+    137|     expect(await app.runSyncNow()).toBe(false)
+    138|     expect(app.webdavState).toBe('failed')
+       |                             ^
+    139|     expect(app.syncStatus?.message).toContain('可能已有内容应用或上传')
+    140|     expect(app.syncStatus?.message).not.toContain('本地内容未修改')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[54/66]⎯
+
+ FAIL  tests/workspace.test.ts > workspace settings contracts > runs sync once and projects status without losing local content on failure
+AssertionError: expected undefined to be 'failed' // Object.is equality
+
+- Expected:
+"failed"
+
++ Received:
+undefined
+
+ ❯ tests/workspace.test.ts:46:44
+     44|     await expect(app.runSyncNow()).resolves.toBe(false)
+     45|     expect(app.syncRunning).toBe(false)
+     46|     expect(app.syncStatus?.operationState).toBe('failed')
+       |                                            ^
+     47|     expect(app.webdavState).toBe('failed')
+     48|     expect(invoke).toHaveBeenCalledWith('run_sync_now')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[55/66]⎯
+
+
+ Test Files  14 failed | 193 passed (207)
+      Tests  66 failed | 1377 passed (1443)
+   Start at  00:43:49
+   Duration  34.90s (tests 39%, environment 39%, transform 12%, import 10%)
+
+Environment  jsdom was created 207 times · 88.36s total, 39% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

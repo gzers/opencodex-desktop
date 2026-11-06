@@ -1,0 +1,20 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.28s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-a2321b53a9e89887)
+
+running 12 tests
+test commands::runtime_recovery_v2::tests::file_errors_keep_the_actual_operation ... ok
+test commands::runtime_recovery_v2::tests::ipc_rejects_source_paths_digests_and_operations ... ok
+test commands::runtime_recovery_v2::tests::native::facade_real_core_preview_refusal_leases_apply_failure_and_reopen ... ignored, isolated native npm6 fixture: set absolute OPENCODEX_TEST_NODE/OPENCODEX_TEST_NPM; run --ignored
+test commands::runtime_recovery_v2::tests::fixed_resource_resolver_authenticates_descriptor_and_both_bundled_and_staged_sources ... ok
+test commands::runtime_recovery_v2::tests::source_pin_and_unknown_staged_id_fail_closed_and_owned_copy_drops ... ok
+test commands::runtime_recovery_v2_owner::tests::actual_os_reports_current_identity_and_listener_ownership_without_service_mutation ... ok
+test commands::runtime_recovery_v2_owner::tests::identity_binds_user_creation_executable_home_record_and_context ... ok
+test commands::runtime_recovery_v2_owner::tests::kernel_argument_parser_handles_padding_spaces_and_rejects_ambiguous_home ... ok
+test commands::runtime_recovery_v2_owner::tests::local_process::actual_process_uid_creation_h_attestation_and_preserving_stop ... ignored, dedicated OS process + attested HTTP fixture: set absolute OPENCODEX_TEST_NODE; run --ignored
+test commands::runtime_recovery_v2_owner::tests::malformed_or_foreign_records_are_never_absence_and_receipts_only_delete_owned_unsent_file ... ok
+test commands::runtime_recovery_v2_owner::tests::positive_absence_requires_runtime_scan_endpoint_and_service_evidence ... ok
+test commands::runtime_recovery_v2::tests::service_boundary_requires_h_attestation_and_rechecks_identity_before_fake_stop ... ok
+
+test result: ok. 10 passed; 0 failed; 2 ignored; 0 measured; 1821 filtered out; finished in 0.67s
+

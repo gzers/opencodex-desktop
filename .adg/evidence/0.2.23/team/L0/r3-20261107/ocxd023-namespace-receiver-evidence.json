@@ -1,0 +1,45 @@
+{
+  "root": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes",
+  "files": {
+    "receive_models_v2.rs": "55d6fdbb04db9df9d33b01227d2a69068df3ac57f9a3d4ae61c04800ba5d4619",
+    "receive_models_v2_tests.rs": "448c26b408edc3f0a39ea1c3e8735583a0c381c95b4d4a38530df9e7ae01d739",
+    "model_receive_file_v2.rs": "555d9fddab1ae0e04efa2458c35d42086c7c40c3a5a47352346ae40ec480a54c",
+    "model_receive_file_v2_tests.rs": "d138cfbf1f74c268b005dfcea68992c2cd62d1d13ec2b9aca1950b461aebd012",
+    "namespace_file_receiver_v2.rs": "1d546aaa4af0b49f24cda2b883c5f02930704b68e30017ee52da0e5a99638ecc"
+  },
+  "productionType": "crate::modules::model_config::config_file::v2::receive::SystemNamespaceReceiveV2",
+  "ownerInjection": ".with_namespace_receive(Arc::new(SystemNamespaceReceiveV2))",
+  "registration": "Not edited: L0 production owner construction is outside this write scope; real FileTransferOwner injection is covered by the end-to-end test.",
+  "contract": [
+    "Default planner and normal receiver still reject every portable namespace without explicit adoption.",
+    "Production namespace adapter/consumer accepts LocalFile scope only and rejects remote identity-mapping write authority.",
+    "Selected namespaces require whole channels and exact adopted IDs; package prefixes are cloned from validated bytes and only channel_id is rebound to the strict local binding.",
+    "Frozen plan and receipt authenticate adopted IDs plus receiver bindings. Original package hash includes namespace content. Original raw model IDs remain unchanged.",
+    "Same receive/compiler/backup/transaction implementation; no follow-up namespace mutation; reopening preserves plan digest/handle and actual receipt.",
+    "No new required fields on ReceiveFileHostV2; normal no-namespace serialized plans/receipts omit the empty authority field."
+  ],
+  "tests": {
+    "namespace": {
+      "passed": 11,
+      "failed": 0,
+      "warnings": 0,
+      "log": "/tmp/ocxd023-namespace-receiver-tests.log"
+    },
+    "regression": {
+      "passed": 99,
+      "failed": 0,
+      "log": "/tmp/ocxd023-namespace-receiver-regression.log",
+      "scope": "receive_models_v2::tests / config_file::v2::receive::tests / file_transfer_v2::tests; ran before final LocalFile-only wrapper guards and before Main registry-gap patch; final guards retested in namespace 11."
+    },
+    "integrated_namespace": {
+      "passed": 11,
+      "failed": 0,
+      "ignored": 0,
+      "warnings": 0,
+      "log": "/tmp/ocxd023-namespace-receiver-integrated-tests.log",
+      "includes": "Main prepare provider identity registry readonly binding block present in compiled source."
+    }
+  },
+  "coordination": "Main owns prepare provider_bindings registry-read block, mapping proof child and final proof test. None were edited by this task. Parent-file hashes are a current shared-tree snapshot and may move with Main work.",
+  "gitCommit": false
+}

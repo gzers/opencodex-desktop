@@ -1,0 +1,23 @@
+    Blocking waiting for file lock on artifact directory
+   Compiling opencodex-desktop v0.2.22 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0432]: unresolved import `super::sync_identity_v2::AdoptedMappingProofV2`
+  --> src/modules/model_config/sync_local_v2.rs:10:5
+   |
+10 |     sync_identity_v2::AdoptedMappingProofV2,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `AdoptedMappingProofV2` in `modules::model_config::sync_identity_v2`
+
+error[E0599]: no method named `verify_remaining_operation` found for reference `&sync_local_v2::LocalApplicationV2` in the current scope
+   --> src/modules/model_config/sync_local_v2.rs:86:53
+    |
+ 86 |         if let Some(proof) = &self.remaining { self.verify_remaining_operation(id, proof)?; }
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+help: there is a method `verify_mapping` with a similar name, but with different arguments
+   --> src/modules/model_config/sync_local_v2.rs:873:5
+    |
+873 |     fn verify_mapping(&self, model_applied: bool) -> SyncResult<()> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Some errors have detailed explanations: E0432, E0599.
+For more information about an error, try `rustc --explain E0432`.
+error: could not compile `opencodex-desktop` (lib test) due to 2 previous errors

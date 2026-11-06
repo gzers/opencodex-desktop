@@ -1,0 +1,22 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 49.66s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-a2321b53a9e89887)
+
+running 1 test
+test modules::runtime::startup_bundle::tests::real_first_start_worker_holds_install_lease_and_announces_refreshed_runtime ... FAILED
+
+failures:
+
+---- modules::runtime::startup_bundle::tests::real_first_start_worker_holds_install_lease_and_announces_refreshed_runtime stdout ----
+
+thread 'modules::runtime::startup_bundle::tests::real_first_start_worker_holds_install_lease_and_announces_refreshed_runtime' (134156510) panicked at src/modules/runtime/startup_bundle.rs:123:14:
+actual provision worker callback: Disconnected
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    modules::runtime::startup_bundle::tests::real_first_start_worker_holds_install_lease_and_announces_refreshed_runtime
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1832 filtered out; finished in 0.20s
+
+error: test failed, to rerun pass `--lib`

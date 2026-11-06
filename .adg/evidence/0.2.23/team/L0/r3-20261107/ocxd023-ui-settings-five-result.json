@@ -1,0 +1,43 @@
+{
+  "cwd": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui",
+  "command": "npm test -- --run tests/data-root.test.ts tests/runtime-protection.test.ts tests/technical-input-autocapitalize.test.ts tests/windows-path-surfaces.test.ts tests/install-discovery-source.test.ts",
+  "result": {
+    "filesPassed": 5,
+    "testsPassed": 37,
+    "testsFailed": 0
+  },
+  "typecheck": "npm run typecheck: passed",
+  "diffCheck": "passed",
+  "files": [
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui/tests/data-root.test.ts",
+      "sha256": "fc4a7909027bca8abb4d04ad0f042a90011bfeb75a4678bbcad28772055259d1",
+      "tests": 17
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui/tests/runtime-protection.test.ts",
+      "sha256": "5741a4733b0975e31fc2d0b8b0430c57536c9f9ce962729b7a40dee8324eff33",
+      "tests": 12
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui/tests/technical-input-autocapitalize.test.ts",
+      "sha256": "64bf99f97e86b501e282f5c6a406cca374e42b2408e0642fc5a878f89b72e0b0",
+      "tests": 3
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui/tests/windows-path-surfaces.test.ts",
+      "sha256": "615014d7fc6e305f54b0ae713d621682aeaa20f1bbbfffb3b9ab7d1e3a3b1f50",
+      "tests": 1
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui/tests/install-discovery-source.test.ts",
+      "sha256": "9a569780af15a535e3f986a6e334c3be392f86c28161296c046852fc5744f880",
+      "tests": 4
+    }
+  ],
+  "productChanges": [],
+  "productDefectsFound": [],
+  "gitCommitPerformed": false,
+  "testLog": "/tmp/ocxd023-ui-settings-five-tests.log",
+  "typecheckLog": "/tmp/ocxd023-ui-settings-five-typecheck.log"
+}

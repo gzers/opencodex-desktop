@@ -1,0 +1,37 @@
+{
+  "task": "CLI SyncRun v2 service integration",
+  "files": [
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/src/modules/ipc/service.rs",
+      "sha256": "a61b3858db863a10429c92dfe9c4411b7a3593f2d8fc6c71c6705e4a388f32a4",
+      "bytes": 139272
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/src/modules/ipc/service_sync_v2_tests.rs",
+      "sha256": "ad00cf3add66208443b256cf7ec3e78ffc2cc537be057008dbc71d28411c8802",
+      "bytes": 29748
+    }
+  ],
+  "changesLimitedTo": "service.rs + new service_sync_v2_tests.rs registered using #[path] in service.rs",
+  "gitCommitPerformed": false,
+  "checks": {
+    "ipcServiceTests": {
+      "passed": 47,
+      "failed": 0,
+      "newV2IntegrationTests": 17
+    },
+    "cargoCheckLibTestsOffline": "passed",
+    "cargoClippyLibTestsDenyWarnings": "passed",
+    "rustfmtFiles": "passed",
+    "gitDiffCheck": "passed",
+    "fixtureCleanup": "8 interrupted fixtures removed; final TempDirs cleaned automatically"
+  },
+  "logs": {
+    "tests": "/tmp/ocxd023-cli-sync-v2-service-tests.log",
+    "check": "/tmp/ocxd023-cli-sync-v2-check.log",
+    "clippy": "/tmp/ocxd023-cli-sync-v2-clippy.log",
+    "cleanup": "/tmp/ocxd023-cli-sync-v2-cleanup.json"
+  },
+  "upstreamFollowup": "authMode:none first receive followed by automatic preview returns SyncPayloadInvalid; direct ProductionServiceBackendV2::compose gives model_receive_credentials_direction. No CLI guard bypass. See receipt and diagnostic log.",
+  "notificationBinding": "Freeze original public endpoint candidate before execution; compare exact unchanged public endpoint at terminal before notification delivery."
+}

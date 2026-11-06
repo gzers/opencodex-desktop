@@ -1,0 +1,20 @@
+    Blocking waiting for file lock on artifact directory
+   Compiling opencodex-desktop v0.2.22 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 37.54s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-09f76e7f4001ca4a)
+
+running 11 tests
+test modules::model_config::config_file::v2::receive::tests::namespace_and_credential_direction_errors_leave_originals_untouched ... ok
+test modules::model_config::config_file::v2::receive::tests::namespace_file_receiver_freezes_adoption_and_applies_compiler_and_receipt_in_one_transaction ... ok
+test modules::model_config::config_file::v2::receive::tests::namespace_file_receiver_rejects_partial_selection_and_invalid_authority_without_business_writes ... ok
+test modules::model_config::config_file::v2::receive::tests::namespace_localfile_owner_explicit_injection_cancel_and_reopen_use_original_plan_and_receipt ... ok
+test modules::model_config::credential_references_v2::tests::recovery_completes_exact_original_plan_without_new_namespaces_or_uuid ... ok
+test modules::model_config::file_transfer_v2::tests::namespace_adoption_is_an_explicit_whole_channel_intent_never_an_implicit_import ... ok
+test modules::model_config::receive_models_v2::tests::namespace_adoption_rejects_missing_duplicate_extra_ids_and_partial_or_unselected_channels ... ok
+test modules::model_config::receive_models_v2::tests::namespace_explicit_adoption_rebinds_only_channel_identity_and_preserves_raw_ids ... ok
+test modules::model_config::receive_models_v2::tests::namespace_is_rejected_even_when_channel_unselected ... ok
+test modules::model_config::saved_objects_capture_v2::tests::namespace_and_manual_binding_remain_actual_saved_values ... ok
+test modules::model_config::sync_identity_v2::tests::endpoint_namespace_is_exact_and_old_path_is_not_consulted ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 1819 filtered out; finished in 6.50s
+
