@@ -134,13 +134,15 @@ jobs:
           & ../../../test/smoke/windows023-two-user-native.test.ps1 -OutputDirectory $taskOutput -Node $env:OCXD_TWO_USER_NODE
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           Copy-Item -LiteralPath $taskOutput -Destination ../../../test/out/windows-candidate/two-user-static -Recurse
-      - name: Verify simultaneous real SID manager isolation
+      - name: Verify simultaneous real SID managers and actual runtime ports
         if: steps.identity.outputs.version == '0.2.23'
         run: |
           $taskOutput = Join-Path $env:RUNNER_TEMP ('ocxd023-two-user-native-'+[guid]::NewGuid().ToString('N'))
           try {
-            & ../../../test/smoke/windows023-two-user-native.ps1 -Executable (Join-Path $env:OCXD_TWO_USER_CANDIDATE 'opencodex-desktop.exe') -Node $env:OCXD_TWO_USER_NODE -OutputDirectory $taskOutput -ExpectedCommit (git rev-parse HEAD)
+            & ../../../test/smoke/windows023-two-user-native.ps1 -Executable (Join-Path $env:OCXD_TWO_USER_CANDIDATE 'opencodex-desktop.exe') -Node $env:OCXD_TWO_USER_NODE -OutputDirectory $taskOutput -ExpectedCommit (git rev-parse HEAD) -VerifyRuntimePorts
             if ($LASTEXITCODE -ne 0) { throw 'Two actual SID native acceptance failed; original evidence retained' }
+            $taskTwoUser = Get-Content -LiteralPath (Join-Path $taskOutput 'two-user-native.json') -Raw | ConvertFrom-Json
+            if (!$taskTwoUser.fullVersionGatePassed -or $taskTwoUser.runtimeProxyPortIsolation -cne 'verified-runtime-ports') { throw 'Actual runtime-port acceptance is incomplete' }
           } finally {
             if (Test-Path -LiteralPath $taskOutput) { Copy-Item -LiteralPath $taskOutput -Destination ../../../test/out/windows-candidate/two-user-native -Recurse }
           }
