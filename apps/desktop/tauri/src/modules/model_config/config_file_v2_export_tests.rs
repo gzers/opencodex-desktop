@@ -506,6 +506,7 @@ fn real_file_transfer_owner_uses_draft_capture_and_roundtrips_v6_without_busines
     let credentials = Arc::new(NoCredentials(AtomicUsize::new(0)));
     let mut owner = FileTransferOwnerV2::new(f.d.clone(), f.h.clone(), credentials.clone())
         .unwrap()
+        .with_recovery_keys(Arc::new(MemoryRecoveryKey))
         .with_draft_capture(Arc::new(ConfigDraftFileCaptureV2));
     let plan = owner
         .prepare_draft_export(
@@ -528,5 +529,204 @@ fn real_file_transfer_owner_uses_draft_capture_and_roundtrips_v6_without_busines
         Field::Custom(12345)
     );
     assert_eq!(credentials.0.load(Ordering::SeqCst), 0);
+    let sealed =
+        f.d.join("manager-state/file-transfer-v2")
+            .join(format!("{}.sealed", plan.id));
+    assert_only_owner_state_added(&before, &f.bytes(), &sealed);
+    let stored = std::fs::read(&sealed).unwrap();
+    assert!(!String::from_utf8_lossy(&stored).contains("SYNTHETIC-SECRET"));
+    let mut reopened = FileTransferOwnerV2::new(f.d.clone(), f.h.clone(), credentials)
+        .unwrap()
+        .with_recovery_keys(Arc::new(MemoryRecoveryKey));
+    assert_eq!(
+        reopened.reopen_export(&plan.id).unwrap().digest,
+        plan.digest
+    );
+    let mut damaged: Value = serde_json::from_slice(&stored).unwrap();
+    let mut ciphertext = damaged["ciphertext"].as_str().unwrap().as_bytes().to_vec();
+    ciphertext[0] = if ciphertext[0] == b'A' { b'B' } else { b'A' };
+    damaged["ciphertext"] = json!(String::from_utf8(ciphertext).unwrap());
+    std::fs::write(&sealed, canonical_bytes(&damaged).unwrap()).unwrap();
+    assert_eq!(
+        reopened.reopen_export(&plan.id).unwrap_err().code,
+        "file_recovery_authentication"
+    );
+    std::fs::write(&sealed, stored).unwrap();
+    assert_only_owner_state_added(&before, &f.bytes(), &sealed);
+}
+
+#[test]
+fn queued_model_and_channel_intents_are_captured_without_staging_or_read_rematching() {
+    let f = Fixture::new();
+    let before = f.bytes();
+    let mut intent = f.intent();
+    intent.edits.push(ModelEditV2::SetOverride {
+        channel_id: f.id(),
+        raw_model_id: "vendor/custom".into(),
+        field: "contextWindow".into(),
+        value: json!(4567),
+    });
+    intent.channel_intents.push(ChannelIntentV2::SetNaming {
+        channel_id: f.id(),
+        raw_model_id: "vendor/custom".into(),
+        alias: Some("queued-model".into()),
+        display_name: Some("Queued model".into()),
+    });
+    let result = capture_typed_intents(&f.d, &f.h, &f.request(), intent).unwrap();
+    let objects = result.objects.into_captured();
+    let c = &objects.models.payload.policy.as_ref().unwrap().channels[0];
+    assert_eq!(
+        c.models[0].explicit_overrides.context_window,
+        Field::Custom(4567)
+    );
+    assert_eq!(
+        c.models[0].source.fields["contextWindow"].value,
+        json!(8192)
+    );
+    assert!(c.models[0].binding.is_none());
+    assert_eq!(
+        c.naming["vendor/custom"].alias.as_deref(),
+        Some("queued-model")
+    );
+    assert_eq!(
+        c.connection.as_ref().unwrap().provider.as_ref().unwrap()["modelContextWindows"]
+            ["vendor/custom"],
+        4567
+    );
     assert_eq!(before, f.bytes());
+}
+#[test]
+fn queued_binding_includes_exact_revision_and_invalid_or_stale_queue_never_writes() {
+    let f = Fixture::new();
+    let library = StoreV2::new(&f.d).snapshot_saved().unwrap().library;
+    let template = &library.templates[0];
+    let revision = &template.revisions[0];
+    let reference = RefV2 {
+        template_id: template.id.clone(),
+        revision_id: revision.id.clone(),
+        digest: revision.digest.clone(),
+    };
+    let mut intent = f.intent();
+    intent.edits.push(ModelEditV2::SetManualBinding {
+        channel_id: f.id(),
+        raw_model_id: "vendor/custom".into(),
+        reference: reference.clone(),
+    });
+    let before = f.bytes();
+    let result = capture_typed_intents(&f.d, &f.h, &f.request(), intent).unwrap();
+    let objects = result.objects.into_captured();
+    assert_eq!(objects.models.payload.templates[0].revisions.len(), 1);
+    assert_eq!(
+        objects.models.payload.templates[0].revisions[0].digest,
+        reference.digest
+    );
+    let mut stale = f.intent();
+    stale.expected.draft_generation += 1;
+    assert!(capture_typed_intents(&f.d, &f.h, &f.request(), stale).is_err());
+    let mut bad = f.intent();
+    bad.channel_intents.push(ChannelIntentV2::SetNaming {
+        channel_id: f.id(),
+        raw_model_id: "other".into(),
+        alias: Some("vendor-custom".into()),
+        display_name: None,
+    });
+    assert!(capture_typed_intents(&f.d, &f.h, &f.request(), bad).is_err());
+    assert_eq!(before, f.bytes());
+}
+
+struct MemoryRecoveryKey;
+impl crate::modules::model_config::file_transfer_v2::FileRecoveryKeysV2 for MemoryRecoveryKey {
+    fn key(&self, _d: &Path, _h: &Path, _create: bool) -> ModelResult<Zeroizing<[u8; 32]>> {
+        Ok(Zeroizing::new([73; 32]))
+    }
+}
+fn assert_only_owner_state_added(
+    before: &BTreeMap<PathBuf, Vec<u8>>,
+    after: &BTreeMap<PathBuf, Vec<u8>>,
+    sealed: &Path,
+) {
+    // Hash/path diagnostics only: never dump captured business bytes or keys.
+    let original = before
+        .iter()
+        .map(|(p, b)| (p.clone(), digest(b)))
+        .collect::<BTreeMap<_, _>>();
+    let retained = after
+        .iter()
+        .filter(|(p, _)| p.as_path() != sealed)
+        .map(|(p, b)| (p.clone(), digest(b)))
+        .collect::<BTreeMap<_, _>>();
+    assert_eq!(original, retained);
+    let bytes = after
+        .get(sealed)
+        .expect("only the controlled owner operation is added");
+    let protected: Value = serde_json::from_slice(bytes).unwrap();
+    assert_eq!(protected["version"], 2);
+    assert_eq!(
+        protected
+            .as_object()
+            .unwrap()
+            .keys()
+            .cloned()
+            .collect::<BTreeSet<_>>(),
+        ["version", "id", "nonce", "ciphertext"]
+            .map(str::to_owned)
+            .into_iter()
+            .collect()
+    );
+    assert!(!String::from_utf8_lossy(bytes).contains("SYNTHETIC-SECRET"));
+}
+
+#[test]
+fn real_owner_dispatches_owned_queued_intents_without_persisting_draft_or_reading_credentials() {
+    use crate::modules::model_config::file_transfer_v2::{
+        DraftExportRequestV2, DraftFileIntentsV2, FileTransferOwnerV2,
+    };
+    use std::sync::Arc;
+    let f = Fixture::new();
+    let credentials = Arc::new(NoCredentials(AtomicUsize::new(0)));
+    let mut owner = FileTransferOwnerV2::new(f.d.clone(), f.h.clone(), credentials.clone())
+        .unwrap()
+        .with_recovery_keys(Arc::new(MemoryRecoveryKey))
+        .with_draft_capture(Arc::new(ConfigDraftFileCaptureV2));
+    let before = f.bytes();
+    let plan = owner
+        .prepare_draft_export_with_intents(
+            DraftExportRequestV2 {
+                expected: f.draft.base.clone(),
+                capture: f.request(),
+            },
+            None,
+            DraftFileIntentsV2 {
+                edits: vec![ModelEditV2::SetOverride {
+                    channel_id: f.id(),
+                    raw_model_id: "vendor/custom".into(),
+                    field: "contextWindow".into(),
+                    value: json!(31234),
+                }],
+                channel_intents: vec![ChannelIntentV2::SetNaming {
+                    channel_id: f.id(),
+                    raw_model_id: "vendor/custom".into(),
+                    alias: Some("owner-queue".into()),
+                    display_name: None,
+                }],
+            },
+        )
+        .unwrap();
+    let result =
+        file_objects_v2::decode(owner.bytes(&plan.id).unwrap(), None, &plan.schema, None).unwrap();
+    let objects = result.objects.into_captured();
+    let c = &objects.models.payload.policy.as_ref().unwrap().channels[0];
+    assert_eq!(
+        c.models[0].explicit_overrides.context_window,
+        Field::Custom(31234)
+    );
+    assert_eq!(
+        c.naming["vendor/custom"].alias.as_deref(),
+        Some("owner-queue")
+    );
+    assert_eq!(credentials.0.load(Ordering::SeqCst), 0);
+    let sealed =
+        f.d.join("manager-state/file-transfer-v2")
+            .join(format!("{}.sealed", plan.id));
+    assert_only_owner_state_added(&before, &f.bytes(), &sealed);
 }

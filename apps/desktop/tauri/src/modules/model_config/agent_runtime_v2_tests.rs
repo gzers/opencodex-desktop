@@ -961,6 +961,9 @@ async fn original_external_run_view_never_substitutes_latest_or_exports_prompt_a
     assert!(external_run_view(&f.root, "../bad").is_err());
     let internal = prepare_run(&f.root, &f.context, intent).unwrap();
     assert!(external_run_view(&f.root, &internal.run_id).is_err());
-    assert_eq!(std::fs::read(record_path(&f.root, &original.task_id).unwrap()).unwrap(), before);
+    assert_eq!(
+        std::fs::read(record_path(&f.root, &original.task_id).unwrap()).unwrap(),
+        before
+    );
     assert!(f.state.calls.lock().unwrap().is_empty());
 }

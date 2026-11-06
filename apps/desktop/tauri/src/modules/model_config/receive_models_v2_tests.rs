@@ -1054,40 +1054,117 @@ fn exact_binding_digest_and_nondefault_adoption_are_rejected() {
 #[test]
 fn namespace_explicit_adoption_rebinds_only_channel_identity_and_preserves_raw_ids() {
     let mut p = package(channel(&["vendor/raw-model"]));
-    let ns = NamespaceV2 { channel_id: A.into(), remove_leading_prefixes: vec!["vendor/".into()] };
+    let ns = NamespaceV2 {
+        channel_id: A.into(),
+        remove_leading_prefixes: vec!["vendor/".into()],
+    };
     pc(&mut p).namespace = Some(ns.clone());
     rehash(&mut p);
     let original = p.clone();
-    let result = plan_with_namespace_adoption(&library(), &policy(), &p, &scope(), &[binding(ReceiveBindingModeV2::New)], &[A.into()]).unwrap();
+    let result = plan_with_namespace_adoption(
+        &library(),
+        &policy(),
+        &p,
+        &scope(),
+        &[binding(ReceiveBindingModeV2::New)],
+        &[A.into()],
+    )
+    .unwrap();
     let c = &result.policy.channels[0];
     assert_eq!(c.id, B);
     assert_eq!(c.namespace.as_ref().unwrap().channel_id, B);
-    assert_eq!(c.namespace.as_ref().unwrap().remove_leading_prefixes, ns.remove_leading_prefixes);
+    assert_eq!(
+        c.namespace.as_ref().unwrap().remove_leading_prefixes,
+        ns.remove_leading_prefixes
+    );
     assert_eq!(c.models[0].raw_model_id, "vendor/raw-model");
     assert_eq!(c.models[0].source.raw_model_id, "vendor/raw-model");
-    assert_eq!(super::super::matching_v2::matching_view_v2(c, "vendor/raw-model").unwrap(), "raw-model");
+    assert_eq!(
+        super::super::matching_v2::matching_view_v2(c, "vendor/raw-model").unwrap(),
+        "raw-model"
+    );
     assert_eq!(p, original);
-    assert_eq!(code(plan(&library(), &policy(), &p, &scope(), &[binding(ReceiveBindingModeV2::New)])), "model_receive_namespace_adoption_required");
+    assert_eq!(
+        code(plan(
+            &library(),
+            &policy(),
+            &p,
+            &scope(),
+            &[binding(ReceiveBindingModeV2::New)]
+        )),
+        "model_receive_namespace_adoption_required"
+    );
 }
 #[test]
 fn namespace_adoption_rejects_missing_duplicate_extra_ids_and_partial_or_unselected_channels() {
     let mut p = package(channel(&["vendor/raw-model"]));
-    pc(&mut p).namespace = Some(NamespaceV2 { channel_id: A.into(), remove_leading_prefixes: vec!["vendor/".into()] });
+    pc(&mut p).namespace = Some(NamespaceV2 {
+        channel_id: A.into(),
+        remove_leading_prefixes: vec!["vendor/".into()],
+    });
     rehash(&mut p);
     let bindings = [binding(ReceiveBindingModeV2::New)];
-    for ids in [vec![], vec![A.into(), A.into()], vec![B.into()], vec![A.into(), B.into()]] {
-        assert!(plan_with_namespace_adoption(&library(), &policy(), &p, &scope(), &bindings, &ids).is_err());
+    for ids in [
+        vec![],
+        vec![A.into(), A.into()],
+        vec![B.into()],
+        vec![A.into(), B.into()],
+    ] {
+        assert!(
+            plan_with_namespace_adoption(&library(), &policy(), &p, &scope(), &bindings, &ids)
+                .is_err()
+        );
     }
     let mut partial = scope();
     partial.channels[0].model_ids = Some(vec!["vendor/raw-model".into()]);
-    assert!(plan_with_namespace_adoption(&library(), &policy(), &p, &partial, &bindings, &[A.into()]).is_err());
+    assert!(plan_with_namespace_adoption(
+        &library(),
+        &policy(),
+        &p,
+        &partial,
+        &bindings,
+        &[A.into()]
+    )
+    .is_err());
     partial.channels[0].model_ids = None;
     partial.channels[0].family_ids = Some(vec![C.into()]);
-    assert!(plan_with_namespace_adoption(&library(), &policy(), &p, &partial, &bindings, &[A.into()]).is_err());
-    assert!(plan_with_namespace_adoption(&library(), &policy(), &p, &SelectionV2::default(), &[], &[A.into()]).is_err());
+    assert!(plan_with_namespace_adoption(
+        &library(),
+        &policy(),
+        &p,
+        &partial,
+        &bindings,
+        &[A.into()]
+    )
+    .is_err());
+    assert!(plan_with_namespace_adoption(
+        &library(),
+        &policy(),
+        &p,
+        &SelectionV2::default(),
+        &[],
+        &[A.into()]
+    )
+    .is_err());
     pc(&mut p).model_subset = Some(vec!["vendor/raw-model".into()]);
     rehash(&mut p);
-    assert!(plan_with_namespace_adoption(&library(), &policy(), &p, &scope(), &bindings, &[A.into()]).is_err());
+    assert!(plan_with_namespace_adoption(
+        &library(),
+        &policy(),
+        &p,
+        &scope(),
+        &bindings,
+        &[A.into()]
+    )
+    .is_err());
     let normal = package(channel(&["a"]));
-    assert!(plan_with_namespace_adoption(&library(), &policy(), &normal, &scope(), &bindings, &[A.into()]).is_err());
+    assert!(plan_with_namespace_adoption(
+        &library(),
+        &policy(),
+        &normal,
+        &scope(),
+        &bindings,
+        &[A.into()]
+    )
+    .is_err());
 }

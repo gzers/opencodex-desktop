@@ -354,7 +354,14 @@ pub fn plan(
     selected: &SelectionV2,
     bindings: &[ReceiveBindingV2],
 ) -> Result<ReceiveModelsPlanV2> {
-    plan_with_namespace_adoption(local_library, local_policy, package, selected, bindings, &[])
+    plan_with_namespace_adoption(
+        local_library,
+        local_policy,
+        package,
+        selected,
+        bindings,
+        &[],
+    )
 }
 /// L0 supplies only the explicitly adopted portable IDs. Prefixes and namespace
 /// contents remain the validated package's evidence, not new caller policy.
@@ -370,20 +377,44 @@ pub fn plan_with_namespace_adoption(
     validate_library_v2(local_library)?;
     validate_dependencies(local_library, local_policy)?;
     let adopted: BTreeSet<_> = adopt_ids.iter().collect();
-    if adopted.len() != adopt_ids.len() { return Err(scope_error()); }
-    let namespaced: BTreeSet<_> = package.payload.policy.iter().flat_map(|p| &p.channels)
-        .filter(|c| c.namespace.is_some()).map(|c| &c.id).collect();
+    if adopted.len() != adopt_ids.len() {
+        return Err(scope_error());
+    }
+    let namespaced: BTreeSet<_> = package
+        .payload
+        .policy
+        .iter()
+        .flat_map(|p| &p.channels)
+        .filter(|c| c.namespace.is_some())
+        .map(|c| &c.id)
+        .collect();
     if !namespaced.is_subset(&adopted) {
         return Err(error("model_receive_namespace_adoption_required"));
     }
-    if namespaced != adopted { return Err(scope_error()); }
+    if namespaced != adopted {
+        return Err(scope_error());
+    }
     for id in &adopted {
         check_id(id)?;
-        let source = package.payload.policy.iter().flat_map(|p| &p.channels).find(|c| &c.id == *id).unwrap();
-        let scope = selected.channels.iter().find(|s| &s.portable_channel_id == *id).ok_or_else(scope_error)?;
-        if scope.model_ids.is_some() || scope.family_ids.is_some()
-            || source.model_subset.is_some() || source.family_scope.is_some()
-        { return Err(scope_error()); }
+        let source = package
+            .payload
+            .policy
+            .iter()
+            .flat_map(|p| &p.channels)
+            .find(|c| &c.id == *id)
+            .unwrap();
+        let scope = selected
+            .channels
+            .iter()
+            .find(|s| &s.portable_channel_id == *id)
+            .ok_or_else(scope_error)?;
+        if scope.model_ids.is_some()
+            || scope.family_ids.is_some()
+            || source.model_subset.is_some()
+            || source.family_scope.is_some()
+        {
+            return Err(scope_error());
+        }
     }
     if selected.channels.len() > 4096
         || selected.template_refs.len() > 4096
@@ -558,7 +589,9 @@ pub fn plan_with_namespace_adoption(
             // A newly created no-auth/local source has no existing credential
             // authority to preserve. Keep its explicit public direction instead
             // of silently converting it to the absent-field default "key".
-            if old.is_none() && !scope.include_key && !scope.include_authorization
+            if old.is_none()
+                && !scope.include_key
+                && !scope.include_authorization
                 && matches!(connection.auth_mode.as_deref(), Some("none" | "local"))
             {
                 next.connection.auth_mode = connection.auth_mode.clone();

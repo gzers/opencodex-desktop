@@ -177,8 +177,12 @@ pub trait DraftFileCaptureV2: Send + Sync {
         credentials: &dyn CaptureCredentialsV2,
     ) -> ModelResult<CapturedSnapshotV2>;
     fn capture_with_intents(
-        &self, d: &Path, h: &Path, expected: &ReadBaseV2,
-        request: &CaptureRequestV2, credentials: &dyn CaptureCredentialsV2,
+        &self,
+        d: &Path,
+        h: &Path,
+        expected: &ReadBaseV2,
+        request: &CaptureRequestV2,
+        credentials: &dyn CaptureCredentialsV2,
         intents: DraftFileIntentsV2,
     ) -> ModelResult<CapturedSnapshotV2> {
         if !intents.edits.is_empty() || !intents.channel_intents.is_empty() {
@@ -338,8 +342,12 @@ impl FileTransferOwnerV2 {
             .as_ref()
             .ok_or_else(|| err("file_draft_capture_not_connected"))?;
         let captured = helper.capture_with_intents(
-            &self.d, &self.h, &request.expected, &request.capture,
-            self.credentials.as_ref(), intents,
+            &self.d,
+            &self.h,
+            &request.expected,
+            &request.capture,
+            self.credentials.as_ref(),
+            intents,
         )?;
         self.freeze_export(request.capture.selection, captured, passphrase)
     }
