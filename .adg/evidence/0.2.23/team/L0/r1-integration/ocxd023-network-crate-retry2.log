@@ -1,0 +1,13 @@
+   Compiling opencodex-desktop v0.2.22 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 37.33s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-7a7e9249d8736667)
+
+running 5 tests
+test infrastructure::webdav_config_v2::tests::href_rejects_cross_origin_traversal_encoded_separators_and_duplicate_identity ... ok
+test infrastructure::webdav_config_v2::tests::partial_truncated_failed_required_properties_and_dtd_never_look_empty ... ok
+test infrastructure::webdav_config_v2::tests::depth_one_excludes_self_and_allows_missing_optional_length ... ok
+test infrastructure::webdav_config_v2::tests::self_counts_toward_limit_and_entities_cannot_hide_href_query ... ok
+test infrastructure::webdav_config_v2::tests::immutable_binding_never_sends_credentials_to_rebound_endpoint ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 1269 filtered out; finished in 0.12s
+

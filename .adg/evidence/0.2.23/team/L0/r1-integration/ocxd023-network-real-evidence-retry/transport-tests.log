@@ -1,0 +1,92 @@
+   Compiling opencodex-desktop v0.2.22 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+warning: function `export_candidate` is never used
+  --> src/commands/migration.rs:42:15
+   |
+42 | pub(crate) fn export_candidate(document_sha256: &str, target: &std::path::Path) -> Vec<u8> {
+   |               ^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `import_candidate` is never used
+  --> src/commands/migration.rs:50:15
+   |
+50 | pub(crate) fn import_candidate(document_sha256: &str, home: &std::path::Path) -> Vec<u8> {
+   |               ^^^^^^^^^^^^^^^^
+
+warning: method `path` is never used
+  --> src/modules/data_root/migration.rs:31:8
+   |
+30 | impl Entry {
+   | ---------- method in this implementation
+31 |     fn path(&self) -> &Path {
+   |        ^^^^
+
+warning: function `resolve` is never used
+   --> src/modules/data_root/startup_v2.rs:195:15
+    |
+195 | pub(crate) fn resolve(
+    |               ^^^^^^^
+
+warning: function `failure` is never used
+  --> src/modules/runtime/relocation.rs:12:4
+   |
+12 | fn failure(message: impl Into<String>) -> AppError {
+   |    ^^^^^^^
+
+warning: function `io` is never used
+  --> src/modules/runtime/relocation.rs:18:4
+   |
+18 | fn io(error: std::io::Error) -> AppError {
+   |    ^^
+
+warning: function `read` is never used
+  --> src/modules/runtime/relocation.rs:22:4
+   |
+22 | fn read(path: &Path, limit: u64) -> AppResult<Vec<u8>> {
+   |    ^^^^
+
+warning: function `resolved_path` is never used
+  --> src/modules/runtime/relocation.rs:42:4
+   |
+42 | fn resolved_path(path: &Path) -> AppResult<PathBuf> {
+   |    ^^^^^^^^^^^^^
+
+warning: function `relocate` is never used
+  --> src/modules/runtime/relocation.rs:66:4
+   |
+66 | fn relocate(path: &Path, source: &Path, target: &Path) -> AppResult<PathBuf> {
+   |    ^^^^^^^^
+
+warning: function `strict_record` is never used
+  --> src/modules/runtime/relocation.rs:74:4
+   |
+74 | fn strict_record(bytes: &[u8]) -> AppResult<(RuntimeSourceRecord, serde_json::Value)> {
+   |    ^^^^^^^^^^^^^
+
+warning: function `recorded_node` is never used
+   --> src/modules/runtime/relocation.rs:125:4
+    |
+125 | fn recorded_node(content: &str, script: &Path) -> AppResult<Option<PathBuf>> {
+    |    ^^^^^^^^^^^^^
+
+warning: function `package_script` is never used
+   --> src/modules/runtime/relocation.rs:176:4
+    |
+176 | fn package_script(prefix: &Path) -> AppResult<PathBuf> {
+    |    ^^^^^^^^^^^^^^
+
+warning: function `prepare` is never used
+   --> src/modules/runtime/relocation.rs:219:15
+    |
+219 | pub(crate) fn prepare(source: &Path, target: &Path) -> AppResult<()> {
+    |               ^^^^^^^
+
+warning: `opencodex-desktop` (lib) generated 13 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 33.91s
+     Running tests/config_v2_transport_real.rs (target/debug/deps/config_v2_transport_real-946c5f1a366f8cd0)
+
+running 1 test
+test v2_depth_one_and_precise_file_transport_over_verified_tls ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+

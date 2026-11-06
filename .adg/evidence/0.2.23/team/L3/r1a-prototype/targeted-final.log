@@ -1,0 +1,48 @@
+✔ absolute values come from the injected snapshot, not current host or aggregate root guesses (0.593459ms)
+✔ path preparation and cancel are read only; confirm records pending state until restart (0.173625ms)
+✔ invalid or stale root selection cannot silently replace active snapshot (0.071458ms)
+✔ v2 selector uses complete string components and fixed AND atoms, no legacy conversion (1.025667ms)
+✔ declared fixtures expose tail/arity/conflict reasons without a second matcher (2.677875ms)
+✔ arbitrary edits invalidate a declared response instead of inventing matching success (0.2485ms)
+✔ new revision save is explicit, immutable and guards draft generation (0.306875ms)
+✔ duplicate fixture and incomplete selectors refuse save; source missing is a separate runtime concern (0.1915ms)
+✔ false, empty collections and explicit null remain custom values (0.087917ms)
+✔ stale saved baseline retains draft and blocks creating a new revision (0.2145ms)
+✔ 渠道和向导无默认协议；取消/重开无隐藏协议或清单适配 (53.236917ms)
+✔ 渠道旧协议与渠道层覆盖不能改变模型协议，单模型覆盖优先 (15.569041ms)
+✔ 清单获取方式显式选择但不持久化，未知模型保持待配置 (24.756625ms)
+✔ 复制保留模型层协议且不制造渠道协议 (22.078792ms)
+✔ 已有渠道获取清单也要选择临时适配，结果不改变模型协议 (35.1395ms)
+✔ 列表工具栏与软件一致：读取现有渠道在新增渠道之前，详情不重复出现 (52.930542ms)
+✔ 读取中禁用入口，完成后自动匹配草稿且保留已选与保存基线 (60.9065ms)
+✔ 自动匹配产生未保存草稿，重复读取无额外变化，正式保存仍由用户确认 (55.737834ms)
+✔ 读取失败 / 无权限 / 无接口只提示，不写来源也不改草稿 (106.894209ms)
+✔ 保存弹窗不再出现操作说明句，说明只留在原型标签 (26.378417ms)
+✔ 保存前直接标在渠道与型号上：渠道“改”标记、型号新增 / 停用标记，不再单列变更清单 (40.009875ms)
+✔ 默认保存版本自动用于未采用族，单模型明确自定义和人工指定保留 (14.012ms)
+✔ 未知型号与无效模版引用保留原配置，不自动修名字或填能力 (12.80525ms)
+✔ 读取期间新编辑和空/失败结果不触发自动匹配或覆盖 (60.55225ms)
+✔ 同优先级已保存规则重叠时保留原模型，不任意选择 (16.587625ms)
+✔ 未指定默认版本的新模版不会被读取动作擅自选最新版 (18.604625ms)
+✔ prepare/cancel before confirmation never backs up or replaces installation (0.563708ms)
+✔ source mismatch cannot create an executable plan (0.074291ms)
+✔ backup failure stops before replacing; occupied other user is never stopped (0.140292ms)
+✔ replacement cannot claim retraction and status reopens the same operation (0.121667ms)
+✔ unknown replacement preserves failure and verifies original instead of reinstalling (0.211708ms)
+✔ first upload prepare is read only and omits generation; G appears only after confirmation and execution (1.305541ms)
+✔ existing generation is reused, cancel before write differs from stop after possible initialization (0.197792ms)
+✔ local read and original verification are separate; later source changes never cause a new upload (0.205334ms)
+✔ MCP source choice guards new write and does not get silently chosen by direction switch (0.148834ms)
+✔ multiple G ordinary write is blocked; dedicated recovery export and download never write remote (0.269625ms)
+✔ conflict resolution includes every observed head, preserves origin, and rejects stale confirmation (0.581458ms)
+✔ download stored source is separate from local apply/backup; failed protection never applies (0.468042ms)
+✔ all error and no-content scenarios refuse ordinary confirmation, no hidden fallback to empty (0.201417ms)
+✔ collision, original endpoint and journal errors only expose permitted recovery actions (0.203375ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 519.454542

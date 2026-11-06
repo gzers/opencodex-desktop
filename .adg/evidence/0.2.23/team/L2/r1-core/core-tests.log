@@ -1,0 +1,45 @@
+   Compiling ocxd-sync-v2-core-driver v0.0.0 (/tmp/ocxd-l2-r1-driver)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.19s
+     Running unittests src/lib.rs (/tmp/ocxd-l2-r1-driver/target/debug/deps/ocxd_sync_v2_core_driver-92fc2cbc0d6be5dc)
+
+running 31 tests
+test sync_v2::tests::authentication_failure_is_not_empty_or_an_unbound_original_verify_action ... ok
+test sync_v2::tests::corrupt_journal_and_symlink_do_not_become_fresh_state ... ok
+test sync_v2::tests::corrupted_metadata_with_duplicate_fields_never_admits_a_root ... ok
+test sync_v2::tests::missing_parent_or_corrupt_json_is_never_empty ... ok
+test sync_v2::tests::delayed_listing_does_not_forget_observed_head ... ok
+test sync_v2::tests::seen_root_commit_identity_cannot_be_silently_replaced ... ok
+test sync_v2::tests::mcp_source_change_blocks_publish_but_not_original_verification ... ok
+test sync_v2::tests::cancellation_and_result_reads_do_not_write_or_contact_remote ... ok
+test sync_v2::tests::strict_wire_rejects_duplicate_null_unknown_float_and_invalid_paths ... ok
+test sync_v2::tests::unknown_business_name_seen_in_listing_union_is_never_empty ... ok
+test sync_v2::tests::ambiguous_generations_only_recovery_exports_and_never_remote_writes ... ok
+test sync_v2::tests::capacity_and_unsupported_schema_fail_without_silent_truncation ... ok
+test sync_v2::tests::resume_cannot_write_through_changed_connection_or_root_revision ... ok
+test sync_v2::tests::whole_publish_deadline_is_not_reset_by_repeated_observations ... ok
+test sync_v2::tests::lost_commit_response_reopen_verify_ignores_new_source_scope_and_evicted_payload ... ok
+test sync_v2::tests::graph_retains_concurrent_roots_and_resolution_keeps_original_files ... ok
+test sync_v2::tests::corrupt_aggregate_state_does_not_erase_previous_receipt_or_accept_new_baseline ... ok
+test sync_v2::tests::original_verification_distinguishes_descendant_and_local_later_save ... ok
+test sync_v2::tests::first_prepare_read_only_then_confirmation_initializes_and_stores ... ok
+test sync_v2::tests::changed_payload_is_not_confirmed_and_original_id_is_never_overwritten ... ok
+test sync_v2::tests::initialization_lost_response_resumes_without_new_generation ... ok
+test sync_v2::tests::cancel_after_uncertain_send_retains_same_operation_and_verify_is_read_only ... ok
+test sync_v2::tests::generation_reset_rejects_old_plan_and_ignores_late_old_data ... ok
+test sync_v2::tests::simultaneous_first_initializations_preserve_markers_and_stop_before_data ... ok
+test sync_v2::tests::lost_payload_response_resumes_same_id_without_reuploading_frozen_bytes ... ok
+test sync_v2::tests::download_protects_local_target_backup_and_idempotent_reapply ... ok
+test sync_v2::tests::concurrent_conflict_resolutions_form_two_new_heads_and_keep_original_branches ... ok
+test sync_v2::tests::unsupported_payload_schema_and_changed_download_target_are_rejected ... ok
+test sync_v2::tests::simultaneous_commits_from_independent_clients_retain_both_stored_branches ... ok
+test sync_v2::tests::whole_prepare_download_deadline_is_shared_between_read_and_recheck ... ok
+test sync_v2::tests::whole_verify_deadline_preserves_historical_stored_evidence ... ok
+
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.27s
+
+   Doc-tests ocxd_sync_v2_core_driver
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

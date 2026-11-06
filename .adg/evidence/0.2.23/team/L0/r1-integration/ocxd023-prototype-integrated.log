@@ -1,0 +1,32 @@
+✔ absolute values come from the injected snapshot, not current host or aggregate root guesses (0.660625ms)
+✔ path preparation and cancel are read only; confirm records pending state until restart (0.197917ms)
+✔ invalid or stale root selection cannot silently replace active snapshot (0.073958ms)
+✔ v2 selector uses complete string components and fixed AND atoms, no legacy conversion (1.237917ms)
+✔ declared fixtures expose tail/arity/conflict reasons without a second matcher (2.255584ms)
+✔ arbitrary edits invalidate a declared response instead of inventing matching success (0.230208ms)
+✔ new revision save is explicit, immutable and guards draft generation (0.362541ms)
+✔ duplicate fixture and incomplete selectors refuse save; source missing is a separate runtime concern (0.349542ms)
+✔ false, empty collections and explicit null remain custom values (0.110416ms)
+✔ stale saved baseline retains draft and blocks creating a new revision (0.416917ms)
+✔ prepare/cancel before confirmation never backs up or replaces installation (0.851667ms)
+✔ source mismatch cannot create an executable plan (0.09525ms)
+✔ backup failure stops before replacing; occupied other user is never stopped (0.162417ms)
+✔ replacement cannot claim retraction and status reopens the same operation (0.080541ms)
+✔ unknown replacement preserves failure and verifies original instead of reinstalling (0.117917ms)
+✔ first upload prepare is read only and omits generation; G appears only after confirmation and execution (1.041291ms)
+✔ existing generation is reused, cancel before write differs from stop after possible initialization (0.177292ms)
+✔ local read and original verification are separate; later source changes never cause a new upload (0.202ms)
+✔ MCP source choice guards new write and does not get silently chosen by direction switch (0.144375ms)
+✔ multiple G ordinary write is blocked; dedicated recovery export and download never write remote (0.266625ms)
+✔ conflict resolution includes every observed head, preserves origin, and rejects stale confirmation (0.390209ms)
+✔ download stored source is separate from local apply/backup; failed protection never applies (0.613125ms)
+✔ all error and no-content scenarios refuse ordinary confirmation, no hidden fallback to empty (0.290667ms)
+✔ collision, original endpoint and journal errors only expose permitted recovery actions (0.246792ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 48.012292

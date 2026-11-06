@@ -1,0 +1,481 @@
+✔ 渠道和向导无默认协议；取消/重开无隐藏协议或清单适配 (47.323125ms)
+✔ 渠道旧协议与渠道层覆盖不能改变模型协议，单模型覆盖优先 (18.827625ms)
+✔ 清单获取方式显式选择但不持久化，未知模型保持待配置 (28.843709ms)
+✔ 复制保留模型层协议且不制造渠道协议 (26.006084ms)
+✔ 已有渠道获取清单也要选择临时适配，结果不改变模型协议 (37.086875ms)
+✔ 列表工具栏与软件一致：读取现有渠道在新增渠道之前，详情不重复出现 (38.399625ms)
+✔ 读取中禁用入口，完成后自动匹配草稿且保留已选与保存基线 (72.369875ms)
+✔ 自动匹配产生未保存草稿，重复读取无额外变化，正式保存仍由用户确认 (62.001542ms)
+✔ 读取失败 / 无权限 / 无接口只提示，不写来源也不改草稿 (103.670125ms)
+✔ 保存弹窗不再出现操作说明句，说明只留在原型标签 (25.743709ms)
+✔ 保存前直接标在渠道与型号上：渠道“改”标记、型号新增 / 停用标记，不再单列变更清单 (39.618542ms)
+✔ 默认保存版本自动用于未采用族，单模型明确自定义和人工指定保留 (14.567625ms)
+✔ 未知型号与无效模版引用保留原配置，不自动修名字或填能力 (14.318125ms)
+✔ 读取期间新编辑和空/失败结果不触发自动匹配或覆盖 (67.591709ms)
+✔ 同优先级已保存规则重叠时保留原模型，不任意选择 (16.742042ms)
+✔ 未指定默认版本的新模版不会被读取动作擅自选最新版 (19.3345ms)
+✔ new channel needs only a unique display name; local address discovery requires no private-network control (8490.157417ms)
+✔ rename accepts non-ASCII and reserved words without a second identifier, while duplicate names stay invalid (4580.682708ms)
+✔ 普通导出冻结当前已保存渠道文件内容，未保存修改不混入；只有保存确认更新基准 (9911.71225ms)
+✔ 只有显式 draft 来源导出内存渠道；预览后继续编辑不改冻结内容，下一次普通导出仍用 saved (4870.892458ms)
+✔ 仅存在草稿的新渠道可显式导出，普通已保存来源不把它列为可导出对象 (5028.143ms)
+✔ 文件保护可选：带渠道凭据的明文导出保留选择，既有确认后完成，不弹第二次确认 (3531.01725ms)
+✔ 选用文件加密时仍校验口令，两次一致才完成；口令不进入导出状态 (3424.825083ms)
+✔ 取消导出不保存渠道，也不替换上一份导出快照 (4308.050833ms)
+✔ 模版导出只取已保存版本；模版缓冲、保存新版本与渠道草稿/文件保存相互独立 (5389.464ms)
+✖ 范围和凭据自动记住；没有单独保存范围或逐次复核 (3399.993125ms)
+✖ upload 按固定内容版本执行，第二次同步无重复更新 (3479.594792ms)
+✖ download 按固定内容版本执行，第二次同步无重复更新 (4041.192667ms)
+✖ same 按固定内容版本执行，第二次同步无重复更新 (3709.092667ms)
+✖ 整次同步只采用一个快照来源，即使对象自身本机时间较新；当前范围以外不改 (3594.907084ms)
+✖ 运行中更改范围只作用下一次，不要求重开旧计划 (3625.339208ms)
+✖ 独立失败不阻断其余对象；只重试失败项、清除旧错误并复用原备份 (3442.919125ms)
+✖ 网络失败不改内容，可从原页面重试 (3545.981959ms)
+✖ backup-fail 独立失败保留原内容，取消备份只绕过备份失败 (3507.093292ms)
+✖ write-fail 独立失败保留原内容，取消备份只绕过备份失败 (3567.607041ms)
+✔ keyless 导入在同一窗口选范围后直接更新saved，无需再保存 (6463.098459ms)
+✔ encrypted 导入在同一窗口选范围后直接更新saved，无需再保存 (6589.927ms)
+✔ 导入未包含的对象和本机未保存编辑保留，待定策略只演示不伪称已批准 (4992.884208ms)
+✖ 官方openai/native不进入同步范围，旧官方条目不新增，自定义渠道仍原位更新 (3099.651667ms)
+✖ 加密为可选且记住选择，不含口令不执行；口令不暴露在状态中 (3186.257209ms)
+✔ 没有文件、错误口令和损坏包均不执行；取消不改内容 (5490.048791ms)
+✔ 结果详情只读，不产生第二次采用；同一模版导入不重复版本 (7742.070958ms)
+✔ 原型保持内存边界，普通同步没有旧比较或保存范围门 (0.973542ms)
+✔ Windows面板反馈示例区分页面失败和代理未运行，重试不重复启动 (2959.665083ms)
+✖ 同步结果沿已有注册事件/Toast/铃铛，收起后仍可查看 (3164.746666ms)
+✔ 旧包不会反向覆盖已保存的新内容，比较在后台完成 (11249.431709ms)
+✔ 明文包含凭据也可导入，资格由所选包内对象决定，无解密或额外确认 (6325.300542ms)
+✔ 取消勾选包内对象即禁用其凭据选项，不误把其它渠道凭据带入；重选保留偏好 (5424.928416ms)
+✖ 文件页明确导出范围，导入范围来自所选文件而非继承页面导出勾选 (3934.5825ms)
+✔ 通知专题导入复用共享窗口，普通同步只预览新版来源、不手选冲突侧 (3916.262458ms)
+✔ 初次WebDAV提供的可用范围默认全选，凭据跟随范围；工具栏只留搜索与表头全选 (3088.792334ms)
+✔ 导入在所提供范围默认全选含包内可用凭据，显式入口只显示对应范围 (5124.891ms)
+
+Interrupted while running:
+
+⚠ docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs (docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:1:1)
+⚠ docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs (docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:1:1)
+✖ docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs (163585.183084ms)
+✖ 概览同步预览：取消 不执行、不备份、不通知，保留路由与滚动 (5554.876292ms)
+✖ 概览同步预览：右上关闭 不执行、不备份、不通知，保留路由与滚动 (4213.785209ms)
+✖ 概览同步预览：Escape 不执行、不备份、不通知，保留路由与滚动 (4302.311208ms)
+✖ download：确认后整次只采用一个快照来源，范围外不变 (4116.136084ms)
+✖ upload：确认后整次只采用一个快照来源，范围外不变 (3774.690958ms)
+✖ normal：确认后整次只采用一个快照来源，范围外不变 (3603.948917ms)
+✖ same：仍展示同步预览，禁用无需更新的确认且不产生执行或备份 (3700.394708ms)
+✖ 下载可取消备份选择，确认仍更新；再次预览没有重复变更 (3799.45425ms)
+✔ 导入读文件后取消 不备份、不写入、不通知 (4648.937666ms)
+✔ 导入读文件后右上关闭 不备份、不写入、不通知 (4777.50925ms)
+✔ 导入读文件后Escape 不备份、不写入、不通知 (4610.348333ms)
+✔ 导入确认：默认备份后写入，仅采用已选渠道 (5133.990708ms)
+✔ 导入确认：取消备份仍可写入，仅采用已选渠道 (6206.120292ms)
+✖ webdav 备份失败场景：阻止写入并保留原内容 (4018.0965ms)
+✖ webdav 备份失败场景：取消备份后允许执行 (4006.623125ms)
+✔ import 备份失败场景：阻止写入并保留原内容 (5393.539417ms)
+✔ import 备份失败场景：取消备份后允许执行 (6004.942958ms)
+✖ webdav write-fail 独立于备份：取消备份仍写入失败并保留原内容 (4000.052167ms)
+✔ import write-fail 独立于备份：取消备份仍写入失败并保留原内容 (6242.624458ms)
+ℹ tests 72
+ℹ suites 0
+ℹ pass 46
+ℹ fail 25
+ℹ cancelled 1
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 163591.7505
+
+✖ failing tests:
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:109:1
+✖ 范围和凭据自动记住；没有单独保存范围或逐次复核 (3399.993125ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '' !== 'sync-preview'
+  
+      at previewSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:15:9)
+      at startSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:22:37)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:114:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'sync-preview',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:116:49
+✖ upload 按固定内容版本执行，第二次同步无重复更新 (3479.594792ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '' !== 'sync-preview'
+  
+      at previewSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:15:9)
+      at startSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:22:37)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:119:17)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'sync-preview',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:116:49
+✖ download 按固定内容版本执行，第二次同步无重复更新 (4041.192667ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '' !== 'sync-preview'
+  
+      at previewSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:15:9)
+      at startSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:22:37)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:119:17)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'sync-preview',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:116:49
+✖ same 按固定内容版本执行，第二次同步无重复更新 (3709.092667ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '' !== 'sync-preview'
+  
+      at previewSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:15:9)
+      at noUpdates (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:24:96)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:123:14)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'sync-preview',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:126:1
+✖ 整次同步只采用一个快照来源，即使对象自身本机时间较新；当前范围以外不改 (3594.907084ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '' !== 'sync-preview'
+  
+      at previewSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:15:9)
+      at startSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:22:37)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:129:16)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'sync-preview',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:133:1
+✖ 运行中更改范围只作用下一次，不要求重开旧计划 (3625.339208ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '' !== 'sync-preview'
+  
+      at previewSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:15:9)
+      at startSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:22:37)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:134:107)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'sync-preview',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:139:1
+✖ 独立失败不阻断其余对象；只重试失败项、清除旧错误并复用原备份 (3442.919125ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '' !== 'sync-preview'
+  
+      at previewSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:15:9)
+      at startSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:22:37)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:140:169)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'sync-preview',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:148:1
+✖ 网络失败不改内容，可从原页面重试 (3545.981959ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '' !== 'sync-preview'
+  
+      at previewSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:15:9)
+      at startSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:22:37)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:149:170)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'sync-preview',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:151:49
+✖ backup-fail 独立失败保留原内容，取消备份只绕过备份失败 (3507.093292ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '' !== 'sync-preview'
+  
+      at previewSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:15:9)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:153:23)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'sync-preview',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:151:49
+✖ write-fail 独立失败保留原内容，取消备份只绕过备份失败 (3567.607041ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '' !== 'sync-preview'
+  
+      at previewSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:15:9)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:153:23)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'sync-preview',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:172:1
+✖ 官方openai/native不进入同步范围，旧官方条目不新增，自定义渠道仍原位更新 (3099.651667ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '' !== 'sync-preview'
+  
+      at previewSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:15:9)
+      at startSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:22:37)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:174:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'sync-preview',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:176:1
+✖ 加密为可选且记住选择，不含口令不执行；口令不暴露在状态中 (3186.257209ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '' !== 'sync-preview'
+  
+      at previewSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:15:9)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:177:136)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'sync-preview',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:199:1
+✖ 同步结果沿已有注册事件/Toast/铃铛，收起后仍可查看 (3164.746666ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '' !== 'sync-preview'
+  
+      at previewSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:15:9)
+      at startSync (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:22:37)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:200:87)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'sync-preview',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:227:1
+✖ 文件页明确导出范围，导入范围来自所选文件而非继承页面导出勾选 (3934.5825ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'skill:design',
+  +   'skill-platform:claude',
+  +   'skill-platform:claude-desktop',
+  +   'skill-platform:cline',
+  +   'skill-platform:codex',
+  +   'skill-platform:commandcode',
+  +   'skill-platform:cursor',
+  +   'skill-platform:dsh',
+  +   'skill-platform:droid',
+  +   'skill-platform:gemini',
+  +   'skill-platform:grok',
+  +   'skill-platform:hermes',
+  +   'skill-platform:kilo',
+  +   'skill-platform:kimi',
+  +   'skill-platform:mcode',
+  +   'skill-platform:omp',
+  +   'skill-platform:openclaw',
+  +   'skill-platform:opencode',
+  +   'skill-platform:pi',
+  +   'skill-platform:prime',
+  +   'skill-platform:qoder',
+  +   'skill-platform:qoder-cn',
+  +   'skill-platform:raycast',
+  +   'skill-platform:t3code',
+  +   'skill-platform:workbuddy'
+    ]
+  
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:233:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [
+      'skill:design',                  'skill-platform:claude',
+      'skill-platform:claude-desktop', 'skill-platform:cline',
+      'skill-platform:codex',          'skill-platform:commandcode',
+      'skill-platform:cursor',         'skill-platform:dsh',
+      'skill-platform:droid',          'skill-platform:gemini',
+      'skill-platform:grok',           'skill-platform:hermes',
+      'skill-platform:kilo',           'skill-platform:kimi',
+      'skill-platform:mcode',          'skill-platform:omp',
+      'skill-platform:openclaw',       'skill-platform:opencode',
+      'skill-platform:pi',             'skill-platform:prime',
+      'skill-platform:qoder',          'skill-platform:qoder-cn',
+      'skill-platform:raycast',        'skill-platform:t3code',
+      'skill-platform:workbuddy'
+    ],
+    expected: [ 'skill:design' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:1:1
+✖ docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs (163585.183084ms)
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:145:44
+✖ 概览同步预览：取消 不执行、不备份、不通知，保留路由与滚动 (5554.876292ms)
+  TypeError: Cannot read properties of null (reading 'value')
+      at openPreview (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:49:109)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:147:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:145:44
+✖ 概览同步预览：右上关闭 不执行、不备份、不通知，保留路由与滚动 (4213.785209ms)
+  TypeError: Cannot read properties of null (reading 'value')
+      at openPreview (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:49:109)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:147:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:145:44
+✖ 概览同步预览：Escape 不执行、不备份、不通知，保留路由与滚动 (4302.311208ms)
+  TypeError: Cannot read properties of null (reading 'value')
+      at openPreview (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:49:109)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:147:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:158:51
+✖ download：确认后整次只采用一个快照来源，范围外不变 (4116.136084ms)
+  TypeError: Cannot read properties of null (reading 'value')
+      at openPreview (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:49:109)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:159:57)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:158:51
+✖ upload：确认后整次只采用一个快照来源，范围外不变 (3774.690958ms)
+  TypeError: Cannot read properties of null (reading 'value')
+      at openPreview (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:49:109)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:159:57)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:158:51
+✖ normal：确认后整次只采用一个快照来源，范围外不变 (3603.948917ms)
+  TypeError: Cannot read properties of null (reading 'value')
+      at openPreview (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:49:109)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:159:57)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:185:1
+✖ same：仍展示同步预览，禁用无需更新的确认且不产生执行或备份 (3700.394708ms)
+  TypeError: Cannot read properties of null (reading 'value')
+      at openPreview (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:49:109)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:186:56)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:196:1
+✖ 下载可取消备份选择，确认仍更新；再次预览没有重复变更 (3799.45425ms)
+  TypeError: Cannot read properties of null (reading 'value')
+      at openPreview (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:49:109)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:197:62)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:265:72
+✖ webdav 备份失败场景：阻止写入并保留原内容 (4018.0965ms)
+  TypeError: Cannot read properties of null (reading 'value')
+      at openPreview (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:49:109)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:268:62)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:265:72
+✖ webdav 备份失败场景：取消备份后允许执行 (4006.623125ms)
+  TypeError: Cannot read properties of null (reading 'value')
+      at openPreview (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:49:109)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:268:62)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:292:39
+✖ webdav write-fail 独立于备份：取消备份仍写入失败并保留原内容 (4000.052167ms)
+  TypeError: Cannot read properties of null (reading 'value')
+      at openPreview (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:49:109)
+      at TestContext.<anonymous> (/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:294:59)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

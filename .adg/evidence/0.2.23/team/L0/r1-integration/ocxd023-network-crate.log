@@ -1,0 +1,108 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   Compiling opencodex-desktop v0.2.22 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0277]: the trait bound `&tauri::Url: IntoUrl` is not satisfied
+    --> src/infrastructure/webdav_config_v2.rs:193:30
+     |
+ 193 |             .request(method, &url)
+     |              -------         ^^^^ the trait `IntoUrl` is not implemented for `&tauri::Url`
+     |              |
+     |              required by a bound introduced by this call
+     |
+note: there are multiple different versions of crate `reqwest` in the dependency graph
+    --> /Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/reqwest-0.12.28/src/into_url.rs:7:1
+     |
+   7 | pub trait IntoUrl: IntoUrlSealed {}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+     |
+    ::: /Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/reqwest-0.13.5/src/into_url.rs:7:1
+     |
+   7 | pub trait IntoUrl: IntoUrlSealed {}
+     | --------------------------------
+     | |
+     | this is the found trait
+     | this is the found trait
+     = help: you can use `cargo tree` to explore your dependency tree
+note: required by a bound in `Client::request`
+    --> /Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/reqwest-0.12.28/src/async_impl/client.rs:2555:23
+     |
+2555 |     pub fn request<U: IntoUrl>(&self, method: Method, url: U) -> RequestBuilder {
+     |                       ^^^^^^^ required by this bound in `Client::request`
+help: consider removing the leading `&`-reference
+     |
+ 193 -             .request(method, &url)
+ 193 +             .request(method, url)
+     |
+
+error[E0277]: can't compare `str` with `[u8; 4]`
+   --> src/infrastructure/webdav_config_v2.rs:406:75
+    |
+406 |                     dav: matches!(ns,ResolveResult::Bound(v) if v.as_ref()==b"DAV:"),
+    |                                                                           ^^ no implementation for `str == [u8; 4]`
+    |
+    = help: the trait `PartialEq<[u8; 4]>` is not implemented for `str`
+    = help: the following other types implement trait `PartialEq<Rhs>`:
+              `&str` implements `PartialEq<Authority>`
+              `&str` implements `PartialEq<ByteStr>`
+              `&str` implements `PartialEq<ByteString>`
+              `&str` implements `PartialEq<Cow<'_, str>>`
+              `&str` implements `PartialEq<HeaderName>`
+              `&str` implements `PartialEq<HeaderValue>`
+              `&str` implements `PartialEq<OsString>`
+              `&str` implements `PartialEq<PathAndQuery>`
+            and 42 others
+    = note: required for `&str` to implement `PartialEq<&[u8; 4]>`
+
+error[E0599]: no method named `to_vec` found for reference `&str` in the current scope
+   --> src/infrastructure/webdav_config_v2.rs:407:69
+    |
+407 |                     name: String::from_utf8(e.local_name().as_ref().to_vec())
+    |                                                                     ^^^^^^ method not found in `&str`
+
+error[E0308]: mismatched types
+   --> src/infrastructure/webdav_config_v2.rs:432:48
+    |
+432 |                 let text = std::str::from_utf8(e.as_ref())
+    |                            ------------------- ^^^^^^^^^^ expected `&[u8]`, found `&str`
+    |                            |
+    |                            arguments to this function are incorrect
+    |
+    = note: expected reference `&[u8]`
+               found reference `&str`
+note: function defined here
+   --> /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/core/src/str/converts.rs:89:13
+
+error[E0308]: mismatched types
+   --> src/infrastructure/webdav_config_v2.rs:444:48
+    |
+444 |                 let name = std::str::from_utf8(e.as_ref())
+    |                            ------------------- ^^^^^^^^^^ expected `&[u8]`, found `&str`
+    |                            |
+    |                            arguments to this function are incorrect
+    |
+    = note: expected reference `&[u8]`
+               found reference `&str`
+note: function defined here
+   --> /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/core/src/str/converts.rs:89:13
+
+error: lifetime may not live long enough
+   --> src/infrastructure/webdav_config_v2.rs:383:9
+    |
+375 |     fn one(&self, name: &str) -> Result<&Node, SyncTransportError> {
+    |            -            - let's call the lifetime of this reference `'1`
+    |            |
+    |            let's call the lifetime of this reference `'2`
+...
+383 |         Ok(first)
+    |         ^^^^^^^^^ method was supposed to return data with lifetime `'2` but it is returning data with lifetime `'1`
+    |
+help: consider introducing a named lifetime parameter and update trait if needed
+    |
+375 |     fn one<'a>(&self, name: &'a str) -> Result<&'a Node, SyncTransportError> {
+    |           ++++               ++                 ++
+
+Some errors have detailed explanations: E0277, E0308, E0599.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `opencodex-desktop` (lib test) due to 6 previous errors

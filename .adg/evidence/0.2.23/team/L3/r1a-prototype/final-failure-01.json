@@ -1,0 +1,27 @@
+[
+  {
+    "engine": "chromium",
+    "viewport": {
+      "width": 1180,
+      "height": 760
+    },
+    "theme": "light",
+    "status": "failed",
+    "checks": [
+      "existing sync entry opens new shared preview",
+      "empty preview and Escape do not initialize",
+      "confirmation then execution creates G; later stop never retracts",
+      "verify same O survives source change; stored and local changed coexist",
+      "multi G -> dedicated export -> explicit empty directory -> source confirmation -> preview",
+      "dedicated recovery download distinct from ordinary synchronization",
+      "all observed parents in resolution; late head invalidates preview",
+      "MCP source required and preserved when direction changes",
+      "unreadable invalid or empty selection never becomes writable empty cloud",
+      "download backup/target guards keep local apply separate from stored source",
+      "all directory validity/pending/port scenes in real settings",
+      "Windows mock values displayed from injected snapshot"
+    ],
+    "pageErrors": [],
+    "error": "locator.click: Timeout 6500ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#modalConfirm')\u001b[22m\n\u001b[2m    - locator resolved to <button hidden=\"\" id=\"modalConfirm\" class=\"btn primary\">确定</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    12 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at /Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/r1a-browser/final.browser.cjs:23:441"
+  }
+]

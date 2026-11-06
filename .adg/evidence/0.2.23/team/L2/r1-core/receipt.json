@@ -1,0 +1,103 @@
+{
+  "date": "2026-11-06",
+  "timezone": "Asia/Shanghai",
+  "role": "L2",
+  "scope": [
+    "IMP-31/P23-00",
+    "IMP-31/P23-06",
+    "AC-P22-05",
+    "AC-P22-06"
+  ],
+  "status": "R1 batch core implemented and self-tested; L0 integration and production adapter validation pending controller evidence",
+  "baseline": "0c57500f8f46ea50655c782c3f04334a39167abb",
+  "firstCommit": "772e6424d9ff06874127b285d539c3833693ccdc",
+  "currentCommit": "a2b3501a485175b6e9e34f2572323325e548563b",
+  "controllerReportedFirstIntegration": "9e8fded1b",
+  "branch": "codex/0.2.23-webdav",
+  "worktree": "/Users/ezio/.codex/worktrees/ocxd-023-webdav/ocx-0219-fixes",
+  "documentContractCommit": "1d32a9cf4",
+  "contractDigest": "sha256:8f082326a1503b66b6b7a4eefc13dcba1610780205c3ddb17c1e8dc64ded5267",
+  "sourceFiles": [
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_v2.rs",
+      "sha256": "4362598c006f90a49b5b034b3b1e439b539ebeeeb56aef44ed04162fb8485d0f",
+      "bytes": 51201
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_v2_types.rs",
+      "sha256": "0306eac579ffe19bf3fa9e4b2512817f51572e0f46ae00896f225ab2ffe5f428",
+      "bytes": 38957
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_v2_graph.rs",
+      "sha256": "08f2393cdce2dc21bc177470c7d3849ecc723e49318e60761b7aba237d3ef680",
+      "bytes": 27332
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_v2_store.rs",
+      "sha256": "df34fa1e405ededb9f51f18453c5d9907e966e02b9f2f0b05a2b2f8d47950f17",
+      "bytes": 17538
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_v2_tests.rs",
+      "sha256": "d204109f37cc183d3cc8fe6dbd5bfa397d64328ddc00c44ab97f9f777cffaf6e",
+      "bytes": 50245
+    }
+  ],
+  "tests": {
+    "driverImportsActualFiveSourceFiles": true,
+    "unitTests": 31,
+    "passed": 31,
+    "failed": 0,
+    "ignored": 0,
+    "command": "cargo test --offline --manifest-path /tmp/ocxd-l2-r1-driver/Cargo.toml -- --nocapture",
+    "clippy": "cargo clippy --offline --manifest-path /tmp/ocxd-l2-r1-driver/Cargo.toml --all-targets -- -D warnings",
+    "clippyPassed": true,
+    "rustfmtCheckPassed": true,
+    "gitDiffCheckPassed": true,
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+    "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+    "reproductionDriver": "driver/Cargo.toml"
+  },
+  "coverage": [
+    "exact-byte DTO/JSON duplicate-field and hash guards",
+    "simultaneous initialization from independent stores preserves both G and stops data",
+    "simultaneous same-parent commits preserve both stored branches",
+    "simultaneous conflict resolutions preserve old files and produce two new heads",
+    "lost generation/payload/commit responses and frozen-ID resume",
+    "verify never PUTs and ignores current source/scope/MCP/evicted local payload",
+    "late descendant and newer local source recorded separately",
+    "cancellation before or after possible send; local-only receipt reads",
+    "whole prepare/publish/verify wall deadlines and historical stored evidence",
+    "root/connection revision changes prevent resume writes",
+    "reset generation rejects old plan and excludes old-generation late files",
+    "missing parents/bad metadata/known commit identity replacement",
+    "listing union of unknown business files does not become empty",
+    "unsupported payload schema, capacity, 507 and authentication failures",
+    "download target/backup guards, same-ID application idempotence",
+    "initialization ambiguity read-only recovery export",
+    "checksummed journals, corrupt seen state, symlink protection"
+  ],
+  "hostIntegrationRequirements": [
+    "L0 owns pub mod sync_v2 and production ConfigSyncTransport adapter",
+    "L1/L0 inject PayloadCodec with OCXD_MODEL_PACKAGE v6/schema2 registry; core does not parse model fields",
+    "L0 LocalApplication apply_once/export_once atomically persist same-ID outcome with expected target and backup",
+    "L0 real semantic-preview no-op gate prevents calling prepare_upload for unchanged content",
+    "later batch connects existing commands/transfer/app consumers; this batch does not switch them"
+  ],
+  "sideEffects": {
+    "realWebDav": false,
+    "dailyConfigOrKeys": false,
+    "remoteClear": false,
+    "publish": false,
+    "sharedEntryOrCargoManifestChanges": false,
+    "portsOrServicesStarted": false
+  },
+  "temporaryCleanup": {
+    "testData": "tempfile TempDirs drop after tests",
+    "driver": "preserved under controlled evidence/driver; /tmp driver build output removed after final evidence",
+    "generator": "/tmp/ocxd-l2-r1-types.py removed",
+    "unrelatedFilesTouched": false
+  },
+  "delivery": "local commits and controlled evidence only; not pushed by L2"
+}

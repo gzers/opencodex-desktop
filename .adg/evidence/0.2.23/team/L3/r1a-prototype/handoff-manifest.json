@@ -1,0 +1,241 @@
+{
+  "role": "L3",
+  "batch": "R1a prototype",
+  "sourceCommit": "0c7999b57e0591bcacc1dfa80602bf1cbdffa9e8",
+  "commits": [
+    "0359102b4",
+    "900a11bb995cb0f9cd3dfe2ebedfcbdc08ffa094"
+  ],
+  "branch": "docs/0.2.23-l3-prototype",
+  "prototypeRoot": "/Users/ezio/.codex/worktrees/ocxd-023-prototype/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型",
+  "codeFiles": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-condition-editor-023.js": "a9d476776afca6263217efe6c25296faa266b526114cf7f524b1e51fd0b6cb74",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/directory-runtime-023.js": "ed98b68ff2ccccc184daf00f156a1ca5c94606939a5a2a82b1ac72591ac7f57b",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/runtime-recovery-023.js": "162261d18c818e38db2a4e2e3b0156c2c12e880283338351c078600b9c36ce5c",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-recovery-023.js": "74706fea91047c23d9b110bce469caea626d9a383bc549691f994c4d975c8e8e",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-conditions-023.test.cjs": "0c64d7442bc00f68500dbdbd673c7919b05467d8da86ab3b749df9d7ae9ffc2a",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/directory-runtime-023.test.cjs": "12a5af6596494b731d9b309a61849057140d6f088fb4da38608e775870ba4c00",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/runtime-recovery-023.test.cjs": "6198b311775090e90a857d3c9c51a0d7da4a1a8a0ad3ca57eb689403c97548d7",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-recovery-023.test.cjs": "90a8e0c7f0c187592d57ce971463ea7377ac5931a8beed02f5123d79d622168c",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.js": "5bca3c55abd586a229f5daa1e0b59a6851f9d795e4a6896d932df06eb8cf349a",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.js": "0ecef09d06739350c7ae074de6954ace200de27c573017b44087a3f4c149bf2e",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "93ce62678b952340f92366ab3d5e46eb16a65ba5913964e3e6bdee5a630f02c3"
+  },
+  "l2ContractCommitReadUsingGitShow": "1d32a9cf4",
+  "l2ContractDigest": "sha256:8f082326a1503b66b6b7a4eefc13dcba1610780205c3ddb17c1e8dc64ded5267",
+  "targetedNode": {
+    "tests": 40,
+    "passed": 40,
+    "failed": 0
+  },
+  "dtoSchemaValidation": {
+    "schemaCommit": "1d32a9cf4",
+    "checks": 71,
+    "passed": 71,
+    "failures": []
+  },
+  "errorPolicyValidation": {
+    "checks": 8,
+    "failures": 0,
+    "errors": []
+  },
+  "browser": [
+    {
+      "engine": "chromium",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "theme": "light",
+      "status": "passed",
+      "checks": [
+        "existing sync entry opens new shared preview",
+        "empty preview and Escape do not initialize",
+        "confirmation then execution creates G; later stop never retracts",
+        "verify same O survives source change; stored and local changed coexist",
+        "multi G -> dedicated export -> explicit empty directory -> source confirmation -> preview",
+        "dedicated recovery download distinct from ordinary synchronization",
+        "all observed parents in resolution; late head invalidates preview",
+        "MCP source required and preserved when direction changes",
+        "unreadable invalid or empty selection never becomes writable empty cloud",
+        "download backup/target guards keep local apply separate from stored source",
+        "all directory validity/pending/port scenes in real settings",
+        "Windows mock values displayed from injected snapshot",
+        "installation source/backup/ownership/permission/unknown/reconciliation failures preserved",
+        "all declared condition outcomes, missing protocol, source/explicit provenance",
+        "editable custom AND -> declared pending response -> explicit revision save",
+        "long editor scrolls with fixed reachable modal footer",
+        "keyboard focus trap and Escape close"
+      ],
+      "pageErrors": [],
+      "externalRequests": 0,
+      "nonGetRequests": 0
+    },
+    {
+      "engine": "chromium",
+      "viewport": {
+        "width": 900,
+        "height": 650
+      },
+      "theme": "dark",
+      "status": "passed",
+      "checks": [
+        "existing sync entry opens new shared preview",
+        "empty preview and Escape do not initialize",
+        "confirmation then execution creates G; later stop never retracts",
+        "verify same O survives source change; stored and local changed coexist",
+        "multi G -> dedicated export -> explicit empty directory -> source confirmation -> preview",
+        "dedicated recovery download distinct from ordinary synchronization",
+        "all observed parents in resolution; late head invalidates preview",
+        "MCP source required and preserved when direction changes",
+        "unreadable invalid or empty selection never becomes writable empty cloud",
+        "download backup/target guards keep local apply separate from stored source",
+        "all directory validity/pending/port scenes in real settings",
+        "Windows mock values displayed from injected snapshot",
+        "installation source/backup/ownership/permission/unknown/reconciliation failures preserved",
+        "all declared condition outcomes, missing protocol, source/explicit provenance",
+        "editable custom AND -> declared pending response -> explicit revision save",
+        "long editor scrolls with fixed reachable modal footer",
+        "keyboard focus trap and Escape close"
+      ],
+      "pageErrors": [],
+      "externalRequests": 0,
+      "nonGetRequests": 0
+    },
+    {
+      "engine": "webkit",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "theme": "dark",
+      "status": "passed",
+      "checks": [
+        "existing sync entry opens new shared preview",
+        "empty preview and Escape do not initialize",
+        "confirmation then execution creates G; later stop never retracts",
+        "verify same O survives source change; stored and local changed coexist",
+        "multi G -> dedicated export -> explicit empty directory -> source confirmation -> preview",
+        "dedicated recovery download distinct from ordinary synchronization",
+        "all observed parents in resolution; late head invalidates preview",
+        "MCP source required and preserved when direction changes",
+        "unreadable invalid or empty selection never becomes writable empty cloud",
+        "download backup/target guards keep local apply separate from stored source",
+        "all directory validity/pending/port scenes in real settings",
+        "Windows mock values displayed from injected snapshot",
+        "installation source/backup/ownership/permission/unknown/reconciliation failures preserved",
+        "all declared condition outcomes, missing protocol, source/explicit provenance",
+        "editable custom AND -> declared pending response -> explicit revision save",
+        "long editor scrolls with fixed reachable modal footer",
+        "keyboard focus trap and Escape close"
+      ],
+      "pageErrors": [],
+      "externalRequests": 0,
+      "nonGetRequests": 0
+    },
+    {
+      "engine": "webkit",
+      "viewport": {
+        "width": 900,
+        "height": 650
+      },
+      "theme": "light",
+      "status": "passed",
+      "checks": [
+        "existing sync entry opens new shared preview",
+        "empty preview and Escape do not initialize",
+        "confirmation then execution creates G; later stop never retracts",
+        "verify same O survives source change; stored and local changed coexist",
+        "multi G -> dedicated export -> explicit empty directory -> source confirmation -> preview",
+        "dedicated recovery download distinct from ordinary synchronization",
+        "all observed parents in resolution; late head invalidates preview",
+        "MCP source required and preserved when direction changes",
+        "unreadable invalid or empty selection never becomes writable empty cloud",
+        "download backup/target guards keep local apply separate from stored source",
+        "all directory validity/pending/port scenes in real settings",
+        "Windows mock values displayed from injected snapshot",
+        "installation source/backup/ownership/permission/unknown/reconciliation failures preserved",
+        "all declared condition outcomes, missing protocol, source/explicit provenance",
+        "editable custom AND -> declared pending response -> explicit revision save",
+        "long editor scrolls with fixed reachable modal footer",
+        "keyboard focus trap and Escape close"
+      ],
+      "pageErrors": [],
+      "externalRequests": 0,
+      "nonGetRequests": 0
+    }
+  ],
+  "staleSaveFinalBrowser": [
+    {
+      "engine": "chromium",
+      "staleSaveBlocked": true,
+      "nativeConditionEntry": true
+    },
+    {
+      "engine": "webkit",
+      "staleSaveBlocked": true,
+      "nativeConditionEntry": true
+    }
+  ],
+  "scaleLimitation": "applyInterfaceScale changes panel-zoom only; tested 100/150/200 controls leave modal at 13px and same geometry. No claim of native WebView/system zoom acceptance.",
+  "historicalRegression": {
+    "missingJsdomPath": {
+      "tests": 81,
+      "passed": 18,
+      "failed": 63
+    },
+    "withExistingJsdom": {
+      "tests": 72,
+      "passed": 46,
+      "failed": 25,
+      "cancelled": 1
+    },
+    "reason": "Old sync DOM/state assertions do not consume the new L2 view; one long-running old fixture process terminated after preserving output. Newly authorized scoped updates tracked separately; no assertions weakened."
+  },
+  "productAcceptance": false,
+  "prototypeVisualQA": "four engine/viewport/theme combinations plus representative screenshot review; limitations retained",
+  "realConfigurationOrNetworkAccess": false,
+  "externalRequests": 0,
+  "productionFilesChanged": false,
+  "sharedDirtyTreeWritten": false,
+  "remotePublished": false,
+  "cleanup": "all Playwright browsers closed; local static server will be stopped at code batch switch",
+  "evidenceFiles": {
+    "chromium-1180-condition-top-light.png": "0fb2ce0c77266985644660c797979005e22bbad7744af72671bcf6fb82bbcd7c",
+    "chromium-1180-directory-light.png": "915363d0c4cccbadb9b626917212a97a9a8fa70944743cd3677d4b76328616c1",
+    "chromium-1180-fork-light.png": "4bcd84de4510dc917b3a7519244eea52cb6d2fb8832a3c381741038331d8cacf",
+    "chromium-1180-original-light.png": "7970e3c7008d63a5eccd407047bd3ab429297282bfb2aad226a1af741a27270e",
+    "chromium-900-condition-top-dark.png": "0b8ee67bd5bdb3cf64b1d9bb48cf99b505676efdaf30d6b9fa2465172dcc1aea",
+    "chromium-900-directory-dark.png": "18012c88bd2237a7604a5192208c01e799025ce5bcc9c3d13f76e2ea611c59df",
+    "chromium-900-fork-dark.png": "990f6dc9bd6fddbb0f917f9f8b551ca3fa9603e328f15f611505cd10e7299267",
+    "chromium-900-original-dark.png": "100bdf8704945d678c14da01ed008597d2422135c91fc36c9c95479f0f534470",
+    "chromium-condition-light.png": "c7f97adf5bcaeb618e964cae184beba1106c6d54de6a26ebf4944b954e374f5a",
+    "chromium-installation-confirm-light.png": "4d934e7cb9c92bd620905c4f52c5f299e5ab9ae3a3105f78c4cf3f12fffe0903",
+    "dto-check.cjs": "854356cc8f892c85e87ff9b1e3e0bc7f933eddfe4d6645c17ab9b5aec917cb8c",
+    "dto-results.json": "dd3c17acde59555d3577c0411234b1e68619317bf45f033481f7c80b0c34387a",
+    "error-policy-results.json": "a99ebc0832a085b053a35712670bdb9c83ca2d2c2dd42fd04fb39847e485ddfb",
+    "final-before-review-tools.json": "fdbddbcc4d86c4c58dc6bdd73bcd6b4c4e183ee57f6f37aff1d578cba9b588cf",
+    "final-failure-01.json": "d144ab9b7b7320723edd4215b5984dcef9b045b1b4ae255d73cc943b2540b6e3",
+    "final-results.json": "fdbddbcc4d86c4c58dc6bdd73bcd6b4c4e183ee57f6f37aff1d578cba9b588cf",
+    "final.browser.cjs": "ce6f82040a1800c15267b225e3587d531b07ba319697616c5fb0fc6d3ef2b77c",
+    "milestone-failure-01.json": "ca80fbbe00aee2302c362f8688b12a4045fba8ca283622021e8792763b6bff74",
+    "milestone-results.json": "07531076c63251def2f5f5267acfce59a6ea6a448f1fb2c07e637aed8115eee0",
+    "milestone.browser.cjs": "56c59ad5a35612e46f93eab4a2c6d388d0e272cc2a9e464c3fc96a7a201a67a1",
+    "regression-env-failure.log": "172fcb9704a15b5e430ae31f4e10a5a3a51de8cee9ca6afb79e9c50c509950e0",
+    "regression-existing-jsdom.log": "dbba4b95b388944578626f54ae93c71e453f0c1bd2924cc6321e9c72126fa8b5",
+    "scale-results.json": "1d012a7853c01ecf2862d4643ce7f1a730faffd9101d6173501516f85a8858bb",
+    "settings-first.png": "348410c1592326fd2cf02702884db5f337168ca073ee9d4a5c4241623a7dd6a9",
+    "stale-final.json": "93374d3856ac2532861639433184d75a2f5de7e11bf354e20696e96cf942ba89",
+    "targeted-final.log": "020d40d3059ee18e64aa41fe06b1f6c8bce3cab1f85996d744f1ea6eb44be233",
+    "webkit-1180-condition-top-dark.png": "265effee33bb415b31ced38bcdfc389203f6a4eb559646de99e3a0abbe80bd41",
+    "webkit-1180-directory-dark.png": "97983bea4c5a4cbacb3ffc31640b2a913bfdfdb91231435966e6e9317180bf47",
+    "webkit-1180-fork-dark.png": "23cfd5c40758b90bb9987a0249d73f912811b68ff423f7ed0de48f4b7e3b0be5",
+    "webkit-1180-original-dark.png": "4181d44e0a854c1c1b03b85aed0e0a181942157f92420c98a9ac412bdceae5e7",
+    "webkit-900-condition-top-light.png": "1700edc4b35061dc9432c1fd83f68ca8637a229b0f885533ee3c02bfd2b984a8",
+    "webkit-900-directory-light.png": "b8431ed526eff7acee2bb40b4936870186051dd2dd376fe020bb2d1b81efeb64",
+    "webkit-900-fork-light.png": "620e68e9fe099d90f63e2032f927801f8bca1da9900d9d0ca7fe6cfbc48ba807",
+    "webkit-900-original-light.png": "84df6047849f5c50588e97cadc664c0416053e5165bcba89e8e6d673c7af5cba",
+    "webkit-condition-dark.png": "c059d06f7d98740f814a475d31418d7569283882bd1eaff6ae8f0da439f97864",
+    "webkit-installation-confirm-dark.png": "554e06928fde88576591b9d4b0dfc4299a0ceb354a3c51b6720e436fcd88bd9e"
+  }
+}

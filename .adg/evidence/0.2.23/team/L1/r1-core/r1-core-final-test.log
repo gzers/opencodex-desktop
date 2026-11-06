@@ -1,0 +1,37 @@
+   Compiling ocxd-model-v2-core-check v0.1.0 (/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/r1-core-driver)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.11s
+     Running unittests lib.rs (/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/r1-core-driver/target/debug/deps/ocxd_model_v2_core_check-9283e9d45c1764f1)
+
+running 29 tests
+test v2_tests::actual_source_mapping_keeps_negative_and_colon_rules ... ok
+test v2_tests::ledger_prevents_materialized_protocol_becoming_source ... ok
+test v2_tests::ledger_pairing_and_connection_credentials_in_urls_are_rejected ... ok
+test v2_tests::channel_protocol_custom_is_rejected_not_dropped ... ok
+test v2_tests::ledger_finalizer_covers_all_fields_and_auth_binding_cannot_guess ... ok
+test v2_tests::eight_name_position_and_four_capability_spillover_cases ... ok
+test v2_tests::all_58_pinned_parameter_groups_and_locks_are_unchanged ... ok
+test v2_tests::provider_adapter_is_evidence_and_exact_protocol_never_falls_back ... ok
+test v2_tests::bad_conditions_unknown_versions_and_overlaps_are_rejected ... ok
+test v2_tests::groups_keep_chat_responses_distinct_and_pending_selected_blocks ... ok
+test v2_tests::source_capability_precedence_and_bad_protocol_types_match_original_fields ... ok
+test v2_tests::seed_is_real_v2_and_history_is_not_relabelled ... ok
+test v2_tests::explicit_intent_equal_value_and_clear_are_not_inferred_from_source ... ok
+test v2_tests::clearing_invalid_manual_pin_can_plan_repair_without_reinterpreting_old_effective_values ... ok
+test v2_tests::portable_native_and_family_boundary_validation_is_enforced ... ok
+test v2_tests::portable_v6_round_trip_is_lossless_and_has_no_local_authority ... ok
+test v2_tests::portable_subset_is_exact_and_cannot_smuggle_others_or_versions ... ok
+test v2_tests::newly_observed_unmatched_id_is_counted_changed_without_selecting_it ... ok
+test v2_tests::materialization_clear_restores_source_and_does_not_write_manual_fields ... ok
+test v2_tests::equal_priority_conflict_preserves_old_model_and_unrelated_success ... ok
+test v2_tests::portable_merge_rejects_same_revision_different_bytes_and_keeps_default ... ok
+test v2_tests::manual_pin_survives_default_change_and_auto_updates_only_on_read ... ok
+test v2_tests::immutable_revision_append_rejects_stale_base_and_agent_lock_changes ... ok
+test v2_tests::stale_read_empty_and_wrong_library_do_not_apply ... ok
+test v2_tests::read_matches_into_draft_and_does_not_change_manual_values_or_selection ... ok
+test v2_tests::preserved_selected_28_ids_remain_matchable_without_inventory_changes ... ok
+test v2_tests::frozen_nineteen_unmatched_models_keep_original_configuration ... ok
+test v2_tests::frozen_separator_and_family_boundaries ... ok
+test v2_tests::frozen_246_rows_keep_133_ids_and_79_known_hits ... ok
+
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.31s
+

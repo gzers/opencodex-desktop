@@ -1,0 +1,20 @@
+[
+  {
+    "engine": "chromium",
+    "viewport": {
+      "width": 1180,
+      "height": 760
+    },
+    "theme": "light",
+    "status": "failed",
+    "checks": [
+      "real template route -> conditions -> declared preview",
+      "name before version AND complete numeric view",
+      "arbitrary edit invalidates mock response",
+      "cancel save stays uncommitted",
+      "explicit immutable memory revision and reopen"
+    ],
+    "pageErrors": [],
+    "error": "locator.click: Timeout 7000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '选择新版目录', exact: true })\u001b[22m\n\n    at /Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/r1a-browser/milestone.browser.cjs:36:62"
+  }
+]
