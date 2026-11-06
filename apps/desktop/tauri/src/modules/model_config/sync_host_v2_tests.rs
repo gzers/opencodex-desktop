@@ -1563,3 +1563,88 @@ fn expected_absent_mapping_unknown_or_changed_target_does_not_turn_into_empty_ca
     );
     assert!(invalid.is_err());
 }
+
+#[cfg(not(windows))]
+#[test]
+fn actual_default_endpoint_id_resolves_d_bound_password_and_binds_production_transport() {
+    use crate::infrastructure::{keychain, webdav_config_v2::FileWebDavTransport};
+    let root = tempfile::tempdir().unwrap();
+    // This is the exact current SyncConfigStore::save_endpoint ID/domain,
+    // with its real persisted config type and D-bound credential file format.
+    let original = endpoint("default", CRED, "https://fixture.example.test/base");
+    save_endpoint(root.path(), original.clone());
+    let reread = crate::modules::sync::config::SyncConfigStore::new(root.path())
+        .load()
+        .unwrap();
+    assert_eq!(reread.active().unwrap().endpoint_id, "default");
+    let account = keychain::account_key(keychain::WEBDAV_CREDENTIAL_PURPOSE, CRED).unwrap();
+    let dir = root.path().join("manager-state/credentials");
+    std::fs::create_dir_all(&dir).unwrap();
+    std::fs::write(dir.join(format!("{account}.json")),serde_json::to_vec(&json!({"account":account,"value":"default-endpoint-synthetic-password","protection":"plain"})).unwrap()).unwrap();
+    let resolver =
+        EndpointResolverV2::new(root.path().into(), Arc::new(SystemEndpointCredentialsV2)).unwrap();
+    let bound = resolver.resolve_active().unwrap();
+    assert!(bound.handle().id.starts_with("default:"));
+    let transport = FileWebDavTransport::new().unwrap();
+    bound.bind_file_transport(&transport).unwrap();
+    let handle = bound.handle().clone();
+    // Switching the active saved endpoint cannot substitute its ID/password for
+    // the original default binding. No second password is needed to verify it.
+    save_endpoint(
+        root.path(),
+        endpoint(
+            "another-saved-endpoint",
+            CRED2,
+            "https://other.example.test",
+        ),
+    );
+    let restored = resolver.resolve_original(&handle).unwrap();
+    assert_eq!(restored.handle(), &handle);
+    restored.bind_file_transport(&transport).unwrap();
+    let mut changed = original;
+    changed.url = "https://changed.example.test".into();
+    save_endpoint(root.path(), changed);
+    assert_eq!(
+        resolver.resolve_original(&handle).err().unwrap().code,
+        ErrorCode::SyncEndpointChanged
+    );
+}
+#[test]
+fn endpoint_ids_are_bounded_opaque_strings_not_operation_uuids() {
+    for id in [
+        "default",
+        "saved-endpoint",
+        "用户连接",
+        "x:y",
+        &"x".repeat(256),
+    ] {
+        let e = endpoint(id, CRED, "https://fixture.example.test");
+        let normalized = normalize_endpoint(&e).unwrap();
+        let handle = endpoint_handle(&e, &normalized, "synthetic-password").unwrap();
+        assert!(handle.id.starts_with(&format!("{id}:")));
+    }
+    for id in [
+        "",
+        " ",
+        "default\n",
+        "default\r",
+        "default\t",
+        "default\0",
+        &"x".repeat(257),
+    ] {
+        let e = endpoint(id, CRED, "https://fixture.example.test");
+        assert_eq!(
+            normalize_endpoint(&e).err().unwrap().code,
+            ErrorCode::SyncEndpointChanged
+        );
+    }
+    // Only the endpoint domain changed: operation/generation UUID and the
+    // credential reference/account-key owner checks remain strict.
+    assert!(require_uuid("default").is_err());
+    assert!(SyncRelativePath::generation("default").is_err());
+    assert!(crate::infrastructure::keychain::account_key(
+        crate::infrastructure::keychain::WEBDAV_CREDENTIAL_PURPOSE,
+        "default"
+    )
+    .is_err());
+}

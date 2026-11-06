@@ -1132,7 +1132,15 @@ fn normalize_endpoint(
             })
             .collect()
     }
-    require_uuid(&endpoint.endpoint_id)?;
+    // SyncConfigStore creates the opaque ID "default". Endpoint identity is
+    // NOT an operation/generation UUID; keep the existing config schema and
+    // reject only unusable/unbounded/control-bearing identifiers here.
+    if endpoint.endpoint_id.trim().is_empty()
+        || endpoint.endpoint_id.len() > 256
+        || endpoint.endpoint_id.chars().any(char::is_control)
+    {
+        return Err(failure(ErrorCode::SyncEndpointChanged, Step::SourceGuard));
+    }
     let raw = endpoint.url.trim();
     let raw_path = raw
         .split_once("://")
