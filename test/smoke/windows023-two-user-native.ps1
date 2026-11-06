@@ -2,7 +2,8 @@ param(
  [Parameter(Mandatory=$true)][string]$Executable,
  [Parameter(Mandatory=$true)][string]$Node,
  [Parameter(Mandatory=$true)][string]$OutputDirectory,
- [Parameter(Mandatory=$true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedCommit
+ [Parameter(Mandatory=$true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedCommit,
+ [switch]$VerifyRuntimePorts
 )
 $ErrorActionPreference='Stop'
 # Guard before ANY directory/account/ACL/process mutation.
@@ -27,7 +28,7 @@ $taskAclBefore=Get-Acl -LiteralPath $taskOutput
 $taskAccounts=[Collections.Generic.List[object]]::new()
 $taskAccess=[Collections.Generic.List[object]]::new()
 $taskLedger=[Collections.Generic.Dictionary[int,object]]::new()
-$taskSummary=[ordered]@{schemaVersion=1;ephemeralGuard=$taskEphemeralGuard;result='not-ready';expectedCommit=$ExpectedCommit;nativeExecuted=$false;twoSidNativePassed=$false;userIsolation='not-verified';fullVersionGatePassed=$false;runtimeProxyPortIsolation='not-verified';cleanup='pending';evidenceDirectory=$taskOutput;unverified=@('Complete runtime proxy ports: no start/stop or conflict experiment performed','Synthetic DPAPI proves OS CurrentUser sub-scope, not all application credential flows','ocxd has no peer-pipe override; cross-pipe denial uses actual other-SID .NET client','Instance lock contents cannot be hashed while Windows byte-range lock is held; size/time plus schema/pointer hashes checked')}
+$taskSummary=[ordered]@{schemaVersion=1;ephemeralGuard=$taskEphemeralGuard;result='not-ready';expectedCommit=$ExpectedCommit;nativeExecuted=$false;verifyRuntimePorts=$VerifyRuntimePorts.IsPresent;twoSidNativePassed=$false;userIsolation='not-verified';fullVersionGatePassed=$false;runtimeProxyPortIsolation='not-verified';cleanup='pending';evidenceDirectory=$taskOutput;unverified=@('Complete runtime proxy ports: no start/stop or conflict experiment performed','Synthetic DPAPI proves OS CurrentUser sub-scope, not all application credential flows','ocxd has no peer-pipe override; cross-pipe denial uses actual other-SID .NET client','Instance lock contents cannot be hashed while Windows byte-range lock is held; size/time plus schema/pointer hashes checked')}
 $taskCandidateBefore=$null
 $taskDesktopRestored=$true
 try {
@@ -72,7 +73,7 @@ try {
    try{$user=New-LocalUser -Name $name -Password $secure -AccountNeverExpires -PasswordNeverExpires -Description 'Disposable two-SID Desktop CI account'}
    catch{$taskSummary.result='blocked';$taskSummary.reason='noSecondUserPermission';throw 'Cannot provision second ordinary CI user'}
    # Track immediately, before any later provision step can fail.
-   $account=[pscustomobject]@{name=$name;sid=$user.SID.Value;profile=$null;evidence=(Join-Path $taskOutput ('user'+$index));process=$null;fact=$null;credential=$null}
+   $account=[pscustomobject]@{name=$name;sid=$user.SID.Value;profile=$null;evidence=(Join-Path $taskOutput ('user'+$index));process=$null;fact=$null;credential=$null;runtimeSequence=0;runtimeCleanupUnproven=$false}
    $taskAccounts.Add($account)
    if($account.sid -ceq $identity.User.Value){throw 'Refusing runner/daily SID'}
    Add-LocalGroupMember -Group (Get-LocalGroup -SID 'S-1-5-32-545') -Member $user
@@ -89,7 +90,7 @@ try {
    & icacls.exe $account.evidence /grant ('*'+$account.sid+':(OI)(CI)M')|Out-Null
    if($LASTEXITCODE -ne 0){throw 'Evidence write ACL failed'}
    $config=Join-Path $account.evidence 'input.json'
-   Write-TwoUserJson $config ([ordered]@{ephemeralGuard=$taskEphemeralGuard;accountSid=$account.sid;profile=$account.profile;commit=$ExpectedCommit;nativeHelper=(Join-Path $code 'windows023-two-user-native-helper.ps1');candidateDirectory=$taskCandidate;executableName=(Split-Path -Leaf $taskExe);node=$taskNode;evidence=$account.evidence;code=$code;profileOnly=$false})
+   Write-TwoUserJson $config ([ordered]@{ephemeralGuard=$taskEphemeralGuard;accountSid=$account.sid;profile=$account.profile;commit=$ExpectedCommit;nativeHelper=(Join-Path $code 'windows023-two-user-native-helper.ps1');candidateDirectory=$taskCandidate;executableName=(Split-Path -Leaf $taskExe);node=$taskNode;evidence=$account.evidence;code=$code;profileOnly=$false;verifyRuntimePorts=$VerifyRuntimePorts.IsPresent;runtimeRole=$index})
    $account.credential=[pscredential]::new(($env:COMPUTERNAME+'\'+$name),$secure)
    $account.process=Start-Process -FilePath (Join-Path $PSHOME 'pwsh.exe') -Credential $account.credential -LoadUserProfile -WorkingDirectory $account.evidence -ArgumentList @('-NoLogo','-NoProfile','-NonInteractive','-File',('"'+(Join-Path $code 'profile-bootstrap.ps1')+'"'),'-InputFile',('"'+$config+'"')) -RedirectStandardOutput (Join-Path $account.evidence 'child-stdout.log') -RedirectStandardError (Join-Path $account.evidence 'child-stderr.log') -PassThru
    $account.fact=Get-TwoUserProcessFact $account.process $account.sid;$taskLedger[[int]$account.fact.pid]=$account.fact
@@ -137,6 +138,13 @@ try {
  foreach($userFacts in $taskSummary.users){
   if($userFacts.result -cne 'pass-user-isolation' -or $userFacts.applicationToken.elevated -ne $false -or $userFacts.peerBusinessData -cne 'access-denied' -or $userFacts.crossPipe -cne 'access-denied-real-token' -or !$userFacts.duplicate.rejected){throw 'Actual native checked facts incomplete'}
  }
+ if($VerifyRuntimePorts.IsPresent){
+  foreach($userFacts in $taskSummary.users){if($userFacts.verifyRuntimePorts -ne $true){throw 'Both account children must opt into runtime-port verification'}}
+  $taskSummary.runtimeProtocol=Invoke-TwoUserRuntimeProtocol $taskAccounts $taskLedger
+  Write-TwoUserJson (Join-Path $taskOutput 'runtime-port-protocol.json') $taskSummary.runtimeProtocol
+  $taskSummary.runtimeProxyPortIsolation='verified-runtime-ports'
+  $taskSummary.unverified=@($taskSummary.unverified|Where-Object {$_ -notlike 'Complete runtime proxy ports:*'})
+ }
  $taskSummary.userIsolation='verified-two-native-SIDs';$taskSummary.result='pass-user-isolation'
 }catch{
  if($taskSummary.result -notin @('blocked')){$taskSummary.result=if($_.Exception.Message.StartsWith('NotReady:')){'not-ready'}else{'fail'}}
@@ -155,8 +163,18 @@ try {
    $finished=Join-Path $account.evidence 'finished.json'
    if($taskSummary.result -ceq 'pass-user-isolation'){
     if(!(Test-Path -LiteralPath $finished)){$taskSummary.result='evidence-incomplete'}
-    else{$last=Get-Content -LiteralPath $finished -Raw|ConvertFrom-Json;if($last.result -cne 'pass-user-isolation' -or $last.inventory -cne 'hashed'){$taskSummary.result='evidence-incomplete'}}
+    else{$last=Get-Content -LiteralPath $finished -Raw|ConvertFrom-Json;if($last.result -cne 'pass-user-isolation' -or $last.inventory -cne 'hashed' -or ($VerifyRuntimePorts.IsPresent -and $last.runtimeProxyVerification -cne 'verified-runtime-ports')){$taskSummary.result='evidence-incomplete'}}
    }
+  }
+ }
+ # Public launch ledger lets exact cleanup survive an intermediate parent exit.
+ foreach($account in $taskAccounts){
+  $tracked=Join-Path $account.evidence 'runtime-tracked.json'
+  if(Test-Path -LiteralPath $tracked){
+   try{foreach($fact in @(Get-Content -LiteralPath $tracked -Raw|ConvertFrom-Json)){
+    if($fact.sid -cne $account.sid -or [long]$fact.creationTicks -lt [long]$account.fact.creationTicks){throw 'Runtime cleanup ledger escaped new account/generation'}
+    if(Get-Process -Id $fact.pid -ErrorAction SilentlyContinue){$null=Assert-TwoUserLive $fact;$taskLedger[[int]$fact.pid]=$fact}
+   }}catch{$account.runtimeCleanupUnproven=$true;$taskSummary.result='cleanup-failed'}
   }
  }
  foreach($fact in @($taskLedger.Values|Sort-Object {[long]$_.creationTicks} -Descending)){
@@ -167,6 +185,7 @@ try {
  for($i=$taskAccess.Count-1;$i -ge 0;$i--){try{$taskAccess[$i].Dispose()}catch{$taskDesktopRestored=$false;$taskSummary.result='cleanup-failed'}}
  foreach($account in $taskAccounts){
   try{
+   if($account.runtimeCleanupUnproven){throw 'Runtime identity unproven; retain new account/Profile'}
    if(@($cleanup|Where-Object {$_.sid -ceq $account.sid -and $_.result -ceq 'retained-unproven'}).Count){throw 'Live ownership not proven; retain corresponding Profile/account'}
    $current=Get-LocalUser -SID $account.sid -ErrorAction Stop
    if($current.Name -cne $account.name -or $current.Name -notlike 'ocxacc*'){throw 'Cleanup account identity changed'}
@@ -193,6 +212,8 @@ try {
  }
  $taskSummary.cleanup=$cleanup.ToArray();$taskSummary.desktopAclRestored=$taskDesktopRestored
  $taskSummary.twoSidNativePassed=$taskSummary.result -ceq 'pass-user-isolation'
+ $taskSummary.fullVersionGatePassed=Test-TwoUserRuntimeFullGate $VerifyRuntimePorts.IsPresent $taskSummary.twoSidNativePassed $taskSummary.runtimeProxyPortIsolation ($taskSummary.runtimeProtocol.servicesStopped -eq $true -and $taskSummary.sealedCandidateUnchanged -eq $true -and $taskSummary.desktopAclRestored -eq $true -and $taskSummary.evidenceAclRestored -eq $true)
+ if($VerifyRuntimePorts.IsPresent -and !$taskSummary.fullVersionGatePassed -and $taskSummary.result -ceq 'pass-user-isolation'){$taskSummary.result='runtime-proof-incomplete'}
  $taskSummary.finishedUtc=[datetime]::UtcNow.ToString('o')
  Write-TwoUserJson (Join-Path $taskOutput 'two-user-native.json') $taskSummary
 }

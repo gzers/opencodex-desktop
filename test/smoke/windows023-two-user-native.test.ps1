@@ -67,6 +67,7 @@ try{
  $env:GITHUB_ACTIONS='false'
  $refused=Join-Path $taskOutput 'must-not-exist'
  Assert-Throws {& $taskMain -Executable 'not-an-exe' -Node 'not-a-node' -OutputDirectory $refused -ExpectedCommit ('a'*40)} 'actual-controller-refuses-outside-Windows-CI'
+ Assert-Throws {& $taskMain -Executable 'not-an-exe' -Node 'not-a-node' -OutputDirectory $refused -ExpectedCommit ('a'*40) -VerifyRuntimePorts} 'actual-runtime-flag-controller-refuses-outside-Windows-CI'
  Assert-Test (!(Test-Path -LiteralPath $refused)) 'guard-created-no-native-output'
  Assert-Throws {Assert-TwoUserChildGuard} 'actual-child-refuses-outside-Windows-CI'
 }finally{[Environment]::SetEnvironmentVariable('GITHUB_ACTIONS',$oldActions,'Process')}
@@ -119,7 +120,34 @@ $taskHelperSource=Get-Content -LiteralPath $taskHelper -Raw
 Assert-Test ($taskHelperSource.Contains(".codex-desktop/opencodex/home")) 'actual-v2-home-leaf-is-home'
 Assert-Test ($taskHelperSource.Contains("Windows UI CLI capability boundary changed")) 'windows-ui-cli-remains-disabled-with-isolated-pipe-fixture'
 
-$result=[ordered]@{schemaVersion=1;result='pass-static-only';checks=$taskChecks.ToArray();checksPassed=$taskChecks.Count;nativeExecuted=$false;accountsCreated=$false;managerStarted=$false;twoSidNativePassed=$false;runtimeProxyPortIsolation='not-verified';host=$PSVersionTable.OS;powershell=$PSVersionTable.PSVersion.ToString();files=@()}
+# Runtime-port increment: parser/contracts + pure fixtures only, never start a proxy.
+$tokens=$null;$errors=$null
+$mainAst=[Management.Automation.Language.Parser]::ParseFile($taskMain,[ref]$tokens,[ref]$errors)
+$flag=@($mainAst.ParamBlock.Parameters|Where-Object {$_.Name.VariablePath.UserPath -ceq 'VerifyRuntimePorts'})
+Assert-Test ($flag.Count -eq 1 -and $flag[0].StaticType -eq [Management.Automation.SwitchParameter] -and !$flag[0].DefaultValue) 'runtime-port-switch-is-ASCII-explicit-default-off'
+Assert-Test ($main.Contains('verifyRuntimePorts=$VerifyRuntimePorts.IsPresent;runtimeRole=$index') -and $helper.Contains('Runtime ports require explicit controller and child flag') -and $main.Contains('Both account children must opt into')) 'runtime-port-flag-bound-to-both-account-children'
+Assert-Test ((Get-TwoUserRuntimeSteps 1) -join ',' -ceq 'start,after-conflict,overlap,after-peer-stop,stop,complete') 'actual-A-runtime-controlled-step-order'
+Assert-Test ((Get-TwoUserRuntimeSteps 2) -join ',' -ceq 'conflict,start,overlap,stop,complete') 'actual-B-runtime-controlled-step-order'
+Assert-Throws {Get-TwoUserRuntimeSteps 0} 'unknown-runtime-role-refused'
+foreach($requested in @($false,$true)){foreach($isolation in @($false,$true)){foreach($proof in @('not-verified','verified-runtime-ports')){foreach($terminal in @($false,$true)){
+ $actual=Test-TwoUserRuntimeFullGate $requested $isolation $proof $terminal
+ Assert-Test ($actual -eq ($requested -and $isolation -and $proof -ceq 'verified-runtime-ports' -and $terminal)) ('runtime-full-gate-'+$requested+'-'+$isolation+'-'+$proof+'-'+$terminal)
+}}}}
+Assert-Test ($helper.Contains("same(c.home,join(process.env.USERPROFILE,'.codex-desktop/opencodex/home'))") -and $helper.Contains("same(c.root,join(process.env.USERPROFILE,'.codex-desktop/desktop'))") -and $helper.Contains("open(temp,'wx',0o600)") -and $helper.Contains('await handle.sync()') -and $helper.Contains('await rename(temp,configPath)')) 'runtime-config-written-atomically-by-own-user-Node-under-real-H'
+Assert-Test ($helper.Contains("runtimeInvoke('process_action',{request:{action,confirm:true}}") -and $helper.Contains('Date.now()+30000') -and $helper.Contains('Date.now()+10000')) 'runtime-public-manager-actions-and-production-start-stop-budgets'
+Assert-Test ($helper.Contains('opencodex-local-management-v1') -and $helper.Contains('timingSafeEqual') -and $helper.Contains("loopbackRequest({hostname:'127.0.0.1'") -and $helper.Contains("response.status===200")) 'runtime-production-attestation-literal-loopback-only'
+Assert-Test ($helper.Contains('B published an owned service record on A port') -and $helper.Contains('B claimed running on peer port') -and $helper.Contains('No explicit production port-conflict diagnostic') -and $helper.Contains('Peer action changed original service generation')) 'runtime-conflict-requires-refusal-and-original-A-generation'
+Assert-Test ($helper.Contains('Original service generation changed') -and $helper.Contains('Get-WindowsProcessToken -Process $p -ExpectedExecutable $fact.path') -and $helper.Contains('Runtime PID was not observed in this fixture launch tree') -and $helper.Contains('Verify exact own PID/creation/image/SID immediately before manager stop')) 'runtime-stop-and-fallback-require-exact-owned-launch-generation'
+Assert-Test ($main.Contains('runtimeCleanupUnproven') -and $main.Contains('Runtime identity unproven; retain new account/Profile') -and $helper.Contains('Existing outer cleanup may stop only exact')) 'runtime-unproven-cleanup-retains-profile-and-no-port-kill'
+Assert-Test ($helper.Contains('publicRecord(r)') -and !$helper.Contains('JSON.stringify(r)') -and $helper.Contains('Raw errors can contain runtime-record material') -and $helper.Contains("diagnosticMarker:true")) 'runtime-evidence-projects-public-facts-and-controlled-errors-only'
+Assert-Test ($helper.Contains("after-peer-stop") -and $helper.Contains('observedSeconds -lt 6') -and $helper.Contains('Original service PID still exists after stop') -and $main.Contains('Test-TwoUserRuntimeFullGate')) 'runtime-gate-requires-overlap-B-stop-A-survival-and-terminal-cleanup'
+Assert-Test ($helper.Contains("'node/node.exe'") -and $helper.Contains("'bun/bun.exe'") -and $helper.Contains('$runtimeRoot=Split-Path -Parent $RuntimePrefix')) 'runtime-engine-identity-uses-actual-sibling-bundle-layout'
+Assert-Test ($helper.Contains('publicFacts:runtimePublic') -and $helper.Contains('runtime_start_not_healthy') -and $helper.Contains('public_manager_command_rejected') -and !$helper.Contains('stack:error.stack')) 'runtime-real-failures-retain-public-status-and-controlled-codes'
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'windows-cdp.mjs') -Destination (Join-Path $taskOutput 'windows-cdp.mjs')
+& $Node $driver --runtime-self-test
+Assert-Test ($LASTEXITCODE -eq 0) 'actual-generated-runtime-secret-projection-proof-PID-port-binding-and-empty-config-pure-fixtures'
+
+$result=[ordered]@{schemaVersion=1;result='pass-static-only';checks=$taskChecks.ToArray();checksPassed=$taskChecks.Count;nativeExecuted=$false;accountsCreated=$false;managerStarted=$false;twoSidNativePassed=$false;fullVersionGatePassed=$false;runtimeProxyPortIsolation='not-verified';host=$PSVersionTable.OS;powershell=$PSVersionTable.PSVersion.ToString();files=@()}
 foreach($f in @($taskMain,$taskHelper,$PSCommandPath)){$result.files+=@{path=$f;sha256=(Get-FileHash -LiteralPath $f -Algorithm SHA256).Hash.ToLowerInvariant()}}
 $result|ConvertTo-Json -Depth 9|Set-Content -LiteralPath (Join-Path $taskOutput 'static-tests.json') -Encoding utf8
 $result|ConvertTo-Json -Depth 9
