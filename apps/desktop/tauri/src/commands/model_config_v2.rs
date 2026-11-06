@@ -810,3 +810,18 @@ pub async fn model_v2_external_revoke(
     )
     .await
 }
+
+#[tauri::command]
+pub async fn model_v2_file_project(
+    request: crate::modules::model_config::config_file::v2::SaveRequestV2,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::config_file::v2::export::DraftProjectionV2> {
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::model_config::config_file::v2::export::project(&root, &home, request)
+    })
+    .await
+    .map_err(|_| error("model_storage"))?
+}
