@@ -1,0 +1,91 @@
+{
+  "role": "L1",
+  "scope": "trusted explicit LocalFile draft capture and nonwrite v2 intent projection",
+  "created_at": "2026-11-06T16:34:39.939712+00:00",
+  "head": "3ef3c30b498108f63f6ef55b7d3cd8e28387d4e5",
+  "root": "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes",
+  "branch": "codex/0.2.23-model-matching",
+  "published_dependencies": {
+    "file_transfer": "23dd95538dee08a21ee6981f5b83bdcccf45eef1",
+    "shared_helpers_and_registration": "87c830c7b5286a3842d309378c549db68b408f3d",
+    "owner_lint_cleanup": "1a544921a1e25361bfa1c2d259ff43fcb70f36a8"
+  },
+  "write_set": [
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2.rs",
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2_export.rs",
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2_export_tests.rs"
+  ],
+  "source_sha256": {
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2.rs": "b454735bb530632aa29256ef90d332688cce9db541c1955589e75bc59c9334b8",
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2_export.rs": "6ae8db89b9b0d25c8488421dd9113124ab48f2f8c263cefff1f9a45a371a155e",
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2_export_tests.rs": "4273ddd3637a021ca70ebdf89c63e58442810bfe988a3ff503dd51710ea5add3"
+  },
+  "checks": {
+    "config_boundary": {
+      "passed": 64,
+      "failed": 0,
+      "new_child": 9,
+      "existing_save_receive_regression": 55,
+      "log": "draft-export-final-tests.log"
+    },
+    "strict_clippy": {
+      "exit_code": 0,
+      "arguments": "--lib --tests --no-deps -- -D warnings",
+      "log": "draft-export-final-clippy.log"
+    },
+    "rustfmt": {
+      "exit_code": 0,
+      "files": [
+        "apps/desktop/tauri/src/modules/model_config/config_file_v2.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_file_v2_export.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_file_v2_export_tests.rs"
+      ]
+    },
+    "diff_check": {
+      "exit_code": 0
+    },
+    "clean_worktree": true,
+    "normal_production_crate": true,
+    "dirty_dependencies_or_snapshot_registration": false
+  },
+  "evidence_sha256": {
+    "draft-export-first-tests.log": "40bc539abaad2c6aa5667feb9c0053d10c7511abbab4599de0928264217c4fab",
+    "draft-export-complete-tests.log": "42a2d98abe93ca1583bd7dbcc7f0f398c663913e9b35ff7de8caba56df1d4134",
+    "draft-export-clippy.log": "e41a8a024f1131f8b88f4acb4ef370d1cb244b1c0814b4850c39511c0794be30",
+    "draft-export-owner-tests.log": "d64c21a4014f7e182d4eafa3991a3b38dd9d9f3ec3a54238e57ad22932a2a6e2",
+    "draft-export-final-tests.log": "70f8717556ef914c10bb1208c006447430c6b7369acc7da8c0e79d2225bfafa6",
+    "draft-export-final-clippy.log": "25e39a7d7ece22a513a4efa14928da26001c44fb30d93d14782cecd5c3148c8d"
+  },
+  "interfaces": {
+    "capture_type": "crate::modules::model_config::config_file::v2::export::ConfigDraftFileCaptureV2",
+    "capture_trait": "file_transfer_v2::DraftFileCaptureV2",
+    "project": "config_file::v2::export::project(d,h,SaveRequestV2)->schema_v2::Result<DraftProjectionV2>",
+    "projection_fields": [
+      "expected",
+      "effective",
+      "intended",
+      "digest"
+    ]
+  },
+  "boundaries": [
+    "capture accepts explicit LocalFile channels, scoped model/family selection and exact template dependencies only",
+    "no credentials/global-default adoption/manager/assets scope",
+    "all source and generation guards from actual stored backend draft under real locks; observed_baseline recomputed through read-only provider import",
+    "only sidecar locks may be created; no registry/config/draft/version/WAL writes or recovery/rematch",
+    "new/copy server-staged channels rendered in memory through shared save transforms and real compiler, no adapter inference",
+    "missing/unresolved executable model protocol fails actual compilation instead of inventing a default",
+    "saved-only capture retains its original draft-skipping contract"
+  ],
+  "limitations": [
+    "L0 owns public command registration and FileTransferOwner service injection",
+    "L3 owns consumer integration and local intent queue generation checks",
+    "macOS temporary fixture validation; no native Windows execution claim",
+    "no real inference, remote sync, daily configuration edits or release",
+    "local artifacts have not been uploaded"
+  ],
+  "failure_history": [
+    "first 61 and 63 test passes preserved",
+    "extraction needless_borrow fixed without semantic changes; owner shared lint fixed in published 1a544",
+    "new owner fixture initially omitted required PayloadSchemaRef decode argument; corrected and final normal-crate test passed"
+  ]
+}

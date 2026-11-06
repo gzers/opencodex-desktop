@@ -1,0 +1,16 @@
+   Compiling tauri v2.12.1
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri)
+   Compiling tauri-plugin-fs v2.6.0
+   Compiling tauri-plugin-process v2.4.0
+   Compiling tauri-plugin-updater v2.13.1
+   Compiling tauri-plugin-dialog v2.8.1
+error: function `commit_protected_restore` is never used
+    --> src/modules/model_config/model_transaction_v2.rs:1014:15
+     |
+1014 | pub(crate) fn commit_protected_restore(
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = note: `-D dead-code` implied by `-D warnings`
+     = help: to override `-D warnings` add `#[expect(dead_code)]` or `#[allow(dead_code)]`
+
+error: could not compile `opencodex-desktop` (lib) due to 1 previous error

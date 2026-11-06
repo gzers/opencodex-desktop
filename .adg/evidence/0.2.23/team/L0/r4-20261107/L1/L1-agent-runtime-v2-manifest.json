@@ -1,0 +1,73 @@
+{
+  "role": "L1",
+  "scope": "0.2.23 v2 execution directory, internal generation, trusted editing buffer, external review facade",
+  "created_at": "2026-11-06T15:27:26.369420+00:00",
+  "root": "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes",
+  "branch": "codex/0.2.23-model-matching",
+  "baseline": "f9a79297192e1c8ee1e66569ae51299128e8ff8e",
+  "head": "fdda071c54ff295f6ba0543c3f12f1df9ce1ed1b",
+  "commits": [
+    "4cefab41092edce49edd501104e97048f8356fbf",
+    "304e1a1e4e90f475661995cf2963f5e3a68157f6",
+    "d97436061473b018ca88adad770cef947b20a4c9",
+    "e59cfae468e75d43852fa299d532c9138948f6ee",
+    "fdda071c54ff295f6ba0543c3f12f1df9ce1ed1b"
+  ],
+  "source_sha256": {
+    "apps/desktop/tauri/src/modules/model_config/execution_directory_v2.rs": "c439efa43815cbcc053bb1af5367846cec690a222c5e6b6d27c984652f18f9cb",
+    "apps/desktop/tauri/src/modules/model_config/execution_directory_v2_tests.rs": "219c1ad85604621b76555f999eecbc7455b4a60de9281379f87753fccfbf97b1",
+    "apps/desktop/tauri/src/modules/model_config/schema_v2.rs": "08560cfd6a0c126000d123caa555539178e7e5049bccd8c107c1168d5dd0aae2",
+    "apps/desktop/tauri/src/modules/model_config/agent_proposal_v2.rs": "ad0340143418c61f90cdae049d846edf466f6c22ba5d07c49041e610a5766c68",
+    "apps/desktop/tauri/src/modules/model_config/agent_runtime_v2.rs": "12da582f3c6177679646fd8e13601f109027ba17a46723c734218a70122b26a4",
+    "apps/desktop/tauri/src/modules/model_config/agent_runtime_v2_tests.rs": "fa33c9cf7501e206fb6a83ba7217647dd4176fbe854eefd1af7d2ec2089b040e"
+  },
+  "checks": {
+    "agent_regression": {
+      "passed": 20,
+      "failed": 0,
+      "composition": "12 runtime + 7 pure proposal + 1 existing conversation",
+      "log": "agent-runtime-accepted-review-tests.log"
+    },
+    "strict_clippy": {
+      "exit_code": 0,
+      "arguments": "--lib --tests --no-deps -- -D warnings",
+      "log": "agent-runtime-accepted-review-clippy.log"
+    },
+    "rustfmt_check": {
+      "exit_code": 0,
+      "files": [
+        "execution_directory_v2.rs",
+        "execution_directory_v2_tests.rs",
+        "schema_v2.rs",
+        "agent_proposal_v2.rs",
+        "agent_runtime_v2.rs",
+        "agent_runtime_v2_tests.rs"
+      ]
+    },
+    "git_diff_check": {
+      "exit_code": 0
+    },
+    "full_crate_byte_comparison": {
+      "tracked_paths": 375,
+      "differences": [
+        "apps/desktop/tauri/src/modules/model_config/mod.rs"
+      ],
+      "registration_only": true
+    }
+  },
+  "evidence_sha256": {
+    "execution-directory-v2-first-tests.log": "df9daca7c21c547046cebd25909444959b6630d28fc165f56685e67b60cf0cfa",
+    "agent-runtime-buffer-final-tests.log": "3f53231b7babdb6dc5dbbbdb70562eeb023ebafbb02f9a9c1bbb05075b149ea3",
+    "agent-runtime-clippy.log": "b1608ac95fa6d7ea3b601a9de1b3b139b3aaf461cd06bf69016f0b89771860c7",
+    "agent-runtime-accepted-review-tests.log": "b0d8057e49ee8d1253cc60777f1c50b0462dd07fda261f994444f70f7d71b42f",
+    "agent-runtime-accepted-review-clippy.log": "920e61d034f274024e986483a18314769b2f5e876ecdf25e4a540277f7f3142e",
+    "agent-runtime-registration-only.patch": "151b8552a95e4a8e3cc1262458020ab19a0b4f46ca4529e139f342b81737239b"
+  },
+  "limitations": [
+    "Local artifacts have not been uploaded",
+    "Normal crate test snapshot adds only two module registrations; production shared mod.rs is L0-owned",
+    "Native Windows CLI fixture and broker authentication integration not executed by L1",
+    "No real inference, daily configuration changes, remote sync or release",
+    "L0 owns final library/version metadata transaction, broker listener/auth/proof/activation/revocation and public API wiring"
+  ]
+}

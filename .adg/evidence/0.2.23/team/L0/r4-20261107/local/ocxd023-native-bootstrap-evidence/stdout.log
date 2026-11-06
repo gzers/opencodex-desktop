@@ -1,0 +1,33 @@
+
+thread 'main' (134329953) panicked at /Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tauri-2.12.1/src/app.rs:1444:11:
+Failed to setup app: error encountered during setup hook: unknown path
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'main' (134329953) panicked at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/core/src/panicking.rs:225:5:
+panic in a function that cannot unwind
+stack backtrace:
+   0:        0x1038592f4 - <<std[bb513d90a5cee88a]::sys::backtrace::BacktraceLock>::print::DisplayBacktrace as core[f63e075e1375d836]::fmt::Display>::fmt
+   1:        0x10386f2f0 - core[f63e075e1375d836]::fmt::write
+   2:        0x10385e058 - <std[bb513d90a5cee88a]::sys::stdio::unix::Stderr as std[bb513d90a5cee88a]::io::Write>::write_fmt
+   3:        0x10383abd4 - std[bb513d90a5cee88a]::panicking::default_hook::{closure#0}
+   4:        0x103850b78 - std[bb513d90a5cee88a]::panicking::default_hook
+   5:        0x103850ea0 - std[bb513d90a5cee88a]::panicking::panic_with_hook
+   6:        0x10383acac - std[bb513d90a5cee88a]::panicking::panic_handler::{closure#0}
+   7:        0x103831cb0 - std[bb513d90a5cee88a]::sys::backtrace::__rust_end_short_backtrace::<std[bb513d90a5cee88a]::panicking::panic_handler::{closure#0}, !>
+   8:        0x10383b8a0 - __rustc[b7974e8690430dd9]::rust_begin_unwind
+   9:        0x1038b63b4 - core[f63e075e1375d836]::panicking::panic_nounwind_fmt
+  10:        0x1038b633c - core[f63e075e1375d836]::panicking::panic_nounwind
+  11:        0x1038b6490 - core[f63e075e1375d836]::panicking::panic_cannot_unwind
+  12:        0x1031eef90 - tao::platform_impl::platform::app_delegate::did_finish_launching::hd12606ff743230df
+  13:        0x18c8871a0 - <unknown>
+  14:        0x18c916394 - <unknown>
+  15:        0x18c9162d8 - <unknown>
+  16:        0x18c8533d0 - <unknown>
+  17:        0x18df4438c - <unknown>
+  18:        0x190e50a14 - <unknown>
+  19:        0x190e507a8 - <unknown>
+  20:        0x190e4ee80 - <unknown>
+  21:        0x190e4ea94 - <unknown>
+  22:        0x18df6d20c - <unknown>
+  23:        0x18df6d004 - <unknown>
+thread caused non-unwinding panic. aborting.

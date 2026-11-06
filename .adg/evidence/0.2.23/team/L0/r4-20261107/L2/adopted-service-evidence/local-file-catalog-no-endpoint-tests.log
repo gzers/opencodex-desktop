@@ -1,0 +1,11 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-webdav/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 38.39s
+     Running unittests src/lib.rs (/tmp/ocxd-l2-adopted-target/debug/deps/opencodex_desktop_lib-a2321b53a9e89887)
+
+running 3 tests
+test modules::model_config::sync_service_v2::tests::local_file_catalog_needs_no_endpoint_and_preserves_actual_saved_ids_models_and_exact_template_refs ... ok
+test modules::model_config::sync_service_v2::tests::local_file_catalog_lists_webdav_candidates_and_password_availability_without_reading_values ... ok
+test modules::model_config::sync_service_v2::tests::local_file_catalog_keeps_conflicting_mcp_per_source_choices_without_endpoint_or_default_selection ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 1819 filtered out; finished in 1.04s
+

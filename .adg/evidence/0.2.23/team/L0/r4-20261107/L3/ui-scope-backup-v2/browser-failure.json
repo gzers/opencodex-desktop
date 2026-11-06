@@ -1,0 +1,13 @@
+{
+  "engine": "chromium",
+  "checks": [
+    "list and exact-group preview remain readonly even with an existing clean model editing session",
+    "explicit restore alone releases clean full-CAS session; partial receipt stays partial with per-group completion and no new draft",
+    "closing and reopening retains original restoreId; stale targets preserve partial proof and frozen selection",
+    "same opaque restore request resumes; only applied proof updates saved model facts, without v1 acceptance or auto-begin",
+    "new local input after preview disables confirmation, remains preserved, and triggers no discard or restore",
+    "public dialog guards a pending readonly baseline and cancels normally after it settles, with zero restore writes"
+  ],
+  "errors": [],
+  "error": "TimeoutError: locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '继续此前恢复', exact: true }) to be visible\u001b[22m\n"
+}

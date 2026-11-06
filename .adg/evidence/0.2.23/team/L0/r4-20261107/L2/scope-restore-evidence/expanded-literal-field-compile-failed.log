@@ -1,0 +1,9 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-webdav/ocx-0219-fixes/apps/desktop/tauri)
+error[E0063]: missing field `webdav_password_ids` in initializer of `ManagerSelectionV2`
+   --> src/modules/model_config/sync_local_v2_restore_tests.rs:282:22
+    |
+282 |             manager: ManagerSelectionV2 {
+    |                      ^^^^^^^^^^^^^^^^^^ missing `webdav_password_ids`
+
+For more information about this error, try `rustc --explain E0063`.
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

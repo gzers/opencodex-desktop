@@ -1,0 +1,11 @@
+    Blocking waiting for file lock on artifact directory
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 26.39s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-a2321b53a9e89887)
+
+running 2 tests
+test modules::model_config::model_transaction_v2::tests::interrupted_protected_restore_keeps_mode_and_replays_only_the_exact_original_absent_plan ... ok
+test modules::model_config::model_transaction_v2::tests::protected_restore_exact_absence_is_distinct_from_ordinary_delete_and_receipts_remain_forbidden ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1892 filtered out; finished in 0.12s
+

@@ -1,0 +1,81 @@
+    Blocking waiting for file lock on artifact directory
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+warning: function `commit_protected_restore` is never used
+    --> src/modules/model_config/model_transaction_v2.rs:1014:15
+     |
+1014 | pub(crate) fn commit_protected_restore(
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `opencodex-desktop` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 40.41s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-a2321b53a9e89887)
+
+running 63 tests
+test modules::model_config::model_transaction_v2::tests::arbitrary_paths_duplicate_targets_and_non_draft_deletion_are_rejected ... ok
+test modules::model_config::model_transaction_v2::tests::actual_multifile_success_deletes_draft_and_keeps_exact_private_originals ... ok
+test modules::model_config::model_transaction_v2::tests::backup_tamper_rejected_even_for_an_already_applied_object ... ok
+test modules::model_config::model_transaction_v2::tests::confirmation_after_preparation_rechecks_every_before_without_business_writes ... ok
+test modules::model_config::model_transaction_v2::tests::crash_after_all_target_writes_still_recovers_from_fixed_marker ... ok
+test modules::model_config::model_transaction_v2::tests::create_absent_objects_and_distinguish_absent_from_empty ... ok
+test modules::model_config::model_transaction_v2::tests::crash_after_marker_before_first_write_replays_all_targets ... ok
+test modules::model_config::model_transaction_v2::tests::creation_failure_compensation_removes_new_object ... ok
+test modules::model_config::model_transaction_v2::tests::deletion_failure_compensates_all_preceding_objects ... ok
+test modules::model_config::model_transaction_v2::tests::duplicate_marker_keys_and_unknown_fields_rejected ... ok
+test modules::model_config::model_transaction_v2::tests::duplicate_nested_journal_keys_rejected_by_strict_parser ... ok
+test modules::model_config::model_transaction_v2::tests::duplicate_targets_and_unknown_targets_inside_checksummed_journal_rejected ... ok
+test modules::model_config::model_transaction_v2::tests::eight_whitelisted_targets_can_participate_in_one_transaction ... ok
+test modules::model_config::model_transaction_v2::tests::external_change_to_written_object_is_preserved_on_compensation ... ok
+test modules::model_config::model_transaction_v2::tests::home_directory_replacement_after_preparation_does_not_redirect_writes ... ok
+test modules::model_config::model_transaction_v2::tests::identity_mapping_before_cas_preserves_external_edit_and_compensates_receipt ... ok
+test modules::model_config::model_transaction_v2::tests::identity_mapping_eight_file_crash_recovers_exact_mapping_and_operation_receipt ... ok
+test modules::model_config::model_transaction_v2::tests::initial_cas_has_no_business_or_preparation_side_effects ... ok
+test modules::model_config::model_transaction_v2::tests::intermediate_interrupt_recovers_original_plan_then_is_idempotent ... ok
+test modules::model_config::model_transaction_v2::tests::interrupted_compensation_recovers_in_rollback_direction ... ok
+test modules::model_config::model_transaction_v2::tests::journal_checksum_tamper_rejected_without_target_writes ... ok
+test modules::model_config::model_transaction_v2::tests::linked_targets_and_public_private_files_are_rejected ... ok
+test modules::model_config::model_transaction_v2::tests::missing_required_backup_or_unexpected_absent_image_refuses_recovery ... ok
+test modules::model_config::model_transaction_v2::tests::no_pending_means_no_historical_or_old_root_scanning ... ok
+test modules::model_config::model_transaction_v2::tests::operation_receipt_before_cas_and_unknown_after_preserve_external_edits ... ok
+test modules::model_config::model_transaction_v2::tests::operation_receipt_free_fields_never_become_retained_template_dependencies ... ok
+test modules::model_config::model_transaction_v2::tests::identity_mapping_limits_deletion_and_alternate_paths_remain_rejected ... ok
+test modules::model_config::model_transaction_v2::tests::operation_receipt_rejects_uuid_paths_deletion_limits_unknown_variants_and_symlinks ... ok
+test modules::model_config::model_transaction_v2::tests::ordinary_commit_requires_before_even_if_external_content_equals_after ... ok
+test modules::model_config::model_transaction_v2::tests::ordinary_write_failure_compensates_prior_writes ... ok
+test modules::model_config::model_transaction_v2::tests::operation_receipt_seven_file_interrupt_recovery_pairs_exact_receipt_with_config ... ok
+test modules::model_config::model_transaction_v2::tests::oversized_pending_and_journal_files_are_bounded ... ok
+test modules::model_config::model_transaction_v2::tests::pending_and_transaction_directory_symlinks_are_rejected ... ok
+test modules::model_config::model_transaction_v2::tests::per_file_cas_preserves_external_edit_and_compensates_other_objects ... ok
+test modules::model_config::model_transaction_v2::tests::oversized_images_and_too_many_targets_are_rejected_before_preparation ... ok
+test modules::model_config::model_transaction_v2::tests::public_transaction_directories_are_rejected_without_business_writes ... ok
+test modules::model_config::model_transaction_v2::tests::recovery_preflights_all_targets_before_replaying_any ... ok
+test modules::model_config::model_transaction_v2::tests::recovery_budget_is_checked_before_loading_any_backup ... ok
+test modules::model_config::model_transaction_v2::tests::retained_refs_bound_journal_reads_and_reject_oversized_unexpected_images ... ok
+test modules::model_config::model_transaction_v2::tests::retained_refs_are_available_after_real_commit_rollback_and_pre_marker_interruption ... ok
+test modules::model_config::model_transaction_v2::tests::retained_refs_bound_typed_reference_arrays_and_do_not_return_a_partial_prefix ... ok
+test modules::model_config::model_transaction_v2::tests::retained_refs_collect_draft_after_as_well_as_before_without_following_arbitrary_ref_fields ... ok
+test modules::model_config::model_transaction_v2::tests::retained_refs_cumulative_metadata_budget_includes_journals_and_all_selected_images ... ok
+test modules::model_config::model_transaction_v2::tests::retained_refs_ignore_unadopted_library_revisions_parents_and_decoy_nested_refs ... ok
+test modules::model_config::model_transaction_v2::tests::retained_refs_missing_directories_return_empty_with_zero_creates_or_modification ... ok
+test modules::model_config::model_transaction_v2::tests::retained_refs_protect_both_images_in_every_valid_phase ... ok
+test modules::model_config::model_transaction_v2::tests::retained_refs_reject_checksum_corruption_unknown_versions_and_missing_journal ... ok
+test modules::model_config::model_transaction_v2::tests::retained_refs_reject_unknown_payload_versions_duplicate_json_and_invalid_typed_refs ... ok
+test modules::model_config::model_transaction_v2::tests::retained_refs_reject_unsafe_directory_names_files_symlinks_and_public_directories ... ok
+test modules::model_config::model_transaction_v2::tests::retained_refs_return_sorted_exact_global_channel_manual_auto_and_draft_images ... ok
+test modules::model_config::model_transaction_v2::tests::retained_refs_verify_exact_payload_digests_and_sizes_without_modifying_evidence ... ok
+test modules::model_config::model_transaction_v2::tests::retained_refs_wrong_home_root_copy_or_directory_id_binding_is_not_empty_success ... ok
+test modules::model_config::model_transaction_v2::tests::staged_write_failure_cleans_temporary_file_and_compensates ... ok
+test modules::model_config::model_transaction_v2::tests::symlink_manager_directory_cannot_redirect_a_transaction ... ok
+test modules::model_config::model_transaction_v2::tests::symlink_private_backups_and_journal_never_followed ... ok
+test modules::model_config::model_transaction_v2::tests::symlink_targets_and_directory_paths_are_rejected ... ok
+test modules::model_config::model_transaction_v2::tests::unsupported_versions_and_non_uuid4_markers_rejected ... ok
+test modules::model_config::model_transaction_v2::tests::versions_file_deletion_is_rejected_in_commit_and_checksummed_recovery ... ok
+test modules::model_config::model_transaction_v2::tests::versions_file_participates_in_six_file_interrupted_save_and_exact_recovery ... ok
+test modules::model_config::model_transaction_v2::tests::versions_file_per_file_cas_preserves_external_edit_and_compensates_config ... ok
+test modules::model_config::model_transaction_v2::tests::versions_file_stale_before_rejects_save_without_preparation ... ok
+test modules::model_config::model_transaction_v2::tests::retained_refs_cap_is_complete_at_256_and_errors_on_the_257th_without_pagination ... ok
+test modules::model_config::model_transaction_v2::tests::wrong_home_and_copied_root_marker_refuse_recovery ... ok
+
+test result: ok. 63 passed; 0 failed; 0 ignored; 0 measured; 1829 filtered out; finished in 11.85s
+

@@ -1,0 +1,21 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-webdav/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 24.89s
+     Running unittests src/lib.rs (/tmp/ocxd-l2-adopted-target/debug/deps/opencodex_desktop_lib-a2321b53a9e89887)
+
+running 1 test
+test modules::model_config::sync_service_v2::tests::production_same_uuid_second_sync_is_semantic_noop_and_explicit_download_restores_existing_actual_source has been running for over 60 seconds
+L2 receiver prepare stable code: model_receive_unsaved_draft
+
+thread 'modules::model_config::sync_service_v2::tests::production_same_uuid_second_sync_is_semantic_noop_and_explicit_download_restores_existing_actual_source' (134205969) panicked at src/modules/model_config/sync_service_v2_tests.rs:1606:10:
+called `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncLocalChanged, step: ApplyLocal, retryability: SameOperationGuarded, cause: None, http_status: None, recovery_actions: [] }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test modules::model_config::sync_service_v2::tests::production_same_uuid_second_sync_is_semantic_noop_and_explicit_download_restores_existing_actual_source ... FAILED
+
+failures:
+
+failures:
+    modules::model_config::sync_service_v2::tests::production_same_uuid_second_sync_is_semantic_noop_and_explicit_download_restores_existing_actual_source
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1826 filtered out; finished in 82.36s
+
+error: test failed, to rerun pass `--lib`

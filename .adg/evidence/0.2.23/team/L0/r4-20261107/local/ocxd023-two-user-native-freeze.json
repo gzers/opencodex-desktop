@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "status": "frozen-static-only-native-pending",
+  "frozenUtc": "2026-11-06T18:49:06.249853+00:00",
+  "checkout": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes",
+  "observedHead": "6d8f78a002330d8d0b730842645deafdda38d200",
+  "files": [
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows023-two-user-native.ps1",
+      "sha256": "4101e5fe7a10d65819f2bff9e932c742280413d530ee9e33464923cbe350b61d",
+      "bytes": 17060,
+      "whitespace": "pass"
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows023-two-user-native-helper.ps1",
+      "sha256": "316864020140e62c33b7e36ff19a215f12121509fd142a49d7f3a9984b1bc5ac",
+      "bytes": 27457,
+      "whitespace": "pass"
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows023-two-user-native.test.ps1",
+      "sha256": "93233d8dcaa8fdf4b373a355d52ab5d717074432cbba71a1b54308b4970ee112",
+      "bytes": 12050,
+      "whitespace": "pass"
+    }
+  ],
+  "dependenciesAtFreeze": [
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows-ordinary-startup.ps1",
+      "sha256": "f820a73a403656e13813842101903b28ad270d0f547cfcf6e129487d074b21a1"
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows-process-token.ps1",
+      "sha256": "1058a67212da256e3f9c03558733bc9eb48db2752cce8089502bd8d5ad8458a9"
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows-cdp.mjs",
+      "sha256": "a4cde3cb25455b2627f238ea3678c40c42191b9af47c464491f4f2f311caf7dd"
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/.github/runtime-platforms-023.json",
+      "sha256": "827fbb0390fdde7c7e84f25fcb6309bc1fafc26d8315ee5774695165892582a5"
+    }
+  ],
+  "static": {
+    "result": "pass-static-only",
+    "checksPassed": 57,
+    "powershell": "7.5.4",
+    "receipt": "/tmp/ocxd023-two-user-resume-final/static-tests.json",
+    "log": "/tmp/ocxd023-two-user-resume-final.log",
+    "whitespace": "three untracked files individually checked via no-index"
+  },
+  "nativeExecuted": false,
+  "accountsCreated": false,
+  "managerStarted": false,
+  "twoSidNativePassed": false,
+  "fullVersionGatePassed": false,
+  "runtimeProxyPortIsolation": "not-verified",
+  "liveTaskProcessesAtFinalInspection": false,
+  "stableParameters": [
+    "Executable",
+    "Node",
+    "OutputDirectory",
+    "ExpectedCommit"
+  ],
+  "windowsCommands": {
+    "static": "pwsh -NoLogo -NoProfile -File test/smoke/windows023-two-user-native.test.ps1 -OutputDirectory \"$env:RUNNER_TEMP/ocxd023-two-user-static-<unique>\" -Node \"<real source-pinned node.exe>\"",
+    "native": "pwsh -NoLogo -NoProfile -File test/smoke/windows023-two-user-native.ps1 -Executable \"<staged candidate>/opencodex-desktop.exe\" -Node \"<real source-pinned node.exe>\" -OutputDirectory \"$env:RUNNER_TEMP/ocxd023-two-user-native-<unique>\" -ExpectedCommit \"<full lowercase 40-character source SHA>\""
+  },
+  "unverifiedAndPreconditions": [
+    "Actual Windows two-SID overlap, GUI/WebView first screens, CLI/pipe denials, DPAPI and cleanup remain unrun on Mac.",
+    "Native preconditions: Windows, GITHUB_ACTIONS=true, nonempty RUNNER_TEMP, elevated ephemeral controller, interactive desktop and WebView2. ephemeralGuard runs before account creation and again in child.",
+    "Candidate must already contain ocxd.exe and complete hash-matching runtime-bundle resources. Candidate/source/real pinned Node must be readable by both ordinary new users. Harness grants no input ACL access, stages no resources and downloads nothing.",
+    "Standard WebView2 loopback CDP unavailable means NotReady; sandbox is not enabled.",
+    "DPAPI test covers synthetic CurrentUser OS protection only, not full application credential flows.",
+    "ocxd lacks peer-pipe override: actual same-user CLI and real other-SID .NET peer pipe access are separate checks.",
+    "app.lock content hash unavailable under Windows byte-range lock; actual pointer/schema hashes and lock size/time are checked.",
+    "Full proxy availability/conflicts/misconnect/stop checks remain unverified; fullVersionGatePassed=false even on user-isolation pass.",
+    "MSVC provenance is supplied upstream; harness checks MZ, candidate hashes and actual app log commit, not compiler toolchain independently."
+  ],
+  "repositoryChanges": "three task scripts untracked; no commit",
+  "priorFailureLogRetained": "/tmp/ocxd023-two-user-static-1.log"
+}

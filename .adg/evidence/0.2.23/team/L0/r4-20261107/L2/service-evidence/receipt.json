@@ -1,0 +1,162 @@
+{
+  "role": "L2",
+  "scope": "normal backend Service composition of real saved capture/Graph/Host/MappingOwner/LocalApplication/ReceiveHost with original-operation and recovery APIs",
+  "worktree": "/Users/ezio/.codex/worktrees/ocxd-023-webdav/ocx-0219-fixes",
+  "branch": "codex/0.2.23-webdav",
+  "currentHead": "326e8b0418cbbc26cb603cf691fd7c5441fc7e62",
+  "contributionCommits": [
+    "d8c2dbd20da78d47719bf69b8f7b88e9880e4109",
+    "e1064158a0de778d01e5a3a4858f7ab32aa0154b",
+    "40807a4e8500387b798bf011918790051bbd9259",
+    "2558e0aab6492d9feb86838895c5105ff19a13e6",
+    "8d9834ea674621c15738c7131a7a5c90fcff7323",
+    "af4c95aecff36c964869a254ae72ed94eedd3962",
+    "8ab95cccb450ff2294472e1fe52b90275bae0b09",
+    "326e8b0418cbbc26cb603cf691fd7c5441fc7e62"
+  ],
+  "integration": "only cherry-pick not-yet-adopted contributions; controller reported production 8d9834 as 466bc18d3",
+  "publishedProductionBaseline": "5ad9b4faa4240cd9aca7f0ae71e9f3330f859a23",
+  "publishedLintBaseline": "1a544921a1e25361bfa1c2d259ff43fcb70f36a8",
+  "mergeSourceVerification": "git show used for committed mod.rs; uncommitted shared source never treated as tested baseline",
+  "sourceFiles": [
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_service_v2.rs",
+      "sha256": "b374f757871f9883621044125a399f74e61f1f82557f0c65aa845fdd26f55821",
+      "bytes": 114509
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_service_v2_tests.rs",
+      "sha256": "40af75f12d70631332fbd78eb4f083b982b66e1a0af728c5a2e38dde5b013dcb",
+      "bytes": 46371
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_host_v2.rs",
+      "sha256": "53531467cf958d3c8a9774e5660744c8f15f2d8ac69f1dd15700a0170d2eeb84",
+      "bytes": 66556
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_host_v2_tests.rs",
+      "sha256": "1b172db7aede2b408eebac01e29148595439bb78bdb9ce998b8d92b9c0bb740a",
+      "bytes": 64003
+    }
+  ],
+  "worktreeClean": true,
+  "validation": {
+    "normalCrateProductionServiceAggregate": {
+      "passed": 14,
+      "failed": 0,
+      "ignored": 0,
+      "filteredOut": 1733,
+      "log": "normal-crate-service-14-tests.log"
+    },
+    "additionalDistinctProductionTests": [
+      {
+        "name": "actual backup failure preserves target and retries same O",
+        "passed": true,
+        "log": "production-backup-failure-retry.log"
+      },
+      {
+        "name": "initialization ambiguous explicit export preserves model targets/mapping/remote bytes",
+        "passed": true,
+        "log": "production-recovery-export.log"
+      },
+      {
+        "name": "selected Key and MCP secret-only diff shows update without secret values/hashes",
+        "passed": true,
+        "log": "private-credential-diff-test.log"
+      }
+    ],
+    "distinctServiceTests": 17,
+    "normalCrateLibTestsStrictClippyPassed": true,
+    "latestClippyLog": "normal-crate-final-context-clippy.log",
+    "normalCrateDefaultEndpointHostTests": {
+      "passed": 24,
+      "failed": 0,
+      "log": "default-endpoint-host-tests.log"
+    },
+    "normalCratePostAppliedHostTests": {
+      "passed": 26,
+      "failed": 0,
+      "log": "host-postadoption-tests.log"
+    },
+    "sliceDriver": "development-only boundary check before mapper baseline, not delivered as final production evidence; reproduce using the actual application Cargo.toml/Cargo.lock and committed source as recorded",
+    "cargoLockSha256": "35a1c19a146fca84bcfae95f3e6e38fa36d340b79f66e02bb4cd2e9cc2b887e8",
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+    "testCommand": "CARGO_TARGET_DIR=/tmp/ocxd-l2-default-endpoint-target cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib modules::model_config::sync_service_v2::tests:: -- --nocapture",
+    "clippyCommand": "CARGO_TARGET_DIR=/tmp/ocxd-l2-default-endpoint-target cargo clippy --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib --tests --no-deps -- -D warnings",
+    "formatAndDiffPassed": true,
+    "currentContextRoundtripTest": {
+      "passed": true,
+      "log": "production-context-roundtrip-test.log",
+      "countedSeparately": false,
+      "explanation": "re-run of original first-device production case after own private-context persistence, not a new distinct test"
+    }
+  },
+  "productionProof": [
+    "actual saved config source and capture owner",
+    "actual full v6 payload/L1 validation and wrapper/overlay",
+    "actual SyncIdentityOwner issued MappingPreview held strongly",
+    "actual LocalApplicationV2 new_mapped and real ReceiveFileHostV2",
+    "actual eight-file model adoption receipt and sync identity mapping same O",
+    "actual manager/preferences/extensions/Skill/MCP after model adoption",
+    "actual encrypted first-device download with read password only in Zeroizing memory",
+    "exact graph head/payload digest readback with zero-PUT preview/download",
+    "catalog cloud-only raw model union and no auto-expansion after scope initialized",
+    "actual MCP same-source per-client/managed digest inventory without default conflict winner",
+    "private original endpoint reference record no password, root/checksum proof and zero-network result",
+    "stored original upload verify/resume across reopen without source recapture",
+    "initialization ambiguous candidate download and export preserve remote directory",
+    "backup failure zero config/model receipt writes then same-O successful retry"
+  ],
+  "injectedTestBoundaries": {
+    "network": "deterministic in-memory transport; no user endpoint network access",
+    "endpointCredentialForServiceTests": "mock owner returns synthetic password by exact ref; dedicated Host test separately used real D-bound password file",
+    "modelApply": "actual production participant/transaction, not synthetic Applied",
+    "mapping": "actual production owner in Service tests, not UI-created authority"
+  },
+  "construction": "SyncServiceV2::production(D,H) -> SyncResult<Self>; L0 owns storage admission and lib manage/IPC registration",
+  "remainingNotClosed": [
+    "explicit same-UUID existing-target adoption awaits immutable identity-owner follow-up method; old freeze remains strict and Service does not bypass it",
+    "partial ModelApplied/remaining assets recovery across process reopen awaits owner restore_adopted/read-only participant proof getter; same-session success or local result reopen is not claimed equivalent",
+    "LocalFile handling belongs to independently assigned FileTransfer owner; Service does not clone it or remove WebDAV password selection"
+  ],
+  "ownerBoundaries": {
+    "handAuthoredFilesOnly": [
+      "sync_service_v2.rs",
+      "sync_service_v2_tests.rs",
+      "specifically delegated necessary Host fixes"
+    ],
+    "commandsUiRegistryNetworkMapperLocalReceiverHandEdits": false,
+    "privateCredentialOrBusinessFormatMigration": false
+  },
+  "sideEffects": {
+    "realWebDav": false,
+    "realKeychainOrDailyKey": false,
+    "dailyHomeOrBusinessData": false,
+    "remoteDeleteOrClear": false,
+    "releaseOrPublish": false,
+    "serversOrPortsStarted": false,
+    "fixtures": "injected tempfile D/H; plain/encrypted synthetic materials only"
+  },
+  "temporaryCleanup": {
+    "privateTarget": "/tmp/ocxd-l2-default-endpoint-target removed after all processes exited",
+    "privateSliceDriver": "development driver removed; final production reproducibility is the real repository Cargo.toml/Cargo.lock with recorded hash and exact source commits",
+    "sharedCargoCacheDeletion": false
+  },
+  "delivery": "local contribution commits + controlled evidence; no L2 push",
+  "receiveContext": {
+    "savedWhen": "actual ModelApply prepare returned, before protect or apply",
+    "path": "manager-state/sync-service-v2/<operationId>.download-context.json",
+    "facts": [
+      "root/home hashes",
+      "original binding canonical bytes",
+      "receive bindings",
+      "original identity before/after images",
+      "model handle token",
+      "local capture/remote scope"
+    ],
+    "readback": "strict checksummed own record and receiver reconstruction compared exact bindings/handle",
+    "authority": "descriptor only, not an Applied/Weak issued proof; owner dual proof still required",
+    "privateDescriptorCannotBeUiSubmitted": true
+  }
+}

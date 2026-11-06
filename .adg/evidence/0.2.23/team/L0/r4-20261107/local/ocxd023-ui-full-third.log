@@ -1,0 +1,788 @@
+
+> opencodex-desktop-ui@0.2.23 test
+> vitest --run
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/sync-result.test.ts (5 tests | 1 failed) 54ms
+   ❯ transfer result is a read-only receipt with explicit original-operation actions (5)
+     × retries an uncertain upload by its original ID without preparing another snapshot 7ms
+ ❯ tests/file-channel-save.test.ts (9 tests | 7 failed) 96ms
+   ❯ current-file channel saves (9)
+     × silently closes an old preview after all edits are restored to saved values 41ms
+     × confirms the preview and writes the current file exactly once 10ms
+     × saves a Key-only edit independently of model discovery 7ms
+     × adopts modeled fields in memory, then uses the existing Save with the actual file digest and receipt 12ms
+     × adopts raw material only in memory, then uses the existing Save with the actual file digest and receipt 4ms
+     × retains edits on a real file conflict and reports an unsuccessful write 5ms
+     × deleting a different channel preserves the official default reference 5ms
+ ❯ tests/workspace.test.ts (4 tests | 1 failed) 13ms
+   ❯ workspace settings contracts (4)
+     × runs sync once and projects status without losing local content on failure 5ms
+ ❯ tests/model-channel-scoped-save.test.ts (50 tests | 2 failed) 206ms
+   ❯ channel-scoped shared store saves (31)
+     × absorbs the latest locked layout from a metadata-only A receipt even when the file digest is unchanged 45ms
+     × uses the scoped receipt as the next global-save baseline while retaining all global draft changes 11ms
+ ❯ tests/sync.test.ts (9 tests | 6 failed) 26ms
+   ❯ sync conflict notification refresh (1)
+     × reloads notifications after a sync run 5ms
+   ❯ sync terminal result is not command acknowledgement (5)
+     × projects synced / succeeded without inventing success 2ms
+     × projects failed / failed without inventing success 2ms
+     × projects conflict / cancelled without inventing success 2ms
+     × projects synced / validating without inventing success 2ms
+     × reports an uncertain failed execution and still refreshes its notifications 2ms
+ ❯ tests/sync-prototype-020.test.ts (8 tests | 2 failed) 269ms
+   ❯ S20 adopted prototype regressions (8)
+     × toolbar contains search and tree selection instead of cancelled presets 12ms
+     × does not permit confirmation when a synchronization diff is unknown 5ms
+ ❯ tests/model-save-result-flow.test.ts (1 test | 1 failed) 61ms
+   ❯ 渠道确认保存到全局结果宿主的完整点击链（模拟文件 API） (1)
+     × 实际编辑、打开预览、确认保存后只出现全局卡；稍后彻底结束，新编辑仍显示 dirty 60ms
+ ❯ tests/post021-sync.test.ts (4 tests | 2 failed) 70ms
+   ❯ post021 remote observations (4)
+     × startup reads an already configured snapshot once without running a sync 12ms
+     × does not network without configuration; failed read can be explicitly retried 2ms
+ ❯ tests/model-transfer.test.ts (45 tests | 13 failed) 1281ms
+   ❯ model transfer review (45)
+     × keeps a cloud-only template selected through the actual first range save/check flow 47ms
+     × shows scope inline without preparing or writing on mount, and blocks writes until the saved remote scope is known 8ms
+     × does not overwrite an unreadable saved WebDAV scope with initial defaults; an explicit reload can recover 10ms
+     × restores and saves the same explicit family scope for this WebDAV device 6ms
+     × retains the original operation ID after uncertain WebDAV publication 4ms
+     × saves the device scope on 同步, previews a newer local snapshot and publishes only after 确认更新 6ms
+     × downloads a newer remote snapshot, backs up first when ticked, and never writes on cancel 5ms
+     × uses only the shared header X when the selected range is already the same 4ms
+     × blocks every write when direction is undetermined: unreliable_save_time 10ms
+     × blocks every write when direction is undetermined: same_instant_different_content 16ms
+     × uses the unchanged check directly without staging upload or download 7ms
+     × asks for the MCP source inside the sync preview and skips an unpicked conflict 16ms
+     × uses the separate content password inside the remote preview without adopting 5ms
+ ❯ tests/update-center.test.ts (20 tests | 1 failed) 959ms
+   ❯ shared production update center (16)
+     × settings reuses the component and does not back up merely by entering 69ms
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 36 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/file-channel-save.test.ts > current-file channel saves > silently closes an old preview after all edits are restored to saved values
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ tests/file-channel-save.test.ts:20:55
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/36]⎯
+
+ FAIL  tests/file-channel-save.test.ts > current-file channel saves > confirms the preview and writes the current file exactly once
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ confirm tests/file-channel-save.test.ts:14:187
+
+ ❯ tests/file-channel-save.test.ts:30:98
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/36]⎯
+
+ FAIL  tests/file-channel-save.test.ts > current-file channel saves > saves a Key-only edit independently of model discovery
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ confirm tests/file-channel-save.test.ts:14:187
+
+ ❯ tests/file-channel-save.test.ts:36:42
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/36]⎯
+
+ FAIL  tests/file-channel-save.test.ts > current-file channel saves > adopts modeled fields in memory, then uses the existing Save with the actual file digest and receipt
+ FAIL  tests/file-channel-save.test.ts > current-file channel saves > adopts raw material only in memory, then uses the existing Save with the actual file digest and receipt
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ confirm tests/file-channel-save.test.ts:14:187
+
+ ❯ tests/file-channel-save.test.ts:54:42
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/36]⎯
+
+ FAIL  tests/file-channel-save.test.ts > current-file channel saves > retains edits on a real file conflict and reports an unsuccessful write
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ confirm tests/file-channel-save.test.ts:14:187
+
+ ❯ tests/file-channel-save.test.ts:68:42
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/36]⎯
+
+ FAIL  tests/file-channel-save.test.ts > current-file channel saves > deleting a different channel preserves the official default reference
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ tests/file-channel-save.test.ts:78:92
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/36]⎯
+
+ FAIL  tests/model-channel-scoped-save.test.ts > channel-scoped shared store saves > absorbs the latest locked layout from a metadata-only A receipt even when the file digest is unchanged
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ tests/model-channel-scoped-save.test.ts:463:75
+    461|     try{
+    462|       await flushPromises();await wrapper.get('[data-testid="policy-sa…
+    463|       await wrapper.findAll('button').find(button=>button.text()==='确认…
+       |                                                                           ^
+    464|       const [expected,policy,,scope]=vi.mocked(modelApi.writeFile).moc…
+    465|       expect(expected).toBe('file-0');expect(scope).toBeUndefined()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/36]⎯
+
+ FAIL  tests/model-channel-scoped-save.test.ts > channel-scoped shared store saves > uses the scoped receipt as the next global-save baseline while retaining all global draft changes
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ tests/model-channel-scoped-save.test.ts:583:75
+    581|     try{
+    582|       await flushPromises();await wrapper.get('[data-testid="policy-sa…
+    583|       await wrapper.findAll('button').find(button=>button.text()==='确认…
+       |                                                                           ^
+    584|       expect(modelApi.writeFile).toHaveBeenCalledTimes(2)
+    585|       expect(vi.mocked(modelApi.writeFile).mock.calls[1]).toEqual(['fi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/36]⎯
+
+ FAIL  tests/model-save-result-flow.test.ts > 渠道确认保存到全局结果宿主的完整点击链（模拟文件 API） > 实际编辑、打开预览、确认保存后只出现全局卡；稍后彻底结束，新编辑仍显示 dirty
+Error: Unable to get .channel-enable-cell button within: <div>
+  <main>
+    <section data-v-840f478a="" class="channels-v2" aria-label="渠道模型配置">
+      <p data-v-840f478a="" role="alert" class="model-error">Cannot read properties of undefined (reading 'dtoVersion')</p>
+      <!--v-if-->
+      <!--v-if-->
+      <div data-v-840f478a="" class="model-toolbar">
+        <div data-v-840f478a="" class="model-inline"><button data-v-840f478a="" class="btn" type="button" disabled="">
+            <!--v-if--><span class="btn-content">预览当前模型目录</span>
+          </button><button data-v-840f478a="" class="btn" type="button">
+            <!--v-if--><span class="btn-content">刷新当前快照</span>
+          </button><button data-v-840f478a="" class="btn" type="button" disabled="">
+            <!--v-if--><span class="btn-content">读取现有渠道</span>
+          </button><button data-v-840f478a="" class="btn" type="button" disabled="">
+            <!--v-if--><span class="btn-content">新增渠道</span>
+          </button></div>
+        <div data-v-840f478a="" class="model-inline"><button data-v-840f478a="" class="btn" type="button" disabled="">
+            <!--v-if--><span class="btn-content">放弃本次全部未保存更改</span>
+          </button><button data-v-840f478a="" class="btn primary" type="button" disabled="" data-testid="policy-save">
+            <!--v-if--><span class="btn-content">保存配置</span>
+          </button></div>
+      </div>
+      <!--v-if-->
+      <!--v-if--><input data-v-840f478a="" class="input" type="search" aria-label="搜索渠道" placeholder="搜索渠道名称或标识">
+      <div data-v-840f478a="" class="model-table-scroll">
+        <table data-v-840f478a="" class="model-table">
+          <thead data-v-840f478a="">
+            <tr data-v-840f478a="">
+              <th data-v-840f478a=""><input data-v-840f478a="" type="checkbox" aria-label="选择当前渠道结果"></th>
+              <th data-v-840f478a="">渠道</th>
+              <th data-v-840f478a="">模型</th>
+              <th data-v-840f478a="">启用</th>
+              <th data-v-840f478a="">操作</th>
+            </tr>
+          </thead>
+          <tbody data-v-840f478a=""></tbody>
+        </table>
+      </div>
+      <!--v-if-->
+      <p data-v-840f478a="" class="model-muted">渠道快照尚未就绪，请重新读取。</p>
+      <!--teleport start-->
+      <!--teleport end-->
+      <!--v-if-->
+      <!--teleport start-->
+      <!--teleport end-->
+      <!--teleport start-->
+      <!--teleport end-->
+      <!--teleport start-->
+      <!--teleport end-->
+    </section>
+  </main>
+  <div class="notif-layer">
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+</div>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/model-save-result-flow.test.ts:52:19
+     50|   it('实际编辑、打开预览、确认保存后只出现全局卡；稍后彻底结束，新编辑仍显示 dirty', async () => {
+     51|     await flushPromises()
+     52|     await wrapper.get('.channel-enable-cell button').trigger('click')
+       |                   ^
+     53|     expect(useModelsStore().channelDirty).toBe(true)
+     54|     await wrapper.findAll('button').find(node => node.text() === '保存')…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/36]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > keeps a cloud-only template selected through the actual first range save/check flow
+Error: Unable to get input[aria-label="搜索配置对象"] within: <article data-v-9510aeb3="" class="model-transfer">
+  <section data-v-0899aec3="" class="config-sync-workspace-v2" aria-label="WebDAV配置同步">
+    <div data-v-0899aec3="" class="sync-workspace-toolbar">
+      <div data-v-0899aec3="">
+        <h2 data-v-0899aec3="">配置同步</h2>
+        <p data-v-0899aec3="">先预览所选配置的来源与真实变化，确认后更新。</p>
+      </div>
+      <div data-v-0899aec3=""><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">重新读取目录</span>
+        </button><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">连接设置</span>
+        </button>
+        <!--v-if-->
+      </div>
+    </div>
+    <!--v-if-->
+    <p data-v-0899aec3="" class="model-error" role="alert">Cannot read properties of undefined (reading 'invoke')</p>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3="">搜索范围<input data-v-0899aec3="" class="input" type="search" aria-label="搜索同步对象"></label>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">包含全局精确模版候选引用</label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">已核对所选扩展与 MCP 来源范围</label>
+    <details data-v-0899aec3="">
+      <summary data-v-0899aec3="">受保护配置的本次口令</summary><label data-v-0899aec3="">读取云端口令<input data-v-0899aec3="" class="input" type="password" autocomplete="off" aria-label="读取云端口令"></label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">本次上传启用保护</label>
+      <!--v-if-->
+      <p data-v-0899aec3="">口令仅传本次服务会话，不进入范围偏好或日志。</p>
+    </details>
+    <div data-v-0899aec3="" class="sync-workspace-footer"><button data-v-0899aec3="" class="btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">同步</span>
+      </button></div>
+  </section>
+  <!--v-if-->
+</article>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/model-transfer.test.ts:45:19
+     43|     vi.mocked(modelTransferApi.checkSync).mockResolvedValue({source:'u…
+     44|     const wrapper=render(true);await flushPromises()
+     45|     await wrapper.get('input[aria-label="搜索配置对象"]').setValue('仅云端模版')
+       |                   ^
+     46|     expect((wrapper.get('input[aria-label="选择 仅云端模版"]').element as HTM…
+     47|     await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/36]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > shows scope inline without preparing or writing on mount, and blocks writes until the saved remote scope is known
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/model-transfer.test.ts:97:65
+     95|     vi.mocked(modelTransferApi.loadRemoteScope).mockReturnValue(new Pr…
+     96|     const wrapper=render(true);await flushPromises()
+     97|     expect(wrapper.find('section[aria-label="同步范围"]').exists()).toBe(t…
+       |                                                                 ^
+     98|     expect(wrapper.find('.sync-scope-credentials').exists()).toBe(true)
+     99|     const save=()=>wrapper.findAll('button').find(b=>b.text()==='同步')!
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/36]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > does not overwrite an unreadable saved WebDAV scope with initial defaults; an explicit reload can recover
+AssertionError: expected '配置同步先预览所选配置的来源与真实变化，确认后更新。重新读取目录连接设置C…' to contain '范围读取失败'
+
+Expected: "范围读取失败"
+Received: "配置同步先预览所选配置的来源与真实变化，确认后更新。重新读取目录连接设置Cannot read properties of undefined (reading 'invoke')搜索范围包含全局精确模版候选引用已核对所选扩展与 MCP 来源范围受保护配置的本次口令读取云端口令本次上传启用保护口令仅传本次服务会话，不进入范围偏好或日志。同步"
+
+ ❯ tests/model-transfer.test.ts:120:80
+    118|     const wrapper=render(true);await flushPromises()
+    119|     const save=()=>wrapper.findAll('button').find(b=>b.text()==='同步')!
+    120|     expect(save().attributes('disabled')).toBeDefined();expect(wrapper…
+       |                                                                                ^
+    121|     expect(modelTransferApi.saveRemoteScope).not.toHaveBeenCalled()
+    122|     vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({tem…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/36]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > restores and saves the same explicit family scope for this WebDAV device
+AssertionError: expected "vi.fn()" to be called with arguments: [ ObjectContaining{…} ]
+
+Number of calls: 0
+
+ ❯ tests/model-transfer.test.ts:157:46
+    155|     vi.mocked(modelTransferApi.prepareUpload).mockResolvedValue({id:'u…
+    156|     await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger(…
+    157|     expect(modelTransferApi.saveRemoteScope).toHaveBeenCalledWith(expe…
+       |                                              ^
+    158|     expect(modelTransferApi.publish).not.toHaveBeenCalled();wrapper.un…
+    159|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/36]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > retains the original operation ID after uncertain WebDAV publication
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ tests/model-transfer.test.ts:384:209
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/36]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > saves the device scope on 同步, previews a newer local snapshot and publishes only after 确认更新
+Error: Unable to get input[aria-label="搜索配置对象"] within: <article data-v-9510aeb3="" class="model-transfer">
+  <section data-v-0899aec3="" class="config-sync-workspace-v2" aria-label="WebDAV配置同步">
+    <div data-v-0899aec3="" class="sync-workspace-toolbar">
+      <div data-v-0899aec3="">
+        <h2 data-v-0899aec3="">配置同步</h2>
+        <p data-v-0899aec3="">先预览所选配置的来源与真实变化，确认后更新。</p>
+      </div>
+      <div data-v-0899aec3=""><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">重新读取目录</span>
+        </button><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">连接设置</span>
+        </button>
+        <!--v-if-->
+      </div>
+    </div>
+    <!--v-if-->
+    <p data-v-0899aec3="" class="model-error" role="alert">Cannot read properties of undefined (reading 'invoke')</p>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3="">搜索范围<input data-v-0899aec3="" class="input" type="search" aria-label="搜索同步对象"></label>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">包含全局精确模版候选引用</label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">已核对所选扩展与 MCP 来源范围</label>
+    <details data-v-0899aec3="">
+      <summary data-v-0899aec3="">受保护配置的本次口令</summary><label data-v-0899aec3="">读取云端口令<input data-v-0899aec3="" class="input" type="password" autocomplete="off" aria-label="读取云端口令"></label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">本次上传启用保护</label>
+      <!--v-if-->
+      <p data-v-0899aec3="">口令仅传本次服务会话，不进入范围偏好或日志。</p>
+    </details>
+    <div data-v-0899aec3="" class="sync-workspace-footer"><button data-v-0899aec3="" class="btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">同步</span>
+      </button></div>
+  </section>
+  <!--v-if-->
+</article>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ chooseExport tests/model-transfer.test.ts:24:133
+
+ ❯ tests/model-transfer.test.ts:428:76
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/36]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > downloads a newer remote snapshot, backs up first when ticked, and never writes on cancel
+Error: Unable to get input[aria-label="搜索配置对象"] within: <article data-v-9510aeb3="" class="model-transfer">
+  <section data-v-0899aec3="" class="config-sync-workspace-v2" aria-label="WebDAV配置同步">
+    <div data-v-0899aec3="" class="sync-workspace-toolbar">
+      <div data-v-0899aec3="">
+        <h2 data-v-0899aec3="">配置同步</h2>
+        <p data-v-0899aec3="">先预览所选配置的来源与真实变化，确认后更新。</p>
+      </div>
+      <div data-v-0899aec3=""><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">重新读取目录</span>
+        </button><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">连接设置</span>
+        </button>
+        <!--v-if-->
+      </div>
+    </div>
+    <!--v-if-->
+    <p data-v-0899aec3="" class="model-error" role="alert">Cannot read properties of undefined (reading 'invoke')</p>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3="">搜索范围<input data-v-0899aec3="" class="input" type="search" aria-label="搜索同步对象"></label>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">包含全局精确模版候选引用</label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">已核对所选扩展与 MCP 来源范围</label>
+    <details data-v-0899aec3="">
+      <summary data-v-0899aec3="">受保护配置的本次口令</summary><label data-v-0899aec3="">读取云端口令<input data-v-0899aec3="" class="input" type="password" autocomplete="off" aria-label="读取云端口令"></label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">本次上传启用保护</label>
+      <!--v-if-->
+      <p data-v-0899aec3="">口令仅传本次服务会话，不进入范围偏好或日志。</p>
+    </details>
+    <div data-v-0899aec3="" class="sync-workspace-footer"><button data-v-0899aec3="" class="btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">同步</span>
+      </button></div>
+  </section>
+  <!--v-if-->
+</article>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ chooseExport tests/model-transfer.test.ts:24:133
+
+ ❯ tests/model-transfer.test.ts:441:76
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/36]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > uses only the shared header X when the selected range is already the same
+Error: Unable to get input[aria-label="搜索配置对象"] within: <article data-v-9510aeb3="" class="model-transfer">
+  <section data-v-0899aec3="" class="config-sync-workspace-v2" aria-label="WebDAV配置同步">
+    <div data-v-0899aec3="" class="sync-workspace-toolbar">
+      <div data-v-0899aec3="">
+        <h2 data-v-0899aec3="">配置同步</h2>
+        <p data-v-0899aec3="">先预览所选配置的来源与真实变化，确认后更新。</p>
+      </div>
+      <div data-v-0899aec3=""><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">重新读取目录</span>
+        </button><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">连接设置</span>
+        </button>
+        <!--v-if-->
+      </div>
+    </div>
+    <!--v-if-->
+    <p data-v-0899aec3="" class="model-error" role="alert">Cannot read properties of undefined (reading 'invoke')</p>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3="">搜索范围<input data-v-0899aec3="" class="input" type="search" aria-label="搜索同步对象"></label>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">包含全局精确模版候选引用</label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">已核对所选扩展与 MCP 来源范围</label>
+    <details data-v-0899aec3="">
+      <summary data-v-0899aec3="">受保护配置的本次口令</summary><label data-v-0899aec3="">读取云端口令<input data-v-0899aec3="" class="input" type="password" autocomplete="off" aria-label="读取云端口令"></label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">本次上传启用保护</label>
+      <!--v-if-->
+      <p data-v-0899aec3="">口令仅传本次服务会话，不进入范围偏好或日志。</p>
+    </details>
+    <div data-v-0899aec3="" class="sync-workspace-footer"><button data-v-0899aec3="" class="btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">同步</span>
+      </button></div>
+  </section>
+  <!--v-if-->
+</article>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ chooseExport tests/model-transfer.test.ts:24:133
+
+ ❯ tests/model-transfer.test.ts:456:76
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/36]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > blocks every write when direction is undetermined: unreliable_save_time
+ FAIL  tests/model-transfer.test.ts > model transfer review > blocks every write when direction is undetermined: same_instant_different_content
+Error: Unable to get input[aria-label="搜索配置对象"] within: <article data-v-9510aeb3="" class="model-transfer">
+  <section data-v-0899aec3="" class="config-sync-workspace-v2" aria-label="WebDAV配置同步">
+    <div data-v-0899aec3="" class="sync-workspace-toolbar">
+      <div data-v-0899aec3="">
+        <h2 data-v-0899aec3="">配置同步</h2>
+        <p data-v-0899aec3="">先预览所选配置的来源与真实变化，确认后更新。</p>
+      </div>
+      <div data-v-0899aec3=""><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">重新读取目录</span>
+        </button><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">连接设置</span>
+        </button>
+        <!--v-if-->
+      </div>
+    </div>
+    <!--v-if-->
+    <p data-v-0899aec3="" class="model-error" role="alert">Cannot read properties of undefined (reading 'invoke')</p>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3="">搜索范围<input data-v-0899aec3="" class="input" type="search" aria-label="搜索同步对象"></label>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">包含全局精确模版候选引用</label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">已核对所选扩展与 MCP 来源范围</label>
+    <details data-v-0899aec3="">
+      <summary data-v-0899aec3="">受保护配置的本次口令</summary><label data-v-0899aec3="">读取云端口令<input data-v-0899aec3="" class="input" type="password" autocomplete="off" aria-label="读取云端口令"></label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">本次上传启用保护</label>
+      <!--v-if-->
+      <p data-v-0899aec3="">口令仅传本次服务会话，不进入范围偏好或日志。</p>
+    </details>
+    <div data-v-0899aec3="" class="sync-workspace-footer"><button data-v-0899aec3="" class="btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">同步</span>
+      </button></div>
+  </section>
+  <!--v-if-->
+</article>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ chooseExport tests/model-transfer.test.ts:24:133
+
+ ❯ tests/model-transfer.test.ts:466:54
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/36]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > uses the unchanged check directly without staging upload or download
+Error: Unable to get input[aria-label="搜索配置对象"] within: <article data-v-9510aeb3="" class="model-transfer">
+  <section data-v-0899aec3="" class="config-sync-workspace-v2" aria-label="WebDAV配置同步">
+    <div data-v-0899aec3="" class="sync-workspace-toolbar">
+      <div data-v-0899aec3="">
+        <h2 data-v-0899aec3="">配置同步</h2>
+        <p data-v-0899aec3="">先预览所选配置的来源与真实变化，确认后更新。</p>
+      </div>
+      <div data-v-0899aec3=""><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">重新读取目录</span>
+        </button><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">连接设置</span>
+        </button>
+        <!--v-if-->
+      </div>
+    </div>
+    <!--v-if-->
+    <p data-v-0899aec3="" class="model-error" role="alert">Cannot read properties of undefined (reading 'invoke')</p>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3="">搜索范围<input data-v-0899aec3="" class="input" type="search" aria-label="搜索同步对象"></label>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">包含全局精确模版候选引用</label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">已核对所选扩展与 MCP 来源范围</label>
+    <details data-v-0899aec3="">
+      <summary data-v-0899aec3="">受保护配置的本次口令</summary><label data-v-0899aec3="">读取云端口令<input data-v-0899aec3="" class="input" type="password" autocomplete="off" aria-label="读取云端口令"></label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">本次上传启用保护</label>
+      <!--v-if-->
+      <p data-v-0899aec3="">口令仅传本次服务会话，不进入范围偏好或日志。</p>
+    </details>
+    <div data-v-0899aec3="" class="sync-workspace-footer"><button data-v-0899aec3="" class="btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">同步</span>
+      </button></div>
+  </section>
+  <!--v-if-->
+</article>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ chooseExport tests/model-transfer.test.ts:24:133
+
+ ❯ tests/model-transfer.test.ts:478:54
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/36]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > asks for the MCP source inside the sync preview and skips an unpicked conflict
+Error: Unable to get input[aria-label="搜索配置对象"] within: <article data-v-9510aeb3="" class="model-transfer">
+  <section data-v-0899aec3="" class="config-sync-workspace-v2" aria-label="WebDAV配置同步">
+    <div data-v-0899aec3="" class="sync-workspace-toolbar">
+      <div data-v-0899aec3="">
+        <h2 data-v-0899aec3="">配置同步</h2>
+        <p data-v-0899aec3="">先预览所选配置的来源与真实变化，确认后更新。</p>
+      </div>
+      <div data-v-0899aec3=""><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">重新读取目录</span>
+        </button><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">连接设置</span>
+        </button>
+        <!--v-if-->
+      </div>
+    </div>
+    <!--v-if-->
+    <p data-v-0899aec3="" class="model-error" role="alert">Cannot read properties of undefined (reading 'invoke')</p>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3="">搜索范围<input data-v-0899aec3="" class="input" type="search" aria-label="搜索同步对象"></label>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">包含全局精确模版候选引用</label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">已核对所选扩展与 MCP 来源范围</label>
+    <details data-v-0899aec3="">
+      <summary data-v-0899aec3="">受保护配置的本次口令</summary><label data-v-0899aec3="">读取云端口令<input data-v-0899aec3="" class="input" type="password" autocomplete="off" aria-label="读取云端口令"></label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">本次上传启用保护</label>
+      <!--v-if-->
+      <p data-v-0899aec3="">口令仅传本次服务会话，不进入范围偏好或日志。</p>
+    </details>
+    <div data-v-0899aec3="" class="sync-workspace-footer"><button data-v-0899aec3="" class="btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">同步</span>
+      </button></div>
+  </section>
+  <!--v-if-->
+</article>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ chooseExport tests/model-transfer.test.ts:24:133
+
+ ❯ tests/model-transfer.test.ts:488:76
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/36]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > uses the separate content password inside the remote preview without adopting
+Error: Unable to get input[aria-label="导入解密口令"] within: <article data-v-9510aeb3="" class="model-transfer">
+  <section data-v-0899aec3="" class="config-sync-workspace-v2" aria-label="WebDAV配置同步">
+    <div data-v-0899aec3="" class="sync-workspace-toolbar">
+      <div data-v-0899aec3="">
+        <h2 data-v-0899aec3="">配置同步</h2>
+        <p data-v-0899aec3="">先预览所选配置的来源与真实变化，确认后更新。</p>
+      </div>
+      <div data-v-0899aec3=""><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">重新读取目录</span>
+        </button><button data-v-0899aec3="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">连接设置</span>
+        </button>
+        <!--v-if-->
+      </div>
+    </div>
+    <!--v-if-->
+    <p data-v-0899aec3="" class="model-error" role="alert">Cannot read properties of undefined (reading 'invoke')</p>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3="">搜索范围<input data-v-0899aec3="" class="input" type="search" aria-label="搜索同步对象"></label>
+    <!--v-if-->
+    <!--v-if--><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">包含全局精确模版候选引用</label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">已核对所选扩展与 MCP 来源范围</label>
+    <details data-v-0899aec3="">
+      <summary data-v-0899aec3="">受保护配置的本次口令</summary><label data-v-0899aec3="">读取云端口令<input data-v-0899aec3="" class="input" type="password" autocomplete="off" aria-label="读取云端口令"></label><label data-v-0899aec3=""><input data-v-0899aec3="" type="checkbox">本次上传启用保护</label>
+      <!--v-if-->
+      <p data-v-0899aec3="">口令仅传本次服务会话，不进入范围偏好或日志。</p>
+    </details>
+    <div data-v-0899aec3="" class="sync-workspace-footer"><button data-v-0899aec3="" class="btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">同步</span>
+      </button></div>
+  </section>
+  <!--v-if-->
+</article>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/model-transfer.test.ts:497:165
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/36]⎯
+
+ FAIL  tests/post021-sync.test.ts > post021 remote observations > startup reads an already configured snapshot once without running a sync
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ tests/post021-sync.test.ts:21:35
+     19|     primeAppData(app as unknown as Parameters<typeof primeAppData>[0])…
+     20|     primeAppData(app as unknown as Parameters<typeof primeAppData>[0])…
+     21|     expect(remoteVersionApi.read).toHaveBeenCalledTimes(1)
+       |                                   ^
+     22|     expect(store.webdavState).toBe('connected'); expect(store.running)…
+     23|     expect(remoteVersionHint(store.observation)).toBe('已读取 · 保存时间未知')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/36]⎯
+
+ FAIL  tests/post021-sync.test.ts > post021 remote observations > does not network without configuration; failed read can be explicitly retried
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ tests/post021-sync.test.ts:33:75
+     31|     store.adoptConfig(config()); vi.mocked(remoteVersionApi.read).mock…
+     32|     await store.inspectRemoteVersion(true); expect(remoteVersionHint(s…
+     33|     await store.inspectRemoteVersion(true); expect(remoteVersionApi.re…
+       |                                                                           ^
+     34|     vi.mocked(remoteVersionApi.read).mockResolvedValue({ remoteExists:…
+     35|     await store.inspectRemoteVersion(); expect(remoteVersionHint(store…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/36]⎯
+
+ FAIL  tests/sync-prototype-020.test.ts > S20 adopted prototype regressions > toolbar contains search and tree selection instead of cancelled presets
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/sync-prototype-020.test.ts:20:186
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/36]⎯
+
+ FAIL  tests/sync-prototype-020.test.ts > S20 adopted prototype regressions > does not permit confirmation when a synchronization diff is unknown
+TypeError: Cannot read properties of undefined (reading 'attributes')
+ ❯ tests/sync-prototype-020.test.ts:52:56
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/36]⎯
+
+ FAIL  tests/sync-result.test.ts > transfer result is a read-only receipt with explicit original-operation actions > retries an uncertain upload by its original ID without preparing another snapshot
+AssertionError: expected "vi.fn()" to be called once with arguments: [ 'original-operation' ]
+
+Number of calls: 0
+
+ ❯ tests/sync-result.test.ts:14:601
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/36]⎯
+
+ FAIL  tests/sync.test.ts > sync conflict notification refresh > reloads notifications after a sync run
+AssertionError: expected 'configured' to be 'conflict' // Object.is equality
+
+Expected: "conflict"
+Received: "configured"
+
+ ❯ tests/sync.test.ts:100:29
+     98|     const app = useAppStore()
+     99|     expect(await app.runSyncNow()).toBe(false)
+    100|     expect(app.webdavState).toBe('conflict')
+       |                             ^
+    101|     await new Promise(resolve => setTimeout(resolve, 0))
+    102|     expect(invoke).toHaveBeenCalledWith('run_sync_now')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/36]⎯
+
+ FAIL  tests/sync.test.ts > sync terminal result is not command acknowledgement > projects synced / succeeded without inventing success
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/sync.test.ts:126:36
+    124|     invoke.mockImplementation((command: string) => Promise.resolve(com…
+    125|     const app = useAppStore()
+    126|     expect(await app.runSyncNow()).toBe(expected)
+       |                                    ^
+    127|     expect(app.webdavState).toBe(operationState==='validating'?'connec…
+    128|     expect(app.syncStatus?.message).toBe(result.message)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/36]⎯
+
+ FAIL  tests/sync.test.ts > sync terminal result is not command acknowledgement > projects failed / failed without inventing success
+AssertionError: expected 'configured' to be 'failed' // Object.is equality
+
+Expected: "failed"
+Received: "configured"
+
+ ❯ tests/sync.test.ts:127:29
+    125|     const app = useAppStore()
+    126|     expect(await app.runSyncNow()).toBe(expected)
+    127|     expect(app.webdavState).toBe(operationState==='validating'?'connec…
+       |                             ^
+    128|     expect(app.syncStatus?.message).toBe(result.message)
+    129|     expect(useSyncStore().running).toBe(false)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/36]⎯
+
+ FAIL  tests/sync.test.ts > sync terminal result is not command acknowledgement > projects conflict / cancelled without inventing success
+AssertionError: expected 'configured' to be 'conflict' // Object.is equality
+
+Expected: "conflict"
+Received: "configured"
+
+ ❯ tests/sync.test.ts:127:29
+    125|     const app = useAppStore()
+    126|     expect(await app.runSyncNow()).toBe(expected)
+    127|     expect(app.webdavState).toBe(operationState==='validating'?'connec…
+       |                             ^
+    128|     expect(app.syncStatus?.message).toBe(result.message)
+    129|     expect(useSyncStore().running).toBe(false)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/36]⎯
+
+ FAIL  tests/sync.test.ts > sync terminal result is not command acknowledgement > projects synced / validating without inventing success
+AssertionError: expected 'configured' to be 'connected' // Object.is equality
+
+Expected: "connected"
+Received: "configured"
+
+ ❯ tests/sync.test.ts:127:29
+    125|     const app = useAppStore()
+    126|     expect(await app.runSyncNow()).toBe(expected)
+    127|     expect(app.webdavState).toBe(operationState==='validating'?'connec…
+       |                             ^
+    128|     expect(app.syncStatus?.message).toBe(result.message)
+    129|     expect(useSyncStore().running).toBe(false)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/36]⎯
+
+ FAIL  tests/sync.test.ts > sync terminal result is not command acknowledgement > reports an uncertain failed execution and still refreshes its notifications
+AssertionError: expected 'configured' to be 'failed' // Object.is equality
+
+Expected: "failed"
+Received: "configured"
+
+ ❯ tests/sync.test.ts:138:29
+    136|     const app = useAppStore()
+    137|     expect(await app.runSyncNow()).toBe(false)
+    138|     expect(app.webdavState).toBe('failed')
+       |                             ^
+    139|     expect(app.syncStatus?.message).toContain('可能已有内容应用或上传')
+    140|     expect(app.syncStatus?.message).not.toContain('本地内容未修改')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/36]⎯
+
+ FAIL  tests/update-center.test.ts > shared production update center > settings reuses the component and does not back up merely by entering
+AssertionError: expected '诊断与恢复程序先检查程序安装与恢复来源，预览实际影响后再确认恢复。运行只读…' to contain '桌面管理器更新'
+
+Expected: "桌面管理器更新"
+Received: "诊断与恢复程序先检查程序安装与恢复来源，预览实际影响后再确认恢复。运行只读诊断本版随包程序使用本版固定资源与编译校验记录；资源不可用时保留原程序并显示实际错误。取消预览恢复方案"
+
+ ❯ tests/update-center.test.ts:291:73
+    289|     await button(wrapper, '查看管理器更新').trigger('click'); await flushProm…
+    290|     expect(wrapper.findComponent(UpdateCenter).props('open')).toBe(tru…
+    291|     expect(new DOMWrapper(document.body).get('[role="dialog"]').text()…
+       |                                                                         ^
+    292|   })
+    293| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/36]⎯
+
+ FAIL  tests/workspace.test.ts > workspace settings contracts > runs sync once and projects status without losing local content on failure
+AssertionError: expected undefined to be 'failed' // Object.is equality
+
+- Expected:
+"failed"
+
++ Received:
+undefined
+
+ ❯ tests/workspace.test.ts:46:44
+     44|     await expect(app.runSyncNow()).resolves.toBe(false)
+     45|     expect(app.syncRunning).toBe(false)
+     46|     expect(app.syncStatus?.operationState).toBe('failed')
+       |                                            ^
+     47|     expect(app.webdavState).toBe('failed')
+     48|     expect(invoke).toHaveBeenCalledWith('run_sync_now')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/36]⎯
+
+
+ Test Files  10 failed | 198 passed (208)
+      Tests  36 failed | 1425 passed (1461)
+   Start at  01:55:10
+   Duration  24.29s (tests 40%, environment 36%, transform 14%, import 10%)
+
+Environment  jsdom was created 208 times · 66.60s total, 36% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

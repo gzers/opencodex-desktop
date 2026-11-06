@@ -1,0 +1,33 @@
+{
+  "role": "L1",
+  "commits": [
+    "a68371c306c784bb3890e98d9abc133e8003ebc8",
+    "f76bcbc1b7c8fd763020314e22e9a10da37cd102"
+  ],
+  "workingTreeClean": true,
+  "tests": {
+    "templateOpsPassed": 6,
+    "agentProposalPassed": 7,
+    "failed": 0,
+    "ignored": 0
+  },
+  "clippy": "both passed --lib --tests --no-deps -- -D warnings",
+  "format": "passed",
+  "diff": "passed",
+  "modelCalls": 0,
+  "networkCalls": 0,
+  "businessFileWrites": 0,
+  "dailyConfigurationReadsOrWrites": 0,
+  "published": false,
+  "files": {
+    "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/template_ops_v2.rs": "f314856944eef12ec2ea8e3e8487757623821c6cb40213df3afe7e73fc7b4d5a",
+    "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/template_ops_v2_tests.rs": "70f4ad6f607a95aace92cc9125c4711ce312a56bbd833a82a0721066d96ff979",
+    "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/agent_proposal_v2.rs": "930db25ebfb9291ada02205eeb4660ea0275c7b8cbba38e43169af5146f8437e",
+    "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/agent_proposal_v2_tests.rs": "c452dcc817dda5f7e15f7866f592fd180d7826ce0267f936e94b79de910d42ed",
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-template-agent-v2-receipt.md": "f03fe09b404ef2700596c369f398daabdb7387aacb1c31d1186831af9f642461",
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/template-ops-first-tests.log": "6ffb8cfa9dc37371614bf6d34e5434d53788933fc8867e9bce21ffe30053cac0",
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/template-ops-clippy.log": "7119e6eff655714b4f405af0bc5d96d73ffba11be8fbf9d6a0f0d4a25776fcbc",
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/agent-proposal-first-tests.log": "cf694cf3812bf27d5d146e4464da7b835dacc8385f53db0d8bf4750e4cbe04c3",
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/agent-proposal-clippy.log": "7119e6eff655714b4f405af0bc5d96d73ffba11be8fbf9d6a0f0d4a25776fcbc"
+  }
+}

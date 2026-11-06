@@ -1,0 +1,28 @@
+PASS config preserves provider name Krill
+PASS config unknown root preserved
+PASS config unknown provider preserved
+PASS original wire ids Krill
+13 | syncBuiltinESMExports();
+14 | for (const key of ['spawn', 'spawnSync']) {
+15 |   Bun[key] = (...args) => { externalAttempts.push({key:'Bun.'+key}); throw Error('External process forbidden'); };
+16 | }
+17 | const checks = [];
+18 | function check(label, actual, expected) { assert.deepEqual(actual, expected, label); checks.push(label); console.log('PASS '+label); }
+                                                      ^
+AssertionError: selector display Krill model-1
++ actual - expected
+
++ 'krill/model-1'
+- 'Krill/model-1'
+
+ generatedMessage: false,
+     actual: "krill/model-1",
+   expected: "Krill/model-1",
+   operator: "deepStrictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at check (/private/tmp/ocxd023-runtime-name-r0x8yusx/freeze-verification/baseline-I/runtime/[eval]:18:50)
+      at syncExpected (/private/tmp/ocxd023-runtime-name-r0x8yusx/freeze-verification/baseline-I/runtime/[eval]:62:5)
+
+Bun v1.4.4 (macOS arm64)

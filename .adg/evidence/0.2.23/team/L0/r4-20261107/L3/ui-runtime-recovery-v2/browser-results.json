@@ -1,0 +1,30 @@
+[
+  {
+    "engine": "chromium",
+    "width": 1180,
+    "theme": "light",
+    "checks": [
+      "read-only diagnostics displays actual fixture report without installing or preparing",
+      "bundled preview shows fixed versions/paths/owner evidence and explicit cancel uses original cancel command",
+      "closing/reopening applying only observes the same operation; terminal success is backend status with no cancel/reapply footer",
+      "offline File staging passes only its own lease ID, never the returned path, hash or version as authority",
+      "failure/detail/restart requirement comes from original status and never falls back to registry install"
+    ],
+    "errors": [],
+    "limits": "Actual recovery Entry/Host, shared UiDialog and API wrappers with deterministic native fixtures. No real runtime install, process stop or archive pin verification performed by this browser run."
+  },
+  {
+    "engine": "webkit",
+    "width": 900,
+    "theme": "dark",
+    "checks": [
+      "read-only diagnostics displays actual fixture report without installing or preparing",
+      "bundled preview shows fixed versions/paths/owner evidence and explicit cancel uses original cancel command",
+      "closing/reopening applying only observes the same operation; terminal success is backend status with no cancel/reapply footer",
+      "offline File staging passes only its own lease ID, never the returned path, hash or version as authority",
+      "failure/detail/restart requirement comes from original status and never falls back to registry install"
+    ],
+    "errors": [],
+    "limits": "Actual recovery Entry/Host, shared UiDialog and API wrappers with deterministic native fixtures. No real runtime install, process stop or archive pin verification performed by this browser run."
+  }
+]

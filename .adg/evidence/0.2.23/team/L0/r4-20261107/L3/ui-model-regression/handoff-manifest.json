@@ -1,0 +1,69 @@
+{
+  "role": "L3",
+  "commits": [
+    "56ea5bb60",
+    "f190c5333",
+    "24515aa96"
+  ],
+  "headAtArchive": "9af40745c7a69a9cb1dabe51cf595f6e75b98d71",
+  "nativeBaseline": "9af1030c403aa3fe1ea3ec48200227338c6f492e",
+  "scopedVitestPass": 235,
+  "typecheck": "passed",
+  "build": "passed, existing chunk/dynamic import warnings",
+  "browser": [
+    {
+      "engine": "chromium",
+      "width": 1180,
+      "theme": "light",
+      "checks": [
+        "alias conflict restores only alias; valid blur records local intent without saved-file writes",
+        "detail cancellation keeps row input and closes only detail",
+        "batch empty validation preserves all intentions; public glass dialog carries actual model content",
+        "detail saves directly once and returns to list",
+        "closing/filtering observation retains completed trusted-node results and never changes active node",
+        "empty replacement cancels local Key intent without changing auth"
+      ],
+      "errors": [],
+      "externalRequests": 0,
+      "limits": "Actual Vue/IPC consumer with deterministic fixture; no native filesystem or upstream requests."
+    },
+    {
+      "engine": "webkit",
+      "width": 900,
+      "theme": "dark",
+      "checks": [
+        "alias conflict restores only alias; valid blur records local intent without saved-file writes",
+        "detail cancellation keeps row input and closes only detail",
+        "batch empty validation preserves all intentions; public glass dialog carries actual model content",
+        "detail saves directly once and returns to list",
+        "closing/filtering observation retains completed trusted-node results and never changes active node",
+        "empty replacement cancels local Key intent without changing auth"
+      ],
+      "errors": [],
+      "externalRequests": 0,
+      "limits": "Actual Vue/IPC consumer with deterministic fixture; no native filesystem or upstream requests."
+    }
+  ],
+  "cleanup": {
+    "browsersClosed": true,
+    "ownedServerStopped": true
+  },
+  "limits": [
+    "Deterministic IPC fixtures exercise actual Vue and invoke wrappers, no native write/inference proof.",
+    "Old remaining broad UI regressions are not declared complete."
+  ],
+  "evidenceHashes": {
+    "webkit-batch-dark.png": "a95fd24c664e7af9880aac8a1c05cee413592e83b3774a2450f291fa17e8de58",
+    "browser-failure.json": "1e33b77b68484fc316cbcf3a35077a3558359c4352f9dada5f9bc3b5f0f87d90",
+    "browser.cjs": "66c760b258964d55d58fe553bfde3f3829331f0f5e9ae7013327275915fa32b7",
+    "typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "browser-failure.png": "5a4b314967ba76a28963f119eb2f5c17549d6e528e606711b63dbe41b0c7b1d6",
+    "component-entry.mjs": "5e53d4f9b617405833acad24a4b2402e3d6e87c6210ee4a076017ee4d776782e",
+    "webkit-node-dark.png": "a398b88693fc65322d93693030812185f3b22138b1fd98c45442e36dbf0ed632",
+    "chromium-node-light.png": "61ffab0c180560b8c644ea0ca5c48bf491558cfaa4a2cf66aa3e7f66fad035c9",
+    "component-server.mjs": "9ab452a50ee19181024d9fc183fe3d6bf37a380b87f05c54e67d92435ea111cc",
+    "browser-results.json": "195eb3d0fe9d09183d069b769a1ad8b9bab17b528059acdbd524a673b0c40955",
+    "chromium-batch-light.png": "64ea02b1791f9932889e1725a46f6bdc79aa1d5dd722088dec4155b0b76a47a6",
+    "build.log": "6addeb8ce6d0d75ca53d0b9e6021749c127ed2e13c8635c396f3d20d7ca1bfcf"
+  }
+}

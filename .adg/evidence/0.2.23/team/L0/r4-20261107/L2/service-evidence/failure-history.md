@@ -1,0 +1,19 @@
+# Service 本批检查与修正记录
+
+本文件记录真实过程摘要，不冒充原始失败全文；最终实际成功输出分别保留在正常crate日志。
+
+- 默认endpoint ID阻断来自Host误用require_uuid；正式SyncConfigStore保存新端点为default。修为非空/有界/无control，新增真实D/ref/adapter绑定回归。generation/op/credential ID规则未改。
+- Service目录DTO增加model/revision字段后，首次实际编译发现共用ObjectEntry初始化器漏填字段（E0063），补完整初值后通过；没有以默认full-selection规避。
+- 临时Service驱动最初只引入注册slice；完整productionBackend等待固定5ad9b4faa提交后才在正常crate编译，未复制dirty mapper或把slice测试当production通过。
+- 正常crate首次productioncheck报Catalog observation部分move后clone（E0382），改在move前clone；四个不必要trait import移除，读取口令实际传LocalApplication而非隐藏None。
+- 严格Clippy在ServicePlan大枚举报large_enum_variant，改Box仅影响Rust存储，JSON仍同kind/plan；测试MutexGuard改词法作用域避免跨await，不抑制lint。
+- 原credential_ids实际是全局允许表，旧资产子批过滤契约已在资产批保留；Service目录仅读取availability，不为列举读取真实Key。
+- production首上传预览首次失败于mapper的sync_identity_explicit_mapping_required：不能先借Download取得本机已存在UUID的上传权限。改空云端直接owner.Upload；有效cloud接收仍遵循mapper严格准入。旧freeze不放宽，显式sameID采用待owner后继。
+- 映射owner issued事实是Weak，上传provider若只持binding+owner会失效；新增私有wrapper持强MappingPreview，保持实际owner签发权限，不deserialize自授。
+- 新get graph wrapper使元数据文件读取也在阻塞池，正常crate14项聚合复验通过。
+- 正常crate严格Clippy曾报已交Mapper514行clone slice lint，L2未越界改/全局allow；合入owner正式1a544921后lib/tests严格通过。
+- 首次读集成工作区mod.rs时误把dirty注册当commit内容，已向L0说明并改用git show33d2c65b5核查，正常merge公布commit；不再宣称其为已推缺模块树。
+
+生产回归14项全通过后又补两项单独正常crate专项：真实备份失败不写配置/模型回执，保护恢复同O成功；专用恢复export不采用/激活映射，远端原字节不变。两项通过，追加严格Clippy通过。
+
+跨重启剩余资产恢复仍等owner的受控restore_adopted证明接口，本报告不把同session或reopen只读结果通过冒称它已完成。

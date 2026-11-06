@@ -1,0 +1,93 @@
+{
+  "role": "L1",
+  "batch": "R1-consumer-batch2",
+  "baseline": "74649027f6d98b96a9a878c562afee47ea64976f",
+  "parentIntegration": "6e031e109",
+  "workspace": "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes",
+  "branch": "codex/0.2.23-model-matching",
+  "commits": [
+    "318786bef707732165480fe2ec2eb9c1f7609c4b",
+    "8523f7c90ef67df7eefa7e2c7ce813c976b4cdc1",
+    "3e32bb1e437168dc248177c40b49ebcfc08432ee"
+  ],
+  "workingTreeClean": true,
+  "check": {
+    "crate": "complete application snapshot, original Cargo.lock, actual model/IO implementations; three registration lines only in snapshot",
+    "testsPassed": 43,
+    "testsFailed": 0,
+    "ignored": 0,
+    "filteredOut": 1247,
+    "clippy": "passed --lib --tests --no-deps -- -D warnings",
+    "rustfmt": "passed",
+    "diff": "passed",
+    "snapshotMatchesCurrentAuthorizedSources": true
+  },
+  "dailyConfigurationReadsOrWrites": 0,
+  "upstreamCalls": 0,
+  "listeningServersStarted": 0,
+  "published": false,
+  "pushed": false,
+  "cleanup": "tempfile D/H tests cleaned automatically; controlled snapshots/logs/build caches retained",
+  "files": {
+    "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/compiler_v2.rs": {
+      "bytes": 18539,
+      "sha256": "2659e582b957ab65dec453612e2886269392126e6937eb73ab299eac20af93de"
+    },
+    "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/consumer_v2_tests.rs": {
+      "bytes": 21521,
+      "sha256": "233f51dcdf7b3a26277b623ff0d4d714bf8e700a624226522138cac428ba3f45"
+    },
+    "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/portable_v2.rs": {
+      "bytes": 16282,
+      "sha256": "3d5e662246317bf3d7001db6c175d95ce1fd0a8da7ed051aab1e6a152c481b7f"
+    },
+    "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/protocol_groups.rs": {
+      "bytes": 39647,
+      "sha256": "e70969e118e2a355b9c247834d596be534f34e9420786b61af869d0db64a92ea"
+    },
+    "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/provider_import.rs": {
+      "bytes": 17708,
+      "sha256": "6549f4614c301f83b5d727340c80476016716e5e450fcab0364491c025aab872"
+    },
+    "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/schema_v2.rs": {
+      "bytes": 29004,
+      "sha256": "982cf78d887a0ac54647885dd4db8cf41f92f673008297b358a33b1bce89aa93"
+    },
+    "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/store_v2.rs": {
+      "bytes": 11837,
+      "sha256": "e58bc4f15ebae519c60255ac23333fe75d54a26b569ad69dfa3d04ef72f119ca"
+    },
+    "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/v2_tests.rs": {
+      "bytes": 104385,
+      "sha256": "a2e1ac0258b8083c3419e8091d9c1cf7ca944da91bb4192eb772e31b9eab8b83"
+    },
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-R1-batch2-receipt.md": {
+      "bytes": 10124,
+      "sha256": "addfab2d3f2f8d2e5a02b26299b73386202792569def83081e4fff4ee31c8fc4"
+    },
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/batch2-crate-duplicate-keys.log": {
+      "bytes": 5289,
+      "sha256": "6aea8800e4206c35321ef8f01918b87c9ce5354f7df15864ead6c98cf7a3ee0b"
+    },
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/batch2-clippy.log": {
+      "bytes": 9349,
+      "sha256": "5f52feebdcacf8a23579c473f17547e91da7d04cb7a2bb00d5e1f5e87cc727be"
+    },
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/batch2-clippy-final.log": {
+      "bytes": 237,
+      "sha256": "7d1d47a68ed27506f6cefdd47b3b4d5e79ae5cb6439e3b605535597adbd2417e"
+    },
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/batch2-opaque-field-tests.log": {
+      "bytes": 1849,
+      "sha256": "d96208b202fe2b57d46a254bfc4a9f0f381d018005b49d7f4faa872af7cd4729"
+    },
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/batch2-crate-snapshot/apps/desktop/tauri/src/modules/model_config/mod.rs": {
+      "bytes": 1339,
+      "sha256": "88474b697da7bf21e8f9779fcb9b8980a1bf29ed22370f1c7fcbefccea66f513"
+    },
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/batch2-crate-snapshot/apps/desktop/tauri/Cargo.lock": {
+      "bytes": 137112,
+      "sha256": "fe80622e09c029c671d2c424b414c8f9ac8c04e7bcad49b4203a75c9c97edbc7"
+    }
+  }
+}

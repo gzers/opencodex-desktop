@@ -1,0 +1,20 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 38.42s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-a2321b53a9e89887)
+
+running 12 tests
+test modules::model_config::file_transfer_v2::output::tests::completed_allocation_requires_original_authenticated_owner_receipt ... ok
+test modules::model_config::file_transfer_v2::output::tests::copied_allocation_cannot_open_another_data_roots_directory ... ok
+test modules::model_config::file_transfer_v2::output::tests::custom_existing_root_and_same_operation_restart_never_reselect_today_or_reencrypt ... ok
+test modules::model_config::file_transfer_v2::output::tests::completed_payload_or_manifest_changed_or_missing_never_recreated_or_overwritten ... ok
+test modules::model_config::file_transfer_v2::output::tests::exclusive_publish_and_readback_reject_conflicting_objects_without_truncation ... ok
+test modules::model_config::file_transfer_v2::output::tests::default_layout_manifest_and_real_receipt_preserve_original_v6_bytes ... ok
+test modules::model_config::file_transfer_v2::output::tests::invalid_custom_never_allocates_arbitrary_directory_or_marks_attempted ... ok
+test modules::model_config::file_transfer_v2::output::tests::original_allocation_tampering_fails_even_with_recomputed_checksum ... ok
+test modules::model_config::file_transfer_v2::output::tests::output_record_never_substitutes_for_original_sealed_owner_receipt ... ok
+test modules::model_config::file_transfer_v2::output::tests::partial_output_manifest_failure_resumes_without_new_package_or_bytes ... ok
+test modules::model_config::file_transfer_v2::output::tests::real_directory_failure_freezes_destination_and_restarts_original_clock_date_bytes ... ok
+test modules::model_config::file_transfer_v2::output::tests::symlinks_and_unrelated_package_entries_fail_closed ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 1880 filtered out; finished in 33.53s
+

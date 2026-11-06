@@ -1,0 +1,98 @@
+{
+  "role": "L1",
+  "client_date": "2026-11-07",
+  "scope": "final copy/history/queued draft export consumer closeout",
+  "created_at_utc": "2026-11-06T17:22:29.167817+00:00",
+  "head": "851948bd4fc281982c69dfaaedcfccf2052deb99",
+  "tested_config_owner_head": "417cad78798d442998d7f433f84f840c20432646",
+  "only_delta_after_broad_tests": "L0 e1a663c110aa67a9b572bc16d7d837d9aff32bea replaces a redundant history-list closure with the same function; all listed feature sources byte-identical",
+  "root": "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes",
+  "branch": "codex/0.2.23-model-matching",
+  "feature_commits": {
+    "copy": "d34775a37d78c10c719dd178844248805caf1e99",
+    "history": "904cfb221f594c26754e4bc307dd6be31ce91dc5",
+    "queued_capture": "da4217a5b2bdfa158e872973fe7ecd41041855c0"
+  },
+  "published_dependencies": {
+    "owned_trait": "be0af917eceb80f833468fb8e367d46a2ae4deb0",
+    "commands_and_resume": "4c148a644801e23b018abfada710efac97e79d59",
+    "fmt": "ceda8f0166c186c98509dcc72571313a4010064d",
+    "command_clippy": "e1a663c110aa67a9b572bc16d7d837d9aff32bea"
+  },
+  "source_sha256": {
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2.rs": "e10883e91ab20c202d5750a9422340a95a6384d8d6025d9a10f821bc8d065fd9",
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2_copy_tests.rs": "0ccd2e47d0de027df7bcdb881bc7ed6642592b5874dc8675d04563d72611a62f",
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2_history.rs": "f2d11e55635eb590a561831343c8c19ff050cc577d2d8b1e028d60b99fbc7fb7",
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2_history_tests.rs": "1175bc19b2d115911f9d29c1680f75c26d5f4e4a0630dd4296229b8b8b1a88fb",
+    "apps/desktop/tauri/src/modules/model_config/model_transaction_v2.rs": "0c88d35b1711cd2e88990dbe1510a83cdc95441d31dacd56ac678bbf652180fe",
+    "apps/desktop/tauri/src/modules/model_config/model_transaction_v2_history.rs": "b7b244fd7cec8069826d27e0c55f97269564c9127c7d161cb76cf1dbb2f7634e",
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2_export.rs": "210d9ffdb31e4a4f3abde077cfef9f6348ba02fcc52209df3259709df2904c9b",
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2_export_tests.rs": "d84b262cb8ce179466407e49242d42fae922576db62a102be4249c0a2fb5424d"
+  },
+  "checks": {
+    "export_targeted": {
+      "passed": 12,
+      "failed": 0,
+      "log": "queued-draft-export-tests.log"
+    },
+    "configuration_regression": {
+      "passed": 90,
+      "failed": 0,
+      "log": "queued-export-config-regression.log"
+    },
+    "file_owner_regression": {
+      "passed": 23,
+      "failed": 0,
+      "log": "queued-export-owner-regression.log"
+    },
+    "combined_broad_regression": {
+      "passed": 113,
+      "failed": 0
+    },
+    "strict_clippy": {
+      "exit_code": 0,
+      "args": "--lib --tests --no-deps -- -D warnings",
+      "log": "queued-draft-export-final-clippy.log"
+    },
+    "all_crate_fmt": {
+      "exit_code": 0,
+      "command": "cargo fmt --manifest-path apps/desktop/tauri/Cargo.toml --all -- --check"
+    },
+    "diff_check": {
+      "exit_code": 0
+    },
+    "clean_worktree": true,
+    "normal_production_crate": true
+  },
+  "evidence_sha256": {
+    "queued-draft-export-tests.log": "a17edec33cc8b6b1b88fb3bf3fe49734a77b79c3164df022e29d6821c8c54a40",
+    "queued-draft-export-clippy.log": "0997ae07a4dd9a1ec7acd63b669d538af1b5a39c8fce21d2f9c52beadb3e9727",
+    "queued-export-config-regression.log": "e9ac7749a8a517474e6342738ad8b3e8abe9aca9f9f9e397bf0180ac1a994c36",
+    "queued-export-owner-regression.log": "ca5b7f1c6c30bdea0251b48ff5124c8df526e3b6dd81aa8eeca9c73489edda7d",
+    "queued-draft-export-final-clippy.log": "67e48b6092304c303b14e0d95988c70f1418223c940604f909f40439978ac7ad"
+  },
+  "earlier_receipt_sha256": {
+    "L1-copy-key-receipt.md": "ed90fe3f925bfd1eca2532a578d06566eb66494f07ac846ed8777680997739fa",
+    "L1-copy-key-manifest.json": "75d8b63ad09b4d43b900dccd355b7b8c24a71e633c2a34d5f94daa4b1331e497",
+    "L1-history-v2-receipt.md": "dff6fb4b12205143c4553c82ab22fc3553ff447c40fa14e149230a0af84fe5f3",
+    "L1-history-v2-manifest.json": "53738a91815777e0c03b59546158318828ad6ff43f961650a46400047b6a3614"
+  },
+  "failure_preservation": {
+    "original_full_run": "/tmp/ocxd023-full-lib-third.log (L0-owned)",
+    "original_problem": "original fixture compared all D/H bytes, including the newly authorized encrypted owner operation; L0 proved 0 removed, 0 changed, 1 controlled sealed addition",
+    "test_correction": "original business path/hash comparison remains exact; only this operation UUID .sealed can be added; authentication/reopen and tamper rejection exercised with MemoryRecoveryKey; no plaintext secret permitted",
+    "later_clippy_failure": "queued-draft-export-clippy.log",
+    "later_clippy_resolution": "L0 published e1a663c110 and final normal-crate strict Clippy passed; no allows or cross-owner edits"
+  },
+  "boundaries": [
+    "queued capture reads real server draft plus typed explicit intents; no UI policy, rematch or save side effects",
+    "no provider credential reads, staging or real keyring use in new owner fixtures; NoCredentials counter 0",
+    "only owner-controlled authenticated encrypted operation metadata may be added; config/library/Policy/draft/ledger/mapping/identities original paths and bytes retained",
+    "external task, copy and history feature commits already handed to L0; no main push or release by L1"
+  ],
+  "limitations": [
+    "macOS temporary roots only; native Windows and full UI/artifact validation remain L0/L3/L4-owned",
+    "artifacts local, not uploaded",
+    "no additional features outstanding in this bounded assignment"
+  ]
+}

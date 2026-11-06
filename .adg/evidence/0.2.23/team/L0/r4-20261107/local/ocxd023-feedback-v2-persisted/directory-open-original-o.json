@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "notification_id": "config-export-directory-opened:11111111-1111-4111-8111-111111111111:Read:Execution:Local:11111111-1111-4111-8111-111111111111",
+      "level": "info",
+      "category": "system",
+      "source": "user_action",
+      "title": "已打开导出目录",
+      "body": "已请求系统打开本次配置包所在目录。",
+      "created_at": "2027-01-15T08:00:01+00:00",
+      "read": false,
+      "resolved": true,
+      "resolved_at": "2027-01-15T08:00:01+00:00",
+      "deleted": false,
+      "operation_id": null,
+      "dedupe_key": "config-export:directory:11111111-1111-4111-8111-111111111111:Read:Execution:Local:11111111-1111-4111-8111-111111111111",
+      "action_ref": "transfer_result",
+      "event_identity": {
+        "object": "configuration",
+        "object_id": "11111111-1111-4111-8111-111111111111",
+        "action": "read",
+        "phase": "execution",
+        "channel": "local",
+        "candidate": "11111111-1111-4111-8111-111111111111"
+      },
+      "occurrence_count": 1,
+      "last_observed_at": "2027-01-15T08:00:01+00:00"
+    }
+  ]
+}

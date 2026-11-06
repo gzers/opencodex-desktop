@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "role": "L2",
+  "commit": "193fa41abfabeb163d4845a59f6fae8101ebed4f",
+  "parent": "7f39cf5f9b5d2ca3c3db23aaeac2f615e66db0b3",
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_service_v2.rs",
+      "sha256": "88411b8de8e12ea681caca77c440227c7a577e5c7ee6c08be322f53b7b3de806"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_service_v2_tests.rs",
+      "sha256": "64316ffd87df0c2595d3af69302e62a00f921c07e2ff29f6c7022a892df2739a"
+    }
+  ],
+  "tests": {
+    "localFileCatalog": 3,
+    "inventoryDtos": 2,
+    "normalCrateStrictClippy": "passed",
+    "format": "passed",
+    "diffCheck": "passed",
+    "longServiceSuiteRerun": false
+  },
+  "workingTreeClean": true,
+  "cleanup": {
+    "removedOnly": "/tmp/ocxd-l2-catalog-metadata-target",
+    "absenceVerified": true,
+    "archivedLogs": 3,
+    "originalLogsRetained": true
+  },
+  "realSync": false,
+  "remoteClear": false,
+  "release": false
+}

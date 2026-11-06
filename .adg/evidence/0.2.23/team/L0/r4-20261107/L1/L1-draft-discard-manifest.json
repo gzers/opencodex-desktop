@@ -1,0 +1,69 @@
+{
+  "role": "L1",
+  "client_date": "2026-11-07",
+  "scope": "explicit exact-CAS server draft discard and bounded private-material cleanup",
+  "commit": "e857da05dd7a32c2f8a78e875eb08309318b0be1",
+  "baseline": "851948bd4fc281982c69dfaaedcfccf2052deb99",
+  "root": "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes",
+  "branch": "codex/0.2.23-model-matching",
+  "created_at_utc": "2026-11-06T17:30:42.061262+00:00",
+  "source_sha256": {
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2.rs": "7a0fc0da360269c516b1172cf223081015e6130920989fa32cf156774531b177",
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2_history.rs": "2287e5d3232e1c689323785d9d916ab4bdf3ed93429a7f90e984852714cf2351",
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2_discard.rs": "14be769bc029149953e23022025a7a9c4edd1823285be5e65bdd08a87b9df767",
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2_discard_tests.rs": "76983ec4acab74fe234309496c61e97df346887f101f2fbd0c16d214149824a4"
+  },
+  "checks": {
+    "config_regression": {
+      "passed": 97,
+      "failed": 0,
+      "log": "draft-discard-regression.log"
+    },
+    "final_durable_discard": {
+      "passed": 7,
+      "failed": 0,
+      "log": "draft-discard-durable-tests.log"
+    },
+    "strict_clippy": {
+      "args": "--lib --tests --no-deps -- -D warnings",
+      "exit_code": 0,
+      "log": "draft-discard-durable-clippy.log"
+    },
+    "all_crate_fmt": {
+      "command": "cargo fmt --manifest-path apps/desktop/tauri/Cargo.toml --all -- --check",
+      "exit_code": 0
+    },
+    "diff_check": {
+      "exit_code": 0
+    },
+    "clean_worktree": true,
+    "normal_production_crate": true
+  },
+  "evidence_sha256": {
+    "draft-discard-first-tests.log": "5cbf2af57b6df27a68f957fa608f8658eb7c6392ec88c489277c840b4291683d",
+    "draft-discard-regression.log": "ffbb63caccade562b542360f43cda4873c06392d79a0894c40eb83a6b7d217bc",
+    "draft-discard-clippy.log": "75367e2c172e39c6f2ac25c6be9d0dbf1a6f2cd44555b5af30fae6f9d477c023",
+    "draft-discard-durable-tests.log": "3b9faf094dbf0ee7323fb39e1557ecddc34f576921b3ab7676458166a4c58ef8",
+    "draft-discard-durable-clippy.log": "39e124fdf97c102f49b4965d8694488c990db4a23a08f23de8b0de4e2913febe"
+  },
+  "interface": "config_file::v2::discard(root:&Path,home:&Path,expected:ReadBaseV2)->schema_v2::Result<FileSnapshotV2>",
+  "public_command": "model_v2_file_discard({expected}) registered by L0",
+  "guard": "pending/config/Store plus exact server draft base/generation, source bytes, canonical D/H root, library digest, saved Policy digest and observed baseline; no recover/rematch or provider registry allocation",
+  "invalidation": "exact draft atomically moved to an attributed private tombstone; Unix flushes both directory entries, Windows MoveFileExW WRITE_THROUGH; credential cleanup only after durable invalidation",
+  "cleanup": "only typed discarded Replace UUIDs and digest/schema/channel/source-verified imported copy tickets; saved Policy or actual raw references protected; no vault/legacy-path enumeration; failed cleanup retains 0600 tombstone while draft is already safely inactive",
+  "test_cases": [
+    "plain/key/copy draft invalidation with original actual configuration unchanged",
+    "all expected fields stale or actual source changed: no invalidation or private cleanup",
+    "new generation and pending transaction retained without recovery",
+    "pending slot already used by saved copy is protected",
+    "cleanup failure preserves attributed private tombstone, no pending secret value in metadata",
+    "accept recovery -> explicit discard -> new draft ID -> normal edit/save succeeds; stale history accept cannot overwrite new generation"
+  ],
+  "limitations": [
+    "macOS temporary fixtures and injected fake credential store only; no real keyring access in these tests",
+    "Windows branch implemented using existing API; native Windows validation remains L4-owned",
+    "no new UI, public command implementation, publish or main push by L1",
+    "previous 113-consumer regression retains its own source head; discard final regression adds 7 cases",
+    "artifacts local and not uploaded"
+  ]
+}

@@ -1,0 +1,36 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri)
+warning: function `commit_protected_restore` is never used
+    --> src/modules/model_config/model_transaction_v2.rs:1014:15
+     |
+1014 | pub(crate) fn commit_protected_restore(
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `opencodex-desktop` (lib) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.78s
+     Running tests/runtime023_manager_name_chain.rs (/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/batch2-crate-target/debug/deps/runtime023_manager_name_chain-cc8f89e235658279)
+
+running 1 test
+CHAIN_STAGE verify_pinned_complete_bundle
+CHAIN_STAGE manager_save label=RenamedEnglish provider=RenamedEnglish
+CHAIN_STAGE provision_complete_bundle
+test manager_renames_reach_the_same_installed_runtime_and_own_codex_catalog has been running for over 60 seconds
+CHAIN_STAGE installed_consumer label=RenamedEnglish
+BUNDLED_NODE {"node":"26.8.1","npm":"11.19.0"}
+MANAGER_RUNTIME_CATALOG {"label":"RenamedEnglish","channelId":"57d79fa3-83b7-41fe-a88d-fe7f026f1d70","providerId":"RenamedEnglish","runtimeVersion":"2.97.0-desktop023.names.1","node":"26.8.1","bun":"1.4.4","rows":[{"slug":"RenamedEnglish/model-1","display_name":"RenamedEnglish/model-1","rawId":"model-1"},{"slug":"RenamedEnglish/vendor-original-model","display_name":"RenamedEnglish/vendor/original-model","rawId":"vendor/original-model"}],"configSha256":"4dc58cc1851d49f30565848aeb758963547bb210f60791122fbdc4990b7b295e","catalogSha256":"f2655d3117965c84e90ea7d8149e7d9e3acae766d0755acc447771477bbb8420","catalogLock":"exact own-home hash; cleaned by Rust RAII","catalogHome":"own TempDir CODEX_HOME","network":"denied by OS sandbox","accountSelectors":[],"liveModels":false}
+
+thread 'manager_renames_reach_the_same_installed_runtime_and_own_codex_catalog' (134448473) panicked at tests/runtime023_manager_name_chain.rs:220:10:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_read_stale", issues: [MatchIssueV2 { code: "model_read_stale", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["refresh_and_retry"] }] }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+CLEANUP_OWN_CATALOG_LOCK filesRemaining=0
+test manager_renames_reach_the_same_installed_runtime_and_own_codex_catalog ... FAILED
+
+failures:
+
+failures:
+    manager_renames_reach_the_same_installed_runtime_and_own_codex_catalog
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 159.45s
+
+error: test failed, to rerun pass `--test runtime023_manager_name_chain`

@@ -1,0 +1,78 @@
+{
+  "role": "L3",
+  "consumerCommit": "6fdb1e556",
+  "followupScopeCommit": "b83ee9790",
+  "headAtArchive": "4b62477c2f683f62862e618e28b156f63d5154e7",
+  "backendBaselines": [
+    "0aa02778c",
+    "e6854926f198494d5c44ac42add8d1b1ad110570",
+    "9d6b4d3cc",
+    "d03ba56376ca704b134c991754d7f626d27957bb"
+  ],
+  "checks": {
+    "scopedVitestFiles": 15,
+    "scopedVitestPass": 161,
+    "typecheck": "passed after removal of an unused test helper",
+    "build": "passed",
+    "wholeUI": {
+      "passed": 1483,
+      "failed": 3,
+      "failedFile": "tests/export-destination.test.ts",
+      "reason": "Adopted date/package destination and trusted output-directory owner is not yet provided; original source assertions retained.",
+      "unhandled": 0
+    }
+  },
+  "browser": [
+    {
+      "engine": "chromium",
+      "width": 1180,
+      "theme": "light",
+      "checks": [
+        "local inventory opens without remote/v1; same-name MCP requires explicit definition source",
+        "protected export clears secret input and native cancellation retries same frozen file exactly once",
+        "native import only reads; explicit target/whole-channel namespace choices recompare same original without applying",
+        "explicit import confirms original operation/digest with default backup and reports only actual receipt"
+      ],
+      "errors": [],
+      "limits": "Actual local file Vue workspace/central dialogs/native API wrappers with deterministic fixtures; no real native save dialog/filesystem/WebDAV writes."
+    },
+    {
+      "engine": "webkit",
+      "width": 900,
+      "theme": "dark",
+      "checks": [
+        "local inventory opens without remote/v1; same-name MCP requires explicit definition source",
+        "protected export clears secret input and native cancellation retries same frozen file exactly once",
+        "native import only reads; explicit target/whole-channel namespace choices recompare same original without applying",
+        "explicit import confirms original operation/digest with default backup and reports only actual receipt"
+      ],
+      "errors": [],
+      "limits": "Actual local file Vue workspace/central dialogs/native API wrappers with deterministic fixtures; no real native save dialog/filesystem/WebDAV writes."
+    }
+  ],
+  "notYetComplete": [
+    "Default/custom date/package export owner and output-directory display/actions pending L0 immutable API.",
+    "Active TransferBackups v1 restore consumer pending L2 actual v2 protection owner.",
+    "No user release or final native acceptance claimed."
+  ],
+  "cleanup": {
+    "browsersClosed": true,
+    "owned43134Stopped": true
+  },
+  "evidenceHashes": {
+    "ui-full-remaining-output-owner.log": "c6de2dddd85053ce94d7aece6cbcb48f0b7aa480f8ab43f446842f580229635d",
+    "chromium-export-light.png": "892772fe8b3eeefb258c94e9bcfde7e3bee200f35b27423ead16eb5a30f4a913",
+    "webkit-export-dark.png": "4a77bc3e480d4944f86ed7838347a0d44481aae4fbae3c84724e3b4aef2b5e16",
+    "browser-failure.json": "d2ff94a467d5e687dfe86a46afe41c89501c956422d5bafbc2591796a5710990",
+    "browser.cjs": "f461856554b948fbeb398600c0d52f8df376367c43ae72ac70360041c0140ba8",
+    "typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "browser-failure.png": "2c00ebdd997d3dedb2ea808d5f8ee363240609b6655618b05378a92cf56e7e08",
+    "chromium-import-light.png": "092391496e714cce7471d862ad61e50dfe1d62b22e291cc6aa153b29abae3058",
+    "component-entry.mjs": "32ace15e889b3ca83df2dc64b8170c399d713509dbf735e76f05112c714e2a1b",
+    "component-server.mjs": "6ffe74fa7ac9661b4043cf6477db5ce0cbdffb0e6c8c8da63138faedd8b50665",
+    "browser-results.json": "081037d861c7cbedf06a5e6f1c8701fc01e628696a7080fa67b5a252e7578a84",
+    "tests.log": "d54afe8c4b8a5238bc8dc92e84ad62adce77fad4ba00aa74a312c84eea601141",
+    "webkit-import-dark.png": "39f282312e263138705e2336903457b5e9b6ac870446ccc0318b67e41605b0fb",
+    "build.log": "96bbc464ddd91e662cdc7d0010b20417191e9501ca827a69eb62d4ead5b3c5eb"
+  }
+}

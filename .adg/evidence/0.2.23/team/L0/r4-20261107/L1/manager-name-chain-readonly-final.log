@@ -1,0 +1,39 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri)
+warning: function `commit_protected_restore` is never used
+    --> src/modules/model_config/model_transaction_v2.rs:1014:15
+     |
+1014 | pub(crate) fn commit_protected_restore(
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `opencodex-desktop` (lib) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.35s
+     Running tests/runtime023_manager_name_chain.rs (/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/batch2-crate-target/debug/deps/runtime023_manager_name_chain-cc8f89e235658279)
+
+running 1 test
+CHAIN_STAGE verify_pinned_complete_bundle
+CHAIN_STAGE manager_save label=RenamedEnglish provider=RenamedEnglish
+CHAIN_STAGE provision_complete_bundle
+test manager_renames_reach_the_same_installed_runtime_and_own_codex_catalog has been running for over 60 seconds
+CHAIN_STAGE installed_consumer label=RenamedEnglish
+BUNDLED_NODE {"node":"26.8.1","npm":"11.19.0"}
+MANAGER_RUNTIME_CATALOG {"label":"RenamedEnglish","channelId":"60d51f41-de3b-4cea-aea5-8e2564e5cd0b","providerId":"RenamedEnglish","runtimeVersion":"2.97.0-desktop023.names.1","node":"26.8.1","bun":"1.4.4","rows":[{"slug":"RenamedEnglish/model-1","display_name":"RenamedEnglish/model-1","rawId":"model-1"},{"slug":"RenamedEnglish/vendor-original-model","display_name":"RenamedEnglish/vendor/original-model","rawId":"vendor/original-model"}],"configSha256":"4dc58cc1851d49f30565848aeb758963547bb210f60791122fbdc4990b7b295e","catalogSha256":"f2655d3117965c84e90ea7d8149e7d9e3acae766d0755acc447771477bbb8420","catalogLock":"exact own-home hash; cleaned by Rust RAII","catalogHome":"own TempDir CODEX_HOME","network":"denied by OS sandbox","installedProgram":"OS sandbox read-only; module hashes unchanged","accountSelectors":[],"liveModels":false}
+CHAIN_STAGE manager_save label=中文渠道 provider=channel-60d51f41de3b4ceaaea58e2564e5cd0b
+CHAIN_STAGE installed_consumer label=中文渠道
+BUNDLED_NODE {"node":"26.8.1","npm":"11.19.0"}
+MANAGER_RUNTIME_CATALOG {"label":"中文渠道","channelId":"60d51f41-de3b-4cea-aea5-8e2564e5cd0b","providerId":"channel-60d51f41de3b4ceaaea58e2564e5cd0b","runtimeVersion":"2.97.0-desktop023.names.1","node":"26.8.1","bun":"1.4.4","rows":[{"slug":"channel-60d51f41de3b4ceaaea58e2564e5cd0b/model-1","display_name":"中文渠道/model-1","rawId":"model-1"},{"slug":"channel-60d51f41de3b4ceaaea58e2564e5cd0b/vendor-original-model","display_name":"中文渠道/vendor/original-model","rawId":"vendor/original-model"}],"configSha256":"b87163ea1b3fab206563bb6c4066590b2fc3ab35898b63c79e08177b2830b5db","catalogSha256":"6e1b5308b340fbe4c46a319a572336ca8063e667cfd8b15b8243cfdad095d4d0","catalogLock":"exact own-home hash; cleaned by Rust RAII","catalogHome":"own TempDir CODEX_HOME","network":"denied by OS sandbox","installedProgram":"OS sandbox read-only; module hashes unchanged","accountSelectors":[],"liveModels":false}
+CHAIN_STAGE manager_save label=Team Space provider=channel-60d51f41de3b4ceaaea58e2564e5cd0b
+CHAIN_STAGE installed_consumer label=Team Space
+BUNDLED_NODE {"node":"26.8.1","npm":"11.19.0"}
+MANAGER_RUNTIME_CATALOG {"label":"Team Space","channelId":"60d51f41-de3b-4cea-aea5-8e2564e5cd0b","providerId":"channel-60d51f41de3b4ceaaea58e2564e5cd0b","runtimeVersion":"2.97.0-desktop023.names.1","node":"26.8.1","bun":"1.4.4","rows":[{"slug":"channel-60d51f41de3b4ceaaea58e2564e5cd0b/model-1","display_name":"Team Space/model-1","rawId":"model-1"},{"slug":"channel-60d51f41de3b4ceaaea58e2564e5cd0b/vendor-original-model","display_name":"Team Space/vendor/original-model","rawId":"vendor/original-model"}],"configSha256":"e2b1d628fd1b63ef9ce104fb4e9b55a59fd9011200f7396d5f3de647b1791f18","catalogSha256":"defd6a0a3ad54eac0fa559279c8a8f4b5cc7b35bd567696c989d7b4ff933f3e2","catalogLock":"exact own-home hash; cleaned by Rust RAII","catalogHome":"own TempDir CODEX_HOME","network":"denied by OS sandbox","installedProgram":"OS sandbox read-only; module hashes unchanged","accountSelectors":[],"liveModels":false}
+CHAIN_STAGE manager_save label=中文 / Team provider=channel-60d51f41de3b4ceaaea58e2564e5cd0b
+CHAIN_STAGE installed_consumer label=中文 / Team
+BUNDLED_NODE {"node":"26.8.1","npm":"11.19.0"}
+MANAGER_RUNTIME_CATALOG {"label":"中文 / Team","channelId":"60d51f41-de3b-4cea-aea5-8e2564e5cd0b","providerId":"channel-60d51f41de3b4ceaaea58e2564e5cd0b","runtimeVersion":"2.97.0-desktop023.names.1","node":"26.8.1","bun":"1.4.4","rows":[{"slug":"channel-60d51f41de3b4ceaaea58e2564e5cd0b/model-1","display_name":"中文 / Team/model-1","rawId":"model-1"},{"slug":"channel-60d51f41de3b4ceaaea58e2564e5cd0b/vendor-original-model","display_name":"中文 / Team/vendor/original-model","rawId":"vendor/original-model"}],"configSha256":"ffa211bda73b30c6ea3c885c4ba31213c6af4b741117823000ed8ffc84e966cf","catalogSha256":"be221c0cbe4218dc08998644f20d9ccf88fdcf84ff97f407338042bda967779a","catalogLock":"exact own-home hash; cleaned by Rust RAII","catalogHome":"own TempDir CODEX_HOME","network":"denied by OS sandbox","installedProgram":"OS sandbox read-only; module hashes unchanged","accountSelectors":[],"liveModels":false}
+MANAGER_NAME_CHAIN_RESULT {"archiveSha256":"982580a65408d5325be3b707288a31a427583e9589b0057ae11be57e7fa11899","dailyConfig":"untouched","descriptorSha256":"88a96e98e3070baa05c7d2ccb402ba70f491f25ca4a93505f8927b8eb0b8b152","labels":4,"network":"OS sandbox deny","runtimeVersion":"2.97.0-desktop023.names.1","temporaryRoots":"I/D/H/CODEX_HOME in one TempDir"}
+CLEANUP_OWN_CATALOG_LOCK filesRemaining=0
+test manager_renames_reach_the_same_installed_runtime_and_own_codex_catalog ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 166.53s
+

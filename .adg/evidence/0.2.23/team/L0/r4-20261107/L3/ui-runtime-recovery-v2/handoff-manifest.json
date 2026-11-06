@@ -1,0 +1,64 @@
+{
+  "role": "L3",
+  "commit": "e5264196b",
+  "backendBaseline": "894b2237f100854440da3fc4ce73bf78fa6f23ca",
+  "checks": {
+    "vitestFiles": 7,
+    "vitestPassed": 70,
+    "typecheck": "passed",
+    "build": "passed"
+  },
+  "browser": [
+    {
+      "engine": "chromium",
+      "width": 1180,
+      "theme": "light",
+      "checks": [
+        "read-only diagnostics displays actual fixture report without installing or preparing",
+        "bundled preview shows fixed versions/paths/owner evidence and explicit cancel uses original cancel command",
+        "closing/reopening applying only observes the same operation; terminal success is backend status with no cancel/reapply footer",
+        "offline File staging passes only its own lease ID, never the returned path, hash or version as authority",
+        "failure/detail/restart requirement comes from original status and never falls back to registry install"
+      ],
+      "errors": [],
+      "limits": "Actual recovery Entry/Host, shared UiDialog and API wrappers with deterministic native fixtures. No real runtime install, process stop or archive pin verification performed by this browser run."
+    },
+    {
+      "engine": "webkit",
+      "width": 900,
+      "theme": "dark",
+      "checks": [
+        "read-only diagnostics displays actual fixture report without installing or preparing",
+        "bundled preview shows fixed versions/paths/owner evidence and explicit cancel uses original cancel command",
+        "closing/reopening applying only observes the same operation; terminal success is backend status with no cancel/reapply footer",
+        "offline File staging passes only its own lease ID, never the returned path, hash or version as authority",
+        "failure/detail/restart requirement comes from original status and never falls back to registry install"
+      ],
+      "errors": [],
+      "limits": "Actual recovery Entry/Host, shared UiDialog and API wrappers with deterministic native fixtures. No real runtime install, process stop or archive pin verification performed by this browser run."
+    }
+  ],
+  "boundaries": [
+    "UI fixtures do not prove actual native recovery, package pins or OS ownership. Backend evidence remains L0 owner proof.",
+    "SettingsRoute only adds recovery Entry/Host and renames the existing install button; public UiDialog/material sources unchanged."
+  ],
+  "cleanup": {
+    "browsersClosed": true,
+    "owned43133Stopped": true
+  },
+  "evidenceHashes": {
+    "chromium-failure-light.png": "b1a78a8b60120966d82cb4957d75876adde65b44618ca49ba6a47dd1516445b4",
+    "browser-failure.json": "7e8527fd3261d62ecd8ea5586d2baaa3a10385c9e938549fbd1f14aa25910e29",
+    "browser.cjs": "838fd1b3a183ffbeb75e3a93bb09f2e1ee7832a3c1ef2434927b94ab0c1a9677",
+    "webkit-preview-dark.png": "9c5b288fd76bcc8c30558b8f89b40df2facd0aad3b82ff9544dc23dc32c05c73",
+    "typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "browser-failure.png": "4c54e436902ea6131da6ceebbc57af48113dbfd69988af8161fd728eb309bc07",
+    "component-entry.mjs": "c085fd220883fbcecd7c4fdb4a474be2af3d0e110357c9407064213c6047f450",
+    "component-server.mjs": "1b31903ae0cdca0ef1a58600354f589655ed8ae78d173dfa535f77c407b3699f",
+    "browser-results.json": "651f42ef083db8d804d4125267e9dd728d268caccad7f21a9c8a8b51bba4df3e",
+    "chromium-preview-light.png": "b418d181fac08e5afd1d5a63260794b031e14d6fe5e93bf354a4793a34db623b",
+    "tests.log": "adb99f8c5354ecc551cc8449c36c3892aa96bcf350d917f519b2939d718ff2ad",
+    "webkit-failure-dark.png": "6281ab5f48f53a1524e62a1728f93b155ee7af62331c213a83800cbda47115ff",
+    "build.log": "581360c1f0d559fadfa2903089fc6c5d2dca8fb3837e524522b042c0cb859366"
+  }
+}

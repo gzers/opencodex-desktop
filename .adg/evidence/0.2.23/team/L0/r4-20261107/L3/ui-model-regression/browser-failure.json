@@ -1,0 +1,11 @@
+{
+  "engine": "chromium",
+  "checks": [
+    "alias conflict restores only alias; valid blur records local intent without saved-file writes",
+    "detail cancellation keeps row input and closes only detail",
+    "batch empty validation preserves all intentions; public glass dialog carries actual model content",
+    "detail saves directly once and returns to list"
+  ],
+  "errors": [],
+  "error": "TimeoutError: locator.fill: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('textbox', { name: '搜索渠道', exact: true })\u001b[22m\n"
+}

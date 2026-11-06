@@ -1,0 +1,86 @@
+{
+  "role": "L3",
+  "headAtArchive": "b9ecf4f3937f960220d62323b2cf8414f9b6a66f",
+  "consumerCommits": [
+    "23ff69970",
+    "cf6a180fb",
+    "bf8b196bd",
+    "a01fa2159",
+    "b624902e4"
+  ],
+  "productionPublicBaselines": [
+    "cb6c2b7dce6abf8f70fc565bf83bca13a33c4975",
+    "6d8f78a002330d8d0b730842645deafdda38d200"
+  ],
+  "checks": {
+    "wholeUIFiles": 213,
+    "wholeUIPassed": 1540,
+    "failed": 0,
+    "unhandled": 0,
+    "typecheck": "passed",
+    "build": "passed"
+  },
+  "browser": [
+    {
+      "engine": "chromium",
+      "width": 1180,
+      "theme": "light",
+      "checks": [
+        "list and exact-group preview remain readonly even with an existing clean model editing session",
+        "explicit restore alone releases clean full-CAS session; partial receipt stays partial with per-group completion and no new draft",
+        "closing and reopening retains original restoreId; stale targets preserve partial proof and frozen selection",
+        "same opaque restore request resumes; only applied proof updates saved model facts, without v1 acceptance or auto-begin",
+        "new local input after preview disables confirmation, remains preserved, and triggers no discard or restore",
+        "public dialog guards a pending readonly baseline and cancels normally after it settles, with zero restore writes",
+        "fresh application state reads exact persistent plans and resumes only the explicitly selected partial restore without creating a preview",
+        "persisted Applied receipt is observation only and cannot repeat a restore over later data"
+      ],
+      "errors": [],
+      "limits": "Actual TransferBackups/Vue store/public modal/invoke wrappers with deterministic owner fixtures. Native protection images, restore writes and OS participants are backend evidence, not proved by this browser run."
+    },
+    {
+      "engine": "webkit",
+      "width": 900,
+      "theme": "dark",
+      "checks": [
+        "list and exact-group preview remain readonly even with an existing clean model editing session",
+        "explicit restore alone releases clean full-CAS session; partial receipt stays partial with per-group completion and no new draft",
+        "closing and reopening retains original restoreId; stale targets preserve partial proof and frozen selection",
+        "same opaque restore request resumes; only applied proof updates saved model facts, without v1 acceptance or auto-begin",
+        "new local input after preview disables confirmation, remains preserved, and triggers no discard or restore",
+        "public dialog guards a pending readonly baseline and cancels normally after it settles, with zero restore writes",
+        "fresh application state reads exact persistent plans and resumes only the explicitly selected partial restore without creating a preview",
+        "persisted Applied receipt is observation only and cannot repeat a restore over later data"
+      ],
+      "errors": [],
+      "limits": "Actual TransferBackups/Vue store/public modal/invoke wrappers with deterministic owner fixtures. Native protection images, restore writes and OS participants are backend evidence, not proved by this browser run."
+    }
+  ],
+  "limits": [
+    "Native protected images/restore writes and actual worker feedback delivery are separate backend owner evidence.",
+    "Saving-clock and final release gates remain L0 responsibility; no release performed."
+  ],
+  "cleanup": {
+    "browsersClosed": true,
+    "ownedServerStopped": true
+  },
+  "evidenceHashes": {
+    "webkit-applied-dark.png": "77b8c256bdad30a52a9075769ab2e7ff954f25ac14d5b4ddfe53a15c6d793b67",
+    "chromium-partial-light.png": "c2c241765df20d8f204bd55a2bbc9f5d04238e4befb1cd4c67a5af1813d24a9a",
+    "browser-failure.json": "1f658676cd1a073178ffe9c32f43ed638b6c197b2c25e7cd23e188488ab1a4c5",
+    "browser.cjs": "5c1bce8547c462d28ba791d82f253d243ab204ba5f1c2cc36fe75b10df06c16a",
+    "ui-full.log": "f0d73b1f9756b96845eb33b10b07f99ba23594815b03c372c93160ce78a4fbd8",
+    "typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "browser-failure.png": "4e857c4415a35c42781c404f57b26ea16a6025e24b622bc5e0842af6bc280e00",
+    "webkit-partial-dark.png": "d6daa06f096acd483aef3bd928f286454d115d57cf1e23f74d4addbcc147b5d2",
+    "chromium-applied-light.png": "eef7cd04ab3228c09db4f7b8d2981107631530a0ff2b302700322b8db71c71dc",
+    "component-entry.mjs": "344ad70cc9dcc8c9feb647a41b10ebd7234e116258809d34de75b1f22cd7da8d",
+    "webkit-persisted-dark.png": "3e41161dea9abe998beee7c099fb8d138db02c17a3b9e4227cf676f088fd8a59",
+    "merge-resolution.json": "8ae4858c86605cb45248255d9d7f3623cb6a1ef73ec3e3438f6f8f0c83c3e3f7",
+    "component-server.mjs": "5d2c61ad7946f4a41187e53d06bc13d023f3ca85ac4f82837e97349c7b3f404e",
+    "browser-results.json": "d72a785478751180527064808a2bfd5dc2f0f7fc39c89f2257c9779deaa8e10c",
+    "operations-merge-resolution.json": "79a91a6400650497845119cbd05b6c989e1c953c180e2dd7b2d86ac474b26dc1",
+    "chromium-persisted-light.png": "6b140c5dedc9a8339f045c6b84ef2a7eeefba850add43df7bf243a0699e42a1b",
+    "build.log": "09b0224f4432ff4eef01d2e58e1236679df0d0cd5257cee612d230c92acb62fd"
+  }
+}

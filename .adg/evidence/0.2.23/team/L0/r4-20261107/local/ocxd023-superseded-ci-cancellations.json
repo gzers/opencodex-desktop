@@ -1,0 +1,46 @@
+{
+  "retainedRun": 42271540704,
+  "records": [
+    {
+      "runId": 42270824847,
+      "headSha": "cce22dc665af07ebcbfc2cd27e17701fbd1b4318",
+      "observedState": "queued",
+      "reason": "superseded by current task CI run 42271540704",
+      "exitCode": 1,
+      "output": "Get \"https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/42270824847?exclude_pull_requests=true\": EOF\n"
+    },
+    {
+      "runId": 42270554780,
+      "headSha": "4149833db08c7a6ab6bc00b2621a38fc20d5af0d",
+      "observedState": "in_progress",
+      "reason": "superseded by current task CI run 42271540704",
+      "exitCode": 1,
+      "output": "Get \"https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/42270554780?exclude_pull_requests=true\": EOF\n"
+    },
+    {
+      "runId": 42269809794,
+      "headSha": "a153eaeacb803f45eac306f5a1a8f990c22c6a9a",
+      "observedState": "in_progress",
+      "reason": "superseded by current task CI run 42271540704",
+      "exitCode": 1,
+      "output": "Cannot cancel a workflow run that is completed\n"
+    },
+    {
+      "runId": 42266863722,
+      "headSha": "d03ba56376ca704b134c991754d7f626d27957bb",
+      "observedState": "in_progress",
+      "reason": "superseded by current task CI run 42271540704",
+      "exitCode": 0,
+      "output": "\u2713 Request to cancel workflow 42266863722 submitted.\n"
+    },
+    {
+      "runId": 42265338718,
+      "headSha": "abc374831f5df3b70d118b226a5d82702f17b516",
+      "observedState": "in_progress",
+      "reason": "superseded by current task CI run 42271540704",
+      "exitCode": 0,
+      "output": "\u2713 Request to cancel workflow 42265338718 submitted.\n"
+    }
+  ],
+  "note": "Cancellations are not test passes; completed original failures stay retained."
+}

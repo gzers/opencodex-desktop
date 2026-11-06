@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "role": "L2",
+  "project": "gzers/opencodex-desktop",
+  "version": "0.2.23",
+  "recorded_at_utc": "2026-11-06T17:24:17.320172+00:00",
+  "head": "7f39cf5f9b5d2ca3c3db23aaeac2f615e66db0b3",
+  "branch": "codex/0.2.23-webdav",
+  "worktree": "/Users/ezio/.codex/worktrees/ocxd-023-webdav/ocx-0219-fixes",
+  "contributions": [
+    "6e4eedac64a168f0363531ddc625494def0f8001",
+    "7f39cf5f9b5d2ca3c3db23aaeac2f615e66db0b3"
+  ],
+  "merged_exact_baselines": [
+    "c688df2ae57af5652585efd4c02d66d20e5e6a8b",
+    "202e449aa54249a5983f17740e9bec20ee5182d7"
+  ],
+  "source_files": [
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_service_v2.rs",
+      "sha256": "1d81d22f04fa5486724a254696f2128baa8d4aeed190415425e914edc190c71b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_service_v2_tests.rs",
+      "sha256": "19c5ea33f4f51e511bebdbe33c08d8971373fb8caf2d7cb1d4024ce41982281f"
+    }
+  ],
+  "working_tree_clean": true,
+  "checks": {
+    "new_targeted_tests_passed": 6,
+    "groups": {
+      "local_file_catalog": 3,
+      "auth_none_real_service": 1,
+      "same_uuid_noop_and_explicit_download": 1,
+      "real_dual_proof_restart": 1
+    },
+    "service_tests_in_source": 23,
+    "all_23_aggregated_rerun_this_batch": false,
+    "normal_crate_strict_clippy": "passed",
+    "git_diff_check": "passed",
+    "archived_logs_byte_identical_to_original": 9
+  },
+  "remaining_integration_boundary": [
+    "L0 thin registration or result.kind dispatch to resume_receive for original DownloadPlan",
+    "RecoveryPlan-specific remaining recovery is outside this batch"
+  ],
+  "cleanup": {
+    "removed_task_owned_target": "/tmp/ocxd-l2-adopted-target",
+    "absence_verified": true,
+    "no_active_target_process_observed_before_removal": true,
+    "archived_and_original_logs_retained": true,
+    "shared_caches_and_other_agents_targets_retained": true
+  },
+  "real_webdav_sync": false,
+  "remote_clear": false,
+  "release_or_publish": false,
+  "supersedes_only": [
+    "prior service-evidence limitation: same-ID production Service not yet proved",
+    "prior service-evidence limitation: real model-Applied restart not yet proved"
+  ],
+  "whole_release_acceptance_claimed": false
+}

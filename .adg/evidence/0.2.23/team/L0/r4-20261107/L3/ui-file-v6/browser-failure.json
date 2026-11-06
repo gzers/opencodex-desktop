@@ -1,0 +1,6 @@
+{
+  "engine": "chromium",
+  "checks": [],
+  "errors": [],
+  "error": "Error: locator.waitFor: Error: strict mode violation: getByRole('alert').filter({ hasText: '请先明确选择' }) resolved to 2 elements:\n    1) <p role=\"alert\" data-v-b7c2702b=\"\" class=\"model-error\">请先明确选择该 MCP 定义来源。</p> aka getByRole('article').getByText('请先明确选择该 MCP 定义来源。')\n    2) <p role=\"alert\" data-v-b7c2702b=\"\" class=\"model-error\">请先明确选择该 MCP 定义来源。</p> aka getByText('请先明确选择该 MCP 定义来源。').nth(1)\n\nCall log:\n\u001b[2m  - waiting for getByRole('alert').filter({ hasText: '请先明确选择' }) to be visible\u001b[22m\n"
+}

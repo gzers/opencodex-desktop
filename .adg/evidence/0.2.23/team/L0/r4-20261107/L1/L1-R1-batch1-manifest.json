@@ -1,0 +1,87 @@
+{
+  "role": "L1",
+  "batch": "R1-batch1",
+  "codeBaseline": "0c57500f8f46ea50655c782c3f04334a39167abb",
+  "commits": [
+    "fa07451c9cb742e33a095bcbefd330c462d6f730",
+    "4b34851dddd41f341691f6e0e338d09f2eb920d7"
+  ],
+  "branch": "codex/0.2.23-model-matching",
+  "workspace": "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes",
+  "workingTreeClean": true,
+  "tests": {
+    "passed": 29,
+    "failed": 0,
+    "scope": "real core sources through isolated Cargo driver; application integration pending L0"
+  },
+  "clippy": "passed -D warnings",
+  "rustfmt": "passed",
+  "diffCheck": "passed",
+  "seedSourceEquality": "17 templates and 58 parameters/locks plus source evidence verified",
+  "dailyConfigurationReadsOrWrites": 0,
+  "upstreamCalls": 0,
+  "published": false,
+  "pushed": false,
+  "files": {
+    "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/matching_v2.rs": {
+      "bytes": 19662,
+      "sha256": "f1ca83bf60132ec9e392b0f0da8ba7d52c77e7fe6f375fd921664837ee356ef5"
+    },
+    "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/portable_v2.rs": {
+      "bytes": 16323,
+      "sha256": "42a05d40f319223ee6227d46edf98d0258d4e54cf53b640a665ebe11a1a6e460"
+    },
+    "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/schema_v2.rs": {
+      "bytes": 24735,
+      "sha256": "8862e71963dbb6447b63b87c2b4cd4ea446f3ec67f0fc25b57e60f08d567a426"
+    },
+    "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/seed_v2.json": {
+      "bytes": 229782,
+      "sha256": "d3984de7dbb247363c2cc42639ac077bee06be36af481ffd904e08c761f6c4c9"
+    },
+    "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/source_v2.rs": {
+      "bytes": 38261,
+      "sha256": "771f098ce5925c9bf801a09be7c48155f5f8d9d5db34483185567630275a679b"
+    },
+    "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/v2_tests.rs": {
+      "bytes": 102465,
+      "sha256": "b8da1eac2ae662beba2375c6780766b70c230538b76e1b22ff049e3cd7385cf1"
+    },
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-R1-batch1-receipt.md": {
+      "bytes": 9223,
+      "sha256": "65a33d7c7fb6bf375dd3e99182e1070c3b7e6325d9b014d240985368d8896437"
+    },
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/r1-core-final-test.log": {
+      "bytes": 2943,
+      "sha256": "64852300655987966ef33333b3b852019933856d92b506aabe241321d79984e9"
+    },
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/r1-core-stage1-test.log": {
+      "bytes": 2130,
+      "sha256": "67c31d24a9e28f450d815584ed895daddd769e3fb98c98f4b1652b37821fa7d8"
+    },
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/r1-core-second-test.log": {
+      "bytes": 3143,
+      "sha256": "4a622a0241aa2b46951b2bb85ed9d77ac7e7b392a424bce630f709b6b522e6db"
+    },
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/r1-core-driver/Cargo.toml": {
+      "bytes": 356,
+      "sha256": "1fa4a872167bdc5ebb8962efdc6e45609435e4aac1f596a06bf9d2bd33495dd1"
+    },
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/r1-core-driver/Cargo.lock": {
+      "bytes": 28954,
+      "sha256": "a0e81ac742c7277d543ba3b04f7d400efd71cb2c8a786243309a435c3da49aed"
+    },
+    "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/r1-core-driver/lib.rs": {
+      "bytes": 1170,
+      "sha256": "b73b0ede2ef9d1e8ef29581eca637eafc9cf263faab94d0dd5986a402ecaad15"
+    },
+    "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/06-问题记录/模型模版通用匹配配置/model-templates.0.2.23.candidate.json": {
+      "bytes": 114463,
+      "sha256": "aeeec2078ff1416f587019c376cc06b17259550e47db199f1e59a7fff8aae68b"
+    },
+    "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/discussions/model-template-matching-20261106/release-seed-rules.json": {
+      "bytes": 168164,
+      "sha256": "d8fd310f8f01ddb0c3b91565b41f5a361dc4ac43ed40abd97b2e40ae953b83dd"
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "role": "L1",
+  "scope": "0.2.23 single-listener v2 external task broker and backend executor routing",
+  "created_at": "2026-11-06T15:54:32.683460+00:00",
+  "root": "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes",
+  "branch": "codex/0.2.23-model-matching",
+  "head": "0104fbe7dcafd9fb275ebf11fb99f8985b5ab661",
+  "published_baseline": "978f18e304813b2f7970b7a17c72333a550c3033",
+  "commits": {
+    "broker_first": "d3afc8e5874cffebeac8d93270cfe2fa3dd8b202",
+    "executor_authority_routing": "b76745a9422b0bf05c4821d35c410e34f8b64141",
+    "broker_boundaries": "a1e46fe3b0f269bb04d3a347051d5d2fe94b55cd"
+  },
+  "source_sha256": {
+    "apps/desktop/tauri/src/modules/model_config/broker.rs": "3843e27b3ea3ea46e10078600781b0c66ff0fda27b7798cb11b5c311a698b3eb",
+    "apps/desktop/tauri/src/modules/model_config/broker_v2_tests.rs": "c938b278b4980942dce4c915aff4d08f2dc579542469059b6ae14d742bf5da74",
+    "apps/desktop/tauri/src/modules/model_config/agent_runtime_v2.rs": "a6f9cfcbf44c71ccf619f17bb8a9c7fc8cfd67f91141f1ac31aaab4f6e6e34be",
+    "apps/desktop/tauri/src/modules/model_config/agent_runtime_v2_tests.rs": "3fe395e84b561c75931dd12bcb656acf93b6f38991ea22ee8f500c608b9e66d9"
+  },
+  "checks": {
+    "broker_http": {
+      "passed": 9,
+      "failed": 0,
+      "log": "broker-v2-978-final-tests.log"
+    },
+    "agent_regression": {
+      "passed": 21,
+      "failed": 0,
+      "log": "broker-v2-978-agent-tests.log"
+    },
+    "strict_clippy": {
+      "arguments": "--lib --tests --no-deps -- -D warnings",
+      "exit_code": 0,
+      "log": "broker-v2-978-strict-clippy.log"
+    },
+    "rustfmt_check": {
+      "exit_code": 0,
+      "files": [
+        "broker.rs",
+        "broker_v2_tests.rs",
+        "agent_runtime_v2.rs",
+        "agent_runtime_v2_tests.rs"
+      ]
+    },
+    "diff_check": {
+      "exit_code": 0
+    },
+    "clean_worktree": true,
+    "actual_production_crate": true,
+    "snapshot_or_registration_patch": false
+  },
+  "evidence_sha256": {
+    "broker-v2-first-tests.log": "d3e12b4f3b2040cc18c592d9a07cc7fc7b62721801f9ea96dff34ef824018f18",
+    "broker-v2-boundary-tests.log": "c7210c984e6257ee530815d562c9af7a200dcadd7eba9c6ab629203637005594",
+    "broker-v2-978-final-tests.log": "ec898e556dedfed05f32558319344d7e77ad52ad02a6ccd82814adca61161d81",
+    "broker-v2-978-agent-tests.log": "40a60e8b00342b90baa8fdcf95f60c3f35006bf34fe11b5237b502c18a917865",
+    "broker-v2-978-strict-clippy.log": "f908d46d70f9f4347747e032cd59018e21a7bd8f41cc26b10ec493578573bcd5",
+    "broker-v2-production-clippy.log": "f9010f4f4e76fc959ed9157d34cc557983dfa251492796033d4fb4c8cbb882a4",
+    "broker-v2-live-clippy.log": "b79e094724003cfa0d99ea70325b8935cd12c6d7c302ea01eeb706cc59b2442d"
+  },
+  "limitations": [
+    "macOS execution; native Windows remains L4-owned",
+    "HTTP submit only persisted a review/report; L0 owns the production library/version metadata transaction",
+    "Owner acceptance in one broker fixture simulated only a temp library write; it does not prove L0 multi-object transaction integration",
+    "Public commands and UI integration belong to L0/L3; no main push, publish, real inference or daily configuration edits",
+    "Artifacts are local and have not been uploaded"
+  ],
+  "failed_check_history": {
+    "log": "broker-v2-live-clippy.log",
+    "cause": "9 shared test lints on prior f0 baseline",
+    "resolution": "L0 published 978f18e30; merged and full strict Clippy passed without allows"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "role": "L1",
+  "scope": "copy-key",
+  "commit": "d34775a37d78c10c719dd178844248805caf1e99",
+  "created_at": "2026-11-06T17:13:33.641583+00:00",
+  "root": "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes",
+  "branch": "codex/0.2.23-model-matching",
+  "source_sha256_at_commit": {
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2.rs": "b9eb57564662224f3e1452ad8223ad8f5b6661901341a2e069715c6b3ba17040",
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2_copy_tests.rs": "0ccd2e47d0de027df7bcdb881bc7ed6642592b5874dc8675d04563d72611a62f",
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2_tests.rs": "37aa74f5a0df0b2f780401c40960fc5c871cbcab68d8c7004f347ba7948a92e5",
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2_export_tests.rs": "2c6a1ce4a84d41b565bd8c5aeda392552a6cf8c10be27d0b3c77acd009c01c52"
+  },
+  "checks": {
+    "regression": {
+      "passed": 70,
+      "log": "copy-key-first-tests.log"
+    },
+    "final_copy": {
+      "passed": 6,
+      "log": "copy-key-final-tests.log"
+    },
+    "strict_clippy": {
+      "exit_code": 0,
+      "log": "copy-key-clippy.log"
+    }
+  },
+  "evidence_sha256": {
+    "copy-key-first-tests.log": "f7f41e5b6f4490938650d37dd729a476ac05922068110a3061c962f3c68e93d8",
+    "copy-key-final-tests.log": "a1f085b36106ff67c6311c8b76a66997a9075584a149c3eb0119db96ce58a111",
+    "copy-key-clippy.log": "3694292d307c7c4e2c285d6b9e3e5084be6683394a7ec7f940349f56e07b9757"
+  },
+  "strict_clippy_arguments": "--lib --tests --no-deps -- -D warnings",
+  "limits": [
+    "local temporary macOS fixtures only; no daily configuration, real inference, sync or release",
+    "L0 owns public command registration and integration, L3 UI consumer",
+    "local artifacts not uploaded"
+  ]
+}

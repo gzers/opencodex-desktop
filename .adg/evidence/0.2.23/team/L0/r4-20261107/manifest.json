@@ -1,0 +1,1420 @@
+{
+  "schemaVersion": 1,
+  "codeHead": "45dc7a3d58d0e528b00e233b9364297e2d077df1",
+  "status": "partial-acceptance-not-a-release-certificate",
+  "notes": [
+    "Original failed and successful checks retained without rewriting source files.",
+    "Rust fourth full run: 1867 passed/0failed/13ignored, before later narrow additions.",
+    "Integrated UI full run: 1529 passed, contributor successor reports 1540; final same-tree verification still required.",
+    "Locked Mac screen prevented visual native QA; isolated owned .app bootstrap passed with v2 directories and startup identity.",
+    "Signed debug candidate and folder DMG validation do not replace final release artifacts.",
+    "Windows private creation 13 native tests passed in real MSVC CI, final candidate/two-user/runtime ports still pending.",
+    "Deletion propagation decision and user unlock reply remain pending; present-content restoration clock is separately proved."
+  ],
+  "files": [
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-full-lib-third.log",
+      "source": "/tmp/ocxd023-full-lib-third.log",
+      "bytes": 333596,
+      "sha256": "d5ec487bd26e7339a3fe81020d5d50c576bd74cf010ba8d9d60451de0b7f227d"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-full-lib-fourth.log",
+      "source": "/tmp/ocxd023-full-lib-fourth.log",
+      "bytes": 225921,
+      "sha256": "fdcd71be5daa1a89138885b1e2a5640dbd2bd6a7422f6bb865248b47b005803f"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-ui-full-third.log",
+      "source": "/tmp/ocxd023-ui-full-third.log",
+      "bytes": 45979,
+      "sha256": "254dbd79b3b275a21a5952002bef97aa44f34fb400301c997cea40bc9231ceea"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-ui-full-fourth-integrated.log",
+      "source": "/tmp/ocxd023-ui-full-fourth-integrated.log",
+      "bytes": 810,
+      "sha256": "c2f952ba823bcaa18719071556b76a60ec3f621bb7b85b375f7b8dc9e7bc0570"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-operations-public-clippy.log",
+      "source": "/tmp/ocxd023-operations-public-clippy.log",
+      "bytes": 198,
+      "sha256": "e168d881edcacfb239474c556a8752545075bd1de38b84614255b77dd20ed006"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-feedback-final-tests.log",
+      "source": "/tmp/ocxd023-feedback-final-tests.log",
+      "bytes": 3010,
+      "sha256": "43739637873140058c939cc37e247e0964c272216cf515414a90c88ebd157e73"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-feedback-final-workspace-clippy.log",
+      "source": "/tmp/ocxd023-feedback-final-workspace-clippy.log",
+      "bytes": 198,
+      "sha256": "86534c132b7d1b71e09e0233063f02cdcc44a54f92a459172d13ff6e0b980f31"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-protected-restore-mode-tests.log",
+      "source": "/tmp/ocxd023-protected-restore-mode-tests.log",
+      "bytes": 9067,
+      "sha256": "9a6c03817592a2127d11dc4667fc664111a9dfd38152f7712c65979ef6fef219"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-protected-restore-mode-focused.log",
+      "source": "/tmp/ocxd023-protected-restore-mode-focused.log",
+      "bytes": 796,
+      "sha256": "9aeecaf8e11d03020964ab307161d9ca21c71e3cd3d5dfe59b6c1ff01f8b7499"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-backup-actual-protected-images.log",
+      "source": "/tmp/ocxd023-backup-actual-protected-images.log",
+      "bytes": 589,
+      "sha256": "a44020ec171bf7f271fbd8534e2c5e0ba39015c22e4cbb6d3fb48b1c5ef1f776"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-file-output-integrated-tests.log",
+      "source": "/tmp/ocxd023-file-output-integrated-tests.log",
+      "bytes": 2083,
+      "sha256": "1c990c57a609dc70c456683a95e54c14f8bd5c254f520aad92d6e89d8a8896e6"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-file-scope-public-check.log",
+      "source": "/tmp/ocxd023-file-scope-public-check.log",
+      "bytes": 1358,
+      "sha256": "f50ecc4f8beb0028872f5e1133b16a57676ff2962d54cab87c10e30c2b94445d"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-file-scope-v2-tests.log",
+      "source": "/tmp/ocxd023-file-scope-v2-tests.log",
+      "bytes": 2562,
+      "sha256": "5888a8d54bb564e107e71a865c6af02e963a8138056c70e7de6420cd5edae165"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-file-import-account-info-third.log",
+      "source": "/tmp/ocxd023-file-import-account-info-third.log",
+      "bytes": 558,
+      "sha256": "d35bc7bc61907ec2baa2dd25c4b9fb06ceb036dda09b361a77ae8df292bd839c"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-mac-complete-candidate-build.log",
+      "source": "/tmp/ocxd023-mac-complete-candidate-build.log",
+      "bytes": 33,
+      "sha256": "15e4126e4ba616aff9c695b5358b78da64d3a593ad3a64c5af4a9683d5b06ff5"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-mac-complete-candidate-build-second.log",
+      "source": "/tmp/ocxd023-mac-complete-candidate-build-second.log",
+      "bytes": 8968,
+      "sha256": "7eb1486bb23b364e1bfa047e53634c10c843d36088021d67779ae2f674bd2e73"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-mac-candidate-resource-staging.json",
+      "source": "/tmp/ocxd023-mac-candidate-resource-staging.json",
+      "bytes": 1326,
+      "sha256": "5ab96c5e01f5a3542d18e96927a52105a866c6a3a0d5b0097d708d6dd63c9af8"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-startup-run.log",
+      "source": "/tmp/ocxd023-native-startup-run.log",
+      "bytes": 643,
+      "sha256": "36beb39b8817da9d087fdeaceaea3c8e61e245ccef956cfffe484ac474b6d151"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-bootstrap-run.log",
+      "source": "/tmp/ocxd023-native-bootstrap-run.log",
+      "bytes": 754,
+      "sha256": "cb659cbc8b6c8ec99bbd712dc9ae6015ed188a792274bf9641755c9cf5d11a07"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-bootstrap-owned-copy-run.log",
+      "source": "/tmp/ocxd023-native-bootstrap-owned-copy-run.log",
+      "bytes": 1095,
+      "sha256": "3c62785c79e3feec4fb6bfcd5c03bd869d016e6503b5ca47c42174094a58064c"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-draft-fixture-key-cleanup.json",
+      "source": "/tmp/ocxd023-draft-fixture-key-cleanup.json",
+      "bytes": 432,
+      "sha256": "f8e084a22bc89d2e2f88ee9bb9df8357e8c19512a98cad517ad605277322f312"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-superseded-ci-cancellations.json",
+      "source": "/tmp/ocxd023-superseded-ci-cancellations.json",
+      "bytes": 1765,
+      "sha256": "6a973c02da0e5ab13b6bdb7e1a7ab53dfb614da7715ec5659fdd3e529046a811"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-two-user-native-freeze.json",
+      "source": "/tmp/ocxd023-two-user-native-freeze.json",
+      "bytes": 4687,
+      "sha256": "8bc1bf0ace0556ab250cdbfdac9d18452f6bfc53b6b213c78047f3599b3ef047"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-private-user-lib-tests-final.log",
+      "source": "/tmp/ocxd023-private-user-lib-tests-final.log",
+      "bytes": 173,
+      "sha256": "57a945c98b1937a363740af2b44090ef790af35886bf3358f548e3e9b088b41a"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-platform-cfg-final-clippy.log",
+      "source": "/tmp/ocxd023-platform-cfg-final-clippy.log",
+      "bytes": 198,
+      "sha256": "e5d48ddf1b6341eb365f9853bbbe3d30193ef78cc0b6a515e15f80aca6ce5e52"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-startup-evidence/exception.log",
+      "source": "/tmp/ocxd023-native-startup-evidence/exception.log",
+      "bytes": 205,
+      "sha256": "ae543b3ecaf24268853d22cc3d9fb2a2d5bac843ee0c131d7d89a37061edeedc"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-startup-evidence/report.json",
+      "source": "/tmp/ocxd023-native-startup-evidence/report.json",
+      "bytes": 689,
+      "sha256": "66fc60d45290a5e5216de907650fcd8c31d38fac349bca2186d6733c45cbfa50"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-startup-evidence/ax-compile.log",
+      "source": "/tmp/ocxd023-native-startup-evidence/ax-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-startup-evidence/capwin-compile.log",
+      "source": "/tmp/ocxd023-native-startup-evidence/capwin-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-bootstrap-evidence/exception.log",
+      "source": "/tmp/ocxd023-native-bootstrap-evidence/exception.log",
+      "bytes": 234,
+      "sha256": "9bfcdacf1c75be6e5a593b93243b02ea21c06d29badd3d162cc063e742e121bb"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-bootstrap-evidence/report.json",
+      "source": "/tmp/ocxd023-native-bootstrap-evidence/report.json",
+      "bytes": 804,
+      "sha256": "2815825b5446b564e8628a74c970f9650e070cc23131ea689a48fec808627f9f"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-bootstrap-evidence/stdout.log",
+      "source": "/tmp/ocxd023-native-bootstrap-evidence/stdout.log",
+      "bytes": 2167,
+      "sha256": "0112e4d7042b55ca39700d84ed09b1edf0e123ad5cdeea0f0caf4b59e8a9e7f3"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-bootstrap-evidence/ax-compile.log",
+      "source": "/tmp/ocxd023-native-bootstrap-evidence/ax-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-bootstrap-evidence/capwin-compile.log",
+      "source": "/tmp/ocxd023-native-bootstrap-evidence/capwin-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-bootstrap-evidence/network-denial.log",
+      "source": "/tmp/ocxd023-native-bootstrap-evidence/network-denial.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-bootstrap-owned-copy-evidence/report.json",
+      "source": "/tmp/ocxd023-native-bootstrap-owned-copy-evidence/report.json",
+      "bytes": 1185,
+      "sha256": "a4dfdc204d8a8bce69e0e638fb7a5fafd9ffab9cff90edaea425503f81ed7f77"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-bootstrap-owned-copy-evidence/stdout.log",
+      "source": "/tmp/ocxd023-native-bootstrap-owned-copy-evidence/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-bootstrap-owned-copy-evidence/ax-compile.log",
+      "source": "/tmp/ocxd023-native-bootstrap-owned-copy-evidence/ax-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-bootstrap-owned-copy-evidence/capwin-compile.log",
+      "source": "/tmp/ocxd023-native-bootstrap-owned-copy-evidence/capwin-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-bootstrap-owned-copy-evidence/network-denial.log",
+      "source": "/tmp/ocxd023-native-bootstrap-owned-copy-evidence/network-denial.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-native-bootstrap-owned-copy-evidence/app.log",
+      "source": "/tmp/ocxd023-native-bootstrap-owned-copy-evidence/app.log",
+      "bytes": 106,
+      "sha256": "b11162dcac767fd54fda64bd83129baacadcc8a528a9b2efee481124a183623b"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-feedback-v2-persisted/directory-open-original-o.json",
+      "source": "/tmp/ocxd023-feedback-v2-persisted/directory-open-original-o.json",
+      "bytes": 1128,
+      "sha256": "0e8fbe9d8c4eaa2d1a76a86ee0bfa88aac24d36dd573434046d3a860f6ae6bad"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-feedback-v2-persisted/same-o-resolved-other-o-retained.json",
+      "source": "/tmp/ocxd023-feedback-v2-persisted/same-o-resolved-other-o-retained.json",
+      "bytes": 3489,
+      "sha256": "af8d3cf130a0b266b4ff457a382d0615059c12a821be7216f6b46206dcb2db4f"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-feedback-v2-persisted/file-export-import-receipts-resolved.json",
+      "source": "/tmp/ocxd023-feedback-v2-persisted/file-export-import-receipts-resolved.json",
+      "bytes": 4628,
+      "sha256": "1a99450cc66556598a5a5621b7322cba3d7abba73ee63d75e7d8b2f8a2b640b8"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-feedback-v2-persisted/recovery-unknown-warning.json",
+      "source": "/tmp/ocxd023-feedback-v2-persisted/recovery-unknown-warning.json",
+      "bytes": 1183,
+      "sha256": "5fe601d3601891b12da95347144cc3acfc4dd07991a3b8f99bf57524f9250db3"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-feedback-v2-persisted/stored-current-unknown.json",
+      "source": "/tmp/ocxd023-feedback-v2-persisted/stored-current-unknown.json",
+      "bytes": 1171,
+      "sha256": "7817955f9433ecc70b8cb16b65d770903ec2c4b0906681eadcb2a178a3bc0dc6"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-feedback-v2-persisted/recovery-original-plan-resolved.json",
+      "source": "/tmp/ocxd023-feedback-v2-persisted/recovery-original-plan-resolved.json",
+      "bytes": 2341,
+      "sha256": "4e79d9827502c415a04d0a862de1a6dec0b8ab3b103d7d72d059189e3ac3cbf8"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/ocxd023-feedback-v2-persisted/pending-warning-deduped.json",
+      "source": "/tmp/ocxd023-feedback-v2-persisted/pending-warning-deduped.json",
+      "bytes": 1183,
+      "sha256": "5fe601d3601891b12da95347144cc3acfc4dd07991a3b8f99bf57524f9250db3"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/local/mac-dmg-candidate-verification.json",
+      "source": "/tmp/ocxd023-macos-package-candidate-v2mwzznw/evidence.json",
+      "bytes": 14910,
+      "sha256": "29becad1555baa563453ee9398ae357da8ef35cbbd9efd2c6fac3abf9c683b48"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/manager-name-chain-original-package-regression-reused.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/manager-name-chain-original-package-regression-reused.log",
+      "bytes": 1103,
+      "sha256": "08e6c3a8af3f683a5fb118f4871b06318a046d695fdd8a5794095b6f926eeee7"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/copy-key-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/copy-key-clippy.log",
+      "bytes": 201,
+      "sha256": "3694292d307c7c4e2c285d6b9e3e5084be6683394a7ec7f940349f56e07b9757"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-content-versions-plan-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-content-versions-plan-manifest.json",
+      "bytes": 1850,
+      "sha256": "6f118180ddde53424e662955753e2e7256955f162ecb374210d8590d73867ca6"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/manager-name-chain-clippy-first.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/manager-name-chain-clippy-first.log",
+      "bytes": 763,
+      "sha256": "6f2468efbc09a276da6f4ec262588c8f07b9a6a03fe090696e7b393878fa5b20"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/history-v2-first-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/history-v2-first-tests.log",
+      "bytes": 1502,
+      "sha256": "baaed2ae3da6e853b59e31b3e59e577eac882a98507b0c274622b8bab62d1371"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/draft-discard-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/draft-discard-clippy.log",
+      "bytes": 201,
+      "sha256": "75367e2c172e39c6f2ac25c6be9d0dbf1a6f2cd44555b5af30fae6f9d477c023"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-history-v2-receipt.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-history-v2-receipt.md",
+      "bytes": 3140,
+      "sha256": "dff6fb4b12205143c4553c82ab22fc3553ff447c40fa14e149230a0af84fe5f3"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-agent-runtime-v2-wiring-analysis.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-agent-runtime-v2-wiring-analysis.md",
+      "bytes": 14422,
+      "sha256": "a9e92fa3eff8bf60a12bf391a855f8e3efb821dfa19af5d8b9acf37eb7169e7b"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-agent-runtime-v2-receipt.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-agent-runtime-v2-receipt.md",
+      "bytes": 4827,
+      "sha256": "3b2faecdba678cb2944a6fd871972729084d72023ff4544f2f33a23cfded333d"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-saved-snapshot-isolation-receipt.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-saved-snapshot-isolation-receipt.md",
+      "bytes": 3259,
+      "sha256": "1bd01ec0ca3d99b500ddacb74ed5c77336b9df36fc5e172197de69fe1459a630"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/history-v2-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/history-v2-clippy.log",
+      "bytes": 201,
+      "sha256": "70554672e76f3ac499556a7a651985fa67da3594d5a23599bf7a6f974e16bae9"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/copy-key-first-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/copy-key-first-tests.log",
+      "bytes": 10121,
+      "sha256": "f7f41e5b6f4490938650d37dd729a476ac05922068110a3061c962f3c68e93d8"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/history-v2-exact-source-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/history-v2-exact-source-tests.log",
+      "bytes": 2274,
+      "sha256": "85a9e6db26fb9fd5bf8e8a2d4b76ef62688633fba26c011d512dfa0569b13144"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-external-cli-receipt.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-external-cli-receipt.md",
+      "bytes": 4545,
+      "sha256": "c06f844e21e7c9f1791d4991e07a9c4819b2f40c00b9dab40da9f47ec84c8748"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-draft-credential-actions-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-draft-credential-actions-manifest.json",
+      "bytes": 1597,
+      "sha256": "7829f1d1f84e9af7031e16c87ac0fd70869ce5493f8ed2e8dcbb9e9f23872502"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/history-v2-exact-source-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/history-v2-exact-source-clippy.log",
+      "bytes": 201,
+      "sha256": "8ff6ca549f5ec99422e5e08eb21826e2162922c11b275cfbfa1905f0c79fc1a2"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/manager-name-chain-final.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/manager-name-chain-final.log",
+      "bytes": 5634,
+      "sha256": "57423dc424b6e18ea9a5bcb1a68db1cfbbc5befd6f4dce82c24111505bd0212e"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-final-consumer-receipt.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-final-consumer-receipt.md",
+      "bytes": 4084,
+      "sha256": "d958cdd15035b07c6461ebb717b0308bc04dda970cd84a70e828c68ba446f0cb"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/queued-draft-export-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/queued-draft-export-clippy.log",
+      "bytes": 1022,
+      "sha256": "0997ae07a4dd9a1ec7acd63b669d538af1b5a39c8fce21d2f9c52beadb3e9727"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-R1-batch1-receipt.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-R1-batch1-receipt.md",
+      "bytes": 9223,
+      "sha256": "65a33d7c7fb6bf375dd3e99182e1070c3b7e6325d9b014d240985368d8896437"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-gate-review-receipt.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-gate-review-receipt.md",
+      "bytes": 3504,
+      "sha256": "d6009da9e01566e1ba8b1636e81bb928bda740b69eab40351e17d811d4e0e5e0"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-draft-export-project-receipt.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-draft-export-project-receipt.md",
+      "bytes": 4967,
+      "sha256": "904e44eb022e79c99cf45c58e8ab32dbbc226c54f1bb3b27302d8efc0a166f41"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/draft-discard-first-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/draft-discard-first-tests.log",
+      "bytes": 1417,
+      "sha256": "5cbf2af57b6df27a68f957fa608f8658eb7c6392ec88c489277c840b4291683d"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-draft-discard-receipt.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-draft-discard-receipt.md",
+      "bytes": 3208,
+      "sha256": "731e8be87a44eb3272c66e905608d27eb9814811152e8d58958a7873e9d9fed4"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-template-agent-v2-receipt.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-template-agent-v2-receipt.md",
+      "bytes": 6629,
+      "sha256": "f03fe09b404ef2700596c369f398daabdb7387aacb1c31d1186831af9f642461"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-draft-credential-actions-receipt.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-draft-credential-actions-receipt.md",
+      "bytes": 2978,
+      "sha256": "408b3ad438657ed0e73cf722af0c3882339d39b5bbb484ebea1524e44dd127f4"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-history-v2-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-history-v2-manifest.json",
+      "bytes": 2144,
+      "sha256": "53738a91815777e0c03b59546158318828ad6ff43f961650a46400047b6a3614"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/draft-discard-regression.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/draft-discard-regression.log",
+      "bytes": 14178,
+      "sha256": "ffbb63caccade562b542360f43cda4873c06392d79a0894c40eb83a6b7d217bc"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/history-v2-guards-final-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/history-v2-guards-final-tests.log",
+      "bytes": 3069,
+      "sha256": "ccc9a5cedc1ab5699cb098778820958ff7caa17a4cd0cbd364042536b1e644ad"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-broker-v2-receipt.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-broker-v2-receipt.md",
+      "bytes": 5232,
+      "sha256": "b829155e7d149e92240a5d345f8ce9825a017e923d8ea9faf0c333dd652eabd8"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-copy-key-receipt.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-copy-key-receipt.md",
+      "bytes": 1273,
+      "sha256": "ed90fe3f925bfd1eca2532a578d06566eb66494f07ac846ed8777680997739fa"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-G0-0.2.23-contract-r1.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-G0-0.2.23-contract-r1.md",
+      "bytes": 27463,
+      "sha256": "1db45cc502033c28fcc77a07d25aceab8d30da7bd8ed611dd48dabdc9e1ca7b5"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-baseline-portable-public-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-baseline-portable-public-manifest.json",
+      "bytes": 2648,
+      "sha256": "425dcc7f3ac6239c71a8784bdd1f6146f89721ccb8f4226a976ab4843de45d63"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-saved-snapshot-isolation-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-saved-snapshot-isolation-manifest.json",
+      "bytes": 1597,
+      "sha256": "0f9293a7a74baf65917e9648bb57cf7a714c2d026023ec34d79eb4e6c416976a"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/queued-draft-export-final-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/queued-draft-export-final-clippy.log",
+      "bytes": 201,
+      "sha256": "67e48b6092304c303b14e0d95988c70f1418223c940604f909f40439978ac7ad"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-copy-key-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-copy-key-manifest.json",
+      "bytes": 1787,
+      "sha256": "75d8b63ad09b4d43b900dccd355b7b8c24a71e633c2a34d5f94daa4b1331e497"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/history-v2-final-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/history-v2-final-clippy.log",
+      "bytes": 201,
+      "sha256": "f52a544ad0975c36c18d2da9b12370d7d48218b669526d18d7ba379fb7ca60f4"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/draft-discard-durable-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/draft-discard-durable-tests.log",
+      "bytes": 1560,
+      "sha256": "3b9faf094dbf0ee7323fb39e1557ecddc34f576921b3ab7676458166a4c58ef8"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-agent-runtime-v2-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-agent-runtime-v2-manifest.json",
+      "bytes": 3649,
+      "sha256": "7d8290202351cc36b3a19decf888080c36cb2b87776030c0d1264544c7b4d8c0"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/history-v2-final-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/history-v2-final-tests.log",
+      "bytes": 2274,
+      "sha256": "dc6576b17571903ca34d1c0774d4617297755ca8622277cb48c5d56c36693305"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-manager-name-chain-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-manager-name-chain-manifest.json",
+      "bytes": 11465,
+      "sha256": "ebe995eb01004b4116e09b012d99f657628cab2f07cfabe7b0bab9155d84db16"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-final-consumer-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-final-consumer-manifest.json",
+      "bytes": 5692,
+      "sha256": "1db26bdbe5cfbebb9c22caf173a35a88026cedfa956ebc3b030f0e266133edc8"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/manager-name-chain-first.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/manager-name-chain-first.log",
+      "bytes": 3244,
+      "sha256": "f717d60e56dc76bc23803339f3629b739a5f2f97a738c3df42310f33381338d7"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-broker-v2-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-broker-v2-manifest.json",
+      "bytes": 3466,
+      "sha256": "ebb87d4e182f3afa08e5f07c71341afbe1751493f5c41d315cc4255b8d04178d"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/manager-name-chain-readonly-final.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/manager-name-chain-readonly-final.log",
+      "bytes": 5902,
+      "sha256": "f3166081d8c386499edaacd16bde3e67b0a87a061961fb112bd195bc48a1421b"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-R1-batch1-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-R1-batch1-manifest.json",
+      "bytes": 4478,
+      "sha256": "4dc241cee52fbf67dddc0ab045eca62fe94183bcc66a93fa276d427aed1dc070"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-R1-batch2-receipt.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-R1-batch2-receipt.md",
+      "bytes": 10124,
+      "sha256": "addfab2d3f2f8d2e5a02b26299b73386202792569def83081e4fff4ee31c8fc4"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/draft-discard-durable-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/draft-discard-durable-clippy.log",
+      "bytes": 201,
+      "sha256": "39e124fdf97c102f49b4965d8694488c990db4a23a08f23de8b0de4e2913febe"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-baseline-portable-public-receipt.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-baseline-portable-public-receipt.md",
+      "bytes": 6117,
+      "sha256": "f9d0f93a133c80d3d9d0f54542479a7b9280be6ae74cd2d1d6e81f6d0de1c63e"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-template-agent-v2-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-template-agent-v2-manifest.json",
+      "bytes": 2293,
+      "sha256": "06b093d7f10517c981da8a52149e033c51107850b2ed621249a8a53367243cac"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-content-versions-plan-receipt.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-content-versions-plan-receipt.md",
+      "bytes": 3869,
+      "sha256": "1bf601a337f467f568faf835c18abfd467ed0db9917597d45beeda880860b872"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-draft-export-project-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-draft-export-project-manifest.json",
+      "bytes": 4651,
+      "sha256": "49f580be5979b4e8043a9344422281d3b9d8f5603b38f0b034ca6c3257c70717"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/manager-name-chain-clippy-final.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/manager-name-chain-clippy-final.log",
+      "bytes": 201,
+      "sha256": "a430120222c7d46d634c4a7f3302603be007f73abdd5f3e590977ce03d93c3f3"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/history-v2-boundary-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/history-v2-boundary-tests.log",
+      "bytes": 1672,
+      "sha256": "81d94b3e7871268fa7fbb10ecae87c98aa083fd2dba3a939961b8e385621b0ea"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/queued-draft-export-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/queued-draft-export-tests.log",
+      "bytes": 2259,
+      "sha256": "a17edec33cc8b6b1b88fb3bf3fe49734a77b79c3164df022e29d6821c8c54a40"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-gate-review-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-gate-review-manifest.json",
+      "bytes": 1630,
+      "sha256": "816841a377f259c77dd4218a2184065edecaf5191f40fbbe6a8832563e465728"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-draft-discard-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-draft-discard-manifest.json",
+      "bytes": 4189,
+      "sha256": "0281d1b138eda13af18fefbd111cf5a3dc82c12d1d40e4c6e79cb83ef8e424d0"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-manager-name-chain-receipt.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-manager-name-chain-receipt.md",
+      "bytes": 4904,
+      "sha256": "329ce6b186638ec8de70b1f4b70a25344313842ae69386d57289122e669d5580"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/manager-name-chain-own-lock.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/manager-name-chain-own-lock.log",
+      "bytes": 2878,
+      "sha256": "21d24fc4ba51f5776ed402fb1585c296a6e7020bad6a2ea5a97ff21b0e04e474"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-external-cli-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-external-cli-manifest.json",
+      "bytes": 3182,
+      "sha256": "e3602d6d729c08a16cb9a70cc42ecffb57238bc4d139542392f0b2538f5c60ea"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/history-v2-complete-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/history-v2-complete-tests.log",
+      "bytes": 11584,
+      "sha256": "75ed9d9879ba722aa7e0ec7a28a094d34f3d971e448d09e24d8234074cb79d91"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/copy-key-final-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/copy-key-final-tests.log",
+      "bytes": 1367,
+      "sha256": "a1f085b36106ff67c6311c8b76a66997a9075584a149c3eb0119db96ce58a111"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-R1-batch2-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/L1-R1-batch2-manifest.json",
+      "bytes": 4795,
+      "sha256": "9a9d7e5fa5cf69664aa847f5e5cf4cf4514afbd64e15dd13d07b3a29802a95f0"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/default-endpoint-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/default-endpoint-clippy.log",
+      "bytes": 8976,
+      "sha256": "5757d28a11c60344f9d0e6dfd02fcdc48f0ac5fc0b3fd5af56719d827a274f95"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/API.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/API.md",
+      "bytes": 7899,
+      "sha256": "9d77402829c059bcff6283404d7100639fcdc2e4a66101bea4dab31c75b78b3c"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/host-postadoption-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/host-postadoption-tests.log",
+      "bytes": 4023,
+      "sha256": "ddfdb31c334420743500a5a8f475e0c2928a4158ab22595f0a24fe5bfe4930be"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/production-first-device-full.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/production-first-device-full.log",
+      "bytes": 801,
+      "sha256": "d2222415bea4a3fdba291f9eb2b1cd45626c1d238f419aebbdd800c87a843cc9"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/failure-history.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/failure-history.md",
+      "bytes": 2631,
+      "sha256": "6e50fc5e5ff28ae78b8d08a1ed62ec3467239dc42b2b701c7f344fd55704e3ef"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/normal-crate-final-context-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/normal-crate-final-context-clippy.log",
+      "bytes": 193,
+      "sha256": "b4cb79653f82b0db86b58fc4b96e006800f6e2ca2fb194ca7faf90a5888b36f8"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/host-postadoption-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/host-postadoption-clippy.log",
+      "bytes": 193,
+      "sha256": "77ae4964f1d8489887c7acec4ac65ac23fd0e3f4a801a515fc228043ca74a891"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/private-credential-diff-test.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/private-credential-diff-test.log",
+      "bytes": 587,
+      "sha256": "94942dfa13eaaa6b9c5f7929dd16e3fdd2f1f61a68ee9b39dedfa2911e31e74c"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/REPRODUCE.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/REPRODUCE.md",
+      "bytes": 1331,
+      "sha256": "419bba6ff2a8ee022df93030492756d36b673aff034e7b3db7fa04a48d4d40c1"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/normal-crate-production-initial-check.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/normal-crate-production-initial-check.log",
+      "bytes": 193,
+      "sha256": "b6f4da15c4ddb30806dfe094d84359f4b0d70b5cc882ce181460cd11968d087d"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/normal-crate-service-14-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/normal-crate-service-14-tests.log",
+      "bytes": 3322,
+      "sha256": "4c7a6819fd1bbcfad1d6c5c73018c40950476eafb234e57c4f09be4740b98567"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/normal-crate-final-tests-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/normal-crate-final-tests-clippy.log",
+      "bytes": 193,
+      "sha256": "b7ee4583c8253a07d29a1b26d5fd7ec0a64d9409ba601de47d742fbdb11de2c5"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/manifest.json",
+      "bytes": 7727,
+      "sha256": "360584b774d137e505d52ba2d9478f04bc5e7cecf5b5019121f9d6400d84916d"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/production-recovery.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/production-recovery.log",
+      "bytes": 795,
+      "sha256": "2d367ff3e464cb64b131508b104bdd9d1197684ae3431417067efbe718051ac6"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/production-encrypted.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/production-encrypted.log",
+      "bytes": 790,
+      "sha256": "708295f46d4e63e92d8b04ebccca1b8ad3e672a47bf2d088b8f52548e9a7cc08"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/normal-crate-service-check.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/normal-crate-service-check.log",
+      "bytes": 193,
+      "sha256": "ba33db4dff15dcab2126281a8190b2a1c14d8b8b1b1bab1d40b60973c6da393c"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/production-recovery-export.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/production-recovery-export.log",
+      "bytes": 836,
+      "sha256": "a7995c2b0fa7c2806c6260e675b3292635aabcf2a78055837ceb9eb71a612d90"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/normal-crate-service-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/normal-crate-service-clippy.log",
+      "bytes": 193,
+      "sha256": "4b2d057f9c8362cc24abf853ab6e13b6bf41545843c66bcaa8e74da528d5abae"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/default-endpoint-host-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/default-endpoint-host-tests.log",
+      "bytes": 3748,
+      "sha256": "1293c4b457ef7c595365fd1ec17dfa1527aef4a513b5cdc806bcb19790838486"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/production-backup-failure-retry.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/production-backup-failure-retry.log",
+      "bytes": 787,
+      "sha256": "842b1307c9460ec35ebbcb45ffb3793611d0d0a2732bd86b4210d34c20d60689"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/receipt.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/receipt.json",
+      "bytes": 8304,
+      "sha256": "9b2c755f5b731f0a39cd695d445d33e6fb3be778f0a941ef1fb1c91fae441f9d"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/production-context-roundtrip-test.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/production-context-roundtrip-test.log",
+      "bytes": 836,
+      "sha256": "8a6a4654355885c080e2a1e279435ffb7e9506ceccedfc900b2043ba6ec377ee"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-service-recovery.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-service-recovery.log",
+      "bytes": 795,
+      "sha256": "2d367ff3e464cb64b131508b104bdd9d1197684ae3431417067efbe718051ac6"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-default-host-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-default-host-tests.log",
+      "bytes": 3748,
+      "sha256": "1293c4b457ef7c595365fd1ec17dfa1527aef4a513b5cdc806bcb19790838486"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-service-context-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-service-context-clippy.log",
+      "bytes": 193,
+      "sha256": "b4cb79653f82b0db86b58fc4b96e006800f6e2ca2fb194ca7faf90a5888b36f8"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-service-production-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-service-production-clippy.log",
+      "bytes": 915,
+      "sha256": "ced55055e3eaf6d5fcda274ccf97d16ade33cbbb4b5c38a4565524a1c6ae7917"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-service-production-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-service-production-tests.log",
+      "bytes": 3001,
+      "sha256": "e70ccab7b5444b38b108f0486cee3d6ef4625a4de87fe9d52deb487df9e6280f"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-service-context-test.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-service-context-test.log",
+      "bytes": 836,
+      "sha256": "8a6a4654355885c080e2a1e279435ffb7e9506ceccedfc900b2043ba6ec377ee"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-service-secret-diff.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-service-secret-diff.log",
+      "bytes": 587,
+      "sha256": "94942dfa13eaaa6b9c5f7929dd16e3fdd2f1f61a68ee9b39dedfa2911e31e74c"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-service-production-check.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-service-production-check.log",
+      "bytes": 193,
+      "sha256": "b6f4da15c4ddb30806dfe094d84359f4b0d70b5cc882ce181460cd11968d087d"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-service-all.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-service-all.log",
+      "bytes": 3322,
+      "sha256": "4c7a6819fd1bbcfad1d6c5c73018c40950476eafb234e57c4f09be4740b98567"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-service-first-full.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-service-first-full.log",
+      "bytes": 801,
+      "sha256": "d2222415bea4a3fdba291f9eb2b1cd45626c1d238f419aebbdd800c87a843cc9"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-service-encrypted.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-service-encrypted.log",
+      "bytes": 790,
+      "sha256": "708295f46d4e63e92d8b04ebccca1b8ad3e672a47bf2d088b8f52548e9a7cc08"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-service-recovery-export.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-service-recovery-export.log",
+      "bytes": 836,
+      "sha256": "a7995c2b0fa7c2806c6260e675b3292635aabcf2a78055837ceb9eb71a612d90"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-service-backupfail.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-service-backupfail.log",
+      "bytes": 787,
+      "sha256": "842b1307c9460ec35ebbcb45ffb3793611d0d0a2732bd86b4210d34c20d60689"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-service-context-check.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-service-context-check.log",
+      "bytes": 578,
+      "sha256": "01751de2f6621f78a5a1031c1d7fe50048120274c0a19131ec23ceec7e483d14"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-default-endpoint-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-default-endpoint-tests.log",
+      "bytes": 15825,
+      "sha256": "6712abeed15c225cac5a919322c3b1a29cd09f0c51040450f8ad9c2b9cae1fa4"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-host-postadoption-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-host-postadoption-clippy.log",
+      "bytes": 193,
+      "sha256": "77ae4964f1d8489887c7acec4ac65ac23fd0e3f4a801a515fc228043ca74a891"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-host-postadoption-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-host-postadoption-tests.log",
+      "bytes": 4023,
+      "sha256": "ddfdb31c334420743500a5a8f475e0c2928a4158ab22595f0a24fe5bfe4930be"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-service-tests-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-service-tests-clippy.log",
+      "bytes": 193,
+      "sha256": "b7ee4583c8253a07d29a1b26d5fd7ec0a64d9409ba601de47d742fbdb11de2c5"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-service-production-check-final.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-service-production-check-final.log",
+      "bytes": 193,
+      "sha256": "ba33db4dff15dcab2126281a8190b2a1c14d8b8b1b1bab1d40b60973c6da393c"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-service-context-check-final.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-service-context-check-final.log",
+      "bytes": 192,
+      "sha256": "63bf962af669c01452bc328c99f4f0ff430ec67957da5d6c3c6c840f6b7e1610"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-service-production-clippy-final.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-service-production-clippy-final.log",
+      "bytes": 193,
+      "sha256": "4b2d057f9c8362cc24abf853ab6e13b6bf41545843c66bcaa8e74da528d5abae"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/service-evidence/development-logs/ocxd-l2-default-endpoint-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/service-evidence/development-logs/ocxd-l2-default-endpoint-clippy.log",
+      "bytes": 8976,
+      "sha256": "5757d28a11c60344f9d0e6dfd02fcdc48f0ac5fc0b3fd5af56719d827a274f95"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/adopted-service-evidence/API.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/adopted-service-evidence/API.md",
+      "bytes": 3083,
+      "sha256": "66381050d09a81ae88af0dbd07623e8f2663b2e3ffb62cfa2eddfd85c8186d2a"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/adopted-service-evidence/real-dual-proof-restart.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/adopted-service-evidence/real-dual-proof-restart.log",
+      "bytes": 784,
+      "sha256": "8c7e27fe712698cc1da7bb5ed008d816b8ebe525247bd42bbc53d6f2f93d8b45"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/adopted-service-evidence/same-id-first-guard-failed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/adopted-service-evidence/same-id-first-guard-failed.log",
+      "bytes": 1520,
+      "sha256": "16d9e834aa9d6fd8078a2657773d3a9f39280adefbcfb79007a83131a39fb607"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/adopted-service-evidence/auth-none-before-owner-fix-failed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/adopted-service-evidence/auth-none-before-owner-fix-failed.log",
+      "bytes": 11784,
+      "sha256": "d753bac49f317a84c857d7d591f69fcd8fd66886fd9d85281d9a87eaa8a1472c"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/adopted-service-evidence/failure-history.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/adopted-service-evidence/failure-history.md",
+      "bytes": 1619,
+      "sha256": "b462d3e7abf082f7297c1ceeaab846bcf52aba66f0d83567e18fe24a4151dd05"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/adopted-service-evidence/local-file-catalog-normal-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/adopted-service-evidence/local-file-catalog-normal-clippy.log",
+      "bytes": 248,
+      "sha256": "3f3b1998d9f823d0bfbad57e7687d3ff89cc30064f7d4961f80a1b34929572e0"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/adopted-service-evidence/same-id-noop-and-confirmed-download.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/adopted-service-evidence/same-id-noop-and-confirmed-download.log",
+      "bytes": 780,
+      "sha256": "2dfca02d3c26b8a383cd33b5fc6f7f7ef6952181ffd0dbb8977910cc974d4a04"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/adopted-service-evidence/manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/adopted-service-evidence/manifest.json",
+      "bytes": 2092,
+      "sha256": "c47df13be91bcd0eaf220b49d63819ca357fe0e1c247367a5dfcf0d47339db1b"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/adopted-service-evidence/local-file-catalog-no-endpoint-tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/adopted-service-evidence/local-file-catalog-no-endpoint-tests.log",
+      "bytes": 890,
+      "sha256": "3f4b41cd7e77713bc6ea3316bdc9140b856f3690186626047fedafddc4370012"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/adopted-service-evidence/auth-none-after-exact-owner-fix.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/adopted-service-evidence/auth-none-after-exact-owner-fix.log",
+      "bytes": 742,
+      "sha256": "bb8deffc939cfebf17c031f1074619816633b65e23eb6d2fb03a4c30dc1c9413"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/adopted-service-evidence/normal-crate-adopted-service-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/adopted-service-evidence/normal-crate-adopted-service-clippy.log",
+      "bytes": 247,
+      "sha256": "5d284ad83c378759ef4d4c15afe8e78d175ab8e93c05e8dde14d6e0c56af002d"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/adopted-service-evidence/receipt.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/adopted-service-evidence/receipt.json",
+      "bytes": 2247,
+      "sha256": "7a2df1dcd61d36ff0a8bac08adf2b280d69aaa30698acd67ae8846462821a5dc"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/adopted-service-evidence/same-id-unsaved-draft-diagnostic.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/adopted-service-evidence/same-id-unsaved-draft-diagnostic.log",
+      "bytes": 1582,
+      "sha256": "8bef9b6af116c0f6e41a8d36ce838b9ba4dcf2cf83d6cf1ee804780f8b9ea3c4"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/local-file-catalog-metadata-evidence/API.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/local-file-catalog-metadata-evidence/API.md",
+      "bytes": 1685,
+      "sha256": "9110497716afa027cb0dcbad362a69cd4cf3c2247e64f36a9888215c034f8ff7"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/local-file-catalog-metadata-evidence/normal-crate-clippy.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/local-file-catalog-metadata-evidence/normal-crate-clippy.log",
+      "bytes": 8922,
+      "sha256": "bd364ced3720727cefb77bde9d13b947b3637615cde201680f0a50744fd75f60"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/local-file-catalog-metadata-evidence/manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/local-file-catalog-metadata-evidence/manifest.json",
+      "bytes": 798,
+      "sha256": "acbb1d3dd098685081432eedeb1c88ae578a017c2a44916388f2e5c73d6a9947"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/local-file-catalog-metadata-evidence/inventory-dto-2.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/local-file-catalog-metadata-evidence/inventory-dto-2.log",
+      "bytes": 730,
+      "sha256": "a81de892e3b5971e0cde27b755cfda252337e6bd4ba72a273ae092a92d317cbd"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/local-file-catalog-metadata-evidence/local-catalog-3.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/local-file-catalog-metadata-evidence/local-catalog-3.log",
+      "bytes": 11319,
+      "sha256": "967042f008c26ac593fd53934d7b200384f55e75a995c0f8c944ce2e3023bc0d"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/local-file-catalog-metadata-evidence/receipt.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/local-file-catalog-metadata-evidence/receipt.json",
+      "bytes": 983,
+      "sha256": "f590ef6464629e849bf9ed8013a2e150716d677f8c39b917e7b5bbcd4963b9d4"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/scope-restore-evidence/API.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-evidence/API.md",
+      "bytes": 4871,
+      "sha256": "51641108b3a0b13bf64c1d7348c01b4734fff36bf0ee016d9391baa53ada1565"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/scope-restore-evidence/local-guard-order-first-failed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-evidence/local-guard-order-first-failed.log",
+      "bytes": 5734,
+      "sha256": "5d377f77486d6e15d13961dafd3399c4a0b60b32025511fa4c2bca9d324b7ebe"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/scope-restore-evidence/failure-history.md",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-evidence/failure-history.md",
+      "bytes": 1514,
+      "sha256": "6312b43f72d46939c38b17945f0d60b02ba229ee6c068b89a2cb7193fc5d0373"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/scope-restore-evidence/local-36-passed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-evidence/local-36-passed.log",
+      "bytes": 5154,
+      "sha256": "99a7254a12bb8efe0d6ab751accfbf0942029b95c48456362d0a52c1faf8805c"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/scope-restore-evidence/actual-expanded-10-passed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-evidence/actual-expanded-10-passed.log",
+      "bytes": 1925,
+      "sha256": "88c2b376c705df3bc9d5fac81ce2acc29e5faf792108be6babb056058b2add1d"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/scope-restore-evidence/expanded-literal-field-compile-failed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-evidence/expanded-literal-field-compile-failed.log",
+      "bytes": 558,
+      "sha256": "92adee310779d6d61a56eb1f9e620fa87ea77c24db10debc89d76e7119c3ec7f"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/scope-restore-evidence/compile-first-failed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-evidence/compile-first-failed.log",
+      "bytes": 18103,
+      "sha256": "30f373e92f8e4804680d253e6363556ec50d2907ca365f7d4b30480ba2865edd"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/scope-restore-evidence/local-40-passed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-evidence/local-40-passed.log",
+      "bytes": 5745,
+      "sha256": "d59a5617b7fc2317ec3de250b93a497282dab5fc9728748df3eeed977467e8ce"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/scope-restore-evidence/manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-evidence/manifest.json",
+      "bytes": 2704,
+      "sha256": "3ebd1700a33cf6fd55c509570ba70cf44f60038bdc12e82925007f9f533e4600"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/scope-restore-evidence/normal-crate-clippy-final-passed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-evidence/normal-crate-clippy-final-passed.log",
+      "bytes": 193,
+      "sha256": "929edf128b1d7642e247c1a023dbca88ce07e5bd603078a4dbda58d873ab45d6"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/scope-restore-evidence/actual-restore-6-passed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-evidence/actual-restore-6-passed.log",
+      "bytes": 1331,
+      "sha256": "e0179bf18a6fa8b37915f8581ffe118107c635befed0cf1a334c8c5eb9308a1b"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/scope-restore-evidence/normal-crate-clippy-first-failed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-evidence/normal-crate-clippy-first-failed.log",
+      "bytes": 10034,
+      "sha256": "2302c11d71c2f209e08285a97841b46836de0bfda4c1fdb66d56735cdefd4718"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/scope-restore-evidence/readonly-storage-admission-final-passed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-evidence/readonly-storage-admission-final-passed.log",
+      "bytes": 589,
+      "sha256": "42b8124cb3e9f5e80b5a878be7e68482f223f223678af82b70cd0b4dcba1283a"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/scope-restore-evidence/real-dual-proof-remaining-passed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-evidence/real-dual-proof-remaining-passed.log",
+      "bytes": 789,
+      "sha256": "d08f3d639bf32316b9814ef75b9b2204fddab8021196064a6272d651dee2cbfc"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/scope-restore-evidence/actual-expanded-11-readonly-passed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-evidence/actual-expanded-11-readonly-passed.log",
+      "bytes": 2085,
+      "sha256": "b3707eebb927d19fce60b8f8c0386a7a5f0d2352de9dd39c0666aa2c62f7f3dd"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/scope-restore-evidence/receipt.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-evidence/receipt.json",
+      "bytes": 3018,
+      "sha256": "bc10b34d21cf29d2f0e3b09a741e552dc0f76f7ee0417fdee6d82753eebb0962"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/scope-restore-evidence/actual-restore-4-passed.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/scope-restore-evidence/actual-restore-4-passed.log",
+      "bytes": 1011,
+      "sha256": "af606747ba469d939fdcf32546a1c08a148d9946a50345e54241f0763bf9f05b"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-model-regression/browser-failure.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-model-regression/browser-failure.json",
+      "bytes": 563,
+      "sha256": "1e33b77b68484fc316cbcf3a35077a3558359c4352f9dada5f9bc3b5f0f87d90"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-model-regression/typecheck.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-model-regression/typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-model-regression/browser-results.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-model-regression/browser-results.json",
+      "bytes": 1538,
+      "sha256": "195eb3d0fe9d09183d069b769a1ad8b9bab17b528059acdbd524a673b0c40955"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-model-regression/handoff-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-model-regression/handoff-manifest.json",
+      "bytes": 3378,
+      "sha256": "94c844302cd9a58bd8b996daaeeb2659a9dce6b72152fb2811edb86caf99138c"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-model-regression/build.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-model-regression/build.log",
+      "bytes": 5958,
+      "sha256": "6addeb8ce6d0d75ca53d0b9e6021749c127ed2e13c8635c396f3d20d7ca1bfcf"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-external-v2/browser-failure.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-external-v2/browser-failure.json",
+      "bytes": 1125,
+      "sha256": "f30e564798e4345939ec3def2c2f51f5e9d27083033a2b2c75bf223a11123293"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-external-v2/typecheck.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-external-v2/typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-external-v2/merge-resolution.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-external-v2/merge-resolution.json",
+      "bytes": 391,
+      "sha256": "04591a3a63c3124a5ef9b911514c8ce8579feb5f3cb7818a1d46e0e89645bc00"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-external-v2/browser-results.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-external-v2/browser-results.json",
+      "bytes": 1532,
+      "sha256": "c73b00a2a4a825e4d4d0cc4cac139955dc5be7b8be92dfc6000d893920980042"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-external-v2/tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-external-v2/tests.log",
+      "bytes": 496,
+      "sha256": "95620fd77d134b2d5fceb702f4dcaa1b92a6cc5cb91bd42d5e9d78c99c022c21"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-external-v2/handoff-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-external-v2/handoff-manifest.json",
+      "bytes": 3352,
+      "sha256": "15411a131be9b237c83e34e51d95196b2aaa3f3303e8ad4b970d02aa6fc1ad6e"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-external-v2/build.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-external-v2/build.log",
+      "bytes": 5474,
+      "sha256": "c35205866b7679c7e1e060addb6613d3b4a9720bf3593c165fe32b42d7a87bb2"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-file-v6/ui-full-remaining-output-owner.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-file-v6/ui-full-remaining-output-owner.log",
+      "bytes": 12742,
+      "sha256": "c6de2dddd85053ce94d7aece6cbcb48f0b7aa480f8ab43f446842f580229635d"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-file-v6/output-build.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-file-v6/output-build.log",
+      "bytes": 4925,
+      "sha256": "b52e5669eae3a22dbf8a9c2d5d588f156a867d48b72b6733c54db729abae1c21"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-file-v6/browser-failure.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-file-v6/browser-failure.json",
+      "bytes": 713,
+      "sha256": "d2ff94a467d5e687dfe86a46afe41c89501c956422d5bafbc2591796a5710990"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-file-v6/output-handoff-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-file-v6/output-handoff-manifest.json",
+      "bytes": 4782,
+      "sha256": "899e1d3f35c4c13a16b4ad66b7e6574cb98bd35efc738ffb985508b7576d67cc"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-file-v6/typecheck.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-file-v6/typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-file-v6/output-ui-full.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-file-v6/output-ui-full.log",
+      "bytes": 750,
+      "sha256": "284f6054913e965e7b26fead4c91ea4297f7f5de0665e5fd373823febc13991b"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-file-v6/browser-results.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-file-v6/browser-results.json",
+      "bytes": 1714,
+      "sha256": "e53e2cf9f8f8e5f2a07141b537b82efa2a779c7ab247056c29cc76c2a7d645c7"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-file-v6/output-typecheck.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-file-v6/output-typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-file-v6/tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-file-v6/tests.log",
+      "bytes": 497,
+      "sha256": "d54afe8c4b8a5238bc8dc92e84ad62adce77fad4ba00aa74a312c84eea601141"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-file-v6/handoff-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-file-v6/handoff-manifest.json",
+      "bytes": 4002,
+      "sha256": "473d4c9dfa515cb7d24af2ea213f2f12b5f5a3d2c8a5e3fa18f87efc781f8045"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-file-v6/build.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-file-v6/build.log",
+      "bytes": 4925,
+      "sha256": "96bbc464ddd91e662cdc7d0010b20417191e9501ca827a69eb62d4ead5b3c5eb"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-runtime-recovery-v2/browser-failure.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-runtime-recovery-v2/browser-failure.json",
+      "bytes": 517,
+      "sha256": "7e8527fd3261d62ecd8ea5586d2baaa3a10385c9e938549fbd1f14aa25910e29"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-runtime-recovery-v2/typecheck.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-runtime-recovery-v2/typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-runtime-recovery-v2/browser-results.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-runtime-recovery-v2/browser-results.json",
+      "bytes": 1792,
+      "sha256": "651f42ef083db8d804d4125267e9dd728d268caccad7f21a9c8a8b51bba4df3e"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-runtime-recovery-v2/tests.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-runtime-recovery-v2/tests.log",
+      "bytes": 494,
+      "sha256": "adb99f8c5354ecc551cc8449c36c3892aa96bcf350d917f519b2939d718ff2ad"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-runtime-recovery-v2/handoff-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-runtime-recovery-v2/handoff-manifest.json",
+      "bytes": 3702,
+      "sha256": "adcc2ef25c27e7f52349205cbd1fb129e8264fec6612e07849234582791ec46b"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-runtime-recovery-v2/build.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-runtime-recovery-v2/build.log",
+      "bytes": 5005,
+      "sha256": "581360c1f0d559fadfa2903089fc6c5d2dca8fb3837e524522b042c0cb859366"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-scope-backup-v2/browser-failure.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-scope-backup-v2/browser-failure.json",
+      "bytes": 972,
+      "sha256": "1f658676cd1a073178ffe9c32f43ed638b6c197b2c25e7cd23e188488ab1a4c5"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-scope-backup-v2/ui-full.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-scope-backup-v2/ui-full.log",
+      "bytes": 750,
+      "sha256": "f0d73b1f9756b96845eb33b10b07f99ba23594815b03c372c93160ce78a4fbd8"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-scope-backup-v2/typecheck.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-scope-backup-v2/typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-scope-backup-v2/merge-resolution.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-scope-backup-v2/merge-resolution.json",
+      "bytes": 405,
+      "sha256": "8ae4858c86605cb45248255d9d7f3623cb6a1ef73ec3e3438f6f8f0c83c3e3f7"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-scope-backup-v2/browser-results.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-scope-backup-v2/browser-results.json",
+      "bytes": 2626,
+      "sha256": "d72a785478751180527064808a2bfd5dc2f0f7fc39c89f2257c9779deaa8e10c"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-scope-backup-v2/operations-merge-resolution.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-scope-backup-v2/operations-merge-resolution.json",
+      "bytes": 1046,
+      "sha256": "79a91a6400650497845119cbd05b6c989e1c953c180e2dd7b2d86ac474b26dc1"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-scope-backup-v2/handoff-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-scope-backup-v2/handoff-manifest.json",
+      "bytes": 5166,
+      "sha256": "2e2b81cbce415839c0eff2f603b58b53adc9598c424396a454ca6f90b135cf82"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-scope-backup-v2/build.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-scope-backup-v2/build.log",
+      "bytes": 4815,
+      "sha256": "09b0224f4432ff4eef01d2e58e1236679df0d0cd5257cee612d230c92acb62fd"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-transfer-notification-v2/ui-full.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-transfer-notification-v2/ui-full.log",
+      "bytes": 750,
+      "sha256": "f0d73b1f9756b96845eb33b10b07f99ba23594815b03c372c93160ce78a4fbd8"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-transfer-notification-v2/typecheck.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-transfer-notification-v2/typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-transfer-notification-v2/browser-results.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-transfer-notification-v2/browser-results.json",
+      "bytes": 1862,
+      "sha256": "7abd6c9f75ac12747f4a1eebd510f9bea6cfca6db44ef8fcb1e4424f6dcaa47c"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-transfer-notification-v2/handoff-manifest.json",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-transfer-notification-v2/handoff-manifest.json",
+      "bytes": 3723,
+      "sha256": "d82efca320f5b9b329339468bebe7541493bedf8df96da3ab02ca7dba4a0650f"
+    },
+    {
+      "path": ".adg/evidence/0.2.23/team/L0/r4-20261107/L3/ui-transfer-notification-v2/build.log",
+      "source": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-f5de-7c53-89a3-cad653af6685/ui-transfer-notification-v2/build.log",
+      "bytes": 4815,
+      "sha256": "09b0224f4432ff4eef01d2e58e1236679df0d0cd5257cee612d230c92acb62fd"
+    }
+  ]
+}

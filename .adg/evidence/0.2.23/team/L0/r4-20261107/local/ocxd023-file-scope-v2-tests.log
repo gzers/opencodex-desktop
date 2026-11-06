@@ -1,0 +1,24 @@
+   Compiling opencodex-desktop v0.2.23 (/tmp/ocxd023-file-scope-v2-check/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.29s
+     Running unittests src/lib.rs (/tmp/ocxd023-capture-check/tauri/target/debug/deps/opencodex_desktop_lib-a2321b53a9e89887)
+
+running 16 tests
+test modules::model_config::file_scope_v2::tests::relative_missing_file_and_non_directory_roots_are_rejected_even_without_a_record ... ok
+test modules::model_config::file_scope_v2::tests::missing_read_is_none_and_does_not_create_state_or_default_choices ... ok
+test modules::model_config::file_scope_v2::tests::full_local_scope_round_trips_without_any_endpoint_capture_or_secret_access ... ok
+test modules::model_config::file_scope_v2::tests::local_usage_uuids_revision_hashes_raw_model_ids_and_duplicate_selections_are_validated ... ok
+test modules::model_config::file_scope_v2::tests::non_private_record_and_actual_write_failure_do_not_repair_or_overwrite ... ok
+test modules::model_config::file_scope_v2::tests::rejected_selection_leaves_existing_preferences_and_no_temporary_files ... ok
+test modules::model_config::file_scope_v2::tests::reviewed_flag_is_only_a_preference_not_authority_to_discover_new_objects ... ok
+test modules::model_config::file_scope_v2::tests::explicit_empty_selection_stays_initialized_including_after_a_prior_full_selection ... ok
+test modules::model_config::file_scope_v2::tests::canonical_root_home_binding_rejects_copied_or_moved_preferences_and_save_cannot_reset_them ... ok
+test modules::model_config::file_scope_v2::tests::same_roots_need_no_process_singleton_and_multiple_roots_keep_independent_preferences ... ok
+test modules::model_config::file_scope_v2::tests::fixed_file_lock_serializes_writers_and_last_explicit_save_can_clear_scope ... ok
+test modules::model_config::file_scope_v2::tests::exact_byte_budget_is_exclusive_and_failed_save_preserves_prior_record ... ok
+test modules::model_config::file_scope_v2::tests::bad_format_schema_uninitialized_and_unknown_fields_never_become_none_or_reset ... ok
+test modules::model_config::file_scope_v2::tests::symlinked_record_parent_lock_or_root_and_hardlinked_record_are_never_followed ... ok
+test modules::model_config::file_scope_v2::tests::strict_recursive_duplicate_keys_trailing_data_and_omitted_explicit_fields_are_rejected ... ok
+test modules::model_config::file_scope_v2::tests::asset_names_credential_subsets_and_mcp_sources_never_accept_paths_or_unknown_owners ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 1862 filtered out; finished in 0.24s
+

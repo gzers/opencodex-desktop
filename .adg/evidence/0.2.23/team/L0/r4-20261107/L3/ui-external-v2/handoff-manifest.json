@@ -1,0 +1,65 @@
+{
+  "role": "L3",
+  "commits": [
+    "3f7e3cb97",
+    "e68eb38ee",
+    "9af40745c"
+  ],
+  "headAtArchive": "9af40745c7a69a9cb1dabe51cf595f6e75b98d71",
+  "nativeBaseline": "9b290eae5857a829043ee1184b0db5514a58bcf5",
+  "scopedVitestPass": 72,
+  "typecheck": "passed",
+  "build": "passed, existing chunk/dynamic import warnings",
+  "browser": [
+    {
+      "engine": "chromium",
+      "width": 1180,
+      "theme": "light",
+      "checks": [
+        "external prepare works without internal execution preference and retains exact v2 targets",
+        "clipboard failure activates nothing; retry copies complete content before activating same task",
+        "original task getter returns review; full condition AST visible, private ticket absent from DOM and Pinia",
+        "closing preserves original result; only one explicit unified confirmation accepts complete review",
+        "CheckOnly original result displays report without accept/save control"
+      ],
+      "errors": [],
+      "limits": "Actual Vue route, public dialogs and invoke wrappers using deterministic backend; no real CLI inference or broker HTTP submission."
+    },
+    {
+      "engine": "webkit",
+      "width": 900,
+      "theme": "dark",
+      "checks": [
+        "external prepare works without internal execution preference and retains exact v2 targets",
+        "clipboard failure activates nothing; retry copies complete content before activating same task",
+        "original task getter returns review; full condition AST visible, private ticket absent from DOM and Pinia",
+        "closing preserves original result; only one explicit unified confirmation accepts complete review",
+        "CheckOnly original result displays report without accept/save control"
+      ],
+      "errors": [],
+      "limits": "Actual Vue route, public dialogs and invoke wrappers using deterministic backend; no real CLI inference or broker HTTP submission."
+    }
+  ],
+  "cleanup": {
+    "browsersClosed": true,
+    "ownedServerStopped": true
+  },
+  "limits": [
+    "Deterministic IPC fixtures exercise actual Vue and invoke wrappers, no native write/inference proof.",
+    "Old remaining broad UI regressions are not declared complete."
+  ],
+  "evidenceHashes": {
+    "chromium-review-light.png": "aea564071d193cdbab565a6c051b6c2d914b31ca46b1c81a82b114e7028fae7a",
+    "browser-failure.json": "f30e564798e4345939ec3def2c2f51f5e9d27083033a2b2c75bf223a11123293",
+    "browser.cjs": "e46c7f1744e10807052c49d8efaa61720fd4d6e0737528d59b53c012e43d44c0",
+    "typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "browser-failure.png": "aea564071d193cdbab565a6c051b6c2d914b31ca46b1c81a82b114e7028fae7a",
+    "component-entry.mjs": "9bef07a95c1fb013e1f18286809894ef6f855c555334a6da57161d6f5a01eb43",
+    "merge-resolution.json": "04591a3a63c3124a5ef9b911514c8ce8579feb5f3cb7818a1d46e0e89645bc00",
+    "component-server.mjs": "9073669eaa297b32b231b48fa84132fc8b37152538e38ed843cfeee224782cac",
+    "browser-results.json": "c73b00a2a4a825e4d4d0cc4cac139955dc5be7b8be92dfc6000d893920980042",
+    "webkit-review-dark.png": "e953fade8b0d400a8e98f3ef0a0a3153a80d50444714c25e4b09a6beef524ab1",
+    "tests.log": "95620fd77d134b2d5fceb702f4dcaa1b92a6cc5cb91bd42d5e9d78c99c022c21",
+    "build.log": "c35205866b7679c7e1e060addb6613d3b4a9720bf3593c165fe32b42d7a87bb2"
+  }
+}

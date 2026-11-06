@@ -1,0 +1,15 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.03s
+     Running unittests src/lib.rs (/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/batch2-crate-target/debug/deps/opencodex_desktop_lib-a2321b53a9e89887)
+
+running 7 tests
+test modules::model_config::config_file::v2::draft_discard::tests::pending_journal_is_rejected_without_recovery_and_newer_generation_is_preserved ... ok
+test modules::model_config::config_file::v2::draft_discard::tests::cleanup_failure_leaves_only_attributed_private_tombstone_after_draft_invalidation ... ok
+test modules::model_config::config_file::v2::draft_discard::tests::actual_source_change_after_edit_is_not_silently_discarded_or_cleaned ... ok
+test modules::model_config::config_file::v2::draft_discard::tests::explicit_discard_clears_only_the_guarded_draft_and_its_proven_private_material ... ok
+test modules::model_config::config_file::v2::draft_discard::tests::stale_source_generation_root_library_or_policy_never_discards_or_cleans_anything ... ok
+test modules::model_config::config_file::v2::draft_discard::tests::discard_never_deletes_a_pending_slot_already_referenced_by_saved_channel ... ok
+test modules::model_config::config_file::v2::draft_discard::tests::discard_recovery_then_begin_new_generation_allows_ordinary_edit_and_save ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 1855 filtered out; finished in 2.11s
+

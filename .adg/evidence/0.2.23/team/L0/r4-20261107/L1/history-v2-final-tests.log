@@ -1,0 +1,20 @@
+   Compiling opencodex-desktop v0.2.22 (/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 25.24s
+     Running unittests src/lib.rs (/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/batch2-crate-target/debug/deps/opencodex_desktop_lib-7a7e9249d8736667)
+
+running 12 tests
+test modules::model_config::config_file::v2::history::tests::corrupt_or_missing_exact_source_images_are_never_recovered_or_overwritten ... ok
+test modules::model_config::config_file::v2::history::tests::transaction_history_reader_refuses_symlink_roots_and_modified_source_images ... ok
+test modules::model_config::config_file::v2::history::tests::cross_endpoint_history_never_forwards_current_or_historical_key_to_another_direction ... ok
+test modules::model_config::config_file::v2::history::tests::changed_source_after_prepare_and_later_draft_edits_refuse_accept_replay ... ok
+test modules::model_config::config_file::v2::history::tests::affected_history_ignores_source_evidence_churn_and_preserves_unrelated_draft_edits ... ok
+test modules::model_config::config_file::v2::history::tests::history_exact_dependencies_and_bounded_enumeration_do_not_guess_missing_revisions ... ok
+test modules::model_config::config_file::v2::history::tests::accept_retry_repairs_interrupted_private_reply_without_new_draft_generation ... ok
+test modules::model_config::config_file::v2::history::tests::accepted_recovery_cannot_be_rematched_or_mixed_through_other_draft_entrypoints ... ok
+test modules::model_config::config_file::v2::history::tests::missing_defaults_stale_guard_and_mixed_model_or_key_intents_keep_originals ... ok
+test modules::model_config::config_file::v2::history::tests::real_history_before_side_prepares_accepts_only_draft_then_saves_with_same_transaction ... ok
+test modules::model_config::config_file::v2::history::tests::exact_library_defaults_are_staged_readonly_then_written_in_the_one_save_transaction ... ok
+test modules::model_config::config_file::v2::history::tests::restoring_before_a_new_channel_uses_the_same_guarded_delete_transform_on_save ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 1771 filtered out; finished in 4.01s
+

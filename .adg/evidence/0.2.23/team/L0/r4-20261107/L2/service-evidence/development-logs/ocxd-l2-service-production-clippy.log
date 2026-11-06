@@ -1,0 +1,14 @@
+   Compiling opencodex-desktop v0.2.22 (/Users/ezio/.codex/worktrees/ocxd-023-webdav/ocx-0219-fixes/apps/desktop/tauri)
+error: this call to `clone` can be replaced with `std::slice::from_ref`
+   --> src/modules/model_config/sync_identity_v2.rs:514:17
+    |
+514 |                 &[selected.name.clone()],
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `std::slice::from_ref(&selected.name)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#cloned_ref_to_slice_refs
+    = note: `-D clippy::cloned-ref-to-slice-refs` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::cloned_ref_to_slice_refs)]`
+
+error: could not compile `opencodex-desktop` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

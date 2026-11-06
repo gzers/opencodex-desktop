@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/tmp/ocxd023-native-bootstrap-review.py", line 33, in <module>
+    if proc.poll() is not None:raise RuntimeError('native app exited '+str(proc.returncode))
+RuntimeError: native app exited -6

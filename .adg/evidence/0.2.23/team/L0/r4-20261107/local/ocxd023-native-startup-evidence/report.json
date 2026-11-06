@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "kind": "isolated debug native review, not release acceptance",
+  "app": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app",
+  "root": "/private/tmp/ocxd023-native-startup-ngoyrvgj",
+  "version": "0.2.23",
+  "checks": [],
+  "permissions": {
+    "axTrusted": true,
+    "locked": true,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "result": "fail",
+  "error": "",
+  "ownedExit": null,
+  "binarySha256": "55c034f2291a44c45cfe06416c9b2a9a0f5881c129721b0595923d3008dc1795",
+  "cleanup": "task-owned subprocess exited; sandbox evidence root removed after recording"
+}

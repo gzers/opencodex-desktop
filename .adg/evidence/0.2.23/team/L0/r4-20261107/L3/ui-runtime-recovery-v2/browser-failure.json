@@ -1,0 +1,9 @@
+{
+  "engine": "chromium",
+  "checks": [
+    "read-only diagnostics displays actual fixture report without installing or preparing",
+    "bundled preview shows fixed versions/paths/owner evidence and explicit cancel uses original cancel command"
+  ],
+  "errors": [],
+  "error": "TimeoutError: locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('dialog', { name: '程序恢复记录', exact: true }).getByText('原恢复正在执行', { exact: true }) to be visible\u001b[22m\n"
+}

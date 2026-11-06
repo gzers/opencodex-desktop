@@ -1,0 +1,146 @@
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-ui/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/export-destination.test.ts (6 tests | 3 failed) 9ms
+   ❯ 导出可选保存路径 (WP-32) (6)
+     × 确认对话框提供导出目录与选择目录 4ms
+     × 确认页展示生成位置目录树（与原型一致，WP-58） 1ms
+     × 导出调用带目标目录，默认留空 2ms
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/export-destination.test.ts > 导出可选保存路径 (WP-32) > 确认对话框提供导出目录与选择目录
+AssertionError: expected '<script setup lang="ts">\nimport {onM…' to contain 'export-destination'
+
+- Expected
++ Received
+
+- export-destination
++ <script setup lang="ts">
++ import {onMounted,watch} from 'vue'
++ import ConfigSyncPreviewV2 from './ConfigSyncPreviewV2.vue'
++ import ConfigFileTransferV2 from './ConfigFileTransferV2.vue'
++ import {useConfigSyncV2Store} from './store-v2'
++ import {useConfigFileV2Store} from './file-store-v2'
++ import {useSyncStore} from './store'
++ import type {ScopeRequestV2} from './api-v2'
++ import type {TransferResult} from './modelTransfer'
++ const props=defineProps<{retryReceipt?:TransferResult;refreshReceipt?:TransferResult;source?:'saved'|'draft';remote?:boolean;importOnly?:boolean;importOpen?:boolean;actionOnly?:boolean}>()
++ const emit=defineEmits<{'update:importOpen':[value:boolean];close:[]}>()
++ const configV2=useConfigSyncV2Store(),files=useConfigFileV2Store(),syncStore=useSyncStore()
++ async function configCatalog(read:string|null=null,write:string|null=null){configV2.secrets(read,write);await configV2.loadCatalog()}
++ async function configPrepare(read:string|null,write:string|null){configV2.secrets(read,write);await configV2.prepare()}
++ function configReview(value:boolean){configV2.setScope({...JSON.parse(JSON.stringify(configV2.scope)) as ScopeRequestV2,assetsReviewed:value})}
++ async function pendingAction(){if(props.remote&&syncStore.takeAction('sync')){await configV2.loadCatalog();if(!configV2.error)await configV2.prepare();if(props.actionOnly)emit('close')}else if(!props.remote&&props.actionOnly&&syncStore.takeAction('export')){if(props.source)await files.setSource(props.source);files.scopeOpen=true;emit('close')}}
++ watch(()=>configV2.scopeEditRevision,()=>{if(props.remote&&configV2.catalog&&!configV2.catalogBusy)void configV2.persistScope()})
++ watch(()=>syncStore.pendingAction,()=>void pendingAction(),{flush:'post'})
++ onMounted(async()=>{if(props.remote){await configV2.loadCatalog();await pendingAction()}else await pendingAction()})
++ </script>
++ <template><article class="model-transfer"><template v-if="remote"><slot name="connection" /><ConfigSyncPreviewV2 :workspace="!actionOnly" :open="false" :preview="null" :catalog="configV2.catalog" :scope="configV2.scope" :loading="configV2.catalogBusy" :busy="configV2.previewBusy" :error="configV2.error" :scope-error="configV2.scopeError" :has-result="!!configV2.fact" @catalog="configCatalog" @prepare="configPrepare" @toggle="configV2.toggleEntry" @mcp="configV2.setMcpClient" @subset="configV2.channelSubset" @option="configV2.channelOption" @credential="configV2.credentialEntry" @revision="configV2.templateRevision" @default="configV2.adoptDefault" @global="configV2.setScope({...configV2.scope,selection:{...configV2.scope.selection,includeGlobalTemplateRefs:$event}})" @review="configReview" @result="configV2.resultOpen=true" @recovery="configV2.recoveryOpen=true" @connection="syncStore.openConnection()" /></template><ConfigFileTransferV2 v-else :source="source" :import-only="importOnly" :import-open="importOpen" :action-only="actionOnly" @update:import-open="emit('update:importOpen',$event)" @close="emit('close')" /></article></template>
++ <style scoped>.model-transfer{display:grid;gap:var(--space-4);min-width:0;width:100%}</style>
++
+
+ ❯ tests/export-destination.test.ts:11:18
+      9| describe('导出可选保存路径 (WP-32)', () => {
+     10|   it('确认对话框提供导出目录与选择目录', () => {
+     11|     expect(view).toContain('export-destination')
+       |                  ^
+     12|     expect(view).toContain('选择目录…')
+     13|     // WP-56：按“日期 / 单次备份包”组织，不再散落成单文件。
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/export-destination.test.ts > 导出可选保存路径 (WP-32) > 确认页展示生成位置目录树（与原型一致，WP-58）
+AssertionError: expected '<script setup lang="ts">\nimport {onM…' to contain 'export-tree'
+
+- Expected
++ Received
+
+- export-tree
++ <script setup lang="ts">
++ import {onMounted,watch} from 'vue'
++ import ConfigSyncPreviewV2 from './ConfigSyncPreviewV2.vue'
++ import ConfigFileTransferV2 from './ConfigFileTransferV2.vue'
++ import {useConfigSyncV2Store} from './store-v2'
++ import {useConfigFileV2Store} from './file-store-v2'
++ import {useSyncStore} from './store'
++ import type {ScopeRequestV2} from './api-v2'
++ import type {TransferResult} from './modelTransfer'
++ const props=defineProps<{retryReceipt?:TransferResult;refreshReceipt?:TransferResult;source?:'saved'|'draft';remote?:boolean;importOnly?:boolean;importOpen?:boolean;actionOnly?:boolean}>()
++ const emit=defineEmits<{'update:importOpen':[value:boolean];close:[]}>()
++ const configV2=useConfigSyncV2Store(),files=useConfigFileV2Store(),syncStore=useSyncStore()
++ async function configCatalog(read:string|null=null,write:string|null=null){configV2.secrets(read,write);await configV2.loadCatalog()}
++ async function configPrepare(read:string|null,write:string|null){configV2.secrets(read,write);await configV2.prepare()}
++ function configReview(value:boolean){configV2.setScope({...JSON.parse(JSON.stringify(configV2.scope)) as ScopeRequestV2,assetsReviewed:value})}
++ async function pendingAction(){if(props.remote&&syncStore.takeAction('sync')){await configV2.loadCatalog();if(!configV2.error)await configV2.prepare();if(props.actionOnly)emit('close')}else if(!props.remote&&props.actionOnly&&syncStore.takeAction('export')){if(props.source)await files.setSource(props.source);files.scopeOpen=true;emit('close')}}
++ watch(()=>configV2.scopeEditRevision,()=>{if(props.remote&&configV2.catalog&&!configV2.catalogBusy)void configV2.persistScope()})
++ watch(()=>syncStore.pendingAction,()=>void pendingAction(),{flush:'post'})
++ onMounted(async()=>{if(props.remote){await configV2.loadCatalog();await pendingAction()}else await pendingAction()})
++ </script>
++ <template><article class="model-transfer"><template v-if="remote"><slot name="connection" /><ConfigSyncPreviewV2 :workspace="!actionOnly" :open="false" :preview="null" :catalog="configV2.catalog" :scope="configV2.scope" :loading="configV2.catalogBusy" :busy="configV2.previewBusy" :error="configV2.error" :scope-error="configV2.scopeError" :has-result="!!configV2.fact" @catalog="configCatalog" @prepare="configPrepare" @toggle="configV2.toggleEntry" @mcp="configV2.setMcpClient" @subset="configV2.channelSubset" @option="configV2.channelOption" @credential="configV2.credentialEntry" @revision="configV2.templateRevision" @default="configV2.adoptDefault" @global="configV2.setScope({...configV2.scope,selection:{...configV2.scope.selection,includeGlobalTemplateRefs:$event}})" @review="configReview" @result="configV2.resultOpen=true" @recovery="configV2.recoveryOpen=true" @connection="syncStore.openConnection()" /></template><ConfigFileTransferV2 v-else :source="source" :import-only="importOnly" :import-open="importOpen" :action-only="actionOnly" @update:import-open="emit('update:importOpen',$event)" @close="emit('close')" /></article></template>
++ <style scoped>.model-transfer{display:grid;gap:var(--space-4);min-width:0;width:100%}</style>
++
+
+ ❯ tests/export-destination.test.ts:25:18
+     23|
+     24|   it('确认页展示生成位置目录树（与原型一致，WP-58）', () => {
+     25|     expect(view).toContain('export-tree')
+       |                  ^
+     26|     expect(view).toContain('生成位置')
+     27|     expect(view).toContain('manifest / 校验信息')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/export-destination.test.ts > 导出可选保存路径 (WP-32) > 导出调用带目标目录，默认留空
+AssertionError: expected '<script setup lang="ts">\nimport {onM…' to contain 'modelTransferApi.export(id, exportTar…'
+
+- Expected
++ Received
+
+- modelTransferApi.export(id, exportTargetDir.value || undefined)
++ <script setup lang="ts">
++ import {onMounted,watch} from 'vue'
++ import ConfigSyncPreviewV2 from './ConfigSyncPreviewV2.vue'
++ import ConfigFileTransferV2 from './ConfigFileTransferV2.vue'
++ import {useConfigSyncV2Store} from './store-v2'
++ import {useConfigFileV2Store} from './file-store-v2'
++ import {useSyncStore} from './store'
++ import type {ScopeRequestV2} from './api-v2'
++ import type {TransferResult} from './modelTransfer'
++ const props=defineProps<{retryReceipt?:TransferResult;refreshReceipt?:TransferResult;source?:'saved'|'draft';remote?:boolean;importOnly?:boolean;importOpen?:boolean;actionOnly?:boolean}>()
++ const emit=defineEmits<{'update:importOpen':[value:boolean];close:[]}>()
++ const configV2=useConfigSyncV2Store(),files=useConfigFileV2Store(),syncStore=useSyncStore()
++ async function configCatalog(read:string|null=null,write:string|null=null){configV2.secrets(read,write);await configV2.loadCatalog()}
++ async function configPrepare(read:string|null,write:string|null){configV2.secrets(read,write);await configV2.prepare()}
++ function configReview(value:boolean){configV2.setScope({...JSON.parse(JSON.stringify(configV2.scope)) as ScopeRequestV2,assetsReviewed:value})}
++ async function pendingAction(){if(props.remote&&syncStore.takeAction('sync')){await configV2.loadCatalog();if(!configV2.error)await configV2.prepare();if(props.actionOnly)emit('close')}else if(!props.remote&&props.actionOnly&&syncStore.takeAction('export')){if(props.source)await files.setSource(props.source);files.scopeOpen=true;emit('close')}}
++ watch(()=>configV2.scopeEditRevision,()=>{if(props.remote&&configV2.catalog&&!configV2.catalogBusy)void configV2.persistScope()})
++ watch(()=>syncStore.pendingAction,()=>void pendingAction(),{flush:'post'})
++ onMounted(async()=>{if(props.remote){await configV2.loadCatalog();await pendingAction()}else await pendingAction()})
++ </script>
++ <template><article class="model-transfer"><template v-if="remote"><slot name="connection" /><ConfigSyncPreviewV2 :workspace="!actionOnly" :open="false" :preview="null" :catalog="configV2.catalog" :scope="configV2.scope" :loading="configV2.catalogBusy" :busy="configV2.previewBusy" :error="configV2.error" :scope-error="configV2.scopeError" :has-result="!!configV2.fact" @catalog="configCatalog" @prepare="configPrepare" @toggle="configV2.toggleEntry" @mcp="configV2.setMcpClient" @subset="configV2.channelSubset" @option="configV2.channelOption" @credential="configV2.credentialEntry" @revision="configV2.templateRevision" @default="configV2.adoptDefault" @global="configV2.setScope({...configV2.scope,selection:{...configV2.scope.selection,includeGlobalTemplateRefs:$event}})" @review="configReview" @result="configV2.resultOpen=true" @recovery="configV2.recoveryOpen=true" @connection="syncStore.openConnection()" /></template><ConfigFileTransferV2 v-else :source="source" :import-only="importOnly" :import-open="importOpen" :action-only="actionOnly" @update:import-open="emit('update:importOpen',$event)" @close="emit('close')" /></article></template>
++ <style scoped>.model-transfer{display:grid;gap:var(--space-4);min-width:0;width:100%}</style>
++
+
+ ❯ tests/export-destination.test.ts:38:18
+     36|   it('导出调用带目标目录，默认留空', () => {
+     37|     expect(api).toContain('targetDir')
+     38|     expect(view).toContain("modelTransferApi.export(id, exportTargetDi…
+       |                  ^
+     39|   })
+     40|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed | 209 passed (210)
+      Tests  3 failed | 1483 passed (1486)
+   Start at  02:11:21
+   Duration  28.82s (environment 39%, tests 37%, transform 14%, import 10%)
+
+Environment  jsdom was created 210 times · 84.99s total, 39% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

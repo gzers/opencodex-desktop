@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "notification_id": "config-snapshot-sync-failed:11111111-1111-4111-8111-111111111111:Synchronize:Execution:Local:11111111-1111-4111-8111-111111111111",
+      "level": "warning",
+      "category": "system",
+      "source": "user_action",
+      "title": "WebDAV 同步未完成",
+      "body": "同步执行或结果核验未完成，可能已应用或上传部分内容；请检查同步状态后重试。",
+      "created_at": "2027-01-15T08:00:00+00:00",
+      "read": false,
+      "resolved": false,
+      "resolved_at": null,
+      "deleted": false,
+      "operation_id": null,
+      "dedupe_key": "config-snapshot-sync:failed:11111111-1111-4111-8111-111111111111:Synchronize:Execution:Local:11111111-1111-4111-8111-111111111111",
+      "action_ref": "transfer_result",
+      "event_identity": {
+        "object": "sync",
+        "object_id": "11111111-1111-4111-8111-111111111111",
+        "action": "synchronize",
+        "phase": "execution",
+        "channel": "local",
+        "candidate": "11111111-1111-4111-8111-111111111111"
+      },
+      "occurrence_count": 2,
+      "last_observed_at": "2027-01-15T08:00:01+00:00"
+    }
+  ]
+}

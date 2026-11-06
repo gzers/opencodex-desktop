@@ -1,0 +1,34 @@
+   Compiling opencodex-desktop v0.2.22 (/Users/ezio/.codex/worktrees/ocxd-023-webdav/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 59.35s
+     Running unittests src/lib.rs (/tmp/ocxd-l2-default-endpoint-target/debug/deps/opencodex_desktop_lib-7a7e9249d8736667)
+
+running 26 tests
+test modules::model_config::sync_host_v2::tests::endpoint_canonical_binding_normalizes_equivalent_paths_and_rejects_traversal_before_url_normalization ... ok
+test modules::model_config::sync_host_v2::tests::endpoint_ids_are_bounded_opaque_strings_not_operation_uuids ... ok
+test modules::model_config::sync_host_v2::tests::expected_absent_mapping_unknown_or_changed_target_does_not_turn_into_empty_capture ... ok
+test modules::model_config::sync_host_v2::tests::current_source_facts_preserve_real_capture_errors_without_secret_paths ... ok
+test modules::model_config::sync_host_v2::tests::mapping_direction_bridge_reuses_saved_atom_time_without_borrowing_unknown_or_other_domains ... ok
+test modules::model_config::sync_host_v2::tests::original_payload_inspection_never_recaptures_todays_source_or_mcp ... ok
+test modules::model_config::sync_host_v2::tests::multi_baseline_and_automatic_merged_resolution_are_rejected_not_silently_combined ... ok
+test modules::model_config::sync_host_v2::tests::preview_head_and_payload_binding_rejects_relabelled_or_replaced_bytes ... ok
+test modules::model_config::sync_host_v2::tests::confirmed_empty_prefers_upload_but_bad_cloud_never_becomes_empty ... ok
+test modules::model_config::sync_host_v2::tests::host_codec_uses_actual_overlay_preserves_unselected_and_freezes_one_supported_schema ... ok
+test modules::model_config::sync_host_v2::tests::original_endpoint_binding_does_not_follow_current_active_connection_and_rejects_changed_password ... ok
+test modules::model_config::sync_host_v2::tests::projected_scope_does_not_borrow_complete_cloud_global_save_time ... ok
+test modules::model_config::sync_host_v2::tests::no_change_session_never_calls_core_prepare_or_remote_and_bad_observation_cannot_be_empty ... ok
+test modules::model_config::sync_host_v2::tests::reliable_complete_save_atoms_choose_saved_later_unknown_time_defaults_cloud ... ok
+test modules::model_config::sync_host_v2::tests::source_or_scope_or_root_change_blocks_new_freeze_with_specific_stable_error ... ok
+test modules::model_config::sync_host_v2::tests::endpoint_revision_edit_rejects_before_reading_replacement_reference_and_never_guesses_on_restart ... ok
+test modules::model_config::sync_host_v2::tests::production_endpoint_credentials_read_exact_ref_in_injected_root_without_global_configure ... ok
+test modules::model_config::sync_host_v2::tests::download_prepare_freezes_explicit_backup_preference_without_publishing ... ok
+test modules::model_config::sync_host_v2::tests::actual_default_endpoint_id_resolves_d_bound_password_and_binds_production_transport ... ok
+test modules::model_config::sync_host_v2::tests::original_upload_owner_reopens_existing_journal_without_preview_or_any_current_capture ... ok
+test modules::model_config::sync_host_v2::tests::reusable_session_prepares_and_publishes_real_core_then_original_verify_does_not_capture ... ok
+test modules::model_config::sync_host_v2::tests::production_capture_provider_calls_registered_saved_owner_and_never_uses_dirty_draft ... ok
+test modules::model_config::sync_host_v2::tests::production_codec_recaptures_actual_inline_saved_key_then_inspects_frozen_bytes_without_source_file ... ok
+test modules::model_config::sync_host_v2::tests::first_install_remote_channel_local_explicit_empty_defaults_download_and_applies_through_mapping ... ok
+test modules::model_config::sync_host_v2::tests::no_change_is_semantic_and_does_not_reencrypt_or_allow_prepare_freeze ... ok
+test modules::model_config::sync_host_v2::tests::newly_frozen_protected_payload_uses_write_passphrase_for_core_inspection_without_recapture ... ok
+
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 1680 filtered out; finished in 14.26s
+

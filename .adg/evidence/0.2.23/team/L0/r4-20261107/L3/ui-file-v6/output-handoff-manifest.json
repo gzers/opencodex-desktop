@@ -1,0 +1,79 @@
+{
+  "role": "L3",
+  "commit": "cfedc90999f2e14d105dce834df15fec3b89ea4b",
+  "backendBaseline": "494cea84da0c05ce7f451c626173030c75e1f584",
+  "wholeUI": {
+    "files": 210,
+    "passed": 1494,
+    "failed": 0,
+    "unhandled": 0
+  },
+  "typecheck": "passed",
+  "build": "passed",
+  "browser": [
+    {
+      "engine": "chromium",
+      "width": 1180,
+      "theme": "light",
+      "checks": [
+        "local inventory opens without remote/v1; same-name MCP requires explicit definition source",
+        "custom directory cancellation preserves original frozen bytes, actual date/package output and trusted open-directory action",
+        "native import only reads; explicit target/whole-channel namespace choices recompare same original without applying",
+        "explicit import confirms original operation/digest with default backup and reports only actual receipt",
+        "default directory uses its enum and backend date/package output without a native file-save picker"
+      ],
+      "errors": [],
+      "limits": "Actual local file Vue workspace/central dialogs/native API wrappers with deterministic fixtures; no real native save dialog/filesystem/WebDAV writes."
+    },
+    {
+      "engine": "webkit",
+      "width": 900,
+      "theme": "dark",
+      "checks": [
+        "local inventory opens without remote/v1; same-name MCP requires explicit definition source",
+        "custom directory cancellation preserves original frozen bytes, actual date/package output and trusted open-directory action",
+        "native import only reads; explicit target/whole-channel namespace choices recompare same original without applying",
+        "explicit import confirms original operation/digest with default backup and reports only actual receipt",
+        "default directory uses its enum and backend date/package output without a native file-save picker"
+      ],
+      "errors": [],
+      "limits": "Actual local file Vue workspace/central dialogs/native API wrappers with deterministic fixtures; no real native save dialog/filesystem/WebDAV writes."
+    }
+  ],
+  "scope": [
+    "Default/custom enum; native directory selection only on confirmed custom export.",
+    "Frozen original export attempts never resubmit scope/bytes or change destination.",
+    "Trusted ExportOutput paths and receipt validated; readonly output read and directory open use original ID.",
+    "Adopted date/package tree shown as a structural illustration; actual paths shown only from backend output."
+  ],
+  "notYetComplete": [
+    "Active TransferBackups migration awaits actual v2 list/preview/restore contract; whole test green does not declare this live feature completed.",
+    "Real native output/archive readback remains backend proof; browser uses deterministic fixtures."
+  ],
+  "cleanup": {
+    "owned43134Stopped": true,
+    "browsersClosed": true
+  },
+  "evidenceHashes": {
+    "ui-full-remaining-output-owner.log": "c6de2dddd85053ce94d7aece6cbcb48f0b7aa480f8ab43f446842f580229635d",
+    "chromium-export-light.png": "6664e87344aa0e733aa56ea9ace7b035a0ca0604e26332d6f5dc754cab7450d6",
+    "webkit-export-dark.png": "0a14ca597389936c0102eef742b66918e4061b33c9cfeb56988089610fc29570",
+    "output-build.log": "b52e5669eae3a22dbf8a9c2d5d588f156a867d48b72b6733c54db729abae1c21",
+    "browser-failure.json": "d2ff94a467d5e687dfe86a46afe41c89501c956422d5bafbc2591796a5710990",
+    "browser.cjs": "e068483c9ec05a9b172c9d3630e79aa981ccd0e54e51ac09a1c698d8e4b4afa1",
+    "typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "browser-failure.png": "2c00ebdd997d3dedb2ea808d5f8ee363240609b6655618b05378a92cf56e7e08",
+    "output-ui-full.log": "284f6054913e965e7b26fead4c91ea4297f7f5de0665e5fd373823febc13991b",
+    "chromium-import-light.png": "035ff9d33cc2a68fc759f98460e304c1e959726f69e5d2cbc1f97280dc2884ee",
+    "webkit-output-dark.png": "b4666553bab3143675b3546a2f269b459788a3992f9ebb593072a568d7fc4109",
+    "component-entry.mjs": "0fa4c509c02a2101ffb0f11509c817c7901d859a9c909e1b057b3245edee62c1",
+    "chromium-output-light.png": "506b148f15e8ed3b5f4c3281b528276bda54737b828a73503b7438ff043c383f",
+    "component-server.mjs": "6ffe74fa7ac9661b4043cf6477db5ce0cbdffb0e6c8c8da63138faedd8b50665",
+    "browser-results.json": "e53e2cf9f8f8e5f2a07141b537b82efa2a779c7ab247056c29cc76c2a7d645c7",
+    "output-typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests.log": "d54afe8c4b8a5238bc8dc92e84ad62adce77fad4ba00aa74a312c84eea601141",
+    "handoff-manifest.json": "473d4c9dfa515cb7d24af2ea213f2f12b5f5a3d2c8a5e3fa18f87efc781f8045",
+    "webkit-import-dark.png": "3429b05b9c4bb32eafd5fb2e4e143be729f294742526558c1044b8e80833bd71",
+    "build.log": "96bbc464ddd91e662cdc7d0010b20417191e9501ca827a69eb62d4ead5b3c5eb"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "role": "L2",
+  "version": "0.2.23",
+  "recordedAtUtc": "2026-11-06T18:37:30.195768+00:00",
+  "commit": "26484af3066c95e20b0c8116ad0d87f5f725e863",
+  "traitCommit": "1552e1793550611307ef3295a973c406447705d0",
+  "exactDependencies": [
+    "5fb6b66b2d97f21c03577286c6c5e39fe1e597b7",
+    "25801cfd8a362a9e226bf34f90b514e0b7f6c9d3",
+    "cce22dc665af07ebcbfc2cd27e17701fbd1b4318"
+  ],
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_local_v2.rs",
+      "sha256": "8d44b7f6730ca8c38942880daaa4e793249d0a924f4c45afb26f85c27d1772f7"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_local_v2_restore.rs",
+      "sha256": "6941f4fd25810920c6b0a777dde0bb29d9ffab11fd6a0f27e61a8d7449a31259"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_local_v2_restore_tests.rs",
+      "sha256": "2959d1fd33ed0048de938bd000a7d44857e12d412e4b9b5d8674ec276a8d4a09"
+    }
+  ],
+  "checks": {
+    "newCases": 11,
+    "localRegressionBeforeReadonlyRefinement": 40,
+    "finalReadonlyAdmissionCase": 1,
+    "existingRealDualProofRemainingCase": 1,
+    "normalCrateStrictClippy": "passed",
+    "rustfmt": "passed",
+    "diffCheck": "passed",
+    "checksOverlapDoNotSumDistinctTotals": true
+  },
+  "commands": [
+    "CARGO_TARGET_DIR=/tmp/ocxd-l2-scope-restore-target cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib sync_local_v2:: -- --nocapture",
+    "CARGO_TARGET_DIR=/tmp/ocxd-l2-scope-restore-target cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib sync_local_v2::restore:: -- --nocapture",
+    "CARGO_TARGET_DIR=/tmp/ocxd-l2-scope-restore-target cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib real_model_applied_interruption_reopens_with_dual_proofs_and_only_finishes_original_nonmodel_participants -- --nocapture",
+    "CARGO_TARGET_DIR=/tmp/ocxd-l2-scope-restore-target cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib readonly_preview_ignores_unknown_draft_and_same_plan_restores_only_after_explicit_cas_discard -- --nocapture",
+    "CARGO_TARGET_DIR=/tmp/ocxd-l2-scope-restore-target cargo clippy --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib --tests --no-deps -- -D warnings"
+  ],
+  "workingTreeClean": true,
+  "cleanup": {
+    "removedOnly": "/tmp/ocxd-l2-scope-restore-target",
+    "absenceVerified": true,
+    "activeTargetProcessBeforeDeletion": false,
+    "archivedOriginalLogs": 13,
+    "originalTmpLogsRetained": true,
+    "sharedCachesAndOtherAgentTargetsRetained": true
+  },
+  "boundaries": [
+    "L0 owns public command/UI registration",
+    "Earlier operations without scope hook never invent before images",
+    "Unsupported model providers default None never make a ready backup",
+    "A typed model pending marker must first use established model transaction recovery before scope undo resumes"
+  ],
+  "realWebdav": false,
+  "dailyData": false,
+  "remoteClear": false,
+  "publish": false
+}

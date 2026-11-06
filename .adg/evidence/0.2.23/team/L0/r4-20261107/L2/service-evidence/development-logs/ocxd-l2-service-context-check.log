@@ -1,0 +1,13 @@
+   Compiling opencodex-desktop v0.2.22 (/Users/ezio/.codex/worktrees/ocxd-023-webdav/ocx-0219-fixes/apps/desktop/tauri)
+warning: method `receiver` is never used
+    --> src/modules/model_config/sync_service_v2.rs:2146:8
+     |
+2145 | impl DownloadContextV2 {
+     | ---------------------- method in this implementation
+2146 |     fn receiver(
+     |        ^^^^^^^^
+     |
+     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `opencodex-desktop` (lib) generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 19.18s

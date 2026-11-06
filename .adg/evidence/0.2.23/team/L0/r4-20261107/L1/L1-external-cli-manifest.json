@@ -1,0 +1,72 @@
+{
+  "role": "L1",
+  "scope": "bounded external CLI export/submit/recovery consumer audit",
+  "created_at": "2026-11-06T16:11:25.443705+00:00",
+  "published_baseline": "33d2c65b58ba8880d6deea7b52d69117238c3d33",
+  "head": "f406e5c7b0f64021c1d3c6d6e9e556dd8f5a4f45",
+  "root": "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes",
+  "branch": "codex/0.2.23-model-matching",
+  "write_set": [
+    "apps/desktop/tauri/src/modules/model_config/broker.rs",
+    "apps/desktop/tauri/src/modules/model_config/broker_v2_tests.rs"
+  ],
+  "source_sha256": {
+    "apps/desktop/tauri/src/modules/model_config/broker.rs": "3b050ab0cb2f079d080c6e3073f8782f90604fa5eaf098cc64a6604c29054215",
+    "apps/desktop/tauri/src/modules/model_config/broker_v2_tests.rs": "f4a70a644d723286086db5ccc5a8265b3a56becec866fe6511d0929d7e221437"
+  },
+  "checks": {
+    "existing_broker_tests": {
+      "passed": 9,
+      "failed": 0,
+      "new_test_cases": 0,
+      "command": "cargo test --offline --locked --manifest-path /Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri/Cargo.toml --target-dir /Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/batch2-crate-target --lib modules::model_config::broker -- --nocapture"
+    },
+    "actual_cli_subprocesses": [
+      {
+        "action": "submit",
+        "pid": 79240,
+        "exit_code": 0
+      },
+      {
+        "action": "submit",
+        "pid": 79245,
+        "exit_code": 0
+      },
+      {
+        "action": "receipt",
+        "pid": 79246,
+        "exit_code": 0
+      }
+    ],
+    "strict_clippy": {
+      "exit_code": 0,
+      "arguments": "--lib --tests --no-deps -- -D warnings"
+    },
+    "rustfmt_check": {
+      "exit_code": 0
+    },
+    "diff_check": {
+      "exit_code": 0
+    },
+    "clean_worktree": true
+  },
+  "evidence_sha256": {
+    "external_task_client.py": "0a9f6975d08057e5de49df5ac568c761d62744872cbd25c48f356914fd1c36f5",
+    "broker-v2-cli-first-tests.log": "e0be395bcdaf81db532d831a9d602fa0ed01eb6debf04a2aa90a1fe160ca2ad1",
+    "broker-v2-cli-clippy.log": "e222b660ff1927bfa9f2c80dc75f2fb59046b6965c40d7f439aacb24dc3a35d7"
+  },
+  "behavior": [
+    "copied task and transport consumed by actual /usr/bin/python3 subprocess via stdin; no secrets in argv or logs",
+    "proof before bearer on each connection, literal loopback, no proxies or redirects",
+    "normal proposal review.valid and CheckOnly report.summary use separate preflight success conditions",
+    "strict raw request wrapper and original body hash retained",
+    "original broker descriptor relocates port; CLI recovery only GETs original receipt after proof and never resubmits",
+    "HTTP submit persists pending review/report; library and configuration stay unchanged"
+  ],
+  "limitations": [
+    "reference Python is a test/evidence consumer, not a new production dependency or inference executor",
+    "native Windows CLI execution remains unverified by this macOS run",
+    "L0 owns new public Tauri registrations and final library/version transaction; L3 owns UI integration",
+    "local artifacts not uploaded; no daily configuration edits, real inference or release"
+  ]
+}

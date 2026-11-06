@@ -1,0 +1,36 @@
+[
+  {
+    "engine": "chromium",
+    "width": 1180,
+    "theme": "light",
+    "checks": [
+      "list and exact-group preview remain readonly even with an existing clean model editing session",
+      "explicit restore alone releases clean full-CAS session; partial receipt stays partial with per-group completion and no new draft",
+      "closing and reopening retains original restoreId; stale targets preserve partial proof and frozen selection",
+      "same opaque restore request resumes; only applied proof updates saved model facts, without v1 acceptance or auto-begin",
+      "new local input after preview disables confirmation, remains preserved, and triggers no discard or restore",
+      "public dialog guards a pending readonly baseline and cancels normally after it settles, with zero restore writes",
+      "fresh application state reads exact persistent plans and resumes only the explicitly selected partial restore without creating a preview",
+      "persisted Applied receipt is observation only and cannot repeat a restore over later data"
+    ],
+    "errors": [],
+    "limits": "Actual TransferBackups/Vue store/public modal/invoke wrappers with deterministic owner fixtures. Native protection images, restore writes and OS participants are backend evidence, not proved by this browser run."
+  },
+  {
+    "engine": "webkit",
+    "width": 900,
+    "theme": "dark",
+    "checks": [
+      "list and exact-group preview remain readonly even with an existing clean model editing session",
+      "explicit restore alone releases clean full-CAS session; partial receipt stays partial with per-group completion and no new draft",
+      "closing and reopening retains original restoreId; stale targets preserve partial proof and frozen selection",
+      "same opaque restore request resumes; only applied proof updates saved model facts, without v1 acceptance or auto-begin",
+      "new local input after preview disables confirmation, remains preserved, and triggers no discard or restore",
+      "public dialog guards a pending readonly baseline and cancels normally after it settles, with zero restore writes",
+      "fresh application state reads exact persistent plans and resumes only the explicitly selected partial restore without creating a preview",
+      "persisted Applied receipt is observation only and cannot repeat a restore over later data"
+    ],
+    "errors": [],
+    "limits": "Actual TransferBackups/Vue store/public modal/invoke wrappers with deterministic owner fixtures. Native protection images, restore writes and OS participants are backend evidence, not proved by this browser run."
+  }
+]

@@ -1,0 +1,229 @@
+{
+  "role": "L1",
+  "client_date": "2026-11-07",
+  "scope": "AC-P22-02 same real manager -> complete installed runtime -> own Codex catalog name chain",
+  "commit": "85c773fda8e9f23a5f510752fc82d44022bf1676",
+  "branch": "codex/0.2.23-model-matching",
+  "root": "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes",
+  "created_at_utc": "2026-11-06T18:52:10.992910+00:00",
+  "write_set": [
+    "apps/desktop/tauri/tests/runtime023_manager_name_chain.rs",
+    "test/smoke/runtime023-manager-name-chain.mjs"
+  ],
+  "source_sha256": {
+    "apps/desktop/tauri/tests/runtime023_manager_name_chain.rs": "8c4f14d59c16eba4645d855a6dc61c81c3528442699d8c38947756ca0584c62c",
+    "test/smoke/runtime023-manager-name-chain.mjs": "655bbb7e6520f5e04671f913c2eb85175073b1d34357dc8fe41ed223f21b08b9"
+  },
+  "run_product_base": "dcea75426cdea9628c7717d440c8a061d3651d5a",
+  "strict_product_base": "3a63c40b46e35d85a2160d54cd44bcb98a31d032",
+  "published_baselines": {
+    "main": "2b7d4586d",
+    "actual_backup": "cb6c2b7dce6abf8f70fc565bf83bca13a33c4975"
+  },
+  "manager_and_bundle_source_byte_equality_between_run_and_strict": {
+    "apps/desktop/tauri/src/modules/model_config/config_file_v2.rs": "7a0fc0da360269c516b1172cf223081015e6130920989fa32cf156774531b177",
+    "apps/desktop/tauri/src/modules/model_config/compiler_v2.rs": "d899ae433650e35a50b570d93fedb81c1b5f561f9584363bbbe8d393cdca684a",
+    "apps/desktop/tauri/src/modules/model_config/source_v2.rs": "771f098ce5925c9bf801a09be7c48155f5f8d9d5db34483185567630275a679b",
+    "apps/desktop/tauri/src/modules/model_config/provider_import.rs": "cc6b0baa1e81ad8ea620482a6d7aa5f4ebf9cdbfb9cb3edcfc9afc75a15a788b",
+    "apps/desktop/tauri/src/modules/model_config/protocol_groups.rs": "e70969e118e2a355b9c247834d596be534f34e9420786b61af869d0db64a92ea",
+    "apps/desktop/tauri/src/modules/model_config/schema_v2.rs": "08560cfd6a0c126000d123caa555539178e7e5049bccd8c107c1168d5dd0aae2",
+    "apps/desktop/tauri/src/modules/runtime/bundled.rs": "d962abc6d5e53d56cdb0adab2163b0d54558dc67deef4f4c034c5656dc579c1f",
+    "apps/desktop/tauri/src/modules/runtime/install.rs": "1526f0e71b6f30cc9ff7d3594b88629e9dac1aeacd0b9000efabe902d488e117"
+  },
+  "artifact": {
+    "archive_path": "/private/tmp/ocxd023-runtime-name-bundle-li1tiyze/handoff/darwin-arm64/runtime-bundle-0.2.23-darwin-arm64.tar.gz",
+    "archive_sha256": "982580a65408d5325be3b707288a31a427583e9589b0057ae11be57e7fa11899",
+    "archive_bytes": 237732299,
+    "descriptor_path": "/private/tmp/ocxd023-runtime-name-bundle-li1tiyze/handoff/darwin-arm64/runtime-bundle-0.2.23-darwin-arm64.manifest.json",
+    "descriptor_sha256": "88a96e98e3070baa05c7d2ccb402ba70f491f25ca4a93505f8927b8eb0b8b152",
+    "runtime_package_sha256": "afb72a4c792c1ca70a0fcd9209d212c78249281d2d7bc42f8eee63aa4464b26b",
+    "runtime_version": "2.97.0-desktop023.names.1",
+    "node_version": "26.8.1",
+    "npm_version": "11.19.0",
+    "bun_version": "1.4.4"
+  },
+  "checks": {
+    "final_chain": {
+      "passed": 1,
+      "failed": 0,
+      "labels": 4,
+      "raw_models_per_label": 2,
+      "seconds": 166.53,
+      "log": "manager-name-chain-readonly-final.log"
+    },
+    "strict_clippy": {
+      "exit_code": 0,
+      "arguments": "--features integration-test --test runtime023_manager_name_chain --no-deps -- -D warnings",
+      "log": "manager-name-chain-clippy-final.log"
+    },
+    "all_crate_fmt": {
+      "exit_code": 0
+    },
+    "diff_check": {
+      "exit_code": 0
+    },
+    "worktree_clean": true
+  },
+  "cases": [
+    {
+      "label": "RenamedEnglish",
+      "channelId": "60d51f41-de3b-4cea-aea5-8e2564e5cd0b",
+      "providerId": "RenamedEnglish",
+      "runtimeVersion": "2.97.0-desktop023.names.1",
+      "node": "26.8.1",
+      "bun": "1.4.4",
+      "rows": [
+        {
+          "slug": "RenamedEnglish/model-1",
+          "display_name": "RenamedEnglish/model-1",
+          "rawId": "model-1"
+        },
+        {
+          "slug": "RenamedEnglish/vendor-original-model",
+          "display_name": "RenamedEnglish/vendor/original-model",
+          "rawId": "vendor/original-model"
+        }
+      ],
+      "configSha256": "4dc58cc1851d49f30565848aeb758963547bb210f60791122fbdc4990b7b295e",
+      "catalogSha256": "f2655d3117965c84e90ea7d8149e7d9e3acae766d0755acc447771477bbb8420",
+      "catalogLock": "exact own-home hash; cleaned by Rust RAII",
+      "catalogHome": "own TempDir CODEX_HOME",
+      "network": "denied by OS sandbox",
+      "installedProgram": "OS sandbox read-only; module hashes unchanged",
+      "accountSelectors": [],
+      "liveModels": false
+    },
+    {
+      "label": "中文渠道",
+      "channelId": "60d51f41-de3b-4cea-aea5-8e2564e5cd0b",
+      "providerId": "channel-60d51f41de3b4ceaaea58e2564e5cd0b",
+      "runtimeVersion": "2.97.0-desktop023.names.1",
+      "node": "26.8.1",
+      "bun": "1.4.4",
+      "rows": [
+        {
+          "slug": "channel-60d51f41de3b4ceaaea58e2564e5cd0b/model-1",
+          "display_name": "中文渠道/model-1",
+          "rawId": "model-1"
+        },
+        {
+          "slug": "channel-60d51f41de3b4ceaaea58e2564e5cd0b/vendor-original-model",
+          "display_name": "中文渠道/vendor/original-model",
+          "rawId": "vendor/original-model"
+        }
+      ],
+      "configSha256": "b87163ea1b3fab206563bb6c4066590b2fc3ab35898b63c79e08177b2830b5db",
+      "catalogSha256": "6e1b5308b340fbe4c46a319a572336ca8063e667cfd8b15b8243cfdad095d4d0",
+      "catalogLock": "exact own-home hash; cleaned by Rust RAII",
+      "catalogHome": "own TempDir CODEX_HOME",
+      "network": "denied by OS sandbox",
+      "installedProgram": "OS sandbox read-only; module hashes unchanged",
+      "accountSelectors": [],
+      "liveModels": false
+    },
+    {
+      "label": "Team Space",
+      "channelId": "60d51f41-de3b-4cea-aea5-8e2564e5cd0b",
+      "providerId": "channel-60d51f41de3b4ceaaea58e2564e5cd0b",
+      "runtimeVersion": "2.97.0-desktop023.names.1",
+      "node": "26.8.1",
+      "bun": "1.4.4",
+      "rows": [
+        {
+          "slug": "channel-60d51f41de3b4ceaaea58e2564e5cd0b/model-1",
+          "display_name": "Team Space/model-1",
+          "rawId": "model-1"
+        },
+        {
+          "slug": "channel-60d51f41de3b4ceaaea58e2564e5cd0b/vendor-original-model",
+          "display_name": "Team Space/vendor/original-model",
+          "rawId": "vendor/original-model"
+        }
+      ],
+      "configSha256": "e2b1d628fd1b63ef9ce104fb4e9b55a59fd9011200f7396d5f3de647b1791f18",
+      "catalogSha256": "defd6a0a3ad54eac0fa559279c8a8f4b5cc7b35bd567696c989d7b4ff933f3e2",
+      "catalogLock": "exact own-home hash; cleaned by Rust RAII",
+      "catalogHome": "own TempDir CODEX_HOME",
+      "network": "denied by OS sandbox",
+      "installedProgram": "OS sandbox read-only; module hashes unchanged",
+      "accountSelectors": [],
+      "liveModels": false
+    },
+    {
+      "label": "中文 / Team",
+      "channelId": "60d51f41-de3b-4cea-aea5-8e2564e5cd0b",
+      "providerId": "channel-60d51f41de3b4ceaaea58e2564e5cd0b",
+      "runtimeVersion": "2.97.0-desktop023.names.1",
+      "node": "26.8.1",
+      "bun": "1.4.4",
+      "rows": [
+        {
+          "slug": "channel-60d51f41de3b4ceaaea58e2564e5cd0b/model-1",
+          "display_name": "中文 / Team/model-1",
+          "rawId": "model-1"
+        },
+        {
+          "slug": "channel-60d51f41de3b4ceaaea58e2564e5cd0b/vendor-original-model",
+          "display_name": "中文 / Team/vendor/original-model",
+          "rawId": "vendor/original-model"
+        }
+      ],
+      "configSha256": "ffa211bda73b30c6ea3c885c4ba31213c6af4b741117823000ed8ffc84e966cf",
+      "catalogSha256": "be221c0cbe4218dc08998644f20d9ccf88fdcf84ff97f407338042bda967779a",
+      "catalogLock": "exact own-home hash; cleaned by Rust RAII",
+      "catalogHome": "own TempDir CODEX_HOME",
+      "network": "denied by OS sandbox",
+      "installedProgram": "OS sandbox read-only; module hashes unchanged",
+      "accountSelectors": [],
+      "liveModels": false
+    }
+  ],
+  "cleanup": {
+    "temporary_I_D_H_CODEX_HOME": "TempDir dropped on test exit including provisioned full runtime",
+    "own_hash_K_sqlite_and_sidecars_remaining": 0,
+    "no_real_daily_codex_or_desktop_restart": true
+  },
+  "evidence_sha256": {
+    "manager-name-chain-first.log": "f717d60e56dc76bc23803339f3629b739a5f2f97a738c3df42310f33381338d7",
+    "manager-name-chain-own-lock.log": "21d24fc4ba51f5776ed402fb1585c296a6e7020bad6a2ea5a97ff21b0e04e474",
+    "manager-name-chain-final.log": "57423dc424b6e18ea9a5bcb1a68db1cfbbc5befd6f4dce82c24111505bd0212e",
+    "manager-name-chain-readonly-final.log": "f3166081d8c386499edaacd16bde3e67b0a87a061961fb112bd195bc48a1421b",
+    "manager-name-chain-clippy-first.log": "6f2468efbc09a276da6f4ec262588c8f07b9a6a03fe090696e7b393878fa5b20",
+    "manager-name-chain-clippy-final.log": "a430120222c7d46d634c4a7f3302603be007f73abdd5f3e590977ce03d93c3f3",
+    "manager-name-chain-original-package-regression-reused.log": "08e6c3a8af3f683a5fb118f4871b06318a046d695fdd8a5794095b6f926eeee7"
+  },
+  "failures_retained": [
+    {
+      "log": "manager-name-chain-first.log",
+      "cause": "initial sandbox denied runtime hardcoded system-temp SQLite K namespace; no catalog commit; fixed exact random CODEX_HOME hash-only whitelist, no runtime patch"
+    },
+    {
+      "log": "manager-name-chain-own-lock.log",
+      "cause": "English actual consumer passed, next manager begin_draft correctly refused fixture expectedDraft=None while server retained unrelated draft; fixed using actual snapshot.draft.base"
+    },
+    {
+      "log": "manager-name-chain-clippy-first.log",
+      "cause": "published baseline unused commit_protected_restore in normal lib; L0 real production backup caller cb6 removed warning, no allow/fake test reference"
+    },
+    {
+      "log": "manager-name-chain-original-package-regression-reused.log",
+      "cause": "existing prior old-package selector name regression evidence reused, not rerun"
+    }
+  ],
+  "runtime_boundaries": [
+    "actual config_v2 begin_draft+typed Rename save for each label, no copied matcher/compiler",
+    "one complete bundle provision, original pinned bytes unchanged",
+    "bundled Node bootstrap plus its own npm and same bundle Bun execute original installed TS modules; no external Node/Bun/PATH or invented pure-Node loader",
+    "OS sandbox denies all network, allows only bundled Node/Bun process execution, denies writes outside own TempDir except exact own CODEX_HOME K lock and sidecars",
+    "OS sandbox makes I program read-only and module/package hashes unchanged",
+    "auth none, no APIKey, liveModels false, accountSelectors empty; no service, inference or UI fake",
+    "actual disk display_name/name/raw IDs/slug codec/readback checked; unselected provider and unknown fields preserved; catalog consumer leaves manager config byte-identical"
+  ],
+  "limits": [
+    "macOS arm64 native artifact only; Windows two-SID/candidate/UI/release acceptance remains L0/L4 scope",
+    "test is ignored by default and requires explicitly supplied archive/descriptor/SHA",
+    "runtime intentionally uses a fixed per-user system-temp coordination namespace independent of TMPDIR; exact test-home hash objects alone were allowed and cleaned",
+    "source package input paths from environment only; local private artifact paths are evidence, not embedded in test source",
+    "artifacts local and not uploaded; no product/versions/lock changes in feature commit"
+  ]
+}

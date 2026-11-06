@@ -1,0 +1,39 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri)
+warning: function `commit_protected_restore` is never used
+    --> src/modules/model_config/model_transaction_v2.rs:1014:15
+     |
+1014 | pub(crate) fn commit_protected_restore(
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `opencodex-desktop` (lib) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.17s
+     Running tests/runtime023_manager_name_chain.rs (/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/batch2-crate-target/debug/deps/runtime023_manager_name_chain-cc8f89e235658279)
+
+running 1 test
+CHAIN_STAGE verify_pinned_complete_bundle
+CHAIN_STAGE manager_save label=RenamedEnglish provider=RenamedEnglish
+CHAIN_STAGE provision_complete_bundle
+test manager_renames_reach_the_same_installed_runtime_and_own_codex_catalog has been running for over 60 seconds
+CHAIN_STAGE installed_consumer label=RenamedEnglish
+BUNDLED_NODE {"node":"26.8.1","npm":"11.19.0"}
+MANAGER_RUNTIME_CATALOG {"label":"RenamedEnglish","channelId":"662720c8-0db8-4c8f-b236-fac242aa0dbf","providerId":"RenamedEnglish","runtimeVersion":"2.97.0-desktop023.names.1","node":"26.8.1","bun":"1.4.4","rows":[{"slug":"RenamedEnglish/model-1","display_name":"RenamedEnglish/model-1","rawId":"model-1"},{"slug":"RenamedEnglish/vendor-original-model","display_name":"RenamedEnglish/vendor/original-model","rawId":"vendor/original-model"}],"configSha256":"4dc58cc1851d49f30565848aeb758963547bb210f60791122fbdc4990b7b295e","catalogSha256":"f2655d3117965c84e90ea7d8149e7d9e3acae766d0755acc447771477bbb8420","catalogLock":"exact own-home hash; cleaned by Rust RAII","catalogHome":"own TempDir CODEX_HOME","network":"denied by OS sandbox","accountSelectors":[],"liveModels":false}
+CHAIN_STAGE manager_save label=中文渠道 provider=channel-662720c80db84c8fb236fac242aa0dbf
+CHAIN_STAGE installed_consumer label=中文渠道
+BUNDLED_NODE {"node":"26.8.1","npm":"11.19.0"}
+MANAGER_RUNTIME_CATALOG {"label":"中文渠道","channelId":"662720c8-0db8-4c8f-b236-fac242aa0dbf","providerId":"channel-662720c80db84c8fb236fac242aa0dbf","runtimeVersion":"2.97.0-desktop023.names.1","node":"26.8.1","bun":"1.4.4","rows":[{"slug":"channel-662720c80db84c8fb236fac242aa0dbf/model-1","display_name":"中文渠道/model-1","rawId":"model-1"},{"slug":"channel-662720c80db84c8fb236fac242aa0dbf/vendor-original-model","display_name":"中文渠道/vendor/original-model","rawId":"vendor/original-model"}],"configSha256":"c7594037f6583da026473f88d2cec07e4f205db981565f52ec7a6732db14797b","catalogSha256":"e5d85f42d29934f7e9306c86d0bc208ed6cd2697e3c93a307d7f4bb5016f8f9e","catalogLock":"exact own-home hash; cleaned by Rust RAII","catalogHome":"own TempDir CODEX_HOME","network":"denied by OS sandbox","accountSelectors":[],"liveModels":false}
+CHAIN_STAGE manager_save label=Team Space provider=channel-662720c80db84c8fb236fac242aa0dbf
+CHAIN_STAGE installed_consumer label=Team Space
+BUNDLED_NODE {"node":"26.8.1","npm":"11.19.0"}
+MANAGER_RUNTIME_CATALOG {"label":"Team Space","channelId":"662720c8-0db8-4c8f-b236-fac242aa0dbf","providerId":"channel-662720c80db84c8fb236fac242aa0dbf","runtimeVersion":"2.97.0-desktop023.names.1","node":"26.8.1","bun":"1.4.4","rows":[{"slug":"channel-662720c80db84c8fb236fac242aa0dbf/model-1","display_name":"Team Space/model-1","rawId":"model-1"},{"slug":"channel-662720c80db84c8fb236fac242aa0dbf/vendor-original-model","display_name":"Team Space/vendor/original-model","rawId":"vendor/original-model"}],"configSha256":"13a30dc7709d4e5f23963fc123661cc8ba0eb7b82d39cabcc257cd8fe1feb3ea","catalogSha256":"6bf5888ffa5d6ab9c55b5b73ad1bd13ebe89483dc4eeb50c96df09fa063ffb4c","catalogLock":"exact own-home hash; cleaned by Rust RAII","catalogHome":"own TempDir CODEX_HOME","network":"denied by OS sandbox","accountSelectors":[],"liveModels":false}
+CHAIN_STAGE manager_save label=中文 / Team provider=channel-662720c80db84c8fb236fac242aa0dbf
+CHAIN_STAGE installed_consumer label=中文 / Team
+BUNDLED_NODE {"node":"26.8.1","npm":"11.19.0"}
+MANAGER_RUNTIME_CATALOG {"label":"中文 / Team","channelId":"662720c8-0db8-4c8f-b236-fac242aa0dbf","providerId":"channel-662720c80db84c8fb236fac242aa0dbf","runtimeVersion":"2.97.0-desktop023.names.1","node":"26.8.1","bun":"1.4.4","rows":[{"slug":"channel-662720c80db84c8fb236fac242aa0dbf/model-1","display_name":"中文 / Team/model-1","rawId":"model-1"},{"slug":"channel-662720c80db84c8fb236fac242aa0dbf/vendor-original-model","display_name":"中文 / Team/vendor/original-model","rawId":"vendor/original-model"}],"configSha256":"b902bd7f38f816e340d3fcf26920a852cdf1ddac853b49172ed60dd7c7db6010","catalogSha256":"8b772f1061f5f93bf0e87c5505f0c86fe13d6cdd66ee43d1af2abe447873b187","catalogLock":"exact own-home hash; cleaned by Rust RAII","catalogHome":"own TempDir CODEX_HOME","network":"denied by OS sandbox","accountSelectors":[],"liveModels":false}
+MANAGER_NAME_CHAIN_RESULT {"archiveSha256":"982580a65408d5325be3b707288a31a427583e9589b0057ae11be57e7fa11899","dailyConfig":"untouched","descriptorSha256":"88a96e98e3070baa05c7d2ccb402ba70f491f25ca4a93505f8927b8eb0b8b152","labels":4,"network":"OS sandbox deny","runtimeVersion":"2.97.0-desktop023.names.1","temporaryRoots":"I/D/H/CODEX_HOME in one TempDir"}
+CLEANUP_OWN_CATALOG_LOCK filesRemaining=0
+test manager_renames_reach_the_same_installed_runtime_and_own_codex_catalog ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 164.57s
+

@@ -1,0 +1,10 @@
+{
+  "engine": "chromium",
+  "checks": [
+    "external prepare works without internal execution preference and retains exact v2 targets",
+    "clipboard failure activates nothing; retry copies complete content before activating same task",
+    "original task getter returns review; full condition AST visible, private ticket absent from DOM and Pinia"
+  ],
+  "errors": [],
+  "error": "Error: locator.click: Error: strict mode violation: getByRole('dialog', { name: '外部任务', exact: true }).getByRole('button', { name: '关闭', exact: true }) resolved to 2 elements:\n    1) <button title=\"关闭\" type=\"button\" aria-label=\"关闭\" aria-busy=\"false\" data-v-f2b1bc8e=\"\" class=\"icon-btn ui-icon-control modal-close\">…</button> aka getByRole('button', { name: '关闭', description: '关闭' })\n    2) <button class=\"btn\" type=\"button\" data-v-73afaee3=\"\">…</button> aka getByRole('contentinfo').getByRole('button', { name: '关闭' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('dialog', { name: '外部任务', exact: true }).getByRole('button', { name: '关闭', exact: true })\u001b[22m\n"
+}
