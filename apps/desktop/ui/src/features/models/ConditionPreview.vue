@@ -20,16 +20,17 @@ const preconditionLabels={layout:'名称结构',literal_tail:'精确剩余文本
     <p v-else-if="error" role="alert" class="model-error">{{error}}</p>
     <p v-else-if="!result" class="model-muted">尚无当前输入的预览结果。修改条件后需要重新核对。</p>
     <template v-if="result&&!busy&&!error">
-      <p role="status">{{result.reason}} · {{result.reasonCode}}</p>
+      <p role="status">{{result.reason}}</p>
       <dl><dt>原始模型 ID</dt><dd>{{result.rawModelId}}</dd><dt>匹配视图</dt><dd>{{result.matchingView}}</dd></dl>
-      <section aria-label="族范围核对"><h3>{{result.family.matched?'命中族范围':'未命中族范围'}}</h3><p>{{result.family.reason}} · {{result.family.reasonCode}}</p></section>
+      <section aria-label="族范围核对"><h3>{{result.family.matched?'命中族范围':'未命中族范围'}}</h3><p>{{result.family.reason}}</p></section>
       <p v-if="!result.conditions.length" class="model-muted">当前模版未声明条件覆盖。</p>
       <article v-for="(condition,index) in result.conditions" :key="condition.conditionId" :aria-label="'条件核对'+(index+1)">
         <h3>覆盖项 {{index+1}} · {{condition.matched===null?'未评估／不适用':condition.matched?'命中覆盖':'未命中覆盖'}} · {{condition.applied?'已采用':'未采用'}}</h3>
-        <p class="model-muted">{{condition.conditionId}} · {{condition.applicable?'适用':'不适用'}}</p><p>{{condition.reason}} · {{condition.reasonCode}}</p>
-        <ul v-if="condition.preconditions.length" aria-label="前置条件"><li v-for="(precondition,at) in condition.preconditions" :key="at">{{preconditionLabels[precondition.kind]}} · {{matchLabel(precondition.matched)}} · {{precondition.reason}} · {{precondition.reasonCode}}</li></ul>
-        <ol aria-label="AND 条件"><li v-for="atom in condition.atoms" :key="atom.index">条件 {{atom.index+1}} · {{atomLabels[atom.kind]}} · {{matchLabel(atom.matched)}} · {{atom.reason}} · {{atom.reasonCode}}</li></ol>
+        <p class="model-muted">{{condition.applicable?'适用':'不适用'}}</p><p>{{condition.reason}}</p>
+        <ul v-if="condition.preconditions.length" aria-label="前置条件"><li v-for="(precondition,at) in condition.preconditions" :key="at">{{preconditionLabels[precondition.kind]}} · {{matchLabel(precondition.matched)}} · {{precondition.reason}}</li></ul>
+        <ol aria-label="AND 条件"><li v-for="atom in condition.atoms" :key="atom.index">条件 {{atom.index+1}} · {{atomLabels[atom.kind]}} · {{matchLabel(atom.matched)}} · {{atom.reason}}</li></ol>
       </article>
+      <details aria-label="条件标识与匹配诊断"><summary>条件标识与匹配诊断</summary><pre>{{JSON.stringify({reasonCode:result.reasonCode,family:result.family,conditions:result.conditions},null,2)}}</pre></details>
       <template v-if="configuration">
         <p v-if="configuration.protocol.kind==='missing'" class="model-error" role="alert">该模型请求协议待配置；不会使用渠道默认协议。</p>
         <p v-else-if="configuration.protocol.kind==='unsupported'" class="model-error" role="alert">暂不支持的协议：{{configuration.protocol.value}}；保留实际来源。</p>
@@ -44,4 +45,5 @@ const preconditionLabels={layout:'名称结构',literal_tail:'精确剩余文本
 </template>
 <style scoped>
 .condition-preview{min-width:0;display:grid;gap:var(--space-3)}.condition-preview h2,.condition-preview h3{font-size:var(--text-body);margin:0}.condition-preview dl{display:grid;grid-template-columns:minmax(80px,auto) minmax(0,1fr);gap:var(--space-2)}.condition-preview dt{color:var(--muted)}.condition-preview dd{margin:0;overflow-wrap:anywhere;white-space:pre-wrap}.condition-preview p,.condition-preview li,.condition-preview td{overflow-wrap:anywhere}.condition-preview table{min-width:420px}.condition-preview .model-table-scroll{overflow:auto;min-width:0}
+.condition-preview pre{min-width:0;white-space:pre-wrap;overflow-wrap:anywhere}
 </style>

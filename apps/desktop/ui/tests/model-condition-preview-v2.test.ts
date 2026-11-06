@@ -9,7 +9,7 @@ vi.mock('@tauri-apps/api/core',()=>({invoke:ipc}))
 const origin={kind:'source' as const,evidence:{kind:'imported_file' as const,sourceDigest:'sha256:'+'a'.repeat(64),providerId:'p',pointer:'/provider/p/adapter'}}
 function result(rawModelId='gpt-6-1-sol'):ConditionPreviewView {const effective:EffectiveModelV2={channelId:'c',rawModelId,selected:true,enabled:true,observed:true,binding:null,rules:{...emptyRulesV2(),fast:{mode:'custom',value:false},fastWire:{mode:'custom',value:null}},protocol:{kind:'resolved',value:'openai-chat',origin},fieldOrigins:{protocol:origin,fast:{kind:'explicit_model'}},matchedConditionId:null,notices:[]};return {rawModelId,matchingView:'backend-matching-view',matched:true,family:{matched:true,reasonCode:'family_fixture',reason:'后端族理由'},reasonCode:'summary_fixture',reason:'原始协议来源保留',conditions:[],effective,issues:[]}}
 beforeEach(()=>{setActivePinia(createPinia());ipc.mockReset()})
-it('renders exact raw ID, actual source and explicit false/null without inventing matching-view or binding facts',()=>{const view=result(),before=JSON.stringify(view),w=mount(ConditionPreview,{props:{result:view}});expect(w.text()).toContain('gpt-6-1-sol');expect(w.text()).toContain('实际导入事实');expect(w.text()).toContain('backend-matching-view');expect(w.text()).toContain('后端族理由');expect(w.text()).not.toContain('未返回独立匹配视图');expect(w.text()).toContain('明确禁用');expect(w.text()).toContain('单模型人工覆盖');expect(JSON.stringify(view)).toBe(before);expect(w.find('details').exists()).toBe(false);w.unmount()})
+it('renders exact raw ID, actual source and explicit false/null without inventing matching-view or binding facts',()=>{const view=result(),before=JSON.stringify(view),w=mount(ConditionPreview,{props:{result:view}});expect(w.text()).toContain('gpt-6-1-sol');expect(w.text()).toContain('实际导入事实');expect(w.text()).toContain('backend-matching-view');expect(w.text()).toContain('后端族理由');expect(w.text()).not.toContain('未返回独立匹配视图');expect(w.text()).toContain('明确禁用');expect(w.text()).toContain('单模型人工覆盖');expect(JSON.stringify(view)).toBe(before);expect(w.findAll('details')).toHaveLength(1);expect(w.get('summary').text()).toBe('条件标识与匹配诊断');w.unmount()})
 it('missing and unsupported protocols are visible, never silently responses',async()=>{const view=result();view.effective={...view.effective!,protocol:{kind:'missing'}};const w=mount(ConditionPreview,{props:{result:view}});expect(w.text()).toContain('待配置');expect(w.text()).not.toContain('openai-responses');await w.setProps({result:{...view,effective:{...view.effective!,protocol:{kind:'unsupported',value:'custom-adapter',origin}}}});expect(w.text()).toContain('custom-adapter');w.unmount()})
 it('loading/error cannot display the old green result and retry is explicit',async()=>{const w=mount(ConditionPreview,{props:{result:result(),busy:true}});expect(w.text()).toContain('正在核对');expect(w.text()).not.toContain('原始协议来源保留');await w.setProps({busy:false,error:'model_read_stale'});expect(w.get('[role=alert]').text()).toContain('model_read_stale');await w.get('button').trigger('click');expect(w.emitted('retry')).toHaveLength(1);w.unmount()})
 it('input changes reject a late preview response and retain the newer draft',async()=>{let finish!:(value:ConditionPreviewView)=>void;const store=useModelsV2Store();store.configureServices({previewConditions:()=>new Promise(resolve=>{finish=resolve})});store.start();store.setPreviewTarget('first','channel');const pending=store.requestPreview();store.setPreviewTarget('later','channel');finish(result('first'));await pending;expect(store.preview).toBeNull();expect(store.previewModelId).toBe('later');expect(store.previewBusy).toBe(false)})
@@ -32,7 +32,7 @@ it('copies the full ordered backend trace without deriving names, matching view,
 it('renders every condition, failed precondition and unevaluated atom separately from false and adopted results',()=>{
   const {input,response}=traceFixture(),w=mount(ConditionPreview,{props:{result:conditionPreviewViewV2(response,input)}})
   const first=w.get('[aria-label="条件核对1"]'),second=w.get('[aria-label="条件核对2"]')
-  expect(first.text()).toContain('未命中覆盖');expect(first.text()).toContain('未采用');expect(first.text()).toContain('literal-tail');expect(first.get('[aria-label="AND 条件"]').text()).toContain('未评估／不适用');expect(first.get('[aria-label="AND 条件"]').text()).not.toContain('不满足');expect(second.text()).toContain('已采用');expect(second.text()).toContain('exact-id');expect(w.text()).toContain('backend_summary');w.unmount()
+  expect(first.text()).toContain('未命中覆盖');expect(first.text()).toContain('未采用');expect(first.text()).toContain('literal-tail');expect(first.get('[aria-label="AND 条件"]').text()).toContain('未评估／不适用');expect(first.get('[aria-label="AND 条件"]').text()).not.toContain('不满足');expect(second.text()).toContain('已采用');expect(second.text()).toContain('exact-id');expect(w.get('details').text()).toContain('backend_summary');w.unmount()
 })
 it('family rejection displays null as not applicable rather than a failed atom',()=>{
   const {input,response}=traceFixture(),row=response.rows[0]!
@@ -40,6 +40,19 @@ it('family rejection displays null as not applicable rather than a failed atom',
   for(const c of row.conditions){c.applicable=false;c.matched=null;c.applied=false;for(const a of c.atoms)a.matched=null}
   const w=mount(ConditionPreview,{props:{result:conditionPreviewViewV2(response,input)}})
   expect(w.get('[aria-label="族范围核对"]').text()).toContain('后端排除理由');expect(w.get('[aria-label="条件核对1"]').text()).toContain('未评估／不适用');expect(w.get('[aria-label="条件核对2"]').text()).toContain('未采用');w.unmount()
+})
+it('keeps identifiers and every original diagnostic code in a closed details, while default content retains reasons and states',async()=>{
+  const {input,response}=traceFixture(),view=conditionPreviewViewV2(response,input),before=JSON.stringify(view)
+  view.conditions[0]!.conditionId='11111111-1111-4111-8111-111111111111'
+  const w=mount(ConditionPreview,{props:{result:view}}),details=w.get('details[aria-label="条件标识与匹配诊断"]')
+  expect(details.get('summary').text()).toBe('条件标识与匹配诊断');expect(details.attributes('open')).toBeUndefined()
+  const visible=w.element.cloneNode(true) as HTMLElement;visible.querySelectorAll('details').forEach(d=>d.remove())
+  expect(visible.textContent).not.toContain('11111111-1111-4111-8111-111111111111');expect(visible.textContent).not.toContain('backend_')
+  for(const text of ['后端汇总原文','tail-failure','not-evaluated-name','未评估／不适用','不满足','已采用','未采用'])expect(visible.textContent).toContain(text)
+  expect(JSON.parse(details.get('pre').text())).toEqual({reasonCode:view.reasonCode,family:view.family,conditions:view.conditions})
+  ;(details.element as HTMLDetailsElement).open=true;await details.trigger('toggle');expect(details.attributes('open')).toBeDefined()
+  ;(details.element as HTMLDetailsElement).open=false;await details.trigger('toggle');expect(details.attributes('open')).toBeUndefined()
+  view.conditions[0]!.conditionId='first';expect(JSON.stringify(view)).toBe(before);w.unmount()
 })
 it('rejects legacy or partial trace receipts instead of manufacturing empty arrays or explanations',()=>{
   const {input,response}=traceFixture()
