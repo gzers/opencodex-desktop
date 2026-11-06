@@ -94,7 +94,33 @@ jobs:
           cargo clippy --locked --workspace --all-targets -- -D warnings
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $env:OPENCODEX_TEST_NODE = (Get-Command node).Source
-          cargo test --locked --workspace --features integration-test
+          cargo test --locked --workspace --features integration-test --doc
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $taskStatic = Join-Path $env:RUNNER_TEMP ('ocxd023-rust-static-' + [guid]::NewGuid().ToString('N'))
+          & ../../../test/smoke/windows023-rust-ordinary.test.ps1 -OutputDirectory $taskStatic
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $taskOrdinary = Join-Path $env:RUNNER_TEMP ('ocxd023-rust-ordinary-' + [guid]::NewGuid().ToString('N'))
+          try {
+            & ../../../test/smoke/windows023-rust-ordinary.ps1 -Cargo (Get-Command cargo.exe).Source -ManifestPath (Join-Path $PWD 'Cargo.toml') -Node (Get-Command node.exe).Source -OutputDirectory $taskOrdinary -ExpectedCommit (git rev-parse HEAD)
+            if ($LASTEXITCODE -ne 0) { throw 'Actual ordinary-account workspace binaries failed; original evidence retained' }
+          } finally {
+            if (Test-Path -LiteralPath $taskOrdinary) { Copy-Item -LiteralPath $taskOrdinary -Destination ../../../test/out/windows-candidate/ordinary-rust -Recurse }
+            if (Test-Path -LiteralPath $taskStatic) { Copy-Item -LiteralPath $taskStatic -Destination ../../../test/out/windows-candidate/ordinary-static -Recurse }
+          }
+      - name: Preserve elevated private creation boundary
+        if: always()
+        run: |
+          cargo test --locked --lib infrastructure::windows_private_create::tests -- --test-threads=1 --nocapture
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Preserve native credential protection evidence
+        if: always()
+        run: |
+          $env:OPENCODEX_SANDBOX = '1'
+          cargo test --locked --test provider_auth_native -- --ignored --test-threads=1 --nocapture
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo test --locked --test channel_rename_native -- --ignored --test-threads=1 --nocapture
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo test --locked --lib native_secure_store_round_trip -- --ignored --test-threads=1 --nocapture
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Build NSIS and MSI candidates
         run: |
