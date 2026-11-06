@@ -603,6 +603,15 @@ pub trait ModelApplyV2: Send + Sync {
         backup: bool,
     ) -> ModelResult<ModelApplyReceipt>;
     fn status(&self, id: &str, handle: &ModelApplyPlanHandle) -> ModelResult<ModelApplyStatus>;
+    /// Actual protected owner images only; None never authorizes a ready backup.
+    fn scope_backup_images(
+        &self,
+        _id: &str,
+        _handle: &ModelApplyPlanHandle,
+    ) -> ModelResult<Option<Vec<super::model_transaction_v2::WriteV2>>> {
+        Ok(None)
+    }
+
 }
 
 struct ActualAuthorization;
