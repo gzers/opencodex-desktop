@@ -279,7 +279,7 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
     if(result.report){session.error='检查报告没有可保存建议，未发起接受。';return}
     session.accepting=true;session.error='';saving.value=true
     try{
-      if(session.acceptRequest){const latest=await modelV2Api.agentLatest(templateId);if(latest?.runId===session.acceptRequest.runId&&latest.phase==='accepted'){session.result=agentResult(latest);session.status='原接受操作已核对成功，未重复保存。';await load();return}if(!latest||latest.runId!==session.acceptRequest.runId)throw new Error('原任务结果尚无法安全核对，未重建或替换接受请求。')}
+      if(session.acceptRequest){const latest=key.startsWith('external:')?(await modelV2Api.externalRun(session.acceptRequest.runId)).result:await modelV2Api.agentLatest(templateId);if(latest?.runId===session.acceptRequest.runId&&latest.phase==='accepted'){session.result=agentResult(latest);session.status='原接受操作已核对成功，未重复保存。';await load();return}if(!latest||latest.runId!==session.acceptRequest.runId)throw new Error('原任务结果尚无法安全核对，未重建或替换接受请求。')}
       if(!session.acceptRequest){if(snapshot.value?.libraryDigest!==result.expectedLibrary)throw {code:'model_save_stale'};session.acceptRequest={runId:result.runId,expectedLibrary:result.expectedLibrary,reviewedResponse:reviewedAgentResponseV2(result)}}
       const accepted=agentResult(await modelV2Api.agentAccept(clone(session.acceptRequest)),session.acceptRequest.runId)
       if(accepted.phase!=='accepted')throw new Error('接受结果尚未确认，原请求与输入已保留。')
