@@ -104,6 +104,12 @@ pub fn export_portable_models_v2(
     }
     let mut channels = vec![];
     for channel in saved_policy.channels.iter().filter(|c| all.contains(&c.id)) {
+        if matches!(
+            channel.connection.provider_id.to_ascii_lowercase().as_str(),
+            "openai" | "chatgpt" | "openai-multi" | "combo"
+        ) {
+            return Err(error("model_native_channel_not_portable"));
+        }
         let subset = scope.channel_models.get(&channel.id);
         let family = scope.channel_families.get(&channel.id);
         if subset.is_some_and(|ids| {
@@ -201,6 +207,14 @@ pub fn export_portable_models_v2(
         revision(library, reference)?;
         templates.insert(reference.template_id.clone());
     }
+    for channel in &policy.channels {
+        for id in channel.family_overrides.keys() {
+            if !library.templates.iter().any(|t| &t.id == id) {
+                return Err(error("model_dependency_missing"));
+            }
+            templates.insert(id.clone());
+        }
+    }
     for ids in scope.channel_families.values() {
         for id in ids {
             if !library.templates.iter().any(|t| &t.id == id) {
@@ -244,6 +258,7 @@ pub fn validate_portable_models_v2(package: &PortableModelsV2) -> Result<()> {
     let library = LibraryV2 {
         schema_version: SCHEMA_VERSION,
         templates: package.payload.templates.clone(),
+        submission_receipts: BTreeMap::new(),
     };
     validate_library_v2(&library)?;
     if let Some(policy) = &package.payload.policy {
@@ -275,6 +290,15 @@ pub fn validate_portable_models_v2(package: &PortableModelsV2) -> Result<()> {
             if let Some(families) = &channel.family_scope {
                 let set: BTreeSet<_> = families.iter().collect();
                 if set.len() != families.len()
+                    || families
+                        .iter()
+                        .any(|id| !library.templates.iter().any(|t| &t.id == id))
+                    || channel
+                        .template_refs
+                        .iter()
+                        .any(|r| !set.contains(&r.template_id))
+                    || channel.family_overrides.keys().any(|id| !set.contains(id))
+                    || channel.defaults != ModelRules::default()
                     || channel.models.iter().any(|m| {
                         m.binding
                             .as_ref()

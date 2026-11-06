@@ -638,11 +638,19 @@ fn ledger_prevents_materialized_protocol_becoming_source() {
         }],
     };
     assert_eq!(
-        reconcile_source_v2(CHANNEL, &saved, &imported, Some(&ledger), &raw).unwrap(),
+        reconcile_source_v2(
+            CHANNEL,
+            &saved,
+            &imported,
+            Some(&ledger),
+            &digest(b"policy"),
+            &raw
+        )
+        .unwrap(),
         saved
     );
     assert_eq!(
-        reconcile_source_v2(CHANNEL, &saved, &imported, None, &raw)
+        reconcile_source_v2(CHANNEL, &saved, &imported, None, &digest(b"policy"), &raw)
             .unwrap_err()
             .code,
         "model_source_provenance_unknown"
@@ -656,7 +664,15 @@ fn ledger_prevents_materialized_protocol_becoming_source() {
         SourceKindV2::ImportedFile,
     )
     .unwrap();
-    let s = reconcile_source_v2(CHANNEL, &saved, &imported, Some(&ledger), &changed).unwrap();
+    let s = reconcile_source_v2(
+        CHANNEL,
+        &saved,
+        &imported,
+        Some(&ledger),
+        &digest(b"policy"),
+        &changed,
+    )
+    .unwrap();
     assert_eq!(s.fields["protocol"].value, "anthropic");
     assert_eq!(
         s.fields["protocol"].evidence.kind,
@@ -781,3 +797,313 @@ const FROZEN_BOUNDARIES: &str = r#"{"separator":[{"case":"dot_dash_gpt","a":"gpt
 const NAMESPACE_PREFIXES: &str = r#"["aixj-","btka-","ciii-","input-","siliconflow-","gxlq-bailian-","gxlq-local-","gzgg-local-ezio-itx-","gzgg-local-ezio-pc-","gzgg-local-strata-"]"#;
 
 const FAMILY_KEYS: &str = r#"{"837c8133-76e9-4bdf-a68c-9637331c4d43":"GPT","961df482-3cbe-421d-a268-caa768de2fc6":"Claude","e4182850-f6b6-4597-b06a-935a23fc19de":"Gemini","e93e0572-8a01-499e-b9c1-7f44bbe512ea":"GLM","f42bcbe3-9758-4512-a0e1-fc7809b505b4":"HY","061c63d1-8cfe-4eaa-bceb-37ca808cd7c8":"DoubaoSeed","48b7e309-2ecb-42af-b8c1-e65a883764ab":"Qwen","ec0b21a6-e038-437c-816e-ce2567c3a264":"DeepSeek","3528cd7b-89e4-4b8d-8609-fd294ef7958a":"Kimi","4d612ef5-e45b-4379-b03f-8c5a81954c7e":"MiniMax","c2efe090-d091-418b-aa1e-92c5c5f7eabf":"ERNIE","04018546-d99e-430a-afd3-92d8a151472c":"Step","0bf7408b-2197-4a98-9a9e-5dd218953594":"MiMo","ec0d785e-989b-458c-9f2b-35e15874b863":"Grok","5910381f-9f57-4c6c-abc7-5162139fa200":"Mistral","85f3649e-6532-403b-b573-8bf39cc3c9ab":"Gemma","626989ec-73e3-41a8-90e3-810dfb200b73":"Llama"}"#;
+
+const FROZEN_SELECTED: &str = r#"[{"provider":"A6api","ids":["gpt-6.1-sol","gpt-6-sol","gpt-6-luna","gpt-6-astra"]},{"provider":"AgentRouter-1","ids":[]},{"provider":"AgentRouter-2","ids":[]},{"provider":"AgentRouter-3","ids":[]},{"provider":"Ciii-1","ids":["gpt-5.6-luna","gpt-6-astra","gpt-6-sol","gpt-6.1-sol","gpt-reserve"]},{"provider":"Ciii-2","ids":["gpt-6-astra","gpt-6-sol","gpt-6.1-sol","gpt-reserve","grok-4.6"]},{"provider":"CodeKey","ids":[]},{"provider":"FeiMao","ids":["gpt-6-astra","gpt-6-sol","gpt-6.1-sol"]},{"provider":"FeiMao-CNM","ids":["deepseek-v4.1-flash"]},{"provider":"FeiMao-Claude","ids":["claude-fable-5","claude-opus-5-5","claude-sonnet-5-5"]},{"provider":"GZGG-NewApi","ids":["gxlq-local-deepseek-flash","gxlq-local-glm-flash","gxlq-bailian-deepseek-flash","gxlq-bailian-deepseek-pro","gxlq-bailian-qwen-flash","gxlq-bailian-qwen-max","gxlq-bailian-glm","gxlq-bailian-kimi-code","btka-kimi-for-coding","btka-kimi-for-coding-highspeed","btka-kimi-k3","btka-kimi-k3-256k","gzgg-local-strata-qwen-flash","gzgg-local-ezio-itx-qwen3.8-27b-q6","gzgg-local-ezio-pc-qwen3.8-27b"]},{"provider":"Input-1","ids":["gpt-6","gpt-6-astra","gpt-6-luna","gpt-6-sol","gpt-6.1-sol"]},{"provider":"Input-2","ids":["gpt-6","gpt-6-astra","gpt-6-luna","gpt-6-sol","gpt-6.1-sol"]},{"provider":"JustDoWoker-1","ids":[]},{"provider":"JustDoWoker-2","ids":[]},{"provider":"Krill-1","ids":["gpt-6-astra","gpt-6-sol","gpt-6.1-sol","gpt-6.1-terra"]},{"provider":"Krill-2","ids":["gpt-6-astra","gpt-6-sol","gpt-6.1-sol"]},{"provider":"MDJK","ids":[]},{"provider":"Pite","ids":[]},{"provider":"SeekAi-1","ids":[]},{"provider":"SeekAi-2","ids":[]},{"provider":"SeekAi-3","ids":[]},{"provider":"TokEasy","ids":[]},{"provider":"Vsllm","ids":[]},{"provider":"YunShu","ids":[]},{"provider":"openai","ids":[]}]"#;
+
+#[test]
+fn immutable_revision_append_rejects_stale_base_and_agent_lock_changes() {
+    let library = seed_library_v2().unwrap();
+    let t = &library.templates[0];
+    let old = &t.revisions[0];
+    let mut request = SaveRevisionRequestV2 {
+        expected_library: digest(&canonical_bytes(&library).unwrap()),
+        template_id: t.id.clone(),
+        base_revision: Some(old.id.clone()),
+        revision_id: "77777777-7777-4777-8777-777777777777".into(),
+        created_at: "2026-11-06T13:00:00Z".into(),
+        label: t.label.clone(),
+        content: old.content.clone(),
+        make_default: false,
+        origin: super::schema::SaveOrigin::Manual,
+    };
+    request.content.description.push_str(" reviewed");
+    let next = save_revision_plan_v2(&library, &request).unwrap();
+    assert_eq!(next.templates[0].revisions[0], *old);
+    assert_eq!(next.templates[0].default_revision, t.default_revision);
+    assert_eq!(next.templates[0].revisions.len(), 2);
+    assert_eq!(next.templates[0].revisions[1].changes.len(), 1);
+    assert_eq!(
+        save_revision_plan_v2(&next, &request).unwrap_err().code,
+        "model_save_stale"
+    );
+    let mut locked = library.clone();
+    locked.templates[0].revisions[0]
+        .content
+        .locked_fields
+        .insert("description".into());
+    refresh_revision(&mut locked, 0);
+    request.expected_library = digest(&canonical_bytes(&locked).unwrap());
+    request.origin = super::schema::SaveOrigin::InternalAgent("fixture-task".into());
+    assert_eq!(
+        save_revision_plan_v2(&locked, &request).unwrap_err().code,
+        "model_locked_field"
+    );
+}
+#[test]
+fn preserved_selected_28_ids_remain_matchable_without_inventory_changes() {
+    let library = seed_library_v2().unwrap();
+    let fixtures: Value = serde_json::from_str(FROZEN_SELECTED).unwrap();
+    let mut selected = BTreeSet::new();
+    for provider in fixtures.as_array().unwrap() {
+        for id in provider["ids"].as_array().unwrap() {
+            let id = id.as_str().unwrap();
+            let mut p = policy(&[id]);
+            if provider["provider"] == "GZGG-NewApi" {
+                p.channels[0].namespace = Some(NamespaceV2 {
+                    channel_id: CHANNEL.into(),
+                    remove_leading_prefixes: serde_json::from_str(NAMESPACE_PREFIXES).unwrap(),
+                });
+            }
+            assert!(
+                select_reference_v2(&library, &p, &p.channels[0], id)
+                    .unwrap()
+                    .is_some(),
+                "{id}"
+            );
+            selected.insert(id);
+        }
+    }
+    assert_eq!(selected.len(), 28);
+}
+#[test]
+fn newly_observed_unmatched_id_is_counted_changed_without_selecting_it() {
+    let library = seed_library_v2().unwrap();
+    let p = policy(&["existing"]);
+    let plan =
+        match_read_to_draft_v2(&library, &p, &observation(&library, &["new-unmatched"])).unwrap();
+    assert_eq!(plan.dto.counts.changed, 1);
+    assert_eq!(plan.dto.counts.unmatched, 1);
+    assert!(!plan.dto.models[0].effective.selected);
+    assert_eq!(
+        plan.next_policy.channels[0].selection,
+        p.channels[0].selection
+    );
+}
+#[test]
+fn source_capability_precedence_and_bad_protocol_types_match_original_fields() {
+    let s=source_from_provider_v2("fixture","model:tag",&json!({"adapter":"openai-chat","modelInputModalities":{"model:tag":["text"]},"modelCapabilities":{"model:tag":{"inputModalities":["text","image"]}},"noReasoningModels":["model"]}),&digest(b"fixture"),SourceKindV2::ImportedFile).unwrap();
+    assert_eq!(s.fields["inputModalities"].value, json!(["text", "image"]));
+    assert_eq!(s.fields["noReasoning"].value, true);
+    assert!(source_from_provider_v2(
+        "fixture",
+        "model",
+        &json!({"adapter":"openai-chat","modelAdapters":{"model":false}}),
+        &digest(b"fixture"),
+        SourceKindV2::ImportedFile
+    )
+    .is_err());
+}
+#[test]
+fn portable_native_and_family_boundary_validation_is_enforced() {
+    let library = seed_library_v2().unwrap();
+    let mut p = policy(&["gpt-6-sol"]);
+    pin(&library, &mut p, "gpt-6-sol", false);
+    let family = p.channels[0].models[0]
+        .binding
+        .as_ref()
+        .unwrap()
+        .reference()
+        .template_id
+        .clone();
+    let scope = ModelExportScopeV2 {
+        channel_families: [(CHANNEL.into(), [family].into())].into(),
+        ..Default::default()
+    };
+    let package = export_portable_models_v2(&library, &p, &scope).unwrap();
+    let c = &package.payload.policy.as_ref().unwrap().channels[0];
+    assert!(c.connection.is_none());
+    assert_eq!(c.defaults, ModelRules::default());
+    let mut bad = package.clone();
+    bad.payload.policy.as_mut().unwrap().channels[0]
+        .defaults
+        .fast = Field::Custom(true);
+    bad.digest = digest(&canonical_bytes(&bad.payload).unwrap());
+    assert!(validate_portable_models_v2(&bad).is_err());
+    p.channels[0].connection.provider_id = "openai".into();
+    let scope = ModelExportScopeV2 {
+        channel_ids: [CHANNEL.into()].into(),
+        ..Default::default()
+    };
+    assert_eq!(
+        export_portable_models_v2(&library, &p, &scope)
+            .unwrap_err()
+            .code,
+        "model_native_channel_not_portable"
+    );
+}
+#[test]
+fn ledger_pairing_and_connection_credentials_in_urls_are_rejected() {
+    let saved = source("model", "openai-chat");
+    let ledger = MaterializationLedgerV2 {
+        source_policy_digest: digest(b"old"),
+        written_file_digest: digest(b"file"),
+        fields: vec![],
+    };
+    assert_eq!(
+        reconcile_source_v2(
+            CHANNEL,
+            &saved,
+            &saved,
+            Some(&ledger),
+            &digest(b"new"),
+            &json!({})
+        )
+        .unwrap_err()
+        .code,
+        "model_source_provenance_unknown"
+    );
+    let mut p = policy(&["model"]);
+    p.channels[0]
+        .connection
+        .nodes
+        .push(super::schema::ServiceNode {
+            id: READ.into(),
+            name: "bad".into(),
+            url: "https://user:secret@example.invalid".into(),
+        });
+    p.channels[0].connection.active_node_id = READ.into();
+    assert!(validate_policy_v2(&p).is_err());
+}
+#[test]
+fn clearing_invalid_manual_pin_can_plan_repair_without_reinterpreting_old_effective_values() {
+    let library = seed_library_v2().unwrap();
+    let mut p = policy(&["gpt-6-sol"]);
+    pin(&library, &mut p, "gpt-6-sol", true);
+    if let Some(ModelBindingV2::Manual { reference }) = &mut p.channels[0].models[0].binding {
+        reference.revision_id = READ.into();
+    }
+    let next = apply_explicit_edits_v2(
+        &p,
+        &[ModelEditV2::ClearManualBinding {
+            channel_id: CHANNEL.into(),
+            raw_model_id: "gpt-6-sol".into(),
+        }],
+    )
+    .unwrap();
+    let plan = plan_materialization_v2(&library, &p, &next).unwrap();
+    assert!(plan.writes.iter().all(|w| !w.before_known));
+    assert_eq!(plan.writes.len(), 11);
+}
+
+#[test]
+fn ledger_finalizer_covers_all_fields_and_auth_binding_cannot_guess() {
+    let p = policy(&["model"]);
+    let raw = json!({"providers":{"fixture":{"adapter":"openai-chat"}}});
+    let mappings = [
+        ("protocol", "modelAdapters"),
+        ("contextWindow", "modelContextWindows"),
+        ("inputModalities", "modelInputModalities"),
+        ("reasoningEfforts", "modelReasoningEfforts"),
+        ("defaultEffort", "modelDefaultReasoningEfforts"),
+        ("fast", "modelSupportsServiceTier"),
+        ("pinnedEffort", "modelPinnedReasoningEfforts"),
+        ("effortMap", "modelReasoningEffortMap"),
+    ];
+    let mut targets = mappings
+        .iter()
+        .map(|(field, map)| MaterializedTargetV2 {
+            channel_id: CHANNEL.into(),
+            raw_model_id: "model".into(),
+            field: (*field).into(),
+            provider_id: "fixture".into(),
+            pointer: format!("/providers/fixture/{map}/model"),
+        })
+        .collect::<Vec<_>>();
+    for (field, path) in [
+        ("noReasoning", "noReasoningModels"),
+        (
+            "reasoningAuthoritative",
+            "modelReasoningEffortsAuthoritative",
+        ),
+        ("fastWire", "fastWire"),
+    ] {
+        targets.push(MaterializedTargetV2 {
+            channel_id: CHANNEL.into(),
+            raw_model_id: "model".into(),
+            field: field.into(),
+            provider_id: "fixture".into(),
+            pointer: format!("/providers/fixture/{path}"),
+        });
+    }
+    let ledger = finalize_materialization_ledger_v2(&p, &raw, &targets).unwrap();
+    assert_eq!(ledger.fields.len(), 11);
+    let saved = &p.channels[0].models[0].source;
+    assert_eq!(
+        reconcile_source_v2(
+            CHANNEL,
+            saved,
+            saved,
+            Some(&ledger),
+            &policy_semantic_digest_v2(&p).unwrap(),
+            &raw
+        )
+        .unwrap(),
+        *saved
+    );
+    let mut malicious = targets.clone();
+    malicious[0].pointer = "/providers/fixture/apiKey".into();
+    assert!(finalize_materialization_ledger_v2(&p, &raw, &malicious).is_err());
+    targets.pop();
+    assert_eq!(
+        finalize_materialization_ledger_v2(&p, &raw, &targets)
+            .unwrap_err()
+            .code,
+        "model_source_provenance_unknown"
+    );
+    let groups = vec![ProtocolGroupPlanV2 {
+        channel_id: CHANNEL.into(),
+        protocol: ProtocolV2::OpenaiResponses,
+        wire_profile_digest: digest(b"wire"),
+        raw_model_ids: vec!["model".into()],
+    }];
+    assert_eq!(
+        validate_protocol_group_auth_v2(&groups, &[])
+            .unwrap_err()
+            .code,
+        "model_protocol_auth_incompatible"
+    );
+    assert!(validate_protocol_group_auth_v2(
+        &groups,
+        &[ProtocolAuthBindingV2 {
+            channel_id: CHANNEL.into(),
+            allowed_protocols: [ProtocolV2::OpenaiChat].into()
+        }]
+    )
+    .is_err());
+    validate_protocol_group_auth_v2(
+        &groups,
+        &[ProtocolAuthBindingV2 {
+            channel_id: CHANNEL.into(),
+            allowed_protocols: [ProtocolV2::OpenaiResponses].into(),
+        }],
+    )
+    .unwrap();
+}
+
+#[test]
+fn frozen_nineteen_unmatched_models_keep_original_configuration() {
+    let library = seed_library_v2().unwrap();
+    let rows: Value = serde_json::from_str(FROZEN_ROWS).unwrap();
+    let mut ids = BTreeSet::new();
+    for row in rows
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|r| r["family"].is_null())
+    {
+        let id = row["rawModelId"].as_str().unwrap();
+        let mut p = policy(&[id]);
+        if row["provider"] == "GZGG-NewApi" {
+            p.channels[0].namespace = Some(NamespaceV2 {
+                channel_id: CHANNEL.into(),
+                remove_leading_prefixes: serde_json::from_str(NAMESPACE_PREFIXES).unwrap(),
+            });
+        }
+        let result = match_read_to_draft_v2(&library, &p, &observation(&library, &[id])).unwrap();
+        assert_eq!(result.next_policy, p, "{id}");
+        assert!(!result.dto.changed);
+        assert_eq!(result.dto.counts.unmatched, 1);
+        ids.insert(id);
+    }
+    assert_eq!(ids.len(), 19);
+}

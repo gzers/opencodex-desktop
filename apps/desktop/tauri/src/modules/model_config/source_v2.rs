@@ -116,6 +116,60 @@ pub fn source_from_provider_v2(
                 }
             }
         }
+        if key == "inputModalities" {
+            // Match the original editor: modelCapabilities overlays the same
+            // per-model key before exact / colon-family / case-fold selection.
+            let mut declarations = BTreeMap::new();
+            if let Some(map) = provider.get("modelInputModalities") {
+                for (id, value) in map
+                    .as_object()
+                    .ok_or_else(|| error("model_source_invalid"))?
+                {
+                    declarations.insert(
+                        id.clone(),
+                        (
+                            format!("{root}/modelInputModalities/{}", pointer(id)),
+                            value.clone(),
+                        ),
+                    );
+                }
+            }
+            if let Some(map) = provider.get("modelCapabilities") {
+                for (id, capability) in map
+                    .as_object()
+                    .ok_or_else(|| error("model_source_invalid"))?
+                {
+                    let capability = capability
+                        .as_object()
+                        .ok_or_else(|| error("model_source_invalid"))?;
+                    if let Some(value) = capability.get("inputModalities") {
+                        declarations.insert(
+                            id.clone(),
+                            (
+                                format!("{root}/modelCapabilities/{}/inputModalities", pointer(id)),
+                                value.clone(),
+                            ),
+                        );
+                    }
+                }
+            }
+            let value = declarations
+                .get(raw_model_id)
+                .or_else(|| {
+                    raw_model_id
+                        .split_once(':')
+                        .and_then(|(family, _)| declarations.get(family))
+                })
+                .or_else(|| {
+                    declarations
+                        .iter()
+                        .find(|(id, _)| id.to_lowercase() == raw_model_id.to_lowercase())
+                        .map(|(_, v)| v)
+                });
+            if let Some(value) = value {
+                selected = Some(value.clone());
+            }
+        }
         if key == "fast" && provider.get("fastEnabled") == Some(&Value::Bool(false)) {
             selected = Some((format!("{root}/fastEnabled"), Value::Bool(false)));
         }
@@ -141,7 +195,10 @@ pub fn source_from_provider_v2(
         if values.iter().any(|v| !v.is_string()) {
             return Err(error("model_source_invalid"));
         }
-        let index = values.iter().position(|v| v.as_str() == Some(raw_model_id));
+        let family = raw_model_id.split_once(':').map(|(family, _)| family);
+        let index = values.iter().position(|v| {
+            v.as_str() == Some(raw_model_id) || family.is_some_and(|f| v.as_str() == Some(f))
+        });
         fields.insert(
             "noReasoning".into(),
             SourceFieldV2 {
@@ -177,6 +234,24 @@ pub fn validate_policy_v2(policy: &PolicyV2) -> Result<()> {
             return Err(error("model_source_invalid"));
         }
         validate_non_protocol(&channel.defaults)?;
+        let mut node_ids = BTreeSet::new();
+        for node in &channel.connection.nodes {
+            check_id(&node.id)?;
+            let url = reqwest::Url::parse(&node.url).map_err(|_| error("model_source_invalid"))?;
+            if !node_ids.insert(&node.id)
+                || !["http", "https"].contains(&url.scheme())
+                || !url.username().is_empty()
+                || url.password().is_some()
+                || url.fragment().is_some()
+            {
+                return Err(error("model_source_invalid"));
+            }
+        }
+        if !channel.connection.nodes.is_empty()
+            && !node_ids.contains(&channel.connection.active_node_id)
+        {
+            return Err(error("model_source_invalid"));
+        }
         for rules in channel.family_overrides.values() {
             validate_non_protocol(rules)?;
         }
@@ -190,7 +265,11 @@ pub fn validate_policy_v2(policy: &PolicyV2) -> Result<()> {
             source_rules_v2(&model.source)?;
             validate_rules(&model.explicit_overrides, false)?;
         }
-        if channel.model_order.iter().collect::<BTreeSet<_>>().len() != channel.model_order.len() {
+        if channel.model_order.iter().collect::<BTreeSet<_>>().len() != channel.model_order.len()
+            || channel.model_order.iter().any(|id| !models.contains(id))
+            || channel.naming.keys().any(|id| !models.contains(id))
+            || matches!(&channel.selection, super::schema::ModelSelection::Whitelist(ids) if ids.iter().any(|id| !models.contains(id)) || ids.iter().collect::<BTreeSet<_>>().len()!=ids.len())
+        {
             return Err(error("model_source_invalid"));
         }
         if let Some(ns) = &channel.namespace {
@@ -438,7 +517,11 @@ pub fn match_read_to_draft_v2(
                 }
             }
         };
-        let changed = model_semantics(&candidate)? != model_semantics(&original)?;
+        let changed = !channel
+            .models
+            .iter()
+            .any(|m| m.raw_model_id == candidate.raw_model_id)
+            || model_semantics(&candidate)? != model_semantics(&original)?;
         match outcome {
             MatchOutcomeV2::Matched => counts.matched += 1,
             MatchOutcomeV2::ManualPreserved => counts.manual_preserved += 1,
@@ -628,10 +711,12 @@ pub fn reconcile_source_v2(
     saved: &SourceModelV2,
     imported: &SourceModelV2,
     ledger: Option<&MaterializationLedgerV2>,
+    expected_source_policy_digest: &str,
     actual_document: &Value,
 ) -> Result<SourceModelV2> {
     let ledger = ledger.ok_or_else(|| error("model_source_provenance_unknown"))?;
     if saved.raw_model_id != imported.raw_model_id
+        || ledger.source_policy_digest != expected_source_policy_digest
         || !valid_digest(&ledger.source_policy_digest)
         || !valid_digest(&ledger.written_file_digest)
     {
@@ -742,6 +827,8 @@ pub struct ModelFieldWriteV2 {
     pub raw_model_id: String,
     pub field: String,
     pub before: Option<Value>,
+    /// False requires L0 to obtain the actual old value under the file lock.
+    pub before_known: bool,
     pub after: Option<Value>,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
@@ -777,9 +864,9 @@ pub fn plan_materialization_v2(
                         .find(|m| m.raw_model_id == model.raw_model_id)
                         .map(|m| (c, m))
                 });
-            let prior = previous
-                .map(|(c, m)| resolve_effective_model_v2(library, c, m))
-                .transpose()?;
+            let prior = previous.map(|(c, m)| resolve_effective_model_v2(library, c, m));
+            let before_known = prior.as_ref().is_none_or(|p| p.is_ok());
+            let prior = prior.and_then(std::result::Result::ok);
             let prior = prior
                 .as_ref()
                 .map(|v| rules_values(&v.rules))
@@ -787,12 +874,13 @@ pub fn plan_materialization_v2(
                 .unwrap_or_default();
             let next = rules_values(&after.rules)?;
             for key in RULE_KEYS {
-                if prior.get(key) != next.get(key) {
+                if !before_known || prior.get(key) != next.get(key) {
                     writes.push(ModelFieldWriteV2 {
                         channel_id: channel.id.clone(),
                         raw_model_id: model.raw_model_id.clone(),
                         field: key.into(),
                         before: prior.get(key).cloned(),
+                        before_known,
                         after: next.get(key).cloned(),
                     });
                 }
@@ -811,4 +899,136 @@ pub fn plan_materialization_v2(
         groups,
         dependencies: dependencies.into_iter().collect(),
     })
+}
+
+/// File mapping chooses actual pointers after grouping/renames; core verifies
+/// they still name known public fields and hashes the exact committed values.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MaterializedTargetV2 {
+    pub channel_id: String,
+    pub raw_model_id: String,
+    pub field: String,
+    pub provider_id: String,
+    pub pointer: String,
+}
+pub fn finalize_materialization_ledger_v2(
+    intended: &PolicyV2,
+    written_file: &Value,
+    targets: &[MaterializedTargetV2],
+) -> Result<MaterializationLedgerV2> {
+    validate_policy_v2(intended)?;
+    let mut fields = Vec::new();
+    let mut seen = BTreeSet::new();
+    for target in targets {
+        let channel = intended
+            .channels
+            .iter()
+            .find(|c| c.id == target.channel_id)
+            .ok_or_else(|| error("model_source_invalid"))?;
+        if !channel
+            .models
+            .iter()
+            .any(|m| m.raw_model_id == target.raw_model_id)
+            || !seen.insert((
+                target.channel_id.clone(),
+                target.raw_model_id.clone(),
+                target.field.clone(),
+            ))
+        {
+            return Err(error("model_source_invalid"));
+        }
+        let root = format!("/providers/{}/", pointer(&target.provider_id));
+        let relative = target
+            .pointer
+            .strip_prefix(&root)
+            .ok_or_else(|| error("model_source_invalid"))?;
+        let (map, parent) = match target.field.as_str() {
+            "protocol" => (Some("modelAdapters"), Some("adapter")),
+            "contextWindow" => (Some("modelContextWindows"), Some("contextWindow")),
+            "inputModalities" => (Some("modelInputModalities"), None),
+            "reasoningEfforts" => (Some("modelReasoningEfforts"), Some("reasoningEfforts")),
+            "defaultEffort" => (Some("modelDefaultReasoningEfforts"), None),
+            "fast" => (
+                Some("modelSupportsServiceTier"),
+                Some("supportsServiceTier"),
+            ),
+            "pinnedEffort" => (
+                Some("modelPinnedReasoningEfforts"),
+                Some("pinnedReasoningEffort"),
+            ),
+            "effortMap" => (Some("modelReasoningEffortMap"), Some("reasoningEffortMap")),
+            "noReasoning" => (None, Some("noReasoningModels")),
+            "reasoningAuthoritative" => (None, Some("modelReasoningEffortsAuthoritative")),
+            "fastWire" => (None, Some("fastWire")),
+            _ => return Err(error("model_unknown_field")),
+        };
+        let allowed = parent == Some(relative)
+            || map
+                .is_some_and(|map| relative == format!("{map}/{}", pointer(&target.raw_model_id)))
+            || target.field == "inputModalities"
+                && relative
+                    == format!(
+                        "modelCapabilities/{}/inputModalities",
+                        pointer(&target.raw_model_id)
+                    );
+        if !allowed {
+            return Err(error("model_source_invalid"));
+        }
+        let value = written_file.pointer(&target.pointer);
+        fields.push(MaterializedFieldV2 {
+            channel_id: target.channel_id.clone(),
+            raw_model_id: target.raw_model_id.clone(),
+            field: target.field.clone(),
+            target_pointer: target.pointer.clone(),
+            value_digest: digest(&canonical_bytes(&value.cloned().unwrap_or(Value::Null))?),
+            present: value.is_some(),
+        });
+    }
+    for channel in &intended.channels {
+        for model in &channel.models {
+            for field in RULE_KEYS {
+                if !seen.contains(&(channel.id.clone(), model.raw_model_id.clone(), field.into())) {
+                    return Err(error("model_source_provenance_unknown"));
+                }
+            }
+        }
+    }
+    fields.sort_by(|a, b| {
+        (&a.channel_id, &a.raw_model_id, &a.field).cmp(&(&b.channel_id, &b.raw_model_id, &b.field))
+    });
+    Ok(MaterializationLedgerV2 {
+        source_policy_digest: policy_semantic_digest_v2(intended)?,
+        written_file_digest: digest(&canonical_bytes(written_file)?),
+        fields,
+    })
+}
+/// Authentication authority is provided by L0's actual credential binding, not
+/// inferred from a channel's former default protocol or copied API key.
+#[derive(Debug, Clone)]
+pub struct ProtocolAuthBindingV2 {
+    pub channel_id: String,
+    pub allowed_protocols: BTreeSet<ProtocolV2>,
+}
+pub fn validate_protocol_group_auth_v2(
+    groups: &[ProtocolGroupPlanV2],
+    bindings: &[ProtocolAuthBindingV2],
+) -> Result<()> {
+    let mut seen = BTreeSet::new();
+    for binding in bindings {
+        if !seen.insert(&binding.channel_id) {
+            return Err(error("model_protocol_auth_incompatible"));
+        }
+    }
+    for group in groups {
+        if !bindings.iter().any(|b| {
+            b.channel_id == group.channel_id && b.allowed_protocols.contains(&group.protocol)
+        }) {
+            return Err(at(
+                error("model_protocol_auth_incompatible"),
+                &group.channel_id,
+                "",
+            ));
+        }
+    }
+    Ok(())
 }

@@ -64,6 +64,10 @@ pub fn error(code: &str) -> MatchErrorV2 {
         "model_channel_protocol_forbidden" => &["remove_channel_protocol"],
         "model_read_stale" | "model_save_stale" => &["refresh_and_retry"],
         "model_limit" => &["reduce_scope"],
+        "model_source_invalid" | "model_read_empty" | "model_read_unavailable" => {
+            &["inspect_source", "retry_read"]
+        }
+        "model_locked_field" => &["review_locks"],
         _ => &["inspect_source"],
     };
     MatchErrorV2 {
@@ -428,6 +432,8 @@ pub struct TemplateV2 {
 pub struct LibraryV2 {
     pub schema_version: u32,
     pub templates: Vec<TemplateV2>,
+    #[serde(default)]
+    pub submission_receipts: BTreeMap<String, super::schema::SubmissionReceipt>,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -480,6 +486,9 @@ pub fn content_digest(label: &str, content: &TemplateContentV2) -> Result<String
     )?))
 }
 pub fn revision<'a>(library: &'a LibraryV2, reference: &RefV2) -> Result<&'a RevisionV2> {
+    if library.schema_version != SCHEMA_VERSION {
+        return Err(error("model_schema_unsupported"));
+    }
     let template = library
         .templates
         .iter()
@@ -498,6 +507,7 @@ pub fn revision<'a>(library: &'a LibraryV2, reference: &RefV2) -> Result<&'a Rev
     {
         return Err(error("model_revision_digest_mismatch"));
     }
+    super::matching_v2::validate_content_v2(&revision.content)?;
     Ok(revision)
 }
 pub fn validate_library_v2(library: &LibraryV2) -> Result<()> {
@@ -540,4 +550,156 @@ pub fn seed_library_v2() -> Result<LibraryV2> {
     let library = serde_json::from_str(include_str!("seed_v2.json")).map_err(json_error)?;
     validate_library_v2(&library)?;
     Ok(library)
+}
+
+/// Immutable revision append plan; IDs and time are supplied by the transaction owner.
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct SaveRevisionRequestV2 {
+    pub expected_library: String,
+    pub template_id: String,
+    pub base_revision: Option<String>,
+    pub revision_id: String,
+    pub created_at: String,
+    pub label: String,
+    pub content: TemplateContentV2,
+    pub make_default: bool,
+    pub origin: super::schema::SaveOrigin,
+}
+pub fn save_revision_plan_v2(
+    library: &LibraryV2,
+    request: &SaveRevisionRequestV2,
+) -> Result<LibraryV2> {
+    validate_library_v2(library)?;
+    if request.expected_library != digest(&canonical_bytes(library)?) {
+        return Err(error("model_save_stale"));
+    }
+    check_id(&request.template_id)?;
+    check_id(&request.revision_id)?;
+    if request.label.trim().is_empty() || request.label.len() > 1024 {
+        return Err(error("model_source_invalid"));
+    }
+    chrono::DateTime::parse_from_rfc3339(&request.created_at)
+        .map_err(|_| error("model_source_invalid"))?;
+    super::matching_v2::validate_content_v2(&request.content)?;
+    if library
+        .templates
+        .iter()
+        .flat_map(|t| &t.revisions)
+        .any(|r| r.id == request.revision_id)
+    {
+        return Err(error("model_revision_digest_mismatch"));
+    }
+    let existing = library
+        .templates
+        .iter()
+        .find(|t| t.id == request.template_id);
+    match (existing, &request.base_revision) {
+        (Some(t), Some(id)) if t.revisions.iter().any(|r| &r.id == id) => {}
+        (None, None) => {}
+        _ => return Err(error("model_dependency_missing")),
+    }
+    if let Some(t) = existing {
+        if matches!(
+            request.origin,
+            super::schema::SaveOrigin::ExternalTask(_)
+                | super::schema::SaveOrigin::InternalAgent(_)
+        ) {
+            let old = &t
+                .revisions
+                .iter()
+                .find(|r| Some(&r.id) == request.base_revision.as_ref())
+                .unwrap()
+                .content;
+            let old_json = serde_json::to_value(old).map_err(json_error)?;
+            let new_json = serde_json::to_value(&request.content).map_err(json_error)?;
+            for locked in &old.locked_fields {
+                let path = if locked == "rules" {
+                    "/commonRules".into()
+                } else if locked == "variants" {
+                    "/conditionOverrides".into()
+                } else if let Some(key) = locked.strip_prefix("rules.") {
+                    format!("/commonRules/{key}")
+                } else {
+                    format!("/{}", locked.replace('.', "/"))
+                };
+                if old_json.pointer(&path) != new_json.pointer(&path) {
+                    return Err(error("model_locked_field"));
+                }
+            }
+            for condition in &old.condition_overrides {
+                if condition.locked_fields.is_empty() {
+                    continue;
+                }
+                let next = request
+                    .content
+                    .condition_overrides
+                    .iter()
+                    .find(|c| c.id == condition.id)
+                    .ok_or_else(|| error("model_locked_field"))?;
+                let old = rules_values(&condition.rules)?;
+                let new = rules_values(&next.rules)?;
+                if condition
+                    .locked_fields
+                    .iter()
+                    .any(|key| old.get(key) != new.get(key))
+                    || next.locked_fields != condition.locked_fields
+                {
+                    return Err(error("model_locked_field"));
+                }
+            }
+            if request.content.locked_fields != old.locked_fields {
+                return Err(error("model_locked_field"));
+            }
+        }
+    }
+    let prior = existing.and_then(|t| {
+        t.revisions
+            .iter()
+            .find(|r| Some(&r.id) == request.base_revision.as_ref())
+    });
+    let mut changes = Vec::new();
+    let old = prior
+        .map(|r| serde_json::json!({"label":r.saved_label,"content":r.content}))
+        .unwrap_or(Value::Null);
+    let new = serde_json::json!({"label":request.label,"content":request.content});
+    if old != new {
+        changes.push(super::schema::ChangeFact {
+            field: "content".into(),
+            before: old,
+            after: new,
+        });
+    }
+    let revision = RevisionV2 {
+        id: request.revision_id.clone(),
+        created_at: request.created_at.clone(),
+        saved_label: request.label.clone(),
+        content_version: CONTENT_VERSION,
+        content: request.content.clone(),
+        digest: content_digest(&request.label, &request.content)?,
+        base_revision: request.base_revision.clone(),
+        changes,
+        origin: request.origin.clone(),
+    };
+    let mut next = library.clone();
+    if let Some(t) = next
+        .templates
+        .iter_mut()
+        .find(|t| t.id == request.template_id)
+    {
+        t.revisions.push(revision);
+        if request.make_default {
+            t.default_revision = Some(request.revision_id.clone());
+        }
+    } else {
+        next.templates.push(TemplateV2 {
+            id: request.template_id.clone(),
+            label: request.label.clone(),
+            source: super::schema::TemplateSource::User,
+            default_revision: request.make_default.then(|| request.revision_id.clone()),
+            revisions: vec![revision],
+        });
+    }
+    validate_library_v2(&next)?;
+    Ok(next)
 }
