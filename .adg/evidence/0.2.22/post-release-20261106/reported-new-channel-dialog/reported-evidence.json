@@ -1,0 +1,41 @@
+{
+  "id": "S22-POST-03",
+  "date": "2026-11-06",
+  "scope": "Record full new-channel two-step prototype/software mismatch; no implementation or prototype changes this turn",
+  "reportImage": {
+    "file": "software-new-channel-step1.png",
+    "sha256": "71d0a8b164d3e7d6e116af9f2d72f4bed0185d89a9ff098d62c8eb3c8103d1c2",
+    "bytes": 100651,
+    "observed": "Default protocol label/control and service-base-address label share one row; fields/steps differ from supplied prototype; screenshot cropped, close/footer not judged absent"
+  },
+  "prototypeEvidence": {
+    "source": "User browser comments1/2 and annotated screenshots in chat",
+    "step1": "新增渠道 · 连接配置; two-stage indicator; name/protocol/BaseURL/auth-mode/Key+eye+clear each organized as form fields",
+    "step2": "新增渠道 · 选择模型; channel summary+return connection; fetch status; search+selected filter; selected count/select results/unselect results; list/manual add; cancel/join draft",
+    "entry": "index.html#models, model-config.js::renderChannelWizard",
+    "sourceSha256": "14b0f738cb683c78474d3bd7212b28f1ef1b817b4cce16b4119180c7b0332f8f",
+    "sourceIsUnmodified": "model-config.js unchanged in task; no redefinition of prototype to fit software"
+  },
+  "softwareSource": {
+    "commit": "0c57500f8f46ea50655c782c3f04334a39167abb",
+    "path": "apps/desktop/ui/src/features/models/NewChannelDialog.vue",
+    "sha256": "087cd741976598ffbfbd8a42d1f9f4cb65be4e419594dfb390dfb9564d290550",
+    "usesSharedComponent": "UiDialog, UiSelectField; not an absence of shared dialog component",
+    "layoutFinding": "Direct label/input children of UiDialog content; no step1 form-grid/stack field wrapper/width rules; scoped CSS only new-channel-models. UiSelectField trigger fills its own select width; no outer field layout guarantees full row. Screenshot confirms row flow defect.",
+    "otherDifferences": "Static title plus1/2paragraph instead of stage title/step bar; no explicit APIKey/none selector, reveal/clear buttons or URL adapter help; second step moves fetch into heading and return action to footer, uses current-result checkbox instead of select/unselect controls, manual add is single input vs prototype multi-line dedupe flow"
+  },
+  "verificationLimits": [
+    "Only first-step actual software screenshot supplied; second-step differences established by source/prototype comparison, not new native screenshot",
+    "Actual installed version/OS/build not visible; recorded after0.2.22 feedback, not proved precise native artifact",
+    "No global font/zoom/material failure inferred from screenshot alone",
+    "Mock-only prototype notice should stay in review shell/annotations and must not become a production warning requiring mock data"
+  ],
+  "nextAcceptance": [
+    "Step1 labels over full-width controls; protocol/address never run together; consistent spacing and focus order",
+    "Stage titles/indicator/shared dialog header/body/actions/sizing/scroll/close conform to adopted prototype and component rules",
+    "Compare both-step auth/key/fetch/search/selection/manualID and back/cancel/join flows explicitly; no silent omission or capability replacement",
+    "Verify loading/error/empty/longID/content/viewport/theme/zoom and real draft/cancel boundaries on macOS/Windows after future implementation",
+    "Check copy/edit-connection consumers of same component without automatically expanding unrelated details redesign"
+  ],
+  "status": "recorded/static-comparison-complete;no-production-fix;no-next-version-assigned"
+}
