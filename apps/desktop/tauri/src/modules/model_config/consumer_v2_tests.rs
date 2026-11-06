@@ -426,6 +426,7 @@ fn library_save_and_draft_cas_use_real_model_v2_lock_and_readback() {
         schema_version: 2,
         base: base.clone(),
         policy: empty_policy_v2(),
+        observed_baseline: None,
     };
     store.stage_draft(None, draft.clone()).unwrap();
     let mut changed = draft.clone();
@@ -845,4 +846,115 @@ fn no_resolved_active_group_parks_existing_identity_without_inventing_models() {
         parked.next_config["providers"]["vendor"]["apiKey"],
         raw["providers"]["vendor"]["apiKey"]
     );
+}
+
+fn baseline_draft_for_test(library_digest: String) -> DraftV2 {
+    let observed = imported(&config());
+    DraftV2 {
+        schema_version: 2,
+        base: ReadBaseV2 {
+            dto_version: 2,
+            draft_id: DRAFT.into(),
+            draft_generation: 0,
+            source_digest: digest(b"observed-config"),
+            policy_digest: policy_semantic_digest_v2(&empty_policy_v2()).unwrap(),
+            library_digest,
+            root_revision: "baseline-fixture-root".into(),
+        },
+        policy: observed.clone(),
+        observed_baseline: Some(observed),
+    }
+}
+#[test]
+fn draft_observation_baseline_round_trips_without_turning_source_into_manual_edits() {
+    let temp = tempfile::tempdir().unwrap();
+    let store = StoreV2::new(temp.path());
+    let mut draft = baseline_draft_for_test(store.snapshot().unwrap().digests.library);
+    let observation = draft.observed_baseline.clone().unwrap();
+    draft.policy.channels[0].label = "explicit draft name".into();
+    draft.policy.channels[0].selection = super::schema::ModelSelection::None;
+    draft.policy.channels[0].model_order.reverse();
+    draft.policy.channels[0].connection.nodes[0].url = "https://changed.invalid/v1".into();
+    for model in &mut draft.policy.channels[0].models {
+        model.source.fields.clear();
+    }
+    let mut new_channel = draft.policy.channels[0].clone();
+    new_channel.id = READ.into();
+    new_channel.connection.provider_id = "explicit-new".into();
+    draft.policy.channels.push(new_channel);
+    store.stage_draft(None, draft.clone()).unwrap();
+    let reloaded = store.snapshot().unwrap().draft.unwrap();
+    assert_eq!(reloaded, draft);
+    assert_eq!(reloaded.observed_baseline.unwrap(), observation);
+    let wire = std::fs::read(temp.path().join(DRAFT_PATH)).unwrap();
+    assert!(!String::from_utf8(wire.clone())
+        .unwrap()
+        .contains("synthetic-auth"));
+    let value = parse_strict_json_v2(&wire).unwrap();
+    assert!(value.get("observedBaseline").is_some());
+    assert!(!temp.path().join(POLICY_PATH).exists());
+    assert!(!temp.path().join(LEDGER_PATH).exists());
+    // Unreleased v2 fixtures may omit the field; schema-v1 is still rejected.
+    let mut fixture = serde_json::to_value(&draft).unwrap();
+    fixture.as_object_mut().unwrap().remove("observedBaseline");
+    assert!(serde_json::from_value::<DraftV2>(fixture)
+        .unwrap()
+        .observed_baseline
+        .is_none());
+}
+#[test]
+fn draft_observation_baseline_schema_source_and_management_identity_are_validated() {
+    for kind in ["schema", "source-id", "management-id"] {
+        let temp = tempfile::tempdir().unwrap();
+        let store = StoreV2::new(temp.path());
+        let mut draft = baseline_draft_for_test(store.snapshot().unwrap().digests.library);
+        let observed = draft.observed_baseline.as_mut().unwrap();
+        match kind {
+            "schema" => observed.schema_version = 1,
+            "source-id" => observed.channels[0].models[0].source.raw_model_id = "wrong-id".into(),
+            _ => observed.channels[0].id = READ.into(),
+        }
+        assert!(store.stage_draft(None, draft).is_err(), "{kind}");
+        assert!(!temp.path().join(DRAFT_PATH).exists());
+    }
+    let temp = tempfile::tempdir().unwrap();
+    let store = StoreV2::new(temp.path());
+    let draft = baseline_draft_for_test(store.snapshot().unwrap().digests.library);
+    let mut value = serde_json::to_value(&draft).unwrap();
+    value["observedBaseline"]["apiKey"] = json!("never-accepted");
+    assert!(serde_json::from_value::<DraftV2>(value).is_err());
+}
+#[test]
+fn baseline_only_update_is_covered_by_the_existing_whole_draft_cas() {
+    let temp = tempfile::tempdir().unwrap();
+    let store = StoreV2::new(temp.path());
+    let draft = baseline_draft_for_test(store.snapshot().unwrap().digests.library);
+    store.stage_draft(None, draft.clone()).unwrap();
+    let original = std::fs::read(temp.path().join(DRAFT_PATH)).unwrap();
+    let mut next = draft.clone();
+    next.observed_baseline.as_mut().unwrap().channels[0].label = "new observed name".into();
+    assert_eq!(
+        store
+            .stage_draft(Some(&draft.base), next.clone())
+            .unwrap_err()
+            .code,
+        "model_read_stale"
+    );
+    assert_eq!(
+        std::fs::read(temp.path().join(DRAFT_PATH)).unwrap(),
+        original
+    );
+    next.base.draft_generation += 1;
+    store.stage_draft(Some(&draft.base), next.clone()).unwrap();
+    assert_eq!(store.snapshot().unwrap().draft, Some(next.clone()));
+    assert_eq!(next.policy, draft.policy);
+    assert_eq!(
+        store
+            .stage_draft(Some(&draft.base), draft.clone())
+            .unwrap_err()
+            .code,
+        "model_read_stale"
+    );
+    assert!(!temp.path().join(POLICY_PATH).exists());
+    assert!(!temp.path().join(LEDGER_PATH).exists());
 }
