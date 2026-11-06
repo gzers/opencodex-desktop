@@ -414,7 +414,6 @@ fn original_actual_receive_before_after_restore_all_and_repeat_receipt_preserves
         store_v2::POLICY_PATH,
         store_v2::LEDGER_PATH,
         store_v2::MAPPING_PATH,
-        "manager-state/saved-content-versions.json",
     ] {
         assert!(!f.d.join(p).exists(), "{p}");
     }
@@ -524,6 +523,23 @@ fn real_participant_write_failure_returns_partial_receipt_and_resumes_without_re
         .completed_groups
         .contains(&"skill:scope-fixture".into()));
     assert!(partial.failure_code.is_some());
+    let partial_progress: Progress =
+        read(&plan_path(&f.d, &p.restore_id, "progress").unwrap()).unwrap();
+    let frozen_time = partial_progress.clock_time.clone().unwrap();
+    assert!(partial_progress.versioned.contains("preferences"));
+    assert!(!partial_progress.versioned.contains("skill:scope-fixture"));
+    let records: BTreeMap<String, versions::Version> =
+        serde_json::from_slice(&ledger_bytes(&f.d).unwrap().unwrap()).unwrap();
+    for (key, content) in &partial_progress.deltas["preferences"].after {
+        if partial_progress.deltas["preferences"].before.get(key) != Some(content) {
+            assert_eq!(records[key].saved_at, frozen_time);
+            assert_eq!(records[key].content_digest, *content);
+            assert_eq!(
+                records[key].last_event.as_deref(),
+                Some(p.restore_id.as_str())
+            );
+        }
+    }
     let protected_preferences =
         std::fs::read(f.d.join(preferences::PREFERENCES_RELATIVE_PATH)).unwrap();
     let resumed = restore(&f.d, &f.h, &p.restore_id, &p.plan_digest).unwrap();
@@ -532,6 +548,13 @@ fn real_participant_write_failure_returns_partial_receipt_and_resumes_without_re
         std::fs::read(f.d.join(preferences::PREFERENCES_RELATIVE_PATH)).unwrap(),
         protected_preferences
     );
+    let final_progress: Progress =
+        read(&plan_path(&f.d, &p.restore_id, "progress").unwrap()).unwrap();
+    assert_eq!(
+        final_progress.clock_time.as_deref(),
+        Some(frozen_time.as_str())
+    );
+    assert!(final_progress.versioned.contains("skill:scope-fixture"));
 }
 #[test]
 fn rewriting_backup_checksum_does_not_authorize_forged_model_or_participant_before_bytes() {
@@ -868,4 +891,180 @@ fn owned_operations_reopen_partial_identity_and_keep_completed_receipt_without_c
     let path = plan_path(&f.d, &p.restore_id, "progress").unwrap();
     atomic_write(&path, b"broken owned receipt", 0o600).unwrap();
     assert!(operations(&f.d, &f.h, None).is_err());
+}
+#[test]
+fn restoring_existing_model_content_is_a_new_frozen_save_and_actual_capture_uploads_over_old_cloud()
+{
+    use crate::modules::model_config::{config_file::v2, content_versions, sync_host_v2};
+    const SECOND: &str = "88888888-8888-4888-8888-888888888888";
+    let f = Fixture::new();
+    f.apply().unwrap();
+    let state = v2::with_saved_config(&f.d, &f.h, |library, policy, _, raw, _, _| {
+        v2::saved_state(library, policy, raw)
+    })
+    .unwrap();
+    // Exact content-bound prior save receipts; no mtime or network clock.
+    let old = content_versions::plan_save_at(
+        &f.d,
+        &SaveState::new(),
+        &state,
+        &chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Nanos, true),
+        "77777777-7777-4777-8777-777777777777",
+    )
+    .unwrap();
+    atomic_write(
+        &f.d.join(content_versions::SAVED_VERSIONS_PATH),
+        &old.after,
+        0o600,
+    )
+    .unwrap();
+    let mut incoming = file_objects_v2::decode(
+        &f.payload,
+        None,
+        &file_objects_v2::supported_schema(),
+        Some(&ActualAuthorization),
+    )
+    .unwrap()
+    .objects
+    .into_captured();
+    incoming.models.payload.policy.as_mut().unwrap().channels[0].models[0]
+        .explicit_overrides
+        .context_window = Field::Custom(16384);
+    incoming.models.digest = schema_v2::digest(&canonical_bytes(&incoming.models.payload).unwrap());
+    let incoming = SavedObjects::capture(incoming, Some(&ActualAuthorization)).unwrap();
+    let payload = file_objects_v2::encode(
+        &incoming,
+        SECOND,
+        "2026-11-07T00:00:00Z",
+        None,
+        Some(&ActualAuthorization),
+    )
+    .unwrap()
+    .into_bytes();
+    let mut selection = f.selection.clone();
+    selection.manager = Default::default();
+    selection.skill_names.clear();
+    selection.mcp_sources.clear();
+    let capture = CaptureRequestV2 {
+        selection: selection.clone(),
+        mcp_clients: BTreeMap::new(),
+        assets_reviewed: false,
+    };
+    let expected = ActualTarget {
+        scope: f.scope.clone(),
+    }
+    .target(&f.d, &f.h, &capture)
+    .unwrap();
+    let model = Arc::new(ReceiveFileHostV2 {
+        root: f.d.clone(),
+        home: f.h.clone(),
+        trusted_mapping_write: None,
+        bindings: vec![ReceiveBindingV2 {
+            portable_channel_id: SOURCE.into(),
+            local_channel_id: LOCAL.into(),
+            provider_id: "scope_received".into(),
+            mode: ReceiveBindingModeV2::Existing,
+        }],
+    });
+    let host = LocalApplicationV2::new(
+        f.d.clone(),
+        f.h.clone(),
+        selection.clone(),
+        capture,
+        f.scope.clone(),
+        Arc::new(ActualTarget {
+            scope: f.scope.clone(),
+        }),
+        model,
+        None,
+    )
+    .unwrap();
+    host.apply_once(
+        SECOND,
+        &payload,
+        &file_objects_v2::supported_schema(),
+        &f.scope,
+        &expected,
+        true,
+    )
+    .unwrap();
+    let mut actual_scope = selection.clone();
+    actual_scope.channels[0].portable_channel_id = LOCAL.into();
+    let request = CaptureRequestV2 {
+        selection: actual_scope.clone(),
+        mcp_clients: BTreeMap::new(),
+        assets_reviewed: false,
+    };
+    let observed_cloud =
+        saved_objects_capture_v2::capture(&f.d, &f.h, &request, &NeverCaptureSecrets).unwrap();
+    // The cloud fixture is an actual explicitly saved snapshot with known
+    // content-bound clocks, not a metadata-only receive with unknown source time.
+    let cloud_saved = content_versions::plan_save_at(
+        &f.d,
+        &SaveState::new(),
+        &observed_cloud.save_state,
+        &chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Nanos, true),
+        "66666666-6666-4666-8666-666666666666",
+    )
+    .unwrap();
+    atomic_write(
+        &f.d.join(content_versions::SAVED_VERSIONS_PATH),
+        &cloud_saved.after,
+        0o600,
+    )
+    .unwrap();
+    let cloud = saved_objects_capture_v2::capture(&f.d, &f.h, &request, &NeverCaptureSecrets)
+        .unwrap()
+        .objects;
+    let versions_before = ledger_bytes(&f.d).unwrap();
+    let p = preview(&f.d, &f.h, SECOND, &["channels".into()]).unwrap();
+    let result = restore(&f.d, &f.h, &p.restore_id, &p.plan_digest).unwrap();
+    assert!(result.status == RestoreStatusV2::Applied);
+    let progress: Progress = read(&plan_path(&f.d, &p.restore_id, "progress").unwrap()).unwrap();
+    let time = progress.clock_time.as_ref().unwrap();
+    let delta = &progress.deltas["@models"];
+    let records: BTreeMap<String, content_versions::Version> =
+        serde_json::from_slice(&ledger_bytes(&f.d).unwrap().unwrap()).unwrap();
+    let old_records: BTreeMap<String, content_versions::Version> =
+        serde_json::from_slice(&versions_before.unwrap()).unwrap();
+    for (key, value) in &delta.after {
+        if delta.before.get(key) != Some(value) {
+            assert_eq!(&records[key].saved_at, time);
+            assert_eq!(
+                records[key].last_event.as_deref(),
+                Some(p.restore_id.as_str())
+            );
+            assert_eq!(records[key].content_digest, *value);
+        } else {
+            assert_eq!(records[key], old_records[key]);
+        }
+    }
+    let actual = saved_objects_capture_v2::capture(&f.d, &f.h, &request, &NeverCaptureSecrets)
+        .unwrap()
+        .objects;
+    let raw: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(f.h.join("config.json")).unwrap()).unwrap();
+    assert_eq!(
+        raw["providers"]["scope_received"]["modelContextWindows"]["fixture"],
+        8192
+    );
+    assert!(matches!(
+        sync_host_v2::automatic_direction_from_saved(&actual, Some(&cloud), &actual_scope).unwrap(),
+        DirectionV2::Upload
+    ));
+    let ledger = ledger_bytes(&f.d).unwrap();
+    assert!(
+        restore(&f.d, &f.h, &p.restore_id, &p.plan_digest)
+            .unwrap()
+            .status
+            == RestoreStatusV2::Applied
+    );
+    assert_eq!(ledger_bytes(&f.d).unwrap(), ledger);
+    assert_eq!(
+        read::<Progress>(&plan_path(&f.d, &p.restore_id, "progress").unwrap())
+            .unwrap()
+            .clock_time
+            .as_ref(),
+        Some(time)
+    );
 }

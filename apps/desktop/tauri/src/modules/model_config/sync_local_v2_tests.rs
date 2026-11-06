@@ -29,6 +29,7 @@ struct Models {
     cut_after_apply: AtomicBool,
     drift_manager: AtomicBool,
     drift_asset: AtomicBool,
+    #[cfg(unix)]
     fail_asset_write: AtomicBool,
 }
 impl Models {
@@ -231,6 +232,7 @@ impl Fixture {
             cut_after_apply: AtomicBool::new(false),
             drift_manager: AtomicBool::new(false),
             drift_asset: AtomicBool::new(false),
+            #[cfg(unix)]
             fail_asset_write: AtomicBool::new(false),
         });
         Self {

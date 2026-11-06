@@ -109,6 +109,40 @@ jobs:
       - name: Install, verify final EXE and uninstall on isolated runner
         run: |
           & ../../../test/smoke/windows-installer.ps1 -BundleDirectory target/release/bundle -BuiltExecutable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-candidate
+      - name: Stage exact complete program for two real user accounts
+        if: steps.identity.outputs.version == '0.2.23'
+        run: |
+          cargo build --locked --release --bin ocxd
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $taskCandidate = Join-Path $env:RUNNER_TEMP ('ocxd023-two-user-candidate-'+[guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $taskCandidate | Out-Null
+          Copy-Item -LiteralPath target/release/opencodex-desktop.exe -Destination $taskCandidate
+          Copy-Item -LiteralPath target/release/ocxd.exe -Destination $taskCandidate
+          Copy-Item -LiteralPath resources/runtime-bundle -Destination $taskCandidate -Recurse
+          'OCXD_TWO_USER_CANDIDATE='+$taskCandidate >> $env:GITHUB_ENV
+          $taskDriver = Join-Path $env:RUNNER_TEMP ('ocxd023-two-user-node-'+[guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $taskDriver | Out-Null
+          $taskTar = (Get-ChildItem -LiteralPath ../../../test/out/windows-candidate/runtime-stage/platform-bundle -Filter 'runtime-bundle-0.2.23-win32-x64.tar.gz').FullName
+          tar -xzf $taskTar -C $taskDriver runtime/node
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          'OCXD_TWO_USER_NODE='+(Join-Path $taskDriver 'runtime/node/node.exe') >> $env:GITHUB_ENV
+      - name: Verify two-user runner guard and fixture contracts
+        if: steps.identity.outputs.version == '0.2.23'
+        run: |
+          $taskOutput = Join-Path $env:RUNNER_TEMP ('ocxd023-two-user-static-'+[guid]::NewGuid().ToString('N'))
+          & ../../../test/smoke/windows023-two-user-native.test.ps1 -OutputDirectory $taskOutput -Node $env:OCXD_TWO_USER_NODE
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Copy-Item -LiteralPath $taskOutput -Destination ../../../test/out/windows-candidate/two-user-static -Recurse
+      - name: Verify simultaneous real SID manager isolation
+        if: steps.identity.outputs.version == '0.2.23'
+        run: |
+          $taskOutput = Join-Path $env:RUNNER_TEMP ('ocxd023-two-user-native-'+[guid]::NewGuid().ToString('N'))
+          try {
+            & ../../../test/smoke/windows023-two-user-native.ps1 -Executable (Join-Path $env:OCXD_TWO_USER_CANDIDATE 'opencodex-desktop.exe') -Node $env:OCXD_TWO_USER_NODE -OutputDirectory $taskOutput -ExpectedCommit (git rev-parse HEAD)
+            if ($LASTEXITCODE -ne 0) { throw 'Two actual SID native acceptance failed; original evidence retained' }
+          } finally {
+            if (Test-Path -LiteralPath $taskOutput) { Copy-Item -LiteralPath $taskOutput -Destination ../../../test/out/windows-candidate/two-user-native -Recurse }
+          }
       - name: Upload verified Windows installers
         uses: actions/upload-artifact@v4
         with:

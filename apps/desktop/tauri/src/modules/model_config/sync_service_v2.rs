@@ -533,6 +533,25 @@ async fn blocking<T: Send + 'static>(
         .map_err(|_| err(ErrorCode::SyncLocalStateIo, Step::Persist))?
 }
 impl SyncServiceV2 {
+    pub fn desktop_root(&self) -> &Path {
+        &self.root
+    }
+    pub fn recovery_operation_id(&self, session_id: &str) -> SyncResult<String> {
+        require_uuid(session_id)?;
+        let sessions = self
+            .recoveries
+            .lock()
+            .map_err(|_| err(ErrorCode::SyncLocalStateIo, Step::Persist))?;
+        let recovery = sessions
+            .get(session_id)
+            .ok_or_else(|| err(ErrorCode::SyncPlanExpired, Step::Recovery))?;
+        Ok(recovery.plan.recovery_plan_id.clone())
+    }
+
+    /// Only a backend-issued non-noop session may supply a notification O.
+    pub fn session_operation_id(&self, session_id: &str) -> SyncResult<Option<String>> {
+        Ok(self.session(session_id)?.operation_id.clone())
+    }
     pub fn new(
         root: PathBuf,
         backend: Arc<dyn ServiceBackendV2>,

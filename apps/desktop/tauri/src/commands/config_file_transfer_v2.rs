@@ -102,34 +102,41 @@ pub async fn save_config_file_export_v2(
     owner: tauri::State<'_, SharedConfigFileTransferV2>,
 ) -> ModelResult<Option<crate::modules::model_config::file_transfer_v2::ExportOutputV2>> {
     work(owner.inner().clone(), move |owner| {
+        // Resolve original backend bytes before publishing any terminal fact.
+        owner.reopen_export(&operation_id)?;
+        let root = owner.desktop_root().to_owned();
         let custom = match destination.as_deref() {
             None | Some("default") => false,
             Some("custom") => true,
             _ => return Err(invalid("file_destination", "请选择默认或自定义导出目录")),
         };
-        // Original attempts retain the first native choice and exact package.
-        if owner.has_export_destination(&operation_id)? {
-            return owner.save_export_at(&operation_id, None).map(Some);
-        }
-        let directory = if custom {
-            let Some(path) = app
-                .dialog()
-                .file()
-                .set_title("选择导出目录")
-                .blocking_pick_folder()
-            else {
-                return Ok(None);
+        let result = (|| {
+            // Original attempts retain the first native choice and exact package.
+            if owner.has_export_destination(&operation_id)? {
+                return owner.save_export_at(&operation_id, None).map(Some);
+            }
+            let directory = if custom {
+                let Some(path) = app
+                    .dialog()
+                    .file()
+                    .set_title("选择导出目录")
+                    .blocking_pick_folder()
+                else {
+                    return Ok(None);
+                };
+                Some(
+                    path.into_path()
+                        .map_err(|_| invalid("file_path", "请选择本机目录"))?,
+                )
+            } else {
+                None
             };
-            Some(
-                path.into_path()
-                    .map_err(|_| invalid("file_path", "请选择本机目录"))?,
-            )
-        } else {
-            None
-        };
-        owner
-            .save_export_at(&operation_id, directory.as_deref())
-            .map(Some)
+            owner
+                .save_export_at(&operation_id, directory.as_deref())
+                .map(Some)
+        })();
+        crate::modules::model_config::feedback::v2::emit_file_export(&root, &operation_id, &result);
+        result
     })
     .await
 }
@@ -193,7 +200,12 @@ pub async fn confirm_config_file_import_v2(
     owner: tauri::State<'_, SharedConfigFileTransferV2>,
 ) -> ModelResult<FileTransferReceiptV2> {
     work(owner.inner().clone(), move |owner| {
-        owner.confirm_import(&operation_id, &expected_plan_digest, backup_before_update)
+        owner.reopen_import(&operation_id)?;
+        let root = owner.desktop_root().to_owned();
+        let result =
+            owner.confirm_import(&operation_id, &expected_plan_digest, backup_before_update);
+        crate::modules::model_config::feedback::v2::emit_import(&root, &operation_id, &result);
+        result
     })
     .await
 }
@@ -350,9 +362,15 @@ pub async fn open_config_file_export_directory_v2(
 ) -> ModelResult<bool> {
     work(owner.inner().clone(), move |owner| {
         let directory = owner.export_directory(&operation_id)?;
-        crate::commands::workspace::open_path(&directory)
-            .map_err(|_| invalid("export_directory", "无法打开本次导出目录"))?;
-        Ok(true)
+        let result = crate::commands::workspace::open_path(&directory)
+            .map(|_| true)
+            .map_err(|_| invalid("export_directory", "无法打开本次导出目录"));
+        crate::modules::model_config::feedback::v2::emit_export_directory_opened(
+            owner.desktop_root(),
+            &operation_id,
+            &result,
+        );
+        result
     })
     .await
 }
