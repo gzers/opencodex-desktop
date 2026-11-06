@@ -161,7 +161,8 @@ try{
   if($untracked.Count){$taskRetain=$true}
  }
  if($taskAccess){try{$taskAccess.Dispose();$taskReport.desktopAclRestored=$true}catch{$taskRetain=$true}}
- $restored=$true;for($i=$taskChanges.Count-1;$i -ge 0;$i--){try{Restore-RustOrdinaryReadAccess $taskChanges[$i]}catch{$restored=$false}}
+ $restored=$true;$aclErrors=@();for($i=$taskChanges.Count-1;$i -ge 0;$i--){try{Restore-RustOrdinaryReadAccess $taskChanges[$i]}catch{$restored=$false;$aclErrors+=@{path=$taskChanges[$i].path;type=$_.Exception.GetType().FullName;hResult=[int]$_.Exception.HResult}}}
+ $taskReport.aclRestoreErrors=$aclErrors
  $taskReport.sourceOrArtifactAclRestored=$restored
  if($taskUser -and !$taskRetain){try{
   $current=Get-LocalUser -SID $taskUser.SID.Value

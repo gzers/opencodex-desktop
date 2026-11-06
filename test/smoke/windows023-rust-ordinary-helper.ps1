@@ -253,4 +253,15 @@ function Invoke-RustOrdinaryChild([string]$InputFile) {
  }
  exit ([int]$report.exitCode)
 }
-if($Mode -ceq 'Child'){Invoke-RustOrdinaryChild $ConfigPath}
+if($Mode -ceq 'Child'){
+ try{Invoke-RustOrdinaryChild $ConfigPath}catch{
+  # Early identity/admission failures occur before the suite report exists.
+  # Retain only controlled diagnostics, never raw exception text or environment.
+  $failure=[ordered]@{result='child-admission-failed';failureType=$_.Exception.GetType().FullName;failureLine=$_.InvocationInfo.ScriptLineNumber;failureHResult=[int]$_.Exception.HResult;sourceLeaf=[IO.Path]::GetFileName($_.InvocationInfo.ScriptName)}
+  $known=@('Only a fresh GitHub-hosted ephemeral Windows runner is admitted','Ordinary current TokenOwner differs from TokenUser; no owner repair is permitted','Ordinary suite real SID/guard differs','Ordinary suite account is administrator','Actual registered new Profile required','Actual token Profile TEMP/KnownFolder differs','Own registered TEMP missing','Real fixture Node bytes changed','Local absolute non-device path required','Path escaped tracked fixture')
+  if($_.Exception.Message -cin $known){$failure.guard=$_.Exception.Message}
+  $path=Join-Path (Split-Path -Parent $ConfigPath) 'child-admission-failure.json'
+  $failure|ConvertTo-Json|Set-Content -LiteralPath $path -Encoding utf8
+  [Console]::Error.WriteLine(($failure|ConvertTo-Json -Compress));exit 1
+ }
+}
