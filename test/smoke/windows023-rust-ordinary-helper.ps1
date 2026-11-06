@@ -213,8 +213,9 @@ public static class OcxRustOrdinaryLaunch {
 }
 '@}
 }
-function Start-RustOrdinaryCaptured([string]$Executable,[string[]]$Arguments,[string]$WorkingDirectory,[string]$Stdout,[string]$Stderr,[string]$Sid,$Ledger,[int]$DeadlineSeconds,[string]$LedgerPath) {
- Assert-RustOrdinaryEphemeral
+function Start-RustOrdinaryCaptured([string]$Executable,[string[]]$Arguments,[string]$WorkingDirectory,[string]$Stdout,[string]$Stderr,[string]$Sid,$Ledger,[int]$DeadlineSeconds,[string]$LedgerPath,$ParentContext=$null) {
+ Assert-RustOrdinaryEphemeral $ParentContext
+ if([Security.Principal.WindowsIdentity]::GetCurrent().User.Value -cne $Sid){throw 'Launch token differs from admitted ordinary SID'}
  Initialize-RustOrdinaryLaunch
  $outFile=[IO.File]::Open($Stdout,'CreateNew','Write','ReadWrite');$errFile=[IO.File]::Open($Stderr,'CreateNew','Write','ReadWrite');$pending=$null
  try{
@@ -285,7 +286,7 @@ function Invoke-RustOrdinaryChild([string]$InputFile) {
    foreach($input in @(@($artifact)+@($c.runtimeDlls)|Where-Object {$_})){if((Get-FileHash -LiteralPath $input.executable -Algorithm SHA256).Hash -ine $input.sha256){throw 'Test executable/DLL changed after parent no-run compilation'}}
    $env:CARGO_MANIFEST_DIR=$artifact.workingDirectory;$env:CARGO_MANIFEST_PATH=$artifact.manifestPath
    $env:CARGO_PKG_NAME=$artifact.packageName;$env:CARGO_PKG_VERSION=$artifact.packageVersion
-   $result=Start-RustOrdinaryCaptured $artifact.executable @($c.testArguments) $artifact.workingDirectory (Join-Path $c.evidence ('test-'+$index+'.stdout.log')) (Join-Path $c.evidence ('test-'+$index+'.stderr.log')) $sid $ledger $remaining (Join-Path $c.evidence 'owned-processes.json')
+   $result=Start-RustOrdinaryCaptured $artifact.executable @($c.testArguments) $artifact.workingDirectory (Join-Path $c.evidence ('test-'+$index+'.stdout.log')) (Join-Path $c.evidence ('test-'+$index+'.stderr.log')) $sid $ledger $remaining (Join-Path $c.evidence 'owned-processes.json') $c.parentRunnerObservation
    $result.sha256=$artifact.sha256;$result.packageId=$artifact.packageId;$result.target=$artifact.target
    $results.Add($result)
    Write-TwoUserJson (Join-Path $c.evidence 'owned-processes.json') @($ledger.Values)
