@@ -1,0 +1,30 @@
+{
+  "status": "passed",
+  "engine": "chromium",
+  "checks": [
+    "read automatically assigns saved-template references to draft",
+    "saved baseline unchanged until explicit save",
+    "model selection/order and explicit overrides preserved",
+    "repeat read is idempotent",
+    "per-model source visible",
+    "save opens normal review without extra adoption step",
+    "cancel save does not persist"
+  ],
+  "report": {
+    "matched": 305,
+    "updated": 305,
+    "explicit": 0,
+    "unmatched": 0,
+    "conflicts": 0,
+    "details": []
+  },
+  "errors": [],
+  "networkRequests": 0,
+  "blockedExternalRequests": [],
+  "screenshots": [
+    "read-matched-draft.png",
+    "automatic-template-source.png",
+    "save-review-after-match.png",
+    "read-match-narrow-dark.png"
+  ]
+}

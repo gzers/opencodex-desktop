@@ -50,10 +50,10 @@ test('删除后重建同ID同URL渠道也不复用旧认证的测速结果或晚
 
 /* 仅检查 mock 路径行为；没有真实测速证据。 */
 function configure(h,url,protocol='Anthropic'){
- h.click('edit-provider',{id:'newapi'});h.event('change','[data-channel-config]',{channelConfig:'protocol'},protocol);
+ h.click('edit-provider',{id:'newapi'}); // 请求协议不参与清单路径，临时清单方式在refresh前选定。
  h.click('edit-node',{id:'primary'});h.nodes.get('mpServiceNodeName').value='默认节点';h.nodes.get('mpServiceNodeURL').value=url;h.runConfirm();
 }
-test('根 / 版本 / 完整清单 / 自定义前缀共用自动补齐，测速与获取清单保持同一结果且不改基址',()=>{
+test('根 / 版本 / 完整清单 / 自定义前缀共用自动补齐，显式清单方式决定路径且不改变模型请求协议或基址',()=>{
  for(const [protocol,input,path] of [
   ['Anthropic','https://service.example','/v1/models'],
   ['Responses','https://service.example/v1/','/v1/models'],
@@ -64,8 +64,8 @@ test('根 / 版本 / 完整清单 / 自定义前缀共用自动补齐，测速�
   ['Ollama','https://service.example','/api/tags']
  ]){
   const h=make();configure(h,input,protocol);const savedURL=h.state().draft.providers[0].nodes[0].url;
-  h.click('node-speed-one',{channel:'newapi',id:'primary'});h.drain();assert.equal(result(h,'primary').status,'success');assert.equal(result(h,'primary').path,'https://service.example'+path);assert.equal(result(h,'primary').count,8);
-  h.click('refresh');h.drain();assert.equal(h.state().discoveryResults.newapi.path,result(h,'primary').path);assert.equal(h.state().draft.providers[0].nodes[0].url,savedURL);
+  h.click('node-speed-one',{channel:'newapi',id:'primary'});h.drain();assert.equal(result(h,'primary').status,'success');assert.equal(result(h,'primary').path,'https://service.example'+(['Google','Ollama'].includes(protocol)?'/v1/models':path));assert.equal(result(h,'primary').count,8);
+  h.nodes.get('mpDetailListMethod').value=protocol==='Google'?'google-list':protocol==='Ollama'?'ollama-list':'openai-list';h.click('refresh');h.drain();assert.equal(h.state().discoveryResults.newapi.path,'https://service.example'+path);assert.equal(h.state().draft.providers[0].nodes[0].url,savedURL);
   assert.doesNotMatch(result(h,'primary').path,/v1\/v1|models\/models/);
  }
 });
@@ -74,7 +74,7 @@ test('HTML 与路径不存在有限同源回退，保留代理前缀；只得到
   const h=make();h.proto.scene(scene);configure(h,'https://service.example:8443/proxy/v1');h.proto.setNodeSpeedScene(mode);
   h.click('node-speed-one',{channel:'newapi',id:'primary'});h.drain();const r=result(h,'primary');assert.equal(r.status,'success');assert.equal(r.attemptedPaths.length,2);
   assert.ok(r.attemptedPaths.every(p=>p.startsWith('https://service.example:8443/proxy/')));assert.equal(r.path,'https://service.example:8443/proxy/models');assert.ok(r.ms>0);
-  h.click('refresh');h.drain();assert.deepEqual(h.state().discoveryResults.newapi.attemptedPaths,r.attemptedPaths);
+  h.nodes.get('mpDetailListMethod').value='openai-list';h.click('refresh');h.drain();assert.deepEqual(h.state().discoveryResults.newapi.attemptedPaths,r.attemptedPaths);
  }
 });
 test('认证 / DNS / TLS / 超时 / 无效清单不重试路径且不伪造耗时',()=>{

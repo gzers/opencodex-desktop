@@ -7,7 +7,7 @@ test('new channel needs only a unique display name; local address discovery requ
  h.input('#mpChannelName','中文 渠道 / openai');h.input('#mpChannelURL','http://127.0.0.1:11434/v1');h.input('#mpChannelKey','mock-key');h.click('#modalConfirm');
  assert.match(h.document.querySelector('#modalBody').textContent,/获取模型列表/);
  assert.doesNotMatch(h.document.querySelector('#modalBody').textContent,/允许.*私有网络/);
- h.click('[data-mp=channel-fetch]');await h.wait(750);
+ const method=h.document.querySelector('#mpChannelListMethod');method.value='openai-list';method.dispatchEvent(new h.w.Event('change',{bubbles:true}));h.click('[data-mp=channel-fetch]');await h.wait(750);
  assert.match(h.document.querySelector('#modalBody').textContent,/已获取/);
  assert.deepEqual(h.network,[]);
 });

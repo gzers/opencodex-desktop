@@ -1,0 +1,68 @@
+{
+  "date": "2026-11-06",
+  "scope": "0.2.23 P23-04 / AC-MATCH-06 protocol UI prototype",
+  "status": "completed_prototype_only_with_regression_timing_exception_disclosed",
+  "source": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.js": "5b12272fc7b23541d76f13efec4b4882d1c080fdd510e8cd5d37f331f5b9955b",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-protocol-scope.test.cjs": "4d4298ed1054841b57c6d50ee63b7f2c142a195cf8b26453bd0e7ea94d473c0a",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-channel-actions.test.cjs": "7c20026ca6ba7a66ce1e1824136a4a93bd23e3d95bc5f2a09513b0004b9a37de",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-node-speed.test.cjs": "35500e972cae374b9aed27a8da0dbc618413ad01171ce32ec347c69c2125255d",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/post021-channels.test.cjs": "0482ffc2d3e1e61c443168dbbb9ef09d90d49ddae14ee03bb59ff0fdc5cf347c",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/新增渠道与模型协议原型说明.md": "4a2112681985aadd1a09e6d546070b7ee402e8585f351882f10344746299bc35",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-31.md": "01e8098b48e8efb9fce1805c50408fc16bd652e8024a2cffb58700a1c15c0f54",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-33.md": "fafb40c3879af5c7b53fc9c9702e784940303620e318cc937f124050814e719a",
+    "docs/02-项目核心/UI规范.md": "5f1c41fe145181ba619293c6f820ed9c08c41b1ed63b000cd2bd5829a73656f0",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/专题-模型模版通用匹配-待分析.md": "394e6a1d3a595c6c9e4918a7b9bab6741510cbbb1b57bcf9410d70cdd3546ee0",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md": "5f3e63cfc21c16a0a814bb829aa10ec148fd79f4115627fe819f506be4e9da96"
+  },
+  "adoption": "working-tree byte baseline; no remote commit claimed",
+  "regression": {
+    "count": 228,
+    "passed": 227,
+    "failed": 1,
+    "failed_scope": "existing WebDAV POST07 fixed-wait state assertion checking vs configured",
+    "isolated_file_recheck": {
+      "tests": 6,
+      "passed": 6,
+      "failed": 0
+    },
+    "new_protocol_tests": 5,
+    "timingFailurePreserved": true
+  },
+  "browser": {
+    "engine": "chromium",
+    "flows": 7,
+    "screenshots": 10,
+    "errors": [],
+    "realNetworkRequests": 0,
+    "visualReviewed": [
+      "wizard-step1-light.png",
+      "wizard-step1-narrow.png",
+      "model-protocol-pending.png"
+    ]
+  },
+  "unchanged": [
+    "index.html",
+    "model-config.css",
+    "parallel overview/maintenance/sync prototype edits",
+    "production code",
+    "daily configuration"
+  ],
+  "notCompleted": [
+    "full name/numeric condition coverage editor",
+    "production DiscoveryRequest/protocol grouping/save/dispatch integration",
+    "production protocol behavior tests"
+  ],
+  "cleanup": {
+    "browserContextsClosed": true,
+    "localServersStarted": 0,
+    "upstreamCalls": 0,
+    "realKeyOrDailyConfigurationAccess": false,
+    "temporaryEditScriptRemoved": true
+  },
+  "toolingLimitations": [
+    "CUA initialization timed out twice; used local Playwright and already-installed Chromium executable.",
+    "Initial browser harness failures: select backing node hidden, manual details collapsed, same-URL navigation retained state; corrected to actual UI clicks/explicit fresh page.",
+    "Initial regression 4 old implicit-list-method assertions changed to explicit one-shot list method as required by new flow."
+  ]
+}

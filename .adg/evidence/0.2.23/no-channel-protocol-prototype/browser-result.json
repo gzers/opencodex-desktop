@@ -1,0 +1,29 @@
+{
+  "status": "passed",
+  "engine": "chromium",
+  "checks": [
+    "initial channels contain no protocol property",
+    "no hidden list or request protocol default",
+    "joined draft only; transient list adapter not stored; unmatched protocol pending",
+    "single model explicit protocol resolves pending route",
+    "channel default editor has no protocol",
+    "existing model resolves explicit adopted template protocol",
+    "cancel/reopen resets private wizard draft"
+  ],
+  "errors": [],
+  "externalRequestsBlocked": [],
+  "screenshots": [
+    "wizard-step1-light.png",
+    "wizard-step2-list.png",
+    "channel-detail-pending.png",
+    "model-protocol-pending.png",
+    "model-protocol-custom.png",
+    "existing-channel-detail.png",
+    "model-protocol-template.png",
+    "wizard-step1-dark.png",
+    "wizard-step1-short.png",
+    "wizard-step1-narrow.png"
+  ],
+  "realNetworkRequests": 0,
+  "prototypeOnly": true
+}
