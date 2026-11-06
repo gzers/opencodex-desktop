@@ -21,6 +21,7 @@ fn c(id: &str, ids: &[&str]) -> PortableChannelV2 {
             enabled: true,
             allow_private_network: false,
             auth_mode: Some("key".into()),
+            provider: None,
         }),
         model_subset: None,
         family_scope: None,
