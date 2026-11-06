@@ -77,7 +77,10 @@ try{
  $taskUser=New-LocalUser -Name $taskName -Password $taskSecure -AccountNeverExpires -Description 'Disposable ordinary Rust suite CI account'
  if($taskUser.SID.Value -ceq $taskIdentity.User.Value){throw 'Refuse existing parent SID'}
  Add-LocalGroupMember -Group (Get-LocalGroup -SID 'S-1-5-32-545') -Member $taskUser
- $profileBuffer=[Text.StringBuilder]::new(32768);$hr=[OcxNativeProfileProvision]::CreateProfile($taskUser.SID.Value,$taskName,$profileBuffer,32768)
+ # Reuse the MAX_PATH-sized CreateProfile contract already exercised by the
+ # ordinary-startup native harness. Retain the exact HRESULT before throwing.
+ $profileBuffer=[Text.StringBuilder]::new(260);$hr=[OcxNativeProfileProvision]::CreateProfile($taskUser.SID.Value,$taskName,$profileBuffer,260)
+ $taskReport.createProfileHResult=[int]$hr
  if($hr -ne 0){[Runtime.InteropServices.Marshal]::ThrowExceptionForHR($hr)}
  $taskProfile=Assert-TwoUserLocalPath $profileBuffer.ToString()
  if((Split-Path -Leaf $taskProfile) -cne $taskName){throw 'OS registered new Profile differs'}
@@ -130,6 +133,8 @@ try{
  $taskReport.result=$child.result
 }catch{
  $taskReport.failureCode='ordinary_suite_build_provision_or_execution_failed';$taskReport.failureType=$_.Exception.GetType().FullName;$taskReport.failureLine=$_.InvocationInfo.ScriptLineNumber
+ $taskReport.failureHResult=[int]$_.Exception.HResult
+ if($_.Exception.InnerException){$taskReport.innerFailureHResult=[int]$_.Exception.InnerException.HResult}
  if($taskExit -eq 0){$taskExit=1}
 }finally{
  $cleanup=[Collections.Generic.List[object]]::new()
@@ -182,6 +187,6 @@ try{
  Write-TwoUserJson (Join-Path $taskOutput 'rust-ordinary.json') $taskReport
  # Bounded public diagnostics are available in the job log before artifact upload.
  # Never serialize the credential, raw exception message, environment or test data.
- [ordered]@{result=$taskReport.result;stage=$taskReport.stage;failureCode=$taskReport.failureCode;failureType=$taskReport.failureType;failureLine=$taskReport.failureLine;nativeSuiteExecuted=$taskReport.nativeSuiteExecuted;allBinariesAttempted=$taskReport.allBinariesAttempted;exitCode=$taskExit}|ConvertTo-Json -Compress|Write-Output
+ [ordered]@{result=$taskReport.result;stage=$taskReport.stage;failureCode=$taskReport.failureCode;failureType=$taskReport.failureType;failureLine=$taskReport.failureLine;failureHResult=$taskReport.failureHResult;innerFailureHResult=$taskReport.innerFailureHResult;createProfileHResult=$taskReport.createProfileHResult;nativeSuiteExecuted=$taskReport.nativeSuiteExecuted;allBinariesAttempted=$taskReport.allBinariesAttempted;exitCode=$taskExit}|ConvertTo-Json -Compress|Write-Output
 }
 exit $taskExit
