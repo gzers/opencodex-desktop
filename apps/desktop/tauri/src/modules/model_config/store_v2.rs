@@ -32,6 +32,10 @@ pub struct DraftV2 {
     pub schema_version: u32,
     pub base: ReadBaseV2,
     pub policy: PolicyV2,
+    /// Read-only actual observation used for a three-way source/draft merge.
+    /// None exists only for this unreleased v2 fixture shape, never v1 migration.
+    #[serde(default)]
+    pub observed_baseline: Option<PolicyV2>,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -107,7 +111,22 @@ fn validate_draft(draft: &DraftV2) -> Result<()> {
     if draft.base.root_revision.is_empty() {
         return Err(error("model_source_invalid"));
     }
-    validate_policy_v2(&draft.policy)
+    validate_policy_v2(&draft.policy)?;
+    if let Some(baseline) = &draft.observed_baseline {
+        validate_policy_v2(baseline)?;
+        // Existing runtime identities cannot be silently rebound to another
+        // management UUID. A new draft-only UUID/provider is an explicit add;
+        // model edits, source refreshes and legitimate rename remain allowed.
+        for observed in &baseline.channels {
+            if draft.policy.channels.iter().any(|channel| {
+                channel.connection.provider_id == observed.connection.provider_id
+                    && channel.id != observed.id
+            }) {
+                return Err(error("model_source_invalid"));
+            }
+        }
+    }
+    Ok(())
 }
 impl StoreV2 {
     pub fn new(root: &Path) -> Self {

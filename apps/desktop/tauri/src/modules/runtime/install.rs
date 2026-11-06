@@ -473,6 +473,8 @@ pub enum InstallError {
     ScriptsRequired,
     /// 用户取消。
     Cancelled,
+    /// Stable v2 admission/recovery reason exposed through AppError.
+    Recovery { code: &'static str, detail: String },
     /// 其它文件系统失败。
     FileSystem { operation: String, detail: String },
 }
@@ -490,6 +492,7 @@ impl InstallError {
             InstallError::VersionMismatch { .. } => "version_mismatch",
             InstallError::ScriptsRequired => "scripts_required",
             InstallError::Cancelled => "cancelled",
+            InstallError::Recovery { code, .. } => code,
             InstallError::FileSystem { .. } => "filesystem",
         }
     }
@@ -526,6 +529,7 @@ impl InstallError {
                 "该包需要执行安装脚本才能生成入口；需要你的二次确认".to_string()
             }
             InstallError::Cancelled => "安装已取消".to_string(),
+            InstallError::Recovery { detail, .. } => detail.clone(),
             InstallError::FileSystem { operation, detail } => {
                 format!("文件操作失败（{operation}）：{detail}")
             }
@@ -818,7 +822,21 @@ impl SystemNpmRunner {
     /// 受控命令：清空继承环境，只给 node / npm 目录与系统最小 PATH；
     /// **不注入应用持有的任何凭据环境变量**，也不继承 `npm_config_*`（`FZ-50`）。
     fn base_command(&self, npm_path: &Path, node_dir: Option<&Path>) -> Command {
-        let mut command = Command::new(dunce::simplified(npm_path));
+        let mut command = if npm_path
+            .file_name()
+            .is_some_and(|name| name == "npm-cli.js")
+        {
+            // A bundled npm CLI is JavaScript, including on Windows. Invoke it
+            // with the explicitly injected Node, never its env-node shebang.
+            let node = node_dir
+                .map(|dir| dir.join(if cfg!(windows) { "node.exe" } else { "node" }))
+                .unwrap_or_else(|| PathBuf::from("/__missing_explicit_node__/node"));
+            let mut command = Command::new(node);
+            command.arg(dunce::simplified(npm_path));
+            command
+        } else {
+            Command::new(dunce::simplified(npm_path))
+        };
         command.env_clear();
         let directories = node_dir
             .into_iter()
@@ -941,7 +959,7 @@ impl NpmRunner for SystemNpmRunner {
             None => (Vec::new(), None),
         };
         let masker = masker_for(request.proxy.as_ref());
-        let spec = if request.offline && Path::new(&request.version).is_absolute() {
+        let spec = if Path::new(&request.version).is_absolute() {
             // A validated local tarball is an npm source in its own right.
             // Prefixing it with the registry package name produces an invalid
             // extended Windows path and fails with ENOENT.
@@ -1340,6 +1358,7 @@ pub struct RuntimeInstaller<'a> {
     /// Unique protected update attempt. Unprotected installs have no receipt.
     pub attempt_id: Option<String>,
     pub data_root: &'a Path,
+    pub installation_root: Option<PathBuf>,
     pub npm: &'a dyn NpmRunner,
     /// 用于写路径校验的符号链接检查范围（通常是用户主目录）。
     pub home: Option<PathBuf>,
@@ -1362,6 +1381,7 @@ impl<'a> RuntimeInstaller<'a> {
     ) -> Self {
         Self {
             data_root,
+            installation_root: None,
             attempt_id: None,
             npm,
             home,
@@ -1430,10 +1450,37 @@ impl<'a> RuntimeInstaller<'a> {
 
     /// 执行一次安装。失败时**不改动现有前缀与运行来源**。
     pub fn install(&self, request: &InstallRequest) -> Result<InstallOutcome, InstallError> {
+        self.install_inner(request, None, None)
+    }
+
+    fn install_inner(
+        &self,
+        request: &InstallRequest,
+        recovery: Option<&RuntimeRecoveryOperation>,
+        recovery_service: Option<&dyn RecoveryServiceBoundary>,
+    ) -> Result<InstallOutcome, InstallError> {
         self.emit(InstallPhase::Preparing, 2, None);
         self.check_cancel()?;
+        if let Some(root) = &self.installation_root {
+            if request.prefix != root.join(super::MANAGED_PREFIX_RELATIVE) {
+                return Err(recovery_error(
+                    "invalid_install_root",
+                    "目标必须属于当前 Desktop 安装根",
+                ));
+            }
+            let node = request
+                .node_path
+                .as_deref()
+                .or(self.node())
+                .ok_or_else(|| {
+                    recovery_error("node_missing", "新版受管入口需要固定的 Node 绝对路径")
+                })?;
+            paths::validate_executable(node)?;
+        }
         let prefix = paths::validate_install_target(&request.prefix, self.home.as_deref())?;
-        validate_existing_prefix(&prefix)?;
+        if recovery.is_none() {
+            validate_existing_prefix(&prefix)?;
+        }
         ensure_parent_directory(&prefix)?;
         let _lock = TargetFileLock::lock(&prefix).map_err(InstallError::from)?;
         let record_path = super::RuntimeStore::new(self.data_root)
@@ -1446,6 +1493,9 @@ impl<'a> RuntimeInstaller<'a> {
         let mut source_record =
             match record_before.as_deref() {
                 None => super::RuntimeSourceRecord::default(),
+                Some(bytes) if recovery.is_some() => {
+                    serde_json::from_slice::<super::RuntimeSourceRecord>(bytes).unwrap_or_default()
+                }
                 Some(bytes) => serde_json::from_slice::<super::RuntimeSourceRecord>(bytes)
                     .map_err(|_| InstallError::FileSystem {
                         operation: "read runtime record".into(),
@@ -1459,7 +1509,41 @@ impl<'a> RuntimeInstaller<'a> {
             });
         }
         paths::validate_install_target(&prefix, self.home.as_deref())?;
-        validate_existing_prefix(&prefix)?;
+        if let Some(operation) = recovery {
+            operation.check_snapshot(self)?;
+        } else {
+            validate_existing_prefix(&prefix)?;
+            if let Some(root) = &self.installation_root {
+                let entry = root.join(MANAGED_ENTRY_RELATIVE);
+                let existing = prefix.join(MANIFEST_FILENAME).exists();
+                if existing {
+                    validate_managed_installation(
+                        root,
+                        request.node_path.as_deref().or(self.node()),
+                    )?;
+                    let manifest: RuntimeManifest = serde_json::from_slice(
+                        &std::fs::read(prefix.join(MANIFEST_FILENAME))
+                            .map_err(|e| recovery_error("read_manifest", &e.to_string()))?,
+                    )
+                    .map_err(|e| recovery_error("read_manifest", &e.to_string()))?;
+                    if source_record.source != super::RuntimeSourceKind::Managed
+                        || source_record.path.as_deref().map(Path::new) != Some(entry.as_path())
+                        || source_record.resolved_version.as_deref()
+                            != Some(manifest.version.as_str())
+                    {
+                        return Err(recovery_error(
+                            "source_record_mismatch",
+                            "来源记录与受管安装不一致，请先预览恢复",
+                        ));
+                    }
+                } else if read_entry_state(&entry)?.is_some() {
+                    return Err(recovery_error(
+                        "unmanaged_entry",
+                        "已有入口缺少受管包体证明，未覆盖",
+                    ));
+                }
+            }
+        }
 
         let temp = sibling_with_tag(&prefix, "new")?;
         let mut guard = TempPrefixGuard::new(temp.clone());
@@ -1484,6 +1568,16 @@ impl<'a> RuntimeInstaller<'a> {
         };
         self.emit(InstallPhase::Verifying, 88, None);
         let verified = verify_package(&temp, expected, self.probe, self.node())?;
+        if let Some(operation) = recovery {
+            if filled.tarball_sha256 != operation.preview.selected_sha256
+                || verified.version != operation.preview.selected_version
+            {
+                return Err(recovery_error(
+                    "recovery_source_changed",
+                    "安装产物与已确认的来源摘要或版本不一致",
+                ));
+            }
+        }
 
         let installed_at = now_rfc3339();
         let mut manifest = RuntimeManifest {
@@ -1502,7 +1596,8 @@ impl<'a> RuntimeInstaller<'a> {
         // 入口必须指向**落位后**的最终路径：临时区名字里带随机后缀，
         // 若把临时路径写进启动器，替换之后入口就指向一个已经不存在的目录
         // （真实链路里表现为入口 `MODULE_NOT_FOUND`）。
-        let entry = self.data_root.join(MANAGED_ENTRY_RELATIVE);
+        let program_root = self.installation_root.as_deref().unwrap_or(self.data_root);
+        let entry = program_root.join(MANAGED_ENTRY_RELATIVE);
         let final_bin = prefix.join(PACKAGE_SUBPATH).join(&verified.bin_entry);
         if let Some(parent) = entry.parent() {
             if parent.exists() && !parent.is_dir() {
@@ -1512,7 +1607,7 @@ impl<'a> RuntimeInstaller<'a> {
                 });
             }
         }
-        crate::modules::backup::safety::check_path(self.data_root, &entry, true)
+        crate::modules::backup::safety::check_path(program_root, &entry, true)
             .map_err(InstallError::from)?;
         let _entry_lock = TargetFileLock::lock(&entry).map_err(InstallError::from)?;
         let previous_entry = read_entry_state(&entry)?;
@@ -1532,7 +1627,9 @@ impl<'a> RuntimeInstaller<'a> {
                 InstallSource::Registry { proxy: Some(_), .. }
             ),
         };
-        if source_record.source != super::RuntimeSourceKind::Explicit {
+        if self.installation_root.is_some()
+            || source_record.source != super::RuntimeSourceKind::Explicit
+        {
             source_record.source = super::RuntimeSourceKind::Managed;
             source_record.path = Some(entry.to_string_lossy().into_owned());
             source_record.resolved_version = Some(outcome.version.clone());
@@ -1545,7 +1642,23 @@ impl<'a> RuntimeInstaller<'a> {
                 detail: e.to_string(),
             })?;
         let mut record_written = false;
-        let mut replacement = atomic_replace_prefix(&temp, &prefix)?;
+        self.check_cancel()?;
+        if let Some(operation) = recovery {
+            operation.check_snapshot(self)?;
+            if recovery_service
+                .ok_or_else(|| recovery_error("recovery_service_missing", "恢复缺少服务归属边界"))?
+                .snapshot()?
+                != RecoveryServiceState::Stopped
+            {
+                return Err(recovery_error(
+                    "recovery_service_changed",
+                    "替换前服务状态已改变，保留旧程序",
+                ));
+            }
+            operation.verify_metadata_backup(self)?;
+        }
+        let retired = recovery.map(|op| op.preview.retained_prefix.as_path());
+        let mut replacement = atomic_replace_prefix_retaining(&temp, &prefix, retired)?;
         let activation = (|| {
             write_entry(
                 &entry,
@@ -1553,13 +1666,24 @@ impl<'a> RuntimeInstaller<'a> {
                 &final_bin,
             )?;
             // Only record activation after the verified package and final launcher land.
-            if let Some(attempt_id) = &self.attempt_id {
+            let activation_attempt = self.attempt_id.clone().or_else(|| {
+                self.installation_root
+                    .as_ref()
+                    .map(|_| uuid::Uuid::new_v4().to_string())
+            });
+            if let Some(attempt_id) = &activation_attempt {
                 manifest.activation = Some(
                     super::protection::activation_proof(
-                        self.data_root,
                         &prefix,
                         attempt_id,
                         &verified.bin_entry,
+                        request
+                            .node_path
+                            .as_deref()
+                            .or(self.node())
+                            .ok_or_else(|| {
+                                recovery_error("node_missing", "激活证明需要固定的 Node 绝对路径")
+                            })?,
                     )
                     .map_err(InstallError::from)?,
                 );
@@ -1573,7 +1697,7 @@ impl<'a> RuntimeInstaller<'a> {
                         }
                     })?);
                 crate::modules::backup::safety::sync_directories(
-                    self.data_root,
+                    program_root,
                     entry.parent().expect("managed entry parent"),
                 )
                 .map_err(InstallError::from)?;
@@ -1581,6 +1705,24 @@ impl<'a> RuntimeInstaller<'a> {
                     .map_err(InstallError::from)?;
             }
             verify_package(&prefix, Some(&verified.version), self.probe, self.node())?;
+            paths::validate_executable(&entry)?;
+            let expected_manifest = serde_json::to_vec_pretty(&manifest)
+                .map_err(|e| recovery_error("manifest_readback", &e.to_string()))?;
+            if std::fs::read(prefix.join(MANIFEST_FILENAME))
+                .ok()
+                .as_deref()
+                != Some(expected_manifest.as_slice())
+                || read_entry_state(&entry)?.as_deref()
+                    != Some(
+                        entry_script(request.node_path.as_deref().or(self.node()), &final_bin)
+                            .as_bytes(),
+                    )
+            {
+                return Err(recovery_error(
+                    "activation_readback",
+                    "包体、入口或清单读回不一致",
+                ));
+            }
             if read_entry_state(&record_path)? != record_before {
                 return Err(InstallError::FileSystem {
                     operation: "commit runtime record".into(),
@@ -1634,7 +1776,9 @@ impl<'a> RuntimeInstaller<'a> {
             }
             return Err(error);
         }
-        replacement.commit();
+        if recovery.is_none() {
+            replacement.commit();
+        }
         guard.disarm();
 
         self.emit(InstallPhase::Done, 100, None);
@@ -1764,7 +1908,7 @@ impl<'a> RuntimeInstaller<'a> {
                 npm_path: npm_path.clone(),
                 node_dir: node_dir.clone(),
                 prefix: temp.to_path_buf(),
-                version: inspection.version.clone(),
+                version: tarball.to_string_lossy().into_owned(),
                 proxy: proxy.cloned(),
                 scripts_enabled: false,
                 offline: false,
@@ -1791,7 +1935,7 @@ impl<'a> RuntimeInstaller<'a> {
                     npm_path: npm_path.clone(),
                     node_dir,
                     prefix: temp.to_path_buf(),
-                    version: inspection.version.clone(),
+                    version: tarball.to_string_lossy().into_owned(),
                     proxy: proxy.cloned(),
                     scripts_enabled: true,
                     offline: false,
@@ -1848,6 +1992,8 @@ fn verify_package(
     node: Option<&Path>,
 ) -> Result<VerifiedPackage, InstallError> {
     let package_root = prefix.join(PACKAGE_SUBPATH);
+    crate::modules::backup::safety::check_path(prefix, &package_root.join("package.json"), false)
+        .map_err(InstallError::from)?;
     let raw = std::fs::read(package_root.join("package.json")).map_err(|error| {
         InstallError::FileSystem {
             operation: "read installed package.json".to_string(),
@@ -1894,6 +2040,8 @@ fn verify_package(
         return Err(InstallError::ScriptsRequired);
     }
     let bin_path = package_root.join(&relative);
+    crate::modules::backup::safety::check_path(prefix, &bin_path, true)
+        .map_err(InstallError::from)?;
     if !is_executable_file(&bin_path) {
         // 入口缺失 / 不可执行：可能是包内脚本尚未运行（`FZ-50`）。
         return Err(InstallError::ScriptsRequired);
@@ -1921,8 +2069,14 @@ fn verify_package(
 
 /// 去掉 `bin` 里的前导 `./`，并拒绝试图逃出包根的写法。
 fn normalize_bin(entry: &str) -> String {
-    let trimmed = entry.trim().trim_start_matches("./");
-    if trimmed.is_empty() || trimmed.starts_with('/') || trimmed.split('/').any(|part| part == "..")
+    let trimmed = entry.trim();
+    let trimmed = trimmed.strip_prefix("./").unwrap_or(trimmed);
+    if trimmed.is_empty()
+        || trimmed.starts_with('/')
+        || trimmed.contains(['\\', ':'])
+        || trimmed
+            .split('/')
+            .any(|part| part == ".." || part == "." || part.is_empty())
     {
         return String::new();
     }
@@ -1960,6 +2114,8 @@ fn validate_existing_prefix(prefix: &Path) -> Result<(), InstallError> {
         return Ok(());
     }
     let manifest_path = prefix.join(MANIFEST_FILENAME);
+    crate::modules::backup::safety::check_path(prefix, &manifest_path, false)
+        .map_err(InstallError::from)?;
     let manifest: RuntimeManifest =
         serde_json::from_slice(&std::fs::read(&manifest_path).map_err(|_| {
             InstallError::FileSystem {
@@ -1978,6 +2134,8 @@ fn validate_existing_prefix(prefix: &Path) -> Result<(), InstallError> {
         });
     }
     let package_json = prefix.join(PACKAGE_SUBPATH).join("package.json");
+    crate::modules::backup::safety::check_path(prefix, &package_json, false)
+        .map_err(InstallError::from)?;
     let package: serde_json::Value =
         serde_json::from_slice(&std::fs::read(&package_json).map_err(|_| {
             InstallError::FileSystem {
@@ -2094,7 +2252,7 @@ fn write_entry(entry: &Path, node: Option<&Path>, script: &Path) -> Result<(), I
 }
 
 #[cfg(not(windows))]
-pub(super) fn entry_script(node: Option<&Path>, script: &Path) -> String {
+pub(crate) fn entry_script(node: Option<&Path>, script: &Path) -> String {
     let script = shell_quote(script);
     match node {
         Some(node) => format!(
@@ -2115,7 +2273,7 @@ fn shell_quote(path: &Path) -> String {
 }
 
 #[cfg(windows)]
-pub(super) fn entry_script(node: Option<&Path>, script: &Path) -> String {
+pub(crate) fn entry_script(node: Option<&Path>, script: &Path) -> String {
     // 路径始终引用，禁用 ! 展开，%% 保留路径中的字面百分号；参数由 Rust
     // Command 的 batch 转义处理，禁止手拼 cmd.exe 参数。
     let quote = |path: &Path| format!("\"{}\"", path.to_string_lossy().replace('%', "%%"));
@@ -2216,7 +2374,11 @@ fn activate_staged_prefix(temp: &Path, prefix: &Path, manifest: &[u8]) -> std::i
     }
 }
 
-fn atomic_replace_prefix(temp: &Path, prefix: &Path) -> Result<PrefixReplacement, InstallError> {
+fn atomic_replace_prefix_retaining(
+    temp: &Path,
+    prefix: &Path,
+    retained: Option<&Path>,
+) -> Result<PrefixReplacement, InstallError> {
     let expected_manifests = vec![std::fs::read(temp.join(MANIFEST_FILENAME)).map_err(|e| {
         InstallError::FileSystem {
             operation: "capture new manifest".into(),
@@ -2236,7 +2398,18 @@ fn atomic_replace_prefix(temp: &Path, prefix: &Path) -> Result<PrefixReplacement
             expected_manifests,
         });
     }
-    let retired = sibling_with_tag(prefix, "old")?;
+    let retired = match retained {
+        Some(path) => {
+            if path
+                .try_exists()
+                .map_err(|e| recovery_error("inspect_backup", &e.to_string()))?
+            {
+                return Err(recovery_error("backup_exists", "恢复备份已存在，未覆盖"));
+            }
+            path.to_path_buf()
+        }
+        None => sibling_with_tag(prefix, "old")?,
+    };
     crate::infrastructure::platform::rename(prefix, &retired).map_err(|error| {
         InstallError::FileSystem {
             operation: "retire existing prefix".to_string(),
@@ -2521,12 +2694,16 @@ mod tests {
                 .save(&Preferences::default())
                 .unwrap();
             let guard = manager::begin_preferences_protection(&data_root, true).unwrap();
+            let node = root
+                .path()
+                .join(if cfg!(windows) { "node.exe" } else { "node" });
+            write_executable(&node);
             let mut receipt = protection::PanelProtection::arm(
                 &data_root,
                 &guard,
                 &prefix_of(&data_root),
                 "0.3.1",
-                None,
+                Some(&node),
             )
             .unwrap()
             .unwrap();
@@ -2540,6 +2717,7 @@ mod tests {
             let mut installer =
                 installer(&data_root, &npm, &sink, Some(root.path().into()), &probe);
             installer.attempt_id = Some(receipt.attempt_id());
+            installer.node_path = Some(node);
             let result =
                 installer.install(&registry_request(prefix_of(&data_root), "0.3.1", &npm_path));
             if probe_succeeds {
@@ -2713,7 +2891,9 @@ mod tests {
         let root = tempfile::tempdir().expect("temp");
         let data_root = root.path().join("data-root");
         let archive = official_package(root.path(), "0.3.1");
-        let node = root.path().join("node");
+        let node = root
+            .path()
+            .join(if cfg!(windows) { "node.exe" } else { "node" });
         write_executable(&node);
         let npm_path = root.path().join("npm");
         write_executable(&npm_path);
@@ -2894,7 +3074,9 @@ mod tests {
         };
         let npm_path = root.path().join("npm");
         write_executable(&npm_path);
-        let node = root.path().join("node");
+        let node = root
+            .path()
+            .join(if cfg!(windows) { "node.exe" } else { "node" });
         write_executable(&node);
 
         let mut request = offline_request(prefix_of(&data_root), archive, npm_path);
@@ -3767,4 +3949,699 @@ mod activation_handle_tests {
         );
         assert!(source.exists());
     }
+}
+
+// Recovery intent is backend-owned; only its preview/status crosses IPC.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "state", rename_all = "camelCase")]
+pub enum RecoveryServiceState {
+    Stopped,
+    Owned { identity: String },
+    Unknown,
+}
+
+/// Process boundary must reject reused PIDs and foreign user/service ownership.
+pub trait RecoveryServiceBoundary {
+    fn snapshot(&self) -> Result<RecoveryServiceState, InstallError>;
+    fn stop_owned(&self, identity: &str) -> Result<(), InstallError>;
+}
+
+/// Digest must come from pinned distribution metadata, not just a matching name.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RuntimeRecoverySource {
+    pub archive: PathBuf,
+    pub expected_sha256: String,
+    pub expected_version: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RuntimeRecoveryPreview {
+    pub operation_id: String,
+    pub installation_root: PathBuf,
+    pub prefix: PathBuf,
+    pub entry: PathBuf,
+    pub desktop_root: PathBuf,
+    pub retained_prefix: PathBuf,
+    pub metadata_backup: PathBuf,
+    pub package_version: Option<String>,
+    pub manifest_version: Option<String>,
+    pub source_version: Option<String>,
+    pub consistency: String,
+    pub package_tree_sha256: String,
+    pub entry_sha256: Option<String>,
+    pub source_record_sha256: Option<String>,
+    pub selected_archive: PathBuf,
+    pub selected_sha256: String,
+    pub selected_version: String,
+    pub service: RecoveryServiceState,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum RuntimeRecoveryPhase {
+    Prepared,
+    Applying,
+    Succeeded,
+    Failed,
+    Cancelled,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RuntimeRecoveryStatus {
+    pub preview: RuntimeRecoveryPreview,
+    pub phase: RuntimeRecoveryPhase,
+    pub restart_required: bool,
+    pub detail: Option<String>,
+}
+
+/// Not deserializable from IPC. Reopening an applying journal does not pretend
+/// cancellation or rollback succeeded. The worker owns the shared install lease.
+#[derive(Debug, Clone)]
+pub struct RuntimeRecoveryOperation {
+    preview: RuntimeRecoveryPreview,
+    source: RuntimeRecoverySource,
+    entry_before: Option<Vec<u8>>,
+    record_before: Option<Vec<u8>>,
+    node: PathBuf,
+    npm: PathBuf,
+    status: RuntimeRecoveryStatus,
+}
+
+fn recovery_error(code: &'static str, detail: &str) -> InstallError {
+    InstallError::Recovery {
+        code,
+        detail: detail.into(),
+    }
+}
+fn recovery_digest(bytes: &[u8]) -> String {
+    crate::infrastructure::hash::sha256_hex(bytes)
+}
+fn recovery_optional_digest(bytes: &Option<Vec<u8>>) -> Option<String> {
+    bytes.as_deref().map(recovery_digest)
+}
+fn recovery_record_path(root: &Path) -> PathBuf {
+    super::RuntimeStore::new(root).path().to_path_buf()
+}
+fn recovery_journal_path(root: &Path, id: &str) -> Result<PathBuf, InstallError> {
+    let id = uuid::Uuid::parse_str(id)
+        .map_err(|_| recovery_error("bad_operation_id", "恢复操作 ID 无效"))?;
+    Ok(root
+        .join("manager-state/runtime-recovery")
+        .join(format!("{id}.json")))
+}
+fn recovery_validate_source(source: &RuntimeRecoverySource) -> Result<(), InstallError> {
+    if !source.archive.is_absolute()
+        || source.expected_sha256.len() != 64
+        || !source
+            .expected_sha256
+            .bytes()
+            .all(|b| b.is_ascii_hexdigit())
+        || source.expected_version.is_empty()
+    {
+        return Err(recovery_error(
+            "untrusted_recovery_source",
+            "需要明确版本及固化 SHA-256 的受管安装源",
+        ));
+    }
+    crate::modules::backup::safety::inspect(&source.archive).map_err(InstallError::from)?;
+    let inspection = archive::inspect(&source.archive, None)?;
+    if inspection.sha256 != source.expected_sha256.to_ascii_lowercase()
+        || inspection.version != source.expected_version
+    {
+        return Err(recovery_error(
+            "recovery_source_changed",
+            "所选安装源摘要或版本与固化来源不一致",
+        ));
+    }
+    Ok(())
+}
+
+/// Bounded snapshot: no old code execution; modes and internal npm links count.
+fn recovery_tree_digest(prefix: &Path) -> Result<String, InstallError> {
+    use sha2::{Digest, Sha256};
+    use std::io::Read;
+    fn walk(
+        root: &Path,
+        path: &Path,
+        hash: &mut Sha256,
+        budget: &mut usize,
+        bytes: &mut u64,
+    ) -> Result<(), InstallError> {
+        if *budget == 0 {
+            return Err(recovery_error("recovery_tree_limit", "安装目录条目超限"));
+        }
+        *budget -= 1;
+        let meta = std::fs::symlink_metadata(path)
+            .map_err(|e| recovery_error("snapshot_runtime", &e.to_string()))?;
+        hash.update(
+            path.strip_prefix(root)
+                .map_err(|_| recovery_error("snapshot_runtime", "目录越界"))?
+                .as_os_str()
+                .as_encoded_bytes(),
+        );
+        hash.update([0]);
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            hash.update(meta.permissions().mode().to_le_bytes());
+        }
+        if meta.file_type().is_symlink() {
+            let target = std::fs::canonicalize(path)
+                .map_err(|e| recovery_error("snapshot_link", &e.to_string()))?;
+            let canonical_root = std::fs::canonicalize(root)
+                .map_err(|e| recovery_error("snapshot_link", &e.to_string()))?;
+            if !target.starts_with(canonical_root) {
+                return Err(recovery_error("snapshot_link", "包体链接指向安装目录外"));
+            }
+            hash.update(b"link");
+            hash.update(
+                std::fs::read_link(path)
+                    .map_err(|e| recovery_error("snapshot_link", &e.to_string()))?
+                    .as_os_str()
+                    .as_encoded_bytes(),
+            );
+        } else {
+            crate::modules::backup::safety::inspect(path).map_err(InstallError::from)?;
+            if meta.is_dir() {
+                hash.update(b"dir");
+                let mut entries = std::fs::read_dir(path)
+                    .map_err(|e| recovery_error("snapshot_directory", &e.to_string()))?
+                    .map(|entry| entry.map(|e| e.path()))
+                    .collect::<Result<Vec<_>, _>>()
+                    .map_err(|e| recovery_error("snapshot_directory", &e.to_string()))?;
+                entries.sort();
+                for entry in entries {
+                    walk(root, &entry, hash, budget, bytes)?;
+                }
+            } else if meta.is_file() {
+                hash.update(b"file");
+                hash.update(meta.len().to_le_bytes());
+                *bytes = bytes
+                    .checked_add(meta.len())
+                    .ok_or_else(|| recovery_error("recovery_tree_limit", "安装目录大小超限"))?;
+                if *bytes > 8 * 1024 * 1024 * 1024 {
+                    return Err(recovery_error("recovery_tree_limit", "安装目录大小超限"));
+                }
+                let mut file = crate::modules::backup::safety::open_file(path, false)
+                    .map_err(InstallError::from)?;
+                crate::modules::backup::safety::require_single_link(&file)
+                    .map_err(InstallError::from)?;
+                let mut buf = [0u8; 65536];
+                let mut read = 0u64;
+                loop {
+                    let n = file
+                        .read(&mut buf)
+                        .map_err(|e| recovery_error("snapshot_file", &e.to_string()))?;
+                    if n == 0 {
+                        break;
+                    }
+                    read += n as u64;
+                    if read > meta.len() {
+                        return Err(recovery_error("snapshot_file", "读取期间包体变化"));
+                    }
+                    hash.update(&buf[..n]);
+                }
+                if read != meta.len() {
+                    return Err(recovery_error("snapshot_file", "读取期间包体变化"));
+                }
+            } else {
+                return Err(recovery_error("snapshot_file", "包体包含特殊文件"));
+            }
+        }
+        hash.update([0]);
+        Ok(())
+    }
+    let mut hash = Sha256::new();
+    walk(prefix, prefix, &mut hash, &mut 250_000, &mut 0)?;
+    Ok(format!("{:x}", hash.finalize()))
+}
+
+impl RuntimeRecoveryOperation {
+    pub(crate) fn dependency_paths(&self) -> (&Path, &Path) {
+        (&self.node, &self.npm)
+    }
+    pub fn status(&self) -> RuntimeRecoveryStatus {
+        self.status.clone()
+    }
+    /// Prepared cancellation is read-only. Applying/completed work cannot undo.
+    pub fn cancel(&mut self) -> Result<RuntimeRecoveryStatus, InstallError> {
+        if self.status.phase != RuntimeRecoveryPhase::Prepared {
+            return Err(recovery_error(
+                "recovery_not_cancellable",
+                "恢复已进入执行或终态，不能宣称撤回",
+            ));
+        }
+        self.status.phase = RuntimeRecoveryPhase::Cancelled;
+        Ok(self.status())
+    }
+    pub fn read_status(
+        data_root: &Path,
+        operation_id: &str,
+    ) -> Result<RuntimeRecoveryStatus, InstallError> {
+        let path = recovery_journal_path(data_root, operation_id)?;
+        crate::modules::backup::safety::check_path(data_root, &path, false)
+            .map_err(InstallError::from)?;
+        let raw = crate::modules::backup::safety::read_file(&path, 128 * 1024)
+            .map_err(InstallError::from)?;
+        let status: RuntimeRecoveryStatus = serde_json::from_slice(&raw)
+            .map_err(|e| recovery_error("read_recovery_status", &e.to_string()))?;
+        if status.preview.operation_id != operation_id || status.preview.desktop_root != data_root {
+            return Err(recovery_error("read_recovery_status", "恢复记录身份不匹配"));
+        }
+        Ok(status)
+    }
+    fn persist(&self, installer: &RuntimeInstaller<'_>) -> Result<(), InstallError> {
+        let path = recovery_journal_path(installer.data_root, &self.preview.operation_id)?;
+        crate::modules::backup::safety::check_path(installer.data_root, &path, true)
+            .map_err(InstallError::from)?;
+        std::fs::create_dir_all(path.parent().expect("journal parent"))
+            .map_err(|e| recovery_error("create_recovery_journal", &e.to_string()))?;
+        let raw = serde_json::to_vec_pretty(&self.status)
+            .map_err(|e| recovery_error("serialize_recovery_status", &e.to_string()))?;
+        atomic_write(&path, &raw, 0o600).map_err(InstallError::from)
+    }
+    fn check_snapshot(&self, installer: &RuntimeInstaller<'_>) -> Result<(), InstallError> {
+        let root = installer.installation_root.as_deref().ok_or_else(|| {
+            recovery_error(
+                "installation_context_missing",
+                "恢复需要明确 Desktop 安装上下文",
+            )
+        })?;
+        if root != self.preview.installation_root
+            || installer.data_root != self.preview.desktop_root
+            || installer.node() != Some(self.node.as_path())
+        {
+            return Err(recovery_error(
+                "recovery_context_changed",
+                "安装或数据上下文已改变，请重新预览",
+            ));
+        }
+        paths::validate_install_target(&self.preview.prefix, installer.home.as_deref())?;
+        crate::modules::backup::safety::check_path(root, &self.preview.entry, true)
+            .map_err(InstallError::from)?;
+        let record = recovery_record_path(installer.data_root);
+        crate::modules::backup::safety::check_path(installer.data_root, &record, true)
+            .map_err(InstallError::from)?;
+        if recovery_tree_digest(&self.preview.prefix)? != self.preview.package_tree_sha256
+            || read_entry_state(&self.preview.entry)? != self.entry_before
+            || read_entry_state(&record)? != self.record_before
+        {
+            return Err(recovery_error(
+                "recovery_snapshot_changed",
+                "程序、入口或来源记录已变化，请重新预览",
+            ));
+        }
+        recovery_validate_source(&self.source)
+    }
+    fn backup_metadata(&self, installer: &RuntimeInstaller<'_>) -> Result<(), InstallError> {
+        let dir = &self.preview.metadata_backup;
+        crate::modules::backup::safety::check_path(installer.data_root, dir, true)
+            .map_err(InstallError::from)?;
+        if dir.exists() {
+            return Err(recovery_error("backup_exists", "恢复备份已存在，未覆盖"));
+        }
+        std::fs::create_dir_all(dir)
+            .map_err(|e| recovery_error("backup_recovery", &e.to_string()))?;
+        for (name, bytes) in [
+            ("entry.before", &self.entry_before),
+            ("runtime.before.json", &self.record_before),
+        ] {
+            if let Some(bytes) = bytes {
+                let path = dir.join(name);
+                atomic_write(&path, bytes, 0o600).map_err(InstallError::from)?;
+                if std::fs::read(&path).ok().as_deref() != Some(bytes.as_slice()) {
+                    return Err(recovery_error(
+                        "backup_readback",
+                        "恢复备份读回失败，未替换旧程序",
+                    ));
+                }
+            }
+        }
+        atomic_write(
+            &dir.join("preview.json"),
+            &serde_json::to_vec_pretty(&self.preview)
+                .map_err(|e| recovery_error("backup_recovery", &e.to_string()))?,
+            0o600,
+        )
+        .map_err(InstallError::from)?;
+        self.verify_metadata_backup(installer)
+    }
+
+    fn verify_metadata_backup(&self, installer: &RuntimeInstaller<'_>) -> Result<(), InstallError> {
+        let dir = &self.preview.metadata_backup;
+        for (name, expected) in [
+            ("entry.before", self.entry_before.clone()),
+            ("runtime.before.json", self.record_before.clone()),
+            (
+                "preview.json",
+                Some(
+                    serde_json::to_vec_pretty(&self.preview)
+                        .map_err(|e| recovery_error("backup_recovery", &e.to_string()))?,
+                ),
+            ),
+        ] {
+            let path = dir.join(name);
+            crate::modules::backup::safety::check_path(installer.data_root, &path, true)
+                .map_err(InstallError::from)?;
+            if read_entry_state(&path)? != expected {
+                return Err(recovery_error(
+                    "backup_readback",
+                    "恢复备份不完整或被修改，未替换旧程序",
+                ));
+            }
+        }
+        Ok(())
+    }
+}
+
+impl RuntimeInstaller<'_> {
+    /// Read-only; admits damaged packages only with positive managed provenance.
+    pub fn prepare_recovery(
+        &self,
+        source: RuntimeRecoverySource,
+        npm: PathBuf,
+        service: &dyn RecoveryServiceBoundary,
+    ) -> Result<RuntimeRecoveryOperation, InstallError> {
+        let root = self.installation_root.as_deref().ok_or_else(|| {
+            recovery_error(
+                "installation_context_missing",
+                "恢复需要明确 Desktop 安装上下文",
+            )
+        })?;
+        if root.starts_with(self.data_root) || self.data_root.starts_with(root) {
+            return Err(recovery_error(
+                "runtime_data_overlap",
+                "安装根与管理器工作根必须分离",
+            ));
+        }
+        let node = self
+            .node()
+            .ok_or_else(|| recovery_error("node_missing", "恢复需要固定 Node 绝对路径"))?
+            .to_path_buf();
+        paths::validate_executable(&node)?;
+        if npm.file_name().is_some_and(|name| name == "npm-cli.js") {
+            crate::modules::backup::safety::read_file(&npm, 1024 * 1024)
+                .map_err(InstallError::from)?;
+        } else {
+            paths::validate_executable(&npm)?;
+        }
+        recovery_validate_source(&source)?;
+        let prefix = root.join(super::MANAGED_PREFIX_RELATIVE);
+        let entry = root.join(MANAGED_ENTRY_RELATIVE);
+        paths::validate_install_target(&prefix, self.home.as_deref())?;
+        crate::modules::backup::safety::check_path(root, &entry, true)
+            .map_err(InstallError::from)?;
+        let record_path = recovery_record_path(self.data_root);
+        crate::modules::backup::safety::check_path(self.data_root, &record_path, true)
+            .map_err(InstallError::from)?;
+        let record_before = read_entry_state(&record_path)?;
+        let entry_before = read_entry_state(&entry)?;
+        let record = record_before
+            .as_deref()
+            .and_then(|b| serde_json::from_slice::<super::RuntimeSourceRecord>(b).ok());
+        let manifest_path = prefix.join(MANIFEST_FILENAME);
+        crate::modules::backup::safety::check_path(&prefix, &manifest_path, true)
+            .map_err(InstallError::from)?;
+        let manifest = read_entry_state(&manifest_path)?
+            .as_deref()
+            .and_then(|b| serde_json::from_slice::<RuntimeManifest>(b).ok());
+        let package_path = prefix.join(PACKAGE_SUBPATH).join("package.json");
+        crate::modules::backup::safety::check_path(&prefix, &package_path, true)
+            .map_err(InstallError::from)?;
+        let package = read_entry_state(&package_path)?
+            .as_deref()
+            .and_then(|b| serde_json::from_slice::<serde_json::Value>(b).ok());
+        let manifest_owned = manifest.as_ref().is_some_and(|m| {
+            m.package == OFFICIAL_PACKAGE
+                && !m.version.is_empty()
+                && m.tarball_sha256.len() == 64
+                && m.tarball_sha256.bytes().all(|b| b.is_ascii_hexdigit())
+        });
+        let record_owned = record.as_ref().is_some_and(|r| {
+            r.schema_version == super::RUNTIME_SCHEMA_VERSION
+                && r.source == super::RuntimeSourceKind::Managed
+                && r.path.as_deref().map(Path::new) == Some(entry.as_path())
+                && r.history.iter().any(|h| {
+                    h.result == "succeeded"
+                        && h.package == OFFICIAL_PACKAGE
+                        && Path::new(&h.target) == prefix
+                })
+        });
+        let package_owned = package
+            .as_ref()
+            .is_some_and(|p| p["name"].as_str() == Some(OFFICIAL_PACKAGE));
+        if !(manifest_owned || record_owned && package_owned) {
+            return Err(recovery_error(
+                "recovery_unknown_program",
+                "现目录缺少可验证受管归属，保留原件并拒绝恢复",
+            ));
+        }
+        let service = service.snapshot()?;
+        if matches!(service, RecoveryServiceState::Unknown)
+            || matches!(&service, RecoveryServiceState::Owned { identity } if identity.is_empty())
+        {
+            return Err(recovery_error(
+                "recovery_service_unknown",
+                "无法证明当前本用户服务归属，未准备恢复",
+            ));
+        }
+        let operation_id = uuid::Uuid::new_v4().to_string();
+        let package_version = package
+            .as_ref()
+            .and_then(|p| p["version"].as_str())
+            .map(str::to_string);
+        let manifest_version = manifest.as_ref().map(|m| m.version.clone());
+        let source_version = record.as_ref().and_then(|r| r.resolved_version.clone());
+        let consistency = if validate_managed_installation(root, self.node()).is_ok()
+            && package_version.is_some()
+            && package_version == manifest_version
+            && package_version == source_version
+        {
+            "consistent"
+        } else {
+            "mismatchOrCorrupted"
+        }
+        .to_string();
+        let preview = RuntimeRecoveryPreview {
+            retained_prefix: prefix.with_file_name(format!("opencodex.recovery-{operation_id}")),
+            metadata_backup: self
+                .data_root
+                .join("backups/runtime-recovery")
+                .join(&operation_id),
+            package_tree_sha256: recovery_tree_digest(&prefix)?,
+            entry_sha256: recovery_optional_digest(&entry_before),
+            source_record_sha256: recovery_optional_digest(&record_before),
+            selected_archive: source.archive.clone(),
+            selected_sha256: source.expected_sha256.to_ascii_lowercase(),
+            selected_version: source.expected_version.clone(),
+            operation_id,
+            installation_root: root.to_path_buf(),
+            desktop_root: self.data_root.to_path_buf(),
+            prefix,
+            entry,
+            package_version,
+            manifest_version,
+            source_version,
+            consistency,
+            service,
+        };
+        let status = RuntimeRecoveryStatus {
+            preview: preview.clone(),
+            phase: RuntimeRecoveryPhase::Prepared,
+            restart_required: false,
+            detail: None,
+        };
+        Ok(RuntimeRecoveryOperation {
+            preview,
+            source,
+            entry_before,
+            record_before,
+            node,
+            npm,
+            status,
+        })
+    }
+
+    /// Caller holds shared installation/storage/preferences leases until worker
+    /// completion. Confirmation must equal the exact frozen operation ID.
+    pub fn apply_recovery(
+        &self,
+        operation: &mut RuntimeRecoveryOperation,
+        confirmation: &str,
+        service: &dyn RecoveryServiceBoundary,
+    ) -> Result<InstallOutcome, InstallError> {
+        if operation.status.phase != RuntimeRecoveryPhase::Prepared
+            || confirmation != operation.preview.operation_id
+        {
+            return Err(recovery_error(
+                "recovery_confirmation_required",
+                "需要确认本次恢复预览的 operationId",
+            ));
+        }
+        self.check_cancel()?;
+        operation.check_snapshot(self)?;
+        if service.snapshot()? != operation.preview.service {
+            return Err(recovery_error(
+                "recovery_service_changed",
+                "服务状态或归属已改变，请重新预览",
+            ));
+        }
+        operation.status.phase = RuntimeRecoveryPhase::Applying;
+        operation.persist(self)?;
+        let result = (|| {
+            operation.backup_metadata(self)?;
+            if let RecoveryServiceState::Owned { identity } = &operation.preview.service {
+                service.stop_owned(identity)?;
+                operation.status.restart_required = true;
+            }
+            if service.snapshot()? != RecoveryServiceState::Stopped {
+                return Err(recovery_error(
+                    "recovery_stop_unconfirmed",
+                    "未确认本用户服务停止，未替换程序",
+                ));
+            }
+            self.install_inner(
+                &InstallRequest {
+                    prefix: operation.preview.prefix.clone(),
+                    source: InstallSource::Offline {
+                        archive: operation.source.archive.clone(),
+                    },
+                    allow_scripts: false,
+                    npm_path: Some(operation.npm.clone()),
+                    node_path: Some(operation.node.clone()),
+                },
+                Some(operation),
+                Some(service),
+            )
+        })();
+        operation.status.phase = if result.is_ok() {
+            RuntimeRecoveryPhase::Succeeded
+        } else {
+            RuntimeRecoveryPhase::Failed
+        };
+        operation.status.restart_required |= result.is_ok();
+        operation.status.detail = result.as_ref().err().map(InstallError::message);
+        // A persistence error cannot claim that a completed activation rolled back.
+        if let Err(error) = operation.persist(self) {
+            operation.status.detail = Some(format!(
+                "{}; actual phase: {:?}",
+                error.message(),
+                operation.status.phase
+            ));
+            return Err(error);
+        }
+        result
+    }
+}
+
+#[cfg(test)]
+#[path = "install_v2_tests.rs"]
+mod install_v2_tests;
+
+/// Verified fixed paths for managed-only resolution. No discovery, PATH lookup,
+/// command execution or implicit executable-only fallback occurs here.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ManagedRuntimeIdentity {
+    pub installation_root: PathBuf,
+    pub prefix: PathBuf,
+    pub entry: PathBuf,
+    pub node: PathBuf,
+    pub package_version: String,
+}
+
+/// Paths derive solely from the trusted Desktop installation context.
+pub fn managed_dependency_paths(root: &Path) -> (PathBuf, PathBuf) {
+    #[cfg(windows)]
+    {
+        (
+            root.join("runtime/node/node.exe"),
+            root.join("runtime/node/node_modules/npm/bin/npm-cli.js"),
+        )
+    }
+    #[cfg(not(windows))]
+    {
+        (
+            root.join("runtime/node/bin/node"),
+            root.join("runtime/node/lib/node_modules/npm/bin/npm-cli.js"),
+        )
+    }
+}
+
+/// Resolve Node only from the installed activation record. Its launcher/package/
+/// bin digests and exact generated launcher must agree before it becomes usable.
+pub fn resolve_managed_installation(root: &Path) -> Result<ManagedRuntimeIdentity, InstallError> {
+    let prefix = root.join(super::MANAGED_PREFIX_RELATIVE);
+    if super::protection::installation_root_for_prefix(&prefix).map_err(InstallError::from)? != root
+    {
+        return Err(recovery_error("invalid_install_root", "安装上下文无效"));
+    }
+    let entry = root.join(MANAGED_ENTRY_RELATIVE);
+    crate::modules::backup::safety::check_path(root, &prefix, false).map_err(InstallError::from)?;
+    crate::modules::backup::safety::check_path(root, &entry, false).map_err(InstallError::from)?;
+    paths::validate_executable(&entry)?;
+    validate_existing_prefix(&prefix)?;
+    let manifest_path = prefix.join(MANIFEST_FILENAME);
+    let raw = crate::modules::backup::safety::read_file(&manifest_path, 64 * 1024)
+        .map_err(InstallError::from)?;
+    let manifest: RuntimeManifest = serde_json::from_slice(&raw)
+        .map_err(|e| recovery_error("read_manifest", &e.to_string()))?;
+    let proof = manifest.activation.as_ref().ok_or_else(|| {
+        recovery_error(
+            "activation_proof_missing",
+            "缺少包含固定 Node 的激活证明，请先恢复安装",
+        )
+    })?;
+    let package_path = prefix.join(PACKAGE_SUBPATH).join("package.json");
+    crate::modules::backup::safety::check_path(&prefix, &package_path, false)
+        .map_err(InstallError::from)?;
+    let package: serde_json::Value = serde_json::from_slice(
+        &crate::modules::backup::safety::read_file(&package_path, 64 * 1024)
+            .map_err(InstallError::from)?,
+    )
+    .map_err(|e| recovery_error("parse_package", &e.to_string()))?;
+    let bin = normalize_bin(&archive::resolve_bin(&package).ok_or(InstallError::ScriptsRequired)?);
+    if bin.is_empty() {
+        return Err(InstallError::ScriptsRequired);
+    }
+    proof.verify(&prefix, &bin).map_err(InstallError::from)?;
+    let script = prefix.join(PACKAGE_SUBPATH).join(bin);
+    crate::modules::backup::safety::check_path(&prefix, &script, false)
+        .map_err(InstallError::from)?;
+    if !is_executable_file(&script) {
+        return Err(InstallError::ScriptsRequired);
+    }
+    let node = proof.node();
+    paths::validate_executable(node)?;
+    if read_entry_state(&entry)?.as_deref() != Some(entry_script(Some(node), &script).as_bytes()) {
+        return Err(recovery_error(
+            "managed_entry_mismatch",
+            "受管入口与激活记录的包体/Node 不一致，请先预览恢复",
+        ));
+    }
+    Ok(ManagedRuntimeIdentity {
+        installation_root: root.into(),
+        prefix,
+        entry,
+        node: node.into(),
+        package_version: manifest.version,
+    })
+}
+
+/// Sole managed-only admission: callers inject managed_dependency_paths(I).0.
+/// The recorded Node is only a consistency witness and must equal that fixed path.
+/// Missing Node/proof never falls back to executable-only admission.
+pub fn validate_managed_installation(root: &Path, node: Option<&Path>) -> Result<(), InstallError> {
+    let node =
+        node.ok_or_else(|| recovery_error("node_missing", "受管入口需要固定的 Node 绝对路径"))?;
+    let identity = resolve_managed_installation(root)?;
+    if identity.node != node {
+        return Err(recovery_error(
+            "managed_node_mismatch",
+            "指定 Node 与受管激活记录不一致",
+        ));
+    }
+    Ok(())
 }

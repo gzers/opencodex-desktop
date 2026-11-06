@@ -168,7 +168,7 @@ async fn query_panel_metadata(
     let Some(home) = app.try_state::<crate::state::SharedHomeDir>() else {
         return Err(AppError::NotConfigured);
     };
-    let npm = crate::modules::about::remote::discovered_npm().ok_or(AppError::NotConfigured)?;
+    let runtime=app.state::<std::sync::Arc<crate::modules::runtime::RuntimeHandle>>().inner().clone();
     let environment = crate::modules::preferences::network_environment_for_app(app, home.0.clone());
     let working = home.0.clone();
     let cache = app
@@ -180,8 +180,8 @@ async fn query_panel_metadata(
         .0
         .join("logs/runtime-query");
     crate::commands::run_blocking("query panel metadata", move || {
-        crate::modules::about::remote::query_remote_latest(
-            &npm,
+        crate::commands::runtime::query_runtime_remote_latest(
+            &runtime,
             &working,
             &cache,
             &logs,

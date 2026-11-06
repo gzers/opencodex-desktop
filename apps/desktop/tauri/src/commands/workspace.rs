@@ -9,7 +9,7 @@ use tauri::{Manager, State};
 
 use crate::errors::{AppError, AppResult};
 use crate::modules::extensions::ClientId;
-use crate::state::{SharedDataRoot, SharedHomeDir};
+use crate::state::{SharedDataRoot, SharedHomeDir, SharedProcessContext};
 use crate::types::workspace::{
     AgentPathDto, AgentPathKind, ManagedPathDto, ManagedPathKey, ManagedPathTargetsDto,
     OpenResultDto,
@@ -28,8 +28,9 @@ pub fn open_managed_path(
     path: String,
     data_root: State<'_, SharedDataRoot>,
     home: State<'_, SharedHomeDir>,
+    context: State<'_, SharedProcessContext>,
 ) -> AppResult<OpenResultDto> {
-    open_managed_path_with_roots(&data_root.0, &home.0, &path)
+    open_managed_path_with_home(&data_root.0, &home.0, Some(&context.opencodex_home), &path)
 }
 
 #[tauri::command]
@@ -118,6 +119,18 @@ pub fn open_managed_path_with_roots(
     home: &Path,
     requested_path: &str,
 ) -> AppResult<OpenResultDto> {
+    let configured_home = crate::modules::data_root::load_runtime_config(data_root)
+        .ok()
+        .map(|config| crate::modules::data_root::resolve_opencodex_home(&config));
+    open_managed_path_with_home(data_root, home, configured_home.as_deref(), requested_path)
+}
+
+fn open_managed_path_with_home(
+    data_root: &Path,
+    home: &Path,
+    opencodex_home: Option<&Path>,
+    requested_path: &str,
+) -> AppResult<OpenResultDto> {
     let request = PathBuf::from(requested_path);
     let targets = managed_path_targets_with_roots(data_root, home);
     if let Some(allowed) = targets
@@ -132,21 +145,12 @@ pub fn open_managed_path_with_roots(
         }
         return open_path(&allowed).map(|_| OpenResultDto { opened: true });
     }
-    // 数据根、用户主目录与真实 OPENCODEX_HOME 都允许打开。OPENCODEX_HOME 由
-    // 数据根运行配置解析：inside 模式为 `<数据根>/opencodex-home`，external 模式为
-    // 配置中的外部路径。此前只把 OS 主目录当作 OPENCODEX_HOME，导致前端传入的
-    // 真实 `opencodex-home` 路径未命中白名单而静默失败（概览与安装配置的「打开」）。
-    let resolved_opencodex_home = crate::modules::data_root::load_runtime_config(data_root)
-        .ok()
-        .map(|config| crate::modules::data_root::resolve_opencodex_home(&config));
-    let direct_roots = [
-        Some(data_root.to_path_buf()),
-        Some(home.to_path_buf()),
-        resolved_opencodex_home,
-    ];
+    // Runtime HOME is injected by the command. Saving a future HOME must not
+    // change the active service's allowed path until restart.
+    let direct_roots = [Some(data_root), Some(home), opencodex_home];
     for root in direct_roots.into_iter().flatten() {
-        if request == root && root.is_dir() {
-            return open_path(&root).map(|_| OpenResultDto { opened: true });
+        if crate::modules::data_root::same_runtime_directory(&request, root) && root.is_dir() {
+            return open_path(root).map(|_| OpenResultDto { opened: true });
         }
     }
     Err(AppError::NotConfigured)
@@ -350,25 +354,26 @@ mod tests {
 
     #[test]
     fn open_data_root_and_opencodex_home_are_allowed() {
-        let root = tempfile::tempdir().expect("temp root");
+        let temp = tempfile::tempdir().expect("temp aggregate");
+        let root = temp.path().join("desktop");
         let home = tempfile::tempdir().expect("temp home");
-        crate::modules::data_root::initialize(root.path()).expect("initialize");
+        crate::modules::data_root::initialize(&root).expect("initialize");
 
         let result = open_managed_path_with_roots(
-            root.path(),
+            root.as_path(),
             home.path(),
-            &root.path().display().to_string(),
+            &root.as_path().display().to_string(),
         )
         .expect("open data root");
         assert!(result.opened);
-        assert!(recorded_open_paths().contains(&root.path().to_path_buf()));
+        assert!(recorded_open_paths().contains(&root.as_path().to_path_buf()));
 
-        // 真实 OPENCODEX_HOME：inside 模式解析为 `<数据根>/opencodex-home`。
-        // 前端传入的正是这个路径；它必须命中白名单，否则按钮会静默失败。
-        let opencodex_home = root.path().join("opencodex-home");
+        let opencodex_home = crate::modules::data_root::resolve_opencodex_home(
+            &crate::modules::data_root::load_runtime_config(root.as_path()).unwrap(),
+        );
         std::fs::create_dir_all(&opencodex_home).expect("create opencodex home");
         let result = open_managed_path_with_roots(
-            root.path(),
+            root.as_path(),
             home.path(),
             &opencodex_home.display().to_string(),
         )
@@ -378,7 +383,7 @@ mod tests {
 
         // 用户主目录本身仍允许打开（退出通道不回退）。
         let result = open_managed_path_with_roots(
-            root.path(),
+            root.as_path(),
             home.path(),
             &home.path().display().to_string(),
         )
@@ -464,5 +469,43 @@ mod tests {
             open_local_document_from_root(root.path(), "unknown"),
             Err(AppError::NotFound { .. })
         ));
+    }
+
+    #[test]
+    fn runtime_home_allowlist_does_not_follow_pending_saved_home_or_old_home_layout() {
+        let t = tempfile::tempdir().unwrap();
+        let root = t.path().join("desktop");
+        crate::modules::data_root::initialize(&root).unwrap();
+        let runtime_home = t.path().join("opencodex/home");
+        let future_home = t.path().join("future-home");
+        let legacy_home = root.join("opencodex-home");
+        for path in [&runtime_home, &future_home, &legacy_home] {
+            fs::create_dir_all(path).unwrap();
+        }
+        crate::modules::data_root::set_opencodex_home(
+            &root,
+            crate::modules::data_root::OpenCodexHomeMode::External,
+            Some(&future_home),
+        )
+        .unwrap();
+        assert!(
+            open_managed_path_with_home(
+                &root,
+                t.path(),
+                Some(&runtime_home),
+                &runtime_home.display().to_string()
+            )
+            .unwrap()
+            .opened
+        );
+        for rejected in [&future_home, &legacy_home] {
+            assert!(open_managed_path_with_home(
+                &root,
+                t.path(),
+                Some(&runtime_home),
+                &rejected.display().to_string()
+            )
+            .is_err());
+        }
     }
 }
