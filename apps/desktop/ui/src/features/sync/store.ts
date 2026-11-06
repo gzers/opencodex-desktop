@@ -9,6 +9,8 @@ import {
 } from './api'
 import {useConfigSyncV2Store} from './store-v2'
 import {useConfigFileV2Store} from './file-store-v2'
+import {useTransferBackupsV2Store} from '@/features/backup/transfer-backups-v2'
+import {resultOwnerV2Api} from './result-owner-v2'
 import { endpointBinding, persistObservation, readObservation, type ConnectionObservation, type ObservationDetails, type ObservationToken, type ObservedState, type WebdavState } from './observation'
 
 function failedStatus(message: string): SyncOperationResultDto {
@@ -27,14 +29,33 @@ export const useSyncStore = defineStore('sync', {
     configRequest: 0,
     saving: false, testing: false, running: false,
     connectionOpen: false, resultOpen: false, resultId: null as string | null,
+    resultReadError:'',resultResolving:false,resultReadSequence:0,
     lastResultId: null as string | null, fileResultId: null as string | null, webdavResultId: null as string | null,
     pendingAction: null as null | 'sync' | 'export' | 'connection',
   }),
   actions: {
     openConnection() { this.connectionOpen = true },
     rememberResult(id: string, remote: boolean) { this.lastResultId = id; if (remote) this.webdavResultId = id; else this.fileResultId = id },
-    openResult(id?:string){const target=id??this.lastResultId;if(!target)return;const owner=useConfigSyncV2Store(),file=useConfigFileV2Store();if(target===owner.fact?.operationId||target===this.webdavResultId){owner.resultOpen=true;void owner.readResult(target);return}if(target===file.receipt?.operationId||target===this.fileResultId){void file.showOriginal(target);return}void file.showOriginal(target).then(found=>{if(!found){owner.resultOpen=true;void owner.readResult(target)}})},
-    closeResult() { this.resultOpen = false },
+    async openResult(id?:string){
+      const target=id??this.lastResultId;if(!target)return false
+      const request=++this.resultReadSequence,current=()=>request===this.resultReadSequence
+      this.resultId=target;this.resultReadError='';this.resultResolving=true;this.resultOpen=false
+      try{
+        const owner=await resultOwnerV2Api.read(target);if(!current())return false
+        if(owner===null)throw new Error('未找到该原操作的受控结果记录。')
+        if(owner.operationId!==target||!['file','sync','recovery','scope_restore'].includes(owner.kind))throw new Error('结果归属回执与原操作不符。')
+        let found=false
+        if(owner.kind==='file')found=await useConfigFileV2Store().showOriginal(target,current)
+        else if(owner.kind==='sync')found=await useConfigSyncV2Store().readResult(target,current)
+        else if(owner.kind==='recovery')found=await useConfigSyncV2Store().readRecovery(target,current)
+        else found=await useTransferBackupsV2Store().showOriginal(target,current)
+        if(!current())return false
+        if(!found)throw new Error('已核对归属，但原操作结果暂未读回；原结果保持。')
+        return true
+      }catch(cause){if(current()){const code=cause&&typeof cause==='object'&&'code'in cause?String(cause.code):cause instanceof Error?cause.message:'';this.resultReadError='原操作结果读取失败，已保留原结果。'+(code?' '+code:'');this.resultOpen=true}return false}
+      finally{if(current())this.resultResolving=false}
+    },
+    closeResult(){this.resultReadSequence++;this.resultOpen=false;this.resultResolving=false},
     setWebdavState(next: ConnectionState) { this.webdavState = next },
     requestAction(action: 'sync' | 'export' | 'connection') { this.pendingAction = action },
     takeAction(action: 'sync' | 'export' | 'connection'): boolean { if (this.pendingAction !== action) return false; this.pendingAction = null; return true },

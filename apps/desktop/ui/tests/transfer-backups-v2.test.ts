@@ -16,7 +16,7 @@ let backend:ReturnType<typeof workspaceBackend>,models:Awaited<ReturnType<Return
 const calls=(name:string)=>ipc.mock.calls.filter(c=>c[0]===name)
 const dialog={props:['open','title','busy'],template:'<section v-if="open" :data-dialog="title"><button class="close" :disabled="busy" @click="$emit(&quot;close&quot;)">X</button><slot/><slot name="actions" :close="() => $emit(&quot;close&quot;)"/></section>'}
 const button=(w:Pick<VueWrapper,'findAll'>,name:string)=>w.findAll('button').find(b=>b.text()===name)!
-function render(){const w=mount(TransferBackups,{global:{stubs:{UiDialog:dialog}}});wrappers.push(w);return w}
+function render(){const w=mount(TransferBackups,{props:{dialogOwner:true},global:{stubs:{UiDialog:dialog}}});wrappers.push(w);return w}
 beforeEach(async()=>{backend=workspaceBackend(ipc,['a']);models=await backend.load();store=useTransferBackupsV2Store();vi.spyOn(useAppStore(),'loadPreferences').mockResolvedValue();const originalHandler=backend.handler;ipc.mockClear();ipc.mockImplementation(async(command,args)=>{if(command==='transfer_v2_backup_list')return [row()];if(command==='transfer_v2_backup_restore_operations')return [];if(command==='transfer_v2_backup_preview')return plan(args.groups);if(command==='transfer_v2_backup_restore'){expect(backend.current.draft).toBeNull();const next=copy(backend.current);next.savedPolicy.channels[0]!.label='Restored original channel';next.sourceDigest=hash(8);backend.current=next;return receipt('applied',store.active!.preview!.groups)}return originalHandler(command,args)})})
 afterEach(()=>{wrappers.splice(0).forEach(w=>w.unmount());vi.restoreAllMocks()})
 describe('actual scope-backup v2 consumer with deterministic owner receipts',()=>{

@@ -57,7 +57,7 @@ describe('POST-09 remaining owned consumer guards', () => {
     vi.spyOn(transferBackupV2Api,'list').mockResolvedValue([{id:'fixture',groups:['channels'],enabled:true,ready:true}]);vi.spyOn(transferBackupV2Api,'restore');vi.spyOn(transferBackupV2Api,'operations').mockResolvedValue([])
     let finish!:(value:RestorePreviewV2)=>void
     vi.spyOn(transferBackupV2Api,'preview').mockReturnValue(new Promise(resolve => { finish = resolve }))
-    const w = render(TransferBackups); await flushPromises()
+    const w = render(TransferBackups,{dialogOwner:true}); await flushPromises()
     await w.findAll('button').find(b => b.text() === '恢复所选范围')!.trigger('click'); await flushPromises()
     await exit(channel); expect(document.querySelector('dialog[open]')).not.toBeNull()
     finish({restoreId:'fixture-restore',planDigest:'fixture-digest',groups:['channels']}); await flushPromises(); await exit(channel)
