@@ -101,6 +101,7 @@ async fn ensure(root: PathBuf) -> ModelResult<String> {
     Ok(endpoint)
 }
 async fn start(root: PathBuf) -> ModelResult<Broker> {
+    let _admission = crate::infrastructure::storage_writers::global().admit()?;
     use crate::modules::backup::safety;
     let descriptor = root.join(DESCRIPTOR);
     safety::check_path(&root, &descriptor, true)?;
@@ -449,6 +450,7 @@ pub fn with_external_authority<T>(
     task_id: &str,
     action: impl FnOnce() -> ModelResult<T>,
 ) -> ModelResult<T> {
+    let _admission = crate::infrastructure::storage_writers::global().admit()?;
     let _lock = grant_lock(root, task_id)?;
     let record = read_grant(root, task_id)?;
     validate_grant(root, &record, true)?;
@@ -534,8 +536,13 @@ fn receipt_value(root: &FsPath, record: &GrantRecordV2, submission_id: &str) -> 
     let Some(receipt) = receipt else {
         return Ok(Value::Null);
     };
+    let payload = record
+        .payload
+        .as_ref()
+        .filter(|p| p.submission_id == submission_id)
+        .ok_or_else(|| invalid("task_binding", "任务提交与能力回执不配对"))?;
     let mut value = serde_json::to_value(receipt)?;
-    value["payloadDigest"] = json!(record.payload.as_ref().map(|p| &p.body_digest));
+    value["payloadDigest"] = json!(payload.body_digest);
     Ok(value)
 }
 async fn preflight(
@@ -579,6 +586,10 @@ async fn submit(
             .map_err(v2_error)?
             .is_some()
         {
+            // The runtime's idempotent path also repairs a missing latest
+            // index after a prior durable review with an interrupted reply.
+            v2::submit_external_review(root, &record.context.process(), &id, &body)
+                .map_err(v2_error)?;
             return receipt_value(root, &record, &submission_id);
         }
         if record.payload.is_none() {
@@ -636,8 +647,8 @@ pub async fn prepare_external_broker(
     context: crate::state::ProcessContext,
     intent: v2::GenerateIntentV2,
 ) -> ModelResult<ExternalBrokerBundleV2> {
-    let endpoint = ensure(root.clone()).await?;
     let admission = crate::infrastructure::storage_writers::global().admit()?;
+    let endpoint = ensure(root.clone()).await?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
         prepare_bundle_at(&root, &context, intent, &endpoint)
@@ -700,6 +711,7 @@ pub fn activate_external(
     task_id: &str,
     prepared_ticket: &str,
 ) -> ModelResult<()> {
+    let _admission = crate::infrastructure::storage_writers::global().admit()?;
     let _lock = grant_lock(root, task_id)?;
     let mut record = read_grant(root, task_id)?;
     validate_grant(root, &record, false)?;
@@ -726,6 +738,7 @@ pub fn activate_external(
     persist_grant(root, &record)
 }
 pub fn revoke_external(root: &FsPath, task_id: &str) -> ModelResult<()> {
+    let _admission = crate::infrastructure::storage_writers::global().admit()?;
     let _lock = grant_lock(root, task_id)?;
     let mut record = read_grant(root, task_id)?;
     if record.revoked {
@@ -733,7 +746,13 @@ pub fn revoke_external(root: &FsPath, task_id: &str) -> ModelResult<()> {
     }
     record.revoked = true;
     persist_grant(root, &record)?;
-    v2::revoke_external(root, task_id).map_err(v2_error)
+    match v2::revoke_external(root, task_id) {
+        Ok(()) => Ok(()),
+        // Already accepted revisions remain accepted. Withdrawing their
+        // transport capability must still succeed and cannot undo a save.
+        Err(error) if error.code == "model_agent_run_state" => Ok(()),
+        Err(error) => Err(v2_error(error)),
+    }
 }
 /// Legacy command type stays source-compatible until L0 replaces its public
 /// entry point. It never prepares or executes a v1 task or reads a v1 library.
