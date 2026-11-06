@@ -30,6 +30,9 @@ use std::{
 };
 use zeroize::Zeroizing;
 
+#[path = "sync_local_v2_restore.rs"]
+pub mod restore;
+
 /// Trusted host boundary: use the exact D/H and explicit preview request.
 pub trait SourceSnapshotProviderV2: Send + Sync {
     fn current(&self, d: &Path, h: &Path, request: &CaptureRequestV2) -> ModelResult<SourceGuard>;
@@ -109,8 +112,9 @@ impl LocalApplication for LocalApplicationV2 {
                 self.verify_plan_guards(&j)?;
                 if j.progress != LocalProgressV2::Applied {
                     j.progress = LocalProgressV2::Applied;
-                    self.save(j)?;
+                    j = self.save(j)?;
                 }
+                restore::finish(self, &j)?;
                 return Ok(());
             }
         }
@@ -250,6 +254,7 @@ impl LocalApplication for LocalApplicationV2 {
             portable_assets::verify(&self.d, id, objects.partitions().assets)
                 .map_err(|_| failure(ErrorCode::SyncLocalChanged))?;
             self.verify_mapping(false)?;
+            restore::freeze_before(self, &j)?;
             let r = self
                 .models
                 .apply_once(id, &objects, &handle, backup)
@@ -304,7 +309,8 @@ impl LocalApplication for LocalApplicationV2 {
             return Err(failure(ErrorCode::SyncOperationUnknown));
         }
         j.progress = LocalProgressV2::Applied;
-        self.save(j)?;
+        j = self.save(j)?;
+        restore::finish(self, &j)?;
         Ok(())
     }
     fn export_once(
