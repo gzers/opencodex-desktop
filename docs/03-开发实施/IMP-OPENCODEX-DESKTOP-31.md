@@ -2,14 +2,16 @@
 id: "IMP-OPENCODEX-DESKTOP-31"
 object_kind: "implementation.change"
 state: "in_progress"
+completion_summary: null
 title: "0.2.23 发布后修复、用户目录与模型模版总计划"
 target_version: "0.2.23"
-demand_ids: ["DMD-OPENCODEX-POST022", "DMD-OPENCODEX-USER-DIRECTORY", "DMD-OPENCODEX-TEMPLATE-MATCHING"]
-summary: "开发前最终自审与有界计划；仅文档，未开工、未创建TASK、未发布。"
+demand_ids: ["DMD-OPENCODEX-POST022", "DMD-OPENCODEX-TEMPLATE-MATCHING", "DMD-OPENCODEX-USER-DIRECTORY"]
+task_ids: ["TASK-023-INTEGRATION", "TASK-023-SYNC"]
+summary: "G0合同已冻结并启动授权实施；L1/L2纯核心已集成，目录、业务接线及制品验收进行中，未发布。"
 ---
 # 0.2.23 发布后修复、用户目录与模型模版总计划
 
-2026-11-06，Asia/Shanghai。**planned，仅计划审计，先不开发。** 范围/验收归[DMD-POST022](../01-需求管理/需求/DMD-OPENCODEX-POST022.md)，反馈分析沿[原清单](../04-项目资料/01-项目支撑资料/06-问题记录/0.2.22-bugs.md)。本文唯一维护顺序/依赖/完成定义，不重开已关闭IMP-30/DMD-POST021/0.2.22证书。
+2026-11-06，Asia/Shanghai。**in_progress：用户已授权文档、开发、测试和发布；本轮正在实施，尚未完成整版验收或发布。** 范围/验收归[DMD-POST022](../01-需求管理/需求/DMD-OPENCODEX-POST022.md)，反馈分析沿[原清单](../04-项目资料/01-项目支撑资料/06-问题记录/0.2.22-bugs.md)。本文唯一维护顺序/依赖/完成定义，不重开已关闭IMP-30/DMD-POST021/0.2.22证书。
 
 用户本轮将目录调整与多用户并行明确纳入0.2.23：原六项修复加同版目录专题。目录验收归[DMD-USER-DIRECTORY](../01-需求管理/需求/DMD-OPENCODEX-USER-DIRECTORY.md)，DIR-00～07明细归[IMP-32](IMP-OPENCODEX-DESKTOP-32.md)，以P23-10接入本总计划。新版全部识别按新规定路径；P23-01/05不增加旧根扫描、旧程序重新绑定或自动迁移。
 
@@ -17,7 +19,7 @@ summary: "开发前最终自审与有界计划；仅文档，未开工、未创�
 
 ## 1. 基线与版本
 
-- 桌面目标0.2.23，代码起点0c57500f8f46ea50655c782c3f04334a39167abb（现有桌面0.2.22），证据文档e01dc177b，长期测试规范893b1d1fc。真正开工先核对远端及最终来源；当前不改package/Cargo/Tauri版本，不创建代码分支/工作树。建议后续分支codex/0.2.23-fixes。
+- 桌面目标0.2.23，代码起点0c57500f8f46ea50655c782c3f04334a39167abb（现有桌面0.2.22），证据文档e01dc177b，长期测试规范893b1d1fc。当前集成分支codex/0.2.23-integration；版本文件在功能及发行链收口时统一更新。
 - 唯一总原型docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html，采用cde9cc52a下#models新增渠道两步、#sync?tab=webdav来源下拉及整体预览。工作区并行概览/维护草稿不采用。后续无ETag决定优先，旧快照批注须在G0更新。
 - cde9cc52a文件SHA256：index.html=f099e67c22b44ed7bdfa58deed70fe0d91fa09b55514b7adde3faf568d4eadf9；sync-config.js=72e94d236d638f60b8f3673a36b5bcea2176cd05b0e0c09884961314338bb578；model-config.js=14b0f738cb683c78474d3bd7212b28f1ef1b817b4cce16b4119180c7b0332f8f。交互沿[最新说明](../04-项目资料/01-项目支撑资料/01-产品原型/同步直接更新原型说明.md)，新增设计状态需记录后继采用提交/摘要。
 - 基础维护运行包2.97.0-post021.ownerquery.2，SHA256 bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957；不含本批中文name目录映射。所需新修订版本/交付来源未冻结，不可沿用旧包版本标记新字节，也不可把桌面0.2.23当作运行包版本。

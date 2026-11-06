@@ -1,0 +1,82 @@
+{
+  "kind": "TASK",
+  "id": "TASK-023-MODEL-CONSUMERS",
+  "title": "模型v2实际文件消费者",
+  "state": "ready",
+  "result": "pending",
+  "summary": "Read/import and compile/store material plans; L0 alone commits runtime configuration transaction.",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-33",
+  "demand_ids": [
+    "DMD-OPENCODEX-TEMPLATE-MATCHING"
+  ],
+  "owner": "L1",
+  "baseline_digest": "10b9e7cd55f5615a59d03e4f6135d412c56155934181ada1244e0ce988291dbe",
+  "write_scope": [
+    "apps/desktop/tauri/src/modules/model_config/compiler_v2.rs",
+    "apps/desktop/tauri/src/modules/model_config/consumer_v2_tests.rs",
+    "apps/desktop/tauri/src/modules/model_config/protocol_groups.rs",
+    "apps/desktop/tauri/src/modules/model_config/provider_import.rs",
+    "apps/desktop/tauri/src/modules/model_config/store_v2.rs"
+  ],
+  "required_checks": [
+    "cleanup:owned-residue",
+    "review:scope",
+    "review:source-and-prototype",
+    "test:affected"
+  ],
+  "acceptance_ids": [
+    "AC-MATCH-01",
+    "AC-MATCH-02",
+    "AC-MATCH-03",
+    "AC-MATCH-04",
+    "AC-MATCH-05",
+    "AC-MATCH-06",
+    "AC-MATCH-07"
+  ],
+  "acceptance_bindings": [
+    {
+      "demand_id": "DMD-OPENCODEX-TEMPLATE-MATCHING",
+      "acceptance_id": "AC-MATCH-01",
+      "criterion_digest": "ebb548b7faea4376c7e1cca20297caca911100e570292d5e9df7868d3a1d92ad"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-TEMPLATE-MATCHING",
+      "acceptance_id": "AC-MATCH-02",
+      "criterion_digest": "819d28d84bc76fb3cc7e842692f1b1bb0dcf5a8ed55bb91b6659cdb6c92c2193"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-TEMPLATE-MATCHING",
+      "acceptance_id": "AC-MATCH-03",
+      "criterion_digest": "1bdd5f0bcff754d45f89de8361a8f41c5a53f5bc7bda6bc019c3a41070acfb67"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-TEMPLATE-MATCHING",
+      "acceptance_id": "AC-MATCH-04",
+      "criterion_digest": "44c34be79a32f199a1193b06722035cdd3a6cfe593ecc6313df0642103c2a0c0"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-TEMPLATE-MATCHING",
+      "acceptance_id": "AC-MATCH-05",
+      "criterion_digest": "5af6889189328a21748af1dbd9e4257a8b28ac0c4e01be5d359774be61ce059a"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-TEMPLATE-MATCHING",
+      "acceptance_id": "AC-MATCH-06",
+      "criterion_digest": "e43875acb0d2720305601048cf36e7a0de06c4899dcb53940499f79c3196597b"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-TEMPLATE-MATCHING",
+      "acceptance_id": "AC-MATCH-07",
+      "criterion_digest": "bb38b08bb03be10fbe02183e752466cbba78d34612662883d742fd7d7ce2f277"
+    }
+  ],
+  "fact_writeback": {
+    "mode": "none",
+    "targets": []
+  },
+  "imported_receipt_digest": null,
+  "certificate_digest": null,
+  "revision": 1,
+  "summary_digest": "a219671ec26db0aa13522df256d50e159702ee2e533ea06285318711852ca29b",
+  "content_digest": "8afc279923a80ab18d96e3b4a6538123cfbe6443aae28eaba7f41eaf812d5c73"
+}

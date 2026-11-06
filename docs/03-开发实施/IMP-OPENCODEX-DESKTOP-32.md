@@ -2,9 +2,11 @@
 id: "IMP-OPENCODEX-DESKTOP-32"
 object_kind: "implementation.change"
 state: "in_progress"
+completion_summary: null
 title: "用户目录重划与新版路径实施清单"
 target_version: "0.2.23"
 demand_ids: ["DMD-OPENCODEX-USER-DIRECTORY"]
+task_ids: ["TASK-023-DIRECTORY"]
 summary: "已确认方向，仅文档；新版路径与手动渠道恢复，不做旧版兼容或自动迁移，目标版本0.2.23。"
 ---
 # 用户目录重划与新版路径实施清单

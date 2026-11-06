@@ -2,14 +2,16 @@
 id: "IMP-OPENCODEX-DESKTOP-33"
 object_kind: "implementation.change"
 state: "in_progress"
+completion_summary: null
 title: "0.2.23 模型模版通用匹配与候选配置实施清单"
 target_version: "0.2.23"
 demand_ids: ["DMD-OPENCODEX-TEMPLATE-MATCHING"]
-summary: "候选17模版及离线校验已准备；生产Schema和全消费者接线未开始；原型局部已接线，完整条件编辑待补。"
+task_ids: ["TASK-023-MODEL-CONSUMERS", "TASK-023-MODELS", "TASK-023-PROTOTYPE"]
+summary: "正式v2纯核心及来源/便携校验已集成，实际文件消费者与统一保存事务接线进行中；部分验证不代表全版通过。"
 ---
 # 0.2.23 模型模版通用匹配与候选配置实施清单
 
-2026-11-06。**planned**：用户授权提前写好配置并纳入0.2.23，不代表授权本轮启动产品开发/发布。验收归[DMD-TEMPLATE-MATCHING](../01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md)，配置及说明见[候选目录](../04-项目资料/01-项目支撑资料/06-问题记录/模型模版通用匹配配置/README.md)。总计划IMP-31 P23-11集成，不另维护发布生命周期。
+2026-11-06。**in_progress**：用户已授权本轮完整实施与发布；当前v2纯核心已并入集成分支，实际消费者及组件继续实现，尚未发布。验收归[DMD-TEMPLATE-MATCHING](../01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md)，配置及说明见[候选目录](../04-项目资料/01-项目支撑资料/06-问题记录/模型模版通用匹配配置/README.md)。总计划IMP-31 P23-11集成，不另维护发布生命周期。
 
 ## 唯一细目与顺序
 

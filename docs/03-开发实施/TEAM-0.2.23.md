@@ -102,3 +102,14 @@ L0在全部适用AC、贡献检查与必需Windows边界通过后完成P23-08；
 L2正式G0回交已接收并按原SHA256归档，见[完整方案](../../.adg/evidence/0.2.23/team/L2/g0-20261106/L2-G0-20261106.md)和[回交凭据](../../.adg/evidence/0.2.23/team/L2/g0-20261106/receipt.json)。这是待冻结建议，非编码/测试结果；初始化歧义恢复与服务器并发能力边界由L0结合共同合同处理。L2申请webdav_client.rs的Depth1/安全href/错误适配不在原写集，L0接入或明确单文件授权后才可改。R1尚未发布，当前L2/L3继续R0。
 
 用户已授权总控目标模式文档/开发/测试/发布及直接协调既有L1/L2/L3，Windows走独立Git交接。当前L0已创建隔离集成工作区及干净原型贡献工作区，G0具体合同产物由各线回交，下一步按冻结合同逐项发R1写集；旧“只读/无开发授权”仅是前序状态，不取消本轮有效授权。共享路径策略已纳入根层IMP/TEAM/合同/候选，真实revision以提交文件为准。
+
+
+### 2026-11-06 第二批实际派发与集成
+
+用户完整授权持续有效。集成代码树为codex/0.2.23-integration，当前已集成L1两个贡献fa07451c9/4b34851dd及L2首批772e6424d，集成提交9e8fded1b。公共注册及生产网络适配正在正常crate复验，尚未完成保存/界面/安装/发行验收。
+
+L1新增实际消费者批次独占：provider_import.rs、protocol_groups.rs仅新增v2入口，compiler_v2.rs、store_v2.rs、consumer_v2_tests.rs；原六个v2纯核心文件继续由L1持有。L0保留config_file、名称/配置统一事务、公共命令/注册。L1库/草稿可独立保存，Policy/ledger/映射只返回统一事务材料，不分开落运行状态。所有root参数为解析后的D，配置H单独传入；不扫描旧路径。锁序：全局写门、content_versions文件保存门、渠道名称门、config文件锁、model-v2事务锁。
+
+L0内部辅助执行者分别独占data_root/{mod,bootstrap,layout,startup_v2}.rs及commands/data_root.rs，和runtime/install.rs及commands/runtime.rs；仍由L0负责审核与提交，不建立新的跨对话版本来源。其他L0文件由总控写入。此辅助分解不扩大L1/L2/L3/Windows写集。
+
+扩大目录回归首轮68项为39过/29失败，主要暴露旧自动修复/旧绑定/版本及路径断言与新合同冲突；保留失败结果并继续逐项处理，不以局部新测试通过替代全模块验收。

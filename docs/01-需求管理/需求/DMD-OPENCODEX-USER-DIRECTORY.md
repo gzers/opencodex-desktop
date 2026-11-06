@@ -8,19 +8,7 @@ summary: "用户已确认.codex-desktop下分desktop/opencodex；仅识别新版
 next_action: "按IMP-32冻结新版双端程序前缀、Schema及原型采用，等待开发指令。"
 resolution: null
 implementation_ids: ["IMP-OPENCODEX-DESKTOP-31", "IMP-OPENCODEX-DESKTOP-32"]
-acceptance_criteria:
-  - id: "AC-DIR-01"
-    text: "双端按当前OS用户解析.codex-desktop，下分desktop和opencodex/home，管理器状态与原版渠道配置各有唯一归属。"
-  - id: "AC-DIR-02"
-    text: "程序、配置、启动、更新、卸载仅按新版规定路径；不扫描继承旧目录、注册表或旧程序，不做旧格式转换、自动迁移、跨版本接管。"
-  - id: "AC-DIR-03"
-    text: "手动放入新HOME的当前支持格式JSON可读取渠道、节点、认证与模型选择并供实际运行目录消费；缺引用/损坏明确提示。"
-  - id: "AC-DIR-04"
-    text: "不同Windows账户允许同时打开管理器及运行各自独立实例；同账户保留单实例约束，启动锁/数据锁/IPC按用户隔离；端口占用明确处理，不误连或停止其它用户服务。"
-  - id: "AC-DIR-05"
-    text: "OpenCodex默认集成到Desktop安装结构runtime中；新安装、初始化、重启、更新及卸载使用同一新版路径合同，界面显示实际值；不自动清理旧版或其它拥有者数据。"
-  - id: "AC-DIR-06"
-    text: "受影响共享逻辑、路径/凭据/进程及必要原生边界验收齐全，条件补Windows；残留清理、脱敏成功/失败证据保留。"
+acceptance_criteria: [{"id":"AC-DIR-01","text":"双端按当前OS用户解析.codex-desktop，下分desktop和opencodex/home，管理器状态与原版渠道配置各有唯一归属。"},{"id":"AC-DIR-02","text":"程序、配置、启动、更新、卸载仅按新版规定路径；不扫描继承旧目录、注册表或旧程序，不做旧格式转换、自动迁移、跨版本接管。"},{"id":"AC-DIR-03","text":"手动放入新HOME的当前支持格式JSON可读取渠道、节点、认证与模型选择并供实际运行目录消费；缺引用/损坏明确提示。"},{"id":"AC-DIR-04","text":"不同Windows账户允许同时打开管理器及运行各自独立实例；同账户保留单实例约束，启动锁/数据锁/IPC按用户隔离；端口占用明确处理，不误连或停止其它用户服务。"},{"id":"AC-DIR-05","text":"OpenCodex默认集成到Desktop安装结构runtime中；新安装、初始化、重启、更新及卸载使用同一新版路径合同，界面显示实际值；不自动清理旧版或其它拥有者数据。"},{"id":"AC-DIR-06","text":"受影响共享逻辑、路径/凭据/进程及必要原生边界验收齐全，条件补Windows；残留清理、脱敏成功/失败证据保留。"}]
 ---
 # 用户目录分类与新版路径隔离
 
