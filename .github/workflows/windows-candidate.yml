@@ -112,6 +112,8 @@ jobs:
       - name: Stage exact complete program for two real user accounts
         if: steps.identity.outputs.version == '0.2.23'
         run: |
+          cargo build --locked --release --bin ocxd
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $taskCandidate = Join-Path $env:RUNNER_TEMP ('ocxd023-two-user-candidate-'+[guid]::NewGuid().ToString('N'))
           New-Item -ItemType Directory -Path $taskCandidate | Out-Null
           Copy-Item -LiteralPath target/release/opencodex-desktop.exe -Destination $taskCandidate
