@@ -1607,3 +1607,6 @@ mod win_private {
         Ok(())
     }
 }
+
+#[path = "model_transaction_v2_history.rs"]
+pub mod history;
