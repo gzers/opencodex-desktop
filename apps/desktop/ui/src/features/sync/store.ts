@@ -8,6 +8,7 @@ import {
   type SaveSyncEndpointRequest, type SyncConfigDto, type SyncOperationResultDto,
 } from './api'
 import {useConfigSyncV2Store} from './store-v2'
+import {useConfigFileV2Store} from './file-store-v2'
 import { endpointBinding, persistObservation, readObservation, type ConnectionObservation, type ObservationDetails, type ObservationToken, type ObservedState, type WebdavState } from './observation'
 
 function failedStatus(message: string): SyncOperationResultDto {
@@ -32,7 +33,7 @@ export const useSyncStore = defineStore('sync', {
   actions: {
     openConnection() { this.connectionOpen = true },
     rememberResult(id: string, remote: boolean) { this.lastResultId = id; if (remote) this.webdavResultId = id; else this.fileResultId = id },
-    openResult(id?: string) {const target=id??this.lastResultId;const owner=useConfigSyncV2Store();if(target&&(target===owner.fact?.operationId||target===this.webdavResultId)){owner.resultOpen=true;void owner.readResult(target);return}this.resultId=target;this.resultOpen=true},
+    openResult(id?:string){const target=id??this.lastResultId;if(!target)return;const owner=useConfigSyncV2Store(),file=useConfigFileV2Store();if(target===owner.fact?.operationId||target===this.webdavResultId){owner.resultOpen=true;void owner.readResult(target);return}if(target===file.receipt?.operationId||target===this.fileResultId){void file.showOriginal(target);return}void file.showOriginal(target).then(found=>{if(!found){owner.resultOpen=true;void owner.readResult(target)}})},
     closeResult() { this.resultOpen = false },
     setWebdavState(next: ConnectionState) { this.webdavState = next },
     requestAction(action: 'sync' | 'export' | 'connection') { this.pendingAction = action },
@@ -158,7 +159,7 @@ export const useSyncStore = defineStore('sync', {
     },
     async runNow(): Promise<boolean> {
       // Every user entry prepares the same central preview. Never executes a v1 pipe.
-      const owner=useConfigSyncV2Store();await owner.loadCatalog();if(owner.error)return false;await owner.prepare();return false
+      const owner=useConfigSyncV2Store(),token=this.observationToken();await owner.loadCatalog();if(owner.error){if(this.ownsObservation(token)){this.status=failedStatus('同步预览读取失败；未确认本次写入。'+owner.error);this.recordObservation(token,'failed')}return false}await owner.prepare();if(owner.error&&this.ownsObservation(token)){this.status=failedStatus('同步预览尚未完成；未确认本次写入。'+owner.error);this.recordObservation(token,'failed')}return false
     },
   },
 })
