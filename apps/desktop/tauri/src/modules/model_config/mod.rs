@@ -44,6 +44,7 @@ pub mod receive_models_v2;
 pub mod recovery;
 mod remote;
 mod research_receipts;
+pub mod result_owner_v2;
 pub mod runtime;
 pub mod runtime_history;
 pub mod saved_objects_capture_v2;

@@ -374,3 +374,34 @@ pub async fn open_config_file_export_directory_v2(
     })
     .await
 }
+
+#[tauri::command]
+pub async fn result_owner_v2(
+    operation_id: String,
+    data_root: tauri::State<'_, crate::state::SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+    owner: tauri::State<'_, SharedConfigFileTransferV2>,
+    sync: tauri::State<'_, super::config_sync_v2::SharedConfigSyncV2>,
+) -> ModelResult<Option<crate::modules::model_config::result_owner_v2::ResultOwnerV2>> {
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    let owner = owner.inner().clone();
+    let sync = sync
+        .service()
+        .map_err(|_| invalid("result_owner_store", "原同步结果存储无法核对"))?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let mut owner = owner
+            .0
+            .lock()
+            .map_err(|_| invalid("result_owner_store", "原文件结果存储不可用"))?;
+        crate::modules::model_config::result_owner_v2::resolve(
+            &root,
+            &home,
+            &operation_id,
+            &mut owner,
+            &sync,
+        )
+    })
+    .await
+    .map_err(|_| invalid("result_owner_worker", "原结果来源读取中断"))?
+}
