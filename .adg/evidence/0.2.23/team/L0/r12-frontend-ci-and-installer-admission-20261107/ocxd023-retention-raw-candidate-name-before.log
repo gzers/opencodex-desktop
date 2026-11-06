@@ -1,0 +1,50 @@
+test_archive_symlink_is_rejected (__main__.AdmissionTests) ... ok
+test_artifact_pins_attachment_attempt_time_and_expiry (__main__.AdmissionTests) ... ok
+test_candidate_uses_raw_packager_name_not_github_asset_rewrite (__main__.AdmissionTests) ... test_extracts_both_pinned_receipted_package_kinds (__main__.AdmissionTests) ... ERROR
+test_local_self_hosted_reruns_and_overrides_stop_before_download (__main__.AdmissionTests) ... ok
+test_only_exact_successful_package_can_admit (__main__.AdmissionTests) ... ok
+test_published_baseline_pins_and_tag (__main__.AdmissionTests) ... ok
+test_receipt_version_source_and_installed_hash_cannot_be_faked (__main__.AdmissionTests) ... ok
+test_release_cannot_be_replaced_by_019_draft_or_detached_asset (__main__.AdmissionTests) ... ok
+test_tag_target_and_asset_identity_are_independent (__main__.AdmissionTests) ... ok
+test_zip_traversal_windows_aliases_and_duplicate_packages_are_refused (__main__.AdmissionTests) ... ok
+test_complete_fixed_payload_uses_registry_keypaths_without_ice_suppression (__main__.InstallerTemplateTests) ... ok
+test_nsis_pinned_upstream_and_only_reviewed_delta (__main__.InstallerTemplateTests) ... ok
+test_nsis_replaces_only_registered_022_program_and_never_purges_data (__main__.InstallerTemplateTests) ... ok
+test_same_ui_and_actual_user_programs_directory_and_custom_choice (__main__.InstallerTemplateTests) ... ok
+test_wix_pinned_upstream_and_reviewed_delta (__main__.InstallerTemplateTests) ... ok
+
+======================================================================
+ERROR: test_extracts_both_pinned_receipted_package_kinds (__main__.AdmissionTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows023-retention-ci-admit.test.py", line 141, in test_extracts_both_pinned_receipted_package_kinds
+    self.extract(self.make_archive(kind), kind)
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows023-retention-ci-admit.test.py", line 135, in extract
+    target, row = admit.extract_candidate(archive, kind, self.pins["head"], downloads, output)
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows023-retention-ci-admit.py", line 142, in extract_candidate
+    require(row.get("name") == name and row.get("result") == "pass"
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows-etw-ci-admit.py", line 35, in require
+    raise ValueError(message)
+ValueError: Candidate package/payload receipt incomplete
+
+======================================================================
+FAIL: test_candidate_uses_raw_packager_name_not_github_asset_rewrite (__main__.AdmissionTests) (kind='nsis')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows023-retention-ci-admit.test.py", line 148, in test_candidate_uses_raw_packager_name_not_github_asset_rewrite
+    self.extract(self.make_archive(kind, product="OpenCodeX.Desktop"), kind)
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_candidate_uses_raw_packager_name_not_github_asset_rewrite (__main__.AdmissionTests) (kind='msi')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows023-retention-ci-admit.test.py", line 148, in test_candidate_uses_raw_packager_name_not_github_asset_rewrite
+    self.extract(self.make_archive(kind, product="OpenCodeX.Desktop"), kind)
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.016s
+
+FAILED (failures=2, errors=1)

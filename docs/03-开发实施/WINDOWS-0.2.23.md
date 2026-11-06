@@ -7,11 +7,19 @@
 ## 当前基线与获取
 
 - 仓库：gzers/opencodex-desktop。
-- 代码：远端codex/0.2.23-integration，明确基线b23696b80655421a82e95d506c755723f6b0efcd（后继仅修像素测试坐标；产品安装/普通SID候选42286888610仍按41ab81694继续，不重复启动）。
+- 代码：远端codex/0.2.23-integration，明确基线a3d0be94e26d3293bea902586344b59700ad9b2d（后继仅测试采样/候选资产名校验；产品候选42286888610按41ab81694继续收集失败证据，不重开原失败运行）。
 - 文档：远端docs/governance-main，以包含本条R2指令的提交为准；读取本文件、TEAM、IMP-31/32及0.2.23-contracts/L0-paths-runtime-v1.md。
 - Windows代码贡献分支：codex/0.2.23-windows；文档/脱敏证据使用独立docs/0.2.23-windows分支。若已有自己的改动，先保留并合并上述明确代码基线，不重置或覆盖工作树。
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
 - 此为0.2.23实施基线，尚非最终安装候选；版本清单仍待L0统一更新。是否取得新代码以完整SHA及实际diff为准，不能仅看软件显示版本。
+
+## R11 前端真实CI通过与候选资产名校验（2026-11-07）
+
+真实CI42287979356的frontend job128133659058已success，214文件1570项、typecheck/build全过，包含未放宽阈值的像素检查。checkout为PR72合并提交0eb1bd2348e52ed0a255ed0c1a79bd0462218ef0，实际树73c196cee552f7f259f968b3ae1c1f5812b3b0ee与b23696b80精确一致；不是以本机结果替代CI。
+
+代码a3d0be94e仅修相邻安装验收的候选原始文件名：固定bundler2.9.4在MSI/NSIS都直接使用product_name()，候选upload-artifact保留OpenCodeX Desktop空格；已发布022资产的OpenCodeX.Desktop点号名仍保持原PIN。不能把公开资产改名规则套到原候选。修前真实空格名fixture拒绝，修后16项通过，点号误改名/摘要/收据/成员不符仍拒；不改产品或旧格式策略。[r12证据](../../.adg/evidence/0.2.23/team/L0/r12-frontend-ci-and-installer-admission-20261107/manifest.json)保留原失败和同源证据。
+
+Windows候选42286888610普通用户回归步骤已failure，提权创建专项success，原生凭据专项继续。日志尚未齐，不猜根因/不重启同源候选、不假称已取得安装器；待完整原日志和清理回执后做最小后继。两端后端CI及正式资产/相邻安装/签名仍未关闭，未发布。
 
 ## R10 像素采样错误已复现与修正（2026-11-07）
 

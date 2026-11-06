@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "a3d0be94e",
+  "facts": {
+    "frontendCI": {
+      "run": 42287979356,
+      "job": 128133659058,
+      "conclusion": "success",
+      "filesPassed": 214,
+      "testsPassed": 1570,
+      "typecheckAndBuild": "pass",
+      "head": "b23696b80655421a82e95d506c755723f6b0efcd",
+      "actualCheckout": "0eb1bd2348e52ed0a255ed0c1a79bd0462218ef0",
+      "tree": "73c196cee552f7f259f968b3ae1c1f5812b3b0ee",
+      "treeMatchesHead": true
+    },
+    "installerAdmission": {
+      "source": "a3d0be94e",
+      "pinnedBuilder": "tauri-bundler2.9.4 MSI mod.rs package_base_name and NSIS mod.rs use settings.product_name() unchanged",
+      "actualCandidatePrefix": "OpenCodeX Desktop_0.2.23_x64",
+      "publishedBaselinePrefix": "OpenCodeX.Desktop_0.2.22_x64",
+      "before": "positive space-named candidate fixture rejected; original failure retained",
+      "after": "16 tests pass; dot-rewritten candidate rejected; same original receipt/hash/member still required"
+    },
+    "windowsCandidate5": {
+      "run": 42286888610,
+      "source": "41ab81694c1cce4e05bd78309b4ff2b8a5eb82da",
+      "regression": "failure",
+      "jobStatus": "still collecting elevated/native evidence at collection",
+      "logs": "not yet sealed; no cause/repair claim"
+    }
+  },
+  "files": [
+    {
+      "source": "/tmp/ocxd023-ci-b236-frontend-success.log",
+      "file": "ocxd023-ci-b236-frontend-success.log",
+      "bytes": 97088,
+      "sha256": "b1fd6a140ff5be4c0caa3b863c6b7dd572be8c0dce0ca9c64e415e9292cefab9"
+    },
+    {
+      "source": "/tmp/ocxd023-ci-b236-merge-tree.json",
+      "file": "ocxd023-ci-b236-merge-tree.json",
+      "bytes": 199,
+      "sha256": "5e5aa927c0b95de474fde8f35391f3a18f81ddce4a24308bf4c2b2977c98bb56"
+    },
+    {
+      "source": "/tmp/ocxd023-retention-raw-candidate-name-before.log",
+      "file": "ocxd023-retention-raw-candidate-name-before.log",
+      "bytes": 3966,
+      "sha256": "cd60874e594df49f87c40c99f2a03882a75f291782e033ce90a2721b8d0cd158"
+    },
+    {
+      "source": "/tmp/ocxd023-retention-raw-candidate-name-after.log",
+      "file": "ocxd023-retention-raw-candidate-name-after.log",
+      "bytes": 1565,
+      "sha256": "7cb30205d6e821be15938a1342d1db39fd840f46b0fa4dbe70f3f453e5a5cc7a"
+    }
+  ],
+  "release": "not published"
+}
