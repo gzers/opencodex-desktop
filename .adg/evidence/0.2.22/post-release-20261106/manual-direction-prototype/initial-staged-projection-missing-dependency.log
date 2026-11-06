@@ -1,0 +1,104 @@
+✔ POST04 内容优先、可靠UTC保存时间判新，无基线不固定云端 (1.65375ms)
+✖ POST04 唯一总原型：未知/同刻/mtime/异常均禁用确认且取消无写入，已知时间对称预览 (1122.901208ms)
+✖ 手动方向在同一弹窗重算来源/变化，未知时间不补造，取消/重开默认自动 (1118.870167ms)
+✖ upload：确认才执行指定方向，未选范围保持 (429.115458ms)
+✖ download：确认才执行指定方向，未选范围保持 (334.068375ms)
+✖ 手动方向不绕过连接失败/预览变化；内容相同也不产生写入 (450.099833ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 1
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3435.655291
+
+✖ failing tests:
+
+test at ../../../../../../../private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/g0-sync-version.test.cjs:14:1
+✖ POST04 唯一总原型：未知/同刻/mtime/异常均禁用确认且取消无写入，已知时间对称预览 (1122.901208ms)
+  Error: ENOENT: no such file or directory, open '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/overview-dual.js'
+      at Object.readFileSync (node:fs:621:20)
+      at make (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic-harness.cjs:35:118)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/g0-sync-version.test.cjs:15:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/overview-dual.js'
+  }
+
+test at ../../../../../../../private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/post022-sync-direction.test.cjs:8:1
+✖ 手动方向在同一弹窗重算来源/变化，未知时间不补造，取消/重开默认自动 (1118.870167ms)
+  Error: ENOENT: no such file or directory, open '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/overview-dual.js'
+      at Object.readFileSync (node:fs:621:20)
+      at make (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic-harness.cjs:35:118)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/post022-sync-direction.test.cjs:9:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/overview-dual.js'
+  }
+
+test at ../../../../../../../private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/post022-sync-direction.test.cjs:18:102
+✖ upload：确认才执行指定方向，未选范围保持 (429.115458ms)
+  Error: ENOENT: no such file or directory, open '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/overview-dual.js'
+      at Object.readFileSync (node:fs:621:20)
+      at make (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic-harness.cjs:35:118)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/post022-sync-direction.test.cjs:19:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/overview-dual.js'
+  }
+
+test at ../../../../../../../private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/post022-sync-direction.test.cjs:18:102
+✖ download：确认才执行指定方向，未选范围保持 (334.068375ms)
+  Error: ENOENT: no such file or directory, open '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/overview-dual.js'
+      at Object.readFileSync (node:fs:621:20)
+      at make (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic-harness.cjs:35:118)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/post022-sync-direction.test.cjs:19:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/overview-dual.js'
+  }
+
+test at ../../../../../../../private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/post022-sync-direction.test.cjs:25:1
+✖ 手动方向不绕过连接失败/预览变化；内容相同也不产生写入 (450.099833ms)
+  Error: ENOENT: no such file or directory, open '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/overview-dual.js'
+      at Object.readFileSync (node:fs:621:20)
+      at make (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic-harness.cjs:35:118)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/post022-sync-direction.test.cjs:26:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/post022-prototype-mc3biuor/docs/04-项目资料/01-项目支撑资料/01-产品原型/overview-dual.js'
+  }

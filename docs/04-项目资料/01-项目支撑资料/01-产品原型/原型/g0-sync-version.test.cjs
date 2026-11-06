@@ -14,18 +14,18 @@ test('POST04 内容优先、可靠UTC保存时间判新，无基线不固定云�
 test('POST04 唯一总原型：未知/同刻/mtime/异常均禁用确认且取消无写入，已知时间对称预览',async t=>{
  const h=await make('#sync?tab=webdav');t.after(()=>h.dispose());const s=()=>h.w.syncPrototype.state();
  for(const scene of ['unknown-time','same-time','legacy-mtime','invalid-time','unbound-version','clock-skew']){
-  h.w.syncPrototype.setScenario(scene);h.w.syncPrototype.open({tab:'webdav',scope:['skill:review'],action:'check'});
+  h.w.syncPrototype.setScenario(scene);h.w.syncPrototype.open({tab:'webdav',scope:['skill:design'],action:'check'});
   assert.equal(h.document.querySelector('#modalTitle').textContent,'同步预览');assert.match(h.document.querySelector('#modalBody').textContent,/无法判定新版/);
   assert.equal(h.document.querySelector('#modalConfirm').disabled,true);assert.equal(h.document.querySelector('#modalConfirm').hidden,false);assert.equal(s().preview.source,'undetermined');
   const before=JSON.stringify({versions:s().versions,backups:s().backups,serial:s().serial});h.click('#modalConfirm');h.click('#modalClose');
   assert.equal(s().running,false);assert.equal(JSON.stringify({versions:s().versions,backups:s().backups,serial:s().serial}),before);
  }
  for(const [scene,source] of [['local-no-baseline','local'],['remote-no-baseline','remote']]){
-  h.w.syncPrototype.setScenario(scene);h.w.syncPrototype.open({tab:'webdav',scope:['skill:review'],action:'check'});assert.equal(s().preview.source,source);assert.equal(h.document.querySelector('#modalConfirm').disabled,false);h.click('#modalCancel');
+  h.w.syncPrototype.setScenario(scene);h.w.syncPrototype.open({tab:'webdav',scope:['skill:design'],action:'check'});assert.equal(s().preview.source,source);assert.equal(h.document.querySelector('#modalConfirm').disabled,false);h.click('#modalCancel');
  }
- h.w.syncPrototype.setScenario('normal');h.w.syncPrototype.open({tab:'webdav',scope:['mcp:docs'],action:'check'});assert.equal(s().preview.source,'local');h.click('#modalCancel');
- h.w.syncPrototype.open({tab:'webdav',scope:['mcp:docs','skill:review'],action:'check'});assert.equal(s().preview.source,'remote');h.click('#modalCancel');
- h.w.syncPrototype.setScenario('upload');h.w.syncPrototype.open({tab:'webdav',scope:['skill:review'],action:'check'});
+ h.w.syncPrototype.setScenario('normal');h.w.syncPrototype.open({tab:'webdav',scope:['mcp:documentation'],action:'check'});assert.equal(s().preview.source,'local');h.click('#modalCancel');
+ h.w.syncPrototype.open({tab:'webdav',scope:['mcp:documentation','skill:design'],action:'check'});assert.equal(s().preview.source,'remote');h.click('#modalCancel');
+ h.w.syncPrototype.setScenario('upload');h.w.syncPrototype.open({tab:'webdav',scope:['skill:design'],action:'check'});
  h.w.syncPrototype.setScenario('download');h.click('#modalConfirm');assert.equal(s().running,false);assert.equal(h.document.querySelector('#modalConfirm').disabled,true);assert.match(h.document.querySelector('#sxError').textContent,/重新预览/);
  assert.deepEqual(h.network,[]);assert.deepEqual(h.errors,[]);assert.ok(h.writes.every(([key])=>['ocx-route','ocx-theme'].includes(key)));
 });

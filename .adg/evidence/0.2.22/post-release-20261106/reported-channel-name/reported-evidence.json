@@ -1,0 +1,32 @@
+{
+  "id": "S22-POST-02",
+  "date": "2026-11-06",
+  "images": [
+    {
+      "file": "manager-channel-krill.png",
+      "bytes": 1817456,
+      "sha256": "6475a9baaedf5c49f206d94976065369a00b696a957003909b5026ae760ed713"
+    },
+    {
+      "file": "codex-selector-krill-1.png",
+      "bytes": 67275,
+      "sha256": "37c5df6cb74ad8d8dae16d579d6f5df73bb86991e32c295ba75db290f2c16ba3"
+    }
+  ],
+  "confirmedByUser": "Renamed after0.2.22update",
+  "observed": "Manager Krill; Codex model picker Krill-1/raw model IDs",
+  "notConfirmed": [
+    "Complete restart of OpenCodex service and Codex after save",
+    "Actual running runtime version/source including adopted2.97.0-post021.ownerquery.2",
+    "Saved raw provider key/name/current picker refs vs local layout display name"
+  ],
+  "staticFindings": [
+    "editName calls renameChannelLabel and should allocateKrill for legal unoccupied name then save rename transaction/current refs",
+    "Mapping snapshot retains stored channel layout label independently of provider identity; label in list alone does not prove raw key migrated",
+    "renameChannelLabel returns immediately if input equals current label; provider_renames skips identical provider key. Historical labelKrill/providerKrill-1 state is a possible distinct no-op path, not proved on user device",
+    "Latest Windows native evidence covers fresh rename first confirmation with explicitly installed candidate2, not all historical metadata mismatches or user current installation"
+  ],
+  "analysis": "Need distinguish saved config vs live reload/catalog vs Codex process; do not infer root cause from screenshots or claim runtime patch guarantees user rollout",
+  "productionChanged": false,
+  "dailyConfigurationRead": false
+}

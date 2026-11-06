@@ -1,0 +1,28 @@
+{
+  "newAndVersionContracts": {
+    "tests": 6,
+    "pass": 6,
+    "fail": 0
+  },
+  "existingSnapshotPreview": {
+    "tests": 20,
+    "pass": 20,
+    "fail": 0,
+    "note": "21 initial combined tests had only staleID g0 failure; 20 snapshot cases all passed"
+  },
+  "initialFailure": "g0 test selected retired skill:review/mcp:docs IDs so selected scope was empty, not unknown-time scenario; actual catalog IDs used, all safeguards retained",
+  "browser": {
+    "entry": "Same sole total prototype, separate agent-created tab preserves user existing draft",
+    "scene": "unknown-time",
+    "observed": [
+      "Automatic selected and disabled confirmation",
+      "Manual download source/cloud→local, confirm enabled, backup checked",
+      "Manual upload source/local→cloud, confirm label changes",
+      "Cancel+reopen automatic, disabled confirmation",
+      "Unknown local time shown unknown, no invented current timestamp"
+    ],
+    "logs": "No error/warn",
+    "image": "forced-download.png"
+  },
+  "boundaries": "Prototype only; no software development or real sync/credentials"
+}

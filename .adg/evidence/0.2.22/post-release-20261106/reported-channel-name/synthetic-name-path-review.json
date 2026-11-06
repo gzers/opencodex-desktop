@@ -1,0 +1,22 @@
+{
+  "result": "passed-two-synthetic-code-paths",
+  "source": "apps/desktop/ui/src/features/models/channelRename.ts",
+  "method": "Actual TypeScript transpiled to CommonJS in vm; pure name allocator invoked, only protectedChannel external helper fixed false for custom non-official fixture",
+  "freshRename": {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "label": "Krill",
+    "connection": {
+      "providerId": "Krill"
+    }
+  },
+  "existingLabelMismatch": {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "label": "Krill",
+    "connection": {
+      "providerId": "Krill-1"
+    }
+  },
+  "conclusion": "Fresh Krill-1→Krill changes provider key; already-labelKrill inputKrill is no-op and does not repair providerKrill-1. This does not identify which case the user has.",
+  "noConfigRead": true,
+  "noProductionMutation": true
+}

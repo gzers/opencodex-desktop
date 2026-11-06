@@ -382,31 +382,47 @@
   const changed=rows.filter(x=>x.direction!=='skip'),same=rows.length-changed.length;
   return '<div class="sx-preview-summary"><strong>'+changed.length+' 项变化</strong><span class="sx-muted">'+same+' 项保持不变</span></div>'+(changed.length?'<ul class="sx-outcomes sx-change-list">'+changed.map(x=>'<li><div><strong>'+esc(x.name)+'</strong><small>'+esc(changeSummary(x))+'</small>'+(x.conflict?sourcePicker(x.id,'暂不同步'):'')+'</div><span class="sx-mark">'+(x.conflict?'选择来源':!x.local||!x.remote?'新增':'更新')+'</span></li>').join('')+'</ul>':'<p class="sx-muted">所选内容已一致，无需更新。</p>');
  }
- function syncPreview(){
-  catalog=collect();pruneUnavailablePlatforms();rememberScope();refreshLocalVersions();const decision=savedContentDecision(),source=decision.source,ids=closure(scopes.webdav).ids;
-  if(decision.status==='unknown'){
-   showDialog('sync-preview','同步预览','<div class="sx-version-unknown" role="status"><h3>无法判定新版</h3><p>'+esc(decision.reason)+'</p><p>不会自动选择来源。当前内容保持；确认更新不可执行。</p></div>'+versionFacts(decision),'确认更新',()=>{},{mode:'confirm',annotationText:'保存版本绑定所选范围、内容摘要、可靠保存时间与时间来源。未知、历史mtime、无效时间、绑定不明或同时异内容不选云端兜底，不写入；不新增强制选源弹窗。'});
-   preview={source:'undetermined',decision:clone(decision),rows:[]};$('#modalConfirm').disabled=true;return;
+ const directionStyle=document.createElement('style');directionStyle.id='sxDirectionStyle';directionStyle.textContent='.sx-sync-direction{border:0;padding:0;margin:0 0 16px;min-width:0}.sx-sync-direction legend{font-weight:650;margin-bottom:8px}.sx-direction-choices{display:flex;flex-wrap:wrap;gap:10px 20px}.sx-sync-direction .sx-muted{margin:8px 0 0}';document.head.append(directionStyle);
+ function syncDirectionOptions(mode,blocked=false){
+  return '<fieldset class="sx-sync-direction"><legend>同步方向</legend><div class="sx-direction-choices">'+[['auto','自动判断'],['upload','强制上传'],['download','强制下载']].map(([value,label])=>'<label class="sx-check"><input type="radio" name="sxDirection" value="'+value+'"'+(mode===value?' checked':'')+(blocked?' disabled':'')+'><span>'+label+'</span></label>').join('')+'</div><p class="sx-muted">自动判断按内容保存时间取新；也可仅为本次指定方向。</p></fieldset>';
+ }
+ function syncPreview(mode='auto'){
+  mode=['upload','download'].includes(mode)?mode:'auto';
+  catalog=collect();pruneUnavailablePlatforms();rememberScope();refreshLocalVersions();const decision=savedContentDecision(),ids=closure(scopes.webdav).ids;
+  const blocked=scenario==='network-error',manual=mode!=='auto',source=manual?(mode==='upload'?'local':'remote'):decision.source;
+  const options=syncDirectionOptions(mode,blocked);
+  const bindDirection=()=>{for(const input of $$('[name=sxDirection]'))input.addEventListener('change',()=>{const next=input.value;syncPreview(next);$('[name=sxDirection][value="'+next+'"]')?.focus();});};
+  if(blocked){
+   showDialog('sync-preview','同步预览',options+'<div class="sx-version-unknown" role="alert"><h3>云端读取失败</h3><p>请先恢复连接并重新读取；当前不能生成上传或下载预览。</p></div>','确认更新',()=>{},{mode:'confirm',annotationText:'手动方向仅替代本次判新，不绕过云端读取、身份、凭据或内容保护；读取失败禁用方向与确认。'});
+   preview={source:'undetermined',directionMode:mode,rows:[],blocked:true};$('#modalConfirm').disabled=true;return;
+  }
+  if(!manual&&decision.status==='unknown'){
+   showDialog('sync-preview','同步预览',options+'<div class="sx-version-unknown" role="status"><h3>无法判定新版</h3><p>'+esc(decision.reason)+'</p><p>可选择强制上传或强制下载，查看本次变化后再确认。</p></div>'+versionFacts(decision),'确认更新',()=>{},{mode:'confirm',annotationText:'S22-POST-01采用增量：默认自动判断；缺可靠保存时间或同刻异内容时不自动选源。用户可在同一预览明确指定方向，重新生成变化清单后确认；不补造保存时间。'});
+   preview={source:'undetermined',directionMode:mode,decision:clone(decision),rows:[]};$('#modalConfirm').disabled=true;bindDirection();return;
   }
   const chosen=['local','remote'].includes(source)?source:'local';
+  if(manual&&!decision.contentVersions[chosen].exists){
+   showDialog('sync-preview','同步预览',options+'<p class="sx-error" role="alert">'+(chosen==='local'?'本机':'云端')+'没有所选内容，不能作为本次来源。请调整范围或方向。</p>'+versionFacts(decision),'确认更新',()=>{},{mode:'confirm'});
+   preview={source,directionMode:mode,rows:[],blocked:true};$('#modalConfirm').disabled=true;bindDirection();return;
+  }
   const rows=updateRows(chosen).filter(x=>ids.has(x.id)),secrets=clone(secretIds(scopes.webdav));
-  const frozen={source,snapshot:source==='unchanged'?null:clone(snapshots[chosen]),decision:clone(decision),connectionIdentity:connectionIdentity(connection),scopeKey:signature(scopes.webdav),rows:clone(rows),agentPlatforms:chosenPlatforms(scopes.webdav.selected),secrets,backup:source==='remote',encrypted:protection.enabled,scenario};
-  const changed=rows.some(x=>x.direction!=='skip');
-  showDialog('sync-preview','同步预览','<dl class="sx-detail-list sx-snapshot-facts"><dt>新版来源</dt><dd>'+ (source==='unchanged'?'内容一致，无需更新':source==='local'?'本机配置 → 云端':'云端配置 → 本机')+'</dd><dt>版本时间</dt><dd>'+esc(frozen.snapshot?.updatedAt?.replace('T',' ').replace('+08:00','')||'无需更新')+'</dd></dl>'+(source==='remote'&&changed?check('id="sxPreviewBackup"','更新前备份',true):'')+changesHTML(rows)+platformAssociationsHTML(rows)+extensionTransferHTML(rows)+(frozen.encrypted?'<label class="sx-field"><span>同步保护口令</span><input id="sxPreviewPass" type="password" class="input" autocomplete="off" placeholder="请输入保护口令" value="'+esc(protection.passphrase)+'"></label>':''),'确认更新',()=>{
+  const frozen={source,directionMode:mode,snapshot:source==='unchanged'?null:clone(snapshots[chosen]),decision:clone(decision),connectionIdentity:connectionIdentity(connection),scopeKey:signature(scopes.webdav),rows:clone(rows),agentPlatforms:chosenPlatforms(scopes.webdav.selected),secrets,backup:source==='remote',encrypted:protection.enabled,scenario};
+  const changed=rows.some(x=>x.direction!=='skip'),action=manual?(mode==='upload'?'确认上传':'确认下载'):'确认更新';
+  const warning=manual?'<div class="sx-info" role="status"><strong>本次强制'+(mode==='upload'?'上传':'下载')+'</strong><p>以'+(source==='local'?'本机':'云端')+'内容更新'+(source==='local'?'云端':'本机')+'所选配置，不按保存时间取新。请核对下方变化；未选范围保持。</p></div>':'';
+  const facts='<dl class="sx-detail-list sx-snapshot-facts"><dt>'+(manual?'本次来源':'新版来源')+'</dt><dd>'+ (source==='unchanged'?'内容一致，无需更新':source==='local'?'本机配置 → 云端':'云端配置 → 本机')+'</dd></dl>'+versionFacts(decision);
+  showDialog('sync-preview','同步预览',options+warning+facts+(source==='remote'&&changed?check('id="sxPreviewBackup"','更新前备份',true):'')+changesHTML(rows)+platformAssociationsHTML(rows)+extensionTransferHTML(rows)+(frozen.encrypted?'<label class="sx-field"><span>同步保护口令</span><input id="sxPreviewPass" type="password" class="input" autocomplete="off" placeholder="请输入保护口令" value="'+esc(protection.passphrase)+'"></label>':''),action,()=>{
    if(!changed)return;
    refreshLocalVersions();
-   if(frozen.connectionIdentity!==connectionIdentity(connection)||frozen.scopeKey!==signature(scopes.webdav)||JSON.stringify(frozen.decision)!==JSON.stringify(savedContentDecision())){setText('#sxError','连接、内容、范围或保存版本已变化，请关闭后重新预览。');$('#modalConfirm').disabled=true;return;}
+   if(frozen.scenario!==scenario||frozen.connectionIdentity!==connectionIdentity(connection)||frozen.scopeKey!==signature(scopes.webdav)||JSON.stringify(frozen.decision)!==JSON.stringify(savedContentDecision())){setText('#sxError','连接、内容、范围或保存版本已变化，请关闭后重新预览。');$('#modalConfirm').disabled=true;return;}
    if(frozen.encrypted&&!$('#sxPreviewPass')?.value){setText('#sxError','请填写保护口令。');return;}
    if(frozen.encrypted)protection.passphrase=$('#sxPreviewPass').value;
    const backup=!!$('#sxPreviewBackup')?.checked,picked=pickedSources();
-   // 未选来源的同名 MCP 本次不同步，其余对象照常更新；不显示也不比较定义值。
    const rows=frozen.rows.map(x=>!x.conflict?x:picked[x.id]?{...x,mcpSource:picked[x.id]}:{...x,direction:'skip',deferred:true,reason:'未选择来源，本次未同步'});
    closeModal();startUpdate('webdav',rows,frozen.secrets,{encrypted:frozen.encrypted},undefined,{backup,source:frozen.source,snapshot:frozen.snapshot,scenario:frozen.scenario,agentPlatforms:frozen.agentPlatforms});
-  },{mode:changed?'confirm':'view',hideConfirm:!changed,cancelLabel:changed?'取消':'关闭',annotationText:'按同一所选范围的内容摘要和可靠保存时间确定来源；相同内容无需更新；无共同基线也按时间判新。确认前重验内容版本与范围，变化则重新预览。所有备份与变化均为内存示例，不连接服务器。'});
-  $('#modalBody .sx-snapshot-facts').insertAdjacentHTML('afterend',versionFacts(decision));
-  preview=frozen;$('#modalConfirm').disabled=!changed;
+  },{mode:changed?'confirm':'view',hideConfirm:!changed,cancelLabel:changed?'取消':'关闭',annotationText:'S22-POST-01：同一公共弹窗选择自动/强制上传/强制下载，仅本次有效，关闭重开默认自动。切换即重算来源和变化，下载默认更新前备份；内容一致无写入。强制不绕过云端读取、强ETag、预览身份/内容/范围变化与凭据保护，不改造旧时间；此原型仅内存演示，软件尚未实现。'});
+  preview=frozen;$('#modalConfirm').disabled=!changed;bindDirection();
  }
- function versionFacts(decision){return '<dl class="sx-detail-list sx-version-facts">'+['local','remote'].map(side=>{const v=decision.contentVersions[side];return '<dt>'+(side==='local'?'本机':'云端')+'保存时间</dt><dd>'+esc(v.savedAt||'未知')+' · '+esc(v.timeKind==='saved'?'内容保存':v.timeKind==='mtime'?'仅历史 mtime':'时间未知')+'</dd>';}).join('')+'</dl>';}
+ function versionFacts(decision){return '<dl class="sx-detail-list sx-version-facts">'+['local','remote'].map(side=>{const v=decision.contentVersions[side],known=v.timeKind==='saved'&&v.bound!==false&&!v.clockSkew&&Number.isFinite(Date.parse(v.savedAt));return '<dt>'+(side==='local'?'本机':'云端')+'保存时间</dt><dd>'+esc(known?v.savedAt.replace('T',' ').replace(/\.\d{3}Z$/,' UTC'):'未知')+'</dd>';}).join('')+'</dl>';}
  function directImportRows(kind){
   const present=new Set([...catalog.filter(x=>x.extensionObject&&(!x.defaultExcluded||x.platformAssociation)).map(x=>x.id),'template:gpt','channel:newapi','channel:legacy','skill:design','mcp:documentation','preferences:desktop','endpoint:personal','account:chatgpt','account:chatgpt-work','account:antigravity','account:device']);
   const items=updateRows('remote').filter(x=>present.has(x.id)).map(x=>({...x,extensionPayload:find(x.id)?.extensionObject?clone(extensionRemote[x.id]):x.extensionPayload,direction:Date.parse(snapshots.local.updatedAt)>Date.parse(snapshots.remote.updatedAt)?'skip':x.direction}));
