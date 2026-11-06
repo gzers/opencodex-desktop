@@ -427,6 +427,7 @@ fn library_save_and_draft_cas_use_real_model_v2_lock_and_readback() {
         base: base.clone(),
         policy: empty_policy_v2(),
         observed_baseline: None,
+        credential_edits: Default::default(),
     };
     store.stage_draft(None, draft.clone()).unwrap();
     let mut changed = draft.clone();
@@ -863,6 +864,7 @@ fn baseline_draft_for_test(library_digest: String) -> DraftV2 {
         },
         policy: observed.clone(),
         observed_baseline: Some(observed),
+        credential_edits: Default::default(),
     }
 }
 #[test]
@@ -957,4 +959,153 @@ fn baseline_only_update_is_covered_by_the_existing_whole_draft_cas() {
     );
     assert!(!temp.path().join(POLICY_PATH).exists());
     assert!(!temp.path().join(LEDGER_PATH).exists());
+}
+
+#[test]
+fn draft_credential_actions_round_trip_without_secret_values_or_auth_mode_changes() {
+    let temp = tempfile::tempdir().unwrap();
+    let store = StoreV2::new(temp.path());
+    let mut draft = baseline_draft_for_test(store.snapshot().unwrap().digests.library);
+    draft.policy.channels[0].connection.credential_ref = Some(READ.into());
+    draft.policy.channels[0].connection.auth_mode = Some("key".into());
+    draft.credential_edits.insert(
+        CHANNEL.into(),
+        DraftCredentialEditV2::Replace {
+            credential_ref: READ.into(),
+        },
+    );
+    store.stage_draft(None, draft.clone()).unwrap();
+    let saved = store.snapshot().unwrap().draft.unwrap();
+    assert_eq!(saved, draft);
+    let wire = serde_json::to_value(&saved).unwrap();
+    assert_eq!(
+        wire["credentialEdits"][CHANNEL],
+        json!({"kind":"replace","credentialRef":READ})
+    );
+    assert!(!serde_json::to_string(&saved)
+        .unwrap()
+        .contains("synthetic-auth"));
+    assert!(!temp.path().join(POLICY_PATH).exists());
+    assert!(!temp.path().join(LEDGER_PATH).exists());
+    let mut clear = saved.clone();
+    clear.base.draft_generation += 1;
+    clear.policy.channels[0].connection.credential_ref = None;
+    clear
+        .credential_edits
+        .insert(CHANNEL.into(), DraftCredentialEditV2::Clear);
+    store.stage_draft(Some(&saved.base), clear.clone()).unwrap();
+    let reloaded = store.snapshot().unwrap().draft.unwrap();
+    assert_eq!(
+        reloaded.policy.channels[0].connection.auth_mode.as_deref(),
+        Some("key")
+    );
+    assert_eq!(
+        reloaded.credential_edits[CHANNEL],
+        DraftCredentialEditV2::Clear
+    );
+    assert_eq!(
+        serde_json::to_value(&reloaded).unwrap()["credentialEdits"][CHANNEL],
+        json!({"kind":"clear"})
+    );
+    assert!(!temp.path().join(POLICY_PATH).exists());
+    assert!(!temp.path().join(LEDGER_PATH).exists());
+}
+#[test]
+fn draft_credential_actions_validate_exact_management_and_reference_identities() {
+    for kind in [
+        "wrong-channel",
+        "noncanonical-channel",
+        "wrong-ref",
+        "noncanonical-ref",
+        "clear-with-ref",
+    ] {
+        let temp = tempfile::tempdir().unwrap();
+        let store = StoreV2::new(temp.path());
+        let mut draft = baseline_draft_for_test(store.snapshot().unwrap().digests.library);
+        draft.policy.channels[0].connection.credential_ref = Some(READ.into());
+        let (channel, edit) = match kind {
+            "wrong-channel" => (
+                DRAFT.into(),
+                DraftCredentialEditV2::Replace {
+                    credential_ref: READ.into(),
+                },
+            ),
+            "noncanonical-channel" => (
+                "not-a-uuid".into(),
+                DraftCredentialEditV2::Replace {
+                    credential_ref: READ.into(),
+                },
+            ),
+            "wrong-ref" => (
+                CHANNEL.into(),
+                DraftCredentialEditV2::Replace {
+                    credential_ref: DRAFT.into(),
+                },
+            ),
+            "noncanonical-ref" => (
+                CHANNEL.into(),
+                DraftCredentialEditV2::Replace {
+                    credential_ref: "sk-raw-secret-is-not-a-reference".into(),
+                },
+            ),
+            _ => (CHANNEL.into(), DraftCredentialEditV2::Clear),
+        };
+        draft.credential_edits.insert(channel, edit);
+        assert!(store.stage_draft(None, draft).is_err(), "{kind}");
+        assert!(!temp.path().join(DRAFT_PATH).exists());
+    }
+    let secret_refs = [
+        json!({"kind":"replace","credentialRef":READ,"apiKey":"raw-fixture"}),
+        json!({"kind":"replace","credentialRef":READ,"secret":"raw-fixture"}),
+        json!({"kind":"clear","value":null}),
+        json!({"kind":"clear","apiKey":"raw-fixture"}),
+        json!({"kind":"clear","credentialRef":READ}),
+        json!({"kind":"replace","credentialRef":null}),
+    ];
+    for value in secret_refs {
+        assert!(serde_json::from_value::<DraftCredentialEditV2>(value).is_err());
+    }
+}
+#[test]
+fn credential_action_only_changes_are_covered_by_the_whole_draft_cas() {
+    let temp = tempfile::tempdir().unwrap();
+    let store = StoreV2::new(temp.path());
+    let mut draft = baseline_draft_for_test(store.snapshot().unwrap().digests.library);
+    draft.policy.channels[0].connection.credential_ref = Some(READ.into());
+    store.stage_draft(None, draft.clone()).unwrap();
+    let original = std::fs::read(temp.path().join(DRAFT_PATH)).unwrap();
+    let mut next = draft.clone();
+    next.credential_edits.insert(
+        CHANNEL.into(),
+        DraftCredentialEditV2::Replace {
+            credential_ref: READ.into(),
+        },
+    );
+    assert_eq!(
+        store
+            .stage_draft(Some(&draft.base), next.clone())
+            .unwrap_err()
+            .code,
+        "model_read_stale"
+    );
+    assert_eq!(
+        std::fs::read(temp.path().join(DRAFT_PATH)).unwrap(),
+        original
+    );
+    next.base.draft_generation += 1;
+    store.stage_draft(Some(&draft.base), next.clone()).unwrap();
+    assert_eq!(store.snapshot().unwrap().draft, Some(next.clone()));
+    assert_eq!(next.policy, draft.policy);
+    assert_eq!(next.observed_baseline, draft.observed_baseline);
+    assert!(!temp.path().join(POLICY_PATH).exists());
+    assert!(!temp.path().join(LEDGER_PATH).exists());
+    let mut old_fixture = serde_json::to_value(&draft).unwrap();
+    old_fixture
+        .as_object_mut()
+        .unwrap()
+        .remove("credentialEdits");
+    assert!(serde_json::from_value::<DraftV2>(old_fixture)
+        .unwrap()
+        .credential_edits
+        .is_empty());
 }
