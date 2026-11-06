@@ -209,6 +209,11 @@ impl StoreV2 {
     pub fn snapshot(&self) -> Result<StoreSnapshotV2> {
         self.with_locked(|locked| locked.snapshot_unlocked())
     }
+    /// Saved-source capture only: never examines the unrelated draft target.
+    /// Mutations still read the complete snapshot under their own CAS checks.
+    pub fn snapshot_saved(&self) -> Result<StoreSnapshotV2> {
+        self.with_locked(|locked| locked.snapshot_saved_unlocked())
+    }
     pub fn save_library(&self, request: &SaveRevisionRequestV2) -> Result<LibraryV2> {
         self.with_locked(|locked| locked.save_library_unlocked(request))
     }
@@ -253,6 +258,14 @@ impl StoreV2 {
 }
 impl LockedStoreV2<'_> {
     pub fn snapshot_unlocked(&self) -> Result<StoreSnapshotV2> {
+        self.snapshot_with_draft_unlocked(true)
+    }
+    /// Caller already owns model-v2 after the normal config lock. This does
+    /// not recover transactions, inspect draft paths or grant write authority.
+    pub fn snapshot_saved_unlocked(&self) -> Result<StoreSnapshotV2> {
+        self.snapshot_with_draft_unlocked(false)
+    }
+    fn snapshot_with_draft_unlocked(&self, include_draft: bool) -> Result<StoreSnapshotV2> {
         let mut files = BTreeMap::new();
         let mut raw = BTreeMap::new();
         for relative in [
@@ -262,6 +275,13 @@ impl LockedStoreV2<'_> {
             LEDGER_PATH,
             MAPPING_PATH,
         ] {
+            if relative == DRAFT_PATH && !include_draft {
+                // Skip before path()/check_path()/metadata/read, including a
+                // symlink, unreadable, broken or newer-format draft target.
+                files.insert(relative.into(), digest(b""));
+                raw.insert(relative, None);
+                continue;
+            }
             let bytes = self.store.bytes(relative)?;
             files.insert(
                 relative.into(),
