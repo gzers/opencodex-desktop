@@ -1,0 +1,25 @@
+{
+  "id": "S22-POST-05",
+  "date": "2026-11-06",
+  "status": "recorded/static-analysis-only; no product changes; no next version assigned",
+  "reportImage": {
+    "file": "webdav-publication-unconfirmed.png",
+    "bytes": 36086,
+    "sha256": "206cc69a5f2ba15e585fcf671db53d4f877b21e070d1174de48e92461a68be69"
+  },
+  "softwareCommit": "0c57500f8f46ea50655c782c3f04334a39167abb",
+  "sourceHashes": {
+    "apps/desktop/tauri/src/modules/model_config/remote.rs": "ea2ac9d208329f31c4eb86f4a286ba9ca0e0761b976460a5366b1be5668640f5",
+    "apps/desktop/tauri/src/modules/model_config/config_remote.rs": "c88671c7c3e988fe09574ee3c3760b644142066dfcec2ed97fb91aa7f6bcd74c",
+    "apps/desktop/ui/src/features/sync/ModelTransfer.vue": "a8a578e95438e36e6516d1fb3edf889542ce92a097acb3fcc8c5ce028786c316"
+  },
+  "analysisAuthority": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.22-bugs.md#S22-POST-05",
+  "limits": [
+    "Screenshot does not prove exact installed build/platform or root cause",
+    "No daily configuration or secrets read/modified",
+    "No live WebDAV, runtime install/restart, implementation or release"
+  ],
+  "observed": "红字：云端可能已写入，但发布结果尚未确认；请保留原操作并重新核对。局部裁图，完整弹窗及按钮未展示。",
+  "staticFinding": "After pointer conditional PUT succeeds (200/201/204) or returns Network, confirm_publication reads pointer up to3 times; missing pointer/etag_required retries after100/200ms, other read errors fail immediately. Different readable pointer returns remote_changed. Original ID/frozen payload permit reconciliation; config_remote persists publishing/published stages.",
+  "unknown": "Actual cloud commit, HTTP/ETag/network/parse/auth failure and user recovery path unverified; no specific server cause established."
+}

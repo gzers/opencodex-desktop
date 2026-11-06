@@ -1,0 +1,24 @@
+{
+  "id": "S22-POST-04",
+  "date": "2026-11-06",
+  "status": "recorded/static-analysis-only; no product changes; no next version assigned",
+  "reportImage": {
+    "file": "panel-update-failed.png",
+    "bytes": 213172,
+    "sha256": "183e2f2447e57330d56c380089178ef11183063a97d64e473303964458b4dd91"
+  },
+  "softwareCommit": "0c57500f8f46ea50655c782c3f04334a39167abb",
+  "sourceHashes": {
+    "apps/desktop/tauri/src/modules/runtime/install.rs": "b71c2513bd976db9b59576f69ba900c23c46d75520046590b095494c92b1140d",
+    "apps/desktop/tauri/src/modules/runtime/mod.rs": "22e78a22b6ea503687f4aee1405e81aa4b7f5fd82752515a80964d6d25a2bc51"
+  },
+  "analysisAuthority": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.22-bugs.md#S22-POST-04",
+  "limits": [
+    "Screenshot does not prove exact installed build/platform or root cause",
+    "No daily configuration or secrets read/modified",
+    "No live WebDAV, runtime install/restart, implementation or release"
+  ],
+  "observed": "面板2.84.0→2.97.0；文件操作失败（validate existing install target）：受管安装包与清单不一致，未覆盖；重试面板更新按钮。",
+  "staticFinding": "validate_existing_prefix: installed package.json name differs from official package or version differs from managed manifest version; not a hash check. Both calls in install() precede temporary package creation/fill and target replacement.",
+  "unknown": "Actual name/version mismatch and its origin not read or established; do not blame maintained runtime or user edits."
+}
