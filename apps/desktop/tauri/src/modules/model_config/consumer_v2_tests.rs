@@ -226,7 +226,9 @@ fn read_match_compile_prepare_commit_and_reopen_restore_source_layer() {
 #[test]
 fn protocol_split_is_real_and_recompiles_without_copied_manual_authority() {
     let library = seed_library_v2().unwrap();
-    let raw = config();
+    let mut raw = config();
+    raw["providers"]["vendor"]["modelCapabilities"] =
+        json!({"gpt-6-sol":{"inputModalities":["text"],"extension":"keep-across-groups"}});
     let before = imported(&raw);
     let matched = matched(&library, &before);
     let intended = apply_explicit_edits_v2(
@@ -306,6 +308,10 @@ fn protocol_split_is_real_and_recompiles_without_copied_manual_authority() {
     assert_eq!(
         done.next_config["providers"]["vendor-responses"]["disabled"],
         true
+    );
+    assert_eq!(
+        done.next_config["providers"]["vendor"]["modelCapabilities"]["gpt-6-sol"]["extension"],
+        "keep-across-groups"
     );
     assert_eq!(
         done.next_config["providers"]["vendor-responses"]["models"],
