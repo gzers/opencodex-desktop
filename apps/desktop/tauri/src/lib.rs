@@ -99,25 +99,10 @@ pub fn run() {
                     .build()?;
             }
 
-            let default_root = app.path().app_data_dir().map_err(|error| {
-                Box::new(crate::errors::AppError::FileSystem {
-                    operation: "resolve app data directory".to_string(),
-                    detail: error.to_string(),
-                }) as Box<dyn std::error::Error>
-            })?;
-            let executable = std::env::current_exe()?;
-            // 沙箱完全绕过个人启动选择；普通 Windows 在任何业务状态注册前完成恢复准入。
-            #[cfg(windows)]
-            let resolution = if crate::modules::test_sandbox::enabled() {
-                crate::modules::data_root::bootstrap::resolve_default_startup(&default_root, &executable)?
-            } else {
-                match crate::infrastructure::windows_startup_root::prepare(app.handle(), &default_root, &executable)? {
-                    Some(resolution) => resolution,
-                    None => return Ok(()), // 仅保留原生选择/错误对话框，业务服务尚未启动。
-                }
-            };
-            #[cfg(not(windows))]
-            let resolution = crate::modules::data_root::bootstrap::resolve_default_startup(&default_root, &executable)?;
+            let user_home=crate::infrastructure::platform::home_dir().ok_or(crate::errors::AppError::NotConfigured)?;
+            let default_root=user_home.join(".codex-desktop");
+            let executable=std::env::current_exe()?;
+            let resolution=crate::modules::data_root::bootstrap::resolve_default_startup(&default_root,&executable)?;
             let crate::modules::data_root::bootstrap::StartupResolution {
                 anchor, sandbox_boundary, runtime_config, locks,
             } = resolution;
@@ -127,12 +112,6 @@ pub fn run() {
             app.manage(crate::state::SharedDataRootAnchor(anchor));
             app.manage(crate::state::SharedSandboxBoundary(sandbox_boundary));
             app.manage(crate::state::InstanceState { locks: std::sync::Mutex::new(locks) });
-            // 配置格式自动转换（§5）：启动时按需迁移旧 schema 偏好并完成未提交事务；
-            // 已是当前 schema 不写盘，损坏/过新不覆盖原件。失败只记日志，不阻断启动。
-            if let Err(error) = crate::modules::config_migration::migrate_preferences_on_startup(&data_root)
-            {
-                record_window_event(&data_root, &format!("config migration: {error}"));
-            }
             app.manage(crate::state::SharedDataRoot(data_root.clone()));
             #[cfg(windows)]
             if let Some(config) = startup_window {
@@ -173,10 +152,6 @@ pub fn run() {
             // 已删除功能的残留文件：删代码不等于删数据，固定文件名在这里就地清掉。
             // 只删「读取代码已完全删除」的文件，不遍历目录、不碰用户配置与历史备份。
             crate::commands::retired_files::purge_retired(&data_root);
-            // Repeatable, bounded upgrade of layout/candidates only. Failure
-            // keeps source bytes and does not stop unrelated application use.
-            let model_layout_migration =
-                crate::modules::model_config::legacy_migration::migrate(&data_root);
             // 「启动时清理」：开启时按保留策略做一次有界的轻量清理（日志截断、通知与
             // 通知保留期），必须在通知集合载入前完成；启动不扫描、校验或删除备份。
             let (startup_cleanup, cleanup_identity) =
@@ -198,9 +173,6 @@ pub fn run() {
             app.manage(std::sync::Arc::new(std::sync::Mutex::new(
                 crate::commands::notifications::startup_notification_store(&data_root),
             )));
-            crate::modules::model_config::feedback::migration_startup(
-                app.handle(), &data_root, &model_layout_migration,
-            );
             // Terminal facts use the post-cleanup store, never an earlier in-memory copy.
             if match &startup_cleanup { Ok(outcome) => outcome.ran, Err(_) => true } {
                 crate::commands::event_delivery::publish(
@@ -230,10 +202,11 @@ pub fn run() {
             // 运行来源解析层（FZ-48）：显式指定 > 托管安装 > 自动发现候选，不读 PATH。
             // 发现候选按文档口径给出（受控默认目录 + Homebrew 两个固定前缀），
             // 逐个做可执行校验，缺失即跳过。
-            let runtime = crate::modules::runtime::RuntimeHandle::initialize(
-                &data_root,
-                crate::infrastructure::discovery_paths::runtime_candidates(&home),
-            );
+            let platform=if cfg!(windows){crate::modules::data_root::layout::Platform::Windows}else if cfg!(target_os="macos"){crate::modules::data_root::layout::Platform::Macos}else{crate::modules::data_root::layout::Platform::Unix};
+            let install_root=if crate::modules::test_sandbox::enabled(){
+                crate::modules::test_sandbox::sandbox_root().ok_or(crate::errors::AppError::NotConfigured)?.join("program")
+            } else {crate::modules::data_root::layout::Layout::installation_root(&executable,platform)?};
+            let runtime=crate::modules::runtime::RuntimeHandle::initialize_managed(&data_root,&install_root);
             let runtime_executable: crate::infrastructure::runtime_executable::SharedRuntimeExecutable =
                 runtime.clone();
             app.manage(runtime.clone());
