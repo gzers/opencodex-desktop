@@ -102,7 +102,26 @@ pub fn run() {
             let user_home=crate::infrastructure::platform::home_dir().ok_or(crate::errors::AppError::NotConfigured)?;
             let default_root=user_home.join(".codex-desktop");
             let executable=std::env::current_exe()?;
-            let resolution=crate::modules::data_root::bootstrap::resolve_default_startup(&default_root,&executable)?;
+            let resolution=match crate::modules::data_root::bootstrap::resolve_default_startup(&default_root,&executable) {
+                Ok(resolution) => resolution,
+                #[cfg(target_os = "macos")]
+                Err(crate::errors::AppError::RuntimeManaged { code, detail })
+                    if code == "macos_install_container" => {
+                    use tauri_plugin_dialog::DialogExt;
+                    // Installation admission failed before U/D/H or runtime
+                    // initialization. Show the remedy without starting services.
+                    if let Some(window) = app.get_webview_window("main") {
+                        let _ = window.hide();
+                    }
+                    let handle = app.handle().clone();
+                    app.dialog().message(detail)
+                        .title("请调整安装位置")
+                        .kind(tauri_plugin_dialog::MessageDialogKind::Error)
+                        .show(move |_| handle.exit(1));
+                    return Ok(());
+                }
+                Err(error) => return Err(error.into()),
+            };
             let crate::modules::data_root::bootstrap::StartupResolution {
                 anchor, sandbox_boundary, runtime_config, locks,
             } = resolution;
@@ -788,8 +807,9 @@ pub fn run() {
                 } = event
                 {
                     if !has_visible_windows {
-                        let data_root = app_handle.state::<crate::state::SharedDataRoot>();
-                        reveal_main_window(app_handle, "dock:reopen", &data_root.0);
+                        if let Some(data_root) = app_handle.try_state::<crate::state::SharedDataRoot>() {
+                            reveal_main_window(app_handle, "dock:reopen", &data_root.0);
+                        }
                     }
                     }
             }
