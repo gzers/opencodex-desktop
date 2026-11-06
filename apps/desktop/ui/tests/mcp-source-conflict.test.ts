@@ -1,74 +1,20 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
-import { createPinia, setActivePinia } from 'pinia'
-import { defineComponent } from 'vue'
+import {beforeEach,afterEach,describe,expect,it,vi} from 'vitest'
+import {flushPromises,mount,type VueWrapper} from '@vue/test-utils'
 import ModelTransfer from '@/features/sync/ModelTransfer.vue'
-import { modelTransferApi,transferChoiceApi, type FilePlan, type McpConflict, type ModelPackage } from '@/features/sync/modelTransfer'
-import { useModelsStore } from '@/features/models/store'
-import type { ModelSnapshot } from '@/features/models/api'
-vi.mock('@tauri-apps/plugin-dialog', () => ({ open: vi.fn() }))
-vi.mock('@/features/sync/modelTransfer', async original => ({ ...await original<typeof import('@/features/sync/modelTransfer')>(), transferChoiceApi:{load:vi.fn(),save:vi.fn()},modelTransferApi: {prepareDraft:vi.fn(),prepare:vi.fn(),export:vi.fn(),receive:vi.fn(),accept:vi.fn(),select:vi.fn(),prepareUpload:vi.fn(),publish:vi.fn(),download:vi.fn(),latestIncoming:vi.fn(),recompare:vi.fn(),openReceived:vi.fn(),loadRemoteScope:vi.fn(),saveRemoteScope:vi.fn(),latestUpload:vi.fn(),accountCatalog:vi.fn(),channelCatalog:vi.fn(),extensionCatalog:vi.fn()} }))
-
-const snapshot = (): ModelSnapshot => ({ library:{schemaVersion:1,templates:[]},policy:{schemaVersion:1,channels:[],templateRefs:[]},libraryDigest:'library',policyDigest:'policy',workspace:null,workspaceDigest:'workspace' })
-const pack = (): ModelPackage => ({format:'OCXD_MODEL_CONFIG',formatVersion:1,schemaVersion:1,createdAt:'2026-10-18T00:00:00Z',digest:'frozen-digest',payload:{templates:[],policy:null}})
-const plan = (conflicts:McpConflict[]): FilePlan => ({id:'mcp-plan',package:pack(),credentialCount:0,assets:{skills:[],mcps:[],conflicts}})
-const dialog = defineComponent({ props:['open'], template:'<section v-if="open"><slot/><slot name="actions"/></section>' })
-const select = defineComponent({props:['modelValue','options','label','disabled'],emits:['update:modelValue'],template:'<label>{{label}}<select :aria-label="label" :value="modelValue" @change="$emit(\'update:modelValue\',$event.target.value)"><option v-for="item in options" :key="item.value" :value="item.value">{{item.label}}</option></select></label>'})
-const render = () => mount(ModelTransfer, {props:{remote:false},global:{stubs:{UiDialog:dialog,UiSelectField:select}}})
-const button = (wrapper:ReturnType<typeof render>,label:string) => wrapper.findAll('button').find(b=>b.text()===label)!
-// 对象树分组默认折叠；按名称搜索后子项才可见。
-async function checkbox(wrapper:ReturnType<typeof render>,label:string){await wrapper.get('input[aria-label="搜索配置对象"]').setValue(label);return wrapper.get('input[aria-label="选择 '+label+'"]')}
-const conflict = {name:'fixture-mcp',clients:['codex','claude'],fields:['command','args']}
-
-beforeEach(() => {
-  setActivePinia(createPinia());vi.clearAllMocks();localStorage.clear();vi.mocked(transferChoiceApi.load).mockResolvedValue(null);vi.mocked(transferChoiceApi.save).mockImplementation(async(_remote,choice)=>choice)
-  vi.mocked(modelTransferApi.accountCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue([])
-  vi.mocked(modelTransferApi.extensionCatalog).mockResolvedValue({skills:[],mcps:['fixture-mcp','node_repl']})
-  useModelsStore().snapshot=snapshot()
+import SyncDialogHost from '@/features/sync/SyncDialogHost.vue'
+import {fileBackend} from './helpers/fileWorkspaceV2'
+import {workspaceHash as hash} from './helpers/modelWorkspaceV2'
+const ipc=vi.hoisted(()=>vi.fn())
+vi.mock('@tauri-apps/api/core',()=>({invoke:ipc}))
+let backend:ReturnType<typeof fileBackend>,wrappers:VueWrapper[]=[]
+const dialog={props:['open'],template:'<section v-if="open"><slot/><slot name="actions" :close="() => $emit(&quot;close&quot;)"/></section>'}
+const select={props:['modelValue','options','label','disabled'],emits:['update:modelValue'],template:'<label>{{label}}<select :aria-label="label" :value="modelValue" :disabled="disabled" @change="$emit(&quot;update:modelValue&quot;,$event.target.value)"><option v-for="o in options" :key="o.value" :value="o.value">{{o.label}}</option></select></label>'}
+function render(){const w=mount(ModelTransfer,{global:{stubs:{UiDialog:dialog,UiSelectField:select}}});wrappers.push(w);return w}
+async function checkbox(w:VueWrapper,label:string){await w.get('input[aria-label="搜索配置对象"]').setValue(label);return w.get<HTMLInputElement>('input[aria-label="选择 '+label+'"]')}
+beforeEach(()=>{backend=fileBackend(ipc);const c=backend.catalog,mcp=c.entries[1]!;mcp.id='fixture-mcp';mcp.label='MCP · fixture-mcp';c.entries=[mcp,{...mcp,id:'node_repl',label:'MCP · node_repl'}];c.mcpSources=[{name:'fixture-mcp',sources:[{source:'codex',definitionDigest:hash(4)}],differingFields:[]},{name:'node_repl',sources:[{source:'codex',definitionDigest:hash(6)}],differingFields:[]}];backend.catalog=c;backend.savedScope=null})
+afterEach(()=>{wrappers.splice(0).forEach(w=>w.unmount());vi.restoreAllMocks()})
+describe('S18-03 exact MCP sources and default node_repl exclusion',()=>{
+ it('excludes node_repl by default but permits explicit selection and explains client-owned local paths',async()=>{const w=render();await flushPromises();expect((await checkbox(w,'MCP · fixture-mcp')).element.checked).toBe(true);const repl=await checkbox(w,'MCP · node_repl');expect(repl.element.checked).toBe(false);expect(repl.element.disabled).toBe(false);expect(w.text()).toContain('由客户端应用维护 · 含本机路径');await w.get('button[aria-label="MCP · node_repl"]').trigger('click');await w.get('select[aria-label="MCP · node_repl定义来源"]').setValue('codex');await repl.setValue(true);await flushPromises();expect(backend.store.scope.selection.mcpSources).toContainEqual({name:'node_repl',definitionDigest:hash(6)})})
+ it('shows exact same-name definition conflicts, preserves the picker after selecting and prepares the same selected range with backend digest',async()=>{const c=backend.catalog;c.mcpSources[0]!.sources.push({source:'claude',definitionDigest:hash(5)});c.mcpSources[0]!.differingFields=['command','args'];backend.catalog=c;const w=render();await flushPromises();await checkbox(w,'MCP · fixture-mcp');await w.get('button[aria-label="MCP · fixture-mcp"]').trigger('click');expect(w.text()).toContain('同名 MCP 定义差异');expect(w.text()).toContain('command、args');const picker=w.get('select[aria-label="MCP · fixture-mcp定义来源"]');expect(picker.findAll('option').map(o=>o.attributes('value'))).toEqual(['','codex','claude']);await picker.setValue('claude');await (await checkbox(w,'MCP · fixture-mcp')).setValue(true);backend.store.setScope({...backend.store.scope,assetsReviewed:true});await backend.store.prepareExport(null);expect(ipc.mock.calls.find(c=>c[0]==='prepare_config_file_export_v2')![1].request).toMatchObject({selection:{mcpSources:[{name:'fixture-mcp',definitionDigest:hash(5)}]},mcpClients:{'fixture-mcp':'claude'}});expect(w.find('select[aria-label="MCP · fixture-mcp定义来源"]').exists()).toBe(true)})
+ it('does not select or generate a file containing only an unresolved same-name MCP; the explicit selection error is retained',async()=>{const c=backend.catalog;c.mcpSources[0]!.sources.push({source:'claude',definitionDigest:hash(5)});backend.catalog=c;const w=render(),h=mount(SyncDialogHost,{global:{stubs:{UiDialog:dialog,UiSelectField:select}}});wrappers.push(h);await flushPromises();await (await checkbox(w,'MCP · fixture-mcp')).setValue(true);expect(backend.store.scope.selection.mcpSources).toEqual([]);expect(w.text()).toContain('请先明确选择该 MCP 定义来源');expect(ipc.mock.calls.some(c=>c[0]==='save_config_file_export_v2'||c[0]==='prepare_config_file_export_v2')).toBe(false);expect(h.findAll('button').some(b=>b.text()==='选择位置并导出')).toBe(false)})
 })
-
-describe('S18-03 同名 MCP 选来源与 node_repl 默认不同步', () => {
-  it('默认范围不勾选 node_repl，可手动勾选且标明由客户端应用维护', async () => {
-    const wrapper=render();await flushPromises();await flushPromises()
-    expect(((await checkbox(wrapper,'MCP · fixture-mcp')).element as HTMLInputElement).checked).toBe(true)
-    const nodeRepl=(await checkbox(wrapper,'MCP · node_repl')).element as HTMLInputElement
-    expect(nodeRepl.checked).toBe(false)
-    expect(nodeRepl.disabled).toBe(false)
-    expect(wrapper.text()).toContain('由客户端应用维护 · 含本机路径')
-    wrapper.unmount()
-  })
-
-  it('导出确认按原型顺序列出冲突，选定来源后按同一范围重算并带上来源', async () => {
-    vi.mocked(modelTransferApi.prepare).mockResolvedValueOnce(plan([conflict])).mockResolvedValue(plan([]))
-    const wrapper=render();await flushPromises();await flushPromises()
-    await button(wrapper,'导出配置').trigger('click');await flushPromises()
-    const text=wrapper.text()
-    expect(text).toContain('同名定义在 Codex、Claude 中不同（差异字段：command、args），请选择来源')
-    // 原型顺序：生成位置 → 同名 MCP 选来源 → 范围与凭据说明（.sx-info）。
-    const follows=(a:string,b:string)=>Boolean(wrapper.get(a).element.compareDocumentPosition(wrapper.get(b).element)&Node.DOCUMENT_POSITION_FOLLOWING)
-    expect(follows('.export-tree','.transfer-mcp-conflicts')).toBe(true)
-    expect(follows('.transfer-mcp-conflicts','.export-info')).toBe(true)
-    const picker=wrapper.get('select[aria-label="fixture-mcp 采用来源"]')
-    expect(picker.findAll('option').map(o=>o.text())).toEqual(['暂不导出','Codex','Claude'])
-    await picker.setValue('claude');await flushPromises()
-    expect(modelTransferApi.prepare).toHaveBeenCalledTimes(2)
-    expect(vi.mocked(modelTransferApi.prepare).mock.calls[1]![3]).toEqual(expect.objectContaining({mcpSources:{'fixture-mcp':'claude'}}))
-    // 已选来源的冲突仍保留在列表中，便于改选。
-    expect(wrapper.find('select[aria-label="fixture-mcp 采用来源"]').exists()).toBe(true)
-    wrapper.unmount()
-  })
-
-  it('范围只剩未选来源的同名 MCP 时不能生成，提示先选来源或调整范围', async () => {
-    vi.mocked(modelTransferApi.prepare).mockResolvedValue(plan([conflict]))
-    const wrapper=render();await flushPromises();await flushPromises()
-    await wrapper.get('input[aria-label="选择当前筛选全部配置对象"]').setValue(true);await wrapper.get('input[aria-label="选择当前筛选全部配置对象"]').setValue(false)
-    await (await checkbox(wrapper,'MCP · fixture-mcp')).setValue(true)
-    await wrapper.get('input[aria-label="搜索配置对象"]').setValue('')
-    await button(wrapper,'导出配置').trigger('click');await flushPromises()
-    await button(wrapper,'生成配置包').trigger('click');await flushPromises()
-    expect(wrapper.text()).toContain('请为同名 MCP 选择来源，或调整导出范围。')
-    expect(modelTransferApi.export).not.toHaveBeenCalled()
-    wrapper.unmount()
-  })
-})
-
