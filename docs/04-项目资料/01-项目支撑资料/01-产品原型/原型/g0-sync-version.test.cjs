@@ -11,13 +11,13 @@ test('POST04 内容优先、可靠UTC保存时间判新，无基线不固定云�
  assert.equal(decideSavedContent(a,{exists:false}).source,'local');assert.equal(decideSavedContent({exists:false},a).source,'remote');
  assert.equal(decideSavedContent({exists:false},{exists:false}).status,'same');assert.equal(decideSavedContent(a,{readError:true}).status,'unknown');
 });
-test('POST04 唯一总原型：未知/同刻/mtime/异常均禁用确认且取消无写入，已知时间对称预览',async t=>{
+test('POST04 最新原型：未知/同刻/mtime/异常按云端存在预选下载，取消无写入，已知时间对称预览',async t=>{
  const h=await make('#sync?tab=webdav');t.after(()=>h.dispose());const s=()=>h.w.syncPrototype.state();
  for(const scene of ['unknown-time','same-time','legacy-mtime','invalid-time','unbound-version','clock-skew']){
   h.w.syncPrototype.setScenario(scene);h.w.syncPrototype.open({tab:'webdav',scope:['skill:design'],action:'check'});
-  assert.equal(h.document.querySelector('#modalTitle').textContent,'同步预览');assert.match(h.document.querySelector('#modalBody').textContent,/无法判定新版/);
-  assert.equal(h.document.querySelector('#modalConfirm').disabled,true);assert.equal(h.document.querySelector('#modalConfirm').hidden,false);assert.equal(s().preview.source,'undetermined');
-  const before=JSON.stringify({versions:s().versions,backups:s().backups,serial:s().serial});h.click('#modalConfirm');h.click('#modalClose');
+  assert.equal(h.document.querySelector('#modalTitle').textContent,'同步预览');assert.match(h.document.querySelector('#modalBody').textContent,/保存时间不足以判定新版/);
+  assert.equal(h.document.querySelector('#modalConfirm').disabled,false);assert.equal(h.document.querySelector('#modalConfirm').hidden,false);assert.equal(s().preview.source,'remote');assert.equal(h.document.querySelector('#sxDirection').value,'download');
+  const before=JSON.stringify({versions:s().versions,backups:s().backups,serial:s().serial});h.click('#modalClose');
   assert.equal(s().running,false);assert.equal(JSON.stringify({versions:s().versions,backups:s().backups,serial:s().serial}),before);
  }
  for(const [scene,source] of [['local-no-baseline','local'],['remote-no-baseline','remote']]){

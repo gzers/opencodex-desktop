@@ -1,0 +1,69 @@
+{
+  "issue": "S22-POST-01",
+  "date": "2026-11-06",
+  "decision": "Source-row upload/download dropdown. Prefer saved-content direction; if undetermined, valid cloud configuration defaults download; confirmed empty cloud with local content defaults upload. Changing selection only recalculates preview; confirmation executes.",
+  "supersedes": "Earlier auto/upload/download radio group and unknown-time disable-only prototype rule",
+  "productStatus": "prototype-only; no production implementation/release",
+  "tests": {
+    "projected": "26/26 passed",
+    "files": [
+      "post022-sync-direction.test.cjs",
+      "g0-sync-version.test.cjs",
+      "sync-snapshot-preview.test.cjs"
+    ],
+    "coverage": [
+      "known saved versions",
+      "unknown/same-time/mtime/invalid/unbound/skew time fallback",
+      "empty cloud upload and invalid source download blocked",
+      "manual upload/download execution only after confirm",
+      "scope and existing backups preserved",
+      "cancel/close/Escape/reopen",
+      "network/preview identity protection",
+      "same-content no write",
+      "import/sync backup/write-failure regressions"
+    ],
+    "setupFailure": "Initial archived projection omitted parent overview-dual.js. Failure log preserved; exact HEAD dependency supplied and rerun passed. Earlier workspace test expected old confirmation wording; assertion updated to direction-specific label."
+  },
+  "browser": {
+    "entry": "index.html#sync?tab=webdav",
+    "viewport": "1561x1218 existing viewport; no override",
+    "verified": [
+      "Source dropdown menu both options",
+      "Manual upload changes list and confirms upload",
+      "Unknown-time default download with local time still unknown and backup checked",
+      "Empty-cloud default upload with 77 mock additions",
+      "No console errors/warnings observed"
+    ],
+    "limits": [
+      "Current workspace contains concurrent overview changes; only source-dropdown projection is adopted",
+      "No native app or live WebDAV validation",
+      "No narrow-viewport claim"
+    ],
+    "finalState": "Unknown-time cloud-present preview, source menu open for user review"
+  },
+  "sourceHashes": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.js": "72e94d236d638f60b8f3673a36b5bcea2176cd05b0e0c09884961314338bb578",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "f099e67c22b44ed7bdfa58deed70fe0d91fa09b55514b7adde3faf568d4eadf9",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/post022-sync-direction.test.cjs": "864f0c8a2b7fe3540c33cd833e8061d29511396fd57b36d7f6a41626cfea1baf",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/g0-sync-version.test.cjs": "9fb0b1876032e4fbd4deaefdaf177a600a463ca4108e0d0ae0d2fe8d9c530698",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs": "3d4965076ae82dffb7e01e00e8358ebae3cf27b5ecb826e974effcc1f9acfb4b"
+  },
+  "screenshots": {
+    "empty-default-upload.jpg": {
+      "bytes": 127812,
+      "sha256": "a50572df5d48f258467f25654be70e08292d46950737ea24222d58304a75b96b"
+    },
+    "source-dropdown.jpg": {
+      "bytes": 136705,
+      "sha256": "dda8d8c550d05236a455ac40392d4a2fbcdf38eaa3ec8242ff1318fa398f0d5f"
+    },
+    "source-menu.jpg": {
+      "bytes": 133738,
+      "sha256": "a10756f313dc4db0e6492b7479ee0e237f4b15a1eb13e88dac5977144731912c"
+    },
+    "unknown-default-download.jpg": {
+      "bytes": 135099,
+      "sha256": "ae530d055250aead9e81322922ed6822259ad59c6e715c324c812c6bcb236cc1"
+    }
+  }
+}

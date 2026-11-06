@@ -46,7 +46,7 @@ async function webdav(h,scene='normal'){
 function openPreview(h){
  h.click('#syncActions [data-prototype-action=sync]');
  assert.equal(h.document.querySelector('#modalTitle').textContent,'同步预览');
- assert.equal(h.document.querySelector('#modalConfirm').textContent,'确认更新');
+ assert.equal(h.document.querySelector('#modalConfirm').textContent,h.document.querySelector('#sxDirection').value==='upload'?'确认上传':'确认下载');
  const s=sync(h),p=s.preview;
  assert.ok(p,'点击同步先生成预览');
  assert.ok(['local','remote','unchanged'].includes(p.source));
