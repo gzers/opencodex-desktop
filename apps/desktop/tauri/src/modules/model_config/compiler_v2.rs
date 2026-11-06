@@ -115,6 +115,7 @@ pub fn compile_file_v2(
     }
     let plan = plan_materialization_v2(library, before, intended)?;
     validate_protocol_group_auth_v2(&plan.groups, auth)?;
+    let verified_mappings = super::protocol_groups::plan_mappings_v2(mappings, &plan.groups, &[])?;
     let mut next = raw.clone();
     if next.get("providers").is_none() {
         next["providers"] = json!({});
@@ -227,6 +228,41 @@ pub fn compile_file_v2(
         let mut no_reasoning = strings(row.get("noReasoningModels"))?;
         no_reasoning.retain(|id| !managed_ids.contains(id.as_str()));
         for id in &ids {
+            // When a model moves back from a split provider, transfer its
+            // public per-model objects before overlaying known rule fields.
+            // This preserves opaque subfields such as capability extensions.
+            let owners = original
+                .iter()
+                .filter(|(provider, raw)| {
+                    (*provider == &channel.connection.provider_id
+                        || mappings
+                            .mappings
+                            .iter()
+                            .any(|m| m.channel_id == channel.id && &m.provider_id == *provider))
+                        && ["models", "retainModels"].iter().any(|key| {
+                            raw.get(*key)
+                                .and_then(Value::as_array)
+                                .is_some_and(|models| models.iter().any(|m| m.as_str() == Some(id)))
+                        })
+                })
+                .collect::<Vec<_>>();
+            if owners.len() > 1 {
+                return Err(error("model_runtime_mapping_conflict"));
+            }
+            if let Some((_, previous)) = owners.first() {
+                for key in super::provider_fields::PUBLIC
+                    .iter()
+                    .filter(|key| key.starts_with("model"))
+                {
+                    if let Some(value) = previous
+                        .get(*key)
+                        .and_then(Value::as_object)
+                        .and_then(|map| map.get(id))
+                    {
+                        set_exact(&mut row, key, id, Some(value))?;
+                    }
+                }
+            }
             let model = plan
                 .effective
                 .iter()
@@ -443,7 +479,7 @@ pub fn compile_file_v2(
         next_config: next,
         policy: intended.clone(),
         ledger,
-        mappings: mappings.clone(),
+        mappings: verified_mappings,
         targets,
         plan,
     })
