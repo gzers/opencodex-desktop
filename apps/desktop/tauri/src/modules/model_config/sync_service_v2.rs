@@ -358,7 +358,7 @@ impl ServiceFilesV2 {
                 }
             }
         }
-        std::fs::create_dir_all(&directory)
+        crate::infrastructure::platform::create_private_dir_all(&directory, 0o700)
             .map_err(|_| failure(ErrorCode::SyncLocalStateIo, Step::Persist))?;
         let root_digest = store::digest(
             root.canonicalize()
@@ -430,13 +430,7 @@ impl ServiceFilesV2 {
             return Err(failure(ErrorCode::SyncLimit, Step::Persist));
         }
         let target = self.path(name)?;
-        let mut f = tempfile::NamedTempFile::new_in(&self.directory)
-            .map_err(|_| failure(ErrorCode::SyncLocalStateIo, Step::Persist))?;
-        use std::io::Write;
-        f.write_all(&bytes)
-            .and_then(|_| f.as_file().sync_all())
-            .map_err(|_| failure(ErrorCode::SyncLocalStateIo, Step::Persist))?;
-        f.persist(target)
+        crate::infrastructure::atomic_write::atomic_write(&target, &bytes, 0o600)
             .map_err(|_| failure(ErrorCode::SyncLocalStateIo, Step::Persist))?;
         Ok(())
     }

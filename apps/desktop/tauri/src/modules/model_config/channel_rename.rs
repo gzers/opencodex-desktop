@@ -522,7 +522,7 @@ impl<'a> Transaction<'a> {
             credentials: self.credentials.clone(),
         };
         let dir = backup_dir(self.root, &journal.id)?;
-        std::fs::create_dir_all(&dir)?;
+        crate::infrastructure::platform::create_private_dir_all(&dir, 0o700)?;
         crate::infrastructure::platform::set_mode(&dir, 0o700)?;
         for (index, image) in self.images.iter().enumerate() {
             let before = if let Some(bytes) = &image.before {

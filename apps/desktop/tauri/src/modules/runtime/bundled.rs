@@ -12,9 +12,11 @@ use crate::{
     modules::backup::safety,
 };
 use serde::{Deserialize, Serialize};
+#[cfg(windows)]
+use std::fs::OpenOptions;
 use std::{
     collections::{BTreeMap, BTreeSet},
-    fs::{self, File, OpenOptions},
+    fs::{self, File},
     io::{Read, Write},
     path::{Component, Path, PathBuf},
 };
@@ -203,12 +205,17 @@ fn mkdir(path: &Path) -> AppResult<()> {
     if let Some(parent) = path.parent() {
         mkdir(parent)?;
     }
+    #[cfg(windows)]
+    return crate::infrastructure::windows_private_create::create_private_dir_all(path, 0o700)
+        .map_err(io);
+    #[cfg(not(windows))]
     let mut builder = fs::DirBuilder::new();
     #[cfg(unix)]
     {
         use std::os::unix::fs::DirBuilderExt;
         builder.mode(0o700);
     }
+    #[cfg(not(windows))]
     match builder.create(path) {
         Ok(()) => Ok(()),
         Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => {
@@ -522,16 +529,12 @@ fn unpack(archive: &Path, plan: &Plan, destination: Option<&Path>) -> AppResult<
             if let Some(root) = destination {
                 let path = root.join(&name);
                 mkdir(path.parent().unwrap())?;
-                let mut options = OpenOptions::new();
-                options.write(true).create_new(true);
-                #[cfg(unix)]
-                {
-                    use std::os::unix::fs::OpenOptionsExt;
-                    options.mode(0o600);
-                }
-                let mut file = options.open(&path).map_err(io)?;
+                let mut file =
+                    crate::infrastructure::platform::create_new_private_file(&path, 0o600)
+                        .map_err(io)?;
                 file.write_all(&bytes).map_err(io)?;
                 file.sync_all().map_err(io)?;
+                drop(file);
                 crate::infrastructure::platform::set_mode(&path, expected.mode.unwrap())
                     .map_err(io)?;
             }
@@ -581,7 +584,13 @@ fn unpack(archive: &Path, plan: &Plan, destination: Option<&Path>) -> AppResult<
                     .get(resolved)
                     .filter(|e| e.kind == "file")
                     .ok_or_else(|| invalid("Windows不接受目录symlink映射"))?;
-                fs::copy(root.join(resolved), &path).map_err(io)?;
+                let mut source = regular(&root.join(resolved))?;
+                let mut target =
+                    crate::infrastructure::platform::create_new_private_file(&path, 0o600)
+                        .map_err(io)?;
+                std::io::copy(&mut source, &mut target).map_err(io)?;
+                target.sync_all().map_err(io)?;
+                drop(target);
                 crate::infrastructure::platform::set_mode(&path, e.mode.unwrap()).map_err(io)?;
             }
         }
@@ -877,14 +886,8 @@ fn provision_inner(
             return Err(invalid("归档体积不符"));
         }
         let copy = stage.path().join("archive.tar.gz");
-        let mut options = OpenOptions::new();
-        options.write(true).create_new(true);
-        #[cfg(unix)]
-        {
-            use std::os::unix::fs::OpenOptionsExt;
-            options.mode(0o600);
-        }
-        let mut output = options.open(&copy).map_err(io)?;
+        let mut output =
+            crate::infrastructure::platform::create_new_private_file(&copy, 0o600).map_err(io)?;
         let n = std::io::copy(&mut source.take(MAX_ARCHIVE + 1), &mut output).map_err(io)?;
         if n != plan.descriptor.archive_bytes {
             return Err(invalid("归档超限/读取期间改变"));

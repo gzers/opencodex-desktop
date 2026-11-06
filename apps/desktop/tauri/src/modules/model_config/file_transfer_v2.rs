@@ -1390,7 +1390,7 @@ fn password_save(d: &Path, j: PasswordJournal) -> ModelResult<()> {
     let parent = path
         .parent()
         .ok_or_else(|| err("file_password_journal_io"))?;
-    std::fs::create_dir_all(parent)?;
+    crate::infrastructure::platform::create_private_dir_all(parent, 0o700)?;
     safety::check_path(d, parent, false)?;
     crate::infrastructure::platform::set_mode(parent, 0o700)?;
     let bytes = serde_json::to_vec(&CheckedPasswords {
@@ -1960,7 +1960,7 @@ impl FileTransferOwnerV2 {
         use rand::RngCore;
         let path = recovery_path(&self.d, id)?;
         let parent = path.parent().ok_or_else(|| err("file_recovery_io"))?;
-        std::fs::create_dir_all(parent)?;
+        crate::infrastructure::platform::create_private_dir_all(parent, 0o700)?;
         safety::check_path(&self.d, parent, false)?;
         crate::infrastructure::platform::set_mode(parent, 0o700)?;
         let _guard = crate::infrastructure::locking::TargetFileLock::lock(&path)?;

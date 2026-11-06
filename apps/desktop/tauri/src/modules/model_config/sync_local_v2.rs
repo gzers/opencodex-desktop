@@ -508,18 +508,25 @@ fn publish_new(d: &Path, p: &Path, bytes: &[u8]) -> SyncResult<()> {
     let parent = p
         .parent()
         .ok_or_else(|| failure(ErrorCode::SyncLocalStateIo))?;
-    std::fs::create_dir_all(parent).map_err(|_| failure(ErrorCode::SyncLocalStateIo))?;
-    checked(d, parent)?;
-    let mut tmp = tempfile::NamedTempFile::new_in(parent)
+    crate::infrastructure::platform::create_private_dir_all(parent, 0o700)
         .map_err(|_| failure(ErrorCode::SyncLocalStateIo))?;
-    crate::infrastructure::platform::set_mode(tmp.path(), 0o600)
+    checked(d, parent)?;
+    let mut tmp = tempfile::Builder::new()
+        .prefix(".ocxd-local-")
+        .make_in(parent, |path| {
+            crate::infrastructure::platform::create_new_private_file(path, 0o600)
+        })
         .map_err(|_| failure(ErrorCode::SyncLocalStateIo))?;
     use std::io::Write;
     tmp.write_all(bytes)
         .and_then(|_| tmp.as_file().sync_all())
         .map_err(|_| failure(ErrorCode::SyncLocalStateIo))?;
-    std::fs::hard_link(tmp.path(), p).map_err(|_| failure(ErrorCode::SyncOperationCollision))?;
-    drop(tmp);
+    // Close the private no-delete-sharing handle before publishing/removing its
+    // pathname on Windows. The TempPath still owns cleanup on every failure.
+    let tmp = tmp.into_temp_path();
+    std::fs::hard_link(&tmp, p).map_err(|_| failure(ErrorCode::SyncOperationCollision))?;
+    tmp.close()
+        .map_err(|_| failure(ErrorCode::SyncLocalStateIo))?;
     sync_parent(d, p)
 }
 #[cfg(test)]

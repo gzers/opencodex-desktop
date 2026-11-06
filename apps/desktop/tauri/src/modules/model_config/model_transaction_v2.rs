@@ -397,7 +397,17 @@ impl Dir {
             let path = self.path.join(name);
             let mut created = false;
             if create {
-                match std::fs::create_dir(&path) {
+                #[cfg(windows)]
+                let made = if secret {
+                    crate::infrastructure::windows_private_create::create_private_dir_all(
+                        &path, 0o700,
+                    )
+                } else {
+                    std::fs::create_dir(&path)
+                };
+                #[cfg(not(windows))]
+                let made = std::fs::create_dir(&path);
+                match made {
                     Ok(()) => created = true,
                     Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => (),
                     Err(_) => return Err(fault("model_transaction_io")),
@@ -463,7 +473,21 @@ impl Dir {
                     options.access_mode(0x40000000 | 0x00040000 | 0x00020000);
                 }
             }
-            options.open(self.path.join(name))
+            #[cfg(windows)]
+            {
+                if create {
+                    crate::infrastructure::platform::create_new_private_file(
+                        &self.path.join(name),
+                        0o600,
+                    )
+                } else {
+                    options.open(self.path.join(name))
+                }
+            }
+            #[cfg(not(windows))]
+            {
+                options.open(self.path.join(name))
+            }
         };
         match opened {
             Ok(f) => {

@@ -154,7 +154,7 @@ impl Store {
         if !root.is_absolute() {
             return Err(io_error("root must be absolute"));
         }
-        fs::create_dir_all(root).map_err(io_error)?;
+        crate::infrastructure::platform::create_private_dir_all(root, 0o700).map_err(io_error)?;
         if fs::symlink_metadata(root)
             .map_err(io_error)?
             .file_type()
@@ -190,14 +190,24 @@ impl Store {
     }
     fn lock_file(&self, key: &str) -> SyncResult<File> {
         let p = self.path(&format!("{key}.lock"))?;
+        #[cfg(not(windows))]
         let mut o = OpenOptions::new();
+        #[cfg(not(windows))]
         o.create(true).read(true).write(true).truncate(false);
         #[cfg(unix)]
         {
             use std::os::unix::fs::OpenOptionsExt;
             o.mode(0o600).custom_flags(libc::O_NOFOLLOW);
         }
-        o.open(p).map_err(io_error)
+        #[cfg(windows)]
+        {
+            crate::infrastructure::platform::open_or_create_private_file(&p, 0o600)
+                .map_err(io_error)
+        }
+        #[cfg(not(windows))]
+        {
+            o.open(p).map_err(io_error)
+        }
     }
     pub async fn lock(&self, key: &str) -> SyncResult<FileGuard> {
         let f = self.lock_file(key)?;
@@ -241,10 +251,7 @@ impl Store {
     }
     fn atomic(&self, name: &str, bytes: &[u8]) -> SyncResult<()> {
         let p = self.path(name)?;
-        let mut f = tempfile::NamedTempFile::new_in(&self.root).map_err(io_error)?;
-        f.write_all(bytes).map_err(io_error)?;
-        f.as_file().sync_all().map_err(io_error)?;
-        f.persist(p).map_err(io_error)?;
+        crate::infrastructure::atomic_write::atomic_write(&p, bytes, 0o600).map_err(io_error)?;
         #[cfg(unix)]
         File::open(&self.root)
             .and_then(|d| d.sync_all())

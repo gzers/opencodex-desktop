@@ -390,7 +390,7 @@ pub(crate) fn create_new_private_file(path: &Path, mode: u32) -> io::Result<File
     let raw = unsafe {
         CreateFileW(
             name.as_ptr(),
-            GENERIC_READ_WRITE | READ_CONTROL,
+            GENERIC_READ_WRITE | READ_CONTROL | 0x0004_0000, // WRITE_DAC for same-owner permission finalization
             FILE_SHARE_READ | FILE_SHARE_WRITE,
             &sa,
             CREATE_NEW,
