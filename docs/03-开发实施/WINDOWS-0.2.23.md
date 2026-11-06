@@ -7,7 +7,7 @@
 ## 当前基线与获取
 
 - 仓库：gzers/opencodex-desktop。
-- 代码：远端codex/0.2.23-integration，明确基线33d2c65b58ba8880d6deea7b52d69117238c3d33。
+- 代码：远端codex/0.2.23-integration，明确基线2bbe1aa92dd824a6c14e7f02caafb7a1e4f27c00。
 - 文档：远端docs/governance-main，以包含本条R2指令的提交为准；读取本文件、TEAM、IMP-31/32及0.2.23-contracts/L0-paths-runtime-v1.md。
 - Windows代码贡献分支：codex/0.2.23-windows；文档/脱敏证据使用独立docs/0.2.23-windows分支。若已有自己的改动，先保留并合并上述明确代码基线，不重置或覆盖工作树。
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
@@ -21,8 +21,8 @@
 
 1. **现在可执行**：使用当前集成源码，在Windows原生MSVC工具链编译/运行受影响检查，补验两真实SID并行、同SID跨会话/提权单实例、跨SID凭据拒绝、pipe及CLI身份验证、整机端口冲突与进程归属不误连误停。报告真实账号/SID关系，证据脱敏；缺少第二用户权限时明确未验，不以模拟通过代替。
 2. **现在可执行**：检查本基线中已集成的R1实现与L0 hook是否正确组合。必要修复仅限R1已列Windows专属文件与test/smoke/windows023-*；platform.rs、lib.rs、runtime核心、Cargo/版本/发行工作流仍归L0。需要公共修正时提供精确接口/最小补丁需求，不并发改共享文件。
-3. **待后继制品**：MSVC正式NSIS/MSI的安装、从0.2.22更新、卸载保留数据以及完整离线runtime供应，以L0后继交付的安装包/资源描述符摘要为准。本次源码交接不是最终安装候选；不能将隔离夹具或本机缺失的Mac临时路径记作制品交付。仓库已提供.github/runtime-platforms-023.json、.github/scripts/build_desktop_runtime_bundle.py与build_runtime_023.py，可读配方核对，最终stage/发行接线仍由L0完成。
-4. **待共享材质补丁**：本机发现WebKit高效果弹窗透字，公共组件正在独立修复。该补丁尚未纳入本次SHA，因此暂不重复验玻璃；补丁集成后只对受影响WebView2弹窗做有条件的小范围复验，不重做普通页面。
+3. **待后继制品**：MSVC正式NSIS/MSI的安装、从0.2.22更新、卸载保留数据以及完整离线runtime供应，以L0后继交付的安装包/资源描述符摘要为准。本次源码交接不是最终安装候选；不能将隔离夹具或本机缺失的Mac临时路径记作制品交付。仓库已提供.github/runtime-platforms-023.json、.github/scripts/build_desktop_runtime_bundle.py与build_runtime_023.py，可读配方核对，stage/发行接线已在205d72b1a实现，可使用.github/scripts/stage_runtime_bundle_023.py按固定配方生成完整资源；最终版本/签名正式制品仍由L0统一收口。
+4. **本批新增条件补验**：公共玻璃弹窗修复已在2bbe1aa92集成；保留模糊并增强正文/次级文字对比，低效果和无backdrop支持仍为实底。Mac Chromium/WebKit真实窗口像素及原回归64/64通过，最低正文5.56:1、次级4.88:1；请只对受影响WebView2弹窗核对亮暗/高低效果、长内容滚动与嵌套焦点，确认不是单纯透明或意外实底，不重做全站页面/模版逻辑。受既定RDP硬件例外约束时保留原失败事实，不伪造绝对帧率通过。
 
 运行包名称版本已确定2.97.0-desktop023.names.1，包SHA256为afb72a4c792c1ca70a0fcd9209d212c78249281d2d7bc42f8eee63aa4464b26b。本条用于后继制品对照，不表示tgz或完整bundle已上传可下载；L0必须提供真实可取位置后再做制品验收。
 
@@ -56,3 +56,5 @@ U=当前用户HOME/.codex-desktop，D=U/desktop，H=U/opencodex/home；固定指
 真实SID/安装器环境不足时如实分开报告，不用同用户两个RDP会话冒充两用户。普通UI/共享算法不重复做平台专项。隔离数据、保留失败/成功及清理证据；不运行真实业务同步/推理，不改日常配置或自动清理旧数据，不自行发布。
 
 回交必须推到可取得的代码/文档贡献分支，给完整SHA、依赖基线、合同、环境/命令/结果、未完原生/制品项及清理回执。不能只给Windows本地临时路径。L0核验后统一集成；R2缺口及R4实际运行包/安装候选仍按前述新派发节继续。
+
+后继交接补记（2026-11-07）：2bbe1aa92代码批次已推送，包含离线资源stage配方205d72b1a、设置37项新版路径回归cdf3585e3及公共材质修复。原33d2为R2首派来源，已由本段明确基线替代；新增同步Service/LocalFile与恢复后继仍由L0继续集成，不能据此提前发行。
