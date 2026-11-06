@@ -129,7 +129,7 @@ struct CaptureBackend {
     calls: AtomicUsize,
 }
 impl ServiceBackendV2 for CaptureBackend {
-    fn inventory(&self) -> ModelResult<InventoryV2> {
+    fn inventory(&self, _: &ConnectionHandle) -> ModelResult<InventoryV2> {
         self.calls.fetch_add(1, Ordering::SeqCst);
         let r = capture::CaptureRequestV2 {
             selection: self.selection.clone(),
@@ -145,6 +145,10 @@ impl ServiceBackendV2 for CaptureBackend {
             )?
             .objects,
             mcp_sources: vec![],
+            key_channel_ids: Default::default(),
+            authorization_channel_ids: Default::default(),
+            credential_skill_names: Default::default(),
+            credential_mcp_names: Default::default(),
         })
     }
     fn compose(
@@ -152,6 +156,7 @@ impl ServiceBackendV2 for CaptureBackend {
         r: &PreviewRequestV2,
         _: &ConnectionHandle,
         _: Option<&SavedObjects>,
+        _: Option<Zeroizing<String>>,
     ) -> ModelResult<CompositionV2> {
         self.calls.fetch_add(1, Ordering::SeqCst);
         let provider = Arc::new(
@@ -552,4 +557,533 @@ async fn original_private_record_has_no_password_and_bad_record_never_uses_new_a
         ErrorCode::SyncJournalInvalid
     );
     assert_eq!(reads, e.remote.gets.load(Ordering::SeqCst));
+}
+#[tokio::test]
+async fn resume_preflight_returns_original_plan_request_not_a_new_preview_and_stored_does_not_capture(
+) {
+    let e = Env::new();
+    let s = e.service();
+    let p = s
+        .preview(e.request(), ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    let ServicePlanV2::Upload(plan) = p.plan.clone() else {
+        panic!("upload")
+    };
+    s.confirm(ConfirmRequestV2 {
+        session_id: p.session_id,
+        plan_digest: p.plan_digest,
+    })
+    .await
+    .unwrap();
+    let count = e.backend.calls.load(Ordering::SeqCst);
+    std::fs::remove_file(e.home.join("config.json")).unwrap();
+    let preflight = s
+        .resume_preflight(plan.operation_id.clone(), None)
+        .await
+        .unwrap();
+    assert!(!preflight.can_resume);
+    assert_eq!(preflight.reason, "already_stored");
+    assert_eq!(preflight.request.operation_id, plan.operation_id);
+    assert_eq!(preflight.request.plan_digest, plan.plan_digest);
+    assert_eq!(
+        preflight.request.expected_view_digest,
+        preflight.observation.view_digest
+    );
+    assert_eq!(count, e.backend.calls.load(Ordering::SeqCst));
+}
+#[test]
+fn source_inventory_dtos_expose_exact_references_and_per_source_binding_without_secret_payloads() {
+    let source = McpSourceEntryV2 {
+        name: "fixture".into(),
+        sources: vec![
+            McpSourceOptionV2 {
+                source: "managed".into(),
+                definition_digest: store::digest(b"actual same-owner MCP source"),
+            },
+            McpSourceOptionV2 {
+                source: "codex".into(),
+                definition_digest: store::digest(b"another actual source"),
+            },
+        ],
+        differing_fields: vec!["credentials".into(), "source".into()],
+    };
+    let value = serde_json::to_value(source).unwrap();
+    assert_eq!(value["sources"][0]["source"], "managed");
+    assert!(value["sources"][0]["definitionDigest"]
+        .as_str()
+        .unwrap()
+        .starts_with("sha256:"));
+    let mut request: CatalogRequestV2 =
+        serde_json::from_value(json!({"readPassphrase":"synthetic-one-request-secret"})).unwrap();
+    assert_eq!(
+        request.take_secret().unwrap().as_str(),
+        "synthetic-one-request-secret"
+    );
+    assert!(request.read_passphrase.is_none());
+    assert!(serde_json::from_value::<CatalogRequestV2>(
+        json!({"readPassphrase":null,"url":"not-authority"})
+    )
+    .is_err());
+}
+fn production_service(e: &Env) -> SyncServiceV2 {
+    SyncServiceV2::new(
+        e.root.clone(),
+        Arc::new(
+            ProductionServiceBackendV2::new(
+                e.root.clone(),
+                e.home.clone(),
+                Arc::new(capture::SystemCaptureCredentialsV2),
+            )
+            .unwrap(),
+        ),
+        e.remote.clone(),
+        Arc::new(CredentialOwner),
+    )
+    .unwrap()
+}
+#[tokio::test]
+async fn production_backend_uploads_actual_saved_objects_and_first_device_downloads_with_real_model_receipt(
+) {
+    let source = Env::new();
+    let upload = production_service(&source);
+    let mut request = source.request();
+    request.forced_direction = None;
+    let (connection, _) = upload.active().await.unwrap();
+    let backend = ProductionServiceBackendV2::new(
+        source.root.clone(),
+        source.home.clone(),
+        Arc::new(capture::SystemCaptureCredentialsV2),
+    )
+    .unwrap();
+    backend.compose(&request, &connection, None, None).unwrap();
+    let preview = upload
+        .preview(request, ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    let ServicePlanV2::Upload(_) = preview.plan else {
+        panic!("first upload")
+    };
+    assert_eq!(source.remote.puts.load(Ordering::SeqCst), 0);
+    upload
+        .confirm(ConfirmRequestV2 {
+            session_id: preview.session_id,
+            plan_digest: preview.plan_digest,
+        })
+        .await
+        .unwrap();
+    let puts = source.remote.puts.load(Ordering::SeqCst);
+    let mut target = Env::new();
+    target.remote = source.remote.clone();
+    std::fs::remove_file(target.home.join("config.json")).unwrap();
+    for file in [
+        "manager-state/model-v2-provider-identities.json",
+        crate::modules::model_config::store_v2::DRAFT_PATH,
+    ] {
+        let p = target.root.join(file);
+        if p.exists() {
+            std::fs::remove_file(p).unwrap();
+        }
+    }
+    let download = production_service(&target);
+    let mut request = source.request();
+    request.forced_direction = None;
+    let before = download
+        .preview(request, ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    assert_eq!(before.chosen_direction, DirectionV2::Download);
+    assert!(before
+        .entries
+        .iter()
+        .any(|e| matches!(e.status, DiffStatusV2::Add)));
+    let ServicePlanV2::Download(plan) = &before.plan else {
+        panic!("download")
+    };
+    let operation = plan.operation_id.clone();
+    assert!(!target.home.join("config.json").exists());
+    let result = download
+        .confirm(ConfirmRequestV2 {
+            session_id: before.session_id,
+            plan_digest: before.plan_digest,
+        })
+        .await
+        .unwrap();
+    assert_eq!(result.local_apply_status, LocalApplyStatus::Applied);
+    assert_eq!(source.remote.puts.load(Ordering::SeqCst), puts);
+    let raw: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(target.home.join("config.json")).unwrap()).unwrap();
+    assert!(raw["providers"].as_object().unwrap().values().any(|p| p
+        .get("models")
+        .and_then(|m| m.as_array())
+        .is_some_and(|ids| ids.contains(&json!("fixture-model")))));
+    let receipt = target
+        .root
+        .join("manager-state/model-receive-v2")
+        .join(&operation)
+        .join("receipt.json");
+    assert!(receipt.is_file());
+    let mapping: serde_json::Value = serde_json::from_slice(
+        &std::fs::read(
+            target
+                .root
+                .join("manager-state/sync-identity-mappings-v2.json"),
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    assert!(mapping["bindings"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|m| m["adoptedOperationId"] == operation));
+    assert_eq!(
+        download.result(operation).await.unwrap().local_apply_status,
+        LocalApplyStatus::Applied
+    );
+}
+#[tokio::test]
+async fn production_directory_mcp_source_options_are_exact_and_do_not_choose_conflicting_sources() {
+    let e = Env::new();
+    std::fs::create_dir_all(e.home.join(".codex")).unwrap();
+    std::fs::create_dir_all(e.home.join(".hermes")).unwrap();
+    std::fs::write(
+        e.home.join(".codex/config.toml"),
+        "[mcp_servers.fixture]\ncommand = 'codex-source'\n",
+    )
+    .unwrap();
+    std::fs::write(
+        e.home.join(".hermes/config.yaml"),
+        "mcp_servers:\n  fixture:\n    command: hermes-source\n",
+    )
+    .unwrap();
+    let service = production_service(&e);
+    let catalog = service.catalog(None).await.unwrap();
+    let mcp = catalog
+        .mcp_sources
+        .iter()
+        .find(|m| m.name == "fixture")
+        .unwrap();
+    assert_eq!(mcp.sources.len(), 2);
+    assert!(mcp
+        .sources
+        .iter()
+        .all(|m| super::super::schema_v2::valid_digest(&m.definition_digest)));
+    assert!(!mcp.differing_fields.is_empty());
+    assert!(!catalog
+        .selected
+        .selection
+        .mcp_sources
+        .iter()
+        .any(|m| m.name == "fixture"));
+    assert!(catalog
+        .entries
+        .iter()
+        .any(|e| e.kind == ObjectKindV2::Mcp && e.id == "fixture"));
+}
+fn add_full_saved_scope(e: &Env, request: &mut PreviewRequestV2) {
+    let prefs = crate::modules::preferences::Preferences::default();
+    crate::modules::preferences::PreferencesStore::new(&e.root)
+        .save(&prefs)
+        .unwrap();
+    let config = crate::modules::extensions::ExtensionConfig::default();
+    let projection = crate::modules::extensions::projection::ExtensionProjection {
+        fingerprint: crate::modules::extensions::ProjectionFingerprint::create(
+            config.fingerprint(),
+            chrono::Utc::now(),
+        ),
+        config,
+    };
+    std::fs::write(
+        e.root
+            .join(crate::modules::extensions::projection::CONFIG_RELATIVE_PATH),
+        serde_json::to_vec(&projection).unwrap(),
+    )
+    .unwrap();
+    let skill = e.home.join(".agents/skills/service-fixture");
+    std::fs::create_dir_all(&skill).unwrap();
+    std::fs::write(
+        skill.join("SKILL.md"),
+        b"# Service fixture\nRead synthetic resource only.",
+    )
+    .unwrap();
+    std::fs::write(skill.join("resource.txt"), b"fixture-resource").unwrap();
+    std::fs::create_dir_all(e.home.join(".codex")).unwrap();
+    std::fs::write(
+        e.home.join(".codex/config.toml"),
+        "[mcp_servers.service_fixture]\ncommand = 'service-fixture-command'\nargs = []\n",
+    )
+    .unwrap();
+    let sources = BTreeMap::from([("service_fixture".into(), "codex".into())]);
+    let (assets, conflicts) = crate::modules::sync::portable_assets::export_with_credential_scope(
+        &e.root,
+        &e.home,
+        &[],
+        &["service_fixture".into()],
+        &sources,
+        false,
+        true,
+        Some(&[]),
+    )
+    .unwrap();
+    assert!(conflicts.is_empty());
+    request.selection.manager.preferences = true;
+    request.selection.manager.extensions = true;
+    request.selection.skill_names = vec!["service-fixture".into()];
+    request.selection.mcp_sources = vec![McpSourceSelectionV2 {
+        name: "service_fixture".into(),
+        definition_digest: super::super::objects_overlay_v2::mcp_source_digest(&assets.mcps[0])
+            .unwrap(),
+    }];
+    request.mcp_clients = sources;
+    request.assets_reviewed = true;
+}
+fn empty_existing_fixture(e: &Env) {
+    if e.home.join("config.json").exists() {
+        std::fs::remove_file(e.home.join("config.json")).unwrap();
+    }
+    for file in [
+        "manager-state/model-v2-provider-identities.json",
+        crate::modules::model_config::store_v2::DRAFT_PATH,
+    ] {
+        let p = e.root.join(file);
+        if p.exists() {
+            std::fs::remove_file(p).unwrap();
+        }
+    }
+}
+#[tokio::test]
+async fn production_first_device_receives_model_mapping_receipt_preferences_extensions_and_assets_after_model_adoption(
+) {
+    let source = Env::new();
+    let mut request = source.request();
+    add_full_saved_scope(&source, &mut request);
+    let upload = production_service(&source);
+    let preview = upload
+        .preview(request.clone(), ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    upload
+        .confirm(ConfirmRequestV2 {
+            session_id: preview.session_id,
+            plan_digest: preview.plan_digest,
+        })
+        .await
+        .unwrap();
+    let puts = source.remote.puts.load(Ordering::SeqCst);
+    let mut target = Env::new();
+    target.remote = source.remote.clone();
+    empty_existing_fixture(&target);
+    let receive = production_service(&target);
+    request.forced_direction = None;
+    let preview = receive
+        .preview(request, ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    assert_eq!(preview.chosen_direction, DirectionV2::Download);
+    let ServicePlanV2::Download(plan) = preview.plan.clone() else {
+        panic!("download")
+    };
+    assert!(preview
+        .entries
+        .iter()
+        .filter(|e| matches!(
+            e.kind,
+            ObjectKindV2::Channel
+                | ObjectKindV2::Preferences
+                | ObjectKindV2::Extensions
+                | ObjectKindV2::Skill
+                | ObjectKindV2::Mcp
+        ))
+        .all(|e| matches!(e.status, DiffStatusV2::Add)));
+    let result = receive
+        .confirm(ConfirmRequestV2 {
+            session_id: preview.session_id,
+            plan_digest: preview.plan_digest,
+        })
+        .await
+        .unwrap();
+    assert_eq!(result.local_apply_status, LocalApplyStatus::Applied);
+    assert_eq!(source.remote.puts.load(Ordering::SeqCst), puts);
+    assert!(target
+        .root
+        .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH)
+        .is_file());
+    assert!(target
+        .root
+        .join(crate::modules::extensions::projection::CONFIG_RELATIVE_PATH)
+        .is_file());
+    assert!(
+        target
+            .home
+            .join(".agents/skills/service-fixture/SKILL.md")
+            .is_file()
+            || target
+                .root
+                .join("manager-state/skills-store/service-fixture/SKILL.md")
+                .is_file()
+    );
+    let definitions: serde_json::Value = serde_json::from_slice(
+        &std::fs::read(target.root.join("manager-state/mcp-definitions.json")).unwrap(),
+    )
+    .unwrap();
+    assert!(definitions
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|m| m["name"] == "service_fixture"));
+    assert!(target
+        .root
+        .join("manager-state/model-receive-v2")
+        .join(plan.operation_id)
+        .join("receipt.json")
+        .exists());
+}
+#[tokio::test]
+async fn production_encrypted_first_download_uses_only_request_read_secret_and_still_commits_actual_model_receipt(
+) {
+    let source = Env::new();
+    let service = production_service(&source);
+    let p = service
+        .preview(
+            source.request(),
+            ServiceSecretsV2 {
+                read_passphrase: None,
+                write_passphrase: Some(Zeroizing::new("service-synthetic-protection".into())),
+            },
+        )
+        .await
+        .unwrap();
+    service
+        .confirm(ConfirmRequestV2 {
+            session_id: p.session_id,
+            plan_digest: p.plan_digest,
+        })
+        .await
+        .unwrap();
+    let mut target = Env::new();
+    target.remote = source.remote.clone();
+    empty_existing_fixture(&target);
+    let service = production_service(&target);
+    let mut request = source.request();
+    request.forced_direction = None;
+    assert_eq!(
+        service
+            .preview(request.clone(), ServiceSecretsV2::default())
+            .await
+            .err()
+            .unwrap()
+            .code,
+        ErrorCode::SyncPassphraseRequired
+    );
+    let p = service
+        .preview(
+            request,
+            ServiceSecretsV2 {
+                read_passphrase: Some(Zeroizing::new("service-synthetic-protection".into())),
+                write_passphrase: None,
+            },
+        )
+        .await
+        .unwrap();
+    let ServicePlanV2::Download(plan) = p.plan.clone() else {
+        panic!("download")
+    };
+    let result = service
+        .confirm(ConfirmRequestV2 {
+            session_id: p.session_id,
+            plan_digest: p.plan_digest,
+        })
+        .await
+        .unwrap();
+    assert_eq!(result.local_apply_status, LocalApplyStatus::Applied);
+    assert!(target
+        .root
+        .join("manager-state/model-receive-v2")
+        .join(plan.operation_id)
+        .join("receipt.json")
+        .is_file());
+    for file in std::fs::read_dir(target.root.join("manager-state/sync-service-v2")).unwrap() {
+        let file = file.unwrap();
+        if file.path().is_file() {
+            assert!(
+                !String::from_utf8_lossy(&std::fs::read(file.path()).unwrap())
+                    .contains("service-synthetic-protection")
+            );
+        }
+    }
+}
+#[tokio::test]
+async fn production_initialization_ambiguity_exposes_readonly_candidates_and_can_explicitly_recover_a_chosen_branch(
+) {
+    let source = Env::new();
+    let upload = production_service(&source);
+    let p = upload
+        .preview(source.request(), ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    upload
+        .confirm(ConfirmRequestV2 {
+            session_id: p.session_id,
+            plan_digest: p.plan_digest,
+        })
+        .await
+        .unwrap();
+    let second = Generation {
+        format: "OCXD_CONFIG_GENERATION".into(),
+        format_version: 1,
+        generation_id: "77777777-7777-4777-8777-777777777777".into(),
+    };
+    source.remote.files.lock().unwrap().insert(
+        SyncRelativePath::generation(&second.generation_id)
+            .unwrap()
+            .as_str()
+            .into(),
+        store::canonical(&second).unwrap(),
+    );
+    let puts = source.remote.puts.load(Ordering::SeqCst);
+    let mut target = Env::new();
+    target.remote = source.remote.clone();
+    empty_existing_fixture(&target);
+    let service = production_service(&target);
+    let catalog = service.catalog(None).await.unwrap();
+    assert_eq!(catalog.cloud_state, RemoteState::InitializationAmbiguous);
+    assert!(!catalog.initialized);
+    assert!(!catalog.observation.recovery_candidates.is_empty());
+    let selected = &catalog.observation.recovery_candidates[0];
+    let request = source.request();
+    let recovery = service
+        .recovery_preview(
+            RecoveryRequestV2 {
+                selection: request.selection,
+                mcp_clients: request.mcp_clients,
+                assets_reviewed: request.assets_reviewed,
+                generation: selected.generation.clone(),
+                head: selected.head.clone(),
+                mode: RecoveryMode::Download,
+                backup_before_update: true,
+            },
+            None,
+        )
+        .await
+        .unwrap();
+    assert!(!target.home.join("config.json").exists());
+    let fact = service
+        .recovery_confirm(ConfirmRequestV2 {
+            session_id: recovery.session_id,
+            plan_digest: recovery.plan.plan_digest.clone(),
+        })
+        .await
+        .unwrap();
+    assert_eq!(fact.outcome, RecoveryOutcome::Applied);
+    assert_eq!(source.remote.puts.load(Ordering::SeqCst), puts);
+    assert!(target.home.join("config.json").is_file());
+    assert_eq!(
+        service
+            .recovery_result(recovery.plan.recovery_plan_id)
+            .await
+            .unwrap()
+            .outcome,
+        RecoveryOutcome::Applied
+    );
 }
