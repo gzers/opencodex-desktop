@@ -213,3 +213,20 @@ pub async fn config_v2_recovery_result(
     )
     .await
 }
+
+/// Original download continuation is local-only. It never borrows upload
+/// preflight, a current cloud head, or a newly captured target baseline.
+#[tauri::command]
+pub async fn config_v2_resume_receive(
+    operation_id: String,
+    read_passphrase: Option<String>,
+    service: tauri::State<'_, SharedConfigSyncV2>,
+) -> SyncResult<OperationFact> {
+    let service = service.service()?;
+    let passphrase = read_passphrase.map(Zeroizing::new);
+    run(
+        async move { service.resume_receive(operation_id, passphrase).await },
+        true,
+    )
+    .await
+}
