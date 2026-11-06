@@ -1,0 +1,190 @@
+{
+  "stage": "signed-final-reverify",
+  "result": "pass",
+  "app": "/private/tmp/ocx022-release-20261106/original-macos/OpenCodeX Desktop.app",
+  "executable": "/private/tmp/ocx022-release-20261106/original-macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+  "pid": 47909,
+  "processGroup": 47909,
+  "root": "/private/tmp/ocx021-mac-native-075be57f-31f5-49ef-a082-1ab017de9f9d/root",
+  "boundary": "/private/tmp/ocx021-mac-native-075be57f-31f5-49ef-a082-1ab017de9f9d",
+  "rootSource": "Fresh UUID root; explicit process environment; startup-bound boundary; no daily data inspection",
+  "environment": {
+    "PATH": "/usr/bin:/bin:/usr/sbin:/sbin",
+    "LANG": "en_US.UTF-8",
+    "USER": "ezio",
+    "LOGNAME": "ezio",
+    "HOME": "/private/tmp/ocx021-mac-native-075be57f-31f5-49ef-a082-1ab017de9f9d/root/home",
+    "CFFIXED_USER_HOME": "/private/tmp/ocx021-mac-native-075be57f-31f5-49ef-a082-1ab017de9f9d/root/home",
+    "TMP": "/private/tmp/ocx021-mac-native-075be57f-31f5-49ef-a082-1ab017de9f9d/root/tmp",
+    "TMPDIR": "/private/tmp/ocx021-mac-native-075be57f-31f5-49ef-a082-1ab017de9f9d/root/tmp/",
+    "TEMP": "/private/tmp/ocx021-mac-native-075be57f-31f5-49ef-a082-1ab017de9f9d/root/tmp",
+    "XDG_CONFIG_HOME": "/private/tmp/ocx021-mac-native-075be57f-31f5-49ef-a082-1ab017de9f9d/root/home/.config",
+    "XDG_CACHE_HOME": "/private/tmp/ocx021-mac-native-075be57f-31f5-49ef-a082-1ab017de9f9d/root/home/.cache",
+    "OPENCODEX_SANDBOX": "1",
+    "OPENCODEX_SANDBOX_ROOT": "/private/tmp/ocx021-mac-native-075be57f-31f5-49ef-a082-1ab017de9f9d/root",
+    "OPENCODEX_SANDBOX_BOUNDARY": "/private/tmp/ocx021-mac-native-075be57f-31f5-49ef-a082-1ab017de9f9d",
+    "OPENCODEX_HOME": "/private/tmp/ocx021-mac-native-075be57f-31f5-49ef-a082-1ab017de9f9d/root/opencodex-home",
+    "CODEX_HOME": "/private/tmp/ocx021-mac-native-075be57f-31f5-49ef-a082-1ab017de9f9d/root/home/.codex"
+  },
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "binarySha256Before": "027692f55a05d0563e88d1e7291280cb806f6556bb32680f6e7257bbcd24638c",
+  "codesign": "Executable=/private/tmp/ocx022-release-20261106/original-macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop\nIdentifier=com.gzers.opencodex.desktop\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=104444 flags=0x10002(adhoc,runtime) hashes=3257+3 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=984320\nHash type=sha256 size=32\nCandidateCDHash sha256=042cea42f5faa931b7438233f8fcacb64444ea0b\nCandidateCDHashFull sha256=042cea42f5faa931b7438233f8fcacb64444ea0bf06df1f69a6bd9b2515e77b1\nHash choices=sha256\nCMSDigest=042cea42f5faa931b7438233f8fcacb64444ea0bf06df1f69a6bd9b2515e77b1\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=12795904\nExecutable Segment flags=0x1\nPage size=4096\nCDHash=042cea42f5faa931b7438233f8fcacb64444ea0b\nSignature=adhoc\nInfo.plist entries=14\nTeamIdentifier=not set\nRuntime Version=15.5.0\nSealed Resources version=2 rules=13 files=4\nInternal requirements count=0 size=12\nTotal signatures=1\nChosen signature=1\n",
+  "sourceHeadAtRun": "a0000005001e1f923fc370cbdf161b57ef7a1d8b",
+  "startupBuildCommit": "1b5c8402dc340540711efa2c2c2037bce673a479",
+  "signedFinalCommitClaimed": false,
+  "scope": "all",
+  "readyMode": false,
+  "toolInputs": null,
+  "realToolVersions": null,
+  "nativeEnvironmentGate": null,
+  "checks": [
+    {
+      "name": "native-permissions",
+      "status": "pass",
+      "axTrusted": true,
+      "locked": false,
+      "onConsole": true,
+      "screenCaptureAllowed": true
+    },
+    {
+      "name": "kernel-network-denial",
+      "status": "pass",
+      "returncode": 1,
+      "error": "nc: connectx to 192.0.2.1 port 443 (tcp) failed: Operation not permitted"
+    },
+    {
+      "name": "process-sandbox-admission",
+      "status": "pass",
+      "pid": 47909,
+      "pgid": 47909,
+      "required": [
+        "HOME",
+        "TMP",
+        "TMPDIR",
+        "OPENCODEX_SANDBOX",
+        "OPENCODEX_SANDBOX_ROOT",
+        "OPENCODEX_SANDBOX_BOUNDARY"
+      ]
+    },
+    {
+      "name": "native-window",
+      "status": "pass",
+      "windows": [
+        {
+          "bounds": {
+            "Height": 760,
+            "Width": 1180,
+            "X": 690,
+            "Y": 307
+          },
+          "id": 112505,
+          "layer": 0,
+          "onscreen": true
+        }
+      ],
+      "axNodes": 70
+    },
+    {
+      "name": "expected-build-commit",
+      "status": "pass",
+      "expected": "1b5c8402dc340540711efa2c2c2037bce673a479"
+    },
+    {
+      "name": "startup-root-binding",
+      "status": "pass",
+      "binding": {
+        "structure_version": "1"
+      },
+      "resolvedActiveRoot": "/private/tmp/ocx021-mac-native-075be57f-31f5-49ef-a082-1ab017de9f9d/root",
+      "resolvedOfficialHome": "/private/tmp/ocx021-mac-native-075be57f-31f5-49ef-a082-1ab017de9f9d/root/opencodex-home",
+      "startup": "2026-11-06T00:59:03.787Z [manager] startup version=0.2.22 commit=1b5c8402dc340540711efa2c2c2037bce673a479"
+    },
+    {
+      "name": "node-detection-centered-unmeasured",
+      "status": "pass",
+      "scenes": [
+        {
+          "exit": "x",
+          "dialog": {
+            "height": 264,
+            "width": 560,
+            "x": 1000,
+            "y": 555
+          },
+          "webview": {
+            "height": 760,
+            "width": 1180,
+            "x": 690,
+            "y": 307
+          },
+          "centerDelta": [
+            0.0,
+            0.0
+          ],
+          "status": "未检测"
+        },
+        {
+          "exit": "escape",
+          "dialog": {
+            "height": 264,
+            "width": 560,
+            "x": 1000,
+            "y": 555
+          },
+          "webview": {
+            "height": 760,
+            "width": 1180,
+            "x": 690,
+            "y": 307
+          },
+          "centerDelta": [
+            0.0,
+            0.0
+          ],
+          "status": "未检测"
+        }
+      ],
+      "proof": "AX invocation opens observation only; no measurement action; kernel denies network"
+    },
+    {
+      "name": "integrated-restart-missing-service-recovery",
+      "status": "pass",
+      "savedConfigUnchanged": true,
+      "errorNamesMissingRecord": true,
+      "manualPanelNotRequired": true,
+      "retryVisible": true,
+      "noClientRestart": true
+    },
+    {
+      "name": "integrated-material-native-scenes",
+      "status": "pass",
+      "theme": "dark",
+      "effects": "high",
+      "productionDialog": true,
+      "productionDetail": true,
+      "scriptFocusExitsPreserved": true,
+      "layout": "native AX and owned-window screenshots; no CSS style injection"
+    },
+    {
+      "name": "owned-process-group-cleanup",
+      "status": "pass",
+      "pgid": 47909,
+      "remaining": []
+    },
+    {
+      "name": "startup-root-source-unchanged",
+      "status": "pass",
+      "source": "Process environment + startup binding; no root rebind invoked",
+      "bindingSha256": "8ae75370e9f9966182caddd12ef094f16449c88119e66012a8a4a99a0c1f0e25"
+    },
+    {
+      "name": "candidate-identity-unchanged",
+      "status": "pass"
+    }
+  ]
+}

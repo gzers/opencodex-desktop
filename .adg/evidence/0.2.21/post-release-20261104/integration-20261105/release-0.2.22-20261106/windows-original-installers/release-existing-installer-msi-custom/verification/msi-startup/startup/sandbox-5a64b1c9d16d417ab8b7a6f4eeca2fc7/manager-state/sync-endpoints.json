@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "endpoints": [
+    {
+      "endpoint_id": "default",
+      "url": "https://webdav.native021.invalid",
+      "remote_path": "native021-only",
+      "username": "synthetic-native021",
+      "credential_ref": {
+        "ref_id": "cred_f0ce5839-653a-42d4-8bc0-b666b6e21fd3",
+        "backend": "keychain",
+        "service_name": "OpenCodex Desktop Sandbox",
+        "account_key": "ocx.dav.cred_f0ce5839-653a-42d4-8bc0-b666b6e21fd3",
+        "purpose": "webdav_credential",
+        "created_at": "2026-11-06T01:07:03.299589900Z",
+        "updated_at": "2026-11-06T01:07:03.299589900Z"
+      },
+      "tls_policy": "verify_required",
+      "conflict_policy": "ask"
+    }
+  ]
+}

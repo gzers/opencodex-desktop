@@ -10,7 +10,11 @@
     "existingPublisher": 29,
     "frontendTypecheckBuild": "passed",
     "focusedUiTests": 65,
-    "releaseAcceptanceAdmissionGuards": 9
+    "releaseAcceptanceAdmissionGuards": 9,
+    "actualRuntimeRollback": "1 passed: real stable→candidate.2→intentional failure preservation→explicit original stable rollback, patch removal and config sentinel unchanged→uninstall",
+    "rollbackTestClippy": "passed -D warnings",
+    "macOtaPrepare": "passed exact 0.2.21 original bundle/signature/pins/permissions/network guard; no app launch",
+    "macOtaMissingPublicationAdmission": "execute missing source/receipt rejected exit2 before side effects"
   },
   "sourceTestOnlyFollowup": "df86a720f0140f801716e688da6e91a31e720395",
   "live": {

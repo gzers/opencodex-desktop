@@ -1,0 +1,7 @@
+(version 1)
+(allow default)
+(deny network*)
+(deny file-read* (require-all (subpath "/Users/ezio") (require-not (subpath "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/baseline-original/OpenCodeX Desktop.app"))))
+(deny file-write* (subpath "/Users/ezio"))
+(deny file-read* file-write* (subpath "/Library/Keychains"))
+(deny mach-lookup (global-name "com.apple.securityd") (global-name "com.apple.secd"))

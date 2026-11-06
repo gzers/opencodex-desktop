@@ -1,0 +1,11 @@
+{
+  "failure": "Actual release Windows MSI default startup reached native about.version0.2.22 then old helper rejected unadmitted version before model writer calls; not product compile/startup failure",
+  "source": "1b5c8402dc340540711efa2c2c2037bce673a479",
+  "run": 42138917336,
+  "job": 127633972468,
+  "originalBuiltExecutableSha256": "34bad179bf3fb4a1a02226d5a645776761fe3908e200e1e7516aeb9456c6b073",
+  "fix": "Explicit 0.2.22 allowlist with same public dialog/native keyboard/full 021 business checks; 0.2.23/malformed/other roots still rejected",
+  "tests": "77 protocol regressions passed; first partial extension exposed one remaining old negative guard, corrected without product changes",
+  "next": "Run existing release installer acceptance matrix against same original assets; then runtime-only signing recovery, no tag rewrite or desktop binary rebuild",
+  "releaseReady": false
+}

@@ -1,0 +1,127 @@
+{
+  "acceptance_bindings": [
+    {
+      "acceptance_id": "AC-P21-01",
+      "criterion_digest": "93e234ff42d457bc7cb7212117d3f35e700907a36ecd39f1d9b356cf784187b4",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-02",
+      "criterion_digest": "0bc9f3985645ef4187e38d176a941494889d5a498d120bed7754296159065de8",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-03",
+      "criterion_digest": "a4bc5eac52d104f36218759cb75dd0d0e0af120221fc09f96b3d51b979ea9a79",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-04",
+      "criterion_digest": "8406c4a930d3dcdf46ffbb7f1b60973475489124bba8b2e0660bff996c003b3d",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-05",
+      "criterion_digest": "751b494ac36609953e6a5da400f644d79f6a3443edc8b95a58c3a2fb768c40bb",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-06",
+      "criterion_digest": "74e1bb24932a1f55e73be8bbe648c32570ffcbe763fc754ac1072f9363ae61e4",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-07",
+      "criterion_digest": "be8bc87ef729deb9d8d98fcc9ab71994325fcb4b7bc466235175488fccaab8c7",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-08",
+      "criterion_digest": "e0c2f8154429d231efc8d0f59659f00039ae20b34e1141ddea41a50f3137ddbb",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-09",
+      "criterion_digest": "be98e9a1cf0b6c4c728b3cfd000b64aa4a83099905281d671d7958bf80f74f59",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-10",
+      "criterion_digest": "1b2d3994f43aa133222bd4f37bb0a50ca85e9c222390330a19fdd703fb782de3",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    }
+  ],
+  "acceptance_ids": [
+    "AC-P21-01",
+    "AC-P21-02",
+    "AC-P21-03",
+    "AC-P21-04",
+    "AC-P21-05",
+    "AC-P21-06",
+    "AC-P21-07",
+    "AC-P21-08",
+    "AC-P21-09",
+    "AC-P21-10"
+  ],
+  "baseline_digest": "8dfe1ac25b5592b3f0250e09a46bb750d82bec290c767042c15ad7f57b68aa85",
+  "certificate_digest": null,
+  "content_digest": "64c086b6f87df3f8a8318552d03b810e3004a73633cd4bf12e765d6723b879a6",
+  "demand_ids": [
+    "DMD-OPENCODEX-POST021"
+  ],
+  "fact_writeback": {
+    "mode": "required",
+    "targets": [
+      {
+        "before_digest": "4ac60ab9b134744bf8ccb8bba616fd7928dbc8c0926b141caa10c803626b725b",
+        "id": "0",
+        "path": "docs/01-需求管理/需求/DMD-OPENCODEX-POST021.md"
+      },
+      {
+        "before_digest": "1e57fd99cb5a5be89b4fbbf285d0f62a8385e733fbec2d38a0906780d0c3b1b6",
+        "id": "1",
+        "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-30.md"
+      },
+      {
+        "before_digest": "711635121fc4ab59fd34e1e4235e44f76e3ce01d15395186018004be7881c60f",
+        "id": "2",
+        "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md"
+      }
+    ]
+  },
+  "id": "TASK-OPENCODEX-022-FINAL-20261106",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-30",
+  "imported_receipt_digest": null,
+  "kind": "TASK",
+  "owner": "local-final-integration",
+  "required_checks": [
+    "review:contribution-evidence",
+    "review:integrated-regression",
+    "review:macos-native",
+    "review:maintained-runtime-delivery",
+    "review:material-functional-hardware-exception",
+    "review:packaged-client-restart",
+    "review:public-release",
+    "review:release-artifacts-upgrade",
+    "review:windows-native"
+  ],
+  "result": "pending",
+  "revision": 2,
+  "state": "in_progress",
+  "summary": "承接明确采用维护包后的十AC与全部发行门；纠正前任务遗漏当前交接摘要写域，冻结历史合约不修改。",
+  "summary_digest": "275846e1937777f5d4e80d7145c480da53b9de16e88df70942b6a46719feb057",
+  "title": "0.2.22最终发行与完整事实回写",
+  "write_scope": [
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/**",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/release-0.2.22-20261106/**",
+    ".github/**",
+    "CHANGELOG.md",
+    "README.en.md",
+    "README.md",
+    "apps/**",
+    "docs/01-需求管理/需求/DMD-OPENCODEX-POST021.md",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-30.md",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md",
+    "test/**"
+  ]
+}

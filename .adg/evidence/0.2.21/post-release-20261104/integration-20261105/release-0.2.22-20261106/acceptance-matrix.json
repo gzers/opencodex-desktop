@@ -1,0 +1,90 @@
+{
+  "source": "DMD-OPENCODEX-POST021 original adopted10AC; no prototype scope expansion",
+  "releaseSource": "1b5c8402dc340540711efa2c2c2037bce673a479",
+  "checks": {
+    "AC-P21-01": {
+      "result": "passed",
+      "evidence": [
+        "../../local-sync-20261104/validation-summary.json",
+        "../windows-msvc-followup-41913003716/connected-native-20261105/CONNECTED-HANDOFF.md"
+      ],
+      "scope": "First precise union / subsequent no expansion, selected content direction and stale/unknown guards; own fixtures only, not real user WebDAV"
+    },
+    "AC-P21-02": {
+      "result": "passed-with-adopted-hardware-exception",
+      "evidence": [
+        "../windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/review.json",
+        "native-final/ocx021-mac-native-075be57f-31f5-49ef-a082-1ab017de9f9d/report.json",
+        "native-clean-install/ocx021-mac-native-577b91e0-63ae-40d4-9dd2-234dc6218e05/report.json"
+      ],
+      "scope": "Functional glass/solid fallback and interactions; original RDP absolute performance remains failed/reference"
+    },
+    "AC-P21-03": {
+      "result": "passed",
+      "evidence": [
+        "../../local-sync-20261104/validation-summary.json",
+        "../HANDOFF.md"
+      ],
+      "scope": "Isolated strong ETag postpublish/readback/conditional guards; no real WebDAV publication"
+    },
+    "AC-P21-04": {
+      "result": "passed",
+      "evidence": [
+        "../../local-sync-20261104/validation-summary.json",
+        "../windows-msvc-followup-41913003716/connected-native-20261105/CONNECTED-HANDOFF.md"
+      ],
+      "scope": "Display joins endpoint and independent directory with slash"
+    },
+    "AC-P21-05": {
+      "result": "passed",
+      "evidence": [
+        "../native-sync/ready/ocx021-mac-native-ae0d9b2b-11d8-4ba8-a821-1ee9067d98f5/report.json",
+        "../ci-menu-projection-477d7edea/review.json"
+      ],
+      "scope": "Read-only startup/manual version observation under connection revision and true failed/no snapshot/unknown states"
+    },
+    "AC-P21-06": {
+      "result": "pending-final-ci-and-stable",
+      "evidence": [
+        "release-status.json",
+        "draft-asset-verification.json",
+        "macos-ota/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/report.json",
+        "windows-ota"
+      ],
+      "scope": "Exact release original bytes, installer/upgrade/signatures/rollback done, stable/final CI pending"
+    },
+    "AC-P21-07": {
+      "result": "passed",
+      "evidence": [
+        "../../local-channels-20261104/validation-summary.json",
+        "../windows-candidate2-targeted-20261105/coverage-matrix.json"
+      ],
+      "scope": "Name-only channel, stable internal ID/name uniqueness, real fresh rename/save/current ref after restart"
+    },
+    "AC-P21-08": {
+      "result": "passed",
+      "evidence": [
+        "../../local-channels-20261104/validation-summary.json",
+        "../windows-final-code-review/review.json"
+      ],
+      "scope": "Removed private-network gates; actual fixture model list and correct errors; no real supplier inference"
+    },
+    "AC-P21-09": {
+      "result": "passed",
+      "evidence": [
+        "../windows-candidate2-targeted-20261105/coverage-matrix.json",
+        "native-final/ocx021-mac-native-075be57f-31f5-49ef-a082-1ab017de9f9d/report.json"
+      ],
+      "scope": "Managed candidate2 native fresh first restart, service failure retry/cancel, exact config/pending/client refs/OS generations and signed daily boundaries"
+    },
+    "AC-P21-10": {
+      "result": "passed",
+      "evidence": [
+        "../windows-msvc-followup-41913003716/HANDOFF.md",
+        "../integrated-b99a94f10-20261105/review.json"
+      ],
+      "scope": "Cold navigation explicit retry, source switch/fast reopen/overlay restoration, actual ready state and bounded failure, unchanged final source"
+    }
+  },
+  "stableReady": false
+}

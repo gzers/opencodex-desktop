@@ -6,12 +6,20 @@ state: "in_progress"
 completion_summary: null
 dmd_refs: ["DMD-OPENCODEX-POST021"]
 demand_ids: ["DMD-OPENCODEX-POST021"]
-task_ids: ["TASK-OPENCODEX-022-MAINTAINED-RELEASE-20261106"]
+task_ids: ["TASK-OPENCODEX-022-FINAL-20261106"]
 summary: "已采用本项目维护运行包，修复发行冻结0.2.22；贡献及同源CI/原生通过，最终发行验收与发布进行中。"
 ---
 # 0.2.21发布后双线修复与集成发布计划
 
 ## 2026-11-06 正式采用维护运行包并冻结0.2.22（当前决定）
+
+发布实际记录归[REL-25](REL-OPENCODEX-DESKTOP-25.md)。运行包与12签名资产已交付，Windows四原包格及MSI/NSIS OTA成功，Mac原包/DMG/真实OTA17项及旧版读取升级后状态通过。beta已投0.2.22、Latest仍0.2.21；当前只待最终WindowsCI剩余检查后稳定晋升与整版闭环。原构建Windows脚本版本准入失败及新四格同原包复验完整保留，不把原失败改成成功。
+
+维护运行包使用约定：离线导入后重启OpenCodex服务，再按需重启Codex客户端。联网安装及官方面板的更新检查仍以npm上游为准；代码features/updates/version.ts按标准预发布优先级，故官方2.97.0会被视为高于2.97.0-post021.ownerquery.2，显式安装会换回未含本补丁的上游包。本次不自动切换/安装；在上游吸收补丁前保留维护归档并继续按离线来源管理，发布安装说明须写明。该行为是所采用独立离线来源的边界，不把它写成已实现自动维护更新通道。
+
+测试通道执行顺序：先核对ca46完整通过源与发行源的Rust src/build/defaults/resources逐树一致、依赖只改本项目版本，且新前端/原始Mac签名包及Windows四原包矩阵实际通过，再允许公开本版本但保留Latest0.2.21并更新既有beta指针，为两端真实OTA提供真实公开源。该测试通道验证与最终fa035完整CI并行；稳定晋升和整版关闭仍必须等待最终CI终态成功、两端实际OTA及全部发行门，不能把同源复用说成新CI已结束。证据source-reuse-beta-admission.json记录复用边界，不更改AC。
+
+当前最终任务为TASK-OPENCODEX-022-FINAL-20261106：此前维护发行任务遗漏原交接摘要的写域；运行时正确拒绝修改已冻结合约，故以本后继任务承接原十AC与全部必需检查，写域纳入原集成证据目录。旧任务契约字节与拒绝事实保留，不绕过冻结校验，不增加产品范围或改发布条件。
 
 本次正式来源采用由后继任务TASK-OPENCODEX-022-MAINTAINED-RELEASE-20261106承接全部十项AC及最终发行门，替代旧TASK-OPENCODEX-POST021-INTEGRATION-HARDWARE-20261105的当前集成指派；原任务及冻结契约保持历史未完成状态，不伪写为通过。当前IMP任务集合只列后继的唯一验收归属，原贡献任务/接收证据与历史指派完整保留于原文和historical-imp-task-assignment.json。
 

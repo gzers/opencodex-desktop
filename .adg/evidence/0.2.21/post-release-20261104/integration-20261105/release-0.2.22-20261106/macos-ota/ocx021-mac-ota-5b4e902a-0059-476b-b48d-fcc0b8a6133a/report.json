@@ -1,0 +1,269 @@
+{
+  "schemaVersion": 1,
+  "mode": "execute",
+  "result": "pass",
+  "from": "0.2.21",
+  "to": "0.2.22",
+  "channel": "existing production beta",
+  "container": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a",
+  "root": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root",
+  "environment": {
+    "PATH": "/usr/bin:/bin:/usr/sbin:/sbin",
+    "LANG": "en_US.UTF-8",
+    "USER": "ezio",
+    "LOGNAME": "ezio",
+    "HOME": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root/home",
+    "CFFIXED_USER_HOME": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root/home",
+    "TMP": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root/tmp",
+    "TEMP": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root/tmp",
+    "TMPDIR": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root/tmp/",
+    "CODEX_HOME": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root/home/.codex",
+    "OPENCODEX_HOME": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root/opencodex-home",
+    "XDG_CONFIG_HOME": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root/home/.config",
+    "XDG_CACHE_HOME": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root/home/.cache",
+    "OPENCODEX_SANDBOX": "1",
+    "OPENCODEX_SANDBOX_ROOT": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root",
+    "OPENCODEX_SANDBOX_BOUNDARY": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a"
+  },
+  "app": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/installed/OpenCodeX Desktop.app",
+  "checks": [
+    {
+      "name": "baseline0.2.21-old-trust-signature",
+      "status": "pass",
+      "archiveSha256": "681e23f37f2c2cf52eb1d5dc409d988557fa0917afc42dd8c8a49eed302fd3c1",
+      "signatureSha256": "1772edb33c4aa9f35e84fdf4f80b52af89d4e0c73891792c298d995bf609b4f0",
+      "publicKeySource": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc"
+    },
+    {
+      "name": "baseline0.2.21-original-bundle",
+      "status": "pass",
+      "version": "0.2.21",
+      "embeddedSource": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "binarySha256": "275dface26a0d1ab483a67303eb30df3253f1f050163548c51289f1812b8457e",
+      "fileCount": 7,
+      "signature": "deep strict passed"
+    },
+    {
+      "name": "native-permissions",
+      "status": "pass",
+      "axTrusted": true,
+      "locked": false,
+      "onConsole": true,
+      "screenCaptureAllowed": true
+    },
+    {
+      "name": "direct-network-denied",
+      "status": "pass",
+      "allowedProductionTlsHosts": [
+        "api.github.com",
+        "github-releases.githubusercontent.com",
+        "github.com",
+        "objects.githubusercontent.com",
+        "release-assets.githubusercontent.com"
+      ],
+      "localTunnelPort": 50427,
+      "appTraffic": "Only real TLS CONNECT, no interception"
+    },
+    {
+      "name": "prepared-not-executed",
+      "status": "pass",
+      "baselineOriginal": "0.2.21/6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "freshRoot": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root",
+      "nativeHelperReusedUnmodified": true,
+      "betaNetworkQueried": false,
+      "appLaunched": false
+    },
+    {
+      "name": "target0.2.22-old-trust-signature",
+      "status": "pass",
+      "archiveSha256": "e2d2f58f679757c9b8bc1b7c97531accbe1eccfd9afe5159ded042354887b590",
+      "signatureSha256": "2b64e9aebc06fa8a3878972724c463c6cc3c150063feef8017be0c6d36a82488",
+      "publicKeySource": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc"
+    },
+    {
+      "name": "target0.2.22-original-bundle",
+      "status": "pass",
+      "version": "0.2.22",
+      "embeddedSource": "1b5c8402dc340540711efa2c2c2037bce673a479",
+      "binarySha256": "027692f55a05d0563e88d1e7291280cb806f6556bb32680f6e7257bbcd24638c",
+      "fileCount": 7,
+      "signature": "deep strict passed"
+    },
+    {
+      "name": "parent-notified-public-beta-admission",
+      "status": "pass",
+      "releaseId": 435948372,
+      "tag": "v0.2.22",
+      "sourceCommit": "1b5c8402dc340540711efa2c2c2037bce673a479",
+      "betaEndpoint": "https://github.com/gzers/opencodex-desktop/releases/download/beta/latest.json",
+      "publishedAssetSha256": "e2d2f58f679757c9b8bc1b7c97531accbe1eccfd9afe5159ded042354887b590",
+      "originalSidecarSha256": "2b64e9aebc06fa8a3878972724c463c6cc3c150063feef8017be0c6d36a82488"
+    },
+    {
+      "name": "old-original-native-launch",
+      "status": "pass",
+      "pid": 51367,
+      "identity": {
+        "active": true,
+        "bundleIdentifier": "com.gzers.opencodex.desktop",
+        "environment": {
+          "CFFIXED_USER_HOME": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root/home",
+          "CODEX_HOME": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root/home/.codex",
+          "HOME": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root/home",
+          "OPENCODEX_HOME": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root/opencodex-home",
+          "OPENCODEX_SANDBOX": "1",
+          "OPENCODEX_SANDBOX_BOUNDARY": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a",
+          "OPENCODEX_SANDBOX_ROOT": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root",
+          "TEMP": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root/tmp",
+          "TMP": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root/tmp",
+          "TMPDIR": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root/tmp/",
+          "XDG_CACHE_HOME": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root/home/.cache",
+          "XDG_CONFIG_HOME": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/root/home/.config"
+        },
+        "executable": "/private/tmp/ocx021-mac-ota-5b4e902a-0059-476b-b48d-fcc0b8a6133a/installed/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+        "launchTime": 1793928374,
+        "launchTimeSource": "ps lstart exact owned PID; seconds resolution",
+        "pgid": 51367,
+        "pid": 51367
+      },
+      "originalBundleUntouched": true
+    },
+    {
+      "name": "old-ui-beta-preference-readback",
+      "status": "pass",
+      "schemaVersion": 2,
+      "field": "updates.app_update_channel",
+      "value": "beta"
+    },
+    {
+      "name": "two-old-native-saves-and-exact-preimages",
+      "status": "pass",
+      "saves": [
+        {
+          "save": 1,
+          "backup": "backups/model-config/20261106T012618-4e4cf9b4-4539-4ccb-b94f-b89ee8604cdb/config.json",
+          "preimageSha256": "f16615fc11faf27ae8fa554242e5aaaa2388dea49534174cda92e901bfb846d8",
+          "savedSha256": "4db71705bb86b383818d7fe7e7bbe63ab98da27bd34af9b4b0b447e7c60df4f9"
+        },
+        {
+          "save": 2,
+          "backup": "backups/model-config/20261106T012619-07f48c04-29ad-49df-8272-6d790e99fb30/config.json",
+          "preimageSha256": "4db71705bb86b383818d7fe7e7bbe63ab98da27bd34af9b4b0b447e7c60df4f9",
+          "savedSha256": "e77d4914920bf72157c46771f4e6fe2a91724f97d5f96ffeb8e395a32b0681c3"
+        }
+      ],
+      "filesFrozen": 8,
+      "channelSavedThroughUi": true
+    },
+    {
+      "name": "installed-before-restart-original-bundle",
+      "status": "pass",
+      "version": "0.2.22",
+      "embeddedSource": "1b5c8402dc340540711efa2c2c2037bce673a479",
+      "binarySha256": "027692f55a05d0563e88d1e7291280cb806f6556bb32680f6e7257bbcd24638c",
+      "fileCount": 7,
+      "signature": "deep strict passed"
+    },
+    {
+      "name": "production-signed-download-and-inplace-install",
+      "status": "pass",
+      "wholeBundleExactlyOriginal": true,
+      "oldRunningPid": 51367,
+      "handoffProducedBy": "production updater only after old-trust verification",
+      "changedUpdaterEndpoint": false,
+      "pendingObservation": "candidate-window OCR"
+    },
+    {
+      "name": "automatic-process-installed0.2.22-original-bundle",
+      "status": "pass",
+      "version": "0.2.22",
+      "embeddedSource": "1b5c8402dc340540711efa2c2c2037bce673a479",
+      "binarySha256": "027692f55a05d0563e88d1e7291280cb806f6556bb32680f6e7257bbcd24638c",
+      "fileCount": 7,
+      "signature": "deep strict passed"
+    },
+    {
+      "name": "same-automatic-process-native-readback",
+      "status": "pass",
+      "oldPid": 51367,
+      "automaticRestartPid": 51697,
+      "sameAutomaticPidThroughoutReadback": true,
+      "manualRelaunches": 0,
+      "exactFilesPreserved": 8,
+      "startupSource": "1b5c8402dc340540711efa2c2c2037bce673a479",
+      "signedOriginalWholeBundleEqual": true,
+      "pendingHandoffConsumed": true
+    },
+    {
+      "name": "owned-process-cleanup",
+      "status": "pass",
+      "remaining": [],
+      "oldAndAutomaticNewIncluded": true,
+      "daily80916SignalsSent": 0
+    },
+    {
+      "name": "baseline-original-remained-immutable",
+      "status": "pass",
+      "binarySha256": "275dface26a0d1ab483a67303eb30df3253f1f050163548c51289f1812b8457e"
+    }
+  ],
+  "otaExecuted": true,
+  "targetSource": "1b5c8402dc340540711efa2c2c2037bce673a479",
+  "publicationAuthorized": true,
+  "scriptSha256": "7096675a09e69f48435280168b88a9418416b2a2aeda5b70566cab91394d62e5",
+  "nativeHelperSha256": "83b125f54b1d0bb9280a96bb84907955276d8ff2991dd001abe908950b5a5eb1",
+  "monitorSha256": "cd4072b0a145a1441e542f9aeac16531f9a33a97ee67a18816e0017e5d37fa8f",
+  "startedAt": "2026-11-06T01:26:02.508134+00:00",
+  "methodOnlyReference": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/final-candidate-updates-20261104/macos-adjacent-ota/ota-result.json",
+  "sameVersionAcceptanceReuse": false,
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "publicMetadataReads": [
+    {
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/releases/tags/v0.2.22",
+      "metadataSource": "anonymous HTTPS",
+      "evidence": "public-release.json",
+      "sha256": "27df5969d84bc4020d06de98f761e69503582a377581b8bf7d93b6e311f243b1",
+      "at": "2026-11-06T01:26:08.724359+00:00"
+    },
+    {
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/git/ref/tags/v0.2.22",
+      "metadataSource": "anonymous HTTPS",
+      "evidence": "public-tag.json",
+      "sha256": "5146f4e67924241d3aa604c04d7b948b53fda038d6dd634ee73c0d360c98c217",
+      "at": "2026-11-06T01:26:10.031693+00:00"
+    },
+    {
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/git/tags/b666d85c368d2de6aef1fc84c131e54512c28fab",
+      "metadataSource": "anonymous HTTPS",
+      "evidence": "public-annotated-tag.json",
+      "sha256": "e21599d17208406b61a3ea5913cb37b466884e72fc286aa62cedeef6b4a2eee3",
+      "at": "2026-11-06T01:26:11.718693+00:00"
+    },
+    {
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/beta/latest.json",
+      "metadataSource": "anonymous HTTPS",
+      "evidence": "production-beta-manifest.json",
+      "sha256": "67dc25d3d0dfd96bba8083e6271a16ce6370737e588df580440869181beade34",
+      "at": "2026-11-06T01:26:14.256750+00:00"
+    }
+  ],
+  "publication": {
+    "releaseId": 435948372,
+    "tag": "v0.2.22",
+    "sourceCommit": "1b5c8402dc340540711efa2c2c2037bce673a479",
+    "betaEndpoint": "https://github.com/gzers/opencodex-desktop/releases/download/beta/latest.json",
+    "publishedAssetSha256": "e2d2f58f679757c9b8bc1b7c97531accbe1eccfd9afe5159ded042354887b590",
+    "originalSidecarSha256": "2b64e9aebc06fa8a3878972724c463c6cc3c150063feef8017be0c6d36a82488"
+  },
+  "oldPid": 51367,
+  "launchCalls": 1,
+  "automaticRestartPid": 51697,
+  "completed": true,
+  "oldExit": 0,
+  "finishedAt": "2026-11-06T01:26:46.508004+00:00"
+}

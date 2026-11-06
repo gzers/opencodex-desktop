@@ -1,0 +1,26 @@
+{
+  "providers": {
+    "ota021-preserve": {
+      "adapter": "openai-chat",
+      "authMode": "none",
+      "disabled": true,
+      "baseUrl": "https://ota021-never-contact.invalid/v1",
+      "models": [
+        "vendor/a:8b",
+        "Mixed_Case/V2"
+      ],
+      "selectedModels": [
+        "vendor/a:8b"
+      ],
+      "note": "Owned synthetic adjacent OTA preservation fixture"
+    }
+  },
+  "defaultProvider": "ota021-preserve",
+  "modelPickerOrder": [
+    "ota021-preserve/vendor/a:8b",
+    "ota021-preserve/Mixed_Case/V2"
+  ],
+  "nativeOtaOpaque": {
+    "keep": 21
+  }
+}

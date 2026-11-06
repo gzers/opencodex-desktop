@@ -6,9 +6,9 @@
   "productFixCommit": "2b860292e",
   "appsTree": "ca89905344d0d29e761bcb8ffa24d22769c9cb4c",
   "authoritativeScope": "DMD-OPENCODEX-POST021 latest AC-P21-02 hardware exception; IMP-30 current entry",
-  "activeTask": "TASK-OPENCODEX-POST021-INTEGRATION-HARDWARE-20261105",
+  "activeTask": "TASK-OPENCODEX-022-FINAL-20261106",
   "historicalSnapshot": "integrated-b99a94f10-20261105/historical-validation-before-b99a94f10.json",
-  "latestReview": "windows-candidate2-targeted-20261105/integration-audit/review.json",
+  "latestReview": "release-0.2.22-20261106/release-status.json",
   "native": {
     "macPanel": {
       "path": "integrated-b99a94f10-20261105/macos-native/ready/ocx021-mac-native-38ade72f-6b80-4790-b42a-5015514e917d/report.json",
@@ -80,7 +80,7 @@
     "productionPerformanceFixClaim": false
   },
   "runtimeDependency": {
-    "state": "candidate2-passed-real-managed-install-and-native-fresh-rename-on-Windows;production-source-adoption-pending",
+    "state": "adopted-project-maintained-offline-runtime;reproducible-identical-archive-and-real-rollback-pass;release-signatures-delivery-pending",
     "basePackage": "@bitkyc08/opencodex@2.97.0",
     "upstream": "lidge-jun/opencodex",
     "checkedDev": "0a30c551304927c93c26a96c034bd39a166c7460",
@@ -92,7 +92,8 @@
     "candidateSha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957",
     "windowsFinalReview": "windows-candidate2-targeted-20261105/integration-audit/review.json",
     "managerInstall": "Actual macOS manager installer and actual Windows native manager offline install/full version/source/entry pass",
-    "firstRenameDrift": "Windows fresh rename first confirmation passed exact saved config bytes and discovery baseline, new/old refs, pending and actual MSIX generation checks"
+    "firstRenameDrift": "Windows fresh rename first confirmation passed exact saved config bytes and discovery baseline, new/old refs, pending and actual MSIX generation checks",
+    "productionSource": "Explicit user-approved maintained offline archive; no registry or daily source change"
   },
   "pending": [
     "Final 0.2.22 source checks and signed desktop/runtime artifacts",
@@ -128,5 +129,19 @@
     "sha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957",
     "installation": "Existing explicit offline import; registry/default/daily sources unchanged",
     "maintenance": "gzers/opencodex-desktop"
+  },
+  "releaseSourceCommit": "1b5c8402dc340540711efa2c2c2037bce673a479",
+  "liveRelease": {
+    "run": 42138917336,
+    "sourceCi": 42138893326,
+    "version": "0.2.22",
+    "state": "in_progress",
+    "channel": "public beta0.2.22;stable0.2.21 preserved",
+    "actualMacOta": "passed17checks/same automatic process/eight files unchanged",
+    "actualWindowsOta": "42143838979 success MSI+NSIS",
+    "windowsOriginalInstallers": "42141381151 success fourcells",
+    "runtimeSignatures": "42141978396 success; actual12assets verified",
+    "ciFinal": 42141370911,
+    "ciWindows": "backend regression passed; remaining native/install/EXE chain running"
   }
 }

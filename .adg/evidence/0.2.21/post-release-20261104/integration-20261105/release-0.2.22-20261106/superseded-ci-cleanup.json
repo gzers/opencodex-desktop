@@ -1,0 +1,36 @@
+{
+  "atUtc": "2026-11-06T01:06:28.395475+00:00",
+  "finalRunKept": 42141370911,
+  "installerAcceptanceKept": 42141381151,
+  "reason": "Superseded PR69 snapshots; obsolete 0.2.22 native admission is known to reject before mutation, fixed in current fa035. Keep final-source full CI and exact original-asset matrix; do not cancel Release, contributor branch, or any run because it is slow/network-EOF. Initial release failure retained. Cancellation not success.",
+  "requests": [
+    {
+      "run": 42138893326,
+      "source": "1b5c8402dc340540711efa2c2c2037bce673a479",
+      "beforeStatus": "in_progress",
+      "cancelRequestAccepted": true,
+      "error": null
+    },
+    {
+      "run": 42139070592,
+      "source": "df86a720f0140f801716e688da6e91a31e720395",
+      "beforeStatus": "in_progress",
+      "cancelRequestAccepted": true,
+      "error": null
+    },
+    {
+      "run": 42139986544,
+      "source": "a0000005001e1f923fc370cbdf161b57ef7a1d8b",
+      "beforeStatus": "in_progress",
+      "cancelRequestAccepted": true,
+      "error": null
+    },
+    {
+      "run": 42137463083,
+      "source": "d780943699f50f32bd4a1d0f09c90703d94b5961",
+      "beforeStatus": "in_progress",
+      "cancelRequestAccepted": true,
+      "error": null
+    }
+  ]
+}

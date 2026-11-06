@@ -1,0 +1,72 @@
+{
+  "disabledModels": [
+    "Native-scope-A-pending/fixture-scope-a",
+    "native-sort-fixture/fixture-alpha",
+    "native-sort-fixture/fixture-beta",
+    "native-sort-fixture/fixture-gamma"
+  ],
+  "modelPickerOrder": [
+    "Native-scope-A-pending/fixture-scope-a",
+    "native-sort-fixture/fixture-beta",
+    "native-sort-fixture/fixture-alpha",
+    "native-sort-fixture/fixture-gamma",
+    "ocxd_import_0cdb0af40d2a4d029cf4fa42a0af17ba/fixture-beta",
+    "ocxd_import_0cdb0af40d2a4d029cf4fa42a0af17ba/fixture-alpha",
+    "ocxd_import_0cdb0af40d2a4d029cf4fa42a0af17ba/fixture-gamma"
+  ],
+  "providers": {
+    "Native-scope-A-pending": {
+      "adapter": "openai-chat",
+      "apiKey": "native-scope-a-pending-key",
+      "authMode": "key",
+      "baseUrl": "https://a.example.test/v1",
+      "disabled": true,
+      "modelContextWindows": {
+        "fixture-scope-a": 96000
+      },
+      "models": [
+        "fixture-scope-a"
+      ],
+      "name": "Native-scope-A-pending",
+      "newModelPolicy": "off",
+      "selectedModels": []
+    },
+    "native-sort-fixture": {
+      "adapter": "openai-chat",
+      "apiKey": "native-sandbox-key",
+      "authMode": "key",
+      "baseUrl": "https://example.test/v1",
+      "disabled": true,
+      "models": [
+        "fixture-alpha",
+        "fixture-beta",
+        "fixture-gamma"
+      ],
+      "name": "Native sort fixture",
+      "newModelPolicy": "off",
+      "selectedModels": []
+    },
+    "ocxd_import_0cdb0af40d2a4d029cf4fa42a0af17ba": {
+      "adapter": "openai-chat",
+      "apiKey": "native-sandbox-key",
+      "apiKeyPool": [
+        {
+          "id": "23860417",
+          "key": "native-sandbox-key",
+          "label": null
+        }
+      ],
+      "authMode": "key",
+      "baseUrl": "https://example.test/v1",
+      "disabled": true,
+      "headers": {},
+      "models": [
+        "fixture-alpha",
+        "fixture-beta",
+        "fixture-gamma"
+      ],
+      "newModelPolicy": "off",
+      "selectedModels": []
+    }
+  }
+}

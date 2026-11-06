@@ -1,0 +1,47 @@
+{
+  "endpoint": "http://127.0.0.1:54947",
+  "startedAt": "2026-11-06T00:57:25.480Z",
+  "phase": "model-native-ui",
+  "attempts": [
+    {
+      "at": "2026-11-06T00:57:25.480Z",
+      "version": {
+        "status": 200
+      },
+      "list": {
+        "status": 200
+      }
+    }
+  ],
+  "lastVersion": {
+    "Browser": "Edg/156.0.4314.50",
+    "File-Path-Style": "windows",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+    "V8-Version": "15.6.12.7",
+    "WebKit-Version": "537.36 (@af2ba23ae0ecf7084d900446fc59d5119dd5fd5e)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:54947/devtools/browser/e75014e3-48e4-4f49-8e67-bf453f1485b4"
+  },
+  "lastTargets": [
+    {
+      "description": "",
+      "devtoolsFrontendUrl": "https://aka.ms/docs-landing-page/serve_rev/@af2ba23ae0ecf7084d900446fc59d5119dd5fd5e/inspector.html?ws=127.0.0.1:54947/devtools/page/4524143AB53399B4276CF71C709F64CF",
+      "id": "4524143AB53399B4276CF71C709F64CF",
+      "title": "OpenCodeX Desktop",
+      "type": "page",
+      "url": "http://tauri.localhost/#overview",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:54947/devtools/page/4524143AB53399B4276CF71C709F64CF"
+    }
+  ],
+  "result": "fail",
+  "target": {
+    "description": "",
+    "devtoolsFrontendUrl": "https://aka.ms/docs-landing-page/serve_rev/@af2ba23ae0ecf7084d900446fc59d5119dd5fd5e/inspector.html?ws=127.0.0.1:54947/devtools/page/4524143AB53399B4276CF71C709F64CF",
+    "id": "4524143AB53399B4276CF71C709F64CF",
+    "title": "OpenCodeX Desktop",
+    "type": "page",
+    "url": "http://tauri.localhost/#overview",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:54947/devtools/page/4524143AB53399B4276CF71C709F64CF"
+  },
+  "error": "Unsupported native model UI acceptance version"
+}

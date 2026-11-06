@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 2,
+  "mode": "ordinary",
+  "harnessToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 3560,
+    "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+    "creationTimeUtc": "2026-11-06T00:56:53.5726304Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-06T00:56:55.0214014Z"
+  },
+  "applicationToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 7816,
+    "executable": "C:\\Program Files\\OpenCodeX Desktop\\opencodex-desktop.exe",
+    "creationTimeUtc": "2026-11-06T00:56:55.0751296Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-06T00:56:55.0853093Z"
+  },
+  "applicationTokenVerified": false,
+  "applicationModeMatched": false,
+  "result": "fail",
+  "executable": "C:\\Program Files\\OpenCodeX Desktop\\opencodex-desktop.exe",
+  "sha256": "711b47e5808c7c95df045f826d7787288296eb5bf01c3f7f44e367e4f8f98924",
+  "homeRemoved": true,
+  "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\release-windows-installer\\msi-default-startup\\startup\\sandbox-d288d9b70794423e8761ca3c2872add1",
+  "observedSeconds": 30,
+  "cdpPort": 54947,
+  "expectedCommit": "1b5c8402dc340540711efa2c2c2037bce673a479",
+  "sourceCommitMatched": true,
+  "mainWindowPresent": true,
+  "pid": 7816,
+  "responding": true,
+  "error": "WebView smoke failed: 1"
+}

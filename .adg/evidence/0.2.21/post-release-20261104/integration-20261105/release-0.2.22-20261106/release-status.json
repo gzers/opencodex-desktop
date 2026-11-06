@@ -1,0 +1,44 @@
+{
+  "version": "0.2.22",
+  "source": "1b5c8402dc340540711efa2c2c2037bce673a479",
+  "validationHead": "fa035fb52d6aeaf772d64c73563e1d750cea0bfb",
+  "releaseId": 435948372,
+  "channel": "public candidate / beta; Latest0.2.21 preserved",
+  "releaseReadyForStable": false,
+  "checks": {
+    "desktopRuntimeSignaturePolicy": "passed12assets; exact uploaded bytes",
+    "windowsOriginalInstallerMatrix": {
+      "run": 42141381151,
+      "result": "success",
+      "cells": 4
+    },
+    "windowsOta": {
+      "run": 42143838979,
+      "result": "success",
+      "kinds": [
+        "msi",
+        "nsis"
+      ],
+      "readbackBoundary": "OS actual automatic restart plus exact installed EXE relaunched explicitly into isolated environment"
+    },
+    "macOriginalNative": "12 checks passed high/dark; 11 low/light DMG install checks",
+    "macOta": "17 checks passed; 51367→51697 same automatic process, 8 files unchanged",
+    "macRollback": "Original0.2.21 loads same8post-update files in independent clone unchanged",
+    "runtimeRollback": "actual stable→patched offline→intentional failure retention→stable/patch removal/config preservation passed",
+    "finalCi": {
+      "run": 42141370911,
+      "passed": [
+        "frontend",
+        "backend",
+        "release-tools",
+        "windows-smoke-evidence"
+      ],
+      "windows": "backend regression passed; credential/install/finalEXE matrices still running"
+    }
+  },
+  "limits": [
+    "No claim that old RDP absolute frame budget passed; adopted hardware exception retained",
+    "Runtime requires explicit offline installation and service restart; npm source unchanged, standard upstream2.97 stable is considered newer and must not be mistaken for patched runtime",
+    "No public upstream PR, no daily config/source/process mutation, no real sync/inference"
+  ]
+}

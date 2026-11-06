@@ -1,0 +1,41 @@
+{
+  "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+  "sourceCommit": "1b5c8402dc340540711efa2c2c2037bce673a479",
+  "builtExecutableSha256": "34bad179bf3fb4a1a02226d5a645776761fe3908e200e1e7516aeb9456c6b073",
+  "version": "0.2.22",
+  "codeSigned": false,
+  "releaseAccepted": false,
+  "result": "pass",
+  "installers": [
+    {
+      "kind": "nsis",
+      "name": "OpenCodeX.Desktop_0.2.22_x64-setup.exe",
+      "bytes": 5323941,
+      "sha256": "0b824645ac1b1c3eacab58a3a7fcfededfc910104ac282cfd99c7855b4f97895",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-nsis-23ba1e77bc214882acae507f885e4288",
+      "result": "pass",
+      "installExitCode": 0,
+      "installedExecutableSha256": "a52b5e7e9861c781ba01bd3036425784131889fabd1d79feb8521996d2e0091a",
+      "expectedInstalledExecutableSha256": "a52b5e7e9861c781ba01bd3036425784131889fabd1d79feb8521996d2e0091a",
+      "bundleMarker": "NSS",
+      "bundleMarkerOffset": 14459437,
+      "productVersion": "0.2.22",
+      "firstScreen": "pass",
+      "explicitCleanupHelper": {
+        "scope": "disposable runner real installed helper with dedicated seeded roots; no native UI root selection",
+        "unconfirmedExitCode": 2,
+        "confirmedExitCode": 0,
+        "startupPointerRemoved": true,
+        "anchorAndActiveRootRemoved": true,
+        "externalHomeUnchanged": true,
+        "applicationRetained": true,
+        "applicationRootBindingTested": false,
+        "hostAcceptanceClaimed": false
+      },
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true,
+      "defaultUninstallRetainedData": true
+    }
+  ],
+  "defaultInstallChecks": []
+}

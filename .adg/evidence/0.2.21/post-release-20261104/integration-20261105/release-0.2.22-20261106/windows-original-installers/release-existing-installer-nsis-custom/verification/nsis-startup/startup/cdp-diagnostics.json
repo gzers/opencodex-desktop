@@ -1,0 +1,38 @@
+{
+  "endpoint": "http://127.0.0.1:64898",
+  "startedAt": "2026-11-06T01:06:25.530Z",
+  "phase": "complete",
+  "attempts": [
+    {
+      "at": "2026-11-06T01:06:25.531Z",
+      "version": {
+        "error": "The operation was aborted due to timeout"
+      },
+      "list": {
+        "status": 200
+      }
+    }
+  ],
+  "lastVersionError": "/json/version: The operation was aborted due to timeout",
+  "lastTargets": [
+    {
+      "description": "",
+      "devtoolsFrontendUrl": "https://aka.ms/docs-landing-page/serve_rev/@af2ba23ae0ecf7084d900446fc59d5119dd5fd5e/inspector.html?ws=127.0.0.1:64898/devtools/page/DC4A8191C6B27D42D32D2391BC452B6F",
+      "id": "DC4A8191C6B27D42D32D2391BC452B6F",
+      "title": "OpenCodeX Desktop",
+      "type": "page",
+      "url": "http://tauri.localhost/#overview",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:64898/devtools/page/DC4A8191C6B27D42D32D2391BC452B6F"
+    }
+  ],
+  "result": "pass",
+  "target": {
+    "description": "",
+    "devtoolsFrontendUrl": "https://aka.ms/docs-landing-page/serve_rev/@af2ba23ae0ecf7084d900446fc59d5119dd5fd5e/inspector.html?ws=127.0.0.1:64898/devtools/page/DC4A8191C6B27D42D32D2391BC452B6F",
+    "id": "DC4A8191C6B27D42D32D2391BC452B6F",
+    "title": "OpenCodeX Desktop",
+    "type": "page",
+    "url": "http://tauri.localhost/#overview",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:64898/devtools/page/DC4A8191C6B27D42D32D2391BC452B6F"
+  }
+}

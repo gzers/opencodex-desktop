@@ -1,0 +1,27 @@
+{
+  "version": "0.2.21",
+  "notes": "- 保存成功通知保留8秒自动收起，取消自动聚焦重启按钮；主动交互与重启确认期间暂停，关闭确认后继续倒计时，到期不自动重启。\n- 渠道名称与运行标识可一起修改，保存时更新当前模型路由、默认选择、顺序及凭据引用，保存后提示重启 Codex 生效；兼容 macOS 与 Windows 标准 npm 安装的客户端入口。\n- WebDAV 按所选已保存内容的可靠保存时间判断来源，本机较新上传、云端较新下载；内容一致不更新，时间未知或同刻异内容时停止更新并说明原因。传输不抬高内容时间，确认前变化仍会阻止旧计划写入。\n- 渠道列表移除节点下拉列，操作列“检测”打开居中公共弹窗；节点检测、停止与选择分开，节点选择只修改草稿，收紧渠道列宽并取消节点常驻高亮。\n- 概览如实区分 WebDAV 已配置未检测与最近检测结果；观察绑定已保存连接及凭据修订，未保存的连接测试不会污染当前状态。\n- 没有导入连接候选时隐藏空入口；读取失败可重试，有候选时显示用途和数量，明确确认后才启用。\n- 统一管理器弹窗右上角关闭入口，查看型移除底部重复关闭及空操作栏；键盘、遮罩与取消遵循同一退出规则，关闭进度观察与取消任务分别处理。\n- 配置包使用新版保存版本格式，可继续读取旧包；接收新包的设备须升级至0.2.21。旧内容没有可靠保存时间时会明确停止自动取新，升级、复制或重新打包不会将旧内容伪装成新版。\n\n---\n\n### 安装\n- macOS（Apple Silicon）：下载 `.dmg`，拖入「应用程序」。\n- Windows（x64）：下载 `*-setup.exe`（NSIS）安装包。\n- 均为未签名测试包：macOS 首次打开如被 Gatekeeper 拦截，右键 →「打开」；Windows SmartScreen 可能提示，选择「仍要运行」。",
+  "pub_date": "2026-11-04T09:51:33.445Z",
+  "platforms": {
+    "windows-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRUFwYTlEZzN4Ulkzclp2SGMrbyttQ0VXZVNvTUpzazdmblN2ZHU2MVl1STl3T0ROZGI2eElZK2NwOUVaajR0dFVrS3BkOHBrU2h1b2w5Zlg0d2FlWEFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkzNzg1MzY2CWZpbGU6T3BlbkNvZGVYIERlc2t0b3BfMC4yLjIxX3g2NF9lbi1VUy5tc2kJdmVyc2lvbjowLjIuMjEKaERzeXFOMW1YT09na04vR0dBMDIxU1ZqRnFFclN0ME9KKzFKNVEzT29xYmg4c3FzUFpZMmNCNXJTaXFPbGIwZEZIUytjaXVQY3A2eThPYk5KZDJEQlE9PQo=",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.2.21/OpenCodeX.Desktop_0.2.21_x64_en-US.msi"
+    },
+    "windows-x86_64-msi": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRUFwYTlEZzN4Ulkzclp2SGMrbyttQ0VXZVNvTUpzazdmblN2ZHU2MVl1STl3T0ROZGI2eElZK2NwOUVaajR0dFVrS3BkOHBrU2h1b2w5Zlg0d2FlWEFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkzNzg1MzY2CWZpbGU6T3BlbkNvZGVYIERlc2t0b3BfMC4yLjIxX3g2NF9lbi1VUy5tc2kJdmVyc2lvbjowLjIuMjEKaERzeXFOMW1YT09na04vR0dBMDIxU1ZqRnFFclN0ME9KKzFKNVEzT29xYmg4c3FzUFpZMmNCNXJTaXFPbGIwZEZIUytjaXVQY3A2eThPYk5KZDJEQlE9PQo=",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.2.21/OpenCodeX.Desktop_0.2.21_x64_en-US.msi"
+    },
+    "windows-x86_64-nsis": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRUZOMzhnNkppYmh6c1Jnc3dpWTh6Qm9DVEVNdkdnWTROeWdQR2tHU0RBSlBEaUtzMTg1a2xCZEQ4d3JPenlaVWdnVlVCU3B6cVVoaVV0cDlVZEhJSlFzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkzNzg1MzY2CWZpbGU6T3BlbkNvZGVYIERlc2t0b3BfMC4yLjIxX3g2NC1zZXR1cC5leGUJdmVyc2lvbjowLjIuMjEKMHJ5Q05LRWRtUjhpS1h4RnErTXNDZ1dUTjFVK1lLU2xOMDQxZURVa0VucE5VODVoSHFYUi9hOTluWklyNjBXRFJkbDgwcE9qT3c4VHdYUEJ1aHUwQnc9PQo=",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.2.21/OpenCodeX.Desktop_0.2.21_x64-setup.exe"
+    },
+    "darwin-aarch64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRUViMExDWThrOEpJMWp1dnBKZGEvckc4L2w4N0o3UCtsMW1sblVoYkpIVkxaMUVhSkpYdHhlK21mMDVaUTNFYmt3cWxpSGw0UElpdmVvcDEvbEZMZFFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkzNzg1ODg1CWZpbGU6T3BlbkNvZGVYIERlc2t0b3AuYXBwLnRhci5negl2ZXJzaW9uOjAuMi4yMQprM09nUWZGSlJkUC9LZUpiUlFrQTJPREVNUlEveXRzT0VJcUFSa2JSL0RyZ2FOb0xFaTR0cHhDMUVwei9kcFJQUVRyRUlyK3ZxZ1pZNVc0UG5SM1lCQT09Cg==",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.2.21/OpenCodeX.Desktop_aarch64.app.tar.gz"
+    },
+    "darwin-aarch64-app": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRUViMExDWThrOEpJMWp1dnBKZGEvckc4L2w4N0o3UCtsMW1sblVoYkpIVkxaMUVhSkpYdHhlK21mMDVaUTNFYmt3cWxpSGw0UElpdmVvcDEvbEZMZFFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkzNzg1ODg1CWZpbGU6T3BlbkNvZGVYIERlc2t0b3AuYXBwLnRhci5negl2ZXJzaW9uOjAuMi4yMQprM09nUWZGSlJkUC9LZUpiUlFrQTJPREVNUlEveXRzT0VJcUFSa2JSL0RyZ2FOb0xFaTR0cHhDMUVwei9kcFJQUVRyRUlyK3ZxZ1pZNVc0UG5SM1lCQT09Cg==",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.2.21/OpenCodeX.Desktop_aarch64.app.tar.gz"
+    }
+  }
+}

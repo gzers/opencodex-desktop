@@ -1,0 +1,122 @@
+{
+  "defaultProvider": "native021-new-5b4bfee8",
+  "disabledModels": [
+    "Native-scope-A-pending/fixture-scope-a",
+    "native-sort-fixture/fixture-alpha",
+    "native-sort-fixture/fixture-beta",
+    "native-sort-fixture/fixture-gamma",
+    "native021-new-5b4bfee8/Mixed_Case/V2"
+  ],
+  "modelPickerOrder": [
+    "Native-scope-A-pending/fixture-scope-a",
+    "native-sort-fixture/fixture-beta",
+    "native-sort-fixture/fixture-alpha",
+    "native-sort-fixture/fixture-gamma",
+    "ocxd_import_0cdb0af40d2a4d029cf4fa42a0af17ba/fixture-beta",
+    "ocxd_import_0cdb0af40d2a4d029cf4fa42a0af17ba/fixture-alpha",
+    "ocxd_import_0cdb0af40d2a4d029cf4fa42a0af17ba/fixture-gamma",
+    "native021-new-5b4bfee8/vendor/a:8b",
+    "native021-old-5b4bfee80/vendor/a:8b",
+    "native021-new-5b4bfee8/vendor-a:8b",
+    "native021-old-5b4bfee80/vendor-a:8b",
+    "native021-new-5b4bfee8/Mixed_Case/V2",
+    "native021-old-5b4bfee80/Mixed_Case/V2"
+  ],
+  "providers": {
+    "Native-scope-A-pending": {
+      "adapter": "openai-chat",
+      "apiKey": "native-scope-a-pending-key",
+      "authMode": "key",
+      "baseUrl": "https://a.example.test/v1",
+      "disabled": true,
+      "modelContextWindows": {
+        "fixture-scope-a": 96000
+      },
+      "models": [
+        "fixture-scope-a"
+      ],
+      "name": "Native-scope-A-pending",
+      "newModelPolicy": "off",
+      "selectedModels": []
+    },
+    "native-sort-fixture": {
+      "adapter": "openai-chat",
+      "apiKey": "native-sandbox-key",
+      "authMode": "key",
+      "baseUrl": "https://example.test/v1",
+      "disabled": true,
+      "models": [
+        "fixture-alpha",
+        "fixture-beta",
+        "fixture-gamma"
+      ],
+      "name": "Native sort fixture",
+      "newModelPolicy": "off",
+      "selectedModels": []
+    },
+    "native021-new-5b4bfee8": {
+      "adapter": "openai-chat",
+      "apiKey": "synthetic-native021-key",
+      "authMode": "key",
+      "baseUrl": "https://native021.invalid/v1",
+      "disabled": true,
+      "models": [
+        "vendor/a:8b",
+        "vendor-a:8b",
+        "Mixed_Case/V2"
+      ],
+      "name": "native021-new-5b4bfee8",
+      "native021Opaque": {
+        "keep": 42,
+        "literal": "native021-old-5b4bfee8/leave-opaque"
+      },
+      "newModelPolicy": "off",
+      "selectedModels": [
+        "vendor/a:8b",
+        "vendor-a:8b",
+        "Mixed_Case/V2"
+      ]
+    },
+    "native021-old-5b4bfee80": {
+      "adapter": "openai-chat",
+      "apiKey": "synthetic-native021-neighbor-key",
+      "authMode": "key",
+      "baseUrl": "https://neighbor.native021.invalid/v1",
+      "disabled": true,
+      "models": [
+        "vendor/a:8b",
+        "vendor-a:8b",
+        "Mixed_Case/V2"
+      ],
+      "name": "native021-old-5b4bfee80",
+      "newModelPolicy": "off",
+      "selectedModels": [
+        "vendor/a:8b",
+        "vendor-a:8b",
+        "Mixed_Case/V2"
+      ]
+    },
+    "ocxd_import_0cdb0af40d2a4d029cf4fa42a0af17ba": {
+      "adapter": "openai-chat",
+      "apiKey": "native-sandbox-key",
+      "apiKeyPool": [
+        {
+          "id": "23860417",
+          "key": "native-sandbox-key",
+          "label": null
+        }
+      ],
+      "authMode": "key",
+      "baseUrl": "https://example.test/v1",
+      "disabled": true,
+      "headers": {},
+      "models": [
+        "fixture-alpha",
+        "fixture-beta",
+        "fixture-gamma"
+      ],
+      "newModelPolicy": "off",
+      "selectedModels": []
+    }
+  }
+}

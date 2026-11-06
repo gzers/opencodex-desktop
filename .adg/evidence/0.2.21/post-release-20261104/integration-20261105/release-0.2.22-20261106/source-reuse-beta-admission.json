@@ -1,0 +1,31 @@
+{
+  "result": "same-runtime-product-source-proven",
+  "criticalPaths": {
+    "apps/desktop/tauri/src": {
+      "ca46bc1f3": "d9116521a2bf872ecfeb0a803b159072dbe314d0",
+      "v0.2.22": "d9116521a2bf872ecfeb0a803b159072dbe314d0",
+      "HEAD": "d9116521a2bf872ecfeb0a803b159072dbe314d0"
+    },
+    "apps/desktop/tauri/build.rs": {
+      "ca46bc1f3": "49ed33f0e3fbadf09995f4358dd4924de31d16c4",
+      "v0.2.22": "49ed33f0e3fbadf09995f4358dd4924de31d16c4",
+      "HEAD": "49ed33f0e3fbadf09995f4358dd4924de31d16c4"
+    },
+    "apps/desktop/tauri/config": {
+      "ca46bc1f3": "3a929774ebb4e3f96a151e7733cdb8bf15edf4c2",
+      "v0.2.22": "3a929774ebb4e3f96a151e7733cdb8bf15edf4c2",
+      "HEAD": "3a929774ebb4e3f96a151e7733cdb8bf15edf4c2"
+    },
+    "apps/desktop/tauri/resources": {
+      "ca46bc1f3": "d54b57b9a103284e9f91014b2baf06ea2b1699fb",
+      "v0.2.22": "d54b57b9a103284e9f91014b2baf06ea2b1699fb",
+      "HEAD": "d54b57b9a103284e9f91014b2baf06ea2b1699fb"
+    }
+  },
+  "uiOnlyChange": [
+    "apps/desktop/ui/src/features/runtime/components/RuntimeInstallDialog.vue"
+  ],
+  "dependencyChanges": "Only own crate version0.2.21→0.2.22; all dependency versions identical",
+  "checksReusedForBetaAdmission": "Full ca46 CI42056342409 five jobs success; exact same Rust source/defaults/resources; new copy/version covered by full new frontend, actual signed Mac and four original Windows installer cells",
+  "notClaimed": "Latest fa035 full backend CI not yet terminal; stable promotion/closure still waits for its actual success and both new OTA checks"
+}
