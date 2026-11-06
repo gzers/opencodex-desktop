@@ -1829,3 +1829,189 @@ fn operation_receipt_free_fields_never_become_retained_template_dependencies() {
     assert_eq!(retained_refs(&f).unwrap(), vec![adopted]);
     f.before();
 }
+
+const IDENTITY_MAPPING: &str = "manager-state/sync-identity-mappings-v2.json";
+const OLD_IDENTITY_MAPPING: &[u8] = b"fixed original identity mapping\r\n";
+const NEW_IDENTITY_MAPPING: &[u8] = b"fixed received identity mapping\n";
+fn receive_eight_writes(f: &Fixture, id: &str, mapping_before: Option<Vec<u8>>) -> Vec<WriteV2> {
+    let mut writes = receive_seven_writes(f, id, None);
+    writes.push(WriteV2 {
+        target: TargetV2::Manager(IDENTITY_MAPPING.into()),
+        before: mapping_before,
+        after: Some(NEW_IDENTITY_MAPPING.to_vec()),
+    });
+    assert_eq!(writes.len(), MAX_FILES);
+    writes
+}
+#[test]
+fn identity_mapping_eight_file_crash_recovers_exact_mapping_and_operation_receipt() {
+    for (cut, existing) in [(0, false), (6, false), (7, true)] {
+        let f = Fixture::new();
+        let id = uuid::Uuid::new_v4().to_string();
+        let before = existing.then(|| OLD_IDENTITY_MAPPING.to_vec());
+        if let Some(bytes) = &before {
+            fs::write(f.root.join(IDENTITY_MAPPING), bytes).unwrap();
+        }
+        let writes = receive_eight_writes(&f, &id, before.clone());
+        let expected_receipt = writes[6].after.clone().unwrap();
+        let h = hook(move |e| {
+            if e == TestEvent::AfterApply(cut) {
+                TestAction::Interrupt
+            } else {
+                TestAction::Continue
+            }
+        });
+        code(
+            commit(&f.root, &f.home, writes),
+            "model_transaction_test_interrupted",
+        );
+        drop(h);
+        let dir = f.dir();
+        if cut < 7 {
+            assert!(fs::read(f.root.join(IDENTITY_MAPPING)).ok() == before);
+        }
+        if cut < 6 {
+            assert!(!operation_receipt_path(&f, &id).exists());
+        }
+        assert!(f.recover().unwrap());
+        assert!(fs::read(f.home.join("config.json")).unwrap() == NEW_CONFIG);
+        assert!(fs::read(operation_receipt_path(&f, &id)).unwrap() == expected_receipt);
+        assert!(fs::read(f.root.join(IDENTITY_MAPPING)).unwrap() == NEW_IDENTITY_MAPPING);
+        for name in [
+            "manager-state/model-family-templates.json",
+            POLICY,
+            "manager-state/model-materialization-ledger.json",
+            "manager-state/model-protocol-mappings.json",
+            VERSIONS,
+        ] {
+            assert!(fs::read(f.root.join(name)).unwrap() == b"receive-exact-image");
+        }
+        assert!(fs::read(dir.join("7.before")).ok() == before);
+        assert!(fs::read(dir.join("7.after")).unwrap() == NEW_IDENTITY_MAPPING);
+        assert!(fs::read(dir.join("6.after")).unwrap() == expected_receipt);
+        assert!(!f.pending().exists());
+        assert!(!f.recover().unwrap());
+    }
+}
+#[test]
+fn identity_mapping_before_cas_preserves_external_edit_and_compensates_receipt() {
+    let f = Fixture::new();
+    let id = uuid::Uuid::new_v4().to_string();
+    fs::write(f.root.join(IDENTITY_MAPPING), OLD_IDENTITY_MAPPING).unwrap();
+    code(
+        commit(&f.root, &f.home, receive_eight_writes(&f, &id, None)),
+        "model_transaction_cas",
+    );
+    f.before();
+    assert!(!operation_receipt_path(&f, &id).exists());
+    assert!(!f.root.join("manager-state").join(TRANSACTIONS).exists());
+    let path = f.root.join(IDENTITY_MAPPING);
+    let h = hook(move |e| {
+        if e == TestEvent::BeforeApply(7) {
+            fs::write(&path, b"external identity mapping").unwrap();
+        }
+        TestAction::Continue
+    });
+    code(
+        commit(
+            &f.root,
+            &f.home,
+            receive_eight_writes(&f, &id, Some(OLD_IDENTITY_MAPPING.to_vec())),
+        ),
+        "model_transaction_compensation_conflict",
+    );
+    drop(h);
+    f.before();
+    assert!(!operation_receipt_path(&f, &id).exists());
+    assert!(fs::read(f.root.join(IDENTITY_MAPPING)).unwrap() == b"external identity mapping");
+    code(f.recover(), "model_transaction_external_change");
+    assert!(fs::read(f.root.join(IDENTITY_MAPPING)).unwrap() == b"external identity mapping");
+    fs::write(f.root.join(IDENTITY_MAPPING), OLD_IDENTITY_MAPPING).unwrap();
+    assert!(f.recover().unwrap());
+    f.before();
+    assert!(!operation_receipt_path(&f, &id).exists());
+    assert!(!f.pending().exists());
+}
+#[test]
+fn identity_mapping_limits_deletion_and_alternate_paths_remain_rejected() {
+    let f = Fixture::new();
+    code(
+        commit(
+            &f.root,
+            &f.home,
+            vec![WriteV2 {
+                target: TargetV2::Manager(IDENTITY_MAPPING.into()),
+                before: None,
+                after: None,
+            }],
+        ),
+        "model_transaction_target_invalid",
+    );
+    for path in [
+        "sync-identity-mappings-v2.json",
+        "manager-state/../sync-identity-mappings-v2.json",
+        "manager-state/sync-identity-mappings-v2.json/receipt.json",
+        "manager-state/other-identity-mappings-v2.json",
+    ] {
+        code(
+            commit(
+                &f.root,
+                &f.home,
+                vec![WriteV2 {
+                    target: TargetV2::Manager(path.into()),
+                    before: None,
+                    after: Some(vec![]),
+                }],
+            ),
+            "model_transaction_target_invalid",
+        );
+    }
+    for oversized_before in [false, true] {
+        let bytes = vec![0; MAX_IMAGE + 1];
+        let write = if oversized_before {
+            WriteV2 {
+                target: TargetV2::Manager(IDENTITY_MAPPING.into()),
+                before: Some(bytes),
+                after: Some(vec![]),
+            }
+        } else {
+            WriteV2 {
+                target: TargetV2::Manager(IDENTITY_MAPPING.into()),
+                before: None,
+                after: Some(bytes),
+            }
+        };
+        code(
+            commit(&f.root, &f.home, vec![write]),
+            "model_transaction_limit",
+        );
+    }
+    let id = uuid::Uuid::new_v4().to_string();
+    let mut nine = receive_eight_writes(&f, &id, None);
+    nine.push(WriteV2 {
+        target: TargetV2::Manager("manager-state/model-channel-layout.json".into()),
+        before: None,
+        after: Some(vec![]),
+    });
+    code(commit(&f.root, &f.home, nine), "model_transaction_limit");
+    f.before();
+    assert!(!f.root.join("manager-state").join(TRANSACTIONS).exists());
+    assert!(!f.root.join(IDENTITY_MAPPING).exists());
+    let h = hook(|e| {
+        if e == TestEvent::AfterApply(6) {
+            TestAction::Interrupt
+        } else {
+            TestAction::Continue
+        }
+    });
+    code(
+        commit(&f.root, &f.home, receive_eight_writes(&f, &id, None)),
+        "model_transaction_test_interrupted",
+    );
+    drop(h);
+    f.rewrite_journal(|j| j.plan.entries[7].after = None);
+    code(f.recover(), "model_transaction_target_invalid");
+    assert!(!f.root.join(IDENTITY_MAPPING).exists());
+    assert!(operation_receipt_path(&f, &id).exists());
+    assert!(f.pending().exists());
+}

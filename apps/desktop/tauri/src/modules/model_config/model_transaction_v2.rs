@@ -28,7 +28,7 @@ const PENDING: &str = "model-transaction-v2.pending.json";
 const TRANSACTIONS: &str = "model-transactions-v2";
 const JOURNAL: &str = "journal.json";
 const DRAFT: &str = "manager-state/model-config-draft.json";
-const MANAGERS: [&str; 8] = [
+const MANAGERS: [&str; 9] = [
     "manager-state/model-policy.json",
     "manager-state/model-materialization-ledger.json",
     "manager-state/model-protocol-mappings.json",
@@ -37,6 +37,7 @@ const MANAGERS: [&str; 8] = [
     "manager-state/model-channel-layout.json",
     "manager-state/model-execution-source-ids.json",
     "manager-state/saved-content-versions.json",
+    "manager-state/sync-identity-mappings-v2.json",
 ];
 
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
