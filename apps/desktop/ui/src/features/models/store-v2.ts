@@ -113,7 +113,7 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
       const released=await modelV2Api.discardFile(clone(server.base))
       if(context()!==before){fileNeedsReconcile.value=true;throw new Error('结束未修改会话期间有新的输入，当前输入已保留，本次确认停止。')}
       if(released.draft||released.rootRevision!==value.rootRevision||released.sourceDigest!==value.sourceDigest||released.libraryDigest!==value.libraryDigest)throw new Error('未核对到同源会话已结束的回执，本次确认未继续。')
-      acceptFile(released);fileGeneration++;return true
+      acceptFile(released);fileGeneration++;if(channelIntents.value.length||modelEdits.value.length||keyBuffers.size||pendingRows.value.length){fileNeedsReconcile.value=true;throw new Error('结束会话时出现新的输入，当前输入保持，本次确认停止。')}return true
     }catch(cause){fileError.value=message(cause);throw cause}finally{fileBusy.value=false}
   }
   async function reloadSavedFacts(){
@@ -147,7 +147,7 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
   function queueChannel(intent:ChannelIntentV2){if((intent.kind==='set_defaults'||intent.kind==='set_family_defaults')&&intent.rules.protocol.mode!=='inherit'){fileError.value='渠道层不能设置请求协议，请在模版或单模型中明确配置。';return}const same=(old:ChannelIntentV2)=>old.channelId===intent.channelId&&old.kind===intent.kind&&(old.kind==='set_family_defaults'&&intent.kind==='set_family_defaults'?old.templateId===intent.templateId:old.kind==='set_naming'&&intent.kind==='set_naming'?old.rawModelId===intent.rawModelId:true);const unchanged=intent.kind==='rename'&&intent.name===(file.value?.draft?.policy??file.value?.savedPolicy)?.channels.find(c=>c.id===intent.channelId)?.label;channelIntents.value=channelIntents.value.filter(old=>!same(old)).concat(unchanged?[]:[clone(intent)]);fileGeneration++}
   function queueModel(edit:ModelEditV2){const same=(old:ModelEditV2)=>old.channelId===edit.channelId&&old.rawModelId===edit.rawModelId&&('field' in old&&'field' in edit?old.field===edit.field:!('field' in old)&&!('field' in edit));modelEdits.value=modelEdits.value.filter(old=>!same(old)).concat([clone(edit)]);fileGeneration++}
   function explicitRules(channelId:string,rawModelId:string){const model=channels.value.find(c=>c.id===channelId)?.models.find(m=>m.rawModelId===rawModelId);const rules=clone(model?.explicitOverrides??emptyContentV2().commonRules) as unknown as Record<string,unknown>;for(const edit of modelEdits.value.filter(e=>e.channelId===channelId&&e.rawModelId===rawModelId)){if(edit.kind==='set_override')rules[edit.field]={mode:'custom',value:clone(edit.value)};else if(edit.kind==='clear_override')rules[edit.field]={mode:'inherit'}}return rules as unknown as import('./api-v2').RulesV2}
-  function fileContext(){return JSON.stringify({file:file.value,channelIntents:channelIntents.value,modelEdits:modelEdits.value,credentialInputRevision:credentialInputRevision.value})}
+  function fileContext(){return JSON.stringify({generation:fileGeneration,file:file.value,channelIntents:channelIntents.value,modelEdits:modelEdits.value,credentialInputRevision:credentialInputRevision.value})}
   async function projectFile(edits:ModelEditV2[]=[],intents:ChannelIntentV2[]=[],scopeChannelId?:string){
     if(fileBusy.value||!file.value?.draft)throw new Error('渠道工作区尚未就绪，当前输入保持。')
     const context=fileContext(),expected=clone(file.value.draft.base)
