@@ -1656,6 +1656,9 @@ pub struct CopyChannelV2 {
     pub expected: ReadBaseV2,
     pub channel_id: String,
     pub name: String,
+    /// Match the adopted copy dialog: explicit opt-in, never accept a key value.
+    #[serde(default)]
+    pub reuse_source_key: bool,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -1664,6 +1667,9 @@ struct CopySourceV2 {
     channel_id: String,
     source_provider_id: String,
     source_digest: String,
+    reuse_source_key: bool,
+    /// Pending replace/clear is fixed by the backend draft, not the source row.
+    source_credential_edit: Option<DraftCredentialEditV2>,
 }
 fn copy_path(root: &Path, id: &str) -> Result<std::path::PathBuf> {
     check_id(id)?;
@@ -1701,6 +1707,20 @@ fn copied_seed(
         return Err(error("model_protected_provider"));
     }
     let mut value = source.clone();
+    if !record.reuse_source_key || record.source_credential_edit.is_some() {
+        // Retain public and unknown noncredential source fields, while never
+        // retaining the source's pool, headers or external credential refs.
+        for field in crate::modules::model_config::provider_fields::PRIVATE
+            .iter()
+            .copied()
+            .chain(["apiKeySelectionRevision", "_apiKeyAttempt"])
+        {
+            value
+                .as_object_mut()
+                .ok_or_else(|| error("model_source_invalid"))?
+                .remove(field);
+        }
+    }
     value["name"] = json!(channel.label);
     value["disabled"] = json!(true);
     Ok(Some(value))
@@ -1734,6 +1754,7 @@ pub fn copy_channel(root: &Path, home: &Path, request: CopyChannelV2) -> Result<
         || source != request.expected.source_digest
         || revision != request.expected.root_revision
         || state.digests.library != request.expected.library_digest
+        || policy_semantic_digest_v2(&state.policy)? != request.expected.policy_digest
     {
         return Err(error("model_read_stale"));
     }
@@ -1759,7 +1780,17 @@ pub fn copy_channel(root: &Path, home: &Path, request: CopyChannelV2) -> Result<
     if raw["providers"].get(&source_id).is_none() {
         return Err(error("model_copy_unsaved_source"));
     }
-    let copied_credential_edit = draft.credential_edits.get(&channel.id).cloned();
+    let source_credential_edit = draft.credential_edits.get(&channel.id).cloned();
+    let copied_credential_edit = if request.reuse_source_key {
+        source_credential_edit.clone()
+    } else {
+        Some(DraftCredentialEditV2::Clear)
+    };
+    if !request.reuse_source_key
+        || matches!(copied_credential_edit, Some(DraftCredentialEditV2::Clear))
+    {
+        channel.connection.credential_ref = None;
+    }
     channel.id = uuid::Uuid::new_v4().to_string();
     if let Some(namespace) = &mut channel.namespace {
         namespace.channel_id = channel.id.clone();
@@ -1776,11 +1807,21 @@ pub fn copy_channel(root: &Path, home: &Path, request: CopyChannelV2) -> Result<
             .map(|c| c.connection.provider_id.to_lowercase())
             .collect(),
     );
+    let next_generation = draft
+        .base
+        .draft_generation
+        .checked_add(1)
+        .ok_or_else(|| error("model_limit"))?;
     let record = CopySourceV2 {
         schema_version: 2,
         channel_id: channel.id.clone(),
         source_provider_id: source_id,
         source_digest: source.clone(),
+        reuse_source_key: request.reuse_source_key,
+        source_credential_edit: request
+            .reuse_source_key
+            .then_some(source_credential_edit)
+            .flatten(),
     };
     let id = uuid::Uuid::new_v4().to_string();
     let bytes = canonical_bytes(&record)?;
@@ -1792,11 +1833,7 @@ pub fn copy_channel(root: &Path, home: &Path, request: CopyChannelV2) -> Result<
             digest: digest(&bytes),
         });
     let mut next = draft.clone();
-    next.base.draft_generation = next
-        .base
-        .draft_generation
-        .checked_add(1)
-        .ok_or_else(|| error("model_limit"))?;
+    next.base.draft_generation = next_generation;
     if let Some(edit) = copied_credential_edit {
         next.credential_edits.insert(channel.id.clone(), edit);
     }
@@ -1807,6 +1844,10 @@ pub fn copy_channel(root: &Path, home: &Path, request: CopyChannelV2) -> Result<
     }
     view(locked.snapshot_unlocked()?, source, revision)
 }
+
+#[cfg(test)]
+#[path = "config_file_v2_copy_tests.rs"]
+mod copy_tests;
 
 /// Public semantic save facts plus plain file-owned keys only. Opaque external
 /// credential stores cannot acquire a fabricated save time from a file rewrite.

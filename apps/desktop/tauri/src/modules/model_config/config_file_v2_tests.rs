@@ -245,6 +245,7 @@ fn copied_channel_keeps_actual_key_and_unknown_fields_only_on_explicit_save() {
         &root,
         &home,
         CopyChannelV2 {
+            reuse_source_key: true,
             expected: started.draft.unwrap().base,
             channel_id: channel.id.clone(),
             name: "Krill-copy".into(),
