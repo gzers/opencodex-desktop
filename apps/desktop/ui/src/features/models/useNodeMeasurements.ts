@@ -6,9 +6,10 @@ export function nodeMeasurementError(code:string):string{return nodeErrors[code]
 export interface NodeMeasurementAdmissionV2 {expected:()=>ReadBaseV2|null;discoveryKind:()=>DiscoveryKindV2|'';enabled?:()=>boolean}
 export function useNodeMeasurements(channel:()=>ChannelPolicy|ChannelV2,_key:()=>string=()=>'',admission?:NodeMeasurementAdmissionV2){
  const run=ref(''),pending=ref<string[]>([]),results=ref<Record<string,NodeMeasurement>>({}),error=ref(''),stopped=ref(false)
- let sequence=0
- const binding=computed(()=>JSON.stringify({channelId:channel().id,credentialRef:channel().connection.credentialRef,nodes:channel().connection.nodes.map(n=>({id:n.id,url:n.url})),expected:admission?.expected(),discoveryKind:admission?.discoveryKind()}))
- function invalidate(){sequence++;const id=run.value;if(id)void modelV2Api.stopMeasurement(id).catch(()=>{});run.value='';pending.value=[];results.value={};error.value='';stopped.value=false}
+ let sequence=0,stoppedReceipt:{id:string;sequence:number}|null=null
+ const isStoppedReceipt=(id:string,current:number)=>stoppedReceipt?.id===id&&stoppedReceipt.sequence===current
+ const binding=computed(()=>JSON.stringify({channelId:channel().id,providerId:channel().connection.providerId,credentialRef:channel().connection.credentialRef,nodes:channel().connection.nodes.map(n=>({id:n.id,url:n.url})),expected:admission?.expected(),discoveryKind:admission?.discoveryKind()}))
+ function invalidate(){sequence++;stoppedReceipt=null;const id=run.value;if(id)void modelV2Api.stopMeasurement(id).catch(()=>{});run.value='';pending.value=[];results.value={};error.value='';stopped.value=false}
  watch(binding,invalidate,{flush:'sync'})
  onScopeDispose(invalidate)
  async function measure(ids:string[]){
@@ -19,11 +20,11 @@ export function useNodeMeasurements(channel:()=>ChannelPolicy|ChannelV2,_key:()=
   if(!discoveryKind){error.value='请选择本次模型清单获取方式。';return}
   const value=channel();if(!('models'in value)){error.value='节点检测仅接受新版可信渠道，未从旧协议字段推断。';return}
   const nodeIds=[...new Set(ids)].filter(id=>value.connection.nodes.some(n=>n.id===id));if(!nodeIds.length)return
-  const current=++sequence,id=crypto.randomUUID();run.value=id;pending.value=nodeIds;error.value='';stopped.value=false
-  try{const response=await modelV2Api.measureNodes({expected,channelId:value.id,nodeIds,discoveryKind,runId:id});if(current!==sequence||response.runId!==id)return;for(const result of response.results)if(nodeIds.includes(result.nodeId))results.value[result.nodeId]=result;stopped.value=response.stopped}
+  const current=++sequence,id=crypto.randomUUID();stoppedReceipt=null;run.value=id;pending.value=nodeIds;error.value='';stopped.value=false
+  try{const response=await modelV2Api.measureNodes({expected,channelId:value.id,nodeIds,discoveryKind,runId:id});const completedStop=isStoppedReceipt(id,current)&&response.stopped;if(current!==sequence&&!completedStop||response.runId!==id)return;for(const result of response.results)if(nodeIds.includes(result.nodeId))results.value[result.nodeId]=result;stopped.value=stopped.value||response.stopped}
   catch(cause){if(current===sequence)error.value=errorText(cause)}
   finally{if(current===sequence){run.value='';pending.value=[]}}
  }
- async function stop(){const id=run.value,current=sequence;if(!id)return;try{await modelV2Api.stopMeasurement(id);if(current===sequence&&run.value===id){sequence++;run.value='';pending.value=[];stopped.value=true}}catch(cause){if(current===sequence)error.value=errorText(cause)}}
+ async function stop(){const id=run.value,current=sequence;if(!id)return;try{await modelV2Api.stopMeasurement(id);if(current===sequence&&run.value===id){stoppedReceipt={id,sequence:current};sequence++;run.value='';pending.value=[];stopped.value=true}}catch(cause){if(current===sequence)error.value=errorText(cause)}}
  return {run,pending,results,error,stopped,measure,stop}
 }
