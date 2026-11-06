@@ -71,8 +71,9 @@ function Assert-RustOrdinaryArtifactCoverage($Expected,$Artifacts) {
  $b=@($Artifacts|ForEach-Object {& $keys $_}|Sort-Object -Unique)
  if(($a -join [char]10) -cne ($b -join [char]10)){throw 'Cargo no-run did not emit every expected default libtest executable'}
 }
-function Get-RustOrdinarySuiteExit([int[]]$ExitCodes,[int]$ExpectedBinaries) {
+function Get-RustOrdinarySuiteExit([object[]]$ExitCodes,[int]$ExpectedBinaries) {
  if($ExpectedBinaries -le 0 -or $ExitCodes.Count -ne $ExpectedBinaries){throw 'Incomplete binary suite cannot pass'}
+ foreach($code in $ExitCodes){if($code -isnot [int]){throw 'Native test process exit code is missing; no null-to-zero conversion permitted'}}
  foreach($code in $ExitCodes){if($code -ne 0){return $code}}
  0
 }
@@ -205,6 +206,10 @@ public sealed class OcxRustOrdinaryPending : IDisposable {
   }finally{Marshal.FreeHGlobal(value);}
  }
  public void Resume(){Live();uint previous=ResumeThread(thread);if(previous==0xffffffff)throw new Win32Exception(Marshal.GetLastWin32Error());if(previous!=1)throw new InvalidOperationException("Created thread suspend count changed");resumed=true;}
+ public int ExitCode(){
+  if(WaitForSingleObject(native,0)!=0)throw new InvalidOperationException("Created native process has not exited");
+  uint code;if(!GetExitCodeProcess(native,out code))throw new Win32Exception(Marshal.GetLastWin32Error());return unchecked((int)code);
+ }
  public void Dispose(){
   // No reopened PID/name authority: this is precisely CreateProcess's handle.
   // If observation/ledger persistence failed, do not orphan our suspended child.
@@ -218,6 +223,7 @@ public sealed class OcxRustOrdinaryPending : IDisposable {
  [DllImport("kernel32.dll",SetLastError=true)] static extern uint WaitForSingleObject(SafeProcessHandle handle,uint milliseconds);
  [DllImport("kernel32.dll",SetLastError=true)] static extern bool TerminateProcess(SafeProcessHandle handle,uint exitCode);
  [DllImport("kernel32.dll",SetLastError=true)] static extern uint GetProcessId(SafeProcessHandle handle);
+ [DllImport("kernel32.dll",SetLastError=true)] static extern bool GetExitCodeProcess(SafeProcessHandle handle,out uint code);
  [DllImport("kernel32.dll",CharSet=CharSet.Unicode,ExactSpelling=true,SetLastError=true)] static extern bool QueryFullProcessImageNameW(SafeProcessHandle handle,uint flags,StringBuilder name,ref uint size);
  [DllImport("kernel32.dll",SetLastError=true)] static extern bool GetProcessTimes(SafeProcessHandle handle,out long created,out long exited,out long kernel,out long user);
  [DllImport("advapi32.dll",SetLastError=true)] static extern bool OpenProcessToken(SafeProcessHandle handle,uint access,out IntPtr token);
@@ -325,7 +331,8 @@ function Start-RustOrdinaryCaptured([string]$Executable,[string[]]$Arguments,[st
   }
   $outFile.Flush($true);$errFile.Flush($true)
   $diagnostic.stage='exited';Write-TwoUserJson ($Stdout+'.launch.json') $diagnostic
-  [ordered]@{process=$fact;token=$token;cim=$cim;exitCode=$p.ExitCode;arguments=$Arguments;stdout=$Stdout;stderr=$Stderr;workingDirectory=$WorkingDirectory;identityObservedBeforeResume=$true}
+  $nativeExit=$pending.ExitCode()
+  [ordered]@{process=$fact;token=$token;cim=$cim;exitCode=$nativeExit;exitAuthority='retained-CreateProcess-handle';arguments=$Arguments;stdout=$Stdout;stderr=$Stderr;workingDirectory=$WorkingDirectory;identityObservedBeforeResume=$true}
  }catch{
   $diagnostic.failureType=$_.Exception.GetType().FullName;$diagnostic.failureHResult=[int]$_.Exception.HResult
   Write-TwoUserJson ($Stdout+'.launch.json') $diagnostic
@@ -376,6 +383,7 @@ function Invoke-RustOrdinaryChild([string]$InputFile) {
    $env:CARGO_MANIFEST_DIR=$artifact.workingDirectory;$env:CARGO_MANIFEST_PATH=$artifact.manifestPath
    $env:CARGO_PKG_NAME=$artifact.packageName;$env:CARGO_PKG_VERSION=$artifact.packageVersion
    $result=Start-RustOrdinaryCaptured $artifact.executable @($c.testArguments) $artifact.workingDirectory (Join-Path $c.evidence ('test-'+$index+'.stdout.log')) (Join-Path $c.evidence ('test-'+$index+'.stderr.log')) $sid $ledger $remaining (Join-Path $c.evidence 'owned-processes.json') $c.parentRunnerObservation
+   if($result.exitCode -isnot [int]){throw 'Native test process exit code is missing; no null-to-zero conversion permitted'}
    $result.sha256=$artifact.sha256;$result.packageId=$artifact.packageId;$result.target=$artifact.target
    $results.Add($result)
    Write-TwoUserJson (Join-Path $c.evidence 'owned-processes.json') @($ledger.Values)
@@ -383,7 +391,7 @@ function Invoke-RustOrdinaryChild([string]$InputFile) {
    if($exitCode -eq 0 -and $result.exitCode -ne 0){$exitCode=[int]$result.exitCode}
    # Deliberately continue every Cargo-emitted test binary after a failed binary.
   }
-  $exitCode=Get-RustOrdinarySuiteExit @($results|ForEach-Object {[int]$_.exitCode}) $c.artifacts.Count
+  $exitCode=Get-RustOrdinarySuiteExit @($results|ForEach-Object {$_.exitCode}) $c.artifacts.Count
   $report.allBinariesAttempted=$results.Count -eq $c.artifacts.Count;$report.exitCode=$exitCode
   $report.result=if($exitCode -eq 0){'pass-ordinary-rust-binaries'}else{'test-failed'}
  }catch{$report.failureCode='ordinary_suite_execution_or_identity_failed';$report.failureType=$_.Exception.GetType().FullName;$report.failureLine=$_.InvocationInfo.ScriptLineNumber;$report.exitCode=1}

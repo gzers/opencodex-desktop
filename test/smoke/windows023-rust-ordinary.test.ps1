@@ -50,6 +50,8 @@ Check ((Get-RustOrdinarySuiteExit @(101,0,7) 3) -eq 101) 'first-original-test-fa
 Check ((Get-RustOrdinarySuiteExit @(0,7,101) 3) -eq 7) 'later-original-test-failure-exit-preserved'
 Refuses {Get-RustOrdinarySuiteExit @() 0} 'empty-suite-never-green'
 Refuses {Get-RustOrdinarySuiteExit @(0) 2} 'partial-suite-never-green'
+Refuses {Get-RustOrdinarySuiteExit @(0,$null) 2} 'missing-native-exit-never-cast-to-success'
+Refuses {Get-RustOrdinarySuiteExit @('0') 1} 'textual-exit-is-not-native-integer-authority'
 $metadata=@{packages=@(@{id='workspace#lib';manifest_path='C:\code\apps\desktop\tauri\Cargo.toml'},@{id='workspace#other';manifest_path='C:\code\tools\Cargo.toml'})}
 $messages=@(
  @{reason='compiler-artifact';package_id='workspace#lib';target=@{name='opencodex_desktop_lib';kind=@('lib')};profile=@{test=$true};executable='C:\code\target\debug\deps\lib-exact.exe'},
