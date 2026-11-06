@@ -140,6 +140,10 @@ pub struct ImportObjectV2 {
     pub has_authorization: bool,
     pub has_credentials: bool,
     pub definition_digest: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub account_info: Option<crate::modules::sync::portable_accounts::AccountInfo>,
+    #[serde(default)]
+    pub information_supported: bool,
 }
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -176,6 +180,25 @@ pub trait DraftFileCaptureV2: Send + Sync {
         request: &CaptureRequestV2,
         credentials: &dyn CaptureCredentialsV2,
     ) -> ModelResult<CapturedSnapshotV2>;
+    fn capture_with_intents(
+        &self,
+        d: &Path,
+        h: &Path,
+        expected: &ReadBaseV2,
+        request: &CaptureRequestV2,
+        credentials: &dyn CaptureCredentialsV2,
+        intents: DraftFileIntentsV2,
+    ) -> ModelResult<CapturedSnapshotV2> {
+        if !intents.edits.is_empty() || !intents.channel_intents.is_empty() {
+            return Err(err("file_draft_intents_not_connected"));
+        }
+        self.capture(d, h, expected, request, credentials)
+    }
+}
+#[derive(Default)]
+pub struct DraftFileIntentsV2 {
+    pub edits: Vec<super::source_v2::ModelEditV2>,
+    pub channel_intents: Vec<config::ChannelIntentV2>,
 }
 pub struct DraftExportRequestV2 {
     pub expected: ReadBaseV2,
@@ -309,17 +332,26 @@ impl FileTransferOwnerV2 {
         request: DraftExportRequestV2,
         passphrase: Option<Zeroizing<String>>,
     ) -> ModelResult<ExportPlanV2> {
+        self.prepare_draft_export_with_intents(request, passphrase, DraftFileIntentsV2::default())
+    }
+    pub fn prepare_draft_export_with_intents(
+        &mut self,
+        request: DraftExportRequestV2,
+        passphrase: Option<Zeroizing<String>>,
+        intents: DraftFileIntentsV2,
+    ) -> ModelResult<ExportPlanV2> {
         local(&request.capture.selection)?;
         let helper = self
             .draft
             .as_ref()
             .ok_or_else(|| err("file_draft_capture_not_connected"))?;
-        let captured = helper.capture(
+        let captured = helper.capture_with_intents(
             &self.d,
             &self.h,
             &request.expected,
             &request.capture,
             self.credentials.as_ref(),
+            intents,
         )?;
         self.freeze_export(request.capture.selection, captured, passphrase)
     }
@@ -770,6 +802,8 @@ fn object(kind: &str, id: &str) -> ImportObjectV2 {
         has_authorization: false,
         has_credentials: false,
         definition_digest: None,
+        account_info: None,
+        information_supported: false,
     }
 }
 fn object_inventory(o: &SavedObjects, inv: &Inventory) -> ModelResult<Vec<ImportObjectV2>> {
@@ -830,7 +864,11 @@ fn object_inventory(o: &SavedObjects, inv: &Inventory) -> ModelResult<Vec<Import
         out.push(object("extensions", "extensions"));
     }
     for a in &p.manager.accounts {
-        out.push(object("account", &a.id));
+        let mut row = object("account", &a.id);
+        row.label = a.label.clone();
+        row.information_supported = portable_accounts::information_supported(a);
+        row.account_info = Some(a.clone());
+        out.push(row);
     }
     for e in &p.manager.webdav {
         let mut row = object("webdav_candidate", &e.id);
@@ -1362,7 +1400,7 @@ fn password_save(d: &Path, j: PasswordJournal) -> ModelResult<()> {
     let parent = path
         .parent()
         .ok_or_else(|| err("file_password_journal_io"))?;
-    std::fs::create_dir_all(parent)?;
+    crate::infrastructure::platform::create_private_dir_all(parent, 0o700)?;
     safety::check_path(d, parent, false)?;
     crate::infrastructure::platform::set_mode(parent, 0o700)?;
     let bytes = serde_json::to_vec(&CheckedPasswords {
@@ -1932,7 +1970,7 @@ impl FileTransferOwnerV2 {
         use rand::RngCore;
         let path = recovery_path(&self.d, id)?;
         let parent = path.parent().ok_or_else(|| err("file_recovery_io"))?;
-        std::fs::create_dir_all(parent)?;
+        crate::infrastructure::platform::create_private_dir_all(parent, 0o700)?;
         safety::check_path(&self.d, parent, false)?;
         crate::infrastructure::platform::set_mode(parent, 0o700)?;
         let _guard = crate::infrastructure::locking::TargetFileLock::lock(&path)?;

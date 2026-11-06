@@ -150,6 +150,12 @@ jobs:
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
             cargo test --locked --workspace --features integration-test -- --show-output --skip infrastructure::official_version_source::windows_tests
           }
+      - name: Verify actual TokenUser ownership at private object creation
+        if: always()
+        shell: pwsh
+        run: |
+          cargo test --locked --lib infrastructure::windows_private_create::tests -- --test-threads=1 --nocapture
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify isolated native credential protection
         if: always()
         shell: pwsh

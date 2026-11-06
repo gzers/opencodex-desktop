@@ -16,7 +16,9 @@ use crate::modules::{
         sync_local_v2::{ModelApplyPlanHandle, ModelApplyReceipt, ModelApplyStatus, ModelApplyV2},
     },
 };
-use std::{fs::OpenOptions, io::Write, path::PathBuf};
+#[cfg(windows)]
+use std::fs::OpenOptions;
+use std::{io::Write, path::PathBuf};
 use zeroize::Zeroize;
 
 const MAX_IMAGE: usize = 32 * 1024 * 1024;
@@ -325,7 +327,9 @@ impl ReceiveFileHostV2 {
     }
     fn namespace_binding_hash(&self, adopt_ids: &[String]) -> Result<String> {
         let original = self.binding_hash()?;
-        if adopt_ids.is_empty() { return Ok(original); }
+        if adopt_ids.is_empty() {
+            return Ok(original);
+        }
         Ok(digest(&canonical_bytes(&(original, adopt_ids))?))
     }
     fn manifest_with_namespace(&self, id: &str, adopt_ids: &[String]) -> Result<Option<Frozen>> {
@@ -411,7 +415,12 @@ impl ReceiveFileHostV2 {
     fn load(&self, id: &str, h: &ModelApplyPlanHandle) -> Result<Frozen> {
         self.load_with_namespace(id, h, &[])
     }
-    fn load_with_namespace(&self, id: &str, h: &ModelApplyPlanHandle, adopt_ids: &[String]) -> Result<Frozen> {
+    fn load_with_namespace(
+        &self,
+        id: &str,
+        h: &ModelApplyPlanHandle,
+        adopt_ids: &[String],
+    ) -> Result<Frozen> {
         let f = self
             .manifest_with_namespace(id, adopt_ids)?
             .ok_or_else(|| fail("model_receive_plan_missing"))?;
@@ -432,7 +441,12 @@ impl ReceiveFileHostV2 {
     fn applied(&self, id: &str, h: &ModelApplyPlanHandle) -> Result<bool> {
         self.applied_with_namespace(id, h, &[])
     }
-    fn applied_with_namespace(&self, id: &str, h: &ModelApplyPlanHandle, adopt_ids: &[String]) -> Result<bool> {
+    fn applied_with_namespace(
+        &self,
+        id: &str,
+        h: &ModelApplyPlanHandle,
+        adopt_ids: &[String],
+    ) -> Result<bool> {
         let p = self.dir(id)?.join("receipt.json");
         let Some(b) = self.private_read(&p, 16 * 1024)? else {
             return Ok(false);
@@ -579,14 +593,14 @@ impl ReceiveFileHostV2 {
         }
         let parent = dir.parent().ok_or_else(|| fail("model_receive_path"))?;
         let existed = parent.exists();
-        std::fs::create_dir_all(parent).map_err(io)?;
+        crate::infrastructure::platform::create_private_dir_all(parent, 0o700).map_err(io)?;
         safety::check_path(&self.root, parent, false).map_err(io)?;
         if existed {
             private(parent, true)?;
         } else {
             restrict(parent, true)?;
         }
-        std::fs::create_dir(&dir).map_err(io)?;
+        crate::infrastructure::platform::create_private_dir_all(&dir, 0o700).map_err(io)?;
         restrict(&dir, true)?;
         for (i, w) in writes.iter().enumerate() {
             if let Some(b) = &w.before {
@@ -709,7 +723,8 @@ impl ReceiveFileHostV2 {
             for path in METADATA {
                 baseline.push(self.target_bytes(&TargetV2::Manager(path.into()))?);
             }
-            let identity_bytes = self.read_at(&self.root, &self.root.join(IDENTITY), MAX_IMAGE as u64)?;
+            let identity_bytes =
+                self.read_at(&self.root, &self.root.join(IDENTITY), MAX_IMAGE as u64)?;
             let identity = optional(&identity_bytes);
             let state = locked.snapshot_saved_unlocked()?;
             for (i, path) in METADATA.iter().take(4).enumerate() {
@@ -748,9 +763,9 @@ impl ReceiveFileHostV2 {
                     schema_version: u32,
                     providers: BTreeMap<String, String>,
                 }
-                let identities: ProviderIdentities = serde_json::from_value(
-                    parse_strict_json_v2(registry_bytes)?,
-                ).map_err(json_error)?;
+                let identities: ProviderIdentities =
+                    serde_json::from_value(parse_strict_json_v2(registry_bytes)?)
+                        .map_err(json_error)?;
                 if identities.schema_version != 2 || identities.providers.len() > 10000 {
                     return Err(fail("model_receive_identity_invalid"));
                 }
@@ -760,19 +775,28 @@ impl ReceiveFileHostV2 {
                     if provider.is_empty() || provider.len() > 512 || !ids.insert(channel.clone()) {
                         return Err(fail("model_receive_identity_invalid"));
                     }
-                    if let Some(existing) = provider_bindings.iter().find(|b| b.provider_id == provider) {
+                    if let Some(existing) =
+                        provider_bindings.iter().find(|b| b.provider_id == provider)
+                    {
                         if existing.channel_id != channel {
                             return Err(fail("model_receive_identity_invalid"));
                         }
                         continue;
                     }
                     if provider_bindings.iter().any(|b| b.channel_id == channel)
-                        || state.mappings.mappings.iter().any(|m| m.provider_id == provider && !m.anchor)
+                        || state
+                            .mappings
+                            .mappings
+                            .iter()
+                            .any(|m| m.provider_id == provider && !m.anchor)
                     {
                         return Err(fail("model_receive_identity_invalid"));
                     }
                     if raw.0["providers"].get(&provider).is_some() {
-                        provider_bindings.push(ProviderBindingV2 { channel_id: channel, provider_id: provider });
+                        provider_bindings.push(ProviderBindingV2 {
+                            channel_id: channel,
+                            provider_id: provider,
+                        });
                     }
                 }
             }
@@ -965,9 +989,19 @@ impl ReceiveFileHostV2 {
     }
 }
 impl ReceiveFileHostV2 {
-    fn protect_authorized(&self, id: &str, h: &ModelApplyPlanHandle, backup: bool, adopt_ids: &[String]) -> ModelResult<()> {
-        self.load_with_namespace(id, h, adopt_ids).map_err(model_error)?;
-        if self.applied_with_namespace(id, h, adopt_ids).map_err(model_error)? {
+    fn protect_authorized(
+        &self,
+        id: &str,
+        h: &ModelApplyPlanHandle,
+        backup: bool,
+        adopt_ids: &[String],
+    ) -> ModelResult<()> {
+        self.load_with_namespace(id, h, adopt_ids)
+            .map_err(model_error)?;
+        if self
+            .applied_with_namespace(id, h, adopt_ids)
+            .map_err(model_error)?
+        {
             return Ok(());
         }
         self.locks(false, |_| {
@@ -1040,11 +1074,16 @@ impl ReceiveFileHostV2 {
     ) -> ModelResult<ModelApplyReceipt> {
         // Validate replay identity before any admission helper can recover an
         // unrelated pending save. Applied is a historical, read-only fast path.
-        let f = self.load_with_namespace(id, h, adopt_ids).map_err(model_error)?;
+        let f = self
+            .load_with_namespace(id, h, adopt_ids)
+            .map_err(model_error)?;
         if f.objects_hash != objects_hash(objects).map_err(model_error)? {
             return Err(model_error(fail("model_receive_operation_collision")));
         }
-        if self.applied_with_namespace(id, h, adopt_ids).map_err(model_error)? {
+        if self
+            .applied_with_namespace(id, h, adopt_ids)
+            .map_err(model_error)?
+        {
             return Ok(Self::receipt(id, h));
         }
         self.locks(false, |_| {
@@ -1123,11 +1162,18 @@ impl ReceiveFileHostV2 {
         })
         .map_err(model_error)
     }
-    fn status_authorized(&self, id: &str, h: &ModelApplyPlanHandle, adopt_ids: &[String]) -> ModelResult<ModelApplyStatus> {
+    fn status_authorized(
+        &self,
+        id: &str,
+        h: &ModelApplyPlanHandle,
+        adopt_ids: &[String],
+    ) -> ModelResult<ModelApplyStatus> {
         // Immutable plan publication and atomic own receipt suffice. Status
         // never acquires a save admission which could recover business files.
         (|| {
-            if !adopt_ids.is_empty() { self.load_with_namespace(id, h, adopt_ids)?; }
+            if !adopt_ids.is_empty() {
+                self.load_with_namespace(id, h, adopt_ids)?;
+            }
             if self.applied_with_namespace(id, h, adopt_ids)? {
                 return Ok(ModelApplyStatus::Applied(Self::receipt(id, h)));
             }
@@ -1141,13 +1187,26 @@ impl ReceiveFileHostV2 {
     }
 }
 impl ModelApplyV2 for ReceiveFileHostV2 {
-    fn prepare(&self, id: &str, objects: &SavedObjects, scope: &SelectionV2, expected: &str) -> ModelResult<ModelApplyPlanHandle> {
-        self.prepare_inner(id, objects, scope, expected, &[]).map_err(model_error)
+    fn prepare(
+        &self,
+        id: &str,
+        objects: &SavedObjects,
+        scope: &SelectionV2,
+        expected: &str,
+    ) -> ModelResult<ModelApplyPlanHandle> {
+        self.prepare_inner(id, objects, scope, expected, &[])
+            .map_err(model_error)
     }
     fn protect(&self, id: &str, h: &ModelApplyPlanHandle, backup: bool) -> ModelResult<()> {
         self.protect_authorized(id, h, backup, &[])
     }
-    fn apply_once(&self, id: &str, objects: &SavedObjects, h: &ModelApplyPlanHandle, backup: bool) -> ModelResult<ModelApplyReceipt> {
+    fn apply_once(
+        &self,
+        id: &str,
+        objects: &SavedObjects,
+        h: &ModelApplyPlanHandle,
+        backup: bool,
+    ) -> ModelResult<ModelApplyReceipt> {
         self.apply_authorized(id, objects, h, backup, &[])
     }
     fn status(&self, id: &str, h: &ModelApplyPlanHandle) -> ModelResult<ModelApplyStatus> {
@@ -1369,7 +1428,8 @@ fn materialize_sources(
             }
             row["disabled"] = json!(!c.enabled);
             row["allowPrivateNetwork"] = json!(c.allow_private_network);
-            if s.include_key || s.include_authorization
+            if s.include_key
+                || s.include_authorization
                 || b.mode == ReceiveBindingModeV2::New
                     && matches!(c.auth_mode.as_deref(), Some("none" | "local"))
             {
@@ -1484,15 +1544,9 @@ fn restrict(path: &Path, directory: bool) -> Result<()> {
 }
 fn publish(root: &Path, path: &Path, bytes: &[u8]) -> Result<()> {
     safety::check_path(root, path, true).map_err(io)?;
-    let mut options = OpenOptions::new();
-    options.create_new(true).write(true);
-    #[cfg(unix)]
-    {
-        use std::os::unix::fs::OpenOptionsExt;
-        options.mode(0o600).custom_flags(libc::O_NOFOLLOW);
-    }
-    let mut f = options.open(path).map_err(io)?;
-    restrict(path, false)?;
+    let mut f =
+        crate::infrastructure::platform::create_new_private_file(path, 0o600).map_err(io)?;
+    private(path, false)?;
     f.write_all(bytes).map_err(io)?;
     f.sync_all().map_err(io)?;
     safety::sync_directories(

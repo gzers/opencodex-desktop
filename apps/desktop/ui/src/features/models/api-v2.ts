@@ -45,6 +45,9 @@ export interface ReadExistingRequestV2 {expectedSource:string;expectedLibrary:st
 export interface ReadExistingResponseV2 {snapshot:FileSnapshotV2;results:ReadMatchDtoV2[]}
 export type ChannelIntentV2={kind:'rename';channelId:string;name:string}|{kind:'set_selection';channelId:string;selection:ModelSelectionV2}|{kind:'set_enabled';channelId:string;enabled:boolean}|{kind:'set_order';channelId:string;rawModelIds:string[]}|{kind:'set_defaults';channelId:string;rules:RulesV2}|{kind:'set_family_defaults';channelId:string;templateId:string;rules:RulesV2}|{kind:'set_naming';channelId:string;rawModelId:string;alias:string|null;displayName:string|null}|{kind:'set_template_refs';channelId:string;references:RefV2[]}|{kind:'delete';channelId:string}|{kind:'set_active_node';channelId:string;nodeId:string}
 export interface FileSaveRequestV2 {expected:ReadBaseV2;edits:ModelEditV2[];channelIntents:ChannelIntentV2[];scopeChannelId?:string|null}
+export interface ModelHistoryEntryV2 {id:string;createdAt:string|null;phase:'applying'|'rolling_back'|'committed'|'rolled_back';channelLabels:string[];recoverable:boolean}
+export interface ModelHistoryPrepareV2 {sourceId:string;side:'before'|'after';scope:'affected'|'all';restoreDefaults:boolean;expected:ReadBaseV2}
+export interface ModelHistoryPlanV2 {recoveryId:string;sourceId:string;side:'before'|'after';scope:'affected'|'all';restoreDefaults:boolean;changes:{field:string;before:unknown;after:unknown}[];defaultChanges:{field:string;before:unknown;after:unknown}[];channelLabels:string[];notices:string[];requiresRuntimeReview:boolean;targetDigest:string}
 // L0/L1 frozen readonly contract. Registration/normal-crate SHA is tracked separately.
 export interface DraftProjectionV2 {expected:ReadBaseV2;effective:EffectiveModelV2[];intended:PolicyV2;digest:string}
 export interface StageConnectionRequestV2 {expected:ReadBaseV2|null;expectedSource:string;expectedLibrary:string;channelId:string|null;name:string;url:string;nodes?:ConnectionV2['nodes'];activeNodeId?:string;authMode:'key'|'none';apiKey:string|null;rawModelIds:string[];selectedModelIds:string[]}
@@ -61,6 +64,8 @@ export interface ResearchSourceV2 {url:string;retrievedAt:string;text:string;lin
 export interface EditingBufferInputV2 {target:RefV2|null;label:string;content:TemplateContentV2;generation:number}
 export interface EditingBufferV2 extends EditingBufferInputV2 {digest:string}
 export interface GenerateIntentV2 {scene:AgentSceneV2;targets:RefV2[];allowNew:boolean;expectedLibrary:string;requirements:string;history:AgentMessageV2[];sources:ResearchSourceV2[];buffer?:EditingBufferV2|null}
+export interface ExternalBrokerBundleV2 {taskId:string;content:string;preparedTicket:string;expiresAt:string}
+export interface ExternalRunViewV2 {dtoVersion:2;taskId:string;scene:AgentSceneV2;expectedLibrary:string;targets:RefV2[];allowNew:boolean;result:GeneratedReviewV2}
 export type RunPhaseV2='prepared'|'running'|'review'|'stopped'|'failed'|'accepted'
 export interface RunTicketV2 {dtoVersion:2;runId:string;phase:RunPhaseV2;expectedLibrary:string;rootRevision:string;sourceDigest:string}
 export interface ContentProposalV2 {target:RefV2|null;label:string;contentVersion:2;content:TemplateContentV2}
@@ -141,8 +146,12 @@ export const modelV2Api={
   readExisting:(request:ReadExistingRequestV2)=>invoke<ReadExistingResponseV2>('model_v2_read_existing',{request}),
   stageConnection:(request:StageConnectionRequestV2)=>invoke<FileSnapshotV2>('model_v2_stage_connection',{request}),
   fileSave:(request:FileSaveRequestV2)=>invoke<FileSnapshotV2>('model_v2_file_save',{request}),
+  discardFile:(expected:ReadBaseV2)=>invoke<FileSnapshotV2>('model_v2_file_discard',{expected}),
+  fileHistory:()=>invoke<ModelHistoryEntryV2[]>('model_v2_file_history'),
+  prepareHistory:(request:ModelHistoryPrepareV2)=>invoke<ModelHistoryPlanV2>('model_v2_file_history_prepare',{request}),
+  acceptHistory:(recoveryId:string)=>invoke<FileSnapshotV2>('model_v2_file_history_accept',{recoveryId}),
   fileProject:(request:FileSaveRequestV2)=>invoke<DraftProjectionV2>('model_v2_file_project',{request}),
-  copyChannel:(request:{expected:ReadBaseV2;channelId:string;name:string})=>invoke<FileSnapshotV2>('model_v2_copy_channel',{request}),
+  copyChannel:(request:{expected:ReadBaseV2;channelId:string;name:string;reuseSourceKey:boolean})=>invoke<FileSnapshotV2>('model_v2_copy_channel',{request}),
   credentialView:(channelId:string)=>invoke<{configured:boolean;value:string;source:string;viewable:boolean}>('model_v2_credential_view',{channelId}),
   stageCredential:(request:{expected:ReadBaseV2;channelId:string;action:'replace'|'clear';value?:string})=>invoke<FileSnapshotV2>('model_v2_stage_credential',{request}),
   measureNodes:(request:{expected:ReadBaseV2;channelId:string;nodeIds:string[];discoveryKind:DiscoveryKindV2;runId:string})=>invoke<NodeMeasurementSetV2>('model_v2_measure_nodes',{request}),
@@ -151,6 +160,10 @@ export const modelV2Api={
   executionDirectory:()=>invoke<ExecutionDirectoryV2>('model_v2_execution_directory'),
   agentSettings:()=>invoke<AgentSettingsV2|null>('model_agent_preferences'),
   bindAgent:(settings:AgentSettingsV2)=>invoke<AgentSettingsV2>('model_v2_bind_agent',{settings}),
+  externalPrepare:(request:GenerateIntentV2)=>invoke<ExternalBrokerBundleV2>('model_v2_external_prepare',{request}),
+  externalActivate:(taskId:string,preparedTicket:string)=>invoke<void>('model_v2_external_activate',{taskId,preparedTicket}),
+  externalRevoke:(taskId:string)=>invoke<void>('model_v2_external_revoke',{taskId}),
+  externalRun:(taskId:string)=>invoke<ExternalRunViewV2>('model_v2_external_run',{taskId}),
   agentBuffer:(request:EditingBufferInputV2)=>invoke<EditingBufferV2>('model_v2_agent_buffer',{request}),
   agentPrepare:(request:GenerateIntentV2)=>invoke<RunTicketV2>('model_v2_agent_prepare',{request}),
   agentGenerate:(runId:string)=>invoke<GeneratedReviewV2>('model_v2_agent_generate',{runId}),

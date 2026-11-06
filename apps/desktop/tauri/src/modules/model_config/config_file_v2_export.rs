@@ -4,7 +4,7 @@ use super::*;
 use crate::modules::model_config::{
     content_versions::{self, TimeKind},
     file_objects_v2::{self, CapturedObjects, SavedObjects, SecretValues},
-    file_transfer_v2::DraftFileCaptureV2,
+    file_transfer_v2::{DraftFileCaptureV2, DraftFileIntentsV2},
     objects_overlay_v2::UsageV2,
     portable_v2::{self, ModelExportScopeV2},
     saved_objects_capture_v2::{
@@ -273,12 +273,65 @@ fn validate_aliases(
     }
     Ok(())
 }
+/// Backend-only historical policy projection; callers first validate exact
+/// image/source identity. No UI deserializer can supply this authority.
+pub(super) fn project_trusted_draft(
+    d: &Path,
+    state: &StoreSnapshotV2,
+    draft: &DraftV2,
+    raw: Value,
+) -> Result<DraftProjectionV2> {
+    render(
+        d,
+        state,
+        draft,
+        raw,
+        SaveRequestV2 {
+            expected: draft.base.clone(),
+            edits: vec![],
+            channel_intents: vec![],
+            scope_channel_id: None,
+        },
+    )
+    .map(|p| p.dto)
+}
 /// Public nonwrite intent projection. The original draft remains unchanged.
 pub fn project(d: &Path, h: &Path, request: SaveRequestV2) -> Result<DraftProjectionV2> {
     let expected = request.expected.clone();
     with_draft(d, h, &expected, |state, draft, raw| {
+        if draft.policy.recovery_id.is_some() {
+            super::history::validate_save(d, h, state, draft, &request)?;
+        }
         render(d, state, draft, raw, request).map(|p| p.dto)
     })
+}
+fn validate_capture_request(request: &CaptureRequestV2) -> ModelResult<()> {
+    capture::validate_request(request)?;
+    let s = &request.selection;
+    if s.usage != UsageV2::LocalFile
+        || s.channels.is_empty()
+        || s.include_global_template_refs
+        || !s.adopt_template_defaults.is_empty()
+        || s.channels
+            .iter()
+            .any(|c| c.include_key || c.include_authorization)
+        || s.manager.preferences
+        || s.manager.extensions
+        || !s.manager.account_ids.is_empty()
+        || !s.manager.webdav_ids.is_empty()
+        || !s.manager.webdav_password_ids.is_empty()
+        || !s.skill_names.is_empty()
+        || !s.mcp_sources.is_empty()
+        || !s.extension_credentials.skill_names.is_empty()
+        || !s.extension_credentials.mcp_names.is_empty()
+        || !request.mcp_clients.is_empty()
+    {
+        return Err(invalid(
+            "capture_draft_scope",
+            "显式草稿导出仅支持无凭据的LocalFile渠道与精确模版依赖",
+        ));
+    }
+    Ok(())
 }
 impl DraftFileCaptureV2 for ConfigDraftFileCaptureV2 {
     fn capture(
@@ -289,52 +342,48 @@ impl DraftFileCaptureV2 for ConfigDraftFileCaptureV2 {
         request: &CaptureRequestV2,
         _credentials: &dyn CaptureCredentialsV2,
     ) -> ModelResult<CapturedSnapshotV2> {
-        capture::validate_request(request)?;
-        let s = &request.selection;
-        if s.usage != UsageV2::LocalFile
-            || s.channels.is_empty()
-            || s.include_global_template_refs
-            || !s.adopt_template_defaults.is_empty()
-            || s.channels
-                .iter()
-                .any(|c| c.include_key || c.include_authorization)
-            || s.manager.preferences
-            || s.manager.extensions
-            || !s.manager.account_ids.is_empty()
-            || !s.manager.webdav_ids.is_empty()
-            || !s.manager.webdav_password_ids.is_empty()
-            || !s.skill_names.is_empty()
-            || !s.mcp_sources.is_empty()
-            || !s.extension_credentials.skill_names.is_empty()
-            || !s.extension_credentials.mcp_names.is_empty()
-            || !request.mcp_clients.is_empty()
-        {
-            return Err(invalid(
-                "capture_draft_scope",
-                "显式草稿导出仅支持无凭据的LocalFile渠道与精确模版依赖",
-            ));
-        }
-        with_draft(d, h, expected, |state, draft, raw| {
-            capture_locked(d, state, draft, raw, request)
-        })
-        .map_err(mapped)
+        capture_typed_intents(
+            d,
+            h,
+            request,
+            SaveRequestV2 {
+                expected: expected.clone(),
+                edits: vec![],
+                channel_intents: vec![],
+                scope_channel_id: None,
+            },
+        )
+    }
+    fn capture_with_intents(
+        &self,
+        d: &Path,
+        h: &Path,
+        expected: &ReadBaseV2,
+        request: &CaptureRequestV2,
+        _credentials: &dyn CaptureCredentialsV2,
+        intents: DraftFileIntentsV2,
+    ) -> ModelResult<CapturedSnapshotV2> {
+        capture_typed_intents(
+            d,
+            h,
+            request,
+            SaveRequestV2 {
+                expected: expected.clone(),
+                edits: intents.edits,
+                channel_intents: intents.channel_intents,
+                scope_channel_id: None,
+            },
+        )
     }
 }
-fn capture_locked(
-    d: &Path,
-    state: &StoreSnapshotV2,
-    draft: &DraftV2,
-    raw: Value,
-    request: &CaptureRequestV2,
-) -> Result<CapturedSnapshotV2> {
+fn export_scope(policy: &PolicyV2, request: &CaptureRequestV2) -> Result<ModelExportScopeV2> {
     let s = &request.selection;
     let mut scope = ModelExportScopeV2 {
         template_refs: s.template_refs.clone(),
         ..Default::default()
     };
     for c in &s.channels {
-        let channel = draft
-            .policy
+        let channel = policy
             .channels
             .iter()
             .find(|v| v.id == c.portable_channel_id)
@@ -364,6 +413,38 @@ fn capture_locked(
             scope.channel_ids.insert(c.portable_channel_id.clone());
         }
     }
+    Ok(scope)
+}
+fn capture_typed_intents(
+    d: &Path,
+    h: &Path,
+    request: &CaptureRequestV2,
+    intent: SaveRequestV2,
+) -> ModelResult<CapturedSnapshotV2> {
+    validate_capture_request(request)?;
+    let expected = intent.expected.clone();
+    with_draft(d, h, &expected, |state, draft, raw| {
+        if intent.edits.is_empty() && intent.channel_intents.is_empty() {
+            return capture_locked(d, state, draft, raw, request);
+        }
+        if draft.policy.recovery_id.is_some() {
+            super::history::validate_save(d, h, state, draft, &intent)?;
+        }
+        let projection = render(d, state, draft, raw, intent)?;
+        let scope = export_scope(&projection.dto.intended, request)?;
+        capture_projection(d, state, draft, request, &scope, projection)
+    })
+    .map_err(mapped)
+}
+fn capture_locked(
+    d: &Path,
+    state: &StoreSnapshotV2,
+    draft: &DraftV2,
+    raw: Value,
+    request: &CaptureRequestV2,
+) -> Result<CapturedSnapshotV2> {
+    let s = &request.selection;
+    let scope = export_scope(&draft.policy, request)?;
     // Reuse the v6 scoper, retaining server-owned connection identities. This
     // prevents an unrelated draft/model with missing protocol from blocking a
     // selected export or leaking into its actual compiled public projection.
@@ -415,8 +496,19 @@ fn capture_locked(
             scope_channel_id: None,
         },
     )?;
+    capture_projection(d, state, draft, request, &scope, projection)
+}
+fn capture_projection(
+    d: &Path,
+    state: &StoreSnapshotV2,
+    draft: &DraftV2,
+    request: &CaptureRequestV2,
+    scope: &ModelExportScopeV2,
+    projection: Projection,
+) -> Result<CapturedSnapshotV2> {
+    let s = &request.selection;
     let mut package =
-        portable_v2::export_portable_models_v2(&state.library, &projection.dto.intended, &scope)?;
+        portable_v2::export_portable_models_v2(&state.library, &projection.dto.intended, scope)?;
     capture::exact_revisions(&mut package, &state.library, s).map_err(|e| error(&e.code))?;
     let mut sources = BTreeMap::new();
     for choice in &s.channels {

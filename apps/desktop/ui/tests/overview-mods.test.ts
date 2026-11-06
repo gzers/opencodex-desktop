@@ -120,8 +120,8 @@ describe('overview module cards', () => {
     expect(route.current).toBe('overview')
     const modal=document.querySelector('dialog[open]')
     expect(modal?.textContent).toContain('尚未选择文件')
-    const read=[...modal!.querySelectorAll('button')].find(b=>b.textContent==='读取配置')!
-    expect(read.disabled).toBe(true)
+    const read=[...modal!.querySelectorAll('button')].find(b=>b.textContent==='选择本机文件')!
+    expect(read.disabled).toBe(false)
     const cancel=[...modal!.querySelectorAll('button')].find(b=>b.textContent==='取消')!
     cancel.click();await flushPromises()
     expect(route.current).toBe('overview')

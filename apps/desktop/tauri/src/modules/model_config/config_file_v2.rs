@@ -308,6 +308,13 @@ pub fn read_existing(root: &Path, home: &Path, request: ReadRequestV2) -> Result
     {
         return Err(error("model_read_stale"));
     }
+    if state
+        .draft
+        .as_ref()
+        .is_some_and(|d| d.policy.recovery_id.is_some())
+    {
+        return Err(error("model_history_draft_active"));
+    }
     let bindings = bindings(
         root,
         &raw,
@@ -756,6 +763,23 @@ fn transform_draft_v2(
                 .insert(channel.connection.provider_id.clone(), seed);
         }
     }
+    if intended.recovery_id.is_some() {
+        // The trusted recovery guard fixes this exact target. Express removed
+        // channels through the existing Delete transform, never raw rewrites.
+        let removed = state
+            .policy
+            .channels
+            .iter()
+            .filter(|c| !intended.channels.iter().any(|v| v.id == c.id))
+            .cloned()
+            .collect::<Vec<_>>();
+        for channel in removed {
+            request.channel_intents.push(ChannelIntentV2::Delete {
+                channel_id: channel.id.clone(),
+            });
+            intended.channels.push(channel);
+        }
+    }
     let mut mappings = state.mappings.clone();
     // Name is the product authority: even an already-equal historical label/key
     // pair is reconciled on explicit Save, rather than waiting for another edit.
@@ -1017,6 +1041,7 @@ pub fn save_with_credentials(
     {
         return Err(error("model_save_stale"));
     }
+    let history_library = history::validate_save(root, home, &state, draft, &request)?;
     validate_save_scope_v2(&request)?;
     let before_observed = provider_import::read_policy_v2(
         &raw,
@@ -1027,8 +1052,11 @@ pub fn save_with_credentials(
         &bindings(root, &raw, &state.policy, Some(draft), &state.mappings)?,
     )?;
     let before_save_state = saved_state(&state.library, &before_observed, &raw)?;
-    let (intended, mut mappings) =
+    let (mut intended, mut mappings) =
         transform_draft_v2(root, &source, &state, draft, &mut raw, &mut request)?;
+    // A recovery authorization is consumed only by this guarded Save; it is
+    // never persisted as authority in the actual saved Policy.
+    intended.recovery_id = None;
     for channel in &intended.channels {
         let provider = raw
             .get_mut("providers")
@@ -1107,6 +1135,25 @@ pub fn save_with_credentials(
             after: Some(w.after),
         })
         .collect::<Vec<_>>();
+    if let Some(library) = &history_library {
+        let target = root.join(store_v2::LIBRARY_PATH);
+        safety::check_path(root, &target, true).map_err(io)?;
+        let before = if target.exists() {
+            Some(safety::read_file(&target, 32 * 1024 * 1024).map_err(io)?)
+        } else {
+            None
+        };
+        if digest(before.as_deref().unwrap_or_default())
+            != state.digests.files[store_v2::LIBRARY_PATH]
+        {
+            return Err(error("model_history_stale"));
+        }
+        writes.push(WriteV2 {
+            target: TargetV2::Manager(store_v2::LIBRARY_PATH.into()),
+            before,
+            after: Some(canonical_bytes(library)?),
+        });
+    }
     writes.insert(
         0,
         WriteV2 {
@@ -1182,7 +1229,11 @@ pub fn save_with_credentials(
         before: Some(draft_bytes),
         after: retained_draft,
     });
-    let after_save_state = saved_state(&state.library, &compiled.policy, &compiled.next_config)?;
+    let after_save_state = saved_state(
+        history_library.as_ref().unwrap_or(&state.library),
+        &compiled.policy,
+        &compiled.next_config,
+    )?;
     let _version_lock =
         crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
     if before_save_state != after_save_state {
@@ -1353,6 +1404,13 @@ pub fn stage_connection(
         || state.draft.as_ref().map(|d| &d.base) != request.expected.as_ref()
     {
         return Err(error("model_read_stale"));
+    }
+    if state
+        .draft
+        .as_ref()
+        .is_some_and(|d| d.policy.recovery_id.is_some())
+    {
+        return Err(error("model_history_draft_active"));
     }
     let mut policy = state
         .draft
@@ -1757,6 +1815,9 @@ pub fn copy_channel(root: &Path, home: &Path, request: CopyChannelV2) -> Result<
         || policy_semantic_digest_v2(&state.policy)? != request.expected.policy_digest
     {
         return Err(error("model_read_stale"));
+    }
+    if draft.policy.recovery_id.is_some() {
+        return Err(error("model_history_draft_active"));
     }
     if draft
         .policy
@@ -2240,6 +2301,9 @@ pub fn stage_credential_with_store(
     {
         return Err(error("model_read_stale"));
     }
+    if draft.policy.recovery_id.is_some() {
+        return Err(error("model_history_draft_active"));
+    }
     let channel = draft
         .policy
         .channels
@@ -2680,3 +2744,10 @@ pub fn accept_agent_library(
 
 #[path = "config_file_v2_export.rs"]
 pub mod export;
+
+#[path = "config_file_v2_history.rs"]
+pub mod history;
+
+#[path = "config_file_v2_discard.rs"]
+mod draft_discard;
+pub use draft_discard::discard;

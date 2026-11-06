@@ -386,6 +386,21 @@ pub fn run() {
                 working_directory: home.clone(),
                 opencodex_home,
             });
+            let recovery_process = crate::state::ProcessContext {
+                runtime: runtime.clone(), working_directory: home.clone(),
+                opencodex_home: crate::modules::data_root::resolve_opencodex_home(&runtime_config),
+            };
+            app.manage(crate::commands::runtime_recovery_v2::SharedRuntimeRecoveryV2::new(
+                crate::commands::runtime_recovery_v2::RecoveryContext::new(
+                    runtime.clone(), data_root.clone(), recovery_process.opencodex_home.clone(), recovery_process.clone(),
+                )?, runtime_install.clone(),
+                std::sync::Arc::new(crate::commands::runtime_recovery_v2_sources::FixedResourceSourceResolver::from_compiled(
+                    app.path().resource_dir()?.join("runtime-bundle"), offline_drop,
+                )?),
+                std::sync::Arc::new(crate::commands::runtime_recovery_v2_owner::SystemServiceOwnerProofProvider::new(
+                    install_root.clone(), recovery_process,
+                )?),
+            ));
             app.manage(crate::commands::config_file_transfer_v2::SharedConfigFileTransferV2(
                 std::sync::Arc::new(std::sync::Mutex::new(
                     crate::modules::model_config::file_transfer_v2::FileTransferOwnerV2::new(
@@ -395,6 +410,8 @@ pub fn run() {
                         operation: "initialize configuration file owner".into(), detail: e.code,
                     })?.with_draft_capture(std::sync::Arc::new(
                         crate::modules::model_config::config_file::v2::export::ConfigDraftFileCaptureV2,
+                    )).with_namespace_receive(std::sync::Arc::new(
+                        crate::modules::model_config::config_file::v2::receive::SystemNamespaceReceiveV2,
                     )),
                 )),
             ));
@@ -559,6 +576,9 @@ pub fn run() {
             }
         })
         .invoke_handler(tauri::generate_handler![
+            commands::config_file_transfer_v2::catalog_config_file_v2,
+            commands::config_file_transfer_v2::file_v2_read_scope,
+            commands::config_file_transfer_v2::file_v2_save_scope,
             commands::config_file_transfer_v2::prepare_config_file_export_v2,
             commands::config_file_transfer_v2::prepare_draft_config_file_export_v2,
             commands::config_file_transfer_v2::save_config_file_export_v2,
@@ -593,6 +613,7 @@ pub fn run() {
             commands::config_sync_v2::config_v2_result,
             commands::config_sync_v2::config_v2_verify,
             commands::config_sync_v2::config_v2_resume,
+            commands::config_sync_v2::config_v2_resume_receive,
             commands::config_sync_v2::config_v2_resume_preflight,
             commands::config_sync_v2::config_v2_cancel,
             commands::config_sync_v2::config_v2_recovery_preview,
@@ -620,6 +641,10 @@ pub fn run() {
             commands::model_config_v2::model_v2_stage_connection,
             commands::model_config_v2::model_v2_file_save,
             commands::model_config_v2::model_v2_file_project,
+            commands::model_config_v2::model_v2_file_discard,
+            commands::model_config_v2::model_v2_file_history,
+            commands::model_config_v2::model_v2_file_history_prepare,
+            commands::model_config_v2::model_v2_file_history_accept,
             commands::model_config_v2::model_v2_copy_channel,
             commands::model_config_v2::model_v2_discover,
             commands::model_config_v2::model_v2_stage_credential,
@@ -755,6 +780,10 @@ pub fn run() {
             commands::migration::import_migration,
             crate::infrastructure::app_activity::app_foreground,
             commands::drain_tray_requests,
+            commands::runtime_recovery_v2::runtime_recovery_v2_prepare,
+            commands::runtime_recovery_v2::runtime_recovery_v2_apply,
+            commands::runtime_recovery_v2::runtime_recovery_v2_status,
+            commands::runtime_recovery_v2::runtime_recovery_v2_cancel,
             commands::runtime::runtime_source,
             commands::runtime::runtime_protection_status,
             commands::runtime::retry_runtime_protection,

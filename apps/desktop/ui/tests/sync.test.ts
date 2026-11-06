@@ -1,8 +1,13 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import {beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import type { SyncConfigDto, SyncOperationResultDto } from '@/features/sync/api'
-import { useSyncStore } from '@/features/sync/store'
+import {useSyncStore} from '@/features/sync/store'
+import {useConfigSyncV2Store} from '@/features/sync/store-v2'
+import {catalog,preview,fact,id} from './helpers/syncWorkspaceV2'
+import {mount,flushPromises} from '@vue/test-utils'
+import SyncDialogHost from '@/features/sync/SyncDialogHost.vue'
+import type {OperationFactV2} from '@/features/sync/api-v2'
 
 const invoke = vi.hoisted(() => vi.fn())
 vi.mock('@tauri-apps/api/core', () => ({ invoke }))
@@ -78,32 +83,8 @@ describe('sync conflict notification refresh', () => {
     localStorage.clear();useSyncStore().adoptConfig(savedConfig())
   })
 
-  it('reloads notifications after a sync run', async () => {
-    invoke.mockImplementation((command: string) => {
-      if (command === 'run_sync_now') {
-        return Promise.resolve({
-          connectionState: 'conflict',
-          operationState: 'cancelled',
-          message: '检测到本地与远端冲突；已暂停覆盖并保留双方历史，请确认后重试。',
-          snapshotId: 'snap',
-          backupId: null,
-          etag: null,
-        })
-      }
-      if (command === 'list_notifications') {
-        return Promise.resolve({ items: [], aggregate: { total: 0, unread: 0, unresolved: 0, dangerUnread: 0 } })
-      }
-      return Promise.resolve(undefined)
-    })
-    const app = useAppStore()
-    expect(await app.runSyncNow()).toBe(false)
-    expect(app.webdavState).toBe('conflict')
-    await new Promise(resolve => setTimeout(resolve, 0))
-    expect(invoke).toHaveBeenCalledWith('run_sync_now')
-    await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith('list_notifications'))
-  })
+  it('reloads notifications after preparing a conflict and never confirms or calls the retired writer',async()=>{invoke.mockImplementation(async command=>command==='config_v2_catalog'?{...catalog(),cloudState:'conflict'}:command==='config_v2_preview'?Promise.reject({code:'sync_remote_conflict',step:'observe',retryability:'after_refresh',recoveryActions:[]}):{items:[]});const app=useAppStore();expect(await app.runSyncNow()).toBe(false);expect(app.webdavState).toBe('failed');expect(useConfigSyncV2Store().catalog?.cloudState).toBe('conflict');await flushPromises();expect(invoke).toHaveBeenCalledWith('config_v2_catalog',{readPassphrase:null});expect(invoke).toHaveBeenCalledWith('list_notifications');expect(invoke.mock.calls.some(c=>c[0]==='config_v2_confirm'||c[0]==='run_sync_now')).toBe(false)})
 })
-
 
 describe('sync terminal result is not command acknowledgement', () => {
   beforeEach(() => {
@@ -113,32 +94,12 @@ describe('sync terminal result is not command acknowledgement', () => {
   })
 
   it.each([
-    ['synced', 'succeeded', true],
-    ['failed', 'failed', false],
-    ['conflict', 'cancelled', false],
-    ['synced', 'validating', false],
-  ] as const)('projects %s / %s without inventing success', async (connectionState, operationState, expected) => {
-    const result: SyncOperationResultDto = {
-      connectionState, operationState, message: '终态说明', snapshotId: 'snap', backupId: null, etag: null,
-    }
-    invoke.mockImplementation((command: string) => Promise.resolve(command === 'run_sync_now' ? result : undefined))
-    const app = useAppStore()
-    expect(await app.runSyncNow()).toBe(expected)
-    expect(app.webdavState).toBe(operationState==='validating'?'connected':connectionState)
-    expect(app.syncStatus?.message).toBe(result.message)
-    expect(useSyncStore().running).toBe(false)
-    await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith('list_notifications'))
+    ['stored','observed_equal','observed_equal','settled','synced'],
+    ['unknown','unknown','unknown','settled','failed'],
+    ['stored','changed','conflict','settled','conflict'],
+    ['stored','unknown','unknown','payload_verified','connected'],
+  ] as const)('projects independent storage/local/remote facts: %s/%s/%s',async(storage,local,remote,phase,state)=>{
+    const result:OperationFactV2={...fact(),storageStatus:storage,phase,relation:{local,remote},...(state==='failed'?{failure:{code:'sync_network',step:'commit_put',retryability:'same_operation_read_only',recoveryActions:[]}}:{})};invoke.mockImplementation(async command=>command==='config_v2_catalog'?catalog():command==='config_v2_preview'?preview():command==='config_v2_confirm'?result:command==='list_notifications'?{items:[]}:null);const w=mount(SyncDialogHost,{global:{stubs:{UiDialog:true,ConfigFileTransferV2:true}}});try{const app=useAppStore(),s=useConfigSyncV2Store();expect(await app.runSyncNow()).toBe(false);expect(invoke.mock.calls.some(c=>c[0]==='config_v2_confirm')).toBe(false);await s.confirm();await flushPromises();expect(useSyncStore().webdavState).toBe(state);expect(s.fact).toEqual(result);expect(useSyncStore().running).toBe(false);expect(invoke).toHaveBeenCalledWith('list_notifications');expect(invoke.mock.calls.some(c=>c[0]==='run_sync_now')).toBe(false)}finally{w.unmount()}
   })
-
-  it('reports an uncertain failed execution and still refreshes its notifications', async () => {
-    invoke.mockImplementation((command: string) => command === 'run_sync_now'
-      ? Promise.reject(new Error('fixture execution failure')) : Promise.resolve(undefined))
-    const app = useAppStore()
-    expect(await app.runSyncNow()).toBe(false)
-    expect(app.webdavState).toBe('failed')
-    expect(app.syncStatus?.message).toContain('可能已有内容应用或上传')
-    expect(app.syncStatus?.message).not.toContain('本地内容未修改')
-    expect(useSyncStore().running).toBe(false)
-    await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith('list_notifications'))
-  })
+  it('retains an uncertain original execution and refreshes notifications without claiming rollback or no local writes',async()=>{invoke.mockImplementation(async command=>{if(command==='config_v2_catalog')return catalog();if(command==='config_v2_preview')return preview();if(command==='config_v2_confirm')throw {code:'sync_network'};if(command==='config_v2_result')return {...fact(),storageStatus:'unknown',relation:{local:'unknown',remote:'unknown'}};if(command==='list_notifications')return {items:[]};return null});const app=useAppStore(),s=useConfigSyncV2Store();expect(await app.runSyncNow()).toBe(false);await s.confirm();await flushPromises();expect(s.fact?.operationId).toBe(id(101));expect(s.fact?.storageStatus).toBe('unknown');expect(s.resultError).toBe('sync_network');expect(s.resultError).not.toContain('本地内容未修改');expect(invoke).toHaveBeenCalledWith('list_notifications');expect(useSyncStore().running).toBe(false)})
 })

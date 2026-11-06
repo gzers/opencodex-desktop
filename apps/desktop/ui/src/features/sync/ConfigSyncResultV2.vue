@@ -2,10 +2,11 @@
 import {computed,ref} from 'vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import UiButton from '@/components/ui/UiButton.vue'
-import {recoveryLabelsV2,type OperationFactV2,type RecoveryActionV2} from './api-v2'
-const props=defineProps<{open:boolean;fact:OperationFactV2|null;busy?:boolean;error?:string}>()
-const emit=defineEmits<{close:[];read:[];action:[value:RecoveryActionV2];cancel:[]}>()
+import {recoveryLabelsV2,type OperationFactV2,type RecoveryActionV2,type ResumePreflightV2} from './api-v2'
+const props=defineProps<{open:boolean;fact:OperationFactV2|null;busy?:boolean;error?:string;preflight?:ResumePreflightV2|null}>()
+const emit=defineEmits<{close:[];read:[];action:[value:RecoveryActionV2];cancel:[];resume:[];dismissResume:[];receive:[]}>()
 const resumeConfirm=ref<RecoveryActionV2|null>(null)
+const receiveConfirm=ref(false)
 const localLabels={not_compared:'未比较当前本机',observed_equal:'本次观察一致',changed:'本机另有变化',unknown:'当前关系未知'}
 const remoteLabels={unknown:'当前关系未知',observed_equal:'本次观察一致',descendant:'远端已有后续版本',conflict:'同代次存在并发配置',initialization_ambiguous:'多个初始化记录，普通写入停止',generation_changed:'原代次已变化'}
 const storageLabels={not_attempted:'未尝试写配置提交',unknown:'尚未确认原提交已存储',stored:'原提交与载荷已核验存储',invalid:'身份或内容未通过校验'}
@@ -32,8 +33,11 @@ function act(value:RecoveryActionV2){if(props.busy)return;if(value.kind==='resum
       <UiButton :disabled="busy" @click="emit('read')">读取本机操作记录</UiButton>
       <UiButton v-if="canStop" :disabled="busy" @click="emit('cancel')">{{mayHaveWritten?'停止后续动作':'取消本次操作'}}</UiButton>
       <UiButton v-for="(action,index) in fact?.recoveryActions??[]" :key="index" :disabled="busy" :variant="action.kind==='verify_original_upload'?'primary':'default'" @click="act(action)">{{recoveryLabelsV2[action.kind]}}</UiButton>
+      <UiButton v-if="fact?.kind==='download'&&fact.localApplyStatus!=='applied'" :disabled="busy" @click="receiveConfirm=true">核对记录并继续本机更新</UiButton>
     </template>
   </UiDialog>
+  <UiDialog :open="!!preflight" title="原上传续传准入" :busy="busy" @close="emit('dismissResume')"><template v-if="preflight"><p>{{preflight.reason}}</p><p>原操作 {{preflight.request.operationId}}</p><p>本次只补发原冻结字节；不重新选取今天的配置或创建上传。</p></template><template #actions="{close}"><UiButton :disabled="busy" @click="close">关闭</UiButton><UiButton variant="primary" :disabled="busy||!preflight?.canResume" @click="emit('resume')">确认补发原操作</UiButton></template></UiDialog>
+  <UiDialog :open="receiveConfirm" title="继续原下载的本机更新" :busy="busy" @close="receiveConfirm=false"><p>后端将核对原下载身份和模型已采用的实际证明，再继续剩余本机参与项。证明缺失时保留错误，需重新预览。</p><p>即使原操作结清，也不表示今天本机与云端一致。</p><template #actions="{close}"><UiButton :disabled="busy" @click="close">取消</UiButton><UiButton variant="primary" :disabled="busy" @click="emit('receive');receiveConfirm=false">确认核对原下载记录</UiButton></template></UiDialog>
   <UiDialog :open="!!resumeConfirm" title="确认续传原上传" :busy="busy" @close="resumeConfirm=null">
     <p>先只读核对原提交；仅在后端确认原冻结字节、端点、代次及来源/范围基准仍有效后补发同一操作。不会新建上传或重新初始化。</p>
     <p>{{resumeConfirm?.operationId}}</p>

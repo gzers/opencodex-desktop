@@ -73,16 +73,22 @@ pub async fn prepare_draft_config_file_export_v2(
     expected: ReadBaseV2,
     request: CaptureRequestV2,
     passphrase: Option<String>,
+    edits: Option<Vec<crate::modules::model_config::source_v2::ModelEditV2>>,
+    channel_intents: Option<Vec<crate::modules::model_config::config_file::v2::ChannelIntentV2>>,
     owner: tauri::State<'_, SharedConfigFileTransferV2>,
 ) -> ModelResult<ExportPlanV2> {
     let passphrase = passphrase.map(Zeroizing::new);
     work(owner.inner().clone(), move |owner| {
-        owner.prepare_draft_export(
+        owner.prepare_draft_export_with_intents(
             DraftExportRequestV2 {
                 expected,
                 capture: request,
             },
             passphrase,
+            crate::modules::model_config::file_transfer_v2::DraftFileIntentsV2 {
+                edits: edits.unwrap_or_default(),
+                channel_intents: channel_intents.unwrap_or_default(),
+            },
         )
     })
     .await
@@ -246,4 +252,69 @@ mod tests {
         assert!(write_and_verify(&link, b"no").is_err());
         assert_eq!(std::fs::read(&target).unwrap(), b"preserve");
     }
+}
+
+/// Local inventory has no WebDAV dependency. Stable source identity bookkeeping
+/// is local metadata, so it holds the same fixed-root admission as preparation.
+#[tauri::command]
+pub async fn catalog_config_file_v2(
+    data_root: tauri::State<'_, crate::state::SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> ModelResult<crate::modules::model_config::sync_service_v2::LocalFileCatalogV2> {
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        crate::modules::model_config::sync_service_v2::ProductionServiceBackendV2::new(
+            root,
+            home,
+            Arc::new(
+                crate::modules::model_config::saved_objects_capture_v2::SystemCaptureCredentialsV2,
+            ),
+        )?
+        .local_file_catalog()
+    })
+    .await
+    .map_err(|_| invalid("file_inventory", "本机配置目录读取中断，当前选择保持"))?
+}
+
+#[tauri::command]
+pub async fn file_v2_read_scope(
+    data_root: tauri::State<'_, crate::state::SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> ModelResult<Option<crate::modules::model_config::sync_service_v2::ScopeRequestV2>> {
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::model_config::file_scope_v2::read(&root, &home)
+    })
+    .await
+    .map_err(|_| invalid("file_scope_read", "本机文件范围读取中断"))?
+}
+#[tauri::command]
+pub async fn file_v2_save_scope(
+    selection: SelectionV2,
+    mcp_clients: std::collections::BTreeMap<String, String>,
+    assets_reviewed: bool,
+    data_root: tauri::State<'_, crate::state::SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> ModelResult<()> {
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        crate::modules::model_config::file_scope_v2::save(
+            &root,
+            &home,
+            crate::modules::model_config::sync_service_v2::ScopeRequestV2 {
+                selection,
+                mcp_clients,
+                assets_reviewed,
+            },
+        )
+    })
+    .await
+    .map_err(|_| invalid("file_scope_save", "本机文件范围保存中断，当前选择保持"))?
 }

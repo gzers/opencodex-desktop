@@ -96,7 +96,7 @@ impl SecretValues {
     }
     /// Transfer ownership during a trusted identity projection without cloning
     /// secret values or exposing an IPC/Debug representation.
-    pub fn into_entries(self) -> impl Iterator<Item=(String,Zeroizing<String>)> {
+    pub fn into_entries(self) -> impl Iterator<Item = (String, Zeroizing<String>)> {
         self.values.into_iter()
     }
 }

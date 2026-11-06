@@ -168,7 +168,10 @@ async fn query_panel_metadata(
     let Some(home) = app.try_state::<crate::state::SharedHomeDir>() else {
         return Err(AppError::NotConfigured);
     };
-    let runtime=app.state::<std::sync::Arc<crate::modules::runtime::RuntimeHandle>>().inner().clone();
+    let runtime = app
+        .state::<std::sync::Arc<crate::modules::runtime::RuntimeHandle>>()
+        .inner()
+        .clone();
     let environment = crate::modules::preferences::network_environment_for_app(app, home.0.clone());
     let working = home.0.clone();
     let cache = app

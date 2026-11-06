@@ -594,7 +594,7 @@ fn rewrite_raw_tar(f: &mut Fixture, mutate: impl FnOnce(&mut Vec<u8>)) {
 }
 #[test]
 fn raw_tar_hardlink_fifo_device_pax_gnu_and_dot_paths_refused() {
-    for kind in [b'1', b'6', b'3', b'4', b'x', b'g', b'L', b'K', b'S'] {
+    for kind in *b"1634xgLKS" {
         let mut f = Fixture::new();
         rewrite_raw_tar(&mut f, |bytes| {
             let mut h = tar::Header::new_ustar();

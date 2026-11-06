@@ -26,13 +26,18 @@ export interface SourceGuardV2 {savedSourceDigest:string;scopeDigest:string;mcpS
 export interface UploadPlanV2 {dtoVersion:1;operationId:string;planDigest:string;bindingId:string;initialization:'none'|'on_confirm';generation?:GenerationRefV2;parents:CommitRefV2[];intent:'update'|'resolve';resolution?:{selectionMode:'head'|'merged';selectedHead?:CommitRefV2;scopeDigest:string;previewDigest:string};payloadDigest:string;payloadBytes:number;payloadSchema:PayloadSchemaRefV2;protectionMode:'plain'|'protected';sourceGuard:SourceGuardV2;expectedViewDigest:string;preparedAt:string;expiresAt:string}
 export interface DownloadPlanV2 {dtoVersion:1;operationId:string;planDigest:string;bindingId:string;generation:GenerationRefV2;head:CommitRefV2;payloadDigest:string;scopeDigest:string;targetDigest:string;expectedViewDigest:string;backupBeforeUpdate:boolean;preparedAt:string;expiresAt:string}
 export interface ResumeUploadRequestV2 {operationId:string;expectedViewDigest:string;planDigest:string}
+export interface ResumePreflightV2 {request:ResumeUploadRequestV2;canResume:boolean;reason:string;observation:RemoteObservationV2}
+export interface RecoveryRequestV2 extends ScopeRequestV2 {generation:GenerationRefV2;head:CommitRefV2;mode:'download'|'export';backupBeforeUpdate:boolean}
+export interface RecoveryPlanV2 {dtoVersion:1;recoveryPlanId:string;planDigest:string;kind:'recovery_download'|'recovery_export';sourceBindingId:string;generation:GenerationRefV2;head:CommitRefV2;payloadDigest:string;payloadSchema:PayloadSchemaRefV2;scopeDigest:string;targetDigest?:string;expectedViewDigest:string;backupBeforeUpdate:boolean;preparedAt:string;expiresAt:string}
+export interface RecoveryPreviewV2 {sessionId:string;plan:RecoveryPlanV2;entries:DiffEntryV2[]}
+export interface RecoveryReceiptV2 {dtoVersion:1;recoveryPlanId:string;kind:'recovery_download'|'recovery_export';outcome:'applied'|'exported'|'unknown'|'failed';sourceBindingId:string;generation:GenerationRefV2;head:CommitRefV2;payloadDigest:string;artifactId?:string;finishedAt:string;failure?:SyncFailureV2;recoveryActions:RecoveryActionV2[]}
 export interface SelectionV2 {channels:{portableChannelId:string;modelIds:string[]|null;familyIds:string[]|null;includeConnection:boolean;includeKey:boolean;includeAuthorization:boolean}[];templateRefs:RefV2[];adoptTemplateDefaults:RefV2[];includeGlobalTemplateRefs:boolean;manager:{preferences:boolean;extensions:boolean;accountIds:string[];webdavIds:string[];webdavPasswordIds:string[]};skillNames:string[];mcpSources:{name:string;definitionDigest:string}[];extensionCredentials:{skillNames:string[];mcpNames:string[]};usage:'remote_sync'|'local_file'}
 export const emptySelectionV2=():SelectionV2=>({channels:[],templateRefs:[],adoptTemplateDefaults:[],includeGlobalTemplateRefs:false,manager:{preferences:false,extensions:false,accountIds:[],webdavIds:[],webdavPasswordIds:[]},skillNames:[],mcpSources:[],extensionCredentials:{skillNames:[],mcpNames:[]},usage:'remote_sync'})
 // Service DTOs read from the L2 contribution source. Final source SHA is pending;
 // only public command names explicitly frozen by L0 are called here.
 export type ObjectKindV2='channel'|'template'|'preferences'|'extensions'|'account'|'skill'|'mcp'
 export interface ModelInventoryV2 {rawModelId:string;label:string;observed:boolean;selected:boolean;availableLocal:boolean;availableCloud:boolean;familyId:string|null}
-export interface ObjectEntryV2 {kind:ObjectKindV2;id:string;label:string;availableLocal:boolean;availableCloud:boolean;modelIds:string[];models:ModelInventoryV2[];familyIds:string[];revisions:RefV2[];defaultRevision:RefV2|null;secretAvailable:boolean}
+export interface ObjectEntryV2 {kind:ObjectKindV2;id:string;label:string;availableLocal:boolean;availableCloud:boolean;modelIds:string[];models:ModelInventoryV2[];familyIds:string[];revisions:RefV2[];defaultRevision:RefV2|null;secretAvailable:boolean;keyAvailable?:boolean;authorizationAvailable?:boolean}
 export interface McpSourceEntryV2 {name:string;sources:{source:string;definitionDigest:string}[];differingFields:string[]}
 export interface ScopeRequestV2 {selection:SelectionV2;mcpClients:Record<string,string>;assetsReviewed:boolean}
 export interface CatalogV2 {connectionState:string;entries:ObjectEntryV2[];mcpSources:McpSourceEntryV2[];selected:ScopeRequestV2;initialized:boolean;cloudState:RemoteStateV2;heads:CommitRefV2[];recoveryActions:RecoveryActionV2[]}
@@ -47,6 +52,11 @@ export const configV2Api={
  result:(operationId:string)=>invoke<OperationFactV2>('config_v2_result',{operationId}),
  verify:(operationId:string,readPassphrase:string|null)=>invoke<OperationFactV2>('config_v2_verify',{operationId,readPassphrase}),
  resume:(request:ResumeUploadRequestV2,readPassphrase:string|null)=>invoke<OperationFactV2>('config_v2_resume',{request,readPassphrase}),
+ resumePreflight:(operationId:string,readPassphrase:string|null)=>invoke<ResumePreflightV2>('config_v2_resume_preflight',{operationId,readPassphrase}),
+ resumeReceive:(operationId:string,readPassphrase:string|null)=>invoke<OperationFactV2>('config_v2_resume_receive',{operationId,readPassphrase}),
+ recoveryPreview:(request:RecoveryRequestV2,readPassphrase:string|null)=>invoke<RecoveryPreviewV2>('config_v2_recovery_preview',{request,readPassphrase}),
+ recoveryConfirm:(request:{sessionId:string;planDigest:string})=>invoke<RecoveryReceiptV2>('config_v2_recovery_confirm',{request}),
+ recoveryResult:(recoveryPlanId:string)=>invoke<RecoveryReceiptV2>('config_v2_recovery_result',{recoveryPlanId}),
  cancel:(sessionId:string)=>invoke<OperationFactV2|null>('config_v2_cancel',{sessionId}),
  readScope:()=>invoke<ScopeRequestV2|null>('config_v2_read_scope'),
  saveScope:(request:ScopeRequestV2)=>invoke<void>('config_v2_save_scope',{selection:request.selection,mcpClients:request.mcpClients,assetsReviewed:request.assetsReviewed}),

@@ -45,7 +45,7 @@ describe('workspace settings contracts', () => {
     expect(app.syncRunning).toBe(false)
     expect(app.syncStatus?.operationState).toBe('failed')
     expect(app.webdavState).toBe('failed')
-    expect(invoke).toHaveBeenCalledWith('run_sync_now')
+    expect(invoke).toHaveBeenCalledWith('config_v2_catalog',{readPassphrase:null});expect(invoke.mock.calls.some(c=>c[0]==='config_v2_confirm'||c[0]==='run_sync_now')).toBe(false)
   })
 
   it('clears local logs and notifications through frozen commands', async () => {

@@ -284,7 +284,8 @@ pub(crate) fn resolve_with_install(
     check(&aggregate)?;
     check(&anchor)?;
     check(&anchor.join("manager-startup.lock"))?;
-    std::fs::create_dir_all(&anchor).map_err(|e| failure(e.to_string()))?;
+    crate::infrastructure::platform::create_private_dir_all(&anchor, 0o700)
+        .map_err(|e| failure(e.to_string()))?;
     let mut locks = vec![AppInstanceLock::acquire_named(
         &anchor,
         "manager-startup.lock",
@@ -328,7 +329,8 @@ pub(crate) fn resolve_with_install(
     let config = super::load_runtime_config(&desktop)?;
     let home = super::resolve_opencodex_home(&config);
     check(&home)?;
-    std::fs::create_dir_all(&home).map_err(|e| failure(e.to_string()))?;
+    crate::infrastructure::platform::create_private_dir_all(&home, 0o700)
+        .map_err(|e| failure(e.to_string()))?;
     super::set_private_directory(&home)?;
     super::set_private_directory(&aggregate)?;
     super::set_private_directory(&anchor)?;
