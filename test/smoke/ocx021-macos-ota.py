@@ -31,11 +31,12 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parent.parent
 DOCS = REPO.parent / 'governance-main'
 HISTORY = DOCS / '.adg/evidence/0.2.20/final-candidate-updates-20261104'
+FROM_VERSION, TO_VERSION = '0.2.20', '0.2.21'
 BASELINE_SOURCE = 'b1750f5cf78b294b2edb34b9674d8c707ef8f810'
 BASELINE_ARCHIVE_SHA = '8fe307fe2f5daaa87c41abbcccc38ef7db346cd5e88ee1456d3285bfb1d8d0f9'
 BASELINE_EXE_SHA = '544de246de1a498b8c681c0bd6ce254c7043ffe4b5fe754d67d3477a8fe4370b'
 BETA_URL = 'https://github.com/gzers/opencodex-desktop/releases/download/beta/latest.json'
-TAG_PREFIX = 'https://github.com/gzers/opencodex-desktop/releases/download/v0.2.21/'
+TAG_PREFIX = 'https://github.com/gzers/opencodex-desktop/releases/download/v' + TO_VERSION + '/'
 ASSET_NAME = 'OpenCodeX.Desktop_aarch64.app.tar.gz'
 NETWORK_HOSTS = {'github.com', 'api.github.com', 'release-assets.githubusercontent.com', 'objects.githubusercontent.com', 'github-releases.githubusercontent.com'}
 
@@ -149,7 +150,7 @@ class OtaRun:
             'OPENCODEX_SANDBOX': '1', 'OPENCODEX_SANDBOX_ROOT': str(self.root), 'OPENCODEX_SANDBOX_BOUNDARY': str(self.container)}
         self.axbin = self.container / 'ax'; self.monitor = self.container / 'monitor'; self.capwin = self.container / 'capwin'
         self.ocr = self.container / 'ocr'
-        self.report = {'schemaVersion': 1, 'mode': args.mode, 'result': 'incomplete', 'from': '0.2.20', 'to': '0.2.21',
+        self.report = {'schemaVersion': 1, 'mode': args.mode, 'result': 'incomplete', 'from': FROM_VERSION, 'to': TO_VERSION,
             'channel': 'existing production beta', 'container': str(self.container), 'root': str(self.root), 'environment': self.env,
             'app': str(self.app), 'checks': [], 'otaExecuted': False, 'targetSource': args.source_sha,
             'publicationAuthorized': bool(args.parent_beta_published), 'scriptSha256': sha(Path(__file__)),
@@ -196,10 +197,10 @@ class OtaRun:
     def prepare(self):
         archive = Path(self.args.baseline_archive).resolve(strict=True)
         signature = Path(self.args.baseline_signature).resolve(strict=True)
-        assert sha(archive) == BASELINE_ARCHIVE_SHA, 'Baseline must be the exact original public b175/0.2.20 release asset'
-        self.verify_signature(archive, signature, 'baseline020')
+        assert sha(archive) == BASELINE_ARCHIVE_SHA, 'Baseline must be the exact original public ' + FROM_VERSION + ' release asset'
+        self.verify_signature(archive, signature, 'baseline' + FROM_VERSION)
         self.baseline = unpack(archive, self.container / 'baseline-original')
-        self.baseline_inventory = self.verify_bundle(self.baseline, '0.2.20', BASELINE_SOURCE, 'baseline020')
+        self.baseline_inventory = self.verify_bundle(self.baseline, FROM_VERSION, BASELINE_SOURCE, 'baseline' + FROM_VERSION)
         assert sha(self.baseline / 'Contents/MacOS/opencodex-desktop') == BASELINE_EXE_SHA
         self.app.parent.mkdir(mode=0o700)
         result = cmd(['/usr/bin/ditto', self.baseline, self.app]); assert result.returncode == 0, result.stderr
@@ -239,9 +240,9 @@ class OtaRun:
             'historicalPassNotCountedFor021': True, 'rel23': str(DOCS / 'docs/03-开发实施/REL-OPENCODEX-DESKTOP-23.md')})
         dump(self.out / 'execution-contract.json', {'prepared': True, 'appLaunched': False, 'otaExecuted': False,
             'requiresParentNotification': True, 'requiredInputs': ['--mode execute', '--parent-beta-published', '--source-sha <full40>', '--publication-receipt <parent JSON>', '--target-archive <original release>', '--target-signature <original sidecar>'],
-            'requiredReceipt': {'schemaVersion': 1, 'parentNotified': True, 'betaPublished': True, 'tag': 'v0.2.21', 'sourceCommit': '<full40>', 'releaseId': '<integer>', 'archiveSha256': '<64hex>', 'betaManifestUrl': BETA_URL},
+            'requiredReceipt': {'schemaVersion': 1, 'parentNotified': True, 'betaPublished': True, 'tag': 'v' + TO_VERSION, 'sourceCommit': '<full40>', 'releaseId': '<integer>', 'archiveSha256': '<64hex>', 'betaManifestUrl': BETA_URL},
             'forbidden': ['new launcher for post-OTA readback', 'modified bundle or signing identity', 'fake IPC or patched updater endpoints', 'daily app restart/quit', 'keychain/signing secrets', 'real provider or sync requests']})
-        self.check('prepared-not-executed', baselineOriginal='0.2.20/b175', freshRoot=str(self.root), nativeHelperReusedUnmodified=True, betaNetworkQueried=False, appLaunched=False)
+        self.check('prepared-not-executed', baselineOriginal=FROM_VERSION + '/' + BASELINE_SOURCE, freshRoot=str(self.root), nativeHelperReusedUnmodified=True, betaNetworkQueried=False, appLaunched=False)
 
     def seed(self):
         preferences = source_config(BASELINE_SOURCE, 'apps/desktop/tauri/config/preferences.defaults.json')
@@ -272,8 +273,8 @@ class OtaRun:
             body = error.read(4096).decode('utf-8', errors='replace')
             rate_limited = error.code in [403, 429] and ('rate limit' in body.lower() or error.headers.get('X-RateLimit-Remaining') == '0')
             allowed_api_path = parsed.path in [
-                '/repos/gzers/opencodex-desktop/releases/tags/v0.2.21',
-                '/repos/gzers/opencodex-desktop/git/ref/tags/v0.2.21'] or bool(re.fullmatch(
+                '/repos/gzers/opencodex-desktop/releases/tags/v' + TO_VERSION,
+                '/repos/gzers/opencodex-desktop/git/ref/tags/v' + TO_VERSION] or bool(re.fullmatch(
                     r'/repos/gzers/opencodex-desktop/git/tags/[0-9a-f]{40}', parsed.path))
             dump(self.out / (name + '.anonymous-error.json'), {'url': url, 'httpStatus': error.code,
                 'body': body, 'rateLimited': rate_limited, 'remaining': error.headers.get('X-RateLimit-Remaining')})
@@ -300,24 +301,24 @@ class OtaRun:
     def publication(self):
         # This is called only in execute mode, after the parent notification.
         receipt = json.loads(Path(self.args.publication_receipt).read_text())
-        required = {'schemaVersion': 1, 'parentNotified': True, 'betaPublished': True, 'tag': 'v0.2.21',
+        required = {'schemaVersion': 1, 'parentNotified': True, 'betaPublished': True, 'tag': 'v' + TO_VERSION,
                     'sourceCommit': self.args.source_sha, 'betaManifestUrl': BETA_URL}
         for key, expected in required.items():
             if receipt.get(key) != expected: raise Blocked('Parent publication receipt mismatch: ' + key)
         if not isinstance(receipt.get('releaseId'), int) or not re.fullmatch('[0-9a-f]{64}', receipt.get('archiveSha256', '')):
             raise Blocked('Parent receipt needs the final public release ID and archive SHA-256')
         dump(self.out / 'parent-publication-receipt.json', receipt)
-        release = self.public_get('https://api.github.com/repos/gzers/opencodex-desktop/releases/tags/v0.2.21', 'public-release.json')
-        if release.get('draft') or release.get('id') != receipt['releaseId'] or release.get('tag_name') != 'v0.2.21':
-            raise Blocked('The exact parent-notified public 021 release is unavailable')
-        tag = self.public_get('https://api.github.com/repos/gzers/opencodex-desktop/git/ref/tags/v0.2.21', 'public-tag.json')['object']
+        release = self.public_get('https://api.github.com/repos/gzers/opencodex-desktop/releases/tags/v' + TO_VERSION, 'public-release.json')
+        if release.get('draft') or release.get('id') != receipt['releaseId'] or release.get('tag_name') != 'v' + TO_VERSION:
+            raise Blocked('The exact notified target release is unavailable')
+        tag = self.public_get('https://api.github.com/repos/gzers/opencodex-desktop/git/ref/tags/v' + TO_VERSION, 'public-tag.json')['object']
         if tag['type'] == 'tag':
             tag = self.public_get('https://api.github.com/repos/gzers/opencodex-desktop/git/tags/' + tag['sha'], 'public-annotated-tag.json')['object']
         if tag['type'] != 'commit' or tag['sha'] != self.args.source_sha: raise Blocked('Public tag does not resolve to the parent source SHA')
         manifest = self.public_get(BETA_URL, 'production-beta-manifest.json')
-        if manifest.get('version') != '0.2.21': raise Blocked('Production beta does not offer exactly 0.2.21')
+        if manifest.get('version') != TO_VERSION: raise Blocked('Production beta does not offer exactly ' + TO_VERSION)
         entry = manifest['platforms']['darwin-aarch64']
-        if urllib.parse.unquote(entry['url']) != TAG_PREFIX + ASSET_NAME: raise Blocked('Beta updater URL is not the original 021 release asset')
+        if urllib.parse.unquote(entry['url']) != TAG_PREFIX + ASSET_NAME: raise Blocked('Beta updater URL is not the original target release asset')
         archive = Path(self.args.target_archive).resolve(strict=True)
         signature = Path(self.args.target_signature).resolve(strict=True)
         digest = sha(archive)
@@ -325,13 +326,13 @@ class OtaRun:
         if digest != receipt['archiveSha256'] or asset.get('digest') != 'sha256:' + digest or asset['size'] != archive.stat().st_size:
             raise Blocked('Local target is not byte-identical to the exact published parent asset')
         if entry['signature'].strip() != signature.read_text().strip(): raise Blocked('Beta manifest and original sidecar signature differ')
-        self.verify_signature(archive, signature, 'target021')
+        self.verify_signature(archive, signature, 'target' + TO_VERSION)
         self.target = unpack(archive, self.container / 'target-original')
-        self.target_inventory = self.verify_bundle(self.target, '0.2.21', self.args.source_sha, 'target021')
+        self.target_inventory = self.verify_bundle(self.target, TO_VERSION, self.args.source_sha, 'target' + TO_VERSION)
         old_key = source_config(BASELINE_SOURCE, 'apps/desktop/tauri/tauri.conf.json')['plugins']['updater']['pubkey']
         new_key = source_config(self.args.source_sha, 'apps/desktop/tauri/tauri.conf.json')['plugins']['updater']['pubkey']
         if old_key != new_key: raise Blocked('Target changed the inherited updater trust key')
-        self.report['publication'] = {'releaseId': release['id'], 'tag': 'v0.2.21', 'sourceCommit': self.args.source_sha,
+        self.report['publication'] = {'releaseId': release['id'], 'tag': 'v' + TO_VERSION, 'sourceCommit': self.args.source_sha,
             'betaEndpoint': BETA_URL, 'publishedAssetSha256': digest, 'originalSidecarSha256': sha(signature)}
         self.check('parent-notified-public-beta-admission', **self.report['publication'])
 
@@ -377,7 +378,7 @@ class OtaRun:
         self.wait(lambda s: any(n.get('role') == 'AXWebArea' for n in s['nodes']), 30, 'old-native-window')
         self.ax('focus'); self.capture('old-native-window')
         log = self.root / 'logs/app.log'
-        assert 'startup version=0.2.20 commit=' + BASELINE_SOURCE in log.read_text()
+        assert 'startup version=' + FROM_VERSION + ' commit=' + BASELINE_SOURCE in log.read_text()
         self.check('old-original-native-launch', pid=self.pid, identity=identity, originalBundleUntouched=inventory(self.app) == self.baseline_inventory)
 
     def ax(self, verb, *args):
@@ -479,22 +480,22 @@ class OtaRun:
     def install(self):
         self.report['otaExecuted'] = True; self.flush()
         self.press('检查更新')
-        self.wait(lambda s: '0.2.21' in self.text(s) or '更新失败' in self.text(s), 120, 'production-beta-check')
+        self.wait(lambda s: TO_VERSION in self.text(s) or '更新失败' in self.text(s), 120, 'production-beta-check')
         snap = self.snapshot()
         if self.matches(snap, '桌面管理器'): self.press('桌面管理器')
         elif len(self.matches(snap, '查看详情')) == 2:
             # b175's update-center list has ordered manager/official sections.
             # This is the original 020 UI, not the 021 public-dialog selector.
-            assert '桌面管理器' in self.text(snap) and '0.2.21' in self.text(snap)
+            assert '桌面管理器' in self.text(snap) and TO_VERSION in self.text(snap)
             self.press('查看详情', index=0)
         elif not self.matches(snap, '确认更新'):
             # The old update-center list has a descriptive manager item label.
-            candidates = [n for n in snap['nodes'] if 'AXPress' in n.get('actions', []) and '桌面管理器' in str(n.get('title', '')) and '0.2.21' in str(n.get('title', ''))]
+            candidates = [n for n in snap['nodes'] if 'AXPress' in n.get('actions', []) and '桌面管理器' in str(n.get('title', '')) and TO_VERSION in str(n.get('title', ''))]
             if len(candidates) != 1: raise Blocked('Exact 021 manager update confirmation entry is not reachable')
             node = candidates[0]; self.ax('press', node['path'], node.get('title'))
         confirm = self.wait(lambda s: self.matches(s, '确认更新'), 45, 'production-target-confirm')
         text = self.text(confirm)
-        assert '0.2.20' in text and '0.2.21' in text and '测试通道' in text
+        assert FROM_VERSION in text and TO_VERSION in text and '测试通道' in text
         self.capture('production-target-confirm')
         self.press('确认更新')
         self.pending_visual = None
@@ -505,7 +506,7 @@ class OtaRun:
                 self.capture('actual-production-install-failed')
                 raise AssertionError('Actual production updater reported download/install failure; original version retained; no handoff/restart inferred')
             if self.matches(pending, '重启并应用更新'):
-                assert '0.2.20' in self.text(pending) and '0.2.21' in self.text(pending)
+                assert FROM_VERSION in self.text(pending) and TO_VERSION in self.text(pending)
                 dump(self.out / 'signed-installed-pending-restart-ax.json', pending)
                 break
             # macOS may stop answering old-process AX after its sealed bundle is
@@ -522,11 +523,11 @@ class OtaRun:
         else: raise Blocked('Real signed installed/pending-restart state was not reached')
         self.capture('signed-installed-pending-restart')
         receipt = json.loads((self.root / 'manager-state/update-handoff.json').read_text())
-        assert receipt['version'] == '0.2.21' and receipt['identity']['channel'] == 'beta'
+        assert receipt['version'] == TO_VERSION and receipt['identity']['channel'] == 'beta'
         dump(self.out / 'signed-installation-handoff.json', receipt)
         installed = inventory(self.app)
         assert installed == self.target_inventory, 'Installed whole bundle differs from published signed original'
-        self.verify_bundle(self.app, '0.2.21', self.args.source_sha, 'installed-before-restart')
+        self.verify_bundle(self.app, TO_VERSION, self.args.source_sha, 'installed-before-restart')
         assert self.old.poll() is None, 'Old running process ended before explicit restart'
         self.check('production-signed-download-and-inplace-install', wholeBundleExactlyOriginal=True, oldRunningPid=self.old.pid,
                    handoffProducedBy='production updater only after old-trust verification', changedUpdaterEndpoint=False,
@@ -554,7 +555,7 @@ class OtaRun:
         # OCR output or accept a fuzzy button: retain the exact installed stage,
         # both versions and unique exact restart action. The production signed
         # handoff and whole target bundle are separately mandatory before input.
-        if not all(value in plain for value in ['0.2.20', '0.2.21', '安装就绪', '重启并应用更新']):
+        if not all(value in plain for value in [FROM_VERSION, TO_VERSION, '安装就绪', '重启并应用更新']):
             raise Blocked('Visible real old->new signed pending-restart screen is not proved')
         hits = []
         for line in read.stdout.splitlines():
@@ -593,9 +594,9 @@ class OtaRun:
         dump(self.out / 'automatic-restart-identity.json', self.restarted)
         self.wait(lambda s: any(n.get('role') == 'AXWebArea' for n in s['nodes']), 35, 'same-auto-process-mounted')
         self.ax('focus'); self.capture('same-auto-process-mounted')
-        assert 'startup version=0.2.21 commit=' + self.args.source_sha in (self.root / 'logs/app.log').read_text()
+        assert 'startup version=' + TO_VERSION + ' commit=' + self.args.source_sha in (self.root / 'logs/app.log').read_text()
         assert inventory(self.app) == self.target_inventory
-        self.verify_bundle(self.app, '0.2.21', self.args.source_sha, 'automatic-process-installed021')
+        self.verify_bundle(self.app, TO_VERSION, self.args.source_sha, 'automatic-process-installed' + TO_VERSION)
         self.press('模型'); self.press('渠道模型'); self.press('编辑')
         snap = self.wait(lambda s: '渠道配置' in self.text(s), 20, 'same-auto-process-business-readback')
         assert 'ota021-preserve' in self.text(snap) and 'vendor/a:8b' in self.text(snap) and 'Mixed_Case/V2' in self.text(snap)
@@ -667,6 +668,7 @@ class OtaRun:
         self.flush()
 
 def main():
+    global FROM_VERSION, TO_VERSION, BASELINE_SOURCE, BASELINE_ARCHIVE_SHA, BASELINE_EXE_SHA, TAG_PREFIX
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--mode', choices=['prepare', 'execute'], default='prepare')
     parser.add_argument('--baseline-archive', default='/private/tmp/ocx020-final-updates-b1750f5c/assets/' + ASSET_NAME)
@@ -677,7 +679,14 @@ def main():
     parser.add_argument('--publication-receipt', help='Parent notification JSON with public release ID/source/archive SHA')
     parser.add_argument('--target-archive', help='Unmodified final public 021 macOS updater archive')
     parser.add_argument('--target-signature', help='Unmodified corresponding updater signature sidecar')
+    parser.add_argument('--adjacent', choices=['020-021', '021-022'], default='020-021')
     args = parser.parse_args()
+    if args.adjacent == '021-022':
+        FROM_VERSION, TO_VERSION = '0.2.21', '0.2.22'
+        BASELINE_SOURCE = '6e2197fd0b8a36dcb8d893b62693c5a2a77151cc'
+        BASELINE_ARCHIVE_SHA = '681e23f37f2c2cf52eb1d5dc409d988557fa0917afc42dd8c8a49eed302fd3c1'
+        BASELINE_EXE_SHA = '275dface26a0d1ab483a67303eb30df3253f1f050163548c51289f1812b8457e'
+        TAG_PREFIX = 'https://github.com/gzers/opencodex-desktop/releases/download/v' + TO_VERSION + '/'
     if args.mode == 'execute':
         if not args.parent_beta_published or not re.fullmatch('[0-9a-f]{40}', args.source_sha or '') or not all([args.publication_receipt, args.target_archive, args.target_signature]):
             parser.error('Execution is closed until parent beta publication notification + exact source SHA + receipt + original target archive/signature are provided')

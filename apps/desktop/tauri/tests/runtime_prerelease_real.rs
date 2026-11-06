@@ -29,6 +29,10 @@ fn actual_managed_prerelease_install_preserves_full_version_and_survives_failure
     let home = root.path().join("home");
     std::fs::create_dir_all(&home).unwrap();
     let data = root.path().join("data");
+    let config = data.join("opencodex-home/config.json");
+    std::fs::create_dir_all(config.parent().unwrap()).unwrap();
+    let config_bytes = br#"{"providers":{},"rollbackSentinel":true}"#;
+    std::fs::write(&config, config_bytes).unwrap();
     let cache = root.path().join("npm-cache");
     let runner = SystemNpmRunner::new(Some(home.clone()), cache);
     let probe = RealVersionProbe::default();
@@ -111,6 +115,41 @@ fn actual_managed_prerelease_install_preserves_full_version_and_survives_failure
         handle.store().load().resolved_version.as_deref(),
         Some(expected.as_str())
     );
-    uninstall_managed(&data, &prefix, &candidate.entry).unwrap();
-    println!("PASS: real managed stable→prerelease/offline entry/source version; failed install preserved candidate; isolated uninstall");
+    let rollback = installer
+        .install(&InstallRequest {
+            prefix: prefix.clone(),
+            source: InstallSource::Registry {
+                version: "2.97.0".into(),
+                proxy: None,
+            },
+            allow_scripts: false,
+            npm_path: Some(PathBuf::from(
+                std::env::var_os("OCX_TEST_RUNTIME_NPM").unwrap(),
+            )),
+            node_path: Some(PathBuf::from(
+                std::env::var_os("OCX_TEST_RUNTIME_NODE").unwrap(),
+            )),
+        })
+        .expect("explicit isolated rollback to the original upstream runtime");
+    assert_eq!(rollback.version, "2.97.0");
+    assert_eq!(
+        probe.probe(None, &rollback.entry).as_deref(),
+        Some("2.97.0")
+    );
+    assert_eq!(handle.refresh().kind, RuntimeSourceKind::Managed);
+    assert_eq!(
+        handle.store().load().resolved_version.as_deref(),
+        Some("2.97.0")
+    );
+    let package: serde_json::Value = serde_json::from_slice(
+        &std::fs::read(prefix.join("node_modules/@bitkyc08/opencodex/package.json")).unwrap(),
+    )
+    .unwrap();
+    assert!(package.get("post021Candidate").is_none());
+    assert!(!prefix
+        .join("node_modules/@bitkyc08/opencodex/src/codex/windows-process-identity.ts")
+        .exists());
+    assert_eq!(std::fs::read(config).unwrap(), config_bytes);
+    uninstall_managed(&data, &prefix, &rollback.entry).unwrap();
+    println!("PASS: real managed stable→prerelease/offline entry/source version; failed install preserved candidate; explicit stable rollback removed patch and preserved config; isolated uninstall");
 }

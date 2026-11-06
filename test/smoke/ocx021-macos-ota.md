@@ -1,3 +1,5 @@
+> 0.2.22接续：增加显式 --adjacent 021-022，原020-021默认行为保留。必须使用原始0.2.21 archive与sidecar（release源码6e2197fd0b8a36dcb8d893b62693c5a2a77151cc，archive SHA256 681e23f37f2c2cf52eb1d5dc409d988557fa0917afc42dd8c8a49eed302fd3c1）。传入本轮 --out；execute仍要求精确0.2.22公开beta回执、source SHA与原始目标归档/签名，缺参在任何根/网络/app操作前拒绝。所有原签名、整体包、真实输入、隔离环境及自动重启后同进程读回断言保持。prepare已在本轮真实旧原包上通过，不计OTA通过。
+
 # 0.2.20 → 0.2.21 macOS 相邻 OTA
 
 当前仅准备。没有父级明确通知最终 v0.2.21 已发布到既有 beta 并给出 source SHA、原包及公开发布回执时，不执行升级。0.2.19→0.2.20 的 REL23 / final-candidate-updates-20261104 只作为方法来源，不计为本轮验收。
