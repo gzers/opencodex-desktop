@@ -31,12 +31,12 @@ export function modelConfigPath(facts,expected){
  return win32.join(home,'config.json')
 }
 export function nativeModelKeyboardChecksRequired(version){
- assert(['0.2.16','0.2.17','0.2.18','0.2.19','0.2.20','0.2.21'].includes(version),'Unsupported native model UI acceptance version')
- return ['0.2.20','0.2.21'].includes(version)
+ assert(['0.2.16','0.2.17','0.2.18','0.2.19','0.2.20','0.2.21','0.2.22'].includes(version),'Unsupported native model UI acceptance version')
+ return ['0.2.20','0.2.21','0.2.22'].includes(version)
 }
 export function nativeModelUiContract(version){
  nativeModelKeyboardChecksRequired(version)
- const publicDialogs=version==='0.2.21'
+ const publicDialogs=['0.2.21','0.2.22'].includes(version)
  return {publicDialogs,confirmation:publicDialogs?'dialog.app-modal-dialog[open]':'.modal-mask',close:publicDialogs?'dialog[open] > .ui-dialog-header':'dialog[open]'}
 }
 export async function confirmNativeTemplateDefault({wait,click},version){

@@ -48,8 +48,10 @@ class Run(native.NativeRun):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for name in ['app','out','expected-build-commit']:p.add_argument('--'+name,required=True)
+    p.add_argument('--expected-version',choices=['0.2.21','0.2.22'],default='0.2.21')
+    p.add_argument('--stage',choices=['debug-preverify','signed-final-reverify'],default='debug-preverify')
     p.add_argument('--theme',choices=['light','dark'],required=True);p.add_argument('--effects',choices=['high','mid','low'],required=True)
-    args=p.parse_args();args.stage='debug-preverify';args.scope='all';args.hold_seconds=0
+    args=p.parse_args();args.scope='all';args.hold_seconds=0
     args.node=args.npm_cli=args.official_entry=args.bun=None
     run=Run(args)
     try:run.prepare();run.launch();run.verify()

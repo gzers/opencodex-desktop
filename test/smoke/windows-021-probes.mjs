@@ -11,7 +11,7 @@ const hash=bytes=>createHash('sha256').update(bytes).digest('hex')
 const notice='.notif-layer [data-notification-key^="model-save:"]'
 export function assert021Admission(facts,expected){
  assertModelSandbox(facts,expected)
- assert.equal(facts.about.version,'0.2.21','021 probes require the exact installed 0.2.21 version')
+ assert(['0.2.21','0.2.22'].includes(facts.about.version),'021/022 probes require an explicitly admitted installed version')
  return modelConfigPath(facts,expected)
 }
 async function freshAdmission(invoke,expected){
@@ -317,7 +317,7 @@ async function verifyWebdav(driver,expected,{startupVersionCheck=false}={}){
 
 export async function verifyWindows021Probes(driver,facts,expected){
  assert021Admission(facts,expected) // Invalid facts/version fail before any IPC/write.
- const result={schemaVersion:1,result:'fail',version:'0.2.21',platform:'Windows WebView2',admittedRoot:expected}
+ const result={schemaVersion:1,result:'fail',version:facts.about.version,platform:'Windows WebView2',admittedRoot:expected}
  try{
   result.admission=(await freshAdmission(driver.invoke,expected)).facts
   result.rename=await verifyRenameAndNotice(driver,expected)

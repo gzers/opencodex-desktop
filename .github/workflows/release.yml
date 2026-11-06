@@ -11,12 +11,18 @@ on:
         description: '已存在的 tag（如 v0.1.0）'
         required: true
         type: string
+      runtime_only:
+        description: '仅为已构建且完成原包补验的草稿补交维护运行包，不重新构建桌面包'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
 
 jobs:
   release:
+    if: github.event_name != 'workflow_dispatch' || !inputs.runtime_only
     strategy:
       fail-fast: false
       matrix:
@@ -135,6 +141,7 @@ jobs:
 
   maintained-runtime:
     needs: release
+    if: always() && (needs.release.result == 'success' || (github.event_name == 'workflow_dispatch' && inputs.runtime_only))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5

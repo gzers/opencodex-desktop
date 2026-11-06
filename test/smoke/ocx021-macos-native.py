@@ -199,8 +199,11 @@ class NativeRun:
         self.app = Path(args.app).expanduser().resolve(strict=True)
         self.info = plistlib.loads((self.app / 'Contents/Info.plist').read_bytes())
         self.exe = self.app / 'Contents/MacOS' / self.info['CFBundleExecutable']
-        if self.info['CFBundleIdentifier'] != 'com.gzers.opencodex.desktop' or self.info['CFBundleShortVersionString'] != '0.2.21':
-            raise ValueError('Expected the original OpenCodeX 0.2.21 app identity')
+        expected_version = getattr(args, 'expected_version', '0.2.21')
+        if expected_version not in ['0.2.21', '0.2.22']:
+            raise ValueError('Unadmitted native acceptance version')
+        if self.info['CFBundleIdentifier'] != 'com.gzers.opencodex.desktop' or self.info['CFBundleShortVersionString'] != expected_version:
+            raise ValueError('Expected the original OpenCodeX ' + expected_version + ' app identity')
         self.container = Path('/private/tmp') / ('ocx021-mac-native-' + str(uuid.uuid4()))
         self.container.mkdir(mode=0o700)
         self.root = self.container / 'root'
@@ -1007,6 +1010,7 @@ def main():
     p.add_argument('--out', default=str((docs if (docs / '.git').exists() else REPO) / '.adg/evidence/0.2.21/macos-native-20261104'))
     p.add_argument('--stage', choices=['debug-preverify', 'signed-final-reverify'], default='debug-preverify')
     p.add_argument('--expected-build-commit', help='Optional exact embedded startup commit admission, useful for the signed final original')
+    p.add_argument('--expected-version', choices=['0.2.21', '0.2.22'], default='0.2.21')
     p.add_argument('--scope', choices=['all', 'notice', 'overview'], default='all', help='Each scope always creates a fresh owned root')
     p.add_argument('--node', help='Absolute path to a real unmodified macOS Node binary; all three ready inputs are required')
     p.add_argument('--npm-cli', help='Absolute path to the original npm bin/npm-cli.js with its package dependencies')

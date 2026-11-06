@@ -24,32 +24,33 @@ test('writes require the exact admitted immutable and saved sandbox, never a rel
 test('invalid native roots are rejected before invoking any application command',async()=>{
  let invoked=false;await assert.rejects(verifyWindowsModelUi(async()=>{invoked=true},'.',facts,'C:\\other'));assert.equal(invoked,false)
 })
-test('020 and 021 require the native keyboard/menu checks while older admitted images retain baseline behavior',()=>{
- for(const version of ['0.2.20','0.2.21'])assert.equal(nativeModelKeyboardChecksRequired(version),true,version)
+test('020 through 022 require the native keyboard/menu checks while older admitted images retain baseline behavior',()=>{
+ for(const version of ['0.2.20','0.2.21','0.2.22'])assert.equal(nativeModelKeyboardChecksRequired(version),true,version)
  for(const version of ['0.2.16','0.2.17','0.2.18','0.2.19'])assert.equal(nativeModelKeyboardChecksRequired(version),false,version)
- for(const version of ['0.2.22','0.2.210','0.3.0','1.0.0','v0.2.21','0.2.021','0.2.21-rc.1','0.2.21 ','',null,undefined,21,{}]){
+ for(const version of ['0.2.23','0.2.210','0.3.0','1.0.0','v0.2.21','0.2.021','0.2.21-rc.1','0.2.21 ','',null,undefined,21,{}]){
   assert.throws(()=>nativeModelKeyboardChecksRequired(version),/Unsupported native model UI acceptance version/)
  }
 })
-test('native acceptance rejects unadmitted versions before IPC, while 020 and 021 enter the CDP driver',async()=>{
+test('native acceptance rejects unadmitted versions before IPC, while 020 through 022 enter the CDP driver',async()=>{
  const home=root+'\\opencodex-home'
  const bound={...facts,dataRoot:{...facts.dataRoot,opencodexHomeMode:'inside',currentOpencodexHome:home,opencodexHome:home}}
- for(const version of ['0.2.22','0.3.0','0.2.21-rc.1']){
+ for(const version of ['0.2.23','0.3.0','0.2.21-rc.1']){
   let calls=0
   await assert.rejects(verifyWindowsModelUi(async()=>{calls++},'.',{...bound,about:{...bound.about,version}},root),/Unsupported native model UI acceptance version/)
   assert.equal(calls,0,version)
  }
- for(const version of ['0.2.20','0.2.21']){
+ for(const version of ['0.2.20','0.2.21','0.2.22']){
   const reached=new Error('admitted native CDP driver reached');let calls=0
   await assert.rejects(verifyWindowsModelUi(async method=>{calls++;assert.equal(method,'Runtime.evaluate');throw reached},'.',{...bound,about:{...bound.about,version}},root),error=>error===reached)
   assert.equal(calls,1,version)
  }
 })
 test('021 uses public native AppModal/header X; the 020 upgrade image keeps its own mask/dialog contract',()=>{
+ assert.deepEqual(nativeModelUiContract('0.2.22'),{publicDialogs:true,confirmation:'dialog.app-modal-dialog[open]',close:'dialog[open] > .ui-dialog-header'})
  assert.deepEqual(nativeModelUiContract('0.2.21'),{publicDialogs:true,confirmation:'dialog.app-modal-dialog[open]',close:'dialog[open] > .ui-dialog-header'})
  assert.deepEqual(nativeModelUiContract('0.2.20'),{publicDialogs:false,confirmation:'.modal-mask',close:'dialog[open]'})
  for(const version of ['0.2.19','0.2.18','0.2.17','0.2.16'])assert.equal(nativeModelUiContract(version).publicDialogs,false)
- assert.throws(()=>nativeModelUiContract('0.2.22'))
+ assert.throws(()=>nativeModelUiContract('0.2.23'))
 })
 function defaultConfirmationFixture(version,mutate=()=>{}){
  class Dialog {
@@ -70,11 +71,11 @@ function defaultConfirmationFixture(version,mutate=()=>{}){
    scene.clicks.push({text,selector});assert.equal(text,'设为默认')
    if(scene.clicks.length===1){
     assert.equal(selector,'dialog[open]')
-    if(version==='0.2.21')scene.dialogs.push(confirmation)
+    if(['0.2.21','0.2.22'].includes(version))scene.dialogs.push(confirmation)
     else {parent.open=false;scene.mask=true}
     mutate(scene,{parent,confirmation,Dialog})
    }else{
-    assert.equal(selector,version==='0.2.21'?'dialog.app-modal-dialog[open]':'.modal-mask')
+    assert.equal(selector,['0.2.21','0.2.22'].includes(version)?'dialog.app-modal-dialog[open]':'.modal-mask')
     scene.commits++;confirmation.open=false;scene.mask=false;parent.open=true
    }
   },
@@ -82,11 +83,11 @@ function defaultConfirmationFixture(version,mutate=()=>{}){
  }
  return {driver,scene,parent,confirmation,document,Dialog}
 }
-for(const version of ['0.2.20','0.2.21'])test(version+' executes the actual default-confirmation driver through its real layer transition',async()=>{
+for(const version of ['0.2.20','0.2.21','0.2.22'])test(version+' executes the actual default-confirmation driver through its real layer transition',async()=>{
  const {driver,scene,parent,confirmation}=defaultConfirmationFixture(version)
  await confirmNativeTemplateDefault(driver,version)
  assert.equal(scene.commits,1);assert.equal(scene.clicks.length,2)
- assert.deepEqual(scene.observed[0],version==='0.2.21'?[parent,confirmation]:[],'021 keeps the exact parent while 020 suspends it')
+ assert.deepEqual(scene.observed[0],['0.2.21','0.2.22'].includes(version)?[parent,confirmation]:[],'021 keeps the exact parent while 020 suspends it')
  assert.deepEqual(scene.dialogs.filter(d=>d.open),[parent],'confirmation must return to the same single version-manager parent')
 })
 test('021 refuses a third layer, incorrect parent/child, duplicate AppModal or any legacy mask before committing',async()=>{

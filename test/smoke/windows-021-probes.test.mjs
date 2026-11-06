@@ -21,6 +21,7 @@ test('first-device native scope requires the complete independent fixture union,
 
 const root='C:\\runner\\owned-sandbox',home=root+'\\opencodex-home'
 const facts={about:{platform:'Windows',version:'0.2.21'},dataRoot:{currentDataRoot:root,activeDataRoot:root,runtimeActive:true,opencodexHomeMode:'inside',currentOpencodexHome:home,opencodexHome:home}}
+test('022 reuses the complete public contract under the same immutable root guard',()=>{assert.equal(assert021Admission({...facts,about:{...facts.about,version:'0.2.22'}},root),home+'\\config.json');assert.throws(()=>assert021Admission({...facts,about:{...facts.about,version:'0.2.23'}},root))})
 test('021 probes fail closed before IPC or filesystem access for wrong version/platform/immutable roots',async()=>{
  assert.equal(assert021Admission(facts,root),home+'\\config.json')
  for(const bad of [

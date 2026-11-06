@@ -66,7 +66,7 @@ export async function verify021ReadyWebdav(driver,output,facts,expected,prepared
   report.readiness=assert021ActualReadyEnvironment(report.environment,report.source)
   assert.deepEqual(await driver.invoke('get_sync_config'),prepared.config,'Ready WebDAV endpoint binding changed')
   observer=await observe021Ipc(driver)
-  await assertNoNativeUiFault(driver,'0.2.21')
+  await assertNoNativeUiFault(driver,facts.about.version)
   await driver.click('概览','.side')
   await driver.wait("!!document.querySelector('[data-testid=overview-remote-version]')||!!document.querySelector('[data-testid=environment-gate] .overview-gate-count')?.textContent.includes('/ 3')")
   // Do not wait past a settled setup gate and turn it into a silent skip.
@@ -74,7 +74,7 @@ export async function verify021ReadyWebdav(driver,output,facts,expected,prepared
   await driver.wait('(()=>{const scene=('+inspect021Webdav.toString()+')();return scene.versionCheckAvailable?scene.state==="failed"&&!scene.checkingVersion:scene.state==="configured"})()')
   report.scene=await driver.evaluate('('+inspect021Webdav.toString()+')()')
   report.readiness=assert021ReadyWebdavFacts(report.environment,report.source,installed,report.scene,endpoint)
-  await assertNoNativeUiFault(driver,'0.2.21')
+  await assertNoNativeUiFault(driver,facts.about.version)
   const shot=await driver.call('Page.captureScreenshot',{format:'png'})
   await writeFile(join(output,'native021-ready-webdav-'+stage+'.png'),Buffer.from(shot.data,'base64'))
   report.finalFacts=await currentFacts(driver,expected)
