@@ -266,6 +266,7 @@ pub fn read_policy_v2(
         let mut selected = BTreeSet::new();
         let mut model_providers = BTreeMap::new();
         let mut all_selected = true;
+        let mut enabled_groups = Vec::new();
         let mut aliases = aliases.into_iter().collect::<Vec<_>>();
         aliases.sort_by_key(|p| if p == &binding.provider_id { 0 } else { 1 });
         for alias in aliases {
@@ -338,6 +339,9 @@ pub fn read_policy_v2(
                 if seen.insert(id.clone()) {
                     ids.push(id.clone());
                 }
+            }
+            if !ids.is_empty() {
+                enabled_groups.push(raw.get("disabled") != Some(&Value::Bool(true)));
             }
             let pending = raw["initialModelSelection"]["version"] == 1
                 && raw["initialModelSelection"]["status"] == "pending";
@@ -425,6 +429,14 @@ pub fn read_policy_v2(
             }
         }
         channel.model_order = order;
+        // A persistent anchor may intentionally be an empty disabled provider.
+        // Its parked state must not disable an active sibling protocol group.
+        channel.connection.enabled = if enabled_groups.is_empty() {
+            old.map(|c| c.connection.enabled)
+                .unwrap_or(channel.connection.enabled)
+        } else {
+            enabled_groups.iter().any(|enabled| *enabled)
+        };
         channel.selection = if all_selected && selected.len() == channel.models.len() {
             ModelSelection::All
         } else if selected.is_empty() {
