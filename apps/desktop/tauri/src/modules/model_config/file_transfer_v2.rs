@@ -140,6 +140,10 @@ pub struct ImportObjectV2 {
     pub has_authorization: bool,
     pub has_credentials: bool,
     pub definition_digest: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub account_info: Option<crate::modules::sync::portable_accounts::AccountInfo>,
+    #[serde(default)]
+    pub information_supported: bool,
 }
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -798,6 +802,8 @@ fn object(kind: &str, id: &str) -> ImportObjectV2 {
         has_authorization: false,
         has_credentials: false,
         definition_digest: None,
+        account_info: None,
+        information_supported: false,
     }
 }
 fn object_inventory(o: &SavedObjects, inv: &Inventory) -> ModelResult<Vec<ImportObjectV2>> {
@@ -858,7 +864,11 @@ fn object_inventory(o: &SavedObjects, inv: &Inventory) -> ModelResult<Vec<Import
         out.push(object("extensions", "extensions"));
     }
     for a in &p.manager.accounts {
-        out.push(object("account", &a.id));
+        let mut row = object("account", &a.id);
+        row.label = a.label.clone();
+        row.information_supported = portable_accounts::information_supported(a);
+        row.account_info = Some(a.clone());
+        out.push(row);
     }
     for e in &p.manager.webdav {
         let mut row = object("webdav_candidate", &e.id);
