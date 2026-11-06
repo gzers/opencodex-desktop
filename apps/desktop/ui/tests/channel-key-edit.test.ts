@@ -13,6 +13,12 @@ function render(){const w=mount(ChannelEditor,{props:{channel:s.channels[0]!,eff
 beforeEach(async()=>{backend=workspaceBackend(ipc,['a']);s=await backend.load()})
 afterEach(()=>{wrappers.forEach(w=>w.unmount());wrappers=[]})
 describe('editing an existing channel Key',()=>{
+ it('rebases an untouched B Key intention after this session saves A, so B can be saved explicitly afterwards',async()=>{
+  backend=workspaceBackend(ipc,['a','b']);s=await backend.load();s.setKeyBuffer(id('b'),{action:'replace',value:'fixture-pending-b'});s.queueChannel({kind:'rename',channelId:id('a'),name:'A saved'});await s.saveChannels(id('a'));expect(s.fileError).toBe('');expect(backend.keys.get(id('b'))).toBe('fixture-original-b');expect(s.keyBuffer(id('b'))).toMatchObject({value:'fixture-pending-b'});await s.saveChannels(id('b'));expect(s.fileError).toBe('');expect(backend.keys.get(id('b'))).toBe('fixture-pending-b');expect(calls('model_v2_stage_credential')).toHaveLength(1);expect(calls('model_v2_stage_credential')[0]![1].request.channelId).toBe(id('b'))
+ })
+ it('does not rebind a pending replacement to changed node targets even if a source digest is unchanged',async()=>{
+  s.setKeyBuffer(id('a'),{action:'replace',value:'fixture-original-target-key'});const next={...s.file!,draft:{...s.file!.draft!,policy:{...s.file!.draft!.policy,channels:s.file!.draft!.policy.channels.map(c=>({...c,connection:{...c.connection,nodes:c.connection.nodes.map((n,index)=>index===0?{...n,url:'https://changed.example.test'}:n)}}))}}};s.file=next;await s.saveChannels(id('a'));expect(calls('model_v2_stage_credential')).toHaveLength(0);expect(s.keyBuffer(id('a'))).toMatchObject({value:'fixture-original-target-key'});expect(s.fileError).toContain('来源基准已变化')
+ })
  it('reads only on an explicit click, reveals and hides the stored value without changing configuration',async()=>{
   const w=render();await flushPromises();const key=w.get<HTMLInputElement>('input[aria-label="渠道替换API Key"]')
   expect(key.element.value).toBe('');expect(key.attributes('type')).toBe('password');expect(calls('model_v2_credential_view')).toHaveLength(0);expect(s.channelDirty(id('a'))).toBe(false)

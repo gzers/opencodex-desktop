@@ -45,6 +45,8 @@ export interface ReadExistingRequestV2 {expectedSource:string;expectedLibrary:st
 export interface ReadExistingResponseV2 {snapshot:FileSnapshotV2;results:ReadMatchDtoV2[]}
 export type ChannelIntentV2={kind:'rename';channelId:string;name:string}|{kind:'set_selection';channelId:string;selection:ModelSelectionV2}|{kind:'set_enabled';channelId:string;enabled:boolean}|{kind:'set_order';channelId:string;rawModelIds:string[]}|{kind:'set_defaults';channelId:string;rules:RulesV2}|{kind:'set_family_defaults';channelId:string;templateId:string;rules:RulesV2}|{kind:'set_naming';channelId:string;rawModelId:string;alias:string|null;displayName:string|null}|{kind:'set_template_refs';channelId:string;references:RefV2[]}|{kind:'delete';channelId:string}|{kind:'set_active_node';channelId:string;nodeId:string}
 export interface FileSaveRequestV2 {expected:ReadBaseV2;edits:ModelEditV2[];channelIntents:ChannelIntentV2[];scopeChannelId?:string|null}
+// L0/L1 frozen readonly contract. Registration/normal-crate SHA is tracked separately.
+export interface DraftProjectionV2 {expected:ReadBaseV2;effective:EffectiveModelV2[];intended:PolicyV2;digest:string}
 export interface StageConnectionRequestV2 {expected:ReadBaseV2|null;expectedSource:string;expectedLibrary:string;channelId:string|null;name:string;url:string;nodes?:ConnectionV2['nodes'];activeNodeId?:string;authMode:'key'|'none';apiKey:string|null;rawModelIds:string[];selectedModelIds:string[]}
 export interface DiscoverRequestV2 {discoveryKind:'openai_list'|'anthropic_list'|'google_list'|'ollama_list';url:string;apiKey:string|null}
 export interface DiscoverResponseV2 {dtoVersion:2;models:{rawModelId:string;label:string}[];elapsedMs:number}
@@ -139,6 +141,7 @@ export const modelV2Api={
   readExisting:(request:ReadExistingRequestV2)=>invoke<ReadExistingResponseV2>('model_v2_read_existing',{request}),
   stageConnection:(request:StageConnectionRequestV2)=>invoke<FileSnapshotV2>('model_v2_stage_connection',{request}),
   fileSave:(request:FileSaveRequestV2)=>invoke<FileSnapshotV2>('model_v2_file_save',{request}),
+  fileProject:(request:FileSaveRequestV2)=>invoke<DraftProjectionV2>('model_v2_file_project',{request}),
   copyChannel:(request:{expected:ReadBaseV2;channelId:string;name:string})=>invoke<FileSnapshotV2>('model_v2_copy_channel',{request}),
   credentialView:(channelId:string)=>invoke<{configured:boolean;value:string;source:string;viewable:boolean}>('model_v2_credential_view',{channelId}),
   stageCredential:(request:{expected:ReadBaseV2;channelId:string;action:'replace'|'clear';value?:string})=>invoke<FileSnapshotV2>('model_v2_stage_credential',{request}),
