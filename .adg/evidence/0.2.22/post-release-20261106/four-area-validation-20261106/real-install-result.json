@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-06",
+  "actualIsolatedInstaller": true,
+  "archive": "opencodex-2.97.0-post021.ownerquery.2.tgz",
+  "archiveSha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957",
+  "productionComponents": [
+    "RuntimeInstaller",
+    "SystemNpmRunner",
+    "RealVersionProbe"
+  ],
+  "checks": [
+    "Actual official maintained archive offline install and full entry version",
+    "Mismatched managed manifest blocks original prefix",
+    "New prefix recovery aligns actual package/manifest/source/launcher",
+    "Old mismatched package bytes and isolated business sentinel unchanged",
+    "Invalid replacement preserves actual source/launcher",
+    "Subsequent actual same-version reinstall",
+    "Pinned upstream stable2.97.0→adopted maintained revision exact version transition"
+  ],
+  "logs": [
+    "real-install-isolated-home-pass.log",
+    "real-install.log"
+  ],
+  "failuresPreserved": [
+    "npm cold-cache preparation timeout",
+    "scripts-disabled first install failed ScriptsRequired because missing optional platform dependency",
+    "scripts-enabled retry also failed on missing platform archive",
+    "subsequent copied exact existing global cache tarball into isolated cache and no-scripts install passed"
+  ],
+  "limits": [
+    "No service or Codex started; --version only",
+    "Stable upstream archive used solely as explicitly selected isolated transition fixture; daily adopted source not changed",
+    "First pass version probes inherited current process HOME; reviewed production RealVersionProbe environment then repeated with isolated probe HOME/CARGO_HOME/RUSTUP_HOME, final evidence uses isolated pass",
+    "Recovery UI/backup orchestration not yet implemented; core installer path validated",
+    "No Windows-specific code changed; no automatic Windows task triggered"
+  ]
+}

@@ -1,0 +1,19 @@
+   Compiling opencodex-desktop v0.2.22 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.89s
+     Running tests/post022_four_real_install_tmp.rs (target/debug/deps/post022_four_real_install_tmp-92c8251535fd896f)
+
+running 1 test
+test real_archive_real_npm_real_version_recovery ...
+thread 'real_archive_real_npm_real_version_recovery' (132215575) panicked at tests/post022_four_real_install_tmp.rs:7:102:
+actual maintained archive offline install: NpmFailed { exit_code: 1, detail: "npm install：npm error code 1；日志：/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/logs/runtime-install/npm-installing-124f5b8cec6c.log" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    real_archive_real_npm_real_version_recovery
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 37.18s
+
+error: test failed, to rerun pass `--test post022_four_real_install_tmp`

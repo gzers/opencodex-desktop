@@ -1,0 +1,1737 @@
+{
+  "runId": "9bff5409-e1d0-4d54-8107-0a1b0a4afe96",
+  "testDirectoryBasename": "ocxd-validation-9bff5409-e1d0-4d54-8107-0a1b0a4afe96",
+  "timeUtc": "2026-11-06T05:38:03.970027+00:00",
+  "candidateProtocolOnly": true,
+  "result": {
+    "status": "passed",
+    "checks": [
+      "simultaneous directory generation initialization fails closed without content upload",
+      "unique isolated directory and generation init",
+      "two simultaneous first uploads retain both branches",
+      "explicit conflict choice references both parents and keeps original files",
+      "four simultaneous updates retain all heads",
+      "direct content verification independent of ETag",
+      "same operation read-only recovery does not reupload",
+      "original confirmation independent of newer local content",
+      "new file immediate listing complete for observed commits",
+      "clear and reinitialize rejects old frozen upload before writes",
+      "orphan payload is not active version"
+    ]
+  },
+  "cleanup": {
+    "attempted": true,
+    "collectionDeleteStatus": 204,
+    "testCollectionAbsent": true,
+    "productionNamesUnchanged": true,
+    "productionLatestBytesUnchanged": true,
+    "individualDeleteFailures": [],
+    "localInputBytesUnchanged": true
+  },
+  "noETagConditions": true,
+  "noSecretsOrRawPayloadSaved": true,
+  "limits": [
+    "Synthetic protocol model uses real server transport; not application new implementation",
+    "Observed visibility and concurrent preservation are finite tests, not proof under all network/cache schedules",
+    "Directory generation bootstrap races must remain explicit conflict/fail-closed until a concrete initialization protocol is implemented",
+    "No production sync/receipt/config or daily service modifications"
+  ],
+  "requests": [
+    {
+      "method": "PROPFIND",
+      "target": "production-directory-read",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 113.69,
+      "responseBytes": 843
+    },
+    {
+      "method": "GET",
+      "target": "production-directory-read",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 93.01,
+      "responseBytes": 180
+    },
+    {
+      "method": "MKCOL",
+      "target": "owned-test-collection",
+      "requestBytes": 0,
+      "status": 201,
+      "elapsedMs": 89.43,
+      "responseBytes": 305
+    },
+    {
+      "method": "PUT",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 45,
+      "status": 201,
+      "elapsedMs": 96.06,
+      "responseBytes": 355
+    },
+    {
+      "method": "PUT",
+      "target": "generation-b4fd3905-e320-42aa-bff8-4cbd6e8eeb00.json",
+      "requestBytes": 45,
+      "status": 201,
+      "elapsedMs": 106.71,
+      "responseBytes": 355
+    },
+    {
+      "method": "GET",
+      "target": "generation-b4fd3905-e320-42aa-bff8-4cbd6e8eeb00.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 99.33,
+      "responseBytes": 45
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 162.29,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 92.45,
+      "responseBytes": 1006
+    },
+    {
+      "method": "DELETE",
+      "target": "generation-b4fd3905-e320-42aa-bff8-4cbd6e8eeb00.json",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 186.67,
+      "responseBytes": 0
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 99.98,
+      "responseBytes": 699
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 362.88,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 94.67,
+      "responseBytes": 699
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 94.87,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 105.33,
+      "responseBytes": 699
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 97.69,
+      "responseBytes": 699
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 92.21,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 87.02,
+      "responseBytes": 699
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 89.4,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 108.05,
+      "responseBytes": 699
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 101.22,
+      "responseBytes": 699
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 107.99,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 96.89,
+      "responseBytes": 699
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 96.81,
+      "responseBytes": 699
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 85.7,
+      "responseBytes": 45
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 95.07,
+      "responseBytes": 45
+    },
+    {
+      "method": "PUT",
+      "target": "data-e3a742be-b161-4e4a-90d3-0b183ebd4075.bin",
+      "requestBytes": 17,
+      "status": 201,
+      "elapsedMs": 83.01,
+      "responseBytes": 348
+    },
+    {
+      "method": "PUT",
+      "target": "data-be4df367-eaee-470c-b6df-e51012a3588e.bin",
+      "requestBytes": 17,
+      "status": 201,
+      "elapsedMs": 100.55,
+      "responseBytes": 348
+    },
+    {
+      "method": "GET",
+      "target": "data-e3a742be-b161-4e4a-90d3-0b183ebd4075.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 95.94,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "data-be4df367-eaee-470c-b6df-e51012a3588e.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 138.04,
+      "responseBytes": 17
+    },
+    {
+      "method": "PUT",
+      "target": "commit-e3a742be-b161-4e4a-90d3-0b183ebd4075.json",
+      "requestBytes": 193,
+      "status": 201,
+      "elapsedMs": 98.47,
+      "responseBytes": 351
+    },
+    {
+      "method": "PUT",
+      "target": "commit-be4df367-eaee-470c-b6df-e51012a3588e.json",
+      "requestBytes": 193,
+      "status": 201,
+      "elapsedMs": 95.68,
+      "responseBytes": 351
+    },
+    {
+      "method": "GET",
+      "target": "commit-e3a742be-b161-4e4a-90d3-0b183ebd4075.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 101.0,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "commit-be4df367-eaee-470c-b6df-e51012a3588e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 99.19,
+      "responseBytes": 193
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 89.45,
+      "responseBytes": 1905
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 93.57,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 92.13,
+      "responseBytes": 1905
+    },
+    {
+      "method": "GET",
+      "target": "commit-e3a742be-b161-4e4a-90d3-0b183ebd4075.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 106.13,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "data-e3a742be-b161-4e4a-90d3-0b183ebd4075.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 88.9,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "commit-be4df367-eaee-470c-b6df-e51012a3588e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 99.46,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "data-be4df367-eaee-470c-b6df-e51012a3588e.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 109.05,
+      "responseBytes": 17
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 89.15,
+      "responseBytes": 1905
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 92.98,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 96.62,
+      "responseBytes": 1905
+    },
+    {
+      "method": "GET",
+      "target": "commit-e3a742be-b161-4e4a-90d3-0b183ebd4075.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 105.9,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "data-e3a742be-b161-4e4a-90d3-0b183ebd4075.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 105.31,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "commit-be4df367-eaee-470c-b6df-e51012a3588e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 105.98,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "data-be4df367-eaee-470c-b6df-e51012a3588e.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 94.62,
+      "responseBytes": 17
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 96.83,
+      "responseBytes": 1905
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 90.66,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 108.95,
+      "responseBytes": 1905
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 96.54,
+      "responseBytes": 45
+    },
+    {
+      "method": "PUT",
+      "target": "data-09cfcd86-45d7-4d93-a399-8df3e23787c0.bin",
+      "requestBytes": 17,
+      "status": 201,
+      "elapsedMs": 100.07,
+      "responseBytes": 348
+    },
+    {
+      "method": "GET",
+      "target": "data-09cfcd86-45d7-4d93-a399-8df3e23787c0.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 95.26,
+      "responseBytes": 17
+    },
+    {
+      "method": "PUT",
+      "target": "commit-09cfcd86-45d7-4d93-a399-8df3e23787c0.json",
+      "requestBytes": 270,
+      "status": 201,
+      "elapsedMs": 78.7,
+      "responseBytes": 351
+    },
+    {
+      "method": "GET",
+      "target": "commit-09cfcd86-45d7-4d93-a399-8df3e23787c0.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 83.55,
+      "responseBytes": 270
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 102.08,
+      "responseBytes": 2508
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 91.44,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 92.48,
+      "responseBytes": 2508
+    },
+    {
+      "method": "GET",
+      "target": "commit-e3a742be-b161-4e4a-90d3-0b183ebd4075.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 87.72,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "data-e3a742be-b161-4e4a-90d3-0b183ebd4075.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 102.91,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "commit-09cfcd86-45d7-4d93-a399-8df3e23787c0.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 92.97,
+      "responseBytes": 270
+    },
+    {
+      "method": "GET",
+      "target": "data-09cfcd86-45d7-4d93-a399-8df3e23787c0.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 159.67,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "commit-be4df367-eaee-470c-b6df-e51012a3588e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 102.11,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "data-be4df367-eaee-470c-b6df-e51012a3588e.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 101.72,
+      "responseBytes": 17
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 100.47,
+      "responseBytes": 2508
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 111.19,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 94.44,
+      "responseBytes": 2508
+    },
+    {
+      "method": "GET",
+      "target": "commit-e3a742be-b161-4e4a-90d3-0b183ebd4075.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 137.19,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "data-e3a742be-b161-4e4a-90d3-0b183ebd4075.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 100.15,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "commit-09cfcd86-45d7-4d93-a399-8df3e23787c0.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 100.42,
+      "responseBytes": 270
+    },
+    {
+      "method": "GET",
+      "target": "data-09cfcd86-45d7-4d93-a399-8df3e23787c0.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 98.74,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "commit-be4df367-eaee-470c-b6df-e51012a3588e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 88.9,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "data-be4df367-eaee-470c-b6df-e51012a3588e.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 95.39,
+      "responseBytes": 17
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 295.69,
+      "responseBytes": 2508
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 131.71,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 96.2,
+      "responseBytes": 2508
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 169.71,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 514.27,
+      "responseBytes": 2508
+    },
+    {
+      "method": "GET",
+      "target": "commit-e3a742be-b161-4e4a-90d3-0b183ebd4075.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 86.25,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "data-e3a742be-b161-4e4a-90d3-0b183ebd4075.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 104.64,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "commit-09cfcd86-45d7-4d93-a399-8df3e23787c0.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 175.07,
+      "responseBytes": 270
+    },
+    {
+      "method": "GET",
+      "target": "data-09cfcd86-45d7-4d93-a399-8df3e23787c0.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 116.6,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "commit-be4df367-eaee-470c-b6df-e51012a3588e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 101.76,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "data-be4df367-eaee-470c-b6df-e51012a3588e.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 91.29,
+      "responseBytes": 17
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 109.35,
+      "responseBytes": 2508
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 94.02,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 118.69,
+      "responseBytes": 2508
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 97.37,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 97.29,
+      "responseBytes": 2508
+    },
+    {
+      "method": "GET",
+      "target": "commit-e3a742be-b161-4e4a-90d3-0b183ebd4075.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 104.39,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "data-e3a742be-b161-4e4a-90d3-0b183ebd4075.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 87.88,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "commit-09cfcd86-45d7-4d93-a399-8df3e23787c0.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 89.05,
+      "responseBytes": 270
+    },
+    {
+      "method": "GET",
+      "target": "data-09cfcd86-45d7-4d93-a399-8df3e23787c0.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 102.16,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "commit-be4df367-eaee-470c-b6df-e51012a3588e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 102.39,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "data-be4df367-eaee-470c-b6df-e51012a3588e.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 140.72,
+      "responseBytes": 17
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 100.35,
+      "responseBytes": 2508
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 89.76,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 148.02,
+      "responseBytes": 2508
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 109.77,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 95.01,
+      "responseBytes": 2508
+    },
+    {
+      "method": "GET",
+      "target": "commit-e3a742be-b161-4e4a-90d3-0b183ebd4075.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 93.1,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "data-e3a742be-b161-4e4a-90d3-0b183ebd4075.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 99.55,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "commit-09cfcd86-45d7-4d93-a399-8df3e23787c0.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 98.94,
+      "responseBytes": 270
+    },
+    {
+      "method": "GET",
+      "target": "data-09cfcd86-45d7-4d93-a399-8df3e23787c0.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 92.32,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "commit-be4df367-eaee-470c-b6df-e51012a3588e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 188.43,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "data-be4df367-eaee-470c-b6df-e51012a3588e.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 124.53,
+      "responseBytes": 17
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 112.0,
+      "responseBytes": 2508
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 177.84,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 90.72,
+      "responseBytes": 2508
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 93.87,
+      "responseBytes": 2508
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 104.98,
+      "responseBytes": 2508
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 111.03,
+      "responseBytes": 45
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 124.3,
+      "responseBytes": 45
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 124.55,
+      "responseBytes": 45
+    },
+    {
+      "method": "PUT",
+      "target": "data-96945bf9-d2b5-46c5-aefd-36d3efb08556.bin",
+      "requestBytes": 18,
+      "status": 201,
+      "elapsedMs": 111.05,
+      "responseBytes": 348
+    },
+    {
+      "method": "PUT",
+      "target": "data-f54a503a-d9f9-4ddd-8036-cc5ba6c9e29d.bin",
+      "requestBytes": 18,
+      "status": 201,
+      "elapsedMs": 99.89,
+      "responseBytes": 348
+    },
+    {
+      "method": "PUT",
+      "target": "data-a3289ec9-ef33-4a9a-897f-f72422b7d632.bin",
+      "requestBytes": 18,
+      "status": 201,
+      "elapsedMs": 108.21,
+      "responseBytes": 348
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 369.86,
+      "responseBytes": 3408
+    },
+    {
+      "method": "GET",
+      "target": "data-96945bf9-d2b5-46c5-aefd-36d3efb08556.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 95.06,
+      "responseBytes": 18
+    },
+    {
+      "method": "GET",
+      "target": "data-a3289ec9-ef33-4a9a-897f-f72422b7d632.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 91.06,
+      "responseBytes": 18
+    },
+    {
+      "method": "GET",
+      "target": "data-f54a503a-d9f9-4ddd-8036-cc5ba6c9e29d.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 110.63,
+      "responseBytes": 18
+    },
+    {
+      "method": "PUT",
+      "target": "commit-96945bf9-d2b5-46c5-aefd-36d3efb08556.json",
+      "requestBytes": 231,
+      "status": 201,
+      "elapsedMs": 100.64,
+      "responseBytes": 351
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 158.48,
+      "responseBytes": 45
+    },
+    {
+      "method": "PUT",
+      "target": "commit-a3289ec9-ef33-4a9a-897f-f72422b7d632.json",
+      "requestBytes": 231,
+      "status": 201,
+      "elapsedMs": 115.48,
+      "responseBytes": 351
+    },
+    {
+      "method": "PUT",
+      "target": "commit-f54a503a-d9f9-4ddd-8036-cc5ba6c9e29d.json",
+      "requestBytes": 231,
+      "status": 201,
+      "elapsedMs": 115.47,
+      "responseBytes": 351
+    },
+    {
+      "method": "GET",
+      "target": "commit-96945bf9-d2b5-46c5-aefd-36d3efb08556.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 101.58,
+      "responseBytes": 231
+    },
+    {
+      "method": "PUT",
+      "target": "data-9e55352c-620a-42fe-bd43-f06786824a86.bin",
+      "requestBytes": 18,
+      "status": 201,
+      "elapsedMs": 85.11,
+      "responseBytes": 348
+    },
+    {
+      "method": "GET",
+      "target": "commit-f54a503a-d9f9-4ddd-8036-cc5ba6c9e29d.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 96.78,
+      "responseBytes": 231
+    },
+    {
+      "method": "GET",
+      "target": "commit-a3289ec9-ef33-4a9a-897f-f72422b7d632.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 107.23,
+      "responseBytes": 231
+    },
+    {
+      "method": "GET",
+      "target": "data-9e55352c-620a-42fe-bd43-f06786824a86.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 109.01,
+      "responseBytes": 18
+    },
+    {
+      "method": "PUT",
+      "target": "commit-9e55352c-620a-42fe-bd43-f06786824a86.json",
+      "requestBytes": 231,
+      "status": 201,
+      "elapsedMs": 81.5,
+      "responseBytes": 351
+    },
+    {
+      "method": "GET",
+      "target": "commit-9e55352c-620a-42fe-bd43-f06786824a86.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 101.0,
+      "responseBytes": 231
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 96.27,
+      "responseBytes": 4920
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 101.81,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 112.81,
+      "responseBytes": 4920
+    },
+    {
+      "method": "GET",
+      "target": "commit-e3a742be-b161-4e4a-90d3-0b183ebd4075.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 107.26,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "data-e3a742be-b161-4e4a-90d3-0b183ebd4075.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 113.55,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "commit-09cfcd86-45d7-4d93-a399-8df3e23787c0.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 119.4,
+      "responseBytes": 270
+    },
+    {
+      "method": "GET",
+      "target": "data-09cfcd86-45d7-4d93-a399-8df3e23787c0.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 101.28,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "commit-a3289ec9-ef33-4a9a-897f-f72422b7d632.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 115.4,
+      "responseBytes": 231
+    },
+    {
+      "method": "GET",
+      "target": "data-a3289ec9-ef33-4a9a-897f-f72422b7d632.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 89.91,
+      "responseBytes": 18
+    },
+    {
+      "method": "GET",
+      "target": "commit-96945bf9-d2b5-46c5-aefd-36d3efb08556.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 97.98,
+      "responseBytes": 231
+    },
+    {
+      "method": "GET",
+      "target": "data-96945bf9-d2b5-46c5-aefd-36d3efb08556.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 113.18,
+      "responseBytes": 18
+    },
+    {
+      "method": "GET",
+      "target": "commit-f54a503a-d9f9-4ddd-8036-cc5ba6c9e29d.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 93.6,
+      "responseBytes": 231
+    },
+    {
+      "method": "GET",
+      "target": "data-f54a503a-d9f9-4ddd-8036-cc5ba6c9e29d.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 98.39,
+      "responseBytes": 18
+    },
+    {
+      "method": "GET",
+      "target": "commit-be4df367-eaee-470c-b6df-e51012a3588e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 97.04,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "data-be4df367-eaee-470c-b6df-e51012a3588e.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 105.07,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "commit-9e55352c-620a-42fe-bd43-f06786824a86.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 98.46,
+      "responseBytes": 231
+    },
+    {
+      "method": "GET",
+      "target": "data-9e55352c-620a-42fe-bd43-f06786824a86.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 109.59,
+      "responseBytes": 18
+    },
+    {
+      "method": "GET",
+      "target": "data-9e55352c-620a-42fe-bd43-f06786824a86.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 97.19,
+      "responseBytes": 18
+    },
+    {
+      "method": "GET",
+      "target": "data-a3289ec9-ef33-4a9a-897f-f72422b7d632.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 81.07,
+      "responseBytes": 18
+    },
+    {
+      "method": "GET",
+      "target": "data-96945bf9-d2b5-46c5-aefd-36d3efb08556.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 103.49,
+      "responseBytes": 18
+    },
+    {
+      "method": "GET",
+      "target": "data-f54a503a-d9f9-4ddd-8036-cc5ba6c9e29d.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 172.6,
+      "responseBytes": 18
+    },
+    {
+      "method": "GET",
+      "target": "commit-9e55352c-620a-42fe-bd43-f06786824a86.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 103.4,
+      "responseBytes": 231
+    },
+    {
+      "method": "GET",
+      "target": "data-9e55352c-620a-42fe-bd43-f06786824a86.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 133.47,
+      "responseBytes": 18
+    },
+    {
+      "method": "GET",
+      "target": "data-9e55352c-620a-42fe-bd43-f06786824a86.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 158.62,
+      "responseBytes": 18
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 85.91,
+      "responseBytes": 4920
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 112.09,
+      "responseBytes": 4920
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 109.43,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 112.23,
+      "responseBytes": 4920
+    },
+    {
+      "method": "GET",
+      "target": "commit-e3a742be-b161-4e4a-90d3-0b183ebd4075.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 101.51,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "data-e3a742be-b161-4e4a-90d3-0b183ebd4075.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 98.26,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "commit-09cfcd86-45d7-4d93-a399-8df3e23787c0.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 90.25,
+      "responseBytes": 270
+    },
+    {
+      "method": "GET",
+      "target": "data-09cfcd86-45d7-4d93-a399-8df3e23787c0.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 121.4,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "commit-a3289ec9-ef33-4a9a-897f-f72422b7d632.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 89.88,
+      "responseBytes": 231
+    },
+    {
+      "method": "GET",
+      "target": "data-a3289ec9-ef33-4a9a-897f-f72422b7d632.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 94.86,
+      "responseBytes": 18
+    },
+    {
+      "method": "GET",
+      "target": "commit-96945bf9-d2b5-46c5-aefd-36d3efb08556.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 89.54,
+      "responseBytes": 231
+    },
+    {
+      "method": "GET",
+      "target": "data-96945bf9-d2b5-46c5-aefd-36d3efb08556.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 106.18,
+      "responseBytes": 18
+    },
+    {
+      "method": "GET",
+      "target": "commit-f54a503a-d9f9-4ddd-8036-cc5ba6c9e29d.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 95.28,
+      "responseBytes": 231
+    },
+    {
+      "method": "GET",
+      "target": "data-f54a503a-d9f9-4ddd-8036-cc5ba6c9e29d.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 93.4,
+      "responseBytes": 18
+    },
+    {
+      "method": "GET",
+      "target": "commit-be4df367-eaee-470c-b6df-e51012a3588e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 97.61,
+      "responseBytes": 193
+    },
+    {
+      "method": "GET",
+      "target": "data-be4df367-eaee-470c-b6df-e51012a3588e.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 90.06,
+      "responseBytes": 17
+    },
+    {
+      "method": "GET",
+      "target": "commit-9e55352c-620a-42fe-bd43-f06786824a86.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 103.02,
+      "responseBytes": 231
+    },
+    {
+      "method": "GET",
+      "target": "data-9e55352c-620a-42fe-bd43-f06786824a86.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 111.69,
+      "responseBytes": 18
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 95.38,
+      "responseBytes": 4920
+    },
+    {
+      "method": "GET",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 109.05,
+      "responseBytes": 45
+    },
+    {
+      "method": "DELETE",
+      "target": "data-a3289ec9-ef33-4a9a-897f-f72422b7d632.bin",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 91.59,
+      "responseBytes": 0
+    },
+    {
+      "method": "DELETE",
+      "target": "data-f54a503a-d9f9-4ddd-8036-cc5ba6c9e29d.bin",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 103.18,
+      "responseBytes": 0
+    },
+    {
+      "method": "DELETE",
+      "target": "data-9e55352c-620a-42fe-bd43-f06786824a86.bin",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 87.31,
+      "responseBytes": 0
+    },
+    {
+      "method": "DELETE",
+      "target": "generation-1f897dcb-2586-4d5c-991d-dc559f53928e.json",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 98.05,
+      "responseBytes": 0
+    },
+    {
+      "method": "DELETE",
+      "target": "commit-e3a742be-b161-4e4a-90d3-0b183ebd4075.json",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 96.31,
+      "responseBytes": 0
+    },
+    {
+      "method": "DELETE",
+      "target": "commit-09cfcd86-45d7-4d93-a399-8df3e23787c0.json",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 101.06,
+      "responseBytes": 0
+    },
+    {
+      "method": "DELETE",
+      "target": "commit-a3289ec9-ef33-4a9a-897f-f72422b7d632.json",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 90.19,
+      "responseBytes": 0
+    },
+    {
+      "method": "DELETE",
+      "target": "data-be4df367-eaee-470c-b6df-e51012a3588e.bin",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 102.69,
+      "responseBytes": 0
+    },
+    {
+      "method": "DELETE",
+      "target": "commit-96945bf9-d2b5-46c5-aefd-36d3efb08556.json",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 100.12,
+      "responseBytes": 0
+    },
+    {
+      "method": "DELETE",
+      "target": "commit-f54a503a-d9f9-4ddd-8036-cc5ba6c9e29d.json",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 390.31,
+      "responseBytes": 0
+    },
+    {
+      "method": "DELETE",
+      "target": "data-e3a742be-b161-4e4a-90d3-0b183ebd4075.bin",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 88.3,
+      "responseBytes": 0
+    },
+    {
+      "method": "DELETE",
+      "target": "commit-be4df367-eaee-470c-b6df-e51012a3588e.json",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 107.98,
+      "responseBytes": 0
+    },
+    {
+      "method": "DELETE",
+      "target": "data-09cfcd86-45d7-4d93-a399-8df3e23787c0.bin",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 84.13,
+      "responseBytes": 0
+    },
+    {
+      "method": "DELETE",
+      "target": "commit-9e55352c-620a-42fe-bd43-f06786824a86.json",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 112.44,
+      "responseBytes": 0
+    },
+    {
+      "method": "DELETE",
+      "target": "data-96945bf9-d2b5-46c5-aefd-36d3efb08556.bin",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 102.76,
+      "responseBytes": 0
+    },
+    {
+      "method": "PUT",
+      "target": "generation-39055a42-86e2-43dd-bc69-0ec7f402a523.json",
+      "requestBytes": 45,
+      "status": 201,
+      "elapsedMs": 95.98,
+      "responseBytes": 355
+    },
+    {
+      "method": "GET",
+      "target": "generation-39055a42-86e2-43dd-bc69-0ec7f402a523.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 110.49,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 82.98,
+      "responseBytes": 699
+    },
+    {
+      "method": "GET",
+      "target": "generation-39055a42-86e2-43dd-bc69-0ec7f402a523.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 102.0,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 145.33,
+      "responseBytes": 699
+    },
+    {
+      "method": "GET",
+      "target": "generation-39055a42-86e2-43dd-bc69-0ec7f402a523.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 93.48,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 93.18,
+      "responseBytes": 699
+    },
+    {
+      "method": "GET",
+      "target": "generation-39055a42-86e2-43dd-bc69-0ec7f402a523.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 87.57,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 146.45,
+      "responseBytes": 699
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 98.42,
+      "responseBytes": 699
+    },
+    {
+      "method": "GET",
+      "target": "generation-39055a42-86e2-43dd-bc69-0ec7f402a523.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 375.81,
+      "responseBytes": 45
+    },
+    {
+      "method": "PUT",
+      "target": "data-12974e08-df10-48e1-89f8-e22ff9ddc60c.bin",
+      "requestBytes": 16,
+      "status": 201,
+      "elapsedMs": 101.02,
+      "responseBytes": 348
+    },
+    {
+      "method": "GET",
+      "target": "data-12974e08-df10-48e1-89f8-e22ff9ddc60c.bin",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 118.77,
+      "responseBytes": 16
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 101.15,
+      "responseBytes": 999
+    },
+    {
+      "method": "GET",
+      "target": "generation-39055a42-86e2-43dd-bc69-0ec7f402a523.json",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 79.76,
+      "responseBytes": 45
+    },
+    {
+      "method": "PROPFIND",
+      "target": "owned-test-collection",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 98.54,
+      "responseBytes": 999
+    },
+    {
+      "method": "DELETE",
+      "target": "data-12974e08-df10-48e1-89f8-e22ff9ddc60c.bin",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 98.62,
+      "responseBytes": 0
+    },
+    {
+      "method": "DELETE",
+      "target": "generation-39055a42-86e2-43dd-bc69-0ec7f402a523.json",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 123.0,
+      "responseBytes": 0
+    },
+    {
+      "method": "DELETE",
+      "target": "owned-test-collection",
+      "requestBytes": 0,
+      "status": 204,
+      "elapsedMs": 104.8,
+      "responseBytes": 0
+    },
+    {
+      "method": "PROPFIND",
+      "target": "production-directory-read",
+      "requestBytes": 74,
+      "status": 207,
+      "elapsedMs": 102.53,
+      "responseBytes": 843
+    },
+    {
+      "method": "GET",
+      "target": "production-directory-read",
+      "requestBytes": 0,
+      "status": 200,
+      "elapsedMs": 85.25,
+      "responseBytes": 180
+    }
+  ]
+}

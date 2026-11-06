@@ -1,0 +1,56 @@
+{
+  "runtime": "2.97.0-post021.ownerquery.2",
+  "actualGatherAndBuild": true,
+  "checks": [
+    {
+      "candidateGeneratedProviderDisplay": "中文渠道/gpt-6.1-sol",
+      "candidateRouteUnchanged": true,
+      "name": "中文渠道",
+      "actualKey": "channel-00000000000040008000000000000001",
+      "bareDisplay": "channel-00000000000040008000000000000001/gpt-6.1-sol",
+      "slashDisplayAccepted": false,
+      "slashDisplayValidation": "modelDisplayNames.\"gpt-6.1-sol\" must not contain /",
+      "boundedDisplay": "中文渠道 · gpt-6.1-sol",
+      "routeUnchanged": true
+    },
+    {
+      "candidateGeneratedProviderDisplay": "Name With Space/gpt-6.1-sol",
+      "candidateRouteUnchanged": true,
+      "name": "Name With Space",
+      "actualKey": "channel-00000000000040008000000000000001",
+      "bareDisplay": "channel-00000000000040008000000000000001/gpt-6.1-sol",
+      "slashDisplayAccepted": false,
+      "slashDisplayValidation": "modelDisplayNames.\"gpt-6.1-sol\" must not contain /",
+      "boundedDisplay": "Name With Space · gpt-6.1-sol",
+      "routeUnchanged": true
+    },
+    {
+      "candidateGeneratedProviderDisplay": "openai/gpt-6.1-sol",
+      "candidateRouteUnchanged": true,
+      "name": "openai",
+      "actualKey": "channel-00000000000040008000000000000001",
+      "bareDisplay": "channel-00000000000040008000000000000001/gpt-6.1-sol",
+      "slashDisplayAccepted": false,
+      "slashDisplayValidation": "modelDisplayNames.\"gpt-6.1-sol\" must not contain /",
+      "boundedDisplay": "openai · gpt-6.1-sol",
+      "routeUnchanged": true
+    },
+    {
+      "candidateGeneratedProviderDisplay": "中文 / 名称/gpt-6.1-sol",
+      "candidateRouteUnchanged": true,
+      "name": "中文 / 名称",
+      "actualKey": "channel-00000000000040008000000000000001",
+      "bareDisplay": "channel-00000000000040008000000000000001/gpt-6.1-sol",
+      "slashDisplayAccepted": false,
+      "boundedDisplayAccepted": false,
+      "boundedError": "modelDisplayNames.\"gpt-6.1-sol\" must not contain /"
+    }
+  ],
+  "externalRequests": 0,
+  "limits": [
+    "Actual pinned runtime catalogue functions with synthetic provider and liveModels=false; no service/client restart or daily config",
+    "modelDisplayNames rejects slash; alternate middle-dot presentation is technically possible, not adopted product decision",
+    "Manager does not currently automatically persist per-model labels for channel-name mapping",
+    "Candidate generated display projection occurs in test composition between actual gather/build; requires production runtime integration, does not bypass external modelDisplayNames validation"
+  ]
+}

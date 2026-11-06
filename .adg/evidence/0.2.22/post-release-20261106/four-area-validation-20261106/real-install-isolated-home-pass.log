@@ -1,0 +1,13 @@
+   Compiling opencodex-desktop v0.2.22 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.59s
+     Running tests/post022_four_real_install_tmp.rs (target/debug/deps/post022_four_real_install_tmp-92c8251535fd896f)
+
+running 1 test
+test real_archive_real_npm_real_version_recovery ... REAL_CHECK initial actual archive/npm/entry full version pass
+REAL_CHECK mismatched original target blocked
+REAL_CHECK recovery source/manifest/package/entry matched, old directory/config preserved
+REAL_CHECK invalid replacement keeps actual source and entry
+REAL_CHECK subsequent managed same-version reinstall pass; no OpenCodex/Codex service launched
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 18.76s

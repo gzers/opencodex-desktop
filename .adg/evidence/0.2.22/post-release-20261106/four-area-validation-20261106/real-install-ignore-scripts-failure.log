@@ -1,0 +1,19 @@
+   Compiling opencodex-desktop v0.2.22 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.09s
+     Running tests/post022_four_real_install_tmp.rs (target/debug/deps/post022_four_real_install_tmp-92c8251535fd896f)
+
+running 1 test
+test real_archive_real_npm_real_version_recovery ...
+thread 'real_archive_real_npm_real_version_recovery' (132208688) panicked at tests/post022_four_real_install_tmp.rs:7:102:
+actual maintained archive offline install: ScriptsRequired
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    real_archive_real_npm_real_version_recovery
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.60s
+
+error: test failed, to rerun pass `--test post022_four_real_install_tmp`

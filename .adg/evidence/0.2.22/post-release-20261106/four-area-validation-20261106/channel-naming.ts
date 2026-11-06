@@ -1,0 +1,15 @@
+import {gatherRoutedModels,buildCatalogEntries} from './runtime-src/src/codex/catalog';
+import {modelDisplayNamesConfigError} from './runtime-src/src/config/provider-validation';
+import {clearModelCache} from './runtime-src/src/codex/model-cache';
+import assert from 'node:assert/strict';import fs from 'node:fs';
+const rows:any[]=[];let network=0;globalThis.fetch=async()=>{network++;throw Error('No external request allowed')};
+for(const name of ['中文渠道','Name With Space','openai','中文 / 名称']){
+ const key='channel-00000000000040008000000000000001',id='gpt-6.1-sol';
+ const full=name+'/'+id;const valid=modelDisplayNamesConfigError({[id]:full});
+ clearModelCache();const config:any={port:10100,defaultProvider:key,modelCacheTtlMs:60000,providers:{[key]:{name,adapter:'openai-chat',authMode:'key',apiKey:'synthetic-not-transmitted',baseUrl:'https://fixture.invalid/v1',liveModels:false,models:[id],selectedModels:[id]}}};
+ const bare=await buildCatalogEntries(null,[],await gatherRoutedModels(config));const b=bare.find(x=>x.slug===key+'/'+id);assert(b,'actual catalog must include fixture');assert.equal(b.display_name,key+'/'+id);
+ const candidateModels=(await gatherRoutedModels(config)).map(m=>m.provider===key?{...m,displayName:name+'/'+m.id}:m);const projected=(await buildCatalogEntries(null,[],candidateModels)).find(e=>e.slug===key+'/'+id);assert(projected);assert.equal(projected.display_name,full);assert.equal(projected.slug,key+'/'+id);const candidate={candidateGeneratedProviderDisplay:projected.display_name,candidateRouteUnchanged:projected.slug===key+'/'+id};
+ const bounded=name+' · '+id;const boundedError=modelDisplayNamesConfigError({[id]:bounded});if(boundedError){rows.push({...candidate,name,actualKey:key,bareDisplay:b.display_name,slashDisplayAccepted:valid===null,boundedDisplayAccepted:false,boundedError});continue}config.providers[key].modelDisplayNames={[id]:bounded};clearModelCache();const named=await buildCatalogEntries(null,[],await gatherRoutedModels(config));const entry=named.find(x=>x.slug===key+'/'+id);assert(entry);assert.equal(entry.display_name,bounded);assert.equal(entry.slug,key+'/'+id);
+ rows.push({...candidate,name,actualKey:key,bareDisplay:b.display_name,slashDisplayAccepted:valid===null,slashDisplayValidation:valid,boundedDisplay:entry.display_name,routeUnchanged:entry.slug===key+'/'+id});
+}
+assert.equal(network,0);fs.writeFileSync(new URL('./channel-naming-result.json',import.meta.url),JSON.stringify({runtime:'2.97.0-post021.ownerquery.2',actualGatherAndBuild:true,checks:rows,externalRequests:network,limits:['Actual pinned runtime catalogue functions with synthetic provider and liveModels=false; no service/client restart or daily config','modelDisplayNames rejects slash; alternate middle-dot presentation is technically possible, not adopted product decision','Manager does not currently automatically persist per-model labels for channel-name mapping','Candidate generated display projection occurs in test composition between actual gather/build; requires production runtime integration, does not bypass external modelDisplayNames validation']},null,2)+'\n');console.log(JSON.stringify(rows,null,2));

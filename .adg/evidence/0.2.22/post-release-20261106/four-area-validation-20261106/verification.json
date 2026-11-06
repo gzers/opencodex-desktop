@@ -1,0 +1,356 @@
+{
+  "date": "2026-11-06",
+  "timeZone": "Asia/Shanghai",
+  "softwareCommit": "0c57500f8f46ea50655c782c3f04334a39167abb",
+  "scope": "User authorized four verification groups; no permanent product repair/deployment, no production WebDAV mutation, daily install unchanged",
+  "results": {
+    "webdav": {
+      "checks": 11,
+      "result": "passed on actual configured server in unique owned child collection",
+      "evidence": "live-webdav-result.json",
+      "status": "candidate protocol transport feasibility; no application implementation",
+      "coverage": [
+        "simultaneous generation init fails closed",
+        "two concurrent initial uploads",
+        "four concurrent updates",
+        "conflict choice/retained branches",
+        "sameID readonly reconcile",
+        "direct digest verification/noETag",
+        "observed new file listing",
+        "clear/reinit rejects stale plan",
+        "orphan payload excluded"
+      ],
+      "productionSnapshot": "Parent file listing and original latest-pointer bytes compared unchanged; test child deleted and absence read back"
+    },
+    "channelNaming": {
+      "cases": 4,
+      "result": "Actual pinned runtime gather/build baseline and proposed display projection verified",
+      "evidence": "channel-naming-result.json",
+      "finding": "Provider.name alone retains internal-key display; config modelDisplayNames rejects slash. Generated internal display projection can show exact channel-name/model without changing route; production integration still needed. Middle-dot external mapping works for names without slash but not adopted UI decision.",
+      "actualCodexPicker": "Not executed: no repaired runtime/client and no daily restart; runtime catalog checked only"
+    },
+    "installation": {
+      "integrationTests": 2,
+      "result": "passed real pinned archives,SystemNpmRunner,RuntimeInstaller,RealVersionProbe with isolated final HOME/cache/prefix",
+      "evidence": "real-install-result.json",
+      "coverage": [
+        "manifest mismatch refusal",
+        "new-prefix recovery",
+        "package/manifest/source/entry full version alignment",
+        "old directory and business sentinel preserved",
+        "bad archive preservation",
+        "subsequent sameversion reinstall",
+        "stable2.97→maintained2.97.0-post021.ownerquery.2 exact transition"
+      ],
+      "limitations": [
+        "No service restart or recovery UI/protection orchestration implementation",
+        "No new Windows platform changes, no default Windows native task"
+      ]
+    },
+    "ui": {
+      "result": "baseline defects confirmed, repair acceptance not passed",
+      "evidence": "page-verification.json",
+      "source": "actual Vue production consumers through existing DEV fixtures; real UiDialog/UiSelectField; service/data adapters mocked",
+      "coverage": [
+        "1280x720 first/second step capture",
+        "protocol/base label same top coordinate",
+        "900x600 fitting/scroll/footer",
+        "back/next selection retained",
+        "sync source dropdown absent in current software; original confirm-update label"
+      ],
+      "limits": [
+        "No repair applied; cannot claim prototype alignment",
+        "Current IAB engine only; no unneeded Windows material revalidation",
+        "Fixture bootstrap reports unavailable shell environment in browser; real form/diff layout checked independently"
+      ]
+    }
+  },
+  "preservedFailures": [
+    "Cold independent npm cache warmup timed out; no pass claimed",
+    "No-scripts actual install failed ScriptsRequired when optional Bun archive unavailable",
+    "Script-enabled isolated retry failed because optional Bun platform tarball absent; archived npm diagnostic",
+    "Exact existing verified public cached Bun tarball copied into task cache, later actual offline no-scripts runs passed",
+    "Initial display-map test assumed middle-dot label allows slash-containing channel name; actual schema rejected; final probe records rejection and tests internal generated display projection instead",
+    "Initial Bun npm wrapper lacked postinstall; used pre-existing exact platform executable for runtime functions",
+    "First installer pass inherited process HOME for version probes; after source review repeated with isolated probeHOME and preserved both logs"
+  ],
+  "followup": [
+    "Implement source-name mapping in manager save and runtime presentation; validate final generated/native picker behavior after repair",
+    "Implement proposed noETag commit/generation/state handling, including initialization conflict UI, before application-level acceptance",
+    "Implement recovery UI/protection/service orchestration then test impacted system boundary only",
+    "Implement full wizard/sync-preview layout and recheck actual pages against adopted prototype"
+  ],
+  "testCleanup": "Archive small scripts/logs/results/screens, remove owned remote child dirs, tempintegration source, service/tab/port, taskprefix/cache and diagnostic build artifacts. Preserve user prototype server/browser and shared compiler deps.",
+  "logNormalization": {
+    "real-install-isolated-home-pass.log": {
+      "rawSha256": "7a7787f93b30f934330e1559186c80e0e54148cc484f97d38f4810f4511b20ea",
+      "note": "Trailing blank lines normalized only"
+    },
+    "npm-warm.log": {
+      "rawSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "note": "Trailing blank lines normalized only"
+    },
+    "real-install-first-pass.log": {
+      "rawSha256": "f64018aae4aca082c08eeca91a6a6ed1b7d183ac9d16eabc261e809b583c45ff",
+      "note": "Trailing blank lines normalized only"
+    },
+    "real-install.log": {
+      "rawSha256": "03cca87e1e34891db5dba854df99be1994f7ec65f1f17a646441663cceb53974",
+      "note": "Trailing blank lines normalized only"
+    },
+    "real-install-allow-scripts-cache-failure.log": {
+      "preLineNormalizationSha256": "a15d61180ce0959a3f62dea09e104a023f11fa27926df305d20163b5a55e534f",
+      "rawCopy": "log-whitespace-originals.zip::real-install-allow-scripts-cache-failure.log",
+      "note": "Only line-end whitespace trimmed for git check; exact pre-line-normalized bytes retained in ZIP, prior EOF capture metadata preserved in original manifest history"
+    },
+    "real-install-ignore-scripts-failure.log": {
+      "preLineNormalizationSha256": "6666497290542ee91acba02d8ac732d3e72c1faf5cdba54d472b2f29e3c47fd9",
+      "rawCopy": "log-whitespace-originals.zip::real-install-ignore-scripts-failure.log",
+      "note": "Only line-end whitespace trimmed for git check; exact pre-line-normalized bytes retained in ZIP, prior EOF capture metadata preserved in original manifest history"
+    },
+    "installer-logs/npm-installing-44eb4bffb06f.log": {
+      "preLineNormalizationSha256": "b93637166231116ea2c35d49f70c2fb2039f626825a6e1c79fde3950e86011b3",
+      "rawCopy": "log-whitespace-originals.zip::installer-logs/npm-installing-44eb4bffb06f.log",
+      "note": "Only line-end whitespace trimmed for git check; exact pre-line-normalized bytes retained in ZIP, prior EOF capture metadata preserved in original manifest history"
+    },
+    "installer-logs/npm-installing-ef9debd5b0a4.log": {
+      "preLineNormalizationSha256": "f61cf75e52c341bbf6314509b92f500d5e4ea21d9e837c6a68a1169c25a3662e",
+      "rawCopy": "log-whitespace-originals.zip::installer-logs/npm-installing-ef9debd5b0a4.log",
+      "note": "Only line-end whitespace trimmed for git check; exact pre-line-normalized bytes retained in ZIP, prior EOF capture metadata preserved in original manifest history"
+    },
+    "installer-logs/npm-installing-b87cbb305210.log": {
+      "preLineNormalizationSha256": "aacd9fa9ed05070773e76a3aed70171bb27ca0188738aa293f4a97987cd63cbb",
+      "rawCopy": "log-whitespace-originals.zip::installer-logs/npm-installing-b87cbb305210.log",
+      "note": "Only line-end whitespace trimmed for git check; exact pre-line-normalized bytes retained in ZIP, prior EOF capture metadata preserved in original manifest history"
+    },
+    "installer-logs/npm-installing-c7ca3fcdc277.log": {
+      "preLineNormalizationSha256": "a3856a08465401547652960fd2b02cb089f87cdbf955987794b2905fe42b72d0",
+      "rawCopy": "log-whitespace-originals.zip::installer-logs/npm-installing-c7ca3fcdc277.log",
+      "note": "Only line-end whitespace trimmed for git check; exact pre-line-normalized bytes retained in ZIP, prior EOF capture metadata preserved in original manifest history"
+    },
+    "installer-logs/npm-installing-8622d69ea7b1.log": {
+      "preLineNormalizationSha256": "842a5aa23da0f46fb5ab457c66113b0f3083fcc48a33f1d3b10ec252610ab738",
+      "rawCopy": "log-whitespace-originals.zip::installer-logs/npm-installing-8622d69ea7b1.log",
+      "note": "Only line-end whitespace trimmed for git check; exact pre-line-normalized bytes retained in ZIP, prior EOF capture metadata preserved in original manifest history"
+    },
+    "installer-logs/npm-installing-bd3d408d2f49.log": {
+      "preLineNormalizationSha256": "a6f854e2645c1e6bd6a8aab445115d8f7fabdca9af8b863e3080598f69a70cf6",
+      "rawCopy": "log-whitespace-originals.zip::installer-logs/npm-installing-bd3d408d2f49.log",
+      "note": "Only line-end whitespace trimmed for git check; exact pre-line-normalized bytes retained in ZIP, prior EOF capture metadata preserved in original manifest history"
+    },
+    "installer-logs/npm-installing-be2b0d0fc812.log": {
+      "preLineNormalizationSha256": "df8acc6cb8de77316d4244a26b5834c0f8f5b9251c1772a6dea0e349b9e4b2a4",
+      "rawCopy": "log-whitespace-originals.zip::installer-logs/npm-installing-be2b0d0fc812.log",
+      "note": "Only line-end whitespace trimmed for git check; exact pre-line-normalized bytes retained in ZIP, prior EOF capture metadata preserved in original manifest history"
+    },
+    "installer-logs/npm-installing-a0ec775f84ea.log": {
+      "preLineNormalizationSha256": "9d616c6599de6c5586aa3d4a8b485c71769b5f236c6e4fd2147346db24a61fe8",
+      "rawCopy": "log-whitespace-originals.zip::installer-logs/npm-installing-a0ec775f84ea.log",
+      "note": "Only line-end whitespace trimmed for git check; exact pre-line-normalized bytes retained in ZIP, prior EOF capture metadata preserved in original manifest history"
+    },
+    "installer-logs/npm-installing-b937cde46efc.log": {
+      "preLineNormalizationSha256": "b88e31e45a2b5cc6454c9864b230cff5f8d55e9efc7cae0342a4cb8e273492e8",
+      "rawCopy": "log-whitespace-originals.zip::installer-logs/npm-installing-b937cde46efc.log",
+      "note": "Only line-end whitespace trimmed for git check; exact pre-line-normalized bytes retained in ZIP, prior EOF capture metadata preserved in original manifest history"
+    },
+    "installer-logs/npm-installing-2aaf4227be7f.log": {
+      "preLineNormalizationSha256": "3f5d228f95a98a8c393cea1b7cc7ad7f3ffa288597da7f33ffebf2f3aeabd0e8",
+      "rawCopy": "log-whitespace-originals.zip::installer-logs/npm-installing-2aaf4227be7f.log",
+      "note": "Only line-end whitespace trimmed for git check; exact pre-line-normalized bytes retained in ZIP, prior EOF capture metadata preserved in original manifest history"
+    }
+  },
+  "artifacts": {
+    "new-channel-narrow.jpg": {
+      "bytes": 35764,
+      "sha256": "1e4140314cb3cf4cbaa3f8f0e96bc89af5e00d68ca41f5c4b6c9c83bd5011821"
+    },
+    "live-webdav-result.json": {
+      "bytes": 43762,
+      "sha256": "a2a141e1d6f8d186b8d389bd6635a16e77a52c22233cee3d2dd23f21bcc08945"
+    },
+    "npm-offline-check.log": {
+      "bytes": 26,
+      "sha256": "31df56f3e0271d53cb57cc4392eb195278a02440955ba5a391446ddda33266e1"
+    },
+    "real-install-result.json": {
+      "bytes": 1833,
+      "sha256": "b65f181a94b5434a10b892224979748624b0443682fd1fc16dcd247b37683c6c"
+    },
+    "npm-bun-optional.log": {
+      "bytes": 395,
+      "sha256": "2707027163e5800b42a22749ef85f940afe820f520b1714d31a95f823df0ae6f"
+    },
+    "channel-naming-result.json": {
+      "bytes": 2649,
+      "sha256": "0a0467d4ebb23c537e1515d6001e2b696e84670edbcc30b9936f5bd5d8680c2d"
+    },
+    "page-verification.json": {
+      "bytes": 951,
+      "sha256": "f24e7996e40406d2a3aa23892cc503a266a1317150b5820ae7dfeea9c9959aa1"
+    },
+    "npm-actual-install-failure.log": {
+      "bytes": 26062,
+      "sha256": "370aaa38d487e4c0dd5102460fa25f5515d0fdda437c4d0f71c6197fd2d79af0"
+    },
+    "source-identity.json": {
+      "bytes": 838,
+      "sha256": "77c448ad2e62aeae8f9fbd43fb227665d6e11fdb9b38a5dc59fc29cfe8c10e4b"
+    },
+    "real-install-allow-scripts-cache-failure.log": {
+      "bytes": 1064,
+      "sha256": "c8a59c192e2031a51591c79c0b808f0641170c274b84666cee8ccc18c488e4e9"
+    },
+    "base-archive-check.json": {
+      "bytes": 270,
+      "sha256": "f189cee7392b33eb9295f697c1de7cc647cfd99e4bfdc7e2b88df30e99f1d697"
+    },
+    "real-install-ignore-scripts-cleanup.json": {
+      "bytes": 48,
+      "sha256": "b3dbb1b624bfe4b4df8fc0336f9315d6a61b6be200be1d6d05c65e56cb65cde3"
+    },
+    "live_webdav.py": {
+      "bytes": 9817,
+      "sha256": "17de09bdbd683000d06ebf29c6a2be65e227f71d68ae0e54f1febadbef60a864"
+    },
+    "npm-offline-status.json": {
+      "bytes": 13,
+      "sha256": "4dcc498c527b0543253f31b3d42cacbc43ca548cece42031abbb4d68e5407158"
+    },
+    "bun-platform-diagnostic.log": {
+      "bytes": 583,
+      "sha256": "c6d016e31984ce6aab55c9f4edb9a1d0492e183e7a17be876a5f87314903ed47"
+    },
+    "owned-external-log-paths.json": {
+      "bytes": 1180,
+      "sha256": "c8e5d7c467978dda1e56c39b3fd26a0a97f476456f4c84ba7ef94e1f015e5b88"
+    },
+    "cache-seed.json": {
+      "bytes": 386,
+      "sha256": "9cefdcbf19ae2da86f708073492182c01ec66b595dd50b9cc3430cb5225530ce"
+    },
+    "real-install-isolated-home-pass.log": {
+      "bytes": 840,
+      "sha256": "c3223ef3fb1fd9c08a493ea6109fe9fe8f5a7af580b42bc2fa6dae2115f70b07"
+    },
+    "live-webdav-first-10-result.json": {
+      "bytes": 42901,
+      "sha256": "78fe5b9ce9f09e4351fd151d18f2c224a692d00798b6201e51a7fe1fc8faceab"
+    },
+    "npm-warm.log": {
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    "real-install-isolated-home-cleanup.json": {
+      "bytes": 46,
+      "sha256": "42408f96a762773942bb78b2e5683360153a7754028ab8feba2b6961da4fa4b7"
+    },
+    "real-install-test.rs.txt": {
+      "bytes": 5843,
+      "sha256": "8a0827ce4cdd543570040ef505fd9b12431f05018fcf769a928ceb364f1f823b"
+    },
+    "page-geometry-observed.json": {
+      "bytes": 587,
+      "sha256": "578fe8b92762128dfdf7f0e6992ebc97e450e700da4baec466410d0eb233d65a"
+    },
+    "real-install-allow-scripts-cleanup.json": {
+      "bytes": 48,
+      "sha256": "b3dbb1b624bfe4b4df8fc0336f9315d6a61b6be200be1d6d05c65e56cb65cde3"
+    },
+    "seed-cache.cjs": {
+      "bytes": 958,
+      "sha256": "6e5dde0d862fa38cb13630fcbde321073dd9c1f13754545dc3fbf5f8be943335"
+    },
+    "real-install-first-pass-cleanup.json": {
+      "bytes": 46,
+      "sha256": "42408f96a762773942bb78b2e5683360153a7754028ab8feba2b6961da4fa4b7"
+    },
+    "get-base-archive.cjs": {
+      "bytes": 1082,
+      "sha256": "81577d36a3cc94540dcaf7690b5b0ec79729ecef8c22d709a6f9225100a81a5e"
+    },
+    "new-channel-step2.jpg": {
+      "bytes": 53633,
+      "sha256": "cc331c1e70b347efb92b851ebf235d98531b559f9a1b3fd55981ddd93a6e9fae"
+    },
+    "real-install-ignore-scripts-failure.log": {
+      "bytes": 898,
+      "sha256": "3331ffef1bbc5d726c97ba6405669610845c26f6242174b4bede5170b1f5c866"
+    },
+    "new-channel-step1.jpg": {
+      "bytes": 61180,
+      "sha256": "1160cd35234a07111afe802496196bd9b1298890b741a02fd91bf54de41689df"
+    },
+    "real-install-first-pass.log": {
+      "bytes": 840,
+      "sha256": "ea5114fce99443cd4313ba9b248aac9977f25cda049b502cd7323ad0a180bbcf"
+    },
+    "run-real-install.py": {
+      "bytes": 1341,
+      "sha256": "4d16ce14e957576e56f111e0786bf1fe36908c0308fcd8102a8447e55848c0ee"
+    },
+    "sync-preview-current.jpg": {
+      "bytes": 52748,
+      "sha256": "90cecbfe578410742805cbea68c14874695f3b9e18a67b168b011d4011b7e7d6"
+    },
+    "real-install-source-cleanup.json": {
+      "bytes": 46,
+      "sha256": "42408f96a762773942bb78b2e5683360153a7754028ab8feba2b6961da4fa4b7"
+    },
+    "channel-naming.ts": {
+      "bytes": 3185,
+      "sha256": "d080fd9c0f5d256f4b88d987b80f59e2d3a35019af90f4f15b08d598054b3912"
+    },
+    "real-install.log": {
+      "bytes": 684,
+      "sha256": "8a91aafc6479b17e11fece4bdcb2dd2091b48a74637f3808a34cb13f23dc9ffa"
+    },
+    "installer-logs/npm-installing-44eb4bffb06f.log": {
+      "bytes": 24746,
+      "sha256": "e50caac2ff7ef0a16dded59fabb85face53851d8df815841cbf500b968b731b0"
+    },
+    "installer-logs/npm-installing-ef9debd5b0a4.log": {
+      "bytes": 24774,
+      "sha256": "3a1eb82a7268850011e66784371714f41d02d84b324de40a9030e5ebe2bb4b33"
+    },
+    "installer-logs/npm-installing-b87cbb305210.log": {
+      "bytes": 24778,
+      "sha256": "bb5ef4d2f358e21221fc07af56b3d53c89861265c505dea543fdfa85d8259283"
+    },
+    "installer-logs/npm-installing-124f5b8cec6c.log": {
+      "bytes": 26062,
+      "sha256": "370aaa38d487e4c0dd5102460fa25f5515d0fdda437c4d0f71c6197fd2d79af0"
+    },
+    "installer-logs/npm-installing-c7ca3fcdc277.log": {
+      "bytes": 24731,
+      "sha256": "9c08d0fafd00ae916845514ed7d6c0cacc1e7920661c99f5a2692347b5ff6e10"
+    },
+    "installer-logs/npm-installing-8622d69ea7b1.log": {
+      "bytes": 24739,
+      "sha256": "854b5776f403c957f5a6a508847026e1cb9c99f10af974e6018316c7db8a778b"
+    },
+    "installer-logs/npm-installing-bd3d408d2f49.log": {
+      "bytes": 24776,
+      "sha256": "30939a0380b043bd2ad923fc4b9dbb8c46a464667421bccf4396cebdafd14b69"
+    },
+    "installer-logs/npm-installing-be2b0d0fc812.log": {
+      "bytes": 24735,
+      "sha256": "d2107e486f99784048440209506f444e895378adfb329885bc657248422bede9"
+    },
+    "installer-logs/npm-installing-a0ec775f84ea.log": {
+      "bytes": 24739,
+      "sha256": "5bf54fa6cc192252041441f2c3b1e64c6cb347b27dfe5785e2ea5935c22cba1c"
+    },
+    "installer-logs/npm-installing-b937cde46efc.log": {
+      "bytes": 24758,
+      "sha256": "cfb5fdaca997eec3134cec2c47fe9ec4cb9f1733f37f0a48b184ddf2969e8e53"
+    },
+    "installer-logs/npm-installing-2aaf4227be7f.log": {
+      "bytes": 24746,
+      "sha256": "7da0b1065d995f999e9d662f91c74f1012db457d3248c7919a975a9b53fe70e6"
+    },
+    "log-whitespace-originals.zip": {
+      "bytes": 35657,
+      "sha256": "adc07df924dff8d18071e732010fc0ab2b91b78e13bb311dad736663187d87b6"
+    }
+  }
+}
