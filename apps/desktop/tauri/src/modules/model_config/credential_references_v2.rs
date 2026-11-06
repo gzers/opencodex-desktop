@@ -861,7 +861,9 @@ pub fn recover(
     Ok(true)
 }
 #[cfg(test)]
-thread_local! { static HOOK: std::cell::RefCell<Option<fn(&str)->Result<()>>> = const { std::cell::RefCell::new(None) }; }
+type ReferenceCheckpointV2 = fn(&str) -> Result<()>;
+#[cfg(test)]
+thread_local! { static HOOK: std::cell::RefCell<Option<ReferenceCheckpointV2>> = const { std::cell::RefCell::new(None) }; }
 fn checkpoint(_point: &str) -> Result<()> {
     #[cfg(test)]
     HOOK.with(|h| h.borrow().map(|f| f(_point)).unwrap_or(Ok(())))?;
