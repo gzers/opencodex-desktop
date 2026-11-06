@@ -814,3 +814,58 @@ fn readonly_preview_ignores_unknown_draft_and_same_plan_restores_only_after_expl
     assert!(result.status == RestoreStatusV2::Applied);
     assert!(!f.h.join("config.json").exists());
 }
+
+#[cfg(unix)]
+#[test]
+fn owned_operations_reopen_partial_identity_and_keep_completed_receipt_without_current_config() {
+    use std::os::unix::fs::PermissionsExt;
+    let f = Fixture::new();
+    f.apply().unwrap();
+    let p = preview(
+        &f.d,
+        &f.h,
+        OP,
+        &["preferences".into(), "skill:scope-fixture".into()],
+    )
+    .unwrap();
+    let directory = f.h.join(".agents/skills/scope-fixture");
+    std::fs::set_permissions(&directory, std::fs::Permissions::from_mode(0o500)).unwrap();
+    let partial = restore(&f.d, &f.h, &p.restore_id, &p.plan_digest);
+    std::fs::set_permissions(&directory, std::fs::Permissions::from_mode(0o700)).unwrap();
+    assert!(partial.unwrap().status == RestoreStatusV2::Partial);
+    let reopened = operations(&f.d, &f.h, Some(OP)).unwrap();
+    assert_eq!(reopened.len(), 1);
+    assert_eq!(reopened[0].restore_id, p.restore_id);
+    assert_eq!(reopened[0].plan_digest, p.plan_digest);
+    assert!(reopened[0].receipt.as_ref().unwrap().status == RestoreStatusV2::Partial);
+    let actual = restore(
+        &f.d,
+        &f.h,
+        &reopened[0].restore_id,
+        &reopened[0].plan_digest,
+    )
+    .unwrap();
+    assert!(actual.status == RestoreStatusV2::Applied);
+    atomic_write(
+        &f.h.join("config.json"),
+        b"broken later model config",
+        0o600,
+    )
+    .unwrap();
+    atomic_write(
+        &f.d.join(crate::modules::extensions::projection::CONFIG_RELATIVE_PATH),
+        b"broken later asset source config",
+        0o600,
+    )
+    .unwrap();
+    let history = operations(&f.d, &f.h, None).unwrap();
+    assert!(history[0].receipt.as_ref().unwrap().status == RestoreStatusV2::Applied);
+    assert!(
+        operations(&f.d, &f.h, Some("88888888-8888-4888-8888-888888888888"))
+            .unwrap()
+            .is_empty()
+    );
+    let path = plan_path(&f.d, &p.restore_id, "progress").unwrap();
+    atomic_write(&path, b"broken owned receipt", 0o600).unwrap();
+    assert!(operations(&f.d, &f.h, None).is_err());
+}
