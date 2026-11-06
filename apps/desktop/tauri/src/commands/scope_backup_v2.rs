@@ -68,3 +68,18 @@ pub async fn transfer_v2_backup_restore(
     )
     .await
 }
+
+#[tauri::command]
+pub async fn transfer_v2_backup_restore_operations(
+    original_operation_id: Option<String>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, SharedProcessContext>,
+) -> ModelResult<Vec<crate::modules::model_config::sync_local_v2::restore::RestoreOperationV2>> {
+    work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        false,
+        move |d, h| restore::operations(d, h, original_operation_id.as_deref()),
+    )
+    .await
+}
