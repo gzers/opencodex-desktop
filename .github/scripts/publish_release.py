@@ -133,6 +133,47 @@ def verify_artifacts(repo, tag, manifest, release):
             verified.add(identity)
             print(f"Cryptographically verified {platform}: {asset['name']}; "
                   f"size={asset['size']}; sha256={digest}", flush=True)
+        # Starting with the adopted 0.2.22 delivery, the independent runtime is
+        # part of the release contract, even though the desktop updater does
+        # not automatically install it. Trust tagged policy, not asset metadata.
+        if version(tag) >= (0, 2, 22):
+            response = json.loads(gh("api", f"repos/{repo}/contents/.github/maintained-runtime.json?ref={tag}"))
+            policy = json.loads(base64.b64decode(response["content"]))
+            verify_maintained_runtime(repo, tag, release, policy, root, key_file)
+            return policy
+    return None
+
+
+def verify_maintained_runtime(repo, tag, release, policy, root, key_file):
+    name = policy["archive"]
+    if not isinstance(name, str) or not re.fullmatch(r"opencodex-[A-Za-z0-9.+-]+[.]tgz", name):
+        raise PublishError("Invalid maintained runtime archive identity")
+    if policy.get("maintainer") != repo or policy.get("installation") != "explicit-offline-import":
+        raise PublishError("Maintained runtime policy owner or installation mode mismatch")
+    assets = release_assets(repo, tag, release)
+    for asset_name in (name, name + ".sig", "maintained-runtime.json", "maintained-runtime.sha256"):
+        asset = assets.get(f"https://github.com/{repo}/releases/download/{tag}/{asset_name}")
+        if not asset or asset.get("state") != "uploaded" or asset.get("size", 0) <= 0:
+            raise PublishError("Missing maintained runtime asset: " + asset_name)
+        target = root / asset_name
+        subprocess.run(["gh", "release", "download", tag, "--repo", repo, "--pattern", asset_name,
+                        "--output", str(target), "--clobber"], check=True, text=True, capture_output=True)
+        if target.stat().st_size != asset["size"]:
+            raise PublishError("Maintained runtime download size mismatch: " + asset_name)
+    archive = root / name
+    digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+    if digest != policy["sha256"] or archive.stat().st_size != policy["bytes"]:
+        raise PublishError("Maintained runtime differs from tagged adopted bytes")
+    delivery = json.loads((root / "maintained-runtime.json").read_bytes())
+    if any(delivery.get(k) != v for k, v in policy.items()):
+        raise PublishError("Maintained runtime delivery manifest differs from tagged policy")
+    if (root / "maintained-runtime.sha256").read_text().strip() != digest + "  " + name:
+        raise PublishError("Maintained runtime checksum file mismatch")
+    signature = root / "maintained-runtime.minisig"
+    signature.write_bytes(base64.b64decode((root / (name + ".sig")).read_text().strip(), validate=True))
+    subprocess.run(["minisign", "-V", "-m", str(archive), "-p", str(key_file), "-x", str(signature)],
+                   check=True, text=True, capture_output=True)
+    print(f"Cryptographically verified adopted runtime {policy['version']}: sha256={digest}", flush=True)
 
 
 def verify_public_manifest(url, expected):
@@ -151,6 +192,25 @@ def verify_public_manifest(url, expected):
         if attempt < 4:
             time.sleep(3)
     raise PublishError(f"Public updater endpoint verification failed: {url}: {last_error}")
+
+
+def verify_public_runtime(repo, tag, policy):
+    url = f"https://github.com/{repo}/releases/download/{tag}/{policy['archive']}"
+    last_error = None
+    for attempt in range(5):
+        try:
+            request = urllib.request.Request(url, headers={"User-Agent": "opencodex-release-verifier"})
+            with urllib.request.urlopen(request, timeout=60) as response:
+                data = response.read(policy["bytes"] + 1)
+            if len(data) == policy["bytes"] and hashlib.sha256(data).hexdigest() == policy["sha256"]:
+                print("Verified anonymously downloadable maintained runtime", flush=True)
+                return
+            last_error = "public runtime differs from tagged adopted bytes"
+        except (urllib.error.URLError, OSError) as error:
+            last_error = str(error)
+        if attempt < 4:
+            time.sleep(3)
+    raise PublishError(f"Public maintained runtime verification failed: {last_error}")
 
 
 def publish(repo, tag, mode):
@@ -172,7 +232,7 @@ def publish(repo, tag, mode):
         raise PublishError("No existing Latest to preserve; explicitly select stable for the first release")
     if mode == "stable" and before and version(tag) < version(before):
         raise PublishError(f"Refusing stable downgrade: {before} -> {tag}")
-    verify_artifacts(repo, tag, manifest, release)
+    runtime_policy = verify_artifacts(repo, tag, manifest, release)
 
     print(f"Target: {tag}; mode: {mode}; previous Latest: {before}", flush=True)
     expected_latest = tag if mode == "stable" else before
@@ -190,6 +250,10 @@ def publish(repo, tag, mode):
     verify_public_manifest(f"{base}/download/{tag}/latest.json", manifest)
     if mode == "stable" or before == tag:
         verify_public_manifest(f"{base}/latest/download/latest.json", manifest)
+    if version(tag) >= (0, 2, 22):
+        if not isinstance(runtime_policy, dict):
+            raise PublishError("Adopted runtime policy verification is required")
+        verify_public_runtime(repo, tag, runtime_policy)
     print(f"Verified public release {tag}; Latest={expected_latest}", flush=True)
 
 

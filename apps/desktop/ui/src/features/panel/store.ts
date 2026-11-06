@@ -15,8 +15,23 @@ export const usePanelStore = defineStore('panel', {
     // 顶栏「刷新状态」在面板路由下的第二层动作：+1 表示请求重载内嵌官方面板。
     // 面板切片不反向依赖根 store，所以只发一个计数器，由 PanelRoute 监听后执行重载。
     reloadToken: 0,
+    // Scalar stage observations only; never persist URLs, configuration or tokens.
+    loadTrace: { id: 0, startedAt: 0, outcome: 'idle', phases: [] as {phase:string;elapsedMs:number}[] },
   }),
   actions: {
+    beginLoad() {
+      this.loadTrace = { id: this.loadTrace.id + 1, startedAt: performance.now(), outcome: 'loading', phases: [] }
+      return this.loadTrace.id
+    },
+    markLoad(id:number, phase:string) {
+      if (id !== this.loadTrace.id) return
+      if (this.loadTrace.phases.length < 48) this.loadTrace.phases.push({phase, elapsedMs: performance.now() - this.loadTrace.startedAt})
+    },
+    finishLoad(id:number, outcome:string) {
+      if (id !== this.loadTrace.id) return
+      this.markLoad(id, outcome)
+      this.loadTrace.outcome = outcome
+    },
     /** 依据最新状态快照推导官方面板地址；不满足运行条件时给出可读原因。 */
     loadUrl(snapshot: StatusSnapshot | null) {
       if (this.loading) return false

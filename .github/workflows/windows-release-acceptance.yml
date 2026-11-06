@@ -10,11 +10,11 @@ on:
       version:
         type: string
         required: true
-        default: '0.2.20'
+        default: '0.2.22'
       from_version:
         type: string
         required: true
-        default: '0.2.19'
+        default: '0.2.21'
       ota_channel:
         description: Existing production updater channel; beta permits prerelease acceptance before stable promotion
         type: choice

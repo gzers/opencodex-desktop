@@ -24,8 +24,20 @@ struct RuntimeRecord {
 
 fn read_record(context: &ProcessContext) -> ModelResult<RuntimeRecord> {
     let path = context.opencodex_home.join("runtime-port.json");
-    safety::check_path(&context.opencodex_home, &path, false)?;
-    let record: RuntimeRecord = serde_json::from_slice(&safety::read_file(&path, 4096)?)?;
+    let unreadable = || {
+        invalid("runtime_record_unavailable", "无法安全读取官方服务运行记录 runtime-port.json；请刷新运行状态或重新启动服务后重试，无需先打开面板页面")
+    };
+    safety::check_path(&context.opencodex_home, &path, true).map_err(|_| unreadable())?;
+    if !path.try_exists().map_err(|_| unreadable())? {
+        return Err(invalid("runtime_record_missing", "未找到官方服务运行记录 runtime-port.json；请从概览启动 OpenCodex 服务，或刷新已有服务的状态后重试，无需先打开面板页面"));
+    }
+    let bytes = safety::read_file(&path, 4096).map_err(|_| unreadable())?;
+    let record: RuntimeRecord = serde_json::from_slice(&bytes).map_err(|_| {
+        invalid(
+            "runtime_record_invalid",
+            "官方服务运行记录 runtime-port.json 损坏；请刷新运行状态或重新启动服务后重试",
+        )
+    })?;
     if record.pid == 0 || record.port == 0 {
         return Err(invalid("runtime_identity", "官方运行身份无效"));
     }
@@ -113,7 +125,13 @@ impl Management {
             .header("x-opencodex-attestation-challenge", &challenge)
             .send()
             .await
-            .map_err(|_| invalid("runtime_attestation", "运行身份验证不可达"))?;
+            .map_err(|error| {
+                if error.is_connect() {
+                    invalid("runtime_unreachable", "官方服务当前不可达，运行记录可能已过期；请从概览检查并启动服务后重试，无需先打开面板页面")
+                } else {
+                    invalid("runtime_attestation", "官方服务运行身份验证未完成；请检查服务状态后重试，尚未发送重启请求")
+                }
+            })?;
         let proof = response
             .headers()
             .get("x-opencodex-attestation-proof")
@@ -146,7 +164,12 @@ impl Management {
         })
     }
     fn unchanged(&self) -> ModelResult<()> {
-        let now = read_record(&self.context)?;
+        let now = read_record(&self.context).map_err(|_| {
+            invalid(
+                "stale_runtime",
+                "官方服务运行记录已变化或不可读，未继续管理请求；请刷新运行状态后重试",
+            )
+        })?;
         if (now.pid, now.port, now.attestation_secret)
             != (
                 self.record.pid,
@@ -198,8 +221,12 @@ impl Management {
     ) -> ModelResult<reqwest::RequestBuilder> {
         self.unchanged()?;
         let token_path = self.context.opencodex_home.join("admin-api-token");
-        safety::check_path(&self.context.opencodex_home, &token_path, false)?;
-        let bytes = safety::read_file(&token_path, 512)?;
+        let unavailable = || {
+            invalid("management_auth_unavailable", "官方服务管理凭据 admin-api-token 缺失或不可安全读取；请重新启动该服务生成凭据后重试，尚未发送管理请求")
+        };
+        safety::check_path(&self.context.opencodex_home, &token_path, false)
+            .map_err(|_| unavailable())?;
+        let bytes = safety::read_file(&token_path, 512).map_err(|_| unavailable())?;
         let token = std::str::from_utf8(&bytes)
             .map_err(|_| invalid("management_auth", "管理令牌编码无效"))?
             .trim();

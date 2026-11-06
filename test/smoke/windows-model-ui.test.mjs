@@ -24,32 +24,33 @@ test('writes require the exact admitted immutable and saved sandbox, never a rel
 test('invalid native roots are rejected before invoking any application command',async()=>{
  let invoked=false;await assert.rejects(verifyWindowsModelUi(async()=>{invoked=true},'.',facts,'C:\\other'));assert.equal(invoked,false)
 })
-test('020 and 021 require the native keyboard/menu checks while older admitted images retain baseline behavior',()=>{
- for(const version of ['0.2.20','0.2.21'])assert.equal(nativeModelKeyboardChecksRequired(version),true,version)
+test('020 through 022 require the native keyboard/menu checks while older admitted images retain baseline behavior',()=>{
+ for(const version of ['0.2.20','0.2.21','0.2.22'])assert.equal(nativeModelKeyboardChecksRequired(version),true,version)
  for(const version of ['0.2.16','0.2.17','0.2.18','0.2.19'])assert.equal(nativeModelKeyboardChecksRequired(version),false,version)
- for(const version of ['0.2.22','0.2.210','0.3.0','1.0.0','v0.2.21','0.2.021','0.2.21-rc.1','0.2.21 ','',null,undefined,21,{}]){
+ for(const version of ['0.2.23','0.2.210','0.3.0','1.0.0','v0.2.21','0.2.021','0.2.21-rc.1','0.2.21 ','',null,undefined,21,{}]){
   assert.throws(()=>nativeModelKeyboardChecksRequired(version),/Unsupported native model UI acceptance version/)
  }
 })
-test('native acceptance rejects unadmitted versions before IPC, while 020 and 021 enter the CDP driver',async()=>{
+test('native acceptance rejects unadmitted versions before IPC, while 020 through 022 enter the CDP driver',async()=>{
  const home=root+'\\opencodex-home'
  const bound={...facts,dataRoot:{...facts.dataRoot,opencodexHomeMode:'inside',currentOpencodexHome:home,opencodexHome:home}}
- for(const version of ['0.2.22','0.3.0','0.2.21-rc.1']){
+ for(const version of ['0.2.23','0.3.0','0.2.21-rc.1']){
   let calls=0
   await assert.rejects(verifyWindowsModelUi(async()=>{calls++},'.',{...bound,about:{...bound.about,version}},root),/Unsupported native model UI acceptance version/)
   assert.equal(calls,0,version)
  }
- for(const version of ['0.2.20','0.2.21']){
+ for(const version of ['0.2.20','0.2.21','0.2.22']){
   const reached=new Error('admitted native CDP driver reached');let calls=0
   await assert.rejects(verifyWindowsModelUi(async method=>{calls++;assert.equal(method,'Runtime.evaluate');throw reached},'.',{...bound,about:{...bound.about,version}},root),error=>error===reached)
   assert.equal(calls,1,version)
  }
 })
 test('021 uses public native AppModal/header X; the 020 upgrade image keeps its own mask/dialog contract',()=>{
+ assert.deepEqual(nativeModelUiContract('0.2.22'),{publicDialogs:true,confirmation:'dialog.app-modal-dialog[open]',close:'dialog[open] > .ui-dialog-header'})
  assert.deepEqual(nativeModelUiContract('0.2.21'),{publicDialogs:true,confirmation:'dialog.app-modal-dialog[open]',close:'dialog[open] > .ui-dialog-header'})
  assert.deepEqual(nativeModelUiContract('0.2.20'),{publicDialogs:false,confirmation:'.modal-mask',close:'dialog[open]'})
  for(const version of ['0.2.19','0.2.18','0.2.17','0.2.16'])assert.equal(nativeModelUiContract(version).publicDialogs,false)
- assert.throws(()=>nativeModelUiContract('0.2.22'))
+ assert.throws(()=>nativeModelUiContract('0.2.23'))
 })
 function defaultConfirmationFixture(version,mutate=()=>{}){
  class Dialog {
@@ -70,11 +71,11 @@ function defaultConfirmationFixture(version,mutate=()=>{}){
    scene.clicks.push({text,selector});assert.equal(text,'设为默认')
    if(scene.clicks.length===1){
     assert.equal(selector,'dialog[open]')
-    if(version==='0.2.21')scene.dialogs.push(confirmation)
+    if(['0.2.21','0.2.22'].includes(version))scene.dialogs.push(confirmation)
     else {parent.open=false;scene.mask=true}
     mutate(scene,{parent,confirmation,Dialog})
    }else{
-    assert.equal(selector,version==='0.2.21'?'dialog.app-modal-dialog[open]':'.modal-mask')
+    assert.equal(selector,['0.2.21','0.2.22'].includes(version)?'dialog.app-modal-dialog[open]':'.modal-mask')
     scene.commits++;confirmation.open=false;scene.mask=false;parent.open=true
    }
   },
@@ -82,11 +83,11 @@ function defaultConfirmationFixture(version,mutate=()=>{}){
  }
  return {driver,scene,parent,confirmation,document,Dialog}
 }
-for(const version of ['0.2.20','0.2.21'])test(version+' executes the actual default-confirmation driver through its real layer transition',async()=>{
+for(const version of ['0.2.20','0.2.21','0.2.22'])test(version+' executes the actual default-confirmation driver through its real layer transition',async()=>{
  const {driver,scene,parent,confirmation}=defaultConfirmationFixture(version)
  await confirmNativeTemplateDefault(driver,version)
  assert.equal(scene.commits,1);assert.equal(scene.clicks.length,2)
- assert.deepEqual(scene.observed[0],version==='0.2.21'?[parent,confirmation]:[],'021 keeps the exact parent while 020 suspends it')
+ assert.deepEqual(scene.observed[0],['0.2.21','0.2.22'].includes(version)?[parent,confirmation]:[],'021 keeps the exact parent while 020 suspends it')
  assert.deepEqual(scene.dialogs.filter(d=>d.open),[parent],'confirmation must return to the same single version-manager parent')
 })
 test('021 refuses a third layer, incorrect parent/child, duplicate AppModal or any legacy mask before committing',async()=>{
@@ -158,18 +159,39 @@ test('native Save evidence requires changed file bytes and one exact backup with
  assert((await readFile(config)).equals(final.bytes))
 })
 
-function nativeMenuFixture({tops=[535.25,499.25,356.25,356.25,356.25],afterMove=()=>{},opens=true}={}){
+test('native rename Save distinguishes one exact prewrite backup from its recovery journal',async t=>{
+ const directory=await mkdtemp(join(tmpdir(),'ocx-native-rename-evidence-'))
+ t.after(()=>rm(directory,{recursive:true,force:true}))
+ const config=join(directory,'config.json'),backupRoot=join(directory,'backups','model-config')
+ await writeFile(config,'{"providers":{"old":{}}}')
+ const before=await modelFileEvidence(config,directory)
+ await mkdir(join(backupRoot,'prewrite'),{recursive:true})
+ await writeFile(join(backupRoot,'prewrite','config.json'),before.bytes)
+ await writeFile(config,'{"providers":{"renamed":{}}}')
+ const journal=join(backupRoot,'rename-00000000-0000-4000-8000-000000000001')
+ await mkdir(journal);await writeFile(join(journal,'0.before'),before.bytes);await writeFile(join(journal,'0.after'),await readFile(config))
+ const after=await modelFileEvidence(config,directory)
+ await assert.rejects(assertModelFileWrite(before,after,directory),/Only provider rename/)
+ await assertModelFileWrite(before,after,directory,{rename:true})
+ await writeFile(join(journal,'0.after'),'wrong config')
+ await assert.rejects(assertModelFileWrite(before,after,directory,{rename:true}),/exact config/)
+ await writeFile(join(journal,'0.after'),after.bytes)
+ await writeFile(join(journal,'unexpected'),'not an image')
+ await assert.rejects(assertModelFileWrite(before,after,directory,{rename:true}),/only indexed/)
+})
+
+function nativeMenuFixture({tops=[535.25,499.25,356.25,356.25,356.25],afterMove=()=>{},opens=true,projectionReadyAfterFrame=0}={}){
  const scene={frame:0,top:tops[0],occluded:false,open:false,scrollCalls:0},commands=[],listeners=new Map(),frames=new Map()
  let nextFrame=0
  const icon={tagName:'svg',getAttribute:()=>null},overlay={tagName:'DIV',getAttribute:()=>null},scroller={scrollTop:0,scrollLeft:0,parentElement:null}
  const button={tagName:'BUTTON',disabled:false,parentElement:scroller,getAttribute:()=> 'Fast支持',contains:e=>e===button||e===icon,scrollIntoView:()=>{scene.scrollCalls++},getBoundingClientRect:()=>({x:515.5,y:scene.top,left:515.5,right:903,top:scene.top,bottom:scene.top+34,width:387.5,height:34})}
- const document={hidden:false,activeElement:button,hasFocus:()=>true,querySelector:selector=>selector.includes('[data-ui-escape-owner]')?(scene.open?{}:null):button,
+ const document={hidden:false,activeElement:button,hasFocus:()=>true,querySelector:selector=>selector.includes('.model-rule-fields caption')?(scene.frame>=projectionReadyAfterFrame?{textContent:'当前草稿有效值与来源'}:null):selector.includes('[data-ui-escape-owner]')?(scene.open?{}:null):button,
   elementFromPoint:(x,y)=>scene.occluded?overlay:x>=515.5&&x<=903&&y>=scene.top&&y<=scene.top+34?icon:null,
   addEventListener:(type,fn)=>listeners.set(type,fn),removeEventListener:type=>listeners.delete(type)}
  const context=createContext({document,window:{screenX:0,screenY:0,visualViewport:{width:1028,height:749,offsetLeft:0,offsetTop:0,pageLeft:0,pageTop:0,scale:1}},innerWidth:1028,innerHeight:749,outerWidth:1044,outerHeight:788,devicePixelRatio:1,performance:{now:()=>scene.frame*16},requestAnimationFrame:fn=>{frames.set(++nextFrame,fn);return nextFrame},cancelAnimationFrame:id=>frames.delete(id)})
  const evaluate=async expression=>runInContext(expression,context)
  function advance(){scene.top=tops[Math.min(scene.frame++,tops.length-1)];const current=[...frames.values()];frames.clear();for(const fn of current)fn(scene.frame*16)}
- const driver={evaluate,wait:async(expression,label)=>{for(let n=0;n<12;n++){advance();const value=await evaluate(expression);if(value)return value}throw Error('Native model UI timeout: '+label)},
+ const driver={evaluate,wait:async(expression,label)=>{const immediate=await evaluate(expression);if(immediate)return immediate;for(let n=0;n<12;n++){advance();const value=await evaluate(expression);if(value)return value}throw Error('Native model UI timeout: '+label)},
   call:async(method,args)=>{
    assert.equal(method,'Input.dispatchMouseEvent');commands.push(args)
    if(args.type==='mouseMoved'){afterMove(scene);return}
@@ -190,6 +212,21 @@ test('actual native menu driver waits through moving frames, rechecks a composit
  assert(trace.stages[0].sameGeometry&&trace.stages[0].sameHit);assert.equal(trace.stages[0].current.hitTarget.tag,'svg')
  assert.deepEqual(trace.events.map(e=>e.type),['pointerdown','mousedown','pointerup','mouseup','click']);assert(trace.events.every(e=>e.trusted&&e.targetWithinButton))
  assert.equal(f.context.__ocxModelMenuInput,undefined);assert.equal(f.frames.size,0);assert.equal(f.listeners.size,0)
+})
+test('native menu waits for delayed effective projection before sampling the trigger geometry',async t=>{
+ const output=await mkdtemp(join(tmpdir(),'ocx-menu-projection-'));t.after(()=>rm(output,{recursive:true,force:true}))
+ const f=nativeMenuFixture({tops:[...Array(8).fill(535.25),...Array(12).fill(499.25)],projectionReadyAfterFrame:9})
+ await clickNativeModelMenu(f.driver,output)
+ assert.deepEqual(f.commands.map(c=>c.type),['mouseMoved','mousePressed','mouseReleased'])
+ assert(f.commands.every(c=>c.y===516.25),'must wait for the known projection-dependent layout before acquiring coordinates')
+ const trace=JSON.parse(await readFile(join(output,'model-menu-input-native.json'),'utf8'))
+ assert.equal(trace.result,'pass');assert(trace.stages[0].sameGeometry&&trace.stages[0].sameHit)
+})
+test('native menu never samples or clicks when effective projection does not become ready',async t=>{
+ const output=await mkdtemp(join(tmpdir(),'ocx-menu-projection-unready-'));t.after(()=>rm(output,{recursive:true,force:true}))
+ const f=nativeMenuFixture({projectionReadyAfterFrame:100})
+ await assert.rejects(clickNativeModelMenu(f.driver,output),/projection resolved before geometry sampling/)
+ assert.deepEqual(f.commands,[]);assert.equal(f.scene.scrollCalls,0);assert.equal(f.context.__ocxModelMenuInput,undefined)
 })
 test('native menu driver refuses movement or occlusion after stable frames before pressing, retaining the failed guard',async t=>{
  const output=await mkdtemp(join(tmpdir(),'ocx-menu-guard-'));t.after(()=>rm(output,{recursive:true,force:true}))

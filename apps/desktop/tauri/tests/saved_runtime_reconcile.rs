@@ -35,6 +35,7 @@ enum Fault {
     ReloadUnavailable,
     ReloadMissingRow,
     ReloadDrift,
+    ReloadObservationDrift,
     ConfigDrift,
     BatchConflict,
     BatchUnavailable,
@@ -208,6 +209,12 @@ async fn reload(State(owner): State<Owner>, headers: HeaderMap, body: Bytes) -> 
     }
     if owner.fault == Fault::ReloadDrift {
         drift(&owner);
+    }
+    if owner.fault == Fault::ReloadObservationDrift {
+        let path = owner.root.join("config.json");
+        let mut disk: Value = serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+        disk["modelDiscovery"]["knownModels"]["Krill"]["updatedAt"] = json!("2026-11-05T00:00:00Z");
+        std::fs::write(path, serde_json::to_vec_pretty(&disk).unwrap()).unwrap();
     }
     Json(json!({"success":true,"name":name})).into_response()
 }
@@ -534,6 +541,21 @@ async fn multiple_old_prefixes_reload_shared_target_once() {
         fixture.operations(),
         ["reload:Krill", "reload:xai", "config", "batch", "config"]
     );
+}
+
+#[tokio::test]
+async fn observation_timestamp_drift_still_refuses_activation_without_clearing_pending() {
+    let fixture = Fixture::new(Fault::ReloadObservationDrift).await;
+    let path = fixture.owner.root.join("config.json");
+    let mut disk: Value = serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+    disk["modelDiscovery"] = json!({"knownModels":{"Krill":{
+        "ids":["vendor/a:8b"],"removed":[],"updatedAt":"2026-01-01T00:00:00Z"
+    }}});
+    std::fs::write(path, serde_json::to_vec_pretty(&disk).unwrap()).unwrap();
+    let error = fixture.reconcile().await.unwrap_err();
+    assert_eq!(error.code, "saved_runtime_drift");
+    assert_eq!(fixture.operations(), ["reload:Krill"]);
+    fixture.assert_sentinels();
 }
 
 #[tokio::test]

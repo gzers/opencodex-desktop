@@ -12,6 +12,8 @@ use std::path::Path;
 use std::time::Duration;
 #[path = "client_npm_runtime.rs"]
 pub mod client_npm_runtime;
+#[path = "client_runtime_readiness.rs"]
+mod client_runtime_readiness;
 #[path = "client_selection_rename.rs"]
 pub mod client_selection_rename;
 #[path = "saved_runtime_reconcile.rs"]
@@ -31,6 +33,19 @@ fn read_rename_preparation(
     let Some(pending) = rename_effects::load(root, &context.opencodex_home)? else {
         return Ok(None);
     };
+    if !context
+        .opencodex_home
+        .join("config.json")
+        .try_exists()
+        .map_err(|_| {
+            invalid(
+                "restart_saved_config_unavailable",
+                "无法读取已保存配置 config.json；请核对当前数据目录后重试",
+            )
+        })?
+    {
+        return Err(invalid("restart_saved_config_missing", "已保存配置 config.json 已不存在；请重新读取并核对配置，当前待处理改名记录已保留，尚未重启"));
+    }
     let snapshot = config_file::snapshot(root, &context.opencodex_home)?;
     Ok(Some(RenamePreparation {
         id: pending.id.clone(),
@@ -150,11 +165,18 @@ fn verify_client_route(binding: &ClientBinding, management_base: &str) -> ModelR
         )
     };
     let path = binding.codex_home.join("config.toml");
-    crate::modules::backup::safety::check_path(&binding.codex_home, &path, false)?;
-    let bytes = zeroize::Zeroizing::new(crate::modules::backup::safety::read_file(
-        &path,
-        2 * 1024 * 1024,
-    )?);
+    let unavailable = || {
+        invalid(
+            "rename_client_config_unavailable",
+            "Codex 客户端配置 config.toml 缺失或不可安全读取；请核对客户端绑定后重试，尚未重启",
+        )
+    };
+    crate::modules::backup::safety::check_path(&binding.codex_home, &path, false)
+        .map_err(|_| unavailable())?;
+    let bytes = zeroize::Zeroizing::new(
+        crate::modules::backup::safety::read_file(&path, 2 * 1024 * 1024)
+            .map_err(|_| unavailable())?,
+    );
     let routing: Routing =
         toml::from_str(std::str::from_utf8(&bytes).map_err(|_| fail())?).map_err(|_| fail())?;
     let selected = routing.model_provider.as_deref().unwrap_or("openai");
@@ -209,6 +231,11 @@ fn client_binding(
         return Err(invalid_binding());
     }
     if !config_path.try_exists().map_err(|_| invalid_binding())? {
+        if matches!(integration["state"].as_str(), Some("current" | "stale"))
+            && integration["installed"] == true
+        {
+            return Err(invalid("rename_client_config_missing", "已绑定的 Codex 客户端配置 config.toml 已不存在；请核对客户端安装与配置后重试，尚未重启"));
+        }
         return Ok(None);
     }
     if !matches!(integration["state"].as_str(), Some("current" | "stale"))
@@ -300,7 +327,7 @@ pub async fn prepare_saved_rename_restart(
     let selection = if preparation.mapping.is_empty() {
         None
     } else {
-        let settings = management.public_settings().await?;
+        let settings = client_runtime_readiness::read_settings(&management).await?;
         let integration = management.codex_integration().await?;
         let binding = client_binding(&settings, &integration)?;
         match binding {
@@ -352,12 +379,15 @@ pub async fn sync_cache_after_save(
         .await
         .map_err(|mut error| {
             error.message = format!(
-                "渠道配置已写入，但当前引用准备未完成，尚未重启Codex：{}",
+                "配置已写入，但当前引用准备未完成，尚未重启 Codex：{}",
                 error.message
             );
             error
         })?;
-    let result = sync_cache(context, true).await?;
+    let result = sync_cache(context, true).await.map_err(|mut error| {
+        error.message = format!("配置已写入，但重启尚未完成：{}", error.message);
+        error
+    })?;
     if result.success && result.restarted {
         if let Some(id) = prepared {
             let owned_root = root.to_path_buf();

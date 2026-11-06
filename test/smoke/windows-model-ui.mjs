@@ -31,12 +31,12 @@ export function modelConfigPath(facts,expected){
  return win32.join(home,'config.json')
 }
 export function nativeModelKeyboardChecksRequired(version){
- assert(['0.2.16','0.2.17','0.2.18','0.2.19','0.2.20','0.2.21'].includes(version),'Unsupported native model UI acceptance version')
- return ['0.2.20','0.2.21'].includes(version)
+ assert(['0.2.16','0.2.17','0.2.18','0.2.19','0.2.20','0.2.21','0.2.22'].includes(version),'Unsupported native model UI acceptance version')
+ return ['0.2.20','0.2.21','0.2.22'].includes(version)
 }
 export function nativeModelUiContract(version){
  nativeModelKeyboardChecksRequired(version)
- const publicDialogs=version==='0.2.21'
+ const publicDialogs=['0.2.21','0.2.22'].includes(version)
  return {publicDialogs,confirmation:publicDialogs?'dialog.app-modal-dialog[open]':'.modal-mask',close:publicDialogs?'dialog[open] > .ui-dialog-header':'dialog[open]'}
 }
 export async function confirmNativeTemplateDefault({wait,click},version){
@@ -85,6 +85,11 @@ function installNativeModelMenuObservation(){
 export async function clickNativeModelMenu({evaluate,wait,call},output){
  let point,error,installed=false
  try{
+  // The detail can mount before asynchronous model projection completes. Its
+  // provisional explanation disappears once effective values arrive, moving
+  // the trigger even after several initially stable frames. Await the real
+  // resolved-values table before scrolling or acquiring any pointer geometry.
+  await wait("document.querySelector('dialog[open] .model-rule-fields caption')?.textContent.trim()==='当前草稿有效值与来源'",'native model detail projection resolved before geometry sampling')
   installed=await evaluate('('+installNativeModelMenuObservation.toString()+')()')
   point=await wait('globalThis.__ocxModelMenuInput.ready()','native menu trigger is stable across frames and hit-testable')
   await call('Input.dispatchMouseEvent',{type:'mouseMoved',x:point.x,y:point.y})
@@ -110,12 +115,25 @@ export async function modelFileEvidence(configPath,root){
  try{backups=(await readdir(join(root,'backups','model-config'))).sort()}catch(error){if(error.code!=='ENOENT')throw error;backups=[]}
  return {bytes:await readFile(configPath),backups}
 }
-export async function assertModelFileWrite(before,after,root){
+export async function assertModelFileWrite(before,after,root,{rename=false}={}){
  assert(!after.bytes.equals(before.bytes),'Save must change actual config.json bytes')
  const added=after.backups.filter(name=>!before.backups.includes(name))
- assert.equal(added.length,1,'Save must create exactly one prewrite backup')
+ const journals=added.filter(name=>/^rename-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(name))
+ const prewrites=added.filter(name=>!journals.includes(name))
+ assert.equal(prewrites.length,1,'Save must create exactly one prewrite backup')
+ assert.equal(journals.length,rename?1:0,'Only provider rename Save may create one recovery journal')
  assert.deepEqual(after.backups.filter(name=>before.backups.includes(name)),before.backups,'Save must preserve earlier backups')
- assert((await readFile(join(root,'backups','model-config',added[0],'config.json'))).equals(before.bytes),'backup must contain exact prewrite config.json bytes')
+ assert((await readFile(join(root,'backups','model-config',prewrites[0],'config.json'))).equals(before.bytes),'backup must contain exact prewrite config.json bytes')
+ for(const name of journals){
+  const directory=join(root,'backups','model-config',name),files=await readdir(directory)
+  assert(files.length>0&&files.every(file=>/^[0-9]+[.](before|after)$/.test(file)),'rename recovery journal must contain only indexed pre/post images')
+  let configImage=false
+  for(const file of files.filter(file=>file.endsWith('.before'))){
+   const pre=await readFile(join(directory,file)),post=await readFile(join(directory,file.replace(/[.]before$/,'.after')))
+   if(pre.equals(before.bytes)&&post.equals(after.bytes))configImage=true
+  }
+  assert(configImage,'rename recovery journal must retain exact config pre/post images')
+ }
 }
 export async function verifyWindowsModelUi(call,output,facts,expected){
  const configPath=modelConfigPath(facts,expected)
@@ -129,7 +147,12 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
   throw Error('Native model UI timeout: '+label)
  }
  const visible="e.getClientRects().length>0"
- async function click(text,selector='.models-page'){const done=await evaluate("(()=>{const root=document.querySelector("+JSON.stringify(selector)+");const button=[...root?.querySelectorAll('button')??[]].find(e=>(e.textContent.trim()==="+JSON.stringify(text)+"||e.getAttribute('aria-label')==="+JSON.stringify(text)+")&&"+visible+"&&!e.disabled);if(!button)return false;button.click();return true})()");assert(done,'Native visible action missing: '+text)}
+ async function click(text,selector='.models-page'){
+  // Returning from a public confirmation can reopen its owning native dialog
+  // one frame before the header becomes visible. Keep the same real selector,
+  // visibility and enabled guards under the existing bounded native wait.
+  await wait("(()=>{const root=document.querySelector("+JSON.stringify(selector)+");const button=[...root?.querySelectorAll('button')??[]].find(e=>(e.textContent.trim()==="+JSON.stringify(text)+"||e.getAttribute('aria-label')==="+JSON.stringify(text)+")&&"+visible+"&&!e.disabled);if(!button)return false;button.click();return true})()",'visible action '+text)
+ }
  // Tauri defines invoke as a non-writable property. Inspect it without replacing IPC.
  const invokeDescriptor=await evaluate("(()=>{const d=Object.getOwnPropertyDescriptor(window.__TAURI_INTERNALS__,'invoke');return {type:typeof d?.value,writable:d?.writable,configurable:d?.configurable}})()")
  await writeFile(join(output,'model-ipc-descriptor.json'),JSON.stringify(invokeDescriptor,null,2)+'\n')
@@ -242,10 +265,13 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  }
  await openChannel(otherChannelId,'native-scope-a-original-key')
  assert.equal(await evaluate(detailSaveDisabled),true,'clean detail Save disabled')
- await inputValue('#channel-config label input','Native scope A pending')
- // This existing scenario isolates label/Key/row scope. The 021 provider
- // namespace migration is exercised separately with default/order readback.
- if(contract.publicDialogs)await inputValue('input[aria-label="运行渠道标识"]','native-scope-a-fixture')
+ const hasExplicitProvider=await evaluate("!!document.querySelector('input[aria-label=\"运行渠道标识\"]')")
+ const pendingName=hasExplicitProvider?'Native scope A pending':'Native-scope-A-pending'
+ const pendingProvider=hasExplicitProvider?'native-scope-a-fixture':'Native-scope-A-pending'
+ await inputValue('#channel-config label input',pendingName)
+ // Historical 0.2.21 exposes an explicit key; name-only candidates allocate it.
+ // Both must still prove the same selective-save and pending-Key boundaries.
+ if(hasExplicitProvider)await inputValue('input[aria-label="运行渠道标识"]','native-scope-a-fixture')
  await inputValue('input[aria-label="API Key"]','native-scope-a-pending-key')
  await click('展开编辑','.channel-model-table')
  await inputValue('.model-row-editor input[type=number]','96000')
@@ -296,7 +322,7 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await click('返回渠道列表');await wait("!!document.querySelector('.channel-table')",'B return')
  await openChannel(otherChannelId,'native-scope-a-pending-key')
  assert.equal(await evaluate(detailSaveDisabled),false,'A remains dirty after B Save')
- assert.equal(await evaluate("document.querySelector('#channel-config label input').value"),'Native scope A pending','A name retained')
+ assert.equal(await evaluate("document.querySelector('#channel-config label input').value"),pendingName,'A name retained')
  assert.equal(await evaluate("document.querySelector('.model-row-editor input[type=number]').value"),'96000','A unconfirmed row input retained')
  assert.equal(await evaluate("!!document.querySelector('tr[data-model=fixture-scope-a][data-pending=true]')"),true,'A pending row retained')
  await click('加入草稿','.model-row-editor')
@@ -307,7 +333,7 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
   await wait("!![...document.querySelectorAll('dialog[open]')].find(e=>e.textContent.includes('保存预览'))",'global list Preview')
  }
  await openSavePreview()
- assert.equal(await evaluate("(()=>{const d=document.querySelector('dialog[open]');return d.textContent.includes('Native scope A pending')&&d.textContent.includes('Native sort fixture')})()"),true,'list Preview still shows all channels')
+ assert.equal(await evaluate("(()=>{const d=document.querySelector('dialog[open]');return d.textContent.includes("+JSON.stringify(pendingName)+")&&d.textContent.includes('Native sort fixture')})()"),true,'list Preview still shows all channels')
  await click('取消','dialog[open]');await wait("!document.querySelector('dialog[open]')",'cancel list Preview')
  assert((await readFile(configPath)).equals(savedBBytes),'cancel Preview must neither revert B nor write A')
  const canceled=await modelFileEvidence(configPath,expected),canceledSnapshot=await invoke('model_file_snapshot')
@@ -317,14 +343,14 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await openSavePreview();await click('确认保存','dialog[open]')
  await wait("!!document.querySelector('.notif-layer .process-progress')",'remaining A file Save result')
  const remainingEvidence=await modelFileEvidence(configPath,expected),remaining=JSON.parse(remainingEvidence.bytes)
- await assertModelFileWrite(writtenEvidence,remainingEvidence,expected)
- assert.equal(remaining.providers['native-scope-a-fixture'].apiKey,'native-scope-a-pending-key','remaining Save commits A Key')
- assert.equal(remaining.providers['native-scope-a-fixture'].modelContextWindows['fixture-scope-a'],96000,'remaining Save commits confirmed A row')
+ await assertModelFileWrite(writtenEvidence,remainingEvidence,expected,{rename:pendingProvider!=='native-scope-a-fixture'})
+ assert.equal(remaining.providers[pendingProvider].apiKey,'native-scope-a-pending-key','remaining Save commits A Key')
+ assert.equal(remaining.providers[pendingProvider].modelContextWindows['fixture-scope-a'],96000,'remaining Save commits confirmed A row')
  for(const [providerId,provider] of Object.entries(written.providers))if(providerId!=='native-scope-a-fixture')assert.deepEqual(remaining.providers[providerId],provider,'remaining Save changed saved B or another Key: '+providerId)
  assert.equal(Object.keys(remaining.providers).length,Object.keys(written.providers).length,'remaining Save preserves provider set')
  const remainingSnapshot=await invoke('model_file_snapshot'),remainingA=remainingSnapshot.policy.channels.find(c=>c.id===otherChannelId)
  assert.notEqual(remainingSnapshot.policyDigest,saved.policyDigest,'remaining Save changes real file digest')
- assert.equal(remainingA.label,'Native scope A pending','remaining Save commits A name')
+ assert.equal(remainingA.label,pendingName,'remaining Save commits A name')
  assert.equal(remainingA.overrides['fixture-scope-a'].contextWindow.value,96000,'snapshot reads back confirmed A row')
  assert.deepEqual(remainingSnapshot.policy.channels.find(c=>c.id===channelId),saved.policy.channels.find(c=>c.id===channelId),'remaining Save preserves B snapshot and order')
  await wait("document.querySelector('[data-testid=policy-save]')?.disabled",'remaining changes now clean')

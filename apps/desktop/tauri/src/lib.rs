@@ -572,6 +572,7 @@ pub fn run() {
             commands::model_transfer::portable_account_catalog,
             commands::model_transfer::portable_channel_catalog,
             commands::model_transfer::config_sync_scope,
+            commands::model_transfer::config_sync_observe,
             commands::model_transfer::transfer_choices,
             commands::model_transfer::transfer_result,
             commands::model_transfer::open_transfer_export_directory,

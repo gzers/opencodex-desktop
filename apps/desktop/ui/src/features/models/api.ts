@@ -89,7 +89,7 @@ export interface MatchPreview { matched: boolean; reason: string; variantId: str
 export const emptyRules = (): ModelRules => ({ protocol: { mode: 'inherit' }, contextWindow: { mode: 'inherit' }, inputModalities: { mode: 'inherit' }, reasoningEfforts: { mode: 'inherit' }, defaultEffort: { mode: 'inherit' }, fast: { mode: 'inherit' }, pinnedEffort:{mode:'inherit'}, effortMap:{mode:'inherit'}, noReasoning:{mode:'inherit'},reasoningAuthoritative:{mode:'inherit'},fastWire:{mode:'inherit'} })
 export const emptyContent = (): TemplateContent => ({ description: '', matching: { include: [{ kind: 'prefix', value: '' }], exclude: [], caseSensitive: false, channelMode: 'all', channels: [], priority: 0 }, rules: emptyRules(), variants: [], lockedFields: [], sources: [] })
 export const modelApi = {
-  previewNewChannel:(request:{protocol:string;url:string;apiKey:string|null;credentialRef:null;allowPrivateNetwork:boolean})=>invoke<{models:DiscoveredModel[];credentialRef:null;elapsedMs:number}>('model_new_channel_preview',{request}),
+  previewNewChannel:(request:{protocol:string;url:string;apiKey:string|null;credentialRef:null;allowPrivateNetwork?:boolean})=>invoke<{models:DiscoveredModel[];credentialRef:null;elapsedMs:number}>('model_new_channel_preview',{request}),
   load: () => invoke<ModelSnapshot>('model_file_snapshot'),
   // Historical recovery alone uses the manager policy/workspace digest domain.
   loadRecoveryBaseline: () => invoke<ModelSnapshot>('model_config_snapshot'),
@@ -117,9 +117,9 @@ export const modelApi = {
   /** 用户显式放弃这次写入（0.2.11）：仅当重新检查与撤回都不可行时使用。 */
   abandonPolicy: (planId:string) => invoke<SavePlan>('model_policy_abandon',{planId}),
   upstream: () => invoke<UpstreamSnapshot>('model_upstream_snapshot'),
-  discover: (request:{protocol:string;url:string;apiKey:string|null;credentialRef:string|null;allowPrivateNetwork:boolean;providerId?:string}) => invoke<{models:DiscoveredModel[];credentialRef:string|null;elapsedMs:number}>('model_channel_discover',{request}),
+  discover: (request:{protocol:string;url:string;apiKey:string|null;credentialRef:string|null;allowPrivateNetwork?:boolean;providerId?:string}) => invoke<{models:DiscoveredModel[];credentialRef:string|null;elapsedMs:number}>('model_channel_discover',{request}),
   forgetCredential: (reference:string) => invoke<void>('model_channel_forget_credential',{reference}),
-  measureNodes:(request:{runId:string;protocol:string;nodes:ServiceNode[];apiKey:string|null;credentialRef:string|null;allowPrivateNetwork:boolean;providerId?:string|null})=>invoke<NodeMeasurementSet>('model_node_measure',{request}),
+  measureNodes:(request:{runId:string;protocol:string;nodes:ServiceNode[];apiKey:string|null;credentialRef:string|null;allowPrivateNetwork?:boolean;providerId?:string|null})=>invoke<NodeMeasurementSet>('model_node_measure',{request}),
   stopNodeMeasurement:(runId:string)=>invoke<void>('model_node_measure_stop',{runId}),
   external: (request: ExternalTaskRequest) => invoke<TaskBundle>('model_external_task', { request }),
   activate: (grant: TaskGrant) => invoke<void>('model_external_activate', { grant }),

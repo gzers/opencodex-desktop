@@ -5,11 +5,23 @@ import {mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join} from 'node:path'
 import {runInNewContext} from 'node:vm'
-import {assert021Admission,assert021RenameReadback,assert021RenameBackups,assert021DetectionLayout,assert021WebdavState,verifyWindows021Probes,close021Dialog,native021Click} from './windows-021-probes.mjs'
+import {assert021Admission,assert021RenameReadback,assert021RenameBackups,assert021DetectionLayout,assert021WebdavState,inspect021Webdav,verifyWindows021Probes,close021Dialog,native021Click} from './windows-021-probes.mjs'
 import {observe021Ipc,assert021IpcSafety,assert021NoticeTiming,install021NoticeObservation,sample021Notice,install021CandidateObservation} from './windows-021-observer.mjs'
+import {assertFirstScopeSelection} from './post021-windows-final/scope-proof.mjs'
+
+test('first-device native scope requires the complete independent fixture union, not one selected object',()=>{
+ const expected={channelIds:['local-channel','cloud-only-channel'],templateIds:['local-template','cloud-only-template']}
+ assert.doesNotThrow(()=>assertFirstScopeSelection(structuredClone(expected),expected))
+ assert.doesNotThrow(()=>assertFirstScopeSelection({channelIds:[...expected.channelIds].reverse(),templateIds:[...expected.templateIds].reverse()},expected))
+ for(const mutate of [x=>x.channelIds.pop(),x=>x.templateIds.pop(),x=>x.channelIds.push('unrelated'),x=>x.templateIds.push(x.templateIds[0]),x=>{x.channelIds=[]}]){
+  const actual=structuredClone(expected);mutate(actual);assert.throws(()=>assertFirstScopeSelection(actual,expected))
+ }
+ assert.throws(()=>assertFirstScopeSelection(expected,{channelIds:[],templateIds:expected.templateIds}))
+})
 
 const root='C:\\runner\\owned-sandbox',home=root+'\\opencodex-home'
 const facts={about:{platform:'Windows',version:'0.2.21'},dataRoot:{currentDataRoot:root,activeDataRoot:root,runtimeActive:true,opencodexHomeMode:'inside',currentOpencodexHome:home,opencodexHome:home}}
+test('022 reuses the complete public contract under the same immutable root guard',()=>{assert.equal(assert021Admission({...facts,about:{...facts.about,version:'0.2.22'}},root),home+'\\config.json');assert.throws(()=>assert021Admission({...facts,about:{...facts.about,version:'0.2.23'}},root))})
 test('021 probes fail closed before IPC or filesystem access for wrong version/platform/immutable roots',async()=>{
  assert.equal(assert021Admission(facts,root),home+'\\config.json')
  for(const bad of [
@@ -84,6 +96,20 @@ test('rename readback validates entire real file, exact namespaces, stable IDs, 
   x=>{x.afterSnapshot.policyDigest=x.beforeSnapshot.policyDigest},
  ]){const value=renameFixture();mutate(value);assert.throws(()=>assert021RenameReadback(value))}
 })
+test('name-only rename requires persisted display name while protecting the full provider document',()=>{
+ const value=renameFixture();value.updatesDisplayName=true
+ value.before.providers[value.from].name=value.from
+ value.after.providers[value.to].name=value.to
+ assert.doesNotThrow(()=>assert021RenameReadback(value))
+ for(const mutate of [
+  x=>{x.after.providers[x.to].name=x.from},
+  x=>{delete x.after.providers[x.to].name},
+  x=>{x.after.providers[x.to].apiKey='lost-key'},
+  x=>{x.after.providers[x.to].native021Opaque.literal=x.to+'/leave-opaque'},
+  x=>{x.after.providers[x.from+'0'].name='changed-neighbor'},
+ ]){const changed=structuredClone(value);mutate(changed);assert.throws(()=>assert021RenameReadback(changed))}
+ assert.throws(()=>assert021RenameReadback({...value,updatesDisplayName:false}),'historical ID contract must not silently adopt display-name writes')
+})
 test('rename backup validation requires one exact ordinary backup plus exact transaction pre/post images',async t=>{
  const output=await mkdtemp(join(tmpdir(),'ocx021-backups-'));t.after(()=>rm(output,{recursive:true,force:true}))
  const before={bytes:Buffer.from('exact-prewrite\n'),backups:['older']},transaction='rename-12345678-1234-1234-1234-123456789abc',after={bytes:Buffer.from('exact-postwrite\n'),backups:['older','ordinary',transaction].sort()},base=join(output,'backups','model-config')
@@ -99,6 +125,48 @@ test('eight-second notice timing subtracts actual confirmation pauses and reject
  const value={shownAt:100,removedAt:13600,leavingAt:13200,focusOnAnchor:true,phases:[{phase:'running',at:100},{phase:'paused',at:1100},{phase:'running',at:6200},{phase:'elapsed',at:13200}]}
  assert.equal(assert021NoticeTiming(value).runningMs,8000)
  for(const change of [{phases:[{phase:'running',at:100},{phase:'elapsed',at:7100}]},{phases:[{phase:'running',at:100},{phase:'elapsed',at:7900}]},{phases:[{phase:'running',at:100},{phase:'elapsed',at:8900}]},{shownAt:null},{removedAt:null},{focusOnAnchor:false},{phases:[]}])assert.throws(()=>assert021NoticeTiming({...value,...change}))
+})
+test('native version observer materializes scalar facts instead of returning a reactive Proxy',()=>{
+ const fact={revision:'bound-revision',source:'version-check',remoteRead:'failed',remoteTime:null,remoteObservedAt:'2026-11-05T00:00:00Z'}
+ const observation=new Proxy(fact,{ownKeys:()=>[]})
+ assert.deepEqual(JSON.parse(JSON.stringify(observation)),{})
+ const sync={webdavState:'failed',config:{endpoint:{revision:fact.revision}},observation,checkingVersion:false}
+ const app={__vue_app__:{config:{globalProperties:{$pinia:{state:{value:{sync}}}}}}}
+ const inspected=runInNewContext('('+inspect021Webdav.toString()+')()',{document:{querySelector:s=>s==='#app'?app:null}})
+ const value=JSON.parse(JSON.stringify(inspected))
+ assert.deepEqual(value.observation,fact)
+ assert.equal(value.revision,fact.revision)
+ assert.equal(value.checkingVersion,false)
+})
+test('actual V8 returnByValue preserves projected observation scalars while a raw Proxy serializes empty',async()=>{
+ const session=new Session();session.connect()
+ try{
+  const raw=await session.post('Runtime.evaluate',{expression:'({observation:new Proxy({revision:"fixture-revision"},{})})',returnByValue:true})
+  assert.deepEqual(raw.result.value,{observation:{}})
+  const expression='(()=>{const observation=new Proxy({revision:"fixture-revision",source:"version-check",remoteRead:"failed",remoteTime:null,remoteObservedAt:"2026-11-05T00:00:00Z"},{});const app={__vue_app__:{config:{globalProperties:{$pinia:{state:{value:{sync:{webdavState:"failed",config:{endpoint:{revision:"fixture-revision"}},observation,checkingVersion:false}}}}}}}};const document={querySelector:s=>s==="#app"?app:null};return ('+inspect021Webdav.toString()+')()})()'
+  const projected=await session.post('Runtime.evaluate',{expression,returnByValue:true})
+  assert.equal(projected.exceptionDetails,undefined)
+  assert.equal(projected.result.value.observation.revision,'fixture-revision')
+  assert.equal(projected.result.value.observation.source,'version-check')
+  assert.equal(projected.result.value.observation.remoteObservedAt,'2026-11-05T00:00:00Z')
+ }finally{session.disconnect()}
+})
+test('adopted startup version probe admits only readonly IPC and requires the real failed observation',()=>{
+ assert.doesNotThrow(()=>assert021IpcSafety(['app_about','config_sync_observe'],[],['config_sync_observe']))
+ assert.throws(()=>assert021IpcSafety(['app_about','config_sync_observe']))
+ for(const command of ['config_sync_publish','config_sync_download','config_sync_check','test_sync_connection']){
+  assert.throws(()=>assert021IpcSafety(['app_about',command],[],['config_sync_observe']))
+  assert.throws(()=>assert021IpcSafety(['app_about',command],[],[command]))
+ }
+ const revision='actual-revision',value={state:'failed',revision,hasObservation:true,checkingVersion:false,observation:{revision,source:'version-check',remoteRead:'failed',remoteTime:null,remoteObservedAt:'2026-11-05T00:00:00Z'},card:{text:'WebDAV 同步 最近检测失败',remote:'— · 读取失败',dots:0},gate:{}}
+ assert.equal(assert021WebdavState(value,revision,{startupVersionCheck:true}),'rendered')
+ for(const mutate of [
+  x=>{x.state='connected'},x=>{x.checkingVersion=true},x=>{x.hasObservation=false},
+  x=>{x.observation.revision='other'},x=>{x.observation.source='sync'},
+  x=>{x.observation.remoteRead='present'},x=>{x.observation.remoteObservedAt='invalid'},
+  x=>{x.observation.remoteTime='2026-11-01T00:00:00Z'},
+  x=>{x.card.text='WebDAV 同步 最近同步成功'},x=>{x.card.remote='尚未读取'},x=>{x.card.dots=1},
+ ]){const changed=structuredClone(value);mutate(changed);assert.throws(()=>assert021WebdavState(changed,revision,{startupVersionCheck:true}))}
 })
 test('notice DOM observation measures real mutations/focus without installing any timers or app state',()=>{
  let present=false,time=10,mutation,focused,phase='running',transform='scaleX(0.75)'

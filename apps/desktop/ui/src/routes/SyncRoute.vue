@@ -7,6 +7,7 @@ import StickyTabs from '@/components/layout/StickyTabs.vue'
 import {useRouteStore} from '@/stores/routes'
 import {useAppStore} from '@/stores/app'
 import {useSyncStore} from '@/features/sync/store'
+import {connectionAddress} from '@/features/sync/observation'
 const ModelTransfer=defineAsyncComponent(()=>import('@/features/sync/ModelTransfer.vue'))
 
 const routes=useRouteStore();const app=useAppStore();const remoteMounted=ref(routes.syncTab==='webdav');watch(()=>routes.syncTab,tab=>{if(tab==='webdav')remoteMounted.value=true})
@@ -21,7 +22,7 @@ const syncStore=useSyncStore();watch(()=>syncStore.pendingAction,()=>{if(syncSto
 <template>
  <section ref="page" class="sync-route" :class="{'sync-short-height':shortHeight}"><AppTopbar/><StickyTabs><div class="sync-tabs" role="tablist" aria-label="同步方式"><button type="button" role="tab" aria-controls="sync-file-panel" :aria-selected="routes.syncTab==='file'" :class="{active:routes.syncTab==='file'}" @click="routes.go('sync',{tab:'file'})">文件同步</button><button type="button" role="tab" aria-controls="sync-webdav-panel" :aria-selected="routes.syncTab==='webdav'" :class="{active:routes.syncTab==='webdav'}" @click="routes.go('sync',{tab:'webdav'})">WebDAV 同步</button></div></StickyTabs>
  <section v-show="routes.syncTab==='file'" id="sync-file-panel" role="tabpanel" aria-label="文件同步"><ModelTransfer/></section>
- <section v-show="routes.syncTab==='webdav'" id="sync-webdav-panel" role="tabpanel" aria-label="WebDAV同步"><ModelTransfer v-if="remoteMounted" remote><template #connection><div class="sync-connection-summary"><div><strong>{{ app.syncConfig?.endpoint?'当前WebDAV连接':'未配置WebDAV连接' }}</strong><small v-if="app.syncConfig?.endpoint">{{ app.syncConfig.endpoint.url }}{{ app.syncConfig.endpoint.remotePath }}</small></div><UiButton @click="syncStore.openConnection()">连接设置</UiButton></div></template></ModelTransfer></section>
+ <section v-show="routes.syncTab==='webdav'" id="sync-webdav-panel" role="tabpanel" aria-label="WebDAV同步"><ModelTransfer v-if="remoteMounted" remote><template #connection><div class="sync-connection-summary"><div><strong>{{ app.syncConfig?.endpoint?'当前WebDAV连接':'未配置WebDAV连接' }}</strong><small v-if="app.syncConfig?.endpoint">{{ connectionAddress(app.syncConfig.endpoint.url, app.syncConfig.endpoint.remotePath) }}</small></div><UiButton @click="syncStore.openConnection()">连接设置</UiButton></div></template></ModelTransfer></section>
  </section>
 </template>
 <style scoped>

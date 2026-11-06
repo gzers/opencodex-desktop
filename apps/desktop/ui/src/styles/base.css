@@ -397,7 +397,7 @@ input, textarea, select, [contenteditable="true"], pre, code, .ui-table td, .mod
 .process-progress h3 { margin: 0; font-size: var(--text-control); font-weight:700; }
 .process-progress p { margin: 8px 0 0; color: var(--muted); font-size: var(--text-caption); line-height: 1.45; }
 .process-progress-actions { display: flex; justify-content: normal; flex-wrap:wrap; gap: 8px; margin-top: 12px; }
-.process-progress .notif-ctl{background:var(--notif-btn-bg);border-color:var(--notif-btn-bd);color:inherit;border-radius:var(--radius-xs);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);line-height:1.25;}
+.process-progress .notif-ctl{background:var(--notif-btn-bg);border-color:var(--notif-btn-bd);color:inherit;border-radius:var(--radius-xs);-webkit-backdrop-filter:var(--surface-notification-control-blur);backdrop-filter:var(--surface-notification-control-blur);line-height:1.25;}
 .process-progress .notif-ctl:hover{background:var(--notif-btn-bg-hover);}
 .notif-ctl { min-height: var(--notif-ctl-h); padding: var(--notif-ctl-pad); font-size: var(--text-caption); }
 .process-progress-track { height: 4px; margin: 14px 0 12px; overflow: hidden; border-radius: var(--radius-pill); background: var(--raised); }

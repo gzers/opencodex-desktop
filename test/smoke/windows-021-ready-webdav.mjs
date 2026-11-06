@@ -1,5 +1,6 @@
 // Post-install acceptance, reached only after the existing real managed
-// installer succeeded. No environment fixture, network test or state injection.
+// installer succeeded. The adopted build may perform its normal readonly
+// startup version observation; no connection test, sync or state injection.
 import assert from 'node:assert/strict'
 import {writeFile} from 'node:fs/promises'
 import {join} from 'node:path'
@@ -49,7 +50,7 @@ export function assert021ReadyWebdavFacts(environment,source,installed,scene,end
  const readiness=assert021ActualReadyEnvironment(environment,source)
  for(const key of ['kind','path','managedPrefix','version','history'])assert.deepEqual(source[key],installed[key],'Ready WebDAV observation changed the installed runtime source: '+key)
  assert.equal(source.kind,'managed','Ready check requires the actual successful managed installation')
- assert.equal(assert021WebdavState(scene,endpoint.revision),'rendered','Ready WebDAV must actually render its overview card')
+ assert.equal(assert021WebdavState(scene,endpoint.revision,{startupVersionCheck:scene.versionCheckAvailable===true}),'rendered','Ready WebDAV must actually render its overview card')
  assert.equal(scene.gate.present,false,'Ready WebDAV must not retain an environment gate')
  return readiness
 }
@@ -65,19 +66,20 @@ export async function verify021ReadyWebdav(driver,output,facts,expected,prepared
   report.readiness=assert021ActualReadyEnvironment(report.environment,report.source)
   assert.deepEqual(await driver.invoke('get_sync_config'),prepared.config,'Ready WebDAV endpoint binding changed')
   observer=await observe021Ipc(driver)
-  await assertNoNativeUiFault(driver,'0.2.21')
+  await assertNoNativeUiFault(driver,facts.about.version)
   await driver.click('概览','.side')
   await driver.wait("!!document.querySelector('[data-testid=overview-remote-version]')||!!document.querySelector('[data-testid=environment-gate] .overview-gate-count')?.textContent.includes('/ 3')")
   // Do not wait past a settled setup gate and turn it into a silent skip.
   await driver.wait("(()=>{const s=document.querySelector('#app')?.__vue_app__?.config.globalProperties.$pinia?.state.value.sync;return s?.config?.endpoint?.revision==="+JSON.stringify(endpoint.revision)+"})()")
+  await driver.wait('(()=>{const scene=('+inspect021Webdav.toString()+')();return scene.versionCheckAvailable?scene.state==="failed"&&!scene.checkingVersion:scene.state==="configured"})()')
   report.scene=await driver.evaluate('('+inspect021Webdav.toString()+')()')
   report.readiness=assert021ReadyWebdavFacts(report.environment,report.source,installed,report.scene,endpoint)
-  await assertNoNativeUiFault(driver,'0.2.21')
+  await assertNoNativeUiFault(driver,facts.about.version)
   const shot=await driver.call('Page.captureScreenshot',{format:'png'})
   await writeFile(join(output,'native021-ready-webdav-'+stage+'.png'),Buffer.from(shot.data,'base64'))
   report.finalFacts=await currentFacts(driver,expected)
   assert.deepEqual(await driver.invoke('get_sync_config'),prepared.config,'Viewing ready overview mutated the endpoint')
-  report.ipc=await observer.finish();observer=null
+  report.ipc=await observer.finish([],report.scene.versionCheckAvailable?['config_sync_observe']:[]);observer=null
   // Return through production navigation to the install surface owned by the
   // caller, so the unchanged offline-drop/query checks retain their precondition.
   await driver.click('设置','.side')
@@ -88,7 +90,7 @@ export async function verify021ReadyWebdav(driver,output,facts,expected,prepared
   return report
  }catch(error){report.error=error.message;throw error}
  finally{
-  try{if(observer)report.ipc=await observer.finish()}
+  try{if(observer)report.ipc=await observer.finish([],report.scene?.versionCheckAvailable?['config_sync_observe']:[])}
   catch(error){report.ipcError=error.message;report.result='fail';throw error}
   finally{await writeFile(join(output,'native021-ready-webdav-'+stage+'.json'),JSON.stringify(report,null,2)+String.fromCharCode(10))}
  }

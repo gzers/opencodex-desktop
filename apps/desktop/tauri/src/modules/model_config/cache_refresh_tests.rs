@@ -104,7 +104,12 @@ fn current_client_binding_requires_owned_absolute_paths_and_validated_runtime() 
     bad_runtime["codexRuntime"]["version"] = Value::Null;
     assert!(client_binding(&bad_runtime, &integration).is_err());
     std::fs::remove_file(codex_home.join("config.toml")).unwrap();
-    assert!(client_binding(&settings, &integration).unwrap().is_none());
+    assert_eq!(
+        client_binding(&settings, &integration).err().unwrap().code,
+        "rename_client_config_missing"
+    );
+    let absent = json!({"clientId":"codex","state":"absent","installed":false,"configPath":codex_home.join("config.toml")});
+    assert!(client_binding(&settings, &absent).unwrap().is_none());
 }
 
 #[test]
@@ -443,6 +448,70 @@ fn assert_incomplete(result: &CacheRefresh) {
     assert!(!result.restarted, "{result:?}");
     assert!(!result.summary.contains("已重启"));
     assert!(!result.summary.contains("已重建"));
+}
+
+#[tokio::test]
+async fn missing_runtime_record_reports_the_actual_precondition_without_touching_saved_files() {
+    let fixture = Fixture::new(response(completed_desktop())).await;
+    std::fs::remove_file(fixture.root.path().join("runtime-port.json")).unwrap();
+    let error = sync_cache_after_save(fixture.root.path(), &fixture.context, true)
+        .await
+        .err()
+        .unwrap();
+    assert_eq!(error.code, "runtime_record_missing");
+    assert!(error.message.contains("配置已写入") && error.message.contains("runtime-port.json"));
+    assert!(error.message.contains("无需先打开面板"));
+    assert!(!error.message.contains("manage backups") && !error.message.contains("os error"));
+    assert_eq!(fixture.state.health_calls.load(Ordering::SeqCst), 0);
+    fixture.assert_calls(0);
+}
+
+#[tokio::test]
+async fn corrupt_record_and_missing_management_token_are_distinct_and_never_send_restart() {
+    let fixture = Fixture::new(response(completed_desktop())).await;
+    std::fs::write(
+        fixture.root.path().join("runtime-port.json"),
+        b"not-json-secret",
+    )
+    .unwrap();
+    let error = sync_cache(&fixture.context, true).await.err().unwrap();
+    assert_eq!(error.code, "runtime_record_invalid");
+    assert!(!error.message.contains("not-json-secret"));
+    assert_eq!(fixture.state.health_calls.load(Ordering::SeqCst), 0);
+    write_record(&fixture.state, fixture.state.pid);
+    std::fs::remove_file(fixture.root.path().join("admin-api-token")).unwrap();
+    let error = sync_cache_after_save(fixture.root.path(), &fixture.context, true)
+        .await
+        .err()
+        .unwrap();
+    assert_eq!(error.code, "management_auth_unavailable");
+    assert!(error.message.contains("admin-api-token") && error.message.contains("配置已写入"));
+    assert_eq!(fixture.state.health_calls.load(Ordering::SeqCst), 1);
+    fixture.assert_calls(0);
+}
+
+#[tokio::test]
+async fn stale_record_for_an_exited_listener_is_not_reported_as_a_missing_file() {
+    let fixture = Fixture::new(response(completed_desktop())).await;
+    fixture.server.abort();
+    tokio::time::sleep(Duration::from_millis(20)).await;
+    let error = sync_cache_after_save(fixture.root.path(), &fixture.context, true)
+        .await
+        .err()
+        .unwrap();
+    assert_eq!(error.code, "runtime_unreachable");
+    assert!(error.message.contains("运行记录可能已过期") && error.message.contains("配置已写入"));
+    fixture.assert_calls(0);
+}
+
+#[tokio::test]
+async fn runtime_record_removed_after_attestation_invalidates_the_bound_owner() {
+    let fixture = Fixture::new(response(completed_desktop())).await;
+    let management = Management::bind(&fixture.context).await.unwrap();
+    std::fs::remove_file(fixture.root.path().join("runtime-port.json")).unwrap();
+    let error = management.restart_codex().await.err().unwrap();
+    assert_eq!(error.code, "stale_runtime");
+    fixture.assert_calls(0);
 }
 
 #[tokio::test]

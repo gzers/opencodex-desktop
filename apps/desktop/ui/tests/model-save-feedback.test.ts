@@ -100,20 +100,28 @@ describe('一次保存反馈的真实组件交互（模拟 API，不代表真机
     dialogButton('确认重启').click()
     await flushPromises()
     expect(refresh).toHaveBeenCalledExactlyOnceWith(true)
-    expect(toast).toHaveBeenCalledWith(result.summary, { kind: result.success ? 'info' : 'error' })
-    expect(useModelSaveFeedback().open).toBe(false)
-    expect(wrapper.find('.process-progress').exists()).toBe(false)
+    if (result.success && result.restarted) {
+      expect(toast).toHaveBeenCalledWith(result.summary, { kind: 'info' })
+      expect(useModelSaveFeedback().open).toBe(false)
+      expect(wrapper.find('.process-progress').exists()).toBe(false)
+    } else {
+      expect(toast).not.toHaveBeenCalled()
+      expect(document.querySelector('[role=alert]')?.textContent).toContain(result.summary)
+      expect(useModelSaveFeedback().open).toBe(true)
+      expect(dialogButton('重试重启').disabled).toBe(false)
+    }
     expect(useNotificationsStore().list).toHaveLength(0)
     expect(useOperationTasks().tasks).toHaveLength(0)
   })
 
-  it('接口异常也结束反馈，仅显示真实错误', async () => {
+  it('接口异常保留已保存反馈、真实错误和重试入口', async () => {
     vi.spyOn(modelApi, 'refreshCache').mockRejectedValue(new Error('本机重启连接断开'))
     await openRestart()
     dialogButton('确认重启').click()
     await flushPromises()
-    expect(useFeedbackStore().toast).toContain('本机重启连接断开')
-    expect(useModelSaveFeedback().open).toBe(false)
+    expect(document.querySelector('[role=alert]')?.textContent).toContain('本机重启连接断开')
+    expect(useModelSaveFeedback().open).toBe(true)
+    expect(dialogButton('重试重启').disabled).toBe(false)
     expect(useNotificationsStore().list).toHaveLength(0)
   })
 

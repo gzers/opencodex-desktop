@@ -173,7 +173,7 @@ describe('overview module cards', () => {
     expect(busy[0].attributes('disabled')).toBeDefined()
     sync.setWebdavState('conflict'); await wrapper.vm.$nextTick()
     expect(card().find('.mod-head .tag').exists()).toBe(false)
-    expect(card().findAll('.mod-actions button').map(b => b.text())).toEqual(['同步', '查看结果'])
+    expect(card().findAll('.mod-actions button').map(b => b.text())).toEqual(['同步', '查看结果', '检测版本'])
     expect(card().findAll('.mod-actions button')[1].classes()).toContain('ghost')
     const requested: unknown[] = []
     sync.$onAction(({ name, args }) => { if (name === 'requestAction') requested.push(args[0]) })

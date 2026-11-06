@@ -67,6 +67,8 @@
 - **最新版本（永远指向最新）**：<https://github.com/gzers/opencodex-desktop/releases/latest>
 - 全部版本与历史：<https://github.com/gzers/opencodex-desktop/releases>
 
+从0.2.22起，发布页另提供本项目维护的修复运行包 `opencodex-2.97.0-post021.ownerquery.2.tgz`（基于上游2.97.0，非上游正式发行）。需要客户端重启和改名修复时，升级管理器后还需在“安装 OpenCodex → 导入离线包”中明确安装该包并重启。管理器升级不会自动替换运行包，“联网安装”仍使用上游官方包；完整版本、SHA256、签名与维护说明见对应Release。
+
 发布包由 GitHub Actions 在打 tag 后自动产出：
 
 | 平台 | 文件 | 说明 |

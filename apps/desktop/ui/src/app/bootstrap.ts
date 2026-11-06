@@ -1,6 +1,7 @@
 // 应用启动数据装配（IMP-04 §5/§13.7）：把「进入应用时先要拉一轮的功能数据」集中到一处，
 // 供 useAppController 的初始化调用。仅做编排，不含展示逻辑；各功能仍由自己的 store 方法负责取数。
 import type { useAppStore } from '@/stores/app'
+import { useSyncStore } from '@/features/sync/store'
 
 type AppStore = ReturnType<typeof useAppStore>
 
@@ -17,6 +18,6 @@ export function primeAppData(app: AppStore) {
   void app.loadStatusSnapshot()
   void app.loadNotifications()
   void app.loadExtensionConfig()
-  void app.loadSyncConfig()
+  void app.loadSyncConfig().then(() => useSyncStore().inspectRemoteVersion(true))
   void app.loadExtensions()
 }

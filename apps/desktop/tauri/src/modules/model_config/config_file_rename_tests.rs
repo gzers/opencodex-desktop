@@ -876,3 +876,59 @@ fn process_exit_recovers_before_first_snapshot() {
     pass("actual-process-exit-recovery");
     std::fs::remove_dir_all(root.parent().unwrap()).unwrap();
 }
+
+#[test]
+fn post021_unicode_name_with_internal_key_saves_and_reopens_with_exact_references() {
+    super::super::file_objects::test_credentials::install();
+    let fixture = Fixture::new();
+    let mut request = fixture.request(true);
+    let channel = request
+        .policy
+        .channels
+        .iter_mut()
+        .find(|c| c.id == fixture.id)
+        .unwrap();
+    channel.label = "渠道 名称 / openai".into();
+    channel.connection.provider_id = format!("channel-{}", fixture.id.replace('-', ""));
+    let key = channel.connection.provider_id.clone();
+    save_with_context(&fixture.root, &fixture.context(), request).unwrap();
+    let read = snapshot(&fixture.root, &fixture.home).unwrap();
+    let channel = read
+        .policy
+        .channels
+        .iter()
+        .find(|c| c.id == fixture.id)
+        .unwrap();
+    assert_eq!(channel.label, "渠道 名称 / openai");
+    assert_eq!(channel.connection.provider_id, key);
+    let raw = read_value(&fixture.home.join("config.json"));
+    assert_eq!(raw["defaultProvider"], key);
+    assert_eq!(
+        raw["providers"][&key]["models"],
+        fixture.raw["providers"][OLD]["models"]
+    );
+    assert_eq!(
+        raw["providers"]["Krill-10"],
+        fixture.raw["providers"]["Krill-10"]
+    );
+}
+#[test]
+fn post021_same_key_metadata_rename_cannot_duplicate_another_channel_name() {
+    super::super::file_objects::test_credentials::install();
+    let fixture = Fixture::new();
+    let mut request = fixture.request(true);
+    let channel = request
+        .policy
+        .channels
+        .iter_mut()
+        .find(|c| c.id == fixture.id)
+        .unwrap();
+    channel.label = "Krill-10".into();
+    channel.connection.provider_id = OLD.into();
+    let before = fixture.bytes();
+    let error = save_with_context(&fixture.root, &fixture.context(), request)
+        .err()
+        .unwrap();
+    assert_eq!(error.code, "channel_name");
+    assert_eq!(fixture.bytes(), before);
+}

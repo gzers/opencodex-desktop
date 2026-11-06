@@ -8,9 +8,25 @@ export interface ConnectionObservation {
   revision: string
   state: ObservedState
   observedAt: string
-  source: 'test' | 'sync-preview' | 'sync'
+  source: 'test' | 'sync-preview' | 'sync' | 'version-check'
   remoteTime?: string | null
   remoteExists?: boolean
+  remoteRead?: 'present' | 'absent' | 'failed'
+  remoteRevision?: string | null
+  remoteObservedAt?: string
+  comparison?: 'same' | null
+}
+export type ObservationDetails = Partial<Omit<ConnectionObservation, 'revision' | 'state'>>
+export function remoteVersionHint(value: ConnectionObservation | null, reading = false): string {
+  if (reading) return '读取中'
+  if (value?.remoteRead === 'failed') return '读取失败'
+  if (value?.remoteExists === false || value?.remoteRead === 'absent') return '未发现快照'
+  if (value?.remoteTime) return '上次观察'
+  if (value?.remoteExists || value?.remoteRead === 'present') return '已读取 · 保存时间未知'
+  return '尚未读取'
+}
+export function connectionAddress(url: string, remotePath: string): string {
+  return url.replace(/\/+$/, '') + '/' + remotePath.replace(/^\/+|\/+$/g, '')
 }
 const STORAGE_KEY = 'opencodex:webdav-observation:v1'
 const opaqueRevision = (value: string) => /^[a-f0-9]{64}$/.test(value)
@@ -35,12 +51,16 @@ export function readObservation(revision: string): ConnectionObservation | null 
   try {
     const value = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null')
     if (!value || value.revision !== revision || !['connected', 'synced', 'conflict', 'failed'].includes(value.state)
-      || !['test', 'sync-preview', 'sync'].includes(value.source) || typeof value.observedAt !== 'string'
+      || !['test', 'sync-preview', 'sync', 'version-check'].includes(value.source) || typeof value.observedAt !== 'string'
       || !Number.isFinite(Date.parse(value.observedAt))) return null
     return {
       revision, state: value.state, source: value.source, observedAt: value.observedAt,
       ...(value.remoteTime === null || typeof value.remoteTime === 'string' && Number.isFinite(Date.parse(value.remoteTime)) ? { remoteTime: value.remoteTime } : {}),
       ...(typeof value.remoteExists === 'boolean' ? { remoteExists: value.remoteExists } : {}),
+      ...(['present', 'absent', 'failed'].includes(value.remoteRead) ? { remoteRead: value.remoteRead } : {}),
+      ...(value.remoteRevision === null || typeof value.remoteRevision === 'string' && value.remoteRevision.length <= 128 ? { remoteRevision: value.remoteRevision } : {}),
+      ...(typeof value.remoteObservedAt === 'string' && Number.isFinite(Date.parse(value.remoteObservedAt)) ? { remoteObservedAt: value.remoteObservedAt } : {}),
+      ...(value.comparison === 'same' ? { comparison: 'same' } : {}),
     }
   } catch { return null }
 }

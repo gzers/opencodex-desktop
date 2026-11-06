@@ -43,7 +43,6 @@ export function inlineChanges(saved: ModelPolicy, draft: ModelPolicy): InlineCha
     }
     rows(name + ' · 名称', before.label, after.label)
     rows(name + ' · 协议', before.connection.protocol, after.connection.protocol)
-    rows(name + ' · 运行渠道标识', before.connection.providerId, after.connection.providerId)
     rows(name + ' · 服务节点', before.connection.nodes.map(node => [node.name, node.url]), after.connection.nodes.map(node => [node.name, node.url]))
     rows(name + ' · 当前节点', before.connection.nodes.find(node => node.id === before.connection.activeNodeId)?.name ?? '未选择', after.connection.nodes.find(node => node.id === after.connection.activeNodeId)?.name ?? '未选择')
     if (before.connection.credentialRef !== after.connection.credentialRef) changes.push({label: name + ' · 认证', before: '原本机认证', after: '拟更换本机认证'})

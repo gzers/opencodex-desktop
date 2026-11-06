@@ -1,5 +1,5 @@
 //! Unsaved connection discovery. No provider registration or generation request.
-use super::{agent, schema::*};
+use super::schema::*;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::{collections::BTreeSet, time::Duration};
@@ -63,6 +63,8 @@ pub struct DiscoveryRequest {
     pub url: String,
     pub api_key: Option<String>,
     pub credential_ref: Option<String>,
+    /// Legacy IPC compatibility only; target address category is not an admission gate.
+    #[serde(default)]
     pub allow_private_network: bool,
     /// 渠道身份（官方 provider id）。给了才允许回落到 config.json 里该渠道已配置的 Key。
     #[serde(default)]
@@ -130,13 +132,8 @@ async fn discover_inner(
     .map_err(|_| invalid("discovery_dns", "地址解析超时"))?
     .map_err(|_| invalid("discovery_dns", "地址解析失败"))?
     .collect();
-    if addresses.is_empty()
-        || !request.allow_private_network && addresses.iter().any(|a| !agent::public_ip(a.ip()))
-    {
-        return Err(invalid(
-            "discovery_private",
-            "地址指向私有网络；如为可信本机服务，请显式允许私有网络",
-        ));
+    if addresses.is_empty() {
+        return Err(invalid("discovery_dns", "地址解析没有返回可用地址"));
     }
     let provided = request.api_key.take().map(Zeroizing::new);
     let stored = if provided.is_none() {
@@ -454,7 +451,7 @@ mod tests {
             url: format!("http://127.0.0.1:{port}/v1"),
             api_key: Some("fixture-preview-only-SECRET".into()),
             credential_ref: None,
-            allow_private_network: true,
+            allow_private_network: false,
             provider_id: None,
             home: None,
         })
@@ -477,7 +474,7 @@ mod tests {
             url: format!("http://127.0.0.1:{port}/v1"),
             api_key: None,
             credential_ref: None,
-            allow_private_network: true,
+            allow_private_network: false,
             provider_id: None,
             home: None,
         })
@@ -496,7 +493,7 @@ mod tests {
         server.abort();
     }
     #[tokio::test]
-    async fn unapproved_private_and_credential_in_url_are_refused() {
+    async fn legacy_private_flag_does_not_gate_connection_but_url_credentials_are_refused() {
         let error = discover(DiscoveryRequest {
             protocol: "openai-chat".into(),
             url: "http://127.0.0.1:9/v1".into(),
@@ -508,7 +505,7 @@ mod tests {
         })
         .await
         .unwrap_err();
-        assert_eq!(error.code, "discovery_private");
+        assert_eq!(error.code, "discovery_failed");
         assert_eq!(
             discover(DiscoveryRequest {
                 protocol: "openai-chat".into(),

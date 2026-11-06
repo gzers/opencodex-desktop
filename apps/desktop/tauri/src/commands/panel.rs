@@ -5,6 +5,8 @@ use crate::errors::{AppError, AppResult};
 use crate::state::SharedStatusCollector;
 use crate::types::status::RuntimeState;
 use serde::{Deserialize, Serialize};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use std::time::{Duration, Instant};
 use tauri::Manager;
 
 pub const PANEL_VIEW_LABEL: &str = "official-panel-content";
@@ -15,7 +17,14 @@ const PANEL_CORNER_RADIUS: f64 = 12.0;
 const HUB_SCRIPT: &str = include_str!("../../assets/panel-hub.js");
 
 #[derive(Default)]
-pub struct PanelLifetime(pub std::sync::Mutex<PanelIdle>);
+pub struct PanelLifetime(
+    pub std::sync::Mutex<PanelIdle>,
+    AtomicU64,
+    AtomicBool,
+    AtomicU64,
+    AtomicU64,
+);
+const PANEL_COMMAND_TIMEOUT: Duration = Duration::from_secs(8);
 #[derive(Default)]
 pub struct PanelIdle {
     generation: u64,
@@ -27,6 +36,17 @@ pub struct PanelIdle {
     scroll: f64,
 }
 impl PanelIdle {
+    fn update_origin(&mut self, origin: String) -> bool {
+        if self.origin == origin {
+            return false;
+        }
+        self.origin = origin;
+        self.path.clear();
+        self.fragment.clear();
+        self.scroll = 0.0;
+        true
+    }
+
     fn accepts(&self, generation: u64) -> bool {
         self.hidden
             && self.generation == generation
@@ -159,6 +179,25 @@ pub struct PanelRequest {
 pub struct PanelResult {
     pub visible: bool,
     pub panel_url: Option<String>,
+    pub ready: bool,
+    pub generation: u64,
+    pub timings: Vec<PanelTiming>,
+}
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PanelTiming {
+    phase: &'static str,
+    elapsed_ms: u128,
+}
+fn mark_panel_phase(
+    app: &tauri::AppHandle,
+    started: Instant,
+    phase: &'static str,
+    timings: &mut Vec<PanelTiming>,
+) {
+    let elapsed_ms = started.elapsed().as_millis();
+    panel_log(app, &format!("phase={phase} elapsed_ms={elapsed_ms}"));
+    timings.push(PanelTiming { phase, elapsed_ms });
 }
 
 pub fn validate_panel_url(url: &str) -> AppResult<tauri::Url> {
@@ -276,6 +315,14 @@ fn apply_panel_corner_radius<R: tauri::Runtime>(view: &tauri::Webview<R>, radius
 }
 
 fn notify_main<R: tauri::Runtime>(app: &tauri::AppHandle<R>, kind: &str, value: &str) {
+    notify_main_generation(app, kind, value, None)
+}
+fn notify_main_generation<R: tauri::Runtime>(
+    app: &tauri::AppHandle<R>,
+    kind: &str,
+    value: &str,
+    generation: Option<u64>,
+) {
     if crate::modules::notifications::registry::validate_signal(
         "ocxd-panel",
         crate::modules::notifications::registry::Job::Panel,
@@ -288,7 +335,7 @@ fn notify_main<R: tauri::Runtime>(app: &tauri::AppHandle<R>, kind: &str, value: 
     }
     // Values are JSON encoded, never concatenated as executable HTML/JS.
     if let Some(main) = app.get_webview("main") {
-        let detail = serde_json::json!({ "kind": kind, "value": value });
+        let detail = serde_json::json!({ "kind": kind, "value": value, "generation": generation });
         let _ = main.eval(format!(
             "window.dispatchEvent(new CustomEvent('ocxd-panel', {{detail:{detail}}}))"
         ));
@@ -300,6 +347,15 @@ fn navigation_allowed(url: &tauri::Url, origin: &tauri::Url) -> bool {
         && url.username().is_empty()
         && url.password().is_none()
         && (url.path() == "/web" || url.path().starts_with("/web/"))
+}
+
+fn current_panel_load(
+    active_view: u64,
+    callback_view: u64,
+    url: &tauri::Url,
+    origin: &tauri::Url,
+) -> bool {
+    active_view == callback_view && navigation_allowed(url, origin)
 }
 
 /// 面板嵌入的排障记录（S18-02）：进程状态、Show 请求与页面加载各记一行，
@@ -333,12 +389,36 @@ pub async fn sync_embedded_panel(
         return Err(AppError::NotConfigured);
     }
     let collector = collector.inner().clone();
-    // add_child waits for the native event loop: never call it from that loop.
-    tauri::async_runtime::spawn_blocking(move || {
+    let started = Instant::now();
+    let generation = {
         let lifetime = app.state::<PanelLifetime>();
+        if matches!(request.action, PanelAction::Show | PanelAction::Hide) {
+            lifetime.1.fetch_add(1, Ordering::AcqRel).wrapping_add(1)
+        } else {
+            lifetime.1.load(Ordering::Acquire)
+        }
+    };
+    let deadline_app = app.clone();
+    // add_child waits for the native event loop: never call it from that loop.
+    let worker = tauri::async_runtime::spawn_blocking(move || {
+        let lifetime = app.state::<PanelLifetime>();
+        let mut timings = Vec::new();
+        mark_panel_phase(&app, started, "queued", &mut timings);
         let mut idle = lifetime.0.lock().map_err(|_| AppError::NotConfigured)?;
+        mark_panel_phase(&app, started, "owner-lock", &mut timings);
+        if lifetime.1.load(Ordering::Acquire) != generation {
+            return Ok(PanelResult {
+                visible: false,
+                panel_url: None,
+                ready: false,
+                generation,
+                timings,
+            });
+        }
         if request.action == PanelAction::Hide {
-            if let Some(view) = app.get_webview(PANEL_VIEW_LABEL) { view.hide()?; }
+            if let Some(view) = app.get_webview(PANEL_VIEW_LABEL) {
+                view.hide()?;
+            }
             if !idle.hidden {
                 idle.hidden = true;
                 idle.generation = idle.generation.wrapping_add(1);
@@ -346,27 +426,59 @@ pub async fn sync_embedded_panel(
                 let generation = idle.generation;
                 let timer_app = app.clone();
                 tauri::async_runtime::spawn(async move {
-                    tokio::time::sleep(crate::modules::runtime_defaults::panel_idle_timeout()).await;
+                    tokio::time::sleep(crate::modules::runtime_defaults::panel_idle_timeout())
+                        .await;
                     let lifetime = timer_app.state::<PanelLifetime>();
-                    if !lifetime.0.lock().is_ok_and(|idle| idle.accepts(generation)) { return; }
+                    if !lifetime.0.lock().is_ok_and(|idle| idle.accepts(generation)) {
+                        return;
+                    }
                     if let Some(view) = timer_app.get_webview(PANEL_VIEW_LABEL) {
                         let _ = view.eval(format!("window.__ocxdTryReclaim?.({generation})"));
                     }
                 });
             }
-            return Ok(PanelResult { visible: false, panel_url: None });
+            return Ok(PanelResult {
+                visible: false,
+                panel_url: None,
+                ready: lifetime.2.load(Ordering::Acquire),
+                generation,
+                timings,
+            });
         }
         let window = app.get_window("main").ok_or(AppError::NotConfigured)?;
-        let size = window.inner_size()?.to_logical::<f64>(window.scale_factor()?);
+        let size = window
+            .inner_size()?
+            .to_logical::<f64>(window.scale_factor()?);
         let scale = request.scale.unwrap_or(100.0);
-        if !scale.is_finite() || !(50.0..=200.0).contains(&scale) { return Err(AppError::NotConfigured); }
+        if !scale.is_finite() || !(50.0..=200.0).contains(&scale) {
+            return Err(AppError::NotConfigured);
+        }
         let theme_setting = normalize_theme_setting(request.theme_setting.as_deref());
         let bounds = request.bounds.ok_or(AppError::NotConfigured)?;
-        bounds.validate(size.width, size.height, scale / 100.0, cfg!(target_os = "macos")).inspect_err(|_| {
-            panel_log(&app, &format!("request rejected; invalid bounds={bounds:?} client={}x{} scale={scale}", size.width, size.height));
-        })?;
+        bounds
+            .validate(
+                size.width,
+                size.height,
+                scale / 100.0,
+                cfg!(target_os = "macos"),
+            )
+            .inspect_err(|_| {
+                panel_log(
+                    &app,
+                    &format!(
+                        "request rejected; invalid bounds={bounds:?} client={}x{} scale={scale}",
+                        size.width, size.height
+                    ),
+                );
+            })?;
         if request.action == PanelAction::Layout && app.get_webview(PANEL_VIEW_LABEL).is_none() {
-            return Ok(PanelResult { visible: false, panel_url: None });
+            return Ok(PanelResult {
+                visible: false,
+                panel_url: None,
+                ready: false,
+                generation,
+                timings,
+            });
         }
 
         if request.action == PanelAction::Show {
@@ -381,60 +493,184 @@ pub async fn sync_embedded_panel(
                 return Err(AppError::NotConfigured);
             }
             let port = guard.port().ok_or(AppError::NotConfigured)?;
-            Some(validate_panel_url(&format!("http://127.0.0.1:{port}/web")).inspect_err(|_| {
-                panel_log(&app, &format!("show rejected; invalid panel url port={port}"));
-            })?)
-        } else { None };
+            Some(
+                validate_panel_url(&format!("http://127.0.0.1:{port}/web")).inspect_err(|_| {
+                    panel_log(
+                        &app,
+                        &format!("show rejected; invalid panel url port={port}"),
+                    );
+                })?,
+            )
+        } else {
+            None
+        };
+        mark_panel_phase(&app, started, "runtime-address", &mut timings);
 
+        // Navigation is restricted to this owned origin. Compare its recorded
+        // identity rather than querying the native page: WKWebView.URL is nil
+        // before initial navigation, and wry's URL getter panics in that state.
         if let Some(url) = url.as_ref() {
             let origin = url.origin().ascii_serialization();
-            if idle.origin != origin { idle.origin = origin; idle.path.clear(); idle.fragment.clear(); idle.scroll = 0.0; }
+            // WebView2 can leave Reload queued behind an initial navigation
+            // that has not received response headers. An explicit retry of a
+            // still-unready view must abandon that navigation, not wait for it.
+            let retry_pending = request.reload && !lifetime.2.load(Ordering::Acquire);
+            if idle.origin != origin || retry_pending {
+                if let Some(existing) = app.get_webview(PANEL_VIEW_LABEL) {
+                    existing.close()?;
+                    lifetime.2.store(false, Ordering::Release);
+                    if retry_pending {
+                        panel_log(&app, "retry; retired pending navigation");
+                    }
+                }
+                // Keep the previous identity if close fails, so a retry cannot
+                // reuse a view belonging to the previous service origin.
+                idle.update_origin(origin);
+            }
         }
-        if let (Some(existing), Some(url)) = (app.get_webview(PANEL_VIEW_LABEL), url.as_ref()) {
-            if existing.url()?.origin() != url.origin() { existing.close()?; }
+        if request.action == PanelAction::Show {
+            lifetime.3.store(generation, Ordering::Release);
         }
-        let view = if let Some(view) = app.get_webview(PANEL_VIEW_LABEL) { view } else {
+        let (view, created) = if let Some(view) = app.get_webview(PANEL_VIEW_LABEL) {
+            (view, false)
+        } else {
+            lifetime.2.store(false, Ordering::Release);
+            // A retired view may finish navigation after its replacement is
+            // created. Its callback must never mark the replacement ready.
+            let view_epoch = lifetime.4.fetch_add(1, Ordering::AcqRel).wrapping_add(1);
             let mut url = url.clone().ok_or(AppError::NotConfigured)?;
             if !request.reload {
-                if !idle.path.is_empty() { url.set_path(&idle.path); }
-                if !idle.fragment.is_empty() { url.set_fragment(Some(&idle.fragment)); }
+                if !idle.path.is_empty() {
+                    url.set_path(&idle.path);
+                }
+                if !idle.fragment.is_empty() {
+                    url.set_fragment(Some(&idle.fragment));
+                }
             }
             let resume_scroll = if request.reload { 0.0 } else { idle.scroll };
             let restore_once = std::sync::atomic::AtomicBool::new(true);
             let origin = url.clone();
             let origin_label = origin.origin().ascii_serialization();
+            let load_origin = origin.clone();
             let navigation_app = app.clone();
             let load_app = app.clone();
-            let builder = tauri::webview::WebviewBuilder::new(PANEL_VIEW_LABEL, tauri::WebviewUrl::External(url))
-                .focused(false)
-                .initialization_script(panel_initialization_script(theme_setting))
-                .initialization_script(IDLE_GUARD_SCRIPT)
-                .on_navigation(move |target| {
-                    if target.scheme() == "ocxd-panel" {
-                        if target.host_str() == Some("reclaim") { reclaim_if_idle(&navigation_app, target); return false; }
-                        if let Some(action @ ("reload" | "browser" | "zoom-in" | "zoom-out")) = target.host_str() {
-                            notify_main(&navigation_app, "action", action);
-                        }
+            let builder = tauri::webview::WebviewBuilder::new(
+                PANEL_VIEW_LABEL,
+                tauri::WebviewUrl::External(url),
+            )
+            .focused(false)
+            .initialization_script(panel_initialization_script(theme_setting))
+            .initialization_script(IDLE_GUARD_SCRIPT)
+            .on_navigation(move |target| {
+                if target.scheme() == "ocxd-panel" {
+                    if target.host_str() == Some("reclaim") {
+                        reclaim_if_idle(&navigation_app, target);
                         return false;
                     }
-                    navigation_allowed(target, &origin)
-                })
-                .on_new_window(|_, _| tauri::webview::NewWindowResponse::Deny)
-                .on_page_load(move |view, payload| {
-                    if matches!(payload.event(), tauri::webview::PageLoadEvent::Finished) && restore_once.swap(false, std::sync::atomic::Ordering::AcqRel) { let _ = view.eval(format!("requestAnimationFrame(() => window.scrollTo(0, {resume_scroll}))")); }
-                    let status = match payload.event() {
-                        tauri::webview::PageLoadEvent::Started => "loading",
-                        tauri::webview::PageLoadEvent::Finished => "ready",
-                    };
-                    panel_log(&load_app, &format!("page {status}; origin={}", payload.url().origin().ascii_serialization()));
-                    notify_main(&load_app, "load", status);
-                });
-            panel_log(&app, &format!("creating embedded view; origin={origin_label}"));
-            window.add_child(builder, tauri::LogicalPosition::new(bounds.x, bounds.y),
-                tauri::LogicalSize::new(bounds.width, bounds.height)).inspect_err(|error| {
+                    if let Some(action @ ("reload" | "browser" | "zoom-in" | "zoom-out")) =
+                        target.host_str()
+                    {
+                        notify_main(&navigation_app, "action", action);
+                    }
+                    return false;
+                }
+                navigation_allowed(target, &origin)
+            })
+            .on_new_window(|_, _| tauri::webview::NewWindowResponse::Deny)
+            .on_page_load(move |view, payload| {
+                let lifetime = load_app.state::<PanelLifetime>();
+                if !current_panel_load(
+                    lifetime.4.load(Ordering::Acquire),
+                    view_epoch,
+                    payload.url(),
+                    &load_origin,
+                ) {
+                    return;
+                }
+                if matches!(payload.event(), tauri::webview::PageLoadEvent::Finished)
+                    && restore_once.swap(false, std::sync::atomic::Ordering::AcqRel)
+                {
+                    let _ = view.eval(format!(
+                        "requestAnimationFrame(() => window.scrollTo(0, {resume_scroll}))"
+                    ));
+                }
+                let status = match payload.event() {
+                    tauri::webview::PageLoadEvent::Started => "loading",
+                    tauri::webview::PageLoadEvent::Finished => "ready",
+                };
+                panel_log(
+                    &load_app,
+                    &format!(
+                        "page {status}; origin={}",
+                        payload.url().origin().ascii_serialization()
+                    ),
+                );
+                lifetime.2.store(status == "ready", Ordering::Release);
+                let load_generation = lifetime.3.load(Ordering::Acquire);
+                notify_main_generation(&load_app, "load", status, Some(load_generation));
+            });
+            #[cfg(windows)]
+            let builder = {
+                // WebView2 pools its browser by profile and arguments. Keep the
+                // child aligned with main, including the explicitly isolated
+                // smoke profile, without moving STA COM objects between threads.
+                let mut config = app.config().clone();
+                let smoke = crate::infrastructure::windows_smoke::from_environment(&mut config)
+                    .map_err(|_| AppError::NotConfigured)?;
+                let main = app
+                    .config()
+                    .app
+                    .windows
+                    .iter()
+                    .find(|window| window.label == "main")
+                    .ok_or(AppError::NotConfigured)?;
+                let directory = smoke
+                    .as_ref()
+                    .map(|window| window.data_directory.clone())
+                    .or_else(|| main.data_directory.clone())
+                    .unwrap_or(app.path().app_local_data_dir()?);
+                let arguments = smoke
+                    .as_ref()
+                    .and_then(|window| window.config.additional_browser_args.as_deref())
+                    .or(main.additional_browser_args.as_deref());
+                let builder = builder.data_directory(directory);
+                let builder = if let Some(arguments) = arguments {
+                    builder.additional_browser_args(arguments)
+                } else {
+                    builder
+                };
+                mark_panel_phase(&app, started, "browser-environment", &mut timings);
+                builder
+            };
+            panel_log(
+                &app,
+                &format!("creating embedded view; origin={origin_label}"),
+            );
+            let view = window
+                .add_child(
+                    builder,
+                    // add_child initially shows its native view. Keep it clipped
+                    // outside the parent until the request generation is checked,
+                    // so an overlay/timeout cannot expose a late-created page.
+                    tauri::LogicalPosition::new(-bounds.width - 1.0, -bounds.height - 1.0),
+                    tauri::LogicalSize::new(bounds.width, bounds.height),
+                )
+                .inspect_err(|error| {
                     panel_log(&app, &format!("embedded view creation failed; {error}"));
-                })?
+                })?;
+            (view, true)
         };
+        mark_panel_phase(&app, started, "native-view", &mut timings);
+        if lifetime.1.load(Ordering::Acquire) != generation {
+            view.hide()?;
+            return Ok(PanelResult {
+                visible: false,
+                panel_url: None,
+                ready: false,
+                generation,
+                timings,
+            });
+        }
         view.set_bounds(bounds.rect())?;
         view.set_zoom(scale / 100.0)?;
         apply_panel_corner_radius(&view, corner_radius_for_scale(scale));
@@ -446,17 +682,63 @@ pub async fn sync_embedded_panel(
         );
         let mut detail = detail;
         detail["effects"] = serde_json::json!(match request.effects.as_deref() {
-            Some("mid") => "mid", Some("low") => "low", _ => "high",
+            Some("mid") => "mid",
+            Some("low") => "low",
+            _ => "high",
         });
-        crate::modules::notifications::registry::validate_signal("ocxd-panel-state", crate::modules::notifications::registry::Job::Panel, crate::modules::notifications::registry::Trigger::User, crate::modules::notifications::registry::Channel::Local).map_err(|_| AppError::NotConfigured)?;
+        crate::modules::notifications::registry::validate_signal(
+            "ocxd-panel-state",
+            crate::modules::notifications::registry::Job::Panel,
+            crate::modules::notifications::registry::Trigger::User,
+            crate::modules::notifications::registry::Channel::Local,
+        )
+        .map_err(|_| AppError::NotConfigured)?;
         view.eval(format!("window.__ocxdPanelState = {detail}; window.dispatchEvent(new CustomEvent('ocxd-panel-state', {{detail:{detail}}}))"))?;
         if request.action == PanelAction::Show {
-            if request.reload { view.reload()?; }
+            if request.reload {
+                // A fresh view is already navigating to the retry URL. Reload
+                // here would enqueue a second navigation before its first load.
+                if !created {
+                    lifetime.2.store(false, Ordering::Release);
+                    view.reload()?;
+                }
+            }
             view.show()?;
-            if request.reload { panel_log(&app, "show; reload requested"); }
+            if request.reload {
+                panel_log(&app, "show; reload requested");
+            }
         }
-        Ok(PanelResult { visible: true, panel_url: url.map(|url| url.to_string()) })
-    }).await.map_err(|_| AppError::NotConfigured)?
+        mark_panel_phase(&app, started, "visible", &mut timings);
+        Ok(PanelResult {
+            visible: true,
+            panel_url: url.map(|url| url.to_string()),
+            ready: lifetime.2.load(Ordering::Acquire),
+            generation,
+            timings,
+        })
+    });
+    match tokio::time::timeout(PANEL_COMMAND_TIMEOUT, worker).await {
+        Ok(result) => result.map_err(|_| AppError::NotConfigured)?,
+        Err(_) => {
+            let lifetime = deadline_app.state::<PanelLifetime>();
+            // A blocking native create cannot be cancelled. Invalidate its
+            // publication instead; a late view is hidden before it can surface.
+            let _ = lifetime.1.compare_exchange(
+                generation,
+                generation.wrapping_add(1),
+                Ordering::AcqRel,
+                Ordering::Acquire,
+            );
+            panel_log(
+                &deadline_app,
+                "native request timed out; late publication invalidated",
+            );
+            Err(AppError::RuntimeManaged {
+                code: "panel_timeout".into(),
+                detail: "原生面板创建或显示超时；可重试加载，服务保持运行".into(),
+            })
+        }
+    }
 }
 
 /// 注入浮层需要的状态：缩放读数与主题。
@@ -485,6 +767,44 @@ fn panel_state_detail(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn load_callbacks_require_the_current_view_and_owned_navigation() {
+        let origin = validate_panel_url("http://127.0.0.1:10100/web").unwrap();
+        assert!(current_panel_load(3, 3, &origin, &origin));
+        assert!(!current_panel_load(4, 3, &origin, &origin));
+        for url in [
+            "about:blank",
+            "http://127.0.0.1:10101/web",
+            "http://127.0.0.1:10100/api/status",
+            "https://example.com/web",
+        ] {
+            assert!(!current_panel_load(3, 3, &url.parse().unwrap(), &origin));
+        }
+        assert!(current_panel_load(
+            4,
+            4,
+            &"http://127.0.0.1:10100/web/models#details".parse().unwrap(),
+            &origin,
+        ));
+    }
+
+    #[test]
+    fn repeated_show_before_navigation_keeps_origin_and_resume_state() {
+        let mut idle = PanelIdle::default();
+        assert!(idle.update_origin("http://127.0.0.1:10100".into()));
+        idle.path = "/web/models".into();
+        idle.fragment = "selected".into();
+        idle.scroll = 180.0;
+        assert!(!idle.update_origin("http://127.0.0.1:10100".into()));
+        assert_eq!(idle.path, "/web/models");
+        assert_eq!(idle.fragment, "selected");
+        assert_eq!(idle.scroll, 180.0);
+        assert!(idle.update_origin("http://127.0.0.1:10101".into()));
+        assert!(idle.path.is_empty());
+        assert!(idle.fragment.is_empty());
+        assert_eq!(idle.scroll, 0.0);
+    }
 
     #[test]
     fn corner_radius_follows_interface_scale() {

@@ -5,10 +5,11 @@ import {
   getSyncConfig,
   saveSyncEndpoint as saveSyncEndpointCommand,
   testSyncConnection as testSyncConnectionCommand,
+  remoteVersionApi,
   type SaveSyncEndpointRequest, type SyncConfigDto, type SyncOperationResultDto,
 } from './api'
 import { runSyncNow as runSyncNowCommand } from '@/platform/workspace'
-import { endpointBinding, persistObservation, readObservation, type ConnectionObservation, type ObservationToken, type ObservedState, type WebdavState } from './observation'
+import { endpointBinding, persistObservation, readObservation, type ConnectionObservation, type ObservationDetails, type ObservationToken, type ObservedState, type WebdavState } from './observation'
 
 function failedStatus(message: string): SyncOperationResultDto {
   return { connectionState: 'failed', operationState: 'failed', message, snapshotId: null, backupId: null, etag: null }
@@ -21,6 +22,8 @@ export const useSyncStore = defineStore('sync', {
     status: null as SyncOperationResultDto | null,
     observation: null as ConnectionObservation | null,
     observationGeneration: 0,
+    observationSequence: 0,
+    versionRequest: 0, versionAttempt: '', checkingVersion: false,
     configRequest: 0,
     saving: false, testing: false, running: false,
     connectionOpen: false, resultOpen: false, resultId: null as string | null,
@@ -51,9 +54,10 @@ export const useSyncStore = defineStore('sync', {
         this.webdavState = this.observation?.state ?? 'configured'
       } else if (!config.endpoint) { this.observation = null; this.webdavState = 'unconfigured' }
     },
-    beginObservation(token: ObservationToken, state: 'connecting' | 'syncing') { if (this.ownsObservation(token)) this.webdavState = state },
-    recordObservation(token: ObservationToken, state: ObservedState, details: Partial<Pick<ConnectionObservation, 'observedAt' | 'source' | 'remoteTime' | 'remoteExists'>> = {}): boolean {
+    beginObservation(token: ObservationToken, state: 'connecting' | 'syncing') { if (this.ownsObservation(token)) { this.observationSequence++; this.webdavState = state } },
+    recordObservation(token: ObservationToken, state: ObservedState, details: ObservationDetails = {}): boolean {
       if (!this.ownsObservation(token)) return false
+      this.observationSequence++
       const previous = this.observation?.revision === token.revision ? this.observation : null
       const observedAt = details.observedAt && Number.isFinite(Date.parse(details.observedAt)) ? details.observedAt : new Date().toISOString()
       const observation: ConnectionObservation = {
@@ -62,9 +66,40 @@ export const useSyncStore = defineStore('sync', {
         ...(previous?.remoteExists !== undefined ? { remoteExists: previous.remoteExists } : {}),
         ...(details.remoteTime !== undefined ? { remoteTime: details.remoteTime && Number.isFinite(Date.parse(details.remoteTime)) ? details.remoteTime : null } : {}),
         ...(details.remoteExists !== undefined ? { remoteExists: details.remoteExists } : {}),
+        ...(previous?.remoteRead ? { remoteRead: previous.remoteRead } : {}),
+        ...(previous?.remoteRevision !== undefined ? { remoteRevision: previous.remoteRevision } : {}),
+        ...(previous?.remoteObservedAt ? { remoteObservedAt: previous.remoteObservedAt } : {}),
+        ...(details.remoteRead ? { remoteRead: details.remoteRead } : {}),
+        ...(details.remoteRevision !== undefined ? { remoteRevision: details.remoteRevision } : {}),
+        ...(details.remoteObservedAt ? { remoteObservedAt: details.remoteObservedAt } : {}),
+        ...(details.comparison === 'same' ? { comparison: 'same' } : {}),
       }
       this.observation = observation; this.webdavState = state; persistObservation(observation)
       return true
+    },
+    async inspectRemoteVersion(once = false): Promise<boolean> {
+      const token = this.observationToken()
+      if (!this.ownsObservation(token)) return false
+      if (this.running || this.testing || this.webdavState === 'syncing') return false
+      const attempt = token.generation + ':' + token.revision
+      if (once && this.versionAttempt === attempt) return false
+      this.versionAttempt = attempt
+      const request = ++this.versionRequest
+      this.checkingVersion = true; this.beginObservation(token, 'connecting')
+      const sequence = this.observationSequence
+      const current = () => request === this.versionRequest && this.ownsObservation(token) && sequence === this.observationSequence
+      try {
+        const value = await remoteVersionApi.read()
+        if (!current()) return false
+        this.recordObservation(token, 'connected', { source: 'version-check', remoteTime: value.remoteSavedAt, remoteExists: value.remoteExists, remoteRevision: value.remoteRevision, remoteRead: value.remoteExists ? 'present' : 'absent', remoteObservedAt: new Date().toISOString() })
+        return true
+      } catch {
+        if (current()) this.recordObservation(token, 'failed', { source: 'version-check', remoteRead: 'failed', remoteObservedAt: new Date().toISOString() })
+        return false
+      } finally {
+        if (request === this.versionRequest) this.checkingVersion = false
+        if (current()) this.endObservation(token)
+      }
     },
     endObservation(token: ObservationToken) {
       if (this.ownsObservation(token) && ['connecting', 'syncing'].includes(this.webdavState)) this.webdavState = this.observation?.state ?? 'configured'

@@ -1,0 +1,117 @@
+{
+  "kind": "local-unsubmitted-upstream-candidate",
+  "targetDev": "0a30c551304927c93c26a96c034bd39a166c7460",
+  "localSnapshot": "cab7eb7d0332ae0ebb4289d7c6bac1de666b6e40",
+  "patchSha256": "3d23278260afe59f6b0715db4a158f59e7eb1d7c65e7e6a72e13c91c0ce4edc8",
+  "patchBytes": 35703,
+  "files": [
+    {
+      "path": "src/codex/desktop-app/windows.ts",
+      "beforeSha256": "85b48bb5db5607534309018362367d4e0363712d8dbb29012d56743c10e41f59",
+      "afterSha256": "28ccd53fed43024f5c296319b40f399c6de387b5b5103de1dde64288414d53af",
+      "beforeGitBlob": "bc1cfac01abac008c2479db1fb7633d6c8a4db6b",
+      "bytes": 10404
+    },
+    {
+      "path": "src/codex/app-server-processes.ts",
+      "beforeSha256": "474a263c8a43346a07f748d8dc5ef9b8b507bd8d9fe0eb0eb568dfae8f05cb8c",
+      "afterSha256": "26eccdd713947e955e2e806f1932882b7044d62483344843ab8dd750c69bbd96",
+      "beforeGitBlob": "31b1664fc241693d0dd09aaabe24b78585aee82a",
+      "bytes": 65130
+    },
+    {
+      "path": "src/codex/windows-process-identity.ts",
+      "beforeSha256": null,
+      "afterSha256": "aa3430263504f5c190c30e2937004ce0b8e3818ca6adc3b8842668436e93e322",
+      "beforeGitBlob": null,
+      "bytes": 7958
+    },
+    {
+      "path": "src/config/live-reconcile.ts",
+      "beforeSha256": "4c9ac8f9d3b76977f6e9be9ce7f50a5f226a9358cc1093f4693a3fa04cf591a4",
+      "afterSha256": "056c6ff1e783a80f52cdb51101bed4f64728f29a0eb152fdfbc86ddc8cc95c0d",
+      "beforeGitBlob": "3e9d14d4439407b5ec385465ed6850ec017fd499"
+    }
+  ],
+  "baseNote": "All 8 modified preimages match pinned dev Git blobs; 2 added paths absent. Expected-layout fixture uses exact dev bytes. Lock and tsconfig match; package differs only by version. Release-tree unchanged surroundings used locally, not claimed full dev CI.",
+  "validation": {
+    "rootCause": "Reload adopted saved provider row without provider-scoped discovery baseline; catalog convergence bootstrapped new updatedAt. Management byte guard correctly refused.",
+    "before": "2 admitted route tests failed; first initial HTTP403 fixture error retained separately",
+    "after": "140 route tests passed; typecheck passed; manager strict timestamp-only drift test passed",
+    "nativeWindows": "new supplemental patch not yet exercised natively on Windows",
+    "productionRuntimeFixed": false,
+    "docBase": "Release config doc drift detected; rebased onto fixeddev original before patch replay, no unrelated changes removed",
+    "strictManagerGuard": "20 saved_runtime_reconcile tests passed incl timestamp-only drift rejection before further mutation; pending sentinels retained",
+    "realManagerInstaller": "macOS real RuntimeInstaller+SystemNpmRunner+RealVersionProbe: candidate1 and candidate2 each passed stable→offline prerelease, exact entry/source full version, failed install kept package/entry/source, isolated uninstall; not Windows native verification"
+  },
+  "remaining": [
+    "Native Windows fresh rename using new combined installed candidate2",
+    "Upstream acceptance/stable runtime delivery or explicit production-source adoption",
+    "Full upstream checks and final desktop source/platform/release gates"
+  ],
+  "publicMutation": false,
+  "devArchiveFetch": "Pinned dev archive fetch ended with unexpected EOF. No extraction or restart; exact dev Git trees verified every modified preimage. Main snapshot used for unchanged surrounding files; not full dev-tree CI.",
+  "localPatch": "/private/tmp/post021-final-integration-20261105/runtime-owner-dev-0a30c551-local.patch",
+  "patchCommittedOrPublished": false,
+  "candidateRevision": 2,
+  "extraRuntimePaths": [
+    "src/config/live-reconcile.ts"
+  ],
+  "patches": [
+    {
+      "file": "runtime-owner-dev-0a30c551.patch",
+      "sha256": "0d8eaaec8c361d914fb901db2c8ef6a36702ce3c7ec209cb3f255817f8e32bb7"
+    },
+    {
+      "file": "runtime-provider-reload-baseline.patch",
+      "sha256": "efe2dc2cce0f1d9b18b250cccf633e4b762ee7156bc6c5ef411e881acceecbf5"
+    }
+  ],
+  "patchApplication": "Apply runtime-owner-dev-0a30c551.patch first, then runtime-provider-reload-baseline.patch to fixed dev0a30c551; do not apply to desktop manager or installed daily packages.",
+  "supplementalFiles": [
+    {
+      "path": "src/config/live-reconcile.ts",
+      "beforeSha256": "4c9ac8f9d3b76977f6e9be9ce7f50a5f226a9358cc1093f4693a3fa04cf591a4",
+      "afterSha256": "056c6ff1e783a80f52cdb51101bed4f64728f29a0eb152fdfbc86ddc8cc95c0d",
+      "beforeGitBlob": "3e9d14d4439407b5ec385465ed6850ec017fd499"
+    },
+    {
+      "path": "tests/server/provider-reload-discovery.test.ts",
+      "beforeSha256": null,
+      "afterSha256": "ea00c31a941a5450f179e24b3dc627f56992233dae9f58551bdec9a6ae2d872e",
+      "beforeGitBlob": null
+    },
+    {
+      "path": "scripts/test-layout/layout-clients.json",
+      "beforeSha256": "339f0b2490c6dd892e5e952fd3a60a02a9c6050ca5c993f423c00863d20482ed",
+      "afterSha256": "3cc1736592681e43eca55a9ed7eec6821b20307d83c47c0c4c926391526057e5",
+      "beforeGitBlob": "041f164383a3250c55b7d6289b7e3f9010f624d4"
+    },
+    {
+      "path": "tests/fixtures/test-layout-expected.json",
+      "beforeSha256": "1c506959eca164baab840815c36fdb76462777c8d83ae527da1890064b7b5e69",
+      "afterSha256": "16af7a5fdecd2ca27ee2f97f1c8e1f2f61a6b2b03a118d8a57f49346df5bb73b",
+      "beforeGitBlob": "274e818115c90498759b8a9246b3eec5636e893c"
+    },
+    {
+      "path": "structure/config.md",
+      "beforeSha256": "527b7bd79657d40d671b3c79b5022fbb3456748643ea80715858990e263f26c2",
+      "afterSha256": "add7d37b092c27f691a461f0a047bc1b88af1bc07c19fe5f91027a2f3a0efbd3",
+      "beforeGitBlob": "a59d456ba66758505bfec6d61bfd624a10b291bd"
+    }
+  ],
+  "expectedArchive": {
+    "version": "2.97.0-post021.ownerquery.2",
+    "archive": "opencodex-2.97.0-post021.ownerquery.2.tgz",
+    "sha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957",
+    "bytes": 15406072,
+    "changedFiles": [
+      "package.json",
+      "src/codex/app-server-processes.ts",
+      "src/codex/desktop-app/windows.ts",
+      "src/codex/windows-process-identity.ts",
+      "src/config/live-reconcile.ts",
+      "src/generated/compatibility-version.json"
+    ]
+  }
+}

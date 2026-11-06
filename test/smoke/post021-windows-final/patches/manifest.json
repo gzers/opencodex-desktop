@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "kind": "windows-handoff-source-patch-not-installed",
+  "file": "runtime-owner-dev-0a30c551.patch",
+  "sha256": "0d8eaaec8c361d914fb901db2c8ef6a36702ce3c7ec209cb3f255817f8e32bb7",
+  "bytes": 35703,
+  "upstreamRepository": "https://github.com/lidge-jun/opencodex",
+  "upstreamBase": "0a30c551304927c93c26a96c034bd39a166c7460",
+  "managerCodeBase": "477d7edeab74c04ad2d2cbc1c075442bfd49123b",
+  "scope": "Apply to a disposable upstream checkout of the exact base, not the desktop manager repository or a daily installed runtime.",
+  "retrieval": "Use git archive --format=zip and Expand-Archive to preserve patch bytes on Windows. Verify with Get-FileHash -Algorithm SHA256; avoid PowerShell text redirection for git show.",
+  "validation": {
+    "typecheck": "2306 runtime files passed with Bun1.4.4",
+    "focused": "109 passed /3 Windows-only not executed /0 failed",
+    "compiledQueryBuilders": "passed identical outputs with source-directory reads and network denied; not complete proxy packaging",
+    "exactDevPatchReplay": "final patch git apply --check and replay passed; all 10 hashes equal final candidate",
+    "changedFilePrivacyScan": "10 files / 0 findings via upstream scanText; whole-repository scan not run without Git index",
+    "typecheckLog": "upstream-prep-typecheck-final-layout.log",
+    "focusedLog": "upstream-prep-tests-final-layout.log",
+    "priorFailures": "Initial104passed/3skipped/5failed retained: old source-string contracts and CreationDate-only fake-query dispatch; adapted without changing production unknown/empty semantics.",
+    "windowsFixtureStatus": "Existing Windows membership fixtures updated for native identity policy using synthetic identities; not executed on macOS. Actual app-server enumeration test remains Windows-only.",
+    "compatibilityLaunch": "12 passed /2 Windows-only not executed /0 failed; captured/reapplied PAC, unknown root args and current-generation refusal covered by injected executors"
+  },
+  "files": [
+    {
+      "path": "src/codex/desktop-app/windows.ts",
+      "beforeSha256": "85b48bb5db5607534309018362367d4e0363712d8dbb29012d56743c10e41f59",
+      "afterSha256": "28ccd53fed43024f5c296319b40f399c6de387b5b5103de1dde64288414d53af",
+      "beforeGitBlob": "bc1cfac01abac008c2479db1fb7633d6c8a4db6b",
+      "bytes": 10404
+    },
+    {
+      "path": "src/codex/app-server-processes.ts",
+      "beforeSha256": "474a263c8a43346a07f748d8dc5ef9b8b507bd8d9fe0eb0eb568dfae8f05cb8c",
+      "afterSha256": "26eccdd713947e955e2e806f1932882b7044d62483344843ab8dd750c69bbd96",
+      "beforeGitBlob": "31b1664fc241693d0dd09aaabe24b78585aee82a",
+      "bytes": 65130
+    },
+    {
+      "path": "src/codex/windows-process-identity.ts",
+      "beforeSha256": null,
+      "afterSha256": "aa3430263504f5c190c30e2937004ce0b8e3818ca6adc3b8842668436e93e322",
+      "beforeGitBlob": null,
+      "bytes": 7958
+    },
+    {
+      "path": "tests/clients/desktop-app-restart.test.ts",
+      "beforeSha256": "878f4df811b01d9872fe8d2375223e20bbf669d781e28b2fb430fb3ebdc8f0a5",
+      "afterSha256": "f1f45359522a9bb951ce41915c6a7d70c9b8ea0ec3160b5133293cbee9b5d7da",
+      "beforeGitBlob": "009d3e6d1f006b04c9967292d5c5e37e635a015f",
+      "bytes": 35423
+    },
+    {
+      "path": "tests/codex-integration/codex-app-server-processes.test.ts",
+      "beforeSha256": "3c83e69c6bd604721ef8ec73b5e8a91dbcd18c5d0996b5c796f7fcdab8c849ff",
+      "afterSha256": "a9204b3d6c6cf1a4c3068e6f72bdb33006287ac4feba18edf53af73e2ea5de93",
+      "beforeGitBlob": "76d3aa9cab7ddb2dec83fa60f4ae28db5ae754d1",
+      "bytes": 73135
+    },
+    {
+      "path": "tests/helpers/windows-power-shell-fixture.ts",
+      "beforeSha256": "c0a278511cb03d87c9baf67fbf7ae9c32947ee280983a26a5202093d82d5aece",
+      "afterSha256": "e21d97dc15377d3a7dff2cc3187b81889b931c5e07e822b65607b6c58b2bb5cd",
+      "beforeGitBlob": "25e4a88826e1e686c3589f2171ed7930cf5ec5ee",
+      "bytes": 6228
+    },
+    {
+      "path": "tests/clients/windows-process-identity.test.ts",
+      "beforeSha256": null,
+      "afterSha256": "a244325d0b22c1279a8d4760ee67cd31d89ca00afcb37fc942b616b99c7b6ca4",
+      "beforeGitBlob": null,
+      "bytes": 3572
+    },
+    {
+      "path": "scripts/test-layout/layout-clients.json",
+      "beforeSha256": "c68eead87703f413d7d5fccc43cd6ce3fd2df84b92340de0476f6cddabf14a63",
+      "afterSha256": "339f0b2490c6dd892e5e952fd3a60a02a9c6050ca5c993f423c00863d20482ed",
+      "beforeGitBlob": "8934d90bd52430c1077352353128dc66651071eb",
+      "bytes": 8394
+    },
+    {
+      "path": "tests/fixtures/test-layout-expected.json",
+      "beforeSha256": "c0994a68a6a5cba5554b86eb8d501e79476b933a9646323608d13aaa5069c571",
+      "afterSha256": "1c506959eca164baab840815c36fdb76462777c8d83ae527da1890064b7b5e69",
+      "beforeGitBlob": "0c4ea5401be608ac5d7e05d92b41c8516d01b825",
+      "bytes": 148411
+    },
+    {
+      "path": "structure/clients/codex-desktop.md",
+      "beforeSha256": "12d744bb1c107ab8b55cd60baee049b15969205776a5be7514771c53e99a9286",
+      "afterSha256": "8db094854707f01c71b678c9b3e35ae06e410bf974e7dbb50860dd8be1362576",
+      "beforeGitBlob": "334956b56378a1875722c39ef0033924ebd2ef02",
+      "bytes": 24642
+    }
+  ],
+  "remaining": [
+    "Windows-native execution of ported policy and updated fixtures",
+    "Git-index-dependent whole-repo privacy/structure/test-layout and upstream CI",
+    "User authorization for external fork/PR",
+    "Maintainer integration and published runtime delivery",
+    "Actual full dev-tree branch validation before readiness; no full dev archive extracted"
+  ],
+  "authorization": "User requested distribution on a contribution branch for Windows verification only. No upstream PR, runtime installation, release or main merge.",
+  "productionRuntimeFixed": false
+}

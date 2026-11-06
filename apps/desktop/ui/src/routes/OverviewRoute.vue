@@ -25,6 +25,7 @@ import RuntimeMotionMark from '@/features/runtime/components/RuntimeMotionMark.v
 import EnvironmentGate from '@/features/environment/components/EnvironmentGate.vue'
 import { webdavStates } from '@/features/sync/states'
 import { useSyncStore } from '@/features/sync/store'
+import { remoteVersionHint as versionHint } from '@/features/sync/observation'
 import { clockText, syncActivity } from '@/features/sync/activity'
 import { runtimeSourceLabel } from '@/lib/labels'
 import { buildEnvironmentPresentation, environmentChecksOrdered } from '@/features/environment/presentation'
@@ -289,15 +290,16 @@ function activityText(entry: { time: string; count: number } | undefined, empty:
 // Last observations belong to the saved endpoint revision, never to a draft form.
 const webdavView = computed(() => webdavStates[app.webdavState])
 const remoteVersionTime = computed(() => clockText(syncStore.observation?.remoteTime ?? undefined) || '—')
-const remoteVersionHint = computed(() => syncStore.observation?.remoteTime ? '上次观察' : syncStore.observation?.remoteExists === false ? '上次未发现快照' : '尚未读取')
+const remoteVersionHint = computed(() => versionHint(syncStore.observation, syncStore.checkingVersion))
 const remoteVersionTitle = computed(() => {
   const observation = syncStore.observation
   if (!observation) return '尚未读取当前连接的云端版本'
-  return '观察时间：' + new Date(observation.observedAt).toLocaleString('zh-CN') + (observation.remoteTime ? '；保存版本：' + new Date(observation.remoteTime).toLocaleString('zh-CN') : '')
+  return '观察时间：' + new Date(observation.remoteObservedAt ?? observation.observedAt).toLocaleString('zh-CN') + (observation.remoteRevision ? '；快照：' + observation.remoteRevision : '') + (observation.remoteTime ? '；保存版本：' + new Date(observation.remoteTime).toLocaleString('zh-CN') : '')
 })
 const webdavConnectionText = computed(() => {
   const time = clockText(syncStore.observation?.observedAt)
-  return webdavView.value.conn + (time && !['unconfigured', 'configured', 'unknown', 'connecting', 'syncing'].includes(app.webdavState) ? ' · ' + time : '')
+  const label = syncStore.checkingVersion ? '正在检测' : syncStore.observation?.comparison === 'same' && syncStore.observation.source === 'sync-preview' ? '最近检查一致' : webdavView.value.conn
+  return label + (time && !['unconfigured', 'configured', 'unknown', 'connecting', 'syncing'].includes(app.webdavState) ? ' · ' + time : '')
 })
 const mods = computed(() => [
   {
@@ -325,7 +327,7 @@ const mods = computed(() => [
       { label: '导出', cls: 'btn', run: () => { overviewTransfer.value='file';syncStore.requestAction('export') } },
     ],
   },
-  { key: 'sync', title: 'WebDAV 同步', tag: '', rows: [['连接状态', webdavConnectionText.value]], actions: webdavView.value.actions.map(a => ({ label: a.label, cls: a.cls, disabled: !!a.disabled, run: () => { if(a.act==='result')syncStore.openResult();else if(a.act==='connection')syncStore.openConnection();else{overviewTransfer.value='webdav';syncStore.requestAction(a.act)} } })) },
+  { key: 'sync', title: 'WebDAV 同步', tag: '', rows: [['连接状态', webdavConnectionText.value]], actions: [...webdavView.value.actions.map(a => ({ label: a.label, cls: a.cls, disabled: !!a.disabled, run: () => { if(a.act==='result')syncStore.openResult();else if(a.act==='connection')syncStore.openConnection();else{overviewTransfer.value='webdav';syncStore.requestAction(a.act)} } })), ...(syncStore.config?.endpoint && !['syncing','connecting'].includes(app.webdavState) ? [{ label: '检测版本', cls: 'btn ghost', disabled: syncStore.checkingVersion || ['syncing', 'connecting'].includes(app.webdavState), run: () => { void syncStore.inspectRemoteVersion() } }] : [])] },
 ])
 </script>
 

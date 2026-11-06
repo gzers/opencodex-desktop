@@ -1,0 +1,533 @@
+--- a/src/codex/desktop-app/windows.ts
++++ b/src/codex/desktop-app/windows.ts
+@@ -2,7 +2,7 @@
+  * Windows adapter for the Codex desktop-app restart.
+  *
+  * Moved from `desktop-app-restart.ts`. Behaviour is the Appx/CIM/taskkill path
+- * that already shipped: runtime package discovery, current-user GetOwner
++ * that already shipped: runtime package discovery, current-user token-SID
+  * scoping, CloseMainWindow then taskkill /T /F, relaunch through the discovered
+  * AUMID. The shape is DesktopAppAdapter so the ladder, not this file, owns
+  * PID-reuse re-verification and the fail-closed sequencing.
+@@ -12,6 +12,7 @@
+  */
+ import { execFileSync } from "node:child_process";
+ import { sep, win32 } from "node:path";
++import { windowsDesktopProcessQuery } from "../windows-process-identity";
+ import { resolveTrustedWindowsPowerShellExe, resolveTrustedWindowsTaskkillExe } from "../../lib/windows-elevation";
+ import { activateWindowsCodexCompatibility, assertWindowsCompatibilityContext, captureWindowsCompatibilityContext } from "../desktop-compatibility/windows-package-command";
+ import {
+@@ -83,8 +84,7 @@
+  * Only `ChatGPT.exe` processes whose image lives under the discovered install
+  * location AND owned by the current user. The install location alone is not
+  * enough: an MSIX package under `WindowsApps` is shared, so on a multi-user
+- * machine another account's Codex desktop matches the same path. The app-server
+- * collector already pays for `GetOwner` for exactly this reason.
++ * machine another account's Codex desktop matches the same path. Both collectors verify the token SID from a native process handle.
+  *
+  * `CreationDate` is captured so a PID can be re-verified before it is signalled;
+  * a graceful-close window is long enough for Windows to recycle a PID.
+@@ -94,27 +94,7 @@
+  * admit a sibling `OpenAI.Codex-evil` directory.
+  */
+ function listPackageProcesses(exec: DesktopExec, install: DesktopAppInstall): DesktopProcess[] | null {
+-  const literal = install.root.replace(/'/g, "''");
+-  const script = [
+-    "$ErrorActionPreference='SilentlyContinue'",
+-    `$root = '${literal}'.Replace('/', '\\')`,
+-    "$me = ([Security.Principal.WindowsIdentity]::GetCurrent()).Name",
+-    "Get-CimInstance Win32_Process -Filter \"Name='ChatGPT.exe'\" |",
+-    "  Where-Object { $_.ExecutablePath -and $_.ExecutablePath.Replace('/', '\\').StartsWith($root, 'OrdinalIgnoreCase') } |",
+-    "  ForEach-Object {",
+-    "    $o = Invoke-CimMethod -InputObject $_ -MethodName GetOwner",
+-    "    if ($o -and $o.ReturnValue -eq 0 -and $o.User) {",
+-    "      $owner = if ($o.Domain) { \"$($o.Domain)\\$($o.User)\" } else { $o.User }",
+-    "      if ($owner -ieq $me) {",
+-    "        $encoded=[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes([string]$_.CommandLine))",
+-    "        \"$($_.ProcessId) $($_.ParentProcessId) $($_.CreationDate.ToString('o')) $($_.ExecutablePath)`t$encoded\"",
+-    "      }",
+-    "    }",
+-    "  }",
+-  // Statements must be newline-separated. Joining with a space concatenates
+-  // `$ErrorActionPreference='SilentlyContinue' $root = '...'` into one malformed statement,
+-  // which PowerShell rejects — so the probe threw and every caller read "not running" (#2557).
+-  ].join("\n");
++  const script = windowsDesktopProcessQuery(install.root);
+   let stdout: string;
+   try {
+     stdout = exec(resolveTrustedWindowsPowerShellExe(), ["-NoProfile", "-NonInteractive", "-Command", script], POWERSHELL_PROBE_OPTIONS);
+--- a/src/codex/app-server-processes.ts
++++ b/src/codex/app-server-processes.ts
+@@ -15,6 +15,7 @@
+   resolveTrustedWindowsTaskkillExe,
+ } from "../lib/windows-elevation";
+ import { readCodexCatalogPath } from "./paths";
++import { windowsAppServerProcessQuery } from "./windows-process-identity";
+ 
+ export const STALE_CODEX_APP_SERVER_HINT =
+   "If Codex still shows an older model list, run `ocx sync --restart-codex`: it restarts the long-lived app-server "
+@@ -41,14 +42,14 @@
+ /**
+  * Narrow Win32_Process CommandLine pre-filter (JS + .NET compatible).
+  * Allows an optional closing quote after the executable basename so paths like
+- * `"C:\Program Files\...\codex.exe" app-server` still reach GetOwner.
++ * `"C:\Program Files\...\codex.exe" app-server` still reach native owner verification.
+  * Also admits official target-triple basenames such as
+  * `codex-x86_64-pc-windows-msvc.exe`.
+  *
+  * The optional `.opencodex-real` sits where `backupPathFor` actually puts it — after
+  * the stem and BEFORE the extension — and deliberately not before the triple. Written
+  * the other way it admits `codex.opencodex-real-x86_64-pc-windows-msvc.exe`, a name
+- * nothing produces, and pays GetOwner for it.
++ * nothing produces, and pays for unnecessary native identity checks.
+  */
+ export const WINDOWS_CODEX_BASENAME_CANDIDATE_RE = new RegExp(
+   `(^|[/\\\\\\s'"=])codex(-${CODEX_TARGET_TRIPLE_BODY})?([.]opencodex-real)?([.]exe|[.]cmd|[.]ps1)?['"]?(\\s|$)`,
+@@ -94,7 +95,7 @@
+   "codex.opencodex-real.ps1",
+ ]);
+ 
+-/** True when a Windows CommandLine is worth paying GetOwner for (current-user scoped later). */
++/** True when a Windows CommandLine is worth verifying native identity for (current-user scoped later). */
+ export function isWindowsCodexCandidateCommandLine(commandLine: string): boolean {
+   return WINDOWS_CODEX_BASENAME_CANDIDATE_RE.test(commandLine)
+     || WINDOWS_CODEX_CODE_MODE_HOST_CANDIDATE_RE.test(commandLine);
+@@ -466,14 +467,14 @@
+ }
+ 
+ /**
+- * Windows snapshots scoped to the invoking user via Win32_Process GetOwner.
++ * Windows snapshots scoped to the invoking user by native token SID.
+  * PowerShell is the sole path: WMIC lacks reliable owner data and is disabled on
+  * many Windows 11 installs; returning unscoped rows would contradict the
+  * current-user restart contract.
+  *
+- * CIM instance methods must use Invoke-CimMethod (direct .GetOwner() calls fail).
++ * A CIM snapshot supplies metadata; a native handle verifies owner/path/start.
+  * Candidates are pre-filtered to Codex basename / code-mode-host command lines
+- * so we do not pay GetOwner per every process on the machine.
++ * before native identity checks; ambiguous reads fail the complete snapshot.
+  * Exported for the Windows integration regression that exercises the real
+  * PowerShell enumeration.
+  */
+@@ -506,41 +507,14 @@
+ 
+ function windowsSnapshotPowerShellCommand(): string {
+   // Newlines keep -Command as a real script (space-joined statements need ';').
+-  // Double-quoted format string so `t expands to a real tab.
++  // The shared helper emits tab-delimited rows without a per-process CIM method.
+   // Codex candidates only: basename token codex / codex.exe / codex.cmd /
+   // codex.ps1, their .opencodex-real shim backups, official target-triple
+   // binaries (optional closing quote after the basename), or code-mode-host —
+   // not incidental substrings like a repo path with "opencodex".
+   const basenameMatch = powerShellSingleQuotedIgnoreCaseMatch(WINDOWS_CODEX_BASENAME_CANDIDATE_RE.source);
+   const codeModeMatch = powerShellSingleQuotedIgnoreCaseMatch(WINDOWS_CODEX_CODE_MODE_HOST_CANDIDATE_RE.source);
+-  return [
+-    "$ErrorActionPreference='SilentlyContinue'",
+-    "$me=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name",
+-    // -ErrorAction Stop plus the outer try is what makes a TOP-LEVEL query failure
+-    // observable. Under SilentlyContinue alone, a failing Get-CimInstance emits nothing
+-    // and the enumeration is indistinguishable from "no Codex process is running" —
+-    // the parse loop finds no rows, no sentinel is produced, and the staleness collector
+-    // reports not_running for a machine whose process list it never actually read.
+-    // The per-process catch below cannot cover this: it only runs once the pipeline has
+-    // objects to iterate.
+-    "try {",
+-    "Get-CimInstance Win32_Process -ErrorAction Stop | Where-Object {",
+-    "  -not [string]::IsNullOrWhiteSpace($_.CommandLine) -and (",
+-    `    $_.CommandLine -match ${basenameMatch} -or`,
+-    `    $_.CommandLine -match ${codeModeMatch}`,
+-    "  )",
+-    "} | ForEach-Object {",
+-    "  try {",
+-    "    $o=Invoke-CimMethod -InputObject $_ -MethodName GetOwner -ErrorAction Stop",
+-    "    if($null -eq $o -or $o.ReturnValue -ne 0 -or [string]::IsNullOrWhiteSpace($o.User)){\"__OCX_ENUM_INCOMPLETE__\"; return}",
+-    "    $owner=if($o.Domain){\"$($o.Domain)\\$($o.User)\"}else{$o.User}",
+-    "    if($owner -ine $me){return}",
+-    "    $cmd=($_.CommandLine -replace \"`t\",\" \")",
+-    "    \"{0}`t{1}`t{2}\" -f $_.ProcessId, $cmd, $owner",
+-    "  } catch { \"__OCX_ENUM_INCOMPLETE__\" }",
+-    "}",
+-    "} catch { \"__OCX_ENUM_INCOMPLETE__\" }",
+-  ].join("\n");
++  return windowsAppServerProcessQuery(basenameMatch, codeModeMatch);
+ }
+ 
+ export function listWindowsSnapshots(runPowerShell?: (psCommand: string) => string): ProcessSnapshot[] {
+@@ -1052,8 +1026,7 @@
+  * How long a real observation may still be SERVED after it expires, while a refresh
+  * runs behind it (#2499).
+  *
+- * The probe is advisory and, on Windows, slow: `Invoke-CimMethod GetOwner` costs
+- * ~0.4s per candidate process, so a cold probe routinely outlives the 5s TTL and
++ * The probe is advisory. A cold Windows snapshot can outlive the 5s TTL and
+  * every turn that misses the cache pays for it on the request path. Serving the
+  * previous reading immediately keeps that cost off the turn without pretending it is
+  * fresh -- the refresh it triggers is what makes the next reading current.
+@@ -1272,7 +1245,7 @@
+  * Dashboard read of the request-path catalog state, bounded by `deadlineMs`.
+  *
+  * The request collector keeps the event loop free, but a cold Windows probe still
+- * takes 4-7s (CIM walk plus GetOwner per candidate), and the Models and Subagents
++ * includes CIM metadata and native identity reads, and the Models and Subagents
+  * pages cannot render their rosters until these routes answer. The reading only
+  * drives an advisory banner, so a slow probe answers `unknown` (which renders no
+  * banner) and keeps running; its result is cached for the next poll.
+--- /dev/null
++++ b/src/codex/windows-process-identity.ts
+@@ -0,0 +1,122 @@
++/** Read-only Windows process identity scripts shared by desktop and app-server discovery.
++ * One CIM snapshot supplies command/parent metadata. Path, token SID and creation
++ * time are read from one native process handle, avoiding a GetOwner RPC per row.
++ * Script literals remain embedded in source and compiled Bun distributions.
++ */
++const nativeIdentity = String.raw`Add-Type -TypeDefinition @'
++using System;
++using System.ComponentModel;
++using System.Runtime.InteropServices;
++using System.Security.Principal;
++using System.Text;
++public static class OcxDesktopOwnerV1 {
++    [StructLayout(LayoutKind.Sequential)] struct NativeFileTime {public uint Low,High;}
++    [DllImport("kernel32.dll",SetLastError=true)] static extern IntPtr OpenProcess(uint access,bool inherit,int pid);
++    [DllImport("kernel32.dll",SetLastError=true)] static extern bool CloseHandle(IntPtr handle);
++    [DllImport("kernel32.dll",SetLastError=true)] static extern bool GetProcessTimes(IntPtr h,out NativeFileTime created,out NativeFileTime exited,out NativeFileTime kernel,out NativeFileTime user);
++    [DllImport("kernel32.dll",CharSet=CharSet.Unicode,SetLastError=true)] static extern bool QueryFullProcessImageName(IntPtr h,int flags,StringBuilder name,ref int size);
++    [DllImport("advapi32.dll",SetLastError=true)] static extern bool OpenProcessToken(IntPtr h,uint access,out IntPtr token);
++    [DllImport("advapi32.dll",SetLastError=true)] static extern bool GetTokenInformation(IntPtr token,int type,IntPtr buffer,int length,out int needed);
++    public sealed class Identity {public string Path; public string Sid; public long CreatedUtcTicks;}
++    public static Identity Read(int pid) {
++        IntPtr process=OpenProcess(0x1000,false,pid),token=IntPtr.Zero,data=IntPtr.Zero;
++        if(process==IntPtr.Zero){int code=Marshal.GetLastWin32Error();if(code==87)return null;throw new Win32Exception(code,"Process identity unavailable");}
++        try {
++            NativeFileTime c,e,k,u;
++            if(!GetProcessTimes(process,out c,out e,out k,out u))throw new Win32Exception(Marshal.GetLastWin32Error());
++            long created=DateTime.FromFileTimeUtc(((long)c.High<<32)|c.Low).Ticks;
++            var name=new StringBuilder(32768);int size=name.Capacity;
++            if(!QueryFullProcessImageName(process,0,name,ref size))throw new Win32Exception(Marshal.GetLastWin32Error());
++            if(!OpenProcessToken(process,8,out token))throw new Win32Exception(Marshal.GetLastWin32Error());
++            int needed;
++            bool first=GetTokenInformation(token,1,IntPtr.Zero,0,out needed);
++            if(first || Marshal.GetLastWin32Error()!=122 || needed< IntPtr.Size || needed>65536)throw new InvalidOperationException("Invalid token-user size");
++            data=Marshal.AllocHGlobal(needed);
++            if(!GetTokenInformation(token,1,data,needed,out needed))throw new Win32Exception(Marshal.GetLastWin32Error());
++            string sid=new SecurityIdentifier(Marshal.ReadIntPtr(data)).Value;
++            return new Identity {Path=name.ToString(),Sid=sid,CreatedUtcTicks=created};
++        } finally {if(data!=IntPtr.Zero)Marshal.FreeHGlobal(data);if(token!=IntPtr.Zero)CloseHandle(token);CloseHandle(process);}
++    }
++}
++'@`;
++const desktopPolicy = String.raw`$taskOwnerSid=[Security.Principal.WindowsIdentity]::GetCurrent().User.Value
++$taskRoot=[IO.Path]::GetFullPath($taskInstallRoot).TrimEnd('\','/')+[IO.Path]::DirectorySeparatorChar
++$taskOwn=@()
++# One CIM snapshot obtains parent IDs. Native handles establish path, owner and
++# creation on the same generation; GetOwner RPC is not repeated per process.
++foreach($taskP in @(Get-CimInstance Win32_Process -Filter "Name='ChatGPT.exe'" -ErrorAction Stop)){
++    if(!$taskP.ExecutablePath){
++        if($taskP.SessionId -eq [Diagnostics.Process]::GetCurrentProcess().SessionId){throw 'Current-session image unavailable'}
++        continue
++    }
++    if(!$taskP.ExecutablePath.Replace('/','\').StartsWith($taskRoot,[StringComparison]::OrdinalIgnoreCase)){continue}
++    $taskNative=[OcxDesktopOwnerV1]::Read([int]$taskP.ProcessId)
++    if(!$taskNative){continue}
++    if($taskNative.Sid -cne $taskOwnerSid){continue}
++    $taskImage=$taskNative.Path
++    if($taskImage.StartsWith('\\?\')){$taskImage=$taskImage.Substring(4)}
++    if(!$taskImage.StartsWith($taskRoot,[StringComparison]::OrdinalIgnoreCase) -or [IO.Path]::GetFileName($taskImage) -ine 'ChatGPT.exe'){throw 'Native package image changed'}
++    $taskDelta=$taskNative.CreatedUtcTicks-$taskP.CreationDate.ToUniversalTime().Ticks
++    if($taskDelta -lt 0 -or $taskDelta -gt 9){throw 'Process generation changed during enumeration'}
++    $taskCreated=[datetime]::new($taskNative.CreatedUtcTicks,[DateTimeKind]::Utc).ToString('o')
++    $taskEncoded=[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes([string]$taskP.CommandLine))
++    $taskOwn += "$($taskP.ProcessId) $($taskP.ParentProcessId) $taskCreated $taskImage"+[char]9+$taskEncoded
++}
++# No partial stdout is published if an identity check fails halfway through.
++$taskOwn|Write-Output
++`;
++const appServerPolicy = String.raw`# The candidate builder prepends the same reviewed native identity type used
++# by the desktop probe. Original narrow matcher regexes are passed as data.
++$ErrorActionPreference='Stop'
++$taskRows=@()
++try {
++    $taskSid=[Security.Principal.WindowsIdentity]::GetCurrent().User.Value
++    $taskMe=[Security.Principal.WindowsIdentity]::GetCurrent().Name
++    foreach($taskP in @(Get-CimInstance Win32_Process -ErrorAction Stop)){
++        if([string]::IsNullOrWhiteSpace($taskP.CommandLine)){continue}
++        if(!($taskP.CommandLine -match $taskBasenameMatch -or $taskP.CommandLine -match $taskCodeModeMatch)){continue}
++        $taskNative=$null
++        try{$taskNative=[OcxDesktopOwnerV1]::Read([int]$taskP.ProcessId)}catch{
++            $taskCurrent=Get-CimInstance Win32_Process -Filter ('ProcessId='+$taskP.ProcessId) -ErrorAction Stop
++            if(!$taskCurrent -or $taskCurrent.CreationDate -ne $taskP.CreationDate){continue}
++            throw 'Still-live candidate owner identity unavailable'
++        }
++        if(!$taskNative){continue}
++        if($taskNative.Sid -cne $taskSid){continue}
++        $taskDelta=$taskNative.CreatedUtcTicks-$taskP.CreationDate.ToUniversalTime().Ticks
++        if($taskDelta -lt 0 -or $taskDelta -gt 9){throw 'App-server generation changed'}
++        $taskImage=$taskNative.Path
++        $taskSlash=[string][char]92
++        if($taskImage.StartsWith($taskSlash+$taskSlash+'?'+$taskSlash)){$taskImage=$taskImage.Substring(4)}
++        if(!$taskP.ExecutablePath -or $taskImage -ine $taskP.ExecutablePath.Replace('/',$taskSlash)){throw 'App-server image changed'}
++        $taskCommand=$taskP.CommandLine.Replace([string][char]9,' ')
++        $taskRows += ([string]$taskP.ProcessId+[char]9+$taskCommand+[char]9+$taskMe)
++    }
++    $taskRows|Write-Output
++}catch{Write-Output '__OCX_ENUM_INCOMPLETE__'}
++`;
++
++export function windowsDesktopProcessQuery(root: string): string {
++  const rootHex = Buffer.from(root, "utf16le").toString("hex");
++  return [
++    "$ErrorActionPreference='Stop'",
++    "$taskRootBytes=New-Object byte[] (" + rootHex.length / 2 + ")",
++    "$taskRootHex='" + rootHex + "'",
++    "for($taskIndex=0;$taskIndex -lt $taskRootBytes.Length;$taskIndex++){$taskRootBytes[$taskIndex]=[Convert]::ToByte($taskRootHex.Substring($taskIndex*2,2),16)}",
++    "$taskInstallRoot=[Text.Encoding]::Unicode.GetString($taskRootBytes)",
++    "if(!$taskInstallRoot -or ![IO.Path]::IsPathRooted($taskInstallRoot)){throw 'Absolute package root required'}",
++    nativeIdentity,
++    desktopPolicy,
++  ].join("\n");
++}
++
++/** Matchers are already encoded as PowerShell single-quoted regex literals. */
++export function windowsAppServerProcessQuery(basenameMatch: string, codeModeMatch: string): string {
++  return [
++    "$ErrorActionPreference='Stop'",
++    "$taskBasenameMatch=" + basenameMatch,
++    "$taskCodeModeMatch=" + codeModeMatch,
++    nativeIdentity,
++    appServerPolicy,
++  ].join("\n");
++}
+--- a/tests/clients/desktop-app-restart.test.ts
++++ b/tests/clients/desktop-app-restart.test.ts
+@@ -57,29 +57,41 @@
+         `    [pscustomobject]@{ ProcessId = 2000; ParentProcessId = 900; CreationDate = [datetime]'2026-09-15T00:00:00Z'; ExecutablePath = ${psLiteral(sibling)} }`,
+         "  )",
+         "}",
+-        "function Invoke-CimMethod {",
+-        "  param($InputObject, [string]$MethodName)",
+-        "  if ($MethodName -cne 'GetOwner' -or $InputObject.ProcessId -notin @(1000, 2000)) { throw 'Unexpected fixture owner query' }",
+-        "  [pscustomobject]@{ ReturnValue = 0; Domain = ''; User = ([Security.Principal.WindowsIdentity]::GetCurrent()).Name }",
++      ].join("\n");
++      // Replace only the native class for synthetic PIDs. PowerShell still
++      // executes the complete generated SID/path/generation selection policy.
++      const nativeExecutable = executable.replaceAll("/", "\\");
++      const nativeSibling = sibling.replaceAll("/", "\\");
++      const fixtureIdentity = [
++        "Add-Type -TypeDefinition @'",
++        "public static class OcxDesktopOwnerV1 {",
++        "  public sealed class Identity { public string Path; public string Sid; public long CreatedUtcTicks; }",
++        "  public static Identity Read(int pid) {",
++        "    if (pid != 1000 && pid != 2000) throw new System.Exception(\"Unexpected fixture PID\");",
++        "    return new Identity { Path = pid == 1000 ? " + JSON.stringify(nativeExecutable) + " : " + JSON.stringify(nativeSibling) + ",",
++        "      Sid = System.Security.Principal.WindowsIdentity.GetCurrent().User.Value,",
++        "      CreatedUtcTicks = System.DateTime.Parse(\"2026-09-15T00:00:00Z\").ToUniversalTime().Ticks };",
++        "  }",
+         "}",
++        "'@",
+       ].join("\n");
+       let rawListing = "";
+       const listed = withTrustedExes(() => windowsDesktopAppAdapter.listProcesses((file, args) => {
+         expect(file).toBe(PS);
+         expect(args.slice(0, 3)).toEqual(["-NoProfile", "-NonInteractive", "-Command"]);
+         const script = args[3]!;
+-        rawListing = execFileSync(file, [...args.slice(0, 3), fixture + "\n" + script], {
++        rawListing = execFileSync(file, [...args.slice(0, 3), fixture + "\n" + script.replace(/Add-Type -TypeDefinition @'[\s\S]*?\n'@/, () => fixtureIdentity)], {
+           encoding: "utf8",
+           timeout: 10_000,
+           windowsHide: true,
+         });
+         return rawListing;
+       }, { id: AUMID.replace("!App", ""), root, relaunch: AUMID }));
+-      // The real prefilter admits both lexical prefixes despite mixed slashes.
+-      // The shared JS boundary check then removes the similarly named sibling.
+-      expect(rawListing.trim().split(/\r?\n/).map(line => Number(line.split(" ")[0]))).toEqual([1000, 2000]);
++      // The PowerShell boundary rejects a sibling package before publishing rows.
++      // The JS parser independently retains the same package boundary.
++      expect(rawListing.trim().split(/\r?\n/).map(line => Number(line.split(" ")[0]))).toEqual([1000]);
+       expect(listed?.map(entry => ({ pid: entry.pid, executable: entry.executable }))).toEqual([
+-        { pid: 1000, executable },
++        { pid: 1000, executable: nativeExecutable },
+       ]);
+     }, 15_000);
+   }
+@@ -380,7 +392,8 @@
+     const probe = calls.find(c => c.args.join(" ").includes("Win32_Process"));
+     const script = probe?.args.join(" ") ?? "";
+     expect(script).toContain("Name='ChatGPT.exe'");
+-    expect(script).toContain(INSTALL);
++    expect(script).toContain(Buffer.from(INSTALL, "utf16le").toString("hex"));
++    expect(script).not.toContain(INSTALL);
+     expect(script).toContain("OrdinalIgnoreCase");
+   });
+ 
+@@ -530,8 +543,8 @@
+     const probe = calls.find(call => call.args.join(" ").includes("Win32_Process"));
+     expect(probe).toBeTruthy();
+     const script = probe!.args[probe!.args.length - 1]!;
+-    expect(script).toContain("SilentlyContinue'\n");
+-    expect(script).not.toContain("SilentlyContinue' $root");
++    expect(script).toContain("Stop'\n");
++    expect(script).not.toContain("Stop' $taskRootBytes");
+   });
+ });
+ 
+--- a/tests/codex-integration/codex-app-server-processes.test.ts
++++ b/tests/codex-integration/codex-app-server-processes.test.ts
+@@ -1028,13 +1028,14 @@
+     "utf8",
+   );
+ 
+-  test("PowerShell uses Invoke-CimMethod GetOwner and fails closed on ReturnValue", () => {
+-    expect(processSource).toContain(
+-      "Invoke-CimMethod -InputObject $_ -MethodName GetOwner -ErrorAction Stop",
+-    );
+-    expect(processSource).toContain("$o.ReturnValue -ne 0");
+-    expect(processSource).toContain(".join(\"\\n\")");
+-    expect(processSource).not.toMatch(/\$o=\$_\.GetOwner\(\)/);
++  test("PowerShell verifies native owner/path/generation and refuses incomplete reads", () => {
++    let script = "";
++    listWindowsSnapshots(command => { script = command; return ""; });
++    expect(script).toContain("GetTokenInformation");
++    expect(script).toContain("GetProcessTimes");
++    expect(script).toContain("App-server generation changed");
++    expect(script).toContain("Still-live candidate owner identity unavailable");
++    expect(script).not.toContain("Invoke-CimMethod");
+     // Shared candidate regex (optional closing quote after basename) drives -match.
+     expect(processSource).toContain("WINDOWS_CODEX_BASENAME_CANDIDATE_RE.source");
+     expect(processSource).toContain("powerShellSingleQuotedIgnoreCaseMatch");
+@@ -1057,7 +1058,7 @@
+ 
+     // The guard has to be on the top-level query itself, not only per-process.
+     expect(psCommand.value).toContain("Get-CimInstance Win32_Process -ErrorAction Stop");
+-    expect(psCommand.value).toContain("} catch { \"__OCX_ENUM_INCOMPLETE__\" }");
++    expect(psCommand.value).toContain("}catch{Write-Output '__OCX_ENUM_INCOMPLETE__'}");
+ 
+     // And the collector must turn that throw into unknown, never not_running.
+     const status = collectCodexAppServerCatalogState({
+--- a/tests/helpers/windows-power-shell-fixture.ts
++++ b/tests/helpers/windows-power-shell-fixture.ts
+@@ -88,7 +88,7 @@
+   writeFileSync(source, [
+     "const command = process.argv.slice(2).join(' ');",
+     "await new Promise(resolve => setTimeout(resolve, 200));",
+-    "if (command.includes('CreationDate')) {",
++    "if (command.includes('CreationDate.ToUniversalTime().ToString(\"o\")')) {",
+     "  process.stdout.write('42\\t1970-01-01T00:00:00.500Z\\n');",
+     "} else {",
+     "  process.stdout.write('42\\t/usr/local/bin/codex app-server\\tCONTOSO\\\\jun\\n');",
+@@ -117,7 +117,7 @@
+     "#!/bin/sh",
+     "sleep 0.2",
+     "case \"$*\" in",
+-    "  *CreationDate*) printf '42\\t1970-01-01T00:00:00.500Z\\n' ;;",
++    "  *'CreationDate.ToUniversalTime().ToString(\"o\")'*) printf '42\\t1970-01-01T00:00:00.500Z\\n' ;;",
+     "  *) printf '42\\t/usr/local/bin/codex app-server\\tCONTOSO\\\\jun\\n' ;;",
+     "esac",
+   ].join("\n"), { mode: 0o755 });
+--- /dev/null
++++ b/tests/clients/windows-process-identity.test.ts
+@@ -0,0 +1,64 @@
++import { afterEach, expect, test } from 'bun:test';
++import { windowsDesktopAppAdapter } from '../../src/codex/desktop-app/windows';
++import { listWindowsSnapshots, parseWindowsSnapshotOutput } from '../../src/codex/app-server-processes';
++import { setTrustedWindowsElevationExecutablesForTests } from '../../src/lib/windows-elevation';
++
++const powershell = 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe';
++const root = "C:\\Program Files\\WindowsApps\\Fixture' Unicode 包";
++const install = { id: 'fixture', root, relaunch: 'fixture!App' };
++const stamp = '2026-11-05T08:00:00.1234567Z';
++afterEach(() => setTrustedWindowsElevationExecutablesForTests(null));
++
++test('desktop identity query preserves command-line context through the unchanged parser', () => {
++  setTrustedWindowsElevationExecutablesForTests({ powershell });
++  const commandLine = '"' + root + '\\ChatGPT.exe" --proxy-pac-url=http://127.0.0.1:54001/fixture.pac';
++  let calls = 0;
++  const rows = windowsDesktopAppAdapter.listProcesses((file, args, options) => {
++    calls++;
++    expect(file).toBe(powershell);
++    expect(options?.timeout).toBe(10_000);
++    expect(options?.windowsHide).toBe(true);
++    const script = args.at(-1)!;
++    expect(script).toContain(Buffer.from(root, 'utf16le').toString('hex'));
++    expect(script).not.toContain(root);
++    expect(script).toContain('GetTokenInformation');
++    expect(script).toContain('GetProcessTimes');
++    expect(script).toContain('CreatedUtcTicks');
++    expect(script).not.toContain('Invoke-CimMethod');
++    expect(script).toContain('$taskP.CommandLine');
++    return '42 10 ' + stamp + ' ' + root + '\\ChatGPT.exe\t' + Buffer.from(commandLine).toString('base64');
++  }, install);
++  expect(calls).toBe(1);
++  expect(rows).toEqual([{ pid: 42, parentPid: 10, createdAt: stamp, executable: root + '\\ChatGPT.exe', commandLine }]);
++});
++
++test('unreadable desktop identity remains unknown; a successful empty snapshot remains empty', () => {
++  setTrustedWindowsElevationExecutablesForTests({ powershell });
++  expect(windowsDesktopAppAdapter.listProcesses(() => { throw Error('unavailable'); }, install)).toBeNull();
++  expect(windowsDesktopAppAdapter.listProcesses(() => '', install)).toEqual([]);
++});
++
++test('desktop parser still rejects a same-prefix neighboring package', () => {
++  setTrustedWindowsElevationExecutablesForTests({ powershell });
++  expect(windowsDesktopAppAdapter.listProcesses(() => '42 10 ' + stamp + ' ' + root + '-foreign\\ChatGPT.exe', install)).toEqual([]);
++});
++
++test('app-server uses the original narrow candidate patterns and public snapshot parser', () => {
++  let calls = 0;
++  const rows = listWindowsSnapshots(script => {
++    calls++;
++    expect(script).toContain('$taskBasenameMatch=');
++    expect(script).toContain('$taskCodeModeMatch=');
++    expect(script).toContain('GetTokenInformation');
++    expect(script).not.toContain('Invoke-CimMethod');
++    expect(script).toContain('Still-live candidate owner identity unavailable');
++    return '42\tC:\\Fixture\\codex.exe app-server\tFIXTURE\\user';
++  });
++  expect(calls).toBe(1);
++  expect(rows).toEqual([{ pid: 42, commandLine: 'C:\\Fixture\\codex.exe app-server', owner: 'FIXTURE\\user' }]);
++});
++
++test('app-server unknown identity refuses partial rows rather than implying no running client', () => {
++  expect(() => parseWindowsSnapshotOutput('42\tC:\\Fixture\\codex.exe app-server\tFIXTURE\\user\n__OCX_ENUM_INCOMPLETE__')).toThrow('windows_enum_incomplete');
++  expect(() => listWindowsSnapshots(() => { throw Error('native probe timeout'); })).toThrow('native probe timeout');
++});
+--- a/scripts/test-layout/layout-clients.json
++++ b/scripts/test-layout/layout-clients.json
+@@ -1,4 +1,5 @@
+ {
++  "windows-process-identity.test.ts": "clients",
+   "omo-responses-loop.test.ts": "clients",
+   "codex-launcher-endpoint.test.ts": "codex-integration",
+   "claude-translated-tool-restrictions.test.ts": "claude-integration",
+--- a/tests/fixtures/test-layout-expected.json
++++ b/tests/fixtures/test-layout-expected.json
+@@ -1,4 +1,4 @@
+-{ "kimi-monthly-quota.test.ts": "providers", "sync-fanout.test.ts": "cli", "sync-command-fanout.test.ts": "cli", "link-pinned-sync-argv.test.ts": "clients", "sync-link-status.test.ts": "cli", "sync-fanout-process.test.ts": "cli", "codex-installation-acl.test.ts": "codex-integration", "codex-installation-id.test.ts": "codex-integration", "codex-installation-wire.test.ts": "codex-integration", "codex-installation-failover.test.ts": "responses", "lmstudio-system-policy.test.ts": "config", "openai-chat-single-system.test.ts": "adapters/openai", "update-reclaim-authorizer.test.ts": "update", "update-capability-policy.test.ts": "update", "update-service-home.test.ts": "update", "update-service-home-policy.test.ts": "update", "update-home-recovery.test.ts": "update", "update-recovery-authority.test.ts": "update", "update-recovery-boundaries.test.ts": "update", "update-home-launcher.test.ts": "update", "update-home-worker.test.ts": "update", "update-mutation-boundaries.test.ts": "update", "update-mutation-guard.test.ts": "update", "update-guarded-ops.test.ts": "update", "update-effect-authority.test.ts": "update", "update-windows-wrapper-authority.test.ts": "update", "update-mutation-scanner.test.ts": "update", "refreshed-upstream-deadlines.test.ts": "responses", "local-upstream-deadlines.test.ts": "responses", "service-desktop-recovery.test.ts": "service", "provider-input-modalities.test.ts": "providers", "turn-membership.test.ts": "responses", "turn-membership-ingress.test.ts": "responses", "workbuddy-quota.test.ts": "providers", "workbuddy-login.test.ts": "oauth", "workbuddy-adapter.test.ts": "adapters", "workbuddy-provider.test.ts": "providers", "link-tunnel-history.test.ts": "clients", "link-readiness.test.ts": "clients", "link-diagnostics.test.ts": "clients", "combo-description.test.ts": "routing", "combo-description-catalog.test.ts": "codex-integration", "catalog-auto-review-override.test.ts": "codex-integration", "management-auto-review-settings.test.ts": "server", "management-auto-review-auth.test.ts": "server", "prefer-model-alias-ids.test.ts": "server", "responses-mimo-envelope.test.ts": "responses", "responses-call-id-linkage.test.ts": "responses", "responses-phase-inference.test.ts": "responses",
++{ "windows-process-identity.test.ts": "clients", "kimi-monthly-quota.test.ts": "providers", "sync-fanout.test.ts": "cli", "sync-command-fanout.test.ts": "cli", "link-pinned-sync-argv.test.ts": "clients", "sync-link-status.test.ts": "cli", "sync-fanout-process.test.ts": "cli", "codex-installation-acl.test.ts": "codex-integration", "codex-installation-id.test.ts": "codex-integration", "codex-installation-wire.test.ts": "codex-integration", "codex-installation-failover.test.ts": "responses", "lmstudio-system-policy.test.ts": "config", "openai-chat-single-system.test.ts": "adapters/openai", "update-reclaim-authorizer.test.ts": "update", "update-capability-policy.test.ts": "update", "update-service-home.test.ts": "update", "update-service-home-policy.test.ts": "update", "update-home-recovery.test.ts": "update", "update-recovery-authority.test.ts": "update", "update-recovery-boundaries.test.ts": "update", "update-home-launcher.test.ts": "update", "update-home-worker.test.ts": "update", "update-mutation-boundaries.test.ts": "update", "update-mutation-guard.test.ts": "update", "update-guarded-ops.test.ts": "update", "update-effect-authority.test.ts": "update", "update-windows-wrapper-authority.test.ts": "update", "update-mutation-scanner.test.ts": "update", "refreshed-upstream-deadlines.test.ts": "responses", "local-upstream-deadlines.test.ts": "responses", "service-desktop-recovery.test.ts": "service", "provider-input-modalities.test.ts": "providers", "turn-membership.test.ts": "responses", "turn-membership-ingress.test.ts": "responses", "workbuddy-quota.test.ts": "providers", "workbuddy-login.test.ts": "oauth", "workbuddy-adapter.test.ts": "adapters", "workbuddy-provider.test.ts": "providers", "link-tunnel-history.test.ts": "clients", "link-readiness.test.ts": "clients", "link-diagnostics.test.ts": "clients", "combo-description.test.ts": "routing", "combo-description-catalog.test.ts": "codex-integration", "catalog-auto-review-override.test.ts": "codex-integration", "management-auto-review-settings.test.ts": "server", "management-auto-review-auth.test.ts": "server", "prefer-model-alias-ids.test.ts": "server", "responses-mimo-envelope.test.ts": "responses", "responses-call-id-linkage.test.ts": "responses", "responses-phase-inference.test.ts": "responses",
+     "codex-installation-live-content.test.ts": "codex-integration",
+     "codex-installation-invalid-account.test.ts": "codex-integration",
+     "codex-installation-sidecars.test.ts": "codex-integration",
+--- a/structure/clients/codex-desktop.md
++++ b/structure/clients/codex-desktop.md
+@@ -28,6 +28,20 @@
+ worker holds admission through installer termination and readback: refusal precedes the restart lock, discovery, any app
+ quit and the handoff, and a lock-acquisition throw still releases the shared gate. See the
+ [update commit window](../codex-cli-update.md#worker-realm-and-the-selection-commit-window).
++
++## Windows process identity
++
++The desktop and app-server queries share embedded PowerShell scripts from
++`src/codex/windows-process-identity.ts`. A single CIM snapshot supplies parent and command metadata;
++a native process handle supplies token SID, executable path and creation time for the same generation.
++The desktop query publishes only current-user images inside the discovered package boundary and retains
++the base64 command-line column used by compatibility-context capture. An unreadable identity remains
++unknown, rather than an empty process list. The app-server query keeps the existing narrow candidate
++patterns and emits the incomplete-enumeration sentinel if a still-live identity cannot be verified.
++The existing query deadlines, ancestry protection and quit/relaunch ladder remain unchanged.
++The scripts are TypeScript literals, so compiled distributions need no adjacent PowerShell resource files.
++`tests/clients/windows-process-identity.test.ts` covers the shared query and parser contracts;
++the Windows-only tests in the existing desktop/app-server suites exercise PowerShell selection and native enumeration.
+ 
+ ## Windows launch context
+ 

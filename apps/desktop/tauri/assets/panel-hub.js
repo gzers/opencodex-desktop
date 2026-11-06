@@ -65,6 +65,11 @@
     #${id}[data-effects="low"] .hub-menu,#${id}[data-effects="low"] .hub-toggle{
       background:#f4f5f9;backdrop-filter:none;-webkit-backdrop-filter:none}
     #${id}[data-effects="low"][data-theme="dark"] .hub-menu,#${id}[data-effects="low"][data-theme="dark"] .hub-toggle{background:#22242a}
+    @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+      #${id} .hub-menu,#${id} .hub-toggle,#${id} .hub-toggle:hover{
+        background:#f4f5f9;-webkit-backdrop-filter:none;backdrop-filter:none}
+      #${id}[data-theme="dark"] .hub-menu,#${id}[data-theme="dark"] .hub-toggle,#${id}[data-theme="dark"] .hub-toggle:hover{background:#22242a}
+    }
   `;
 
   const mount = () => {

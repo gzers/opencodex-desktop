@@ -11,7 +11,7 @@ const hash=bytes=>createHash('sha256').update(bytes).digest('hex')
 const notice='.notif-layer [data-notification-key^="model-save:"]'
 export function assert021Admission(facts,expected){
  assertModelSandbox(facts,expected)
- assert.equal(facts.about.version,'0.2.21','021 probes require the exact installed 0.2.21 version')
+ assert(['0.2.21','0.2.22'].includes(facts.about.version),'021/022 probes require an explicitly admitted installed version')
  return modelConfigPath(facts,expected)
 }
 async function freshAdmission(invoke,expected){
@@ -26,10 +26,11 @@ async function assertFixtureFile(config,root){
  const relative=win32.relative(await realpath(root),await realpath(config))
  assert(relative&&!relative.startsWith('..')&&!win32.isAbsolute(relative),'021 fixture resolved outside the admitted root')
 }
-export function assert021RenameReadback({before,after,beforeSnapshot,afterSnapshot,channelId,from,to}){
+export function assert021RenameReadback({before,after,beforeSnapshot,afterSnapshot,channelId,from,to,updatesDisplayName=false}){
  assert(Object.hasOwn(before.providers,from)&&!Object.hasOwn(before.providers,to),'021 rename preimage is ambiguous')
  const expected=structuredClone(before)
  expected.providers[to]=expected.providers[from];delete expected.providers[from]
+ if(updatesDisplayName)expected.providers[to].name=to
  if(expected.defaultProvider===from)expected.defaultProvider=to
  for(const field of ['modelPickerOrder','disabledModels'])if(expected[field])expected[field]=expected[field].map(slug=>slug.startsWith(from+'/')?to+slug.slice(from.length):slug)
  assert.deepEqual(after,expected,'021 rename must migrate exact routed/default references and preserve all other file content/Keys')
@@ -148,17 +149,20 @@ async function verifyRenameAndNotice(driver,expected){
  await wait("document.readyState==='complete'&&!!document.querySelector('.side')",'021 fixture reload')
  await channelList(driver)
  const observer=await observe021Ipc(driver)
- let noticeResult,ipc
+ let noticeResult,ipc,updatesDisplayName=false
  try{
   await openChannel(driver,id,'synthetic-native021-key')
+  // Historical 0.2.21 exposes a separate runtime ID; the integrated name-only
+  // contract also persists the channel display name in the provider document.
+  updatesDisplayName=await evaluate(js(()=>!document.querySelector('input[aria-label="运行渠道标识"]')))
   await input(driver,'#channel-config input[maxlength="80"]',to)
-  const draft=await wait(js(to=>{const preview=document.querySelector('[data-channel-rename-preview]');return document.querySelector('input[aria-label="运行渠道标识"]')?.value===to&&preview?.textContent.includes(to+'/vendor/a:8b')?{preview:preview.textContent,keyMasked:document.querySelector('input[aria-label="API Key"]').type==='password'}:null},to),'021 exact rename preview from native handler')
+  const draft=await wait(js(to=>{const preview=document.querySelector('[data-channel-rename-preview]');const field=document.querySelector('input[aria-label="运行渠道标识"]');return (field?field.value===to:document.querySelector('#channel-config input[maxlength="80"]')?.value===to)&&preview?.textContent.includes(to)?{preview:preview.textContent,keyMasked:document.querySelector('input[aria-label="API Key"]').type==='password'}:null},to),'021 exact rename preview from native handler')
   assert(draft.keyMasked)
   await click('返回渠道列表');await wait("!!document.querySelector('.channel-table')",'021 unsaved rename return')
   const unsaved=await modelFileEvidence(config,expected)
   assert(unsaved.bytes.equals(before.bytes));assert.deepEqual(unsaved.backups,before.backups,'021 unsaved rename created a backup')
   await openChannel(driver,id,'synthetic-native021-key')
-  assert.equal(await evaluate('document.querySelector('+JSON.stringify('input[aria-label="运行渠道标识"]')+').value'),to,'021 rename draft lost on return')
+  assert.equal(await evaluate('document.querySelector('+JSON.stringify('#channel-config input[maxlength="80"]')+').value'),to,'021 rename draft lost on return')
   await freshAdmission(invoke,expected)
   await call('Input.dispatchMouseEvent',{type:'mouseMoved',x:4,y:4})
   assert(await evaluate(js(install021NoticeObservation)))
@@ -175,18 +179,18 @@ async function verifyRenameAndNotice(driver,expected){
  }
  assert.equal(ipc.commands.filter(c=>c==='model_file_save').length,1,'021 notification/cancellation performed another save')
  const after=await modelFileEvidence(config,expected),afterSnapshot=await invoke('model_file_snapshot')
- assert021RenameReadback({before:JSON.parse(before.bytes),after:JSON.parse(after.bytes),beforeSnapshot,afterSnapshot,channelId:id,from,to})
+ assert021RenameReadback({before:JSON.parse(before.bytes),after:JSON.parse(after.bytes),beforeSnapshot,afterSnapshot,channelId:id,from,to,updatesDisplayName})
  const backups=await assert021RenameBackups(before,after,expected)
  await freshAdmission(invoke,expected)
  await call('Page.reload',{ignoreCache:true});await wait("document.readyState==='complete'&&!!document.querySelector('.side')",'021 saved rename full reopen')
  await channelList(driver);await openChannel(driver,id,'synthetic-native021-key')
- assert.equal(await evaluate('document.querySelector('+JSON.stringify('input[aria-label="运行渠道标识"]')+').value'),to,'021 saved namespace lost after reload')
+ assert.equal(await evaluate('document.querySelector('+JSON.stringify('#channel-config input[maxlength="80"]')+').value'),to,'021 saved namespace lost after reload')
  assert.equal(await evaluate('document.querySelector('+JSON.stringify('button[aria-label="保存渠道草稿"]')+').disabled'),true,'021 reopened rename is dirty')
  assert.deepEqual(await evaluate("[...document.querySelectorAll('.channel-model-table tr[data-model]')].map(e=>e.dataset.model)"),ids,'021 full model IDs/order lost on reopen')
  const reopened=await invoke('model_file_snapshot');assert.deepEqual(reopened.policy,afterSnapshot.policy)
  await screenshot(driver,'native021-channel-rename')
  await click('返回渠道列表');await wait("!!document.querySelector('.channel-table')",'021 detection list')
- return {channelId:id,provider:to,from,modelIds:ids,backups,notice:noticeResult,ipc}
+ return {channelId:id,provider:to,from,modelIds:ids,backups,notice:noticeResult,ipc,updatesDisplayName}
 }
 
 export function assert021DetectionLayout(value){
@@ -231,16 +235,32 @@ async function verifyDetection(driver,expected,channelId){
 export function inspect021Webdav(){
  const sync=document.querySelector('#app')?.__vue_app__?.config.globalProperties.$pinia?.state.value.sync
  const row=document.querySelector('[data-testid=overview-remote-version]'),card=row?.closest('.mod'),gate=document.querySelector('[data-testid=environment-gate]')
- return {state:sync?.webdavState,revision:sync?.config?.endpoint?.revision,hasObservation:!!sync?.observation,
+ const observation=sync?.observation
+ // CDP returnByValue does not materialize Vue Proxy own properties. Read only
+ // the explicit scalar facts, never return a live store object to the driver.
+ return {state:sync?.webdavState,revision:sync?.config?.endpoint?.revision,hasObservation:!!observation,observation:observation?{revision:observation.revision,source:observation.source,remoteRead:observation.remoteRead,remoteTime:observation.remoteTime??null,remoteObservedAt:observation.remoteObservedAt}:null,checkingVersion:!!sync?.checkingVersion,
+  versionCheckAvailable:[...card?.querySelectorAll?.('button')??[]].some(button=>button.textContent.trim()==='检测版本'),
   card:card?{text:card.textContent,remote:row.textContent,dots:row.querySelectorAll('.ov-state-dot').length}:null,
   gate:{present:!!gate,settled:!!gate?.querySelector('.overview-gate-count')?.textContent.includes('/ 3'),checks:gate?.querySelectorAll('.overview-checks li').length??0}}
 }
-export function assert021WebdavState(value,revision){
- assert.equal(value.state,'configured','021 saved WebDAV must remain configured, not disconnected/connected')
+export function assert021WebdavState(value,revision,{startupVersionCheck=false}={}){
+ if(startupVersionCheck){
+  assert.equal(value.state,'failed','Synthetic invalid endpoint must report a real failed version read')
+  assert.equal(value.checkingVersion,false,'Version read must have settled')
+  assert.equal(value.hasObservation,true,'Startup version check needs an actual observation')
+  assert.equal(value.observation?.revision,revision,'Startup observation belongs to another revision')
+  assert.equal(value.observation?.source,'version-check','Startup observation must be readonly version check')
+  assert.equal(value.observation?.remoteRead,'failed','Invalid endpoint cannot fabricate remote content')
+  assert(Number.isFinite(Date.parse(value.observation?.remoteObservedAt)),'Version failure needs an actual observation time')
+  assert(value.observation?.remoteTime==null,'Failed read cannot fabricate a saved content time')
+ }else{
+  assert.equal(value.state,'configured','021 saved WebDAV must remain configured, not disconnected/connected')
+  assert.equal(value.hasObservation,false,'021 WebDAV has a fabricated test/sync observation')
+ }
  assert.equal(value.revision,revision,'021 DOM consumer used another endpoint revision')
- assert.equal(value.hasObservation,false,'021 WebDAV has a fabricated test/sync observation')
  if(value.card){
-  assert(value.card.text.includes('已配置 · 未检测'),'021 overview lost the configured/untested label')
+  assert(value.card.text.includes(startupVersionCheck?'最近检测失败':'已配置 · 未检测'),'021 overview lost the actual connection state')
+  if(startupVersionCheck)assert(value.card.remote.includes('读取失败'),'Overview must distinguish version read failure')
   assert(!/最近检测成功|最近同步成功|连接失败/.test(value.card.text),'021 overview fabricated a connection result')
   assert.equal(value.card.dots,0,'021 untested endpoint must have no remote status dot')
   return 'rendered'
@@ -248,7 +268,7 @@ export function assert021WebdavState(value,revision){
  assert(value.gate.present&&value.gate.settled&&value.gate.checks===3,'021 missing WebDAV card requires the actual settled environment gate')
  return 'environment-gated; production configured state verified; overview label requires a ready native environment'
 }
-async function verifyWebdav(driver,expected){
+async function verifyWebdav(driver,expected,{startupVersionCheck=false}={}){
  const {call,invoke,click,evaluate,wait}=driver,{config}=await freshAdmission(invoke,expected),before=await modelFileEvidence(config,expected)
  assert.equal((await invoke('get_sync_config')).endpoint,null,'021 WebDAV fixture requires the fresh startup sandbox, not an existing connection')
  assert.deepEqual((await invoke('list_imported_sync_connections')).items,[],'021 empty candidates must come from the actual backend')
@@ -268,8 +288,8 @@ async function verifyWebdav(driver,expected){
  try{
   await click('概览','.side')
   await wait("!!document.querySelector('[data-testid=overview-remote-version]')||!!document.querySelector('[data-testid=environment-gate] .overview-gate-count')?.textContent.includes('/ 3')",'021 real overview state settled')
-  state=await wait('('+js(inspect021Webdav)+'.state==="configured")&&'+js(inspect021Webdav),'021 actual production configured state')
-  state.presentation=assert021WebdavState(state,saved.endpoint.revision)
+  state=await wait('('+js(inspect021Webdav)+'.state==='+JSON.stringify(startupVersionCheck?'failed':'configured')+')&&'+js(inspect021Webdav),'021 actual production configured/version-read state')
+  state.presentation=assert021WebdavState(state,saved.endpoint.revision,{startupVersionCheck})
   await screenshot(driver,'native021-webdav-configured')
   await click('同步','.side');await wait("!!document.querySelector('.sync-route')",'021 WebDAV settings entry')
   await click('WebDAV 同步','.sync-route');await wait("!!document.querySelector('#sync-webdav-panel')",'021 WebDAV panel')
@@ -285,24 +305,24 @@ async function verifyWebdav(driver,expected){
   await screenshot(driver,'native021-webdav-empty-candidates')
   await close021Dialog(driver,'dialog.sync-connection-dialog[open]','escape')
  }finally{
-  try{ipc=await observer.finish(['save_transfer_choices'])} // Existing local scope preference watcher; no remote or endpoint write.
+  try{ipc=await observer.finish(['save_transfer_choices'],startupVersionCheck?['config_sync_observe']:[])} // Local preference watcher + adopted readonly version read, never sync.
   finally{await evaluate('(()=>{globalThis.__ocx021Candidates?.dispose();delete globalThis.__ocx021Candidates;return true})()')}
  }
  assert(ipc.commands.includes('get_sync_config')&&ipc.commands.includes('list_imported_sync_connections'),'021 WebDAV DOM did not load through real IPC')
  assert.deepEqual(await invoke('get_sync_config'),saved,'021 settings observation changed the saved endpoint')
  assert((await readFile(join(expected,'manager-state','sync-endpoints.json'))).equals(stored),'021 cancelled settings changed its actual file')
  const after=await modelFileEvidence(config,expected);assert(after.bytes.equals(before.bytes));assert.deepEqual(after.backups,before.backups)
- return {revision:saved.endpoint.revision,fixture:'production save_sync_endpoint; synthetic sandbox-only DPAPI credential; no test/connection/sync request',state,connection,ipc,modelConfigAndBackupsUnchanged:true,endpointBytesUnchanged:true}
+ return {revision:saved.endpoint.revision,fixture:'production save_sync_endpoint; synthetic sandbox-only DPAPI credential; invalid synthetic endpoint; no test/connection/sync request',startupVersionCheck,state,connection,ipc,modelConfigAndBackupsUnchanged:true,endpointBytesUnchanged:true}
 }
 
 export async function verifyWindows021Probes(driver,facts,expected){
  assert021Admission(facts,expected) // Invalid facts/version fail before any IPC/write.
- const result={schemaVersion:1,result:'fail',version:'0.2.21',platform:'Windows WebView2',admittedRoot:expected}
+ const result={schemaVersion:1,result:'fail',version:facts.about.version,platform:'Windows WebView2',admittedRoot:expected}
  try{
   result.admission=(await freshAdmission(driver.invoke,expected)).facts
   result.rename=await verifyRenameAndNotice(driver,expected)
   result.detection=await verifyDetection(driver,expected,result.rename.channelId)
-  result.webdav=await verifyWebdav(driver,expected)
+  result.webdav=await verifyWebdav(driver,expected,{startupVersionCheck:result.rename.updatesDisplayName})
   result.limitations=result.webdav.state.card?[]:[result.webdav.state.presentation]
   result.finalAdmission=(await freshAdmission(driver.invoke,expected)).facts
   result.result='pass'

@@ -547,6 +547,33 @@ pub fn initialize_remote_scope(
     scope.cloud_binding = Some(binding.into());
     scope.upstream_root = Some(upstream_root.into());
     scope.local_home = Some(local_home.into());
+    scope.extensions = false;
+    let local = super::config_file::snapshot(root, upstream_root)?;
+    scope.template_ids = local
+        .library
+        .templates
+        .iter()
+        .map(|t| t.id.clone())
+        .collect();
+    scope.channel_ids = local
+        .policy
+        .channels
+        .iter()
+        .filter(|c| !super::compiler::channel_is_native(&c.connection.provider_id))
+        .map(|c| c.id.clone())
+        .collect();
+    scope.account_ids = crate::modules::sync::portable_accounts::catalog(root, upstream_root)?
+        .into_iter()
+        .filter(|a| a.information_supported)
+        .map(|a| a.account.id)
+        .collect();
+    let assets = crate::modules::sync::portable_assets::catalog(root, local_home)?;
+    scope.skill_names = assets.skills;
+    scope.mcp_names = assets
+        .mcps
+        .into_iter()
+        .filter(|n| crate::modules::sync::portable_assets::default_included_mcp(n))
+        .collect();
     for object in &catalog.objects {
         let parts: Vec<String> = serde_json::from_str(&object.id)?;
         if parts.len() != 2 {
@@ -577,6 +604,104 @@ pub fn initialize_remote_scope(
 }
 fn scope_digest(scope: &Scope) -> ModelResult<String> {
     Ok(sha256(&serde_json::to_vec(scope)?))
+}
+
+/// Opening the range fetches the complete catalogue before any UI choice is
+/// persisted. An existing selection is never widened during an upgrade.
+#[allow(clippy::too_many_arguments)]
+pub async fn open_scope<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
+    root: &Path,
+    transport: &T,
+    config: &WebDavConfig,
+    binding: &str,
+    upstream: &Path,
+    home: &Path,
+    password: Option<&str>,
+    previous: Option<&str>,
+    unchanged: F,
+) -> ModelResult<Scope> {
+    let catalog = refresh_catalog(root, transport, config, binding, password, previous).await?;
+    unchanged()?;
+    let empty = CloudCatalog {
+        binding: binding.into(),
+        objects: vec![],
+        credential_ids: vec![],
+        created_at: String::new(),
+        accounts: vec![],
+    };
+    initialize_remote_scope(
+        root,
+        binding,
+        catalog.as_ref().unwrap_or(&empty),
+        upstream,
+        home,
+    )?;
+    load_scope(root)
+}
+
+pub fn require_known_scope(root: &Path) -> ModelResult<()> {
+    let path = root.join(SCOPE);
+    safety::check_path(root, &path, true)?;
+    if !path.exists() {
+        return Err(invalid(
+            "sync_scope_uninitialized",
+            "请先成功读取完整范围目录，再保存同步范围",
+        ));
+    }
+    Ok(())
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RemoteVersion {
+    pub remote_exists: bool,
+    pub remote_revision: Option<String>,
+    pub remote_saved_at: Option<String>,
+}
+/// Read only: no range initialization, plan, save receipt or business writes.
+pub async fn observe_version<T: WebDavTransport>(
+    transport: &T,
+    config: &WebDavConfig,
+    password: Option<&str>,
+    previous: Option<&str>,
+) -> ModelResult<RemoteVersion> {
+    let baseline = remote::pointer_for(remote::CONFIG, transport, config).await?;
+    let Some(head) = baseline else {
+        return Ok(RemoteVersion {
+            remote_exists: false,
+            remote_revision: None,
+            remote_saved_at: None,
+        });
+    };
+    let bytes = zeroize::Zeroizing::new(
+        remote::fetch_for(remote::CONFIG, transport, config, &head.pointer).await?,
+    );
+    let fact = match file_objects::content_fact(&bytes, password) {
+        Err(e)
+            if previous.is_some()
+                && ["passphrase_required", "portable_authentication"]
+                    .contains(&e.code.as_str()) =>
+        {
+            file_objects::content_fact(&bytes, previous)?
+        }
+        other => other?,
+    };
+    if remote::pointer_for(remote::CONFIG, transport, config)
+        .await?
+        .as_ref()
+        .map(|p| &p.pointer)
+        != Some(&head.pointer)
+    {
+        return Err(invalid(
+            "remote_changed",
+            "读取版本期间云端快照改变，请重新检测",
+        ));
+    }
+    Ok(RemoteVersion {
+        remote_exists: true,
+        remote_revision: Some(head.pointer.revision().into()),
+        remote_saved_at: fact.saved_at,
+    })
 }
 fn local_manager(root: &Path, scope: &Scope) -> ModelResult<ManagerScope> {
     let mut m = scope.manager();
@@ -711,6 +836,7 @@ impl Comparison {
     fn check(&self, root: &Path) -> super::sync_state::Check {
         let mut check = super::sync_state::compare_content(&self.local, self.remote.as_ref());
         check.last_synced_at = super::sync_state::last_synced_at(root, &self.binding);
+        check.remote_revision = self.baseline.as_ref().map(|p| p.pointer.revision().into());
         check
     }
     fn matches(&self, other: &Self) -> ModelResult<bool> {
@@ -2018,38 +2144,26 @@ mod tests {
         )
         .await
         .unwrap();
-        let _initial = save_scope(
-            target.path(),
-            Scope {
-                preferences: true,
-                extensions: false,
-                upstream_root: Some(target_home.path().into()),
-                local_home: Some(local_home.path().into()),
-                ..Default::default()
-            },
-        )
-        .unwrap();
         let before = std::fs::read(target_home.path().join("config.json")).unwrap();
-        let c = refresh_catalog(
+        let initial = open_scope(
             target.path(),
             &remote,
             &config(),
             "catalog-bound",
-            None,
-            None,
-        )
-        .await
-        .unwrap()
-        .unwrap();
-        std::fs::remove_file(target.path().join(SCOPE)).unwrap();
-        initialize_remote_scope(
-            target.path(),
-            "catalog-bound",
-            &c,
             target_home.path(),
             local_home.path(),
+            None,
+            None,
+            || Ok(()),
         )
+        .await
         .unwrap();
+        // The UI loads this initialized selection before its first save/check.
+        assert!(initial.channel_ids.len() == 1);
+        save_scope(target.path(), initial).unwrap();
+        let c = cached_catalog(target.path(), "catalog-bound")
+            .unwrap()
+            .unwrap();
         assert_eq!(
             std::fs::read(target_home.path().join("config.json")).unwrap(),
             before
@@ -2120,6 +2234,7 @@ mod tests {
             target.path(),
             Scope {
                 channel_ids: vec![cloud_id],
+                template_ids: vec![],
                 preferences: false,
                 cloud_binding: Some("catalog-bound".into()),
                 ..saved_scope
@@ -3112,6 +3227,7 @@ mod tests {
         .await
         .unwrap();
         remote.lose_reply();
+        remote.delay_commit_validator(3);
         assert!(publish(
             root.path(),
             &remote,

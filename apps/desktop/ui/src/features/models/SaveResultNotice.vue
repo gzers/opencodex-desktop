@@ -15,6 +15,7 @@ const emit = defineEmits<{ close: [] }>()
 const feedback = useFeedbackStore()
 const confirming = ref(false)
 const busy = ref(false)
+const restartError = ref('')
 let disposed = false
 // 原型 scheduleTaskCollapse：「已写入」卡与其它终态任务卡同为 8 秒成功倒计时，到点收起到铃铛。
 // 每次保存由宿主按 revision 重建本组件，倒计时随实例独立。
@@ -55,16 +56,23 @@ onBeforeUnmount(() => {
 async function restart() {
   if (busy.value) return
   busy.value = true
+  restartError.value = ''
+  countdown.resume('restart-error')
+  let completed = false
   try {
     const result = await modelApi.refreshCache(true)
-    feedback.showToast(result.summary, { kind: result.success ? 'info' : 'error' })
+    if (disposed) return
+    completed = result.success && result.restarted
+    if (completed) feedback.showToast(result.summary, { kind: 'info' })
+    else restartError.value = result.summary || '重启结果尚未确认；已保存配置保持，可检查服务状态后重试。'
   } catch (cause) {
-    feedback.showToast(errorText(cause), { kind: 'error' })
+    if (!disposed) restartError.value = errorText(cause)
   } finally {
+    if (restartError.value) countdown.pause('restart-error')
     busy.value = false
-    confirming.value = false
+    if (completed) confirming.value = false
     // 新一次保存可能已替换本提示；旧请求不能关闭新反馈。
-    if (!disposed) emit('close')
+    if (!disposed && completed) emit('close')
   }
 }
 </script>
@@ -73,7 +81,7 @@ async function restart() {
   <TaskProgressCard
     v-if="open"
     title="已写入"
-    message=""
+    :message="restartError ? '配置已保存；重启尚未完成，仍可重试。' : ''"
     phase="done"
     :show-track="false"
     :show-collapse="false"
@@ -90,9 +98,10 @@ async function restart() {
   <UiDialog :open="confirming" title="重启 Codex" :busy="busy" @close="confirming = false">
     <p>重启会立即结束当前正在进行的 Codex 对话，然后重新打开 Codex。</p>
     <p>如果你还有没保存的对话内容，请先选「取消」。</p>
+    <p v-if="restartError" role="alert">{{ restartError }}</p>
     <template #actions="{ close }">
       <UiButton :disabled="busy" @click="close">取消</UiButton>
-      <UiButton variant="primary" :loading="busy" @click="restart">确认重启</UiButton>
+      <UiButton variant="primary" :loading="busy" @click="restart">{{ restartError ? '重试重启' : '确认重启' }}</UiButton>
     </template>
   </UiDialog>
 </template>

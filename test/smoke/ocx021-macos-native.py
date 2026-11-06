@@ -199,8 +199,11 @@ class NativeRun:
         self.app = Path(args.app).expanduser().resolve(strict=True)
         self.info = plistlib.loads((self.app / 'Contents/Info.plist').read_bytes())
         self.exe = self.app / 'Contents/MacOS' / self.info['CFBundleExecutable']
-        if self.info['CFBundleIdentifier'] != 'com.gzers.opencodex.desktop' or self.info['CFBundleShortVersionString'] != '0.2.21':
-            raise ValueError('Expected the original OpenCodeX 0.2.21 app identity')
+        expected_version = getattr(args, 'expected_version', '0.2.21')
+        if expected_version not in ['0.2.21', '0.2.22']:
+            raise ValueError('Unadmitted native acceptance version')
+        if self.info['CFBundleIdentifier'] != 'com.gzers.opencodex.desktop' or self.info['CFBundleShortVersionString'] != expected_version:
+            raise ValueError('Expected the original OpenCodeX ' + expected_version + ' app identity')
         self.container = Path('/private/tmp') / ('ocx021-mac-native-' + str(uuid.uuid4()))
         self.container.mkdir(mode=0o700)
         self.root = self.container / 'root'
@@ -628,7 +631,7 @@ class NativeRun:
         self.channels(); self.press('编辑')
         self.wait(lambda s: self.matches(s, '渠道名称', ('AXTextField',)))
         self.set_text('渠道名称', target)
-        snap = self.wait(lambda s: any(n.get('value') == target for n in self.matches(s, '运行渠道标识', ('AXTextField',))), name='rename-draft')
+        snap = self.wait(lambda s: any(n.get('value') == target for n in self.matches(s, '渠道名称', ('AXTextField',))), name='rename-draft')
         assert self.matches(snap, '保存渠道草稿')[0]['enabled']
         self.ax('focus')
         nav = self.matches(self.snapshot(), '概览')[0]
@@ -782,7 +785,8 @@ class NativeRun:
         self.channels(); self.press('编辑')
         snap = self.wait(lambda s: self.matches(s, '渠道名称', ('AXTextField',)), name='rename-reopened-' + target)
         assert self.matches(snap, '渠道名称', ('AXTextField',))[0]['value'] == target
-        assert self.matches(snap, '运行渠道标识', ('AXTextField',))[0]['value'] == target
+        runtime_fields = self.matches(snap, '运行渠道标识', ('AXTextField',))
+        assert not runtime_fields or runtime_fields[0]['value'] == target
         assert not self.matches(snap, '保存渠道草稿')[0]['enabled']
         self.capture('rename-reopened-' + target, snap)
         self.press('返回渠道列表')
@@ -1006,6 +1010,7 @@ def main():
     p.add_argument('--out', default=str((docs if (docs / '.git').exists() else REPO) / '.adg/evidence/0.2.21/macos-native-20261104'))
     p.add_argument('--stage', choices=['debug-preverify', 'signed-final-reverify'], default='debug-preverify')
     p.add_argument('--expected-build-commit', help='Optional exact embedded startup commit admission, useful for the signed final original')
+    p.add_argument('--expected-version', choices=['0.2.21', '0.2.22'], default='0.2.21')
     p.add_argument('--scope', choices=['all', 'notice', 'overview'], default='all', help='Each scope always creates a fresh owned root')
     p.add_argument('--node', help='Absolute path to a real unmodified macOS Node binary; all three ready inputs are required')
     p.add_argument('--npm-cli', help='Absolute path to the original npm bin/npm-cli.js with its package dependencies')

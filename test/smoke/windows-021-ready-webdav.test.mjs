@@ -30,6 +30,16 @@ test('actual managed source can satisfy the production ready_via_source branch w
  for(const source of [{kind:'unresolved'}, {...installed,path:null}, {...installed,version:null}])assert.throws(()=>assert021ActualReadyEnvironment(discovery,source))
  for(const key of ['node','npm'])assert.throws(()=>assert021ActualReadyEnvironment({...discovery,[key]:{found:false}},installed))
 })
+test('ready post-install consumer requires adopted readonly failure while preserving endpoint and source guards',()=>{
+ const current={...scene,versionCheckAvailable:true,state:'failed',hasObservation:true,checkingVersion:false,
+  observation:{revision:endpoint.revision,source:'version-check',remoteRead:'failed',remoteTime:null,remoteObservedAt:'2026-11-05T00:00:00Z'},
+  card:{text:'WebDAV 同步 最近检测失败',remote:'— · 读取失败',dots:0}}
+ assert.equal(assert021ReadyWebdavFacts(environment,installed,installed,current,endpoint),'ready')
+ for(const mutate of [x=>{x.state='configured'},x=>{x.hasObservation=false},x=>{x.observation.source='sync'},x=>{x.observation.revision='other'},x=>{x.observation.remoteTime='2026-11-01T00:00:00Z'},x=>{x.checkingVersion=true},x=>{x.card.remote='尚未读取'},x=>{x.card=null}]){
+  const changed=structuredClone(current);mutate(changed);assert.throws(()=>assert021ReadyWebdavFacts(environment,installed,installed,changed,endpoint))
+ }
+ assert.throws(()=>assert021ReadyWebdavFacts(environment,{...installed,path:'foreign'},installed,current,endpoint))
+})
 test('ready fixture rereads immutable roots before any seed and refuses an absent prior endpoint unless the recovery owner explicitly seeds',async()=>{
  const commands=[]
  const driver={invoke:async command=>{commands.push(command);return command==='app_about'?facts.about:command==='get_data_root_config'?facts.dataRoot:{endpoint:null}}}
@@ -82,6 +92,17 @@ test('post-install orchestration observes real invoke, verifies visible ready DO
  assert.equal(before.result,'pass');assert.equal(after.result,'pass');assert(before.ipc.commands.includes('app_about'));assert.equal(route,'settings')
  assert.equal(actions.filter(a=>a.text==='概览').length,2);assert.equal(cdp.filter(c=>c==='Page.captureScreenshot').length,2)
  assert(!commands.some(command=>/test_sync|config_sync_check|install_runtime/.test(command)))
+ // The same production consumer must accept the adopted startup observation,
+ // without changing environment/source checks or inventing a configured state.
+ card.querySelectorAll=()=>[{textContent:'检测版本'}]
+ card.textContent='WebDAV 同步 最近检测失败';row.textContent='线上版本 — · 读取失败'
+ const currentSync=app.__vue_app__.config.globalProperties.$pinia.state.value.sync
+ currentSync.webdavState='failed'
+ currentSync.checkingVersion=false
+ currentSync.observation={revision:endpoint.revision,source:'version-check',remoteRead:'failed',remoteTime:null,remoteObservedAt:'2026-11-05T00:00:00Z'}
+ const current=await verify021ReadyWebdav(driver,output,facts,root,prepared,installed,'recovery-installed')
+ assert.equal(current.result,'pass');assert.equal(current.scene.versionCheckAvailable,true)
+ assert.equal(current.scene.observation.revision,endpoint.revision)
  gate='missing_node'
  await assert.rejects(verify021ReadyWebdav(driver,output,facts,root,prepared,installed,'managed-after-offline-drop'),/not ready/)
  const receipt=JSON.parse(await readFile(join(output,'native021-ready-webdav-managed-after-offline-drop.json'),'utf8'))
