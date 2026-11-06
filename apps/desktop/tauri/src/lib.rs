@@ -577,6 +577,7 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             commands::scope_backup_v2::transfer_v2_backup_list,
+            commands::scope_backup_v2::transfer_v2_backup_restore_operations,
             commands::scope_backup_v2::transfer_v2_backup_preview,
             commands::scope_backup_v2::transfer_v2_backup_restore,
             commands::config_file_transfer_v2::catalog_config_file_v2,

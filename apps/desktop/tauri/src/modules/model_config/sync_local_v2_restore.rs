@@ -46,6 +46,15 @@ pub struct RestoreReceiptV2 {
     pub refresh_file_snapshot: bool,
     pub failure_code: Option<String>,
 }
+#[derive(Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RestoreOperationV2 {
+    pub restore_id: String,
+    pub original_operation_id: String,
+    pub plan_digest: String,
+    pub groups: Vec<String>,
+    pub receipt: Option<RestoreReceiptV2>,
+}
 #[derive(Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 struct Address {
@@ -323,6 +332,14 @@ fn groups(s: &SelectionV2) -> Vec<String> {
     g.into_iter().collect()
 }
 fn validate_record(d: &Path, h: &Path, r: &Record) -> ModelResult<Journal> {
+    validate_record_at(d, h, r, true)
+}
+fn validate_record_at(
+    d: &Path,
+    h: &Path,
+    r: &Record,
+    current_targets: bool,
+) -> ModelResult<Journal> {
     if r.version != 2 || r.root != d || r.home != h || r.groups != groups(&r.selection) {
         return Err(bad("scope_backup_binding"));
     }
@@ -344,15 +361,17 @@ fn validate_record(d: &Path, h: &Path, r: &Record) -> ModelResult<Journal> {
         }
         return Ok(j);
     }
-    let addresses = participant_addresses(d, h, &r.id, &r.selection)?;
-    let participant: Vec<_> = r
-        .rows
-        .iter()
-        .filter(|row| row.address.model.is_none())
-        .map(|row| row.address.clone())
-        .collect();
-    if participant != addresses {
-        return Err(bad("scope_backup_target_changed"));
+    if current_targets {
+        let addresses = participant_addresses(d, h, &r.id, &r.selection)?;
+        let participant: Vec<_> = r
+            .rows
+            .iter()
+            .filter(|row| row.address.model.is_none())
+            .map(|row| row.address.clone())
+            .collect();
+        if participant != addresses {
+            return Err(bad("scope_backup_target_changed"));
+        }
     }
     let mut seen = BTreeSet::new();
     for row in &r.rows {
@@ -368,7 +387,9 @@ fn validate_record(d: &Path, h: &Path, r: &Record) -> ModelResult<Journal> {
                 return Err(bad("scope_backup_model_target"));
             }
         }
-        safety::check_path(&row.address.anchor, &row.address.path, true)?;
+        if current_targets {
+            safety::check_path(&row.address.anchor, &row.address.path, true)?;
+        }
         if row.address.model.is_none() {
             verify_before_tree(row, &j)?;
         }
@@ -872,6 +893,100 @@ pub fn preview(
         plan_digest,
         groups,
     })
+}
+/// Owned v2 restore journals only. Historical receipts never inspect today's
+/// business configuration, allocate a replacement plan, or grant new targets.
+pub fn operations(
+    d: &Path,
+    h: &Path,
+    original: Option<&str>,
+) -> ModelResult<Vec<RestoreOperationV2>> {
+    let (d, h) = roots(d, h)?;
+    if let Some(original) = original {
+        id(original)?;
+    }
+    let directory = d.join(PLANS);
+    safety::check_path(&d, &directory, true)?;
+    if !directory.exists() {
+        return Ok(vec![]);
+    }
+    let mut names = BTreeSet::new();
+    let mut count = 0;
+    for entry in std::fs::read_dir(&directory)? {
+        count += 1;
+        if count > 1024 {
+            return Err(bad("scope_restore_limit"));
+        }
+        let entry = entry?;
+        safety::check_path(&d, &entry.path(), false)?;
+        let name = entry
+            .file_name()
+            .into_string()
+            .map_err(|_| bad("scope_restore_journal"))?;
+        let base = name.strip_suffix(".lock").unwrap_or(&name);
+        let (restore, suffix) = if let Some(restore) = base.strip_suffix(".plan.json") {
+            (restore, "plan")
+        } else if let Some(restore) = base.strip_suffix(".progress.json") {
+            (restore, "progress")
+        } else {
+            return Err(bad("scope_restore_journal"));
+        };
+        id(restore)?;
+        if suffix == "progress" && !plan_path(&d, restore, "plan")?.exists() {
+            return Err(bad("scope_restore_journal"));
+        }
+        if suffix == "plan" && !name.ends_with(".lock") {
+            names.insert(restore.to_string());
+        }
+    }
+    if names.len() > 256 {
+        return Err(bad("scope_restore_limit"));
+    }
+    let mut result = vec![];
+    for restore_id in names {
+        let p: Plan = read(&plan_path(&d, &restore_id, "plan")?)?;
+        if p.version != 2 || p.id != restore_id || p.root != d || p.home != h {
+            return Err(bad("scope_restore_plan"));
+        }
+        let r: Record = read(&record_path(&d, &p.original)?)?;
+        if r.id != p.original || digest(&r)? != p.source_digest {
+            return Err(bad("scope_restore_source_stale"));
+        }
+        validate_record_at(&d, &h, &r, false)?;
+        let indices = selected(&r, &p.groups)?;
+        if indices.len() != p.guards.len() {
+            return Err(bad("scope_restore_plan"));
+        }
+        let plan_digest = digest(&p)?;
+        let path = plan_path(&d, &restore_id, "progress")?;
+        let receipt = if path.exists() {
+            let progress: Progress = read(&path)?;
+            if progress.plan_digest != plan_digest
+                || progress.completed.iter().any(|i| !indices.contains(i))
+            {
+                return Err(bad("scope_restore_journal"));
+            }
+            if let Some(stored) = &progress.receipt {
+                let expected = receipt(&p, &indices, &r, &progress, stored.failure_code.clone());
+                if encode(stored)? != encode(&expected)? {
+                    return Err(bad("scope_restore_receipt"));
+                }
+            }
+            progress.receipt
+        } else {
+            None
+        };
+        if original.is_none_or(|original| original == p.original) {
+            result.push(RestoreOperationV2 {
+                restore_id,
+                original_operation_id: p.original,
+                plan_digest,
+                groups: p.groups,
+                receipt,
+            });
+        }
+    }
+    Ok(result)
 }
 fn verify_protection(d: &Path, progress: &Progress) -> ModelResult<()> {
     for proof in &progress.backups {
