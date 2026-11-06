@@ -100,9 +100,11 @@ pub fn initialize(root: &Path) -> Result<bool, AppError> {
     startup_v2::check_owner(root)?;
     check_partitions(root)?;
     migration::require_published(root)?;
-    std::fs::create_dir_all(root).map_err(|error| AppError::FileSystem {
-        operation: "create data root".to_string(),
-        detail: error.to_string(),
+    crate::infrastructure::platform::create_private_dir_all(root, 0o700).map_err(|error| {
+        AppError::FileSystem {
+            operation: "create data root".to_string(),
+            detail: error.to_string(),
+        }
     })?;
     let paths = DataRootPaths::new(root.to_path_buf());
 
@@ -184,10 +186,12 @@ pub fn ensure_partitions(root: &Path) -> Result<(), AppError> {
                 detail: "partition target is not a directory".to_string(),
             });
         } else {
-            std::fs::create_dir(&path).map_err(|error| AppError::FileSystem {
-                operation: "ensure data root partition".to_string(),
-                detail: error.to_string(),
-            })?;
+            crate::infrastructure::platform::create_private_dir_all(&path, 0o700).map_err(
+                |error| AppError::FileSystem {
+                    operation: "ensure data root partition".to_string(),
+                    detail: error.to_string(),
+                },
+            )?;
             set_private_directory(&path)?;
         }
     }
@@ -510,9 +514,11 @@ fn create_partitions(root: &Path) -> Result<(), AppError> {
                 detail: "partition target is not a directory".to_string(),
             });
         }
-        std::fs::create_dir(&path).map_err(|error| AppError::FileSystem {
-            operation: "create data root partition".to_string(),
-            detail: error.to_string(),
+        crate::infrastructure::platform::create_private_dir_all(&path, 0o700).map_err(|error| {
+            AppError::FileSystem {
+                operation: "create data root partition".to_string(),
+                detail: error.to_string(),
+            }
         })?;
         set_private_directory(&path)?;
         created.push(path);

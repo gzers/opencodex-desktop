@@ -4,7 +4,6 @@
 //! 不访问真实用户配置或数据根。锁语义为独占文件锁（Unix `flock` /
 //! Windows `LockFileEx`），超时 3 秒。
 
-use std::fs::OpenOptions;
 use std::io;
 use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant};
@@ -54,14 +53,12 @@ impl TargetFileLock {
     pub fn try_lock_with_timeout(target: &Path, timeout: Duration) -> Result<Self, AppError> {
         let lock_path = lock_path_for(target);
         if let Some(parent) = lock_path.parent() {
-            std::fs::create_dir_all(parent).map_err(fs_error)?;
+            if !parent.is_dir() {
+                crate::infrastructure::platform::create_private_dir_all(parent, 0o700)
+                    .map_err(fs_error)?;
+            }
         }
-        let file = OpenOptions::new()
-            .create(true)
-            .truncate(false)
-            .write(true)
-            .read(true)
-            .open(&lock_path)
+        let file = crate::infrastructure::platform::open_or_create_private_file(&lock_path, 0o600)
             .map_err(fs_error)?;
 
         let started = Instant::now();
@@ -135,7 +132,10 @@ mod tests {
     fn owning_handle_reads_bounded_metadata_without_releasing_the_lock() {
         let temp = tempfile::tempdir().unwrap();
         let target = temp.path().join("legacy");
-        std::fs::write(lock_path_for(&target), b"legacy metadata").unwrap();
+        crate::infrastructure::platform::create_new_private_file(&lock_path_for(&target), 0o600)
+            .unwrap()
+            .write_all(b"legacy metadata")
+            .unwrap();
         let guard = TargetFileLock::lock(&target).unwrap();
         assert_eq!(guard.read_metadata(15).unwrap(), b"legacy metadata");
         assert!(guard.read_metadata(14).is_err());

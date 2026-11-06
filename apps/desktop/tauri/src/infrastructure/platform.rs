@@ -213,6 +213,77 @@ impl OpenOptionsModeExt for OpenOptions {
     }
 }
 
+/// New private objects are owned by the actual TokenUser from creation time.
+/// An elevated process may have Administrators as its default TokenOwner.
+pub fn create_new_private_file(path: &Path, mode: u32) -> io::Result<std::fs::File> {
+    #[cfg(windows)]
+    {
+        crate::infrastructure::windows_private_create::create_new_private_file(path, mode)
+    }
+    #[cfg(not(windows))]
+    {
+        OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create_new(true)
+            .create_mode(mode)
+            .open(path)
+    }
+}
+/// Existing private targets may be tightened only after their actual owner is
+/// verified. Existing OS ancestors are never modified or taken over.
+pub fn create_private_dir_all(path: &Path, mode: u32) -> io::Result<()> {
+    #[cfg(windows)]
+    {
+        match std::fs::symlink_metadata(path) {
+            Ok(_) => {
+                crate::infrastructure::windows_startup_root::protect_current_user_path(path, mode)?
+            }
+            Err(e) if e.kind() == io::ErrorKind::NotFound => (),
+            Err(e) => return Err(e),
+        }
+        crate::infrastructure::windows_private_create::create_private_dir_all(path, mode)
+    }
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::DirBuilderExt;
+        std::fs::DirBuilder::new()
+            .recursive(true)
+            .mode(mode)
+            .create(path)
+    }
+    #[cfg(not(any(unix, windows)))]
+    {
+        let _ = mode;
+        std::fs::create_dir_all(path)
+    }
+}
+/// Create the private lock once; reopening never truncates or rewrites it.
+pub fn open_or_create_private_file(path: &Path, mode: u32) -> io::Result<std::fs::File> {
+    #[cfg(windows)]
+    {
+        match create_new_private_file(path, mode) {
+            Ok(file) => Ok(file),
+            Err(e) if e.kind() == io::ErrorKind::AlreadyExists => {
+                crate::infrastructure::windows_private_create::open_existing_private_file(
+                    path, mode,
+                )
+            }
+            Err(e) => Err(e),
+        }
+    }
+    #[cfg(not(windows))]
+    {
+        OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create(true)
+            .truncate(false)
+            .create_mode(mode)
+            .open(path)
+    }
+}
+
 /// Unix permission bits; Windows enforces the current token's private ACL.
 pub fn set_mode(path: &Path, mode: u32) -> io::Result<()> {
     #[cfg(unix)]
