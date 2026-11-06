@@ -50,8 +50,6 @@ jobs:
 
   frontend:
     runs-on: macos-15
-    env:
-      OCXD_GLASS_EVIDENCE_DIR: ${{ runner.temp }}
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -64,6 +62,8 @@ jobs:
         run: npm --prefix apps/desktop/ui exec -- playwright-core install chromium webkit
       - run: npm --prefix apps/desktop/ui run typecheck
       - run: npm --prefix apps/desktop/ui run test -- --run
+        env:
+          OCXD_GLASS_EVIDENCE_DIR: ${{ runner.temp }}
       - run: npm --prefix apps/desktop/ui run build
       - name: Preserve actual browser pixel evidence
         if: always()
