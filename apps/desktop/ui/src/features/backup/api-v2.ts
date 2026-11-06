@@ -9,8 +9,10 @@ export interface RestoreReceiptV2 {
   status:'applied'|'partial';completedGroups:string[]
   refreshFileSnapshot:boolean;failureCode:string|null
 }
+export interface RestoreOperationV2 {restoreId:string;originalOperationId:string;planDigest:string;groups:string[];receipt:RestoreReceiptV2|null}
 export const transferBackupV2Api={
   list:()=>invoke<BackupStatusV2[]>('transfer_v2_backup_list'),
   preview:(originalOperationId:string,groups:string[])=>invoke<RestorePreviewV2>('transfer_v2_backup_preview',{originalOperationId,groups}),
   restore:(restoreId:string,planDigest:string)=>invoke<RestoreReceiptV2>('transfer_v2_backup_restore',{restoreId,planDigest}),
+  operations:(originalOperationId:string|null=null)=>invoke<RestoreOperationV2[]>('transfer_v2_backup_restore_operations',{originalOperationId}),
 }

@@ -54,7 +54,7 @@ describe('POST-09 remaining owned consumer guards', () => {
   })
 
   it.each(['x', 'escape', 'backdrop', 'cancel'])('guards restore %s while checking its baseline, then cancels without writing', async channel => {
-    vi.spyOn(transferBackupV2Api,'list').mockResolvedValue([{id:'fixture',groups:['channels'],enabled:true,ready:true}]);vi.spyOn(transferBackupV2Api,'restore')
+    vi.spyOn(transferBackupV2Api,'list').mockResolvedValue([{id:'fixture',groups:['channels'],enabled:true,ready:true}]);vi.spyOn(transferBackupV2Api,'restore');vi.spyOn(transferBackupV2Api,'operations').mockResolvedValue([])
     let finish!:(value:RestorePreviewV2)=>void
     vi.spyOn(transferBackupV2Api,'preview').mockReturnValue(new Promise(resolve => { finish = resolve }))
     const w = render(TransferBackups); await flushPromises()
