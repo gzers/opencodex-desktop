@@ -1,0 +1,568 @@
+{
+  "date": "2026-11-07",
+  "timezone": "Asia/Shanghai",
+  "role": "L4",
+  "documentSHA": "d707d28888f065a2a88a0c6f67f31f3608409d02",
+  "codeHead": "400c4e7f4a765b18e4406ba889d13fe5021ccb9b",
+  "codeBaseline": "33d2c65b58ba8880d6deea7b52d69117238c3d33",
+  "ciCheckoutMergeSHA": "74583c49f1a137d05b28c78d0bbf01a272ab45d9",
+  "pr": 71,
+  "run": {
+    "id": 42249148982,
+    "name": "CI",
+    "status": "completed",
+    "conclusion": "failure",
+    "run_number": 645,
+    "jobs_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/42249148982/jobs",
+    "logs_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/42249148982/logs",
+    "workflow_id": 373713239
+  },
+  "jobs": [
+    {
+      "id": 127999232030,
+      "name": "backend",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 42249148982,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Run cargo fmt --all -- --check",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 4
+        },
+        {
+          "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 5
+        },
+        {
+          "name": "Verify bounded metadata process tree before the workspace workload",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Run remaining workspace regression without repeating the completed query fixture",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        }
+      ]
+    },
+    {
+      "id": 127999232280,
+      "name": "frontend",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 42249148982,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Windows CDP protocol regression",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui ci",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui run typecheck",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui run test -- --run",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 7
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui run build",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Post Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        }
+      ]
+    },
+    {
+      "id": 127999232404,
+      "name": "backend-windows",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 42249148982,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Run npm --prefix ../ui ci",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Run npm --prefix ../ui run build",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Run cargo fmt --all -- --check",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 7
+        },
+        {
+          "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Prepare first-regression ETW only on the Windows diagnostic branch",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Windows backend regression",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Verify isolated native credential protection",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 11
+        },
+        {
+          "name": "Verify official managed install upgrade and offline reinstall",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Collect Windows native dependency diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Run cargo build --locked --release --features custom-protocol --bins",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Preserve exact MSVC application candidate for native followup",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16
+        },
+        {
+          "name": "Windows final EXE smoke",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17
+        },
+        {
+          "name": "Record Node24 driver for native version matrix",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Windows native installation failure, metadata recovery and path regression",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 19
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 20
+        },
+        {
+          "name": "Windows original Node22.20 npm environment regression",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Windows ordinary-account final EXE smoke",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 23
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 24
+        },
+        {
+          "name": "Post Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 47
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 48
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 49
+        }
+      ]
+    },
+    {
+      "id": 127999232579,
+      "name": "windows-smoke-evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 42249148982,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Verify Windows process-token evidence and smoke syntax",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Verify installer matrix completeness and parameter isolation",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Verify isolated acceptance Profile admission",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Verify ordinary-account first-logon Profile before long builds",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Verify recovery restart waits for the old process exit",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        }
+      ]
+    },
+    {
+      "id": 127999232811,
+      "name": "release-tools",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 42249148982,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run sudo apt-get update && sudo apt-get install -y minisign",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_publish_release.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_maintained_runtime.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_windows_release_acceptance.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_windows_etw_ci.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_windows_retention_ci.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        }
+      ]
+    },
+    {
+      "id": 128006012666,
+      "name": "build",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42249148982,
+      "logs_url": null,
+      "steps": null
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 13520071162,
+      "name": "windows-startup-evidence",
+      "size_in_bytes": 252261,
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/artifacts/13520071162",
+      "archive_download_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/artifacts/13520071162/zip",
+      "expired": false,
+      "created_at": "2026-11-06T16:14:39Z",
+      "expires_at": "2027-02-04T16:05:50Z",
+      "updated_at": "2026-11-06T16:14:39Z",
+      "digest": "sha256:56bf723146de242498b40bb6024e9915d2d28de539792cb8c0675665b8fa1055",
+      "workflow_run": {
+        "id": 42249148982,
+        "repository_id": 1369202675,
+        "head_repository_id": 1369202675,
+        "head_branch": "codex/0.2.23-windows",
+        "head_sha": "400c4e7f4a765b18e4406ba889d13fe5021ccb9b"
+      }
+    },
+    {
+      "id": 13517894778,
+      "name": "windows-process-token-evidence",
+      "size_in_bytes": 6911,
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/artifacts/13517894778",
+      "archive_download_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/artifacts/13517894778/zip",
+      "expired": false,
+      "created_at": "2026-11-06T16:07:01Z",
+      "expires_at": "2027-02-04T16:05:50Z",
+      "updated_at": "2026-11-06T16:07:01Z",
+      "digest": "sha256:0bcb5b163cfe2d985b55a01a43c71bd7fbdadec618c0535e8729d4d4135ba96d",
+      "workflow_run": {
+        "id": 42249148982,
+        "repository_id": 1369202675,
+        "head_repository_id": 1369202675,
+        "head_branch": "codex/0.2.23-windows",
+        "head_sha": "400c4e7f4a765b18e4406ba889d13fe5021ccb9b"
+      }
+    }
+  ],
+  "validation": {
+    "nativeMsvcCompiler": "rustc 1.99.1 host x86_64-pc-windows-msvc",
+    "providerAuthNativeCompiled": true,
+    "providerAuthNative": {
+      "passed": 0,
+      "failed": 1,
+      "ignored": 0,
+      "failureLocation": "tests/provider_auth_native.rs:141:81",
+      "error": "atomic write failed: set temporary permissions: private object belongs to another user"
+    },
+    "windowsNormalBackendRegression": "skipped by fmt failure",
+    "windowsStrictClippy": "skipped by fmt failure",
+    "windowsCandidateBuild": "skipped; no final installer/runtime acceptance",
+    "windowsSmoke": "success; utility scripts and isolated Profile-only, not two-user product proof",
+    "releaseTools": "success; no actual release",
+    "macBackend": "failed fmt",
+    "frontend": {
+      "testFilesFailed": 27,
+      "testFilesPassed": 177,
+      "testFilesTotal": 204,
+      "testsFailed": 147,
+      "testsPassed": 1231,
+      "testsTotal": 1378,
+      "result": "failure"
+    }
+  },
+  "localFormatting": "check only; 10 L0 files; no L4 helper diffs",
+  "issuesToL0": [
+    "Fix shared formatting without skipping gates",
+    "Read actual owner SID and TokenOwner of newly created synthetic file under runner token",
+    "Create new owned files/directories with explicit current-user owner and private DACL, without taking existing foreign ownership"
+  ],
+  "ownerMismatchRootCause": "observed mismatch; exact default-owner reason not yet established",
+  "pending": [
+    "L0 shared creation/atomic-write and formatting patch with pinned source",
+    "second user controlled execution channel",
+    "same-SID cross-session/elevation and real two SID product IPC/DPAPI/ports evidence",
+    "final complete offline runtime NSIS/MSI candidate resources"
+  ],
+  "localArtifactDownloads": "ZIP not materialized because redirected hostname DNS fails; decoded Windows full job log saved through connector",
+  "automaticCleanupBlock": "prior attempt remains retained; no retry",
+  "dailyConfigChanged": false,
+  "realSyncOrInference": false,
+  "published": false,
+  "acceptanceComplete": false
+}
