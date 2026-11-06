@@ -378,7 +378,7 @@ fn unique(values: &[String], limit: usize) -> ModelResult<()> {
     }
     Ok(())
 }
-fn validate_request(r: &CaptureRequestV2) -> ModelResult<()> {
+pub(crate) fn validate_request(r: &CaptureRequestV2) -> ModelResult<()> {
     let s = &r.selection;
     if s.channels.len() > 4096
         || s.template_refs.len() > 4096
@@ -470,7 +470,7 @@ fn validate_request(r: &CaptureRequestV2) -> ModelResult<()> {
     }
     Ok(())
 }
-fn scope_digest(r: &CaptureRequestV2) -> ModelResult<String> {
+pub(crate) fn scope_digest(r: &CaptureRequestV2) -> ModelResult<String> {
     let mut s = r.selection.clone();
     s.channels
         .sort_by(|a, b| a.portable_channel_id.cmp(&b.portable_channel_id));
@@ -504,7 +504,7 @@ fn scope_digest(r: &CaptureRequestV2) -> ModelResult<String> {
 }
 /// Copy original per-model public values from every actual protocol group,
 /// including unknown nested children. Never rebuild them from ModelRules.
-fn public_source(raw: &Value, channel: &ChannelV2, mappings: &MappingFileV2) -> ModelResult<Value> {
+pub(crate) fn public_source(raw: &Value, channel: &ChannelV2, mappings: &MappingFileV2) -> ModelResult<Value> {
     let provider = |id: &str| {
         raw.get("providers")
             .and_then(|p| p.get(id))
@@ -738,7 +738,7 @@ fn models(
     )
     .map_err(mapped)?
 }
-fn exact_revisions(
+pub(crate) fn exact_revisions(
     package: &mut portable_v2::PortableModelsV2,
     library: &LibraryV2,
     s: &SelectionV2,
