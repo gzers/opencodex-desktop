@@ -1237,3 +1237,76 @@ async fn production_recovery_export_reads_chosen_branch_and_preserves_all_busine
         .exists());
     assert_eq!(*source.remote.files.lock().unwrap(), remote_before);
 }
+#[test]
+fn selected_key_and_mcp_secret_only_changes_are_visible_as_updates_without_secret_values_or_hashes()
+{
+    let e = Env::new();
+    let h = ConnectionHandle {
+        id: "fixture".into(),
+        binding_id: store::digest(b"namespace"),
+        revision: store::digest(b"revision"),
+    };
+    let base = e.backend.inventory(&h).unwrap().objects;
+    let mut before = base.into_captured();
+    let id = before.models.payload.policy.as_ref().unwrap().channels[0]
+        .id
+        .clone();
+    before
+        .channel_keys
+        .insert(id.clone(), Zeroizing::new("first-synthetic-key".into()))
+        .unwrap();
+    let first = crate::modules::sync::portable_assets::split_mcp(
+        crate::modules::extensions::discovery::RawServerDefinition {
+            name: "secret-fixture".into(),
+            value: json!({"command":"fixture","env":{"TOKEN":"first-synthetic-mcp"}}),
+        },
+        true,
+        true,
+    )
+    .unwrap();
+    before.assets.mcps = vec![first];
+    let before = SavedObjects::capture(before, Some(&host::PayloadAuthorizationV2)).unwrap();
+    let mut after = before.partitions().models.clone();
+    after.created_at = "2026-11-06T16:00:00Z".into();
+    let bytes =
+        file_objects_v2::encode_document(&before, Some(&host::PayloadAuthorizationV2)).unwrap();
+    let mut after_objects =
+        file_objects_v2::decode_document(&bytes, Some(&host::PayloadAuthorizationV2))
+            .unwrap()
+            .into_captured();
+    after_objects.models = after;
+    let mut keys = super::super::file_objects_v2::SecretValues::new();
+    keys.insert(id, Zeroizing::new("second-synthetic-key".into()))
+        .unwrap();
+    after_objects.channel_keys = keys;
+    after_objects.assets.mcps[0]
+        .secrets
+        .0
+        .insert("/env/TOKEN".into(), "second-synthetic-mcp".into());
+    let after = SavedObjects::capture(after_objects, Some(&host::PayloadAuthorizationV2)).unwrap();
+    let mut selection = e.backend.selection.clone();
+    selection.channels[0].include_key = true;
+    selection.mcp_sources = vec![McpSourceSelectionV2 {
+        name: "secret-fixture".into(),
+        definition_digest: super::super::objects_overlay_v2::mcp_source_digest(
+            &after.partitions().assets.mcps[0],
+        )
+        .unwrap(),
+    }];
+    selection.extension_credentials.mcp_names = vec!["secret-fixture".into()];
+    let diff = semantic_diff(&selection, &after, Some(&before), DirectionV2::Upload).unwrap();
+    assert!(diff
+        .iter()
+        .filter(|d| matches!(d.kind, ObjectKindV2::Channel | ObjectKindV2::Mcp))
+        .all(|d| matches!(d.status, DiffStatusV2::Update)));
+    let public = serde_json::to_string(&diff).unwrap();
+    for value in [
+        "first-synthetic-key",
+        "second-synthetic-key",
+        "first-synthetic-mcp",
+        "second-synthetic-mcp",
+    ] {
+        assert!(!public.contains(value));
+        assert!(!public.contains(&store::digest(value.as_bytes())));
+    }
+}

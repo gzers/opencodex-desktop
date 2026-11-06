@@ -1029,6 +1029,17 @@ impl SyncServiceV2 {
         })
         .await?;
         let public = preview.decision.clone();
+        let mut public_diff = composition.diff.clone();
+        if public.no_change {
+            for row in &mut public_diff {
+                if !matches!(
+                    row.status,
+                    DiffStatusV2::Unavailable | DiffStatusV2::SourceRequired
+                ) {
+                    row.status = DiffStatusV2::Unchanged;
+                }
+            }
+        }
         let codec = HostPayloadCodecV2::new(composition.provider.clone(), preview, secrets.host());
         let bound = {
             let resolver = self.resolver.clone();
@@ -1125,7 +1136,7 @@ impl SyncServiceV2 {
             cloud_saved_time: public.cloud_saved_time,
             no_change: public.no_change,
             backup_before_update: request.backup_before_update,
-            entries: composition.diff,
+            entries: public_diff,
             local_summary: public.local_summary,
             cloud_summary: public.cloud_summary,
             plan,
@@ -2935,6 +2946,79 @@ fn semantic_diff(
             m.name.clone(),
             serde_json::json!(["v2-mcps", m.name]),
         )?;
+    }
+    // Credential-only changes are real selected changes even when the public
+    // channel/MCP atom is identical. Compare private values only in memory;
+    // never put secret hashes or strings into a public diff entry.
+    for channel_scope in &selection.channels {
+        let key = &channel_scope.portable_channel_id;
+        let l = local.partitions();
+        let r = cloud.map(SavedObjects::partitions);
+        let key_changed = channel_scope.include_key
+            && l.channel_keys.get(key) != r.as_ref().and_then(|p| p.channel_keys.get(key));
+        let auth_changed = if channel_scope.include_authorization {
+            let a = l
+                .channel_authorizations
+                .get(key)
+                .map(|v| serde_json::to_vec(v).map(Zeroizing::new))
+                .transpose()
+                .map_err(|_| invalid("portable_objects_v2_format", "授权差异无法核对"))?;
+            let b = r
+                .as_ref()
+                .and_then(|p| p.channel_authorizations.get(key))
+                .map(|v| serde_json::to_vec(v).map(Zeroizing::new))
+                .transpose()
+                .map_err(|_| invalid("portable_objects_v2_format", "授权差异无法核对"))?;
+            a != b
+        } else {
+            false
+        };
+        if let Some(row) = rows
+            .iter_mut()
+            .find(|row| row.kind == ObjectKindV2::Channel && row.id == *key)
+        {
+            let target = if direction == DirectionV2::Download {
+                Some(local)
+            } else {
+                cloud
+            };
+            let target_has = target.is_some_and(|o| {
+                o.models()
+                    .payload
+                    .policy
+                    .iter()
+                    .flat_map(|p| &p.channels)
+                    .any(|c| c.id == *key)
+            });
+            if target_has && matches!(row.status, DiffStatusV2::Add) {
+                row.status = DiffStatusV2::Update;
+            }
+            if (key_changed || auth_changed) && matches!(row.status, DiffStatusV2::Unchanged) {
+                row.status = DiffStatusV2::Update;
+            }
+        }
+    }
+    for name in &selection.extension_credentials.mcp_names {
+        let a = local
+            .partitions()
+            .assets
+            .mcps
+            .iter()
+            .find(|m| m.name == *name)
+            .map(|m| &m.secrets.0);
+        let b = cloud
+            .and_then(|c| c.partitions().assets.mcps.iter().find(|m| m.name == *name))
+            .map(|m| &m.secrets.0);
+        if a != b {
+            if let Some(row) = rows
+                .iter_mut()
+                .find(|r| r.kind == ObjectKindV2::Mcp && r.id == *name)
+            {
+                if matches!(row.status, DiffStatusV2::Unchanged) {
+                    row.status = DiffStatusV2::Update;
+                }
+            }
+        }
     }
     Ok(rows)
 }
