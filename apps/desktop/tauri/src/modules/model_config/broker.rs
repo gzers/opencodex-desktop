@@ -696,8 +696,26 @@ fn prepare_bundle_at(
     persist_grant(root, &record)?;
     let base = format!("{endpoint}/v1/tasks/{}", task.task_id);
     let discovery = root.join(DESCRIPTOR).to_string_lossy().into_owned();
-    let transport = json!({"baseUrl":base,"headers":{"Authorization":format!("Bearer {bearer}"),"Content-Type":"application/json"},"discoveryFile":discovery,"proof":{"method":"POST /proof","request":{"challenge":"new UUIDv4"},"key":"UTF8('sha256:'+hex(SHA256(UTF8(bearer token))))","payload":"ocxd-model-task-v1\n{taskId}\n{challenge}\n{authority}\n{pid}","algorithm":"HMAC-SHA256 hex; compare in constant time before forwarding Bearer. On every reconnect read descriptor version=1, authority, pid; allow only 127.0.0.1:port and verify taskId/challenge/authority/pid. Disable proxies and redirects."},"methods":{"context":"GET /context","contract":"GET /contract","preflight":"POST /preflight","submit":"POST /submit","receipt":"GET /receipts/{submissionId}"}});
-    let content=format!("仅按v2契约制作指定范围提案，保留全部人工锁。严格JSON先preflight，valid后同一submissionId与原始字节submit；断连先查询receipt，同ID不得换字节。提交仅进入待审，只有管理器人工确认后统一事务才可保存库。CheckOnly只能报告。不可修改凭据、运行配置、历史、默认或采用关系。先核验同一个本机broker proof，禁止代理和重定向。\n\n{}",serde_json::to_string_pretty(&json!({"task":task,"transport":transport}))?);
+    let transport = json!({
+        "baseUrl":base,
+        "headers":{"Authorization":format!("Bearer {bearer}"),"Content-Type":"application/json"},
+        "discoveryFile":discovery,
+        "proof":{"method":"POST /proof","request":{"challenge":"new UUIDv4"},"key":"UTF8('sha256:'+hex(SHA256(UTF8(bearer token))))","payload":"ocxd-model-task-v1\n{taskId}\n{challenge}\n{authority}\n{pid}","algorithm":"HMAC-SHA256 hex; compare in constant time before forwarding Bearer. On every reconnect read descriptor version=1, authority, pid; allow only 127.0.0.1:port and verify taskId/challenge/authority/pid. Disable proxies and redirects."},
+        "methods":{"context":"GET /context","contract":"GET /contract","preflight":"POST /preflight","submit":"POST /submit","receipt":"GET /receipts/{submissionId}"},
+        "submission":{"contractVersion":2,"submissionId":"Generate one UUIDv4 and retain the exact complete UTF-8 JSON request bytes for retries","responseSchema":"task.contract.responseContract.response; wrap the response in {contractVersion:2,submissionId,response}"},
+        "preflightSuccess": if task.scene == super::tasks::Scene::CheckOnly {
+            "dtoVersion=2, expectedLibrary matches task.expectedLibrary, review=null, report.summary is nonempty; CheckOnly has no valid flag"
+        } else {
+            "dtoVersion=2, expectedLibrary matches task.expectedLibrary, review.valid=true; valid is nested under review"
+        },
+        "receiptSuccess":"taskId/submissionId match this task/request, payloadDigest equals sha256:hex(SHA256(original request bytes)); result.phase=review means awaiting human acceptance, not saved",
+        "recovery":"On every reconnect read discoveryFile and rebuild http://{authority}/v1/tasks/{taskId}; exported baseUrl is only a hint. Verify proof before sending Bearer, then GET /receipts/{submissionId}. A null receipt is not a failed or saved verdict. Do not resend or rewrite bytes automatically; if explicitly retrying, send exactly the retained request bytes. Never reinitialize a task or write the library to recover a receipt."
+    });
+    let instructions = "仅按v2契约制作指定范围提案，保留全部人工锁。请求正文必须是{contractVersion:2,submissionId,response}，response按task.contract.responseContract.response构造，不能提交旧版裸proposals/report。普通提案preflight检查review.valid=true；CheckOnly检查report.summary且review=null，没有valid字段。核对dtoVersion和expectedLibrary后，以同一submissionId与完全相同UTF-8请求字节submit。receipt中的result.phase=review仅代表待人工审阅，不是已保存。断连重读discoveryFile并按taskId重建当前入口，先proof再Bearer，查询原receipt；不可自动换ID、改字节或写库恢复。复制激活由管理器完成，外部执行者不需要也不得索取preparedTicket。不可修改凭据、运行配置、历史、默认或采用关系。禁止代理和重定向。";
+    let content = format!(
+        "{instructions}\n\n{}",
+        serde_json::to_string_pretty(&json!({"task":task,"transport":transport}))?
+    );
     Ok(ExternalBrokerBundleV2 {
         task_id: record.task_id,
         content,
