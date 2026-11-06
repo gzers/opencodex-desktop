@@ -10,6 +10,7 @@ const props=defineProps<{original?:ChannelPolicy|ChannelV2}>()
 const original=props.original?JSON.parse(JSON.stringify(props.original)) as ChannelPolicy|ChannelV2:undefined
 const emit=defineEmits<{close:[];added:[string]}>()
 const store=useModelsV2Store()
+const openingWorkspace=JSON.stringify({source:store.file?.sourceDigest,library:store.file?.libraryDigest,root:store.file?.rootRevision,base:store.file?.draft?.base})
 const step=ref(1),label=ref(original?.label??''),authMode=ref<'key'|'none'>(original?.connection.authMode==='none'?'none':'key'),apiKey=ref(''),keyVisible=ref(false)
 const discoveryKind=ref<TemporaryDiscoveryKind|''>(''),discoveryReadId=ref<string|null>(null)
 const nodes=ref<{id:string;name:string;url:string}[]>(original?JSON.parse(JSON.stringify(original.connection.nodes)):[])
@@ -62,6 +63,7 @@ async function join(){
  if(!selected.value.length){error.value='请选择至少一个精确型号';return}
  busy.value=true;error.value=''
  try{
+  if(openingWorkspace!==JSON.stringify({source:store.file?.sourceDigest,library:store.file?.libraryDigest,root:store.file?.rootRevision,base:store.file?.draft?.base}))throw new Error('表单打开后渠道基准已变化，输入保持；请重新核对当前工作区。')
   if(original&&JSON.stringify(store.channels.find(c=>c.id===original.id))!==JSON.stringify(original))throw new Error('原渠道草稿已变化，请关闭后重新编辑连接。')
   const intent:ChannelConnectionEditIntentV2={channelId:id,kind:original?'edit_connection':'create',label:label.value.trim(),nodes:original?JSON.parse(JSON.stringify(nodes.value)):[{id:nodeId,name:'默认节点',url:url.value}],activeNodeId:original?activeNode.value:nodeId,authMode:authMode.value,selectedModelIds:[...selected.value],modelOrder:[...new Set([...(original?.modelOrder??[]),...models.value.map(m=>m.id)])],modelLabels:Object.fromEntries(models.value.map(m=>[m.id,m.label])),discoveryReadId:discoveryReadId.value}
   const result=await store.stageConnection(intent,needsKey.value?{action:'replace',value:apiKey.value}:{action:'unchanged'})

@@ -1,22 +1,29 @@
-import { computed,onScopeDispose,ref,watch } from 'vue'
-import { errorText,modelApi,type ChannelPolicy,type NodeMeasurement } from './api'
-const nodeErrors:Record<string,string>={discovery_html:'服务返回了网页，没有模型清单',discovery_path:'未找到模型清单接口',discovery_json:'模型清单响应不是有效 JSON',discovery_dns:'地址解析失败',discovery_auth:'服务拒绝了这次请求；请核对 Key 是否有效',credential_unconfirmed:'该节点没有可确认的凭据',discovery_timeout:'请求超时',discovery_failed:'连接或清单请求失败',discovery_pagination:'分页未完整',discovery_shape:'服务未返回模型清单',discovery_limit:'响应超过上限',discovery_protocol:'该协议需专用连接',node_url:'节点地址无效',credential_store:'系统凭据不可用'}
-export function nodeMeasurementError(code:string):string{return nodeErrors[code]??'检测未完成，请检查连接'}
-export function useNodeMeasurements(channel:()=>ChannelPolicy,key:()=>string){
- const run=ref('');const pending=ref<string[]>([]);const results=ref<Record<string,NodeMeasurement>>({});const error=ref('');const stopped=ref(false)
+import {computed,onScopeDispose,ref,watch} from 'vue'
+import {errorText,type ChannelPolicy,type NodeMeasurement} from './api'
+import {modelV2Api,type ChannelV2,type DiscoveryKindV2,type ReadBaseV2} from './api-v2'
+const nodeErrors:Record<string,string>={discovery_html:'服务返回网页而非模型清单',discovery_path:'未找到模型清单接口',discovery_json:'模型清单不是有效 JSON',discovery_dns:'地址解析失败',discovery_auth:'服务拒绝了这次请求，请核对凭据',credential_unconfirmed:'该节点没有明确认可的凭据',discovery_timeout:'请求超时',discovery_failed:'连接或清单请求失败',discovery_pagination:'分页未完整',discovery_shape:'服务未返回模型清单',discovery_limit:'响应超过上限',discovery_protocol:'请选择本次清单获取方式',node_url:'节点地址无效',credential_store:'系统凭据不可用',model_save_stale:'草稿基准已变化，请重新核对'}
+export function nodeMeasurementError(code:string):string{return nodeErrors[code]??'检测未完成，请核对连接与本次清单方式'}
+export interface NodeMeasurementAdmissionV2 {expected:()=>ReadBaseV2|null;discoveryKind:()=>DiscoveryKindV2|'';enabled?:()=>boolean}
+export function useNodeMeasurements(channel:()=>ChannelPolicy|ChannelV2,_key:()=>string=()=>'',admission?:NodeMeasurementAdmissionV2){
+ const run=ref(''),pending=ref<string[]>([]),results=ref<Record<string,NodeMeasurement>>({}),error=ref(''),stopped=ref(false)
  let sequence=0
- const binding=computed(()=>JSON.stringify({channelId:channel().id,providerId:channel().connection.providerId,protocol:channel().connection.protocol,credentialRef:channel().connection.credentialRef,nodes:channel().connection.nodes.map(n=>({id:n.id,url:n.url})),key:key()}))
- function invalidate(){sequence++;const id=run.value;if(id)void modelApi.stopNodeMeasurement(id).catch(()=>{});run.value='';pending.value=[];results.value={};error.value='';stopped.value=false}
+ const binding=computed(()=>JSON.stringify({channelId:channel().id,credentialRef:channel().connection.credentialRef,nodes:channel().connection.nodes.map(n=>({id:n.id,url:n.url})),expected:admission?.expected(),discoveryKind:admission?.discoveryKind()}))
+ function invalidate(){sequence++;const id=run.value;if(id)void modelV2Api.stopMeasurement(id).catch(()=>{});run.value='';pending.value=[];results.value={};error.value='';stopped.value=false}
  watch(binding,invalidate,{flush:'sync'})
  onScopeDispose(invalidate)
  async function measure(ids:string[]){
   if(run.value)return
-  const value=channel();const nodes=value.connection.nodes.filter(n=>ids.includes(n.id)).map(n=>({...n}));if(!nodes.length)return
-  const current=++sequence;const id=crypto.randomUUID();run.value=id;pending.value=nodes.map(n=>n.id);error.value='';stopped.value=false
-  try{const response=await modelApi.measureNodes({runId:id,protocol:value.connection.protocol,nodes,apiKey:key()||null,credentialRef:value.connection.credentialRef,providerId:value.connection.providerId});if(current!==sequence||response.runId!==id)return;for(const result of response.results)if(ids.includes(result.nodeId))results.value[result.nodeId]=result;stopped.value=response.stopped}
+  if(!admission||admission.enabled?.()===false){error.value='节点检测服务尚未就绪，未发送请求。';return}
+  const expected=admission.expected(),discoveryKind=admission.discoveryKind()
+  if(!expected){error.value='请先取得当前可信渠道草稿。';return}
+  if(!discoveryKind){error.value='请选择本次模型清单获取方式。';return}
+  const value=channel();if(!('models'in value)){error.value='节点检测仅接受新版可信渠道，未从旧协议字段推断。';return}
+  const nodeIds=[...new Set(ids)].filter(id=>value.connection.nodes.some(n=>n.id===id));if(!nodeIds.length)return
+  const current=++sequence,id=crypto.randomUUID();run.value=id;pending.value=nodeIds;error.value='';stopped.value=false
+  try{const response=await modelV2Api.measureNodes({expected,channelId:value.id,nodeIds,discoveryKind,runId:id});if(current!==sequence||response.runId!==id)return;for(const result of response.results)if(nodeIds.includes(result.nodeId))results.value[result.nodeId]=result;stopped.value=response.stopped}
   catch(cause){if(current===sequence)error.value=errorText(cause)}
   finally{if(current===sequence){run.value='';pending.value=[]}}
  }
- async function stop(){const id=run.value,current=sequence;if(id)try{await modelApi.stopNodeMeasurement(id)}catch(cause){if(current===sequence&&run.value===id)error.value=errorText(cause)}}
+ async function stop(){const id=run.value,current=sequence;if(!id)return;try{await modelV2Api.stopMeasurement(id);if(current===sequence&&run.value===id){sequence++;run.value='';pending.value=[];stopped.value=true}}catch(cause){if(current===sequence)error.value=errorText(cause)}}
  return {run,pending,results,error,stopped,measure,stop}
 }

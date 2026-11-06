@@ -27,6 +27,8 @@ function issuesFor(id:string){return props.issues?.filter(issue=>issue.condition
     <fieldset :disabled="disabled">
       <legend>族匹配范围</legend>
       <p class="model-muted">排除优先于包含；完整 ID 保持原样。协议是匹配后的配置输出，不参与族识别。</p>
+      <label>渠道范围<UiSelectField :model-value="modelValue.matching.channelMode" label="模版渠道范围" :disabled="disabled" :options="[{value:'all',label:'全部渠道'},{value:'whitelist',label:'仅所选渠道 UUID'},{value:'blacklist',label:'排除所选渠道 UUID'}]" @update:model-value="edit(c=>c.matching.channelMode=$event as 'all'|'whitelist'|'blacklist')" /></label>
+      <label v-if="modelValue.matching.channelMode!=='all'">渠道 UUID（每行一个）<textarea class="input" aria-label="模版范围渠道UUID" :value="modelValue.matching.channels.join('\n')" @input="edit(c=>c.matching.channels=text($event).split(/\n/).map(v=>v.trim()).filter(Boolean))" /></label>
       <section v-for="kind in (['include','exclude'] as const)" :key="kind">
         <div class="model-field-title"><h3>{{kind==='include'?'包含规则':'排除规则'}}</h3><UiButton size="sm" :disabled="disabled" @click="edit(c=>c.matching[kind].push({kind:'prefix',value:''}))">添加{{kind==='include'?'包含':'排除'}}</UiButton></div>
         <div v-for="(pattern,index) in modelValue.matching[kind]" :key="index" class="condition-row">
