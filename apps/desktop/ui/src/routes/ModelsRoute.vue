@@ -36,7 +36,7 @@ function saveV2(){const generation=modelsV2.editGeneration;modal.open({title:'�
 const modal=useModalStore()
 const page = ref<HTMLElement | null>(null)
 const tab = toRef(models.view,'tab')
-useModelViewPosition(page,()=>tab.value==='templates'?(models.view.templateEditor&&models.draft?'template:'+models.view.templatePosition:'templates'):(models.view.channelEditor?'channel:'+models.view.channelEditor:'channels'))
+useModelViewPosition(page,()=>tab.value==='templates'?(models.view.templateEditor&&models.draft?'template:'+models.view.templatePosition:'templates'):(modelsV2.channelEditorId?'channel:'+modelsV2.channelEditorId:'channels'))
 watch(()=>models.policyNotificationTarget,target=>{if(target)tab.value='channels'},{immediate:true})
 const agentOpen = ref(false)
 const agentTrigger = ref<HTMLElement | null>(null)
@@ -94,10 +94,10 @@ const kinds = [{ value: 'prefix', label: '前缀' }, { value: 'exact', label: '�
 let stopChanges: (() => void) | undefined
 let disposed = false
 onMounted(async () => {
-  void models.load()
+  if(tab.value==='templates'&&!modelsV2.active)void models.load()
   try {
     const { listen } = await import('@tauri-apps/api/event')
-    const stop = await listen('model-config-changed', () => { void models.load() })
+    const stop = await listen('model-config-changed', () => { if(tab.value==='channels')void modelsV2.loadChannels();else if(modelsV2.active)void modelsV2.load();else void models.load() })
     if (disposed) stop(); else stopChanges = stop
   } catch { /* Explicit IPC errors remain visible through the saved-state read. */ }
 })
@@ -209,9 +209,9 @@ function prepareDelete() {
       <p v-else class="model-muted">选择一个明确保存版本，或创建条件模版草稿。旧格式不会被自动转换。</p>
     </section>
     <template v-else>
-    <p v-if="models.error" class="model-error" role="alert">{{ models.error }}</p>
-    <div v-if="!models.snapshot" class="model-empty"><p>{{ models.busy ? '正在读取模型配置…' : '模型配置读取未完成' }}</p><UiButton :disabled="models.busy" @click="models.load">重新读取</UiButton></div>
-    <ChannelsView v-if="models.snapshot" v-show="tab==='channels'" :active="tab==='channels'" actions-target="#model-tabs-actions" />
+    <p v-if="tab==='templates'&&models.error" class="model-error" role="alert">{{ models.error }}</p>
+    <div v-if="tab==='templates'&&!models.snapshot" class="model-empty"><p>{{ models.busy ? '正在读取模型配置…' : '模型配置读取未完成' }}</p><UiButton :disabled="models.busy" @click="models.load">重新读取</UiButton></div>
+    <ChannelsView v-if="tab==='channels'" :active="tab==='channels'" actions-target="#model-tabs-actions" />
     <template v-if="models.snapshot&&tab==='templates'&&(!draft||!models.view.templateEditor)">
       <div class="model-toolbar"><input class="input" v-model="search" type="search" placeholder="搜索模版" aria-label="搜索模版" /><div class="model-inline"><UiButton v-if="draft" @click="models.view.templateEditor=true">继续编辑</UiButton><UiButton variant="primary" @click="edit()">新建模版</UiButton><UiButton @click="batchOpen=true">{{ selectedTemplates.length?'检查勾选更新':'检查全部更新' }}</UiButton><UiButton @click="externalOpen = true">外部任务</UiButton></div></div>
       <div class="model-table-scroll"><table class="model-table ui-table ui-table-fixed template-table"><colgroup><col class="ui-selection-col"/><col class="template-name-col"/><col class="template-version-col"/><col class="template-actions-col"/></colgroup><thead><tr><th class="ui-selection-cell"><span class="sr-only">选择</span></th><th>模版</th><th>版本</th><th>操作</th></tr></thead><tbody><tr v-for="t in templates" :key="t.id">
