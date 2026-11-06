@@ -36,6 +36,43 @@ pub struct DraftV2 {
     /// None exists only for this unreleased v2 fixture shape, never v1 migration.
     #[serde(default)]
     pub observed_baseline: Option<PolicyV2>,
+    /// Server-owned intent only. References carry no key material; clear does
+    /// not change authMode and cannot be inferred from a missing/null key.
+    #[serde(default)]
+    pub credential_edits: BTreeMap<String, DraftCredentialEditV2>,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[serde(
+    tag = "kind",
+    rename_all = "snake_case",
+    rename_all_fields = "camelCase",
+    deny_unknown_fields
+)]
+pub enum DraftCredentialEditV2 {
+    Replace { credential_ref: String },
+    Clear,
+}
+impl<'de> Deserialize<'de> for DraftCredentialEditV2 {
+    fn deserialize<D: serde::Deserializer<'de>>(decoder: D) -> std::result::Result<Self, D::Error> {
+        // serde's internally tagged unit variant ignores extra fields even
+        // under deny_unknown_fields. The empty struct variant enforces the
+        // actual wire contract while preserving the public unit Clear API.
+        #[derive(Deserialize)]
+        #[serde(
+            tag = "kind",
+            rename_all = "snake_case",
+            rename_all_fields = "camelCase",
+            deny_unknown_fields
+        )]
+        enum Strict {
+            Replace { credential_ref: String },
+            Clear {},
+        }
+        Ok(match Strict::deserialize(decoder)? {
+            Strict::Replace { credential_ref } => Self::Replace { credential_ref },
+            Strict::Clear {} => Self::Clear,
+        })
+    }
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -112,6 +149,27 @@ fn validate_draft(draft: &DraftV2) -> Result<()> {
         return Err(error("model_source_invalid"));
     }
     validate_policy_v2(&draft.policy)?;
+    for (channel_id, edit) in &draft.credential_edits {
+        check_id(channel_id)?;
+        let channel = draft
+            .policy
+            .channels
+            .iter()
+            .find(|channel| &channel.id == channel_id)
+            .ok_or_else(|| error("model_credential_edit_invalid"))?;
+        match edit {
+            DraftCredentialEditV2::Replace { credential_ref } => {
+                check_id(credential_ref)?;
+                if channel.connection.credential_ref.as_ref() != Some(credential_ref) {
+                    return Err(error("model_credential_edit_invalid"));
+                }
+            }
+            DraftCredentialEditV2::Clear if channel.connection.credential_ref.is_some() => {
+                return Err(error("model_credential_edit_invalid"));
+            }
+            DraftCredentialEditV2::Clear => {}
+        }
+    }
     if let Some(baseline) = &draft.observed_baseline {
         validate_policy_v2(baseline)?;
         // Existing runtime identities cannot be silently rebound to another
@@ -150,6 +208,11 @@ impl StoreV2 {
     }
     pub fn snapshot(&self) -> Result<StoreSnapshotV2> {
         self.with_locked(|locked| locked.snapshot_unlocked())
+    }
+    /// Saved-source capture only: never examines the unrelated draft target.
+    /// Mutations still read the complete snapshot under their own CAS checks.
+    pub fn snapshot_saved(&self) -> Result<StoreSnapshotV2> {
+        self.with_locked(|locked| locked.snapshot_saved_unlocked())
     }
     pub fn save_library(&self, request: &SaveRevisionRequestV2) -> Result<LibraryV2> {
         self.with_locked(|locked| locked.save_library_unlocked(request))
@@ -195,6 +258,14 @@ impl StoreV2 {
 }
 impl LockedStoreV2<'_> {
     pub fn snapshot_unlocked(&self) -> Result<StoreSnapshotV2> {
+        self.snapshot_with_draft_unlocked(true)
+    }
+    /// Caller already owns model-v2 after the normal config lock. This does
+    /// not recover transactions, inspect draft paths or grant write authority.
+    pub fn snapshot_saved_unlocked(&self) -> Result<StoreSnapshotV2> {
+        self.snapshot_with_draft_unlocked(false)
+    }
+    fn snapshot_with_draft_unlocked(&self, include_draft: bool) -> Result<StoreSnapshotV2> {
         let mut files = BTreeMap::new();
         let mut raw = BTreeMap::new();
         for relative in [
@@ -204,6 +275,13 @@ impl LockedStoreV2<'_> {
             LEDGER_PATH,
             MAPPING_PATH,
         ] {
+            if relative == DRAFT_PATH && !include_draft {
+                // Skip before path()/check_path()/metadata/read, including a
+                // symlink, unreadable, broken or newer-format draft target.
+                files.insert(relative.into(), digest(b""));
+                raw.insert(relative, None);
+                continue;
+            }
             let bytes = self.store.bytes(relative)?;
             files.insert(
                 relative.into(),

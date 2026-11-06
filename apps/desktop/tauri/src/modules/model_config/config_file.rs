@@ -23,10 +23,10 @@ const MAX_CONFIG: u64 = 16 * 1024 * 1024;
 const METADATA: &str = "manager-state/model-channel-layout.json";
 #[path = "channel_rename.rs"]
 mod channel_rename;
-#[path = "config_file_v2.rs"]
-pub mod v2;
 #[path = "rename_effects.rs"]
 pub(crate) mod rename_effects;
+#[path = "config_file_v2.rs"]
+pub mod v2;
 pub(super) fn metadata_digest(root: &Path) -> ModelResult<String> {
     let path = root.join(METADATA);
     safety::check_path(root, &path, true)?;
@@ -346,38 +346,45 @@ fn apply_credentials(
             .get_mut(&channel.connection.provider_id)
             .and_then(Value::as_object_mut)
             .ok_or_else(|| invalid("credential", "密钥所属渠道已不存在"))?;
-        match edit.action.as_str() {
-            "replace" => {
-                let key = edit
-                    .value
-                    .as_deref()
-                    .filter(|v| {
-                        !v.trim().is_empty() && v.len() <= 8192 && !v.contains(['\r', '\n'])
-                    })
-                    .ok_or_else(|| invalid("credential", "请填写有效的 API Key"))?;
-                let previous = row.get("apiKey").and_then(Value::as_str).map(str::to_owned);
-                if let Some(pool) = row.get_mut("apiKeyPool").and_then(Value::as_array_mut) {
-                    if let Some(slot) = pool
-                        .iter_mut()
-                        .find(|slot| slot["key"].as_str() == previous.as_deref())
-                    {
-                        slot["key"] = json!(key);
-                        slot["id"] = json!(sha256(key.as_bytes()).trim_start_matches("sha256:")
-                            [..8]
-                            .to_string());
-                    }
-                }
-                row.insert("apiKey".into(), json!(key));
-            }
-            "clear" => {
-                row.remove("apiKey");
-                row.remove("apiKeyPool");
-            }
-            _ => return Err(invalid("credential", "不支持的密钥修改方式")),
-        }
+        write_credential_row(row, &edit.action, edit.value.as_deref())?;
     }
     Ok(())
 }
+/// Pure active-Key editing shared by v1 adapters and the authoritative v2 gate.
+/// It preserves other pool slots; explicit Clear removes the complete Key scope.
+pub(super) fn write_credential_row(
+    row: &mut serde_json::Map<String, Value>,
+    action: &str,
+    value: Option<&str>,
+) -> ModelResult<()> {
+    match action {
+        "replace" => {
+            let key = value
+                .filter(|v| !v.trim().is_empty() && v.len() <= 8192 && !v.contains(['\r', '\n']))
+                .ok_or_else(|| invalid("credential", "请填写有效的 API Key"))?;
+            let previous = row.get("apiKey").and_then(Value::as_str).map(str::to_owned);
+            if let Some(pool) = row.get_mut("apiKeyPool").and_then(Value::as_array_mut) {
+                if let Some(slot) = pool
+                    .iter_mut()
+                    .find(|slot| slot["key"].as_str() == previous.as_deref())
+                {
+                    slot["key"] = json!(key);
+                    slot["id"] = json!(
+                        sha256(key.as_bytes()).trim_start_matches("sha256:")[..8].to_string()
+                    );
+                }
+            }
+            row.insert("apiKey".into(), json!(key));
+        }
+        "clear" => {
+            row.remove("apiKey");
+            row.remove("apiKeyPool");
+        }
+        _ => return Err(invalid("credential", "不支持的密钥修改方式")),
+    }
+    Ok(())
+}
+
 fn seed_imports(
     root: &Path,
     config: &mut Value,

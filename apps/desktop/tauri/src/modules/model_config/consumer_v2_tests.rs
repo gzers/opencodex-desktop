@@ -427,6 +427,7 @@ fn library_save_and_draft_cas_use_real_model_v2_lock_and_readback() {
         base: base.clone(),
         policy: empty_policy_v2(),
         observed_baseline: None,
+        credential_edits: Default::default(),
     };
     store.stage_draft(None, draft.clone()).unwrap();
     let mut changed = draft.clone();
@@ -863,6 +864,7 @@ fn baseline_draft_for_test(library_digest: String) -> DraftV2 {
         },
         policy: observed.clone(),
         observed_baseline: Some(observed),
+        credential_edits: Default::default(),
     }
 }
 #[test]
@@ -957,4 +959,313 @@ fn baseline_only_update_is_covered_by_the_existing_whole_draft_cas() {
     );
     assert!(!temp.path().join(POLICY_PATH).exists());
     assert!(!temp.path().join(LEDGER_PATH).exists());
+}
+
+#[test]
+fn draft_credential_actions_round_trip_without_secret_values_or_auth_mode_changes() {
+    let temp = tempfile::tempdir().unwrap();
+    let store = StoreV2::new(temp.path());
+    let mut draft = baseline_draft_for_test(store.snapshot().unwrap().digests.library);
+    draft.policy.channels[0].connection.credential_ref = Some(READ.into());
+    draft.policy.channels[0].connection.auth_mode = Some("key".into());
+    draft.credential_edits.insert(
+        CHANNEL.into(),
+        DraftCredentialEditV2::Replace {
+            credential_ref: READ.into(),
+        },
+    );
+    store.stage_draft(None, draft.clone()).unwrap();
+    let saved = store.snapshot().unwrap().draft.unwrap();
+    assert_eq!(saved, draft);
+    let wire = serde_json::to_value(&saved).unwrap();
+    assert_eq!(
+        wire["credentialEdits"][CHANNEL],
+        json!({"kind":"replace","credentialRef":READ})
+    );
+    assert!(!serde_json::to_string(&saved)
+        .unwrap()
+        .contains("synthetic-auth"));
+    assert!(!temp.path().join(POLICY_PATH).exists());
+    assert!(!temp.path().join(LEDGER_PATH).exists());
+    let mut clear = saved.clone();
+    clear.base.draft_generation += 1;
+    clear.policy.channels[0].connection.credential_ref = None;
+    clear
+        .credential_edits
+        .insert(CHANNEL.into(), DraftCredentialEditV2::Clear);
+    store.stage_draft(Some(&saved.base), clear.clone()).unwrap();
+    let reloaded = store.snapshot().unwrap().draft.unwrap();
+    assert_eq!(
+        reloaded.policy.channels[0].connection.auth_mode.as_deref(),
+        Some("key")
+    );
+    assert_eq!(
+        reloaded.credential_edits[CHANNEL],
+        DraftCredentialEditV2::Clear
+    );
+    assert_eq!(
+        serde_json::to_value(&reloaded).unwrap()["credentialEdits"][CHANNEL],
+        json!({"kind":"clear"})
+    );
+    assert!(!temp.path().join(POLICY_PATH).exists());
+    assert!(!temp.path().join(LEDGER_PATH).exists());
+}
+#[test]
+fn draft_credential_actions_validate_exact_management_and_reference_identities() {
+    for kind in [
+        "wrong-channel",
+        "noncanonical-channel",
+        "wrong-ref",
+        "noncanonical-ref",
+        "clear-with-ref",
+    ] {
+        let temp = tempfile::tempdir().unwrap();
+        let store = StoreV2::new(temp.path());
+        let mut draft = baseline_draft_for_test(store.snapshot().unwrap().digests.library);
+        draft.policy.channels[0].connection.credential_ref = Some(READ.into());
+        let (channel, edit) = match kind {
+            "wrong-channel" => (
+                DRAFT.into(),
+                DraftCredentialEditV2::Replace {
+                    credential_ref: READ.into(),
+                },
+            ),
+            "noncanonical-channel" => (
+                "not-a-uuid".into(),
+                DraftCredentialEditV2::Replace {
+                    credential_ref: READ.into(),
+                },
+            ),
+            "wrong-ref" => (
+                CHANNEL.into(),
+                DraftCredentialEditV2::Replace {
+                    credential_ref: DRAFT.into(),
+                },
+            ),
+            "noncanonical-ref" => (
+                CHANNEL.into(),
+                DraftCredentialEditV2::Replace {
+                    credential_ref: "sk-raw-secret-is-not-a-reference".into(),
+                },
+            ),
+            _ => (CHANNEL.into(), DraftCredentialEditV2::Clear),
+        };
+        draft.credential_edits.insert(channel, edit);
+        assert!(store.stage_draft(None, draft).is_err(), "{kind}");
+        assert!(!temp.path().join(DRAFT_PATH).exists());
+    }
+    let secret_refs = [
+        json!({"kind":"replace","credentialRef":READ,"apiKey":"raw-fixture"}),
+        json!({"kind":"replace","credentialRef":READ,"secret":"raw-fixture"}),
+        json!({"kind":"clear","value":null}),
+        json!({"kind":"clear","apiKey":"raw-fixture"}),
+        json!({"kind":"clear","credentialRef":READ}),
+        json!({"kind":"replace","credentialRef":null}),
+    ];
+    for value in secret_refs {
+        assert!(serde_json::from_value::<DraftCredentialEditV2>(value).is_err());
+    }
+}
+#[test]
+fn credential_action_only_changes_are_covered_by_the_whole_draft_cas() {
+    let temp = tempfile::tempdir().unwrap();
+    let store = StoreV2::new(temp.path());
+    let mut draft = baseline_draft_for_test(store.snapshot().unwrap().digests.library);
+    draft.policy.channels[0].connection.credential_ref = Some(READ.into());
+    store.stage_draft(None, draft.clone()).unwrap();
+    let original = std::fs::read(temp.path().join(DRAFT_PATH)).unwrap();
+    let mut next = draft.clone();
+    next.credential_edits.insert(
+        CHANNEL.into(),
+        DraftCredentialEditV2::Replace {
+            credential_ref: READ.into(),
+        },
+    );
+    assert_eq!(
+        store
+            .stage_draft(Some(&draft.base), next.clone())
+            .unwrap_err()
+            .code,
+        "model_read_stale"
+    );
+    assert_eq!(
+        std::fs::read(temp.path().join(DRAFT_PATH)).unwrap(),
+        original
+    );
+    next.base.draft_generation += 1;
+    store.stage_draft(Some(&draft.base), next.clone()).unwrap();
+    assert_eq!(store.snapshot().unwrap().draft, Some(next.clone()));
+    assert_eq!(next.policy, draft.policy);
+    assert_eq!(next.observed_baseline, draft.observed_baseline);
+    assert!(!temp.path().join(POLICY_PATH).exists());
+    assert!(!temp.path().join(LEDGER_PATH).exists());
+    let mut old_fixture = serde_json::to_value(&draft).unwrap();
+    old_fixture
+        .as_object_mut()
+        .unwrap()
+        .remove("credentialEdits");
+    assert!(serde_json::from_value::<DraftV2>(old_fixture)
+        .unwrap()
+        .credential_edits
+        .is_empty());
+}
+
+fn installed_saved_fixture(root: &Path) -> StoreSnapshotV2 {
+    let library = seed_library_v2().unwrap();
+    let raw = config();
+    let before = imported(&raw);
+    let intended = matched(&library, &before);
+    let mappings = mapping_for(&library, &before, &intended);
+    let compiled = compile_file_v2(&library, &before, &intended, &raw, &mappings, &auth()).unwrap();
+    std::fs::create_dir_all(root.join("manager-state")).unwrap();
+    for (path, bytes) in [
+        (LIBRARY_PATH, canonical_bytes(&library).unwrap()),
+        (POLICY_PATH, canonical_bytes(&compiled.policy).unwrap()),
+        (
+            LEDGER_PATH,
+            canonical_bytes(&LedgerFileV2 {
+                schema_version: 2,
+                ledger: compiled.ledger,
+            })
+            .unwrap(),
+        ),
+        (MAPPING_PATH, canonical_bytes(&compiled.mappings).unwrap()),
+    ] {
+        std::fs::write(root.join(path), bytes).unwrap();
+    }
+    StoreV2::new(root).snapshot_saved().unwrap()
+}
+#[test]
+fn saved_snapshot_omits_dirty_draft_and_preserves_the_actual_four_saved_objects() {
+    let temp = tempfile::tempdir().unwrap();
+    let baseline = installed_saved_fixture(temp.path());
+    let mut draft = baseline_draft_for_test(baseline.digests.library.clone());
+    draft.policy.channels[0].label = "UNSAVED-MUST-NOT-EXPORT".into();
+    let bytes = canonical_bytes(&draft).unwrap();
+    std::fs::write(temp.path().join(DRAFT_PATH), &bytes).unwrap();
+    let store = StoreV2::new(temp.path());
+    let full = store.snapshot().unwrap();
+    assert_eq!(full.draft, Some(draft));
+    let saved = store.snapshot_saved().unwrap();
+    assert!(saved.draft.is_none());
+    assert_eq!(saved.policy, baseline.policy);
+    assert_eq!(saved.library, baseline.library);
+    assert_eq!(saved.ledger, baseline.ledger);
+    assert_eq!(saved.mappings, baseline.mappings);
+    assert_eq!(saved.digests.files[DRAFT_PATH], digest(b""));
+    assert_eq!(full.digests.files[DRAFT_PATH], digest(&bytes));
+    for path in [LIBRARY_PATH, POLICY_PATH, LEDGER_PATH, MAPPING_PATH] {
+        assert_eq!(saved.digests.files[path], baseline.digests.files[path]);
+    }
+    assert!(!serde_json::to_string(&saved)
+        .unwrap()
+        .contains("UNSAVED-MUST-NOT-EXPORT"));
+    assert_eq!(std::fs::read(temp.path().join(DRAFT_PATH)).unwrap(), bytes);
+    let guard = store.lock().unwrap();
+    assert!(guard.snapshot_saved_unlocked().unwrap().draft.is_none());
+    assert!(guard.snapshot_unlocked().unwrap().draft.is_some());
+}
+#[test]
+fn bad_or_newer_draft_cannot_block_saved_reads_but_still_blocks_complete_snapshot() {
+    for bad in [
+        b"{".as_slice(),
+        br#"{"schemaVersion":999,"notAReleasedDraft":true}"#.as_slice(),
+    ] {
+        let temp = tempfile::tempdir().unwrap();
+        let baseline = installed_saved_fixture(temp.path());
+        let draft = temp.path().join(DRAFT_PATH);
+        std::fs::write(&draft, bad).unwrap();
+        let store = StoreV2::new(temp.path());
+        let saved = store.snapshot_saved().unwrap();
+        assert!(saved.draft.is_none());
+        assert_eq!(saved.policy, baseline.policy);
+        assert_eq!(saved.digests.files[DRAFT_PATH], digest(b""));
+        assert!(store.snapshot().is_err());
+        assert_eq!(std::fs::read(&draft).unwrap(), bad);
+    }
+}
+#[cfg(unix)]
+#[test]
+fn saved_snapshot_never_checks_or_follows_a_symlinked_or_dangling_draft_target() {
+    for dangling in [false, true] {
+        let temp = tempfile::tempdir().unwrap();
+        let external = tempfile::tempdir().unwrap();
+        let baseline = installed_saved_fixture(temp.path());
+        let target = external.path().join("do-not-open.json");
+        if !dangling {
+            std::fs::write(&target, b"not even JSON").unwrap();
+        }
+        let draft = temp.path().join(DRAFT_PATH);
+        std::os::unix::fs::symlink(&target, &draft).unwrap();
+        let store = StoreV2::new(temp.path());
+        let saved = store.snapshot_saved().unwrap();
+        assert_eq!(saved.policy, baseline.policy);
+        assert!(saved.draft.is_none());
+        assert!(store.snapshot().is_err());
+        assert_eq!(std::fs::read_link(&draft).unwrap(), target);
+        assert_eq!(target.exists(), !dangling);
+        if !dangling {
+            assert_eq!(std::fs::read(&target).unwrap(), b"not even JSON");
+        }
+    }
+}
+#[test]
+fn saved_snapshot_keeps_strict_policy_ledger_mapping_and_library_checks() {
+    for path in [LIBRARY_PATH, POLICY_PATH, LEDGER_PATH, MAPPING_PATH] {
+        let temp = tempfile::tempdir().unwrap();
+        installed_saved_fixture(temp.path());
+        std::fs::write(temp.path().join(DRAFT_PATH), b"{").unwrap();
+        let target = temp.path().join(path);
+        let corrupt = if path == LEDGER_PATH {
+            br#"{"schemaVersion":2,"ledger":{"sourcePolicyDigest":"sha256:0000000000000000000000000000000000000000000000000000000000000000","writtenFileDigest":"sha256:0000000000000000000000000000000000000000000000000000000000000000","fields":[]}}"#.as_slice()
+        } else {
+            br#"{"schemaVersion":1}"#.as_slice()
+        };
+        std::fs::write(&target, corrupt).unwrap();
+        assert!(
+            StoreV2::new(temp.path()).snapshot_saved().is_err(),
+            "{path}"
+        );
+        assert_eq!(std::fs::read(target).unwrap(), corrupt);
+    }
+}
+#[test]
+fn saved_digest_placeholder_cannot_bypass_full_draft_reads_in_any_mutation() {
+    let temp = tempfile::tempdir().unwrap();
+    let saved = installed_saved_fixture(temp.path());
+    let store = StoreV2::new(temp.path());
+    let path = temp.path().join(DRAFT_PATH);
+    std::fs::write(&path, b"{").unwrap();
+    let current = store.snapshot_saved().unwrap();
+    let guard = store.lock().unwrap();
+    assert!(guard
+        .prepare_save_unlocked(
+            &current.digests,
+            &current.policy,
+            current.ledger.as_ref().unwrap(),
+            &current.mappings
+        )
+        .is_err());
+    assert!(guard
+        .stage_draft_unlocked(None, baseline_draft_for_test(saved.digests.library.clone()))
+        .is_err());
+    let template = &saved.library.templates[0];
+    let revision = &template.revisions[0];
+    let request = SaveRevisionRequestV2 {
+        expected_library: saved.digests.library.clone(),
+        template_id: template.id.clone(),
+        base_revision: Some(revision.id.clone()),
+        revision_id: READ.into(),
+        created_at: "2026-11-06T00:00:00Z".into(),
+        label: template.label.clone(),
+        content: revision.content.clone(),
+        make_default: false,
+        origin: super::schema::SaveOrigin::Manual,
+    };
+    assert!(guard.save_library_unlocked(&request).is_err());
+    assert_eq!(std::fs::read(path).unwrap(), b"{");
+    assert_eq!(
+        std::fs::read(temp.path().join(LIBRARY_PATH)).unwrap(),
+        canonical_bytes(&saved.library).unwrap()
+    );
 }
