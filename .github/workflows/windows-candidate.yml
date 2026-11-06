@@ -344,7 +344,7 @@ jobs:
             test/runtime/ci-bd2-query-etw/capture
 
   retention:
-    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'installer-retention' && github.repository == 'gzers/opencodex-desktop'
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'installer-retention' && !startsWith(inputs.admission_run, '{"mode":"retention023"') && github.repository == 'gzers/opencodex-desktop'
     strategy:
       fail-fast: false
       matrix:
@@ -382,7 +382,7 @@ jobs:
           path: test/out/windows-installer-retention
 
   native-ui:
-    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui'
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023'
     runs-on: windows-latest
     timeout-minutes: 40
     defaults:
@@ -460,7 +460,7 @@ jobs:
           }
 
   ordinary-preflight:
-    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'ordinary-preflight'
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run == 'ordinary-preflight-023'
     runs-on: windows-latest
     timeout-minutes: 15
     steps:
@@ -496,7 +496,7 @@ jobs:
           retention-days: 14
 
   retention023:
-    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'retention023'
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'installer-retention' && startsWith(inputs.admission_run, '{"mode":"retention023"')
     permissions:
       contents: read
       actions: read
@@ -526,12 +526,12 @@ jobs:
       - name: Admit published 0.2.22 and exact successful candidate bytes
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          OCXD_CANDIDATE_RUN: ${{ inputs.candidate_run }}
-          OCXD_CANDIDATE_ATTEMPT: ${{ inputs.candidate_attempt }}
-          OCXD_CANDIDATE_HEAD: ${{ inputs.candidate_head }}
-          OCXD_ARTIFACT_ID: ${{ inputs.artifact_id }}
-          OCXD_ARTIFACT_BYTES: ${{ inputs.artifact_bytes }}
-          OCXD_ARTIFACT_SHA256: ${{ inputs.artifact_sha256 }}
+          OCXD_CANDIDATE_RUN: ${{ fromJSON(inputs.admission_run).candidate_run }}
+          OCXD_CANDIDATE_ATTEMPT: ${{ fromJSON(inputs.admission_run).candidate_attempt }}
+          OCXD_CANDIDATE_HEAD: ${{ fromJSON(inputs.admission_run).candidate_head }}
+          OCXD_ARTIFACT_ID: ${{ fromJSON(inputs.admission_run).artifact_id }}
+          OCXD_ARTIFACT_BYTES: ${{ fromJSON(inputs.admission_run).artifact_bytes }}
+          OCXD_ARTIFACT_SHA256: ${{ fromJSON(inputs.admission_run).artifact_sha256 }}
           OCXD_INSTALLER_KIND: ${{ matrix.kind }}
           OCXD_INSTALLER_SCENARIO: ${{ matrix.scenario }}
         run: |
