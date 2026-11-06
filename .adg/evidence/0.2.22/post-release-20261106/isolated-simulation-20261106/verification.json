@@ -1,0 +1,98 @@
+{
+  "date": "2026-11-06",
+  "timeZone": "Asia/Shanghai",
+  "softwareCommit": "0c57500f8f46ea50655c782c3f04334a39167abb",
+  "authorization": "User requested isolated simulation of unresolved behavior, cleanup test residue, preserve evidence; no production implementation or live sync",
+  "results": {
+    "rustActualProduct": "4 diagnostic cases passed: label-old-provider real same-name save; pending-upload retry after newer local save blocked; verified new managed-prefix recovery; failed recovery keeps prior installation",
+    "httpCandidateModel": "13 loopback WebDAV design cases passed;20 simultaneous-update operations in stress case; no ETag conditional request; request/response traces retained",
+    "total": "17 final cases passed; earlier fixture/setup attempts retained separately"
+  },
+  "confirmed": [
+    "Current no-op save preserves existing label/provider separation; actual production save reproduced in tempfile",
+    "Current pending publication retry after newer local content returns sync_source_changed before original remote reconciliation; actual production path reproduced",
+    "Existing RuntimeInstaller can install selected verified package into new prefix and align manifest/source/entry while preserving original mismatched prefix and business sentinel; synthetic archive/npm/version probe only, no actual service",
+    "Invalid candidate recovery preserves prior source/entry/package, no successful target activated",
+    "Naive GET/latest→compare→PUT/latest→GET/latest loses previously acknowledged A under scheduled B overwrite; file checks alone are not atomic concurrency control",
+    "Simulation-only immutable per-operation files with parent heads preserve both concurrent commits, require explicit conflict choice and can reconcile same operation after lost reply without further PUT",
+    "Weak/missing/changing ETag does not affect candidate file-content verification"
+  ],
+  "notConfirmed": [
+    "Origin of actual daily installation version mismatch cannot be proved by simulating possible histories",
+    "Actual Codex runtime/reload/picker state not inspected; historical-label path is reproducible, not conclusively assigned to actual user",
+    "Actual remote server HTTP/ETag/cache/auth failure not observed, no real WebDAV requested",
+    "Candidate requires Depth1 enumeration and complete eventual discovery; current product transport uses Depth0, capability not verified on actual server",
+    "Delayed directory visibility can temporarily hide conflict; immutable commits preserve data but do not establish globally linearizable latest. UI must distinguish stored/original confirmed from all-device current convergence",
+    "Legacy clients use single latest pointer; old/new protocol coexistence and version/migration policy unadopted; candidate test deliberately does not implicitly merge legacy file",
+    "Recovery UI, protection transaction, platform process activation and actual npm/archive verification not exercised; core installer simulated only",
+    "No product implementation, native UI acceptance or release completed"
+  ],
+  "recommendedNextDesign": [
+    "Managed installation inconsistency: preserve old directory; install approved source into a new managed prefix, validate and switch source through existing mechanisms; retain old directory for explicit later disposal",
+    "WebDAV original-operation confirmation: separate frozen read-only commit reconciliation from permission to write newer local state; fix pending/error wording",
+    "NoETag candidate: per-operation immutable uploads plus content verification and explicit multiple-head conflict handling; actual listing/compatibility and convergence contract must be resolved before adopting a production protocol"
+  ],
+  "setupCorrections": [
+    "Initial rust injection mistakenly placed installation cases in Windows-only final module, so only2 other cases ran; retained log, corrected insertion into actual cross-platform install::tests, final4 passed",
+    "First HTTP stress run failed with OSError22 during socket connection setup at8 workers; full failure retained. Raised mock listener backlog128/reduced workers4, kept20 writer operations and original assertions; final13 passed. This does not prove a production performance or networking cause."
+  ],
+  "cleanupPolicy": "Only task-owned temporary directories and diagnostic artifacts are removed; preserve existing prototype server/user tabs, other agents files, installed packages and shared compiler dependency/incremental caches",
+  "artifacts": {
+    "rust-cleanup.json": {
+      "bytes": 297,
+      "sha256": "85433587f93395b4d309aba15f05d4261df07dc5f034945e8a23a9476748034d"
+    },
+    "sync-cases.rs.txt": {
+      "bytes": 1041,
+      "sha256": "1dab343af520272a150f40544e17f34314bec8f143139a07168dc081edb29326"
+    },
+    "initial-webdav-results.json": {
+      "bytes": 211081,
+      "sha256": "cd3a29f726af1511fdea10ac23debf0460ee40b4830415b69c4756d7a5180c46"
+    },
+    "webdav-tests.txt": {
+      "bytes": 1947,
+      "sha256": "abd0d9916946b363cef070acdf9f801176ba99e6fcf7c2eb3bcd06b7e8ae0f01"
+    },
+    "rename-cases.rs.txt": {
+      "bytes": 1143,
+      "sha256": "89121c3edf8060b719c9ac88f60e182cc6740f7abe351f5fde27f7d52f20b00c"
+    },
+    "run-rust.py": {
+      "bytes": 1778,
+      "sha256": "edc4015457ecdca441cccc3af246b199cb4b2fd608c4193a39a991e37360ceac"
+    },
+    "webdav_simulation.py": {
+      "bytes": 12846,
+      "sha256": "ce08940654b78bd3e9900c2d80f03a4b82070629fb74468f6752767ec1fa93ad"
+    },
+    "runtime-cases.rs.txt": {
+      "bytes": 5083,
+      "sha256": "fb20e7a87b0a880f0a61dd0543ee7445f933c7f95336614198bbd76418f615bd"
+    },
+    "initial-webdav-tests.txt": {
+      "bytes": 5369,
+      "sha256": "e9a75d00b56333a56c2b3df09e7ed07cedfa874df2b84c3925e0afe80898a3c5"
+    },
+    "webdav-results.json": {
+      "bytes": 273816,
+      "sha256": "b75697a3e6fa26f873b5f713833aae91861bcc74b770aadfe732d02b987db98f"
+    },
+    "rust-first-two-cases.txt": {
+      "bytes": 1010,
+      "sha256": "0ab82418a64f501ce087175a37899c1f1bbc75279860a9c7ca983102210d22d2",
+      "rawCaptureSha256": "2b35288d4f34dd85bbfa79267608f9fdcb8ac8c9dabc7cd68e89c6704c5192b0",
+      "normalization": "Trailing blank lines removed for git whitespace check; diagnostic text unchanged"
+    },
+    "rust-tests.txt": {
+      "bytes": 1506,
+      "sha256": "4d5bf3799402d9ba01dc1b68971fe3827f5e3efe02477deb563e18ad59f22a39",
+      "rawCaptureSha256": "82a6a2e4282dfdd6df2cd749243b1a1eb2258a80126fbe5bc1324e0649a2a5bd",
+      "normalization": "Trailing blank lines removed for git whitespace check; diagnostic text unchanged"
+    },
+    "rust-first-cleanup.json": {
+      "bytes": 297,
+      "sha256": "85433587f93395b4d309aba15f05d4261df07dc5f034945e8a23a9476748034d"
+    }
+  }
+}

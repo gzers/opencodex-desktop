@@ -1,0 +1,32 @@
+    fn post022_tree(path: &Path) -> Vec<(String, Vec<u8>)> {
+        fn walk(root:&Path,p:&Path,out:&mut Vec<(String,Vec<u8>)>){
+            if !p.exists(){return} for e in std::fs::read_dir(p).unwrap(){let p=e.unwrap().path();if p.is_dir(){walk(root,&p,out)}else{out.push((p.strip_prefix(root).unwrap().to_string_lossy().to_string(),std::fs::read(&p).unwrap()))}}
+        }
+        let mut out=vec![];walk(path,path,&mut out);out.sort();out
+    }
+    #[test]
+    fn post022_simulation_recover_into_verified_new_prefix_preserves_mismatched_old_install() {
+        let root=tempfile::tempdir().unwrap();let data=root.path().join("data");let old=prefix_of(&data);let sink=RecordingProgressSink::default();let npm_path=root.path().join("npm");write_executable(&npm_path);
+        let old_archive=official_package(root.path(),"2.78.0");let old_npm=FakeNpm::new(old_archive.clone());let old_probe=FixedVersionProbe{version:Some("2.78.0".into())};
+        installer(&data,&old_npm,&sink,Some(root.path().into()),&old_probe).install(&offline_request(old.clone(),old_archive,npm_path.clone())).unwrap();
+        let package=old.join(PACKAGE_SUBPATH).join("package.json");let mut value:serde_json::Value=serde_json::from_slice(&std::fs::read(&package).unwrap()).unwrap();value["version"]=serde_json::json!("2.97.0");std::fs::write(&package,serde_json::to_vec(&value).unwrap()).unwrap();
+        let store=super::super::RuntimeStore::new(&data);let mut record=store.load();record.resolved_version=Some("2.84.0".into());store.save(&record).unwrap();
+        let config=data.join("opencodex-home/config.json");std::fs::create_dir_all(config.parent().unwrap()).unwrap();std::fs::write(&config,b"synthetic-business-state-preserve").unwrap();
+        let original=post022_tree(&old);let config_before=std::fs::read(&config).unwrap();
+        let reviewed=official_package(root.path(),"2.97.0-post021.ownerquery.2");let npm=FakeNpm::new(reviewed.clone());let probe=FixedVersionProbe{version:Some("2.97.0-post021.ownerquery.2".into())};
+        assert!(installer(&data,&npm,&sink,Some(root.path().into()),&probe).install(&offline_request(old.clone(),reviewed.clone(),npm_path.clone())).is_err());assert!(npm.calls().is_empty());
+        let recovered=data.join("runtime/recovered-isolated");let out=installer(&data,&npm,&sink,Some(root.path().into()),&probe).install(&offline_request(recovered.clone(),reviewed,npm_path)).unwrap();
+        assert_eq!(out.version,"2.97.0-post021.ownerquery.2");assert_eq!(post022_tree(&old),original);assert_eq!(std::fs::read(&config).unwrap(),config_before);
+        let manifest:RuntimeManifest=serde_json::from_slice(&std::fs::read(recovered.join(MANIFEST_FILENAME)).unwrap()).unwrap();let package:serde_json::Value=serde_json::from_slice(&std::fs::read(recovered.join(PACKAGE_SUBPATH).join("package.json")).unwrap()).unwrap();
+        assert_eq!(manifest.version,out.version);assert_eq!(package["version"],out.version);let after=store.load();assert_eq!(after.resolved_version.as_deref(),Some(out.version.as_str()));assert_eq!(after.installed_prefix(&data),recovered);assert_eq!(after.source,super::super::RuntimeSourceKind::Managed);
+        let entry=std::fs::read_to_string(&out.entry).unwrap();assert!(entry.contains("recovered-isolated"));println!("SIM_RESULT recovery-new-prefix: package/manifest/source/entry aligned; old bytes and business sentinel preserved; no service executed");
+    }
+    #[test]
+    fn post022_simulation_failed_recovery_keeps_original_source_and_old_package() {
+        let root=tempfile::tempdir().unwrap();let data=root.path().join("data");let old=prefix_of(&data);let sink=RecordingProgressSink::default();let npm_path=root.path().join("npm");write_executable(&npm_path);
+        let a=official_package(root.path(),"2.78.0");let npm=FakeNpm::new(a.clone());let probe=FixedVersionProbe{version:Some("2.78.0".into())};installer(&data,&npm,&sink,Some(root.path().into()),&probe).install(&offline_request(old.clone(),a,npm_path.clone())).unwrap();
+        let old_before=post022_tree(&old);let record_path=super::super::RuntimeStore::new(&data).path().to_path_buf();let record_before=std::fs::read(&record_path).unwrap();let entry=data.join(super::super::MANAGED_ENTRY_RELATIVE);let entry_before=std::fs::read(&entry).unwrap();
+        let a=official_package(root.path(),"2.97.0");let npm=FakeNpm::new(a.clone());let bad=FixedVersionProbe{version:Some("0.0.0".into())};let target=data.join("runtime/recovery-fail");assert!(installer(&data,&npm,&sink,Some(root.path().into()),&bad).install(&offline_request(target.clone(),a,npm_path)).is_err());
+        assert!(!target.exists());assert_eq!(post022_tree(&old),old_before);assert_eq!(std::fs::read(&record_path).unwrap(),record_before);assert_eq!(std::fs::read(&entry).unwrap(),entry_before);assert_eq!(std::fs::read_dir(data.join("runtime")).unwrap().filter_map(Result::ok).filter(|e|e.file_name().to_string_lossy().contains(".new")).count(),0);
+        println!("SIM_RESULT recovery-failure: invalid candidate blocked; old package/source/entry untouched; no service executed");
+    }

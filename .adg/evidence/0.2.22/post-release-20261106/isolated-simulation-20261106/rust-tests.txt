@@ -1,0 +1,15 @@
+   Compiling opencodex-desktop v0.2.22 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.87s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-dc98c5de7f0eb56f)
+
+running 4 tests
+test modules::model_config::config_file::rename_tests::post022_simulation_saved_label_with_old_provider_survives_real_noop_save ... SIM_RESULT historical-label-same-name-save: real save keeps old provider key; metadata-only mismatch path reproduced, not user daily config
+ok
+test modules::model_config::config_remote::version_tests::post022_simulation_publishing_retry_after_local_edit_is_blocked_before_reconciliation ... SIM_RESULT original-upload-after-new-edit: confirmed current code blocks with sync_source_changed; need read-only frozen-operation reconcile independent of permission-to-write
+ok
+test modules::runtime::install::tests::post022_simulation_failed_recovery_keeps_original_source_and_old_package ... SIM_RESULT recovery-failure: invalid candidate blocked; old package/source/entry untouched; no service executed
+ok
+test modules::runtime::install::tests::post022_simulation_recover_into_verified_new_prefix_preserves_mismatched_old_install ... SIM_RESULT recovery-new-prefix: package/manifest/source/entry aligned; old bytes and business sentinel preserved; no service executed
+ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 1228 filtered out; finished in 1.88s

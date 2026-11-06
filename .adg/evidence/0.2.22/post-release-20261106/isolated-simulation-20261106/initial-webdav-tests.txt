@@ -1,0 +1,64 @@
+test_concurrent_first_upload_keeps_both_and_requires_choice (__main__.Cases.test_concurrent_first_upload_keeps_both_and_requires_choice) ... ok
+test_concurrent_updates_and_stress_preserve_all_operation_files (__main__.Cases.test_concurrent_updates_and_stress_preserve_all_operation_files) ... ERROR
+test_delayed_listing_detects_later_conflict_without_erasing_commit (__main__.Cases.test_delayed_listing_detects_later_conflict_without_erasing_commit) ... ok
+test_etag_missing_weak_or_changing_does_not_gate_content (__main__.Cases.test_etag_missing_weak_or_changing_does_not_gate_content) ... ok
+test_first_upload_and_sequential_download_no_etag (__main__.Cases.test_first_upload_and_sequential_download_no_etag) ... ok
+test_invalid_or_unreadable_data_never_means_empty (__main__.Cases.test_invalid_or_unreadable_data_never_means_empty) ... ok
+test_legacy_pointer_does_not_merge_into_candidate_log_implicitly (__main__.Cases.test_legacy_pointer_does_not_merge_into_candidate_log_implicitly) ... ok
+test_local_edits_do_not_block_original_readonly_confirmation (__main__.Cases.test_local_edits_do_not_block_original_readonly_confirmation) ... ok
+test_lost_commit_reply_reconciles_same_files_without_reupload (__main__.Cases.test_lost_commit_reply_reconciles_same_files_without_reupload) ... ok
+test_naive_read_compare_write_loses_an_acknowledged_upload (__main__.Cases.test_naive_read_compare_write_loses_an_acknowledged_upload) ... ok
+test_orphan_payload_is_not_an_effective_configuration (__main__.Cases.test_orphan_payload_is_not_an_effective_configuration) ... ok
+test_same_id_with_changed_payload_rejected_and_original_kept (__main__.Cases.test_same_id_with_changed_payload_rejected_and_original_kept) ... ok
+test_unsupported_discovery_and_missing_parent_fail_closed (__main__.Cases.test_unsupported_discovery_and_missing_parent_fail_closed) ... ok
+
+======================================================================
+ERROR: test_concurrent_updates_and_stress_preserve_all_operation_files (__main__.Cases.test_concurrent_updates_and_stress_preserve_all_operation_files)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/post022-simulation-handoff/webdav_simulation.py", line 131, in test_concurrent_updates_and_stress_preserve_all_operation_files
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:list(ex.map(self.c.send,plans))
+                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/concurrent/futures/_base.py", line 619, in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/concurrent/futures/_base.py", line 317, in _result_or_cancel
+    return fut.result(timeout)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/post022-simulation-handoff/webdav_simulation.py", line 98, in send
+    c={k:v for k,v in plan.items() if k!='payload'};self.put_verified('data-'+c['id']+'.bin',plan['payload']);self.put_verified('commit-'+c['id']+'.json',encode(c));return self.reconcile(plan)
+                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/post022-simulation-handoff/webdav_simulation.py", line 61, in put_verified
+    old=self.read(name,True)
+        ^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/post022-simulation-handoff/webdav_simulation.py", line 56, in read
+    status,b=self.request('GET',name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/post022-simulation-handoff/webdav_simulation.py", line 52, in request
+    conn.request(method,self.prefix+name,body=body,headers={'Depth':'1'} if method=='PROPFIND' else {})
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/http/client.py", line 1323, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/http/client.py", line 1369, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/http/client.py", line 1318, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/http/client.py", line 1078, in _send_output
+    self.send(msg)
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/http/client.py", line 1016, in send
+    self.connect()
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/http/client.py", line 986, in connect
+    self.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+OSError: [Errno 22] Invalid argument
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.361s
+
+FAILED (errors=1)

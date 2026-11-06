@@ -1,0 +1,7 @@
+#[test]
+fn post022_simulation_saved_label_with_old_provider_survives_real_noop_save() {
+    super::super::file_objects::test_credentials::install();let f=Fixture::new();let mut policy=snapshot(&f.root,&f.home).unwrap().policy;policy.channels.iter_mut().find(|c|c.id==f.id).unwrap().label=NEW.into();record_layout(&f.root,&policy);
+    let before=snapshot(&f.root,&f.home).unwrap();let c=before.policy.channels.iter().find(|c|c.id==f.id).unwrap();assert_eq!(c.label,NEW);assert_eq!(c.connection.provider_id,OLD);
+    let request=SaveRequest{expected_file:before.policy_digest,policy:before.policy,credentials:vec![],scope:Some(SaveScope{channel_id:f.id.clone()})};save_with_context(&f.root,&f.context(),request).unwrap();let raw=read_value(&f.home.join("config.json"));assert!(raw["providers"].get(OLD).is_some());assert!(raw["providers"].get(NEW).is_none());let after=snapshot(&f.root,&f.home).unwrap();assert_eq!(after.policy.channels.iter().find(|c|c.id==f.id).unwrap().label,NEW);
+    println!("SIM_RESULT historical-label-same-name-save: real save keeps old provider key; metadata-only mismatch path reproduced, not user daily config");
+}

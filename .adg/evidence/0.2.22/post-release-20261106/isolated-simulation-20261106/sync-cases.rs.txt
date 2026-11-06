@@ -1,0 +1,8 @@
+#[tokio::test]
+async fn post022_simulation_publishing_retry_after_local_edit_is_blocked_before_reconciliation() {
+    let cloud=Memory::default();let d=Device::new();d.save_at(125,"2026-11-01T00:00:00Z");check(&d,&cloud,"fixture").await;
+    let plan=prepare(d.root(),&cloud,&config(),"fixture",d.scope(),None,||Ok(())).await.unwrap();cloud.lose_reply();cloud.delay_commit_validator(3);
+    let error=publish(d.root(),&cloud,&config(),&plan.id,"fixture",||Ok(())).await.unwrap_err();assert_eq!(error.code,"publication_unconfirmed");assert_eq!(latest_upload(d.root()).unwrap().unwrap().phase,"publishing");
+    d.save_at(150,"2026-11-02T00:00:00Z");let writes=cloud.writes();let error=publish(d.root(),&cloud,&config(),&plan.id,"fixture",||Ok(())).await.unwrap_err();assert_eq!(error.code,"sync_source_changed");assert_eq!(cloud.writes(),writes);
+    println!("SIM_RESULT original-upload-after-new-edit: confirmed current code blocks with sync_source_changed; need read-only frozen-operation reconcile independent of permission-to-write");
+}
