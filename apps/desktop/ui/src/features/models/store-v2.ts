@@ -159,11 +159,14 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
   // Discovery has no readId or saved protocol. Sequence protection belongs to its UI caller.
   services.value.previewChannel=async input=>{const kinds={compatible_models:'openai_list',anthropic_models:'anthropic_list',google_models:'google_list',ollama_models:'ollama_list'} as const;const value=await modelV2Api.discover({discoveryKind:kinds[input.kind],url:input.url,apiKey:input.apiKey});if(value.dtoVersion!==2)throw new Error('清单响应格式不支持。');return {models:value.models.map(m=>({id:m.rawModelId,label:m.label})),elapsedMs:value.elapsedMs}}
   services.value.stageConnection=stageFileConnection
-  async function copyChannel(channelId:string,name:string){
+  async function copyChannel(channelId:string,name:string,reuseSourceKey=false){
     if(fileBusy.value||!file.value?.draft||!channelCapabilities.value.copy)throw serviceUnavailableV2()
-    if(channelIntents.value.length||modelEdits.value.length||pendingRows.value.length||keyBuffers.size)throw new Error('请先保存或还原明确编辑，再复制当前服务端渠道。')
+    if(channelIntents.value.some(i=>i.channelId===channelId)||modelEdits.value.some(e=>e.channelId===channelId)||pendingRows.value.some(row=>row.channel===channelId))throw new Error('请先保存或还原源渠道的明确编辑，再复制当前服务端渠道。')
+    const keyEdit=keyBuffers.get(channelId)
+    if(reuseSourceKey&&keyEdit){if(keyEdit.sourceGuard!==keySourceGuard()||keyEdit.targetGuard!==keyTargetGuard(channelId))throw new Error('Key 编辑期间来源基准已变化，输入保持，请重新核对。');await stageCredential(channelId,keyEdit.action,keyEdit.value);if(keyBuffers.get(channelId)===keyEdit)setKeyBuffer(channelId,null)}
+    if(!file.value?.draft)throw new Error('复制草稿基准已变化，输入保持。')
     const beforeIds=new Set(channels.value.map(c=>c.id));fileBusy.value=true;fileError.value=''
-    try{const value=await modelV2Api.copyChannel({expected:clone(file.value.draft.base),channelId,name});acceptFile(value);const added=channels.value.filter(c=>!beforeIds.has(c.id));if(added.length!==1)throw new Error('复制回执未定位到明确的新渠道，原件保持。');fileGeneration++;return added[0]!.id}
+    try{const value=await modelV2Api.copyChannel({expected:clone(file.value.draft.base),channelId,name,reuseSourceKey});acceptFile(value);const added=channels.value.filter(c=>!beforeIds.has(c.id));if(added.length!==1)throw new Error('复制回执未定位到明确的新渠道，原件保持。');fileGeneration++;return added[0]!.id}
     finally{fileBusy.value=false}
   }
   async function viewCredential(channelId:string){if(!channelCapabilities.value.credential)throw serviceUnavailableV2();return modelV2Api.credentialView(channelId)}

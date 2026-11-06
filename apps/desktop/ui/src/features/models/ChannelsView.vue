@@ -12,7 +12,7 @@ import {useFeedbackStore} from '@/app/feedback/store'
 import {useModelsV2Store} from './store-v2'
 import {channelNameErrorV2} from './channelRename'
 const props=withDefaults(defineProps<{actionsTarget?:string;active?:boolean}>(),{active:true})
-const models=useModelsV2Store(),nodeOpenId=ref(''),selectedChannelIds=ref<string[]>([]),newChannelOpen=ref(false),saveOpen=ref(false),pickerOpen=ref(false),copyId=ref(''),copyName=ref(''),copyError=ref(''),deleteId=ref(''),saveScope=ref<string|undefined>()
+const models=useModelsV2Store(),nodeOpenId=ref(''),selectedChannelIds=ref<string[]>([]),newChannelOpen=ref(false),saveOpen=ref(false),pickerOpen=ref(false),copyId=ref(''),copyName=ref(''),reuseCopyKey=ref(false),copyError=ref(''),deleteId=ref(''),saveScope=ref<string|undefined>()
 const editor=computed(()=>models.channels.find(c=>c.id===models.channelEditorId))
 const filtered=computed(()=>models.channels.filter(c=>(c.label+' '+c.id).toLowerCase().includes(models.channelSearch.toLowerCase())))
 const nameErrors=computed(()=>models.channels.map(c=>channelNameErrorV2(c.label,c.id,models.channels)).filter(Boolean))
@@ -26,8 +26,8 @@ async function saveDetail(){const channel=editor.value;if(!channel||!isActive()|
 watch(()=>[models.channelEditorId,props.active],()=>{saveOpen.value=false})
 async function discardLocal(){await models.loadChannels(true)}
 function selectVisibleChannels(checked:boolean){const visible=new Set(filtered.value.map(c=>c.id));selectedChannelIds.value=checked?[...new Set([...selectedChannelIds.value,...visible])]:selectedChannelIds.value.filter(id=>!visible.has(id))}
-function openCopy(id:string){copyId.value=id;copyName.value=(models.channels.find(c=>c.id===id)?.label??'渠道')+' 副本';copyError.value=''}
-async function confirmCopy(){const error=channelNameErrorV2(copyName.value,'',models.channels);if(error){copyError.value=error;return}try{const id=await models.copyChannel(copyId.value,copyName.value.trim());copyId.value='';models.channelEditorId=id}catch(cause){copyError.value=cause instanceof Error?cause.message:'复制未完成，原件保持。'}}
+function openCopy(id:string){reuseCopyKey.value=false;copyId.value=id;copyName.value=(models.channels.find(c=>c.id===id)?.label??'渠道')+' 副本';copyError.value=''}
+async function confirmCopy(){if(models.fileBusy)return;const error=channelNameErrorV2(copyName.value,'',models.channels);if(error){copyError.value=error;return}try{const id=await models.copyChannel(copyId.value,copyName.value.trim(),reuseCopyKey.value);copyId.value='';models.channelEditorId=id}catch{copyError.value='副本尚未建立；当前名称和原件保持，请重新核对源渠道与凭据。'}}
 async function confirmDelete(){if(models.fileBusy||!deleteId.value||!models.channelCapabilities.delete||!models.channelCapabilities.scopedSave)return;models.queueChannel({kind:'delete',channelId:deleteId.value});await models.saveChannels(deleteId.value);if(!models.fileError){deleteId.value='';models.channelEditorId=''}}
 onMounted(()=>{if(props.active!==false&&!models.file)void models.loadChannels()})
 </script>
@@ -50,7 +50,7 @@ onMounted(()=>{if(props.active!==false&&!models.file)void models.loadChannels()}
     <NewChannelDialog v-if="newChannelOpen" @close="newChannelOpen=false" @added="models.channelEditorId=$event" />
     <ChannelNodeSelect v-for="channel in models.channels" :key="channel.id" :channel="channel" :expected="models.file?.draft?.base" :open="nodeOpenId===channel.id" :show-trigger="false" :active="props.active!==false&&!editor&&filtered.some(c=>c.id===channel.id)" :readonly="protectedChannel(channel)||models.fileBusy||!models.channelCapabilities.activeNode" :measurement-disabled="protectedChannel(channel)||models.fileBusy||!models.channelCapabilities.measure" @close="nodeOpenId=''" @select="models.queueChannel({kind:'set_active_node',channelId:channel.id,nodeId:$event})" />
     <UiDialog :open="!!copyId" title="复制渠道到草稿" :busy="models.fileBusy" @close="copyId=''">
-      <p>复制当前服务端渠道来源、模型人工设置及精确引用。新管理身份和运行键由后端生成，不复制 Key 明文到界面；正式配置需后续保存。</p><label>新渠道名称<input v-model="copyName" class="input" aria-label="复制渠道名称" :disabled="models.fileBusy" /></label><p v-if="copyError" class="model-error" role="alert">{{copyError}}</p>
+      <p>复制当前服务端渠道来源、模型人工设置及精确引用。新管理身份和运行键由后端生成，默认不复用源 Key；正式配置需后续保存。</p><label>新渠道名称<input v-model="copyName" class="input" aria-label="复制渠道名称" :disabled="models.fileBusy" /></label><label><input v-model="reuseCopyKey" type="checkbox" :disabled="models.fileBusy" aria-label="复用源渠道Key" />明确复用源渠道 Key（含本次待保存替换或清空意图）</label><p v-if="copyError" class="model-error" role="alert">{{copyError}}</p>
       <template #actions="{close}"><UiButton :disabled="models.fileBusy" @click="close">取消</UiButton><UiButton variant="primary" :disabled="models.fileBusy||!models.channelCapabilities.copy" @click="confirmCopy">确认复制到草稿</UiButton></template>
     </UiDialog>
     <UiDialog :open="!!deleteId" title="确认删除渠道" :busy="models.fileBusy" @close="deleteId=''">
