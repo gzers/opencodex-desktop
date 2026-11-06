@@ -35,17 +35,24 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
   const channelIntents=ref<ChannelIntentV2[]>([]),modelEdits=ref<ModelEditV2[]>([])
   const readResults=shallowRef<readonly import('./api-v2').ReadMatchDtoV2[]>([])
   const channelEditorId=ref(''),channelSearch=ref('')
+  // Private, session-only Key input. Never included in $state, source DTOs or logs.
+  const keyBuffers=new Map<string,{action:'replace'|'clear';value?:string;sourceGuard?:string}>(),keyBufferVersion=ref(0)
+  const credentialInputRevision=computed(()=>keyBufferVersion.value)
+  const keySourceGuard=()=>JSON.stringify({source:file.value?.sourceDigest,library:file.value?.libraryDigest,root:file.value?.rootRevision})
+  const pendingCredentialKinds=computed(()=>{void keyBufferVersion.value;return Object.fromEntries([...keyBuffers].map(([id,v])=>[id,v.action]))})
+  function keyBuffer(channelId:string){const value=keyBuffers.get(channelId);return value?{...value}:null}
+  function setKeyBuffer(channelId:string,value:{action:'replace'|'clear';value?:string}|null){if(value)keyBuffers.set(channelId,{...value,sourceGuard:keySourceGuard()});else keyBuffers.delete(channelId);keyBufferVersion.value++}
   const view=ref({tab:'channels' as 'channels'|'templates',templateSearch:'',templateEditor:false,templateNavCollapsed:false,templateSection:'model-basic',selectedVersions:{} as Record<string,string>,selectedTemplates:[] as string[]})
-  // These remain gated until L0 supplies the compiled contract/baseline SHA.
-  const channelCapabilities=ref({scopedSave:false,defaults:false,naming:false,templateRefs:false,copy:false,delete:false})
+  // Registered/compiled together with L0 baseline a3a20621d29318353bfe8afe624222d0b4b12584.
+  const channelCapabilities=ref({scopedSave:true,defaults:true,naming:true,templateRefs:true,copy:true,delete:true,credential:false,measure:false,activeNode:false})
   function configureChannelCapabilities(value:Partial<typeof channelCapabilities.value>){channelCapabilities.value={...channelCapabilities.value,...value}}
   let fileSequence=0,fileGeneration=0,openingDraft:Promise<void>|null=null
   const channels=computed(()=>{
     const result=clone(file.value?.draft?.policy.channels??file.value?.savedPolicy.channels??[])
-    for(const intent of channelIntents.value){const channel=result.find(c=>c.id===intent.channelId);if(!channel)continue;switch(intent.kind){case'rename':channel.label=intent.name;break;case'set_enabled':channel.connection.enabled=intent.enabled;break;case'set_selection':channel.selection=clone(intent.selection);break;case'set_order':channel.modelOrder=[...intent.rawModelIds];break;case'set_defaults':channel.defaults=clone(intent.rules);break;case'set_family_defaults':channel.familyOverrides[intent.templateId]=clone(intent.rules);break;case'set_naming':channel.naming[intent.rawModelId]={...(intent.alias===null?{}:{alias:intent.alias}),...(intent.displayName===null?{}:{displayName:intent.displayName})};break;case'set_template_refs':channel.templateRefs=clone(intent.references);break;case'delete':break}}
+    for(const intent of channelIntents.value){const channel=result.find(c=>c.id===intent.channelId);if(!channel)continue;switch(intent.kind){case'rename':channel.label=intent.name;break;case'set_enabled':channel.connection.enabled=intent.enabled;break;case'set_selection':channel.selection=clone(intent.selection);break;case'set_order':channel.modelOrder=[...intent.rawModelIds];break;case'set_defaults':channel.defaults=clone(intent.rules);break;case'set_family_defaults':channel.familyOverrides[intent.templateId]=clone(intent.rules);break;case'set_naming':channel.naming[intent.rawModelId]={...(intent.alias===null?{}:{alias:intent.alias}),...(intent.displayName===null?{}:{displayName:intent.displayName})};break;case'set_template_refs':channel.templateRefs=clone(intent.references);break;case'set_active_node':channel.connection.activeNodeId=intent.nodeId;break;case'delete':break}}
     return result
   })
-  const fileDirty=computed(()=>channelIntents.value.length>0||modelEdits.value.length>0||!!file.value?.draft&&JSON.stringify(file.value.draft.policy)!==JSON.stringify(file.value.savedPolicy))
+  const fileDirty=computed(()=>Object.keys(pendingCredentialKinds.value).length>0||Object.keys(file.value?.draft?.credentialEdits??{}).length>0||channelIntents.value.length>0||modelEdits.value.length>0||!!file.value?.draft&&JSON.stringify(file.value.draft.policy)!==JSON.stringify(file.value.savedPolicy))
   const canSaveFile=computed(()=>!!file.value?.draft&&!fileBusy.value&&!fileNeedsReconcile.value)
   let clean='',readSequence=0,previewSequence=0,baseLibraryDigest=''
   const dirty=computed(()=>!!draft.value&&(draft.value.baseRevision===null||JSON.stringify(draft.value)!==clean))
@@ -68,7 +75,7 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
     if(fileBusy.value)return
     if((channelIntents.value.length||modelEdits.value.length)&&!discardLocal){fileError.value='当前有未保存的明确编辑，请先保存或还原后重新读取。';return}
     const seq=++fileSequence;fileBusy.value=true;fileError.value=''
-    try{const value=await modelV2Api.fileSnapshot();if(seq!==fileSequence)return;acceptFile(value);if(discardLocal){channelIntents.value=[];modelEdits.value=[];fileGeneration++}await ensureFileDraft();fileNeedsReconcile.value=false}
+    try{const value=await modelV2Api.fileSnapshot();if(seq!==fileSequence)return;acceptFile(value);if(discardLocal){channelIntents.value=[];modelEdits.value=[];keyBuffers.clear();keyBufferVersion.value++;fileGeneration++}await ensureFileDraft();fileNeedsReconcile.value=false}
     catch(cause){if(seq===fileSequence)fileError.value=message(cause)}finally{if(seq===fileSequence)fileBusy.value=false}
   }
   async function readExisting(){
@@ -84,6 +91,9 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
   function setSelection(channelId:string,selection:ModelSelectionV2){queueChannel({kind:'set_selection',channelId,selection})}
   async function saveChannels(scopeChannelId?:string){
     if(!canSaveFile.value||!file.value?.draft)return
+    const scoped=channelCapabilities.value.scopedSave?scopeChannelId:undefined
+    for(const [id,edit] of [...keyBuffers]){if(scoped&&id!==scoped)continue;if(edit.sourceGuard!==keySourceGuard()){fileError.value='Key 编辑期间来源基准已变化，输入仍保留；请重新核对该渠道与凭据意图。';return}try{await stageCredential(id,edit.action,edit.value);setKeyBuffer(id,null)}catch(cause){fileError.value=message(cause);return}}
+    if(!file.value?.draft)return
     const localChannel=channels.value.find(c=>c.id===scopeChannelId)
     if(localChannel&&!channelIntents.value.some(i=>(i.kind==='rename'||i.kind==='delete')&&i.channelId===localChannel.id))queueChannel({kind:'rename',channelId:localChannel.id,name:localChannel.label})
     const scope=channelCapabilities.value.scopedSave?scopeChannelId:undefined
@@ -110,6 +120,13 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
     if(channelIntents.value.length||modelEdits.value.length)throw new Error('请先保存或还原明确编辑，再复制当前服务端渠道。')
     const beforeIds=new Set(channels.value.map(c=>c.id));fileBusy.value=true;fileError.value=''
     try{const value=await modelV2Api.copyChannel({expected:clone(file.value.draft.base),channelId,name});acceptFile(value);const added=channels.value.filter(c=>!beforeIds.has(c.id));if(added.length!==1)throw new Error('复制回执未定位到明确的新渠道，原件保持。');fileGeneration++;return added[0]!.id}
+    finally{fileBusy.value=false}
+  }
+  async function viewCredential(channelId:string){if(!channelCapabilities.value.credential)throw serviceUnavailableV2();return modelV2Api.credentialView(channelId)}
+  async function stageCredential(channelId:string,action:'replace'|'clear',value?:string){
+    if(!channelCapabilities.value.credential||fileBusy.value||!file.value?.draft)throw serviceUnavailableV2()
+    fileBusy.value=true;fileError.value=''
+    try{const result=await modelV2Api.stageCredential({expected:clone(file.value.draft.base),channelId,action,...(action==='replace'?{value:value??''}:{})});acceptFile(result);fileGeneration++}
     finally{fileBusy.value=false}
   }
 
@@ -177,5 +194,5 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
     stagedConnectionIntents.value=[...stagedConnectionIntents.value.filter(item=>item.channelId!==result.channelId),{...immutableIntent,channelId:result.channelId}]
     return result
   }
-  return {active,loading,saving,previewBusy,snapshot,draft,error,previewError,issues,preview,previewModelId,previewChannelId,editGeneration,dirty,canLoad,canPreview,canSave,canDiscover,canStageConnection,stagedConnectionIntents,configureServices,start,setContent,setLabel,setDefault,reset,close,load,open,setPreviewTarget,requestPreview,save,discover,stageConnection,file,fileBusy,fileError,fileNeedsReconcile,channels,channelIntents,modelEdits,readResults,channelEditorId,channelSearch,fileDirty,canSaveFile,loadChannels,readExisting,queueChannel,queueModel,explicitRules,setSelection,saveChannels,channelCapabilities,configureChannelCapabilities,copyChannel,view,copyTemplate,templateAction}
+  return {active,loading,saving,previewBusy,snapshot,draft,error,previewError,issues,preview,previewModelId,previewChannelId,editGeneration,dirty,canLoad,canPreview,canSave,canDiscover,canStageConnection,stagedConnectionIntents,configureServices,start,setContent,setLabel,setDefault,reset,close,load,open,setPreviewTarget,requestPreview,save,discover,stageConnection,file,fileBusy,fileError,fileNeedsReconcile,channels,channelIntents,modelEdits,readResults,channelEditorId,channelSearch,fileDirty,canSaveFile,loadChannels,readExisting,queueChannel,queueModel,explicitRules,setSelection,saveChannels,channelCapabilities,configureChannelCapabilities,copyChannel,viewCredential,stageCredential,pendingCredentialKinds,keyBuffer,setKeyBuffer,credentialInputRevision,view,copyTemplate,templateAction}
 })

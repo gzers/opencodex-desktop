@@ -39,15 +39,17 @@ export interface ConnectionV2 {providerId:string;nodes:{id:string;name:string;ur
 export interface ModelConfigV2 {rawModelId:string;label:string;observed:boolean;readonly source:SourceModelV2;explicitOverrides:RulesV2;readonly binding:Readonly<ModelBindingV2>|null}
 export interface ChannelV2 {id:string;label:string;connection:ConnectionV2;selection:ModelSelectionV2;modelOrder:string[];models:ModelConfigV2[];templateRefs:RefV2[];defaults:RulesV2;familyOverrides:Record<string,RulesV2>;naming:Record<string,{alias?:string;displayName?:string}>;namespace:{channelId:string;removeLeadingPrefixes:string[]}|null}
 export interface PolicyV2 {schemaVersion:2;channels:ChannelV2[];templateRefs:RefV2[];defaultChannelId:string|null;pendingRemovals:readonly unknown[];recoveryId:string|null}
-export interface DraftV2 {schemaVersion:2;base:ReadBaseV2;readonly policy:PolicyV2;readonly observedBaseline?:Readonly<PolicyV2>|null}
+export interface DraftV2 {schemaVersion:2;base:ReadBaseV2;readonly policy:PolicyV2;readonly observedBaseline?:Readonly<PolicyV2>|null;readonly credentialEdits?:Readonly<Record<string,{kind:'replace';credentialRef:string}|{kind:'clear'}>>}
 export interface FileSnapshotV2 {dtoVersion:2;library:LibraryV2;libraryDigest:string;savedPolicy:PolicyV2;draft:DraftV2|null;sourceDigest:string;rootRevision:string;effective:readonly EffectiveModelV2[]}
 export interface ReadExistingRequestV2 {expectedSource:string;expectedLibrary:string;expectedDraft:ReadBaseV2|null}
 export interface ReadExistingResponseV2 {snapshot:FileSnapshotV2;results:ReadMatchDtoV2[]}
-export type ChannelIntentV2={kind:'rename';channelId:string;name:string}|{kind:'set_selection';channelId:string;selection:ModelSelectionV2}|{kind:'set_enabled';channelId:string;enabled:boolean}|{kind:'set_order';channelId:string;rawModelIds:string[]}|{kind:'set_defaults';channelId:string;rules:RulesV2}|{kind:'set_family_defaults';channelId:string;templateId:string;rules:RulesV2}|{kind:'set_naming';channelId:string;rawModelId:string;alias:string|null;displayName:string|null}|{kind:'set_template_refs';channelId:string;references:RefV2[]}|{kind:'delete';channelId:string}
+export type ChannelIntentV2={kind:'rename';channelId:string;name:string}|{kind:'set_selection';channelId:string;selection:ModelSelectionV2}|{kind:'set_enabled';channelId:string;enabled:boolean}|{kind:'set_order';channelId:string;rawModelIds:string[]}|{kind:'set_defaults';channelId:string;rules:RulesV2}|{kind:'set_family_defaults';channelId:string;templateId:string;rules:RulesV2}|{kind:'set_naming';channelId:string;rawModelId:string;alias:string|null;displayName:string|null}|{kind:'set_template_refs';channelId:string;references:RefV2[]}|{kind:'delete';channelId:string}|{kind:'set_active_node';channelId:string;nodeId:string}
 export interface FileSaveRequestV2 {expected:ReadBaseV2;edits:ModelEditV2[];channelIntents:ChannelIntentV2[];scopeChannelId?:string|null}
 export interface StageConnectionRequestV2 {expected:ReadBaseV2|null;expectedSource:string;expectedLibrary:string;channelId:string|null;name:string;url:string;nodes?:ConnectionV2['nodes'];activeNodeId?:string;authMode:'key'|'none';apiKey:string|null;rawModelIds:string[];selectedModelIds:string[]}
 export interface DiscoverRequestV2 {discoveryKind:'openai_list'|'anthropic_list'|'google_list'|'ollama_list';url:string;apiKey:string|null}
 export interface DiscoverResponseV2 {dtoVersion:2;models:{rawModelId:string;label:string}[];elapsedMs:number}
+export type DiscoveryKindV2=DiscoverRequestV2['discoveryKind']
+export interface NodeMeasurementSetV2 {runId:string;stopped:boolean;results:{nodeId:string;elapsedMs:number|null;modelCount:number|null;error:string|null}[]}
 
 // View-only props and explicit editing intents below are not IPC wire contracts.
 // The L0 adapter will supply these services after public commands are registered.
@@ -105,5 +107,9 @@ export const modelV2Api={
   stageConnection:(request:StageConnectionRequestV2)=>invoke<FileSnapshotV2>('model_v2_stage_connection',{request}),
   fileSave:(request:FileSaveRequestV2)=>invoke<FileSnapshotV2>('model_v2_file_save',{request}),
   copyChannel:(request:{expected:ReadBaseV2;channelId:string;name:string})=>invoke<FileSnapshotV2>('model_v2_copy_channel',{request}),
+  credentialView:(channelId:string)=>invoke<{configured:boolean;value:string;source:string;viewable:boolean}>('model_v2_credential_view',{channelId}),
+  stageCredential:(request:{expected:ReadBaseV2;channelId:string;action:'replace'|'clear';value?:string})=>invoke<FileSnapshotV2>('model_v2_stage_credential',{request}),
+  measureNodes:(request:{expected:ReadBaseV2;channelId:string;nodeIds:string[];discoveryKind:DiscoveryKindV2;runId:string})=>invoke<NodeMeasurementSetV2>('model_v2_measure_nodes',{request}),
+  stopMeasurement:(runId:string)=>invoke<void>('model_node_measure_stop',{runId}),
   discover:(request:DiscoverRequestV2)=>invoke<DiscoverResponseV2>('model_v2_discover',{request}),
 }
