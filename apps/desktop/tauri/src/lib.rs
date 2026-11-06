@@ -395,6 +395,8 @@ pub fn run() {
                         operation: "initialize configuration file owner".into(), detail: e.code,
                     })?.with_draft_capture(std::sync::Arc::new(
                         crate::modules::model_config::config_file::v2::export::ConfigDraftFileCaptureV2,
+                    )).with_namespace_receive(std::sync::Arc::new(
+                        crate::modules::model_config::config_file::v2::receive::SystemNamespaceReceiveV2,
                     )),
                 )),
             ));
