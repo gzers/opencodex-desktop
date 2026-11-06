@@ -16,7 +16,7 @@ use std::{
 use windows_sys::Win32::{
     Foundation::{CloseHandle, LocalFree, HANDLE},
     Security::{
-        GetSecurityDescriptorDacl, GetTokenInformation, TokenUser, SECURITY_ATTRIBUTES,
+        GetSecurityDescriptorDacl, GetTokenInformation, TokenUser, ACL, SECURITY_ATTRIBUTES,
         TOKEN_QUERY, TOKEN_USER,
     },
     System::Threading::{GetCurrentProcess, GetCurrentThread, OpenProcessToken, OpenThreadToken},
@@ -38,18 +38,18 @@ extern "system" {
         info: u32,
         owner: *mut *mut c_void,
         group: *mut *mut c_void,
-        dacl: *mut *mut c_void,
-        sacl: *mut *mut c_void,
+        dacl: *mut *mut ACL,
+        sacl: *mut *mut ACL,
         descriptor: *mut *mut c_void,
     ) -> u32;
     fn SetSecurityInfo(
         handle: HANDLE,
         kind: i32,
         info: u32,
-        owner: *const c_void,
-        group: *const c_void,
-        dacl: *const c_void,
-        sacl: *const c_void,
+        owner: *mut c_void,
+        group: *mut c_void,
+        dacl: *const ACL,
+        sacl: *const ACL,
     ) -> u32;
     fn ImpersonateNamedPipeClient(pipe: HANDLE) -> i32;
     fn RevertToSelf() -> i32;
@@ -257,7 +257,7 @@ impl SecurityDescriptor {
             bInheritHandle: 0,
         }
     }
-    fn dacl(&self) -> io::Result<*mut c_void> {
+    fn dacl(&self) -> io::Result<*mut ACL> {
         let mut present = 0;
         let mut defaulted = 0;
         let mut acl = ptr::null_mut();
@@ -268,7 +268,7 @@ impl SecurityDescriptor {
         if present == 0 || acl.is_null() {
             return Err(invalid("private DACL must not be null"));
         }
-        Ok(acl.cast())
+        Ok(acl)
     }
 }
 pub(crate) fn private_pipe_security() -> io::Result<SecurityDescriptor> {
@@ -349,8 +349,8 @@ pub(crate) fn protect_current_user_path(path: &Path, mode: u32) -> io::Result<()
             file.as_raw_handle(),
             1,
             4 | 0x8000_0000,
-            ptr::null(),
-            ptr::null(),
+            ptr::null_mut(),
+            ptr::null_mut(),
             private.dacl()?,
             ptr::null(),
         )

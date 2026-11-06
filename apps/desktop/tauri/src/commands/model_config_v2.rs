@@ -842,3 +842,49 @@ pub async fn model_v2_external_run(
     )
     .await
 }
+
+#[tauri::command]
+pub async fn model_v2_file_history(
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<Vec<crate::modules::model_config::config_file::v2::history::HistoryEntryV2>> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        false,
+        move |root, home| crate::modules::model_config::config_file::v2::history::list(root, home),
+    )
+    .await
+}
+#[tauri::command]
+pub async fn model_v2_file_history_prepare(
+    request: crate::modules::model_config::config_file::v2::history::HistoryPrepareV2,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::config_file::v2::history::HistoryPlanV2> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        true,
+        move |root, home| {
+            crate::modules::model_config::config_file::v2::history::prepare(root, home, request)
+        },
+    )
+    .await
+}
+#[tauri::command]
+pub async fn model_v2_file_history_accept(
+    recovery_id: String,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::config_file::v2::FileSnapshotV2> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        true,
+        move |root, home| {
+            crate::modules::model_config::config_file::v2::history::accept(root, home, &recovery_id)
+        },
+    )
+    .await
+}

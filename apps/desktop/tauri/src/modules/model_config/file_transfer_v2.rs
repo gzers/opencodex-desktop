@@ -176,6 +176,21 @@ pub trait DraftFileCaptureV2: Send + Sync {
         request: &CaptureRequestV2,
         credentials: &dyn CaptureCredentialsV2,
     ) -> ModelResult<CapturedSnapshotV2>;
+    fn capture_with_intents(
+        &self, d: &Path, h: &Path, expected: &ReadBaseV2,
+        request: &CaptureRequestV2, credentials: &dyn CaptureCredentialsV2,
+        intents: DraftFileIntentsV2,
+    ) -> ModelResult<CapturedSnapshotV2> {
+        if !intents.edits.is_empty() || !intents.channel_intents.is_empty() {
+            return Err(err("file_draft_intents_not_connected"));
+        }
+        self.capture(d, h, expected, request, credentials)
+    }
+}
+#[derive(Default)]
+pub struct DraftFileIntentsV2 {
+    pub edits: Vec<super::source_v2::ModelEditV2>,
+    pub channel_intents: Vec<config::ChannelIntentV2>,
 }
 pub struct DraftExportRequestV2 {
     pub expected: ReadBaseV2,
@@ -309,17 +324,22 @@ impl FileTransferOwnerV2 {
         request: DraftExportRequestV2,
         passphrase: Option<Zeroizing<String>>,
     ) -> ModelResult<ExportPlanV2> {
+        self.prepare_draft_export_with_intents(request, passphrase, DraftFileIntentsV2::default())
+    }
+    pub fn prepare_draft_export_with_intents(
+        &mut self,
+        request: DraftExportRequestV2,
+        passphrase: Option<Zeroizing<String>>,
+        intents: DraftFileIntentsV2,
+    ) -> ModelResult<ExportPlanV2> {
         local(&request.capture.selection)?;
         let helper = self
             .draft
             .as_ref()
             .ok_or_else(|| err("file_draft_capture_not_connected"))?;
-        let captured = helper.capture(
-            &self.d,
-            &self.h,
-            &request.expected,
-            &request.capture,
-            self.credentials.as_ref(),
+        let captured = helper.capture_with_intents(
+            &self.d, &self.h, &request.expected, &request.capture,
+            self.credentials.as_ref(), intents,
         )?;
         self.freeze_export(request.capture.selection, captured, passphrase)
     }

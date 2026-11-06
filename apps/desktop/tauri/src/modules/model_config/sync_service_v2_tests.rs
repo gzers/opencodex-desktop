@@ -1310,6 +1310,84 @@ fn selected_key_and_mcp_secret_only_changes_are_visible_as_updates_without_secre
         assert!(!public.contains(&store::digest(value.as_bytes())));
     }
 }
+#[tokio::test]
+async fn auth_mode_none_first_receive_keeps_actual_public_direction_on_second_service_preview() {
+    let source = Env::new();
+    let raw_path = source.home.join("config.json");
+    let mut raw: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(&raw_path).unwrap()).unwrap();
+    raw["providers"]["fixture"]["authMode"] = json!("none");
+    std::fs::write(&raw_path, serde_json::to_vec(&raw).unwrap()).unwrap();
+    let upload = production_service(&source);
+    let p = upload
+        .preview(source.request(), ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    upload
+        .confirm(ConfirmRequestV2 {
+            session_id: p.session_id,
+            plan_digest: p.plan_digest,
+        })
+        .await
+        .unwrap();
+    let puts = source.remote.puts.load(Ordering::SeqCst);
+    let mut target = Env::new();
+    target.remote = source.remote.clone();
+    empty_existing_fixture(&target);
+    let service = production_service(&target);
+    let mut request = source.request();
+    request.forced_direction = Some(ServiceDirectionV2::Download);
+    let p = service
+        .preview(request.clone(), ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    service
+        .confirm(ConfirmRequestV2 {
+            session_id: p.session_id,
+            plan_digest: p.plan_digest,
+        })
+        .await
+        .unwrap();
+    let after: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(target.home.join("config.json")).unwrap()).unwrap();
+    let saved_mode = after["providers"]
+        .as_object()
+        .unwrap()
+        .values()
+        .next()
+        .unwrap()
+        .get("authMode")
+        .cloned();
+    let backend = ProductionServiceBackendV2::new(
+        target.root.clone(),
+        target.home.clone(),
+        Arc::new(capture::SystemCaptureCredentialsV2),
+    )
+    .unwrap();
+    let (handle, _) = service.active().await.unwrap();
+    let graph = service.graph(&handle).await.unwrap();
+    let payload = service.cloud(&graph, None, &handle).await.unwrap().unwrap();
+    let cloud = file_objects_v2::decode(
+        &payload.bytes,
+        None,
+        &file_objects_v2::supported_schema(),
+        Some(&host::PayloadAuthorizationV2),
+    )
+    .unwrap()
+    .objects;
+    let compose = backend.compose(&request, &handle, Some(&cloud), None);
+    assert!(
+        compose.is_ok(),
+        "authMode none second preview: persisted authMode={saved_mode:?}, compose code={:?}",
+        compose.err().map(|e| e.code)
+    );
+    let p = service
+        .preview(request, ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    assert_eq!(source.remote.puts.load(Ordering::SeqCst), puts);
+    assert!(p.no_change || matches!(p.plan, ServicePlanV2::Download(_)));
+}
 struct CatalogNeverCredentials;
 impl capture::CaptureCredentialsV2 for CatalogNeverCredentials {
     fn channel_key(
@@ -1480,4 +1558,211 @@ fn local_file_catalog_keeps_conflicting_mcp_per_source_choices_without_endpoint_
         .iter()
         .any(|e| e.kind == ObjectKindV2::Mcp && e.id == "localfixture"));
     assert_eq!(e.remote.gets.load(Ordering::SeqCst), 0);
+}
+#[tokio::test]
+async fn production_same_uuid_second_sync_is_semantic_noop_and_explicit_download_restores_existing_actual_source(
+) {
+    let source = Env::new();
+    // Env's begin_draft exists ONLY to establish the source UUID registry.
+    // This scenario explicitly has no user edit buffer to preserve; leave the
+    // real receiver's unsaved-draft refusal unchanged for actual dirty drafts.
+    std::fs::remove_file(
+        source
+            .root
+            .join(crate::modules::model_config::store_v2::DRAFT_PATH),
+    )
+    .unwrap();
+
+    let service = production_service(&source);
+    let p = service
+        .preview(source.request(), ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    service
+        .confirm(ConfirmRequestV2 {
+            session_id: p.session_id,
+            plan_digest: p.plan_digest,
+        })
+        .await
+        .unwrap();
+    let puts = source.remote.puts.load(Ordering::SeqCst);
+    let repeated = service
+        .preview(source.request(), ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    assert!(repeated.no_change);
+    assert!(matches!(repeated.plan, ServicePlanV2::NoChange));
+    assert_eq!(source.remote.puts.load(Ordering::SeqCst), puts);
+    let path = source.home.join("config.json");
+    let mut raw: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+    raw["providers"]["fixture"]["modelContextWindows"]["fixture-model"] = json!(16384);
+    std::fs::write(&path, serde_json::to_vec(&raw).unwrap()).unwrap();
+    let mut request = source.request();
+    request.forced_direction = Some(ServiceDirectionV2::Download);
+    let p = service
+        .preview(request, ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    let ServicePlanV2::Download(plan) = p.plan.clone() else {
+        panic!("existing exact same UUID must allow explicit receive preview")
+    };
+    let result = service
+        .confirm(ConfirmRequestV2 {
+            session_id: p.session_id,
+            plan_digest: p.plan_digest,
+        })
+        .await
+        .unwrap();
+    assert_eq!(result.local_apply_status, LocalApplyStatus::Applied);
+    assert_eq!(result.operation_id, plan.operation_id);
+    assert_eq!(source.remote.puts.load(Ordering::SeqCst), puts);
+    let raw: serde_json::Value = serde_json::from_slice(&std::fs::read(path).unwrap()).unwrap();
+    assert_eq!(
+        raw["providers"]["fixture"]["modelContextWindows"]["fixture-model"],
+        8192
+    );
+}
+#[tokio::test]
+async fn real_model_applied_interruption_reopens_with_dual_proofs_and_only_finishes_original_nonmodel_participants(
+) {
+    let source = Env::new();
+    let mut request = source.request();
+    add_full_saved_scope(&source, &mut request);
+    let upload = production_service(&source);
+    let p = upload
+        .preview(request.clone(), ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    upload
+        .confirm(ConfirmRequestV2 {
+            session_id: p.session_id,
+            plan_digest: p.plan_digest,
+        })
+        .await
+        .unwrap();
+    let mut target = Env::new();
+    target.remote = source.remote.clone();
+    empty_existing_fixture(&target);
+    let mut backend = ProductionServiceBackendV2::new(
+        target.root.clone(),
+        target.home.clone(),
+        Arc::new(capture::SystemCaptureCredentialsV2),
+    )
+    .unwrap();
+    let root = target.root.clone();
+    let interrupted = Arc::new(AtomicBool::new(false));
+    let observed = interrupted.clone();
+    backend.after_model_fault = Some(Arc::new(move |id| {
+        assert!(root
+            .join("manager-state/model-receive-v2")
+            .join(id)
+            .join("receipt.json")
+            .is_file());
+        assert!(root
+            .join("manager-state/sync-identity-mappings-v2.json")
+            .is_file());
+        observed.store(true, Ordering::SeqCst);
+        Err(invalid(
+            "test_remaining_interruption",
+            "deterministic post-model participant fault",
+        ))
+    }));
+    let service = SyncServiceV2::new(
+        target.root.clone(),
+        Arc::new(backend),
+        target.remote.clone(),
+        Arc::new(CredentialOwner),
+    )
+    .unwrap();
+    request.forced_direction = None;
+    let p = service
+        .preview(request, ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    let ServicePlanV2::Download(plan) = p.plan.clone() else {
+        panic!("download")
+    };
+    let operation = plan.operation_id.clone();
+    assert!(service
+        .confirm(ConfirmRequestV2 {
+            session_id: p.session_id,
+            plan_digest: p.plan_digest
+        })
+        .await
+        .is_err());
+    assert!(interrupted.load(Ordering::SeqCst));
+    let receipt_path = target
+        .root
+        .join("manager-state/model-receive-v2")
+        .join(&operation)
+        .join("receipt.json");
+    let model_receipt = std::fs::read(&receipt_path).unwrap();
+    assert!(!target
+        .root
+        .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH)
+        .exists());
+    let original = service.result(operation.clone()).await.unwrap();
+    assert_ne!(original.local_apply_status, LocalApplyStatus::Applied);
+    drop(service);
+    let external = b"{ deliberately invalid later source; remaining must not read/capture it";
+    std::fs::write(target.home.join("config.json"), external).unwrap();
+    let puts = target.remote.puts.load(Ordering::SeqCst);
+    let gets = target.remote.gets.load(Ordering::SeqCst);
+    let reopened = production_service(&target);
+    let completed = reopened
+        .resume_receive(operation.clone(), None)
+        .await
+        .unwrap();
+    assert_eq!(completed.operation_id, operation);
+    assert_eq!(completed.local_apply_status, LocalApplyStatus::Applied);
+    assert_eq!(completed.relation.local, LocalRelation::Unknown);
+    assert_eq!(gets, target.remote.gets.load(Ordering::SeqCst));
+    assert_eq!(puts, target.remote.puts.load(Ordering::SeqCst));
+    assert_eq!(model_receipt, std::fs::read(receipt_path).unwrap());
+    assert_eq!(
+        std::fs::read(target.home.join("config.json")).unwrap(),
+        external
+    );
+    assert!(target
+        .root
+        .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH)
+        .is_file());
+    assert!(target
+        .root
+        .join("manager-state/mcp-definitions.json")
+        .is_file());
+    assert!(
+        target
+            .home
+            .join(".agents/skills/service-fixture/SKILL.md")
+            .exists()
+            || target
+                .root
+                .join("manager-state/skills-store/service-fixture/SKILL.md")
+                .exists()
+    );
+    assert_eq!(
+        reopened
+            .result(operation.clone())
+            .await
+            .unwrap()
+            .local_apply_status,
+        LocalApplyStatus::Applied
+    );
+    let context_name = format!("{operation}.download-context.json");
+    let mut context: DownloadContextV2 = reopened.files.read(&context_name).unwrap().unwrap();
+    let original_after = context.mapping_after.clone();
+    context.mapping_after.push(b' ');
+    reopened.files.write(&context_name, context).unwrap();
+    assert!(reopened
+        .resume_receive(operation.clone(), None)
+        .await
+        .is_err());
+    let mut context: DownloadContextV2 = reopened.files.read(&context_name).unwrap().unwrap();
+    context.mapping_after = original_after;
+    reopened.files.write(&context_name, context).unwrap();
+    let repeated = reopened.resume_receive(operation, None).await.unwrap();
+    assert_eq!(repeated.local_apply_status, LocalApplyStatus::Applied);
+    assert_eq!(gets, target.remote.gets.load(Ordering::SeqCst));
 }
