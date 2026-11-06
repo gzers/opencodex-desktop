@@ -1,0 +1,45 @@
+   Compiling windows023-user-scope-driver v0.0.0 (C:\Users\15119\.codex\visualizations\2026\11\06\01a1b0c8-944d-75d0-9a8b-c2e46c8963a1\L4-R1-20261106\native-driver)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.59s
+     Running unittests lib.rs (C:/Users/15119/.codex/visualizations/2026/11/06/01a1b0c8-944d-75d0-9a8b-c2e46c8963a1/L4-R1-20261106/native-target\debug\deps\windows023_user_scope_driver-a5f32741f23d8d3a.exe)
+
+running 5 tests
+test user_scope::tests::invalid_path_and_pipe_fail_closed ... ok
+test user_scope::tests::private_directory_does_not_rewrite_existing_child_security ... FAILED
+test user_scope::tests::private_file_remains_readable_and_missing_path_is_not_created ... ok
+test user_scope::tests::spoofed_user_environment_cannot_change_token_identity ... FAILED
+test user_scope::tests::token_folders_and_sid_are_real_absolute_os_values ... ok
+
+failures:
+
+---- user_scope::tests::private_directory_does_not_rewrite_existing_child_security stdout ----
+
+thread 'user_scope::tests::private_directory_does_not_rewrite_existing_child_security' (33252) panicked at C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\infrastructure\windows_user_scope.rs:423:9:
+assertion `left == right` failed: directory ACL protection must not rewrite existing child DACLs
+  left: [1, 0, 4, 132, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 2, 0, 64, 0, 2, 0, 0, 0, 0, 16, 20, 0, 255, 1, 31, 0, 1, 1, 0, 0, 0, 0, 0, 5, 18, 0, 0, 0, 0, 16, 36, 0, 255, 1, 31, 0, 1, 5, 0, 0, 0, 0, 0, 5, 21, 0, 0, 0, 192, 34, 3, 35, 214, 218, 7, 51, 96, 117, 250, 153, 233, 3, 0, 0]
+ right: [1, 0, 4, 132, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 2, 0, 24, 1, 8, 0, 0, 0, 0, 16, 36, 0, 191, 1, 19, 0, 1, 5, 0, 0, 0, 0, 0, 5, 21, 0, 0, 0, 192, 34, 3, 35, 214, 218, 7, 51, 96, 117, 250, 153, 236, 3, 0, 0, 0, 16, 36, 0, 191, 1, 19, 0, 1, 5, 0, 0, 0, 0, 0, 5, 21, 0, 0, 0, 99, 243, 18, 64, 226, 229, 78, 93, 66, 225, 175, 84, 127, 77, 208, 32, 0, 16, 36, 0, 255, 1, 19, 0, 1, 5, 0, 0, 0, 0, 0, 5, 21, 0, 0, 0, 131, 99, 9, 190, 38, 107, 253, 51, 229, 132, 54, 157, 191, 23, 24, 33, 0, 16, 36, 0, 255, 1, 19, 0, 1, 5, 0, 0, 0, 0, 0, 5, 21, 0, 0, 0, 1, 231, 214, 143, 213, 124, 222, 3, 179, 153, 108, 132, 117, 252, 119, 234, 0, 16, 20, 0, 255, 1, 31, 0, 1, 1, 0, 0, 0, 0, 0, 5, 18, 0, 0, 0, 0, 16, 24, 0, 255, 1, 31, 0, 1, 2, 0, 0, 0, 0, 0, 5, 32, 0, 0, 0, 32, 2, 0, 0, 0, 16, 36, 0, 255, 1, 31, 0, 1, 5, 0, 0, 0, 0, 0, 5, 21, 0, 0, 0, 192, 34, 3, 35, 214, 218, 7, 51, 96, 117, 250, 153, 233, 3, 0, 0, 0, 16, 48, 0, 255, 1, 31, 0, 1, 8, 0, 0, 0, 0, 0, 15, 3, 0, 0, 0, 9, 129, 244, 176, 52, 241, 98, 48, 232, 140, 65, 131, 148, 186, 140, 225, 33, 174, 123, 64, 103, 145, 119, 161, 255, 85, 189, 85]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- user_scope::tests::spoofed_user_environment_cannot_change_token_identity stdout ----
+
+thread 'user_scope::tests::spoofed_user_environment_cannot_change_token_identity' (86964) panicked at C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri\src\infrastructure\windows_user_scope.rs:450:9:
+
+running 1 test
+test user_scope::tests::spoofed_user_environment_cannot_change_token_identity ... FAILED
+
+failures:
+
+failures:
+    user_scope::tests::spoofed_user_environment_cannot_change_token_identity
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+
+
+
+failures:
+    user_scope::tests::private_directory_does_not_rewrite_existing_child_security
+    user_scope::tests::spoofed_user_environment_cannot_change_token_identity
+
+test result: FAILED. 3 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `--lib`

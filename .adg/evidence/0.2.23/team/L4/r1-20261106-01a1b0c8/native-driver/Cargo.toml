@@ -1,0 +1,16 @@
+[package]
+name = "windows023-user-scope-driver"
+version = "0.0.0"
+edition = "2021"
+
+[dependencies]
+windows-sys = { version = "=0.61.2", features = ["Win32_Foundation", "Win32_Security", "Win32_System_Threading", "Win32_UI_Shell"] }
+tempfile = "3"
+serde_json = "=1.0.151"
+
+[lib]
+path = "lib.rs"
+
+[[bin]]
+name = "windows023-user-scope-probe"
+path = "C:/Users/15119/.codex/worktrees/ocxd-023-windows-r1/code/test/smoke/windows023-user-scope-probe.rs"

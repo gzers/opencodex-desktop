@@ -1,0 +1,42 @@
+   Compiling opencodex-desktop v0.2.22 (C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\apps\desktop\tauri)
+warning: unused imports: `current_user_profile` and `protect_current_user_path`
+ --> src\infrastructure\windows_startup_root.rs:7:29
+  |
+7 | pub(crate) use user_scope::{current_user_profile, protect_current_user_path};
+  |                             ^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+error: future cannot be sent between threads safely
+   --> src\modules\ipc\endpoint.rs:429:26
+    |
+429 |               let server = tokio::spawn(async move {
+    |  __________________________^
+430 | |                 let error = endpoint.accept_once(&mut NeverExecute).await.unwrap_err();
+431 | |                 assert!(
+432 | |                     matches!(error, AppError::FileSystem { ref operation, .. } if operation == "validate Windows IPC client SID")
+...   |
+453 | |                 assert_eq!(endpoint.requests_served.load(Ordering::SeqCst), 1);
+454 | |             });
+    | |______________^ future created by async block is not `Send`
+    |
+    = help: within `{async block@src\modules\ipc\endpoint.rs:429:39: 429:49}`, the trait `std::marker::Send` is not implemented for `*mut c_void`
+note: future is not `Send` as this value is used across an await
+   --> src\modules\ipc\endpoint.rs:452:52
+    |
+435 |                 let mut thread_token = std::ptr::null_mut();
+    |                     ---------------- has type `*mut c_void` which is not `Send`
+...
+452 |                 endpoint.accept_once(&mut service).await.unwrap();
+    |                                                    ^^^^^ await occurs here, with `mut thread_token` maybe used later
+note: required by a bound in `tokio::spawn`
+   --> D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tokio-1.53.2\src\task\spawn.rs:176:21
+    |
+174 |     pub fn spawn<F>(future: F) -> JoinHandle<F::Output>
+    |            ----- required by a bound in this function
+175 |     where
+176 |         F: Future + Send + 'static,
+    |                     ^^^^ required by this bound in `spawn`
+
+warning: `opencodex-desktop` (lib test) generated 1 warning
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error; 1 warning emitted
