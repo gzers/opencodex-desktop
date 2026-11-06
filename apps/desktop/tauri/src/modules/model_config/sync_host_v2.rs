@@ -24,6 +24,66 @@ pub struct HostCapturedV2 {
 pub trait CaptureProviderV2: Send + Sync {
     fn capture_saved(&self, selection: &SelectionV2) -> ModelResult<HostCapturedV2>;
 }
+/// Production adapter to the ONE immutable, registered saved-object capture
+/// implementation. The request, D/H and credential owner are fixed for this
+/// session. UI metadata, drafts and arbitrary public providers are not substitutes.
+pub struct SavedCaptureProviderV2 {
+    root: std::path::PathBuf,
+    home: std::path::PathBuf,
+    request: super::saved_objects_capture_v2::CaptureRequestV2,
+    credentials: Arc<dyn super::saved_objects_capture_v2::CaptureCredentialsV2 + Send + Sync>,
+}
+impl SavedCaptureProviderV2 {
+    pub fn new(
+        root: std::path::PathBuf,
+        home: std::path::PathBuf,
+        request: super::saved_objects_capture_v2::CaptureRequestV2,
+        credentials: Arc<dyn super::saved_objects_capture_v2::CaptureCredentialsV2 + Send + Sync>,
+    ) -> SyncResult<Self> {
+        validate_remote_selection(&request.selection)?;
+        if !root.is_absolute() || !home.is_absolute() || !root.is_dir() || !home.is_dir() {
+            return Err(failure(ErrorCode::SyncPlanChanged, Step::SourceGuard));
+        }
+        Ok(Self {
+            root,
+            home,
+            request,
+            credentials,
+        })
+    }
+    pub fn selection(&self) -> &SelectionV2 {
+        &self.request.selection
+    }
+}
+impl CaptureProviderV2 for SavedCaptureProviderV2 {
+    fn capture_saved(&self, selection: &SelectionV2) -> ModelResult<HostCapturedV2> {
+        if self.request.selection != *selection {
+            return Err(super::schema::invalid(
+                "capture_scope_invalid",
+                "会话范围已改变，需重新预览",
+            ));
+        }
+        let captured = super::saved_objects_capture_v2::capture(
+            &self.root,
+            &self.home,
+            &self.request,
+            self.credentials.as_ref(),
+        )?;
+        if file_objects_v2::save_state(&captured.objects)? != captured.save_state
+            || file_objects_v2::semantic_digest(&captured.objects)? != captured.semantic_digest
+        {
+            return Err(super::schema::invalid(
+                "capture_stale",
+                "捕获材料未保持同一保存事实",
+            ));
+        }
+        Ok(HostCapturedV2 {
+            objects: captured.objects,
+            source_guard: captured.source_guard,
+            root_revision: captured.root_revision,
+        })
+    }
+}
 /// L0 can delegate LocalApplication's source/root facts here. This deliberately
 /// recaptures for NEW write admission, never from original-operation inspection.
 pub struct CurrentSourceProviderV2 {
@@ -207,6 +267,7 @@ pub fn map_host_error(error: ModelError) -> SyncFailure {
         | "capture_scope_invalid"
         | "capture_mcp_source_changed"
         | "overlay_scope_invalid" => (ErrorCode::SyncScopeChanged, Cause::ScopeChanged),
+        "host_credential_read" => (ErrorCode::SyncLocalStateIo, Cause::LocalIo),
         "capture_root_invalid" | "model_transaction_pending" => {
             (ErrorCode::SyncPlanChanged, Cause::SourceChanged)
         }
@@ -561,6 +622,7 @@ pub struct HostPayloadCodecV2 {
     provider: Arc<dyn CaptureProviderV2>,
     preview: HostPreviewV2,
     secrets: SessionSecretsV2,
+    own_frozen: std::sync::Mutex<std::collections::BTreeSet<Digest>>,
 }
 impl HostPayloadCodecV2 {
     pub fn new(
@@ -572,6 +634,7 @@ impl HostPayloadCodecV2 {
             provider,
             preview,
             secrets,
+            own_frozen: Default::default(),
         }
     }
     pub fn preview(&self) -> &HostPreviewV2 {
@@ -667,6 +730,20 @@ impl PayloadCodec for HostPayloadCodecV2 {
         let current = capture_checked(self.provider.as_ref(), &self.preview.selection)?;
         snapshot_guard_matches(&current, guard, &self.preview.root_revision)?;
         let protected = encoded.protected;
+        // The immediate core validation of newly frozen bytes must use THIS
+        // operation's write protection, not the baseline's old read password.
+        // Only known exact hashes get that key; other incoming files still use
+        // the explicit read passphrase. No key/material is journaled here.
+        {
+            let mut own = self
+                .own_frozen
+                .lock()
+                .map_err(|_| failure(ErrorCode::SyncLocalStateIo, Step::Persist))?;
+            if own.len() >= Budgets::default().heads {
+                return Err(failure(ErrorCode::SyncLimit, Step::Persist));
+            }
+            own.insert(encoded.file_digest.clone());
+        }
         let mut bytes = encoded.into_bytes();
         Ok(FrozenPayload {
             bytes: std::mem::take(&mut *bytes),
@@ -686,7 +763,652 @@ impl PayloadCodec for HostPayloadCodecV2 {
                 Step::Decode,
             ));
         }
+        let own = self
+            .own_frozen
+            .lock()
+            .map_err(|_| failure(ErrorCode::SyncLocalStateIo, Step::Decode))?
+            .contains(&digest(bytes));
+        if own {
+            let decoded = file_objects_v2::decode(
+                bytes,
+                self.secrets.write(),
+                schema,
+                Some(&PayloadAuthorizationV2),
+            )
+            .map_err(map_host_error)?;
+            decoded
+                .objects
+                .validate_remote_sync_scope()
+                .map_err(map_host_error)
+        } else {
+            decode_payload(bytes, &self.secrets).map(|_| ())
+        }
+    }
+}
+/// Root-aware credential owner injected by L0. The exact saved ref_id is passed
+/// inside the saved endpoint; endpoint_id is NEVER a credential reference.
+pub trait EndpointCredentialsV2: Send + Sync {
+    fn read_password(
+        &self,
+        root: &std::path::Path,
+        endpoint: &crate::modules::sync::config::SyncEndpointConfig,
+    ) -> ModelResult<Zeroizing<String>>;
+}
+/// D-bound production read, never configure() or the singleton/cache API.
+pub struct SystemEndpointCredentialsV2;
+impl EndpointCredentialsV2 for SystemEndpointCredentialsV2 {
+    fn read_password(
+        &self,
+        root: &std::path::Path,
+        endpoint: &crate::modules::sync::config::SyncEndpointConfig,
+    ) -> ModelResult<Zeroizing<String>> {
+        let value = crate::infrastructure::credentials::load_optional_at(
+            root,
+            crate::infrastructure::keychain::WEBDAV_CREDENTIAL_PURPOSE,
+            &endpoint.credential_ref.ref_id,
+        )
+        .map_err(|_| {
+            super::schema::invalid(
+                "host_credential_read",
+                "原连接凭据当前无法读取或未通过归属校验",
+            )
+        })?;
+        value
+            .ok_or_else(|| super::schema::invalid("capture_credential_missing", "原连接凭据不存在"))
+    }
+}
+struct EndpointSnapshotV2 {
+    endpoint: crate::modules::sync::config::SyncEndpointConfig,
+    handle: ConnectionHandle,
+}
+/// Original endpoint metadata is host-owned in memory; it is not a UI handle
+/// constructor or a new persistence format. L0 restores its own saved metadata
+/// explicitly after a restart, rather than falling back to the active endpoint.
+pub struct EndpointResolverV2 {
+    root: std::path::PathBuf,
+    credentials: Arc<dyn EndpointCredentialsV2>,
+    originals: std::sync::Mutex<std::collections::BTreeMap<String, EndpointSnapshotV2>>,
+}
+pub struct BoundEndpointV2 {
+    handle: ConnectionHandle,
+    base: String,
+    directory: String,
+    username: String,
+    password: Zeroizing<String>,
+}
+impl BoundEndpointV2 {
+    pub fn handle(&self) -> &ConnectionHandle {
+        &self.handle
+    }
+    /// Bind the adapter supplied by L0. This builds no new transport and makes
+    /// no request. Actual networking remains the separately owned adapter.
+    pub fn bind_file_transport(
+        &self,
+        transport: &crate::infrastructure::webdav_config_v2::FileWebDavTransport,
+    ) -> SyncResult<()> {
+        transport
+            .bind(
+                self.handle.clone(),
+                &self.base,
+                &self.directory,
+                self.username.clone(),
+                self.password.to_string(),
+            )
+            .map_err(|e| transport_failure(e, Step::SourceGuard))
+    }
+}
+struct NormalEndpointV2 {
+    base: String,
+    directory: String,
+    username: String,
+}
+fn normalize_endpoint(
+    endpoint: &crate::modules::sync::config::SyncEndpointConfig,
+) -> SyncResult<NormalEndpointV2> {
+    fn components(raw: &str) -> SyncResult<Vec<String>> {
+        if raw.contains(['\\', '?', '#']) {
+            return Err(failure(ErrorCode::SyncEndpointChanged, Step::SourceGuard));
+        }
+        let raw = raw.strip_prefix('/').unwrap_or(raw);
+        let raw = raw.strip_suffix('/').unwrap_or(raw);
+        if raw.is_empty() {
+            return Ok(vec![]);
+        }
+        raw.split('/')
+            .map(|part| {
+                let decoded = percent_encoding::percent_decode_str(part)
+                    .decode_utf8()
+                    .map_err(|_| failure(ErrorCode::SyncEndpointChanged, Step::SourceGuard))?;
+                if decoded.is_empty()
+                    || matches!(decoded.as_ref(), "." | "..")
+                    || decoded.contains(['/', '\\', '%'])
+                    || decoded.chars().any(char::is_control)
+                {
+                    return Err(failure(ErrorCode::SyncEndpointChanged, Step::SourceGuard));
+                }
+                Ok(decoded.into_owned())
+            })
+            .collect()
+    }
+    require_uuid(&endpoint.endpoint_id)?;
+    let raw = endpoint.url.trim();
+    let raw_path = raw
+        .split_once("://")
+        .and_then(|(_, s)| s.find('/').map(|i| &s[i..]))
+        .unwrap_or("");
+    let parts = components(raw_path)?;
+    let remote = components(endpoint.remote_path.trim())?;
+    let mut base = reqwest::Url::parse(raw)
+        .map_err(|_| failure(ErrorCode::SyncEndpointChanged, Step::SourceGuard))?;
+    if base.scheme() != "https"
+        || base.host_str().is_none()
+        || !base.username().is_empty()
+        || base.password().is_some()
+        || base.query().is_some()
+        || base.fragment().is_some()
+        || remote.is_empty()
+        || endpoint.username.trim().is_empty()
+    {
+        return Err(failure(ErrorCode::SyncEndpointChanged, Step::SourceGuard));
+    }
+    {
+        let mut path = base
+            .path_segments_mut()
+            .map_err(|_| failure(ErrorCode::SyncEndpointChanged, Step::SourceGuard))?;
+        path.clear();
+        for part in parts {
+            path.push(&part);
+        }
+    }
+    let directory = remote
+        .iter()
+        .map(|part| {
+            percent_encoding::utf8_percent_encode(part, percent_encoding::NON_ALPHANUMERIC)
+                .to_string()
+        })
+        .collect::<Vec<_>>()
+        .join("/");
+    Ok(NormalEndpointV2 {
+        base: base.to_string().trim_end_matches('/').into(),
+        directory,
+        username: endpoint.username.trim().into(),
+    })
+}
+fn endpoint_handle(
+    endpoint: &crate::modules::sync::config::SyncEndpointConfig,
+    n: &NormalEndpointV2,
+    password: &str,
+) -> SyncResult<ConnectionHandle> {
+    if password.is_empty() {
+        return Err(failure(ErrorCode::SyncAuthRequired, Step::SourceGuard));
+    }
+    let secret_digest = digest(password.as_bytes());
+    let binding_id = digest(&super::sync_v2::store::canonical(
+        &serde_json::json!({"url":n.base,"remotePath":n.directory,"username":n.username,"secretDigest":secret_digest}),
+    )?);
+    let revision = digest(&super::sync_v2::store::canonical(
+        &serde_json::json!({"endpointId":endpoint.endpoint_id,"bindingId":binding_id,"credentialRef":endpoint.credential_ref}),
+    )?);
+    Ok(ConnectionHandle {
+        id: format!("{}:{}", endpoint.endpoint_id, &revision[7..]),
+        binding_id,
+        revision,
+    })
+}
+impl EndpointResolverV2 {
+    pub fn new(
+        root: std::path::PathBuf,
+        credentials: Arc<dyn EndpointCredentialsV2>,
+    ) -> SyncResult<Self> {
+        if !root.is_absolute()
+            || !root.is_dir()
+            || std::fs::symlink_metadata(&root)
+                .map_err(|_| failure(ErrorCode::SyncLocalStateIo, Step::SourceGuard))?
+                .file_type()
+                .is_symlink()
+        {
+            return Err(failure(ErrorCode::SyncPlanChanged, Step::SourceGuard));
+        }
+        Ok(Self {
+            root,
+            credentials,
+            originals: Default::default(),
+        })
+    }
+    fn saved_config(&self) -> SyncResult<crate::modules::sync::config::SyncConfig> {
+        let store = crate::modules::sync::config::SyncConfigStore::new(&self.root);
+        // Only the fixed owner path is read. Check its existing directory and
+        // file without following links; parsing/validation remains SyncConfigStore.
+        for (path, directory) in [
+            (self.root.join("manager-state"), true),
+            (store.path(), false),
+        ] {
+            match std::fs::symlink_metadata(&path) {
+                Ok(m)
+                    if m.file_type().is_symlink()
+                        || (directory && !m.is_dir())
+                        || (!directory && !m.is_file()) =>
+                {
+                    return Err(failure(ErrorCode::SyncLocalStateIo, Step::SourceGuard))
+                }
+                Ok(_) => (),
+                Err(e) if e.kind() == std::io::ErrorKind::NotFound => (),
+                Err(_) => return Err(failure(ErrorCode::SyncLocalStateIo, Step::SourceGuard)),
+            }
+        }
+        store
+            .load()
+            .map_err(|_| failure(ErrorCode::SyncEndpointChanged, Step::SourceGuard))
+    }
+    fn resolve_saved(
+        &self,
+        endpoint: &crate::modules::sync::config::SyncEndpointConfig,
+    ) -> SyncResult<BoundEndpointV2> {
+        let normalized = normalize_endpoint(endpoint)?;
+        let password = self
+            .credentials
+            .read_password(&self.root, endpoint)
+            .map_err(map_host_error)?;
+        let handle = endpoint_handle(endpoint, &normalized, &password)?;
+        Ok(BoundEndpointV2 {
+            handle,
+            base: normalized.base,
+            directory: normalized.directory,
+            username: normalized.username,
+            password,
+        })
+    }
+    pub fn resolve_active(&self) -> SyncResult<BoundEndpointV2> {
+        let config = self.saved_config()?;
+        let endpoint = config
+            .active()
+            .ok_or_else(|| failure(ErrorCode::SyncEndpointChanged, Step::SourceGuard))?;
+        let bound = self.resolve_saved(endpoint)?;
+        self.originals
+            .lock()
+            .map_err(|_| failure(ErrorCode::SyncLocalStateIo, Step::Persist))?
+            .insert(
+                bound.handle.id.clone(),
+                EndpointSnapshotV2 {
+                    endpoint: endpoint.clone(),
+                    handle: bound.handle.clone(),
+                },
+            );
+        Ok(bound)
+    }
+    /// Restore only L0's trusted ORIGINAL saved record plus the original journal
+    /// handle. Caller-supplied UI endpoint fields have no authority here.
+    pub fn restore_original(
+        &self,
+        endpoint: crate::modules::sync::config::SyncEndpointConfig,
+        expected: &ConnectionHandle,
+    ) -> SyncResult<BoundEndpointV2> {
+        crate::modules::sync::config::validate_config(&crate::modules::sync::config::SyncConfig {
+            schema_version: 1,
+            endpoints: vec![endpoint.clone()],
+        })
+        .map_err(|_| failure(ErrorCode::SyncEndpointChanged, Step::SourceGuard))?;
+        let bound = self.resolve_saved(&endpoint)?;
+        if bound.handle != *expected {
+            return Err(failure(ErrorCode::SyncEndpointChanged, Step::SourceGuard));
+        }
+        self.originals
+            .lock()
+            .map_err(|_| failure(ErrorCode::SyncLocalStateIo, Step::Persist))?
+            .insert(
+                expected.id.clone(),
+                EndpointSnapshotV2 {
+                    endpoint,
+                    handle: expected.clone(),
+                },
+            );
+        Ok(bound)
+    }
+    pub fn resolve_original(&self, expected: &ConnectionHandle) -> SyncResult<BoundEndpointV2> {
+        let endpoint = {
+            let originals = self
+                .originals
+                .lock()
+                .map_err(|_| failure(ErrorCode::SyncLocalStateIo, Step::Persist))?;
+            let original = originals
+                .get(&expected.id)
+                .ok_or_else(|| failure(ErrorCode::SyncEndpointChanged, Step::Verify))?;
+            if original.handle != *expected {
+                return Err(failure(ErrorCode::SyncEndpointChanged, Step::Verify));
+            }
+            original.endpoint.clone()
+        };
+        let config = self.saved_config()?;
+        // A different active endpoint never replaces the saved original. If the
+        // same endpoint ID has been edited, however, refuse its new revision
+        // BEFORE reading any replacement credential reference.
+        if let Some(current) = config
+            .endpoints
+            .iter()
+            .find(|e| e.endpoint_id == endpoint.endpoint_id)
+        {
+            let old = normalize_endpoint(&endpoint)?;
+            let new = normalize_endpoint(current)?;
+            if old.base != new.base
+                || old.directory != new.directory
+                || old.username != new.username
+                || current.credential_ref != endpoint.credential_ref
+            {
+                return Err(failure(ErrorCode::SyncEndpointChanged, Step::Verify));
+            }
+        }
+        let resolved = self.resolve_saved(&endpoint)?;
+        if resolved.handle != *expected {
+            return Err(failure(ErrorCode::SyncEndpointChanged, Step::Verify));
+        }
+        Ok(resolved)
+    }
+}
+#[derive(Serialize)]
+#[serde(tag = "kind", content = "result", rename_all = "snake_case")]
+pub enum HostPreparationV2 {
+    NoChange(SourceDecisionV2),
+    Upload(UploadPlan),
+    Download(DownloadPlan),
+}
+/// Reusable owner-level session. Only L0 composes LocalApplication and decides
+/// when a prepared plan receives explicit confirmation; prepare never PUTs.
+pub struct HostSessionV2 {
+    codec: HostPayloadCodecV2,
+    connection: ConnectionHandle,
+    observation: RemoteObservation,
+}
+impl HostSessionV2 {
+    pub fn new(
+        codec: HostPayloadCodecV2,
+        bound: &BoundEndpointV2,
+        observation: RemoteObservation,
+    ) -> SyncResult<Self> {
+        if observation.binding_id != bound.handle.binding_id {
+            return Err(failure(ErrorCode::SyncEndpointChanged, Step::Observe));
+        }
+        let unique_generation = observation
+            .generation
+            .as_ref()
+            .is_some_and(|g| observation.generations.as_slice() == [g.clone()]);
+        match observation.state {
+            RemoteState::Empty
+                if codec.preview.baseline.is_none()
+                    && observation.generations.is_empty()
+                    && observation.heads.is_empty() => {}
+            RemoteState::GenerationEmpty
+                if codec.preview.baseline.is_none()
+                    && unique_generation
+                    && observation.heads.is_empty() => {}
+            RemoteState::Ready | RemoteState::Conflict
+                if unique_generation
+                    && codec
+                        .preview
+                        .baseline
+                        .as_ref()
+                        .is_some_and(|b| observation.heads.contains(&b.head))
+                    && ((observation.state == RemoteState::Ready
+                        && observation.heads.len() == 1)
+                        || (observation.state == RemoteState::Conflict
+                            && observation.heads.len() > 1)) => {}
+            RemoteState::InitializationAmbiguous | RemoteState::Conflict => {
+                return Err(failure(ErrorCode::SyncRemoteConflict, Step::Observe))
+            }
+            _ => return Err(failure(ErrorCode::SyncRemoteInvalid, Step::Observe)),
+        }
+        Ok(Self {
+            codec,
+            connection: bound.handle.clone(),
+            observation,
+        })
+    }
+    fn context<'a>(
+        &'a self,
+        store: &'a super::sync_v2::store::Store,
+        transport: &'a dyn ConfigSyncTransport,
+        local: &'a dyn LocalApplication,
+    ) -> SyncResult<super::sync_v2::SyncContext<'a>> {
+        super::sync_v2::SyncContext::new(
+            store,
+            transport,
+            &self.codec,
+            local,
+            self.connection.clone(),
+        )
+    }
+    fn admit_new_write(&self) -> SyncResult<()> {
+        let current = capture_checked(self.codec.provider.as_ref(), &self.codec.preview.selection)?;
+        snapshot_guard_matches(
+            &current,
+            &self.codec.preview.source_guard,
+            &self.codec.preview.root_revision,
+        )
+    }
+    pub fn source_provider(&self) -> SyncResult<CurrentSourceProviderV2> {
+        self.codec.current_source_provider()
+    }
+    pub fn decision(&self) -> &SourceDecisionV2 {
+        &self.codec.preview.decision
+    }
+    pub async fn prepare(
+        &self,
+        resolver: &EndpointResolverV2,
+        store: &super::sync_v2::store::Store,
+        transport: &dyn ConfigSyncTransport,
+        local: &dyn LocalApplication,
+    ) -> SyncResult<HostPreparationV2> {
+        resolver.resolve_original(&self.connection)?;
+        self.admit_new_write()?;
+        if self.codec.preview.decision.no_change {
+            return Ok(HostPreparationV2::NoChange(
+                self.codec.preview.decision.clone(),
+            ));
+        }
+        let cx = self.context(store, transport, local)?;
+        let preview = &self.codec.preview;
+        match preview.decision.chosen_direction {
+            DirectionV2::Upload if self.observation.state == RemoteState::Conflict => {
+                let head = preview
+                    .baseline
+                    .as_ref()
+                    .ok_or_else(|| failure(ErrorCode::SyncRemoteConflict, Step::SourceGuard))?
+                    .head
+                    .clone();
+                let generation = self
+                    .observation
+                    .generation
+                    .clone()
+                    .ok_or_else(|| failure(ErrorCode::SyncRemoteConflict, Step::SourceGuard))?;
+                let preview_digest = digest(&super::sync_v2::store::canonical(
+                    &serde_json::json!({"viewDigest":self.observation.view_digest,"sourceGuard":preview.source_guard,"decision":preview.decision,"selectedHead":head}),
+                )?);
+                cx.prepare_resolution(PrepareResolutionRequest {
+                    connection_id: self.connection.id.clone(),
+                    generation,
+                    heads: self.observation.heads.clone(),
+                    expected_view_digest: self.observation.view_digest.clone(),
+                    source_guard: preview.source_guard.clone(),
+                    resolution: Resolution {
+                        selection_mode: SelectionMode::Head,
+                        selected_head: Some(head),
+                        scope_digest: preview.source_guard.scope_digest.clone(),
+                        preview_digest,
+                    },
+                })
+                .await
+                .map(HostPreparationV2::Upload)
+            }
+            DirectionV2::Upload => cx
+                .prepare_upload(PrepareUploadRequest {
+                    connection_id: self.connection.id.clone(),
+                    expected_view_digest: self.observation.view_digest.clone(),
+                    source_guard: preview.source_guard.clone(),
+                    initialize_on_confirm: preview.baseline.is_none(),
+                })
+                .await
+                .map(HostPreparationV2::Upload),
+            DirectionV2::Download
+                if preview.decision.can_download
+                    && self.observation.state == RemoteState::Ready =>
+            {
+                cx.prepare_download(PrepareDownloadRequest {
+                    connection_id: self.connection.id.clone(),
+                    generation: self
+                        .observation
+                        .generation
+                        .clone()
+                        .ok_or_else(|| failure(ErrorCode::SyncPlanChanged, Step::DownloadGuard))?,
+                    head: preview
+                        .baseline
+                        .as_ref()
+                        .ok_or_else(|| failure(ErrorCode::SyncPlanChanged, Step::DownloadGuard))?
+                        .head
+                        .clone(),
+                    expected_view_digest: self.observation.view_digest.clone(),
+                    scope_digest: preview.source_guard.scope_digest.clone(),
+                    backup_before_update: true,
+                })
+                .await
+                .map(HostPreparationV2::Download)
+            }
+            _ => Err(failure(ErrorCode::SyncPlanChanged, Step::SourceGuard)),
+        }
+    }
+    pub async fn publish_upload(
+        &self,
+        r: ConfirmUploadRequest,
+        resolver: &EndpointResolverV2,
+        store: &super::sync_v2::store::Store,
+        transport: &dyn ConfigSyncTransport,
+        local: &dyn LocalApplication,
+    ) -> SyncResult<OperationFact> {
+        resolver.resolve_original(&self.connection)?;
+        let journal = store.journal(&r.operation_id)?;
+        // Any repeated confirmation after a possible send is the core's
+        // read-only verification route, not authority to recapture a new source.
+        if journal.fact.last_write_step == WriteStep::None {
+            self.admit_new_write()?;
+        }
+        self.context(store, transport, local)?
+            .publish_upload(r)
+            .await
+    }
+    pub async fn verify_original_upload(
+        &self,
+        r: OperationRequest,
+        resolver: &EndpointResolverV2,
+        store: &super::sync_v2::store::Store,
+        transport: &dyn ConfigSyncTransport,
+        local: &dyn LocalApplication,
+    ) -> SyncResult<OperationFact> {
+        // No current selection/root/capture check here. Original endpoint and
+        // original frozen journal/files determine the historical storage fact.
+        resolver.resolve_original(&self.connection)?;
+        self.context(store, transport, local)?
+            .verify_original_upload(r)
+            .await
+    }
+    pub async fn resume_original_upload(
+        &self,
+        r: ResumeUploadRequest,
+        resolver: &EndpointResolverV2,
+        store: &super::sync_v2::store::Store,
+        transport: &dyn ConfigSyncTransport,
+        local: &dyn LocalApplication,
+    ) -> SyncResult<OperationFact> {
+        resolver.resolve_original(&self.connection)?;
+        let verified = self
+            .context(store, transport, local)?
+            .verify_original_upload(OperationRequest {
+                operation_id: r.operation_id.clone(),
+            })
+            .await;
+        if store.journal(&r.operation_id)?.fact.storage_status == StorageStatus::Stored {
+            return verified;
+        }
+        match verified {
+            Err(e) if e.code != ErrorCode::SyncOperationUnknown => return Err(e),
+            _ => (),
+        }
+        self.admit_new_write()?;
+        self.context(store, transport, local)?
+            .resume_original_upload(r)
+            .await
+    }
+}
+/// Historical upload owner can be reconstructed from L0's trusted original
+/// connection + existing journal, with NO preview, CaptureProvider or current
+/// source available. This is essential after restart/local edits or bad drafts.
+pub struct OriginalUploadOwnerV2 {
+    connection: ConnectionHandle,
+    inspection: InspectionCodecV2,
+}
+struct InspectionCodecV2 {
+    secrets: SessionSecretsV2,
+}
+impl PayloadCodec for InspectionCodecV2 {
+    fn supported_schemas(&self) -> Vec<PayloadSchemaRef> {
+        vec![file_objects_v2::supported_schema()]
+    }
+    fn freeze_selected(
+        &self,
+        _: &SourceGuard,
+        _: &[PayloadInput],
+        _: Option<&Resolution>,
+    ) -> SyncResult<FrozenPayload> {
+        Err(failure(ErrorCode::SyncPlanChanged, Step::Verify))
+    }
+    fn inspect_and_validate(&self, bytes: &[u8], schema: &PayloadSchemaRef) -> SyncResult<()> {
+        if *schema != file_objects_v2::supported_schema() {
+            return Err(failure(
+                ErrorCode::SyncPayloadSchemaUnsupported,
+                Step::Decode,
+            ));
+        }
         decode_payload(bytes, &self.secrets).map(|_| ())
+    }
+}
+impl OriginalUploadOwnerV2 {
+    pub fn new(original: &BoundEndpointV2, read_passphrase: Option<Zeroizing<String>>) -> Self {
+        Self {
+            connection: original.handle.clone(),
+            inspection: InspectionCodecV2 {
+                secrets: SessionSecretsV2 {
+                    read_passphrase,
+                    write_passphrase: None,
+                },
+            },
+        }
+    }
+    pub fn read_result(
+        &self,
+        store: &super::sync_v2::store::Store,
+        request: OperationRequest,
+    ) -> SyncResult<OperationFact> {
+        let journal = store.journal(&request.operation_id)?;
+        if journal.plan.binding_id != self.connection.binding_id {
+            return Err(failure(ErrorCode::SyncEndpointChanged, Step::Verify));
+        }
+        Ok(journal.fact)
+    }
+    pub async fn verify(
+        &self,
+        request: OperationRequest,
+        resolver: &EndpointResolverV2,
+        store: &super::sync_v2::store::Store,
+        transport: &dyn ConfigSyncTransport,
+        local: &dyn LocalApplication,
+    ) -> SyncResult<OperationFact> {
+        resolver.resolve_original(&self.connection)?;
+        super::sync_v2::SyncContext::new(
+            store,
+            transport,
+            &self.inspection,
+            local,
+            self.connection.clone(),
+        )?
+        .verify_original_upload(request)
+        .await
     }
 }
 #[cfg(test)]
