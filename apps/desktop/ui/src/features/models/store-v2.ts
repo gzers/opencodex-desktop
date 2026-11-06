@@ -43,8 +43,8 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
   function keyBuffer(channelId:string){const value=keyBuffers.get(channelId);return value?{...value}:null}
   function setKeyBuffer(channelId:string,value:{action:'replace'|'clear';value?:string}|null){if(value)keyBuffers.set(channelId,{...value,sourceGuard:keySourceGuard()});else keyBuffers.delete(channelId);keyBufferVersion.value++}
   const view=ref({tab:'channels' as 'channels'|'templates',templateSearch:'',templateEditor:false,templateNavCollapsed:false,templateSection:'model-basic',selectedVersions:{} as Record<string,string>,selectedTemplates:[] as string[]})
-  // Registered/compiled together with L0 baseline a3a20621d29318353bfe8afe624222d0b4b12584.
-  const channelCapabilities=ref({scopedSave:true,defaults:true,naming:true,templateRefs:true,copy:true,delete:true,credential:false,measure:false,activeNode:false})
+  // Key/node commands and active-node intent registered/compiled in L0 f9a79297192e1c8ee1e66569ae51299128e8ff8e.
+  const channelCapabilities=ref({scopedSave:true,defaults:true,naming:true,templateRefs:true,copy:true,delete:true,credential:true,measure:true,activeNode:true})
   function configureChannelCapabilities(value:Partial<typeof channelCapabilities.value>){channelCapabilities.value={...channelCapabilities.value,...value}}
   let fileSequence=0,fileGeneration=0,openingDraft:Promise<void>|null=null
   const channels=computed(()=>{
@@ -92,7 +92,7 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
   async function saveChannels(scopeChannelId?:string){
     if(!canSaveFile.value||!file.value?.draft)return
     const scoped=channelCapabilities.value.scopedSave?scopeChannelId:undefined
-    for(const [id,edit] of [...keyBuffers]){if(scoped&&id!==scoped)continue;if(edit.sourceGuard!==keySourceGuard()){fileError.value='Key 编辑期间来源基准已变化，输入仍保留；请重新核对该渠道与凭据意图。';return}try{await stageCredential(id,edit.action,edit.value);setKeyBuffer(id,null)}catch(cause){fileError.value=message(cause);return}}
+    for(const [id,edit] of [...keyBuffers]){if(scoped&&id!==scoped)continue;if(edit.sourceGuard!==keySourceGuard()){fileError.value='Key 编辑期间来源基准已变化，输入仍保留；请重新核对该渠道与凭据意图。';return}try{await stageCredential(id,edit.action,edit.value);if(keyBuffers.get(id)===edit)setKeyBuffer(id,null)}catch(cause){fileError.value=message(cause);return}}
     if(!file.value?.draft)return
     const localChannel=channels.value.find(c=>c.id===scopeChannelId)
     if(localChannel&&!channelIntents.value.some(i=>(i.kind==='rename'||i.kind==='delete')&&i.channelId===localChannel.id))queueChannel({kind:'rename',channelId:localChannel.id,name:localChannel.label})
