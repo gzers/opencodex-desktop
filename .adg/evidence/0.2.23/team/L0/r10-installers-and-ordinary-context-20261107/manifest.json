@@ -1,0 +1,194 @@
+{
+  "schemaVersion": 1,
+  "source": "41ab81694c1cce4e05bd78309b4ff2b8a5eb82da",
+  "facts": {
+    "installerTemplates": {
+      "source": "1673190e11da1268ebf19650e8d8b05113fac1c7",
+      "upstream": "TauriCLI2.11.4 bundler2.9.4 commit8909f221",
+      "default": "current-user LocalAppData/Programs/OpenCodeX Desktop",
+      "pureChecks": "15Python +10PowerShell groups pass",
+      "wixSchema": "strict3variants pass",
+      "nsisCrossCompile": "full3.13 synthetic-payload compile pass; Windows3.11 actual not claimed",
+      "msi": "actual oldperMachine→newperUser blocker and explicitconversion must be tested; not an automatic major upgrade"
+    },
+    "ordinaryRunner": {
+      "source": "ee1504b947690e644ec42ed282eabab09460625a",
+      "checks": 85,
+      "nativeExecuted": false,
+      "workerDefault": "unchanged libtest default; no filters/skips",
+      "docTests": "separate actual --doc in parent workflow",
+      "elevatedCreationAndNativeCredentials": "remain independent always steps"
+    },
+    "candidate5": {
+      "run": 42286888610,
+      "source": "41ab81694",
+      "stateAtCollection": "in_progress; actual terminal required"
+    },
+    "macCandidate": {
+      "source": "2880f90a3fe4fff28d3c474cf19c434180c2f274",
+      "nativeBootstrap": "pass; locked screen visual pending",
+      "sealedFolderDMG": "verified-candidate",
+      "sha256": "8e7449bf0640109546a8492e53476453e6c0822f5d424c850f25c76c5bba1eb2",
+      "bytes": 262713358,
+      "packagingCleanup": "own mount detached and scratch removed, sealed source unchanged"
+    },
+    "ciErrors": {
+      "invalidContext": "10b5 job-env runner.temp validation failed; 2880 step-env correction actionlint passed",
+      "frontend2880": "real pixel assertions failed after browser install; raw logs preserved, L3 investigating actual captured geometry/pixels without relaxed thresholds",
+      "windowsCandidate4": "1299pass368fail5ignored, still no installers; raw retained"
+    },
+    "release": "not published"
+  },
+  "files": [
+    {
+      "source": "/tmp/ocxd023-rust-ordinary-freeze.json",
+      "file": "ocxd023-rust-ordinary-freeze.json",
+      "bytes": 3763,
+      "sha256": "b1d084be189284d23ba8cdd1d67b6cc9335f9ecc13a61dae77571779760c0751"
+    },
+    {
+      "source": "/tmp/ocxd023-rust-ordinary-contract-frozen.log",
+      "file": "ocxd023-rust-ordinary-contract-frozen.log",
+      "bytes": 9091,
+      "sha256": "3c731d707121f456ab422ba641efe35be1b71055c6edac6a71412ac7c2666762"
+    },
+    {
+      "source": "/tmp/ocxd023-final-ordinary-static.log",
+      "file": "ocxd023-final-ordinary-static.log",
+      "bytes": 9091,
+      "sha256": "1030da264b163dfe2292ef66ed8c7ae0ebd5863d91d2fb021d42db4f7783ff1a"
+    },
+    {
+      "source": "/tmp/ocxd023-final-retention-admission-tests.log",
+      "file": "ocxd023-final-retention-admission-tests.log",
+      "bytes": 1469,
+      "sha256": "82381d3d88913761d5881d0745cec4ee7c4e05afb7adce050ddb6070536c5270"
+    },
+    {
+      "source": "/tmp/ocxd023-final-retention-fixtures.log",
+      "file": "ocxd023-final-retention-fixtures.log",
+      "bytes": 208,
+      "sha256": "9c1de9751da3adae942b3c66c12113365b265c5ec7699fdebae21d7059c25aa0"
+    },
+    {
+      "source": "/tmp/ocxd023-final-retention-fixtures-canonical.log",
+      "file": "ocxd023-final-retention-fixtures-canonical.log",
+      "bytes": 791,
+      "sha256": "07128bd74c6f7662d884d82526dd7cb63ecdd6d63f197c007a9b5b700a5dcfc9"
+    },
+    {
+      "source": "/tmp/ocxd023-ordinary-installers-workflow-actionlint.log",
+      "file": "ocxd023-ordinary-installers-workflow-actionlint.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/tmp/ocxd023-ci-workflow-validation-failure.json",
+      "file": "ocxd023-ci-workflow-validation-failure.json",
+      "bytes": 13019,
+      "sha256": "2a0e7fcaf5f0fab03fcf278f4dfbc1c6fbbb81a57094ec19c3c93b86b4a79f9c"
+    },
+    {
+      "source": "/tmp/ocxd023-workflow-actionlint.log",
+      "file": "ocxd023-workflow-actionlint.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/tmp/ocxd023-mac-final-trace-rejection-build.log",
+      "file": "ocxd023-mac-final-trace-rejection-build.log",
+      "bytes": 7278,
+      "sha256": "6fc375003558ba9f9e22af4476d98010608f2feb09c2c24c55aeeeb4eafe20c7"
+    },
+    {
+      "source": "/tmp/ocxd023-macos-final-folder-package.log",
+      "file": "ocxd023-macos-final-folder-package.log",
+      "bytes": 358,
+      "sha256": "b1f1308402cfeec29fdeb95ba8080ee64d8bcd8704e7374a56a4594d1fd823e0"
+    },
+    {
+      "source": "/tmp/ocxd023-windows-candidate-fourth-job-raw.log",
+      "file": "ocxd023-windows-candidate-fourth-job-raw.log",
+      "bytes": 674369,
+      "sha256": "a3c511a7f0a2d8b68d4d8188852a83374d8c0fb10f04913dea0545acc9bb332b"
+    },
+    {
+      "source": "/tmp/ocxd023-ci-2880-frontend-raw.log",
+      "file": "ocxd023-ci-2880-frontend-raw.log",
+      "bytes": 104617,
+      "sha256": "056a14b3b62305c57457b4b0787c2b6f0771367f7ea4a6fcd52bdd52c1f26d78"
+    },
+    {
+      "source": "/tmp/ocxd023-superseded-ci-cancellations-r3.json",
+      "file": "ocxd023-superseded-ci-cancellations-r3.json",
+      "bytes": 2345,
+      "sha256": "85ad17e9233a9dc85b931f7eb6ea92e885a5a95a185626abb862c600c31f8c9b"
+    },
+    {
+      "source": "/tmp/ocxd023-rust-ordinary-contract-frozen/static-tests.json",
+      "file": "static-tests.json",
+      "bytes": 9091,
+      "sha256": "3c731d707121f456ab422ba641efe35be1b71055c6edac6a71412ac7c2666762"
+    },
+    {
+      "source": "/private/tmp/windows023-cli2114-source/template-schema-receipt.json",
+      "file": "template-schema-receipt.json",
+      "bytes": 4148,
+      "sha256": "3622c0b535f471a263df64efbea3ff8e035654a719f74f23cf27b9062a9bc2a6"
+    },
+    {
+      "source": "/private/tmp/windows023-cli2114-source/nsis-cross-compile-receipt.json",
+      "file": "nsis-cross-compile-receipt.json",
+      "bytes": 496,
+      "sha256": "72d44802e977efef30a658d44af4c95c17896aa92f1e13450675bc2c43e20cd2"
+    },
+    {
+      "source": "/private/tmp/windows023-baseline-m32m67py/verification.json",
+      "file": "verification.json",
+      "bytes": 646,
+      "sha256": "4bda09993b7d517258564513253a877818dc31b9403720f246ab2a91990dca02"
+    },
+    {
+      "source": "/private/tmp/ocxd023-macos-final-folder-sf_6159p/package-evidence.json",
+      "file": "package-evidence.json",
+      "bytes": 14668,
+      "sha256": "e60459f733431ab8cbcdcd618a6d6096da7001e9dccdfca04417a0bf0b0c754d"
+    },
+    {
+      "source": "/tmp/ocxd023-native-final-trace-bootstrap-evidence/app.log",
+      "file": "native-app.log",
+      "bytes": 106,
+      "sha256": "7109b0e1d70ae0a728bdb4b01deebb0d2b2d3b2e0653ee293e053f93e74c4d9c"
+    },
+    {
+      "source": "/tmp/ocxd023-native-final-trace-bootstrap-evidence/ax-compile.log",
+      "file": "native-ax-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/tmp/ocxd023-native-final-trace-bootstrap-evidence/capwin-compile.log",
+      "file": "native-capwin-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/tmp/ocxd023-native-final-trace-bootstrap-evidence/network-denial.log",
+      "file": "native-network-denial.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "source": "/tmp/ocxd023-native-final-trace-bootstrap-evidence/report.json",
+      "file": "native-report.json",
+      "bytes": 1205,
+      "sha256": "b795607017c84a6b2b602dd281254c59fc83ce19f586032254c189630938fd23"
+    },
+    {
+      "source": "/tmp/ocxd023-native-final-trace-bootstrap-evidence/stdout.log",
+      "file": "native-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

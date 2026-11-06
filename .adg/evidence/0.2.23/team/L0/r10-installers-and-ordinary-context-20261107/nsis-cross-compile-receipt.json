@@ -1,0 +1,11 @@
+{
+  "result": "pass-cross-compile-synthetic-payload",
+  "compiler": "Homebrew makensis 3.13 temporary bottle, not Tauri Windows 3.11",
+  "template": "complete strict-rendered nsis023.nsi",
+  "hooks": "actual product installer-hooks.nsh",
+  "tauriPluginVersion": "0.5.3",
+  "syntheticInstallerSha256": "e7913cf90108e60957be842aa8bb2e00388c0e7de1578c1fb62b96cecf389933",
+  "installerExecuted": false,
+  "windowsAcceptancePassed": false,
+  "warning": "6012 unused upstream label install_webview2"
+}

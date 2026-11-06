@@ -1,0 +1,82 @@
+{
+  "keptHead": "2880f90a3fe4fff28d3c474cf19c434180c2f274",
+  "cancelled": [
+    {
+      "source": {
+        "conclusion": "",
+        "databaseId": 42283563454,
+        "headSha": "41390aa7ac442af7be4cc9d522e48d87374cb225",
+        "name": "CI",
+        "status": "queued"
+      },
+      "exit": 0,
+      "output": "\u2713 Request to cancel workflow 42283563454 submitted.\n"
+    },
+    {
+      "source": {
+        "conclusion": "",
+        "databaseId": 42283369093,
+        "headSha": "843274dd434e5d14b1ddb8b9201dfd6c3ee1c0bf",
+        "name": "CI",
+        "status": "queued"
+      },
+      "exit": 0,
+      "output": "\u2713 Request to cancel workflow 42283369093 submitted.\n"
+    },
+    {
+      "source": {
+        "conclusion": "",
+        "databaseId": 42282554601,
+        "headSha": "751d30c2096d8f90b08e68669ffbf4a2860c16e3",
+        "name": "CI",
+        "status": "in_progress"
+      },
+      "exit": 1,
+      "output": "Get \"https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/42282554601?exclude_pull_requests=true\": net/http: TLS handshake timeout\n"
+    },
+    {
+      "source": {
+        "conclusion": "",
+        "databaseId": 42282173807,
+        "headSha": "7cbb0daf710fc81de24952f96274c7ee8e740ede",
+        "name": "CI",
+        "status": "in_progress"
+      },
+      "exit": 0,
+      "output": "\u2713 Request to cancel workflow 42282173807 submitted.\n"
+    },
+    {
+      "source": {
+        "conclusion": "",
+        "databaseId": 42281865156,
+        "headSha": "00df4bc15df168a766a5fa39e4c2646ef2155dbb",
+        "name": "CI",
+        "status": "in_progress"
+      },
+      "exit": 0,
+      "output": "\u2713 Request to cancel workflow 42281865156 submitted.\n"
+    },
+    {
+      "source": {
+        "conclusion": "",
+        "databaseId": 42281777429,
+        "headSha": "2d59b361541a9fa90aaabefe5db16f3809d4bce0",
+        "name": "CI",
+        "status": "in_progress"
+      },
+      "exit": 0,
+      "output": "\u2713 Request to cancel workflow 42281777429 submitted.\n"
+    },
+    {
+      "source": {
+        "conclusion": "",
+        "databaseId": 42280376494,
+        "headSha": "4f087eaeab7e5c8fbb8a00805e904efb7131f4ac",
+        "name": "CI",
+        "status": "in_progress"
+      },
+      "exit": 0,
+      "output": "\u2713 Request to cancel workflow 42280376494 submitted.\n"
+    }
+  ]
+}

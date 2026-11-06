@@ -1,0 +1,122 @@
+{
+  "result": "pass-strict-template-render-and-wix3141-schema",
+  "installerExecuted": false,
+  "windowsAcceptancePassed": false,
+  "schemaSha256": "493e95b6bc199bc613dd9348bbd326956835ece16cae15f5cb9189d1833270a9",
+  "variants": [
+    {
+      "variant": "base",
+      "schemaValid": true,
+      "fileSources": [
+        {
+          "id": "Path",
+          "source": "\\private\\tmp\\windows023-nsis-compiler\\fixture\\opencodex-desktop.exe"
+        },
+        {
+          "id": "Bin_Ocxd",
+          "source": "C:\\fixture\\ocxd.exe"
+        },
+        {
+          "id": "OCX023License",
+          "source": "C:\\fixture\\apps\\desktop\\tauri\\resources\\LICENSE"
+        },
+        {
+          "id": "OCX023Notices",
+          "source": "C:\\fixture\\apps\\desktop\\tauri\\resources\\THIRD-PARTY-NOTICES.txt"
+        },
+        {
+          "id": "OCX023RuntimeArchive",
+          "source": "C:\\fixture\\apps\\desktop\\tauri\\resources\\runtime-bundle\\runtime-bundle-0.2.23-win32-x64.tar.gz"
+        },
+        {
+          "id": "OCX023RuntimeSource",
+          "source": "C:\\fixture\\apps\\desktop\\tauri\\resources\\runtime-bundle\\maintained-runtime.tgz"
+        },
+        {
+          "id": "OCX023RuntimeManifest",
+          "source": "C:\\fixture\\apps\\desktop\\tauri\\resources\\runtime-bundle\\runtime-bundle.manifest.json"
+        },
+        {
+          "id": "OCX023RuntimePin",
+          "source": "C:\\fixture\\apps\\desktop\\tauri\\resources\\runtime-bundle\\runtime-bundle.manifest.sha256"
+        }
+      ]
+    },
+    {
+      "variant": "download",
+      "schemaValid": true,
+      "fileSources": [
+        {
+          "id": "Path",
+          "source": "\\private\\tmp\\windows023-nsis-compiler\\fixture\\opencodex-desktop.exe"
+        },
+        {
+          "id": "Bin_Ocxd",
+          "source": "C:\\fixture\\ocxd.exe"
+        },
+        {
+          "id": "OCX023License",
+          "source": "C:\\fixture\\apps\\desktop\\tauri\\resources\\LICENSE"
+        },
+        {
+          "id": "OCX023Notices",
+          "source": "C:\\fixture\\apps\\desktop\\tauri\\resources\\THIRD-PARTY-NOTICES.txt"
+        },
+        {
+          "id": "OCX023RuntimeArchive",
+          "source": "C:\\fixture\\apps\\desktop\\tauri\\resources\\runtime-bundle\\runtime-bundle-0.2.23-win32-x64.tar.gz"
+        },
+        {
+          "id": "OCX023RuntimeSource",
+          "source": "C:\\fixture\\apps\\desktop\\tauri\\resources\\runtime-bundle\\maintained-runtime.tgz"
+        },
+        {
+          "id": "OCX023RuntimeManifest",
+          "source": "C:\\fixture\\apps\\desktop\\tauri\\resources\\runtime-bundle\\runtime-bundle.manifest.json"
+        },
+        {
+          "id": "OCX023RuntimePin",
+          "source": "C:\\fixture\\apps\\desktop\\tauri\\resources\\runtime-bundle\\runtime-bundle.manifest.sha256"
+        }
+      ]
+    },
+    {
+      "variant": "embed",
+      "schemaValid": true,
+      "fileSources": [
+        {
+          "id": "Path",
+          "source": "\\private\\tmp\\windows023-nsis-compiler\\fixture\\opencodex-desktop.exe"
+        },
+        {
+          "id": "Bin_Ocxd",
+          "source": "C:\\fixture\\ocxd.exe"
+        },
+        {
+          "id": "OCX023License",
+          "source": "C:\\fixture\\apps\\desktop\\tauri\\resources\\LICENSE"
+        },
+        {
+          "id": "OCX023Notices",
+          "source": "C:\\fixture\\apps\\desktop\\tauri\\resources\\THIRD-PARTY-NOTICES.txt"
+        },
+        {
+          "id": "OCX023RuntimeArchive",
+          "source": "C:\\fixture\\apps\\desktop\\tauri\\resources\\runtime-bundle\\runtime-bundle-0.2.23-win32-x64.tar.gz"
+        },
+        {
+          "id": "OCX023RuntimeSource",
+          "source": "C:\\fixture\\apps\\desktop\\tauri\\resources\\runtime-bundle\\maintained-runtime.tgz"
+        },
+        {
+          "id": "OCX023RuntimeManifest",
+          "source": "C:\\fixture\\apps\\desktop\\tauri\\resources\\runtime-bundle\\runtime-bundle.manifest.json"
+        },
+        {
+          "id": "OCX023RuntimePin",
+          "source": "C:\\fixture\\apps\\desktop\\tauri\\resources\\runtime-bundle\\runtime-bundle.manifest.sha256"
+        }
+      ]
+    }
+  ]
+}

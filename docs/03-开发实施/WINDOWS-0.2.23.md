@@ -7,11 +7,21 @@
 ## 当前基线与获取
 
 - 仓库：gzers/opencodex-desktop。
-- 代码：远端codex/0.2.23-integration，明确基线678fd312afbcfb01998e529244b0618baacd4af4（完整trace/默认折叠呈现、Mac安装位置保护及临时目录修正已集成；Windows普通用户suite/安装默认路径仍待后继制品）。
+- 代码：远端codex/0.2.23-integration，明确基线41ab81694c1cce4e05bd78309b4ff2b8a5eb82da（用户级安装模板、普通SID整套binary验收及五种安装场景已冻结；真实终态另见下文）。
 - 文档：远端docs/governance-main，以包含本条R2指令的提交为准；读取本文件、TEAM、IMP-31/32及0.2.23-contracts/L0-paths-runtime-v1.md。
 - Windows代码贡献分支：codex/0.2.23-windows；文档/脱敏证据使用独立docs/0.2.23-windows分支。若已有自己的改动，先保留并合并上述明确代码基线，不重置或覆盖工作树。
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
 - 此为0.2.23实施基线，尚非最终安装候选；版本清单仍待L0统一更新。是否取得新代码以完整SHA及实际diff为准，不能仅看软件显示版本。
+
+## R9 实际安装默认与普通SID套件已交新候选（2026-11-07）
+
+明确代码41ab81694c1cce4e05bd78309b4ff2b8a5eb82da已真实推送，工作区干净。1673190e1采用CLI2.11.4/bundler2.9.4固定上游模板，保留MIT来源，仅改用户级Programs默认、明确自定义目录及卸载保留。15Python/10PS组、WiX3.14.1三分支严格Schema与完整NSIS3.13交叉编译通过；固定Windows3.11/WiXICE/真实UI和安装路径仍待候选，不用Mac静态结果冒原生通过。发布配方已固定同CLI2.11.4，避免新模板换打包器漂移。
+
+旧022 MSI为per-machine，新023为per-user，Windows Installer不支持跨上下文自动major upgrade。新版先实际拒绝并指引卸载旧管理器保留配置，再安装；相邻MSI预期拒绝、MSI显式程序切换、两种fresh及NSIS相邻更新分五个独立runner场景。测试必须实际执行候选拒绝及旧程序/全数据哈希保持，不以harness自行报阻断代替。
+
+ee1504b94普通SID执行器已冻结85项纯检查通过：父账户只编译，全部Cargo JSON精确测试binary交新真实普通SID/Profile/TEMP执行，默认libtest workers保持，不skip失败、不修foreignowner。docTests独立真实运行；提权私有创建13项及nativecred保留always。候选42286888610基于精确41ab81694已启动，需等待原生suite/安装器/两SID端口全部实际终态。
+
+原候选3/4的1299过/368失败与CI2880像素断言失败继续保留。浏览器工具安装及workflow上下文修正已过actionlint，本机28像素过不能替代CI；L3正在对原CI截图/几何排障，不改产品材质或放宽阈值。Mac2880整文件夹DMG签名/挂载/源不变及隔离原生启动过，屏锁下实屏仍待。[r10证据](../../.adg/evidence/0.2.23/team/L0/r10-installers-and-ordinary-context-20261107/manifest.json)含精确摘要及清理事实。未发布，真实同步与日常配置边界保持。
 
 ## R8 原型补齐与真实CI失败后继（2026-11-07）
 

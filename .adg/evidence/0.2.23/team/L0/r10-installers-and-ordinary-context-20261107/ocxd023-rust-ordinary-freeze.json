@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "status": "frozen-static-pass-native-pending",
+  "atUtc": "2026-11-06T20:13:56.438548+00:00",
+  "files": [
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows023-rust-ordinary.ps1",
+      "sha256": "bc9b06cec29c4282f436b2f1599cd8d39487f53e8484dab50325efab563258a2"
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows023-rust-ordinary-helper.ps1",
+      "sha256": "46d89a06f5e265be33efa181bb73d597f5e6dbf72f73cf2f01b8503cc7cacbab"
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows023-rust-ordinary.test.ps1",
+      "sha256": "04054ff8a0113c7b763afaf032b0a6d44e3c1f90cd3c65e4457f50be1072ce69"
+    }
+  ],
+  "checksPassed": 85,
+  "nativeExecuted": false,
+  "ordinarySuitePassed": false,
+  "scope": "binaries",
+  "fullWorkspacePassed": false,
+  "docTestsExecuted": false,
+  "staticReceipt": "/tmp/ocxd023-rust-ordinary-contract-frozen/static-tests.json",
+  "staticLog": "/tmp/ocxd023-rust-ordinary-contract-frozen.log",
+  "retainedInvocationFailure": "/tmp/ocxd023-rust-ordinary-static-final.log",
+  "retainedCandidateFailure": "/tmp/ocxd023-windows-candidate-third-job-raw.log",
+  "authoritativeFailureClassification": "/tmp/ocxd023-windows-candidate-third-failures.json",
+  "nativeInvocationFromTauriDirectory": "& ../../../test/smoke/windows023-rust-ordinary.ps1 -Cargo (Get-Command cargo.exe).Source -ManifestPath (Join-Path $PWD 'Cargo.toml') -Node (Get-Command node.exe).Source -OutputDirectory (Join-Path $env:RUNNER_TEMP ('ocxd023-rust-ordinary-'+[guid]::NewGuid().ToString('N'))) -ExpectedCommit (git rev-parse HEAD)",
+  "parentDocTests": "cargo test --locked --workspace --features integration-test --doc",
+  "parentAdminSpecialized": "Main always path must independently execute elevated windows_private_create 13 and nativecred groups",
+  "defaults": {
+    "CargoArguments": [
+      "--locked",
+      "--workspace",
+      "--features",
+      "integration-test",
+      "--no-fail-fast"
+    ],
+    "TestArguments": [],
+    "SuiteTimeoutSeconds": 2400
+  },
+  "requirements": [
+    "GitHub-hosted ephemeral Windows, PowerShell >=7.4, administrator controller only for compilation/provision/cleanup",
+    "source-pinned real Node, existing source SHA and Cargo no-run JSON exact executables/DLL hashes",
+    "one new ordinary SID/Profile; actual Profile/AppData/Local/Temp with TokenUser/TokenOwner evidence",
+    "before RunAs UseNewEnvironment + explicit guard/path environment; bootstrap sanitizer excludes parent secrets and worker/timeout overrides",
+    "preserve zero or at most one original explicit --test-threads=N; no test filter/skip",
+    "every default-libtest metadata test target must match exact emitted binary; custom/ambiguous harness and conditional target coverage explicitly refused",
+    "only exact source/artifact RX grants restored from original DACL string with readback; no fixture owner/ACL repair",
+    "each executable suspended until real token/SID/image/creation recorded then resumed; first original nonzero exit retained; continue remaining binary tests",
+    "only exact tracked generations cleaned; untracked new-SID processes cause retained account/Profile failure"
+  ],
+  "limitations": [
+    "Windows ordinary native execution still pending candidate; static fixtures do not prove native suite pass",
+    "No doctests in no-run artifact list: scope only binaries, docTestsExecuted=false; Main must really run parent --doc even if zero docs",
+    "Original non-owner and missing-/tmp failures remain evidence; no claim ordinary context resolves all failures"
+  ],
+  "commit": "ee1504b947690e644ec42ed282eabab09460625a"
+}
