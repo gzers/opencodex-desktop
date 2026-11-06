@@ -273,10 +273,35 @@ fn validate_aliases(
     }
     Ok(())
 }
+/// Backend-only historical policy projection; callers first validate exact
+/// image/source identity. No UI deserializer can supply this authority.
+pub(super) fn project_trusted_draft(
+    d: &Path,
+    state: &StoreSnapshotV2,
+    draft: &DraftV2,
+    raw: Value,
+) -> Result<DraftProjectionV2> {
+    render(
+        d,
+        state,
+        draft,
+        raw,
+        SaveRequestV2 {
+            expected: draft.base.clone(),
+            edits: vec![],
+            channel_intents: vec![],
+            scope_channel_id: None,
+        },
+    )
+    .map(|p| p.dto)
+}
 /// Public nonwrite intent projection. The original draft remains unchanged.
 pub fn project(d: &Path, h: &Path, request: SaveRequestV2) -> Result<DraftProjectionV2> {
     let expected = request.expected.clone();
     with_draft(d, h, &expected, |state, draft, raw| {
+        if draft.policy.recovery_id.is_some() {
+            super::history::validate_save(d, h, state, draft, &request)?;
+        }
         render(d, state, draft, raw, request).map(|p| p.dto)
     })
 }
