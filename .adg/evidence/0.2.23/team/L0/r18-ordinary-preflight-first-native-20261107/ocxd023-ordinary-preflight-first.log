@@ -1,0 +1,740 @@
+﻿2026-11-06T23:16:32.7550591Z Current runner version: '2.338.2'
+2026-11-06T23:16:32.7573146Z ##[group]Runner Image Provisioner
+2026-11-06T23:16:32.7573805Z Hosted Compute Agent
+2026-11-06T23:16:32.7574235Z Version: 20261103.629
+2026-11-06T23:16:32.7574840Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-06T23:16:32.7575418Z Build Date: 2026-11-03T17:26:59Z
+2026-11-06T23:16:32.7575968Z Worker ID: {24313342-7401-45b3-895d-01cdbcee31f3}
+2026-11-06T23:16:32.7576849Z Region: eastus2
+2026-11-06T23:16:32.7577353Z Cloud: Azure
+2026-11-06T23:16:32.7577787Z ##[endgroup]
+2026-11-06T23:16:32.7579195Z ##[group]Operating System
+2026-11-06T23:16:32.7579703Z Microsoft Windows Server 2025
+2026-11-06T23:16:32.7580177Z 10.0.26100
+2026-11-06T23:16:32.7580587Z Datacenter
+2026-11-06T23:16:32.7580997Z ##[endgroup]
+2026-11-06T23:16:32.7581467Z ##[group]Runner Image
+2026-11-06T23:16:32.7581977Z Image: windows-2025-vs2026
+2026-11-06T23:16:32.7582503Z Version: 20261103.298.1
+2026-11-06T23:16:32.7583741Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+2026-11-06T23:16:32.7585038Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+2026-11-06T23:16:32.7585792Z ##[endgroup]
+2026-11-06T23:16:32.7586655Z ##[group]GITHUB_TOKEN Permissions
+2026-11-06T23:16:32.7588112Z Contents: read
+2026-11-06T23:16:32.7588582Z Metadata: read
+2026-11-06T23:16:32.7588983Z ##[endgroup]
+2026-11-06T23:16:32.7590613Z Secret source: Actions
+2026-11-06T23:16:32.7591409Z Cache mode: write
+2026-11-06T23:16:32.7592024Z Prepare workflow directory
+2026-11-06T23:16:32.7883168Z Prepare all required actions
+2026-11-06T23:16:32.7922272Z Getting action download info
+2026-11-06T23:16:32.9616033Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+2026-11-06T23:16:33.0655083Z Download action repository 'actions/setup-node@v5' (SHA:a0853c24544627f65ddf259abe73b1d18a591444)
+2026-11-06T23:16:33.2330877Z Download action repository 'dtolnay/rust-toolchain@stable' (SHA:b725eda525362e7cf34af9a7243cac1e3f01a7ec)
+2026-11-06T23:16:33.3273151Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-06T23:16:33.7718101Z Complete job name: ordinary-preflight
+2026-11-06T23:16:33.9758255Z ##[group]Run actions/checkout@v5
+2026-11-06T23:16:33.9759475Z with:
+2026-11-06T23:16:33.9760078Z   repository: gzers/opencodex-desktop
+2026-11-06T23:16:33.9765614Z   token: ***
+2026-11-06T23:16:33.9766182Z   ssh-strict: true
+2026-11-06T23:16:33.9766784Z   ssh-user: git
+2026-11-06T23:16:33.9767382Z   persist-credentials: true
+2026-11-06T23:16:33.9768038Z   clean: true
+2026-11-06T23:16:33.9768640Z   sparse-checkout-cone-mode: true
+2026-11-06T23:16:33.9769329Z   fetch-depth: 1
+2026-11-06T23:16:33.9769902Z   fetch-tags: false
+2026-11-06T23:16:33.9770490Z   show-progress: true
+2026-11-06T23:16:33.9771093Z   lfs: false
+2026-11-06T23:16:33.9771641Z   submodules: false
+2026-11-06T23:16:33.9772274Z   set-safe-directory: true
+2026-11-06T23:16:33.9772948Z   allow-unsafe-pr-checkout: false
+2026-11-06T23:16:33.9773789Z ##[endgroup]
+2026-11-06T23:16:34.0946120Z Syncing repository: gzers/opencodex-desktop
+2026-11-06T23:16:34.0948172Z ##[group]Getting Git version info
+2026-11-06T23:16:34.0949200Z Working directory is 'D:\a\opencodex-desktop\opencodex-desktop'
+2026-11-06T23:16:34.1549332Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-06T23:16:34.4824984Z git version 2.56.0.windows.4
+2026-11-06T23:16:34.4866477Z ##[endgroup]
+2026-11-06T23:16:34.4882634Z Temporarily overriding HOME='D:\a\_temp\280177c6-e70b-416b-af13-f5e4c7cc812d' before making global git config changes
+2026-11-06T23:16:34.4884549Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-06T23:16:34.4891186Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+2026-11-06T23:16:34.5896429Z Deleting the contents of 'D:\a\opencodex-desktop\opencodex-desktop'
+2026-11-06T23:16:34.5901525Z ##[group]Initializing the repository
+2026-11-06T23:16:34.5908564Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\opencodex-desktop\opencodex-desktop
+2026-11-06T23:16:34.6666917Z Initialized empty Git repository in D:/a/opencodex-desktop/opencodex-desktop/.git/
+2026-11-06T23:16:34.6707925Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/gzers/opencodex-desktop
+2026-11-06T23:16:34.7478895Z ##[endgroup]
+2026-11-06T23:16:34.7480097Z ##[group]Disabling automatic garbage collection
+2026-11-06T23:16:34.7489569Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-06T23:16:34.7861307Z ##[endgroup]
+2026-11-06T23:16:34.7862853Z ##[group]Setting up auth
+2026-11-06T23:16:34.7867355Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-06T23:16:34.8214642Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-06T23:16:36.3802020Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-06T23:16:36.4115948Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-06T23:16:36.8730863Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-06T23:16:36.9045838Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-06T23:16:37.3788404Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-06T23:16:37.4105452Z ##[endgroup]
+2026-11-06T23:16:37.4166296Z ##[group]Fetching the repository
+2026-11-06T23:16:37.4171518Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +e5d7de53dabd972a9482229c2771d01186c71366:refs/remotes/origin/codex/0.2.23-integration
+2026-11-06T23:16:39.0326120Z From https://github.com/gzers/opencodex-desktop
+2026-11-06T23:16:39.0326655Z  * [new ref]         e5d7de53dabd972a9482229c2771d01186c71366 -> origin/codex/0.2.23-integration
+2026-11-06T23:16:39.0361987Z ##[endgroup]
+2026-11-06T23:16:39.0362323Z ##[group]Determining the checkout info
+2026-11-06T23:16:39.0364000Z ##[endgroup]
+2026-11-06T23:16:39.0371980Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-06T23:16:39.0836928Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-06T23:16:39.1142028Z ##[group]Checking out the ref
+2026-11-06T23:16:39.1149597Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B codex/0.2.23-integration refs/remotes/origin/codex/0.2.23-integration
+2026-11-06T23:16:39.4454762Z Switched to a new branch 'codex/0.2.23-integration'
+2026-11-06T23:16:39.4544224Z branch 'codex/0.2.23-integration' set up to track 'origin/codex/0.2.23-integration'.
+2026-11-06T23:16:39.4588911Z ##[endgroup]
+2026-11-06T23:16:39.5001621Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-06T23:16:39.5273564Z e5d7de53dabd972a9482229c2771d01186c71366
+2026-11-06T23:16:39.5664405Z ##[group]Run actions/setup-node@v5
+2026-11-06T23:16:39.5664707Z with:
+2026-11-06T23:16:39.5664892Z   node-version: 26.8.1
+2026-11-06T23:16:39.5665095Z   always-auth: false
+2026-11-06T23:16:39.5665270Z   check-latest: false
+2026-11-06T23:16:39.5667117Z   token: ***
+2026-11-06T23:16:39.5667293Z   package-manager-cache: true
+2026-11-06T23:16:39.5667512Z ##[endgroup]
+2026-11-06T23:16:39.7013720Z Attempting to download 26.8.1...
+2026-11-06T23:16:39.7164491Z (node:7796) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-06T23:16:39.7166089Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-06T23:16:40.2038303Z Acquiring 26.8.1 - x64 from https://github.com/actions/node-versions/releases/download/26.8.1-33034053154/node-26.8.1-win32-x64.7z
+2026-11-06T23:16:40.5585682Z Extracting ...
+2026-11-06T23:16:42.3780020Z Adding to the cache ...
+2026-11-06T23:16:45.4468291Z ##[group]Environment details
+2026-11-06T23:16:46.0874903Z node: v26.8.1
+2026-11-06T23:16:46.0875186Z npm: 11.19.0
+2026-11-06T23:16:46.0875407Z yarn: 1.22.22
+2026-11-06T23:16:46.0876166Z ##[endgroup]
+2026-11-06T23:16:46.1240932Z ##[group]Run dtolnay/rust-toolchain@stable
+2026-11-06T23:16:46.1241221Z with:
+2026-11-06T23:16:46.1241376Z   toolchain: stable
+2026-11-06T23:16:46.1241544Z ##[endgroup]
+2026-11-06T23:16:46.1297707Z ##[start-action display=Parse toolchain version;id=__dtolnay_rust-toolchain.parse]
+2026-11-06T23:16:46.1438608Z ##[group]Run if [[ -z $toolchain ]]; then
+2026-11-06T23:16:46.1438915Z [36;1mif [[ -z $toolchain ]]; then[0m
+2026-11-06T23:16:46.1439329Z [36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070[0m
+2026-11-06T23:16:46.1439746Z [36;1m  echo "'toolchain' is a required input" >&2[0m
+2026-11-06T23:16:46.1439964Z [36;1m  exit 1[0m
+2026-11-06T23:16:46.1440214Z [36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then[0m
+2026-11-06T23:16:46.1440531Z [36;1m  if [[ Windows == macOS ]]; then[0m
+2026-11-06T23:16:46.1440967Z [36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2026-11-06T23:16:46.1441338Z [36;1m  else[0m
+2026-11-06T23:16:46.1441638Z [36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2026-11-06T23:16:46.1441978Z [36;1m  fi[0m
+2026-11-06T23:16:46.1442198Z [36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then[0m
+2026-11-06T23:16:46.1442586Z [36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT[0m
+2026-11-06T23:16:46.1442928Z [36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then[0m
+2026-11-06T23:16:46.1443306Z [36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT[0m
+2026-11-06T23:16:46.1443660Z [36;1melse[0m
+2026-11-06T23:16:46.1443812Z [36;1m  delimiter=EOF[0m
+2026-11-06T23:16:46.1444043Z [36;1m  while [[ $toolchain == *$delimiter* ]]; do delimiter+=_; done[0m
+2026-11-06T23:16:46.1444417Z [36;1m  printf 'toolchain<<%s\n%s\n%s\n' "$delimiter" "$toolchain" "$delimiter" >> $GITHUB_OUTPUT[0m
+2026-11-06T23:16:46.1444722Z [36;1mfi[0m
+2026-11-06T23:16:46.1460505Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-06T23:16:46.1460815Z env:
+2026-11-06T23:16:46.1460966Z   toolchain: stable
+2026-11-06T23:16:46.1461129Z ##[endgroup]
+2026-11-06T23:16:46.4598236Z ##[end-action id=__dtolnay_rust-toolchain.parse;outcome=success;conclusion=success;duration_ms=329]
+2026-11-06T23:16:46.4602021Z ##[start-action display=Set $CARGO_HOME;id=__dtolnay_rust-toolchain.__run]
+2026-11-06T23:16:46.4706893Z ##[group]Run echo CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV
+2026-11-06T23:16:46.4707284Z [36;1mecho CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV[0m
+2026-11-06T23:16:46.4718065Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-06T23:16:46.4718419Z ##[endgroup]
+2026-11-06T23:16:46.5060671Z ##[end-action id=__dtolnay_rust-toolchain.__run;outcome=success;conclusion=success;duration_ms=45]
+2026-11-06T23:16:46.5062761Z ##[start-action display=Install rustup if needed;id=__dtolnay_rust-toolchain.__run_2]
+2026-11-06T23:16:46.5070299Z ##[end-action id=__dtolnay_rust-toolchain.__run_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-06T23:16:46.5072384Z ##[start-action display=Install rustup if needed on windows;id=__dtolnay_rust-toolchain.__run_3]
+2026-11-06T23:16:46.5177466Z ##[group]Run if ! command -v rustup &>/dev/null; then
+2026-11-06T23:16:46.5177758Z [36;1mif ! command -v rustup &>/dev/null; then[0m
+2026-11-06T23:16:46.5178332Z [36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://win.rustup.rs/x86_64 --output 'D:\a\_temp\rustup-init.exe'[0m
+2026-11-06T23:16:46.5178950Z [36;1m  'D:\a\_temp\rustup-init.exe' --default-toolchain none --no-modify-path -y[0m
+2026-11-06T23:16:46.5180664Z [36;1m  echo "$CARGO_HOME\bin" >> $GITHUB_PATH[0m
+2026-11-06T23:16:46.5180905Z [36;1mfi[0m
+2026-11-06T23:16:46.5211899Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-06T23:16:46.5212217Z env:
+2026-11-06T23:16:46.5212386Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-06T23:16:46.5212593Z ##[endgroup]
+2026-11-06T23:16:46.5711905Z ##[end-action id=__dtolnay_rust-toolchain.__run_3;outcome=success;conclusion=success;duration_ms=63]
+2026-11-06T23:16:46.5724526Z ##[start-action display=rustup toolchain install stable;id=__dtolnay_rust-toolchain.__run_4]
+2026-11-06T23:16:46.5833595Z ##[group]Run set -f  # split targets and components on commas and whitespace, without glob expansion
+2026-11-06T23:16:46.5834122Z [36;1mset -f  # split targets and components on commas and whitespace, without glob expansion[0m
+2026-11-06T23:16:46.5834445Z [36;1mflags=()[0m
+2026-11-06T23:16:46.5834676Z [36;1mfor t in ${targets//,/ }; do flags+=(--target "$t"); done[0m
+2026-11-06T23:16:46.5834995Z [36;1mfor c in ${components//,/ }; do flags+=(--component "$c"); done[0m
+2026-11-06T23:16:46.5835371Z [36;1mif [[ $toolchain == nightly && -n $components ]]; then flags+=(--allow-downgrade); fi[0m
+2026-11-06T23:16:46.5835704Z [36;1mlog=$(mktemp)[0m
+2026-11-06T23:16:46.5835886Z [36;1mtrap 'rm -f "$log"' EXIT[0m
+2026-11-06T23:16:46.5836087Z [36;1mfor attempt in 1 2 3 4 5; do[0m
+2026-11-06T23:16:46.5836515Z [36;1m  if rustup toolchain install "$toolchain" "${flags[@]}" --profile minimal --no-self-update --force-non-host 2>&1 | tee "$log"; then[0m
+2026-11-06T23:16:46.5836923Z [36;1m    break[0m
+2026-11-06T23:16:46.5837073Z [36;1m  else[0m
+2026-11-06T23:16:46.5837223Z [36;1m    status=$?[0m
+2026-11-06T23:16:46.5837384Z [36;1m  fi[0m
+2026-11-06T23:16:46.5837610Z [36;1m  if [[ $attempt == 5 ]] || ! grep -Fq 'checksum failed for ' "$log" \[0m
+2026-11-06T23:16:46.5838031Z [36;1m      || ! grep -Fq 'this is likely due to an ongoing update of the official release server' "$log"; then[0m
+2026-11-06T23:16:46.5838386Z [36;1m    exit "$status"[0m
+2026-11-06T23:16:46.5838560Z [36;1m  fi[0m
+2026-11-06T23:16:46.5838835Z [36;1m  echo "Retrying rustup toolchain install in 30 seconds (retry $attempt of 4)" >&2[0m
+2026-11-06T23:16:46.5839150Z [36;1m  sleep 30[0m
+2026-11-06T23:16:46.5839310Z [36;1mdone[0m
+2026-11-06T23:16:46.5850545Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-06T23:16:46.5850855Z env:
+2026-11-06T23:16:46.5851020Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-06T23:16:46.5851229Z   toolchain: stable
+2026-11-06T23:16:46.5851390Z   targets: 
+2026-11-06T23:16:46.5851530Z   components: 
+2026-11-06T23:16:46.5851690Z   RUSTUP_PERMIT_COPY_RENAME: 1
+2026-11-06T23:16:46.5851869Z ##[endgroup]
+2026-11-06T23:16:55.4070596Z info: syncing channel updates for stable-x86_64-pc-windows-msvc
+2026-11-06T23:16:55.9128862Z 
+2026-11-06T23:16:55.9287522Z   stable-x86_64-pc-windows-msvc unchanged - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+2026-11-06T23:16:55.9288532Z 
+2026-11-06T23:16:56.0097483Z ##[end-action id=__dtolnay_rust-toolchain.__run_4;outcome=success;conclusion=success;duration_ms=9437]
+2026-11-06T23:16:56.0103743Z ##[start-action display=rustup default stable;id=__dtolnay_rust-toolchain.__run_5]
+2026-11-06T23:16:56.0204383Z ##[group]Run rustup default "$toolchain" --force-non-host
+2026-11-06T23:16:56.0204698Z [36;1mrustup default "$toolchain" --force-non-host[0m
+2026-11-06T23:16:56.0215561Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-06T23:16:56.0215861Z env:
+2026-11-06T23:16:56.0216024Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-06T23:16:56.0216230Z   toolchain: stable
+2026-11-06T23:16:56.0216383Z ##[endgroup]
+2026-11-06T23:16:56.0783791Z info: using existing install for stable-x86_64-pc-windows-msvc
+2026-11-06T23:16:56.0854151Z info: default toolchain set to stable-x86_64-pc-windows-msvc
+2026-11-06T23:16:56.0855196Z 
+2026-11-06T23:16:56.1034386Z   stable-x86_64-pc-windows-msvc unchanged - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+2026-11-06T23:16:56.1034863Z 
+2026-11-06T23:16:56.1103442Z ##[end-action id=__dtolnay_rust-toolchain.__run_5;outcome=success;conclusion=success;duration_ms=99]
+2026-11-06T23:16:56.1106487Z ##[start-action display=Create cachekey;id=__dtolnay_rust-toolchain.rustc-version]
+2026-11-06T23:16:56.1206549Z ##[group]Run DATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+2026-11-06T23:16:56.1207565Z [36;1mDATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')[0m
+2026-11-06T23:16:56.1208072Z [36;1mHASH=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-hash: //p')[0m
+2026-11-06T23:16:56.1208483Z [36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT[0m
+2026-11-06T23:16:56.1219464Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-06T23:16:56.1219776Z env:
+2026-11-06T23:16:56.1219942Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-06T23:16:56.1220154Z   toolchain: stable
+2026-11-06T23:16:56.1220318Z ##[endgroup]
+2026-11-06T23:16:57.0128782Z ##[end-action id=__dtolnay_rust-toolchain.rustc-version;outcome=success;conclusion=success;duration_ms=902]
+2026-11-06T23:16:57.0131101Z ##[start-action display=Disable incremental compilation;id=__dtolnay_rust-toolchain.__run_6]
+2026-11-06T23:16:57.0235277Z ##[group]Run if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+2026-11-06T23:16:57.0235589Z [36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then[0m
+2026-11-06T23:16:57.0235837Z [36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV[0m
+2026-11-06T23:16:57.0236051Z [36;1mfi[0m
+2026-11-06T23:16:57.0246043Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-06T23:16:57.0246347Z env:
+2026-11-06T23:16:57.0246512Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-06T23:16:57.0246727Z ##[endgroup]
+2026-11-06T23:16:57.0575107Z ##[end-action id=__dtolnay_rust-toolchain.__run_6;outcome=success;conclusion=success;duration_ms=44]
+2026-11-06T23:16:57.0577384Z ##[start-action display=Enable colors in Cargo output;id=__dtolnay_rust-toolchain.__run_7]
+2026-11-06T23:16:57.0677939Z ##[group]Run if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+2026-11-06T23:16:57.0678274Z [36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then[0m
+2026-11-06T23:16:57.0678534Z [36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV[0m
+2026-11-06T23:16:57.0678767Z [36;1mfi[0m
+2026-11-06T23:16:57.0690793Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-06T23:16:57.0691118Z env:
+2026-11-06T23:16:57.0691296Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-06T23:16:57.0691513Z   CARGO_INCREMENTAL: 0
+2026-11-06T23:16:57.0691679Z ##[endgroup]
+2026-11-06T23:16:57.1042248Z ##[end-action id=__dtolnay_rust-toolchain.__run_7;outcome=success;conclusion=success;duration_ms=46]
+2026-11-06T23:16:57.1045833Z ##[start-action display=Enable Cargo sparse registry;id=__dtolnay_rust-toolchain.__run_8]
+2026-11-06T23:16:57.1153710Z ##[group]Run # implemented in 1.66, stabilized in 1.68, made default in 1.70
+2026-11-06T23:16:57.1154800Z [36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70[0m
+2026-11-06T23:16:57.1155311Z [36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol ]; then[0m
+2026-11-06T23:16:57.1155832Z [36;1m  if rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[89]\.'; then[0m
+2026-11-06T23:16:57.1156229Z [36;1m    touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2026-11-06T23:16:57.1156594Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV[0m
+2026-11-06T23:16:57.1156975Z [36;1m  elif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[67]\.'; then[0m
+2026-11-06T23:16:57.1157484Z [36;1m    touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2026-11-06T23:16:57.1157836Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV[0m
+2026-11-06T23:16:57.1158137Z [36;1m  fi[0m
+2026-11-06T23:16:57.1158292Z [36;1mfi[0m
+2026-11-06T23:16:57.1169923Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-06T23:16:57.1170222Z env:
+2026-11-06T23:16:57.1170383Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-06T23:16:57.1170600Z   CARGO_INCREMENTAL: 0
+2026-11-06T23:16:57.1170766Z   CARGO_TERM_COLOR: always
+2026-11-06T23:16:57.1170930Z   toolchain: stable
+2026-11-06T23:16:57.1171088Z ##[endgroup]
+2026-11-06T23:16:57.3270935Z ##[end-action id=__dtolnay_rust-toolchain.__run_8;outcome=success;conclusion=success;duration_ms=222]
+2026-11-06T23:16:57.3274632Z ##[start-action display=Work around spurious network errors in curl 8.0;id=__dtolnay_rust-toolchain.__run_9]
+2026-11-06T23:16:57.3408101Z ##[group]Run # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+2026-11-06T23:16:57.3408664Z [36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation[0m
+2026-11-06T23:16:57.3409149Z [36;1mif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.7[01]\.'; then[0m
+2026-11-06T23:16:57.3409501Z [36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV[0m
+2026-11-06T23:16:57.3409738Z [36;1mfi[0m
+2026-11-06T23:16:57.3419812Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-06T23:16:57.3420110Z env:
+2026-11-06T23:16:57.3420278Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-06T23:16:57.3420493Z   CARGO_INCREMENTAL: 0
+2026-11-06T23:16:57.3420668Z   CARGO_TERM_COLOR: always
+2026-11-06T23:16:57.3420835Z   toolchain: stable
+2026-11-06T23:16:57.3420990Z ##[endgroup]
+2026-11-06T23:16:57.4813010Z ##[end-action id=__dtolnay_rust-toolchain.__run_9;outcome=success;conclusion=success;duration_ms=153]
+2026-11-06T23:16:57.4817345Z ##[start-action display=rustc +stable --version --verbose;id=__dtolnay_rust-toolchain.__run_10]
+2026-11-06T23:16:57.4927510Z ##[group]Run rustc +"$toolchain" --version --verbose
+2026-11-06T23:16:57.4927814Z [36;1mrustc +"$toolchain" --version --verbose[0m
+2026-11-06T23:16:57.4937888Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-06T23:16:57.4938179Z env:
+2026-11-06T23:16:57.4938337Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-06T23:16:57.4938542Z   CARGO_INCREMENTAL: 0
+2026-11-06T23:16:57.4938707Z   CARGO_TERM_COLOR: always
+2026-11-06T23:16:57.4938877Z   toolchain: stable
+2026-11-06T23:16:57.4939029Z ##[endgroup]
+2026-11-06T23:16:57.5607856Z rustc 1.99.1 (58cf8f9c3 2026-10-13)
+2026-11-06T23:16:57.5608262Z binary: rustc
+2026-11-06T23:16:57.5608535Z commit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67
+2026-11-06T23:16:57.5608800Z commit-date: 2026-10-13
+2026-11-06T23:16:57.5609003Z host: x86_64-pc-windows-msvc
+2026-11-06T23:16:57.5609327Z release: 1.99.1
+2026-11-06T23:16:57.5609580Z LLVM version: 23.1.1
+2026-11-06T23:16:57.5716289Z ##[end-action id=__dtolnay_rust-toolchain.__run_10;outcome=success;conclusion=success;duration_ms=89]
+2026-11-06T23:16:57.5855379Z ##[group]Run $taskStatic = Join-Path $env:RUNNER_TEMP ('ocxd023-preflight-static-' + [guid]::NewGuid().ToString('N'))
+2026-11-06T23:16:57.5856067Z [36;1m$taskStatic = Join-Path $env:RUNNER_TEMP ('ocxd023-preflight-static-' + [guid]::NewGuid().ToString('N'))[0m
+2026-11-06T23:16:57.5856605Z [36;1m& test/smoke/windows023-rust-ordinary.test.ps1 -OutputDirectory $taskStatic[0m
+2026-11-06T23:16:57.5856972Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-06T23:16:57.6436726Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-06T23:16:57.6437023Z env:
+2026-11-06T23:16:57.6437194Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-06T23:16:57.6437412Z   CARGO_INCREMENTAL: 0
+2026-11-06T23:16:57.6437585Z   CARGO_TERM_COLOR: always
+2026-11-06T23:16:57.6437763Z ##[endgroup]
+2026-11-06T23:17:03.7015812Z {
+2026-11-06T23:17:03.7016452Z   "schemaVersion": 1,
+2026-11-06T23:17:03.7016810Z   "result": "pass-static-only",
+2026-11-06T23:17:03.7017190Z   "checks": [
+2026-11-06T23:17:03.7017445Z     {
+2026-11-06T23:17:03.7017754Z       "name": "parser-windows023-rust-ordinary.ps1",
+2026-11-06T23:17:03.7018086Z       "result": "pass"
+2026-11-06T23:17:03.7018257Z     },
+2026-11-06T23:17:03.7018408Z     {
+2026-11-06T23:17:03.7018694Z       "name": "no-reserved-variable-assignment-windows023-rust-ordinary.ps1",
+2026-11-06T23:17:03.7019013Z       "result": "pass"
+2026-11-06T23:17:03.7019180Z     },
+2026-11-06T23:17:03.7019316Z     {
+2026-11-06T23:17:03.7019535Z       "name": "parser-windows023-rust-ordinary-helper.ps1",
+2026-11-06T23:17:03.7019789Z       "result": "pass"
+2026-11-06T23:17:03.7019942Z     },
+2026-11-06T23:17:03.7020083Z     {
+2026-11-06T23:17:03.7020431Z       "name": "no-reserved-variable-assignment-windows023-rust-ordinary-helper.ps1",
+2026-11-06T23:17:03.7020817Z       "result": "pass"
+2026-11-06T23:17:03.7020977Z     },
+2026-11-06T23:17:03.7021124Z     {
+2026-11-06T23:17:03.7021341Z       "name": "parser-windows023-rust-ordinary.test.ps1",
+2026-11-06T23:17:03.7021598Z       "result": "pass"
+2026-11-06T23:17:03.7021759Z     },
+2026-11-06T23:17:03.7021907Z     {
+2026-11-06T23:17:03.7022212Z       "name": "no-reserved-variable-assignment-windows023-rust-ordinary.test.ps1",
+2026-11-06T23:17:03.7022553Z       "result": "pass"
+2026-11-06T23:17:03.7022718Z     },
+2026-11-06T23:17:03.7022856Z     {
+2026-11-06T23:17:03.7023137Z       "name": "ephemeral-guard-before-compilation-and-all-native-mutations",
+2026-11-06T23:17:03.7023441Z       "result": "pass"
+2026-11-06T23:17:03.7023593Z     },
+2026-11-06T23:17:03.7023729Z     {
+2026-11-06T23:17:03.7023953Z       "name": "fresh-hosted-runner-required-not-just-GHA-flag",
+2026-11-06T23:17:03.7024214Z       "result": "pass"
+2026-11-06T23:17:03.7024366Z     },
+2026-11-06T23:17:03.7024494Z     {
+2026-11-06T23:17:03.7024706Z       "name": "one-new-ordinary-account-real-profile-loaded",
+2026-11-06T23:17:03.7024958Z       "result": "pass"
+2026-11-06T23:17:03.7025111Z     },
+2026-11-06T23:17:03.7025250Z     {
+2026-11-06T23:17:03.7025493Z       "name": "existing-profile-bootstrap-reused-no-product-startup",
+2026-11-06T23:17:03.7025767Z       "result": "pass"
+2026-11-06T23:17:03.7025917Z     },
+2026-11-06T23:17:03.7026049Z     {
+2026-11-06T23:17:03.7026327Z       "name": "parent-secret-environment-scrubbed-before-loading-public-config",
+2026-11-06T23:17:03.7026632Z       "result": "pass"
+2026-11-06T23:17:03.7026783Z     },
+2026-11-06T23:17:03.7026911Z     {
+2026-11-06T23:17:03.7027144Z       "name": "known-folder-reexec-keeps-only-explicit-guard-state",
+2026-11-06T23:17:03.7027415Z       "result": "pass"
+2026-11-06T23:17:03.7027563Z     },
+2026-11-06T23:17:03.7027698Z     {
+2026-11-06T23:17:03.7027890Z       "name": "generated-profile-bootstrap-parser",
+2026-11-06T23:17:03.7028117Z       "result": "pass"
+2026-11-06T23:17:03.7028271Z     },
+2026-11-06T23:17:03.7028408Z     {
+2026-11-06T23:17:03.7031755Z       "name": "native-launch-managed-compilation-only-no-PInvoke",
+2026-11-06T23:17:03.7032652Z       "result": "pass"
+2026-11-06T23:17:03.7032878Z     },
+2026-11-06T23:17:03.7033049Z     {
+2026-11-06T23:17:03.7033304Z       "name": "windows-argv-empty-preserved",
+2026-11-06T23:17:03.7033619Z       "result": "pass"
+2026-11-06T23:17:03.7033835Z     },
+2026-11-06T23:17:03.7034017Z     {
+2026-11-06T23:17:03.7034334Z       "name": "windows-argv-spaces-preserved",
+2026-11-06T23:17:03.7034678Z       "result": "pass"
+2026-11-06T23:17:03.7034895Z     },
+2026-11-06T23:17:03.7035077Z     {
+2026-11-06T23:17:03.7035313Z       "name": "windows-argv-quotes-preserved",
+2026-11-06T23:17:03.7035620Z       "result": "pass"
+2026-11-06T23:17:03.7035828Z     },
+2026-11-06T23:17:03.7036013Z     {
+2026-11-06T23:17:03.7036330Z       "name": "windows-argv-trailing-slash-preserved",
+2026-11-06T23:17:03.7036944Z       "result": "pass"
+2026-11-06T23:17:03.7037166Z     },
+2026-11-06T23:17:03.7037351Z     {
+2026-11-06T23:17:03.7037613Z       "name": "windows-argv-NUL-refused",
+2026-11-06T23:17:03.7037948Z       "result": "pass"
+2026-11-06T23:17:03.7038180Z     },
+2026-11-06T23:17:03.7038402Z     {
+2026-11-06T23:17:03.7038728Z       "name": "original-Cargo-build-scope-features-lock-preserved-with-no-run-JSON",
+2026-11-06T23:17:03.7039088Z       "result": "pass"
+2026-11-06T23:17:03.7039251Z     },
+2026-11-06T23:17:03.7039389Z     {
+2026-11-06T23:17:03.7039636Z       "name": "cargo-scope-narrowing-or-override-refused---exclude",
+2026-11-06T23:17:03.7039918Z       "result": "pass"
+2026-11-06T23:17:03.7040071Z     },
+2026-11-06T23:17:03.7040204Z     {
+2026-11-06T23:17:03.7040453Z       "name": "cargo-scope-narrowing-or-override-refused---lib",
+2026-11-06T23:17:03.7040710Z       "result": "pass"
+2026-11-06T23:17:03.7040862Z     },
+2026-11-06T23:17:03.7041198Z     {
+2026-11-06T23:17:03.7041419Z       "name": "cargo-scope-narrowing-or-override-refused---test",
+2026-11-06T23:17:03.7041671Z       "result": "pass"
+2026-11-06T23:17:03.7041820Z     },
+2026-11-06T23:17:03.7041954Z     {
+2026-11-06T23:17:03.7042227Z       "name": "cargo-scope-narrowing-or-override-refused-some-test-filter",
+2026-11-06T23:17:03.7042524Z       "result": "pass"
+2026-11-06T23:17:03.7042673Z     },
+2026-11-06T23:17:03.7042802Z     {
+2026-11-06T23:17:03.7043013Z       "name": "cargo-scope-narrowing-or-override-refused---doc",
+2026-11-06T23:17:03.7043257Z       "result": "pass"
+2026-11-06T23:17:03.7043403Z     },
+2026-11-06T23:17:03.7043538Z     {
+2026-11-06T23:17:03.7043759Z       "name": "cargo-scope-narrowing-or-override-refused---no-run",
+2026-11-06T23:17:03.7044023Z       "result": "pass"
+2026-11-06T23:17:03.7044173Z     },
+2026-11-06T23:17:03.7044299Z     {
+2026-11-06T23:17:03.7044574Z       "name": "cargo-scope-narrowing-or-override-refused---message-format=json",
+2026-11-06T23:17:03.7044882Z       "result": "pass"
+2026-11-06T23:17:03.7045035Z     },
+2026-11-06T23:17:03.7045163Z     {
+2026-11-06T23:17:03.7045382Z       "name": "cargo-scope-narrowing-or-override-refused---config",
+2026-11-06T23:17:03.7045647Z       "result": "pass"
+2026-11-06T23:17:03.7045794Z     },
+2026-11-06T23:17:03.7045927Z     {
+2026-11-06T23:17:03.7046109Z       "name": "no-fail-fast-must-remain-explicit",
+2026-11-06T23:17:03.7046326Z       "result": "pass"
+2026-11-06T23:17:03.7046476Z     },
+2026-11-06T23:17:03.7046608Z     {
+2026-11-06T23:17:03.7046819Z       "name": "original-worker-count-and-nocapture-admitted",
+2026-11-06T23:17:03.7047065Z       "result": "pass"
+2026-11-06T23:17:03.7047222Z     },
+2026-11-06T23:17:03.7047346Z     {
+2026-11-06T23:17:03.7047519Z       "name": "no-test-filter-or-skip---skip",
+2026-11-06T23:17:03.7047731Z       "result": "pass"
+2026-11-06T23:17:03.7047877Z     },
+2026-11-06T23:17:03.7048005Z     {
+2026-11-06T23:17:03.7048186Z       "name": "no-test-filter-or-skip---ignored",
+2026-11-06T23:17:03.7048401Z       "result": "pass"
+2026-11-06T23:17:03.7048547Z     },
+2026-11-06T23:17:03.7048676Z     {
+2026-11-06T23:17:03.7049490Z       "name": "no-test-filter-or-skip---exact",
+2026-11-06T23:17:03.7049851Z       "result": "pass"
+2026-11-06T23:17:03.7050029Z     },
+2026-11-06T23:17:03.7050164Z     {
+2026-11-06T23:17:03.7050353Z       "name": "no-test-filter-or-skip-filter",
+2026-11-06T23:17:03.7050577Z       "result": "pass"
+2026-11-06T23:17:03.7050729Z     },
+2026-11-06T23:17:03.7050858Z     {
+2026-11-06T23:17:03.7051057Z       "name": "no-test-filter-or-skip---test-threads=0",
+2026-11-06T23:17:03.7051297Z       "result": "pass"
+2026-11-06T23:17:03.7051444Z     },
+2026-11-06T23:17:03.7051573Z     {
+2026-11-06T23:17:03.7051754Z       "name": "duplicate-worker-override-refused",
+2026-11-06T23:17:03.7051977Z       "result": "pass"
+2026-11-06T23:17:03.7052129Z     },
+2026-11-06T23:17:03.7052264Z     {
+2026-11-06T23:17:03.7052441Z       "name": "complete-all-zero-exits-pass",
+2026-11-06T23:17:03.7052650Z       "result": "pass"
+2026-11-06T23:17:03.7052795Z     },
+2026-11-06T23:17:03.7052918Z     {
+2026-11-06T23:17:03.7053129Z       "name": "first-original-test-failure-exit-preserved",
+2026-11-06T23:17:03.7053381Z       "result": "pass"
+2026-11-06T23:17:03.7053528Z     },
+2026-11-06T23:17:03.7053653Z     {
+2026-11-06T23:17:03.7053859Z       "name": "later-original-test-failure-exit-preserved",
+2026-11-06T23:17:03.7054235Z       "result": "pass"
+2026-11-06T23:17:03.7054429Z     },
+2026-11-06T23:17:03.7054601Z     {
+2026-11-06T23:17:03.7054815Z       "name": "empty-suite-never-green",
+2026-11-06T23:17:03.7055079Z       "result": "pass"
+2026-11-06T23:17:03.7055284Z     },
+2026-11-06T23:17:03.7055473Z     {
+2026-11-06T23:17:03.7055713Z       "name": "partial-suite-never-green",
+2026-11-06T23:17:03.7055981Z       "result": "pass"
+2026-11-06T23:17:03.7056205Z     },
+2026-11-06T23:17:03.7056426Z     {
+2026-11-06T23:17:03.7056809Z       "name": "exact-all-Cargo-test-artifacts-multiple-packages-no-latest-glob",
+2026-11-06T23:17:03.7057221Z       "result": "pass"
+2026-11-06T23:17:03.7057412Z     },
+2026-11-06T23:17:03.7057570Z     {
+2026-11-06T23:17:03.7057835Z       "name": "repeated-identical-artifact-executed-once",
+2026-11-06T23:17:03.7058144Z       "result": "pass"
+2026-11-06T23:17:03.7058338Z     },
+2026-11-06T23:17:03.7058509Z     {
+2026-11-06T23:17:03.7058752Z       "name": "malformed-build-JSON-fails-closed",
+2026-11-06T23:17:03.7059067Z       "result": "pass"
+2026-11-06T23:17:03.7059271Z     },
+2026-11-06T23:17:03.7059435Z     {
+2026-11-06T23:17:03.7059671Z       "name": "zero-test-artifacts-never-pass",
+2026-11-06T23:17:03.7059958Z       "result": "pass"
+2026-11-06T23:17:03.7060149Z     },
+2026-11-06T23:17:03.7060321Z     {
+2026-11-06T23:17:03.7060599Z       "name": "foreign-package-test-executable-refused",
+2026-11-06T23:17:03.7060945Z       "result": "pass"
+2026-11-06T23:17:03.7061373Z     },
+2026-11-06T23:17:03.7061552Z     {
+2026-11-06T23:17:03.7061895Z       "name": "exact-executable-DLL-hashes-and-source-commit-frozen",
+2026-11-06T23:17:03.7062294Z       "result": "pass"
+2026-11-06T23:17:03.7062526Z     },
+2026-11-06T23:17:03.7062745Z     {
+2026-11-06T23:17:03.7063058Z       "name": "test-process-native-identity-persisted-before-resume",
+2026-11-06T23:17:03.7063334Z       "result": "pass"
+2026-11-06T23:17:03.7063486Z     },
+2026-11-06T23:17:03.7063618Z     {
+2026-11-06T23:17:03.7064091Z       "name": "actual-ordinary-token-image-SID-creation-required",
+2026-11-06T23:17:03.7064535Z       "result": "pass"
+2026-11-06T23:17:03.7064792Z     },
+2026-11-06T23:17:03.7065006Z     {
+2026-11-06T23:17:03.7065473Z       "name": "own-registered-Profile-and-LocalAppData-TEMP-with-owner-readback",
+2026-11-06T23:17:03.7066001Z       "result": "pass"
+2026-11-06T23:17:03.7066245Z     },
+2026-11-06T23:17:03.7066451Z     {
+2026-11-06T23:17:03.7066841Z       "name": "TokenOwner-is-evidence-never-default-owner-mutation",
+2026-11-06T23:17:03.7067297Z       "result": "pass"
+2026-11-06T23:17:03.7067540Z     },
+2026-11-06T23:17:03.7067747Z     {
+2026-11-06T23:17:03.7068393Z       "name": "failed-binary-exit-kept-and-rest-of-suite-continues",
+2026-11-06T23:17:03.7069673Z       "result": "pass"
+2026-11-06T23:17:03.7069943Z     },
+2026-11-06T23:17:03.7070153Z     {
+2026-11-06T23:17:03.7070670Z       "name": "admin-specialized-groups-and-doc-scope-not-claimed-by-binary-suite",
+2026-11-06T23:17:03.7071233Z       "result": "pass"
+2026-11-06T23:17:03.7071492Z     },
+2026-11-06T23:17:03.7071700Z     {
+2026-11-06T23:17:03.7072233Z       "name": "read-ACL-exact-artifacts-source-only-no-recursive-repair-or-owner-change",
+2026-11-06T23:17:03.7072843Z       "result": "pass"
+2026-11-06T23:17:03.7073096Z     },
+2026-11-06T23:17:03.7073307Z     {
+2026-11-06T23:17:03.7073663Z       "name": "exact-source-ACL-and-desktop-grants-restored",
+2026-11-06T23:17:03.7074088Z       "result": "pass"
+2026-11-06T23:17:03.7074334Z     },
+2026-11-06T23:17:03.7074544Z     {
+2026-11-06T23:17:03.7074939Z       "name": "unknown-new-SID-process-retains-account-not-killed",
+2026-11-06T23:17:03.7075389Z       "result": "pass"
+2026-11-06T23:17:03.7075639Z     },
+2026-11-06T23:17:03.7075858Z     {
+2026-11-06T23:17:03.7076282Z       "name": "cleanup-reuses-only-exact-PID-creation-image-SID-helper",
+2026-11-06T23:17:03.7076761Z       "result": "pass"
+2026-11-06T23:17:03.7077021Z     },
+2026-11-06T23:17:03.7077227Z     {
+2026-11-06T23:17:03.7077490Z       "name": "no-Stop-Process -Name",
+2026-11-06T23:17:03.7077810Z       "result": "pass"
+2026-11-06T23:17:03.7078068Z     },
+2026-11-06T23:17:03.7078282Z     {
+2026-11-06T23:17:03.7078560Z       "name": "no-SetTokenInformation",
+2026-11-06T23:17:03.7078890Z       "result": "pass"
+2026-11-06T23:17:03.7079130Z     },
+2026-11-06T23:17:03.7079325Z     {
+2026-11-06T23:17:03.7079526Z       "name": "no-TakeOwn",
+2026-11-06T23:17:03.7079792Z       "result": "pass"
+2026-11-06T23:17:03.7080026Z     },
+2026-11-06T23:17:03.7080232Z     {
+2026-11-06T23:17:03.7080452Z       "name": "no-/setowner",
+2026-11-06T23:17:03.7080742Z       "result": "pass"
+2026-11-06T23:17:03.7080990Z     },
+2026-11-06T23:17:03.7081198Z     {
+2026-11-06T23:17:03.7081779Z       "name": "no-Set-Service",
+2026-11-06T23:17:03.7082063Z       "result": "pass"
+2026-11-06T23:17:03.7082296Z     },
+2026-11-06T23:17:03.7082488Z     {
+2026-11-06T23:17:03.7082746Z       "name": "no-New-NetFirewallRule",
+2026-11-06T23:17:03.7083073Z       "result": "pass"
+2026-11-06T23:17:03.7083313Z     },
+2026-11-06T23:17:03.7083510Z     {
+2026-11-06T23:17:03.7083764Z       "name": "no-Set-DnsClient",
+2026-11-06T23:17:03.7084061Z       "result": "pass"
+2026-11-06T23:17:03.7084300Z     },
+2026-11-06T23:17:03.7084506Z     {
+2026-11-06T23:17:03.7084695Z       "name": "no-Invoke-WebRequest",
+2026-11-06T23:17:03.7084895Z       "result": "pass"
+2026-11-06T23:17:03.7085061Z     },
+2026-11-06T23:17:03.7085192Z     {
+2026-11-06T23:17:03.7085502Z       "name": "original-DACL-snapshot-is-immutable-string-and-restored-with-readback",
+2026-11-06T23:17:03.7085843Z       "result": "pass"
+2026-11-06T23:17:03.7085991Z     },
+2026-11-06T23:17:03.7086158Z     {
+2026-11-06T23:17:03.7086369Z       "name": "exact-DACL-restoration-pure-fixture",
+2026-11-06T23:17:03.7086594Z       "result": "pass"
+2026-11-06T23:17:03.7086744Z     },
+2026-11-06T23:17:03.7086872Z     {
+2026-11-06T23:17:03.7087123Z       "name": "different-artifact-same-executable-never-silently-dropped",
+2026-11-06T23:17:03.7087430Z       "result": "pass"
+2026-11-06T23:17:03.7087604Z     },
+2026-11-06T23:17:03.7087753Z     {
+2026-11-06T23:17:03.7087985Z       "name": "ordinary-cleanup-refuses-changed-creation",
+2026-11-06T23:17:03.7088238Z       "result": "pass"
+2026-11-06T23:17:03.7088395Z     },
+2026-11-06T23:17:03.7088526Z     {
+2026-11-06T23:17:03.7088728Z       "name": "ordinary-cleanup-zero-kills-after-creation",
+2026-11-06T23:17:03.7088973Z       "result": "pass"
+2026-11-06T23:17:03.7089124Z     },
+2026-11-06T23:17:03.7089255Z     {
+2026-11-06T23:17:03.7089447Z       "name": "ordinary-cleanup-refuses-changed-image",
+2026-11-06T23:17:03.7089676Z       "result": "pass"
+2026-11-06T23:17:03.7090007Z     },
+2026-11-06T23:17:03.7090245Z     {
+2026-11-06T23:17:03.7090444Z       "name": "ordinary-cleanup-zero-kills-after-image",
+2026-11-06T23:17:03.7090702Z       "result": "pass"
+2026-11-06T23:17:03.7090855Z     },
+2026-11-06T23:17:03.7090985Z     {
+2026-11-06T23:17:03.7091179Z       "name": "ordinary-cleanup-refuses-changed-sid",
+2026-11-06T23:17:03.7091416Z       "result": "pass"
+2026-11-06T23:17:03.7091571Z     },
+2026-11-06T23:17:03.7091702Z     {
+2026-11-06T23:17:03.7091894Z       "name": "ordinary-cleanup-zero-kills-after-sid",
+2026-11-06T23:17:03.7092119Z       "result": "pass"
+2026-11-06T23:17:03.7092264Z     },
+2026-11-06T23:17:03.7092395Z     {
+2026-11-06T23:17:03.7092626Z       "name": "ordinary-cleanup-stops-only-matching-frozen-fixture",
+2026-11-06T23:17:03.7092896Z       "result": "pass"
+2026-11-06T23:17:03.7093048Z     },
+2026-11-06T23:17:03.7093177Z     {
+2026-11-06T23:17:03.7093382Z       "name": "default-workers-unchanged-no-test-arguments",
+2026-11-06T23:17:03.7093626Z       "result": "pass"
+2026-11-06T23:17:03.7093779Z     },
+2026-11-06T23:17:03.7093909Z     {
+2026-11-06T23:17:03.7094173Z       "name": "RunAs-new-environment-before-credentials-no-worker-override",
+2026-11-06T23:17:03.7094471Z       "result": "pass"
+2026-11-06T23:17:03.7094627Z     },
+2026-11-06T23:17:03.7094759Z     {
+2026-11-06T23:17:03.7094969Z       "name": "metadata-default-libtest-harness-admission",
+2026-11-06T23:17:03.7095208Z       "result": "pass"
+2026-11-06T23:17:03.7095361Z     },
+2026-11-06T23:17:03.7095484Z     {
+2026-11-06T23:17:03.7095674Z       "name": "custom-harness-false-explicitly-refused",
+2026-11-06T23:17:03.7095903Z       "result": "pass"
+2026-11-06T23:17:03.7096062Z     },
+2026-11-06T23:17:03.7096186Z     {
+2026-11-06T23:17:03.7096416Z       "name": "all-metadata-test-targets-match-emitted-artifacts",
+2026-11-06T23:17:03.7096683Z       "result": "pass"
+2026-11-06T23:17:03.7096843Z     },
+2026-11-06T23:17:03.7096982Z     {
+2026-11-06T23:17:03.7097176Z       "name": "missing-test-artifact-never-green",
+2026-11-06T23:17:03.7097401Z       "result": "pass"
+2026-11-06T23:17:03.7097551Z     },
+2026-11-06T23:17:03.7097683Z     {
+2026-11-06T23:17:03.7097903Z       "name": "binaries-only-no-doctest-or-fullworkspace-claim",
+2026-11-06T23:17:03.7098159Z       "result": "pass"
+2026-11-06T23:17:03.7098315Z     },
+2026-11-06T23:17:03.7098438Z     {
+2026-11-06T23:17:03.7098658Z       "name": "actual-parent-guard-refuses-before-native-output",
+2026-11-06T23:17:03.7098911Z       "result": "pass"
+2026-11-06T23:17:03.7099054Z     },
+2026-11-06T23:17:03.7099176Z     {
+2026-11-06T23:17:03.7099364Z       "name": "refused-parent-created-no-output",
+2026-11-06T23:17:03.7099581Z       "result": "pass"
+2026-11-06T23:17:03.7099741Z     },
+2026-11-06T23:17:03.7099869Z     {
+2026-11-06T23:17:03.7100108Z       "name": "actual-child-guard-refuses-outside-ephemeral-runner",
+2026-11-06T23:17:03.7100375Z       "result": "pass"
+2026-11-06T23:17:03.7100526Z     }
+2026-11-06T23:17:03.7100660Z   ],
+2026-11-06T23:17:03.7100806Z   "checksPassed": 85,
+2026-11-06T23:17:03.7100981Z   "nativeExecuted": false,
+2026-11-06T23:17:03.7101165Z   "accountsCreated": false,
+2026-11-06T23:17:03.7101367Z   "rustBinariesExecuted": false,
+2026-11-06T23:17:03.7101898Z   "ordinarySuitePassed": false,
+2026-11-06T23:17:03.7102081Z   "files": [
+2026-11-06T23:17:03.7102221Z     {
+2026-11-06T23:17:03.7102488Z       "sha256": "632a69508d7d24f713ce2bae0b9f37a53bf794e86535149fc942df61f4da4732",
+2026-11-06T23:17:03.7102970Z       "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-rust-ordinary.ps1"
+2026-11-06T23:17:03.7103348Z     },
+2026-11-06T23:17:03.7103560Z     {
+2026-11-06T23:17:03.7103889Z       "sha256": "858cc7460f2c8420fa0de20232f8663ed270d1cbcb934ae6fc319fc367e149b5",
+2026-11-06T23:17:03.7104494Z       "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-rust-ordinary-helper.ps1"
+2026-11-06T23:17:03.7115706Z     },
+2026-11-06T23:17:03.7117247Z     {
+2026-11-06T23:17:03.7117876Z       "sha256": "b600475a3654963446275e219ab5464a29efb81f8307b447780c84302b806a7e",
+2026-11-06T23:17:03.7118634Z       "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-rust-ordinary.test.ps1"
+2026-11-06T23:17:03.7119194Z     }
+2026-11-06T23:17:03.7119401Z   ]
+2026-11-06T23:17:03.7119608Z }
+2026-11-06T23:17:03.8016051Z ##[group]Run $taskEvidence = Join-Path $env:RUNNER_TEMP ('ocxd023-preflight-native-' + [guid]::NewGuid().ToString('N'))
+2026-11-06T23:17:03.8016768Z [36;1m$taskEvidence = Join-Path $env:RUNNER_TEMP ('ocxd023-preflight-native-' + [guid]::NewGuid().ToString('N'))[0m
+2026-11-06T23:17:03.8017159Z [36;1mtry {[0m
+2026-11-06T23:17:03.8017936Z [36;1m  & test/smoke/windows023-rust-ordinary.ps1 -Cargo (Get-Command cargo.exe).Source -ManifestPath (Join-Path $PWD 'test/smoke/windows023-ordinary-preflight/Cargo.toml') -Node (Get-Command node.exe).Source -OutputDirectory $taskEvidence -ExpectedCommit (git rev-parse HEAD)[0m
+2026-11-06T23:17:03.8018912Z [36;1m  if ($LASTEXITCODE -ne 0) { throw 'Ordinary runner preflight failed; original receipts retained' }[0m
+2026-11-06T23:17:03.8019259Z [36;1m} finally {[0m
+2026-11-06T23:17:03.8019566Z [36;1m  New-Item -ItemType Directory -Force test/out/windows023-ordinary-preflight | Out-Null[0m
+2026-11-06T23:17:03.8020247Z [36;1m  if (Test-Path -LiteralPath $taskEvidence) { Copy-Item -LiteralPath $taskEvidence -Destination test/out/windows023-ordinary-preflight/native -Recurse }[0m
+2026-11-06T23:17:03.8020745Z [36;1m}[0m
+2026-11-06T23:17:03.8076807Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-06T23:17:03.8077082Z env:
+2026-11-06T23:17:03.8077263Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-06T23:17:03.8077476Z   CARGO_INCREMENTAL: 0
+2026-11-06T23:17:03.8077648Z   CARGO_TERM_COLOR: always
+2026-11-06T23:17:03.8077823Z ##[endgroup]
+2026-11-06T23:18:00.2069605Z {"result":"cleanup-failed","stage":"run-ordinary-suite","failureCode":"ordinary_suite_build_provision_or_execution_failed","failureType":"System.Management.Automation.ItemNotFoundException","failureLine":130,"failureHResult":-2146233087,"innerFailureHResult":null,"createProfileHResult":0,"nativeSuiteExecuted":true,"allBinariesAttempted":false,"exitCode":1}
+2026-11-06T23:18:00.3891873Z [31;1mException: [0mD:\a\_temp\add2cdca-0a85-4115-a9ea-198f74334689.ps1:5[0m
+2026-11-06T23:18:00.3892345Z [31;1m[0m[36;1mLine |[0m
+2026-11-06T23:18:00.3893093Z [31;1m[0m[36;1m[36;1m   5 | [0m … DE -ne 0) { [36;1mthrow 'Ordinary runner preflight failed; original receipt[0m …[0m
+2026-11-06T23:18:00.3894068Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+2026-11-06T23:18:00.3894920Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mOrdinary runner preflight failed; original receipts retained[0m
+2026-11-06T23:18:00.4212548Z ##[error]Process completed with exit code 1.
+2026-11-06T23:18:00.4407896Z ##[group]Run actions/upload-artifact@v4
+2026-11-06T23:18:00.4408322Z with:
+2026-11-06T23:18:00.4408759Z   name: windows023-ordinary-preflight-e5d7de53dabd972a9482229c2771d01186c71366
+2026-11-06T23:18:00.4409334Z   path: test/out/windows023-ordinary-preflight
+2026-11-06T23:18:00.4409677Z   if-no-files-found: warn
+2026-11-06T23:18:00.4409957Z   retention-days: 14
+2026-11-06T23:18:00.4410218Z   compression-level: 6
+2026-11-06T23:18:00.4410474Z   overwrite: false
+2026-11-06T23:18:00.4410726Z   include-hidden-files: false
+2026-11-06T23:18:00.4411012Z env:
+2026-11-06T23:18:00.4411259Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-06T23:18:00.4411589Z   CARGO_INCREMENTAL: 0
+2026-11-06T23:18:00.4411858Z   CARGO_TERM_COLOR: always
+2026-11-06T23:18:00.4412098Z ##[endgroup]
+2026-11-06T23:18:00.6215191Z (node:4944) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-06T23:18:00.6215881Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-06T23:18:00.6311751Z With the provided path, there will be 16 files uploaded
+2026-11-06T23:18:00.6316032Z Artifact name is valid!
+2026-11-06T23:18:00.6317158Z Root directory input is valid!
+2026-11-06T23:18:00.8581801Z Beginning upload of artifact content to blob storage
+2026-11-06T23:18:00.8982551Z (node:4944) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-06T23:18:00.9205212Z Uploaded bytes 91189
+2026-11-06T23:18:00.9320569Z Finished uploading artifact content to blob storage!
+2026-11-06T23:18:00.9321657Z SHA256 digest of uploaded artifact zip is 9e1af170906a4302cc09ca8b94158be6a09276cdc790786e7e7996d618b5d77a
+2026-11-06T23:18:00.9323416Z Finalizing artifact upload
+2026-11-06T23:18:01.3150710Z Artifact windows023-ordinary-preflight-e5d7de53dabd972a9482229c2771d01186c71366.zip successfully finalized. Artifact ID 13547468966
+2026-11-06T23:18:01.3151872Z Artifact windows023-ordinary-preflight-e5d7de53dabd972a9482229c2771d01186c71366 has been successfully uploaded! Final size is 91189 bytes. Artifact ID is 13547468966
+2026-11-06T23:18:01.3160063Z Artifact download URL: https://github.com/gzers/opencodex-desktop/actions/runs/42310763513/artifacts/13547468966
+2026-11-06T23:18:01.3454575Z Post job cleanup.
+2026-11-06T23:18:01.4771797Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-06T23:18:01.5050347Z git version 2.56.0.windows.4
+2026-11-06T23:18:01.5101991Z Temporarily overriding HOME='D:\a\_temp\92e1207d-d3cb-43e8-a43e-364bb0d6feaf' before making global git config changes
+2026-11-06T23:18:01.5102873Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-06T23:18:01.5110789Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+2026-11-06T23:18:01.5428305Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-06T23:18:01.5747822Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-06T23:18:02.0670441Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-06T23:18:02.0942808Z http.https://github.com/.extraheader
+2026-11-06T23:18:02.0980347Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-06T23:18:02.1294198Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-06T23:18:02.6221768Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-06T23:18:02.6534757Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-06T23:18:03.1427950Z Cleaning up orphan processes
+2026-11-06T23:18:03.1854573Z Terminate orphan process: pid (3616) (vctip)
+2026-11-06T23:18:03.1984087Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+

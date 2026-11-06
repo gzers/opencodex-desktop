@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "original": {
+    "run": 42310763513,
+    "source": "e5d7de53dabd972a9482229c2771d01186c71366",
+    "job": 128211332672,
+    "conclusion": "failure",
+    "profileHResult": 0,
+    "profileKnownFolders": "actual pass",
+    "nativeSuiteExecuted": "controller child started, noRusttestbinaryattempted",
+    "accountAndProfileRemoved": true,
+    "sourceBytesUnchanged": true,
+    "aclRestored": false,
+    "bootstrap": "failed before ordinary-suite report; fixed message RuntimeException only; exact cause not claimed"
+  },
+  "followup": {
+    "source": "ee7ccde42",
+    "run": 42311203133,
+    "scope": "bounded earlyguarddiagnostic + ACLrestore path/type/HR; no guard or permissions weakened",
+    "nativeResult": "pending"
+  },
+  "files": [
+    {
+      "file": "ocxd023-ordinary-preflight-first.zip",
+      "source": "/tmp/ocxd023-ordinary-preflight-first.zip",
+      "bytes": 91189,
+      "sha256": "9e1af170906a4302cc09ca8b94158be6a09276cdc790786e7e7996d618b5d77a"
+    },
+    {
+      "file": "ocxd023-ordinary-preflight-first.log",
+      "source": "/tmp/ocxd023-ordinary-preflight-first.log",
+      "bytes": 52223,
+      "sha256": "9950e199d5e9f4bea98a080d0c7977afe25e776bf87db3eff59fc782375fd9fe"
+    },
+    {
+      "file": "ocxd023-child-admission-diagnostic-tests.log",
+      "source": "/tmp/ocxd023-child-admission-diagnostic-tests.log",
+      "bytes": 9091,
+      "sha256": "ada60a40df3b941464dddfc14268bb96b9e93efeb3d8f086d824a133f9b4cf59"
+    },
+    {
+      "file": "rust-ordinary.json",
+      "source": "/tmp/ocxd023-ordinary-preflight-first/native/rust-ordinary.json",
+      "bytes": 2942,
+      "sha256": "81d6fa743abdc17086962751d2bb19362d76fc8c53ce0c278bc6c314f6e55034"
+    },
+    {
+      "file": "ordinary-profile.json",
+      "source": "/tmp/ocxd023-ordinary-preflight-first/native/ordinary/ordinary-profile.json",
+      "bytes": 455,
+      "sha256": "f9018e807bfb0f44b14c81aa68cef7844e3949ee52a56f69eaa10c60ce5c686c"
+    },
+    {
+      "file": "ordinary-known-folders.json",
+      "source": "/tmp/ocxd023-ordinary-preflight-first/native/ordinary/ordinary-known-folders.json",
+      "bytes": 272,
+      "sha256": "78e944093032864f451dc7137a7e95392325ad13982de98b6cd6c63fa6092039"
+    }
+  ],
+  "fullSoftwarePassed": false,
+  "release": "not published"
+}

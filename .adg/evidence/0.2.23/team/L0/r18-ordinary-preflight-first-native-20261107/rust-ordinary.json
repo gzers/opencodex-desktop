@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "ephemeralGuard": true,
+  "result": "cleanup-failed",
+  "scope": "binaries",
+  "fullWorkspacePassed": false,
+  "expectedCommit": "e5d7de53dabd972a9482229c2771d01186c71366",
+  "nativeSuiteExecuted": true,
+  "allBinariesAttempted": false,
+  "docTestsExecuted": false,
+  "adminSpecializedGroups": "must-run-independently-in-parent-always-path",
+  "cargoArguments": [
+    "--locked",
+    "--workspace",
+    "--features",
+    "integration-test",
+    "--no-fail-fast"
+  ],
+  "testArguments": [],
+  "suiteTimeoutSeconds": 2400,
+  "sourceOrArtifactAclRestored": false,
+  "desktopAclRestored": true,
+  "accountAndProfileRemoved": true,
+  "exitCode": 1,
+  "stage": "run-ordinary-suite",
+  "node": {
+    "sha256": "5cba0ea928508c65ddadefc0681d2fb6d95f1f3beea4428f04397631140ee8e5",
+    "path": "C:\\hostedtoolcache\\windows\\node\\26.8.1\\x64\\node.exe",
+    "version": "v26.8.1"
+  },
+  "harnessContract": "metadata-covered-default-libtest-only; custom/ambiguous harness refused",
+  "runtimeDlls": [],
+  "artifacts": [
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-ordinary-preflight\\target\\debug\\deps\\windows023_ordinary_preflight-791569d65fb88844.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows023-ordinary-preflight#0.1.0",
+      "target": "windows023_ordinary_preflight",
+      "kinds": [
+        "lib"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-ordinary-preflight",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-ordinary-preflight\\Cargo.toml",
+      "packageName": "windows023-ordinary-preflight",
+      "packageVersion": "0.1.0",
+      "sha256": "cfb30fa94ef35450feb0a17c12c669fb9f48c657de7fb0e885e0b3aea6a1357c"
+    }
+  ],
+  "createProfileHResult": 0,
+  "accountSid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+  "profile": "C:\\Users\\ocxacc00815c39fc",
+  "failureCode": "ordinary_suite_build_provision_or_execution_failed",
+  "failureType": "System.Management.Automation.ItemNotFoundException",
+  "failureLine": 130,
+  "failureHResult": -2146233087,
+  "remainingNewSidProcesses": [],
+  "sourceBytesUnchanged": true,
+  "cleanup": [
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 3220,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296038721117690",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 4928,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+        "creationTicks": "639296038721081268",
+        "sessionId": 2
+      }
+    }
+  ]
+}

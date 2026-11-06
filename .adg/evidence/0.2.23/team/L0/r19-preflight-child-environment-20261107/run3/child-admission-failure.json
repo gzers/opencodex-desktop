@@ -1,0 +1,15 @@
+{
+  "result": "child-admission-failed",
+  "failureType": "System.Management.Automation.RuntimeException",
+  "failureLine": 4,
+  "failureHResult": -2146233087,
+  "sourceLeaf": "windows023-rust-ordinary-helper.ps1",
+  "ephemeralFacts": {
+    "imagePresent": true,
+    "hosted": false,
+    "isWindows": true,
+    "runnerTempPresent": false,
+    "githubActions": false
+  },
+  "guard": "Only a fresh GitHub-hosted ephemeral Windows runner is admitted"
+}

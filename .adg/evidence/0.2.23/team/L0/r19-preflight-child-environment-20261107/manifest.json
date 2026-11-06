@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "facts": {
+    "preflight2": {
+      "run": 42311203133,
+      "source": "ee7ccde42",
+      "result": "failure",
+      "profileHResult": 0,
+      "knownFolderReadback": "pass",
+      "ordinaryRustBinaryRan": false
+    },
+    "preflight3": {
+      "run": 42311736190,
+      "source": "9776fad8f",
+      "result": "failure",
+      "exactChildGuardFacts": {
+        "isWindows": true,
+        "ImageOSPresent": true,
+        "GITHUB_ACTIONS": false,
+        "RUNNER_ENVIRONMENT_hosted": false,
+        "RUNNER_TEMP_present": false
+      },
+      "acl": "SetAcl returned but exact DACL SDDL readback differs on repo/output/code directories",
+      "accountAndProfileRemoved": true,
+      "sourceBytesUnchanged": true,
+      "ordinaryRustBinaryRan": false
+    },
+    "scope": "executor admission/cleanup only, not a software regression or platform acceptance"
+  },
+  "files": [
+    {
+      "file": "ocxd023-preflight2-evidence.zip",
+      "bytes": 92056,
+      "sha256": "332d793c4ad3157bd1613cdc052d09260f5875e23cea0c1df50e11b426d47cbc"
+    },
+    {
+      "file": "run2/bootstrap.stderr.log",
+      "zipMember": "native/ordinary/bootstrap.stderr.log",
+      "bytes": 269,
+      "sha256": "23dea454872479ce0c58d178c1c8a6aebf0b273b2373ee2ab45efb5444cbc592"
+    },
+    {
+      "file": "run2/child-admission-failure.json",
+      "zipMember": "native/ordinary/child-admission-failure.json",
+      "bytes": 301,
+      "sha256": "b95813d8508595822403e3d6c1543eefca9cdb4a227a73e6e56e7aa287649d2c"
+    },
+    {
+      "file": "run2/ordinary-profile.json",
+      "zipMember": "native/ordinary/ordinary-profile.json",
+      "bytes": 455,
+      "sha256": "d72e2c8acc03102f07032fe95b603f72488cf290c8e509290be77ba8acd73e11"
+    },
+    {
+      "file": "run2/rust-ordinary.json",
+      "zipMember": "native/rust-ordinary.json",
+      "bytes": 3547,
+      "sha256": "e6ae1cd317ac900741568d5f0c4661c8858f4c4e1479a75e2b245dcdd82ed45b"
+    },
+    {
+      "file": "ocxd023-preflight3-evidence.zip",
+      "bytes": 92356,
+      "sha256": "66aecd4aba4a2230a175b3e733e7cbc640994105944d22bf0ff87f12299e5a31"
+    },
+    {
+      "file": "run3/bootstrap.stderr.log",
+      "zipMember": "native/ordinary/bootstrap.stderr.log",
+      "bytes": 388,
+      "sha256": "55c26cb33f631e62335e68eb2f241ddda0d71d7ecb91db0708aca1037cfdec48"
+    },
+    {
+      "file": "run3/child-admission-failure.json",
+      "zipMember": "native/ordinary/child-admission-failure.json",
+      "bytes": 464,
+      "sha256": "f8b308bae49fca16cec48cd9a9658c06c830c95f44b8fbcffa9b0c8d8e271219"
+    },
+    {
+      "file": "run3/ordinary-profile.json",
+      "zipMember": "native/ordinary/ordinary-profile.json",
+      "bytes": 455,
+      "sha256": "29735c315a3b3a5ccbaa7d37357b54bca260aa93f3268f722fa2bf299e913cfa"
+    },
+    {
+      "file": "run3/rust-ordinary.json",
+      "zipMember": "native/rust-ordinary.json",
+      "bytes": 3643,
+      "sha256": "040211506270c29c5fb2bd3415145b15368c88b548ab1acfe3666f5d27b901cb"
+    }
+  ],
+  "next": "explicit parent-observed CI context bound to actual newSID/Profile/input plus original ACL restoration investigation; no guard/permission relaxation",
+  "release": "not published"
+}

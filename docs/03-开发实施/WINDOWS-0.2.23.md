@@ -7,11 +7,21 @@
 ## 当前基线与获取
 
 - 仓库：gzers/opencodex-desktop。
-- 代码：远端codex/0.2.23-integration，明确基线e5d7de53dabd972a9482229c2771d01186c71366（执行器JSON空键修正、Profile HRESULT诊断与真实快速预检，产品全套/安装仍未过）。
+- 代码：远端codex/0.2.23-integration，明确基线eeb452913b0c6f94e9e0af59a19074f031942e45（父观测上下文/精确ACL诊断，快速预检42312502433待；产品suite和安装未通过）。
 - 文档：远端docs/governance-main，以包含本条R2指令的提交为准；读取本文件、TEAM、IMP-31/32及0.2.23-contracts/L0-paths-runtime-v1.md。
 - Windows代码贡献分支：codex/0.2.23-windows；文档/脱敏证据使用独立docs/0.2.23-windows分支。若已有自己的改动，先保留并合并上述明确代码基线，不重置或覆盖工作树。
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
 - 此为0.2.23实施基线，尚非最终安装候选；版本清单仍待L0统一更新。是否取得新代码以完整SHA及实际diff为准，不能仅看软件显示版本。
+
+## R14 快速原生预检的真实环境与清理缺口（2026-11-07）
+
+第一次短run42310763513证实CreateProfile HRESULT0及actual KnownFolders通过，父子普通账号pwsh已启动，但未产生Rust suite回执；账户/Profile已清、源码未变，DACL读回不一致仍判cleanup-failed，不能算通过。[r18原ZIP/回执](../../.adg/evidence/0.2.23/team/L0/r18-ordinary-preflight-first-native-20261107/manifest.json)。
+
+第二/三短run42311203133与42311736190通过有界诊断定位：真实IsWindows和ImageOS存在，RunAs子进程GITHUB_ACTIONS/RUNNER_ENVIRONMENT/RUNNER_TEMP未收到；不是KnownFolder重启（该分支本次false）、也不是环境名大小写问题。3个DACL差异均SetAcl调用完成后字符串不同，实际原/读回ACE与control尚待明细，未宽松判绿。[r19](../../.adg/evidence/0.2.23/team/L0/r19-preflight-child-environment-20261107/manifest.json)保留两原ZIP及实证布尔值。
+
+最新eeb452913以父进程真实CI guard通过后持久的明确parent-observation交接，不伪造环境已继承；child先核实际SID/Profile、源码ID及本输入/证据位置，才接受这份显式上下文。原DACL严格恢复门不改，追加ordered ACE/control的原/读回DACL诊断；89项AST/纯fixture通过，包括差异仍拒绝/写失败独立识别。真实短run42312502433已开始，必须继续实际测试binary和ACL终态验证，不能把预检或诊断提交当软件验收。
+
+未发布；全部49产品binary、两种实际安装/相邻或显式MSI切换/卸载保留、两真实SID服务端口仍必需。旧失败持续保留，代码和证据按批推送，不动日常配置和真实WebDAV。
 
 ## R13 普通执行器继续按真实错误修复（2026-11-07）
 
