@@ -511,7 +511,7 @@ impl SyncIdentityOwnerV2 {
                 &self.root,
                 &self.home,
                 &[],
-                &[selected.name.clone()],
+                std::slice::from_ref(&selected.name),
                 &sources,
                 false,
                 request.assets_reviewed,
