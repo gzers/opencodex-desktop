@@ -18,6 +18,7 @@ pub mod feedback;
 pub mod file_exports;
 pub mod file_objects;
 pub mod file_objects_v2;
+pub mod file_transfer_v2;
 pub mod objects_overlay_v2;
 pub mod legacy_migration;
 pub mod management;
