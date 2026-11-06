@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "original": {
+    "run": 42314320984,
+    "source": "03b4d28f8",
+    "workflowConclusion": "success",
+    "actualTestOutput": "2/2 parent libtests plus exactchild1/1 passed",
+    "actualIdentityAndCleanup": "TokenUser=TokenOwner/Profile/TEMP verified;sourceBytesUnchanged,allDACLrestore,desktopACLrestore,accountProfileRemovaltrue",
+    "auditFinding": "test1 exitCode serialized null; aggregation int cast mappednullto0; completed test stdout not enough exit authority so scoped executor gate not closed"
+  },
+  "followup": {
+    "source": "1ad1bf5b3",
+    "rule": "GetExitCodeProcess via retainedCreateProcessSafeHandle after signaledexit; requires actualint; null/text/partialsuite rejects, nonzero preserved",
+    "staticTests": "nativehandle128 plus exitnull/textnegative2pass",
+    "actualPreflightRun": 42314822371,
+    "fullProductCandidateRun": 42314821774,
+    "statesAtCollection": "started, no actual pass yet"
+  },
+  "files": [
+    {
+      "file": "ocxd023-preflight7-evidence.zip",
+      "source": "/tmp/ocxd023-preflight7-evidence.zip",
+      "bytes": 111885,
+      "sha256": "2e1895cf324b8ecbbaff1eb0881fcf017010738ad245fee1b3a89f05484bd5c4"
+    },
+    {
+      "file": "ocxd023-preflight7-job.log",
+      "source": "/tmp/ocxd023-preflight7-job.log",
+      "bytes": 62023,
+      "sha256": "c68f6d955784f6cd047e31d9ab3f09858cceb2e58361eca1e36f7b87f2e62835"
+    },
+    {
+      "file": "ocxd023-rust-ordinary-native-handle-static.log",
+      "source": "/tmp/ocxd023-rust-ordinary-native-handle-static.log",
+      "bytes": 13525,
+      "sha256": "1a15f383b1b164c1139293a915839a8212bfc07bbe9d691890280f0ff3320c71"
+    },
+    {
+      "file": "ocxd023-native-exit-authority-tests.log",
+      "source": "/tmp/ocxd023-native-exit-authority-tests.log",
+      "bytes": 13718,
+      "sha256": "0f9ad1de71d4337370f3300a15de1d20b9b6f7c0fa2fb9be8f11e51dcf74c359"
+    },
+    {
+      "file": "ocxd023-final-current-workflows.log",
+      "source": "/tmp/ocxd023-final-current-workflows.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ordinary-suite.json",
+      "zipMember": "native/ordinary/ordinary-suite.json",
+      "bytes": 3538,
+      "sha256": "f010e2a69a358919403632fef88d8f785c279bd497bef00babdcec3486408625"
+    },
+    {
+      "file": "test-1.stdout.log",
+      "zipMember": "native/ordinary/test-1.stdout.log",
+      "bytes": 438,
+      "sha256": "0c1554d0aaa8ea552d5b4d4fe5a34c6480644109115651a4af53230ad40df4ba"
+    },
+    {
+      "file": "test-1.stdout.log.launch.json",
+      "zipMember": "native/ordinary/test-1.stdout.log.launch.json",
+      "bytes": 1069,
+      "sha256": "0459bd6b460ec420c1a4755d04d3884ee31c360e9e95d456e569e7b31cecd469"
+    },
+    {
+      "file": "rust-ordinary.json",
+      "zipMember": "native/rust-ordinary.json",
+      "bytes": 566407,
+      "sha256": "5316b7b772128c2ce5ea932b62090a966ce06dcecffc165d738e41d91d8025a7"
+    }
+  ],
+  "fullSoftwarePassed": false,
+  "release": "not published"
+}

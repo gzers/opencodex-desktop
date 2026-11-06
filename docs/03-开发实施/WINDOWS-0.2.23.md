@@ -7,11 +7,21 @@
 ## 当前基线与获取
 
 - 仓库：gzers/opencodex-desktop。
-- 代码：远端codex/0.2.23-integration，明确基线eeb452913b0c6f94e9e0af59a19074f031942e45（父观测上下文/精确ACL诊断，快速预检42312502433待；产品suite和安装未通过）。
+- 代码：远端codex/0.2.23-integration，明确基线1ad1bf5b3534dac74e370b7f626539dd1a9ebf55（retained原生SID/exitcode，短预检42314822371与完整候选42314821774已启动，实际终态待）。
 - 文档：远端docs/governance-main，以包含本条R2指令的提交为准；读取本文件、TEAM、IMP-31/32及0.2.23-contracts/L0-paths-runtime-v1.md。
 - Windows代码贡献分支：codex/0.2.23-windows；文档/脱敏证据使用独立docs/0.2.23-windows分支。若已有自己的改动，先保留并合并上述明确代码基线，不重置或覆盖工作树。
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
 - 此为0.2.23实施基线，尚非最终安装候选；版本清单仍待L0统一更新。是否取得新代码以完整SHA及实际diff为准，不能仅看软件显示版本。
+
+## R16 原生执行已实跑，退出码审计后继续完整候选（2026-11-07）
+
+03b4d28f8通过同一retained CreateProcess原句柄读实际TokenUser、映像、创建时间和ordinary elevation；CIM缺失如实标明、若提供矛盾仍拒绝，原0..9时间粒度不变。启动前失败仅终止本次返回的精确原生句柄，避免遗留暂停进程，不按名称/端口猜进程。128项AST/managedinterop/纯fixture通过。
+
+真实短run42314320984 job128223126807终态success，实际Rust parent2/2和exactchild1/1输出通过；TokenUser=TokenOwner/Profile/TEMP及DACL、桌面ACL、account/Profile清理、源码字节保持全过。但总控回执审计发现单项test1.exitCode=null，聚合int cast把null变0，不能据此关闭执行器门。原绿色工作流及此缺口一并保留，未按stdout冒退出权威。
+
+1ad1bf5b3改用retained native handle的GetExitCodeProcess，等待真实signaledexit后只接受integer；null/text/partial拒绝，第一原始nonzero保持。后继短预检42314822371与完整产品候选42314821774已分别启动，精确源码1ad1bf5b3；后者仍强制全部49productbinary、doc独立执行、提权13/nativecred、实际安装及两SID端口，不用预检代替。[r23原ZIP/启动诊断/审计证据](../../.adg/evidence/0.2.23/team/L0/r23-native-preflight-exit-authority-20261107/manifest.json)。
+
+未发布，Mac真实CI过范围保持，Mac实屏与原None恢复删除语义仍待用户答复；不因测试工具绿色擅自关闭这两项或生产配置边界。
 
 ## R15 普通执行器已到原生暂停态身份边界（2026-11-07）
 
