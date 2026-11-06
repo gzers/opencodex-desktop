@@ -1,0 +1,73 @@
+use std::path::Path;
+const OFFICIAL_PACKAGE:&str="@bitkyc08/opencodex";
+const MANIFEST_FILENAME:&str=".runtime-manifest.json";
+const PACKAGE_SUBPATH:&str="node_modules/@bitkyc08/opencodex";
+#[derive(serde::Deserialize)] struct RuntimeManifest{package:String,version:String}
+#[derive(Debug)] enum InstallError{FileSystem{operation:String,detail:String}}
+fn validate_existing_prefix(prefix: &Path) -> Result<(), InstallError> {
+    if !prefix.exists() {
+        return Ok(());
+    }
+    let has_entries = std::fs::read_dir(prefix)
+        .map_err(|error| InstallError::FileSystem {
+            operation: "inspect existing install target".to_string(),
+            detail: error.to_string(),
+        })?
+        .next()
+        .is_some();
+    if !has_entries {
+        return Ok(());
+    }
+    let manifest_path = prefix.join(MANIFEST_FILENAME);
+    let manifest: RuntimeManifest =
+        serde_json::from_slice(&std::fs::read(&manifest_path).map_err(|_| {
+            InstallError::FileSystem {
+                operation: "validate existing install target".to_string(),
+                detail: "已有非空目录不是受管 OpenCodex 安装，未覆盖".to_string(),
+            }
+        })?)
+        .map_err(|_| InstallError::FileSystem {
+            operation: "validate existing install target".to_string(),
+            detail: "已有安装清单无效，未覆盖".to_string(),
+        })?;
+    if manifest.package != OFFICIAL_PACKAGE || manifest.version.is_empty() {
+        return Err(InstallError::FileSystem {
+            operation: "validate existing install target".to_string(),
+            detail: "已有目录不是受管 OpenCodex 安装，未覆盖".to_string(),
+        });
+    }
+    let package_json = prefix.join(PACKAGE_SUBPATH).join("package.json");
+    let package: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(&package_json).map_err(|_| {
+            InstallError::FileSystem {
+                operation: "validate existing install target".to_string(),
+                detail: "受管安装缺少官方包清单，未覆盖".to_string(),
+            }
+        })?)
+        .map_err(|_| InstallError::FileSystem {
+            operation: "validate existing install target".to_string(),
+            detail: "受管安装包清单无效，未覆盖".to_string(),
+        })?;
+    if package.get("name").and_then(|value| value.as_str()) != Some(OFFICIAL_PACKAGE)
+        || package.get("version").and_then(|value| value.as_str())
+            != Some(manifest.version.as_str())
+    {
+        return Err(InstallError::FileSystem {
+            operation: "validate existing install target".to_string(),
+            detail: "受管安装包与清单不一致，未覆盖".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn main(){
+ let root=std::env::temp_dir().join(format!("post022-manifest-review-{}",std::process::id()));std::fs::create_dir_all(root.join(PACKAGE_SUBPATH)).unwrap();
+ let manifest=root.join(MANIFEST_FILENAME);let package=root.join(PACKAGE_SUBPATH).join("package.json");
+ for (case,mv,pn,pv,ok) in [("consistent-2.84","2.84.0",OFFICIAL_PACKAGE,"2.84.0",true),("consistent-maintained","2.97.0-post021.ownerquery.2",OFFICIAL_PACKAGE,"2.97.0-post021.ownerquery.2",true),("version-mismatch","2.84.0",OFFICIAL_PACKAGE,"2.97.0",false),("package-name-mismatch","2.84.0","different-package","2.84.0",false),("truncated-prerelease-manifest","2.97.0",OFFICIAL_PACKAGE,"2.97.0-post021.ownerquery.2",false)]{
+  std::fs::write(&manifest,serde_json::to_vec(&serde_json::json!({"package":OFFICIAL_PACKAGE,"version":mv})).unwrap()).unwrap();std::fs::write(&package,serde_json::to_vec(&serde_json::json!({"name":pn,"version":pv})).unwrap()).unwrap();
+  let before=(std::fs::read(&manifest).unwrap(),std::fs::read(&package).unwrap());let result=validate_existing_prefix(&root);assert_eq!(result.is_ok(),ok);
+  if let Err(InstallError::FileSystem{operation,detail})=result{assert_eq!(operation,"validate existing install target");assert_eq!(detail,"受管安装包与清单不一致，未覆盖");}
+  assert_eq!(before,(std::fs::read(&manifest).unwrap(),std::fs::read(&package).unwrap()));println!("PASS {case}: accepted={ok}, no mutation");
+ }
+ std::fs::remove_dir_all(root).unwrap();
+}

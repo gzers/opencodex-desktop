@@ -1,0 +1,26 @@
+import {beforeEach,describe,expect,it,vi} from 'vitest'
+import {mount,flushPromises} from '@vue/test-utils'
+import {defineComponent} from 'vue'
+import SyncResultDialog from '@/features/sync/SyncResultDialog.vue'
+import {modelTransferApi,transferResultApi,type TransferResult} from '@/features/sync/modelTransfer'
+vi.mock('@/features/sync/modelTransfer',async original=>({...await original<typeof import('@/features/sync/modelTransfer')>(),transferResultApi:{read:vi.fn(),openDirectory:vi.fn(),backup:vi.fn(),restore:vi.fn()},modelTransferApi:{export:vi.fn(),publish:vi.fn(),prepare:vi.fn(),prepareUpload:vi.fn(),download:vi.fn(),receive:vi.fn(),accept:vi.fn()}}))
+const dialog=defineComponent({props:['open'],emits:['close'],template:'<section v-if="open"><button aria-label="关闭" @click="$emit(\'close\')">×</button><slot/><slot name="actions"/></section>'})
+const receipt=(kind:TransferResult['kind']='export'):TransferResult=>({id:'original-operation',kind,phase:'failed',startedAt:'2026-11-02T00:00:00Z',finishedAt:'2026-11-02T00:00:01Z',items:[{id:'skills:first',kind:'skills',label:'First Skill',status:'completed'},{id:'skills:second',kind:'skills',label:'Second Skill',status:'pending'}],errorCode:'fixture_write',exportPath:null,sourceDigest:'frozen',retry:null})
+const render=()=>mount(SyncResultDialog,{props:{operationId:'original-operation'},global:{stubs:{UiDialog:dialog}}})
+beforeEach(()=>{vi.clearAllMocks();vi.mocked(transferResultApi.read).mockResolvedValue(receipt())})
+describe('transfer result is a read-only receipt with explicit original-operation actions',()=>{
+ it('explains a native authorization-store failure without misclassifying it as a file permission error',async()=>{vi.mocked(transferResultApi.read).mockResolvedValue({...receipt('import'),errorCode:'provider_auth_keychain'});const w=render();await flushPromises();expect(w.text()).toContain('本机安全存储');expect(w.text()).not.toContain('检查目标目录权限');expect(w.text()).not.toContain('已完成 2');w.unmount()})
+ it('opening and closing does not prepare, download, publish, accept or retry',async()=>{const w=render();await flushPromises();expect(transferResultApi.read).toHaveBeenCalledExactlyOnceWith('original-operation');expect(w.text()).toContain('First Skill');expect(w.text()).toContain('未完成 1');expect(w.findAll('button').some(b=>b.text()==='关闭')).toBe(false);await w.find('button[aria-label="关闭"]').trigger('click');expect(w.emitted('close')).toHaveLength(1);for(const fn of [modelTransferApi.prepare,modelTransferApi.prepareUpload,modelTransferApi.download,modelTransferApi.publish,modelTransferApi.accept,modelTransferApi.export])expect(fn).not.toHaveBeenCalled();w.unmount()})
+ it('retries an uncertain upload by its original ID without preparing another snapshot',async()=>{vi.mocked(transferResultApi.read).mockResolvedValueOnce(receipt('upload')).mockResolvedValue({...receipt('upload'),phase:'complete',errorCode:null,items:receipt().items.map(i=>({...i,status:'completed' as const}))});vi.mocked(modelTransferApi.publish).mockResolvedValue({id:'original-operation',phase:'published',package:{} as never});const w=render();await flushPromises();await w.findAll('button').find(b=>b.text()==='重试未完成项')!.trigger('click');await flushPromises();expect(modelTransferApi.publish).toHaveBeenCalledExactlyOnceWith('original-operation');expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();expect(modelTransferApi.download).not.toHaveBeenCalled();expect(w.text()).toContain('未完成 0');w.unmount()})
+ it('opens the actual custom export package directory through its receipt',async()=>{vi.mocked(transferResultApi.read).mockResolvedValue({...receipt(),phase:'complete',errorCode:null,exportPath:'/custom/date/package/file.ocxdconf',items:[]});const w=render();await flushPromises();await w.findAll('button').find(b=>b.text()==='打开备份包目录')!.trigger('click');await flushPromises();expect(transferResultApi.openDirectory).toHaveBeenCalledExactlyOnceWith('original-operation');expect(modelTransferApi.export).not.toHaveBeenCalled();w.unmount()})
+ it('hands an import retry to the shared dialog with its exact frozen options',async()=>{const r={...receipt('import'),retry:{adoptKeys:true,adoptExtensionCredentials:false,adoptWebdavPasswords:false,backupBeforeUpdate:false,credentialIds:['channel:source']}};vi.mocked(transferResultApi.read).mockResolvedValue(r);const w=render();await flushPromises();await w.findAll('button').find(b=>b.text()==='重试未完成项')!.trigger('click');expect(w.emitted('retry')).toEqual([[r]]);expect(modelTransferApi.accept).not.toHaveBeenCalled();w.unmount()})
+})
+
+it('INVESTIGATION: publication_unconfirmed currently falls through to local-file permission guidance',async()=>{
+ vi.mocked(transferResultApi.read).mockResolvedValue({...receipt('upload'),errorCode:'publication_unconfirmed'});
+ const w=render();await flushPromises();expect(w.text()).toContain('检查目标目录权限、文件占用');
+ expect(w.text()).not.toContain('云端可能已写入');
+ await w.findAll('button').find(b=>b.text()==='重试未完成项')!.trigger('click');await flushPromises();
+ expect(modelTransferApi.publish).toHaveBeenCalledExactlyOnceWith('original-operation');expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();
+ console.log('INVESTIGATION_CONFIRMED publication_unconfirmed uses generic local permission advice; retry retains original operation ID');w.unmount();
+});

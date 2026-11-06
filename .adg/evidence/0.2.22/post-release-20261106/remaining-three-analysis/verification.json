@@ -1,0 +1,76 @@
+{
+  "date": "2026-11-06",
+  "issues": [
+    "S22-POST-03",
+    "S22-POST-04",
+    "S22-POST-05"
+  ],
+  "softwareCommit": "0c57500f8f46ea50655c782c3f04334a39167abb",
+  "sourceHashes": {
+    "apps/desktop/ui/src/features/models/NewChannelDialog.vue": "087cd741976598ffbfbd8a42d1f9f4cb65be4e419594dfb390dfb9564d290550",
+    "apps/desktop/ui/src/components/ui/UiDialog.vue": "5336d199b593c127a8f1477bfec3827e1dd7a4af3412050dad9ed66e576b6563",
+    "apps/desktop/ui/src/components/ui/UiSelectField.vue": "b024333f4fd345d263202342a03d4cc09bb2ca6b76b595c734d75ce7779ae210",
+    "apps/desktop/ui/src/styles/base.css": "ef5a5d18051a19fa28c4b6e540310aa4a425bd6d1670c332a9a3692243f0b036",
+    "apps/desktop/tauri/src/commands/runtime.rs": "3d2be765ee177d8bb09b77ffbad90acd993a426e563c6c6929868b132bfd7d4e",
+    "apps/desktop/tauri/src/modules/runtime/mod.rs": "22e78a22b6ea503687f4aee1405e81aa4b7f5fd82752515a80964d6d25a2bc51",
+    "apps/desktop/tauri/src/modules/runtime/install.rs": "b71c2513bd976db9b59576f69ba900c23c46d75520046590b095494c92b1140d",
+    "apps/desktop/tauri/src/modules/model_config/remote.rs": "ea2ac9d208329f31c4eb86f4a286ba9ca0e0761b976460a5366b1be5668640f5",
+    "apps/desktop/tauri/src/modules/model_config/config_remote.rs": "c88671c7c3e988fe09574ee3c3760b644142066dfcec2ed97fb91aa7f6bcd74c",
+    "apps/desktop/tauri/src/modules/model_config/transfer_results.rs": "68bdd9f36f2d0e1ae74b5bb64033d8a0d03822da8de006b4a818b75a894a8e89",
+    "apps/desktop/ui/src/features/sync/ModelTransfer.vue": "a8a578e95438e36e6516d1fb3edf889542ce92a097acb3fcc8c5ce028786c316",
+    "apps/desktop/ui/src/features/sync/SyncResultDialog.vue": "b7a2c63aa0104e4f8b0316da22818d2c1ed0d317217ffea344bef62a87d960b8"
+  },
+  "checks": [
+    {
+      "command": "npm test -- --run tests/investigation-post022-result-temp.test.ts tests/new-channel-dialog.test.ts",
+      "result": "18 passed",
+      "scope": "12 existing new-channel behavior cases plus5 existing receipt cases and1 diagnostic case proving wrong permission guidance for publication_unconfirmed and same-ID retry; dialogs/select mocked, not visual QA"
+    },
+    {
+      "command": "npm test -- --run tests/investigation-post022-preview-temp.test.ts",
+      "result": "1 passed",
+      "scope": "Actual ModelTransfer mounted with mocked API; unconfirmed publish leaves confirm-update label; clicking again calls original operation ID, prepareUpload count stays1"
+    },
+    {
+      "command": "cargo test --lib modules::runtime::install::tests:: -- --test-threads=1",
+      "result": "34 passed",
+      "scope": "Local existing installation unit tests, simulated npm/probes; no daily package changes"
+    },
+    {
+      "command": "cargo test --lib modules::model_config::remote::tests:: -- --nocapture --test-threads=1",
+      "result": "7 passed",
+      "scope": "In-memory WebDAV; ETag/transient response/idempotency/partial/concurrency guards"
+    },
+    {
+      "command": "cargo test --lib lost_pointer_reply_reuses_original_configuration_plan_and_does_not_republish -- --nocapture --test-threads=1",
+      "result": "1 passed",
+      "scope": "Actual config_remote frozen upload using mock transport/temp root"
+    },
+    {
+      "method": "Extract exact validate_existing_prefix function; minimal compatible RuntimeManifest fields and InstallError type, compile with cached serde pair; temp files only",
+      "result": "5 passed",
+      "scope": "Consistent2.84/maintained package accepted; version/name/truncated-manifest mismatch rejected with exact message; no file mutation"
+    }
+  ],
+  "findings": {
+    "newChannel": "Missing first-stage field wrapper; inline labels plus inline-flex select; shared UiDialog supplies generic content, not business grid. Existing tests stub dialog/select and cannot validate browser layout. New/edit connection share component. Functional defaults not all equal prototype (auth mode/Key controls/search selection/manual ID/back action).",
+    "panel": "Local readonly managed-install metadata confirms manifest2.78.0 vs package2.97.0 vs resolved record2.84.0; recent history has3 failed2.97 installs and last successful managed install2.78. This directly explains local guard and stale displayed version; origin of package replacement remains unproven, no claim exact Windows state or package integrity/running service version.",
+    "webdav": "Local latest receipt kind upload, phase failed, errorCode publication_unconfirmed,48items. Code collapses confirmation read failures and receipt finish uses generic failed; result UI falls through to file permissions guidance; preview preserves prepared state on rejected await and still says confirm update. Original-ID backend recovery works in tested unchanged-source cases."
+  },
+  "staticFollowups": [
+    "config_remote::publish invokes current scope/source guard before remote::publish_blob pointer reconciliation. Publishing-state retry after source/scope changes requires dedicated recovery verification; not reproduced this turn.",
+    "Original confirmation read network/auth/invalid-pointer error code is collapsed into publication_unconfirmed; receipt cannot establish precise server cause. Do not infer missingETag as actual root from current local receipt."
+  ],
+  "fixtureSetupAdjustments": [
+    "Initial extracted validator rustc run selected incompatible cached serde pair; compiled with a compatible cached pair without source logic changes.",
+    "Initial preview fixture omitted transferResultApi.readMode; corrected mock, final probe passed. These were setup failures, not product failures."
+  ],
+  "boundaries": [
+    "Only installation identity/data-root pointer/runtime history and latest transfer receipt metadata read from daily app state; no business config, credentials, cloud payload or endpoint read",
+    "Read metadata bytes rechecked unchanged during each observation; no background-global atomicity claim",
+    "No real WebDAV/inference/service call, install/restart or production change",
+    "Two temporary UI diagnostic files removed after preserving read-only evidence",
+    "No native visual acceptance; no final release acceptance"
+  ],
+  "total": "61 test cases passed plus5 extracted-validator diagnostic cases; not native visual/product acceptance"
+}

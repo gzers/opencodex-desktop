@@ -1,0 +1,29 @@
+import {beforeEach,describe,expect,it,vi} from 'vitest'
+import {mount,flushPromises} from '@vue/test-utils'
+import {createPinia,setActivePinia} from 'pinia'
+import {defineComponent} from 'vue'
+import {open} from '@tauri-apps/plugin-dialog'
+import ObjectScopeTree from '@/features/sync/ObjectScopeTree.vue'
+import ModelTransfer from '@/features/sync/ModelTransfer.vue'
+import {modelTransferApi,transferChoiceApi,transferProtectionApi,importCredentialChoiceApi,type ModelPackage,type IncomingPlan} from '@/features/sync/modelTransfer'
+import {useModelsStore} from '@/features/models/store'
+vi.mock('@tauri-apps/plugin-dialog',()=>({open:vi.fn()}))
+vi.mock('@/features/sync/modelTransfer',async original=>({...await original<typeof import('@/features/sync/modelTransfer')>(),transferResultApi:{read:vi.fn().mockResolvedValue(null),readMode:vi.fn().mockResolvedValue(null)},transferChoiceApi:{load:vi.fn(),save:vi.fn()},transferProtectionApi:{load:vi.fn(),save:vi.fn()},importCredentialChoiceApi:{load:vi.fn(),save:vi.fn()},modelTransferApi:{prepareDraft:vi.fn(),prepare:vi.fn(),export:vi.fn(),receive:vi.fn(),accept:vi.fn(),select:vi.fn(),prepareUpload:vi.fn(),publish:vi.fn(),download:vi.fn(),latestIncoming:vi.fn(),recompare:vi.fn(),openReceived:vi.fn(),loadRemoteScope:vi.fn(),saveRemoteScope:vi.fn(),latestUpload:vi.fn(),checkSync:vi.fn(),accountCatalog:vi.fn(),channelCatalog:vi.fn(),extensionCatalog:vi.fn()}}))
+const dialog=defineComponent({props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'})
+const render=(remote=false)=>mount(ModelTransfer,{props:{remote},global:{stubs:{UiDialog:dialog,UiSelectField:true}}})
+const pack=():ModelPackage=>({format:'OCXD_MODEL_CONFIG',formatVersion:1,schemaVersion:1,createdAt:'2026-11-02T00:00:00Z',digest:'fixture',payload:{templates:[],policy:null}})
+beforeEach(()=>{setActivePinia(createPinia());vi.clearAllMocks();localStorage.clear();vi.mocked(importCredentialChoiceApi.load).mockResolvedValue({keys:true,extensions:true});vi.mocked(importCredentialChoiceApi.save).mockResolvedValue(undefined);vi.mocked(transferProtectionApi.load).mockResolvedValue({enabled:false,hasPassword:false});vi.mocked(transferProtectionApi.save).mockResolvedValue({enabled:false,hasPassword:false});vi.mocked(transferChoiceApi.load).mockResolvedValue(null);vi.mocked(transferChoiceApi.save).mockImplementation(async(_remote,value)=>value);useModelsStore().snapshot={library:{schemaVersion:1,templates:[]},policy:{schemaVersion:1,channels:[],templateRefs:[]},libraryDigest:'library',policyDigest:'policy',workspace:null,workspaceDigest:'workspace'};vi.mocked(modelTransferApi.accountCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.extensionCatalog).mockResolvedValue({skills:['fixture-skill'],mcps:['fixture-mcp']});vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false,skillNames:['fixture-skill'],mcpNames:['fixture-mcp']});vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'export-plan',package:pack(),credentialCount:1});vi.mocked(modelTransferApi.export).mockResolvedValue({path:'/fixture/config.ocxdconf',digest:'fixture',channels:0,templates:0})})
+
+it('INVESTIGATION: preview after unconfirmed publish keeps original ID but still displays confirmation instead of reconciliation',async()=>{
+ vi.mocked(modelTransferApi.checkSync).mockResolvedValue({source:'local',hasRemote:true} as never);
+ const plan={id:'frozen-original',phase:'prepared',package:pack(),manager:{preferences:null,extensions:null,webdav:[]},credentialCount:0,protected:false,assets:{skills:[],mcps:[],conflicts:[]},sync:{source:'local',createdAt:'2026-11-02T00:00:00Z',changes:[{kind:'preferences',id:'desktop',label:'桌面偏好',action:'update'}],unchanged:0}};
+ vi.mocked(modelTransferApi.prepareUpload).mockResolvedValue(plan as never);
+ vi.mocked(modelTransferApi.publish).mockRejectedValue({code:'publication_unconfirmed',message:'云端可能已写入，但发布结果尚未确认；请保留原操作并重新核对'});
+ const w=render(true);await flushPromises();await w.findAll('button').find(b=>b.text()==='同步')!.trigger('click');await flushPromises();
+ await w.findAll('button').find(b=>b.text()==='确认更新')!.trigger('click');await flushPromises();
+ expect(w.text()).toContain('云端可能已写入');expect(w.findAll('button').some(b=>b.text()==='确认更新')).toBe(true);
+ expect(w.text()).not.toContain('核对原上传');
+ await w.findAll('button').find(b=>b.text()==='确认更新')!.trigger('click');await flushPromises();
+ expect(modelTransferApi.publish).toHaveBeenCalledTimes(2);expect(vi.mocked(modelTransferApi.publish).mock.calls.map(x=>x[0])).toEqual(['frozen-original','frozen-original']);
+ expect(modelTransferApi.prepareUpload).toHaveBeenCalledTimes(1);w.unmount();
+});
