@@ -154,7 +154,7 @@ impl InstallProgressSink for EventProgressSink {
     }
 }
 
-fn broadcast_source_changed(app: &tauri::AppHandle) {
+pub(crate) fn broadcast_source_changed(app: &tauri::AppHandle) {
     let _ = crate::commands::event_delivery::emit_signal(
         app,
         RUNTIME_SOURCE_CHANGED_EVENT,

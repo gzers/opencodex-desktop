@@ -153,6 +153,8 @@ struct Frozen {
     objects_hash: String,
     selection_hash: String,
     bindings_hash: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    namespace_adoption: Vec<String>,
     expected_target: String,
     source_hash: String,
     identity: Option<Image>,
@@ -165,6 +167,8 @@ struct Receipt {
     operation_id: String,
     plan_hash: String,
     root_revision: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    namespace_adoption: Vec<String>,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -319,7 +323,12 @@ impl ReceiveFileHostV2 {
         let (a, p) = self.target_path(t)?;
         self.read_at(&a, &p, MAX_IMAGE as u64)
     }
-    fn manifest(&self, id: &str) -> Result<Option<Frozen>> {
+    fn namespace_binding_hash(&self, adopt_ids: &[String]) -> Result<String> {
+        let original = self.binding_hash()?;
+        if adopt_ids.is_empty() { return Ok(original); }
+        Ok(digest(&canonical_bytes(&(original, adopt_ids))?))
+    }
+    fn manifest_with_namespace(&self, id: &str, adopt_ids: &[String]) -> Result<Option<Frozen>> {
         let dir = self.dir(id)?;
         let Some(bytes) = self.private_read(&dir.join("plan.json"), MAX_MANIFEST)? else {
             return Ok(None);
@@ -331,7 +340,8 @@ impl ReceiveFileHostV2 {
         }
         if frozen.operation_id != id
             || frozen.root_revision != root_revision(&self.root, &self.home)?
-            || frozen.bindings_hash != self.binding_hash()?
+            || frozen.namespace_adoption != adopt_ids
+            || frozen.bindings_hash != self.namespace_binding_hash(adopt_ids)?
         {
             return Err(fail("model_receive_plan_binding"));
         }
@@ -399,23 +409,30 @@ impl ReceiveFileHostV2 {
         Ok(digest(&canonical_bytes(f)?))
     }
     fn load(&self, id: &str, h: &ModelApplyPlanHandle) -> Result<Frozen> {
+        self.load_with_namespace(id, h, &[])
+    }
+    fn load_with_namespace(&self, id: &str, h: &ModelApplyPlanHandle, adopt_ids: &[String]) -> Result<Frozen> {
         let f = self
-            .manifest(id)?
+            .manifest_with_namespace(id, adopt_ids)?
             .ok_or_else(|| fail("model_receive_plan_missing"))?;
         if Self::plan_hash(&f)? != h.token() {
             return Err(fail("model_receive_handle_mismatch"));
         }
         Ok(f)
     }
-    fn receipt_bytes(&self, id: &str, hash: &str) -> Result<Vec<u8>> {
+    fn receipt_bytes(&self, id: &str, hash: &str, adopt_ids: &[String]) -> Result<Vec<u8>> {
         checked(&Receipt {
             schema_version: 2,
             operation_id: id.into(),
             plan_hash: hash.into(),
             root_revision: root_revision(&self.root, &self.home)?,
+            namespace_adoption: adopt_ids.to_vec(),
         })
     }
     fn applied(&self, id: &str, h: &ModelApplyPlanHandle) -> Result<bool> {
+        self.applied_with_namespace(id, h, &[])
+    }
+    fn applied_with_namespace(&self, id: &str, h: &ModelApplyPlanHandle, adopt_ids: &[String]) -> Result<bool> {
         let p = self.dir(id)?.join("receipt.json");
         let Some(b) = self.private_read(&p, 16 * 1024)? else {
             return Ok(false);
@@ -425,6 +442,7 @@ impl ReceiveFileHostV2 {
             return Err(fail("model_schema_unsupported"));
         }
         if r.operation_id != id
+            || r.namespace_adoption != adopt_ids
             || r.plan_hash != h.token()
             || r.root_revision != root_revision(&self.root, &self.home)?
         {
@@ -538,7 +556,7 @@ impl ReceiveFileHostV2 {
         let receipt = self
             .private_read(&self.dir(id)?.join("receipt-after.bin"), 16 * 1024)?
             .ok_or_else(|| fail("model_receive_image_missing"))?;
-        if receipt.as_slice() != self.receipt_bytes(id, h.token())? {
+        if receipt.as_slice() != self.receipt_bytes(id, h.token(), &f.namespace_adoption)? {
             return Err(fail("model_receive_image_corrupt"));
         }
         out.push(WriteV2 {
@@ -585,7 +603,7 @@ impl ReceiveFileHostV2 {
         publish(
             &self.root,
             &dir.join("receipt-after.bin"),
-            &self.receipt_bytes(id, h.token())?,
+            &self.receipt_bytes(id, h.token(), &f.namespace_adoption)?,
         )?;
         let bytes = checked(f)?;
         if bytes.len() as u64 > MAX_MANIFEST {
@@ -647,6 +665,7 @@ impl ReceiveFileHostV2 {
         objects: &SavedObjects,
         scope: &SelectionV2,
         expected: &str,
+        adopt_ids: &[String],
     ) -> Result<ModelApplyPlanHandle> {
         operation_id(id)?;
         if let Some(w) = &self.trusted_mapping_write {
@@ -657,7 +676,7 @@ impl ReceiveFileHostV2 {
         }
         let object_hash = objects_hash(objects)?;
         let selection_hash = digest(&canonical_bytes(scope)?);
-        if let Some(f) = self.manifest(id)? {
+        if let Some(f) = self.manifest_with_namespace(id, adopt_ids)? {
             if f.objects_hash != object_hash
                 || f.selection_hash != selection_hash
                 || f.expected_target != expected
@@ -665,12 +684,12 @@ impl ReceiveFileHostV2 {
                 return Err(fail("model_receive_operation_collision"));
             }
             let h = ModelApplyPlanHandle::new(Self::plan_hash(&f)?).map_err(io)?;
-            if self.applied(id, &h)? {
+            if self.applied_with_namespace(id, &h, adopt_ids)? {
                 return Ok(h);
             }
         }
         self.locks(true, |locked| {
-            if let Some(f) = self.manifest(id)? {
+            if let Some(f) = self.manifest_with_namespace(id, adopt_ids)? {
                 if f.objects_hash != object_hash
                     || f.selection_hash != selection_hash
                     || f.expected_target != expected
@@ -690,8 +709,8 @@ impl ReceiveFileHostV2 {
             for path in METADATA {
                 baseline.push(self.target_bytes(&TargetV2::Manager(path.into()))?);
             }
-            let identity =
-                optional(&self.read_at(&self.root, &self.root.join(IDENTITY), MAX_IMAGE as u64)?);
+            let identity_bytes = self.read_at(&self.root, &self.root.join(IDENTITY), MAX_IMAGE as u64)?;
+            let identity = optional(&identity_bytes);
             let state = locked.snapshot_saved_unlocked()?;
             for (i, path) in METADATA.iter().take(4).enumerate() {
                 if state.digests.files.get(*path)
@@ -710,7 +729,7 @@ impl ReceiveFileHostV2 {
             if optional(&bytes) != optional(&baseline[0]) {
                 return Err(fail("model_receive_stale"));
             }
-            let provider_bindings: Vec<_> = state
+            let mut provider_bindings: Vec<_> = state
                 .policy
                 .channels
                 .iter()
@@ -719,6 +738,44 @@ impl ReceiveFileHostV2 {
                     provider_id: c.connection.provider_id.clone(),
                 })
                 .collect();
+            // Saved-only inventory can assign stable UUIDs before the user has
+            // saved a manager Policy. Read its already frozen identity registry;
+            // never allocate IDs or persist a new registry during receive.
+            if let Some(registry_bytes) = identity_bytes.as_deref() {
+                #[derive(Deserialize)]
+                #[serde(rename_all = "camelCase", deny_unknown_fields)]
+                struct ProviderIdentities {
+                    schema_version: u32,
+                    providers: BTreeMap<String, String>,
+                }
+                let identities: ProviderIdentities = serde_json::from_value(
+                    parse_strict_json_v2(registry_bytes)?,
+                ).map_err(json_error)?;
+                if identities.schema_version != 2 || identities.providers.len() > 10000 {
+                    return Err(fail("model_receive_identity_invalid"));
+                }
+                let mut ids = BTreeSet::new();
+                for (provider, channel) in identities.providers {
+                    check_id(&channel)?;
+                    if provider.is_empty() || provider.len() > 512 || !ids.insert(channel.clone()) {
+                        return Err(fail("model_receive_identity_invalid"));
+                    }
+                    if let Some(existing) = provider_bindings.iter().find(|b| b.provider_id == provider) {
+                        if existing.channel_id != channel {
+                            return Err(fail("model_receive_identity_invalid"));
+                        }
+                        continue;
+                    }
+                    if provider_bindings.iter().any(|b| b.channel_id == channel)
+                        || state.mappings.mappings.iter().any(|m| m.provider_id == provider && !m.anchor)
+                    {
+                        return Err(fail("model_receive_identity_invalid"));
+                    }
+                    if raw.0["providers"].get(&provider).is_some() {
+                        provider_bindings.push(ProviderBindingV2 { channel_id: channel, provider_id: provider });
+                    }
+                }
+            }
             if raw.0.get("providers").is_some_and(|p| !p.is_object()) {
                 return Err(fail("model_source_invalid"));
             }
@@ -743,12 +800,13 @@ impl ReceiveFileHostV2 {
                 &state.mappings,
                 &provider_bindings,
             )?;
-            let mut received = receive_models_v2::plan(
+            let mut received = receive_models_v2::plan_with_namespace_adoption(
                 &state.library,
                 &actual,
                 objects.models(),
                 scope,
                 &self.bindings,
+                adopt_ids,
             )?;
             let mut output = SecretValue(raw.0.clone());
             if output.0.get("providers").is_none() {
@@ -876,7 +934,8 @@ impl ReceiveFileHostV2 {
                 root_revision: root_revision(&self.root, &self.home)?,
                 objects_hash: object_hash,
                 selection_hash,
-                bindings_hash: self.binding_hash()?,
+                bindings_hash: self.namespace_binding_hash(adopt_ids)?,
+                namespace_adoption: adopt_ids.to_vec(),
                 expected_target: expected.into(),
                 source_hash: source_digest(&bytes),
                 identity,
@@ -905,25 +964,15 @@ impl ReceiveFileHostV2 {
         })
     }
 }
-impl ModelApplyV2 for ReceiveFileHostV2 {
-    fn prepare(
-        &self,
-        id: &str,
-        objects: &SavedObjects,
-        scope: &SelectionV2,
-        expected_target: &str,
-    ) -> ModelResult<ModelApplyPlanHandle> {
-        self.prepare_inner(id, objects, scope, expected_target)
-            .map_err(model_error)
-    }
-    fn protect(&self, id: &str, h: &ModelApplyPlanHandle, backup: bool) -> ModelResult<()> {
-        self.load(id, h).map_err(model_error)?;
-        if self.applied(id, h).map_err(model_error)? {
+impl ReceiveFileHostV2 {
+    fn protect_authorized(&self, id: &str, h: &ModelApplyPlanHandle, backup: bool, adopt_ids: &[String]) -> ModelResult<()> {
+        self.load_with_namespace(id, h, adopt_ids).map_err(model_error)?;
+        if self.applied_with_namespace(id, h, adopt_ids).map_err(model_error)? {
             return Ok(());
         }
         self.locks(false, |_| {
-            let f = self.load(id, h)?;
-            if self.applied(id, h)? {
+            let f = self.load_with_namespace(id, h, adopt_ids)?;
+            if self.applied_with_namespace(id, h, adopt_ids)? {
                 return Ok(());
             }
             self.check_base(&f)?;
@@ -981,28 +1030,29 @@ impl ModelApplyV2 for ReceiveFileHostV2 {
         })
         .map_err(model_error)
     }
-    fn apply_once(
+    fn apply_authorized(
         &self,
         id: &str,
         objects: &SavedObjects,
         h: &ModelApplyPlanHandle,
         backup: bool,
+        adopt_ids: &[String],
     ) -> ModelResult<ModelApplyReceipt> {
         // Validate replay identity before any admission helper can recover an
         // unrelated pending save. Applied is a historical, read-only fast path.
-        let f = self.load(id, h).map_err(model_error)?;
+        let f = self.load_with_namespace(id, h, adopt_ids).map_err(model_error)?;
         if f.objects_hash != objects_hash(objects).map_err(model_error)? {
             return Err(model_error(fail("model_receive_operation_collision")));
         }
-        if self.applied(id, h).map_err(model_error)? {
+        if self.applied_with_namespace(id, h, adopt_ids).map_err(model_error)? {
             return Ok(Self::receipt(id, h));
         }
         self.locks(false, |_| {
-            let f = self.load(id, h)?;
+            let f = self.load_with_namespace(id, h, adopt_ids)?;
             if f.objects_hash != objects_hash(objects)? {
                 return Err(fail("model_receive_operation_collision"));
             }
-            if self.applied(id, h)? {
+            if self.applied_with_namespace(id, h, adopt_ids)? {
                 return Ok(Self::receipt(id, h));
             }
             if self
@@ -1029,7 +1079,7 @@ impl ModelApplyV2 for ReceiveFileHostV2 {
             {
                 recover_model_transactions(&self.root, &self.home)?;
             }
-            if self.applied(id, h)? {
+            if self.applied_with_namespace(id, h, adopt_ids)? {
                 return Ok(Self::receipt(id, h));
             }
             self.check_base(&f)?;
@@ -1052,11 +1102,11 @@ impl ModelApplyV2 for ReceiveFileHostV2 {
                 {
                     recover_model_transactions(&self.root, &self.home)?;
                 }
-                if !self.applied(id, h)? {
+                if !self.applied_with_namespace(id, h, adopt_ids)? {
                     return Err(result.err().unwrap());
                 }
             }
-            if !self.applied(id, h)? {
+            if !self.applied_with_namespace(id, h, adopt_ids)? {
                 return Err(fail("model_receive_receipt_missing"));
             }
             for e in &f.entries {
@@ -1073,22 +1123,41 @@ impl ModelApplyV2 for ReceiveFileHostV2 {
         })
         .map_err(model_error)
     }
-    fn status(&self, id: &str, h: &ModelApplyPlanHandle) -> ModelResult<ModelApplyStatus> {
+    fn status_authorized(&self, id: &str, h: &ModelApplyPlanHandle, adopt_ids: &[String]) -> ModelResult<ModelApplyStatus> {
         // Immutable plan publication and atomic own receipt suffice. Status
         // never acquires a save admission which could recover business files.
         (|| {
-            if self.applied(id, h)? {
+            if !adopt_ids.is_empty() { self.load_with_namespace(id, h, adopt_ids)?; }
+            if self.applied_with_namespace(id, h, adopt_ids)? {
                 return Ok(ModelApplyStatus::Applied(Self::receipt(id, h)));
             }
-            if self.manifest(id)?.is_none() {
+            if self.manifest_with_namespace(id, adopt_ids)?.is_none() {
                 return Ok(ModelApplyStatus::Unknown);
             }
-            self.load(id, h)?;
+            self.load_with_namespace(id, h, adopt_ids)?;
             Ok(ModelApplyStatus::Prepared)
         })()
         .map_err(model_error)
     }
 }
+impl ModelApplyV2 for ReceiveFileHostV2 {
+    fn prepare(&self, id: &str, objects: &SavedObjects, scope: &SelectionV2, expected: &str) -> ModelResult<ModelApplyPlanHandle> {
+        self.prepare_inner(id, objects, scope, expected, &[]).map_err(model_error)
+    }
+    fn protect(&self, id: &str, h: &ModelApplyPlanHandle, backup: bool) -> ModelResult<()> {
+        self.protect_authorized(id, h, backup, &[])
+    }
+    fn apply_once(&self, id: &str, objects: &SavedObjects, h: &ModelApplyPlanHandle, backup: bool) -> ModelResult<ModelApplyReceipt> {
+        self.apply_authorized(id, objects, h, backup, &[])
+    }
+    fn status(&self, id: &str, h: &ModelApplyPlanHandle) -> ModelResult<ModelApplyStatus> {
+        self.status_authorized(id, h, &[])
+    }
+}
+#[path = "namespace_file_receiver_v2.rs"]
+pub mod namespace;
+pub use namespace::SystemNamespaceReceiveV2;
+
 fn deep_overlay(target: &mut Value, incoming: &Value) {
     match (target, incoming) {
         (Value::Object(t), Value::Object(s)) => {
@@ -1300,7 +1369,10 @@ fn materialize_sources(
             }
             row["disabled"] = json!(!c.enabled);
             row["allowPrivateNetwork"] = json!(c.allow_private_network);
-            if s.include_key || s.include_authorization {
+            if s.include_key || s.include_authorization
+                || b.mode == ReceiveBindingModeV2::New
+                    && matches!(c.auth_mode.as_deref(), Some("none" | "local"))
+            {
                 channel.connection.auth_mode = c.auth_mode.clone();
                 if let Some(mode) = &c.auth_mode {
                     row["authMode"] = json!(mode);
@@ -1660,3 +1732,7 @@ mod receive_private_acl {
         Ok(())
     }
 }
+
+#[path = "model_receive_mapping_proof_v2.rs"]
+mod mapping_proof;
+pub use mapping_proof::AppliedMappingReceiptProofV2;

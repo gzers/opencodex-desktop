@@ -48,6 +48,11 @@
   --surface-overlay-border: var(--border);
   --surface-overlay-blur: var(--glass-blur-notif);
   --surface-overlay-shadow: var(--shadow);
+  /* Native dialogs retain the overlay blur. A stronger tint and secondary ink
+     keep 13px content readable over white/black background steps in both themes.
+     Derive from the effective overlay recipe, so low effects stay fully solid. */
+  --surface-overlay-dialog-bg: color-mix(in srgb, var(--panel) 40%, var(--surface-overlay-bg));
+  --surface-overlay-dialog-muted: color-mix(in srgb, var(--text) 80%, var(--muted));
 
   /* 档位相关：环境光与连续装饰是否允许（低档关闭）。 */
   --surface-ambient-display: block;
@@ -56,6 +61,18 @@
 html[data-theme="dark"] {
   --surface-panel-shadow: 0 18px 44px #00000066, 0 2px 6px #0006;
   --surface-control-shadow: 0 8px 22px #0000004d;
+}
+
+/* The existing low/no-backdrop solid recipe also keeps its original secondary ink. */
+html[data-effects="low"] {
+  --surface-overlay-dialog-bg: var(--panel);
+  --surface-overlay-dialog-muted: var(--muted);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root {
+    --surface-overlay-dialog-bg: var(--panel);
+    --surface-overlay-dialog-muted: var(--muted);
+  }
 }
 
 /* —— 配方应用：把组件类接到上面的表面分类（布局仍归各组件自己的规则）。

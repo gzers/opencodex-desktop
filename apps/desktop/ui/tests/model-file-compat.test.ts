@@ -7,6 +7,9 @@ import ChannelsView from '@/features/models/ChannelsView.vue'
 import SelectorPreviewDialog from '@/features/models/SelectorPreviewDialog.vue'
 import {emptyRules,type ChannelPolicy,type CredentialView,type ModelPolicy,type ModelSnapshot,type SavePlan} from '@/features/models/api'
 import {useModelsStore} from '@/features/models/store'
+import {useModelsV2Store} from '@/features/models/store-v2'
+import {workspaceBackend,workspaceId as wid,deferredWorkspace,copyWorkspace} from './helpers/modelWorkspaceV2'
+import type {FileSnapshotV2} from '@/features/models/api-v2'
 import {useModelSaveFeedback} from '@/app/feedback/modelSave'
 import {useFeedbackStore} from '@/app/feedback/store'
 import {useModalStore} from '@/app/modal/store'
@@ -34,8 +37,6 @@ async function compareHistory(){const w=render(ModelSaveHistory);await flushProm
 async function acceptHistory(){const w=await compareHistory();await button(w,'放入恢复草稿').trigger('click');await flushPromises();expect(useModelsStore().historicalRecovery?.id).toBe('recovery-id');return w}
 async function previewSave(w:VueWrapper){await flushPromises();await w.get('[data-testid="policy-save"]').trigger('click');await flushPromises();expect(w.findAll('[data-dialog-title="保存预览"]')).toHaveLength(1);expect(w.findAll('.channels-view > p[role="status"]')).toHaveLength(0);expect(w.text()).not.toContain('保存历史恢复')}
 async function confirmSave(w:VueWrapper){await previewSave(w);await button(w,'确认保存').trigger('click');await flushPromises()}
-async function openCopy(w:VueWrapper,reuse=true){await button(w,'复制').trigger('click');await w.get('input[maxlength="256"]').setValue('My copy');const checkbox=w.findAll('label').find(label=>label.text()==='副本复用此本机渠道Key')!.get('input');await checkbox.setValue(reuse)}
-function copied(){return useModelsStore().channelDraft!.channels.find(c=>c.id!=='source')!}
 
 beforeEach(async()=>{
   setActivePinia(createPinia());vi.clearAllMocks();currentFile=file();accepted=recovered();overrides={};wrappers=[]
@@ -136,43 +137,25 @@ describe('explicit history adapter using the actual file models UI',()=>{
 })
 
 describe('channel copy with actual-file credentials',()=>{
-  it('reads a saved Key once before adding the copy, stages it only in memory and writes it only on explicit Save',async()=>{
-    let finish!:(value:CredentialView)=>void
-    overrides.model_file_credential=()=>new Promise<CredentialView>(resolve=>{finish=resolve})
-    const models=useModelsStore(),w=render(ChannelsView);await openCopy(w)
-    await button(w,'建立副本草稿').trigger('click');await button(w,'建立副本草稿').trigger('click');await flushPromises()
-    expect(calls('model_file_credential')).toHaveLength(1);expect(calls('model_file_credential')[0]![1]).toEqual({providerId:'custom'});expect(models.channelDraft!.channels).toHaveLength(1);expect(w.get('input[maxlength="256"]').element).toHaveProperty('value','My copy')
-    finish(savedKey());await flushPromises()
-    const copy=copied();expect(copy.connection.credentialRef).toBeNull();expect(models.credentialEdits[copy.id]).toEqual({channelId:copy.id,action:'replace',value:'fixture-saved-key'});expect(calls('model_file_save')).toHaveLength(0);expect(calls('model_policy_stage')).toHaveLength(0);expect(w.text()).not.toContain('fixture-saved-key')
-    models.view.channelEditor='';await flushPromises();await confirmSave(w)
-    expect(calls('model_file_save')[0]![1].request.credentials).toEqual([{channelId:copy.id,action:'replace',value:'fixture-saved-key'}]);expect(calls('model_policy_prepare')).toHaveLength(0)
-  })
-
-  it.each(['replace','clear'])('uses the source pending %s without reading an older saved Key',async action=>{
-    const models=useModelsStore()
-    if(action==='replace')models.editCredential('source','fixture-replacement','')
-    else models.clearCredential('source')
-    const original=clone(models.credentialEdits.source),w=render(ChannelsView);await openCopy(w);await button(w,'建立副本草稿').trigger('click');await flushPromises()
-    const copy=copied();expect(copy).toBeDefined();expect(calls('model_file_credential')).toHaveLength(0);expect(models.credentialEdits.source).toEqual(original)
-    if(action==='replace')expect(models.credentialEdits[copy.id]?.value).toBe('fixture-replacement')
-    else expect(models.credentialEdits[copy.id]).toBeUndefined()
-    expect(calls('model_file_save')).toHaveLength(0)
-  })
-
-  it.each(['local','none'])('copies %s authorization without fetching a stale Key',async authMode=>{
-    const models=useModelsStore();models.channelDraft!.channels[0]!.connection.authMode=authMode
-    const w=render(ChannelsView);await openCopy(w);await button(w,'建立副本草稿').trigger('click');await flushPromises()
-    expect(copied().connection.authMode).toBe(authMode);expect(copied().connection.credentialRef).toBeNull();expect(models.credentialEdits).toEqual({});expect(calls('model_file_credential')).toHaveLength(0);expect(calls('model_file_save')).toHaveLength(0)
-  })
-
-  it.each(['unreadable','failed'])('retains copy input on %s credentials and displays only a fixed error',async failure=>{
-    overrides.model_file_credential=()=>{if(failure==='failed')throw {message:'untrusted credential payload'};return {...savedKey(),viewable:false,value:''}}
-    const models=useModelsStore(),w=render(ChannelsView);await openCopy(w);await button(w,'建立副本草稿').trigger('click');await flushPromises()
-    expect(models.channelDraft!.channels).toHaveLength(1);expect(models.credentialEdits).toEqual({});expect(w.get('input[maxlength="256"]').element).toHaveProperty('value','My copy');expect(w.get('input[maxlength="256"]').attributes('disabled')).toBeUndefined();expect(w.text()).toContain('副本尚未建立');expect(w.text()).not.toContain('untrusted credential payload');expect(calls('model_file_save')).toHaveLength(0)
-  })
-
-  it('copies without a Key when reuse is declined, even with a pending replacement',async()=>{
-    const models=useModelsStore();models.editCredential('source','fixture-replacement','');const w=render(ChannelsView);await openCopy(w,false);await button(w,'建立副本草稿').trigger('click');await flushPromises()
-    expect(copied().connection.credentialRef).toBeNull();expect(models.credentialEdits[copied().id]).toBeUndefined();expect(models.credentialEdits.source?.value).toBe('fixture-replacement');expect(calls('model_file_credential')).toHaveLength(0);expect(calls('model_file_save')).toHaveLength(0)
-  })
+ let backend:ReturnType<typeof workspaceBackend>,models:ReturnType<typeof useModelsV2Store>
+ beforeEach(async()=>{backend=workspaceBackend(ipc,['source']);models=await backend.load()})
+ async function copyForm(reuse=true){const w=render(ChannelsView);await button(w,'复制').trigger('click');await w.get('input[aria-label="复制渠道名称"]').setValue('My copy');await w.get('input[aria-label="复用源渠道Key"]').setValue(reuse);return w}
+ const copyChannel=()=>models.channels.find(c=>c.id!==wid('source'))!
+ it('copies through the trusted backend only after confirmation, with no Key plaintext read or formal-file write',async()=>{
+  const pending=deferredWorkspace<FileSnapshotV2>();let request!:unknown;ipc.mockImplementation(async(command,args)=>{if(command==='model_v2_copy_channel'){request=args;return pending.promise}return backend.handler(command,args)});const w=await copyForm();await button(w,'确认复制到草稿').trigger('click');await button(w,'确认复制到草稿').trigger('click');await flushPromises();expect(calls('model_v2_copy_channel')).toHaveLength(1);expect(calls('model_v2_credential_view')).toHaveLength(0);expect(models.channels).toHaveLength(1);expect(w.get<HTMLInputElement>('input[aria-label="复制渠道名称"]').element.value).toBe('My copy');pending.resolve(await backend.handler('model_v2_copy_channel',request as any) as FileSnapshotV2);await flushPromises();expect(copyChannel().connection.credentialRef).toBe(models.channels[0]!.connection.credentialRef);expect(JSON.stringify(models.$state)).not.toContain('fixture-original-source');expect(calls('model_v2_file_save')).toHaveLength(0);expect(w.text()).not.toContain('fixture-original-source');models.channelEditorId='';await confirmSaveV2(w);expect(calls('model_v2_file_save')).toHaveLength(1);expect(calls('model_v2_copy_channel')[0]![1].request).toEqual({expected:expect.any(Object),channelId:wid('source'),name:'My copy',reuseSourceKey:true})
+ })
+ async function confirmSaveV2(w:VueWrapper){await flushPromises();await w.get('[data-testid="policy-save"]').trigger('click');await flushPromises();await button(w,'确认保存').trigger('click');await flushPromises()}
+ it.each(['replace','clear'] as const)('uses the source pending %s through trusted staging without reading an older saved Key',async action=>{
+  models.setKeyBuffer(wid('source'),action==='replace'?{action,value:'fixture-replacement'}:{action});const w=await copyForm();await button(w,'确认复制到草稿').trigger('click');await flushPromises();const c=copyChannel();expect(c).toBeDefined();expect(calls('model_v2_credential_view')).toHaveLength(0);expect(calls('model_v2_stage_credential')).toHaveLength(1);expect(models.keyBuffer(wid('source'))).toBeNull();expect(models.file!.draft!.credentialEdits![wid('source')]!.kind).toBe(action);if(action==='replace'){expect(c.connection.credentialRef).not.toBeNull();expect(backend.stagedKeys.get(c.id)).toBe('fixture-replacement')}else{expect(c.connection.credentialRef).toBeNull();expect(backend.stagedKeys.get(c.id)).toBeNull()}expect(calls('model_v2_copy_channel')[0]![1].request).not.toHaveProperty('value');expect(calls('model_v2_file_save')).toHaveLength(0)
+ })
+ it.each(['local','none'])('copies %s authorization without fetching a stale Key',async authMode=>{
+  const fixture=copyWorkspace(models.file!);fixture.savedPolicy.channels[0]!.connection.authMode=authMode;fixture.savedPolicy.channels[0]!.connection.credentialRef=null;fixture.draft!.policy.channels[0]!.connection.authMode=authMode;fixture.draft!.policy.channels[0]!.connection.credentialRef=null;models.file=fixture;backend.current=fixture;backend.keys.clear();const w=await copyForm();await button(w,'确认复制到草稿').trigger('click');await flushPromises();expect(copyChannel().connection.authMode).toBe(authMode);expect(copyChannel().connection.credentialRef).toBeNull();expect(calls('model_v2_credential_view')).toHaveLength(0);expect(calls('model_v2_stage_credential')).toHaveLength(0);expect(calls('model_v2_file_save')).toHaveLength(0)
+ })
+ it.each(['unreadable','failed'])('retains copy input on %s backend credentials and displays only a fixed error',async failure=>{
+  ipc.mockImplementation(async(command,args)=>{if(command==='model_v2_copy_channel')throw failure==='failed'?new Error('untrusted credential payload'):{code:'credential_store'};return backend.handler(command,args)});const w=await copyForm();await button(w,'确认复制到草稿').trigger('click');await flushPromises();expect(models.channels).toHaveLength(1);expect(w.get<HTMLInputElement>('input[aria-label="复制渠道名称"]').element.value).toBe('My copy');expect(w.get('input[aria-label="复制渠道名称"]').attributes('disabled')).toBeUndefined();expect(w.text()).toContain('副本尚未建立');expect(w.text()).not.toContain('untrusted credential payload');expect(calls('model_v2_file_save')).toHaveLength(0)
+ })
+ it('copies without a Key when reuse is declined, even with a pending replacement',async()=>{
+  models.setKeyBuffer(wid('source'),{action:'replace',value:'fixture-pending'});const before=models.keyBuffer(wid('source')),w=await copyForm(false);await button(w,'确认复制到草稿').trigger('click');await flushPromises();expect(copyChannel().connection.credentialRef).toBeNull();expect(models.keyBuffer(wid('source'))).toEqual(before);expect(calls('model_v2_stage_credential')).toHaveLength(0);expect(calls('model_v2_credential_view')).toHaveLength(0);expect(calls('model_v2_copy_channel')[0]![1].request.reuseSourceKey).toBe(false);expect(calls('model_v2_file_save')).toHaveLength(0)
+ })
+ it('defaults Key reuse off every time a copy form opens, and cancellation has no backend effect',async()=>{const w=render(ChannelsView);await button(w,'复制').trigger('click');expect(w.get<HTMLInputElement>('input[aria-label="复用源渠道Key"]').element.checked).toBe(false);await w.get('input[aria-label="复用源渠道Key"]').setValue(true);await button(w,'取消').trigger('click');await button(w,'复制').trigger('click');expect(w.get<HTMLInputElement>('input[aria-label="复用源渠道Key"]').element.checked).toBe(false);expect(calls('model_v2_copy_channel')).toHaveLength(0);expect(calls('model_v2_stage_credential')).toHaveLength(0)})
 })

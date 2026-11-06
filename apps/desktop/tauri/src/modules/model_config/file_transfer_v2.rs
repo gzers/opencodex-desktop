@@ -12,7 +12,7 @@ use super::{
     schema_v2::{self, LibraryV2, PolicyV2},
     source_v2::ReadBaseV2,
     store_v2,
-    sync_local_v2::{self, LocalApplicationV2, SourceSnapshotProviderV2},
+    sync_local_v2::{self, LocalApplicationV2, ModelApplyV2, SourceSnapshotProviderV2},
     sync_v2::types::{LocalApplication, PayloadSchemaRef, SourceGuard},
 };
 use crate::modules::{
@@ -62,11 +62,12 @@ impl AuthorizationValidator for Auth {
         )
     }
 }
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ExportPlanV2 {
     pub id: String,
     pub scope: SelectionV2,
+    #[serde(with = "summary_wire")]
     pub summary: PublicSummary,
     pub encrypted: bool,
     pub filename: String,
@@ -74,7 +75,7 @@ pub struct ExportPlanV2 {
     pub digest: String,
     pub length: usize,
 }
-#[derive(Clone, Debug, Serialize, PartialEq, Eq)]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct FileTransferReceiptV2 {
     pub operation_id: String,
@@ -87,6 +88,7 @@ struct Export {
     bytes: Zeroizing<Vec<u8>>,
     attempted: bool,
     receipt: Option<FileTransferReceiptV2>,
+    revision: Option<String>,
 }
 /// UI chooses channel identities only; never accepts an arbitrary provider ID.
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -111,8 +113,11 @@ pub struct ImportBindingsV2 {
     pub channels: Vec<ChannelBindingChoiceV2>,
     pub mcp_clients: BTreeMap<String, String>,
     pub assets_reviewed: bool,
+    /// Explicitly adopt the file's namespace only for selected whole channels.
+    #[serde(default)]
+    pub adopt_namespace_channel_ids: Vec<String>,
 }
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ImportObjectV2 {
     pub kind: String,
@@ -136,18 +141,20 @@ pub struct ImportObjectV2 {
     pub has_credentials: bool,
     pub definition_digest: Option<String>,
 }
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ImportDifferencesV2 {
     pub changed_channel_ids: Vec<String>,
     pub changed_template_refs: Vec<schema_v2::RefV2>,
+    #[serde(with = "optional_summary_wire")]
     pub selected_summary: Option<PublicSummary>,
 }
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ImportPreviewV2 {
     pub operation_id: String,
     pub plan_digest: String,
+    #[serde(with = "summary_wire")]
     pub summary: PublicSummary,
     pub objects: Vec<ImportObjectV2>,
     pub selected_scope: SelectionV2,
@@ -169,6 +176,21 @@ pub trait DraftFileCaptureV2: Send + Sync {
         request: &CaptureRequestV2,
         credentials: &dyn CaptureCredentialsV2,
     ) -> ModelResult<CapturedSnapshotV2>;
+    fn capture_with_intents(
+        &self, d: &Path, h: &Path, expected: &ReadBaseV2,
+        request: &CaptureRequestV2, credentials: &dyn CaptureCredentialsV2,
+        intents: DraftFileIntentsV2,
+    ) -> ModelResult<CapturedSnapshotV2> {
+        if !intents.edits.is_empty() || !intents.channel_intents.is_empty() {
+            return Err(err("file_draft_intents_not_connected"));
+        }
+        self.capture(d, h, expected, request, credentials)
+    }
+}
+#[derive(Default)]
+pub struct DraftFileIntentsV2 {
+    pub edits: Vec<super::source_v2::ModelEditV2>,
+    pub channel_intents: Vec<config::ChannelIntentV2>,
 }
 pub struct DraftExportRequestV2 {
     pub expected: ReadBaseV2,
@@ -204,6 +226,8 @@ struct Import {
     original: Zeroizing<Vec<u8>>,
     passphrase: Option<Zeroizing<String>>,
     objects: SavedObjects,
+    choices: ImportBindingsV2,
+    revision: Option<String>,
     preview: ImportPreviewV2,
     application: Option<Prepared>,
     attempted: bool,
@@ -216,10 +240,10 @@ struct Prepared {
     scope: String,
     target: String,
     selected: SavedObjects,
+    context: PreparedContext,
 }
-/// Pending plans currently live for this owner's lifetime. L0 must retain the
-/// owner across dialog cancellation/errors. Participant journals are durable;
-/// process-restart reopening of these in-memory file plans is not implemented.
+/// Frozen operations are authenticated/encrypted at rest. Reopening restores
+/// exact original bytes/context and never invokes capture or today's preview.
 pub struct FileTransferOwnerV2 {
     d: PathBuf,
     h: PathBuf,
@@ -227,6 +251,8 @@ pub struct FileTransferOwnerV2 {
     exports: BTreeMap<String, Export>,
     imports: BTreeMap<String, Import>,
     draft: Option<Arc<dyn DraftFileCaptureV2>>,
+    recovery_keys: Arc<dyn FileRecoveryKeysV2>,
+    namespace: Option<Arc<dyn NamespaceReceiveV2>>,
     passwords: Option<Arc<dyn RootScopedWebDavPasswordInstallerV2>>,
 }
 impl FileTransferOwnerV2 {
@@ -243,6 +269,8 @@ impl FileTransferOwnerV2 {
             exports: BTreeMap::new(),
             imports: BTreeMap::new(),
             draft: None,
+            recovery_keys: Arc::new(SystemFileRecoveryKeysV2),
+            namespace: None,
             passwords: Some(Arc::new(SystemWebDavPasswordInstallerV2)),
         })
     }
@@ -257,6 +285,14 @@ impl FileTransferOwnerV2 {
             .get(id)
             .map(|o| o.preview.clone())
             .ok_or_else(|| err("file_operation_missing"))
+    }
+    pub fn with_recovery_keys(mut self, keys: Arc<dyn FileRecoveryKeysV2>) -> Self {
+        self.recovery_keys = keys;
+        self
+    }
+    pub fn with_namespace_receive(mut self, helper: Arc<dyn NamespaceReceiveV2>) -> Self {
+        self.namespace = Some(helper);
+        self
     }
     pub fn with_draft_capture(mut self, helper: Arc<dyn DraftFileCaptureV2>) -> Self {
         self.draft = Some(helper);
@@ -288,17 +324,22 @@ impl FileTransferOwnerV2 {
         request: DraftExportRequestV2,
         passphrase: Option<Zeroizing<String>>,
     ) -> ModelResult<ExportPlanV2> {
+        self.prepare_draft_export_with_intents(request, passphrase, DraftFileIntentsV2::default())
+    }
+    pub fn prepare_draft_export_with_intents(
+        &mut self,
+        request: DraftExportRequestV2,
+        passphrase: Option<Zeroizing<String>>,
+        intents: DraftFileIntentsV2,
+    ) -> ModelResult<ExportPlanV2> {
         local(&request.capture.selection)?;
         let helper = self
             .draft
             .as_ref()
             .ok_or_else(|| err("file_draft_capture_not_connected"))?;
-        let captured = helper.capture(
-            &self.d,
-            &self.h,
-            &request.expected,
-            &request.capture,
-            self.credentials.as_ref(),
+        let captured = helper.capture_with_intents(
+            &self.d, &self.h, &request.expected, &request.capture,
+            self.credentials.as_ref(), intents,
         )?;
         self.freeze_export(request.capture.selection, captured, passphrase)
     }
@@ -333,19 +374,27 @@ impl FileTransferOwnerV2 {
                 bytes: file.into_bytes(),
                 attempted: false,
                 receipt: None,
+                revision: None,
             },
         );
+        self.persist_export(&plan.id)?;
         Ok(plan)
     }
     /// Host-only immutable bridge to nativeSaveDialog exporter. Call only after
     /// explicit user destination choice, before writing. Marks unknown output.
     pub fn bytes(&mut self, id: &str) -> ModelResult<&[u8]> {
+        self.ensure_export(id)?;
         let e = self
             .exports
             .get_mut(id)
             .ok_or_else(|| err("file_operation_missing"))?;
         e.attempted = true;
-        Ok(&e.bytes)
+        self.persist_export(id)?;
+        Ok(&self
+            .exports
+            .get(id)
+            .ok_or_else(|| err("file_operation_missing"))?
+            .bytes)
     }
     /// L0 must supply actual written/read-back digest, not the planned digest.
     pub fn finish_export(
@@ -353,6 +402,7 @@ impl FileTransferOwnerV2 {
         id: &str,
         actual_written_digest: &str,
     ) -> ModelResult<FileTransferReceiptV2> {
+        self.ensure_export(id)?;
         let e = self
             .exports
             .get_mut(id)
@@ -367,10 +417,12 @@ impl FileTransferOwnerV2 {
             length: e.bytes.len(),
         };
         e.receipt = Some(receipt.clone());
+        self.persist_export(id)?;
         Ok(receipt)
     }
     /// false: output may exist; retain exact bytes/id for retry.
     pub fn cancel_export(&mut self, id: &str) -> ModelResult<bool> {
+        self.ensure_export(id)?;
         let e = self
             .exports
             .get(id)
@@ -378,6 +430,7 @@ impl FileTransferOwnerV2 {
         if e.attempted {
             return Ok(false);
         }
+        self.discard_recovery(id, e.revision.as_deref())?;
         self.exports.remove(id);
         Ok(true)
     }
@@ -404,11 +457,13 @@ impl FileTransferOwnerV2 {
             passphrase.as_ref(),
         )?;
         self.imports.insert(
-            id,
+            id.clone(),
             Import {
                 original: bytes,
-                passphrase,
+                passphrase: None,
                 objects: decoded.objects,
+                choices: bindings,
+                revision: None,
                 preview: preview.clone(),
                 application,
                 attempted: false,
@@ -416,6 +471,7 @@ impl FileTransferOwnerV2 {
                 receipt: None,
             },
         );
+        self.persist_import(&id)?;
         Ok(preview)
     }
     pub fn reselect(
@@ -425,6 +481,7 @@ impl FileTransferOwnerV2 {
         scope: SelectionV2,
         bindings: ImportBindingsV2,
     ) -> ModelResult<ImportPreviewV2> {
+        self.ensure_import(id)?;
         let op = self
             .imports
             .get(id)
@@ -449,9 +506,12 @@ impl FileTransferOwnerV2 {
             .ok_or_else(|| err("file_operation_missing"))?;
         op.preview = preview.clone();
         op.application = application;
+        op.choices = bindings;
+        self.persist_import(id)?;
         Ok(preview)
     }
     pub fn cancel_import(&mut self, id: &str) -> ModelResult<bool> {
+        self.ensure_import(id)?;
         let op = self
             .imports
             .get(id)
@@ -459,6 +519,7 @@ impl FileTransferOwnerV2 {
         if op.attempted {
             return Ok(false);
         }
+        self.discard_recovery(id, op.revision.as_deref())?;
         self.imports.remove(id);
         Ok(true)
     }
@@ -468,6 +529,8 @@ impl FileTransferOwnerV2 {
         expected_plan_digest: &str,
         backup_default_true: Option<bool>,
     ) -> ModelResult<FileTransferReceiptV2> {
+        self.ensure_import(id)?;
+        self.refresh_import(id)?;
         let op = self
             .imports
             .get_mut(id)
@@ -489,12 +552,17 @@ impl FileTransferOwnerV2 {
         if op.backup.is_some_and(|b| b != backup) {
             return Err(err("file_operation_frozen"));
         }
+        op.attempted = true;
+        op.backup = Some(backup);
+        self.persist_import(id)?;
+        let op = self
+            .imports
+            .get(id)
+            .ok_or_else(|| err("file_operation_missing"))?;
         let p = op
             .application
             .as_ref()
             .ok_or_else(|| err("file_selection_required"))?;
-        op.attempted = true;
-        op.backup = Some(backup);
         let has_passwords = !p.selected.partitions().webdav_passwords.is_empty();
         if has_passwords {
             self.passwords
@@ -534,7 +602,17 @@ impl FileTransferOwnerV2 {
             file_digest: schema_v2::digest(&op.original),
             length: op.original.len(),
         };
-        op.receipt = Some(r.clone());
+        self.imports
+            .get_mut(id)
+            .ok_or_else(|| err("file_operation_missing"))?
+            .receipt = Some(r.clone());
+        if let Err(e) = self.persist_import(id) {
+            self.imports
+                .get_mut(id)
+                .ok_or_else(|| err("file_operation_missing"))?
+                .receipt = None;
+            return Err(e);
+        }
         Ok(r)
     }
 }
@@ -801,7 +879,7 @@ impl FileTransferOwnerV2 {
         objects: &SavedObjects,
         scope: &SelectionV2,
         choices: &ImportBindingsV2,
-        password: Option<&Zeroizing<String>>,
+        _password: Option<&Zeroizing<String>>,
     ) -> ModelResult<(ImportPreviewV2, Option<Prepared>)> {
         local(scope)?;
         let inv = inventory(&self.d, &self.h)?;
@@ -865,14 +943,29 @@ impl FileTransferOwnerV2 {
                 return Err(err("file_mcp_source_invalid"));
             }
             let bindings = binding_plan(&inv, scope, choices)?;
-            let planned = receive_models_v2::plan(
-                &inv.library,
-                &inv.policy,
-                selected.models(),
-                scope,
-                &bindings,
-            )
-            .map_err(model)?;
+            validate_namespace_choice(&selected, scope, choices)?;
+            let planned = if choices.adopt_namespace_channel_ids.is_empty() {
+                receive_models_v2::plan(
+                    &inv.library,
+                    &inv.policy,
+                    selected.models(),
+                    scope,
+                    &bindings,
+                )
+                .map_err(model)?
+            } else {
+                self.namespace
+                    .as_ref()
+                    .ok_or_else(|| err("file_namespace_receiver_not_connected"))?
+                    .plan(
+                        &inv.library,
+                        &inv.policy,
+                        &selected,
+                        scope,
+                        &bindings,
+                        &choices.adopt_namespace_channel_ids,
+                    )?
+            };
             preview.differences.changed_channel_ids = planned.changed_channel_ids;
             preview.differences.changed_template_refs = planned.changed_template_refs;
             preview.differences.selected_summary = Some(selected.summary());
@@ -894,7 +987,7 @@ impl FileTransferOwnerV2 {
                 &application_objects,
                 id,
                 &chrono::Utc::now().to_rfc3339(),
-                password.map(|p| p.as_str()),
+                None,
                 Some(&Auth),
             )?
             .into_bytes();
@@ -904,38 +997,22 @@ impl FileTransferOwnerV2 {
                 return Err(err("capture_stale"));
             }
             let scope_digest = hash(&application_scope)?;
-            let capture = CaptureRequestV2 {
-                selection: application_scope.clone(),
-                mcp_clients: choices.mcp_clients.clone(),
-                assets_reviewed: choices.assets_reviewed,
-            };
-            let source = Arc::new(FileSource {
+            let context = PreparedContext {
                 scope: scope_digest.clone(),
-                selection: scope.clone(),
+                target: target.clone(),
+                selection: application_scope,
+                source_selection: scope.clone(),
                 choices: choices.clone(),
-            });
-            let host = LocalApplicationV2::new(
-                self.d.clone(),
-                self.h.clone(),
-                application_scope,
-                capture,
-                scope_digest.clone(),
-                source,
-                Arc::new(ReceiveFileHostV2 {
-                    root: self.d.clone(),
-                    home: self.h.clone(),
-                    bindings,
-                    trusted_mapping_write: None,
-                }),
-                password.cloned(),
-            )
-            .map_err(|_| err("file_local_context_invalid"))?;
+                bindings: bindings.iter().map(FrozenBinding::from).collect(),
+            };
+            let host = self.restore_host(&context)?;
             Ok(Prepared {
                 host,
                 payload,
                 scope: scope_digest,
                 target,
                 selected,
+                context,
             })
         })();
         match result {
@@ -1552,4 +1629,723 @@ fn manager_before_candidate_ids(d: &Path, id: &str) -> ModelResult<BTreeSet<Stri
     let candidates: Vec<portable_manager::Candidate> =
         serde_json::from_slice(&bytes).map_err(|_| err("file_password_candidate_invalid"))?;
     Ok(candidates.into_iter().map(|c| c.id).collect())
+}
+
+/// Namespace support must use the same receive model transaction, never a
+/// follow-up namespace write or another operation. L0 injects the shared engine
+/// adapter when its explicit adoption API is available.
+pub trait NamespaceReceiveV2: Send + Sync {
+    fn plan(
+        &self,
+        library: &LibraryV2,
+        policy: &PolicyV2,
+        objects: &SavedObjects,
+        scope: &SelectionV2,
+        bindings: &[ReceiveBindingV2],
+        adopt_ids: &[String],
+    ) -> ModelResult<receive_models_v2::ReceiveModelsPlanV2>;
+    fn consumer(
+        &self,
+        d: &Path,
+        h: &Path,
+        bindings: Vec<ReceiveBindingV2>,
+        adopt_ids: &[String],
+    ) -> ModelResult<Arc<dyn ModelApplyV2>>;
+}
+fn validate_namespace_choice(
+    objects: &SavedObjects,
+    scope: &SelectionV2,
+    choices: &ImportBindingsV2,
+) -> ModelResult<()> {
+    let mut seen = BTreeSet::new();
+    for id in &choices.adopt_namespace_channel_ids {
+        let selected = scope
+            .channels
+            .iter()
+            .find(|s| &s.portable_channel_id == id)
+            .ok_or_else(|| err("file_namespace_scope_invalid"))?;
+        let source = objects
+            .models()
+            .payload
+            .policy
+            .iter()
+            .flat_map(|p| &p.channels)
+            .find(|c| &c.id == id)
+            .ok_or_else(|| err("file_namespace_scope_invalid"))?;
+        if !seen.insert(id)
+            || selected.model_ids.is_some()
+            || selected.family_ids.is_some()
+            || source.namespace.is_none()
+        {
+            return Err(err("file_namespace_scope_invalid"));
+        }
+    }
+    for c in objects
+        .models()
+        .payload
+        .policy
+        .iter()
+        .flat_map(|p| &p.channels)
+    {
+        if c.namespace.is_some() && !seen.contains(&c.id) {
+            return Err(err("model_receive_namespace_adoption_required"));
+        }
+    }
+    Ok(())
+}
+#[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct FrozenBinding {
+    portable: String,
+    local: String,
+    provider: String,
+    new: bool,
+}
+impl From<&ReceiveBindingV2> for FrozenBinding {
+    fn from(b: &ReceiveBindingV2) -> Self {
+        Self {
+            portable: b.portable_channel_id.clone(),
+            local: b.local_channel_id.clone(),
+            provider: b.provider_id.clone(),
+            new: b.mode == ReceiveBindingModeV2::New,
+        }
+    }
+}
+impl FrozenBinding {
+    fn binding(&self) -> ReceiveBindingV2 {
+        ReceiveBindingV2 {
+            portable_channel_id: self.portable.clone(),
+            local_channel_id: self.local.clone(),
+            provider_id: self.provider.clone(),
+            mode: if self.new {
+                ReceiveBindingModeV2::New
+            } else {
+                ReceiveBindingModeV2::Existing
+            },
+        }
+    }
+}
+#[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct PreparedContext {
+    scope: String,
+    target: String,
+    selection: SelectionV2,
+    source_selection: SelectionV2,
+    choices: ImportBindingsV2,
+    bindings: Vec<FrozenBinding>,
+}
+impl FileTransferOwnerV2 {
+    fn restore_host(&self, c: &PreparedContext) -> ModelResult<LocalApplicationV2> {
+        local(&c.selection)?;
+        local(&c.source_selection)?;
+        if hash(&c.selection)? != c.scope || !schema_v2::valid_digest(&c.target) {
+            return Err(err("file_recovery_context_invalid"));
+        }
+        let mut expected = c.source_selection.clone();
+        expected.manager.webdav_password_ids.clear();
+        if expected != c.selection {
+            return Err(err("file_recovery_context_invalid"));
+        }
+        let bindings = c
+            .bindings
+            .iter()
+            .map(FrozenBinding::binding)
+            .collect::<Vec<_>>();
+        let models = if c.choices.adopt_namespace_channel_ids.is_empty() {
+            Arc::new(ReceiveFileHostV2 {
+                root: self.d.clone(),
+                home: self.h.clone(),
+                bindings,
+                trusted_mapping_write: None,
+            }) as Arc<dyn ModelApplyV2>
+        } else {
+            self.namespace
+                .as_ref()
+                .ok_or_else(|| err("file_namespace_receiver_not_connected"))?
+                .consumer(
+                    &self.d,
+                    &self.h,
+                    bindings,
+                    &c.choices.adopt_namespace_channel_ids,
+                )?
+        };
+        LocalApplicationV2::new(
+            self.d.clone(),
+            self.h.clone(),
+            c.selection.clone(),
+            CaptureRequestV2 {
+                selection: c.selection.clone(),
+                mcp_clients: c.choices.mcp_clients.clone(),
+                assets_reviewed: c.choices.assets_reviewed,
+            },
+            c.scope.clone(),
+            Arc::new(FileSource {
+                scope: c.scope.clone(),
+                selection: c.source_selection.clone(),
+                choices: c.choices.clone(),
+            }),
+            models,
+            None,
+        )
+        .map_err(|_| err("file_local_context_invalid"))
+    }
+}
+
+/// Recovery key boundary only. No file passphrase is stored, returned to IPC or
+/// used as a device key. Tests inject fixed in-memory keys; never use keyring.
+pub trait FileRecoveryKeysV2: Send + Sync {
+    fn key(&self, d: &Path, h: &Path, create: bool) -> ModelResult<Zeroizing<[u8; 32]>>;
+}
+pub struct SystemFileRecoveryKeysV2;
+impl FileRecoveryKeysV2 for SystemFileRecoveryKeysV2 {
+    fn key(&self, d: &Path, h: &Path, create: bool) -> ModelResult<Zeroizing<[u8; 32]>> {
+        use base64::Engine;
+        use rand::RngCore;
+        let account = hash(&("OCXD_FILE_RECOVERY_KEY_V2", d, h))?;
+        let lock = d.join("manager-state/file-transfer-v2-key");
+        safety::check_path(d, &lock, true)?;
+        let _guard = crate::infrastructure::locking::TargetFileLock::lock(&lock)?;
+        let entry = keyring::Entry::new("opencodex.file-transfer-recovery.v2", &account)
+            .map_err(|_| err("file_recovery_key_unavailable"))?;
+        let encoded = match entry.get_password() {
+            Ok(value) => Zeroizing::new(value),
+            Err(keyring::Error::NoEntry) if create => {
+                let dir = d.join(RECOVERY_DIR);
+                safety::check_path(d, &dir, true)?;
+                if dir.exists()
+                    && std::fs::read_dir(&dir)?.any(|p| {
+                        p.is_ok_and(|p| p.path().extension().is_some_and(|e| e == "sealed"))
+                    })
+                {
+                    return Err(err("file_recovery_key_missing"));
+                }
+                let mut key = Zeroizing::new([0; 32]);
+                rand::rng().fill_bytes(key.as_mut());
+                let value =
+                    Zeroizing::new(base64::engine::general_purpose::STANDARD.encode(key.as_ref()));
+                entry
+                    .set_password(&value)
+                    .map_err(|_| err("file_recovery_key_unavailable"))?;
+                let read = Zeroizing::new(
+                    entry
+                        .get_password()
+                        .map_err(|_| err("file_recovery_key_unavailable"))?,
+                );
+                if read.as_str() != value.as_str() {
+                    return Err(err("file_recovery_key_unavailable"));
+                }
+                value
+            }
+            Err(keyring::Error::NoEntry) => return Err(err("file_recovery_key_missing")),
+            Err(_) => return Err(err("file_recovery_key_unavailable")),
+        };
+        let bytes = Zeroizing::new(
+            base64::engine::general_purpose::STANDARD
+                .decode(encoded.as_bytes())
+                .map_err(|_| err("file_recovery_key_invalid"))?,
+        );
+        if bytes.len() != 32 {
+            return Err(err("file_recovery_key_invalid"));
+        }
+        let mut key = Zeroizing::new([0; 32]);
+        key.copy_from_slice(&bytes);
+        Ok(key)
+    }
+}
+const RECOVERY_DIR: &str = "manager-state/file-transfer-v2";
+const RECOVERY_PLAIN_LIMIT: usize = 256 * 1024 * 1024;
+const RECOVERY_FILE_LIMIT: u64 = 384 * 1024 * 1024;
+struct RecoveryBlob(Zeroizing<Vec<u8>>);
+impl Serialize for RecoveryBlob {
+    fn serialize<S: serde::Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
+        use base64::Engine;
+        let encoded = Zeroizing::new(base64::engine::general_purpose::STANDARD.encode(&*self.0));
+        s.serialize_str(&encoded)
+    }
+}
+impl<'de> Deserialize<'de> for RecoveryBlob {
+    fn deserialize<D: serde::Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
+        use base64::Engine;
+        let text = Zeroizing::new(String::deserialize(d)?);
+        let bytes = Zeroizing::new(
+            base64::engine::general_purpose::STANDARD
+                .decode(text.as_bytes())
+                .map_err(|_| serde::de::Error::custom("invalid protected artifact"))?,
+        );
+        if bytes.len() > codec::FILE_LIMIT {
+            return Err(serde::de::Error::custom("artifact limit"));
+        }
+        Ok(Self(bytes))
+    }
+}
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct FrozenApplication {
+    context: PreparedContext,
+    payload: RecoveryBlob,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(
+    tag = "kind",
+    rename_all = "snake_case",
+    rename_all_fields = "camelCase",
+    deny_unknown_fields
+)]
+enum FrozenOperation {
+    Export {
+        plan: ExportPlanV2,
+        bytes: RecoveryBlob,
+        attempted: bool,
+        receipt: Option<FileTransferReceiptV2>,
+    },
+    Import {
+        original: RecoveryBlob,
+        objects: RecoveryBlob,
+        preview: Box<ImportPreviewV2>,
+        choices: ImportBindingsV2,
+        application: Option<FrozenApplication>,
+        attempted: bool,
+        backup: Option<bool>,
+        receipt: Option<FileTransferReceiptV2>,
+    },
+}
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct ProtectedOperation {
+    version: u32,
+    id: String,
+    nonce: String,
+    ciphertext: String,
+}
+fn recovery_path(d: &Path, id: &str) -> ModelResult<PathBuf> {
+    if !uuid::Uuid::parse_str(id).is_ok_and(|u| u.to_string() == id && u.get_version_num() == 4) {
+        return Err(err("file_operation_id_invalid"));
+    }
+    let p = d.join(RECOVERY_DIR).join(format!("{id}.sealed"));
+    safety::check_path(d, &p, true)?;
+    Ok(p)
+}
+fn recovery_aad(d: &Path, h: &Path, id: &str) -> ModelResult<Vec<u8>> {
+    schema_v2::canonical_bytes(&("OCXD_FILE_RECOVERY_V2", 2, d, h, id)).map_err(model)
+}
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RecoverableFileOperationV2 {
+    pub operation_id: String,
+    pub kind: String,
+    pub attempted: bool,
+    pub completed: bool,
+}
+impl FileTransferOwnerV2 {
+    fn save_recovery(
+        &self,
+        id: &str,
+        expected: Option<&str>,
+        value: &FrozenOperation,
+    ) -> ModelResult<String> {
+        use aes_gcm::{
+            aead::{Aead, KeyInit, Payload},
+            Aes256Gcm, Nonce,
+        };
+        use base64::Engine;
+        use rand::RngCore;
+        let path = recovery_path(&self.d, id)?;
+        let parent = path.parent().ok_or_else(|| err("file_recovery_io"))?;
+        std::fs::create_dir_all(parent)?;
+        safety::check_path(&self.d, parent, false)?;
+        crate::infrastructure::platform::set_mode(parent, 0o700)?;
+        let _guard = crate::infrastructure::locking::TargetFileLock::lock(&path)?;
+        let current = read_recovery_file(&self.d, &path)?;
+        if current.as_ref().map(|b| schema_v2::digest(b)).as_deref() != expected {
+            return Err(err("file_recovery_changed"));
+        }
+        let key = self
+            .recovery_keys
+            .key(&self.d, &self.h, expected.is_none())?;
+        let plain = Zeroizing::new(serde_json::to_vec(value)?);
+        if plain.len() > RECOVERY_PLAIN_LIMIT {
+            return Err(err("file_recovery_limit"));
+        }
+        let mut nonce = [0; 12];
+        rand::rng().fill_bytes(&mut nonce);
+        let cipher = Aes256Gcm::new_from_slice(key.as_ref())
+            .map_err(|_| err("file_recovery_key_invalid"))?;
+        let ciphertext = cipher
+            .encrypt(
+                Nonce::from_slice(&nonce),
+                Payload {
+                    msg: &plain,
+                    aad: &recovery_aad(&self.d, &self.h, id)?,
+                },
+            )
+            .map_err(|_| err("file_recovery_protection_failed"))?;
+        let bytes = serde_json::to_vec(&ProtectedOperation {
+            version: 2,
+            id: id.into(),
+            nonce: base64::engine::general_purpose::STANDARD.encode(nonce),
+            ciphertext: base64::engine::general_purpose::STANDARD.encode(ciphertext),
+        })?;
+        if bytes.len() as u64 > RECOVERY_FILE_LIMIT {
+            return Err(err("file_recovery_limit"));
+        }
+        crate::infrastructure::atomic_write::atomic_write(&path, &bytes, 0o600)?;
+        safety::sync_directories(&self.d, parent)?;
+        Ok(schema_v2::digest(&bytes))
+    }
+    fn load_recovery(&self, id: &str) -> ModelResult<(FrozenOperation, String)> {
+        use aes_gcm::{
+            aead::{Aead, KeyInit, Payload},
+            Aes256Gcm, Nonce,
+        };
+        use base64::Engine;
+        let path = recovery_path(&self.d, id)?;
+        let bytes =
+            read_recovery_file(&self.d, &path)?.ok_or_else(|| err("file_operation_missing"))?;
+        let doc: ProtectedOperation =
+            serde_json::from_slice(&bytes).map_err(|_| err("file_recovery_invalid"))?;
+        if doc.version != 2 || doc.id != id {
+            return Err(err("file_recovery_invalid"));
+        }
+        let nonce = base64::engine::general_purpose::STANDARD
+            .decode(doc.nonce)
+            .map_err(|_| err("file_recovery_invalid"))?;
+        let ciphertext = base64::engine::general_purpose::STANDARD
+            .decode(doc.ciphertext)
+            .map_err(|_| err("file_recovery_invalid"))?;
+        if nonce.len() != 12 || ciphertext.len() > RECOVERY_PLAIN_LIMIT + 16 {
+            return Err(err("file_recovery_limit"));
+        }
+        let key = self.recovery_keys.key(&self.d, &self.h, false)?;
+        let cipher = Aes256Gcm::new_from_slice(key.as_ref())
+            .map_err(|_| err("file_recovery_key_invalid"))?;
+        let plain = Zeroizing::new(
+            cipher
+                .decrypt(
+                    Nonce::from_slice(&nonce),
+                    Payload {
+                        msg: &ciphertext,
+                        aad: &recovery_aad(&self.d, &self.h, id)?,
+                    },
+                )
+                .map_err(|_| err("file_recovery_authentication"))?,
+        );
+        let value = serde_json::from_slice(&plain).map_err(|_| err("file_recovery_invalid"))?;
+        Ok((value, schema_v2::digest(&bytes)))
+    }
+    fn persist_export(&mut self, id: &str) -> ModelResult<()> {
+        let op = self
+            .exports
+            .get(id)
+            .ok_or_else(|| err("file_operation_missing"))?;
+        let frozen = FrozenOperation::Export {
+            plan: op.plan.clone(),
+            bytes: RecoveryBlob(Zeroizing::new(op.bytes.to_vec())),
+            attempted: op.attempted,
+            receipt: op.receipt.clone(),
+        };
+        let revision = self.save_recovery(id, op.revision.as_deref(), &frozen)?;
+        self.exports
+            .get_mut(id)
+            .ok_or_else(|| err("file_operation_missing"))?
+            .revision = Some(revision);
+        Ok(())
+    }
+    fn persist_import(&mut self, id: &str) -> ModelResult<()> {
+        let op = self
+            .imports
+            .get(id)
+            .ok_or_else(|| err("file_operation_missing"))?;
+        let frozen = FrozenOperation::Import {
+            original: RecoveryBlob(Zeroizing::new(op.original.to_vec())),
+            objects: RecoveryBlob(codec::encode_document(&op.objects, Some(&Auth))?),
+            preview: Box::new(op.preview.clone()),
+            choices: op.choices.clone(),
+            application: op.application.as_ref().map(|p| FrozenApplication {
+                context: p.context.clone(),
+                payload: RecoveryBlob(Zeroizing::new(p.payload.to_vec())),
+            }),
+            attempted: op.attempted,
+            backup: op.backup,
+            receipt: op.receipt.clone(),
+        };
+        let revision = self.save_recovery(id, op.revision.as_deref(), &frozen)?;
+        self.imports
+            .get_mut(id)
+            .ok_or_else(|| err("file_operation_missing"))?
+            .revision = Some(revision);
+        Ok(())
+    }
+    fn discard_recovery(&self, id: &str, expected: Option<&str>) -> ModelResult<()> {
+        let path = recovery_path(&self.d, id)?;
+        let _guard = crate::infrastructure::locking::TargetFileLock::lock(&path)?;
+        let bytes =
+            read_recovery_file(&self.d, &path)?.ok_or_else(|| err("file_operation_missing"))?;
+        if Some(schema_v2::digest(&bytes)).as_deref() != expected {
+            return Err(err("file_recovery_changed"));
+        }
+        std::fs::remove_file(&path)?;
+        safety::sync_directories(
+            &self.d,
+            path.parent().ok_or_else(|| err("file_recovery_io"))?,
+        )?;
+        Ok(())
+    }
+    fn refresh_import(&mut self, id: &str) -> ModelResult<()> {
+        let path = recovery_path(&self.d, id)?;
+        let bytes =
+            read_recovery_file(&self.d, &path)?.ok_or_else(|| err("file_operation_missing"))?;
+        if self.imports.get(id).and_then(|o| o.revision.as_deref())
+            != Some(schema_v2::digest(&bytes)).as_deref()
+        {
+            self.reopen_import(id)?;
+        }
+        Ok(())
+    }
+    fn ensure_export(&mut self, id: &str) -> ModelResult<()> {
+        if !self.exports.contains_key(id) {
+            self.reopen_export(id)?;
+        }
+        Ok(())
+    }
+    fn ensure_import(&mut self, id: &str) -> ModelResult<()> {
+        if !self.imports.contains_key(id) {
+            self.reopen_import(id)?;
+        }
+        Ok(())
+    }
+    pub fn reopen_export(&mut self, id: &str) -> ModelResult<ExportPlanV2> {
+        let (frozen, revision) = self.load_recovery(id)?;
+        let FrozenOperation::Export {
+            plan,
+            bytes,
+            attempted,
+            receipt,
+        } = frozen
+        else {
+            return Err(err("file_operation_kind_mismatch"));
+        };
+        if plan.id != id
+            || plan.digest != schema_v2::digest(&bytes.0)
+            || plan.length != bytes.0.len()
+            || plan.schema != codec::supported_schema()
+            || receipt.as_ref().is_some_and(|r| {
+                r.operation_id != id
+                    || r.plan_digest != plan.digest
+                    || r.file_digest != plan.digest
+                    || r.length != plan.length
+            })
+        {
+            return Err(err("file_recovery_invalid"));
+        }
+        self.exports.insert(
+            id.into(),
+            Export {
+                plan: plan.clone(),
+                bytes: bytes.0,
+                attempted,
+                receipt,
+                revision: Some(revision),
+            },
+        );
+        Ok(plan)
+    }
+    pub fn reopen_import(&mut self, id: &str) -> ModelResult<ImportPreviewV2> {
+        let (frozen, revision) = self.load_recovery(id)?;
+        let FrozenOperation::Import {
+            original,
+            objects,
+            preview,
+            choices,
+            application,
+            attempted,
+            backup,
+            receipt,
+        } = frozen
+        else {
+            return Err(err("file_operation_kind_mismatch"));
+        };
+        let preview = *preview;
+        if preview.operation_id != id
+            || receipt.as_ref().is_some_and(|r| {
+                r.operation_id != id
+                    || r.plan_digest != preview.plan_digest
+                    || r.file_digest != schema_v2::digest(&original.0)
+                    || r.length != original.0.len()
+            })
+            || attempted != backup.is_some()
+        {
+            return Err(err("file_recovery_invalid"));
+        }
+        let objects = codec::decode_document(&objects.0, Some(&Auth))?;
+        let application = if receipt.is_some() {
+            None
+        } else {
+            application
+                .map(|f| -> ModelResult<Prepared> {
+                    if f.context.source_selection != preview.selected_scope
+                        || hash(&f.context.choices)? != hash(&choices)?
+                    {
+                        return Err(err("file_recovery_context_invalid"));
+                    }
+                    let selected = sync_local_v2::select_received_objects_v2(
+                        narrow_received(&objects, &preview.selected_scope)?,
+                        &preview.selected_scope,
+                    )?;
+                    validate_namespace_choice(&selected, &preview.selected_scope, &choices)?;
+                    let host = self.restore_host(&f.context)?;
+                    Ok(Prepared {
+                        host,
+                        payload: f.payload.0,
+                        scope: f.context.scope.clone(),
+                        target: f.context.target.clone(),
+                        selected,
+                        context: f.context,
+                    })
+                })
+                .transpose()?
+        };
+        self.imports.insert(
+            id.into(),
+            Import {
+                original: original.0,
+                passphrase: None,
+                objects,
+                choices,
+                revision: Some(revision),
+                preview: preview.clone(),
+                application,
+                attempted,
+                backup,
+                receipt,
+            },
+        );
+        Ok(preview)
+    }
+    pub fn recoverable_operations(&self) -> ModelResult<Vec<RecoverableFileOperationV2>> {
+        let dir = self.d.join(RECOVERY_DIR);
+        safety::check_path(&self.d, &dir, true)?;
+        if !dir.exists() {
+            return Ok(vec![]);
+        }
+        let mut ids = vec![];
+        for entry in std::fs::read_dir(dir)? {
+            let path = entry?.path();
+            if path.extension().is_none_or(|e| e != "sealed") {
+                continue;
+            }
+            let id = path
+                .file_stem()
+                .and_then(|s| s.to_str())
+                .ok_or_else(|| err("file_recovery_invalid"))?
+                .to_owned();
+            ids.push(id);
+            if ids.len() > 256 {
+                return Err(err("file_recovery_limit"));
+            }
+        }
+        ids.sort();
+        let mut out = vec![];
+        for id in ids {
+            let (op, _) = self.load_recovery(&id)?;
+            let (kind, attempted, completed) = match op {
+                FrozenOperation::Export {
+                    attempted, receipt, ..
+                } => ("export", attempted, receipt.is_some()),
+                FrozenOperation::Import {
+                    attempted, receipt, ..
+                } => ("import", attempted, receipt.is_some()),
+            };
+            out.push(RecoverableFileOperationV2 {
+                operation_id: id,
+                kind: kind.into(),
+                attempted,
+                completed,
+            });
+        }
+        Ok(out)
+    }
+}
+fn read_recovery_file(d: &Path, path: &Path) -> ModelResult<Option<Zeroizing<Vec<u8>>>> {
+    safety::check_path(d, path, true)?;
+    match std::fs::symlink_metadata(path) {
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(None),
+        Err(_) => Err(err("file_recovery_io")),
+        Ok(_) => {
+            safety::inspect(path)?;
+            #[cfg(unix)]
+            {
+                use std::os::unix::fs::PermissionsExt;
+                if std::fs::metadata(path)?.permissions().mode() & 0o777 != 0o600 {
+                    return Err(err("file_recovery_permissions"));
+                }
+            }
+            Ok(Some(Zeroizing::new(safety::read_file(
+                path,
+                RECOVERY_FILE_LIMIT,
+            )?)))
+        }
+    }
+}
+
+mod summary_wire {
+    use super::*;
+    #[derive(Deserialize)]
+    #[serde(rename_all = "camelCase", deny_unknown_fields)]
+    pub(super) struct Wire {
+        schema: PayloadSchemaRef,
+        template_ids: Vec<String>,
+        channel_ids: Vec<String>,
+        account_count: usize,
+        skill_count: usize,
+        mcp_count: usize,
+        has_preferences: bool,
+        has_extensions: bool,
+        webdav_count: usize,
+        channel_key_count: usize,
+        channel_authorization_count: usize,
+        webdav_password_count: usize,
+        extension_secret_count: usize,
+        content_version_count: usize,
+    }
+    impl Wire {
+        pub(super) fn summary(self) -> PublicSummary {
+            PublicSummary {
+                schema: self.schema,
+                template_ids: self.template_ids,
+                channel_ids: self.channel_ids,
+                account_count: self.account_count,
+                skill_count: self.skill_count,
+                mcp_count: self.mcp_count,
+                has_preferences: self.has_preferences,
+                has_extensions: self.has_extensions,
+                webdav_count: self.webdav_count,
+                channel_key_count: self.channel_key_count,
+                channel_authorization_count: self.channel_authorization_count,
+                webdav_password_count: self.webdav_password_count,
+                extension_secret_count: self.extension_secret_count,
+                content_version_count: self.content_version_count,
+            }
+        }
+    }
+    pub fn serialize<S: serde::Serializer>(v: &PublicSummary, s: S) -> Result<S::Ok, S::Error> {
+        v.serialize(s)
+    }
+    pub fn deserialize<'de, D: serde::Deserializer<'de>>(d: D) -> Result<PublicSummary, D::Error> {
+        Wire::deserialize(d).map(Wire::summary)
+    }
+}
+mod optional_summary_wire {
+    use super::*;
+    pub fn serialize<S: serde::Serializer>(
+        v: &Option<PublicSummary>,
+        s: S,
+    ) -> Result<S::Ok, S::Error> {
+        v.serialize(s)
+    }
+    pub fn deserialize<'de, D: serde::Deserializer<'de>>(
+        d: D,
+    ) -> Result<Option<PublicSummary>, D::Error> {
+        Option::<summary_wire::Wire>::deserialize(d).map(|v| v.map(summary_wire::Wire::summary))
+    }
 }

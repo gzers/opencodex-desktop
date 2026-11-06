@@ -1,7 +1,10 @@
 //! Saved-only channel identity owner. Preview is an in-memory capability, never
 //! a deserialized authority. This owner never writes a business or mapping file.
 use super::{
-    config_file::v2::{self as config, receive::IdentityMappingWriteV2},
+    config_file::v2::{
+        self as config,
+        receive::{AppliedMappingReceiptProofV2, IdentityMappingWriteV2},
+    },
     content_versions,
     file_objects_v2::{self, CapturedObjects, SavedObjects, SecretValues},
     objects_overlay_v2::UsageV2,
@@ -14,6 +17,7 @@ use super::{
         DirectionV2, LocalTargetBindingV2, PayloadAuthorizationV2, TargetExpectationV2,
         TargetSlotV2, TrustedMappingOwnerV2,
     },
+    sync_local_v2::{LocalModelJournalProofV2, ModelApplyPlanHandle},
     sync_v2::types::SourceGuard,
 };
 use crate::modules::{
@@ -184,6 +188,123 @@ pub struct MappingPreviewV2 {
     owner: Arc<SyncIdentityOwnerV2>,
     facts: Arc<FrozenFacts>,
 }
+/// Recovery-only capability. It is never registered in issued previews and
+/// never implements TrustedMappingOwnerV2/CaptureProviderV2. The original
+/// Absent/Present binding is historical, not a new admission to model writes.
+pub struct AdoptedMappingProofV2 {
+    owner: Arc<SyncIdentityOwnerV2>,
+    binding: LocalTargetBindingV2,
+    local: LocalModelJournalProofV2,
+    after: Vec<u8>,
+}
+impl AdoptedMappingProofV2 {
+    pub fn binding(&self) -> &LocalTargetBindingV2 {
+        &self.binding
+    }
+    pub fn operation_id(&self) -> &str {
+        self.local.operation_id()
+    }
+    pub fn handle(&self) -> &ModelApplyPlanHandle {
+        self.local.handle()
+    }
+    pub fn root_revision(&self) -> &str {
+        self.local.root_revision()
+    }
+    pub fn scope(&self) -> &str {
+        self.local.scope()
+    }
+    pub fn expected_target(&self) -> &str {
+        self.local.expected_target()
+    }
+    pub(crate) fn local_journal(&self) -> &LocalModelJournalProofV2 {
+        &self.local
+    }
+    /// Mapping + original local context only. LocalApplication additionally
+    /// rechecks the actual model receipt before every remaining participant.
+    pub fn verify_adopted(&self, operation_id: &str) -> ModelResult<()> {
+        if operation_id != self.operation_id() {
+            return Err(err("sync_identity_adoption_operation"));
+        }
+        self.local
+            .verify_current()
+            .map_err(|_| err("sync_identity_local_journal"))?;
+        let bytes = mapping_bytes(&self.owner.root)?;
+        document(bytes.as_deref())?;
+        if bytes.as_deref() != Some(self.after.as_slice()) {
+            return Err(err("sync_identity_adoption_changed"));
+        }
+        Ok(())
+    }
+}
+// Parsing historical bytes is not authority: these private records must match
+// BOTH owner-issued proofs before a read-only capability is constructed.
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct HistoricalBinding {
+    mapping_revision: String,
+    local_scope: super::objects_overlay_v2::SelectionV2,
+    remote_scope: super::objects_overlay_v2::SelectionV2,
+    direction: String,
+    slots: Vec<HistoricalSlot>,
+    digest: String,
+}
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct HistoricalSlot {
+    kind: String,
+    portable_id: String,
+    local_id: String,
+    expected: HistoricalExpectation,
+}
+#[derive(Deserialize)]
+#[serde(
+    tag = "kind",
+    content = "digest",
+    rename_all = "snake_case",
+    deny_unknown_fields
+)]
+enum HistoricalExpectation {
+    Present(String),
+    ExpectedAbsent(String),
+}
+fn historical_binding(bytes: &[u8]) -> ModelResult<LocalTargetBindingV2> {
+    if bytes.len() > 4 * 1024 * 1024 {
+        return Err(err("sync_identity_limit"));
+    }
+    let tree = schema_v2::parse_strict_json_v2(bytes).map_err(model)?;
+    let record: HistoricalBinding =
+        serde_json::from_value(tree.clone()).map_err(|_| err("sync_identity_binding_invalid"))?;
+    if record.direction != "download" {
+        return Err(err("sync_identity_binding_invalid"));
+    }
+    let slots = record
+        .slots
+        .into_iter()
+        .map(|s| TargetSlotV2 {
+            kind: s.kind,
+            portable_id: s.portable_id,
+            local_id: s.local_id,
+            expected: match s.expected {
+                HistoricalExpectation::Present(d) => TargetExpectationV2::Present(d),
+                HistoricalExpectation::ExpectedAbsent(d) => TargetExpectationV2::ExpectedAbsent(d),
+            },
+        })
+        .collect();
+    let binding = LocalTargetBindingV2::freeze(
+        record.mapping_revision,
+        record.local_scope,
+        record.remote_scope,
+        DirectionV2::Download,
+        slots,
+    )
+    .map_err(|_| err("sync_identity_binding_invalid"))?;
+    if record.digest != binding.digest
+        || serde_json::to_value(&binding).map_err(|_| err("sync_identity_binding_invalid"))? != tree
+    {
+        return Err(err("sync_identity_binding_invalid"));
+    }
+    Ok(binding)
+}
 impl MappingPreviewV2 {
     pub fn binding(&self) -> &LocalTargetBindingV2 {
         &self.facts.binding
@@ -338,6 +459,80 @@ impl MappingPreviewV2 {
     }
 }
 impl SyncIdentityOwnerV2 {
+    /// Restore only O's remaining-participant authority from its original local
+    /// journal AND receive's actual manifest/receipt/images. Caller JSON never
+    /// enters issued previews, and today's saved objects/Absent are never read.
+    pub fn restore_adopted(
+        self: &Arc<Self>,
+        original_binding_bytes: &[u8],
+        local: LocalModelJournalProofV2,
+        model_proof: &AppliedMappingReceiptProofV2,
+    ) -> ModelResult<Arc<AdoptedMappingProofV2>> {
+        local
+            .verify_current()
+            .map_err(|_| err("sync_identity_local_journal"))?;
+        let root = self
+            .root
+            .canonicalize()
+            .map_err(|_| err("capture_root_invalid"))?;
+        let home = self
+            .home
+            .canonicalize()
+            .map_err(|_| err("capture_root_invalid"))?;
+        let binding = historical_binding(original_binding_bytes)?;
+        let remote_json = serde_json::to_vec(&binding.remote_scope)
+            .map_err(|_| err("sync_identity_binding_invalid"))?;
+        if local.root() != root
+            || local.home() != home
+            || local.operation_id() != model_proof.operation_id()
+            || local.handle() != model_proof.handle()
+            || local.root_revision() != model_proof.root_revision()
+            || local.binding_digest() != binding.digest
+            || local.expected_target() != model_proof.expected_target()
+            || local.selection_hash() != schema_v2::digest(&remote_json)
+            || model_proof.selection_hash() != hash(&binding.remote_scope)?
+            || !schema_v2::valid_digest(model_proof.bindings_hash())
+            || binding.mapping_revision != map_revision(model_proof.mapping_before())
+        {
+            return Err(err("sync_identity_recovery_mismatch"));
+        }
+        let mut doc = document(model_proof.mapping_before())?;
+        let mut changed = false;
+        for slot in &binding.slots {
+            if let Some(row) = doc.bindings.iter().find(|r| {
+                r.endpoint_binding_id == self.endpoint_binding_id
+                    && r.portable_id == slot.portable_id
+            }) {
+                if row.local_id != slot.local_id {
+                    return Err(err("sync_identity_conflict"));
+                }
+            } else {
+                changed = true;
+                doc.bindings.push(MappingRow {
+                    endpoint_binding_id: self.endpoint_binding_id.clone(),
+                    portable_id: slot.portable_id.clone(),
+                    local_id: slot.local_id.clone(),
+                    adopted_operation_id: local.operation_id().to_owned(),
+                });
+            }
+        }
+        let expected = match (model_proof.mapping_before(), changed) {
+            (Some(before), false) => before.to_vec(),
+            _ => schema_v2::canonical_bytes(&doc).map_err(model)?,
+        };
+        document(Some(&expected))?;
+        if expected != model_proof.mapping_after() {
+            return Err(err("sync_identity_recovery_mismatch"));
+        }
+        let proof = Arc::new(AdoptedMappingProofV2 {
+            owner: self.clone(),
+            binding,
+            local,
+            after: expected,
+        });
+        proof.verify_adopted(proof.operation_id())?;
+        Ok(proof)
+    }
     pub fn new(
         root: PathBuf,
         home: PathBuf,
@@ -549,8 +744,30 @@ impl SyncIdentityOwnerV2 {
     pub fn freeze_preview(
         self: &Arc<Self>,
         direction: DirectionV2,
+        request: CaptureRequestV2,
+        cloud: Option<&SavedObjects>,
+    ) -> ModelResult<MappingPreviewV2> {
+        self.freeze_preview_inner(direction, request, cloud, false)
+    }
+    /// Explicit download-preview intent from the trusted backend, never JSON
+    /// mapping authority. An unpaired occupied target may be adopted ONLY when
+    /// its actual local UUID equals the selected remote UUID. Existing known
+    /// pairs and new unoccupied remote IDs retain the ordinary strict rules.
+    /// This only freezes Present facts; confirmation and the receive transaction
+    /// still own activation. Labels, names and different UUIDs cannot unlock it.
+    pub fn freeze_preview_adopting_same_ids(
+        self: &Arc<Self>,
+        request: CaptureRequestV2,
+        cloud: &SavedObjects,
+    ) -> ModelResult<MappingPreviewV2> {
+        self.freeze_preview_inner(DirectionV2::Download, request, Some(cloud), true)
+    }
+    fn freeze_preview_inner(
+        self: &Arc<Self>,
+        direction: DirectionV2,
         mut request: CaptureRequestV2,
         cloud: Option<&SavedObjects>,
+        adopt_same_ids: bool,
     ) -> ModelResult<MappingPreviewV2> {
         if direction == DirectionV2::NoChange
             || request.selection.usage != UsageV2::RemoteSync
@@ -588,8 +805,9 @@ impl SyncIdentityOwnerV2 {
                     let known = rows.iter().find(|r| r.portable_id == *supplied);
                     let local = known.map_or(supplied.as_str(), |r| r.local_id.as_str());
                     if known.is_none()
-                        && (observed.policy.channels.iter().any(|c| c.id == local)
-                            || rows.iter().any(|r| r.local_id == local))
+                        && (rows.iter().any(|r| r.local_id == local)
+                            || observed.policy.channels.iter().any(|c| c.id == local)
+                                && !adopt_same_ids)
                     {
                         return Err(err("sync_identity_explicit_mapping_required"));
                     }

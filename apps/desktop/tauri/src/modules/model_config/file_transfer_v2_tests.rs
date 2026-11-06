@@ -51,7 +51,9 @@ impl Fixture {
         Self { _t: t, d, h }
     }
     fn owner(&self) -> FileTransferOwnerV2 {
-        FileTransferOwnerV2::new(self.d.clone(), self.h.clone(), Arc::new(NoCredentials)).unwrap()
+        FileTransferOwnerV2::new(self.d.clone(), self.h.clone(), Arc::new(NoCredentials))
+            .unwrap()
+            .with_recovery_keys(Arc::new(MemoryRecoveryKey))
     }
     fn request(&self) -> CaptureRequestV2 {
         let inv = inventory(&self.d, &self.h).unwrap();
@@ -465,6 +467,8 @@ fn password_retry_same_operation_preserves_user_changes_after_durable_participan
         code(o.confirm_import(&p.operation_id, &p.plan_digest, None)),
         "test_cut_after_password_receipt"
     );
+    drop(o);
+    let mut o = f.owner();
     let changed = b"later user candidate edit";
     std::fs::write(f.d.join(portable_manager::CANDIDATES), changed).unwrap();
     o.confirm_import(&p.operation_id, &p.plan_digest, None)
@@ -688,6 +692,8 @@ fn password_storage_failure_resumes_same_refs_and_does_not_reapply_model_files()
     let later = br#"{"providers":{},"laterUserEdit":true}"#;
     std::fs::write(f.h.join("config.json"), later).unwrap();
     std::fs::remove_file(blocked).unwrap();
+    drop(o);
+    let mut o = f.owner();
     o.confirm_import(&p.operation_id, &p.plan_digest, None)
         .unwrap();
     assert_eq!(
@@ -889,4 +895,279 @@ fn exact_template_refs_manual_and_auto_source_intents_survive_real_file_receive(
         .unwrap();
     assert_eq!(imported.revisions[0].digest, r.digest);
     assert!(imported.default_revision.is_none());
+}
+
+struct MemoryRecoveryKey;
+impl FileRecoveryKeysV2 for MemoryRecoveryKey {
+    fn key(&self, _d: &Path, _h: &Path, _create: bool) -> ModelResult<Zeroizing<[u8; 32]>> {
+        Ok(Zeroizing::new([73; 32]))
+    }
+}
+
+#[test]
+fn encrypted_export_reopens_exact_ciphertext_after_source_changes_and_keeps_unknown_output() {
+    let f = Fixture::new(true);
+    let mut o = f.owner();
+    let p = o
+        .prepare_export(f.request(), Some(Zeroizing::new(PASSWORD.into())))
+        .unwrap();
+    let bytes = o.bytes(&p.id).unwrap().to_vec();
+    drop(o);
+    std::fs::write(
+        f.h.join("config.json"),
+        b"later invalid config must not be read",
+    )
+    .unwrap();
+    let mut o = f.owner();
+    let reopened = o.reopen_export(&p.id).unwrap();
+    assert_eq!(reopened.digest, p.digest);
+    assert_eq!(o.bytes(&p.id).unwrap(), bytes);
+    assert!(!o.cancel_export(&p.id).unwrap());
+    assert_eq!(
+        code(o.finish_export(&p.id, &schema_v2::digest(b"partial"))),
+        "file_output_unknown"
+    );
+    let receipt = o.finish_export(&p.id, &schema_v2::digest(&bytes)).unwrap();
+    drop(o);
+    let mut o = f.owner();
+    assert_eq!(o.finish_export(&p.id, &p.digest).unwrap(), receipt);
+    assert_eq!(
+        std::fs::read(f.h.join("config.json")).unwrap(),
+        b"later invalid config must not be read"
+    );
+}
+#[test]
+fn prepared_import_reopen_uses_frozen_target_and_applied_repeat_is_read_only_original_fact() {
+    let s = Fixture::new(true);
+    let (bytes, scope) = exported(&s, true);
+    let f = Fixture::new(false);
+    let mut o = f.owner();
+    let p = o
+        .prepare_import(
+            bytes.clone(),
+            Some(Zeroizing::new(PASSWORD.into())),
+            Some(scope.clone()),
+            new_binding(&scope),
+        )
+        .unwrap();
+    assert!(p.can_confirm, "{:?}", p.reason_code);
+    let payload = o.imports[&p.operation_id]
+        .application
+        .as_ref()
+        .unwrap()
+        .payload
+        .to_vec();
+    drop(o);
+    let mut o = f.owner();
+    let restored = o.reopen_import(&p.operation_id).unwrap();
+    assert_eq!(restored.plan_digest, p.plan_digest);
+    assert_eq!(&*o.imports[&p.operation_id].original, &bytes);
+    assert_eq!(
+        &*o.imports[&p.operation_id]
+            .application
+            .as_ref()
+            .unwrap()
+            .payload,
+        &payload
+    );
+    assert!(o.imports[&p.operation_id].passphrase.is_none());
+    let receipt = o
+        .confirm_import(&p.operation_id, &p.plan_digest, None)
+        .unwrap();
+    drop(o);
+    std::fs::write(f.h.join("config.json"), b"user's later invalid config").unwrap();
+    std::fs::write(
+        f.d.join(store_v2::LIBRARY_PATH),
+        b"user's later invalid library",
+    )
+    .unwrap();
+    let before = std::fs::read(recovery_path(&f.d, &p.operation_id).unwrap()).unwrap();
+    let mut o = f.owner();
+    assert_eq!(
+        o.confirm_import(&p.operation_id, &p.plan_digest, None)
+            .unwrap(),
+        receipt
+    );
+    assert_eq!(
+        std::fs::read(recovery_path(&f.d, &p.operation_id).unwrap()).unwrap(),
+        before
+    );
+    assert_eq!(
+        std::fs::read(f.h.join("config.json")).unwrap(),
+        b"user's later invalid config"
+    );
+    assert_eq!(
+        std::fs::read(f.d.join(store_v2::LIBRARY_PATH)).unwrap(),
+        b"user's later invalid library"
+    );
+}
+#[test]
+fn prepared_reopen_cannot_recapture_a_changed_target_as_new_baseline() {
+    let s = Fixture::new(true);
+    let (bytes, scope) = exported(&s, false);
+    let f = Fixture::new(false);
+    let mut o = f.owner();
+    let p = o
+        .prepare_import(bytes, None, Some(scope.clone()), new_binding(&scope))
+        .unwrap();
+    drop(o);
+    let changed = br#"{"providers":{},"userLater":true}"#;
+    std::fs::write(f.h.join("config.json"), changed).unwrap();
+    let mut o = f.owner();
+    assert_eq!(
+        o.reopen_import(&p.operation_id).unwrap().plan_digest,
+        p.plan_digest
+    );
+    assert!(o
+        .confirm_import(&p.operation_id, &p.plan_digest, None)
+        .is_err());
+    assert_eq!(std::fs::read(f.h.join("config.json")).unwrap(), changed);
+}
+#[test]
+fn recovery_is_authenticated_root_bound_and_contains_no_plain_secrets_or_file_passphrase() {
+    let s = Fixture::new(true);
+    let (bytes, scope) = password_file(&s);
+    let f = Fixture::new(false);
+    let other = Fixture::new(false);
+    let mut o = f.owner();
+    let p = o
+        .prepare_import(
+            bytes,
+            Some(Zeroizing::new(PASSWORD.into())),
+            Some(scope),
+            Default::default(),
+        )
+        .unwrap();
+    let path = recovery_path(&f.d, &p.operation_id).unwrap();
+    let original = std::fs::read(&path).unwrap();
+    let text = String::from_utf8_lossy(&original);
+    assert!(!text.contains(DAV_PASSWORD));
+    assert!(!text.contains(PASSWORD));
+    assert!(!text.contains("document_b64"));
+    let (frozen, _) = o.load_recovery(&p.operation_id).unwrap();
+    let inner = Zeroizing::new(serde_json::to_vec(&frozen).unwrap());
+    assert!(!String::from_utf8_lossy(&inner).contains(PASSWORD));
+    let copied = recovery_path(&other.d, &p.operation_id).unwrap();
+    std::fs::create_dir_all(copied.parent().unwrap()).unwrap();
+    crate::infrastructure::atomic_write::atomic_write(&copied, &original, 0o600).unwrap();
+    assert_eq!(
+        code(other.owner().reopen_import(&p.operation_id)),
+        "file_recovery_authentication"
+    );
+    let mut doc: serde_json::Value = serde_json::from_slice(&original).unwrap();
+    let ciphertext = doc["ciphertext"].as_str().unwrap();
+    let mut bad = ciphertext.as_bytes().to_vec();
+    bad[10] = if bad[10] == b'A' { b'B' } else { b'A' };
+    doc["ciphertext"] = serde_json::Value::String(String::from_utf8(bad).unwrap());
+    crate::infrastructure::atomic_write::atomic_write(
+        &path,
+        &serde_json::to_vec(&doc).unwrap(),
+        0o600,
+    )
+    .unwrap();
+    assert_eq!(
+        code(f.owner().reopen_import(&p.operation_id)),
+        "file_recovery_authentication"
+    );
+}
+#[test]
+fn stale_owner_returns_newly_completed_original_fact_without_overwriting_later_edits() {
+    let s = Fixture::new(true);
+    let (bytes, scope) = exported(&s, false);
+    let f = Fixture::new(false);
+    let mut a = f.owner();
+    let p = a
+        .prepare_import(bytes, None, Some(scope.clone()), new_binding(&scope))
+        .unwrap();
+    let mut stale = f.owner();
+    stale.reopen_import(&p.operation_id).unwrap();
+    let receipt = a
+        .confirm_import(&p.operation_id, &p.plan_digest, None)
+        .unwrap();
+    std::fs::write(
+        f.h.join("config.json"),
+        b"later edits after completed receipt",
+    )
+    .unwrap();
+    assert_eq!(
+        stale
+            .confirm_import(&p.operation_id, &p.plan_digest, None)
+            .unwrap(),
+        receipt
+    );
+    assert_eq!(
+        std::fs::read(f.h.join("config.json")).unwrap(),
+        b"later edits after completed receipt"
+    );
+}
+#[test]
+fn cancel_removes_only_unattempted_protected_artifact_and_listing_survives_owner_restart() {
+    let f = Fixture::new(true);
+    let mut o = f.owner();
+    let p = o.prepare_export(f.request(), None).unwrap();
+    drop(o);
+    let mut o = f.owner();
+    let list = o.recoverable_operations().unwrap();
+    assert_eq!(list.len(), 1);
+    assert_eq!(list[0].operation_id, p.id);
+    assert!(!list[0].attempted);
+    assert!(o.cancel_export(&p.id).unwrap());
+    assert!(o.recoverable_operations().unwrap().is_empty());
+    assert!(!recovery_path(&f.d, &p.id).unwrap().exists());
+}
+#[test]
+fn namespace_adoption_is_an_explicit_whole_channel_intent_never_an_implicit_import() {
+    let source = Fixture::new(true);
+    let (bytes, scope) = exported(&source, false);
+    let mut c = decode(&bytes, None).unwrap().objects.into_captured();
+    c.models.payload.policy.as_mut().unwrap().channels[0].namespace =
+        Some(super::super::schema_v2::NamespaceV2 {
+            channel_id: scope.channels[0].portable_channel_id.clone(),
+            remove_leading_prefixes: vec!["vendor/".into()],
+        });
+    c.models.digest = hash(&c.models.payload).unwrap();
+    let objects = SavedObjects::capture(c, Some(&Auth)).unwrap();
+    let bytes = codec::encode(
+        &objects,
+        "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+        "2026-11-07T00:00:00Z",
+        None,
+        Some(&Auth),
+    )
+    .unwrap()
+    .into_bytes()
+    .to_vec();
+    let f = Fixture::new(false);
+    let mut o = f.owner();
+    let choices = new_binding(&scope);
+    let p = o
+        .prepare_import(bytes, None, Some(scope.clone()), choices.clone())
+        .unwrap();
+    assert_eq!(
+        p.reason_code.as_deref(),
+        Some("model_receive_namespace_adoption_required")
+    );
+    let mut adopt = choices;
+    adopt.adopt_namespace_channel_ids = vec![scope.channels[0].portable_channel_id.clone()];
+    let p = o
+        .reselect(
+            &p.operation_id,
+            &p.plan_digest,
+            scope.clone(),
+            adopt.clone(),
+        )
+        .unwrap();
+    assert_eq!(
+        p.reason_code.as_deref(),
+        Some("file_namespace_receiver_not_connected")
+    );
+    let mut partial = scope;
+    partial.channels[0].model_ids = Some(vec!["vendor/custom".into()]);
+    let p = o
+        .reselect(&p.operation_id, &p.plan_digest, partial, adopt)
+        .unwrap();
+    assert_eq!(
+        p.reason_code.as_deref(),
+        Some("file_namespace_scope_invalid")
+    );
 }

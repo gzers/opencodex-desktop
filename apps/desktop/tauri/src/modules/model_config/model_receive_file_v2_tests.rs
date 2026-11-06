@@ -1304,3 +1304,219 @@ fn status_and_applied_replay_do_not_enter_an_unrelated_pending_save_gate() {
         b"unrelated pending save must not be recovered by status"
     );
 }
+
+#[test]
+fn namespace_file_receiver_freezes_adoption_and_applies_compiler_and_receipt_in_one_transaction() {
+    use crate::modules::model_config::file_transfer_v2::NamespaceReceiveV2;
+    let f = Fixture::new();
+    let mut c = channel(&["vendor/model"]);
+    c.namespace = Some(NamespaceV2 { channel_id: SOURCE.into(), remove_leading_prefixes: vec!["vendor/".into()] });
+    c.models[0].explicit_overrides.context_window = Field::Custom(64000);
+    let o = objects(c, vec![], true, None);
+    let mut scope = selection();
+    scope.usage = crate::modules::model_config::objects_overlay_v2::UsageV2::LocalFile;
+    scope.channels[0].include_key = true;
+    let expected = digest(b"outer selected target");
+    let before = f.business();
+    let helper = SystemNamespaceReceiveV2;
+    let plan = helper.plan(&f.saved().library, &f.saved().policy, &o, &scope, &f.host.bindings, &[SOURCE.into()]).unwrap();
+    assert_eq!(plan.policy.channels[0].namespace.as_ref().unwrap().channel_id, LOCAL);
+    assert_eq!(f.business(), before); // Preview/cancel has no business writes.
+    assert!(!f.host.root.join(RECEIVES).exists());
+    assert!(f.host.prepare(OP, &o, &scope, &expected).is_err());
+    let consumer = helper.consumer(&f.host.root, &f.host.home, f.host.bindings.clone(), &[SOURCE.into()]).unwrap();
+    let handle = consumer.prepare(OP, &o, &scope, &expected).unwrap();
+    assert_eq!(f.business(), before);
+    let frozen: Frozen = decoded(&std::fs::read(f.host.dir(OP).unwrap().join("plan.json")).unwrap()).unwrap();
+    assert_eq!(frozen.namespace_adoption, vec![SOURCE.to_string()]);
+    assert_eq!(frozen.objects_hash, objects_hash(&o).unwrap());
+    assert!(matches!(consumer.status(OP, &handle).unwrap(), ModelApplyStatus::Prepared));
+    assert!(f.host.status(OP, &handle).is_err());
+    assert!(f.host.protect(OP, &handle, false).is_err());
+    drop(consumer);
+    let reopened = helper.consumer(&f.host.root, &f.host.home, f.host.bindings.clone(), &[SOURCE.into()]).unwrap();
+    assert!(reopened.prepare(OP, &o, &scope, &expected).unwrap() == handle);
+    reopened.protect(OP, &handle, false).unwrap();
+    assert_eq!(f.business(), before);
+    let receipt = reopened.apply_once(OP, &o, &handle, false).unwrap();
+    assert_eq!(receipt.operation_id, OP);
+    assert!(receipt.plan == handle);
+    let saved = f.saved();
+    let channel = &saved.policy.channels[0];
+    assert_eq!(channel.id, LOCAL);
+    assert_eq!(channel.namespace.as_ref().unwrap().channel_id, LOCAL);
+    assert_eq!(channel.namespace.as_ref().unwrap().remove_leading_prefixes, vec!["vendor/"]);
+    assert_eq!(channel.models[0].raw_model_id, "vendor/model");
+    assert_eq!(channel.models[0].source.raw_model_id, "vendor/model");
+    assert_eq!(f.raw()["providers"]["received"]["models"], json!(["vendor/model"]));
+    assert_eq!(f.raw()["providers"]["received"]["modelContextWindows"]["vendor/model"], 64000);
+    assert_eq!(f.raw()["providers"]["received"]["apiKey"], SECRET);
+    assert_eq!(saved.ledger.unwrap().written_file_digest, digest(&std::fs::read(f.host.home.join("config.json")).unwrap()));
+    let own_receipt: Receipt = decoded(&std::fs::read(f.host.dir(OP).unwrap().join("receipt.json")).unwrap()).unwrap();
+    assert_eq!(own_receipt.namespace_adoption, vec![SOURCE.to_string()]);
+    assert_eq!(own_receipt.plan_hash, handle.token());
+    assert!(f.host.status(OP, &handle).is_err());
+    assert!(f.host.applied_mapping_proof(OP, &handle).is_err()); // No remote-proof authority.
+    let after = f.business();
+    let reopened = helper.consumer(&f.host.root, &f.host.home, f.host.bindings.clone(), &[SOURCE.into()]).unwrap();
+    assert!(matches!(reopened.status(OP, &handle).unwrap(), ModelApplyStatus::Applied(_)));
+    assert!(reopened.prepare(OP, &o, &scope, &expected).unwrap() == handle);
+    reopened.apply_once(OP, &o, &handle, false).unwrap();
+    assert_eq!(f.business(), after);
+    let mut changed_bindings = f.host.bindings.clone();
+    changed_bindings[0].provider_id = "changed-provider".into();
+    let changed = helper.consumer(&f.host.root, &f.host.home, changed_bindings, &[SOURCE.into()]).unwrap();
+    assert!(changed.status(OP, &handle).is_err());
+    assert!(changed.apply_once(OP, &o, &handle, false).is_err());
+    let mut captured = crate::modules::model_config::file_objects_v2::decode_document(
+        &crate::modules::model_config::file_objects_v2::encode_document(&o, Some(&ActualAuthorization)).unwrap(), Some(&ActualAuthorization),
+    ).unwrap().into_captured();
+    captured.models.payload.policy.as_mut().unwrap().channels[0].namespace.as_mut().unwrap().remove_leading_prefixes = vec!["other/".into()];
+    captured.models.digest = digest(&canonical_bytes(&captured.models.payload).unwrap());
+    let changed_objects = SavedObjects::capture(captured, Some(&ActualAuthorization)).unwrap();
+    assert!(reopened.prepare(OP, &changed_objects, &scope, &expected).is_err());
+    assert!(reopened.apply_once(OP, &changed_objects, &handle, false).is_err());
+    assert_eq!(f.business(), after);
+}
+
+#[test]
+fn namespace_file_receiver_rejects_partial_selection_and_invalid_authority_without_business_writes() {
+    use crate::modules::model_config::file_transfer_v2::NamespaceReceiveV2;
+    let f = Fixture::new();
+    let mut c = channel(&["vendor/model"]);
+    c.namespace = Some(NamespaceV2 { channel_id: SOURCE.into(), remove_leading_prefixes: vec!["vendor/".into()] });
+    let objects = objects(c, vec![], false, None);
+    let helper = SystemNamespaceReceiveV2;
+    let before = f.business();
+    for ids in [vec![SOURCE.into(), SOURCE.into()], vec![LOCAL.into()]] {
+        assert!(helper.consumer(&f.host.root, &f.host.home, f.host.bindings.clone(), &ids).is_err());
+    }
+    let mixed = ReceiveFileHostV2 {
+        root: f.host.root.clone(), home: f.host.home.clone(), bindings: f.host.bindings.clone(),
+        trusted_mapping_write: Some(IdentityMappingWriteV2 { before: None, after: b"untrusted mapping".to_vec() }),
+    };
+    assert!(mixed.with_namespace_adoption(vec![SOURCE.into()]).is_err());
+    let host = helper.consumer(&f.host.root, &f.host.home, f.host.bindings.clone(), &[SOURCE.into()]).unwrap();
+    let remote = selection();
+    assert!(host.prepare(OP, &objects, &remote, &digest(b"outer selected target")).is_err());
+    assert!(helper.plan(&f.saved().library, &f.saved().policy, &objects, &remote, &f.host.bindings, &[SOURCE.into()]).is_err());
+    let mut partial = selection();
+    partial.usage = crate::modules::model_config::objects_overlay_v2::UsageV2::LocalFile;
+    partial.channels[0].model_ids = Some(vec!["vendor/model".into()]);
+    assert!(host.prepare(OP, &objects, &partial, &digest(b"outer selected target")).is_err());
+    assert_eq!(f.business(), before);
+    assert!(!f.host.root.join(RECEIVES).exists());
+}
+
+#[test]
+fn namespace_localfile_owner_explicit_injection_cancel_and_reopen_use_original_plan_and_receipt() {
+    use crate::modules::model_config::{
+        file_transfer_v2::{FileTransferOwnerV2, FileRecoveryKeysV2, ImportBindingsV2, ChannelBindingChoiceV2},
+        saved_objects_capture_v2::{CaptureCredentialsV2, SelectedKeySourceV2},
+        objects_overlay_v2::UsageV2,
+    };
+    use std::sync::Arc;
+    struct NoSecrets;
+    impl CaptureCredentialsV2 for NoSecrets {
+        fn channel_key(&self, _: &Path, _: &SelectedKeySourceV2<'_>) -> ModelResult<Zeroizing<String>> { panic!("unselected key access") }
+        fn authorization(&self, _: &Path, _: &str, _: &Value, _: &Value) -> ModelResult<PortableAuthorization> { panic!("unselected authorization access") }
+        fn webdav_password(&self, _: &Path, _: &str) -> ModelResult<Zeroizing<String>> { panic!("unselected password access") }
+    }
+    struct MemoryKey;
+    impl FileRecoveryKeysV2 for MemoryKey {
+        fn key(&self, _: &Path, _: &Path, _: bool) -> ModelResult<Zeroizing<[u8;32]>> { Ok(Zeroizing::new([81;32])) }
+    }
+    let f = Fixture::new();
+    let owner = || FileTransferOwnerV2::new(f.host.root.clone(), f.host.home.clone(), Arc::new(NoSecrets)).unwrap()
+        .with_recovery_keys(Arc::new(MemoryKey)).with_namespace_receive(Arc::new(SystemNamespaceReceiveV2));
+    let mut c = channel(&["vendor/model"]);
+    c.namespace = Some(NamespaceV2 { channel_id: SOURCE.into(), remove_leading_prefixes: vec!["vendor/".into()] });
+    let o = objects(c, vec![], false, None);
+    let bytes = file_objects_v2::encode(&o, OP, "2026-11-07T00:00:00Z", None, Some(&ActualAuthorization)).unwrap().into_bytes().to_vec();
+    let mut scope = selection(); scope.usage = UsageV2::LocalFile;
+    let choices = ImportBindingsV2 {
+        channels: vec![ChannelBindingChoiceV2::New { portable_channel_id: SOURCE.into() }],
+        adopt_namespace_channel_ids: vec![SOURCE.into()], ..Default::default()
+    };
+    let before = f.business();
+    let mut original = owner();
+    let preview = original.prepare_import(bytes.clone(), None, Some(scope.clone()), choices.clone()).unwrap();
+    assert!(preview.can_confirm, "{:?}", preview.reason_code);
+    assert_eq!(f.business(), before);
+    assert!(!f.host.root.join(RECEIVES).exists());
+    assert!(original.cancel_import(&preview.operation_id).unwrap());
+    assert_eq!(f.business(), before);
+    let preview = original.prepare_import(bytes, None, Some(scope), choices).unwrap();
+    let operation = preview.operation_id.clone();
+    let digest = preview.plan_digest.clone();
+    drop(original);
+    let mut resumed = owner();
+    let reopened = resumed.reopen_import(&operation).unwrap();
+    assert_eq!(reopened.plan_digest, digest);
+    assert!(reopened.can_confirm, "{:?}", reopened.reason_code);
+    let receipt = resumed.confirm_import(&operation, &digest, Some(false)).unwrap();
+    assert_eq!(receipt.operation_id, operation); assert_eq!(receipt.plan_digest, digest);
+    let saved = f.saved();
+    let channel = &saved.policy.channels[0];
+    assert_eq!(channel.id, SOURCE); // LocalFile New preserves the explicit available UUID.
+    assert_eq!(channel.namespace.as_ref().unwrap().channel_id, channel.id);
+    assert_eq!(channel.namespace.as_ref().unwrap().remove_leading_prefixes, vec!["vendor/"]);
+    assert_eq!(channel.models[0].raw_model_id, "vendor/model");
+    assert!(f.host.dir(&operation).unwrap().join("receipt.json").is_file());
+    let after = f.business();
+    drop(resumed);
+    let mut again = owner();
+    let after_reopen = again.reopen_import(&operation).unwrap();
+    assert_eq!(after_reopen.plan_digest, digest);
+    let replay = again.confirm_import(&operation, &digest, Some(false)).unwrap();
+    assert_eq!(replay.operation_id, operation);
+    assert_eq!(f.business(), after);
+}
+
+#[test]
+fn applied_mapping_proof_requires_original_manifest_and_receipt_even_after_later_edits() {
+    let mut f = Fixture::new();
+    let after = mapping_bytes(vec![mapping_row("endpoint", SOURCE, LOCAL, OP)]);
+    f.host.trusted_mapping_write = Some(IdentityMappingWriteV2 { before: None, after: after.clone() });
+    let objects = simple(&["a"]);
+    let handle = f.prepare(OP, &objects, &selection());
+    assert!(f.host.applied_mapping_proof(OP, &handle).is_err());
+    f.host.protect(OP, &handle, false).unwrap();
+    f.host.apply_once(OP, &objects, &handle, false).unwrap();
+    // Historical proof is not an assertion that today's config remains equal.
+    std::fs::write(f.host.home.join("config.json"), b"{\"later_user_edit\":true}").unwrap();
+    let before = f.business();
+    let proof = f.host.applied_mapping_proof(OP, &handle).unwrap();
+    assert_eq!(proof.operation_id(), OP);
+    assert!(proof.handle() == &handle);
+    assert!(proof.mapping_before().is_none());
+    assert_eq!(proof.mapping_after(), after);
+    assert_eq!(proof.expected_target(), digest(b"outer selected target"));
+    assert_eq!(f.business(), before);
+    let manifest_path = f.host.dir(OP).unwrap().join("plan.json");
+    let original = std::fs::read(&manifest_path).unwrap();
+    std::fs::write(&manifest_path, b"{}").unwrap();
+    assert!(matches!(f.host.status(OP, &handle).unwrap(), ModelApplyStatus::Applied(_)));
+    assert!(f.host.applied_mapping_proof(OP, &handle).is_err());
+    std::fs::write(&manifest_path, original).unwrap();
+    std::fs::write(f.host.dir(OP).unwrap().join("6-after.bin"), b"corrupt").unwrap();
+    assert!(f.host.applied_mapping_proof(OP, &handle).is_err());
+    assert_eq!(f.business(), before);
+}
+
+#[test]
+fn first_receive_preserves_explicit_no_secret_auth_mode_and_allows_second_receive() {
+    for mode in ["none", "local"] {
+        let mut f = Fixture::new();
+        let mut c = channel(&["a"]);
+        c.connection.as_mut().unwrap().auth_mode = Some(mode.into());
+        let objects = objects(c, vec![], false, None);
+        f.apply(OP, &objects, &selection(), false);
+        assert_eq!(f.raw()["providers"]["received"]["authMode"], mode);
+        assert!(f.raw()["providers"]["received"].get("apiKey").is_none());
+        f.existing();
+        f.apply(OP2, &objects, &selection(), false);
+        assert_eq!(f.raw()["providers"]["received"]["authMode"], mode);
+        assert!(f.raw()["providers"]["received"].get("apiKey").is_none());
+    }
+}

@@ -1,4 +1,5 @@
 //! Synthetic sources only, all D/H and logs isolated under /tmp.
+use super::super::sync_v2::types::LocalApplication;
 use super::super::{
     file_objects_v2::SecretValues,
     objects_overlay_v2::{ChannelSelectionV2, SelectionV2},
@@ -10,7 +11,9 @@ use super::super::{
     source_v2::source_from_provider_v2,
     sync_local_v2::ModelApplyV2,
 };
+use super::super::{sync_host_v2 as host, sync_local_v2 as local};
 use super::*;
+use host::CaptureProviderV2;
 use serde_json::Value;
 use tempfile::TempDir;
 const CLOUD: &str = "11111111-1111-4111-8111-111111111111";
@@ -561,6 +564,119 @@ fn uuid_occupied_without_pair_requires_explicit_mapping_same_name_never_guesses(
     );
     assert!(!f.root.join(MAPPING_PATH).exists());
 }
+
+#[test]
+fn explicit_same_uuid_download_freezes_present_then_adopts_only_in_receive_transaction() {
+    let f = Fixture::new(true);
+    let id = f.local_id();
+    let c = cloud(&id, "different remote label");
+    let mut r = request(&id);
+    // Preserve the actual local connection and credentials in this model-only
+    // selection. Explicit identity adoption confers no connection authority.
+    r.selection.channels[0].include_connection = false;
+    assert_eq!(
+        code(
+            f.owner
+                .freeze_preview(DirectionV2::Download, request_copy(&r), Some(&c))
+        ),
+        "sync_identity_explicit_mapping_required"
+    );
+    let p = f
+        .owner
+        .freeze_preview_adopting_same_ids(request_copy(&r), &c)
+        .unwrap();
+    assert_eq!(p.binding().direction, DirectionV2::Download);
+    assert_eq!(p.binding().slots[0].portable_id, id);
+    assert_eq!(p.binding().slots[0].local_id, id);
+    assert_eq!(p.receive_bindings()[0].mode, ReceiveBindingModeV2::Existing);
+    let captured = f.owner.capture(&p.local_capture_request()).unwrap();
+    let atoms = file_objects_v2::save_state(&captured.objects).unwrap();
+    let atom = channel_atom(&captured.objects, &atoms, &id).unwrap();
+    assert!(
+        matches!(&p.binding().slots[0].expected, TargetExpectationV2::Present(d) if d == &atom)
+    );
+    f.owner.verify(p.binding()).unwrap();
+    assert!(!f.root.join(MAPPING_PATH).exists());
+    // Issuing an explicit preview never unlocks the original strict API.
+    assert!(f
+        .owner
+        .freeze_preview(DirectionV2::Download, request_copy(&r), Some(&c))
+        .is_err());
+    let write = p.after_adoption(OP).unwrap();
+    assert!(write.before.is_none());
+    let doc = document(Some(&write.after)).unwrap();
+    assert_eq!(doc.bindings[0].portable_id, id);
+    assert_eq!(doc.bindings[0].local_id, id);
+    assert_eq!(doc.bindings[0].adopted_operation_id, OP);
+    let host = config::receive::ReceiveFileHostV2 {
+        root: f.root.clone(),
+        home: f.home.clone(),
+        bindings: p.receive_bindings().to_vec(),
+        trusted_mapping_write: Some(write),
+    };
+    let handle = host
+        .prepare(
+            OP,
+            &c,
+            &r.selection,
+            &schema_v2::digest(b"explicit same uuid target"),
+        )
+        .unwrap();
+    assert!(!f.root.join(MAPPING_PATH).exists());
+    host.protect(OP, &handle, false).unwrap();
+    host.apply_once(OP, &c, &handle, false).unwrap();
+    assert!(matches!(host.status(OP, &handle).unwrap(),
+        super::super::sync_local_v2::ModelApplyStatus::Applied(receipt) if receipt.operation_id == OP && receipt.plan == handle));
+    p.verify_adopted(OP).unwrap();
+}
+
+#[test]
+fn explicit_same_uuid_preview_cannot_steal_a_pair_or_guess_a_different_uuid_by_name() {
+    let f = Fixture::new(true);
+    let local = f.local_id();
+    f.mapping(CLOUD, &local);
+    let before = std::fs::read(f.root.join(MAPPING_PATH)).unwrap();
+    let c = cloud(&local, "fixture");
+    let mut r = request(&local);
+    r.selection.channels[0].include_connection = false;
+    assert_eq!(
+        code(f.owner.freeze_preview_adopting_same_ids(r, &c)),
+        "sync_identity_explicit_mapping_required"
+    );
+    assert_eq!(std::fs::read(f.root.join(MAPPING_PATH)).unwrap(), before);
+    let f = Fixture::new(true);
+    let c = cloud(CLOUD, "fixture");
+    assert_eq!(
+        code(f.owner.freeze_preview_adopting_same_ids(request(CLOUD), &c)),
+        "model_receive_identity_conflict"
+    );
+    assert!(!f.root.join(MAPPING_PATH).exists());
+}
+
+#[test]
+fn explicit_same_uuid_present_verification_rejects_actual_source_and_roster_changes() {
+    for change in ["model", "roster", "key"] {
+        let f = Fixture::new(true);
+        let local = f.local_id();
+        let c = cloud(&local, "cloud");
+        let mut r = request(&local);
+        r.selection.channels[0].include_connection = false;
+        let p = f.owner.freeze_preview_adopting_same_ids(r, &c).unwrap();
+        let path = f.home.join("config.json");
+        let mut raw: Value = serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+        match change {
+            "model" => {
+                raw["providers"]["fixture"]["modelContextWindows"] =
+                    json!({"vendor/raw/slash":7777})
+            }
+            "key" => raw["providers"]["fixture"]["apiKey"] = json!("synthetic-changed-key"),
+            _ => raw["providers"]["another"] = json!({"adapter":"openai-chat","models":[]}),
+        }
+        std::fs::write(path, serde_json::to_vec(&raw).unwrap()).unwrap();
+        assert!(f.owner.verify(p.binding()).is_err(), "{change}");
+        assert!(!f.root.join(MAPPING_PATH).exists());
+    }
+}
 #[test]
 fn upload_projects_only_channel_identity_and_preserves_source_models_refs() {
     let f = Fixture::new(true);
@@ -975,4 +1091,366 @@ fn invalid_draft_is_never_a_runtime_source() {
         .freeze_preview(DirectionV2::Upload, request(&local), None)
         .unwrap();
     f.owner.verify(p.binding()).unwrap();
+}
+
+struct OriginalMappedSource {
+    current: host::CurrentSourceProviderV2,
+    preview: Arc<MappingPreviewV2>,
+}
+impl local::SourceSnapshotProviderV2 for OriginalMappedSource {
+    fn current(&self, _: &Path, _: &Path, _: &CaptureRequestV2) -> ModelResult<SourceGuard> {
+        self.current
+            .current_source()
+            .map_err(|_| err("capture_stale"))
+    }
+    fn root(&self, _: &Path, _: &Path, _: &CaptureRequestV2) -> ModelResult<String> {
+        self.current
+            .root_revision()
+            .map_err(|_| err("capture_stale"))
+    }
+    fn target(&self, d: &Path, h: &Path, r: &CaptureRequestV2) -> ModelResult<String> {
+        Ok(self.current(d, h, r)?.saved_source_digest)
+    }
+    fn verify_applied_mapping(&self, id: &str, _: &LocalTargetBindingV2) -> ModelResult<()> {
+        self.preview.verify_adopted(id)
+    }
+}
+struct NoRecoveryCapture;
+impl local::SourceSnapshotProviderV2 for NoRecoveryCapture {
+    fn current(&self, _: &Path, _: &Path, _: &CaptureRequestV2) -> ModelResult<SourceGuard> {
+        panic!("remaining recovery must not capture today's source")
+    }
+    fn root(&self, _: &Path, _: &Path, _: &CaptureRequestV2) -> ModelResult<String> {
+        panic!("remaining recovery must not resolve today's root")
+    }
+    fn target(&self, _: &Path, _: &Path, _: &CaptureRequestV2) -> ModelResult<String> {
+        panic!("remaining recovery must not create a baseline")
+    }
+}
+struct CutAfterRealReceive {
+    receiver: Arc<config::receive::ReceiveFileHostV2>,
+    read_only: bool,
+    remembered_handle: Mutex<Option<ModelApplyPlanHandle>>,
+}
+impl local::ModelApplyV2 for CutAfterRealReceive {
+    fn prepare(
+        &self,
+        id: &str,
+        o: &SavedObjects,
+        s: &super::super::objects_overlay_v2::SelectionV2,
+        e: &str,
+    ) -> ModelResult<ModelApplyPlanHandle> {
+        assert!(
+            !self.read_only,
+            "remaining recovery prepared a new model write"
+        );
+        let handle = self.receiver.prepare(id, o, s, e)?;
+        *self.remembered_handle.lock().unwrap() = Some(handle.clone());
+        Ok(handle)
+    }
+    fn protect(&self, id: &str, h: &ModelApplyPlanHandle, b: bool) -> ModelResult<()> {
+        assert!(
+            !self.read_only,
+            "remaining recovery repeated model protection"
+        );
+        self.receiver.protect(id, h, b)
+    }
+    fn apply_once(
+        &self,
+        id: &str,
+        o: &SavedObjects,
+        h: &ModelApplyPlanHandle,
+        b: bool,
+    ) -> ModelResult<local::ModelApplyReceipt> {
+        assert!(!self.read_only, "remaining recovery rewrote models");
+        self.receiver.apply_once(id, o, h, b)?;
+        Err(err("synthetic_crash_after_real_model_receipt"))
+    }
+    fn status(&self, id: &str, h: &ModelApplyPlanHandle) -> ModelResult<local::ModelApplyStatus> {
+        self.receiver.status(id, h)
+    }
+}
+
+#[test]
+fn restart_restores_original_absent_with_dual_real_proofs_and_finishes_only_old_participants() {
+    let f = Fixture::new(false);
+    let (cloud, request) = full_cloud(&f);
+    let preview = Arc::new(
+        f.owner
+            .freeze_preview(DirectionV2::Download, request, Some(&cloud))
+            .unwrap(),
+    );
+    let binding = preview.binding().clone();
+    let original_bytes = serde_json::to_vec(&binding).unwrap();
+    let request_bytes = serde_json::to_vec(&preview.local_capture_request()).unwrap();
+    let receiver = Arc::new(config::receive::ReceiveFileHostV2 {
+        root: f.root.clone(),
+        home: f.home.clone(),
+        bindings: preview.receive_bindings().to_vec(),
+        trusted_mapping_write: Some(preview.after_adoption(OP).unwrap()),
+    });
+    let actual = Arc::new(
+        host::SavedCaptureProviderV2::new(
+            f.root.clone(),
+            f.home.clone(),
+            preview.local_capture_request(),
+            Arc::new(Credentials),
+        )
+        .unwrap(),
+    );
+    let mapped = Arc::new(
+        host::MappedCaptureProviderV2::new(actual, f.owner.clone(), binding.clone()).unwrap(),
+    );
+    let captured = mapped.capture_saved(&binding.remote_scope).unwrap();
+    let scope = captured.source_guard.scope_digest.clone();
+    let expected = captured.source_guard.saved_source_digest.clone();
+    let source = Arc::new(OriginalMappedSource {
+        current: host::CurrentSourceProviderV2::new(
+            mapped,
+            binding.remote_scope.clone(),
+            captured.root_revision,
+        )
+        .unwrap(),
+        preview: preview.clone(),
+    });
+    let payload = file_objects_v2::encode(
+        &cloud,
+        OP,
+        "2026-11-07T01:00:00Z",
+        None,
+        Some(&PayloadAuthorizationV2),
+    )
+    .unwrap()
+    .into_bytes();
+    let model_host = Arc::new(CutAfterRealReceive {
+        receiver: receiver.clone(),
+        read_only: false,
+        remembered_handle: Mutex::new(None),
+    });
+    let app = local::LocalApplicationV2::new_mapped(
+        f.root.clone(),
+        f.home.clone(),
+        binding.remote_scope.clone(),
+        preview.local_capture_request(),
+        scope.clone(),
+        source,
+        model_host.clone(),
+        None,
+        binding.clone(),
+        f.owner.clone(),
+    )
+    .unwrap();
+    assert!(app
+        .apply_once(
+            OP,
+            &payload,
+            &file_objects_v2::supported_schema(),
+            &scope,
+            &expected,
+            false
+        )
+        .is_err());
+    assert_eq!(
+        app.progress(OP).unwrap(),
+        Some(local::LocalProgressV2::Protected)
+    );
+    // The Service retained the handle returned by the real participant. It
+    // does not parse the mapper/local journal to reconstruct that context.
+    let journal_path = f
+        .root
+        .join("manager-state/sync-local-v2")
+        .join(format!("{OP}.json"));
+    let handle = model_host
+        .remembered_handle
+        .lock()
+        .unwrap()
+        .as_ref()
+        .unwrap()
+        .clone();
+    assert!(matches!(
+        receiver.status(OP, &handle).unwrap(),
+        local::ModelApplyStatus::Applied(_)
+    ));
+    let model_proof = receiver.applied_mapping_proof(OP, &handle).unwrap();
+    assert!(f.owner.verify(&binding).is_err());
+    drop(app);
+    drop(preview);
+    let model_config_after = std::fs::read(f.home.join("config.json")).unwrap();
+    let map_after = std::fs::read(f.root.join(MAPPING_PATH)).unwrap();
+    let owner = Arc::new(
+        SyncIdentityOwnerV2::new(
+            f.root.clone(),
+            f.home.clone(),
+            f.owner.endpoint_binding_id.clone(),
+            Arc::new(Credentials),
+        )
+        .unwrap(),
+    );
+    let witness = || {
+        local::LocalApplicationV2::local_model_journal_proof(&f.root, &f.home, OP, &handle).unwrap()
+    };
+    let mut forged = binding.clone();
+    if let TargetExpectationV2::ExpectedAbsent(d) = &mut forged.slots[0].expected {
+        *d = schema_v2::digest(b"forged absent");
+    }
+    let forged = LocalTargetBindingV2::freeze(
+        forged.mapping_revision,
+        forged.local_scope,
+        forged.remote_scope,
+        forged.direction,
+        forged.slots,
+    )
+    .unwrap();
+    assert!(owner
+        .restore_adopted(
+            &serde_json::to_vec(&forged).unwrap(),
+            witness(),
+            &model_proof
+        )
+        .is_err());
+    let other_endpoint = Arc::new(
+        SyncIdentityOwnerV2::new(
+            f.root.clone(),
+            f.home.clone(),
+            schema_v2::digest(b"other endpoint"),
+            Arc::new(Credentials),
+        )
+        .unwrap(),
+    );
+    assert!(other_endpoint
+        .restore_adopted(&original_bytes, witness(), &model_proof)
+        .is_err());
+    let mut edited = map_after.clone();
+    edited.push(10);
+    std::fs::write(f.root.join(MAPPING_PATH), edited).unwrap();
+    assert!(owner
+        .restore_adopted(&original_bytes, witness(), &model_proof)
+        .is_err());
+    std::fs::write(f.root.join(MAPPING_PATH), &map_after).unwrap();
+    let proof = owner
+        .restore_adopted(&original_bytes, witness(), &model_proof)
+        .unwrap();
+    assert!(proof.binding() == &binding);
+    assert!(matches!(
+        proof.binding().slots[0].expected,
+        TargetExpectationV2::ExpectedAbsent(_)
+    ));
+    assert!(owner.verify(proof.binding()).is_err());
+    let capture = || serde_json::from_slice::<CaptureRequestV2>(&request_bytes).unwrap();
+    let remaining = local::LocalApplicationV2::new_mapped_remaining(
+        f.root.clone(),
+        f.home.clone(),
+        binding.remote_scope.clone(),
+        capture(),
+        scope.clone(),
+        Arc::new(NoRecoveryCapture),
+        Arc::new(CutAfterRealReceive {
+            receiver: receiver.clone(),
+            read_only: true,
+            remembered_handle: Mutex::new(None),
+        }),
+        None,
+        proof.clone(),
+    )
+    .unwrap();
+    assert!(remaining.current_source().is_err());
+    assert!(remaining.target_digest(&scope).is_err());
+    assert!(remaining
+        .export_once(OP, &payload, &file_objects_v2::supported_schema(), &scope)
+        .is_err());
+    assert!(remaining
+        .apply_once(
+            OTHER,
+            &payload,
+            &file_objects_v2::supported_schema(),
+            &scope,
+            &expected,
+            false
+        )
+        .is_err());
+    assert!(!f
+        .root
+        .join("manager-state/sync-local-v2")
+        .join(format!("{OTHER}.json"))
+        .exists());
+    // Every call rechecks mapping and old context before remaining writes.
+    let mut changed = map_after.clone();
+    changed.push(10);
+    std::fs::write(f.root.join(MAPPING_PATH), changed).unwrap();
+    assert!(remaining
+        .apply_once(
+            OP,
+            &payload,
+            &file_objects_v2::supported_schema(),
+            &scope,
+            &expected,
+            false
+        )
+        .is_err());
+    std::fs::write(f.root.join(MAPPING_PATH), &map_after).unwrap();
+    assert!(remaining
+        .apply_once(
+            OP,
+            &payload,
+            &file_objects_v2::supported_schema(),
+            &scope,
+            &expected,
+            true
+        )
+        .is_err());
+    remaining
+        .apply_once(
+            OP,
+            &payload,
+            &file_objects_v2::supported_schema(),
+            &scope,
+            &expected,
+            false,
+        )
+        .unwrap();
+    assert_eq!(
+        remaining.progress(OP).unwrap(),
+        Some(local::LocalProgressV2::Applied)
+    );
+    assert_eq!(
+        std::fs::read(f.home.join("config.json")).unwrap(),
+        model_config_after
+    );
+    assert_eq!(std::fs::read(f.root.join(MAPPING_PATH)).unwrap(), map_after);
+    assert!(f
+        .root
+        .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH)
+        .exists());
+    assert!(discovery::skills_store_dir(&f.root)
+        .join("fixture-skill/SKILL.md")
+        .exists());
+    assert_eq!(
+        portable_assets::stored_public(&f.root).unwrap()[0].name,
+        "fixture"
+    );
+    let before = std::fs::read(&journal_path).unwrap();
+    remaining
+        .apply_once(
+            OP,
+            &payload,
+            &file_objects_v2::supported_schema(),
+            &scope,
+            &expected,
+            false,
+        )
+        .unwrap();
+    assert_eq!(std::fs::read(&journal_path).unwrap(), before);
+    // Removal of the original journal is never permission to rebaseline O.
+    std::fs::remove_file(&journal_path).unwrap();
+    assert!(remaining
+        .apply_once(
+            OP,
+            &payload,
+            &file_objects_v2::supported_schema(),
+            &scope,
+            &expected,
+            false
+        )
+        .is_err());
+    assert!(!journal_path.exists());
 }
