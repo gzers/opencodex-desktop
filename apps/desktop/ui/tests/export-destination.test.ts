@@ -2,8 +2,8 @@ import {readFileSync} from 'node:fs'
 import {resolve} from 'node:path'
 import {describe,expect,it} from 'vitest'
 
-const view=readFileSync(resolve(__dirname,'../src/features/sync/ModelTransfer.vue'),'utf8')
-const api=readFileSync(resolve(__dirname,'../src/features/sync/modelTransfer.ts'),'utf8')
+const view=readFileSync(resolve(__dirname,'../src/features/sync/ConfigFileTransferV2.vue'),'utf8')
+const api=readFileSync(resolve(__dirname,'../src/features/sync/file-api-v2.ts'),'utf8')
 const caps=readFileSync(resolve(__dirname,'../../tauri/capabilities/default.json'),'utf8')
 
 describe('导出可选保存路径 (WP-32)', () => {
@@ -28,17 +28,17 @@ describe('导出可选保存路径 (WP-32)', () => {
     expect(view).toContain('同日多次导出各自建包')
   })
 
-  it('结果区显示备份包路径与打开目录', () => {
-    expect(view).not.toContain('v-if="exportedPath"')
+  it('结果区显示后端确认的备份包路径与打开目录', () => {
+    expect(view).not.toContain('v-if="exportedPath"');expect(view).toContain('displayPath(files.output.path)');expect(view).toContain('打开备份包目录');expect(api).toContain("'open_config_file_export_directory_v2',{operationId}")
     // Actual result reading/directory actions are exercised in sync-result.test.ts.
   })
 
-  it('导出调用带目标目录，默认留空', () => {
-    expect(api).toContain('targetDir')
-    expect(view).toContain("modelTransferApi.export(id, exportTargetDir.value || undefined)")
+  it('导出仅传默认或自定义目录意图，由后端选择并冻结实际路径', () => {
+    expect(api).toContain("destination:ExportDestinationV2='default'");expect(api).toContain("'save_config_file_export_v2',{operationId,destination}")
+    expect(view).toContain('v-model="files.destination"');expect(api).not.toContain('targetDir');expect(api).not.toContain('path:string)=>invoke')
   })
 
-  it('能力清单允许系统保存对话框', () => {
-    expect(caps).toContain('dialog:allow-save')
+  it('能力清单允许系统原生目录选择', () => {
+    expect(caps).toContain('dialog:allow-open')
   })
 })

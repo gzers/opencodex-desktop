@@ -611,7 +611,6 @@ pub trait ModelApplyV2: Send + Sync {
     ) -> ModelResult<Option<Vec<super::model_transaction_v2::WriteV2>>> {
         Ok(None)
     }
-
 }
 
 struct ActualAuthorization;

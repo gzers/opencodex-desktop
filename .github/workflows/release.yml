@@ -132,6 +132,30 @@ jobs:
           codesign -dvv "$app" 2>&1
           test -s "$app/Contents/Resources/resources/LICENSE"
           test -s "$app/Contents/Resources/resources/THIRD-PARTY-NOTICES.txt"
+      - name: Package verified macOS app in its independent user installation folder
+        if: runner.os == 'macOS'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+        run: |
+          set -euo pipefail
+          app="apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app"
+          images=(apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg)
+          test "${#images[@]}" -eq 1
+          test -f "${images[0]}"
+          output="test/out/macos023-package/$(basename "${images[0]}")"
+          python3 .github/scripts/package_macos_023.py --app "$app" --output "$output" --metadata test/out/macos023-package/package-evidence.json --expected-version 0.2.23 --input-kind release-input
+          # The sealed .app/updater bytes stay unchanged; replace only the DMG.
+          cp "$output" "${images[0]}"
+          gh release upload "$RELEASE_TAG" "$output" --repo "$GITHUB_REPOSITORY" --clobber
+      - uses: actions/upload-artifact@v4
+        if: always() && runner.os == 'macOS'
+        with:
+          name: release-macos-installation-layout-evidence
+          path: test/out/macos023-package/package-evidence.json
+          if-no-files-found: ignore
+
       # Keep the release private until its actual installer bytes pass the existing
       # ephemeral-runner checks. This does not replace updater signature validation.
       - name: Verify Windows release installers on isolated runner

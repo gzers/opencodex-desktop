@@ -1211,6 +1211,13 @@ impl ReceiveFileHostV2 {
     }
 }
 impl ModelApplyV2 for ReceiveFileHostV2 {
+    fn scope_backup_images(
+        &self,
+        id: &str,
+        handle: &ModelApplyPlanHandle,
+    ) -> ModelResult<Option<Vec<WriteV2>>> {
+        self.protected_images(id, handle).map(Some)
+    }
     fn prepare(
         &self,
         id: &str,
