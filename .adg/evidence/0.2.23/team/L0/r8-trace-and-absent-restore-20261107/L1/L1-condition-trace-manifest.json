@@ -1,0 +1,131 @@
+{
+  "role": "L1",
+  "scope": "AC-MATCH-05 same-evaluator read-only conditional preview trace backend",
+  "created_at_utc": "2026-11-06T19:42:43.691068+00:00",
+  "client_date": "2026-11-07",
+  "root": "/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes",
+  "branch": "codex/0.2.23-model-matching",
+  "baseline": "62d698b2c",
+  "exact_baseline": "62d698b2c9016970759f5f8283aee902c49f923e",
+  "parent": "c002589f7d61935a7da238bf385cc3a0e591e066",
+  "commit": "9c6da8e2c1ee38992f42b83d4428079dccb4afd3",
+  "remote_confirmed": "9c6da8e2c1ee38992f42b83d4428079dccb4afd3\trefs/heads/codex/0.2.23-model-matching",
+  "write_set": [
+    "apps/desktop/tauri/src/modules/model_config/matching_v2.rs",
+    "apps/desktop/tauri/src/modules/model_config/matching_v2_trace_tests.rs",
+    "apps/desktop/tauri/src/commands/model_config_v2.rs",
+    "apps/desktop/tauri/src/commands/model_config_v2_trace_tests.rs"
+  ],
+  "source_sha256": {
+    "apps/desktop/tauri/src/modules/model_config/matching_v2.rs": "71f6553360f546339a218abf9f821e3b286eba41fb1e2656aa99be10b53ed282",
+    "apps/desktop/tauri/src/modules/model_config/matching_v2_trace_tests.rs": "8a78f7e4ac728423e3d7167a43e3fc9fec677ea4fb7fde2d31988bdbb18d5ed9",
+    "apps/desktop/tauri/src/commands/model_config_v2.rs": "5fe9b38749ea24978ea487a2a9a2dc1444cc885a42d608b1c59196055a2d519c",
+    "apps/desktop/tauri/src/commands/model_config_v2_trace_tests.rs": "fe1cc2e32a3ecd66185649a29e5f221851cd478b68712d8add8e3ccb4ee7ae4a"
+  },
+  "checks": {
+    "matcher_trace": {
+      "passed": 7,
+      "failed": 0,
+      "log": "condition-trace-matcher-final.log"
+    },
+    "public_commands": {
+      "passed": 9,
+      "failed": 0,
+      "log": "condition-trace-command-final.log"
+    },
+    "frozen_core": {
+      "passed": 37,
+      "failed": 0,
+      "log": "condition-trace-frozen-regression.log"
+    },
+    "file_consumers": {
+      "passed": 26,
+      "failed": 0,
+      "log": "condition-trace-consumer-regression.log"
+    },
+    "actual_config_boundary": {
+      "passed": 98,
+      "failed": 0,
+      "log": "condition-trace-file-regression.log"
+    }
+  },
+  "total_rust_tests": 177,
+  "strict_clippy": {
+    "exit_code": 0,
+    "args": "--lib --tests --no-deps -- -D warnings",
+    "log": "condition-trace-final-clippy.log"
+  },
+  "all_crate_fmt": {
+    "exit_code": 0
+  },
+  "diff_check": {
+    "exit_code": 0
+  },
+  "clean_worktree": true,
+  "schema_validation": {
+    "validator": "jsonschema",
+    "version": "4.25.1",
+    "draft": "draft-07",
+    "schema_check": "passed",
+    "real_function_cases": 14,
+    "valid_results": 12,
+    "valid_errors": 2,
+    "rows": 23,
+    "negative_assertions": [
+      "unknown_reason_enum_rejected",
+      "non_boolean_non_null_match_rejected",
+      "old_schemars_snake_origin_rejected",
+      "origin_oneof_extra_field_rejected",
+      "required_real_matching_view_rejected_if_missing",
+      "invalid_error_condition_identity_type_rejected"
+    ],
+    "cases": [
+      "numeric_joiners",
+      "complete_numeric_boundaries",
+      "name_any",
+      "name_before_version",
+      "name_after_version",
+      "wrong_name_position",
+      "all_and_atoms",
+      "layout_and_tail_prerequisites",
+      "literal_segment_boundary",
+      "family_include_and_repeated_prefix",
+      "family_excluded",
+      "family_channel_scope",
+      "invalid_layout_reference",
+      "runtime_overlap_error"
+    ],
+    "source": "actual preview_conditions Rust test output, no renderer declarations",
+    "sha256": {
+      "condition-preview.trace.schema.json": "8a12967cc1ed3d52e328796952227c1f399b7aacee8585370607e71480a089a4",
+      "condition-preview.error.schema.json": "6e8a71b4c19e5e78009d256d2e4872ba17c32249793a756d823414ff4d7e1fe2",
+      "condition-preview.real-cases.json": "974c837759b7c932456b2a9288b51b9af08ac27df3439da8dde7518da7bee01c"
+    }
+  },
+  "evidence_sha256": {
+    "condition-trace-matcher-final.log": "ad7cc50135d7c7fee5b4915c1625fe60a7cd9b5d9273365176cdae1faed2dc29",
+    "condition-trace-command-final.log": "49ff6facdbbe0418bd4682fa03e40fce56b78e6738d3893aac6bc9349b8f5e45",
+    "condition-trace-frozen-regression.log": "304c12df1568b0a5fbf21bd1b008405e418d4e5e6656f2d2163a0d85311b79a7",
+    "condition-trace-consumer-regression.log": "2062aead8628b85fdadce8758b68d88e876a44ffb906b92d04ce77ca2b3e50d0",
+    "condition-trace-file-regression.log": "48e0fb5ce76a172d9bf8d395f2425e594f449d0a875e7c567815a63bac3a2f83",
+    "condition-trace-final-clippy.log": "2887aa37a266fc676856a7113da1df8f4732222f0462039e396b9c075035ae74",
+    "condition-trace-cases-schema-final.log": "8437509008c1faac4a6843cd6397b4428574d63eb3b2b278650ba546d825a2de",
+    "condition-preview.schema-validation.log": "422758ebf2baa6a01d07e92960a3a578d76cb4159a50f5bb487c8258c62df3a1",
+    "condition-trace-schema-tool-install.log": "efcdd180c1639efa587ad4446c69cd40814f209b1ca9dd986edcc4866c495366",
+    "condition-trace-push.log": "2a8b4634901a52d7ec42e1f97947d5fdd51ebf5050e298af7cfeee9e0a9bd020",
+    "condition-trace-remote-confirmation.txt": "919dd20db950b3247b6f6c01d4ab273db7e1eab88e7c05d3cdbcf7f661406c8d"
+  },
+  "contract_sha256": "4b3e026a3c37b9e7f82c071181921cf57ef35049e9a4c9b8d9051c1f18b32395",
+  "old_audit_retained": {
+    "L1-final-scope-readonly-audit.md": "3daa692d679f2e9ca957db274549debef3f6b2656b1a5cd9fcf01fcab5a5882b",
+    "L1-final-scope-readonly-audit.json": "bcc929183a1c1ca3240eed551b8f7772763d9576b470dcb929e7a78277d75db6"
+  },
+  "limits": [
+    "backend only; L3 frontend adapter/render/browser adoption and L0 integrated validation remain outstanding",
+    "schema generator compatibility correction is test-only; no production dependencies, model fields, wire bytes or acceptance standard changes",
+    "schema validator tooling uses an isolated artifact venv; no repository manifest/lock updates",
+    "normal tests use only synthetic/frozen content and temporary fixture roots; no daily configuration, service or upstream inference",
+    "raw derive output from before the compatibility fix retained in condition-trace-real-cases.log/command-first.log; final corrected schema is separately named and strictly validated",
+    "first tooling installation attempt failed TLS/timeout; retry in same task-owned venv succeeded; this is not a backend test failure"
+  ]
+}

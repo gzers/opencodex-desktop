@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "role": "L2",
+  "recordedAtUtc": "2026-11-06T19:43:45.196694+00:00",
+  "testCommit": "fc5d6b28fd06f0134afdd05a0d4eca9f64db2b03",
+  "testedProductBaseline": "d3c838759d7d153f6ced2be3a94a94e1fc21d0d4",
+  "peerParityBaseline": "4f087eaeab7e5c8fbb8a00805e904efb7131f4ac",
+  "changedFiles": [
+    "apps/desktop/tauri/src/modules/model_config/sync_local_v2_restore_tests.rs"
+  ],
+  "productSourceChanged": false,
+  "checks": {
+    "targetedCasesPassed": 2,
+    "normalCrateStrictClippy": "passed",
+    "rustfmt": "passed",
+    "diffCheck": "passed"
+  },
+  "observedConclusion": "Direct capture rejects absent targets, but production mapper/Host/complete Service preview prepare Download / LocalEmpty; no follow-up confirm or actual revival performed",
+  "originalOperationId": "99999999-9999-4999-8999-999999999999",
+  "operations": [
+    {
+      "group": "extensions",
+      "restoreId": "a3e1c6be-ac52-46b5-bb1f-1ad2c342489b",
+      "restorePlanDigest": "sha256:6706c21609750df5a3193ce96ae503ddab5cbfac7ce5b9879d7137fd931acd5b",
+      "preparedDownloadOperationId": "10aaf43e-b18c-4c73-963f-b29c36d9bee8",
+      "directActualCapture": "capture_source_invalid",
+      "servicePreviewChosenDirection": "download",
+      "servicePreviewReason": "local_empty"
+    },
+    {
+      "group": "channels",
+      "restoreId": "4d37634a-a533-462b-a695-6e82b53cfd87",
+      "restorePlanDigest": "sha256:0eecc79afa381f5a95b62152f59be03e6b0467b94441ce7907b65995581af81d",
+      "preparedDownloadOperationId": "41267cf5-e583-4b52-b432-a54dfa1f4167",
+      "directActualCapture": "model_source_invalid",
+      "servicePreviewChosenDirection": "download",
+      "servicePreviewReason": "local_empty"
+    }
+  ],
+  "realWebdav": false,
+  "dailyData": false,
+  "remotePuts": 0,
+  "remoteClear": false,
+  "publish": false,
+  "productPolicyChanged": false,
+  "deletionPropagationApproved": false,
+  "acMarkedComplete": false,
+  "commands": [
+    "CARGO_TARGET_DIR=/tmp/ocxd-l2-none-restore-probe-target cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib original_none_ -- --nocapture",
+    "CARGO_TARGET_DIR=/tmp/ocxd-l2-none-restore-probe-target cargo clippy --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib --tests --no-deps -- -D warnings"
+  ],
+  "cleanup": {
+    "fixtureRoots": [
+      {
+        "fixtureRoot": "/tmp/ocxd-l2-v2-scope-restore-Btj1fr",
+        "group": "extensions",
+        "removed": true
+      },
+      {
+        "fixtureRoot": "/tmp/ocxd-l2-v2-scope-restore-zx9dC8",
+        "group": "channels",
+        "removed": true
+      }
+    ],
+    "remainingUniqueProbeMarkerRoots": [],
+    "removedOnlyTarget": "/tmp/ocxd-l2-none-restore-probe-target",
+    "targetAbsenceVerified": true,
+    "activeOwnBuildOrTestProcessBeforeRemoval": false,
+    "originalLogsRetained": true,
+    "otherAgentsAndSharedCachesRetained": true
+  },
+  "workingTreeClean": true
+}

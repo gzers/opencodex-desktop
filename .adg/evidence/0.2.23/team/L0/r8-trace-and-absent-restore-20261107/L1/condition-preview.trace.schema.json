@@ -1,0 +1,877 @@
+{
+  "$comment": "Generated from schemars::schema_for!(ConditionPreview) by commands/model_config_v2_trace_tests.rs::wire_output_schema. Only the existing FieldOriginV2 condition_id/template_id schema property/required names are corrected to the actual unchanged serde conditionId/templateId wire. No reason enum or oneOf variant, reference, or validation rule is removed or broadened.",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AtomKindV2": {
+      "enum": [
+        "exact_id",
+        "numeric_version",
+        "literal_segment"
+      ],
+      "type": "string"
+    },
+    "AtomTraceV2": {
+      "properties": {
+        "index": {
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "kind": {
+          "$ref": "#/definitions/AtomKindV2"
+        },
+        "matched": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        },
+        "reasonCode": {
+          "$ref": "#/definitions/MatchReasonV2"
+        }
+      },
+      "required": [
+        "index",
+        "kind",
+        "reason",
+        "reasonCode"
+      ],
+      "type": "object"
+    },
+    "ConditionMatchTraceV2": {
+      "properties": {
+        "applicable": {
+          "type": "boolean"
+        },
+        "applied": {
+          "type": "boolean"
+        },
+        "atoms": {
+          "items": {
+            "$ref": "#/definitions/AtomTraceV2"
+          },
+          "type": "array"
+        },
+        "conditionId": {
+          "type": "string"
+        },
+        "matched": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "preconditions": {
+          "items": {
+            "$ref": "#/definitions/PredicateTraceV2"
+          },
+          "type": "array"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "reasonCode": {
+          "$ref": "#/definitions/MatchReasonV2"
+        }
+      },
+      "required": [
+        "applicable",
+        "applied",
+        "atoms",
+        "conditionId",
+        "preconditions",
+        "reason",
+        "reasonCode"
+      ],
+      "type": "object"
+    },
+    "ConditionPreviewRow": {
+      "properties": {
+        "conditions": {
+          "items": {
+            "$ref": "#/definitions/ConditionMatchTraceV2"
+          },
+          "type": "array"
+        },
+        "family": {
+          "$ref": "#/definitions/FamilyTraceV2"
+        },
+        "familyMatched": {
+          "type": "boolean"
+        },
+        "fieldOrigins": {
+          "additionalProperties": {
+            "$ref": "#/definitions/FieldOriginV2"
+          },
+          "type": "object"
+        },
+        "matchedConditionId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "matchingView": {
+          "type": "string"
+        },
+        "protocol": {
+          "$ref": "#/definitions/ProtocolStateV2"
+        },
+        "rawModelId": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "reasonCode": {
+          "$ref": "#/definitions/MatchReasonV2"
+        },
+        "rules": {
+          "$ref": "#/definitions/ModelRules"
+        }
+      },
+      "required": [
+        "conditions",
+        "family",
+        "familyMatched",
+        "fieldOrigins",
+        "matchingView",
+        "protocol",
+        "rawModelId",
+        "reason",
+        "reasonCode",
+        "rules"
+      ],
+      "type": "object"
+    },
+    "FamilyTraceV2": {
+      "properties": {
+        "matched": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "reasonCode": {
+          "$ref": "#/definitions/MatchReasonV2"
+        }
+      },
+      "required": [
+        "matched",
+        "reason",
+        "reasonCode"
+      ],
+      "type": "object"
+    },
+    "FastWire": {
+      "additionalProperties": false,
+      "properties": {
+        "betas": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "canonicalToWire": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "foreignCallerTiers": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "canonicalToWire",
+        "foreignCallerTiers",
+        "kind"
+      ],
+      "type": "object"
+    },
+    "FieldOriginV2": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "evidence": {
+              "$ref": "#/definitions/SourceEvidenceV2"
+            },
+            "kind": {
+              "enum": [
+                "source"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "evidence",
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "enum": [
+                "template_common"
+              ],
+              "type": "string"
+            },
+            "reference": {
+              "$ref": "#/definitions/RefV2"
+            }
+          },
+          "required": [
+            "kind",
+            "reference"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "conditionId": {
+              "type": "string"
+            },
+            "kind": {
+              "enum": [
+                "template_condition"
+              ],
+              "type": "string"
+            },
+            "reference": {
+              "$ref": "#/definitions/RefV2"
+            }
+          },
+          "required": [
+            "conditionId",
+            "kind",
+            "reference"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "enum": [
+                "channel_default"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "enum": [
+                "channel_family"
+              ],
+              "type": "string"
+            },
+            "templateId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "templateId"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "enum": [
+                "explicit_model"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "enum": [
+                "unknown"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "Field_for_Array_of_String": {
+      "description": "Explicit false/empty custom values are distinct from inheritance.",
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "enum": [
+                "inherit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "enum": [
+                "custom"
+              ],
+              "type": "string"
+            },
+            "value": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "mode",
+            "value"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "Field_for_Boolean": {
+      "description": "Explicit false/empty custom values are distinct from inheritance.",
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "enum": [
+                "inherit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "enum": [
+                "custom"
+              ],
+              "type": "string"
+            },
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "mode",
+            "value"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "Field_for_Map_of_String": {
+      "description": "Explicit false/empty custom values are distinct from inheritance.",
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "enum": [
+                "inherit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "enum": [
+                "custom"
+              ],
+              "type": "string"
+            },
+            "value": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "mode",
+            "value"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "Field_for_Nullable_FastWire": {
+      "description": "Explicit false/empty custom values are distinct from inheritance.",
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "enum": [
+                "inherit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "enum": [
+                "custom"
+              ],
+              "type": "string"
+            },
+            "value": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/FastWire"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "mode",
+            "value"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "Field_for_String": {
+      "description": "Explicit false/empty custom values are distinct from inheritance.",
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "enum": [
+                "inherit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "enum": [
+                "custom"
+              ],
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "mode",
+            "value"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "Field_for_uint64": {
+      "description": "Explicit false/empty custom values are distinct from inheritance.",
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "enum": [
+                "inherit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "enum": [
+                "custom"
+              ],
+              "type": "string"
+            },
+            "value": {
+              "format": "uint64",
+              "minimum": 0.0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "mode",
+            "value"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "MatchReasonV2": {
+      "description": "Stable explanations emitted only by the same predicates used for matching.",
+      "enum": [
+        "family_matched",
+        "channel_scope_mismatch",
+        "repeated_literal_prefix",
+        "excluded_pattern",
+        "no_included_pattern",
+        "family_not_applicable",
+        "layout_matched",
+        "layout_missing",
+        "layout_parse_failed",
+        "literal_tail_matched",
+        "literal_tail_mismatch",
+        "selector_precondition_failed",
+        "exact_id_matched",
+        "exact_id_mismatch",
+        "numeric_components_matched",
+        "numeric_components_mismatch",
+        "numeric_requires_layout",
+        "literal_segment_matched",
+        "literal_segment_missing",
+        "segment_boundary_mismatch",
+        "position_requires_layout",
+        "segment_position_mismatch",
+        "condition_matched",
+        "condition_and_failed",
+        "no_condition_matched",
+        "no_conditions"
+      ],
+      "type": "string"
+    },
+    "ModelRules": {
+      "additionalProperties": false,
+      "properties": {
+        "contextWindow": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Field_for_uint64"
+            }
+          ],
+          "default": {
+            "mode": "inherit"
+          }
+        },
+        "defaultEffort": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Field_for_String"
+            }
+          ],
+          "default": {
+            "mode": "inherit"
+          }
+        },
+        "effortMap": {
+          "$ref": "#/definitions/Field_for_Map_of_String"
+        },
+        "fast": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Field_for_Boolean"
+            }
+          ],
+          "default": {
+            "mode": "inherit"
+          }
+        },
+        "fastWire": {
+          "$ref": "#/definitions/Field_for_Nullable_FastWire"
+        },
+        "inputModalities": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Field_for_Array_of_String"
+            }
+          ],
+          "default": {
+            "mode": "inherit"
+          }
+        },
+        "noReasoning": {
+          "$ref": "#/definitions/Field_for_Boolean"
+        },
+        "pinnedEffort": {
+          "$ref": "#/definitions/Field_for_String"
+        },
+        "protocol": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Field_for_String"
+            }
+          ],
+          "default": {
+            "mode": "inherit"
+          }
+        },
+        "reasoningAuthoritative": {
+          "$ref": "#/definitions/Field_for_Boolean"
+        },
+        "reasoningEfforts": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Field_for_Array_of_String"
+            }
+          ],
+          "default": {
+            "mode": "inherit"
+          }
+        }
+      },
+      "type": "object"
+    },
+    "PreconditionKindV2": {
+      "enum": [
+        "layout",
+        "literal_tail"
+      ],
+      "type": "string"
+    },
+    "PredicateTraceV2": {
+      "properties": {
+        "kind": {
+          "$ref": "#/definitions/PreconditionKindV2"
+        },
+        "matched": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        },
+        "reasonCode": {
+          "$ref": "#/definitions/MatchReasonV2"
+        }
+      },
+      "required": [
+        "kind",
+        "reason",
+        "reasonCode"
+      ],
+      "type": "object"
+    },
+    "ProtocolStateV2": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "enum": [
+                "resolved"
+              ],
+              "type": "string"
+            },
+            "origin": {
+              "$ref": "#/definitions/FieldOriginV2"
+            },
+            "value": {
+              "$ref": "#/definitions/ProtocolV2"
+            }
+          },
+          "required": [
+            "kind",
+            "origin",
+            "value"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "enum": [
+                "missing"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "enum": [
+                "unsupported"
+              ],
+              "type": "string"
+            },
+            "origin": {
+              "$ref": "#/definitions/FieldOriginV2"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "origin",
+            "value"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "ProtocolV2": {
+      "enum": [
+        "openai-chat",
+        "openai-responses",
+        "anthropic",
+        "google",
+        "ollama-native"
+      ],
+      "type": "string"
+    },
+    "RefV2": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "type": "string"
+        },
+        "revisionId": {
+          "type": "string"
+        },
+        "templateId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "digest",
+        "revisionId",
+        "templateId"
+      ],
+      "type": "object"
+    },
+    "SourceEvidenceV2": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "$ref": "#/definitions/SourceKindV2"
+        },
+        "pointer": {
+          "type": "string"
+        },
+        "providerId": {
+          "type": "string"
+        },
+        "sourceDigest": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "pointer",
+        "providerId",
+        "sourceDigest"
+      ],
+      "type": "object"
+    },
+    "SourceKindV2": {
+      "enum": [
+        "imported_file",
+        "upstream_read",
+        "portable_import",
+        "external_file_edit"
+      ],
+      "type": "string"
+    }
+  },
+  "properties": {
+    "contentDigest": {
+      "type": "string"
+    },
+    "dtoVersion": {
+      "format": "uint32",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "previewOnly": {
+      "type": "boolean"
+    },
+    "rows": {
+      "items": {
+        "$ref": "#/definitions/ConditionPreviewRow"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "contentDigest",
+    "dtoVersion",
+    "previewOnly",
+    "rows"
+  ],
+  "title": "ConditionPreview",
+  "type": "object"
+}

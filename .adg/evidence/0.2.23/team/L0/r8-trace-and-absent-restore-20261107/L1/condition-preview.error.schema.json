@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "definitions": {
+    "MatchIssueV2": {
+      "additionalProperties": false,
+      "properties": {
+        "channelId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "code": {
+          "type": "string"
+        },
+        "conditionIds": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "fieldPath": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": "string"
+        },
+        "rawModelId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "recoveryActions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "reference": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RefV2"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "code",
+        "conditionIds",
+        "message",
+        "recoveryActions"
+      ],
+      "type": "object"
+    },
+    "RefV2": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "type": "string"
+        },
+        "revisionId": {
+          "type": "string"
+        },
+        "templateId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "digest",
+        "revisionId",
+        "templateId"
+      ],
+      "type": "object"
+    }
+  },
+  "properties": {
+    "code": {
+      "type": "string"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/definitions/MatchIssueV2"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "code",
+    "issues"
+  ],
+  "title": "MatchErrorV2",
+  "type": "object"
+}

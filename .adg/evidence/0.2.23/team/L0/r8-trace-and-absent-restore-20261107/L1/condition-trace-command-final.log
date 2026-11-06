@@ -1,0 +1,17 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.97s
+     Running unittests src/lib.rs (/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/batch2-crate-target/debug/deps/opencodex_desktop_lib-a2321b53a9e89887)
+
+running 9 tests
+test commands::model_config_v2::trace_tests::output_json_schema_freezes_nullable_skip_and_trace_reason_enums ... ok
+test commands::model_config_v2::trace_tests::output_schema_origin_names_follow_the_actual_existing_serde_wire_format ... ok
+test commands::model_config_v2::trace_tests::exclusion_and_repeated_prefix_do_not_report_a_condition_as_adopted ... ok
+test commands::model_config_v2::tests::content_preview_uses_engine_and_preserves_exact_model_ids ... ok
+test commands::model_config_v2::trace_tests::readonly_preview_preserves_raw_ids_and_returns_truthful_and_tail_and_family_diagnostics ... ok
+test commands::model_config_v2::trace_tests::expanded_trace_budget_refuses_large_valid_batches_before_allocating_results ... ok
+test commands::model_config_v2::trace_tests::preview_keeps_duplicate_and_overlap_rejection_and_never_serializes_preview_authority_as_input ... ok
+test commands::model_config_v2::trace_tests::all_real_seed_conditions_trace_the_same_applied_revision_rules_as_resolution ... ok
+test commands::model_config_v2::trace_tests::real_preview_function_emits_reproducible_input_output_cases_for_the_consumer ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 1943 filtered out; finished in 0.26s
+

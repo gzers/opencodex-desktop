@@ -1,0 +1,40 @@
+{
+  "validator": "jsonschema",
+  "version": "4.25.1",
+  "draft": "draft-07",
+  "schema_check": "passed",
+  "real_function_cases": 14,
+  "valid_results": 12,
+  "valid_errors": 2,
+  "rows": 23,
+  "negative_assertions": [
+    "unknown_reason_enum_rejected",
+    "non_boolean_non_null_match_rejected",
+    "old_schemars_snake_origin_rejected",
+    "origin_oneof_extra_field_rejected",
+    "required_real_matching_view_rejected_if_missing",
+    "invalid_error_condition_identity_type_rejected"
+  ],
+  "cases": [
+    "numeric_joiners",
+    "complete_numeric_boundaries",
+    "name_any",
+    "name_before_version",
+    "name_after_version",
+    "wrong_name_position",
+    "all_and_atoms",
+    "layout_and_tail_prerequisites",
+    "literal_segment_boundary",
+    "family_include_and_repeated_prefix",
+    "family_excluded",
+    "family_channel_scope",
+    "invalid_layout_reference",
+    "runtime_overlap_error"
+  ],
+  "source": "actual preview_conditions Rust test output, no renderer declarations",
+  "sha256": {
+    "condition-preview.trace.schema.json": "8a12967cc1ed3d52e328796952227c1f399b7aacee8585370607e71480a089a4",
+    "condition-preview.error.schema.json": "6e8a71b4c19e5e78009d256d2e4872ba17c32249793a756d823414ff4d7e1fe2",
+    "condition-preview.real-cases.json": "974c837759b7c932456b2a9288b51b9af08ac27df3439da8dde7518da7bee01c"
+  }
+}

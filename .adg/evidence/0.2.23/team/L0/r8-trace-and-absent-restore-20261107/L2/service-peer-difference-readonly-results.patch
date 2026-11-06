@@ -1,0 +1,106 @@
+diff --git a/apps/desktop/tauri/src/modules/model_config/sync_service_v2.rs b/apps/desktop/tauri/src/modules/model_config/sync_service_v2.rs
+index 7ea1ca391..698ba8ab8 100644
+--- a/apps/desktop/tauri/src/modules/model_config/sync_service_v2.rs
++++ b/apps/desktop/tauri/src/modules/model_config/sync_service_v2.rs
+@@ -503,6 +503,12 @@ impl ConfigSyncTransport for LimitedTransportV2 {
+         self.inner.put_file(c, p, b, l).await
+     }
+ }
++#[derive(Clone, Copy, PartialEq, Eq)]
++pub(crate) enum StoredResultOwnerV2 {
++    Sync,
++    Recovery,
++}
++
+ pub struct SyncServiceV2 {
+     root: PathBuf,
+     backend: Arc<dyn ServiceBackendV2>,
+@@ -533,6 +539,88 @@ async fn blocking<T: Send + 'static>(
+         .map_err(|_| err(ErrorCode::SyncLocalStateIo, Step::Persist))?
+ }
+ impl SyncServiceV2 {
++    pub fn desktop_root(&self) -> &Path {
++        &self.root
++    }
++    pub(crate) fn upstream_home(&self) -> Option<PathBuf> {
++        self.backend.configured_home()
++    }
++
++    pub(crate) fn inspect_result_owner(
++        &self,
++        id: &str,
++    ) -> ModelResult<Option<StoredResultOwnerV2>> {
++        require_uuid(id).map_err(|_| invalid("result_operation_id", "原操作ID无效"))?;
++        let anchor = self.root.join("manager-state/sync-v2-transactions");
++        let exists = |suffix: &str| -> ModelResult<bool> {
++            let path = anchor.join(format!("{id}.{suffix}.json"));
++            crate::modules::backup::safety::check_path(&self.root, &path, true)?;
++            match std::fs::symlink_metadata(&path) {
++                Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(false),
++                Err(_) => Err(invalid("result_record_io", "原操作记录无法读取")),
++                Ok(_) => {
++                    crate::modules::backup::safety::inspect(&path)?;
++                    Ok(true)
++                }
++            }
++        };
++        let upload = exists("upload")?;
++        let receive = exists("receive")?;
++        let bad = || invalid("result_record_invalid", "原操作记录未通过核对");
++        if upload && receive {
++            return Err(invalid(
++                "result_owner_ambiguous",
++                "同一ID出现多个操作来源，请检查原记录",
++            ));
++        }
++        if upload {
++            self.store.journal(id).map_err(|_| bad())?;
++            return Ok(Some(StoredResultOwnerV2::Sync));
++        }
++        if !receive {
++            return Ok(None);
++        }
++        let record = self.store.receive(id).map_err(|_| bad())?;
++        match (&record.download, &record.recovery) {
++            (Some(plan), None)
++                if plan.operation_id == id
++                    && store::plan_digest(plan).map_err(|_| bad())? == plan.plan_digest
++                    && record.fact.as_ref().is_none_or(|f| {
++                        f.operation_id == id && f.kind == OperationKind::Download
++                    }) =>
++            {
++                Ok(Some(StoredResultOwnerV2::Sync))
++            }
++            (None, Some(plan))
++                if plan.recovery_plan_id == id
++                    && store::plan_digest(plan).map_err(|_| bad())? == plan.plan_digest
++                    && record
++                        .receipt
++                        .as_ref()
++                        .is_none_or(|r| r.recovery_plan_id == id && r.kind == plan.kind) =>
++            {
++                Ok(Some(StoredResultOwnerV2::Recovery))
++            }
++            _ => Err(bad()),
++        }
++    }
++
++    pub fn recovery_operation_id(&self, session_id: &str) -> SyncResult<String> {
++        require_uuid(session_id)?;
++        let sessions = self
++            .recoveries
++            .lock()
++            .map_err(|_| err(ErrorCode::SyncLocalStateIo, Step::Persist))?;
++        let recovery = sessions
++            .get(session_id)
++            .ok_or_else(|| err(ErrorCode::SyncPlanExpired, Step::Recovery))?;
++        Ok(recovery.plan.recovery_plan_id.clone())
++    }
++
++    /// Only a backend-issued non-noop session may supply a notification O.
++    pub fn session_operation_id(&self, session_id: &str) -> SyncResult<Option<String>> {
++        Ok(self.session(session_id)?.operation_id.clone())
++    }
+     pub fn new(
+         root: PathBuf,
+         backend: Arc<dyn ServiceBackendV2>,

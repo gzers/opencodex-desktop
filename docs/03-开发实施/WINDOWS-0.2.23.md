@@ -7,11 +7,21 @@
 ## 当前基线与获取
 
 - 仓库：gzers/opencodex-desktop。
-- 代码：远端codex/0.2.23-integration，明确基线4f087eaeab7e5c8fbb8a00805e904efb7131f4ac（含真实双用户runtime端口验收脚本与候选工作流接线；正式安装制品另看下文）。
+- 代码：远端codex/0.2.23-integration，明确基线7cbb0daf710fc81de24952f96274c7ee8e740ede（含同源条件trace与恢复后方向实证；默认安装路径仍在补齐，正式制品另看下文）。
 - 文档：远端docs/governance-main，以包含本条R2指令的提交为准；读取本文件、TEAM、IMP-31/32及0.2.23-contracts/L0-paths-runtime-v1.md。
 - Windows代码贡献分支：codex/0.2.23-windows；文档/脱敏证据使用独立docs/0.2.23-windows分支。若已有自己的改动，先保留并合并上述明确代码基线，不重置或覆盖工作树。
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
 - 此为0.2.23实施基线，尚非最终安装候选；版本清单仍待L0统一更新。是否取得新代码以完整SHA及实际diff为准，不能仅看软件显示版本。
+
+## R7 最后清单对照发现的安装默认路径缺口（2026-11-07）
+
+本批代码7cbb0daf7已推送，含同源条件解释后端9c6da8e2c、原None恢复后真实方向测试及新的精确候选相邻安装验收工具5af6b66a6/工作流2d59b3615。后端177项与严格Clippy通过，最终UI展示仍由L3接线；不在Windows复制模型共享逻辑。
+
+重要未完：现Tauri默认NSIS仍为LocalAppData直下、MSI仍ProgramFiles，尚未落地既定默认当前用户LocalAppData/Programs/OpenCodeX Desktop。旧工具已如实核出此差异，L0正补安装模板/配置与版本区分的验收，不能改合同、用强制/D或INSTALLDIR替代产品默认，也不能拿已手工stage到正确位置的两用户程序当安装器默认通过。候选3/4即使某部分通过，也不据此关闭本项。MSI跨上下文升级约束需要实际处理与证据，不添加旧配置自动迁移。
+
+相邻安装新入口为windows023-retention.yml，只接受已成功的精确candidate run/attempt/head与artifact ID/大小/SHA；两个安装器各自独立新runner，原始0.2.22资产已有标签、ID、大小与实际摘要核对。真实执行尚未启动，现纯工具检查10+8项不等于Windows安装通过。
+
+原None范围恢复的2项隔离验证同时发现：完整产品preview仍建议下载，不是已自动阻断；未确认后继下载、未写业务文件或真实远端。策略仍待用户选择。详见[r8证据](../../.adg/evidence/0.2.23/team/L0/r8-trace-and-absent-restore-20261107/manifest.json)。
 
 ## R6 真实双用户代理端口与候选后继（2026-11-07）
 

@@ -1,0 +1,71 @@
+{
+  "testedBase": "d3c838759d7d153f6ced2be3a94a94e1fc21d0d4",
+  "peer": "4f087eaeab7e5c8fbb8a00805e904efb7131f4ac",
+  "identicalProductionFiles": [
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_local_v2.rs",
+      "sha256": "8d44b7f6730ca8c38942880daaa4e793249d0a924f4c45afb26f85c27d1772f7",
+      "sameAsPeer": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_local_v2_restore.rs",
+      "sha256": "771dcb6ceced814c347cb34a4e6e8827ebc03a77d41479d534b0e34055335062",
+      "sameAsPeer": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_host_v2.rs",
+      "sha256": "53531467cf958d3c8a9774e5660744c8f15f2d8ac69f1dd15700a0170d2eeb84",
+      "sameAsPeer": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_identity_v2.rs",
+      "sha256": "a8eb31bde2ce3c0d59aced73c719af04803ba02073e0da4a6b9cd1fa0935b97d",
+      "sameAsPeer": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/saved_objects_capture_v2.rs",
+      "sha256": "f47259f2d45ca1aa108b56a223f1691c876346b90f6eb240eddec0182cab3ea4",
+      "sameAsPeer": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/content_versions.rs",
+      "sha256": "e0dbee98e048918c04983cd638321c4db43f28c8322dc8bc6fe44fe63134b3d0",
+      "sameAsPeer": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/objects_overlay_v2.rs",
+      "sha256": "16cc2e9e88a7fddc348f6344dd62adf651ef373b79fef7b83845da205395ed73",
+      "sameAsPeer": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/model_transaction_v2.rs",
+      "sha256": "e8b2351529d887428348723f6a9c84cb322d2a1d44eb2e23d310125e83265535",
+      "sameAsPeer": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/model_receive_file_v2.rs",
+      "sha256": "d83f75cb191565617c56e1b61a6cfbbc7088cf12dd79df67e4f4c8f70c4cca73",
+      "sameAsPeer": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/config_file_v2.rs",
+      "sha256": "7a0fc0da360269c516b1172cf223081015e6130920989fa32cf156774531b177",
+      "sameAsPeer": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/sync/portable_assets.rs",
+      "sha256": "612dcc99891099e0fff838cba31fb9451a2e29fc060533cb7f758ea5661333b8",
+      "sameAsPeer": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/sync/portable_manager.rs",
+      "sha256": "ddc78075c8d2c074bc30dadbe498f11f3040ce654d40baee10f9be56b09519b7",
+      "sameAsPeer": true
+    }
+  ],
+  "serviceDifference": "Only added readonly result-owner/accessor methods; actual compose and preview unchanged",
+  "testFile": {
+    "path": "apps/desktop/tauri/src/modules/model_config/sync_local_v2_restore_tests.rs",
+    "sha256": "efea8545805647ed959f8438d33138c3fd86c06ae48df4c6a2e1698255504e6f"
+  }
+}

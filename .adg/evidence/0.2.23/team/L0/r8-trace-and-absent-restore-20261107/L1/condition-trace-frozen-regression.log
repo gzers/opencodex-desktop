@@ -1,0 +1,45 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-model-matching/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.31s
+     Running unittests src/lib.rs (/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-c6d5-74d0-9348-44a8af294a97/batch2-crate-target/debug/deps/opencodex_desktop_lib-a2321b53a9e89887)
+
+running 37 tests
+test modules::model_config::v2_tests::actual_source_mapping_keeps_negative_and_colon_rules ... ok
+test modules::model_config::v2_tests::ledger_prevents_materialized_protocol_becoming_source ... ok
+test modules::model_config::v2_tests::ledger_pairing_and_connection_credentials_in_urls_are_rejected ... ok
+test modules::model_config::v2_tests::channel_protocol_custom_is_rejected_not_dropped ... ok
+test modules::model_config::v2_tests::ledger_finalizer_covers_all_fields_and_auth_binding_cannot_guess ... ok
+test modules::model_config::v2_tests::bad_conditions_unknown_versions_and_overlaps_are_rejected ... ok
+test modules::model_config::v2_tests::eight_name_position_and_four_capability_spillover_cases ... ok
+test modules::model_config::v2_tests::groups_keep_chat_responses_distinct_and_pending_selected_blocks ... ok
+test modules::model_config::v2_tests::all_58_pinned_parameter_groups_and_locks_are_unchanged ... ok
+test modules::model_config::v2_tests::portable_decoder_rejects_duplicate_version_and_nested_source_keys ... ok
+test modules::model_config::v2_tests::explicit_intent_equal_value_and_clear_are_not_inferred_from_source ... ok
+test modules::model_config::v2_tests::clearing_invalid_manual_pin_can_plan_repair_without_reinterpreting_old_effective_values ... ok
+test modules::model_config::v2_tests::portable_public_adapter_remains_source_material_and_cannot_replace_manual_protocol ... ok
+test modules::model_config::v2_tests::portable_public_subset_reuses_raw_id_maps_and_bounds_every_known_model_list ... ok
+test modules::model_config::v2_tests::portable_public_source_is_optional_and_preserves_complete_public_objects ... ok
+test modules::model_config::v2_tests::portable_public_known_model_maps_and_denial_lists_never_keep_unselected_definitions ... ok
+test modules::model_config::v2_tests::provider_adapter_is_evidence_and_exact_protocol_never_falls_back ... ok
+test modules::model_config::v2_tests::source_capability_precedence_and_bad_protocol_types_match_original_fields ... ok
+test modules::model_config::v2_tests::portable_review_override_keys_are_scoped_but_external_selector_values_are_untouched ... ok
+test modules::model_config::v2_tests::strict_json_rejects_duplicate_keys_at_every_depth_and_escaped_aliases ... ok
+test modules::model_config::v2_tests::newly_observed_unmatched_id_is_counted_changed_without_selecting_it ... ok
+test modules::model_config::v2_tests::portable_native_and_family_boundary_validation_is_enforced ... ok
+test modules::model_config::v2_tests::seed_is_real_v2_and_history_is_not_relabelled ... ok
+test modules::model_config::v2_tests::portable_public_source_rejects_secrets_unknown_fields_outside_scopes_and_family_connections ... ok
+test modules::model_config::v2_tests::portable_subset_is_exact_and_cannot_smuggle_others_or_versions ... ok
+test modules::model_config::v2_tests::equal_priority_conflict_preserves_old_model_and_unrelated_success ... ok
+test modules::model_config::v2_tests::portable_merge_rejects_same_revision_different_bytes_and_keeps_default ... ok
+test modules::model_config::v2_tests::materialization_clear_restores_source_and_does_not_write_manual_fields ... ok
+test modules::model_config::v2_tests::portable_v6_round_trip_is_lossless_and_has_no_local_authority ... ok
+test modules::model_config::v2_tests::manual_pin_survives_default_change_and_auto_updates_only_on_read ... ok
+test modules::model_config::v2_tests::immutable_revision_append_rejects_stale_base_and_agent_lock_changes ... ok
+test modules::model_config::v2_tests::stale_read_empty_and_wrong_library_do_not_apply ... ok
+test modules::model_config::v2_tests::read_matches_into_draft_and_does_not_change_manual_values_or_selection ... ok
+test modules::model_config::v2_tests::preserved_selected_28_ids_remain_matchable_without_inventory_changes ... ok
+test modules::model_config::v2_tests::frozen_nineteen_unmatched_models_keep_original_configuration ... ok
+test modules::model_config::v2_tests::frozen_separator_and_family_boundaries ... ok
+test modules::model_config::v2_tests::frozen_246_rows_keep_133_ids_and_79_known_hits ... ok
+
+test result: ok. 37 passed; 0 failed; 0 ignored; 0 measured; 1915 filtered out; finished in 3.13s
+

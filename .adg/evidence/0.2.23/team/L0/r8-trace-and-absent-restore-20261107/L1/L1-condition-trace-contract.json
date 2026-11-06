@@ -1,0 +1,134 @@
+{
+  "producer_commit": "9c6da8e2c1ee38992f42b83d4428079dccb4afd3",
+  "producer_branch": "codex/0.2.23-model-matching",
+  "producer_source_sha256": {
+    "apps/desktop/tauri/src/modules/model_config/matching_v2.rs": "71f6553360f546339a218abf9f821e3b286eba41fb1e2656aa99be10b53ed282",
+    "apps/desktop/tauri/src/modules/model_config/matching_v2_trace_tests.rs": "8a78f7e4ac728423e3d7167a43e3fc9fec677ea4fb7fde2d31988bdbb18d5ed9",
+    "apps/desktop/tauri/src/commands/model_config_v2.rs": "5fe9b38749ea24978ea487a2a9a2dc1444cc885a42d608b1c59196055a2d519c",
+    "apps/desktop/tauri/src/commands/model_config_v2_trace_tests.rs": "fe1cc2e32a3ecd66185649a29e5f221851cd478b68712d8add8e3ccb4ee7ae4a"
+  },
+  "command": "model_v2_preview_conditions",
+  "request": {
+    "request": {
+      "content": "TemplateContentV2",
+      "rawModelIds": "string[] exact original text",
+      "channelId": "canonical UUID"
+    }
+  },
+  "dtoVersion": 2,
+  "previewOnly": true,
+  "row_existing_fields": [
+    "rawModelId",
+    "familyMatched",
+    "matchedConditionId",
+    "rules",
+    "protocol",
+    "fieldOrigins"
+  ],
+  "row_added_fields": {
+    "matchingView": "string from actual matching_view_v2; current pure content preview has no channel namespace so it equals the exact raw text",
+    "family": "{matched:boolean,reasonCode:MatchReasonV2,reason:string}",
+    "reasonCode": "MatchReasonV2",
+    "reason": "string",
+    "conditions": "ConditionMatchTraceV2[] in source order, every declared condition"
+  },
+  "condition_shape": {
+    "conditionId": "string",
+    "applicable": "boolean: family gate passed",
+    "matched": "boolean|null: selector outcome, null if family not applicable",
+    "applied": "boolean: actual unique effective condition, never adoption/save authority",
+    "reasonCode": "MatchReasonV2",
+    "reason": "string",
+    "preconditions": "[{kind:layout|literal_tail,matched:boolean|null,reasonCode,reason}]",
+    "atoms": "[{index:number,kind:exact_id|numeric_version|literal_segment,matched:boolean|null,reasonCode,reason}]"
+  },
+  "nullable_rules": [
+    "family rejected -> condition/applicable=false,matched=null,applied=false,all child checks matched=null",
+    "layout failure -> layout=false,tail=null,all atoms=null; literal-tail failure -> layout=true,tail=false,all atoms=null",
+    "prerequisites passed -> evaluate every AND atom, including after a failed atom; false is a real predicate failure, null is not evaluated",
+    "only applied=true corresponds to the actual returned matchedConditionId; matching a family never fabricates a condition adoption"
+  ],
+  "reason_enum": [
+    "family_matched",
+    "channel_scope_mismatch",
+    "repeated_literal_prefix",
+    "excluded_pattern",
+    "no_included_pattern",
+    "family_not_applicable",
+    "layout_matched",
+    "layout_missing",
+    "layout_parse_failed",
+    "literal_tail_matched",
+    "literal_tail_mismatch",
+    "selector_precondition_failed",
+    "exact_id_matched",
+    "exact_id_mismatch",
+    "numeric_components_matched",
+    "numeric_components_mismatch",
+    "numeric_requires_layout",
+    "literal_segment_matched",
+    "literal_segment_missing",
+    "segment_boundary_mismatch",
+    "position_requires_layout",
+    "segment_position_mismatch",
+    "condition_matched",
+    "condition_and_failed",
+    "no_condition_matched",
+    "no_conditions"
+  ],
+  "error_semantics": [
+    "bad content/layout reference remains original validation Err",
+    "runtime overlap remains Err model_condition_overlap + exact conditionIds, never a green traced result",
+    "no changes to selector/parser/protocol/source/capability/conflict/immutable revision semantics"
+  ],
+  "trace_budget": {
+    "max_items": 65536,
+    "formula": "rows * (1 + sum(condition atom count + 1 + (2 if declared layout else 0)))",
+    "error": "model_limit before result allocation"
+  },
+  "schema_artifacts": {
+    "condition-preview.trace.schema.json": "8a12967cc1ed3d52e328796952227c1f399b7aacee8585370607e71480a089a4",
+    "condition-preview.error.schema.json": "6e8a71b4c19e5e78009d256d2e4872ba17c32249793a756d823414ff4d7e1fe2"
+  },
+  "schema_generation": "Rust schemars 0.8.22 schema_for!(ConditionPreview), with test-only wire_output_schema correcting exactly existing FieldOriginV2 condition_id/template_id properties+required names to actual serde conditionId/templateId. No variant/reference/reason/oneOf relaxed; production serializer/config fields untouched.",
+  "actual_function_cases": {
+    "path": "condition-preview.real-cases.json",
+    "sha256": "974c837759b7c932456b2a9288b51b9af08ac27df3439da8dde7518da7bee01c",
+    "count": 14,
+    "rows": 23,
+    "valid_results": 12,
+    "errors": 2,
+    "case_names": [
+      "numeric_joiners",
+      "complete_numeric_boundaries",
+      "name_any",
+      "name_before_version",
+      "name_after_version",
+      "wrong_name_position",
+      "all_and_atoms",
+      "layout_and_tail_prerequisites",
+      "literal_segment_boundary",
+      "family_include_and_repeated_prefix",
+      "family_excluded",
+      "family_channel_scope",
+      "invalid_layout_reference",
+      "runtime_overlap_error"
+    ]
+  },
+  "rust_generator_command": "cargo test --offline --locked --manifest-path apps/desktop/tauri/Cargo.toml --lib commands::model_config_v2::trace_tests -- --nocapture",
+  "rust_stdout_markers": [
+    "CONDITION_PREVIEW_SCHEMA",
+    "CONDITION_PREVIEW_ERROR_SCHEMA",
+    "CONDITION_PREVIEW_CASE"
+  ],
+  "strict_schema_validator": {
+    "tool": "jsonschema",
+    "version": "4.25.1",
+    "script": "validate-condition-trace-schema.py",
+    "script_sha256": "2e303b555490627c8805908fdf6bf1f93ca75598e37a906b0e9d2e4b1e21d3f5",
+    "report": "condition-preview.schema-validation.json",
+    "report_sha256": "422758ebf2baa6a01d07e92960a3a578d76cb4159a50f5bb487c8258c62df3a1"
+  },
+  "read_only": "preview command is pure in-memory; no root/home/runtime/service/vault arguments or IO. Sample generator uses frozen synthetic content and actual Rust function.",
+  "frontend_instruction": "Consume real bool|null and preconditions; never coerce skipped null to false/success, never synthesize matchingView or atom reasons. Keep errors in original structured issue flow. Use actual_function_cases as backend evidence, not hand-declared renderer fixtures."
+}
