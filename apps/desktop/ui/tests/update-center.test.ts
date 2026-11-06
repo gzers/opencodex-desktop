@@ -254,7 +254,7 @@ describe('shared production update center', () => {
   it('traps keyboard focus and restores the opener when hidden', async () => {
     const opener = document.createElement('button'); document.body.append(opener); opener.focus()
     const wrapper = render(); await flushPromises()
-    expect(document.activeElement).toBe(new DOMWrapper(document.body).get('[role="dialog"]').element)
+    expect(document.activeElement).toBe(new DOMWrapper(document.body).get('dialog[open][role="dialog"]').element)
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }))
     expect(document.activeElement).toBe(new DOMWrapper(document.body).findAll('dialog button')[0].element)
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
@@ -267,7 +267,7 @@ describe('shared production update center', () => {
     const opener=new DOMWrapper(document.body).get('[data-testid="'+target+'-update-detail"]')
     ;(opener.element as HTMLButtonElement).focus()
     await opener.trigger('click'); await flushPromises()
-    expect(new DOMWrapper(document.body).get('[role="dialog"]').element.contains(document.activeElement)).toBe(true)
+    expect(new DOMWrapper(document.body).get('dialog[open][role="dialog"]').element.contains(document.activeElement)).toBe(true)
     expect(new DOMWrapper(document.body).findAll('dialog header h2')).toHaveLength(1)
     expect(new DOMWrapper(document.body).find('.update-back').exists()).toBe(false)
     expect(mocks.install).not.toHaveBeenCalled()
@@ -288,7 +288,7 @@ describe('shared production update center', () => {
     expect(backup).not.toHaveBeenCalled()
     await button(wrapper, '查看管理器更新').trigger('click'); await flushPromises()
     expect(wrapper.findComponent(UpdateCenter).props('open')).toBe(true)
-    expect(new DOMWrapper(document.body).get('[role="dialog"]').text()).toContain('桌面管理器更新')
+    expect(new DOMWrapper(document.body).get('dialog[open][role="dialog"]').text()).toContain('桌面管理器更新')
   })
 })
 
