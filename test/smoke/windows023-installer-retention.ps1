@@ -76,6 +76,47 @@ function Get-RetentionRegistrations {
         $first
     }
 }
+function Get-RetentionExpectedRoot([string]$Kind,[string]$Version,[string]$Local,[string]$MachinePrograms) {
+    if($Kind -cnotin @('msi','nsis')){throw 'Unsupported installer kind'}
+    if($Version -ceq '0.2.23'){return Join-Path $Local 'Programs/OpenCodeX Desktop'}
+    if($Version -ceq '0.2.22'){
+        if($Kind -ceq 'nsis'){return Join-Path $Local 'OpenCodeX Desktop'}
+        return Join-Path $MachinePrograms 'OpenCodeX Desktop'
+    }
+    throw 'Unsupported installer version'
+}
+function Get-RetentionContextBlock([string]$Kind,[string]$Scenario,$Registration) {
+    if($Kind -ceq 'msi' -and $Scenario -cin @('adjacent','explicit-conversion')){
+        if($Registration.hive -cne 'LocalMachine' -or $Registration.key -ine '{C5476FDD-CB86-46AF-A97F-96DD56A32CA0}'){
+            throw 'Official baseline MSI machine registration differs'
+        }
+        return [ordered]@{result='blocked-installation-context';baselineContext='per-machine';candidateContext='per-user';
+            baselineProductCode=$Registration.key;automaticReplacementSupported=$false;candidateRejectionVerified=$false;
+            reason='Windows Installer major upgrades cannot cross installation context';
+            source='https://learn.microsoft.com/en-us/windows/win32/msi/major-upgrades';
+            reviewableAlternative='Explicitly uninstall 022 retaining all data, then separately install 023 per-user; not an automatic upgrade';
+            oldDataMigrationRequested=$false}
+    }
+    return $null
+}
+function Read-RetentionMsiProperties([string]$Package) {
+    # Read the digest-pinned MSI database, never execute it or activate its app.
+    $installer=New-Object -ComObject WindowsInstaller.Installer
+    $database=$null;$view=$null;$record=$null
+    try{
+        $database=$installer.OpenDatabase($Package,0)
+        $view=$database.OpenView('SELECT `Property`, `Value` FROM `Property`');$view.Execute()
+        $properties=@{}
+        while($record=$view.Fetch()){
+            $properties[[string]$record.StringData(1)]=[string]$record.StringData(2)
+            $null=[Runtime.InteropServices.Marshal]::FinalReleaseComObject($record);$record=$null
+        }
+        @{productCode=$properties.ProductCode;version=$properties.ProductVersion;allUsers=$properties.ALLUSERS;upgradeCode=$properties.UpgradeCode}
+    }finally{
+        if($view){$view.Close()}
+        foreach($owned in @($record,$view,$database,$installer)){if($owned){$null=[Runtime.InteropServices.Marshal]::FinalReleaseComObject($owned)}}
+    }
+}
 function Find-RetentionInstall([string]$Version) {
     $registrations=@(Get-RetentionRegistrations)
     if($registrations.Count -ne 1 -or $registrations[0].version -cne $Version){throw 'Expected one exact-version actual installer registration'}
@@ -90,23 +131,25 @@ function Find-RetentionInstall([string]$Version) {
     $root=$roots[0];Assert-RetentionPlainPath $root
     # Verify the two installer defaults independently. A changed template fails
     # visibly; a common forced TEMP directory cannot satisfy this acceptance.
-    $expected=if($taskAdmission.kind -ceq 'nsis'){Join-Path $taskLocal 'OpenCodeX Desktop'}else{Join-Path $env:ProgramFiles 'OpenCodeX Desktop'}
+    $expected=Get-RetentionExpectedRoot $taskAdmission.kind $Version $taskLocal $env:ProgramFiles
+    $expectedHive=if($Version -ceq '0.2.22' -and $taskAdmission.kind -ceq 'msi'){'LocalMachine'}else{'CurrentUser'}
+    if($entry.hive -cne $expectedHive){throw 'Actual installer context differs from the version contract'}
     if(!(Test-RetentionSamePath $root $expected)){throw "Actual $($taskAdmission.kind) default root differs from its reviewed template: $root"}
     $exe=Join-Path $root 'opencodex-desktop.exe'
     $item=Get-Item -LiteralPath $exe
     if($item.VersionInfo.ProductVersion -cne $Version){throw 'Installed PE product version differs'}
     [pscustomobject]@{root=$root;exe=$exe;registration=$entry;version=$item.VersionInfo.ProductVersion;sha256=(Get-FileHash -LiteralPath $exe).Hash.ToLowerInvariant()}
 }
-function Invoke-RetentionInstaller([string]$File,[string]$Arguments,[string]$Phase) {
+function Invoke-RetentionInstaller([string]$File,[string]$Arguments,[string]$Phase,[int[]]$ExpectedExitCodes=@(0)) {
     $step=[ordered]@{name=$Phase;startedUtc=[datetime]::UtcNow.ToString('o');exitCode=$null;timedOut=$false}
     $taskResult.steps+=,$step
     Write-RetentionJson (Join-Path $taskOutput 'execution-attempt.json') $taskResult
     $p=Start-Process -FilePath $File -ArgumentList $Arguments -PassThru
-    $step.pid=$p.Id;$step.file=$File;$step.arguments=$Arguments
+    $step.pid=$p.Id;$step.file=$File;$step.arguments=$Arguments;$step.expectedExitCodes=$ExpectedExitCodes
     try{
         if(!$p.WaitForExit(180000)){$step.timedOut=$true;throw 'Installer timeout; preserve state and do not retry'}
         $step.exitCode=$p.ExitCode
-        if($p.ExitCode -ne 0){throw "Installer failed or requested reboot: $($p.ExitCode)"}
+        if($p.ExitCode -notin $ExpectedExitCodes){throw "Installer failed or requested reboot: $($p.ExitCode)"}
     }finally{$step.finishedUtc=[datetime]::UtcNow.ToString('o');$p.Dispose()}
 }
 function Install-RetentionPackage([string]$Package,[string]$Phase) {
@@ -127,6 +170,28 @@ function Uninstall-RetentionPackage($Installation,[string]$Phase) {
     while((Test-Path -LiteralPath $Installation.exe) -and [datetime]::UtcNow -lt $deadline){Start-Sleep -Milliseconds 200}
     if((Test-Path -LiteralPath $Installation.exe) -or @(Get-RetentionRegistrations).Count){throw 'Default uninstall left executable or product registration'}
     $script:taskMayBeInstalled=$false
+}
+function Assert-RetentionCandidateMsiBlock($Baseline) {
+    $beforeImage=Get-RetentionTree $Baseline.root
+    $beforeUser=Get-RetentionTree $taskUser
+    Write-RetentionJson (Join-Path $taskOutput 'before-msi-block-old-program.json') ($beforeImage|ConvertFrom-Json)
+    Write-RetentionJson (Join-Path $taskOutput 'before-msi-block-U.json') ($beforeUser|ConvertFrom-Json)
+    $log=Join-Path $taskOutput 'candidate-machine-context-block.log'
+    Invoke-RetentionInstaller "$env:SystemRoot\System32\msiexec.exe" ('/i "'+$taskAdmission.candidatePackage+'" /qn /norestart /L*v "'+$log+'"') 'candidate-must-block-machine022' @(1603)
+    if(!(Get-Content -LiteralPath $log -Raw).Contains('OCX023_MACHINE022_BLOCK:')){throw 'MSI failed without the specific product context-block message'}
+    Assert-RetentionTree $Baseline.root $beforeImage
+    Assert-RetentionTree $taskUser $beforeUser
+    Assert-RetentionSeeds 'after-candidate-msi-block'
+    $stillInstalled=Find-RetentionInstall '0.2.22'
+    if($stillInstalled.sha256 -cne $Baseline.sha256){throw 'Rejected MSI changed the official old executable'}
+    if(Test-Path -LiteralPath (Get-RetentionExpectedRoot 'msi' '0.2.23' $taskLocal $env:ProgramFiles)){
+        throw 'Rejected MSI wrote the new program directory'
+    }
+    Write-RetentionJson (Join-Path $taskOutput 'candidate-machine-context-block.json') @{
+        result='pass-expected-product-rejection';candidateExecuted=$true;expectedExitCode=1603;
+        productMessage='OCX023_MACHINE022_BLOCK:';oldProgramTreeUnchanged=$true;allUserAndSeedHashesUnchanged=$true;
+        automaticUpgradePassed=$false;legacyMigration=$false
+    }
 }
 function New-RetentionSeed([string]$Path,[string]$Value) {
     Assert-RetentionPlainPath $Path
@@ -370,7 +435,8 @@ if(!(Test-RetentionSamePath $AdmissionPath (Join-Path $taskOutput 'admission.jso
 $taskAdmission=Get-Content -LiteralPath $AdmissionPath -Raw|ConvertFrom-Json
 $taskSource=(& git -C $taskRepo rev-parse HEAD).Trim()
 if($LASTEXITCODE -ne 0 -or $taskSource -cne $taskAdmission.harnessSource -or $taskSource -cne $env:GITHUB_SHA -or
-    $taskAdmission.schemaVersion -ne 23 -or $taskAdmission.kind -cnotin @('msi','nsis') -or
+    $taskAdmission.schemaVersion -ne 23 -or $taskAdmission.scenario -cnotin @('adjacent','fresh023','explicit-conversion') -or $taskAdmission.kind -cnotin @('msi','nsis') -or
+    ($taskAdmission.scenario -ceq 'explicit-conversion' -and $taskAdmission.kind -cne 'msi') -or
     $taskAdmission.baselineRelease -ne 435948372 -or $taskAdmission.baselineVersion -cne '0.2.22' -or
     $taskAdmission.candidateVersion -cne '0.2.23' -or $taskAdmission.candidate.head -cnotmatch '^[0-9a-f]{40}$' -or
     $taskAdmission.executionRun -cne $env:GITHUB_RUN_ID -or $taskAdmission.executionJob -cne $env:GITHUB_JOB -or
@@ -389,7 +455,7 @@ $taskUser=Join-Path $taskProfile '.codex-desktop';$taskDesktop=Join-Path $taskUs
 $taskOldRoots=@((Join-Path ([Environment]::GetFolderPath('ApplicationData')) 'com.gzers.opencodex.desktop'),(Join-Path $taskLocal 'com.gzers.opencodex.desktop'),(Join-Path $taskProfile '.codex'))
 $taskAttemptStarted=$false
 if(@(Get-RetentionRegistrations).Count){throw 'Pre-existing product registration; do not alter it'}
-foreach($path in @($taskUser)+$taskOldRoots+@((Join-Path $taskLocal 'OpenCodeX Desktop'),(Join-Path $env:ProgramFiles 'OpenCodeX Desktop'))){
+foreach($path in @($taskUser)+$taskOldRoots+@((Join-Path $taskLocal 'OpenCodeX Desktop'),(Join-Path $env:ProgramFiles 'OpenCodeX Desktop'),(Join-Path $taskLocal 'Programs/OpenCodeX Desktop'))){
     Assert-RetentionPlainPath $path;if(Test-Path -LiteralPath $path){throw 'Existing product/profile/legacy data; fresh runner required'}
 }
 if(@(Get-CimInstance Win32_Process -Filter "Name='opencodex-desktop.exe' OR Name='ocxd.exe'").Count){throw 'Product process already exists'}
@@ -397,17 +463,27 @@ if(!$Execute){@{result='prepared-only';installerExecuted=$false;windowsAcceptanc
 $attempt=Join-Path $taskOutput 'execution-attempt.json'
 if(Test-Path -LiteralPath $attempt){throw 'Original attempt exists; no retry or overwrite'}
 $taskResult=[ordered]@{schemaVersion=23;result='fail';harnessSource=$taskSource;candidate=$taskAdmission.candidate;kind=$taskAdmission.kind;
-    baselineVersion='0.2.22';candidateVersion='0.2.23';steps=@();defaultPathOverrides=$false;
+    baselineVersion='0.2.22';candidateVersion='0.2.23';scenario=$taskAdmission.scenario;baselineInstalled=($taskAdmission.scenario -cne 'fresh023');automaticUpgradePassed=$false;explicitProgramConversion=($taskAdmission.scenario -ceq 'explicit-conversion');steps=@();defaultPathOverrides=$false;
     legacyReadAuditScope='Candidate desktop, CLI and installed runtime reads/listing of seeded legacy roots';legacyScanVerified=$false;
     ordinaryAccountAcceptanceClaimed=$false;releaseRequested=$false}
 Write-RetentionJson $attempt $taskResult
-$taskAttemptStarted=$true;$taskMayBeInstalled=$false;$taskSeeds=@();$taskLegacy=@();$taskAuditBackup=$null;$taskAuditAcls=@();$taskFailure=$null;$taskInstallRoots=@()
+$taskAttemptStarted=$true;$taskMayBeInstalled=$false;$taskSeeds=@();$taskLegacy=@();$taskAuditBackup=$null;$taskAuditAcls=@();$taskFailure=$null;$taskInstallRoots=@();$taskStopAfterExpectedBlock=$false
 $cleanup=[ordered]@{result='pending';policyRestored=$false;aclRestored=$false;fixtureDisposition='preserved-on-disposable-runner';installerRetry=$false;errors=@()}
 try{
-    Install-RetentionPackage $taskAdmission.baselinePackage 'install-official-022'
-    $baseline=Find-RetentionInstall '0.2.22';$taskResult.baselineInstallation=$baseline;$taskInstallRoots+=,$baseline.root
+    if($taskAdmission.kind -ceq 'msi'){
+        $msiProperties=Read-RetentionMsiProperties $taskAdmission.baselinePackage
+        Write-RetentionJson (Join-Path $taskOutput 'baseline-msi-properties.original.json') $msiProperties
+        if($msiProperties.productCode -ine '{C5476FDD-CB86-46AF-A97F-96DD56A32CA0}' -or
+            $msiProperties.version -cne '0.2.22' -or $msiProperties.allUsers -cne '1'){throw 'Published baseline MSI context/identity differs'}
+    }
+    $baseline=$null
+    if($taskAdmission.scenario -cne 'fresh023'){
+        Install-RetentionPackage $taskAdmission.baselinePackage 'install-official-022'
+        $baseline=Find-RetentionInstall '0.2.22';$taskResult.baselineInstallation=$baseline;$taskInstallRoots+=,$baseline.root
+        $oldInstall=$baseline.root
+    }else{$oldInstall=Get-RetentionExpectedRoot $taskAdmission.kind '0.2.22' $taskLocal $env:ProgramFiles}
     # Never start the old program: it must not migrate or discover any old data.
-    $taskOldRoots+=Join-Path $baseline.root 'data'
+    $taskOldRoots+=Join-Path $oldInstall 'data'
     foreach($root in $taskOldRoots){
         if(Test-Path -LiteralPath $root){throw 'Unexpected old data after fresh baseline install'}
         New-RetentionSeed (Join-Path $root 'windows023-legacy-seed.txt') ('legacy must remain untouched '+[guid]::NewGuid())
@@ -421,11 +497,34 @@ try{
     $prefs=Join-Path $taskDesktop 'manager-state/preferences.json';$null=New-Item -ItemType Directory -Path (Split-Path -Parent $prefs) -Force
     Write-RetentionJson $prefs @{schema_version=2;shell=@{launch_with_codex=$false;auto_panel=$false};updates=@{app_update_auto_check=$false};sync=@{cold_sync=$false}}
     Set-RetentionSyntheticOwner
+    $block=Get-RetentionContextBlock $taskAdmission.kind $taskAdmission.scenario $(if($baseline){$baseline.registration}else{$null})
+    if($block){
+        Assert-RetentionCandidateMsiBlock $baseline
+        $block.candidateRejectionVerified=$true
+        Write-RetentionJson (Join-Path $taskOutput 'installation-context-blocker.json') $block
+        $taskResult.blocker=$block
+        if($taskAdmission.scenario -ceq 'adjacent'){
+            $taskStopAfterExpectedBlock=$true;$taskResult.result='pass-expected-block'
+        }else{
+            # Explicit test action, never embedded in product upgrade behavior.
+            $retainedBeforeConversion=Get-RetentionTree $taskUser
+            Uninstall-RetentionPackage $baseline 'explicit-uninstall-official-022-retain-data'
+            Assert-RetentionTree $taskUser $retainedBeforeConversion
+            Assert-RetentionSeeds 'after-explicit-old-msi-uninstall'
+            Write-RetentionJson (Join-Path $taskOutput 'explicit-program-conversion.json') @{
+                authorizedScenario='explicit-conversion';oldVersion='0.2.22';newVersion='0.2.23';
+                oldDefaultUninstallExecuted=$true;UandHHashesPreserved=$true;oldDataSeedsPreserved=$true;
+                automaticUpgrade=$false;configurationMigration=$false
+            }
+        }
+    }
+    if(!$taskStopAfterExpectedBlock){
     Start-RetentionAudit
     Assert-RetentionSeeds 'before-upgrade'
-    Install-RetentionPackage $taskAdmission.candidatePackage 'upgrade-to-023'
+    $installPhase=switch -CaseSensitive ($taskAdmission.scenario){'adjacent'{'upgrade-to-023'} 'explicit-conversion'{'explicit-install-023'} default{'fresh-install-023'}}
+    Install-RetentionPackage $taskAdmission.candidatePackage $installPhase
     $candidate=Find-RetentionInstall '0.2.23';$taskResult.candidateInstallation=$candidate;$taskInstallRoots+=,$candidate.root
-    if(!(Test-RetentionSamePath $baseline.root $candidate.root) -and (Test-Path -LiteralPath $baseline.exe)){throw 'Upgrade left the old executable'}
+    if($baseline -and !(Test-RetentionSamePath $baseline.root $candidate.root) -and (Test-Path -LiteralPath $baseline.exe)){throw 'Upgrade left the old executable'}
     Assert-RetentionSeeds 'after-upgrade'
     Read-RetentionCandidate $candidate 'upgraded'
     Assert-RetentionSeeds 'after-upgraded-readback'
@@ -446,7 +545,8 @@ try{
     Assert-RetentionTree $taskUser $retained;Assert-RetentionSeeds 'after-final-default-uninstall'
     Assert-RetentionNoLegacyRead 'final'
     if(@(Get-CimInstance Win32_Process -Filter "Name='opencodex-desktop.exe' OR Name='ocxd.exe'").Count){throw 'Product process remained after cleanup'}
-    $taskResult.legacyScanVerified=$true;$taskResult.result='pass'
+    $taskResult.legacyScanVerified=$true;$taskResult.automaticUpgradePassed=($taskAdmission.scenario -ceq 'adjacent');$taskResult.result='pass'
+    }
 }catch{$taskFailure=$_;$taskResult.error=$_.Exception.Message;$taskResult.errorType=$_.Exception.GetType().Name
 }finally{
     foreach($entry in $taskAuditAcls){try{
@@ -474,5 +574,5 @@ try{
     Write-RetentionJson (Join-Path $taskOutput 'retention-result.json') $taskResult
 }
 if($taskFailure){throw $taskFailure}
-if($taskResult.result -cne 'pass'){throw 'Retention cleanup failed; original receipts retained'}
+if($taskResult.result -cnotin @('pass','pass-expected-block')){throw 'Retention cleanup failed; original receipts retained'}
 $taskResult|ConvertTo-Json -Depth 15

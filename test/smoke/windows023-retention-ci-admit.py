@@ -6,6 +6,12 @@ from a reviewed successful package run; never select latest. Then invoke
 windows023-installer-retention.ps1 -AdmissionPath
 <test/out/windows023-installer-retention/admission.json> -Execute. Always upload
 the entire output directory, including admission/cleanup failures. No reruns.
+Default scenario=adjacent. MSI 022 machine -> 023 user is explicitly blocked,
+never reported as an upgrade pass. --scenario explicit-conversion verifies the
+candidate's real MSI rejection, explicitly uninstalls 022 preserving seeds, then
+installs 023. It is a test-only program switch, never automatic migration.
+Use --scenario fresh023 in a separate job to
+verify the new per-user MSI install/uninstall/reinstall, without removing 022.
 """
 import argparse
 from datetime import datetime, timezone
@@ -150,6 +156,7 @@ def extract_candidate(archive, kind, head, downloads, output):
 
 def prepare(args):
     verify_context(os.environ, os.name)
+    require(args.scenario != "explicit-conversion" or args.kind == "msi", "Explicit conversion is MSI-only")
     repo = Path(__file__).resolve().parents[2]
     source = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo).decode().strip()
     require(source == os.environ["GITHUB_SHA"], "Harness checkout mismatch")
@@ -189,7 +196,7 @@ def prepare(args):
         with zipfile.ZipFile(archive_path) as archive:
             candidate, row = extract_candidate(archive, args.kind, pins["head"], downloads, output)
         record = {
-            "schemaVersion": 23, "atUtc": datetime.now(timezone.utc).isoformat(), "harnessSource": source,
+            "schemaVersion": 23, "scenario": args.scenario, "atUtc": datetime.now(timezone.utc).isoformat(), "harnessSource": source,
             "executionRun": os.environ["GITHUB_RUN_ID"], "executionJob": os.environ["GITHUB_JOB"],
             "candidate": pins, "kind": args.kind, "baselineRelease": BASELINE_RELEASE,
             "baselineVersion": "0.2.22", "candidateVersion": "0.2.23", "baselineSource": BASELINE_COMMIT,
@@ -212,6 +219,7 @@ def prepare(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("kind", choices=BASELINE)
+    parser.add_argument("--scenario", choices=("adjacent", "fresh023", "explicit-conversion"), default="adjacent")
     for key, value_type in (("candidate-run", int), ("candidate-attempt", int), ("candidate-head", str),
                             ("artifact-id", int), ("artifact-bytes", int), ("artifact-sha256", str)):
         parser.add_argument("--" + key, type=value_type, required=True)

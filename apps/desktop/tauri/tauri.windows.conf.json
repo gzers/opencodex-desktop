@@ -8,7 +8,12 @@
   "bundle": {
     "windows": {
       "nsis": {
-        "installerHooks": "windows/installer-hooks.nsh"
+        "installerHooks": "windows/installer-hooks.nsh",
+        "installMode": "currentUser",
+        "template": "windows/nsis023.nsi"
+      },
+      "wix": {
+        "template": "windows/wix023.wxs"
       }
     },
     "icon": [

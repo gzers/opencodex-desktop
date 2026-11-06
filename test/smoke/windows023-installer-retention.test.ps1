@@ -6,7 +6,7 @@ $null=New-Item -ItemType Directory -Path $OutputDirectory
 $tokens=$null;$errors=$null
 $ast=[Management.Automation.Language.Parser]::ParseFile((Join-Path $PSScriptRoot 'windows023-installer-retention.ps1'),[ref]$tokens,[ref]$errors)
 if($errors.Count){throw ($errors|Out-String)}
-$names=@('Test-RetentionSamePath','Assert-RetentionPlainPath','Get-RetentionTree','Assert-RetentionTree','Test-RetentionLegacyRead','Assert-RetentionReadback','Assert-RetentionNoMigration','Write-RetentionJson','Invoke-RetentionInstaller','Install-RetentionPackage')
+$names=@('Test-RetentionSamePath','Assert-RetentionPlainPath','Get-RetentionTree','Assert-RetentionTree','Test-RetentionLegacyRead','Assert-RetentionReadback','Assert-RetentionNoMigration','Write-RetentionJson','Invoke-RetentionInstaller','Install-RetentionPackage','Get-RetentionExpectedRoot','Get-RetentionContextBlock','Assert-RetentionCandidateMsiBlock')
 foreach($name in $names){
     $node=@($ast.FindAll({param($n) $n -is [Management.Automation.Language.FunctionDefinitionAst] -and $n.Name -ceq $name},$true))
     if($node.Count -ne 1){throw 'Pure fixture function missing/ambiguous'}
@@ -90,6 +90,42 @@ Assert-RetentionNoMigration 'synthetic-no-migration'
 $copy=Join-Path $taskUser 'copied-old-seed';Copy-Item -LiteralPath $oldSource -Destination $copy
 Assert-Refused {Assert-RetentionNoMigration 'synthetic-forbidden-migration'}
 $checks+='legacy payload copied into U/H is rejected'
+$fixtureLocal=Join-Path $OutputDirectory 'profile/AppData/Local';$fixtureMachine=Join-Path $OutputDirectory 'Program Files'
+foreach($kind in @('nsis','msi')){
+    Assert-Fixture (Test-RetentionSamePath (Get-RetentionExpectedRoot $kind '0.2.23' $fixtureLocal $fixtureMachine) (Join-Path $fixtureLocal 'Programs/OpenCodeX Desktop')) '023 default differs from user Programs contract'
+}
+Assert-Fixture (Test-RetentionSamePath (Get-RetentionExpectedRoot 'nsis' '0.2.22' $fixtureLocal $fixtureMachine) (Join-Path $fixtureLocal 'OpenCodeX Desktop')) '022 NSIS actual default changed'
+Assert-Fixture (Test-RetentionSamePath (Get-RetentionExpectedRoot 'msi' '0.2.22' $fixtureLocal $fixtureMachine) (Join-Path $fixtureMachine 'OpenCodeX Desktop')) '022 MSI actual default changed'
+Assert-Refused {Get-RetentionExpectedRoot 'msi' '0.1.9' $fixtureLocal $fixtureMachine}
+$registration=@{hive='LocalMachine';key='{C5476FDD-CB86-46AF-A97F-96DD56A32CA0}'}
+$block=Get-RetentionContextBlock 'msi' 'adjacent' $registration
+Assert-Fixture ($block.automaticReplacementSupported -eq $false -and $block.candidateRejectionVerified -eq $false) 'Harness description falsely certifies actual product rejection'
+Assert-Fixture ($null -ne (Get-RetentionContextBlock 'msi' 'explicit-conversion' $registration)) 'Conversion must prove candidate rejection first'
+Assert-Fixture ($null -eq (Get-RetentionContextBlock 'msi' 'fresh023' $null)) 'Fresh 023 installation was blocked'
+$checks+='023 uses current-user Programs; 022 keeps actual defaults; MSI context classification never certifies product rejection'
+# Mock ONLY the installer process. Execute the real rejection-verifier function
+# against temporary bytes to prove its command and evidence requirements.
+$taskOutput=Join-Path $OutputDirectory 'block-fixture';$null=New-Item -ItemType Directory -Path $taskOutput
+$taskLocal=$fixtureLocal;$taskAdmission=@{candidatePackage='synthetic-candidate.msi'}
+$baselineRoot=Join-Path $OutputDirectory '022-program';$null=New-Item -ItemType Directory -Path $baselineRoot
+[IO.File]::WriteAllText((Join-Path $baselineRoot 'opencodex-desktop.exe'),'never executable synthetic baseline')
+$baseline=@{root=$baselineRoot;sha256=(Get-FileHash -LiteralPath (Join-Path $baselineRoot 'opencodex-desktop.exe')).Hash.ToLowerInvariant()}
+$script:blockMockMessage='OCX023_MACHINE022_BLOCK: synthetic product response';$script:blockWrites=$false;$script:blockInvocations=0
+function Invoke-RetentionInstaller {
+    param($File,$Arguments,$Phase,$ExpectedExitCodes)
+    Assert-Fixture ($ExpectedExitCodes.Count -eq 1 -and $ExpectedExitCodes[0] -eq 1603) 'Product block must require exact MSI failure code'
+    Assert-Fixture ($Arguments.Contains('/i "synthetic-candidate.msi"') -and $Arguments -notmatch '(?i)INSTALLDIR|TARGETDIR|/D=') 'Block verifier did not execute exact candidate defaults'
+    $script:blockInvocations++
+    [IO.File]::WriteAllText((Join-Path $taskOutput 'candidate-machine-context-block.log'),$script:blockMockMessage)
+    if($script:blockWrites){[IO.File]::WriteAllText((Join-Path $baseline.root 'changed'),'candidate mutation')}
+}
+function Assert-RetentionSeeds {param($Phase)}
+function Find-RetentionInstall {param($Version) $baseline}
+Assert-RetentionCandidateMsiBlock $baseline
+Assert-Fixture ($blockInvocations -eq 1) 'Candidate block process was not invoked'
+$script:blockMockMessage='generic MSI failure';Assert-Refused {Assert-RetentionCandidateMsiBlock $baseline}
+$script:blockMockMessage='OCX023_MACHINE022_BLOCK:';$script:blockWrites=$true;Assert-Refused {Assert-RetentionCandidateMsiBlock $baseline}
+$checks+='real block-verifier invokes candidate defaults, rejects generic MSI failures and detects old program mutations'
 @{result='pass-pure-fixtures';checks=$checks;installerExecuted=$false;windowsAcceptancePassed=$false;source='AST of windows023-installer-retention.ps1'}|
     ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $OutputDirectory 'fixture-receipt.json') -Encoding utf8
 $checks
