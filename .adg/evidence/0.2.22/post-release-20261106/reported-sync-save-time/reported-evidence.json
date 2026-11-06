@@ -1,0 +1,34 @@
+{
+  "reportedDate": "2026-11-06",
+  "reportedPlatform": "Windows",
+  "reportedVersion": "User reports after 0.2.22 release; screenshot does not expose installed build/version",
+  "issue": "S22-POST-01",
+  "image": {
+    "file": "windows-sync-unknown-save-time.png",
+    "bytes": 278666,
+    "sha256": "cc05106ce4c21ef9467a0408f927454c6dc2f630c677954d8fa3cf6f84537785"
+  },
+  "sourceReview": {
+    "releaseTag": "v0.2.22",
+    "tagCommit": "1b5c8402dc340540711efa2c2c2037bce673a479",
+    "files": [
+      "apps/desktop/tauri/src/modules/model_config/sync_state.rs:compare_content",
+      "apps/desktop/tauri/src/modules/model_config/file_objects.rs:bound_versions/object_fact",
+      "apps/desktop/tauri/src/modules/model_config/content_versions.rs:observe/record_at_validated/inherit",
+      "apps/desktop/ui/src/features/sync/ModelTransfer.vue:undeterminedReason"
+    ]
+  },
+  "conclusions": [
+    "No dependency on last-sync existence in compare_content; first sync alone is not the cause",
+    "Both sides nonempty/different plus either unreliable content-bound save time produces undetermined/unreliable_save_time",
+    "Empty selected local content with nonempty remote chooses remote before time comparison; no remote with nonempty local chooses local; equal content chooses unchanged",
+    "New installation can also hit this when selected defaults/scanned/imported/external content are nonempty and lack matching trusted save receipts",
+    "All selected atoms require reliable matching save time; any uncovered unknown atom suppresses aggregate savedAt. A successful no-op save does not certify unknown content. Existing sync does not immunize against later unobserved external edits or scope changes"
+  ],
+  "notEstablished": [
+    "Which actual selected objects lack provenance on the user device",
+    "Whether local is actually empty within selected scope, cloud snapshot format/receipts, exact installed version",
+    "No user configuration/credentials/real WebDAV was read or changed; no live reproduction performed"
+  ],
+  "status": "recorded/static-analysis-complete; fix scope and release version unassigned"
+}
