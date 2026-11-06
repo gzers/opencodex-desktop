@@ -258,6 +258,7 @@ if($Mode -ceq 'Child'){
   # Early identity/admission failures occur before the suite report exists.
   # Retain only controlled diagnostics, never raw exception text or environment.
   $failure=[ordered]@{result='child-admission-failed';failureType=$_.Exception.GetType().FullName;failureLine=$_.InvocationInfo.ScriptLineNumber;failureHResult=[int]$_.Exception.HResult;sourceLeaf=[IO.Path]::GetFileName($_.InvocationInfo.ScriptName)}
+  $failure.ephemeralFacts=@{isWindows=[bool]$IsWindows;githubActions=($env:GITHUB_ACTIONS -ceq 'true');hosted=($env:RUNNER_ENVIRONMENT -ceq 'github-hosted');runnerTempPresent=![string]::IsNullOrWhiteSpace($env:RUNNER_TEMP);imagePresent=![string]::IsNullOrWhiteSpace($env:ImageOS)}
   $known=@('Only a fresh GitHub-hosted ephemeral Windows runner is admitted','Ordinary current TokenOwner differs from TokenUser; no owner repair is permitted','Ordinary suite real SID/guard differs','Ordinary suite account is administrator','Actual registered new Profile required','Actual token Profile TEMP/KnownFolder differs','Own registered TEMP missing','Real fixture Node bytes changed','Local absolute non-device path required','Path escaped tracked fixture')
   if($_.Exception.Message -cin $known){$failure.guard=$_.Exception.Message}
   $path=Join-Path (Split-Path -Parent $ConfigPath) 'child-admission-failure.json'
