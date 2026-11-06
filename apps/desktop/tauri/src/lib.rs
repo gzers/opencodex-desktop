@@ -386,6 +386,21 @@ pub fn run() {
                 working_directory: home.clone(),
                 opencodex_home,
             });
+            let recovery_process = crate::state::ProcessContext {
+                runtime: runtime.clone(), working_directory: home.clone(),
+                opencodex_home: crate::modules::data_root::resolve_opencodex_home(&runtime_config),
+            };
+            app.manage(crate::commands::runtime_recovery_v2::SharedRuntimeRecoveryV2::new(
+                crate::commands::runtime_recovery_v2::RecoveryContext::new(
+                    runtime.clone(), data_root.clone(), recovery_process.opencodex_home.clone(), recovery_process.clone(),
+                )?, runtime_install.clone(),
+                std::sync::Arc::new(crate::commands::runtime_recovery_v2_sources::FixedResourceSourceResolver::from_compiled(
+                    app.path().resource_dir()?.join("runtime-bundle"), offline_drop,
+                )?),
+                std::sync::Arc::new(crate::commands::runtime_recovery_v2_owner::SystemServiceOwnerProofProvider::new(
+                    install_root.clone(), recovery_process,
+                )?),
+            ));
             app.manage(crate::commands::config_file_transfer_v2::SharedConfigFileTransferV2(
                 std::sync::Arc::new(std::sync::Mutex::new(
                     crate::modules::model_config::file_transfer_v2::FileTransferOwnerV2::new(
@@ -757,6 +772,10 @@ pub fn run() {
             commands::migration::import_migration,
             crate::infrastructure::app_activity::app_foreground,
             commands::drain_tray_requests,
+            commands::runtime_recovery_v2::runtime_recovery_v2_prepare,
+            commands::runtime_recovery_v2::runtime_recovery_v2_apply,
+            commands::runtime_recovery_v2::runtime_recovery_v2_status,
+            commands::runtime_recovery_v2::runtime_recovery_v2_cancel,
             commands::runtime::runtime_source,
             commands::runtime::runtime_protection_status,
             commands::runtime::retry_runtime_protection,
