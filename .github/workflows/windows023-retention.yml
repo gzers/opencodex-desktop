@@ -1,0 +1,82 @@
+name: Windows 0.2.23 adjacent installer retention
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_run:
+        description: Exact successful Windows candidate workflow run ID
+        type: string
+        required: true
+      candidate_attempt:
+        description: Exact successful package run attempt
+        type: string
+        required: true
+      candidate_head:
+        description: Full candidate source commit SHA
+        type: string
+        required: true
+      artifact_id:
+        description: Exact candidate installer artifact ID
+        type: string
+        required: true
+      artifact_bytes:
+        description: Candidate artifact archive size in bytes
+        type: string
+        required: true
+      artifact_sha256:
+        description: Candidate artifact archive SHA256 without prefix
+        type: string
+        required: true
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  retention:
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [nsis, msi]
+    runs-on: windows-latest
+    timeout-minutes: 35
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v5
+      - name: Verify bounded admission and retention fixture contracts
+        run: |
+          python test/smoke/windows023-retention-ci-admit.test.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $taskFixtures = Join-Path $env:RUNNER_TEMP ('ocxd023-retention-fixtures-' + [guid]::NewGuid().ToString('N'))
+          & test/smoke/windows023-installer-retention.test.ps1 -OutputDirectory $taskFixtures
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Admit published 0.2.22 and exact successful candidate bytes
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OCXD_CANDIDATE_RUN: ${{ inputs.candidate_run }}
+          OCXD_CANDIDATE_ATTEMPT: ${{ inputs.candidate_attempt }}
+          OCXD_CANDIDATE_HEAD: ${{ inputs.candidate_head }}
+          OCXD_ARTIFACT_ID: ${{ inputs.artifact_id }}
+          OCXD_ARTIFACT_BYTES: ${{ inputs.artifact_bytes }}
+          OCXD_ARTIFACT_SHA256: ${{ inputs.artifact_sha256 }}
+          OCXD_INSTALLER_KIND: ${{ matrix.kind }}
+        run: |
+          python test/smoke/windows023-retention-ci-admit.py $env:OCXD_INSTALLER_KIND --candidate-run $env:OCXD_CANDIDATE_RUN --candidate-attempt $env:OCXD_CANDIDATE_ATTEMPT --candidate-head $env:OCXD_CANDIDATE_HEAD --artifact-id $env:OCXD_ARTIFACT_ID --artifact-bytes $env:OCXD_ARTIFACT_BYTES --artifact-sha256 $env:OCXD_ARTIFACT_SHA256
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify actual default upgrade uninstall and reinstall
+        run: |
+          foreach ($taskName in @('GITHUB_TOKEN','GH_TOKEN','ACTIONS_RUNTIME_TOKEN','ACTIONS_ID_TOKEN_REQUEST_TOKEN')) {
+            [Environment]::SetEnvironmentVariable($taskName, $null, 'Process')
+          }
+          & test/smoke/windows023-installer-retention.ps1 -AdmissionPath test/out/windows023-installer-retention/admission.json -Execute
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Preserve admission execution and cleanup evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows023-retention-${{ matrix.kind }}-${{ github.sha }}
+          path: test/out/windows023-installer-retention
+          if-no-files-found: warn
+          retention-days: 14
