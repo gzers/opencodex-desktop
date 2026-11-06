@@ -1,0 +1,6 @@
+🚀 opencodex proxy running on http://localhost:60480
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard

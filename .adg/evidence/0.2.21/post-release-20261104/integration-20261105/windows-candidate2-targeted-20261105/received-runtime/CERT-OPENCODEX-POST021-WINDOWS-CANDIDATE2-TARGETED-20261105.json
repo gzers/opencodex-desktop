@@ -1,0 +1,55 @@
+{
+  "kind": "CERT",
+  "id": "CERT-OPENCODEX-POST021-WINDOWS-CANDIDATE2-TARGETED-20261105",
+  "task_id": "TASK-OPENCODEX-POST021-WINDOWS-CANDIDATE2-TARGETED-20261105",
+  "task_digest_before_close": "50883d41e310b5d7ae41d32d7bb81016fd7d731b9efcf7cd29152a570844c5e0",
+  "task_summary_digest": "f9106870f50874814d6136897f9f3512a8ef940a58b312482284c50934cc2f1d",
+  "closed_task_summary_digest": "0b6d77301fbd35770e2892eba190c9e095310a9d91de241a19fd52f0c9b2b47f",
+  "receipt_id": "RCP-OPENCODEX-POST021-WINDOWS-CANDIDATE2-TARGETED-20261105",
+  "receipt_digest": "430c1806f02118cbddd54cee7e2473bc73def1c081fdbaca7650446891760ef7",
+  "result": "succeeded",
+  "verified_at": "2026-11-06T00:24:54.656002+00:00",
+  "checks": [
+    {
+      "name": "review:failure-retry-cancellation",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/native-independent-review.json"
+    },
+    {
+      "name": "review:fresh-rename-first-confirm",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/native-attempt2/fresh-first-confirm-readback.json"
+    },
+    {
+      "name": "review:install-failure-preservation",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/native-attempt2/failed-install-preservation.json"
+    },
+    {
+      "name": "review:native-managed-install-full-version",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/native-attempt2/managed-install-readback.json"
+    },
+    {
+      "name": "review:other-owner-daily-boundary",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/native-attempt2/07-service-retry-boundary.json"
+    },
+    {
+      "name": "review:source-and-artifact-identity",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/native-attempt2/manager-identity.json"
+    }
+  ],
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-09",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/coverage-matrix.json"
+    }
+  ],
+  "fact_impacts": [],
+  "revision": 1,
+  "summary_digest": "3848b3a8bfae4cf7a2418b5f255e14952c3de7314c1b2123cdff4f61d81c77a1",
+  "content_digest": "42283349868991a8879fced849592556621307ed07a8f0eee228e845e6554f42"
+}

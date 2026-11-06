@@ -1,0 +1,116 @@
+{
+  "status": "in_progress",
+  "releaseReady": false,
+  "codeHead": "ca46bc1f3c35988d206e1a2949c708d4f23aab50",
+  "productIntegrationCommit": "ca46bc1f3c35988d206e1a2949c708d4f23aab50",
+  "productFixCommit": "2b860292e",
+  "appsTree": "1ddc5117a0ee13b4a87c546302ade0c98221bd5d",
+  "authoritativeScope": "DMD-OPENCODEX-POST021 latest AC-P21-02 hardware exception; IMP-30 current entry",
+  "activeTask": "TASK-OPENCODEX-POST021-INTEGRATION-HARDWARE-20261105",
+  "historicalSnapshot": "integrated-b99a94f10-20261105/historical-validation-before-b99a94f10.json",
+  "latestReview": "integrated-b99a94f10-20261105/review.json",
+  "native": {
+    "macPanel": {
+      "path": "integrated-b99a94f10-20261105/macos-native/ready/ocx021-mac-native-38ade72f-6b80-4790-b42a-5015514e917d/report.json",
+      "result": "pass",
+      "checks": 15,
+      "build": "f97b2a92d223d71166ff6e5eb762bec6a794237c"
+    },
+    "macUnchangedChannelsSync": {
+      "native-channels": {
+        "path": "native-channels/ocx021-mac-native-f1be5f35-bff6-4eb0-b91e-42144b5a378d/report.json",
+        "result": "pass",
+        "checks": 12,
+        "build": "cf412c33660c87f1a39d6159fe77d1e4227ffa74",
+        "error": null
+      },
+      "native-sync": {
+        "path": "native-sync/ready/ocx021-mac-native-ae0d9b2b-11d8-4ba8-a821-1ee9067d98f5/report.json",
+        "result": "pass",
+        "checks": 27,
+        "build": "23440509452fc1241324a8ba02ebdd6e52822c18",
+        "error": null
+      }
+    },
+    "windowsPanel": "windows-msvc-followup-41913003716/native-msvc-retry-fixed-20261105/HANDOFF.md",
+    "windowsFirstScope": "windows-msvc-followup-41913003716/connected-native-20261105/CONNECTED-HANDOFF.md",
+    "windowsMaterials": "windows-msvc-followup-41913003716/hardware-aware-closeout-20261105/review.json",
+    "windowsRestartCandidate": "windows-msvc-followup-41913003716/runtime-appserver-native-candidate-20261105/review.json"
+  },
+  "checks": {
+    "localRustPanel": "18 passed / 0 failed",
+    "localFrontendBuild": "passed",
+    "runtimePatchReplay": "2021 package files verified / exactly 4 changed paths; isolated copy only",
+    "runtimeProtocol": "4 passed / 0 failed after Unix-only trusted-path test seam; not native Windows execution",
+    "fullIntegratedCI": {
+      "run": 42003613998,
+      "head": "f97b2a92d223d71166ff6e5eb762bec6a794237c",
+      "result": "success",
+      "evidence": "integrated-b99a94f10-20261105/ci-run.json"
+    },
+    "latestToolCI": {
+      "run": 42056342409,
+      "head": "ca46bc1f3c35988d206e1a2949c708d4f23aab50",
+      "result": "queued at admission",
+      "localInstallLibrary": 34,
+      "localStrictReconcile": 20,
+      "localUpstreamRoutes": 140,
+      "runtimeBuilder": 5,
+      "actualManagedInstall": "candidate1 and2 passed macOS real npm/entry/source/failure preservation",
+      "macNative": "12 checks pass; save/restart missing-service/retry/cancel/config preservation; matching runtime/UI source",
+      "review": "local-remaining-20261105/review.json"
+    },
+    "previousToolCI": {
+      "run": 42051476515,
+      "head": "bfcf85f0bb4d78b5a9e5929326bdccd2aa808be2",
+      "result": "queued at admission",
+      "localRustCacheRefresh": 31,
+      "localRuntimeBuilder": 3,
+      "review": "windows-runtime-delivery-20261105/integration-audit/review.json"
+    }
+  },
+  "hardwareException": {
+    "acceptedByCurrentUser": true,
+    "scope": "shared UHD770/RDP host absolute p95/over6B only advisory for this release",
+    "absolutePerformanceResult": "failed-original-reference-retained",
+    "functionalGlassFallbackInteractionRequired": true,
+    "productionPerformanceFixClaim": false
+  },
+  "runtimeDependency": {
+    "state": "local-candidate2-source-fixed-and-macos-managed-install-passed;Windows-final-native-and-production-delivery-pending",
+    "basePackage": "@bitkyc08/opencodex@2.97.0",
+    "upstream": "lidge-jun/opencodex",
+    "checkedDev": "0a30c551304927c93c26a96c034bd39a166c7460",
+    "prBase": "dev",
+    "authorizationToSendUpstreamPr": "pending",
+    "review": "integrated-b99a94f10-20261105/upstream-dev-review.json",
+    "localPortPreparation": "upstream-runtime-prep-0a30c551/runtime-owner-dev-prep-review.json; 109+12 tests and typecheck, not complete dev/native/released runtime",
+    "candidate": "2.97.0-post021.ownerquery.2",
+    "candidateSha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957",
+    "windowsFinalReview": "windows-runtime-delivery-20261105/integration-audit/review.json",
+    "managerInstall": "prerelease parser fixed; actual macOS manager installer pass; Windows native install pending",
+    "firstRenameDrift": "source root reproduced and fixed in local upstream patch; 140 route tests pass, strict manager guard retained; Windows fresh-first-rename pending"
+  },
+  "pending": [
+    "Final new-head CI42056342409",
+    "Windows actual manager offline install candidate2 and fresh first rename→restart→reference readback; no repeat of old material/sync matrix",
+    "Upstream stable repaired runtime or explicitly adopted production source/maintenance",
+    "Version freeze, final installers/upgrade/updater signatures/manifests/rollback and unified release"
+  ],
+  "boundaries": "No daily config or real WebDAV/inference. Authorized disposable-account default restart is distinct from daily Codex. Prior daily Bun cleanup incident and missing pre/post bytes remain preserved; no all-history zero-side-effect claim.",
+  "reuse": {
+    "scope": "Only native panel product path changed since prior material/channel/sync evidence; source trees checked during merge. Final same-product Mac panel and Windows MSVC races supplement existing unaffected checks.",
+    "macosChannelSyncSources": {
+      "materialsAndFullRustFrom": "aa54d4b2ac7b0eaae66cff949d0d83baae7aefac",
+      "appsChangedSince": [
+        "apps/desktop/tauri/src/commands/panel.rs"
+      ],
+      "channelNativeFrom": "cf412c33660c87f1a39d6159fe77d1e4227ffa74",
+      "appsChangedSinceChannel": [
+        "apps/desktop/tauri/src/commands/panel.rs"
+      ],
+      "reason": "Only native panel lifecycle changed; UI material/channel/sync product paths byte-identical. Final native panel and sync plus targeted panel regression and Clippy supplement reused unaffected checks. No claim of a new full suite on final commit."
+    }
+  },
+  "historicalTasks": "Frozen original TASK/RCP/CERT contracts not rebound; successor task owns the user-approved hardware exception."
+}

@@ -1,0 +1,38 @@
+{
+  "result": "passed-native-candidate2-targeted",
+  "codeBaseline": "ca46bc1f3c35988d206e1a2949c708d4f23aab50",
+  "artifactVersion": "2.97.0-post021.ownerquery.2",
+  "artifactSha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957",
+  "artifactBytes": 15406072,
+  "patchApplication": "First patch ten existing postimages matched; supplemental five preimages andpostimages checked; only second applied todisposablecompleteupstreamdev",
+  "checks": {
+    "builder": "5pass",
+    "upstreamSupplementalRoute": "2pass onWindows; realroute+discoverytransition",
+    "realWindowsRuntimeInstaller": "1pass actual isolated stable2.97→offlinecandidate2/fullentry/sourceversion/failureretainsentrypackageandsource/uninstall",
+    "strictReconcile": "19pass; includes updatedAt-onlydrift stillrefused andpendingretained",
+    "driverAdmission": "Wrongowner15119 rejectedbeforedata/processmutation",
+    "dailyCrossAccountGuard": "Signature, challenge, timestamp, SID/session/path negative cases passed; real 15119 signed challenge and original hashes passed; attempt2 wrongowner rejected before output."
+  },
+  "nonEvidence": "Initial unix-onlyinstalllibfilterselected0 onWindows; preservedbutnotcountedpassing",
+  "nativeManager": {
+    "artifactId": 13431169501,
+    "run": 42056342409,
+    "EXESha256": "f62c474c06cb3fe2f77fe23d38e99c0783d86e727dbd538cfe7b4d36dd8c347d",
+    "bytes": 15296000,
+    "buildCommit": "56141aecef1608eb44d44dd8ff0eaef84b96676f",
+    "appsTree": "ca89905344d0d29e761bcb8ffa24d22769c9cb4c",
+    "embeddedCommitAndParentVerified": true
+  },
+  "freshRename": "Entirelyfreshrename, firstactualconfirmation1 passedexactbytes+timebaseline+newoldrefs+pending+MSIXgenerations",
+  "ciRun": 42056342409,
+  "at": "2026-11-06T00:24:54.656002+00:00",
+  "AdministratorRun": "2026-11-06T00:17:12.294Z..00:21:51.350Z, AdministratorSID500/session1, actual driverexit0",
+  "codeSha": "63f9dbe265568ba608da631aa83739bf5691755a",
+  "ci": "42056342409 completed/success;5applicablejobs success;releasebuild skipped byoriginalcondition",
+  "pendingEntry": "D:/Users/Administrator/WorkSpace/Test/POST021-CANDIDATE2-TARGETED.ps1",
+  "nativeChecks": "Allsixrequiredchecks passed; seecoverage-matrix.json",
+  "remaining": [
+    "Production official runtime release or reviewed maintained offline source adoption",
+    "Final desktop installer/upgrade/signing/update/rollback and shared integration closure"
+  ]
+}

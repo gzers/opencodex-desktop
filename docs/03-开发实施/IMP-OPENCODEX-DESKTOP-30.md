@@ -7,9 +7,18 @@ completion_summary: null
 dmd_refs: ["DMD-OPENCODEX-POST021"]
 demand_ids: ["DMD-OPENCODEX-POST021"]
 task_ids: ["TASK-OPENCODEX-POST021-INTEGRATION-HARDWARE-20261105", "TASK-OPENCODEX-POST021-LOCAL-20261104", "TASK-OPENCODEX-POST021-CHANNELS-20261104", "TASK-OPENCODEX-POST021-CHANNEL-PROTOTYPE-20261104", "TASK-OPENCODEX-POST021-INTEGRATION-20261105", "TASK-OPENCODEX-POST021-WINDOWS-HUB-20261104", "TASK-OPENCODEX-POST021-WINDOWS-MATERIALS-20261104", "TASK-OPENCODEX-POST021-WINDOWS-PANEL-20261104", "TASK-OPENCODEX-POST021-WINDOWS-RESTART-20261104", "TASK-OPENCODEX-POST021-WINDOWS-RESTART-FEEDBACK-20261104", "TASK-OPENCODEX-POST021-WINDOWS-STICKY-20261104", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-20261105", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-PROBE-20261105", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-RENAME-PROBE-20261105", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-SYNC-PROBE-20261105"]
-summary: "本机安装版本与首次改名基线源头已修，真实Mac安装/原生通过；新CI和Windows候选2定向、正式运行包及发行门仍待。"
+summary: "Windows候选2托管安装、首次改名重启及保护验收已接收；相同产品源CI通过，生产运行包采用与最终发行门仍待。"
 ---
 # 0.2.21发布后双线修复与集成发布计划
+
+## 2026-11-06 Windows候选2接收与最终发布依赖（最新）
+
+用户报告“windows集成处理已完毕”。代码63f9dbe26和文档98625f5a1已取回，集成d78094369只新增七份验收工具，产品apps树ca89905344d0d29e761bcb8ffa24d22769c9cb4c与ca46、原MSVC构建一致。117条原始路径导入、manifest113项SHA通过；贡献TASK/RCP/CERT结构/摘要/关闭关系核验通过，保留received-runtime，不作为整版证书。
+
+Windows原生实测：候选2.97.0-post021.ownerquery.2真实管理器离线托管安装，完整版本及来源/入口读回、2522文件匹配；无效包失败保留。全新改名首次确认成功、14样本配置字节及knownModels/recentArrivals稳定，新引用/旧引用/pending、正式MSIX代际读回齐备。取消及服务错误/同通知重试成功，五份签名日常配置摘要及四边界其他账号代际保持。本机只读回放原生断言/签名验证通过，新增保护反例1项/三JS语法通过，没有重跑或伪称本机Windows原生。
+
+CI42056342409在ca46的五项适用job全部success，发行build原条件跳过。相同apps树限定复用，不写成合并头全量新跑。上游npm latest仍2.97.0；本地候选不能自动成为生产源。剩余顺序：明确上游稳定修复或明确采用维护的离线运行包，再冻结版本、完成最终发行原包/升级/签名/更新清单/回退，统一发布。DMD/IMP及整版集成TASK继续in_progress，既定RDP硬件例外不变。证据与可审阅方案：integration-20261105/windows-candidate2-targeted-20261105/integration-audit/；未公开上游PR、未改变日常来源/配置、未真实同步/推理。
+
 
 
 ## 2026-11-05 本机剩余项修复完成，转Windows定向验收（最新）

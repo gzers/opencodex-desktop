@@ -1,0 +1,104 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-POST021-WINDOWS-CANDIDATE2-TARGETED-20261105",
+  "task_id": "TASK-OPENCODEX-POST021-WINDOWS-CANDIDATE2-TARGETED-20261105",
+  "task_digest": "50883d41e310b5d7ae41d32d7bb81016fd7d731b9efcf7cd29152a570844c5e0",
+  "task_summary_digest": "f9106870f50874814d6136897f9f3512a8ef940a58b312482284c50934cc2f1d",
+  "baseline_digest": "690575db1bf7341180d373a49cfcf5618c0df4b28ce5cf9ae31e9a997e3cf24a",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/HANDOFF.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/acquisition.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/attempt1-native-failed/official-client-version.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/attempt1-native-failed/process-initial.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/attempt1-native-failed/protected-daily-proxy-before.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/attempt1-native-failed/result.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/attempt1-native-failed/started.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/attempt2-admission.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/attempt2-observer-live-check.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/attempt2-owner-negative.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/attempt2-owner-negative.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/attempt2-plan.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/baseline.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/candidate2-artifact-manifest.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/ci-artifacts.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/ci-jobs.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/ci-run.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/ci-terminal-review.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/daily-guard-tests.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/daily-guard-tests.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/governance-snapshot/DMD-OPENCODEX-POST021.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/governance-snapshot/IMP-OPENCODEX-DESKTOP-30.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/governance-snapshot/WINDOWS-TARGETED.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/isolated-preparation.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/live-log-observation.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/manifest.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/native-admission.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/patch-application-review.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/prior-receipts/rcp-revision4.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/progress-review.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/real-installer-test-review.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/real-installer-test.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/real-installer-test.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/runtime-install-tests-review.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/runtime-install-tests.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/runtime-install-tests.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/same-source-parent-runs.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/saved-reconcile-tests-review.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/saved-reconcile-tests.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/saved-reconcile-tests.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/wrong-owner-driver.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/wrong-owner-driver.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/wrong-owner-stop.stderr.log",
+    "test/smoke/post021-windows-final/candidate2-daily-guard.mjs",
+    "test/smoke/post021-windows-final/candidate2-daily-guard.test.mjs",
+    "test/smoke/post021-windows-final/candidate2-owned-stop.ps1",
+    "test/smoke/post021-windows-final/candidate2-service.ts",
+    "test/smoke/post021-windows-final/candidate2-targeted-native.mjs"
+  ],
+  "checks": [
+    {
+      "name": "review:failure-retry-cancellation",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:fresh-rename-first-confirm",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:install-failure-preservation",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:native-managed-install-full-version",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:other-owner-daily-boundary",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:source-and-artifact-identity",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/HANDOFF.md"
+    }
+  ],
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-09",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-candidate2-targeted-20261105/baseline.json"
+    }
+  ],
+  "fact_impacts": [],
+  "completed_at": "2026-11-05T23:15:45.329411+00:00",
+  "summary": "首次Administrator运行在启动管理器前读取日常文件EPERM，原失败五JSON保留，无安装/服务停止/保存。改用15119签名随机挑战摘要并验证真实往返/过期重放身份负例及错误账号拒绝，严格基线不变；接续入口已备仍待管理员实际安装/全新改名首次确认/取消重试，AC09不关闭。代码02a6910e93e62f6aa9b9139757019aff88662965",
+  "revision": 5,
+  "summary_digest": "972a21f79a7273328c54d9cf9635cde3a4e19b505c712328354b084c41ebcad4",
+  "content_digest": "480bc5a575cfd0e2b49f00c71704e36a256ecc7638843351743aadce0248922d"
+}

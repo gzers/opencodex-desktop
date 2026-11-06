@@ -1,3 +1,5 @@
+> 2026-11-06：本定向任务已完成并由集成线核验接收。代码63f9dbe26、证据98625f5a1；当前入口 ../windows-candidate2-targeted-20261105/HANDOFF.md。以下为原验收合同，保留历史，不再要求重复执行。
+
 # Windows候选2定向验收
 
 代码codex/post021-sync-fixes，ca46bc1f3c35988d206e1a2949c708d4f23aab50；文档docs/governance-main最新IMP-30及本文件。新CI42056342409待终态，不用旧b82/bfcf二进制冒充本轮。只补剩余项，不重跑旧材质/同步全矩阵。

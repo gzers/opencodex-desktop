@@ -1,0 +1,35 @@
+{
+  "error": "{\"exceptionId\":1,\"text\":\"Uncaught (in promise)\",\"lineNumber\":0,\"columnNumber\":0,\"exception\":{\"type\":\"object\",\"className\":\"Object\",\"description\":\"Object\",\"objectId\":\"-5955944480213907161.2.1\",\"preview\":{\"type\":\"object\",\"description\":\"Object\",\"overflow\":false,\"properties\":[{\"name\":\"code\",\"type\":\"number\",\"value\":\"14\"},{\"name\":\"message\",\"type\":\"string\",\"value\":\"managed runtime operation failed: not_gzip; 离线包校验未通过：not_gzip\"}]}}}",
+  "source": {
+    "kind": "managed",
+    "path": "\\\\?\\D:\\Users\\Administrator\\WorkSpace\\Test\\post021-candidate2-targeted-20261105\\sandbox\\runtime\\bin\\ocx.cmd",
+    "version": "2.97.0-post021.ownerquery.2",
+    "resolvedAt": "2026-11-06T00:17:57Z",
+    "insideDataRoot": true,
+    "managedEntry": "\\\\?\\D:\\Users\\Administrator\\WorkSpace\\Test\\post021-candidate2-targeted-20261105\\sandbox\\runtime\\bin\\ocx.cmd",
+    "managedPrefix": "\\\\?\\D:\\Users\\Administrator\\WorkSpace\\Test\\post021-candidate2-targeted-20261105\\sandbox\\runtime\\opencodex",
+    "defaultPrefix": "\\\\?\\D:\\Users\\Administrator\\WorkSpace\\Test\\post021-candidate2-targeted-20261105\\sandbox\\runtime\\opencodex",
+    "explicitPath": null,
+    "history": [
+      {
+        "action": "install",
+        "result": "succeeded",
+        "package": "@bitkyc08/opencodex",
+        "version": "2.97.0-post021.ownerquery.2",
+        "target": "\\\\?\\D:\\Users\\Administrator\\WorkSpace\\Test\\post021-candidate2-targeted-20261105\\sandbox\\runtime\\opencodex",
+        "at": "2026-11-06T00:17:56Z"
+      },
+      {
+        "action": "install",
+        "result": "failed",
+        "package": "@bitkyc08/opencodex",
+        "version": "latest",
+        "target": "\\\\?\\D:\\Users\\Administrator\\WorkSpace\\Test\\post021-candidate2-targeted-20261105\\sandbox\\runtime\\opencodex",
+        "at": "2026-11-06T00:17:59Z",
+        "reason": "离线包校验未通过：not_gzip"
+      }
+    ]
+  },
+  "allPackageFilesUnchanged": true,
+  "entryUnchanged": true
+}

@@ -1,0 +1,62 @@
+{
+  "runRoot": "D:\\Users\\Administrator\\WorkSpace\\Test\\post021-candidate2-targeted-20261105",
+  "expectedOwner": "EZIO-MINI\\Administrator",
+  "artifactManifest": "D:\\Users\\Administrator\\WorkSpace\\Test\\post021-candidate2-targeted-20261105\\artifact-manifest.json",
+  "artifactArchive": "D:\\Users\\Administrator\\WorkSpace\\Test\\post021-candidate2-targeted-20261105\\opencodex-2.97.0-post021.ownerquery.2.tgz",
+  "invalidArchive": "D:\\Users\\Administrator\\WorkSpace\\Test\\post021-candidate2-targeted-20261105\\opencodex-2.97.0-post021.intentionally-invalid.tgz",
+  "bunExe": "D:\\Users\\Administrator\\WorkSpace\\Test\\post021-candidate2-targeted-20261105\\tools\\bun.exe",
+  "nodeExe": "D:\\Users\\Administrator\\WorkSpace\\Test\\post021-candidate2-targeted-20261105\\sandbox\\home\\.local\\bin\\node.exe",
+  "codexExe": "C:/Program Files/WindowsApps/OpenAI.Codex_26.1029.7803.0_x64__2p2nqsd0c76g0/app/resources/codex.exe",
+  "cdpPort": 9463,
+  "servicePort": 60480,
+  "fixturePort": 60481,
+  "fromProvider": "Post021AdminRenamed",
+  "toProvider": "Post021AdminFresh2",
+  "currentFormal": {
+    "pid": 51156,
+    "createdAtUtcTicks": "639294865815136420"
+  },
+  "previousService": {
+    "pid": 69172,
+    "path": "D:\\Users\\Administrator\\WorkSpace\\Test\\post021-formal-20261105-1518\\tools\\bun.exe",
+    "createdAtUtcTicks": "639294832847431360",
+    "sessionId": 1,
+    "sha256": "cb1d8e6564e655e49d30cead359750a1cbbd12f42651caa4b62244d7bd93c244",
+    "commandMarker": "formal-msix-service.ts"
+  },
+  "protectedConfigPaths": [
+    "C:/Users/15119/.codex/config.toml",
+    "D:/Software/Develop/OpenCodeX Desktop/data/opencodex-home/config.json"
+  ],
+  "protectedProxy": {
+    "pid": 66908,
+    "createdAtUtcTicks": "639294111174266020",
+    "path": "D:/Software/Develop/OpenCodeX Desktop/data/runtime/opencodex/node_modules/bun/bin/bun.exe"
+  },
+  "codexExeSha256": "925c7d0665ffa49b0dcf748e034a805a04da984164ac92301432073b47789b99",
+  "managerExe": "D:\\Users\\Administrator\\WorkSpace\\Test\\post021-candidate2-targeted-20261105\\opencodex-desktop.exe",
+  "managerMetadata": "D:\\Users\\Administrator\\WorkSpace\\Test\\post021-candidate2-targeted-20261105\\manager-candidate.json",
+  "managerAppsTree": "ca89905344d0d29e761bcb8ffa24d22769c9cb4c",
+  "evidenceDirectory": "evidence-attempt2",
+  "resumeAdmission": {
+    "priorResultSha256": "9b9bb271817a8ab3cb008936819f3d2ffcb09962276186874c9a07aa8a6acac0",
+    "reason": "Only pre-mutation EPERM evidence admitted; original attempt preserved"
+  },
+  "protectedConfigBaseline": [
+    {
+      "path": "C:/Users/15119/.codex/config.toml",
+      "bytes": 3340,
+      "sha256": "46355008abfeb9b9390bd3733504f72d2e1c56c4da0600879455b167389aeed4"
+    },
+    {
+      "path": "D:/Software/Develop/OpenCodeX Desktop/data/opencodex-home/config.json",
+      "bytes": 69452,
+      "sha256": "a485cf85292e680e43b41b0d674efe7cd5cb22109298dd49a25ed4cd170b58c8"
+    }
+  ],
+  "dailyGuard": {
+    "root": "D:\\Users\\Administrator\\WorkSpace\\Test\\post021-candidate2-targeted-20261105\\daily-guard-attempt2",
+    "runId": "e66f1c05-3c80-496c-8dcd-03df4de81c78",
+    "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA71TMuf8uMAULxE9GgXh01YOS2uOkh9PzK4BX19PGpvg=\n-----END PUBLIC KEY-----\n"
+  }
+}
