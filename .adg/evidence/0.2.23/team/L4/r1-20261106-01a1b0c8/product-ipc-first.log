@@ -1,0 +1,21 @@
+
+running 4 tests
+
+thread 'modules::ipc::endpoint::platform::tests::authenticated_request_and_reopen_preserve_wire_contract' (49688) panicked at src\modules\ipc\endpoint.rs:421:58:
+called `Result::unwrap()` on an `Err` value: FileSystem { operation: "rebind Windows IPC named pipe", detail: "所有的管道范例都在使用中。 (os error 231)" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'modules::ipc::endpoint::platform::tests::authenticated_request_and_reopen_preserve_wire_contract' (49688) panicked at src\modules\ipc\endpoint.rs:433:35:
+connect isolated pipe: 系统找不到指定的文件。 (os error 2)
+test modules::ipc::endpoint::platform::tests::authenticated_request_and_reopen_preserve_wire_contract ... FAILED
+test modules::ipc::endpoint::platform::tests::isolated_pipes_reject_duplicate_owners_and_keep_real_token_identity ... ok
+test modules::ipc::endpoint::windows_identity_tests::daily_identity_is_sid_scoped_and_independent_of_roots ... ok
+test modules::ipc::endpoint::windows_identity_tests::sandbox_pipe_is_root_scoped_and_invalid_root_never_selects_daily_pipe ... ok
+
+failures:
+
+failures:
+    modules::ipc::endpoint::platform::tests::authenticated_request_and_reopen_preserve_wire_contract
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 1096 filtered out; finished in 0.01s
+

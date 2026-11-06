@@ -1,0 +1,96 @@
+{
+  "date": "2026-11-06",
+  "timezone": "Asia/Shanghai",
+  "role": "L4",
+  "stage": "R1 first-batch pending L0 integration and final native/candidate acceptance",
+  "authorizationDocumentCommit": "7bba1822eaec26b1b07891806baf6fb398cf2a9f",
+  "authorizationPath": "docs/03-开发实施/WINDOWS-0.2.23.md",
+  "codeBaseline": "9e69f4598512aac0c4e068b9f9f9c08ede906a28",
+  "codeBranch": "codex/0.2.23-windows",
+  "codeCommit": "42d2a4a1770a5be1050dec3de641efab77a65917",
+  "commits": [
+    "911310f1f1d93f062ddd1b14767db93a6934d2aa",
+    "0c2d1a1d4f0c6c90243d21ccc8db3a35dd0cde4c",
+    "42d2a4a1770a5be1050dec3de641efab77a65917"
+  ],
+  "codeFiles": [
+    "apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_user_scope.rs",
+    "apps/desktop/tauri/src/modules/ipc/endpoint.rs",
+    "apps/desktop/tauri/windows/installer-hooks.nsh",
+    "test/smoke/windows023-user-scope-probe.rs",
+    "test/smoke/windows023-user-scope.ps1"
+  ],
+  "nativeToolchain": "x86_64-pc-windows-gnu",
+  "msvcBuildVerified": false,
+  "checks": [
+    {
+      "log": "product-startup-with-manifest.log",
+      "passed": 10,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "log": "modules-data_root-native-final.log",
+      "passed": 36,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "log": "modules-ipc-native-final.log",
+      "passed": 44,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "log": "modules-instance-native-final.log",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "log": "infrastructure-atomic_write-native-final.log",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    }
+  ],
+  "uniqueNativeChecksPassed": 97,
+  "helperClippy": "passed -D warnings; external driver lib scope only",
+  "probeAccountA": "passed; clean committed probe/helper source; native helper only",
+  "probeSha256": "801f791c1cad9265578e969627aee18aa82a8df0fbc6df373ed82dbdd85ba8af",
+  "helperSha256": "dde5be9fb1775b17b346fc4d1f68895e18b4939d384d2d429638ce818551a2fd",
+  "fullProductVerified": false,
+  "twoSidGuiParallelVerified": false,
+  "sameSidCrossSessionElevationVerified": false,
+  "dpapiCrossSidVerified": false,
+  "proxyPortProcessOwnershipVerified": false,
+  "realInstallerRuntimeBundleVerified": false,
+  "l0HooksPending": [
+    "platform.rs real Profile and private ACL integration",
+    "ocxd.rs verify_windows_server before sending request",
+    "new owner-preserving creation/elevation policy and final source SHA",
+    "NSIS/WiX defaults, offline runtime/Node and installer candidates"
+  ],
+  "externalDependencies": [
+    "user to provide second account controlled execution channel",
+    "L0 final runtime/candidate hashes and MSVC/SDK environment"
+  ],
+  "cleanup": {
+    "ownFixtureRemoved": true,
+    "testProcessesCompleted": true,
+    "dailyProcess41396Untouched": true,
+    "buildGeneratedSchemaRestoredOrRemovedFromCheckout": true,
+    "buildArtifactsRetainedOutsideCodeCheckout": true
+  },
+  "prohibitedActionsExecuted": {
+    "realSync": false,
+    "inference": false,
+    "dailyConfigChange": false,
+    "legacyCleanup": false,
+    "publish": false
+  },
+  "sourceWorkingTreeClean": true,
+  "docsTargetBranch": "docs/0.2.23-windows",
+  "docsArchivePrefix": ".adg/evidence/0.2.23/team/L4/r1-20261106-01a1b0c8"
+}

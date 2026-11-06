@@ -1,0 +1,10 @@
+
+running 5 tests
+test modules::ipc::endpoint::platform::tests::anonymous_peer_is_rejected_before_business_and_next_peer_still_works ... ok
+test modules::ipc::endpoint::platform::tests::authenticated_request_and_reopen_preserve_wire_contract ... ok
+test modules::ipc::endpoint::platform::tests::isolated_pipes_reject_duplicate_owners_and_keep_real_token_identity ... ok
+test modules::ipc::endpoint::windows_identity_tests::daily_identity_is_sid_scoped_and_independent_of_roots ... ok
+test modules::ipc::endpoint::windows_identity_tests::sandbox_pipe_is_root_scoped_and_invalid_root_never_selects_daily_pipe ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 1096 filtered out; finished in 0.01s
+
