@@ -73,6 +73,11 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
   function channelDirty(id:string){return pendingRows.value.some(row=>row.channel===id)||!!pendingCredentialKinds.value[id]||!!file.value?.draft?.credentialEdits?.[id]||channelIntents.value.some(i=>i.channelId===id)||modelEdits.value.some(i=>i.channelId===id)||JSON.stringify(file.value?.draft?file.value.draft.policy.channels.find(c=>c.id===id):file.value?.savedPolicy.channels.find(c=>c.id===id))!==JSON.stringify(file.value?.savedPolicy.channels.find(c=>c.id===id))}
   const canSaveFile=computed(()=>!!file.value?.draft&&!fileBusy.value&&!fileNeedsReconcile.value)
   let clean='',readSequence=0,previewSequence=0,baseLibraryDigest=''
+  const retainedBuffers=new Map<string,{draft:RevisionBufferV2;clean:string;library:string}>()
+  const bufferKey=(id:string,revision:string|null)=>id+'|'+(revision??'new')
+  function retainBuffer(){if(draft.value)retainedBuffers.set(bufferKey(draft.value.templateId,draft.value.baseRevision),{draft:clone(draft.value),clean,library:baseLibraryDigest})}
+  function protectsRevision(templateId:string,revisionId:string){return draft.value?.templateId===templateId&&draft.value.baseRevision===revisionId||[...retainedBuffers.values()].some(value=>value.draft.templateId===templateId&&value.draft.baseRevision===revisionId)}
+  function discardNew(){if(saving.value||!draft.value||draft.value.baseRevision)return;retainedBuffers.delete(bufferKey(draft.value.templateId,null));draft.value=null;invalidate()}
   const dirty=computed(()=>!!draft.value&&(draft.value.baseRevision===null||JSON.stringify(draft.value)!==clean))
   const canLoad=computed(()=>!!services.value.loadLibrary)
   const canPreview=computed(()=>!!services.value.previewConditions)
@@ -173,6 +178,10 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
     const revision=template?.revisions.find(r=>r.id===(revisionId??template.defaultRevision))
     if(template&&!revision){error.value='指定的保存版本不可用，请核对精确依赖。';return}
     if(revision&&revision.contentVersion!==2){error.value='该内容格式暂不支持，原件保持。';return}
+    if(template&&draft.value?.templateId===template.id&&draft.value.baseRevision===revision?.id)return
+    retainBuffer()
+    const retained=template?retainedBuffers.get(bufferKey(template.id,revision?.id??null)):undefined
+    if(retained){draft.value=clone(retained.draft);clean=retained.clean;baseLibraryDigest=retained.library;invalidate();error.value='';return}
     draft.value={templateId:template?.id??crypto.randomUUID(),baseRevision:revision?.id??null,label:template?.label??'',content:revision?clone(revision.content):emptyContentV2(),makeDefault:false}
     clean=JSON.stringify(draft.value);baseLibraryDigest=snapshot.value?.libraryDigest??'';invalidate();error.value=''
   }
@@ -180,7 +189,7 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
   function setLabel(value:string){if(!draft.value||saving.value)return;draft.value.label=value;invalidate()}
   function setDefault(value:boolean){if(!draft.value||saving.value)return;draft.value.makeDefault=value;invalidate()}
   function reset(){if(saving.value||!draft.value)return;draft.value=JSON.parse(clean) as RevisionBufferV2;invalidate();error.value=''}
-  function copyTemplate(){if(!draft.value||saving.value)return;if(draft.value.baseRevision===null){error.value='请先保存或取消已有新建模版，再复制。';return}draft.value={...clone(draft.value),templateId:crypto.randomUUID(),baseRevision:null,label:draft.value.label+' 副本',makeDefault:false};clean=JSON.stringify(draft.value);invalidate()}
+  function copyTemplate(){if(!draft.value||saving.value)return;if(draft.value.baseRevision===null){error.value='请先保存或取消已有新建模版，再复制。';return}retainBuffer();draft.value={...clone(draft.value),templateId:crypto.randomUUID(),baseRevision:null,label:draft.value.label+' 副本',makeDefault:false};clean=JSON.stringify(draft.value);invalidate()}
   function close(){if(saving.value)return;active.value=false;readSequence++;previewSequence++;loading.value=false;previewBusy.value=false}
   async function load(){
     if(loading.value)return
@@ -263,7 +272,7 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
   async function changeLibrary(request:LibraryChangeV2){
     if(saving.value)throw new Error('模版保存正在处理，请稍后重试。')
     if(snapshot.value?.libraryDigest!==request.expectedLibrary)throw {code:'model_save_stale',issues:[]}
-    if(request.intent.kind==='delete_revisions'&&draft.value?.templateId===request.intent.templateId&&draft.value.baseRevision&&request.intent.revisionIds.includes(draft.value.baseRevision))throw {code:'model_revision_in_use',issues:[]}
+    if(request.intent.kind==='delete_revisions'&&request.intent.revisionIds.some(id=>protectsRevision(request.intent.kind==='delete_revisions'?request.intent.templateId:'',id)))throw {code:'model_revision_in_use',issues:[]}
     saving.value=true
     try{
       const result=await modelV2Api.changeLibrary(clone(request))
@@ -289,5 +298,5 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
     stagedConnectionIntents.value=[...stagedConnectionIntents.value.filter(item=>item.channelId!==result.channelId),{...immutableIntent,channelId:result.channelId}]
     return result
   }
-  return {modelRows,pendingRows,rowsFor,projectFile,adoptProjection,fileContext,effectiveRows,active,loading,saving,previewBusy,snapshot,draft,error,previewError,issues,preview,previewModelId,previewChannelId,editGeneration,dirty,canLoad,canPreview,canSave,canDiscover,canStageConnection,stagedConnectionIntents,configureServices,start,setContent,setLabel,setDefault,reset,close,load,open,setPreviewTarget,requestPreview,save,discover,stageConnection,file,fileBusy,fileError,fileNeedsReconcile,channels,channelIntents,modelEdits,readResults,channelEditorId,channelSearch,fileDirty,channelDirty,canSaveFile,loadChannels,readExisting,queueChannel,queueModel,explicitRules,setSelection,saveChannels,channelCapabilities,configureChannelCapabilities,copyChannel,viewCredential,stageCredential,pendingCredentialKinds,keyBuffer,setKeyBuffer,credentialInputRevision,view,copyTemplate,changeLibrary,templateAction,executionPreference,executionPreferenceRevision,loadAgentSettings,bindAgent,agentSessions,agentSession,runAgent,stopAgent,restoreAgent,acceptAgent}
+  return {protectsRevision,discardNew,modelRows,pendingRows,rowsFor,projectFile,adoptProjection,fileContext,effectiveRows,active,loading,saving,previewBusy,snapshot,draft,error,previewError,issues,preview,previewModelId,previewChannelId,editGeneration,dirty,canLoad,canPreview,canSave,canDiscover,canStageConnection,stagedConnectionIntents,configureServices,start,setContent,setLabel,setDefault,reset,close,load,open,setPreviewTarget,requestPreview,save,discover,stageConnection,file,fileBusy,fileError,fileNeedsReconcile,channels,channelIntents,modelEdits,readResults,channelEditorId,channelSearch,fileDirty,channelDirty,canSaveFile,loadChannels,readExisting,queueChannel,queueModel,explicitRules,setSelection,saveChannels,channelCapabilities,configureChannelCapabilities,copyChannel,viewCredential,stageCredential,pendingCredentialKinds,keyBuffer,setKeyBuffer,credentialInputRevision,view,copyTemplate,changeLibrary,templateAction,executionPreference,executionPreferenceRevision,loadAgentSettings,bindAgent,agentSessions,agentSession,runAgent,stopAgent,restoreAgent,acceptAgent}
 })
