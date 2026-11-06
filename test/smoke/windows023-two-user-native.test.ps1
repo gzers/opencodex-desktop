@@ -60,6 +60,12 @@ Assert-Test ($one -cne $two -and $one -match '^OpenCodeXDesktop-[0-9a-f]{24}$') 
 Assert-Throws {Get-TwoUserPipeName 'same-rdp-session'} 'reject-non-SID-naming-input'
 Assert-Test (Test-TwoUserSamePath 'C:\Users\test' '\\?\C:\Users\test') 'backend-extended-path-comparison-only'
 Assert-Test (!(Test-TwoUserSamePath 'C:\Users\test' 'C:\Users\peer')) 'path-comparison-does-not-confuse-users'
+foreach($valid in @('D:\a\repo','C:/Program Files/node/node.exe','D:\a/repo\Cargo.toml','C:\Users\用户\fixture')){
+ Assert-Test (Test-TwoUserLocalSpelling $valid) ('local-path-spelling-accepted-'+$valid)
+}
+foreach($invalid in @('','C:relative','relative','C:\','C:/','\\server\share','\\?\C:\fixture','\\.\pipe\fixture','C:\fixture\..\peer','C:/fixture/./peer','C:\fixture\file:stream',"C:\fixture`npeer")){
+ Assert-Test (!(Test-TwoUserLocalSpelling $invalid)) ('local-path-spelling-refused-'+$invalid)
+}
 Assert-Test ($helper.Contains('Get-NetTCPConnection -State Listen -LocalPort $app.port') -and $helper.Contains('$ledger.ContainsKey([int]$_.OwningProcess)')) 'CDP-listener-is-owned-not-just-a-port'
 # Exercise actual guards on any host, never the Windows account code.
 $oldActions=[Environment]::GetEnvironmentVariable('GITHUB_ACTIONS','Process')

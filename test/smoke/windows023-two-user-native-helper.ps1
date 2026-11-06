@@ -21,8 +21,18 @@ function Get-TwoUserReuseParts([string]$OrdinaryScript) {
 function Assert-TwoUserChildGuard {
  if(!$IsWindows -or $env:GITHUB_ACTIONS -cne 'true' -or [string]::IsNullOrWhiteSpace($env:RUNNER_TEMP)){throw 'Disposable Windows Actions runner required'}
 }
+function Test-TwoUserLocalSpelling([string]$Path) {
+ if([string]::IsNullOrWhiteSpace($Path)){return $false}
+ # Normalize separators for the lexical test only. In a .NET regex [\/]
+ # escapes slash and does not accept a Windows backslash. Never use OS
+ # GetFullPath to admit relative/device/traversal input before this check.
+ $spelling=$Path.Replace([char]92,[char]47)
+ if($spelling -cnotmatch '^[A-Za-z]:/' -or $spelling.Substring(2).Contains(':') -or $spelling -match '[\x00-\x1f\x7f]'){return $false}
+ foreach($part in $spelling.Substring(3).Split('/')){if($part -in @('.','..')){return $false}}
+ return $spelling.TrimEnd('/').Length -gt 2
+}
 function Assert-TwoUserLocalPath([string]$Path) {
- if($Path -notmatch '^[a-zA-Z]:[\/]' -or $Path -match '(^|[\/])\.\.?([\/]|$)' -or $Path.Substring(2).Contains(':')){throw 'Local absolute non-device path required'}
+ if(!(Test-TwoUserLocalSpelling $Path)){throw 'Local absolute non-device path required'}
  $resolved=[IO.Path]::GetFullPath($Path).TrimEnd('\')
  if($resolved.Length -le 3){throw 'Drive root is not a fixture boundary'}
  $resolved
