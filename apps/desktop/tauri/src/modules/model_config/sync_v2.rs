@@ -58,6 +58,69 @@ impl<'a> SyncContext<'a> {
             network_slots: Arc::new(Semaphore::new(4)),
         })
     }
+    /// One wall-clock budget for the complete command. In particular, multiple
+    /// observe/readback stages cannot each reset the ninety-second contract.
+    async fn bounded<T>(
+        &self,
+        id: Option<&str>,
+        future: impl std::future::Future<Output = SyncResult<T>>,
+    ) -> SyncResult<T> {
+        self.budgets.validate()?;
+        match tokio::time::timeout(Duration::from_millis(self.budgets.observation_ms), future).await
+        {
+            Ok(value) => value.map_err(|mut error| {
+                if let Some(id) = id {
+                    error = error.for_operation(id);
+                } else {
+                    error.recovery_actions.retain(|a| {
+                        !matches!(
+                            a.kind,
+                            RecoveryKind::VerifyOriginalUpload | RecoveryKind::ResumeOriginalUpload
+                        )
+                    });
+                }
+                error
+            }),
+            Err(_) => {
+                let mut error = failure(ErrorCode::SyncNetwork, Step::Observe);
+                error.cause = Some(Cause::Timeout);
+                if let Some(id) = id {
+                    require_uuid(id)?;
+                    if let Some(_guard) = self.store.try_lock(&format!("op-{id}"))? {
+                        if let Ok(mut j) = self.store.journal(id) {
+                            if j.fact.last_write_step != WriteStep::None {
+                                error = failure(ErrorCode::SyncOperationUnknown, Step::Verify);
+                                error.cause = Some(Cause::Timeout);
+                            }
+                            return self
+                                .save_error(&mut j, error)
+                                .map(|_| unreachable!("save_error always returns Err"));
+                        }
+                        if let Ok(mut record) = self.store.receive(id) {
+                            if let Some(fact) = record.fact.as_mut() {
+                                fact.failure = Some(error.clone());
+                                fact.recovery_actions = error.recovery_actions.clone();
+                            }
+                            if let Some(receipt) = record.receipt.as_mut() {
+                                receipt.failure = Some(error.clone());
+                                receipt.recovery_actions = error.recovery_actions.clone();
+                            }
+                            self.store.save_receive(id, &record)?;
+                        }
+                    }
+                }
+                if id.is_none() {
+                    error.recovery_actions.retain(|a| {
+                        !matches!(
+                            a.kind,
+                            RecoveryKind::VerifyOriginalUpload | RecoveryKind::ResumeOriginalUpload
+                        )
+                    });
+                }
+                Err(error)
+            }
+        }
+    }
     fn net(&self) -> Network<'_> {
         Network {
             transport: self.transport,
@@ -83,7 +146,8 @@ impl<'a> SyncContext<'a> {
     }
     pub async fn observe_remote(&self, r: ObserveRequest) -> SyncResult<RemoteObservation> {
         self.connection_id(&r.connection_id)?;
-        Ok(self.observe().await?.observation)
+        self.bounded(None, async { Ok(self.observe().await?.observation) })
+            .await
     }
     fn source(&self, expected: &SourceGuard) -> SyncResult<()> {
         require_guard(expected)?;
@@ -150,13 +214,22 @@ impl<'a> SyncContext<'a> {
         Ok(b)
     }
     pub async fn prepare_upload(&self, r: PrepareUploadRequest) -> SyncResult<UploadPlan> {
-        self.prepare(r, None).await
+        self.bounded(None, self.prepare(r, None)).await
     }
     pub async fn prepare_resolution(&self, r: PrepareResolutionRequest) -> SyncResult<UploadPlan> {
+        self.bounded(None, self.prepare_resolution_inner(r)).await
+    }
+    async fn prepare_resolution_inner(
+        &self,
+        r: PrepareResolutionRequest,
+    ) -> SyncResult<UploadPlan> {
         self.connection_id(&r.connection_id)?;
         require_digest(&r.expected_view_digest)?;
         let graph = self.observe().await?;
         graph.ordinary(true)?;
+        if r.resolution.scope_digest != r.source_guard.scope_digest {
+            return Err(failure(ErrorCode::SyncScopeChanged, Step::SourceGuard));
+        }
         if graph.observation.state != RemoteState::Conflict
             || graph.observation.generation.as_ref() != Some(&r.generation)
             || graph.observation.heads != r.heads
@@ -195,11 +268,17 @@ impl<'a> SyncContext<'a> {
             return Err(failure(ErrorCode::SyncRemoteConflict, Step::SourceGuard));
         }
         let mut inputs = Vec::new();
+        let mut total_bytes = 0usize;
         if let Some(g) = &graph.observation.generation {
             for h in &graph.observation.heads {
+                let bytes = self.fetch(g, h, &graph).await?;
+                total_bytes = total_bytes.saturating_add(bytes.len());
+                if total_bytes > self.budgets.payload_bytes {
+                    return Err(failure(ErrorCode::SyncLimit, Step::Decode));
+                }
                 inputs.push(PayloadInput {
                     head: h.clone(),
-                    bytes: self.fetch(g, h, &graph).await?,
+                    bytes,
                 });
             }
         }
@@ -212,9 +291,7 @@ impl<'a> SyncContext<'a> {
         let handle = new_id();
         let prepared_at = now();
         // Derive expiry from the frozen timestamp, rather than two clock reads.
-        let expires_at = (chrono::DateTime::parse_from_rfc3339(&prepared_at).unwrap()
-            + chrono::Duration::milliseconds(self.budgets.preview_ms))
-        .to_rfc3339_opts(chrono::SecondsFormat::Millis, true);
+        let expires_at = self.expiry(&prepared_at)?;
         let mut plan = UploadPlan {
             dto_version: 1,
             operation_id: id.clone(),
@@ -327,6 +404,10 @@ impl<'a> SyncContext<'a> {
         Err(e)
     }
     pub async fn publish_upload(&self, r: ConfirmUploadRequest) -> SyncResult<OperationFact> {
+        let id = r.operation_id.clone();
+        self.bounded(Some(&id), self.publish_upload_inner(r)).await
+    }
+    async fn publish_upload_inner(&self, r: ConfirmUploadRequest) -> SyncResult<OperationFact> {
         require_uuid(&r.operation_id)?;
         let _binding = self
             .store
@@ -470,7 +551,7 @@ impl<'a> SyncContext<'a> {
                 return Err(failure(ErrorCode::SyncGenerationChanged, Step::Initialize));
             }
             j.fact.phase = Phase::InitializationMayBeWritten;
-            j.fact.last_write_step = WriteStep::Generation;
+            j.fact.last_write_step = std::cmp::max(j.fact.last_write_step, WriteStep::Generation);
             self.store.save_journal(j)?;
             let gb = j.generation_bytes_utf8.as_ref().unwrap().as_bytes();
             self.net()
@@ -513,7 +594,7 @@ impl<'a> SyncContext<'a> {
             Err(e) if e.code == ErrorCode::SyncListingIncomplete => {
                 self.guard(j, true).await?;
                 j.fact.phase = Phase::PayloadMayBeWritten;
-                j.fact.last_write_step = WriteStep::Payload;
+                j.fact.last_write_step = std::cmp::max(j.fact.last_write_step, WriteStep::Payload);
                 j.fact.storage_status = StorageStatus::Unknown;
                 self.store.save_journal(j)?;
                 self.net()
@@ -557,7 +638,7 @@ impl<'a> SyncContext<'a> {
             Err(e) if e.code == ErrorCode::SyncListingIncomplete => {
                 self.guard(j, true).await?;
                 j.fact.phase = Phase::CommitMayBeWritten;
-                j.fact.last_write_step = WriteStep::Commit;
+                j.fact.last_write_step = std::cmp::max(j.fact.last_write_step, WriteStep::Commit);
                 j.fact.storage_status = StorageStatus::Unknown;
                 self.store.save_journal(j)?;
                 self.net()
@@ -690,12 +771,25 @@ impl<'a> SyncContext<'a> {
         }
     }
     pub async fn verify_original_upload(&self, r: OperationRequest) -> SyncResult<OperationFact> {
+        let id = r.operation_id.clone();
+        self.bounded(Some(&id), self.verify_original_upload_inner(r))
+            .await
+    }
+    async fn verify_original_upload_inner(&self, r: OperationRequest) -> SyncResult<OperationFact> {
         require_uuid(&r.operation_id)?;
         let _op = self.store.lock(&format!("op-{}", r.operation_id)).await?;
         let mut j = self.store.journal(&r.operation_id)?;
         self.verify_locked(&mut j).await
     }
     pub async fn resume_original_upload(
+        &self,
+        r: ResumeUploadRequest,
+    ) -> SyncResult<OperationFact> {
+        let id = r.operation_id.clone();
+        self.bounded(Some(&id), self.resume_original_upload_inner(r))
+            .await
+    }
+    async fn resume_original_upload_inner(
         &self,
         r: ResumeUploadRequest,
     ) -> SyncResult<OperationFact> {
@@ -740,6 +834,11 @@ impl<'a> SyncContext<'a> {
                 failure(ErrorCode::SyncOperationUnknown, Step::Verify)
                     .for_operation(&r.operation_id),
             );
+            f.recovery_actions = f
+                .failure
+                .as_ref()
+                .map(|e| e.recovery_actions.clone())
+                .unwrap_or_default();
             return Ok(f);
         };
         let mut j = self.store.journal(&r.operation_id)?;
@@ -782,6 +881,9 @@ impl<'a> SyncContext<'a> {
         }
     }
     pub async fn prepare_download(&self, r: PrepareDownloadRequest) -> SyncResult<DownloadPlan> {
+        self.bounded(None, self.prepare_download_inner(r)).await
+    }
+    async fn prepare_download_inner(&self, r: PrepareDownloadRequest) -> SyncResult<DownloadPlan> {
         self.connection_id(&r.connection_id)?;
         require_digest(&r.scope_digest)?;
         let graph = self.observe().await?;
@@ -876,6 +978,10 @@ impl<'a> SyncContext<'a> {
         Ok(())
     }
     pub async fn apply_download(&self, r: ConfirmDownloadRequest) -> SyncResult<OperationFact> {
+        let id = r.operation_id.clone();
+        self.bounded(Some(&id), self.apply_download_inner(r)).await
+    }
+    async fn apply_download_inner(&self, r: ConfirmDownloadRequest) -> SyncResult<OperationFact> {
         require_uuid(&r.operation_id)?;
         let _lock = self.store.lock(&format!("op-{}", r.operation_id)).await?;
         let mut record = self.store.receive(&r.operation_id)?;
@@ -956,6 +1062,9 @@ impl<'a> SyncContext<'a> {
         Ok(record.fact.unwrap())
     }
     pub async fn prepare_recovery(&self, r: PrepareRecoveryRequest) -> SyncResult<RecoveryPlan> {
+        self.bounded(None, self.prepare_recovery_inner(r)).await
+    }
+    async fn prepare_recovery_inner(&self, r: PrepareRecoveryRequest) -> SyncResult<RecoveryPlan> {
         self.connection_id(&r.connection_id)?;
         self.binding(&r.source_binding_id)?;
         require_digest(&r.scope_digest)?;
@@ -1027,6 +1136,10 @@ impl<'a> SyncContext<'a> {
         Ok(plan)
     }
     pub async fn apply_recovery(&self, r: ConfirmRecoveryRequest) -> SyncResult<RecoveryReceipt> {
+        let id = r.recovery_plan_id.clone();
+        self.bounded(Some(&id), self.apply_recovery_inner(r)).await
+    }
+    async fn apply_recovery_inner(&self, r: ConfirmRecoveryRequest) -> SyncResult<RecoveryReceipt> {
         require_uuid(&r.recovery_plan_id)?;
         let _lock = self
             .store

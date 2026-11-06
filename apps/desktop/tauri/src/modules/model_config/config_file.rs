@@ -23,6 +23,8 @@ const MAX_CONFIG: u64 = 16 * 1024 * 1024;
 const METADATA: &str = "manager-state/model-channel-layout.json";
 #[path = "channel_rename.rs"]
 mod channel_rename;
+#[path = "config_file_v2.rs"]
+pub mod v2;
 #[path = "rename_effects.rs"]
 pub(crate) mod rename_effects;
 pub(super) fn metadata_digest(root: &Path) -> ModelResult<String> {

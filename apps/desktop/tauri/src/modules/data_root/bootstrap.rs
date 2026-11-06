@@ -1,8 +1,5 @@
-//! Resolve the binding before any stateful service is created. No data is moved.
+//! Resolve v2 roots before creating stateful services; no legacy discovery.
 use super::*;
-use std::collections::HashSet;
-
-pub const MAX_BINDING_DEPTH: usize = 8;
 
 pub(crate) struct StartupResolution {
     pub anchor: PathBuf,
@@ -11,75 +8,56 @@ pub(crate) struct StartupResolution {
     pub locks: Vec<crate::modules::instance::AppInstanceLock>,
 }
 
-/// Sandboxes resolve without consulting any per-user Windows startup choice.
 pub(crate) fn resolve_default_startup(
     platform_root: &Path,
     executable: &Path,
 ) -> Result<StartupResolution, AppError> {
-    let bootstrap_root = if crate::modules::test_sandbox::enabled() {
-        platform_root.to_path_buf()
+    let home = crate::infrastructure::platform::home_dir().ok_or(AppError::NotConfigured)?;
+    let sandbox = if crate::modules::test_sandbox::enabled() {
+        Some(
+            crate::modules::test_sandbox::resolve_data_root(platform_root)
+                .map_err(|e| failure(&e))?,
+        )
     } else {
-        default_anchor(platform_root, executable, cfg!(windows))?
+        None
     };
-    let anchor =
-        crate::modules::test_sandbox::resolve_data_root(&bootstrap_root).map_err(|detail| {
-            AppError::FileSystem {
-                operation: "resolve sandbox data root".into(),
-                detail,
-            }
-        })?;
-    let sandbox_boundary =
-        crate::modules::test_sandbox::resolve_boundary(&anchor).map_err(|detail| {
-            AppError::FileSystem {
-                operation: "resolve sandbox boundary".into(),
-                detail,
-            }
-        })?;
-    let (runtime_config, locks) =
-        resolve_locked_with_boundary(&anchor, sandbox_boundary.as_deref())?;
-    Ok(StartupResolution {
-        anchor,
-        sandbox_boundary,
-        runtime_config,
-        locks,
-    })
+    let platform = if cfg!(windows) {
+        layout::Platform::Windows
+    } else if cfg!(target_os = "macos") {
+        layout::Platform::Macos
+    } else {
+        layout::Platform::Unix
+    };
+    let install = match &sandbox {
+        Some(root) => root.join("program"),
+        None => layout::Layout::installation_root(executable, platform)?,
+    };
+    startup_v2::resolve_with_install(&home, sandbox.as_deref(), Some(&install))
 }
 
-/// Existing Windows data wins, including malformed data: never silently abandon it.
+/// Old Windows callers must use the current-user v2 resolver, never scan installs.
 pub fn default_anchor(
-    platform_root: &Path,
-    executable: &Path,
-    windows: bool,
+    _platform_root: &Path,
+    _executable: &Path,
+    _windows: bool,
 ) -> Result<PathBuf, AppError> {
-    if !windows
-        || platform_root
-            .try_exists()
-            .map_err(|e| failure(&e.to_string()))?
-    {
-        return Ok(platform_root.to_path_buf());
-    }
-    executable
-        .parent()
-        .filter(|parent| parent.is_absolute())
-        .map(|parent| parent.join("data"))
-        .ok_or_else(|| failure("installation directory is unavailable"))
+    Err(failure(
+        "legacy startup selection disabled; use current-user v2 location",
+    ))
 }
 
-pub fn resolve(anchor: &Path) -> Result<DataRootRuntimeConfig, AppError> {
-    resolve_with_boundary(anchor, None)
+/// Resolve one explicit D for internal copy/verification callers. No pointer chase.
+pub fn resolve(root: &Path) -> Result<DataRootRuntimeConfig, AppError> {
+    resolve_with_boundary(root, None)
 }
-
 pub fn resolve_with_boundary(
-    anchor: &Path,
+    root: &Path,
     boundary: Option<&Path>,
 ) -> Result<DataRootRuntimeConfig, AppError> {
-    resolve_locked_with_boundary(anchor, boundary).map(|(config, _locks)| config)
+    resolve_locked_with_boundary(root, boundary).map(|(config, _locks)| config)
 }
-
-/// Retain every binding lock for the process lifetime. Initialization and
-/// partition repair happen only after owning that root, including the anchor.
 pub fn resolve_locked_with_boundary(
-    anchor: &Path,
+    root: &Path,
     boundary: Option<&Path>,
 ) -> Result<
     (
@@ -88,95 +66,37 @@ pub fn resolve_locked_with_boundary(
     ),
     AppError,
 > {
-    let admission = migration::activation::admit_startup(anchor)?;
-    let mut locks = vec![crate::modules::instance::AppInstanceLock::acquire(anchor)?];
-    migration::activation::complete_startup(anchor, &locks[0], admission)?;
-    initialize(anchor)?;
-    let boundary = boundary
-        .map(Path::canonicalize)
-        .transpose()
-        .map_err(|e| failure(&e.to_string()))?;
-    let mut current = anchor.to_path_buf();
-    let mut seen = HashSet::new();
-    let mut external_home = None;
-    for _ in 0..MAX_BINDING_DEPTH {
-        let canonical = current
-            .canonicalize()
-            .map_err(|e| failure(&e.to_string()))?;
-        if !seen.insert(canonical.clone()) {
-            return Err(failure("data root binding cycle"));
-        }
-        let mut config = load_runtime_config(&current)?;
-        if external_home.is_none() && config.opencodex_home_mode == OpenCodexHomeMode::External {
-            external_home = config.opencodex_home_path.clone();
-        }
-        if let (Some(root), Some(home)) = (&boundary, &external_home) {
-            // HOME can be a not-yet-created directory. Resolve the nearest existing
-            // ancestor so symlinks cannot conceal an escape from the sandbox.
-            let mut ancestor = home.as_path();
-            while !ancestor.try_exists().map_err(|e| failure(&e.to_string()))? {
-                ancestor = ancestor
-                    .parent()
-                    .ok_or_else(|| failure("invalid external HOME"))?;
-            }
-            if !ancestor
-                .canonicalize()
-                .map_err(|e| failure(&e.to_string()))?
-                .starts_with(root)
-                || home
-                    .components()
-                    .any(|c| matches!(c, std::path::Component::ParentDir))
-            {
-                return Err(failure("external HOME escapes the isolated root"));
-            }
-        }
-        let target = config
-            .active_data_root
-            .canonicalize()
-            .map_err(|e| failure(&e.to_string()))?;
+    let root = startup_v2::checked_path(root)?;
+    let boundary = boundary.map(startup_v2::checked_path).transpose()?;
+    let check = |path: &Path| -> Result<(), AppError> {
         if boundary
             .as_ref()
-            .is_some_and(|root| !target.starts_with(root))
-        {
-            return Err(failure("binding escapes the isolated root"));
-        }
-        if canonical == target {
-            // Supplement partitions only after validating all bindings.
-            initialize(&target)?;
-            config.active_data_root = target;
-            if let Some(home) = external_home {
-                config.opencodex_home_mode = OpenCodexHomeMode::External;
-                config.opencodex_home_path = Some(home);
-            }
-            return Ok((config, locks));
-        }
-        // A committed, still-marked migration can be admitted before locking;
-        // it cannot be initialized until full locked inventory verification.
-        let admission = migration::activation::admit_startup(&target)?;
-        if read_and_validate_metadata(&target.join(METADATA_RELATIVE_PATH))?
-            != StructureValidation::Valid
+            .is_some_and(|b| startup_v2::checked_path(path).map_or(true, |p| !p.starts_with(b)))
         {
             return Err(failure(
-                "referenced data root is corrupted or newer than supported",
+                "directory or external HOME escapes the isolated root",
             ));
         }
-        if seen.contains(&target) {
-            return Err(failure("data root binding cycle"));
-        }
-        locks.push(crate::modules::instance::AppInstanceLock::acquire(&target)?);
-        migration::activation::complete_startup(
-            &target,
-            locks.last().expect("target lock"),
-            admission,
-        )?;
-        current = target;
+        startup_v2::check_owner(path)
+    };
+    check(&root)?;
+    check_partitions(&root)?;
+    check(&root.join("manager-state"))?;
+    check(&root.join("manager-state/app.lock"))?;
+    if root.join(METADATA_RELATIVE_PATH).exists() {
+        check(&resolve_opencodex_home(&load_runtime_config(&root)?))?;
     }
-    Err(failure("data root binding exceeds depth limit"))
+    let admission = migration::activation::admit_startup(&root)?;
+    let locks = vec![crate::modules::instance::AppInstanceLock::acquire(&root)?];
+    migration::activation::complete_startup(&root, &locks[0], admission)?;
+    initialize(&root)?;
+    let config = load_runtime_config(&root)?;
+    check(&resolve_opencodex_home(&config))?;
+    Ok((config, locks))
 }
-
 fn failure(detail: &str) -> AppError {
     AppError::FileSystem {
-        operation: "resolve data root binding".into(),
+        operation: "resolve v2 data root".into(),
         detail: detail.into(),
     }
 }
@@ -184,12 +104,13 @@ fn failure(detail: &str) -> AppError {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::fs;
     #[test]
     fn losing_startup_does_not_repair_partitions_before_owning_root() {
-        let temp = tempfile::tempdir().unwrap();
-        let root = temp.path().join("data");
+        let t = tempfile::tempdir().unwrap();
+        let root = t.path().join("desktop");
         let (_config, locks) = resolve_locked_with_boundary(&root, None).unwrap();
-        std::fs::remove_dir(root.join("cache")).unwrap();
+        fs::remove_dir(root.join("cache")).unwrap();
         assert!(matches!(
             resolve_locked_with_boundary(&root, None),
             Err(AppError::InstanceLockConflict)
@@ -199,122 +120,28 @@ mod tests {
         let (_config, _locks) = resolve_locked_with_boundary(&root, None).unwrap();
         assert!(root.join("cache").is_dir());
     }
-
     #[test]
-    fn distinct_anchors_cannot_initialize_or_run_the_same_active_root() {
-        let temp = tempfile::tempdir().unwrap();
-        let a = temp.path().join("a");
-        let b = temp.path().join("b");
-        let shared = temp.path().join("shared");
-        for root in [&a, &b, &shared] {
-            initialize(root).unwrap();
-        }
-        switch_reference(&a, &shared, DataRootSwitchMode::ReferenceOnly).unwrap();
-        switch_reference(&b, &shared, DataRootSwitchMode::ReferenceOnly).unwrap();
-        let (_config, locks) = resolve_locked_with_boundary(&a, None).unwrap();
-        std::fs::remove_dir(shared.join("cache")).unwrap();
-        assert!(matches!(
-            resolve_locked_with_boundary(&b, None),
-            Err(AppError::InstanceLockConflict)
-        ));
-        assert!(!shared.join("cache").exists());
-        drop(locks);
-        let (_config, _locks) = resolve_locked_with_boundary(&b, None).unwrap();
-        assert!(shared.join("cache").is_dir());
-    }
-
-    #[test]
-    fn windows_uses_installation_path_and_keeps_legacy_even_if_invalid() {
-        let temp = tempfile::tempdir().unwrap();
-        let legacy = temp.path().join("legacy");
-        let exe = temp.path().join("chosen-install/opencodex.exe");
-        assert_eq!(
-            default_anchor(&legacy, &exe, true).unwrap(),
-            temp.path().join("chosen-install/data")
-        );
-        assert_eq!(default_anchor(&legacy, &exe, false).unwrap(), legacy);
-        std::fs::create_dir(&legacy).unwrap();
-        std::fs::write(legacy.join("keep"), b"old").unwrap();
-        assert_eq!(default_anchor(&legacy, &exe, true).unwrap(), legacy);
-    }
-    #[test]
-    fn resolves_before_stores_and_preserves_external_home() {
-        let temp = tempfile::tempdir().unwrap();
-        let a = temp.path().join("a");
-        let b = temp.path().join("b");
-        initialize(&a).unwrap();
-        initialize(&b).unwrap();
-        let home = temp.path().join("external");
-        set_opencodex_home(&a, OpenCodexHomeMode::External, Some(&home)).unwrap();
-        switch_reference(&a, &b, DataRootSwitchMode::ReferenceOnly).unwrap();
-        let config = resolve(&a).unwrap();
-        assert_eq!(config.active_data_root, b.canonicalize().unwrap());
-        assert_eq!(resolve_opencodex_home(&config), home);
-        assert_eq!(
-            load_runtime_config(&a).unwrap().opencodex_home_mode,
-            OpenCodexHomeMode::External
-        );
-    }
-    #[test]
-    fn cycles_and_future_bindings_fail_without_initializing_target() {
-        let temp = tempfile::tempdir().unwrap();
-        let a = temp.path().join("a");
-        let b = temp.path().join("b");
-        initialize(&a).unwrap();
-        initialize(&b).unwrap();
-        switch_reference(&a, &b, DataRootSwitchMode::ReferenceOnly).unwrap();
-        switch_reference(&b, &a, DataRootSwitchMode::ReferenceOnly).unwrap();
-        assert!(resolve(&a).unwrap_err().to_string().contains("cycle"));
-        let before = std::fs::read(b.join(METADATA_RELATIVE_PATH)).unwrap();
-        let mut payload: serde_json::Value = serde_json::from_slice(&before).unwrap();
-        payload["structure_version"] = serde_json::json!("2");
-        let future = serde_json::to_vec(&payload).unwrap();
-        std::fs::write(b.join(METADATA_RELATIVE_PATH), &future).unwrap();
-        assert!(resolve(&a).is_err());
-        assert_eq!(
-            std::fs::read(b.join(METADATA_RELATIVE_PATH)).unwrap(),
-            future
-        );
-    }
-    #[test]
-    fn setting_home_does_not_erase_selected_root() {
-        let temp = tempfile::tempdir().unwrap();
-        let a = temp.path().join("a");
-        let b = temp.path().join("b");
-        initialize(&a).unwrap();
-        initialize(&b).unwrap();
-        switch_reference(&a, &b, DataRootSwitchMode::ReferenceOnly).unwrap();
-        set_opencodex_home(
-            &a,
-            OpenCodexHomeMode::External,
-            Some(&temp.path().join("home")),
-        )
-        .unwrap();
-        assert_eq!(load_runtime_config(&a).unwrap().active_data_root, b);
-    }
-    #[test]
-    fn sandbox_rejects_escape_before_supplementing_partitions() {
-        let temp = tempfile::tempdir().unwrap();
-        let a = temp.path().join("sandbox");
-        let b = temp.path().join("daily");
-        initialize(&a).unwrap();
-        initialize(&b).unwrap();
-        std::fs::remove_dir(b.join("cache")).unwrap();
-        switch_reference(&a, &b, DataRootSwitchMode::ReferenceOnly).unwrap();
-        assert!(resolve_with_boundary(&a, Some(&a)).is_err());
-        assert!(!b.join("cache").exists());
-    }
-    #[test]
-    fn sandbox_rejects_external_home_before_creating_it() {
-        let temp = tempfile::tempdir().unwrap();
-        let a = temp.path().join("sandbox");
-        initialize(&a).unwrap();
-        let home = temp.path().join("daily/not-created");
-        set_opencodex_home(&a, OpenCodexHomeMode::External, Some(&home)).unwrap();
-        assert!(resolve_with_boundary(&a, Some(&a))
-            .unwrap_err()
-            .to_string()
-            .contains("external HOME"));
+    fn sandbox_rejects_external_home_before_creating_or_repairing_it() {
+        let t = tempfile::tempdir().unwrap();
+        let aggregate = t.path().join("sandbox");
+        let root = aggregate.join("desktop");
+        initialize(&root).unwrap();
+        let home = t.path().join("daily/not-created");
+        set_opencodex_home(&root, OpenCodexHomeMode::External, Some(&home)).unwrap();
+        fs::remove_dir(root.join("cache")).unwrap();
+        assert!(resolve_with_boundary(&root, Some(&aggregate)).is_err());
         assert!(!home.exists());
+        assert!(!root.join("cache").exists());
+    }
+    #[test]
+    fn old_windows_anchor_api_never_scans_or_selects_installation_data() {
+        let t = tempfile::tempdir().unwrap();
+        assert!(default_anchor(
+            &t.path().join("legacy"),
+            &t.path().join("install/app.exe"),
+            true
+        )
+        .is_err());
+        assert_eq!(fs::read_dir(t.path()).unwrap().count(), 0);
     }
 }
