@@ -167,14 +167,63 @@ using System.Diagnostics;
 using System.IO;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
+public sealed class OcxRustOrdinaryIdentity {
+ public int ProcessId; public string Executable, Sid;
+ public DateTime CreationTimeUtc; public bool Elevated; public int ElevationType;
+}
 public sealed class OcxRustOrdinaryPending : IDisposable {
  public Process Process;
- IntPtr thread;
- public OcxRustOrdinaryPending(Process process,IntPtr handle){Process=process;thread=handle;}
- public void Resume(){if(ResumeThread(thread)==0xffffffff)throw new Win32Exception(Marshal.GetLastWin32Error());}
- public void Dispose(){if(thread!=IntPtr.Zero){CloseHandle(thread);thread=IntPtr.Zero;}}
- [DllImport("kernel32.dll",SetLastError=true)] static extern uint ResumeThread(IntPtr handle);
- [DllImport("kernel32.dll")] static extern bool CloseHandle(IntPtr handle);
+ readonly SafeProcessHandle native; readonly SafeWaitHandle thread; bool resumed;
+ public OcxRustOrdinaryPending(IntPtr process,IntPtr primaryThread){native=new SafeProcessHandle(process,true);thread=new SafeWaitHandle(primaryThread,true);}
+ public void Attach(int id){Process=System.Diagnostics.Process.GetProcessById(id);}
+ void Live(){uint state=WaitForSingleObject(native,0);if(state!=258)throw new InvalidOperationException("Created native process is not live");}
+ public OcxRustOrdinaryIdentity Observe(){
+  Live();uint pid=GetProcessId(native);if(pid==0)throw new Win32Exception(Marshal.GetLastWin32Error());
+  var name=new StringBuilder(32768);uint size=(uint)name.Capacity;
+  if(!QueryFullProcessImageNameW(native,0,name,ref size))throw new Win32Exception(Marshal.GetLastWin32Error());
+  long created,exited,kernel,user;if(!GetProcessTimes(native,out created,out exited,out kernel,out user))throw new Win32Exception(Marshal.GetLastWin32Error());
+  IntPtr rawToken; if(!OpenProcessToken(native,8,out rawToken))throw new Win32Exception(Marshal.GetLastWin32Error());
+  using(var token=new SafeAccessTokenHandle(rawToken)){
+   uint needed;GetTokenInformation(token,1,IntPtr.Zero,0,out needed);
+   if(needed<8||needed>65536)throw new InvalidOperationException("TokenUser buffer size invalid");
+   IntPtr buffer=Marshal.AllocHGlobal((int)needed),sidText=IntPtr.Zero;
+   try{
+    if(!GetTokenInformation(token,1,buffer,needed,out needed))throw new Win32Exception(Marshal.GetLastWin32Error());
+    if(!ConvertSidToStringSidW(Marshal.ReadIntPtr(buffer),out sidText))throw new Win32Exception(Marshal.GetLastWin32Error());
+    string sid=Marshal.PtrToStringUni(sidText);if(sid==null||sid.Length>512)throw new InvalidOperationException("TokenUser SID invalid");
+    int elevated=ReadInt(token,20),type=ReadInt(token,18);
+    if((elevated!=0&&elevated!=1)||type<1||type>3)throw new InvalidOperationException("Token elevation invalid");
+    Live();return new OcxRustOrdinaryIdentity{ProcessId=(int)pid,Executable=name.ToString(),Sid=sid,CreationTimeUtc=DateTime.FromFileTimeUtc(created),Elevated=elevated!=0,ElevationType=type};
+   }finally{if(sidText!=IntPtr.Zero)LocalFree(sidText);Marshal.FreeHGlobal(buffer);}
+  }
+ }
+ static int ReadInt(SafeAccessTokenHandle token,uint kind){
+  IntPtr value=Marshal.AllocHGlobal(4);try{uint needed;
+   if(!GetTokenInformation(token,kind,value,4,out needed))throw new Win32Exception(Marshal.GetLastWin32Error());
+   if(needed!=4)throw new InvalidOperationException("Token integer size invalid");return Marshal.ReadInt32(value);
+  }finally{Marshal.FreeHGlobal(value);}
+ }
+ public void Resume(){Live();uint previous=ResumeThread(thread);if(previous==0xffffffff)throw new Win32Exception(Marshal.GetLastWin32Error());if(previous!=1)throw new InvalidOperationException("Created thread suspend count changed");resumed=true;}
+ public void Dispose(){
+  // No reopened PID/name authority: this is precisely CreateProcess's handle.
+  // If observation/ledger persistence failed, do not orphan our suspended child.
+  try{if(!resumed&&!native.IsClosed&&!native.IsInvalid){
+   uint state=WaitForSingleObject(native,0);
+   if(state==258){if(!TerminateProcess(native,1))throw new Win32Exception(Marshal.GetLastWin32Error());if(WaitForSingleObject(native,10000)!=0)throw new InvalidOperationException("Created suspended process cleanup incomplete");}
+   else if(state!=0)throw new Win32Exception(Marshal.GetLastWin32Error());
+  }}finally{thread.Dispose();native.Dispose();}
+ }
+ [DllImport("kernel32.dll",SetLastError=true)] static extern uint ResumeThread(SafeWaitHandle handle);
+ [DllImport("kernel32.dll",SetLastError=true)] static extern uint WaitForSingleObject(SafeProcessHandle handle,uint milliseconds);
+ [DllImport("kernel32.dll",SetLastError=true)] static extern bool TerminateProcess(SafeProcessHandle handle,uint exitCode);
+ [DllImport("kernel32.dll",SetLastError=true)] static extern uint GetProcessId(SafeProcessHandle handle);
+ [DllImport("kernel32.dll",CharSet=CharSet.Unicode,ExactSpelling=true,SetLastError=true)] static extern bool QueryFullProcessImageNameW(SafeProcessHandle handle,uint flags,StringBuilder name,ref uint size);
+ [DllImport("kernel32.dll",SetLastError=true)] static extern bool GetProcessTimes(SafeProcessHandle handle,out long created,out long exited,out long kernel,out long user);
+ [DllImport("advapi32.dll",SetLastError=true)] static extern bool OpenProcessToken(SafeProcessHandle handle,uint access,out IntPtr token);
+ [DllImport("advapi32.dll",SetLastError=true)] static extern bool GetTokenInformation(SafeAccessTokenHandle token,uint kind,IntPtr buffer,uint size,out uint needed);
+ [DllImport("advapi32.dll",CharSet=CharSet.Unicode,ExactSpelling=true,SetLastError=true)] static extern bool ConvertSidToStringSidW(IntPtr sid,out IntPtr text);
+ [DllImport("kernel32.dll")] static extern IntPtr LocalFree(IntPtr handle);
 }
 public static class OcxRustOrdinaryLaunch {
  [StructLayout(LayoutKind.Sequential,CharSet=CharSet.Unicode)] struct Startup {
@@ -195,8 +244,16 @@ public static class OcxRustOrdinaryLaunch {
    if(c=='"'){b.Append('\\',slashes*2+1);b.Append(c);}else{b.Append('\\',slashes);b.Append(c);}slashes=0;}
   b.Append('\\',slashes*2);return b.Append('"').ToString();
  }
+ public static string[] CimContradictions(OcxRustOrdinaryIdentity native,int? pid,string sid,string image,long? creationTicks){
+  var differences=new System.Collections.Generic.List<string>();
+  if(pid.HasValue&&pid.Value!=native.ProcessId)differences.Add("pid");
+  if(!String.IsNullOrEmpty(sid)&&!String.Equals(sid,native.Sid,StringComparison.Ordinal))differences.Add("sid");
+  if(!String.IsNullOrEmpty(image)&&!String.Equals(image,native.Executable,StringComparison.OrdinalIgnoreCase))differences.Add("image");
+  if(creationTicks.HasValue){long delta=native.CreationTimeUtc.Ticks-creationTicks.Value;if(delta<0||delta>9)differences.Add("creation");}
+  return differences.ToArray();
+ }
  public static OcxRustOrdinaryPending Start(string exe,string[] args,string cwd,FileStream stdout,FileStream stderr){
-  IntPtr output=IntPtr.Zero,error=IntPtr.Zero;Info info=new Info();
+  IntPtr output=IntPtr.Zero,error=IntPtr.Zero;Info info=new Info();OcxRustOrdinaryPending pending=null;
   try {
    var current=GetCurrentProcess();
    if(!DuplicateHandle(current,stdout.SafeFileHandle.DangerousGetHandle(),current,out output,0,true,2)||
@@ -205,9 +262,9 @@ public static class OcxRustOrdinaryLaunch {
    var startup=new Startup();startup.cb=Marshal.SizeOf<Startup>();startup.flags=0x100;startup.output=output;startup.error=error;
    // CREATE_SUSPENDED | CREATE_NO_WINDOW, environment inherited from scrubbed child.
    if(!CreateProcessW(exe,command,IntPtr.Zero,IntPtr.Zero,true,0x08000004,IntPtr.Zero,cwd,ref startup,out info))throw new Win32Exception(Marshal.GetLastWin32Error());
-   var process=Process.GetProcessById((int)info.pid);var result=new OcxRustOrdinaryPending(process,info.thread);info.thread=IntPtr.Zero;
-   // Retain the actual kernel process handle before closing CreateProcess's handle.
-   var retained=process.Handle;return result;
+   pending=new OcxRustOrdinaryPending(info.process,info.thread);info.process=IntPtr.Zero;info.thread=IntPtr.Zero;
+   pending.Attach((int)info.pid);return pending;
+  } catch {if(pending!=null){try{pending.Dispose();}finally{if(pending.Process!=null)pending.Process.Dispose();}}throw;
   } finally {if(output!=IntPtr.Zero)CloseHandle(output);if(error!=IntPtr.Zero)CloseHandle(error);if(info.process!=IntPtr.Zero)CloseHandle(info.process);if(info.thread!=IntPtr.Zero)CloseHandle(info.thread);}
  }
 }
@@ -218,22 +275,47 @@ function Start-RustOrdinaryCaptured([string]$Executable,[string[]]$Arguments,[st
  if([Security.Principal.WindowsIdentity]::GetCurrent().User.Value -cne $Sid){throw 'Launch token differs from admitted ordinary SID'}
  Initialize-RustOrdinaryLaunch
  $outFile=[IO.File]::Open($Stdout,'CreateNew','Write','ReadWrite');$errFile=[IO.File]::Open($Stderr,'CreateNew','Write','ReadWrite');$pending=$null
+ $diagnostic=[ordered]@{stage='create-suspended';identityAuthority='retained-CreateProcess-handle';kernel=$null;cim=$null;resumed=$false;failureType=$null;failureHResult=$null}
  try{
   $pending=[OcxRustOrdinaryLaunch]::Start($Executable,$Arguments,$WorkingDirectory,$outFile,$errFile);$p=$pending.Process
-  # QueryFullProcessImageName/GetProcessTimes from retained native handle work
-  # before the loader runs; Process.MainModule is not reliable while suspended.
-  $token=Get-WindowsProcessToken -Process $p -ExpectedExecutable $Executable
+  $diagnostic.stage='observe-created-handle'
+  $native=$pending.Observe()
+  $created=$native.CreationTimeUtc.Ticks
+  $token=[ordered]@{schemaVersion=1;status='observed';processId=$native.ProcessId;executable=$native.Executable;creationTimeUtc=$native.CreationTimeUtc.ToString('o');elevated=$native.Elevated;elevationType=$native.ElevationType;tokenUser=$native.Sid;authority='retained-CreateProcess-handle'}
+  $diagnostic.kernel=$token
   Assert-WindowsProcessMode -Observation $token -Mode ordinary
-  $row=Get-CimInstance Win32_Process -Filter ('ProcessId='+$p.Id) -ErrorAction Stop
-  $owner=Invoke-CimMethod -InputObject $row -MethodName GetOwnerSid -ErrorAction Stop
-  $created=[datetime]::Parse($token.creationTimeUtc).ToUniversalTime().Ticks
-  $delta=$created-$row.CreationDate.ToUniversalTime().Ticks
-  if($owner.ReturnValue -ne 0 -or $owner.Sid -cne $Sid -or $row.ExecutablePath -ine $token.executable -or $delta -lt 0 -or $delta -gt 9){throw 'Suspended native process TokenUser/image/creation differs'}
-  $fact=[pscustomobject]@{pid=$p.Id;sid=$owner.Sid;path=$token.executable;creationTicks=[string]$created;sessionId=$row.SessionId}
+  if($native.ProcessId -ne $p.Id -or $native.Sid -cne $Sid -or ![StringComparer]::OrdinalIgnoreCase.Equals($native.Executable,[IO.Path]::GetFullPath($Executable))){throw 'Suspended native process TokenUser/image/creation differs'}
+  # CIM is supplementary before loader startup. Missing values are explicitly
+  # absent, never recorded as agreement; any supplied contradiction still fails.
+  $diagnostic.stage='supplementary-cim'
+  $cim=[ordered]@{rowPresent=$false;pidProvided=$false;pid=$null;sidProvided=$false;sid=$null;imageProvided=$false;image=$null;creationProvided=$false;creationTicks=$null;ownerReturnValue=$null;queryFailureType=$null;queryHResult=$null;contradictions=@()}
+  $cimPid=$null;$cimSid=$null;$cimImage=$null;$cimCreated=$null;$session=$null
+  try{
+   $row=Get-CimInstance Win32_Process -Filter ('ProcessId='+$native.ProcessId) -ErrorAction Stop
+   if($row){
+    $cim.rowPresent=$true
+    if($null -ne $row.ProcessId){$cimPid=[int]$row.ProcessId;$cim.pidProvided=$true;$cim.pid=$cimPid}
+    if(![string]::IsNullOrEmpty($row.ExecutablePath)){$cimImage=[string]$row.ExecutablePath;if($cimImage.Length -gt 32768){throw 'Bounded CIM image required'};$cim.imageProvided=$true;$cim.image=$cimImage}
+    if($row.CreationDate){$cimCreated=$row.CreationDate.ToUniversalTime().Ticks;$cim.creationProvided=$true;$cim.creationTicks=[string]$cimCreated}
+    $session=$row.SessionId
+    try{
+     $owner=Invoke-CimMethod -InputObject $row -MethodName GetOwnerSid -ErrorAction Stop
+     $cim.ownerReturnValue=$owner.ReturnValue
+     if(![string]::IsNullOrEmpty($owner.Sid)){$cimSid=[string]$owner.Sid;if($cimSid.Length -gt 512){throw 'Bounded CIM SID required'};$cim.sidProvided=$true;$cim.sid=$cimSid}
+    }catch{$cim.queryFailureType=$_.Exception.GetType().FullName;$cim.queryHResult=[int]$_.Exception.HResult}
+   }
+  }catch{$cim.queryFailureType=$_.Exception.GetType().FullName;$cim.queryHResult=[int]$_.Exception.HResult}
+  $cim.contradictions=@([OcxRustOrdinaryLaunch]::CimContradictions($native,$cimPid,$cimSid,$cimImage,$cimCreated))
+  $diagnostic.cim=$cim
+  if($cim.contradictions.Count){throw 'Supplementary CIM contradicts retained created-process identity'}
+  $fact=[pscustomobject]@{pid=$native.ProcessId;sid=$native.Sid;path=$native.Executable;creationTicks=[string]$created;sessionId=$session;identityAuthority='retained-CreateProcess-handle'}
   $Ledger[[int]$fact.pid]=$fact
   # Persist exact identity before allowing ANY test code to execute.
+  $diagnostic.stage='persist-ledger'
   Write-TwoUserJson $LedgerPath @($Ledger.Values)
   $pending.Resume()
+  $diagnostic.resumed=$true;$diagnostic.stage='running'
+  Write-TwoUserJson ($Stdout+'.launch.json') $diagnostic
   $until=[datetime]::UtcNow.AddSeconds($DeadlineSeconds)
   while(!$p.HasExited){
    try{Add-TwoUserDescendants $fact $Ledger}catch{if(!$p.HasExited){throw}}
@@ -242,8 +324,15 @@ function Start-RustOrdinaryCaptured([string]$Executable,[string[]]$Arguments,[st
    Start-Sleep -Milliseconds 100
   }
   $outFile.Flush($true);$errFile.Flush($true)
-  [ordered]@{process=$fact;token=$token;exitCode=$p.ExitCode;arguments=$Arguments;stdout=$Stdout;stderr=$Stderr;workingDirectory=$WorkingDirectory;identityObservedBeforeResume=$true}
- }finally{if($pending){$pending.Dispose();$pending.Process.Dispose()};$outFile.Dispose();$errFile.Dispose()}
+  $diagnostic.stage='exited';Write-TwoUserJson ($Stdout+'.launch.json') $diagnostic
+  [ordered]@{process=$fact;token=$token;cim=$cim;exitCode=$p.ExitCode;arguments=$Arguments;stdout=$Stdout;stderr=$Stderr;workingDirectory=$WorkingDirectory;identityObservedBeforeResume=$true}
+ }catch{
+  $diagnostic.failureType=$_.Exception.GetType().FullName;$diagnostic.failureHResult=[int]$_.Exception.HResult
+  Write-TwoUserJson ($Stdout+'.launch.json') $diagnostic
+  throw
+ }finally{
+  try{if($pending){try{$pending.Dispose()}finally{if($pending.Process){$pending.Process.Dispose()}}}}finally{$outFile.Dispose();$errFile.Dispose()}
+ }
 }
 function Invoke-RustOrdinaryChild([string]$InputFile) {
  $c=Get-Content -LiteralPath $InputFile -Raw|ConvertFrom-Json

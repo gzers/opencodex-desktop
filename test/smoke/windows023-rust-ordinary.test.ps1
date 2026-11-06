@@ -68,7 +68,27 @@ $foreign=$messages[0].Clone();$foreign.package_id='unlisted'
 Refuses {Get-RustOrdinaryArtifacts @($foreign|ConvertTo-Json -Depth 5 -Compress) $metadata} 'foreign-package-test-executable-refused'
 Check ($main.Contains('Get-FileHash -LiteralPath $artifact.executable') -and $main.Contains('frozen-artifacts.json') -and $helper.Contains('Test executable/DLL changed after parent no-run compilation')) 'exact-executable-DLL-hashes-and-source-commit-frozen'
 Check ($helper.Contains('CreateProcessW') -and $helper.Contains('0x08000004') -and $helper.IndexOf('Write-TwoUserJson $LedgerPath') -lt $helper.IndexOf('$pending.Resume()')) 'test-process-native-identity-persisted-before-resume'
-Check ($helper.Contains('Get-WindowsProcessToken -Process $p') -and $helper.Contains('Suspended native process TokenUser/image/creation differs')) 'actual-ordinary-token-image-SID-creation-required'
+Check ($helper.Contains('$native=$pending.Observe()') -and $helper.Contains('OpenProcessToken(native,8') -and $helper.Contains('GetTokenInformation(token,1,buffer') -and $helper.Contains('Suspended native process TokenUser/image/creation differs')) 'actual-ordinary-token-image-SID-creation-required'
+Check ($helper.Contains('new SafeProcessHandle(process,true)') -and $helper.Contains('new SafeWaitHandle(primaryThread,true)') -and $helper.Contains('new OcxRustOrdinaryPending(info.process,info.thread)')) 'CreateProcess-original-process-and-thread-handles-retained-with-safe-ownership'
+Check ($helper.Contains('if(!resumed&&!native.IsClosed&&!native.IsInvalid)') -and $helper.Contains('TerminateProcess(native,1)') -and !$helper.Contains('$p.Kill()')) 'failed-suspended-launch-cleaned-only-through-unique-created-handle'
+Check ($helper.Contains('sidProvided=$false') -and $helper.Contains('imageProvided=$false') -and $helper.Contains('creationProvided=$false') -and $helper.Contains('Supplementary CIM contradicts retained created-process identity')) 'CIM-missing-is-explicit-not-agreement-and-contradiction-is-fatal'
+$nativeFixture=[OcxRustOrdinaryIdentity]::new()
+$nativeFixture.ProcessId=42;$nativeFixture.Sid='S-1-5-21-1-2-3-1001';$nativeFixture.Executable='C:\fixture\test.exe'
+$nativeFixture.CreationTimeUtc=[datetime]::new(638000000000000009,[DateTimeKind]::Utc)
+Check ((@([OcxRustOrdinaryLaunch]::CimContradictions($nativeFixture,$null,$null,$null,$null))).Count -eq 0) 'supplementary-CIM-all-absent-is-no-contradiction-not-a-proof'
+Check ((@([OcxRustOrdinaryLaunch]::CimContradictions($nativeFixture,42,$nativeFixture.Sid,'c:\fixture\TEST.EXE',638000000000000000))).Count -eq 0) 'CIM-microsecond-truncation-nine-100ns-units-accepted'
+Check ((@([OcxRustOrdinaryLaunch]::CimContradictions($nativeFixture,42,$nativeFixture.Sid,$nativeFixture.Executable,$nativeFixture.CreationTimeUtc.Ticks))).Count -eq 0) 'CIM-exact-values-accepted-as-supplementary'
+foreach($entry in @(
+ @{name='pid';pid=43;sid=$null;image=$null;ticks=$null},
+ @{name='sid';pid=$null;sid='S-1-5-21-1-2-3-1002';image=$null;ticks=$null},
+ @{name='image';pid=$null;sid=$null;image='C:\fixture\other.exe';ticks=$null},
+ @{name='creation';pid=$null;sid=$null;image=$null;ticks=637999999999999999},
+ @{name='creation';pid=$null;sid=$null;image=$null;ticks=638000000000000010}
+ )){
+ $different=@([OcxRustOrdinaryLaunch]::CimContradictions($nativeFixture,$entry.pid,$entry.sid,$entry.image,$entry.ticks))
+ Check ($different.Count -eq 1 -and $different[0] -ceq $entry.name) ('CIM-supplied-contradiction-refused-'+$entry.name+'-'+$entry.ticks)
+}
+Check ($helper.Contains("+'.launch.json')") -and $helper.Contains("identityAuthority='retained-CreateProcess-handle'")) 'bounded-kernel-CIM-launch-diagnostic-persisted-before-error-propagation'
 Check ($helper.Contains('Actual token Profile TEMP/KnownFolder differs') -and $helper.Contains("Join-Path $"+'c.profile '+"'AppData/Local'") -and $helper.Contains('Fresh std-style fixture owner is not the ordinary TokenUser')) 'own-registered-Profile-and-LocalAppData-TEMP-with-owner-readback'
 Check ($helper.Contains('$identity.Owner.Value') -and $helper.Contains('no owner repair is permitted')) 'TokenOwner-is-evidence-never-default-owner-mutation'
 Check ($helper.Contains('Deliberately continue every Cargo-emitted test binary') -and $helper.Contains('$exitCode=[int]$result.exitCode')) 'failed-binary-exit-kept-and-rest-of-suite-continues'
