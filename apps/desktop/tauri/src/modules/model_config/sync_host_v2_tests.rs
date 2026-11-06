@@ -1497,8 +1497,8 @@ async fn first_install_remote_channel_local_explicit_empty_defaults_download_and
     let result = session
         .apply_download(
             ConfirmDownloadRequest {
-                operation_id: plan.operation_id,
-                plan_digest: plan.plan_digest,
+                operation_id: plan.operation_id.clone(),
+                plan_digest: plan.plan_digest.clone(),
             },
             &resolver,
             &store,
@@ -1510,6 +1510,54 @@ async fn first_install_remote_channel_local_explicit_empty_defaults_download_and
     assert_eq!(result.local_apply_status, LocalApplyStatus::Applied);
     assert!(local.applied.load(Ordering::SeqCst));
     assert_eq!(remote.writes.load(Ordering::SeqCst), 0);
+    local.owner.valid.store(false, Ordering::SeqCst);
+    struct AppliedReceiptLocal(Digest);
+    impl LocalApplication for AppliedReceiptLocal {
+        fn root_revision(&self) -> SyncResult<Digest> {
+            Ok(self.0.clone())
+        }
+        fn current_source(&self) -> SyncResult<SourceGuard> {
+            panic!("no recapture after applied")
+        }
+        fn target_digest(&self, _: &str) -> SyncResult<Digest> {
+            panic!("no old absent check")
+        }
+        fn apply_once(
+            &self,
+            _: &str,
+            _: &[u8],
+            _: &PayloadSchemaRef,
+            _: &str,
+            _: &str,
+            _: bool,
+        ) -> SyncResult<()> {
+            panic!("no reapply")
+        }
+        fn export_once(
+            &self,
+            _: &str,
+            _: &[u8],
+            _: &PayloadSchemaRef,
+            _: &str,
+        ) -> SyncResult<Uuid> {
+            panic!("no export")
+        }
+    }
+    let applied = AppliedReceiptLocal(store.receive(&plan.operation_id).unwrap().root_revision);
+    let receipt = session
+        .apply_download(
+            ConfirmDownloadRequest {
+                operation_id: plan.operation_id,
+                plan_digest: plan.plan_digest,
+            },
+            &resolver,
+            &store,
+            &remote,
+            &applied,
+        )
+        .await
+        .unwrap();
+    assert_eq!(receipt.local_apply_status, LocalApplyStatus::Applied);
 }
 #[test]
 fn expected_absent_mapping_unknown_or_changed_target_does_not_turn_into_empty_capture() {
@@ -1708,4 +1756,26 @@ async fn download_prepare_freezes_explicit_backup_preference_without_publishing(
     };
     assert!(!plan.backup_before_update);
     assert_eq!(remote.writes.load(Ordering::SeqCst), 0);
+}
+#[test]
+fn mapping_direction_bridge_reuses_saved_atom_time_without_borrowing_unknown_or_other_domains() {
+    let local = stamped(objects(8192, false), "2026-11-06T12:00:00Z");
+    let old = stamped(objects(4096, false), "2026-11-06T11:00:00Z");
+    assert_eq!(
+        automatic_direction_from_saved(&local, Some(&old), &selection()).unwrap(),
+        DirectionV2::Upload
+    );
+    assert_eq!(
+        automatic_direction_from_saved(&objects(8192, false), Some(&old), &selection()).unwrap(),
+        DirectionV2::Download
+    );
+    let other = stamped(objects(4096, true), "2026-11-06T11:00:00Z");
+    assert_eq!(
+        automatic_direction_from_saved(&local, Some(&other), &selection()).unwrap(),
+        DirectionV2::Download
+    );
+    assert_eq!(
+        automatic_direction_from_saved(&local, None, &selection()).unwrap(),
+        DirectionV2::Upload
+    );
 }
