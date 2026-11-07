@@ -231,7 +231,9 @@ try {
         if($package.Count -ne 1){throw 'Exact default NSIS installer package missing'}
         [void](Invoke-Installer $package[0].FullName '/S')
         $defaultRoot=Find-DefaultInstalledDirectory
-        if ($AsInstallationOwner -and [IO.Path]::GetFullPath($defaultRoot).TrimEnd('/') -ine [IO.Path]::GetFullPath((Join-Path $env:LOCALAPPDATA 'Programs/OpenCodeX Desktop')).TrimEnd('/')) { throw '023 NSIS default installation escaped actual ordinary owner Programs directory' }
+        $expectedOwnerRoot=Join-Path $env:LOCALAPPDATA 'Programs/OpenCodeX Desktop'
+        $taskResult.defaultNsisRootObservation=@{actual=$defaultRoot;expectedOwner=$expectedOwnerRoot}
+        if ($AsInstallationOwner -and !(Test-WindowsInstallerSameDirectory $defaultRoot $expectedOwnerRoot)) { throw '023 NSIS default installation escaped actual ordinary owner Programs directory' }
         try{
             $defaultExe=Join-Path $defaultRoot 'opencodex-desktop.exe'
             $startupMode = if ($AsInstallationOwner) { 'ordinary' } else { 'any' }

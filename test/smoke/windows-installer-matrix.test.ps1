@@ -74,6 +74,9 @@ foreach($actual in @(($owner+' sibling'),($owner.Replace('owned','other')),($own
  if(Test-WindowsInstallerSameDirectory $actual $owner){throw 'Foreign owner/child directory accepted'}
 }
 $checks.Add('MSI trailing native separator matches only same ordinary owner directory')
+$comparisons=@($ast.FindAll({param($n) $n -is [Management.Automation.Language.CommandAst] -and $n.GetCommandName() -ceq 'Test-WindowsInstallerSameDirectory'},$true))
+if($comparisons.Count -ne 2){throw 'Both default MSI and NSIS must use the same owner-root comparison'}
+$checks.Add('Both default installer branches retain exact owner-root comparison')
 $output=[IO.Path]::GetFullPath($OutputDirectory)
 New-Item -ItemType Directory -Force $output | Out-Null
 [ordered]@{result='pass';powershell=$PSVersionTable.PSVersion.ToString();checks=@($checks)} |
