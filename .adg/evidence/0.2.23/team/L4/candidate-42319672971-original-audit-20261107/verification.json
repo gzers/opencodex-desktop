@@ -1,0 +1,299 @@
+{
+  "runId": 42319672971,
+  "jobId": 128240894462,
+  "conclusion": "failure",
+  "sourceCommit": "7730073e96999382697fe2ad8dd8f877352c75a3",
+  "artifactId": 13553623926,
+  "zipSize": 715014352,
+  "zipSha256": "0e9fc18ef21e9204edb535fc5e2ab594b48bb4367a88f99a393d3d18545306f5",
+  "originalZipVerified": true,
+  "expectedBinaries": 49,
+  "completedExitReceipts": 5,
+  "coreStdout": {
+    "passed": 1593,
+    "failed": 96,
+    "ignored": 5,
+    "exitAuthority": "missing"
+  },
+  "windowsRuntime": {
+    "passed": 14,
+    "failed": 3,
+    "ignored": 4,
+    "exitCode": 101,
+    "exitAuthority": "retained-CreateProcess-handle",
+    "failedTests": [
+      "windows_managed_install_accepts_the_extended_form_of_a_local_prefix",
+      "windows_managed_install_rejects_unowned_targets_and_restores_old_package_on_entry_failure",
+      "windows_source_registration_failure_rolls_back_package_and_entry_then_retries"
+    ]
+  },
+  "coreFailureSetEqualsSameTreeCI": true,
+  "coreFailedTests": [
+    "modules::data_root::uninstall::tests::confirmed_removal_deletes_real_v2_data_and_home_preserving_program_and_other_user",
+    "modules::data_root::uninstall::tests::missing_external_home_is_never_created_or_removed",
+    "modules::data_root::uninstall::tests::fixed_control_only_anchor_can_remove_selected_v2_data",
+    "modules::data_root::uninstall::tests::selected_v2_root_is_removed_without_following_any_local_pointer_or_old_chain",
+    "modules::ipc::service::sync_v2_tests::cli_first_device_download_uses_actual_model_transaction_receipt_and_default_backup",
+    "modules::ipc::service::sync_v2_tests::cli_repeated_models_follow_actual_backend_plan_without_inventing_semantic_equality",
+    "modules::model_config::config_file::v2::draft_discard::tests::discard_recovery_then_begin_new_generation_allows_ordinary_edit_and_save",
+    "modules::model_config::config_file::v2::history::tests::exact_library_defaults_are_staged_readonly_then_written_in_the_one_save_transaction",
+    "modules::model_config::config_file::v2::history::tests::history_exact_dependencies_and_bounded_enumeration_do_not_guess_missing_revisions",
+    "modules::model_config::config_file::v2::receive::tests::applied_id_still_rejects_different_payload_or_handle",
+    "modules::model_config::config_file::v2::history::tests::restoring_before_a_new_channel_uses_the_same_guarded_delete_transform_on_save",
+    "modules::model_config::config_file::v2::receive::tests::applied_is_historical_and_same_id_never_overwrites_later_user_changes",
+    "modules::model_config::config_file::v2::receive::tests::applied_mapping_proof_requires_original_manifest_and_receipt_even_after_later_edits",
+    "modules::model_config::config_file::v2::history::tests::real_history_before_side_prepares_accepts_only_draft_then_saves_with_same_transaction",
+    "modules::model_config::config_file::v2::receive::tests::backup_failure_has_zero_business_writes_and_cannot_claim_protection",
+    "modules::model_config::config_file::v2::receive::tests::apply_requires_explicit_protection_even_when_backup_is_disabled",
+    "modules::model_config::config_file::v2::receive::tests::backup_images_require_actual_protection_and_keep_original_before_after_without_receipt_targets",
+    "modules::model_config::config_file::v2::receive::tests::copied_receipt_from_another_root_cannot_claim_local_application",
+    "modules::model_config::config_file::v2::receive::tests::draft_created_after_freeze_cannot_be_cleared_by_apply",
+    "modules::model_config::config_file::v2::receive::tests::eight_target_transaction_recovery_finishes_mapping_and_receipt_together",
+    "modules::model_config::config_file::v2::receive::tests::explicit_none_selection_is_materialized_without_enabling_any_model",
+    "modules::model_config::config_file::v2::receive::tests::external_config_or_each_metadata_edit_after_freeze_is_rejected",
+    "modules::model_config::config_file::v2::receive::tests::family_fragment_updates_existing_rules_without_new_connection_or_credentials",
+    "modules::model_config::config_file::v2::receive::tests::first_device_identity_can_use_the_same_portable_uuid_without_allocation",
+    "modules::model_config::config_file::v2::receive::tests::first_receive_preserves_explicit_no_secret_auth_mode_and_allows_second_receive",
+    "modules::model_config::config_file::v2::receive::tests::frozen_image_corruption_and_plan_schema_checksum_fail_closed",
+    "modules::model_config::config_file::v2::receive::tests::identity_mapping_is_frozen_and_committed_as_the_eighth_transaction_target",
+    "modules::model_config::config_file::v2::receive::tests::identity_registry_change_after_prepare_is_also_a_cas_conflict",
+    "modules::model_config::config_file::v2::receive::tests::key_replace_preserves_unselected_pool_slots",
+    "modules::model_config::config_file::v2::receive::tests::mapping_material_changes_invalidate_handle_and_external_mapping_edit_fails_cas",
+    "modules::model_config::config_file::v2::receive::tests::mapping_preserves_old_pairs_and_backups_existing_identity_metadata",
+    "modules::model_config::config_file::v2::receive::tests::namespace_and_credential_direction_errors_leave_originals_untouched",
+    "modules::model_config::config_file::v2::receive::tests::namespace_file_receiver_freezes_adoption_and_applies_compiler_and_receipt_in_one_transaction",
+    "modules::model_config::config_file::v2::receive::tests::new_endpoint_with_selected_key_cannot_carry_old_unselected_header_or_pool_secrets",
+    "modules::model_config::config_file::v2::receive::tests::no_mapping_change_does_not_touch_existing_identity_metadata",
+    "modules::model_config::config_file::v2::receive::tests::pending_recovery_refuses_unknown_external_target_value_without_overwrite",
+    "modules::model_config::config_file::v2::receive::tests::portable_authorization_is_materialized_into_file_without_system_credentials",
+    "modules::model_config::config_file::v2::receive::tests::protect_covers_all_existing_images_and_rechecks_backup_bytes",
+    "modules::model_config::config_file::v2::receive::tests::namespace_localfile_owner_explicit_injection_cancel_and_reopen_use_original_plan_and_receipt",
+    "modules::model_config::config_file::v2::receive::tests::real_transaction_pending_resumes_same_frozen_images_and_commits_receipt_last",
+    "modules::model_config::config_file::v2::receive::tests::receive_new_writes_real_config_library_policy_ledger_mappings_versions_and_atomic_receipt",
+    "modules::model_config::config_file::v2::receive::tests::same_id_payload_scope_target_bindings_or_handle_change_cannot_rebuild",
+    "modules::model_config::config_file::v2::receive::tests::secrets_are_only_in_private_images_and_actual_files_not_manifests_receipts_or_dtos",
+    "modules::model_config::config_file::v2::receive::tests::selected_partial_existing_preserves_unselected_raw_fields_models_credentials_and_order",
+    "modules::model_config::config_file::v2::receive::tests::status_and_applied_replay_do_not_enter_an_unrelated_pending_save_gate",
+    "modules::model_config::config_file::v2::receive::tests::unselected_owned_keychain_reference_is_not_read_or_copied_to_a_new_group",
+    "modules::model_config::config_file::v2::receive::tests::unselected_provider_object_remains_exact_after_complete_compiler_validation",
+    "modules::model_config::config_file::v2::tests::existing_revision_default_and_delete_use_exact_dependencies_without_latest_fallback",
+    "modules::model_config::config_file::v2::tests::explicit_key_only_replace_preserves_other_pool_slots_and_clear_keeps_auth_mode",
+    "modules::model_config::config_file::v2::tests::single_channel_save_keeps_other_staged_work_and_rebases_its_guard",
+    "modules::model_config::file_transfer_v2::tests::default_false_review_actual_asset_export_import_keeps_sources_cancel_and_target_guards",
+    "modules::model_config::file_transfer_v2::tests::exact_template_refs_manual_and_auto_source_intents_survive_real_file_receive",
+    "modules::model_config::file_transfer_v2::tests::local_file_password_installs_only_in_d_as_inactive_candidate_and_private_receipt",
+    "modules::model_config::file_transfer_v2::tests::model_subset_from_whole_file_is_scoped_before_receive_without_overwriting_other_models",
+    "modules::model_config::file_transfer_v2::tests::no_password_choice_never_creates_credentials_and_existing_identity_requires_explicit_mapping",
+    "modules::model_config::file_transfer_v2::tests::password_retry_same_operation_preserves_user_changes_after_durable_participant_receipt",
+    "modules::model_config::file_transfer_v2::tests::password_storage_failure_resumes_same_refs_and_does_not_reapply_model_files",
+    "modules::model_config::file_transfer_v2::tests::prepared_import_reopen_uses_frozen_target_and_applied_repeat_is_read_only_original_fact",
+    "modules::model_config::file_transfer_v2::tests::real_backup_failure_prevents_business_writes_and_can_retry_original_operation",
+    "modules::model_config::file_transfer_v2::tests::preview_reselect_no_business_write_confirm_real_receiver_and_no_reapply_after_edits",
+    "modules::model_config::file_transfer_v2::tests::stale_owner_returns_newly_completed_original_fact_without_overwriting_later_edits",
+    "modules::model_config::file_transfer_v2::tests::skill_and_mcp_contents_do_not_require_manual_review_and_keep_credential_scope",
+    "modules::model_config::legacy_migration::tests::busy_retired_admission_lock_is_never_replaced_removed_or_archived",
+    "modules::model_config::legacy_migration::tests::retired_join_candidates_and_unlocked_admission_are_archived_without_deleting_references",
+    "modules::model_config::legacy_migration::tests::terminal_join_records_are_archived_retired_and_repeat_without_new_archives",
+    "modules::model_config::model_transaction_v2::tests::operation_receipt_free_fields_never_become_retained_template_dependencies",
+    "modules::model_config::model_transaction_v2::tests::operation_receipt_seven_file_interrupt_recovery_pairs_exact_receipt_with_config",
+    "modules::model_config::model_transaction_v2::tests::retained_refs_cap_is_complete_at_256_and_errors_on_the_257th_without_pagination",
+    "modules::model_config::model_transaction_v2::tests::retained_refs_ignore_unadopted_library_revisions_parents_and_decoy_nested_refs",
+    "modules::model_config::model_transaction_v2::tests::retained_refs_cumulative_metadata_budget_includes_journals_and_all_selected_images",
+    "modules::model_config::result_owner_v2::tests::actual_preferences_import_issues_scope_restore_owner_without_result_side_effects",
+    "modules::model_config::sync_identity_v2::tests::explicit_same_uuid_download_freezes_present_then_adopts_only_in_receive_transaction",
+    "modules::model_config::sync_identity_v2::tests::first_empty_device_full_remote_scope_keeps_only_actual_local_capture_sources",
+    "modules::model_config::sync_identity_v2::tests::new_device_absence_cancel_and_exact_same_transaction_adoption_reopen",
+    "modules::model_config::sync_local_v2::restore::tests::actual_model_applied_interruption_keeps_not_ready_then_reopens_same_before",
+    "modules::model_config::sync_local_v2::restore::tests::actual_receiver_and_namespace_production_traits_issue_ready_restorable_backups",
+    "modules::model_config::sync_local_v2::restore::tests::backup_false_is_listed_disabled_without_private_scope_images",
+    "modules::model_config::sync_local_v2::restore::tests::manager_only_restore_preserves_later_unselected_model_edits_and_restores_original_absent_metadata",
+    "modules::model_config::sync_local_v2::restore::tests::original_actual_receive_before_after_restore_all_and_repeat_receipt_preserves_later_edits",
+    "modules::model_config::sync_local_v2::restore::tests::original_none_channel_restore_rejects_direct_capture_but_actual_service_prepares_download",
+    "modules::model_config::sync_local_v2::restore::tests::original_none_extension_restore_rejects_direct_capture_but_actual_service_prepares_download",
+    "modules::model_config::sync_local_v2::restore::tests::readonly_preview_ignores_unknown_draft_and_same_plan_restores_only_after_explicit_cas_discard",
+    "modules::model_config::sync_local_v2::restore::tests::restoring_existing_model_content_is_a_new_frozen_save_and_actual_capture_uploads_over_old_cloud",
+    "modules::model_config::sync_local_v2::restore::tests::rewriting_backup_checksum_does_not_authorize_forged_model_or_participant_before_bytes",
+    "modules::model_config::sync_local_v2::restore::tests::production_service_backend_factory_mapping_receipt_protects_actual_scope_without_network",
+    "modules::model_config::sync_local_v2::restore::tests::template_only_dependency_rejected_and_preview_cas_preserves_changed_targets",
+    "modules::model_config::sync_identity_v2::tests::restart_restores_original_absent_with_dual_real_proofs_and_finishes_only_old_participants",
+    "modules::model_config::sync_local_v2::tests::false_review_actual_local_application_receives_assets_with_real_model_receipt_and_source_cas",
+    "modules::model_config::sync_service_v2::tests::auth_mode_none_first_receive_keeps_actual_public_direction_on_second_service_preview",
+    "modules::model_config::sync_service_v2::tests::production_backup_failure_preserves_actual_target_and_retries_same_operation_after_protection_restored",
+    "modules::model_config::sync_service_v2::tests::production_backend_uploads_actual_saved_objects_and_first_device_downloads_with_real_model_receipt",
+    "modules::model_config::sync_service_v2::tests::production_encrypted_first_download_uses_only_request_read_secret_and_still_commits_actual_model_receipt",
+    "modules::model_config::sync_service_v2::tests::production_initialization_ambiguity_exposes_readonly_candidates_and_can_explicitly_recover_a_chosen_branch",
+    "modules::model_config::sync_service_v2::tests::production_first_device_receives_model_mapping_receipt_preferences_extensions_and_assets_after_model_adoption",
+    "modules::model_config::sync_service_v2::tests::production_same_uuid_second_sync_is_semantic_noop_and_explicit_download_restores_existing_actual_source",
+    "modules::model_config::sync_service_v2::tests::real_model_applied_interruption_reopens_with_dual_proofs_and_only_finishes_original_nonmodel_participants"
+  ],
+  "allBinariesAttempted": false,
+  "docTestsExecuted": false,
+  "lastLaunch": {
+    "stage": "exited",
+    "identityAuthority": "retained-CreateProcess-handle",
+    "kernel": {
+      "schemaVersion": 1,
+      "status": "observed",
+      "processId": 3960,
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\opencodex_desktop_lib-2f26242b31cee7aa.exe",
+      "creationTimeUtc": "2026-11-07T00:56:34.4298199Z",
+      "elevated": false,
+      "elevationType": 1,
+      "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+      "authority": "retained-CreateProcess-handle"
+    },
+    "cim": {
+      "rowPresent": true,
+      "pidProvided": true,
+      "pid": 3960,
+      "sidProvided": true,
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+      "imageProvided": false,
+      "image": null,
+      "creationProvided": true,
+      "creationTicks": "639296097944298190",
+      "ownerReturnValue": 0,
+      "queryFailureType": null,
+      "queryHResult": null,
+      "contradictions": []
+    },
+    "resumed": true,
+    "failureType": "System.Management.Automation.MethodInvocationException",
+    "failureHResult": -2146233087
+  },
+  "cleanupVerifiedFromOriginalParent": true,
+  "identityMatches": true,
+  "archiveProgramsExtractedOrExecuted": false,
+  "originalMembers": [
+    {
+      "path": "ordinary-rust/rust-ordinary.json",
+      "sha256": "a23ac14b18b95720bce1762f3d732a7c56d7fb01c840e07c9e4bf17cb99202a7",
+      "size_bytes": 666452
+    },
+    {
+      "path": "ordinary-rust/frozen-artifacts.json",
+      "sha256": "aea0ce82913de8cc2c06d32098a8f0f462855959ece47851edbb8feef2223c9a",
+      "size_bytes": 42476
+    },
+    {
+      "path": "ordinary-rust/ordinary/ordinary-suite.json",
+      "sha256": "45ca387462bd7b8548e45f9f42b6f13517fe984fcf792278db5f557c5b5d2276",
+      "size_bytes": 28417
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-1.json",
+      "sha256": "99c844ce50c6053ef10845e5b02a1b1f4a08a77764c27e58f24cc2d090644df4",
+      "size_bytes": 1897
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-1.stdout.log",
+      "sha256": "07b2d0ce9c24049742c1bf7a96cd3e87108e7b95883730a6086e7e8be6300d70",
+      "size_bytes": 395
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-1.stdout.log.launch.json",
+      "sha256": "7678b72b9ab0d4de9d2a93d9c16a702881cb31cfa54d33dc54baeaa03f9cbd9d",
+      "size_bytes": 1022
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-2.json",
+      "sha256": "065af9d4f573efc679b7037eb4ce23a3a6853ea31f863650d89f7b664c8d3a77",
+      "size_bytes": 1932
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-2.stdout.log",
+      "sha256": "37f48ddfce61b499d1a1068917755c93ee544fdd815575bc46f8c81d24ede90b",
+      "size_bytes": 7795
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-2.stdout.log.launch.json",
+      "sha256": "653c397beadd6c10cd6e88d2d54716f0d3c74881f6f3b1d75c188aa1e73c1c8e",
+      "size_bytes": 1033
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-3.json",
+      "sha256": "14be78949ec612f012ac0b0a419fd02e171814fd5380b2a28f4e94590e0d030e",
+      "size_bytes": 1939
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-3.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-3.stdout.log",
+      "sha256": "a4a27be095b44cb2de8845414e07c60cbfe2652a64798f875e2d6085a1ea1240",
+      "size_bytes": 185
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-3.stdout.log.launch.json",
+      "sha256": "966581cbe6de18ba36ff4014852ba10d925539a833e275fc2659b57ef79265d4",
+      "size_bytes": 1036
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-4.json",
+      "sha256": "48a08273643687e189b92dd195c15a1bc64c7c106f5519eff67bae9ff461d149",
+      "size_bytes": 1915
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-4.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-4.stdout.log",
+      "sha256": "df166913f47ff1f04202cae9b31df67ed272d692d99a0023a8117dc3029100dd",
+      "size_bytes": 113
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-4.stdout.log.launch.json",
+      "sha256": "b30502eb37ad87453d50314cebd3b45c480cbdd638264ba1da510c93c78837f9",
+      "size_bytes": 1028
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-5.json",
+      "sha256": "c0fd7264dac8a3df2fe0b66e1fc53523c06dc336be7a7a740172965415f1a1f7",
+      "size_bytes": 1927
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-5.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-5.stdout.log",
+      "sha256": "df166913f47ff1f04202cae9b31df67ed272d692d99a0023a8117dc3029100dd",
+      "size_bytes": 113
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-5.stdout.log.launch.json",
+      "sha256": "31cef90bd3c02b862a465703b797a3455bde4b430ec51fcff5f61ce8412a0074",
+      "size_bytes": 1032
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-6.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-6.stdout.log",
+      "sha256": "8b957ea5af5e381ff47fb459f1e97081f2bd427ef430ac04771fecc2a81f446d",
+      "size_bytes": 536361
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-6.stdout.log.launch.json",
+      "sha256": "21a320427ae0e8f6fc2d631dedb3d968c7712fc9363c15f893a2c97b5a845045",
+      "size_bytes": 1098
+    }
+  ]
+}
