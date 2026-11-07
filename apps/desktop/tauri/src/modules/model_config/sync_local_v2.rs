@@ -977,11 +977,6 @@ impl LocalApplicationV2 {
         {
             return Err(failure(ErrorCode::SyncOperationCollision));
         }
-        if (!selection.skill_names.is_empty() || !selection.mcp_sources.is_empty())
-            && !host.capture.assets_reviewed
-        {
-            return Err(failure(ErrorCode::SyncScopeChanged));
-        }
         host.selection = selection;
         host.verify_remaining_operation(proof.operation_id(), &proof)?;
         host.remaining = Some(proof);
@@ -1034,6 +1029,9 @@ impl LocalApplicationV2 {
         if !super::schema_v2::valid_digest(&scope) {
             return Err(failure(ErrorCode::SyncScopeChanged));
         }
+        // assets_reviewed is a deprecated caller declaration, not authority.
+        // Exact selection, source/digests, target mapping and original journals
+        // remain the admission proofs for both new and remaining operations.
         // Same object identities; incoming/local MCP definitions may differ.
         let mut incoming = selection.clone();
         let mut local = capture.selection.clone();
@@ -1043,11 +1041,6 @@ impl LocalApplicationV2 {
             }
         }
         if incoming != local {
-            return Err(failure(ErrorCode::SyncScopeChanged));
-        }
-        if (!selection.skill_names.is_empty() || !selection.mcp_sources.is_empty())
-            && !capture.assets_reviewed
-        {
             return Err(failure(ErrorCode::SyncScopeChanged));
         }
         Ok(Self {
@@ -1095,11 +1088,6 @@ impl LocalApplicationV2 {
         // can omit absent non-model objects while receive keeps remote choices.
         // Their actual before/absent images are frozen by the target/helpers;
         // do not widen choices or reconstruct the mapper's filtering here.
-        if (!selection.skill_names.is_empty() || !selection.mcp_sources.is_empty())
-            && !capture.assets_reviewed
-        {
-            return Err(failure(ErrorCode::SyncScopeChanged));
-        }
         for slot in &binding.slots {
             if matches!(slot.expected, TargetExpectationV2::Present(_)) {
                 let mut r = selection
