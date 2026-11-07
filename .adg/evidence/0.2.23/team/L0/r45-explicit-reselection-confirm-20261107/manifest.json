@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "source": "e722dc4d7 test extension over 56a8a8dcc production",
+  "result": "four actual download confirmations passed",
+  "checks": [
+    {
+      "group": "extensions",
+      "scopeAdjustedAfterRestore": true,
+      "explicitUserReselection": true,
+      "confirmationCalled": true,
+      "explicitDownloadActuallyApplied": true,
+      "businessImagesUnchangedDuringPreview": true,
+      "remotePuts": 0,
+      "realNetworkUsed": false
+    },
+    {
+      "group": "skill:scope-fixture",
+      "scopeAdjustedAfterRestore": true,
+      "explicitUserReselection": true,
+      "confirmationCalled": true,
+      "explicitDownloadActuallyApplied": true,
+      "businessImagesUnchangedDuringPreview": true,
+      "remotePuts": 0,
+      "realNetworkUsed": false
+    },
+    {
+      "group": "mcp",
+      "scopeAdjustedAfterRestore": true,
+      "explicitUserReselection": true,
+      "confirmationCalled": true,
+      "explicitDownloadActuallyApplied": true,
+      "businessImagesUnchangedDuringPreview": true,
+      "remotePuts": 0,
+      "realNetworkUsed": false
+    },
+    {
+      "group": "channels",
+      "scopeAdjustedAfterRestore": true,
+      "explicitUserReselection": true,
+      "confirmationCalled": true,
+      "explicitDownloadActuallyApplied": true,
+      "businessImagesUnchangedDuringPreview": true,
+      "remotePuts": 0,
+      "realNetworkUsed": false
+    }
+  ],
+  "productionPath": "SyncServiceV2 catalog→explicit source/scope selection→preview→confirm→actual LocalApplication/ReceiveFileHost/assets→Applied receipt; readonly synthetic remote",
+  "cleanup": "all four owned fixture roots explicitly removed and checked in original log",
+  "files": [
+    {
+      "path": "ocxd023-explicit-reselection-confirm.log",
+      "bytes": 17155,
+      "sha256": "ffacf8d6a4b5b2eb50fb7d20c73afd375e6bea8b568ffc7146f3a9998adbeca4"
+    }
+  ]
+}
