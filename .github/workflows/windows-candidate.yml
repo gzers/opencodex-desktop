@@ -262,6 +262,12 @@ jobs:
             test/out/windows-candidate/*-startup/startup/*.png
             test/out/windows-candidate/two-user-native/*.json
             test/out/windows-candidate/two-user-native/*.log
+            test/out/windows-candidate/two-user-native/user1/*.json
+            test/out/windows-candidate/two-user-native/user1/*.log
+            test/out/windows-candidate/two-user-native/user1/*.png
+            test/out/windows-candidate/two-user-native/user2/*.json
+            test/out/windows-candidate/two-user-native/user2/*.log
+            test/out/windows-candidate/two-user-native/user2/*.png
             test/out/windows-candidate/two-user-static
 
   query-etw:
@@ -831,6 +837,12 @@ jobs:
             test/out/raw-full0c/input/build-identities.json
             test/out/raw-full0c/two-user/*.json
             test/out/raw-full0c/two-user/*.log
+            test/out/raw-full0c/two-user/user1/*.json
+            test/out/raw-full0c/two-user/user1/*.log
+            test/out/raw-full0c/two-user/user1/*.png
+            test/out/raw-full0c/two-user/user2/*.json
+            test/out/raw-full0c/two-user/user2/*.log
+            test/out/raw-full0c/two-user/user2/*.png
             test/out/raw-full0c/input/administrative-extract.log
             test/out/raw-full0c/evidence/*.json
             test/out/raw-full0c/evidence/*.log
