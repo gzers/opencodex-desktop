@@ -1,0 +1,17 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: {"exceptionId":1,"text":"Uncaught (in promise)","lineNumber":0,"columnNumber":0,"exception":{"type":"object","className":"Object","description":"Object","objectId":"-7163449391030032496.3.1","preview":{"type":"object","description":"Object","overflow":false,"properties":[{"name":"code","type":"number","value":"14"},{"name":"message","type":"string","value":"managed runtime operation failed: discovery_runtime_version_mismatch; 实际执行的依赖或运行包版本不符合当前受管来源"}]}}}
+    at evaluate (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-install-recovery.mjs:38:3)
+    at async verify021ReadyWebdav (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-021-ready-webdav.mjs:75:22)
+    at async file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-install-recovery.mjs:129:24 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.22.2
