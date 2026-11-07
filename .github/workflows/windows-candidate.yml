@@ -384,7 +384,7 @@ jobs:
           path: test/out/windows-installer-retention
 
   native-ui:
-    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023'
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023' && inputs.admission_run != 'msi-compiler-023'
     runs-on: windows-latest
     timeout-minutes: 40
     defaults:
@@ -495,6 +495,34 @@ jobs:
           name: windows023-ordinary-preflight-${{ github.sha }}
           path: test/out/windows023-ordinary-preflight
           if-no-files-found: warn
+          retention-days: 14
+
+  msi-compiler023:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run == 'msi-compiler-023'
+    runs-on: windows-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: apps/desktop/tauri
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - name: Install pinned bundle compiler only
+        run: npm install --global @tauri-apps/cli@2.11.4
+      - name: Compile actual MSI template with explicitly synthetic payload
+        run: |
+          & ../../../test/smoke/windows023-msi-compiler.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Preserve exact generated WiX and native compiler output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows023-msi-compiler-${{ github.sha }}
+          path: test/out/windows023-msi-compiler
+          if-no-files-found: error
           retention-days: 14
 
   retention023:
