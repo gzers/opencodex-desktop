@@ -2276,7 +2276,15 @@ fn shell_quote(path: &Path) -> String {
 pub(crate) fn entry_script(node: Option<&Path>, script: &Path) -> String {
     // 路径始终引用，禁用 ! 展开，%% 保留路径中的字面百分号；参数由 Rust
     // Command 的 batch 转义处理，禁止手拼 cmd.exe 参数。
-    let quote = |path: &Path| format!("\"{}\"", path.to_string_lossy().replace('%', "%%"));
+    // Install target validation stores native separators. The resolver may
+    // receive an equivalent ordinary Windows path with '/' components. Produce
+    // the same launcher bytes for both; preserve all other path/escaping checks.
+    let quote = |path: &Path| {
+        format!(
+            "\"{}\"",
+            path.to_string_lossy().replace('/', "\\").replace('%', "%%")
+        )
+    };
     let node = node.map(quote).unwrap_or_else(|| "node.exe".to_string());
     format!(
         "@echo off\r\n\"%SystemRoot%\\System32\\chcp.com\" 65001 >nul\r\nsetlocal DisableDelayedExpansion\r\n{node} {} %*\r\nexit /b %errorlevel%\r\n",
@@ -4650,3 +4658,7 @@ pub fn validate_managed_installation(root: &Path, node: Option<&Path>) -> Result
     }
     Ok(())
 }
+
+#[cfg(all(test, windows))]
+#[path = "install_windows_path_tests.rs"]
+mod windows_path_tests;
