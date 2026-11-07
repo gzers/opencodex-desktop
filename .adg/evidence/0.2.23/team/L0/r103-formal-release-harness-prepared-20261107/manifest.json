@@ -1,0 +1,18 @@
+{
+  "source": "434d2c990",
+  "priorSource": "102c7a24e",
+  "applicationTreeUnchanged": "cf7ca5b19438d9157ada555d0451f91d768b1cf9",
+  "scope": "test/workflow only; prepared before formal signed release, not actual OTA acceptance",
+  "installer": "explicit023 original signed assets digest and frozen original build identity; exact same ordinary owner install/start/uninstall; Server precondition/finallyrestore and explicit evidence globs",
+  "ota": "dedicated023 NSIS branch uses published exact022 baseline, production updater old-key signatures, ordinary-exit no install, explicit restart automaticPID with no manual fallback; actual023 D/H, no migration/emptychannels, oldconfig bytes retained; original022 exactbyte independent install/manualrollback and newdata unchanged",
+  "msiScope": "023 old022 machine->peruser automatic conversion explicitly excluded from NSIS automaticOTA; actualMSIblock and explicit conversion remain in mandatoryretention matrix; formal023 fresh/customoriginalMSI still required",
+  "localChecks": [
+    "release allowlist/identity/phase boundary tests passed",
+    "native PowerShell AST passed",
+    "JS syntax passed",
+    "release workflow YAML parsed"
+  ],
+  "actualSignedUpdateExecuted": false,
+  "remaining": "final candidate/twoSID/retention then signed assets for actual Windows and Mac updater/rollback/publicreadback",
+  "releaseAcceptance": false
+}
