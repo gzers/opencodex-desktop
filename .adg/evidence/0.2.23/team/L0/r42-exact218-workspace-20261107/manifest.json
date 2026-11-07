@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "source": "218b2262bdbdcddaaa79c8fc240872ff2b596ae8",
+  "command": "cargo test --locked --workspace --features integration-test --no-fail-fast",
+  "exitCode": 0,
+  "topLevelResult": {
+    "binaries": 49,
+    "passed": 2206,
+    "failed": 0,
+    "ignored": 37
+  },
+  "countMethod": "last libtest result per explicit Cargo Running binary; nested child results not counted twice",
+  "doctest": "pass; 0 doctests",
+  "scope": "full current local workspace; no Windows-native/installer/publication claim",
+  "files": [
+    {
+      "path": "ocxd023-218-final-sourcehashes.json",
+      "bytes": 3300,
+      "sha256": "202aaa1c142b693e69d0208823426997fb6b329b0ecdf25a30ea4b82c1f53bb5"
+    },
+    {
+      "path": "ocxd023-218-final-workspace-counts.json",
+      "bytes": 8425,
+      "sha256": "f0f44276be1f54237b8eaa89f5e5a45d45d55e2a11d09e6ba9db562918f78a23"
+    },
+    {
+      "path": "ocxd023-218-final-workspace.log",
+      "bytes": 269976,
+      "sha256": "4fadfc59db51e235f23f4acabf1ee85b227da2c100dadabeaa4c8942d7dfee3c"
+    }
+  ]
+}
