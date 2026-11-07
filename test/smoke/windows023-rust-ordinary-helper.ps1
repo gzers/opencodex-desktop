@@ -282,6 +282,14 @@ public static class OcxRustOrdinaryLaunch {
 }
 '@}
 }
+function Complete-RustOrdinaryNativeExit($Ledger,$Fact,$NativeExit) {
+ # Called only after WaitForExit + ExitCode on the original retained kernel
+ # handle. A later PID lookup is not authority for this exited generation.
+ if ($NativeExit -isnot [int] -or $Fact.identityAuthority -cne 'retained-CreateProcess-handle') { throw 'Original native exit authority required' }
+ $known=$Ledger[[int]$Fact.pid]
+ if (!$known -or $known.sid -cne $Fact.sid -or $known.path -cne $Fact.path -or $known.creationTicks -cne $Fact.creationTicks) { throw 'Exited ledger generation changed' }
+ [void]$Ledger.Remove([int]$Fact.pid)
+}
 function Start-RustOrdinaryCaptured([string]$Executable,[string[]]$Arguments,[string]$WorkingDirectory,[string]$Stdout,[string]$Stderr,[string]$Sid,$Ledger,[int]$DeadlineSeconds,[string]$LedgerPath,$ParentContext=$null) {
  Assert-RustOrdinaryEphemeral $ParentContext
  if([Security.Principal.WindowsIdentity]::GetCurrent().User.Value -cne $Sid){throw 'Launch token differs from admitted ordinary SID'}
@@ -350,6 +358,8 @@ function Start-RustOrdinaryCaptured([string]$Executable,[string[]]$Arguments,[st
   $outFile.Flush($true);$errFile.Flush($true)
   $diagnostic.stage='read-native-exit';Write-TwoUserJson ($Stdout+'.launch.json') $diagnostic
   $nativeExit=$pending.ExitCode()
+  Complete-RustOrdinaryNativeExit $Ledger $fact $nativeExit
+  Write-TwoUserJson $LedgerPath @($Ledger.Values)
   $diagnostic.stage='exited';Write-TwoUserJson ($Stdout+'.launch.json') $diagnostic
   [ordered]@{process=$fact;token=$token;cim=$cim;exitCode=$nativeExit;exitAuthority='retained-CreateProcess-handle';arguments=$Arguments;stdout=$Stdout;stderr=$Stderr;workingDirectory=$WorkingDirectory;identityObservedBeforeResume=$true}
  }catch{
