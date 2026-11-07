@@ -827,7 +827,7 @@ impl SyncServiceV2 {
         let (connection, _) = self.active().await?;
         let backend = self.backend.clone();
         let inventory_connection = connection.clone();
-        let inventory = blocking(move || {
+        let mut inventory = blocking(move || {
             backend
                 .inventory(&inventory_connection)
                 .map_err(host::map_host_error)
@@ -857,6 +857,31 @@ impl SyncServiceV2 {
             ),
             None => None,
         };
+        let mut cloud_only_mcps = BTreeSet::new();
+        // A cloud-only MCP has no local client definition to enumerate. Expose
+        // its validated exact digest with the managed destination so a user can
+        // explicitly select/download it after undoing its local creation. Never
+        // replace or auto-resolve existing differing local client definitions.
+        if let Some(cloud) = &cloud {
+            for mcp in &cloud.partitions().assets.mcps {
+                if !inventory
+                    .mcp_sources
+                    .iter()
+                    .any(|entry| entry.name == mcp.name)
+                {
+                    cloud_only_mcps.insert(mcp.name.clone());
+                    inventory.mcp_sources.push(McpSourceEntryV2 {
+                        name: mcp.name.clone(),
+                        sources: vec![McpSourceOptionV2 {
+                            source: "managed".into(),
+                            definition_digest: super::objects_overlay_v2::mcp_source_digest(mcp)
+                                .map_err(host::map_host_error)?,
+                        }],
+                        differing_fields: vec![],
+                    });
+                }
+            }
+        }
         let mut entries = entries_from(&inventory.objects, true);
         for row in &mut entries {
             if row.kind == ObjectKindV2::Channel {
@@ -875,7 +900,7 @@ impl SyncServiceV2 {
                     kind: ObjectKindV2::Mcp,
                     id: source.name.clone(),
                     label: source.name.clone(),
-                    available_local: true,
+                    available_local: !cloud_only_mcps.contains(&source.name),
                     available_cloud: false,
                     model_ids: vec![],
                     models: vec![],

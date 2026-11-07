@@ -1162,6 +1162,9 @@ async fn original_none_probe(group: &str) {
     };
     use crate::modules::sync::config::*;
     let f = Fixture::new();
+    if group == "skill:scope-fixture" {
+        std::fs::remove_dir_all(f.h.join(".agents/skills/scope-fixture")).unwrap();
+    }
     // Actual source/receive material, with matching known Saved clocks for
     // every portable atom. No timestamp is derived from a local mtime/header.
     let mut parts = file_objects_v2::decode(
@@ -1298,6 +1301,16 @@ async fn original_none_probe(group: &str) {
             template_refs: f.selection.template_refs.clone(),
             ..Default::default()
         }
+    } else if group == "mcp" {
+        SelectionV2 {
+            mcp_sources: f.selection.mcp_sources.clone(),
+            ..Default::default()
+        }
+    } else if group == "skill:scope-fixture" {
+        SelectionV2 {
+            skill_names: vec!["scope-fixture".into()],
+            ..Default::default()
+        }
     } else {
         SelectionV2 {
             usage: UsageV2::RemoteSync,
@@ -1310,7 +1323,11 @@ async fn original_none_probe(group: &str) {
     };
     let request = service::PreviewRequestV2 {
         selection: scope.clone(),
-        mcp_clients: BTreeMap::new(),
+        mcp_clients: if group == "mcp" {
+            BTreeMap::from([("scope_fixture".into(), "managed".into())])
+        } else {
+            BTreeMap::new()
+        },
         assets_reviewed: false,
         selected_head: None,
         forced_direction: Some(service::ServiceDirectionV2::Download),
@@ -1353,8 +1370,17 @@ async fn original_none_probe(group: &str) {
     drop(composition);
     let restored_path = if group == "channels" {
         f.h.join("config.json")
-    } else {
+    } else if group == "extensions" {
         f.d.join(crate::modules::extensions::projection::CONFIG_RELATIVE_PATH)
+    } else {
+        let r: Record = read(&record_path(&f.d, OP).unwrap()).unwrap();
+        r.rows
+            .iter()
+            .find(|row| row.address.group == group && !row.before.exists)
+            .unwrap()
+            .address
+            .path
+            .clone()
     };
     assert!(restored_path.exists());
     let plan = preview(&f.d, &f.h, OP, &[group.to_string()]).unwrap();
@@ -1379,7 +1405,7 @@ async fn original_none_probe(group: &str) {
     }
     let capture_request = CaptureRequestV2 {
         selection: direct_scope,
-        mcp_clients: BTreeMap::new(),
+        mcp_clients: request.mcp_clients.clone(),
         assets_reviewed: false,
     };
     let direct =
@@ -1388,14 +1414,21 @@ async fn original_none_probe(group: &str) {
             Ok(_) => "ok".to_string(),
             Err(error) => error.code,
         };
-    assert_eq!(
-        direct,
-        if group == "channels" {
-            "model_source_invalid"
-        } else {
-            "capture_source_invalid"
-        }
-    );
+    if group == "channels" || group == "extensions" {
+        assert_eq!(
+            direct,
+            if group == "channels" {
+                "model_source_invalid"
+            } else {
+                "capture_source_invalid"
+            }
+        );
+    } else {
+        assert_ne!(
+            direct, "ok",
+            "direct capture must not invent a restored missing resource"
+        );
+    }
     let mut automatic = request;
     automatic.forced_direction = None;
     let composition = backend
@@ -1441,11 +1474,40 @@ async fn original_none_probe(group: &str) {
             catalog.selected.selection.channels.is_empty(),
             "restored absent channel must not be reselected by first catalog"
         );
+    } else if group == "mcp" {
+        assert!(catalog.selected.selection.mcp_sources.is_empty());
+        assert!(
+            catalog
+                .mcp_sources
+                .iter()
+                .any(|m| m.name == "scope_fixture" && !m.sources.is_empty()),
+            "remote-only MCP must expose an exact source option for manual reselection"
+        );
+    } else if group == "skill:scope-fixture" {
+        assert!(!catalog
+            .selected
+            .selection
+            .skill_names
+            .contains(&"scope-fixture".to_string()));
+        assert!(catalog
+            .entries
+            .iter()
+            .any(|e| e.kind == service::ObjectKindV2::Skill
+                && e.id == "scope-fixture"
+                && e.available_cloud));
     } else {
         assert!(
             !catalog.selected.selection.manager.extensions,
             "restored absent extensions must stay unchecked"
         );
+    }
+    if group == "mcp" {
+        let row = catalog
+            .entries
+            .iter()
+            .find(|entry| entry.kind == service::ObjectKindV2::Mcp && entry.id == "scope_fixture")
+            .unwrap();
+        assert!(!row.available_local && row.available_cloud);
     }
     // An explicit user action may select it again and download the retained cloud object.
     client
@@ -1633,4 +1695,13 @@ fn local_file_restore_deselects_actual_local_uuid_and_keeps_unrelated_remembered
         "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"
     );
     assert!(saved.selection.manager.preferences);
+}
+
+#[tokio::test]
+async fn original_none_skill_restore_deselects_scope_and_explicit_reselection_can_download() {
+    original_none_probe("skill:scope-fixture").await;
+}
+#[tokio::test]
+async fn original_none_mcp_restore_deselects_scope_and_exposes_manual_download_source() {
+    original_none_probe("mcp").await;
 }
