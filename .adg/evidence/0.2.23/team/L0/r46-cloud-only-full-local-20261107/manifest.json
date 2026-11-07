@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "productionSource": "56a8a8dcc30f55f732474c6548912678d01d68a8",
+  "result": "full local workspace exit0",
+  "topLevelResult": {
+    "binaries": 49,
+    "passed": 2208,
+    "failed": 0,
+    "ignored": 37
+  },
+  "frontend": {
+    "files": 215,
+    "passed": 1590,
+    "failed": 0
+  },
+  "testsOnlySuccessor": "e722dc4d7 adds actual confirmation asserts to same four tests; all four confirmed actual Applied with zero remote writes in r45; exact source lib/strict followup running",
+  "doctest": "pass",
+  "scope": "ordinary shared code complete for these checks, not Windows or final installer release acceptance",
+  "files": [
+    {
+      "path": "ocxd023-56a8-final-workspace-counts.json",
+      "bytes": 8557,
+      "sha256": "09620cb9501600e00962f2a1e2d491b10300cdb6976cefcbea08b527b82bd371"
+    },
+    {
+      "path": "ocxd023-56a8-final-workspace.log",
+      "bytes": 270618,
+      "sha256": "270e65ca19f9a7a89afc46221e99fa5d07f843a3eb3aa56b2b382b923d57516f"
+    },
+    {
+      "path": "ocxd023-56a8-ui-full-followup.log",
+      "bytes": 823,
+      "sha256": "0a957a31984ef9849a66a74ce0391e712fd616e5df02c7f7dfb9677c13f19379"
+    }
+  ]
+}
