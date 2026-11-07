@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "ephemeralGuard": {
+    "passed": true,
+    "windows": true,
+    "githubActions": "true",
+    "runnerTemp": "D:\\a\\_temp",
+    "checkedBeforeProvisioning": true
+  },
+  "result": "not-ready",
+  "expectedCommit": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+  "nativeExecuted": true,
+  "verifyRuntimePorts": true,
+  "twoSidNativePassed": false,
+  "userIsolation": "not-verified",
+  "fullVersionGatePassed": false,
+  "runtimeProxyPortIsolation": "not-verified",
+  "cleanup": [
+    {
+      "image": "C:\\Windows\\system32\\conhost.exe",
+      "result": "stopped-or-exited",
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1005",
+      "pid": 5840,
+      "creationTicks": "639296597840234592"
+    },
+    {
+      "image": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+      "result": "stopped-or-exited",
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1005",
+      "pid": 7700,
+      "creationTicks": "639296597840204464"
+    },
+    {
+      "image": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+      "result": "stopped-or-exited",
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+      "pid": 5536,
+      "creationTicks": "639296597603408075"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+      "result": "account-and-profile-removed",
+      "profile": "C:\\Users\\ocxacc08a618126b"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1005",
+      "result": "account-and-profile-removed",
+      "profile": "C:\\Users\\ocxacc8a0a9b8e41"
+    }
+  ],
+  "evidenceDirectory": "D:\\a\\_temp\\ocxd023-raw-two-user-9f8438d17445436b9c09ee7780ee8d7a",
+  "unverified": [
+    "Complete runtime proxy ports: no start/stop or conflict experiment performed",
+    "Synthetic DPAPI proves OS CurrentUser sub-scope, not all application credential flows",
+    "ocxd has no peer-pipe override; cross-pipe denial uses actual other-SID .NET client",
+    "Instance lock contents cannot be hashed while Windows byte-range lock is held; size/time plus schema/pointer hashes checked"
+  ],
+  "nodeVersion": "v26.8.1",
+  "executableSha256": "8efc2f6488dc2b1667790ed94bf63ab3d176f9b93eb35063de13165221d9948e",
+  "nodeSha256": "5cba0ea928508c65ddadefc0681d2fb6d95f1f3beea4428f04397631140ee8e5",
+  "reusedSourceSha256": "67a03112abef8b3659ba4154f8d16b92053e1163a2ea6e27010ce1fbbab798ce",
+  "scriptHashes": [
+    {
+      "name": "windows023-two-user-native.ps1",
+      "sha256": "ce634a38644a33431544217870541905d73701b0389912218acdaf7d9fe1831f"
+    },
+    {
+      "name": "windows023-two-user-native-helper.ps1",
+      "sha256": "be28e9ce501a8aac583285c6e214bef00f7fb0a30a3d51ee8ef5dfb9df5c5ca8"
+    },
+    {
+      "name": "windows-process-token.ps1",
+      "sha256": "2c3512b4ad51127883a8fee6a37ee53ced616fea286a9825876eec54c7c9feca"
+    },
+    {
+      "name": "windows-cdp.mjs",
+      "sha256": "9426b6deed269c9000a6a242358da9aa16676675e1a4814c7a430cc124c85c60"
+    }
+  ],
+  "createProfileHResult": 0,
+  "failureCode": "NotReady: ordinary child exited before both Managers were ready",
+  "failureKind": "System.Management.Automation.RuntimeException",
+  "failureStage": 106,
+  "evidenceAclRestored": true,
+  "sealedCandidateUnchanged": true,
+  "desktopAclRestored": true,
+  "finishedUtc": "2026-11-07T14:49:53.1391485Z"
+}
