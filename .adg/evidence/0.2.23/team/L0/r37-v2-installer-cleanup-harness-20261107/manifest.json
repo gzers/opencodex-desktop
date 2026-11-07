@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "source": "0c19e55d6",
+  "result": "static-only pass; real Windows installed helper pending",
+  "reason": "windows-uninstall-data.ps1 still constructed V1 registry/startup install/data fixtures; product 023 intentionally reads only current-user V2 pointer, so old harness was stale",
+  "replacement": "actual TokenUser registered profile U/desktop, structure2 fixed pointer selects explicit current-v2 D, external HOME and unselected legacy sentinel unchanged; cancellation no gates, confirmed D removal with durable external gates, repeat idempotent; only exact initially-absent newly-created roots cleaned by harness",
+  "nativeCleanupExecuted": false,
+  "parserAndGuardChecks": 31,
+  "priorPlatformGuard": "windows-process-token.test.ps1 refused on Mac as intended; no Windows-native claim",
+  "files": [
+    {
+      "path": "ocxd023-v2-uninstall-all-smoke-static.log",
+      "sha256": "495a1b634a9d20f48c283f078546156b37b5049294afdc5d8594c7871adb6ad5",
+      "bytes": 324
+    },
+    {
+      "path": "ocxd023-v2-uninstall-static-check.ps1",
+      "sha256": "df0bbbd59b4ac379402f339ad081adfdaeee3500094e249136f89c68cab46080",
+      "bytes": 1302
+    },
+    {
+      "path": "ocxd023-v2-uninstall-static-result.json",
+      "sha256": "0c0bcdb3dc0b758724196a52353f306960b53973f44d448ad9b788bd9f84f05d",
+      "bytes": 2921
+    }
+  ]
+}
