@@ -1,0 +1,22 @@
+{
+  "scope": "only two queued superseded intermediate test-tool CI runs, product apps tree equal current; each queued status verified immediately before request",
+  "runs": [
+    {
+      "conclusion": "",
+      "databaseId": 42356931619,
+      "headSha": "1c2aa74db73dfec56fd423745e1d7b1bc90b03e7",
+      "status": "in_progress"
+    },
+    {
+      "conclusion": "",
+      "databaseId": 42356608953,
+      "headSha": "d317b85f2bbdd0196f282363b73b74b506e191b9",
+      "status": "in_progress"
+    }
+  ],
+  "reason": "latest same-source full CI42356943505 and complete candidate42356993199 retained; original failures and running validation evidence kept",
+  "candidateStoppedOrRestarted": false,
+  "cancelledCountsAsPassed": false,
+  "latestCandidate": 42356993199,
+  "latestCi": 42356943505
+}

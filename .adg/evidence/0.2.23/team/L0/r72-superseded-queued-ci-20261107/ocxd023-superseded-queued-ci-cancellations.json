@@ -1,0 +1,26 @@
+[
+  {
+    "run": 42356931619,
+    "prior": {
+      "databaseId": 42356931619,
+      "headSha": "1c2aa74db73dfec56fd423745e1d7b1bc90b03e7",
+      "name": "CI",
+      "status": "queued"
+    },
+    "result": "cancel-request-failed",
+    "exit": 1,
+    "reason": "queued obsolete intermediate test tools; latest full CI42356943505 and complete candidate42356993199 retained; product apps tree equal"
+  },
+  {
+    "run": 42356608953,
+    "prior": {
+      "databaseId": 42356608953,
+      "headSha": "d317b85f2bbdd0196f282363b73b74b506e191b9",
+      "name": "CI",
+      "status": "queued"
+    },
+    "result": "cancellation-requested",
+    "exit": 0,
+    "reason": "queued obsolete intermediate test tools; latest full CI42356943505 and complete candidate42356993199 retained; product apps tree equal"
+  }
+]
