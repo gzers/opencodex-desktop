@@ -7,11 +7,19 @@
 ## 当前基线与获取
 
 - 仓库：gzers/opencodex-desktop。
-- 代码：远端codex/0.2.23-integration，明确基线1ad1bf5b3534dac74e370b7f626539dd1a9ebf55（retained原生SID/exitcode，短预检42314822371与完整候选42314821774已启动，实际终态待）。
+- 代码：远端codex/0.2.23-integration，明确基线47eb7cf7420ba9127f4d7047e4d83231f826035f（真实普通执行器短预检及退出/清理已通过；完整候选42315908693待全部软件/安装/端口）。
 - 文档：远端docs/governance-main，以包含本条R2指令的提交为准；读取本文件、TEAM、IMP-31/32及0.2.23-contracts/L0-paths-runtime-v1.md。
 - Windows代码贡献分支：codex/0.2.23-windows；文档/脱敏证据使用独立docs/0.2.23-windows分支。若已有自己的改动，先保留并合并上述明确代码基线，不重置或覆盖工作树。
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
 - 此为0.2.23实施基线，尚非最终安装候选；版本清单仍待L0统一更新。是否取得新代码以完整SHA及实际diff为准，不能仅看软件显示版本。
+
+## R17 普通执行器原生预检已审计通过（2026-11-07）
+
+真实短run42315398563精确HEAD47eb7cf7420ba9127f4d7047e4d83231f826035f终态success：Rustparent2/2和exactchild1/1、retained CreateProcess原生句柄exitCode为integer0、allBinariesAttempted=true；实际普通SID=TokenOwner/Profile/HOME/TEMP、sourceBytesUnchanged、全部DACL与桌面ACL恢复、account/Profile清理均通过。原null退出码缺口已关闭；预检只有一个小binary，不能外推49产品binary或实际安装通过。[r24原ZIP/回执/原生身份](../../.adg/evidence/0.2.23/team/L0/r24-ordinary-preflight-native-verified-20261107/manifest.json)。
+
+47eb7修父wrapper观察对暂停态子进程的竞态：child先写实际原生身份账本再Resume，父层只核对原wrapper，不抢先用CIM扫描未装载映像；清理仍按原PID/SID/image/creation及child原账本，任何未跟踪liveSID进程拒绝删除。原跑测试过但账本未终结的run42314822371保留。派发期间另一次run42315236053实际取旧1ad源码，不计修后验证；先核远端SHA再派发42315398563，源已逐项确认。
+
+同精确SHA完整候选42315908693已开始，继续全部49产品测试binary+独立doc+提权13/nativecred、NSIS/MSI、真实安装/卸载、两用户服务端口。旧完整候选42314821774仍存活不因本次观察超时重开或冒终止；它的源为1ad，结果只能证明其真实范围。当前不发布，等待完整产品验收；Mac实屏和原None删除语义仍待用户答复。
 
 ## R16 原生执行已实跑，退出码审计后继续完整候选（2026-11-07）
 
