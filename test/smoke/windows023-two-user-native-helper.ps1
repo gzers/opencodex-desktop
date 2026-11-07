@@ -695,11 +695,15 @@ function Invoke-TwoUserChild([string]$InputFile) {
    foreach($fact in @($ledger.Values|Sort-Object {[long]$_.creationTicks} -Descending)){Stop-TwoUserTracked $fact};$ledger.Clear();$manager.process.Dispose()
    $prefs=Join-Path $root 'manager-state/preferences.json'
    $document=if(Test-Path -LiteralPath $prefs){Get-Content -LiteralPath $prefs -Raw|ConvertFrom-Json -AsHashtable}else{@{schema_version=2}}
+   if(!$document.Contains('appearance')){$document.appearance=@{}}
+   $document.appearance.theme='system'
+   # Explicit theme avoids first-run theme-import rewriting this backend-only
+   # isolated CLI fixture as Windows UI cli=false. No product capability change.
    $document.cli=@{cli_enabled=$true};$document.shell=@{auto_panel=$false;launch_main=$true;launch_with_codex=$false};$document.updates=@{app_update_auto_check=$false}
    $document|ConvertTo-Json -Depth 12|Set-Content -LiteralPath $prefs -Encoding utf8
    Copy-Item -LiteralPath $prefs -Destination (Join-Path $out 'explicit-test-preferences.before-restart.json')
    $prefObservation=Get-Content -LiteralPath $prefs -Raw|ConvertFrom-Json
-   if($prefObservation.cli.cli_enabled -ne $true -or $prefObservation.schema_version -ne 2){throw 'Explicit isolated CLI preference fixture did not roundtrip'}
+   if($prefObservation.cli.cli_enabled -ne $true -or $prefObservation.schema_version -ne 2 -or $prefObservation.appearance.theme -cne 'system'){throw 'Explicit isolated CLI/theme preference fixture did not roundtrip'}
    $manager=& $start
    $windowDeadline=[datetime]::UtcNow.AddSeconds(40);$liveWindow=$null
    do{try{$liveWindow=Get-TwoUserWindow $manager.fact}catch{Start-Sleep -Milliseconds 250}}while(!$liveWindow -and [datetime]::UtcNow -lt $windowDeadline)
@@ -770,7 +774,12 @@ function Invoke-TwoUserChild([string]$InputFile) {
    if($duplicateProcess.ExitCode -eq 0){throw 'Second Manager did not report rejection'}
    $duplicatePid=$duplicateProcess.Id;$duplicateExit=$duplicateProcess.ExitCode
   }finally{$duplicateProcess.Dispose()}
-  $null=Assert-TwoUserLive $manager.fact;$after=Get-TwoUserWindow $manager.fact
+  $null=Assert-TwoUserLive $manager.fact
+  if($c.diagnosticSweep){
+   $originalHandle=[IntPtr]::new([long]$live.window.handle)
+   if(![OcxTwoUserWindow]::OwnedVisible($originalHandle,$manager.fact.pid)){throw 'Exact original owned visible HWND no longer exists'}
+   $after=@{pid=$manager.fact.pid;handle=$live.window.handle;ownedVisible=$true;observedUtc=[datetime]::UtcNow.ToString('o');method='same exact originalHWND user32 ownership/visibility check'}
+  }else{$after=Get-TwoUserWindow $manager.fact}
   if($c.diagnosticSweep){Write-TwoUserJson (Join-Path $out 'single-instance-window-readback.json') @{original=$live.window;after=$after;manager=$manager.fact;duplicatePid=$duplicatePid;duplicateExit=$duplicateExit;accepted=$false}}
   if($after.handle -cne $live.window.handle){throw 'Original window changed'}
   foreach($f in @($pointer,$metadata)){if((Get-FileHash -LiteralPath $f).Hash -cne $before[$f]){throw 'Duplicate changed pointer/metadata'}}

@@ -1,0 +1,15 @@
+--- a/apps/desktop/tauri/src/modules/runtime/bundled.rs
++++ b/apps/desktop/tauri/src/modules/runtime/bundled.rs
+@@ -151,6 +151,12 @@
+     let mut current = PathBuf::new();
+     for part in path.components() {
+         current.push(part);
++        // A Windows drive/UNC prefix alone is not a filesystem root. Wait for
++        // RootDir before metadata I/O; keep subsequent reparse/directory checks.
++        #[cfg(windows)]
++        if matches!(part, Component::Prefix(_)) {
++            continue;
++        }
+         match fs::symlink_metadata(&current) {
+             Ok(_) => {
+                 if !safety::inspect(&current)?.is_dir() {
