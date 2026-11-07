@@ -1,0 +1,21 @@
+{
+  "result": "fail",
+  "screenshots": [],
+  "checks": [],
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.2.23",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "layout": {
+    "physicalRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces",
+    "dataRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\data\\desktop",
+    "userHome": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\home",
+    "opencodexHome": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\data\\opencodex\\home",
+    "installationRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\program"
+  },
+  "error": "AssertionError [ERR_ASSERTION]: missing native path action: 关闭\n    at click (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-path-ui.mjs:32:5)\n    at async verifyWindowsPathUi (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-path-ui.mjs:99:7)\n    at async file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-install-recovery.mjs:83:3"
+}

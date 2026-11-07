@@ -1,0 +1,25 @@
+{
+  "run": 42370683549,
+  "job": 128397978903,
+  "source": "a99d123e2b605284d926bee7b1f123893c426ca2",
+  "terminal": "failure",
+  "passed": [
+    "actual wizard/offline drop",
+    "eight exact complete original paths/status/details",
+    "real native multiline clipboard; actual CRLF transport independently retained"
+  ],
+  "rootCauseOfPrecedingClipboardFailureConfirmed": "Windows actual readback contains CRLF; expected UI write text uses LF; all path characters/order/count match",
+  "failure": "path driver click helper only checked textContent; actual icon-only header X has aria-label=关闭",
+  "visualEvidence": "paths-failure.png viewed; actual complete path native dialog and visible top-right X, no software close action removed",
+  "followupSource": "54625fa92",
+  "followup": "test click locates exact text or accessible name with visible/enabled guards; same actual Vue action and no timeout changes",
+  "productChanged": false,
+  "localTests": 81,
+  "artifact": {
+    "id": 13573269568,
+    "apiBytes": 507597,
+    "apiSha256": "6c2c6a73a4591a11ea429a2770b660614e25944b06c10e99dbd9ce6305abef47",
+    "wholeZipLocallyHashed": false
+  },
+  "releaseAcceptance": false
+}
