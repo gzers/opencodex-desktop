@@ -1,7 +1,7 @@
 import {test} from 'node:test'
 import assert from 'node:assert/strict'
 import {win32} from 'node:path'
-import {runtimeAcceptanceLayout,assert023RuntimeAdmission} from './windows023-runtime-layout.mjs'
+import {runtimeAcceptanceLayout,assert023RuntimeAdmission,readInitialRuntimeEnvironment} from './windows023-runtime-layout.mjs'
 import {assert023ReadyIpcSafety,prepare021ReadyWebdav} from './windows-021-ready-webdav.mjs'
 const root=win32.join('C:/','owned','中文 Spaces'),layout=runtimeAcceptanceLayout('0.2.23',root)
 const facts={about:{platform:'Windows',version:'0.2.23'},dataRoot:{aggregateRoot:win32.join(root,'data'),currentDataRoot:layout.dataRoot,activeDataRoot:layout.dataRoot,currentOpencodexHome:layout.opencodexHome,opencodexHome:layout.opencodexHome,opencodexHomeMode:'inside',runtimeActive:true}}
@@ -24,4 +24,16 @@ test('wrong 023 HOME fails before any command, reload or endpoint fixture is tou
  let calls=0
  await assert.rejects(prepare021ReadyWebdav({invoke:async()=>{calls++},call:async()=>{calls++}}, {...facts,dataRoot:{...facts.dataRoot,currentOpencodexHome:root}},root,true))
  assert.equal(calls,0)
+})
+
+test('fresh 023 refuses only typed unresolved/pending while preserving real success and all other failures',async()=>{
+ const ready={gate:'ready',node:{found:true},npm:{found:true}}
+ assert.equal(await readInitialRuntimeEnvironment(async()=>ready,'0.2.23'),ready)
+ for(const code of ['unresolved','pending']){
+  const error={code:14,message:'discovery_runtime_'+code}
+  const value=await readInitialRuntimeEnvironment(async()=>{throw error},'0.2.23')
+  assert.equal(value.readyVerified,false);assert.equal(value.gate,'integrated_runtime_not_ready')
+  await assert.rejects(readInitialRuntimeEnvironment(async()=>{throw error},'0.2.22'),e=>e===error)
+ }
+ for(const error of [{code:14,message:'discovery_runtime_invalid'},{code:13,message:'discovery_runtime_unresolved'},new Error('disk corrupt')])await assert.rejects(readInitialRuntimeEnvironment(async()=>{throw error},'0.2.23'),e=>e===error)
 })

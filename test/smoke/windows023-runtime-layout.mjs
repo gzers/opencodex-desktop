@@ -19,3 +19,12 @@ export function assert023RuntimeAdmission(facts,sandbox){
  for(const key of ['currentOpencodexHome','opencodexHome'])assert.equal(normalize(facts.dataRoot[key]),normalize(layout.opencodexHome),'023 HOME escaped the explicit owned layout')
  return layout
 }
+
+// Serialized into the actual WebView; invokes the real backend, never Pinia.
+export async function readInitialRuntimeEnvironment(invoke,version){
+ try{return await invoke('discover_environment',{request:null})}
+ catch(error){
+  if(version!=='0.2.23'||error?.code!==14||!/discovery_runtime_(unresolved|pending)/.test(error?.message??''))throw error
+  return {gate:'integrated_runtime_not_ready',code:error.code,message:error.message,readyVerified:false}
+ }
+}

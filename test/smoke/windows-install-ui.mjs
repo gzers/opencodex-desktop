@@ -4,6 +4,7 @@ import {verifyWindowsOfflineDrop} from './windows-offline-drop.mjs'
 import {writeFile} from 'node:fs/promises'
 import {join,win32} from 'node:path'
 import {runtimeInstallHost,runtimeInstallDomExpression,runtimeInstallExpression,closeRuntimeInstallTerminal} from './windows-021-runtime-host.mjs'
+import {readInitialRuntimeEnvironment} from './windows023-runtime-layout.mjs'
 import {assertModelSandbox} from './windows-model-ui.mjs'
 function readablePrefix(value){
  const native=win32.normalize(value)
@@ -24,7 +25,7 @@ export async function verifyWindowsInstallUi(call,output,install=false,sandbox){
  const closed='!document.querySelector('+JSON.stringify(host.selector)+')'
  let installedSource,readyEndpoint,readyBefore,readyAfter
  await click('概览','.side');await wait("!!document.querySelector('.ov')");
- const prerequisites=await evaluate("(async()=>{try{return await window.__TAURI_INTERNALS__.invoke('discover_environment',{request:null})}catch(error){const about=await window.__TAURI_INTERNALS__.invoke('app_about');if(about.version!=='0.2.23'||error?.code!==14||!/discovery_runtime_(unresolved|pending)/.test(error?.message??''))throw error;return {gate:'integrated_runtime_not_ready',code:error.code,message:error.message,readyVerified:false}}})()");
+ const prerequisites=await evaluate('('+readInitialRuntimeEnvironment.toString()+')(window.__TAURI_INTERNALS__.invoke,'+JSON.stringify(about.version)+')');
  if(about.version==='0.2.23'&&prerequisites.gate==='integrated_runtime_not_ready'){
   assert.equal(prerequisites.readyVerified,false)
   await wait("!!document.querySelector('[data-testid=environment-gate]')")
