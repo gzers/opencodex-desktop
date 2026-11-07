@@ -1,0 +1,27 @@
+{
+  "toolCommit": "f533ac713",
+  "scope": "Mac022->023 signed OTA driver offline preparation only",
+  "result": "prepared-awaiting-parent-publication",
+  "baselineVersion": "0.2.22",
+  "baselineSource": "1b5c8402dc340540711efa2c2c2037bce673a479",
+  "baselineArchiveSha256": "e2d2f58f679757c9b8bc1b7c97531accbe1eccfd9afe5159ded042354887b590",
+  "baselineExeSha256": "027692f55a05d0563e88d1e7291280cb806f6556bb32680f6e7257bbcd24638c",
+  "checks": [
+    "original public-key signature",
+    "strict signed bundle seal",
+    "embedded source and executable hash",
+    "native helpers compiled and permissions observed",
+    "OS direct network denied / owned TLS CONNECT port allowed",
+    "baseline immutable and owned container removed"
+  ],
+  "admissionTests": 5,
+  "appLaunched": false,
+  "betaQueried": false,
+  "otaExecuted": false,
+  "rollbackExecuted": false,
+  "remaining": "actual final signed public beta payload, production updater/native input, automatic new PID/new D-H no migration and old hashes preserved, separate original022 rollback readback; no test pass claimed before execute",
+  "currentWindowsCandidate": 42361947889,
+  "windowsSource": "fa333dd06a14a7f6885a5bc1c611d84acd7b3e4c",
+  "newCommitWindowsOrProductChanges": false,
+  "releaseAcceptance": false
+}

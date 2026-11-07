@@ -1,0 +1,32 @@
+{
+  "prepared": true,
+  "appLaunched": false,
+  "otaExecuted": false,
+  "requiresParentNotification": true,
+  "requiredInputs": [
+    "--mode execute",
+    "--parent-beta-published",
+    "--source-sha <full40>",
+    "--publication-receipt <parent JSON>",
+    "--target-archive <original release>",
+    "--target-signature <original sidecar>"
+  ],
+  "requiredReceipt": {
+    "schemaVersion": 1,
+    "parentNotified": true,
+    "betaPublished": true,
+    "tag": "v0.2.23",
+    "sourceCommit": "<full40>",
+    "releaseId": "<integer>",
+    "archiveSha256": "<64hex>",
+    "betaManifestUrl": "https://github.com/gzers/opencodex-desktop/releases/download/beta/latest.json"
+  },
+  "forbidden": [
+    "new launcher for post-OTA readback",
+    "modified bundle or signing identity",
+    "fake IPC or patched updater endpoints",
+    "daily app restart/quit",
+    "keychain/signing secrets",
+    "real provider or sync requests"
+  ]
+}
