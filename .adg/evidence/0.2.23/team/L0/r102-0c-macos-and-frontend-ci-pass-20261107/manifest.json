@@ -1,0 +1,26 @@
+{
+  "source": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+  "run": 42373994923,
+  "macosJob": 128407736816,
+  "frontendJob": 128407736815,
+  "macosTerminal": "success",
+  "frontendTerminal": "success",
+  "macosChecks": [
+    "strict alltarget Clippy",
+    "bounded metadata process-tree query exact standalone test before workload",
+    "remaining complete workspace regression with original query excluded once",
+    "doc tests"
+  ],
+  "macosCounts": "raw log contains53 success summaries totaling2219 pass including2 nested child-process summaries; original top-level plus standalone query accounting2217 pass,0fail,37 original ignored; not double counting nested subprocesses",
+  "frontend": {
+    "files": 215,
+    "tests": 1590,
+    "typecheck": "passed",
+    "build": "passed"
+  },
+  "retentionAdmissionTests": 17,
+  "windowsCiJob": 128407736681,
+  "windowsRemaining": "full regression stage passed; actualTokenUser passed; native credential/real install/MSVC still inprogress at recording",
+  "finalCandidateRun": 42374536779,
+  "releaseAcceptance": false
+}
