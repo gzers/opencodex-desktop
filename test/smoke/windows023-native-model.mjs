@@ -78,6 +78,9 @@ export async function verify023Native(call,output,facts,sandbox){
  // execution-directory acceptance, never this source-only native probe.
  if(runtimeDirectory.ok)assert(runtimeDirectory.value.channels.some(c=>c.id===channel.id))
  else assert.equal(runtimeDirectory.error?.code,'storage')
+ await click('更多');await click('刷新当前快照')
+ await wait('[...document.querySelectorAll(".channel-model-table tbody tr,.model-table tbody tr")].some(r=>r.textContent.includes("本机/渠道 023"))')
+ checks.push('actual channel table refresh renders the saved Unicode renamed channel')
  checks.push('new D/H paths and actual runtime source readback; no legacy sandbox HOME created')
  await writeFile(join(output,'model-native-ui.json'),JSON.stringify({result:'pass',version:'0.2.23',checks,configPath:paths.config,runtimeDirectory,liveRuntimeDirectoryAccepted:runtimeDirectory.ok,sharedCoverage:'same-source complete Rust and browser suites; no v1 API or old-path fallback',networkGeneration:false},null,2))
  const screenshot=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'model023-native.png'),Buffer.from(screenshot.data,'base64'))
