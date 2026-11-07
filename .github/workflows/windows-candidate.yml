@@ -264,9 +264,15 @@ jobs:
             test/out/windows-candidate/two-user-native/*.log
             test/out/windows-candidate/two-user-native/user1/*.json
             test/out/windows-candidate/two-user-native/user1/*.log
+            test/out/windows-candidate/two-user-native/user1/*/*.json
+            test/out/windows-candidate/two-user-native/user1/*/*.log
+            test/out/windows-candidate/two-user-native/user1/*/*.png
             test/out/windows-candidate/two-user-native/user1/*.png
             test/out/windows-candidate/two-user-native/user2/*.json
             test/out/windows-candidate/two-user-native/user2/*.log
+            test/out/windows-candidate/two-user-native/user2/*/*.json
+            test/out/windows-candidate/two-user-native/user2/*/*.log
+            test/out/windows-candidate/two-user-native/user2/*/*.png
             test/out/windows-candidate/two-user-native/user2/*.png
             test/out/windows-candidate/two-user-static
 
@@ -792,6 +798,14 @@ jobs:
         with:
           ref: 0c869d9497c102b714dea1ee89394f999da8c4ec
           path: test/out/raw-full0c/original-source
+      - name: Apply only observed test-helper environment fix to exact original product checkout
+        shell: pwsh
+        run: |
+          Copy-Item -LiteralPath test/smoke/windows023-two-user-native-helper.ps1 -Destination test/out/raw-full0c/original-source/test/smoke/windows023-two-user-native-helper.ps1 -Force
+          $changed=@(git -C test/out/raw-full0c/original-source diff --name-only)
+          if($changed.Count -gt 1 -or ($changed.Count -eq 1 -and $changed[0] -cne 'test/smoke/windows023-two-user-native-helper.ps1')){throw 'Only the declared diagnostic helper may differ'}
+          if((git -C test/out/raw-full0c/original-source rev-parse HEAD:apps).Trim() -cne 'cf7ca5b19438d9157ada555d0451f91d768b1cf9'){throw 'Original product source differs'}
+          [ordered]@{productSource='0c869d9497c102b714dea1ee89394f999da8c4ec';helperSource=(git rev-parse HEAD).Trim();helperSha256=(Get-FileHash test/smoke/windows023-two-user-native-helper.ps1).Hash.ToLowerInvariant();changed=$changed;productChanged=$false}|ConvertTo-Json|Set-Content test/out/raw-full0c/input/declared-test-helper.json
       - name: Verify two actual SIDs and ports from the same complete original MSI payload
         shell: pwsh
         run: |
@@ -839,11 +853,18 @@ jobs:
             test/out/raw-full0c/two-user/*.log
             test/out/raw-full0c/two-user/user1/*.json
             test/out/raw-full0c/two-user/user1/*.log
+            test/out/raw-full0c/two-user/user1/*/*.json
+            test/out/raw-full0c/two-user/user1/*/*.log
+            test/out/raw-full0c/two-user/user1/*/*.png
             test/out/raw-full0c/two-user/user1/*.png
             test/out/raw-full0c/two-user/user2/*.json
             test/out/raw-full0c/two-user/user2/*.log
+            test/out/raw-full0c/two-user/user2/*/*.json
+            test/out/raw-full0c/two-user/user2/*/*.log
+            test/out/raw-full0c/two-user/user2/*/*.png
             test/out/raw-full0c/two-user/user2/*.png
             test/out/raw-full0c/input/administrative-extract.log
+            test/out/raw-full0c/input/declared-test-helper.json
             test/out/raw-full0c/evidence/*.json
             test/out/raw-full0c/evidence/*.log
             test/out/raw-full0c/evidence/*startup/*.json

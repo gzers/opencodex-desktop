@@ -578,6 +578,10 @@ function Invoke-TwoUserChild([string]$InputFile) {
  $start={
   $listener=[Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback,0);$listener.Start();$port=$listener.LocalEndpoint.Port;$listener.Stop()
   $info=[Diagnostics.ProcessStartInfo]::new();$info.FileName=$exe;$info.WorkingDirectory=$installed;$info.UseShellExecute=$false
+  # PowerShell/.NET can preserve a removed process environment value as empty.
+  # Delete the actual child dictionary keys; empty is not an unset smoke port.
+  foreach($key in @('OPENCODEX_SANDBOX','OPENCODEX_SANDBOX_ROOT','OPENCODEX_WINDOWS_SMOKE_CDP_PORT','HOME','OPENCODEX_HOME','CODEX_HOME','WEBVIEW2_USER_DATA_FOLDER','WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS')){[void]$info.Environment.Remove($key)}
+  if($info.Environment.ContainsKey('OPENCODEX_WINDOWS_SMOKE_CDP_PORT') -or $info.Environment.ContainsKey('OPENCODEX_SANDBOX')){throw 'Native manager child still has test overrides'}
   # Standard WebView2 diagnostics only, NOT the sandbox-only product smoke hook.
   $info.Environment['WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS']="--remote-debugging-address=127.0.0.1 --remote-debugging-port=$port"
   $p=[Diagnostics.Process]::Start($info);$fact=Get-TwoUserProcessFact $p $sid;$ledger[[int]$fact.pid]=$fact
