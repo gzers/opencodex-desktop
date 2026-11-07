@@ -62,7 +62,8 @@ pub(crate) fn start(
                 "integrated runtime provisioning failed; installation retained for recovery: {error}"
             ),
         };
-        let _ = crate::infrastructure::runtime_log::RuntimeLog::new(&desktop).append_event(&message);
+        let _ =
+            crate::infrastructure::runtime_log::RuntimeLog::new(&desktop).append_event(&message);
     });
     Ok(())
 }
