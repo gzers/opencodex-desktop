@@ -24,7 +24,11 @@ fn complete_root_checks_still_reject_regular_files_and_parent_traversal() {
     fs::write(&file, b"keep").unwrap();
     assert!(absolute(&file).is_err());
     assert!(absolute(&file.join("child")).is_err());
-    assert!(absolute(&root.join("one/../two")).is_err());
+    // Joining onto a verbatim Windows prefix normalizes parent components.
+    // Construct the caller spelling directly so the negative input still has ..
+    let traversal = PathBuf::from(format!(r"{}\one\..\two", root.display()));
+    assert!(traversal.to_str().unwrap().contains(r"\..\"));
+    assert!(absolute(&traversal).is_err());
     assert_eq!(fs::read(&file).unwrap(), b"keep");
 }
 

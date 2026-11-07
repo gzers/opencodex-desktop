@@ -66,6 +66,7 @@ try {
  Get-TwoUserDriverText|Set-Content -LiteralPath (Join-Path $code 'two-user-driver.mjs') -Encoding utf8
  $taskSummary.reusedSourceSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'windows-ordinary-startup.ps1')).Hash.ToLowerInvariant()
  $taskSummary.scriptHashes=@(foreach($name in @('windows023-two-user-native.ps1','windows023-two-user-native-helper.ps1','windows-process-token.ps1','windows-cdp.mjs')){@{name=$name;sha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $name)).Hash.ToLowerInvariant()}})
+ $sweepStartupDeadline=if($DiagnosticSweep){[datetime]::UtcNow.AddSeconds(600)}else{$null}
  foreach($index in 1..2){
   $name='ocxacc'+[guid]::NewGuid().ToString('N').Substring(0,10)
   $entropy=[Security.Cryptography.RandomNumberGenerator]::GetBytes(32);$secure=$null;$account=$null
@@ -92,7 +93,7 @@ try {
    & icacls.exe $account.evidence /grant ('*'+$account.sid+':(OI)(CI)M')|Out-Null
    if($LASTEXITCODE -ne 0){throw 'Evidence write ACL failed'}
    $config=Join-Path $account.evidence 'input.json'
-   Write-TwoUserJson $config ([ordered]@{ephemeralGuard=$taskEphemeralGuard;accountSid=$account.sid;profile=$account.profile;commit=$ExpectedCommit;nativeHelper=(Join-Path $code 'windows023-two-user-native-helper.ps1');candidateDirectory=$taskCandidate;executableName=(Split-Path -Leaf $taskExe);node=$taskNode;evidence=$account.evidence;code=$code;profileOnly=$false;verifyRuntimePorts=$VerifyRuntimePorts.IsPresent;runtimeRole=$index;diagnosticSweep=$DiagnosticSweep.IsPresent})
+   Write-TwoUserJson $config ([ordered]@{ephemeralGuard=$taskEphemeralGuard;accountSid=$account.sid;profile=$account.profile;commit=$ExpectedCommit;nativeHelper=(Join-Path $code 'windows023-two-user-native-helper.ps1');candidateDirectory=$taskCandidate;executableName=(Split-Path -Leaf $taskExe);node=$taskNode;evidence=$account.evidence;code=$code;profileOnly=$false;verifyRuntimePorts=$VerifyRuntimePorts.IsPresent;runtimeRole=$index;diagnosticSweep=$DiagnosticSweep.IsPresent;startupDeadlineUtc=$(if($sweepStartupDeadline){$sweepStartupDeadline.ToString('o')}else{$null})})
    $account.credential=[pscredential]::new(($env:COMPUTERNAME+'\'+$name),$secure)
    $account.process=Start-Process -FilePath (Join-Path $PSHOME 'pwsh.exe') -Credential $account.credential -LoadUserProfile -WorkingDirectory $account.evidence -ArgumentList @('-NoLogo','-NoProfile','-NonInteractive','-File',('"'+(Join-Path $code 'profile-bootstrap.ps1')+'"'),'-InputFile',('"'+$config+'"')) -RedirectStandardOutput (Join-Path $account.evidence 'child-stdout.log') -RedirectStandardError (Join-Path $account.evidence 'child-stderr.log') -PassThru
    $account.fact=Get-TwoUserProcessFact $account.process $account.sid;$taskLedger[[int]$account.fact.pid]=$account.fact
@@ -100,7 +101,7 @@ try {
   }finally{[Array]::Clear($entropy,0,$entropy.Length);if($secure -and (!$account -or !$account.credential)){$secure.Dispose()}}
  }
  if($taskAccounts[0].sid -ceq $taskAccounts[1].sid){throw 'Two distinct real SIDs required'}
- $deadline=[datetime]::UtcNow.AddSeconds(600)
+ $deadline=if($DiagnosticSweep){$sweepStartupDeadline}else{[datetime]::UtcNow.AddSeconds(600)}
  do{
   $startupStates=@()
   foreach($account in $taskAccounts){

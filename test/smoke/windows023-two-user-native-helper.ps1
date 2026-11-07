@@ -703,7 +703,27 @@ function Invoke-TwoUserChild([string]$InputFile) {
    Write-TwoUserJson (Join-Path $out 'diagnostic-startup.json') @{sid=$sid;manager=$manager.fact;window=$liveWindow;token=$actualToken;accepted=$false}
    Invoke-TwoUserSweepCheck 'native-observation' {$observed.initial=& $screen $manager 'initial';$observed.initial.facts}|Out-Null
    $initial=$observed.initial
+   # First-screen polling is not a terminal supply observation. Keep this exact
+   # generation alive inside the ORIGINAL shared 600-second startup budget;
+   # reserve 90 seconds for restart/IPC. Never kill a still-verifying worker to
+   # install the CLI fixture, or its pending transaction is caused by the test.
+   $supplyDeadline=[datetime]::Parse($c.startupDeadlineUtc).ToUniversalTime().AddSeconds(-90)
+   $supplyTerminal=$null;$supplyPhases=@();$lastPhase=$null
+   do{
+    $null=Assert-TwoUserLive $manager.fact;Add-TwoUserDescendants $manager.fact $ledger
+    $logPath=Join-Path $root 'logs/app.log'
+    if(Test-Path -LiteralPath $logPath){$supplyTerminal=Get-Content -LiteralPath $logPath|Select-String 'integrated runtime (provisioned and verified|provisioning failed)'|Select-Object -Last 1}
+    $pending=Join-Path $installed '.runtime-bundle-pending.json'
+    if(Test-Path -LiteralPath $pending){try{$phase=(Get-Content -LiteralPath $pending -Raw|ConvertFrom-Json).phase;if($phase -cne $lastPhase -and $supplyPhases.Count -lt 64){$supplyPhases+=@{phase=$phase;atUtc=[datetime]::UtcNow.ToString('o')};$lastPhase=$phase}}catch{}}
+    if(!$supplyTerminal){Start-Sleep -Milliseconds 250}
+   }while(!$supplyTerminal -and [datetime]::UtcNow -lt $supplyDeadline)
+   Write-TwoUserJson (Join-Path $out 'supply-worker-terminal.json') @{terminal=$(if($supplyTerminal){$supplyTerminal.Line}else{$null});phases=$supplyPhases;originalStartupDeadlineUtc=$c.startupDeadlineUtc;observationDeadlineUtc=$supplyDeadline.ToString('o');accepted=$false}
+   if($supplyTerminal -and $supplyTerminal.Line.Contains('integrated runtime provisioned and verified')){
+    Invoke-TwoUserSweepCheck 'supplied-observation' {$observed.initial=& $screen $manager 'supplied';$observed.initial.facts}|Out-Null
+    $initial=$observed.initial
+   }
    Invoke-TwoUserSweepCheck 'private-bundle-supply' {
+    if(!$supplyTerminal){throw 'Actual first-start supply did not reach a terminal result inside the original shared startup budget'}
     $failedSupply=@(Get-Content -LiteralPath (Join-Path $root 'logs/app.log') -ErrorAction SilentlyContinue|Select-String 'integrated runtime provisioning failed'|Select-Object -Last 1)
     if($failedSupply.Count){throw $failedSupply[0].Line}
     if(!$initial){throw 'Actual supply observation unavailable: native CDP failed; app logs retain any actual bundle failure'}
@@ -726,6 +746,7 @@ function Invoke-TwoUserChild([string]$InputFile) {
    if($location.schemaVersion -ne 1 -or !(Test-TwoUserSamePath $location.activeRoot (Join-Path $nativeProfile '.codex-desktop')) -or $meta.structure_version -cne '2'){throw 'Actual own pointer/structure2 prerequisite missing; no preference mutation'}
    $appLog=Join-Path $root 'logs/app.log'
    if(!(Get-Content -LiteralPath $appLog -Raw).Contains('commit='+$c.commit)){throw 'Actual own Manager source provenance differs'}
+   if(!$supplyTerminal){throw 'NotReady: still-verifying supply is not interrupted for an IPC fixture'}
    Add-TwoUserDescendants $manager.fact $ledger
    foreach($fact in @($ledger.Values|Sort-Object {[long]$_.creationTicks} -Descending)){Stop-TwoUserTracked $fact};$ledger.Clear();$manager.process.Dispose()
    $prefs=Join-Path $root 'manager-state/preferences.json'
@@ -739,6 +760,9 @@ function Invoke-TwoUserChild([string]$InputFile) {
    Copy-Item -LiteralPath $prefs -Destination (Join-Path $out 'explicit-test-preferences.before-restart.json')
    $prefObservation=Get-Content -LiteralPath $prefs -Raw|ConvertFrom-Json
    if($prefObservation.cli.cli_enabled -ne $true -or $prefObservation.schema_version -ne 2 -or $prefObservation.appearance.theme -cne 'system'){throw 'Explicit isolated CLI/theme preference fixture did not roundtrip'}
+   if(Test-Path -LiteralPath (Join-Path $installed 'sweep-state.exe')){
+    & (Join-Path $installed 'sweep-state.exe') $root *> (Join-Path $out 'actual-preferences-loader.before-restart.log')
+   }
    $manager=& $start
    $windowDeadline=[datetime]::UtcNow.AddSeconds(40);$liveWindow=$null
    do{try{$liveWindow=Get-TwoUserWindow $manager.fact}catch{Start-Sleep -Milliseconds 250}}while(!$liveWindow -and [datetime]::UtcNow -lt $windowDeadline)
@@ -751,7 +775,7 @@ function Invoke-TwoUserChild([string]$InputFile) {
   $data=Invoke-TwoUserCli $cli @('data-root','show','--json')
   if(!(Test-TwoUserSamePath $data.data.active_data_root $root) -or !(Test-TwoUserSamePath $data.data.opencodex_home $nativeHome)){throw 'Candidate CLI uses another D/H'}
   Write-TwoUserJson (Join-Path $out 'same-user-data-root.json') $data
-  $pipe=Get-TwoUserPipeName $sid;$own=[IO.Pipes.NamedPipeClientStream]::new('.',$pipe,[IO.Pipes.PipeDirection]::InOut)
+  $pipe=Get-TwoUserPipeName $sid;$own=[IO.Pipes.NamedPipeClientStream]::new('.',$pipe,[IO.Pipes.PipeDirection]::InOut,[IO.Pipes.PipeOptions]::Asynchronous,[Security.Principal.TokenImpersonationLevel]::Impersonation)
   try{$connectBudget=[Diagnostics.Stopwatch]::StartNew();Wait-TwoUserDiagnosticPipe $manager.fact $pipe 5000;$own.Connect([Math]::Max(1,5000-[int]$connectBudget.ElapsedMilliseconds));[uint32]$serverId=0
    if(![OcxTwoUserWindow]::GetNamedPipeServerProcessId($own.SafePipeHandle.DangerousGetHandle(),[ref]$serverId) -or $serverId -ne $manager.fact.pid){throw 'Actual product pipe server PID differs'}
    $frame=Complete-TwoUserReadonlyPipeFrame $own
@@ -963,6 +987,9 @@ function Invoke-TwoUserChild([string]$InputFile) {
    }
   }
   if($c.diagnosticSweep -and (Test-Path -LiteralPath (Join-Path $root 'manager-state/preferences.json'))){Copy-Item -LiteralPath (Join-Path $root 'manager-state/preferences.json') -Destination (Join-Path $out 'explicit-test-preferences.after-checks.json')}
+  if($c.diagnosticSweep -and (Test-Path -LiteralPath (Join-Path $installed 'sweep-state.exe'))){
+   try{& (Join-Path $installed 'sweep-state.exe') $root *> (Join-Path $out 'actual-preferences-loader.after-checks.log')}catch{}
+  }
   if($c.diagnosticSweep -and (Test-Path -LiteralPath (Join-Path $installed 'sweep-filesystem.exe'))){
    try{& (Join-Path $installed 'sweep-filesystem.exe') $installed $root *> (Join-Path $out 'filesystem-observations.log')}catch{$result.filesystemObserverError=$_.Exception.GetType().FullName}
   }
