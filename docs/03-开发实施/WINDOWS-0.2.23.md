@@ -271,3 +271,12 @@ R23的缺custom-protocol因果判断撤回：同一已封装release包，未激�
 ## R28 云端独有MCP的恢复后重选补齐（2026-11-07）
 
 f86620e83补真实消费者缺口：原None恢复取消选择后，cloud-only MCP目录无本机source选项，UI无法明确勾选下载。现仅该情形加入云端有效文件内exact定义摘要+managed目标入口；原本机冲突来源保持，标记availableLocal=false。四种原None对象（渠道/扩展/Skill/MCP）真实Service取消选择及明确重选下载4过，Service28、UI48/type/build/strict过。56a8a8dcc再阻止范围读回失败时沿用旧选择prepare/confirm/save。整套UI首轮1589过/1采样probe消失，独立原玻璃测试不改样式/阈值28过，精确新源全量续跑，r44。当前218Windows候选42333262869不含此普通共享增量，只证明其自身来源范围，最终制品需新源。
+
+
+## R29 218阶段计时回交与返修（2026-11-07）
+
+完整候选42333262869固定218b2262b已失败结束。普通49binary全部尝试，48成功，库1686过/13失败/5忽略，实际101保留；源码/制品ACL及desktopACL还原、临时SID/Profile清理过。always提权13+真实backup-lock1过，native provider-auth/channel-rename/secure-store全过；安装器因前序失败未通过。证据13560147533共715108940 bytes，整ZIP期望cbc455ee4cc54e01320e57de91701d033b9cc9f8709248dc57bc7af25be6ba28；本次只核条目CRC/size及本地SHA，不声称完整ZIP核过。r49。
+
+阶段日志显示网络请求0～5ms、图观察最多45ms、锁等待最多33ms（受查失败组），超时位于这些阶段外。源码确认上传同一context guard先取root_revision再取source，实际完整本机捕获重复两次。e2f1d7fc8改为单次新鲜捕获同时证明两项，每个写门禁仍重新捕获，不缓存日常配置/Key；仅编译固定种子解析/校验OnceLock，返回独立clone，用户文件仍严格验证。
+
+运行时身份用例在旧代码实际复现跨入独立Tauri全局执行器；208f4d9a7沿调用方Tokio执行器派发并保留断开观察者不取消已准入工作的lease/supervisor语义，原2s/5s/10s及90s门均不增。两项原None路径断言仅因Windows反斜杠，9437625f4只统一夹具清单拼写。更新15/IPC47/core34/host28/service28本机定向过，完整及strict续验，Windows是否解决仍待新候选，未发布。

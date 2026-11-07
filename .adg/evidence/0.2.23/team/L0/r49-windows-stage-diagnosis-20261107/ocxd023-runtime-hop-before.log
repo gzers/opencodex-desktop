@@ -1,0 +1,21 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 26.51s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-0acf286eb61f7336)
+
+running 1 test
+
+thread 'commands::update::tests::manager_query_retains_the_callers_runtime_for_its_owned_work' (136871532) panicked at src/commands/update.rs:691:9:
+assertion `left == right` failed: query work must not hop to an unrelated global runtime
+  left: Id(2)
+ right: Id(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test commands::update::tests::manager_query_retains_the_callers_runtime_for_its_owned_work ... FAILED
+
+failures:
+
+failures:
+    commands::update::tests::manager_query_retains_the_callers_runtime_for_its_owned_work
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1987 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

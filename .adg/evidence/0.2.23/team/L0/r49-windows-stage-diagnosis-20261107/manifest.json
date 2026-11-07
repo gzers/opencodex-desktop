@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "result": "218 Windows candidate failed; stage evidence narrows cause and followups committed",
+  "run": 42333262869,
+  "source": "218b2262bdbdcddaaa79c8fc240872ff2b596ae8",
+  "artifact": {
+    "id": 13560147533,
+    "bytes": 715108940,
+    "expectedWholeZipSha256": "cbc455ee4cc54e01320e57de91701d033b9cc9f8709248dc57bc7af25be6ba28",
+    "wholeZipDigestVerified": false,
+    "entryProof": "bounded centraldirectory/localheader extraction; CRC32/size verified; every local file SHA below"
+  },
+  "ordinary": {
+    "all49BinariesAttempted": true,
+    "other48Binaries": "success",
+    "library": {
+      "passed": 1686,
+      "failed": 13,
+      "ignored": 5
+    },
+    "nativeExit": 101,
+    "sourceArtifactAclAndDesktopAclRestored": true,
+    "accountAndProfileRemoved": true
+  },
+  "elevated": "13 private creation + one actual backup-lock case passed",
+  "nativeCredentials": "provider-auth native, channel-rename native, native secure store all passed",
+  "installer": "skipped because ordinary regression failed; not accepted",
+  "diagnosis": {
+    "network": "failing service test transport calls 0～5ms; graph observations max45ms, store locks max33ms in examined phases, not a 30s network stall",
+    "source": "fresh upload context guard called root_revision then current_source; production implementation recaptured complete source separately twice; combined source_context returns both from one fresh verified capture, rechecks every gate",
+    "executor": "new runtime-identity test reproduced Tauri global runtime hop (Id2 versus caller Id1); 208f4d9a7 binds async/blocking owners to caller runtime preserving leases and independent completion after observer cancellation",
+    "pathAssertions": "two restored-absence inventory tests compared slash patterns against Windows backslash display paths; 9437625f4 normalizes only the test inventory comparison, no product path semantic change",
+    "unconfirmed": "stage evidence narrows costs but Windows timeout resolution is not claimed before next source native results"
+  },
+  "followups": {
+    "208f4d9a7": "runtime locality",
+    "e2f1d7fc8": "fresh context capture once; cache only immutable compiled seed parse/validation with clone isolation, no user file/key/source cache",
+    "9437625f4": "test inventory platform-independent spelling"
+  },
+  "localChecks": {
+    "updateOwnership": 15,
+    "IPC": 47,
+    "coreSync": 34,
+    "host": 28,
+    "service": 28,
+    "originalBudgets": "unchanged request30s/operation90s/owner test deadlines/default workers/full49 scope",
+    "fullAndStrict": "running"
+  },
+  "files": [
+    {
+      "path": "ocxd023-candidate13-failure-evidence/partial-extraction-manifest.json",
+      "bytes": 430,
+      "sha256": "ce96e02a33ee01b944cd71b72a8d50a15862a2267e379dbaf9d6167cee83c80a"
+    },
+    {
+      "path": "ocxd023-candidate13-failure-evidence/test-13.stdout.log",
+      "bytes": 371078,
+      "sha256": "f4c9bce1890a7113be1b1c71fa51dd2dc9bf75c95dbac4e5f200920434654195"
+    },
+    {
+      "path": "ocxd023-candidate13-failure-phase-analysis.json",
+      "bytes": 20873,
+      "sha256": "d100eff628d0e840e2757dd22242f1ba0577db9a923b33f9fca981182eefc541"
+    },
+    {
+      "path": "ocxd023-candidate13-range-evidence/ordinary-suite.json",
+      "bytes": 144548,
+      "sha256": "3dfc4304c2b34079efe854cbb1c74c8956f71420681726a65fcd2da556c1c0a8"
+    },
+    {
+      "path": "ocxd023-candidate13-range-evidence/partial-extraction-manifest.json",
+      "bytes": 629,
+      "sha256": "c9692ae13912c223bf6863f236e1068de978220bf48ec4aa60b9f6e7a73bcc25"
+    },
+    {
+      "path": "ocxd023-candidate13-range-evidence/rust-ordinary.json",
+      "bytes": 789520,
+      "sha256": "30c4ee3185b2c7c608331a08c9635b2f04baa423c7596cb416047201000a5a67"
+    },
+    {
+      "path": "ocxd023-candidate13-terminal-job.log",
+      "bytes": 144446,
+      "sha256": "33af19929630b61ee8b99d9506970b7b0115ffcc5858f2b645f22356d870fa2d"
+    },
+    {
+      "path": "ocxd023-core-combined-source.log",
+      "bytes": 4314,
+      "sha256": "79c8efead11ba0b4d4739035e8b32c8bbf49cbd6d438e87ddca710e45650330a"
+    },
+    {
+      "path": "ocxd023-fresh-source-context-final.log",
+      "bytes": 4275,
+      "sha256": "fe06f46dd0497acc58b6b82c13dae3150d65e946e58389e142adcb147d3a190e"
+    },
+    {
+      "path": "ocxd023-ipc-local-runtime.log",
+      "bytes": 7294,
+      "sha256": "fe8940af3be595de9a62863a5e5325acb894219990b78a3878ce8a926d055ea7"
+    },
+    {
+      "path": "ocxd023-owned-query-local-runtime.log",
+      "bytes": 2127,
+      "sha256": "cced9d3adf11c4749b64943baeaaff7e53224a99acb8ce03bbf8bfcef68b32af"
+    },
+    {
+      "path": "ocxd023-runtime-hop-before.log",
+      "bytes": 1012,
+      "sha256": "4897140c7024322c5295667de5f1b32ca4c10679c385d7bdcc91f81e0a525efe"
+    },
+    {
+      "path": "ocxd023-service-source-perf.log",
+      "bytes": 4796,
+      "sha256": "015f4e5a2fcc3c67effb6c28991c28f63e5c3fe994f613aeed1c22c37e871f63"
+    }
+  ]
+}

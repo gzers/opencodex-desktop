@@ -1,0 +1,37 @@
+    Blocking waiting for file lock on artifact directory
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.18s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-0acf286eb61f7336)
+
+running 28 tests
+test modules::model_config::sync_service_v2::scope_restore::tests::edited_plan_cannot_deselect_an_unrelated_object_by_rewriting_its_checksum ... ok
+test modules::model_config::sync_service_v2::scope_restore::tests::first_catalog_still_selects_every_other_object_but_not_restored_absences ... ok
+test modules::model_config::sync_service_v2::scope_restore::tests::frozen_scope_update_keeps_other_choices_and_manual_reselection_survives_reopen ... ok
+test modules::model_config::sync_service_v2::scope_restore::tests::changed_scope_rejects_the_frozen_plan_without_overwriting_user_choices ... ok
+test modules::model_config::sync_service_v2::tests::inventory_dtos_keep_key_and_authorization_independent_for_cloud_and_default_old_fields ... ok
+test modules::model_config::sync_service_v2::tests::local_file_catalog_needs_no_endpoint_and_preserves_actual_saved_ids_models_and_exact_template_refs ... ok
+test modules::model_config::sync_service_v2::tests::persisted_scope_is_explicit_empty_and_bad_cloud_never_initializes_default_all ... ok
+test modules::model_config::sync_service_v2::tests::local_file_catalog_keeps_conflicting_mcp_per_source_choices_without_endpoint_or_default_selection ... ok
+test modules::model_config::sync_service_v2::tests::request_dtos_reject_unknown_connection_authority_and_secrets_are_not_serializable ... ok
+test modules::model_config::sync_service_v2::tests::local_file_catalog_lists_webdav_candidates_and_password_availability_without_reading_values ... ok
+test modules::model_config::sync_service_v2::tests::source_inventory_dtos_expose_exact_references_and_per_source_binding_without_secret_payloads ... ok
+test modules::model_config::sync_service_v2::tests::selected_key_and_mcp_secret_only_changes_are_visible_as_updates_without_secret_values_or_hashes ... ok
+test modules::model_config::sync_service_v2::tests::original_private_record_has_no_password_and_bad_record_never_uses_new_active_endpoint ... ok
+test modules::model_config::sync_service_v2::tests::production_directory_mcp_source_options_are_exact_and_do_not_choose_conflicting_sources ... ok
+test modules::model_config::sync_service_v2::tests::current_saved_change_and_cancel_block_unconfirmed_publication ... ok
+test modules::model_config::sync_service_v2::tests::actual_saved_upload_preview_is_read_only_confirmation_publishes_and_reopened_result_verify_is_original_only ... ok
+test modules::model_config::sync_service_v2::tests::no_op_is_semantic_and_never_prepares_or_publishes_a_second_operation ... ok
+test modules::model_config::sync_service_v2::tests::catalog_keeps_exact_saved_revisions_and_unions_cloud_only_raw_models_without_expanding_existing_scope ... ok
+test modules::model_config::sync_service_v2::tests::resume_preflight_returns_original_plan_request_not_a_new_preview_and_stored_does_not_capture ... ok
+test modules::model_config::sync_service_v2::tests::production_recovery_export_reads_chosen_branch_and_preserves_all_business_targets_and_remote_files ... ok
+test modules::model_config::sync_service_v2::tests::production_initialization_ambiguity_exposes_readonly_candidates_and_can_explicitly_recover_a_chosen_branch ... ok
+test modules::model_config::sync_service_v2::tests::production_backend_uploads_actual_saved_objects_and_first_device_downloads_with_real_model_receipt ... ok
+test modules::model_config::sync_service_v2::tests::production_backup_failure_preserves_actual_target_and_retries_same_operation_after_protection_restored ... ok
+test modules::model_config::sync_service_v2::tests::production_same_uuid_second_sync_is_semantic_noop_and_explicit_download_restores_existing_actual_source ... ok
+test modules::model_config::sync_service_v2::tests::production_first_device_receives_model_mapping_receipt_preferences_extensions_and_assets_after_model_adoption ... ok
+test modules::model_config::sync_service_v2::tests::real_model_applied_interruption_reopens_with_dual_proofs_and_only_finishes_original_nonmodel_participants ... ok
+test modules::model_config::sync_service_v2::tests::auth_mode_none_first_receive_keeps_actual_public_direction_on_second_service_preview ... ok
+test modules::model_config::sync_service_v2::tests::production_encrypted_first_download_uses_only_request_read_secret_and_still_commits_actual_model_receipt has been running for over 60 seconds
+test modules::model_config::sync_service_v2::tests::production_encrypted_first_download_uses_only_request_read_secret_and_still_commits_actual_model_receipt ... ok
+
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 1961 filtered out; finished in 64.14s
+

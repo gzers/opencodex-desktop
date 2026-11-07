@@ -1,0 +1,89 @@
+    Blocking waiting for file lock on artifact directory
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.36s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-0acf286eb61f7336)
+
+running 47 tests
+test modules::ipc::service::sync_v2_tests::v2_failures_keep_cli_error_classes_and_never_expose_provider_details ... ok
+test modules::ipc::service::sync_v2_tests::production_cli_source_selects_process_context_home_and_has_no_legacy_engine_edge ... ok
+test modules::ipc::service::tests::backup_list_lock_wait_keeps_executor_responsive_and_survives_observer_drop ... ok
+test modules::ipc::service::tests::busy_frozen_and_unconfirmed_cli_sync_do_not_execute_or_write_audit ... ok
+test modules::ipc::service::sync_v2_tests::real_v2_cli_busy_or_frozen_rejects_before_catalog_credentials_and_audit ... ok
+test modules::ipc::service::sync_v2_tests::confirmation_and_invalid_args_reject_before_scope_network_or_audit ... ok
+test modules::ipc::service::sync_v2_tests::terminal_notification_candidate_stays_bound_to_the_original_public_endpoint ... ok
+test modules::ipc::service::sync_v2_tests::lazy_production_constructor_is_shared_and_uses_explicit_existing_home ... ok
+test modules::ipc::service::tests::binding_refuses_busy_writer_and_validation_failure_reopens_admission ... ok
+test modules::ipc::service::tests::cli_binding_busy_frozen_and_unconfirmed_never_execute_or_audit ... ok
+
+thread 'tokio-rt-worker' (136909846) panicked at src/modules/ipc/service.rs:1654:34:
+injected terminal panic
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test modules::ipc::service::tests::cancelled_sync_observer_keeps_admissions_until_terminal_and_audit_for_each_result ... ok
+
+thread 'tokio-rt-worker' (136909918) panicked at src/modules/ipc/service.rs:3049:38:
+isolated binding projection panic
+test modules::ipc::service::tests::cli_lifecycle_projects_only_matching_terminal_and_preserves_context_and_wire_contract ... ok
+
+thread 'tokio-rt-worker' (136909918) panicked at src/modules/ipc/service.rs:3049:38:
+isolated binding projection panic
+test modules::ipc::service::tests::cli_binding_owns_runtime_and_exclusive_storage_until_terminal_audit ... ok
+test modules::ipc::service::tests::cli_lifecycle_rejects_busy_frozen_unconfirmed_and_unsafe_arguments ... ok
+test modules::ipc::service::sync_v2_tests::saved_explicit_empty_scope_is_not_replaced_by_catalog_default_all ... ok
+test modules::ipc::service::tests::cli_backup_uses_manual_scope_verified_source_and_complete_metadata_listing ... ok
+
+thread 'tokio-rt-worker' (136909983) panicked at src/modules/ipc/service.rs:2013:46:
+isolated lifecycle worker panic
+test modules::ipc::service::tests::cli_migration_refusal_does_not_wait_for_legacy_file_locks_or_create_targets ... ok
+test modules::ipc::service::tests::cli_migration_rejects_unconfirmed_frozen_and_invalid_requests_without_file_mutation ... ok
+
+thread 'tokio-rt-worker' (136909944) panicked at src/modules/ipc/service.rs:2530:37:
+injected backup panic
+test modules::ipc::service::tests::cli_lifecycle_reuses_registered_events_and_recovers_only_exact_action_and_candidate ... ok
+test modules::ipc::service::tests::cli_root_migrate_is_unsupported_before_status_audit_or_target_creation ... ok
+test modules::ipc::service::tests::cancelled_backup_observer_keeps_admission_through_real_terminal_and_audit ... ok
+test modules::ipc::service::tests::cli_update_projects_truthful_terminal_status_and_keeps_three_field_dto ... ok
+test modules::ipc::service::tests::cli_migration_is_explicitly_unsupported_without_reading_or_changing_files ... 
+thread 'tokio-rt-worker' (136910071) panicked at src/modules/ipc/service.rs:2955:38:
+isolated query panic
+ok
+test modules::ipc::service::tests::cli_update_requires_real_gui_and_frozen_query_has_no_side_effects ... ok
+test modules::ipc::service::tests::passphrase_required_is_reported_distinctly ... ok
+
+thread 'modules::ipc::service::tests::cli_update_query_survives_disconnect_through_commit_and_terminal_audit' (136910081) panicked at src/modules/ipc/service.rs:2810:34:
+isolated CLI update panic
+
+thread 'tokio-rt-worker' (136910071) panicked at src/modules/ipc/service.rs:2955:38:
+isolated query panic
+test modules::ipc::service::tests::cli_update_query_survives_disconnect_through_commit_and_terminal_audit ... ok
+
+thread 'tokio-rt-worker' (136909983) panicked at src/modules/ipc/service.rs:2013:46:
+isolated lifecycle worker panic
+test modules::ipc::service::tests::public_status_lock_wait_keeps_executor_responsive_and_survives_disconnect ... ok
+
+thread 'tokio-rt-worker' (136910071) panicked at src/modules/ipc/service.rs:2955:38:
+isolated query panic
+test modules::ipc::service::tests::frozen_and_unconfirmed_cli_backup_do_not_execute_or_write_audit ... ok
+test modules::ipc::service::tests::sync_projection_preserves_conflicts_readback_failure_and_typed_network_errors ... ok
+test modules::ipc::service::tests::cli_queries_survive_disconnect_and_audit_only_admitted_roots ... ok
+test modules::ipc::service::tests::sync_run_without_endpoint_reports_failure_instead_of_fake_success ... ok
+
+thread 'tokio-rt-worker' (136909983) panicked at src/modules/ipc/service.rs:2013:46:
+isolated lifecycle worker panic
+test modules::ipc::service::tests::public_binding_lock_wait_persists_v2_fixed_pointer_after_disconnect ... ok
+test modules::ipc::service::tests::cli_lifecycle_worker_survives_disconnect_and_holds_both_gates_through_audit ... ok
+test modules::ipc::service::sync_v2_tests::projection_requires_matching_operation_and_independent_terminal_proofs ... ok
+test modules::ipc::service::sync_v2_tests::bad_payload_readback_and_unauthorized_remote_never_project_success ... ok
+test modules::ipc::service::sync_v2_tests::cancelled_cli_observer_keeps_admissions_until_real_v2_terminal_and_audit ... ok
+test modules::ipc::service::tests::switch_data_root_uses_fixed_d_and_target_u_across_actual_ipc_restart ... ok
+test modules::ipc::service::sync_v2_tests::ambiguous_generations_are_not_implicitly_selected_or_written_by_cli ... ok
+test modules::ipc::service::sync_v2_tests::cli_real_saved_preferences_no_change_has_no_fabricated_snapshot_or_confirm_write ... ok
+test modules::ipc::service::sync_v2_tests::cli_real_v2_initial_catalog_uploads_verified_wrapper_and_audits_original_request ... ok
+test modules::ipc::service::tests::actual_ipc_reference_checks_sandbox_installation_update_and_current_locks ... ok
+test modules::ipc::service::sync_v2_tests::cli_first_device_download_uses_actual_model_transaction_receipt_and_default_backup ... ok
+test modules::ipc::service::tests::cli_backup_honours_saved_cleanup_mode_and_retains_pins_and_legacy_transactions ... ok
+test modules::ipc::service::tests::cli_backup_rejects_missing_corrupt_source_or_policy_without_fake_success_or_cleanup ... ok
+test modules::ipc::service::sync_v2_tests::differing_mcp_sources_require_gui_choice_and_never_silently_sync_a_partial_default ... ok
+test modules::ipc::service::sync_v2_tests::cli_repeated_models_follow_actual_backend_plan_without_inventing_semantic_equality ... ok
+test modules::ipc::service::sync_v2_tests::protected_cloud_without_passphrase_returns_typed_failure_without_plaintext_fallback ... ok
+
+test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 1942 filtered out; finished in 12.35s
+

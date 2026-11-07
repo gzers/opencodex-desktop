@@ -1,0 +1,450 @@
+[
+  {
+    "test": "commands::update::tests::manager_query_owner_survives_disconnect_and_releases_on_all_terminals",
+    "failure": "thread 'commands::update::tests::manager_query_owner_survives_disconnect_and_releases_on_all_terminals' (836) panicked at src\\commands\\update.rs:734:18:\ncalled `Result::unwrap()` on an `Err` value: Elapsed(())\n",
+    "phaseStats": {},
+    "lastPhases": []
+  },
+  {
+    "test": "modules::ipc::service::sync_v2_tests::cancelled_cli_observer_keeps_admissions_until_real_v2_terminal_and_audit",
+    "failure": "thread 'modules::ipc::service::sync_v2_tests::cancelled_cli_observer_keeps_admissions_until_real_v2_terminal_and_audit' (5420) panicked at src\\modules\\ipc\\service_sync_v2_tests.rs:653:6:\ncalled `Result::unwrap()` on an `Err` value: Elapsed(())\n",
+    "phaseStats": {
+      "store-lock-wait": {
+        "n": 5,
+        "max": 9,
+        "sum": 13
+      },
+      "network-list": {
+        "n": 6,
+        "max": 5,
+        "sum": 5
+      },
+      "graph-observe-with-store-lock": {
+        "n": 3,
+        "max": 26,
+        "sum": 54
+      }
+    },
+    "lastPhases": [
+      "SYNC_TEST_PHASE end network-list elapsed_ms=0",
+      "SYNC_TEST_PHASE begin network-list",
+      "SYNC_TEST_PHASE end network-list elapsed_ms=0",
+      "SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=18",
+      "SYNC_TEST_PHASE begin store-lock-wait",
+      "SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1",
+      "SYNC_TEST_PHASE begin store-lock-wait",
+      "SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1"
+    ]
+  },
+  {
+    "test": "modules::model_config::sync_local_v2::restore::tests::original_none_extension_restore_deselects_scope_and_explicit_reselection_can_download",
+    "failure": "thread 'modules::model_config::sync_local_v2::restore::tests::original_none_extension_restore_deselects_scope_and_explicit_reselection_can_download' (8596) panicked at src\\modules\\model_config\\sync_local_v2_restore_tests.rs:1508:5:\nunexpected changed paths: [\"D/manager-state\\\\sync-service-v2\\\\scope.json\"]\n",
+    "phaseStats": {
+      "store-lock-wait": {
+        "n": 4,
+        "max": 10,
+        "sum": 13
+      },
+      "network-list": {
+        "n": 8,
+        "max": 0,
+        "sum": 0
+      },
+      "network-get": {
+        "n": 11,
+        "max": 0,
+        "sum": 0
+      },
+      "graph-observe-with-store-lock": {
+        "n": 4,
+        "max": 19,
+        "sum": 51
+      }
+    },
+    "lastPhases": [
+      "SYNC_TEST_PHASE end network-list elapsed_ms=0",
+      "SYNC_TEST_PHASE begin network-get",
+      "SYNC_TEST_PHASE end network-get elapsed_ms=0",
+      "SYNC_TEST_PHASE begin network-get",
+      "SYNC_TEST_PHASE end network-get elapsed_ms=0",
+      "SYNC_TEST_PHASE begin network-list",
+      "SYNC_TEST_PHASE end network-list elapsed_ms=0",
+      "SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=11"
+    ]
+  },
+  {
+    "test": "modules::model_config::sync_local_v2::restore::tests::original_none_channel_restore_deselects_scope_and_explicit_reselection_can_download",
+    "failure": "thread 'modules::model_config::sync_local_v2::restore::tests::original_none_channel_restore_deselects_scope_and_explicit_reselection_can_download' (1016) panicked at src\\modules\\model_config\\sync_local_v2_restore_tests.rs:1508:5:\nunexpected changed paths: [\"D/manager-state\\\\sync-service-v2\\\\scope.json\"]\n",
+    "phaseStats": {
+      "store-lock-wait": {
+        "n": 4,
+        "max": 16,
+        "sum": 20
+      },
+      "network-list": {
+        "n": 8,
+        "max": 0,
+        "sum": 0
+      },
+      "network-get": {
+        "n": 11,
+        "max": 0,
+        "sum": 0
+      },
+      "graph-observe-with-store-lock": {
+        "n": 4,
+        "max": 25,
+        "sum": 56
+      }
+    },
+    "lastPhases": [
+      "SYNC_TEST_PHASE end network-list elapsed_ms=0",
+      "SYNC_TEST_PHASE begin network-get",
+      "SYNC_TEST_PHASE end network-get elapsed_ms=0",
+      "SYNC_TEST_PHASE begin network-get",
+      "SYNC_TEST_PHASE end network-get elapsed_ms=0",
+      "SYNC_TEST_PHASE begin network-list",
+      "SYNC_TEST_PHASE end network-list elapsed_ms=0",
+      "SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=10"
+    ]
+  },
+  {
+    "test": "modules::model_config::sync_service_v2::tests::auth_mode_none_first_receive_keeps_actual_public_direction_on_second_service_preview",
+    "failure": "thread 'modules::model_config::sync_service_v2::tests::auth_mode_none_first_receive_keeps_actual_public_direction_on_second_service_preview' (6280) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1394:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncOperationUnknown, step: Verify, retryability: SameOperationReadOnly, cause: Some(Timeout), http_status: None, recovery_actions: [RecoveryAction { kind: VerifyOriginalUpload, operation_id: Some(\"f3ac1b82-6a38-4729-a844-2402a759f31d\"), recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: ResumeOriginalUpload, operation_id: Some(\"f3ac1b82-6a38-4729-a844-2402a759f31d\"), recovery_plan_id: None, generation: None, head: None }] }\n",
+    "phaseStats": {
+      "store-lock-wait": {
+        "n": 10,
+        "max": 26,
+        "sum": 92
+      },
+      "network-list": {
+        "n": 14,
+        "max": 0,
+        "sum": 0
+      },
+      "graph-observe-with-store-lock": {
+        "n": 8,
+        "max": 35,
+        "sum": 154
+      },
+      "network-put": {
+        "n": 2,
+        "max": 0,
+        "sum": 0
+      },
+      "network-get": {
+        "n": 7,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "lastPhases": [
+      "SYNC_TEST_PHASE end network-list elapsed_ms=0",
+      "SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=35",
+      "SYNC_TEST_PHASE begin network-get",
+      "SYNC_TEST_PHASE end network-get elapsed_ms=0",
+      "SYNC_TEST_PHASE begin graph-observe-with-store-lock",
+      "SYNC_TEST_PHASE begin store-lock-wait",
+      "SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1",
+      "SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=1"
+    ]
+  },
+  {
+    "test": "modules::model_config::sync_service_v2::tests::production_encrypted_first_download_uses_only_request_read_secret_and_still_commits_actual_model_receipt",
+    "failure": "thread 'modules::model_config::sync_service_v2::tests::production_encrypted_first_download_uses_only_request_read_secret_and_still_commits_actual_model_receipt' (1908) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1018:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncNetwork, step: Observe, retryability: SameOperationReadOnly, cause: None, http_status: None, recovery_actions: [RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }] }\n",
+    "phaseStats": {
+      "store-lock-wait": {
+        "n": 2,
+        "max": 23,
+        "sum": 41
+      },
+      "network-list": {
+        "n": 4,
+        "max": 0,
+        "sum": 0
+      },
+      "graph-observe-with-store-lock": {
+        "n": 2,
+        "max": 30,
+        "sum": 56
+      }
+    },
+    "lastPhases": [
+      "SYNC_TEST_PHASE begin graph-observe-with-store-lock",
+      "SYNC_TEST_PHASE begin store-lock-wait",
+      "SYNC_TEST_PHASE end store-lock-wait elapsed_ms=23",
+      "SYNC_TEST_PHASE begin network-list",
+      "SYNC_TEST_PHASE end network-list elapsed_ms=0",
+      "SYNC_TEST_PHASE begin network-list",
+      "SYNC_TEST_PHASE end network-list elapsed_ms=0",
+      "SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=30"
+    ]
+  },
+  {
+    "test": "modules::model_config::sync_service_v2::tests::production_backup_failure_preserves_actual_target_and_retries_same_operation_after_protection_restored",
+    "failure": "thread 'modules::model_config::sync_service_v2::tests::production_backup_failure_preserves_actual_target_and_retries_same_operation_after_protection_restored' (5032) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1172:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncOperationUnknown, step: Verify, retryability: SameOperationReadOnly, cause: Some(Timeout), http_status: None, recovery_actions: [RecoveryAction { kind: VerifyOriginalUpload, operation_id: Some(\"b19b6c93-4406-43be-90db-00a46fade846\"), recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: ResumeOriginalUpload, operation_id: Some(\"b19b6c93-4406-43be-90db-00a46fade846\"), recovery_plan_id: None, generation: None, head: None }] }\n",
+    "phaseStats": {
+      "store-lock-wait": {
+        "n": 10,
+        "max": 33,
+        "sum": 57
+      },
+      "network-list": {
+        "n": 14,
+        "max": 0,
+        "sum": 0
+      },
+      "graph-observe-with-store-lock": {
+        "n": 8,
+        "max": 45,
+        "sum": 116
+      },
+      "network-put": {
+        "n": 2,
+        "max": 0,
+        "sum": 0
+      },
+      "network-get": {
+        "n": 7,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "lastPhases": [
+      "SYNC_TEST_PHASE end network-list elapsed_ms=0",
+      "SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=12",
+      "SYNC_TEST_PHASE begin network-get",
+      "SYNC_TEST_PHASE end network-get elapsed_ms=0",
+      "SYNC_TEST_PHASE begin graph-observe-with-store-lock",
+      "SYNC_TEST_PHASE begin store-lock-wait",
+      "SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1",
+      "SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=1"
+    ]
+  },
+  {
+    "test": "modules::model_config::sync_service_v2::tests::production_backend_uploads_actual_saved_objects_and_first_device_downloads_with_real_model_receipt",
+    "failure": "thread 'modules::model_config::sync_service_v2::tests::production_backend_uploads_actual_saved_objects_and_first_device_downloads_with_real_model_receipt' (1744) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:736:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncOperationUnknown, step: Verify, retryability: SameOperationReadOnly, cause: Some(Timeout), http_status: None, recovery_actions: [RecoveryAction { kind: VerifyOriginalUpload, operation_id: Some(\"9fbf494a-2c4c-4dfb-a89d-1a5835eb996f\"), recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: ResumeOriginalUpload, operation_id: Some(\"9fbf494a-2c4c-4dfb-a89d-1a5835eb996f\"), recovery_plan_id: None, generation: None, head: None }] }\n",
+    "phaseStats": {
+      "store-lock-wait": {
+        "n": 10,
+        "max": 31,
+        "sum": 118
+      },
+      "network-list": {
+        "n": 14,
+        "max": 0,
+        "sum": 0
+      },
+      "graph-observe-with-store-lock": {
+        "n": 8,
+        "max": 41,
+        "sum": 161
+      },
+      "network-put": {
+        "n": 2,
+        "max": 0,
+        "sum": 0
+      },
+      "network-get": {
+        "n": 7,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "lastPhases": [
+      "SYNC_TEST_PHASE end network-list elapsed_ms=0",
+      "SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=41",
+      "SYNC_TEST_PHASE begin network-get",
+      "SYNC_TEST_PHASE end network-get elapsed_ms=0",
+      "SYNC_TEST_PHASE begin graph-observe-with-store-lock",
+      "SYNC_TEST_PHASE begin store-lock-wait",
+      "SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1",
+      "SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=1"
+    ]
+  },
+  {
+    "test": "modules::model_config::sync_service_v2::tests::production_first_device_receives_model_mapping_receipt_preferences_extensions_and_assets_after_model_adoption",
+    "failure": "thread 'modules::model_config::sync_service_v2::tests::production_first_device_receives_model_mapping_receipt_preferences_extensions_and_assets_after_model_adoption' (1052) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:927:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncNetwork, step: Observe, retryability: SameOperationReadOnly, cause: None, http_status: None, recovery_actions: [RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }] }\n",
+    "phaseStats": {
+      "store-lock-wait": {
+        "n": 2,
+        "max": 17,
+        "sum": 18
+      },
+      "network-list": {
+        "n": 4,
+        "max": 0,
+        "sum": 0
+      },
+      "graph-observe-with-store-lock": {
+        "n": 2,
+        "max": 25,
+        "sum": 39
+      }
+    },
+    "lastPhases": [
+      "SYNC_TEST_PHASE begin graph-observe-with-store-lock",
+      "SYNC_TEST_PHASE begin store-lock-wait",
+      "SYNC_TEST_PHASE end store-lock-wait elapsed_ms=17",
+      "SYNC_TEST_PHASE begin network-list",
+      "SYNC_TEST_PHASE end network-list elapsed_ms=0",
+      "SYNC_TEST_PHASE begin network-list",
+      "SYNC_TEST_PHASE end network-list elapsed_ms=0",
+      "SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=25"
+    ]
+  },
+  {
+    "test": "modules::model_config::sync_service_v2::tests::real_model_applied_interruption_reopens_with_dual_proofs_and_only_finishes_original_nonmodel_participants",
+    "failure": "thread 'modules::model_config::sync_service_v2::tests::real_model_applied_interruption_reopens_with_dual_proofs_and_only_finishes_original_nonmodel_participants' (6872) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1790:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncNetwork, step: Observe, retryability: SameOperationReadOnly, cause: None, http_status: None, recovery_actions: [RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }] }\n",
+    "phaseStats": {
+      "store-lock-wait": {
+        "n": 2,
+        "max": 1,
+        "sum": 2
+      },
+      "network-list": {
+        "n": 4,
+        "max": 0,
+        "sum": 0
+      },
+      "graph-observe-with-store-lock": {
+        "n": 2,
+        "max": 10,
+        "sum": 19
+      }
+    },
+    "lastPhases": [
+      "SYNC_TEST_PHASE begin graph-observe-with-store-lock",
+      "SYNC_TEST_PHASE begin store-lock-wait",
+      "SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1",
+      "SYNC_TEST_PHASE begin network-list",
+      "SYNC_TEST_PHASE end network-list elapsed_ms=0",
+      "SYNC_TEST_PHASE begin network-list",
+      "SYNC_TEST_PHASE end network-list elapsed_ms=0",
+      "SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=9"
+    ]
+  },
+  {
+    "test": "modules::model_config::sync_service_v2::tests::production_initialization_ambiguity_exposes_readonly_candidates_and_can_explicitly_recover_a_chosen_branch",
+    "failure": "thread 'modules::model_config::sync_service_v2::tests::production_initialization_ambiguity_exposes_readonly_candidates_and_can_explicitly_recover_a_chosen_branch' (8656) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1093:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncOperationUnknown, step: Verify, retryability: SameOperationReadOnly, cause: Some(Timeout), http_status: None, recovery_actions: [RecoveryAction { kind: VerifyOriginalUpload, operation_id: Some(\"9d53390f-2828-4292-a197-90695e7f2059\"), recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: ResumeOriginalUpload, operation_id: Some(\"9d53390f-2828-4292-a197-90695e7f2059\"), recovery_plan_id: None, generation: None, head: None }] }\n",
+    "phaseStats": {
+      "store-lock-wait": {
+        "n": 10,
+        "max": 27,
+        "sum": 126
+      },
+      "network-list": {
+        "n": 14,
+        "max": 0,
+        "sum": 0
+      },
+      "graph-observe-with-store-lock": {
+        "n": 8,
+        "max": 35,
+        "sum": 161
+      },
+      "network-put": {
+        "n": 2,
+        "max": 0,
+        "sum": 0
+      },
+      "network-get": {
+        "n": 7,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "lastPhases": [
+      "SYNC_TEST_PHASE end network-list elapsed_ms=0",
+      "SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=15",
+      "SYNC_TEST_PHASE begin network-get",
+      "SYNC_TEST_PHASE end network-get elapsed_ms=0",
+      "SYNC_TEST_PHASE begin graph-observe-with-store-lock",
+      "SYNC_TEST_PHASE begin store-lock-wait",
+      "SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1",
+      "SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=1"
+    ]
+  },
+  {
+    "test": "modules::model_config::sync_service_v2::tests::production_recovery_export_reads_chosen_branch_and_preserves_all_business_targets_and_remote_files",
+    "failure": "thread 'modules::model_config::sync_service_v2::tests::production_recovery_export_reads_chosen_branch_and_preserves_all_business_targets_and_remote_files' (5560) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1239:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncOperationUnknown, step: Verify, retryability: SameOperationReadOnly, cause: Some(Timeout), http_status: None, recovery_actions: [RecoveryAction { kind: VerifyOriginalUpload, operation_id: Some(\"51fae5c1-a6e9-4c54-bec2-65132843a238\"), recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: ResumeOriginalUpload, operation_id: Some(\"51fae5c1-a6e9-4c54-bec2-65132843a238\"), recovery_plan_id: None, generation: None, head: None }] }\n",
+    "phaseStats": {
+      "store-lock-wait": {
+        "n": 10,
+        "max": 30,
+        "sum": 107
+      },
+      "network-list": {
+        "n": 14,
+        "max": 0,
+        "sum": 0
+      },
+      "graph-observe-with-store-lock": {
+        "n": 8,
+        "max": 40,
+        "sum": 141
+      },
+      "network-put": {
+        "n": 2,
+        "max": 0,
+        "sum": 0
+      },
+      "network-get": {
+        "n": 7,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "lastPhases": [
+      "SYNC_TEST_PHASE end network-list elapsed_ms=0",
+      "SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=40",
+      "SYNC_TEST_PHASE begin network-get",
+      "SYNC_TEST_PHASE end network-get elapsed_ms=0",
+      "SYNC_TEST_PHASE begin graph-observe-with-store-lock",
+      "SYNC_TEST_PHASE begin store-lock-wait",
+      "SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1",
+      "SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=1"
+    ]
+  },
+  {
+    "test": "modules::model_config::sync_service_v2::tests::production_same_uuid_second_sync_is_semantic_noop_and_explicit_download_restores_existing_actual_source",
+    "failure": "thread 'modules::model_config::sync_service_v2::tests::production_same_uuid_second_sync_is_semantic_noop_and_explicit_download_restores_existing_actual_source' (5896) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1741:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncOperationUnknown, step: Verify, retryability: SameOperationReadOnly, cause: Some(Timeout), http_status: None, recovery_actions: [RecoveryAction { kind: VerifyOriginalUpload, operation_id: Some(\"0803c053-e7bd-432f-b243-f7f6bfc89390\"), recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: ResumeOriginalUpload, operation_id: Some(\"0803c053-e7bd-432f-b243-f7f6bfc89390\"), recovery_plan_id: None, generation: None, head: None }] }\n",
+    "phaseStats": {
+      "store-lock-wait": {
+        "n": 10,
+        "max": 29,
+        "sum": 84
+      },
+      "network-list": {
+        "n": 14,
+        "max": 0,
+        "sum": 0
+      },
+      "graph-observe-with-store-lock": {
+        "n": 8,
+        "max": 37,
+        "sum": 137
+      },
+      "network-put": {
+        "n": 2,
+        "max": 0,
+        "sum": 0
+      },
+      "network-get": {
+        "n": 7,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "lastPhases": [
+      "SYNC_TEST_PHASE end network-list elapsed_ms=0",
+      "SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=10",
+      "SYNC_TEST_PHASE begin network-get",
+      "SYNC_TEST_PHASE end network-get elapsed_ms=0",
+      "SYNC_TEST_PHASE begin graph-observe-with-store-lock",
+      "SYNC_TEST_PHASE begin store-lock-wait",
+      "SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1",
+      "SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=1"
+    ]
+  }
+]
