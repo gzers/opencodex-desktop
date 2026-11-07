@@ -1,5 +1,16 @@
 # This verifier is independent of Windows so the report contract can be checked
 # with PowerShell on every host, without installing packages or editing registry.
+function Get-WindowsInstallerSource([string]$ExpectedCommit) {
+    if ($ExpectedCommit) {
+        if ($ExpectedCommit -cnotmatch '^[0-9a-f]{40}$') { throw 'Source commit missing' }
+        return $ExpectedCommit
+    }
+    $observed = & git rev-parse HEAD
+    $gitExit = $LASTEXITCODE
+    if ($gitExit -ne 0 -or !$observed -or $observed.Trim() -cnotmatch '^[0-9a-f]{40}$') { throw 'Source commit missing' }
+    return $observed.Trim()
+}
+
 function Assert-WindowsInstallerMatrix {
     param(
         [ValidateSet('all','msi','nsis')][string]$Kind,

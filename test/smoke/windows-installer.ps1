@@ -16,8 +16,7 @@ if (!$IsWindows -or $env:GITHUB_ACTIONS -ne 'true') {
 $taskBundle = (Resolve-Path -LiteralPath $BundleDirectory).Path
 $taskBuilt = (Resolve-Path -LiteralPath $BuiltExecutable).Path
 $taskOutput = [System.IO.Path]::GetFullPath($OutputDirectory)
-$taskSource = if ($ExpectedCommit) { $ExpectedCommit } else { (& git rev-parse HEAD).Trim() }
-if ($LASTEXITCODE -ne 0 -or $taskSource -notmatch '^[0-9a-f]{40}$') { throw 'Source commit missing' }
+$taskSource = Get-WindowsInstallerSource $ExpectedCommit
 $taskHash = (Get-FileHash -LiteralPath $taskBuilt -Algorithm SHA256).Hash.ToLower()
 $taskVersion = (Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../apps/desktop/tauri/tauri.conf.json') -Raw | ConvertFrom-Json).version
 if ([string]::IsNullOrWhiteSpace($taskVersion)) { throw 'Expected version missing from tauri.conf.json' }

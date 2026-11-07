@@ -2,6 +2,28 @@ param([Parameter(Mandatory=$true)][string]$OutputDirectory)
 $ErrorActionPreference='Stop'
 . (Join-Path $PSScriptRoot 'windows-installer-matrix.ps1')
 $checks=[Collections.Generic.List[string]]::new()
+$sourceFixture='a'*40
+$priorGit=Get-Item Function:git -ErrorAction SilentlyContinue
+try {
+    function git { throw 'Explicit source must not call git' }
+    $global:LASTEXITCODE=7
+    if ((Get-WindowsInstallerSource $sourceFixture) -cne $sourceFixture) { throw 'Explicit source lost' }
+    foreach($bad in @('HEAD',('A'*40),('a'*39))) {
+        $rejected=$false
+        try { $null=Get-WindowsInstallerSource $bad } catch { if ($_.Exception.Message -cne 'Source commit missing') { throw };$rejected=$true }
+        if (!$rejected) { throw 'Malformed explicit source accepted' }
+    }
+    function git { $global:LASTEXITCODE=1;return $sourceFixture }
+    $rejected=$false
+    try { $null=Get-WindowsInstallerSource '' } catch { if ($_.Exception.Message -cne 'Source commit missing') { throw };$rejected=$true }
+    if (!$rejected) { throw 'Failed git source accepted' }
+    function git { $global:LASTEXITCODE=0;return $sourceFixture }
+    if ((Get-WindowsInstallerSource '') -cne $sourceFixture) { throw 'Successful git source lost' }
+    $checks.Add('explicit-source-independent-of-stale-exit-and-git-fallback-verified')
+} finally {
+    if ($priorGit) { Set-Item Function:git $priorGit.ScriptBlock } else { Remove-Item Function:git }
+    $global:LASTEXITCODE=0
+}
 function Assert-MatrixRejects([scriptblock]$Action){
     $rejected=$false
     try{& $Action}catch{
