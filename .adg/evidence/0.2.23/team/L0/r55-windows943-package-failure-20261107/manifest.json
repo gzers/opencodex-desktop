@@ -1,0 +1,48 @@
+{
+  "source": "9437625f4d5432a2fcbc5918fdc4904b6baf7fb9",
+  "run": 42339481442,
+  "job": 128303762460,
+  "terminal": "failure",
+  "ordinaryBinaryCount": 49,
+  "ordinaryAllAttempted": true,
+  "ordinaryAllExitZero": true,
+  "elevatedPrivateCreation": 13,
+  "elevatedBackupLock": 1,
+  "nativeCredentialChecks": "provider_auth_native/channel_rename_native/native_secure_store passed",
+  "installerBuild": "NSIS produced; MSI candle failed generic error",
+  "actualInstallTwoSidPorts": "skipped, not accepted",
+  "artifact": {
+    "id": 13562902460,
+    "bytes": 715103222,
+    "apiDigest": "sha256:5ec3a80ef2f1ce0aa8140b7fb13a2f89df7e442833f08ed0c2523da90e9f552a",
+    "downloadMethod": "selected ZIP members HTTP Range, entry CRC/size verified",
+    "wholeZipHashLocallyVerified": false
+  },
+  "cleanup": {
+    "sourceOrArtifactAclRestored": true,
+    "accountAndProfileRemoved": true
+  },
+  "diagnostic": {
+    "firstRun": 42344672263,
+    "source": "177db6f2645177cd3f2232a7225c5e0bd95a0f61",
+    "result": "fixture failed before rendering because generated ignored runtime override absent",
+    "correctedFixtureSource": "74a3f8612dded1fb20d41c3a76ca3b578eed422c",
+    "nextRun": 42344849595,
+    "notProductAcceptance": true,
+    "secondResult": "CNDL0230: auto GUID invalid for multi-file components with registry keypaths"
+  },
+  "finalAcceptance": false,
+  "library": {
+    "passed": 1705,
+    "failed": 0,
+    "ignored": 5,
+    "seconds": 1559.03
+  },
+  "fix": {
+    "commit": "e29291120d0dbfbd3c23f9f5aba71d327ee6aaa3",
+    "scope": "explicit stable distinct GUID for documents and runtime-bundle MSI components; no ICE suppression or ACL change",
+    "staticTests": 17,
+    "nativeCompilerRun": 42345059395,
+    "nativeCompilerResult": "pending"
+  }
+}
