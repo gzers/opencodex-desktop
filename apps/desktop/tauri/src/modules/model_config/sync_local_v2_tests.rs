@@ -29,6 +29,7 @@ struct Models {
     cut_after_apply: AtomicBool,
     drift_manager: AtomicBool,
     drift_asset: AtomicBool,
+    #[cfg(unix)]
     fail_asset_write: AtomicBool,
 }
 impl Models {
@@ -143,7 +144,7 @@ impl Fixture {
     fn new(secret_skill: bool) -> Self {
         let t = tempfile::Builder::new()
             .prefix("ocxd023-local-apply-")
-            .tempdir_in("/tmp")
+            .tempdir_in(crate::modules::test_sandbox::temporary_parent())
             .unwrap();
         let d = t.path().join("D");
         let h = t.path().join("H");
@@ -231,6 +232,7 @@ impl Fixture {
             cut_after_apply: AtomicBool::new(false),
             drift_manager: AtomicBool::new(false),
             drift_asset: AtomicBool::new(false),
+            #[cfg(unix)]
             fail_asset_write: AtomicBool::new(false),
         });
         Self {

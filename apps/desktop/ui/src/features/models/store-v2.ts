@@ -2,7 +2,7 @@ import {computed,ref,shallowRef} from 'vue'
 import {defineStore} from 'pinia'
 import {createModelRowsState,pendingModelRows,type ModelRowsState} from './modelRows'
 import {
-  emptyContentV2,serviceUnavailableV2,modelV2Api,reviewedAgentResponseV2,type ModelV2Services,type LibraryViewV2,type TemplateContentV2,
+  emptyContentV2,serviceUnavailableV2,modelV2Api,conditionPreviewViewV2,reviewedAgentResponseV2,type ModelV2Services,type LibraryViewV2,type TemplateContentV2,
   type TemplateV2,type ConditionPreviewView,type MatchIssueV2,type ChannelConnectionEditIntentV2,
   type ChannelDiscoveryInputV2,
   type FileSnapshotV2,type ReadExistingRequestV2,type ChannelIntentV2,type ModelEditV2,type ModelSelectionV2,type DraftProjectionV2,
@@ -23,9 +23,7 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
     validateContent:async content=>{await modelV2Api.validateContent(content);return []},
     previewConditions:async input=>{
       const response=await modelV2Api.previewConditions(input.content,[input.rawModelId],input.channelId)
-      if(response.dtoVersion!==2||response.previewOnly!==true||response.rows.length!==1)throw new Error('预览回执不完整，当前输入保持。')
-      const row=response.rows[0]!
-      return {rawModelId:row.rawModelId,matchingView:null,matched:row.familyMatched,reason:row.familyMatched?(row.matchedConditionId?'命中族及条件覆盖':'命中族，使用通用规则'):'未命中族范围',conditions:row.matchedConditionId?[{conditionId:row.matchedConditionId,matched:true,reason:'解析器确认命中此覆盖项',atoms:[]}]:[],effective:null,configuration:{rules:row.rules,protocol:row.protocol,fieldOrigins:row.fieldOrigins},issues:[]}
+      return conditionPreviewViewV2(response,input)
     },
     saveRevision:modelV2Api.saveRevision,
   })
@@ -75,6 +73,7 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
   const fileDirty=computed(()=>Object.keys(pendingCredentialKinds.value).length>0||Object.keys(file.value?.draft?.credentialEdits??{}).length>0||channelIntents.value.length>0||modelEdits.value.length>0||!!file.value?.draft&&JSON.stringify(file.value.draft.policy)!==JSON.stringify(file.value.savedPolicy))
   function channelDirty(id:string){return pendingRows.value.some(row=>row.channel===id)||!!pendingCredentialKinds.value[id]||!!file.value?.draft?.credentialEdits?.[id]||channelIntents.value.some(i=>i.channelId===id)||modelEdits.value.some(i=>i.channelId===id)||JSON.stringify(file.value?.draft?file.value.draft.policy.channels.find(c=>c.id===id):file.value?.savedPolicy.channels.find(c=>c.id===id))!==JSON.stringify(file.value?.savedPolicy.channels.find(c=>c.id===id))}
   const canSaveFile=computed(()=>!!file.value?.draft&&!fileBusy.value&&!fileNeedsReconcile.value)
+  const canReleaseCleanSession=computed(()=>!!file.value?.draft&&!fileBusy.value&&!saving.value&&!fileNeedsReconcile.value&&!fileDirty.value&&!pendingRows.value.length&&!channelIntents.value.length&&!modelEdits.value.length&&!keyBuffers.size&&!Object.keys(file.value.draft.credentialEdits??{}).length&&!file.value.draft.policy.recoveryId&&JSON.stringify(file.value.draft.policy)===JSON.stringify(file.value.savedPolicy))
   let clean='',readSequence=0,previewSequence=0,baseLibraryDigest=''
   const retainedBuffers=new Map<string,{draft:RevisionBufferV2;clean:string;library:string}>()
   const bufferKey=(id:string,revision:string|null)=>id+'|'+(revision??'new')
@@ -99,12 +98,42 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
     catch(cause){fileError.value=message(cause)}finally{fileBusy.value=false}
   }
   function expectedFile():ReadExistingRequestV2 {if(!file.value)throw new Error('请先读取当前渠道工作区。');return {expectedSource:file.value.sourceDigest,expectedLibrary:file.value.libraryDigest,expectedDraft:file.value.draft?.base??null}}
+  async function releaseCleanSessionForSavedMutation(){
+    if(fileBusy.value||saving.value||fileNeedsReconcile.value||fileDirty.value||pendingRows.value.length||channelIntents.value.length||modelEdits.value.length||keyBuffers.size)throw new Error('当前有未保存的模型编辑，输入保持，本次确认未继续。')
+    const context=()=>JSON.stringify({file:fileContext(),rows:modelRows.value,template:draft.value,generation:editGeneration.value}),before=context()
+    fileBusy.value=true;fileError.value=''
+    try{
+      const value=file.value??await modelV2Api.fileSnapshot()
+      if(context()!==before)throw new Error('核对未修改会话期间有新的输入，当前输入保持，本次确认停止。')
+      const server=value.draft
+      if(!server){acceptFile(value);return false}
+      if(Object.keys(server.credentialEdits??{}).length||server.policy.recoveryId||JSON.stringify(server.policy)!==JSON.stringify(value.savedPolicy))throw new Error('服务端草稿含未保存修改或恢复意图，未结束会话；请先明确处理当前草稿。')
+      const released=await modelV2Api.discardFile(clone(server.base))
+      if(context()!==before){fileNeedsReconcile.value=true;throw new Error('结束未修改会话期间有新的输入，当前输入已保留，本次确认停止。')}
+      if(released.draft||released.rootRevision!==value.rootRevision||released.sourceDigest!==value.sourceDigest||released.libraryDigest!==value.libraryDigest)throw new Error('未核对到同源会话已结束的回执，本次确认未继续。')
+      acceptFile(released);fileGeneration++;if(channelIntents.value.length||modelEdits.value.length||keyBuffers.size||pendingRows.value.length){fileNeedsReconcile.value=true;throw new Error('结束会话时出现新的输入，当前输入保持，本次确认停止。')}return true
+    }catch(cause){fileError.value=message(cause);throw cause}finally{fileBusy.value=false}
+  }
+  async function reloadSavedFacts(){
+    if(fileBusy.value||saving.value||fileDirty.value||pendingRows.value.length||fileNeedsReconcile.value)throw new Error('当前有未保存渠道或型号输入，已保留，请先处理后重新读取。')
+    const context=JSON.stringify({file:fileContext(),rows:modelRows.value})
+    fileBusy.value=true;fileError.value=''
+    try{const value=await modelV2Api.fileSnapshot();if(context!==JSON.stringify({file:fileContext(),rows:modelRows.value})){fileNeedsReconcile.value=true;throw new Error('读取恢复结果期间有新的明确输入，当前输入保持。')}acceptFile(value);for(const state of Object.values(modelRows.value))state.buffers=Object.create(null);fileNeedsReconcile.value=false}
+    catch(cause){fileError.value=message(cause);throw cause}finally{fileBusy.value=false}
+  }
   async function ensureFileDraft(){
     if(file.value?.draft)return
     if(openingDraft)return openingDraft
     const request=expectedFile()
     openingDraft=(async()=>{const value=await modelV2Api.beginDraft(request);acceptFile(value)})()
     try{await openingDraft}finally{openingDraft=null}
+  }
+  async function beginChannelSession(){
+    if(file.value?.draft)return true
+    if(fileBusy.value||fileNeedsReconcile.value)return false
+    if(!file.value){await loadChannels();return canSaveFile.value}
+    fileBusy.value=true;fileError.value=''
+    try{await ensureFileDraft();return true}catch(cause){fileError.value=message(cause);return false}finally{fileBusy.value=false}
   }
   async function loadChannels(discardLocal=false){
     if(fileBusy.value)return
@@ -123,7 +152,7 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
   function queueChannel(intent:ChannelIntentV2){if((intent.kind==='set_defaults'||intent.kind==='set_family_defaults')&&intent.rules.protocol.mode!=='inherit'){fileError.value='渠道层不能设置请求协议，请在模版或单模型中明确配置。';return}const same=(old:ChannelIntentV2)=>old.channelId===intent.channelId&&old.kind===intent.kind&&(old.kind==='set_family_defaults'&&intent.kind==='set_family_defaults'?old.templateId===intent.templateId:old.kind==='set_naming'&&intent.kind==='set_naming'?old.rawModelId===intent.rawModelId:true);const unchanged=intent.kind==='rename'&&intent.name===(file.value?.draft?.policy??file.value?.savedPolicy)?.channels.find(c=>c.id===intent.channelId)?.label;channelIntents.value=channelIntents.value.filter(old=>!same(old)).concat(unchanged?[]:[clone(intent)]);fileGeneration++}
   function queueModel(edit:ModelEditV2){const same=(old:ModelEditV2)=>old.channelId===edit.channelId&&old.rawModelId===edit.rawModelId&&('field' in old&&'field' in edit?old.field===edit.field:!('field' in old)&&!('field' in edit));modelEdits.value=modelEdits.value.filter(old=>!same(old)).concat([clone(edit)]);fileGeneration++}
   function explicitRules(channelId:string,rawModelId:string){const model=channels.value.find(c=>c.id===channelId)?.models.find(m=>m.rawModelId===rawModelId);const rules=clone(model?.explicitOverrides??emptyContentV2().commonRules) as unknown as Record<string,unknown>;for(const edit of modelEdits.value.filter(e=>e.channelId===channelId&&e.rawModelId===rawModelId)){if(edit.kind==='set_override')rules[edit.field]={mode:'custom',value:clone(edit.value)};else if(edit.kind==='clear_override')rules[edit.field]={mode:'inherit'}}return rules as unknown as import('./api-v2').RulesV2}
-  function fileContext(){return JSON.stringify({file:file.value,channelIntents:channelIntents.value,modelEdits:modelEdits.value,credentialInputRevision:credentialInputRevision.value})}
+  function fileContext(){return JSON.stringify({generation:fileGeneration,file:file.value,channelIntents:channelIntents.value,modelEdits:modelEdits.value,credentialInputRevision:credentialInputRevision.value})}
   async function projectFile(edits:ModelEditV2[]=[],intents:ChannelIntentV2[]=[],scopeChannelId?:string){
     if(fileBusy.value||!file.value?.draft)throw new Error('渠道工作区尚未就绪，当前输入保持。')
     const context=fileContext(),expected=clone(file.value.draft.base)
@@ -315,5 +344,5 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
     stagedConnectionIntents.value=[...stagedConnectionIntents.value.filter(item=>item.channelId!==result.channelId),{...immutableIntent,channelId:result.channelId}]
     return result
   }
-  return {discardChannels,assertHistoryReady,acceptHistory,policyNotificationTarget,dismissPreview,externalTasks,externalCurrentId,externalNotificationTarget,protectsRevision,discardNew,modelRows,pendingRows,rowsFor,projectFile,adoptProjection,fileContext,effectiveRows,active,loading,saving,previewBusy,snapshot,draft,error,previewError,issues,preview,previewModelId,previewChannelId,editGeneration,dirty,canLoad,canPreview,canSave,canDiscover,canStageConnection,stagedConnectionIntents,configureServices,start,setContent,setLabel,setDefault,reset,close,load,open,setPreviewTarget,requestPreview,save,discover,stageConnection,file,fileBusy,fileError,fileNeedsReconcile,channels,channelIntents,modelEdits,readResults,channelEditorId,channelSearch,fileDirty,channelDirty,canSaveFile,loadChannels,readExisting,queueChannel,queueModel,explicitRules,setSelection,saveChannels,channelCapabilities,configureChannelCapabilities,copyChannel,viewCredential,stageCredential,pendingCredentialKinds,keyBuffer,setKeyBuffer,credentialInputRevision,view,copyTemplate,changeLibrary,templateAction,executionPreference,executionPreferenceRevision,loadAgentSettings,bindAgent,agentSessions,agentSession,runAgent,stopAgent,restoreAgent,acceptAgent}
+  return {beginChannelSession,canReleaseCleanSession,releaseCleanSessionForSavedMutation,reloadSavedFacts,discardChannels,assertHistoryReady,acceptHistory,policyNotificationTarget,dismissPreview,externalTasks,externalCurrentId,externalNotificationTarget,protectsRevision,discardNew,modelRows,pendingRows,rowsFor,projectFile,adoptProjection,fileContext,effectiveRows,active,loading,saving,previewBusy,snapshot,draft,error,previewError,issues,preview,previewModelId,previewChannelId,editGeneration,dirty,canLoad,canPreview,canSave,canDiscover,canStageConnection,stagedConnectionIntents,configureServices,start,setContent,setLabel,setDefault,reset,close,load,open,setPreviewTarget,requestPreview,save,discover,stageConnection,file,fileBusy,fileError,fileNeedsReconcile,channels,channelIntents,modelEdits,readResults,channelEditorId,channelSearch,fileDirty,channelDirty,canSaveFile,loadChannels,readExisting,queueChannel,queueModel,explicitRules,setSelection,saveChannels,channelCapabilities,configureChannelCapabilities,copyChannel,viewCredential,stageCredential,pendingCredentialKinds,keyBuffer,setKeyBuffer,credentialInputRevision,view,copyTemplate,changeLibrary,templateAction,executionPreference,executionPreferenceRevision,loadAgentSettings,bindAgent,agentSessions,agentSession,runAgent,stopAgent,restoreAgent,acceptAgent}
 })

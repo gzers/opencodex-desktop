@@ -50,7 +50,8 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          # Bundle resolution must use the same Node/npm pair as the pinned closure.
+          node-version: 26.8.1
 
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -95,7 +96,7 @@ jobs:
             echo "---"
             echo ""
             echo "### 安装"
-            echo "- macOS（Apple Silicon）：下载 \`.dmg\`，拖入「应用程序」。"
+            echo '- macOS（Apple Silicon）：下载 .dmg，将其中整个“OpenCodeX Desktop”文件夹复制到 ~/Applications，再打开文件夹中的应用；请勿只复制 .app 或从磁盘映像运行。'
             echo "- Windows（x64）：下载 \`*-setup.exe\`（NSIS）安装包。"
             echo "- 均为未签名测试包：macOS 首次打开如被 Gatekeeper 拦截，右键 →「打开」；Windows SmartScreen 可能提示，选择「仍要运行」。"
             echo "CHANGELOG_EOF"
@@ -115,6 +116,8 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           projectPath: apps/desktop/tauri
+          # Custom installer templates are reviewed against this exact bundler.
+          tauriScript: npx --yes @tauri-apps/cli@2.11.4
           tagName: ${{ steps.notes.outputs.tag }}
           releaseName: 'OpenCodeX Desktop ${{ steps.notes.outputs.tag }}'
           releaseBody: ${{ steps.notes.outputs.body }}

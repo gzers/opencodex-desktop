@@ -10,7 +10,7 @@ const C: &str = "33333333-3333-4333-8333-333333333333";
 fn fixture() -> (TempDir, PathBuf, PathBuf) {
     let t = tempfile::Builder::new()
         .prefix("ocxd023-file-scope-v2-")
-        .tempdir_in("/tmp")
+        .tempdir_in(crate::modules::test_sandbox::temporary_parent())
         .unwrap();
     let d = t.path().join("D");
     let h = t.path().join("H");

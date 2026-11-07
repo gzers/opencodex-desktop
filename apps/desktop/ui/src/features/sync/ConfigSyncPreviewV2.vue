@@ -52,7 +52,7 @@ const reasonText={same_semantic_content:'所选内容一致，无需更新。',b
       <label v-if="preview.chosenDirection==='download'&&!preview.noChange" class="sync-backup"><input type="checkbox" :checked="preview.backupBeforeUpdate" :disabled="busy" @change="emit('backup',($event.target as HTMLInputElement).checked)" />更新前备份</label>
       <h3>本次变化 · {{preview.entries.length}} 项</h3><ul class="sync-preview-diffs"><li v-for="entry in preview.entries" :key="entry.kind+entry.id"><strong>{{label(entry.kind,entry.id)}}</strong><span>{{changes[entry.status]}}</span></li></ul>
       <p v-if="preview.noChange||preview.plan.kind==='no_change'">所选内容没有需要写入的变化，不创建业务写入、备份或远端提交。</p>
-      <p>只更新已确认所选范围，未选对象和凭据保持。切换来源将重新只读 prepare，不直接执行。</p>
+      <p>只更新已确认所选范围，未选对象和凭据保持。下载确认时会结束未修改的模型编辑会话，有未保存输入时将停止。切换来源将重新只读 prepare，不直接执行。</p>
     </template>
     <template #actions="{close}"><UiButton @click="close">取消</UiButton><UiButton v-if="error||stale" :disabled="busy" @click="emit('retry')">重新预览</UiButton><UiButton variant="primary" :disabled="disabled" :loading="busy" @click="emit('confirm')">{{actionLabel}}</UiButton></template>
   </UiDialog>

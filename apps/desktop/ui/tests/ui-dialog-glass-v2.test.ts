@@ -6,8 +6,8 @@ import { createServer, type ViteDevServer } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { createRequire } from 'node:module'
 import { execFileSync } from 'node:child_process'
-import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
-import { homedir, tmpdir } from 'node:os'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -20,17 +20,11 @@ const cases = ['light', 'dark'].flatMap(theme => ['high', 'mid', 'low'].flatMap(
   [1180, 560].map(width => ({ theme, effects, width, name: theme + ' ' + effects + ' ' + (width > 600 ? 'wide' : 'narrow') }))))
 let server: ViteDevServer
 let base = ''
-// The repository's existing QA also discovers host-installed Playwright; no new package dependency.
+// Use the declared, locked test tool on both clean CI and developer machines.
 function playwright(): any {
-  const cache = path.join(homedir(), '.npm', '_npx')
-  const candidates = [path.join(ui, 'node_modules', 'playwright-core'),
-    ...(existsSync(cache) ? readdirSync(cache).map(name => path.join(cache, name, 'node_modules', 'playwright-core')) : [])]
-  for (const dir of candidates) {
-    if (!existsSync(path.join(dir, 'package.json'))) continue
-    const api = createRequire(path.join(dir, 'package.json'))('playwright-core')
-    if (engines.every(engine => existsSync(api[engine].executablePath()))) return api
-  }
-  throw new Error('Real Chromium and WebKit builds are required for dialog glass pixel tests.')
+  const api = createRequire(import.meta.url)('playwright-core')
+  if (engines.every(engine => existsSync(api[engine].executablePath()))) return api
+  throw new Error('Real Chromium and WebKit builds are required. Run npm exec -- playwright-core install chromium webkit in apps/desktop/ui.')
 }
 const swift = prefix + 'owned-window.swift'
 const entry = [
@@ -68,20 +62,66 @@ afterAll(async () => {
 })
 
 // Only capture the titled task-owned browser window, never the user's desktop.
-async function capture(page: any, name: string): Promise<{ buffer: Buffer; xScale: number; top: number; physical: boolean }> {
+async function capture(page: any, name: string) {
   const file = prefix + stage + '-' + name + '.png'
+  // Top-layer fixture-only fiducials register CSS coordinates to the compositor.
+  // A requested viewport can extend below a macOS-constrained native window;
+  // window height minus requested viewport height is therefore NOT browser chrome.
+  const markers = await page.evaluate(() => {
+    document.getElementById('capture-registration')?.remove()
+    const registration = document.createElement('div')
+    registration.id = 'capture-registration'; registration.popover = 'manual'
+    registration.style.cssText = 'position:fixed;inset:auto;left:0;top:0;width:96px;height:96px;margin:0;padding:0;border:0;background:transparent;pointer-events:none;overflow:visible'
+    const markers = [[4,4,'rgb(1,253,137)'],[84,4,'rgb(251,3,139)'],[4,84,'rgb(3,139,251)']] as const
+    for (const [x,y,color] of markers) {
+      const square = document.createElement('div')
+      square.style.cssText = 'position:absolute;width:8px;height:8px;left:'+x+'px;top:'+y+'px;background:'+color
+      registration.append(square)
+    }
+    document.body.append(registration); registration.showPopover()
+    return [...registration.children].map(square => {const b=square.getBoundingClientRect();return {x:b.x+b.width/2,y:b.y+b.height/2}})
+  })
+  if (process.platform === 'darwin' && process.env.OCXD_GLASS_NATIVE_WINDOW_HEIGHT && page.context().browser().browserType().name() === 'chromium') {
+    // Controlled reproduction of a small runner display, without changing the desktop.
+    const cdp = await page.context().newCDPSession(page), own = await cdp.send('Browser.getWindowForTarget')
+    await cdp.send('Browser.setWindowBounds', {windowId:own.windowId,bounds:{height:Number(process.env.OCXD_GLASS_NATIVE_WINDOW_HEIGHT)}})
+    await cdp.detach()
+  }
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
+  let buffer: Buffer, bounds: {Width:number;Height:number}|null = null
   if (process.platform === 'darwin') {
     const windows = JSON.parse(execFileSync('swift', [swift], { encoding: 'utf8' }))
     expect(windows.length, 'one task-owned window').toBe(1)
-    const window = windows[0], bounds = window.kCGWindowBounds
+    const window = windows[0]; bounds = window.kCGWindowBounds
     execFileSync('/usr/sbin/screencapture', ['-x', '-o', '-l', String(window.kCGWindowNumber), file])
-    const buffer = readFileSync(file)
-    const dimensions = await page.evaluate(async (b64: string) => {
-      const img = new Image(); img.src = 'data:image/png;base64,' + b64; await img.decode(); return { width: img.width, height: img.height }
-    }, buffer.toString('base64'))
-    return { buffer, xScale: dimensions.width / bounds.Width, top: bounds.Height - page.viewportSize().height, physical: true }
-  }
-  return { buffer: await page.screenshot({ path: file }), xScale: 1, top: 0, physical: false }
+    buffer = readFileSync(file)
+  } else buffer = await page.screenshot({ path: file })
+  const geometry = await page.evaluate(async ({b64,markers}: any) => {
+    const image = new Image(); image.src = 'data:image/png;base64,'+b64; await image.decode()
+    const canvas = document.createElement('canvas'); canvas.width=image.width;canvas.height=image.height
+    const ctx=canvas.getContext('2d')!;ctx.drawImage(image,0,0)
+    const data=ctx.getImageData(0,0,image.width,image.height).data
+    const points=[[1,253,137],[251,3,139],[3,139,251]].map(color=>{
+      let left=image.width,top=image.height,right=-1,bottom=-1,count=0
+      for(let y=0;y<image.height;y++)for(let x=0;x<image.width;x++){
+        const at=(y*image.width+x)*4
+        if(color.every((v,i)=>Math.abs(data[at+i]!-v)<=3)&&data[at+3]===255){left=Math.min(left,x);top=Math.min(top,y);right=Math.max(right,x);bottom=Math.max(bottom,y);count++}
+      }
+      if(count<16||right-left>64||bottom-top>64)throw new Error('Compositor registration marker missing or ambiguous')
+      return {x:(left+right+1)/2,y:(top+bottom+1)/2}
+    })
+    const xScale=(points[1]!.x-points[0]!.x)/(markers[1].x-markers[0].x)
+    const yScale=(points[2]!.y-points[0]!.y)/(markers[2].y-markers[0].y)
+    const left=points[0]!.x-markers[0].x*xScale,top=points[0]!.y-markers[0].y*yScale
+    return {imageWidth:image.width,imageHeight:image.height,xScale,yScale,left,top,viewport:{width:innerWidth,height:innerHeight},screen:{width:screen.width,height:screen.height,availWidth:screen.availWidth,availHeight:screen.availHeight},outer:{width:outerWidth,height:outerHeight},visible:{width:Math.min(innerWidth,(image.width-left)/xScale),height:Math.min(innerHeight,(image.height-top)/yScale)}}
+  }, {b64:buffer.toString('base64'),markers})
+  expect(geometry.xScale, 'positive screenshot registration scale').toBeGreaterThan(0)
+  expect(Math.abs(geometry.xScale-geometry.yScale), 'uniform compositor pixel scale').toBeLessThan(.02)
+  expect(geometry.left, 'registered page left is inside screenshot').toBeGreaterThanOrEqual(0)
+  expect(geometry.top, 'registered page top is inside screenshot').toBeGreaterThanOrEqual(0)
+  if(bounds)expect(Math.abs(geometry.xScale-geometry.imageWidth/bounds.Width), 'registration agrees with window pixel ratio').toBeLessThan(.02)
+  writeFileSync(prefix+stage+'-'+name+'-geometry.json',JSON.stringify({bounds,...geometry},null,2))
+  return {buffer,physical:process.platform==='darwin',geometry}
 }
 async function pixels(page: any, shot: Awaited<ReturnType<typeof capture>>, selector: string) {
   const box = await page.locator(selector + ' .probe').boundingBox()
@@ -93,25 +133,37 @@ async function pixels(page: any, shot: Awaited<ReturnType<typeof capture>>, sele
     background: getComputedStyle(d).backgroundColor, zoom: getComputedStyle(d).zoom,
     backdrop: getComputedStyle(d, '::backdrop').backgroundColor,
   }))
-  return page.evaluate(async ({ b64, box, outer, scale, top, colors }: any) => {
+  expect(box, 'probe exists before pixel sampling').not.toBeNull()
+  expect(outer, 'dialog exists before pixel sampling').not.toBeNull()
+  expect(box.y+25, 'probe scan row is visible in native window').toBeGreaterThanOrEqual(0)
+  expect(box.y+25, 'probe scan row is not clipped by native window').toBeLessThan(shot.geometry.visible.height)
+  expect(box.x+12, 'probe scan begins within dialog').toBeGreaterThanOrEqual(Math.max(0,outer.x))
+  expect(box.x+box.width-12, 'probe scan ends within visible dialog').toBeLessThanOrEqual(Math.min(shot.geometry.visible.width,outer.x+outer.width))
+  return page.evaluate(async ({ b64, box, outer, geometry, colors }: any) => {
     const image = new Image(); image.src = 'data:image/png;base64,' + b64; await image.decode()
     const canvas = document.createElement('canvas'); canvas.width = image.width; canvas.height = image.height
     const ctx = canvas.getContext('2d')!; ctx.drawImage(image, 0, 0)
-    const y = Math.round((top + box.y + 25) * scale), x = Math.ceil((box.x + 12) * scale)
-    const n = Math.floor((box.width - 24) * scale), data = ctx.getImageData(x, y, n, 1).data
+    const {xScale:scale,yScale,left,top}=geometry
+    const y = Math.round(top + (box.y + 25) * yScale), x = Math.ceil(left + (box.x + 12) * scale)
+    const n = Math.floor((box.width - 24) * scale)
+    if(x<0||y<0||n<=0||x+n>image.width||y>=image.height)throw new Error('Pixel probe is outside captured visible area')
+    const data = ctx.getImageData(x, y, n, 1).data
+    if(Array.from(data).some((v,i)=>i%4===3&&v!==255))throw new Error('Pixel probe includes uncaptured transparent pixels')
     const luminance = (rgb: number[]) => rgb.map(v => v / 255).map(v => v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4).reduce((s, v, i) => s + v * [.2126, .7152, .0722][i]!, 0)
     const lum: number[] = [], gray: number[] = []
     for (let i = 0; i < data.length; i += 4) { const rgb = [data[i]!, data[i + 1]!, data[i + 2]!]; lum.push(luminance(rgb)); gray.push(rgb.reduce((a, b) => a + b, 0) / 3) }
     const min = Math.min(...gray), max = Math.max(...gray), range = max - min
     const maxStep = Math.max(...gray.slice(1).map((v, i) => Math.abs(v - gray[i]!)))
-    const outside = ctx.getImageData(Math.ceil(140 * scale), Math.round((top + Math.max(2, outer.y - 20)) * scale), Math.floor((innerWidth - 152) * scale), 1).data
+    const outsideY=Math.max(2,outer.y-20),outsideX=Math.ceil(left+140*scale),outsideN=Math.floor((geometry.visible.width-152)*scale)
+    if(outsideY>=outer.y||outsideY>=geometry.visible.height||outsideN<=0)throw new Error('No visible background reference row outside dialog')
+    const outside = ctx.getImageData(outsideX,Math.round(top+outsideY*yScale),outsideN,1).data
     const outsideGray: number[] = []
     for (let i = 0; i < outside.length; i += 4) outsideGray.push((outside[i]! + outside[i + 1]! + outside[i + 2]!) / 3)
     const outsideRange = Math.max(...outsideGray) - Math.min(...outsideGray)
     const outsideStep = Math.max(...outsideGray.slice(1).map((v, i) => Math.abs(v - outsideGray[i]!)))
     const ratios = (color: string) => { ctx.clearRect(0, 0, 1, 1); ctx.fillStyle = color; ctx.fillRect(0, 0, 1, 1); const rgb = Array.from(ctx.getImageData(0, 0, 1, 1).data).slice(0, 3); const fg = luminance(rgb); return Math.min(...lum.map(bg => (Math.max(bg, fg) + .05) / (Math.min(bg, fg) + .05))) }
-    return { range, maxStep, outsideNormalizedStep: outsideStep / outsideRange, normalizedStep: range > 1 ? maxStep / range : 0, textContrast: ratios(colors.text), secondaryContrast: ratios(colors.secondary), colors, physicalScale: scale, physicalTop: top }
-  }, { b64: shot.buffer.toString('base64'), box, outer, scale: shot.xScale, top: shot.top, colors })
+    return { range, maxStep, outsideNormalizedStep: outsideStep / outsideRange, normalizedStep: range > 1 ? maxStep / range : 0, textContrast: ratios(colors.text), secondaryContrast: ratios(colors.secondary), colors, physicalScale: scale, physicalTop: top,geometry,probe:box,dialog:outer,sample:{x,y,width:n},outsideSample:{x:outsideX,y:Math.round(top+outsideY*yScale),width:outsideN} }
+  }, { b64: shot.buffer.toString('base64'), box, outer, geometry:shot.geometry, colors })
 }
 
 for (const engine of engines) describe(engine + ' native dialog glass', () => {

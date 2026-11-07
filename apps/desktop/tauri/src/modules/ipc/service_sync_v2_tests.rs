@@ -136,7 +136,7 @@ impl Env {
     fn new(remote: Arc<Remote>, model: bool) -> Self {
         let temp = tempfile::Builder::new()
             .prefix("ocxd023-cli-sync-v2-")
-            .tempdir_in("/tmp")
+            .tempdir_in(crate::modules::test_sandbox::temporary_parent())
             .unwrap();
         let d = temp.path().join("D");
         let h = temp.path().join("actual-H");
@@ -684,7 +684,7 @@ fn production_cli_source_selects_process_context_home_and_has_no_legacy_engine_e
 async fn lazy_production_constructor_is_shared_and_uses_explicit_existing_home() {
     let t = tempfile::Builder::new()
         .prefix("ocxd023-cli-sync-v2-constructor-")
-        .tempdir_in("/tmp")
+        .tempdir_in(crate::modules::test_sandbox::temporary_parent())
         .unwrap();
     let d = t.path().join("D");
     let h = t.path().join("H");

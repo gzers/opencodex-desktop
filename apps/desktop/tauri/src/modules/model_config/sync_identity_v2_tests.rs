@@ -33,7 +33,7 @@ impl Fixture {
     fn new(populated: bool) -> Self {
         let temp = tempfile::Builder::new()
             .prefix("ocxd023-sync-identity-fixture-")
-            .tempdir_in("/tmp")
+            .tempdir_in(crate::modules::test_sandbox::temporary_parent())
             .unwrap();
         let root = temp.path().join("D");
         let home = temp.path().join("H");

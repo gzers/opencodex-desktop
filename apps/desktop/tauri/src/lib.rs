@@ -102,7 +102,26 @@ pub fn run() {
             let user_home=crate::infrastructure::platform::home_dir().ok_or(crate::errors::AppError::NotConfigured)?;
             let default_root=user_home.join(".codex-desktop");
             let executable=std::env::current_exe()?;
-            let resolution=crate::modules::data_root::bootstrap::resolve_default_startup(&default_root,&executable)?;
+            let resolution=match crate::modules::data_root::bootstrap::resolve_default_startup(&default_root,&executable) {
+                Ok(resolution) => resolution,
+                #[cfg(target_os = "macos")]
+                Err(crate::errors::AppError::RuntimeManaged { code, detail })
+                    if code == "macos_install_container" => {
+                    use tauri_plugin_dialog::DialogExt;
+                    // Installation admission failed before U/D/H or runtime
+                    // initialization. Show the remedy without starting services.
+                    if let Some(window) = app.get_webview_window("main") {
+                        let _ = window.hide();
+                    }
+                    let handle = app.handle().clone();
+                    app.dialog().message(detail)
+                        .title("请调整安装位置")
+                        .kind(tauri_plugin_dialog::MessageDialogKind::Error)
+                        .show(move |_| handle.exit(1));
+                    return Ok(());
+                }
+                Err(error) => return Err(error.into()),
+            };
             let crate::modules::data_root::bootstrap::StartupResolution {
                 anchor, sandbox_boundary, runtime_config, locks,
             } = resolution;
@@ -576,7 +595,12 @@ pub fn run() {
             }
         })
         .invoke_handler(tauri::generate_handler![
+            commands::scope_backup_v2::transfer_v2_backup_list,
+            commands::scope_backup_v2::transfer_v2_backup_restore_operations,
+            commands::scope_backup_v2::transfer_v2_backup_preview,
+            commands::scope_backup_v2::transfer_v2_backup_restore,
             commands::config_file_transfer_v2::catalog_config_file_v2,
+            commands::config_file_transfer_v2::result_owner_v2,
             commands::config_file_transfer_v2::file_v2_read_scope,
             commands::config_file_transfer_v2::file_v2_save_scope,
             commands::config_file_transfer_v2::prepare_config_file_export_v2,
@@ -592,21 +616,6 @@ pub fn run() {
             commands::config_file_transfer_v2::reopen_config_file_export_v2,
             commands::config_file_transfer_v2::reopen_config_file_import_v2,
             commands::config_file_transfer_v2::recoverable_config_file_operations_v2,
-            commands::model_transfer::model_transfer_export,
-            commands::model_transfer::model_transfer_protect,
-            commands::model_transfer::model_transfer_discard_unattempted,
-            commands::model_transfer::model_transfer_prepare,
-            commands::model_transfer::model_transfer_prepare_draft,
-            commands::model_transfer::model_transfer_receive,
-            commands::model_transfer::model_transfer_accept,
-            commands::model_transfer::model_transfer_select,
-            commands::model_transfer::portable_latest_incoming,
-            commands::model_transfer::portable_recompare,
-            commands::model_transfer::portable_open_received,
-            commands::model_transfer::portable_extension_catalog,
-            commands::model_transfer::portable_asset_detail,
-            commands::model_transfer::portable_account_catalog,
-            commands::model_transfer::portable_channel_catalog,
             commands::config_sync_v2::config_v2_catalog,
             commands::config_sync_v2::config_v2_read_scope,
             commands::config_sync_v2::config_v2_save_scope,
@@ -621,18 +630,6 @@ pub fn run() {
             commands::config_sync_v2::config_v2_recovery_preview,
             commands::config_sync_v2::config_v2_recovery_confirm,
             commands::config_sync_v2::config_v2_recovery_result,
-            commands::model_transfer::transfer_choices,
-            commands::model_transfer::transfer_result,
-            commands::model_transfer::open_transfer_export_directory,
-            commands::model_transfer::import_credential_choices,
-            commands::model_transfer::transfer_backup_status,
-            commands::model_transfer::list_transfer_backups,
-            commands::model_transfer::preview_transfer_restore,
-            commands::model_transfer::restore_transfer_backup,
-            commands::model_transfer::save_transfer_choices,
-            commands::model_transfer::transfer_protection,
-            commands::model_transfer::save_transfer_protection,
-            commands::model_config::model_config_snapshot,
             commands::model_config_v2::model_v2_validate_content,
             commands::model_config_v2::model_v2_library,
             commands::model_config_v2::model_v2_save_revision,
@@ -667,46 +664,11 @@ pub fn run() {
             commands::model_config_v2::model_v2_external_activate,
             commands::model_config_v2::model_v2_external_revoke,
             commands::model_config_v2::model_v2_external_run,
-            commands::model_config::model_file_snapshot,
-            commands::model_config::model_file_save,
-            commands::model_config::model_file_credential,
-            commands::model_config::model_template_save,
-            commands::model_config::model_template_usage,
-            commands::model_config::model_template_set_default,
-            commands::model_config::model_template_delete,
-            commands::model_config::model_match_preview,
-            commands::model_config::model_policy_preview,
-            commands::model_config::model_policy_prepare,
-            commands::model_config::model_policy_apply,
-            commands::model_config::model_policy_result,
-            commands::model_config::model_policy_save_blocked,
-            commands::model_config::model_policy_latest,
-            commands::model_config::model_policy_history,
             commands::model_config::model_policy_refresh_cache,
-            commands::model_config::model_policy_recovery_prepare,
-            commands::model_config::model_policy_recovery_accept,
-            commands::model_config::model_policy_compensate,
-            commands::model_config::model_policy_abandon,
-            commands::model_config::model_upstream_snapshot,
-            commands::model_config::model_channel_discover,
-            commands::model_config::model_new_channel_preview,
-            commands::model_config::model_channel_forget_credential,
-            commands::model_config::model_node_measure,
             commands::model_config::model_node_measure_stop,
-            commands::model_config::model_external_task,
-            commands::model_config::model_external_activate,
-            commands::model_config::model_external_result,
             commands::model_config::model_agent_preferences,
-            commands::model_config::model_agent_directory,
-            commands::model_config::model_agent_preferences_save,
             commands::model_config::model_research_sources,
             commands::model_config::model_research_search,
-            commands::model_config::model_agent_generate,
-            commands::model_config::model_agent_stop,
-            commands::model_config::model_agent_accept_review,
-            commands::model_config::model_agent_latest_result,
-            commands::model_config::model_agent_conversation,
-            commands::model_config::model_agent_conversation_save,
             commands::backup::backup_files,
             commands::backup::open_backup_file,
             commands::backup::create_preferences_backup,
@@ -845,8 +807,9 @@ pub fn run() {
                 } = event
                 {
                     if !has_visible_windows {
-                        let data_root = app_handle.state::<crate::state::SharedDataRoot>();
-                        reveal_main_window(app_handle, "dock:reopen", &data_root.0);
+                        if let Some(data_root) = app_handle.try_state::<crate::state::SharedDataRoot>() {
+                            reveal_main_window(app_handle, "dock:reopen", &data_root.0);
+                        }
                     }
                     }
             }

@@ -264,6 +264,25 @@ pub struct FileTransferOwnerV2 {
     passwords: Option<Arc<dyn RootScopedWebDavPasswordInstallerV2>>,
 }
 impl FileTransferOwnerV2 {
+    pub fn desktop_root(&self) -> &Path {
+        &self.d
+    }
+    pub(crate) fn upstream_home(&self) -> &Path {
+        &self.h
+    }
+
+    pub(crate) fn owns_record(&self, id: &str) -> ModelResult<bool> {
+        let path = recovery_path(&self.d, id)?;
+        match std::fs::symlink_metadata(&path) {
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(false),
+            Err(_) => Err(err("file_recovery_io")),
+            Ok(_) => {
+                self.load_recovery(id)?;
+                Ok(true)
+            }
+        }
+    }
+
     pub fn new(d: PathBuf, h: PathBuf, credentials: Arc<Credentials>) -> ModelResult<Self> {
         for p in [&d, &h] {
             if !p.is_absolute() || !safety::inspect(p)?.is_dir() {

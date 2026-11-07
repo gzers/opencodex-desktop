@@ -8,7 +8,7 @@ on:
       purpose:
         description: Package a candidate, or run one bounded diagnostic without a desktop/package
         type: choice
-        options: [candidate, query-etw, installer-retention, native-ui, process-exit]
+        options: [candidate, ordinary-preflight, retention023, query-etw, installer-retention, native-ui, process-exit]
         default: candidate
       admission_run:
         description: Successful exact-head push CI run required for query-etw
@@ -19,6 +19,30 @@ on:
         type: choice
         options: [isolated-replay, post-build-runner-temp]
         default: isolated-replay
+      candidate_run:
+        description: Exact successful 023 candidate run
+        type: string
+        default: ''
+      candidate_attempt:
+        description: Exact successful candidate attempt
+        type: string
+        default: ''
+      candidate_head:
+        description: Full candidate source SHA
+        type: string
+        default: ''
+      artifact_id:
+        description: Exact installer artifact ID
+        type: string
+        default: ''
+      artifact_bytes:
+        description: Artifact ZIP byte size
+        type: string
+        default: ''
+      artifact_sha256:
+        description: Artifact ZIP SHA256
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -27,7 +51,9 @@ jobs:
   package:
     if: github.event_name != 'workflow_dispatch' || inputs.purpose == 'candidate'
     runs-on: windows-latest
-    timeout-minutes: 45
+    # Full offline closure, MSVC debug/release builds and actual two-user
+    # services share this job. Product start/stop and smoke deadlines stay fixed.
+    timeout-minutes: 90
     defaults:
       run:
         shell: pwsh
@@ -45,7 +71,8 @@ jobs:
           & ../../../test/smoke/windows-process-token.test.ps1 -OutputDirectory ../../../test/out/windows-candidate/process-token
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          # Bundle resolution must use the same Node/npm pair as the pinned closure.
+          node-version: 26.8.1
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
@@ -65,6 +92,16 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           npm --prefix ../ui run build
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      # Produce the complete 0.2.23 closure before compilation, matching release pins.
+      - name: Stage complete 0.2.23 offline runtime
+        if: steps.identity.outputs.version == '0.2.23'
+        run: |
+          $taskNode = (Get-Command node).Source
+          $taskNpm = node -e 'const p=require("node:path"),f=require("node:fs"),d=p.dirname(process.execPath);const a=[p.join(d,"node_modules/npm/bin/npm-cli.js"),p.join(d,"../lib/node_modules/npm/bin/npm-cli.js")];const n=a.find(x=>f.existsSync(x));if(!n)process.exit(1);process.stdout.write(p.resolve(n))'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python ../../../.github/scripts/stage_runtime_bundle_023.py --platform win32-x64 --build-node $taskNode --npm-cli $taskNpm --output ../../../test/out/windows-candidate/runtime-stage
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          'OCXD_REQUIRE_RUNTIME_BUNDLE=1' >> $env:GITHUB_ENV
       - name: Freeze and record dependency resolution
         run: |
           New-Item -ItemType Directory -Force ../../../test/out/windows-candidate | Out-Null
@@ -81,7 +118,33 @@ jobs:
           cargo clippy --locked --workspace --all-targets -- -D warnings
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $env:OPENCODEX_TEST_NODE = (Get-Command node).Source
-          cargo test --locked --workspace --features integration-test
+          cargo test --locked --workspace --features integration-test --doc
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $taskStatic = Join-Path $env:RUNNER_TEMP ('ocxd023-rust-static-' + [guid]::NewGuid().ToString('N'))
+          & ../../../test/smoke/windows023-rust-ordinary.test.ps1 -OutputDirectory $taskStatic
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $taskOrdinary = Join-Path $env:RUNNER_TEMP ('ocxd023-rust-ordinary-' + [guid]::NewGuid().ToString('N'))
+          try {
+            & ../../../test/smoke/windows023-rust-ordinary.ps1 -Cargo (Get-Command cargo.exe).Source -ManifestPath (Join-Path $PWD 'Cargo.toml') -Node (Get-Command node.exe).Source -OutputDirectory $taskOrdinary -ExpectedCommit (git rev-parse HEAD)
+            if ($LASTEXITCODE -ne 0) { throw 'Actual ordinary-account workspace binaries failed; original evidence retained' }
+          } finally {
+            if (Test-Path -LiteralPath $taskOrdinary) { Copy-Item -LiteralPath $taskOrdinary -Destination ../../../test/out/windows-candidate/ordinary-rust -Recurse }
+            if (Test-Path -LiteralPath $taskStatic) { Copy-Item -LiteralPath $taskStatic -Destination ../../../test/out/windows-candidate/ordinary-static -Recurse }
+          }
+      - name: Preserve elevated private creation boundary
+        if: always()
+        run: |
+          cargo test --locked --lib infrastructure::windows_private_create::tests -- --test-threads=1 --nocapture
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Preserve native credential protection evidence
+        if: always()
+        run: |
+          $env:OPENCODEX_SANDBOX = '1'
+          cargo test --locked --test provider_auth_native -- --ignored --test-threads=1 --nocapture
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo test --locked --test channel_rename_native -- --ignored --test-threads=1 --nocapture
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo test --locked --lib native_secure_store_round_trip -- --ignored --test-threads=1 --nocapture
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Build NSIS and MSI candidates
         run: |
@@ -89,11 +152,52 @@ jobs:
           # Invoke its JavaScript entry through the native node executable.
           $taskTauriCli = Join-Path (npm root --global) '@tauri-apps/cli/tauri.js'
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          node $taskTauriCli build --bundles nsis,msi -- --locked
+          $taskBuildArgs = @('build','--bundles','nsis,msi')
+          if ((Get-Content tauri.conf.json -Raw | ConvertFrom-Json).version -ceq '0.2.23') {
+            $taskBuildArgs += @('--config','tauri.runtime-bundle.conf.json')
+          }
+          $taskBuildArgs += @('--','--locked')
+          node $taskTauriCli @taskBuildArgs
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Install, verify final EXE and uninstall on isolated runner
         run: |
           & ../../../test/smoke/windows-installer.ps1 -BundleDirectory target/release/bundle -BuiltExecutable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-candidate
+      - name: Stage exact complete program for two real user accounts
+        if: steps.identity.outputs.version == '0.2.23'
+        run: |
+          cargo build --locked --release --bin ocxd
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $taskCandidate = Join-Path $env:RUNNER_TEMP ('ocxd023-two-user-candidate-'+[guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $taskCandidate | Out-Null
+          Copy-Item -LiteralPath target/release/opencodex-desktop.exe -Destination $taskCandidate
+          Copy-Item -LiteralPath target/release/ocxd.exe -Destination $taskCandidate
+          Copy-Item -LiteralPath resources/runtime-bundle -Destination $taskCandidate -Recurse
+          'OCXD_TWO_USER_CANDIDATE='+$taskCandidate >> $env:GITHUB_ENV
+          $taskDriver = Join-Path $env:RUNNER_TEMP ('ocxd023-two-user-node-'+[guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $taskDriver | Out-Null
+          $taskTar = (Get-ChildItem -LiteralPath ../../../test/out/windows-candidate/runtime-stage/platform-bundle -Filter 'runtime-bundle-0.2.23-win32-x64.tar.gz').FullName
+          tar -xzf $taskTar -C $taskDriver runtime/node
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          'OCXD_TWO_USER_NODE='+(Join-Path $taskDriver 'runtime/node/node.exe') >> $env:GITHUB_ENV
+      - name: Verify two-user runner guard and fixture contracts
+        if: steps.identity.outputs.version == '0.2.23'
+        run: |
+          $taskOutput = Join-Path $env:RUNNER_TEMP ('ocxd023-two-user-static-'+[guid]::NewGuid().ToString('N'))
+          & ../../../test/smoke/windows023-two-user-native.test.ps1 -OutputDirectory $taskOutput -Node $env:OCXD_TWO_USER_NODE
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Copy-Item -LiteralPath $taskOutput -Destination ../../../test/out/windows-candidate/two-user-static -Recurse
+      - name: Verify simultaneous real SID managers and actual runtime ports
+        if: steps.identity.outputs.version == '0.2.23'
+        run: |
+          $taskOutput = Join-Path $env:RUNNER_TEMP ('ocxd023-two-user-native-'+[guid]::NewGuid().ToString('N'))
+          try {
+            & ../../../test/smoke/windows023-two-user-native.ps1 -Executable (Join-Path $env:OCXD_TWO_USER_CANDIDATE 'opencodex-desktop.exe') -Node $env:OCXD_TWO_USER_NODE -OutputDirectory $taskOutput -ExpectedCommit (git rev-parse HEAD) -VerifyRuntimePorts
+            if ($LASTEXITCODE -ne 0) { throw 'Two actual SID native acceptance failed; original evidence retained' }
+            $taskTwoUser = Get-Content -LiteralPath (Join-Path $taskOutput 'two-user-native.json') -Raw | ConvertFrom-Json
+            if (!$taskTwoUser.fullVersionGatePassed -or $taskTwoUser.runtimeProxyPortIsolation -cne 'verified-runtime-ports') { throw 'Actual runtime-port acceptance is incomplete' }
+          } finally {
+            if (Test-Path -LiteralPath $taskOutput) { Copy-Item -LiteralPath $taskOutput -Destination ../../../test/out/windows-candidate/two-user-native -Recurse }
+          }
       - name: Upload verified Windows installers
         uses: actions/upload-artifact@v4
         with:
@@ -240,7 +344,7 @@ jobs:
             test/runtime/ci-bd2-query-etw/capture
 
   retention:
-    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'installer-retention' && github.repository == 'gzers/opencodex-desktop'
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'installer-retention' && !startsWith(inputs.admission_run, '{"mode":"retention023"') && github.repository == 'gzers/opencodex-desktop'
     strategy:
       fail-fast: false
       matrix:
@@ -278,7 +382,7 @@ jobs:
           path: test/out/windows-installer-retention
 
   native-ui:
-    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui'
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023'
     runs-on: windows-latest
     timeout-minutes: 40
     defaults:
@@ -354,3 +458,97 @@ jobs:
             cargo test -- --nocapture
             if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
           }
+
+  ordinary-preflight:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run == 'ordinary-preflight-023'
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Verify unchanged runner contracts
+        shell: pwsh
+        run: |
+          $taskStatic = Join-Path $env:RUNNER_TEMP ('ocxd023-preflight-static-' + [guid]::NewGuid().ToString('N'))
+          & test/smoke/windows023-rust-ordinary.test.ps1 -OutputDirectory $taskStatic
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Exercise the real runner with a small default Rust test binary
+        shell: pwsh
+        run: |
+          $taskEvidence = Join-Path $env:RUNNER_TEMP ('ocxd023-preflight-native-' + [guid]::NewGuid().ToString('N'))
+          try {
+            & test/smoke/windows023-rust-ordinary.ps1 -Cargo (Get-Command cargo.exe).Source -ManifestPath (Join-Path $PWD 'test/smoke/windows023-ordinary-preflight/Cargo.toml') -Node (Get-Command node.exe).Source -OutputDirectory $taskEvidence -ExpectedCommit (git rev-parse HEAD)
+            if ($LASTEXITCODE -ne 0) { throw 'Ordinary runner preflight failed; original receipts retained' }
+          } finally {
+            New-Item -ItemType Directory -Force test/out/windows023-ordinary-preflight | Out-Null
+            if (Test-Path -LiteralPath $taskEvidence) { Copy-Item -LiteralPath $taskEvidence -Destination test/out/windows023-ordinary-preflight/native -Recurse }
+          }
+      - name: Preserve exact native runner and cleanup evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows023-ordinary-preflight-${{ github.sha }}
+          path: test/out/windows023-ordinary-preflight
+          if-no-files-found: warn
+          retention-days: 14
+
+  retention023:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'installer-retention' && startsWith(inputs.admission_run, '{"mode":"retention023"')
+    permissions:
+      contents: read
+      actions: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {kind: nsis, scenario: adjacent}
+          - {kind: nsis, scenario: fresh023}
+          - {kind: msi, scenario: adjacent}
+          - {kind: msi, scenario: explicit-conversion}
+          - {kind: msi, scenario: fresh023}
+    runs-on: windows-latest
+    timeout-minutes: 35
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v5
+      - name: Verify bounded admission and retention fixture contracts
+        run: |
+          python test/smoke/windows023-retention-ci-admit.test.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $taskFixtures = Join-Path $env:RUNNER_TEMP ('ocxd023-retention-fixtures-' + [guid]::NewGuid().ToString('N'))
+          & test/smoke/windows023-installer-retention.test.ps1 -OutputDirectory $taskFixtures
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Admit published 0.2.22 and exact successful candidate bytes
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OCXD_CANDIDATE_RUN: ${{ fromJSON(inputs.admission_run).candidate_run }}
+          OCXD_CANDIDATE_ATTEMPT: ${{ fromJSON(inputs.admission_run).candidate_attempt }}
+          OCXD_CANDIDATE_HEAD: ${{ fromJSON(inputs.admission_run).candidate_head }}
+          OCXD_ARTIFACT_ID: ${{ fromJSON(inputs.admission_run).artifact_id }}
+          OCXD_ARTIFACT_BYTES: ${{ fromJSON(inputs.admission_run).artifact_bytes }}
+          OCXD_ARTIFACT_SHA256: ${{ fromJSON(inputs.admission_run).artifact_sha256 }}
+          OCXD_INSTALLER_KIND: ${{ matrix.kind }}
+          OCXD_INSTALLER_SCENARIO: ${{ matrix.scenario }}
+        run: |
+          python test/smoke/windows023-retention-ci-admit.py $env:OCXD_INSTALLER_KIND --scenario $env:OCXD_INSTALLER_SCENARIO --candidate-run $env:OCXD_CANDIDATE_RUN --candidate-attempt $env:OCXD_CANDIDATE_ATTEMPT --candidate-head $env:OCXD_CANDIDATE_HEAD --artifact-id $env:OCXD_ARTIFACT_ID --artifact-bytes $env:OCXD_ARTIFACT_BYTES --artifact-sha256 $env:OCXD_ARTIFACT_SHA256
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify actual default upgrade uninstall and reinstall
+        run: |
+          foreach ($taskName in @('GITHUB_TOKEN','GH_TOKEN','ACTIONS_RUNTIME_TOKEN','ACTIONS_ID_TOKEN_REQUEST_TOKEN')) {
+            [Environment]::SetEnvironmentVariable($taskName, $null, 'Process')
+          }
+          & test/smoke/windows023-installer-retention.ps1 -AdmissionPath test/out/windows023-installer-retention/admission.json -Execute
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Preserve admission execution and cleanup evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows023-retention-${{ matrix.kind }}-${{ matrix.scenario }}-${{ github.sha }}
+          path: test/out/windows023-installer-retention
+          if-no-files-found: warn
+          retention-days: 14
