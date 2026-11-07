@@ -6,11 +6,15 @@ export const useEnvironmentStore = defineStore('environment', {
   state: () => ({
     report: null as EnvironmentReport | null,
     loading: false,
+    error: '',
+    requestGeneration: 0,
   }),
   actions: {
     set(next: EnvironmentReport) {
+      this.requestGeneration++
       this.report = next
       this.loading = false
+      this.error = ''
     },
     setLoading(next: boolean) {
       this.loading = next
@@ -18,11 +22,20 @@ export const useEnvironmentStore = defineStore('environment', {
     // 环境重新发现：正式服务入口（供概览/设置的「重新发现」共用），
     // 不再依赖挂在 window 上的调试全局（IMP-04 §13.6）。Toast 仍由根壳负责。
     async refresh(): Promise<boolean> {
+      const generation = ++this.requestGeneration
       this.setLoading(true)
+      this.error = ''
       try {
-        this.set(await discoverEnvironment())
+        const report = await discoverEnvironment()
+        if (generation !== this.requestGeneration) return true
+        this.set(report)
         return true
       } catch {
+        if (generation !== this.requestGeneration) return true
+        // Failed current discovery invalidates an older MissingNode/ready claim.
+        // An error is not evidence of missing system tools or bundle preparation.
+        this.report = null
+        this.error = '集成运行程序检查未就绪，可稍后重新检查或查看安装状态。'
         this.setLoading(false)
         return false
       }

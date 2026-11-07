@@ -28,6 +28,7 @@ import { useSyncStore } from '@/features/sync/store'
 import { remoteVersionHint as versionHint } from '@/features/sync/observation'
 import { clockText, syncActivity } from '@/features/sync/activity'
 import { runtimeSourceLabel } from '@/lib/labels'
+import { useEnvironmentStore } from '@/features/environment/store'
 import { buildEnvironmentPresentation, environmentChecksOrdered } from '@/features/environment/presentation'
 import { projectMotion } from '@/features/runtime/motion/projection'
 
@@ -184,7 +185,7 @@ const home = computed(() => displayPath(managerHome.value || app.statusSnapshot?
 
 // 环境结论（就绪态并入运行详情；准备态由准备卡承载）。
 const environment = computed(() =>
-  buildEnvironmentPresentation(app.environment, app.environmentLoading, app.runtimeSource?.kind ?? null, app.aboutApp?.platform),
+  buildEnvironmentPresentation(app.environment, app.environmentLoading, app.runtimeSource?.kind ?? null, app.aboutApp?.platform, useEnvironmentStore().error),
 )
 // 按检查顺序呈现：检查中只亮当前项，其后为「待检查」。
 const envChecks = computed(() =>
