@@ -29,7 +29,7 @@ if($taskSmokeVersion -ceq '0.2.23'){
  New-Item -ItemType Directory -Path (Join-Path $taskTools 'node_modules') -Force|Out-Null
  Copy-Item -LiteralPath $taskNode -Destination (Join-Path $taskTools 'node.exe')
  Copy-Item -LiteralPath $taskNpmRoot -Destination (Join-Path $taskTools 'node_modules/npm') -Recurse
- $taskPins=Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../.github/runtime-platforms-023.json') -Raw|ConvertFrom-Json
+ $taskPins=Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../.github/runtime-platforms-023.json') -Raw|ConvertFrom-Json -AsHashtable
  $taskActualNode=(& $taskNode --version).Trim()
  if($LASTEXITCODE -ne 0){throw 'Explicit native Node version read failed'}
  $taskActualNpm=(Get-Content -LiteralPath (Join-Path $taskNpmRoot 'package.json') -Raw|ConvertFrom-Json).version
