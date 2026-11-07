@@ -1584,6 +1584,21 @@ async fn original_none_probe(group: &str) {
                 || path.starts_with("D/manager-state/sync-v2-transactions/")),
         "unexpected added paths: {added:?}"
     );
+    // The user explicitly selected the retained cloud object again. Verify the
+    // complete actual confirmation/receipt path, still with zero remote writes.
+    let applied = client
+        .confirm(service::ConfirmRequestV2 {
+            session_id: service_preview.session_id.clone(),
+            plan_digest: service_preview.plan_digest.clone(),
+        })
+        .await
+        .unwrap();
+    assert!(applied.local_apply_status == LocalApplyStatus::Applied);
+    assert!(
+        restored_path.exists(),
+        "explicitly reselected object must be received again"
+    );
+    assert_eq!(remote.writes.load(Ordering::SeqCst), 0);
     let fixture_root = f._temp.path().to_path_buf();
     println!("NONE_RESTORE_PROBE {}",serde_json::to_string(&json!({
         "group":group,"originalOperationId":OP,"restoreId":plan.restore_id,"restorePlanDigest":plan.plan_digest,
@@ -1591,7 +1606,7 @@ async fn original_none_probe(group: &str) {
         "originalRemoteScope":scope,"directActualCapture":direct,"mappedCaptureSummary":local_objects,
         "mappingDirection":mapping_direction,"mappingSlots":mapped_binding.slots,"hostPreview":host_decision,
         "servicePreviewChosenDirection":service_preview.chosen_direction,"servicePreviewReason":service_preview.automatic_reason,
-        "preparedDownloadOperationId":prepared_operation,"confirmationCalled":false,"businessImagesUnchangedDuringPreview":true,
+        "preparedDownloadOperationId":prepared_operation,"confirmationCalled":true,"explicitDownloadActuallyApplied":true,"businessImagesUnchangedDuringPreview":true,
         "remoteReads":remote.reads.load(Ordering::SeqCst),"remotePuts":remote.writes.load(Ordering::SeqCst),
         "previewAddedPaths":added,"previewChangedOrRemovedPaths":changed,
         "scopeAdjustedAfterRestore":true,"explicitUserReselection":true,"realNetworkUsed":false,"policyOrAcAcceptance":false,
