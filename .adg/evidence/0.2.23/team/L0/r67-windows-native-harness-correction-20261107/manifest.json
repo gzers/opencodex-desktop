@@ -1,0 +1,38 @@
+{
+  "productionSource": "414d62bab35060e8aa2011300dab926a66727946",
+  "toolSuccessor": "e9a00510e",
+  "productSourceChanged": false,
+  "packageFailure": {
+    "run": 42347480862,
+    "job": 128328254550,
+    "artifact": 13566407013,
+    "artifactBytes": 715108376,
+    "apiDigest": "37196cd4b52e38d4eecf1c2fc2914799a801915d76f402e305df11b637c42aea",
+    "wholeZipHashLocallyVerified": false,
+    "build": "both real NSIS/MSI complete",
+    "install": "default per-user MSI installed in runneradmin Profile; old smoke tried another SID and could not read private EXE",
+    "twoSidPorts": "skipped after install failure, not accepted"
+  },
+  "ciFailure": {
+    "run": 42347427165,
+    "job": 128328085500,
+    "cause": "actual application alive but smoke checked old sandbox log at root; new D is sandbox/data/desktop",
+    "diagnosticArtifactUpload": "EPERM when glob traversal attempted private sandbox data; raw terminal log retained",
+    "trayError": "Access denied observed, not asserted as primary failure or resolved"
+  },
+  "corrections": {
+    "installerOwner": "023 installation/start/uninstall by one actual ordinary owner, no product ACL weakening; default path checked against owner LocalAppData/Programs",
+    "paths": "023 D=data/desktop and H=data/opencodex/home; old-version probes retain original behavior",
+    "nativeConsumer": "explicit023 real DOM/V2 IPC for new paths, wizard cancel, stage/project/save/rename/current execution directory/discard; detailed shared matcher/transfer/editor coverage continues in complete same-source Rust/browser suites as conditional platform policy",
+    "evidence": "explicit metadata/log/png upload paths avoid traversing private sandbox caches",
+    "preflight": "fixed original 414 MSVC EXE, exact checked PR merge01032 and apps tree equal414, SHA4cf2f44e737024ab6ec599217839d90e926b83bed0551ab9a2b3e1b568081265; no re-sign or binary change"
+  },
+  "validation": {
+    "PowerShellParse": "passed",
+    "releaseAcceptancePureChecks": 10,
+    "nativePathPositiveNegativeChecks": 3,
+    "actionlint": "passed",
+    "actualNativeReplay": "pending"
+  },
+  "finalAcceptance": false
+}

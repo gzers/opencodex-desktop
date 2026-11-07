@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "result": "pass",
+  "checks": [
+    {
+      "name": "parse-all-windows-smoke-scripts",
+      "result": "pass",
+      "detail": {
+        "files": [
+          "windows-021-client-owner.ps1",
+          "windows-acceptance-profile.ps1",
+          "windows-acceptance-profile.test.ps1",
+          "windows-appearance.ps1",
+          "windows-ci-test-runner.ps1",
+          "windows-install-recovery.ps1",
+          "windows-installer-matrix.ps1",
+          "windows-installer-matrix.test.ps1",
+          "windows-installer-retention.ps1",
+          "windows-installer.ps1",
+          "windows-native.ps1",
+          "windows-ordinary-startup.ps1",
+          "windows-ota.ps1",
+          "windows-owned-etw.ps1",
+          "windows-owned-etw.test.ps1",
+          "windows-process-token.ps1",
+          "windows-process-token.test.ps1",
+          "windows-release-installers.ps1",
+          "windows-restart-handoff.test.ps1",
+          "windows-startup.ps1",
+          "windows-uninstall-data.ps1",
+          "windows023-installer-retention.ps1",
+          "windows023-installer-retention.test.ps1",
+          "windows023-msi-compiler.ps1",
+          "windows023-rust-ordinary-helper.ps1",
+          "windows023-rust-ordinary.ps1",
+          "windows023-rust-ordinary.test.ps1",
+          "windows023-two-user-native-helper.ps1",
+          "windows023-two-user-native.ps1",
+          "windows023-two-user-native.test.ps1",
+          "windows023-user-scope.ps1"
+        ]
+      }
+    },
+    {
+      "name": "harness-process-identity",
+      "result": "pass",
+      "detail": {
+        "processId": 1780
+      }
+    },
+    {
+      "name": "actual-child-identity-and-inherited-token",
+      "result": "pass",
+      "detail": {
+        "elevationType": 1,
+        "mode": "administrator",
+        "processId": 1908
+      }
+    },
+    {
+      "name": "reject-wrong-executable",
+      "result": "pass",
+      "detail": null
+    },
+    {
+      "name": "reject-opposite-permission-mode",
+      "result": "pass",
+      "detail": null
+    },
+    {
+      "name": "reject-missing-token-evidence",
+      "result": "pass",
+      "detail": null
+    },
+    {
+      "name": "reject-string-elevation-value",
+      "result": "pass",
+      "detail": null
+    },
+    {
+      "name": "reject-exited-process",
+      "result": "pass",
+      "detail": null
+    },
+    {
+      "name": "reject-disposed-process",
+      "result": "pass",
+      "detail": null
+    }
+  ],
+  "harnessToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 1780,
+    "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+    "creationTimeUtc": "2026-11-07T06:32:57.5427676Z",
+    "elevated": true,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-07T06:33:02.3485740Z"
+  },
+  "childToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 1908,
+    "executable": "C:\\Windows\\System32\\cmd.exe",
+    "creationTimeUtc": "2026-11-07T06:33:02.3724941Z",
+    "elevated": true,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-07T06:33:02.3761047Z"
+  },
+  "sourceCommit": "414d62bab35060e8aa2011300dab926a66727946",
+  "powershell": "7.6.9",
+  "scope": "read-only token helper; does not accept native UI or dual-permission application gates",
+  "collectedAtUtc": "2026-11-07T06:33:02.4316229Z"
+}
