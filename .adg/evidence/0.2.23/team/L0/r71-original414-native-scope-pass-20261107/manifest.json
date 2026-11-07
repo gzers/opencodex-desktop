@@ -1,0 +1,31 @@
+{
+  "productSource": "414d62bab35060e8aa2011300dab926a66727946",
+  "toolSource": "d317b85f2bbdd0196f282363b73b74b506e191b9",
+  "run": 42356645409,
+  "job": 128356071505,
+  "result": "success-scoped-native-original-EXE",
+  "originalExeSha256": "4cf2f44e737024ab6ec599217839d90e926b83bed0551ab9a2b3e1b568081265",
+  "ordinaryApplicationToken": true,
+  "sourceCommitChecked": "01032c5df1c6b8de849a9999a20a9e9b2d5efb3b (PR merge apps tree matches414)",
+  "checks": [
+    "new D/H paths",
+    "native wizard open/cancel config unchanged",
+    "actual V2 stage/project/save",
+    "immutable library unchanged",
+    "read existing templates repeated idempotence and discard",
+    "actual provider English/Unicode-space-slash names and model ID",
+    "reopen/discard config bytes preserved",
+    "desktopACL restored"
+  ],
+  "screenshotReview": "normal native route visible, old empty UI snapshot remained after direct IPC writes; successor dfb adds actual table refresh + Unicode-name DOM assertion for full installation suite",
+  "runtimeDirectoryAccepted": false,
+  "runtimeDirectoryRefusal": "storage because sandbox program absent; no live catalog success claimed",
+  "normalCompleteRuntimeTwoSidAndPorts": "still required",
+  "candidateSuccessor": {
+    "source": "dfb3e487fcef46239279f9030823e5621d694e42",
+    "productionAppsTreeUnchangedSince414": true,
+    "run": 42356993199,
+    "result": "pending full regression/build/installation-owner/twoSID/ports"
+  },
+  "finalReleaseAcceptance": false
+}
