@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "status": "native UI failed; corrected explicit custom-protocol build in progress",
+  "whiteWindowSource": "4a90213bba70ae58cc16a2b1001338cf4b58b877",
+  "binarySha256": "b565dea957c9a2da843fd20a57f2ef2482258e00e94b2c69229d2412f854f829",
+  "originalReportLimit": "report result pass proves offline worker/managed source only; screenshot visual review found blank white window; it does NOT prove UI acceptance",
+  "originalBuildFeatures": [
+    "default"
+  ],
+  "sourceFix": "b24b00be2 makes CI packaging, Windows candidate and formal release explicit --features custom-protocol",
+  "followupBuild": "actual rustc command observed --cfg feature=custom-protocol; build/native screenshot not yet complete",
+  "tools": {
+    "passed": 46,
+    "nativePackageProof": false
+  },
+  "candidateDmg": "structural/signature/mount checks passed but UI failed, so not final accepted artifact",
+  "cleanup": "OS temp-parent gate from generic fixture roots verified exact task inode/owner/empty under exclusive lock and removed; production U gates remain permanent",
+  "files": [
+    {
+      "path": "ocxd023-bundle-protocol-tools-test.log",
+      "bytes": 145,
+      "sha256": "2d3191ecd9440edd0d412cc9462616d64c8eb652a6f43617e424ca84929282a7"
+    },
+    {
+      "path": "ocxd023-repaired-release-app-build.log",
+      "bytes": 7278,
+      "sha256": "c7532d652c943d61277fdb062ec5a4a4b820dcc9f3bb7819ad1d1b680387d288"
+    },
+    {
+      "path": "ocxd023-repaired-release-dmg-package.log",
+      "bytes": 362,
+      "sha256": "62887c0e44ab0fb5ba2d3923944b415d4cf5d3eba98426bdb5e70db6be03b6d7"
+    },
+    {
+      "path": "ocxd023-repaired-release-firststart-evidence/app.log",
+      "bytes": 106,
+      "sha256": "5a8042e235dd71cde9b986a08e23a646337ed4b7d32900a5095acb3452b4420a"
+    },
+    {
+      "path": "ocxd023-repaired-release-firststart-evidence/ax-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-repaired-release-firststart-evidence/capwin-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-repaired-release-firststart-evidence/final-app.log",
+      "bytes": 185,
+      "sha256": "a75542fac88a973109602c5a0284d3f9519a463ce73fa9d9215a79a6c254dfd8"
+    },
+    {
+      "path": "ocxd023-repaired-release-firststart-evidence/network-denial.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "path": "ocxd023-repaired-release-firststart-evidence/ordinary-first-screen-ax.json",
+      "bytes": 2495,
+      "sha256": "030f1c8156c71e9d1d2c8fab348fcaa434994bfeea65f43180a494b17fb5cf83"
+    },
+    {
+      "path": "ocxd023-repaired-release-firststart-evidence/ordinary-first-screen.png",
+      "bytes": 74612,
+      "sha256": "d85309b2f576b17388f96cf291785f76cf2c5612dac699ce4d25f67a7b486178"
+    },
+    {
+      "path": "ocxd023-repaired-release-firststart-evidence/report.json",
+      "bytes": 1797,
+      "sha256": "0d56d98fc8b5e8965a3726cebc379fc9b0bde875f463bc832a18dd8cf13288bb"
+    },
+    {
+      "path": "ocxd023-repaired-release-firststart-evidence/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-temporary-gate-cleanup.json",
+      "bytes": 352,
+      "sha256": "bad0b79ca34550538f402d23fa8719517e6edf695b9e574d628299a9c75e0da9"
+    },
+    {
+      "path": "package-evidence.json",
+      "bytes": 14734,
+      "sha256": "bfaa4b628fa1be54726f2f294624ac3d70b589dfa855d381224ecea363755939"
+    }
+  ]
+}

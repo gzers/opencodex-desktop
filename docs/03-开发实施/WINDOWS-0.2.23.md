@@ -237,3 +237,8 @@ U=当前用户HOME/.codex-desktop，D=U/desktop，H=U/opencodex/home；固定指
 采用用户最新单主对话要求，贡献线冻结，不再派发。代码54c5198a5分四笔：03f4cae6a统一模型接收/事务实际User+SYSTEM严格ACL，cfdd8e101引入U外部持久删除gate并在独占期释放D内句柄，3f208c759修正npm重复解包及准入锁测试夹具，54c5198a5改用原生retained handle等待退出再取码。权限验证未接受Admins/宽ACL，noFollow/单链接/实际TokenUser保留；禁止覆盖规则与原断言保留。Mac库1963过、14原忽略、strict过，PS130仅静态；不得当Windows通过。新候选及NSIS/MSI/双SID/保留五场景仍待验。
 
 773候选42319672971终态失败：普通执行器第334行退出码读取异常，allBinariesAttempted=false；提权私有创建与原生凭据组成功，安装器后续未运行。47eb原证据整ZIP已完整SHA核验；773只按条目CRC/size抽取，不声称完整ZIP核验。[r33证据](../../.adg/evidence/0.2.23/team/L0/r33-main-only-repairs-20261107/manifest.json)保留原失败和跟进。
+
+
+## R23 打包界面协议显式化（2026-11-07）
+
+Mac release实际实屏白窗，虽后端供应成功但不通过UI门；编译fingerprint只有default，未含custom-protocol。b24b00be2让Windows候选taskBuildArgs、MacCI与正式release显式启用custom-protocol，重建实际rustc已观察该feature，46打包/发布工具检查过；实屏修后仍待。正在执行的54c5198a候选42325691178不含本修复及后继Windows接收GENERIC_READ，不作最终同源制品；保留其完整回归证据后再定后继候选。失败报告的后端pass不冒认界面pass，见r35。
