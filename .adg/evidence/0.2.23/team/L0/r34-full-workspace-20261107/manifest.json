@@ -19,6 +19,18 @@
       "path": "ocxd023-windows-repairs-doc.log",
       "bytes": 347,
       "sha256": "94f48fa70fa58489f8e3ef43eefaaf825ab95600fc66db57f86091260aef4007"
+    },
+    {
+      "path": "top-level-result-counts.json",
+      "bytes": 9532,
+      "sha256": "ff4fcf1d6c5005622d5dcb6eee6b55584218d349978d1882b874c4b4032f5ad3"
     }
-  ]
+  ],
+  "recordedResultGroupsMeaning": "2202 is raw result-record sum including two nested child result records; use topLevelResult for distinct top-level binary libtest summary counts",
+  "topLevelResult": {
+    "binaries": 49,
+    "passed": 2200,
+    "failed": 0,
+    "ignored": 37
+  }
 }

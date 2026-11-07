@@ -1,0 +1,352 @@
+{
+  "scope": "last libtest summary for each explicit Cargo Running binary; nested child summaries not counted twice",
+  "binaries": 49,
+  "passed": 2200,
+  "failed": 0,
+  "ignored": 37,
+  "rows": [
+    {
+      "binary": "unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-0acf286eb61f7336)",
+      "result": "ok",
+      "passed": 1963,
+      "failed": 0,
+      "ignored": 14
+    },
+    {
+      "binary": "unittests src/bin/ocxd.rs (target/debug/deps/ocxd-791b28f4772b35b8)",
+      "result": "ok",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "unittests src/main.rs (target/debug/deps/opencodex_desktop-758a658157d361ce)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/about.rs (target/debug/deps/about-3b6d9cabb011418f)",
+      "result": "ok",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/app_icon.rs (target/debug/deps/app_icon-dcd62bd76472f960)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/app_startup_wiring.rs (target/debug/deps/app_startup_wiring-79ff8b4700a61d2f)",
+      "result": "ok",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/app_status.rs (target/debug/deps/app_status-0a5a8685752e125d)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/backup_process_lock.rs (target/debug/deps/backup_process_lock-47186b4be364f59b)",
+      "result": "ok",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "binary": "tests/channel_rename_native.rs (target/debug/deps/channel_rename_native-ae4be4a5eac0b193)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "binary": "tests/cli_ipc.rs (target/debug/deps/cli_ipc-327f9e92c6541bfd)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/client_npm_runtime.rs (target/debug/deps/client_npm_runtime-fda52b6d3571f5d5)",
+      "result": "ok",
+      "passed": 18,
+      "failed": 0,
+      "ignored": 2
+    },
+    {
+      "binary": "tests/client_selection_rename.rs (target/debug/deps/client_selection_rename-d576d5d6417b799c)",
+      "result": "ok",
+      "passed": 21,
+      "failed": 0,
+      "ignored": 5
+    },
+    {
+      "binary": "tests/codex_shim.rs (target/debug/deps/codex_shim-620bc60b969b796a)",
+      "result": "ok",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/config_sync_webdav_real.rs (target/debug/deps/config_sync_webdav_real-bf1d5ba71f644b08)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 2
+    },
+    {
+      "binary": "tests/config_v2_transport_real.rs (target/debug/deps/config_v2_transport_real-b87360336b56b79f)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "binary": "tests/doctor.rs (target/debug/deps/doctor-f0b749b9820a1843)",
+      "result": "ok",
+      "passed": 9,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/event_registry.rs (target/debug/deps/event_registry-b2c22209383d3a0b)",
+      "result": "ok",
+      "passed": 43,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/extensions.rs (target/debug/deps/extensions-ab86f6d8b3a0f8b6)",
+      "result": "ok",
+      "passed": 39,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/layer_boundaries.rs (target/debug/deps/layer_boundaries-9940d70cb492e4ac)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/logs.rs (target/debug/deps/logs-7f4c56d9efca6545)",
+      "result": "ok",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/model_config_official_real.rs (target/debug/deps/model_config_official_real-c4a134499b6524fb)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 2
+    },
+    {
+      "binary": "tests/model_file_browser.rs (target/debug/deps/model_file_browser-7649a5c62100f34f)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "binary": "tests/model_file_live.rs (target/debug/deps/model_file_live-b38ec8a391b8d08b)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 2
+    },
+    {
+      "binary": "tests/model_research_real.rs (target/debug/deps/model_research_real-f1a337752c19cf6c)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "binary": "tests/notifications.rs (target/debug/deps/notifications-dc0d769d152f109e)",
+      "result": "ok",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/official_status_source.rs (target/debug/deps/official_status_source-831402e1d80c6f4e)",
+      "result": "ok",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/preferences.rs (target/debug/deps/preferences-2aebf832155acc34)",
+      "result": "ok",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/process_action.rs (target/debug/deps/process_action-82611ab4a1d67fc8)",
+      "result": "ok",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/provider_auth_native.rs (target/debug/deps/provider_auth_native-88e1db33d0a7e4a5)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "binary": "tests/runtime023_manager_name_chain.rs (target/debug/deps/runtime023_manager_name_chain-cc8f89e235658279)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "binary": "tests/runtime_bundle_real.rs (target/debug/deps/runtime_bundle_real-9ecb3cfad7b0407f)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "binary": "tests/runtime_managed_real.rs (target/debug/deps/runtime_managed_real-98fd7c02693a5147)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/runtime_prerelease_real.rs (target/debug/deps/runtime_prerelease_real-774bc09b8afade5c)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "binary": "tests/sandbox_isolation.rs (target/debug/deps/sandbox_isolation-60e53a0a4d95ca75)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/saved_runtime_reconcile.rs (target/debug/deps/saved_runtime_reconcile-365c122b5c84ecf4)",
+      "result": "ok",
+      "passed": 20,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/status_matrix.rs (target/debug/deps/status_matrix-1a4621e5f5219c4d)",
+      "result": "ok",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/status_snapshot.rs (target/debug/deps/status_snapshot-174e4c1468d5703e)",
+      "result": "ok",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "binary": "tests/sync_plaintext.rs (target/debug/deps/sync_plaintext-9523550eefcf171b)",
+      "result": "ok",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/tray.rs (target/debug/deps/tray-d1439386caeaad43)",
+      "result": "ok",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/tray_icon.rs (target/debug/deps/tray_icon-ea8bd1d0e925be6a)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/tray_left_click.rs (target/debug/deps/tray_left_click-929187134bf5a987)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/webdav_legacy_real.rs (target/debug/deps/webdav_legacy_real-835e0ec6079ca182)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/webdav_real.rs (target/debug/deps/webdav_real-4a6b9519159887d0)",
+      "result": "ok",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/webdav_sync_real.rs (target/debug/deps/webdav_sync_real-bddd0bb4d42810d8)",
+      "result": "ok",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/webdav_tls.rs (target/debug/deps/webdav_tls-ccac32175029b63c)",
+      "result": "ok",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/window_close.rs (target/debug/deps/window_close-5e67acd48b0a9c58)",
+      "result": "ok",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/windows_client_selection_owner.rs (target/debug/deps/windows_client_selection_owner-ab2d7a129d5c3f2e)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/windows_runtime.rs (target/debug/deps/windows_runtime-a08d6bf038355b12)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "binary": "tests/windows_tray_icon.rs (target/debug/deps/windows_tray_icon-103c9bc248e3e6c2)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    }
+  ]
+}
