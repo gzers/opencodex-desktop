@@ -151,6 +151,12 @@ fn absolute(path: &Path) -> AppResult<()> {
     let mut current = PathBuf::new();
     for part in path.components() {
         current.push(part);
+        // A Windows drive/UNC prefix alone is not a filesystem root. Wait for
+        // RootDir before metadata I/O; keep subsequent reparse/directory checks.
+        #[cfg(windows)]
+        if matches!(part, Component::Prefix(_)) {
+            continue;
+        }
         match fs::symlink_metadata(&current) {
             Ok(_) => {
                 if !safety::inspect(&current)?.is_dir() {
@@ -1153,3 +1159,7 @@ fn publish(source: &Path, target: &Path) -> AppResult<()> {
 #[cfg(all(test, unix))]
 #[path = "bundled_tests.rs"]
 mod bundled_tests;
+
+#[cfg(all(test, windows))]
+#[path = "bundled_windows_tests.rs"]
+mod windows_bundle_roots;
