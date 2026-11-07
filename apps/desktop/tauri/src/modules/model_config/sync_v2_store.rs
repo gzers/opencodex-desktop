@@ -210,6 +210,8 @@ impl Store {
         }
     }
     pub async fn lock(&self, key: &str) -> SyncResult<FileGuard> {
+        #[cfg(all(test, windows))]
+        let _timing = super::TestPhaseTiming::start("store-lock-wait");
         let f = self.lock_file(key)?;
         tokio::task::spawn_blocking(move || {
             f.lock().map_err(io_error)?;

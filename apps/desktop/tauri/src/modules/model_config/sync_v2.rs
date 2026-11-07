@@ -16,6 +16,34 @@ use store::{canonical, digest, execution_digest, plan_digest, ReceiveRecord, Sto
 use tokio::sync::Semaphore;
 use types::*;
 
+// Windows CI timing evidence for remaining timeout failures. Only static phase
+// names and elapsed milliseconds are emitted; no paths, payloads or credentials.
+#[cfg(all(test, windows))]
+pub(super) struct TestPhaseTiming {
+    phase: &'static str,
+    started: std::time::Instant,
+}
+#[cfg(all(test, windows))]
+impl TestPhaseTiming {
+    pub(super) fn start(phase: &'static str) -> Self {
+        eprintln!("SYNC_TEST_PHASE begin {phase}");
+        Self {
+            phase,
+            started: std::time::Instant::now(),
+        }
+    }
+}
+#[cfg(all(test, windows))]
+impl Drop for TestPhaseTiming {
+    fn drop(&mut self) {
+        eprintln!(
+            "SYNC_TEST_PHASE end {} elapsed_ms={}",
+            self.phase,
+            self.started.elapsed().as_millis()
+        );
+    }
+}
+
 pub struct SyncContext<'a> {
     pub store: &'a Store,
     pub transport: &'a dyn ConfigSyncTransport,
@@ -675,6 +703,8 @@ impl<'a> SyncContext<'a> {
         self.verify_locked(j).await
     }
     async fn verify_inner(&self, j: &mut Journal) -> SyncResult<OperationFact> {
+        #[cfg(all(test, windows))]
+        let _timing = TestPhaseTiming::start("verify-original-upload");
         self.binding(&j.plan.binding_id)?;
         j.fact.relation.local = LocalRelation::NotCompared;
         let graph = self.observe().await;
