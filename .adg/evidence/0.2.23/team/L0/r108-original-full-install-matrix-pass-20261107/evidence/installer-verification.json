@@ -1,0 +1,143 @@
+{
+  "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+  "sourceCommit": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+  "builtExecutableSha256": "c59a2a72a231b004443b5250036b5b1cf19db770ffd009f09c88ba915f1af21b",
+  "version": "0.2.23",
+  "codeSigned": false,
+  "releaseAccepted": false,
+  "result": "pass",
+  "installers": [
+    {
+      "kind": "msi",
+      "name": "OpenCodeX Desktop_0.2.23_x64_en-US.msi",
+      "bytes": 288911360,
+      "sha256": "4b29b5607b6af416c7eac55d3698ea923f170896152d39e77754385d2b089719",
+      "installDirectory": "C:\\Users\\ocxacc7746d735\\AppData\\Local\\Temp\\ocxd-candidate-msi-b7109508f95e4c3eb9c70d0709bff540",
+      "result": "pass",
+      "registryCleanup": [],
+      "installExitCode": 0,
+      "installedExecutableSha256": "8efc2f6488dc2b1667790ed94bf63ab3d176f9b93eb35063de13165221d9948e",
+      "expectedInstalledExecutableSha256": "8efc2f6488dc2b1667790ed94bf63ab3d176f9b93eb35063de13165221d9948e",
+      "bundleMarker": "MSI",
+      "bundleMarkerOffset": 16431941,
+      "productVersion": "0.2.23",
+      "firstScreen": "pass",
+      "explicitCleanupHelper": {
+        "scope": "disposable hosted runner actual TokenUser profile; current v2 fixed pointer and selected aggregate",
+        "structureVersion": 2,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "profile": "C:\\Users\\ocxacc7746d735",
+        "unconfirmedExitCode": 2,
+        "confirmedExitCode": 0,
+        "repeatExitCode": 0,
+        "fixedAndSelectedDesktopRemoved": true,
+        "externalHomeUnchanged": true,
+        "unselectedLegacyPathUnchanged": true,
+        "durableExternalGatesRetainedByProduct": true,
+        "newFixturesCleanedByHarness": true,
+        "applicationRetained": true,
+        "legacyCompatibilityTested": false,
+        "hostAcceptanceClaimed": false
+      },
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true,
+      "defaultUninstallRetainedData": true
+    },
+    {
+      "kind": "nsis",
+      "name": "OpenCodeX Desktop_0.2.23_x64-setup.exe",
+      "bytes": 287581782,
+      "sha256": "7f4fac1404d43a23e59bc97abaaf2bd91b0df292376d16a608f8a5fc26b89fe0",
+      "installDirectory": "C:\\Users\\ocxacc7746d735\\AppData\\Local\\Temp\\ocxd-candidate-nsis-a51b63746ecd4ca3a911f6e974ad6a28",
+      "result": "pass",
+      "installExitCode": 0,
+      "installedExecutableSha256": "04bffaea237fa85c299f35582be25c279e1ee0c2475661e86232047706258176",
+      "expectedInstalledExecutableSha256": "04bffaea237fa85c299f35582be25c279e1ee0c2475661e86232047706258176",
+      "bundleMarker": "NSS",
+      "bundleMarkerOffset": 16431941,
+      "productVersion": "0.2.23",
+      "firstScreen": "pass",
+      "explicitCleanupHelper": {
+        "scope": "disposable hosted runner actual TokenUser profile; current v2 fixed pointer and selected aggregate",
+        "structureVersion": 2,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "profile": "C:\\Users\\ocxacc7746d735",
+        "unconfirmedExitCode": 2,
+        "confirmedExitCode": 0,
+        "repeatExitCode": 0,
+        "fixedAndSelectedDesktopRemoved": true,
+        "externalHomeUnchanged": true,
+        "unselectedLegacyPathUnchanged": true,
+        "durableExternalGatesRetainedByProduct": true,
+        "newFixturesCleanedByHarness": true,
+        "applicationRetained": true,
+        "legacyCompatibilityTested": false,
+        "hostAcceptanceClaimed": false
+      },
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true,
+      "defaultUninstallRetainedData": true
+    }
+  ],
+  "installationOwnerToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 6176,
+    "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+    "creationTimeUtc": "2026-11-07T14:39:01.7087715Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-07T14:39:03.0157273Z"
+  },
+  "installationOwnerProfile": "C:\\Users\\ocxacc7746d735",
+  "installerPolicies": [
+    {
+      "path": "HKLM:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+      "AlwaysInstallElevated": null,
+      "DisableMSI": 0,
+      "exists": true,
+      "DisableUserInstalls": null
+    },
+    {
+      "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+      "AlwaysInstallElevated": null,
+      "DisableMSI": null,
+      "exists": false,
+      "DisableUserInstalls": null
+    }
+  ],
+  "defaultInstallChecks": [
+    {
+      "kind": "msi",
+      "boundary": "MSI fresh first; NSIS may honor the existing product remembered directory",
+      "installDirectory": "C:\\Users\\ocxacc7746d735\\AppData\\Local\\Programs\\OpenCodeX Desktop\\",
+      "pathOverride": false,
+      "result": "pass"
+    },
+    {
+      "kind": "nsis",
+      "boundary": "per-user NSIS is checked after MSI cells to avoid contaminating MSI AppSearch",
+      "installDirectory": "C:\\Users\\ocxacc7746d735\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+      "pathOverride": false,
+      "result": "pass"
+    }
+  ],
+  "defaultMsiRegistryCleanup": [],
+  "defaultInstallRootObservation": {
+    "actual": "C:\\Users\\ocxacc7746d735\\AppData\\Local\\Programs\\OpenCodeX Desktop\\",
+    "expectedOwner": "C:\\Users\\ocxacc7746d735\\AppData\\Local\\Programs\\OpenCodeX Desktop"
+  },
+  "defaultNsisRegistryCleanup": [
+    {
+      "valueName": "",
+      "scope": "exact own earlier NSIS custom fixture only",
+      "hive": "CurrentUser",
+      "view": "Registry32",
+      "prior": "C:\\Users\\ocxacc7746d735\\AppData\\Local\\Temp\\ocxd-candidate-nsis-a51b63746ecd4ca3a911f6e974ad6a28"
+    }
+  ],
+  "defaultNsisRootObservation": {
+    "actual": "C:\\Users\\ocxacc7746d735\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+    "expectedOwner": "C:\\Users\\ocxacc7746d735\\AppData\\Local\\Programs\\OpenCodeX Desktop"
+  }
+}
