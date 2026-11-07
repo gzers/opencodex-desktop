@@ -421,7 +421,7 @@ jobs:
           path: test/out/windows-installer-retention
 
   native-ui:
-    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023' && inputs.admission_run != 'msi-compiler-023' && inputs.admission_run != 'native-replay-414'
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023' && inputs.admission_run != 'msi-compiler-023' && inputs.admission_run != 'native-replay-414' && inputs.admission_run != 'raw-msi-3d-diagnostic'
     runs-on: windows-latest
     timeout-minutes: 40
     defaults:
@@ -666,3 +666,54 @@ jobs:
           path: test/out/windows023-installer-retention
           if-no-files-found: warn
           retention-days: 14
+
+  raw-msi3d-diagnostic:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run == 'raw-msi-3d-diagnostic'
+    permissions:
+      contents: read
+      actions: read
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: gzers/opencodex-desktop
+          run-id: 42365850198
+          name: windows-raw-installers-unverified-3d45558c1e76fa326852318ce899987be408b9fb
+          path: test/out/raw-msi3d/input
+      - name: Verify exact raw originals then diagnose one default MSI installation
+        shell: pwsh
+        run: |
+          $root=(Resolve-Path test/out/raw-msi3d/input).Path
+          $receipt=Get-Content -LiteralPath (Join-Path $root 'build-identities.json') -Raw|ConvertFrom-Json
+          $expected='3d45558c1e76fa326852318ce899987be408b9fb'
+          if($receipt.source -cne $expected -or $receipt.appsTree -cne (git rev-parse HEAD:apps).Trim() -or $receipt.status -cne 'unverified-build-only' -or $receipt.installationAccepted -or $receipt.releaseAccepted -or @($receipt.files).Count -ne 3){throw 'Unverified original identity differs'}
+          foreach($file in $receipt.files){
+            if($file.name -notin @('opencodex-desktop.exe','OpenCodeX Desktop_0.2.23_x64-setup.exe','OpenCodeX Desktop_0.2.23_x64_en-US.msi')){throw 'Unexpected original file'}
+            $path=Join-Path $root $file.name
+            if((Get-Item -LiteralPath $path).Length -ne $file.bytes -or (Get-FileHash -LiteralPath $path).Hash.ToLowerInvariant() -cne $file.sha256){throw 'Original bytes changed'}
+          }
+          $bundle=Join-Path $root 'bundle'
+          New-Item -ItemType Directory -Force (Join-Path $bundle 'msi')|Out-Null
+          Copy-Item -LiteralPath (Join-Path $root 'OpenCodeX Desktop_0.2.23_x64_en-US.msi') -Destination (Join-Path $bundle 'msi')
+          & test/smoke/windows-installer.ps1 -BundleDirectory $bundle -BuiltExecutable (Join-Path $root 'opencodex-desktop.exe') -Node (Get-Command node).Source -OutputDirectory test/out/raw-msi3d/evidence -ExpectedCommit $expected -Kind msi -Mode default
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw-msi3d-diagnostic
+          if-no-files-found: error
+          path: |
+            test/out/raw-msi3d/input/build-identities.json
+            test/out/raw-msi3d/evidence/*.json
+            test/out/raw-msi3d/evidence/*.log
+            test/out/raw-msi3d/evidence/*startup/*.json
+            test/out/raw-msi3d/evidence/*startup/*.log
+            test/out/raw-msi3d/evidence/*startup/startup/*.json
+            test/out/raw-msi3d/evidence/*startup/startup/*.log
+            test/out/raw-msi3d/evidence/*startup/startup/*.png

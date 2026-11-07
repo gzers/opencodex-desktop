@@ -43,6 +43,12 @@ $taskResult = [ordered]@{
     result = 'fail'; installers = @()
 }
 if ($AsInstallationOwner) { $taskResult.installationOwnerToken=$ownerToken; $taskResult.installationOwnerProfile=$env:USERPROFILE }
+# Read-only policy evidence. Never relax a machine/user installer policy.
+$taskResult.installerPolicies=@(foreach($policyPath in @('HKLM:\Software\Policies\Microsoft\Windows\Installer','HKCU:\Software\Policies\Microsoft\Windows\Installer')){
+ $properties=Get-ItemProperty -LiteralPath $policyPath -ErrorAction SilentlyContinue
+ @{path=$policyPath;exists=($null -ne $properties);DisableMSI=$properties.DisableMSI;DisableUserInstalls=$properties.DisableUserInstalls;AlwaysInstallElevated=$properties.AlwaysInstallElevated}
+})
+
 function Invoke-Installer([string]$File, [string]$Arguments) {
     $process = Start-Process -FilePath $File -ArgumentList $Arguments -Wait -PassThru
     if ($process.ExitCode -notin @(0, 3010)) { throw "Installer failed with exit code $($process.ExitCode)" }
@@ -114,7 +120,7 @@ try {
         if($installerKind -eq 'nsis'){[void](Invoke-Installer $package[0].FullName '/S')}
         else{
             $entryCleanup = Clear-ProductRememberedInstallDirectory
-            [void](Invoke-Installer 'msiexec.exe' ('/i "'+$package[0].FullName+'" /qn /norestart'))
+            [void](Invoke-Installer 'msiexec.exe' ('/i "'+$package[0].FullName+'" /qn /norestart /L*v "'+(Join-Path $taskOutput 'msi-default-install.log')+'"'))
             $taskResult.defaultMsiRegistryCleanup = @($entryCleanup)
         }
         $defaultRoot=Find-DefaultInstalledDirectory
