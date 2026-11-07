@@ -1,0 +1,273 @@
+{
+  "source": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+  "auditKind": "updated prepublication evidence index; self-audit only, not final acceptance",
+  "fullObjectiveComplete": false,
+  "criteriaCount": 21,
+  "sourceReuse": "shared UI/base native evidence retained; Windows-only launcher generation61944 separately verified in actual native2.91->failure->2.93 on final apps tree; current Mac bundle rebuilt/r100",
+  "windowsFinalRun": 42374536779,
+  "windowsFinalStatus": "in_progress full regression; install/twoSID not complete",
+  "criteria": [
+    {
+      "id": "AC-P22-01",
+      "text": "同一同步预览来源下拉及预选、确认/取消/重开、范围与备份按采用原型执行，不伪造时间。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-POST022.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r29-corrected-native-parity-20261107",
+        ".adg/evidence/0.2.23/team/L0/r45-explicit-reselection-confirm-20261107",
+        ".adg/evidence/0.2.23/team/L0/r52-mcp-definition-binding-20261107",
+        ".adg/evidence/0.2.23/team/L0/r54-8ced-full-and-native-20261107"
+      ],
+      "disposition": "scoped-implementation-evidence-present-final-release-not-accepted",
+      "remaining": "Scoped product evidence present. Latest final source/platform CI, complete installers/twoSID/retention and signed release gates remain; this evidence index does not close the criterion."
+    },
+    {
+      "id": "AC-P22-02",
+      "text": "渠道name落实到实际配置、当前引用和Codex目录显示，覆盖历史显示名/运行键分离及非ASCII名称。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-POST022.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-manager-name-chain-receipt.md",
+        ".adg/evidence/0.2.23/team/L0/r54-8ced-full-and-native-20261107",
+        ".adg/evidence/0.2.23/team/L0/r96-real-install-recovery-and-unpinned-readiness-20261107",
+        ".adg/evidence/0.2.23/team/L0/r99-pinned-native-install-recovery-pass-20261107"
+      ],
+      "disposition": "scoped-implementation-evidence-present-final-release-not-accepted",
+      "remaining": "Scoped product evidence present. Latest final source/platform CI, complete installers/twoSID/retention and signed release gates remain; this evidence index does not close the criterion."
+    },
+    {
+      "id": "AC-P22-03",
+      "text": "新增渠道两步按后继采用原型还原，移除渠道协议属性，发现/模板协议与单模型自定义独立接线；模型选择、草稿和退出完整。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-POST022.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r29-corrected-native-parity-20261107",
+        ".adg/evidence/0.2.23/team/L0/r55-windows943-package-failure-20261107/8ced-frontend-ci.log"
+      ],
+      "disposition": "scoped-implementation-evidence-present-final-release-not-accepted",
+      "remaining": "Scoped product evidence present. Latest final source/platform CI, complete installers/twoSID/retention and signed release gates remain; this evidence index does not close the criterion."
+    },
+    {
+      "id": "AC-P22-04",
+      "text": "安装身份诊断与明确来源的新目录恢复保留旧安装和业务数据，包/入口/清单/来源一致才确认成功。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-POST022.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r27-app-owned-installation-remediation-20261107",
+        ".adg/evidence/0.2.23/team/L0/r58-e292-macos-final-candidate-20261107",
+        ".adg/evidence/0.2.23/team/L0/r93-launcher-separator-proof-20261107",
+        ".adg/evidence/0.2.23/team/L0/r99-pinned-native-install-recovery-pass-20261107",
+        ".adg/evidence/0.2.23/team/L0/r100-0c-macos-final-candidate-20261107"
+      ],
+      "disposition": "incomplete-final-platform-or-release-evidence",
+      "remaining": "Actual pinned native install/failure preservation/recovery now passed. Final complete installer/package and Node22 compatibility matrix still required."
+    },
+    {
+      "id": "AC-P22-05",
+      "text": "全部WebDAV配置交互不依赖ETag，采用新格式空目录初始化、代次绑定、并发提交保全及明确冲突处理。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-POST022.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r4-20261107/L2/adopted-service-evidence",
+        ".adg/evidence/0.2.23/team/L0/r54-8ced-full-and-native-20261107"
+      ],
+      "disposition": "scoped-implementation-evidence-present-final-release-not-accepted",
+      "remaining": "Scoped product evidence present. Latest final source/platform CI, complete installers/twoSID/retention and signed release gates remain; this evidence index does not close the criterion."
+    },
+    {
+      "id": "AC-P22-06",
+      "text": "原上传只读核对不受后续本机修改阻断，待确认/成功/冲突与后续待同步事实准确持久记录。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-POST022.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r6-result-owner-integration-20261107",
+        ".adg/evidence/0.2.23/team/L0/r41-restored-absence-scope-20261107",
+        ".adg/evidence/0.2.23/team/L0/r44-remote-only-reselection-20261107",
+        ".adg/evidence/0.2.23/team/L0/r54-8ced-full-and-native-20261107"
+      ],
+      "disposition": "scoped-implementation-evidence-present-final-release-not-accepted",
+      "remaining": "Scoped product evidence present. Latest final source/platform CI, complete installers/twoSID/retention and signed release gates remain; this evidence index does not close the criterion."
+    },
+    {
+      "id": "AC-P22-07",
+      "text": "同步预览整体按原型还原，真实组件页面验证；Windows补验按长期规范条件触发。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-POST022.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r28-sync-native-parity-consumer-20261107",
+        ".adg/evidence/0.2.23/team/L0/r29-corrected-native-parity-20261107",
+        ".adg/evidence/0.2.23/team/L0/r55-windows943-package-failure-20261107/8ced-frontend-ci.log"
+      ],
+      "disposition": "scoped-implementation-evidence-present-final-release-not-accepted",
+      "remaining": "Scoped product evidence present. Latest final source/platform CI, complete installers/twoSID/retention and signed release gates remain; this evidence index does not close the criterion."
+    },
+    {
+      "id": "AC-P22-08",
+      "text": "原六项及同版目录/多用户及模型模版专题最终同源验收、依赖运行包交付、实际制品/升级/签名/回退与测试清理证据齐全后才可交付。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-POST022.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r55-windows943-package-failure-20261107",
+        ".adg/evidence/0.2.23/team/L0/r56-msi-guid-native-20261107",
+        ".adg/evidence/0.2.23/team/L0/r57-final-source-reuse-audit-20261107",
+        ".adg/evidence/0.2.23/team/L0/r58-e292-macos-final-candidate-20261107",
+        ".adg/evidence/0.2.23/team/L0/r59-adjacent022-baseline-preparation-20261107",
+        ".adg/evidence/0.2.23/team/L0/r92-3d-full-msi1625-original-20261107",
+        ".adg/evidence/0.2.23/team/L0/r97-original-msi-default-owner-pass-20261107",
+        ".adg/evidence/0.2.23/team/L0/r99-pinned-native-install-recovery-pass-20261107",
+        ".adg/evidence/0.2.23/team/L0/r100-0c-macos-final-candidate-20261107"
+      ],
+      "disposition": "incomplete-final-platform-or-release-evidence",
+      "remaining": "Final Windows installers, two real SIDs/ports, retention cells, signed release/updater/rollback/public readback and final governance closure remain."
+    },
+    {
+      "id": "AC-DIR-01",
+      "text": "双端按当前OS用户解析.codex-desktop，下分desktop和opencodex/home，管理器状态与原版渠道配置各有唯一归属。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-USER-DIRECTORY.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r54-8ced-full-and-native-20261107",
+        ".adg/evidence/0.2.23/team/L0/r58-e292-macos-final-candidate-20261107",
+        ".adg/evidence/0.2.23/team/L0/r97-original-msi-default-owner-pass-20261107",
+        ".adg/evidence/0.2.23/team/L0/r99-pinned-native-install-recovery-pass-20261107",
+        ".adg/evidence/0.2.23/team/L0/r100-0c-macos-final-candidate-20261107"
+      ],
+      "disposition": "incomplete-final-platform-or-release-evidence",
+      "remaining": "Current Mac/native Windows D/H fixed dependencies and original MSI default ordinary owner evidence present. Exact final complete Windows installer and twoSID evidence remain."
+    },
+    {
+      "id": "AC-DIR-02",
+      "text": "程序、配置、启动、更新、卸载仅按新版规定路径；不扫描继承旧目录、注册表或旧程序，不做旧格式转换、自动迁移、跨版本接管。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-USER-DIRECTORY.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r54-8ced-full-and-native-20261107",
+        ".adg/evidence/0.2.23/team/L0/r57-final-source-reuse-audit-20261107",
+        ".adg/evidence/0.2.23/team/L0/r97-original-msi-default-owner-pass-20261107",
+        ".adg/evidence/0.2.23/team/L0/r100-0c-macos-final-candidate-20261107"
+      ],
+      "disposition": "incomplete-final-platform-or-release-evidence",
+      "remaining": "Current Mac no-old-path and original MSI default install/uninstall passed within limited scopes. Final candidate and five legacy-preservation retention cells still required."
+    },
+    {
+      "id": "AC-DIR-03",
+      "text": "手动放入新HOME的当前支持格式JSON可读取渠道、节点、认证与模型选择并供实际运行目录消费；缺引用/损坏明确提示。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-USER-DIRECTORY.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-final-consumer-receipt.md",
+        ".adg/evidence/0.2.23/team/L0/r54-8ced-full-and-native-20261107",
+        ".adg/evidence/0.2.23/team/L0/r99-pinned-native-install-recovery-pass-20261107"
+      ],
+      "disposition": "scoped-implementation-evidence-present-final-release-not-accepted",
+      "remaining": "Scoped product evidence present. Latest final source/platform CI, complete installers/twoSID/retention and signed release gates remain; this evidence index does not close the criterion."
+    },
+    {
+      "id": "AC-DIR-04",
+      "text": "不同Windows账户允许同时打开管理器及运行各自独立实例；同账户保留单实例约束，启动锁/数据锁/IPC按用户隔离；端口占用明确处理，不误连或停止其它用户服务。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-USER-DIRECTORY.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r55-windows943-package-failure-20261107"
+      ],
+      "disposition": "incomplete-final-platform-or-release-evidence",
+      "remaining": "Actual two different SIDs with simultaneous managers and independent runtime proxy ports remain. Previous candidate skipped these steps after MSI failure."
+    },
+    {
+      "id": "AC-DIR-05",
+      "text": "OpenCodex默认集成到Desktop安装结构runtime中；新安装、初始化、重启、更新及卸载使用同一新版路径合同，界面显示实际值；不自动清理旧版或其它拥有者数据。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-USER-DIRECTORY.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r58-e292-macos-final-candidate-20261107",
+        ".adg/evidence/0.2.23/team/L0/r56-msi-guid-native-20261107",
+        ".adg/evidence/0.2.23/team/L0/r99-pinned-native-install-recovery-pass-20261107",
+        ".adg/evidence/0.2.23/team/L0/r100-0c-macos-final-candidate-20261107"
+      ],
+      "disposition": "incomplete-final-platform-or-release-evidence",
+      "remaining": "Actual pinned native program install/update-failure preservation/recovery passed. Final package install/update/uninstall plus signed adjacent updater/rollback still required."
+    },
+    {
+      "id": "AC-DIR-06",
+      "text": "受影响共享逻辑、路径/凭据/进程及必要原生边界验收齐全，条件补Windows；残留清理、脱敏成功/失败证据保留。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-USER-DIRECTORY.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r54-8ced-full-and-native-20261107",
+        ".adg/evidence/0.2.23/team/L0/r55-windows943-package-failure-20261107",
+        ".adg/evidence/0.2.23/team/L0/r58-e292-macos-final-candidate-20261107",
+        ".adg/evidence/0.2.23/team/L0/r97-original-msi-default-owner-pass-20261107",
+        ".adg/evidence/0.2.23/team/L0/r99-pinned-native-install-recovery-pass-20261107",
+        ".adg/evidence/0.2.23/team/L0/r100-0c-macos-final-candidate-20261107"
+      ],
+      "disposition": "incomplete-final-platform-or-release-evidence",
+      "remaining": "Scoped native Mac cleanup and raw MSI account/Profile/policy restoration passed. Final complete candidate/twoSID/retention cleanup still required."
+    },
+    {
+      "id": "AC-MATCH-01",
+      "text": "本批候选17模版数据可复核来源，族级规则减少精确枚举；已有58组型号参数及锁定字段保留，读取成功自动匹配并在草稿绑定已保存版本，正式保存后生效，不覆盖旧revision。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-R1-batch1-receipt.md",
+        ".adg/evidence/0.2.23/team/L0/r54-8ced-full-and-native-20261107"
+      ],
+      "disposition": "scoped-implementation-evidence-present-final-release-not-accepted",
+      "remaining": "Scoped product evidence present. Latest final source/platform CI, complete installers/twoSID/retention and signed release gates remain; this evidence index does not close the criterion."
+    },
+    {
+      "id": "AC-MATCH-02",
+      "text": "数字版本.与-仅在声明槽位等价，保留完整数字段/规格/构建及原始请求ID；名称条件支持完整片段及不限/版本前/版本后，组合AND且无子串误匹配。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r9-prototype-and-ci-followup-20261107",
+        ".adg/evidence/0.2.23/team/L0/r54-8ced-full-and-native-20261107"
+      ],
+      "disposition": "scoped-implementation-evidence-present-final-release-not-accepted",
+      "remaining": "Scoped product evidence present. Latest final source/platform CI, complete installers/twoSID/retention and signed release gates remain; this evidence index does not close the criterion."
+    },
+    {
+      "id": "AC-MATCH-03",
+      "text": "规则预览、正式保存/实际解析、导入导出、所选模版传输和Agent编辑使用同一语义，等价重复/冲突明确报错，未知能力继承，不自动扩能力；读取匹配到草稿，无需另确认采用。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-final-consumer-receipt.md",
+        ".adg/evidence/0.2.23/team/L0/r54-8ced-full-and-native-20261107"
+      ],
+      "disposition": "scoped-implementation-evidence-present-final-release-not-accepted",
+      "remaining": "Scoped product evidence present. Latest final source/platform CI, complete installers/twoSID/retention and signed release gates remain; this evidence index does not close the criterion."
+    },
+    {
+      "id": "AC-MATCH-04",
+      "text": "冻结本地样本的133个族归类及已选28个ID潜在覆盖保持，参数/规格反例通过；剩余18个其它族/特殊任务及1个重复前缀不补齐、不禁用、不阻断交付。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-R1-batch1-receipt.md",
+        ".adg/evidence/0.2.23/team/L0/r9-prototype-and-ci-followup-20261107",
+        ".adg/evidence/0.2.23/team/L0/r54-8ced-full-and-native-20261107"
+      ],
+      "disposition": "scoped-implementation-evidence-present-final-release-not-accepted",
+      "remaining": "Scoped product evidence present. Latest final source/platform CI, complete installers/twoSID/retention and signed release gates remain; this evidence index does not close the criterion."
+    },
+    {
+      "id": "AC-MATCH-05",
+      "text": "原型条件覆盖/名称位置/版本分隔及命中原因、字段来源与错误状态经采用后软件真实组件对照；正式Schema和接线验证齐全才完成，不以离线脚本代替产品验收。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r9-prototype-and-ci-followup-20261107",
+        ".adg/evidence/0.2.23/team/L0/r55-windows943-package-failure-20261107/8ced-frontend-ci.log"
+      ],
+      "disposition": "scoped-implementation-evidence-present-final-release-not-accepted",
+      "remaining": "Scoped product evidence present. Latest final source/platform CI, complete installers/twoSID/retention and signed release gates remain; this evidence index does not close the criterion."
+    },
+    {
+      "id": "AC-MATCH-06",
+      "text": "渠道层无默认/自定义协议；最终协议由已采用模版通用值、条件覆盖、单模型显式值解析。模型发现方式独立，实际运行adapter由最终模型协议派生，无隐藏渠道回退；缺失/不支持明确提示且不猜协议。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r29-corrected-native-parity-20261107",
+        ".adg/evidence/0.2.23/team/L0/r54-8ced-full-and-native-20261107"
+      ],
+      "disposition": "scoped-implementation-evidence-present-final-release-not-accepted",
+      "remaining": "Scoped product evidence present. Latest final source/platform CI, complete installers/twoSID/retention and signed release gates remain; this evidence index does not close the criterion."
+    },
+    {
+      "id": "AC-MATCH-07",
+      "text": "读取现有渠道成功后按默认已保存/明确指定模版版本自动匹配更新模型草稿，无额外采用确认；人工单模型覆盖保留，来源参数不冒充手工覆盖，失败/空/冲突/晚回保护，保存才写入，重复读取幂等。",
+      "authority": "docs/01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md",
+      "evidence": [
+        ".adg/evidence/0.2.23/team/L0/r4-20261107/L1/L1-final-consumer-receipt.md",
+        ".adg/evidence/0.2.23/team/L0/r55-windows943-package-failure-20261107/8ced-frontend-ci.log",
+        ".adg/evidence/0.2.23/team/L0/r54-8ced-full-and-native-20261107"
+      ],
+      "disposition": "scoped-implementation-evidence-present-final-release-not-accepted",
+      "remaining": "Scoped product evidence present. Latest final source/platform CI, complete installers/twoSID/retention and signed release gates remain; this evidence index does not close the criterion."
+    }
+  ],
+  "finalCiRun": 42373994923
+}
