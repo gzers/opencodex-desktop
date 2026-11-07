@@ -35,3 +35,8 @@ SharedDataRoot表示D，已有manager-state/logs/cache/backups等相对消费者
 ## Windows Git协作
 
 L4只用已推送明确SHA和本合同，G0可立即核对本机SID/安装器事实；R1平台编码需WINDOWS文件逐项放行。禁止跨写共享lib.rs/data_root/runtime核心；Windows专属文件单写，跨边界回交接口需求。两真实SID、同SID多会话/提权、端口/IPC/凭据及NSIS/MSI受影响格必须实际证明。RDP可使用，不能拿同用户两个RDP会话冒充两SID。
+
+
+### 2026-11-07 删除与启动共同准入补充
+
+各显式集合根U下永久保留控制文件`.desktop-removal.lock`，位于D/H外，不保存业务配置和凭据。正常启动在创建D前、单实例生命周期和备份事务期间持共享lease；确认删除对固定与所选D的gate按规范路径排序取非阻塞独占lease，复核现有startup/app/backup锁和原计划后，先释放树内句柄，再在外部独占lease仍存活时删除已选D/H。gate不删除、不替换，避免不同inode分裂锁权威；有活动实例/备份立即拒绝，不停其它用户进程。不扩大旧路径扫描或迁移。取消/只读计划不新建gate。Windows实际证明待候选回归，本机定向51项通过。

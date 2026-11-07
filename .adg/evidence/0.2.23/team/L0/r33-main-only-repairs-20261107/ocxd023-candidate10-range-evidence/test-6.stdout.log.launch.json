@@ -1,0 +1,33 @@
+{
+  "stage": "exited",
+  "identityAuthority": "retained-CreateProcess-handle",
+  "kernel": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 3960,
+    "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\opencodex_desktop_lib-2f26242b31cee7aa.exe",
+    "creationTimeUtc": "2026-11-07T00:56:34.4298199Z",
+    "elevated": false,
+    "elevationType": 1,
+    "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+    "authority": "retained-CreateProcess-handle"
+  },
+  "cim": {
+    "rowPresent": true,
+    "pidProvided": true,
+    "pid": 3960,
+    "sidProvided": true,
+    "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+    "imageProvided": false,
+    "image": null,
+    "creationProvided": true,
+    "creationTicks": "639296097944298190",
+    "ownerReturnValue": 0,
+    "queryFailureType": null,
+    "queryHResult": null,
+    "contradictions": []
+  },
+  "resumed": true,
+  "failureType": "System.Management.Automation.MethodInvocationException",
+  "failureHResult": -2146233087
+}

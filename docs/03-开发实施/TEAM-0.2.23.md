@@ -1,6 +1,6 @@
 # 0.2.23 多对话团队协作文件
 
-2026-11-06，Asia/Shanghai。**团队已进入开发与分批集成，Windows按唯一任务入口执行R2补验。** 前序R0/G0段落作为过程来源保留；本文拥有责任边界、启动条件和回交合同，不复制需求验收，不维护第二份任务状态。
+2026-11-07，Asia/Shanghai。**按用户最新指令，已有贡献回交后统一由主对话完成剩余修复、验证、治理和发布，不再派发新工作。** 前序R0/G0段落作为过程来源保留；本文拥有责任边界、启动条件和回交合同，不复制需求验收，不维护第二份任务状态。
 
 执行阶段/整版顺序唯一归[IMP-31](IMP-OPENCODEX-DESKTOP-31.md#3-实施顺序与并行边界)，目录及Windows细目归[IMP-32](IMP-OPENCODEX-DESKTOP-32.md)，模版细目归[IMP-33](IMP-OPENCODEX-DESKTOP-33.md)。范围/验收归[DMD-POST022](../01-需求管理/需求/DMD-OPENCODEX-POST022.md)、[DMD-USER-DIRECTORY](../01-需求管理/需求/DMD-OPENCODEX-USER-DIRECTORY.md)、[DMD-TEMPLATE-MATCHING](../01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md)。本文件不授权发布、真实同步或修改日常配置。
 
@@ -123,3 +123,8 @@ L0内部辅助执行者分别独占data_root/{mod,bootstrap,layout,startup_v2}.r
 ### 2026-11-07 Windows R2 真实推送交接
 
 Windows R1代码及证据已集成；此前入口未随代码批次更新，已更正唯一任务入口WINDOWS-0.2.23.md至R2。当前已推送代码基线33d2c65b58ba8880d6deea7b52d69117238c3d33，包含实际Profile/ACL及IPC服务SID接线。Windows现在可继续MSVC和真实SID/凭据/pipe/端口原生边界补验；完整安装包与公共材质补丁待L0后继交付，不能将缺失制品项打勾。每批代码与文档及时推送，并提供远端确认的SHA；本机路径或只commit不算跨设备交付。
+
+
+## 2026-11-07 主对话接管
+
+用户明确“之后可以回到只用主对话做完了”。L1/L2/L3与Hegel已冻结交接；后续实现写集由L0单写，原并行分工保留为来源记录。Windows验证使用主对话控制的隔离CI，不要求另开贡献对话。L2回交只读97失败分层，未实施修复；Hegel回交卸载外部gate与原生句柄等待方案，未新增实现。L0接入与实测范围见r33，整版仍未完成。

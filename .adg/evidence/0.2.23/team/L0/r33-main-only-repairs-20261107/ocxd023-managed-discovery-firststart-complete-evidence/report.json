@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "kind": "isolated debug-bundle ordinary first start; provisioning plus visible environment screen",
+  "app": "/private/tmp/ocxd023-managed-discovery-installed-iw344q57/OpenCodeX Desktop.app",
+  "root": "/private/tmp/ocxd023-native-startup-ep2av78u",
+  "version": "0.2.23",
+  "checks": [
+    "actual native process stayed alive through startup metadata",
+    "actual sandbox U/data desktop and opencodex/home split with fixed v2 pointer",
+    "actual normal startup provisions pinned offline runtime from copied release resources",
+    "no legacy .opencodex or retired D/opencodex-home created"
+  ],
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "visualChecks": "separate visual review required",
+  "pid": 73943,
+  "pointer": {
+    "schemaVersion": 1,
+    "activeRoot": "/private/tmp/ocxd023-native-startup-ep2av78u/home/.codex-desktop"
+  },
+  "metadata": {
+    "structure_version": "2",
+    "opencodex_home_mode": "inside"
+  },
+  "startupEvent": "2026-11-07T01:30:47.150Z [manager] startup version=0.2.23 commit=52a84e233c4960e30077667d9990d12705cfb0fc",
+  "provisionedRuntimeVersion": "2.97.0-desktop023.names.1",
+  "runtimeSource": {
+    "schema_version": 1,
+    "source": "managed",
+    "path": "/private/tmp/ocxd023-managed-discovery-installed-iw344q57/runtime/bin/ocx",
+    "resolved_version": "2.97.0-desktop023.names.1",
+    "resolved_at": "2026-11-07T01:31:08Z",
+    "history": []
+  },
+  "installation": "/private/tmp/ocxd023-managed-discovery-installed-iw344q57",
+  "result": "pass",
+  "ownedExit": -15,
+  "binarySha256": "4399104b400bf70538ccaa99def3e4b20e92f7948acf2138ab887b03ed34347d",
+  "cleanup": "task-owned subprocess exited; sandbox evidence root removed after recording"
+}

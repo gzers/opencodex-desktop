@@ -1,0 +1,59 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 42.76s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-0acf286eb61f7336)
+
+running 51 tests
+test modules::data_root::layout::tests::windows_layout_does_not_gain_macos_container_policy ... ok
+test modules::data_root::layout::tests::distinct_users_share_program_but_never_state_or_home ... ok
+test modules::data_root::layout::tests::aliases_cannot_hide_nested_installation_or_user_data ... ok
+test modules::data_root::layout::tests::refuses_relative_parent_and_nested_program_roots ... ok
+test modules::data_root::bootstrap::tests::old_windows_anchor_api_never_scans_or_selects_installation_data ... ok
+test modules::data_root::layout::tests::mac_application_container_is_not_an_installation ... ok
+test modules::data_root::migration::tests::linked_source_and_target_are_neither_followed_nor_replaced ... ok
+test modules::data_root::migration::tests::root_copy_is_unsupported_before_any_source_or_target_io ... ok
+test modules::data_root::layout::tests::mac_runtime_is_sibling_of_signed_bundle ... ok
+test modules::data_root::layout::tests::mac_explicit_home_and_personal_applications_are_containers ... ok
+test modules::data_root::layout::tests::mac_container_case_comparison_follows_the_actual_volume ... ok
+test modules::data_root::removal_gate::tests::exclusive_gate_blocks_new_admission_until_inner_handles_are_gone ... ok
+test modules::data_root::layout::tests::mac_dedicated_custom_and_shared_read_only_folders_remain_valid ... ok
+test modules::data_root::removal_gate::tests::linked_or_broad_gate_is_refused_without_repair ... ok
+test modules::data_root::layout::tests::mac_shared_containers_and_volume_roots_are_refused_read_only ... ok
+test modules::data_root::layout::tests::mac_container_aliases_are_refused_without_touching_old_bundle_or_config ... ok
+test modules::data_root::migration::activation::tests::existing_v2_root_is_checked_without_creating_receipts_or_pointers ... ok
+test modules::data_root::migration::tests::marker_cannot_trigger_resume_or_partition_repair ... ok
+test modules::data_root::migration::activation::tests::committed_looking_legacy_marker_is_never_an_activation_license ... ok
+test modules::data_root::bootstrap::tests::sandbox_rejects_external_home_before_creating_or_repairing_it ... ok
+test modules::data_root::bootstrap::tests::losing_startup_does_not_repair_partitions_before_owning_root ... ok
+test modules::data_root::tests::empty_root_is_uninitialized_and_cannot_be_selected ... ok
+test modules::data_root::tests::unknown_nonempty_root_is_preserved_instead_of_imported_or_repaired ... ok
+test modules::data_root::tests::initializes_private_v2_partitions_and_home_metadata_idempotently ... ok
+test modules::data_root::tests::metadata_cannot_bind_a_different_root ... ok
+test modules::data_root::tests::linked_partitions_cannot_modify_a_different_root ... ok
+test modules::data_root::migration::tests::refusal_preserves_existing_v2_metadata_pointer_and_home ... ok
+test modules::data_root::tests::external_home_validation_precedes_metadata_write ... ok
+test modules::data_root::startup_v2::tests::startup_rejects_nested_install_and_data_before_creation ... ok
+test modules::data_root::startup_v2::tests::corrupted_pointer_never_falls_back_to_empty_root ... ok
+test modules::data_root::tests::version_comparison_is_numeric_and_v2_is_current ... ok
+test modules::data_root::startup_v2::tests::ignores_legacy_and_keeps_same_user_single_instance ... ok
+test modules::data_root::uninstall::tests::never_opened_app_has_no_data_to_initialize_or_remove ... ok
+test modules::data_root::startup_v2::tests::canonical_aliases_work_but_symlink_sandbox_escape_is_denied_before_write ... ok
+test modules::data_root::startup_v2::tests::invalid_pointer_and_selected_metadata_never_fall_back_or_repair ... ok
+test modules::data_root::tests::old_future_and_corrupt_metadata_fail_without_writes ... ok
+test modules::data_root::startup_v2::tests::sandbox_pointer_and_external_home_escape_never_touch_daily_state ... ok
+test modules::data_root::uninstall::tests::prepare_and_cancel_do_not_delete_rewrite_or_create_locks ... ok
+test modules::data_root::startup_v2::tests::active_desktop_cannot_be_used_as_a_new_fixed_pointer_anchor ... ok
+test modules::data_root::uninstall::tests::linked_fixed_aggregate_does_not_authorize_deleting_its_target ... ok
+test modules::data_root::uninstall::tests::unknown_content_and_nonfixed_roots_are_not_removal_authority ... ok
+test modules::data_root::uninstall::tests::missing_external_home_is_never_created_or_removed ... ok
+test modules::data_root::uninstall::tests::fixed_control_only_anchor_can_remove_selected_v2_data ... ok
+test modules::data_root::uninstall::tests::confirmed_removal_deletes_real_v2_data_and_home_preserving_program_and_other_user ... ok
+test modules::data_root::startup_v2::tests::fixed_pointer_is_only_authority_across_repeated_switches_and_return ... ok
+test modules::data_root::startup_v2::tests::separate_users_cannot_run_same_selected_root_or_repair_loser_partitions ... ok
+test modules::data_root::uninstall::tests::changed_pointer_or_metadata_invalidates_reviewed_plan_before_deletion ... ok
+test modules::data_root::uninstall::tests::selected_v2_root_is_removed_without_following_any_local_pointer_or_old_chain ... ok
+test modules::data_root::uninstall::tests::linked_partition_pointer_or_home_cannot_delete_external_data ... ok
+test modules::data_root::uninstall::tests::running_startup_service_and_backup_locks_prevent_any_deletion ... ok
+test modules::data_root::uninstall::tests::corrupted_future_or_old_pointer_and_metadata_are_retained_without_new_locks ... ok
+
+test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 1926 filtered out; finished in 0.89s
+

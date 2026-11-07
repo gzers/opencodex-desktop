@@ -1,0 +1,252 @@
+{
+  "schemaVersion": 1,
+  "source": "54c5198a5",
+  "status": "partial; Windows native repairs and final artifact gates pending",
+  "mainOnly": true,
+  "macLibrary": {
+    "passed": 1963,
+    "failed": 0,
+    "ignored": 14
+  },
+  "macTargeted": {
+    "receive": 47,
+    "transaction": 66,
+    "dataRoot": 51
+  },
+  "clippy": "pass",
+  "powershellStatic": {
+    "passed": 130,
+    "nativeExecuted": false
+  },
+  "firstStart": {
+    "source": "52a84e233c4960e30077667d9990d12705cfb0fc",
+    "bundle": "debug custom-protocol; not final release artifact",
+    "initialCapture": "pending checks; not a success proof",
+    "followup": "normal overview visible after managed probes; no MissingNode guide; actual service not started"
+  },
+  "candidate9Zip": {
+    "path": "/tmp/ocxd023-candidate9-original-evidence.zip",
+    "bytes": 715119881,
+    "sha256": "e40a9767c614989972ef070f37ab334ecd474c8553b2809511a6adf9e2577073",
+    "wholeZipDigestVerified": true
+  },
+  "candidate10": {
+    "run": 42319672971,
+    "source": "7730073e96999382697fe2ad8dd8f877352c75a3",
+    "result": "failure; elevated and native credential groups passed; installers skipped",
+    "rangeExtraction": "entry CRC and size verified; no whole ZIP digest claim"
+  },
+  "cleanup": "owned native process group exited, its isolated HOME removed; installation fixture retained pending final native artifact replacement",
+  "files": [
+    {
+      "path": "ocxd023-acl-receive-mac.log",
+      "bytes": 6851,
+      "sha256": "8a8102c0590e67a93e77f9d2a442a2a663fc9422edb4a24a10eca960f3090858"
+    },
+    {
+      "path": "ocxd023-acl-transaction-mac.log",
+      "bytes": 8941,
+      "sha256": "246ed982ab4927552096ac2e698067a9e18f5cec493d944269ed24e355a54861"
+    },
+    {
+      "path": "ocxd023-candidate10-range-evidence/bootstrap.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-candidate10-range-evidence/ordinary-suite.json",
+      "bytes": 28417,
+      "sha256": "45ca387462bd7b8548e45f9f42b6f13517fe984fcf792278db5f557c5b5d2276"
+    },
+    {
+      "path": "ocxd023-candidate10-range-evidence/partial-extraction-manifest.json",
+      "bytes": 3338,
+      "sha256": "7951e6f969f76fd87bee125067c91bae64c73c3eedd2d3c5d243721d729da9be"
+    },
+    {
+      "path": "ocxd023-candidate10-range-evidence/rust-ordinary.json",
+      "bytes": 666452,
+      "sha256": "a23ac14b18b95720bce1762f3d732a7c56d7fb01c840e07c9e4bf17cb99202a7"
+    },
+    {
+      "path": "ocxd023-candidate10-range-evidence/test-1.stdout.log",
+      "bytes": 395,
+      "sha256": "07b2d0ce9c24049742c1bf7a96cd3e87108e7b95883730a6086e7e8be6300d70"
+    },
+    {
+      "path": "ocxd023-candidate10-range-evidence/test-1.stdout.log.launch.json",
+      "bytes": 1022,
+      "sha256": "7678b72b9ab0d4de9d2a93d9c16a702881cb31cfa54d33dc54baeaa03f9cbd9d"
+    },
+    {
+      "path": "ocxd023-candidate10-range-evidence/test-2.stdout.log",
+      "bytes": 7795,
+      "sha256": "37f48ddfce61b499d1a1068917755c93ee544fdd815575bc46f8c81d24ede90b"
+    },
+    {
+      "path": "ocxd023-candidate10-range-evidence/test-2.stdout.log.launch.json",
+      "bytes": 1033,
+      "sha256": "653c397beadd6c10cd6e88d2d54716f0d3c74881f6f3b1d75c188aa1e73c1c8e"
+    },
+    {
+      "path": "ocxd023-candidate10-range-evidence/test-3.stdout.log",
+      "bytes": 185,
+      "sha256": "a4a27be095b44cb2de8845414e07c60cbfe2652a64798f875e2d6085a1ea1240"
+    },
+    {
+      "path": "ocxd023-candidate10-range-evidence/test-3.stdout.log.launch.json",
+      "bytes": 1036,
+      "sha256": "966581cbe6de18ba36ff4014852ba10d925539a833e275fc2659b57ef79265d4"
+    },
+    {
+      "path": "ocxd023-candidate10-range-evidence/test-4.stdout.log",
+      "bytes": 113,
+      "sha256": "df166913f47ff1f04202cae9b31df67ed272d692d99a0023a8117dc3029100dd"
+    },
+    {
+      "path": "ocxd023-candidate10-range-evidence/test-4.stdout.log.launch.json",
+      "bytes": 1028,
+      "sha256": "b30502eb37ad87453d50314cebd3b45c480cbdd638264ba1da510c93c78837f9"
+    },
+    {
+      "path": "ocxd023-candidate10-range-evidence/test-5.stdout.log",
+      "bytes": 113,
+      "sha256": "df166913f47ff1f04202cae9b31df67ed272d692d99a0023a8117dc3029100dd"
+    },
+    {
+      "path": "ocxd023-candidate10-range-evidence/test-5.stdout.log.launch.json",
+      "bytes": 1032,
+      "sha256": "31cef90bd3c02b862a465703b797a3455bde4b430ec51fcff5f61ce8412a0074"
+    },
+    {
+      "path": "ocxd023-candidate10-range-evidence/test-6.stdout.log",
+      "bytes": 536361,
+      "sha256": "8b957ea5af5e381ff47fb459f1e97081f2bd427ef430ac04771fecc2a81f446d"
+    },
+    {
+      "path": "ocxd023-candidate10-range-evidence/test-6.stdout.log.launch.json",
+      "bytes": 1098,
+      "sha256": "21a320427ae0e8f6fc2d631dedb3d968c7712fc9363c15f893a2c97b5a845045"
+    },
+    {
+      "path": "ocxd023-candidate10-terminal-job.log",
+      "bytes": 143393,
+      "sha256": "39838268d5311208171bfa920b1e5214c252dad03157e9224082512596d595bd"
+    },
+    {
+      "path": "ocxd023-managed-discovery-firststart-complete-evidence/app.log",
+      "bytes": 106,
+      "sha256": "3650c81d8aa8113e07bd9121c3b1e08acb41e826ddfe7149e6d033614e27037d"
+    },
+    {
+      "path": "ocxd023-managed-discovery-firststart-complete-evidence/ax-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-managed-discovery-firststart-complete-evidence/capwin-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-managed-discovery-firststart-complete-evidence/final-app.log",
+      "bytes": 185,
+      "sha256": "e19c622417596c5d2100bf50e0f3b2f0f2a95cae8ae5e841291caafa9e936524"
+    },
+    {
+      "path": "ocxd023-managed-discovery-firststart-complete-evidence/network-denial.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "path": "ocxd023-managed-discovery-firststart-complete-evidence/ordinary-first-screen-ax.json",
+      "bytes": 4652,
+      "sha256": "3a0f6025410b2c4eb02ca2bda1fef6729508e20f6f2f173288d215f1c2b970d0"
+    },
+    {
+      "path": "ocxd023-managed-discovery-firststart-complete-evidence/ordinary-first-screen.png",
+      "bytes": 2983777,
+      "sha256": "96d9d1ece0137b8d2d7956a4ae90892c5398723b9c0fb1daf9adf89ad7cc5632"
+    },
+    {
+      "path": "ocxd023-managed-discovery-firststart-complete-evidence/report.json",
+      "bytes": 1798,
+      "sha256": "09241457bc0a2ca985480fab18450c82de98d5157a2dc5a8762e49df58733339"
+    },
+    {
+      "path": "ocxd023-managed-discovery-firststart-complete-evidence/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-managed-discovery-firststart-evidence/app.log",
+      "bytes": 106,
+      "sha256": "d1a29cadea15aa8ac5baaf50ac53af5856d8d0ee0d67b8effb96b8554d55dd11"
+    },
+    {
+      "path": "ocxd023-managed-discovery-firststart-evidence/ax-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-managed-discovery-firststart-evidence/capwin-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-managed-discovery-firststart-evidence/final-app.log",
+      "bytes": 185,
+      "sha256": "2f37ea129ffc348f2c874f9a010697083affaa28d14156939be9a3ce450baaeb"
+    },
+    {
+      "path": "ocxd023-managed-discovery-firststart-evidence/network-denial.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "path": "ocxd023-managed-discovery-firststart-evidence/ordinary-first-screen-ax.json",
+      "bytes": 4651,
+      "sha256": "20b35386b13495b75f01220a9b993e8aaafc01f678f71232773c9f7ffb6fab32"
+    },
+    {
+      "path": "ocxd023-managed-discovery-firststart-evidence/ordinary-first-screen.png",
+      "bytes": 2683339,
+      "sha256": "f9b267dbefa7444b4aaff4208db46a203e8d1bed41323471321e2b597292ca24"
+    },
+    {
+      "path": "ocxd023-managed-discovery-firststart-evidence/report.json",
+      "bytes": 1786,
+      "sha256": "1e083fda5f790480216c8a4becc35dbf30cc195be7747280f5e8e31c864ac790"
+    },
+    {
+      "path": "ocxd023-managed-discovery-firststart-evidence/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-removal-gate-mac.log",
+      "bytes": 5875,
+      "sha256": "0e39d87ad5681121f4ab8e779efce3efca766d0a351acc6260532a22917bdd24"
+    },
+    {
+      "path": "ocxd023-retained-native-wait-static/bootstrap-fixture.ps1",
+      "bytes": 5505,
+      "sha256": "5ae16d5dba7cfb9d521783288741c5ac50b36b5ba8509a28d7f1dfd4f49a2da4"
+    },
+    {
+      "path": "ocxd023-retained-native-wait-static/static-tests.json",
+      "bytes": 13718,
+      "sha256": "bf872d2466a4ae77214193df6ea552fc8b1175b4a4477fcad29e521b8e0f09d2"
+    },
+    {
+      "path": "ocxd023-windows-repairs-clippy.log",
+      "bytes": 1304,
+      "sha256": "44db7273e3bc5de8c0f35552a6f9ce65fa9335447231070851b6917b03c3f377"
+    },
+    {
+      "path": "ocxd023-windows-repairs-full-mac.log",
+      "bytes": 237925,
+      "sha256": "25cf7046bd5b5ce256238a564bfe51c11f84a556b8e88f08b69d9dca5a6d7f41"
+    }
+  ]
+}

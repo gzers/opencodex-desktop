@@ -230,3 +230,10 @@ U=当前用户HOME/.codex-desktop，D=U/desktop，H=U/opencodex/home；固定指
 回交必须推到可取得的代码/文档贡献分支，给完整SHA、依赖基线、合同、环境/命令/结果、未完原生/制品项及清理回执。不能只给Windows本地临时路径。L0核验后统一集成；R2缺口及R4实际运行包/安装候选仍按前述新派发节继续。
 
 后继交接补记（2026-11-07）：2bbe1aa92代码批次已推送，包含离线资源stage配方205d72b1a、设置37项新版路径回归cdf3585e3及公共材质修复。原33d2为R2首派来源，已由本段明确基线替代；新增同步Service/LocalFile与恢复后继仍由L0继续集成，不能据此提前发行。
+
+
+## R22 主对话接管及Windows回归修复（2026-11-07）
+
+采用用户最新单主对话要求，贡献线冻结，不再派发。代码54c5198a5分四笔：03f4cae6a统一模型接收/事务实际User+SYSTEM严格ACL，cfdd8e101引入U外部持久删除gate并在独占期释放D内句柄，3f208c759修正npm重复解包及准入锁测试夹具，54c5198a5改用原生retained handle等待退出再取码。权限验证未接受Admins/宽ACL，noFollow/单链接/实际TokenUser保留；禁止覆盖规则与原断言保留。Mac库1963过、14原忽略、strict过，PS130仅静态；不得当Windows通过。新候选及NSIS/MSI/双SID/保留五场景仍待验。
+
+773候选42319672971终态失败：普通执行器第334行退出码读取异常，allBinariesAttempted=false；提权私有创建与原生凭据组成功，安装器后续未运行。47eb原证据整ZIP已完整SHA核验；773只按条目CRC/size抽取，不声称完整ZIP核验。[r33证据](../../.adg/evidence/0.2.23/team/L0/r33-main-only-repairs-20261107/manifest.json)保留原失败和跟进。
