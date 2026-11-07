@@ -125,6 +125,9 @@ mod tests {
         drop(live);
         let removal = RemovalLeaseSet::try_exclusive([desktop.clone()]).unwrap();
         assert!(shared(&desktop).is_err());
+        assert!(crate::modules::instance::AppInstanceLock::acquire(&desktop).is_err());
+        assert!(crate::modules::backup::manager::acquire_preferences_transaction(&desktop).is_err());
+        assert!(!desktop.exists(), "refused entrants must not recreate removed D");
         removal.require(&desktop).unwrap();
         assert!(removal
             .require(&desktop.with_file_name("unselected"))
