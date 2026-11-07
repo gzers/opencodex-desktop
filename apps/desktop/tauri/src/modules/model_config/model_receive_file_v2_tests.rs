@@ -1735,3 +1735,25 @@ fn backup_images_require_actual_protection_and_keep_original_before_after_withou
     let other = ModelApplyPlanHandle::new(digest(b"wrong handle")).unwrap();
     assert!(f.host.protected_images(OP, &other).is_err());
 }
+
+#[test]
+fn receive_storage_keeps_shared_private_creation_authority_for_later_operations() {
+    let f = Fixture::new();
+    let directory = f.host.root.join("private-storage-regression");
+    crate::infrastructure::platform::create_private_dir_all(&directory, 0o700).unwrap();
+    restrict(&directory, true).unwrap();
+    publish(&f.host.root, &directory.join("first.bin"), b"first image").unwrap();
+    // A second operation must admit the directory created by the first one.
+    crate::infrastructure::platform::create_private_dir_all(&directory, 0o700).unwrap();
+    private(&directory, true).unwrap();
+    publish(&f.host.root, &directory.join("second.bin"), b"second image").unwrap();
+    private(&directory.join("first.bin"), false).unwrap();
+    assert_eq!(
+        std::fs::read(directory.join("first.bin")).unwrap(),
+        b"first image"
+    );
+    assert_eq!(
+        std::fs::read(directory.join("second.bin")).unwrap(),
+        b"second image"
+    );
+}
