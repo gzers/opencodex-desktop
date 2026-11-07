@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "result": "pass-ordinary-rust-binaries",
+  "scope": "binaries",
+  "fullWorkspacePassed": false,
+  "nativeExecuted": true,
+  "runnerAdmissionSource": "explicit-parent-observation-after-parent-CI-guard",
+  "accountSid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+  "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+  "tokenOwner": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+  "profile": "C:\\Users\\ocxacc2e4a8200aa",
+  "home": "C:\\Users\\ocxacc2e4a8200aa",
+  "temp": "C:\\Users\\ocxacc2e4a8200aa\\AppData\\Local\\Temp",
+  "expectedCommit": "fa333dd06a14a7f6885a5bc1c611d84acd7b3e4c",
+  "testArguments": [],
+  "docTestsExecuted": false,
+  "allBinariesAttempted": true,
+  "cleanup": [],
+  "exitCode": 0,
+  "tests": [
+    {
+      "process": {
+        "pid": 8588,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-ordinary-preflight\\target\\debug\\deps\\windows023_ordinary_preflight-791569d65fb88844.exe",
+        "creationTicks": "639296421873831295",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 8588,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-ordinary-preflight\\target\\debug\\deps\\windows023_ordinary_preflight-791569d65fb88844.exe",
+        "creationTimeUtc": "2026-11-07T09:56:27.3831295Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 8588,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296421873831290",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-preflight-native-f6b1d899aa4d449b92a7409eede005e9\\ordinary\\test-1.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-preflight-native-f6b1d899aa4d449b92a7409eede005e9\\ordinary\\test-1.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-ordinary-preflight",
+      "identityObservedBeforeResume": true,
+      "sha256": "dbf1e25760e2a87ec76e0a902f47ae4872aa81b4b2d9c0b83f02b4efed0b24e6",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows023-ordinary-preflight#0.1.0",
+      "target": "windows023_ordinary_preflight"
+    }
+  ],
+  "freshDirectoryOwner": "S-1-5-21-3289802278-1561746829-1498425070-1003"
+}

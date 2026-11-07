@@ -1,0 +1,37 @@
+{
+  "accountSid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+  "suiteTimeoutSeconds": 2400,
+  "profile": "C:\\Users\\ocxacc2e4a8200aa",
+  "code": "D:\\a\\_temp\\ocxd023-preflight-native-f6b1d899aa4d449b92a7409eede005e9\\code",
+  "ephemeralGuard": true,
+  "parentRunnerObservation": {
+    "kind": "ordinary-runner-parent-observation-v1",
+    "runnerTemp": "D:\\a\\_temp",
+    "githubActions": "true",
+    "runnerEnvironment": "github-hosted",
+    "imageOS": "win25-vs2026"
+  },
+  "node": "C:\\hostedtoolcache\\windows\\node\\26.8.1\\x64\\node.exe",
+  "runtimeDlls": [],
+  "artifacts": [
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-ordinary-preflight\\target\\debug\\deps\\windows023_ordinary_preflight-791569d65fb88844.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows023-ordinary-preflight#0.1.0",
+      "target": "windows023_ordinary_preflight",
+      "kinds": [
+        "lib"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-ordinary-preflight",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-ordinary-preflight\\Cargo.toml",
+      "packageName": "windows023-ordinary-preflight",
+      "packageVersion": "0.1.0",
+      "sha256": "dbf1e25760e2a87ec76e0a902f47ae4872aa81b4b2d9c0b83f02b4efed0b24e6"
+    }
+  ],
+  "commit": "fa333dd06a14a7f6885a5bc1c611d84acd7b3e4c",
+  "testArguments": [],
+  "profileOnly": false,
+  "nodeSha256": "5cba0ea928508c65ddadefc0681d2fb6d95f1f3beea4428f04397631140ee8e5",
+  "nativeHelper": "D:\\a\\_temp\\ocxd023-preflight-native-f6b1d899aa4d449b92a7409eede005e9\\code\\windows023-rust-ordinary-helper.ps1",
+  "evidence": "D:\\a\\_temp\\ocxd023-preflight-native-f6b1d899aa4d449b92a7409eede005e9\\ordinary"
+}
