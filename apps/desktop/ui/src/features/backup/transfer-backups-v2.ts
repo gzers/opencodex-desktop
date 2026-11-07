@@ -2,6 +2,7 @@ import {computed,ref,shallowRef} from 'vue'
 import {defineStore} from 'pinia'
 import {useModelsV2Store} from '@/features/models/store-v2'
 import {useAppStore} from '@/stores/app'
+import {useConfigSyncV2Store} from '@/features/sync/store-v2'
 import {transferBackupV2Api,type BackupStatusV2,type RestorePreviewV2,type RestoreReceiptV2,type RestoreOperationV2} from './api-v2'
 
 const copy=<T>(value:T):T=>JSON.parse(JSON.stringify(value)) as T
@@ -48,7 +49,7 @@ export const useTransferBackupsV2Store=defineStore('transfer-backups-v2',()=>{
   async function refreshSaved(session=active.value){
     if(!session?.receipt||refreshing.value)return
     refreshing.value=true;session.refreshError=''
-    try{assertReady();if(session.receipt.refreshFileSnapshot)await models.reloadSavedFacts();if(session.receipt.completedGroups.includes('preferences')){await useAppStore().loadPreferences();if(useAppStore().preferencesError)throw new Error('已恢复的偏好暂未读回，原恢复回执保持。')}}
+    try{assertReady();if(session.receipt.refreshSyncScope)await useConfigSyncV2Store().refreshScopeAfterRestore();if(session.receipt.refreshFileSnapshot)await models.reloadSavedFacts();if(session.receipt.completedGroups.includes('preferences')){await useAppStore().loadPreferences();if(useAppStore().preferencesError)throw new Error('已恢复的偏好暂未读回，原恢复回执保持。')}}
     catch(cause){session.refreshError=message(cause)}finally{refreshing.value=false}
   }
   async function restore(){

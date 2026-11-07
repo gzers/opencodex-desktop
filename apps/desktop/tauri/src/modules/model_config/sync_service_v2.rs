@@ -28,6 +28,8 @@ use std::{
 };
 use tokio::sync::{Mutex as AsyncMutex, Semaphore};
 use zeroize::Zeroizing;
+#[path = "sync_scope_restore_v2.rs"]
+pub(crate) mod scope_restore;
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -313,6 +315,8 @@ struct ScopeRecordV2 {
     root_digest: Digest,
     initialized: bool,
     request: ScopeRequestV2,
+    #[serde(default)]
+    restored_absences: BTreeSet<String>,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -960,7 +964,8 @@ impl SyncServiceV2 {
                 }
             }
         }
-        let saved = self.read_scope().await?;
+        let root = self.root.clone();
+        let (saved, exclusions) = blocking(move || scope_restore::snapshot(&root)).await?;
         let initialized = saved.is_some();
         let selected = match saved {
             Some(s) => s,
@@ -1040,8 +1045,10 @@ impl SyncServiceV2 {
                     graph.observation.state,
                     RemoteState::Conflict | RemoteState::InitializationAmbiguous
                 ) {
-                    self.save_scope(request.clone()).await?;
+                    let root = self.root.clone();
+                    request = blocking(move || scope_restore::initialize(&root, request)).await?;
                 }
+                scope_restore::filter(&mut request, &exclusions);
                 request
             }
         };
@@ -1062,38 +1069,15 @@ impl SyncServiceV2 {
         })
     }
     pub async fn read_scope(&self) -> SyncResult<Option<ScopeRequestV2>> {
-        let files = self.files.clone();
-        blocking(move || {
-            let record: Option<ScopeRecordV2> = files.read("scope.json")?;
-            match record {
-                Some(r)
-                    if r.version == 2 && r.root_digest == files.root_digest && r.initialized =>
-                {
-                    Ok(Some(r.request))
-                }
-                Some(_) => Err(err(ErrorCode::SyncJournalInvalid, Step::Persist)),
-                None => Ok(None),
-            }
-        })
-        .await
+        let root = self.root.clone();
+        blocking(move || scope_restore::snapshot(&root).map(|(scope, _)| scope)).await
     }
     pub async fn save_scope(&self, request: ScopeRequestV2) -> SyncResult<()> {
         if request.selection.usage != super::objects_overlay_v2::UsageV2::RemoteSync {
             return Err(err(ErrorCode::SyncScopeChanged, Step::SourceGuard));
         }
-        let files = self.files.clone();
-        blocking(move || {
-            files.write(
-                "scope.json",
-                ScopeRecordV2 {
-                    version: 2,
-                    root_digest: files.root_digest.clone(),
-                    initialized: true,
-                    request,
-                },
-            )
-        })
-        .await
+        let root = self.root.clone();
+        blocking(move || scope_restore::save_manual(&root, request)).await
     }
     pub async fn preview(
         &self,

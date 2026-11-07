@@ -1435,6 +1435,35 @@ async fn original_none_probe(group: &str) {
         Arc::new(AbsentPreviewEndpointCredentials),
     )
     .unwrap();
+    let catalog = client.catalog(None).await.unwrap();
+    if group == "channels" {
+        assert!(
+            catalog.selected.selection.channels.is_empty(),
+            "restored absent channel must not be reselected by first catalog"
+        );
+    } else {
+        assert!(
+            !catalog.selected.selection.manager.extensions,
+            "restored absent extensions must stay unchecked"
+        );
+    }
+    // An explicit user action may select it again and download the retained cloud object.
+    client
+        .save_scope(service::ScopeRequestV2 {
+            selection: scope.clone(),
+            mcp_clients: BTreeMap::new(),
+            assets_reviewed: false,
+        })
+        .await
+        .unwrap();
+    assert_eq!(client.read_scope().await.unwrap().unwrap().selection, scope);
+    let historical = restore(&f.d, &f.h, &plan.restore_id, &plan.plan_digest).unwrap();
+    assert!(historical.status == RestoreStatusV2::Applied);
+    assert_eq!(
+        client.read_scope().await.unwrap().unwrap().selection,
+        scope,
+        "historical retry must preserve later explicit reselection"
+    );
     let service_preview = client
         .preview(automatic, service::ServiceSecretsV2::default())
         .await
@@ -1476,12 +1505,23 @@ async fn original_none_probe(group: &str) {
         .filter(|(path, value)| after.get(*path) != Some(*value))
         .map(|(path, _)| path.clone())
         .collect::<Vec<_>>();
-    assert!(changed.is_empty());
-    assert!(added
-        .iter()
-        .all(|path| path.starts_with("D/manager-state/sync-service-v2/")
-            || path == "D/manager-state/sync-v2-transactions"
-            || path.starts_with("D/manager-state/sync-v2-transactions/")));
+    assert!(
+        changed
+            .iter()
+            .all(|path| path == "D/manager-state/sync-service-v2/scope.json"
+                || path == "D/manager-state/sync-service-v2/scope.json.lock"),
+        "unexpected changed paths: {changed:?}"
+    );
+    assert!(
+        added
+            .iter()
+            .all(|path| path.starts_with("D/manager-state/sync-service-v2/")
+                || path == "D/manager-state/account-catalog-ids.json.lock"
+                || path == "D/manager-state/preferences.json.lock"
+                || path == "D/manager-state/sync-v2-transactions"
+                || path.starts_with("D/manager-state/sync-v2-transactions/")),
+        "unexpected added paths: {added:?}"
+    );
     let fixture_root = f._temp.path().to_path_buf();
     println!("NONE_RESTORE_PROBE {}",serde_json::to_string(&json!({
         "group":group,"originalOperationId":OP,"restoreId":plan.restore_id,"restorePlanDigest":plan.plan_digest,
@@ -1492,7 +1532,7 @@ async fn original_none_probe(group: &str) {
         "preparedDownloadOperationId":prepared_operation,"confirmationCalled":false,"businessImagesUnchangedDuringPreview":true,
         "remoteReads":remote.reads.load(Ordering::SeqCst),"remotePuts":remote.writes.load(Ordering::SeqCst),
         "previewAddedPaths":added,"previewChangedOrRemovedPaths":changed,
-        "scopeAdjustedAfterRestore":false,"realNetworkUsed":false,"policyOrAcAcceptance":false,
+        "scopeAdjustedAfterRestore":true,"explicitUserReselection":true,"realNetworkUsed":false,"policyOrAcAcceptance":false,
     })).unwrap());
     drop(client);
     drop(composition);
@@ -1507,12 +1547,90 @@ async fn original_none_probe(group: &str) {
     );
 }
 #[tokio::test]
-async fn original_none_channel_restore_rejects_direct_capture_but_actual_service_prepares_download()
-{
+async fn original_none_channel_restore_deselects_scope_and_explicit_reselection_can_download() {
     original_none_probe("channels").await;
 }
 #[tokio::test]
-async fn original_none_extension_restore_rejects_direct_capture_but_actual_service_prepares_download(
-) {
+async fn original_none_extension_restore_deselects_scope_and_explicit_reselection_can_download() {
     original_none_probe("extensions").await;
+}
+
+#[test]
+fn changed_remembered_sync_scope_refuses_restore_before_any_business_write() {
+    use crate::modules::model_config::sync_service_v2::{scope_restore, ScopeRequestV2};
+    let f = Fixture::new();
+    f.apply().unwrap();
+    let mut selection = SelectionV2::default();
+    selection.manager.extensions = true;
+    selection.manager.preferences = true;
+    scope_restore::save_manual(
+        &f.d,
+        ScopeRequestV2 {
+            selection: selection.clone(),
+            mcp_clients: BTreeMap::new(),
+            assets_reviewed: false,
+        },
+    )
+    .unwrap();
+    let plan = preview(&f.d, &f.h, OP, &["extensions".into()]).unwrap();
+    let path =
+        f.d.join(crate::modules::extensions::projection::CONFIG_RELATIVE_PATH);
+    let before = std::fs::read(&path).unwrap();
+    selection.manager.preferences = false;
+    scope_restore::save_manual(
+        &f.d,
+        ScopeRequestV2 {
+            selection: selection.clone(),
+            mcp_clients: BTreeMap::new(),
+            assets_reviewed: false,
+        },
+    )
+    .unwrap();
+    assert!(restore(&f.d, &f.h, &plan.restore_id, &plan.plan_digest).is_err());
+    assert_eq!(std::fs::read(&path).unwrap(), before);
+    assert_eq!(
+        scope_restore::snapshot(&f.d).unwrap().0.unwrap().selection,
+        selection
+    );
+}
+
+#[test]
+fn local_file_restore_deselects_actual_local_uuid_and_keeps_unrelated_remembered_channels() {
+    use crate::modules::model_config::sync_service_v2::{scope_restore, ScopeRequestV2};
+    let f = Fixture::new();
+    f.apply().unwrap();
+    let mut selection = SelectionV2 {
+        channels: [LOCAL, "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"]
+            .into_iter()
+            .map(|id| ChannelSelectionV2 {
+                portable_channel_id: id.into(),
+                model_ids: None,
+                family_ids: None,
+                include_connection: true,
+                include_key: false,
+                include_authorization: false,
+            })
+            .collect(),
+        ..Default::default()
+    };
+    selection.manager.preferences = true;
+    scope_restore::save_manual(
+        &f.d,
+        ScopeRequestV2 {
+            selection,
+            mcp_clients: BTreeMap::new(),
+            assets_reviewed: false,
+        },
+    )
+    .unwrap();
+    let plan = preview(&f.d, &f.h, OP, &["channels".into()]).unwrap();
+    let result = restore(&f.d, &f.h, &plan.restore_id, &plan.plan_digest).unwrap();
+    assert!(result.status == RestoreStatusV2::Applied && result.refresh_sync_scope);
+    let saved = scope_restore::snapshot(&f.d).unwrap().0.unwrap();
+    assert_eq!(saved.selection.channels.len(), 1);
+    assert_eq!(
+        saved.selection.channels[0].portable_channel_id,
+        "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"
+    );
+    assert!(saved.selection.manager.preferences);
 }

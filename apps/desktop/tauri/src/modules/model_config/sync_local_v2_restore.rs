@@ -45,6 +45,8 @@ pub struct RestoreReceiptV2 {
     pub status: RestoreStatusV2,
     pub completed_groups: Vec<String>,
     pub refresh_file_snapshot: bool,
+    #[serde(default)]
+    pub refresh_sync_scope: bool,
     pub failure_code: Option<String>,
 }
 #[derive(Clone, Serialize)]
@@ -119,6 +121,8 @@ struct Plan {
     source_digest: String,
     groups: Vec<String>,
     guards: Vec<String>,
+    #[serde(default)]
+    scope_edit: Option<super::super::sync_service_v2::scope_restore::ScopeEditV2>,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -136,6 +140,8 @@ struct Progress {
     clocks: Vec<ClockStep>,
     #[serde(default)]
     versioned: BTreeSet<String>,
+    #[serde(default)]
+    scope_updated: bool,
 }
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -901,6 +907,181 @@ fn model_state(
     super::super::config_file::v2::saved_state(&library, &observed, &raw)
         .map_err(|_| bad("scope_restore_save_state"))
 }
+// Derive only identities that will actually cease to exist in the restored
+// frozen images. Model save atoms retain local UUIDs; endpoint mappings bridge
+// the exact portable UUID without inferring identity from a display label.
+fn restored_absences(
+    d: &Path,
+    h: &Path,
+    r: &Record,
+    indices: &[usize],
+) -> ModelResult<BTreeSet<String>> {
+    let mut removed = BTreeSet::new();
+    let models = if indices.iter().any(|i| r.rows[*i].address.model.is_some()) {
+        Some(model_state(d, h, r, indices, false)?)
+    } else {
+        None
+    };
+    if let Some(before) = &models {
+        let mut ids: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
+        for (i, row) in r.rows.iter().enumerate() {
+            if matches!(&row.address.model, Some(TargetV2::Manager(p)) if p=="manager-state/sync-identity-mappings-v2.json")
+            {
+                if let Some(raw) = bytes(
+                    r.after
+                        .as_ref()
+                        .and_then(|a| a.get(i))
+                        .ok_or_else(|| bad("scope_restore_not_ready"))?,
+                )? {
+                    let value = schema_v2::parse_strict_json_v2(&raw)
+                        .map_err(|_| bad("scope_restore_scope_identity"))?;
+                    for binding in value["bindings"]
+                        .as_array()
+                        .ok_or_else(|| bad("scope_restore_scope_identity"))?
+                    {
+                        let portable = binding["portableId"]
+                            .as_str()
+                            .ok_or_else(|| bad("scope_restore_scope_identity"))?;
+                        let local = binding["localId"]
+                            .as_str()
+                            .ok_or_else(|| bad("scope_restore_scope_identity"))?;
+                        ids.entry(portable.into()).or_default().insert(local.into());
+                    }
+                }
+            }
+        }
+        let mut removed_local = BTreeSet::new();
+        for i in indices {
+            if matches!(&r.rows[*i].address.model, Some(TargetV2::Manager(p)) if p==store_v2::POLICY_PATH)
+            {
+                if let Some(raw) = bytes(
+                    r.after
+                        .as_ref()
+                        .and_then(|a| a.get(*i))
+                        .ok_or_else(|| bad("scope_restore_not_ready"))?,
+                )? {
+                    let policy: schema_v2::PolicyV2 = serde_json::from_value(
+                        schema_v2::parse_strict_json_v2(&raw)
+                            .map_err(|_| bad("scope_restore_scope_identity"))?,
+                    )?;
+                    for channel in policy.channels {
+                        if !before.contains_key(&versions::key(&serde_json::json!([
+                            "v2-channel",
+                            channel.id,
+                            null,
+                            null
+                        ]))?) {
+                            removed.insert(format!("channel:{}", channel.id));
+                            removed_local.insert(channel.id);
+                        }
+                    }
+                }
+            }
+        }
+        let mut originally_empty = false;
+        for i in indices {
+            if r.rows[*i].address.model == Some(TargetV2::OfficialConfig) {
+                originally_empty = match bytes(&r.rows[*i].before)? {
+                    None => true,
+                    Some(raw) => schema_v2::parse_strict_json_v2(&raw)
+                        .map_err(|_| bad("scope_restore_scope_identity"))?["providers"]
+                        .as_object()
+                        .is_none_or(|providers| providers.is_empty()),
+                };
+            }
+        }
+        for channel in &r.selection.channels {
+            let id = &channel.portable_channel_id;
+            let mut candidates = ids.get(id).cloned().unwrap_or_default();
+            candidates.insert(id.clone());
+            let present = candidates.iter().any(|id| {
+                versions::key(&serde_json::json!(["v2-channel", id, null, null]))
+                    .is_ok_and(|key| before.contains_key(&key))
+            });
+            if !present
+                && (removed_local.contains(id)
+                    || ids
+                        .get(id)
+                        .is_some_and(|locals| locals.iter().any(|id| removed_local.contains(id)))
+                    || originally_empty)
+            {
+                removed.insert(format!("channel:{id}"));
+            }
+        }
+        for reference in &r.selection.template_refs {
+            let key = versions::key(&serde_json::json!([
+                "v2-template",
+                reference.template_id,
+                reference.revision_id
+            ]))?;
+            if !before.contains_key(&key) {
+                removed.insert(format!(
+                    "template:{}:{}",
+                    reference.template_id, reference.revision_id
+                ));
+            }
+        }
+    }
+    for group in groups(&r.selection) {
+        if !indices
+            .iter()
+            .any(|i| r.rows[*i].address.group == group && r.rows[*i].address.model.is_none())
+        {
+            continue;
+        }
+        let before = group_state(d, r, &group, false)?;
+        let missing = |identity: serde_json::Value| -> ModelResult<bool> {
+            Ok(!before.contains_key(&versions::key(&identity)?))
+        };
+        match group.as_str() {
+            "preferences" | "extensions" => {
+                if missing(serde_json::json!([format!("v2-{group}")]))? {
+                    removed.insert(group);
+                }
+            }
+            "mcp" => {
+                for mcp in &r.selection.mcp_sources {
+                    if missing(serde_json::json!(["v2-mcps", mcp.name]))? {
+                        removed.insert(format!("mcp:{}", mcp.name));
+                    }
+                }
+            }
+            "accounts" => {
+                let mut present = BTreeSet::new();
+                for row in r.rows.iter().filter(|row| row.address.group == group) {
+                    if let Some(raw) = bytes(&row.before)? {
+                        for a in serde_json::from_slice::<
+                            Vec<crate::modules::sync::portable_accounts::AccountInfo>,
+                        >(&raw)?
+                        {
+                            present.insert(a.id);
+                        }
+                    }
+                }
+                for id in &r.selection.manager.account_ids {
+                    if !present.contains(id) {
+                        removed.insert(format!("account:{id}"));
+                    }
+                }
+            }
+            "webdav" => {
+                for id in &r.selection.manager.webdav_ids {
+                    if missing(serde_json::json!(["v2-webdav", id]))? {
+                        removed.insert(format!("webdav:{id}"));
+                    }
+                }
+            }
+            _ => {
+                if let Some(name) = group.strip_prefix("skill:") {
+                    if missing(serde_json::json!(["v2-skills", name]))? {
+                        removed.insert(group);
+                    }
+                }
+            }
+        }
+    }
+    Ok(removed)
+}
 pub fn preview(
     d: &Path,
     h: &Path,
@@ -949,10 +1130,15 @@ pub fn preview(
         id: uuid::Uuid::new_v4().to_string(),
         original: original.into(),
         root: d.clone(),
-        home: h,
+        home: h.clone(),
         source_digest: digest(&r)?,
         groups: groups.clone(),
         guards,
+        scope_edit: super::super::sync_service_v2::scope_restore::freeze(
+            &d,
+            restored_absences(&d, &h, &r, &indices)?,
+        )
+        .map_err(local_error)?,
     };
     let plan_digest = digest(&p)?;
     save(&d, &plan_path(&d, &p.id, "plan")?, &p)?;
@@ -1356,7 +1542,9 @@ fn receipt(
             })
             .cloned()
             .collect();
-    let applied = progress.completed.len() == indices.len() && failure_code.is_none();
+    let applied = progress.completed.len() == indices.len()
+        && (p.scope_edit.is_none() || progress.scope_updated)
+        && failure_code.is_none();
     RestoreReceiptV2 {
         restore_id: p.id.clone(),
         original_operation_id: p.original.clone(),
@@ -1368,6 +1556,7 @@ fn receipt(
         },
         completed_groups,
         refresh_file_snapshot: applied,
+        refresh_sync_scope: progress.scope_updated,
         failure_code,
     }
 }
@@ -1461,6 +1650,7 @@ pub fn restore(
             deltas: BTreeMap::new(),
             clocks: vec![],
             versioned: BTreeSet::new(),
+            scope_updated: false,
         }
     };
     let r = record(&d, &h, &p.original)?;
@@ -1472,6 +1662,23 @@ pub fn restore(
         return Err(bad("scope_restore_plan"));
     }
     with_locks(&d, &h, &r, || {
+        let removed = restored_absences(&d, &h, &r, &indices)?;
+        super::super::sync_service_v2::scope_restore::validate(&d, p.scope_edit.as_ref(), &removed)
+            .map_err(local_error)?;
+        let _scope_guard = if p.scope_edit.is_some() {
+            Some(super::super::sync_service_v2::scope_restore::lock(&d).map_err(local_error)?)
+        } else {
+            None
+        };
+        if let Some(edit) = &p.scope_edit {
+            super::super::sync_service_v2::scope_restore::check(
+                &d,
+                edit,
+                progress.protected,
+                progress.scope_updated,
+            )
+            .map_err(local_error)?;
+        }
         // Readonly plans never open or classify a draft. Only a write that
         // touches models requires the strict absence witness under real locks.
         if indices.iter().any(|i| r.rows[*i].address.model.is_some()) {
@@ -1537,6 +1744,12 @@ pub fn restore(
                 protect_tree(&d, &d, &d.join(versions::SAVED_VERSIONS_PATH))
                     .map_err(local_error)?,
             );
+            if p.scope_edit.is_some() {
+                let path = super::super::sync_service_v2::scope_restore::path(&d);
+                progress
+                    .backups
+                    .extend(protect_tree(&d, &d, &path).map_err(local_error)?);
+            }
             verify_protection(&d, &progress)?;
             for (slot, i) in indices.iter().enumerate() {
                 let a = &r.rows[*i].address;
@@ -1548,6 +1761,24 @@ pub fn restore(
             save(&d, &progress_path, &progress)?;
         }
         verify_protection(&d, &progress)?;
+        // Deselect before removing objects: an interrupted undo must never leave
+        // automatic sync authorized to immediately receive the removed scope.
+        if let Some(edit) = &p.scope_edit {
+            if let Err(error) = super::super::sync_service_v2::scope_restore::apply(&d, edit) {
+                let result = receipt(
+                    &p,
+                    &indices,
+                    &r,
+                    &progress,
+                    Some(format!("{:?}", error.code)),
+                );
+                progress.receipt = Some(result.clone());
+                save(&d, &progress_path, &progress)?;
+                return Ok(result);
+            }
+            progress.scope_updated = true;
+            save(&d, &progress_path, &progress)?;
+        }
         // Model/config/Policy/ledger/mappings/versions use the existing typed
         // exact-image engine, including its durable compensation direction.
         let model_indices: Vec<_> = indices
