@@ -1,0 +1,31 @@
+{
+  "run": 42365850198,
+  "job": 128383623450,
+  "source": "3d45558c1e76fa326852318ce899987be408b9fb",
+  "terminal": "failure",
+  "passed": [
+    "complete ordinary-token49 regression processes and cleanup",
+    "elevated private creation checks",
+    "native credential protection",
+    "actual NSIS and MSI MSVC builds"
+  ],
+  "failure": "first default current-user MSI installation exit1625 before EXE startup; previous explicitSHA/LASTEXITCODE defect no longer occurred",
+  "installationOwnerCleanup": "temporarySID/Profile removed true; retained original JSON",
+  "twoSidsPorts": "not reached",
+  "rawArtifact": {
+    "id": 13574021565,
+    "apiBytes": 584307048,
+    "apiSha256": "2e112dc0ed09c000ebf62474b3399b8ac2113e527b956205124898bb68519551",
+    "status": "unverified diagnostic originals only; cannot satisfy retention/release admission"
+  },
+  "evidenceArtifact": {
+    "id": 13573529673,
+    "apiBytes": 572494,
+    "apiSha256": "195c24597d1d0f443c4e104fa38f6d02be585daa1bc8cea90629170b5c070a26",
+    "wholeZipLocallyHashed": false
+  },
+  "followupSource": "d1c751149",
+  "followup": "default MSI verbose log plus readonly HKLM/HKCU installer policy; same exact raw bytes diagnostic on fresh runner; no policy relaxation/no final promotion",
+  "localFollowupChecks": "PowerShell AST/matrix passed; Ruby YAML parse passed",
+  "releaseAcceptance": false
+}
