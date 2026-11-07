@@ -20,7 +20,7 @@ export async function verify023Native(call,output,facts,sandbox){
  const invoke=(name,args={})=>evaluate('window.__TAURI_INTERNALS__.invoke('+JSON.stringify(name)+','+JSON.stringify(args)+')')
  const sleep=()=>new Promise(r=>setTimeout(r,100))
  async function wait(expression){for(let i=0;i<100;i++){const v=await evaluate(expression);if(v)return v;await sleep()}throw Error('023 native DOM did not reach expected state: '+expression)}
- async function click(text,root='document'){assert(await evaluate('(()=>{const root='+root+';const b=[...root.querySelectorAll("button,a")].find(x=>x.textContent.trim()==='+JSON.stringify(text)+'&&!x.disabled&&x.getClientRects().length);if(!b)return false;b.click();return true})()'),'Missing visible native action: '+text)}
+ async function click(text,root='document'){assert(await evaluate('(()=>{const root='+root+';const b=[...root.querySelectorAll("button,a,summary")].find(x=>x.textContent.trim()==='+JSON.stringify(text)+'&&!x.disabled&&x.getClientRects().length);if(!b)return false;b.click();return true})()'),'Missing visible native action: '+text)}
  const before=await readFile(paths.config).catch(e=>{if(e.code==='ENOENT')return null;throw e})
  await click('模型');await wait('!!document.querySelector(".channel-list-toolbar")')
  await wait('[...document.querySelectorAll(".channel-list-toolbar button")].some(b=>b.textContent.trim()==="新增渠道"&&!b.disabled)')
