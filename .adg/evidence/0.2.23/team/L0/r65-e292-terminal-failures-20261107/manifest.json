@@ -1,0 +1,42 @@
+{
+  "source": "e29291120d0dbfbd3c23f9f5aba71d327ee6aaa3",
+  "run": 42345195190,
+  "job": 128321311301,
+  "result": "failure",
+  "ordinaryBinariesAttempted": 49,
+  "library": {
+    "passed": 1706,
+    "failed": 2,
+    "ignored": 5,
+    "seconds": 2101.63,
+    "failingTests": [
+      "cancelled_cli_observer_keeps_admissions_until_real_v2_terminal_and_audit",
+      "production_encrypted_first_download_uses_only_request_read_secret_and_still_commits_actual_model_receipt"
+    ]
+  },
+  "cleanup": {
+    "result": "cleanup-failed",
+    "retainedUnprovenLeaf": "conhost.exe",
+    "retainedUnprovenPid": 5664,
+    "sourceOrArtifactAclRestored": true,
+    "remainingNewSidProcesses": [],
+    "accountAndProfileRemoved": false,
+    "preciseCause": "not recorded; no inference that PID reuse or timing was definitely responsible; fail-closed retained account on ephemeral runner"
+  },
+  "parentAlwaysChecks": {
+    "privateCreationPassed": 13,
+    "backupLockPassed": 1,
+    "nativeCredentials": "provider_auth/channel_rename/secure_store passed"
+  },
+  "installerAndTwoSid": "skipped after regression failure; not accepted",
+  "artifact": {
+    "id": 13565073113,
+    "bytes": 715105510,
+    "apiSha256": "ed32e1feff48bd7f87fb0aab82237af981265e6d6e37096e5426ebb0e826c321",
+    "method": "selectedZIP members Range, CRC and size checks",
+    "wholeZipHashLocallyVerified": false
+  },
+  "successorSource": "414d62bab35060e8aa2011300dab926a66727946",
+  "successorRun": 42347480862,
+  "successorAcceptance": "pending; previous failed result never overwritten"
+}
