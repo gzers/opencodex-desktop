@@ -70,6 +70,30 @@ fn record_startup_event(data_root: &std::path::Path, version: &str) {
 pub fn run() {
     use tauri::Manager;
     let context = tauri::generate_context!();
+    #[cfg(target_os = "macos")]
+    let context = {
+        let mut context = context;
+        let invalid_container = std::env::current_exe().ok().is_some_and(|executable| {
+            matches!(
+                crate::modules::data_root::layout::Layout::installation_root(
+                    &executable,
+                    crate::modules::data_root::layout::Platform::Macos,
+                ),
+                Err(crate::errors::AppError::RuntimeManaged { code, .. })
+                    if code == "macos_install_container"
+            )
+        });
+        if invalid_container {
+            // The remediation-only branch must not mount a frontend whose
+            // commands require the deliberately uninitialized user data root.
+            context
+                .config_mut()
+                .app
+                .windows
+                .retain(|window| window.label != "main");
+        }
+        context
+    };
     #[cfg(windows)]
     let (context, smoke_window, startup_window) = {
         let mut context = context;
