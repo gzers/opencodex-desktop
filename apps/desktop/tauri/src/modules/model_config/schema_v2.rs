@@ -549,10 +549,17 @@ pub fn validate_library_v2(library: &LibraryV2) -> Result<()> {
     Ok(())
 }
 pub fn seed_library_v2() -> Result<LibraryV2> {
-    let library = serde_json::from_value(parse_strict_json_v2(include_bytes!("seed_v2.json"))?)
-        .map_err(json_error)?;
-    validate_library_v2(&library)?;
-    Ok(library)
+    // These are immutable bytes compiled into this exact executable. Parse and
+    // validate them once; each caller still owns an independent mutable clone.
+    // Saved user files, credentials, source guards and revisions are NOT cached.
+    static SEED: std::sync::OnceLock<Result<LibraryV2>> = std::sync::OnceLock::new();
+    SEED.get_or_init(|| {
+        let library = serde_json::from_value(parse_strict_json_v2(include_bytes!("seed_v2.json"))?)
+            .map_err(json_error)?;
+        validate_library_v2(&library)?;
+        Ok(library)
+    })
+    .clone()
 }
 
 /// Pure shared Agent lock checker. It never creates a revision or relaxes

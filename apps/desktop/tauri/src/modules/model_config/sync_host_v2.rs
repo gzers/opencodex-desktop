@@ -310,6 +310,10 @@ impl CurrentSourceProviderV2 {
     pub fn current_source(&self) -> SyncResult<SourceGuard> {
         Ok(self.current()?.source_guard)
     }
+    pub fn source_context(&self) -> SyncResult<(Digest, SourceGuard)> {
+        let current = self.current()?;
+        Ok((current.root_revision, current.source_guard))
+    }
     pub fn root_revision(&self) -> SyncResult<Digest> {
         Ok(self.current()?.root_revision)
     }

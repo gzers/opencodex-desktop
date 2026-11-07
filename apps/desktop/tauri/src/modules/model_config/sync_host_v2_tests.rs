@@ -431,6 +431,36 @@ fn no_change_is_semantic_and_does_not_reencrypt_or_allow_prepare_freeze() {
     );
 }
 #[test]
+fn immutable_seed_cache_never_shares_a_callers_mutations_or_changes_saved_revisions() {
+    let original = super::super::schema_v2::seed_library_v2().unwrap();
+    let mut modified = super::super::schema_v2::seed_library_v2().unwrap();
+    modified.templates[0].label = "caller-owned mutation".into();
+    modified.templates[0].revisions.clear();
+    assert_eq!(
+        super::super::schema_v2::seed_library_v2().unwrap(),
+        original
+    );
+    super::super::schema_v2::validate_library_v2(&original).unwrap();
+}
+#[test]
+fn fresh_source_context_proves_root_and_source_with_one_capture_and_rechecks_each_call() {
+    let provider = Arc::new(Capture::new(objects(8192, false)));
+    let current =
+        CurrentSourceProviderV2::new(provider.clone(), selection(), digest(b"root")).unwrap();
+    let (root, first) = current.source_context().unwrap();
+    assert_eq!(root, digest(b"root"));
+    assert_eq!(provider.calls.load(Ordering::SeqCst), 1);
+    provider.replace(objects(4096, false));
+    let (_, second) = current.source_context().unwrap();
+    assert_ne!(first.saved_source_digest, second.saved_source_digest);
+    assert_eq!(provider.calls.load(Ordering::SeqCst), 2);
+    *provider.root.lock().unwrap() = digest(b"changed root");
+    assert_eq!(
+        current.source_context().unwrap_err().code,
+        ErrorCode::SyncPlanChanged
+    );
+}
+#[test]
 fn current_source_facts_preserve_real_capture_errors_without_secret_paths() {
     let provider = Arc::new(Capture::new(objects(8192, false)));
     let current =

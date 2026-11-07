@@ -180,7 +180,11 @@ impl<'a> SyncContext<'a> {
     fn source(&self, expected: &SourceGuard) -> SyncResult<()> {
         require_guard(expected)?;
         let current = self.local.current_source()?;
-        require_guard(&current)?;
+        self.validate_source(expected, &current)
+    }
+    fn validate_source(&self, expected: &SourceGuard, current: &SourceGuard) -> SyncResult<()> {
+        require_guard(expected)?;
+        require_guard(current)?;
         if current.scope_digest != expected.scope_digest
             || current.mcp_sources_digest != expected.mcp_sources_digest
         {
@@ -428,10 +432,14 @@ impl<'a> SyncContext<'a> {
         if j.connection_revision != self.connection.revision {
             return Err(failure(ErrorCode::SyncEndpointChanged, Step::SourceGuard));
         }
-        if j.root_revision != self.local.root_revision()? {
+        #[cfg(all(test, windows))]
+        let _timing = TestPhaseTiming::start("fresh-local-source-context");
+        let (revision, current) = self.local.source_context()?;
+        require_digest(&revision)?;
+        if j.root_revision != revision {
             return Err(failure(ErrorCode::SyncPlanChanged, Step::SourceGuard));
         }
-        self.source(&j.plan.source_guard)
+        self.validate_source(&j.plan.source_guard, &current)
     }
     fn save_error(&self, j: &mut Journal, mut e: SyncFailure) -> SyncResult<OperationFact> {
         e = e.for_operation(&j.operation_id);

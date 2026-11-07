@@ -290,10 +290,15 @@ impl LockedStoreV2<'_> {
             raw.insert(relative, bytes);
         }
         let library: LibraryV2 = match &raw[LIBRARY_PATH] {
-            Some(bytes) => decode(bytes)?,
+            Some(bytes) => {
+                let library = decode(bytes)?;
+                validate_library_v2(&library)?;
+                library
+            }
+            // The immutable compiled seed is validated before its cached clone
+            // is returned. Every user-provided file still validates above.
             None => seed_library_v2()?,
         };
-        validate_library_v2(&library)?;
         let policy: PolicyV2 = match &raw[POLICY_PATH] {
             Some(bytes) => decode(bytes)?,
             None => empty_policy_v2(),

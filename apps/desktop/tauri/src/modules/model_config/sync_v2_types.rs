@@ -868,6 +868,11 @@ pub trait PayloadCodec: Send + Sync {
 pub trait LocalApplication: Send + Sync {
     fn root_revision(&self) -> SyncResult<Digest>;
     fn current_source(&self) -> SyncResult<SourceGuard>;
+    /// One fresh observation may prove both facts. The default preserves the
+    /// independent owner APIs; production upload supplies a single capture.
+    fn source_context(&self) -> SyncResult<(Digest, SourceGuard)> {
+        Ok((self.root_revision()?, self.current_source()?))
+    }
     fn target_digest(&self, scope_digest: &str) -> SyncResult<Digest>;
     fn apply_once(
         &self,

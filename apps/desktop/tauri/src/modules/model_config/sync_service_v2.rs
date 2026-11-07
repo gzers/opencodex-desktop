@@ -3383,6 +3383,9 @@ impl LocalApplication for UploadSourceLocalV2 {
     fn current_source(&self) -> SyncResult<SourceGuard> {
         self.provider.current_source()
     }
+    fn source_context(&self) -> SyncResult<(Digest, SourceGuard)> {
+        self.provider.source_context()
+    }
     fn target_digest(&self, _: &str) -> SyncResult<Digest> {
         Err(err(ErrorCode::SyncPlanChanged, Step::DownloadGuard))
     }
