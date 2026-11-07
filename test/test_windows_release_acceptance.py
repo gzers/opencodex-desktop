@@ -113,7 +113,9 @@ class WindowsReleaseAcceptanceTests(unittest.TestCase):
     def test_023_default_nsis_is_fresh_after_the_custom_nsis_fixture(self):
         script = (ROOT / "test/smoke/windows-installer.ps1").read_text()
         branch = script.split("if($Mode -cne 'custom' -and $Kind -ceq 'all')",1)[1]
-        self.assertIn("if($AsInstallationOwner){$taskResult.defaultNsisRegistryCleanup=@(Clear-ProductRememberedInstallDirectory)}",branch)
+        self.assertIn("Clear-OwnedNsisRememberedDirectory $ownCustom[0].installDirectory",branch)
+        self.assertIn("NSIS remembered directory is not this matrix custom fixture; not cleared",script)
+        self.assertIn("RegistryHive]::CurrentUser",script)
         self.assertLess(branch.index("defaultNsisRegistryCleanup"),branch.index("Invoke-Installer $package[0].FullName '/S'"))
         self.assertIn("HKCU:\\Software\\gzers\\OpenCodeX Desktop\\023",script)
         self.assertIn("$defaultTaskKinds=if($Kind -ceq 'all'){@('msi')}",script)

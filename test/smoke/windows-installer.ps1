@@ -67,6 +67,24 @@ function Find-DefaultInstalledDirectory {
     if($found.Count -ne 1){throw 'Could not identify one product-owned default install directory'}
     return $found[0]
 }
+function Clear-OwnedNsisRememberedDirectory([string]$ExpectedPath) {
+    if(!$AsInstallationOwner -or !$ExpectedPath){throw 'Only the exact new ordinary owner NSIS fixture may be cleared'}
+    $cleared=@()
+    foreach($view in @([Microsoft.Win32.RegistryView]::Registry32,[Microsoft.Win32.RegistryView]::Registry64)){
+        $base=[Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::CurrentUser,$view)
+        $key=$base.OpenSubKey('Software\gzers\OpenCodeX Desktop',$true)
+        try{
+            if($key -and '' -in $key.GetValueNames()){
+                $actual=[string]$key.GetValue('')
+                if(!(Test-WindowsInstallerSameDirectory $actual $ExpectedPath)){throw 'NSIS remembered directory is not this matrix custom fixture; not cleared'}
+                $key.DeleteValue('',$true)
+                if('' -in $key.GetValueNames()){throw 'Owned NSIS remembered value remained'}
+                $cleared+=@{hive='CurrentUser';view=$view.ToString();valueName='';prior=$actual;scope='exact own earlier NSIS custom fixture only'}
+            }
+        }finally{if($key){$key.Dispose()};$base.Dispose()}
+    }
+    return $cleared
+}
 function Clear-ProductRememberedInstallDirectory {
     if ($AsInstallationOwner) {
         # Only this test owner's NEW-version key; no other SID/HKLM/old root.
@@ -230,8 +248,12 @@ try {
         $package=@(Get-ChildItem -LiteralPath (Join-Path $taskBundle $installerKind) -Filter '*-setup.exe' -File)
         if($package.Count -ne 1){throw 'Exact default NSIS installer package missing'}
         # The earlier custom NSIS cell deliberately remembers /D. This is a
-        # fresh-default cell, so clear only the NEW test-owner023 InstallDir.
-        if($AsInstallationOwner){$taskResult.defaultNsisRegistryCleanup=@(Clear-ProductRememberedInstallDirectory)}
+        # fresh-default cell, so clear only the exact earlier custom value in this NEW test owner hive.
+        if($AsInstallationOwner){
+            $ownCustom=@($taskResult.installers|Where-Object kind -ceq 'nsis')
+            if($ownCustom.Count -ne 1 -or $ownCustom[0].result -cne 'pass'){throw 'Earlier exact NSIS custom fixture must have passed'}
+            $taskResult.defaultNsisRegistryCleanup=@(Clear-OwnedNsisRememberedDirectory $ownCustom[0].installDirectory)
+        }
         [void](Invoke-Installer $package[0].FullName '/S')
         $defaultRoot=Find-DefaultInstalledDirectory
         $expectedOwnerRoot=Join-Path $env:LOCALAPPDATA 'Programs/OpenCodeX Desktop'
