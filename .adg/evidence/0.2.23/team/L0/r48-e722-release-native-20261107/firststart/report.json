@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "kind": "isolated release-bundle ordinary first start; provisioning plus visible environment screen",
+  "app": "/private/tmp/ocxd023-e722-release-installed-pars2yfq/OpenCodeX Desktop.app",
+  "root": "/private/tmp/ocxd023-native-startup-_xmb1u1l",
+  "version": "0.2.23",
+  "checks": [
+    "actual native process stayed alive and exact owned application explicitly focused",
+    "actual sandbox U/data desktop and opencodex/home split with fixed v2 pointer",
+    "actual normal startup provisions pinned offline runtime from copied release resources",
+    "no legacy .opencodex or retired D/opencodex-home created"
+  ],
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "visualChecks": "exact owned app focused; screenshot requires normal overview review",
+  "pid": 32429,
+  "pointer": {
+    "schemaVersion": 1,
+    "activeRoot": "/private/tmp/ocxd023-native-startup-_xmb1u1l/home/.codex-desktop"
+  },
+  "metadata": {
+    "structure_version": "2",
+    "opencodex_home_mode": "inside"
+  },
+  "startupEvent": "2026-11-07T04:05:43.526Z [manager] startup version=0.2.23 commit=e722dc4d7ae61e59f61cdc45a99df4ad7ca2da69",
+  "provisionedRuntimeVersion": "2.97.0-desktop023.names.1",
+  "runtimeSource": {
+    "schema_version": 1,
+    "source": "managed",
+    "path": "/private/tmp/ocxd023-e722-release-installed-pars2yfq/runtime/bin/ocx",
+    "resolved_version": "2.97.0-desktop023.names.1",
+    "resolved_at": "2026-11-07T04:06:36Z",
+    "history": []
+  },
+  "installation": "/private/tmp/ocxd023-e722-release-installed-pars2yfq",
+  "result": "pass",
+  "ownedExit": -15,
+  "binarySha256": "d9e220964665484bb7a0fdd53e7a11373b57076c2f7c3f55c35505d73a14e85f",
+  "cleanup": "task-owned subprocess exited; sandbox evidence root removed after recording"
+}

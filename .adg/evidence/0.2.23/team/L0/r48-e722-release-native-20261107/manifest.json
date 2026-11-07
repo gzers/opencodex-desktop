@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "e722dc4d7ae61e59f61cdc45a99df4ad7ca2da69",
+  "status": "Mac release candidate actual normal startup and packaging passed; entire release still pending Windows",
+  "binarySha256": "d9e220964665484bb7a0fdd53e7a11373b57076c2f7c3f55c35505d73a14e85f",
+  "nativeReviewed": "focused actual normal overview shows 未运行 and 启动 OpenCodex after managed maintenance runtime provisioning and environment refresh",
+  "runtimeVersion": "2.97.0-desktop023.names.1",
+  "testBoundary": "OS all-network and real-HOME denied; online version query failure shown is expected; no actual service/inference/business sync",
+  "artifact": {
+    "path": "/private/tmp/ocxd023-e722-release-dmg-2eolzpco/OpenCodeX_Desktop_0.2.23_aarch64.dmg",
+    "sha256": "57d74d4e3131e6c8288c266fa3cff8b53ebac8ec8aba2c292217767492ee244a",
+    "bytes": 262798045,
+    "signatureReadOnlyMountAndSourceUnchanged": true
+  },
+  "cleanup": {
+    "ownedProcessMatches": 0,
+    "completedCopyRemoved": "/private/tmp/ocxd023-e722-release-installed-pars2yfq",
+    "removed": true,
+    "isolatedHomeRemovedByHarness": true,
+    "sourceAppAndCandidateDmgRetained": true
+  },
+  "files": [
+    {
+      "path": "firststart/app.log",
+      "bytes": 106,
+      "sha256": "a75d6f3500b76ffb52705300dd6b061e9a42159a3a5a896b250d64741b8dc5f4"
+    },
+    {
+      "path": "firststart/ax-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "firststart/capwin-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "firststart/final-app.log",
+      "bytes": 185,
+      "sha256": "950669485067bfe86567550ef4e984656e76141620454231ff1f81e418ea0303"
+    },
+    {
+      "path": "firststart/network-denial.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "path": "firststart/ordinary-first-screen-ax.json",
+      "bytes": 4646,
+      "sha256": "7b63f515d1c1a75bafadd3ebfe2b30b167e3cdcbc903f76e3c60fa38a04da326"
+    },
+    {
+      "path": "firststart/ordinary-first-screen.png",
+      "bytes": 2921428,
+      "sha256": "fcdc3df762600d00786d76c971a6fc33641372e82d92062e67c0aeefb95843d4"
+    },
+    {
+      "path": "firststart/report.json",
+      "bytes": 1843,
+      "sha256": "ed885ef6a708728b226ba2a8d8115c9f15fdf3ae3b25cb05e525fd9c45c5f759"
+    },
+    {
+      "path": "firststart/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-e722-release-build.log",
+      "bytes": 7278,
+      "sha256": "99a20f5b2a7c8ef0dc0e677f50774284a8e1d38036590dcd539239badc437166"
+    },
+    {
+      "path": "ocxd023-e722-release-dmg-package.log",
+      "bytes": 354,
+      "sha256": "025f894e67232e085bebdce3c91bec2e211b57a7ed89e1798c409a023e66662d"
+    },
+    {
+      "path": "package-evidence.json",
+      "bytes": 14734,
+      "sha256": "c70c491b0da9e8de332dd800d0ee599f06ed2b560764f25ee2d1b2a3f2b9dc91"
+    }
+  ]
+}
