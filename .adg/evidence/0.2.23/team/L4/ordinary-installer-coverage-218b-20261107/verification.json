@@ -1,0 +1,109 @@
+{
+  "observedUtc": "2026-11-07T03:38:21.613280+00:00",
+  "sourceCommit": "218b2262bdbdcddaaa79c8fc240872ff2b596ae8",
+  "instructionCommit": "af1d18dd6a5804c67f3f7c976461ddaab5d397b3",
+  "scope": "read-only installer acceptance coverage audit",
+  "nativeExecuted": false,
+  "sourceFrozen": true,
+  "ordinaryInstallerAcceptanceProven": false,
+  "retentionHarnessExplicitlyDeclinesOrdinaryAccountClaim": true,
+  "ordinaryStartupDoesNotProveInstallerToken": true,
+  "sourceFacts": [
+    {
+      "path": ".github/workflows/windows-candidate.yml",
+      "sha256": "5e601d71847cedd82d087f1c9ee0765224aaee31a093c8d69c619f5063fff557",
+      "selectedLines": [
+        {
+          "line": 166,
+          "text": "          & ../../../test/smoke/windows-installer.ps1 -BundleDirectory target/release/bundle -BuiltExecutable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-candidate"
+        },
+        {
+          "line": 509,
+          "text": "          - {kind: nsis, scenario: adjacent}"
+        },
+        {
+          "line": 510,
+          "text": "          - {kind: nsis, scenario: fresh023}"
+        },
+        {
+          "line": 511,
+          "text": "          - {kind: msi, scenario: adjacent}"
+        },
+        {
+          "line": 512,
+          "text": "          - {kind: msi, scenario: explicit-conversion}"
+        },
+        {
+          "line": 513,
+          "text": "          - {kind: msi, scenario: fresh023}"
+        },
+        {
+          "line": 547,
+          "text": "          & test/smoke/windows023-installer-retention.ps1 -AdmissionPath test/out/windows023-installer-retention/admission.json -Execute"
+        }
+      ]
+    },
+    {
+      "path": "test/smoke/windows023-installer-retention.ps1",
+      "sha256": "bb1886de6d7243fa30ca258482da9a1fa082161476ef12e3aa56a1cea850aa55",
+      "selectedLines": [
+        {
+          "line": 143,
+          "text": "function Invoke-RetentionInstaller([string]$File,[string]$Arguments,[string]$Phase,[int[]]$ExpectedExitCodes=@(0)) {"
+        },
+        {
+          "line": 147,
+          "text": "    $p=Start-Process -FilePath $File -ArgumentList $Arguments -PassThru"
+        },
+        {
+          "line": 155,
+          "text": "function Install-RetentionPackage([string]$Package,[string]$Phase) {"
+        },
+        {
+          "line": 207,
+          "text": "    $sid=[Security.Principal.WindowsIdentity]::GetCurrent().User"
+        },
+        {
+          "line": 254,
+          "text": "    # Enable SeSecurityPrivilege for SACLs, only on this disposable hosted VM."
+        },
+        {
+          "line": 266,
+          "text": "  try {if(!LookupPrivilegeValue(null,\"SeSecurityPrivilege\",out l)) throw new Exception(\"Audit privilege missing\");"
+        },
+        {
+          "line": 468,
+          "text": "    ordinaryAccountAcceptanceClaimed=$false;releaseRequested=$false}"
+        }
+      ]
+    },
+    {
+      "path": "test/smoke/windows-installer.ps1",
+      "sha256": "fbfa3d8ec4cde212e2cf02bc47dde8fc97d41750ba3d6138c75c93100844b8d7",
+      "selectedLines": [
+        {
+          "line": 30,
+          "text": "function Invoke-Installer([string]$File, [string]$Arguments) {"
+        },
+        {
+          "line": 31,
+          "text": "    $process = Start-Process -FilePath $File -ArgumentList $Arguments -Wait -PassThru"
+        },
+        {
+          "line": 106,
+          "text": "                & (Join-Path $PSScriptRoot 'windows-ordinary-startup.ps1') -Executable $defaultExe -Node $Node -OutputDirectory (Join-Path $taskOutput ($installerKind+'-default-startup')) -ExpectedCommit $taskSource"
+        },
+        {
+          "line": 157,
+          "text": "            & (Join-Path $PSScriptRoot 'windows-ordinary-startup.ps1') -Executable $installed -Node $Node -OutputDirectory (Join-Path $taskOutput ($installerKind + '-startup')) -ExpectedCommit $taskSource"
+        }
+      ]
+    }
+  ],
+  "currentCandidate": {
+    "runId": 42333262869,
+    "jobId": 128284347930,
+    "lastObservedStatus": "in_progress",
+    "lastObservedStep": "Windows regression with the package lock"
+  }
+}
