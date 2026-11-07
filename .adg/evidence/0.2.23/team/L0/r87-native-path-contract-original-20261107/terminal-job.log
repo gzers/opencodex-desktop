@@ -1,0 +1,502 @@
+﻿2026-11-07T11:47:16.3698078Z Current runner version: '2.338.2'
+2026-11-07T11:47:16.3718299Z ##[group]Runner Image Provisioner
+2026-11-07T11:47:16.3718818Z Hosted Compute Agent
+2026-11-07T11:47:16.3719419Z Version: 20261103.629
+2026-11-07T11:47:16.3719779Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-07T11:47:16.3720188Z Build Date: 2026-11-03T17:26:59Z
+2026-11-07T11:47:16.3720574Z Worker ID: {025ac9d2-67c2-4527-b641-0731cb84e2a1}
+2026-11-07T11:47:16.3720964Z Region: northcentralus
+2026-11-07T11:47:16.3721270Z Cloud: Azure
+2026-11-07T11:47:16.3721594Z ##[endgroup]
+2026-11-07T11:47:16.3722375Z ##[group]Operating System
+2026-11-07T11:47:16.3722726Z Microsoft Windows Server 2025
+2026-11-07T11:47:16.3723062Z 10.0.26100
+2026-11-07T11:47:16.3723340Z Datacenter
+2026-11-07T11:47:16.3723641Z ##[endgroup]
+2026-11-07T11:47:16.3723945Z ##[group]Runner Image
+2026-11-07T11:47:16.3724361Z Image: windows-2025-vs2026
+2026-11-07T11:47:16.3724747Z Version: 20261103.298.1
+2026-11-07T11:47:16.3725667Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+2026-11-07T11:47:16.3726566Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+2026-11-07T11:47:16.3727136Z ##[endgroup]
+2026-11-07T11:47:16.3727783Z ##[group]GITHUB_TOKEN Permissions
+2026-11-07T11:47:16.3728954Z Contents: read
+2026-11-07T11:47:16.3729297Z Metadata: read
+2026-11-07T11:47:16.3729594Z ##[endgroup]
+2026-11-07T11:47:16.3730978Z Secret source: Actions
+2026-11-07T11:47:16.3731443Z Cache mode: write
+2026-11-07T11:47:16.3731858Z Prepare workflow directory
+2026-11-07T11:47:16.4021689Z Prepare all required actions
+2026-11-07T11:47:16.4068712Z Getting action download info
+2026-11-07T11:47:16.6479047Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+2026-11-07T11:47:16.7268856Z Download action repository 'actions/setup-node@v5' (SHA:a0853c24544627f65ddf259abe73b1d18a591444)
+2026-11-07T11:47:16.8334431Z Download action repository 'dtolnay/rust-toolchain@stable' (SHA:b725eda525362e7cf34af9a7243cac1e3f01a7ec)
+2026-11-07T11:47:16.9723349Z Download action repository 'Swatinem/rust-cache@v2' (SHA:d1527c8f67ef9af357290475d4af4b0fab8f12e0)
+2026-11-07T11:47:17.2477732Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-07T11:47:17.4932802Z Complete job name: native-ui
+2026-11-07T11:47:17.6305441Z ##[group]Run actions/checkout@v5
+2026-11-07T11:47:17.6306145Z with:
+2026-11-07T11:47:17.6306385Z   repository: gzers/opencodex-desktop
+2026-11-07T11:47:17.6308914Z   token: ***
+2026-11-07T11:47:17.6309133Z   ssh-strict: true
+2026-11-07T11:47:17.6309357Z   ssh-user: git
+2026-11-07T11:47:17.6309585Z   persist-credentials: true
+2026-11-07T11:47:17.6309840Z   clean: true
+2026-11-07T11:47:17.6310067Z   sparse-checkout-cone-mode: true
+2026-11-07T11:47:17.6310332Z   fetch-depth: 1
+2026-11-07T11:47:17.6310550Z   fetch-tags: false
+2026-11-07T11:47:17.6310799Z   show-progress: true
+2026-11-07T11:47:17.6311027Z   lfs: false
+2026-11-07T11:47:17.6311232Z   submodules: false
+2026-11-07T11:47:17.6311461Z   set-safe-directory: true
+2026-11-07T11:47:17.6311723Z   allow-unsafe-pr-checkout: false
+2026-11-07T11:47:17.6312099Z ##[endgroup]
+2026-11-07T11:47:17.7367314Z Syncing repository: gzers/opencodex-desktop
+2026-11-07T11:47:17.7368469Z ##[group]Getting Git version info
+2026-11-07T11:47:17.7368941Z Working directory is 'D:\a\opencodex-desktop\opencodex-desktop'
+2026-11-07T11:47:17.7799737Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-07T11:47:18.0895641Z git version 2.56.0.windows.4
+2026-11-07T11:47:18.0932708Z ##[endgroup]
+2026-11-07T11:47:18.0946952Z Temporarily overriding HOME='D:\a\_temp\44f24f29-299f-404b-9eb1-9e35232d5c47' before making global git config changes
+2026-11-07T11:47:18.0947663Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-07T11:47:18.0954253Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+2026-11-07T11:47:18.1488609Z Deleting the contents of 'D:\a\opencodex-desktop\opencodex-desktop'
+2026-11-07T11:47:18.1493138Z ##[group]Initializing the repository
+2026-11-07T11:47:18.1500296Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\opencodex-desktop\opencodex-desktop
+2026-11-07T11:47:18.2168654Z Initialized empty Git repository in D:/a/opencodex-desktop/opencodex-desktop/.git/
+2026-11-07T11:47:18.2204894Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/gzers/opencodex-desktop
+2026-11-07T11:47:18.2812761Z ##[endgroup]
+2026-11-07T11:47:18.2813345Z ##[group]Disabling automatic garbage collection
+2026-11-07T11:47:18.2822026Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-07T11:47:18.3117417Z ##[endgroup]
+2026-11-07T11:47:18.3118322Z ##[group]Setting up auth
+2026-11-07T11:47:18.3126166Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-07T11:47:18.3416900Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-07T11:47:19.6855666Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-07T11:47:19.7230320Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-07T11:47:20.1508754Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-07T11:47:20.1812319Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-07T11:47:20.6033222Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-07T11:47:20.6317507Z ##[endgroup]
+2026-11-07T11:47:20.6326584Z ##[group]Fetching the repository
+2026-11-07T11:47:20.6329350Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +5404302002ac6ca4f0c519951d6fc908d5f2a517:refs/remotes/origin/codex/0.2.23-integration
+2026-11-07T11:47:22.1998195Z From https://github.com/gzers/opencodex-desktop
+2026-11-07T11:47:22.1998870Z  * [new ref]         5404302002ac6ca4f0c519951d6fc908d5f2a517 -> origin/codex/0.2.23-integration
+2026-11-07T11:47:22.2036185Z ##[endgroup]
+2026-11-07T11:47:22.2036803Z ##[group]Determining the checkout info
+2026-11-07T11:47:22.2038216Z ##[endgroup]
+2026-11-07T11:47:22.2045761Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-07T11:47:22.2494089Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-07T11:47:22.2777434Z ##[group]Checking out the ref
+2026-11-07T11:47:22.2784518Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B codex/0.2.23-integration refs/remotes/origin/codex/0.2.23-integration
+2026-11-07T11:47:22.5182419Z Switched to a new branch 'codex/0.2.23-integration'
+2026-11-07T11:47:22.5276128Z branch 'codex/0.2.23-integration' set up to track 'origin/codex/0.2.23-integration'.
+2026-11-07T11:47:22.5315559Z ##[endgroup]
+2026-11-07T11:47:22.5707407Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-07T11:47:22.5971151Z 5404302002ac6ca4f0c519951d6fc908d5f2a517
+2026-11-07T11:47:22.6338482Z ##[group]Run actions/setup-node@v5
+2026-11-07T11:47:22.6338757Z with:
+2026-11-07T11:47:22.6338886Z   node-version: 24
+2026-11-07T11:47:22.6339178Z   always-auth: false
+2026-11-07T11:47:22.6339302Z   check-latest: false
+2026-11-07T11:47:22.6340824Z   token: ***
+2026-11-07T11:47:22.6341550Z   package-manager-cache: true
+2026-11-07T11:47:22.6341696Z ##[endgroup]
+2026-11-07T11:47:22.7710154Z Found in cache @ C:\hostedtoolcache\windows\node\24.22.2\x64
+2026-11-07T11:47:22.7716646Z (node:2340) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-07T11:47:22.7717117Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-07T11:47:22.7719082Z ##[group]Environment details
+2026-11-07T11:47:27.0012538Z node: v24.22.2
+2026-11-07T11:47:27.0012764Z npm: 11.19.1
+2026-11-07T11:47:27.0012869Z yarn: 1.22.22
+2026-11-07T11:47:27.0013376Z ##[endgroup]
+2026-11-07T11:47:27.0317020Z ##[group]Run dtolnay/rust-toolchain@stable
+2026-11-07T11:47:27.0317235Z with:
+2026-11-07T11:47:27.0317352Z   toolchain: stable
+2026-11-07T11:47:27.0317470Z ##[endgroup]
+2026-11-07T11:47:27.0365335Z ##[start-action display=Parse toolchain version;id=__dtolnay_rust-toolchain.parse]
+2026-11-07T11:47:27.0474904Z ##[group]Run if [[ -z $toolchain ]]; then
+2026-11-07T11:47:27.0475169Z [36;1mif [[ -z $toolchain ]]; then[0m
+2026-11-07T11:47:27.0475474Z [36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070[0m
+2026-11-07T11:47:27.0475798Z [36;1m  echo "'toolchain' is a required input" >&2[0m
+2026-11-07T11:47:27.0475960Z [36;1m  exit 1[0m
+2026-11-07T11:47:27.0476147Z [36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then[0m
+2026-11-07T11:47:27.0476382Z [36;1m  if [[ Windows == macOS ]]; then[0m
+2026-11-07T11:47:27.0476728Z [36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2026-11-07T11:47:27.0477005Z [36;1m  else[0m
+2026-11-07T11:47:27.0477224Z [36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2026-11-07T11:47:27.0477469Z [36;1m  fi[0m
+2026-11-07T11:47:27.0477643Z [36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then[0m
+2026-11-07T11:47:27.0477937Z [36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT[0m
+2026-11-07T11:47:27.0478195Z [36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then[0m
+2026-11-07T11:47:27.0478480Z [36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT[0m
+2026-11-07T11:47:27.0478749Z [36;1melse[0m
+2026-11-07T11:47:27.0478856Z [36;1m  delimiter=EOF[0m
+2026-11-07T11:47:27.0479037Z [36;1m  while [[ $toolchain == *$delimiter* ]]; do delimiter+=_; done[0m
+2026-11-07T11:47:27.0479317Z [36;1m  printf 'toolchain<<%s\n%s\n%s\n' "$delimiter" "$toolchain" "$delimiter" >> $GITHUB_OUTPUT[0m
+2026-11-07T11:47:27.0479546Z [36;1mfi[0m
+2026-11-07T11:47:27.0492456Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-07T11:47:27.0492727Z env:
+2026-11-07T11:47:27.0492838Z   toolchain: stable
+2026-11-07T11:47:27.0492961Z ##[endgroup]
+2026-11-07T11:47:27.1985043Z ##[end-action id=__dtolnay_rust-toolchain.parse;outcome=success;conclusion=success;duration_ms=161]
+2026-11-07T11:47:27.1988570Z ##[start-action display=Set $CARGO_HOME;id=__dtolnay_rust-toolchain.__run]
+2026-11-07T11:47:27.2074875Z ##[group]Run echo CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV
+2026-11-07T11:47:27.2075178Z [36;1mecho CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV[0m
+2026-11-07T11:47:27.2083444Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-07T11:47:27.2083686Z ##[endgroup]
+2026-11-07T11:47:27.2372359Z ##[end-action id=__dtolnay_rust-toolchain.__run;outcome=success;conclusion=success;duration_ms=38]
+2026-11-07T11:47:27.2374219Z ##[start-action display=Install rustup if needed;id=__dtolnay_rust-toolchain.__run_2]
+2026-11-07T11:47:27.2380574Z ##[end-action id=__dtolnay_rust-toolchain.__run_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-07T11:47:27.2405493Z ##[start-action display=Install rustup if needed on windows;id=__dtolnay_rust-toolchain.__run_3]
+2026-11-07T11:47:27.2496498Z ##[group]Run if ! command -v rustup &>/dev/null; then
+2026-11-07T11:47:27.2496722Z [36;1mif ! command -v rustup &>/dev/null; then[0m
+2026-11-07T11:47:27.2497169Z [36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://win.rustup.rs/x86_64 --output 'D:\a\_temp\rustup-init.exe'[0m
+2026-11-07T11:47:27.2497647Z [36;1m  'D:\a\_temp\rustup-init.exe' --default-toolchain none --no-modify-path -y[0m
+2026-11-07T11:47:27.2499413Z [36;1m  echo "$CARGO_HOME\bin" >> $GITHUB_PATH[0m
+2026-11-07T11:47:27.2499589Z [36;1mfi[0m
+2026-11-07T11:47:27.2508598Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-07T11:47:27.2508815Z env:
+2026-11-07T11:47:27.2508937Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-07T11:47:27.2509102Z ##[endgroup]
+2026-11-07T11:47:27.2971818Z ##[end-action id=__dtolnay_rust-toolchain.__run_3;outcome=success;conclusion=success;duration_ms=56]
+2026-11-07T11:47:27.2984621Z ##[start-action display=rustup toolchain install stable;id=__dtolnay_rust-toolchain.__run_4]
+2026-11-07T11:47:27.3075838Z ##[group]Run set -f  # split targets and components on commas and whitespace, without glob expansion
+2026-11-07T11:47:27.3076243Z [36;1mset -f  # split targets and components on commas and whitespace, without glob expansion[0m
+2026-11-07T11:47:27.3076479Z [36;1mflags=()[0m
+2026-11-07T11:47:27.3076644Z [36;1mfor t in ${targets//,/ }; do flags+=(--target "$t"); done[0m
+2026-11-07T11:47:27.3076871Z [36;1mfor c in ${components//,/ }; do flags+=(--component "$c"); done[0m
+2026-11-07T11:47:27.3077150Z [36;1mif [[ $toolchain == nightly && -n $components ]]; then flags+=(--allow-downgrade); fi[0m
+2026-11-07T11:47:27.3077385Z [36;1mlog=$(mktemp)[0m
+2026-11-07T11:47:27.3077530Z [36;1mtrap 'rm -f "$log"' EXIT[0m
+2026-11-07T11:47:27.3077936Z [36;1mfor attempt in 1 2 3 4 5; do[0m
+2026-11-07T11:47:27.3078248Z [36;1m  if rustup toolchain install "$toolchain" "${flags[@]}" --profile minimal --no-self-update --force-non-host 2>&1 | tee "$log"; then[0m
+2026-11-07T11:47:27.3078555Z [36;1m    break[0m
+2026-11-07T11:47:27.3078662Z [36;1m  else[0m
+2026-11-07T11:47:27.3078769Z [36;1m    status=$?[0m
+2026-11-07T11:47:27.3078878Z [36;1m  fi[0m
+2026-11-07T11:47:27.3079038Z [36;1m  if [[ $attempt == 5 ]] || ! grep -Fq 'checksum failed for ' "$log" \[0m
+2026-11-07T11:47:27.3079350Z [36;1m      || ! grep -Fq 'this is likely due to an ongoing update of the official release server' "$log"; then[0m
+2026-11-07T11:47:27.3079604Z [36;1m    exit "$status"[0m
+2026-11-07T11:47:27.3079727Z [36;1m  fi[0m
+2026-11-07T11:47:27.3079919Z [36;1m  echo "Retrying rustup toolchain install in 30 seconds (retry $attempt of 4)" >&2[0m
+2026-11-07T11:47:27.3080148Z [36;1m  sleep 30[0m
+2026-11-07T11:47:27.3080259Z [36;1mdone[0m
+2026-11-07T11:47:27.3089118Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-07T11:47:27.3089343Z env:
+2026-11-07T11:47:27.3089461Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-07T11:47:27.3089607Z   toolchain: stable
+2026-11-07T11:47:27.3089711Z   targets: 
+2026-11-07T11:47:27.3089809Z   components: 
+2026-11-07T11:47:27.3089922Z   RUSTUP_PERMIT_COPY_RENAME: 1
+2026-11-07T11:47:27.3090058Z ##[endgroup]
+2026-11-07T11:47:30.9384524Z info: syncing channel updates for stable-x86_64-pc-windows-msvc
+2026-11-07T11:47:31.3312837Z 
+2026-11-07T11:47:31.3472134Z   stable-x86_64-pc-windows-msvc unchanged - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+2026-11-07T11:47:31.3472533Z 
+2026-11-07T11:47:31.3856195Z ##[end-action id=__dtolnay_rust-toolchain.__run_4;outcome=success;conclusion=success;duration_ms=4087]
+2026-11-07T11:47:31.3862545Z ##[start-action display=rustup default stable;id=__dtolnay_rust-toolchain.__run_5]
+2026-11-07T11:47:31.3949010Z ##[group]Run rustup default "$toolchain" --force-non-host
+2026-11-07T11:47:31.3949236Z [36;1mrustup default "$toolchain" --force-non-host[0m
+2026-11-07T11:47:31.3957314Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-07T11:47:31.3957534Z env:
+2026-11-07T11:47:31.3957652Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-07T11:47:31.3957800Z   toolchain: stable
+2026-11-07T11:47:31.3957912Z ##[endgroup]
+2026-11-07T11:47:31.4420589Z info: using existing install for stable-x86_64-pc-windows-msvc
+2026-11-07T11:47:31.4504266Z info: default toolchain set to stable-x86_64-pc-windows-msvc
+2026-11-07T11:47:31.4505147Z 
+2026-11-07T11:47:31.4651430Z   stable-x86_64-pc-windows-msvc unchanged - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+2026-11-07T11:47:31.4651666Z 
+2026-11-07T11:47:31.4704815Z ##[end-action id=__dtolnay_rust-toolchain.__run_5;outcome=success;conclusion=success;duration_ms=84]
+2026-11-07T11:47:31.4707777Z ##[start-action display=Create cachekey;id=__dtolnay_rust-toolchain.rustc-version]
+2026-11-07T11:47:31.4789522Z ##[group]Run DATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+2026-11-07T11:47:31.4790015Z [36;1mDATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')[0m
+2026-11-07T11:47:31.4790398Z [36;1mHASH=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-hash: //p')[0m
+2026-11-07T11:47:31.4790684Z [36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT[0m
+2026-11-07T11:47:31.4798553Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-07T11:47:31.4798944Z env:
+2026-11-07T11:47:31.4799061Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-07T11:47:31.4799211Z   toolchain: stable
+2026-11-07T11:47:31.4799320Z ##[endgroup]
+2026-11-07T11:47:32.2041279Z ##[end-action id=__dtolnay_rust-toolchain.rustc-version;outcome=success;conclusion=success;duration_ms=733]
+2026-11-07T11:47:32.2043317Z ##[start-action display=Disable incremental compilation;id=__dtolnay_rust-toolchain.__run_6]
+2026-11-07T11:47:32.2132917Z ##[group]Run if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+2026-11-07T11:47:32.2133154Z [36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then[0m
+2026-11-07T11:47:32.2133341Z [36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV[0m
+2026-11-07T11:47:32.2133497Z [36;1mfi[0m
+2026-11-07T11:47:32.2142238Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-07T11:47:32.2142470Z env:
+2026-11-07T11:47:32.2142590Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-07T11:47:32.2142755Z ##[endgroup]
+2026-11-07T11:47:32.2444623Z ##[end-action id=__dtolnay_rust-toolchain.__run_6;outcome=success;conclusion=success;duration_ms=40]
+2026-11-07T11:47:32.2446476Z ##[start-action display=Enable colors in Cargo output;id=__dtolnay_rust-toolchain.__run_7]
+2026-11-07T11:47:32.2536894Z ##[group]Run if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+2026-11-07T11:47:32.2537146Z [36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then[0m
+2026-11-07T11:47:32.2537339Z [36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV[0m
+2026-11-07T11:47:32.2537508Z [36;1mfi[0m
+2026-11-07T11:47:32.2545754Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-07T11:47:32.2545986Z env:
+2026-11-07T11:47:32.2546108Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-07T11:47:32.2546260Z   CARGO_INCREMENTAL: 0
+2026-11-07T11:47:32.2546378Z ##[endgroup]
+2026-11-07T11:47:32.2853767Z ##[end-action id=__dtolnay_rust-toolchain.__run_7;outcome=success;conclusion=success;duration_ms=40]
+2026-11-07T11:47:32.2856734Z ##[start-action display=Enable Cargo sparse registry;id=__dtolnay_rust-toolchain.__run_8]
+2026-11-07T11:47:32.2953577Z ##[group]Run # implemented in 1.66, stabilized in 1.68, made default in 1.70
+2026-11-07T11:47:32.2953951Z [36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70[0m
+2026-11-07T11:47:32.2955074Z [36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol ]; then[0m
+2026-11-07T11:47:32.2955556Z [36;1m  if rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[89]\.'; then[0m
+2026-11-07T11:47:32.2955940Z [36;1m    touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2026-11-07T11:47:32.2956292Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV[0m
+2026-11-07T11:47:32.2956645Z [36;1m  elif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[67]\.'; then[0m
+2026-11-07T11:47:32.2957228Z [36;1m    touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2026-11-07T11:47:32.2957562Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV[0m
+2026-11-07T11:47:32.2957828Z [36;1m  fi[0m
+2026-11-07T11:47:32.2970433Z [36;1mfi[0m
+2026-11-07T11:47:32.2985931Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-07T11:47:32.2986318Z env:
+2026-11-07T11:47:32.2986505Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-07T11:47:32.2986747Z   CARGO_INCREMENTAL: 0
+2026-11-07T11:47:32.2986940Z   CARGO_TERM_COLOR: always
+2026-11-07T11:47:32.2987134Z   toolchain: stable
+2026-11-07T11:47:32.2987308Z ##[endgroup]
+2026-11-07T11:47:32.4409693Z ##[end-action id=__dtolnay_rust-toolchain.__run_8;outcome=success;conclusion=success;duration_ms=155]
+2026-11-07T11:47:32.4413434Z ##[start-action display=Work around spurious network errors in curl 8.0;id=__dtolnay_rust-toolchain.__run_9]
+2026-11-07T11:47:32.4505586Z ##[group]Run # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+2026-11-07T11:47:32.4506014Z [36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation[0m
+2026-11-07T11:47:32.4506364Z [36;1mif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.7[01]\.'; then[0m
+2026-11-07T11:47:32.4506641Z [36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV[0m
+2026-11-07T11:47:32.4506810Z [36;1mfi[0m
+2026-11-07T11:47:32.4521364Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-07T11:47:32.4521581Z env:
+2026-11-07T11:47:32.4521699Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-07T11:47:32.4521846Z   CARGO_INCREMENTAL: 0
+2026-11-07T11:47:32.4521971Z   CARGO_TERM_COLOR: always
+2026-11-07T11:47:32.4522093Z   toolchain: stable
+2026-11-07T11:47:32.4522200Z ##[endgroup]
+2026-11-07T11:47:32.5225439Z ##[end-action id=__dtolnay_rust-toolchain.__run_9;outcome=success;conclusion=success;duration_ms=81]
+2026-11-07T11:47:32.5229464Z ##[start-action display=rustc +stable --version --verbose;id=__dtolnay_rust-toolchain.__run_10]
+2026-11-07T11:47:32.5335538Z ##[group]Run rustc +"$toolchain" --version --verbose
+2026-11-07T11:47:32.5335746Z [36;1mrustc +"$toolchain" --version --verbose[0m
+2026-11-07T11:47:32.5345610Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-07T11:47:32.5345970Z env:
+2026-11-07T11:47:32.5346149Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-07T11:47:32.5346383Z   CARGO_INCREMENTAL: 0
+2026-11-07T11:47:32.5346572Z   CARGO_TERM_COLOR: always
+2026-11-07T11:47:32.5346764Z   toolchain: stable
+2026-11-07T11:47:32.5346932Z ##[endgroup]
+2026-11-07T11:47:32.5940128Z rustc 1.99.1 (58cf8f9c3 2026-10-13)
+2026-11-07T11:47:32.5940517Z binary: rustc
+2026-11-07T11:47:32.5940808Z commit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67
+2026-11-07T11:47:32.5941115Z commit-date: 2026-10-13
+2026-11-07T11:47:32.5941358Z host: x86_64-pc-windows-msvc
+2026-11-07T11:47:32.5941593Z release: 1.99.1
+2026-11-07T11:47:32.5941835Z LLVM version: 23.1.1
+2026-11-07T11:47:32.6040427Z ##[end-action id=__dtolnay_rust-toolchain.__run_10;outcome=success;conclusion=success;duration_ms=81]
+2026-11-07T11:47:32.6170117Z ##[group]Run Swatinem/rust-cache@v2
+2026-11-07T11:47:32.6170309Z with:
+2026-11-07T11:47:32.6170658Z   workspaces: apps/desktop/tauri -> target
+2026-11-07T11:47:32.6170914Z   shared-key: windows-native-ui-018
+2026-11-07T11:47:32.6171059Z   cache-on-failure: true
+2026-11-07T11:47:32.6171181Z   prefix-key: v0-rust
+2026-11-07T11:47:32.6171291Z   add-job-id-key: true
+2026-11-07T11:47:32.6171417Z   add-rust-environment-hash-key: true
+2026-11-07T11:47:32.6171561Z   cache-targets: true
+2026-11-07T11:47:32.6171676Z   cache-all-crates: false
+2026-11-07T11:47:32.6171808Z   cache-workspace-crates: false
+2026-11-07T11:47:32.6171940Z   save-if: true
+2026-11-07T11:47:32.6172048Z   cache-provider: github
+2026-11-07T11:47:32.6172161Z   cache-bin: true
+2026-11-07T11:47:32.6172266Z   lookup-only: false
+2026-11-07T11:47:32.6172375Z   cmd-format: {0}
+2026-11-07T11:47:32.6172474Z env:
+2026-11-07T11:47:32.6172587Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-07T11:47:32.6172774Z   CARGO_INCREMENTAL: 0
+2026-11-07T11:47:32.6172889Z   CARGO_TERM_COLOR: always
+2026-11-07T11:47:32.6173006Z ##[endgroup]
+2026-11-07T11:47:34.4741347Z ##[group]Cache Configuration
+2026-11-07T11:47:34.4741845Z Cache Provider:
+2026-11-07T11:47:34.4742044Z     github
+2026-11-07T11:47:34.4742218Z Workspaces:
+2026-11-07T11:47:34.4742545Z     D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri
+2026-11-07T11:47:34.4742982Z Cache Paths:
+2026-11-07T11:47:34.4743327Z     C:\Users\runneradmin\.cargo\bin
+2026-11-07T11:47:34.4743624Z     C:\Users\runneradmin\.cargo\.crates.toml
+2026-11-07T11:47:34.4743926Z     C:\Users\runneradmin\.cargo\.crates2.json
+2026-11-07T11:47:34.4744206Z     C:\Users\runneradmin\.cargo\registry
+2026-11-07T11:47:34.4744464Z     C:\Users\runneradmin\.cargo\git
+2026-11-07T11:47:34.4744816Z     D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target
+2026-11-07T11:47:34.4745135Z Restore Key:
+2026-11-07T11:47:34.4745439Z     v0-rust-windows-native-ui-018-Windows_NT-x64-e70cdc14
+2026-11-07T11:47:34.4745728Z Cache Key:
+2026-11-07T11:47:34.4746012Z     v0-rust-windows-native-ui-018-Windows_NT-x64-e70cdc14-4cd12942
+2026-11-07T11:47:34.4746351Z .. Prefix:
+2026-11-07T11:47:34.4746603Z   - v0-rust-windows-native-ui-018-Windows_NT-x64
+2026-11-07T11:47:34.4746951Z .. Environment considered:
+2026-11-07T11:47:34.4747213Z   - Rust Versions:
+2026-11-07T11:47:34.4747524Z     - 1.99.1 x86_64-pc-windows-msvc 58cf8f9c35b355199727627d07ae34a4e2846d67
+2026-11-07T11:47:34.4747854Z   - CARGO_HOME
+2026-11-07T11:47:34.4748031Z   - CARGO_INCREMENTAL
+2026-11-07T11:47:34.4748219Z   - CARGO_TERM_COLOR
+2026-11-07T11:47:34.4748420Z .. Lockfiles considered:
+2026-11-07T11:47:34.4748773Z   - D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\Cargo.lock
+2026-11-07T11:47:34.4749256Z   - D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\Cargo.toml
+2026-11-07T11:47:34.4749750Z ##[endgroup]
+2026-11-07T11:47:34.4749861Z 
+2026-11-07T11:47:34.4749958Z ... Restoring cache ...
+2026-11-07T11:47:34.6585618Z Cache hit for: v0-rust-windows-native-ui-018-Windows_NT-x64-e70cdc14-4cd12942
+2026-11-07T11:47:35.7823723Z Received 121634816 of 592281725 (20.5%), 116.0 MBs/sec
+2026-11-07T11:47:36.7894154Z Received 264241152 of 592281725 (44.6%), 125.5 MBs/sec
+2026-11-07T11:47:37.7941703Z Received 398458880 of 592281725 (67.3%), 126.2 MBs/sec
+2026-11-07T11:47:38.7999413Z Received 532676608 of 592281725 (89.9%), 126.4 MBs/sec
+2026-11-07T11:47:39.6258551Z Received 592281725 of 592281725 (100.0%), 116.6 MBs/sec
+2026-11-07T11:47:39.6261806Z Cache Size: ~565 MB (592281725 B)
+2026-11-07T11:47:39.6344007Z [command]"C:\Program Files\Git\usr\bin\tar.exe" -xf D:/a/_temp/eab9a679-f54f-449e-b570-5443e427aadf/cache.tzst -P -C D:/a/opencodex-desktop/opencodex-desktop --force-local --use-compress-program "zstd -d"
+2026-11-07T11:47:52.3797152Z Cache restored successfully
+2026-11-07T11:47:52.4153481Z Restored from cache key "v0-rust-windows-native-ui-018-Windows_NT-x64-e70cdc14-4cd12942" full match: true.
+2026-11-07T11:47:52.4364366Z ##[group]Run npm --prefix ../ui ci
+2026-11-07T11:47:52.4364596Z [36;1mnpm --prefix ../ui ci[0m
+2026-11-07T11:47:52.4364938Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-07T11:47:52.4365120Z [36;1mnpm --prefix ../ui run build[0m
+2026-11-07T11:47:52.4365296Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-07T11:47:52.4365526Z [36;1mcargo build --locked --features custom-protocol --bins --jobs 2[0m
+2026-11-07T11:47:52.4365757Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-07T11:47:52.4924037Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-07T11:47:52.4924252Z env:
+2026-11-07T11:47:52.4924387Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-07T11:47:52.4924539Z   CARGO_INCREMENTAL: 0
+2026-11-07T11:47:52.4924711Z   CARGO_TERM_COLOR: always
+2026-11-07T11:47:52.4924905Z   CACHE_ON_FAILURE: true
+2026-11-07T11:47:52.4925029Z ##[endgroup]
+2026-11-07T11:47:55.3231444Z npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+2026-11-07T11:47:58.2966811Z 
+2026-11-07T11:47:58.2967535Z added 147 packages, and audited 148 packages in 5s
+2026-11-07T11:47:58.2967834Z 
+2026-11-07T11:47:58.2968248Z 27 packages are looking for funding
+2026-11-07T11:47:58.2969333Z   run `npm fund` for details
+2026-11-07T11:47:58.3091191Z 
+2026-11-07T11:47:58.3091767Z 8 vulnerabilities (7 moderate, 1 high)
+2026-11-07T11:47:58.3094392Z 
+2026-11-07T11:47:58.3094631Z To address all issues (including breaking changes), run:
+2026-11-07T11:47:58.3094963Z   npm audit fix --force
+2026-11-07T11:47:58.3095108Z 
+2026-11-07T11:47:58.3095216Z Run `npm audit` for details.
+2026-11-07T11:48:01.5911028Z 
+2026-11-07T11:48:01.5911735Z > opencodex-desktop-ui@0.2.23 build
+2026-11-07T11:48:01.5912144Z > vue-tsc --noEmit && vite build
+2026-11-07T11:48:01.5912312Z 
+2026-11-07T11:48:10.2364029Z [36mvite v8.3.0 [32mbuilding client environment for production...[36m[39m
+2026-11-07T11:48:10.2448817Z transforming...
+2026-11-07T11:48:11.0016513Z ✓ 350 modules transformed.
+2026-11-07T11:48:11.0743953Z rendering chunks...
+2026-11-07T11:48:11.1393009Z computing gzip size...
+2026-11-07T11:48:11.1446167Z dist/index.html                                     1.07 kB │ gzip:   0.42 kB
+2026-11-07T11:48:11.1446577Z dist/assets/ConnectionDialog-BKg8FI3T.css           0.47 kB │ gzip:   0.24 kB
+2026-11-07T11:48:11.1446954Z dist/assets/ImportedConnections-Bw10PPf4.css        0.48 kB │ gzip:   0.25 kB
+2026-11-07T11:48:11.1447323Z dist/assets/SyncRoute-CbiJC7y8.css                  1.45 kB │ gzip:   0.54 kB
+2026-11-07T11:48:11.1447945Z dist/assets/ModelSaveHistory-D0E3qsOy.css           1.53 kB │ gzip:   0.49 kB
+2026-11-07T11:48:11.1448488Z dist/assets/ModelsRoute-8SFXvb0q.css               20.87 kB │ gzip:   4.06 kB
+2026-11-07T11:48:11.1449001Z dist/assets/index-CDxWFaWB.css                    142.25 kB │ gzip:  25.00 kB
+2026-11-07T11:48:11.1449629Z dist/assets/rolldown-runtime-DK3Fl9T5.js            0.15 kB │ gzip:   0.15 kB
+2026-11-07T11:48:11.1450201Z dist/assets/preload-helper-BZ1Pz5am.js              1.21 kB │ gzip:   0.69 kB
+2026-11-07T11:48:11.1450756Z dist/assets/core-DNNVStWM.js                        2.85 kB │ gzip:   1.14 kB
+2026-11-07T11:48:11.1451304Z dist/assets/SyncRoute-D44zD2Qj.js                   2.99 kB │ gzip:   1.42 kB
+2026-11-07T11:48:11.1451896Z dist/assets/ImportedConnections-BVupZ_yz.js         3.15 kB │ gzip:   1.58 kB
+2026-11-07T11:48:11.1469921Z dist/assets/api-DJ3SDe3A.js                         4.55 kB │ gzip:   1.82 kB
+2026-11-07T11:48:11.1470646Z dist/assets/pinia-B8tPejl1.js                       5.99 kB │ gzip:   2.83 kB
+2026-11-07T11:48:11.1471485Z dist/assets/ConnectionDialog-aoS1TlW6.js            6.55 kB │ gzip:   2.71 kB
+2026-11-07T11:48:11.1472102Z dist/assets/ModelSaveHistory-C0W4t5Ur.js            8.65 kB │ gzip:   3.75 kB
+2026-11-07T11:48:11.1474536Z dist/assets/reactivity.esm-bundler-CiLpcgQX.js     20.90 kB │ gzip:   7.86 kB
+2026-11-07T11:48:11.1475143Z dist/assets/store-DIK3Rray.js                      27.98 kB │ gzip:   4.72 kB
+2026-11-07T11:48:11.1475919Z dist/assets/runtime-core.esm-bundler-soTStIfQ.js   43.51 kB │ gzip:  17.94 kB
+2026-11-07T11:48:11.1476442Z dist/assets/ModelsRoute-BdrKyb3O.js               182.97 kB │ gzip:  52.63 kB
+2026-11-07T11:48:11.1476782Z dist/assets/index-CP9epPvp.js                     621.49 kB │ gzip: 194.95 kB
+2026-11-07T11:48:11.1477026Z 
+2026-11-07T11:48:11.1479676Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/models/store-v2.ts is dynamically imported by src/composables/useAppController.ts but also statically imported by src/features/backup/ModelSaveHistory.vue?vue&type=script&setup=true&lang.ts, src/features/backup/transfer-backups-v2.ts, src/features/models/AgentExecutionField.vue?vue&type=script&setup=true&lang.ts, src/features/models/AgentPanel.vue?vue&type=script&setup=true&lang.ts, src/features/models/BatchAgentDialog.vue?vue&type=script&setup=true&lang.ts, ..., dynamic import will not move module into another chunk.
+2026-11-07T11:48:11.1481016Z [39m
+2026-11-07T11:48:11.1481216Z [33m[plugin builtin:vite-reporter] 
+2026-11-07T11:48:11.1481465Z (!) Some chunks are larger than 500 kB after minification. Consider:
+2026-11-07T11:48:11.1481733Z - Using dynamic import() to code-split the application
+2026-11-07T11:48:11.1482164Z - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+2026-11-07T11:48:11.1482658Z - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+2026-11-07T11:48:11.1484331Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/sync/store.ts is dynamically imported by src/composables/useAppController.ts but also statically imported by src/app/bootstrap.ts, src/components/TaskProgressHost.vue?vue&type=script&setup=true&lang.ts, src/components/ToastHost.vue?vue&type=script&setup=true&lang.ts, src/features/sync/ConnectionDialog.vue?vue&type=script&setup=true&lang.ts, src/features/sync/ModelTransfer.vue?vue&type=script&setup=true&lang.ts, ..., dynamic import will not move module into another chunk.
+2026-11-07T11:48:11.1486383Z [39m
+2026-11-07T11:48:11.1488034Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/preferences/store.ts is dynamically imported by src/components/AppTopbar.vue?vue&type=script&setup=true&lang.ts but also statically imported by src/features/migration/store.ts, src/features/updates/useUpdateScheduler.ts, src/stores/app.ts, dynamic import will not move module into another chunk.
+2026-11-07T11:48:11.1489226Z [39m
+2026-11-07T11:48:11.1491330Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/updates/update.ts is dynamically imported by src/features/updates/store.ts but also statically imported by src/features/backup/BackupManagement.vue?vue&type=script&setup=true&lang.ts, src/features/updates/UpdateCenter.vue?vue&type=script&setup=true&lang.ts, src/features/updates/useUpdateScheduler.ts, src/routes/OverviewRoute.vue?vue&type=script&setup=true&lang.ts, dynamic import will not move module into another chunk.
+2026-11-07T11:48:11.1492297Z [39m
+2026-11-07T11:48:11.1493194Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/backup/TransferBackups.vue is dynamically imported by src/features/backup/BackupManagement.vue?vue&type=script&setup=true&lang.ts but also statically imported by src/features/sync/SyncDialogHost.vue?vue&type=script&setup=true&lang.ts, dynamic import will not move module into another chunk.
+2026-11-07T11:48:11.1493903Z [39m
+2026-11-07T11:48:11.1495010Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0mnode_modules/@tauri-apps/api/event.js is dynamically imported by src/app/appearance/effects.ts, src/app/lifecycle/store.ts, src/components/TaskProgressHost.vue?vue&type=script&setup=true&lang.ts, src/features/notifications/store.ts, src/features/runtime/store.ts, ... but also statically imported by src/app/appearance/nativeWindow.ts, dynamic import will not move module into another chunk.
+2026-11-07T11:48:11.1496701Z [39m
+2026-11-07T11:48:11.1496970Z [32m✓ built in 909ms[39m
+2026-11-07T11:48:12.3755925Z [1m[92m    Updating[0m crates.io index
+2026-11-07T11:48:28.2334247Z [1m[92m   Compiling[0m opencodex-desktop v0.2.23 (D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri)
+2026-11-07T11:50:34.6228876Z [1m[92m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 2m 23s
+2026-11-07T11:50:34.7033330Z ##[group]Run $taskNode = (Get-Command node).Source
+2026-11-07T11:50:34.7033690Z [36;1m$taskNode = (Get-Command node).Source[0m
+2026-11-07T11:50:34.7034024Z [36;1m$taskNpm = Join-Path (Split-Path -Parent $taskNode) 'node_modules/npm/bin/npm-cli.js'[0m
+2026-11-07T11:50:34.7034636Z [36;1m& ../../../test/smoke/windows-install-recovery.ps1 -Executable target/debug/opencodex-desktop.exe -Node $taskNode -NpmCli $taskNpm -OutputDirectory ../../../test/out/windows-native-ui-diagnostic[0m
+2026-11-07T11:50:34.7035162Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-07T11:50:34.7101061Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-07T11:50:34.7101330Z env:
+2026-11-07T11:50:34.7101527Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-07T11:50:34.7101731Z   CARGO_INCREMENTAL: 0
+2026-11-07T11:50:34.7101902Z   CARGO_TERM_COLOR: always
+2026-11-07T11:50:34.7102079Z   CACHE_ON_FAILURE: true
+2026-11-07T11:50:34.7102271Z ##[endgroup]
+2026-11-07T11:50:51.2562777Z [31;1mException: [0mD:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-install-recovery.ps1:67[0m
+2026-11-07T11:50:51.2563480Z [31;1m[0m[36;1mLine |[0m
+2026-11-07T11:50:51.2564070Z [31;1m[0m[36;1m[36;1m  67 | [0m … CODE -ne 0){[36;1mthrow 'Native WebView install/recovery assertions failed;[0m …[0m
+2026-11-07T11:50:51.2564613Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+2026-11-07T11:50:51.2565443Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mNative WebView install/recovery assertions failed; see execution.log[0m
+2026-11-07T11:50:51.2785963Z ##[error]Process completed with exit code 1.
+2026-11-07T11:50:51.2925590Z ##[group]Run actions/upload-artifact@v4
+2026-11-07T11:50:51.2925847Z with:
+2026-11-07T11:50:51.2926030Z   name: windows-native-ui-diagnostic
+2026-11-07T11:50:51.2926228Z   if-no-files-found: error
+2026-11-07T11:50:51.2926658Z   path: test/out/windows-native-ui-diagnostic
+!test/out/windows-native-ui-diagnostic/OpenCodeX Native*/**
+
+2026-11-07T11:50:51.2926999Z   compression-level: 6
+2026-11-07T11:50:51.2927160Z   overwrite: false
+2026-11-07T11:50:51.2927328Z   include-hidden-files: false
+2026-11-07T11:50:51.2927532Z env:
+2026-11-07T11:50:51.2927690Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-07T11:50:51.2928130Z   CARGO_INCREMENTAL: 0
+2026-11-07T11:50:51.2928340Z   CARGO_TERM_COLOR: always
+2026-11-07T11:50:51.2928520Z   CACHE_ON_FAILURE: true
+2026-11-07T11:50:51.2928713Z ##[endgroup]
+2026-11-07T11:50:51.4309958Z (node:1728) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-07T11:50:51.4310967Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-07T11:50:51.6935227Z With the provided path, there will be 12 files uploaded
+2026-11-07T11:50:51.6939221Z Artifact name is valid!
+2026-11-07T11:50:51.6940684Z Root directory input is valid!
+2026-11-07T11:50:51.9251133Z Beginning upload of artifact content to blob storage
+2026-11-07T11:50:51.9623454Z (node:1728) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-07T11:50:52.1724458Z Uploaded bytes 222096
+2026-11-07T11:50:52.2164441Z Finished uploading artifact content to blob storage!
+2026-11-07T11:50:52.2165348Z SHA256 digest of uploaded artifact zip is 0e8f0fac73a50aa570801554d5a11b2d0d056ed7a4f6a1e1f39da4214271d845
+2026-11-07T11:50:52.2166449Z Finalizing artifact upload
+2026-11-07T11:50:52.5869545Z Artifact windows-native-ui-diagnostic.zip successfully finalized. Artifact ID 13572274884
+2026-11-07T11:50:52.5870869Z Artifact windows-native-ui-diagnostic has been successfully uploaded! Final size is 222096 bytes. Artifact ID is 13572274884
+2026-11-07T11:50:52.5880144Z Artifact download URL: https://github.com/gzers/opencodex-desktop/actions/runs/42369636216/artifacts/13572274884
+2026-11-07T11:50:52.6170182Z Post job cleanup.
+2026-11-07T11:50:52.7277828Z Cache up-to-date.
+2026-11-07T11:50:52.7535329Z Post job cleanup.
+2026-11-07T11:50:52.8651791Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-07T11:50:52.8917236Z git version 2.56.0.windows.4
+2026-11-07T11:50:52.8967035Z Temporarily overriding HOME='D:\a\_temp\3795c8f4-1666-41df-b22f-1f19599c11d4' before making global git config changes
+2026-11-07T11:50:52.8967798Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-07T11:50:52.8974390Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+2026-11-07T11:50:52.9256670Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-07T11:50:52.9545533Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-07T11:50:53.4811019Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-07T11:50:53.5115032Z http.https://github.com/.extraheader
+2026-11-07T11:50:53.5150191Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-07T11:50:53.5426905Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-07T11:50:53.9596614Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-07T11:50:53.9885145Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-07T11:50:54.7168006Z Cleaning up orphan processes
+2026-11-07T11:50:54.7372165Z Terminate orphan process: pid (5184) (vctip)
+2026-11-07T11:50:54.7829245Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

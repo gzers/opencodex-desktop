@@ -1,0 +1,21 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ '\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\data'
+- 'D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\data'
+
+    at verifyWindowsPathUi (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-path-ui.mjs:58:16)
+    at async file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-install-recovery.mjs:83:3 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: '\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\data',
+  expected: 'D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\data',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.22.2
