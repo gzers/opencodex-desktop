@@ -65,6 +65,15 @@ foreach($loop in $ast.FindAll({param($node) $node -is [Management.Automation.Lan
 $calls=@($ast.FindAll({param($node) $node -is [Management.Automation.Language.CommandAst] -and $node.GetCommandName() -ceq 'Assert-WindowsInstallerMatrix'},$true))
 if($calls.Count -ne 1){throw 'Production installer must call the matrix gate exactly once before success'}
 $checks.Add('production-loops-preserve-requested-kind-and-mode')
+$slash=[string][char]92
+$owner='C:'+ $slash +'Users'+$slash+'owned'+$slash+'AppData'+$slash+'Local'+$slash+'Programs'+$slash+'OpenCodeX Desktop'
+foreach($actual in @($owner,($owner+$slash),($owner.Replace($slash,'/')+'/'),($owner.ToUpperInvariant()+$slash))){
+ if(!(Test-WindowsInstallerSameDirectory $actual $owner)){throw 'Same owner directory spelling was rejected'}
+}
+foreach($actual in @(($owner+' sibling'),($owner.Replace('owned','other')),($owner+$slash+'child'),'relative')){
+ if(Test-WindowsInstallerSameDirectory $actual $owner){throw 'Foreign owner/child directory accepted'}
+}
+$checks.Add('MSI trailing native separator matches only same ordinary owner directory')
 $output=[IO.Path]::GetFullPath($OutputDirectory)
 New-Item -ItemType Directory -Force $output | Out-Null
 [ordered]@{result='pass';powershell=$PSVersionTable.PSVersion.ToString();checks=@($checks)} |

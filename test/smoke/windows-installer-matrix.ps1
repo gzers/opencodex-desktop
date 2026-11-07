@@ -39,3 +39,10 @@ function Assert-WindowsInstallerMatrix {
         throw "Installer matrix incomplete: expected [$($expected -join ', ')]; observed [$($observed -join ', ')]"
     }
 }
+
+function Test-WindowsInstallerSameDirectory([string]$Actual,[string]$Expected) {
+    if ($Actual -notmatch '^[A-Za-z]:[\\/]' -or $Expected -notmatch '^[A-Za-z]:[\\/]') { return $false }
+    $left=$Actual.Replace('/',[string][char]92).TrimEnd([char]92)
+    $right=$Expected.Replace('/',[string][char]92).TrimEnd([char]92)
+    return [string]::Equals($left,$right,[StringComparison]::OrdinalIgnoreCase)
+}
