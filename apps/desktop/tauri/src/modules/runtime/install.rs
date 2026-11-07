@@ -2642,6 +2642,11 @@ mod tests {
                 line: Some(format!("fake npm install {}", request.version)),
             });
             let package_root = request.prefix.join(PACKAGE_SUBPATH);
+            // This fake represents npm replacing the package in its owned
+            // staging prefix, not a second archive overlay onto existing files.
+            if package_root.exists() {
+                std::fs::remove_dir_all(&package_root).unwrap();
+            }
             archive::extract(&self.tarball, None, &package_root)?;
             if self.require_scripts && !request.scripts_enabled {
                 let _ = std::fs::remove_file(package_root.join("bin/ocx.js"));
