@@ -64,3 +64,21 @@ foreach($fault in @('','wrong-id','failure','oversize','truncated')){
 $readFixture=[IO.MemoryStream]::new([byte[]]@(1,2,3));$bytes=[byte[]]::new(3)
 try{Read-TwoUserBoundedPipeBytes $readFixture $bytes;if(($bytes -join ',') -cne '1,2,3'){throw 'Actual .NET asynchronous exact read differs'}}finally{$readFixture.Dispose()}
 Write-Output 'PASS: PID probe completes readonly frame and rejects mismatched, failed, oversized and truncated responses'
+
+Add-Type -TypeDefinition @'
+using System;
+using System.IO.Pipes;
+using System.Threading.Tasks;
+public static class SweepDelayedPipe {
+ public static NamedPipeClientStream Reader() {
+  string name="os-"+Guid.NewGuid().ToString("N").Substring(0,8);
+  var server=new NamedPipeServerStream(name,PipeDirection.Out,1,PipeTransmissionMode.Byte,PipeOptions.Asynchronous);
+  _=Task.Run(async()=>{using(server){await server.WaitForConnectionAsync();await Task.Delay(150);await server.WriteAsync(new byte[]{7,8,9});await server.FlushAsync();}});
+  var client=new NamedPipeClientStream(".",name,PipeDirection.In,PipeOptions.Asynchronous);
+  client.Connect(5000);return client;
+ }
+}
+'@
+$delayed=[SweepDelayedPipe]::Reader();$delayedBytes=[byte[]]::new(3)
+try{Read-TwoUserBoundedPipeBytes $delayed $delayedBytes;if(($delayedBytes -join ',') -cne '7,8,9'){throw 'Actual delayed asynchronous named-pipe read differed'}}finally{$delayed.Dispose()}
+Write-Output 'PASS: incomplete actual named-pipe ValueTask awaits completion before GetResult'

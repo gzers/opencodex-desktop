@@ -189,7 +189,13 @@ function Wait-TwoUserDiagnosticPipe($Fact,[string]$Name,[int]$TimeoutMillisecond
 }
 function Read-TwoUserBoundedPipeBytes($Stream,[byte[]]$Buffer) {
  $cancel=[Threading.CancellationTokenSource]::new(5000)
- try{$Stream.ReadExactlyAsync($Buffer,0,$Buffer.Length,$cancel.Token).GetAwaiter().GetResult()}finally{$cancel.Dispose()}
+ try{
+  $pendingRead=$Stream.ReadExactlyAsync($Buffer,0,$Buffer.Length,$cancel.Token)
+  # Pipe ValueTask uses IValueTaskSource: GetResult does not block while pending.
+  # Convert once to Task before waiting, retaining cancellation and exact reads.
+  $readTask=if($pendingRead -is [Threading.Tasks.Task]){$pendingRead}else{$pendingRead.AsTask()}
+  [void]$readTask.GetAwaiter().GetResult()
+ }finally{$cancel.Dispose()}
 }
 function Complete-TwoUserReadonlyPipeFrame($Stream) {
  $requestId='req_'+[guid]::NewGuid().ToString()
@@ -381,8 +387,12 @@ try{
  }
  assert(facts?.mounted&&facts.textLength>30,'Actual first screen unavailable');assert.equal(facts.about.platform,'Windows');
  if(process.argv.includes('--diagnostic-sweep')){
-  const environment=await call('Runtime.evaluate',{expression:"(async()=>{try{return {value:await window.__TAURI_INTERNALS__.invoke('discover_environment',{request:null})}}catch(error){return {error:{code:error?.code,message:error?.message}}}})()",awaitPromise:true,returnByValue:true});
-  facts.environment=environment.exceptionDetails?{error:{message:'Actual environment IPC raised an exception'}}:environment.result.value;
+  const environmentStarted=Date.now();
+  try{
+   const environment=await call('Runtime.evaluate',{expression:"(async()=>{try{return {value:await window.__TAURI_INTERNALS__.invoke('discover_environment',{request:null})}}catch(error){return {error:{code:error?.code,message:error?.message}}}})()",awaitPromise:true,returnByValue:true});
+   facts.environment=environment.exceptionDetails?{error:{message:'Actual environment IPC raised an exception'}}:environment.result.value;
+  }catch(error){facts.environment={error:{message:'Actual environment observation failed within unchanged 10000ms budget: '+String(error)}};}
+  await writeFile(join(output,'environment-call.json'),JSON.stringify({elapsedMilliseconds:Date.now()-environmentStarted,budgetMilliseconds:10000,...facts.environment,accepted:false})+'\n');
  }
 
  const image=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'first-screen.png'),Buffer.from(image.data,'base64'));
@@ -881,6 +891,8 @@ function Invoke-TwoUserChild([string]$InputFile) {
   foreach($fact in @($ledger.Values|Sort-Object {[long]$_.creationTicks} -Descending)){Stop-TwoUserTracked $fact};$ledger.Clear();$manager.process.Dispose()
   $prefs=Join-Path $root 'manager-state/preferences.json'
   $document=if(Test-Path -LiteralPath $prefs){Get-Content -LiteralPath $prefs -Raw|ConvertFrom-Json -AsHashtable}else{@{schema_version=2}}
+  if(!$document.Contains('appearance')){$document.appearance=@{}}
+  $document.appearance.theme='system'
   $document.cli=@{cli_enabled=$true};$document.shell=@{auto_panel=$false;launch_main=$true;launch_with_codex=$false};$document.updates=@{app_update_auto_check=$false}
   $document|ConvertTo-Json -Depth 12|Set-Content -LiteralPath $prefs -Encoding utf8
   $manager=& $start;$live=& $screen $manager 'live'
@@ -896,9 +908,12 @@ function Invoke-TwoUserChild([string]$InputFile) {
   $data=Invoke-TwoUserCli $cli @('data-root','show','--json')
   if(!(Test-TwoUserSamePath $data.data.active_data_root $root) -or !(Test-TwoUserSamePath $data.data.opencodex_home $nativeHome)){throw 'Candidate CLI uses another D/H'}
   Write-TwoUserJson (Join-Path $out 'same-user-data-root.json') $data
-  $pipe=Get-TwoUserPipeName $sid;$own=[IO.Pipes.NamedPipeClientStream]::new('.',$pipe,[IO.Pipes.PipeDirection]::InOut)
+  $pipe=Get-TwoUserPipeName $sid;$own=[IO.Pipes.NamedPipeClientStream]::new('.',$pipe,[IO.Pipes.PipeDirection]::InOut,[IO.Pipes.PipeOptions]::Asynchronous,[Security.Principal.TokenImpersonationLevel]::Impersonation)
   try{$own.Connect(5000);[uint32]$serverId=0
    if(![OcxTwoUserWindow]::GetNamedPipeServerProcessId($own.SafePipeHandle.DangerousGetHandle(),[ref]$serverId) -or $serverId -ne $manager.fact.pid){throw 'Actual product pipe server PID differs'}
+   $frame=Complete-TwoUserReadonlyPipeFrame $own
+   if(!(Test-TwoUserSamePath $frame.data.active_data_root $root)){throw 'Actual owned-pipe frame returned another data root'}
+   Write-TwoUserJson (Join-Path $out 'owned-pipe-frame.json') @{serverPid=$serverId;response=$frame}
   }finally{$own.Dispose()}
   }|Out-Null
   $pipe=Get-TwoUserPipeName $sid
