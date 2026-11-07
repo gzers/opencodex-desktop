@@ -310,6 +310,13 @@ pub fn run() {
             let active_data_root = runtime_config.active_data_root.clone();
             let opencodex_home = crate::modules::data_root::resolve_opencodex_home(&runtime_config);
             let process_path = crate::infrastructure::discovery_paths::process_path(&home, &discovery_paths);
+            // IPC services resolve this state from with_app_handle(). Register it
+            // before spawning any endpoint worker, including immediate CLI calls.
+            app.manage(crate::state::ProcessContext {
+                runtime: runtime_executable.clone(),
+                working_directory: home.clone(),
+                opencodex_home: opencodex_home.clone(),
+            });
             let status_environment = crate::modules::process::EnvironmentPolicy {
                 opencodex_home: opencodex_home.clone(),
                 home: Some(home.clone().into_os_string()),
@@ -454,11 +461,6 @@ pub fn run() {
             app.manage(std::sync::Mutex::new(
                 crate::modules::process::ControlledProcessRunner::new(home.clone()),
             ));
-            app.manage(crate::state::ProcessContext {
-                runtime: runtime_executable,
-                working_directory: home.clone(),
-                opencodex_home,
-            });
             let recovery_process = crate::state::ProcessContext {
                 runtime: runtime.clone(), working_directory: home.clone(),
                 opencodex_home: crate::modules::data_root::resolve_opencodex_home(&runtime_config),

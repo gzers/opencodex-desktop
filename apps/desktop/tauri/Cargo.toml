@@ -85,3 +85,9 @@ lto = true
 opt-level = "s"
 panic = "abort"
 strip = true
+
+# Diagnostic/dev builds verify the same full Node/package/launcher digests as
+# release. Optimize the hashing core rather than caching or skipping admission.
+# The test profile inherits dev package overrides; release is already optimized.
+[profile.dev.package.sha2]
+opt-level = 3
