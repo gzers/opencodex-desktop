@@ -529,6 +529,7 @@ jobs:
           github-token: ${{ github.token }}
           run-id: 42347427165
           artifact-ids: 13566576723
+          merge-multiple: true
           path: test/out/native-replay414/input
       - name: Verify exact already built MSVC image and unchanged product source
         shell: pwsh
