@@ -161,6 +161,30 @@ jobs:
           $taskBuildArgs += @('--','--locked')
           node $taskTauriCli @taskBuildArgs
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      # These are diagnostic originals, explicitly NOT the admitted final
+      # candidate artifact. Retention/release admission still requires the
+      # separately named verified artifact and successful package job below.
+      - name: Record exact unverified installer build identities
+        shell: pwsh
+        run: |
+          $taskRaw = [IO.Path]::GetFullPath('../../../test/out/windows-raw-candidate')
+          New-Item -ItemType Directory -Force $taskRaw | Out-Null
+          $taskRawFiles = @(Get-ChildItem target/release/bundle/nsis/*-setup.exe,target/release/bundle/msi/*.msi -File)
+          if ($taskRawFiles.Count -ne 2) { throw 'Both raw installer originals required' }
+          foreach ($taskRawFile in $taskRawFiles) { Copy-Item -LiteralPath $taskRawFile.FullName -Destination $taskRaw }
+          Copy-Item -LiteralPath target/release/opencodex-desktop.exe -Destination $taskRaw
+          [ordered]@{
+            source=(git rev-parse HEAD).Trim();appsTree=(git rev-parse HEAD:apps).Trim();run=$env:GITHUB_RUN_ID;attempt=$env:GITHUB_RUN_ATTEMPT
+            status='unverified-build-only';installationAccepted=$false;releaseAccepted=$false
+            files=@(Get-ChildItem $taskRaw -File | ForEach-Object { @{name=$_.Name;bytes=$_.Length;sha256=(Get-FileHash -LiteralPath $_.FullName).Hash.ToLowerInvariant()} })
+          } | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $taskRaw 'build-identities.json')
+      - name: Preserve unverified originals for bounded followup only
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-raw-installers-unverified-${{ github.sha }}
+          path: test/out/windows-raw-candidate
+          if-no-files-found: error
+          retention-days: 14
       - name: Install, verify final EXE and uninstall on isolated runner
         run: |
           & ../../../test/smoke/windows-installer.ps1 -BundleDirectory target/release/bundle -BuiltExecutable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-candidate
