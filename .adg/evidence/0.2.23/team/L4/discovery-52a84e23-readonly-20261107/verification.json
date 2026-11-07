@@ -1,0 +1,32 @@
+{
+  "observedUtc": "2026-11-07T01:36:57.409166+00:00",
+  "observedIntegrationCommit": "52a84e233c4960e30077667d9990d12705cfb0fc",
+  "instructionCommit": "323b75df971658908cd6b23915bb880ce41296b0",
+  "stillPinnedBaseline": "7730073e96999382697fe2ad8dd8f877352c75a3",
+  "adoptedNewBaseline": false,
+  "nativeExecuted": false,
+  "sourceChecks": {
+    "fixedManagedProof": true,
+    "nodeRunsManagedPackageScriptOnWindows": true,
+    "windowsOwnedJobWiringPresent": true,
+    "newDiscoveryTestsUnixOnly": true,
+    "earlierReportedProductAndExecutorFilesUnchanged": true
+  },
+  "sourceFiles": [
+    {
+      "path": "apps/desktop/tauri/src/commands/discovery.rs",
+      "sha256": "b0b00bb8d398b0b4e829961867cf1374f89669c4d291e47a2bcc82f51f3b4f9e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/discovery_v2_tests.rs",
+      "sha256": "a8e7d292002a73353d8a2f7527066abeacf9dc66f01f9128583d0970ac243620"
+    }
+  ],
+  "activeWindowsJob": {
+    "runId": 42323530379,
+    "jobId": 128253406896,
+    "lastObservedStage": "Windows backend regression",
+    "lastObservedStatus": "in_progress",
+    "acceptanceClaim": false
+  }
+}
