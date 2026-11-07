@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "source": "e722dc4d7ae61e59f61cdc45a99df4ad7ca2da69",
+  "result": "pass",
+  "library": {
+    "passed": 1971,
+    "failed": 0,
+    "ignored": 14
+  },
+  "strictClippy": "pass",
+  "scope": "exact final library with real four confirmations; full 56a8 workspace2208 result remains applicable to unchanged non-library executables; test-only source delta explicitly recorded, no claim reran49 at e722",
+  "deltaFromFullWorkspaceSource": [
+    "apps/desktop/tauri/src/modules/model_config/sync_local_v2_restore_tests.rs"
+  ],
+  "frontendSameSourceInputsAs56a8": "1590 passed/type/build",
+  "finalNativeBuild": "running",
+  "files": [
+    {
+      "path": "ocxd023-e722-clippy.log",
+      "bytes": 198,
+      "sha256": "605478f1de299631155725ee3273578afa0755b2d891df03d72734d36d5077ae"
+    },
+    {
+      "path": "ocxd023-e722-final-lib.log",
+      "bytes": 239858,
+      "sha256": "6cac93f87719773641adc200fb144ac683799f58d692fffed0ab1bb178c5b6d4"
+    }
+  ]
+}
