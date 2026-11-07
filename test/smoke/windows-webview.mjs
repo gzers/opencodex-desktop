@@ -74,9 +74,19 @@ try {
   const invoke = await call('Runtime.evaluate', {
     expression: `(async () => {
       const invoke = window.__TAURI_INTERNALS__.invoke;
+      const about = await invoke('app_about');
+      let discovery;
+      try { discovery = await invoke('discover_environment', {request: null}); }
+      catch (error) {
+        // An explicitly standalone 023 EXE has no packaged runtime closure.
+        // Record the typed refusal; never fabricate ready or use old PATH.
+        if (about.version !== '0.2.23' || error?.code !== 14 ||
+            !/discovery_runtime_(unresolved|pending)/.test(error?.message ?? '')) throw error;
+        discovery = {gate:'integrated_runtime_not_ready', code:error.code, message:error.message, readyVerified:false};
+      }
       return {
-        about: await invoke('app_about'),
-        discovery: await invoke('discover_environment', {request: null}),
+        about,
+        discovery,
         preferences: await invoke('get_preferences'),
         dataRoot: await invoke('get_data_root_config')
       };
