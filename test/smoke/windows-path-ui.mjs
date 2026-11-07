@@ -29,7 +29,7 @@ export async function verifyWindowsPathUi(call, output, sandbox){
     throw Error('native path UI wait: '+expression)
   }
   async function click(text,selector='.route-section.active'){
-    assert(await evaluate(`(()=>{const root=document.querySelector(${JSON.stringify(selector)});const b=[...root?.querySelectorAll('button')??[]].find(e=>e.textContent.trim()===${JSON.stringify(text)}&&!e.disabled);if(!b)return false;b.click();return true})()`),'missing native path action: '+text)
+    assert(await evaluate(`(()=>{const root=document.querySelector(${JSON.stringify(selector)});const b=[...root?.querySelectorAll('button')??[]].find(e=>(e.textContent.trim()===${JSON.stringify(text)}||e.getAttribute('aria-label')===${JSON.stringify(text)})&&!e.disabled&&e.getClientRects().length);if(!b)return false;b.click();return true})()`),'missing native path action: '+text)
   }
   async function screenshot(name){
     const image=await call('Page.captureScreenshot',{format:'png'})
