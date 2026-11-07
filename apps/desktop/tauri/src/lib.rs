@@ -19,6 +19,35 @@ pub fn build_commit() -> &'static str {
 #[cfg(target_os = "macos")]
 struct InstallationRemediation(String);
 
+#[cfg(target_os = "macos")]
+fn show_installation_remediation(detail: &str) {
+    use objc2::msg_send;
+    use objc2::rc::Retained;
+    use objc2::runtime::{AnyClass, AnyObject};
+    let detail = std::ffi::CString::new(detail).expect("fixed installation diagnostic");
+    // RunEvent::Ready is on the AppKit thread. Use an app-owned NSAlert rather
+    // than a parentless CFUserNotification hosted by a different OS process.
+    unsafe {
+        let app_class = AnyClass::get(c"NSApplication").expect("application class");
+        let app: *mut AnyObject = msg_send![app_class, sharedApplication];
+        let _: () = msg_send![app, activateIgnoringOtherApps: true];
+        let string_class = AnyClass::get(c"NSString").expect("string class");
+        let title: *mut AnyObject =
+            msg_send![string_class, stringWithUTF8String: c"请调整安装位置".as_ptr()];
+        let body: *mut AnyObject = msg_send![string_class, stringWithUTF8String: detail.as_ptr()];
+        let button: *mut AnyObject =
+            msg_send![string_class, stringWithUTF8String: c"确定".as_ptr()];
+        let alert_class = AnyClass::get(c"NSAlert").expect("alert class");
+        let raw: *mut AnyObject = msg_send![alert_class, new];
+        let alert = Retained::from_raw(raw).expect("native alert");
+        let _: () = msg_send![&*alert, setMessageText: title];
+        let _: () = msg_send![&*alert, setInformativeText: body];
+        let _: () = msg_send![&*alert, setAlertStyle: 2usize];
+        let _: *mut AnyObject = msg_send![&*alert, addButtonWithTitle: button];
+        let _: isize = msg_send![&*alert, runModal];
+    }
+}
+
 /// 把入口名写成一条非敏感运行日志；失败不阻断导航，也不携带窗口/凭据细节。
 fn record_window_event(data_root: &std::path::Path, message: &str) {
     let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root).append_event(message);
@@ -827,13 +856,9 @@ pub fn run() {
             {
                 if matches!(event, tauri::RunEvent::Ready) {
                     if let Some(remediation) = app_handle.try_state::<InstallationRemediation>() {
-                        use tauri_plugin_dialog::DialogExt;
                         let _ = app_handle.set_activation_policy(tauri::ActivationPolicy::Regular);
-                        let handle = app_handle.clone();
-                        app_handle.dialog().message(remediation.0.clone())
-                            .title("请调整安装位置")
-                            .kind(tauri_plugin_dialog::MessageDialogKind::Error)
-                            .show(move |_| handle.exit(1));
+                        show_installation_remediation(&remediation.0);
+                        app_handle.exit(1);
                     }
                 }
                 if let tauri::RunEvent::Reopen {
