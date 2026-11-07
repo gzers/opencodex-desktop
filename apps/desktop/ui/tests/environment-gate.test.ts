@@ -27,6 +27,22 @@ describe('environment presentation', () => {
     setActivePinia(createPinia())
   })
 
+  it('failed managed discovery is explicitly not ready, with no invented pending/missing/ready facts', () => {
+    const error='discovery_runtime_pending'
+    const presentation=buildEnvironmentPresentation(report({gate:'missing_node'}),false,'managed',null,error)
+    expect(presentation.state).toBe('not_ready');expect(presentation.title).toBe('集成运行程序检查未就绪');expect(presentation.blocked).toBe(true)
+    expect(presentation.commands).toEqual([]);expect(presentation.link).toBeUndefined();expect(presentation.checks.every(c=>c.value==='未声明'&&c.state==='muted')).toBe(true)
+    expect(JSON.stringify(presentation)).not.toMatch(/Homebrew|brew install|缺少 Node|正在准备|discovery_runtime_pending/)
+    expect(buildEnvironmentPresentation(null,true,'managed',null,error).state).toBe('checking')
+    expect(buildEnvironmentPresentation(report({gate:'ready'}),false,'managed',null,'').state).toBe('ready')
+  })
+
+  it('actual gate consumes the environment error and keeps only factual existing recheck/installation exits',async()=>{
+    const env=useEnvironmentStore();env.report=null;env.error='集成运行程序检查未就绪，可稍后重新检查或查看安装状态。'
+    const recheck=vi.fn(),w=mount(EnvironmentGate,{props:{onRecheck:recheck}})
+    try{expect(w.get('h2').text()).toBe('集成运行程序检查未就绪');expect(w.findAll('.overview-check-value').map(c=>c.text())).toEqual(['未声明','未声明','未声明']);expect(w.findAll('button').map(b=>b.text())).toEqual(['重新检查','完整指引 ›']);expect(w.find('.env-command').exists()).toBe(false);await w.findAll('button').find(b=>b.text()==='重新检查')!.trigger('click');expect(recheck).toHaveBeenCalledOnce();env.loading=true;await w.vm.$nextTick();expect(w.get('h2').text()).toBe('检查启动条件')}finally{w.unmount()}
+  })
+
   it('maps all five backend gates without inventing values', () => {
     const cases: Array<[EnvironmentReport['gate'], string, string, boolean, string]> = [
       ['ready', '运行环境检查通过', 'ok', true, 'ready'],

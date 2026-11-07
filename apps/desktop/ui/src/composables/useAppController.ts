@@ -16,6 +16,7 @@ import { useLifecycleStore } from '@/app/lifecycle/store'
 import { TRAY_FALLBACK_MS, TRAY_BACKOFF_MS } from '@/config/runtimeDefaults'
 import type { NotificationItem } from '@/types/ui'
 import { useUpdateScheduler } from '@/features/updates/useUpdateScheduler'
+import { useEnvironmentStore } from '@/features/environment/store'
 
 // 组合根（IMP-04 §19.4 E）：把诊断与生命周期控制器组合起来，并向调用方暴露与拆分前一致的字段。
 export function useAppController(initialize = false) {
@@ -231,6 +232,18 @@ export function useAppController(initialize = false) {
   })
 
   if (initialize) {
+    // Only the initialized root owns cross-feature source/environment orchestration.
+    // Ignore read timestamps/history: repeated card reads must not start a loop.
+    const environment = useEnvironmentStore()
+    watch(() => {
+      const source = app.runtimeSource
+      return source ? JSON.stringify([source.kind, source.path, source.version,
+        source.managedEntry, source.managedPrefix, source.explicitPath]) : null
+    }, async (identity, previous) => {
+      if (disposed || !identity || !previous && app.runtimeSource?.kind === 'unresolved') return
+      const ok = await environment.refresh()
+      if (!disposed && !ok) app.showToast(environment.error)
+    })
     watch(currentLogKind, () => {
       void loadLogs()
       void app.loadNotifications()
