@@ -55,13 +55,19 @@ $receipt=Invoke-SweepCheck $recordDirectory $Step $Name {
    @{source=(git -C $repo rev-parse HEAD).Trim();appsTree=(git -C $repo rev-parse HEAD:apps).Trim();profile='debug custom-protocol; diagnostic-only';files=@(Get-ChildItem $env:OCXD_SWEEP_PROGRAM -File|ForEach-Object{@{name=$_.Name;sha256=(Get-FileHash $_.FullName).Hash.ToLowerInvariant()}})}
   }
   state-observer {
-   $nativePaths=@(Get-Content -LiteralPath (Join-Path $evidence 'native-build-messages.json')|ForEach-Object {$_|ConvertFrom-Json}|Where-Object reason -ceq 'build-script-executed'|ForEach-Object {$_.linked_paths}|Sort-Object -Unique)
-   if(!$nativePaths.Count){throw 'Actual cargo native link directories unavailable; no guessed SDK/library paths'}
-   $arguments=@('--edition','2021','test/smoke/sweep/state.rs','--extern',('opencodex_desktop_lib='+ (Join-Path $repo 'apps/desktop/tauri/target/debug/deps/libopencodex_desktop_lib.rlib')),'-L',('dependency='+ (Join-Path $repo 'apps/desktop/tauri/target/debug/deps')))
-   foreach($path in $nativePaths){$arguments+=@('-L',$path)}
-   $arguments+=@('-o',(Join-Path $env:OCXD_SWEEP_PROGRAM 'sweep-state.exe'))
-   & rustc @arguments *> (Join-Path $evidence 'state-probe-build.log');if($LASTEXITCODE -ne 0){throw 'Independent actual backend preferences observer build failed; product candidate remains available'}
-   @{source=(git -C $repo rev-parse HEAD).Trim();nativePaths=$nativePaths;observerSha256=(Get-FileHash (Join-Path $env:OCXD_SWEEP_PROGRAM 'sweep-state.exe')).Hash.ToLowerInvariant();accepted=$false}
+   # Cargo carries its platform linker/native flags. A transient example keeps
+   # this diagnostic source owned by test/, without adding a product command.
+   $exampleDirectory=Join-Path $repo 'apps/desktop/tauri/examples'
+   $example=Join-Path $exampleDirectory 'ocxd-sweep-state.rs'
+   if(Test-Path -LiteralPath $example){throw 'Fresh transient diagnostic example required'}
+   [IO.Directory]::CreateDirectory($exampleDirectory)|Out-Null
+   Copy-Item -LiteralPath (Join-Path $repo 'test/smoke/sweep/state.rs') -Destination $example
+   try{
+    & cargo build --manifest-path apps/desktop/tauri/Cargo.toml --locked --features custom-protocol --example ocxd-sweep-state *> (Join-Path $evidence 'state-probe-build.log')
+    if($LASTEXITCODE -ne 0){throw 'Independent Cargo backend observer build failed; product candidate remains available'}
+    Copy-Item -LiteralPath (Join-Path $repo 'apps/desktop/tauri/target/debug/examples/ocxd-sweep-state.exe') -Destination (Join-Path $env:OCXD_SWEEP_PROGRAM 'sweep-state.exe')
+   }finally{Remove-Item -LiteralPath $example -Force}
+   @{source=(git -C $repo rev-parse HEAD).Trim();builtBy='Cargo exact product dependency/feature/linker graph';transientSourceRemoved=(!(Test-Path -LiteralPath $example));observerSha256=(Get-FileHash (Join-Path $env:OCXD_SWEEP_PROGRAM 'sweep-state.exe')).Hash.ToLowerInvariant();accepted=$false}
   }
   bundle-roots {
    & cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib windows_bundle_roots -- --nocapture *> (Join-Path $evidence 'windows-bundle-root-regression.log')

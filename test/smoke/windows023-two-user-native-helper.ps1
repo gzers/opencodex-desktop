@@ -371,7 +371,11 @@ try{
  else {
  let facts;
  for(let i=0;i<120;i++){
-  const r=await call('Runtime.evaluate',{expression:'(async()=>{if(!window.__TAURI_INTERNALS__?.invoke||!document.querySelector("#app")?.children.length)return null;const i=window.__TAURI_INTERNALS__.invoke;return {mounted:true,textLength:document.body.innerText.length,about:await i("app_about"),paths:await i("model_paths_v2_snapshot"),config:await i("get_data_root_config"),preferences:await i("get_preferences"),runtime:await i("runtime_source")};})()',awaitPromise:true,returnByValue:true});
+  const sampleStarted=Date.now();
+  let r;
+  try{r=await call('Runtime.evaluate',{expression:'(async()=>{if(!window.__TAURI_INTERNALS__?.invoke||!document.querySelector("#app")?.children.length)return null;const i=window.__TAURI_INTERNALS__.invoke;const start=performance.now();const paths=await i("model_paths_v2_snapshot");return {mounted:true,textLength:document.body.innerText.length,about:await i("app_about"),paths,pathSnapshotMilliseconds:performance.now()-start,config:await i("get_data_root_config"),preferences:await i("get_preferences"),runtime:await i("runtime_source")};})()',awaitPromise:true,returnByValue:true});}
+  catch(error){await writeFile(join(output,'snapshot-call-failure.json'),JSON.stringify({elapsedMilliseconds:Date.now()-sampleStarted,budgetMilliseconds:10000,error:String(error),accepted:false})+'\n');throw error;}
+  await writeFile(join(output,'snapshot-call-latency.json'),JSON.stringify({elapsedMilliseconds:Date.now()-sampleStarted,pathSnapshotMilliseconds:r.result?.value?.pathSnapshotMilliseconds??null,budgetMilliseconds:10000,accepted:false})+'\n');
   if(!r.exceptionDetails&&r.result?.value?.mounted){facts=r.result.value;if(facts.paths.program.consistency==='consistent')break;}
   await new Promise(r=>setTimeout(r,1000));
  }
@@ -705,9 +709,9 @@ function Invoke-TwoUserChild([string]$InputFile) {
    $initial=$observed.initial
    # First-screen polling is not a terminal supply observation. Keep this exact
    # generation alive inside the ORIGINAL shared 600-second startup budget;
-   # reserve 90 seconds for restart/IPC. Never kill a still-verifying worker to
+   # do not impose an earlier secondary cutoff. Never kill a still-verifying worker to
    # install the CLI fixture, or its pending transaction is caused by the test.
-   $supplyDeadline=[datetime]::Parse($c.startupDeadlineUtc).ToUniversalTime().AddSeconds(-90)
+   $supplyDeadline=[datetime]::Parse($c.startupDeadlineUtc).ToUniversalTime()
    $supplyTerminal=$null;$supplyPhases=@();$lastPhase=$null
    do{
     $null=Assert-TwoUserLive $manager.fact;Add-TwoUserDescendants $manager.fact $ledger
