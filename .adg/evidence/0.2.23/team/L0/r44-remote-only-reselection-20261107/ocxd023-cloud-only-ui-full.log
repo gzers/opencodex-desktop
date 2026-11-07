@@ -1,0 +1,38 @@
+
+> opencodex-desktop-ui@0.2.23 test
+> vitest --run
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+ ❯ tests/ui-dialog-glass-v2.test.ts (28 tests | 1 failed) 37956ms
+   ❯ chromium native dialog glass (14)
+     × light high wide blurs actual background and preserves readable contrast 2453ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ui-dialog-glass-v2.test.ts > chromium native dialog glass > light high wide blurs actual background and preserves readable contrast
+AssertionError: probe exists before pixel sampling: expected null not to be null
+ ❯ pixels tests/ui-dialog-glass-v2.test.ts:136:57
+    134|     backdrop: getComputedStyle(d, '::backdrop').backgroundColor,
+    135|   }))
+    136|   expect(box, 'probe exists before pixel sampling').not.toBeNull()
+       |                                                         ^
+    137|   expect(outer, 'dialog exists before pixel sampling').not.toBeNull()
+    138|   expect(box.y+25, 'probe scan row is visible in native window').toBeG…
+ ❯ tests/ui-dialog-glass-v2.test.ts:185:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 214 passed (215)
+      Tests  1 failed | 1589 passed (1590)
+   Start at  11:45:35
+   Duration  38.59s (environment 40%, tests 39%, transform 11%, import 10%)
+
+Environment  jsdom was created 215 times · 103.21s total, 40% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

@@ -266,3 +266,8 @@ R23的缺custom-protocol因果判断撤回：同一已封装release包，未激�
 后继67b08b2d5把非布局临时根gate留在根内，生产U/desktop删除/owner规则不变；7df4ec422把四个恢复marker/异根回执测试改为合法private创建，不松校验；b75452325以retained handle处理退出信号与枚举顺序，并保持仍活未知进程拒绝。同步9项Timeout及两项等待Elapsed尚未查清，dcb465d36只在Windows测试记录静态阶段名/耗时，预算/workers/全范围保持。
 
 用户已批准恢复原None对象取消本机同步勾选。c2845bd7d接入原恢复CAS/保护/持久进度及本地UI回读，17真实恢复、1589UI、type/build/strict通过，原失败及修复证据r41。完整后继候选42333262869固定218b2262b，含上述存储/执行器、V2安装清理和提权备份锁、范围处理与诊断，当前仅运行，不标通过。无需再开贡献对话，Main继续取证修复，未发布。
+
+
+## R28 云端独有MCP的恢复后重选补齐（2026-11-07）
+
+f86620e83补真实消费者缺口：原None恢复取消选择后，cloud-only MCP目录无本机source选项，UI无法明确勾选下载。现仅该情形加入云端有效文件内exact定义摘要+managed目标入口；原本机冲突来源保持，标记availableLocal=false。四种原None对象（渠道/扩展/Skill/MCP）真实Service取消选择及明确重选下载4过，Service28、UI48/type/build/strict过。56a8a8dcc再阻止范围读回失败时沿用旧选择prepare/confirm/save。整套UI首轮1589过/1采样probe消失，独立原玻璃测试不改样式/阈值28过，精确新源全量续跑，r44。当前218Windows候选42333262869不含此普通共享增量，只证明其自身来源范围，最终制品需新源。

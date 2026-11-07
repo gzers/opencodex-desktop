@@ -1,0 +1,37 @@
+
+> opencodex-desktop-ui@0.2.23 test
+> vitest --run tests/sync-v2-consumers.test.ts tests/transfer-backups-v2.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/sync-v2-consumers.test.ts (22 tests | 1 failed) 99ms
+   × cloud-only MCP remains unchecked until explicit exact source selection and supports managed download after restore 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/sync-v2-consumers.test.ts > cloud-only MCP remains unchecked until explicit exact source selection and supports managed download after restore
+AssertionError: expected undefined to be '云端配置（下载到本机托管）' // Object.is equality
+
+- Expected:
+"云端配置（下载到本机托管）"
+
++ Received:
+undefined
+
+ ❯ tests/sync-v2-consumers.test.ts:56:158
+     54|  expect(store.scope.mcpClients[mcp.id]).toBe('managed');expect(ipc.moc…
+     55|  const w=mount(ConfigSyncPreviewV2,{props:{open:false,preview:null,wor…
+     56|  try{const option=w.findAllComponents(UiSelectField).flatMap(field=>fi…
+       |                                                                                                                                                              ^
+     57| })
+     58|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 47 passed (48)
+   Start at  11:42:46
+   Duration  1.33s (transform 47%, environment 32%, tests 12%, import 8%)
+

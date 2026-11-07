@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "implementationSource": "f86620e83 and 56a8a8dcc",
+  "status": "affected checks and full UI passed; final-source full backend and actual confirm test in progress",
+  "discovered": "restored-absent cloud-only MCP had no local source options, so manual reselect from current UI was blocked; this was a real consumer gap",
+  "fixed": "catalog adds validated exact cloud digest with managed destination only when no local definition options exist; retains local conflicts and existing explicit origin options; UI labels 云端配置（下载到本机托管） and still requires explicit choice; remote-only rows never claim availableLocal",
+  "readbackProtection": "scope readback pending after restore blocks prepare/confirm and persistence; successful local readback or directory reload clears it; historical receipt not reexecuted",
+  "tests": {
+    "actualFourObjects": [
+      "channel",
+      "extensions",
+      "Skill",
+      "MCP"
+    ],
+    "actualServicePostRestoreReselection": 4,
+    "serviceRegressions": 28,
+    "affectedUI": 48,
+    "typecheck": "pass",
+    "UIBuild": "pass",
+    "strict": "pass",
+    "fullUIFirstAttempt": "1589 passed/1 failure; glass pixel probe boundingBox null, not a contrast/threshold failure",
+    "nativeGlassUnchangedFollowup": "28 passed; no style/threshold/test changes",
+    "finalFullUI": {
+      "files": 215,
+      "passed": 1590,
+      "failed": 0
+    },
+    "finalFullBackend": "running"
+  },
+  "cleanup": "actual resource restore probes all TempDir roots removed after screenshots/receipts logging; no real endpoint IO or business configuration",
+  "files": [
+    {
+      "path": "ocxd023-56a8-ui-full-followup.log",
+      "bytes": 823,
+      "sha256": "0a957a31984ef9849a66a74ce0391e712fd616e5df02c7f7dfb9677c13f19379"
+    },
+    {
+      "path": "ocxd023-cloud-only-mcp-service.log",
+      "bytes": 6391,
+      "sha256": "f40b39183e0ff42cf62e001ee3cf84e6ae1372559e0e013bef14b559e5ea24b2"
+    },
+    {
+      "path": "ocxd023-cloud-only-mcp-ui-r2.log",
+      "bytes": 366,
+      "sha256": "1c4caec0c588613ebe567290ca8c42576a0cbc68909b6e24acfebbe8079d2c78"
+    },
+    {
+      "path": "ocxd023-cloud-only-mcp-ui.log",
+      "bytes": 1544,
+      "sha256": "a9e5987e57a3fadd926e1fc14d6fcf0ad46ec7f7bdfd906b406e280156d0c8a2"
+    },
+    {
+      "path": "ocxd023-cloud-only-ui-full.log",
+      "bytes": 1891,
+      "sha256": "74aed91e356e3c8a9c2502c68bedc6f70732f557dfd93715ece74c5bb814ff29"
+    },
+    {
+      "path": "ocxd023-mcp-reselect-r2.log",
+      "bytes": 4264,
+      "sha256": "61b006d53383301de334f152cf12e6658737ea5131423abdabcbec0541806cbf"
+    },
+    {
+      "path": "ocxd023-mcp-scope-typecheck.log",
+      "bytes": 61,
+      "sha256": "34334a2ae2240d33b9dcb6e3616de893f91814a7d0572dfa5ea9e9149458d264"
+    },
+    {
+      "path": "ocxd023-mcp-scope-ui-final.log",
+      "bytes": 366,
+      "sha256": "42a79c55ba1b468bedd83fbedec1ca5b35152f9f1a05cf5f5ab3870295c95563"
+    },
+    {
+      "path": "ocxd023-native-dialog-followup.log",
+      "bytes": 292,
+      "sha256": "8a18e1f15e9f5acb33ce2d93dec67dca18308f54b2b8cb17c92051e948ff4d60"
+    },
+    {
+      "path": "ocxd023-remote-only-clippy.log",
+      "bytes": 252,
+      "sha256": "54332a84cd2c6044b622ca823b44a3544fad9a5d1b91396c3e0d8f1db190c10f"
+    },
+    {
+      "path": "ocxd023-remote-only-reselection-final.log",
+      "bytes": 16290,
+      "sha256": "d2ab8b353d8f19e3f3af543913809442b14bfe38d81648e4004590632387ea71"
+    },
+    {
+      "path": "ocxd023-remote-only-ui-build.log",
+      "bytes": 4978,
+      "sha256": "a6bbf941c4ebb58a3046d6825d9e4885c05737fbfff65013e9330b9eb02d0150"
+    },
+    {
+      "path": "ocxd023-restore-skill-mcp-reselect.log",
+      "bytes": 13165,
+      "sha256": "da00e15cedfaabd3ce69c4ea3053e7c87d228018a4c67e713c3ec5475eff8c68"
+    }
+  ],
+  "remotePushVerified": "56a8a8dcc30f55f732474c6548912678d01d68a8"
+}
