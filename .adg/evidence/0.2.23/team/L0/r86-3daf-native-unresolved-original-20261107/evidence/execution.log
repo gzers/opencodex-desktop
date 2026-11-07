@@ -1,0 +1,17 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: {"exceptionId":1,"text":"Uncaught (in promise)","lineNumber":0,"columnNumber":0,"exception":{"type":"object","className":"Object","description":"Object","objectId":"4177773892083745476.2.1","preview":{"type":"object","description":"Object","overflow":false,"properties":[{"name":"code","type":"number","value":"14"},{"name":"message","type":"string","value":"managed runtime operation failed: discovery_runtime_unresolved; 当前 Desktop 集成运行来源尚未就绪，未检查旧环境"}]}}}
+    at evaluate (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-install-ui.mjs:14:127)
+    at async verifyWindowsInstallUi (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-install-ui.mjs:27:22)
+    at async file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-install-recovery.mjs:82:3 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.22.2
