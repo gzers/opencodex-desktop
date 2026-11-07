@@ -287,3 +287,8 @@ f86620e83补真实消费者缺口：原None恢复取消选择后，cloud-only MC
 9437625f4d5432a2fcbc5918fdc4904b6baf7fb9源码已远端核实；新完整Windows候选42339481442/job128303762460实际head匹配。scope仍全部49/默认workers/原预算、独立提权14及nativecred、NSIS/MSI与两SID，当前运行不标通过。
 
 返修源码完整本机workspace49binary2212过/0败/37原忽略、doc及strict过。但该命令在提交前启动，实际库d文件env-dep OPENCODEX_BUILD_COMMIT仍为e722；当前文件哈希与943树核对留证，不冒已冻结制品身份。现串行重编精确943并再验，后继实际制品必须stamp一致。r50。
+
+
+## R31 精确943本机复验的单项截止夹具（2026-11-07）
+
+943库depfile实际OPENCODEX_BUILD_COMMIT匹配。全49binary尝试的原命令exit101，2211过/1失败/37原忽略；唯一失败为Unix metadata-query 200ms测试在正确返回timeout、原2s总耗时断言过后读取child-pid时NotFound，夹具子进程未及时写marker。未改产品/测试预算或断言，未删除覆盖；同一个精确binary仅此原用例单独重跑1过、0.21s，并实际验证子进程已退出。r51原失败与独立复验均保留，不写原全量命令成功。CI既有策略本就先单独跑此Unix用例再跑其余回归，本次源未修改该策略。Windows不适用这项Unix测试；新候选42339481442仍运行，不能借本机独立复验豁免Windows剩余门。

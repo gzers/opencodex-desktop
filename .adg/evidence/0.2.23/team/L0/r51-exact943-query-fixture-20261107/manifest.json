@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "9437625f4d5432a2fcbc5918fdc4904b6baf7fb9",
+  "exactStampVerified": "library depfile OPENCODEX_BUILD_COMMIT matches",
+  "rawWorkspace": {
+    "exitCode": 101,
+    "binaries": 49,
+    "passed": 2211,
+    "failed": 1,
+    "ignored": 37
+  },
+  "rawFailure": {
+    "test": "modules::about::remote::tests::metadata_query_rejects_oversize_and_kills_timed_out_process_group",
+    "site": "remote.rs:485",
+    "cause": "child-pid file absent after correctly returned 200ms deadline; all timeout/error/elapsed assertions before marker read passed",
+    "scope": "fixture did not launch its required descendant/marker within budget under the parallel whole suite; not a reason to increase product or fixture limits"
+  },
+  "followup": {
+    "sameBinary": true,
+    "sourceUnchanged": true,
+    "assertionsUnchanged": true,
+    "deadlineMs": 200,
+    "passed": 1,
+    "durationSeconds": 0.21,
+    "descendantExitAndOutputBoundsAsserted": true,
+    "execution": "one exact original fixture, no skip added to source or invocation"
+  },
+  "CIExistingStrategy": "ci.yml executes this Unix fixture once separately first; all remaining workspace tests follow without repeating it. Final same-source CI still required, no raw full-green claim",
+  "fullScopeCoverage": "all 49 attempted; the single failed fixture is independently reverified; original101 kept",
+  "release": "not published; Windows and final installer gates open",
+  "files": [
+    {
+      "path": "ocxd023-943-exact-workspace-counts.json",
+      "bytes": 9148,
+      "sha256": "a14cf24541253abc122455b6fbe3e920d8cefb685ca2e9d2b3bf6bcc874b2409"
+    },
+    {
+      "path": "ocxd023-943-exact-workspace.log",
+      "bytes": 269644,
+      "sha256": "f3076b287e1c164cf9d843365cc154741d36080a1e5a79393f48f4cd1109401a"
+    },
+    {
+      "path": "ocxd023-943-query-deadline-standalone.log",
+      "bytes": 390,
+      "sha256": "6f64cfd419fbdf5e8504454f070ab86809282d0f240aee2768c1f05387cdf183"
+    }
+  ]
+}
