@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "kind": "isolated release-bundle ordinary first start; provisioning plus visible environment screen",
+  "app": "/private/tmp/ocxd023-0c-release-installed-cgjig_p1/OpenCodeX Desktop.app",
+  "root": "/private/tmp/ocxd023-native-startup-12i7kycn",
+  "version": "0.2.23",
+  "checks": [
+    "actual native process stayed alive and exact owned application explicitly focused",
+    "actual isolated HOME U/desktop and U/opencodex/home split with fixed v2 pointer",
+    "actual normal startup provisions pinned offline runtime from copied release resources",
+    "no legacy .opencodex or retired D/opencodex-home created"
+  ],
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "visualChecks": "exact owned app focused; screenshot requires normal overview review",
+  "pid": 77766,
+  "pointer": {
+    "schemaVersion": 1,
+    "activeRoot": "/private/tmp/ocxd023-native-startup-12i7kycn/home/.codex-desktop"
+  },
+  "metadata": {
+    "structure_version": "2",
+    "opencodex_home_mode": "inside"
+  },
+  "startupEvent": "2026-11-07T13:02:21.785Z [manager] startup version=0.2.23 commit=0c869d9497c102b714dea1ee89394f999da8c4ec",
+  "provisionedRuntimeVersion": "2.97.0-desktop023.names.1",
+  "runtimeSource": {
+    "schema_version": 1,
+    "source": "managed",
+    "path": "/private/tmp/ocxd023-0c-release-installed-cgjig_p1/runtime/bin/ocx",
+    "resolved_version": "2.97.0-desktop023.names.1",
+    "resolved_at": "2026-11-07T13:03:15Z",
+    "history": []
+  },
+  "installation": "/private/tmp/ocxd023-0c-release-installed-cgjig_p1",
+  "result": "pass",
+  "ownedExit": -15,
+  "binarySha256": "5b9ab2ce852f8e3e7c439104719bb4b1a1ca299b571e29e2f3c0bbfeab4fc194",
+  "cleanup": "task-owned subprocess exited; sandbox evidence root removed after recording",
+  "ownedInstallationRemoved": true
+}
