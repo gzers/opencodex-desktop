@@ -1,0 +1,69 @@
+{
+  "date": "2026-11-07",
+  "timezone": "Asia/Shanghai",
+  "role": "L4",
+  "documentSHA": "fc3e3b672c583ab2e4d0292b04e6851c4df4c65f",
+  "specifiedCodeBaseline": "47eb7cf7420ba9127f4d7047e4d83231f826035f",
+  "contributionHead": "381f44d1499c5c54613df0c82ae33c5c0f0af8c9",
+  "codeTreeIdenticalToBaseline": true,
+  "baselineIsAncestor": true,
+  "workingTreeClean": true,
+  "nativeProductChangesThisBatch": false,
+  "originalArtifactChecksums": [
+    {
+      "path": "preflight-42314822371.zip",
+      "sha256": "26a55dcff684bcf63214fc3f5a3b68db983b9ac41906021e78181dc5eddda859",
+      "size_bytes": 109472
+    },
+    {
+      "path": "preflight-42315398563.zip",
+      "sha256": "da4d5bde9c6142e04d740db6b66206c7eab243ee75d0d4a5889bd8bbefc1437b",
+      "size_bytes": 112007
+    }
+  ],
+  "preflightEvidenceAudit": {
+    "result": "pass-evidence-audit-only",
+    "originalZipHashesVerified": true,
+    "failedPreflightRun": 42314822371,
+    "failedPreflightPreserved": true,
+    "successfulPreflightRun": 42315398563,
+    "nativeExitIntegerZeroVerified": true,
+    "nativeExitAuthority": "retained-CreateProcess-handle",
+    "ordinaryIdentityVerified": true,
+    "accountAndProfileCleanupVerified": true,
+    "allDaclAndSourceRestorationVerified": true,
+    "testBinaryCount": 1,
+    "stdoutParentTestsPassed": 2,
+    "stdoutExactChildTestsPassed": 1,
+    "fullProductPassed": false,
+    "twoSidProductPassed": false,
+    "installersPassed": false,
+    "doctestsPassed": false,
+    "accountsCreatedLocally": false,
+    "archiveMemberProgramsExecuted": false
+  },
+  "localStaticChecks": {
+    "ordinary": 130,
+    "twoUser": 113,
+    "nativeExecuted": false,
+    "twoUserSourceUnchangedBetween1adAnd47": true
+  },
+  "activeRunHandles": [
+    {
+      "runId": 42314821774,
+      "jobId": 128224754074,
+      "source": "1ad1bf5b3534dac74e370b7f626539dd1a9ebf55"
+    },
+    {
+      "runId": 42315908693,
+      "jobId": 128228320764,
+      "source": "47eb7cf7420ba9127f4d7047e4d83231f826035f"
+    }
+  ],
+  "fullSoftwareAcceptance": false,
+  "twoSidProductAcceptance": false,
+  "installerAcceptance": false,
+  "releasePerformed": false,
+  "priorCleanupBlock": "retained unchanged; no retry",
+  "localDailyConfigurationChanged": false
+}

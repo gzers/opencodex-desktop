@@ -1,0 +1,431 @@
+{
+  "type": "live-run-snapshot-not-completion",
+  "runs": [
+    {
+      "runId": 42314821774,
+      "jobs": [
+        {
+          "id": 128224754074,
+          "name": "package",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_id": 42314821774,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Run actions/checkout@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Read candidate version",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Verify process-token evidence and all Windows smoke syntax",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Run actions/setup-node@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Run dtolnay/rust-toolchain@stable",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Verify strict bundle identity checks",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Run Swatinem/rust-cache@v2",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Install pinned CLI and frontend",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "Stage complete 0.2.23 offline runtime",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10
+            },
+            {
+              "name": "Freeze and record dependency resolution",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11
+            },
+            {
+              "name": "Windows regression with the package lock",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 12
+            },
+            {
+              "name": "Preserve elevated private creation boundary",
+              "status": "pending",
+              "conclusion": null,
+              "number": 13
+            },
+            {
+              "name": "Preserve native credential protection evidence",
+              "status": "pending",
+              "conclusion": null,
+              "number": 14
+            },
+            {
+              "name": "Build NSIS and MSI candidates",
+              "status": "pending",
+              "conclusion": null,
+              "number": 15
+            },
+            {
+              "name": "Install, verify final EXE and uninstall on isolated runner",
+              "status": "pending",
+              "conclusion": null,
+              "number": 16
+            },
+            {
+              "name": "Stage exact complete program for two real user accounts",
+              "status": "pending",
+              "conclusion": null,
+              "number": 17
+            },
+            {
+              "name": "Verify two-user runner guard and fixture contracts",
+              "status": "pending",
+              "conclusion": null,
+              "number": 18
+            },
+            {
+              "name": "Verify simultaneous real SID managers and actual runtime ports",
+              "status": "pending",
+              "conclusion": null,
+              "number": 19
+            },
+            {
+              "name": "Upload verified Windows installers",
+              "status": "pending",
+              "conclusion": null,
+              "number": 20
+            },
+            {
+              "name": "Preserve package evidence",
+              "status": "pending",
+              "conclusion": null,
+              "number": 21
+            },
+            {
+              "name": "Post Run Swatinem/rust-cache@v2",
+              "status": "pending",
+              "conclusion": null,
+              "number": 40
+            },
+            {
+              "name": "Post Run actions/setup-node@v5",
+              "status": "pending",
+              "conclusion": null,
+              "number": 41
+            },
+            {
+              "name": "Post Run actions/checkout@v5",
+              "status": "pending",
+              "conclusion": null,
+              "number": 42
+            }
+          ]
+        },
+        {
+          "id": 128224755368,
+          "name": "retention023",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_id": 42314821774,
+          "logs_url": null,
+          "steps": null
+        },
+        {
+          "id": 128224755505,
+          "name": "ordinary-preflight",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_id": 42314821774,
+          "logs_url": null,
+          "steps": null
+        },
+        {
+          "id": 128224755589,
+          "name": "native-ui",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_id": 42314821774,
+          "logs_url": null,
+          "steps": null
+        },
+        {
+          "id": 128224755639,
+          "name": "process-exit",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_id": 42314821774,
+          "logs_url": null,
+          "steps": null
+        },
+        {
+          "id": 128224757052,
+          "name": "query-etw",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_id": 42314821774,
+          "logs_url": null,
+          "steps": null
+        },
+        {
+          "id": 128224810635,
+          "name": "retention",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_id": 42314821774,
+          "logs_url": null,
+          "steps": null
+        }
+      ]
+    },
+    {
+      "runId": 42315908693,
+      "jobs": [
+        {
+          "id": 128228320764,
+          "name": "package",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_id": 42315908693,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Run actions/checkout@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Read candidate version",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Verify process-token evidence and all Windows smoke syntax",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Run actions/setup-node@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Run dtolnay/rust-toolchain@stable",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Verify strict bundle identity checks",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Run Swatinem/rust-cache@v2",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Install pinned CLI and frontend",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "Stage complete 0.2.23 offline runtime",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10
+            },
+            {
+              "name": "Freeze and record dependency resolution",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11
+            },
+            {
+              "name": "Windows regression with the package lock",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 12
+            },
+            {
+              "name": "Preserve elevated private creation boundary",
+              "status": "pending",
+              "conclusion": null,
+              "number": 13
+            },
+            {
+              "name": "Preserve native credential protection evidence",
+              "status": "pending",
+              "conclusion": null,
+              "number": 14
+            },
+            {
+              "name": "Build NSIS and MSI candidates",
+              "status": "pending",
+              "conclusion": null,
+              "number": 15
+            },
+            {
+              "name": "Install, verify final EXE and uninstall on isolated runner",
+              "status": "pending",
+              "conclusion": null,
+              "number": 16
+            },
+            {
+              "name": "Stage exact complete program for two real user accounts",
+              "status": "pending",
+              "conclusion": null,
+              "number": 17
+            },
+            {
+              "name": "Verify two-user runner guard and fixture contracts",
+              "status": "pending",
+              "conclusion": null,
+              "number": 18
+            },
+            {
+              "name": "Verify simultaneous real SID managers and actual runtime ports",
+              "status": "pending",
+              "conclusion": null,
+              "number": 19
+            },
+            {
+              "name": "Upload verified Windows installers",
+              "status": "pending",
+              "conclusion": null,
+              "number": 20
+            },
+            {
+              "name": "Preserve package evidence",
+              "status": "pending",
+              "conclusion": null,
+              "number": 21
+            },
+            {
+              "name": "Post Run Swatinem/rust-cache@v2",
+              "status": "pending",
+              "conclusion": null,
+              "number": 40
+            },
+            {
+              "name": "Post Run actions/setup-node@v5",
+              "status": "pending",
+              "conclusion": null,
+              "number": 41
+            },
+            {
+              "name": "Post Run actions/checkout@v5",
+              "status": "pending",
+              "conclusion": null,
+              "number": 42
+            }
+          ]
+        },
+        {
+          "id": 128228321991,
+          "name": "process-exit",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_id": 42315908693,
+          "logs_url": null,
+          "steps": null
+        },
+        {
+          "id": 128228322001,
+          "name": "retention023",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_id": 42315908693,
+          "logs_url": null,
+          "steps": null
+        },
+        {
+          "id": 128228322116,
+          "name": "ordinary-preflight",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_id": 42315908693,
+          "logs_url": null,
+          "steps": null
+        },
+        {
+          "id": 128228322237,
+          "name": "native-ui",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_id": 42315908693,
+          "logs_url": null,
+          "steps": null
+        },
+        {
+          "id": 128228322339,
+          "name": "retention",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_id": 42315908693,
+          "logs_url": null,
+          "steps": null
+        },
+        {
+          "id": 128228322532,
+          "name": "query-etw",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_id": 42315908693,
+          "logs_url": null,
+          "steps": null
+        }
+      ]
+    }
+  ]
+}
