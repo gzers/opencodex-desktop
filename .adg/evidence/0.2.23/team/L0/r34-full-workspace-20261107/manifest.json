@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "source": "54c5198a5 plus tested added admission assertions committed as 9305d5941 and formatted as 4a90213bb",
+  "result": "pass",
+  "command": "cargo test --locked --workspace --features integration-test --no-fail-fast",
+  "recordedResultGroups": 52,
+  "passed": 2202,
+  "failed": 0,
+  "ignored": 37,
+  "ignoredMeaning": "retained platform or explicitly admitted fixture entries; no skip added to obtain success",
+  "sourceBoundary": "later dd7080068 changes only Windows receive handle access and is not claimed Windows-native verified here",
+  "files": [
+    {
+      "path": "ocxd023-repair-full-workspace-mac.log",
+      "bytes": 268742,
+      "sha256": "5c81f7ed6c72bf75523746e36effd43b4ebd2b3a88422a9f145f99c6bca1d66a"
+    },
+    {
+      "path": "ocxd023-windows-repairs-doc.log",
+      "bytes": 347,
+      "sha256": "94f48fa70fa58489f8e3ef43eefaaf825ab95600fc66db57f86091260aef4007"
+    }
+  ]
+}
