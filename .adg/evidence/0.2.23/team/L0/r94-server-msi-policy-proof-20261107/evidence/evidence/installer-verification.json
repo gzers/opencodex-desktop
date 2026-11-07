@@ -1,0 +1,39 @@
+{
+  "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+  "sourceCommit": "3d45558c1e76fa326852318ce899987be408b9fb",
+  "builtExecutableSha256": "7d2157f6ca785379304fa52a11997496116d58e0370c08e9d3e76decf0a2077c",
+  "version": "0.2.23",
+  "codeSigned": false,
+  "releaseAccepted": false,
+  "result": "fail",
+  "installers": [],
+  "installationOwnerToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 7996,
+    "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+    "creationTimeUtc": "2026-11-07T12:24:30.9081567Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-07T12:24:32.2130549Z"
+  },
+  "installationOwnerProfile": "C:\\Users\\ocxaccfa154f3a",
+  "installerPolicies": [
+    {
+      "DisableMSI": null,
+      "exists": false,
+      "path": "HKLM:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+      "AlwaysInstallElevated": null,
+      "DisableUserInstalls": null
+    },
+    {
+      "DisableMSI": null,
+      "exists": false,
+      "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+      "AlwaysInstallElevated": null,
+      "DisableUserInstalls": null
+    }
+  ],
+  "defaultInstallChecks": [],
+  "error": "Installer failed with exit code 1625"
+}

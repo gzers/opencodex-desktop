@@ -1,0 +1,23 @@
+{
+  "run": 42371784397,
+  "job": 128401236807,
+  "source": "3f269d4edd047727487decda2b8324f133ffb3b6",
+  "terminal": "failure",
+  "rootCause": "installation normalizes prefix path separators, resolver rebuilds same launcher from mixed fixed root; byte comparison of equivalent Windows paths mismatches",
+  "actualEvidence": "install-terminal-2.91.0.json retains package activation proof, original launcher text, succeeded install history and unresolved source with program consistency=mismatch",
+  "fixSource": "61944fc82",
+  "fix": "Windows entry_script normalizes slash to native separator before quoting; fixed node/package/entry proof, digests and exact byte comparison remain",
+  "regression": "Windows actual-files full manifest/activation+RuntimeHandle resolution fixture and tamper negative, plus percent/quotes/argv separator equivalence",
+  "local": "cargo check and fmt passed; original launcher tests executing, actual Windows test/native acceptance still required",
+  "currentIntegration": "ace51ce57ef426497dae16668d4acb626cb1fe87",
+  "productAppsTree": "cf7ca5b19438d9157ada555d0451f91d768b1cf9",
+  "nativeRun": 42372658543,
+  "fullCandidateRun": 42372671422,
+  "artifact": {
+    "id": 13574621109,
+    "apiBytes": 779199,
+    "apiSha256": "9141ba442093cfa5c54cec9e72a5c0a74a44d5387033dad60484e9682444843a",
+    "wholeZipLocallyHashed": false
+  },
+  "releaseAcceptance": false
+}

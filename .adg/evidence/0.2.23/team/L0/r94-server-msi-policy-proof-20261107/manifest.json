@@ -1,0 +1,24 @@
+{
+  "run": 42372275617,
+  "job": 128402680142,
+  "harness": "d1c751149",
+  "originalPackageSource": "3d45558c1e76fa326852318ce899987be408b9fb",
+  "terminal": "failure",
+  "rootCause": "actual Windows Installer service log Machine policy DisableMsi=1, AlwaysInstallElevated=0, per-user unmanaged MSI returns1625 before product execution; HKLM/HKCU explicit values absent confirms Server default",
+  "ordinaryTokenPreserved": true,
+  "accountProfileCleanup": "removed true in original evidence",
+  "originalFailurePreserved": true,
+  "successNotClaimed": true,
+  "followupSource": "ace51ce57",
+  "followup": "explicit disposable GitHub-hosted Server client-equivalent fixture sets only DisableMSI0, records absent/key/type/original value, always restores and exact readback; application remains ordinary SID, no AlwaysInstallElevated/privilege/product protection changes",
+  "rawOriginalDiagnosticRun": 42372695040,
+  "newFullCandidateRun": 42372671422,
+  "rawReplayCannotReplaceFinalSuccessfulCandidate": true,
+  "artifact": {
+    "id": 13573613370,
+    "apiBytes": 6460,
+    "apiSha256": "886367d85a36f8c7cf62df8044772a8e83e4fd78f91049aa99742624c086207f",
+    "wholeZipLocallyHashed": false
+  },
+  "releaseAcceptance": false
+}
