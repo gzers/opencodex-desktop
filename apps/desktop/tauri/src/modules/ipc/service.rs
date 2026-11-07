@@ -1180,9 +1180,9 @@ where
         .admit()
         .map_err(|_| IpcErrorCode::TargetStateConflict)?;
     let audit = super::audit::AuditStore::with_writers(&root, writers);
-    tauri::async_runtime::spawn(async move {
+    tokio::spawn(async move {
         let _admission = admission;
-        let result = tauri::async_runtime::spawn(async move { task().await })
+        let result = tokio::spawn(async move { task().await })
             .await
             .unwrap_or(Err(IpcErrorCode::InternalError));
         crate::commands::run_readonly("CLI update query audit", move || {

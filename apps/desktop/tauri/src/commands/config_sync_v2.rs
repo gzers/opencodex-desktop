@@ -52,7 +52,7 @@ where
         None
     };
     let runtime = tokio::runtime::Handle::current();
-    tauri::async_runtime::spawn_blocking(move || {
+    tokio::task::spawn_blocking(move || {
         let _admission = admission;
         runtime.block_on(future)
     })
