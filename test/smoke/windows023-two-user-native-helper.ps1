@@ -573,6 +573,18 @@ function Invoke-TwoUserChild([string]$InputFile) {
  Write-TwoUserJson (Join-Path $out 'installation-copy.json') $copy
  $exe=Join-Path $installed $c.executableName;$cli=Join-Path $installed 'ocxd.exe'
  $root=Join-Path $nativeProfile '.codex-desktop/desktop';$nativeHome=Join-Path $nativeProfile '.codex-desktop/opencodex/home'
+ # Read-only access facts for the exact actual ordinary profile. No provisioning
+ # or repairs; compare drive-relative prefix and anchored root explicitly.
+ $accessFacts=@()
+ foreach($path in @(([IO.Path]::GetPathRoot($installed).TrimEnd([char]92)),[IO.Path]::GetPathRoot($installed),$nativeProfile,$installed,$root,(Join-Path $installed 'runtime-bundle'),(Join-Path $installed 'runtime-bundle/runtime-bundle.manifest.json'))){
+  try{$file=Get-Item -LiteralPath $path -Force -ErrorAction Stop;$accessFacts+=@{path=$path;exists=$true;resolved=$file.FullName;attributes=$file.Attributes.ToString();directory=$file.PSIsContainer;length=$(if(!$file.PSIsContainer){$file.Length}else{$null})}}
+  catch{$accessFacts+=@{path=$path;exists=$false;errorType=$_.Exception.GetType().FullName;error=$_.Exception.Message}}
+ }
+ $descriptor=Join-Path $installed 'runtime-bundle/runtime-bundle.manifest.json'
+ $descriptorHash=(Get-FileHash -LiteralPath $descriptor).Hash.ToLowerInvariant()
+ $binary=[IO.File]::ReadAllBytes($exe)
+ $pinPresent=[Text.Encoding]::ASCII.GetString($binary).Contains($descriptorHash)
+ Write-TwoUserJson (Join-Path $out 'bundle-read-access.json') @{facts=$accessFacts;descriptorSha256=$descriptorHash;descriptorPinPresentInActualExe=$pinPresent;readOnly=$true}
  $ledger=[Collections.Generic.Dictionary[int,object]]::new();$manager=$null;$runtimeState=@{service=$null;completed=$false;cooperativeStopFailed=$false}
  $result=[ordered]@{ephemeralGuard=$c.ephemeralGuard;sid=$sid;profile=$nativeProfile;processHome=$env:USERPROFILE;localAppData=$env:LOCALAPPDATA;desktopRoot=$root;opencodexHome=$nativeHome;installation=$installed;result='fail';runtimeProxyVerification='not-verified';verifyRuntimePorts=($c.verifyRuntimePorts -eq $true);sandbox=$false}
  $start={
