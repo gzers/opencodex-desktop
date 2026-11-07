@@ -50,6 +50,7 @@ $receipt=Invoke-SweepCheck $recordDirectory $Step $Name {
    & npm --prefix apps/desktop/ui ci *> (Join-Path $evidence 'npm-ci.log');if($LASTEXITCODE -ne 0){throw 'Frontend dependency install failed'}
    & npm --prefix apps/desktop/ui run build *> (Join-Path $evidence 'frontend-build.log');if($LASTEXITCODE -ne 0){throw 'Frontend build failed'}
    & cargo build --manifest-path apps/desktop/tauri/Cargo.toml --locked --features custom-protocol --bins --jobs 2 *> (Join-Path $evidence 'native-build.log');if($LASTEXITCODE -ne 0){throw 'Current native binary build failed'}
+   & rustc --edition 2021 test/smoke/sweep/filesystem.rs -o (Join-Path $env:OCXD_SWEEP_PROGRAM 'sweep-filesystem.exe') *> (Join-Path $evidence 'filesystem-probe-build.log');if($LASTEXITCODE -ne 0){throw 'Test-only filesystem observer build failed'}
    foreach($file in @('opencodex-desktop.exe','ocxd.exe')){Copy-Item -LiteralPath (Join-Path $repo ('apps/desktop/tauri/target/debug/'+$file)) -Destination $env:OCXD_SWEEP_PROGRAM}
    @{source=(git -C $repo rev-parse HEAD).Trim();appsTree=(git -C $repo rev-parse HEAD:apps).Trim();profile='debug custom-protocol; diagnostic-only';files=@(Get-ChildItem $env:OCXD_SWEEP_PROGRAM -File|ForEach-Object{@{name=$_.Name;sha256=(Get-FileHash $_.FullName).Hash.ToLowerInvariant()}})}
   }

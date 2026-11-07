@@ -553,6 +553,10 @@ function Invoke-TwoUserRuntimeSession($Context,$App,$Ledger,[string]$RuntimePref
   }
  }
 }
+function Get-TwoUserDiagnosticStartupState([object[]]$States){
+ $failed=@($States|Where-Object {$_.failed})
+ @{ready=($States.Count -eq 2 -and @($States|Where-Object {$_.failed -or !$_.ready}).Count -eq 0);allSettled=($States.Count -eq 2 -and @($States|Where-Object {!$_.failed -and !$_.ready}).Count -eq 0);failedSids=@($failed|ForEach-Object {$_.sid})}
+}
 function Invoke-TwoUserSweepCheck([string]$Name,[scriptblock]$Action){
  if(!$c.diagnosticSweep){return & $Action}
  $record=[ordered]@{name=$Name;status='fail';accepted=$false;diagnosticOnly=$true;firstError=''}
@@ -619,6 +623,7 @@ function Invoke-TwoUserChild([string]$InputFile) {
    $listeners=@(Get-NetTCPConnection -State Listen -LocalPort $app.port -ErrorAction SilentlyContinue)
    if(!$listeners.Count){Start-Sleep -Milliseconds 250}
   }while(!$listeners.Count -and [datetime]::UtcNow -lt $cdpDeadline)
+  Add-TwoUserDescendants $app.fact $ledger
   if(!$listeners.Count -or @($listeners|Where-Object {!$ledger.ContainsKey([int]$_.OwningProcess) -or $_.LocalAddress -notin @('127.0.0.1','::1')}).Count){throw 'NotReady: CDP listener is not owned by this Manager tree'}
   foreach($listenerFact in $listeners){$null=Assert-TwoUserLive $ledger[[int]$listenerFact.OwningProcess]}
   $info=[Diagnostics.ProcessStartInfo]::new();$info.FileName=$c.node;$info.UseShellExecute=$false;$info.RedirectStandardOutput=$true;$info.RedirectStandardError=$true
@@ -647,6 +652,133 @@ function Invoke-TwoUserChild([string]$InputFile) {
   [pscustomobject]@{facts=$facts;window=$window;directory=$evidence;token=$token}
  }
  try{
+  if($c.diagnosticSweep){
+   $observed=@{initial=$null}
+   $manager=& $start
+   # Real SID/token/window is independent of the WebView diagnostic endpoint.
+   $windowDeadline=[datetime]::UtcNow.AddSeconds(40);$liveWindow=$null
+   do{try{$liveWindow=Get-TwoUserWindow $manager.fact}catch{Start-Sleep -Milliseconds 250}}while(!$liveWindow -and [datetime]::UtcNow -lt $windowDeadline)
+   if(!$liveWindow){throw 'NotReady: actual own Manager window missing'}
+   $actualToken=Get-WindowsProcessToken -Process $manager.process -ExpectedExecutable $exe
+   Assert-WindowsProcessMode -Observation $actualToken -Mode ordinary
+   Write-TwoUserJson (Join-Path $out 'diagnostic-startup.json') @{sid=$sid;manager=$manager.fact;window=$liveWindow;token=$actualToken;accepted=$false}
+   Invoke-TwoUserSweepCheck 'native-observation' {$observed.initial=& $screen $manager 'initial';$observed.initial.facts}|Out-Null
+   $initial=$observed.initial
+   Invoke-TwoUserSweepCheck 'private-bundle-supply' {
+    $failedSupply=@(Get-Content -LiteralPath (Join-Path $root 'logs/app.log') -ErrorAction SilentlyContinue|Select-String 'integrated runtime provisioning failed'|Select-Object -Last 1)
+    if($failedSupply.Count){throw $failedSupply[0].Line}
+    if(!$initial){throw 'Actual supply observation unavailable: native CDP failed; app logs retain any actual bundle failure'}
+    if($initial.facts.paths.program.consistency -cne 'consistent' -or $initial.facts.paths.runtimeEntry.status -cne 'valid' -or $initial.facts.paths.runtimePrefix.status -cne 'valid' -or $initial.facts.runtime.kind -cne 'managed'){throw 'Actual private first-start runtime supply is not consistent/managed'}
+    $initial.facts.paths.program
+   }|Out-Null
+   Invoke-TwoUserSweepCheck 'runtime-readiness' {
+    if(!$initial -or $initial.facts.environment.value.gate -cne 'ready'){throw ('Actual production readiness not verified: '+$initial.facts.environment.error.message)}
+    $initial.facts.environment
+   }|Out-Null
+   Invoke-TwoUserSweepCheck 'path-snapshot' {
+    if(!$initial){throw 'Actual path-snapshot IPC unavailable; filesystem pointers do not substitute for a snapshot'}
+    if(!(Test-TwoUserSamePath $initial.facts.paths.desktopRoot.path $root) -or !(Test-TwoUserSamePath $initial.facts.paths.opencodexHome.path $nativeHome)){throw 'Actual path snapshot escaped own Profile'}
+    $initial.facts.paths
+   }|Out-Null
+   # CLI test preference may be written only after the real product created its
+   # own structure2/pointer/log. No ready/runtime state is injected here.
+   $pointer=Join-Path $root 'manager-location.json';$metadata=Join-Path $root 'manager-state/data-root.json'
+   $location=Get-Content -LiteralPath $pointer -Raw|ConvertFrom-Json;$meta=Get-Content -LiteralPath $metadata -Raw|ConvertFrom-Json
+   if($location.schemaVersion -ne 1 -or !(Test-TwoUserSamePath $location.activeRoot (Join-Path $nativeProfile '.codex-desktop')) -or $meta.structure_version -cne '2'){throw 'Actual own pointer/structure2 prerequisite missing; no preference mutation'}
+   $appLog=Join-Path $root 'logs/app.log'
+   if(!(Get-Content -LiteralPath $appLog -Raw).Contains('commit='+$c.commit)){throw 'Actual own Manager source provenance differs'}
+   Add-TwoUserDescendants $manager.fact $ledger
+   foreach($fact in @($ledger.Values|Sort-Object {[long]$_.creationTicks} -Descending)){Stop-TwoUserTracked $fact};$ledger.Clear();$manager.process.Dispose()
+   $prefs=Join-Path $root 'manager-state/preferences.json'
+   $document=if(Test-Path -LiteralPath $prefs){Get-Content -LiteralPath $prefs -Raw|ConvertFrom-Json -AsHashtable}else{@{schema_version=2}}
+   $document.cli=@{cli_enabled=$true};$document.shell=@{auto_panel=$false;launch_main=$true;launch_with_codex=$false};$document.updates=@{app_update_auto_check=$false}
+   $document|ConvertTo-Json -Depth 12|Set-Content -LiteralPath $prefs -Encoding utf8
+   $manager=& $start
+   $windowDeadline=[datetime]::UtcNow.AddSeconds(40);$liveWindow=$null
+   do{try{$liveWindow=Get-TwoUserWindow $manager.fact}catch{Start-Sleep -Milliseconds 250}}while(!$liveWindow -and [datetime]::UtcNow -lt $windowDeadline)
+   if(!$liveWindow){throw 'NotReady: actual restarted own Manager window missing'}
+   $actualToken=Get-WindowsProcessToken -Process $manager.process -ExpectedExecutable $exe
+   Assert-WindowsProcessMode -Observation $actualToken -Mode ordinary
+   $live=@{window=$liveWindow;token=$actualToken}
+  Invoke-TwoUserSweepCheck 'same-user-ipc' {
+  $same=Invoke-TwoUserCli $cli @('status','--json');Write-TwoUserJson (Join-Path $out 'same-user-status.json') $same
+  $data=Invoke-TwoUserCli $cli @('data-root','show','--json')
+  if(!(Test-TwoUserSamePath $data.data.active_data_root $root) -or !(Test-TwoUserSamePath $data.data.opencodex_home $nativeHome)){throw 'Candidate CLI uses another D/H'}
+  Write-TwoUserJson (Join-Path $out 'same-user-data-root.json') $data
+  $pipe=Get-TwoUserPipeName $sid;$own=[IO.Pipes.NamedPipeClientStream]::new('.',$pipe,[IO.Pipes.PipeDirection]::InOut)
+  try{$own.Connect(5000);[uint32]$serverId=0
+   if(![OcxTwoUserWindow]::GetNamedPipeServerProcessId($own.SafePipeHandle.DangerousGetHandle(),[ref]$serverId) -or $serverId -ne $manager.fact.pid){throw 'Actual product pipe server PID differs'}
+  }finally{$own.Dispose()}
+  }|Out-Null
+  $pipe=Get-TwoUserPipeName $sid
+  Add-Type -AssemblyName System.Security.Cryptography.ProtectedData
+  $plain=[Security.Cryptography.RandomNumberGenerator]::GetBytes(32)
+  try{
+   $cipher=[Security.Cryptography.ProtectedData]::Protect($plain,$null,[Security.Cryptography.DataProtectionScope]::CurrentUser)
+   $ownPlain=[Security.Cryptography.ProtectedData]::Unprotect($cipher,$null,[Security.Cryptography.DataProtectionScope]::CurrentUser)
+   if([Convert]::ToBase64String($plain) -cne [Convert]::ToBase64String($ownPlain)){throw 'Own DPAPI readback failed'}
+   [Array]::Clear($ownPlain,0,$ownPlain.Length);[IO.File]::WriteAllBytes((Join-Path $out 'synthetic-dpapi.bin'),$cipher)
+  }finally{[Array]::Clear($plain,0,$plain.Length)}
+
+   $result.manager=$manager.fact;$result.window=$liveWindow;$result.applicationToken=$actualToken;$result.pipe=Get-TwoUserPipeName $sid
+   $result.accepted=$false;$result.diagnosticOnly=$true
+   $result.runtimeReady=(Get-Content -LiteralPath (Join-Path $out 'sweep-runtime-readiness.json') -Raw|ConvertFrom-Json).status -ceq 'pass'
+   Write-TwoUserJson (Join-Path $out 'ready.json') $result
+   $peerFile=Join-Path $out 'peer.json';$deadline=[datetime]::UtcNow.AddSeconds(720)
+   while(!(Test-Path -LiteralPath $peerFile)){
+    if(Test-Path -LiteralPath (Join-Path $out 'stop')){throw 'Actual peer startup incomplete'}
+    if([datetime]::UtcNow -gt $deadline){throw 'Peer deadline'}
+    Add-TwoUserDescendants $manager.fact $ledger;Start-Sleep -Milliseconds 250
+   }
+  $peer=Get-Content -LiteralPath $peerFile -Raw|ConvertFrom-Json
+  if($peer.sid -ceq $sid -or $peer.pipe -cne (Get-TwoUserPipeName $peer.sid)){throw 'Peer identity differs'}
+  Invoke-TwoUserSweepCheck 'peer-business-data' {
+  $peerDataDenied=$false
+  try{$peerFileHandle=[IO.File]::Open($peer.privateFile,'Open','Read','ReadWrite');$peerFileHandle.Dispose()}catch [UnauthorizedAccessException]{$peerDataDenied=$true}
+  if(!$peerDataDenied){throw 'Other account actual business data was readable'}
+  $result.peerBusinessData='access-denied'
+  }|Out-Null
+  Invoke-TwoUserSweepCheck 'cross-user-ipc' {
+  $peerStream=[IO.Pipes.NamedPipeClientStream]::new('.',$peer.pipe,[IO.Pipes.PipeDirection]::InOut);$denied=$false
+  try{$peerStream.Connect(3000)}catch [UnauthorizedAccessException]{$denied=$true}
+  catch [IO.IOException]{if(($_.Exception.HResult -band 0xffff) -eq 5){$denied=$true}else{throw 'NotReady: peer pipe denial unproven'}}
+  finally{$peerStream.Dispose()}
+  if(!$denied){throw 'Other SID pipe accepted or denial unproven'}
+  $result.crossPipe='access-denied-real-token';$result.crossPipeServer=$peer.manager.pid
+  }|Out-Null
+  Invoke-TwoUserSweepCheck 'cross-user-dpapi' {
+  $dpapiDenied=$false;$peerBytes=[IO.File]::ReadAllBytes($peer.cipher)
+  try{$unexpected=[Security.Cryptography.ProtectedData]::Unprotect($peerBytes,$null,[Security.Cryptography.DataProtectionScope]::CurrentUser);[Array]::Clear($unexpected,0,$unexpected.Length)}catch [Security.Cryptography.CryptographicException]{$dpapiDenied=$true}
+  if(!$dpapiDenied){throw 'Other SID synthetic DPAPI accepted'}
+  $result.dpapi='own-roundtrip-and-peer-denied-synthetic-subscope-only'
+  }|Out-Null
+  Invoke-TwoUserSweepCheck 'same-sid-single-instance' {
+  $before=@{};foreach($f in @($pointer,$metadata)){$before[$f]=(Get-FileHash -LiteralPath $f).Hash}
+  $lockFile=Join-Path $root 'manager-state/app.lock';$lockBefore=Get-Item -LiteralPath $lockFile
+  $duplicateInfo=[Diagnostics.ProcessStartInfo]::new();$duplicateInfo.FileName=$exe;$duplicateInfo.WorkingDirectory=$installed;$duplicateInfo.UseShellExecute=$false
+  foreach($key in @('OPENCODEX_SANDBOX','OPENCODEX_SANDBOX_ROOT','OPENCODEX_WINDOWS_SMOKE_CDP_PORT','HOME','OPENCODEX_HOME','CODEX_HOME','WEBVIEW2_USER_DATA_FOLDER','WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS')){[void]$duplicateInfo.Environment.Remove($key)}
+  $duplicateProcess=[Diagnostics.Process]::Start($duplicateInfo)
+  try{[void]$duplicateProcess.Handle
+   if(!$duplicateProcess.WaitForExit(20000)){$dupFact=Get-TwoUserProcessFact $duplicateProcess $sid;$ledger[[int]$dupFact.pid]=$dupFact;throw 'Same-SID second Manager remained alive'}
+   if($duplicateProcess.ExitCode -eq 0){throw 'Second Manager did not report rejection'}
+   $duplicatePid=$duplicateProcess.Id;$duplicateExit=$duplicateProcess.ExitCode
+  }finally{$duplicateProcess.Dispose()}
+  $null=Assert-TwoUserLive $manager.fact;$after=Get-TwoUserWindow $manager.fact
+  if($after.handle -cne $live.window.handle){throw 'Original window changed'}
+  foreach($f in @($pointer,$metadata)){if((Get-FileHash -LiteralPath $f).Hash -cne $before[$f]){throw 'Duplicate changed pointer/metadata'}}
+  $lockAfter=Get-Item -LiteralPath $lockFile
+  if($lockBefore.Length -ne $lockAfter.Length -or $lockBefore.LastWriteTimeUtc -ne $lockAfter.LastWriteTimeUtc){throw 'Duplicate changed lock metadata'}
+  $result.duplicate=[ordered]@{rejected=$true;secondPid=$duplicatePid;secondExitCode=$duplicateExit;originalPid=$manager.fact.pid;originalWindowUnchanged=$true;pointerMetadataHashUnchanged=$true;lockSizeAndWriteTimeUnchanged=$true;lockContentHash='unavailable-while-byte-range-lock-held'}
+  }|Out-Null
+
+   $result.result='diagnostic-only';Write-TwoUserJson (Join-Path $out 'checked.json') $result
+   if($c.verifyRuntimePorts -eq $true -and $result.runtimeReady){
+    Invoke-TwoUserRuntimeSession $c $manager $ledger ($initial.facts.paths.runtimePrefix.path -replace '^\\\\\?\\','') $runtimeState
+    if(!$runtimeState.completed){throw 'Actual runtime protocol not completed'}
+    $result.runtimeProxyVerification='verified-runtime-ports'
+   }
+   while(!(Test-Path -LiteralPath (Join-Path $out 'stop'))){if([datetime]::UtcNow -gt $deadline){throw 'Controller stop deadline'};Add-TwoUserDescendants $manager.fact $ledger;Start-Sleep -Milliseconds 250}
+  }else{
   # Let the real product initialize structure2 before editing isolated CLI prefs.
   $manager=& $start;$initial=& $screen $manager 'initial'
   if($initial.facts.cliEnabled -ne $false){throw 'Default CLI was enabled'}
@@ -751,6 +883,7 @@ function Invoke-TwoUserChild([string]$InputFile) {
    $result.runtimeProxyVerification='verified-runtime-ports'
   }
   while(!(Test-Path -LiteralPath (Join-Path $out 'stop'))){if([datetime]::UtcNow -gt $deadline){throw 'Controller stop deadline'};Add-TwoUserDescendants $manager.fact $ledger;Start-Sleep -Milliseconds 250}
+  }
  }catch{
   $result.failureKind=$_.Exception.GetType().FullName;$result.failureLine=$_.InvocationInfo.ScriptLineNumber
   $result.failureCode=if($_.Exception.Message.StartsWith('NotReady:')){$_.Exception.Message}else{'Native identity/UI/IPC/cleanup assertion failed; inspect stage and retained evidence'}
@@ -762,12 +895,19 @@ function Invoke-TwoUserChild([string]$InputFile) {
    try{Stop-TwoUserTracked $fact;$cleanup+=@{process=$fact;result='stopped-or-exited'}}catch{$cleanup+=@{process=$fact;result='retained-unproven'};$result.result='cleanup-failed'}
   }
   $result.cleanup=$cleanup
+  if($c.diagnosticSweep){foreach($stage in @('private-bundle-supply','runtime-readiness','path-snapshot','same-user-ipc','peer-business-data','cross-user-ipc','cross-user-dpapi','same-sid-single-instance')){
+   $path=Join-Path $out ('sweep-'+$stage+'.json')
+   if(!(Test-Path -LiteralPath $path)){Write-TwoUserJson $path @{name=$stage;status='fail';firstError=('Unmet actual identity/startup prerequisite: '+$result.failureCode);accepted=$false;diagnosticOnly=$true}}
+  }}
   $logDirectory=Join-Path $root 'logs'
   if(Test-Path -LiteralPath $logDirectory){
    $retainedLogs=Join-Path $out 'application-logs';New-Item -ItemType Directory -Path $retainedLogs|Out-Null
    foreach($file in @(Get-ChildItem -LiteralPath $logDirectory -File -Filter '*.log'|Select-Object -First 32)){
     if($file.Length -le 8MB -and !($file.Attributes -band [IO.FileAttributes]::ReparsePoint)){Copy-Item -LiteralPath $file.FullName -Destination (Join-Path $retainedLogs $file.Name)}
    }
+  }
+  if($c.diagnosticSweep -and (Test-Path -LiteralPath (Join-Path $installed 'sweep-filesystem.exe'))){
+   try{& (Join-Path $installed 'sweep-filesystem.exe') $installed $root *> (Join-Path $out 'filesystem-observations.log')}catch{$result.filesystemObserverError=$_.Exception.GetType().FullName}
   }
   $programDiagnostics=Join-Path $out 'program-diagnostics';New-Item -ItemType Directory -Force $programDiagnostics|Out-Null
   foreach($relative in @('.runtime-bundle-failure.json','.runtime-bundle-pending.json','runtime-bundle/runtime-bundle.manifest.json','runtime/opencodex/.runtime-manifest.json')){

@@ -19,3 +19,11 @@ $c.diagnosticSweep=$false;$rejected=$false
 try{Invoke-TwoUserSweepCheck 'legacy' {throw 'original assertion'}|Out-Null}catch{$rejected=$true}
 if(!$rejected){throw 'Normal acceptance assertion was swallowed'}
 Write-Output 'PASS: wrappers continue, refuse overwrite, and preserve normal strict assertions'
+
+$busy=Get-TwoUserDiagnosticStartupState @(@{sid='A';failed=$true;ready=$false},@{sid='B';failed=$false;ready=$false})
+if($busy.ready -or $busy.allSettled){throw 'One failed SID prematurely stopped the independently running second SID'}
+$settled=Get-TwoUserDiagnosticStartupState @(@{sid='A';failed=$true;ready=$false},@{sid='B';failed=$false;ready=$true})
+if($settled.ready -or !$settled.allSettled -or $settled.failedSids.Count -ne 1){throw 'Failed SID became ready or settled independent result was lost'}
+$both=Get-TwoUserDiagnosticStartupState @(@{sid='A';failed=$false;ready=$true},@{sid='B';failed=$false;ready=$true})
+if(!$both.ready -or !$both.allSettled -or $both.failedSids.Count){throw 'Two real ready coordination receipts were not handled'}
+Write-Output 'PASS: real controller state function waits for the independent SID and never converts failure to ready'

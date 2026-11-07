@@ -102,13 +102,20 @@ try {
  if($taskAccounts[0].sid -ceq $taskAccounts[1].sid){throw 'Two distinct real SIDs required'}
  $deadline=[datetime]::UtcNow.AddSeconds(600)
  do{
-  $ready=$true
+  $startupStates=@()
   foreach($account in $taskAccounts){
-   if($account.process.HasExited){throw 'NotReady: ordinary child exited before both Managers were ready'}
+   $failed=$account.process.HasExited -or (Test-Path -LiteralPath (Join-Path $account.evidence 'failure.json'))
+   if($failed){
+    if(!$DiagnosticSweep){throw 'NotReady: ordinary child exited or reported failure before both Managers ready'}
+    $startupStates+=@{sid=$account.sid;failed=$true;ready=$false};continue
+   }
    Add-TwoUserDescendants $account.fact $taskLedger
-   if(Test-Path -LiteralPath (Join-Path $account.evidence 'failure.json')){throw 'NotReady: child reported native failure'}
-   $ready=$ready -and (Test-Path -LiteralPath (Join-Path $account.evidence 'ready.json'))
+   $hasReady=Test-Path -LiteralPath (Join-Path $account.evidence 'ready.json')
+   $startupStates+=@{sid=$account.sid;failed=$false;ready=$hasReady}
   }
+  $startupState=Get-TwoUserDiagnosticStartupState $startupStates
+  $ready=$startupState.ready
+  if($DiagnosticSweep -and $startupState.allSettled -and $startupState.failedSids.Count){throw 'NotReady: at least one actual SID failed; other SID startup was allowed to finish independently'}
   if([datetime]::UtcNow -gt $deadline){throw 'NotReady: two-profile native startup deadline'}
   if(!$ready){Start-Sleep -Milliseconds 500}
  }while(!$ready)
