@@ -185,6 +185,10 @@ jobs:
           path: test/out/windows-raw-candidate
           if-no-files-found: error
           retention-days: 14
+      - name: Prepare disposable Server MSI client-equivalent fixture
+        id: msi_server_fixture
+        run: |
+          & ../../../test/smoke/windows-msi-server-fixture.ps1 -Mode prepare -EvidenceDirectory ../../../test/out/windows-candidate
       - name: Install, verify final EXE and uninstall on isolated runner
         run: |
           & ../../../test/smoke/windows-installer.ps1 -BundleDirectory target/release/bundle -BuiltExecutable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-candidate
@@ -234,6 +238,10 @@ jobs:
             apps/desktop/tauri/target/release/bundle/nsis/*-setup.exe
             apps/desktop/tauri/target/release/bundle/msi/*.msi
             test/out/windows-candidate/installer-verification.json
+      - name: Restore exact Server MSI policy
+        if: always()
+        run: |
+          if(Test-Path ../../../test/out/windows-candidate/msi-server-policy.original.json){ & ../../../test/smoke/windows-msi-server-fixture.ps1 -Mode restore -EvidenceDirectory ../../../test/out/windows-candidate }
       - name: Preserve package evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -651,6 +659,9 @@ jobs:
         run: |
           python test/smoke/windows023-retention-ci-admit.py $env:OCXD_INSTALLER_KIND --scenario $env:OCXD_INSTALLER_SCENARIO --candidate-run $env:OCXD_CANDIDATE_RUN --candidate-attempt $env:OCXD_CANDIDATE_ATTEMPT --candidate-head $env:OCXD_CANDIDATE_HEAD --artifact-id $env:OCXD_ARTIFACT_ID --artifact-bytes $env:OCXD_ARTIFACT_BYTES --artifact-sha256 $env:OCXD_ARTIFACT_SHA256
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Prepare disposable Server MSI client-equivalent fixture
+        id: retention_msi_fixture
+        run: ./test/smoke/windows-msi-server-fixture.ps1 -Mode prepare -EvidenceDirectory test/out/windows023-installer-retention
       - name: Verify actual default upgrade uninstall and reinstall
         run: |
           foreach ($taskName in @('GITHUB_TOKEN','GH_TOKEN','ACTIONS_RUNTIME_TOKEN','ACTIONS_ID_TOKEN_REQUEST_TOKEN')) {
@@ -658,6 +669,9 @@ jobs:
           }
           & test/smoke/windows023-installer-retention.ps1 -AdmissionPath test/out/windows023-installer-retention/admission.json -Execute
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Restore exact Server MSI policy
+        if: always()
+        run: if(Test-Path test/out/windows023-installer-retention/msi-server-policy.original.json){ & ./test/smoke/windows-msi-server-fixture.ps1 -Mode restore -EvidenceDirectory test/out/windows023-installer-retention }
       - name: Preserve admission execution and cleanup evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -686,13 +700,17 @@ jobs:
           run-id: 42365850198
           name: windows-raw-installers-unverified-3d45558c1e76fa326852318ce899987be408b9fb
           path: test/out/raw-msi3d/input
+      - name: Prepare disposable Server MSI client-equivalent fixture
+        id: raw_msi_fixture
+        shell: pwsh
+        run: ./test/smoke/windows-msi-server-fixture.ps1 -Mode prepare -EvidenceDirectory test/out/raw-msi3d/evidence
       - name: Verify exact raw originals then diagnose one default MSI installation
         shell: pwsh
         run: |
           $root=(Resolve-Path test/out/raw-msi3d/input).Path
           $receipt=Get-Content -LiteralPath (Join-Path $root 'build-identities.json') -Raw|ConvertFrom-Json
           $expected='3d45558c1e76fa326852318ce899987be408b9fb'
-          if($receipt.source -cne $expected -or $receipt.appsTree -cne (git rev-parse HEAD:apps).Trim() -or $receipt.status -cne 'unverified-build-only' -or $receipt.installationAccepted -or $receipt.releaseAccepted -or @($receipt.files).Count -ne 3){throw 'Unverified original identity differs'}
+          if($receipt.source -cne $expected -or $receipt.appsTree -cne '95ca3f35cd29919bba22ec6d84bd867c2f35fc54' -or $receipt.status -cne 'unverified-build-only' -or $receipt.installationAccepted -or $receipt.releaseAccepted -or @($receipt.files).Count -ne 3){throw 'Unverified original identity differs'}
           foreach($file in $receipt.files){
             if($file.name -notin @('opencodex-desktop.exe','OpenCodeX Desktop_0.2.23_x64-setup.exe','OpenCodeX Desktop_0.2.23_x64_en-US.msi')){throw 'Unexpected original file'}
             $path=Join-Path $root $file.name
@@ -703,6 +721,10 @@ jobs:
           Copy-Item -LiteralPath (Join-Path $root 'OpenCodeX Desktop_0.2.23_x64_en-US.msi') -Destination (Join-Path $bundle 'msi')
           & test/smoke/windows-installer.ps1 -BundleDirectory $bundle -BuiltExecutable (Join-Path $root 'opencodex-desktop.exe') -Node (Get-Command node).Source -OutputDirectory test/out/raw-msi3d/evidence -ExpectedCommit $expected -Kind msi -Mode default
           if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+      - name: Restore exact Server MSI policy
+        if: always()
+        shell: pwsh
+        run: if(Test-Path test/out/raw-msi3d/evidence/msi-server-policy.original.json){ & ./test/smoke/windows-msi-server-fixture.ps1 -Mode restore -EvidenceDirectory test/out/raw-msi3d/evidence }
       - uses: actions/upload-artifact@v4
         if: always()
         with:
