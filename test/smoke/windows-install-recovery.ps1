@@ -3,7 +3,8 @@ param(
  [Parameter(Mandatory=$true)][string]$Node,
  [Parameter(Mandatory=$true)][string]$NpmCli,
  [Parameter(Mandatory=$true)][string]$OutputDirectory,
- [string]$DriverNode=''
+ [string]$DriverNode='',
+ [ValidateSet('','paths','install','query')][string]$SweepProbe=''
 )
 $ErrorActionPreference='Stop'
 if(!$IsWindows){throw 'Native Windows required'}
@@ -72,11 +73,13 @@ try{
  $taskOut=$taskProcess.StandardOutput.ReadToEndAsync()
  $taskErr=$taskProcess.StandardError.ReadToEndAsync()
  # The protocol client needs Node >=24; the app uses the explicit native Node above.
- & $taskDriver (Join-Path $PSScriptRoot 'windows-install-recovery.mjs') "http://127.0.0.1:$taskPort" $taskOutput $taskSandbox $taskDependencyContract *> (Join-Path $taskOutput 'execution.log')
+ $taskScript=if($SweepProbe){Join-Path $PSScriptRoot 'sweep/native.mjs'}else{Join-Path $PSScriptRoot 'windows-install-recovery.mjs'}
+ & $taskDriver $taskScript "http://127.0.0.1:$taskPort" $taskOutput $taskSandbox $taskDependencyContract $SweepProbe *> (Join-Path $taskOutput 'execution.log')
  if($LASTEXITCODE -ne 0){throw 'Native WebView install/recovery assertions failed; see execution.log'}
  $taskRecord.result='pass'
 }finally{
  if($taskProcess -and !$taskProcess.HasExited){$taskProcess.Kill($true);$taskProcess.WaitForExit()}
+ if($SweepProbe -and $taskProcess){$taskRecord.cleanup=@{method='retained Process handle exited; scoped child-tree kill only if still running';pid=$taskProcess.Id;image=$taskExe;handleHasExited=$taskProcess.HasExited;exitCode=$taskProcess.ExitCode};if(!$taskProcess.HasExited){throw 'Native diagnostic owned process exit unproved'}}
  if($taskProcess){
   [IO.File]::WriteAllText((Join-Path $taskOutput 'application-stdout.log'),$taskOut.GetAwaiter().GetResult())
   [IO.File]::WriteAllText((Join-Path $taskOutput 'application-stderr.log'),$taskErr.GetAwaiter().GetResult())
