@@ -1,0 +1,313 @@
+{
+  "date": "2026-11-07",
+  "timezone": "Asia/Shanghai",
+  "role": "L4",
+  "type": "original-run-terminal-log-audit-with-unavailable-large-ZIP",
+  "runId": 42314821774,
+  "jobId": 128224754074,
+  "sourceSHA": "1ad1bf5b3534dac74e370b7f626539dd1a9ebf55",
+  "conclusion": "failure",
+  "jobs": [
+    {
+      "id": 128224754074,
+      "name": "package",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 42314821774,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Read candidate version",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Verify process-token evidence and all Windows smoke syntax",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Verify strict bundle identity checks",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Run Swatinem/rust-cache@v2",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Install pinned CLI and frontend",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Stage complete 0.2.23 offline runtime",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Freeze and record dependency resolution",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Windows regression with the package lock",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 12
+        },
+        {
+          "name": "Preserve elevated private creation boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Preserve native credential protection evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Build NSIS and MSI candidates",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15
+        },
+        {
+          "name": "Install, verify final EXE and uninstall on isolated runner",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16
+        },
+        {
+          "name": "Stage exact complete program for two real user accounts",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17
+        },
+        {
+          "name": "Verify two-user runner guard and fixture contracts",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Verify simultaneous real SID managers and actual runtime ports",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 19
+        },
+        {
+          "name": "Upload verified Windows installers",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 20
+        },
+        {
+          "name": "Preserve package evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21
+        },
+        {
+          "name": "Post Run Swatinem/rust-cache@v2",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 40
+        },
+        {
+          "name": "Post Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 41
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 43
+        }
+      ]
+    },
+    {
+      "id": 128224755368,
+      "name": "retention023",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42314821774,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 128224755505,
+      "name": "ordinary-preflight",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42314821774,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 128224755589,
+      "name": "native-ui",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42314821774,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 128224755639,
+      "name": "process-exit",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42314821774,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 128224757052,
+      "name": "query-etw",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42314821774,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 128224810635,
+      "name": "retention",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42314821774,
+      "logs_url": null,
+      "steps": null
+    }
+  ],
+  "observedOrdinaryResult": {
+    "result": "fail",
+    "stage": "run-ordinary-suite",
+    "nativeSuiteExecuted": true,
+    "allBinariesAttempted": false,
+    "exitCode": 1,
+    "failureCode": null,
+    "failureType": null,
+    "failureLine": null,
+    "rootCauseEstablished": false
+  },
+  "specializedNativeChecks": {
+    "privateCreation": {
+      "passed": 13,
+      "failed": 0,
+      "ignored": 0
+    },
+    "providerAuth": {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    "channelRename": {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    "nativeSecureStore": {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    }
+  },
+  "actualElevatedOwnerEvidence": {
+    "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-500",
+    "tokenDefaultOwner": "S-1-5-32-544",
+    "createdOwner": "S-1-5-21-3289802278-1561746829-1498425070-500",
+    "elevated": true,
+    "strictForeignOwnerRefusalPreserved": true
+  },
+  "artifact": {
+    "id": 13551564465,
+    "name": "windows-candidate-evidence",
+    "size_in_bytes": 715027912,
+    "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/artifacts/13551564465",
+    "archive_download_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/artifacts/13551564465/zip",
+    "expired": false,
+    "created_at": "2026-11-07T00:44:26Z",
+    "expires_at": "2026-11-21T00:43:49Z",
+    "updated_at": "2026-11-07T00:44:26Z",
+    "digest": "sha256:9e9d131185e25deeb5b21cc131d6a00dbf6de68b204fb6b38dcc42be54aeac06",
+    "workflow_run": {
+      "id": 42314821774,
+      "repository_id": 1369202675,
+      "head_repository_id": 1369202675,
+      "head_branch": "codex/0.2.23-integration",
+      "head_sha": "1ad1bf5b3534dac74e370b7f626539dd1a9ebf55"
+    }
+  },
+  "largeZip": {
+    "localDownloadVerified": false,
+    "reason": "direct repository API redirect URLError/DNS; connector explicitly refuses 715027912 > 536870912 bytes",
+    "partialFileCreated": false,
+    "extracted": false
+  },
+  "cleanupAuthority": "Unverified: internal ordinary/cleanup receipts not acquired; job conclusion or successful specialized tests are insufficient",
+  "finalAcceptance": false,
+  "installationPassed": false,
+  "twoSidProductPassed": false,
+  "noRerunOrCancellation": true,
+  "liveFollowups": [
+    {
+      "runId": 42315908693,
+      "jobId": 128228320764,
+      "sourceSHA": "47eb7cf7420ba9127f4d7047e4d83231f826035f",
+      "status": "in_progress",
+      "step": "Windows regression with the package lock"
+    },
+    {
+      "runId": 42319738998,
+      "jobId": 128241109814,
+      "sourceHead": "05d14a41dafaabcc7d4accce57d7762d6ef0213f",
+      "status": "in_progress",
+      "strictClippy": "success",
+      "step": "Windows backend regression"
+    }
+  ]
+}
