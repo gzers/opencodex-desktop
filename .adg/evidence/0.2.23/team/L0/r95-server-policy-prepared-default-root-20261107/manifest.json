@@ -1,0 +1,16 @@
+{
+  "run": 42372695040,
+  "job": 128403907309,
+  "harness": "ace51ce57ef426497dae16668d4acb626cb1fe87",
+  "packageSource": "3d45558c1e76fa326852318ce899987be408b9fb",
+  "terminal": "failure",
+  "serverPrerequisite": "actual MSI installer accepted with only DisableMSI0 temporary fixture",
+  "policyRestore": "passed; original key/value absent restored, AlwaysInstallElevated untouched",
+  "actualInstallDirectory": "MSI log INSTALLDIR and ARPINSTALLLOCATION are actual test ordinaryUser/AppData/Local/Programs/OpenCodeX Desktop with trailing native slash",
+  "failure": "harness TrimEnd only removed forward slash, causing same actual default directory to be falsely rejected before startup",
+  "productDirectoryDefectProven": false,
+  "followup": "76b0def8c exact-owner comparison normalizes separator spelling and trailing native slash; refuses sibling/child/otherUser/relative paths; also records observed/expected roots",
+  "followupLocalTests": "14 PowerShell source/matrix/owner-root contract checks passed",
+  "newRawReplayRun": "pending dispatch; exact same raw source bytes only",
+  "releaseAcceptance": false
+}
