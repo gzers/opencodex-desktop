@@ -1,0 +1,34 @@
+{
+  "run": 42374536779,
+  "job": 128409324782,
+  "source": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+  "terminal": "failure",
+  "passed": [
+    "complete49 ordinarytest binaries/cleanup",
+    "elevatedprivatecreation",
+    "nativecredentials",
+    "NSIS+MSI MSVCcompletebuilds",
+    "MSIdefaultordinaryowner install/nativefirstscreen/uninstall",
+    "MSIcustom install/nativefirstscreen/explicitcleanup/uninstall/dataretention",
+    "NSIScustom install/nativefirstscreen/explicitcleanup/uninstall/dataretention"
+  ],
+  "failure": "last NSISdefault owner-root comparison retained old TrimEnd forwardslash-only expression; same actualowner root trailingnative slash falsely rejected",
+  "twoSid": "not reached; not accepted",
+  "serverPolicyAndAccountProfileCleanup": "actual originals retained in respectiveJSON",
+  "followup": "2e270 fixes second missed branch; AST test now requires both defaultMSI andNSIS calls same helper;15checks passed",
+  "rawOriginalArtifact": {
+    "id": 13577507433,
+    "apiBytes": 584313173,
+    "apiSha256": "ca43a85209e5a122b7bbca8763f208a189f58f89d95752c89ab921b8ad0ef2f2",
+    "notVerified": true
+  },
+  "evidenceArtifact": {
+    "id": 13576859132,
+    "apiBytes": 632717,
+    "apiSha256": "1b00474652b8419e48f047326d609444dbda25de444578e3988747b0d5415056",
+    "wholeZipLocallyHashed": false
+  },
+  "rawFullDiagnostic": 42381246428,
+  "newFullCandidate": "dispatch pending; no repeated product change",
+  "releaseAcceptance": false
+}
