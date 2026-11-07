@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: {"exceptionId":1,"text":"Uncaught (in promise)","lineNumber":0,"columnNumber":0,"exception":{"type":"object","className":"Object","description":"Object","objectId":"700134332887032475.2.1","preview":{"type":"object","description":"Object","overflow":false,"properties":[{"name":"code","type":"number","value":"14"},{"name":"message","type":"string","value":"managed runtime operation failed: discovery_runtime_unresolved; 当前 Desktop 集成安装根尚未就绪，未检查旧环境"}]}}}
+    at file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-webview.mjs:87:3 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v26.8.1
+WebView smoke failed: 1
+at <ScriptBlock>, D:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-startup.ps1: line 133
+at <ScriptBlock>, D:\a\opencodex-desktop\opencodex-desktop\test\out\native-replay414\evidence\ordinary-child.ps1: line 72

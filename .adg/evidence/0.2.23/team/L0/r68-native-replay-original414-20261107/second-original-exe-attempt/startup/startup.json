@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 2,
+  "mode": "ordinary",
+  "harnessToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 7184,
+    "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+    "creationTimeUtc": "2026-11-07T08:19:12.7159176Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-07T08:19:14.1330285Z"
+  },
+  "applicationToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 7120,
+    "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\native-replay414\\input\\opencodex-desktop.exe",
+    "creationTimeUtc": "2026-11-07T08:19:14.1445988Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-07T08:19:14.1603173Z"
+  },
+  "applicationTokenVerified": false,
+  "applicationModeMatched": false,
+  "result": "fail",
+  "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\native-replay414\\input\\opencodex-desktop.exe",
+  "sha256": "4cf2f44e737024ab6ec599217839d90e926b83bed0551ab9a2b3e1b568081265",
+  "homeRemoved": true,
+  "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\native-replay414\\evidence\\startup\\sandbox-4e9f35bb5bfb43cfbe84842f7c2a0b1f",
+  "observedSeconds": 30,
+  "cdpPort": 51567,
+  "expectedCommit": "01032c5df1c6b8de849a9999a20a9e9b2d5efb3b",
+  "sourceCommitMatched": true,
+  "mainWindowPresent": true,
+  "pid": 7120,
+  "responding": true,
+  "error": "WebView smoke failed: 1"
+}

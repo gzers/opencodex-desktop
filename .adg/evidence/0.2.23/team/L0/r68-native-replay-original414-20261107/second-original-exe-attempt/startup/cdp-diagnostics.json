@@ -1,0 +1,47 @@
+{
+  "endpoint": "http://127.0.0.1:51567",
+  "startedAt": "2026-11-07T08:19:44.752Z",
+  "phase": "invoke",
+  "attempts": [
+    {
+      "at": "2026-11-07T08:19:44.753Z",
+      "version": {
+        "status": 200
+      },
+      "list": {
+        "status": 200
+      }
+    }
+  ],
+  "lastVersion": {
+    "Browser": "Edg/156.0.4314.58",
+    "File-Path-Style": "windows",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+    "V8-Version": "15.6.12.10",
+    "WebKit-Version": "537.36 (@7806b68d20d1c1273d5b07b4f4de18e8f5852581)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:51567/devtools/browser/1f169187-c022-490a-b00a-3210fbce7f7d"
+  },
+  "lastTargets": [
+    {
+      "description": "",
+      "devtoolsFrontendUrl": "https://aka.ms/docs-landing-page/serve_rev/@7806b68d20d1c1273d5b07b4f4de18e8f5852581/inspector.html?ws=127.0.0.1:51567/devtools/page/2AA162FACDB31F0F0F05D21A69372F03",
+      "id": "2AA162FACDB31F0F0F05D21A69372F03",
+      "title": "OpenCodeX Desktop",
+      "type": "page",
+      "url": "http://tauri.localhost/#overview",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:51567/devtools/page/2AA162FACDB31F0F0F05D21A69372F03"
+    }
+  ],
+  "result": "fail",
+  "target": {
+    "description": "",
+    "devtoolsFrontendUrl": "https://aka.ms/docs-landing-page/serve_rev/@7806b68d20d1c1273d5b07b4f4de18e8f5852581/inspector.html?ws=127.0.0.1:51567/devtools/page/2AA162FACDB31F0F0F05D21A69372F03",
+    "id": "2AA162FACDB31F0F0F05D21A69372F03",
+    "title": "OpenCodeX Desktop",
+    "type": "page",
+    "url": "http://tauri.localhost/#overview",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:51567/devtools/page/2AA162FACDB31F0F0F05D21A69372F03"
+  },
+  "error": "{\"exceptionId\":1,\"text\":\"Uncaught (in promise)\",\"lineNumber\":0,\"columnNumber\":0,\"exception\":{\"type\":\"object\",\"className\":\"Object\",\"description\":\"Object\",\"objectId\":\"700134332887032475.2.1\",\"preview\":{\"type\":\"object\",\"description\":\"Object\",\"overflow\":false,\"properties\":[{\"name\":\"code\",\"type\":\"number\",\"value\":\"14\"},{\"name\":\"message\",\"type\":\"string\",\"value\":\"managed runtime operation failed: discovery_runtime_unresolved; 当前 Desktop 集成安装根尚未就绪，未检查旧环境\"}]}}}"
+}

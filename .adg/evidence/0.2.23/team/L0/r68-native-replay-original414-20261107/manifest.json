@@ -1,0 +1,33 @@
+{
+  "productSource": "414d62bab35060e8aa2011300dab926a66727946",
+  "originalImage": {
+    "run": 42347427165,
+    "artifact": 13566576723,
+    "checkedCommit": "01032c5df1c6b8de849a9999a20a9e9b2d5efb3b",
+    "requestedHead": "414d62bab35060e8aa2011300dab926a66727946",
+    "appsTree": "95ca3f35cd29919bba22ec6d84bd867c2f35fc54",
+    "bytes": 17220096,
+    "sha256": "4cf2f44e737024ab6ec599217839d90e926b83bed0551ab9a2b3e1b568081265"
+  },
+  "attempts": [
+    {
+      "run": 42354432076,
+      "toolSource": "e9a00510e",
+      "result": "fail before product launch; artifact downloaded into extra name directory; candidate.json not found",
+      "successor": "9cb044cfe adds explicit merge-multiple layout"
+    },
+    {
+      "run": 42354668479,
+      "toolSource": "9cb044cfe353ab88cd6fde0722e8978d020ceb88",
+      "result": "fail at environment query; actual ordinary app token, main window, responding and exact source commit passed; typed discovery_runtime_unresolved propagated",
+      "productDefectProved": false,
+      "rootCause": "smoke requested ready from sandbox runtime; lib.rs sandbox uses isolated program and skips automatic integrated runtime provisioning",
+      "successor": "2e872a805 records only typed 023 unresolved/pending as actual not-ready, never creates ready; unrelated errors still fail",
+      "tray": "Access denied remains observed; not asserted resolved"
+    }
+  ],
+  "latestRun": 42355237929,
+  "latestResult": "pending",
+  "installerReadinessAndTwoSidPorts": "still require real normal-mode complete candidate; sandbox native probe not substituted",
+  "finalAcceptance": false
+}

@@ -1,0 +1,404 @@
+﻿2026-11-07T08:15:12.6014320Z Current runner version: '2.338.2'
+2026-11-07T08:15:12.6041693Z ##[group]Runner Image Provisioner
+2026-11-07T08:15:12.6042542Z Hosted Compute Agent
+2026-11-07T08:15:12.6043087Z Version: 20261103.629
+2026-11-07T08:15:12.6043825Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-07T08:15:12.6044900Z Build Date: 2026-11-03T17:26:59Z
+2026-11-07T08:15:12.6045548Z Worker ID: {43c87231-c3d1-4f5c-ba1f-f579f5d93b02}
+2026-11-07T08:15:12.6046203Z Region: westus
+2026-11-07T08:15:12.6046706Z Cloud: Azure
+2026-11-07T08:15:12.6047177Z ##[endgroup]
+2026-11-07T08:15:12.6048572Z ##[group]Operating System
+2026-11-07T08:15:12.6049236Z Microsoft Windows Server 2025
+2026-11-07T08:15:12.6049795Z 10.0.26100
+2026-11-07T08:15:12.6050249Z Datacenter
+2026-11-07T08:15:12.6050716Z ##[endgroup]
+2026-11-07T08:15:12.6051206Z ##[group]Runner Image
+2026-11-07T08:15:12.6051719Z Image: windows-2025-vs2026
+2026-11-07T08:15:12.6052285Z Version: 20261103.298.1
+2026-11-07T08:15:12.6053683Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+2026-11-07T08:15:12.6055695Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+2026-11-07T08:15:12.6056601Z ##[endgroup]
+2026-11-07T08:15:12.6057744Z ##[group]GITHUB_TOKEN Permissions
+2026-11-07T08:15:12.6059540Z Actions: read
+2026-11-07T08:15:12.6060162Z Contents: read
+2026-11-07T08:15:12.6060671Z Metadata: read
+2026-11-07T08:15:12.6061221Z ##[endgroup]
+2026-11-07T08:15:12.6063547Z Secret source: Actions
+2026-11-07T08:15:12.6064391Z Cache mode: write
+2026-11-07T08:15:12.6065093Z Prepare workflow directory
+2026-11-07T08:15:12.6421946Z Prepare all required actions
+2026-11-07T08:15:12.6482153Z Getting action download info
+2026-11-07T08:15:12.9829152Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+2026-11-07T08:15:13.1184625Z Download action repository 'actions/setup-node@v5' (SHA:a0853c24544627f65ddf259abe73b1d18a591444)
+2026-11-07T08:15:13.3021700Z Download action repository 'actions/download-artifact@v4' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+2026-11-07T08:15:13.7542966Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-07T08:15:14.1231273Z Complete job name: native-replay414
+2026-11-07T08:15:14.2991153Z ##[group]Run actions/checkout@v5
+2026-11-07T08:15:14.2992637Z with:
+2026-11-07T08:15:14.2993108Z   fetch-depth: 0
+2026-11-07T08:15:14.2993668Z   repository: gzers/opencodex-desktop
+2026-11-07T08:15:14.2997907Z   token: ***
+2026-11-07T08:15:14.2998452Z   ssh-strict: true
+2026-11-07T08:15:14.2999044Z   ssh-user: git
+2026-11-07T08:15:14.2999578Z   persist-credentials: true
+2026-11-07T08:15:14.3000149Z   clean: true
+2026-11-07T08:15:14.3000734Z   sparse-checkout-cone-mode: true
+2026-11-07T08:15:14.3001398Z   fetch-tags: false
+2026-11-07T08:15:14.3001967Z   show-progress: true
+2026-11-07T08:15:14.3002525Z   lfs: false
+2026-11-07T08:15:14.3003049Z   submodules: false
+2026-11-07T08:15:14.3003619Z   set-safe-directory: true
+2026-11-07T08:15:14.3004224Z   allow-unsafe-pr-checkout: false
+2026-11-07T08:15:14.3005153Z ##[endgroup]
+2026-11-07T08:15:14.4579624Z Syncing repository: gzers/opencodex-desktop
+2026-11-07T08:15:14.4582832Z ##[group]Getting Git version info
+2026-11-07T08:15:14.4584290Z Working directory is 'D:\a\opencodex-desktop\opencodex-desktop'
+2026-11-07T08:15:14.5515607Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-07T08:15:14.8641817Z git version 2.56.0.windows.4
+2026-11-07T08:15:14.8696965Z ##[endgroup]
+2026-11-07T08:15:14.8717428Z Temporarily overriding HOME='D:\a\_temp\2fa3fb4b-aa82-4f5d-8fac-cf52984cefc5' before making global git config changes
+2026-11-07T08:15:14.8720709Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-07T08:15:14.8728301Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+2026-11-07T08:15:14.9363706Z Deleting the contents of 'D:\a\opencodex-desktop\opencodex-desktop'
+2026-11-07T08:15:14.9370400Z ##[group]Initializing the repository
+2026-11-07T08:15:14.9379275Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\opencodex-desktop\opencodex-desktop
+2026-11-07T08:15:15.0180916Z Initialized empty Git repository in D:/a/opencodex-desktop/opencodex-desktop/.git/
+2026-11-07T08:15:15.0228923Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/gzers/opencodex-desktop
+2026-11-07T08:15:15.1007443Z ##[endgroup]
+2026-11-07T08:15:15.1008505Z ##[group]Disabling automatic garbage collection
+2026-11-07T08:15:15.1017262Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-07T08:15:15.1421270Z ##[endgroup]
+2026-11-07T08:15:15.1423268Z ##[group]Setting up auth
+2026-11-07T08:15:15.1424966Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-07T08:15:15.1830802Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-07T08:15:16.6116065Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-07T08:15:16.6584057Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-07T08:15:17.2349748Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-07T08:15:17.2746543Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-07T08:15:17.8747745Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-07T08:15:17.9135444Z ##[endgroup]
+2026-11-07T08:15:17.9136130Z ##[group]Fetching the repository
+2026-11-07T08:15:17.9150400Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-11-07T08:18:37.8060089Z From https://github.com/gzers/opencodex-desktop
+2026-11-07T08:18:37.8062258Z  * [new branch]        ci-logs                    -> origin/ci-logs
+2026-11-07T08:18:37.8066228Z  * [new branch]        codex/0.1.10-windows-mesh-initial-size -> origin/codex/0.1.10-windows-mesh-initial-size
+2026-11-07T08:18:37.8068275Z  * [new branch]        codex/0.2.14-file-models   -> origin/codex/0.2.14-file-models
+2026-11-07T08:18:37.8070039Z  * [new branch]        codex/0.2.15-channel-consumers -> origin/codex/0.2.15-channel-consumers
+2026-11-07T08:18:37.8071165Z  * [new branch]        codex/0.2.16-channel-save  -> origin/codex/0.2.16-channel-save
+2026-11-07T08:18:37.8073244Z  * [new branch]        codex/0.2.17-windows-install -> origin/codex/0.2.17-windows-install
+2026-11-07T08:18:37.8074525Z  * [new branch]        codex/0.2.20-all-dialog-states -> origin/codex/0.2.20-all-dialog-states
+2026-11-07T08:18:37.8075919Z  * [new branch]        codex/0.2.20-close-protected-import -> origin/codex/0.2.20-close-protected-import
+2026-11-07T08:18:37.8077239Z  * [new branch]        codex/0.2.20-compact-typography -> origin/codex/0.2.20-compact-typography
+2026-11-07T08:18:37.8078491Z  * [new branch]        codex/0.2.20-detail-navigation-zoom -> origin/codex/0.2.20-detail-navigation-zoom
+2026-11-07T08:18:37.8079844Z  * [new branch]        codex/0.2.20-dialog-menu-position -> origin/codex/0.2.20-dialog-menu-position
+2026-11-07T08:18:37.8081521Z  * [new branch]        codex/0.2.20-dialog-qa-fixtures -> origin/codex/0.2.20-dialog-qa-fixtures
+2026-11-07T08:18:37.8082919Z  * [new branch]        codex/0.2.20-discard-cancelled-export-plan -> origin/codex/0.2.20-discard-cancelled-export-plan
+2026-11-07T08:18:37.8087670Z  * [new branch]        codex/0.2.20-extension-detail-overflow -> origin/codex/0.2.20-extension-detail-overflow
+2026-11-07T08:18:37.8088808Z  * [new branch]        codex/0.2.20-final-candidate -> origin/codex/0.2.20-final-candidate
+2026-11-07T08:18:37.8089835Z  * [new branch]        codex/0.2.20-final-update-details -> origin/codex/0.2.20-final-update-details
+2026-11-07T08:18:37.8090953Z  * [new branch]        codex/0.2.20-import-credential-kind -> origin/codex/0.2.20-import-credential-kind
+2026-11-07T08:18:37.8092131Z  * [new branch]        codex/0.2.20-installer-acceptance-fix -> origin/codex/0.2.20-installer-acceptance-fix
+2026-11-07T08:18:37.8093411Z  * [new branch]        codex/0.2.20-installer-matrix-completeness -> origin/codex/0.2.20-installer-matrix-completeness
+2026-11-07T08:18:37.8094774Z  * [new branch]        codex/0.2.20-native-model-dialog-feedback -> origin/codex/0.2.20-native-model-dialog-feedback
+2026-11-07T08:18:37.8096145Z  * [new branch]        codex/0.2.20-notification-history-feedback -> origin/codex/0.2.20-notification-history-feedback
+2026-11-07T08:18:37.8097582Z  * [new branch]        codex/0.2.20-nsis-startup-evidence -> origin/codex/0.2.20-nsis-startup-evidence
+2026-11-07T08:18:37.8098685Z  * [new branch]        codex/0.2.20-official-diagnostics -> origin/codex/0.2.20-official-diagnostics
+2026-11-07T08:18:37.8099669Z  * [new branch]        codex/0.2.20-ota-bundle-hash -> origin/codex/0.2.20-ota-bundle-hash
+2026-11-07T08:18:37.8100932Z  * [new branch]        codex/0.2.20-owned-official-contract -> origin/codex/0.2.20-owned-official-contract
+2026-11-07T08:18:37.8102157Z  * [new branch]        codex/0.2.20-portable-preferences-scope -> origin/codex/0.2.20-portable-preferences-scope
+2026-11-07T08:18:37.8103455Z  * [new branch]        codex/0.2.20-prerelease-ota-acceptance -> origin/codex/0.2.20-prerelease-ota-acceptance
+2026-11-07T08:18:37.8104593Z  * [new branch]        codex/0.2.20-qa-report-guard -> origin/codex/0.2.20-qa-report-guard
+2026-11-07T08:18:37.8105667Z  * [new branch]        codex/0.2.20-release-notes-closeout -> origin/codex/0.2.20-release-notes-closeout
+2026-11-07T08:18:37.8106953Z  * [new branch]        codex/0.2.20-restore-dialog-ownership -> origin/codex/0.2.20-restore-dialog-ownership
+2026-11-07T08:18:37.8109149Z  * [new branch]        codex/0.2.20-secondary-dialog-coverage -> origin/codex/0.2.20-secondary-dialog-coverage
+2026-11-07T08:18:37.8110575Z  * [new branch]        codex/0.2.20-shared-execution-preference -> origin/codex/0.2.20-shared-execution-preference
+2026-11-07T08:18:37.8111949Z  * [new branch]        codex/0.2.20-sync-short-height-parity -> origin/codex/0.2.20-sync-short-height-parity
+2026-11-07T08:18:37.8113128Z  * [new branch]        codex/0.2.20-update-scale  -> origin/codex/0.2.20-update-scale
+2026-11-07T08:18:37.8113975Z  * [new branch]        codex/0.2.21-fixes         -> origin/codex/0.2.21-fixes
+2026-11-07T08:18:37.8114780Z  * [new branch]        codex/0.2.23-integration   -> origin/codex/0.2.23-integration
+2026-11-07T08:18:37.8115684Z  * [new branch]        codex/0.2.23-model-matching -> origin/codex/0.2.23-model-matching
+2026-11-07T08:18:37.8116591Z  * [new branch]        codex/0.2.23-ui            -> origin/codex/0.2.23-ui
+2026-11-07T08:18:37.8117382Z  * [new branch]        codex/0.2.23-webdav        -> origin/codex/0.2.23-webdav
+2026-11-07T08:18:37.8118194Z  * [new branch]        codex/0.2.23-windows       -> origin/codex/0.2.23-windows
+2026-11-07T08:18:37.8119333Z  * [new branch]        codex/post021-runtime-patch-handoff -> origin/codex/post021-runtime-patch-handoff
+2026-11-07T08:18:37.8120756Z  * [new branch]        codex/post021-sync-fixes   -> origin/codex/post021-sync-fixes
+2026-11-07T08:18:37.8121730Z  * [new branch]        codex/post021-windows-final -> origin/codex/post021-windows-final
+2026-11-07T08:18:37.8122757Z  * [new branch]        codex/post021-windows-materials -> origin/codex/post021-windows-materials
+2026-11-07T08:18:37.8124075Z  * [new branch]        codex/worktree-probes-20261028 -> origin/codex/worktree-probes-20261028
+2026-11-07T08:18:37.8125078Z  * [new branch]        docs/0.2.23-windows        -> origin/docs/0.2.23-windows
+2026-11-07T08:18:37.8125928Z  * [new branch]        docs/0.2.23-windows-g0     -> origin/docs/0.2.23-windows-g0
+2026-11-07T08:18:37.8126877Z  * [new branch]        docs/governance-main       -> origin/docs/governance-main
+2026-11-07T08:18:37.8127807Z  * [new branch]        docs/post021-windows-final -> origin/docs/post021-windows-final
+2026-11-07T08:18:37.8128785Z  * [new branch]        docs/post021-windows-materials -> origin/docs/post021-windows-materials
+2026-11-07T08:18:37.8129858Z  * [new branch]        feature/0.1.10-caption-diagnostics -> origin/feature/0.1.10-caption-diagnostics
+2026-11-07T08:18:37.8131060Z  * [new branch]        feature/0.1.10-empty-root-initialization -> origin/feature/0.1.10-empty-root-initialization
+2026-11-07T08:18:37.8132376Z  * [new branch]        feature/0.1.10-integration-candidate -> origin/feature/0.1.10-integration-candidate
+2026-11-07T08:18:37.8133494Z  * [new branch]        feature/0.1.10-maintenance -> origin/feature/0.1.10-maintenance
+2026-11-07T08:18:37.8134588Z  * [new branch]        feature/0.1.10-preferences-theme -> origin/feature/0.1.10-preferences-theme
+2026-11-07T08:18:37.8135718Z  * [new branch]        feature/0.1.10-release-details -> origin/feature/0.1.10-release-details
+2026-11-07T08:18:37.8136844Z  * [new branch]        feature/0.1.10-update-center-focus -> origin/feature/0.1.10-update-center-focus
+2026-11-07T08:18:37.8139212Z  * [new branch]        feature/0.1.10-windows-etw-query-threads -> origin/feature/0.1.10-windows-etw-query-threads
+2026-11-07T08:18:37.8141267Z  * [new branch]        feature/0.1.10-windows-gpu-resources -> origin/feature/0.1.10-windows-gpu-resources
+2026-11-07T08:18:37.8142522Z  * [new branch]        feature/0.1.10-windows-ipc-idle-signal -> origin/feature/0.1.10-windows-ipc-idle-signal
+2026-11-07T08:18:37.8143748Z  * [new branch]        feature/0.1.10-windows-isolation -> origin/feature/0.1.10-windows-isolation
+2026-11-07T08:18:37.8145008Z  * [new branch]        feature/0.1.10-windows-npm-cwd -> origin/feature/0.1.10-windows-npm-cwd
+2026-11-07T08:18:37.8146276Z  * [new branch]        feature/0.1.10-windows-npm-path -> origin/feature/0.1.10-windows-npm-path
+2026-11-07T08:18:37.8147353Z  * [new branch]        feature/0.1.10-windows-query-etw -> origin/feature/0.1.10-windows-query-etw
+2026-11-07T08:18:37.8148490Z  * [new branch]        feature/0.1.10-windows-query-observer -> origin/feature/0.1.10-windows-query-observer
+2026-11-07T08:18:37.8149671Z  * [new branch]        feature/0.1.10-windows-startup-pair -> origin/feature/0.1.10-windows-startup-pair
+2026-11-07T08:18:37.8151008Z  * [new branch]        feature/0.1.10-windows-transparent-icons -> origin/feature/0.1.10-windows-transparent-icons
+2026-11-07T08:18:37.8152427Z  * [new branch]        feature/0.1.10-windows-uninstall-data -> origin/feature/0.1.10-windows-uninstall-data
+2026-11-07T08:18:37.8153744Z  * [new branch]        feature/0.1.10-windows-webgl-lifetime -> origin/feature/0.1.10-windows-webgl-lifetime
+2026-11-07T08:18:37.8155162Z  * [new branch]        feature/0.1.10-windows-working-set-pages -> origin/feature/0.1.10-windows-working-set-pages
+2026-11-07T08:18:37.8156654Z  * [new branch]        feature/0.1.2-update-channel-config-layers -> origin/feature/0.1.2-update-channel-config-layers
+2026-11-07T08:18:37.8158042Z  * [new branch]        feature/0.1.3-update-channel-network -> origin/feature/0.1.3-update-channel-network
+2026-11-07T08:18:37.8159254Z  * [new branch]        feature/0.1.4-update-check-fixes -> origin/feature/0.1.4-update-check-fixes
+2026-11-07T08:18:37.8160861Z  * [new branch]        feature/0.1.5-update-check-fixes -> origin/feature/0.1.5-update-check-fixes
+2026-11-07T08:18:37.8162008Z  * [new branch]        feature/0.1.6-ota-retry    -> origin/feature/0.1.6-ota-retry
+2026-11-07T08:18:37.8163063Z  * [new branch]        feature/0.1.7-performance  -> origin/feature/0.1.7-performance
+2026-11-07T08:18:37.8164396Z  * [new branch]        feature/0.1.8-windows-fixes -> origin/feature/0.1.8-windows-fixes
+2026-11-07T08:18:37.8165535Z  * [new branch]        feature/0.1.8-windows-package -> origin/feature/0.1.8-windows-package
+2026-11-07T08:18:37.8166677Z  * [new branch]        feature/0.1.9-windows-appearance -> origin/feature/0.1.9-windows-appearance
+2026-11-07T08:18:37.8167765Z  * [new branch]        feature/0.2.0-model-config -> origin/feature/0.2.0-model-config
+2026-11-07T08:18:37.8168672Z  * [new branch]        feature/0.2.1-ui-alignment -> origin/feature/0.2.1-ui-alignment
+2026-11-07T08:18:37.8169378Z  * [new branch]        feature/0.2.18-windows-install-diagnostics -> origin/feature/0.2.18-windows-install-diagnostics
+2026-11-07T08:18:37.8170042Z  * [new branch]        feature/0.2.19-fixes       -> origin/feature/0.2.19-fixes
+2026-11-07T08:18:37.8170567Z  * [new branch]        feature/0.2.2-ui-bugs      -> origin/feature/0.2.2-ui-bugs
+2026-11-07T08:18:37.8171166Z  * [new branch]        feature/0.2.3-selector-preview -> origin/feature/0.2.3-selector-preview
+2026-11-07T08:18:37.8171731Z  * [new branch]        feature/0.2.4-fixes        -> origin/feature/0.2.4-fixes
+2026-11-07T08:18:37.8172253Z  * [new branch]        feature/0.2.5-sync-parity  -> origin/feature/0.2.5-sync-parity
+2026-11-07T08:18:37.8172863Z  * [new branch]        feature/0.2.6-agent-credentials -> origin/feature/0.2.6-agent-credentials
+2026-11-07T08:18:37.8173541Z  * [new branch]        feature/windows-query-process-tree -> origin/feature/windows-query-process-tree
+2026-11-07T08:18:37.8174283Z  * [new branch]        feature/windows-query-process-tree-red -> origin/feature/windows-query-process-tree-red
+2026-11-07T08:18:37.8175016Z  * [new branch]        feature/windows-version-probe-tree -> origin/feature/windows-version-probe-tree
+2026-11-07T08:18:37.8175757Z  * [new branch]        feature/windows-version-probe-tree-red -> origin/feature/windows-version-probe-tree-red
+2026-11-07T08:18:37.8176446Z  * [new branch]        fix/0.2.10-status-unification -> origin/fix/0.2.10-status-unification
+2026-11-07T08:18:37.8176990Z  * [new branch]        fix/0.2.11-save-flow       -> origin/fix/0.2.11-save-flow
+2026-11-07T08:18:37.8177704Z  * [new branch]        fix/0.2.12-timing-and-speed -> origin/fix/0.2.12-timing-and-speed
+2026-11-07T08:18:37.8178300Z  * [new branch]        fix/0.2.13-config-source   -> origin/fix/0.2.13-config-source
+2026-11-07T08:18:37.8178899Z  * [new branch]        fix/0.2.8-export-and-parity -> origin/fix/0.2.8-export-and-parity
+2026-11-07T08:18:37.8179390Z  * [new branch]        main                       -> origin/main
+2026-11-07T08:18:37.8179780Z  * [new tag]           beta                       -> beta
+2026-11-07T08:18:37.8180645Z  * [new tag]           promote-stable/v0.1.6      -> promote-stable/v0.1.6
+2026-11-07T08:18:37.8181143Z  * [new tag]           promote-stable/v0.1.7      -> promote-stable/v0.1.7
+2026-11-07T08:18:37.8181721Z  * [new tag]           promote-stable/v0.2.10     -> promote-stable/v0.2.10
+2026-11-07T08:18:37.8182641Z  * [new tag]           promote-stable/v0.2.11     -> promote-stable/v0.2.11
+2026-11-07T08:18:37.8183499Z  * [new tag]           promote-stable/v0.2.7      -> promote-stable/v0.2.7
+2026-11-07T08:18:37.8183963Z  * [new tag]           promote-stable/v0.2.8      -> promote-stable/v0.2.8
+2026-11-07T08:18:37.8184394Z  * [new tag]           promote-stable/v0.2.9      -> promote-stable/v0.2.9
+2026-11-07T08:18:37.8184888Z  * [new tag]           publish/v0.1.0             -> publish/v0.1.0
+2026-11-07T08:18:37.8185316Z  * [new tag]           publish/v0.1.1             -> publish/v0.1.1
+2026-11-07T08:18:37.8185744Z  * [new tag]           publish/v0.1.3             -> publish/v0.1.3
+2026-11-07T08:18:37.8186558Z  * [new tag]           publish/v0.2.10            -> publish/v0.2.10
+2026-11-07T08:18:37.8187205Z  * [new tag]           publish/v0.2.11            -> publish/v0.2.11
+2026-11-07T08:18:37.8189033Z  * [new tag]           publish/v0.2.7             -> publish/v0.2.7
+2026-11-07T08:18:37.8189778Z  * [new tag]           publish/v0.2.8             -> publish/v0.2.8
+2026-11-07T08:18:37.8190623Z  * [new tag]           publish/v0.2.9             -> publish/v0.2.9
+2026-11-07T08:18:37.8191306Z  * [new tag]           v0.1.0                     -> v0.1.0
+2026-11-07T08:18:37.8191931Z  * [new tag]           v0.1.1                     -> v0.1.1
+2026-11-07T08:18:37.8192547Z  * [new tag]           v0.1.10                    -> v0.1.10
+2026-11-07T08:18:37.8193162Z  * [new tag]           v0.1.2                     -> v0.1.2
+2026-11-07T08:18:37.8193793Z  * [new tag]           v0.1.3                     -> v0.1.3
+2026-11-07T08:18:37.8194479Z  * [new tag]           v0.1.4                     -> v0.1.4
+2026-11-07T08:18:37.8195130Z  * [new tag]           v0.1.5                     -> v0.1.5
+2026-11-07T08:18:37.8195741Z  * [new tag]           v0.1.6                     -> v0.1.6
+2026-11-07T08:18:37.8196352Z  * [new tag]           v0.1.7                     -> v0.1.7
+2026-11-07T08:18:37.8197037Z  * [new tag]           v0.1.9                     -> v0.1.9
+2026-11-07T08:18:37.8197657Z  * [new tag]           v0.2.0                     -> v0.2.0
+2026-11-07T08:18:37.8198232Z  * [new tag]           v0.2.1                     -> v0.2.1
+2026-11-07T08:18:37.8198889Z  * [new tag]           v0.2.10                    -> v0.2.10
+2026-11-07T08:18:37.8199571Z  * [new tag]           v0.2.11                    -> v0.2.11
+2026-11-07T08:18:37.8200527Z  * [new tag]           v0.2.12                    -> v0.2.12
+2026-11-07T08:18:37.8201173Z  * [new tag]           v0.2.13                    -> v0.2.13
+2026-11-07T08:18:37.8201816Z  * [new tag]           v0.2.14                    -> v0.2.14
+2026-11-07T08:18:37.8202689Z  * [new tag]           v0.2.15                    -> v0.2.15
+2026-11-07T08:18:37.8203345Z  * [new tag]           v0.2.16                    -> v0.2.16
+2026-11-07T08:18:37.8203969Z  * [new tag]           v0.2.17                    -> v0.2.17
+2026-11-07T08:18:37.8204648Z  * [new tag]           v0.2.18                    -> v0.2.18
+2026-11-07T08:18:37.8205268Z  * [new tag]           v0.2.19                    -> v0.2.19
+2026-11-07T08:18:37.8205948Z  * [new tag]           v0.2.2                     -> v0.2.2
+2026-11-07T08:18:37.8207520Z  * [new tag]           v0.2.20                    -> v0.2.20
+2026-11-07T08:18:37.8208261Z  * [new tag]           v0.2.21                    -> v0.2.21
+2026-11-07T08:18:37.8208918Z  * [new tag]           v0.2.22                    -> v0.2.22
+2026-11-07T08:18:37.8209544Z  * [new tag]           v0.2.3                     -> v0.2.3
+2026-11-07T08:18:37.8210165Z  * [new tag]           v0.2.4                     -> v0.2.4
+2026-11-07T08:18:37.8210776Z  * [new tag]           v0.2.5                     -> v0.2.5
+2026-11-07T08:18:37.8211408Z  * [new tag]           v0.2.6                     -> v0.2.6
+2026-11-07T08:18:37.8212077Z  * [new tag]           v0.2.7                     -> v0.2.7
+2026-11-07T08:18:37.8212698Z  * [new tag]           v0.2.8                     -> v0.2.8
+2026-11-07T08:18:37.8213291Z  * [new tag]           v0.2.9                     -> v0.2.9
+2026-11-07T08:18:37.8213966Z  * [new tag]           validation/0.2.20-34a3553f -> validation/0.2.20-34a3553f
+2026-11-07T08:18:37.8214789Z  * [new tag]           validation/0.2.20-bda7c92d -> validation/0.2.20-bda7c92d
+2026-11-07T08:18:37.8215664Z  * [new tag]           validation/0.2.21-9ed7b2c8 -> validation/0.2.21-9ed7b2c8
+2026-11-07T08:18:37.8218532Z [command]"C:\Program Files\Git\bin\git.exe" branch --list --remote origin/codex/0.2.23-integration
+2026-11-07T08:18:37.8639741Z   origin/codex/0.2.23-integration
+2026-11-07T08:18:37.8690751Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse refs/remotes/origin/codex/0.2.23-integration
+2026-11-07T08:18:37.9105819Z 9cb044cfe353ab88cd6fde0722e8978d020ceb88
+2026-11-07T08:18:37.9140790Z ##[endgroup]
+2026-11-07T08:18:37.9141287Z ##[group]Determining the checkout info
+2026-11-07T08:18:37.9143232Z ##[endgroup]
+2026-11-07T08:18:37.9153065Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-07T08:18:37.9621866Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-07T08:18:37.9999935Z ##[group]Checking out the ref
+2026-11-07T08:18:38.0010164Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B codex/0.2.23-integration refs/remotes/origin/codex/0.2.23-integration
+2026-11-07T08:18:38.4400888Z Switched to a new branch 'codex/0.2.23-integration'
+2026-11-07T08:18:38.4493281Z branch 'codex/0.2.23-integration' set up to track 'origin/codex/0.2.23-integration'.
+2026-11-07T08:18:38.4561291Z ##[endgroup]
+2026-11-07T08:18:38.5060355Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-07T08:18:38.5425474Z 9cb044cfe353ab88cd6fde0722e8978d020ceb88
+2026-11-07T08:18:38.5931054Z ##[group]Run actions/setup-node@v5
+2026-11-07T08:18:38.5931457Z with:
+2026-11-07T08:18:38.5931736Z   node-version: 26.8.1
+2026-11-07T08:18:38.5932023Z   always-auth: false
+2026-11-07T08:18:38.5932291Z   check-latest: false
+2026-11-07T08:18:38.5935135Z   token: ***
+2026-11-07T08:18:38.5935408Z   package-manager-cache: true
+2026-11-07T08:18:38.5935685Z ##[endgroup]
+2026-11-07T08:18:38.7997142Z Attempting to download 26.8.1...
+2026-11-07T08:18:38.8192132Z (node:2956) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-07T08:18:38.8193593Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-07T08:18:39.5219621Z Acquiring 26.8.1 - x64 from https://github.com/actions/node-versions/releases/download/26.8.1-33034053154/node-26.8.1-win32-x64.7z
+2026-11-07T08:18:40.0490135Z Extracting ...
+2026-11-07T08:18:42.4692509Z Adding to the cache ...
+2026-11-07T08:18:45.8132751Z ##[group]Environment details
+2026-11-07T08:18:46.7355554Z node: v26.8.1
+2026-11-07T08:18:46.7356087Z npm: 11.19.0
+2026-11-07T08:18:46.7356489Z yarn: 1.22.22
+2026-11-07T08:18:46.7357297Z ##[endgroup]
+2026-11-07T08:18:46.7703930Z ##[group]Run actions/download-artifact@v4
+2026-11-07T08:18:46.7704331Z with:
+2026-11-07T08:18:46.7707185Z   github-token: ***
+2026-11-07T08:18:46.7707456Z   run-id: 42347427165
+2026-11-07T08:18:46.7707976Z   artifact-ids: 13566576723
+2026-11-07T08:18:46.7708458Z   merge-multiple: true
+2026-11-07T08:18:46.7708748Z   path: test/out/native-replay414/input
+2026-11-07T08:18:46.7709082Z   repository: gzers/opencodex-desktop
+2026-11-07T08:18:46.7709397Z ##[endgroup]
+2026-11-07T08:18:46.9587940Z Downloading artifacts by ID
+2026-11-07T08:18:46.9590784Z Fetching artifact list for workflow run 42347427165 in repository gzers/opencodex-desktop
+2026-11-07T08:18:46.9683622Z (node:7744) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-07T08:18:46.9684521Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-07T08:18:47.0098843Z (node:7744) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-07T08:18:47.2251844Z Found 3 artifact(s)
+2026-11-07T08:18:47.2252963Z Preparing to download the following artifacts:
+2026-11-07T08:18:47.2254596Z - windows-msvc-candidate (ID: 13566576723, Size: 7877408, Expected Digest: sha256:c621f6e5d11ba6f355229b1af5d175a97eba57c0589dcd2c18574eb1f00f61e8)
+2026-11-07T08:18:47.2310608Z Downloading artifact '13566576723' from 'gzers/opencodex-desktop'
+2026-11-07T08:18:47.5486941Z Redirecting to blob download url: https://productionresultssa30.blob.core.windows.net/actions-results/81886eea-afaf-8513-9ab9-614855abdd0f/workflow-job-run-86f54227-f980-5865-ab87-70db745cfa1d/artifacts/816f033738b7e8100609f2af982308b2aaa797d51b512051101b27f6294b550b.zip
+2026-11-07T08:18:47.5490252Z Starting download of artifact to: D:\a\opencodex-desktop\opencodex-desktop\test\out\native-replay414\input
+2026-11-07T08:18:47.8944166Z (node:7744) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-11-07T08:18:48.6027663Z SHA256 digest of downloaded artifact is c621f6e5d11ba6f355229b1af5d175a97eba57c0589dcd2c18574eb1f00f61e8
+2026-11-07T08:18:48.6029221Z Artifact download completed successfully.
+2026-11-07T08:18:48.6030309Z Total of 1 artifact(s) downloaded
+2026-11-07T08:18:48.6039403Z Download artifact has finished successfully
+2026-11-07T08:18:48.6358250Z ##[group]Run $inputRoot = (Resolve-Path test/out/native-replay414/input).Path
+2026-11-07T08:18:48.6359042Z [36;1m$inputRoot = (Resolve-Path test/out/native-replay414/input).Path[0m
+2026-11-07T08:18:48.6359680Z [36;1m$receipt = Get-Content (Join-Path $inputRoot 'candidate.json') -Raw | ConvertFrom-Json[0m
+2026-11-07T08:18:48.6360263Z [36;1m$expected = '414d62bab35060e8aa2011300dab926a66727946'[0m
+2026-11-07T08:18:48.6361705Z [36;1mif ($receipt.requestedHead -cne $expected -or $receipt.checkedCommit -cne '01032c5df1c6b8de849a9999a20a9e9b2d5efb3b' -or $receipt.appsTree -cne '95ca3f35cd29919bba22ec6d84bd867c2f35fc54' -or $receipt.runId -ne '42347427165' -or $receipt.target -cne 'x86_64-pc-windows-msvc') { throw 'Native original candidate identity mismatch' }[0m
+2026-11-07T08:18:48.6363147Z [36;1m$exe = Join-Path $inputRoot 'opencodex-desktop.exe'[0m
+2026-11-07T08:18:48.6364133Z [36;1mif ((Get-Item $exe).Length -ne 17220096 -or (Get-FileHash $exe).Hash -ine '4cf2f44e737024ab6ec599217839d90e926b83bed0551ab9a2b3e1b568081265') { throw 'Native original EXE bytes mismatch' }[0m
+2026-11-07T08:18:48.6386721Z [36;1m# Only test/workflow corrections can consume this original image.[0m
+2026-11-07T08:18:48.6387225Z [36;1m$changes = @(git diff --name-only $expected HEAD -- apps)[0m
+2026-11-07T08:18:48.6387790Z [36;1mif ($LASTEXITCODE -ne 0 -or $changes.Count) { throw 'Product source changed since original EXE' }[0m
+2026-11-07T08:18:48.6388810Z [36;1m& test/smoke/windows-ordinary-startup.ps1 -Executable $exe -Node (Get-Command node).Source -OutputDirectory test/out/native-replay414/evidence -ExpectedCommit $receipt.checkedCommit[0m
+2026-11-07T08:18:48.6389650Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-07T08:18:48.6972126Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-07T08:18:48.6972597Z ##[endgroup]
+2026-11-07T08:19:47.8570651Z node:internal/modules/run_main:107
+2026-11-07T08:19:47.8572349Z     triggerUncaughtException(
+2026-11-07T08:19:47.8574285Z     ^
+2026-11-07T08:19:47.8576306Z 
+2026-11-07T08:19:47.8583187Z AssertionError [ERR_ASSERTION]: {"exceptionId":1,"text":"Uncaught (in promise)","lineNumber":0,"columnNumber":0,"exception":{"type":"object","className":"Object","description":"Object","objectId":"700134332887032475.2.1","preview":{"type":"object","description":"Object","overflow":false,"properties":[{"name":"code","type":"number","value":"14"},{"name":"message","type":"string","value":"managed runtime operation failed: discovery_runtime_unresolved; 当前 Desktop 集成安装根尚未就绪，未检查旧环境"}]}}}
+2026-11-07T08:19:47.8587418Z     at file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-webview.mjs:87:3 {
+2026-11-07T08:19:47.8588858Z   generatedMessage: false,
+2026-11-07T08:19:47.8644106Z   code: 'ERR_ASSERTION',
+2026-11-07T08:19:47.8644928Z   actual: false,
+2026-11-07T08:19:47.8645500Z   expected: true,
+2026-11-07T08:19:47.8646038Z   operator: '==',
+2026-11-07T08:19:47.8646561Z   diff: 'simple'
+2026-11-07T08:19:47.8647094Z }
+2026-11-07T08:19:47.8647455Z 
+2026-11-07T08:19:47.8647784Z Node.js v26.8.1
+2026-11-07T08:19:47.8648371Z WebView smoke failed: 1
+2026-11-07T08:19:47.8649495Z at <ScriptBlock>, D:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-startup.ps1: line 133
+2026-11-07T08:19:47.8651313Z at <ScriptBlock>, D:\a\opencodex-desktop\opencodex-desktop\test\out\native-replay414\evidence\ordinary-child.ps1: line 72
+2026-11-07T08:19:47.8652738Z {
+2026-11-07T08:19:47.8653438Z   "registered": "C:\\Users\\ocxacc3f57c878",
+2026-11-07T08:19:47.8654402Z   "profile": "C:\\Users\\ocxacc3f57c878",
+2026-11-07T08:19:47.8655462Z   "roaming": "C:\\Users\\ocxacc3f57c878\\AppData\\Roaming",
+2026-11-07T08:19:47.8658122Z   "local": "C:\\Users\\ocxacc3f57c878\\AppData\\Local",
+2026-11-07T08:19:47.8663300Z   "processProfile": "C:\\Users\\ocxacc3f57c878"
+2026-11-07T08:19:47.8664097Z }
+2026-11-07T08:19:47.8664710Z     "elevated": false,
+2026-11-07T08:19:47.8665316Z     "elevationType": 1,
+2026-11-07T08:19:47.8668740Z     "collectedAtUtc": "2026-11-07T08:19:14.1603173Z"
+2026-11-07T08:19:47.8669685Z   },
+2026-11-07T08:19:47.8670086Z   "applicationTokenVerified": false,
+2026-11-07T08:19:47.8670604Z   "applicationModeMatched": false,
+2026-11-07T08:19:47.8671028Z   "result": "fail",
+2026-11-07T08:19:47.8671960Z   "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\native-replay414\\input\\opencodex-desktop.exe",
+2026-11-07T08:19:47.8673359Z   "sha256": "4cf2f44e737024ab6ec599217839d90e926b83bed0551ab9a2b3e1b568081265",
+2026-11-07T08:19:47.8674391Z   "homeRemoved": true,
+2026-11-07T08:19:47.8676074Z   "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\native-replay414\\evidence\\startup\\sandbox-4e9f35bb5bfb43cfbe84842f7c2a0b1f",
+2026-11-07T08:19:47.8677278Z   "observedSeconds": 30,
+2026-11-07T08:19:47.8678151Z   "cdpPort": 51567,
+2026-11-07T08:19:47.8679214Z   "expectedCommit": "01032c5df1c6b8de849a9999a20a9e9b2d5efb3b",
+2026-11-07T08:19:47.8700002Z   "sourceCommitMatched": true,
+2026-11-07T08:19:47.8700694Z   "mainWindowPresent": true,
+2026-11-07T08:19:47.8701241Z   "pid": 7120,
+2026-11-07T08:19:47.8701707Z   "responding": true,
+2026-11-07T08:19:47.8703348Z   "error": "WebView smoke failed: 1"
+2026-11-07T08:19:47.8704137Z }
+2026-11-07T08:19:47.8705025Z Windows tray appearance refresh failed: tray icon error: Access is denied. (os error 5)
+2026-11-07T08:19:47.8705862Z 
+2026-11-07T08:19:48.0423734Z [31;1mException: [0mD:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-ordinary-startup.ps1:172[0m
+2026-11-07T08:19:48.0424826Z [31;1m[0m[36;1mLine |[0m
+2026-11-07T08:19:48.0425961Z [31;1m[0m[36;1m[36;1m 172 | [0m   [36;1mthrow 'Ordinary native startup failed; see retained output'[0m
+2026-11-07T08:19:48.0427216Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+2026-11-07T08:19:48.0428752Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mOrdinary native startup failed; see retained output[0m
+2026-11-07T08:19:48.0798317Z ##[error]Process completed with exit code 1.
+2026-11-07T08:19:48.1322399Z ##[group]Run actions/upload-artifact@v4
+2026-11-07T08:19:48.1322757Z with:
+2026-11-07T08:19:48.1323049Z   name: native-replay414-9cb044cfe353ab88cd6fde0722e8978d020ceb88
+2026-11-07T08:19:48.1324156Z   path: test/out/native-replay414/evidence/*.json
+test/out/native-replay414/evidence/*.log
+test/out/native-replay414/evidence/startup/*.json
+test/out/native-replay414/evidence/startup/*.log
+test/out/native-replay414/evidence/startup/*.png
+
+2026-11-07T08:19:48.1325162Z   if-no-files-found: warn
+2026-11-07T08:19:48.1325383Z   compression-level: 6
+2026-11-07T08:19:48.1325575Z   overwrite: false
+2026-11-07T08:19:48.1325767Z   include-hidden-files: false
+2026-11-07T08:19:48.1325992Z ##[endgroup]
+2026-11-07T08:19:48.4067231Z (node:3596) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-07T08:19:48.4084293Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-07T08:19:48.4259773Z With the provided path, there will be 11 files uploaded
+2026-11-07T08:19:48.4266571Z Artifact name is valid!
+2026-11-07T08:19:48.4269124Z Root directory input is valid!
+2026-11-07T08:19:48.8156264Z Beginning upload of artifact content to blob storage
+2026-11-07T08:19:48.8621676Z (node:3596) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-07T08:19:49.1268250Z Uploaded bytes 7049
+2026-11-07T08:19:49.1996756Z Finished uploading artifact content to blob storage!
+2026-11-07T08:19:49.1998379Z SHA256 digest of uploaded artifact zip is 91ab9d61f4d40b9aa0945a1cc3ed2bae99b92162c0fcc2bb599cc4c3db08d0bb
+2026-11-07T08:19:49.1999995Z Finalizing artifact upload
+2026-11-07T08:19:49.6777708Z Artifact native-replay414-9cb044cfe353ab88cd6fde0722e8978d020ceb88.zip successfully finalized. Artifact ID 13566749494
+2026-11-07T08:19:49.6779879Z Artifact native-replay414-9cb044cfe353ab88cd6fde0722e8978d020ceb88 has been successfully uploaded! Final size is 7049 bytes. Artifact ID is 13566749494
+2026-11-07T08:19:49.6789759Z Artifact download URL: https://github.com/gzers/opencodex-desktop/actions/runs/42354668479/artifacts/13566749494
+2026-11-07T08:19:49.7206410Z Post job cleanup.
+2026-11-07T08:19:49.9604800Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-07T08:19:50.0203555Z git version 2.56.0.windows.4
+2026-11-07T08:19:50.0324734Z Temporarily overriding HOME='D:\a\_temp\0dd0ed09-9bec-4801-901d-66b26c828528' before making global git config changes
+2026-11-07T08:19:50.0331991Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-07T08:19:50.0335646Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+2026-11-07T08:19:50.0906440Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-07T08:19:50.1349739Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-07T08:19:50.9967949Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-07T08:19:51.0380037Z http.https://github.com/.extraheader
+2026-11-07T08:19:51.0444244Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-07T08:19:51.0921985Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-07T08:19:52.2023283Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-07T08:19:52.2591802Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-07T08:19:53.0846732Z Cleaning up orphan processes
+2026-11-07T08:19:53.1599616Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/download-artifact@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
