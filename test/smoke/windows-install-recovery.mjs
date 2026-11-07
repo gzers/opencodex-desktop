@@ -65,7 +65,17 @@ async function install(version){
   await wait(inInstall(root=>!!document.querySelector(root+' input[aria-label="版本"]')))
   await evaluate(inInstall((root,version)=>{const i=document.querySelector(root+' input[aria-label="版本"]');i.value=version;i.dispatchEvent(new Event('input',{bubbles:true}));return true},version))
   await click('开始安装')
-  return wait('(()=>{const scene='+runtimeInstallExpression(report.about.version)+';return scene.error||scene.done?scene:false})()',300_000)
+  const terminal=await wait('(()=>{const scene='+runtimeInstallExpression(report.about.version)+';return scene.error||scene.done?scene:false})()',300_000)
+  if(terminal.error){
+    const current=await source(),layout=runtimeAcceptanceLayout(report.about.version,sandbox)
+    const diagnostic={version,terminal,source:current,paths:await evaluate("window.__TAURI_INTERNALS__.invoke('model_paths_v2_snapshot')")}
+    for(const [key,path] of Object.entries({manifest:join(current.managedPrefix,'.runtime-manifest.json'),entry:join(layout.installationRoot??layout.dataRoot,'runtime','bin','ocx.cmd'),runtimeRecord:join(layout.dataRoot,'manager-state','runtime.json'),appLog:join(layout.dataRoot,'logs','app.log')})){
+      try{diagnostic[key]={path,text:await readFile(path,'utf8')}}catch(error){diagnostic[key]={path,error:error.message}}
+    }
+    await writeFile(join(output,'install-terminal-'+version+'.json'),JSON.stringify(diagnostic,null,2)+'\n')
+    await screenshot('install-terminal-'+version)
+  }
+  return terminal
 }
 const report={result:'fail',screenshots:[],checks:[]}
 try{
