@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "7f5057366",
+  "result": "Mac targeted and strict pass; Windows elevated actual-token test pending",
+  "reason": "backup manager lock created through std default owner can become Administrators-owned under elevated token and fail actual-user removal tree recheck",
+  "fix": "Windows backup and removal lock use standardized private open/create, existing descriptor verified without repair; nonWindows retains safety::open_file nofollow behavior; two IPC lock-wait fixtures now create valid private lock",
+  "tests": {
+    "backup": 42,
+    "ipc": 47,
+    "uninstall": 12,
+    "strictClippy": "pass",
+    "releaseTools": "pass",
+    "WindowsNative": "not executed on Mac"
+  },
+  "elevatedBoundary": "existing 13 creation checks retained; added one real backup-lock TokenUser/DACL/reopen/byte-preservation test in always step",
+  "files": [
+    {
+      "path": "ocxd023-backup-lock-release-tools.log",
+      "bytes": 137,
+      "sha256": "2619e281cf1c46ddc5c1182ab80295d71ebf9922ff657664c053acd1531b6e5d"
+    },
+    {
+      "path": "ocxd023-backup-private-lock-clippy.log",
+      "bytes": 198,
+      "sha256": "db4d0335f4b2e8c434ad3e1912e25ff1f56459e51c5d45e0f452dfe0dff1e696"
+    },
+    {
+      "path": "ocxd023-backup-private-lock-ipc-mac.log",
+      "bytes": 7152,
+      "sha256": "d03786362bb02167ea8d459b6c47abf4145256ea1671a4e64e62eaf0238f16a6"
+    },
+    {
+      "path": "ocxd023-backup-private-lock-uninstall-mac.log",
+      "bytes": 1649,
+      "sha256": "ad58bc0bd5fcfd9d8a736334699583e77b717ea14160205ccf416f37943c9768"
+    },
+    {
+      "path": "ocxd023-private-backup-lock-final-mac.log",
+      "bytes": 5827,
+      "sha256": "2113c4509e51e5603d8f2f620e81ab46e8bb455b0358320e8b4a7e7f334c8c7b"
+    },
+    {
+      "path": "ocxd023-private-backup-lock-mac.log",
+      "bytes": 5827,
+      "sha256": "cba6e61435ef2f7277a8772fba92ec5ee9a7e8b8eb07739148fede397a5e4452"
+    }
+  ]
+}

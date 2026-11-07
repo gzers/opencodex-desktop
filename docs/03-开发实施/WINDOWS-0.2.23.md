@@ -252,3 +252,8 @@ R23的缺custom-protocol因果判断撤回：同一已封装release包，未激�
 ## R25 安装清理夹具改为当前V2（2026-11-07）
 
 后继0c19e55d6只修test/smoke/windows-uninstall-data.ps1：原脚本仍构造V1注册表指针/安装旁data，和本版无旧扫描合同冲突。改用实际TokenUser注册Profile的全新U/desktop、V2固定指针和所选D，取消不写、确认删除、重复执行、外部HOME/旧路径保留、持久外部gate均保留断言。仅为预证不存在的本次合成夹具设置实际User/SYSTEM owner，既有对象不repair。31解析及真实Mac越界guard拒绝过，不冒Windows native过；需新来源候选完成安装清理。原候选只作为各自来源范围证据。见r37。
+
+
+## R26 提权备份锁创建归属补全（2026-11-07）
+
+7f5057366修正Windows备份/删除准入锁的创建：原safety标准API在提权进程可用Administrators默认owner，随后删除整树的实际用户归属复核拒绝；现走统一private create/open，验证实际TokenUser与User/SYSTEM，不修existing未知对象。非Windows保留原nofollow打开逻辑。两IPC锁等待夹具改为合法private创建，47IPC/42backup/12uninstall及strict本机过；always提权组保留原13项并新增真实backup-lock owner/DACL/重开字节检查。仅定向本机通过，不冒Windows实证；候选结果及新来源复验仍待，见r38。

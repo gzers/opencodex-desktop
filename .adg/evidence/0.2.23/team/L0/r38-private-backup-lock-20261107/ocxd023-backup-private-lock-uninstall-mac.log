@@ -1,0 +1,19 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.56s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-0acf286eb61f7336)
+
+running 12 tests
+test modules::data_root::uninstall::tests::never_opened_app_has_no_data_to_initialize_or_remove ... ok
+test modules::data_root::uninstall::tests::prepare_and_cancel_do_not_delete_rewrite_or_create_locks ... ok
+test modules::data_root::uninstall::tests::linked_fixed_aggregate_does_not_authorize_deleting_its_target ... ok
+test modules::data_root::uninstall::tests::unknown_content_and_nonfixed_roots_are_not_removal_authority ... ok
+test modules::data_root::uninstall::tests::missing_external_home_is_never_created_or_removed ... ok
+test modules::data_root::uninstall::tests::fixed_control_only_anchor_can_remove_selected_v2_data ... ok
+test modules::data_root::uninstall::tests::confirmed_removal_deletes_real_v2_data_and_home_preserving_program_and_other_user ... ok
+test modules::data_root::uninstall::tests::selected_v2_root_is_removed_without_following_any_local_pointer_or_old_chain ... ok
+test modules::data_root::uninstall::tests::changed_pointer_or_metadata_invalidates_reviewed_plan_before_deletion ... ok
+test modules::data_root::uninstall::tests::linked_partition_pointer_or_home_cannot_delete_external_data ... ok
+test modules::data_root::uninstall::tests::running_startup_service_and_backup_locks_prevent_any_deletion ... ok
+test modules::data_root::uninstall::tests::corrupted_future_or_old_pointer_and_metadata_are_retained_without_new_locks ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 1965 filtered out; finished in 1.70s
+
