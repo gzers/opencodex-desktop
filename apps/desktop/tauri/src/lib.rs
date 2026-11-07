@@ -89,6 +89,9 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .setup(move |app| {
+            // The frontend may query activity while installation admission is
+            // still showing its remediation dialog. This state has no disk IO.
+            app.manage(crate::infrastructure::app_activity::AppActivity::default());
             crate::modules::model_config::feedback::configure(app.handle().clone());
             crate::modules::model_config::broker::configure(app.handle().clone());
             use tauri::Manager;
@@ -439,7 +442,6 @@ pub fn run() {
             ));
             crate::modules::model_config::broker::resume(data_root.clone());
 
-            app.manage(crate::infrastructure::app_activity::AppActivity::default());
             app.manage(crate::commands::panel::PanelLifetime::default());
             crate::infrastructure::app_activity::install(app.handle());
             crate::infrastructure::window_appearance::install(app.handle());
