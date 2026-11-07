@@ -32,6 +32,9 @@ pub struct CaptureRequestV2 {
     #[serde(deserialize_with = "explicit_selection")]
     pub selection: SelectionV2,
     pub mcp_clients: BTreeMap<String, String>,
+    /// Deprecated manual-review declaration; required wire value remains frozen
+    /// in the original request hash. Neither value grants source authority or
+    /// adds a write gate; explicit selection/source/digest checks still apply.
     pub assets_reviewed: bool,
 }
 // Overlay defaults must not turn an omitted capture choice into authority.

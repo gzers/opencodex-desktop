@@ -16,6 +16,38 @@ pub fn build_commit() -> &'static str {
     option_env!("OPENCODEX_BUILD_COMMIT").unwrap_or("")
 }
 
+#[cfg(target_os = "macos")]
+struct InstallationRemediation(String);
+
+#[cfg(target_os = "macos")]
+fn show_installation_remediation(detail: &str) {
+    use objc2::msg_send;
+    use objc2::rc::Retained;
+    use objc2::runtime::{AnyClass, AnyObject};
+    let detail = std::ffi::CString::new(detail).expect("fixed installation diagnostic");
+    // RunEvent::Ready is on the AppKit thread. Use an app-owned NSAlert rather
+    // than a parentless CFUserNotification hosted by a different OS process.
+    unsafe {
+        let app_class = AnyClass::get(c"NSApplication").expect("application class");
+        let app: *mut AnyObject = msg_send![app_class, sharedApplication];
+        let _: () = msg_send![app, activateIgnoringOtherApps: true];
+        let string_class = AnyClass::get(c"NSString").expect("string class");
+        let title: *mut AnyObject =
+            msg_send![string_class, stringWithUTF8String: c"请调整安装位置".as_ptr()];
+        let body: *mut AnyObject = msg_send![string_class, stringWithUTF8String: detail.as_ptr()];
+        let button: *mut AnyObject =
+            msg_send![string_class, stringWithUTF8String: c"确定".as_ptr()];
+        let alert_class = AnyClass::get(c"NSAlert").expect("alert class");
+        let raw: *mut AnyObject = msg_send![alert_class, new];
+        let alert = Retained::from_raw(raw).expect("native alert");
+        let _: () = msg_send![&*alert, setMessageText: title];
+        let _: () = msg_send![&*alert, setInformativeText: body];
+        let _: () = msg_send![&*alert, setAlertStyle: 2usize];
+        let _: *mut AnyObject = msg_send![&*alert, addButtonWithTitle: button];
+        let _: isize = msg_send![&*alert, runModal];
+    }
+}
+
 /// 把入口名写成一条非敏感运行日志；失败不阻断导航，也不携带窗口/凭据细节。
 fn record_window_event(data_root: &std::path::Path, message: &str) {
     let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root).append_event(message);
@@ -70,6 +102,30 @@ fn record_startup_event(data_root: &std::path::Path, version: &str) {
 pub fn run() {
     use tauri::Manager;
     let context = tauri::generate_context!();
+    #[cfg(target_os = "macos")]
+    let context = {
+        let mut context = context;
+        let invalid_container = std::env::current_exe().ok().is_some_and(|executable| {
+            matches!(
+                crate::modules::data_root::layout::Layout::installation_root(
+                    &executable,
+                    crate::modules::data_root::layout::Platform::Macos,
+                ),
+                Err(crate::errors::AppError::RuntimeManaged { code, .. })
+                    if code == "macos_install_container"
+            )
+        });
+        if invalid_container {
+            // The remediation-only branch must not mount a frontend whose
+            // commands require the deliberately uninitialized user data root.
+            context
+                .config_mut()
+                .app
+                .windows
+                .retain(|window| window.label != "main");
+        }
+        context
+    };
     #[cfg(windows)]
     let (context, smoke_window, startup_window) = {
         let mut context = context;
@@ -89,6 +145,9 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .setup(move |app| {
+            // The frontend may query activity while installation admission is
+            // still showing its remediation dialog. This state has no disk IO.
+            app.manage(crate::infrastructure::app_activity::AppActivity::default());
             crate::modules::model_config::feedback::configure(app.handle().clone());
             crate::modules::model_config::broker::configure(app.handle().clone());
             use tauri::Manager;
@@ -107,17 +166,12 @@ pub fn run() {
                 #[cfg(target_os = "macos")]
                 Err(crate::errors::AppError::RuntimeManaged { code, detail })
                     if code == "macos_install_container" => {
-                    use tauri_plugin_dialog::DialogExt;
                     // Installation admission failed before U/D/H or runtime
                     // initialization. Show the remedy without starting services.
                     if let Some(window) = app.get_webview_window("main") {
                         let _ = window.hide();
                     }
-                    let handle = app.handle().clone();
-                    app.dialog().message(detail)
-                        .title("请调整安装位置")
-                        .kind(tauri_plugin_dialog::MessageDialogKind::Error)
-                        .show(move |_| handle.exit(1));
+                    app.manage(InstallationRemediation(detail));
                     return Ok(());
                 }
                 Err(error) => return Err(error.into()),
@@ -439,7 +493,6 @@ pub fn run() {
             ));
             crate::modules::model_config::broker::resume(data_root.clone());
 
-            app.manage(crate::infrastructure::app_activity::AppActivity::default());
             app.manage(crate::commands::panel::PanelLifetime::default());
             crate::infrastructure::app_activity::install(app.handle());
             crate::infrastructure::window_appearance::install(app.handle());
@@ -801,6 +854,13 @@ pub fn run() {
             // 否则用户会以为应用「卡住」了——macOS 用 Reopen 事件表达这一意图。
             #[cfg(target_os = "macos")]
             {
+                if matches!(event, tauri::RunEvent::Ready) {
+                    if let Some(remediation) = app_handle.try_state::<InstallationRemediation>() {
+                        let _ = app_handle.set_activation_policy(tauri::ActivationPolicy::Regular);
+                        show_installation_remediation(&remediation.0);
+                        app_handle.exit(1);
+                    }
+                }
                 if let tauri::RunEvent::Reopen {
                     has_visible_windows,
                     ..
