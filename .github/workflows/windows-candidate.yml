@@ -805,15 +805,19 @@ jobs:
           if(!(Test-Path -LiteralPath $taskBundle)){throw 'Original MSI complete runtime bundle absent'}
           tar -xzf $taskBundle -C $taskDriver runtime/node
           if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
-          $taskTools=(Resolve-Path test/smoke).Path
-          $taskEvidence=[IO.Path]::GetFullPath('test/out/raw-full0c/two-user')
+          $taskTools=(Resolve-Path test/out/raw-full0c/original-source/test/smoke).Path
+          $taskEvidence=Join-Path $env:RUNNER_TEMP ('ocxd023-raw-two-user-'+[guid]::NewGuid().ToString('N'))
+          $taskFinalEvidence=[IO.Path]::GetFullPath('test/out/raw-full0c/two-user')
           Push-Location test/out/raw-full0c/original-source
           try{
             & (Join-Path $taskTools 'windows023-two-user-native.ps1') -Executable $taskImages[0].FullName -Node (Join-Path $taskDriver 'runtime/node/node.exe') -OutputDirectory $taskEvidence -ExpectedCommit '0c869d9497c102b714dea1ee89394f999da8c4ec' -VerifyRuntimePorts
             if($LASTEXITCODE -ne 0){throw 'Original package actual twoSID/runtime ports failed'}
             $taskResult=Get-Content -LiteralPath (Join-Path $taskEvidence 'two-user-native.json') -Raw|ConvertFrom-Json
             if(!$taskResult.fullVersionGatePassed -or $taskResult.runtimeProxyPortIsolation -cne 'verified-runtime-ports'){throw 'Original twoSID evidence incomplete'}
-          }finally{Pop-Location}
+          }finally{
+            Pop-Location
+            if(Test-Path -LiteralPath $taskEvidence){Copy-Item -LiteralPath $taskEvidence -Destination $taskFinalEvidence -Recurse}
+          }
       - name: Restore exact Server MSI policy
         if: always()
         shell: pwsh
