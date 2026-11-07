@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "414d62bab35060e8aa2011300dab926a66727946",
+  "ordinaryBinaryScopePassed": true,
+  "installerAcceptancePassed": false,
+  "wholeZipSha256Verified": false,
+  "files": [
+    {
+      "path": "original/installer-verification.json",
+      "role": "original-artifact-member",
+      "sha256": "993f0c710a0bebc9f57c0206f1fbca083180addd11d081c4d814036a3115d625",
+      "size_bytes": 547,
+      "media_type": "application/json"
+    },
+    {
+      "path": "original/msi-default-startup/ordinary-child.ps1",
+      "role": "original-artifact-member",
+      "sha256": "8cd68be919182b752647291a1b14df90f7c78c15efbb1cf7923035e6979139f7",
+      "size_bytes": 4958,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "original/msi-default-startup/ordinary-input.json",
+      "role": "original-artifact-member",
+      "sha256": "aeb523e3a36634d424554d83ad8852b57747f7ecab47836c728311e2e6dedc23",
+      "size_bytes": 551,
+      "media_type": "application/json"
+    },
+    {
+      "path": "original/msi-default-startup/ordinary-known-folders.json",
+      "role": "original-artifact-member",
+      "sha256": "ba70c953dfa352c03c04ef9a9122394c4a0c9fa950293b292e25cafc719af8d6",
+      "size_bytes": 262,
+      "media_type": "application/json"
+    },
+    {
+      "path": "original/msi-default-startup/ordinary-profile.json",
+      "role": "original-artifact-member",
+      "sha256": "a6df14473285bfb20508d948f6d48ff2b95d5e0ac83c08be99a6dd90d4f100d9",
+      "size_bytes": 448,
+      "media_type": "application/json"
+    },
+    {
+      "path": "original/msi-default-startup/ordinary-stderr.log",
+      "role": "original-artifact-member",
+      "sha256": "f844647c54be170787ee04193b69385efebe0ead0fd37aee4bd0c71da54cd582",
+      "size_bytes": 352,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "original/msi-default-startup/ordinary-stdout.log",
+      "role": "original-artifact-member",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "original/ordinary-rust/frozen-artifacts.json",
+      "role": "original-artifact-member",
+      "sha256": "52bfbeb22d17033acc4342f026a2c80fcc7e3172bf1dec33f618b4d82244cdf5",
+      "size_bytes": 42476,
+      "media_type": "application/json"
+    },
+    {
+      "path": "original/ordinary-rust/ordinary/ordinary-suite.json",
+      "role": "original-artifact-member",
+      "sha256": "0c92f7639206b1fa486c2cd2409e687c534a428dec20226e026ca192075fbbad",
+      "size_bytes": 144627,
+      "media_type": "application/json"
+    },
+    {
+      "path": "original/ordinary-rust/rust-ordinary.json",
+      "role": "original-artifact-member",
+      "sha256": "7d224487cc11a2a8ec479b5c25ee3eebe571d9fb3e9411cc3d258c4a73c3bccb",
+      "size_bytes": 790037,
+      "media_type": "application/json"
+    },
+    {
+      "path": "verification.json",
+      "role": "audit-verification",
+      "sha256": "a6a3cf88dad3a8bcc894dfcd9ce679f3ec179cddca0ca1869a4f0aa11c0eb95f",
+      "size_bytes": 3555,
+      "media_type": "application/json"
+    },
+    {
+      "path": "account-chain-audit.json",
+      "role": "audit-verification",
+      "sha256": "3cb04acb4a58c2351517022aa937366c1185ae31733f7437e420f0fd2a5c70c7",
+      "size_bytes": 4841,
+      "media_type": "application/json"
+    },
+    {
+      "path": "read-original-range.py",
+      "role": "audit-script",
+      "sha256": "1951cb261ee2d534ef221b2fbc05dd59ba1ef56f511e82f651299ca59904c631",
+      "size_bytes": 6557,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "package-original-decoded.log",
+      "role": "original-decoded-job-log",
+      "sha256": "4f95ed2fd4dc58948ec887d0306c7291e921a526b892048fb498a7c4b4ca6c32",
+      "size_bytes": 181871,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "L4-414安装器身份链失败回交.md",
+      "role": "audit-report",
+      "sha256": "9b2b68422d714e79580bf05ce9e2af29cc237cec8fad6183d897ee969ef956a2",
+      "size_bytes": 4568,
+      "media_type": "text/plain"
+    }
+  ]
+}
