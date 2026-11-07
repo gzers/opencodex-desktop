@@ -14,6 +14,7 @@ use crate::errors::AppError;
 pub struct AppInstanceLock {
     _file: std::fs::File,
     lock_path: PathBuf,
+    _removal: Option<crate::modules::data_root::removal_gate::SharedLease>,
 }
 
 impl AppInstanceLock {
@@ -22,10 +23,34 @@ impl AppInstanceLock {
     /// `data_root` 是应用数据根的绝对路径；实际锁文件为
     /// `<data_root>/manager-state/app.lock`。
     pub fn acquire(data_root: &Path) -> Result<Self, AppError> {
-        Self::acquire_named(&data_root.join("manager-state"), "app.lock")
+        let lease = crate::modules::data_root::removal_gate::shared(data_root)?;
+        Self::acquire_inner(&data_root.join("manager-state"), "app.lock", Some(lease))
     }
 
     pub(crate) fn acquire_named(state_dir: &Path, name: &str) -> Result<Self, AppError> {
+        let lease = crate::modules::data_root::removal_gate::shared(state_dir)?;
+        Self::acquire_inner(state_dir, name, Some(lease))
+    }
+
+    #[cfg(any(windows, test))]
+    pub(crate) fn acquire_for_removal(
+        data_root: &Path,
+        startup: bool,
+        capability: &crate::modules::data_root::removal_gate::RemovalLeaseSet,
+    ) -> Result<Self, AppError> {
+        capability.require(data_root)?;
+        if startup {
+            Self::acquire_inner(data_root, "manager-startup.lock", None)
+        } else {
+            Self::acquire_inner(&data_root.join("manager-state"), "app.lock", None)
+        }
+    }
+
+    fn acquire_inner(
+        state_dir: &Path,
+        name: &str,
+        removal: Option<crate::modules::data_root::removal_gate::SharedLease>,
+    ) -> Result<Self, AppError> {
         crate::infrastructure::platform::create_private_dir_all(state_dir, 0o700)
             .map_err(|error| admission_io("create manager-state directory", error))?;
 
@@ -67,6 +92,7 @@ impl AppInstanceLock {
         Ok(Self {
             _file: file,
             lock_path,
+            _removal: removal,
         })
     }
 

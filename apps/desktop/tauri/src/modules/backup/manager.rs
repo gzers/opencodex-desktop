@@ -52,20 +52,33 @@ fn observed_lock(
     root: &Path,
     action: BackupAction,
     observer: &mut dyn MaintenanceObserver,
-) -> AppResult<File> {
+) -> AppResult<BackupLease> {
     lock(root).inspect_err(|_| observer.backup_result(action, SOURCE_UNAVAILABLE, false))
 }
 
-fn lock(root: &Path) -> AppResult<File> {
+struct BackupLease {
+    _file: File,
+    _removal: crate::modules::data_root::removal_gate::SharedLease,
+}
+
+fn lock(root: &Path) -> AppResult<BackupLease> {
+    let removal = crate::modules::data_root::removal_gate::shared(root)?;
     let path = root.join(LOCK_FILE_NAME);
     safety::check_path(root, &path, true)?;
     let file = safety::open_file(&path, true)?;
     file.lock().map_err(|e| fail(e.to_string()))?;
-    Ok(file)
+    Ok(BackupLease {
+        _file: file,
+        _removal: removal,
+    })
 }
 /// Uninstall must refuse a live backup transaction instead of waiting for it.
 #[cfg(any(windows, test))]
-pub(crate) fn try_lock_for_removal(root: &Path) -> AppResult<File> {
+pub(crate) fn try_lock_for_removal(
+    root: &Path,
+    capability: &crate::modules::data_root::removal_gate::RemovalLeaseSet,
+) -> AppResult<File> {
+    capability.require(root)?;
     let path = root.join(LOCK_FILE_NAME);
     safety::check_path(root, &path, true)?;
     let file = safety::open_file(&path, true)?;
@@ -76,7 +89,7 @@ pub(crate) fn try_lock_for_removal(root: &Path) -> AppResult<File> {
 /// Cooperative cross-process guard. Keep alive through the entire mutation.
 /// Uses the same lock as W2 restore, pin and cleanup. Lock release never deletes backups.
 pub struct PreferencesProtectionGuard {
-    _lock: File,
+    _lock: BackupLease,
     pub backup: Option<UpgradeBackupResult>,
     /// Best-effort maintenance failure after a successful protection backup.
     /// The backup and mutation lock remain valid. Also emitted to diagnostics.

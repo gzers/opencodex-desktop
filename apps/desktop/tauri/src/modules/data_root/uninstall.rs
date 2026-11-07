@@ -275,22 +275,29 @@ impl RemovalPlan {
         if self.desktops.is_empty() {
             return Ok(());
         }
-        let _startup = AppInstanceLock::acquire_named(&self.anchor, "manager-startup.lock")?;
-        let _locks = self
+        let removal = super::removal_gate::RemovalLeaseSet::try_exclusive(
+            self.desktops.iter().map(|root| root.path.clone()),
+        )?;
+        let startup = AppInstanceLock::acquire_for_removal(&self.anchor, true, &removal)?;
+        let locks = self
             .desktops
             .iter()
             .filter(|root| root.metadata.is_some())
-            .map(|root| AppInstanceLock::acquire(&root.path))
+            .map(|root| AppInstanceLock::acquire_for_removal(&root.path, false, &removal))
             .collect::<AppResult<Vec<_>>>()?;
-        let _backups = self
+        let backups = self
             .desktops
             .iter()
             .filter(|root| root.metadata.is_some())
-            .map(|root| crate::modules::backup::manager::try_lock_for_removal(&root.path))
+            .map(|root| crate::modules::backup::manager::try_lock_for_removal(&root.path, &removal))
             .collect::<AppResult<Vec<_>>>()?;
         if Self::prepare(anchor, install)? != self {
             return Err(failure("removal selection changed while locking"));
         }
+        // The outer exclusive gate survives these handles and all deletions.
+        drop(backups);
+        drop(locks);
+        drop(startup);
         for home in &self.homes {
             std::fs::remove_dir_all(home).map_err(io)?;
         }
