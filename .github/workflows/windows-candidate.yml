@@ -217,7 +217,20 @@ jobs:
           name: windows-candidate-evidence
           if-no-files-found: error
           retention-days: 14
-          path: test/out/windows-candidate
+          path: |
+            test/out/windows-candidate/*.json
+            test/out/windows-candidate/*.log
+            test/out/windows-candidate/ordinary-rust
+            test/out/windows-candidate/ordinary-static
+            test/out/windows-candidate/runtime-stage/*.json
+            test/out/windows-candidate/*-startup/*.json
+            test/out/windows-candidate/*-startup/*.log
+            test/out/windows-candidate/*-startup/startup/*.json
+            test/out/windows-candidate/*-startup/startup/*.log
+            test/out/windows-candidate/*-startup/startup/*.png
+            test/out/windows-candidate/two-user-native/*.json
+            test/out/windows-candidate/two-user-native/*.log
+            test/out/windows-candidate/two-user-static
 
   query-etw:
     if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'query-etw' && github.repository == 'gzers/opencodex-desktop'
@@ -384,7 +397,7 @@ jobs:
           path: test/out/windows-installer-retention
 
   native-ui:
-    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023' && inputs.admission_run != 'msi-compiler-023'
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023' && inputs.admission_run != 'msi-compiler-023' && inputs.admission_run != 'native-replay-414'
     runs-on: windows-latest
     timeout-minutes: 40
     defaults:
@@ -496,6 +509,52 @@ jobs:
           path: test/out/windows023-ordinary-preflight
           if-no-files-found: warn
           retention-days: 14
+
+  native-replay414:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run == 'native-replay-414'
+    runs-on: windows-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 42347427165
+          artifact-ids: 13566576723
+          path: test/out/native-replay414/input
+      - name: Verify exact already built MSVC image and unchanged product source
+        shell: pwsh
+        run: |
+          $inputRoot = (Resolve-Path test/out/native-replay414/input).Path
+          $receipt = Get-Content (Join-Path $inputRoot 'candidate.json') -Raw | ConvertFrom-Json
+          $expected = '414d62bab35060e8aa2011300dab926a66727946'
+          if ($receipt.requestedHead -cne $expected -or $receipt.checkedCommit -cne '01032c5df1c6b8de849a9999a20a9e9b2d5efb3b' -or $receipt.appsTree -cne '95ca3f35cd29919bba22ec6d84bd867c2f35fc54' -or $receipt.runId -ne '42347427165' -or $receipt.target -cne 'x86_64-pc-windows-msvc') { throw 'Native original candidate identity mismatch' }
+          $exe = Join-Path $inputRoot 'opencodex-desktop.exe'
+          if ((Get-Item $exe).Length -ne 17220096 -or (Get-FileHash $exe).Hash -ine '4cf2f44e737024ab6ec599217839d90e926b83bed0551ab9a2b3e1b568081265') { throw 'Native original EXE bytes mismatch' }
+          # Only test/workflow corrections can consume this original image.
+          $changes = @(git diff --name-only $expected HEAD -- apps)
+          if ($LASTEXITCODE -ne 0 -or $changes.Count) { throw 'Product source changed since original EXE' }
+          & test/smoke/windows-ordinary-startup.ps1 -Executable $exe -Node (Get-Command node).Source -OutputDirectory test/out/native-replay414/evidence -ExpectedCommit $receipt.checkedCommit
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-replay414-${{ github.sha }}
+          path: |
+            test/out/native-replay414/evidence/*.json
+            test/out/native-replay414/evidence/*.log
+            test/out/native-replay414/evidence/startup/*.json
+            test/out/native-replay414/evidence/startup/*.log
+            test/out/native-replay414/evidence/startup/*.png
+          if-no-files-found: warn
 
   msi-compiler023:
     if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run == 'msi-compiler-023'

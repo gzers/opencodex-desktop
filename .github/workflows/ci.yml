@@ -337,11 +337,19 @@ jobs:
         with:
           name: windows-startup-evidence
           path: |
-            test/out/windows-startup
+            test/out/windows-startup/*.json
+            test/out/windows-startup/*.log
+            test/out/windows-startup/startup/*.json
+            test/out/windows-startup/startup/*.log
+            test/out/windows-startup/startup/*.png
             test/out/windows-backend
             test/out/windows-native-018
             test/out/windows-native-018-node22
-            test/out/windows-ordinary
+            test/out/windows-ordinary/*.json
+            test/out/windows-ordinary/*.log
+            test/out/windows-ordinary/startup/*.json
+            test/out/windows-ordinary/startup/*.log
+            test/out/windows-ordinary/startup/*.png
             test/out/windows-query-etw
             test/runtime/ci-bd2-query-etw/capture
             !test/out/windows-native-018/OpenCodeX Native*/**

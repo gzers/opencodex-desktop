@@ -165,7 +165,7 @@ public static class OcxFirstLogonFolders {
  $taskEnvelope = if ($InstallerSuiteConfig) { 1200000 } else { 300000 }
  if(!$taskProcess.WaitForExit($taskEnvelope)){$taskProcess.Kill($true);throw 'Ordinary native startup deadline expired'}
  if($taskProcess.ExitCode -ne 0){
-  foreach($name in @('ordinary-stderr.log','ordinary-known-folders.json','startup/startup-stderr.log')){
+  foreach($name in @('ordinary-stderr.log','ordinary-known-folders.json','startup/startup.json','startup/startup-stderr.log')){
    $path=Join-Path $taskOutput $name
    if(Test-Path -LiteralPath $path){Get-Content -LiteralPath $path -Tail 20 | Write-Output}
   }
