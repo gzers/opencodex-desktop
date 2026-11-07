@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {computed,onBeforeUnmount,ref,watch} from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
+import UiIconButton from '@/components/ui/UiIconButton.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
 import {useModelsV2Store} from './store-v2'
@@ -75,15 +76,14 @@ async function join(){
 function close(){if(busy.value)return;generation++;apiKey.value='';keyVisible.value=false;emit('close')}
 </script>
 <template>
- <UiDialog :open="true" wide :title="original?'编辑渠道连接':'新增渠道'" :busy="busy" @close="close">
-  <p role="status">{{ step===1?'1 / 2 · 连接配置':'2 / 2 · 选择模型' }}</p>
+ <UiDialog :open="true" :title="(original?'编辑渠道连接':'新增渠道')+' · '+(step===1?'连接配置':'选择模型')" :busy="busy" @close="close">
+  <ol class="channel-wizard-steps" aria-label="新增渠道步骤"><li :aria-current="step===1?'step':undefined">1 连接配置</li><li :aria-current="step===2?'step':undefined">2 选择模型</li></ol>
   <div v-if="step===1" class="connection-fields">
    <label>渠道名称<input v-model="label" class="input" maxlength="80" :disabled="!!original" /></label>
    <template v-if="original"><label>当前节点<UiSelectField v-model="activeNode" label="编辑连接的当前节点" :options="nodes.map(n=>({value:n.id,label:n.name||'未命名节点'}))" /></label><div v-for="node in nodes" :key="node.id" class="model-columns"><label>节点名称<input v-model="node.name" class="input" /></label><label>节点服务基地址<input v-model="node.url" class="input" type="url" :aria-label="node.name+'编辑地址'" /></label><UiButton size="sm" variant="danger" :disabled="nodes.length<2||node.id===activeNode" @click="nodes=nodes.filter(n=>n.id!==node.id)">删除节点</UiButton></div><UiButton size="sm" :disabled="nodes.length>=32" @click="addEditNode">新增节点</UiButton><p>修改连接后重新获取并选择型号；请重新输入用于这些节点的Key，不会把原Key自动发到新地址。</p></template>
    <label v-else>服务基地址<input v-model="url" class="input" type="url" autocapitalize="off" spellcheck="false" placeholder="https://api.example.com/v1" /></label>
    <label>认证方式<UiSelectField v-model="authMode" label="渠道认证方式" :options="[{value:'key',label:'API Key'},{value:'none',label:'无需认证'}]" /></label>
-   <label v-if="needsKey">API Key<input v-model="apiKey" aria-label="API Key" class="input" :type="keyVisible?'text':'password'" autocomplete="new-password" autocapitalize="off" spellcheck="false" /></label>
-   <div v-if="needsKey" class="model-inline"><UiButton size="sm" :aria-pressed="keyVisible" @click="keyVisible=!keyVisible">{{keyVisible?'隐藏 Key':'显示 Key'}}</UiButton><UiButton size="sm" :disabled="!apiKey" @click="apiKey=''">清空 Key</UiButton></div>
+   <div v-if="needsKey" class="channel-key-field"><label :for="'channel-key-'+id">API Key</label><div class="channel-key-controls"><input :id="'channel-key-'+id" v-model="apiKey" aria-label="API Key" class="input" :type="keyVisible?'text':'password'" autocomplete="new-password" autocapitalize="off" spellcheck="false" /><UiIconButton :label="keyVisible?'隐藏 Key':'显示 Key'" :title="keyVisible?'隐藏 Key':'显示 Key'" :aria-controls="'channel-key-'+id" :aria-pressed="keyVisible" @click="keyVisible=!keyVisible"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></UiIconButton><UiButton size="sm" :disabled="!apiKey" @click="apiKey=''">清空 Key</UiButton></div></div>
    <p class="model-muted">填写服务基地址，不包含 responses、chat/completions 或 messages 等生成接口路径。</p>
   </div>
   <template v-else>
@@ -97,11 +97,12 @@ function close(){if(busy.value)return;generation++;apiKey.value='';keyVisible.va
    <div class="new-channel-models"><label v-for="model in rows" :key="model.id"><input type="checkbox" :checked="selected.includes(model.id)" :disabled="discovering" :aria-label="'选择新渠道型号 '+model.id" @change="select(model.id,($event.target as HTMLInputElement).checked)" /><span>{{ model.label||model.id }}<code v-if="model.label!==model.id">{{ model.id }}</code></span></label><p v-if="!rows.length">暂无型号；可获取清单或手动添加精确ID。</p></div>
    <details><summary>手动添加精确ID</summary><label>原始模型ID<input v-model="manual" class="input" :disabled="discovering" autocapitalize="off" spellcheck="false" /></label><UiButton size="sm" :disabled="discovering||!manual" @click="addManual">添加ID</UiButton></details>
   </template>
-  <p v-if="step===2&&!store.canStageConnection" class="model-muted" role="status">渠道草稿服务暂不可用，当前输入已保留。</p>
+  <p v-if="step===2&&!store.canStageConnection" class="model-muted" role="status">暂时无法添加渠道，当前输入已保留。</p>
   <p v-if="status" role="status" class="model-muted">{{ status }}</p><p v-if="error" role="alert" class="model-error">{{ error }}</p>
   <template #actions="{ close: requestClose }"><UiButton :disabled="busy" @click="requestClose">取消</UiButton><UiButton v-if="step===2" :disabled="busy" @click="generation++;discovering=false;step=1">上一步</UiButton><UiButton v-if="step===1" variant="primary" :disabled="busy" @click="next">下一步</UiButton><UiButton v-else variant="primary" :loading="busy" :disabled="discovering||!selected.length||!store.canStageConnection" @click="join">{{ original?'确认连接并加入草稿':'加入草稿' }}</UiButton></template>
  </UiDialog>
 </template>
 <style scoped>
 .connection-fields{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-3)}.connection-fields .model-columns{grid-template-columns:minmax(0,1fr)}.connection-fields>label{display:grid;gap:var(--space-2);min-width:0}.connection-fields>.input,.connection-fields input{width:100%;min-width:0;box-sizing:border-box}.new-channel-models{max-height:320px;overflow:auto;min-width:0}.new-channel-models label{display:flex;gap:var(--space-2);align-items:flex-start;padding-block:var(--space-2)}.new-channel-models span,.new-channel-models code{min-width:0;overflow-wrap:anywhere}.new-channel-models code{display:block;font-family:var(--font-code);color:var(--muted)}
+.channel-wizard-steps{display:flex;gap:24px;padding:0;margin:0 0 var(--space-4);list-style:none;color:var(--muted);font-size:var(--text-label);flex-wrap:wrap}.channel-wizard-steps [aria-current=step]{color:var(--text);font-weight:600}.channel-key-field{display:grid;gap:var(--space-2);min-width:0}.channel-key-controls{display:flex;align-items:center;gap:var(--space-2);min-width:0}.channel-key-controls>.input{flex:1;width:0}.channel-key-controls>button{flex:none}.channel-key-controls>.icon-btn{width:32px;height:32px;min-width:32px;min-height:32px;padding:0}
 </style>
