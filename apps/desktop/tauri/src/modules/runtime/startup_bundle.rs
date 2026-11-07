@@ -54,10 +54,15 @@ pub(crate) fn start(
             Ok(())
         })();
         let message = match &result {
-            Ok(()) => "integrated runtime provisioned and verified",
-            Err(_) => "integrated runtime provisioning failed; installation retained for recovery",
+            Ok(()) => "integrated runtime provisioned and verified".to_string(),
+            // This worker reads only the pinned local distribution and managed
+            // installation metadata. Preserve its actual bounded failure reason
+            // so first-start failures can be diagnosed without touching secrets.
+            Err(error) => format!(
+                "integrated runtime provisioning failed; installation retained for recovery: {error}"
+            ),
         };
-        let _ = crate::infrastructure::runtime_log::RuntimeLog::new(&desktop).append_event(message);
+        let _ = crate::infrastructure::runtime_log::RuntimeLog::new(&desktop).append_event(&message);
     });
     Ok(())
 }
