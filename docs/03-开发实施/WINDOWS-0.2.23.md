@@ -13,6 +13,12 @@
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
 - 此为0.2.23实施基线，尚非最终安装候选；版本清单仍待L0统一更新。是否取得新代码以完整SHA及实际diff为准，不能仅看软件显示版本。
 
+## R20 同源回归已过，新Windows完整候选仍待（2026-11-07）
+
+明确源码7730073e96999382697fe2ad8dd8f877352c75a3完整前端214文件1576项、typecheck/build过；workspace全部binary51groups共2191过/0失败/36条件忽略，核心库1952过，strictClippy过。初始最后doctest因并行candidate构建切换共享Tauri依赖产物E0463失败，原整体exit101保留；不再并发构建后独立cargo--doc实际exit0(0tests)，只补失败范围，不重复2191项。[r31原日志与摘要](../../.adg/evidence/0.2.23/team/L0/r31-full-integrated-regression-20261107/manifest.json)。实际native UI/安装告警的证据仍归r27/r29，不把这份回归夸成发布通过。
+
+新完整Windows候选42319672971已确认exact773，旧候选42315908693为47eb仍存活，各自真实结果按来源记录。新lib及人工门/页面消费者必须新源验证，旧candidate不能外推；两运行不因观察超时重开。当前Main串行准备exact773 release候选与后继DMG，原debugnative过不替代正式包/升级/签名。未合main/未tag/未发布，原None恢复同步语义仍待用户答复。
+
 ## R19 原生QA发现项已修正并复验（2026-11-07）
 
 本批代码7730073e9（含da4f producer及f1236/83a4 UI）已推送。模型列表tab右状态/保存还原、搜索左/读取新增右、More保旧低频动作；新增560两步、阶段标题/进度/Key同行；同步file/WebDAV复用对象树+右凭据栏、搜索不折行、未设endpoint零目录/预览请求、唯一连接入口，人工review控件及额外compare步骤去除，global/source真实功能保低频显式入口。默认false wire照传，真实source/digest/CAS/secret/冲突/Ohash等不变，非UI偷偷填true。producerfile39/local46/strict过，UI132相关和4route40过，同源全UI214文件1576过/typebuild过。[r26后端/模型返修](../../.adg/evidence/0.2.23/team/L0/r26-native-ui-and-manual-gate-corrections-20261107/manifest.json)、[r28同步消费者](../../.adg/evidence/0.2.23/team/L0/r28-sync-native-parity-consumer-20261107/manifest.json)。
