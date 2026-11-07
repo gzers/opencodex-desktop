@@ -1453,7 +1453,7 @@ fn mapped_empty_local_receives_full_remote_preferences_extensions_skill_and_mcp(
 }
 
 #[test]
-fn mapped_filtered_non_model_scopes_need_exact_issued_binding_and_reviewed_context() {
+fn mapped_filtered_non_model_scopes_need_exact_binding_without_manual_review_gate() {
     let m = MappedFixture::empty_local_full_remote();
     let create =
         |selection: SelectionV2, capture: CaptureRequestV2, binding: LocalTargetBindingV2| {
@@ -1479,7 +1479,7 @@ fn mapped_filtered_non_model_scopes_need_exact_issued_binding_and_reviewed_conte
     assert!(create(m.f.selection.clone(), local, m.binding.clone()).is_err());
     let mut unreviewed = request();
     unreviewed.assets_reviewed = false;
-    assert!(create(m.f.selection.clone(), unreviewed, m.binding.clone()).is_err());
+    assert!(create(m.f.selection.clone(), unreviewed, m.binding.clone()).is_ok());
     // Even a freshly recomputed digest is not authority without owner issuance.
     let forged = LocalTargetBindingV2::freeze(
         m.binding.mapping_revision.clone(),
@@ -1636,4 +1636,139 @@ fn local_model_witness_rejects_corruption_wrong_home_and_changed_original_contex
             LocalApplicationV2::local_model_journal_proof(&m.f.d, &m.f.h, OP, &handle).is_err()
         );
     }
+}
+
+#[test]
+fn false_review_actual_local_application_receives_assets_with_real_model_receipt_and_source_cas() {
+    use crate::modules::model_config::config_file::v2::receive::ReceiveFileHostV2;
+    let mut f = Fixture::new(false);
+    std::fs::create_dir_all(f.h.join(".codex")).unwrap();
+    atomic_write(
+        &f.h.join(".codex/config.toml"),
+        b"[mcp_servers.localreview]\ncommand = 'old-command'\n",
+        0o600,
+    )
+    .unwrap();
+    let clients = BTreeMap::from([("localreview".into(), "codex".into())]);
+    let (original, conflicts) = portable_assets::export_with_credential_scope(
+        &f.d,
+        &f.h,
+        &[],
+        &["localreview".into()],
+        &clients,
+        false,
+        false,
+        Some(&[]),
+    )
+    .unwrap();
+    assert!(conflicts.is_empty());
+    let mut request: CaptureRequestV2 = serde_json::from_slice(&f.capture_json).unwrap();
+    request.assets_reviewed = false;
+    request.mcp_clients = clients;
+    request.selection.mcp_sources = vec![objects_overlay_v2::McpSourceSelectionV2 {
+        name: "localreview".into(),
+        definition_digest: objects_overlay_v2::mcp_source_digest(&original.mcps[0]).unwrap(),
+    }];
+    let snapshot = saved_objects_capture_v2::capture(&f.d, &f.h, &request, &NoCredentials).unwrap();
+    let incoming_mcp = portable_assets::split_mcp(
+        discovery::RawServerDefinition {
+            name: "localreview".into(),
+            value: json!({"command":"incoming-command"}),
+        },
+        false,
+        false,
+    )
+    .unwrap();
+    let mut incoming = file_objects_v2::decode(
+        &f.payload,
+        Some(PASSWORD),
+        &file_objects_v2::supported_schema(),
+        Some(&ActualAuthorization),
+    )
+    .unwrap()
+    .objects
+    .into_captured();
+    incoming.assets.mcps = vec![incoming_mcp];
+    f.selection = request.selection.clone();
+    f.selection.mcp_sources[0].definition_digest =
+        objects_overlay_v2::mcp_source_digest(&incoming.assets.mcps[0]).unwrap();
+    f.capture_json = json(&request).unwrap();
+    f.scope = snapshot.source_guard.scope_digest;
+    f.expected = snapshot.source_guard.saved_source_digest;
+    let saved = SavedObjects::capture(incoming, Some(&ActualAuthorization)).unwrap();
+    f.payload = file_objects_v2::encode(
+        &saved,
+        OP,
+        "2026-11-07T00:00:00Z",
+        Some(PASSWORD),
+        Some(&ActualAuthorization),
+    )
+    .unwrap()
+    .into_bytes();
+    let make = || {
+        LocalApplicationV2::new(
+            f.d.clone(),
+            f.h.clone(),
+            f.selection.clone(),
+            serde_json::from_slice(&f.capture_json).unwrap(),
+            f.scope.clone(),
+            Arc::new(SavedSourceSnapshotProviderV2(NoCredentials)),
+            Arc::new(ReceiveFileHostV2 {
+                root: f.d.clone(),
+                home: f.h.clone(),
+                bindings: vec![],
+                trusted_mapping_write: None,
+            }),
+            Some(Zeroizing::new(PASSWORD.into())),
+        )
+        .unwrap()
+    };
+    let host = make();
+    let before = std::fs::read(discovery::skills_store_dir(&f.d).join("fixture/SKILL.md")).unwrap();
+    atomic_write(
+        &f.h.join(".codex/config.toml"),
+        b"[mcp_servers.localreview]\ncommand = 'changed-after-source-freeze'\n",
+        0o600,
+    )
+    .unwrap();
+    assert!(f.apply(&host).is_err());
+    assert_eq!(
+        std::fs::read(discovery::skills_store_dir(&f.d).join("fixture/SKILL.md")).unwrap(),
+        before
+    );
+    assert!(!f
+        .d
+        .join("manager-state/model-receive-v2")
+        .join(OP)
+        .join("receipt.json")
+        .exists());
+    atomic_write(
+        &f.h.join(".codex/config.toml"),
+        b"[mcp_servers.localreview]\ncommand = 'old-command'\n",
+        0o600,
+    )
+    .unwrap();
+    f.apply(&make()).unwrap();
+    assert_eq!(f.theme(), "dark");
+    assert!(f
+        .d
+        .join("manager-state/model-receive-v2")
+        .join(OP)
+        .join("receipt.json")
+        .is_file());
+    assert_eq!(
+        std::fs::read(discovery::skills_store_dir(&f.d).join("fixture/SKILL.md")).unwrap(),
+        b"# Fixture\nNew instruction.\n"
+    );
+    assert_eq!(
+        portable_assets::stored_public(&f.d).unwrap()[0].value["command"],
+        "incoming-command"
+    );
+    let j = make().load(OP).unwrap().unwrap();
+    assert_eq!(j.progress, LocalProgressV2::Applied);
+    assert!(
+        !serde_json::from_slice::<CaptureRequestV2>(&f.capture_json)
+            .unwrap()
+            .assets_reviewed
+    );
 }

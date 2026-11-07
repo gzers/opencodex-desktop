@@ -112,6 +112,8 @@ pub enum ChannelBindingChoiceV2 {
 pub struct ImportBindingsV2 {
     pub channels: Vec<ChannelBindingChoiceV2>,
     pub mcp_clients: BTreeMap<String, String>,
+    /// Deprecated manual-review declaration retained in the v2 wire/context.
+    /// Neither true nor false grants source authority or gates application.
     pub assets_reviewed: bool,
     /// Explicitly adopt the file's namespace only for selected whole channels.
     #[serde(default)]
@@ -926,13 +928,8 @@ impl FileTransferOwnerV2 {
         let validated = narrow_received(objects, scope)
             .and_then(|o| sync_local_v2::select_received_objects_v2(o, scope));
         let target = match &validated {
-            Ok(_)
-                if choices.assets_reviewed
-                    || (scope.skill_names.is_empty() && scope.mcp_sources.is_empty()) =>
-            {
-                target_digest(&self.d, &self.h, scope, choices)?
-            }
-            _ => inv.digest.clone(),
+            Ok(_) => target_digest(&self.d, &self.h, scope, choices)?,
+            Err(_) => inv.digest.clone(),
         };
         let plan_digest = hash(&(
             id,
@@ -966,11 +963,6 @@ impl FileTransferOwnerV2 {
                 })
             {
                 return Err(err("file_selection_required"));
-            }
-            if (!scope.skill_names.is_empty() || !scope.mcp_sources.is_empty())
-                && !choices.assets_reviewed
-            {
-                return Err(err("capture_assets_review_required"));
             }
             if choices
                 .mcp_clients
