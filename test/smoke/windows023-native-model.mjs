@@ -61,8 +61,9 @@ export async function verify023Native(call,output,facts,sandbox){
   snapshot=await invoke('model_v2_file_save',{request:{expected:snapshot.draft.base,edits:[],channelIntents:[{kind:'rename',channelId:channel.id,name}],scopeChannelId:channel.id}})
   const row=snapshot.savedPolicy.channels.find(c=>c.id===channel.id);assert.equal(row.label,name);assert.equal(row.models[0].rawModelId,id)
   const raw=JSON.parse(await readFile(paths.config,'utf8'));assert(raw.providers[row.connection.providerId]);assert(raw.providers[row.connection.providerId].models.includes(id))
-  const directory=await invoke('model_v2_execution_directory');assert.equal(directory.channels.find(c=>c.id===channel.id).label,name)
-  checks.push('actual saved name and native execution directory: '+name)
+  const savedView=await invoke('model_v2_file_snapshot');assert.equal(savedView.savedPolicy.channels.find(c=>c.id===channel.id).label,name)
+  assert.equal(raw.providers[row.connection.providerId].name,name)
+  checks.push('actual provider name, stable saved identity and fresh snapshot: '+name)
  }
  const saved=await readFile(paths.config),reopened=await invoke('model_v2_file_snapshot');assert.equal(reopened.sourceDigest,snapshot.sourceDigest)
  snapshot=await invoke('model_v2_begin_draft',{request:{expectedSource:snapshot.sourceDigest,expectedLibrary:snapshot.libraryDigest,expectedDraft:null}})
@@ -71,7 +72,13 @@ export async function verify023Native(call,output,facts,sandbox){
  checks.push('reopen/discard preserves exact saved config bytes and stable channel identity')
  await assert.rejects(access(win32.join(sandbox,'opencodex-home')))
  const source=await invoke('runtime_source');assert(source&&typeof source==='object')
+ const runtimeDirectory=await evaluate('(async()=>{try{return {ok:true,value:await window.__TAURI_INTERNALS__.invoke("model_v2_execution_directory")}}catch(error){return {ok:false,error}}})()')
+ // A standalone sandbox intentionally lacks the original runtime. Preserve
+ // its actual refusal; the normal complete-bundle port/catalog test owns live
+ // execution-directory acceptance, never this source-only native probe.
+ if(runtimeDirectory.ok)assert(runtimeDirectory.value.channels.some(c=>c.id===channel.id))
+ else assert.equal(runtimeDirectory.error?.code,'storage')
  checks.push('new D/H paths and actual runtime source readback; no legacy sandbox HOME created')
- await writeFile(join(output,'model-native-ui.json'),JSON.stringify({result:'pass',version:'0.2.23',checks,configPath:paths.config,sharedCoverage:'same-source complete Rust and browser suites; no v1 API or old-path fallback',networkGeneration:false},null,2))
+ await writeFile(join(output,'model-native-ui.json'),JSON.stringify({result:'pass',version:'0.2.23',checks,configPath:paths.config,runtimeDirectory,liveRuntimeDirectoryAccepted:runtimeDirectory.ok,sharedCoverage:'same-source complete Rust and browser suites; no v1 API or old-path fallback',networkGeneration:false},null,2))
  const screenshot=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'model023-native.png'),Buffer.from(screenshot.data,'base64'))
 }
