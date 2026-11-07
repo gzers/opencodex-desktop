@@ -1,0 +1,504 @@
+{
+  "schemaVersion": 1,
+  "observedUtc": "2026-11-07T01:21:50.153745+00:00",
+  "runId": 42315908693,
+  "artifactId": 13553127671,
+  "sourceCommit": "47eb7cf7420ba9127f4d7047e4d83231f826035f",
+  "pinnedBaseline": "7730073e96999382697fe2ad8dd8f877352c75a3",
+  "originalZip": {
+    "size_bytes": 715119881,
+    "sha256": "e40a9767c614989972ef070f37ab334ecd474c8553b2809511a6adf9e2577073",
+    "verified": true
+  },
+  "nativeProgramsExtractedOrExecutedByThisAudit": false,
+  "expectedStdoutGroups": 49,
+  "completedExitReceipts": 48,
+  "authoritativeLibraryExit": 101,
+  "lastBinaryExitAuthority": "unavailable",
+  "suiteFailure": {
+    "code": "ordinary_suite_execution_or_identity_failed",
+    "type": "System.Management.Automation.MethodInvocationException",
+    "line": 334,
+    "lastLaunch": {
+      "stage": "exited",
+      "identityAuthority": "retained-CreateProcess-handle",
+      "kernel": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 6544,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\windows_runtime-8cedb5f4e268014f.exe",
+        "creationTimeUtc": "2026-11-07T00:58:59.9117895Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 6544,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296099399117890",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "resumed": true,
+      "failureType": "System.Management.Automation.MethodInvocationException",
+      "failureHResult": -2146233087
+    }
+  },
+  "cleanupVerifiedFromOriginalParent": true,
+  "ordinaryIdentityMatches": true,
+  "allBinariesAttempted": false,
+  "docTestsExecuted": false,
+  "stdoutOnlyAggregate": {
+    "passed": 1739,
+    "failed": 100,
+    "ignored": 26
+  },
+  "stdoutCountsAreNotFullSuiteAcceptance": true,
+  "stdoutGroups": [
+    {
+      "path": "ordinary-rust/ordinary/test-1.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 1,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-2.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-3.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 11,
+      "failed": 0,
+      "ignored": 1,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-4.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-5.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-6.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 2,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-7.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-8.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-9.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-10.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 2,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-11.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-12.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-13.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-14.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-15.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-16.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-17.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-18.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 2,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-19.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-20.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-21.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-22.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-23.stdout.log",
+      "stdoutStatus": "FAILED",
+      "passed": 1590,
+      "failed": 97,
+      "ignored": 5,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-24.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-25.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-26.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-27.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 19,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-28.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-29.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-30.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-31.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-32.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-33.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-34.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 42,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-35.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-36.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 1,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-37.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-38.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-39.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-40.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-41.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-42.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-43.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-44.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-45.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-46.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-47.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-48.stdout.log",
+      "stdoutStatus": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1,
+      "hasExitReceipt": true
+    },
+    {
+      "path": "ordinary-rust/ordinary/test-49.stdout.log",
+      "stdoutStatus": "FAILED",
+      "passed": 14,
+      "failed": 3,
+      "ignored": 4,
+      "hasExitReceipt": false
+    }
+  ],
+  "sourceComparisons": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_private_create.rs",
+      "sourceSha256": "71246dad510b8ef7c52d730a439ae08ca0010cc8db6986cda6c409b0c66ce944",
+      "baselineSha256": "71246dad510b8ef7c52d730a439ae08ca0010cc8db6986cda6c409b0c66ce944",
+      "unchangedAtPinned773": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/model_receive_file_v2.rs",
+      "sourceSha256": "d83f75cb191565617c56e1b61a6cfbbc7088cf12dd79df67e4f4c8f70c4cca73",
+      "baselineSha256": "d83f75cb191565617c56e1b61a6cfbbc7088cf12dd79df67e4f4c8f70c4cca73",
+      "unchangedAtPinned773": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/model_transaction_v2.rs",
+      "sourceSha256": "e8b2351529d887428348723f6a9c84cb322d2a1d44eb2e23d310125e83265535",
+      "baselineSha256": "e8b2351529d887428348723f6a9c84cb322d2a1d44eb2e23d310125e83265535",
+      "unchangedAtPinned773": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/data_root/uninstall.rs",
+      "sourceSha256": "dc88103c0552c16a010459ae73742f9c1468d84a57873d279e741ecc19208493",
+      "baselineSha256": "dc88103c0552c16a010459ae73742f9c1468d84a57873d279e741ecc19208493",
+      "unchangedAtPinned773": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/instance/mod.rs",
+      "sourceSha256": "00c53367691c30decbb4784dd86a48cd56fa2788b0f82834a86d839a56cf35ba",
+      "baselineSha256": "00c53367691c30decbb4784dd86a48cd56fa2788b0f82834a86d839a56cf35ba",
+      "unchangedAtPinned773": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/archive.rs",
+      "sourceSha256": "b14a2bef0f481090f71e0c7956be9f60cfb358603bd4425e8cf7cfc8cebe96f1",
+      "baselineSha256": "b14a2bef0f481090f71e0c7956be9f60cfb358603bd4425e8cf7cfc8cebe96f1",
+      "unchangedAtPinned773": true
+    },
+    {
+      "path": "apps/desktop/tauri/tests/windows_runtime.rs",
+      "sourceSha256": "5c0dda461ef25f09627771b866bd4f1245d5d7dd75909b933a5c300da0216e95",
+      "baselineSha256": "5c0dda461ef25f09627771b866bd4f1245d5d7dd75909b933a5c300da0216e95",
+      "unchangedAtPinned773": true
+    }
+  ]
+}
