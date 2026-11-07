@@ -1,0 +1,46 @@
+{
+  "candidateSource": "dfb3e487fcef46239279f9030823e5621d694e42",
+  "productBaseline": "414d62bab35060e8aa2011300dab926a66727946",
+  "run": 42356993199,
+  "job": 128357140078,
+  "terminal": "failure",
+  "originalArtifact": {
+    "id": 13569273580,
+    "bytes": 573121,
+    "apiDigest": "02477705cb3b8c38038242e47c170fec310cb8fe29e6652f993dd02f2c9ef047",
+    "extractedBy": "gh artifact download",
+    "wholeZipDigestLocallyVerified": false
+  },
+  "allBinaryNativeExitCodes": {
+    "attempted": 49,
+    "allZero": true
+  },
+  "cleanupRefusal": [
+    {
+      "result": "retained-unproven",
+      "process": {
+        "pid": 6644,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\layer_boundaries-3e65926ef8c36638.exe",
+        "creationTicks": "639296393998309962",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      }
+    }
+  ],
+  "aclRestored": true,
+  "desktopAclRestored": true,
+  "remainingNewSidProcesses": [],
+  "accountAndProfileRemoved": false,
+  "sourceBytesUnchanged": true,
+  "diagnosis": "top-level process exit was proven by original retained CreateProcess handle, but historical PID remained in cleanup ledger; final PID lookup could not prove original generation. Exact underlying query exception was not retained, no claim PID reuse definitely occurred.",
+  "successor": {
+    "commit": "fa333dd06a14a7f6885a5bc1c611d84acd7b3e4c",
+    "fix": "after original handle WaitForExit and native ExitCode, retire only exact matching SID/image/creation ledger entry and persist; descendants/live/unproven generations retain existing strict cleanup",
+    "staticChecks": 141,
+    "nativePreflightRun": 42361739805,
+    "nativeResult": "pending"
+  },
+  "installerAndTwoSid": "not executed; no acceptance claimed",
+  "releaseAcceptance": false
+}

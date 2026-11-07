@@ -1,0 +1,11 @@
+
+running 6 tests
+test fallback_keeps_missing_state_when_no_log_file_exists ... ok
+test missing_agent_log_falls_back_to_the_app_log ... ok
+test missing_call_log_does_not_fall_back_to_application_log ... ok
+test missing_log_file_is_explicit_not_an_error ... ok
+test read_recent_returns_200_tail_and_sanitizes_frozen_rules ... ok
+test call_log_is_read_from_the_active_data_root_not_the_logs_partition ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+

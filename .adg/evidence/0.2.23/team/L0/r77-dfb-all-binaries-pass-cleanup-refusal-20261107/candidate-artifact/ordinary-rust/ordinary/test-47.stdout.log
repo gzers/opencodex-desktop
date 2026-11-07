@@ -1,0 +1,26 @@
+
+running 21 tests
+test windows_environment_discovery_rejects_relative_and_noncommand_files ... ok
+test windows_explicit_sandbox_child ... ignored, child entry explicitly executed by the isolated-environment parent
+test windows_install_admission_rejects_mixed_verbatim_traversal_before_creating_directories ... ok
+test windows_local_discovered_tools_install_upgrade_and_failure_recovery ... ignored, explicit local reproduction with discovered tools; installs only into its test root
+test windows_managed_install_accepts_the_extended_form_of_a_local_prefix ... ok
+test windows_codex_shim_receives_the_same_native_user_environment ... ok
+test windows_activation_waits_for_a_short_lived_directory_handle ... ok
+test windows_model_environment_child ... ignored, owned child only
+test windows_managed_install_rejects_unowned_targets_and_restores_old_package_on_entry_failure ... ok
+test windows_npm_cmd_runner_passes_paths_and_controlled_environment ... ok
+test windows_official_managed_registry_upgrade_and_offline_reinstall ... ignored, explicit CI official registry install; no daily profile or generation
+test windows_model_commands_preserve_sandbox_home_and_controlled_tool_path ... ok
+test windows_cmd_sources_support_spaces_unicode_and_official_output ... ok
+test windows_real_version_probe_requires_zero_exit ... ok
+test windows_sandbox_home_discovery_and_pipe_use_the_same_explicit_identity ... ok
+test windows_npm_receives_safe_paths_without_retargeting_validated_storage ... ok
+test windows_source_registration_failure_rolls_back_package_and_entry_then_retries ... ok
+test windows_user_environment_is_explicit_and_does_not_inherit_credentials ... ok
+test windows_stop_observes_actual_zero_and_nonzero_exit_codes ... ok
+test windows_version_probe_executes_node_script_in_a_spaced_path ... ok
+test windows_uninstall_commands_bind_the_selected_home_and_prefix ... ok
+
+test result: ok. 17 passed; 0 failed; 4 ignored; 0 measured; 0 filtered out; finished in 0.98s
+
