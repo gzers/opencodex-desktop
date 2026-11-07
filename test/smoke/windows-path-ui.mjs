@@ -55,19 +55,18 @@ export async function verifyWindowsPathUi(call, output, sandbox){
       for(const key of keys){
         const visible=paths.find(p=>p.key===key)
         assert(visible,'missing actual 023 path: '+key)
-        assert.equal(visible.path,ordinary(snapshot[key].path))
+        assert.equal(visible.path,snapshot[key].path)
         assert.equal(visible.status,snapshot[key].status)
-        assert(!visible.path.startsWith('\\\\?\\'),'unreadable extended Windows prefix')
       }
       assert.equal(ordinary(snapshot.desktopRoot.path).toLowerCase(),ordinary(config.currentDataRoot).toLowerCase())
       assert.equal(ordinary(snapshot.opencodexHome.path).toLowerCase(),ordinary(config.currentOpencodexHome).toLowerCase())
       await evaluate("document.querySelector('[data-testid=paths-details]').click()")
       await wait("!!document.querySelector('dialog.paths-v2-dialog[open] [data-testid=paths-copy]')")
       const detailed=await evaluate("[...document.querySelectorAll('dialog.paths-v2-dialog[open] code')].map(e=>e.textContent)")
-      expectedClipboard=keys.map(key=>ordinary(snapshot[key].path)).join('\n')
+      expectedClipboard=keys.map(key=>snapshot[key].path).join('\n')
       assert.deepEqual(detailed,expectedClipboard.split('\n'))
       report.pathSnapshot=snapshot;report.openedTargets=[]
-      report.checks.push('023 complete U/D/H/program paths and actual statuses agree with production snapshot; no retired editable root input')
+      report.checks.push('023 complete original U/D/H/program path identities and actual statuses agree byte-for-byte with production snapshot; no retired editable root input')
     }else{
     await wait("!!document.querySelector('#data-root-input')")
     await wait(`document.querySelectorAll('.data-root-table code').length>=${pathTargets.managed.length+2}`)
@@ -93,7 +92,7 @@ export async function verifyWindowsPathUi(call, output, sandbox){
     // actual result instead of racing that promise with an immediate read.
     const copied=await wait(`(async()=>{const text=await ${readClipboard};return text===${JSON.stringify(expectedClipboard)}?text:false})()`)
     assert.equal(copied,expectedClipboard)
-    report.checks.push('real clipboard receives readable same-identity data root')
+    report.checks.push(about.version==='0.2.23'?'real clipboard receives all eight full original path identities':'real clipboard receives readable same-identity data root')
     if(about.version==='0.2.23'){
       await click('关闭','dialog.paths-v2-dialog[open] > .ui-dialog-header')
       await wait("!document.querySelector('dialog.paths-v2-dialog[open]')")
