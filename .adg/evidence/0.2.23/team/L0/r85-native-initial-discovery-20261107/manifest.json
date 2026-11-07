@@ -1,0 +1,23 @@
+{
+  "source": "5404302002ac6ca4f0c519951d6fc908d5f2a517",
+  "precedingSource": "ca5694c06821da337b4a28511d232033c74a86cc",
+  "applicationTreeUnchanged": "95ca3f35cd29919bba22ec6d84bd867c2f35fc54",
+  "change": "test tooling only; fresh sandbox skips bundle provision so exact typed unresolved/pending is recorded as not ready before required actual install",
+  "guard": "read success unchanged; invalid/corrupt/unexpected platform/errors propagate; no fabricated ready",
+  "localTests": {
+    "passed": 80,
+    "failed": 0
+  },
+  "latestFullCiRun": 42369266479,
+  "sameProductFullCandidateRun": 42365850198,
+  "earlierNativeDiagnosticRun": 42368883250,
+  "earlierNativeDiagnosticSource": "3dafdbb8d51850e4e37406b65bfeae0444a12060",
+  "nativeDiagnosticHasLatestTypedDiscoveryFollowup": false,
+  "releaseAcceptance": false,
+  "pr72": "metadata updated via authenticated gh after connector403; remains draft",
+  "supersededCiCancellationRequested": [
+    42368879232,
+    42369059182
+  ],
+  "cancellationIsNotPass": true
+}
