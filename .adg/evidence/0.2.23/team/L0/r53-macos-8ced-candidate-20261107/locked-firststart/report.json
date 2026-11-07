@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "kind": "isolated release-bundle ordinary first start; provisioning plus visible environment screen",
+  "app": "/private/tmp/ocxd023-8ced-release-installed-4eey5gtm/OpenCodeX Desktop.app",
+  "root": "/private/tmp/ocxd023-native-startup-ahzndh6w",
+  "version": "0.2.23",
+  "checks": [],
+  "permissions": {
+    "axTrusted": true,
+    "locked": true,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "visualChecks": "deferred: screen locked; bootstrap validation only",
+  "pid": 77725,
+  "result": "fail",
+  "error": "{\"error\":\"locked or AX permission missing\"}\n",
+  "ownedExit": -15,
+  "binarySha256": "0a25080e46f37ad254d52bbea9b7736a2c6f828ab16718152a178dd13615d463",
+  "cleanup": "task-owned subprocess exited; sandbox evidence root removed after recording"
+}

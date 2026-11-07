@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/ocxd023-8ced-release-firststart.py", line 38, in <module>
+    run([helper,'focus',proc.pid,exe])
+  File "/tmp/ocxd023-8ced-release-firststart.py", line 21, in run
+    if p.returncode:raise RuntimeError(p.stdout+p.stderr)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: {"error":"locked or AX permission missing"}
+
