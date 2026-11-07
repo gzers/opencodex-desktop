@@ -1,0 +1,28 @@
+{
+  "source": "414d62bab35060e8aa2011300dab926a66727946",
+  "run": 42347427165,
+  "job": 128328085554,
+  "name": "backend",
+  "conclusion": "success",
+  "checks": [
+    "cargo fmt --check",
+    "cargo clippy --locked --workspace --all-targets -- -D warnings",
+    "bounded original metadata process-tree fixture separately",
+    "remaining workspace original regression, skips only already completed fixture",
+    "doc tests"
+  ],
+  "library": {
+    "passed": 1979,
+    "failed": 0,
+    "ignored": 14,
+    "filteredAlreadyPassedQuery": 1,
+    "seconds": 1075.58
+  },
+  "separateQuery": {
+    "passed": 1,
+    "seconds": 0.24
+  },
+  "rawLogsRetained": true,
+  "fullCiConclusion": "pending Windows backend",
+  "releaseAcceptance": false
+}
