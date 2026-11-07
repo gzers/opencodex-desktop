@@ -1,0 +1,37 @@
+{
+  "source": "fa333dd06a14a7f6885a5bc1c611d84acd7b3e4c",
+  "run": 42361714069,
+  "job": 128371311051,
+  "terminal": "failure",
+  "regressionPrivateCreationCredentialManagedUpgradeOfflineReinstall": "steps passed",
+  "releaseBuild": "passed",
+  "finalExeOrdinaryNativeSmoke": "passed",
+  "failingStep": "Windows native installation failure, metadata recovery and path regression",
+  "failure": "immutable sandbox mismatch at windows-install-recovery.mjs:74; old smoke treats sandbox root as D, actual023D is data/desktop",
+  "productDefectProven": false,
+  "scopeStillRequired": [
+    "actual native registry install 2.91.0",
+    "missing version failure with readable details and retained console",
+    "prior launcher/package/manifest/source unchanged after failure",
+    "reopen recover to2.93.0",
+    "readable copy/open actual new paths with immutable binding",
+    "query/update failure and recovery actual UI",
+    "ready overview synthetic WebDAV no real sync",
+    "shared import dialog/cancel actual new interface"
+  ],
+  "neededAdaptation": [
+    "explicit023D/H",
+    "seed explicit runtime Node/npm in isolated program/runtime, no PATH fallback",
+    "023 public dialog/transfer/recovery consumers",
+    "retain existing deadlines and preservation assertions, no deletion of failing checks"
+  ],
+  "artifact": {
+    "id": 13571838894,
+    "apiBytes": 24735246,
+    "apiSha256": "671305555feb67c1aeb3820e3a6dad3eff55ea1a6349abbc9dd8c6e7f6a08635",
+    "fullZipHashLocallyVerified": false
+  },
+  "latestFullCandidate": 42365850198,
+  "newFullCandidateStartedBecauseOfThisFailure": false,
+  "releaseAcceptance": false
+}
