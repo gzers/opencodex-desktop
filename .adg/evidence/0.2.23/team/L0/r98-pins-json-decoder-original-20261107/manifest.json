@@ -1,0 +1,14 @@
+{
+  "run": 42373324171,
+  "job": 128405748182,
+  "source": "69866da71c7afdd0e98cca3abf8b9fdad14286ce",
+  "terminal": "failure",
+  "frontendAndNativeBuild": "passed",
+  "nativeAppLaunched": false,
+  "failure": "PowerShell default PSCustomObject decoder rejects source runtime-platforms JSON empty-string property names before native launch",
+  "followupSource": "0c869d949",
+  "followup": "ConvertFrom-Json -AsHashtable; actual source pins26.8.1/npm11.19.0 decoded and launcher AST tested under local PowerShell7.5.4",
+  "allNativeRequirementsUnchanged": true,
+  "noArtifactProduced": "launcher failed before app record initialization; original terminal log retained",
+  "releaseAcceptance": false
+}
