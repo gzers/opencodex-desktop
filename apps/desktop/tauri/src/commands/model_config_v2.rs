@@ -90,17 +90,22 @@ pub struct ConditionPreviewRequest {
     pub raw_model_ids: Vec<String>,
     pub channel_id: String,
 }
-#[derive(Serialize)]
+#[derive(Serialize, schemars::JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct ConditionPreviewRow {
     pub raw_model_id: String,
+    pub matching_view: String,
+    pub family: matching_v2::FamilyTraceV2,
+    pub reason_code: matching_v2::MatchReasonV2,
+    pub reason: String,
+    pub conditions: Vec<matching_v2::ConditionMatchTraceV2>,
     pub family_matched: bool,
     pub matched_condition_id: Option<String>,
     pub rules: ModelRules,
     pub protocol: ProtocolStateV2,
     pub field_origins: BTreeMap<String, FieldOriginV2>,
 }
-#[derive(Serialize)]
+#[derive(Serialize, schemars::JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct ConditionPreview {
     pub dto_version: u32,
@@ -116,6 +121,26 @@ pub fn preview_conditions(request: ConditionPreviewRequest) -> Result<ConditionP
             .raw_model_ids
             .iter()
             .any(|s| s.is_empty() || s.len() > 2048 || s.chars().any(char::is_control))
+    {
+        return Err(error("model_limit"));
+    }
+    // Expanded diagnostics are bounded before row/condition/atom allocation.
+    // Normal matching/configuration budgets and outcomes remain unchanged.
+    let trace_per_row = request
+        .content
+        .condition_overrides
+        .iter()
+        .try_fold(1usize, |n, c| {
+            n.checked_add(
+                c.selector.all.len() + 1 + if c.selector.layout_id.is_some() { 2 } else { 0 },
+            )
+        })
+        .ok_or_else(|| error("model_limit"))?;
+    if request
+        .raw_model_ids
+        .len()
+        .checked_mul(trace_per_row)
+        .is_none_or(|n| n > 65_536)
     {
         return Err(error("model_limit"));
     }
@@ -174,7 +199,8 @@ pub fn preview_conditions(request: ConditionPreviewRequest) -> Result<ConditionP
     };
     let mut rows = vec![];
     for raw in request.raw_model_ids {
-        let matched = matching_v2::family_matches_v2(&request.content, &channel.id, &raw);
+        let trace = matching_v2::trace_matching_v2(&request.content, &channel, &raw)?;
+        let matched = trace.family.matched;
         let model = ModelConfigV2 {
             raw_model_id: raw.clone(),
             label: raw.clone(),
@@ -191,6 +217,11 @@ pub fn preview_conditions(request: ConditionPreviewRequest) -> Result<ConditionP
         let effective = matching_v2::resolve_effective_model_v2(&library, &channel, &model)?;
         rows.push(ConditionPreviewRow {
             raw_model_id: raw,
+            matching_view: trace.matching_view,
+            family: trace.family,
+            reason_code: trace.reason_code,
+            reason: trace.reason,
+            conditions: trace.conditions,
             family_matched: matched,
             matched_condition_id: effective.matched_condition_id,
             rules: effective.rules,
@@ -650,29 +681,57 @@ pub async fn model_v2_agent_accept(
         context.opencodex_home.clone(),
         true,
         move |root, home| {
-            let response_digest = digest(request.reviewed_response.as_bytes());
-            if let Ok(receipt) = crate::modules::model_config::agent_runtime_v2::mark_accepted(
+            let accept =
+                || -> Result<crate::modules::model_config::agent_runtime_v2::GeneratedReviewV2> {
+                    let response_digest = digest(request.reviewed_response.as_bytes());
+                    if let Ok(receipt) =
+                        crate::modules::model_config::agent_runtime_v2::mark_accepted(
+                            root,
+                            &context,
+                            &request.run_id,
+                            &response_digest,
+                        )
+                    {
+                        return Ok(receipt);
+                    }
+                    let plan = crate::modules::model_config::agent_runtime_v2::prepare_accept(
+                        root,
+                        &context,
+                        &request.run_id,
+                        &request.expected_library,
+                        request.reviewed_response.as_bytes(),
+                    )?;
+                    crate::modules::model_config::config_file::v2::accept_agent_library(
+                        root, home, &plan,
+                    )?;
+                    crate::modules::model_config::agent_runtime_v2::mark_accepted(
+                        root,
+                        &context,
+                        &request.run_id,
+                        &plan.response_digest,
+                    )
+                };
+            if crate::modules::model_config::agent_runtime_v2::requires_external_authority(
                 root,
-                &context,
                 &request.run_id,
-                &response_digest,
-            ) {
-                return Ok(receipt);
+            )? {
+                crate::modules::model_config::broker::with_external_authority(
+                    root,
+                    &context,
+                    &request.run_id,
+                    || {
+                        accept().map_err(|e| {
+                            crate::modules::model_config::schema::invalid(
+                                &e.code,
+                                "外部任务审阅或保存未完成，原记录保持",
+                            )
+                        })
+                    },
+                )
+                .map_err(|e| error(&e.code))
+            } else {
+                accept()
             }
-            let plan = crate::modules::model_config::agent_runtime_v2::prepare_accept(
-                root,
-                &context,
-                &request.run_id,
-                &request.expected_library,
-                request.reviewed_response.as_bytes(),
-            )?;
-            crate::modules::model_config::config_file::v2::accept_agent_library(root, home, &plan)?;
-            crate::modules::model_config::agent_runtime_v2::mark_accepted(
-                root,
-                &context,
-                &request.run_id,
-                &plan.response_digest,
-            )
         },
     )
     .await
@@ -723,3 +782,161 @@ pub async fn model_v2_agent_buffer(
     )
     .await
 }
+
+#[tauri::command]
+pub async fn model_v2_external_prepare(
+    request: crate::modules::model_config::agent_runtime_v2::GenerateIntentV2,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::broker::ExternalBrokerBundleV2> {
+    let _admission = crate::infrastructure::storage_writers::global()
+        .admit()
+        .map_err(|_| error("model_storage"))?;
+    crate::modules::model_config::broker::prepare_external_broker(
+        data_root.0.clone(),
+        context.inner().clone(),
+        request,
+    )
+    .await
+    .map_err(|e| error(&e.code))
+}
+#[tauri::command]
+pub async fn model_v2_external_activate(
+    task_id: String,
+    prepared_ticket: String,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<()> {
+    let context = context.inner().clone();
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        true,
+        move |root, _| {
+            crate::modules::model_config::broker::activate_external(
+                root,
+                &context,
+                &task_id,
+                &prepared_ticket,
+            )
+            .map_err(|e| error(&e.code))
+        },
+    )
+    .await
+}
+#[tauri::command]
+pub async fn model_v2_external_revoke(
+    task_id: String,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<()> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        true,
+        move |root, _| {
+            crate::modules::model_config::broker::revoke_external(root, &task_id)
+                .map_err(|e| error(&e.code))
+        },
+    )
+    .await
+}
+
+#[tauri::command]
+pub async fn model_v2_file_project(
+    request: crate::modules::model_config::config_file::v2::SaveRequestV2,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::config_file::v2::export::DraftProjectionV2> {
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::model_config::config_file::v2::export::project(&root, &home, request)
+    })
+    .await
+    .map_err(|_| error("model_storage"))?
+}
+
+#[tauri::command]
+pub async fn model_v2_external_run(
+    task_id: String,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::agent_runtime_v2::ExternalRunViewV2> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        false,
+        move |root, _| {
+            crate::modules::model_config::agent_runtime_v2::external_run_view(root, &task_id)
+        },
+    )
+    .await
+}
+
+#[tauri::command]
+pub async fn model_v2_file_history(
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<Vec<crate::modules::model_config::config_file::v2::history::HistoryEntryV2>> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        false,
+        crate::modules::model_config::config_file::v2::history::list,
+    )
+    .await
+}
+#[tauri::command]
+pub async fn model_v2_file_history_prepare(
+    request: crate::modules::model_config::config_file::v2::history::HistoryPrepareV2,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::config_file::v2::history::HistoryPlanV2> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        true,
+        move |root, home| {
+            crate::modules::model_config::config_file::v2::history::prepare(root, home, request)
+        },
+    )
+    .await
+}
+#[tauri::command]
+pub async fn model_v2_file_history_accept(
+    recovery_id: String,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::config_file::v2::FileSnapshotV2> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        true,
+        move |root, home| {
+            crate::modules::model_config::config_file::v2::history::accept(root, home, &recovery_id)
+        },
+    )
+    .await
+}
+
+#[tauri::command]
+pub async fn model_v2_file_discard(
+    expected: crate::modules::model_config::source_v2::ReadBaseV2,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::config_file::v2::FileSnapshotV2> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        true,
+        move |root, home| {
+            crate::modules::model_config::config_file::v2::discard(root, home, expected)
+        },
+    )
+    .await
+}
+
+#[cfg(test)]
+#[path = "model_config_v2_trace_tests.rs"]
+mod trace_tests;

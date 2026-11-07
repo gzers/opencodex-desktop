@@ -4,30 +4,30 @@ import {createPinia,setActivePinia} from 'pinia'
 import {defineComponent,nextTick,ref} from 'vue'
 import ModelsRoute from '@/routes/ModelsRoute.vue'
 import {useModalStore} from '@/app/modal/store'
-import {useModelsStore} from '@/features/models/store'
+import {useModelsV2Store as useModelsStore} from '@/features/models/store-v2'
 import {useModelViewPosition} from '@/features/models/useViewPosition'
-import {emptyContent,modelApi,type ModelSnapshot} from '@/features/models/api'
+import {agentLibrary} from './helpers/modelAgentV2'
 vi.mock('@tauri-apps/api/event',()=>({listen:vi.fn(async()=>()=>{})}))
-vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{load:vi.fn(),save:vi.fn(),stage:vi.fn()}}))
-const snapshot=():ModelSnapshot=>({library:{schemaVersion:1,templates:[{id:'family',source:'user',label:'测试族',defaultRevision:'revision',revisions:[{id:'revision',createdAt:'2026-10-20T00:00:00Z',savedLabel:'测试族',content:emptyContent(),digest:'x',baseRevision:null,changes:[]}]}]},policy:{schemaVersion:1,templateRefs:[],channels:[]},libraryDigest:'base',policyDigest:'policy',workspace:null,workspaceDigest:'workspace'})
-beforeEach(()=>{setActivePinia(createPinia());vi.clearAllMocks();vi.mocked(modelApi.load).mockResolvedValue(snapshot())})
+const ipc=vi.hoisted(()=>vi.fn())
+vi.mock('@tauri-apps/api/core',()=>({invoke:ipc}))
+beforeEach(()=>{setActivePinia(createPinia());ipc.mockReset();ipc.mockImplementation(async command=>{if(command==='model_v2_library')return agentLibrary();throw new Error('Unexpected command '+command)})})
 const button=(wrapper:ReturnType<typeof mount>,label:string)=>wrapper.findAll('button').find(b=>b.text()===label)!
 describe('model view context',()=>{
  it('reacts to navigation changes on the first edit session, without requiring a route remount',async()=>{
   const store=useModelsStore();store.view.tab='templates'
   const wrapper=mount(ModelsRoute,{global:{stubs:{AppTopbar:true,ChannelsView:true,AgentPanel:true,BatchAgentDialog:true,ExternalTaskDialog:true,ModelRuleFields:true,UiDialog:true,UiSelectField:true}}});await flushPromises()
   await button(wrapper,'编辑').trigger('click');await flushPromises()
-  await wrapper.get('[aria-label="收起模版导航"]').trigger('click');await flushPromises()
+  await wrapper.get('[aria-label="收起模版"]').trigger('click');await flushPromises()
   expect(wrapper.get('.detail-workspace').classes()).toContain('detail-collapsed')
-  expect(wrapper.find('[aria-label="展开模版导航"]').exists()).toBe(true)
-  await wrapper.get('[aria-label="展开模版导航"]').trigger('click');await flushPromises()
+  expect(wrapper.find('[aria-label="展开模版"]').exists()).toBe(true)
+  await wrapper.get('[aria-label="展开模版"]').trigger('click');await flushPromises()
   expect(wrapper.get('.detail-workspace').classes()).not.toContain('detail-collapsed');wrapper.unmount()
  })
  it('cancels a new copy only after current confirmation, retaining the source and refusing a stale discard',async()=>{
   const pinia=createPinia();setActivePinia(pinia);const store=useModelsStore(),modal=useModalStore();store.view.tab='templates';const wrapper=mount(ModelsRoute,{global:{plugins:[pinia],stubs:{AppTopbar:true,ChannelsView:true,AgentPanel:true,BatchAgentDialog:true,ExternalTaskDialog:true,TemplateComparisonDialog:true,ModelRuleFields:true,UiDialog:true,UiSelectField:true}}});await flushPromises()
-  await button(wrapper,'编辑').trigger('click');await wrapper.get('textarea').setValue('原缓冲保持');await wrapper.get('[aria-label="复制模版"]').trigger('click');expect(store.draft!.templateId).toBeNull();await wrapper.get('[aria-label="取消新建"]').trigger('click');modal.resolve('cancel');expect(store.draft).not.toBeNull()
-  await wrapper.get('[aria-label="取消新建"]').trigger('click');store.draft!.label='确认期间后来输入';modal.resolve('confirm');expect(store.draft!.label).toBe('确认期间后来输入');expect(store.error).toContain('过期')
-  await wrapper.get('[aria-label="取消新建"]').trigger('click');modal.resolve('confirm');await flushPromises();expect(store.draft).toBeNull();expect(store.view.templateEditor).toBe(false);expect(store.hasNewTemplate).toBe(false);expect(modelApi.save).not.toHaveBeenCalled()
+  await button(wrapper,'编辑').trigger('click');await wrapper.get('textarea').setValue('原缓冲保持');await button(wrapper,'复制模版').trigger('click');expect(store.draft!.baseRevision).toBeNull();await button(wrapper,'取消新建').trigger('click');modal.resolve('cancel');expect(store.draft).not.toBeNull()
+  await button(wrapper,'取消新建').trigger('click');store.setLabel('确认期间后来输入');modal.resolve('confirm');expect(store.draft!.label).toBe('确认期间后来输入');expect(store.error).toContain('过期')
+  await button(wrapper,'取消新建').trigger('click');modal.resolve('confirm');await flushPromises();expect(store.draft).toBeNull();expect(store.view.templateEditor).toBe(false);expect(ipc.mock.calls.some(c=>c[0]==='model_v2_save_revision')).toBe(false)
   await button(wrapper,'编辑').trigger('click');expect(store.draft!.content.description).toBe('原缓冲保持');wrapper.unmount()
  })
 
@@ -35,8 +35,8 @@ describe('model view context',()=>{
   const pinia=createPinia();setActivePinia(pinia);const store=useModelsStore();store.view.tab='templates'
   const options={global:{plugins:[pinia],stubs:{AppTopbar:true,ChannelsView:true,AgentPanel:true,BatchAgentDialog:true,ExternalTaskDialog:true,ModelRuleFields:true,UiDialog:true,UiSelectField:true}}}
   let wrapper=mount(ModelsRoute,options);await flushPromises();await button(wrapper,'编辑').trigger('click');await wrapper.get('input[aria-label="模版名称"]').setValue('保留输入')
-  await button(wrapper,'返回').trigger('click');expect(button(wrapper,'继续编辑').exists()).toBe(true);expect(store.dirty).toBe(true);expect(store.draft!.label).toBe('保留输入')
-  wrapper.unmount();wrapper=mount(ModelsRoute,options);await flushPromises();await button(wrapper,'编辑').trigger('click');expect((wrapper.get('input[aria-label="模版名称"]').element as HTMLInputElement).value).toBe('保留输入');expect(modelApi.save).not.toHaveBeenCalled();wrapper.unmount()
+  await button(wrapper,'返回模版列表').trigger('click');expect(button(wrapper,'继续编辑').exists()).toBe(true);expect(store.dirty).toBe(true);expect(store.draft!.label).toBe('保留输入')
+  wrapper.unmount();wrapper=mount(ModelsRoute,options);await flushPromises();await button(wrapper,'继续编辑').trigger('click');expect((wrapper.get('input[aria-label="模版名称"]').element as HTMLInputElement).value).toBe('保留输入');expect(ipc.mock.calls.some(c=>c[0]==='model_v2_save_revision')).toBe(false);wrapper.unmount()
  })
  it('restores per-view scroll and list trigger focus without changing business state',async()=>{
   const key=ref('list');const Sample=defineComponent({setup(){const root=ref<HTMLElement|null>(null);useModelViewPosition(root,()=>key.value);return{root,key}},template:`<section ref="root"><button v-if="key==='list'" data-model-focus="edit:one">编辑</button><input v-else aria-label="详情" /></section>`})

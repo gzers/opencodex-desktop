@@ -938,3 +938,32 @@ async fn executor_routing_comes_from_private_record_and_external_cannot_generate
     injected["executor"] = json!("internal");
     assert!(serde_json::from_value::<GenerateIntentV2>(injected).is_err());
 }
+
+#[tokio::test]
+async fn original_external_run_view_never_substitutes_latest_or_exports_prompt_authority() {
+    let f = Fixture::new().await;
+    let intent = f.intent(Scene::UpdateModels);
+    let original = prepare_external(&f.root, &f.context, intent.clone()).unwrap();
+    let other = prepare_external(&f.root, &f.context, intent.clone()).unwrap();
+    assert_ne!(original.task_id, other.task_id);
+    let view = external_run_view(&f.root, &original.task_id).unwrap();
+    assert_eq!(view.task_id, original.task_id);
+    assert_eq!(view.result.run_id, original.task_id);
+    assert_eq!(view.targets, intent.targets);
+    assert_eq!(view.expected_library, intent.expected_library);
+    assert!(!view.allow_new);
+    let encoded = serde_json::to_value(view).unwrap();
+    assert!(encoded.get("requirements").is_none());
+    assert!(encoded.get("history").is_none());
+    assert!(encoded.get("buffer").is_none());
+    assert!(encoded.get("contract").is_none());
+    let before = std::fs::read(record_path(&f.root, &original.task_id).unwrap()).unwrap();
+    assert!(external_run_view(&f.root, "../bad").is_err());
+    let internal = prepare_run(&f.root, &f.context, intent).unwrap();
+    assert!(external_run_view(&f.root, &internal.run_id).is_err());
+    assert_eq!(
+        std::fs::read(record_path(&f.root, &original.task_id).unwrap()).unwrap(),
+        before
+    );
+    assert!(f.state.calls.lock().unwrap().is_empty());
+}

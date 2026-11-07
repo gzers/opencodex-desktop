@@ -4,11 +4,11 @@ import UiSegmented from '@/components/ui/UiSegmented.vue'
 import InformationRow from '@/components/patterns/InformationRow.vue'
 import ChannelEditor from '@/features/models/ChannelEditor.vue'
 import {createPinia} from 'pinia'
-import {emptyRules,type ChannelPolicy} from '@/features/models/api'
+import {workspaceChannel} from './helpers/modelWorkspaceV2'
 const options=[{value:'high',label:'高'},{value:'mid',label:'中'},{value:'low',label:'低',disabled:true}]
 describe('0.2.1 public patterns',()=>{
  it('uses one public primary save in the channel sidebar without changing its save intent',async()=>{
-  const channel:ChannelPolicy={id:'fixture',label:'Fixture',templateRefs:[],modelRefs:{},selection:{mode:'none'},modelOrder:[],discovered:[],defaults:emptyRules(),overrides:{},familyOverrides:{},connection:{providerId:'fixture',protocol:'openai-chat',nodes:[],activeNodeId:'',credentialRef:null,enabled:false,allowPrivateNetwork:false}}
+  const channel=workspaceChannel('fixture')
   const w=mount(ChannelEditor,{props:{channel,templates:[],dirty:true},global:{plugins:[createPinia()],stubs:{NodePicker:true,ModelRuleFields:true,ChannelModelTable:true}}})
   const save=w.get('.detail-navigation-primary button[aria-label="保存渠道草稿"]')
   expect(save.classes()).toContain('primary');expect(w.findAll('button[aria-label="保存渠道草稿"]')).toHaveLength(1)

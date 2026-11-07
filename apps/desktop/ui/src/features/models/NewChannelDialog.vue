@@ -26,6 +26,7 @@ const allVisible=computed(()=>rows.value.length>0&&rows.value.every(m=>selected.
 const mixedVisible=computed(()=>rows.value.some(m=>selected.value.includes(m.id))&&!allVisible.value)
 watch(()=>JSON.stringify([authMode.value,url.value,apiKey.value,nodes.value,activeNode.value]),()=>{generation++;discovering.value=false;models.value=[];selected.value=[];discoveryReadId.value=null;status.value='';error.value=''})
 watch(discoveryKind,()=>{generation++;discovering.value=false;discoveryReadId.value=null;error.value=''})
+watch(()=>JSON.stringify({source:store.file?.sourceDigest,library:store.file?.libraryDigest,root:store.file?.rootRevision,base:store.file?.draft?.base}),value=>{if(value!==openingWorkspace){generation++;discovering.value=false;models.value=[];selected.value=[];discoveryReadId.value=null;status.value='';error.value='来源基准已变化，输入保持；请关闭后重新核对连接。'}})
 onBeforeUnmount(()=>{disposed=true;generation++;apiKey.value='';keyVisible.value=false})
 function connectionError(){
  if(!label.value.trim()||[...label.value.trim()].length>80||new TextEncoder().encode(label.value.trim()).length>256)return '请填写渠道名称，名称不能过长'

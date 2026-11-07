@@ -29,6 +29,7 @@ struct Models {
     cut_after_apply: AtomicBool,
     drift_manager: AtomicBool,
     drift_asset: AtomicBool,
+    #[cfg(unix)]
     fail_asset_write: AtomicBool,
 }
 impl Models {
@@ -143,7 +144,7 @@ impl Fixture {
     fn new(secret_skill: bool) -> Self {
         let t = tempfile::Builder::new()
             .prefix("ocxd023-local-apply-")
-            .tempdir_in("/tmp")
+            .tempdir_in(crate::modules::test_sandbox::temporary_parent())
             .unwrap();
         let d = t.path().join("D");
         let h = t.path().join("H");
@@ -231,6 +232,7 @@ impl Fixture {
             cut_after_apply: AtomicBool::new(false),
             drift_manager: AtomicBool::new(false),
             drift_asset: AtomicBool::new(false),
+            #[cfg(unix)]
             fail_asset_write: AtomicBool::new(false),
         });
         Self {
@@ -852,11 +854,11 @@ fn missing_frozen_backup_on_resume_blocks_remaining_business_writes() {
 
 // Actual Host dual-domain composition, only mapping facts/model transaction fake.
 use super::super::sync_host_v2::{
-    self, CurrentSourceProviderV2, MappedCaptureProviderV2,
-    SavedCaptureProviderV2, TargetSlotV2,
+    self, CurrentSourceProviderV2, MappedCaptureProviderV2, SavedCaptureProviderV2, TargetSlotV2,
 };
 struct MappedOwner {
     revision: String,
+    binding_digest: String,
     revision_valid: AtomicBool,
     absent_valid: AtomicBool,
     checks: AtomicUsize,
@@ -879,7 +881,10 @@ impl TrustedMappingOwnerV2 for MappedOwner {
     fn verify(&self, b: &LocalTargetBindingV2) -> ModelResult<()> {
         self.checks.fetch_add(1, SeqCst);
         self.verify_revision(b)?;
-        if !self.absent_valid.load(SeqCst) || self.receipt.exists() {
+        if b.digest != self.binding_digest
+            || !self.absent_valid.load(SeqCst)
+            || self.receipt.exists()
+        {
             return Err(invalid(
                 "host_mapping_changed",
                 "synthetic original absent fact changed",
@@ -938,25 +943,71 @@ struct MappedFixture {
 }
 impl MappedFixture {
     fn new(with_non_model: bool) -> Self {
+        Self::build(with_non_model, false)
+    }
+    fn empty_local_full_remote() -> Self {
+        Self::build(true, true)
+    }
+    fn build(with_non_model: bool, absent_non_model: bool) -> Self {
         let mut f = Fixture::new(false);
         // This really is a new device: explicit empty local channel selection,
         // not a capture failure converted to empty and not an ID/name fallback.
         atomic_write(&f.h.join("config.json"), b"{}", 0o600).unwrap();
         let cloud_home = f._temp.path().join("cloud-H");
+        let cloud_root = f._temp.path().join("cloud-D");
+        std::fs::create_dir_all(cloud_root.join("manager-state")).unwrap();
+        if with_non_model {
+            std::fs::copy(
+                f.d.join(preferences::PREFERENCES_RELATIVE_PATH),
+                cloud_root.join(preferences::PREFERENCES_RELATIVE_PATH),
+            )
+            .unwrap();
+            let skill = discovery::skills_store_dir(&cloud_root).join("fixture");
+            std::fs::create_dir_all(&skill).unwrap();
+            std::fs::copy(
+                discovery::skills_store_dir(&f.d).join("fixture/SKILL.md"),
+                skill.join("SKILL.md"),
+            )
+            .unwrap();
+        }
+        if absent_non_model {
+            std::fs::remove_file(f.d.join(preferences::PREFERENCES_RELATIVE_PATH)).unwrap();
+            std::fs::remove_dir_all(discovery::skills_store_dir(&f.d)).unwrap();
+        }
         std::fs::create_dir_all(&cloud_home).unwrap();
         atomic_write(&cloud_home.join("config.json"), br#"{"providers":{"cloudnewA":{"adapter":"openai-chat","models":["cloud-model"],"authMode":"none"}}}"#, 0o600).unwrap();
         let id = super::super::config_file::v2::with_saved_config(
-            &f.d,
+            &cloud_root,
             &cloud_home,
             |_, p, _, _, _, _| Ok(p.channels[0].id.clone()),
         )
         .unwrap();
-        let local = if with_non_model {
+        let local = if with_non_model && !absent_non_model {
             f.selection.clone()
         } else {
             SelectionV2::default()
         };
-        let mut remote = local.clone();
+        let mut remote = if absent_non_model {
+            f.selection.clone()
+        } else {
+            local.clone()
+        };
+        let mcp = absent_non_model.then(|| portable_assets::Mcp {
+            name: "cloud-only-mcp".into(),
+            definition: json!({"command":"fixture-command","args":["--cloud"]}),
+            secret_fields: vec![],
+            secrets: Default::default(),
+            warnings: vec![],
+        });
+        if let Some(mcp) = &mcp {
+            remote.manager.extensions = true;
+            remote
+                .mcp_sources
+                .push(objects_overlay_v2::McpSourceSelectionV2 {
+                    name: mcp.name.clone(),
+                    definition_digest: objects_overlay_v2::mcp_source_digest(mcp).unwrap(),
+                });
+        }
         remote
             .channels
             .push(objects_overlay_v2::ChannelSelectionV2 {
@@ -984,6 +1035,7 @@ impl MappedFixture {
         .unwrap();
         let owner = Arc::new(MappedOwner {
             revision: binding.mapping_revision.clone(),
+            binding_digest: binding.digest.clone(),
             revision_valid: AtomicBool::new(true),
             absent_valid: AtomicBool::new(true),
             checks: AtomicUsize::new(0),
@@ -1011,18 +1063,33 @@ impl MappedFixture {
         let mapped =
             Arc::new(MappedCaptureProviderV2::new(actual, owner.clone(), binding.clone()).unwrap());
         // Exercise the actual Host preview and its dual-domain SourceGuard.
+        let mut cloud_capture_scope = remote.clone();
+        if absent_non_model {
+            // Model/prefs/Skill use real cloud capture. The explicit public MCP
+            // and extension settings below are validated by the real wrapper.
+            cloud_capture_scope.manager.extensions = false;
+            cloud_capture_scope.mcp_sources.clear();
+        }
         let cloud_request = CaptureRequestV2 {
-            selection: remote.clone(),
+            selection: cloud_capture_scope,
             mcp_clients: BTreeMap::new(),
             assets_reviewed: with_non_model,
         };
-        let mut cloud =
-            saved_objects_capture_v2::capture(&f.d, &cloud_home, &cloud_request, &NoCredentials)
-                .unwrap()
-                .objects
-                .into_captured();
+        let mut cloud = saved_objects_capture_v2::capture(
+            &cloud_root,
+            &cloud_home,
+            &cloud_request,
+            &NoCredentials,
+        )
+        .unwrap()
+        .objects
+        .into_captured();
         if with_non_model {
             cloud.manager.preferences.as_mut().unwrap().theme = "dark".into();
+        }
+        if let Some(mcp) = mcp {
+            cloud.manager.extensions = Some(Default::default());
+            cloud.assets.mcps.push(mcp);
         }
         let cloud = SavedObjects::capture(cloud, Some(&ActualAuthorization)).unwrap();
         f.payload = file_objects_v2::encode(
@@ -1113,7 +1180,10 @@ fn mapped_revision_or_absent_drift_before_apply_has_zero_business_writes() {
         } else {
             m.owner.absent_valid.store(false, SeqCst);
         }
-        assert!(m.f.apply(&host).is_err());
+        assert_eq!(
+            m.f.apply(&host).unwrap_err().code,
+            ErrorCode::SyncPlanChanged
+        );
         assert_eq!(m.f.models.applies.load(SeqCst), 0);
         assert!(!m.f.models.business().exists());
         assert_eq!(m.f.models.prepares.load(SeqCst), 0);
@@ -1226,38 +1296,344 @@ fn mapped_same_id_changed_binding_digest_is_rejected_before_receipt_reuse() {
     assert_eq!(m.f.models.applies.load(SeqCst), 1);
 }
 
-struct FrozenMappedSource { guard: SourceGuard, root: String }
-impl SourceSnapshotProviderV2 for FrozenMappedSource {
-    fn current(&self, _: &Path, _: &Path, _: &CaptureRequestV2) -> ModelResult<SourceGuard> { Ok(self.guard.clone()) }
-    fn root(&self, _: &Path, _: &Path, _: &CaptureRequestV2) -> ModelResult<String> { Ok(self.root.clone()) }
-    fn target(&self, _: &Path, _: &Path, _: &CaptureRequestV2) -> ModelResult<String> { Ok(self.guard.saved_source_digest.clone()) }
+struct FrozenMappedSource {
+    guard: SourceGuard,
+    root: String,
 }
-struct DriftAfterPrepare { models: Arc<Models>, owner: Arc<MappedOwner>, revision: bool }
+impl SourceSnapshotProviderV2 for FrozenMappedSource {
+    fn current(&self, _: &Path, _: &Path, _: &CaptureRequestV2) -> ModelResult<SourceGuard> {
+        Ok(self.guard.clone())
+    }
+    fn root(&self, _: &Path, _: &Path, _: &CaptureRequestV2) -> ModelResult<String> {
+        Ok(self.root.clone())
+    }
+    fn target(&self, _: &Path, _: &Path, _: &CaptureRequestV2) -> ModelResult<String> {
+        Ok(self.guard.saved_source_digest.clone())
+    }
+}
+struct DriftAfterPrepare {
+    models: Arc<Models>,
+    owner: Arc<MappedOwner>,
+    revision: bool,
+}
 impl ModelApplyV2 for DriftAfterPrepare {
-    fn prepare(&self, id: &str, objects: &SavedObjects, s: &SelectionV2, expected: &str) -> ModelResult<ModelApplyPlanHandle> {
+    fn prepare(
+        &self,
+        id: &str,
+        objects: &SavedObjects,
+        s: &SelectionV2,
+        expected: &str,
+    ) -> ModelResult<ModelApplyPlanHandle> {
         let h = self.models.prepare(id, objects, s, expected)?;
-        if self.revision { self.owner.revision_valid.store(false, SeqCst); } else { self.owner.absent_valid.store(false, SeqCst); }
+        if self.revision {
+            self.owner.revision_valid.store(false, SeqCst);
+        } else {
+            self.owner.absent_valid.store(false, SeqCst);
+        }
         Ok(h)
     }
-    fn protect(&self, id: &str, h: &ModelApplyPlanHandle, b: bool) -> ModelResult<()> { self.models.protect(id, h, b) }
-    fn apply_once(&self, id: &str, objects: &SavedObjects, h: &ModelApplyPlanHandle, b: bool) -> ModelResult<ModelApplyReceipt> {
+    fn protect(&self, id: &str, h: &ModelApplyPlanHandle, b: bool) -> ModelResult<()> {
+        self.models.protect(id, h, b)
+    }
+    fn apply_once(
+        &self,
+        id: &str,
+        objects: &SavedObjects,
+        h: &ModelApplyPlanHandle,
+        b: bool,
+    ) -> ModelResult<ModelApplyReceipt> {
         self.models.apply_once(id, objects, h, b)
     }
-    fn status(&self, id: &str, h: &ModelApplyPlanHandle) -> ModelResult<ModelApplyStatus> { self.models.status(id, h) }
+    fn status(&self, id: &str, h: &ModelApplyPlanHandle) -> ModelResult<ModelApplyStatus> {
+        self.models.status(id, h)
+    }
 }
 #[test]
 fn mapped_owner_is_independent_of_capture_and_rechecked_before_protect() {
     for revision in [true, false] {
         let m = MappedFixture::new(true);
         let r: CaptureRequestV2 = serde_json::from_slice(&m.f.capture_json).unwrap();
-        let source = Arc::new(FrozenMappedSource { guard: m.source.current(&m.f.d, &m.f.h, &r).unwrap(),
-            root: m.source.root(&m.f.d, &m.f.h, &r).unwrap() });
-        let models = Arc::new(DriftAfterPrepare { models: m.f.models.clone(), owner: m.owner.clone(), revision });
-        let host = LocalApplicationV2::new_mapped(m.f.d.clone(), m.f.h.clone(), m.f.selection.clone(), r,
-            m.f.scope.clone(), source, models, None, m.binding.clone(), m.owner.clone()).unwrap();
+        let source = Arc::new(FrozenMappedSource {
+            guard: m.source.current(&m.f.d, &m.f.h, &r).unwrap(),
+            root: m.source.root(&m.f.d, &m.f.h, &r).unwrap(),
+        });
+        let models = Arc::new(DriftAfterPrepare {
+            models: m.f.models.clone(),
+            owner: m.owner.clone(),
+            revision,
+        });
+        let host = LocalApplicationV2::new_mapped(
+            m.f.d.clone(),
+            m.f.h.clone(),
+            m.f.selection.clone(),
+            r,
+            m.f.scope.clone(),
+            source,
+            models,
+            None,
+            m.binding.clone(),
+            m.owner.clone(),
+        )
+        .unwrap();
         let theme = m.f.theme();
-        assert_eq!(m.f.apply(&host).unwrap_err().code, ErrorCode::SyncPlanChanged);
-        assert_eq!(m.f.models.prepares.load(SeqCst), 1); assert_eq!(m.f.models.applies.load(SeqCst), 0);
-        assert_eq!(m.f.theme(), theme); assert_eq!(host.progress(OP).unwrap(), Some(LocalProgressV2::Prepared));
+        assert_eq!(
+            m.f.apply(&host).unwrap_err().code,
+            ErrorCode::SyncPlanChanged
+        );
+        assert_eq!(m.f.models.prepares.load(SeqCst), 1);
+        assert_eq!(m.f.models.applies.load(SeqCst), 0);
+        assert_eq!(m.f.theme(), theme);
+        assert_eq!(host.progress(OP).unwrap(), Some(LocalProgressV2::Prepared));
+    }
+}
+
+#[test]
+fn mapped_empty_local_receives_full_remote_preferences_extensions_skill_and_mcp() {
+    let m = MappedFixture::empty_local_full_remote();
+    assert!(m.binding.local_scope == SelectionV2::default());
+    assert!(m.binding.remote_scope.manager.preferences);
+    assert!(m.binding.remote_scope.manager.extensions);
+    assert_eq!(m.binding.remote_scope.skill_names, ["fixture"]);
+    assert_eq!(m.binding.remote_scope.mcp_sources.len(), 1);
+    let prefs = m.f.d.join(preferences::PREFERENCES_RELATIVE_PATH);
+    let extensions =
+        m.f.d
+            .join(crate::modules::extensions::projection::CONFIG_RELATIVE_PATH);
+    let skill = discovery::skills_store_dir(&m.f.d).join("fixture/SKILL.md");
+    assert!(!prefs.exists());
+    assert!(!extensions.exists());
+    assert!(!skill.exists());
+    assert!(portable_assets::stored_public(&m.f.d).unwrap().is_empty());
+    // Ordinary same-domain construction still rejects this split authority.
+    assert!(LocalApplicationV2::new(
+        m.f.d.clone(),
+        m.f.h.clone(),
+        m.f.selection.clone(),
+        serde_json::from_slice(&m.f.capture_json).unwrap(),
+        m.f.scope.clone(),
+        m.source.clone(),
+        m.f.models.clone(),
+        None
+    )
+    .is_err());
+    let host = m.host().unwrap();
+    m.f.apply(&host).unwrap();
+    assert_eq!(host.progress(OP).unwrap(), Some(LocalProgressV2::Applied));
+    assert_eq!(m.f.theme(), "dark");
+    assert!(extensions.is_file());
+    assert_eq!(
+        std::fs::read(&skill).unwrap(),
+        b"# Fixture\nOld instruction.\n"
+    );
+    let mcps = portable_assets::stored_public(&m.f.d).unwrap();
+    assert_eq!(mcps.len(), 1);
+    assert_eq!(mcps[0].name, "cloud-only-mcp");
+    assert_eq!(
+        mcps[0].value,
+        json!({"command":"fixture-command","args":["--cloud"]})
+    );
+    let manager: Value =
+        serde_json::from_slice(&std::fs::read(host.manager_path(OP)).unwrap()).unwrap();
+    assert_eq!(manager["files"].as_array().unwrap().len(), 2);
+    assert!(manager["files"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .all(|f| f["before"].is_null()));
+    let assets: Value =
+        serde_json::from_slice(&std::fs::read(host.asset_path(OP)).unwrap()).unwrap();
+    assert!(assets["skillsBefore"]["fixture"].is_null());
+    assert_eq!(assets["storeBefore"], hash(b""));
+    let journal = host.load(OP).unwrap().unwrap();
+    assert_eq!(
+        journal.target_binding_digest.as_ref(),
+        Some(&m.binding.digest)
+    );
+    assert!(!journal.targets.unwrap().is_empty());
+}
+
+#[test]
+fn mapped_filtered_non_model_scopes_need_exact_issued_binding_and_reviewed_context() {
+    let m = MappedFixture::empty_local_full_remote();
+    let create =
+        |selection: SelectionV2, capture: CaptureRequestV2, binding: LocalTargetBindingV2| {
+            LocalApplicationV2::new_mapped(
+                m.f.d.clone(),
+                m.f.h.clone(),
+                selection,
+                capture,
+                m.f.scope.clone(),
+                m.source.clone(),
+                m.f.models.clone(),
+                None,
+                binding,
+                m.owner.clone(),
+            )
+        };
+    let request = || serde_json::from_slice::<CaptureRequestV2>(&m.f.capture_json).unwrap();
+    let mut wider = m.f.selection.clone();
+    wider.skill_names.push("not-issued".into());
+    assert!(create(wider.clone(), request(), m.binding.clone()).is_err());
+    let mut local = request();
+    local.selection.manager.preferences = true;
+    assert!(create(m.f.selection.clone(), local, m.binding.clone()).is_err());
+    let mut unreviewed = request();
+    unreviewed.assets_reviewed = false;
+    assert!(create(m.f.selection.clone(), unreviewed, m.binding.clone()).is_err());
+    // Even a freshly recomputed digest is not authority without owner issuance.
+    let forged = LocalTargetBindingV2::freeze(
+        m.binding.mapping_revision.clone(),
+        m.binding.local_scope.clone(),
+        wider.clone(),
+        m.binding.direction.clone(),
+        m.binding.slots.clone(),
+    )
+    .unwrap();
+    let result = create(wider, request(), forged);
+    assert_eq!(result.err().unwrap().code, ErrorCode::SyncPlanChanged);
+    assert_eq!(m.f.models.prepares.load(SeqCst), 0);
+    assert!(!m.f.models.business().exists());
+}
+
+struct CreatePreferencesAfterProtection {
+    models: Arc<Models>,
+    once: AtomicBool,
+}
+impl ModelApplyV2 for CreatePreferencesAfterProtection {
+    fn prepare(
+        &self,
+        id: &str,
+        objects: &SavedObjects,
+        s: &SelectionV2,
+        expected: &str,
+    ) -> ModelResult<ModelApplyPlanHandle> {
+        self.models.prepare(id, objects, s, expected)
+    }
+    fn protect(&self, id: &str, h: &ModelApplyPlanHandle, b: bool) -> ModelResult<()> {
+        self.models.protect(id, h, b)?;
+        if self.once.swap(false, SeqCst) {
+            atomic_write(
+                &self.models.d.join(preferences::PREFERENCES_RELATIVE_PATH),
+                br#"{"theme":"light"}"#,
+                0o600,
+            )?;
+        }
+        Ok(())
+    }
+    fn apply_once(
+        &self,
+        id: &str,
+        objects: &SavedObjects,
+        h: &ModelApplyPlanHandle,
+        b: bool,
+    ) -> ModelResult<ModelApplyReceipt> {
+        self.models.apply_once(id, objects, h, b)
+    }
+    fn status(&self, id: &str, h: &ModelApplyPlanHandle) -> ModelResult<ModelApplyStatus> {
+        self.models.status(id, h)
+    }
+}
+#[test]
+fn mapped_non_model_absence_is_frozen_by_real_helper_not_inferred_from_empty_capture() {
+    let m = MappedFixture::empty_local_full_remote();
+    let models = Arc::new(CreatePreferencesAfterProtection {
+        models: m.f.models.clone(),
+        once: AtomicBool::new(true),
+    });
+    let host = LocalApplicationV2::new_mapped(
+        m.f.d.clone(),
+        m.f.h.clone(),
+        m.f.selection.clone(),
+        serde_json::from_slice(&m.f.capture_json).unwrap(),
+        m.f.scope.clone(),
+        m.source.clone(),
+        models,
+        None,
+        m.binding.clone(),
+        m.owner.clone(),
+    )
+    .unwrap();
+    assert_eq!(
+        m.f.apply(&host).unwrap_err().code,
+        ErrorCode::SyncLocalChanged
+    );
+    assert_eq!(m.f.models.applies.load(SeqCst), 0);
+    assert_eq!(m.f.theme(), "light");
+    assert!(!discovery::skills_store_dir(&m.f.d).join("fixture").exists());
+    assert!(portable_assets::stored_public(&m.f.d).unwrap().is_empty());
+    assert_eq!(host.progress(OP).unwrap(), Some(LocalProgressV2::Protected));
+    let manager = std::fs::read(host.manager_path(OP)).unwrap();
+    assert_eq!(
+        m.f.apply(&host).unwrap_err().code,
+        ErrorCode::SyncLocalChanged
+    );
+    assert_eq!(std::fs::read(host.manager_path(OP)).unwrap(), manager);
+    assert_eq!(m.f.models.applies.load(SeqCst), 0);
+}
+
+#[test]
+fn local_model_journal_witness_is_read_only_and_does_not_claim_applied() {
+    let m = MappedFixture::new(true);
+    let host = m.host().unwrap();
+    m.f.models.cut_after_apply.store(true, SeqCst);
+    assert!(m.f.apply(&host).is_err());
+    let j = host.load(OP).unwrap().unwrap();
+    assert_eq!(j.progress, LocalProgressV2::Protected);
+    let handle = j.model.unwrap();
+    // A local witness is still only journal context when the independent
+    // participant receipt is unavailable. Identity restore needs the REAL proof.
+    std::fs::remove_file(m.f.models.receipt(OP)).unwrap();
+    let before = std::fs::read(host.path(OP).unwrap()).unwrap();
+    let witness =
+        LocalApplicationV2::local_model_journal_proof(&m.f.d, &m.f.h, OP, &handle).unwrap();
+    assert_eq!(witness.binding_digest(), m.binding.digest);
+    assert_eq!(witness.operation_id(), OP);
+    witness.verify_current().unwrap();
+    assert_eq!(std::fs::read(host.path(OP).unwrap()).unwrap(), before);
+    let wrong = ModelApplyPlanHandle::new(hash(b"other plan")).unwrap();
+    assert!(LocalApplicationV2::local_model_journal_proof(&m.f.d, &m.f.h, OP, &wrong).is_err());
+    assert!(
+        LocalApplicationV2::local_model_journal_proof(&m.f.d, &m.f.h, EXPORT, &handle).is_err()
+    );
+    assert!(!host.path(EXPORT).unwrap().exists());
+}
+
+#[test]
+fn local_model_witness_rejects_corruption_wrong_home_and_changed_original_context() {
+    let m = MappedFixture::new(true);
+    let host = m.host().unwrap();
+    m.f.models.cut_after_apply.store(true, SeqCst);
+    assert!(m.f.apply(&host).is_err());
+    let j = host.load(OP).unwrap().unwrap();
+    let handle = j.model.as_ref().unwrap().clone();
+    let witness =
+        LocalApplicationV2::local_model_journal_proof(&m.f.d, &m.f.h, OP, &handle).unwrap();
+    let before = std::fs::read(host.path(OP).unwrap()).unwrap();
+    let other_home = m.f._temp.path().join("other-H");
+    std::fs::create_dir(&other_home).unwrap();
+    assert!(
+        LocalApplicationV2::local_model_journal_proof(&m.f.d, &other_home, OP, &handle).is_err()
+    );
+    let mut corrupt = before.clone();
+    corrupt.push(10);
+    atomic_write(&host.path(OP).unwrap(), &corrupt, 0o600).unwrap();
+    assert!(LocalApplicationV2::local_model_journal_proof(&m.f.d, &m.f.h, OP, &handle).is_err());
+    atomic_write(&host.path(OP).unwrap(), &before, 0o600).unwrap();
+    let mut changed = host.load(OP).unwrap().unwrap();
+    changed.expected_target = hash(b"new baseline forbidden");
+    host.save(changed).unwrap();
+    assert!(witness.verify_current().is_err());
+    atomic_write(&host.path(OP).unwrap(), &before, 0o600).unwrap();
+    witness.verify_current().unwrap();
+    #[cfg(unix)]
+    {
+        let path = host.path(OP).unwrap();
+        std::fs::remove_file(&path).unwrap();
+        let outside = m.f._temp.path().join("outside-journal");
+        atomic_write(&outside, &before, 0o600).unwrap();
+        std::os::unix::fs::symlink(&outside, &path).unwrap();
+        assert!(
+            LocalApplicationV2::local_model_journal_proof(&m.f.d, &m.f.h, OP, &handle).is_err()
+        );
     }
 }

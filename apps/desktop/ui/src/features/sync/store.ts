@@ -5,10 +5,12 @@ import {
   getSyncConfig,
   saveSyncEndpoint as saveSyncEndpointCommand,
   testSyncConnection as testSyncConnectionCommand,
-  remoteVersionApi,
   type SaveSyncEndpointRequest, type SyncConfigDto, type SyncOperationResultDto,
 } from './api'
-import { runSyncNow as runSyncNowCommand } from '@/platform/workspace'
+import {useConfigSyncV2Store} from './store-v2'
+import {useConfigFileV2Store} from './file-store-v2'
+import {useTransferBackupsV2Store} from '@/features/backup/transfer-backups-v2'
+import {resultOwnerV2Api} from './result-owner-v2'
 import { endpointBinding, persistObservation, readObservation, type ConnectionObservation, type ObservationDetails, type ObservationToken, type ObservedState, type WebdavState } from './observation'
 
 function failedStatus(message: string): SyncOperationResultDto {
@@ -27,14 +29,33 @@ export const useSyncStore = defineStore('sync', {
     configRequest: 0,
     saving: false, testing: false, running: false,
     connectionOpen: false, resultOpen: false, resultId: null as string | null,
+    resultReadError:'',resultResolving:false,resultReadSequence:0,
     lastResultId: null as string | null, fileResultId: null as string | null, webdavResultId: null as string | null,
     pendingAction: null as null | 'sync' | 'export' | 'connection',
   }),
   actions: {
     openConnection() { this.connectionOpen = true },
     rememberResult(id: string, remote: boolean) { this.lastResultId = id; if (remote) this.webdavResultId = id; else this.fileResultId = id },
-    openResult(id?: string) { this.resultId = id ?? this.lastResultId; this.resultOpen = true },
-    closeResult() { this.resultOpen = false },
+    async openResult(id?:string){
+      const target=id??this.lastResultId;if(!target)return false
+      const request=++this.resultReadSequence,current=()=>request===this.resultReadSequence
+      this.resultId=target;this.resultReadError='';this.resultResolving=true;this.resultOpen=false
+      try{
+        const owner=await resultOwnerV2Api.read(target);if(!current())return false
+        if(owner===null)throw new Error('未找到该原操作的受控结果记录。')
+        if(owner.operationId!==target||!['file','sync','recovery','scope_restore'].includes(owner.kind))throw new Error('结果归属回执与原操作不符。')
+        let found=false
+        if(owner.kind==='file')found=await useConfigFileV2Store().showOriginal(target,current)
+        else if(owner.kind==='sync')found=await useConfigSyncV2Store().readResult(target,current)
+        else if(owner.kind==='recovery')found=await useConfigSyncV2Store().readRecovery(target,current)
+        else found=await useTransferBackupsV2Store().showOriginal(target,current)
+        if(!current())return false
+        if(!found)throw new Error('已核对归属，但原操作结果暂未读回；原结果保持。')
+        return true
+      }catch(cause){if(current()){const code=cause&&typeof cause==='object'&&'code'in cause?String(cause.code):cause instanceof Error?cause.message:'';this.resultReadError='原操作结果读取失败，已保留原结果。'+(code?' '+code:'');this.resultOpen=true}return false}
+      finally{if(current())this.resultResolving=false}
+    },
+    closeResult(){this.resultReadSequence++;this.resultOpen=false;this.resultResolving=false},
     setWebdavState(next: ConnectionState) { this.webdavState = next },
     requestAction(action: 'sync' | 'export' | 'connection') { this.pendingAction = action },
     takeAction(action: 'sync' | 'export' | 'connection'): boolean { if (this.pendingAction !== action) return false; this.pendingAction = null; return true },
@@ -45,6 +66,7 @@ export const useSyncStore = defineStore('sync', {
       const before = endpointBinding(this.config?.endpoint), after = endpointBinding(config.endpoint)
       this.config = config; this.configReadError = ''
       if (before !== after || invalidate) {
+        useConfigSyncV2Store().endpointChanged()
         this.observationGeneration++
         this.observation = invalidate ? null : readObservation(after)
         this.status = null
@@ -89,9 +111,12 @@ export const useSyncStore = defineStore('sync', {
       const sequence = this.observationSequence
       const current = () => request === this.versionRequest && this.ownsObservation(token) && sequence === this.observationSequence
       try {
-        const value = await remoteVersionApi.read()
-        if (!current()) return false
-        this.recordObservation(token, 'connected', { source: 'version-check', remoteTime: value.remoteSavedAt, remoteExists: value.remoteExists, remoteRevision: value.remoteRevision, remoteRead: value.remoteExists ? 'present' : 'absent', remoteObservedAt: new Date().toISOString() })
+        const owner=useConfigSyncV2Store();await owner.loadCatalog()
+        if(!current())return false
+        if(owner.error||!owner.catalog)throw new Error(owner.error||'目录不可读')
+        const state=owner.catalog.cloudState
+        if(['incomplete','invalid'].includes(state))throw new Error('目录读取不完整或内容无效')
+        this.recordObservation(token,['conflict','initialization_ambiguous'].includes(state)?'conflict':'connected',{source:'version-check',remoteTime:null,remoteExists:!['empty','generation_empty'].includes(state),remoteRead:['incomplete','invalid'].includes(state)?'failed':['empty','generation_empty'].includes(state)?'absent':'present'})
         return true
       } catch {
         if (current()) this.recordObservation(token, 'failed', { source: 'version-check', remoteRead: 'failed', remoteObservedAt: new Date().toISOString() })
@@ -154,20 +179,8 @@ export const useSyncStore = defineStore('sync', {
       } finally { this.testing = false; this.endObservation(token) }
     },
     async runNow(): Promise<boolean> {
-      if (this.running) return false
-      const token = this.observationToken(); this.running = true; this.beginObservation(token, 'syncing')
-      try {
-        const status = await runSyncNowCommand()
-        if (this.ownsObservation(token)) this.status = status
-        if (status.connectionState === 'conflict') this.recordObservation(token, 'conflict', { source: 'sync' })
-        else if (status.operationState === 'succeeded' && status.connectionState === 'synced') this.recordObservation(token, 'synced', { source: 'sync' })
-        else if (status.operationState === 'failed' || status.connectionState === 'failed') this.recordObservation(token, 'failed', { source: 'sync' })
-        else if (status.connectionState === 'synced') this.recordObservation(token, 'connected', { source: 'sync' })
-        return status.connectionState === 'synced' && status.operationState === 'succeeded'
-      } catch {
-        if (this.ownsObservation(token)) this.status = failedStatus('同步执行未完成；可能已有内容应用或上传，请检查同步状态与本地内容后重试。')
-        this.recordObservation(token, 'failed', { source: 'sync' }); return false
-      } finally { this.running = false; this.endObservation(token) }
+      // Every user entry prepares the same central preview. Never executes a v1 pipe.
+      const owner=useConfigSyncV2Store(),token=this.observationToken();await owner.loadCatalog();if(owner.error){if(this.ownsObservation(token)){this.status=failedStatus('同步预览读取失败；未确认本次写入。'+owner.error);this.recordObservation(token,'failed')}return false}await owner.prepare();if(owner.error&&this.ownsObservation(token)){this.status=failedStatus('同步预览尚未完成；未确认本次写入。'+owner.error);this.recordObservation(token,'failed')}return false
     },
   },
 })

@@ -56,6 +56,7 @@ export interface RemoteScope {channelFamilies?:Record<string,FamilyScope>;channe
 export interface RemoteOptions {templateIds?:string[];accountIds?:string[];preferences:boolean;extensions:boolean;includeKeys:boolean;skillNames?:string[];mcpNames?:string[];mcpSources?:Record<string,string>;extensionCredentials?:boolean;credentialIds?:string[];assetsReviewed?:boolean;allTemplates?:boolean;allChannels?:boolean;allSkills?:boolean;allMcps?:boolean;passphrase?:string}
 export function remoteScope(scope:TransferScope,options?:RemoteOptions):RemoteScope{return {...(scope.channelFamilies?{channelFamilies:scope.channelFamilies}:{}),...(scope.channelModels?{channelModels:scope.channelModels}:{}),...(options?.accountIds?{accountIds:options.accountIds}:{}),templateIds:options?.templateIds??[...new Set(scope.templateRefs.map(reference=>reference.templateId))],channelIds:scope.channelIds,includeGlobal:scope.includeGlobal,preferences:options?.preferences??true,extensions:options?.extensions??true,includeKeys:options?.includeKeys??false,...(options?.skillNames?{skillNames:options.skillNames}:{}),...(options?.mcpNames?{mcpNames:options.mcpNames}:{}),...(options?.mcpSources&&Object.keys(options.mcpSources).length?{mcpSources:options.mcpSources}:{}),...(options?.extensionCredentials!==undefined?{extensionCredentials:options.extensionCredentials,credentialIds:options.credentialIds,assetsReviewed:options.assetsReviewed}:{}),...(options?.allTemplates!==undefined?{allTemplates:options.allTemplates,allChannels:options.allChannels,allSkills:options.allSkills,allMcps:options.allMcps}:{})}}
 export interface ExportedModels { path: string; digest: string; templates: number; channels: number }
+const retiredRemoteV1=async<T>():Promise<T>=>{throw new Error('旧同步计划不能写入新版目录；请从新版同步预览核对当前范围与原操作。')}
 export const modelTransferApi = {
   protect:(planId:string,passphrase?:string)=>invoke<FilePlan>('model_transfer_protect',{planId,passphrase:passphrase??null}),
   discardUnattempted:(planId:string)=>invoke<boolean>('model_transfer_discard_unattempted',{planId}),
@@ -72,13 +73,13 @@ export const modelTransferApi = {
   latestIncoming:()=>invoke<IncomingPlan|null>('portable_latest_incoming'),
   recompare:(incomingId:string,passphrase?:string)=>invoke<IncomingPlan>('portable_recompare',{incomingId,passphrase:passphrase??null}),
   openReceived:(incomingId:string,passphrase?:string)=>invoke<IncomingPlan>('portable_open_received',{incomingId,passphrase:passphrase??null}),
-  loadRemoteScope:()=>invoke<RemoteScope>('config_sync_scope'),
-  saveRemoteScope:(scope:RemoteScope)=>invoke<RemoteScope>('config_sync_save_scope',{scope}),
-  prepareUpload: (scope: TransferScope,options?:RemoteOptions) => invoke<UploadPlan>('config_sync_prepare', { scope:remoteScope(scope,options),passphrase:options?.passphrase??null }),
-  publish: (planId: string) => invoke<UploadPlan>('config_sync_publish', { planId }),
-  download: (passphrase?:string) => invoke<IncomingPlan>('config_sync_download',{passphrase:passphrase??null}),
-  latestUpload:()=>invoke<UploadPlan|null>('config_sync_latest_upload'),
-  checkSync:()=>invoke<SyncCheck>('config_sync_check'),
+  loadRemoteScope:()=>retiredRemoteV1<RemoteScope>(),
+  saveRemoteScope:(_scope:RemoteScope)=>retiredRemoteV1<RemoteScope>(),
+  prepareUpload: (_scope: TransferScope,_options?:RemoteOptions) => retiredRemoteV1<UploadPlan>(),
+  publish: (_planId: string) => retiredRemoteV1<UploadPlan>(),
+  download: (_passphrase?:string) => retiredRemoteV1<IncomingPlan>(),
+  latestUpload:()=>retiredRemoteV1<UploadPlan|null>(),
+  checkSync:()=>retiredRemoteV1<SyncCheck>(),
 }
 
 export function scopeFor(snapshot: ModelSnapshot, templateIds: string[], channelIds: string[], global: boolean, versions: Record<string,string>,channelModels:Record<string,string[]>={},channelFamilies:Record<string,FamilyScope>={}): TransferScope {
@@ -94,7 +95,7 @@ export interface TransferBackupStatus {id:string;enabled:boolean;ready:boolean;g
 export const transferResultApi={backups:()=>invoke<TransferBackupStatus[]>('list_transfer_backups'),previewRestore:(incomingId:string,groups:string[])=>invoke<string>('preview_transfer_restore',{incomingId,groups}),readMode:(mode:'file'|'webdav')=>invoke<TransferResult|null>('transfer_result',{operationId:null,mode}),read:(operationId?:string)=>invoke<TransferResult|null>('transfer_result',{operationId:operationId??null}),openDirectory:(planId:string)=>invoke<void>('open_transfer_export_directory',{planId}),backup:(incomingId:string)=>invoke<TransferBackupStatus|null>('transfer_backup_status',{incomingId}),restore:(incomingId:string,groups:string[],baseline:string)=>invoke<ModelSnapshot>('restore_transfer_backup',{incomingId,groups,baseline})}
 
 export interface CloudSyncCatalog{binding:string;objects:{id:string;category:string;categoryLabel:string;label:string;detail:string;mark:string;files?:string[]}[];accounts?:PortableAccount[];credentialIds:string[];createdAt:string}
-export const cloudCatalogApi={load:()=>invoke<CloudSyncCatalog|null>('config_sync_catalog')}
+export const cloudCatalogApi={load:()=>retiredRemoteV1<CloudSyncCatalog|null>()}
 
 export const transferFileDialog={open:(options:OpenDialogOptions):Promise<string|string[]|null>=>open(options)}
 

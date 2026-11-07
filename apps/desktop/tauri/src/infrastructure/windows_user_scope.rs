@@ -13,6 +13,8 @@ use std::{
     path::{Component, Path, PathBuf},
     ptr,
 };
+#[cfg(test)]
+use windows_sys::Win32::UI::Shell::{FOLDERID_LocalAppData, SHGetKnownFolderPath};
 use windows_sys::Win32::{
     Foundation::{CloseHandle, LocalFree, HANDLE},
     Security::{
@@ -20,7 +22,7 @@ use windows_sys::Win32::{
         TOKEN_QUERY, TOKEN_USER,
     },
     System::Threading::{GetCurrentProcess, GetCurrentThread, OpenProcessToken, OpenThreadToken},
-    UI::Shell::{FOLDERID_LocalAppData, GetUserProfileDirectoryW, SHGetKnownFolderPath},
+    UI::Shell::GetUserProfileDirectoryW,
 };
 
 #[link(name = "advapi32")]
@@ -56,6 +58,7 @@ extern "system" {
 }
 #[link(name = "ole32")]
 extern "system" {
+    #[cfg(test)]
     fn CoTaskMemFree(value: *const c_void);
 }
 #[link(name = "kernel32")]
@@ -180,6 +183,7 @@ pub(crate) fn current_user_profile() -> io::Result<PathBuf> {
     }
     checked_folder(&path[..needed as usize - 1])
 }
+#[cfg(test)]
 pub(crate) fn current_user_local_app_data() -> io::Result<PathBuf> {
     let mut path = ptr::null_mut();
     let token = process_token()?;
@@ -303,7 +307,7 @@ pub(crate) fn protect_current_user_path(path: &Path, mode: u32) -> io::Result<()
         .rev()
     {
         let parent = OpenOptions::new()
-            .access_mode(0x80)
+            .access_mode(0x8000_0000) // GENERIC_READ includes directory-list access for delete sharing.
             .share_mode(3)
             .custom_flags(0x0200_0000 | 0x0020_0000)
             .open(ancestor)?;

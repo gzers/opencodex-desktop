@@ -8,6 +8,7 @@ use super::{
     saved_objects_capture_v2::{self, CaptureCredentialsV2, CaptureRequestV2},
     schema::{invalid, ModelResult},
     sync_host_v2::{DirectionV2, LocalTargetBindingV2, TargetExpectationV2, TrustedMappingOwnerV2},
+    sync_identity_v2::AdoptedMappingProofV2,
     sync_v2::types::*,
 };
 use crate::{
@@ -29,6 +30,9 @@ use std::{
 };
 use zeroize::Zeroizing;
 
+#[path = "sync_local_v2_restore.rs"]
+pub mod restore;
+
 /// Trusted host boundary: use the exact D/H and explicit preview request.
 pub trait SourceSnapshotProviderV2: Send + Sync {
     fn current(&self, d: &Path, h: &Path, request: &CaptureRequestV2) -> ModelResult<SourceGuard>;
@@ -37,17 +41,27 @@ pub trait SourceSnapshotProviderV2: Send + Sync {
     /// Recovery proof for unfinished NON-model writes after the model receipt.
     /// Check the frozen revision or THIS operation's receipted after-revision,
     /// never the original Absent fact or current capture. Otherwise fail closed.
-    fn verify_applied_mapping(&self, _operation_id: &str, _binding: &LocalTargetBindingV2) -> ModelResult<()> {
+    fn verify_applied_mapping(
+        &self,
+        _operation_id: &str,
+        _binding: &LocalTargetBindingV2,
+    ) -> ModelResult<()> {
         Err(invalid("host_mapping_changed", "映射恢复需要独立版本证明"))
     }
 }
 impl LocalApplication for LocalApplicationV2 {
     fn root_revision(&self) -> SyncResult<Digest> {
+        if let Some(proof) = &self.remaining {
+            return Ok(proof.root_revision().to_owned());
+        }
         self.source
             .root(&self.d, &self.h, &self.capture)
             .map_err(|_| failure(ErrorCode::SyncSourceChanged))
     }
     fn current_source(&self) -> SyncResult<SourceGuard> {
+        if self.remaining.is_some() {
+            return Err(failure(ErrorCode::SyncPlanChanged));
+        }
         let g = self
             .source
             .current(&self.d, &self.h, &self.capture)
@@ -58,6 +72,9 @@ impl LocalApplication for LocalApplicationV2 {
         Ok(g)
     }
     fn target_digest(&self, scope: &str) -> SyncResult<Digest> {
+        if self.remaining.is_some() {
+            return Err(failure(ErrorCode::SyncPlanChanged));
+        }
         if scope != self.scope {
             return Err(failure(ErrorCode::SyncScopeChanged));
         }
@@ -75,6 +92,9 @@ impl LocalApplication for LocalApplicationV2 {
         backup: bool,
     ) -> SyncResult<()> {
         canonical_id(id)?;
+        if let Some(proof) = &self.remaining {
+            self.verify_remaining_operation(id, proof)?;
+        }
         if scope != self.scope {
             return Err(failure(ErrorCode::SyncScopeChanged));
         }
@@ -92,8 +112,9 @@ impl LocalApplication for LocalApplicationV2 {
                 self.verify_plan_guards(&j)?;
                 if j.progress != LocalProgressV2::Applied {
                     j.progress = LocalProgressV2::Applied;
-                    self.save(j)?;
+                    j = self.save(j)?;
                 }
+                restore::finish(self, &j)?;
                 return Ok(());
             }
         }
@@ -233,6 +254,7 @@ impl LocalApplication for LocalApplicationV2 {
             portable_assets::verify(&self.d, id, objects.partitions().assets)
                 .map_err(|_| failure(ErrorCode::SyncLocalChanged))?;
             self.verify_mapping(false)?;
+            restore::freeze_before(self, &j)?;
             let r = self
                 .models
                 .apply_once(id, &objects, &handle, backup)
@@ -287,7 +309,8 @@ impl LocalApplication for LocalApplicationV2 {
             return Err(failure(ErrorCode::SyncOperationUnknown));
         }
         j.progress = LocalProgressV2::Applied;
-        self.save(j)?;
+        j = self.save(j)?;
+        restore::finish(self, &j)?;
         Ok(())
     }
     fn export_once(
@@ -297,6 +320,9 @@ impl LocalApplication for LocalApplicationV2 {
         schema: &PayloadSchemaRef,
         scope: &str,
     ) -> SyncResult<Uuid> {
+        if self.remaining.is_some() {
+            return Err(failure(ErrorCode::SyncPlanChanged));
+        }
         canonical_id(id)?;
         if scope != self.scope {
             return Err(failure(ErrorCode::SyncScopeChanged));
@@ -488,18 +514,25 @@ fn publish_new(d: &Path, p: &Path, bytes: &[u8]) -> SyncResult<()> {
     let parent = p
         .parent()
         .ok_or_else(|| failure(ErrorCode::SyncLocalStateIo))?;
-    std::fs::create_dir_all(parent).map_err(|_| failure(ErrorCode::SyncLocalStateIo))?;
-    checked(d, parent)?;
-    let mut tmp = tempfile::NamedTempFile::new_in(parent)
+    crate::infrastructure::platform::create_private_dir_all(parent, 0o700)
         .map_err(|_| failure(ErrorCode::SyncLocalStateIo))?;
-    crate::infrastructure::platform::set_mode(tmp.path(), 0o600)
+    checked(d, parent)?;
+    let mut tmp = tempfile::Builder::new()
+        .prefix(".ocxd-local-")
+        .make_in(parent, |path| {
+            crate::infrastructure::platform::create_new_private_file(path, 0o600)
+        })
         .map_err(|_| failure(ErrorCode::SyncLocalStateIo))?;
     use std::io::Write;
     tmp.write_all(bytes)
         .and_then(|_| tmp.as_file().sync_all())
         .map_err(|_| failure(ErrorCode::SyncLocalStateIo))?;
-    std::fs::hard_link(tmp.path(), p).map_err(|_| failure(ErrorCode::SyncOperationCollision))?;
-    drop(tmp);
+    // Close the private no-delete-sharing handle before publishing/removing its
+    // pathname on Windows. The TempPath still owns cleanup on every failure.
+    let tmp = tmp.into_temp_path();
+    std::fs::hard_link(&tmp, p).map_err(|_| failure(ErrorCode::SyncOperationCollision))?;
+    tmp.close()
+        .map_err(|_| failure(ErrorCode::SyncLocalStateIo))?;
     sync_parent(d, p)
 }
 #[cfg(test)]
@@ -576,6 +609,14 @@ pub trait ModelApplyV2: Send + Sync {
         backup: bool,
     ) -> ModelResult<ModelApplyReceipt>;
     fn status(&self, id: &str, handle: &ModelApplyPlanHandle) -> ModelResult<ModelApplyStatus>;
+    /// Actual protected owner images only; None never authorizes a ready backup.
+    fn scope_backup_images(
+        &self,
+        _id: &str,
+        _handle: &ModelApplyPlanHandle,
+    ) -> ModelResult<Option<Vec<super::model_transaction_v2::WriteV2>>> {
+        Ok(None)
+    }
 }
 
 struct ActualAuthorization;
@@ -694,6 +735,147 @@ struct CheckedJournal {
     checksum: String,
     journal: Journal,
 }
+/// Read-only witness from the ORIGINAL local journal. This is NOT an Applied
+/// receipt. Only the identity owner can combine it with receive's real proof.
+/// No public constructor, Clone, serde, or Debug; callers cannot mint witnesses.
+pub struct LocalModelJournalProofV2 {
+    journal: Journal,
+}
+impl LocalModelJournalProofV2 {
+    pub fn operation_id(&self) -> &str {
+        &self.journal.id
+    }
+    pub fn handle(&self) -> &ModelApplyPlanHandle {
+        self.journal
+            .model
+            .as_ref()
+            .expect("validated model witness")
+    }
+    pub fn root_revision(&self) -> &str {
+        &self.journal.root_revision
+    }
+    pub fn binding_digest(&self) -> &str {
+        self.journal
+            .target_binding_digest
+            .as_deref()
+            .expect("validated mapped witness")
+    }
+    pub fn selection_hash(&self) -> &str {
+        &self.journal.selection_hash
+    }
+    pub fn expected_target(&self) -> &str {
+        &self.journal.expected_target
+    }
+    pub fn scope(&self) -> &str {
+        &self.journal.scope
+    }
+    pub(crate) fn root(&self) -> &Path {
+        &self.journal.root
+    }
+    pub(crate) fn home(&self) -> &Path {
+        &self.journal.home
+    }
+    /// Reopen only the old operation. Progress may advance, immutable admission
+    /// and protected participant images may not change or be recreated.
+    pub(crate) fn verify_current(&self) -> SyncResult<()> {
+        let old = &self.journal;
+        let current = read_local_journal(&old.root, &old.home, &old.id)?
+            .ok_or_else(|| failure(ErrorCode::SyncJournalInvalid))?;
+        validate_model_journal(&current, self.handle())?;
+        if journal_admission(&current)? != journal_admission(old)?
+            || current.progress < old.progress
+        {
+            return Err(failure(ErrorCode::SyncOperationCollision));
+        }
+        Ok(())
+    }
+}
+fn journal_admission(j: &Journal) -> SyncResult<Vec<u8>> {
+    json(&serde_json::json!({
+        "id":j.id,"root":j.root,"home":j.home,"rootRevision":j.root_revision,
+        "payloadHash":j.payload_hash,"payloadLen":j.payload_len,"schema":j.schema,"scope":j.scope,
+        "selectionHash":j.selection_hash,"requestHash":j.request_hash,"binding":j.target_binding_digest,
+        "expectedTarget":j.expected_target,"backup":j.backup,"model":j.model,
+        "managerGuard":j.manager_guard,"assetGuard":j.asset_guard,"targets":j.targets,"backups":j.backups,
+    }))
+}
+fn validate_model_journal(j: &Journal, handle: &ModelApplyPlanHandle) -> SyncResult<()> {
+    for anchor in [&j.root, &j.home] {
+        if !safety::inspect(anchor)
+            .map_err(|_| failure(ErrorCode::SyncSourceChanged))?
+            .is_dir()
+            || anchor
+                .canonicalize()
+                .map_err(|_| failure(ErrorCode::SyncSourceChanged))?
+                != *anchor
+        {
+            return Err(failure(ErrorCode::SyncSourceChanged));
+        }
+    }
+    if j.export
+        || !j.protected
+        || j.progress < LocalProgressV2::Protected
+        || j.progress > LocalProgressV2::Applied
+        || j.model.as_ref() != Some(handle)
+        || j.manager_guard.is_none()
+        || j.asset_guard.is_none()
+        || j.targets.is_none()
+        || j.schema != file_objects_v2::supported_schema()
+        || j.payload_len > file_objects_v2::FILE_LIMIT
+        || [
+            &j.root_revision,
+            &j.scope,
+            &j.expected_target,
+            &j.selection_hash,
+            &j.request_hash,
+            &j.payload_hash,
+        ]
+        .iter()
+        .any(|d| !super::schema_v2::valid_digest(d))
+        || !j
+            .target_binding_digest
+            .as_deref()
+            .is_some_and(super::schema_v2::valid_digest)
+    {
+        return Err(failure(ErrorCode::SyncJournalInvalid));
+    }
+    let root_revision = super::schema_v2::digest(
+        &super::schema_v2::canonical_bytes(&(&j.root, &j.home))
+            .map_err(|_| failure(ErrorCode::SyncJournalInvalid))?,
+    );
+    if j.root_revision != root_revision {
+        return Err(failure(ErrorCode::SyncSourceChanged));
+    }
+    Ok(())
+}
+fn read_local_journal(d: &Path, h: &Path, id: &str) -> SyncResult<Option<Journal>> {
+    canonical_id(id)?;
+    let p = d
+        .join("manager-state/sync-local-v2")
+        .join(format!("{id}.json"));
+    checked(d, &p)?;
+    match std::fs::symlink_metadata(&p) {
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+        Err(_) => return Err(failure(ErrorCode::SyncJournalInvalid)),
+        Ok(_) => (),
+    }
+    private(&p)?;
+    let bytes = safety::read_file(&p, 4 * 1024 * 1024)
+        .map_err(|_| failure(ErrorCode::SyncJournalInvalid))?;
+    let c: CheckedJournal =
+        serde_json::from_slice(&bytes).map_err(|_| failure(ErrorCode::SyncJournalInvalid))?;
+    if json(&c)? != bytes
+        || hash(&json(&c.journal)?) != c.checksum
+        || c.journal.id != id
+        || c.journal.version != 2
+    {
+        return Err(failure(ErrorCode::SyncJournalInvalid));
+    }
+    if c.journal.root != d || c.journal.home != h {
+        return Err(failure(ErrorCode::SyncSourceChanged));
+    }
+    Ok(Some(c.journal))
+}
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Target {
@@ -719,6 +901,7 @@ pub struct LocalApplicationV2 {
     models: Arc<dyn ModelApplyV2>,
     payload_passphrase: Option<Zeroizing<String>>,
     mapped: Option<MappedLocalContext>,
+    remaining: Option<Arc<AdoptedMappingProofV2>>,
 }
 struct MappedLocalContext {
     binding: LocalTargetBindingV2,
@@ -726,6 +909,106 @@ struct MappedLocalContext {
     root_revision: String,
 }
 impl LocalApplicationV2 {
+    /// Read the exact existing local journal, without locks that create files,
+    /// capture, repair, or model writes. Must be paired with the actual receive
+    /// Applied proof: the journal alone makes NO claim that a model was applied.
+    pub fn local_model_journal_proof(
+        d: &Path,
+        h: &Path,
+        id: &str,
+        handle: &ModelApplyPlanHandle,
+    ) -> SyncResult<LocalModelJournalProofV2> {
+        for anchor in [d, h] {
+            if !anchor.is_absolute()
+                || !safety::inspect(anchor)
+                    .map_err(|_| failure(ErrorCode::SyncLocalStateIo))?
+                    .is_dir()
+            {
+                return Err(failure(ErrorCode::SyncLocalStateIo));
+            }
+        }
+        let d = d
+            .canonicalize()
+            .map_err(|_| failure(ErrorCode::SyncLocalStateIo))?;
+        let h = h
+            .canonicalize()
+            .map_err(|_| failure(ErrorCode::SyncLocalStateIo))?;
+        let journal = read_local_journal(&d, &h, id)?
+            .ok_or_else(|| failure(ErrorCode::SyncJournalInvalid))?;
+        validate_model_journal(&journal, handle)?;
+        Ok(LocalModelJournalProofV2 { journal })
+    }
+    /// Recovery-only host for the ORIGINAL receipted operation. No new current
+    /// source or target baseline is observed; the protected local journal and
+    /// actual model status remain mandatory on each invocation.
+    #[allow(clippy::too_many_arguments)]
+    pub fn new_mapped_remaining(
+        d: PathBuf,
+        h: PathBuf,
+        selection: SelectionV2,
+        capture: CaptureRequestV2,
+        scope: String,
+        source: Arc<dyn SourceSnapshotProviderV2>,
+        models: Arc<dyn ModelApplyV2>,
+        payload_passphrase: Option<Zeroizing<String>>,
+        proof: Arc<AdoptedMappingProofV2>,
+    ) -> SyncResult<Self> {
+        if selection != proof.binding().remote_scope
+            || capture.selection != proof.binding().local_scope
+        {
+            return Err(failure(ErrorCode::SyncScopeChanged));
+        }
+        let mut host = Self::new(
+            d,
+            h,
+            capture.selection.clone(),
+            capture,
+            scope,
+            source,
+            models,
+            payload_passphrase,
+        )?;
+        let witness = proof.local_journal();
+        if host.d != witness.root()
+            || host.h != witness.home()
+            || host.scope != witness.scope()
+            || hash(&json(&selection)?) != witness.selection_hash()
+            || hash(&json(&host.capture)?) != witness.journal.request_hash
+        {
+            return Err(failure(ErrorCode::SyncOperationCollision));
+        }
+        if (!selection.skill_names.is_empty() || !selection.mcp_sources.is_empty())
+            && !host.capture.assets_reviewed
+        {
+            return Err(failure(ErrorCode::SyncScopeChanged));
+        }
+        host.selection = selection;
+        host.verify_remaining_operation(proof.operation_id(), &proof)?;
+        host.remaining = Some(proof);
+        Ok(host)
+    }
+    fn verify_remaining_operation(
+        &self,
+        id: &str,
+        proof: &AdoptedMappingProofV2,
+    ) -> SyncResult<()> {
+        if id != proof.operation_id() {
+            return Err(failure(ErrorCode::SyncOperationCollision));
+        }
+        proof.local_journal().verify_current()?;
+        proof
+            .verify_adopted(id)
+            .map_err(|_| failure(ErrorCode::SyncPlanChanged))?;
+        if !self.model_applied(id, proof.handle())? {
+            return Err(failure(ErrorCode::SyncOperationUnknown));
+        }
+        let j = self
+            .load(id)?
+            .ok_or_else(|| failure(ErrorCode::SyncJournalInvalid))?;
+        self.verify_guards(&j)?;
+        self.verify_backups(&j)?;
+        Ok(())
+    }
     #[allow(clippy::too_many_arguments)]
     pub fn new(
         d: PathBuf,
@@ -777,6 +1060,7 @@ impl LocalApplicationV2 {
             models,
             payload_passphrase,
             mapped: None,
+            remaining: None,
         })
     }
     /// The binding is trusted host memory only; journal stores its digest.
@@ -807,18 +1091,13 @@ impl LocalApplicationV2 {
         {
             return Err(failure(ErrorCode::SyncScopeChanged));
         }
-        // Only channel identities may cross domains. Keep all other explicit
-        // choices/context and the existing actual MCP digest relationship.
-        let mut remote = selection.clone();
-        let mut local = capture.selection.clone();
-        remote.channels.clear();
-        local.channels.clear();
-        for s in [&mut remote, &mut local] {
-            for m in &mut s.mcp_sources {
-                m.definition_digest.clear();
-            }
-        }
-        if remote != local {
+        // The owner-issued binding freezes BOTH exact scopes. Local capture
+        // can omit absent non-model objects while receive keeps remote choices.
+        // Their actual before/absent images are frozen by the target/helpers;
+        // do not widen choices or reconstruct the mapper's filtering here.
+        if (!selection.skill_names.is_empty() || !selection.mcp_sources.is_empty())
+            && !capture.assets_reviewed
+        {
             return Err(failure(ErrorCode::SyncScopeChanged));
         }
         for slot in &binding.slots {
@@ -861,9 +1140,18 @@ impl LocalApplicationV2 {
         Ok(host)
     }
     fn binding_digest(&self) -> Option<String> {
+        if let Some(proof) = &self.remaining {
+            return Some(proof.binding().digest.clone());
+        }
         self.mapped.as_ref().map(|m| m.binding.digest.clone())
     }
     fn verify_mapping(&self, model_applied: bool) -> SyncResult<()> {
+        if let Some(proof) = &self.remaining {
+            if !model_applied {
+                return Err(failure(ErrorCode::SyncOperationUnknown));
+            }
+            return self.verify_remaining_operation(proof.operation_id(), proof);
+        }
         if let Some(m) = &self.mapped {
             if model_applied {
                 return Ok(());
@@ -878,6 +1166,9 @@ impl LocalApplicationV2 {
         Ok(())
     }
     fn verify_mapping_for_remaining(&self, j: &Journal, objects: &SavedObjects) -> SyncResult<()> {
+        if let Some(proof) = &self.remaining {
+            return self.verify_remaining_operation(&j.id, proof);
+        }
         if let Some(m) = &self.mapped {
             let manager_done = self.manager_completed(&j.id)?;
             let asset_done = portable_assets::apply_progress(&self.d, &j.id)
@@ -918,28 +1209,7 @@ impl LocalApplicationV2 {
         TargetFileLock::lock(&path).map_err(|_| failure(ErrorCode::SyncLocalStateIo))
     }
     fn load(&self, id: &str) -> SyncResult<Option<Journal>> {
-        let p = self.path(id)?;
-        if !p.exists() {
-            return Ok(None);
-        }
-        private(&p)?;
-        let bytes = safety::read_file(&p, 4 * 1024 * 1024)
-            .map_err(|_| failure(ErrorCode::SyncJournalInvalid))?;
-        let c: CheckedJournal =
-            serde_json::from_slice(&bytes).map_err(|_| failure(ErrorCode::SyncJournalInvalid))?;
-        // Exact emitted representation rejects duplicate keys and extra fields.
-        if json(&c)? != bytes
-            || hash(&json(&c.journal)?) != c.checksum
-            || c.journal.id != id
-            || c.journal.version != 2
-        {
-            return Err(failure(ErrorCode::SyncJournalInvalid));
-        }
-        let j = c.journal;
-        if j.root != self.d || j.home != self.h {
-            return Err(failure(ErrorCode::SyncSourceChanged));
-        }
-        Ok(Some(j))
+        read_local_journal(&self.d, &self.h, id)
     }
     fn save(&self, j: Journal) -> SyncResult<Journal> {
         let p = self.path(&j.id)?;
@@ -978,20 +1248,26 @@ impl LocalApplicationV2 {
             {
                 return Err(failure(ErrorCode::SyncOperationCollision));
             }
-            let root = match &self.mapped {
-                Some(m) => m.root_revision.clone(),
-                None => self.root_revision()?,
+            let root = if let Some(m) = &self.mapped {
+                m.root_revision.clone()
+            } else if let Some(proof) = &self.remaining {
+                proof.root_revision().to_owned()
+            } else {
+                self.root_revision()?
             };
             if j.root_revision != root {
                 return Err(failure(ErrorCode::SyncSourceChanged));
             }
             return Ok(j);
         }
-        if !export && self.target_digest(scope)? != expected {
-            return Err(failure(ErrorCode::SyncLocalChanged));
+        if self.remaining.is_some() {
+            return Err(failure(ErrorCode::SyncJournalInvalid));
         }
         if !export {
             self.verify_mapping(false)?;
+        }
+        if !export && self.target_digest(scope)? != expected {
+            return Err(failure(ErrorCode::SyncLocalChanged));
         }
         if !export {
             for p in [

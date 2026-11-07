@@ -463,7 +463,7 @@ fn existing_unknown_empty_corrupt_and_missing_manifest_are_preserved() {
 fn activation_failure_compensates_only_own_install_and_allows_retry() {
     let f = Fixture::new();
     let (bytes, pin) = f.bytes();
-    assert!(provision_inner(&f.i, &f.d, &f.archive, &bytes, &pin, true).is_err());
+    assert!(provision_inner(&f.i, &f.d, &f.archive, &bytes, &pin, true, None).is_err());
     assert!(!f.i.join("runtime").exists());
     assert!(!f.i.join(PENDING).exists());
     assert!(!f.d.exists());
@@ -594,7 +594,7 @@ fn rewrite_raw_tar(f: &mut Fixture, mutate: impl FnOnce(&mut Vec<u8>)) {
 }
 #[test]
 fn raw_tar_hardlink_fifo_device_pax_gnu_and_dot_paths_refused() {
-    for kind in [b'1', b'6', b'3', b'4', b'x', b'g', b'L', b'K', b'S'] {
+    for kind in *b"1634xgLKS" {
         let mut f = Fixture::new();
         rewrite_raw_tar(&mut f, |bytes| {
             let mut h = tar::Header::new_ustar();
@@ -796,5 +796,93 @@ fn safe_link_chains_and_in_runtime_directory_targets_remain_valid() {
             .canonicalize()
             .unwrap(),
         f.i.join("runtime/node/lib/node_modules/npm/bin/npm-cli.js")
+    );
+}
+
+#[cfg(target_os = "macos")]
+#[test]
+fn mac_container_rejected_before_archive_lock_stage_runtime_or_store_write() {
+    let f = Fixture::new();
+    let user = f.root.join("isolated-profile");
+    let applications = user.join("Applications");
+    let old_app = applications.join("OpenCodeX Desktop.app/Contents/MacOS/app");
+    mkdir(old_app.parent().unwrap()).unwrap();
+    fs::write(&old_app, b"old app stays").unwrap();
+    let config = user.join("config-sentinel");
+    fs::write(&config, b"old config stays").unwrap();
+    let before = tree_snapshot(&user);
+    let entries: BTreeSet<_> = fs::read_dir(&applications)
+        .unwrap()
+        .map(|e| e.unwrap().file_name())
+        .collect();
+    let (bytes, pin) = f.bytes();
+    for i in [&applications, &user] {
+        // Valid pinned bundle: fail only on the real installation boundary.
+        let error =
+            provision_inner(i, &f.d, &f.archive, &bytes, &pin, false, Some(&user)).unwrap_err();
+        assert!(matches!(error, AppError::RuntimeManaged { ref code, .. }
+            if code == "macos_install_container"));
+        assert_eq!(tree_snapshot(&user), before);
+        assert!(!f.d.exists());
+    }
+    assert_eq!(
+        fs::read_dir(&applications)
+            .unwrap()
+            .map(|e| e.unwrap().file_name())
+            .collect::<BTreeSet<_>>(),
+        entries
+    );
+    assert!(!applications.join(".runtime-bundle.lock").exists());
+    assert!(!applications.join(PENDING).exists());
+    assert!(!applications.join(FAILURE).exists());
+    // Public entry also refuses a real container BEFORE reading any archive.
+    let error = provision(
+        Path::new("/Applications"),
+        &f.d,
+        &f.root.join("missing-archive"),
+        b"",
+        "",
+    )
+    .unwrap_err();
+    assert!(matches!(error, AppError::RuntimeManaged { ref code, .. }
+        if code == "macos_install_container"));
+    assert!(!f.d.exists());
+}
+
+#[cfg(target_os = "macos")]
+#[test]
+fn mac_whole_folder_under_personal_applications_installs_and_reopens_read_only() {
+    let mut f = Fixture::new();
+    let user = f.root.join("isolated-profile");
+    f.i = user.join("Applications/OpenCodeX Desktop");
+    let (bytes, pin) = f.bytes();
+    let first = provision_inner(&f.i, &f.d, &f.archive, &bytes, &pin, false, Some(&user)).unwrap();
+    assert!(matches!(first, ProvisionResult::Installed { .. }));
+    let before = tree_snapshot(&f.i);
+    let entries: BTreeSet<_> = fs::read_dir(&f.i)
+        .unwrap()
+        .map(|e| e.unwrap().file_name())
+        .collect();
+    fs::set_permissions(&f.i, fs::Permissions::from_mode(0o555)).unwrap();
+    let second = f.root.join("second-user/desktop");
+    // Public production entry takes the read-only existing path, with no install-target
+    // write probe and no need to reopen/create a lock in I.
+    let result = provision(&f.i, &second, &f.root.join("missing-archive"), b"", "");
+    fs::set_permissions(&f.i, fs::Permissions::from_mode(0o700)).unwrap();
+    assert!(matches!(
+        result.unwrap(),
+        ProvisionResult::AlreadyInstalled { .. }
+    ));
+    assert_eq!(tree_snapshot(&f.i), before);
+    assert_eq!(
+        fs::read_dir(&f.i)
+            .unwrap()
+            .map(|e| e.unwrap().file_name())
+            .collect::<BTreeSet<_>>(),
+        entries
+    );
+    assert_eq!(
+        RuntimeStore::new(&second).load().source,
+        RuntimeSourceKind::Managed
     );
 }

@@ -6,11 +6,12 @@
 //! 优先级（`FZ-48`）：用户显式指定 > 托管安装 > 自动发现候选。**不读取 PATH**。
 
 pub mod archive;
-pub mod install;
 pub mod bundled;
+pub mod install;
 pub(crate) mod offline_drop;
 pub mod paths;
 pub(crate) mod protection;
+pub(crate) mod startup_bundle;
 pub mod uninstall;
 
 use serde::{Deserialize, Serialize};

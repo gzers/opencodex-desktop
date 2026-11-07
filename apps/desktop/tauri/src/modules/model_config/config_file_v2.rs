@@ -1,9 +1,9 @@
 //! Authoritative v2 draft/config boundary. Raw providers never cross IPC.
+#[path = "model_receive_file_v2.rs"]
+pub mod receive;
 #[cfg(test)]
 #[path = "config_file_v2_tests.rs"]
 mod tests;
-#[path="model_receive_file_v2.rs"]
-pub mod receive;
 use crate::modules::model_config::{
     compiler_v2, matching_v2,
     protocol_groups::{self, MappingFileV2, RuntimeMappingV2},
@@ -307,6 +307,13 @@ pub fn read_existing(root: &Path, home: &Path, request: ReadRequestV2) -> Result
         || state.draft.as_ref().map(|d| &d.base) != request.expected_draft.as_ref()
     {
         return Err(error("model_read_stale"));
+    }
+    if state
+        .draft
+        .as_ref()
+        .is_some_and(|d| d.policy.recovery_id.is_some())
+    {
+        return Err(error("model_history_draft_active"));
     }
     let bindings = bindings(
         root,
@@ -671,44 +678,9 @@ fn auth_bindings(raw: &Value, policy: &PolicyV2) -> Result<Vec<ProtocolAuthBindi
         })
         .collect()
 }
-pub fn save(root: &Path, home: &Path, request: SaveRequestV2) -> Result<FileSnapshotV2> {
-    save_with_credentials(root, home, request, &SystemDraftCredentialsV2)
-}
-pub fn save_with_credentials(
-    root: &Path,
-    home: &Path,
-    request: SaveRequestV2,
-    vault: &dyn DraftCredentialStoreV2,
-) -> Result<FileSnapshotV2> {
-    use crate::modules::model_config::model_transaction_v2::{self, TargetV2, WriteV2};
-    let _versions = crate::modules::model_config::content_versions::file_saves::admit(root, home)
-        .map_err(io)?;
-    let _rename = super::channel_rename::admit(root, home).map_err(io)?;
-    let _config = TargetFileLock::lock(&home.join("config.json")).map_err(io)?;
-    let store = StoreV2::new(root);
-    let locked = store.lock()?;
-    {
-        let _recovery_versions =
-            crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
-        recover_model_transactions(root, home)?;
-    }
-    let state = locked.snapshot_unlocked()?;
-    let (mut raw, bytes) = read_raw(home)?;
-    let original_config = raw.clone();
-    let source = source_digest(&bytes);
-    let revision = root_revision(root, home)?;
-    let draft = state
-        .draft
-        .as_ref()
-        .ok_or_else(|| error("model_save_stale"))?;
-    if draft.base != request.expected
-        || source != request.expected.source_digest
-        || state.digests.library != request.expected.library_digest
-        || revision != request.expected.root_revision
-        || policy_semantic_digest_v2(&state.policy)? != request.expected.policy_digest
-    {
-        return Err(error("model_save_stale"));
-    }
+// Shared pure draft transformations. The save path keeps its original guards,
+// credential handling and transaction order; read-only children reuse these.
+fn validate_save_scope_v2(request: &SaveRequestV2) -> Result<()> {
     if let Some(scope) = &request.scope_channel_id {
         check_id(scope)?;
         for edit in &request.edits {
@@ -740,15 +712,16 @@ pub fn save_with_credentials(
             }
         }
     }
-    let before_observed = provider_import::read_policy_v2(
-        &raw,
-        &source,
-        &state.policy,
-        state.ledger.as_ref(),
-        &state.mappings,
-        &bindings(root, &raw, &state.policy, Some(draft), &state.mappings)?,
-    )?;
-    let before_save_state = saved_state(&state.library, &before_observed, &raw)?;
+    Ok(())
+}
+fn transform_draft_v2(
+    root: &Path,
+    source: &str,
+    state: &StoreSnapshotV2,
+    draft: &DraftV2,
+    raw: &mut Value,
+    request: &mut SaveRequestV2,
+) -> Result<(PolicyV2, MappingFileV2)> {
     let edited = apply_explicit_edits_v2(&draft.policy, &request.edits)?;
     let mut intended = if let Some(scope) = &request.scope_channel_id {
         let mut p = state.policy.clone();
@@ -781,7 +754,7 @@ pub fn save_with_credentials(
             if state.policy.channels.iter().any(|c| c.id == channel.id) {
                 return Err(error("model_save_stale"));
             }
-            let seed = copied_seed(root, &raw, channel, &source)?.unwrap_or_else(
+            let seed = copied_seed(root, raw, channel, source)?.unwrap_or_else(
                 || json!({"name":channel.label,"disabled":true,"models":[],"selectedModels":[]}),
             );
             raw["providers"]
@@ -790,10 +763,27 @@ pub fn save_with_credentials(
                 .insert(channel.connection.provider_id.clone(), seed);
         }
     }
+    if intended.recovery_id.is_some() {
+        // The trusted recovery guard fixes this exact target. Express removed
+        // channels through the existing Delete transform, never raw rewrites.
+        let removed = state
+            .policy
+            .channels
+            .iter()
+            .filter(|c| !intended.channels.iter().any(|v| v.id == c.id))
+            .cloned()
+            .collect::<Vec<_>>();
+        for channel in removed {
+            request.channel_intents.push(ChannelIntentV2::Delete {
+                channel_id: channel.id.clone(),
+            });
+            intended.channels.push(channel);
+        }
+    }
     let mut mappings = state.mappings.clone();
     // Name is the product authority: even an already-equal historical label/key
     // pair is reconciled on explicit Save, rather than waiting for another edit.
-    for intent in request.channel_intents {
+    for intent in std::mem::take(&mut request.channel_intents) {
         match intent {
             ChannelIntentV2::SetActiveNode {
                 channel_id,
@@ -940,7 +930,7 @@ pub fn save_with_credentials(
                 }
             }
             ChannelIntentV2::Rename { channel_id, name } => {
-                rename(&mut raw, &mut intended, &mut mappings, &channel_id, &name)?
+                rename(raw, &mut intended, &mut mappings, &channel_id, &name)?
             }
             ChannelIntentV2::SetSelection {
                 channel_id,
@@ -995,8 +985,78 @@ pub fn save_with_credentials(
         .map(|c| (c.id.clone(), c.label.clone()))
         .collect::<Vec<_>>();
     for (id, name) in reconcile_names {
-        rename(&mut raw, &mut intended, &mut mappings, &id, &name)?;
+        rename(raw, &mut intended, &mut mappings, &id, &name)?;
     }
+    Ok((intended, mappings))
+}
+fn project_connection_v2(provider: &mut Value, channel: &ChannelV2) {
+    if let Some(node) = channel
+        .connection
+        .nodes
+        .iter()
+        .find(|n| n.id == channel.connection.active_node_id)
+    {
+        provider["baseUrl"] = json!(node.url);
+    }
+    provider["disabled"] = json!(!channel.connection.enabled);
+    if let Some(mode) = &channel.connection.auth_mode {
+        provider["authMode"] = json!(mode);
+    }
+}
+pub fn save(root: &Path, home: &Path, request: SaveRequestV2) -> Result<FileSnapshotV2> {
+    save_with_credentials(root, home, request, &SystemDraftCredentialsV2)
+}
+pub fn save_with_credentials(
+    root: &Path,
+    home: &Path,
+    mut request: SaveRequestV2,
+    vault: &dyn DraftCredentialStoreV2,
+) -> Result<FileSnapshotV2> {
+    use crate::modules::model_config::model_transaction_v2::{self, TargetV2, WriteV2};
+    let _versions = crate::modules::model_config::content_versions::file_saves::admit(root, home)
+        .map_err(io)?;
+    let _rename = super::channel_rename::admit(root, home).map_err(io)?;
+    let _config = TargetFileLock::lock(&home.join("config.json")).map_err(io)?;
+    let store = StoreV2::new(root);
+    let locked = store.lock()?;
+    {
+        let _recovery_versions =
+            crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
+        recover_model_transactions(root, home)?;
+    }
+    let state = locked.snapshot_unlocked()?;
+    let (mut raw, bytes) = read_raw(home)?;
+    let original_config = raw.clone();
+    let source = source_digest(&bytes);
+    let revision = root_revision(root, home)?;
+    let draft = state
+        .draft
+        .as_ref()
+        .ok_or_else(|| error("model_save_stale"))?;
+    if draft.base != request.expected
+        || source != request.expected.source_digest
+        || state.digests.library != request.expected.library_digest
+        || revision != request.expected.root_revision
+        || policy_semantic_digest_v2(&state.policy)? != request.expected.policy_digest
+    {
+        return Err(error("model_save_stale"));
+    }
+    let history_library = history::validate_save(root, home, &state, draft, &request)?;
+    validate_save_scope_v2(&request)?;
+    let before_observed = provider_import::read_policy_v2(
+        &raw,
+        &source,
+        &state.policy,
+        state.ledger.as_ref(),
+        &state.mappings,
+        &bindings(root, &raw, &state.policy, Some(draft), &state.mappings)?,
+    )?;
+    let before_save_state = saved_state(&state.library, &before_observed, &raw)?;
+    let (mut intended, mut mappings) =
+        transform_draft_v2(root, &source, &state, draft, &mut raw, &mut request)?;
+    // A recovery authorization is consumed only by this guarded Save; it is
+    // never persisted as authority in the actual saved Policy.
+    intended.recovery_id = None;
     for channel in &intended.channels {
         let provider = raw
             .get_mut("providers")
@@ -1006,18 +1066,7 @@ pub fn save_with_credentials(
         if protected(&channel.connection.provider_id, provider) {
             continue;
         }
-        if let Some(node) = channel
-            .connection
-            .nodes
-            .iter()
-            .find(|n| n.id == channel.connection.active_node_id)
-        {
-            provider["baseUrl"] = json!(node.url);
-        }
-        provider["disabled"] = json!(!channel.connection.enabled);
-        if let Some(mode) = &channel.connection.auth_mode {
-            provider["authMode"] = json!(mode);
-        }
+        project_connection_v2(provider, channel);
         if let Some(edit) = draft.credential_edits.get(&channel.id) {
             match edit {
                 DraftCredentialEditV2::Replace { credential_ref } => {
@@ -1086,6 +1135,25 @@ pub fn save_with_credentials(
             after: Some(w.after),
         })
         .collect::<Vec<_>>();
+    if let Some(library) = &history_library {
+        let target = root.join(store_v2::LIBRARY_PATH);
+        safety::check_path(root, &target, true).map_err(io)?;
+        let before = if target.exists() {
+            Some(safety::read_file(&target, 32 * 1024 * 1024).map_err(io)?)
+        } else {
+            None
+        };
+        if digest(before.as_deref().unwrap_or_default())
+            != state.digests.files[store_v2::LIBRARY_PATH]
+        {
+            return Err(error("model_history_stale"));
+        }
+        writes.push(WriteV2 {
+            target: TargetV2::Manager(store_v2::LIBRARY_PATH.into()),
+            before,
+            after: Some(canonical_bytes(library)?),
+        });
+    }
     writes.insert(
         0,
         WriteV2 {
@@ -1161,7 +1229,11 @@ pub fn save_with_credentials(
         before: Some(draft_bytes),
         after: retained_draft,
     });
-    let after_save_state = saved_state(&state.library, &compiled.policy, &compiled.next_config)?;
+    let after_save_state = saved_state(
+        history_library.as_ref().unwrap_or(&state.library),
+        &compiled.policy,
+        &compiled.next_config,
+    )?;
     let _version_lock =
         crate::modules::model_config::content_versions::lock_versions(root).map_err(io)?;
     if before_save_state != after_save_state {
@@ -1332,6 +1404,13 @@ pub fn stage_connection(
         || state.draft.as_ref().map(|d| &d.base) != request.expected.as_ref()
     {
         return Err(error("model_read_stale"));
+    }
+    if state
+        .draft
+        .as_ref()
+        .is_some_and(|d| d.policy.recovery_id.is_some())
+    {
+        return Err(error("model_history_draft_active"));
     }
     let mut policy = state
         .draft
@@ -1635,6 +1714,9 @@ pub struct CopyChannelV2 {
     pub expected: ReadBaseV2,
     pub channel_id: String,
     pub name: String,
+    /// Match the adopted copy dialog: explicit opt-in, never accept a key value.
+    #[serde(default)]
+    pub reuse_source_key: bool,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -1643,6 +1725,9 @@ struct CopySourceV2 {
     channel_id: String,
     source_provider_id: String,
     source_digest: String,
+    reuse_source_key: bool,
+    /// Pending replace/clear is fixed by the backend draft, not the source row.
+    source_credential_edit: Option<DraftCredentialEditV2>,
 }
 fn copy_path(root: &Path, id: &str) -> Result<std::path::PathBuf> {
     check_id(id)?;
@@ -1680,6 +1765,20 @@ fn copied_seed(
         return Err(error("model_protected_provider"));
     }
     let mut value = source.clone();
+    if !record.reuse_source_key || record.source_credential_edit.is_some() {
+        // Retain public and unknown noncredential source fields, while never
+        // retaining the source's pool, headers or external credential refs.
+        for field in crate::modules::model_config::provider_fields::PRIVATE
+            .iter()
+            .copied()
+            .chain(["apiKeySelectionRevision", "_apiKeyAttempt"])
+        {
+            value
+                .as_object_mut()
+                .ok_or_else(|| error("model_source_invalid"))?
+                .remove(field);
+        }
+    }
     value["name"] = json!(channel.label);
     value["disabled"] = json!(true);
     Ok(Some(value))
@@ -1713,8 +1812,12 @@ pub fn copy_channel(root: &Path, home: &Path, request: CopyChannelV2) -> Result<
         || source != request.expected.source_digest
         || revision != request.expected.root_revision
         || state.digests.library != request.expected.library_digest
+        || policy_semantic_digest_v2(&state.policy)? != request.expected.policy_digest
     {
         return Err(error("model_read_stale"));
+    }
+    if draft.policy.recovery_id.is_some() {
+        return Err(error("model_history_draft_active"));
     }
     if draft
         .policy
@@ -1738,7 +1841,17 @@ pub fn copy_channel(root: &Path, home: &Path, request: CopyChannelV2) -> Result<
     if raw["providers"].get(&source_id).is_none() {
         return Err(error("model_copy_unsaved_source"));
     }
-    let copied_credential_edit = draft.credential_edits.get(&channel.id).cloned();
+    let source_credential_edit = draft.credential_edits.get(&channel.id).cloned();
+    let copied_credential_edit = if request.reuse_source_key {
+        source_credential_edit.clone()
+    } else {
+        Some(DraftCredentialEditV2::Clear)
+    };
+    if !request.reuse_source_key
+        || matches!(copied_credential_edit, Some(DraftCredentialEditV2::Clear))
+    {
+        channel.connection.credential_ref = None;
+    }
     channel.id = uuid::Uuid::new_v4().to_string();
     if let Some(namespace) = &mut channel.namespace {
         namespace.channel_id = channel.id.clone();
@@ -1755,11 +1868,21 @@ pub fn copy_channel(root: &Path, home: &Path, request: CopyChannelV2) -> Result<
             .map(|c| c.connection.provider_id.to_lowercase())
             .collect(),
     );
+    let next_generation = draft
+        .base
+        .draft_generation
+        .checked_add(1)
+        .ok_or_else(|| error("model_limit"))?;
     let record = CopySourceV2 {
         schema_version: 2,
         channel_id: channel.id.clone(),
         source_provider_id: source_id,
         source_digest: source.clone(),
+        reuse_source_key: request.reuse_source_key,
+        source_credential_edit: request
+            .reuse_source_key
+            .then_some(source_credential_edit)
+            .flatten(),
     };
     let id = uuid::Uuid::new_v4().to_string();
     let bytes = canonical_bytes(&record)?;
@@ -1771,11 +1894,7 @@ pub fn copy_channel(root: &Path, home: &Path, request: CopyChannelV2) -> Result<
             digest: digest(&bytes),
         });
     let mut next = draft.clone();
-    next.base.draft_generation = next
-        .base
-        .draft_generation
-        .checked_add(1)
-        .ok_or_else(|| error("model_limit"))?;
+    next.base.draft_generation = next_generation;
     if let Some(edit) = copied_credential_edit {
         next.credential_edits.insert(channel.id.clone(), edit);
     }
@@ -1786,6 +1905,10 @@ pub fn copy_channel(root: &Path, home: &Path, request: CopyChannelV2) -> Result<
     }
     view(locked.snapshot_unlocked()?, source, revision)
 }
+
+#[cfg(test)]
+#[path = "config_file_v2_copy_tests.rs"]
+mod copy_tests;
 
 /// Public semantic save facts plus plain file-owned keys only. Opaque external
 /// credential stores cannot acquire a fabricated save time from a file rewrite.
@@ -2177,6 +2300,9 @@ pub fn stage_credential_with_store(
         || policy_semantic_digest_v2(&state.policy)? != request.expected.policy_digest
     {
         return Err(error("model_read_stale"));
+    }
+    if draft.policy.recovery_id.is_some() {
+        return Err(error("model_history_draft_active"));
     }
     let channel = draft
         .policy
@@ -2615,3 +2741,13 @@ pub fn accept_agent_library(
     }
     commit_library_change(root, home, &locked, &state, plan.library.clone())
 }
+
+#[path = "config_file_v2_export.rs"]
+pub mod export;
+
+#[path = "config_file_v2_history.rs"]
+pub mod history;
+
+#[path = "config_file_v2_discard.rs"]
+mod draft_discard;
+pub use draft_discard::discard;

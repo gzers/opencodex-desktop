@@ -2,7 +2,7 @@ use std::fs;
 use std::path::PathBuf;
 
 use opencodex_desktop_lib::commands::logs::read_logs_with_root;
-use opencodex_desktop_lib::modules::data_root::{self, DataRootRuntimeConfig, OpenCodexHomeMode};
+use opencodex_desktop_lib::modules::data_root;
 use opencodex_desktop_lib::types::logs::LogKind;
 
 fn temp_data_root(name: &str) -> (tempfile::TempDir, PathBuf) {
@@ -91,26 +91,23 @@ async fn fallback_keeps_missing_state_when_no_log_file_exists() {
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
 async fn call_log_is_read_from_the_active_data_root_not_the_logs_partition() {
     let temp = tempfile::tempdir().expect("create temp root");
-    let manager = temp.path().join("manager");
-    let active = temp.path().join("active-home");
-    fs::create_dir_all(&active).expect("create active root");
+    let manager = temp.path().join("aggregate/desktop");
+    let home = temp.path().join("aggregate/opencodex/home");
+    fs::create_dir_all(&home).expect("create separate runtime HOME");
     data_root::initialize(&manager).expect("initialize data root");
-
-    let mut config: DataRootRuntimeConfig =
-        data_root::load_runtime_config(&manager).expect("load runtime config");
-    config.active_data_root = active.clone();
-    config.opencodex_home_mode = OpenCodexHomeMode::External;
-    config.opencodex_home_path = Some(active.clone());
-    data_root::save_runtime_config(&manager, &config).expect("save runtime config");
+    let config = data_root::load_runtime_config(&manager).expect("load runtime config");
+    assert_eq!(config.active_data_root, manager);
+    assert_eq!(data_root::resolve_opencodex_home(&config), home);
 
     fs::write(
-        active.join("audit.log"),
+        manager.join("audit.log"),
         "{\"call\":\"status\",\"result\":\"ok\"}\n",
     )
     .expect("write audit log");
     // 分区里的同名文件是干扰项：分类日志必须读到活跃数据根那一份。
     fs::create_dir_all(manager.join("logs")).expect("create logs dir");
     fs::write(manager.join("logs/audit.log"), "WRONG-SOURCE\n").expect("write decoy");
+    fs::write(home.join("audit.log"), "WRONG-RUNTIME-HOME\n").expect("write HOME decoy");
 
     let result = read_logs_with_root(LogKind::Audit, &manager).expect("read call log");
     assert_eq!(

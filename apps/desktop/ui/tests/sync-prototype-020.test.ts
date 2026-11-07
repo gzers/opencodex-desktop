@@ -1,56 +1,28 @@
-import {beforeEach,describe,expect,it,vi} from 'vitest'
-import {mount,flushPromises} from '@vue/test-utils'
-import {createPinia,setActivePinia} from 'pinia'
-import {defineComponent} from 'vue'
-import {open} from '@tauri-apps/plugin-dialog'
-import ObjectScopeTree from '@/features/sync/ObjectScopeTree.vue'
+import {afterEach,beforeEach,describe,expect,it,vi} from 'vitest'
+import {mount,flushPromises,type VueWrapper} from '@vue/test-utils'
 import ModelTransfer from '@/features/sync/ModelTransfer.vue'
-import {modelTransferApi,transferChoiceApi,transferProtectionApi,importCredentialChoiceApi,type ModelPackage,type IncomingPlan} from '@/features/sync/modelTransfer'
-import {useModelsStore} from '@/features/models/store'
-vi.mock('@tauri-apps/plugin-dialog',()=>({open:vi.fn()}))
-vi.mock('@/features/sync/modelTransfer',async original=>({...await original<typeof import('@/features/sync/modelTransfer')>(),transferChoiceApi:{load:vi.fn(),save:vi.fn()},transferProtectionApi:{load:vi.fn(),save:vi.fn()},importCredentialChoiceApi:{load:vi.fn(),save:vi.fn()},modelTransferApi:{prepareDraft:vi.fn(),prepare:vi.fn(),export:vi.fn(),receive:vi.fn(),accept:vi.fn(),select:vi.fn(),prepareUpload:vi.fn(),publish:vi.fn(),download:vi.fn(),latestIncoming:vi.fn(),recompare:vi.fn(),openReceived:vi.fn(),loadRemoteScope:vi.fn(),saveRemoteScope:vi.fn(),latestUpload:vi.fn(),checkSync:vi.fn(),accountCatalog:vi.fn(),channelCatalog:vi.fn(),extensionCatalog:vi.fn()}}))
-const dialog=defineComponent({props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'})
-const render=(remote=false)=>mount(ModelTransfer,{props:{remote},global:{stubs:{UiDialog:dialog,UiSelectField:true}}})
-const pack=():ModelPackage=>({format:'OCXD_MODEL_CONFIG',formatVersion:1,schemaVersion:1,createdAt:'2026-11-02T00:00:00Z',digest:'fixture',payload:{templates:[],policy:null}})
-beforeEach(()=>{setActivePinia(createPinia());vi.clearAllMocks();localStorage.clear();vi.mocked(importCredentialChoiceApi.load).mockResolvedValue({keys:true,extensions:true});vi.mocked(importCredentialChoiceApi.save).mockResolvedValue(undefined);vi.mocked(transferProtectionApi.load).mockResolvedValue({enabled:false,hasPassword:false});vi.mocked(transferProtectionApi.save).mockResolvedValue({enabled:false,hasPassword:false});vi.mocked(transferChoiceApi.load).mockResolvedValue(null);vi.mocked(transferChoiceApi.save).mockImplementation(async(_remote,value)=>value);useModelsStore().snapshot={library:{schemaVersion:1,templates:[]},policy:{schemaVersion:1,channels:[],templateRefs:[]},libraryDigest:'library',policyDigest:'policy',workspace:null,workspaceDigest:'workspace'};vi.mocked(modelTransferApi.accountCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.extensionCatalog).mockResolvedValue({skills:['fixture-skill'],mcps:['fixture-mcp']});vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false,skillNames:['fixture-skill'],mcpNames:['fixture-mcp']});vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'export-plan',package:pack(),credentialCount:1});vi.mocked(modelTransferApi.export).mockResolvedValue({path:'/fixture/config.ocxdconf',digest:'fixture',channels:0,templates:0})})
-describe('S20 adopted prototype regressions',()=>{
- it('read failure does not replace an unknown saved choice or allow export',async()=>{vi.mocked(transferChoiceApi.load).mockRejectedValue({message:'unreadable'});const w=render();await flushPromises();expect(w.text()).toContain('本机范围读取失败');expect(w.findAll('button').find(b=>b.text()==='导出配置')!.attributes('disabled')).toBeDefined();expect(transferChoiceApi.save).not.toHaveBeenCalled();w.unmount()})
- it('restores exact file scope and per-object credentials without applying defaults',async()=>{vi.mocked(transferChoiceApi.load).mockResolvedValue({selectedIds:[JSON.stringify(['skills','fixture-skill'])],credentialIds:['skill:fixture-skill'],versions:{},mcpSources:{},includeGlobal:false,webdavPasswords:false});const w=render();await flushPromises();await w.findAll('button').find(b=>b.text()==='导出配置')!.trigger('click');await flushPromises();expect(modelTransferApi.prepare).toHaveBeenCalledWith(expect.objectContaining({includeGlobal:false,channelIds:[]}),undefined,false,expect.objectContaining({preferences:false,extensions:false,skillNames:['fixture-skill'],mcpNames:[],credentialIds:['skill:fixture-skill'],extensionCredentials:true}));w.unmount()})
- it('selected resources permit preview without a human-review checkbox',async()=>{const w=render();await flushPromises();expect(w.text()).not.toContain('已复核所选资源');expect(w.findAll('button').find(b=>b.text()==='导出配置')!.attributes('disabled')).toBeUndefined();w.unmount()})
- it('toolbar contains search and tree selection instead of cancelled presets',async()=>{const w=render(true);await flushPromises();expect(w.find('input[aria-label="搜索配置对象"]').exists()).toBe(true);expect(w.text()).not.toContain('清空选择');expect(w.text()).not.toContain('后续新增对象');expect(w.text()).not.toContain('全局采用及渠道组顺序');w.unmount()})
- it('credential-bearing export defaults to plaintext and never adds a second confirmation',async()=>{const w=render();await flushPromises();await w.findAll('button').find(b=>b.text()==='导出配置')!.trigger('click');await flushPromises();expect(w.get<HTMLInputElement>('.export-encrypt input').element.checked).toBe(false);expect(w.find('input[aria-label="加密口令"]').exists()).toBe(false);await w.findAll('button').find(b=>b.text()==='生成配置包')!.trigger('click');await flushPromises();expect(modelTransferApi.export).toHaveBeenCalledExactlyOnceWith('export-plan',undefined);expect(w.text()).not.toContain('仍以明文导出');w.unmount()})
- it('keeps file selection and necessary decryption in the same public import window',async()=>{
-  vi.mocked(open).mockResolvedValue('/fixture/protected.ocxdconf')
-  vi.mocked(modelTransferApi.receive).mockRejectedValueOnce({code:'passphrase_required'})
-  const incoming={id:'incoming',package:pack(),expectedPolicy:'policy',expectedLibrary:'library',expectedWorkspace:'workspace',mergedPolicy:null,notices:[],availableKeys:[],availableExtensionIds:[]} as IncomingPlan
-  vi.mocked(modelTransferApi.receive).mockResolvedValueOnce(incoming)
-  const w=render();await flushPromises();await w.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await flushPromises()
-  expect(w.find('.export-destination').exists()).toBe(false)
-  await w.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises()
-  expect(w.find('input[aria-label="导入解密口令"]').exists()).toBe(true)
-  expect(w.findAll('section[title="导入配置"]')).toHaveLength(1)
-  await w.get('input[aria-label="导入解密口令"]').setValue('fixture-password')
-  await w.findAll('button').find(b=>b.text()==='读取配置')!.trigger('click');await flushPromises()
-  expect(modelTransferApi.receive).toHaveBeenLastCalledWith('/fixture/protected.ocxdconf','fixture-password')
-  expect(w.findAll('section[title="导入配置"]')).toHaveLength(1)
-  expect(w.text()).not.toContain('比较所选范围')
-  expect(modelTransferApi.accept).not.toHaveBeenCalled();w.unmount()
- })
- it('recompares a changed incoming scope automatically',async()=>{
-  vi.mocked(open).mockResolvedValue('/fixture/config.ocxdconf')
-  const incoming={id:'incoming',package:pack(),expectedPolicy:'policy',expectedLibrary:'library',expectedWorkspace:'workspace',mergedPolicy:null,notices:[],assets:{skills:[{name:'fixture-skill',digest:'fixture-skill-digest',files:1,bytes:5,warnings:[],protected:false}],mcps:[],conflicts:[]}} as IncomingPlan
-  vi.mocked(modelTransferApi.receive).mockResolvedValue(incoming);vi.mocked(modelTransferApi.select).mockResolvedValue({...incoming,id:'selected'})
-  const w=render();await flushPromises();await w.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await flushPromises();await w.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises()
-  w.findAllComponents(ObjectScopeTree).at(-1)!.vm.$emit('update:selectedIds',[]);await flushPromises()
-  expect(modelTransferApi.select).toHaveBeenCalledWith('incoming',expect.objectContaining({skillNames:[]}))
-  expect(w.findAll('section[title="导入配置"]')).toHaveLength(1);expect(modelTransferApi.accept).not.toHaveBeenCalled();w.unmount()
- })
- it('does not permit confirmation when a synchronization diff is unknown',async()=>{
-  vi.mocked(modelTransferApi.checkSync).mockResolvedValue({source:'local',hasRemote:true})
-  vi.mocked(modelTransferApi.prepareUpload).mockResolvedValue({id:'upload',phase:'prepared',package:pack(),manager:{preferences:null,extensions:null,webdav:[]},credentialCount:0,protected:false,assets:{skills:[],mcps:[],conflicts:[]},sync:{source:'local',createdAt:'2026-11-02T00:00:00Z',changes:null,unchanged:0}})
-  const w=render(true);await flushPromises();await w.findAll('button').find(b=>b.text()==='同步')!.trigger('click');await flushPromises()
-  expect(w.findAll('button').find(b=>b.text()==='确认更新')!.attributes('disabled')).toBeDefined()
-  expect(modelTransferApi.publish).not.toHaveBeenCalled();w.unmount()
- })
-
+import SyncDialogHost from '@/features/sync/SyncDialogHost.vue'
+import {configFileV2Api} from '@/features/sync/file-api-v2'
+import {configV2Api} from '@/features/sync/api-v2'
+import {useConfigSyncV2Store} from '@/features/sync/store-v2'
+import {fileBackend} from './helpers/fileWorkspaceV2'
+import {catalog,preview} from './helpers/syncWorkspaceV2'
+const ipc=vi.hoisted(()=>vi.fn())
+vi.mock('@tauri-apps/api/core',()=>({invoke:ipc}))
+let backend:ReturnType<typeof fileBackend>,wrappers:VueWrapper[]=[]
+const dialog={props:['open','title'],template:'<section v-if="open" :data-dialog="title"><slot/><slot name="actions" :close="() => $emit(&quot;close&quot;)"/></section>'}
+const button=(w:Pick<VueWrapper,'findAll'>,text:string)=>w.findAll('button').find(b=>b.text()===text)!
+function render(remote=false){const w=mount(ModelTransfer,{props:{remote},global:{stubs:{UiDialog:dialog,UiSelectField:true}}});wrappers.push(w);return w}
+function host(){const w=mount(SyncDialogHost,{global:{stubs:{UiDialog:dialog,UiSelectField:true}}});wrappers.push(w);return w}
+beforeEach(()=>{backend=fileBackend(ipc);const original=backend.handler;ipc.mockImplementation(async(command,args)=>{if(command==='config_v2_catalog')return catalog();if(command==='config_v2_preview')return preview();if(command==='config_v2_cancel')return null;return original(command,args)})})
+afterEach(()=>{wrappers.splice(0).forEach(w=>w.unmount());vi.restoreAllMocks()})
+describe('S20 adopted prototype regressions under explicit v6 boundaries',()=>{
+ it('read failure does not replace an unknown saved choice or allow export',async()=>{vi.spyOn(configFileV2Api,'readScope').mockRejectedValueOnce(new Error('unreadable'));const save=vi.spyOn(configFileV2Api,'saveScope'),w=render();await flushPromises();expect(w.text()).toContain('本机范围读取失败');expect(button(w,'导出配置').attributes('disabled')).toBeDefined();expect(save).not.toHaveBeenCalled()})
+ it('restores exact file scope and per-object credentials without applying defaults',async()=>{backend.savedScope={selection:{...backend.store.scope.selection,skillNames:['exact-skill'],extensionCredentials:{skillNames:['exact-skill'],mcpNames:[]}},mcpClients:{},assetsReviewed:true};const w=render();await flushPromises();await button(w,'导出配置').trigger('click');await flushPromises();expect(ipc.mock.calls.find(c=>c[0]==='prepare_config_file_export_v2')![1].request).toEqual(backend.savedScope);expect(backend.store.scope.selection.channels).toEqual([])})
+ it('selected resources use the actual backend review admission without the retired resource-review wording',async()=>{const w=render();await flushPromises();expect(w.text()).not.toContain('已复核所选资源');expect(w.text()).toContain('已核对所选扩展和 MCP 来源范围');expect(button(w,'导出配置').attributes('disabled')).toBeUndefined()})
+ it('toolbar contains search and explicit scope instead of cancelled presets or a clear action',async()=>{const w=render(true);await flushPromises();expect(w.find('input[aria-label="搜索同步对象"]').exists()).toBe(true);expect(w.text()).not.toContain('清空选择');expect(w.text()).not.toContain('后续新增对象');expect(w.text()).not.toContain('全局采用及渠道组顺序')})
+ it('credential-bearing export defaults to plaintext and never adds a second confirmation before native save',async()=>{const w=render(),h=host();await flushPromises();backend.store.toggleEntry(backend.store.entries[0]!,true);backend.store.channelOption(backend.store.entries[0]!.id,'includeKey',true);await button(w,'导出配置').trigger('click');await flushPromises();expect(backend.store.exportPlan?.encrypted).toBe(false);expect(w.find('input[aria-label="导出保护口令"]').exists()).toBe(false);await button(h,'生成配置包').trigger('click');await flushPromises();expect(ipc.mock.calls.filter(c=>c[0]==='save_config_file_export_v2')).toHaveLength(1);expect(h.text()).not.toContain('仍以明文导出')})
+ it('keeps native file selection and necessary decryption in the same public import window',async()=>{vi.spyOn(configFileV2Api,'openImport').mockRejectedValueOnce({code:'passphrase_required'});const w=render(),h=host();await flushPromises();await button(w,'导入配置').trigger('click');await button(h,'选择本机文件').trigger('click');await flushPromises();expect(h.findAll('[data-dialog="选择配置文件"]')).toHaveLength(1);expect(h.text()).toContain('passphrase_required');await h.get('input[aria-label="导入读取口令"]').setValue('file-password');await button(h,'选择本机文件').trigger('click');await flushPromises();expect(ipc.mock.calls.find(c=>c[0]==='open_config_file_import_v2')![1].passphrase).toBe('file-password');expect(h.findAll('[data-dialog="导入配置预览"]')).toHaveLength(1);expect(ipc.mock.calls.some(c=>c[0]==='confirm_config_file_import_v2')).toBe(false)})
+ it('recompares a changed incoming scope automatically against the same operation',async()=>{await backend.store.openImport(null);backend.store.setImport({...backend.store.importScope,skillNames:['explicit']},{...backend.store.bindings,assetsReviewed:true});await flushPromises();expect(ipc.mock.calls.find(c=>c[0]==='reselect_config_file_import_v2')![1]).toMatchObject({operationId:backend.preview.operationId,scope:{skillNames:['explicit']}});expect(ipc.mock.calls.some(c=>c[0]==='confirm_config_file_import_v2')).toBe(false)})
+ it('does not permit confirmation when a synchronization diff is missing or malformed',async()=>{const s=useConfigSyncV2Store();await s.loadCatalog();vi.spyOn(configV2Api,'preview').mockResolvedValue({...preview(),entries:null as never});await s.prepare();await s.confirm();expect(s.canConfirm).toBe(false);expect(s.error).toContain('预览方向');expect(ipc.mock.calls.some(c=>c[0]==='config_v2_confirm')).toBe(false)})
 })

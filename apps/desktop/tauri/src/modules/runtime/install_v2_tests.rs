@@ -72,7 +72,7 @@ impl Fixture {
     fn new(label: &str) -> Self {
         let temp = tempfile::Builder::new()
             .prefix("ocxd023-runtime-recovery-")
-            .tempdir_in("/tmp")
+            .tempdir_in(crate::modules::test_sandbox::temporary_parent())
             .unwrap();
         // /tmp is the explicit test anchor; /private is correctly system-protected.
         let base = temp.path().to_path_buf();

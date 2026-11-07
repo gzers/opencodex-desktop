@@ -60,11 +60,11 @@ export function useAppController(initialize = false) {
         else if (notification.action === 'transfer_result') void import('@/features/sync/store').then(({useSyncStore})=>useSyncStore().openResult(notification.objectId??undefined))
         else if (notification.action === 'logs') routes.go('logs', { tab: 'logs' })
         else if (notification.action === 'model_policy') {
-          void import('@/features/models/store').then(({useModelsStore})=>{if(notification.objectId)useModelsStore().policyNotificationTarget={planId:notification.objectId};routes.go('models')})
+          void import('@/features/models/store-v2').then(({useModelsV2Store})=>{if(notification.objectId)useModelsV2Store().policyNotificationTarget={operationId:notification.objectId};routes.go('models')})
         }
         else if (notification.action === 'models') {
-          void import('@/features/models/store').then(({ useModelsStore }) => {
-            if (notification.objectId && notification.candidateId) useModelsStore().notificationTarget = { taskId:notification.objectId,submissionId:notification.candidateId }
+          void import('@/features/models/store-v2').then(({useModelsV2Store})=>{
+            if(notification.objectId)useModelsV2Store().externalNotificationTarget={taskId:notification.objectId}
             routes.go('models')
           })
         }

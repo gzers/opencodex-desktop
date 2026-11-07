@@ -8,9 +8,16 @@ use std::fs::Permissions;
 use std::os::unix::fs::PermissionsExt;
 
 #[test]
-fn default_data_root_initializer_matches_fz02_structure() {
+fn default_data_root_initializer_matches_v2_desktop_partition_structure() {
     let temp = tempfile::tempdir().expect("create temporary home fixture");
-    let data_root = temp.path().join("OpenCodex Desktop");
+    let user = temp.path().canonicalize().unwrap().join("profile");
+    let layout = opencodex_desktop_lib::modules::data_root::layout::Layout::new(
+        &user,
+        &temp.path().canonicalize().unwrap().join("program"),
+        opencodex_desktop_lib::modules::data_root::layout::Platform::Unix,
+    )
+    .unwrap();
+    let data_root = layout.desktop_root.clone();
 
     let created = opencodex_desktop_lib::modules::data_root::initialize(&data_root)
         .expect("default data root should initialize");
@@ -20,7 +27,6 @@ fn default_data_root_initializer_matches_fz02_structure() {
     assert_eq!(structure, StructureValidation::Valid);
     for name in [
         "manager-state",
-        "opencodex-home",
         "backups",
         "logs",
         "exports",
@@ -32,6 +38,16 @@ fn default_data_root_initializer_matches_fz02_structure() {
             "{name} partition should exist"
         );
     }
+    assert_eq!(
+        layout.opencodex_home,
+        user.join(".codex-desktop/opencodex/home")
+    );
+    assert!(!data_root.join("opencodex-home").exists());
+    let metadata: serde_json::Value = serde_json::from_slice(
+        &std::fs::read(data_root.join("manager-state/data-root.json")).unwrap(),
+    )
+    .unwrap();
+    assert_eq!(metadata["structure_version"], "2");
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
