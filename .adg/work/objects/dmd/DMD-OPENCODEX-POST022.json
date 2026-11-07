@@ -1,0 +1,52 @@
+{
+  "acceptance_criteria": [
+    {
+      "id": "AC-P22-01",
+      "text": "同一同步预览来源下拉及预选、确认/取消/重开、范围与备份按采用原型执行，不伪造时间。"
+    },
+    {
+      "id": "AC-P22-02",
+      "text": "渠道name落实到实际配置、当前引用和Codex目录显示，覆盖历史显示名/运行键分离及非ASCII名称。"
+    },
+    {
+      "id": "AC-P22-03",
+      "text": "新增渠道两步按后继采用原型还原，移除渠道协议属性，发现/模板协议与单模型自定义独立接线；模型选择、草稿和退出完整。"
+    },
+    {
+      "id": "AC-P22-04",
+      "text": "安装身份诊断与明确来源的新目录恢复保留旧安装和业务数据，包/入口/清单/来源一致才确认成功。"
+    },
+    {
+      "id": "AC-P22-05",
+      "text": "全部WebDAV配置交互不依赖ETag，采用新格式空目录初始化、代次绑定、并发提交保全及明确冲突处理。"
+    },
+    {
+      "id": "AC-P22-06",
+      "text": "原上传只读核对不受后续本机修改阻断，待确认/成功/冲突与后续待同步事实准确持久记录。"
+    },
+    {
+      "id": "AC-P22-07",
+      "text": "同步预览整体按原型还原，真实组件页面验证；Windows补验按长期规范条件触发。"
+    },
+    {
+      "id": "AC-P22-08",
+      "text": "原六项及同版目录/多用户及模型模版专题最终同源验收、依赖运行包交付、实际制品/升级/签名/回退与测试清理证据齐全后才可交付。"
+    }
+  ],
+  "content_digest": "5338d554636172cf996460cd919a0b7a11a143f27dd1f9f45e1c99512b4655b2",
+  "id": "DMD-OPENCODEX-POST022",
+  "implementation_ids": [
+    "IMP-OPENCODEX-DESKTOP-31"
+  ],
+  "kind": "DMD",
+  "next_action": "完成IMP-31前置设计检查，等待新的开发指令；不创建执行TASK或发布。",
+  "resolution": null,
+  "revision": 2,
+  "source_digest": "d6cbee036dfc8c3a373bb50167fc9189a6911bbb79130fb391da07de337246b4",
+  "source_path": "docs/01-需求管理/需求/DMD-OPENCODEX-POST022.md",
+  "source_revision": 2,
+  "state": "pending",
+  "summary": "承接0.2.22发布后6项问题；当前只做开发前计划审计，不开发。",
+  "summary_digest": "d12f2cdbf76d37be71cdf3265d71bc0c8f713dc6727a2aab3d041c63de40a5eb",
+  "title": "0.2.23 同步、渠道名称与安装恢复修复"
+}

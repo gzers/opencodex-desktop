@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "source": "218b2262bdbdcddaaa79c8fc240872ff2b596ae8",
+  "implementation": "c2845bd7d",
+  "decision": "user approved deselect objects restored to original local absence; remote files retained; explicit manual reselection can download",
+  "status": "implementation and local targeted verification passed; exact final workspace/Windows candidate running",
+  "rules": [
+    "freeze scope CAS and exact absent identities from original protected images; no label inference",
+    "preserve unrelated selections, sibling template revisions and credentials; first successful catalog still selects remaining objects",
+    "deselect local scope before object removal within same protected durable operation; no network",
+    "scope edits after review stop stale plan; rederived projection rejects forged plan checksum widening",
+    "same completed restore returns historical receipt without reverting later explicit reselection",
+    "read back local scope after successful or partial scope update, invalidate stale preview; UI read failure keeps original restore receipt and retries only readback"
+  ],
+  "localChecks": {
+    "actualRestore": 17,
+    "includesActualServiceDeselectAndManualDownload": true,
+    "scopeProjectionAndForgedPlan": "included in interim full workspace; four dedicated scope tests and result-owner checked",
+    "frontendFull": {
+      "files": 215,
+      "passed": 1589
+    },
+    "frontendAffected": 62,
+    "typecheck": "passed",
+    "build": "passed",
+    "clippy": "passed after fixing test initializer formatting; initial failures retained",
+    "interimWorkspace": "49 binaries, 2205 passed/0 failed/37 original ignored; final local-UUID algorithm and added test then specifically checked by 17 actual restores; exact final218 workspace now running"
+  },
+  "candidate": {
+    "run": 42333262869,
+    "head": "218b2262bdbdcddaaa79c8fc240872ff2b596ae8",
+    "status": "running, not passed"
+  },
+  "cleanup": "scope fixtures use owned TempDir, actual None probe reports fixture deletion; all initial failures retained",
+  "files": [
+    {
+      "path": "ocxd023-218-final-sourcehashes.json",
+      "sha256": "202aaa1c142b693e69d0208823426997fb6b329b0ecdf25a30ea4b82c1f53bb5",
+      "bytes": 3300
+    },
+    {
+      "path": "ocxd023-final-scope-ui-all.log",
+      "sha256": "683c17a166525ed48fa6bfeb92cb70c485f4d64f9df775c2cc779a548b3bf62b",
+      "bytes": 810
+    },
+    {
+      "path": "ocxd023-main-scope-full-backend.log",
+      "sha256": "de18e35047d04618bd85f53c8c1e4af4f46e99fe8b0c6cfd98480fc9a173f986",
+      "bytes": 269823
+    },
+    {
+      "path": "ocxd023-restore-deselect-clippy-final.log",
+      "sha256": "6890380f2132b8d2d66bb7d0d5a8eb4314f2eaa38a0f3446647b5d9c757a244f",
+      "bytes": 198
+    },
+    {
+      "path": "ocxd023-restore-deselect-clippy.log",
+      "sha256": "bb3e4b6a6b226bd25c57e9210964e1eed4dbe90462594757812dcaff25a394f8",
+      "bytes": 3251
+    },
+    {
+      "path": "ocxd023-restore-deselect-final.log",
+      "sha256": "838a6edadc19beac8bb1928cd4019813a5f92c903e77f3913cb42dfdb844340d",
+      "bytes": 10910
+    },
+    {
+      "path": "ocxd023-restore-scope-typecheck.log",
+      "sha256": "34334a2ae2240d33b9dcb6e3616de893f91814a7d0572dfa5ea9e9149458d264",
+      "bytes": 61
+    },
+    {
+      "path": "ocxd023-restore-scope-ui.log",
+      "sha256": "b19268338b2ed48ba1c04b0eda6b799c179501c8745e64fe8e5b7eee69699e74",
+      "bytes": 679
+    },
+    {
+      "path": "ocxd023-scope-deselect-absent-r6.log",
+      "sha256": "fb6fea73d872fb909327a31349182b12dd0c8e6391b09c9059be07dfc16048ce",
+      "bytes": 2917
+    },
+    {
+      "path": "ocxd023-scope-deselect-restore-final.log",
+      "sha256": "d9a72c6b27fa2af7387662cafd9cbc9d71fd8d86064a5b37c6373c15dc085c7e",
+      "bytes": 3604
+    },
+    {
+      "path": "ocxd023-scope-deselect-restore-r2.log",
+      "sha256": "0e80a2958cdef4a548d3cf472dbb798ff333927cb752345c63a4a5806d33f2be",
+      "bytes": 4061
+    },
+    {
+      "path": "ocxd023-scope-deselect-restore-r5.log",
+      "sha256": "e885ae208395b5941d44e7cdf4505654d3f1172c007e311c45adffb157e8ece1",
+      "bytes": 4084
+    },
+    {
+      "path": "ocxd023-scope-deselect-restore-r7.log",
+      "sha256": "7c1e87bbad249bad661f17436b3cb183b0d48ae61e8992fdecbc1e16626f042e",
+      "bytes": 10757
+    },
+    {
+      "path": "ocxd023-scope-deselect-ui-build.log",
+      "sha256": "84dbf2aa283b76cd1c9c851e45091f05205af4eacdacf0206d1600c20581893d",
+      "bytes": 4978
+    },
+    {
+      "path": "ocxd023-scope-deselect-unit-final.log",
+      "sha256": "5e41379c60cc17019a97b20a224c3490e9062af607f9d1e7c639a98ad3e002f6",
+      "bytes": 1570
+    },
+    {
+      "path": "ocxd023-scope-deselect-unit-r3.log",
+      "sha256": "48e20fce6507c08b3f17c3b3841c1989885e6a7758f060126e54007cccfc4a66",
+      "bytes": 563
+    },
+    {
+      "path": "ocxd023-scope-deselect-unit-r4.log",
+      "sha256": "f0d421ec90f1e15b0a569cc7d35af84919df53975c9e0429001573adea14d327",
+      "bytes": 993
+    }
+  ]
+}

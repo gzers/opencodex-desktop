@@ -1,0 +1,63 @@
+    Blocking waiting for file lock on build directory
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error: field assignment outside of initializer for an instance created with Default::default()
+    --> src/modules/model_config/sync_local_v2_restore_tests.rs:1603:5
+     |
+1603 | /     selection.channels = [LOCAL, "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"]
+1604 | |         .into_iter()
+1605 | |         .map(|id| ChannelSelectionV2 {
+1606 | |             portable_channel_id: id.into(),
+...    |
+1612 | |         })
+1613 | |         .collect();
+     | |___________________^
+     |
+note: consider initializing the variable with `modules::model_config::objects_overlay_v2::SelectionV2 { channels: [LOCAL, "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"]
+              .into_iter()
+              .map(|id| ChannelSelectionV2 {
+                  portable_channel_id: id.into(),
+                  model_ids: None,
+                  family_ids: None,
+                  include_connection: true,
+                  include_key: false,
+                  include_authorization: false,
+              })
+              .collect(), ..Default::default() }` and removing relevant reassignments
+    --> src/modules/model_config/sync_local_v2_restore_tests.rs:1602:5
+     |
+1602 |     let mut selection = SelectionV2::default();
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#field_reassign_with_default
+     = note: `-D clippy::field-reassign-with-default` implied by `-D warnings`
+     = help: to override `-D warnings` add `#[allow(clippy::field_reassign_with_default)]`
+
+error: field assignment outside of initializer for an instance created with Default::default()
+   --> src/modules/model_config/sync_scope_restore_v2.rs:258:9
+    |
+258 | /         selection.channels = ["removed", "keep"]
+259 | |             .into_iter()
+260 | |             .map(|id| ChannelSelectionV2 {
+261 | |                 portable_channel_id: id.into(),
+...   |
+267 | |             })
+268 | |             .collect();
+    | |_______________________^
+    |
+note: consider initializing the variable with `modules::model_config::objects_overlay_v2::SelectionV2 { channels: ["removed", "keep"]
+                  .into_iter()
+                  .map(|id| ChannelSelectionV2 {
+                      portable_channel_id: id.into(),
+                      model_ids: None,
+                      family_ids: None,
+                      include_connection: true,
+                      include_key: true,
+                      include_authorization: false,
+                  })
+                  .collect(), skill_names: vec!["gone".into(), "other".into()], ..Default::default() }` and removing relevant reassignments
+   --> src/modules/model_config/sync_scope_restore_v2.rs:257:9
+    |
+257 |         let mut selection = SelectionV2::default();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#field_reassign_with_default
+
+error: could not compile `opencodex-desktop` (lib test) due to 2 previous errors

@@ -1,0 +1,17 @@
+
+running 12 tests
+test actual_public_binary_matches_the_unmodified_official_js_selector ... ignored, requires explicit verified public package root; never executes Codex
+test network_device_and_alternate_stream_paths_are_refused_before_io ... ok
+test embedded_vendor_is_used_only_when_the_optional_dependency_is_absent ... ok
+test relative_non_cmd_missing_and_parent_traversal_inputs_are_rejected ... ok
+test arbitrary_wrappers_extra_commands_flags_and_escaping_targets_are_rejected ... ok
+test shadowing_and_external_optional_packages_are_not_used_as_fallbacks ... ok
+test stable_version_updates_with_the_same_selector_do_not_need_a_desktop_hash_update ... ok
+test architecture_ambiguity_and_adjacent_non_x64_node_are_refused ... ok
+test optional_version_os_cpu_exports_and_native_format_must_match ... ok
+test standard_local_and_global_shims_resolve_only_their_linked_package ... ok
+test text_reads_are_bounded_and_malformed_metadata_does_not_escape ... ok
+test unsupported_versions_and_inconsistent_package_bin_alias_or_selector_refuse ... ok
+
+test result: ok. 11 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.39s
+

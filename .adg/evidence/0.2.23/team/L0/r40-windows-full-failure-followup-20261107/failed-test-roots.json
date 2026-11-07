@@ -1,0 +1,148 @@
+[
+  {
+    "run": 42325691178,
+    "source": "54c5198a5f03be2c878707e5a78eb5779dbd4922",
+    "summary": "test result: FAILED. 1676 passed; 16 failed; 5 ignored; 0 measured; 0 filtered out; finished in 2128.72s",
+    "failures": [
+      {
+        "test": "modules::ipc::service::sync_v2_tests::cancelled_cli_observer_keeps_admissions_until_real_v2_terminal_and_audit",
+        "failure": "thread 'modules::ipc::service::sync_v2_tests::cancelled_cli_observer_keeps_admissions_until_real_v2_terminal_and_audit' (8164) panicked at src\\modules\\ipc\\service_sync_v2_tests.rs:653:6:\ncalled `Result::unwrap()` on an `Err` value: Elapsed(())\n"
+      },
+      {
+        "test": "modules::model_config::config_file::v2::receive::tests::copied_receipt_from_another_root_cannot_claim_local_application",
+        "failure": "thread 'modules::model_config::config_file::v2::receive::tests::copied_receipt_from_another_root_cannot_claim_local_application' (9020) panicked at src\\modules\\model_config\\model_receive_file_v2_tests.rs:1160:26:\ncalled `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: \"model_receive_private_storage\", issues: [MatchIssueV2 { code: \"model_receive_private_storage\", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: \"模型配置未通过核对\", recovery_actions: [\"inspect_source\"] }] }\n"
+      },
+      {
+        "test": "modules::model_config::config_file::v2::receive::tests::eight_target_transaction_recovery_finishes_mapping_and_receipt_together",
+        "failure": "thread 'modules::model_config::config_file::v2::receive::tests::eight_target_transaction_recovery_finishes_mapping_and_receipt_together' (3780) panicked at src\\modules\\model_config\\model_receive_file_v2_tests.rs:1205:31:\ncalled `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: \"model_receive_private_storage\", issues: [MatchIssueV2 { code: \"model_receive_private_storage\", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: \"模型配置未通过核对\", recovery_actions: [\"inspect_source\"] }] }\n"
+      },
+      {
+        "test": "modules::model_config::config_file::v2::receive::tests::pending_recovery_refuses_unknown_external_target_value_without_overwrite",
+        "failure": "thread 'modules::model_config::config_file::v2::receive::tests::pending_recovery_refuses_unknown_external_target_value_without_overwrite' (3160) panicked at src\\modules\\model_config\\model_receive_file_v2_tests.rs:1264:31:\ncalled `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: \"model_receive_private_storage\", issues: [MatchIssueV2 { code: \"model_receive_private_storage\", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: \"模型配置未通过核对\", recovery_actions: [\"inspect_source\"] }] }\n"
+      },
+      {
+        "test": "modules::model_config::config_file::v2::receive::tests::real_transaction_pending_resumes_same_frozen_images_and_commits_receipt_last",
+        "failure": "thread 'modules::model_config::config_file::v2::receive::tests::real_transaction_pending_resumes_same_frozen_images_and_commits_receipt_last' (5244) panicked at src\\modules\\model_config\\model_receive_file_v2_tests.rs:712:6:\ncalled `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: \"model_receive_private_storage\", issues: [MatchIssueV2 { code: \"model_receive_private_storage\", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: \"模型配置未通过核对\", recovery_actions: [\"inspect_source\"] }] }\n"
+      },
+      {
+        "test": "modules::model_config::sync_local_v2::restore::tests::original_none_extension_restore_rejects_direct_capture_but_actual_service_prepares_download",
+        "failure": "thread 'modules::model_config::sync_local_v2::restore::tests::original_none_extension_restore_rejects_direct_capture_but_actual_service_prepares_download' (7760) panicked at src\\modules\\model_config\\sync_local_v2_restore_tests.rs:1480:5:\nassertion failed: added.iter().all(|path|\n        path.starts_with(\"D/manager-state/sync-service-v2/\") ||\n                path == \"D/manager-state/sync-v2-transactions\" ||\n            path.starts_with(\"D/manager-state/sync-v2-transactions/\"))\n"
+      },
+      {
+        "test": "modules::model_config::sync_local_v2::restore::tests::original_none_channel_restore_rejects_direct_capture_but_actual_service_prepares_download",
+        "failure": "thread 'modules::model_config::sync_local_v2::restore::tests::original_none_channel_restore_rejects_direct_capture_but_actual_service_prepares_download' (6916) panicked at src\\modules\\model_config\\sync_local_v2_restore_tests.rs:1480:5:\nassertion failed: added.iter().all(|path|\n        path.starts_with(\"D/manager-state/sync-service-v2/\") ||\n                path == \"D/manager-state/sync-v2-transactions\" ||\n            path.starts_with(\"D/manager-state/sync-v2-transactions/\"))\n"
+      },
+      {
+        "test": "modules::model_config::sync_service_v2::tests::production_encrypted_first_download_uses_only_request_read_secret_and_still_commits_actual_model_receipt",
+        "failure": "thread 'modules::model_config::sync_service_v2::tests::production_encrypted_first_download_uses_only_request_read_secret_and_still_commits_actual_model_receipt' (2108) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1018:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncNetwork, step: Observe, retryability: SameOperationReadOnly, cause: None, http_status: None, recovery_actions: [RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }] }\n"
+      },
+      {
+        "test": "modules::model_config::sync_service_v2::tests::auth_mode_none_first_receive_keeps_actual_public_direction_on_second_service_preview",
+        "failure": "thread 'modules::model_config::sync_service_v2::tests::auth_mode_none_first_receive_keeps_actual_public_direction_on_second_service_preview' (6688) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1394:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncOperationUnknown, step: Verify, retryability: SameOperationReadOnly, cause: Some(Timeout), http_status: None, recovery_actions: [RecoveryAction { kind: VerifyOriginalUpload, operation_id: Some(\"1270e752-c66f-44e5-82ec-b76f7acc33ea\"), recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: ResumeOriginalUpload, operation_id: Some(\"1270e752-c66f-44e5-82ec-b76f7acc33ea\"), recovery_plan_id: None, generation: None, head: None }] }\n"
+      },
+      {
+        "test": "modules::model_config::sync_service_v2::tests::production_backup_failure_preserves_actual_target_and_retries_same_operation_after_protection_restored",
+        "failure": "thread 'modules::model_config::sync_service_v2::tests::production_backup_failure_preserves_actual_target_and_retries_same_operation_after_protection_restored' (9164) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1172:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncOperationUnknown, step: Verify, retryability: SameOperationReadOnly, cause: Some(Timeout), http_status: None, recovery_actions: [RecoveryAction { kind: VerifyOriginalUpload, operation_id: Some(\"c6aec73e-4aca-41eb-b7f2-f013517012b1\"), recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: ResumeOriginalUpload, operation_id: Some(\"c6aec73e-4aca-41eb-b7f2-f013517012b1\"), recovery_plan_id: None, generation: None, head: None }] }\n"
+      },
+      {
+        "test": "modules::model_config::sync_service_v2::tests::production_backend_uploads_actual_saved_objects_and_first_device_downloads_with_real_model_receipt",
+        "failure": "thread 'modules::model_config::sync_service_v2::tests::production_backend_uploads_actual_saved_objects_and_first_device_downloads_with_real_model_receipt' (2800) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:736:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncOperationUnknown, step: Verify, retryability: SameOperationReadOnly, cause: Some(Timeout), http_status: None, recovery_actions: [RecoveryAction { kind: VerifyOriginalUpload, operation_id: Some(\"1e75ab1f-d3f1-456d-9877-2bb85c14030c\"), recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: ResumeOriginalUpload, operation_id: Some(\"1e75ab1f-d3f1-456d-9877-2bb85c14030c\"), recovery_plan_id: None, generation: None, head: None }] }\n"
+      },
+      {
+        "test": "modules::model_config::sync_service_v2::tests::production_first_device_receives_model_mapping_receipt_preferences_extensions_and_assets_after_model_adoption",
+        "failure": "thread 'modules::model_config::sync_service_v2::tests::production_first_device_receives_model_mapping_receipt_preferences_extensions_and_assets_after_model_adoption' (1264) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:927:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncNetwork, step: Observe, retryability: SameOperationReadOnly, cause: None, http_status: None, recovery_actions: [RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }] }\n"
+      },
+      {
+        "test": "modules::model_config::sync_service_v2::tests::real_model_applied_interruption_reopens_with_dual_proofs_and_only_finishes_original_nonmodel_participants",
+        "failure": "thread 'modules::model_config::sync_service_v2::tests::real_model_applied_interruption_reopens_with_dual_proofs_and_only_finishes_original_nonmodel_participants' (8540) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1790:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncNetwork, step: Observe, retryability: SameOperationReadOnly, cause: None, http_status: None, recovery_actions: [RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }] }\n"
+      },
+      {
+        "test": "modules::model_config::sync_service_v2::tests::production_initialization_ambiguity_exposes_readonly_candidates_and_can_explicitly_recover_a_chosen_branch",
+        "failure": "thread 'modules::model_config::sync_service_v2::tests::production_initialization_ambiguity_exposes_readonly_candidates_and_can_explicitly_recover_a_chosen_branch' (6404) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1093:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncOperationUnknown, step: Verify, retryability: SameOperationReadOnly, cause: Some(Timeout), http_status: None, recovery_actions: [RecoveryAction { kind: VerifyOriginalUpload, operation_id: Some(\"838fa8f9-bbc2-487b-a58e-9d8440d9b5d9\"), recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: ResumeOriginalUpload, operation_id: Some(\"838fa8f9-bbc2-487b-a58e-9d8440d9b5d9\"), recovery_plan_id: None, generation: None, head: None }] }\n"
+      },
+      {
+        "test": "modules::model_config::sync_service_v2::tests::production_recovery_export_reads_chosen_branch_and_preserves_all_business_targets_and_remote_files",
+        "failure": "thread 'modules::model_config::sync_service_v2::tests::production_recovery_export_reads_chosen_branch_and_preserves_all_business_targets_and_remote_files' (6456) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1239:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncOperationUnknown, step: Verify, retryability: SameOperationReadOnly, cause: Some(Timeout), http_status: None, recovery_actions: [RecoveryAction { kind: VerifyOriginalUpload, operation_id: Some(\"ad37ce10-f090-41a8-ac91-27cdebe10279\"), recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: ResumeOriginalUpload, operation_id: Some(\"ad37ce10-f090-41a8-ac91-27cdebe10279\"), recovery_plan_id: None, generation: None, head: None }] }\n"
+      },
+      {
+        "test": "modules::model_config::sync_service_v2::tests::production_same_uuid_second_sync_is_semantic_noop_and_explicit_download_restores_existing_actual_source",
+        "failure": "thread 'modules::model_config::sync_service_v2::tests::production_same_uuid_second_sync_is_semantic_noop_and_explicit_download_restores_existing_actual_source' (8664) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1741:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncOperationUnknown, step: Verify, retryability: SameOperationReadOnly, cause: Some(Timeout), http_status: None, recovery_actions: [RecoveryAction { kind: VerifyOriginalUpload, operation_id: Some(\"534d66e7-f449-489e-a212-6d4027ce8862\"), recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: ResumeOriginalUpload, operation_id: Some(\"534d66e7-f449-489e-a212-6d4027ce8862\"), recovery_plan_id: None, generation: None, head: None }] }\n"
+      }
+    ]
+  },
+  {
+    "run": 42327388977,
+    "source": "b24b00be2941f9bf439e199d6d8abdc96ff4155b",
+    "summary": "test result: FAILED. 1675 passed; 17 failed; 5 ignored; 0 measured; 0 filtered out; finished in 2103.44s",
+    "failures": [
+      {
+        "test": "commands::update::tests::manager_query_owner_survives_disconnect_and_releases_on_all_terminals",
+        "failure": "thread 'commands::update::tests::manager_query_owner_survives_disconnect_and_releases_on_all_terminals' (1764) panicked at src\\commands\\update.rs:734:18:\ncalled `Result::unwrap()` on an `Err` value: Elapsed(())\n"
+      },
+      {
+        "test": "modules::ipc::service::sync_v2_tests::cancelled_cli_observer_keeps_admissions_until_real_v2_terminal_and_audit",
+        "failure": "thread 'modules::ipc::service::sync_v2_tests::cancelled_cli_observer_keeps_admissions_until_real_v2_terminal_and_audit' (3592) panicked at src\\modules\\ipc\\service_sync_v2_tests.rs:653:6:\ncalled `Result::unwrap()` on an `Err` value: Elapsed(())\n"
+      },
+      {
+        "test": "modules::model_config::config_file::v2::receive::tests::copied_receipt_from_another_root_cannot_claim_local_application",
+        "failure": "thread 'modules::model_config::config_file::v2::receive::tests::copied_receipt_from_another_root_cannot_claim_local_application' (5944) panicked at src\\modules\\model_config\\model_receive_file_v2_tests.rs:1160:26:\ncalled `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: \"model_receive_private_storage\", issues: [MatchIssueV2 { code: \"model_receive_private_storage\", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: \"模型配置未通过核对\", recovery_actions: [\"inspect_source\"] }] }\n"
+      },
+      {
+        "test": "modules::model_config::config_file::v2::receive::tests::eight_target_transaction_recovery_finishes_mapping_and_receipt_together",
+        "failure": "thread 'modules::model_config::config_file::v2::receive::tests::eight_target_transaction_recovery_finishes_mapping_and_receipt_together' (2728) panicked at src\\modules\\model_config\\model_receive_file_v2_tests.rs:1205:31:\ncalled `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: \"model_receive_private_storage\", issues: [MatchIssueV2 { code: \"model_receive_private_storage\", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: \"模型配置未通过核对\", recovery_actions: [\"inspect_source\"] }] }\n"
+      },
+      {
+        "test": "modules::model_config::config_file::v2::receive::tests::pending_recovery_refuses_unknown_external_target_value_without_overwrite",
+        "failure": "thread 'modules::model_config::config_file::v2::receive::tests::pending_recovery_refuses_unknown_external_target_value_without_overwrite' (7860) panicked at src\\modules\\model_config\\model_receive_file_v2_tests.rs:1264:31:\ncalled `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: \"model_receive_private_storage\", issues: [MatchIssueV2 { code: \"model_receive_private_storage\", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: \"模型配置未通过核对\", recovery_actions: [\"inspect_source\"] }] }\n"
+      },
+      {
+        "test": "modules::model_config::config_file::v2::receive::tests::real_transaction_pending_resumes_same_frozen_images_and_commits_receipt_last",
+        "failure": "thread 'modules::model_config::config_file::v2::receive::tests::real_transaction_pending_resumes_same_frozen_images_and_commits_receipt_last' (8024) panicked at src\\modules\\model_config\\model_receive_file_v2_tests.rs:712:6:\ncalled `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: \"model_receive_private_storage\", issues: [MatchIssueV2 { code: \"model_receive_private_storage\", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: \"模型配置未通过核对\", recovery_actions: [\"inspect_source\"] }] }\n"
+      },
+      {
+        "test": "modules::model_config::sync_local_v2::restore::tests::original_none_extension_restore_rejects_direct_capture_but_actual_service_prepares_download",
+        "failure": "thread 'modules::model_config::sync_local_v2::restore::tests::original_none_extension_restore_rejects_direct_capture_but_actual_service_prepares_download' (1180) panicked at src\\modules\\model_config\\sync_local_v2_restore_tests.rs:1480:5:\nassertion failed: added.iter().all(|path|\n        path.starts_with(\"D/manager-state/sync-service-v2/\") ||\n                path == \"D/manager-state/sync-v2-transactions\" ||\n            path.starts_with(\"D/manager-state/sync-v2-transactions/\"))\n"
+      },
+      {
+        "test": "modules::model_config::sync_local_v2::restore::tests::original_none_channel_restore_rejects_direct_capture_but_actual_service_prepares_download",
+        "failure": "thread 'modules::model_config::sync_local_v2::restore::tests::original_none_channel_restore_rejects_direct_capture_but_actual_service_prepares_download' (7704) panicked at src\\modules\\model_config\\sync_local_v2_restore_tests.rs:1480:5:\nassertion failed: added.iter().all(|path|\n        path.starts_with(\"D/manager-state/sync-service-v2/\") ||\n                path == \"D/manager-state/sync-v2-transactions\" ||\n            path.starts_with(\"D/manager-state/sync-v2-transactions/\"))\n"
+      },
+      {
+        "test": "modules::model_config::sync_service_v2::tests::production_encrypted_first_download_uses_only_request_read_secret_and_still_commits_actual_model_receipt",
+        "failure": "thread 'modules::model_config::sync_service_v2::tests::production_encrypted_first_download_uses_only_request_read_secret_and_still_commits_actual_model_receipt' (4128) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1018:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncNetwork, step: Observe, retryability: SameOperationReadOnly, cause: None, http_status: None, recovery_actions: [RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }] }\n"
+      },
+      {
+        "test": "modules::model_config::sync_service_v2::tests::auth_mode_none_first_receive_keeps_actual_public_direction_on_second_service_preview",
+        "failure": "thread 'modules::model_config::sync_service_v2::tests::auth_mode_none_first_receive_keeps_actual_public_direction_on_second_service_preview' (6240) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1394:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncOperationUnknown, step: Verify, retryability: SameOperationReadOnly, cause: Some(Timeout), http_status: None, recovery_actions: [RecoveryAction { kind: VerifyOriginalUpload, operation_id: Some(\"01cbbb02-a221-4dce-ac65-549815e41514\"), recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: ResumeOriginalUpload, operation_id: Some(\"01cbbb02-a221-4dce-ac65-549815e41514\"), recovery_plan_id: None, generation: None, head: None }] }\n"
+      },
+      {
+        "test": "modules::model_config::sync_service_v2::tests::production_backup_failure_preserves_actual_target_and_retries_same_operation_after_protection_restored",
+        "failure": "thread 'modules::model_config::sync_service_v2::tests::production_backup_failure_preserves_actual_target_and_retries_same_operation_after_protection_restored' (5212) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1172:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncOperationUnknown, step: Verify, retryability: SameOperationReadOnly, cause: Some(Timeout), http_status: None, recovery_actions: [RecoveryAction { kind: VerifyOriginalUpload, operation_id: Some(\"32e5478d-2797-47fc-b50a-c8475ba2b650\"), recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: ResumeOriginalUpload, operation_id: Some(\"32e5478d-2797-47fc-b50a-c8475ba2b650\"), recovery_plan_id: None, generation: None, head: None }] }\n"
+      },
+      {
+        "test": "modules::model_config::sync_service_v2::tests::production_backend_uploads_actual_saved_objects_and_first_device_downloads_with_real_model_receipt",
+        "failure": "thread 'modules::model_config::sync_service_v2::tests::production_backend_uploads_actual_saved_objects_and_first_device_downloads_with_real_model_receipt' (3296) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:736:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncOperationUnknown, step: Verify, retryability: SameOperationReadOnly, cause: Some(Timeout), http_status: None, recovery_actions: [RecoveryAction { kind: VerifyOriginalUpload, operation_id: Some(\"86ff80dc-17f3-4272-86b3-1afb25ec3127\"), recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: ResumeOriginalUpload, operation_id: Some(\"86ff80dc-17f3-4272-86b3-1afb25ec3127\"), recovery_plan_id: None, generation: None, head: None }] }\n"
+      },
+      {
+        "test": "modules::model_config::sync_service_v2::tests::production_first_device_receives_model_mapping_receipt_preferences_extensions_and_assets_after_model_adoption",
+        "failure": "thread 'modules::model_config::sync_service_v2::tests::production_first_device_receives_model_mapping_receipt_preferences_extensions_and_assets_after_model_adoption' (4500) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:927:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncNetwork, step: Observe, retryability: SameOperationReadOnly, cause: None, http_status: None, recovery_actions: [RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }] }\n"
+      },
+      {
+        "test": "modules::model_config::sync_service_v2::tests::real_model_applied_interruption_reopens_with_dual_proofs_and_only_finishes_original_nonmodel_participants",
+        "failure": "thread 'modules::model_config::sync_service_v2::tests::real_model_applied_interruption_reopens_with_dual_proofs_and_only_finishes_original_nonmodel_participants' (5776) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1790:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncNetwork, step: Observe, retryability: SameOperationReadOnly, cause: None, http_status: None, recovery_actions: [RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }] }\n"
+      },
+      {
+        "test": "modules::model_config::sync_service_v2::tests::production_initialization_ambiguity_exposes_readonly_candidates_and_can_explicitly_recover_a_chosen_branch",
+        "failure": "thread 'modules::model_config::sync_service_v2::tests::production_initialization_ambiguity_exposes_readonly_candidates_and_can_explicitly_recover_a_chosen_branch' (8584) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1093:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncOperationUnknown, step: Verify, retryability: SameOperationReadOnly, cause: Some(Timeout), http_status: None, recovery_actions: [RecoveryAction { kind: VerifyOriginalUpload, operation_id: Some(\"40c298f0-cc10-4635-a6f5-a996d6a8b1ea\"), recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: ResumeOriginalUpload, operation_id: Some(\"40c298f0-cc10-4635-a6f5-a996d6a8b1ea\"), recovery_plan_id: None, generation: None, head: None }] }\n"
+      },
+      {
+        "test": "modules::model_config::sync_service_v2::tests::production_recovery_export_reads_chosen_branch_and_preserves_all_business_targets_and_remote_files",
+        "failure": "thread 'modules::model_config::sync_service_v2::tests::production_recovery_export_reads_chosen_branch_and_preserves_all_business_targets_and_remote_files' (5316) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1239:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncOperationUnknown, step: Verify, retryability: SameOperationReadOnly, cause: Some(Timeout), http_status: None, recovery_actions: [RecoveryAction { kind: VerifyOriginalUpload, operation_id: Some(\"d891ec13-74d8-4e3d-9c6f-f2e8bd4e43af\"), recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: ResumeOriginalUpload, operation_id: Some(\"d891ec13-74d8-4e3d-9c6f-f2e8bd4e43af\"), recovery_plan_id: None, generation: None, head: None }] }\n"
+      },
+      {
+        "test": "modules::model_config::sync_service_v2::tests::production_same_uuid_second_sync_is_semantic_noop_and_explicit_download_restores_existing_actual_source",
+        "failure": "thread 'modules::model_config::sync_service_v2::tests::production_same_uuid_second_sync_is_semantic_noop_and_explicit_download_restores_existing_actual_source' (3012) panicked at src\\modules\\model_config\\sync_service_v2_tests.rs:1741:10:\ncalled `Result::unwrap()` on an `Err` value: SyncFailure { code: SyncOperationUnknown, step: Verify, retryability: SameOperationReadOnly, cause: Some(Timeout), http_status: None, recovery_actions: [RecoveryAction { kind: VerifyOriginalUpload, operation_id: Some(\"e5bf1f6e-4568-4477-b8b8-b480f0bdb4ce\"), recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: RetryLater, operation_id: None, recovery_plan_id: None, generation: None, head: None }, RecoveryAction { kind: ResumeOriginalUpload, operation_id: Some(\"e5bf1f6e-4568-4477-b8b8-b480f0bdb4ce\"), recovery_plan_id: None, generation: None, head: None }] }\n"
+      }
+    ]
+  }
+]

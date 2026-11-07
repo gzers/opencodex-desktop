@@ -1,0 +1,24 @@
+
+running 19 tests
+test changed_attested_record_stops_before_provider_operations ... ok
+test canonical_provider_is_included_in_full_saved_reload_order ... ok
+test all_distinct_rename_targets_reload_before_one_complete_batch ... ok
+test complete_noop_editor_adopts_roster_default_without_disk_or_secret_roundtrip ... ok
+test empty_rename_map_still_adopts_saved_full_roster_and_default ... ok
+test committed_catalog_accepts_no_change_or_degradation_without_synced_heuristics ... ok
+test invalid_pending_map_stops_before_management_operations ... ok
+test invalid_or_missing_config_does_not_fall_back_to_live_or_defaults ... ok
+test exact_file_drift_fails_even_after_rejection_or_successful_live_adoption ... ok
+test missing_saved_public_row_is_not_invented_from_secret_disk_data ... ok
+test multiple_old_prefixes_reload_shared_target_once ... ok
+test observation_timestamp_drift_still_refuses_activation_without_clearing_pending ... ok
+test catalog_failed_skipped_missing_or_malformed_never_finishes_the_action ... ok
+test retry_after_live_already_adopted_is_idempotent_and_does_not_clear_pending ... ok
+test previously_added_or_modified_saved_sibling_is_reloaded_before_rename_batch ... ok
+test untrusted_listener_never_receives_admin_or_reload_capability ... ok
+test stale_or_unsupported_owner_never_uses_repair_writes ... ok
+test success_flag_and_complete_live_readback_are_required ... ok
+test unknown_secret_and_unexpected_runtime_dto_fields_fail_before_batch ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.48s
+

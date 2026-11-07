@@ -1,0 +1,9 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0063]: missing field `refresh_sync_scope` in initializer of `sync_local_v2::restore::RestoreReceiptV2`
+   --> src/modules/model_config/feedback_v2_tests.rs:602:19
+    |
+602 |     let receipt = RestoreReceiptV2 {
+    |                   ^^^^^^^^^^^^^^^^ missing `refresh_sync_scope`
+
+For more information about this error, try `rustc --explain E0063`.
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

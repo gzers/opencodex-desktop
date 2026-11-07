@@ -1,0 +1,22 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 20.71s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-0acf286eb61f7336)
+
+running 4 tests
+test modules::model_config::sync_service_v2::scope_restore::tests::first_catalog_still_selects_every_other_object_but_not_restored_absences ... ok
+
+thread 'modules::model_config::sync_service_v2::scope_restore::tests::frozen_scope_update_keeps_other_choices_and_manual_reselection_survives_reopen' (135958506) panicked at src/modules/model_config/sync_scope_restore_v2.rs:288:9:
+assertion failed: check(&d, &edit, true).is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test modules::model_config::sync_service_v2::scope_restore::tests::changed_scope_rejects_the_frozen_plan_without_overwriting_user_choices ... ok
+test modules::model_config::sync_service_v2::scope_restore::tests::frozen_scope_update_keeps_other_choices_and_manual_reselection_survives_reopen ... FAILED
+test modules::model_config::result_owner_v2::tests::actual_preferences_import_issues_scope_restore_owner_without_result_side_effects ... ok
+
+failures:
+
+failures:
+    modules::model_config::sync_service_v2::scope_restore::tests::frozen_scope_update_keeps_other_choices_and_manual_reselection_survives_reopen
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 1976 filtered out; finished in 3.59s
+
+error: test failed, to rerun pass `--lib`

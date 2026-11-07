@@ -1,0 +1,37 @@
+    Blocking waiting for file lock on artifact directory
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 19.63s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-0acf286eb61f7336)
+
+running 15 tests
+test modules::model_config::sync_local_v2::restore::tests::real_unsaved_draft_and_backup_protection_fail_closed_before_business_writes ... ok
+test modules::model_config::sync_local_v2::restore::tests::backup_false_is_listed_disabled_without_private_scope_images ... ok
+test modules::model_config::sync_local_v2::restore::tests::actual_model_applied_interruption_keeps_not_ready_then_reopens_same_before ... ok
+test modules::model_config::sync_local_v2::restore::tests::rewriting_backup_checksum_does_not_authorize_forged_model_or_participant_before_bytes ... ok
+test modules::model_config::sync_local_v2::restore::tests::template_only_dependency_rejected_and_preview_cas_preserves_changed_targets ... ok
+test modules::model_config::sync_local_v2::restore::tests::manager_only_restore_preserves_later_unselected_model_edits_and_restores_original_absent_metadata ... ok
+test modules::model_config::sync_local_v2::restore::tests::real_participant_write_failure_returns_partial_receipt_and_resumes_without_rewriting_completed_groups ... ok
+test modules::model_config::sync_local_v2::restore::tests::owned_operations_reopen_partial_identity_and_keep_completed_receipt_without_current_config ... ok
+test modules::model_config::sync_local_v2::restore::tests::readonly_preview_ignores_unknown_draft_and_same_plan_restores_only_after_explicit_cas_discard ... ok
+test modules::model_config::sync_local_v2::restore::tests::original_actual_receive_before_after_restore_all_and_repeat_receipt_preserves_later_edits ... ok
+test modules::model_config::sync_local_v2::restore::tests::restoring_existing_model_content_is_a_new_frozen_save_and_actual_capture_uploads_over_old_cloud ... ok
+test modules::model_config::sync_local_v2::restore::tests::actual_receiver_and_namespace_production_traits_issue_ready_restorable_backups ... ok
+test modules::model_config::sync_local_v2::restore::tests::production_service_backend_factory_mapping_receipt_protects_actual_scope_without_network ... ok
+
+thread 'modules::model_config::sync_local_v2::restore::tests::original_none_extension_restore_deselects_scope_and_explicit_reselection_can_download' (135958513) panicked at src/modules/model_config/sync_local_v2_restore_tests.rs:1501:5:
+assertion failed: changed.is_empty()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test modules::model_config::sync_local_v2::restore::tests::original_none_extension_restore_deselects_scope_and_explicit_reselection_can_download ... FAILED
+
+thread 'modules::model_config::sync_local_v2::restore::tests::original_none_channel_restore_deselects_scope_and_explicit_reselection_can_download' (135958512) panicked at src/modules/model_config/sync_local_v2_restore_tests.rs:1501:5:
+assertion failed: changed.is_empty()
+test modules::model_config::sync_local_v2::restore::tests::original_none_channel_restore_deselects_scope_and_explicit_reselection_can_download ... FAILED
+
+failures:
+
+failures:
+    modules::model_config::sync_local_v2::restore::tests::original_none_channel_restore_deselects_scope_and_explicit_reselection_can_download
+    modules::model_config::sync_local_v2::restore::tests::original_none_extension_restore_deselects_scope_and_explicit_reselection_can_download
+
+test result: FAILED. 13 passed; 2 failed; 0 ignored; 0 measured; 1965 filtered out; finished in 43.40s
+
+error: test failed, to rerun pass `--lib`

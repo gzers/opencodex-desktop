@@ -1,0 +1,94 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0425]: cannot find value `applied` in this scope
+   --> src/modules/model_config/sync_scope_restore_v2.rs:180:10
+    |
+180 |     if (!applied && now == edit.before) || started && now.as_deref() == Some(edit.after.as_slice())
+    |          ^^^^^^^ not found in this scope
+    |
+note: function `crate::modules::model_config::feedback::v2::tests::applied` exists but is inaccessible
+   --> src/modules/model_config/feedback_v2_tests.rs:54:1
+    |
+ 54 | fn applied() -> OperationFact {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not accessible
+
+error[E0063]: missing field `refresh_sync_scope` in initializer of `sync_local_v2::restore::RestoreReceiptV2`
+   --> src/modules/model_config/feedback_v2_tests.rs:602:19
+    |
+602 |     let receipt = RestoreReceiptV2 {
+    |                   ^^^^^^^^^^^^^^^^ missing `refresh_sync_scope`
+
+error[E0061]: this function takes 3 arguments but 4 arguments were supplied
+    --> src/modules/model_config/sync_local_v2_restore.rs:1622:13
+     |
+1622 |             super::super::sync_service_v2::scope_restore::check(
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+1626 |                 progress.scope_updated,
+     |                 ---------------------- unexpected argument #4 of type `bool`
+     |
+note: function defined here
+    --> src/modules/model_config/sync_scope_restore_v2.rs:178:15
+     |
+ 178 | pub(crate) fn check(root: &Path, edit: &ScopeEditV2, started: bool) -> SyncResult<()> {
+     |               ^^^^^
+help: remove the extra argument
+     |
+1625 -                 progress.protected,
+1626 -                 progress.scope_updated,
+1625 +                 progress.protected,
+     |
+
+error[E0061]: this function takes 3 arguments but 4 arguments were supplied
+   --> src/modules/model_config/sync_scope_restore_v2.rs:256:13
+    |
+256 |             check(&d, &edit, false, false).unwrap();
+    |             ^^^^^                   ----- unexpected argument #4 of type `bool`
+    |
+note: function defined here
+   --> src/modules/model_config/sync_scope_restore_v2.rs:178:15
+    |
+178 | pub(crate) fn check(root: &Path, edit: &ScopeEditV2, started: bool) -> SyncResult<()> {
+    |               ^^^^^
+help: remove the extra argument
+    |
+256 -             check(&d, &edit, false, false).unwrap();
+256 +             check(&d, &edit, false).unwrap();
+    |
+
+error[E0061]: this function takes 3 arguments but 4 arguments were supplied
+   --> src/modules/model_config/sync_scope_restore_v2.rs:289:17
+    |
+289 |         assert!(check(&d, &edit, true, true).is_err());
+    |                 ^^^^^                  ---- unexpected argument #4 of type `bool`
+    |
+note: function defined here
+   --> src/modules/model_config/sync_scope_restore_v2.rs:178:15
+    |
+178 | pub(crate) fn check(root: &Path, edit: &ScopeEditV2, started: bool) -> SyncResult<()> {
+    |               ^^^^^
+help: remove the extra argument
+    |
+289 -         assert!(check(&d, &edit, true, true).is_err());
+289 +         assert!(check(&d, &edit, true).is_err());
+    |
+
+error[E0061]: this function takes 3 arguments but 4 arguments were supplied
+   --> src/modules/model_config/sync_scope_restore_v2.rs:325:21
+    |
+325 |             assert!(check(&d, &edit, false, false).is_err());
+    |                     ^^^^^                   ----- unexpected argument #4 of type `bool`
+    |
+note: function defined here
+   --> src/modules/model_config/sync_scope_restore_v2.rs:178:15
+    |
+178 | pub(crate) fn check(root: &Path, edit: &ScopeEditV2, started: bool) -> SyncResult<()> {
+    |               ^^^^^
+help: remove the extra argument
+    |
+325 -             assert!(check(&d, &edit, false, false).is_err());
+325 +             assert!(check(&d, &edit, false).is_err());
+    |
+
+Some errors have detailed explanations: E0061, E0063, E0425.
+For more information about an error, try `rustc --explain E0061`.
+error: could not compile `opencodex-desktop` (lib test) due to 6 previous errors

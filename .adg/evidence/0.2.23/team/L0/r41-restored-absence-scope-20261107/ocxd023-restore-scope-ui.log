@@ -1,0 +1,17 @@
+
+> opencodex-desktop-ui@0.2.23 test
+> vitest --run tests/transfer-backups-v2.test.ts tests/sync-v2-consumers.test.ts tests/sync-v2-entry.test.ts tests/sync-v2-recovery.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui
+
+
+ Test Files  4 passed (4)
+      Tests  62 passed (62)
+   Start at  11:01:49
+   Duration  1.27s (transform 48%, environment 36%, tests 8%, import 7%)
+
+  Transform  transforming modules took 2.00s · 48% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

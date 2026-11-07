@@ -1,0 +1,24 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 19.40s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-0acf286eb61f7336)
+
+running 2 tests
+
+thread 'modules::model_config::sync_local_v2::restore::tests::original_none_extension_restore_deselects_scope_and_explicit_reselection_can_download' (135986635) panicked at src/modules/model_config/sync_local_v2_restore_tests.rs:1515:5:
+unexpected added paths: ["D/manager-state/account-catalog-ids.json.lock", "D/manager-state/preferences.json.lock", "D/manager-state/sync-service-v2/42fffee2-858a-4163-9f3f-263dcc9eab4c.original.json", "D/manager-state/sync-v2-transactions", "D/manager-state/sync-v2-transactions/417b53ef4a76a23867d21871d0dd7e968f4cc6e49945a5bbb7f5be86c541f37a.seen.json", "D/manager-state/sync-v2-transactions/42fffee2-858a-4163-9f3f-263dcc9eab4c.receive.json", "D/manager-state/sync-v2-transactions/6bbcddb9-cb40-4964-8021-12b61442fff9.payload", "D/manager-state/sync-v2-transactions/seen-417b53ef4a76a23867d21871d0dd7e968f4cc6e49945a5bbb7f5be86c541f37a.lock"]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test modules::model_config::sync_local_v2::restore::tests::original_none_extension_restore_deselects_scope_and_explicit_reselection_can_download ... FAILED
+
+thread 'modules::model_config::sync_local_v2::restore::tests::original_none_channel_restore_deselects_scope_and_explicit_reselection_can_download' (135986634) panicked at src/modules/model_config/sync_local_v2_restore_tests.rs:1515:5:
+unexpected added paths: ["D/manager-state/account-catalog-ids.json.lock", "D/manager-state/preferences.json.lock", "D/manager-state/sync-service-v2/9c36eb86-7ddc-4c4e-8ceb-a95b7d3528ec.original.json", "D/manager-state/sync-v2-transactions", "D/manager-state/sync-v2-transactions/417b53ef4a76a23867d21871d0dd7e968f4cc6e49945a5bbb7f5be86c541f37a.seen.json", "D/manager-state/sync-v2-transactions/9c36eb86-7ddc-4c4e-8ceb-a95b7d3528ec.receive.json", "D/manager-state/sync-v2-transactions/f22b77fa-a349-4524-8e7a-3cd583ced653.payload", "D/manager-state/sync-v2-transactions/seen-417b53ef4a76a23867d21871d0dd7e968f4cc6e49945a5bbb7f5be86c541f37a.lock"]
+test modules::model_config::sync_local_v2::restore::tests::original_none_channel_restore_deselects_scope_and_explicit_reselection_can_download ... FAILED
+
+failures:
+
+failures:
+    modules::model_config::sync_local_v2::restore::tests::original_none_channel_restore_deselects_scope_and_explicit_reselection_can_download
+    modules::model_config::sync_local_v2::restore::tests::original_none_extension_restore_deselects_scope_and_explicit_reselection_can_download
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 1979 filtered out; finished in 43.98s
+
+error: test failed, to rerun pass `--lib`

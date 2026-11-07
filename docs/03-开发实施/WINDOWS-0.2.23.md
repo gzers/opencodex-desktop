@@ -257,3 +257,12 @@ R23的缺custom-protocol因果判断撤回：同一已封装release包，未激�
 ## R26 提权备份锁创建归属补全（2026-11-07）
 
 7f5057366修正Windows备份/删除准入锁的创建：原safety标准API在提权进程可用Administrators默认owner，随后删除整树的实际用户归属复核拒绝；现走统一private create/open，验证实际TokenUser与User/SYSTEM，不修existing未知对象。非Windows保留原nofollow打开逻辑。两IPC锁等待夹具改为合法private创建，47IPC/42backup/12uninstall及strict本机过；always提权组保留原13项并新增真实backup-lock owner/DACL/重开字节检查。仅定向本机通过，不冒Windows实证；候选结果及新来源复验仍待，见r38。
+
+
+## R27 完整候选失败明细与单主线后继（2026-11-07）
+
+54候选42325691178：库1676过/16失败/5忽略，48其它binary记录成功；末库已执行完成，但终止时枚举先消失导致控制器line100异常与cleanup-failed，不假称全部完成/账户清理过。b24候选42327388977：49binary全部尝试，48成功，库1675过/17失败/5忽略，真实101保留；源码/制品ACL、desktopACL及账户Profile清理均过。两候选提权13过，原生改名凭据测试被“目录属于其它用户”挡住，安装器未进入通过。r40按条目CRC/size抽取，未声明完整715MB ZIP/SHA过。
+
+后继67b08b2d5把非布局临时根gate留在根内，生产U/desktop删除/owner规则不变；7df4ec422把四个恢复marker/异根回执测试改为合法private创建，不松校验；b75452325以retained handle处理退出信号与枚举顺序，并保持仍活未知进程拒绝。同步9项Timeout及两项等待Elapsed尚未查清，dcb465d36只在Windows测试记录静态阶段名/耗时，预算/workers/全范围保持。
+
+用户已批准恢复原None对象取消本机同步勾选。c2845bd7d接入原恢复CAS/保护/持久进度及本地UI回读，17真实恢复、1589UI、type/build/strict通过，原失败及修复证据r41。完整后继候选42333262869固定218b2262b，含上述存储/执行器、V2安装清理和提权备份锁、范围处理与诊断，当前仅运行，不标通过。无需再开贡献对话，Main继续取证修复，未发布。
