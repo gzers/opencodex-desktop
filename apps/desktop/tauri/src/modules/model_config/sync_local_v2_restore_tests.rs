@@ -1147,7 +1147,13 @@ fn absent_probe_tree(d: &Path, h: &Path) -> BTreeMap<String, String> {
         tree(root, root, &mut state, &mut (64 * 1024 * 1024)).unwrap();
         for (path, value) in state {
             output.insert(
-                format!("{label}/{}", path.strip_prefix(root).unwrap().display()),
+                format!(
+                    "{label}/{}",
+                    path.strip_prefix(root)
+                        .unwrap()
+                        .to_string_lossy()
+                        .replace('\\', "/")
+                ),
                 value,
             );
         }
