@@ -206,6 +206,12 @@ public sealed class OcxRustOrdinaryPending : IDisposable {
   }finally{Marshal.FreeHGlobal(value);}
  }
  public void Resume(){Live();uint previous=ResumeThread(thread);if(previous==0xffffffff)throw new Win32Exception(Marshal.GetLastWin32Error());if(previous!=1)throw new InvalidOperationException("Created thread suspend count changed");resumed=true;}
+ public bool WaitForExit(uint milliseconds){
+  uint state=WaitForSingleObject(native,milliseconds);
+  if(state==0)return true;
+  if(state==258)return false;
+  throw new Win32Exception(Marshal.GetLastWin32Error());
+ }
  public int ExitCode(){
   if(WaitForSingleObject(native,0)!=0)throw new InvalidOperationException("Created native process has not exited");
   uint code;if(!GetExitCodeProcess(native,out code))throw new Win32Exception(Marshal.GetLastWin32Error());return unchecked((int)code);
@@ -323,15 +329,16 @@ function Start-RustOrdinaryCaptured([string]$Executable,[string[]]$Arguments,[st
   $diagnostic.resumed=$true;$diagnostic.stage='running'
   Write-TwoUserJson ($Stdout+'.launch.json') $diagnostic
   $until=[datetime]::UtcNow.AddSeconds($DeadlineSeconds)
-  while(!$p.HasExited){
-   try{Add-TwoUserDescendants $fact $Ledger}catch{if(!$p.HasExited){throw}}
+  while(!$pending.WaitForExit(0)){
+   try{Add-TwoUserDescendants $fact $Ledger}catch{if(!$pending.WaitForExit(0)){throw}}
    Write-TwoUserJson $LedgerPath @($Ledger.Values)
    if([datetime]::UtcNow -gt $until){throw 'Original suite envelope exhausted; no test deadline was enlarged'}
    Start-Sleep -Milliseconds 100
   }
   $outFile.Flush($true);$errFile.Flush($true)
-  $diagnostic.stage='exited';Write-TwoUserJson ($Stdout+'.launch.json') $diagnostic
+  $diagnostic.stage='read-native-exit';Write-TwoUserJson ($Stdout+'.launch.json') $diagnostic
   $nativeExit=$pending.ExitCode()
+  $diagnostic.stage='exited';Write-TwoUserJson ($Stdout+'.launch.json') $diagnostic
   [ordered]@{process=$fact;token=$token;cim=$cim;exitCode=$nativeExit;exitAuthority='retained-CreateProcess-handle';arguments=$Arguments;stdout=$Stdout;stderr=$Stderr;workingDirectory=$WorkingDirectory;identityObservedBeforeResume=$true}
  }catch{
   $diagnostic.failureType=$_.Exception.GetType().FullName;$diagnostic.failureHResult=[int]$_.Exception.HResult
