@@ -35,6 +35,24 @@ class WindowsReleaseAcceptanceTests(unittest.TestCase):
         self.assertNotIn("**/*.json", workflow)
         self.assertIn("node-version: 26.8.1", workflow)
 
+    def test_023_ota_is_separate_from_legacy_and_does_not_fabricate_msi_scope_upgrade(self):
+        script = (ROOT / "test/smoke/windows023-ota.ps1").read_text()
+        readback = (ROOT / "test/smoke/windows023-ota-readback.mjs").read_text()
+        workflow = (ROOT / ".github/workflows/windows-release-acceptance.yml").read_text()
+        self.assertIn("inputs.version == '0.2.23'", workflow)
+        self.assertIn("'[\"nsis\"]'", workflow)
+        self.assertIn("0b824645ac1b1c3eacab58a3a7fcfededfc910104ac282cfd99c7855b4f97895", script)
+        self.assertIn("prepare-exit", script)
+        self.assertIn("prepare-restart", script)
+        self.assertIn("no manual launch fallback", script)
+        self.assertIn("oldAndNewRootsPreserved", script)
+        self.assertIn("Rollback original022 executable identity changed", script)
+        self.assertIn("snapshot.savedPolicy.channels.length,0", readback)
+        self.assertIn("model_file_snapshot", readback)
+        self.assertIn("model_v2_file_snapshot", readback)
+        self.assertNotIn("model_file_save", readback)
+        self.assertIn("signatureVerified,true", (ROOT / "test/smoke/windows-ota.mjs").read_text())
+
     def test_ota_admits_only_explicit_forward_adjacent_releases_through_022(self):
         script = (ROOT / "test/smoke/windows-ota.ps1").read_text(encoding="utf-8")
         match = re.search(r"^if\(!\((.+)\)\)\{throw 'Only the admitted adjacent releases may be tested'\}$", script, re.MULTILINE)
