@@ -1,0 +1,77 @@
+{
+  "result": "pass",
+  "checks": [
+    "023 complete original U/D/H/program path identities and actual statuses agree byte-for-byte with production snapshot; no retired editable root input",
+    "real clipboard receives all eight full original path identities",
+    "backup root readable, actual backup generated, production open action uses original target",
+    "Skills source and all client Skills/MCP paths use shared readable presentation",
+    "path display, copy and open leave stored data-root and source identities unchanged"
+  ],
+  "rawDataRoot": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\desktop",
+  "pathSnapshot": {
+    "schemaVersion": 1,
+    "aggregateRoot": {
+      "path": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data",
+      "status": "valid"
+    },
+    "desktopRoot": {
+      "path": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\desktop",
+      "status": "valid"
+    },
+    "opencodexHome": {
+      "path": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\opencodex\\home",
+      "status": "valid"
+    },
+    "configPath": {
+      "path": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\opencodex\\home\\config.json",
+      "status": "missing"
+    },
+    "installationRoot": {
+      "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program",
+      "status": "valid"
+    },
+    "runtimePrefix": {
+      "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime/opencodex",
+      "status": "missing"
+    },
+    "runtimeEntry": {
+      "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime/bin/ocx.cmd",
+      "status": "missing"
+    },
+    "managerExecutable": {
+      "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe",
+      "status": "valid"
+    },
+    "program": {
+      "packageVersion": null,
+      "manifestVersion": null,
+      "sourceVersion": null,
+      "consistency": "missing"
+    },
+    "currentAggregateRoot": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data",
+    "pendingRestart": false
+  },
+  "openedTargets": [
+    "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\desktop\\backups"
+  ],
+  "documentFocusEmulated": true,
+  "isolatedClipboardPermissionGranted": true,
+  "clipboardReadback": {
+    "text": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\r\n\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\desktop\r\n\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\opencodex\\home\r\n\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\opencodex\\home\\config.json\r\nD:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\r\nD:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe\r\nD:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime/opencodex\r\nD:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime/bin/ocx.cmd",
+    "expected": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\n\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\desktop\n\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\opencodex\\home\n\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\opencodex\\home\\config.json\nD:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\nD:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe\nD:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime/opencodex\nD:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime/bin/ocx.cmd",
+    "crlfTransport": true
+  },
+  "typography": {
+    "font": "Consolas, \"Cascadia Code\", SFMono-Regular, Menlo, \"Microsoft YaHei\", monospace",
+    "hasBackslash": true,
+    "hasWon": false
+  },
+  "freshPreferencesSavedThroughProductionApi": true,
+  "backupConfirmation": {
+    "version": "0.2.23",
+    "selector": "dialog.app-modal-dialog[open]",
+    "confirmed": true
+  },
+  "agentPathCount": 13,
+  "clipboardRestored": true
+}

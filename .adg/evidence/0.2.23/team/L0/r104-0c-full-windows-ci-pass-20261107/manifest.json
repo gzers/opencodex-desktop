@@ -1,0 +1,39 @@
+{
+  "source": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+  "productAppsTree": "cf7ca5b19438d9157ada555d0451f91d768b1cf9",
+  "run": 42373994923,
+  "job": 128407736681,
+  "terminal": "success",
+  "allRequiredCiJobs": "success; main-only build skipped by declared branch condition",
+  "ordinaryRegression": "all49 top-level binary attempts exit0, allBinariesAttempted true; source/desktopACL restored and temporaryaccount/Profile removed",
+  "affectedTests": "both new windows runtime install path actualmanifest/launcher resolver and tamper/escaping tests pass in originaltest8 stdout",
+  "nativeBoundaries": [
+    "actual TokenUser private creation",
+    "native credential protection",
+    "real official managed upgrade/offline reinstall",
+    "MSVC release build",
+    "finalEXE ordinary-account native smoke",
+    "finalEXE pinnedNode26/npm11.19 full install/failure-preserve/2.93recovery, readyWebDAV/query/updatefailure-recovery/import",
+    "Node22.20 full install/failure-preserve/recovery/query/updatefailure-recovery and explicit typed production-readiness rejection; not counted production-ready",
+    "second ordinary-account finalEXE native smoke"
+  ],
+  "cleanup": "ordinaryRust source/desktopACL and account/Profile pass; two ordinary startup receipts restored desktopACL/dailyUserChanged false; npmrc+clipboard restored in native probes",
+  "evidenceArtifact": {
+    "id": 13577550597,
+    "apiBytes": 28991406,
+    "apiSha256": "39a8ad011451a0aeba52c2789b83e06a7a3f437635a0dab63c0babab6df2cc7a",
+    "wholeZipLocallyHashed": false
+  },
+  "msvcOriginalArtifact": {
+    "id": 13577240226,
+    "apiBytes": 7877538,
+    "apiSha256": "65959dab515b8e6494dccd16359da039f4b12fe56b2f7305af828b1ca373952d"
+  },
+  "laterHarnessOnlyCommits": [
+    "102c7a24e",
+    "434d2c990"
+  ],
+  "laterHarnessReleaseToolsFrontendSyntaxCiPassed": 42377970599,
+  "finalPackageRun": 42374536779,
+  "releaseAcceptance": false
+}

@@ -1,0 +1,21 @@
+{
+  "result": "pass",
+  "mainUiMounted": true,
+  "bodyTextLength": 299,
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.2.23",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "discovery": {
+    "gate": "integrated_runtime_not_ready",
+    "code": 14,
+    "message": "managed runtime operation failed: discovery_runtime_unresolved; 当前 Desktop 集成安装根尚未就绪，未检查旧环境",
+    "readyVerified": false
+  },
+  "cliEnabled": false,
+  "sandboxDataRootInitialized": true
+}

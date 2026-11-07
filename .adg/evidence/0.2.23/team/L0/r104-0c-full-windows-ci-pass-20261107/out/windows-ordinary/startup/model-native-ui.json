@@ -1,0 +1,38 @@
+{
+  "result": "pass",
+  "version": "0.2.23",
+  "checks": [
+    "actual 023 two-step wizard opens/cancels without config write or channel protocol",
+    "stage and project do not save; explicit save commits real V2 config with original raw model ID",
+    "reading existing saved channel matches templates into draft, repeated read is idempotent and cancellation preserves config",
+    "actual provider name, stable saved identity and fresh snapshot: Native023 renamed",
+    "actual provider name, stable saved identity and fresh snapshot: 本机/渠道 023",
+    "reopen/discard preserves exact saved config bytes and stable channel identity",
+    "actual channel table refresh renders the saved Unicode renamed channel",
+    "new D/H paths and actual runtime source readback; no legacy sandbox HOME created"
+  ],
+  "configPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-ordinary\\startup\\sandbox-4e2b76da425c4011b1e170edbb430f24\\data\\opencodex\\home\\config.json",
+  "runtimeDirectory": {
+    "ok": false,
+    "error": {
+      "code": "storage",
+      "issues": [
+        {
+          "channelId": null,
+          "code": "storage",
+          "conditionIds": [],
+          "fieldPath": null,
+          "message": "模型配置未通过核对",
+          "rawModelId": null,
+          "recoveryActions": [
+            "inspect_source"
+          ],
+          "reference": null
+        }
+      ]
+    }
+  },
+  "liveRuntimeDirectoryAccepted": false,
+  "sharedCoverage": "same-source complete Rust and browser suites; no v1 API or old-path fallback",
+  "networkGeneration": false
+}

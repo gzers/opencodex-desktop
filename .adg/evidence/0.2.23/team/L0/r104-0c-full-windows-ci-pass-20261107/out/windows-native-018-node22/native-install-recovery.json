@@ -1,0 +1,92 @@
+{
+  "result": "pass-compatibility-not-ready",
+  "screenshots": [
+    "installed-2.91.0.png",
+    "failure-retains-output.png",
+    "recovered-upgraded-2.93.0.png"
+  ],
+  "checks": [
+    "prefill/reset/readable native Windows path",
+    "Node22 actual installs/query recovery preserved; exact production readiness correctly refused; full ready/WebDAV/overview import belongs to independent pinned dependency matrix",
+    "actual registry install 2.91.0",
+    "actual missing-version failure with readable details and retained console",
+    "old package/launcher/source preserved",
+    "failure history retains npm stage and log path",
+    "reopen and recover upgrade to 2.93.0"
+  ],
+  "dependencyContract": "node22-compatibility-not-ready",
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.2.23",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "layout": {
+    "physicalRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces",
+    "dataRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\data\\desktop",
+    "userHome": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\home",
+    "opencodexHome": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\data\\opencodex\\home",
+    "installationRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\program"
+  },
+  "firstClosure": {
+    "version": "0.2.23",
+    "terminal": "done",
+    "selector": "dialog.runtime-install-dialog[open][data-testid=runtime-install-modal]",
+    "exit": "public-header-X",
+    "phase": "done",
+    "outcomePresent": true,
+    "progress": "100"
+  },
+  "failureClosure": {
+    "version": "0.2.23",
+    "terminal": "failed",
+    "selector": "dialog.runtime-install-dialog[open][data-testid=runtime-install-modal]",
+    "exit": "public-header-X",
+    "phase": "failed",
+    "outcomePresent": false,
+    "progress": null
+  },
+  "recoveredClosure": {
+    "version": "0.2.23",
+    "terminal": "done",
+    "selector": "dialog.runtime-install-dialog[open][data-testid=runtime-install-modal]",
+    "exit": "public-header-X",
+    "phase": "done",
+    "outcomePresent": true,
+    "progress": "100"
+  },
+  "compatibilityReadiness": {
+    "code": 14,
+    "message": "managed runtime operation failed: discovery_runtime_version_mismatch; 实际执行的依赖或运行包版本不符合当前受管来源",
+    "readyAccepted": false
+  },
+  "failure": {
+    "present": true,
+    "native": true,
+    "status": "安装失败 ",
+    "error": "npm 命令失败（退出码 1）：npm pack：npm error code ETARGET；日志：\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\data\\desktop\\logs\\runtime-install\\npm-downloading-9cb4607ee4a9.log",
+    "outcome": "",
+    "done": false,
+    "phase": "failed",
+    "installing": false,
+    "progress": null,
+    "taskOutcome": false,
+    "taskVersion": null,
+    "taskError": "npm 命令失败（退出码 1）：npm pack：npm error code ETARGET；日志：\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\data\\desktop\\logs\\runtime-install\\npm-downloading-9cb4607ee4a9.log",
+    "closeCount": 1,
+    "closeEnabled": true,
+    "footerCount": 0,
+    "legacyFinish": false,
+    "retryEnabled": false,
+    "scriptsEnabled": false,
+    "console": "命令：D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\program\\runtime/node\\node.exe [\"D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-018-node22\\\\OpenCodeX Native 中文 Spaces\\\\program\\\\runtime/node/node_modules/npm/bin/npm-cli.js\", \"pack\", \"@bitkyc08/opencodex@0.0.0-ocx-missing-native-recovery\", \"--pack-destination\", \"D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-018-node22\\\\OpenCodeX Native 中文 Spaces\\\\program\\\\runtime\\\\opencodex.new-0b6e6e06a8ed\\\\.downloads\", \"--loglevel\", \"info\"]\n工作目录：D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\program\\runtime\\opencodex.new-0b6e6e06a8ed\\.downloads\n日志：\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\data\\desktop\\logs\\runtime-install\\npm-downloading-9cb4607ee4a9.log\nnpm info using npm@10.9.3\nnpm info using node@v22.20.0\nnpm http cache https://registry.npmjs.org/@bitkyc08%2fopencodex 12ms (cache hit)\nnpm error code ETARGET\nnpm error notarget No matching version found for @bitkyc08/opencodex@0.0.0-ocx-missing-native-recovery.\nnpm error notarget In most cases you or one of your dependencies are requesting\nnpm error notarget a package version that doesn't exist.\nnpm error A complete log of this run can be found in: D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\data\\desktop\\cache\\npm\\_logs\\2026-11-07T14_01_51_539Z-debug-0.log\n退出码：1；日志：\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\data\\desktop\\logs\\runtime-install\\npm-downloading-9cb4607ee4a9.log",
+    "offlineSteps": false
+  },
+  "final": {
+    "kind": "managed",
+    "version": "2.93.0",
+    "managedPrefix": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\program\\runtime/opencodex"
+  }
+}

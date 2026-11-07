@@ -1,0 +1,114 @@
+{
+  "version": "0.0.0-ocx-missing-native-recovery",
+  "terminal": {
+    "present": true,
+    "native": true,
+    "status": "安装失败 ",
+    "error": "npm 命令失败（退出码 1）：npm pack：npm error code ETARGET；日志：\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\desktop\\logs\\runtime-install\\npm-downloading-c26d44ca5b86.log",
+    "outcome": "",
+    "done": false,
+    "phase": "failed",
+    "installing": false,
+    "progress": null,
+    "taskOutcome": false,
+    "taskVersion": null,
+    "taskError": "npm 命令失败（退出码 1）：npm pack：npm error code ETARGET；日志：\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\desktop\\logs\\runtime-install\\npm-downloading-c26d44ca5b86.log",
+    "closeCount": 1,
+    "closeEnabled": true,
+    "footerCount": 0,
+    "legacyFinish": false,
+    "retryEnabled": false,
+    "scriptsEnabled": false,
+    "console": "命令：D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime/node\\node.exe [\"D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-018\\\\OpenCodeX Native 中文 Spaces\\\\program\\\\runtime/node/node_modules/npm/bin/npm-cli.js\", \"pack\", \"@bitkyc08/opencodex@0.0.0-ocx-missing-native-recovery\", \"--pack-destination\", \"D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-018\\\\OpenCodeX Native 中文 Spaces\\\\program\\\\runtime\\\\opencodex.new-915d53e4a8ce\\\\.downloads\", \"--loglevel\", \"info\"]\n工作目录：D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime\\opencodex.new-915d53e4a8ce\\.downloads\n日志：\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\desktop\\logs\\runtime-install\\npm-downloading-c26d44ca5b86.log\nnpm info using npm@11.19.0\nnpm info using node@v26.8.1\nnpm http fetch GET 200 https://registry.npmjs.org/@bitkyc08%2fopencodex 121ms (cache revalidated)\nnpm error code ETARGET\nnpm error notarget No matching version found for @bitkyc08/opencodex@0.0.0-ocx-missing-native-recovery.\nnpm error notarget In most cases you or one of your dependencies are requesting a package version that doesn't exist.\nnpm error A complete log of this run can be found in: D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\desktop\\cache\\npm\\_logs\\2026-11-07T14_00_27_954Z-debug-0.log\n退出码：1；日志：\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\desktop\\logs\\runtime-install\\npm-downloading-c26d44ca5b86.log",
+    "offlineSteps": false
+  },
+  "source": {
+    "kind": "managed",
+    "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime/bin/ocx.cmd",
+    "version": "2.91.0",
+    "resolvedAt": "2026-11-07T14:00:19Z",
+    "insideDataRoot": false,
+    "managedEntry": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime/bin/ocx.cmd",
+    "managedPrefix": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime/opencodex",
+    "defaultPrefix": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime/opencodex",
+    "explicitPath": null,
+    "history": [
+      {
+        "action": "install",
+        "result": "succeeded",
+        "package": "@bitkyc08/opencodex",
+        "version": "2.91.0",
+        "target": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime\\opencodex",
+        "at": "2026-11-07T14:00:18Z"
+      },
+      {
+        "action": "install",
+        "result": "failed",
+        "package": "@bitkyc08/opencodex",
+        "version": "0.0.0-ocx-missing-native-recovery",
+        "target": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime/opencodex",
+        "at": "2026-11-07T14:00:28Z",
+        "reason": "npm 命令失败（退出码 1）：npm pack：npm error code ETARGET；日志：\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\desktop\\logs\\runtime-install\\npm-downloading-c26d44ca5b86.log"
+      }
+    ]
+  },
+  "paths": {
+    "schemaVersion": 1,
+    "aggregateRoot": {
+      "path": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data",
+      "status": "valid"
+    },
+    "desktopRoot": {
+      "path": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\desktop",
+      "status": "valid"
+    },
+    "opencodexHome": {
+      "path": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\opencodex\\home",
+      "status": "valid"
+    },
+    "configPath": {
+      "path": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\opencodex\\home\\config.json",
+      "status": "missing"
+    },
+    "installationRoot": {
+      "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program",
+      "status": "valid"
+    },
+    "runtimePrefix": {
+      "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime/opencodex",
+      "status": "valid"
+    },
+    "runtimeEntry": {
+      "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime/bin/ocx.cmd",
+      "status": "valid"
+    },
+    "managerExecutable": {
+      "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe",
+      "status": "valid"
+    },
+    "program": {
+      "packageVersion": "2.91.0",
+      "manifestVersion": "2.91.0",
+      "sourceVersion": "2.91.0",
+      "consistency": "consistent"
+    },
+    "currentAggregateRoot": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data",
+    "pendingRestart": false
+  },
+  "manifest": {
+    "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime\\opencodex\\.runtime-manifest.json",
+    "text": "{\n  \"activation\": {\n    \"attempt_id\": \"ba2d6f39-df92-4861-ac3a-e8f2c86f4a98\",\n    \"bin\": \"bin/ocx.mjs\",\n    \"node\": \"D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-018\\\\OpenCodeX Native 中文 Spaces\\\\program\\\\runtime/node/node.exe\",\n    \"node_sha256\": \"5cba0ea928508c65ddadefc0681d2fb6d95f1f3beea4428f04397631140ee8e5\",\n    \"entry_sha256\": \"25008e2cabdbd91cbbec033848b8274bf306394b18e4e92236cb5f58eb4c9240\",\n    \"package_sha256\": \"9d919265485b242e8d754e4a26f52c04d7926ec246e06b6718e75d96c0775715\",\n    \"bin_sha256\": \"8e88d4a6d6e81af7ff386de7b34d6f97976cb49455d6f80c6111f5971ba76d4b\"\n  },\n  \"package\": \"@bitkyc08/opencodex\",\n  \"version\": \"2.91.0\",\n  \"tarball_sha256\": \"3765a34c8c3949a66dafc29234d5fd84b50cfac05027508222400142eb144343\",\n  \"installed_at\": \"2026-11-07T14:00:18Z\",\n  \"npm_path\": \"D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-018\\\\OpenCodeX Native 中文 Spaces\\\\program\\\\runtime/node/node_modules/npm/bin/npm-cli.js\",\n  \"scripts_enabled\": false,\n  \"source\": \"registry\"\n}"
+  },
+  "entry": {
+    "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime\\bin\\ocx.cmd",
+    "text": "@echo off\r\n\"%SystemRoot%\\System32\\chcp.com\" 65001 >nul\r\nsetlocal DisableDelayedExpansion\r\n\"D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime\\node\\node.exe\" \"D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program\\runtime\\opencodex\\node_modules\\@bitkyc08\\opencodex\\bin\\ocx.mjs\" %*\r\nexit /b %errorlevel%\r\n"
+  },
+  "runtimeRecord": {
+    "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\desktop\\manager-state\\runtime.json",
+    "text": "{\n  \"schema_version\": 1,\n  \"source\": \"managed\",\n  \"path\": \"D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-018\\\\OpenCodeX Native 中文 Spaces\\\\program\\\\runtime/bin/ocx.cmd\",\n  \"resolved_version\": \"2.91.0\",\n  \"resolved_at\": \"2026-11-07T14:00:19Z\",\n  \"history\": [\n    {\n      \"action\": \"install\",\n      \"result\": \"succeeded\",\n      \"package\": \"@bitkyc08/opencodex\",\n      \"version\": \"2.91.0\",\n      \"target\": \"D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-018\\\\OpenCodeX Native 中文 Spaces\\\\program\\\\runtime\\\\opencodex\",\n      \"at\": \"2026-11-07T14:00:18Z\"\n    },\n    {\n      \"action\": \"install\",\n      \"result\": \"failed\",\n      \"package\": \"@bitkyc08/opencodex\",\n      \"version\": \"0.0.0-ocx-missing-native-recovery\",\n      \"target\": \"D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-018\\\\OpenCodeX Native 中文 Spaces\\\\program\\\\runtime/opencodex\",\n      \"at\": \"2026-11-07T14:00:28Z\",\n      \"reason\": \"npm 命令失败（退出码 1）：npm pack：npm error code ETARGET；日志：\\\\\\\\?\\\\D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-018\\\\OpenCodeX Native 中文 Spaces\\\\data\\\\desktop\\\\logs\\\\runtime-install\\\\npm-downloading-c26d44ca5b86.log\"\n    }\n  ]\n}"
+  },
+  "appLog": {
+    "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\desktop\\logs\\app.log",
+    "text": "2026-11-07T13:59:53.808Z [manager] startup version=0.2.23 commit=9b6fc48b9966fdafc0dc2a533b993fc63eff6a68\n2026-11-07T13:59:53.852Z [manager] window appearance: theme=light material=mica reason=mica build=26100 active=true transparency=true dwm=Some(0) backdrop=Some(2)\n2026-11-07T13:59:55.762Z [manager] window appearance: theme=light material=solid reason=inactive build=26100 active=false transparency=true dwm=Some(0) backdrop=Some(1)\n"
+  }
+}
