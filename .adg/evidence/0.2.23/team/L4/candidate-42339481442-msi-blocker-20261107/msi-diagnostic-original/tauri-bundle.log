@@ -1,0 +1,58 @@
+       Debug [tauri_cli::helpers::app_paths] Found Tauri project inside D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri on early lookup
+       Debug [tauri_cli::helpers::app_paths] resolving frontend directory from D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri
+       Debug [ignore::gitignore] opened gitignore file: C:\Users\RUNNER~1\AppData\Local\Temp\.gitignore
+       Debug [globset] built glob set; 0 literals, 3 basenames, 0 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 0 regexes
+       Debug [ignore::gitignore] opened gitignore file: \\?\D:\a\opencodex-desktop\opencodex-desktop\.gitignore
+       Debug [globset] glob converted to regex: Glob { glob: "**/.env.*", re: "(?-u)^(?:/?|.*/)\\.env\\.[^/]*$", opts: GlobOptions { case_insensitive: false, literal_separator: true, backslash_escape: true, empty_alternates: false }, tokens: Tokens([RecursivePrefix, Literal('.'), Literal('e'), Literal('n'), Literal('v'), Literal('.'), ZeroOrMore]) }
+       Debug [globset] built glob set; 9 literals, 5 basenames, 4 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 1 regexes
+       Debug [ignore::gitignore] opened gitignore file: \\?\D:\a\opencodex-desktop\opencodex-desktop\.git\info\exclude
+       Debug [ignore::gitignore] opened gitignore file: D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\.gitignore
+       Debug [globset] built glob set; 3 literals, 0 basenames, 0 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 0 regexes
+       Debug [ignore::walk] ignoring D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\tauri.runtime-bundle.conf.json: Ignore(IgnoreMatch(Gitignore(Glob { from: Some("D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\.gitignore"), original: "/tauri.runtime-bundle.conf.json", actual: "tauri.runtime-bundle.conf.json", is_whitelist: false, is_only_dir: false })))
+       Debug [ignore::walk] ignoring D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\.gitignore: Ignore(IgnoreMatch(Hidden))
+       Debug [ignore::walk] ignoring D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\resources\runtime-bundle: Ignore(IgnoreMatch(Gitignore(Glob { from: Some("D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\.gitignore"), original: "/resources/runtime-bundle/", actual: "resources/runtime-bundle", is_whitelist: false, is_only_dir: true })))
+       Debug [ignore::walk] ignoring D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target: Ignore(IgnoreMatch(Gitignore(Glob { from: Some("D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\.gitignore"), original: "/target/", actual: "target", is_whitelist: false, is_only_dir: true })))
+        Info [tauri_bundler::bundle] Patching D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\opencodex-desktop.exe with bundle type information: msi
+        Warn [tauri_bundler::bundle] Failed to add bundler type to the binary: __TAURI_BUNDLE_TYPE variable not found in binary. Make sure tauri crate and tauri-cli are up to date. Updater plugin may not be able to update this package. This shouldn't normally happen, please report it to https://github.com/tauri-apps/tauri/issues
+        Info [tauri_bundler::bundle::windows::msi] Verifying wix package
+ Downloading [tauri_bundler::utils::http_utils] https://github.com/wixtoolset/wix3/releases/download/wix3141rtm/wix314-binaries.zip
+       Debug [ureq::run] GET https://github.com/******
+       Debug [ureq::unversioned::resolver] Resolved: ArrayVec { len: 1, arr: [140.82.113.4:443] }
+       Debug [ureq::unversioned::transport::tcp] Connected TcpStream to 140.82.113.4:443
+       Debug [rustls::client::hs] No cached session for DnsName("github.com")
+       Debug [rustls::client::hs] Not resuming any session
+       Debug [ureq::tls::rustls] Wrapped TLS
+       Debug [ureq::run] Request { method: GET, uri: https://github.com/******, version: HTTP/1.1, headers: {"accept-encoding": "gzip", "user-agent": "tauri-bundler/2.9.4", "accept": "*/*", "host": "github.com"} }
+       Debug [rustls::client::hs] Using ciphersuite TLS13_AES_128_GCM_SHA256
+       Debug [rustls::client::tls13] Not resuming
+       Debug [rustls::client::tls13] TLS1.3 encrypted extensions: ServerExtensions { server_name_ack: (), unknown_extensions: {}, .. }
+       Debug [rustls::client::hs] ALPN protocol is None
+       Debug [ureq::run] Response { status: 302, version: HTTP/1.1, headers: {"date": "Sat, 07 Nov 2026 05:57:32 GMT", "content-type": "text/html; charset=utf-8", "server": "github.com", "content-length": "0", "location": "******", "<NOTICE>": "10 HEADERS ARE REDACTED"} }
+       Debug [ureq::pool] Return to pool: PoolKey { scheme: "https", authority: github.com, proxy: None }
+       Debug [ureq::run] Redirect (302 Found): GET https://release-assets.githubusercontent.com/******
+       Debug [ureq::run] GET https://release-assets.githubusercontent.com/******
+       Debug [ureq::unversioned::resolver] Resolved: ArrayVec { len: 4, arr: [185.199.110.133:443, 185.199.111.133:443, 185.199.108.133:443, 185.199.109.133:443] }
+       Debug [ureq::unversioned::transport::tcp] Connected TcpStream to 185.199.110.133:443
+       Debug [rustls::client::hs] No cached session for DnsName("release-assets.githubusercontent.com")
+       Debug [rustls::client::hs] Not resuming any session
+       Debug [ureq::tls::rustls] Wrapped TLS
+       Debug [ureq::run] Request { method: GET, uri: https://release-assets.githubusercontent.com/******, version: HTTP/1.1, headers: {"accept-encoding": "gzip", "user-agent": "tauri-bundler/2.9.4", "accept": "*/*", "host": "release-assets.githubusercontent.com"} }
+       Debug [rustls::client::hs] Using ciphersuite TLS13_AES_128_GCM_SHA256
+       Debug [rustls::client::tls13] Not resuming
+       Debug [rustls::client::tls13] TLS1.3 encrypted extensions: ServerExtensions { server_name_ack: (), unknown_extensions: {}, .. }
+       Debug [rustls::client::hs] ALPN protocol is None
+       Debug [ureq::run] Response { status: 200, version: HTTP/1.1, headers: {"connection": "keep-alive", "content-length": "41297555", "server": "Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0", "date": "Sat, 07 Nov 2026 05:57:32 GMT", "content-type": "application/octet-stream", "<NOTICE>": "18 HEADERS ARE REDACTED"} }
+       Debug [ureq::pool] Return to pool: PoolKey { scheme: "https", authority: release-assets.githubusercontent.com, proxy: None }
+        Info [tauri_bundler::utils::http_utils] validating hash
+        Info [tauri_bundler::bundle::windows::msi] extracting WIX
+        Info [tauri_bundler::bundle::windows::msi] Target: x64
+     Running [tauri_bundler::bundle::windows::msi] candle for "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\wix\\x64\\main.wxs"
+     Running [tauri_bundler::utils] Command `C:\Users\runneradmin\AppData\Local\tauri\WixTools314\candle.exe  -arch x64 D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\wix\x64\main.wxs -dSourceDir=D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\opencodex-desktop.exe`
+Windows Installer XML Toolset Compiler version 3.14.1.8722
+Copyright (c) .NET Foundation and contributors. All rights reserved.
+
+main.wxs
+D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\wix\x64\main.wxs(181) : error CNDL0230 : The Component/@Guid attribute's value '*' is not valid for this component because it does not meet the criteria for having an automatically generated guid. Components with registry keypaths and files cannot use an automatically generated guid. Create multiple components, each with one file and/or one registry value keypath, to use automatically generated guids.
+D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\wix\x64\main.wxs(189) : error CNDL0230 : The Component/@Guid attribute's value '*' is not valid for this component because it does not meet the criteria for having an automatically generated guid. Components with registry keypaths and files cannot use an automatically generated guid. Create multiple components, each with one file and/or one registry value keypath, to use automatically generated guids.
+failed to bundle project: `failed to run C:\Users\runneradmin\AppData\Local\tauri\WixTools314\candle.exe`
+       Error [tauri_cli_node] failed to bundle project: `failed to run C:\Users\runneradmin\AppData\Local\tauri\WixTools314\candle.exe`
