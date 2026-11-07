@@ -1,0 +1,329 @@
+{
+  "schemaVersion": 1,
+  "scope": "exact15Main-created terminalofflinefixtureoutputs; no source worktrees, active buildtarget, runtime, shared tools/cache or nativecandidate removed",
+  "originalLogs": "/tmp original stdout/logs kept; r16/r18/r20/r21/r23 already archived exact failure/pass facts",
+  "entries": [
+    {
+      "root": "/private/tmp/ocxd023-runtime-policy-json-tests",
+      "result": "removed-owned-completed-fixture",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "bytes": 4750,
+          "sha256": "66f5730f154942662adb61e7c1d591803b5e7489af05b5db108f00489c480474"
+        },
+        {
+          "path": "changed-ordinary.ps1",
+          "bytes": 12360,
+          "sha256": "d40cd6ec70a7f8a7fcf3e68d4ce5050ddf6055f9e7eb4c5a04c250bc013bf41b"
+        },
+        {
+          "path": "driver-fixture.mjs",
+          "bytes": 14564,
+          "sha256": "b1cc7c5122d0ee116417f4e0d1fa8be060512273ec0928d5d6bd1a694fecddfd"
+        },
+        {
+          "path": "static-tests.json",
+          "bytes": 11875,
+          "sha256": "cc81aaabde03286ba9d52ec89b21a474abb5b04afc06525d892ac2e42f6b9ef5"
+        },
+        {
+          "path": "tree-fixture",
+          "kind": "directory"
+        },
+        {
+          "path": "tree-fixture/one.txt",
+          "bytes": 8,
+          "sha256": "7f8b1dfc466b6249f06cbe55c9174df2578e7754da793fded244ef5cba2a38f1"
+        },
+        {
+          "path": "windows-cdp.mjs",
+          "bytes": 3419,
+          "sha256": "a4cde3cb25455b2627f238ea3678c40c42191b9af47c464491f4f2f311caf7dd"
+        }
+      ]
+    },
+    {
+      "root": "/private/tmp/ocxd023-runtime-policy-ordinary-tests",
+      "result": "removed-owned-completed-fixture",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "bytes": 5505,
+          "sha256": "5ae16d5dba7cfb9d521783288741c5ac50b36b5ba8509a28d7f1dfd4f49a2da4"
+        },
+        {
+          "path": "static-tests.json",
+          "bytes": 9091,
+          "sha256": "9d6beaefcd639c17e611c24f99539a809e3e66d76f7307c5f4e91bd13b88bef0"
+        }
+      ]
+    },
+    {
+      "root": "/private/tmp/ocxd023-runtime-policy-staged-ordinary-tests",
+      "result": "removed-owned-completed-fixture",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "bytes": 5505,
+          "sha256": "5ae16d5dba7cfb9d521783288741c5ac50b36b5ba8509a28d7f1dfd4f49a2da4"
+        },
+        {
+          "path": "static-tests.json",
+          "bytes": 9091,
+          "sha256": "1094a0e1f43915e0c22e72670cb9ea5ac262938fce995d90b98f28df6034f474"
+        }
+      ]
+    },
+    {
+      "root": "/private/tmp/ocxd023-createprofile-contract-ordinary",
+      "result": "removed-owned-completed-fixture",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "bytes": 5505,
+          "sha256": "5ae16d5dba7cfb9d521783288741c5ac50b36b5ba8509a28d7f1dfd4f49a2da4"
+        },
+        {
+          "path": "static-tests.json",
+          "bytes": 9091,
+          "sha256": "6ca5af35ed6091863028558a741950985d97a1ce80d2a10fd281bb9f429b6baf"
+        }
+      ]
+    },
+    {
+      "root": "/private/tmp/ocxd023-createprofile-contract-two-user",
+      "result": "removed-owned-completed-fixture",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "bytes": 4750,
+          "sha256": "66f5730f154942662adb61e7c1d591803b5e7489af05b5db108f00489c480474"
+        },
+        {
+          "path": "changed-ordinary.ps1",
+          "bytes": 12360,
+          "sha256": "d40cd6ec70a7f8a7fcf3e68d4ce5050ddf6055f9e7eb4c5a04c250bc013bf41b"
+        },
+        {
+          "path": "driver-fixture.mjs",
+          "bytes": 14564,
+          "sha256": "b1cc7c5122d0ee116417f4e0d1fa8be060512273ec0928d5d6bd1a694fecddfd"
+        },
+        {
+          "path": "static-tests.json",
+          "bytes": 11875,
+          "sha256": "596914f14890030d4c9236ef00055a91b734da82a48e35979415f226904afee9"
+        },
+        {
+          "path": "tree-fixture",
+          "kind": "directory"
+        },
+        {
+          "path": "tree-fixture/one.txt",
+          "bytes": 8,
+          "sha256": "7f8b1dfc466b6249f06cbe55c9174df2578e7754da793fded244ef5cba2a38f1"
+        },
+        {
+          "path": "windows-cdp.mjs",
+          "bytes": 3419,
+          "sha256": "a4cde3cb25455b2627f238ea3678c40c42191b9af47c464491f4f2f311caf7dd"
+        }
+      ]
+    },
+    {
+      "root": "/private/tmp/ocxd023-child-admission-diagnostic-tests",
+      "result": "removed-owned-completed-fixture",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "bytes": 5505,
+          "sha256": "5ae16d5dba7cfb9d521783288741c5ac50b36b5ba8509a28d7f1dfd4f49a2da4"
+        },
+        {
+          "path": "static-tests.json",
+          "bytes": 9091,
+          "sha256": "ada60a40df3b941464dddfc14268bb96b9e93efeb3d8f086d824a133f9b4cf59"
+        }
+      ]
+    },
+    {
+      "root": "/private/tmp/ocxd023-preflight-guard-facts-tests",
+      "result": "removed-owned-completed-fixture",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "bytes": 5505,
+          "sha256": "5ae16d5dba7cfb9d521783288741c5ac50b36b5ba8509a28d7f1dfd4f49a2da4"
+        },
+        {
+          "path": "static-tests.json",
+          "bytes": 9091,
+          "sha256": "007e1316ecd3dd4075ad989b1c4d9477718e5cae2731be46901d0a3693163e0c"
+        }
+      ]
+    },
+    {
+      "root": "/private/tmp/ocxd023-parent-context-ordinary-tests",
+      "result": "removed-owned-completed-fixture",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "bytes": 5505,
+          "sha256": "5ae16d5dba7cfb9d521783288741c5ac50b36b5ba8509a28d7f1dfd4f49a2da4"
+        },
+        {
+          "path": "static-tests.json",
+          "bytes": 9091,
+          "sha256": "b001fcd48b3cf991bc408d3a23d1067a6caf640966013b8b579df7f35566478b"
+        }
+      ]
+    },
+    {
+      "root": "/private/tmp/ocxd023-parent-admission-acl-diagnostic-final",
+      "result": "removed-owned-completed-fixture",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "bytes": 5505,
+          "sha256": "5ae16d5dba7cfb9d521783288741c5ac50b36b5ba8509a28d7f1dfd4f49a2da4"
+        },
+        {
+          "path": "static-tests.json",
+          "bytes": 9499,
+          "sha256": "41c09d6207a33cc6f2cfde09778ace95429ae99d9c9e59e379c16bd9b1d37051"
+        }
+      ]
+    },
+    {
+      "root": "/private/tmp/ocxd023-empty-json-ledger-tests",
+      "result": "removed-owned-completed-fixture",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "bytes": 4750,
+          "sha256": "66f5730f154942662adb61e7c1d591803b5e7489af05b5db108f00489c480474"
+        },
+        {
+          "path": "changed-ordinary.ps1",
+          "bytes": 12360,
+          "sha256": "d40cd6ec70a7f8a7fcf3e68d4ce5050ddf6055f9e7eb4c5a04c250bc013bf41b"
+        },
+        {
+          "path": "driver-fixture.mjs",
+          "bytes": 14564,
+          "sha256": "b1cc7c5122d0ee116417f4e0d1fa8be060512273ec0928d5d6bd1a694fecddfd"
+        },
+        {
+          "path": "empty-ledger.json",
+          "bytes": 3,
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        {
+          "path": "one-ledger.json",
+          "bytes": 26,
+          "sha256": "0aaa300da45236f3bb692cda9520ed5d2319a3090b58e9698b14952e14c4e085"
+        },
+        {
+          "path": "static-tests.json",
+          "bytes": 12070,
+          "sha256": "20af8a0fd654097cebd3ef4c849d0686f93bb5ac66207a30449ba54bfe245cd9"
+        },
+        {
+          "path": "tree-fixture",
+          "kind": "directory"
+        },
+        {
+          "path": "tree-fixture/one.txt",
+          "bytes": 8,
+          "sha256": "7f8b1dfc466b6249f06cbe55c9174df2578e7754da793fded244ef5cba2a38f1"
+        },
+        {
+          "path": "windows-cdp.mjs",
+          "bytes": 3419,
+          "sha256": "a4cde3cb25455b2627f238ea3678c40c42191b9af47c464491f4f2f311caf7dd"
+        }
+      ]
+    },
+    {
+      "root": "/private/tmp/ocxd023-empty-json-ordinary-tests",
+      "result": "removed-owned-completed-fixture",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "bytes": 5505,
+          "sha256": "5ae16d5dba7cfb9d521783288741c5ac50b36b5ba8509a28d7f1dfd4f49a2da4"
+        },
+        {
+          "path": "static-tests.json",
+          "bytes": 9499,
+          "sha256": "0a4665ed060dea614497eb22932832f78bbd5d66e941a20fc52bf3aa8785f262"
+        }
+      ]
+    },
+    {
+      "root": "/private/tmp/ocxd023-acl-ai-main-review",
+      "result": "removed-owned-completed-fixture",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "bytes": 5505,
+          "sha256": "5ae16d5dba7cfb9d521783288741c5ac50b36b5ba8509a28d7f1dfd4f49a2da4"
+        },
+        {
+          "path": "static-tests.json",
+          "bytes": 12201,
+          "sha256": "17f4f6b9d7b4055d73b8c1538bf5b6f3d3ebd1f3d574346d2a4f988a70f42627"
+        }
+      ]
+    },
+    {
+      "root": "/private/tmp/ocxd023-launch-parent-context-tests",
+      "result": "removed-owned-completed-fixture",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "bytes": 5505,
+          "sha256": "5ae16d5dba7cfb9d521783288741c5ac50b36b5ba8509a28d7f1dfd4f49a2da4"
+        },
+        {
+          "path": "static-tests.json",
+          "bytes": 12201,
+          "sha256": "fcaec0dc2e5ee8353f78395546d9b75fd462beaf8c79b0b9a5430dd4552624cb"
+        }
+      ]
+    },
+    {
+      "root": "/private/tmp/ocxd023-native-exit-authority-tests",
+      "result": "removed-owned-completed-fixture",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "bytes": 5505,
+          "sha256": "5ae16d5dba7cfb9d521783288741c5ac50b36b5ba8509a28d7f1dfd4f49a2da4"
+        },
+        {
+          "path": "static-tests.json",
+          "bytes": 13718,
+          "sha256": "0f9ad1de71d4337370f3300a15de1d20b9b6f7c0fa2fb9be8f11e51dcf74c359"
+        }
+      ]
+    },
+    {
+      "root": "/private/tmp/ocxd023-suspended-ledger-observer-tests",
+      "result": "removed-owned-completed-fixture",
+      "inventory": [
+        {
+          "path": "bootstrap-fixture.ps1",
+          "bytes": 5505,
+          "sha256": "5ae16d5dba7cfb9d521783288741c5ac50b36b5ba8509a28d7f1dfd4f49a2da4"
+        },
+        {
+          "path": "static-tests.json",
+          "bytes": 13718,
+          "sha256": "e0e9a82f977d72a011de6104cf067ef20141e67f5ea7c3f37c2f93473dd2a24d"
+        }
+      ]
+    }
+  ]
+}
