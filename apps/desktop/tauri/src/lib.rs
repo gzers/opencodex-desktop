@@ -16,6 +16,9 @@ pub fn build_commit() -> &'static str {
     option_env!("OPENCODEX_BUILD_COMMIT").unwrap_or("")
 }
 
+#[cfg(target_os = "macos")]
+struct InstallationRemediation(String);
+
 /// 把入口名写成一条非敏感运行日志；失败不阻断导航，也不携带窗口/凭据细节。
 fn record_window_event(data_root: &std::path::Path, message: &str) {
     let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root).append_event(message);
@@ -134,17 +137,12 @@ pub fn run() {
                 #[cfg(target_os = "macos")]
                 Err(crate::errors::AppError::RuntimeManaged { code, detail })
                     if code == "macos_install_container" => {
-                    use tauri_plugin_dialog::DialogExt;
                     // Installation admission failed before U/D/H or runtime
                     // initialization. Show the remedy without starting services.
                     if let Some(window) = app.get_webview_window("main") {
                         let _ = window.hide();
                     }
-                    let handle = app.handle().clone();
-                    app.dialog().message(detail)
-                        .title("请调整安装位置")
-                        .kind(tauri_plugin_dialog::MessageDialogKind::Error)
-                        .show(move |_| handle.exit(1));
+                    app.manage(InstallationRemediation(detail));
                     return Ok(());
                 }
                 Err(error) => return Err(error.into()),
@@ -827,6 +825,17 @@ pub fn run() {
             // 否则用户会以为应用「卡住」了——macOS 用 Reopen 事件表达这一意图。
             #[cfg(target_os = "macos")]
             {
+                if matches!(event, tauri::RunEvent::Ready) {
+                    if let Some(remediation) = app_handle.try_state::<InstallationRemediation>() {
+                        use tauri_plugin_dialog::DialogExt;
+                        let _ = app_handle.set_activation_policy(tauri::ActivationPolicy::Regular);
+                        let handle = app_handle.clone();
+                        app_handle.dialog().message(remediation.0.clone())
+                            .title("请调整安装位置")
+                            .kind(tauri_plugin_dialog::MessageDialogKind::Error)
+                            .show(move |_| handle.exit(1));
+                    }
+                }
                 if let tauri::RunEvent::Reopen {
                     has_visible_windows,
                     ..
