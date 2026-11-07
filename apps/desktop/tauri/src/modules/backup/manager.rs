@@ -61,11 +61,25 @@ struct BackupLease {
     _removal: crate::modules::data_root::removal_gate::SharedLease,
 }
 
+fn open_lock(path: &Path) -> AppResult<File> {
+    #[cfg(windows)]
+    {
+        // Elevated default TokenOwner may be Administrators. Creation must use
+        // the same actual-TokenUser authority as startup and removal checks.
+        crate::infrastructure::platform::open_or_create_private_file(path, 0o600)
+            .map_err(|e| fail(e.to_string()))
+    }
+    #[cfg(not(windows))]
+    {
+        safety::open_file(path, true)
+    }
+}
+
 fn lock(root: &Path) -> AppResult<BackupLease> {
     let removal = crate::modules::data_root::removal_gate::shared(root)?;
     let path = root.join(LOCK_FILE_NAME);
     safety::check_path(root, &path, true)?;
-    let file = safety::open_file(&path, true)?;
+    let file = open_lock(&path)?;
     file.lock().map_err(|e| fail(e.to_string()))?;
     Ok(BackupLease {
         _file: file,
@@ -81,7 +95,7 @@ pub(crate) fn try_lock_for_removal(
     capability.require(root)?;
     let path = root.join(LOCK_FILE_NAME);
     safety::check_path(root, &path, true)?;
-    let file = safety::open_file(&path, true)?;
+    let file = open_lock(&path)?;
     file.try_lock()
         .map_err(|_| safety::fail("backup mutation is active during removal"))?;
     Ok(file)
@@ -1126,6 +1140,23 @@ mod tests {
             .save(&Preferences::default())
             .unwrap();
         root
+    }
+    #[cfg(windows)]
+    #[test]
+    fn windows_backup_lock_uses_actual_token_user_and_reopens_without_repair() {
+        use std::io::Write;
+        let fixture = tempfile::tempdir().unwrap();
+        let path = fixture.path().join(LOCK_FILE_NAME);
+        let mut first = open_lock(&path).unwrap();
+        first.write_all(b"owned lock bytes").unwrap();
+        first.sync_all().unwrap();
+        crate::infrastructure::windows_private_create::verify_private_handle(&first, false)
+            .unwrap();
+        drop(first);
+        let second = open_lock(&path).unwrap();
+        crate::infrastructure::windows_private_create::verify_private_handle(&second, false)
+            .unwrap();
+        assert_eq!(std::fs::read(&path).unwrap(), b"owned lock bytes");
     }
     fn manual(root: &Path, age: i64) -> BackupRecord {
         managed_backup(

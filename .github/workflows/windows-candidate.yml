@@ -136,6 +136,8 @@ jobs:
         run: |
           cargo test --locked --lib infrastructure::windows_private_create::tests -- --test-threads=1 --nocapture
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo test --locked --lib modules::backup::manager::tests::windows_backup_lock_uses_actual_token_user_and_reopens_without_repair -- --exact --test-threads=1 --nocapture
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Preserve native credential protection evidence
         if: always()
         run: |
