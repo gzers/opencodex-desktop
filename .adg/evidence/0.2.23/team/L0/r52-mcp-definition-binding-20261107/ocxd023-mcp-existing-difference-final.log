@@ -1,0 +1,20 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.26s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-0acf286eb61f7336)
+
+running 1 test
+
+thread 'modules::model_config::sync_service_v2::tests::explicit_download_updates_an_existing_different_mcp_definition_in_the_selected_client_only' (137549869) panicked at src/modules/model_config/sync_service_v2_tests.rs:2014:5:
+assertion failed: after.contains("service-fixture-command") &&
+    !after.contains("different-local-command")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test modules::model_config::sync_service_v2::tests::explicit_download_updates_an_existing_different_mcp_definition_in_the_selected_client_only ... FAILED
+
+failures:
+
+failures:
+    modules::model_config::sync_service_v2::tests::explicit_download_updates_an_existing_different_mcp_definition_in_the_selected_client_only
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1991 filtered out; finished in 32.46s
+
+error: test failed, to rerun pass `--lib`
