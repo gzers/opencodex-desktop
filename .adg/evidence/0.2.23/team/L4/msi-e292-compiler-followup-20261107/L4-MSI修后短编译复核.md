@@ -1,0 +1,11 @@
+# L4：MSI组件GUID修后短编译原始复核
+
+2026-11-07。L0 e29291120d0dbfbd3c23f9f5aba71d327ee6aaa3将wix023.wxs的OCX023Documents和OCX023RuntimeBundle由Guid=*改固定GUID，其余per-user registry KeyPath/payload布局保持。原CNDL0230失败已在前批e95575c4227ed0df712126a3986fe91b9c861f59保留。
+
+后继run42345059395/job128320909246真实msi-compiler023 success。artifact13563036574实际129319bytes，整ZIP SHA256 2336d9281d837f256a91e16fd1422e88d6722cf06a06db647dab56f40399f804完整验证。仅抽取4个文字成员并验证，未提取/执行其中程序。原compiler-result.json的bundleExit=0、candleExit=0；tauri-bundle.log实际调用light并Finished 1 bundle，修后模板已过此真实Windows编译子范围。
+
+范围仍为Windows where.exe与合成offline资源；productAcceptance=false、installerExecuted=false。不能用成功工作流名Windows candidate installer冒完整应用candidate通过；该run实际只运行msi-compiler023。不能据此放行签名/发布、普通用户默认安装/升级/保留、两SID或完整payload。
+
+L0现完整后继run42345195190以同e292源码运行，等待49binary/独立doc/提权与凭据、真实NSIS/MSI、安装及两SID原始回执。之前8ced候选按自身来源记录，不重开或由观察超时推定终止。安装器真实普通身份覆盖仍按189de89c55b32f5f8461f342544a16670cae89eb交接补齐。
+
+本批仅回交原证据和范围，不改实现/版本/工作流，不执行安装器，不真实同步、清理或发布。用户无需当前手工操作。

@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "e29291120d0dbfbd3c23f9f5aba71d327ee6aaa3",
+  "productAcceptance": false,
+  "installerExecuted": false,
+  "files": [
+    {
+      "path": "msi-fixed-original/candle.log",
+      "role": "original-artifact-member",
+      "sha256": "723c046677f0b8a186de563a6aa0ff4dfc5a708a2c182e59deded3ff569caecb",
+      "size_bytes": 142,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "msi-fixed-original/compiler-result.json",
+      "role": "original-artifact-member",
+      "sha256": "4c05ec507f43bd441cff7b42c5b017c0f1680ab0944c6fbe54bd802fc789bf4c",
+      "size_bytes": 237,
+      "media_type": "application/json"
+    },
+    {
+      "path": "msi-fixed-original/generated/main.wxs",
+      "role": "original-artifact-member",
+      "sha256": "3867a8d6327c40463de8a1682da622860fbaff760cb719793344a20fadbf2fb2",
+      "size_bytes": 17345,
+      "media_type": "application/xml"
+    },
+    {
+      "path": "msi-fixed-original/tauri-bundle.log",
+      "role": "original-artifact-member",
+      "sha256": "6afe83cfc204296e4cb96e2705921709b230b627c3321584b6fdd63e8b1154f6",
+      "size_bytes": 12590,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "msi-fixed-verification.json",
+      "role": "audit-verification",
+      "sha256": "8bde4725b92c3024dd79eeda9236487f33116d400473b75b23ada160668a5181",
+      "size_bytes": 1221,
+      "media_type": "application/json"
+    },
+    {
+      "path": "inspect-msi-fixed.py",
+      "role": "audit-script",
+      "sha256": "706c3ed4007f214520a74768670c8958f2193e6098a60e794b6ede74839e7d3c",
+      "size_bytes": 1780,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "L4-MSI修后短编译复核.md",
+      "role": "audit-report",
+      "sha256": "24ec9beb83da916e35385b6c27d87b621f66dc442bb528710d9852e5d2e2f6d5",
+      "size_bytes": 1568,
+      "media_type": "text/plain"
+    }
+  ]
+}
