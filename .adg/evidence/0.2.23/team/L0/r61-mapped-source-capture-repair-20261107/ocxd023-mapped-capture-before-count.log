@@ -1,0 +1,21 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 36.04s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-0acf286eb61f7336)
+
+running 1 test
+
+thread 'modules::model_config::sync_identity_v2::tests::mapped_capture_checks_fresh_source_before_and_after_without_nested_recapture' (138155871) panicked at src/modules/model_config/sync_identity_v2_tests.rs:399:5:
+assertion `left == right` failed: one owner snapshot on each side of the supplied local source
+  left: 5
+ right: 2
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test modules::model_config::sync_identity_v2::tests::mapped_capture_checks_fresh_source_before_and_after_without_nested_recapture ... FAILED
+
+failures:
+
+failures:
+    modules::model_config::sync_identity_v2::tests::mapped_capture_checks_fresh_source_before_and_after_without_nested_recapture
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1993 filtered out; finished in 1.12s
+
+error: test failed, to rerun pass `--lib`

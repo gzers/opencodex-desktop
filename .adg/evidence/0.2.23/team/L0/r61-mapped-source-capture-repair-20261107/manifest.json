@@ -1,0 +1,51 @@
+{
+  "source": "414d62bab35060e8aa2011300dab926a66727946",
+  "priorFailure": {
+    "source": "8ced5d44212eb2b58e1dca5344c5be7145747377",
+    "run": 42341887810,
+    "job": 128311160186,
+    "allTopLevelBinariesAttempted": 49,
+    "libraryPassed": 1706,
+    "libraryFailed": 2,
+    "libraryIgnored": 5,
+    "failingTests": [
+      "cancelled_cli_observer_keeps_admissions_until_real_v2_terminal_and_audit",
+      "production_encrypted_first_download_uses_only_request_read_secret_and_still_commits_actual_model_receipt"
+    ],
+    "budgetsUnchanged": "observer10s; preview90s; defaultworkers; no added skips",
+    "cleanupAclAndAccount": true,
+    "artifactId": 13563857612,
+    "artifactApiBytes": 24077089,
+    "artifactApiSha256": "4a3182d76aec96279f8a981395de84f3ddeccd236a84ca66f97166f0d0102845",
+    "wholeZipHashLocallyVerified": false
+  },
+  "fix": "production mapping owner combines nested same-gate captures; admit supplied provider against fresh owner root/guard/semantic/save-state; final full source verification retained; no cross-gate cache",
+  "testEvidence": {
+    "sameCountTestOriginalPath": {
+      "result": "failed",
+      "ownerCaptureCount": 5,
+      "expectedBound": 2
+    },
+    "successorOwnerCaptureCount": 2,
+    "suppliedProviderCaptureRetained": true,
+    "newGuardCounterexamples": [
+      "forged source guard",
+      "different root",
+      "fabricated semantic material",
+      "external source change during capture",
+      "later gate source drift"
+    ],
+    "affectedSync": {
+      "passed": 210,
+      "failed": 0,
+      "seconds": 91.23
+    },
+    "identityBeforeNewTests": 27,
+    "newTargetedTests": 2,
+    "strictWorkspaceClippy": "passed"
+  },
+  "newCandidateRun": 42347480862,
+  "newCandidateHead": "414d62bab35060e8aa2011300dab926a66727946",
+  "finalWindowsAcceptance": false,
+  "finalReleaseAcceptance": false
+}

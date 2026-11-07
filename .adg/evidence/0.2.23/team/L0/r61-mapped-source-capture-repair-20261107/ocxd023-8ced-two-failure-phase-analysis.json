@@ -1,0 +1,38 @@
+{
+  "modules::ipc::service::sync_v2_tests::cancelled_cli_observer_keeps_admissions_until_real_v2_terminal_and_audit": {
+    "phaseCount": 20,
+    "totals": {
+      "fresh-local-source-context": 1632,
+      "graph-observe-with-store-lock": 90,
+      "network-list": 0,
+      "store-lock-wait": 5
+    },
+    "maxima": {
+      "fresh-local-source-context": 821,
+      "graph-observe-with-store-lock": 51,
+      "network-list": 0,
+      "store-lock-wait": 1
+    }
+  },
+  "modules::model_config::sync_service_v2::tests::production_encrypted_first_download_uses_only_request_read_secret_and_still_commits_actual_model_receipt": {
+    "phaseCount": 84,
+    "totals": {
+      "fresh-local-source-context": 24368,
+      "graph-observe-with-store-lock": 155,
+      "network-get": 0,
+      "network-list": 0,
+      "network-put": 0,
+      "store-lock-wait": 52,
+      "verify-original-upload": 17
+    },
+    "maxima": {
+      "fresh-local-source-context": 4095,
+      "graph-observe-with-store-lock": 33,
+      "network-get": 0,
+      "network-list": 0,
+      "network-put": 0,
+      "store-lock-wait": 25,
+      "verify-original-upload": 17
+    }
+  }
+}

@@ -1,0 +1,10 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 16.91s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-0acf286eb61f7336)
+
+running 2 tests
+test modules::model_config::sync_identity_v2::tests::mapped_capture_checks_fresh_source_before_and_after_without_nested_recapture ... ok
+test modules::model_config::sync_identity_v2::tests::mapped_capture_rejects_provider_guard_root_material_and_mid_capture_source_changes ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1992 filtered out; finished in 2.34s
+

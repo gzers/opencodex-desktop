@@ -1,0 +1,35 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 43.67s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-0acf286eb61f7336)
+
+running 27 tests
+test modules::model_config::sync_identity_v2::tests::owned_mapping_parent_leaf_and_root_symlinks_refuse ... ok
+test modules::model_config::sync_identity_v2::tests::explicit_same_uuid_preview_cannot_steal_a_pair_or_guess_a_different_uuid_by_name ... ok
+test modules::model_config::sync_identity_v2::tests::positively_missing_saved_config_is_empty_but_malformed_is_never_empty ... ok
+test modules::model_config::sync_identity_v2::tests::post_apply_bytes_cannot_issue_an_unfrozen_operation ... ok
+test modules::model_config::sync_identity_v2::tests::read_failure_never_becomes_absent_and_raw_byte_map_change_invalidates ... ok
+test modules::model_config::sync_identity_v2::tests::nonmodel_read_failure_is_not_filtered_as_absence ... ok
+test modules::model_config::sync_identity_v2::tests::invalid_draft_is_never_a_runtime_source ... ok
+test modules::model_config::sync_identity_v2::tests::endpoint_namespace_is_exact_and_old_path_is_not_consulted ... ok
+test modules::model_config::sync_identity_v2::tests::stable_local_uuid_upload_never_randomly_allocates ... ok
+test modules::model_config::sync_identity_v2::tests::known_different_uuid_pair_and_missing_known_target_keep_fixed_identity ... ok
+test modules::model_config::sync_identity_v2::tests::partial_present_uses_exact_v2_atom_and_preserves_full_mcp_guard ... ok
+test modules::model_config::sync_identity_v2::tests::known_mapping_noop_keeps_raw_revision_and_does_not_prove_model_applied ... ok
+test modules::model_config::sync_identity_v2::tests::uuid_occupied_without_pair_requires_explicit_mapping_same_name_never_guesses ... ok
+test modules::model_config::sync_identity_v2::tests::unissued_or_modified_binding_has_no_authority ... ok
+test modules::model_config::sync_identity_v2::tests::receive_mcp_binds_local_selection_to_exact_cloud_definition_and_rejects_unknown_digest ... ok
+test modules::model_config::sync_identity_v2::tests::strict_schema_duplicates_and_budgets_are_rejected ... ok
+test modules::model_config::sync_identity_v2::tests::authorization_map_moves_through_actual_provider_validation ... ok
+test modules::model_config::sync_identity_v2::tests::local_only_mcp_remains_available_for_upload_when_cloud_has_other_objects ... ok
+test modules::model_config::sync_identity_v2::tests::existing_nonmodel_sources_keep_actual_local_mcp_digest_and_explicit_client_guard ... ok
+test modules::model_config::sync_identity_v2::tests::explicit_same_uuid_present_verification_rejects_actual_source_and_roster_changes ... ok
+test modules::model_config::sync_identity_v2::tests::source_key_model_and_roster_changes_refuse_verification ... ok
+test modules::model_config::sync_identity_v2::tests::first_empty_device_full_remote_scope_keeps_only_actual_local_capture_sources ... ok
+test modules::model_config::sync_identity_v2::tests::explicit_same_uuid_download_freezes_present_then_adopts_only_in_receive_transaction ... ok
+test modules::model_config::sync_identity_v2::tests::same_uuid_and_known_pair_key_maps_move_without_cloning ... ok
+test modules::model_config::sync_identity_v2::tests::new_device_absence_cancel_and_exact_same_transaction_adoption_reopen ... ok
+test modules::model_config::sync_identity_v2::tests::upload_projects_only_channel_identity_and_preserves_source_models_refs ... ok
+test modules::model_config::sync_identity_v2::tests::restart_restores_original_absent_with_dual_real_proofs_and_finishes_only_old_participants ... ok
+
+test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 1965 filtered out; finished in 10.63s
+
