@@ -4,6 +4,8 @@ import hashlib
 import importlib.util
 import io
 import json
+import re
+import xml.etree.ElementTree as ET
 from pathlib import Path
 import tempfile
 import unittest
@@ -106,8 +108,8 @@ class AdmissionTests(unittest.TestCase):
                 admit.prepare(None)
             download.assert_not_called()
 
-    def make_archive(self, kind="msi", mutate=None, member=None, extra=None, payload=b"synthetic installer; NEVER executable"):
-        name = f"OpenCodeX.Desktop_0.2.23_x64{'-setup.exe' if kind == 'nsis' else '_en-US.msi'}"
+    def make_archive(self, kind="msi", mutate=None, member=None, extra=None, payload=b"synthetic installer; NEVER executable", product="OpenCodeX Desktop"):
+        name = f"{product}_0.2.23_x64{'-setup.exe' if kind == 'nsis' else '_en-US.msi'}"
         row = {"kind": kind, "name": name, "result": "pass", "productVersion": "0.2.23", "firstScreen": "pass",
                "bytes": len(payload), "sha256": hashlib.sha256(payload).hexdigest(),
                "installedExecutableSha256": "d" * 64, "expectedInstalledExecutableSha256": "d" * 64}
@@ -138,6 +140,13 @@ class AdmissionTests(unittest.TestCase):
         for kind in admit.BASELINE:
             self.extract(self.make_archive(kind), kind)
 
+    def test_candidate_uses_raw_packager_name_not_github_asset_rewrite(self):
+        # Pinned tauri-bundler 2.9.4 uses settings.product_name() unchanged.
+        # Published baseline assets have dots; upload-artifact preserves spaces.
+        for kind in admit.BASELINE:
+            with self.subTest(kind=kind), self.assertRaises(ValueError):
+                self.extract(self.make_archive(kind, product="OpenCodeX.Desktop"), kind)
+
     def test_receipt_version_source_and_installed_hash_cannot_be_faked(self):
         for key, value in (("version", "0.1.10"), ("sourceCommit", "f" * 40), ("result", "fail"), ("installers", [])):
             with self.subTest(key=key), self.assertRaises(ValueError):
@@ -152,7 +161,7 @@ class AdmissionTests(unittest.TestCase):
         for member in ("../evil.msi", "/abs.msi", "C:/evil.msi", "a\\evil.msi", "a./evil.msi", "a /evil.msi"):
             with self.subTest(member=member), self.assertRaises(ValueError):
                 self.extract(self.make_archive(member=member))
-        name = "OpenCodeX.Desktop_0.2.23_x64_en-US.msi"
+        name = "OpenCodeX Desktop_0.2.23_x64_en-US.msi"
         with self.assertRaises(ValueError):
             self.extract(self.make_archive(extra=("elsewhere/" + name, "duplicate")))
         with self.assertRaises(ValueError):
@@ -168,6 +177,131 @@ class AdmissionTests(unittest.TestCase):
         stream.seek(0)
         with zipfile.ZipFile(stream) as archive, self.assertRaises(ValueError):
             admit.checked_zip(archive)
+
+
+class InstallerTemplateTests(unittest.TestCase):
+    root = Path(__file__).resolve().parents[2] / "apps/desktop/tauri"
+
+    def test_nsis_pinned_upstream_and_only_reviewed_delta(self):
+        text = (self.root / "windows/nsis023.nsi").read_text()
+        self.assertIn("Copyright (c) 2017 - Present Tauri Apps Contributors", text)
+        self.assertIn("THE SOFTWARE IS PROVIDED", text)
+        upstream = text.split("; OCX023-UPSTREAM-BEGIN\n", 1)[1]
+        upstream = upstream.replace('StrCpy $INSTDIR "$LOCALAPPDATA\\Programs\\${PRODUCTNAME}"',
+                                    'StrCpy $INSTDIR "$LOCALAPPDATA\\${PRODUCTNAME}"')
+        start = upstream.index("Function RestorePreviousInstallLocation\n")
+        end = upstream.index("FunctionEnd", start) + len("FunctionEnd")
+        upstream = upstream[:start] + '''Function RestorePreviousInstallLocation
+  ReadRegStr $4 SHCTX "${MANUPRODUCTKEY}" ""
+  StrCmp $4 "" +2 0
+    StrCpy $INSTDIR $4
+FunctionEnd''' + upstream[end:]
+        self.assertEqual(hashlib.sha256(upstream.encode()).hexdigest(),
+                         "20f4ecc730defb71f1342eaeaec4021df13be3d843abba0effe88ea5835fa079")
+        self.assertIn('${If} $INSTDIR == "${PLACEHOLDER_INSTALL_DIR}"', text)
+        self.assertLess(text.index('StrCpy $INSTDIR "$LOCALAPPDATA\\Programs'), text.index("Section Install"))
+        self.assertIn('${AndIf} $4 != "$LOCALAPPDATA\\${PRODUCTNAME}"', text)
+
+    def test_wix_pinned_upstream_and_reviewed_delta(self):
+        text = (self.root / "windows/wix023.wxs").read_text()
+        self.assertIn("Copyright (c) 2017 - Present Tauri Apps Contributors", text)
+        self.assertIn("THE SOFTWARE IS PROVIDED", text)
+        upstream = text.split("<!-- OCX023-UPSTREAM-BEGIN -->\n", 1)[1]
+        upstream = upstream.replace('InstallScope="perUser"\n                 InstallPrivileges="limited"', 'InstallScope="perMachine"')
+        start = upstream.index("        <!-- Only the new per-user installation")
+        end = upstream.index("        <!-- launch app checkbox -->", start)
+        original = r'''        <!-- NOTE: The order of RegistrySearch elements below matters. In WIX, when multiple
+             RegistrySearch elements are listed under a single Property, the LAST successful
+             match wins. We list the NSIS default-key search first and the MSI InstallDir
+             search second so that the MSI-specific path takes priority when both keys exist. -->
+        <Property Id="INSTALLDIR">
+          <!-- First attempt: Search for the default key value (this is how the nsis installer stores the path) -->
+          <RegistrySearch Id="PrevInstallDirNoName" Root="HKCU" Key="Software\\{{manufacturer}}\\{{product_name}}" Type="raw" />
+
+          <!-- Second attempt: Search for "InstallDir" which takes priority if found (this is how the msi installer stores the path) -->
+          <RegistrySearch Id="PrevInstallDirWithName" Root="HKCU" Key="Software\\{{manufacturer}}\\{{product_name}}" Name="InstallDir" Type="raw" />
+        </Property>
+
+'''
+        upstream = upstream[:start] + original + upstream[end:]
+        new_directory = '''            <Directory Id="LocalAppDataFolder">
+                <Directory Id="OCX023ProgramsFolder" Name="Programs">
+                    <Directory Id="INSTALLDIR" Name="{{product_name}}"/>
+                </Directory>
+            </Directory>'''
+        upstream = upstream.replace(new_directory, '''            <Directory Id="$(var.PlatformProgramFilesFolder)" Name="PFiles">
+                <Directory Id="INSTALLDIR" Name="{{product_name}}"/>
+            </Directory>''')
+        upstream = upstream.replace('''<Component Id="RegistryEntries" Guid="*">
+                <RegistryKey Root="HKCU" Key="Software\\\\{{manufacturer}}\\\\{{product_name}}\\023">''',
+                                    '''<Component Id="RegistryEntries" Guid="*">
+                <RegistryKey Root="HKCU" Key="Software\\\\{{manufacturer}}\\\\{{product_name}}">''')
+        upstream = upstream.replace('<!-- Per-user protocol registration uses the installing user. -->', '<!-- Change the Root to HKCU for perUser installations -->')
+        upstream = upstream.replace('<RegistryKey Root="HKCU" Key="Software\\Classes\\\\{{protocol}}">', '<RegistryKey Root="HKLM" Key="Software\\Classes\\\\{{protocol}}">')
+        upstream = re.sub(r'(<File Id="Path" Source="\{\{main_binary_path\}\}") Checksum="yes"/>\n\s*<RegistryValue[^\n]+Name="Desktop"[^\n]+/>',
+                          r'\1 KeyPath="yes" Checksum="yes"/>', upstream)
+        upstream = re.sub(r'(<File Id="Bin_\{\{ bin.id \}\}" Source="\{\{bin.path\}\}")/>\n\s*<RegistryValue[^\n]+Name="\{\{bin.id\}\}"[^\n]+/>',
+                          r'\1 KeyPath="yes"/>', upstream)
+        upstream = re.sub(r'            <!-- OCX023-PAYLOAD-BEGIN.*?<!-- OCX023-PAYLOAD-END -->', '            {{resources}}', upstream, flags=re.S)
+        upstream = re.sub(r'            <!-- OCX023-RESOURCE-REFS-BEGIN -->.*?<!-- OCX023-RESOURCE-REFS-END -->',
+                          '''            {{#each resource_file_ids as |resource_file_id| ~}}
+                <ComponentRef Id="{{ resource_file_id }}"/>
+            {{/each~}}''', upstream, flags=re.S)
+        upstream = upstream.replace('\n                <RemoveFolder Id="OCX023RemovePrograms" Directory="OCX023ProgramsFolder" On="uninstall" />', '')
+        self.assertEqual(hashlib.sha256(upstream.encode()).hexdigest(),
+                         "e371a01628a06730828f9bd24111feacb8bec53c250ccec4b46df756fe0a0198")
+
+    def test_same_ui_and_actual_user_programs_directory_and_custom_choice(self):
+        config = json.loads((self.root / "tauri.windows.conf.json").read_bytes())["bundle"]["windows"]
+        self.assertEqual(config["nsis"]["installMode"], "currentUser")
+        self.assertEqual(config["nsis"]["template"], "windows/nsis023.nsi")
+        self.assertEqual(config["wix"]["template"], "windows/wix023.wxs")
+        text = (self.root / config["wix"]["template"]).read_text()
+        fragment = re.search(r'<Directory Id="LocalAppDataFolder">.*?</Directory>\s*</Directory>', text, re.S).group()
+        directory = ET.fromstring(fragment)
+        self.assertEqual(directory.find("Directory").attrib["Name"], "Programs")
+        self.assertEqual(directory.find("Directory/Directory").attrib["Id"], "INSTALLDIR")
+        self.assertIn('<Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR"', text)
+        self.assertIn('NOT INSTALLDIR AND OCX023_REMEMBERED_I', text)
+        self.assertIn('Sequence="both"', text)
+        self.assertIn('InstallScope="perUser"', text)
+        self.assertIn('InstallPrivileges="limited"', text)
+        self.assertIn('先卸载旧管理器（保留配置），再安装新版', text)
+        self.assertIn('NOT ALLUSERS', text)
+        self.assertNotIn('PrevInstallDirNoName', text)
+        self.assertEqual(text.count('{C5476FDD-CB86-46AF-A97F-96DD56A32CA0}'), 2)
+        self.assertIn('Win64="yes"', text)
+        self.assertIn('Win64="no"', text)
+
+    def test_complete_fixed_payload_uses_registry_keypaths_without_ice_suppression(self):
+        text = (self.root / "windows/wix023.wxs").read_text()
+        fragment = re.search(r'<Directory Id="OCX023RuntimeBundle".*?<!-- OCX023-PAYLOAD-END -->', text, re.S).group().split('<!-- OCX023-PAYLOAD-END -->')[0].strip()
+        directory = ET.fromstring(fragment)
+        component = directory.find("Component")
+        files = {row.attrib["Source"].rsplit('\\', 1)[-1] for row in component.findall("File")}
+        self.assertEqual(files, {"runtime-bundle-0.2.23-win32-x64.tar.gz", "maintained-runtime.tgz",
+                                 "runtime-bundle.manifest.json", "runtime-bundle.manifest.sha256"})
+        self.assertEqual(component.find("RegistryValue").attrib["Root"], "HKCU")
+        self.assertEqual(component.find("RegistryValue").attrib["KeyPath"], "yes")
+        self.assertTrue(component.find("RemoveFolder") is not None)
+        self.assertNotIn('{{resources}}', text)
+        self.assertNotIn('SuppressIces', text)
+        self.assertNotIn('RemoveFile', text)
+        self.assertNotIn('RemoveFolderEx', text)
+
+    def test_nsis_replaces_only_registered_022_program_and_never_purges_data(self):
+        hooks = (self.root / "windows/installer-hooks.nsh").read_text()
+        pre = hooks.split('!macro NSIS_HOOK_PREINSTALL\n')[1].split('!macroend')[0]
+        self.assertIn('ReadRegStr $4 HKCU "${UNINSTKEY}" "DisplayVersion"', pre)
+        self.assertIn('${If} $4 == "0.2.22"', pre)
+        self.assertIn('ReadRegStr $6 HKCU "${UNINSTKEY}" "UninstallString"', pre)
+        self.assertIn('/S /UPDATE _?=$LOCALAPPDATA', pre)
+        self.assertNotIn('RMDir', pre)
+        self.assertNotIn('CopyFiles', pre)
+        self.assertNotIn('EnumRegKey', pre)
+        self.assertNotIn('.codex', pre)
+        self.assertNotIn('/D=', pre)
+        self.assertIn('StrCpy $DeleteAppDataCheckboxState 0', hooks)
 
 
 if __name__ == "__main__":

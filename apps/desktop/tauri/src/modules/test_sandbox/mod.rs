@@ -5,6 +5,21 @@
 
 use std::path::{Path, PathBuf};
 
+/// Test fixtures use the real Windows temporary directory. Unix fixtures keep
+/// a short parent so their owned IPC socket paths stay within OS limits.
+/// This does not select or initialize an application data directory.
+#[cfg(any(test, feature = "integration-test"))]
+pub fn temporary_parent() -> PathBuf {
+    #[cfg(windows)]
+    {
+        std::env::temp_dir()
+    }
+    #[cfg(not(windows))]
+    {
+        PathBuf::from("/tmp")
+    }
+}
+
 /// 沙箱身份标识（拟议值）。
 pub const SANDBOX_IDENTIFIER: &str = "com.gzers.opencodex.desktop.sandbox";
 

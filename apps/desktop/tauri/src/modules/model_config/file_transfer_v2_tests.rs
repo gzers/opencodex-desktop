@@ -36,7 +36,7 @@ impl Fixture {
     fn new(provider: bool) -> Self {
         let t = tempfile::Builder::new()
             .prefix("ocxd023-filetransfer-")
-            .tempdir_in("/tmp")
+            .tempdir_in(crate::modules::test_sandbox::temporary_parent())
             .unwrap();
         let d = t.path().join("D");
         let h = t.path().join("H");

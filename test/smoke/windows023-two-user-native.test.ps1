@@ -10,6 +10,10 @@ $taskMain=Join-Path $PSScriptRoot 'windows023-two-user-native.ps1'
 $taskChecks=[Collections.Generic.List[object]]::new()
 function Assert-Test([bool]$Condition,[string]$Name){if(!$Condition){throw ('Offline contract failed: '+$Name)};$taskChecks.Add(@{name=$Name;result='pass'})}
 function Assert-Throws([scriptblock]$Action,[string]$Name){$caught=$false;try{& $Action|Out-Null}catch{$caught=$true};Assert-Test $caught $Name}
+$emptyPath=Join-Path $taskOutput 'empty-ledger.json';Write-TwoUserJson $emptyPath @()
+Assert-Test ((Get-Content -LiteralPath $emptyPath -Raw).Trim() -ceq '[]') 'empty-ledger-is-a-real-JSON-array-not-missing-file'
+$singlePath=Join-Path $taskOutput 'one-ledger.json';Write-TwoUserJson $singlePath @(@{pid=42})
+Assert-Test ((Get-Content -LiteralPath $singlePath -Raw).Trim().StartsWith('[')) 'single-ledger-retains-array-container'
 foreach($file in @($taskMain,$taskHelper,$PSCommandPath)){
  $tokens=$null;$errors=$null
  $null=[Management.Automation.Language.Parser]::ParseFile($file,[ref]$tokens,[ref]$errors)
@@ -34,6 +38,12 @@ $fixture=Join-Path $taskOutput 'changed-ordinary.ps1'
 (Get-Content -LiteralPath (Join-Path $PSScriptRoot 'windows-ordinary-startup.ps1') -Raw).Replace(' if($c.profileOnly){exit 0}',' if($c.changedBoundary){exit 0}')|Set-Content -LiteralPath $fixture
 Assert-Throws {Get-TwoUserReuseParts $fixture} 'upstream-reuse-drift-fails-closed'
 $main=Get-Content -LiteralPath $taskMain -Raw;$helper=Get-Content -LiteralPath $taskHelper -Raw
+ $policyPath=Join-Path $PSScriptRoot '../../.github/runtime-platforms-023.json'
+ $policyBytes=Get-FileHash -LiteralPath $policyPath -Algorithm SHA256
+ $policy=Read-TwoUserRuntimePolicy $policyPath
+ Assert-Test ($policy.node.version -ceq '26.8.1' -and $policy.packageLock.packages.Contains('') -and $policy.packageLock.packages[''].name) 'actual-runtime-policy-preserves-empty-npm-root-key'
+ Assert-Test ((Get-FileHash -LiteralPath $policyPath -Algorithm SHA256).Hash -ceq $policyBytes.Hash) 'actual-runtime-policy-reader-is-read-only'
+ Assert-Test ($main.Contains('Read-TwoUserRuntimePolicy (Join-Path $taskRepo') -and (Get-Content (Join-Path $PSScriptRoot 'windows023-rust-ordinary.ps1') -Raw).Contains('Read-TwoUserRuntimePolicy (Join-Path $taskRepo')) 'both-native-controllers-consume-same-dictionary-policy-reader'
 Assert-Test ($main.IndexOf('Restricted to an ephemeral Windows Actions runner') -lt $main.IndexOf('New-Item')) 'CI-guard-before-mutation'
 Assert-Test ($main.IndexOf('$taskEphemeralGuard=') -lt $main.IndexOf('New-LocalUser') -and $main.Contains('ephemeralGuard=$taskEphemeralGuard') -and $helper.Contains('Controller ephemeralGuard missing')) 'ephemeralGuard-before-any-account-and-child-recheck'
 Assert-Test ($helper.Contains('launch_main=$true') -and !$helper.Contains('launch_main=$false') -and $helper.Contains('auto_panel=$false')) 'isolated-CLI-restart-preserves-visible-main-window'
@@ -60,6 +70,12 @@ Assert-Test ($one -cne $two -and $one -match '^OpenCodeXDesktop-[0-9a-f]{24}$') 
 Assert-Throws {Get-TwoUserPipeName 'same-rdp-session'} 'reject-non-SID-naming-input'
 Assert-Test (Test-TwoUserSamePath 'C:\Users\test' '\\?\C:\Users\test') 'backend-extended-path-comparison-only'
 Assert-Test (!(Test-TwoUserSamePath 'C:\Users\test' 'C:\Users\peer')) 'path-comparison-does-not-confuse-users'
+foreach($valid in @('D:\a\repo','C:/Program Files/node/node.exe','D:\a/repo\Cargo.toml','C:\Users\用户\fixture')){
+ Assert-Test (Test-TwoUserLocalSpelling $valid) ('local-path-spelling-accepted-'+$valid)
+}
+foreach($invalid in @('','C:relative','relative','C:\','C:/','\\server\share','\\?\C:\fixture','\\.\pipe\fixture','C:\fixture\..\peer','C:/fixture/./peer','C:\fixture\file:stream',"C:\fixture`npeer")){
+ Assert-Test (!(Test-TwoUserLocalSpelling $invalid)) ('local-path-spelling-refused-'+$invalid)
+}
 Assert-Test ($helper.Contains('Get-NetTCPConnection -State Listen -LocalPort $app.port') -and $helper.Contains('$ledger.ContainsKey([int]$_.OwningProcess)')) 'CDP-listener-is-owned-not-just-a-port'
 # Exercise actual guards on any host, never the Windows account code.
 $oldActions=[Environment]::GetEnvironmentVariable('GITHUB_ACTIONS','Process')

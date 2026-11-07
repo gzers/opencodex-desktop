@@ -23,7 +23,7 @@ impl Fixture {
     fn new() -> Self {
         let t = tempfile::Builder::new()
             .prefix("ocxd023-model-receive-file-fixture-")
-            .tempdir_in("/tmp")
+            .tempdir_in(crate::modules::test_sandbox::temporary_parent())
             .unwrap();
         let root = t.path().join("D");
         let home = t.path().join("H");

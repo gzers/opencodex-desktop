@@ -41,7 +41,7 @@ try {
   $stream=[IO.File]::OpenRead($tool)
   try{$reader=[IO.BinaryReader]::new($stream);if($reader.ReadUInt16() -ne 0x5a4d){throw 'NotReady: native Windows executable required'}}finally{$stream.Dispose()}
  }
- $nodePin=Get-Content -LiteralPath (Join-Path $taskRepo '.github/runtime-platforms-023.json') -Raw|ConvertFrom-Json
+ $nodePin=Read-TwoUserRuntimePolicy (Join-Path $taskRepo '.github/runtime-platforms-023.json')
  $nodeVersion=(& $taskNode --version).Trim()
  if($LASTEXITCODE -ne 0 -or $nodeVersion -cne ('v'+$nodePin.node.version)){throw 'NotReady: real test-driver Node does not match source-pinned version'}
  $taskSummary.nodeVersion=$nodeVersion
@@ -77,8 +77,9 @@ try {
    $taskAccounts.Add($account)
    if($account.sid -ceq $identity.User.Value){throw 'Refusing runner/daily SID'}
    Add-LocalGroupMember -Group (Get-LocalGroup -SID 'S-1-5-32-545') -Member $user
-   $nativeProfilePath=[Text.StringBuilder]::new(32768)
-   $hr=[OcxNativeProfileProvision]::CreateProfile($account.sid,$name,$nativeProfilePath,32768)
+   $nativeProfilePath=[Text.StringBuilder]::new(260)
+   $hr=[OcxNativeProfileProvision]::CreateProfile($account.sid,$name,$nativeProfilePath,260)
+   $taskSummary.createProfileHResult=[int]$hr
    if($hr -ne 0){[Runtime.InteropServices.Marshal]::ThrowExceptionForHR($hr)}
    $account.profile=Assert-TwoUserLocalPath $nativeProfilePath.ToString()
    if((Split-Path -Leaf $account.profile) -cne $name){throw 'OS registered temporary Profile differs'}
