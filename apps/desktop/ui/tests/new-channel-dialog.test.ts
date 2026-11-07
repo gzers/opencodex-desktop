@@ -3,13 +3,14 @@ import {flushPromises,mount} from '@vue/test-utils'
 import {createPinia,setActivePinia} from 'pinia'
 import NewChannelDialog from '@/features/models/NewChannelDialog.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
+import UiDialog from '@/components/ui/UiDialog.vue'
 import {emptyRules,type ModelSnapshot,type ChannelPolicy} from '@/features/models/api'
 import {useModelsStore} from '@/features/models/store'
 import {useModelsV2Store} from '@/features/models/store-v2'
 import type {ChannelDiscoveryViewV2,ChannelConnectionEditIntentV2,ChannelV2,FileSnapshotV2} from '@/features/models/api-v2'
 const ipc=vi.hoisted(()=>vi.fn())
 vi.mock('@tauri-apps/api/core',()=>({invoke:ipc}))
-const dialog={props:['open'],template:'<section v-if="open"><slot/><slot name="actions" :close="$emit.bind(null, &quot;close&quot;)" /></section>'}
+const dialog={props:['open','title','wide'],template:'<section v-if="open"><slot/><slot name="actions" :close="$emit.bind(null, &quot;close&quot;)" /></section>'}
 const wrappers:ReturnType<typeof mount>[]=[]
 const discovery=vi.fn(),stage=vi.fn()
 let pinia:ReturnType<typeof createPinia>
@@ -23,6 +24,14 @@ const selectedIntent=()=>stage.mock.calls.at(-1)![0] as ChannelConnectionEditInt
 beforeEach(()=>{pinia=createPinia();setActivePinia(pinia);vi.clearAllMocks();discovery.mockReset();stage.mockReset();stage.mockImplementation(async intent=>({channelId:intent.channelId}));useModelsV2Store().configureServices({previewChannel:discovery,stageConnection:stage});useModelsV2Store().file=fileFixture();const snapshot={policy:{schemaVersion:1,templateRefs:[],channels:[]},workspace:null,workspaceDigest:'w',policyDigest:'p',libraryDigest:'l',library:{schemaVersion:1,templates:[]}} as ModelSnapshot;useModelsStore().acceptTransfer(snapshot)})
 afterEach(()=>{wrappers.splice(0).forEach(w=>w.unmount());pinia._s.forEach(store=>store.$dispose())})
 describe('new channel without a channel protocol',()=>{
+ it('uses the adopted compact two-step heading and inline Key controls without changing authentication',async()=>{
+  const w=render();expect(w.findComponent(UiDialog).props('wide')).not.toBe(true);expect(w.findComponent(UiDialog).props('title')).toBe('新增渠道 · 连接配置')
+  expect(w.get('ol[aria-label="新增渠道步骤"] [aria-current="step"]').text()).toBe('1 连接配置')
+  const controls=w.get('.channel-key-controls'),input=controls.get<HTMLInputElement>('input[aria-label="API Key"]')
+  await input.setValue('fixture-secret');await controls.get('button[aria-label="显示 Key"]').trigger('click');expect(input.attributes('type')).toBe('text');expect(input.element.value).toBe('fixture-secret')
+  await controls.get('button[aria-label="隐藏 Key"]').trigger('click');expect(input.attributes('type')).toBe('password');await button(w,'清空 Key').trigger('click');expect(input.element.value).toBe('')
+  await firstStep(w);expect(w.findComponent(UiDialog).props('title')).toBe('新增渠道 · 选择模型');expect(w.get('ol [aria-current="step"]').text()).toBe('2 选择模型');expect(stage).not.toHaveBeenCalled()
+ })
  it.each(['中文 渠道 / one','openai','with space'])('stages %s as explicit v2 connection intent, never mutating v1 policy',async name=>{
   discovery.mockResolvedValue({readId:'read',models:[{id:'raw/model',label:'raw/model'}],elapsedMs:2});const before=JSON.stringify(useModelsStore().channelDraft),w=render();await firstStep(w);await button(w,'上一步').trigger('click');await field(w,'渠道名称',name);await button(w,'下一步').trigger('click');await choice(w,'本次清单获取方式','compatible_models');await button(w,'获取模型列表').trigger('click');await flushPromises();await w.get('input[aria-label="选择新渠道型号 raw/model"]').setValue(true);await button(w,'加入草稿').trigger('click');await flushPromises();expect(selectedIntent()).toMatchObject({kind:'create',label:name,selectedModelIds:['raw/model'],authMode:'key',discoveryReadId:'read'});expect(selectedIntent()).not.toHaveProperty('protocol');expect(selectedIntent()).not.toHaveProperty('connection.protocol');expect(JSON.stringify(useModelsStore().channelDraft)).toBe(before);expect(ipc).not.toHaveBeenCalled()
  })
