@@ -1,0 +1,589 @@
+{
+  "schemaVersion": 1,
+  "result": "pass-static-only",
+  "checks": [
+    {
+      "name": "parser-windows023-rust-ordinary.ps1",
+      "result": "pass"
+    },
+    {
+      "name": "no-reserved-variable-assignment-windows023-rust-ordinary.ps1",
+      "result": "pass"
+    },
+    {
+      "name": "parser-windows023-rust-ordinary-helper.ps1",
+      "result": "pass"
+    },
+    {
+      "name": "no-reserved-variable-assignment-windows023-rust-ordinary-helper.ps1",
+      "result": "pass"
+    },
+    {
+      "name": "parser-windows023-rust-ordinary.test.ps1",
+      "result": "pass"
+    },
+    {
+      "name": "no-reserved-variable-assignment-windows023-rust-ordinary.test.ps1",
+      "result": "pass"
+    },
+    {
+      "name": "ephemeral-guard-before-compilation-and-all-native-mutations",
+      "result": "pass"
+    },
+    {
+      "name": "fresh-hosted-runner-required-not-just-GHA-flag",
+      "result": "pass"
+    },
+    {
+      "name": "one-new-ordinary-account-real-profile-loaded",
+      "result": "pass"
+    },
+    {
+      "name": "existing-profile-bootstrap-reused-no-product-startup",
+      "result": "pass"
+    },
+    {
+      "name": "parent-secret-environment-scrubbed-before-loading-public-config",
+      "result": "pass"
+    },
+    {
+      "name": "known-folder-reexec-keeps-only-explicit-guard-state",
+      "result": "pass"
+    },
+    {
+      "name": "generated-profile-bootstrap-parser",
+      "result": "pass"
+    },
+    {
+      "name": "native-launch-managed-compilation-only-no-PInvoke",
+      "result": "pass"
+    },
+    {
+      "name": "windows-argv-empty-preserved",
+      "result": "pass"
+    },
+    {
+      "name": "windows-argv-spaces-preserved",
+      "result": "pass"
+    },
+    {
+      "name": "windows-argv-quotes-preserved",
+      "result": "pass"
+    },
+    {
+      "name": "windows-argv-trailing-slash-preserved",
+      "result": "pass"
+    },
+    {
+      "name": "windows-argv-NUL-refused",
+      "result": "pass"
+    },
+    {
+      "name": "original-Cargo-build-scope-features-lock-preserved-with-no-run-JSON",
+      "result": "pass"
+    },
+    {
+      "name": "cargo-scope-narrowing-or-override-refused---exclude",
+      "result": "pass"
+    },
+    {
+      "name": "cargo-scope-narrowing-or-override-refused---lib",
+      "result": "pass"
+    },
+    {
+      "name": "cargo-scope-narrowing-or-override-refused---test",
+      "result": "pass"
+    },
+    {
+      "name": "cargo-scope-narrowing-or-override-refused-some-test-filter",
+      "result": "pass"
+    },
+    {
+      "name": "cargo-scope-narrowing-or-override-refused---doc",
+      "result": "pass"
+    },
+    {
+      "name": "cargo-scope-narrowing-or-override-refused---no-run",
+      "result": "pass"
+    },
+    {
+      "name": "cargo-scope-narrowing-or-override-refused---message-format=json",
+      "result": "pass"
+    },
+    {
+      "name": "cargo-scope-narrowing-or-override-refused---config",
+      "result": "pass"
+    },
+    {
+      "name": "no-fail-fast-must-remain-explicit",
+      "result": "pass"
+    },
+    {
+      "name": "original-worker-count-and-nocapture-admitted",
+      "result": "pass"
+    },
+    {
+      "name": "no-test-filter-or-skip---skip",
+      "result": "pass"
+    },
+    {
+      "name": "no-test-filter-or-skip---ignored",
+      "result": "pass"
+    },
+    {
+      "name": "no-test-filter-or-skip---exact",
+      "result": "pass"
+    },
+    {
+      "name": "no-test-filter-or-skip-filter",
+      "result": "pass"
+    },
+    {
+      "name": "no-test-filter-or-skip---test-threads=0",
+      "result": "pass"
+    },
+    {
+      "name": "duplicate-worker-override-refused",
+      "result": "pass"
+    },
+    {
+      "name": "complete-all-zero-exits-pass",
+      "result": "pass"
+    },
+    {
+      "name": "first-original-test-failure-exit-preserved",
+      "result": "pass"
+    },
+    {
+      "name": "later-original-test-failure-exit-preserved",
+      "result": "pass"
+    },
+    {
+      "name": "empty-suite-never-green",
+      "result": "pass"
+    },
+    {
+      "name": "partial-suite-never-green",
+      "result": "pass"
+    },
+    {
+      "name": "missing-native-exit-never-cast-to-success",
+      "result": "pass"
+    },
+    {
+      "name": "textual-exit-is-not-native-integer-authority",
+      "result": "pass"
+    },
+    {
+      "name": "exact-all-Cargo-test-artifacts-multiple-packages-no-latest-glob",
+      "result": "pass"
+    },
+    {
+      "name": "repeated-identical-artifact-executed-once",
+      "result": "pass"
+    },
+    {
+      "name": "malformed-build-JSON-fails-closed",
+      "result": "pass"
+    },
+    {
+      "name": "zero-test-artifacts-never-pass",
+      "result": "pass"
+    },
+    {
+      "name": "foreign-package-test-executable-refused",
+      "result": "pass"
+    },
+    {
+      "name": "exact-executable-DLL-hashes-and-source-commit-frozen",
+      "result": "pass"
+    },
+    {
+      "name": "test-process-native-identity-persisted-before-resume",
+      "result": "pass"
+    },
+    {
+      "name": "actual-ordinary-token-image-SID-creation-required",
+      "result": "pass"
+    },
+    {
+      "name": "CreateProcess-original-process-and-thread-handles-retained-with-safe-ownership",
+      "result": "pass"
+    },
+    {
+      "name": "failed-suspended-launch-cleaned-only-through-unique-created-handle",
+      "result": "pass"
+    },
+    {
+      "name": "CIM-missing-is-explicit-not-agreement-and-contradiction-is-fatal",
+      "result": "pass"
+    },
+    {
+      "name": "supplementary-CIM-all-absent-is-no-contradiction-not-a-proof",
+      "result": "pass"
+    },
+    {
+      "name": "CIM-microsecond-truncation-nine-100ns-units-accepted",
+      "result": "pass"
+    },
+    {
+      "name": "CIM-exact-values-accepted-as-supplementary",
+      "result": "pass"
+    },
+    {
+      "name": "CIM-supplied-contradiction-refused-pid-",
+      "result": "pass"
+    },
+    {
+      "name": "CIM-supplied-contradiction-refused-sid-",
+      "result": "pass"
+    },
+    {
+      "name": "CIM-supplied-contradiction-refused-image-",
+      "result": "pass"
+    },
+    {
+      "name": "CIM-supplied-contradiction-refused-creation-637999999999999999",
+      "result": "pass"
+    },
+    {
+      "name": "CIM-supplied-contradiction-refused-creation-638000000000000010",
+      "result": "pass"
+    },
+    {
+      "name": "bounded-kernel-CIM-launch-diagnostic-persisted-before-error-propagation",
+      "result": "pass"
+    },
+    {
+      "name": "own-registered-Profile-and-LocalAppData-TEMP-with-owner-readback",
+      "result": "pass"
+    },
+    {
+      "name": "TokenOwner-is-evidence-never-default-owner-mutation",
+      "result": "pass"
+    },
+    {
+      "name": "failed-binary-exit-kept-and-rest-of-suite-continues",
+      "result": "pass"
+    },
+    {
+      "name": "admin-specialized-groups-and-doc-scope-not-claimed-by-binary-suite",
+      "result": "pass"
+    },
+    {
+      "name": "read-ACL-exact-artifacts-source-only-no-recursive-repair-or-owner-change",
+      "result": "pass"
+    },
+    {
+      "name": "exact-source-ACL-and-desktop-grants-restored",
+      "result": "pass"
+    },
+    {
+      "name": "unknown-new-SID-process-retains-account-not-killed",
+      "result": "pass"
+    },
+    {
+      "name": "cleanup-reuses-only-exact-PID-creation-image-SID-helper",
+      "result": "pass"
+    },
+    {
+      "name": "no-Stop-Process -Name",
+      "result": "pass"
+    },
+    {
+      "name": "no-SetTokenInformation",
+      "result": "pass"
+    },
+    {
+      "name": "no-TakeOwn",
+      "result": "pass"
+    },
+    {
+      "name": "no-/setowner",
+      "result": "pass"
+    },
+    {
+      "name": "no-Set-Service",
+      "result": "pass"
+    },
+    {
+      "name": "no-New-NetFirewallRule",
+      "result": "pass"
+    },
+    {
+      "name": "no-Set-DnsClient",
+      "result": "pass"
+    },
+    {
+      "name": "no-Invoke-WebRequest",
+      "result": "pass"
+    },
+    {
+      "name": "original-DACL-snapshot-is-immutable-string-and-restored-with-readback",
+      "result": "pass"
+    },
+    {
+      "name": "exact-DACL-restoration-pure-fixture",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-diagnostic-equal-readback-remains-verified",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-drift-still-fails-no-semantic-bypass",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-error-retains-exact-original-and-readback-DACL-only",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-write-failure-distinguished-from-readback-drift",
+      "result": "pass"
+    },
+    {
+      "name": "actual-preflight4-only-AI-addition-reported-normalized-never-exact",
+      "result": "pass"
+    },
+    {
+      "name": "AI-is-specific-control-0400-and-all-ordered-ACE-text-retained",
+      "result": "pass"
+    },
+    {
+      "name": "native-RawSecurityDescriptor-verification-only-on-Windows-not-claimed-on-Mac",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-AI-exception-refuses-protection-added",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-counterexample-never-verified-protection-added",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-AI-exception-refuses-protection-removed",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-counterexample-never-verified-protection-removed",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-AI-exception-refuses-auto-inherit-request-added",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-counterexample-never-verified-auto-inherit-request-added",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-AI-exception-refuses-AI-removed",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-counterexample-never-verified-AI-removed",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-AI-exception-refuses-OI-removed",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-counterexample-never-verified-OI-removed",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-AI-exception-refuses-CI-removed",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-counterexample-never-verified-CI-removed",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-AI-exception-refuses-IO-removed",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-counterexample-never-verified-IO-removed",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-AI-exception-refuses-ID-removed",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-counterexample-never-verified-ID-removed",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-AI-exception-refuses-access-mask-changed",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-counterexample-never-verified-access-mask-changed",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-AI-exception-refuses-SID-changed",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-counterexample-never-verified-SID-changed",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-AI-exception-refuses-ACE-order-changed",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-counterexample-never-verified-ACE-order-changed",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-AI-exception-refuses-extra-ACE",
+      "result": "pass"
+    },
+    {
+      "name": "ACL-counterexample-never-verified-extra-ACE",
+      "result": "pass"
+    },
+    {
+      "name": "different-artifact-same-executable-never-silently-dropped",
+      "result": "pass"
+    },
+    {
+      "name": "ordinary-cleanup-refuses-changed-creation",
+      "result": "pass"
+    },
+    {
+      "name": "ordinary-cleanup-zero-kills-after-creation",
+      "result": "pass"
+    },
+    {
+      "name": "ordinary-cleanup-refuses-changed-image",
+      "result": "pass"
+    },
+    {
+      "name": "ordinary-cleanup-zero-kills-after-image",
+      "result": "pass"
+    },
+    {
+      "name": "ordinary-cleanup-refuses-changed-sid",
+      "result": "pass"
+    },
+    {
+      "name": "ordinary-cleanup-zero-kills-after-sid",
+      "result": "pass"
+    },
+    {
+      "name": "ordinary-cleanup-stops-only-matching-frozen-fixture",
+      "result": "pass"
+    },
+    {
+      "name": "original-retained-native-exit-0-retires-only-completed-generation",
+      "result": "pass"
+    },
+    {
+      "name": "original-retained-native-exit-101-retires-only-completed-generation",
+      "result": "pass"
+    },
+    {
+      "name": "completed-ledger-does-not-retire-replaced-sid",
+      "result": "pass"
+    },
+    {
+      "name": "completed-ledger-preserves-unknown-sid",
+      "result": "pass"
+    },
+    {
+      "name": "completed-ledger-does-not-retire-replaced-path",
+      "result": "pass"
+    },
+    {
+      "name": "completed-ledger-preserves-unknown-path",
+      "result": "pass"
+    },
+    {
+      "name": "completed-ledger-does-not-retire-replaced-creationTicks",
+      "result": "pass"
+    },
+    {
+      "name": "completed-ledger-preserves-unknown-creationTicks",
+      "result": "pass"
+    },
+    {
+      "name": "completed-generation-needs-real-integer-exit",
+      "result": "pass"
+    },
+    {
+      "name": "completed-generation-needs-real-integer-exit",
+      "result": "pass"
+    },
+    {
+      "name": "retire-only-after-original-handle-exitcode",
+      "result": "pass"
+    },
+    {
+      "name": "default-workers-unchanged-no-test-arguments",
+      "result": "pass"
+    },
+    {
+      "name": "RunAs-new-environment-before-credentials-no-worker-override",
+      "result": "pass"
+    },
+    {
+      "name": "metadata-default-libtest-harness-admission",
+      "result": "pass"
+    },
+    {
+      "name": "custom-harness-false-explicitly-refused",
+      "result": "pass"
+    },
+    {
+      "name": "all-metadata-test-targets-match-emitted-artifacts",
+      "result": "pass"
+    },
+    {
+      "name": "missing-test-artifact-never-green",
+      "result": "pass"
+    },
+    {
+      "name": "binaries-only-no-doctest-or-fullworkspace-claim",
+      "result": "pass"
+    },
+    {
+      "name": "actual-parent-guard-refuses-before-native-output",
+      "result": "pass"
+    },
+    {
+      "name": "refused-parent-created-no-output",
+      "result": "pass"
+    },
+    {
+      "name": "actual-child-guard-refuses-outside-ephemeral-runner",
+      "result": "pass"
+    }
+  ],
+  "checksPassed": 141,
+  "nativeExecuted": false,
+  "accountsCreated": false,
+  "rustBinariesExecuted": false,
+  "ordinarySuitePassed": false,
+  "files": [
+    {
+      "sha256": "6e1cdeeb8fa0ad95d99bb15f6b12de946e180962e065dd3a815e2ead75b04db4",
+      "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-rust-ordinary.ps1"
+    },
+    {
+      "sha256": "afa3d661c7fe0bcec5f520be20a01fa4f0ca98bf883f6375807f1e572f3d48c2",
+      "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-rust-ordinary-helper.ps1"
+    },
+    {
+      "sha256": "ed3b17071a9286de225888a32f8c87996f7d92dc62ea5c279c88c89af7725395",
+      "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-rust-ordinary.test.ps1"
+    }
+  ]
+}

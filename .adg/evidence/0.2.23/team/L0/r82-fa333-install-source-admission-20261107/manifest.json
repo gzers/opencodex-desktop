@@ -1,0 +1,38 @@
+{
+  "run": 42361947889,
+  "job": 128372012039,
+  "source": "fa333dd06a14a7f6885a5bc1c611d84acd7b3e4c",
+  "terminal": "failure",
+  "ordinaryRegressionAndCleanup": {
+    "result": "pass-ordinary-rust-binaries",
+    "allBinariesAttempted": 49,
+    "allExitZero": true,
+    "sourceAclRestored": true,
+    "desktopAclRestored": true,
+    "testAccountAndProfileRemoved": true,
+    "sourceBytesUnchanged": true
+  },
+  "elevatedNativeChecks": "passed",
+  "installerBuild": "both actual NSIS and MSI built successfully",
+  "installerSuiteFailure": "Source commit missing before install: explicit ExpectedCommit valid, but inherited LASTEXITCODE from previous native command nonzero; old check incorrectly required unrelated exit zero",
+  "installationOwnerCleanup": "created account/Profile removed=true",
+  "installerAndTwoSidAcceptance": false,
+  "artifact": {
+    "id": 13571318954,
+    "bytes": 571170,
+    "apiDigest": "858ac4b1d7bf463146cf186de56901ef3e8f2d8586074d4b36d86d70d770db85",
+    "wholeZipHashLocallyVerified": false
+  },
+  "successor": {
+    "source": "3d45558c1e76fa326852318ce899987be408b9fb",
+    "sourceFix": "d60b84a82: explicit40hex independent of stale exit, actual git fallback exit checked",
+    "behavioralContractChecks": 13,
+    "pythonInstallerChecks": 10,
+    "retentionAdmissionChecks": 17,
+    "rawArtifact": "explicit unverified name, sha/size/source recorded, not admitted by existing retention successful-package policy",
+    "newFullCandidate": 42365850198
+  },
+  "productionAppsChangedSince414": false,
+  "noBusinessSyncDailyConfig": true,
+  "releaseAcceptance": false
+}

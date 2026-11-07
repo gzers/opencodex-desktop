@@ -1,0 +1,2868 @@
+{
+  "schemaVersion": 1,
+  "result": "pass-ordinary-rust-binaries",
+  "scope": "binaries",
+  "fullWorkspacePassed": false,
+  "nativeExecuted": true,
+  "runnerAdmissionSource": "explicit-parent-observation-after-parent-CI-guard",
+  "accountSid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+  "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+  "tokenOwner": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+  "profile": "C:\\Users\\ocxacc82be06ff2e",
+  "home": "C:\\Users\\ocxacc82be06ff2e",
+  "temp": "C:\\Users\\ocxacc82be06ff2e\\AppData\\Local\\Temp",
+  "expectedCommit": "fa333dd06a14a7f6885a5bc1c611d84acd7b3e4c",
+  "testArguments": [],
+  "docTestsExecuted": false,
+  "allBinariesAttempted": true,
+  "cleanup": [
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 5644,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296442181763553",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 4344,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296442179052894",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 8708,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296442022855179",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 4964,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296442004058374",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 7368,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296441996820481",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 5704,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296441979681455",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 4620,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\backup_process_lock-585580ca689c7cae.exe",
+        "creationTicks": "639296441972048793",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 6344,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\backup_process_lock-585580ca689c7cae.exe",
+        "creationTicks": "639296441966723788",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 620,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\backup_process_lock-585580ca689c7cae.exe",
+        "creationTicks": "639296441961182225",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 4656,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\backup_process_lock-585580ca689c7cae.exe",
+        "creationTicks": "639296441958433109",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 5628,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\backup_process_lock-585580ca689c7cae.exe",
+        "creationTicks": "639296441954709821",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 7788,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296441953288967",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 5216,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296441921870972",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 5864,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296441897226936",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 8080,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\cmd.exe",
+        "creationTicks": "639296441897197169",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 4388,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\cmd.exe",
+        "creationTicks": "639296441894939813",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 3456,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296441894721340",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 2944,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296441865898319",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 7156,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296441637994227",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 5012,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "creationTicks": "639296441637970106",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 8304,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296441635240836",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 780,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "creationTicks": "639296441635213527",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 8952,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296441633326957",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 5268,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "creationTicks": "639296441633297780",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 4292,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\hostedtoolcache\\windows\\node\\26.8.1\\x64\\node.exe",
+        "creationTicks": "639296441582170030",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 3108,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296441581714130",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 6076,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\hostedtoolcache\\windows\\node\\26.8.1\\x64\\node.exe",
+        "creationTicks": "639296441581571367",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 3128,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296441561347725",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 6408,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\hostedtoolcache\\windows\\node\\26.8.1\\x64\\node.exe",
+        "creationTicks": "639296441561162323",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 6228,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\opencodex_desktop_lib-2f26242b31cee7aa.exe",
+        "creationTicks": "639296433650204455",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 1524,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\opencodex_desktop_lib-2f26242b31cee7aa.exe",
+        "creationTicks": "639296433640340928",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 9088,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\opencodex_desktop_lib-2f26242b31cee7aa.exe",
+        "creationTicks": "639296432623094454",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 1348,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\opencodex_desktop_lib-2f26242b31cee7aa.exe",
+        "creationTicks": "639296432600930149",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 7240,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\opencodex_desktop_lib-2f26242b31cee7aa.exe",
+        "creationTicks": "639296432599386773",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 5672,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\hostedtoolcache\\windows\\node\\26.8.1\\x64\\node.exe",
+        "creationTicks": "639296432150831649",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 2724,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\hostedtoolcache\\windows\\node\\26.8.1\\x64\\node.exe",
+        "creationTicks": "639296432150297200",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 4056,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\hostedtoolcache\\windows\\node\\26.8.1\\x64\\node.exe",
+        "creationTicks": "639296432150278305",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 8336,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296432150147534",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 5536,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296432150116400",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 3100,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\cmd.exe",
+        "creationTicks": "639296432149926886",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 5224,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296432149903260",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 6304,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\cmd.exe",
+        "creationTicks": "639296432149901813",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 5300,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\hostedtoolcache\\windows\\node\\26.8.1\\x64\\node.exe",
+        "creationTicks": "639296432148987680",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 7768,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\hostedtoolcache\\windows\\node\\26.8.1\\x64\\node.exe",
+        "creationTicks": "639296432148448659",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 5888,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296432148272518",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 1660,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\cmd.exe",
+        "creationTicks": "639296432148096654",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 7980,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296432148062367",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 7908,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\System32\\cmd.exe",
+        "creationTicks": "639296432148013883",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 7608,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296432131676791",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 1152,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "creationTicks": "639296432131649268",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 2464,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "creationTicks": "639296432127457748",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 4932,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\hostedtoolcache\\windows\\node\\26.8.1\\x64\\node.exe",
+        "creationTicks": "639296432121375086",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 1240,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\hostedtoolcache\\windows\\node\\26.8.1\\x64\\node.exe",
+        "creationTicks": "639296432120973031",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 7060,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296432120837582",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 6004,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296432120688405",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 4288,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\cmd.exe",
+        "creationTicks": "639296432120675802",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 1572,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\System32\\cmd.exe",
+        "creationTicks": "639296432120654771",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 7200,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296432074620397",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 7568,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "C:\\Windows\\system32\\conhost.exe",
+        "creationTicks": "639296432063398764",
+        "sessionId": 2
+      }
+    }
+  ],
+  "exitCode": 0,
+  "tests": [
+    {
+      "process": {
+        "pid": 6492,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\tray_left_click-2502acee4a5ae47c.exe",
+        "creationTicks": "639296432046412171",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 6492,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\tray_left_click-2502acee4a5ae47c.exe",
+        "creationTimeUtc": "2026-11-07T10:13:24.6412171Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 6492,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296432046412170",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-1.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-1.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "9a27595ca5e6c866b7174060dbd24f325866de11e5a026d48b8b1941225e6e49",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "tray_left_click"
+    },
+    {
+      "process": {
+        "pid": 8784,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\ocxd-cb2de1b8ac281141.exe",
+        "creationTicks": "639296432049863547",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 8784,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\ocxd-cb2de1b8ac281141.exe",
+        "creationTimeUtc": "2026-11-07T10:13:24.9863547Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 8784,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296432049863540",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-2.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-2.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "542bbc64f4df6659b02caf359d7638aa6c9e22149a876640cd48361063812d4e",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "ocxd"
+    },
+    {
+      "process": {
+        "pid": 8336,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\model_research_real-6cb1d3033494401c.exe",
+        "creationTicks": "639296432052578608",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 8336,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\model_research_real-6cb1d3033494401c.exe",
+        "creationTimeUtc": "2026-11-07T10:13:25.2578608Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 8336,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296432052578600",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-3.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-3.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "235442356bff5a895417e4418a2f04e8714b15dbd4acd75a630b26e474cc7b04",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "model_research_real"
+    },
+    {
+      "process": {
+        "pid": 1348,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\runtime023_manager_name_chain-1e6c4af40b5fbcbf.exe",
+        "creationTicks": "639296432060610154",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 1348,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\runtime023_manager_name_chain-1e6c4af40b5fbcbf.exe",
+        "creationTimeUtc": "2026-11-07T10:13:26.0610154Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 1348,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296432060610150",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-4.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-4.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "b64f71d76fbc499304e34dde2f1be54b0164c9f9aaca07906e8ad7b8bca6b281",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "runtime023_manager_name_chain"
+    },
+    {
+      "process": {
+        "pid": 6892,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\windows_client_selection_owner-68b8766234955738.exe",
+        "creationTicks": "639296432063084645",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 6892,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\windows_client_selection_owner-68b8766234955738.exe",
+        "creationTimeUtc": "2026-11-07T10:13:26.3084645Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 6892,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296432063084640",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-5.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-5.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "3620126089a23ca6fcbe9189a35bee8147ecd73815c35ff20a27a818a3fbbd92",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "windows_client_selection_owner"
+    },
+    {
+      "process": {
+        "pid": 6784,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\model_file_browser-92c8fc498d929a22.exe",
+        "creationTicks": "639296432069009476",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 6784,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\model_file_browser-92c8fc498d929a22.exe",
+        "creationTimeUtc": "2026-11-07T10:13:26.9009476Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 6784,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296432069009470",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-6.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-6.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "52e742d56ca23d70a59dc09077944968976c368c6f06837a26fcccc22fc3472b",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "model_file_browser"
+    },
+    {
+      "process": {
+        "pid": 4276,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\windows_tray_icon-7f8335d5166056f6.exe",
+        "creationTicks": "639296432071253396",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 4276,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\windows_tray_icon-7f8335d5166056f6.exe",
+        "creationTimeUtc": "2026-11-07T10:13:27.1253396Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 4276,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296432071253390",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-7.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-7.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "89ef99ef8c948800e48478061db6426be7f74d498604a24bbe55d5cbb2edf8a5",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "windows_tray_icon"
+    },
+    {
+      "process": {
+        "pid": 7216,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\opencodex_desktop_lib-2f26242b31cee7aa.exe",
+        "creationTicks": "639296432074380144",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 7216,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\opencodex_desktop_lib-2f26242b31cee7aa.exe",
+        "creationTimeUtc": "2026-11-07T10:13:27.4380144Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 7216,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296432074380140",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-8.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-8.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "e7ede42cbb69ec48ef16aba6dca837505f6e6e449afc2c9c6275c195eed0ec09",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "opencodex_desktop_lib"
+    },
+    {
+      "process": {
+        "pid": 1764,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\runtime_managed_real-0931131ba6cc56c6.exe",
+        "creationTicks": "639296441858651588",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 1764,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\runtime_managed_real-0931131ba6cc56c6.exe",
+        "creationTimeUtc": "2026-11-07T10:29:45.8651588Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 1764,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441858651580",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-9.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-9.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "f45acaf4eba6c7b5815f7e7c75438770bfdb20f5b1db5626e7e5b3969e378a66",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "runtime_managed_real"
+    },
+    {
+      "process": {
+        "pid": 7576,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\event_registry-5940c4b6bbef0445.exe",
+        "creationTicks": "639296441865627974",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 7576,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\event_registry-5940c4b6bbef0445.exe",
+        "creationTimeUtc": "2026-11-07T10:29:46.5627974Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 7576,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441865627970",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-10.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-10.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "e538d13d2bd94d43ffce9060a10326ebaef838f1c8bda37d913a4b6b33cd68d1",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "event_registry"
+    },
+    {
+      "process": {
+        "pid": 4384,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\runtime_bundle_real-3fccf10e01343f86.exe",
+        "creationTicks": "639296441892028276",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 4384,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\runtime_bundle_real-3fccf10e01343f86.exe",
+        "creationTimeUtc": "2026-11-07T10:29:49.2028276Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 4384,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441892028270",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-11.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-11.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "735662b9ed43ef1503b238a753b7c4bc0a8c1da7fdc6e80ff525d839edb90cbe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "runtime_bundle_real"
+    },
+    {
+      "process": {
+        "pid": 8864,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\windows_runtime-8cedb5f4e268014f.exe",
+        "creationTicks": "639296441894463119",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 8864,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\windows_runtime-8cedb5f4e268014f.exe",
+        "creationTimeUtc": "2026-11-07T10:29:49.4463119Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 8864,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441894463110",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-12.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-12.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "79a62358597d45eff183c3ae09bf299dfd2deb338f8c29b20837d1cbf94868a3",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "windows_runtime"
+    },
+    {
+      "process": {
+        "pid": 3092,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\about-d9367b1926e160cc.exe",
+        "creationTicks": "639296441902431483",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 3092,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\about-d9367b1926e160cc.exe",
+        "creationTimeUtc": "2026-11-07T10:29:50.2431483Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 3092,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441902431480",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-13.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-13.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "a008d6e49fba208e8f0fa1e1853a25e3ed6b19a553b7a56486b375b4e694784a",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "about"
+    },
+    {
+      "process": {
+        "pid": 8288,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\runtime_prerelease_real-49fcab09715ce39d.exe",
+        "creationTicks": "639296441904664598",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 8288,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\runtime_prerelease_real-49fcab09715ce39d.exe",
+        "creationTimeUtc": "2026-11-07T10:29:50.4664598Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 8288,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441904664590",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-14.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-14.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "9cd200101940e7a680c2c42f6ad63d2a8b9ab7ae1ff0cd2ca8f522e1d3f618f6",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "runtime_prerelease_real"
+    },
+    {
+      "process": {
+        "pid": 6460,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\tray_icon-f9f33a717afb1160.exe",
+        "creationTicks": "639296441906974514",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 6460,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\tray_icon-f9f33a717afb1160.exe",
+        "creationTimeUtc": "2026-11-07T10:29:50.6974514Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 6460,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441906974510",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-15.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-15.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "d2fc00bdf80ecabaedbc3bae4a76c58e97a00379bfb841f9d468d114a9e931f4",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "tray_icon"
+    },
+    {
+      "process": {
+        "pid": 9020,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\app_icon-e2d412b8b201f642.exe",
+        "creationTicks": "639296441909374755",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 9020,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\app_icon-e2d412b8b201f642.exe",
+        "creationTimeUtc": "2026-11-07T10:29:50.9374755Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 9020,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441909374750",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-16.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-16.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "76126bc07e9381d3b059754f66fb822c4af5a4d32452cf3acd212f55203a48bb",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "app_icon"
+    },
+    {
+      "process": {
+        "pid": 7380,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\config_v2_transport_real-d6d2ae6b972a9a40.exe",
+        "creationTicks": "639296441916766127",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 7380,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\config_v2_transport_real-d6d2ae6b972a9a40.exe",
+        "creationTimeUtc": "2026-11-07T10:29:51.6766127Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 7380,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441916766120",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-17.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-17.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "664e89bb69fd1154592974e38829613dac96c61716f21a1edcafcf6b835926a8",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "config_v2_transport_real"
+    },
+    {
+      "process": {
+        "pid": 2528,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\model_file_live-77949cf397042c04.exe",
+        "creationTicks": "639296441919248760",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 2528,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\model_file_live-77949cf397042c04.exe",
+        "creationTimeUtc": "2026-11-07T10:29:51.9248760Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 2528,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441919248760",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-18.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-18.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "2d4b2d55ddf6fc8d7c39bad4542ccd92cae6527e511d05a46b36c17cd8cb62b6",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "model_file_live"
+    },
+    {
+      "process": {
+        "pid": 672,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\sandbox_isolation-8e2d74fc07b8b022.exe",
+        "creationTicks": "639296441921633740",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 672,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\sandbox_isolation-8e2d74fc07b8b022.exe",
+        "creationTimeUtc": "2026-11-07T10:29:52.1633740Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 672,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441921633740",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-19.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-19.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "40f5eead5b2bd835aba64710ca5f9edecadf656629b7e1d1ca738b038e86be12",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "sandbox_isolation"
+    },
+    {
+      "process": {
+        "pid": 1084,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\webdav_tls-10e645a574224d3b.exe",
+        "creationTicks": "639296441924279855",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 1084,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\webdav_tls-10e645a574224d3b.exe",
+        "creationTimeUtc": "2026-11-07T10:29:52.4279855Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 1084,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441924279850",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-20.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-20.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "d909e0d9c5c403bb18eadc6b413d7159ae7e6b0d4605cdddcf79689e4f196399",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "webdav_tls"
+    },
+    {
+      "process": {
+        "pid": 7784,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\opencodex_desktop-27506433e6a914e0.exe",
+        "creationTicks": "639296441926928414",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 7784,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\opencodex_desktop-27506433e6a914e0.exe",
+        "creationTimeUtc": "2026-11-07T10:29:52.6928414Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 7784,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441926928410",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-21.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-21.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "0c97e4bfc8a7212c57dbd5eba67330660fdab3797331ed316ec0b3a8aadfa962",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "opencodex-desktop"
+    },
+    {
+      "process": {
+        "pid": 7712,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\config_sync_webdav_real-18372d3bb31fef32.exe",
+        "creationTicks": "639296441929343760",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 7712,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\config_sync_webdav_real-18372d3bb31fef32.exe",
+        "creationTimeUtc": "2026-11-07T10:29:52.9343760Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 7712,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441929343760",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-22.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-22.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "ce6246a7360c0ec748dd48075323f0a7d0aab184f8ca2fdaf0cb3b2b3176bd23",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "config_sync_webdav_real"
+    },
+    {
+      "process": {
+        "pid": 8220,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\preferences-52ef048dc36b282d.exe",
+        "creationTicks": "639296441931644683",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 8220,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\preferences-52ef048dc36b282d.exe",
+        "creationTimeUtc": "2026-11-07T10:29:53.1644683Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 8220,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441931644680",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-23.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-23.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "9c3b40c1a6b325b6f658d26e793e3a025ca33cc2b6163b6094433e7ee65fec23",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "preferences"
+    },
+    {
+      "process": {
+        "pid": 8196,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\webdav_legacy_real-1e892c84e4af7f3c.exe",
+        "creationTicks": "639296441933940309",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 8196,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\webdav_legacy_real-1e892c84e4af7f3c.exe",
+        "creationTimeUtc": "2026-11-07T10:29:53.3940309Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 8196,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441933940300",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-24.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-24.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "729904035fb09e94b61055084174220fab8047180928c805a317a49c80db39ab",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "webdav_legacy_real"
+    },
+    {
+      "process": {
+        "pid": 7508,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\provider_auth_native-e8cd631e3a66e42b.exe",
+        "creationTicks": "639296441936282775",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 7508,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\provider_auth_native-e8cd631e3a66e42b.exe",
+        "creationTimeUtc": "2026-11-07T10:29:53.6282775Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 7508,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441936282770",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-25.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-25.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "c90152bc2b0fdd7d6f78f47c9997e0e36fa3df5030c7eb1ce9ee93361820e03b",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "provider_auth_native"
+    },
+    {
+      "process": {
+        "pid": 7900,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\extensions-5850c5906cccf613.exe",
+        "creationTicks": "639296441938579957",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 7900,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\extensions-5850c5906cccf613.exe",
+        "creationTimeUtc": "2026-11-07T10:29:53.8579957Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 7900,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441938579950",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-26.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-26.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "3779a58efcdeacb91aaba527f3167483c42be2149af04d69577fb94503fec2eb",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "extensions"
+    },
+    {
+      "process": {
+        "pid": 6436,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\client_selection_rename-3564ebf730f76f45.exe",
+        "creationTicks": "639296441940768180",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 6436,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\client_selection_rename-3564ebf730f76f45.exe",
+        "creationTimeUtc": "2026-11-07T10:29:54.0768180Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 6436,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441940768180",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-27.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-27.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "84fa97b1c4931fd835aac33a29170d8ce7bcd3d5f92f5969194f1e6e9434daa7",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "client_selection_rename"
+    },
+    {
+      "process": {
+        "pid": 7532,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\status_snapshot-bf9ecb2afaf7d3cc.exe",
+        "creationTicks": "639296441943260681",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 7532,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\status_snapshot-bf9ecb2afaf7d3cc.exe",
+        "creationTimeUtc": "2026-11-07T10:29:54.3260681Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 7532,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441943260680",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-28.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-28.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "037a596144f12d3ec4ec03e656281d9e184f593b6e091793dc2a167becb5cac9",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "status_snapshot"
+    },
+    {
+      "process": {
+        "pid": 8688,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\official_status_source-8a6569f480e43593.exe",
+        "creationTicks": "639296441945577420",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 8688,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\official_status_source-8a6569f480e43593.exe",
+        "creationTimeUtc": "2026-11-07T10:29:54.5577420Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 8688,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441945577420",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-29.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-29.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "b76acbd8ae00b09e477ba3538a5caf8a2aef8268457f2c6a6ac1c758344a4263",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "official_status_source"
+    },
+    {
+      "process": {
+        "pid": 6632,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\process_action-12ee9c2c7b1dd362.exe",
+        "creationTicks": "639296441947828790",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 6632,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\process_action-12ee9c2c7b1dd362.exe",
+        "creationTimeUtc": "2026-11-07T10:29:54.7828790Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 6632,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441947828790",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-30.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-30.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "6b389e10643de877662d9609631856cfac8b43308816cc2517462303a3a94625",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "process_action"
+    },
+    {
+      "process": {
+        "pid": 2880,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\logs-e9e8fa21888a03ae.exe",
+        "creationTicks": "639296441950271427",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 2880,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\logs-e9e8fa21888a03ae.exe",
+        "creationTimeUtc": "2026-11-07T10:29:55.0271427Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 2880,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441950271420",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-31.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-31.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "cbaf7784194fce45a6cd32f72392f7c73c938544e527042c2a9fc3117a646e8a",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "logs"
+    },
+    {
+      "process": {
+        "pid": 8976,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\backup_process_lock-585580ca689c7cae.exe",
+        "creationTicks": "639296441953009378",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 8976,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\backup_process_lock-585580ca689c7cae.exe",
+        "creationTimeUtc": "2026-11-07T10:29:55.3009378Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 8976,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441953009370",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-32.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-32.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "8a9d869774b50ebd61d98fc83dea313febffe0b96f2682b208e0f588f61fbec5",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "backup_process_lock"
+    },
+    {
+      "process": {
+        "pid": 8348,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\app_startup_wiring-51a66925e3577ddf.exe",
+        "creationTicks": "639296441974892395",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 8348,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\app_startup_wiring-51a66925e3577ddf.exe",
+        "creationTimeUtc": "2026-11-07T10:29:57.4892395Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 8348,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441974892390",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-33.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-33.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "d6d61fb21aad8ce9ec184027fc54bf2eaa45f10400352c78184009405622d790",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "app_startup_wiring"
+    },
+    {
+      "process": {
+        "pid": 8712,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\codex_shim-b81ef50cccd71cc2.exe",
+        "creationTicks": "639296441977154289",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 8712,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\codex_shim-b81ef50cccd71cc2.exe",
+        "creationTimeUtc": "2026-11-07T10:29:57.7154289Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 8712,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441977154280",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-34.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-34.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "0989944db6f0725cdfbb5641d7832af13747fb7e9b7db9433eca23b8a710263c",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "codex_shim"
+    },
+    {
+      "process": {
+        "pid": 9164,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\saved_runtime_reconcile-ff35ab1a60085703.exe",
+        "creationTicks": "639296441979439126",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 9164,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\saved_runtime_reconcile-ff35ab1a60085703.exe",
+        "creationTimeUtc": "2026-11-07T10:29:57.9439126Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 9164,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441979439120",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-35.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-35.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "608af7ad85fc11567db0b857846d409baca2e63bfb230764211813fc6af1ee2a",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "saved_runtime_reconcile"
+    },
+    {
+      "process": {
+        "pid": 7688,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\tray-6891d49d45ed804a.exe",
+        "creationTicks": "639296441989715297",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 7688,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\tray-6891d49d45ed804a.exe",
+        "creationTimeUtc": "2026-11-07T10:29:58.9715297Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 7688,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441989715290",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-36.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-36.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "4608633a21b4fcf6f307dc1bac8a02ae939f169d6a20d13ab94a6ce5165ecb6d",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "tray"
+    },
+    {
+      "process": {
+        "pid": 4996,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\app_status-ba9cf1aadc1dbf2e.exe",
+        "creationTicks": "639296441991952285",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 4996,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\app_status-ba9cf1aadc1dbf2e.exe",
+        "creationTimeUtc": "2026-11-07T10:29:59.1952285Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 4996,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441991952280",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-37.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-37.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "c9f285f52861460cc498e6a9dcac5165b6af2056bf3d18378b72d50bb2b1b789",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "app_status"
+    },
+    {
+      "process": {
+        "pid": 7516,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\layer_boundaries-3e65926ef8c36638.exe",
+        "creationTicks": "639296441994342376",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 7516,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\layer_boundaries-3e65926ef8c36638.exe",
+        "creationTimeUtc": "2026-11-07T10:29:59.4342376Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 7516,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441994342370",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-38.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-38.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "d44a7851943620bcc521ea07f874b97e12b7b6814b0c0b2157e9009b21837774",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "layer_boundaries"
+    },
+    {
+      "process": {
+        "pid": 1784,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\window_close-80f736cf41caa559.exe",
+        "creationTicks": "639296441996541097",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 1784,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\window_close-80f736cf41caa559.exe",
+        "creationTimeUtc": "2026-11-07T10:29:59.6541097Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 1784,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441996541090",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-39.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-39.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "909c026e0baf5dc85baefe5683fb7b2228b79f14b471ace34fa5bfef27959ee0",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "window_close"
+    },
+    {
+      "process": {
+        "pid": 1908,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\webdav_sync_real-aef0a731839c3921.exe",
+        "creationTicks": "639296441999260270",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 1908,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\webdav_sync_real-aef0a731839c3921.exe",
+        "creationTimeUtc": "2026-11-07T10:29:59.9260270Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 1908,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296441999260270",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-40.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-40.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "6e495392bfc8a790d6b455495ab6223807962fd44003a47bd55f56d2f3a988ed",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "webdav_sync_real"
+    },
+    {
+      "process": {
+        "pid": 7452,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\model_config_official_real-aeef328f2e59d12d.exe",
+        "creationTicks": "639296442001487661",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 7452,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\model_config_official_real-aeef328f2e59d12d.exe",
+        "creationTimeUtc": "2026-11-07T10:30:00.1487661Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 7452,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296442001487660",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-41.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-41.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "7acb4f67cb9ed587ccd185d7edfc24b7605e07187275d7b37de6ed3a71157c3f",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "model_config_official_real"
+    },
+    {
+      "process": {
+        "pid": 3584,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\sync_plaintext-134c8e7ab4131353.exe",
+        "creationTicks": "639296442003799324",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 3584,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\sync_plaintext-134c8e7ab4131353.exe",
+        "creationTimeUtc": "2026-11-07T10:30:00.3799324Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 3584,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296442003799320",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-42.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-42.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "c4f0655921b27eb8a6cea346a91bffb7286a1057b9b3598ad65067370464ce99",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "sync_plaintext"
+    },
+    {
+      "process": {
+        "pid": 6576,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\doctor-308d73e99e58c468.exe",
+        "creationTicks": "639296442020276448",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 6576,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\doctor-308d73e99e58c468.exe",
+        "creationTimeUtc": "2026-11-07T10:30:02.0276448Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 6576,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296442020276440",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-43.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-43.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "5abd14ef67d3b9c723d7acc3d51939e40308769c0b65e73d0c99488454574ed5",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "doctor"
+    },
+    {
+      "process": {
+        "pid": 2308,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\webdav_real-34b120c4956a15e6.exe",
+        "creationTicks": "639296442022595533",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 2308,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\webdav_real-34b120c4956a15e6.exe",
+        "creationTimeUtc": "2026-11-07T10:30:02.2595533Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 2308,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296442022595530",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-44.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-44.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "70b29632d3ed4360a2e32fa1e8514ac0bf58b821d8d894ce7941041c0387cde8",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "webdav_real"
+    },
+    {
+      "process": {
+        "pid": 2220,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\channel_rename_native-cb91469f5b84ec97.exe",
+        "creationTicks": "639296442174524148",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 2220,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\channel_rename_native-cb91469f5b84ec97.exe",
+        "creationTimeUtc": "2026-11-07T10:30:17.4524148Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 2220,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296442174524140",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-45.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-45.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "0c858b2efc37ea2c57b3218fa580f58447558598c2b6ae264ae9bb386eb060c3",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "channel_rename_native"
+    },
+    {
+      "process": {
+        "pid": 2836,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\status_matrix-e08b31cd49612485.exe",
+        "creationTicks": "639296442176678702",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 2836,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\status_matrix-e08b31cd49612485.exe",
+        "creationTimeUtc": "2026-11-07T10:30:17.6678702Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 2836,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296442176678700",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-46.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-46.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "30d057509671ddcababc51c60b85574aebaabf349347a3898d471c8743f8a1b2",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "status_matrix"
+    },
+    {
+      "process": {
+        "pid": 7044,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\client_npm_runtime-670492e6d53a0da4.exe",
+        "creationTicks": "639296442178818572",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 7044,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\client_npm_runtime-670492e6d53a0da4.exe",
+        "creationTimeUtc": "2026-11-07T10:30:17.8818572Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 7044,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296442178818570",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-47.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-47.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "23675fe3e8f41d7e3d740b13fe6db92556a9170c1bb40991885601d31ab190d2",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "client_npm_runtime"
+    },
+    {
+      "process": {
+        "pid": 5624,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\notifications-d5c9c8521fad81c9.exe",
+        "creationTicks": "639296442181534383",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 5624,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\notifications-d5c9c8521fad81c9.exe",
+        "creationTimeUtc": "2026-11-07T10:30:18.1534383Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 5624,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296442181534380",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-48.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-48.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "7913f4bc7a080b2abf21c3cd7ac9ff1a1983f598c9ea7b12e0ae04cd5a4371b8",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "notifications"
+    },
+    {
+      "process": {
+        "pid": 7024,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\cli_ipc-649e5519142abd7e.exe",
+        "creationTicks": "639296442184017146",
+        "sessionId": 2,
+        "identityAuthority": "retained-CreateProcess-handle"
+      },
+      "token": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 7024,
+        "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\cli_ipc-649e5519142abd7e.exe",
+        "creationTimeUtc": "2026-11-07T10:30:18.4017146Z",
+        "elevated": false,
+        "elevationType": 1,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "authority": "retained-CreateProcess-handle"
+      },
+      "cim": {
+        "rowPresent": true,
+        "pidProvided": true,
+        "pid": 7024,
+        "sidProvided": true,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "imageProvided": false,
+        "image": null,
+        "creationProvided": true,
+        "creationTicks": "639296442184017140",
+        "ownerReturnValue": 0,
+        "queryFailureType": null,
+        "queryHResult": null,
+        "contradictions": []
+      },
+      "exitCode": 0,
+      "exitAuthority": "retained-CreateProcess-handle",
+      "arguments": [],
+      "stdout": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-49.stdout.log",
+      "stderr": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary\\test-49.stderr.log",
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "identityObservedBeforeResume": true,
+      "sha256": "b09f2aecf9f0cbd355c7001d4db980271c0f95ef47d3ce46e68868ef4310b21f",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "cli_ipc"
+    }
+  ],
+  "freshDirectoryOwner": "S-1-5-21-3289802278-1561746829-1498425070-1003"
+}

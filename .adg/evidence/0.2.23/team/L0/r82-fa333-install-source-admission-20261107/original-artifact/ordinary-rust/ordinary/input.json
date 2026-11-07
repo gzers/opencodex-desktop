@@ -1,0 +1,768 @@
+{
+  "testArguments": [],
+  "accountSid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+  "commit": "fa333dd06a14a7f6885a5bc1c611d84acd7b3e4c",
+  "code": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\code",
+  "suiteTimeoutSeconds": 2400,
+  "nodeSha256": "5cba0ea928508c65ddadefc0681d2fb6d95f1f3beea4428f04397631140ee8e5",
+  "nativeHelper": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\code\\windows023-rust-ordinary-helper.ps1",
+  "parentRunnerObservation": {
+    "githubActions": "true",
+    "runnerTemp": "D:\\a\\_temp",
+    "imageOS": "win25-vs2026",
+    "runnerEnvironment": "github-hosted",
+    "kind": "ordinary-runner-parent-observation-v1"
+  },
+  "runtimeDlls": [
+    {
+      "sha256": "0b5994faf511c2906d2fb1832dba699518e9de927292c6aa970bd485108ae79d",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\async_trait-7e9ac28bdf5ce55e.dll"
+    },
+    {
+      "sha256": "5d90a5e971b4faaf1def50332429b559245a69e782f74bf0df3e7998b7856d4d",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\cssparser_macros-3522aa1b41b52d4c.dll"
+    },
+    {
+      "sha256": "45838da7a39c50c525f8b36f05eaf11a12e2f9ab086caf822edc5564d0b73fdf",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\darling_macro-414a0f9983cd0281.dll"
+    },
+    {
+      "sha256": "607629ad5002a76c06c5e31ed1e3c59eb3a52711f44bfcbc044b098056fe5c69",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\derive_more_impl-ecf739c2a8676e72.dll"
+    },
+    {
+      "sha256": "12bd12c77eca6a0807feabaee29c31624ff7af00f5408a02fed9319e2208b7bc",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\displaydoc-0b7cb4ecf13e6e31.dll"
+    },
+    {
+      "sha256": "60ebf1fb9633bd894471cc1a6a989a15cfcd304d33c19a9a24fa81dcc664d6bc",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\futures_macro-8a73927395296d1c.dll"
+    },
+    {
+      "sha256": "051dbb2eee36eb620bde17ec7407708f2a09447c7aa605107424b1f6b4e30129",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\opencodex_desktop_lib.dll"
+    },
+    {
+      "sha256": "d7d4e36096dc77a0d916124f8609189559f91678899083f216851da3107308d5",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\phf_macros-86e803eaa8053177.dll"
+    },
+    {
+      "sha256": "d57dcc19e1d1018d1c79d9feba84bffc6f3e18b9abca9bf313e742407bca48d1",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\phf_macros-c11dbecea18af65f.dll"
+    },
+    {
+      "sha256": "ba6139b6409cd887a888ae75744b6ea635e9a29380d6aaab4d86a9251044f581",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\schemars_derive-52f09e23f07d081c.dll"
+    },
+    {
+      "sha256": "d7d410b65df8a2717f9d11ed5d2592f4f244e414a5139abb8d074502f2a64203",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\serde_derive-57ef79d5bf0d01ae.dll"
+    },
+    {
+      "sha256": "82ad17cccd22e737fa68e01a5e331f4b8d797a539774504b5333e5b89380e791",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\serde_repr-a0231028336f37e1.dll"
+    },
+    {
+      "sha256": "07837ff45b85319c3c0feae8b2f6e386c4934aa7d5cf3eac54d35ff983d3ac6b",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\serde_with_macros-ab7660c153bcaa08.dll"
+    },
+    {
+      "sha256": "6368cbb89592942205272296b895e197ea7b22c74ae79485319073df289e0a21",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\serialize_to_javascript_impl-cc41836bfc59bcad.dll"
+    },
+    {
+      "sha256": "a880eaf05407ccf98fd0341f9187a4c413683a9a234e70faa155b67be6355081",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\tauri_macros-09c3fc7edf3e9921.dll"
+    },
+    {
+      "sha256": "b6a63f5b07f79f907e63b38cec60150163cb0e550733f35a5fc797749bfb133f",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\tauri_macros-885e3246101417a3.dll"
+    },
+    {
+      "sha256": "f5843a12d952d86745ff36508bbdcdb5dbc505bf9630c3dec3e900fcb9c357f3",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\thiserror_impl-9700f35e125da37a.dll"
+    },
+    {
+      "sha256": "45b05c9b80e03522ff251a829f44a106d447d2608d0f11840a19f617d7f81b0e",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\time_macros-52fa6afd4818fd9d.dll"
+    },
+    {
+      "sha256": "eee00437fa81c109c648835d16449d61109a95bedc461a6cc7670026bdd77ba4",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\time_macros-7495913e3db81922.dll"
+    },
+    {
+      "sha256": "a615127cf2268429e68130e321014e63ff7e0e959391ecebe6ed490f37ba3b63",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\tokio_macros-b0b7a224f51003ef.dll"
+    },
+    {
+      "sha256": "0c13d8c7cf6a2919c6a34d495dc6f02e353c27bcaa2e85460a217e0333a79603",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\webview2_com_macros-c4d29c81c0ad7c92.dll"
+    },
+    {
+      "sha256": "518006c30825f4f97d38537825008b9176e87481fb05c806028a69bf6e4e2fc4",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\windows_implement-5c15c736348873e9.dll"
+    },
+    {
+      "sha256": "40d38e6c2a6578e8bd426bd2c3c58e1c017a93564e39740f26a7d9ff594cf29e",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\windows_interface-3fea95274b80fed9.dll"
+    },
+    {
+      "sha256": "cb8713a362aa2b4fbb50bff4484e250f1c09868feda07a5892100bf86c3a30a8",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\yoke_derive-7619c1aea85d2b85.dll"
+    },
+    {
+      "sha256": "76a2d2d76d11dc5875b20d734ed0f4b36e277c0ce57180384730fafe08013919",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\zerofrom_derive-d1db415de884b112.dll"
+    },
+    {
+      "sha256": "1d2eefe16ad09b8205f429b668c955987ddd8c61bebed265e907bb02af9dd391",
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\zerovec_derive-a142d0a0a16dcb70.dll"
+    }
+  ],
+  "evidence": "D:\\a\\_temp\\ocxd023-rust-ordinary-d93aa16ba49d4fa3ba18dd6845a70c23\\ordinary",
+  "profileOnly": false,
+  "artifacts": [
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\tray_left_click-2502acee4a5ae47c.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "tray_left_click",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "9a27595ca5e6c866b7174060dbd24f325866de11e5a026d48b8b1941225e6e49"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\ocxd-cb2de1b8ac281141.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "ocxd",
+      "kinds": [
+        "bin"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "542bbc64f4df6659b02caf359d7638aa6c9e22149a876640cd48361063812d4e"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\model_research_real-6cb1d3033494401c.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "model_research_real",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "235442356bff5a895417e4418a2f04e8714b15dbd4acd75a630b26e474cc7b04"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\runtime023_manager_name_chain-1e6c4af40b5fbcbf.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "runtime023_manager_name_chain",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "b64f71d76fbc499304e34dde2f1be54b0164c9f9aaca07906e8ad7b8bca6b281"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\windows_client_selection_owner-68b8766234955738.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "windows_client_selection_owner",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "3620126089a23ca6fcbe9189a35bee8147ecd73815c35ff20a27a818a3fbbd92"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\model_file_browser-92c8fc498d929a22.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "model_file_browser",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "52e742d56ca23d70a59dc09077944968976c368c6f06837a26fcccc22fc3472b"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\windows_tray_icon-7f8335d5166056f6.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "windows_tray_icon",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "89ef99ef8c948800e48478061db6426be7f74d498604a24bbe55d5cbb2edf8a5"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\opencodex_desktop_lib-2f26242b31cee7aa.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "opencodex_desktop_lib",
+      "kinds": [
+        "staticlib",
+        "cdylib",
+        "rlib"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "e7ede42cbb69ec48ef16aba6dca837505f6e6e449afc2c9c6275c195eed0ec09"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\runtime_managed_real-0931131ba6cc56c6.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "runtime_managed_real",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "f45acaf4eba6c7b5815f7e7c75438770bfdb20f5b1db5626e7e5b3969e378a66"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\event_registry-5940c4b6bbef0445.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "event_registry",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "e538d13d2bd94d43ffce9060a10326ebaef838f1c8bda37d913a4b6b33cd68d1"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\runtime_bundle_real-3fccf10e01343f86.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "runtime_bundle_real",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "735662b9ed43ef1503b238a753b7c4bc0a8c1da7fdc6e80ff525d839edb90cbe"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\windows_runtime-8cedb5f4e268014f.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "windows_runtime",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "79a62358597d45eff183c3ae09bf299dfd2deb338f8c29b20837d1cbf94868a3"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\about-d9367b1926e160cc.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "about",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "a008d6e49fba208e8f0fa1e1853a25e3ed6b19a553b7a56486b375b4e694784a"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\runtime_prerelease_real-49fcab09715ce39d.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "runtime_prerelease_real",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "9cd200101940e7a680c2c42f6ad63d2a8b9ab7ae1ff0cd2ca8f522e1d3f618f6"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\tray_icon-f9f33a717afb1160.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "tray_icon",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "d2fc00bdf80ecabaedbc3bae4a76c58e97a00379bfb841f9d468d114a9e931f4"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\app_icon-e2d412b8b201f642.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "app_icon",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "76126bc07e9381d3b059754f66fb822c4af5a4d32452cf3acd212f55203a48bb"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\config_v2_transport_real-d6d2ae6b972a9a40.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "config_v2_transport_real",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "664e89bb69fd1154592974e38829613dac96c61716f21a1edcafcf6b835926a8"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\model_file_live-77949cf397042c04.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "model_file_live",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "2d4b2d55ddf6fc8d7c39bad4542ccd92cae6527e511d05a46b36c17cd8cb62b6"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\sandbox_isolation-8e2d74fc07b8b022.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "sandbox_isolation",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "40f5eead5b2bd835aba64710ca5f9edecadf656629b7e1d1ca738b038e86be12"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\webdav_tls-10e645a574224d3b.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "webdav_tls",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "d909e0d9c5c403bb18eadc6b413d7159ae7e6b0d4605cdddcf79689e4f196399"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\opencodex_desktop-27506433e6a914e0.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "opencodex-desktop",
+      "kinds": [
+        "bin"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "0c97e4bfc8a7212c57dbd5eba67330660fdab3797331ed316ec0b3a8aadfa962"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\config_sync_webdav_real-18372d3bb31fef32.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "config_sync_webdav_real",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "ce6246a7360c0ec748dd48075323f0a7d0aab184f8ca2fdaf0cb3b2b3176bd23"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\preferences-52ef048dc36b282d.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "preferences",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "9c3b40c1a6b325b6f658d26e793e3a025ca33cc2b6163b6094433e7ee65fec23"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\webdav_legacy_real-1e892c84e4af7f3c.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "webdav_legacy_real",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "729904035fb09e94b61055084174220fab8047180928c805a317a49c80db39ab"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\provider_auth_native-e8cd631e3a66e42b.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "provider_auth_native",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "c90152bc2b0fdd7d6f78f47c9997e0e36fa3df5030c7eb1ce9ee93361820e03b"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\extensions-5850c5906cccf613.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "extensions",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "3779a58efcdeacb91aaba527f3167483c42be2149af04d69577fb94503fec2eb"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\client_selection_rename-3564ebf730f76f45.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "client_selection_rename",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "84fa97b1c4931fd835aac33a29170d8ce7bcd3d5f92f5969194f1e6e9434daa7"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\status_snapshot-bf9ecb2afaf7d3cc.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "status_snapshot",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "037a596144f12d3ec4ec03e656281d9e184f593b6e091793dc2a167becb5cac9"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\official_status_source-8a6569f480e43593.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "official_status_source",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "b76acbd8ae00b09e477ba3538a5caf8a2aef8268457f2c6a6ac1c758344a4263"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\process_action-12ee9c2c7b1dd362.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "process_action",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "6b389e10643de877662d9609631856cfac8b43308816cc2517462303a3a94625"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\logs-e9e8fa21888a03ae.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "logs",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "cbaf7784194fce45a6cd32f72392f7c73c938544e527042c2a9fc3117a646e8a"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\backup_process_lock-585580ca689c7cae.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "backup_process_lock",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "8a9d869774b50ebd61d98fc83dea313febffe0b96f2682b208e0f588f61fbec5"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\app_startup_wiring-51a66925e3577ddf.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "app_startup_wiring",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "d6d61fb21aad8ce9ec184027fc54bf2eaa45f10400352c78184009405622d790"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\codex_shim-b81ef50cccd71cc2.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "codex_shim",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "0989944db6f0725cdfbb5641d7832af13747fb7e9b7db9433eca23b8a710263c"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\saved_runtime_reconcile-ff35ab1a60085703.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "saved_runtime_reconcile",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "608af7ad85fc11567db0b857846d409baca2e63bfb230764211813fc6af1ee2a"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\tray-6891d49d45ed804a.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "tray",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "4608633a21b4fcf6f307dc1bac8a02ae939f169d6a20d13ab94a6ce5165ecb6d"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\app_status-ba9cf1aadc1dbf2e.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "app_status",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "c9f285f52861460cc498e6a9dcac5165b6af2056bf3d18378b72d50bb2b1b789"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\layer_boundaries-3e65926ef8c36638.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "layer_boundaries",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "d44a7851943620bcc521ea07f874b97e12b7b6814b0c0b2157e9009b21837774"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\window_close-80f736cf41caa559.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "window_close",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "909c026e0baf5dc85baefe5683fb7b2228b79f14b471ace34fa5bfef27959ee0"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\webdav_sync_real-aef0a731839c3921.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "webdav_sync_real",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "6e495392bfc8a790d6b455495ab6223807962fd44003a47bd55f56d2f3a988ed"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\model_config_official_real-aeef328f2e59d12d.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "model_config_official_real",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "7acb4f67cb9ed587ccd185d7edfc24b7605e07187275d7b37de6ed3a71157c3f"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\sync_plaintext-134c8e7ab4131353.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "sync_plaintext",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "c4f0655921b27eb8a6cea346a91bffb7286a1057b9b3598ad65067370464ce99"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\doctor-308d73e99e58c468.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "doctor",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "5abd14ef67d3b9c723d7acc3d51939e40308769c0b65e73d0c99488454574ed5"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\webdav_real-34b120c4956a15e6.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "webdav_real",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "70b29632d3ed4360a2e32fa1e8514ac0bf58b821d8d894ce7941041c0387cde8"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\channel_rename_native-cb91469f5b84ec97.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "channel_rename_native",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "0c858b2efc37ea2c57b3218fa580f58447558598c2b6ae264ae9bb386eb060c3"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\status_matrix-e08b31cd49612485.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "status_matrix",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "30d057509671ddcababc51c60b85574aebaabf349347a3898d471c8743f8a1b2"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\client_npm_runtime-670492e6d53a0da4.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "client_npm_runtime",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "23675fe3e8f41d7e3d740b13fe6db92556a9170c1bb40991885601d31ab190d2"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\notifications-d5c9c8521fad81c9.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "notifications",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "7913f4bc7a080b2abf21c3cd7ac9ff1a1983f598c9ea7b12e0ae04cd5a4371b8"
+    },
+    {
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\cli_ipc-649e5519142abd7e.exe",
+      "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/apps/desktop/tauri#opencodex-desktop@0.2.23",
+      "target": "cli_ipc",
+      "kinds": [
+        "test"
+      ],
+      "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+      "manifestPath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\Cargo.toml",
+      "packageName": "opencodex-desktop",
+      "packageVersion": "0.2.23",
+      "sha256": "b09f2aecf9f0cbd355c7001d4db980271c0f95ef47d3ce46e68868ef4310b21f"
+    }
+  ],
+  "profile": "C:\\Users\\ocxacc82be06ff2e",
+  "node": "C:\\hostedtoolcache\\windows\\node\\26.8.1\\x64\\node.exe",
+  "ephemeralGuard": true
+}
