@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "status": "verified-candidate",
+  "inputKind": "candidate",
+  "sourceApp": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app",
+  "output": "/private/tmp/ocxd023-218-release-dmg-ats40g9l/OpenCodeX_Desktop_0.2.23_aarch64.dmg",
+  "metadata": "/private/tmp/ocxd023-218-release-dmg-ats40g9l/package-evidence.json",
+  "expectedVersion": "0.2.23",
+  "installationRoot": "~/Applications/OpenCodeX Desktop",
+  "installedApp": "~/Applications/OpenCodeX Desktop/OpenCodeX Desktop.app",
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=2",
+        "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app"
+      ],
+      "command": "/usr/bin/codesign --verify --deep --strict --verbose=2 '/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app'",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "--prepared:/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n--validated:/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app: valid on disk\n/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app: satisfies its Designated Requirement\n",
+      "elapsedSeconds": 0.174
+    },
+    {
+      "argv": [
+        "/usr/bin/codesign",
+        "-d",
+        "--verbose=4",
+        "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app"
+      ],
+      "command": "/usr/bin/codesign -d --verbose=4 '/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app'",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "Executable=/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop\nIdentifier=com.gzers.opencodex.desktop\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=30140 flags=0x10002(adhoc,runtime) hashes=935+3 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=1769472\nHash type=sha256 size=32\nCandidateCDHash sha256=9ceafa3cbda25e25b6cce161336240ff87b4da60\nCandidateCDHashFull sha256=9ceafa3cbda25e25b6cce161336240ff87b4da6005f5efb14218ab6d970d2c7e\nHash choices=sha256\nCMSDigest=9ceafa3cbda25e25b6cce161336240ff87b4da6005f5efb14218ab6d970d2c7e\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=14729216\nExecutable Segment flags=0x1\nPage size=16384\nCDHash=9ceafa3cbda25e25b6cce161336240ff87b4da60\nSignature=adhoc\nInfo.plist entries=14\nTeamIdentifier=not set\nRuntime Version=27.0.0\nSealed Resources version=2 rules=13 files=8\nInternal requirements count=0 size=12\nTotal signatures=1\nChosen signature=1\n",
+      "elapsedSeconds": 0.018
+    },
+    {
+      "argv": [
+        "/usr/bin/ditto",
+        "--rsrc",
+        "--extattr",
+        "--acl",
+        "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app",
+        "/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/payload/OpenCodeX Desktop/OpenCodeX Desktop.app"
+      ],
+      "command": "/usr/bin/ditto --rsrc --extattr --acl '/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app' '/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/payload/OpenCodeX Desktop/OpenCodeX Desktop.app'",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.013
+    },
+    {
+      "argv": [
+        "/usr/bin/codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/payload/OpenCodeX Desktop/OpenCodeX Desktop.app"
+      ],
+      "command": "/usr/bin/codesign --verify --deep --strict --verbose=2 '/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/payload/OpenCodeX Desktop/OpenCodeX Desktop.app'",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "--prepared:/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/payload/OpenCodeX Desktop/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n--validated:/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/payload/OpenCodeX Desktop/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/payload/OpenCodeX Desktop/OpenCodeX Desktop.app: valid on disk\n/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/payload/OpenCodeX Desktop/OpenCodeX Desktop.app: satisfies its Designated Requirement\n",
+      "elapsedSeconds": 0.171
+    },
+    {
+      "argv": [
+        "/usr/bin/hdiutil",
+        "create",
+        "-srcfolder",
+        "/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/payload",
+        "-volname",
+        "OpenCodeX Desktop 0.2.23",
+        "-fs",
+        "HFS+",
+        "-format",
+        "UDZO",
+        "/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/verified-candidate.dmg"
+      ],
+      "command": "/usr/bin/hdiutil create -srcfolder /private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/payload -volname 'OpenCodeX Desktop 0.2.23' -fs HFS+ -format UDZO /private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/verified-candidate.dmg",
+      "timeoutSeconds": 600,
+      "returncode": 0,
+      "stdout": "created: /private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/verified-candidate.dmg\n",
+      "stderr": "hdiutil: WARNING: 'hdiutil create -volname -format ...' is deprecated. Please use 'diskutil image create from/blank --volumeName --format ...' instead.\n",
+      "elapsedSeconds": 23.137
+    },
+    {
+      "argv": [
+        "/usr/bin/hdiutil",
+        "verify",
+        "/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/verified-candidate.dmg"
+      ],
+      "command": "/usr/bin/hdiutil verify /private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/verified-candidate.dmg",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "stdout": "正在检查“Protective Master Boot Record（MBR：0）”的校验和…\nProtective Master Boot Record（MBR：0）：已验证CRC32 $903CAC69\n正在检查“GPT Header（Primary GPT Header：1）”的校验和…\n    GPT Header（Primary GPT Header：1）：已验证CRC32 $F61C3528\n正在检查“GPT Partition Data（Primary GPT Table：2）”的校验和…\nGPT Partition Data（Primary GPT Table：已验证CRC32 $8D21425C\n正在检查“（Apple_Free：3）”的校验和…\n                      （Apple_Free：3）：已验证CRC32 $00000000\n正在检查“disk image（Apple_HFS：4）”的校验和…\n             disk image（Apple_HFS：4）：已验证CRC32 $E72127EF\n正在检查“（Apple_Free：5）”的校验和…\n                      （Apple_Free：5）：已验证CRC32 $00000000\n正在检查“GPT Partition Data（Backup GPT Table：6）”的校验和…\nGPT Partition Data（Backup GPT Table：：已验证CRC32 $8D21425C\n正在检查“GPT Header（Backup GPT Header：7）”的校验和…\n     GPT Header（Backup GPT Header：7）：已验证CRC32 $1253ECB4\n已验证CRC32 $972FA3F6\n",
+      "stderr": "hdiutil: verify: checksum of \"/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/verified-candidate.dmg\" is VALID\n",
+      "elapsedSeconds": 2.217
+    },
+    {
+      "argv": [
+        "/usr/bin/hdiutil",
+        "attach",
+        "/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/verified-candidate.dmg",
+        "-readonly",
+        "-nobrowse",
+        "-noautoopen",
+        "-noautofsck",
+        "-mountpoint",
+        "/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/mounted",
+        "-plist"
+      ],
+      "command": "/usr/bin/hdiutil attach /private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/verified-candidate.dmg -readonly -nobrowse -noautoopen -noautofsck -mountpoint /private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/mounted -plist",
+      "timeoutSeconds": 120,
+      "returncode": 0,
+      "stdout": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n<plist version=\"1.0\">\n<dict>\n\t<key>system-entities</key>\n\t<array>\n\t\t<dict>\n\t\t\t<key>content-hint</key>\n\t\t\t<string>Apple_HFS</string>\n\t\t\t<key>dev-entry</key>\n\t\t\t<string>/dev/disk6s1</string>\n\t\t\t<key>mount-point</key>\n\t\t\t<string>/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/mounted</string>\n\t\t\t<key>potentially-mountable</key>\n\t\t\t<true/>\n\t\t\t<key>unmapped-content-hint</key>\n\t\t\t<string>48465300-0000-11AA-AA11-00306543ECAC</string>\n\t\t\t<key>volume-kind</key>\n\t\t\t<string>hfs</string>\n\t\t</dict>\n\t\t<dict>\n\t\t\t<key>content-hint</key>\n\t\t\t<string>GUID_partition_scheme</string>\n\t\t\t<key>dev-entry</key>\n\t\t\t<string>/dev/disk6</string>\n\t\t\t<key>potentially-mountable</key>\n\t\t\t<false/>\n\t\t\t<key>unmapped-content-hint</key>\n\t\t\t<string>GUID_partition_scheme</string>\n\t\t</dict>\n\t</array>\n</dict>\n</plist>\n",
+      "stderr": "hdiutil: WARNING: 'hdiutil attach -readonly -nobrowse -mountpoint ...' is deprecated. Please use 'diskutil image attach --readOnly --mountOptions nobrowse --mountPoint ...' instead.\n",
+      "elapsedSeconds": 0.208
+    },
+    {
+      "argv": [
+        "/usr/bin/codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/mounted/OpenCodeX Desktop/OpenCodeX Desktop.app"
+      ],
+      "command": "/usr/bin/codesign --verify --deep --strict --verbose=2 '/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/mounted/OpenCodeX Desktop/OpenCodeX Desktop.app'",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "--prepared:/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/mounted/OpenCodeX Desktop/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n--validated:/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/mounted/OpenCodeX Desktop/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/mounted/OpenCodeX Desktop/OpenCodeX Desktop.app: valid on disk\n/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/mounted/OpenCodeX Desktop/OpenCodeX Desktop.app: satisfies its Designated Requirement\n",
+      "elapsedSeconds": 0.314
+    },
+    {
+      "argv": [
+        "/usr/bin/hdiutil",
+        "detach",
+        "/private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/mounted"
+      ],
+      "command": "/usr/bin/hdiutil detach /private/tmp/ocxd023-218-release-dmg-ats40g9l/.ocxd023-macos-package-y27gbuuy/mounted",
+      "timeoutSeconds": 120,
+      "returncode": 0,
+      "stdout": "\"disk6\" ejected.\n",
+      "stderr": "hdiutil: WARNING: 'hdiutil detach ...' is deprecated. Please use 'diskutil eject ...' instead.\n",
+      "elapsedSeconds": 0.155
+    },
+    {
+      "argv": [
+        "/usr/bin/codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=2",
+        "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app"
+      ],
+      "command": "/usr/bin/codesign --verify --deep --strict --verbose=2 '/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app'",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "--prepared:/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n--validated:/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app: valid on disk\n/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app: satisfies its Designated Requirement\n",
+      "elapsedSeconds": 0.171
+    }
+  ],
+  "cleanup": {
+    "ownMountDetached": true,
+    "scratchRemoved": true,
+    "outputPublished": true
+  },
+  "installationPerformed": false,
+  "releaseAcceptance": false,
+  "sourceInfo": {
+    "CFBundleShortVersionString": "0.2.23",
+    "CFBundleVersion": "0.2.23",
+    "CFBundleIdentifier": "com.gzers.opencodex.desktop",
+    "CFBundleExecutable": "opencodex-desktop"
+  },
+  "sourceAppTreeSha256": "aee5360edff91055d3e3b8ac728e45526260a68a9487fa74b0b8ed849bf4edb7",
+  "mountedInfo": {
+    "CFBundleShortVersionString": "0.2.23",
+    "CFBundleVersion": "0.2.23",
+    "CFBundleIdentifier": "com.gzers.opencodex.desktop",
+    "CFBundleExecutable": "opencodex-desktop"
+  },
+  "mountedAppTreeSha256": "aee5360edff91055d3e3b8ac728e45526260a68a9487fa74b0b8ed849bf4edb7",
+  "mountedTopLevel": [
+    "Install.txt",
+    "OpenCodeX Desktop"
+  ],
+  "readOnlyVerified": true,
+  "appNeverLaunched": true,
+  "runtimeAbsentBesideApp": true,
+  "sourceUnchanged": true,
+  "artifactSha256": "cd3e2c6d0abdc2d08112035681794f1c4b0f66083c124da3c3e5ec7f07dc2907",
+  "artifactBytes": 262800012
+}
