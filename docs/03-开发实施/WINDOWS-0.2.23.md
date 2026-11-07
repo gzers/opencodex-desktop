@@ -13,6 +13,16 @@
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
 - 此为0.2.23实施基线，尚非最终安装候选；版本清单仍待L0统一更新。是否取得新代码以完整SHA及实际diff为准，不能仅看软件显示版本。
 
+## R21 release普通首装发现环境链未闭，继续修正（2026-11-07）
+
+773release应用实际构建/包签名与整文件夹DMG只读挂载验证通过，DMG262723533bytes/SHA25692bd9d62a2969d76724eea99419ab71d667593a0ddcd661e1717623a8dd6774c，sealed source不变，own mount/scratch清理。此为候选，不是公开/更新签名制品通过。
+
+Main在临时完整安装文件夹与独立HOME、OS拒绝网络/真实HOME下实际normal启动，未启用OPENCODEX_SANDBOX；v2U/D/H与指针正确，随包程序供应线程最终日志integrated runtime provisioned and verified，RuntimeStore managed路径为该I/runtime/bin/ocx，版本2.97.0-desktop023.names.1，无旧根创建。原先只等package/store落盘过早取样不够，已保留其局部pass而不当最终首装通过。
+
+等待线程完成及3秒后实际原生首页仍“缺少Node.js/Homebrew旧指引”。定位commands::discovery默认null仍default_paths旧HOME/.nvm/.volta/brew候选，而不是本版实际I/runtime；runtime-source-changed监听只读来源卡片，未重新发现环境。该产品可用首装门不通过，L1独占commands/discovery及tests修固定受管程序解析，L3根壳刷新/旧指引按producer事实修，Main最终原生及release再验。不能改成依赖用户安装系统Node，也不扫描旧路径兜底。[r32release/实际normal首装及矛盾截图](../../.adg/evidence/0.2.23/team/L0/r32-release-firststart-managed-discovery-gap-20261107/manifest.json)。
+
+前序47ebWindows候选42315908693回归步骤failure，正在保留凭据/证据；新773候选42319672971仍回归运行。未取原日志不猜产品失败原因、不改测试门或重新跑未修复源；全部未过项保持，未发布。
+
 ## R20 同源回归已过，新Windows完整候选仍待（2026-11-07）
 
 明确源码7730073e96999382697fe2ad8dd8f877352c75a3完整前端214文件1576项、typecheck/build过；workspace全部binary51groups共2191过/0失败/36条件忽略，核心库1952过，strictClippy过。初始最后doctest因并行candidate构建切换共享Tauri依赖产物E0463失败，原整体exit101保留；不再并发构建后独立cargo--doc实际exit0(0tests)，只补失败范围，不重复2191项。[r31原日志与摘要](../../.adg/evidence/0.2.23/team/L0/r31-full-integrated-regression-20261107/manifest.json)。实际native UI/安装告警的证据仍归r27/r29，不把这份回归夸成发布通过。

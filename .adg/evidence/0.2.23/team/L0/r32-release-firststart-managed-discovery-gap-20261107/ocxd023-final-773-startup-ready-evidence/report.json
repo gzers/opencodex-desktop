@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "kind": "isolated release-profile ordinary first start from whole installation folder",
+  "app": "/private/tmp/ocxd023-final-773-complete-firststart-mvxkdk3z/OpenCodeX Desktop.app",
+  "root": "/private/tmp/ocxd023-native-startup-ux339ald",
+  "version": "0.2.23",
+  "checks": [
+    "actual native process stayed alive through startup metadata",
+    "actual sandbox U/data desktop and opencodex/home split with fixed v2 pointer",
+    "actual normal startup provisions pinned offline runtime from copied release resources",
+    "no legacy .opencodex or retired D/opencodex-home created"
+  ],
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "visualChecks": "separate visual review required",
+  "pid": 63172,
+  "pointer": {
+    "schemaVersion": 1,
+    "activeRoot": "/private/tmp/ocxd023-native-startup-ux339ald/home/.codex-desktop"
+  },
+  "metadata": {
+    "structure_version": "2",
+    "opencodex_home_mode": "inside"
+  },
+  "startupEvent": "2026-11-07T01:00:56.150Z [manager] startup version=0.2.23 commit=7730073e96999382697fe2ad8dd8f877352c75a3",
+  "provisionedRuntimeVersion": "2.97.0-desktop023.names.1",
+  "runtimeSource": {
+    "schema_version": 1,
+    "source": "managed",
+    "path": "/private/tmp/ocxd023-final-773-complete-firststart-mvxkdk3z/runtime/bin/ocx",
+    "resolved_version": "2.97.0-desktop023.names.1",
+    "resolved_at": "2026-11-07T01:00:58Z",
+    "history": []
+  },
+  "result": "pass",
+  "ownedExit": -15,
+  "binarySha256": "9d1112d426f19165e100b17bdbe14ad09582f70262897b1229fd221b25bb2963",
+  "cleanup": "task-owned subprocess exited; sandbox evidence root removed after recording"
+}
