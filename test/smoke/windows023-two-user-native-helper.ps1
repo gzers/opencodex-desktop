@@ -161,6 +161,10 @@ function Invoke-TwoUserCli([string]$Cli,[string[]]$Arguments) {
   if(!$p.WaitForExit(20000)){
    Stop-TwoUserTracked (Get-TwoUserProcessFact $p ([Security.Principal.WindowsIdentity]::GetCurrent().User.Value));throw 'CLI deadline'
   }
+  if($c.diagnosticSweep){
+   $commandName=($Arguments -join '-').Replace('/','_').Replace([string][char]92,'_')
+   Write-TwoUserJson (Join-Path $out ('cli-'+$commandName+'.json')) @{exitCode=$p.ExitCode;stdout=$stdout.GetAwaiter().GetResult();stderr=$stderr.GetAwaiter().GetResult();pid=$p.Id;accepted=$false;command=$Arguments}
+  }
   if($p.ExitCode -ne 0){throw 'Candidate CLI did not confirm same-user status'}
   $json=$stdout.GetAwaiter().GetResult()|ConvertFrom-Json
   if($json.ok -ne $true -or $json.schema_version -ne 1){throw 'Actual CLI JSON failed'}
@@ -693,6 +697,9 @@ function Invoke-TwoUserChild([string]$InputFile) {
    $document=if(Test-Path -LiteralPath $prefs){Get-Content -LiteralPath $prefs -Raw|ConvertFrom-Json -AsHashtable}else{@{schema_version=2}}
    $document.cli=@{cli_enabled=$true};$document.shell=@{auto_panel=$false;launch_main=$true;launch_with_codex=$false};$document.updates=@{app_update_auto_check=$false}
    $document|ConvertTo-Json -Depth 12|Set-Content -LiteralPath $prefs -Encoding utf8
+   Copy-Item -LiteralPath $prefs -Destination (Join-Path $out 'explicit-test-preferences.before-restart.json')
+   $prefObservation=Get-Content -LiteralPath $prefs -Raw|ConvertFrom-Json
+   if($prefObservation.cli.cli_enabled -ne $true -or $prefObservation.schema_version -ne 2){throw 'Explicit isolated CLI preference fixture did not roundtrip'}
    $manager=& $start
    $windowDeadline=[datetime]::UtcNow.AddSeconds(40);$liveWindow=$null
    do{try{$liveWindow=Get-TwoUserWindow $manager.fact}catch{Start-Sleep -Milliseconds 250}}while(!$liveWindow -and [datetime]::UtcNow -lt $windowDeadline)
@@ -764,6 +771,7 @@ function Invoke-TwoUserChild([string]$InputFile) {
    $duplicatePid=$duplicateProcess.Id;$duplicateExit=$duplicateProcess.ExitCode
   }finally{$duplicateProcess.Dispose()}
   $null=Assert-TwoUserLive $manager.fact;$after=Get-TwoUserWindow $manager.fact
+  if($c.diagnosticSweep){Write-TwoUserJson (Join-Path $out 'single-instance-window-readback.json') @{original=$live.window;after=$after;manager=$manager.fact;duplicatePid=$duplicatePid;duplicateExit=$duplicateExit;accepted=$false}}
   if($after.handle -cne $live.window.handle){throw 'Original window changed'}
   foreach($f in @($pointer,$metadata)){if((Get-FileHash -LiteralPath $f).Hash -cne $before[$f]){throw 'Duplicate changed pointer/metadata'}}
   $lockAfter=Get-Item -LiteralPath $lockFile
@@ -870,6 +878,7 @@ function Invoke-TwoUserChild([string]$InputFile) {
    $duplicatePid=$duplicateProcess.Id;$duplicateExit=$duplicateProcess.ExitCode
   }finally{$duplicateProcess.Dispose()}
   $null=Assert-TwoUserLive $manager.fact;$after=Get-TwoUserWindow $manager.fact
+  if($c.diagnosticSweep){Write-TwoUserJson (Join-Path $out 'single-instance-window-readback.json') @{original=$live.window;after=$after;manager=$manager.fact;duplicatePid=$duplicatePid;duplicateExit=$duplicateExit;accepted=$false}}
   if($after.handle -cne $live.window.handle){throw 'Original window changed'}
   foreach($f in @($pointer,$metadata)){if((Get-FileHash -LiteralPath $f).Hash -cne $before[$f]){throw 'Duplicate changed pointer/metadata'}}
   $lockAfter=Get-Item -LiteralPath $lockFile
@@ -906,6 +915,7 @@ function Invoke-TwoUserChild([string]$InputFile) {
     if($file.Length -le 8MB -and !($file.Attributes -band [IO.FileAttributes]::ReparsePoint)){Copy-Item -LiteralPath $file.FullName -Destination (Join-Path $retainedLogs $file.Name)}
    }
   }
+  if($c.diagnosticSweep -and (Test-Path -LiteralPath (Join-Path $root 'manager-state/preferences.json'))){Copy-Item -LiteralPath (Join-Path $root 'manager-state/preferences.json') -Destination (Join-Path $out 'explicit-test-preferences.after-checks.json')}
   if($c.diagnosticSweep -and (Test-Path -LiteralPath (Join-Path $installed 'sweep-filesystem.exe'))){
    try{& (Join-Path $installed 'sweep-filesystem.exe') $installed $root *> (Join-Path $out 'filesystem-observations.log')}catch{$result.filesystemObserverError=$_.Exception.GetType().FullName}
   }

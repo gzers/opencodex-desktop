@@ -5,7 +5,7 @@ fn quoted(s:&str)->String{let mut out=String::from("\"");for c in s.chars(){matc
 fn report(name:&str,path:&Path,result:Result<String,std::io::Error>){match result{Ok(value)=>println!("{{\"probe\":{},\"path\":{},\"status\":\"pass\",\"value\":{},\"accepted\":false}}",quoted(name),quoted(&path.to_string_lossy()),quoted(&value)),Err(error)=>println!("{{\"probe\":{},\"path\":{},\"status\":\"fail\",\"firstError\":{},\"osError\":{},\"accepted\":false}}",quoted(name),quoted(&path.to_string_lossy()),quoted(&error.to_string()),error.raw_os_error().map(|n|n.to_string()).unwrap_or("null".into()))}}
 fn inspect(path:&Path){let mut current=PathBuf::new();for component in path.components(){current.push(component);report("same-component-symlink-metadata",&current,fs::symlink_metadata(&current).map(|m|format!("directory={} file={} symlink={}",m.is_dir(),m.is_file(),m.file_type().is_symlink())))}report("canonicalize",path,fs::canonicalize(path).map(|p|p.to_string_lossy().to_string()));}
 fn main(){let args=env::args_os().skip(1).map(PathBuf::from).collect::<Vec<_>>();if args.len()!=2{std::process::exit(2)}
- for p in &args{inspect(p)}
+ for p in &args{inspect(p);if let Ok(canonical)=fs::canonicalize(p){inspect(&canonical)}}
  let install=&args[0];let descriptor=install.join("runtime-bundle/runtime-bundle.manifest.json");report("read-descriptor",&descriptor,fs::read(&descriptor).map(|b|format!("bytes={}",b.len())));
  // CreateNew only in the explicit new test-owned private program copy. Keep
  // independent lock/flush results; remove just this exact owned file after drop.

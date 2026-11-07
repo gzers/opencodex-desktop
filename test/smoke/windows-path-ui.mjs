@@ -115,6 +115,7 @@ export async function verifyWindowsPathUi(call, output, sandbox){
     report.freshPreferencesSavedThroughProductionApi=true
     await click('生成备份')
     await wait("!!document.querySelector('.backup-records li')")
+    await wait("[...document.querySelectorAll('.backup-files tbody button')].some(b=>b.textContent.trim()==='打开目录'&&!b.disabled&&b.getClientRects().length)")
     await click('打开目录','.backup-files tbody')
     report.backupConfirmation=await confirmNativeBackupDirectory({wait,click},about.version)
     report.openedTargets.push(win32.join(config.currentDataRoot,'backups'))
