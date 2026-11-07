@@ -1,0 +1,18 @@
+{
+  "run": 42370159063,
+  "job": 128396437836,
+  "source": "e7b3961d08542a4bae083bebaf4c29e78b8e79a5",
+  "terminal": "failure",
+  "passed": "real wizard/offline preview plus all eight exact original path strings/statuses and details values",
+  "failure": "multiline clipboard exact text comparison timed out; original readback was not retained by earlier tool, so CRLF transport remains hypothesis until next actual readback",
+  "followup": "a99d123e2 test tooling preserves actual clipboard text/expected and failure screenshot; accepts only CF_UNICODETEXT CRLF-to-LF transport while every path character, line order and count remain exact",
+  "localTests": 81,
+  "productChanged": false,
+  "artifact": {
+    "id": 13572729070,
+    "apiBytes": 222952,
+    "apiSha256": "bb0d5e87eba6436a124eaf951e78f9f9d5db7f1cb0717a0f43fb750293163333",
+    "wholeZipLocallyHashed": false
+  },
+  "releaseAcceptance": false
+}

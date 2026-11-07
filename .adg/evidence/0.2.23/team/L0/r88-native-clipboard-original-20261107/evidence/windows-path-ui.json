@@ -1,0 +1,55 @@
+{
+  "result": "fail",
+  "checks": [
+    "023 complete original U/D/H/program path identities and actual statuses agree byte-for-byte with production snapshot; no retired editable root input"
+  ],
+  "rawDataRoot": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\data\\desktop",
+  "pathSnapshot": {
+    "schemaVersion": 1,
+    "aggregateRoot": {
+      "path": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\data",
+      "status": "valid"
+    },
+    "desktopRoot": {
+      "path": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\data\\desktop",
+      "status": "valid"
+    },
+    "opencodexHome": {
+      "path": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\data\\opencodex\\home",
+      "status": "valid"
+    },
+    "configPath": {
+      "path": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\data\\opencodex\\home\\config.json",
+      "status": "missing"
+    },
+    "installationRoot": {
+      "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\program",
+      "status": "valid"
+    },
+    "runtimePrefix": {
+      "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\program\\runtime/opencodex",
+      "status": "missing"
+    },
+    "runtimeEntry": {
+      "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\program\\runtime/bin/ocx.cmd",
+      "status": "missing"
+    },
+    "managerExecutable": {
+      "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\opencodex-desktop.exe",
+      "status": "valid"
+    },
+    "program": {
+      "packageVersion": null,
+      "manifestVersion": null,
+      "sourceVersion": null,
+      "consistency": "missing"
+    },
+    "currentAggregateRoot": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\data",
+    "pendingRestart": false
+  },
+  "openedTargets": [],
+  "documentFocusEmulated": true,
+  "isolatedClipboardPermissionGranted": true,
+  "error": "Error: native path UI wait: (async()=>{const text=await Promise.race([navigator.clipboard.readText(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('isolated clipboard permission deadline')),5000))]);return text===\"\\\\\\\\?\\\\D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-ui-diagnostic\\\\OpenCodeX Native 中文 Spaces\\\\data\\n\\\\\\\\?\\\\D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-ui-diagnostic\\\\OpenCodeX Native 中文 Spaces\\\\data\\\\desktop\\n\\\\\\\\?\\\\D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-ui-diagnostic\\\\OpenCodeX Native 中文 Spaces\\\\data\\\\opencodex\\\\home\\n\\\\\\\\?\\\\D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-ui-diagnostic\\\\OpenCodeX Native 中文 Spaces\\\\data\\\\opencodex\\\\home\\\\config.json\\nD:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-ui-diagnostic\\\\OpenCodeX Native 中文 Spaces\\\\program\\nD:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\apps\\\\desktop\\\\tauri\\\\target\\\\debug\\\\opencodex-desktop.exe\\nD:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-ui-diagnostic\\\\OpenCodeX Native 中文 Spaces\\\\program\\\\runtime/opencodex\\nD:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-ui-diagnostic\\\\OpenCodeX Native 中文 Spaces\\\\program\\\\runtime/bin/ocx.cmd\"?text:false})()\n    at wait (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-path-ui.mjs:28:11)\n    at async verifyWindowsPathUi (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-path-ui.mjs:93:18)\n    at async file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-install-recovery.mjs:83:3",
+  "clipboardRestored": true
+}

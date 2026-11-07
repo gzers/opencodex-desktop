@@ -1,0 +1,21 @@
+{
+  "result": "fail",
+  "screenshots": [],
+  "checks": [],
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.2.23",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "layout": {
+    "physicalRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces",
+    "dataRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\data\\desktop",
+    "userHome": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\home",
+    "opencodexHome": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\data\\opencodex\\home",
+    "installationRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\program"
+  },
+  "error": "Error: native path UI wait: (async()=>{const text=await Promise.race([navigator.clipboard.readText(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('isolated clipboard permission deadline')),5000))]);return text===\"\\\\\\\\?\\\\D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-ui-diagnostic\\\\OpenCodeX Native 中文 Spaces\\\\data\\n\\\\\\\\?\\\\D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-ui-diagnostic\\\\OpenCodeX Native 中文 Spaces\\\\data\\\\desktop\\n\\\\\\\\?\\\\D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-ui-diagnostic\\\\OpenCodeX Native 中文 Spaces\\\\data\\\\opencodex\\\\home\\n\\\\\\\\?\\\\D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-ui-diagnostic\\\\OpenCodeX Native 中文 Spaces\\\\data\\\\opencodex\\\\home\\\\config.json\\nD:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-ui-diagnostic\\\\OpenCodeX Native 中文 Spaces\\\\program\\nD:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\apps\\\\desktop\\\\tauri\\\\target\\\\debug\\\\opencodex-desktop.exe\\nD:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-ui-diagnostic\\\\OpenCodeX Native 中文 Spaces\\\\program\\\\runtime/opencodex\\nD:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-ui-diagnostic\\\\OpenCodeX Native 中文 Spaces\\\\program\\\\runtime/bin/ocx.cmd\"?text:false})()\n    at wait (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-path-ui.mjs:28:11)\n    at async verifyWindowsPathUi (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-path-ui.mjs:93:18)\n    at async file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-install-recovery.mjs:83:3"
+}
