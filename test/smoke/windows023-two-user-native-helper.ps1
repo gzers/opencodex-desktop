@@ -561,6 +561,40 @@ function Invoke-TwoUserSweepCheck([string]$Name,[scriptblock]$Action){
  if(Test-Path -LiteralPath $path){throw 'Preserve earlier per-user diagnostic record'}
  Write-TwoUserJson $path $record
 }
+function Get-TwoUserAncestorOpenProbe([string[]]$Paths) {
+ if(!('OcxAncestorOpenProbe' -as [type])) {
+  Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
+public static class OcxAncestorOpenProbe {
+ [StructLayout(LayoutKind.Sequential)] public struct Info {
+  public uint attrs,createdLow,createdHigh,accessLow,accessHigh,writeLow,writeHigh;
+  public uint volume,sizeHigh,sizeLow,links,indexHigh,indexLow;
+ }
+ public sealed class Result {public string path,access;public uint flags=0x02200000,share=3;public bool openOk,infoOk;public int openError,infoError;public uint attributes,links,type;}
+ [DllImport("kernel32.dll",CharSet=CharSet.Unicode,ExactSpelling=true,SetLastError=true)] static extern SafeFileHandle CreateFileW(string path,uint access,uint share,IntPtr security,uint disposition,uint flags,IntPtr template);
+ [DllImport("kernel32.dll",SetLastError=true)] static extern bool GetFileInformationByHandle(SafeFileHandle handle,out Info info);
+ [DllImport("kernel32.dll",SetLastError=true)] static extern uint GetFileType(SafeFileHandle handle);
+ public static Result Probe(string path,uint access) {
+  var r=new Result{path=path,access="0x"+access.ToString("x8")};
+  using(var handle=CreateFileW(path,access,3,IntPtr.Zero,3,0x02200000,IntPtr.Zero)) {
+   r.openOk=!handle.IsInvalid;r.openError=r.openOk?0:Marshal.GetLastWin32Error();
+   if(r.openOk){Info info;r.infoOk=GetFileInformationByHandle(handle,out info);r.infoError=r.infoOk?0:Marshal.GetLastWin32Error();if(r.infoOk){r.attributes=info.attrs;r.links=info.links;}r.type=GetFileType(handle);}
+  }
+  return r;
+ }
+}
+'@
+ }
+ $rows=@()
+ foreach($path in $Paths|Select-Object -Unique) {
+  foreach($access in @([uint32]2147614720,[uint32]2147483648,[uint32]128,[uint32]131200)) {
+   $rows += [OcxAncestorOpenProbe]::Probe($path,$access)
+  }
+ }
+ return $rows
+}
 function Invoke-TwoUserChild([string]$InputFile) {
  Assert-TwoUserChildGuard
  $c=Get-Content -LiteralPath $InputFile -Raw|ConvertFrom-Json
@@ -574,6 +608,8 @@ function Invoke-TwoUserChild([string]$InputFile) {
  if($nativeProfile -ine $c.profile -or (Split-Path -Leaf $nativeProfile) -notlike 'ocxacc*'){throw 'Registered temporary Profile differs'}
  foreach($key in @('OPENCODEX_SANDBOX','OPENCODEX_SANDBOX_ROOT','OPENCODEX_WINDOWS_SMOKE_CDP_PORT','HOME','OPENCODEX_HOME','CODEX_HOME','WEBVIEW2_USER_DATA_FOLDER','WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS')){[Environment]::SetEnvironmentVariable($key,$null,'Process')}
  $out=$c.evidence;$code=$c.code;$installed=Join-Path $env:LOCALAPPDATA 'Programs/OpenCodeX Desktop'
+ $ancestorProbe=Get-TwoUserAncestorOpenProbe @(('D:'+ [char]92),[IO.Path]::GetPathRoot($nativeProfile),$nativeProfile)
+ Write-TwoUserJson (Join-Path $out 'ancestor-open-probe.json') @{sid=$sid;profile=$nativeProfile;readOnly=$true;results=@($ancestorProbe)}
  $null=Assert-TwoUserUnder $nativeProfile $installed
  if(Test-Path -LiteralPath $installed){throw 'Fresh per-user installation required'}
  New-Item -ItemType Directory -Path $installed|Out-Null
