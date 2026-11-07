@@ -16,6 +16,13 @@ try {
     foreach ($taskName in @('runtime-bundle-0.2.23-win32-x64.tar.gz','maintained-runtime.tgz','runtime-bundle.manifest.json','runtime-bundle.manifest.sha256')) {
         'synthetic compiler fixture, not an installable runtime' | Set-Content (Join-Path 'resources/runtime-bundle' $taskName)
     }
+    # stage_runtime_bundle_023.py normally generates this ignored override.
+    # Preserve its exact resource mapping without preparing an actual runtime.
+    @{bundle=@{resources=@{
+        'resources/LICENSE'='resources/LICENSE'
+        'resources/THIRD-PARTY-NOTICES.txt'='resources/THIRD-PARTY-NOTICES.txt'
+        'resources/runtime-bundle/'='runtime-bundle/'
+    }}} | ConvertTo-Json -Depth 5 | Set-Content tauri.runtime-bundle.conf.json
     $taskCli = Join-Path (npm root --global) '@tauri-apps/cli/tauri.js'
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     # Bundle renders the actual repository template without a Rust build.
