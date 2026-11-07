@@ -1,0 +1,482 @@
+pass-runtime-pure-fixtures-only
+{
+  "schemaVersion": 1,
+  "result": "pass-static-only",
+  "checks": [
+    {
+      "name": "empty-ledger-is-a-real-JSON-array-not-missing-file",
+      "result": "pass"
+    },
+    {
+      "name": "single-ledger-retains-array-container",
+      "result": "pass"
+    },
+    {
+      "name": "parse-windows023-two-user-native.ps1",
+      "result": "pass"
+    },
+    {
+      "name": "no-reserved-variable-assignment-windows023-two-user-native.ps1",
+      "result": "pass"
+    },
+    {
+      "name": "parse-windows023-two-user-native-helper.ps1",
+      "result": "pass"
+    },
+    {
+      "name": "no-reserved-variable-assignment-windows023-two-user-native-helper.ps1",
+      "result": "pass"
+    },
+    {
+      "name": "parse-windows023-two-user-native.test.ps1",
+      "result": "pass"
+    },
+    {
+      "name": "no-reserved-variable-assignment-windows023-two-user-native.test.ps1",
+      "result": "pass"
+    },
+    {
+      "name": "reuse-original-native-types",
+      "result": "pass"
+    },
+    {
+      "name": "reuse-real-SID-profile-bootstrap",
+      "result": "pass"
+    },
+    {
+      "name": "no-sandbox-startup-tail",
+      "result": "pass"
+    },
+    {
+      "name": "native-interop-managed-compile-only",
+      "result": "pass"
+    },
+    {
+      "name": "generated-bootstrap-parses",
+      "result": "pass"
+    },
+    {
+      "name": "upstream-reuse-drift-fails-closed",
+      "result": "pass"
+    },
+    {
+      "name": "actual-runtime-policy-preserves-empty-npm-root-key",
+      "result": "pass"
+    },
+    {
+      "name": "actual-runtime-policy-reader-is-read-only",
+      "result": "pass"
+    },
+    {
+      "name": "both-native-controllers-consume-same-dictionary-policy-reader",
+      "result": "pass"
+    },
+    {
+      "name": "CI-guard-before-mutation",
+      "result": "pass"
+    },
+    {
+      "name": "ephemeralGuard-before-any-account-and-child-recheck",
+      "result": "pass"
+    },
+    {
+      "name": "isolated-CLI-restart-preserves-visible-main-window",
+      "result": "pass"
+    },
+    {
+      "name": "controller-native-boundary-reparse-checks",
+      "result": "pass"
+    },
+    {
+      "name": "real-users-loaded-profiles-and-explicit-blocked",
+      "result": "pass"
+    },
+    {
+      "name": "tracked-profile-account-and-ACL-cleanup",
+      "result": "pass"
+    },
+    {
+      "name": "private-runner-output-and-sealed-candidate-readback",
+      "result": "pass"
+    },
+    {
+      "name": "cleanup-requires-four-process-identities",
+      "result": "pass"
+    },
+    {
+      "name": "no-name-port-or-unverified-tree-kill",
+      "result": "pass"
+    },
+    {
+      "name": "no-Set-DnsClient",
+      "result": "pass"
+    },
+    {
+      "name": "no-New-NetFirewallRule",
+      "result": "pass"
+    },
+    {
+      "name": "no-Set-NetFirewall",
+      "result": "pass"
+    },
+    {
+      "name": "no-Stop-Service",
+      "result": "pass"
+    },
+    {
+      "name": "no-Start-Service",
+      "result": "pass"
+    },
+    {
+      "name": "no-Set-Service",
+      "result": "pass"
+    },
+    {
+      "name": "no-Invoke-WebRequest",
+      "result": "pass"
+    },
+    {
+      "name": "no-Start-BitsTransfer",
+      "result": "pass"
+    },
+    {
+      "name": "no-Register-ScheduledTask",
+      "result": "pass"
+    },
+    {
+      "name": "never-enable-sandbox-profile",
+      "result": "pass"
+    },
+    {
+      "name": "actual-candidate-CLI-and-owned-pipe-server",
+      "result": "pass"
+    },
+    {
+      "name": "cross-user-rejection-subscope-labels",
+      "result": "pass"
+    },
+    {
+      "name": "source-pinned-real-node-preflight",
+      "result": "pass"
+    },
+    {
+      "name": "native-pass-only-after-terminal-cleanup",
+      "result": "pass"
+    },
+    {
+      "name": "no-false-complete-runtime-gate",
+      "result": "pass"
+    },
+    {
+      "name": "unavailable-lock-bytes-not-invented",
+      "result": "pass"
+    },
+    {
+      "name": "overlap-is-live-generations-and-visible-owned-windows",
+      "result": "pass"
+    },
+    {
+      "name": "distinct-SID-pipe-name-fixture-only",
+      "result": "pass"
+    },
+    {
+      "name": "reject-non-SID-naming-input",
+      "result": "pass"
+    },
+    {
+      "name": "backend-extended-path-comparison-only",
+      "result": "pass"
+    },
+    {
+      "name": "path-comparison-does-not-confuse-users",
+      "result": "pass"
+    },
+    {
+      "name": "local-path-spelling-accepted-D:\\a\\repo",
+      "result": "pass"
+    },
+    {
+      "name": "local-path-spelling-accepted-C:/Program Files/node/node.exe",
+      "result": "pass"
+    },
+    {
+      "name": "local-path-spelling-accepted-D:\\a/repo\\Cargo.toml",
+      "result": "pass"
+    },
+    {
+      "name": "local-path-spelling-accepted-C:\\Users\\用户\\fixture",
+      "result": "pass"
+    },
+    {
+      "name": "local-path-spelling-refused-",
+      "result": "pass"
+    },
+    {
+      "name": "local-path-spelling-refused-C:relative",
+      "result": "pass"
+    },
+    {
+      "name": "local-path-spelling-refused-relative",
+      "result": "pass"
+    },
+    {
+      "name": "local-path-spelling-refused-C:\\",
+      "result": "pass"
+    },
+    {
+      "name": "local-path-spelling-refused-C:/",
+      "result": "pass"
+    },
+    {
+      "name": "local-path-spelling-refused-\\\\server\\share",
+      "result": "pass"
+    },
+    {
+      "name": "local-path-spelling-refused-\\\\?\\C:\\fixture",
+      "result": "pass"
+    },
+    {
+      "name": "local-path-spelling-refused-\\\\.\\pipe\\fixture",
+      "result": "pass"
+    },
+    {
+      "name": "local-path-spelling-refused-C:\\fixture\\..\\peer",
+      "result": "pass"
+    },
+    {
+      "name": "local-path-spelling-refused-C:/fixture/./peer",
+      "result": "pass"
+    },
+    {
+      "name": "local-path-spelling-refused-C:\\fixture\\file:stream",
+      "result": "pass"
+    },
+    {
+      "name": "local-path-spelling-refused-C:\\fixture\npeer",
+      "result": "pass"
+    },
+    {
+      "name": "CDP-listener-is-owned-not-just-a-port",
+      "result": "pass"
+    },
+    {
+      "name": "actual-controller-refuses-outside-Windows-CI",
+      "result": "pass"
+    },
+    {
+      "name": "actual-runtime-flag-controller-refuses-outside-Windows-CI",
+      "result": "pass"
+    },
+    {
+      "name": "guard-created-no-native-output",
+      "result": "pass"
+    },
+    {
+      "name": "actual-child-refuses-outside-Windows-CI",
+      "result": "pass"
+    },
+    {
+      "name": "generated-real-node-driver-syntax-only",
+      "result": "pass"
+    },
+    {
+      "name": "actual-hash-fixture-detects-change",
+      "result": "pass"
+    },
+    {
+      "name": "tree-root-link-not-followed",
+      "result": "pass"
+    },
+    {
+      "name": "tree-child-link-not-followed",
+      "result": "pass"
+    },
+    {
+      "name": "cleanup-rejects-changed-creation-without-kill",
+      "result": "pass"
+    },
+    {
+      "name": "zero-kills-after-creation-refusal",
+      "result": "pass"
+    },
+    {
+      "name": "cleanup-rejects-changed-image-without-kill",
+      "result": "pass"
+    },
+    {
+      "name": "zero-kills-after-image-refusal",
+      "result": "pass"
+    },
+    {
+      "name": "cleanup-rejects-changed-sid-without-kill",
+      "result": "pass"
+    },
+    {
+      "name": "zero-kills-after-sid-refusal",
+      "result": "pass"
+    },
+    {
+      "name": "cleanup-only-matching-fixture-handle-and-disposes-all",
+      "result": "pass"
+    },
+    {
+      "name": "actual-v2-home-leaf-is-home",
+      "result": "pass"
+    },
+    {
+      "name": "windows-ui-cli-remains-disabled-with-isolated-pipe-fixture",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-port-switch-is-ASCII-explicit-default-off",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-port-flag-bound-to-both-account-children",
+      "result": "pass"
+    },
+    {
+      "name": "actual-A-runtime-controlled-step-order",
+      "result": "pass"
+    },
+    {
+      "name": "actual-B-runtime-controlled-step-order",
+      "result": "pass"
+    },
+    {
+      "name": "unknown-runtime-role-refused",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-full-gate-False-False-not-verified-False",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-full-gate-False-False-not-verified-True",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-full-gate-False-False-verified-runtime-ports-False",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-full-gate-False-False-verified-runtime-ports-True",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-full-gate-False-True-not-verified-False",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-full-gate-False-True-not-verified-True",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-full-gate-False-True-verified-runtime-ports-False",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-full-gate-False-True-verified-runtime-ports-True",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-full-gate-True-False-not-verified-False",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-full-gate-True-False-not-verified-True",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-full-gate-True-False-verified-runtime-ports-False",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-full-gate-True-False-verified-runtime-ports-True",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-full-gate-True-True-not-verified-False",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-full-gate-True-True-not-verified-True",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-full-gate-True-True-verified-runtime-ports-False",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-full-gate-True-True-verified-runtime-ports-True",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-config-written-atomically-by-own-user-Node-under-real-H",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-public-manager-actions-and-production-start-stop-budgets",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-production-attestation-literal-loopback-only",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-conflict-requires-refusal-and-original-A-generation",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-stop-and-fallback-require-exact-owned-launch-generation",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-unproven-cleanup-retains-profile-and-no-port-kill",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-evidence-projects-public-facts-and-controlled-errors-only",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-gate-requires-overlap-B-stop-A-survival-and-terminal-cleanup",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-engine-identity-uses-actual-sibling-bundle-layout",
+      "result": "pass"
+    },
+    {
+      "name": "runtime-real-failures-retain-public-status-and-controlled-codes",
+      "result": "pass"
+    },
+    {
+      "name": "actual-generated-runtime-secret-projection-proof-PID-port-binding-and-empty-config-pure-fixtures",
+      "result": "pass"
+    }
+  ],
+  "checksPassed": 113,
+  "nativeExecuted": false,
+  "accountsCreated": false,
+  "managerStarted": false,
+  "twoSidNativePassed": false,
+  "fullVersionGatePassed": false,
+  "runtimeProxyPortIsolation": "not-verified",
+  "host": "Darwin 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:06:40 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6050",
+  "powershell": "7.5.4",
+  "files": [
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows023-two-user-native.ps1",
+      "sha256": "6960a076d5504803c0f3f646d56e3b49722a3920d4a58190a3adecac5b6db0ad"
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows023-two-user-native-helper.ps1",
+      "sha256": "0815a510fbf6fe8a0c267841efc76d720e323f93d37ba8a01f454838c631c048"
+    },
+    {
+      "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/windows023-two-user-native.test.ps1",
+      "sha256": "08aab556330b1f83f66a52ca1acdd07beff345c565cdae3cd4eddf0073591a3d"
+    }
+  ]
+}

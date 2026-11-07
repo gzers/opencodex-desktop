@@ -1,0 +1,36 @@
+{
+  "ephemeralGuard": {
+    "passed": true,
+    "windows": true,
+    "githubActions": "true",
+    "runnerTemp": "D:\\a\\_temp",
+    "checkedBeforeProvisioning": true
+  },
+  "sid": "S-1-5-21-3289802278-1561746829-1498425070-1005",
+  "profile": "C:\\Users\\ocxacc63be5074c4",
+  "processHome": "C:\\Users\\ocxacc63be5074c4",
+  "localAppData": "C:\\Users\\ocxacc63be5074c4\\AppData\\Local",
+  "desktopRoot": "C:\\Users\\ocxacc63be5074c4\\.codex-desktop\\desktop",
+  "opencodexHome": "C:\\Users\\ocxacc63be5074c4\\.codex-desktop\\opencodex\\home",
+  "installation": "C:\\Users\\ocxacc63be5074c4\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+  "result": "fail",
+  "runtimeProxyVerification": "not-verified",
+  "verifyRuntimePorts": true,
+  "sandbox": false,
+  "failureKind": "System.Management.Automation.RuntimeException",
+  "failureLine": 114,
+  "failureCode": "Native identity/UI/IPC/cleanup assertion failed; inspect stage and retained evidence",
+  "cleanup": [
+    {
+      "process": {
+        "pid": 1880,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1005",
+        "path": "C:\\Users\\ocxacc63be5074c4\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+        "creationTicks": "639296601782188058",
+        "sessionId": 2
+      },
+      "result": "stopped-or-exited"
+    }
+  ],
+  "inventory": "unavailable"
+}

@@ -1,0 +1,16 @@
+{
+  "run": 42383577532,
+  "job": 128436130397,
+  "harness": "a52db4d6f",
+  "productOriginal": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+  "terminal": "failure-two-user-not-ready",
+  "fourInstallerCells": "passed",
+  "twoActualSids": "created; childstderr fromboth actualManagerpanics onemptyOPENCODEX_WINDOWS_SMOKE_CDP_PORT before normalstart",
+  "rootCause": "globalSetEnvironmentVariable(null) fixture clearing left emptytestport inherited in ProcessStartInfo; app correctlyrejectsinvalidinteger",
+  "fixSource": "f182a2d01",
+  "fix": "explicitlyremoveeighttest/environmentoverridekeys from actualchildProcessStartInfo.Environment, assert sandbox/smokeportabsent, then setonlystandardloopbackWebViewdiagnostics; productparserunchanged",
+  "rawReplayHelperProvenance": "copyonlydeclaredhelper intoexactoriginalsourcecheckout; guardonlyonechangedtesthelper and unchangedapps tree; recordhelperSource+SHA, no pretendingcleanoriginaltools",
+  "cleanup": "bothaccount/Profile removed; owntrackedprocess cleanup/desktop/evidenceACL and sealedcandidateunchanged",
+  "ports": "notperformed/notaccepted",
+  "releaseAcceptance": false
+}
