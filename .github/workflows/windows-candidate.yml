@@ -441,7 +441,7 @@ jobs:
           path: test/out/windows-installer-retention
 
   native-ui:
-    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023' && inputs.admission_run != 'msi-compiler-023' && inputs.admission_run != 'native-replay-414' && inputs.admission_run != 'raw-msi-3d-diagnostic' && inputs.admission_run != 'raw-full-0c-diagnostic'
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023' && inputs.admission_run != 'msi-compiler-023' && inputs.admission_run != 'native-replay-414' && inputs.admission_run != 'raw-msi-3d-diagnostic' && inputs.admission_run != 'raw-full-0c-diagnostic' && inputs.admission_run != 'full-bundle-two-user-debug'
     runs-on: windows-latest
     timeout-minutes: 40
     defaults:
@@ -872,3 +872,87 @@ jobs:
             test/out/raw-full0c/evidence/*startup/startup/*.json
             test/out/raw-full0c/evidence/*startup/startup/*.log
             test/out/raw-full0c/evidence/*startup/startup/*.png
+
+  full-bundle-two-user-debug:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run == 'full-bundle-two-user-debug'
+    permissions:
+      contents: read
+      actions: read
+    runs-on: windows-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/tauri -> target
+          shared-key: windows-native-ui-018
+          cache-on-failure: true
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: gzers/opencodex-desktop
+          run-id: 42374536779
+          name: windows-raw-installers-unverified-0c869d9497c102b714dea1ee89394f999da8c4ec
+          path: test/out/full-bundle-two-user-debug/input
+      - name: Stage exact original distribution resources only
+        shell: pwsh
+        run: |
+          $root=(Resolve-Path test/out/full-bundle-two-user-debug/input).Path
+          $receipt=Get-Content (Join-Path $root 'build-identities.json') -Raw|ConvertFrom-Json
+          if($receipt.source -cne '0c869d9497c102b714dea1ee89394f999da8c4ec' -or $receipt.status -cne 'unverified-build-only'){throw 'Original distribution identity differs'}
+          foreach($file in $receipt.files){if((Get-FileHash -LiteralPath (Join-Path $root $file.name)).Hash.ToLowerInvariant() -cne $file.sha256){throw 'Original bytes differ'}}
+          $payload=Join-Path $env:RUNNER_TEMP ('ocxd023-debug-payload-'+[guid]::NewGuid().ToString('N'))
+          $p=Start-Process msiexec.exe -ArgumentList ('/a "'+(Join-Path $root 'OpenCodeX Desktop_0.2.23_x64_en-US.msi')+'" /qn TARGETDIR="'+$payload+'"') -Wait -PassThru
+          if($p.ExitCode -ne 0){throw 'Original resource payload extraction failed'}
+          $images=@(Get-ChildItem $payload -Recurse -Filter opencodex-desktop.exe)
+          if($images.Count -ne 1){throw 'One complete original payload required'}
+          $resources=Join-Path $images[0].DirectoryName 'runtime-bundle'
+          Copy-Item -LiteralPath $resources -Destination apps/desktop/tauri/resources/runtime-bundle -Recurse
+          'OCXD_REQUIRE_RUNTIME_BUNDLE=1' >> $env:GITHUB_ENV
+          'OCXD_DEBUG_PAYLOAD='+$images[0].DirectoryName >> $env:GITHUB_ENV
+      - name: Build current production code with exact complete distribution pin
+        shell: pwsh
+        run: |
+          npm --prefix apps/desktop/ui ci
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+          npm --prefix apps/desktop/ui run build
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+          cargo build --manifest-path apps/desktop/tauri/Cargo.toml --locked --features custom-protocol --bins --jobs 2
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+      - name: Run actual two ordinary users with current binary and original pinned resources
+        shell: pwsh
+        run: |
+          $candidate=Join-Path $env:RUNNER_TEMP ('ocxd023-debug-complete-'+[guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory $candidate|Out-Null
+          Copy-Item apps/desktop/tauri/target/debug/opencodex-desktop.exe,apps/desktop/tauri/target/debug/ocxd.exe -Destination $candidate
+          Copy-Item -LiteralPath (Join-Path $env:OCXD_DEBUG_PAYLOAD 'runtime-bundle') -Destination $candidate -Recurse
+          $driver=Join-Path $env:RUNNER_TEMP ('ocxd023-debug-node-'+[guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory $driver|Out-Null
+          tar -xzf (Join-Path $candidate 'runtime-bundle/runtime-bundle-0.2.23-win32-x64.tar.gz') -C $driver runtime/node
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+          $out=Join-Path $env:RUNNER_TEMP ('ocxd023-debug-users-'+[guid]::NewGuid().ToString('N'))
+          try{ & test/smoke/windows023-two-user-native.ps1 -Executable (Join-Path $candidate 'opencodex-desktop.exe') -Node (Join-Path $driver 'runtime/node/node.exe') -OutputDirectory $out -ExpectedCommit (git rev-parse HEAD).Trim() -VerifyRuntimePorts }
+          finally{if(Test-Path $out){Copy-Item -LiteralPath $out -Destination test/out/full-bundle-two-user-debug/evidence -Recurse}}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: full-bundle-two-user-debug
+          if-no-files-found: error
+          path: |
+            test/out/full-bundle-two-user-debug/input/build-identities.json
+            test/out/full-bundle-two-user-debug/evidence/*.json
+            test/out/full-bundle-two-user-debug/evidence/*.log
+            test/out/full-bundle-two-user-debug/evidence/user1/*.json
+            test/out/full-bundle-two-user-debug/evidence/user1/*.log
+            test/out/full-bundle-two-user-debug/evidence/user1/*/*.json
+            test/out/full-bundle-two-user-debug/evidence/user1/*/*.log
+            test/out/full-bundle-two-user-debug/evidence/user1/*/*.png
+            test/out/full-bundle-two-user-debug/evidence/user2/*.json
+            test/out/full-bundle-two-user-debug/evidence/user2/*.log
+            test/out/full-bundle-two-user-debug/evidence/user2/*/*.json
+            test/out/full-bundle-two-user-debug/evidence/user2/*/*.log
+            test/out/full-bundle-two-user-debug/evidence/user2/*/*.png
