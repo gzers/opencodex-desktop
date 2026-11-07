@@ -1,0 +1,16 @@
+{
+  "run": 42381777679,
+  "job": 128430738917,
+  "harness": "14750059a",
+  "productOriginal": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+  "terminal": "failure",
+  "rootCause": "fixture clearedMSI023InstallDir but actualNSIS uses ownproductkey unnamed value; previous customTEMP still selected",
+  "sourceProof": "nsis023.nsi MANUPRODUCTKEY default value WriteRegStr at714 / RestorePreviousInstallLocation at929",
+  "followup": "6a046e3ca only deletes actual unnamedNSISvalue in CurrentUser32/64 if same exact preceding passed customfixture path; mismatch abort/noforeignSID/nootherpathclear; defaults still nooverride",
+  "localTests": "13releasefixture/15matrix source checks pass",
+  "twoSid": "not reached",
+  "supersededFullRun": 42381856379,
+  "supersededCancellation": "requested due knownfixture failure; notpassed",
+  "productChange": false,
+  "releaseAcceptance": false
+}
