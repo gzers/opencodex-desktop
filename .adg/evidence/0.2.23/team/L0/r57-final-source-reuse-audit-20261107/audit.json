@@ -1,0 +1,33 @@
+{
+  "source": "e29291120d0dbfbd3c23f9f5aba71d327ee6aaa3",
+  "baseline": "8ced5d44212eb2b58e1dca5344c5be7145747377",
+  "changedFiles": [
+    ".github/workflows/windows-candidate.yml",
+    "apps/desktop/tauri/windows/wix023.wxs",
+    "test/smoke/windows023-msi-compiler.ps1",
+    "test/smoke/windows023-retention-ci-admit.test.py"
+  ],
+  "businessSourceOrLockChanges": [],
+  "reusableEvidence": {
+    "backend": "r54 complete workspace 2215 combined /0failed/37ignored",
+    "frontend": "r55 exact8ced frontend CI215files/1590pass",
+    "macNative": "r54 exact8ced first start / visible overview /cleanup; final source-stamped app still rebuilding",
+    "conditionalWindows": "r55 exact943 ordinary49/elevated14/nativecredential pass; final e292 candidate42345195190 remains required"
+  },
+  "originalUpdaterPublicKeyUnchanged": true,
+  "actualStagedMaintainedRuntime": {
+    "version": "2.97.0-desktop023.names.1",
+    "sha256": "afb72a4c792c1ca70a0fcd9209d212c78249281d2d7bc42f8eee63aa4464b26b",
+    "bytes": 15406751
+  },
+  "releaseAssetsVerified": false,
+  "releasePublished": false,
+  "pending": [
+    "final Windows candidate installers actual install/uninstall",
+    "two actual SID managers and separate runtime proxy ports",
+    "five installer retention cells bound to successful exact candidate artifact",
+    "final app and updater artifact signature checks",
+    "adjacent upgrade rollback and public release readback",
+    "formal final requirement-by-requirement acceptance and governed closure"
+  ]
+}
