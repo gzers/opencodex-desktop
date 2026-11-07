@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "kind": "isolated release-profile native bootstrap, visual acceptance separate",
+  "app": "/private/tmp/ocxd023-native-startup-lbx4inv2/home/Applications/OpenCodeX Desktop.app",
+  "root": "/private/tmp/ocxd023-native-startup-lbx4inv2",
+  "version": "0.2.23",
+  "checks": [],
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "visualChecks": "actual native install-location alert",
+  "pid": 40542,
+  "result": "fail",
+  "error": "native guard process exited -6",
+  "ownedExit": -6,
+  "binarySha256": "315d124bac5ca98bab10a43c919aca13c3b43bea15eb25da9ccd8c9b725b89d9",
+  "cleanup": "task-owned subprocess exited; sandbox evidence root removed after recording"
+}

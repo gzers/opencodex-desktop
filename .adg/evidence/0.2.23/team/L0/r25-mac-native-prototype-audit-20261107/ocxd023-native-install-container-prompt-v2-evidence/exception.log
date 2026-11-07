@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ocxd023-native-install-container-prompt-v2.py", line 39, in <module>
+    if proc.poll() is not None:raise RuntimeError('native guard process exited '+str(proc.returncode))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: native guard process exited -6

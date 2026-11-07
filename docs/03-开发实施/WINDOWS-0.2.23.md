@@ -13,6 +13,14 @@
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
 - 此为0.2.23实施基线，尚非最终安装候选；版本清单仍待L0统一更新。是否取得新代码以完整SHA及实际diff为准，不能仅看软件显示版本。
 
+## R18 Mac原生原型对照发现偏差，整版继续修正（2026-11-07）
+
+用户屏幕现解锁，Main以OS阻断网络/真实HOME的任务候选2880实际WKWebView完成模型页、渠道两步、同步file/WebDAV和连接弹窗观察。取消新增/连接未生成config.json，私有沙箱与进程已清理。发现模型页工具栏/状态保存区和技术说明、wizard850宽/阶段标题/两步进度/Key同行未还原原型；file搜索label折行及技术checkbox，未配置WebDAV时rawsync_endpoint_changed和重复连接入口。原组件及CI通过不代表这些原生UI偏差已过，P23-04/07据实回未完成；截图/AX/证据见[r25](../../.adg/evidence/0.2.23/team/L0/r25-mac-native-prototype-audit-20261107/manifest.json)。L3按12f27未替换原型有界修ModelChannels/Wizard，后继sync页独立修，不改原型迎合实现。
+
+后端复核确认assetsReviewed:true人工门是本版重引入，与DMD-UI-020 AC020-01及IMP28既有“连后端人工确认契约一起移除”决策冲突。不能UI静默填true；L2修真实fileTransfer/syncLocal门而保留MCP明确source/digest、路径、secret选择、原O/CAS/并发等保护。不能恢复020已移除的旧sideRef/“全局采用及渠道组顺序”标签冒本版全局refs语义。
+
+另非sandbox原生测试安装容器提示触发AppActivity查询早于manage的panic，Main修早期纯内存注册、不创建D/H/runtime。原失败日志保留，重建后原生复验；当前候选Windows42315908693仍实际跑，但将来共享产品后继须按diff复验，不提前算最终源。
+
 ## R17 普通执行器原生预检已审计通过（2026-11-07）
 
 真实短run42315398563精确HEAD47eb7cf7420ba9127f4d7047e4d83231f826035f终态success：Rustparent2/2和exactchild1/1、retained CreateProcess原生句柄exitCode为integer0、allBinariesAttempted=true；实际普通SID=TokenOwner/Profile/HOME/TEMP、sourceBytesUnchanged、全部DACL与桌面ACL恢复、account/Profile清理均通过。原null退出码缺口已关闭；预检只有一个小binary，不能外推49产品binary或实际安装通过。[r24原ZIP/回执/原生身份](../../.adg/evidence/0.2.23/team/L0/r24-ordinary-preflight-native-verified-20261107/manifest.json)。
