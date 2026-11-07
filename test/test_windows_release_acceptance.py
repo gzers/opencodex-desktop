@@ -9,19 +9,31 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class WindowsReleaseAcceptanceTests(unittest.TestCase):
-    def test_installer_acceptance_admits_known_releases_through_022_only(self):
+    def test_installer_acceptance_admits_known_releases_through_023_only(self):
         script = (ROOT / "test/smoke/windows-release-installers.ps1").read_text(encoding="utf-8")
         match = re.search(r"if\(\$Version -notmatch '([^']+)'\)\{throw 'Unsupported release acceptance version'\}", script)
         self.assertIsNotNone(match, "release version must remain explicitly allowlisted")
         allowed = re.compile(match.group(1))
-        for version in ["0.2.17", "0.2.18", "0.2.19", "0.2.20", "0.2.21", "0.2.22"]:
+        for version in ["0.2.17", "0.2.18", "0.2.19", "0.2.20", "0.2.21", "0.2.22", "0.2.23"]:
             with self.subTest(version=version):
                 self.assertRegex(version, allowed)
-        for version in ["0.2.16", "0.2.23", "0.2.210", "0.3.0", "1.0.0",
+        for version in ["0.2.16", "0.2.24", "0.2.210", "0.3.0", "1.0.0",
                         "v0.2.21", "0.2.021", "0.2.21-rc.1", "0.2.21 ", " 0.2.21"]:
             with self.subTest(version=version):
                 self.assertNotRegex(version, allowed, "unadmitted versions require an explicit acceptance update")
         self.assertLess(match.end(), script.index("& git fetch"))
+
+    def test_023_final_installer_acceptance_keeps_original_signed_bytes_and_server_restore(self):
+        script = (ROOT / "test/smoke/windows-release-installers.ps1").read_text()
+        workflow = (ROOT / ".github/workflows/windows-release-acceptance.yml").read_text().split("  ota:", 1)[0]
+        self.assertIn("asset[0].digest", script)
+        self.assertIn("ExpectedBuiltSha256", script)
+        self.assertIn("Original release identity verification failed", script)
+        self.assertIn("-Mode prepare", workflow)
+        self.assertIn("-Mode restore", workflow)
+        self.assertIn("if: always() && inputs.version == '0.2.23'", workflow)
+        self.assertNotIn("**/*.json", workflow)
+        self.assertIn("node-version: 26.8.1", workflow)
 
     def test_ota_admits_only_explicit_forward_adjacent_releases_through_022(self):
         script = (ROOT / "test/smoke/windows-ota.ps1").read_text(encoding="utf-8")
@@ -99,7 +111,7 @@ class WindowsReleaseAcceptanceTests(unittest.TestCase):
 
     def test_ci_release_exe_smoke_obeys_the_ordinary_token_boundary(self):
         workflow = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
-        step = workflow.split("- name: Windows final EXE smoke", 1)[1].split("- name: Record Node24 driver", 1)[0]
+        step = workflow.split("- name: Windows final EXE smoke", 1)[1].split("- name: Record pinned Node26 driver", 1)[0]
         self.assertIn("windows-ordinary-startup.ps1", step)
         self.assertNotIn("windows-startup.ps1", step)
         self.assertIn("if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }", step)
