@@ -33,7 +33,6 @@ export async function verify023Native(call,output,facts,sandbox){
  let snapshot=await invoke('model_v2_file_snapshot');assert.equal(snapshot.dtoVersion,2);assert.equal(snapshot.library.schemaVersion,2)
  const library=JSON.stringify(snapshot.library),id='gpt-6.1-sol'
  snapshot=await invoke('model_v2_stage_connection',{request:{expected:snapshot.draft?.base??null,expectedSource:snapshot.sourceDigest,expectedLibrary:snapshot.libraryDigest,channelId:null,name:'Native023',url:'https://native023.invalid/v1',authMode:'none',apiKey:null,rawModelIds:[id],selectedModelIds:[id]}})
- snapshot=(await invoke('model_v2_read_existing',{request:{expectedSource:snapshot.sourceDigest,expectedLibrary:snapshot.libraryDigest,expectedDraft:snapshot.draft.base}})).snapshot
  const channel=snapshot.draft.policy.channels.find(c=>c.label==='Native023');assert(channel)
  assert.deepEqual(await readFile(paths.config).catch(e=>{if(e.code==='ENOENT')return null;throw e}),before)
  const request={expected:snapshot.draft.base,edits:[],channelIntents:[],scopeChannelId:null}
@@ -42,6 +41,15 @@ export async function verify023Native(call,output,facts,sandbox){
  assert.equal(snapshot.savedPolicy.channels.find(c=>c.id===channel.id).label,'Native023')
  assert(JSON.stringify(snapshot.library)===library,'channel writes must not rewrite immutable library')
  checks.push('stage and project do not save; explicit save commits real V2 config with original raw model ID')
+ const initialSaved=await readFile(paths.config)
+ snapshot=(await invoke('model_v2_read_existing',{request:{expectedSource:snapshot.sourceDigest,expectedLibrary:snapshot.libraryDigest,expectedDraft:null}})).snapshot
+ const firstReadPolicy=JSON.stringify(snapshot.draft.policy)
+ snapshot=(await invoke('model_v2_read_existing',{request:{expectedSource:snapshot.sourceDigest,expectedLibrary:snapshot.libraryDigest,expectedDraft:snapshot.draft.base}})).snapshot
+ assert.equal(JSON.stringify(snapshot.draft.policy),firstReadPolicy)
+ assert.deepEqual(await readFile(paths.config),initialSaved)
+ snapshot=await invoke('model_v2_file_discard',{expected:snapshot.draft.base})
+ assert.deepEqual(await readFile(paths.config),initialSaved)
+ checks.push('reading existing saved channel matches templates into draft, repeated read is idempotent and cancellation preserves config')
  for(const name of ['Native023 renamed','本机/渠道 023']){
   snapshot=await invoke('model_v2_begin_draft',{request:{expectedSource:snapshot.sourceDigest,expectedLibrary:snapshot.libraryDigest,expectedDraft:snapshot.draft?.base??null}})
   snapshot=await invoke('model_v2_file_save',{request:{expected:snapshot.draft.base,edits:[],channelIntents:[{kind:'rename',channelId:channel.id,name}],scopeChannelId:channel.id}})
