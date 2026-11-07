@@ -4,6 +4,9 @@ pub mod about;
 pub mod backup;
 pub mod cleanup;
 pub mod codex_shim;
+pub mod config_file_transfer_v2;
+pub mod config_sync_v2;
+pub mod data_paths_v2;
 pub mod data_root;
 pub mod discovery;
 pub mod doctor;
@@ -12,6 +15,7 @@ pub mod extensions;
 pub mod logs;
 pub mod migration;
 pub mod model_config;
+pub mod model_config_v2;
 pub mod model_transfer;
 pub mod network;
 pub mod notifications;
@@ -20,6 +24,10 @@ pub mod preferences;
 pub mod release_details;
 pub mod retired_files;
 pub mod runtime;
+pub mod runtime_recovery_v2;
+pub mod runtime_recovery_v2_owner;
+pub mod runtime_recovery_v2_sources;
+pub mod scope_backup_v2;
 pub mod sync;
 pub mod tray;
 pub mod update;
@@ -87,7 +95,7 @@ where
     F: FnOnce() -> AppResult<T> + Send + 'static,
     T: Send + 'static,
 {
-    tauri::async_runtime::spawn_blocking(task)
+    tokio::task::spawn_blocking(task)
         .await
         .map_err(|error| AppError::FileSystem {
             operation: operation.to_string(),
@@ -938,6 +946,16 @@ mod runtime_state_notification_tests {
 mod writer_dispatch_tests {
     use super::*;
 
+    #[tokio::test(flavor = "current_thread")]
+    async fn readonly_dispatch_uses_the_runtime_that_owns_its_observer() {
+        let expected = tokio::runtime::Handle::current().id();
+        let observed = run_readonly("runtime locality", || {
+            Ok(tokio::runtime::Handle::current().id())
+        })
+        .await
+        .unwrap();
+        assert_eq!(expected, observed);
+    }
     #[tokio::test]
     async fn cancelled_observer_does_not_release_blocking_worker_admission() {
         let gate =

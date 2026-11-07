@@ -1,0 +1,155 @@
+name: Windows 0.2.23 complete diagnostic sweep
+on:
+  workflow_dispatch:
+  workflow_call:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  sweep:
+    runs-on: windows-latest
+    timeout-minutes: 75
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/tauri -> target
+          shared-key: windows-native-ui-018
+          cache-on-failure: true
+      - name: Create unique diagnostic round directory
+        id: round
+        run: |
+          $root=Join-Path $env:RUNNER_TEMP ('ocxd023-sweep-'+$env:GITHUB_RUN_ID+'-'+$env:GITHUB_RUN_ATTEMPT)
+          if(Test-Path -LiteralPath $root){throw 'Do not overwrite previous diagnostic evidence'}
+          New-Item -ItemType Directory (Join-Path $root 'sweep')|Out-Null
+          'OCXD_SWEEP_ROOT='+$root >> $env:GITHUB_ENV
+          'root='+$root >> $env:GITHUB_OUTPUT
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          github-token: ${{ github.token }}
+          repository: gzers/opencodex-desktop
+          run-id: 42374536779
+          name: windows-raw-installers-unverified-0c869d9497c102b714dea1ee89394f999da8c4ec
+          path: ${{ steps.round.outputs.root }}/input
+      - name: 01 original-inputs
+        if: always()
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '01' -Name original-inputs -Task inputs
+      - name: 02 current-binary
+        if: always()
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '02' -Name current-binary -Task build
+      - name: 25 backend-state-observer-build
+        if: always()
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '25' -Name backend-state-observer-build -Task state-observer
+      - name: 24 windows-bundle-root-regression
+        if: always()
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '24' -Name windows-bundle-root-regression -Task bundle-roots
+      - name: 03 server-msi-prepare
+        if: always()
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '03' -Name server-msi-prepare -Task policy-prepare
+      - name: 04 msi-default
+        if: always()
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '04' -Name msi-default -Task installer -Kind msi -Mode default
+      - name: 05 msi-custom
+        if: always()
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '05' -Name msi-custom -Task installer -Kind msi -Mode custom
+      - name: 06 nsis-default
+        if: always()
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '06' -Name nsis-default -Task installer -Kind nsis -Mode default
+      - name: 07 nsis-custom
+        if: always()
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '07' -Name nsis-custom -Task installer -Kind nsis -Mode custom
+      - name: 08 path-snapshot-and-copy
+        if: always()
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '08' -Name path-snapshot-and-copy -Task native -Probe paths
+      - name: 09 native-install-recovery
+        if: always()
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '09' -Name native-install-recovery -Task native -Probe install
+      - name: 10 query-and-update-recovery
+        if: always()
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '10' -Name query-and-update-recovery -Task native -Probe query
+      - name: 11 two-real-sids
+        if: always()
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '11' -Name two-real-sids -Task two-user
+      - name: 12 private-bundle-supply
+        if: always()
+        continue-on-error: true
+        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --step '12'
+      - name: 13 runtime-readiness
+        if: always()
+        continue-on-error: true
+        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --step '13'
+      - name: 14 runtime-ports
+        if: always()
+        continue-on-error: true
+        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --step '14'
+      - name: 15 two-user-paths
+        if: always()
+        continue-on-error: true
+        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --step '15'
+      - name: 16 same-user-ipc
+        if: always()
+        continue-on-error: true
+        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --step '16'
+      - name: 17 cross-user-ipc
+        if: always()
+        continue-on-error: true
+        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --step '17'
+      - name: 18 account-and-process-cleanup
+        if: always()
+        continue-on-error: true
+        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --step '18'
+      - name: 19 uninstall-and-retention
+        if: always()
+        continue-on-error: true
+        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --step '19'
+      - name: 21 query-failure
+        if: always()
+        continue-on-error: true
+        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --step '21'
+      - name: 22 update-failure-recovery
+        if: always()
+        continue-on-error: true
+        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --step '22'
+      - name: 23 native-process-cleanup
+        if: always()
+        continue-on-error: true
+        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --step '23'
+      - name: 20 Exact Server MSI policy restoration
+        if: always()
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '20' -Name server-msi-restore -Task policy-restore
+      - name: Complete immutable full status summary accepted false
+        if: always()
+        run: python test/smoke/sweep/summary.py (Join-Path $env:OCXD_SWEEP_ROOT 'sweep') --plan test/smoke/sweep/plan.json
+      - name: Preserve original paths and inventory every controlled evidence file
+        if: always()
+        run: python test/smoke/sweep/artifact.py $env:OCXD_SWEEP_ROOT
+      - name: Upload complete controlled round diagnostics including all failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows023-sweep-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          include-hidden-files: true
+          path: ${{ steps.round.outputs.root }}/artifact/**

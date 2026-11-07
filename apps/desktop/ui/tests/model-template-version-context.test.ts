@@ -4,42 +4,21 @@ import {DOMWrapper,mount,flushPromises,type VueWrapper} from '@vue/test-utils'
 import {createPinia,setActivePinia} from 'pinia'
 import ModelsRoute from '@/routes/ModelsRoute.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
-import {useModelsStore} from '@/features/models/store'
-import {useModalStore} from '@/app/modal/store'
-import {modelApi,emptyContent,type ModelSnapshot} from '@/features/models/api'
+import {useModelsV2Store} from '@/features/models/store-v2'
+import {emptyContentV2,type LibraryViewV2} from '@/features/models/api-v2'
+const ipc=vi.hoisted(()=>vi.fn())
+vi.mock('@tauri-apps/api/core',()=>({invoke:ipc}))
 vi.mock('@tauri-apps/api/event',()=>({listen:vi.fn(async()=>()=>{})}))
-vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{load:vi.fn(),setDefault:vi.fn()}}))
-function snapshot():ModelSnapshot{return{library:{schemaVersion:1,templates:[{id:'family',label:'<img src=x>模型族',source:'user',defaultRevision:'old',revisions:['old','new'].map(id=>({id,createdAt:'2026-10-20T00:00:00Z',savedLabel:id,digest:id,baseRevision:null,changes:[],content:emptyContent()}))}]},policy:{schemaVersion:1,templateRefs:[{templateId:'family',revisionId:'old'}],channels:[]},workspace:null,libraryDigest:'library',policyDigest:'policy',workspaceDigest:'workspace'}}
+const id=(n:number)=>'00000000-0000-4000-8000-'+String(n).padStart(12,'0'),hash=(n:number)=>'sha256:'+String(n).repeat(64)
+let library:LibraryViewV2
 const wrappers:VueWrapper[]=[]
 afterEach(()=>{wrappers.splice(0).forEach(w=>w.unmount());document.body.innerHTML=''})
 function body(){return new DOMWrapper(document.body)}
-function render(){const w=mount(ModelsRoute,{attachTo:document.body,global:{stubs:{AppTopbar:true,ChannelsView:true,AgentPanel:true,BatchAgentDialog:true,ExternalTaskDialog:true,UiSelectField:true,ModelRuleFields:true}}});wrappers.push(w);return w}
-beforeEach(()=>{installNativeDialogStub();setActivePinia(createPinia());vi.clearAllMocks();vi.mocked(modelApi.load).mockResolvedValue(snapshot());vi.mocked(modelApi.setDefault).mockImplementation(async()=>{const s=snapshot();s.library.templates[0]!.defaultRevision='new';return s});useModelsStore().view.tab='templates'})
-describe('template browser/default version separation',()=>{
- it('closes a version search on Escape while preserving source-page search and rejects dismissal during a write',async()=>{
-  const wrapper=render();await flushPromises()
-  await wrapper.get('input[aria-label="搜索模版"]').setValue('模型族')
-  await wrapper.findAll('button').find(b=>b.text()==='版本管理')!.trigger('click');await flushPromises()
-  await body().get('dialog[open] input[aria-label="搜索版本"]').setValue('no-such-version')
-  useModelsStore().busy=true;await flushPromises()
-  await body().get('dialog[open] input[aria-label="搜索版本"]').trigger('keydown',{key:'Escape'});expect(body().find('dialog[open] input[aria-label="搜索版本"]').exists()).toBe(true)
-  useModelsStore().busy=false;await flushPromises()
-  await body().get('dialog[open] input[aria-label="搜索版本"]').trigger('keydown',{key:'Escape'});await flushPromises()
-  expect(body().find('dialog[open] input[aria-label="搜索版本"]').exists()).toBe(false)
-  expect((wrapper.get('input[aria-label="搜索模版"]').element as HTMLInputElement).value).toBe('模型族')
-  expect(modelApi.setDefault).not.toHaveBeenCalled();wrapper.unmount()
- })
-
- it('starts from the saved default and prevents list version changes while an editor buffer is dirty',async()=>{
-  const wrapper=render();await flushPromises();const select=wrapper.findAllComponents(UiSelectField).find(c=>String(c.props('label')).endsWith('保存版本'))!
-  expect(select.props('modelValue')).toBe('old');expect((select.props('options') as {value:string;label:string}[]).find(o=>o.value==='old')!.label).toContain('默认')
-  const store=useModelsStore();store.edit(store.snapshot!.library.templates[0]!,'old');store.draft!.label='dirty edit';await flushPromises();expect(select.props('disabled')).toBe(true)
-  select.vm.$emit('update:modelValue','new');await flushPromises();expect(store.selected.family).toBeUndefined();expect(store.draft!.baseRevision).toBe('old');wrapper.unmount()
- })
- it('confirms default changes with an escaped label and rejects a stale confirmation without upgrading adoption',async()=>{
-  const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='版本管理')!.trigger('click');await flushPromises()
-  const button=body().findAll('button').find(b=>b.text()==='设为默认')!;await button.trigger('click');await flushPromises();const modal=useModalStore();expect(body().get('dialog.model-version-manager[open]').text()).toContain('当前默认');expect(modelApi.setDefault).not.toHaveBeenCalled();expect(modal.current!.body).toContain('&lt;img src=x&gt;');expect(modal.current!.body).not.toContain('<img')
-  const store=useModelsStore();store.snapshot!.libraryDigest='later';modal.resolve('confirm');await flushPromises();expect(modelApi.setDefault).not.toHaveBeenCalled();expect(body().text()).toContain('确认已过期')
-  store.snapshot!.libraryDigest='library';await body().findAll('button').find(b=>b.text()==='设为默认')!.trigger('click');await flushPromises();modal.resolve('cancel');await flushPromises();expect(body().text()).toContain('当前默认');await body().findAll('button').find(b=>b.text()==='设为默认')!.trigger('click');await flushPromises();modal.resolve('confirm');await flushPromises();expect(modelApi.setDefault).toHaveBeenCalledWith('library','family','new');expect(store.snapshot!.policy.templateRefs).toEqual([{templateId:'family',revisionId:'old'}]);wrapper.unmount()
- })
+function nativeDialog(title:string){return body().findAll('dialog[open]').find(d=>d.get('h2').text()===title)!}
+function render(){const w=mount(ModelsRoute,{attachTo:document.body,global:{stubs:{AppTopbar:true,ChannelsView:true,AgentExecutionField:true,UiSelectField:true,ModelRuleFields:true}}});wrappers.push(w);return w}
+beforeEach(()=>{installNativeDialogStub();setActivePinia(createPinia());vi.clearAllMocks();library={dtoVersion:2,library:{schemaVersion:2,submissionReceipts:{},templates:[{id:id(1),label:'<img src=x>模型族',source:'user',defaultRevision:id(2),revisions:[2,3].map(n=>({id:id(n),createdAt:'2026-11-06T00:00:00Z',savedLabel:'模型族',contentVersion:2,content:emptyContentV2(),digest:hash(n),baseRevision:null,changes:[],origin:{kind:'manual'}}))}]},libraryDigest:hash(1)};ipc.mockReset();ipc.mockImplementation(async(command,args)=>{if(command==='model_v2_library')return JSON.parse(JSON.stringify(library));if(command==='model_v2_change_library'){library.library.templates[0]!.defaultRevision=args.request.intent.reference.revisionId;return {...JSON.parse(JSON.stringify(library)),libraryDigest:hash(9)}}throw new Error('Unexpected legacy command '+command)});useModelsV2Store().view.tab='templates'})
+describe('v2 template browser/default version separation',()=>{
+ it('closes version search on Escape while preserving page search, but refuses dismissal during a library write',async()=>{const w=render();await flushPromises();await w.get('input[aria-label="搜索模版"]').setValue('模型族');await w.findAll('button').find(b=>b.text()==='版本管理')!.trigger('click');await flushPromises();const search=body().get('dialog[open] input[aria-label="搜索版本"]');await search.setValue('no-such-version');useModelsV2Store().saving=true;await flushPromises();await search.trigger('keydown',{key:'Escape'});expect(body().find('dialog[open] input[aria-label="搜索版本"]').exists()).toBe(true);useModelsV2Store().saving=false;await flushPromises();await search.trigger('keydown',{key:'Escape'});await flushPromises();expect(body().find('dialog[open] input[aria-label="搜索版本"]').exists()).toBe(false);expect(w.get<HTMLInputElement>('input[aria-label="搜索模版"]').element.value).toBe('模型族');expect(ipc.mock.calls.some(c=>c[0]==='model_v2_change_library')).toBe(false)})
+ it('starts from the exact saved default and rejects even a stale child selection event while an edit is dirty',async()=>{const w=render();await flushPromises();const select=w.findAllComponents(UiSelectField).find(c=>String(c.props('label')).endsWith('保存版本'))!;expect(select.props('modelValue')).toBe(id(2));expect((select.props('options') as {value:string;label:string}[]).find(r=>r.value===id(2))!.label).toContain('默认');const store=useModelsV2Store();store.start(store.snapshot!.library.templates[0]!,id(2));store.setLabel('dirty edit');await flushPromises();expect(select.props('disabled')).toBe(true);select.vm.$emit('update:modelValue',id(3));await flushPromises();expect(store.view.selectedVersions[id(1)]).toBeUndefined();expect(store.draft!.baseRevision).toBe(id(2));expect(store.draft!.label).toBe('dirty edit')})
+ it('escapes the label, rejects a stale default confirmation, and does not call Read/upgrade adoption when a valid confirmation succeeds',async()=>{const w=render();await flushPromises();await w.findAll('button').find(b=>b.text()==='版本管理')!.trigger('click');await flushPromises();const history=nativeDialog('版本管理 · <img src=x>模型族');await history.findAll('button').find(b=>b.text()==='设为默认'&&b.attributes('disabled')===undefined)!.trigger('click');await flushPromises();expect(nativeDialog('设置已保存默认版本').text()).toContain('<img src=x>模型族');expect(body().find('img').exists()).toBe(false);const store=useModelsV2Store();store.snapshot={...store.snapshot!,libraryDigest:hash(8)};await nativeDialog('设置已保存默认版本').findAll('button').find(b=>b.text()==='确认操作')!.trigger('click');await flushPromises();expect(ipc.mock.calls.some(c=>c[0]==='model_v2_change_library')).toBe(false);expect(nativeDialog('设置已保存默认版本').text()).toContain('model_save_stale');await nativeDialog('设置已保存默认版本').findAll('button').find(b=>b.text()==='取消')!.trigger('click');store.snapshot={...store.snapshot!,libraryDigest:hash(1)};await history.findAll('button').find(b=>b.text()==='设为默认'&&b.attributes('disabled')===undefined)!.trigger('click');await flushPromises();await nativeDialog('设置已保存默认版本').findAll('button').find(b=>b.text()==='取消')!.trigger('click');expect(library.library.templates[0]!.defaultRevision).toBe(id(2));await history.findAll('button').find(b=>b.text()==='设为默认'&&b.attributes('disabled')===undefined)!.trigger('click');await flushPromises();await nativeDialog('设置已保存默认版本').findAll('button').find(b=>b.text()==='确认操作')!.trigger('click');await flushPromises();expect(ipc.mock.calls.find(c=>c[0]==='model_v2_change_library')![1]).toEqual({request:{expectedLibrary:hash(1),intent:{kind:'set_default',reference:{templateId:id(1),revisionId:id(3),digest:hash(3)}}}});expect(store.snapshot!.library.templates[0]!.defaultRevision).toBe(id(3));expect(ipc.mock.calls.some(c=>c[0]==='model_v2_read_existing')).toBe(false);expect(ipc.mock.calls.some(c=>c[0]==='model_template_set_default')).toBe(false)})
 })

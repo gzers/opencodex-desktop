@@ -6,8 +6,9 @@ import {readFile, readdir, writeFile, unlink} from 'node:fs/promises'
 import {join, win32} from 'node:path'
 import {closeNativeUpdateCenter,updateCenterHost} from './windows-021-public-hosts.mjs'
 
-export async function verifyWindowsQueryUi(call, output, sandbox) {
-  const report = {result:'fail', checks:[], requests:[]}
+export async function verifyWindowsQueryUi(call, output, sandbox, {dataRoot=sandbox,diagnosticSweep=false}={}) {
+  const report = {result:'fail', checks:[], requests:[], sweep:[]}
+  async function phase(name,action){if(!diagnosticSweep)return action();try{await action();report.sweep.push({name,status:'pass',accepted:false})}catch(error){report.sweep.push({name,status:'fail',firstError:error.message.split(/\r?\n/)[0],accepted:false})}}
   const npmrc = join(sandbox,'home','.npmrc')
   let original
   let mode='query-failure'
@@ -54,7 +55,7 @@ export async function verifyWindowsQueryUi(call, output, sandbox) {
   const ordinary=value=>win32.normalize(value).replace(/^\\\\\?\\UNC\\/i,'\\\\').replace(/^\\\\\?\\(?=[a-z]:\\)/i,'')
   try {
     const config=await evaluate("window.__TAURI_INTERNALS__.invoke('get_data_root_config')")
-    assert.equal(ordinary(config.currentDataRoot).toLowerCase(),ordinary(sandbox).toLowerCase())
+    assert.equal(ordinary(config.currentDataRoot).toLowerCase(),ordinary(dataRoot).toLowerCase())
     const about=await evaluate("window.__TAURI_INTERNALS__.invoke('app_about')")
     const updateHost=updateCenterHost(about.version)
     report.about=about
@@ -66,11 +67,12 @@ export async function verifyWindowsQueryUi(call, output, sandbox) {
     const before=await evaluate("window.__TAURI_INTERNALS__.invoke('official_remote_latest',{trigger:'user'})")
     assert(/^\d/.test(before.version),'real registry metadata must contain version')
     report.before=before
-    const directory=join(sandbox,'logs','runtime-query')
+    const directory=join(dataRoot,'logs','runtime-query')
     const previous=new Set(await readdir(directory))
     await evaluate("(async()=>{const invoke=window.__TAURI_INTERNALS__.invoke;const p=await invoke('get_preferences');p.appUpdateAutoCheck=false;await invoke('save_preferences',{preferences:p});return true})()")
     await writeFile(npmrc,`registry=${registry}\nfetch-retries=0\n`)
     report.failureRegistry=registry
+    await phase('query-failure-and-reopen',async()=>{
     await click('版本升级')
     await click('检查更新')
     await wait(inUpdate(root=>document.querySelector(root+' [data-testid=official-update-row]')?.textContent.includes('检查失败')))
@@ -96,7 +98,7 @@ export async function verifyWindowsQueryUi(call, output, sandbox) {
     assert.deepEqual(header.arguments,['view','@bitkyc08/opencodex@latest','version','dist.integrity','--json'])
     assert.equal(ordinary(header.workingDirectory).toLowerCase(),ordinary(join(sandbox,'home')).toLowerCase())
     assert.equal(ordinary(header.environment.OPENCODEX_HOME).toLowerCase(),ordinary(config.currentOpencodexHome).toLowerCase())
-    assert.equal(ordinary(header.environment.npm_config_cache).toLowerCase(),ordinary(join(sandbox,'cache','npm')).toLowerCase())
+    assert.equal(ordinary(header.environment.npm_config_cache).toLowerCase(),ordinary(join(dataRoot,'cache','npm')).toLowerCase())
     assert.equal(header.environment.COMSPEC.toLowerCase(),win32.join(header.environment.SystemRoot,'System32','cmd.exe').toLowerCase())
     assert.equal(terminal.exitCode,1)
     assert(stdout.text.includes('E404')&&stderr.text.includes('E404'))
@@ -109,6 +111,10 @@ export async function verifyWindowsQueryUi(call, output, sandbox) {
     await wait(inUpdate(root=>document.querySelector(root+' [data-testid=official-query-error]')?.textContent.includes('E404')))
     report.checks.push('close/reopen retains query stderr and command log reference')
     await closeNativeUpdateCenter({wait,click},about.version)
+    })
+    // Only use the real public X after any settled preceding check.
+    if(diagnosticSweep&&await evaluate('!!document.querySelector('+JSON.stringify(updateHost.selector)+')'))await phase('query-close-after-failure',()=>closeNativeUpdateCenter({wait,click},about.version))
+    await phase('update-failure-and-reopen',async()=>{
     mode='install-failure'
     await click('检查更新')
     await wait(inUpdate(root=>document.querySelector(root+' [data-testid=official-update-row]')?.textContent.includes('999.0.0-ocx-native-failure')))
@@ -126,6 +132,9 @@ export async function verifyWindowsQueryUi(call, output, sandbox) {
     await wait(inUpdate(root=>document.querySelector(root+' pre[aria-label="面板安装输出"]')?.textContent.includes('E404')))
     report.checks.push('real npm pack tarball failure after production backup; failed update retains console through close/reopen')
     await closeNativeUpdateCenter({wait,click},about.version)
+    })
+    if(diagnosticSweep&&await evaluate('!!document.querySelector('+JSON.stringify(updateHost.selector)+')'))await phase('update-close-after-failure',()=>closeNativeUpdateCenter({wait,click},about.version))
+    await phase('query-recovery-and-source-preservation',async()=>{
     await restoreNpmrc()
     // The query and manager check share the center's checking state. Allow the
     // admitted check to finish before explicitly requesting recovery.
@@ -149,6 +158,8 @@ export async function verifyWindowsQueryUi(call, output, sandbox) {
     report.checks.push('actual registry metadata recovery clears failure; installed runtime source unchanged')
     await screenshot('query-recovered')
     await closeNativeUpdateCenter({wait,click},about.version)
+    })
+    if(report.sweep.some(p=>p.status==='fail'))throw Error('Diagnostic query/update phases failed: '+report.sweep.filter(p=>p.status==='fail').map(p=>p.name+': '+p.firstError).join('; '))
     await click('安装配置')
     report.result='pass'
     return report

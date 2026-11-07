@@ -2,9 +2,9 @@
 
 use crate::errors::AppResult;
 use crate::modules::data_root::{
-    initialize as initialize_module, load_runtime_config, resolve_opencodex_home,
-    set_opencodex_home, switch_reference, validate_structure, DataRootRuntimeConfig,
-    DataRootSwitchBlocked, DataRootSwitchMode, OpenCodexHomeMode, StructureValidation,
+    initialize as initialize_module, resolve_opencodex_home, set_opencodex_home, switch_reference,
+    validate_structure, DataRootRuntimeConfig, DataRootSwitchBlocked, DataRootSwitchMode,
+    OpenCodexHomeMode, StructureValidation,
 };
 use serde::Serialize;
 
@@ -45,6 +45,7 @@ pub struct OpenCodexHomeRequest {
 pub struct DataRootConfigDto {
     /// Saved binding, which can differ from immutable startup services.
     pub active_data_root: String,
+    pub aggregate_root: String,
     pub opencodex_home_mode: OpenCodexHomeMode,
     pub opencodex_home: String,
     pub current_data_root: String,
@@ -78,9 +79,9 @@ pub async fn initialize_data_root(
     let root = std::path::PathBuf::from(request.root_path);
     crate::commands::run_blocking("initialize data root", move || {
         let sandbox = app.state::<crate::state::SharedSandboxBoundary>();
-        crate::modules::test_sandbox::check_boundary(sandbox.0.as_deref(), &root)
-            .map_err(|_| AppError::NotConfigured)?;
-        let created = initialize_module(&root)?;
+        let runtime = app.state::<std::sync::Arc<crate::modules::runtime::RuntimeHandle>>();
+        let created =
+            initialize_with_paths(&root, sandbox.0.as_deref(), runtime.installation_root())?;
         Ok(DataRootInitialization {
             created,
             structure_version: crate::modules::data_root::STRUCTURE_VERSION.to_string(),
@@ -92,7 +93,7 @@ pub async fn initialize_data_root(
 #[tauri::command]
 pub async fn validate_data_root_structure(root_path: String) -> AppResult<StructureValidation> {
     crate::commands::run_readonly("validate data root", move || {
-        validate_structure(std::path::Path::new(&root_path))
+        validate_structure(&std::path::Path::new(&root_path).join("desktop"))
     })
     .await
 }
@@ -112,37 +113,18 @@ pub async fn switch_data_root(
     anchor: tauri::State<'_, SharedDataRootAnchor>,
     app: tauri::AppHandle,
 ) -> AppResult<DataRootSwitchResult> {
+    if request.mode == DataRootSwitchMode::MigrateData {
+        return Ok(blocked_result(DataRootSwitchBlocked::Unsupported));
+    }
     let root = anchor.0.clone();
     let target = std::path::PathBuf::from(&request.target_path);
     let mode = request.mode;
     let result = crate::commands::run_readonly("switch data root", move || {
-        change_binding(&app, |binding| {
+        change_binding(&app, |_| {
             let sandbox = app.state::<crate::state::SharedSandboxBoundary>();
-            crate::modules::test_sandbox::check_boundary(sandbox.0.as_deref(), &target)
-                .map_err(|_| AppError::NotConfigured)?;
-            if mode != DataRootSwitchMode::MigrateData {
-                return switch_data_root_with_paths(&root, &target, mode);
-            }
-            let runtime = app.state::<SharedDataRoot>();
-            let context = app.state::<SharedProcessContext>();
-            let instances = app.state::<crate::state::InstanceState>();
-            // Acquire and reserve before the irreversible binding commit.
-            let mut locks = instances
-                .locks
-                .lock()
-                .map_err(|_| AppError::NotConfigured)?;
-            migrate_binding(
-                MigrationPaths {
-                    anchor: &root,
-                    source: &runtime.0,
-                    home: &context.opencodex_home,
-                    target: &target,
-                    boundary: sandbox.0.as_deref(),
-                },
-                &crate::infrastructure::storage_writers::global(),
-                binding,
-                &mut locks,
-            )
+            let runtime = app.state::<std::sync::Arc<crate::modules::runtime::RuntimeHandle>>();
+            validate_reference_target(&target, sandbox.0.as_deref(), runtime.installation_root())?;
+            switch_data_root_with_paths(&root, &target, mode)
         })
     })
     .await?;
@@ -168,10 +150,40 @@ pub async fn set_opencodex_home_config(
                 )
                 .map_err(|_| AppError::NotConfigured)?;
             }
+            if let Some(home) = external_path
+                .as_deref()
+                .filter(|_| mode == OpenCodexHomeMode::External)
+            {
+                check_installation_separation(&app, home)?;
+            }
             set_opencodex_home_with_paths(&root, mode, external_path.as_deref())
         })
     })
     .await
+}
+
+fn initialize_with_paths(
+    root: &std::path::Path,
+    boundary: Option<&std::path::Path>,
+    install: &std::path::Path,
+) -> AppResult<bool> {
+    use crate::modules::data_root::{layout, startup_v2};
+    let layout = layout::Layout::with_aggregate_root(root, install, layout::Platform::Unix)?;
+    for path in [
+        &layout.aggregate_root,
+        &layout.desktop_root,
+        &layout.opencodex_home,
+        &layout.desktop_root.join("manager-state"),
+        &layout.desktop_root.join("manager-state/app.lock"),
+    ] {
+        crate::modules::test_sandbox::check_boundary(boundary, path)
+            .map_err(|_| AppError::NotConfigured)?;
+        startup_v2::check_owner(path)?;
+        layout::Layout::with_aggregate_root(path, install, layout::Platform::Unix)?;
+    }
+    crate::modules::data_root::check_partitions(&layout.desktop_root)?;
+    let _lock = crate::modules::instance::AppInstanceLock::acquire(&layout.desktop_root)?;
+    initialize_module(&layout.desktop_root)
 }
 
 pub fn data_root_config_with_paths(
@@ -179,7 +191,7 @@ pub fn data_root_config_with_paths(
     runtime_root: &std::path::Path,
     runtime_home: &std::path::Path,
 ) -> AppResult<DataRootConfigDto> {
-    let config = load_runtime_config(data_root)?;
+    let config = crate::modules::data_root::startup_v2::selected_config(data_root)?;
     Ok(project_config(&config, runtime_root, runtime_home))
 }
 
@@ -191,6 +203,12 @@ fn project_config(
     let opencodex_home = resolve_opencodex_home(config);
     DataRootConfigDto {
         active_data_root: config.active_data_root.display().to_string(),
+        aggregate_root: config
+            .active_data_root
+            .parent()
+            .expect("D has aggregate parent")
+            .display()
+            .to_string(),
         opencodex_home_mode: config.opencodex_home_mode,
         opencodex_home: opencodex_home.display().to_string(),
         current_data_root: runtime_root.display().to_string(),
@@ -208,11 +226,37 @@ pub fn switch_data_root_with_paths(
     target: &std::path::Path,
     mode: DataRootSwitchMode,
 ) -> AppResult<DataRootSwitchResult> {
-    let before = load_runtime_config(current)?;
+    if mode == DataRootSwitchMode::MigrateData {
+        return Ok(blocked_result(DataRootSwitchBlocked::Unsupported));
+    }
+    let before = crate::modules::data_root::startup_v2::selected_config(current)?;
+    if mode == DataRootSwitchMode::ReferenceOnly {
+        for aggregate in [
+            current.parent().ok_or(AppError::NotConfigured)?,
+            before
+                .active_data_root
+                .parent()
+                .ok_or(AppError::NotConfigured)?,
+        ] {
+            if !crate::modules::data_root::same_runtime_directory(aggregate, target)
+                && crate::modules::data_root::is_nested(aggregate, target)
+            {
+                return Ok(blocked_result(DataRootSwitchBlocked::Nested));
+            }
+        }
+        match validate_structure(&target.join("desktop")) {
+            Ok(StructureValidation::FutureVersion) => {
+                return Ok(blocked_result(DataRootSwitchBlocked::FutureVersion))
+            }
+            Ok(StructureValidation::Valid) => {}
+            _ => return Ok(blocked_result(DataRootSwitchBlocked::Corrupted)),
+        }
+    }
     apply_config_or_blocked(
         switch_reference(current, target, mode),
         DataRootSwitchBlocked::Corrupted,
         &before,
+        || crate::modules::data_root::startup_v2::selected_config(current),
     )
 }
 
@@ -221,11 +265,17 @@ pub fn set_opencodex_home_with_paths(
     mode: OpenCodexHomeMode,
     external_path: Option<&std::path::Path>,
 ) -> AppResult<DataRootSwitchResult> {
-    let before = load_runtime_config(current)?;
+    let before = crate::modules::data_root::startup_v2::selected_config(current)?;
+    if mode == OpenCodexHomeMode::External
+        && external_path.is_some_and(|home| crate::modules::data_root::is_nested(current, home))
+    {
+        return Ok(blocked_result(DataRootSwitchBlocked::Nested));
+    }
     apply_config_or_blocked(
-        set_opencodex_home(current, mode, external_path),
+        set_opencodex_home(&before.active_data_root, mode, external_path),
         DataRootSwitchBlocked::Nested,
         &before,
+        || crate::modules::data_root::startup_v2::selected_config(current),
     )
 }
 
@@ -264,24 +314,65 @@ fn change_binding(
         return Ok(blocked_running());
     }
     let context = app.state::<SharedProcessContext>();
+    let anchor = app.state::<SharedDataRootAnchor>();
+    let instances = app.state::<crate::state::InstanceState>();
+    let locks = instances
+        .locks
+        .lock()
+        .map_err(|_| AppError::NotConfigured)?;
+    require_current_locks(&locks, &anchor.0, &root.0)?;
     let mut result = change(&mut binding)?;
+    finish_binding_change(&mut result, &root.0, &context.opencodex_home, &mut binding);
+    Ok(result)
+}
+
+pub(crate) fn require_current_locks(
+    locks: &[crate::modules::instance::AppInstanceLock],
+    anchor: &std::path::Path,
+    current: &std::path::Path,
+) -> AppResult<()> {
+    for required in [
+        anchor.join("manager-startup.lock"),
+        current.join("manager-state/app.lock"),
+    ] {
+        if !locks.iter().any(|held| {
+            crate::modules::data_root::same_runtime_directory(held.lock_path(), &required)
+        }) {
+            return Err(AppError::NotConfigured);
+        }
+    }
+    Ok(())
+}
+
+fn finish_binding_change(
+    result: &mut DataRootSwitchResult,
+    root: &std::path::Path,
+    home: &std::path::Path,
+    binding: &mut Option<crate::infrastructure::storage_writers::BindingSave>,
+) {
     if let Some(config) = result.config.as_mut() {
-        config.current_data_root = root.0.display().to_string();
-        config.current_opencodex_home = context.opencodex_home.display().to_string();
+        config.current_data_root = root.display().to_string();
+        config.current_opencodex_home = home.display().to_string();
         config.runtime_active = crate::modules::data_root::same_runtime_directory(
             std::path::Path::new(&config.active_data_root),
-            &root.0,
+            root,
         ) && crate::modules::data_root::same_runtime_directory(
             std::path::Path::new(&config.opencodex_home),
-            &context.opencodex_home,
+            home,
         );
-        if !config.runtime_active {
+        if config.runtime_active && !result.reconciliation_required {
+            result.status = DataRootSwitchStatus::Applied;
+        }
+        if !config.runtime_active || result.reconciliation_required {
             if let Some(binding) = binding.take() {
                 binding.commit();
             }
         }
+    } else if result.reconciliation_required {
+        if let Some(binding) = binding.take() {
+            binding.commit();
+        }
     }
-    Ok(result)
 }
 
 fn binding_runtime_is_idle(runtime: crate::types::status::RuntimeState) -> bool {
@@ -304,98 +395,36 @@ fn binding_runtime_blocked(
     }
 }
 
-struct MigrationPaths<'a> {
-    anchor: &'a std::path::Path,
-    source: &'a std::path::Path,
-    home: &'a std::path::Path,
-    target: &'a std::path::Path,
-    boundary: Option<&'a std::path::Path>,
+/// Shared by GUI and IPC after acquiring their writer/runtime leases.
+pub(crate) fn validate_reference_target(
+    target: &std::path::Path,
+    boundary: Option<&std::path::Path>,
+    install: &std::path::Path,
+) -> AppResult<()> {
+    use crate::modules::data_root::layout::{Layout, Platform};
+    let desktop = target.join("desktop");
+    for path in [target, desktop.as_path()] {
+        crate::modules::test_sandbox::check_boundary(boundary, path)
+            .map_err(|_| AppError::NotConfigured)?;
+        Layout::with_aggregate_root(path, install, Platform::Unix)?;
+    }
+    if let Ok(config) = crate::modules::data_root::load_runtime_config(&desktop) {
+        let home = resolve_opencodex_home(&config);
+        crate::modules::test_sandbox::check_boundary(boundary, &home)
+            .map_err(|_| AppError::NotConfigured)?;
+        Layout::with_aggregate_root(&home, install, Platform::Unix)?;
+    }
+    Ok(())
 }
 
-fn migration_error(detail: impl Into<String>) -> AppError {
-    AppError::FileSystem {
-        operation: "migrate data root".into(),
-        detail: detail.into(),
-    }
-}
-
-fn migrate_binding(
-    paths: MigrationPaths<'_>,
-    gate: &std::sync::Arc<crate::infrastructure::storage_writers::WriterGate>,
-    binding: &mut Option<crate::infrastructure::storage_writers::BindingSave>,
-    locks: &mut Vec<crate::modules::instance::AppInstanceLock>,
-) -> AppResult<DataRootSwitchResult> {
-    use std::path::Component;
-    if !binding.as_ref().is_some_and(|save| save.permits(gate)) {
-        return Err(migration_error("迁移缺少有效写入冻结。"));
-    }
-    let canonical = |path: &std::path::Path| {
-        path.canonicalize()
-            .map_err(|e| migration_error(e.to_string()))
-    };
-    let anchor = canonical(paths.anchor)?;
-    let source = canonical(paths.source)?;
-    for root in [&anchor, &source] {
-        let lock_path = canonical(&root.join("manager-state/app.lock"))?;
-        if !locks
-            .iter()
-            .any(|lock| canonical(lock.lock_path()).is_ok_and(|held| held == lock_path))
-        {
-            return Err(migration_error("迁移缺少启动锚点或活动数据目录的实例锁。"));
-        }
-    }
-    if !paths.target.is_absolute()
-        || paths
-            .target
-            .components()
-            .any(|c| matches!(c, Component::ParentDir))
-    {
-        return Err(migration_error("目标必须是规范的绝对路径。"));
-    }
-    let parent = canonical(
-        paths
-            .target
-            .parent()
-            .ok_or_else(|| migration_error("目标缺少父目录。"))?,
+fn check_installation_separation(app: &tauri::AppHandle, root: &std::path::Path) -> AppResult<()> {
+    let runtime = app.state::<std::sync::Arc<crate::modules::runtime::RuntimeHandle>>();
+    crate::modules::data_root::layout::Layout::with_aggregate_root(
+        root,
+        runtime.installation_root(),
+        crate::modules::data_root::layout::Platform::Unix,
     )?;
-    let target = parent.join(
-        paths
-            .target
-            .file_name()
-            .ok_or_else(|| migration_error("目标缺少目录名。"))?,
-    );
-    if let Some(boundary) = paths.boundary {
-        if !target.starts_with(canonical(boundary)?) {
-            return Err(migration_error("目标超出测试沙箱边界，未创建迁移目标。"));
-        }
-    }
-    // Actual startup HOME wins over metadata at an intermediate binding root.
-    let inside = paths.home == source.join("opencodex-home");
-    let config = DataRootRuntimeConfig {
-        active_data_root: source,
-        opencodex_home_mode: if inside {
-            OpenCodexHomeMode::Inside
-        } else {
-            OpenCodexHomeMode::External
-        },
-        opencodex_home_path: (!inside).then(|| paths.home.to_path_buf()),
-    };
-    locks
-        .try_reserve(1)
-        .map_err(|e| migration_error(e.to_string()))?;
-    let mut copy = crate::modules::data_root::migration::copy_verified(&config, &target)?;
-    copy.prepare_runtime()?;
-    let committed = copy.prepare_activation(&anchor)?.commit()?;
-    // No fallible locking/allocation/I/O between commit and retaining the lock.
-    // Uncertain commits MUST latch too; returning an ordinary error is unsafe.
-    binding.take().expect("checked migration freeze").commit();
-    locks.push(committed.target_lock);
-    Ok(DataRootSwitchResult {
-        status: DataRootSwitchStatus::RestartRequired,
-        blocked: None,
-        config: Some(project_config(&committed.config, paths.source, paths.home)),
-        reconciliation_required: committed.reconciliation_required,
-    })
+    Ok(())
 }
 
 fn blocked_running() -> DataRootSwitchResult {
@@ -415,6 +444,7 @@ fn apply_config_or_blocked(
     result: Result<DataRootRuntimeConfig, crate::errors::AppError>,
     blocked: DataRootSwitchBlocked,
     before: &DataRootRuntimeConfig,
+    readback: impl FnOnce() -> AppResult<DataRootRuntimeConfig>,
 ) -> AppResult<DataRootSwitchResult> {
     match result {
         Ok(config) => Ok(DataRootSwitchResult {
@@ -427,12 +457,21 @@ fn apply_config_or_blocked(
             )),
             reconciliation_required: false,
         }),
-        Err(_) => Ok(DataRootSwitchResult {
-            status: DataRootSwitchStatus::Blocked,
-            blocked: Some(blocked),
-            config: None,
-            reconciliation_required: false,
-        }),
+        Err(_) => match readback() {
+            Ok(config) if config == *before => Ok(blocked_result(blocked)),
+            observed => Ok(DataRootSwitchResult {
+                status: DataRootSwitchStatus::RestartRequired,
+                blocked: None,
+                config: observed.ok().map(|config| {
+                    project_config(
+                        &config,
+                        &before.active_data_root,
+                        &resolve_opencodex_home(before),
+                    )
+                }),
+                reconciliation_required: true,
+            }),
+        },
     }
 }
 
@@ -440,282 +479,9 @@ fn apply_config_or_blocked(
 mod tests {
     use super::*;
     use crate::infrastructure::storage_writers::WriterGate;
-    use crate::modules::{data_root, instance::AppInstanceLock};
+    use crate::modules::data_root::{self, startup_v2};
     use crate::types::status::RuntimeState;
-    use std::{fs, path::PathBuf, sync::Arc};
-
-    #[cfg(unix)]
-    #[test]
-    fn startup_aliases_do_not_report_pending_restart_or_hide_real_changes() {
-        let temp = tempfile::tempdir().unwrap();
-        let root = temp.path().join("data");
-        initialize_module(&root).unwrap();
-        let alias = temp.path().join("alias");
-        std::os::unix::fs::symlink(&root, &alias).unwrap();
-        let canonical = root.canonicalize().unwrap();
-        let home = canonical.join("opencodex-home");
-        let metadata = root.join(data_root::METADATA_RELATIVE_PATH);
-        let before = fs::read(&metadata).unwrap();
-        let dto = data_root_config_with_paths(&alias, &canonical, &home).unwrap();
-        assert!(dto.runtime_active);
-        assert_eq!(fs::read(&metadata).unwrap(), before);
-
-        let external = temp.path().join("external");
-        fs::create_dir(&external).unwrap();
-        let external_alias = temp.path().join("external-alias");
-        std::os::unix::fs::symlink(&external, &external_alias).unwrap();
-        set_opencodex_home(&alias, OpenCodexHomeMode::External, Some(&external_alias)).unwrap();
-        let external = external.canonicalize().unwrap();
-        assert!(
-            data_root_config_with_paths(&alias, &canonical, &external)
-                .unwrap()
-                .runtime_active
-        );
-        assert!(
-            !data_root_config_with_paths(&alias, &canonical, &home)
-                .unwrap()
-                .runtime_active
-        );
-
-        let other = temp.path().join("other");
-        initialize_module(&other).unwrap();
-        switch_reference(&alias, &other, DataRootSwitchMode::ReferenceOnly).unwrap();
-        assert!(
-            !data_root_config_with_paths(&alias, &canonical, &external)
-                .unwrap()
-                .runtime_active
-        );
-        assert!(!data_root::same_runtime_directory(
-            &temp.path().join("missing"),
-            &canonical
-        ));
-    }
-
-    struct MigrationFixture {
-        _temp: tempfile::TempDir,
-        anchor: PathBuf,
-        source: PathBuf,
-        target: PathBuf,
-        home: PathBuf,
-        locks: Vec<AppInstanceLock>,
-        gate: Arc<WriterGate>,
-    }
-
-    impl MigrationFixture {
-        fn new(external: bool) -> Self {
-            let temp = tempfile::tempdir().unwrap();
-            let anchor = temp.path().join("anchor");
-            let source = temp.path().join("source");
-            initialize_module(&anchor).unwrap();
-            initialize_module(&source).unwrap();
-            switch_reference(&anchor, &source, DataRootSwitchMode::ReferenceOnly).unwrap();
-            if external {
-                let home = temp.path().join("external-home");
-                fs::create_dir(&home).unwrap();
-                fs::write(home.join("private-config"), b"external untouched").unwrap();
-                set_opencodex_home(&anchor, OpenCodexHomeMode::External, Some(&home)).unwrap();
-            }
-            fs::write(source.join("manager-state/preferences.json"), b"original").unwrap();
-            let (config, locks) =
-                data_root::bootstrap::resolve_locked_with_boundary(&anchor, None).unwrap();
-            let home = resolve_opencodex_home(&config);
-            Self {
-                anchor: anchor.canonicalize().unwrap(),
-                source: config.active_data_root,
-                target: temp
-                    .path()
-                    .canonicalize()
-                    .unwrap()
-                    .join("target 中文 space"),
-                home,
-                locks,
-                _temp: temp,
-                gate: Arc::new(WriterGate::default()),
-            }
-        }
-        fn migrate(
-            &mut self,
-            binding: &mut Option<crate::infrastructure::storage_writers::BindingSave>,
-            boundary: Option<&std::path::Path>,
-        ) -> AppResult<DataRootSwitchResult> {
-            migrate_binding(
-                MigrationPaths {
-                    anchor: &self.anchor,
-                    source: &self.source,
-                    home: &self.home,
-                    target: &self.target,
-                    boundary,
-                },
-                &self.gate,
-                binding,
-                &mut self.locks,
-            )
-        }
-    }
-
-    #[test]
-    fn migration_command_retains_locks_and_freeze_until_locked_restart() {
-        for external in [false, true] {
-            let mut f = MigrationFixture::new(external);
-            let mut binding = f.gate.freeze().unwrap();
-            let result = f.migrate(&mut binding, None).unwrap();
-            assert!(binding.is_none());
-            assert!(f.gate.admit().is_err());
-            assert_eq!(f.locks.len(), 3);
-            assert!(matches!(
-                AppInstanceLock::acquire(&f.target),
-                Err(AppError::InstanceLockConflict)
-            ));
-            assert_eq!(result.status, DataRootSwitchStatus::RestartRequired);
-            assert!(!result.reconciliation_required);
-            let wire = serde_json::to_value(&result).unwrap();
-            assert_eq!(wire["reconciliationRequired"], false);
-            let config = result.config.unwrap();
-            assert!(!config.runtime_active);
-            assert_eq!(config.current_data_root, f.source.display().to_string());
-            assert_eq!(config.current_opencodex_home, f.home.display().to_string());
-            assert_eq!(
-                fs::read(f.source.join("manager-state/preferences.json")).unwrap(),
-                b"original"
-            );
-            f.locks.clear();
-            let (restarted, _locks) =
-                data_root::bootstrap::resolve_locked_with_boundary(&f.anchor, None).unwrap();
-            assert_eq!(restarted.active_data_root, f.target);
-            assert_eq!(
-                resolve_opencodex_home(&restarted),
-                if external {
-                    f.home.clone()
-                } else {
-                    f.target.join("opencodex-home")
-                }
-            );
-            assert_eq!(
-                fs::read(f.target.join("manager-state/preferences.json")).unwrap(),
-                b"original"
-            );
-            if external {
-                assert_eq!(
-                    fs::read(f.home.join("private-config")).unwrap(),
-                    b"external untouched"
-                );
-                assert!(!f.target.join("opencodex-home/private-config").exists());
-            }
-        }
-    }
-
-    #[test]
-    fn explicit_sandbox_container_supports_migration_and_locked_restart() {
-        for external in [false, true] {
-            let mut f = MigrationFixture::new(external);
-            let boundary = f._temp.path().canonicalize().unwrap();
-            crate::modules::test_sandbox::check_boundary(Some(&boundary), &f.target).unwrap();
-            let mut binding = f.gate.freeze().unwrap();
-            let result = f.migrate(&mut binding, Some(&boundary)).unwrap();
-            assert_eq!(result.status, DataRootSwitchStatus::RestartRequired);
-            assert!(binding.is_none());
-            assert!(f.gate.admit().is_err());
-            assert!(matches!(
-                AppInstanceLock::acquire(&f.target),
-                Err(AppError::InstanceLockConflict)
-            ));
-            f.locks.clear();
-            let (restarted, locks) =
-                data_root::bootstrap::resolve_locked_with_boundary(&f.anchor, Some(&boundary))
-                    .unwrap();
-            assert_eq!(restarted.active_data_root, f.target);
-            assert_eq!(locks.len(), 2);
-            assert_eq!(
-                fs::read(f.target.join("manager-state/preferences.json")).unwrap(),
-                b"original"
-            );
-            assert_eq!(
-                resolve_opencodex_home(&restarted),
-                if external {
-                    f.home.clone()
-                } else {
-                    f.target.join("opencodex-home")
-                }
-            );
-            if external {
-                assert_eq!(
-                    fs::read(f.home.join("private-config")).unwrap(),
-                    b"external untouched"
-                );
-            }
-            let outside = tempfile::tempdir().unwrap();
-            let denied = outside.path().join("daily-root");
-            assert!(
-                crate::modules::test_sandbox::check_boundary(Some(&boundary), &denied).is_err()
-            );
-            assert!(!denied.exists());
-        }
-    }
-
-    #[test]
-    fn sandbox_escape_is_denied_before_reserving_target() {
-        let mut f = MigrationFixture::new(false);
-        let before = fs::read(data_root::runtime_config_path(&f.anchor)).unwrap();
-        let mut binding = f.gate.freeze().unwrap();
-        let boundary = f.anchor.clone();
-        assert!(f.migrate(&mut binding, Some(&boundary)).is_err());
-        assert!(!f.target.exists());
-        assert_eq!(
-            fs::read(data_root::runtime_config_path(&f.anchor)).unwrap(),
-            before
-        );
-        drop(binding);
-        assert!(f.gate.admit().is_ok());
-    }
-
-    #[test]
-    fn migration_requires_matching_freeze_and_both_startup_locks() {
-        for missing_lock in [true, false] {
-            let mut f = MigrationFixture::new(false);
-            let before = fs::read(data_root::runtime_config_path(&f.anchor)).unwrap();
-            let wrong_gate = Arc::new(WriterGate::default());
-            let mut binding = if missing_lock {
-                f.locks.pop();
-                f.gate.freeze().unwrap()
-            } else {
-                wrong_gate.freeze().unwrap()
-            };
-            assert!(f.migrate(&mut binding, None).is_err());
-            assert!(!f.target.exists());
-            assert_eq!(
-                fs::read(data_root::runtime_config_path(&f.anchor)).unwrap(),
-                before
-            );
-            drop(binding);
-            assert!(f.gate.admit().is_ok());
-        }
-    }
-
-    #[test]
-    fn preparation_failure_keeps_old_binding_and_quarantines_partial_copy() {
-        let mut f = MigrationFixture::new(false);
-        fs::write(
-            f.source.join("manager-state/runtime.json"),
-            b"invalid runtime metadata",
-        )
-        .unwrap();
-        let before = fs::read(data_root::runtime_config_path(&f.anchor)).unwrap();
-        let mut binding = f.gate.freeze().unwrap();
-        assert!(f.migrate(&mut binding, None).is_err());
-        assert_eq!(f.locks.len(), 2);
-        assert_eq!(
-            fs::read(data_root::runtime_config_path(&f.anchor)).unwrap(),
-            before
-        );
-        assert!(f
-            .target
-            .join(data_root::migration::UNPUBLISHED_MARKER)
-            .is_file());
-        assert!(initialize_module(&f.target).is_err());
-        assert!(data_root::bootstrap::resolve(&f.target).is_err());
-        drop(binding);
-        assert!(f.gate.admit().is_ok());
-    }
+    use std::{fs, sync::Arc};
 
     #[test]
     fn only_observed_idle_runtime_allows_binding_save() {
@@ -730,83 +496,373 @@ mod tests {
             RuntimeState::Stopping,
             RuntimeState::Running,
         ] {
-            assert!(!binding_runtime_is_idle(runtime), "{runtime:?}");
+            assert_eq!(
+                binding_runtime_blocked(true, runtime),
+                Some(DataRootSwitchBlocked::Running)
+            );
         }
-        assert!(binding_runtime_is_idle(RuntimeState::Stopped));
-        assert!(binding_runtime_is_idle(RuntimeState::NotFound));
-        assert_eq!(
-            blocked_running().blocked,
-            Some(DataRootSwitchBlocked::Running)
-        );
+        for runtime in [RuntimeState::Stopped, RuntimeState::NotFound] {
+            assert!(binding_runtime_blocked(true, runtime).is_none());
+            assert_eq!(
+                binding_runtime_blocked(false, runtime),
+                Some(DataRootSwitchBlocked::RuntimeUnverified)
+            );
+        }
     }
 
     #[test]
-    fn failed_status_collection_cannot_admit_a_binding_change() {
-        for runtime in [
-            RuntimeState::NotFound,
-            RuntimeState::Stopped,
-            RuntimeState::Running,
-        ] {
-            let reason = binding_runtime_blocked(false, runtime).unwrap();
-            assert_eq!(reason, DataRootSwitchBlocked::RuntimeUnverified);
-            let result = blocked_result(reason);
-            assert_eq!(result.status, DataRootSwitchStatus::Blocked);
-            assert!(result.config.is_none());
-        }
-        assert!(binding_runtime_blocked(true, RuntimeState::Stopped).is_none());
-        assert_eq!(
-            binding_runtime_blocked(true, RuntimeState::Running),
-            Some(DataRootSwitchBlocked::Running)
-        );
-    }
-
-    #[test]
-    fn home_only_save_stays_pending_until_actual_startup_home_matches() {
-        let temp = tempfile::tempdir().unwrap();
-        let root = temp.path().join("data");
-        initialize_module(&root).unwrap();
-        let actual_home = root.join("opencodex-home");
-        let external = temp.path().join("external-home");
-        let result =
-            set_opencodex_home_with_paths(&root, OpenCodexHomeMode::External, Some(&external))
-                .unwrap();
+    fn reference_switch_uses_target_metadata_and_fixed_pointer_across_restart() {
+        let t = tempfile::tempdir().unwrap();
+        let startup = startup_v2::resolve(&t.path().join("user"), None).unwrap();
+        let target = t.path().join("selected");
+        let target_d = target.join("desktop");
+        initialize_module(&target_d).unwrap();
+        let external = t.path().join("target-home");
+        set_opencodex_home(&target_d, OpenCodexHomeMode::External, Some(&external)).unwrap();
+        fs::write(
+            startup
+                .runtime_config
+                .active_data_root
+                .join("manager-state/source-only"),
+            b"keep",
+        )
+        .unwrap();
+        let bytes = fs::read(data_root::runtime_config_path(&target_d)).unwrap();
+        let result = switch_data_root_with_paths(
+            &startup.anchor,
+            &target,
+            DataRootSwitchMode::ReferenceOnly,
+        )
+        .unwrap();
         let config = result.config.unwrap();
         assert_eq!(result.status, DataRootSwitchStatus::RestartRequired);
         assert!(!config.runtime_active);
+        assert!(data_root::same_runtime_directory(
+            std::path::Path::new(&config.active_data_root),
+            &target_d
+        ));
         assert_eq!(
-            config.current_opencodex_home,
-            actual_home.display().to_string()
+            fs::read(data_root::runtime_config_path(&target_d)).unwrap(),
+            bytes
         );
-        let reread = data_root_config_with_paths(&root, &root, &actual_home).unwrap();
-        assert!(!reread.runtime_active);
-        assert_eq!(reread.opencodex_home, external.display().to_string());
+        assert!(!target_d.join("manager-state/source-only").exists());
+        assert!(!target_d.join("manager-location.json").exists());
+        let runtime_home = resolve_opencodex_home(&startup.runtime_config);
+        let saved = data_root_config_with_paths(
+            &startup.anchor,
+            &startup.runtime_config.active_data_root,
+            &runtime_home,
+        )
+        .unwrap();
+        assert!(!saved.runtime_active);
+        assert!(data_root::same_runtime_directory(
+            std::path::Path::new(&saved.opencodex_home),
+            &external
+        ));
+        let anchor = startup.anchor.clone();
+        drop(startup);
+        let restart = startup_v2::resolve(&t.path().join("user"), None).unwrap();
+        assert_eq!(restart.anchor, anchor);
         assert!(
-            data_root_config_with_paths(&root, &root, &external)
-                .unwrap()
-                .runtime_active
+            data_root_config_with_paths(
+                &anchor,
+                &restart.runtime_config.active_data_root,
+                &resolve_opencodex_home(&restart.runtime_config)
+            )
+            .unwrap()
+            .runtime_active
         );
-        let wire = serde_json::to_value(reread).unwrap();
-        assert!(wire.get("currentDataRoot").is_some());
-        assert!(wire.get("currentOpencodexHome").is_some());
     }
 
     #[test]
-    fn reference_switch_preserves_external_home_without_copying() {
-        let temp = tempfile::tempdir().unwrap();
-        let root = temp.path().join("source");
-        let target = temp.path().join("target");
-        let external = temp.path().join("external-home");
-        initialize_module(&root).unwrap();
-        initialize_module(&target).unwrap();
-        set_opencodex_home_with_paths(&root, OpenCodexHomeMode::External, Some(&external)).unwrap();
-        std::fs::write(root.join("manager-state/source-only"), b"untouched").unwrap();
-        let result =
-            switch_data_root_with_paths(&root, &target, DataRootSwitchMode::ReferenceOnly).unwrap();
+    fn home_save_edits_selected_root_and_latches_current_writers_until_restart() {
+        let t = tempfile::tempdir().unwrap();
+        let startup = startup_v2::resolve(&t.path().join("user"), None).unwrap();
+        let target = t.path().join("selected");
+        initialize_module(&target.join("desktop")).unwrap();
+        switch_data_root_with_paths(&startup.anchor, &target, DataRootSwitchMode::ReferenceOnly)
+            .unwrap();
+        let fixed_bytes = fs::read(data_root::runtime_config_path(&startup.anchor)).unwrap();
+        let external = t.path().join("external");
+        let mut result = set_opencodex_home_with_paths(
+            &startup.anchor,
+            OpenCodexHomeMode::External,
+            Some(&external),
+        )
+        .unwrap();
+        assert_eq!(
+            fs::read(data_root::runtime_config_path(&startup.anchor)).unwrap(),
+            fixed_bytes
+        );
+        let gate = Arc::new(WriterGate::default());
+        let mut binding = gate.freeze().unwrap();
+        let current_home = resolve_opencodex_home(&startup.runtime_config);
+        finish_binding_change(
+            &mut result,
+            &startup.runtime_config.active_data_root,
+            &current_home,
+            &mut binding,
+        );
+        assert!(binding.is_none());
+        assert!(gate.admit().is_err());
         let config = result.config.unwrap();
-        assert_eq!(config.current_data_root, root.display().to_string());
-        assert_eq!(config.active_data_root, target.display().to_string());
-        assert_eq!(config.opencodex_home, external.display().to_string());
         assert!(!config.runtime_active);
-        assert!(!target.join("manager-state/source-only").exists());
+        assert_eq!(
+            config.current_data_root,
+            startup
+                .runtime_config
+                .active_data_root
+                .display()
+                .to_string()
+        );
+        assert_eq!(
+            config.current_opencodex_home,
+            current_home.display().to_string()
+        );
+        let wire = serde_json::to_value(config).unwrap();
+        assert!(wire.get("aggregateRoot").is_some());
+        assert!(!target.join("desktop/manager-location.json").exists());
+    }
+
+    #[test]
+    fn migration_request_is_rejected_without_copy_or_pointer_update() {
+        let t = tempfile::tempdir().unwrap();
+        let startup = startup_v2::resolve(&t.path().join("user"), None).unwrap();
+        let pointer = startup.anchor.join("manager-location.json");
+        let before = fs::read(&pointer).unwrap();
+        let target = t.path().join("uncreated");
+        let result =
+            switch_data_root_with_paths(&startup.anchor, &target, DataRootSwitchMode::MigrateData)
+                .unwrap();
+        assert_eq!(result.status, DataRootSwitchStatus::Blocked);
+        assert_eq!(result.blocked, Some(DataRootSwitchBlocked::Unsupported));
+        assert_eq!(fs::read(pointer).unwrap(), before);
+        assert!(!target.exists());
+    }
+
+    #[test]
+    fn unchanged_save_releases_gate_but_uncertain_save_latches_it() {
+        let t = tempfile::tempdir().unwrap();
+        let startup = startup_v2::resolve(&t.path().join("user"), None).unwrap();
+        let root = &startup.runtime_config.active_data_root;
+        let home = resolve_opencodex_home(&startup.runtime_config);
+        for uncertain in [false, true] {
+            let gate = Arc::new(WriterGate::default());
+            let mut binding = gate.freeze().unwrap();
+            let mut result = DataRootSwitchResult {
+                status: DataRootSwitchStatus::RestartRequired,
+                blocked: None,
+                config: Some(project_config(&startup.runtime_config, root, &home)),
+                reconciliation_required: uncertain,
+            };
+            finish_binding_change(&mut result, root, &home, &mut binding);
+            assert_eq!(
+                result.status,
+                if uncertain {
+                    DataRootSwitchStatus::RestartRequired
+                } else {
+                    DataRootSwitchStatus::Applied
+                }
+            );
+            drop(binding);
+            assert_eq!(gate.admit().is_err(), uncertain);
+        }
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn startup_aliases_preserve_runtime_identity_without_rewriting_metadata() {
+        let t = tempfile::tempdir().unwrap();
+        let startup = startup_v2::resolve(&t.path().join("user"), None).unwrap();
+        let alias = t.path().join("alias");
+        std::os::unix::fs::symlink(&startup.anchor, &alias).unwrap();
+        let before = fs::read(data_root::runtime_config_path(&startup.anchor)).unwrap();
+        let home = resolve_opencodex_home(&startup.runtime_config);
+        assert!(
+            data_root_config_with_paths(&alias, &startup.runtime_config.active_data_root, &home)
+                .unwrap()
+                .runtime_active
+        );
+        assert_eq!(
+            fs::read(data_root::runtime_config_path(&startup.anchor)).unwrap(),
+            before
+        );
+    }
+
+    #[test]
+    fn binding_changes_require_both_current_service_and_fixed_startup_locks() {
+        let t = tempfile::tempdir().unwrap();
+        let mut startup = startup_v2::resolve(&t.path().join("user"), None).unwrap();
+        require_current_locks(
+            &startup.locks,
+            &startup.anchor,
+            &startup.runtime_config.active_data_root,
+        )
+        .unwrap();
+        let root_lock = startup.locks.pop().unwrap();
+        assert!(require_current_locks(
+            &startup.locks,
+            &startup.anchor,
+            &startup.runtime_config.active_data_root
+        )
+        .is_err());
+        assert!(require_current_locks(
+            &[root_lock],
+            &startup.anchor,
+            &startup.runtime_config.active_data_root
+        )
+        .is_err());
+    }
+
+    #[test]
+    fn initialize_command_uses_aggregate_semantics_and_refuses_busy_or_nested_targets() {
+        let t = tempfile::tempdir().unwrap();
+        let root = t.path().join("data");
+        let install = t.path().join("program");
+        assert!(initialize_with_paths(&root, None, &install).unwrap());
+        assert!(root.join("desktop/manager-state/data-root.json").is_file());
+        assert!(!root.join("manager-state").exists());
+        let _busy =
+            crate::modules::instance::AppInstanceLock::acquire(&root.join("desktop")).unwrap();
+        fs::remove_dir(root.join("desktop/cache")).unwrap();
+        assert!(matches!(
+            initialize_with_paths(&root, None, &install),
+            Err(AppError::InstanceLockConflict)
+        ));
+        assert!(!root.join("desktop/cache").exists());
+        let invalid = install.join("data");
+        assert!(initialize_with_paths(&invalid, None, &install).is_err());
+        assert!(!invalid.exists());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn sandbox_initialization_cannot_follow_a_desktop_link_outside_boundary() {
+        let t = tempfile::tempdir().unwrap();
+        let sandbox = t.path().canonicalize().unwrap().join("sandbox");
+        let outside = t.path().join("outside");
+        fs::create_dir(&sandbox).unwrap();
+        fs::create_dir(&outside).unwrap();
+        let root = sandbox.join("data");
+        fs::create_dir(&root).unwrap();
+        std::os::unix::fs::symlink(&outside, root.join("desktop")).unwrap();
+        assert!(initialize_with_paths(&root, Some(&sandbox), &sandbox.join("program")).is_err());
+        assert_eq!(fs::read_dir(&outside).unwrap().count(), 0);
+    }
+
+    #[test]
+    fn uncertain_save_readback_never_reopens_old_writers() {
+        let t = tempfile::tempdir().unwrap();
+        let startup = startup_v2::resolve(&t.path().join("user"), None).unwrap();
+        let before = &startup.runtime_config;
+        for readable in [false, true] {
+            let gate = Arc::new(WriterGate::default());
+            let mut binding = gate.freeze().unwrap();
+            let mut changed = before.clone();
+            changed.opencodex_home_mode = OpenCodexHomeMode::External;
+            changed.opencodex_home_path = Some(t.path().join("external"));
+            let mut result = apply_config_or_blocked(
+                Err(AppError::NotConfigured),
+                DataRootSwitchBlocked::Corrupted,
+                before,
+                || {
+                    if readable {
+                        Ok(changed)
+                    } else {
+                        Err(AppError::NotConfigured)
+                    }
+                },
+            )
+            .unwrap();
+            assert!(result.reconciliation_required);
+            finish_binding_change(
+                &mut result,
+                &before.active_data_root,
+                &resolve_opencodex_home(before),
+                &mut binding,
+            );
+            assert!(binding.is_none());
+            assert!(gate.admit().is_err());
+        }
+        let result = apply_config_or_blocked(
+            Err(AppError::NotConfigured),
+            DataRootSwitchBlocked::Corrupted,
+            before,
+            || Ok(before.clone()),
+        )
+        .unwrap();
+        assert_eq!(result.status, DataRootSwitchStatus::Blocked);
+        assert!(!result.reconciliation_required);
+    }
+
+    #[test]
+    fn selected_home_cannot_overlap_fixed_manager_state() {
+        let t = tempfile::tempdir().unwrap();
+        let startup = startup_v2::resolve(&t.path().join("user"), None).unwrap();
+        let target = t.path().join("selected");
+        initialize_module(&target.join("desktop")).unwrap();
+        switch_data_root_with_paths(&startup.anchor, &target, DataRootSwitchMode::ReferenceOnly)
+            .unwrap();
+        let before = fs::read(data_root::runtime_config_path(&target.join("desktop"))).unwrap();
+        let result = set_opencodex_home_with_paths(
+            &startup.anchor,
+            OpenCodexHomeMode::External,
+            Some(&startup.anchor.join("home")),
+        )
+        .unwrap();
+        assert_eq!(result.blocked, Some(DataRootSwitchBlocked::Nested));
+        assert_eq!(
+            fs::read(data_root::runtime_config_path(&target.join("desktop"))).unwrap(),
+            before
+        );
+    }
+
+    #[test]
+    fn future_and_nested_selection_are_typed_blocks_without_pointer_changes() {
+        let t = tempfile::tempdir().unwrap();
+        let startup = startup_v2::resolve(&t.path().join("user"), None).unwrap();
+        let pointer = startup.anchor.join("manager-location.json");
+        let before = fs::read(&pointer).unwrap();
+        let future = t.path().join("future");
+        initialize_module(&future.join("desktop")).unwrap();
+        fs::write(
+            future.join("desktop/manager-state/data-root.json"),
+            br#"{"structure_version":"3","opencodex_home_mode":"inside"}"#,
+        )
+        .unwrap();
+        assert_eq!(
+            switch_data_root_with_paths(
+                &startup.anchor,
+                &future,
+                DataRootSwitchMode::ReferenceOnly
+            )
+            .unwrap()
+            .blocked,
+            Some(DataRootSwitchBlocked::FutureVersion)
+        );
+        let nested = startup.anchor.parent().unwrap().join("nested");
+        assert_eq!(
+            switch_data_root_with_paths(
+                &startup.anchor,
+                &nested,
+                DataRootSwitchMode::ReferenceOnly
+            )
+            .unwrap()
+            .blocked,
+            Some(DataRootSwitchBlocked::Nested)
+        );
+        assert_eq!(fs::read(pointer).unwrap(), before);
+        assert!(!nested.exists());
+    }
+
+    #[test]
+    fn unsupported_migration_does_not_require_or_probe_a_legacy_anchor() {
+        let t = tempfile::tempdir().unwrap();
+        let source = t.path().join("not-created/source");
+        let target = t.path().join("not-created/target");
+        let result =
+            switch_data_root_with_paths(&source, &target, DataRootSwitchMode::MigrateData).unwrap();
+        assert_eq!(result.blocked, Some(DataRootSwitchBlocked::Unsupported));
+        assert_eq!(fs::read_dir(t.path()).unwrap().count(), 0);
     }
 }

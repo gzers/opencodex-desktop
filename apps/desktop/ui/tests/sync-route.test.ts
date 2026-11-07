@@ -31,7 +31,7 @@ describe('one top-level configuration sync entry',()=>{
  })
   it('keeps the range workspace and its credential column in the page body',()=>{
     // DOM ownership only; actual two-column geometry/scrollports are asserted in qa/sync-020.browser.mjs.
-    const source=readFileSync(resolve(__dirname,'../src/features/sync/ModelTransfer.vue'),'utf8')
+    const source=readFileSync(resolve(__dirname,'../src/features/sync/ConfigFileTransferV2.vue'),'utf8')
     expect(source).toContain('data-testid="sync-scope-workspace"')
     expect(source).toContain('data-testid="sync-scope-credentials"')
   })

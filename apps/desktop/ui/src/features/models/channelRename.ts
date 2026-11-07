@@ -28,3 +28,13 @@ export function channelRenamePreview(channel:ChannelPolicy,saved?:ChannelPolicy)
  if(!saved||saved.label===channel.label)return null
  return {fromLabel:saved.label,toLabel:channel.label}
 }
+
+/** V2 name editing validates display intent only; runtime keys belong to L0. */
+export function channelNameErrorV2(name:string,id:string,channels:readonly {id:string;label:string}[]):string {
+ const value=name.trim()
+ if(!value)return '请填写渠道名称'
+ if([...value].length>80||new TextEncoder().encode(value).length>256)return '渠道名称过长'
+ if(/[\u0000-\u001f\u007f]/.test(value))return '渠道名称不能包含控制字符'
+ if(channels.some(c=>c.id!==id&&c.label.trim().toLowerCase()===value.toLowerCase()))return '渠道名称已存在'
+ return ''
+}

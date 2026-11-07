@@ -4,7 +4,10 @@
 //! 不扫描用户目录、不迁移数据、不启动代理、不访问 Keychain。
 
 pub mod bootstrap;
+pub mod layout;
 pub mod migration;
+pub(crate) mod removal_gate;
+pub(crate) mod startup_v2;
 #[cfg(any(windows, test))]
 pub mod uninstall;
 
@@ -13,13 +16,12 @@ use std::path::{Path, PathBuf};
 
 use crate::errors::AppError;
 
-pub const STRUCTURE_VERSION: &str = "1";
+pub const STRUCTURE_VERSION: &str = "2";
 pub const METADATA_RELATIVE_PATH: &str = "manager-state/data-root.json";
 pub const STRUCTURE_LOCK_RELATIVE_PATH: &str = "manager-state/structure.lock";
 
-pub const PARTITIONS: [(&str, &str); 7] = [
+pub const PARTITIONS: [(&str, &str); 6] = [
     ("manager state", "manager-state"),
-    ("opencodex home", "opencodex-home"),
     ("backups", "backups"),
     ("logs", "logs"),
     ("exports", "exports"),
@@ -59,6 +61,7 @@ pub enum DataRootSwitchMode {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum DataRootSwitchBlocked {
+    Unsupported,
     Running,
     RuntimeUnverified,
     Nested,
@@ -94,16 +97,19 @@ impl DataRootPaths {
 
 /// 初始化或引用一个显式数据根；返回 true 表示本次实际创建。
 pub fn initialize(root: &Path) -> Result<bool, AppError> {
+    startup_v2::checked_path(root)?;
+    startup_v2::check_owner(root)?;
+    check_partitions(root)?;
     migration::require_published(root)?;
-    std::fs::create_dir_all(root).map_err(|error| AppError::FileSystem {
-        operation: "create data root".to_string(),
-        detail: error.to_string(),
+    crate::infrastructure::platform::create_private_dir_all(root, 0o700).map_err(|error| {
+        AppError::FileSystem {
+            operation: "create data root".to_string(),
+            detail: error.to_string(),
+        }
     })?;
     let paths = DataRootPaths::new(root.to_path_buf());
 
-    // 旧行为会把结构版本连同运行期配置一起覆盖掉；这里先自愈，避免用户
-    // 切换数据根后直接起不来。
-    repair_missing_structure_version(root)?;
+    // No automatic repair or import of legacy metadata in v2.
 
     if metadata_matches_version(&paths.metadata)? {
         if !paths
@@ -116,10 +122,35 @@ pub fn initialize(root: &Path) -> Result<bool, AppError> {
                 detail: "manager-state directory is missing".to_string(),
             });
         }
+        set_private_directory(root)?;
         ensure_partitions(root)?;
         return Ok(false);
     }
 
+    if std::fs::read_dir(root)
+        .map_err(|e| AppError::FileSystem {
+            operation: "inspect v2 root".into(),
+            detail: e.to_string(),
+        })?
+        .any(|entry| match entry {
+            Ok(entry) if entry.file_name() == "manager-state" => std::fs::read_dir(entry.path())
+                .map(|mut files| {
+                    files.any(|f| f.map(|f| f.file_name() != "app.lock").unwrap_or(true))
+                })
+                .unwrap_or(true),
+            Ok(entry) => !["manager-startup.lock", "manager-location.json"]
+                .iter()
+                .any(|name| entry.file_name() == *name),
+            Err(_) => true,
+        })
+    {
+        return Err(AppError::FileSystem {
+            operation: "initialize v2 root".into(),
+            detail: "nonempty unrecognized directory; original contents retained".into(),
+        });
+    }
+
+    set_private_directory(root)?;
     let existing: Vec<_> = PARTITIONS
         .iter()
         .filter_map(|(_, name)| {
@@ -145,6 +176,7 @@ pub fn initialize(root: &Path) -> Result<bool, AppError> {
 /// 幂等补建既有数据根的缺失分区；不改动已有内容。
 pub fn ensure_partitions(root: &Path) -> Result<(), AppError> {
     migration::require_published(root)?;
+    check_partitions(root)?;
     for (_, name) in PARTITIONS {
         let path = root.join(name);
         if path.is_dir() {
@@ -155,11 +187,44 @@ pub fn ensure_partitions(root: &Path) -> Result<(), AppError> {
                 detail: "partition target is not a directory".to_string(),
             });
         } else {
-            std::fs::create_dir(&path).map_err(|error| AppError::FileSystem {
-                operation: "ensure data root partition".to_string(),
-                detail: error.to_string(),
-            })?;
+            crate::infrastructure::platform::create_private_dir_all(&path, 0o700).map_err(
+                |error| AppError::FileSystem {
+                    operation: "ensure data root partition".to_string(),
+                    detail: error.to_string(),
+                },
+            )?;
             set_private_directory(&path)?;
+        }
+    }
+    Ok(())
+}
+
+pub(crate) fn check_partitions(root: &Path) -> Result<(), AppError> {
+    for path in PARTITIONS.iter().map(|(_, name)| root.join(name)).chain([
+        root.join(METADATA_RELATIVE_PATH),
+        root.join(STRUCTURE_LOCK_RELATIVE_PATH),
+    ]) {
+        match std::fs::symlink_metadata(&path) {
+            Ok(meta) => {
+                #[cfg(windows)]
+                {
+                    use std::os::windows::fs::MetadataExt;
+                    if meta.file_attributes() & 0x400 != 0 {
+                        return Err(AppError::NotConfigured);
+                    }
+                }
+                if meta.file_type().is_symlink() {
+                    return Err(AppError::NotConfigured);
+                }
+                startup_v2::check_owner(&path)?;
+            }
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
+            Err(e) => {
+                return Err(AppError::FileSystem {
+                    operation: "inspect v2 partitions".into(),
+                    detail: e.to_string(),
+                })
+            }
         }
     }
     Ok(())
@@ -173,6 +238,7 @@ pub fn validate_structure(root: &Path) -> Result<StructureValidation, AppError> 
             detail: format!("{} is not a directory", root.display()),
         });
     }
+    check_partitions(root)?;
     let metadata = root.join(METADATA_RELATIVE_PATH);
     if !metadata.is_file() {
         let mut entries = std::fs::read_dir(root).map_err(|error| AppError::FileSystem {
@@ -199,67 +265,76 @@ pub fn runtime_config_path(data_root: &Path) -> PathBuf {
     data_root.join(METADATA_RELATIVE_PATH)
 }
 
+/// Metadata belongs only to this D. The fixed location file is read separately.
 pub fn load_runtime_config(data_root: &Path) -> Result<DataRootRuntimeConfig, AppError> {
-    if !data_root.is_absolute() {
+    startup_v2::checked_path(data_root)?;
+    check_partitions(data_root)?;
+    let document = read_metadata_document(&runtime_config_path(data_root))?;
+    if document.structure_version != STRUCTURE_VERSION {
         return Err(AppError::NotConfigured);
     }
-    let path = runtime_config_path(data_root);
+    let config = DataRootRuntimeConfig {
+        active_data_root: data_root.into(),
+        opencodex_home_mode: document.opencodex_home_mode,
+        opencodex_home_path: document.opencodex_home_path,
+    };
+    validate_home_config(&config)?;
+    Ok(config)
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct MetadataDocument {
+    structure_version: String,
+    opencodex_home_mode: OpenCodexHomeMode,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    opencodex_home_path: Option<PathBuf>,
+}
+
+fn read_metadata_document(path: &Path) -> Result<MetadataDocument, AppError> {
     use std::io::Read;
     let mut bytes = Vec::new();
-    let file = std::fs::File::open(&path).map_err(|error| AppError::FileSystem {
-        operation: "read data root runtime config".into(),
-        detail: error.to_string(),
+    let file = std::fs::File::open(path).map_err(|e| AppError::FileSystem {
+        operation: "read v2 directory metadata".into(),
+        detail: e.to_string(),
     })?;
     file.take(65537)
         .read_to_end(&mut bytes)
-        .map_err(|error| AppError::FileSystem {
-            operation: "read data root runtime config".to_string(),
-            detail: error.to_string(),
+        .map_err(|e| AppError::FileSystem {
+            operation: "read v2 directory metadata".into(),
+            detail: e.to_string(),
         })?;
     if bytes.len() > 65536 {
         return Err(AppError::NotConfigured);
     }
-    let payload: serde_json::Value =
-        serde_json::from_slice(&bytes).map_err(|_| AppError::FileSystem {
-            operation: "parse data root runtime config".to_string(),
-            detail: "invalid runtime config".to_string(),
-        })?;
-    if payload.get("structure_version") != Some(&serde_json::json!(STRUCTURE_VERSION)) {
-        return Err(AppError::FileSystem {
-            operation: "validate structure version".into(),
-            detail: "runtime binding has unsupported or missing structure version".into(),
-        });
+    serde_json::from_slice(&bytes).map_err(|_| AppError::NotConfigured)
+}
+
+fn validate_home_config(config: &DataRootRuntimeConfig) -> Result<(), AppError> {
+    startup_v2::checked_path(&config.active_data_root)?;
+    if config.active_data_root.parent().is_none() {
+        return Err(AppError::NotConfigured);
     }
-    if payload.get("structure_version")
-        == Some(&serde_json::Value::String(STRUCTURE_VERSION.to_string()))
-        && payload.get("active_data_root").is_none()
-    {
-        return Ok(DataRootRuntimeConfig {
-            active_data_root: data_root.to_path_buf(),
-            opencodex_home_mode: OpenCodexHomeMode::Inside,
-            opencodex_home_path: None,
-        });
-    }
-    let config: DataRootRuntimeConfig =
-        serde_json::from_value(payload).map_err(|_| AppError::FileSystem {
-            operation: "parse data root runtime config".to_string(),
-            detail: "invalid runtime config".to_string(),
-        })?;
-    if !config.active_data_root.is_absolute() {
-        return Err(AppError::FileSystem {
-            operation: "validate active data root".to_string(),
-            detail: "active data root must be an absolute path".to_string(),
-        });
-    }
-    match config.opencodex_home_mode {
-        OpenCodexHomeMode::Inside => Ok(config),
-        OpenCodexHomeMode::External => match config.opencodex_home_path {
-            Some(ref path) if path.is_absolute() => Ok(config),
-            _ => Err(AppError::FileSystem {
-                operation: "validate OPENCODEX_HOME".to_string(),
-                detail: "external OPENCODEX_HOME requires an absolute path".to_string(),
-            }),
-        },
+    match (
+        config.opencodex_home_mode,
+        config.opencodex_home_path.as_deref(),
+    ) {
+        (OpenCodexHomeMode::Inside, None) => {
+            startup_v2::check_owner(&resolve_opencodex_home(config))?;
+            if is_nested(&config.active_data_root, &resolve_opencodex_home(config)) {
+                return Err(AppError::NotConfigured);
+            }
+            Ok(())
+        }
+        (OpenCodexHomeMode::External, Some(home)) => {
+            startup_v2::checked_path(home)?;
+            startup_v2::check_owner(home)?;
+            if is_nested(&config.active_data_root, home) {
+                return Err(AppError::NotConfigured);
+            }
+            Ok(())
+        }
+        _ => Err(AppError::NotConfigured),
     }
 }
 
@@ -267,150 +342,107 @@ pub fn save_runtime_config(
     data_root: &Path,
     value: &DataRootRuntimeConfig,
 ) -> Result<(), AppError> {
-    if !data_root.is_absolute() || !value.active_data_root.is_absolute() {
+    startup_v2::check_owner(data_root)?;
+    check_partitions(data_root)?;
+    load_runtime_config(data_root)?;
+    if !same_runtime_directory(data_root, &value.active_data_root) {
         return Err(AppError::NotConfigured);
     }
-    if let OpenCodexHomeMode::External = value.opencodex_home_mode {
-        if !value
-            .opencodex_home_path
-            .as_ref()
-            .is_some_and(|path| path.is_absolute())
-        {
-            return Err(AppError::FileSystem {
-                operation: "save OPENCODEX_HOME".to_string(),
-                detail: "external OPENCODEX_HOME requires an absolute path".to_string(),
-            });
-        }
-    }
-    // `manager-state/data-root.json` 同时被当作结构元数据与运行期配置读取：
-    // `initialize` 按 `DataRootMetadata` 解析它，`load_runtime_config` 按
-    // `DataRootRuntimeConfig` 解析它。此前这里只写运行期字段，把
-    // `structure_version` 整个覆盖掉，切换数据根后应用再也起不来
-    // （`parse structure metadata; invalid structure metadata`）。
-    // 因此写回时必须保留结构版本，让两种读者都能解析同一份文档。
-    let payload = merged_metadata_payload(value)?;
+    validate_home_config(value)?;
+    let path = runtime_config_path(data_root);
     crate::infrastructure::atomic_write::atomic_write(
-        &runtime_config_path(data_root),
-        &payload,
+        &path,
+        &merged_metadata_payload(value)?,
         0o600,
-    )
+    )?;
+    startup_v2::sync_parent(&path)?;
+    if load_runtime_config(data_root)? != *value {
+        return Err(AppError::NotConfigured);
+    }
+    Ok(())
 }
 
-/// 生成「结构版本 + 运行期配置」的合并文档。
 fn merged_metadata_payload(value: &DataRootRuntimeConfig) -> Result<Vec<u8>, AppError> {
-    let mut document = serde_json::Map::new();
-    document.insert(
-        "structure_version".to_string(),
-        serde_json::Value::String(STRUCTURE_VERSION.to_string()),
-    );
-    let runtime = serde_json::to_value(value).map_err(|error| AppError::AtomicWrite {
-        reason: error.to_string(),
-    })?;
-    let serde_json::Value::Object(fields) = runtime else {
-        return Err(AppError::AtomicWrite {
-            reason: "runtime config is not an object".to_string(),
-        });
-    };
-    for (key, value) in fields {
-        document.insert(key, value);
-    }
-    serde_json::to_vec_pretty(&serde_json::Value::Object(document)).map_err(|error| {
-        AppError::AtomicWrite {
-            reason: error.to_string(),
-        }
+    validate_home_config(value)?;
+    serde_json::to_vec_pretty(&MetadataDocument {
+        structure_version: STRUCTURE_VERSION.into(),
+        opencodex_home_mode: value.opencodex_home_mode,
+        opencodex_home_path: value.opencodex_home_path.clone(),
+    })
+    .map_err(|e| AppError::AtomicWrite {
+        reason: e.to_string(),
     })
 }
 
-/// 修复被旧行为覆盖掉结构版本的数据根：文件里只剩运行期配置。
-///
-/// 返回 `true` 表示确实修复过。只认「合法 JSON 且带 `active_data_root`、
-/// 缺 `structure_version`」这一种形态，其余异常仍按损坏处理。
-pub fn repair_missing_structure_version(data_root: &Path) -> Result<bool, AppError> {
-    let paths = DataRootPaths::new(data_root.to_path_buf());
-    let Ok(bytes) = std::fs::read(&paths.metadata) else {
-        return Ok(false);
-    };
-    let Ok(payload) = serde_json::from_slice::<serde_json::Value>(&bytes) else {
-        return Ok(false);
-    };
-    if payload.get("structure_version").is_some() || payload.get("active_data_root").is_none() {
-        return Ok(false);
-    }
-    let Ok(config) = serde_json::from_value::<DataRootRuntimeConfig>(payload) else {
-        return Ok(false);
-    };
-    crate::infrastructure::atomic_write::atomic_write(
-        &paths.metadata,
-        &merged_metadata_payload(&config)?,
-        0o600,
-    )?;
-    Ok(true)
-}
-
+/// The anchor is fixed current-user D; target is aggregate U.
+/// Selecting a root never copies or rewrites either root's HOME settings.
 pub fn switch_reference(
-    current: &Path,
+    anchor: &Path,
     target: &Path,
     mode: DataRootSwitchMode,
 ) -> Result<DataRootRuntimeConfig, AppError> {
     if mode == DataRootSwitchMode::MigrateData {
-        return Err(AppError::FileSystem {
-            operation: "switch data root".to_string(),
-            detail: "data migration is not enabled in this task".to_string(),
-        });
+        return Err(migration::unsupported());
     }
-    // 「切回数据根自身」是合法的重置操作，不该被嵌套校验挡住；
-    // 否则用户一旦切走就再也回不到管理器自己的数据根。
-    let canonical_current = current
-        .canonicalize()
-        .unwrap_or_else(|_| current.to_path_buf());
-    let canonical_target = target
-        .canonicalize()
-        .unwrap_or_else(|_| target.to_path_buf());
-    if canonical_current != canonical_target && is_nested(current, target) {
-        return Err(AppError::FileSystem {
-            operation: "switch data root".to_string(),
-            detail: "current and target data roots cannot be nested".to_string(),
-        });
+
+    let before = startup_v2::selected_config(anchor)?;
+    let target = startup_v2::checked_path(target)?;
+    let current = before
+        .active_data_root
+        .parent()
+        .ok_or(AppError::NotConfigured)?;
+    let fixed = anchor.parent().ok_or(AppError::NotConfigured)?;
+    for root in [current, fixed] {
+        if !same_runtime_directory(root, &target) && is_nested(root, &target) {
+            return Err(AppError::NotConfigured);
+        }
     }
-    if validate_structure(target)? != StructureValidation::Valid {
-        return Err(AppError::FileSystem {
-            operation: "switch data root".to_string(),
-            detail: "target data root is not current version 1".to_string(),
-        });
+    let desktop = target.join("desktop");
+    if validate_structure(&desktop)? != StructureValidation::Valid {
+        return Err(AppError::NotConfigured);
     }
-    let mut config = load_runtime_config(current)?;
-    config.active_data_root = target.to_path_buf();
-    save_runtime_config(current, &config)?;
+    startup_v2::check_owner(&target)?;
+    startup_v2::check_owner(&desktop)?;
+    let config = load_runtime_config(&desktop)?;
+    if is_nested(anchor, &resolve_opencodex_home(&config)) {
+        return Err(AppError::NotConfigured);
+    }
+    let _target_lock = if !same_runtime_directory(&desktop, &before.active_data_root) {
+        Some(crate::modules::instance::AppInstanceLock::acquire(
+            &desktop,
+        )?)
+    } else {
+        None
+    };
+    startup_v2::set_location(anchor, &target)?;
     Ok(config)
 }
 
+/// Edit one explicitly supplied D, never an active pointer.
 pub fn set_opencodex_home(
     current: &Path,
     mode: OpenCodexHomeMode,
     external_path: Option<&Path>,
 ) -> Result<DataRootRuntimeConfig, AppError> {
     let mut config = load_runtime_config(current)?;
-    let resolved_path: Option<&Path> = match mode {
-        OpenCodexHomeMode::Inside => None,
-        OpenCodexHomeMode::External => Some(external_path.ok_or_else(|| AppError::NotConfigured)?),
-    };
-    if let Some(path) = resolved_path {
-        if is_nested(current, path) || is_nested(&config.active_data_root, path) {
-            return Err(AppError::FileSystem {
-                operation: "set OPENCODEX_HOME".to_string(),
-                detail: "OPENCODEX_HOME cannot be nested in the manager data root".to_string(),
-            });
-        }
-    }
     config.opencodex_home_mode = mode;
-    config.opencodex_home_path = resolved_path.map(Path::to_path_buf);
+    config.opencodex_home_path = match mode {
+        OpenCodexHomeMode::Inside => None,
+        OpenCodexHomeMode::External => Some(startup_v2::checked_path(
+            external_path.ok_or(AppError::NotConfigured)?,
+        )?),
+    };
     save_runtime_config(current, &config)?;
     Ok(config)
 }
 
 pub fn resolve_opencodex_home(config: &DataRootRuntimeConfig) -> PathBuf {
     match config.opencodex_home_mode {
-        OpenCodexHomeMode::Inside => config.active_data_root.join("opencodex-home"),
+        OpenCodexHomeMode::Inside => config
+            .active_data_root
+            .parent()
+            .expect("desktop has an aggregate parent")
+            .join("opencodex/home"),
         OpenCodexHomeMode::External => config
             .opencodex_home_path
             .clone()
@@ -432,31 +464,18 @@ pub fn runtime_binding_matches(
 
 pub fn same_runtime_directory(saved: &Path, current: &Path) -> bool {
     saved == current
-        || matches!((saved.canonicalize(), current.canonicalize()),
+        || matches!((startup_v2::checked_path(saved), startup_v2::checked_path(current)),
             (Ok(saved), Ok(current)) if saved == current)
 }
 
-fn is_nested(left: &Path, right: &Path) -> bool {
-    let left = left.canonicalize().unwrap_or_else(|_| left.to_path_buf());
-    let right = match right.canonicalize() {
-        Ok(path) => path,
-        Err(_) => {
-            let parent = right
-                .parent()
-                .and_then(|parent| parent.canonicalize().ok())
-                .unwrap_or_else(|| right.to_path_buf());
-            match right.file_name() {
-                Some(name) => parent.join(name),
-                None => right.to_path_buf(),
-            }
-        }
-    };
-    if left.starts_with(&right) || right.starts_with(&left) {
-        return true;
+pub(crate) fn is_nested(left: &Path, right: &Path) -> bool {
+    match (
+        startup_v2::checked_path(left),
+        startup_v2::checked_path(right),
+    ) {
+        (Ok(left), Ok(right)) => left.starts_with(&right) || right.starts_with(&left),
+        _ => true,
     }
-    left.starts_with(&right)
-        || left.join("opencodex-home").starts_with(&right)
-        || right.join("opencodex-home").starts_with(&left)
 }
 
 fn metadata_matches_version(path: &Path) -> Result<bool, AppError> {
@@ -467,7 +486,7 @@ fn metadata_matches_version(path: &Path) -> Result<bool, AppError> {
     if validation == StructureValidation::FutureVersion {
         return Err(AppError::FileSystem {
             operation: "validate structure version".to_string(),
-            detail: "data root structure version is newer than supported version 1".to_string(),
+            detail: "data root structure version is newer than supported version 2".to_string(),
         });
     }
     if validation == StructureValidation::Corrupted {
@@ -496,9 +515,11 @@ fn create_partitions(root: &Path) -> Result<(), AppError> {
                 detail: "partition target is not a directory".to_string(),
             });
         }
-        std::fs::create_dir(&path).map_err(|error| AppError::FileSystem {
-            operation: "create data root partition".to_string(),
-            detail: error.to_string(),
+        crate::infrastructure::platform::create_private_dir_all(&path, 0o700).map_err(|error| {
+            AppError::FileSystem {
+                operation: "create data root partition".to_string(),
+                detail: error.to_string(),
+            }
         })?;
         set_private_directory(&path)?;
         created.push(path);
@@ -513,11 +534,10 @@ fn create_partitions(root: &Path) -> Result<(), AppError> {
 }
 
 fn write_metadata_and_lock(paths: &DataRootPaths) -> Result<(), AppError> {
-    let metadata = DataRootMetadata {
-        structure_version: STRUCTURE_VERSION.to_string(),
-    };
-    let payload = serde_json::to_vec_pretty(&metadata).map_err(|error| AppError::AtomicWrite {
-        reason: error.to_string(),
+    let payload = merged_metadata_payload(&DataRootRuntimeConfig {
+        active_data_root: paths.root.clone(),
+        opencodex_home_mode: OpenCodexHomeMode::Inside,
+        opencodex_home_path: None,
     })?;
     crate::infrastructure::atomic_write::atomic_write(&paths.metadata, &payload, 0o600)?;
     if let Err(error) =
@@ -530,18 +550,32 @@ fn write_metadata_and_lock(paths: &DataRootPaths) -> Result<(), AppError> {
 }
 
 fn read_and_validate_metadata(path: &Path) -> Result<StructureValidation, AppError> {
-    let bytes = std::fs::read(path).map_err(|error| AppError::FileSystem {
-        operation: "read structure metadata".to_string(),
-        detail: error.to_string(),
-    })?;
-    let metadata: DataRootMetadata =
-        serde_json::from_slice(&bytes).map_err(|_| AppError::FileSystem {
-            operation: "parse structure metadata".to_string(),
-            detail: "invalid structure metadata".to_string(),
-        })?;
-    match metadata.structure_version.as_str() {
-        "1" => Ok(StructureValidation::Valid),
-        value if value > "1" => Ok(StructureValidation::FutureVersion),
+    let metadata = match read_metadata_document(path) {
+        Ok(document) => document,
+        Err(AppError::NotConfigured) => return Ok(StructureValidation::Corrupted),
+        Err(error) => return Err(error),
+    };
+    match metadata.structure_version.parse::<u64>() {
+        Ok(2) if metadata.structure_version == STRUCTURE_VERSION => {
+            let root = path
+                .parent()
+                .and_then(Path::parent)
+                .ok_or(AppError::NotConfigured)?;
+            Ok(
+                if validate_home_config(&DataRootRuntimeConfig {
+                    active_data_root: root.into(),
+                    opencodex_home_mode: metadata.opencodex_home_mode,
+                    opencodex_home_path: metadata.opencodex_home_path,
+                })
+                .is_ok()
+                {
+                    StructureValidation::Valid
+                } else {
+                    StructureValidation::Corrupted
+                },
+            )
+        }
+        Ok(version) if version > 2 => Ok(StructureValidation::FutureVersion),
         _ => Ok(StructureValidation::Corrupted),
     }
 }
@@ -560,385 +594,185 @@ fn set_private_directory(path: &Path) -> Result<(), AppError> {
 }
 
 #[cfg(test)]
-mod empty_root_tests {
-    use super::*;
-
-    #[test]
-    fn empty_directory_is_uninitialized_until_partitions_are_created() {
-        let root = tempfile::tempdir().expect("empty directory");
-        assert_eq!(
-            validate_structure(root.path()).expect("validate empty directory"),
-            StructureValidation::Uninitialized
-        );
-        assert_eq!(std::fs::read_dir(root.path()).unwrap().count(), 0);
-        assert!(initialize(root.path()).expect("initialize empty directory"));
-        assert_eq!(
-            validate_structure(root.path()).expect("validate initialized directory"),
-            StructureValidation::Valid
-        );
-    }
-
-    #[test]
-    fn nonempty_directory_without_metadata_remains_corrupted() {
-        let root = tempfile::tempdir().expect("directory");
-        let sentinel = root.path().join("existing-file");
-        std::fs::write(&sentinel, b"must remain").unwrap();
-        assert_eq!(
-            validate_structure(root.path()).expect("validate nonempty directory"),
-            StructureValidation::Corrupted
-        );
-        assert_eq!(std::fs::read(&sentinel).unwrap(), b"must remain");
-        assert_eq!(std::fs::read_dir(root.path()).unwrap().count(), 1);
-    }
-
-    #[test]
-    fn empty_directory_cannot_be_referenced_as_an_active_root() {
-        let source = tempfile::tempdir().expect("source");
-        initialize(source.path()).unwrap();
-        let target = tempfile::tempdir().expect("empty target");
-        let result = switch_reference(
-            source.path(),
-            target.path(),
-            DataRootSwitchMode::ReferenceOnly,
-        );
-        assert!(result.is_err());
-        assert_eq!(std::fs::read_dir(target.path()).unwrap().count(), 0);
-    }
-}
-
-#[cfg(all(test, unix))]
 mod tests {
     use super::*;
-    use std::fs::Permissions;
-    use std::os::unix::fs::PermissionsExt;
+    use std::fs;
 
-    /// 回归：数据根目录已存在（上一次初始化中断、或用户手工创建）但缺少元数据时，
-    /// 初始化必须补齐分区并成功启动，而不是以 `File exists` 让整个应用崩溃。
+    fn document(version: &str) -> Vec<u8> {
+        serde_json::to_vec(&serde_json::json!({
+            "structure_version": version, "opencodex_home_mode": "inside"
+        }))
+        .unwrap()
+    }
+
     #[test]
-    fn initialize_recovers_when_partition_directory_already_exists() {
-        let temp = tempfile::tempdir().expect("temp parent");
-        let root = temp.path().join("data-root");
-        // 预先创建其中一个分区目录，模拟中断留下的半成品数据根。
-        std::fs::create_dir_all(root.join("manager-state")).expect("pre-create partition");
-        std::fs::write(root.join("manager-state").join("keep.txt"), b"keep")
-            .expect("seed user data");
-
-        let created = initialize(&root).expect("已存在的分区目录不得阻断启动");
-        assert!(created, "缺少元数据时应视为首次初始化");
+    fn initializes_private_v2_partitions_and_home_metadata_idempotently() {
+        let t = tempfile::tempdir().unwrap();
+        let root = t.path().join("aggregate/desktop");
+        assert!(initialize(&root).unwrap());
+        let bytes = fs::read(root.join(METADATA_RELATIVE_PATH)).unwrap();
+        assert!(!initialize(&root).unwrap());
+        assert_eq!(fs::read(root.join(METADATA_RELATIVE_PATH)).unwrap(), bytes);
         assert_eq!(
-            validate_structure(&root).expect("validate"),
+            validate_structure(&root).unwrap(),
             StructureValidation::Valid
         );
-        // 预先存在的内容必须保留，不能被回滚删掉。
+        let value: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
         assert_eq!(
-            std::fs::read_to_string(root.join("manager-state").join("keep.txt")).expect("keep"),
-            "keep"
+            value,
+            serde_json::json!({"structure_version":"2", "opencodex_home_mode":"inside"})
         );
-    }
-
-    #[test]
-    fn metadata_write_failure_keeps_preexisting_partition_data() {
-        let temp = tempfile::tempdir().unwrap();
-        let root = temp.path().join("root");
-        std::fs::create_dir_all(root.join("logs")).unwrap();
-        std::fs::write(root.join("logs/keep"), b"keep").unwrap();
-        std::fs::create_dir_all(root.join(STRUCTURE_LOCK_RELATIVE_PATH)).unwrap();
-        assert!(initialize(&root).is_err());
-        assert_eq!(std::fs::read(root.join("logs/keep")).unwrap(), b"keep");
-        assert!(!root.join("backups").exists());
-    }
-
-    /// 已有的合法数据根重复初始化必须幂等，且不返回「新建」。
-    #[test]
-    fn initialize_is_idempotent_on_existing_root() {
-        let temp = tempfile::tempdir().expect("temp parent");
-        let root = temp.path().join("data-root");
-        assert!(initialize(&root).expect("first init"));
-        assert!(
-            !initialize(&root).expect("second init"),
-            "第二次不应再视为新建"
-        );
+        let config = load_runtime_config(&root).unwrap();
+        assert_eq!(config.active_data_root, root);
         assert_eq!(
-            validate_structure(&root).expect("validate"),
-            StructureValidation::Valid
-        );
-    }
-
-    /// 回归：切换数据根引用后，本数据根的结构元数据必须仍然可解析，
-    /// 否则「重启后应用起不来」。此前运行期配置会把结构元数据整个覆盖掉。
-    #[test]
-    fn switching_reference_keeps_structure_metadata_readable() {
-        let temp = tempfile::tempdir().expect("temp parent");
-        let root = temp.path().join("root-a");
-        let target = temp.path().join("root-b");
-        initialize(&root).expect("init root");
-        initialize(&target).expect("init target");
-
-        switch_reference(&root, &target, DataRootSwitchMode::ReferenceOnly).expect("switch");
-
-        // 模拟重启：同一数据根必须仍能初始化，而不是报结构元数据损坏。
-        assert!(!initialize(&root).expect("switching must not break startup"));
-        assert_eq!(
-            validate_structure(&root).expect("validate"),
-            StructureValidation::Valid
-        );
-        assert_eq!(
-            load_runtime_config(&root)
-                .expect("runtime config")
-                .active_data_root,
-            target
-        );
-    }
-
-    /// 回归：被旧行为覆盖成「只剩运行期配置」的数据根，启动时要能自愈。
-    #[test]
-    fn clobbered_structure_metadata_is_repaired_on_initialize() {
-        let temp = tempfile::tempdir().expect("temp parent");
-        let root = temp.path().join("root-a");
-        let target = temp.path().join("root-b");
-        initialize(&root).expect("init root");
-        initialize(&target).expect("init target");
-        let clobbered = serde_json::json!({
-            "active_data_root": target,
-            "opencodex_home_mode": "inside",
-        });
-        std::fs::write(
-            root.join(METADATA_RELATIVE_PATH),
-            serde_json::to_vec(&clobbered).expect("json"),
-        )
-        .expect("write clobbered metadata");
-
-        assert!(!initialize(&root).expect("must self-heal"));
-        assert_eq!(
-            validate_structure(&root).expect("validate"),
-            StructureValidation::Valid
-        );
-        assert_eq!(
-            load_runtime_config(&root)
-                .expect("runtime config")
-                .active_data_root,
-            target
-        );
-    }
-
-    /// 回归：必须允许「切回数据根自身」，否则用户切走后无法回到管理器自己的数据根，
-    /// 也无法把 external OPENCODEX_HOME 之后的引用重置回默认根。
-    #[test]
-    fn switching_back_to_the_data_root_itself_is_allowed() {
-        let temp = tempfile::tempdir().expect("temp parent");
-        let root = temp.path().join("root-a");
-        let other = temp.path().join("root-b");
-        initialize(&root).expect("init root");
-        initialize(&other).expect("init other");
-
-        switch_reference(&root, &other, DataRootSwitchMode::ReferenceOnly).expect("switch away");
-        switch_reference(&root, &root, DataRootSwitchMode::ReferenceOnly).expect("switch back");
-
-        assert_eq!(
-            load_runtime_config(&root)
-                .expect("runtime config")
-                .active_data_root,
-            root
-        );
-        assert_eq!(
-            validate_structure(&root).expect("validate"),
-            StructureValidation::Valid
-        );
-    }
-
-    fn metadata_json(version: &str) -> Vec<u8> {
-        serde_json::to_vec(&DataRootMetadata {
-            structure_version: version.to_string(),
-        })
-        .expect("serialize metadata")
-    }
-
-    #[test]
-    fn initializes_seven_private_partitions_and_metadata() {
-        let temp = tempfile::tempdir().expect("create temporary root parent");
-        let root = temp.path().join("data-root");
-
-        let created = initialize(&root).expect("initialize data root");
-        assert!(created);
-        assert_eq!(
-            validate_structure(&root).expect("validate"),
-            StructureValidation::Valid
-        );
-
-        for (_, name) in PARTITIONS {
-            let path = root.join(name);
-            assert!(path.is_dir(), "{name} should exist");
-            let mode = std::fs::metadata(&path).unwrap().permissions().mode();
-            assert_eq!(mode & 0o777, 0o700);
-        }
-
-        let metadata_path = root.join(METADATA_RELATIVE_PATH);
-        assert!(metadata_path.is_file());
-        let mode = std::fs::metadata(&metadata_path)
-            .unwrap()
-            .permissions()
-            .mode();
-        assert_eq!(mode & 0o777, 0o600);
-        assert!(root.join(STRUCTURE_LOCK_RELATIVE_PATH).is_file());
-    }
-
-    #[test]
-    fn existing_valid_structure_is_referenced_idempotently() {
-        let temp = tempfile::tempdir().expect("create temporary root parent");
-        let root = temp.path().join("data-root");
-        std::fs::create_dir_all(root.join("manager-state")).expect("create manager state");
-        std::fs::write(root.join(METADATA_RELATIVE_PATH), metadata_json("1"))
-            .expect("write metadata");
-
-        let created = initialize(&root).expect("reference existing root");
-
-        assert!(!created);
-        assert_eq!(
-            validate_structure(&root).expect("validate"),
-            StructureValidation::Valid
+            resolve_opencodex_home(&config),
+            t.path().join("aggregate/opencodex/home")
         );
         for (_, name) in PARTITIONS {
-            assert!(root.join(name).is_dir(), "{name} should be idempotent");
-            let mode = std::fs::metadata(root.join(name))
-                .unwrap()
-                .permissions()
-                .mode();
-            assert_eq!(mode & 0o777, 0o700);
-        }
-    }
-
-    #[test]
-    fn future_structure_version_is_blocked_before_writes() {
-        let temp = tempfile::tempdir().expect("create temporary root parent");
-        let root = temp.path().join("data-root");
-        std::fs::create_dir_all(root.join("manager-state")).expect("create manager state");
-        std::fs::write(root.join(METADATA_RELATIVE_PATH), metadata_json("2"))
-            .expect("write metadata");
-
-        let error = initialize(&root).expect_err("future version should fail");
-
-        assert!(error.to_string().contains("newer than supported"));
-        for (_, name) in PARTITIONS {
-            if name == "manager-state" {
-                continue;
+            assert!(root.join(name).is_dir());
+            #[cfg(unix)]
+            {
+                use std::os::unix::fs::PermissionsExt;
+                assert_eq!(
+                    fs::metadata(root.join(name)).unwrap().permissions().mode() & 0o777,
+                    0o700
+                );
             }
-            assert!(!root.join(name).exists());
+        }
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            assert_eq!(
+                fs::metadata(root.join(METADATA_RELATIVE_PATH))
+                    .unwrap()
+                    .permissions()
+                    .mode()
+                    & 0o777,
+                0o600
+            );
         }
     }
 
     #[test]
-    fn corrupted_or_missing_metadata_is_blocked() {
-        let temp = tempfile::tempdir().expect("create temporary root parent");
-        let root = temp.path().join("incomplete");
-        std::fs::create_dir_all(root.join("manager-state")).expect("create incomplete root");
+    fn unknown_nonempty_root_is_preserved_instead_of_imported_or_repaired() {
+        let t = tempfile::tempdir().unwrap();
+        let root = t.path().join("desktop");
+        fs::create_dir_all(root.join("manager-state")).unwrap();
+        fs::write(root.join("manager-state/keep"), b"keep").unwrap();
+        assert!(initialize(&root).is_err());
+        assert_eq!(fs::read(root.join("manager-state/keep")).unwrap(), b"keep");
+        assert!(!root.join("cache").exists());
         assert_eq!(
-            validate_structure(&root).expect("validate"),
+            validate_structure(&root).unwrap(),
             StructureValidation::Corrupted
         );
-
-        let root = temp.path().join("broken");
-        std::fs::create_dir_all(root.join("manager-state")).expect("create manager state");
-        std::fs::write(root.join(METADATA_RELATIVE_PATH), b"{broken").expect("write metadata");
-        assert!(initialize(&root).is_err());
     }
 
     #[test]
-    fn non_directory_target_is_rejected() {
-        let temp = tempfile::tempdir().expect("create temporary parent");
-        let target = temp.path().join("not-directory");
-        std::fs::write(&target, b"file").expect("write fixture");
-        assert!(initialize(&target).is_err());
-    }
-
-    #[test]
-    fn write_failure_does_not_leave_partial_structure() {
-        let temp = tempfile::tempdir().expect("create temporary parent");
-        let root = temp.path().join("data-root");
-        std::fs::create_dir(&root).expect("create root");
-        let metadata_parent = root.join("manager-state");
-        std::fs::create_dir(&metadata_parent).expect("create manager state");
-        let metadata_path = metadata_parent.join("data-root.json");
-        std::fs::write(&metadata_path, b"existing").expect("write metadata");
-        std::fs::set_permissions(&metadata_path, Permissions::from_mode(0o444))
-            .expect("make read-only");
-
-        let result = initialize(&root);
-        std::fs::set_permissions(&metadata_path, Permissions::from_mode(0o644))
-            .expect("restore permissions");
-
-        assert!(result.is_err());
-        assert!(!root.join("backups").exists());
-        assert!(!root.join("logs").exists());
-    }
-
-    #[test]
-    fn runtime_config_defaults_inside_home_and_rejects_relative_root() {
-        let temp = tempfile::tempdir().expect("create temporary root");
-        let root = temp.path().join("data-root");
-        initialize(&root).expect("initialize data root");
-        let config = DataRootRuntimeConfig {
-            active_data_root: root.clone(),
-            opencodex_home_mode: OpenCodexHomeMode::Inside,
-            opencodex_home_path: None,
-        };
-        save_runtime_config(&root, &config).expect("save runtime config");
-        let loaded = load_runtime_config(&root).expect("load runtime config");
-        assert_eq!(loaded.active_data_root, root);
-        assert_eq!(resolve_opencodex_home(&loaded), root.join("opencodex-home"));
-
-        let relative = temp.path().join("relative");
-        std::fs::create_dir(&relative).expect("create relative root");
-        assert!(load_runtime_config(&relative).is_err());
-    }
-
-    #[test]
-    fn external_home_requires_absolute_path_and_rejects_nesting() {
-        let temp = tempfile::tempdir().expect("create temporary root");
-        let root = temp.path().join("data-root");
-        initialize(&root).expect("initialize data root");
-        let config = DataRootRuntimeConfig {
-            active_data_root: root.clone(),
-            opencodex_home_mode: OpenCodexHomeMode::Inside,
-            opencodex_home_path: None,
-        };
-        save_runtime_config(&root, &config).expect("save runtime config");
-        assert!(set_opencodex_home(&root, OpenCodexHomeMode::External, None).is_err());
-        assert!(
-            set_opencodex_home(&root, OpenCodexHomeMode::External, Some(&root.join("home")))
-                .is_err()
+    fn empty_root_is_uninitialized_and_cannot_be_selected() {
+        let t = tempfile::tempdir().unwrap();
+        assert_eq!(
+            validate_structure(t.path()).unwrap(),
+            StructureValidation::Uninitialized
         );
-        let external = temp.path().join("external-home");
-        std::fs::create_dir(&external).expect("create external home");
-        let updated = set_opencodex_home(&root, OpenCodexHomeMode::External, Some(&external))
-            .expect("set external");
-        assert_eq!(resolve_opencodex_home(&updated), external);
-        let loaded = load_runtime_config(&root).expect("load runtime config");
-        assert_eq!(loaded.opencodex_home_mode, OpenCodexHomeMode::External);
-    }
-
-    #[test]
-    fn reference_switch_requires_valid_non_nested_target() {
-        let temp = tempfile::tempdir().expect("create temporary parent");
-        let current = temp.path().join("current");
-        initialize(&current).expect("initialize current");
+        let source = tempfile::tempdir().unwrap();
+        initialize(&source.path().join("desktop")).unwrap();
         assert!(switch_reference(
-            &current,
-            &current.join("nested"),
+            &source.path().join("desktop"),
+            t.path(),
             DataRootSwitchMode::ReferenceOnly
         )
         .is_err());
+        assert_eq!(fs::read_dir(t.path()).unwrap().count(), 0);
+    }
 
-        let future = temp.path().join("future");
-        std::fs::create_dir_all(future.join("manager-state")).expect("create future");
-        std::fs::write(future.join(METADATA_RELATIVE_PATH), metadata_json("2"))
-            .expect("write future");
-        assert!(switch_reference(&current, &future, DataRootSwitchMode::ReferenceOnly).is_err());
+    #[test]
+    fn old_future_and_corrupt_metadata_fail_without_writes() {
+        for bytes in [document("1"), document("3"), document("10"), b"{broken".to_vec(),
+            br#"{"active_data_root":"/old","opencodex_home_mode":"inside"}"#.to_vec(),
+            br#"{"structure_version":"2","opencodex_home_mode":"inside","active_data_root":"/old"}"#.to_vec(),
+            br#"{"structure_version":"2"}"#.to_vec()] {
+            let t = tempfile::tempdir().unwrap();
+            let root = t.path().join("desktop");
+            fs::create_dir_all(root.join("manager-state")).unwrap();
+            fs::write(root.join(METADATA_RELATIVE_PATH), &bytes).unwrap();
+            assert!(initialize(&root).is_err());
+            assert!(load_runtime_config(&root).is_err());
+            assert_eq!(fs::read(root.join(METADATA_RELATIVE_PATH)).unwrap(), bytes);
+            assert!(!root.join("cache").exists());
+        }
+    }
 
-        let target = temp.path().join("target");
-        initialize(&target).expect("initialize target");
-        let config = switch_reference(&current, &target, DataRootSwitchMode::ReferenceOnly)
-            .expect("switch reference");
-        assert_eq!(config.active_data_root, target);
-        assert!(switch_reference(&current, &target, DataRootSwitchMode::MigrateData).is_err());
+    #[test]
+    fn version_comparison_is_numeric_and_v2_is_current() {
+        for (version, expected) in [
+            ("1", StructureValidation::Corrupted),
+            ("2", StructureValidation::Valid),
+            ("3", StructureValidation::FutureVersion),
+            ("10", StructureValidation::FutureVersion),
+        ] {
+            let t = tempfile::tempdir().unwrap();
+            fs::create_dir(t.path().join("manager-state")).unwrap();
+            fs::write(t.path().join(METADATA_RELATIVE_PATH), document(version)).unwrap();
+            assert_eq!(validate_structure(t.path()).unwrap(), expected);
+        }
+    }
+
+    #[test]
+    fn external_home_validation_precedes_metadata_write() {
+        let t = tempfile::tempdir().unwrap();
+        let root = t.path().join("desktop");
+        initialize(&root).unwrap();
+        let before = fs::read(runtime_config_path(&root)).unwrap();
+        for path in [
+            None,
+            Some(Path::new("relative")),
+            Some(root.as_path()),
+            Some(root.join("home").as_path()),
+            Some(t.path()),
+            Some(t.path().join("missing/../escape").as_path()),
+        ] {
+            assert!(set_opencodex_home(&root, OpenCodexHomeMode::External, path).is_err());
+            assert_eq!(fs::read(runtime_config_path(&root)).unwrap(), before);
+        }
+        let external = t.path().join("external/new/home");
+        let config =
+            set_opencodex_home(&root, OpenCodexHomeMode::External, Some(&external)).unwrap();
+        assert_eq!(
+            resolve_opencodex_home(&config),
+            startup_v2::checked_path(&external).unwrap()
+        );
+        assert!(!external.exists());
+        let inside = set_opencodex_home(&root, OpenCodexHomeMode::Inside, None).unwrap();
+        assert_eq!(inside.opencodex_home_path, None);
+        assert_eq!(fs::read(runtime_config_path(&root)).unwrap(), before);
+    }
+
+    #[test]
+    fn metadata_cannot_bind_a_different_root() {
+        let t = tempfile::tempdir().unwrap();
+        let root = t.path().join("desktop");
+        initialize(&root).unwrap();
+        let before = fs::read(runtime_config_path(&root)).unwrap();
+        let mut config = load_runtime_config(&root).unwrap();
+        config.active_data_root = t.path().join("different/desktop");
+        assert!(save_runtime_config(&root, &config).is_err());
+        assert_eq!(fs::read(runtime_config_path(&root)).unwrap(), before);
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn linked_partitions_cannot_modify_a_different_root() {
+        let t = tempfile::tempdir().unwrap();
+        let root = t.path().join("desktop");
+        initialize(&root).unwrap();
+        let outside = t.path().join("outside");
+        fs::create_dir(&outside).unwrap();
+        fs::remove_dir(root.join("cache")).unwrap();
+        std::os::unix::fs::symlink(&outside, root.join("cache")).unwrap();
+        let before = fs::metadata(&outside).unwrap().permissions();
+        assert!(initialize(&root).is_err());
+        assert_eq!(fs::metadata(&outside).unwrap().permissions(), before);
+        assert_eq!(fs::read_dir(&outside).unwrap().count(), 0);
     }
 }

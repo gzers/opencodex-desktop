@@ -1,107 +1,68 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import UiIconButton from '@/components/ui/UiIconButton.vue'
+import {computed,nextTick,onBeforeUnmount,ref,watch} from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
+import UiIconButton from '@/components/ui/UiIconButton.vue'
+import UiSelectField from '@/components/ui/UiSelectField.vue'
 import AgentExecutionField from './AgentExecutionField.vue'
-import type {AgentViewContext} from './agentView'
-import { modelApi, errorText, type AgentSettings, type ModelSnapshot, type Proposal, type ResearchSource, type TemplateDraft } from './api'
-import { acceptProposal, proposalFields } from './proposals'
-const props = withDefaults(defineProps<{ draft: TemplateDraft; snapshot: ModelSnapshot;active?:boolean;viewContext?:AgentViewContext }>(),{active:true})
-const emit = defineEmits<{ close: []; apply: [draft: TemplateDraft]; external: [draft:TemplateDraft] }>()
-const prompt = ref(''); const urls = ref(''); const sources = ref<ResearchSource[]>([]); const settings = ref<AgentSettings | null>(null)
-const query = ref('')
-const lockContext=ref(props.viewContext?.lockContext??true),sourcesOpen=ref(props.viewContext?.sourcesOpen??false)
-const sourceSummary=computed(()=>sources.value.length?'资料 '+sources.value.length+' 项':'资料')
-function requestDraft(){const value=copy(props.draft);if(lockContext.value&&value.content.rules.contextWindow.mode==='custom'&&!value.content.lockedFields.includes('rules.contextWindow'))value.content.lockedFields.push('rules.contextWindow');return value}
-function external(){emit('external',copy(props.draft))}
-async function toggleSources(){sourcesOpen.value=!sourcesOpen.value;if(sourcesOpen.value){await nextTick();const detail=panel.value?.querySelector('#model-agent-sources');if(detail&&chat.value)chat.value.scrollTop+=detail.getBoundingClientRect().top-chat.value.getBoundingClientRect().top}}
-const restoreStatus=ref('')
-const error = ref(''); const busy = ref(false); const researching = ref(false)
-const run = ref(''); const result = ref<Proposal | null>(null); const base = ref<TemplateDraft | null>(null); const chosen = ref<string[]>([])
-const history = ref<{ role: string; text: string }[]>([])
-const panel=ref<HTMLElement|null>(null),chat=ref<HTMLElement|null>(null),input=ref<HTMLTextAreaElement|null>(null),maximized=ref(false)
-const copy=<T,>(value:T):T=>JSON.parse(JSON.stringify(value)) as T
-if(props.viewContext?.initialized){const view=props.viewContext;prompt.value=view.input;urls.value=view.urls;query.value=view.query;history.value=copy(view.history);sources.value=copy(view.sources);base.value=copy(view.base);result.value=copy(view.proposal);chosen.value=[...view.chosen];maximized.value=view.maximized}
-function captureView(wasActive=props.active){
- const view=props.viewContext;if(!view)return
- Object.assign(view,{initialized:true,lockContext:lockContext.value,sourcesOpen:sourcesOpen.value,input:prompt.value,urls:urls.value,query:query.value,history:copy(history.value),sources:copy(sources.value),scrollTop:chat.value?.scrollTop??view.scrollTop,selectionStart:input.value?.selectionStart??view.selectionStart,selectionEnd:input.value?.selectionEnd??view.selectionEnd,focusInput:wasActive&&!!panel.value?.contains(document.activeElement)||view.focusInput,base:copy(base.value),proposal:copy(result.value),chosen:[...chosen.value],maximized:maximized.value})
+import {useModelsV2Store,type RevisionBufferV2} from './store-v2'
+import {modelV2Api,type AgentSceneV2,type LibraryViewV2,type RefV2,type GenerateIntentV2} from './api-v2'
+import {useModalStore} from '@/app/modal/store'
+const props=withDefaults(defineProps<{draft?:RevisionBufferV2;snapshot:LibraryViewV2;generation?:number;targets?:readonly RefV2[];sessionKey?:string;active?:boolean;embedded?:boolean;disabled?:boolean}>(),{active:true,embedded:false})
+const emit=defineEmits<{close:[];external:[draft:RevisionBufferV2]}>()
+const models=useModelsV2Store(),modal=useModalStore(),chat=ref<HTMLElement|null>(null),input=ref<HTMLTextAreaElement|null>(null),maximized=ref(false)
+const scene=ref<AgentSceneV2>(props.embedded?'check_only':'from_sources'),confirming=ref(false),researching=ref(false)
+let researchSequence=0
+const key=computed(()=>props.sessionKey??'template:'+props.draft?.templateId),session=computed(()=>models.agentSession(key.value))
+const busy=computed(()=>session.value.preparing||session.value.generating||session.value.stopping||session.value.accepting)
+const target=computed<RefV2|null>(()=>{const d=props.draft;if(!d?.baseRevision)return null;const r=props.snapshot.library.templates.find(t=>t.id===d.templateId)?.revisions.find(r=>r.id===d.baseRevision);return r?{templateId:d.templateId,revisionId:r.id,digest:r.digest}:null})
+const exactTargets=computed(()=>props.targets?[...props.targets]:target.value?[target.value]:[])
+const missingTarget=computed(()=>!!props.draft?.baseRevision&&!target.value)
+const result=computed(()=>session.value.result)
+const reportOnly=computed(()=>!!result.value?.report)
+const stale=computed(()=>!!result.value&&result.value.expectedLibrary!==props.snapshot.libraryDigest)
+const proposals=computed(()=>result.value?.review?.proposals??[])
+const scopeMatches=computed(()=>proposals.value.every(item=>item.proposal.target?exactTargets.value.some(r=>JSON.stringify(r)===JSON.stringify(item.proposal.target)):!!props.draft&&!props.draft.baseRevision&&exactTargets.value.length===0))
+const canAccept=computed(()=>scene.value!=='check_only'&&result.value?.phase==='review'&&!reportOnly.value&&result.value.review?.valid&&scopeMatches.value&&(!stale.value||!!session.value.acceptRequest)&&!busy.value&&!props.disabled)
+const editChanged=computed(()=>props.generation!==undefined&&session.value.inputGeneration!==null&&props.generation!==session.value.inputGeneration)
+const sceneOptions=computed(()=>props.embedded?[{value:'check_only',label:'仅检查，返回报告'},{value:'update_models',label:'生成更新建议'}]:[{value:'from_sources',label:'按当前编辑生成建议'},{value:'check_only',label:'仅检查已保存目标'}])
+function capture(){const s=session.value;s.view??={scrollTop:0,selectionStart:0,selectionEnd:0,maximized:false};s.view.scrollTop=chat.value?.scrollTop??s.view.scrollTop;s.view.selectionStart=input.value?.selectionStart??0;s.view.selectionEnd=input.value?.selectionEnd??0;s.view.maximized=maximized.value}
+async function restoreView(){await nextTick();const view=session.value.view;if(!view||!props.active)return;if(chat.value)chat.value.scrollTop=view.scrollTop;maximized.value=view.maximized;if(input.value)input.value.setSelectionRange(view.selectionStart,view.selectionEnd)}
+function close(){capture();emit('close')}
+watch(()=>props.active,value=>{if(value)void restoreView();else capture()},{immediate:true})
+onBeforeUnmount(()=>{capture();researchSequence++})
+async function research(mode:'read'|'search'){if(researching.value||busy.value)return;const sessionKey=key.value,request=++researchSequence;researching.value=true;session.value.error='';try{const values=mode==='read'?await modelV2Api.researchSources((session.value.researchUrls??'').split('\n').map(s=>s.trim()).filter(Boolean)):await modelV2Api.searchSources((session.value.researchQuery??'').trim());if(request!==researchSequence||key.value!==sessionKey)return;session.value.sources=values}catch(cause){if(request===researchSequence)session.value.error=cause instanceof Error?cause.message:'资料读取未完成，原有来源保持。'}finally{if(request===researchSequence)researching.value=false}}
+async function generate(){
+ if(busy.value||researching.value||props.disabled||missingTarget.value||!models.executionPreference)return
+ const check=scene.value==='check_only'
+ if(check&&!exactTargets.value.length){session.value.error='仅检查需要明确的已保存版本，新建缓冲不会被伪装成保存目标。';return}
+ const message=session.value.input.trim()||(check?'检查所选保存版本的规则与参数':'按当前明确编辑补全规则，保留人工锁与原始 ID')
+ const history=[...session.value.history,{role:'user' as const,text:message}]
+ session.value.history=history
+ const request:GenerateIntentV2={scene:scene.value,targets:exactTargets.value,allowNew:!check&&!!props.draft&&!props.draft.baseRevision,expectedLibrary:props.snapshot.libraryDigest,requirements:message,history:history.slice(-40),sources:JSON.parse(JSON.stringify(session.value.sources))}
+ const buffer=!check&&props.draft?{target:target.value,label:props.draft.label,content:JSON.parse(JSON.stringify(props.draft.content)),generation:props.generation??models.editGeneration}:undefined
+ await models.runAgent(key.value,request,buffer)
+ const value=session.value.result;if(value?.report)session.value.history.push({role:'assistant',text:value.report.summary});else if(value?.review)session.value.history.push({role:'assistant',text:value.review.valid?'建议已返回，请审阅后明确保存。':'建议未通过完整校验，问题已保留。'})
 }
-watch([prompt,history,sources,urls,query,base,result,chosen,maximized,lockContext,sourcesOpen],()=>captureView(),{deep:true,flush:'sync'})
-async function restoreView(){await nextTick();if(panelDisposed||!props.active)return;const view=props.viewContext;if(!view?.initialized)return;if(chat.value)chat.value.scrollTop=view.scrollTop;if(input.value){input.value.setSelectionRange(view.selectionStart,view.selectionEnd);if(view.focusInput)input.value.focus({preventScroll:true})}}
-function collapse(){captureView();emit('close')}
-watch(()=>props.active,(active,previous)=>{if(active)void restoreView();else captureView(previous)})
-
-const sameTarget = computed(() => !!base.value && base.value.templateId === props.draft.templateId && base.value.baseRevision === props.draft.baseRevision)
-const fields = computed(() => base.value && result.value && sameTarget.value ? proposalFields(base.value, props.draft, result.value) : [])
-watch(fields, values => { chosen.value = chosen.value.filter(path => values.some(field => field.path.join('.') === path && !field.conflict && !field.locked)) })
-let panelDisposed=false;let conversationDigest:string|null=null;let conversationReady=false;let conversationDirty=false;let conversationTimer:ReturnType<typeof setTimeout>|undefined;let conversationWrite:Promise<void>|null=null
-function conversationContent(){return {baseRevision:props.draft.baseRevision,input:prompt.value,history:history.value.map(item=>({role:item.role==='你'?'user' as const:'assistant' as const,text:item.text})),sources:JSON.parse(JSON.stringify(sources.value)) as ResearchSource[]}}
-async function persistConversation(){
- if(conversationWrite)return conversationWrite
- if(!conversationReady||!conversationDirty)return
- conversationWrite=(async()=>{while(conversationDirty){conversationDirty=false;try{const saved=await modelApi.saveAgentConversation({templateId:props.draft.templateId,expectedDigest:conversationDigest,content:conversationContent()});conversationDigest=saved.digest}catch(cause){conversationDirty=true;error.value=errorText(cause);break}}})().finally(()=>{conversationWrite=null})
- return conversationWrite
-}
-watch([prompt,history,sources],()=>{conversationDirty=true;if(conversationTimer)clearTimeout(conversationTimer);conversationTimer=setTimeout(()=>void persistConversation(),350)},{deep:true})
-onMounted(async()=>{void restoreView();try{const previous=await modelApi.agentConversation(props.draft.templateId);if(panelDisposed)return;conversationDigest=previous?.digest??null;conversationReady=true;if(conversationDirty)void persistConversation()}catch(cause){if(!panelDisposed)error.value=errorText(cause)}})
-let sequence = 0;let researchSequence=0
-onBeforeUnmount(() => { captureView();if(conversationTimer)clearTimeout(conversationTimer);void persistConversation();panelDisposed=true;sequence++;researchSequence++; if (run.value) void modelApi.stopGeneration(run.value) })
-async function readSources() {
-  const current=++researchSequence;researching.value = true; error.value = ''
-  try { const found=await modelApi.research(urls.value.split('\n').map(v => v.trim()).filter(Boolean));if(current===researchSequence)sources.value=found }
-  catch (cause) {if(current===researchSequence) error.value = errorText(cause) } finally { if(current===researchSequence)researching.value = false }
-}
-async function searchSources() {
-  const current=++researchSequence;researching.value = true; error.value = ''
-  try {const found=await modelApi.searchSources(query.value);if(current===researchSequence)sources.value=found }
-  catch (cause) { if(current===researchSequence)error.value = errorText(cause) } finally {if(current===researchSequence) researching.value = false }
-}
-async function restoreSuggestion(){
- if(busy.value)return
- const current=++sequence;busy.value=true;error.value=''
- try{const inputBefore=prompt.value;const previous=await modelApi.agentConversation(props.draft.templateId);const pending=await modelApi.latestAgentResult(props.draft.templateId);if(current!==sequence)return;
- if(previous){conversationDigest=previous.digest;conversationReady=true;history.value=previous.content.history.map(item=>({role:item.role==='user'?'你':'助手',text:item.text}));sources.value=previous.content.sources;if(prompt.value===inputBefore)prompt.value=previous.content.input}
- if(!pending){restoreStatus.value=previous?'本机对话与未发送输入已恢复，当前没有待审建议':'没有可恢复的内部对话或建议';return}
- const suggestion=pending.result.proposals.find(p=>p.templateId===props.draft.templateId);if(!suggestion)throw new Error('上次结果不包含当前编辑对象')
- const target=pending.targets.find(t=>t.templateId===props.draft.templateId)
- base.value=target?(target.buffer??{templateId:target.templateId,baseRevision:target.revision.id,label:target.revision.savedLabel,content:target.revision.content}):JSON.parse(JSON.stringify(props.draft))
- result.value=suggestion;chosen.value=[];sources.value=previous?.content.sources??pending.sources??[];history.value=previous?.content.history.length?previous.content.history.map(item=>({role:item.role==='user'?'你':'助手',text:item.text})):pending.history?.length?pending.history.map(item=>({role:item.role==='user'?'你':'助手',text:item.text})):[{role:'助手',text:pending.result.report??'上次待审建议'}];restoreStatus.value=new Date(pending.createdAt).toLocaleString('zh-CN')+' · '+(pending.reviewed?'该建议已有另存版本，当前编辑缓冲保持':'对话与建议已恢复，请逐项比较')
- }catch(cause){if(current===sequence)error.value=errorText(cause)}finally{if(current===sequence)busy.value=false}
-}
-async function generate() {
-  if (busy.value || !settings.value) return
-  const current = ++sequence; const captured: TemplateDraft = requestDraft(); const id = crypto.randomUUID(); run.value = id
-  busy.value = true; error.value = '';restoreStatus.value=''; result.value = null; chosen.value = []
-  const input = prompt.value.trim(); history.value.push({ role: '你', text: input || '根据当前模版与资料补全规则' })
-  try {
-    await persistConversation()
-    const value = await modelApi.generate(id, { scene: 'from_sources', targets: captured.templateId && captured.baseRevision ? [{ templateId: captured.templateId, revisionId: captured.baseRevision }] : [], allowNew: !captured.templateId, requirements: [input||'根据当前模版与资料补全规则', ...(!captured.templateId?['新建表单：'+JSON.stringify(captured)]:[])].join('\n'), expectedLibrary: props.snapshot.libraryDigest, buffers: captured.templateId && captured.baseRevision ? [{ templateId: captured.templateId, baseRevision: captured.baseRevision, label: captured.label, content: captured.content }] : [] }, sources.value,history.value.slice(-40).map(item=>({role:item.role==='你'?'user':'assistant',text:item.text})))
-    if (current !== sequence) return
-    if (value.proposals.length !== 1) throw new Error('当前编辑仅接收一个目标，请缩小范围')
-    const suggestion = value.proposals[0]!
-    if (suggestion.templateId !== captured.templateId || suggestion.baseRevision !== captured.baseRevision) throw new Error('建议目标与当前编辑基准不一致')
-    base.value = captured; result.value = suggestion
-    chosen.value = proposalFields(captured, props.draft, suggestion).filter(f => !f.conflict && !f.locked).map(f => f.path.join('.'))
-    history.value.push({ role: '助手', text: value.report || '已生成建议，请比较后接受；尚未保存。' })
-  } catch (cause) { if (current === sequence) error.value = errorText(cause) }
-  finally { if (current === sequence) { busy.value = false; run.value = '' } }
-}
-async function stop() { const id = run.value; sequence++; busy.value = false; run.value = ''; if (id) await modelApi.stopGeneration(id) }
-function accept() { if (sameTarget.value) { emit('apply', acceptProposal(props.draft, fields.value, chosen.value)); result.value = null; history.value.push({ role:'助手',text:'所选建议已放入表单，仍需保存。' }) } }
+async function restore(){await models.restoreAgent(key.value,props.draft?.baseRevision?props.draft.templateId:null);void restoreView()}
+function accept(){if(!canAccept.value||confirming.value)return;confirming.value=true;const runId=result.value!.runId,digest=result.value!.responseDigest,generation=props.generation;modal.open({title:'接受本次已审阅建议',body:(editChanged.value?'当前编辑已经变化；本次只另存原任务建议，不覆盖当前输入。':'确认后按本次精确目标另存建议版本，当前输入、默认与已有采用保持。')+' 检查报告不会进入保存。',confirmLabel:'确认接受并保存',onConfirm:async()=>{try{if(result.value?.runId!==runId||result.value.responseDigest!==digest||props.generation!==generation){session.value.error='审阅确认期间结果或编辑已变化，原输入保持，请重新核对。';return}await models.acceptAgent(key.value,props.draft?.baseRevision?props.draft.templateId:null)}finally{confirming.value=false}},onCancel:()=>{confirming.value=false}})}
 </script>
 <template>
-  <aside id="model-agent-panel" ref="panel" class="model-agent-panel" role="dialog" aria-modal="false" :class="{'is-maximized':maximized}" aria-label="模版助手"><header><strong>模版助手</strong><div class="model-inline"><UiIconButton :label="maximized?'还原大小':'放大'" :title="maximized?'还原大小':'放大'" :aria-pressed="maximized" @click="maximized=!maximized"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path v-if="maximized" d="M9 3v6H3m18 0h-6V3M3 15h6v6m6 0v-6h6"/><path v-else d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></UiIconButton><UiIconButton label="收起" title="收起助手" @click="collapse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></UiIconButton></div></header>
-    <div class="model-agent-execution"><AgentExecutionField v-model="settings" /></div><div ref="chat" class="model-agent-scroll" @scroll.passive="captureView()"><UiButton size="sm" :disabled="busy" @click="restoreSuggestion">恢复上次对话与建议</UiButton>
-      <p v-if="restoreStatus" class="model-muted" role="status">{{ restoreStatus }}</p>
-      <details id="model-agent-sources" :open="sourcesOpen" @toggle="sourcesOpen=($event.target as HTMLDetailsElement).open"><summary>在线资料</summary><label>检索关键词<input class="input" v-model="query" /></label><UiButton size="sm" :loading="researching" :disabled="!query.trim()" @click="searchSources">检索公开资料</UiButton><label>公开HTTPS资料地址（每行一个）<textarea class="input" v-model="urls" rows="3" /></label><UiButton size="sm" :loading="researching" @click="readSources">读取在线资料</UiButton><p v-for="source in sources" :key="source.url" class="model-muted">{{ source.url }} · {{ source.retrievedAt }}</p></details>
-      <div role="log" aria-live="polite" aria-relevant="additions text" aria-label="Agent对话"><div v-for="(item,i) in history" :key="i" class="model-agent-message"><strong>{{ item.role }}</strong><p>{{ item.text }}</p></div></div>
-      <p v-if="history.length>40" class="model-muted">本次发送最近 40 条消息；完整对话继续保留在本机。</p>
-      <template v-if="result"><p v-if="!sameTarget" class="model-error">该建议属于先前编辑对象，未应用到当前表单。</p><article v-for="field in fields" :key="field.path.join('.')" class="model-agent-diff"><label><input v-model="chosen" type="checkbox" :value="field.path.join('.')" :disabled="field.locked" />{{ field.label }}{{ field.locked ? ' · 人工锁' : field.conflict ? ' · 生成期间有人工修改，默认保留' : '' }}</label><details><summary>查看前后内容</summary><pre>{{ JSON.stringify(field.current,null,2) }}</pre><pre>{{ JSON.stringify(field.after,null,2) }}</pre></details></article><UiButton :disabled="!sameTarget || !chosen.length" @click="accept">接受所选建议</UiButton></template>
-      <p v-if="error" role="alert" class="model-error">{{ error }}</p>
+  <aside id="model-agent-panel" class="model-agent-panel" :class="{'is-maximized':maximized,'is-embedded':embedded}" role="region" aria-label="模版助手" v-show="active">
+    <header><strong>{{embedded?'检查模版更新':'模版助手'}}</strong><div class="model-inline"><UiIconButton v-if="!embedded" :label="maximized?'还原大小':'放大'" @click="maximized=!maximized"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5m6 0h5v5M4 15v5h5m6 0h5v-5" /></svg></UiIconButton><UiButton v-if="!embedded" size="sm" @click="close">收起助手</UiButton></div></header>
+    <div class="model-agent-execution"><AgentExecutionField :disabled="busy" /></div>
+    <div ref="chat" class="model-agent-scroll" @scroll.passive="capture">
+      <div class="model-inline"><UiButton size="sm" :disabled="busy" @click="restore">恢复上次建议</UiButton><UiSelectField v-model="scene" label="Agent 本次任务" :options="sceneOptions" :disabled="busy" /></div>
+      <p v-if="missingTarget" class="model-error" role="alert">当前编辑的精确保存依赖已缺失，未改选其它版本。</p>
+      <p v-if="session.status" role="status">{{session.status}}</p><p v-if="session.ticket" class="model-muted">原任务 · {{session.ticket.runId}}</p>
+      <div role="log" aria-label="Agent对话"><article v-for="(message,index) in session.history" :key="index" class="model-agent-message"><strong>{{message.role==='user'?'你':'助手'}}</strong><p>{{message.text}}</p></article></div>
+      <details><summary>本次已核验资料 · {{session.sources.length}} 项</summary><label>检索关键词<input v-model="session.researchQuery" class="input" aria-label="Agent资料关键词" /></label><UiButton size="sm" :disabled="busy||researching||!session.researchQuery?.trim()" @click="research('search')">检索公开资料</UiButton><label>公开 HTTPS 资料地址（每行一个）<textarea v-model="session.researchUrls" class="input" aria-label="Agent公开资料地址" rows="3" /></label><UiButton size="sm" :disabled="busy||researching||!session.researchUrls?.trim()" @click="research('read')">读取在线资料</UiButton><p class="model-muted">只发送有后端来源回执的资料；本页不会把任意 URL 文本当成已核验来源。</p><p v-for="source in session.sources" :key="source.receiptId??source.url">{{source.url}} · {{source.retrievedAt}}</p></details>
+      <template v-if="result?.report"><h3>检查报告</h3><p class="model-agent-report">{{result.report.summary}}</p><ul><li v-for="(issue,index) in result.report.issues" :key="index">{{issue.code}} · {{issue.message}}<span v-if="issue.fieldPath"> · {{issue.fieldPath}}</span></li></ul><p>仅检查返回报告，没有建议版本或配置写入。</p></template>
+      <template v-if="result?.review"><h3>待审阅建议 · {{proposals.length}} 项</h3><p v-if="stale" class="model-error" role="alert">已保存库已变化，当前建议保留；不能把旧结果应用到新基准。</p><p v-if="!scopeMatches" class="model-error" role="alert">该结果不属于当前精确目标范围，未允许接受。</p><p v-if="editChanged" role="status">当前编辑已变化；审阅原建议不会覆盖当前输入，保存前会再次确认。</p><article v-for="item in proposals" :key="item.index" class="model-agent-diff"><h4>{{item.proposal.label}} · {{item.proposal.target?.revisionId??'明确新建目标'}}</h4><p v-if="item.plannedRevision" class="model-muted">后端计划版本 {{item.plannedRevision.revisionId}}</p><details v-for="(difference,index) in item.differences" :key="index"><summary>{{difference.fieldPath}}</summary><pre>{{JSON.stringify(difference.before,null,2)}}</pre><pre>{{JSON.stringify(difference.after,null,2)}}</pre></details><details><summary>完整 v2 条件内容</summary><pre>{{JSON.stringify(item.proposal.content,null,2)}}</pre></details><p v-for="(issue,index) in item.issues" :key="index" class="model-error">{{issue.code}} · {{issue.message}}</p></article><p v-for="(issue,index) in result.review.issues" :key="index" role="alert" class="model-error">{{issue.code}} · {{issue.message}}</p><UiButton v-if="result.phase==='review'&&scene!=='check_only'" variant="primary" :disabled="!canAccept||confirming" :loading="session.accepting" @click="accept">{{session.acceptRequest?'核对原接受结果':'接受本次完整建议'}}</UiButton><p v-if="result.phase==='accepted'" role="status">原任务建议已接受保存，当前编辑缓冲保持。</p></template>
+      <p v-if="session.error" class="model-error" role="alert">{{session.error}}</p>
     </div>
-    <footer><div class="model-agent-context"><UiButton size="sm" variant="ghost" :aria-expanded="sourcesOpen" aria-controls="model-agent-sources" @click="toggleSources">{{ sourceSummary }}</UiButton><label title="保留本轮内部建议前已有的人工上下文窗口"><input v-model="lockContext" type="checkbox" :disabled="busy" />锁定上下文</label><UiIconButton label="导出上下文" title="导出上下文到外部任务" :disabled="busy" @click="external"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 14v6h16v-6"/></svg></UiIconButton></div><textarea ref="input" class="input" v-model="prompt" rows="2" placeholder="填写资料或继续纠偏" aria-label="制模要求" @select="captureView()" @keyup="captureView()" @blur="captureView()" /><div class="model-inline"><UiButton v-if="busy" @click="stop">停止</UiButton><UiButton v-else variant="primary" :disabled="!settings || researching" @click="generate">发送</UiButton></div></footer>
+    <footer><label>制模要求<textarea ref="input" v-model="session.input" class="input" aria-label="制模要求" rows="2" @select="capture" @blur="capture" /></label><div class="model-inline"><UiButton v-if="session.preparing||session.generating" :disabled="session.stopping" @click="models.stopAgent(key)">停止</UiButton><UiButton v-else variant="primary" :disabled="busy||researching||disabled||!models.executionPreference||missingTarget||confirming" @click="generate">{{scene==='check_only'?'开始检查':'生成建议'}}</UiButton><UiButton v-if="draft" size="sm" :disabled="busy" @click="emit('external',draft)">外部任务</UiButton></div></footer>
   </aside>
 </template>
 <style scoped>
-.model-agent-panel{position:fixed;right:12px;bottom:12px;z-index:var(--z-overlay);width:min(400px,calc(100vw / var(--ui-zoom) - 24px));max-height:calc(100vh / var(--ui-zoom) - 48px);display:flex;flex-direction:column;background:var(--surface-overlay-bg,var(--panel));backdrop-filter:var(--surface-overlay-blur);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}.model-agent-panel.is-maximized{width:calc(100vw / var(--ui-zoom) - 24px);height:calc(100vh / var(--ui-zoom) - 48px)}.model-agent-panel>header,.model-agent-panel>footer{flex:none;padding:14px;display:flex;gap:12px;align-items:center;justify-content:space-between}.model-agent-panel>header{border-bottom:1px solid var(--border)}.model-agent-panel>footer{border-top:1px solid var(--border);display:grid;grid-template-columns:minmax(0,1fr) auto;justify-content:normal;align-items:end;gap:8px;padding:10px}.model-agent-context{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-width:0}.model-agent-context label{display:flex;gap:6px;align-items:center;font-size:var(--text-control)}.model-agent-context svg,.model-agent-panel>header svg{width:16px;height:16px;stroke-width:1.8}.model-agent-panel>footer>.model-inline{justify-self:end}.model-agent-execution{padding:10px 14px;border-bottom:1px solid var(--border);flex:none}.model-agent-scroll{min-height:0;flex:1;padding:14px;overflow:auto;display:grid;gap:14px}.model-agent-scroll label{display:grid;gap:6px}.model-agent-message p{white-space:pre-wrap;overflow-wrap:anywhere}.model-agent-diff{padding:10px 0;border-bottom:1px solid var(--border)}.model-agent-diff label{display:flex;align-items:center;gap:8px}.model-agent-diff pre{white-space:pre-wrap;max-height:160px;overflow:auto}.model-agent-panel textarea{width:100%;min-height:56px;max-height:96px;resize:vertical}
+.model-agent-panel{position:fixed;right:12px;bottom:12px;z-index:var(--z-overlay);width:min(400px,calc(100vw / var(--ui-zoom) - 24px));max-height:calc(100vh / var(--ui-zoom) - 48px);display:flex;flex-direction:column;background:var(--surface-overlay-bg,var(--panel));backdrop-filter:var(--surface-overlay-blur);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}.model-agent-panel.is-maximized{width:calc(100vw / var(--ui-zoom) - 24px);height:calc(100vh / var(--ui-zoom) - 48px)}.model-agent-panel.is-embedded{position:static;width:100%;max-height:none;border:0;box-shadow:none;background:none}.model-agent-panel>header,.model-agent-panel>footer{flex:none;padding:14px;display:flex;gap:12px;align-items:center;justify-content:space-between}.model-agent-panel>header{border-bottom:1px solid var(--border)}.model-agent-panel>footer{border-top:1px solid var(--border);display:grid;gap:8px}.model-agent-panel>footer label{display:grid;gap:8px}.model-agent-execution{padding:10px 14px;border-bottom:1px solid var(--border);flex:none}.model-agent-scroll{min-height:0;flex:1;padding:14px;overflow:auto;display:grid;gap:14px}.model-agent-message p,.model-agent-report{white-space:pre-wrap;overflow-wrap:anywhere}.model-agent-diff{padding:10px 0;border-bottom:1px solid var(--border)}.model-agent-diff pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:240px;overflow:auto}.model-agent-panel textarea{width:100%;min-height:56px;max-height:140px;resize:vertical;box-sizing:border-box}.model-error{color:var(--red)}.model-agent-panel svg{fill:none;stroke:currentColor;stroke-width:1.8}
 </style>

@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict'
 import {writeFile} from 'node:fs/promises'
 import {join, win32} from 'node:path'
+import {nativePathClipboardMatches} from './windows023-runtime-layout.mjs'
 import {nativeModelUiContract} from './windows-model-ui.mjs'
 
 export async function confirmNativeBackupDirectory({wait,click},version){
@@ -28,7 +29,7 @@ export async function verifyWindowsPathUi(call, output, sandbox){
     throw Error('native path UI wait: '+expression)
   }
   async function click(text,selector='.route-section.active'){
-    assert(await evaluate(`(()=>{const root=document.querySelector(${JSON.stringify(selector)});const b=[...root?.querySelectorAll('button')??[]].find(e=>e.textContent.trim()===${JSON.stringify(text)}&&!e.disabled);if(!b)return false;b.click();return true})()`),'missing native path action: '+text)
+    assert(await evaluate(`(()=>{const root=document.querySelector(${JSON.stringify(selector)});const b=[...root?.querySelectorAll('button')??[]].find(e=>(e.textContent.trim()===${JSON.stringify(text)}||e.getAttribute('aria-label')===${JSON.stringify(text)})&&!e.disabled&&e.getClientRects().length);if(!b)return false;b.click();return true})()`),'missing native path action: '+text)
   }
   async function screenshot(name){
     const image=await call('Page.captureScreenshot',{format:'png'})
@@ -42,9 +43,32 @@ export async function verifyWindowsPathUi(call, output, sandbox){
   const source=await evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')")
   const pathTargets=await evaluate("window.__TAURI_INTERNALS__.invoke('get_managed_path_targets')")
   const report={result:'fail',checks:[],rawDataRoot:config.currentDataRoot}
-  let clipboard
+  let clipboard,readClipboard
   try{
     await click('安装配置')
+    let expectedClipboard
+    if(about.version==='0.2.23'){
+      const snapshot=await evaluate("window.__TAURI_INTERNALS__.invoke('model_paths_v2_snapshot')")
+      const keys=['aggregateRoot','desktopRoot','opencodexHome','configPath','installationRoot','managerExecutable','runtimePrefix','runtimeEntry']
+      await wait("document.querySelectorAll('.paths-facts dd[data-path-key] code').length===8")
+      const paths=await evaluate("[...document.querySelectorAll('.paths-facts dd[data-path-key]')].map(e=>({key:e.dataset.pathKey,path:e.querySelector('code')?.textContent,status:e.querySelector('[data-path-status]')?.dataset.pathStatus}))")
+      assert.equal(snapshot.schemaVersion,1)
+      for(const key of keys){
+        const visible=paths.find(p=>p.key===key)
+        assert(visible,'missing actual 023 path: '+key)
+        assert.equal(visible.path,snapshot[key].path)
+        assert.equal(visible.status,snapshot[key].status)
+      }
+      assert.equal(ordinary(snapshot.desktopRoot.path).toLowerCase(),ordinary(config.currentDataRoot).toLowerCase())
+      assert.equal(ordinary(snapshot.opencodexHome.path).toLowerCase(),ordinary(config.currentOpencodexHome).toLowerCase())
+      await evaluate("document.querySelector('[data-testid=paths-details]').click()")
+      await wait("!!document.querySelector('dialog.paths-v2-dialog[open] [data-testid=paths-copy]')")
+      const detailed=await evaluate("[...document.querySelectorAll('dialog.paths-v2-dialog[open] code')].map(e=>e.textContent)")
+      expectedClipboard=keys.map(key=>snapshot[key].path).join('\n')
+      assert.deepEqual(detailed,expectedClipboard.split('\n'))
+      report.pathSnapshot=snapshot;report.openedTargets=[]
+      report.checks.push('023 complete original U/D/H/program path identities and actual statuses agree byte-for-byte with production snapshot; no retired editable root input')
+    }else{
     await wait("!!document.querySelector('#data-root-input')")
     await wait(`document.querySelectorAll('.data-root-table code').length>=${pathTargets.managed.length+2}`)
     const paths=await evaluate("({values:[...document.querySelectorAll('.data-root-table code')].map(e=>e.textContent),placeholder:document.querySelector('#data-root-input').placeholder})")
@@ -54,22 +78,30 @@ export async function verifyWindowsPathUi(call, output, sandbox){
     assert(paths.values.every(value=>!value.startsWith('\\\\?\\')))
     assert.equal(paths.placeholder,'D:\\OpenCodexData')
     report.checks.push('installation data root/home/all six managed partitions/native placeholder use readable ordinary paths')
+      expectedClipboard=ordinary(config.currentDataRoot)
+    }
     // Loopback CDP smoke windows may lack native foreground focus. Explicitly
     // emulate document focus; clipboard calls still use the real platform API.
     await call('Emulation.setFocusEmulationEnabled',{enabled:true})
     report.documentFocusEmulated=true
     await call('Browser.grantPermissions',{origin:'http://tauri.localhost',permissions:['clipboardReadWrite','clipboardSanitizedWrite']})
     report.isolatedClipboardPermissionGranted=true
-    const readClipboard="Promise.race([navigator.clipboard.readText(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('isolated clipboard permission deadline')),5000))])"
+    readClipboard="Promise.race([navigator.clipboard.readText(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('isolated clipboard permission deadline')),5000))])"
     try{clipboard=await evaluate(readClipboard)}catch{}
-    await evaluate("document.querySelector('.data-root-table .cli-copy-btn').click()")
+    await evaluate(about.version==='0.2.23'?"document.querySelector('[data-testid=paths-copy]').click()":"document.querySelector('.data-root-table .cli-copy-btn').click()")
     // The Vue click handler awaits the native clipboard write. Observe its
     // actual result instead of racing that promise with an immediate read.
-    const copied=await wait(`(async()=>{const text=await ${readClipboard};return text===${JSON.stringify(ordinary(config.currentDataRoot))}?text:false})()`)
-    assert.equal(copied,ordinary(config.currentDataRoot))
-    report.checks.push('real clipboard receives readable same-identity data root')
-    await click('打开','.data-root-table tbody tr')
-    report.openedTargets=[config.currentDataRoot]
+    const copied=await wait('(async()=>{const text=await '+readClipboard+';return ('+nativePathClipboardMatches.toString()+')(text,'+JSON.stringify(expectedClipboard)+')?{text}:false})()')
+    assert(nativePathClipboardMatches(copied.text,expectedClipboard))
+    report.clipboardReadback={text:copied.text,expected:expectedClipboard,crlfTransport:copied.text.includes(String.fromCharCode(13,10))}
+    report.checks.push(about.version==='0.2.23'?'real clipboard receives all eight full original path identities':'real clipboard receives readable same-identity data root')
+    if(about.version==='0.2.23'){
+      await click('关闭','dialog.paths-v2-dialog[open] > .ui-dialog-header')
+      await wait("!document.querySelector('dialog.paths-v2-dialog[open]')")
+    }else{
+      await click('打开','.data-root-table tbody tr')
+      report.openedTargets=[config.currentDataRoot]
+    }
     await click('数据与备份')
     const backup=await wait("document.querySelector('.backup-root')?.textContent")
     assert.equal(backup,ordinary(win32.join(config.currentDataRoot,'backups')))
@@ -83,6 +115,7 @@ export async function verifyWindowsPathUi(call, output, sandbox){
     report.freshPreferencesSavedThroughProductionApi=true
     await click('生成备份')
     await wait("!!document.querySelector('.backup-records li')")
+    await wait("[...document.querySelectorAll('.backup-files tbody button')].some(b=>b.textContent.trim()==='打开目录'&&!b.disabled&&b.getClientRects().length)")
     await click('打开目录','.backup-files tbody')
     report.backupConfirmation=await confirmNativeBackupDirectory({wait,click},about.version)
     report.openedTargets.push(win32.join(config.currentDataRoot,'backups'))
@@ -103,7 +136,7 @@ export async function verifyWindowsPathUi(call, output, sandbox){
     await click('安装配置')
     report.result='pass'
     return report
-  }catch(error){report.error=error.stack;throw error}
+  }catch(error){report.error=error.stack;if(readClipboard)try{report.clipboardFailureReadback=await evaluate(readClipboard)}catch(readError){report.clipboardReadbackError=readError.message}try{await screenshot('paths-failure')}catch(captureError){report.failureCaptureError=captureError.message}throw error}
   finally{
     if(clipboard!==undefined){
       try{await evaluate(`navigator.clipboard.writeText(${JSON.stringify(clipboard)})`);report.clipboardRestored=true}catch{report.clipboardRestored=false}

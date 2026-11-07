@@ -849,6 +849,15 @@ mod tests {
         std::fs::create_dir_all(path.parent().unwrap()).unwrap();
         std::fs::write(path, bytes).unwrap();
     }
+    fn put_admission_lock(root: &Path, bytes: &[u8]) {
+        use std::io::Write;
+        let path = root.join(JOIN_LOCK);
+        std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+        let mut file =
+            crate::infrastructure::platform::create_new_private_file(&path, 0o600).unwrap();
+        file.write_all(bytes).unwrap();
+        file.sync_all().unwrap();
+    }
     fn put_json(root: &Path, relative: &str, value: &Value) -> Vec<u8> {
         let bytes = serde_json::to_vec_pretty(value).unwrap();
         put(root, relative, &bytes);
@@ -1403,7 +1412,7 @@ mod tests {
             &relative,
             &json!({"credentialRef": CREDENTIAL, "importedConfig": {"id": SOURCE}, "rawFixtureSecret": "retain-in-archive"}),
         );
-        put(root.path(), JOIN_LOCK, b"old admission bytes");
+        put_admission_lock(root.path(), b"old admission bytes");
         let reference = "manager-state/imported-provider-configs/reference.json";
         put(root.path(), reference, b"protected fixture authorization");
         let report = migrate(root.path()).unwrap();
@@ -1439,7 +1448,7 @@ mod tests {
                 (relative, bytes)
             },
         );
-        put(root.path(), JOIN_LOCK, b"original admission inode");
+        put_admission_lock(root.path(), b"original admission inode");
         #[cfg(unix)]
         let inode = {
             use std::os::unix::fs::MetadataExt;
@@ -1648,7 +1657,7 @@ mod tests {
             &relative,
             &join_record(OPERATION, "committed", false),
         );
-        put(root.path(), JOIN_LOCK, b"held lock bytes");
+        put_admission_lock(root.path(), b"held lock bytes");
         let guard = TargetFileLock::lock(&root.path().join(JOIN_ADMISSION)).unwrap();
         let report = migrate(root.path()).unwrap();
         assert!(report.created_layout);

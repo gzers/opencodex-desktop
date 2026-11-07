@@ -41,6 +41,8 @@ jobs:
       - uses: actions/checkout@v5
       - run: sudo apt-get update && sudo apt-get install -y minisign
       - run: python3 -B -m unittest discover -s test -p 'test_publish_release.py' -v
+      - run: python3 -B -m unittest discover -s test -p 'test_package_macos_023.py' -v
+      - run: python3 -B -m unittest discover -s test -p 'test_stage_runtime_bundle_023.py' -v
       - run: python3 -B -m unittest discover -s test -p 'test_maintained_runtime.py' -v
       - run: python3 -B -m unittest discover -s test -p 'test_windows_release_acceptance.py' -v
       - run: python3 -B -m unittest discover -s test -p 'test_windows_etw_ci.py' -v
@@ -56,9 +58,20 @@ jobs:
       - name: Windows CDP protocol regression
         run: node --test test/smoke/windows-cdp.test.mjs test/smoke/windows-model-ui.test.mjs test/smoke/windows-ota-channel.test.mjs test/smoke/windows-ota-fixture.test.mjs test/smoke/windows-ui-alignment.test.mjs test/smoke/windows-021-probes.test.mjs test/smoke/windows-021-runtime-host.test.mjs test/smoke/windows-021-ready-webdav.test.mjs
       - run: npm --prefix apps/desktop/ui ci
+      - name: Install locked Chromium and WebKit for actual dialog pixel tests
+        run: npm --prefix apps/desktop/ui exec -- playwright-core install chromium webkit
       - run: npm --prefix apps/desktop/ui run typecheck
       - run: npm --prefix apps/desktop/ui run test -- --run
+        env:
+          OCXD_GLASS_EVIDENCE_DIR: ${{ runner.temp }}
       - run: npm --prefix apps/desktop/ui run build
+      - name: Preserve actual browser pixel evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dialog-pixel-evidence
+          path: ${{ runner.temp }}/ocxd023-dialog-glass-*
+          if-no-files-found: warn
 
   backend:
     runs-on: macos-15
@@ -93,7 +106,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          node-version: 26.8.1
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
@@ -131,8 +144,9 @@ jobs:
           } | ConvertTo-Json
           # Preserve the original process deadlines and default test worker count.
           # The diagnostic branch retains its original first-regression capture.
-          # In normal CI, run the cold two-second version probes before the large
-          # workspace workload; the remainder excludes only that completed group.
+          # Normal workspace binaries run under one new ordinary token/Profile,
+          # preserving all tests and libtest's default workers. Elevated creation
+          # and native credential groups remain independent always steps below.
           if ('${{ steps.regression-etw.outputs.enabled }}' -ceq 'true') {
             $taskAdmission = Get-Content -LiteralPath ../../../test/out/windows-query-etw/admission.json -Raw | ConvertFrom-Json
             $env:OPENCODEX_TEST_NODE = $taskAdmission.node
@@ -146,10 +160,27 @@ jobs:
             }
             cargo --config $taskConfigPath test --locked --workspace --features integration-test -- --show-output
           } else {
-            cargo test --locked --lib --features integration-test infrastructure::official_version_source::windows_tests -- --show-output
+            cargo test --locked --workspace --features integration-test --doc
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-            cargo test --locked --workspace --features integration-test -- --show-output --skip infrastructure::official_version_source::windows_tests
+            $taskStatic = Join-Path $env:RUNNER_TEMP ('ocxd023-rust-static-' + [guid]::NewGuid().ToString('N'))
+            & ../../../test/smoke/windows023-rust-ordinary.test.ps1 -OutputDirectory $taskStatic
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            $taskOrdinary = Join-Path $env:RUNNER_TEMP ('ocxd023-rust-ordinary-' + [guid]::NewGuid().ToString('N'))
+            try {
+              & ../../../test/smoke/windows023-rust-ordinary.ps1 -Cargo (Get-Command cargo.exe).Source -ManifestPath (Join-Path $PWD 'Cargo.toml') -Node (Get-Command node.exe).Source -OutputDirectory $taskOrdinary -ExpectedCommit (git rev-parse HEAD)
+              if ($LASTEXITCODE -ne 0) { throw 'Actual ordinary-account workspace binaries failed; original evidence retained' }
+            } finally {
+              New-Item -ItemType Directory -Force ../../../test/out/windows-backend | Out-Null
+              if (Test-Path -LiteralPath $taskOrdinary) { Copy-Item -LiteralPath $taskOrdinary -Destination ../../../test/out/windows-backend/ordinary-rust -Recurse }
+              if (Test-Path -LiteralPath $taskStatic) { Copy-Item -LiteralPath $taskStatic -Destination ../../../test/out/windows-backend/ordinary-static -Recurse }
+            }
           }
+      - name: Verify actual TokenUser ownership at private object creation
+        if: always()
+        shell: pwsh
+        run: |
+          cargo test --locked --lib infrastructure::windows_private_create::tests -- --test-threads=1 --nocapture
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify isolated native credential protection
         if: always()
         shell: pwsh
@@ -273,7 +304,7 @@ jobs:
         run: |
           & ../../../test/smoke/windows-ordinary-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-      - name: Record Node24 driver for native version matrix
+      - name: Record pinned Node26 driver for native version matrix
         id: native_driver
         shell: pwsh
         run: '"node=$((Get-Command node).Source)" >> $env:GITHUB_OUTPUT'
@@ -306,11 +337,19 @@ jobs:
         with:
           name: windows-startup-evidence
           path: |
-            test/out/windows-startup
+            test/out/windows-startup/*.json
+            test/out/windows-startup/*.log
+            test/out/windows-startup/startup/*.json
+            test/out/windows-startup/startup/*.log
+            test/out/windows-startup/startup/*.png
             test/out/windows-backend
             test/out/windows-native-018
             test/out/windows-native-018-node22
-            test/out/windows-ordinary
+            test/out/windows-ordinary/*.json
+            test/out/windows-ordinary/*.log
+            test/out/windows-ordinary/startup/*.json
+            test/out/windows-ordinary/startup/*.log
+            test/out/windows-ordinary/startup/*.png
             test/out/windows-query-etw
             test/runtime/ci-bd2-query-etw/capture
             !test/out/windows-native-018/OpenCodeX Native*/**
@@ -338,4 +377,4 @@ jobs:
         # tauri.conf.json 在 apps/desktop/tauri（仓库根没有），必须在应用目录里执行 CLI，
         # 否则根目录直接以「could not find tauri.conf.json」失败（IMP-03 目录迁移后遗留）。
         working-directory: apps/desktop/tauri
-        run: tauri build --target aarch64-apple-darwin
+        run: tauri build --features custom-protocol --target aarch64-apple-darwin

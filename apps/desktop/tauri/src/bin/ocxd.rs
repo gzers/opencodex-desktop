@@ -161,11 +161,14 @@ fn connect_stream() -> Result<UnixStream, IpcErrorCode> {
 fn connect_stream() -> Result<std::fs::File, IpcErrorCode> {
     let pipe = opencodex_desktop_lib::modules::ipc::endpoint::pipe_name()
         .map_err(|_| IpcErrorCode::InstanceOffline)?;
-    std::fs::OpenOptions::new()
+    let file = std::fs::OpenOptions::new()
         .read(true)
         .write(true)
         .open(pipe)
-        .map_err(|_| IpcErrorCode::InstanceOffline)
+        .map_err(|_| IpcErrorCode::InstanceOffline)?;
+    opencodex_desktop_lib::modules::ipc::endpoint::verify_windows_server(&file)
+        .map_err(|_| IpcErrorCode::AccessDenied)?;
+    Ok(file)
 }
 
 #[cfg(windows)]

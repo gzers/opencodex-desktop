@@ -17,15 +17,16 @@ pub mod status_source;
 pub(crate) mod storage_writers;
 pub mod tray_controller;
 pub mod webdav_client;
+pub mod webdav_config_v2;
 
 pub mod app_activity;
 pub mod window_appearance;
+#[cfg(windows)]
+pub(crate) mod windows_private_create;
 #[cfg(all(windows, test))]
 pub(crate) mod windows_query_fixture;
 #[cfg(windows)]
 pub(crate) mod windows_query_job;
-#[cfg(windows)]
-pub(crate) mod windows_restart;
 #[cfg(any(windows, test))]
 pub(crate) mod windows_smoke;
 #[cfg(any(windows, test))]
