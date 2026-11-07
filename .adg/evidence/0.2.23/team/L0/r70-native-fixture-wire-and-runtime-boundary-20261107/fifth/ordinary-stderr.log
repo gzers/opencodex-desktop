@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: {"exceptionId":1,"text":"Uncaught (in promise)","lineNumber":0,"columnNumber":0,"exception":{"type":"object","className":"Object","description":"Object","objectId":"4053920352878021997.2.1","preview":{"type":"object","description":"Object","overflow":false,"properties":[{"name":"code","type":"string","value":"model_source_invalid"},{"name":"issues","type":"object","value":"Array(1)","subtype":"array"}]}}}
+    at evaluate (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows023-native-model.mjs:19:127)
+    at async verify023Native (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows023-native-model.mjs:41:16)
+    at async file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-webview.mjs:113:45 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v26.8.1
+WebView smoke failed: 1
+at <ScriptBlock>, D:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-startup.ps1: line 133
+at <ScriptBlock>, D:\a\opencodex-desktop\opencodex-desktop\test\out\native-replay414\evidence\ordinary-child.ps1: line 72
