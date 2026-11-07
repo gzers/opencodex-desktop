@@ -14,9 +14,17 @@ fn fail(error: impl ToString) -> AppError {
     }
 }
 fn gate(desktop: &Path) -> AppResult<(PathBuf, File)> {
-    let parent = desktop
-        .parent()
-        .ok_or_else(|| fail("missing explicit aggregate"))?;
+    let managed = desktop.file_name().is_some_and(|name| name == "desktop");
+    // Product v2 D always ends in desktop. Explicit non-layout helper/fixture
+    // roots cannot be removal authorities and keep their gate inside that root,
+    // never in a shared OS temporary/profile parent.
+    let parent = if managed {
+        desktop
+            .parent()
+            .ok_or_else(|| fail("missing explicit aggregate"))?
+    } else {
+        desktop
+    };
     if !desktop.is_absolute() || desktop.file_name().is_none() {
         return Err(fail("absolute explicit desktop root required"));
     }
@@ -25,7 +33,9 @@ fn gate(desktop: &Path) -> AppResult<(PathBuf, File)> {
         crate::modules::backup::safety::inspect(parent)?;
     }
     let parent = super::startup_v2::checked_path(parent)?;
-    super::startup_v2::check_owner(&parent)?;
+    if managed {
+        super::startup_v2::check_owner(&parent)?;
+    }
     if !parent.exists() {
         crate::infrastructure::platform::create_private_dir_all(&parent, 0o700).map_err(fail)?;
     }
@@ -61,7 +71,14 @@ fn gate(desktop: &Path) -> AppResult<(PathBuf, File)> {
             return Err(fail("gate owner, mode or link count differs"));
         }
     }
-    Ok((parent.join(desktop.file_name().unwrap()), file))
+    Ok((
+        if managed {
+            parent.join(desktop.file_name().unwrap())
+        } else {
+            parent
+        },
+        file,
+    ))
 }
 
 #[derive(Debug)]
