@@ -136,6 +136,7 @@ public static class OcxTwoUserWindow {
  [DllImport("user32.dll")] static extern bool IsWindowVisible(IntPtr window);
  [DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr window,out uint pid);
  [DllImport("kernel32.dll",SetLastError=true)] public static extern bool GetNamedPipeServerProcessId(IntPtr pipe,out uint pid);
+ [DllImport("kernel32.dll",CharSet=CharSet.Unicode,SetLastError=true)] public static extern bool WaitNamedPipe(string name,uint timeout);
  public static bool OwnedVisible(IntPtr window,int expected){uint pid;return window!=IntPtr.Zero&&IsWindowVisible(window)&&GetWindowThreadProcessId(window,out pid)!=0&&pid==expected;}
 }
 '@}
@@ -153,12 +154,15 @@ function Get-TwoUserPipeName([string]$Sid) {
  'OpenCodeXDesktop-'+[Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($bytes)[0..11]).ToLowerInvariant()
 }
 function Invoke-TwoUserCli([string]$Cli,[string[]]$Arguments) {
+ $budget=[Diagnostics.Stopwatch]::StartNew()
+ if($c.diagnosticSweep){Wait-TwoUserDiagnosticPipe $manager.fact (Get-TwoUserPipeName $sid) 20000}
  $info=[Diagnostics.ProcessStartInfo]::new();$info.FileName=$Cli;$info.UseShellExecute=$false
  $info.RedirectStandardOutput=$true;$info.RedirectStandardError=$true
  foreach($arg in $Arguments){$info.ArgumentList.Add($arg)}
  $p=[Diagnostics.Process]::Start($info)
  try{$stdout=$p.StandardOutput.ReadToEndAsync();$stderr=$p.StandardError.ReadToEndAsync()
-  if(!$p.WaitForExit(20000)){
+  $remaining=[Math]::Max(1,20000-[int]$budget.ElapsedMilliseconds)
+  if(!$p.WaitForExit($remaining)){
    Stop-TwoUserTracked (Get-TwoUserProcessFact $p ([Security.Principal.WindowsIdentity]::GetCurrent().User.Value));throw 'CLI deadline'
   }
   if($c.diagnosticSweep){
@@ -170,6 +174,37 @@ function Invoke-TwoUserCli([string]$Cli,[string[]]$Arguments) {
   if($json.ok -ne $true -or $json.schema_version -ne 1){throw 'Actual CLI JSON failed'}
   $json
  }finally{$p.Dispose()}
+}
+function Wait-TwoUserDiagnosticPipe($Fact,[string]$Name,[int]$TimeoutMilliseconds=20000) {
+ Initialize-TwoUserWindowProbe
+ $deadline=[datetime]::UtcNow.AddMilliseconds($TimeoutMilliseconds)
+ do {
+  $null=Assert-TwoUserLive $Fact
+  if([OcxTwoUserWindow]::WaitNamedPipe(('\\.\pipe\'+$Name),1)){return}
+  $errorCode=[Runtime.InteropServices.Marshal]::GetLastWin32Error()
+  if($errorCode -notin @(2,121,231)){throw ('Actual same-user pipe wait failed: '+$errorCode)}
+  Start-Sleep -Milliseconds 100
+ }while([datetime]::UtcNow -lt $deadline)
+ throw 'Actual same-user pipe not available within existing IPC budget'
+}
+function Read-TwoUserBoundedPipeBytes($Stream,[byte[]]$Buffer) {
+ $cancel=[Threading.CancellationTokenSource]::new(5000)
+ try{$Stream.ReadExactlyAsync($Buffer,0,$Buffer.Length,$cancel.Token).GetAwaiter().GetResult()}finally{$cancel.Dispose()}
+}
+function Complete-TwoUserReadonlyPipeFrame($Stream) {
+ $requestId='req_'+[guid]::NewGuid().ToString()
+ $body=[Text.Encoding]::UTF8.GetBytes((@{request_id=$requestId;command='data_root_show';args=@{};confirm=$false;contract_version=1}|ConvertTo-Json -Compress))
+ $header=[BitConverter]::GetBytes([uint64]$body.Length)
+ if([BitConverter]::IsLittleEndian){[Array]::Reverse($header)}
+ $Stream.Write($header,0,8);$Stream.Write($body,0,$body.Length);$Stream.Flush()
+ $read=[byte[]]::new(8);Read-TwoUserBoundedPipeBytes $Stream $read
+ if([BitConverter]::IsLittleEndian){[Array]::Reverse($read)}
+ $length=[BitConverter]::ToUInt64($read,0)
+ if($length -lt 1 -or $length -gt 1048576){throw 'Actual pipe response frame outside bounded contract'}
+ $response=[byte[]]::new([int]$length);Read-TwoUserBoundedPipeBytes $Stream $response
+ $value=[Text.Encoding]::UTF8.GetString($response)|ConvertFrom-Json
+ if($value.request_id -cne $requestId -or $value.ok -ne $true){throw 'Actual readonly owned-pipe request did not succeed'}
+ $value
 }
 function Write-TwoUserJson([string]$Path,$Value) {
  $temp=$Path+'.writing-'+[guid]::NewGuid().ToString('N')
@@ -717,8 +752,11 @@ function Invoke-TwoUserChild([string]$InputFile) {
   if(!(Test-TwoUserSamePath $data.data.active_data_root $root) -or !(Test-TwoUserSamePath $data.data.opencodex_home $nativeHome)){throw 'Candidate CLI uses another D/H'}
   Write-TwoUserJson (Join-Path $out 'same-user-data-root.json') $data
   $pipe=Get-TwoUserPipeName $sid;$own=[IO.Pipes.NamedPipeClientStream]::new('.',$pipe,[IO.Pipes.PipeDirection]::InOut)
-  try{$own.Connect(5000);[uint32]$serverId=0
+  try{$connectBudget=[Diagnostics.Stopwatch]::StartNew();Wait-TwoUserDiagnosticPipe $manager.fact $pipe 5000;$own.Connect([Math]::Max(1,5000-[int]$connectBudget.ElapsedMilliseconds));[uint32]$serverId=0
    if(![OcxTwoUserWindow]::GetNamedPipeServerProcessId($own.SafePipeHandle.DangerousGetHandle(),[ref]$serverId) -or $serverId -ne $manager.fact.pid){throw 'Actual product pipe server PID differs'}
+   $frame=Complete-TwoUserReadonlyPipeFrame $own
+   if(!(Test-TwoUserSamePath $frame.data.active_data_root $root)){throw 'Actual owned-pipe frame returned another data root'}
+   Write-TwoUserJson (Join-Path $out 'owned-pipe-frame.json') @{serverPid=$serverId;response=$frame;accepted=$false}
   }finally{$own.Dispose()}
   }|Out-Null
   $pipe=Get-TwoUserPipeName $sid

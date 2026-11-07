@@ -27,3 +27,40 @@ if($settled.ready -or !$settled.allSettled -or $settled.failedSids.Count -ne 1){
 $both=Get-TwoUserDiagnosticStartupState @(@{sid='A';failed=$false;ready=$true},@{sid='B';failed=$false;ready=$true})
 if(!$both.ready -or !$both.allSettled -or $both.failedSids.Count){throw 'Two real ready coordination receipts were not handled'}
 Write-Output 'PASS: real controller state function waits for the independent SID and never converts failure to ready'
+
+class SweepReadonlyFrameFixture {
+ [IO.MemoryStream]$Request=[IO.MemoryStream]::new()
+ [IO.MemoryStream]$Response
+ [string]$Fault=''
+ [object]$DecodedRequest
+ [void] Write([byte[]]$Bytes,[int]$Offset,[int]$Count){$this.Request.Write($Bytes,$Offset,$Count)}
+ [void] Flush(){
+  $raw=$this.Request.ToArray();$head=$raw[0..7];if([BitConverter]::IsLittleEndian){[Array]::Reverse($head)}
+  if([BitConverter]::ToUInt64([byte[]]$head,0) -ne $raw.Length-8){throw 'Request frame length differs'}
+  $this.DecodedRequest=[Text.Encoding]::UTF8.GetString($raw,8,$raw.Length-8)|ConvertFrom-Json
+  $id=$this.DecodedRequest.request_id;if($this.Fault -ceq 'wrong-id'){$id='unrelated'}
+  $payload=[Text.Encoding]::UTF8.GetBytes((@{request_id=$id;ok=($this.Fault -cne 'failure');data=@{active_data_root='isolated'}}|ConvertTo-Json -Compress))
+  $length=if($this.Fault -ceq 'oversize'){[uint64]1048577}else{[uint64]$payload.Length}
+  $header=[BitConverter]::GetBytes($length);if([BitConverter]::IsLittleEndian){[Array]::Reverse($header)}
+  $this.Response=[IO.MemoryStream]::new();$this.Response.Write($header,0,8)
+  if($this.Fault -cne 'truncated'){$this.Response.Write($payload,0,$payload.Length)}
+  $this.Response.Position=0
+ }
+ [Threading.Tasks.Task] ReadExactlyAsync([byte[]]$Bytes,[int]$Offset,[int]$Count,[Threading.CancellationToken]$Token){
+  $this.Response.ReadExactly($Bytes,$Offset,$Count)
+  return [Threading.Tasks.Task]::CompletedTask
+ }
+ [void] Dispose(){$this.Request.Dispose();if($this.Response){$this.Response.Dispose()}}
+}
+foreach($fault in @('','wrong-id','failure','oversize','truncated')){
+ $stream=[SweepReadonlyFrameFixture]::new();$stream.Fault=$fault;$rejected=$false
+ try{
+  try{$reply=Complete-TwoUserReadonlyPipeFrame $stream}catch{$rejected=$true}
+  if($fault -ceq ''){
+   if($rejected -or $reply.ok -ne $true -or $stream.DecodedRequest.command -cne 'data_root_show' -or $stream.DecodedRequest.confirm -ne $false -or $stream.DecodedRequest.contract_version -ne 1){throw 'Owned PID probe did not complete the actual readonly frame contract'}
+  }elseif(!$rejected){throw ('Invalid response accepted: '+$fault)}
+ }finally{$stream.Dispose()}
+}
+$readFixture=[IO.MemoryStream]::new([byte[]]@(1,2,3));$bytes=[byte[]]::new(3)
+try{Read-TwoUserBoundedPipeBytes $readFixture $bytes;if(($bytes -join ',') -cne '1,2,3'){throw 'Actual .NET asynchronous exact read differs'}}finally{$readFixture.Dispose()}
+Write-Output 'PASS: PID probe completes readonly frame and rejects mismatched, failed, oversized and truncated responses'

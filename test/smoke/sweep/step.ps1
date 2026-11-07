@@ -2,7 +2,7 @@ param(
  [Parameter(Mandatory=$true)][string]$Step,
  [Parameter(Mandatory=$true)][string]$Name,
  [Parameter(Mandatory=$true)][string]$Directory,
- [Parameter(Mandatory=$true)][ValidateSet('inputs','build','policy-prepare','policy-restore','installer','native','two-user','collect')][string]$Task,
+ [Parameter(Mandatory=$true)][ValidateSet('inputs','build','bundle-roots','policy-prepare','policy-restore','installer','native','two-user','collect')][string]$Task,
  [string]$Kind,[string]$Mode,[string]$Probe
 )
 $ErrorActionPreference='Stop'
@@ -53,6 +53,13 @@ $receipt=Invoke-SweepCheck $recordDirectory $Step $Name {
    & rustc --edition 2021 test/smoke/sweep/filesystem.rs -o (Join-Path $env:OCXD_SWEEP_PROGRAM 'sweep-filesystem.exe') *> (Join-Path $evidence 'filesystem-probe-build.log');if($LASTEXITCODE -ne 0){throw 'Test-only filesystem observer build failed'}
    foreach($file in @('opencodex-desktop.exe','ocxd.exe')){Copy-Item -LiteralPath (Join-Path $repo ('apps/desktop/tauri/target/debug/'+$file)) -Destination $env:OCXD_SWEEP_PROGRAM}
    @{source=(git -C $repo rev-parse HEAD).Trim();appsTree=(git -C $repo rev-parse HEAD:apps).Trim();profile='debug custom-protocol; diagnostic-only';files=@(Get-ChildItem $env:OCXD_SWEEP_PROGRAM -File|ForEach-Object{@{name=$_.Name;sha256=(Get-FileHash $_.FullName).Hash.ToLowerInvariant()}})}
+  }
+  bundle-roots {
+   & cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib windows_bundle_roots -- --nocapture *> (Join-Path $evidence 'windows-bundle-root-regression.log')
+   if($LASTEXITCODE -ne 0){throw 'Actual Windows bundle root/reparse regression failed; original log retained'}
+   $log=Get-Content -LiteralPath (Join-Path $evidence 'windows-bundle-root-regression.log') -Raw
+   if($log -notmatch '3 passed; 0 failed'){throw 'All three Windows filesystem regressions must actually execute'}
+   @{source=(git -C $repo rev-parse HEAD).Trim();tests=3;platform='actual Windows filesystem';accepted=$false}
   }
   policy-prepare { & (Join-Path $repo 'test/smoke/windows-msi-server-fixture.ps1') -Mode prepare -EvidenceDirectory (Join-Path $evidence 'server-policy');if(!$?){throw 'Server MSI preparation failed'};Get-Content (Join-Path $evidence 'server-policy/msi-server-policy.original.json') -Raw|ConvertFrom-Json }
   policy-restore { & (Join-Path $repo 'test/smoke/windows-msi-server-fixture.ps1') -Mode restore -EvidenceDirectory (Join-Path $evidence 'server-policy');if(!$?){throw 'Exact Server MSI restoration failed'};Get-Content (Join-Path $evidence 'server-policy/msi-server-policy.restored.json') -Raw|ConvertFrom-Json }
