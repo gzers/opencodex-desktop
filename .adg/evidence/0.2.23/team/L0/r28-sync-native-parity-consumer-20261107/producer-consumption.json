@@ -1,0 +1,39 @@
+{
+  "producer": "da4f0890b6916cc82ba137e28205ea9fe1e1338b",
+  "consumerCherryPick": "ba292ee8d04293e1793044690c4b38aff2e020e4",
+  "all4SourceFilesExact": true,
+  "sourceSha256": {
+    "apps/desktop/tauri/src/modules/model_config/file_transfer_v2.rs": "67c197a4df3564ac21ec57c0084f4b23bf7059f3a7f9e8e2b83ef3fefe0aac1b",
+    "apps/desktop/tauri/src/modules/model_config/file_transfer_v2_tests.rs": "d4c167479ac41e34d5907430238474588d16db2313d2f4f3ec342c29dc9f6a38",
+    "apps/desktop/tauri/src/modules/model_config/sync_local_v2.rs": "cd4896be353d2ad3c27553a397d7f50119994c5c100a49f6ece5839a366eeb07",
+    "apps/desktop/tauri/src/modules/model_config/sync_local_v2_tests.rs": "475c45ed33391d7e3ef51be60b7f2aa3acb8ad0f038a8123b7ebfc92c86525df"
+  },
+  "uiStoresApiSharedTreeRouteUnchangedFrom": "f1236fa21899404c172b7a7aa367465581fe2fd4",
+  "unchangedFilesSha256": {
+    "apps/desktop/ui/src/features/sync/file-store-v2.ts": "b617890f459b1064b9051774c5e5413c9dba292580bd7413cde7a948b620c6b1",
+    "apps/desktop/ui/src/features/sync/store-v2.ts": "de3e9e55bd10ed10fd9fe8259de51fab9e908055390658b1274361d9d0fe7f99",
+    "apps/desktop/ui/src/features/sync/api-v2.ts": "e33102505d1d19af6d54b2c14838014b9e07002e7bbf2b51e643b7ebbbe00be9",
+    "apps/desktop/ui/src/features/sync/file-api-v2.ts": "4804b50b764cf478b6a8b6af4b68cc0cfc69239970a7ee2e670caa164b4de5c5",
+    "apps/desktop/ui/src/features/sync/ObjectScopeTree.vue": "6fd39e9cafd258ca996d06775a5e361dd1833caab5d2204c6cfe99a6f84a83c2",
+    "apps/desktop/ui/src/routes/SyncRoute.vue": "00a249a8eaf03e3d078c92f293ecc2d3d77768324167bc1176bb9b61d0180a05"
+  },
+  "assetsReviewed": "required boolean retained; default false forwarded unchanged; no UI setter to true, no old-record/hash rewrite.",
+  "proofBoundary": "Producer real tests belong to L2; renderer fixture proves actual emitted requests/UI only, not backend gate removal.",
+  "producerEvidence": {
+    "root": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/manual-review-gate-correction-evidence",
+    "manifestSha256": "3d04c881eac572adf5a6e6a320f2f54466b4b24753e566f76c0ae140a37abfff",
+    "allArtifactsVerified": true,
+    "allSourceReceiptHashesMatchConsumer": true,
+    "checks": {
+      "beforeProductionFixCorrectedBehaviorAssertions": "2 failed as expected",
+      "newFalseActualFileAndLocalReceive": 2,
+      "fullFileTransferIncludingOutput": 39,
+      "fullLocalApplicationIncludingScopeRestore": 46,
+      "distinctFullAffectedTests": 85,
+      "strictNormalCrateClippy": "passed",
+      "rustfmt": "passed",
+      "diffCheck": "passed",
+      "noIgnoreOrGlobalAllow": true
+    }
+  }
+}

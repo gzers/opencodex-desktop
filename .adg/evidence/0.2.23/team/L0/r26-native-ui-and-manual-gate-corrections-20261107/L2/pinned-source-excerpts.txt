@@ -1,0 +1,568 @@
+
+SOURCE 47eb7cf7420ba9127f4d7047e4d83231f826035f apps/desktop/tauri/src/modules/model_config/file_transfer_v2.rs
+107:         portable_channel_id: String,
+108:     },
+109: }
+110: #[derive(Clone, Debug, Default, Serialize, Deserialize)]
+111: #[serde(rename_all = "camelCase", deny_unknown_fields)]
+112: pub struct ImportBindingsV2 {
+113:     pub channels: Vec<ChannelBindingChoiceV2>,
+114:     pub mcp_clients: BTreeMap<String, String>,
+115:     pub assets_reviewed: bool,
+116:     /// Explicitly adopt the file's namespace only for selected whole channels.
+117:     #[serde(default)]
+118:     pub adopt_namespace_channel_ids: Vec<String>,
+119: }
+120: #[derive(Clone, Debug, Serialize, Deserialize)]
+121: #[serde(rename_all = "camelCase")]
+122: pub struct ImportObjectV2 {
+922:         let inv = inventory(&self.d, &self.h)?;
+923:         let rows = object_inventory(objects, &inv)?;
+924:         // Validate receive scope before deriving file targets. In particular,
+925:         // untrusted asset names never become paths before asset validation.
+926:         let validated = narrow_received(objects, scope)
+927:             .and_then(|o| sync_local_v2::select_received_objects_v2(o, scope));
+928:         let target = match &validated {
+929:             Ok(_)
+930:                 if choices.assets_reviewed
+931:                     || (scope.skill_names.is_empty() && scope.mcp_sources.is_empty()) =>
+932:             {
+933:                 target_digest(&self.d, &self.h, scope, choices)?
+934:             }
+935:             _ => inv.digest.clone(),
+936:         };
+937:         let plan_digest = hash(&(
+938:             id,
+939:             schema_v2::digest(bytes),
+940:             scope,
+941:             choices,
+942:             &inv.digest,
+943:             &target,
+944:         ))?;
+945:         let mut preview = ImportPreviewV2 {
+946:             operation_id: id.into(),
+947:             plan_digest,
+948:             summary: objects.summary(),
+949:             objects: rows,
+950:             selected_scope: scope.clone(),
+951:             differences: ImportDifferencesV2 {
+952:                 changed_channel_ids: vec![],
+953:                 changed_template_refs: vec![],
+954:                 selected_summary: None,
+955:             },
+956:             requires_backup: true,
+957:             can_confirm: false,
+958:             reason_code: None,
+959:         };
+960:         let result = (|| -> ModelResult<Prepared> {
+961:             let selected = validated?;
+962:             if *scope
+963:                 == (SelectionV2 {
+964:                     usage: UsageV2::LocalFile,
+965:                     ..Default::default()
+966:                 })
+967:             {
+968:                 return Err(err("file_selection_required"));
+969:             }
+970:             if (!scope.skill_names.is_empty() || !scope.mcp_sources.is_empty())
+971:                 && !choices.assets_reviewed
+972:             {
+973:                 return Err(err("capture_assets_review_required"));
+974:             }
+975:             if choices
+976:                 .mcp_clients
+977:                 .keys()
+978:                 .any(|n| !scope.mcp_sources.iter().any(|m| &m.name == n))
+979:             {
+980:                 return Err(err("file_mcp_source_invalid"));
+981:             }
+982:             let bindings = binding_plan(&inv, scope, choices)?;
+983:             validate_namespace_choice(&selected, scope, choices)?;
+984:             let planned = if choices.adopt_namespace_channel_ids.is_empty() {
+985:                 receive_models_v2::plan(
+986:                     &inv.library,
+1222: fn target_digest(
+1223:     d: &Path,
+1224:     h: &Path,
+1225:     s: &SelectionV2,
+1226:     choices: &ImportBindingsV2,
+1227: ) -> ModelResult<String> {
+1228:     let inv = inventory(d, h)?;
+1229:     let mut paths = vec![(h.to_path_buf(), h.join("config.json"))];
+1230:     for p in [
+1231:         store_v2::LIBRARY_PATH,
+1232:         store_v2::POLICY_PATH,
+1233:         store_v2::LEDGER_PATH,
+1234:         store_v2::MAPPING_PATH,
+1235:         super::content_versions::SAVED_VERSIONS_PATH,
+1236:         "manager-state/model-v2-provider-identities.json",
+1237:         preferences::PREFERENCES_RELATIVE_PATH,
+1238:         projection::CONFIG_RELATIVE_PATH,
+1239:         portable_accounts::IMPORTED,
+1240:         portable_manager::CANDIDATES,
+1241:     ] {
+1242:         paths.push((d.to_path_buf(), d.join(p)));
+1243:     }
+1244:     paths.push((
+1245:         d.to_path_buf(),
+1246:         d.join("manager-state/mcp-definitions.json"),
+1247:     ));
+1248:     for name in &s.skill_names {
+1249:         if name.is_empty() || name == "." || name == ".." || name.contains(['/', '\\']) {
+1250:             return Err(err("file_asset_name_invalid"));
+1251:         }
+1252:         paths.push((d.to_path_buf(), discovery::skills_store_dir(d).join(name)));
+1253:     }
+1254:     // Skills use the existing source resolver. New incoming MCP definitions
+1255:     // need not exist locally: guard the selected client's fixed config path,
+1256:     // including absence, rather than invoking an export-only MCP resolver.
+1257:     for p in portable_assets::saved_source_paths(d, h, &s.skill_names, &[], &BTreeMap::new())? {
+1258:         let anchor = if p.starts_with(d) {
+1259:             d.to_path_buf()
+1260:         } else if p.starts_with(h) {
+1261:             h.to_path_buf()
+1262:         } else {
+1263:             p.parent()
+1264:                 .ok_or_else(|| err("file_asset_source_invalid"))?
+1265:                 .to_path_buf()
+1266:         };
+1267:         paths.push((anchor, p));
+1268:     }
+1269:     use crate::modules::extensions::{ClientTarget, CLIENT_IDS};
+1270:     for selected in &s.mcp_sources {
+1271:         let choice = choices.mcp_clients.get(&selected.name);
+1272:         if choice.is_some_and(|c| {
+1273:             c != "managed"
+1274:                 && !CLIENT_IDS
+1275:                     .iter()
+1276:                     .any(|id| portable_assets::client_key(*id) == *c)
+1277:         }) {
+1278:             return Err(err("file_mcp_source_invalid"));
+1279:         }
+1280:         for id in CLIENT_IDS {
+1281:             if choice.is_some_and(|c| *c != portable_assets::client_key(id)) {
+1282:                 continue;
+1283:             }
+1284:             let target = ClientTarget::user_target(id, h, true, true);
+1285:             paths.push((h.to_path_buf(), target.mcp_config_path));
+1286:         }
+1287:     }
+1288:     paths.sort();
+1289:     paths.dedup();
+1290:     let mut images = BTreeMap::new();
+1291:     let mut budget = 128 * 1024 * 1024;
+1292:     for (anchor, p) in paths {
+1293:         tree_image(&anchor, &p, &mut images, &mut budget)?;
+1294:     }
+1295:     hash(&(inv.digest, images))
+
+SOURCE 47eb7cf7420ba9127f4d7047e4d83231f826035f apps/desktop/tauri/src/modules/model_config/sync_local_v2.rs
+969:             payload_passphrase,
+970:         )?;
+971:         let witness = proof.local_journal();
+972:         if host.d != witness.root()
+973:             || host.h != witness.home()
+974:             || host.scope != witness.scope()
+975:             || hash(&json(&selection)?) != witness.selection_hash()
+976:             || hash(&json(&host.capture)?) != witness.journal.request_hash
+977:         {
+978:             return Err(failure(ErrorCode::SyncOperationCollision));
+979:         }
+980:         if (!selection.skill_names.is_empty() || !selection.mcp_sources.is_empty())
+981:             && !host.capture.assets_reviewed
+982:         {
+983:             return Err(failure(ErrorCode::SyncScopeChanged));
+984:         }
+985:         host.selection = selection;
+986:         host.verify_remaining_operation(proof.operation_id(), &proof)?;
+987:         host.remaining = Some(proof);
+988:         Ok(host)
+1032:         let d = std::fs::canonicalize(d).map_err(|_| failure(ErrorCode::SyncLocalStateIo))?;
+1033:         let h = std::fs::canonicalize(h).map_err(|_| failure(ErrorCode::SyncLocalStateIo))?;
+1034:         if !super::schema_v2::valid_digest(&scope) {
+1035:             return Err(failure(ErrorCode::SyncScopeChanged));
+1036:         }
+1037:         // Same object identities; incoming/local MCP definitions may differ.
+1038:         let mut incoming = selection.clone();
+1039:         let mut local = capture.selection.clone();
+1040:         for s in [&mut incoming, &mut local] {
+1041:             for m in &mut s.mcp_sources {
+1042:                 m.definition_digest.clear();
+1043:             }
+1044:         }
+1045:         if incoming != local {
+1046:             return Err(failure(ErrorCode::SyncScopeChanged));
+1047:         }
+1048:         if (!selection.skill_names.is_empty() || !selection.mcp_sources.is_empty())
+1049:             && !capture.assets_reviewed
+1050:         {
+1051:             return Err(failure(ErrorCode::SyncScopeChanged));
+1052:         }
+1053:         Ok(Self {
+1054:             d,
+1055:             h,
+1090:             || capture.selection != binding.local_scope
+1091:         {
+1092:             return Err(failure(ErrorCode::SyncScopeChanged));
+1093:         }
+1094:         // The owner-issued binding freezes BOTH exact scopes. Local capture
+1095:         // can omit absent non-model objects while receive keeps remote choices.
+1096:         // Their actual before/absent images are frozen by the target/helpers;
+1097:         // do not widen choices or reconstruct the mapper's filtering here.
+1098:         if (!selection.skill_names.is_empty() || !selection.mcp_sources.is_empty())
+1099:             && !capture.assets_reviewed
+1100:         {
+1101:             return Err(failure(ErrorCode::SyncScopeChanged));
+1102:         }
+1103:         for slot in &binding.slots {
+1104:             if matches!(slot.expected, TargetExpectationV2::Present(_)) {
+1105:                 let mut r = selection
+
+SOURCE 47eb7cf7420ba9127f4d7047e4d83231f826035f apps/desktop/tauri/src/modules/model_config/saved_objects_capture_v2.rs
+29: #[derive(Serialize, Deserialize)]
+30: #[serde(rename_all = "camelCase", deny_unknown_fields)]
+31: pub struct CaptureRequestV2 {
+32:     #[serde(deserialize_with = "explicit_selection")]
+33:     pub selection: SelectionV2,
+34:     pub mcp_clients: BTreeMap<String, String>,
+35:     pub assets_reviewed: bool,
+36: }
+425:     if s.extension_credentials
+426:         .skill_names
+427:         .iter()
+428:         .any(|n| !s.skill_names.contains(n))
+429:         || s.extension_credentials
+430:             .mcp_names
+431:             .iter()
+432:             .any(|n| !s.mcp_sources.iter().any(|m| &m.name == n))
+433:         || s.manager
+434:             .webdav_password_ids
+435:             .iter()
+436:             .any(|id| !s.manager.webdav_ids.contains(id))
+437:         || r.mcp_clients.iter().any(|(n, c)| {
+438:             c.is_empty() || c.len() > 128 || !s.mcp_sources.iter().any(|m| &m.name == n)
+439:         })
+440:     {
+441:         return Err(err("capture_scope_invalid"));
+442:     }
+443:     if s.usage == UsageV2::RemoteSync
+444:         && (!s.manager.webdav_ids.is_empty() || !s.manager.webdav_password_ids.is_empty())
+445:     {
+446:         return Err(err("sync_self_scope"));
+447:     }
+448:     for m in &s.mcp_sources {
+449:         if !schema_v2::valid_digest(&m.definition_digest) {
+450:             return Err(err("capture_scope_invalid"));
+451:         }
+473: pub(crate) fn scope_digest(r: &CaptureRequestV2) -> ModelResult<String> {
+474:     let mut s = r.selection.clone();
+475:     s.channels
+476:         .sort_by(|a, b| a.portable_channel_id.cmp(&b.portable_channel_id));
+477:     for c in &mut s.channels {
+478:         if let Some(v) = &mut c.model_ids {
+479:             v.sort();
+480:         }
+481:         if let Some(v) = &mut c.family_ids {
+482:             v.sort();
+483:         }
+484:     }
+485:     for v in [&mut s.template_refs, &mut s.adopt_template_defaults] {
+486:         v.sort_by(|a, b| {
+487:             (&a.template_id, &a.revision_id, &a.digest).cmp(&(
+488:                 &b.template_id,
+489:                 &b.revision_id,
+490:                 &b.digest,
+491:             ))
+492:         });
+493:     }
+494:     s.skill_names.sort();
+495:     s.mcp_sources.sort_by(|a, b| a.name.cmp(&b.name));
+496:     s.extension_credentials.skill_names.sort();
+497:     s.extension_credentials.mcp_names.sort();
+498:     s.manager.account_ids.sort();
+499:     s.manager.webdav_ids.sort();
+500:     s.manager.webdav_password_ids.sort();
+501:     hashed(
+502:         &json!({"format":"OCXD_CAPTURE_SCOPE_V2", "selection":s,"reviewed":r.assets_reviewed,"mcpClients":r.mcp_clients}),
+503:     )
+810:     for m in &r.selection.mcp_sources {
+811:         let detail = portable_assets::detail(
+812:             root,
+813:             home,
+814:             "mcps",
+815:             &m.name,
+816:             r.mcp_clients.get(&m.name).map(String::as_str),
+817:         )?;
+818:         let chosen = if let Some(c) = r.mcp_clients.get(&m.name) {
+819:             if !detail.clients.contains(c) {
+820:                 return Err(err("capture_mcp_source_changed"));
+821:             }
+822:             c.clone()
+823:         } else if detail.clients.len() == 1 {
+824:             detail.clients[0].clone()
+825:         } else {
+826:             return Err(err("capture_mcp_source_required"));
+827:         };
+828:         clients.insert(m.name.clone(), chosen);
+829:     }
+830:     let credential_ids: Vec<_> = r
+831:         .selection
+832:         .extension_credentials
+833:         .skill_names
+834:         .iter()
+835:         .map(|n| format!("skill:{n}"))
+836:         .chain(
+837:             r.selection
+860:         Some(&credential_ids),
+861:     )?;
+862:     if !conflicts.is_empty()
+863:         || assets.skills.len() != r.selection.skill_names.len()
+864:         || assets.mcps.len() != r.selection.mcp_sources.len()
+865:     {
+866:         return Err(err("capture_selection_missing"));
+867:     }
+868:     let mut bindings = BTreeMap::new();
+869:     for m in &assets.mcps {
+870:         let digest = objects_overlay_v2::mcp_source_digest(m)?;
+871:         if !r
+872:             .selection
+873:             .mcp_sources
+874:             .iter()
+875:             .any(|s| s.name == m.name && s.definition_digest == digest)
+876:         {
+877:             return Err(err("capture_mcp_source_changed"));
+878:         }
+879:         if r.selection
+880:             .extension_credentials
+881:             .mcp_names
+882:             .contains(&m.name)
+883:             && m.secrets.0.is_empty()
+884:         {
+
+SOURCE 47eb7cf7420ba9127f4d7047e4d83231f826035f apps/desktop/tauri/src/modules/sync/portable_assets.rs
+315: pub fn snapshot_skill(
+316:     path: &Path,
+317:     label: &str,
+318:     include_secrets: bool,
+319:     _reviewed: bool,
+320: ) -> ModelResult<Skill> {
+321:     name(label)?;
+322:     let metadata = std::fs::symlink_metadata(path)?;
+323:     if !metadata.is_dir() || metadata.is_symlink() {
+324:         return Err(invalid("asset_link", "Skill读源须为普通目录"));
+325:     }
+326:     let root = path.canonicalize()?;
+367: pub fn split_mcp(
+368:     definition: discovery::RawServerDefinition,
+369:     include_secrets: bool,
+370:     _reviewed: bool,
+371: ) -> ModelResult<Mcp> {
+372:     name(&definition.name)?;
+373:     let mut value = definition.value;
+374:     let object = value
+960: fn choose_export_mcp(
+961:     candidates: &[ExportMcpCandidate],
+962:     server: &str,
+963: ) -> Result<usize, McpConflict> {
+964:     if candidates.len() == 1 {
+965:         return Ok(0);
+966:     }
+967:     let first = &candidates[0];
+968:     if candidates.iter().all(|c| proven_same_export_mcp(first, c)) {
+969:         return Ok(0);
+970:     }
+971:     let mut fields = differing_fields(
+972:         &candidates
+973:             .iter()
+974:             .map(|c| &c.public.definition)
+975:             .collect::<Vec<_>>(),
+976:     );
+977:     if candidates.iter().any(|c| {
+978:         !same_secret_paths(&first.public, &c.public)
+979:             || (!c.public.secret_fields.is_empty() && !proven_same_export_mcp(first, c))
+980:     }) {
+981:         fields.push("credentials".into());
+982:         fields.push("source".into());
+983:     }
+984:     fields.sort();
+985:     fields.dedup();
+986:     Err(McpConflict {
+987:         name: server.into(),
+988:         clients: candidates.iter().map(|c| c.source.clone()).collect(),
+989:         fields,
+990:     })
+
+SOURCE 47eb7cf7420ba9127f4d7047e4d83231f826035f apps/desktop/tauri/src/modules/model_config/portable_v2.rs
+194:     }
+195:     let policy = PortablePolicyV2 {
+196:         template_refs: if scope.include_global {
+197:             saved_policy.template_refs.clone()
+198:         } else {
+199:             vec![]
+200:         },
+201:         channel_order: channels.iter().map(|c| c.id.clone()).collect(),
+202:         default_channel_id: saved_policy
+203:             .default_channel_id
+204:             .as_ref()
+205:             .filter(|id| all.contains(*id))
+206:             .cloned(),
+207:         channels,
+
+SOURCE 47eb7cf7420ba9127f4d7047e4d83231f826035f apps/desktop/tauri/src/modules/model_config/receive_models_v2.rs
+728:     if selected.include_global_template_refs {
+729:         let p = package.payload.policy.as_ref().ok_or_else(scope_error)?;
+730:         merge_refs(
+731:             &mut out.policy.template_refs,
+732:             p.template_refs.iter().cloned(),
+733:         );
+734:         let order: Vec<_> = p
+735:             .channel_order
+736:             .iter()
+737:             .filter_map(|id| out.source_to_target.get(id).cloned())
+738:             .collect();
+739:         let current: Vec<_> = out.policy.channels.iter().map(|c| c.id.clone()).collect();
+740:         let ids = order.iter().cloned().collect();
+741:         let order = reorder(&current, &order, &ids, &current);
+742:         let channels = out.policy.channels.clone();
+743:         out.policy.channels = order
+744:             .iter()
+745:             .map(|id| channels.iter().find(|c| &c.id == id).unwrap().clone())
+746:             .collect();
+747:         if let Some(id) = &p.default_channel_id {
+748:             out.policy.default_channel_id = Some(
+749:                 out.source_to_target
+750:                     .get(id)
+751:                     .ok_or_else(scope_error)?
+752:                     .clone(),
+753:             );
+754:         }
+755:     }
+
+SOURCE 47eb7cf7420ba9127f4d7047e4d83231f826035f apps/desktop/tauri/src/modules/model_config/objects_overlay_v2.rs
+354:     let key_ids: BTreeSet<_> = selection
+355:         .channels
+356:         .iter()
+357:         .filter(|c| c.include_key)
+358:         .map(|c| c.portable_channel_id.clone())
+359:         .collect();
+360:     out.channel_keys = overlay_secret_values(&out.channel_keys, &local.channel_keys, &key_ids)?;
+361:     if selection.include_global_template_refs {
+362:         let source = local_policy
+363:             .as_ref()
+364:             .ok_or_else(|| err("overlay_selection_missing"))?;
+365:         merge_refs(&mut policy.template_refs, &source.template_refs)?;
+366:         required.extend(source.template_refs.clone());
+367:     }
+368:     if let Some(source) = &local_policy {
+369:         policy.channel_order = reorder_selected(
+370:             &policy.channel_order,
+371:             &source.channel_order,
+372:             &changed_channel_ids,
+373:             policy.channels.iter().map(|c| c.id.clone()),
+374:         );
+375:         if !had_baseline {
+376:             policy.default_channel_id = source
+377:                 .default_channel_id
+378:                 .as_ref()
+379:                 .filter(|id| changed_channel_ids.contains(*id))
+380:                 .cloned();
+381:         }
+382:     }
+383:     check_channel_names(&policy)?;
+384:     if !selection.channels.is_empty()
+385:         || selection.include_global_template_refs
+386:         || out.models.payload.policy.is_some()
+387:     {
+388:         out.models.payload.policy = Some(policy);
+389:     }
+390:     merge_templates(
+391:         &mut out.models,
+392:         &local.models,
+393:         &required,
+394:         &selection.adopt_template_defaults,
+395:     )?;
+
+SOURCE 47eb7cf7420ba9127f4d7047e4d83231f826035f apps/desktop/ui/src/features/sync/ConfigFileTransferV2.vue
+53:    <template v-if="entry(object.id)!.kind==='mcp'"><UiSelectField :model-value="files.scope.mcpClients[entry(object.id)!.id]??''" :label="object.label+'定义来源'" :disabled="files.busy" :options="[{value:'',label:'请选择明确来源'},...(files.catalog?.mcpSources.find(m=>m.name===entry(object.id)!.id)?.sources??[]).map(s=>({value:s.source,label:s.source}))]" @update:model-value="files.mcpSource(entry(object.id)!.id,$event)" /><p>同名 MCP 定义差异：{{files.catalog?.mcpSources.find(m=>m.name===entry(object.id)!.id)?.differingFields.join('、')||'未报告差异'}}。未选来源不会自动采用。</p></template>
+54:    <p v-if="entry(object.id)!.kind==='account'">仅账户信息；本机路径、登录状态与不受支持的会话凭据保持在原设备。</p><dl v-if="entry(object.id)!.kind==='account'&&account(entry(object.id)!.id)"><dt>平台</dt><dd>{{account(entry(object.id)!.id)!.origin?.accountPlatform??account(entry(object.id)!.id)!.provider}}</dd><dt>管理方</dt><dd>{{account(entry(object.id)!.id)!.origin?.owner??'来源未登记'}}</dd><dt>来源账户</dt><dd>{{account(entry(object.id)!.id)!.origin?.sourceAccountId??'未登记'}}</dd><dt>主体 / 组织</dt><dd>{{account(entry(object.id)!.id)!.subject??'未知'}} / {{account(entry(object.id)!.id)!.origin?.tenant??'未知'}}</dd></dl></template>
+55:    <template v-if="JSON.parse(object.id)[0]==='webdav_candidate'"><p>导入后形成未启用的连接候选，不改当前连接。</p><label><input type="checkbox" :checked="files.scope.selection.manager.webdavPasswordIds.includes(JSON.parse(object.id)[1])" :disabled="files.busy||files.source==='draft'||!files.scope.selection.manager.webdavIds.includes(JSON.parse(object.id)[1])||!files.catalog?.webdavConnections.find(c=>c.id===JSON.parse(object.id)[1])?.passwordAvailable" @change="webdavPassword(JSON.parse(object.id)[1],($event.target as HTMLInputElement).checked)" />包含此连接密码</label></template>
+56:   </template></ObjectScopeTree>
+57:   <aside aria-label="其他凭据与内容保护" data-testid="sync-scope-credentials"><h3>其他凭据</h3><template v-for="e in files.entries.filter(e=>files.selected(e))" :key="e.kind+e.id"><template v-if="e.kind==='channel'"><label><input type="checkbox" :checked="channel(e.id)?.includeKey" :disabled="files.busy||files.source==='draft'||!e.keyAvailable||channel(e.id)?.familyIds!==null" @change="files.channelOption(e.id,'includeKey',($event.target as HTMLInputElement).checked)" />{{e.label}} · API Key</label><label><input type="checkbox" :checked="channel(e.id)?.includeAuthorization" :disabled="files.busy||files.source==='draft'||!e.authorizationAvailable||channel(e.id)?.familyIds!==null" @change="files.channelOption(e.id,'includeAuthorization',($event.target as HTMLInputElement).checked)" />{{e.label}} · 受支持授权</label></template><label v-if="e.kind==='skill'||e.kind==='mcp'"><input type="checkbox" :checked="e.kind==='skill'?files.scope.selection.extensionCredentials.skillNames.includes(e.id):files.scope.selection.extensionCredentials.mcpNames.includes(e.id)" :disabled="files.busy||files.source==='draft'||!e.secretAvailable" @change="secret(e,($event.target as HTMLInputElement).checked)" />{{e.label}} · 扩展凭据</label></template><label><input v-model="encrypt" type="checkbox" :disabled="files.busy" />保护导出内容</label><label v-if="encrypt">保护口令<input v-model="password" class="input" type="password" aria-label="导出保护口令" autocomplete="new-password" :disabled="files.busy" /></label><p>保护口令与 WebDAV 连接密码分别选择；口令不进入范围偏好。</p></aside></div>
+58:   <label><input type="checkbox" :checked="files.scope.selection.includeGlobalTemplateRefs" :disabled="files.busy" @change="files.setScope({...files.scope,selection:{...files.scope.selection,includeGlobalTemplateRefs:($event.target as HTMLInputElement).checked}})" />包含全局精确模版候选引用</label><label><input type="checkbox" :checked="files.scope.assetsReviewed" :disabled="files.busy" @change="files.setScope({...files.scope,assetsReviewed:($event.target as HTMLInputElement).checked})" />已核对所选扩展和 MCP 来源范围</label>
+59:   <details v-if="files.recoverable.length"><summary>原文件操作 · {{files.recoverable.length}}</summary><div v-for="op in files.recoverable" :key="op.operationId"><span>{{op.kind==='export'?'导出':'导入'}} · {{op.operationId}} · {{op.completed?'已有回执':op.attempted?'原操作待核对':'尚未执行'}}</span><UiButton :disabled="files.busy" @click="files.reopen(op)">重开原操作</UiButton></div></details></template>
+65:    <template v-if="o.kind==='channel'"><UiSelectField :model-value="bindingValue(o.id)" :label="o.label+'接收目标'" :options="bindingOptions(o)" :disabled="files.busy||files.importAttempted" @update:model-value="binding(o.id,$event)" /><UiSelectField :model-value="incomingChannel(o.id)?.modelIds!==null?'models':incomingChannel(o.id)?.familyIds!==null?'families':'all'" :label="o.label+'采用模型范围'" :options="[{value:'all',label:'文件内完整渠道范围',disabled:!!o.exportedModelIds||!!o.exportedFamilyIds},{value:'models',label:'逐模型选择',disabled:!!o.exportedFamilyIds},{value:'families',label:'按族片段选择'}]" :disabled="files.busy||files.importAttempted" @update:model-value="importSubset(o,$event as 'all'|'models'|'families')" /><label v-for="id in incomingChannel(o.id)?.modelIds!==null?o.modelIds:incomingChannel(o.id)?.familyIds!==null?o.familyIds:[]" :key="id"><input type="checkbox" :checked="incomingChannel(o.id)?.modelIds?.includes(id)||incomingChannel(o.id)?.familyIds?.includes(id)" :disabled="files.busy||files.importAttempted" @change="importSubId(o,incomingChannel(o.id)?.modelIds!==null?'models':'families',id,($event.target as HTMLInputElement).checked)" />{{id}}</label><label><input type="checkbox" :checked="incomingChannel(o.id)?.includeConnection" :disabled="files.busy||files.importAttempted||!o.connectionAvailable||incomingChannel(o.id)?.familyIds!==null" @change="importOption(o,'includeConnection',($event.target as HTMLInputElement).checked)" />采用连接</label><label v-if="o.hasKey"><input type="checkbox" :checked="incomingChannel(o.id)?.includeKey" :disabled="files.busy||files.importAttempted||incomingChannel(o.id)?.familyIds!==null" @change="importOption(o,'includeKey',($event.target as HTMLInputElement).checked)" />采用渠道 Key</label><label v-if="o.hasAuthorization"><input type="checkbox" :checked="incomingChannel(o.id)?.includeAuthorization" :disabled="files.busy||files.importAttempted||incomingChannel(o.id)?.familyIds!==null" @change="importOption(o,'includeAuthorization',($event.target as HTMLInputElement).checked)" />采用受支持授权</label><label v-if="o.namespaceRequiresAdoption"><input type="checkbox" :checked="files.bindings.adoptNamespaceChannelIds.includes(o.id)" :disabled="files.busy||files.importAttempted||incomingChannel(o.id)?.modelIds!==null||incomingChannel(o.id)?.familyIds!==null" @change="mutateImport((_s,b)=>{b.adoptNamespaceChannelIds=b.adoptNamespaceChannelIds.filter(id=>id!==o.id);if(($event.target as HTMLInputElement).checked)b.adoptNamespaceChannelIds.push(o.id)})" />明确采用文件中的渠道命名空间（仅完整渠道）</label></template>
+66:    <template v-if="o.kind==='template'"><div v-for="r in o.templateReferences" :key="r.revisionId"><label><input type="checkbox" :checked="files.importScope.templateRefs.some(v=>v.templateId===r.templateId&&v.revisionId===r.revisionId)" :disabled="files.busy||files.importAttempted" @change="mutateImport(s=>{s.templateRefs=s.templateRefs.filter(v=>v.templateId!==r.templateId||v.revisionId!==r.revisionId);if(($event.target as HTMLInputElement).checked)s.templateRefs.push(r);else s.adoptTemplateDefaults=s.adoptTemplateDefaults.filter(v=>v.templateId!==r.templateId||v.revisionId!==r.revisionId)})" />{{r.revisionId}}</label><label><input type="checkbox" :checked="files.importScope.adoptTemplateDefaults.some(v=>v.templateId===r.templateId&&v.revisionId===r.revisionId)" :disabled="files.busy||files.importAttempted||!files.importScope.templateRefs.some(v=>v.templateId===r.templateId&&v.revisionId===r.revisionId)" @change="mutateImport(s=>{s.adoptTemplateDefaults=s.adoptTemplateDefaults.filter(v=>v.templateId!==r.templateId);if(($event.target as HTMLInputElement).checked)s.adoptTemplateDefaults.push(r)})" />明确采用为默认保存版本</label></div></template>
+67:    <dl v-if="o.kind==='account'&&o.accountInfo"><dt>平台</dt><dd>{{o.accountInfo.origin?.accountPlatform??o.accountInfo.provider}}</dd><dt>管理方</dt><dd>{{o.accountInfo.origin?.owner??'来源未登记'}}</dd><dt>来源账户</dt><dd>{{o.accountInfo.origin?.sourceAccountId??'未登记'}}</dd><dt>主体 / 组织</dt><dd>{{o.accountInfo.subject??'未知'}} / {{o.accountInfo.origin?.tenant??'未知'}}</dd></dl><UiSelectField v-if="o.kind==='mcp'" :model-value="files.bindings.mcpClients[o.id]??''" :label="o.label+'接收客户端'" :options="[{value:'',label:'请选择接收客户端'},...Object.entries(clientLabels).map(([value,label])=>({value,label}))]" :disabled="files.busy||files.importAttempted" @update:model-value="mutateImport((_s,b)=>{if($event)b.mcpClients[o.id]=$event;else delete b.mcpClients[o.id]})" />
+68:    <label v-if="o.kind==='webdav_candidate'&&o.hasCredentials"><input type="checkbox" :checked="files.importScope.manager.webdavPasswordIds.includes(o.id)" :disabled="files.busy||files.importAttempted" @change="mutateImport(s=>{s.manager.webdavPasswordIds=s.manager.webdavPasswordIds.filter(id=>id!==o.id);if(($event.target as HTMLInputElement).checked)s.manager.webdavPasswordIds.push(o.id)})" />采用此未启用连接候选的密码</label><label v-if="(o.kind==='skill'||o.kind==='mcp')&&o.hasCredentials"><input type="checkbox" :checked="o.kind==='skill'?files.importScope.extensionCredentials.skillNames.includes(o.id):files.importScope.extensionCredentials.mcpNames.includes(o.id)" :disabled="files.busy||files.importAttempted" @change="mutateImport(s=>{const k=o.kind==='skill'?'skillNames':'mcpNames';s.extensionCredentials[k]=s.extensionCredentials[k].filter(id=>id!==o.id);if(($event.target as HTMLInputElement).checked)s.extensionCredentials[k].push(o.id)})" />采用本项扩展凭据</label></template></article>
+69:   <label><input type="checkbox" :checked="files.importScope.includeGlobalTemplateRefs" :disabled="files.busy||files.importAttempted" @change="mutateImport(s=>{s.includeGlobalTemplateRefs=($event.target as HTMLInputElement).checked})" />采用包内全局精确引用</label><label><input type="checkbox" :checked="files.bindings.assetsReviewed" :disabled="files.busy||files.importAttempted" @change="mutateImport((_s,b)=>{b.assetsReviewed=($event.target as HTMLInputElement).checked})" />已核对本次扩展与 MCP 接收客户端</label><label><input v-model="files.backup" type="checkbox" :disabled="files.busy||files.importAttempted" />更新前备份</label><p v-if="files.comparing" role="status">正在核对本次明确范围；新输入会保留并继续比较。</p><p v-if="files.importStale" role="status">本次范围已调整，请重新核对差异。</p><p v-if="files.importPreview?.reasonCode" role="alert" class="model-error">{{files.importPreview.reasonCode}}</p><p v-if="files.error" role="alert" class="model-error">{{files.error}}</p><details v-if="files.importPreview"><summary>本次实际变更范围</summary><p>渠道：{{files.importPreview.differences.changedChannelIds.join('、')||'无已确认变化'}}</p><p>精确模版：{{files.importPreview.differences.changedTemplateRefs.map(r=>r.templateId+'/'+r.revisionId).join('、')||'无已确认变化'}}</p></details><template #actions="{close}"><UiButton :disabled="files.busy" @click="close">取消</UiButton><UiButton :disabled="files.busy||files.importAttempted" @click="files.compareImport">核对本次差异</UiButton><UiButton variant="primary" :disabled="!files.canConfirmImport" @click="files.confirmImport">{{files.importAttempted?'核对并继续原采用':'确认采用所选配置'}}</UiButton></template></UiDialog>
+70:   <UiDialog :open="files.resultOpen" title="文件操作结果" @close="files.resultOpen=false"><template v-if="files.receipt?.operationId===files.resultOperationId"><p>原操作 {{files.receipt.operationId}}</p><p>文件内容已核对 · {{files.receipt.length}} 字节</p><p>文件摘要 {{files.receipt.fileDigest}}</p><template v-if="files.output?.operationId===files.resultOperationId"><h3>实际生成位置</h3><p class="local-path">{{displayPath(files.output.path)}}</p><p>备份包目录：<code>{{displayPath(files.output.directory)}}</code></p><div class="file-actions"><UiButton :disabled="files.busy" @click="files.openOutputDirectory()">打开备份包目录</UiButton><UiButton :disabled="files.busy" @click="files.readOutput()">重新核对输出位置</UiButton></div></template><p>关闭结果不重复导出或采用。</p></template><template v-else-if="files.originalRecord"><p>原操作 {{files.originalRecord.operationId}}</p><p>{{files.originalRecord.completed?'后端原操作已有完成回执':'原操作仍待核对'}}</p><p>此处只显示原操作记录，未重新导出或采用。</p></template><p v-if="files.error" role="alert" class="model-error">{{files.error}}</p></UiDialog>
+
+SOURCE 47eb7cf7420ba9127f4d7047e4d83231f826035f apps/desktop/ui/src/features/sync/ConfigSyncPreviewV2.vue
+37:       <label v-if="(entry.kind==='skill'||entry.kind==='mcp')&&selected(entry)"><input type="checkbox" :checked="entry.kind==='skill'?scope?.selection.extensionCredentials.skillNames.includes(entry.id):scope?.selection.extensionCredentials.mcpNames.includes(entry.id)" :disabled="busy||!entry.secretAvailable" @change="emit('credential',entry,($event.target as HTMLInputElement).checked)" />包含该项所选凭据</label>
+38:       <details v-if="entry.kind==='template'&&selected(entry)"><summary>选择确切保存版本 · {{scope?.selection.templateRefs.filter(r=>r.templateId===entry.id).length??0}} 个</summary><div v-for="reference in entry.revisions" :key="reference.revisionId"><label><input type="checkbox" :checked="scope?.selection.templateRefs.some(r=>r.templateId===reference.templateId&&r.revisionId===reference.revisionId&&r.digest===reference.digest)" :disabled="busy" @change="emit('revision',reference,($event.target as HTMLInputElement).checked)" />{{reference.revisionId}}</label><label><input type="checkbox" :checked="scope?.selection.adoptTemplateDefaults.some(r=>r.templateId===reference.templateId&&r.revisionId===reference.revisionId)" :disabled="busy||!scope?.selection.templateRefs.some(r=>r.templateId===reference.templateId&&r.revisionId===reference.revisionId)" @change="emit('default',reference,($event.target as HTMLInputElement).checked)" />明确采用此保存版本为默认</label></div><p>未保存编辑不进入普通同步；不取任意 latest，精确依赖由后端补齐核验。</p></details>
+39:     </article></div>
+40:     <p v-if="catalog&&!shown.length">当前筛选下没有对象；无本机对象不阻止核验有效云端配置。</p>
+41:     <label><input type="checkbox" :checked="scope?.selection.includeGlobalTemplateRefs" :disabled="busy" @change="emit('global',($event.target as HTMLInputElement).checked)" />包含全局精确模版候选引用</label>
+42:     <label><input type="checkbox" :checked="scope?.assetsReviewed" :disabled="busy" @change="emit('review',($event.target as HTMLInputElement).checked)" />已核对所选扩展与 MCP 来源范围</label>
+43:     <details><summary>受保护配置的本次口令</summary><label>读取云端口令<input v-model="readPassphrase" class="input" type="password" autocomplete="off" aria-label="读取云端口令" /></label><label><input v-model="useProtection" type="checkbox" />本次上传启用保护</label><label v-if="useProtection">写入保护口令<input v-model="writePassphrase" class="input" type="password" autocomplete="new-password" aria-label="写入保护口令" /></label><p>口令仅传本次服务会话，不进入范围偏好或日志。</p></details>
+44:     <div class="sync-workspace-footer"><UiButton variant="primary" :disabled="loading||busy||!catalog||catalog.cloudState==='initialization_ambiguous'" @click="submit('prepare')">同步</UiButton></div>
+
+SOURCE fc3e3b672c583ab2e4d0292b04e6851c4df4c65f docs/01-需求管理/需求/DMD-OPENCODEX-UI-020.md
+8: next_action: null
+9: acceptance_criteria: [{"id": "AC-020-01", "text": "同时移除旧UI必经步骤、按钮门槛和后端人工确认契约；保留路径/软链/文件限额/凭据范围/解析校验，不得仅隐藏复选框或伪造“已人工确认”。选中Skill、自定义MCP，首次进入/重开/同步/导出都不被旧门槛阻断。"}, {"id": "AC-020-02", "text": "删除已取消入口与死状态；表头与搜索全选只作用当前结果，隐藏勾选保持，空列表/半选/禁用项有一致反馈。"}, {"id": "AC-020-03", "text": "明确对象树与全局/顺序字段的承载，不把后端字段直接当产品控件；迁移旧all_*持久值，不静默扩大范围；新对象是否默认纳入按采用原型规则执行。"}, {"id": "AC-020-04", "text": "各入口/重开/重启分别恢复最后选择，文件与WebDAV不串用，不让初始化/目录重试覆盖用户选择；确认前不写业务对象，允许独立保存本机操作偏好并在合同中说明。"}, {"id": "AC-020-05", "text": "凭据选择与对象身份绑定、子项数量准确；文件导出、WebDAV与导入偏好分别验证。未勾选保留目标已有值，不按名称错绑，不展示秘密值。不能凭截图中勾选不同就断言所有默认值均错误。"}, {"id": "AC-020-06", "text": "有/无凭据均默认false；不开启时不显示口令；开启后双口令长度/一致性校验；明文风险在同一确认页说明，不加第二窗；取消不生成文件。"}, {"id": "AC-020-07", "text": "配置/保护/连接密码分开；开/关、含/不含凭据、本机新版/云端新版、重开和错误口令逐项对齐。口令保留方式须冻结，不能为“记住”把明文口令写入普通JSON/localStorage或包内。"}, {"id": "AC-020-08", "text": "所有文件入口使用同一流程与原页宿主；必要解密在该窗口内；改范围后变化与可执行性自动收敛；旧计划恢复、显式draft导入另列兼容分支，不把兼容入口重新变成普通必经步骤。"}, {"id": "AC-020-09", "text": "对齐字段/按钮位置、留空保密语义与测试反馈；不把凭据引用及重复说明放主流程；额外删除/导入连接管理明确归属，必要失败原因可见；无真实连接时使用沙箱。"}, {"id": "AC-020-10", "text": "同步页与概览共享同一业务逻辑和公共宿主；逐项检查打开/取消/关闭/Escape/完成，路由与滚动保持；查看结果只读，不启动新同步。"}, {"id": "AC-020-11", "text": "成功/失败/部分完成/无变化分别有真实回执，结果与通知一一对应；失败只重试相应项并复用原操作/备份；删通知不复活；自定义导出“打开目录”指向实际位置。不重复制造页面结果块。"}, {"id": "AC-020-12", "text": "比较失败不能伪装完整可执行预览；恢复路径先定规则；对象/Key/顺序/Skill文件变化准确且脱敏；本机/云端冲突两侧均能表达来源，未选只跳该项。"}, {"id": "AC-020-13", "text": "用实际沙箱配置文件证明确认后已更新且重开可见；未保存编辑保持并正确重基准，不能让旧编辑覆盖新版。显式source=draft按既有独立合同保留，不把draft特例当普通快照行为。"}, {"id": "AC-020-14", "text": "先冻结勾选与保护备份语义；沙箱证明实际内容可恢复、失败不覆盖、重试不覆盖原始备份；UI说明与真实范围一致，不称只备份偏好为全部受保护。"}, {"id": "AC-020-15", "text": "先形成来源决策表再实施；双端隔离夹具验证来回收敛、时间不漂、范围外保持；整对象删除不得自行扩展。当前未运行真实双设备，不假称已修。"}, {"id": "AC-020-16", "text": "对portable字段逐个列允许/排除/适配及来源身份，检查导入/同步/备份三者差别；保留已有登录、当前连接及设备身份；客户端MCP键路径修正仍归扩展包，引用依赖不重复开发。"}, {"id": "AC-020-17", "text": "明确本机偏好/临时计划/业务文件写入边界；对打开→取消/关闭/Escape、未知变化、备份失败、并发编辑、半完成、重试恢复逐项记录真实文件和计划状态；不得把必要缓存一概当业务覆盖，也不以“无真实传输”免测副作用。"}, {"id": "AC-020-18", "text": "先写旧实现稳定失败的行为断言，再更改实现；两引擎和原生验收分开；所有skip须逐条解释，截图/矩阵/断言覆盖同一组已采用规则。通过数不能替代覆盖率。"}, {"id": "AC-020-19", "text": "逐表面记录标题/字段/顺序/按钮/默认值/禁用/间距/滚动/键盘；不因共用UiDialog或材质一致就判整窗一致。夹具数据量、注释工具、原生标题栏差异从产品差异中剔除。 用户追加默认100%字体收紧：正文/导航13px、控件12px、副标题15px、弹窗标题18px、页标题22px，软件与原型同源，小字10/11/12px与缩放语义保持。"}, {"id": "AC-020-20", "text": "第5、6节全部条目登记来源与状态；先确认属于本版的原型，再审计；不把未来原型入口当缺功能，不把开发打样页当产品，不遗漏无法浏览器复现的原生状态。"}]
+10: resolution: "S20-01～20按采用原型及字体增量验收完成；同一b175签名原包完成两平台安装和相邻OTA并公开v0.2.20 stable，限制与原始失败保留于REL23和原问题清单。"
+21: 用户授权范围包括必要的文件/凭据/隔离网络夹具、Windows一次性Actions runner、代码提交推送/PR合并、正式原包构建与签名核验、公开stable及相邻实际OTA。不改日常配置、不读取/发布日常秘密值、不运行日常真实配置同步。发布私钥只在现有Actions secrets中使用。
+22: 
+23: 已确认规则：移除逐次人工复核、预设/清空及额外明文确认；默认不加密；范围/凭据按文件与WebDAV分别记忆；概览原位共享弹窗；普通导入/下载确认后更新已保存内容且保护未保存输入；备份为实际所选资源。详见IMP-28采用决策与依赖。其他未决规则不靠旧实现默认批准。
+24: 
+
+SOURCE fc3e3b672c583ab2e4d0292b04e6851c4df4c65f docs/03-开发实施/IMP-OPENCODEX-DESKTOP-28.md
+17: ## 采用决策与顺序
+18: 
+19: 1. 固定DMD与S20清单、cfbd90c4b+1da4cabca；建立逐AC、SY和弹窗检查回执，缺证据不通过。先新增旧实现会失败的行为测试。
+20: 2. S20-01/02/03/06/18：移除旧人工复核契约（兼容读取旧字段但不作为写入门槛，不伪造人工确认）；移除取消的工具栏/额外右栏；默认明文、一次确认，路径/文件/身份/限额校验保持。
+21: 3. S20-04/05/07/16：本机范围存管理器状态，文件/WebDAV/导入独立；范围目录重读不扩大。凭据按对象选且源身份绑定；保护口令只进现有受保护凭据后端，绝不JSON/localStorage明文；连接密码与内容口令分离。
+22: 4. S20-08/09/10/11/19：共享控制器和公共弹窗唯一挂载，原页/滚动保持；导入同窗选文件/解密/范围/变化；连接按原型；结果只读，按原操作重试；事件注册与消费者对账。
+23: 5. S20-12/13/14/15/17：预览未知不允许写；确认实际写入已保存配置并重基准、保留未保存输入；按所选范围一次写前备份，失败不覆盖，同操作复用原始备份并可恢复。先建立隔离文件/内存transport的双端反例。
+
+SOURCE fc3e3b672c583ab2e4d0292b04e6851c4df4c65f docs/03-开发实施/IMP-OPENCODEX-DESKTOP-31.md
+21: 
+22: - 桌面目标0.2.23，代码起点0c57500f8f46ea50655c782c3f04334a39167abb（现有桌面0.2.22），证据文档e01dc177b，长期测试规范893b1d1fc。当前集成分支codex/0.2.23-integration；版本文件在功能及发行链收口时统一更新。
+23: - 唯一总原型docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html，采用cde9cc52a下#models新增渠道两步、#sync?tab=webdav来源下拉及整体预览。工作区并行概览/维护草稿不采用。后续无ETag决定优先，旧快照批注须在G0更新。
+24: - cde9cc52a文件SHA256：index.html=f099e67c22b44ed7bdfa58deed70fe0d91fa09b55514b7adde3faf568d4eadf9；sync-config.js=72e94d236d638f60b8f3673a36b5bcea2176cd05b0e0c09884961314338bb578；model-config.js=14b0f738cb683c78474d3bd7212b28f1ef1b817b4cce16b4119180c7b0332f8f。交互沿[最新说明](../04-项目资料/01-项目支撑资料/01-产品原型/同步直接更新原型说明.md)，新增设计状态需记录后继采用提交/摘要。
+25: - 基础维护运行包2.97.0-post021.ownerquery.2，SHA256 bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957；不含本批中文name目录映射。所需新修订版本/交付来源未冻结，不可沿用旧包版本标记新字节，也不可把桌面0.2.23当作运行包版本。
+105: ## 2026-11-07 分批集成事实与未完
+106: 
+107: 本段及当前清单替代前文开发前时点的“尚未开工”状态描述；历史基线、验收标准与原型范围不因此删除。代码已推送至codex/0.2.23-integration，目录与模型/同步各线合入来源可由Git追溯。维护运行包明确为2.97.0-desktop023.names.1，SHA256 afb72a4c792c1ca70a0fcd9209d212c78249281d2d7bc42f8eee63aa4464b26b，配方与完整双平台bundle供应已提交205d72b1a。原ownerquery.2只作构建输入与对照，不是本版名称修复包。后继总原型采用局部增量12f27c515，保留并行概览/维护草稿边界。
+108: 
+
+SOURCE fc3e3b672c583ab2e4d0292b04e6851c4df4c65f docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.20-bugs.md
+33: | 编号 / 建议级别 | 原型或已确认要求 | 0.2.19实际、证据与影响 | 0.2.20验收条件 |
+34: | --- | --- | --- | --- |
+35: | S20-01 / P1 | 凭据随范围记住，取消普通同步每次人工复核；Skill/MCP选中后可进入预览。 | **确认差异**：`ModelTransfer.vue:62,176,390,425`保留assetsReviewed，初始false并禁用同步/导出；loadScope不恢复它，后端Scope又不序列化该值；`portable_assets.rs:312,458`仍据它拒绝Skill或自定义MCP字段。截图、两引擎均复现。 | 同时移除旧UI必经步骤、按钮门槛和后端人工确认契约；保留路径/软链/文件限额/凭据范围/解析校验，不得仅隐藏复选框或伪造“已人工确认”。选中Skill、自定义MCP，首次进入/重开/同步/导出都不被旧门槛阻断。 |
+36: | S20-02 / P2 | 范围工具栏仅保留搜索与表头全选/取消；删除预设下拉和“清空选择”。 | **确认差异**：`ModelTransfer.vue:144,189,399`仍有默认/分享/换设备/自定义预设和清空按钮，注释仍称原型有旧工具栏。 | 删除已取消入口与死状态；表头与搜索全选只作用当前结果，隐藏勾选保持，空列表/半选/禁用项有一致反馈。 |
+37: | S20-03 / P2 | 范围由对象树表达，右栏仅凭据与对应保护选项。 | **确认差异**：右栏仍有“后续新增对象”“全局采用及渠道组顺序”；allTemplates/allChannels/allSkills/allMcps可覆盖具体对象选择。原型树没有这些右栏控件。 | 明确对象树与全局/顺序字段的承载，不把后端字段直接当产品控件；迁移旧all_*持久值，不静默扩大范围；新对象是否默认纳入按采用原型规则执行。 |
+38: | S20-04 / P1 | 文件导出与WebDAV范围、凭据各自自动记住；每台设备独立；新导入包默认全选其提供的范围。 | **源码确认，夹具重开复位**：文件页`begin():230`每次挂载applyScopePreset('all')，仅组件fileScopeInitialized；没有文件范围持久层。WebDAV在`startSync():214`点击后才saveRemoteScope，取消或未同步就离开的勾选不保证保存。 | 各入口/重开/重启分别恢复最后选择，文件与WebDAV不串用，不让初始化/目录重试覆盖用户选择；确认前不写业务对象，允许独立保存本机操作偏好并在合同中说明。 |
+186: | S20 | 最终结论与证据 | 范围与边界 |
+187: | --- | --- | --- |
+188: | S20-01 | 通过；[AC对应证据](../../../../.adg/evidence/0.2.20/final-candidate-updates-20261104/final-acceptance-map.json) | 前后端旧人工复核门槛均移除，路径、文件限额及凭据身份校验保留；正式包混合资源可直接预览。 |
+189: | S20-02 | 通过；[AC对应证据](../../../../.adg/evidence/0.2.20/final-candidate-updates-20261104/final-acceptance-map.json) | 预设与清空入口移除；当前搜索表头选择、隐藏勾选、半选、空与禁用状态均已覆盖。 |
+190: | S20-03 | 通过；[AC对应证据](../../../../.adg/evidence/0.2.20/final-candidate-updates-20261104/final-acceptance-map.json) | 旧all值物化具体对象，依赖与顺序按可见范围承载；桌面偏好只含四项显示字段，不隐含扩展整份配置。 |
+191: | S20-04 | 通过；[AC对应证据](../../../../.adg/evidence/0.2.20/final-candidate-updates-20261104/final-acceptance-map.json) | 文件、WebDAV及导入选择独立记忆；新设备首次成功目录全选，其后新增不自动选，失败不初始化。 |
+214: 普通快照、依赖、凭据与结果均已接线：文件保护仅重封冻结字节，目标与密文在首次写出后冻结；内容保护开关可关闭既有云端加密，轮换口令可先读旧版本。保存源时间由内容索引与真实保存来源确定，读取/重传不使用当前传输时间。已确认并实现范围初始化规则：无本机持久化范围的新设备首次成功读取云端目录时全选当时对象并写设备级初始化标记；已有范围的升级设备保留原选择并只标记完成；其后新增对象不自动勾选，读取失败不写标记。定向回归覆盖首次全选、后续新增不扩展、无效目录不标记；本机Rust lib全量1159通过、0失败、4项ignored。Windows CI、前端失败复核及原生端到端仍在进行，本节不代表发布验收完成。
+215: 
+216: 导入同窗含变化，Key-only变化只输出对象名与credentials分类，不输出秘密或秘密摘要；Skill变化记录具体新增/更新/移除文件。预览unknown在前后端均阻断；下载确认重新核验原远端指针，布局变更单独保护。所选渠道的源全局引用折入渠道精确依赖，目标未选渠道和主版本不变；模版按对象全部已保存版本交换。
+217: 
+
+SOURCE fc3e3b672c583ab2e4d0292b04e6851c4df4c65f docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.js
+274:   return '<div class="sx-toolbar"><input class="input" id="sxSearch" type="search" aria-label="搜索配置对象" placeholder="搜索配置对象" value="'+esc(query)+'"></div><div class="sx-table proto-tree" role="region" aria-label="配置对象列表" tabindex="0">'+window.PrototypeTreeTable.row({className:'sx-table-head',label:tab==='file'?'导出范围':'配置对象',selection:'<input type="checkbox" data-sx-all aria-label="选择当前搜索结果" '+(visible.filter(eligible).length&&visible.filter(eligible).every(x=>ids.has(x.id))?'checked':'')+'>',cells:['<span>范围与凭据</span>']})+''+(rows||'<div class="sx-empty">没有匹配的配置对象<br>更换关键词或清除搜索。</div>')+'</div><p class="sx-extension-scope-note" role="status">'+esc(syncScopeNote())+' 同步无需先映射。</p>'+sxAnn('01','同步范围与选择规则','范围就是最后一次的勾选结果，文件导出与 WebDAV 各记一份，下次打开直接沿用；表头复选框可一键全选或取消当前搜索结果。同平台支持多个独立账户；账户平台与OpenCodex管理方、调用方分开，Google Antigravity、Kiro不归类为Codex。账户能力按账户平台、管理方、授权来源和认证类型登记；当前正常流程仅账户信息。默认导出当前已保存文件快照；仅显式指定 draft 来源才导出当前模型渠道内存草稿。模版只取已保存版本，不带模版编辑缓冲。搜索仅改变显示，隐藏勾选保留。凭据随所选范围/包内能力选择，默认不加密。普通同步不传输这些操作偏好，也不切换另一台设备的当前连接。每次导入在包内提供范围默认全选，显式入口范围只列对应对象。点击同步先看预览，确认才执行。原型只记在当前文档内存，刷新后复位；不读写真实文件。');
+275:  }
+276:  function credentialsHTML(){
+277:   const s=state(),ids=closure().ids;
+278:   const reviewed='';
+279:   const hasAssets=[...ids].some(id=>['skills','mcp'].includes(find(id)?.group));
+280:   const blocks=[['keys','渠道 API Key','包含所选渠道的 Key','渠道可单独分享，接收方自行填 Key。',x=>x.key],['extensions','扩展凭据','包含所选扩展的凭据','例如 MCP 的 Authorization / 环境变量。',x=>x.extensionSecret]].map(([key,title,label,note,match])=>{
+281:    const items=catalog.filter(x=>ids.has(x.id)&&match(x)),active=items.some(x=>s[key].has(x.id));
+282:    return '<section class="sx-secret-block">'+check('data-sx-secret="'+key+'"',title,active,!items.length)+(key==='extensions'&&hasAssets?reviewed:'')+'<p class="sx-muted">'+note+'</p>'+(active?'<div class="sx-subpicks">'+items.map(x=>check('data-sx-secret-object="'+x.id+'" data-kind="'+key+'"',esc(x.name),s[key].has(x.id))).join('')+'</div>':'')+'</section>';
+283:   }).join('');
+284:   return '<aside class="sx-secrets"><header><h3>其他凭据</h3><p class="sx-muted">账户按平台能力提供可选范围；当前仅账户信息'+(tab==='file'?'，WebDAV 密码随配置选择':'')+'；以下凭据可另选。</p></header>'+ (tab==='webdav'?'<section class="sx-secret-block">'+check('data-sx-protect','加密同步内容',protection.enabled)+'<div '+(!protection.enabled?'hidden':'')+' id="sxProtectionFields"><label class="sx-field"><span>保护口令</span><input class="input" type="password" id="sxProtectionPass" autocomplete="off" placeholder="填写后记住本次选择" value="'+esc(protection.passphrase)+'"></label>'+(result?.inputNeeded?'<p class="sx-error" role="alert">请填写保护口令</p>':'')+'</div><p class="sx-muted">可选，与连接密码独立。</p></section>':'')+blocks+'<p class="sx-note">'+(secretCount()?'所选凭据随范围同步':'当前不携带凭据')+'</p>'+sxAnn('02','凭据选择与加密规则','加密口令独立于 WebDAV 密码，不随包或远端数据保存。导入同一身份时保留本机已有凭据，不用空值覆盖。文件导出与WebDAV默认不加密，含凭据也不自动勾选；仅手动开启加密后填写口令，不增加确认步骤。WebDAV连接密码继续复用；普通同步不要求逐次复核。原型不读取真实密钥、不做真实加密。')+'</aside>';

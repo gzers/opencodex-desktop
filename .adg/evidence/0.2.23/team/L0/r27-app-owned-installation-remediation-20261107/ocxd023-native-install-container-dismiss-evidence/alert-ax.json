@@ -1,0 +1,114 @@
+{
+  "active": false,
+  "axTrusted": true,
+  "executable": "/private/tmp/ocxd023-native-startup-4i1rfm__/home/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+  "hidden": false,
+  "locked": false,
+  "nodes": [
+    {
+      "actions": [],
+      "hidden": false,
+      "path": "",
+      "role": "AXApplication",
+      "title": "OpenCodeX Desktop"
+    },
+    {
+      "actions": [
+        "AXRaise"
+      ],
+      "description": "alert",
+      "focused": true,
+      "frame": {
+        "height": 303,
+        "width": 260,
+        "x": 1470,
+        "y": 285
+      },
+      "identifier": "_NS:87",
+      "path": "0",
+      "role": "AXWindow",
+      "subrole": "AXDialog",
+      "title": ""
+    },
+    {
+      "actions": [],
+      "description": "OpenCodeX Desktop critical alert",
+      "enabled": true,
+      "focused": false,
+      "frame": {
+        "height": 66,
+        "width": 66,
+        "x": 1489,
+        "y": 304.5
+      },
+      "identifier": "_NS:35",
+      "path": "0.0",
+      "role": "AXImage"
+    },
+    {
+      "actions": [
+        "AXShowMenu"
+      ],
+      "enabled": true,
+      "focused": false,
+      "frame": {
+        "height": 18,
+        "width": 218,
+        "x": 1491,
+        "y": 384.5
+      },
+      "identifier": "_NS:74",
+      "path": "0.1",
+      "role": "AXStaticText",
+      "value": "请调整安装位置"
+    },
+    {
+      "actions": [
+        "AXShowMenu"
+      ],
+      "enabled": true,
+      "focused": false,
+      "frame": {
+        "height": 118.5,
+        "width": 218,
+        "x": 1491,
+        "y": 410.5
+      },
+      "identifier": "_NS:58",
+      "path": "0.2",
+      "role": "AXStaticText",
+      "value": "macOS 需要整文件夹安装：请将应用与随包运行程序放在独立安装文件夹中（例如 ~/Applications/OpenCodeX Desktop/），不能直接使用 Applications、用户 HOME 或卷根作为安装根。原应用与配置未移动或迁移。"
+    },
+    {
+      "actions": [
+        "AXPress"
+      ],
+      "enabled": true,
+      "focused": false,
+      "frame": {
+        "height": 30,
+        "width": 230,
+        "x": 1485,
+        "y": 543
+      },
+      "identifier": "action-button-1",
+      "path": "0.3",
+      "role": "AXButton",
+      "title": "确定"
+    }
+  ],
+  "pid": 51701,
+  "windows": [
+    {
+      "bounds": {
+        "Height": 21,
+        "Width": 18,
+        "X": 1591,
+        "Y": 426
+      },
+      "id": 119770,
+      "layer": 0,
+      "onscreen": true
+    }
+  ]
+}

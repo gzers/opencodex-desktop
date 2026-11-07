@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "kind": "isolated current-source debug-profile actualWKWebView parity",
+  "app": "/private/tmp/ocxd023-native-final-parity-pc7r78bn/OpenCodeX Desktop.app",
+  "root": "/private/tmp/ocxd023-native-startup-5ys63pzc",
+  "version": "0.2.23",
+  "checks": [
+    "actual native process stayed alive through startup metadata",
+    "actual sandbox U/data desktop and opencodex/home split with fixed v2 pointer"
+  ],
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "visualChecks": "actual owned WKWebView review in progress",
+  "pid": 55550,
+  "pointer": {
+    "schemaVersion": 1,
+    "activeRoot": "/private/tmp/ocxd023-native-startup-5ys63pzc/data"
+  },
+  "metadata": {
+    "structure_version": "2",
+    "opencodex_home_mode": "inside"
+  },
+  "startupEvent": "2026-11-07T00:36:37.540Z [manager] startup version=0.2.23 commit=7730073e96999382697fe2ad8dd8f877352c75a3",
+  "visualEvidence": "AX trees and exact owned-window captures recorded separately",
+  "result": "pass",
+  "ownedExit": -15,
+  "binarySha256": "629c7f87ce1e08a45e106bb1470ee5a12db9b4bdf3370f4b0e63ac2d08699d7c",
+  "cleanup": "task-owned subprocess exited; sandbox evidence root removed after recording"
+}

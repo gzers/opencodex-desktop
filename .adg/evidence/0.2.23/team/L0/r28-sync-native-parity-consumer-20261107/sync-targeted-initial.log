@@ -1,0 +1,68 @@
+
+> opencodex-desktop-ui@0.2.23 test
+> vitest --run tests/config-file-v2.test.ts tests/sync-v2-entry.test.ts tests/sync-v2-consumers.test.ts tests/sync-v2-recovery.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-ui/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/sync-v2-entry.test.ts (6 tests | 3 failed) 31ms
+   × the existing remote ModelTransfer entry reads only v2 catalog/scope and never the v1 model/ETag pipe 12ms
+   × Overview-style actionOnly uses the same store preview and emits close, without initiating any v1 upload 3ms
+   × SyncDialogHost provides the sole v2 preview/result/recovery surfaces without loading legacy result data 12ms
+ ❯ tests/config-file-v2.test.ts (24 tests | 1 failed) 121ms
+   ❯ v6 local file consumers with deterministic backend fixtures (24)
+     × imports only after explicit native selection, explicit channel mapping and a reselect of the original file 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/config-file-v2.test.ts > v6 local file consumers with deterministic backend fixtures > imports only after explicit native selection, explicit channel mapping and a reselect of the original file
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ tests/config-file-v2.test.ts:47:835
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/sync-v2-entry.test.ts > the existing remote ModelTransfer entry reads only v2 catalog/scope and never the v1 model/ETag pipe
+AssertionError: expected '' to contain '管理器偏好'
+
+- Expected
++ Received
+
+- 管理器偏好
+
+ ❯ tests/sync-v2-entry.test.ts:17:275
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/sync-v2-entry.test.ts > Overview-style actionOnly uses the same store preview and emits close, without initiating any v1 upload
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/sync-v2-entry.test.ts:18:357
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/sync-v2-entry.test.ts > SyncDialogHost provides the sole v2 preview/result/recovery surfaces without loading legacy result data
+AssertionError: expected '同步预览本次操作未完成，请重试；当前选择与已有配置保持。取消重新预览确认上传' to contain 'sync_listing_incomplete'
+
+Expected: "sync_listing_incomplete"
+Received: "同步预览本次操作未完成，请重试；当前选择与已有配置保持。取消重新预览确认上传"
+
+ ❯ tests/sync-v2-entry.test.ts:19:378
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  4 failed | 54 passed (58)
+   Start at  08:21:26
+   Duration  949ms (transform 47%, environment 38%, import 8%, tests 7%)
+

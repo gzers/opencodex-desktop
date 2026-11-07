@@ -1,0 +1,742 @@
+[
+  {
+    "engine": "chromium",
+    "width": 1180,
+    "command": "prepare_config_file_export_v2",
+    "args": {
+      "request": {
+        "selection": {
+          "channels": [
+            {
+              "portableChannelId": "00000000-0000-4000-8000-000000000097",
+              "modelIds": null,
+              "familyIds": null,
+              "includeConnection": true,
+              "includeKey": false,
+              "includeAuthorization": false
+            }
+          ],
+          "templateRefs": [],
+          "adoptTemplateDefaults": [],
+          "includeGlobalTemplateRefs": true,
+          "manager": {
+            "preferences": false,
+            "extensions": false,
+            "accountIds": [],
+            "webdavIds": [],
+            "webdavPasswordIds": []
+          },
+          "skillNames": [],
+          "mcpSources": [
+            {
+              "name": "same-name",
+              "definitionDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "extensionCredentials": {
+            "skillNames": [],
+            "mcpNames": []
+          },
+          "usage": "local_file"
+        },
+        "mcpClients": {
+          "same-name": "codex"
+        },
+        "assetsReviewed": false
+      },
+      "passphrase": null
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 1180,
+    "command": "reselect_config_file_import_v2",
+    "args": {
+      "operationId": "00000000-0000-4000-8000-000000000667",
+      "expectedPlanDigest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "scope": {
+        "channels": [
+          {
+            "portableChannelId": "00000000-0000-4000-8000-000000000097",
+            "modelIds": null,
+            "familyIds": null,
+            "includeConnection": true,
+            "includeKey": false,
+            "includeAuthorization": false
+          }
+        ],
+        "templateRefs": [],
+        "adoptTemplateDefaults": [],
+        "includeGlobalTemplateRefs": false,
+        "manager": {
+          "preferences": false,
+          "extensions": false,
+          "accountIds": [],
+          "webdavIds": [],
+          "webdavPasswordIds": []
+        },
+        "skillNames": [],
+        "mcpSources": [],
+        "extensionCredentials": {
+          "skillNames": [],
+          "mcpNames": []
+        },
+        "usage": "local_file"
+      },
+      "bindings": {
+        "channels": [],
+        "mcpClients": {},
+        "assetsReviewed": false,
+        "adoptNamespaceChannelIds": []
+      }
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 1180,
+    "command": "reselect_config_file_import_v2",
+    "args": {
+      "operationId": "00000000-0000-4000-8000-000000000667",
+      "expectedPlanDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+      "scope": {
+        "channels": [
+          {
+            "portableChannelId": "00000000-0000-4000-8000-000000000097",
+            "modelIds": null,
+            "familyIds": null,
+            "includeConnection": true,
+            "includeKey": false,
+            "includeAuthorization": false
+          }
+        ],
+        "templateRefs": [],
+        "adoptTemplateDefaults": [],
+        "includeGlobalTemplateRefs": false,
+        "manager": {
+          "preferences": false,
+          "extensions": false,
+          "accountIds": [],
+          "webdavIds": [],
+          "webdavPasswordIds": []
+        },
+        "skillNames": [],
+        "mcpSources": [],
+        "extensionCredentials": {
+          "skillNames": [],
+          "mcpNames": []
+        },
+        "usage": "local_file"
+      },
+      "bindings": {
+        "channels": [
+          {
+            "kind": "existing",
+            "portableChannelId": "00000000-0000-4000-8000-000000000097",
+            "localChannelId": "00000000-0000-4000-8000-000000000097"
+          }
+        ],
+        "mcpClients": {},
+        "assetsReviewed": false,
+        "adoptNamespaceChannelIds": []
+      }
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 1180,
+    "command": "config_v2_preview",
+    "args": {
+      "request": {
+        "selection": {
+          "channels": [],
+          "templateRefs": [],
+          "adoptTemplateDefaults": [],
+          "includeGlobalTemplateRefs": true,
+          "manager": {
+            "preferences": true,
+            "extensions": false,
+            "accountIds": [],
+            "webdavIds": [],
+            "webdavPasswordIds": []
+          },
+          "skillNames": [],
+          "mcpSources": [
+            {
+              "name": "documentation",
+              "definitionDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+            }
+          ],
+          "extensionCredentials": {
+            "skillNames": [],
+            "mcpNames": []
+          },
+          "usage": "remote_sync"
+        },
+        "mcpClients": {
+          "documentation": "codex"
+        },
+        "assetsReviewed": false,
+        "selectedHead": null,
+        "forcedDirection": null,
+        "backupBeforeUpdate": true
+      },
+      "readPassphrase": null,
+      "writePassphrase": null
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 1180,
+    "command": "prepare_config_file_export_v2",
+    "args": {
+      "request": {
+        "selection": {
+          "channels": [
+            {
+              "portableChannelId": "00000000-0000-4000-8000-000000000097",
+              "modelIds": null,
+              "familyIds": null,
+              "includeConnection": true,
+              "includeKey": false,
+              "includeAuthorization": false
+            }
+          ],
+          "templateRefs": [],
+          "adoptTemplateDefaults": [],
+          "includeGlobalTemplateRefs": true,
+          "manager": {
+            "preferences": false,
+            "extensions": false,
+            "accountIds": [],
+            "webdavIds": [],
+            "webdavPasswordIds": []
+          },
+          "skillNames": [],
+          "mcpSources": [
+            {
+              "name": "same-name",
+              "definitionDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "extensionCredentials": {
+            "skillNames": [],
+            "mcpNames": []
+          },
+          "usage": "local_file"
+        },
+        "mcpClients": {
+          "same-name": "codex"
+        },
+        "assetsReviewed": false
+      },
+      "passphrase": null
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 1180,
+    "command": "reselect_config_file_import_v2",
+    "args": {
+      "operationId": "00000000-0000-4000-8000-000000000667",
+      "expectedPlanDigest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "scope": {
+        "channels": [
+          {
+            "portableChannelId": "00000000-0000-4000-8000-000000000097",
+            "modelIds": null,
+            "familyIds": null,
+            "includeConnection": true,
+            "includeKey": false,
+            "includeAuthorization": false
+          }
+        ],
+        "templateRefs": [],
+        "adoptTemplateDefaults": [],
+        "includeGlobalTemplateRefs": false,
+        "manager": {
+          "preferences": false,
+          "extensions": false,
+          "accountIds": [],
+          "webdavIds": [],
+          "webdavPasswordIds": []
+        },
+        "skillNames": [],
+        "mcpSources": [],
+        "extensionCredentials": {
+          "skillNames": [],
+          "mcpNames": []
+        },
+        "usage": "local_file"
+      },
+      "bindings": {
+        "channels": [],
+        "mcpClients": {},
+        "assetsReviewed": false,
+        "adoptNamespaceChannelIds": []
+      }
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 1180,
+    "command": "reselect_config_file_import_v2",
+    "args": {
+      "operationId": "00000000-0000-4000-8000-000000000667",
+      "expectedPlanDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+      "scope": {
+        "channels": [
+          {
+            "portableChannelId": "00000000-0000-4000-8000-000000000097",
+            "modelIds": null,
+            "familyIds": null,
+            "includeConnection": true,
+            "includeKey": false,
+            "includeAuthorization": false
+          }
+        ],
+        "templateRefs": [],
+        "adoptTemplateDefaults": [],
+        "includeGlobalTemplateRefs": false,
+        "manager": {
+          "preferences": false,
+          "extensions": false,
+          "accountIds": [],
+          "webdavIds": [],
+          "webdavPasswordIds": []
+        },
+        "skillNames": [],
+        "mcpSources": [],
+        "extensionCredentials": {
+          "skillNames": [],
+          "mcpNames": []
+        },
+        "usage": "local_file"
+      },
+      "bindings": {
+        "channels": [
+          {
+            "kind": "existing",
+            "portableChannelId": "00000000-0000-4000-8000-000000000097",
+            "localChannelId": "00000000-0000-4000-8000-000000000097"
+          }
+        ],
+        "mcpClients": {},
+        "assetsReviewed": false,
+        "adoptNamespaceChannelIds": []
+      }
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 1180,
+    "command": "config_v2_preview",
+    "args": {
+      "request": {
+        "selection": {
+          "channels": [],
+          "templateRefs": [],
+          "adoptTemplateDefaults": [],
+          "includeGlobalTemplateRefs": true,
+          "manager": {
+            "preferences": true,
+            "extensions": false,
+            "accountIds": [],
+            "webdavIds": [],
+            "webdavPasswordIds": []
+          },
+          "skillNames": [],
+          "mcpSources": [
+            {
+              "name": "documentation",
+              "definitionDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+            }
+          ],
+          "extensionCredentials": {
+            "skillNames": [],
+            "mcpNames": []
+          },
+          "usage": "remote_sync"
+        },
+        "mcpClients": {
+          "documentation": "codex"
+        },
+        "assetsReviewed": false,
+        "selectedHead": null,
+        "forcedDirection": null,
+        "backupBeforeUpdate": true
+      },
+      "readPassphrase": null,
+      "writePassphrase": null
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 760,
+    "command": "prepare_config_file_export_v2",
+    "args": {
+      "request": {
+        "selection": {
+          "channels": [
+            {
+              "portableChannelId": "00000000-0000-4000-8000-000000000097",
+              "modelIds": null,
+              "familyIds": null,
+              "includeConnection": true,
+              "includeKey": false,
+              "includeAuthorization": false
+            }
+          ],
+          "templateRefs": [],
+          "adoptTemplateDefaults": [],
+          "includeGlobalTemplateRefs": true,
+          "manager": {
+            "preferences": false,
+            "extensions": false,
+            "accountIds": [],
+            "webdavIds": [],
+            "webdavPasswordIds": []
+          },
+          "skillNames": [],
+          "mcpSources": [
+            {
+              "name": "same-name",
+              "definitionDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "extensionCredentials": {
+            "skillNames": [],
+            "mcpNames": []
+          },
+          "usage": "local_file"
+        },
+        "mcpClients": {
+          "same-name": "codex"
+        },
+        "assetsReviewed": false
+      },
+      "passphrase": null
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 760,
+    "command": "reselect_config_file_import_v2",
+    "args": {
+      "operationId": "00000000-0000-4000-8000-000000000667",
+      "expectedPlanDigest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "scope": {
+        "channels": [
+          {
+            "portableChannelId": "00000000-0000-4000-8000-000000000097",
+            "modelIds": null,
+            "familyIds": null,
+            "includeConnection": true,
+            "includeKey": false,
+            "includeAuthorization": false
+          }
+        ],
+        "templateRefs": [],
+        "adoptTemplateDefaults": [],
+        "includeGlobalTemplateRefs": false,
+        "manager": {
+          "preferences": false,
+          "extensions": false,
+          "accountIds": [],
+          "webdavIds": [],
+          "webdavPasswordIds": []
+        },
+        "skillNames": [],
+        "mcpSources": [],
+        "extensionCredentials": {
+          "skillNames": [],
+          "mcpNames": []
+        },
+        "usage": "local_file"
+      },
+      "bindings": {
+        "channels": [],
+        "mcpClients": {},
+        "assetsReviewed": false,
+        "adoptNamespaceChannelIds": []
+      }
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 760,
+    "command": "reselect_config_file_import_v2",
+    "args": {
+      "operationId": "00000000-0000-4000-8000-000000000667",
+      "expectedPlanDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+      "scope": {
+        "channels": [
+          {
+            "portableChannelId": "00000000-0000-4000-8000-000000000097",
+            "modelIds": null,
+            "familyIds": null,
+            "includeConnection": true,
+            "includeKey": false,
+            "includeAuthorization": false
+          }
+        ],
+        "templateRefs": [],
+        "adoptTemplateDefaults": [],
+        "includeGlobalTemplateRefs": false,
+        "manager": {
+          "preferences": false,
+          "extensions": false,
+          "accountIds": [],
+          "webdavIds": [],
+          "webdavPasswordIds": []
+        },
+        "skillNames": [],
+        "mcpSources": [],
+        "extensionCredentials": {
+          "skillNames": [],
+          "mcpNames": []
+        },
+        "usage": "local_file"
+      },
+      "bindings": {
+        "channels": [
+          {
+            "kind": "existing",
+            "portableChannelId": "00000000-0000-4000-8000-000000000097",
+            "localChannelId": "00000000-0000-4000-8000-000000000097"
+          }
+        ],
+        "mcpClients": {},
+        "assetsReviewed": false,
+        "adoptNamespaceChannelIds": []
+      }
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 760,
+    "command": "config_v2_preview",
+    "args": {
+      "request": {
+        "selection": {
+          "channels": [],
+          "templateRefs": [],
+          "adoptTemplateDefaults": [],
+          "includeGlobalTemplateRefs": true,
+          "manager": {
+            "preferences": true,
+            "extensions": false,
+            "accountIds": [],
+            "webdavIds": [],
+            "webdavPasswordIds": []
+          },
+          "skillNames": [],
+          "mcpSources": [
+            {
+              "name": "documentation",
+              "definitionDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+            }
+          ],
+          "extensionCredentials": {
+            "skillNames": [],
+            "mcpNames": []
+          },
+          "usage": "remote_sync"
+        },
+        "mcpClients": {
+          "documentation": "codex"
+        },
+        "assetsReviewed": false,
+        "selectedHead": null,
+        "forcedDirection": null,
+        "backupBeforeUpdate": true
+      },
+      "readPassphrase": null,
+      "writePassphrase": null
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 760,
+    "command": "prepare_config_file_export_v2",
+    "args": {
+      "request": {
+        "selection": {
+          "channels": [
+            {
+              "portableChannelId": "00000000-0000-4000-8000-000000000097",
+              "modelIds": null,
+              "familyIds": null,
+              "includeConnection": true,
+              "includeKey": false,
+              "includeAuthorization": false
+            }
+          ],
+          "templateRefs": [],
+          "adoptTemplateDefaults": [],
+          "includeGlobalTemplateRefs": true,
+          "manager": {
+            "preferences": false,
+            "extensions": false,
+            "accountIds": [],
+            "webdavIds": [],
+            "webdavPasswordIds": []
+          },
+          "skillNames": [],
+          "mcpSources": [
+            {
+              "name": "same-name",
+              "definitionDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "extensionCredentials": {
+            "skillNames": [],
+            "mcpNames": []
+          },
+          "usage": "local_file"
+        },
+        "mcpClients": {
+          "same-name": "codex"
+        },
+        "assetsReviewed": false
+      },
+      "passphrase": null
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 760,
+    "command": "reselect_config_file_import_v2",
+    "args": {
+      "operationId": "00000000-0000-4000-8000-000000000667",
+      "expectedPlanDigest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "scope": {
+        "channels": [
+          {
+            "portableChannelId": "00000000-0000-4000-8000-000000000097",
+            "modelIds": null,
+            "familyIds": null,
+            "includeConnection": true,
+            "includeKey": false,
+            "includeAuthorization": false
+          }
+        ],
+        "templateRefs": [],
+        "adoptTemplateDefaults": [],
+        "includeGlobalTemplateRefs": false,
+        "manager": {
+          "preferences": false,
+          "extensions": false,
+          "accountIds": [],
+          "webdavIds": [],
+          "webdavPasswordIds": []
+        },
+        "skillNames": [],
+        "mcpSources": [],
+        "extensionCredentials": {
+          "skillNames": [],
+          "mcpNames": []
+        },
+        "usage": "local_file"
+      },
+      "bindings": {
+        "channels": [],
+        "mcpClients": {},
+        "assetsReviewed": false,
+        "adoptNamespaceChannelIds": []
+      }
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 760,
+    "command": "reselect_config_file_import_v2",
+    "args": {
+      "operationId": "00000000-0000-4000-8000-000000000667",
+      "expectedPlanDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+      "scope": {
+        "channels": [
+          {
+            "portableChannelId": "00000000-0000-4000-8000-000000000097",
+            "modelIds": null,
+            "familyIds": null,
+            "includeConnection": true,
+            "includeKey": false,
+            "includeAuthorization": false
+          }
+        ],
+        "templateRefs": [],
+        "adoptTemplateDefaults": [],
+        "includeGlobalTemplateRefs": false,
+        "manager": {
+          "preferences": false,
+          "extensions": false,
+          "accountIds": [],
+          "webdavIds": [],
+          "webdavPasswordIds": []
+        },
+        "skillNames": [],
+        "mcpSources": [],
+        "extensionCredentials": {
+          "skillNames": [],
+          "mcpNames": []
+        },
+        "usage": "local_file"
+      },
+      "bindings": {
+        "channels": [
+          {
+            "kind": "existing",
+            "portableChannelId": "00000000-0000-4000-8000-000000000097",
+            "localChannelId": "00000000-0000-4000-8000-000000000097"
+          }
+        ],
+        "mcpClients": {},
+        "assetsReviewed": false,
+        "adoptNamespaceChannelIds": []
+      }
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 760,
+    "command": "config_v2_preview",
+    "args": {
+      "request": {
+        "selection": {
+          "channels": [],
+          "templateRefs": [],
+          "adoptTemplateDefaults": [],
+          "includeGlobalTemplateRefs": true,
+          "manager": {
+            "preferences": true,
+            "extensions": false,
+            "accountIds": [],
+            "webdavIds": [],
+            "webdavPasswordIds": []
+          },
+          "skillNames": [],
+          "mcpSources": [
+            {
+              "name": "documentation",
+              "definitionDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+            }
+          ],
+          "extensionCredentials": {
+            "skillNames": [],
+            "mcpNames": []
+          },
+          "usage": "remote_sync"
+        },
+        "mcpClients": {
+          "documentation": "codex"
+        },
+        "assetsReviewed": false,
+        "selectedHead": null,
+        "forcedDirection": null,
+        "backupBeforeUpdate": true
+      },
+      "readPassphrase": null,
+      "writePassphrase": null
+    }
+  }
+]

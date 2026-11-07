@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "kind": "isolated debug-profile native install-container prompt acceptance",
+  "app": "/private/tmp/ocxd023-native-startup-fx1uyi7v/home/Applications/OpenCodeX Desktop.app",
+  "root": "/private/tmp/ocxd023-native-startup-fx1uyi7v",
+  "version": "0.2.23",
+  "checks": [
+    "actual native visible install-location remediation dialog",
+    "no user data or container runtime created",
+    "old signed app bytes preserved",
+    "native Return dismisses original alert and exits1 without data initialization"
+  ],
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "visualChecks": "actual native install-location alert",
+  "pid": 51889,
+  "sourceApp": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app",
+  "result": "pass",
+  "ownedExit": 1,
+  "binarySha256": "65b6a03e6b2c3ac76900edd5a190f9b27d0750a5941608a931aef66f5f11c74d",
+  "cleanup": "task-owned subprocess exited; sandbox evidence root removed after recording"
+}

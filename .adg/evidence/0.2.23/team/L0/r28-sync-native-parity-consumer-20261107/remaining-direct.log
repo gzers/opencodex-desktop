@@ -1,0 +1,193 @@
+
+> opencodex-desktop-ui@0.2.23 test
+> vitest --run tests/model-transfer.test.ts tests/mcp-source-conflict.test.ts tests/sync-prototype-020.test.ts tests/sync-route.test.ts tests/export-destination.test.ts tests/passphrase-optional.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-ui/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/sync-prototype-020.test.ts (8 tests | 3 failed) 109ms
+   ❯ S20 adopted prototype regressions under explicit v6 boundaries (8)
+     × selected resources use the actual backend review admission without the retired resource-review wording 11ms
+     × toolbar contains search and explicit scope instead of cancelled presets or a clear action 6ms
+     × keeps native file selection and necessary decryption in the same public import window 16ms
+ ❯ tests/model-transfer.test.ts (45 tests | 7 failed) 170ms
+   ❯ model transfer review through the v6 and v2 owners (45)
+     × keeps a cloud-only template selected through the actual first range save/check flow 15ms
+     × shows scope inline without preparing on mount and blocks writes until the saved remote scope is known 3ms
+     × restores and saves the same explicit family scope for this WebDAV device 3ms
+     × keeps the necessary protected-file password in the native-selection dialog and never adopts on decryption failure 9ms
+     × saves the explicit device scope and prepares upload, publishing only after the shared confirmation 3ms
+     × downloads a newer cloud snapshot with backup default true and never writes on cancel 3ms
+     × requires an exact MCP definition source in the actual workspace and skips an unpicked conflict 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review through the v6 and v2 owners > keeps a cloud-only template selected through the actual first range save/check flow
+AssertionError: expected [] to deeply equal [ { …(3) } ]
+
+- Expected
++ Received
+
+- [
+-   {
+-     "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+-     "revisionId": "00000000-0000-4000-8000-000000000021",
+-     "templateId": "00000000-0000-4000-8000-000000000020",
+-   },
+- ]
++ []
+
+ ❯ tests/model-transfer.test.ts:29:501
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review through the v6 and v2 owners > shows scope inline without preparing on mount and blocks writes until the saved remote scope is known
+AssertionError: expected '' to contain '配置同步'
+
+- Expected
++ Received
+
+- 配置同步
+
+ ❯ tests/model-transfer.test.ts:34:316
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review through the v6 and v2 owners > restores and saves the same explicit family scope for this WebDAV device
+AssertionError: expected { …(3) } to deeply equal { selection: { …(9) }, …(2) }
+
+- Expected
++ Received
+
+@@ -1,31 +1,20 @@
+  {
+    "assetsReviewed": false,
+    "mcpClients": {},
+    "selection": {
+      "adoptTemplateDefaults": [],
+-     "channels": [
+-       {
+-         "familyIds": [
+-           "00000000-0000-4000-8000-000000000020",
+-         ],
+-         "includeAuthorization": false,
+-         "includeConnection": false,
+-         "includeKey": false,
+-         "modelIds": null,
+-         "portableChannelId": "00000000-0000-4000-8000-000000000040",
+-       },
+-     ],
++     "channels": [],
+      "extensionCredentials": {
+        "mcpNames": [],
+        "skillNames": [],
+      },
+      "includeGlobalTemplateRefs": false,
+      "manager": {
+        "accountIds": [],
+        "extensions": false,
+-       "preferences": true,
++       "preferences": false,
+        "webdavIds": [],
+        "webdavPasswordIds": [],
+      },
+      "mcpSources": [],
+      "skillNames": [],
+
+ ❯ tests/model-transfer.test.ts:38:383
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review through the v6 and v2 owners > keeps the necessary protected-file password in the native-selection dialog and never adopts on decryption failure
+AssertionError: expected 'X尚未选择文件。选择本机配置文件后，核对内容和接收目标。受保护文件的读取口…' to contain 'passphrase_required'
+
+Expected: "passphrase_required"
+Received: "X尚未选择文件。选择本机配置文件后，核对内容和接收目标。受保护文件的读取口令本次操作未完成，请重试；当前选择与已有配置保持。取消选择本机文件"
+
+ ❯ tests/model-transfer.test.ts:61:391
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review through the v6 and v2 owners > saves the explicit device scope and prepares upload, publishing only after the shared confirmation
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ tests/model-transfer.test.ts:64:277
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review through the v6 and v2 owners > downloads a newer cloud snapshot with backup default true and never writes on cancel
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ tests/model-transfer.test.ts:65:236
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review through the v6 and v2 owners > requires an exact MCP definition source in the actual workspace and skips an unpicked conflict
+AssertionError: expected [] to deeply equal [ { name: 'same-name', …(1) } ]
+
+- Expected
++ Received
+
+- [
+-   {
+-     "definitionDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+-     "name": "same-name",
+-   },
+- ]
++ []
+
+ ❯ tests/model-transfer.test.ts:69:601
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  tests/sync-prototype-020.test.ts > S20 adopted prototype regressions under explicit v6 boundaries > selected resources use the actual backend review admission without the retired resource-review wording
+AssertionError: expected '导入与导出按下方范围导出配置；导入时在所选文件内选择范围。导入配置导出配置…' to contain '已核对所选扩展和 MCP 来源范围'
+
+Expected: "已核对所选扩展和 MCP 来源范围"
+Received: "导入与导出按下方范围导出配置；导入时在所选文件内选择范围。导入配置导出配置更多重新读取范围目录 导出来源导出范围范围与凭据渠道与模型0 / 1MCP0 / 1WebDAV连接0 / 1其他凭据保护导出内容保护口令与 WebDAV 连接密码分别选择；口令不进入范围偏好。高级选项全局设置包含模版引用、默认渠道和渠道组顺序。勾选后会将这些设置包含在配置包中，接收时可明确选择是否采用；未勾选时不包含。包含这些全局设置"
+
+ ❯ tests/sync-prototype-020.test.ts:22:218
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  tests/sync-prototype-020.test.ts > S20 adopted prototype regressions under explicit v6 boundaries > toolbar contains search and explicit scope instead of cancelled presets or a clear action
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/sync-prototype-020.test.ts:23:204
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  tests/sync-prototype-020.test.ts > S20 adopted prototype regressions under explicit v6 boundaries > keeps native file selection and necessary decryption in the same public import window
+AssertionError: expected '尚未选择文件。选择本机配置文件后，核对内容和接收目标。受保护文件的读取口令…' to contain 'passphrase_required'
+
+Expected: "passphrase_required"
+Received: "尚未选择文件。选择本机配置文件后，核对内容和接收目标。受保护文件的读取口令本次操作未完成，请重试；当前选择与已有配置保持。取消选择本机文件"
+
+ ❯ tests/sync-prototype-020.test.ts:25:423
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+
+ Test Files  2 failed | 4 passed (6)
+      Tests  10 failed | 60 passed (70)
+   Start at  08:29:17
+   Duration  1.27s (transform 52%, environment 29%, tests 9%, import 9%)
+
+  Transform  transforming modules took 2.25s · 52% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

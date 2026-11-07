@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ocxd023-native-install-container-prompt-ready.py", line 49, in <module>
+    assert any('macOS 需要整文件夹安装' in v for v in values),'actual remediation dialog absent'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: actual remediation dialog absent

@@ -1,0 +1,22 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 23.67s
+     Running tests/app_startup_wiring.rs (target/debug/deps/app_startup_wiring-79ff8b4700a61d2f)
+
+running 2 tests
+test default_data_root_initializer_matches_v2_desktop_partition_structure ... ok
+test controlled_status_source_uses_explicit_fixture_without_path_search ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.39s
+
+     Running tests/window_close.rs (target/debug/deps/window_close-5e67acd48b0a9c58)
+
+running 6 tests
+test hidden_window_releases_the_dock_icon_and_showing_it_restores_it ... ok
+test unreadable_preferences_never_quit_the_shell ... ok
+test window_close_only_hides_the_shell_when_keep_proxy_on_close_is_enabled ... ok
+test default_preference_is_keep_proxy_on_close ... ok
+test notification_publisher_is_absent_when_lifecycle_notifications_are_off ... ok
+test lifecycle_notifications_preference_is_consumed ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+

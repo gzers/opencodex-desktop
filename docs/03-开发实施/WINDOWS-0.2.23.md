@@ -7,11 +7,21 @@
 ## 当前基线与获取
 
 - 仓库：gzers/opencodex-desktop。
-- 代码：远端codex/0.2.23-integration，明确基线47eb7cf7420ba9127f4d7047e4d83231f826035f（真实普通执行器短预检及退出/清理已通过；完整候选42315908693待全部软件/安装/端口）。
+- 代码：远端codex/0.2.23-integration，明确基线7730073e96999382697fe2ad8dd8f877352c75a3（原生QA返修及人工门移除已集成；Mac实际native过具体范围，最终整套和平台制品仍待）。
 - 文档：远端docs/governance-main，以包含本条R2指令的提交为准；读取本文件、TEAM、IMP-31/32及0.2.23-contracts/L0-paths-runtime-v1.md。
 - Windows代码贡献分支：codex/0.2.23-windows；文档/脱敏证据使用独立docs/0.2.23-windows分支。若已有自己的改动，先保留并合并上述明确代码基线，不重置或覆盖工作树。
 - 两种产物必须分开checkout：代码分支没有docs，不据此误判资料缺失；docs分支没有新产品实现，不据此编译。先fetch远端上述两分支，再确认git rev-parse HEAD与祖先关系。
 - 此为0.2.23实施基线，尚非最终安装候选；版本清单仍待L0统一更新。是否取得新代码以完整SHA及实际diff为准，不能仅看软件显示版本。
+
+## R19 原生QA发现项已修正并复验（2026-11-07）
+
+本批代码7730073e9（含da4f producer及f1236/83a4 UI）已推送。模型列表tab右状态/保存还原、搜索左/读取新增右、More保旧低频动作；新增560两步、阶段标题/进度/Key同行；同步file/WebDAV复用对象树+右凭据栏、搜索不折行、未设endpoint零目录/预览请求、唯一连接入口，人工review控件及额外compare步骤去除，global/source真实功能保低频显式入口。默认false wire照传，真实source/digest/CAS/secret/冲突/Ohash等不变，非UI偷偷填true。producerfile39/local46/strict过，UI132相关和4route40过，同源全UI214文件1576过/typebuild过。[r26后端/模型返修](../../.adg/evidence/0.2.23/team/L0/r26-native-ui-and-manual-gate-corrections-20261107/manifest.json)、[r28同步消费者](../../.adg/evidence/0.2.23/team/L0/r28-sync-native-parity-consumer-20261107/manifest.json)。
+
+Main解锁后actualWKWebView已完成同源复验：模型空页布局、原生实际键入合成name/base/key→step2→cancel，无config写；file树/搜索/右凭据无复核项；未配WebDAV不再raw错误且唯一connectionbutton，实际开关连接窗无保存。OSdeny所有网络及真实用户HOME读写，私有进程和数据清理。该实际流程范围通过，不冒真实远端业务或最终签名制品。[r29原生截图/AX/源码事件](../../.adg/evidence/0.2.23/team/L0/r29-corrected-native-parity-20261107/manifest.json)。
+
+安装容器拒绝已改在无frontend的原生就绪分支用应用自有NSAlert。实际显示/激活原窗口/Return确定退出1通过，未建用户数据或公共runtime，原签名应用字节保持；旧panic/parentless通知观测/未focus超时失败全部保留，r27。Mac显示检查不需Windows重做无关材质，但共享lib/人工门后继须定向复验。
+
+新完整Rust/strict正在Main同树执行，旧47eb Windows完整候选42315908693仍实际运行；旧candidate不能证明新人工门/页面/启动后继最终验收，待终态后按diff最小补平台和最终制品。未发布，原None恢复同步语义仍待用户选择，不擅自实现跨设备删除。
 
 ## R18 Mac原生原型对照发现偏差，整版继续修正（2026-11-07）
 

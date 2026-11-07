@@ -1,0 +1,47 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-webdav/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.89s
+     Running unittests src/lib.rs (/tmp/ocxd-l2-review-removal-target/debug/deps/opencodex_desktop_lib-a2321b53a9e89887)
+
+running 39 tests
+test commands::config_file_transfer_v2::tests::native_selected_link_cannot_redirect_export_to_another_file ... ok
+test commands::config_file_transfer_v2::tests::export_receipt_digest_is_actual_file_bytes_and_preserves_conflicting_objects ... ok
+test modules::model_config::file_transfer_v2::output::tests::exclusive_publish_and_readback_reject_conflicting_objects_without_truncation ... ok
+test modules::model_config::file_transfer_v2::tests::cancel_removes_only_unattempted_protected_artifact_and_listing_survives_owner_restart ... ok
+test modules::model_config::file_transfer_v2::tests::import_inventory_preserves_only_actual_public_account_platform_metadata ... ok
+test modules::model_config::file_transfer_v2::tests::mapping_never_accepts_provider_from_ui_and_cancel_never_applies ... ok
+test modules::model_config::file_transfer_v2::tests::namespace_adoption_is_an_explicit_whole_channel_intent_never_an_implicit_import ... ok
+test modules::model_config::file_transfer_v2::tests::local_file_password_installs_only_in_d_as_inactive_candidate_and_private_receipt ... ok
+test modules::model_config::file_transfer_v2::tests::exact_template_refs_manual_and_auto_source_intents_survive_real_file_receive ... ok
+test modules::model_config::file_transfer_v2::tests::original_provider_public_field_domain_survives_saved_full_export ... ok
+test modules::model_config::file_transfer_v2::tests::model_subset_from_whole_file_is_scoped_before_receive_without_overwriting_other_models ... ok
+test modules::model_config::file_transfer_v2::tests::oversized_and_duplicate_wrapper_and_old_inner_document_are_rejected_precisely ... ok
+test modules::model_config::file_transfer_v2::tests::no_password_choice_never_creates_credentials_and_existing_identity_requires_explicit_mapping ... ok
+test modules::model_config::file_transfer_v2::tests::password_retry_same_operation_preserves_user_changes_after_durable_participant_receipt ... ok
+test modules::model_config::file_transfer_v2::tests::password_storage_failure_resumes_same_refs_and_does_not_reapply_model_files ... ok
+test modules::model_config::file_transfer_v2::tests::prepared_reopen_cannot_recapture_a_changed_target_as_new_baseline ... ok
+test modules::model_config::file_transfer_v2::tests::encrypted_export_reopens_exact_ciphertext_after_source_changes_and_keeps_unknown_output ... ok
+test modules::model_config::file_transfer_v2::output::tests::custom_existing_root_and_same_operation_restart_never_reselect_today_or_reencrypt ... ok
+test modules::model_config::file_transfer_v2::output::tests::invalid_custom_never_allocates_arbitrary_directory_or_marks_attempted ... ok
+test modules::model_config::file_transfer_v2::output::tests::default_layout_manifest_and_real_receipt_preserve_original_v6_bytes ... ok
+test modules::model_config::file_transfer_v2::output::tests::output_record_never_substitutes_for_original_sealed_owner_receipt ... ok
+test modules::model_config::file_transfer_v2::output::tests::completed_allocation_requires_original_authenticated_owner_receipt ... ok
+test modules::model_config::file_transfer_v2::output::tests::real_directory_failure_freezes_destination_and_restarts_original_clock_date_bytes ... ok
+test modules::model_config::file_transfer_v2::output::tests::copied_allocation_cannot_open_another_data_roots_directory ... ok
+test modules::model_config::file_transfer_v2::output::tests::original_allocation_tampering_fails_even_with_recomputed_checksum ... ok
+test modules::model_config::file_transfer_v2::output::tests::symlinks_and_unrelated_package_entries_fail_closed ... ok
+test modules::model_config::file_transfer_v2::tests::default_false_review_actual_asset_export_import_keeps_sources_cancel_and_target_guards ... ok
+test modules::model_config::file_transfer_v2::tests::recovery_is_authenticated_root_bound_and_contains_no_plain_secrets_or_file_passphrase ... ok
+test modules::model_config::file_transfer_v2::output::tests::partial_output_manifest_failure_resumes_without_new_package_or_bytes ... ok
+test modules::model_config::file_transfer_v2::tests::saved_export_does_not_silently_export_unsaved_draft ... ok
+test modules::model_config::file_transfer_v2::tests::stale_target_fails_without_overwrite_and_same_id_bytes_are_retained ... ok
+test modules::model_config::file_transfer_v2::tests::real_backup_failure_prevents_business_writes_and_can_retry_original_operation ... ok
+test modules::model_config::file_transfer_v2::tests::stale_owner_returns_newly_completed_original_fact_without_overwriting_later_edits ... ok
+test modules::model_config::file_transfer_v2::tests::skill_and_mcp_contents_do_not_require_manual_review_and_keep_credential_scope ... ok
+test modules::model_config::file_transfer_v2::tests::legacy_unknown_digest_and_password_fail_closed ... ok
+test modules::model_config::file_transfer_v2::tests::prepared_import_reopen_uses_frozen_target_and_applied_repeat_is_read_only_original_fact ... ok
+test modules::model_config::file_transfer_v2::tests::saved_export_native_bytes_encryption_cancel_and_unknown_output_freeze ... ok
+test modules::model_config::file_transfer_v2::tests::preview_reselect_no_business_write_confirm_real_receiver_and_no_reapply_after_edits ... ok
+test modules::model_config::file_transfer_v2::output::tests::completed_payload_or_manifest_changed_or_missing_never_recreated_or_overwritten ... ok
+
+test result: ok. 39 passed; 0 failed; 0 ignored; 0 measured; 1926 filtered out; finished in 24.33s
+

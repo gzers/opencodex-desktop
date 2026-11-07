@@ -1,0 +1,294 @@
+{
+  "role": "L3",
+  "batch": "Native sync UI adopted-prototype restoration",
+  "status": "scoped_ui_and_producer_consumption_verified_native_rebuild_pending_Main",
+  "uiCommit": "83a4e077ffb38a721b5e6b7c28ff1152327ab9c6",
+  "branch": "codex/0.2.23-ui",
+  "baseline": "f1236fa21899404c172b7a7aa367465581fe2fd4",
+  "producer": "da4f0890b6916cc82ba137e28205ea9fe1e1338b",
+  "producerConsumerCherryPick": "ba292ee8d04293e1793044690c4b38aff2e020e4",
+  "producerConsumption": {
+    "producer": "da4f0890b6916cc82ba137e28205ea9fe1e1338b",
+    "consumerCherryPick": "ba292ee8d04293e1793044690c4b38aff2e020e4",
+    "all4SourceFilesExact": true,
+    "sourceSha256": {
+      "apps/desktop/tauri/src/modules/model_config/file_transfer_v2.rs": "67c197a4df3564ac21ec57c0084f4b23bf7059f3a7f9e8e2b83ef3fefe0aac1b",
+      "apps/desktop/tauri/src/modules/model_config/file_transfer_v2_tests.rs": "d4c167479ac41e34d5907430238474588d16db2313d2f4f3ec342c29dc9f6a38",
+      "apps/desktop/tauri/src/modules/model_config/sync_local_v2.rs": "cd4896be353d2ad3c27553a397d7f50119994c5c100a49f6ece5839a366eeb07",
+      "apps/desktop/tauri/src/modules/model_config/sync_local_v2_tests.rs": "475c45ed33391d7e3ef51be60b7f2aa3acb8ad0f038a8123b7ebfc92c86525df"
+    },
+    "uiStoresApiSharedTreeRouteUnchangedFrom": "f1236fa21899404c172b7a7aa367465581fe2fd4",
+    "unchangedFilesSha256": {
+      "apps/desktop/ui/src/features/sync/file-store-v2.ts": "b617890f459b1064b9051774c5e5413c9dba292580bd7413cde7a948b620c6b1",
+      "apps/desktop/ui/src/features/sync/store-v2.ts": "de3e9e55bd10ed10fd9fe8259de51fab9e908055390658b1274361d9d0fe7f99",
+      "apps/desktop/ui/src/features/sync/api-v2.ts": "e33102505d1d19af6d54b2c14838014b9e07002e7bbf2b51e643b7ebbbe00be9",
+      "apps/desktop/ui/src/features/sync/file-api-v2.ts": "4804b50b764cf478b6a8b6af4b68cc0cfc69239970a7ee2e670caa164b4de5c5",
+      "apps/desktop/ui/src/features/sync/ObjectScopeTree.vue": "6fd39e9cafd258ca996d06775a5e361dd1833caab5d2204c6cfe99a6f84a83c2",
+      "apps/desktop/ui/src/routes/SyncRoute.vue": "00a249a8eaf03e3d078c92f293ecc2d3d77768324167bc1176bb9b61d0180a05"
+    },
+    "assetsReviewed": "required boolean retained; default false forwarded unchanged; no UI setter to true, no old-record/hash rewrite.",
+    "proofBoundary": "Producer real tests belong to L2; renderer fixture proves actual emitted requests/UI only, not backend gate removal.",
+    "producerEvidence": {
+      "root": "/Users/ezio/.codex/visualizations/2026/11/06/01a1b0c0-de8a-73c3-acec-a566da6f5ce6/manual-review-gate-correction-evidence",
+      "manifestSha256": "3d04c881eac572adf5a6e6a320f2f54466b4b24753e566f76c0ae140a37abfff",
+      "allArtifactsVerified": true,
+      "allSourceReceiptHashesMatchConsumer": true,
+      "checks": {
+        "beforeProductionFixCorrectedBehaviorAssertions": "2 failed as expected",
+        "newFalseActualFileAndLocalReceive": 2,
+        "fullFileTransferIncludingOutput": 39,
+        "fullLocalApplicationIncludingScopeRestore": 46,
+        "distinctFullAffectedTests": 85,
+        "strictNormalCrateClippy": "passed",
+        "rustfmt": "passed",
+        "diffCheck": "passed",
+        "noIgnoreOrGlobalAllow": true
+      }
+    }
+  },
+  "changedFiles": [
+    "apps/desktop/ui/src/features/sync/ConfigFileTransferV2.vue",
+    "apps/desktop/ui/src/features/sync/ConfigSyncPreviewV2.vue",
+    "apps/desktop/ui/src/features/sync/ModelTransfer.vue",
+    "apps/desktop/ui/tests/config-file-v2.test.ts",
+    "apps/desktop/ui/tests/model-transfer.test.ts",
+    "apps/desktop/ui/tests/sync-prototype-020.test.ts",
+    "apps/desktop/ui/tests/sync-v2-consumers.test.ts",
+    "apps/desktop/ui/tests/sync-v2-entry.test.ts"
+  ],
+  "fileSha256": {
+    "apps/desktop/ui/src/features/sync/ConfigFileTransferV2.vue": "2c2d86a164f5184971e075213ce58014c9375290019a442a73e2bfaca041e745",
+    "apps/desktop/ui/src/features/sync/ConfigSyncPreviewV2.vue": "9a3f7cd9e9a2933968b0ff90d8f337f0d899976fe7bae619277768e399a04560",
+    "apps/desktop/ui/src/features/sync/ModelTransfer.vue": "b6f156a05af36d045c42e7bf1a5bbaaac8c79deeb1189eb227ccfe45fe5ffd8c",
+    "apps/desktop/ui/tests/config-file-v2.test.ts": "8a06a7a20a4e1721983482d199466c6885818c63efcf724e5991245a9aadb9b7",
+    "apps/desktop/ui/tests/model-transfer.test.ts": "63d0c03b554ebd1e3bef09201ceca0ded9e637f6e8c0578e19393747dc03e92b",
+    "apps/desktop/ui/tests/sync-prototype-020.test.ts": "33cccd6d0de904f54a4da59166f51d17a89543db2c6531ffab4f96912735fc6a",
+    "apps/desktop/ui/tests/sync-v2-consumers.test.ts": "1b1c2028887fd24ef3f75399891fd5f9305fd20039065ec3104d210471d8a310",
+    "apps/desktop/ui/tests/sync-v2-entry.test.ts": "d015267aa0816e653346aa7d9bc9eb18eed23925be7ac0a6beb728a29661f5dd"
+  },
+  "prototypeSources": [
+    {
+      "commit": "cde9cc52ae2edc9ebdbca05fcb3133ed753835da",
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.js",
+      "sha256": "72e94d236d638f60b8f3673a36b5bcea2176cd05b0e0c09884961314338bb578"
+    },
+    {
+      "commit": "cde9cc52ae2edc9ebdbca05fcb3133ed753835da",
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.css",
+      "sha256": "35a5cd4181023be68f313b9dcffd17c71a9017df89fba5629a05ed40744eccfa"
+    },
+    {
+      "commit": "cde9cc52ae2edc9ebdbca05fcb3133ed753835da",
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/同步直接更新原型说明.md",
+      "sha256": "8284d77437458e7761f73b520313ab541a1fcbeb219955562833343bd8880462"
+    },
+    {
+      "commit": "12f27c51559935a3aa35633bc6a61a991c192ffc",
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.js",
+      "sha256": "0ecef09d06739350c7ae074de6954ace200de27c573017b44087a3f4c149bf2e"
+    },
+    {
+      "commit": "12f27c51559935a3aa35633bc6a61a991c192ffc",
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.css",
+      "sha256": "35a5cd4181023be68f313b9dcffd17c71a9017df89fba5629a05ed40744eccfa"
+    },
+    {
+      "commit": "12f27c51559935a3aa35633bc6a61a991c192ffc",
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/同步直接更新原型说明.md",
+      "sha256": "8db7d68e2e816e520c256c2c63550be8e6c779379a7a8f30b25b6d6f08ba0407"
+    }
+  ],
+  "authorityCorrections": [
+    "No UiSearch/ConfigScopeV2 in current source; Main confirmed ObjectScopeTree/UiTreeTable and local search input styling, no new shared components.",
+    "Adopted prototype has no sideRef/old global adoption-order row. Existing v2 global side effects preserved in explicitly authorized collapsed Advanced option, accurate template refs/default-channel/order disclosure, no auto-select/reset.",
+    "DMD-UI-020/IMP28 and L2 producer remove manual gates. Required boolean false wire/hash remains, true not authority."
+  ],
+  "changes": [
+    "File primary Import/Export; More preserves explicit reload + saved/draft source selection and original source guards. Search/tree left; credentials/content protection right.",
+    "WebDAV primary Sync at top, connection slot appears once; existing shared object tree + right credentials, optional content-protection input.",
+    "Unconfigured endpoint renders only parent connection entry; no workspace mount, remote catalog or preview request. Actual ConnectionDialog opens from that entry, local config read only.",
+    "Three review checkboxes and parent review event removed; no assetsReviewed=true setter; unmodified store/API forwards required boolean.",
+    "Import automatic setImport->compare/reselect preserved; no mandatory compare button, error-only retry available; confirm/CAS/context and cancel guards retained.",
+    "Chinese error messages replace machine-only code display; passphrase_required prompts protection password, original store error remains."
+  ],
+  "checks": {
+    "initialRelated": {
+      "files": 4,
+      "passed": 62
+    },
+    "allDirect": {
+      "files": 10,
+      "passed": 132,
+      "failed": 0,
+      "log": "all-direct.log"
+    },
+    "typecheck": "passed via vue-tsc --noEmit in build",
+    "build": "passed; existing dynamic-import/chunk warnings retained",
+    "producerReal": "85 real producer tests=file39+local46, actual false2, preserved pre-fix2fail, strictClippy; all frozen source/artifact hashes independently verified.",
+    "browser": [
+      {
+        "engine": "chromium",
+        "width": 1180,
+        "height": 760,
+        "theme": "light",
+        "status": "passed",
+        "checks": 10,
+        "pageErrors": [],
+        "consoleWarningsOrErrors": [],
+        "unconfiguredRemoteRequests": 0
+      },
+      {
+        "engine": "webkit",
+        "width": 1180,
+        "height": 760,
+        "theme": "light",
+        "status": "passed",
+        "checks": 10,
+        "pageErrors": [],
+        "consoleWarningsOrErrors": [],
+        "unconfiguredRemoteRequests": 0
+      },
+      {
+        "engine": "chromium",
+        "width": 760,
+        "height": 760,
+        "theme": "dark",
+        "status": "passed",
+        "checks": 10,
+        "pageErrors": [],
+        "consoleWarningsOrErrors": [],
+        "unconfiguredRemoteRequests": 0
+      },
+      {
+        "engine": "webkit",
+        "width": 760,
+        "height": 760,
+        "theme": "dark",
+        "status": "passed",
+        "checks": 10,
+        "pageErrors": [],
+        "consoleWarningsOrErrors": [],
+        "unconfiguredRemoteRequests": 0
+      }
+    ],
+    "explicitFalseRequests": 16,
+    "cancel": "No export save/import adoption/WebDAV confirm commands in cancelled flows; scope preference writes are in-memory fixtures only."
+  },
+  "originalNativeSha256": {
+    "sync-file.png": "2fd8b84398b2d95905692e559a95c47ea749ae55252d9079d4f23020b7d6e32a",
+    "sync-file-ax.json": "8ae606cf3b6e670d975dcd7da0271d8940a0afcafcedb73cdce3cf7a06cdb640",
+    "sync-webdav.png": "347214184e5ad361b0b4cfaa10d41c14f5d18aa98b18b8dbd5b3686023260873",
+    "sync-webdav-ax.json": "96b662f9c7b0a154841fc754acf4939dd7e3e49cfc7a69e08d1d74663f328d75",
+    "webdav-connection.png": "4a8f41c6d0820b0d9b23c46c466bd155ee0c47b13b07c00289bac4be0b88a2d0",
+    "webdav-connection-ax.json": "1dc3e34214acec0947dc019b7b11da0cee8e0badcb565fb641f1ca7b78f2b728"
+  },
+  "screenshots": {
+    "originalNative": 3,
+    "browser": 28
+  },
+  "comparison": [
+    {
+      "before": "sync-file.png",
+      "prototype": "cde9 sync-config.js274/284/292-294, matchingCSS; direct-update note2026-10-31+11-01",
+      "after": "webkit-1180-file-light.png",
+      "fixed": "folded label, full source row, extra reload, review checkbox and default global technical row"
+    },
+    {
+      "before": "sync-webdav.png",
+      "after": [
+        "webkit-1180-webdav-unconfigured-light.png",
+        "webkit-1180-webdav-configured-light.png"
+      ],
+      "fixed": "raw endpoint error/duplicate connection, flat scope, bottom review/passphrase/Sync clutter"
+    },
+    {
+      "before": "webdav-connection.png",
+      "after": "webkit-1180-webdav-connection-light.png",
+      "note": "Existing dialog unchanged; sole entry verified"
+    }
+  ],
+  "failureHistory": [
+    "remaining-direct.log preserves10 old direct-test failures; approved two-test extension updates configured-endpoint fixtures/no-review/Chinese error expectations. all-direct132pass.",
+    "sync-targeted-initial.log preserves first4 old test failures; no product guard weakening.",
+    "browser-attempt01/02 preserve old-title/sidebar harness locator failures; exact labels corrected."
+  ],
+  "limits": [
+    "Actual production SyncRoute/AppSidebar/SyncDialogHost/AppModal with declared in-memory IPC fixture; no real WebDAV/configuration/filesystem access.",
+    "Renderer fixture is UI/request proof only. Real gate removal comes from L2 frozen85-test producer evidence, source-matched.",
+    "Main owns native rebuild/WKWebView parity, original checklist, release and whole-version acceptance; this scoped batch does not close the version.",
+    "Only3components+5directtests after explicit approval. No store/API/SyncRoute/sharedtree/sharedcomponents/globalCSS/Rust production/prototype/docs/parallel overview edits.",
+    "Existing stored true scope values and old operation/hash contexts not rewritten; no implicit global selection or fake review true."
+  ],
+  "cleanup": "All owned browser contexts closed and Vite server stopped.",
+  "pushed": true,
+  "remoteVerified": "83a4e077ffb38a721b5e6b7c28ff1152327ab9c6",
+  "worktreeClean": true,
+  "createdAt": "2026-11-07T00:33:32.172930+00:00",
+  "evidenceSha256": {
+    "12f27c515-sync-config.css": "35a5cd4181023be68f313b9dcffd17c71a9017df89fba5629a05ed40744eccfa",
+    "12f27c515-sync-config.js": "0ecef09d06739350c7ae074de6954ace200de27c573017b44087a3f4c149bf2e",
+    "12f27c515-同步直接更新原型说明.md": "8db7d68e2e816e520c256c2c63550be8e6c779379a7a8f30b25b6d6f08ba0407",
+    "all-direct.log": "f29a3485f9ba28e1f2248e9f8bfc4d0e5ecedfc0ba9f76a486e7f2089f1ac224",
+    "browser-attempt-01.json": "471a7e9ac8bf24ce5d0217165dc404453391e74b01d7ae20fa107021459bb3a3",
+    "browser-attempt-02.json": "5ecbe7245034fbf0bcad540743d613b036222da402b0ffbbc1c686f96a897844",
+    "browser-results.json": "33d0f88bd48a6abc718b6d0332c7a29a6fda4c8cfa40fb8b3e4a0562fcde6e8a",
+    "browser.log": "4489f240e15a84ab73067208cc6b178955d116cbe58fec8b438f0ceeb43642a9",
+    "build.log": "e4fb49199076e58dead49816660715fdea07b54834484773ebab0aab510113ec",
+    "cde9cc52a-sync-config.css": "35a5cd4181023be68f313b9dcffd17c71a9017df89fba5629a05ed40744eccfa",
+    "cde9cc52a-sync-config.js": "72e94d236d638f60b8f3673a36b5bcea2176cd05b0e0c09884961314338bb578",
+    "cde9cc52a-同步直接更新原型说明.md": "8284d77437458e7761f73b520313ab541a1fcbeb219955562833343bd8880462",
+    "chromium-1180-export-preview-light.png": "cbe2765c11a38ef6b41a6a7341b4bd31fa4f4294748db3a0e205e3bebb364ad3",
+    "chromium-1180-file-light.png": "5d82661fd11804762e73586c1dd5f25e88c7e5a1f3bd3894c54d1bf2e69ff39c",
+    "chromium-1180-import-preview-light.png": "b5d2ca3abed5d9b67a5b5eebd0ff9896132b351f0229c1e73e26ed5e5fe7dd97",
+    "chromium-1180-sync-preview-light.png": "1735102670fe87b087b8976b8af2232561fbc80e8389c275930ff9906208e3f3",
+    "chromium-1180-webdav-configured-light.png": "71cbadf5ad032c31e960c862a799044bdfaafecf01a0193342577c26ba3cdbdd",
+    "chromium-1180-webdav-connection-light.png": "200b2d8ffd622071b0c24b467f5c5e53479120f2b1340d8c3b42d8f3242bfc37",
+    "chromium-1180-webdav-unconfigured-light.png": "e1ef537d0301c62a579894b391044df9a62f8b3bcba3f434ae662faf4b76ad7a",
+    "chromium-760-export-preview-dark.png": "98354bb7417a3b71faa922e92ac8a321e862703189558e42186d7d76117838d9",
+    "chromium-760-file-dark.png": "fa43f876511698c0c41edb965361b0c9dd80cf48e649c5f49a63b0427c60cd09",
+    "chromium-760-import-preview-dark.png": "4210b68317919cbee18fa9e06ca735fdaf14167a9fd5a19855d83485f990001b",
+    "chromium-760-sync-preview-dark.png": "e51038a57168df3da25d72d7b6e1837ce0b5046a98037e8369d708365ff7c8b8",
+    "chromium-760-webdav-configured-dark.png": "8d9850d037c84c0c7f485a1b4a039e8e0a22dbc7bdc47c53f0e3da77ef86d2a3",
+    "chromium-760-webdav-connection-dark.png": "b4efacc0ea7e4f4f30c5a298423235c47f9512911e6c13dd43d8454d8f0c6757",
+    "chromium-760-webdav-unconfigured-dark.png": "c251b611f239b203f72a87a3a134ecdcd9d45861bb5f5f9d4cdd6d2c578072e0",
+    "component-entry.mjs": "db57de6d672bf9b9023e72f5365336897ed4b53755309822aad5314b1da7d713",
+    "component-server.mjs": "c05acc7edd0c75195461b7c084765c8390b90ff95e9bbba7fa22ffea4286bbb4",
+    "false-wire-requests.json": "5c84e90fdf7ee718199652f253324cc2c1e2fe7762b21d4acddb6ce42ad1128b",
+    "producer/CONTRACT.md": "d1358f7a88879653a43f202f9568ca73bc1a204f48746a84a1fb9816c4a7bdf9",
+    "producer/VALIDATION.md": "b345134c1cc067961805f1b6c06152d45a2d40ad854b489402ea3c48b489ec9b",
+    "producer/all-file-transfer-39-passed.log": "eba3cf990e9627834018a96027f56b1e257783f92fa2ff8909cf476867aa8402",
+    "producer/all-local-application-restore-46-passed.log": "950411ebbcc12e99a016ef9724e86b36f3089b098fa7ade71baeb850aa978ce7",
+    "producer/before-source-fix-two-manual-gates-failed.log": "72b569a8c99df0e3e6f4751bebb76b6fc0d4ba5ca9c71ee679cf1477661f7b1c",
+    "producer/false-actual-file-and-local-receive-passed.log": "ea228273edd3e332bc165467640204d4cf2157ae356bb80eb7bef807e20c8e54",
+    "producer/manifest.json": "3d04c881eac572adf5a6e6a320f2f54466b4b24753e566f76c0ae140a37abfff",
+    "producer/normal-crate-strict-clippy-passed.log": "b4d2f328e88309fe5a09731115e79e80c52a4873e9faaebf7a9830b0c0385a7d",
+    "producer/receipt.json": "b8a320bb8e44446aad6b8a25f3835df9246304dfee42dde6fed470dcde04e8f5",
+    "producer-consumption.json": "b8d8521ccb00e1128643b6de760d1a17ef93d4aa452ead44efc3cf335ed72c20",
+    "prototype-sources.json": "6315a232ff7589fd33e2cba239aacd296bc0ef7deb8684588a074677db2e400e",
+    "remaining-direct.log": "b266b702a8c4f635a19282aae20d61e4062bd9ff90b60e881dab9c01a6cea5be",
+    "route.browser.cjs": "9f19bceb32a96bf3acdfd789c4f8031ed8d5a4c920e33dbf316031cd8bc10d11",
+    "sync-file-ax.json": "8ae606cf3b6e670d975dcd7da0271d8940a0afcafcedb73cdce3cf7a06cdb640",
+    "sync-file.png": "2fd8b84398b2d95905692e559a95c47ea749ae55252d9079d4f23020b7d6e32a",
+    "sync-targeted-initial.log": "b2cc8c162a8a7075006201e2ee618a541d4d2322e55ede99f2aee5714a6b7354",
+    "sync-targeted-second.log": "b5488dbfa947bee45d982002042df367a3559776d7c1af5a9f8eeb00f7a2bf81",
+    "sync-webdav-ax.json": "96b662f9c7b0a154841fc754acf4939dd7e3e49cfc7a69e08d1d74663f328d75",
+    "sync-webdav.png": "347214184e5ad361b0b4cfaa10d41c14f5d18aa98b18b8dbd5b3686023260873",
+    "targeted.log": "022e6e71548f5d33d57677d955b10b3dbee8941d90ec879cd79dbe711d5f3127",
+    "webdav-connection-ax.json": "1dc3e34214acec0947dc019b7b11da0cee8e0badcb565fb641f1ca7b78f2b728",
+    "webdav-connection.png": "4a8f41c6d0820b0d9b23c46c466bd155ee0c47b13b07c00289bac4be0b88a2d0",
+    "webkit-1180-export-preview-light.png": "0d8750de746c5ac54c2cbe2e8792d9c15c8cc239b6569c7e484cc6c83669e6f0",
+    "webkit-1180-file-light.png": "a1c4cc194108b2741b14458af393645048b599ce64679b9ea1787b487ddd52c9",
+    "webkit-1180-import-preview-light.png": "e5097b88ab2a0c61d4ad323d6c1774688d5b72af4e3422ed6b5f801f38623b88",
+    "webkit-1180-sync-preview-light.png": "4aba591c6c2a46b6136632aa6fda292569e98771e79809e5f97f0355fda92a79",
+    "webkit-1180-webdav-configured-light.png": "9ead90da714450027265eee0f324f5e89032b60caf5f6792ae1103468f0d635a",
+    "webkit-1180-webdav-connection-light.png": "bf6244e194154d0f9af26af1617cae0e2f79ef65a82f52774ead8098372594d9",
+    "webkit-1180-webdav-unconfigured-light.png": "82ce0758a9ef8512ad682cc36aac5ab137eb37f5d9d9649b7160705af81dc126",
+    "webkit-760-export-preview-dark.png": "baedc6b15c54ce73a693f452b08798c82bba11a544fef50ed19a2dc4c83a4148",
+    "webkit-760-file-dark.png": "90a690dc1c91d1308022cba31eeaad2815d715b9e870acdd57f6d82366d86648",
+    "webkit-760-import-preview-dark.png": "b1745c231d9dbf0783824f692c8101e9d08c564bc97370861378e8490ef7a5e7",
+    "webkit-760-sync-preview-dark.png": "94674aaca72a4542170e55e664f3a126f9c2819dfe25d3ef9101da87bf7e8e49",
+    "webkit-760-webdav-configured-dark.png": "625e7b0324aba020553a91c8430f7002a48ffff4f325cc320ee6af9c7f2c7cbd",
+    "webkit-760-webdav-connection-dark.png": "c1934da5ad2ad292f0183011e28ca6ab3f554c23290389096432a3186c7ee8ea",
+    "webkit-760-webdav-unconfigured-dark.png": "ea4522c4847cc366234970c82d09aa214d4b666c85ae4235c9140088dbdb8a1a"
+  }
+}

@@ -1,0 +1,417 @@
+{
+  "role": "L3",
+  "batch": "Native QA follow-up: adopted models/channel wizard presentation",
+  "status": "scoped_browser_verification_complete_native_rebuild_pending_Main",
+  "commit": "f1236fa21899404c172b7a7aa367465581fe2fd4",
+  "branch": "codex/0.2.23-ui",
+  "baselineMerge": "d5c74ef423896acc0f87b0eda2ceb5490ecaaa60",
+  "mergedSourceCommit": "47eb7cf74",
+  "changedFiles": [
+    "apps/desktop/ui/src/features/models/ChannelsView.vue",
+    "apps/desktop/ui/src/features/models/NewChannelDialog.vue",
+    "apps/desktop/ui/tests/model-channels-v2.test.ts",
+    "apps/desktop/ui/tests/new-channel-dialog.test.ts"
+  ],
+  "fileSha256": {
+    "apps/desktop/ui/src/features/models/ChannelsView.vue": "6ca8890f23b6e78f657fe5b56db18805ebb6262690d721cd17eb9ce7266c95c0",
+    "apps/desktop/ui/src/features/models/NewChannelDialog.vue": "7f3806978fb6a680e9e2b062f605c122ef2e0bef3dc5f7a02e68cbee95f5955f",
+    "apps/desktop/ui/tests/model-channels-v2.test.ts": "6a4f372b77dfea79fbcdaee26fad8c3489ec363f004c5f2f84969d7b4ed726f9",
+    "apps/desktop/ui/tests/new-channel-dialog.test.ts": "7639c6d3746d8e754df5090214c4ff311ef0de059031c983b7c1ee83c7235b97"
+  },
+  "prototypeSources": [
+    {
+      "commit": "12f27c51559935a3aa35633bc6a61a991c192ffc",
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.js",
+      "sha256": "5bca3c55abd586a229f5daa1e0b59a6851f9d795e4a6896d932df06eb8cf349a"
+    },
+    {
+      "commit": "12f27c51559935a3aa35633bc6a61a991c192ffc",
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.css",
+      "sha256": "7bb33ddc845e817767ad78d38ab08d76c343e9a6afa136426b615d736496bda3"
+    },
+    {
+      "commit": "cde9cc52ae2edc9ebdbca05fcb3133ed753835da",
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.js",
+      "sha256": "14b0f738cb683c78474d3bd7212b28f1ef1b817b4cce16b4119180c7b0332f8f"
+    },
+    {
+      "commit": "cde9cc52ae2edc9ebdbca05fcb3133ed753835da",
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.css",
+      "sha256": "7bb33ddc845e817767ad78d38ab08d76c343e9a6afa136426b615d736496bda3"
+    }
+  ],
+  "prototypeComparison": [
+    {
+      "area": "channels list",
+      "source": "12f27 model-config.js433/464-473/937, model-config.css328-332",
+      "nativeBefore": [
+        "models.png",
+        "models-ax.json"
+      ],
+      "implementation": "Deferred Teleport to existing #model-tabs-actions; 未修改/待保存修改 + 还原修改 + 保存配置 in tab row, search left max360, Read/New right. Existing directory preview and explicit refresh remain reachable in More. Default server-draft/internal snapshot explanation removed; empty state uses plain factual next actions.",
+      "after": [
+        "webkit-1180-empty-list-light.png",
+        "chromium-1180-list-light.png"
+      ]
+    },
+    {
+      "area": "wizard",
+      "source": "12f27 model-config.js1284-1290, model-config.css370-371/575-578; relevant adopted cde9 source also archived",
+      "nativeBefore": [
+        "add-channel-step1.png",
+        "add-channel-step1-ax.json",
+        "add-channel-step2.png"
+      ],
+      "implementation": "Shared UiDialog unchanged: remove owned caller wide prop to standard560px. Stage in dialog title; two-step ol with current step; Key input, eye icon, clear button on one row; auth/key/discovery/next/stage logic unchanged.",
+      "after": [
+        "webkit-1180-empty-wizard-step1-light.png",
+        "chromium-760-wizard-step2-dark.png"
+      ]
+    }
+  ],
+  "businessGuardVerification": {
+    "newChannelScriptIdenticalExceptUiIconButtonImport": true,
+    "channelsScriptIdenticalExceptDiscardConfirmationPlainLanguage": true,
+    "source": "d5c74ef423896acc0f87b0eda2ceb5490ecaaa60",
+    "noStoreApiRustSharedComponentGlobalCssChanges": true,
+    "noModelsRouteChangeNeeded": true
+  },
+  "checks": {
+    "targeted": {
+      "files": 6,
+      "tests": 115,
+      "failed": 0
+    },
+    "typecheck": "passed as build vue-tsc --noEmit",
+    "build": "passed; existing import/chunk warnings retained",
+    "browser": [
+      {
+        "engine": "chromium",
+        "width": 1180,
+        "height": 760,
+        "theme": "light",
+        "status": "passed",
+        "checks": 9,
+        "pageErrors": [],
+        "consoleWarningsOrErrors": [],
+        "geometry": {
+          "layout": {
+            "search": {
+              "x": 269,
+              "y": 167.5,
+              "width": 360,
+              "height": 34
+            },
+            "read": {
+              "x": 918,
+              "y": 167.5,
+              "width": 98,
+              "height": 34
+            },
+            "add": {
+              "x": 1024,
+              "y": 167.5,
+              "width": 74,
+              "height": 34
+            },
+            "actions": {
+              "x": 944,
+              "y": 115.5,
+              "width": 212,
+              "height": 34
+            }
+          },
+          "wizard": {
+            "bounds": {
+              "x": 310,
+              "y": 106.25,
+              "width": 560,
+              "height": 547.5
+            },
+            "key": {
+              "x": 331,
+              "y": 474.25,
+              "width": 399.921875,
+              "height": 34
+            },
+            "eye": {
+              "x": 738.921875,
+              "y": 475.25,
+              "width": 32,
+              "height": 32
+            },
+            "clear": {
+              "x": 778.921875,
+              "y": 477.25,
+              "width": 70.078125,
+              "height": 28
+            }
+          }
+        }
+      },
+      {
+        "engine": "webkit",
+        "width": 1180,
+        "height": 760,
+        "theme": "light",
+        "status": "passed",
+        "checks": 9,
+        "pageErrors": [],
+        "consoleWarningsOrErrors": [],
+        "geometry": {
+          "layout": {
+            "search": {
+              "x": 269,
+              "y": 167.5,
+              "width": 360,
+              "height": 34
+            },
+            "read": {
+              "x": 918.953125,
+              "y": 167.5,
+              "width": 97.515625,
+              "height": 34
+            },
+            "add": {
+              "x": 1024.46875,
+              "y": 167.5,
+              "width": 73.6875,
+              "height": 34
+            },
+            "actions": {
+              "x": 944.796875,
+              "y": 115.5,
+              "width": 211.203125,
+              "height": 34
+            }
+          },
+          "wizard": {
+            "bounds": {
+              "x": 310,
+              "y": 106.25,
+              "width": 560,
+              "height": 547.5
+            },
+            "key": {
+              "x": 331,
+              "y": 474.25,
+              "width": 400.09375,
+              "height": 34
+            },
+            "eye": {
+              "x": 739.09375,
+              "y": 475.25,
+              "width": 32,
+              "height": 32
+            },
+            "clear": {
+              "x": 779.09375,
+              "y": 477.25,
+              "width": 69.90625,
+              "height": 28
+            }
+          }
+        }
+      },
+      {
+        "engine": "chromium",
+        "width": 760,
+        "height": 760,
+        "theme": "dark",
+        "status": "passed",
+        "checks": 9,
+        "pageErrors": [],
+        "consoleWarningsOrErrors": [],
+        "geometry": {
+          "layout": {
+            "search": {
+              "x": 187,
+              "y": 159.5,
+              "width": 307,
+              "height": 34
+            },
+            "read": {
+              "x": 506,
+              "y": 159.5,
+              "width": 98,
+              "height": 34
+            },
+            "add": {
+              "x": 612,
+              "y": 159.5,
+              "width": 74,
+              "height": 34
+            },
+            "actions": {
+              "x": 532,
+              "y": 107.5,
+              "width": 212,
+              "height": 34
+            }
+          },
+          "wizard": {
+            "bounds": {
+              "x": 100,
+              "y": 106.25,
+              "width": 560,
+              "height": 547.5
+            },
+            "key": {
+              "x": 121,
+              "y": 474.25,
+              "width": 399.921875,
+              "height": 34
+            },
+            "eye": {
+              "x": 528.921875,
+              "y": 475.25,
+              "width": 32,
+              "height": 32
+            },
+            "clear": {
+              "x": 568.921875,
+              "y": 477.25,
+              "width": 70.078125,
+              "height": 28
+            }
+          }
+        }
+      },
+      {
+        "engine": "webkit",
+        "width": 760,
+        "height": 760,
+        "theme": "dark",
+        "status": "passed",
+        "checks": 9,
+        "pageErrors": [],
+        "consoleWarningsOrErrors": [],
+        "geometry": {
+          "layout": {
+            "search": {
+              "x": 187,
+              "y": 159.5,
+              "width": 307.953125,
+              "height": 34
+            },
+            "read": {
+              "x": 506.953125,
+              "y": 159.5,
+              "width": 97.515625,
+              "height": 34
+            },
+            "add": {
+              "x": 612.46875,
+              "y": 159.5,
+              "width": 73.6875,
+              "height": 34
+            },
+            "actions": {
+              "x": 532.796875,
+              "y": 107.5,
+              "width": 211.203125,
+              "height": 34
+            }
+          },
+          "wizard": {
+            "bounds": {
+              "x": 100,
+              "y": 106.25,
+              "width": 560,
+              "height": 547.5
+            },
+            "key": {
+              "x": 121,
+              "y": 474.25,
+              "width": 400.09375,
+              "height": 34
+            },
+            "eye": {
+              "x": 529.09375,
+              "y": 475.25,
+              "width": 32,
+              "height": 32
+            },
+            "clear": {
+              "x": 569.09375,
+              "y": 477.25,
+              "width": 69.90625,
+              "height": 28
+            }
+          }
+        }
+      }
+    ]
+  },
+  "originalNativeEvidenceSha256": {
+    "models.png": "9c72d03da77c778ded5db620a8991b78ea69ad6654e3e05043c778f2a43286b3",
+    "models-ax.json": "ca01d462b5ac7369df2cfaac7d501eae9fde3503b05da46f3351140d9fbacf78",
+    "add-channel-step1.png": "7ff97df01f2c46550e189db682edabd28496517723856c6888866a54e29dbcd2",
+    "add-channel-step1-ax.json": "2a7a24831b70c3ee24de454bdf551fc0913ed3d06e32386183485e94f294cacc",
+    "add-channel-step2.png": "40de4bd39bc4cee0742644611f5445c582cee3d43eea3477f4b7d6b5e5960995",
+    "add-channel-step2-ax.json": "e901d584077232ef5226bc825b9dd0a8c39fb354998ce783ba763b2abebdeb61"
+  },
+  "screenshots": {
+    "originalNative": 3,
+    "newBrowser": 20
+  },
+  "transport": "Actual production ModelsRoute/AppSidebar/AppModal/components with deterministic in-memory Tauri command fixture; no external/real configuration access, backend behavior not claimed from fixture.",
+  "failureHistory": [
+    "browser-attempt-01.json captures ordinary Teleport missing sibling target at initial mount; corrected with Vue3.5 deferred Teleport, rechecked mount/tab/detail/unmount.",
+    "browser-attempt-02.json captures hidden picker search locator collision plus fixture missing WebKit event unregistration shim; fixed test harness only, final logs clean."
+  ],
+  "limits": [
+    "Main owns release rebuild and actual native WKWebView verification. Browser success is not native parity or full version acceptance.",
+    "No sync-page changes; next producer contract/UI scope remains separately assigned.",
+    "No prototype/docs/parallel overview drafts edited; exact adopted source preserved, no new design.",
+    "More was specifically authorized as low-frequency home for retained preview/refresh features; no feature/test removed.",
+    "The layout fixture uses actual sidebar and route in1180x760 and760x760 with deterministic data; not a shipped native runtime."
+  ],
+  "cleanup": "All owned browser contexts closed; own Vite server stopped.",
+  "pushed": true,
+  "createdAt": "2026-11-07T00:16:22.031563+00:00",
+  "evidenceSha256": {
+    "12f27c515-model-config.css": "7bb33ddc845e817767ad78d38ab08d76c343e9a6afa136426b615d736496bda3",
+    "12f27c515-model-config.js": "5bca3c55abd586a229f5daa1e0b59a6851f9d795e4a6896d932df06eb8cf349a",
+    "add-channel-step1-ax.json": "2a7a24831b70c3ee24de454bdf551fc0913ed3d06e32386183485e94f294cacc",
+    "add-channel-step1.png": "7ff97df01f2c46550e189db682edabd28496517723856c6888866a54e29dbcd2",
+    "add-channel-step2-ax.json": "e901d584077232ef5226bc825b9dd0a8c39fb354998ce783ba763b2abebdeb61",
+    "add-channel-step2.png": "40de4bd39bc4cee0742644611f5445c582cee3d43eea3477f4b7d6b5e5960995",
+    "browser-attempt-01.json": "5284486f9d25410cf6fd2fff7c203a44964c53f940a0b7b65f9b5791f1f2cd46",
+    "browser-attempt-02.json": "f96d814a9087562620d14b2ece39df6daf05bc8539ecf29a282d91a9e8b2a4eb",
+    "browser-results.json": "4735b38743d7a6abe954b9187c6d5442de58520e61b4d3c2ae4432f328bfeecd",
+    "browser.log": "09bded78278aef7bb176746786dd85c5a1982b6dc4faa4cc41caefea78a7a06c",
+    "build.log": "a5acba09e30eec6a01377bc9f7e0301a01dd35a5ae90b841f32ce41184d89040",
+    "cde9cc52a-model-config.css": "7bb33ddc845e817767ad78d38ab08d76c343e9a6afa136426b615d736496bda3",
+    "cde9cc52a-model-config.js": "14b0f738cb683c78474d3bd7212b28f1ef1b817b4cce16b4119180c7b0332f8f",
+    "chromium-1180-empty-list-light.png": "2d6a158b45104c6f0fd5d6855a6e0c71a4c0e896e3614babea250d923d5679ee",
+    "chromium-1180-empty-wizard-step1-light.png": "091949b90f4f4069144b8a5a1533beea669a9fa69673b23d50a8a5bb5b377900",
+    "chromium-1180-list-light.png": "662493892f534199a2be3d239e00f7a478795e5349178804a5a87e8c2c529e8e",
+    "chromium-1180-wizard-step1-light.png": "040d2022068535b6995d1714e8100a15ee545477d9a1a5135173d125006c6748",
+    "chromium-1180-wizard-step2-light.png": "4d6b1f0622643da21bb8ded96cd240480e907e37e479bbd53e94f598a8cd308d",
+    "chromium-760-empty-list-dark.png": "b19a2350dc2e8a8d62345fb70bc8b21578c417ea649b8f36033a65a877501daa",
+    "chromium-760-empty-wizard-step1-dark.png": "d04e232fb9f15d141ad4d9e2b1ce5a8939f4afa00d2eb0fdd0a70a8899db0478",
+    "chromium-760-list-dark.png": "c81f99a4c0289a9a1a7dc1d38cb585a1db215ee6e96a449ef7ddb371cf80d117",
+    "chromium-760-wizard-step1-dark.png": "dc1eb35a01420c87128b5239a6c5fb7339cb0443d082b343a6448a7150685dc8",
+    "chromium-760-wizard-step2-dark.png": "520202b7ecfc1bc96a6990f2f7bcecc1762451757f640489341ce21404b45259",
+    "component-entry.mjs": "eee5dcc764a92e4a6cd5c43e83a904a27fcf4473d10b2e6cb42eb7b572eb685e",
+    "component-server.mjs": "b4c7ef357880d5b3de97952826de9942915e6f6efdba15fa18a95a2fc744a8aa",
+    "models-ax.json": "ca01d462b5ac7369df2cfaac7d501eae9fde3503b05da46f3351140d9fbacf78",
+    "models.png": "9c72d03da77c778ded5db620a8991b78ea69ad6654e3e05043c778f2a43286b3",
+    "prototype-sources.json": "3f270337c8933a4e4690d49d6bd8a53a2524c0ffc02172fcf1fa18a359c41824",
+    "route.browser.cjs": "90f87ff501b2c96b23ce006487488be190fc617246bbb95925471e440c01bcb8",
+    "targeted.log": "769ad923b54625bb6b2e357331ad77dd523ee8bfbb7e35f0e422277ce2b9aec6",
+    "webkit-1180-empty-list-light.png": "7095cb470193c5eb31ba621541404c58e46bd8c6f4a09b9ccf6e3f5d7670d8fc",
+    "webkit-1180-empty-wizard-step1-light.png": "31be279bbe16dbd2b9f8705a3834c0222a3d80859320132384a265d7eb6c9e5a",
+    "webkit-1180-list-light.png": "e5594dbbc7ebc6904c8d0e862d153dcef5cb248e447f52df1d6b8cfc23f0b1de",
+    "webkit-1180-wizard-step1-light.png": "df6b20eef8358319a2cef1ef336513c6f97e87b532d6bc073ed433bd1d931024",
+    "webkit-1180-wizard-step2-light.png": "1562b9071bbb41a662b6aae34818e89b082ad69c4ba4e66d60f699338f09289c",
+    "webkit-760-empty-list-dark.png": "5bbfe0eae096dd9d57459df8120181d20150214c8daaabf466fc374aa15eb466",
+    "webkit-760-empty-wizard-step1-dark.png": "99fb18d4b7718dc7f8381f887479d50d51d714e37a09bd0905c41b66d7fa01a7",
+    "webkit-760-list-dark.png": "791b4a3e078379382e1d7b07940c3f4b9d874176fbf7b1df8f03ee0229e6f557",
+    "webkit-760-wizard-step1-dark.png": "7f8d346dbeaa144e9a46e825b6eaa1d196e014468773bcbbbabef78ac2d0d455",
+    "webkit-760-wizard-step2-dark.png": "6035d64c3af32a9e3d962cb1c35d42b64a4ffdf5f22b0bb8b4f635dcc2877f04"
+  },
+  "remoteVerified": "refs/heads/codex/0.2.23-ui = f1236fa21899404c172b7a7aa367465581fe2fd4",
+  "worktreeClean": true
+}

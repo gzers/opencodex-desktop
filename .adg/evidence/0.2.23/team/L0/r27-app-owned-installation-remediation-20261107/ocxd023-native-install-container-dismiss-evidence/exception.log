@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/tmp/ocxd023-native-install-container-dismiss.py", line 65, in <module>
+    proc.wait(timeout=12)
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/subprocess.py", line 2045, in _wait
+    raise TimeoutExpired(self.args, timeout)
+subprocess.TimeoutExpired: Command '['/usr/bin/sandbox-exec', '-f', '/private/tmp/ocxd023-native-startup-4i1rfm__/guard.sb', '/private/tmp/ocxd023-native-startup-4i1rfm__/home/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop']' timed out after 12 seconds

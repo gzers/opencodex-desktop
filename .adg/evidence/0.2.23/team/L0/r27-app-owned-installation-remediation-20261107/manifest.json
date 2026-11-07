@@ -1,0 +1,314 @@
+{
+  "schemaVersion": 1,
+  "facts": {
+    "oldNativeFailures": "uninitializedAppActivity thenSharedDataRoot panics preserved; nomainview avoidsfrontendcalls; parentlessplugin alertnotappowned",
+    "sourceFixes": [
+      "be7b4e258",
+      "0c98b984d",
+      "22dff278c",
+      "0e74537a5"
+    ],
+    "actualNativePass": {
+      "source": "0e74537a5",
+      "binarySha256": "65b6a03e6b2c3ac76900edd5a190f9b27d0750a5941608a931aef66f5f11c74d",
+      "profile": "debugwithcompletefixedresources",
+      "visible": "ownedNSAlert,titleandremediationtextverifiedAX+exactwindowcapture",
+      "action": "focusoriginalownedapp,nativeReturn→exit1noabort",
+      "noUserDataOrContainerRuntime": true,
+      "sourceSignedAppBytesPreserved": true,
+      "cleanup": "onlytaskprocess+privatecopiedapp/HOMEremoved;originalevidencekept"
+    },
+    "testHarnessBoundary": "earlysnapshotcaughtanimation96px then settled260px captured;firstReturnwithoutfocusdidntexit,originalfailurepreserved"
+  },
+  "files": [
+    {
+      "file": "ocxd023-native-install-container-prompt-fixed-evidence/exception.log",
+      "source": "/tmp/ocxd023-native-install-container-prompt-fixed-evidence/exception.log",
+      "bytes": 371,
+      "sha256": "ded8bbd43ce6416f390ba42811b33438ca3624c94cdeb739146ae115ca98c116"
+    },
+    {
+      "file": "ocxd023-native-install-container-prompt-fixed-evidence/report.json",
+      "source": "/tmp/ocxd023-native-install-container-prompt-fixed-evidence/report.json",
+      "bytes": 758,
+      "sha256": "5990fcc67bbd5d54099a8f3f601e272cfb04a0bd68cb752f7d185fe8d8514576"
+    },
+    {
+      "file": "ocxd023-native-install-container-prompt-fixed-evidence/stdout.log",
+      "source": "/tmp/ocxd023-native-install-container-prompt-fixed-evidence/stdout.log",
+      "bytes": 358,
+      "sha256": "82cfb54227e4a4bc47a7a1be0c974d0d34615e7be3404516668dda5d76b97677"
+    },
+    {
+      "file": "ocxd023-native-install-container-prompt-fixed-evidence/ax-compile.log",
+      "source": "/tmp/ocxd023-native-install-container-prompt-fixed-evidence/ax-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ocxd023-native-install-container-prompt-fixed-evidence/capwin-compile.log",
+      "source": "/tmp/ocxd023-native-install-container-prompt-fixed-evidence/capwin-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ocxd023-native-install-container-prompt-fixed-evidence/network-denial.log",
+      "source": "/tmp/ocxd023-native-install-container-prompt-fixed-evidence/network-denial.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "file": "ocxd023-native-install-container-prompt-final-evidence/exception.log",
+      "source": "/tmp/ocxd023-native-install-container-prompt-final-evidence/exception.log",
+      "bytes": 336,
+      "sha256": "dc97b0cd61ca1244cddb394431e557663bebcdb82c768e57da0475b84042cb0c"
+    },
+    {
+      "file": "ocxd023-native-install-container-prompt-final-evidence/report.json",
+      "source": "/tmp/ocxd023-native-install-container-prompt-final-evidence/report.json",
+      "bytes": 761,
+      "sha256": "d04b1aa7c95d0dba105cc95c6b92bbe349c89a41d2d3964cd2cc6a8f7cfc0c5d"
+    },
+    {
+      "file": "ocxd023-native-install-container-prompt-final-evidence/stdout.log",
+      "source": "/tmp/ocxd023-native-install-container-prompt-final-evidence/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ocxd023-native-install-container-prompt-final-evidence/ax-compile.log",
+      "source": "/tmp/ocxd023-native-install-container-prompt-final-evidence/ax-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ocxd023-native-install-container-prompt-final-evidence/capwin-compile.log",
+      "source": "/tmp/ocxd023-native-install-container-prompt-final-evidence/capwin-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ocxd023-native-install-container-prompt-final-evidence/network-denial.log",
+      "source": "/tmp/ocxd023-native-install-container-prompt-final-evidence/network-denial.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "file": "ocxd023-native-install-container-prompt-ready-evidence/exception.log",
+      "source": "/tmp/ocxd023-native-install-container-prompt-ready-evidence/exception.log",
+      "bytes": 336,
+      "sha256": "6119a4e8072e6518ea522b8850c284d2eb66886746de20b8c7e64071eec9f0f7"
+    },
+    {
+      "file": "ocxd023-native-install-container-prompt-ready-evidence/observed-ax.json",
+      "source": "/tmp/ocxd023-native-install-container-prompt-ready-evidence/observed-ax.json",
+      "bytes": 2566,
+      "sha256": "0b5f314511c1a4794aacbe989e0059dc59846dfd567a61236770844832cc1a76"
+    },
+    {
+      "file": "ocxd023-native-install-container-prompt-ready-evidence/report.json",
+      "source": "/tmp/ocxd023-native-install-container-prompt-ready-evidence/report.json",
+      "bytes": 761,
+      "sha256": "3d41dc44f3fe63d82709f5d035a393651613cd9be3a41f612a2971063e1dde99"
+    },
+    {
+      "file": "ocxd023-native-install-container-prompt-ready-evidence/stdout.log",
+      "source": "/tmp/ocxd023-native-install-container-prompt-ready-evidence/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ocxd023-native-install-container-prompt-ready-evidence/ax-compile.log",
+      "source": "/tmp/ocxd023-native-install-container-prompt-ready-evidence/ax-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ocxd023-native-install-container-prompt-ready-evidence/capwin-compile.log",
+      "source": "/tmp/ocxd023-native-install-container-prompt-ready-evidence/capwin-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ocxd023-native-install-container-prompt-ready-evidence/network-denial.log",
+      "source": "/tmp/ocxd023-native-install-container-prompt-ready-evidence/network-denial.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "file": "ocxd023-native-install-container-app-owned-evidence/exception.log",
+      "source": "/tmp/ocxd023-native-install-container-app-owned-evidence/exception.log",
+      "bytes": 170,
+      "sha256": "d6c240be1ec0fd05dc0607829a4fa36380be70cc59c28ba2231dc0de525cda2a"
+    },
+    {
+      "file": "ocxd023-native-install-container-app-owned-evidence/observed-ax.json",
+      "source": "/tmp/ocxd023-native-install-container-app-owned-evidence/observed-ax.json",
+      "bytes": 2487,
+      "sha256": "85da80eefd0026dc5b1c93613f0f74afe6a48e47275bab8a8ccb181852048e32"
+    },
+    {
+      "file": "ocxd023-native-install-container-app-owned-evidence/report.json",
+      "source": "/tmp/ocxd023-native-install-container-app-owned-evidence/report.json",
+      "bytes": 729,
+      "sha256": "9d1c3b2b5ed0d2a183cb0aa9e7d41c22dc12a75fb91f87b6e14561cb8dc0b061"
+    },
+    {
+      "file": "ocxd023-native-install-container-app-owned-evidence/alert-ax.json",
+      "source": "/tmp/ocxd023-native-install-container-app-owned-evidence/alert-ax.json",
+      "bytes": 2487,
+      "sha256": "85da80eefd0026dc5b1c93613f0f74afe6a48e47275bab8a8ccb181852048e32"
+    },
+    {
+      "file": "ocxd023-native-install-container-app-owned-evidence/stdout.log",
+      "source": "/tmp/ocxd023-native-install-container-app-owned-evidence/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ocxd023-native-install-container-app-owned-evidence/ax-compile.log",
+      "source": "/tmp/ocxd023-native-install-container-app-owned-evidence/ax-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ocxd023-native-install-container-app-owned-evidence/capwin-compile.log",
+      "source": "/tmp/ocxd023-native-install-container-app-owned-evidence/capwin-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ocxd023-native-install-container-app-owned-evidence/network-denial.log",
+      "source": "/tmp/ocxd023-native-install-container-app-owned-evidence/network-denial.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-evidence/capture.log",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-evidence/capture.log",
+      "bytes": 99,
+      "sha256": "b3901fb3644e3e700e7f973262f614e7155e68e8bfd1bc18e41424f76f6ddb66"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-evidence/exception.log",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-evidence/exception.log",
+      "bytes": 727,
+      "sha256": "958362269f5fba712802f33439a385cae402d9d1f4522842c57ecd60c6563964"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-evidence/observed-ax.json",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-evidence/observed-ax.json",
+      "bytes": 2486,
+      "sha256": "4a9ea44d092866233e6edaf75cc3ab80c13edef7eb947c962989c7cf2a9a7624"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-evidence/report.json",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-evidence/report.json",
+      "bytes": 1279,
+      "sha256": "fce796f2759eb1405029db2f6f5c6b7f8ab8cf927b6e01ac46cbde0d9f32119a"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-evidence/alert-ax.json",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-evidence/alert-ax.json",
+      "bytes": 2486,
+      "sha256": "4a9ea44d092866233e6edaf75cc3ab80c13edef7eb947c962989c7cf2a9a7624"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-evidence/stdout.log",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-evidence/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-evidence/ax-compile.log",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-evidence/ax-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-evidence/capwin-compile.log",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-evidence/capwin-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-evidence/network-denial.log",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-evidence/network-denial.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-evidence/settled-alert-ax.json",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-evidence/settled-alert-ax.json",
+      "bytes": 2488,
+      "sha256": "a286c3e6f2156bf628a5bf59a66f25ecc4323b9e402a7834adf504b1e312ae13"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-evidence/install-location-alert.png",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-evidence/install-location-alert.png",
+      "bytes": 84127,
+      "sha256": "c81fa34d7f49f897888530cec637ad62800d3a2b80976b9e3adc2191ea69e34b"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-focused-evidence/capture.log",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-focused-evidence/capture.log",
+      "bytes": 107,
+      "sha256": "96fb1356365c67d252e425e47e203dd869978098c744f00bf875a2b3fca5f473"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-focused-evidence/observed-ax.json",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-focused-evidence/observed-ax.json",
+      "bytes": 2486,
+      "sha256": "b3022a546fa031e4cee37ba8a69b1517d1140fee22f23e158d1efdde383516fe"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-focused-evidence/report.json",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-focused-evidence/report.json",
+      "bytes": 1101,
+      "sha256": "146d6868c2c247b221777eb565fe0722076c58bcdc3b4f640a76e44e346644b1"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-focused-evidence/alert-ax.json",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-focused-evidence/alert-ax.json",
+      "bytes": 2486,
+      "sha256": "b3022a546fa031e4cee37ba8a69b1517d1140fee22f23e158d1efdde383516fe"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-focused-evidence/stdout.log",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-focused-evidence/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-focused-evidence/ax-compile.log",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-focused-evidence/ax-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-focused-evidence/capwin-compile.log",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-focused-evidence/capwin-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-focused-evidence/network-denial.log",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-focused-evidence/network-denial.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-focused-evidence/settled-alert-ax.json",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-focused-evidence/settled-alert-ax.json",
+      "bytes": 2488,
+      "sha256": "ac30a10f61342460d5f82e583dbd548b8dafc4b27e2c3f1ba69ded0057926120"
+    },
+    {
+      "file": "ocxd023-native-install-container-dismiss-focused-evidence/install-location-alert.png",
+      "source": "/tmp/ocxd023-native-install-container-dismiss-focused-evidence/install-location-alert.png",
+      "bytes": 84127,
+      "sha256": "c81fa34d7f49f897888530cec637ad62800d3a2b80976b9e3adc2191ea69e34b"
+    }
+  ],
+  "release": "not published"
+}

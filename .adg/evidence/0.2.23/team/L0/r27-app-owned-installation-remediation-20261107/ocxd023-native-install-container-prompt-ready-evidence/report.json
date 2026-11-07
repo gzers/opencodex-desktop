@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "kind": "isolated debug-profile native install-container prompt acceptance",
+  "app": "/private/tmp/ocxd023-native-startup-61d1ccvi/home/Applications/OpenCodeX Desktop.app",
+  "root": "/private/tmp/ocxd023-native-startup-61d1ccvi",
+  "version": "0.2.23",
+  "checks": [],
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "visualChecks": "actual native install-location alert",
+  "pid": 49083,
+  "result": "fail",
+  "error": "actual remediation dialog absent",
+  "ownedExit": -15,
+  "binarySha256": "a248b22ac4772f97486ab69653e5212af75ba19c9a3ba49cf233b98cce72b6a0",
+  "cleanup": "task-owned subprocess exited; sandbox evidence root removed after recording"
+}

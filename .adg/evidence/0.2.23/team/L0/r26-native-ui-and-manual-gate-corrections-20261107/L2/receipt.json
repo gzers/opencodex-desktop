@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "role": "L2",
+  "recordedAtUtc": "2026-11-07T00:28:50.478166+00:00",
+  "producerCommit": "da4f0890b6916cc82ba137e28205ea9fe1e1338b",
+  "integratedExactBaseline": "47eb7cf7420ba9127f4d7047e4d83231f826035f",
+  "parentMerge": "b0a29bb23aa4fd658248c7c11bc66a8f734081bc",
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/file_transfer_v2.rs",
+      "sha256": "67c197a4df3564ac21ec57c0084f4b23bf7059f3a7f9e8e2b83ef3fefe0aac1b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/file_transfer_v2_tests.rs",
+      "sha256": "d4c167479ac41e34d5907430238474588d16db2313d2f4f3ec342c29dc9f6a38"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_local_v2.rs",
+      "sha256": "cd4896be353d2ad3c27553a397d7f50119994c5c100a49f6ece5839a366eeb07"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_local_v2_tests.rs",
+      "sha256": "475c45ed33391d7e3ef51be60b7f2aa3acb8ad0f038a8123b7ebfc92c86525df"
+    }
+  ],
+  "approvedFilesOnly": true,
+  "checks": {
+    "beforeProductionFixCorrectedBehaviorAssertions": "2 failed as expected",
+    "newFalseActualFileAndLocalReceive": 2,
+    "fullFileTransferIncludingOutput": 39,
+    "fullLocalApplicationIncludingScopeRestore": 46,
+    "distinctFullAffectedTests": 85,
+    "strictNormalCrateClippy": "passed",
+    "rustfmt": "passed",
+    "diffCheck": "passed",
+    "noIgnoreOrGlobalAllow": true
+  },
+  "producerContract": {
+    "assetsReviewedWire": "required bool unchanged",
+    "recommendedConsumerValue": false,
+    "deprecatedDeclarationNotAuthority": true,
+    "falseAcceptedWithActualGuards": true,
+    "originalOperationHashAndContextPreserved": true,
+    "includeGlobalSemanticsChanged": false
+  },
+  "commands": [
+    "CARGO_TARGET_DIR=/tmp/ocxd-l2-review-removal-target cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib manual_review -- --nocapture",
+    "CARGO_TARGET_DIR=/tmp/ocxd-l2-review-removal-target cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib false_review_ -- --nocapture",
+    "CARGO_TARGET_DIR=/tmp/ocxd-l2-review-removal-target cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib file_transfer_v2:: -- --nocapture",
+    "CARGO_TARGET_DIR=/tmp/ocxd-l2-review-removal-target cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib sync_local_v2:: -- --nocapture",
+    "CARGO_TARGET_DIR=/tmp/ocxd-l2-review-removal-target cargo clippy --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib --tests --no-deps -- -D warnings"
+  ],
+  "workingTreeClean": true,
+  "cleanup": {
+    "removedOnlyTarget": "/tmp/ocxd-l2-review-removal-target",
+    "absenceVerified": true,
+    "activeOwnTargetProcessBeforeDeletion": false,
+    "archivedLogs": 6,
+    "originalTmpLogsRetained": true,
+    "sharedCachesAndOtherAgentTargetsRetained": true
+  },
+  "uiModified": false,
+  "docsOrSchemaModified": false,
+  "realWebdav": false,
+  "dailyData": false,
+  "remoteClear": false,
+  "publish": false
+}
