@@ -37,7 +37,7 @@ export async function verify023Native(call,output,facts,sandbox){
  assert.deepEqual(await readFile(paths.config).catch(e=>{if(e.code==='ENOENT')return null;throw e}),before)
  // Explicit per-model protocol is test input, not a hidden channel default.
  // Seed templates can intentionally inherit unknown protocol capabilities.
- const request={expected:snapshot.draft.base,edits:[{kind:'set_override',channelId:channel.id,rawModelId:id,field:'protocol',value:{mode:'custom',value:'openai-responses'}}],channelIntents:[{kind:'set_enabled',channelId:channel.id,enabled:true}],scopeChannelId:null}
+ const request={expected:snapshot.draft.base,edits:[{kind:'set_override',channelId:channel.id,rawModelId:id,field:'protocol',value:'openai-responses'}],channelIntents:[{kind:'set_enabled',channelId:channel.id,enabled:true}],scopeChannelId:null}
  const project=await invoke('model_v2_file_project',{request});assert.equal(project.intended.channels.find(c=>c.id===channel.id).label,'Native023')
  snapshot=await invoke('model_v2_file_save',{request});assert(!snapshot.draft)
  assert.equal(snapshot.savedPolicy.channels.find(c=>c.id===channel.id).label,'Native023')
