@@ -1,0 +1,373 @@
+{
+  "runId": 42388765646,
+  "jobId": 128451695146,
+  "sourceCommit": "575a7cdc0256b43c953c0f58237f83eea77a2c18",
+  "baseline": "7093cafe729c205e76a0a6fed438d2aed0de673c",
+  "artifactId": 13580858132,
+  "originalZip": {
+    "size_bytes": 337598,
+    "sha256": "1f30fcb3352b4afb827a2990ac5791a2e548ad205bf95c8f53071bc045d742f2",
+    "wholeZipSha256Verified": true
+  },
+  "scope": "readonly ancestor API probes plus actual two-user native diagnostic; no product change",
+  "runtimeCodeUnchangedSha256": "71246dad510b8ef7c52d730a439ae08ca0010cc8db6986cda6c409b0c66ce944",
+  "systemRootOldAccessFailureConfirmed": false,
+  "conditionalPermissionChangeApplied": false,
+  "reparseAndLinkChecksUnchanged": true,
+  "localRowsAllSuccess": true,
+  "ordinaryUsers": [
+    {
+      "user": "user1",
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+      "profile": "C:\\Users\\ocxacc879405c987",
+      "rows": [
+        {
+          "path": "D:\\",
+          "access": "0x80020000",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 22,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "D:\\",
+          "access": "0x80000000",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 22,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "D:\\",
+          "access": "0x00000080",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 22,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "D:\\",
+          "access": "0x00020080",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 22,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "C:\\",
+          "access": "0x80020000",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 22,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "C:\\",
+          "access": "0x80000000",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 22,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "C:\\",
+          "access": "0x00000080",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 22,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "C:\\",
+          "access": "0x00020080",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 22,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "C:\\Users\\ocxacc879405c987",
+          "access": "0x80020000",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 16,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "C:\\Users\\ocxacc879405c987",
+          "access": "0x80000000",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 16,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "C:\\Users\\ocxacc879405c987",
+          "access": "0x00000080",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 16,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "C:\\Users\\ocxacc879405c987",
+          "access": "0x00020080",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 16,
+          "links": 1,
+          "type": 1
+        }
+      ]
+    },
+    {
+      "user": "user2",
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+      "profile": "C:\\Users\\ocxacc375c3e7432",
+      "rows": [
+        {
+          "path": "D:\\",
+          "access": "0x80020000",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 22,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "D:\\",
+          "access": "0x80000000",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 22,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "D:\\",
+          "access": "0x00000080",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 22,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "D:\\",
+          "access": "0x00020080",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 22,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "C:\\",
+          "access": "0x80020000",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 22,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "C:\\",
+          "access": "0x80000000",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 22,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "C:\\",
+          "access": "0x00000080",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 22,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "C:\\",
+          "access": "0x00020080",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 22,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "C:\\Users\\ocxacc375c3e7432",
+          "access": "0x80020000",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 16,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "C:\\Users\\ocxacc375c3e7432",
+          "access": "0x80000000",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 16,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "C:\\Users\\ocxacc375c3e7432",
+          "access": "0x00000080",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 16,
+          "links": 1,
+          "type": 1
+        },
+        {
+          "path": "C:\\Users\\ocxacc375c3e7432",
+          "access": "0x00020080",
+          "flags": 35651584,
+          "share": 3,
+          "openOk": true,
+          "infoOk": true,
+          "openError": 0,
+          "infoError": 0,
+          "attributes": 16,
+          "links": 1,
+          "type": 1
+        }
+      ]
+    }
+  ],
+  "applicationLogs": [
+    {
+      "user": "user1",
+      "provisioning": "failed bundle_filesystem os error 1",
+      "tray": "Access is denied os error 5; not proof of root-open denial"
+    },
+    {
+      "user": "user2",
+      "provisioning": "failed bundle_filesystem os error 1",
+      "tray": "Access is denied os error 5; not proof of root-open denial"
+    }
+  ],
+  "subsequentGates": {
+    "firstUserFrontendMounted": true,
+    "firstUserProgramConsistency": "missing",
+    "firstUserRuntime": "unresolved",
+    "twoSidNativePassed": false,
+    "fullVersionGatePassed": false,
+    "runtimeProxyPortIsolation": "not-verified"
+  },
+  "cleanup": {
+    "twoAccountsAndProfilesRemoved": true,
+    "desktopAclRestored": true,
+    "evidenceAclRestored": true,
+    "sealedCandidateUnchanged": true
+  },
+  "noFullSuiteOrInstallerMatrixDispatched": true
+}
