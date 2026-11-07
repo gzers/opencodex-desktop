@@ -1,0 +1,214 @@
+{
+  "schemaVersion": 1,
+  "ephemeralGuard": {
+    "passed": true,
+    "windows": true,
+    "githubActions": "true",
+    "runnerTemp": "D:\\a\\_temp",
+    "checkedBeforeProvisioning": true
+  },
+  "result": "fail",
+  "expectedCommit": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+  "nativeExecuted": true,
+  "verifyRuntimePorts": true,
+  "twoSidNativePassed": false,
+  "userIsolation": "not-verified",
+  "fullVersionGatePassed": false,
+  "runtimeProxyPortIsolation": "not-verified",
+  "cleanup": [
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1005",
+      "creationTicks": "639296612741662796",
+      "pid": 8980,
+      "result": "stopped-or-exited",
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1005",
+      "creationTicks": "639296612740408108",
+      "pid": 5984,
+      "result": "stopped-or-exited",
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1005",
+      "creationTicks": "639296612740083864",
+      "pid": 3276,
+      "result": "stopped-or-exited",
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1005",
+      "creationTicks": "639296612740080513",
+      "pid": 2516,
+      "result": "stopped-or-exited",
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1005",
+      "creationTicks": "639296612737252941",
+      "pid": 3584,
+      "result": "stopped-or-exited",
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1005",
+      "creationTicks": "639296612737013439",
+      "pid": 1660,
+      "result": "stopped-or-exited",
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1005",
+      "creationTicks": "639296612733654516",
+      "pid": 8636,
+      "result": "stopped-or-exited",
+      "image": "C:\\Users\\ocxacc877d4fb786\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1005",
+      "creationTicks": "639296612699788233",
+      "pid": 8668,
+      "result": "stopped-or-exited",
+      "image": "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1005",
+      "creationTicks": "639296612679920776",
+      "pid": 8080,
+      "result": "stopped-or-exited",
+      "image": "C:\\Windows\\system32\\conhost.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1005",
+      "creationTicks": "639296612679872250",
+      "pid": 8392,
+      "result": "stopped-or-exited",
+      "image": "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+      "creationTicks": "639296612666375925",
+      "pid": 7288,
+      "result": "stopped-or-exited",
+      "image": "D:\\a\\_temp\\ocxd023-raw-node-0659fbba9c5b41499ee18fccb1d80bf9\\runtime\\node\\node.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+      "creationTicks": "639296612664476143",
+      "pid": 6032,
+      "result": "stopped-or-exited",
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+      "creationTicks": "639296612660178628",
+      "pid": 6056,
+      "result": "stopped-or-exited",
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+      "creationTicks": "639296612658721112",
+      "pid": 8448,
+      "result": "stopped-or-exited",
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+      "creationTicks": "639296612658713623",
+      "pid": 6320,
+      "result": "stopped-or-exited",
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+      "creationTicks": "639296612655969118",
+      "pid": 812,
+      "result": "stopped-or-exited",
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+      "creationTicks": "639296612655727322",
+      "pid": 5744,
+      "result": "stopped-or-exited",
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+      "creationTicks": "639296612650610768",
+      "pid": 7028,
+      "result": "stopped-or-exited",
+      "image": "C:\\Users\\ocxaccea68a06fd6\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+      "creationTicks": "639296612492768302",
+      "pid": 4688,
+      "result": "stopped-or-exited",
+      "image": "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+      "creationTicks": "639296612478338780",
+      "pid": 9180,
+      "result": "stopped-or-exited",
+      "image": "C:\\Windows\\system32\\conhost.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+      "creationTicks": "639296612478299045",
+      "pid": 5068,
+      "result": "stopped-or-exited",
+      "image": "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+      "result": "account-and-profile-removed",
+      "profile": "C:\\Users\\ocxaccea68a06fd6"
+    },
+    {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1005",
+      "result": "account-and-profile-removed",
+      "profile": "C:\\Users\\ocxacc877d4fb786"
+    }
+  ],
+  "evidenceDirectory": "D:\\a\\_temp\\ocxd023-raw-two-user-1836d05115084172b374d599123022ac",
+  "unverified": [
+    "Complete runtime proxy ports: no start/stop or conflict experiment performed",
+    "Synthetic DPAPI proves OS CurrentUser sub-scope, not all application credential flows",
+    "ocxd has no peer-pipe override; cross-pipe denial uses actual other-SID .NET client",
+    "Instance lock contents cannot be hashed while Windows byte-range lock is held; size/time plus schema/pointer hashes checked"
+  ],
+  "nodeVersion": "v26.8.1",
+  "executableSha256": "8efc2f6488dc2b1667790ed94bf63ab3d176f9b93eb35063de13165221d9948e",
+  "nodeSha256": "5cba0ea928508c65ddadefc0681d2fb6d95f1f3beea4428f04397631140ee8e5",
+  "reusedSourceSha256": "67a03112abef8b3659ba4154f8d16b92053e1163a2ea6e27010ce1fbbab798ce",
+  "scriptHashes": [
+    {
+      "name": "windows023-two-user-native.ps1",
+      "sha256": "ce634a38644a33431544217870541905d73701b0389912218acdaf7d9fe1831f"
+    },
+    {
+      "name": "windows023-two-user-native-helper.ps1",
+      "sha256": "7d47c81030aa10306f3d739f972ad617b64b9b18adb11930981e34495d219dbc"
+    },
+    {
+      "name": "windows-process-token.ps1",
+      "sha256": "2c3512b4ad51127883a8fee6a37ee53ced616fea286a9825876eec54c7c9feca"
+    },
+    {
+      "name": "windows-cdp.mjs",
+      "sha256": "9426b6deed269c9000a6a242358da9aa16676675e1a4814c7a430cc124c85c60"
+    }
+  ],
+  "createProfileHResult": 0,
+  "failureCode": "Native preflight/identity/isolation assertion failed; inspect retained stage/evidence",
+  "failureKind": "System.Management.Automation.RuntimeException",
+  "failureStage": 102,
+  "evidenceAclRestored": true,
+  "sealedCandidateUnchanged": true,
+  "desktopAclRestored": true,
+  "finishedUtc": "2026-11-07T15:14:44.5380144Z"
+}
