@@ -1,0 +1,40 @@
+{
+  "source": "414d62bab35060e8aa2011300dab926a66727946",
+  "candidateRun": 42347480862,
+  "ciRun": 42347427165,
+  "regressionStages": [
+    {
+      "job": 128328254550,
+      "step": {
+        "name": "Windows regression with the package lock",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 12,
+        "started_at": "2026-11-07T06:37:24Z",
+        "completed_at": "2026-11-07T07:26:10Z"
+      }
+    },
+    {
+      "job": 128328085500,
+      "step": {
+        "name": "Windows backend regression",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 10,
+        "started_at": "2026-11-07T06:36:37Z",
+        "completed_at": "2026-11-07T07:22:36Z"
+      }
+    }
+  ],
+  "evidenceScope": "successful completed regression stages observed via GitHub API; full raw logs/artifacts pending until job completion",
+  "remaining": [
+    "native private creation/credentials",
+    "NSIS/MSI full actual payload build",
+    "actual install/uninstall",
+    "two actual SID runtime ports",
+    "five installer retention cells",
+    "release signatures adjacent updater rollback and public readback"
+  ],
+  "finalWindowsAcceptance": false,
+  "releaseAcceptance": false
+}
