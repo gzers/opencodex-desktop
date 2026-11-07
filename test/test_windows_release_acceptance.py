@@ -110,6 +110,14 @@ class WindowsReleaseAcceptanceTests(unittest.TestCase):
         self.assertIn("GetValue('InstallDir',$null)", script)
         self.assertIn("registryCleanup", script)
 
+    def test_023_default_nsis_is_fresh_after_the_custom_nsis_fixture(self):
+        script = (ROOT / "test/smoke/windows-installer.ps1").read_text()
+        branch = script.split("if($Mode -cne 'custom' -and $Kind -ceq 'all')",1)[1]
+        self.assertIn("if($AsInstallationOwner){$taskResult.defaultNsisRegistryCleanup=@(Clear-ProductRememberedInstallDirectory)}",branch)
+        self.assertLess(branch.index("defaultNsisRegistryCleanup"),branch.index("Invoke-Installer $package[0].FullName '/S'"))
+        self.assertIn("HKCU:\\Software\\gzers\\OpenCodeX Desktop\\023",script)
+        self.assertIn("$defaultTaskKinds=if($Kind -ceq 'all'){@('msi')}",script)
+
     def test_all_msi_cells_run_before_default_nsis_can_write_a_remembered_path(self):
         script = (ROOT / "test/smoke/windows-installer.ps1").read_text(encoding="utf-8")
         self.assertIn("$defaultTaskKinds=if($Kind -ceq 'all'){@('msi')}", script)

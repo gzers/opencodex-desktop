@@ -229,6 +229,9 @@ try {
         $installerKind='nsis'
         $package=@(Get-ChildItem -LiteralPath (Join-Path $taskBundle $installerKind) -Filter '*-setup.exe' -File)
         if($package.Count -ne 1){throw 'Exact default NSIS installer package missing'}
+        # The earlier custom NSIS cell deliberately remembers /D. This is a
+        # fresh-default cell, so clear only the NEW test-owner023 InstallDir.
+        if($AsInstallationOwner){$taskResult.defaultNsisRegistryCleanup=@(Clear-ProductRememberedInstallDirectory)}
         [void](Invoke-Installer $package[0].FullName '/S')
         $defaultRoot=Find-DefaultInstalledDirectory
         $expectedOwnerRoot=Join-Path $env:LOCALAPPDATA 'Programs/OpenCodeX Desktop'
