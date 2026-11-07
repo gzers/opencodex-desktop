@@ -6,7 +6,7 @@ import {runtimeInstallHost,runtimeInstallExpression,assertRuntimeInstallTerminal
 import {confirmNativeBackupDirectory} from './windows-path-ui.mjs'
 
 function installFixture(version,change={}){
- const publicDialogs=['0.2.21','0.2.22'].includes(version),state={status:'安装完成 · 2.91.0 · 联网安装',error:'',outcome:'入口 C:/owned/runtime/ocx.mjs · SHA-256 abcdef',phase:'done',installing:false,taskOutcome:{version:'2.91.0'},taskError:'',progress:'100',footerCount:publicDialogs?0:1,closeCount:1,closeEnabled:true,legacyFinish:!publicDialogs,retryEnabled:false,present:true,native:publicDialogs,...change}
+ const publicDialogs=['0.2.21','0.2.22','0.2.23'].includes(version),state={status:'安装完成 · 2.91.0 · 联网安装',error:'',outcome:'入口 C:/owned/runtime/ocx.mjs · SHA-256 abcdef',phase:'done',installing:false,taskOutcome:{version:'2.91.0'},taskError:'',progress:'100',footerCount:publicDialogs?0:1,closeCount:1,closeEnabled:true,legacyFinish:!publicDialogs,retryEnabled:false,present:true,native:publicDialogs,...change}
  class NativeDialog {}
  const d=state.native?new NativeDialog():{}
  d.querySelector=selector=>selector==='[data-testid=wiz-status]'?{textContent:state.status}:selector==='[data-testid=wiz-error]'?state.error?{textContent:state.error}:null:selector==='[data-testid=wiz-outcome]'?state.outcome?{textContent:state.outcome}:null:selector==='[data-testid=wiz-finish]:not(:disabled)'?state.legacyFinish?{}:null:selector==='[data-testid=wiz-allow-scripts]:not(:disabled)'?state.retryEnabled?{}:null:selector==='[role=progressbar]'?{getAttribute:()=>state.progress}:selector==='[data-testid=wiz-console]'?{textContent:'日志：owned/console.log'}:null
@@ -40,11 +40,11 @@ test('020 still requires and uses its enabled completion footer, never the 021 X
  const incomplete=installFixture('0.2.20',{legacyFinish:false})
  assert.equal((await incomplete.read()).done,false);await assert.rejects(closeRuntimeInstallTerminal(incomplete.driver,'0.2.20','done'));assert.deepEqual(incomplete.clicks,[])
 })
-for(const version of ['0.2.20','0.2.21','0.2.22'])test(version+' real settled install failure closes using its versioned host',async()=>{
+for(const version of ['0.2.20','0.2.21','0.2.22','0.2.23'])test(version+' real settled install failure closes using its versioned host',async()=>{
  const f=installFixture(version,{status:'安装失败',error:'npm pack E404 日志：owned/failure.log',outcome:'',phase:'failed',taskOutcome:null,progress:null,legacyFinish:false,taskError:'npm pack'})
  const scene=await f.read();assert.equal(scene.done,false);assert.equal(scene.scriptsEnabled,false,'an absent retry button is not an enabled retry')
  await closeRuntimeInstallTerminal(f.driver,version,'failed')
- assert.equal(f.clicks[0].label,'关闭');assert.equal(f.clicks[0].selector,runtimeInstallHost(version).selector+(['0.2.21','0.2.22'].includes(version)?' > .ui-dialog-header':''))
+ assert.equal(f.clicks[0].label,'关闭');assert.equal(f.clicks[0].selector,runtimeInstallHost(version).selector+(['0.2.21','0.2.22','0.2.23'].includes(version)?' > .ui-dialog-header':''))
 })
 test('021 failure waits for task settlement before enabling X closure',async()=>{
  const f=installFixture('0.2.21',{status:'安装失败',error:'npm pack E404',outcome:'',phase:'failed',installing:true,taskOutcome:null,legacyFinish:false})
@@ -56,13 +56,13 @@ test('021 failure waits for task settlement before enabling X closure',async()=>
  await closeRuntimeInstallTerminal(f.driver,'0.2.21','failed');assert.equal(f.clicks.length,1)
 })
 test('unsupported install versions fail before DOM evaluation or actions',async()=>{
- for(const version of ['0.2.23','0.2.21-rc.1','v0.2.21','0.2.021',null]){
+ for(const version of ['0.2.24','0.2.21-rc.1','v0.2.21','0.2.021',null]){
   let calls=0;assert.throws(()=>runtimeInstallHost(version))
   await assert.rejects(closeRuntimeInstallTerminal({wait:async()=>{calls++},click:async()=>{calls++}},version,'done'));assert.equal(calls,0)
  }
 })
-for(const version of ['0.2.20','0.2.21','0.2.22'])test(version+' backup open confirmation uses the correct native or legacy host then waits for close',async()=>{
- let open=true;const native=['0.2.21','0.2.22'].includes(version),selector=native?'dialog.app-modal-dialog[open]':'.modal-mask [role=dialog]',clicks=[]
+for(const version of ['0.2.20','0.2.21','0.2.22','0.2.23'])test(version+' backup open confirmation uses the correct native or legacy host then waits for close',async()=>{
+ let open=true;const native=['0.2.21','0.2.22','0.2.23'].includes(version),selector=native?'dialog.app-modal-dialog[open]':'.modal-mask [role=dialog]',clicks=[]
  class Dialog {}
  const d=native?new Dialog():{};d.open=true;d.textContent='打开备份目录 备份目录可能包含敏感信息 继续打开'
  const document={querySelector:actual=>{assert.equal(actual,selector);return open?d:null},querySelectorAll:actual=>{assert.equal(actual,'dialog[open]');return open?[d]:[]}}

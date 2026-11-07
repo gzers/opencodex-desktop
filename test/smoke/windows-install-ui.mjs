@@ -38,7 +38,7 @@ export async function verifyWindowsInstallUi(call,output,install=false,sandbox){
  await click('设置','.side');await wait("!!document.querySelector('.settings-tabs')");
  await click('安装配置','.route-section.active');await wait("!!document.querySelector('[data-testid=runtime-install]')");
  const source=await evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')");
- await click('安装 OpenCodex','.route-section.active');await wait(inInstall(root=>!!document.querySelector(root+' #wiz-prefix')));
+ await click(about.version==='0.2.23'?'安装程序':'安装 OpenCodex','.route-section.active');await wait(inInstall(root=>!!document.querySelector(root+' #wiz-prefix')));
  const initial=await evaluate(inInstall(root=>{const d=document.querySelector(root);return {value:d.querySelector('#wiz-prefix').value,nextDisabled:[...d.querySelectorAll('button')].find(e=>e.textContent.trim()==='开始安装').disabled,error:d.querySelector('.wiz-error')?.textContent||'',hint:d.querySelector('.wiz-hint')?.textContent||''}}));
  assert.equal(initial.value,readablePrefix(source.managedPrefix));assert.equal(initial.nextDisabled,true,'explicit confirmation is required before installation');assert.equal(initial.error,'');assert.equal(win32.isAbsolute(initial.value),true);
  await evaluate(inInstall(root=>{const i=document.querySelector(root+' #wiz-prefix');i.value='relative';i.dispatchEvent(new Event('input',{bubbles:true}));return true}));
@@ -52,7 +52,7 @@ export async function verifyWindowsInstallUi(call,output,install=false,sandbox){
  await click('取消',host.selector);await wait(closed);
  const after=await evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')");for(const field of ['kind','path','managedPrefix','defaultPrefix','history'])assert.deepEqual(after[field],source[field],'wizard cancel changed '+field);
  if(install){
-  await click('安装 OpenCodex','.route-section.active');await wait(inInstall(root=>!!document.querySelector(root+' #wiz-prefix')));
+  await click(about.version==='0.2.23'?'安装程序':'安装 OpenCodex','.route-section.active');await wait(inInstall(root=>!!document.querySelector(root+' #wiz-prefix')));
 
   await evaluate(inInstall(root=>{document.querySelector(root+' [data-testid=wiz-ack]').click();return true}));
   await wait(inInstall(root=>!!document.querySelector(root+' input[aria-label="版本"]')));

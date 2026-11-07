@@ -16,11 +16,25 @@ $taskOutput=[IO.Path]::GetFullPath($OutputDirectory)
 if(Test-Path -LiteralPath $taskOutput){throw 'Fresh evidence directory required'}
 New-Item -ItemType Directory -Path $taskOutput|Out-Null
 $taskSandbox=Join-Path $taskOutput 'OpenCodeX Native 中文 Spaces'
-$taskTools=Join-Path $taskSandbox 'home/.local/bin'
-New-Item -ItemType Directory -Path $taskTools -Force|Out-Null
-Copy-Item -LiteralPath $taskNode -Destination (Join-Path $taskTools 'node.exe')
-$taskWrapper='@echo off'+[Environment]::NewLine+'"%~dp0node.exe" "'+$taskNpm+'" %*'+[Environment]::NewLine
-[IO.File]::WriteAllText((Join-Path $taskTools 'npm.cmd'),$taskWrapper,[Text.UTF8Encoding]::new($false))
+$taskSmokeVersion=(Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../apps/desktop/tauri/tauri.conf.json') -Raw|ConvertFrom-Json).version
+$taskData=if($taskSmokeVersion -ceq '0.2.23'){Join-Path $taskSandbox 'data/desktop'}else{$taskSandbox}
+New-Item -ItemType Directory -Path (Join-Path $taskSandbox 'home') -Force|Out-Null
+if($taskSmokeVersion -ceq '0.2.23'){
+ # Sandbox intentionally skips bundle provisioning. Supply the explicit native
+ # dependency pair at the production fixed paths, never through host PATH.
+ $taskTools=Join-Path $taskSandbox 'program/runtime/node'
+ $taskNpmRoot=Split-Path -Parent (Split-Path -Parent $taskNpm)
+ if((Split-Path -Leaf $taskNpm) -cne 'npm-cli.js' -or !(Test-Path -LiteralPath (Join-Path $taskNpmRoot 'package.json'))){throw 'Explicit complete npm module required'}
+ New-Item -ItemType Directory -Path (Join-Path $taskTools 'node_modules') -Force|Out-Null
+ Copy-Item -LiteralPath $taskNode -Destination (Join-Path $taskTools 'node.exe')
+ Copy-Item -LiteralPath $taskNpmRoot -Destination (Join-Path $taskTools 'node_modules/npm') -Recurse
+}else{
+ $taskTools=Join-Path $taskSandbox 'home/.local/bin'
+ New-Item -ItemType Directory -Path $taskTools -Force|Out-Null
+ Copy-Item -LiteralPath $taskNode -Destination (Join-Path $taskTools 'node.exe')
+ $taskWrapper='@echo off'+[Environment]::NewLine+'"%~dp0node.exe" "'+$taskNpm+'" %*'+[Environment]::NewLine
+ [IO.File]::WriteAllText((Join-Path $taskTools 'npm.cmd'),$taskWrapper,[Text.UTF8Encoding]::new($false))
+}
 $taskListener=[Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback,0)
 $taskListener.Start();$taskPort=$taskListener.LocalEndpoint.Port;$taskListener.Stop()
 $taskInfo=[Diagnostics.ProcessStartInfo]::new()
@@ -39,7 +53,7 @@ foreach($taskVariable in @('HOME','WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS','WEBVI
 }
 $taskRecord=[ordered]@{
  source=(git rev-parse HEAD).Trim();executable=$taskExe;sha256=(Get-FileHash -LiteralPath $taskExe).Hash
- node=$taskNode;npmCli=$taskNpm;workingDirectory=$taskInfo.WorkingDirectory;sandbox=$taskSandbox;port=$taskPort
+ node=$taskNode;npmCli=$taskNpm;dataRoot=$taskData;fixedDependencies=($taskSmokeVersion -ceq '0.2.23');workingDirectory=$taskInfo.WorkingDirectory;sandbox=$taskSandbox;port=$taskPort
  startedAt=[DateTimeOffset]::Now.ToString('o');result='fail'
 }
 $taskProcess=$null
@@ -58,7 +72,7 @@ try{
   [IO.File]::WriteAllText((Join-Path $taskOutput 'application-stdout.log'),$taskOut.GetAwaiter().GetResult())
   [IO.File]::WriteAllText((Join-Path $taskOutput 'application-stderr.log'),$taskErr.GetAwaiter().GetResult())
  }
- $taskAppLog=Join-Path $taskSandbox 'logs/app.log'
+ $taskAppLog=Join-Path $taskData 'logs/app.log'
  if(Test-Path -LiteralPath $taskAppLog){
   $taskStartup=Get-Content -LiteralPath $taskAppLog | Select-String 'startup version=([^ ]+) commit=([0-9a-f]+)' | Select-Object -First 1
   if($taskStartup){

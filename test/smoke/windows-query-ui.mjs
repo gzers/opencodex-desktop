@@ -6,7 +6,7 @@ import {readFile, readdir, writeFile, unlink} from 'node:fs/promises'
 import {join, win32} from 'node:path'
 import {closeNativeUpdateCenter,updateCenterHost} from './windows-021-public-hosts.mjs'
 
-export async function verifyWindowsQueryUi(call, output, sandbox) {
+export async function verifyWindowsQueryUi(call, output, sandbox, {dataRoot=sandbox}={}) {
   const report = {result:'fail', checks:[], requests:[]}
   const npmrc = join(sandbox,'home','.npmrc')
   let original
@@ -54,7 +54,7 @@ export async function verifyWindowsQueryUi(call, output, sandbox) {
   const ordinary=value=>win32.normalize(value).replace(/^\\\\\?\\UNC\\/i,'\\\\').replace(/^\\\\\?\\(?=[a-z]:\\)/i,'')
   try {
     const config=await evaluate("window.__TAURI_INTERNALS__.invoke('get_data_root_config')")
-    assert.equal(ordinary(config.currentDataRoot).toLowerCase(),ordinary(sandbox).toLowerCase())
+    assert.equal(ordinary(config.currentDataRoot).toLowerCase(),ordinary(dataRoot).toLowerCase())
     const about=await evaluate("window.__TAURI_INTERNALS__.invoke('app_about')")
     const updateHost=updateCenterHost(about.version)
     report.about=about
@@ -66,7 +66,7 @@ export async function verifyWindowsQueryUi(call, output, sandbox) {
     const before=await evaluate("window.__TAURI_INTERNALS__.invoke('official_remote_latest',{trigger:'user'})")
     assert(/^\d/.test(before.version),'real registry metadata must contain version')
     report.before=before
-    const directory=join(sandbox,'logs','runtime-query')
+    const directory=join(dataRoot,'logs','runtime-query')
     const previous=new Set(await readdir(directory))
     await evaluate("(async()=>{const invoke=window.__TAURI_INTERNALS__.invoke;const p=await invoke('get_preferences');p.appUpdateAutoCheck=false;await invoke('save_preferences',{preferences:p});return true})()")
     await writeFile(npmrc,`registry=${registry}\nfetch-retries=0\n`)
@@ -96,7 +96,7 @@ export async function verifyWindowsQueryUi(call, output, sandbox) {
     assert.deepEqual(header.arguments,['view','@bitkyc08/opencodex@latest','version','dist.integrity','--json'])
     assert.equal(ordinary(header.workingDirectory).toLowerCase(),ordinary(join(sandbox,'home')).toLowerCase())
     assert.equal(ordinary(header.environment.OPENCODEX_HOME).toLowerCase(),ordinary(config.currentOpencodexHome).toLowerCase())
-    assert.equal(ordinary(header.environment.npm_config_cache).toLowerCase(),ordinary(join(sandbox,'cache','npm')).toLowerCase())
+    assert.equal(ordinary(header.environment.npm_config_cache).toLowerCase(),ordinary(join(dataRoot,'cache','npm')).toLowerCase())
     assert.equal(header.environment.COMSPEC.toLowerCase(),win32.join(header.environment.SystemRoot,'System32','cmd.exe').toLowerCase())
     assert.equal(terminal.exitCode,1)
     assert(stdout.text.includes('E404')&&stderr.text.includes('E404'))

@@ -45,6 +45,30 @@ export async function verifyWindowsPathUi(call, output, sandbox){
   let clipboard
   try{
     await click('安装配置')
+    let expectedClipboard
+    if(about.version==='0.2.23'){
+      const snapshot=await evaluate("window.__TAURI_INTERNALS__.invoke('model_paths_v2_snapshot')")
+      const keys=['aggregateRoot','desktopRoot','opencodexHome','configPath','installationRoot','managerExecutable','runtimePrefix','runtimeEntry']
+      await wait("document.querySelectorAll('.paths-facts dd[data-path-key] code').length===8")
+      const paths=await evaluate("[...document.querySelectorAll('.paths-facts dd[data-path-key]')].map(e=>({key:e.dataset.pathKey,path:e.querySelector('code')?.textContent,status:e.querySelector('[data-path-status]')?.dataset.pathStatus}))")
+      assert.equal(snapshot.schemaVersion,1)
+      for(const key of keys){
+        const visible=paths.find(p=>p.key===key)
+        assert(visible,'missing actual 023 path: '+key)
+        assert.equal(visible.path,ordinary(snapshot[key].path))
+        assert.equal(visible.status,snapshot[key].status)
+        assert(!visible.path.startsWith('\\\\?\\'),'unreadable extended Windows prefix')
+      }
+      assert.equal(ordinary(snapshot.desktopRoot.path).toLowerCase(),ordinary(config.currentDataRoot).toLowerCase())
+      assert.equal(ordinary(snapshot.opencodexHome.path).toLowerCase(),ordinary(config.currentOpencodexHome).toLowerCase())
+      await evaluate("document.querySelector('[data-testid=paths-details]').click()")
+      await wait("!!document.querySelector('dialog.paths-v2-dialog[open] [data-testid=paths-copy]')")
+      const detailed=await evaluate("[...document.querySelectorAll('dialog.paths-v2-dialog[open] code')].map(e=>e.textContent)")
+      expectedClipboard=keys.map(key=>ordinary(snapshot[key].path)).join('\n')
+      assert.deepEqual(detailed,expectedClipboard.split('\n'))
+      report.pathSnapshot=snapshot;report.openedTargets=[]
+      report.checks.push('023 complete U/D/H/program paths and actual statuses agree with production snapshot; no retired editable root input')
+    }else{
     await wait("!!document.querySelector('#data-root-input')")
     await wait(`document.querySelectorAll('.data-root-table code').length>=${pathTargets.managed.length+2}`)
     const paths=await evaluate("({values:[...document.querySelectorAll('.data-root-table code')].map(e=>e.textContent),placeholder:document.querySelector('#data-root-input').placeholder})")
@@ -54,6 +78,8 @@ export async function verifyWindowsPathUi(call, output, sandbox){
     assert(paths.values.every(value=>!value.startsWith('\\\\?\\')))
     assert.equal(paths.placeholder,'D:\\OpenCodexData')
     report.checks.push('installation data root/home/all six managed partitions/native placeholder use readable ordinary paths')
+      expectedClipboard=ordinary(config.currentDataRoot)
+    }
     // Loopback CDP smoke windows may lack native foreground focus. Explicitly
     // emulate document focus; clipboard calls still use the real platform API.
     await call('Emulation.setFocusEmulationEnabled',{enabled:true})
@@ -62,14 +88,19 @@ export async function verifyWindowsPathUi(call, output, sandbox){
     report.isolatedClipboardPermissionGranted=true
     const readClipboard="Promise.race([navigator.clipboard.readText(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('isolated clipboard permission deadline')),5000))])"
     try{clipboard=await evaluate(readClipboard)}catch{}
-    await evaluate("document.querySelector('.data-root-table .cli-copy-btn').click()")
+    await evaluate(about.version==='0.2.23'?"document.querySelector('[data-testid=paths-copy]').click()":"document.querySelector('.data-root-table .cli-copy-btn').click()")
     // The Vue click handler awaits the native clipboard write. Observe its
     // actual result instead of racing that promise with an immediate read.
-    const copied=await wait(`(async()=>{const text=await ${readClipboard};return text===${JSON.stringify(ordinary(config.currentDataRoot))}?text:false})()`)
-    assert.equal(copied,ordinary(config.currentDataRoot))
+    const copied=await wait(`(async()=>{const text=await ${readClipboard};return text===${JSON.stringify(expectedClipboard)}?text:false})()`)
+    assert.equal(copied,expectedClipboard)
     report.checks.push('real clipboard receives readable same-identity data root')
-    await click('打开','.data-root-table tbody tr')
-    report.openedTargets=[config.currentDataRoot]
+    if(about.version==='0.2.23'){
+      await click('关闭','dialog.paths-v2-dialog[open] > .ui-dialog-header')
+      await wait("!document.querySelector('dialog.paths-v2-dialog[open]')")
+    }else{
+      await click('打开','.data-root-table tbody tr')
+      report.openedTargets=[config.currentDataRoot]
+    }
     await click('数据与备份')
     const backup=await wait("document.querySelector('.backup-root')?.textContent")
     assert.equal(backup,ordinary(win32.join(config.currentDataRoot,'backups')))

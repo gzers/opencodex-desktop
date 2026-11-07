@@ -6,6 +6,7 @@ import {discoverMainTarget} from './windows-cdp.mjs'
 import {verifyWindowsInstallUi} from './windows-install-ui.mjs'
 import {verifyWindowsPathUi} from './windows-path-ui.mjs'
 import {verifyWindowsQueryUi} from './windows-query-ui.mjs'
+import {runtimeAcceptanceLayout,assert023RuntimeAdmission} from './windows023-runtime-layout.mjs'
 import {runtimeInstallHost,runtimeInstallDomExpression,runtimeInstallExpression,closeRuntimeInstallTerminal} from './windows-021-runtime-host.mjs'
 
 const [endpoint, output, sandbox] = process.argv.slice(2)
@@ -57,7 +58,7 @@ async function source(){return evaluate("window.__TAURI_INTERNALS__.invoke('runt
 async function install(version){
   const host=runtimeInstallHost(report.about.version)
   const inInstall=(fn,...args)=>runtimeInstallDomExpression(report.about.version,fn,...args)
-  await click('安装 OpenCodex','.route-section.active')
+  await click(report.about.version==='0.2.23'?'安装程序':'安装 OpenCodex','.route-section.active')
   await wait(inInstall(root=>!!document.querySelector(root+' #wiz-prefix')))
 
   await evaluate(inInstall(root=>document.querySelector(root+' [data-testid=wiz-ack]').click()))
@@ -70,11 +71,16 @@ const report={result:'fail',screenshots:[],checks:[]}
 try{
   await wait("!!window.__TAURI_INTERNALS__?.invoke&&!!document.querySelector('.side')")
   const config=await evaluate("window.__TAURI_INTERNALS__.invoke('get_data_root_config')")
-  const equal=(a,b)=>win32.normalize(a).replace(/^\\\\\?\\/,'').toLowerCase()===win32.normalize(b).replace(/^\\\\\?\\/,'').toLowerCase()
-  assert(equal(config.activeDataRoot,sandbox)&&equal(config.currentDataRoot,sandbox)&&config.runtimeActive,'immutable sandbox mismatch')
   report.about=await evaluate("window.__TAURI_INTERNALS__.invoke('app_about')")
-  await verifyWindowsInstallUi(call,output,false,sandbox)
-  await verifyWindowsPathUi(call,output,sandbox)
+  const layout=runtimeAcceptanceLayout(report.about.version,sandbox)
+  if(report.about.version==='0.2.23')assert023RuntimeAdmission({about:report.about,dataRoot:config},sandbox)
+  else {
+    const equal=(a,b)=>win32.normalize(a).replace(/^\\\\\?\\/,'').toLowerCase()===win32.normalize(b).replace(/^\\\\\?\\/,'').toLowerCase()
+    assert(equal(config.activeDataRoot,sandbox)&&equal(config.currentDataRoot,sandbox)&&config.runtimeActive,'immutable sandbox mismatch')
+  }
+  report.layout=layout
+  await verifyWindowsInstallUi(call,output,false,layout.dataRoot)
+  await verifyWindowsPathUi(call,output,layout.dataRoot)
   report.checks.push('prefill/reset/readable native Windows path')
   const first=await install('2.91.0')
   assert(first.done&&!first.error,JSON.stringify(first))
@@ -112,9 +118,18 @@ try{
     const prepared=await prepare021ReadyWebdav(driver,facts,sandbox,true)
     report.readyWebdav=await verify021ReadyWebdav(driver,output,facts,sandbox,prepared,final,'recovery-installed')
   }
-  await verifyWindowsQueryUi(call,output,sandbox)
+  await verifyWindowsQueryUi(call,output,sandbox,{dataRoot:layout.dataRoot})
   await click('概览','.side');await wait("!!document.querySelector('.ov .mods')")
   await click('导入','.ov')
+  if(report.about.version==='0.2.23'){
+    await wait("[...document.querySelectorAll('dialog[open]')].some(d=>d.querySelector('h2')?.textContent==='选择配置文件')")
+    const picker=await evaluate("(()=>{const d=[...document.querySelectorAll('dialog[open]')].find(d=>d.querySelector('h2')?.textContent==='选择配置文件'),r=d.getBoundingClientRect(),z=Number(getComputedStyle(d).zoom)||1;return {native:d instanceof HTMLDialogElement,title:d.querySelector('h2').textContent,text:d.textContent,width:r.width/z,viewport:innerWidth/z,hash:location.hash,masked:d.querySelector('input[aria-label=导入读取口令]')?.type==='password',chooser:[...d.querySelectorAll('button')].some(b=>b.textContent.trim()==='选择本机文件'&&!b.disabled),confirm:[...d.querySelectorAll('button')].some(b=>b.textContent.includes('确认采用')&&!b.disabled),close:d.querySelectorAll('.ui-dialog-header .modal-close:not(:disabled)').length}})()")
+    assert(picker.native&&picker.masked&&picker.chooser&&!picker.confirm&&picker.close===1&&picker.text.includes('尚未选择文件')&&picker.hash.startsWith('#overview'),JSON.stringify(picker))
+    assert(Math.abs(picker.width-Math.min(560,picker.viewport-32))<=2,'023 chooser must use the adopted shared dialog width')
+    report.importPicker=picker
+    await screenshot('overview-import-dialog')
+    await click('取消','dialog[open]');await wait("!document.querySelector('dialog[open]')")
+  }else{
   await wait("!!document.querySelector('dialog[open].transfer-review')")
   const picker=await evaluate("(()=>{const d=document.querySelector('dialog[open].transfer-review');return {title:d.querySelector('h2').textContent,readDisabled:[...d.querySelectorAll('button')].find(b=>b.textContent.trim()==='读取配置').disabled,hash:location.hash}})()")
   assert.equal(picker.title,'导入配置');assert(picker.readDisabled&&picker.hash.startsWith('#overview'))
@@ -123,8 +138,9 @@ try{
   assert(pickerLayout.fieldTop>=pickerLayout.labelBottom+5&&pickerLayout.border==='1px'&&pickerLayout.padding==='12px','native import field must keep its separate label and frame')
   await screenshot('overview-import-dialog')
   await click('取消','dialog[open].transfer-review');await wait("!document.querySelector('dialog[open].transfer-review')")
+  }
   assert(await evaluate("location.hash.startsWith('#overview')"))
-  report.checks.push('overview shared import opens without navigation, requires file, cancels back to overview')
+  report.checks.push('overview shared import opens without navigation, requires actual file selection before adoption, cancels back to overview')
 
   report.result='pass'
   report.checks.push('actual registry install 2.91.0','actual missing-version failure with readable details and retained console','old package/launcher/source preserved','failure history retains npm stage and log path','reopen and recover upgrade to 2.93.0')
