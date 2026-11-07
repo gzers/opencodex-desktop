@@ -1,0 +1,47 @@
+{
+  "endpoint": "http://127.0.0.1:61904",
+  "startedAt": "2026-11-07T08:24:41.902Z",
+  "phase": "023-native-boundary",
+  "attempts": [
+    {
+      "at": "2026-11-07T08:24:41.903Z",
+      "version": {
+        "status": 200
+      },
+      "list": {
+        "status": 200
+      }
+    }
+  ],
+  "lastVersion": {
+    "Browser": "Edg/156.0.4314.58",
+    "File-Path-Style": "windows",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+    "V8-Version": "15.6.12.10",
+    "WebKit-Version": "537.36 (@7806b68d20d1c1273d5b07b4f4de18e8f5852581)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:61904/devtools/browser/d0dad506-3792-40f3-af91-1bf48055cbb5"
+  },
+  "lastTargets": [
+    {
+      "description": "",
+      "devtoolsFrontendUrl": "https://aka.ms/docs-landing-page/serve_rev/@7806b68d20d1c1273d5b07b4f4de18e8f5852581/inspector.html?ws=127.0.0.1:61904/devtools/page/7DC6B5592FC30908821CACAADEC05207",
+      "id": "7DC6B5592FC30908821CACAADEC05207",
+      "title": "OpenCodeX Desktop",
+      "type": "page",
+      "url": "http://tauri.localhost/#overview",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:61904/devtools/page/7DC6B5592FC30908821CACAADEC05207"
+    }
+  ],
+  "result": "fail",
+  "target": {
+    "description": "",
+    "devtoolsFrontendUrl": "https://aka.ms/docs-landing-page/serve_rev/@7806b68d20d1c1273d5b07b4f4de18e8f5852581/inspector.html?ws=127.0.0.1:61904/devtools/page/7DC6B5592FC30908821CACAADEC05207",
+    "id": "7DC6B5592FC30908821CACAADEC05207",
+    "title": "OpenCodeX Desktop",
+    "type": "page",
+    "url": "http://tauri.localhost/#overview",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:61904/devtools/page/7DC6B5592FC30908821CACAADEC05207"
+  },
+  "error": "{\"exceptionId\":1,\"text\":\"Uncaught (in promise)\",\"lineNumber\":0,\"columnNumber\":0,\"exception\":{\"type\":\"object\",\"className\":\"Object\",\"description\":\"Object\",\"objectId\":\"-5038620193316351890.2.1\",\"preview\":{\"type\":\"object\",\"description\":\"Object\",\"overflow\":false,\"properties\":[{\"name\":\"code\",\"type\":\"string\",\"value\":\"model_read_empty\"},{\"name\":\"issues\",\"type\":\"object\",\"value\":\"Array(1)\",\"subtype\":\"array\"}]}}}"
+}

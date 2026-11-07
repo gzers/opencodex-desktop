@@ -1,0 +1,27 @@
+{
+  "productSource": "414d62bab35060e8aa2011300dab926a66727946",
+  "productCodeChanged": false,
+  "attempts": [
+    {
+      "run": 42355237929,
+      "toolSource": "2e872a805",
+      "result": "model_read_empty when fixture attempted read before first saved config; startup/mainUI/ordinary token/source/path checks passed"
+    },
+    {
+      "run": 42355556727,
+      "toolSource": "cfcdf23e9",
+      "result": "model_read_empty after first save; test channel disabled with unresolved inherited model protocol, so not a materialized runtime model source"
+    }
+  ],
+  "sourceAnalysis": [
+    "stage_connection creates disabled channel and auto-matches templates",
+    "source_v2::plan_protocol_groups_v2 skips unresolved disabled models; no hidden default protocol",
+    "model_v2_read_existing rejects actual file with no models, not manager draft as source"
+  ],
+  "successor": "a188cc365d65e6c9c20521df793b2b8a17eb63eb",
+  "successorFixture": "explicit per-model openai-responses override plus explicit set_enabled; assert actual provider models/adapter before read; repeat read/draft cancellation/stableidentity/name projection remain",
+  "latestRun": 42355999944,
+  "latestResult": "pending",
+  "testFailureNotProductSuccess": true,
+  "completeInstallationTwoSidPortsRetentionReleaseRemain": true
+}
