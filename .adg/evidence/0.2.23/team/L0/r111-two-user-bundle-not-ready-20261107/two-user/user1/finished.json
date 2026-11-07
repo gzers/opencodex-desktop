@@ -1,0 +1,227 @@
+{
+  "ephemeralGuard": {
+    "passed": true,
+    "windows": true,
+    "githubActions": "true",
+    "runnerTemp": "D:\\a\\_temp",
+    "checkedBeforeProvisioning": true
+  },
+  "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+  "profile": "C:\\Users\\ocxaccc7357ec091",
+  "processHome": "C:\\Users\\ocxaccc7357ec091",
+  "localAppData": "C:\\Users\\ocxaccc7357ec091\\AppData\\Local",
+  "desktopRoot": "C:\\Users\\ocxaccc7357ec091\\.codex-desktop\\desktop",
+  "opencodexHome": "C:\\Users\\ocxaccc7357ec091\\.codex-desktop\\opencodex\\home",
+  "installation": "C:\\Users\\ocxaccc7357ec091\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+  "result": "not-ready",
+  "runtimeProxyVerification": "not-verified",
+  "verifyRuntimePorts": true,
+  "sandbox": false,
+  "failureKind": "System.Management.Automation.RuntimeException",
+  "failureLine": 606,
+  "failureCode": "NotReady: first screen/complete staged resources unavailable",
+  "cleanup": [
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 9060,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+        "path": "D:\\a\\_temp\\ocxd023-raw-node-78f10470e3fa42d9aff7769419bfc13c\\runtime\\node\\node.exe",
+        "creationTicks": "639296606003383064",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 916,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+        "creationTicks": "639296605999070238",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 8792,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+        "creationTicks": "639296605997378230",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 9580,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+        "creationTicks": "639296605996109160",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 9608,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+        "creationTicks": "639296605996108386",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 8316,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+        "creationTicks": "639296605990731221",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 10212,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+        "creationTicks": "639296605990490380",
+        "sessionId": 2
+      }
+    },
+    {
+      "result": "stopped-or-exited",
+      "process": {
+        "pid": 10200,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+        "path": "C:\\Users\\ocxaccc7357ec091\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+        "creationTicks": "639296605986486737",
+        "sessionId": 2
+      }
+    }
+  ],
+  "finalInventory": {
+    "sha256": "56fd8780d5f8f03b99e77ef9517fcdfdaa2e1adc9782a9fdfcd17ea4ecf45446",
+    "entries": [
+      {
+        "path": ".desktop-removal.lock",
+        "kind": "file",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "desktop",
+        "kind": "directory"
+      },
+      {
+        "path": "desktop\\backups",
+        "kind": "directory"
+      },
+      {
+        "path": "desktop\\cache",
+        "kind": "directory"
+      },
+      {
+        "path": "desktop\\exports",
+        "kind": "directory"
+      },
+      {
+        "path": "desktop\\logs",
+        "kind": "directory"
+      },
+      {
+        "path": "desktop\\logs\\app.log",
+        "kind": "file",
+        "bytes": 670,
+        "sha256": "77f655d5670027ad89311040a1e495719c453f366ae3fa1f7edb131adbb0b8c5"
+      },
+      {
+        "path": "desktop\\manager-location.json",
+        "kind": "file",
+        "bytes": 94,
+        "sha256": "2a914da58b4be91b01628607f9926155d294f804fd47fa3f7b05cb7ba346f152"
+      },
+      {
+        "path": "desktop\\manager-startup.lock",
+        "kind": "file",
+        "bytes": 41,
+        "sha256": "ff45e02a15ed8400067acd98ee6699de5d7ae3e6ab3820442a135c74a339195e"
+      },
+      {
+        "path": "desktop\\manager-state",
+        "kind": "directory"
+      },
+      {
+        "path": "desktop\\manager-state\\app.lock",
+        "kind": "file",
+        "bytes": 41,
+        "sha256": "b2872e8ed4bbe0b46aee93818de398aa6f494974814ace08dafb4ad4b0c3aa16"
+      },
+      {
+        "path": "desktop\\manager-state\\data-root.json",
+        "kind": "file",
+        "bytes": 65,
+        "sha256": "d5fb6f9aa1c6b872dda878591c350beb55765e6a0e2b33588426a0a3032a7eff"
+      },
+      {
+        "path": "desktop\\manager-state\\event-scope.json",
+        "kind": "file",
+        "bytes": 325,
+        "sha256": "efc223918944d3d3205fa3eb95eb345b07d6c014400ba0051785df360ea5a17e"
+      },
+      {
+        "path": "desktop\\manager-state\\event-scope.lock",
+        "kind": "file",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "desktop\\manager-state\\notifications.json",
+        "kind": "file",
+        "bytes": 640,
+        "sha256": "ddf68c0f66d6d6a653e2cdc8d0484a5efddd80f4875773692c2a2adc275e5a3b"
+      },
+      {
+        "path": "desktop\\manager-state\\preferences.json.lock",
+        "kind": "file",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "desktop\\manager-state\\runtime.json",
+        "kind": "file",
+        "bytes": 153,
+        "sha256": "47b53ad2fe689efe4c04e1c5067a5733b05edb0de73e1fc578b8032e71323ed2"
+      },
+      {
+        "path": "desktop\\manager-state\\structure.lock",
+        "kind": "file",
+        "bytes": 6,
+        "sha256": "14493f5f5470ed48c3f103d917ec52ae9005fa3913128031d0fac2a49ac3cc41"
+      },
+      {
+        "path": "desktop\\manager-state\\sync-service-v2",
+        "kind": "directory"
+      },
+      {
+        "path": "desktop\\manager-state\\sync-v2-transactions",
+        "kind": "directory"
+      },
+      {
+        "path": "desktop\\sync-state",
+        "kind": "directory"
+      },
+      {
+        "path": "opencodex",
+        "kind": "directory"
+      },
+      {
+        "path": "opencodex\\home",
+        "kind": "directory"
+      }
+    ]
+  },
+  "inventory": "hashed"
+}
