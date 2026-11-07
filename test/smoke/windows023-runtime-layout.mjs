@@ -28,3 +28,9 @@ export async function readInitialRuntimeEnvironment(invoke,version){
   return {gate:'integrated_runtime_not_ready',code:error.code,message:error.message,readyVerified:false}
  }
 }
+
+// Windows CF_UNICODETEXT represents line breaks as CRLF. Keep every path
+// character and line order exact; only this platform text transport is folded.
+export function nativePathClipboardMatches(actual,expected){
+ return typeof actual==='string'&&actual.replaceAll(String.fromCharCode(13,10),String.fromCharCode(10))===expected
+}

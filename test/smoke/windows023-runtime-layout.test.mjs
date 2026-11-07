@@ -1,7 +1,7 @@
 import {test} from 'node:test'
 import assert from 'node:assert/strict'
 import {win32} from 'node:path'
-import {runtimeAcceptanceLayout,assert023RuntimeAdmission,readInitialRuntimeEnvironment} from './windows023-runtime-layout.mjs'
+import {runtimeAcceptanceLayout,assert023RuntimeAdmission,readInitialRuntimeEnvironment,nativePathClipboardMatches} from './windows023-runtime-layout.mjs'
 import {assert023ReadyIpcSafety,prepare021ReadyWebdav} from './windows-021-ready-webdav.mjs'
 const root=win32.join('C:/','owned','中文 Spaces'),layout=runtimeAcceptanceLayout('0.2.23',root)
 const facts={about:{platform:'Windows',version:'0.2.23'},dataRoot:{aggregateRoot:win32.join(root,'data'),currentDataRoot:layout.dataRoot,activeDataRoot:layout.dataRoot,currentOpencodexHome:layout.opencodexHome,opencodexHome:layout.opencodexHome,opencodexHomeMode:'inside',runtimeActive:true}}
@@ -36,4 +36,11 @@ test('fresh 023 refuses only typed unresolved/pending while preserving real succ
   await assert.rejects(readInitialRuntimeEnvironment(async()=>{throw error},'0.2.22'),e=>e===error)
  }
  for(const error of [{code:14,message:'discovery_runtime_invalid'},{code:13,message:'discovery_runtime_unresolved'},new Error('disk corrupt')])await assert.rejects(readInitialRuntimeEnvironment(async()=>{throw error},'0.2.23'),e=>e===error)
+})
+
+test('native multiline clipboard accepts Windows CRLF transport only, never changed paths, order or dropped lines',()=>{
+ const expected=['original path1','original path2'].join(String.fromCharCode(10))
+ assert(nativePathClipboardMatches(expected,expected))
+ assert(nativePathClipboardMatches(expected.replaceAll(String.fromCharCode(10),String.fromCharCode(13,10)),expected))
+ for(const actual of [expected+'extra',expected.split(String.fromCharCode(10)).reverse().join(String.fromCharCode(10)),expected.replace('path2','path3'),expected.replaceAll(String.fromCharCode(10),String.fromCharCode(13)),null])assert.equal(nativePathClipboardMatches(actual,expected),false)
 })
