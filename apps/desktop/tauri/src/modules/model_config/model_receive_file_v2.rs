@@ -1595,7 +1595,9 @@ mod tests;
 fn windows_storage_handle(path: &Path) -> Result<std::fs::File> {
     use std::os::windows::fs::OpenOptionsExt;
     OpenOptions::new()
-        .access_mode(0x20000)
+        // GENERIC_READ includes attributes and READ_CONTROL and participates
+        // in delete-sharing admission; an ACL-only handle does not pin the path.
+        .access_mode(0x80000000)
         .share_mode(3)
         .custom_flags(0x02200000)
         .open(path)
