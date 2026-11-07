@@ -9,7 +9,7 @@ import {verifyWindowsQueryUi} from './windows-query-ui.mjs'
 import {runtimeAcceptanceLayout,assert023RuntimeAdmission} from './windows023-runtime-layout.mjs'
 import {runtimeInstallHost,runtimeInstallDomExpression,runtimeInstallExpression,closeRuntimeInstallTerminal} from './windows-021-runtime-host.mjs'
 
-const [endpoint, output, sandbox] = process.argv.slice(2)
+const [endpoint, output, sandbox, dependencyContract] = process.argv.slice(2)
 assert(output && win32.isAbsolute(sandbox), 'explicit isolated root required')
 const target = await discoverMainTarget(endpoint)
 const ws = new WebSocket(target.webSocketDebuggerUrl)
@@ -77,7 +77,7 @@ async function install(version){
   }
   return terminal
 }
-const report={result:'fail',screenshots:[],checks:[]}
+const report={result:'fail',screenshots:[],checks:[],dependencyContract}
 try{
   await wait("!!window.__TAURI_INTERNALS__?.invoke&&!!document.querySelector('.side')")
   const config=await evaluate("window.__TAURI_INTERNALS__.invoke('get_data_root_config')")
@@ -121,6 +121,12 @@ try{
   assert.equal(final.version,'2.93.0');assert.equal(final.kind,'managed')
   await screenshot('recovered-upgraded-2.93.0')
   report.recoveredClosure=await closeRuntimeInstallTerminal({evaluate,wait,click},report.about.version,'done')
+  const compatibility=report.about.version==='0.2.23'&&dependencyContract==='node22-compatibility-not-ready'
+  if(compatibility){
+    const rejected=await evaluate("(async()=>{try{return {environment:await window.__TAURI_INTERNALS__.invoke('discover_environment',{request:null})}}catch(error){return {code:error?.code,message:error?.message}}})()")
+    assert.equal(rejected.code,14);assert(rejected.message.includes('discovery_runtime_version_mismatch'),'Node22 must not claim pinned production readiness')
+    report.compatibilityReadiness={...rejected,readyAccepted:false}
+  }else{
   if(runtimeInstallHost(report.about.version).publicDialogs){
     const {prepare021ReadyWebdav,verify021ReadyWebdav}=await import('./windows-021-ready-webdav.mjs')
     const facts={about:report.about,dataRoot:await evaluate("window.__TAURI_INTERNALS__.invoke('get_data_root_config')")}
@@ -128,7 +134,9 @@ try{
     const prepared=await prepare021ReadyWebdav(driver,facts,sandbox,true)
     report.readyWebdav=await verify021ReadyWebdav(driver,output,facts,sandbox,prepared,final,'recovery-installed')
   }
+  }
   await verifyWindowsQueryUi(call,output,sandbox,{dataRoot:layout.dataRoot})
+  if(!compatibility){
   await click('概览','.side');await wait("!!document.querySelector('.ov .mods')")
   await click('导入','.ov')
   if(report.about.version==='0.2.23'){
@@ -152,7 +160,12 @@ try{
   assert(await evaluate("location.hash.startsWith('#overview')"))
   report.checks.push('overview shared import opens without navigation, requires actual file selection before adoption, cancels back to overview')
 
-  report.result='pass'
+  }else{
+    await click('概览','.side');await wait("!!document.querySelector('[data-testid=environment-gate]')")
+    assert(!await evaluate("!!document.querySelector('[data-testid=overview-remote-version]')"),'unsupported dependency fixture must not fabricate ready overview')
+    report.checks.push('Node22 actual installs/query recovery preserved; exact production readiness correctly refused; full ready/WebDAV/overview import belongs to independent pinned dependency matrix')
+  }
+  report.result=compatibility?'pass-compatibility-not-ready':'pass'
   report.checks.push('actual registry install 2.91.0','actual missing-version failure with readable details and retained console','old package/launcher/source preserved','failure history retains npm stage and log path','reopen and recover upgrade to 2.93.0')
   report.screenshots=['installed-2.91.0.png','failure-retains-output.png','recovered-upgraded-2.93.0.png']
   report.failure=failure

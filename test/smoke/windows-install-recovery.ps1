@@ -17,6 +17,7 @@ if(Test-Path -LiteralPath $taskOutput){throw 'Fresh evidence directory required'
 New-Item -ItemType Directory -Path $taskOutput|Out-Null
 $taskSandbox=Join-Path $taskOutput 'OpenCodeX Native 中文 Spaces'
 $taskSmokeVersion=(Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../apps/desktop/tauri/tauri.conf.json') -Raw|ConvertFrom-Json).version
+$taskDependencyContract='legacy'
 $taskData=if($taskSmokeVersion -ceq '0.2.23'){Join-Path $taskSandbox 'data/desktop'}else{$taskSandbox}
 New-Item -ItemType Directory -Path (Join-Path $taskSandbox 'home') -Force|Out-Null
 if($taskSmokeVersion -ceq '0.2.23'){
@@ -28,6 +29,14 @@ if($taskSmokeVersion -ceq '0.2.23'){
  New-Item -ItemType Directory -Path (Join-Path $taskTools 'node_modules') -Force|Out-Null
  Copy-Item -LiteralPath $taskNode -Destination (Join-Path $taskTools 'node.exe')
  Copy-Item -LiteralPath $taskNpmRoot -Destination (Join-Path $taskTools 'node_modules/npm') -Recurse
+ $taskPins=Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../.github/runtime-platforms-023.json') -Raw|ConvertFrom-Json
+ $taskActualNode=(& $taskNode --version).Trim()
+ if($LASTEXITCODE -ne 0){throw 'Explicit native Node version read failed'}
+ $taskActualNpm=(Get-Content -LiteralPath (Join-Path $taskNpmRoot 'package.json') -Raw|ConvertFrom-Json).version
+ if($taskActualNode -ceq ('v'+$taskPins.node.version) -and $taskActualNpm -ceq $taskPins.node.npmVersion){$taskDependencyContract='pinned-ready'}
+ elseif($taskActualNode -ceq 'v22.20.0'){$taskDependencyContract='node22-compatibility-not-ready'}
+ else{throw '023 ready probe requires exact production dependencies; only explicit Node22 matrix is admitted as negative readiness compatibility'}
+
 }else{
  $taskTools=Join-Path $taskSandbox 'home/.local/bin'
  New-Item -ItemType Directory -Path $taskTools -Force|Out-Null
@@ -53,7 +62,7 @@ foreach($taskVariable in @('HOME','WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS','WEBVI
 }
 $taskRecord=[ordered]@{
  source=(git rev-parse HEAD).Trim();executable=$taskExe;sha256=(Get-FileHash -LiteralPath $taskExe).Hash
- node=$taskNode;npmCli=$taskNpm;dataRoot=$taskData;fixedDependencies=($taskSmokeVersion -ceq '0.2.23');workingDirectory=$taskInfo.WorkingDirectory;sandbox=$taskSandbox;port=$taskPort
+ node=$taskNode;npmCli=$taskNpm;dataRoot=$taskData;dependencyContract=$taskDependencyContract;actualNode=$taskActualNode;actualNpm=$taskActualNpm;fixedDependencies=($taskSmokeVersion -ceq '0.2.23');workingDirectory=$taskInfo.WorkingDirectory;sandbox=$taskSandbox;port=$taskPort
  startedAt=[DateTimeOffset]::Now.ToString('o');result='fail'
 }
 $taskProcess=$null
@@ -63,7 +72,7 @@ try{
  $taskOut=$taskProcess.StandardOutput.ReadToEndAsync()
  $taskErr=$taskProcess.StandardError.ReadToEndAsync()
  # The protocol client needs Node >=24; the app uses the explicit native Node above.
- & $taskDriver (Join-Path $PSScriptRoot 'windows-install-recovery.mjs') "http://127.0.0.1:$taskPort" $taskOutput $taskSandbox *> (Join-Path $taskOutput 'execution.log')
+ & $taskDriver (Join-Path $PSScriptRoot 'windows-install-recovery.mjs') "http://127.0.0.1:$taskPort" $taskOutput $taskSandbox $taskDependencyContract *> (Join-Path $taskOutput 'execution.log')
  if($LASTEXITCODE -ne 0){throw 'Native WebView install/recovery assertions failed; see execution.log'}
  $taskRecord.result='pass'
 }finally{

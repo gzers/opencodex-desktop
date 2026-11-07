@@ -304,7 +304,7 @@ jobs:
         run: |
           & ../../../test/smoke/windows-ordinary-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-      - name: Record Node24 driver for native version matrix
+      - name: Record pinned Node26 driver for native version matrix
         id: native_driver
         shell: pwsh
         run: '"node=$((Get-Command node).Source)" >> $env:GITHUB_OUTPUT'
