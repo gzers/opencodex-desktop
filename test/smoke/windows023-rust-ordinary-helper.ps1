@@ -330,7 +330,19 @@ function Start-RustOrdinaryCaptured([string]$Executable,[string[]]$Arguments,[st
   Write-TwoUserJson ($Stdout+'.launch.json') $diagnostic
   $until=[datetime]::UtcNow.AddSeconds($DeadlineSeconds)
   while(!$pending.WaitForExit(0)){
-   try{Add-TwoUserDescendants $fact $Ledger}catch{if(!$pending.WaitForExit(0)){throw}}
+   try{Add-TwoUserDescendants $fact $Ledger}catch{
+    $observationFailure=$_
+    if(!$pending.WaitForExit(0)){
+     # Process enumeration may lose a terminating process before its retained
+     # kernel handle becomes signaled. Only absence permits waiting through this
+     # narrow exit race; a live contradictory identity still fails immediately.
+     $enumerated=Get-Process -Id $fact.pid -ErrorAction SilentlyContinue
+     if($enumerated){$enumerated.Dispose();throw $observationFailure}
+     while(!$pending.WaitForExit(100)){
+      if([datetime]::UtcNow -gt $until){throw 'Original suite envelope exhausted while waiting for terminating retained handle'}
+     }
+    }
+   }
    Write-TwoUserJson $LedgerPath @($Ledger.Values)
    if([datetime]::UtcNow -gt $until){throw 'Original suite envelope exhausted; no test deadline was enlarged'}
    Start-Sleep -Milliseconds 100

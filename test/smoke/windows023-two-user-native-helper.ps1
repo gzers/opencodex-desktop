@@ -118,7 +118,12 @@ function Add-TwoUserDescendants($Root,[Collections.Generic.Dictionary[int,object
 function Stop-TwoUserTracked($Fact) {
  $p=Get-Process -Id $Fact.pid -ErrorAction SilentlyContinue
  if(!$p){return}
- try{$now=Get-TwoUserProcessFact $p $Fact.sid
+ try{
+  # A retained Process object can observe termination between enumeration and
+  # identity query. An exited object needs no kill; a still-live unknown object
+  # remains a refusal, including a reused PID or another SID.
+  if($p.HasExited){return}
+  try{$now=Get-TwoUserProcessFact $p $Fact.sid}catch{if($p.HasExited){return};throw}
   if($now.creationTicks -cne $Fact.creationTicks -or $now.path -ine $Fact.path){throw 'Refusing changed PID/SID/image/creation cleanup'}
   $p.Kill();if(!$p.WaitForExit(10000)){throw 'Tracked child did not exit'}
  }finally{$p.Dispose()}

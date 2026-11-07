@@ -165,7 +165,7 @@ Refuses {Get-RustOrdinaryArtifacts @($lines[0],($collision|ConvertTo-Json -Depth
 $originalFact=(Get-Item Function:Get-TwoUserProcessFact).ScriptBlock
 $priorGetProcess=Get-Item Function:Get-Process -ErrorAction SilentlyContinue
 $cleanupState=@{kills=0;mode='creation'}
-$fakeProcess=[pscustomobject]@{}
+$fakeProcess=[pscustomobject]@{HasExited=$false}
 $fakeProcess|Add-Member ScriptMethod Kill {$cleanupState.kills++}
 $fakeProcess|Add-Member ScriptMethod WaitForExit {param($ms) $true}
 $fakeProcess|Add-Member ScriptMethod Dispose {}
