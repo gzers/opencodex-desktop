@@ -35,10 +35,16 @@ export async function verify023Native(call,output,facts,sandbox){
  snapshot=await invoke('model_v2_stage_connection',{request:{expected:snapshot.draft?.base??null,expectedSource:snapshot.sourceDigest,expectedLibrary:snapshot.libraryDigest,channelId:null,name:'Native023',url:'https://native023.invalid/v1',authMode:'none',apiKey:null,rawModelIds:[id],selectedModelIds:[id]}})
  const channel=snapshot.draft.policy.channels.find(c=>c.label==='Native023');assert(channel)
  assert.deepEqual(await readFile(paths.config).catch(e=>{if(e.code==='ENOENT')return null;throw e}),before)
- const request={expected:snapshot.draft.base,edits:[],channelIntents:[],scopeChannelId:null}
+ // Explicit per-model protocol is test input, not a hidden channel default.
+ // Seed templates can intentionally inherit unknown protocol capabilities.
+ const request={expected:snapshot.draft.base,edits:[{kind:'set_override',channelId:channel.id,rawModelId:id,field:'protocol',value:{mode:'custom',value:'openai-responses'}}],channelIntents:[{kind:'set_enabled',channelId:channel.id,enabled:true}],scopeChannelId:null}
  const project=await invoke('model_v2_file_project',{request});assert.equal(project.intended.channels.find(c=>c.id===channel.id).label,'Native023')
  snapshot=await invoke('model_v2_file_save',{request});assert(!snapshot.draft)
  assert.equal(snapshot.savedPolicy.channels.find(c=>c.id===channel.id).label,'Native023')
+ const firstRow=snapshot.savedPolicy.channels.find(c=>c.id===channel.id)
+ const firstRaw=JSON.parse(await readFile(paths.config,'utf8'))
+ assert(firstRaw.providers[firstRow.connection.providerId].models.includes(id),'explicitly enabled model must materialize in actual provider')
+ assert.equal(firstRaw.providers[firstRow.connection.providerId].adapter,'openai-responses')
  assert(JSON.stringify(snapshot.library)===library,'channel writes must not rewrite immutable library')
  checks.push('stage and project do not save; explicit save commits real V2 config with original raw model ID')
  const initialSaved=await readFile(paths.config)
