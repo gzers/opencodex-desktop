@@ -16,6 +16,34 @@ use store::{canonical, digest, execution_digest, plan_digest, ReceiveRecord, Sto
 use tokio::sync::Semaphore;
 use types::*;
 
+// Windows CI timing evidence for remaining timeout failures. Only static phase
+// names and elapsed milliseconds are emitted; no paths, payloads or credentials.
+#[cfg(all(test, windows))]
+pub(super) struct TestPhaseTiming {
+    phase: &'static str,
+    started: std::time::Instant,
+}
+#[cfg(all(test, windows))]
+impl TestPhaseTiming {
+    pub(super) fn start(phase: &'static str) -> Self {
+        eprintln!("SYNC_TEST_PHASE begin {phase}");
+        Self {
+            phase,
+            started: std::time::Instant::now(),
+        }
+    }
+}
+#[cfg(all(test, windows))]
+impl Drop for TestPhaseTiming {
+    fn drop(&mut self) {
+        eprintln!(
+            "SYNC_TEST_PHASE end {} elapsed_ms={}",
+            self.phase,
+            self.started.elapsed().as_millis()
+        );
+    }
+}
+
 pub struct SyncContext<'a> {
     pub store: &'a Store,
     pub transport: &'a dyn ConfigSyncTransport,
@@ -152,7 +180,11 @@ impl<'a> SyncContext<'a> {
     fn source(&self, expected: &SourceGuard) -> SyncResult<()> {
         require_guard(expected)?;
         let current = self.local.current_source()?;
-        require_guard(&current)?;
+        self.validate_source(expected, &current)
+    }
+    fn validate_source(&self, expected: &SourceGuard, current: &SourceGuard) -> SyncResult<()> {
+        require_guard(expected)?;
+        require_guard(current)?;
         if current.scope_digest != expected.scope_digest
             || current.mcp_sources_digest != expected.mcp_sources_digest
         {
@@ -400,10 +432,14 @@ impl<'a> SyncContext<'a> {
         if j.connection_revision != self.connection.revision {
             return Err(failure(ErrorCode::SyncEndpointChanged, Step::SourceGuard));
         }
-        if j.root_revision != self.local.root_revision()? {
+        #[cfg(all(test, windows))]
+        let _timing = TestPhaseTiming::start("fresh-local-source-context");
+        let (revision, current) = self.local.source_context()?;
+        require_digest(&revision)?;
+        if j.root_revision != revision {
             return Err(failure(ErrorCode::SyncPlanChanged, Step::SourceGuard));
         }
-        self.source(&j.plan.source_guard)
+        self.validate_source(&j.plan.source_guard, &current)
     }
     fn save_error(&self, j: &mut Journal, mut e: SyncFailure) -> SyncResult<OperationFact> {
         e = e.for_operation(&j.operation_id);
@@ -675,6 +711,8 @@ impl<'a> SyncContext<'a> {
         self.verify_locked(j).await
     }
     async fn verify_inner(&self, j: &mut Journal) -> SyncResult<OperationFact> {
+        #[cfg(all(test, windows))]
+        let _timing = TestPhaseTiming::start("verify-original-upload");
         self.binding(&j.plan.binding_id)?;
         j.fact.relation.local = LocalRelation::NotCompared;
         let graph = self.observe().await;

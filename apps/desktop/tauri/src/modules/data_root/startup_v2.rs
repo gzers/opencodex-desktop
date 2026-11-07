@@ -284,6 +284,7 @@ pub(crate) fn resolve_with_install(
     check(&aggregate)?;
     check(&anchor)?;
     check(&anchor.join("manager-startup.lock"))?;
+    let _admission = super::removal_gate::shared(&anchor)?;
     crate::infrastructure::platform::create_private_dir_all(&anchor, 0o700)
         .map_err(|e| failure(e.to_string()))?;
     let mut locks = vec![AppInstanceLock::acquire_named(

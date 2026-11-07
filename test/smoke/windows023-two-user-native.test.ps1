@@ -168,3 +168,5 @@ foreach($f in @($taskMain,$taskHelper,$PSCommandPath)){$result.files+=@{path=$f;
 $result|ConvertTo-Json -Depth 9|Set-Content -LiteralPath (Join-Path $taskOutput 'static-tests.json') -Encoding utf8
 $result|ConvertTo-Json -Depth 9
 
+
+if(!$helper.Contains('[void]$info.Environment.Remove($key)') -or !$helper.Contains("Native manager child still has test overrides")){throw 'Real native child must remove override keys, not inherit empty smoke values'}

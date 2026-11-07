@@ -38,12 +38,16 @@ jobs:
       contents: write
     if: inputs.phase == 'installers'
     runs-on: windows-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          node-version: 26.8.1
+      - name: Prepare disposable Server MSI client-equivalent fixture
+        if: inputs.version == '0.2.23'
+        shell: pwsh
+        run: ./test/smoke/windows-msi-server-fixture.ps1 -Mode prepare -EvidenceDirectory test/out/release-existing-installers
       - name: Verify exact existing signed release installers without rebuilding
         shell: pwsh
         env:
@@ -51,28 +55,38 @@ jobs:
           OCX_ACCEPT_VERSION: ${{ inputs.version }}
           OCX_BUILT_SHA256: ${{ inputs.built_sha256 }}
         run: ./test/smoke/windows-release-installers.ps1 -OutputDirectory test/out/release-existing-installers -Kind ${{ matrix.kind }} -Mode ${{ matrix.mode }} -Version $env:OCX_ACCEPT_VERSION -ExpectedBuiltSha256 $env:OCX_BUILT_SHA256
+      - name: Restore exact Server MSI policy
+        if: always() && inputs.version == '0.2.23'
+        shell: pwsh
+        run: if(Test-Path test/out/release-existing-installers/msi-server-policy.original.json){ & ./test/smoke/windows-msi-server-fixture.ps1 -Mode restore -EvidenceDirectory test/out/release-existing-installers }
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: release-existing-installer-${{ matrix.kind }}-${{ matrix.mode }}
           path: |
-            test/out/release-existing-installers/**/*.json
-            test/out/release-existing-installers/**/*.log
-            test/out/release-existing-installers/**/*.png
+            test/out/release-existing-installers/*.json
+            test/out/release-existing-installers/*.log
+            test/out/release-existing-installers/verification/*.json
+            test/out/release-existing-installers/verification/*.log
+            test/out/release-existing-installers/verification/*startup/*.json
+            test/out/release-existing-installers/verification/*startup/*.log
+            test/out/release-existing-installers/verification/*startup/startup/*.json
+            test/out/release-existing-installers/verification/*startup/startup/*.log
+            test/out/release-existing-installers/verification/*startup/startup/*.png
           if-no-files-found: error
   ota:
     if: inputs.phase == 'ota'
     strategy:
       fail-fast: false
       matrix:
-        kind: [msi, nsis]
+        kind: ${{ fromJSON(inputs.version == '0.2.23' && '["nsis"]' || '["msi","nsis"]') }}
     runs-on: windows-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          node-version: 26.8.1
       - name: Published adjacent-release actual signed updater and restart
         shell: pwsh
         env:
@@ -80,7 +94,14 @@ jobs:
           OCX_ACCEPT_VERSION: ${{ inputs.version }}
           OCX_OTA_CHANNEL: ${{ inputs.ota_channel }}
           OCX_BUILT_SHA256: ${{ inputs.built_sha256 }}
-        run: ./test/smoke/windows-ota.ps1 -Kind '${{ matrix.kind }}' -OutputDirectory 'test/out/windows-ota-${{ matrix.kind }}' -Version $env:OCX_ACCEPT_VERSION -FromVersion $env:OCX_BASELINE_VERSION -Channel $env:OCX_OTA_CHANNEL -ExpectedBuiltSha256 $env:OCX_BUILT_SHA256
+        run: |
+          if($env:OCX_ACCEPT_VERSION -ceq '0.2.23'){
+            if($env:OCX_BASELINE_VERSION -cne '0.2.22'){throw '023 accepts only published adjacent022 baseline'}
+            & ./test/smoke/windows023-ota.ps1 -OutputDirectory 'test/out/windows-ota-nsis' -Channel $env:OCX_OTA_CHANNEL -ExpectedBuiltSha256 $env:OCX_BUILT_SHA256
+          }else{
+            & ./test/smoke/windows-ota.ps1 -Kind '${{ matrix.kind }}' -OutputDirectory 'test/out/windows-ota-${{ matrix.kind }}' -Version $env:OCX_ACCEPT_VERSION -FromVersion $env:OCX_BASELINE_VERSION -Channel $env:OCX_OTA_CHANNEL -ExpectedBuiltSha256 $env:OCX_BUILT_SHA256
+          }
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -89,4 +110,5 @@ jobs:
             test/out/windows-ota-${{ matrix.kind }}/*.json
             test/out/windows-ota-${{ matrix.kind }}/*.png
             test/out/windows-ota-${{ matrix.kind }}/actual-sandbox/logs/*.log
+            test/out/windows-ota-${{ matrix.kind }}/actual-sandbox/data/desktop/logs/*.log
           if-no-files-found: error

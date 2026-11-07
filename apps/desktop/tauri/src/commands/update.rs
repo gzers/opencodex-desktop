@@ -157,7 +157,7 @@ where
     Fut: std::future::Future<Output = AppResult<T>> + Send + 'static,
 {
     let admission = gate.admit()?;
-    tauri::async_runtime::spawn(async move {
+    tokio::spawn(async move {
         let _admission = admission;
         task().await
     })
@@ -681,6 +681,21 @@ fn hydrate_cache(status: &mut UpdateStatus, app: &tauri::AppHandle) -> AppResult
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test(flavor = "current_thread")]
+    async fn manager_query_retains_the_callers_runtime_for_its_owned_work() {
+        let expected = tokio::runtime::Handle::current().id();
+        let actual = run_check_owned(
+            Arc::new(crate::infrastructure::storage_writers::WriterGate::default()),
+            || async { Ok(tokio::runtime::Handle::current().id()) },
+        )
+        .await
+        .unwrap();
+        assert_eq!(
+            actual, expected,
+            "query work must not hop to an unrelated global runtime"
+        );
+    }
 
     #[tokio::test(flavor = "current_thread")]
     async fn manager_query_owner_survives_disconnect_and_releases_on_all_terminals() {

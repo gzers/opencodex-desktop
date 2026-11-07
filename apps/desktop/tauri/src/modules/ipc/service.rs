@@ -1180,9 +1180,9 @@ where
         .admit()
         .map_err(|_| IpcErrorCode::TargetStateConflict)?;
     let audit = super::audit::AuditStore::with_writers(&root, writers);
-    tauri::async_runtime::spawn(async move {
+    tokio::spawn(async move {
         let _admission = admission;
-        let result = tauri::async_runtime::spawn(async move { task().await })
+        let result = tokio::spawn(async move { task().await })
             .await
             .unwrap_or(Err(IpcErrorCode::InternalError));
         crate::commands::run_readonly("CLI update query audit", move || {
@@ -2606,7 +2606,11 @@ mod tests {
     async fn backup_list_lock_wait_keeps_executor_responsive_and_survives_observer_drop() {
         use std::time::{Duration, Instant};
         let root = tempfile::tempdir().unwrap();
-        let lock = std::fs::File::create(root.path().join(".backup-w2.lock")).unwrap();
+        let lock = crate::infrastructure::platform::create_new_private_file(
+            &root.path().join(".backup-w2.lock"),
+            0o600,
+        )
+        .unwrap();
         lock.lock().unwrap();
         let (release, released) = std::sync::mpsc::channel();
         // A watchdog releases the real lock even if a regression blocks this
@@ -2711,7 +2715,11 @@ mod tests {
         let mutations = service.runtime_mutations.clone();
         // Retain real service locks after the disconnected service clone exits.
         let _context = service.binding_context.clone();
-        let lock = std::fs::File::create(root.join(".backup-w2.lock")).unwrap();
+        let lock = crate::infrastructure::platform::create_new_private_file(
+            &root.join(".backup-w2.lock"),
+            0o600,
+        )
+        .unwrap();
         lock.lock().unwrap();
         let (release, released) = std::sync::mpsc::channel();
         let holder = std::thread::spawn(move || {

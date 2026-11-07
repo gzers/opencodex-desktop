@@ -165,7 +165,7 @@ Refuses {Get-RustOrdinaryArtifacts @($lines[0],($collision|ConvertTo-Json -Depth
 $originalFact=(Get-Item Function:Get-TwoUserProcessFact).ScriptBlock
 $priorGetProcess=Get-Item Function:Get-Process -ErrorAction SilentlyContinue
 $cleanupState=@{kills=0;mode='creation'}
-$fakeProcess=[pscustomobject]@{}
+$fakeProcess=[pscustomobject]@{HasExited=$false}
 $fakeProcess|Add-Member ScriptMethod Kill {$cleanupState.kills++}
 $fakeProcess|Add-Member ScriptMethod WaitForExit {param($ms) $true}
 $fakeProcess|Add-Member ScriptMethod Dispose {}
@@ -187,6 +187,24 @@ try{
  if($priorGetProcess){Set-Item Function:Get-Process $priorGetProcess.ScriptBlock}else{Remove-Item Function:Get-Process}
 }
 Assert-RustOrdinaryTestArguments @()
+foreach($exitCode in @(0,101)) {
+ $exited=[pscustomobject]@{pid=42;sid='fixtureSID';path='fixture.exe';creationTicks='123';identityAuthority='retained-CreateProcess-handle'}
+ $ledger=[Collections.Generic.Dictionary[int,object]]::new();$ledger[42]=$exited
+ Complete-RustOrdinaryNativeExit $ledger $exited $exitCode
+ Check (!$ledger.ContainsKey(42)) ('original-retained-native-exit-'+$exitCode+'-retires-only-completed-generation')
+}
+$exited=[pscustomobject]@{pid=42;sid='fixtureSID';path='fixture.exe';creationTicks='123';identityAuthority='retained-CreateProcess-handle'}
+foreach($field in @('sid','path','creationTicks')) {
+ $changed=[pscustomobject]@{pid=42;sid='fixtureSID';path='fixture.exe';creationTicks='123'};$changed.$field='changed'
+ $ledger=[Collections.Generic.Dictionary[int,object]]::new();$ledger[42]=$changed
+ Refuses {Complete-RustOrdinaryNativeExit $ledger $exited 0} ('completed-ledger-does-not-retire-replaced-'+$field)
+ Check ($ledger.ContainsKey(42)) ('completed-ledger-preserves-unknown-'+$field)
+}
+foreach($exitCode in @($null,'0')) {
+ $ledger=[Collections.Generic.Dictionary[int,object]]::new();$ledger[42]=$exited
+ Refuses {Complete-RustOrdinaryNativeExit $ledger $exited $exitCode} 'completed-generation-needs-real-integer-exit'
+}
+Check ($helper.IndexOf('$nativeExit=$pending.ExitCode()') -lt $helper.IndexOf('Complete-RustOrdinaryNativeExit $Ledger $fact $nativeExit')) 'retire-only-after-original-handle-exitcode'
 Check ($main.Contains('[string[]]$TestArguments=@()')) 'default-workers-unchanged-no-test-arguments'
 Check ($main.Contains('-UseNewEnvironment -Environment $taskChildEnvironment') -and !$main.Contains('RUST_TEST_THREADS')) 'RunAs-new-environment-before-credentials-no-worker-override'
 $hmeta=@{workspace_members=@('workspace#lib');packages=@(@{id='workspace#lib';manifest_path='fixture.toml';targets=@(@{name='lib';kind=@('lib');test=$true},@{name='build';kind=@('custom-build');test=$false})})}

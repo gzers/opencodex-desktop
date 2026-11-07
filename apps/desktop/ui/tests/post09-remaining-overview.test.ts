@@ -33,6 +33,12 @@ async function exit(channel: string, selector: string) {
   await flushPromises()
 }
 describe('POST-09 overview observation consumers', () => {
+  it('actual overview leaves ready mode on discovery error and renders the existing factual error gate',async()=>{
+    const env=useEnvironmentStore();env.report=null;env.error='集成运行程序检查未就绪，可稍后重新检查或查看安装状态。'
+    const w=mount(OverviewRoute,{global:{stubs:{AppTopbar:true,RuntimeMotionMark:true,UpdateCenter:true,ModelTransfer:true}},attachTo:document.body});wrappers.push(w);await flushPromises()
+    expect(w.get('[data-testid="environment-gate"] h2').text()).toBe('集成运行程序检查未就绪');expect(w.find('.cli-copy-btn').exists()).toBe(false);expect(w.text()).not.toMatch(/Homebrew|brew install|Node.js 官方下载/)
+    env.set(report());await flushPromises();expect(w.find('[data-testid="environment-gate"]').exists()).toBe(false)
+  })
   it.each(['x', 'escape', 'native-cancel', 'backdrop'])('retains directory business actions and exits the runtime observer via %s', async channel => {
     const w = await render(), root = body().get('dialog.overview-runtime-dialog[open]')
     expect(root.findAll('footer button').map(b => b.text())).toEqual(['打开数据目录', '打开 OPENCODEX_HOME'])

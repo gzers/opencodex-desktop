@@ -304,7 +304,7 @@ jobs:
         run: |
           & ../../../test/smoke/windows-ordinary-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-      - name: Record Node24 driver for native version matrix
+      - name: Record pinned Node26 driver for native version matrix
         id: native_driver
         shell: pwsh
         run: '"node=$((Get-Command node).Source)" >> $env:GITHUB_OUTPUT'
@@ -337,11 +337,19 @@ jobs:
         with:
           name: windows-startup-evidence
           path: |
-            test/out/windows-startup
+            test/out/windows-startup/*.json
+            test/out/windows-startup/*.log
+            test/out/windows-startup/startup/*.json
+            test/out/windows-startup/startup/*.log
+            test/out/windows-startup/startup/*.png
             test/out/windows-backend
             test/out/windows-native-018
             test/out/windows-native-018-node22
-            test/out/windows-ordinary
+            test/out/windows-ordinary/*.json
+            test/out/windows-ordinary/*.log
+            test/out/windows-ordinary/startup/*.json
+            test/out/windows-ordinary/startup/*.log
+            test/out/windows-ordinary/startup/*.png
             test/out/windows-query-etw
             test/runtime/ci-bd2-query-etw/capture
             !test/out/windows-native-018/OpenCodeX Native*/**
@@ -369,4 +377,4 @@ jobs:
         # tauri.conf.json 在 apps/desktop/tauri（仓库根没有），必须在应用目录里执行 CLI，
         # 否则根目录直接以「could not find tauri.conf.json」失败（IMP-03 目录迁移后遗留）。
         working-directory: apps/desktop/tauri
-        run: tauri build --target aarch64-apple-darwin
+        run: tauri build --features custom-protocol --target aarch64-apple-darwin

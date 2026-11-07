@@ -1558,17 +1558,16 @@ fn private(path: &Path, directory: bool) -> Result<()> {
     }
     #[cfg(windows)]
     {
-        let handle = windows_storage_handle(path, false)?;
-        receive_private_acl::verify(&handle, directory)?;
-        if !directory {
-            receive_private_acl::single_link(&handle)?;
-        }
+        let handle = windows_storage_handle(path)?;
+        crate::infrastructure::windows_private_create::verify_private_handle(&handle, directory)
+            .map_err(|_| fail("model_receive_private_storage"))?;
     }
     Ok(())
 }
 fn restrict(path: &Path, directory: bool) -> Result<()> {
-    #[cfg(windows)]
-    receive_private_acl::protect(&windows_storage_handle(path, true)?, directory)?;
+    // Windows creators already establish the strict User/SYSTEM descriptor.
+    // Verify it without repairing existing objects or replacing its authority.
+    #[cfg(not(windows))]
     crate::infrastructure::platform::set_mode(path, if directory { 0o700 } else { 0o600 })
         .map_err(io)?;
     private(path, directory)
@@ -1593,231 +1592,17 @@ mod tests;
 
 // OS ACL primitive only. It deliberately owns no config path or save authority.
 #[cfg(windows)]
-fn windows_storage_handle(path: &Path, write_acl: bool) -> Result<std::fs::File> {
+fn windows_storage_handle(path: &Path) -> Result<std::fs::File> {
     use std::os::windows::fs::OpenOptionsExt;
     OpenOptions::new()
-        .access_mode(if write_acl { 0x60000 } else { 0x20000 })
+        // GENERIC_READ includes attributes and READ_CONTROL and participates
+        // in delete-sharing admission; an ACL-only handle does not pin the path.
+        .access_mode(0x80000000)
         .share_mode(3)
         .custom_flags(0x02200000)
         .open(path)
         .map_err(io)
 }
-#[cfg(windows)]
-mod receive_private_acl {
-    use super::*;
-    use std::fs::File;
-    use std::{
-        ffi::c_void,
-        os::windows::io::{AsRawHandle, FromRawHandle, OwnedHandle},
-        ptr,
-    };
-    use windows_sys::Win32::{
-        Foundation::LocalFree,
-        Security::{
-            EqualSid, GetSecurityDescriptorControl, GetSecurityDescriptorDacl, GetTokenInformation,
-            TokenUser, ACL, TOKEN_QUERY, TOKEN_USER,
-        },
-        Storage::FileSystem::{GetFileInformationByHandle, BY_HANDLE_FILE_INFORMATION},
-        System::Threading::{GetCurrentProcess, OpenProcessToken},
-    };
-    #[link(name = "advapi32")]
-    extern "system" {
-        fn ConvertStringSecurityDescriptorToSecurityDescriptorW(
-            text: *const u16,
-            revision: u32,
-            descriptor: *mut *mut c_void,
-            length: *mut u32,
-        ) -> i32;
-        fn GetSecurityInfo(
-            handle: *mut c_void,
-            kind: i32,
-            information: u32,
-            owner: *mut *mut c_void,
-            group: *mut *mut c_void,
-            dacl: *mut *mut ACL,
-            sacl: *mut *mut ACL,
-            descriptor: *mut *mut c_void,
-        ) -> u32;
-        fn SetSecurityInfo(
-            handle: *mut c_void,
-            kind: i32,
-            information: u32,
-            owner: *mut c_void,
-            group: *mut c_void,
-            dacl: *const ACL,
-            sacl: *const ACL,
-        ) -> u32;
-    }
-    struct Descriptor(*mut c_void);
-    impl Drop for Descriptor {
-        fn drop(&mut self) {
-            // SAFETY: Windows returned this LocalAlloc-owned descriptor.
-            unsafe {
-                LocalFree(self.0);
-            }
-        }
-    }
-    fn descriptor(directory: bool) -> Result<Descriptor> {
-        let text = if directory {
-            "D:P(A;OICI;FA;;;OW)"
-        } else {
-            "D:P(A;;FA;;;OW)"
-        };
-        let text: Vec<u16> = text.encode_utf16().chain(Some(0)).collect();
-        let mut sd = ptr::null_mut();
-        // SAFETY: terminated input and a live output pointer; revision is SDDL 1.
-        if unsafe {
-            ConvertStringSecurityDescriptorToSecurityDescriptorW(
-                text.as_ptr(),
-                1,
-                &mut sd,
-                ptr::null_mut(),
-            )
-        } == 0
-        {
-            return Err(fail("model_receive_private_storage"));
-        }
-        Ok(Descriptor(sd))
-    }
-    fn dacl(sd: &Descriptor) -> Result<*mut ACL> {
-        let mut present = 0;
-        let mut defaulted = 0;
-        let mut acl = ptr::null_mut();
-        // SAFETY: descriptor is owned and valid; outputs are initialized by Win32.
-        if unsafe { GetSecurityDescriptorDacl(sd.0, &mut present, &mut acl, &mut defaulted) } == 0
-            || present == 0
-            || acl.is_null()
-        {
-            return Err(fail("model_receive_private_storage"));
-        }
-        Ok(acl)
-    }
-    pub(super) fn protect(file: &File, directory: bool) -> Result<()> {
-        let expected = descriptor(directory)?;
-        let acl = dacl(&expected)?;
-        // SAFETY: live file handle and ACL; protect the DACL against inheritance.
-        if unsafe {
-            SetSecurityInfo(
-                file.as_raw_handle(),
-                1,
-                0x80000004,
-                ptr::null_mut(),
-                ptr::null_mut(),
-                acl,
-                ptr::null(),
-            )
-        } != 0
-        {
-            return Err(fail("model_receive_private_storage"));
-        }
-        verify(file, directory)
-    }
-    fn current_owner(owner: *mut c_void) -> Result<()> {
-        let mut token = ptr::null_mut();
-        // SAFETY: pseudo process handle and a live output pointer.
-        if unsafe { OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &mut token) } == 0 {
-            return Err(fail("model_receive_private_storage"));
-        }
-        // SAFETY: successful OpenProcessToken transfers a new owned handle.
-        let token = unsafe { OwnedHandle::from_raw_handle(token) };
-        let mut size = 0;
-        // SAFETY: the first call only queries the required buffer length.
-        unsafe {
-            GetTokenInformation(
-                token.as_raw_handle(),
-                TokenUser,
-                ptr::null_mut(),
-                0,
-                &mut size,
-            );
-        }
-        if size < std::mem::size_of::<TOKEN_USER>() as u32 || size > 65536 {
-            return Err(fail("model_receive_private_storage"));
-        }
-        let mut buffer = vec![0usize; (size as usize).div_ceil(std::mem::size_of::<usize>())];
-        // SAFETY: buffer is aligned for TOKEN_USER and has at least size bytes.
-        if unsafe {
-            GetTokenInformation(
-                token.as_raw_handle(),
-                TokenUser,
-                buffer.as_mut_ptr().cast(),
-                size,
-                &mut size,
-            )
-        } == 0
-        {
-            return Err(fail("model_receive_private_storage"));
-        }
-        // SAFETY: successful TokenUser query initialized this aligned structure.
-        let sid = unsafe { (*(buffer.as_ptr().cast::<TOKEN_USER>())).User.Sid };
-        // SAFETY: both SIDs originate from successful Windows security queries.
-        if owner.is_null() || unsafe { EqualSid(owner, sid) } == 0 {
-            return Err(fail("model_receive_private_storage"));
-        }
-        Ok(())
-    }
-    pub(super) fn verify(file: &File, directory: bool) -> Result<()> {
-        let expected = descriptor(directory)?;
-        let expected_acl = dacl(&expected)?;
-        let mut owner = ptr::null_mut();
-        let mut acl = ptr::null_mut();
-        let mut sd = ptr::null_mut();
-        // SAFETY: live handle and output pointers; request owner and DACL only.
-        if unsafe {
-            GetSecurityInfo(
-                file.as_raw_handle(),
-                1,
-                5,
-                &mut owner,
-                ptr::null_mut(),
-                &mut acl,
-                ptr::null_mut(),
-                &mut sd,
-            )
-        } != 0
-        {
-            return Err(fail("model_receive_private_storage"));
-        }
-        let sd = Descriptor(sd);
-        current_owner(owner)?;
-        let mut control = 0;
-        let mut revision = 0;
-        // SAFETY: live security descriptor and valid output pointers.
-        if unsafe { GetSecurityDescriptorControl(sd.0, &mut control, &mut revision) } == 0
-            || control & 0x1000 == 0
-            || acl.is_null()
-        {
-            return Err(fail("model_receive_private_storage"));
-        }
-        // SAFETY: successful security queries guarantee valid ACL headers and
-        // AclSize-byte buffers, both kept alive by their descriptor guards.
-        let equal = unsafe {
-            let a = std::slice::from_raw_parts(acl.cast::<u8>(), (*acl).AclSize as usize);
-            let b = std::slice::from_raw_parts(
-                expected_acl.cast::<u8>(),
-                (*expected_acl).AclSize as usize,
-            );
-            a == b
-        };
-        if !equal {
-            return Err(fail("model_receive_private_storage"));
-        }
-        Ok(())
-    }
-    pub(super) fn single_link(file: &File) -> Result<()> {
-        let mut info = std::mem::MaybeUninit::<BY_HANDLE_FILE_INFORMATION>::uninit();
-        // SAFETY: live file handle and writable output storage.
-        if unsafe { GetFileInformationByHandle(file.as_raw_handle(), info.as_mut_ptr()) } == 0 {
-            return Err(fail("model_receive_private_storage"));
-        }
-        // SAFETY: successful query initialized the output.
-        if unsafe { info.assume_init() }.nNumberOfLinks != 1 {
-            return Err(fail("model_receive_private_storage"));
-        }
-        Ok(())
-    }
-}
-
 #[path = "model_receive_mapping_proof_v2.rs"]
 mod mapping_proof;
 pub use mapping_proof::AppliedMappingReceiptProofV2;

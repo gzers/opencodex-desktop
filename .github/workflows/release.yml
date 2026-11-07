@@ -123,7 +123,7 @@ jobs:
           releaseBody: ${{ steps.notes.outputs.body }}
           releaseDraft: true
           prerelease: true
-          args: --config tauri.updater.conf.json --config tauri.runtime-bundle.conf.json ${{ matrix.args }}
+          args: --features custom-protocol --config tauri.updater.conf.json --config tauri.runtime-bundle.conf.json ${{ matrix.args }}
 
       - name: Verify sealed macOS application bundle and packaged resources
         if: runner.os == 'macOS'

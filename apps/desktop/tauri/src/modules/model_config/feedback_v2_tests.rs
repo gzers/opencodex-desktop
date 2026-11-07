@@ -606,6 +606,7 @@ fn scoped_restore_real_status_preserves_original_restore_progress_without_import
         status: RestoreStatusV2::Partial,
         completed_groups: vec![],
         refresh_file_snapshot: false,
+        refresh_sync_scope: false,
         failure_code: Some("raw-secret-error".into()),
     };
     assert_eq!(

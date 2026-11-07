@@ -19,6 +19,8 @@ pub struct Network<'a> {
 }
 impl Network<'_> {
     pub async fn list(&self) -> SyncResult<BTreeSet<String>> {
+        #[cfg(all(test, windows))]
+        let _timing = super::TestPhaseTiming::start("network-list");
         let _permit = self
             .slots
             .acquire()
@@ -65,6 +67,8 @@ impl Network<'_> {
         max: usize,
         step: Step,
     ) -> SyncResult<Vec<u8>> {
+        #[cfg(all(test, windows))]
+        let _timing = super::TestPhaseTiming::start("network-get");
         let _permit = self
             .slots
             .acquire()
@@ -94,6 +98,8 @@ impl Network<'_> {
         Ok(response.body)
     }
     pub async fn put(&self, path: &SyncRelativePath, bytes: &[u8], step: Step) -> SyncResult<()> {
+        #[cfg(all(test, windows))]
+        let _timing = super::TestPhaseTiming::start("network-put");
         let max = if step == Step::PayloadPut {
             self.limits.payload_bytes
         } else {
@@ -422,6 +428,8 @@ fn validate_branch(
     Ok(heads)
 }
 pub async fn observe(net: &Network<'_>, store: &Store) -> SyncResult<Graph> {
+    #[cfg(all(test, windows))]
+    let _timing = super::TestPhaseTiming::start("graph-observe-with-store-lock");
     net.limits.validate()?;
     require_digest(&net.connection.binding_id)?;
     let key = format!("seen-{}", &net.connection.binding_id[7..]);

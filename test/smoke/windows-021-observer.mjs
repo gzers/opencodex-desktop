@@ -25,7 +25,7 @@ export function assert021IpcSafety(commands,writes=[],extraReads=[]){
  const allowed=new Set([...reads,...writes,...extraReads])
  for(const command of commands)assert(allowed.has(command),'Unexpected native command in bounded 021 probe: '+command)
 }
-export async function observe021Ipc({call,evaluate,invoke}){
+export async function observe021Ipc({call,evaluate,invoke},safety=assert021IpcSafety){
  await call('Debugger.enable')
  await evaluate('(()=>{if(globalThis.'+TRACE+')throw Error("021 IPC observer already installed");globalThis.'+TRACE+'={commands:[],invoke:window.__TAURI_INTERNALS__.invoke};return true})()')
  let breakpointId
@@ -51,7 +51,7 @@ export async function observe021Ipc({call,evaluate,invoke}){
    try{
     const observation=await evaluate('({commands:globalThis.'+TRACE+'.commands,unchanged:globalThis.'+TRACE+'.invoke===window.__TAURI_INTERNALS__.invoke})')
     assert(observation.unchanged,'021 probe replaced real IPC')
-    assert021IpcSafety(observation.commands,writes,extraReads)
+    safety(observation.commands,writes,extraReads)
     return {method:'non-pausing CDP function breakpoint; real-command sentinel',commands:observation.commands,invokeUnchanged:true}
    }finally{
     await call('Debugger.removeBreakpoint',{breakpointId})

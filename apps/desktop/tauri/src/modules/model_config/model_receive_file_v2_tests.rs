@@ -696,12 +696,14 @@ fn real_transaction_pending_resumes_same_frozen_images_and_commits_receipt_last(
     std::fs::write(&journal_path, canonical_bytes(&journal).unwrap()).unwrap();
     let marker = json!({"version":2,"id":plan["id"],"binding":plan["binding"],"planDigest":digest(&canonical_bytes(&plan).unwrap())});
     let marker = json!({"checksum":digest(&canonical_bytes(&marker).unwrap()),"value":marker});
-    std::fs::write(
-        f.host
+    crate::infrastructure::platform::create_new_private_file(
+        &f.host
             .root
             .join("manager-state/model-transaction-v2.pending.json"),
-        canonical_bytes(&marker).unwrap(),
+        0o600,
     )
+    .unwrap()
+    .write_all(&canonical_bytes(&marker).unwrap())
     .unwrap();
     restrict(
         &f.host
@@ -1156,7 +1158,7 @@ fn copied_receipt_from_another_root_cannot_claim_local_application() {
     let h = a.apply(OP, &o, &selection(), false);
     let b = Fixture::new();
     let dir = b.host.dir(OP).unwrap();
-    std::fs::create_dir_all(&dir).unwrap();
+    crate::infrastructure::platform::create_private_dir_all(&dir, 0o700).unwrap();
     restrict(&dir, true).unwrap();
     publish(
         &b.host.root,
@@ -1201,7 +1203,10 @@ fn eight_target_transaction_recovery_finishes_mapping_and_receipt_together() {
         .host
         .root
         .join("manager-state/model-transaction-v2.pending.json");
-    std::fs::write(&pending, canonical_bytes(&marker).unwrap()).unwrap();
+    crate::infrastructure::platform::create_new_private_file(&pending, 0o600)
+        .unwrap()
+        .write_all(&canonical_bytes(&marker).unwrap())
+        .unwrap();
     restrict(&pending, false).unwrap();
     f.host.apply_once(OP, &o, &h, false).unwrap();
     assert_eq!(
@@ -1260,7 +1265,10 @@ fn pending_recovery_refuses_unknown_external_target_value_without_overwrite() {
         .host
         .root
         .join("manager-state/model-transaction-v2.pending.json");
-    std::fs::write(&pending, canonical_bytes(&marker).unwrap()).unwrap();
+    crate::infrastructure::platform::create_new_private_file(&pending, 0o600)
+        .unwrap()
+        .write_all(&canonical_bytes(&marker).unwrap())
+        .unwrap();
     restrict(&pending, false).unwrap();
     std::fs::write(
         f.host.home.join("config.json"),
@@ -1734,4 +1742,26 @@ fn backup_images_require_actual_protection_and_keep_original_before_after_withou
     );
     let other = ModelApplyPlanHandle::new(digest(b"wrong handle")).unwrap();
     assert!(f.host.protected_images(OP, &other).is_err());
+}
+
+#[test]
+fn receive_storage_keeps_shared_private_creation_authority_for_later_operations() {
+    let f = Fixture::new();
+    let directory = f.host.root.join("private-storage-regression");
+    crate::infrastructure::platform::create_private_dir_all(&directory, 0o700).unwrap();
+    restrict(&directory, true).unwrap();
+    publish(&f.host.root, &directory.join("first.bin"), b"first image").unwrap();
+    // A second operation must admit the directory created by the first one.
+    crate::infrastructure::platform::create_private_dir_all(&directory, 0o700).unwrap();
+    private(&directory, true).unwrap();
+    publish(&f.host.root, &directory.join("second.bin"), b"second image").unwrap();
+    private(&directory.join("first.bin"), false).unwrap();
+    assert_eq!(
+        std::fs::read(directory.join("first.bin")).unwrap(),
+        b"first image"
+    );
+    assert_eq!(
+        std::fs::read(directory.join("second.bin")).unwrap(),
+        b"second image"
+    );
 }

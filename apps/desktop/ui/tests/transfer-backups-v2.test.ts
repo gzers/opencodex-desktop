@@ -4,6 +4,8 @@ import TransferBackups from '@/features/backup/TransferBackups.vue'
 import {transferBackupV2Api,type BackupStatusV2,type RestorePreviewV2,type RestoreReceiptV2,type RestoreOperationV2} from '@/features/backup/api-v2'
 import {useTransferBackupsV2Store} from '@/features/backup/transfer-backups-v2'
 import {useAppStore} from '@/stores/app'
+import {useConfigSyncV2Store} from '@/features/sync/store-v2'
+import {configV2Api,emptySelectionV2} from '@/features/sync/api-v2'
 import {workspaceBackend,workspaceId as id,workspaceHash as hash,copyWorkspace as copy,deferredWorkspace} from './helpers/modelWorkspaceV2'
 import type {FileSnapshotV2} from '@/features/models/api-v2'
 const ipc=vi.hoisted(()=>vi.fn())
@@ -39,4 +41,27 @@ describe('actual scope-backup v2 consumer with deterministic owner receipts',()=
  it('keeps the actual applied receipt when loading the saved model facts fails and retries only readback',async()=>{await store.load();await store.choose(store.rows[0]!);vi.spyOn(models,'reloadSavedFacts').mockRejectedValueOnce(new Error('snapshot read failed'));await store.restore();expect(store.active!.receipt?.status).toBe('applied');expect(store.active!.refreshError).toContain('snapshot read failed');expect(calls('transfer_v2_backup_restore')).toHaveLength(1);await store.refreshSaved();expect(store.active!.refreshError).toBe('');expect(calls('transfer_v2_backup_restore')).toHaveLength(1);expect(models.file!.savedPolicy.channels[0]!.label).toBe('Restored original channel');expect(calls('model_v2_begin_draft')).toHaveLength(0)})
  it('retains newer local input during a result readback and never invokes the v1 acceptance adapter',async()=>{await store.load();await store.choose(store.rows[0]!);const pending=deferredWorkspace<FileSnapshotV2>(),snapshot=vi.spyOn(models,'reloadSavedFacts');snapshot.mockImplementationOnce(async()=>{const task=pending.promise;models.queueChannel({kind:'rename',channelId:id('a'),name:'later after restore'});await task;throw new Error('新的明确输入保持')});const task=store.restore();await flushPromises();pending.resolve(copy(backend.current));await task;expect(store.active!.receipt?.status).toBe('applied');expect(store.active!.refreshError).toContain('明确输入保持');expect(models.channels[0]!.label).toBe('later after restore');expect(ipc.mock.calls.every(c=>!['list_transfer_backups','preview_transfer_restore','restore_transfer_backup','model_file_snapshot','model_policy_apply'].includes(String(c[0])))).toBe(true)})
  it.each(['wrong-restore','wrong-operation','extra-group','incomplete-applied'])('rejects %s receipts and retains the reviewed original plan for audit',async invalid=>{await store.load();await store.choose(store.rows[0]!);const value=receipt();if(invalid==='wrong-restore')value.restoreId=id('other');if(invalid==='wrong-operation')value.originalOperationId=id('other');if(invalid==='extra-group')value.completedGroups.push('unknown');if(invalid==='incomplete-applied')value.completedGroups=['channels'];vi.spyOn(transferBackupV2Api,'restore').mockResolvedValueOnce(value);await store.restore();expect(store.active!.receipt).toBeNull();expect(store.active!.preview).toEqual(plan());expect(store.active!.error).toContain('身份或完成范围不完整');expect(calls('model_v2_file_snapshot')).toHaveLength(0)})
+ it('refreshes only persisted local sync scope after restore and invalidates a stale preview without network or saves',async()=>{
+  const sync=useConfigSyncV2Store(),old=emptySelectionV2();old.manager.extensions=true;old.manager.preferences=true
+  sync.setScope({selection:old,mcpClients:{},assetsReviewed:false})
+  const next=copy(old);next.manager.extensions=false
+  const read=vi.spyOn(configV2Api,'readScope').mockResolvedValue({selection:next,mcpClients:{},assetsReviewed:false})
+  const catalog=vi.spyOn(configV2Api,'catalog'),save=vi.spyOn(configV2Api,'saveScope')
+  vi.spyOn(transferBackupV2Api,'restore').mockResolvedValue({...receipt(),refreshSyncScope:true})
+  await store.load();await store.choose(store.rows[0]!);await store.restore()
+  expect(read).toHaveBeenCalledTimes(1);expect(sync.scope.selection.manager.extensions).toBe(false)
+  expect(sync.scope.selection.manager.preferences).toBe(true);expect(sync.previewStale).toBe(true)
+  expect(catalog).not.toHaveBeenCalled();expect(save).not.toHaveBeenCalled()
+  expect(store.active!.receipt!.status).toBe('applied');expect(store.active!.refreshError).toBe('')
+ })
+ it('retains applied restore receipt if persisted scope cannot be read and retries readback without restoring again',async()=>{
+  const read=vi.spyOn(configV2Api,'readScope').mockRejectedValueOnce(new Error('scope readback failed')).mockResolvedValue(null)
+  const restore=vi.spyOn(transferBackupV2Api,'restore').mockResolvedValue({...receipt(),refreshSyncScope:true})
+  await store.load();await store.choose(store.rows[0]!);await store.restore()
+  expect(store.active!.receipt!.status).toBe('applied');expect(store.active!.refreshError).toContain('scope readback failed')
+  const sync=useConfigSyncV2Store();await sync.prepare();await sync.persistScope();expect(sync.error).toContain('尚未读回');expect(calls('config_v2_preview')).toHaveLength(0);expect(calls('config_v2_save_scope')).toHaveLength(0)
+  await store.refreshSaved();expect(read).toHaveBeenCalledTimes(2);expect(restore).toHaveBeenCalledTimes(1)
+  expect(store.active!.refreshError).toBe('')
+ })
+
 })

@@ -43,3 +43,15 @@ it('workspace reuses the object tree and credentials aside, preserving false rev
  const w=mount(ConfigSyncPreviewV2,{props:{open:false,preview:null,workspace:true,catalog:value,scope:value.selected},global:{stubs:{UiDialog:dialog,UiSelectField:true}}})
  try{expect(w.findComponent({name:'ObjectScopeTree'}).exists()).toBe(true);expect(w.find('.sync-credentials').exists()).toBe(true);expect(w.text()).not.toMatch(/已核对所选|本次口令/);expect(w.get('.sync-search input').attributes('placeholder')).toBe('搜索配置对象');expect(w.get('.sync-advanced input').element).toHaveProperty('checked',true);expect(w.get('.sync-advanced').attributes('open')).toBeUndefined();expect(w.text()).toContain('默认渠道和渠道组顺序');expect(w.findAll('button').some(b=>b.text()==='连接设置')).toBe(false);await w.findAll('button').find(b=>b.text()==='同步')!.trigger('click');expect(w.emitted('prepare')).toEqual([[null,null]]);expect(w.emitted('review')).toBeUndefined();expect(value.selected.assetsReviewed).toBe(false)}finally{w.unmount()}
 })
+
+it('cloud-only MCP remains unchecked until explicit exact source selection and supports managed download after restore',async()=>{
+ const value=catalog(),mcp={kind:'mcp' as const,id:'cloud-only',label:'Cloud MCP',availableLocal:false,availableCloud:true,modelIds:[],models:[],familyIds:[],revisions:[],defaultRevision:null,secretAvailable:false}
+ value.entries.push(mcp);value.mcpSources=[{name:mcp.id,sources:[{source:'managed',definitionDigest:hash(8)}],differingFields:[]}]
+ ipc.mockResolvedValueOnce(value);const store=useConfigSyncV2Store();await store.loadCatalog()
+ expect(store.selected(mcp)).toBe(false);store.toggleEntry(mcp,true);expect(store.selected(mcp)).toBe(false)
+ store.setMcpClient(mcp.id,'managed');store.toggleEntry(mcp,true)
+ expect(store.scope.selection.mcpSources).toEqual([{name:mcp.id,definitionDigest:hash(8)}])
+ expect(store.scope.mcpClients[mcp.id]).toBe('managed');expect(ipc.mock.calls.some(c=>c[0]==='config_v2_confirm')).toBe(false)
+ const w=mount(ConfigSyncPreviewV2,{props:{open:false,preview:null,workspace:true,catalog:value,scope:store.scope},global:{stubs:{UiDialog:dialog,UiSelectField:true}}})
+ try{w.findComponent({name:'ObjectScopeTree'}).findComponent({name:'UiTreeTable'}).vm.$emit('activate',JSON.stringify(['mcp',mcp.id]));await flushPromises();const option=w.findAllComponents(UiSelectField).flatMap(field=>field.props('options')??[]).find(option=>option.value==='managed');expect(option?.label).toBe('云端配置（下载到本机托管）')}finally{w.unmount()}
+})

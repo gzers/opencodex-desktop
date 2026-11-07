@@ -158,6 +158,20 @@ pub trait TrustedMappingOwnerV2: Send + Sync {
         objects: SavedObjects,
         binding: &LocalTargetBindingV2,
     ) -> ModelResult<SavedObjects>;
+    /// Owners can combine repeated admission captures within one gate. The
+    /// default preserves independent-provider behavior and all before/after
+    /// checks; production still validates the supplied provider's exact facts.
+    fn capture_projected(
+        &self,
+        local: &dyn CaptureProviderV2,
+        binding: &LocalTargetBindingV2,
+    ) -> ModelResult<HostCapturedV2> {
+        self.verify(binding)?;
+        let mut captured = local.capture_saved(&binding.local_scope)?;
+        captured.objects = self.project_saved_to_remote(captured.objects, binding)?;
+        self.verify(binding)?;
+        Ok(captured)
+    }
 }
 pub struct MappedCaptureProviderV2 {
     local: Arc<dyn CaptureProviderV2>,
@@ -184,12 +198,10 @@ impl CaptureProviderV2 for MappedCaptureProviderV2 {
         self.binding.validate(remote).map_err(|_| {
             super::schema::invalid("host_mapping_changed", "远端与本机选区映射已变化")
         })?;
-        self.mapping.verify(&self.binding)?;
-        let local = self.local.capture_saved(&self.binding.local_scope)?;
-        let objects = self
+        let local = self
             .mapping
-            .project_saved_to_remote(local.objects, &self.binding)?;
-        self.mapping.verify(&self.binding)?;
+            .capture_projected(self.local.as_ref(), &self.binding)?;
+        let objects = local.objects;
         let saved_source_digest=digest(&super::sync_v2::store::canonical(&serde_json::json!({"domain":"OCXD_MAPPED_SAVED_SOURCE_V2","localSaved":local.source_guard.saved_source_digest,"targetBinding":self.binding.digest})).map_err(|_|super::schema::invalid("host_mapping_changed","目标事实无法核对"))?);
         let scope_digest=digest(&super::sync_v2::store::canonical(&serde_json::json!({"domain":"OCXD_MAPPED_SCOPE_V2","localScopeGuard":local.source_guard.scope_digest,"targetBinding":self.binding})).map_err(|_|super::schema::invalid("host_mapping_changed","目标范围无法核对"))?);
         Ok(HostCapturedV2 {
@@ -309,6 +321,10 @@ impl CurrentSourceProviderV2 {
     }
     pub fn current_source(&self) -> SyncResult<SourceGuard> {
         Ok(self.current()?.source_guard)
+    }
+    pub fn source_context(&self) -> SyncResult<(Digest, SourceGuard)> {
+        let current = self.current()?;
+        Ok((current.root_revision, current.source_guard))
     }
     pub fn root_revision(&self) -> SyncResult<Digest> {
         Ok(self.current()?.root_revision)

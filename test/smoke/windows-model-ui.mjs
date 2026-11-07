@@ -35,8 +35,9 @@ export function nativeModelKeyboardChecksRequired(version){
  return ['0.2.20','0.2.21','0.2.22'].includes(version)
 }
 export function nativeModelUiContract(version){
- nativeModelKeyboardChecksRequired(version)
- const publicDialogs=['0.2.21','0.2.22'].includes(version)
+ // Public runtime/path dialogs also serve 023; its V2 model acceptance remains separate.
+ if(version!=='0.2.23')nativeModelKeyboardChecksRequired(version)
+ const publicDialogs=['0.2.21','0.2.22','0.2.23'].includes(version)
  return {publicDialogs,confirmation:publicDialogs?'dialog.app-modal-dialog[open]':'.modal-mask',close:publicDialogs?'dialog[open] > .ui-dialog-header':'dialog[open]'}
 }
 export async function confirmNativeTemplateDefault({wait,click},version){

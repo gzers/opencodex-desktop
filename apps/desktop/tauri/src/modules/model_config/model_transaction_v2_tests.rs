@@ -2094,3 +2094,30 @@ fn interrupted_protected_restore_keeps_mode_and_replays_only_the_exact_original_
     assert!(!f.root.join(POLICY).exists());
     assert!(!f.pending().exists());
 }
+
+#[test]
+fn retained_private_directory_can_be_reopened_without_rewriting_its_acl() {
+    let f = Fixture::new();
+    let root = Dir::anchor(&f.root).unwrap();
+    let first = root.child("retained-private", true, true).unwrap().unwrap();
+    let mut image = first.open("image.bin", true).unwrap().unwrap();
+    image.write_all(b"owned image").unwrap();
+    image.sync_all().unwrap();
+    drop(image);
+    let second = root.child("retained-private", true, true).unwrap().unwrap();
+    assert_eq!(
+        second
+            .read("image.bin", 64, true)
+            .unwrap()
+            .unwrap()
+            .as_slice(),
+        b"owned image"
+    );
+    #[cfg(windows)]
+    {
+        crate::infrastructure::windows_private_create::verify_private_handle(&first.handle, true)
+            .unwrap();
+        crate::infrastructure::windows_private_create::verify_private_handle(&second.handle, true)
+            .unwrap();
+    }
+}

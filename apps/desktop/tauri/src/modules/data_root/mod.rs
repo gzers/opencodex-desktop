@@ -6,6 +6,7 @@
 pub mod bootstrap;
 pub mod layout;
 pub mod migration;
+pub(crate) mod removal_gate;
 pub(crate) mod startup_v2;
 #[cfg(any(windows, test))]
 pub mod uninstall;

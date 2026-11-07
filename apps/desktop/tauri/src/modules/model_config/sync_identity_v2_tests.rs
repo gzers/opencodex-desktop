@@ -374,6 +374,188 @@ fn first_empty_device_full_remote_scope_keeps_only_actual_local_capture_sources(
 }
 
 #[test]
+fn mapped_capture_checks_fresh_source_before_and_after_without_nested_recapture() {
+    let f = Fixture::new(true);
+    let preview = f
+        .owner
+        .freeze_preview(DirectionV2::Upload, request(&f.local_id()), None)
+        .unwrap();
+    let local = Arc::new(
+        host::SavedCaptureProviderV2::new(
+            f.root.clone(),
+            f.home.clone(),
+            preview.local_capture_request(),
+            Arc::new(Credentials),
+        )
+        .unwrap(),
+    );
+    let mapped =
+        host::MappedCaptureProviderV2::new(local, f.owner.clone(), preview.binding().clone())
+            .unwrap();
+    CAPTURE_COUNT.with(|count| count.set(0));
+    mapped
+        .capture_saved(&preview.binding().remote_scope)
+        .unwrap();
+    assert_eq!(
+        CAPTURE_COUNT.with(|count| count.get()),
+        2,
+        "one owner snapshot on each side of the supplied local source"
+    );
+    // The following gate must perform new reads and reject source drift.
+    let path = f.home.join("config.json");
+    let mut raw: Value = serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+    raw["providers"]["fixture"]["baseUrl"] = json!("https://changed.invalid/v1");
+    std::fs::write(path, serde_json::to_vec(&raw).unwrap()).unwrap();
+    assert!(mapped
+        .capture_saved(&preview.binding().remote_scope)
+        .is_err());
+}
+
+#[test]
+fn mapped_capture_rejects_provider_guard_root_material_and_mid_capture_source_changes() {
+    struct ChangedSource {
+        inner: host::SavedCaptureProviderV2,
+        home: PathBuf,
+        fault: &'static str,
+    }
+    impl CaptureProviderV2 for ChangedSource {
+        fn capture_saved(
+            &self,
+            selection: &super::super::objects_overlay_v2::SelectionV2,
+        ) -> ModelResult<host::HostCapturedV2> {
+            let mut actual = self.inner.capture_saved(selection)?;
+            match self.fault {
+                "guard" => {
+                    actual.source_guard.saved_source_digest = schema_v2::digest(b"forged guard")
+                }
+                "root" => actual.root_revision = schema_v2::digest(b"another root"),
+                "material" => {
+                    let mut parts = actual.objects.into_captured();
+                    parts.models.payload.policy.as_mut().unwrap().channels[0].label =
+                        "fabricated label".into();
+                    parts.models.digest = hash(&parts.models.payload)?;
+                    actual.objects = SavedObjects::capture(parts, Some(&PayloadAuthorizationV2))?;
+                }
+                "during" => {
+                    let path = self.home.join("config.json");
+                    let mut raw: Value =
+                        serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+                    raw["providers"]["fixture"]["baseUrl"] = json!("https://changed.invalid/v1");
+                    std::fs::write(path, serde_json::to_vec(&raw).unwrap()).unwrap();
+                }
+                _ => unreachable!(),
+            }
+            Ok(actual)
+        }
+    }
+    for fault in ["guard", "root", "material", "during"] {
+        let f = Fixture::new(true);
+        let preview = f
+            .owner
+            .freeze_preview(DirectionV2::Upload, request(&f.local_id()), None)
+            .unwrap();
+        let local = Arc::new(ChangedSource {
+            inner: host::SavedCaptureProviderV2::new(
+                f.root.clone(),
+                f.home.clone(),
+                preview.local_capture_request(),
+                Arc::new(Credentials),
+            )
+            .unwrap(),
+            home: f.home.clone(),
+            fault,
+        });
+        let mapped =
+            host::MappedCaptureProviderV2::new(local, f.owner.clone(), preview.binding().clone())
+                .unwrap();
+        assert!(
+            mapped
+                .capture_saved(&preview.binding().remote_scope)
+                .is_err(),
+            "{fault}"
+        );
+    }
+}
+
+#[test]
+fn receive_mcp_binds_local_selection_to_exact_cloud_definition_and_rejects_unknown_digest() {
+    let f = Fixture::new(false);
+    let (cloud, mut request) = full_cloud(&f);
+    request.selection = super::super::objects_overlay_v2::SelectionV2 {
+        mcp_sources: request.selection.mcp_sources,
+        ..Default::default()
+    };
+    std::fs::create_dir(f.home.join(".codex")).unwrap();
+    std::fs::write(
+        f.home.join(".codex/config.toml"),
+        "[mcp_servers.fixture]\ncommand='synthetic-local-command'\n",
+    )
+    .unwrap();
+    request.mcp_clients.insert("fixture".into(), "codex".into());
+    f.owner.local_nonmodel_sources(&mut request).unwrap();
+    let local = request.selection.clone();
+    let mut forged = CaptureRequestV2 {
+        selection: request.selection.clone(),
+        mcp_clients: request.mcp_clients.clone(),
+        assets_reviewed: request.assets_reviewed,
+    };
+    forged.selection.mcp_sources[0].definition_digest = schema_v2::digest(b"unobserved");
+    assert_eq!(
+        code(
+            f.owner
+                .freeze_preview(DirectionV2::Download, forged, Some(&cloud))
+        ),
+        "capture_mcp_source_changed"
+    );
+    let preview = f
+        .owner
+        .freeze_preview(DirectionV2::Download, request, Some(&cloud))
+        .unwrap();
+    assert_eq!(preview.binding().local_scope, local);
+    assert_ne!(
+        preview.binding().remote_scope.mcp_sources,
+        local.mcp_sources
+    );
+    assert_eq!(
+        preview.binding().remote_scope.mcp_sources[0].definition_digest,
+        super::super::objects_overlay_v2::mcp_source_digest(&cloud.partitions().assets.mcps[0])
+            .unwrap()
+    );
+    f.owner.verify(preview.binding()).unwrap();
+}
+
+#[test]
+fn local_only_mcp_remains_available_for_upload_when_cloud_has_other_objects() {
+    let f = Fixture::new(false);
+    let (cloud, mut request) = full_cloud(&f);
+    request.selection = super::super::objects_overlay_v2::SelectionV2 {
+        mcp_sources: request.selection.mcp_sources,
+        ..Default::default()
+    };
+    request.selection.mcp_sources[0].name = "local_only".into();
+    request.mcp_clients = BTreeMap::from([("local_only".into(), "codex".into())]);
+    std::fs::create_dir(f.home.join(".codex")).unwrap();
+    std::fs::write(
+        f.home.join(".codex/config.toml"),
+        "[mcp_servers.local_only]\ncommand='synthetic-local-command'\n",
+    )
+    .unwrap();
+    f.owner.local_nonmodel_sources(&mut request).unwrap();
+    let local = request.selection.clone();
+    let receive = f
+        .owner
+        .freeze_preview(DirectionV2::Download, request, Some(&cloud))
+        .unwrap();
+    assert_eq!(receive.binding().remote_scope, local);
+    let upload = f
+        .owner
+        .freeze_preview(DirectionV2::Upload, receive.local_capture_request(), None)
+        .unwrap();
+    assert_eq!(upload.binding().remote_scope, local);
+    f.owner.verify(upload.binding()).unwrap();
+}
+
+#[test]
 fn existing_nonmodel_sources_keep_actual_local_mcp_digest_and_explicit_client_guard() {
     let f = Fixture::new(false);
     let (cloud, mut request) = full_cloud(&f);

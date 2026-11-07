@@ -118,7 +118,12 @@ function Add-TwoUserDescendants($Root,[Collections.Generic.Dictionary[int,object
 function Stop-TwoUserTracked($Fact) {
  $p=Get-Process -Id $Fact.pid -ErrorAction SilentlyContinue
  if(!$p){return}
- try{$now=Get-TwoUserProcessFact $p $Fact.sid
+ try{
+  # A retained Process object can observe termination between enumeration and
+  # identity query. An exited object needs no kill; a still-live unknown object
+  # remains a refusal, including a reused PID or another SID.
+  if($p.HasExited){return}
+  try{$now=Get-TwoUserProcessFact $p $Fact.sid}catch{if($p.HasExited){return};throw}
   if($now.creationTicks -cne $Fact.creationTicks -or $now.path -ine $Fact.path){throw 'Refusing changed PID/SID/image/creation cleanup'}
   $p.Kill();if(!$p.WaitForExit(10000)){throw 'Tracked child did not exit'}
  }finally{$p.Dispose()}
@@ -323,7 +328,7 @@ try{
  const url=new URL(target.webSocketDebuggerUrl);assert(['127.0.0.1','localhost','[::1]'].includes(url.hostname));assert.equal(url.port,new URL(endpoint).port);
  ws=new WebSocket(target.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.addEventListener('open',r,{once:true});ws.addEventListener('error',()=>j(Error('CDP unavailable')),{once:true});setTimeout(()=>j(Error('CDP open deadline')),10000).unref();});
  ws.addEventListener('message',e=>{const v=JSON.parse(e.data);const p=pending.get(v.id);if(p){pending.delete(v.id);v.error?p.reject(Error('CDP rejected')):p.resolve(v.result);}});
- if(commandFile){await runtimeCommand(JSON.parse(await readFile(commandFile,'utf8')));}
+ if(commandFile&&commandFile!=='--diagnostic-sweep'){await runtimeCommand(JSON.parse(await readFile(commandFile,'utf8')));}
  else {
  let facts;
  for(let i=0;i<120;i++){
@@ -332,13 +337,18 @@ try{
   await new Promise(r=>setTimeout(r,1000));
  }
  assert(facts?.mounted&&facts.textLength>30,'Actual first screen unavailable');assert.equal(facts.about.platform,'Windows');
+ if(process.argv.includes('--diagnostic-sweep')){
+  const environment=await call('Runtime.evaluate',{expression:"(async()=>{try{return {value:await window.__TAURI_INTERNALS__.invoke('discover_environment',{request:null})}}catch(error){return {error:{code:error?.code,message:error?.message}}}})()",awaitPromise:true,returnByValue:true});
+  facts.environment=environment.exceptionDetails?{error:{message:'Actual environment IPC raised an exception'}}:environment.result.value;
+ }
+
  const image=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'first-screen.png'),Buffer.from(image.data,'base64'));
- await writeFile(join(output,'first-screen.json'),JSON.stringify({mounted:true,textLength:facts.textLength,about:facts.about,paths:facts.paths,config:facts.config,cliEnabled:facts.preferences.cliEnabled,runtime:facts.runtime},null,2)+'\n');
- assert.equal(facts.paths.program.consistency,'consistent','NotReady: staged runtime unverified');
- assert.equal(facts.paths.runtimeEntry.status,'valid');assert.equal(facts.paths.runtimePrefix.status,'valid');
+ await writeFile(join(output,'first-screen.json'),JSON.stringify({mounted:true,textLength:facts.textLength,about:facts.about,paths:facts.paths,config:facts.config,cliEnabled:facts.preferences.cliEnabled,runtime:facts.runtime,environment:facts.environment},null,2)+'\n');
+ if(!process.argv.includes('--diagnostic-sweep'))assert.equal(facts.paths.program.consistency,'consistent','NotReady: staged runtime unverified');
+ if(!process.argv.includes('--diagnostic-sweep')){assert.equal(facts.paths.runtimeEntry.status,'valid');assert.equal(facts.paths.runtimePrefix.status,'valid');}
  }
 }catch(error){
- if(commandFile){await writeFile(join(output,'runtime-step.json'),JSON.stringify({result:'fail',failureCode:runtimeFailureCode(error),stage:runtimeStage,publicFacts:runtimePublic})+'\n');process.exitCode=1;}else{throw error;}
+ if(commandFile&&commandFile!=='--diagnostic-sweep'){await writeFile(join(output,'runtime-step.json'),JSON.stringify({result:'fail',failureCode:runtimeFailureCode(error),stage:runtimeStage,publicFacts:runtimePublic})+'\n');process.exitCode=1;}else{throw error;}
 }finally{ws?.close();}
 '@
  $text.Replace('/*RUNTIME_CONTROL*/',(Get-TwoUserRuntimeDriverText))
@@ -543,6 +553,14 @@ function Invoke-TwoUserRuntimeSession($Context,$App,$Ledger,[string]$RuntimePref
   }
  }
 }
+function Invoke-TwoUserSweepCheck([string]$Name,[scriptblock]$Action){
+ if(!$c.diagnosticSweep){return & $Action}
+ $record=[ordered]@{name=$Name;status='fail';accepted=$false;diagnosticOnly=$true;firstError=''}
+ try{$record.evidence=& $Action;$record.status='pass'}catch{$record.firstError=($_.Exception.Message -split "\r?\n",2)[0];$record.errorType=$_.Exception.GetType().FullName}
+ $path=Join-Path $out ('sweep-'+$Name+'.json')
+ if(Test-Path -LiteralPath $path){throw 'Preserve earlier per-user diagnostic record'}
+ Write-TwoUserJson $path $record
+}
 function Invoke-TwoUserChild([string]$InputFile) {
  Assert-TwoUserChildGuard
  $c=Get-Content -LiteralPath $InputFile -Raw|ConvertFrom-Json
@@ -568,11 +586,27 @@ function Invoke-TwoUserChild([string]$InputFile) {
  Write-TwoUserJson (Join-Path $out 'installation-copy.json') $copy
  $exe=Join-Path $installed $c.executableName;$cli=Join-Path $installed 'ocxd.exe'
  $root=Join-Path $nativeProfile '.codex-desktop/desktop';$nativeHome=Join-Path $nativeProfile '.codex-desktop/opencodex/home'
+ # Read-only access facts for the exact actual ordinary profile. No provisioning
+ # or repairs; compare drive-relative prefix and anchored root explicitly.
+ $accessFacts=@()
+ foreach($path in @(([IO.Path]::GetPathRoot($installed).TrimEnd([char]92)),[IO.Path]::GetPathRoot($installed),$nativeProfile,$installed,$root,(Join-Path $installed 'runtime-bundle'),(Join-Path $installed 'runtime-bundle/runtime-bundle.manifest.json'))){
+  try{$file=Get-Item -LiteralPath $path -Force -ErrorAction Stop;$accessFacts+=@{path=$path;exists=$true;resolved=$file.FullName;attributes=$file.Attributes.ToString();directory=$file.PSIsContainer;length=$(if(!$file.PSIsContainer){$file.Length}else{$null})}}
+  catch{$accessFacts+=@{path=$path;exists=$false;errorType=$_.Exception.GetType().FullName;error=$_.Exception.Message}}
+ }
+ $descriptor=Join-Path $installed 'runtime-bundle/runtime-bundle.manifest.json'
+ $descriptorHash=(Get-FileHash -LiteralPath $descriptor).Hash.ToLowerInvariant()
+ $binary=[IO.File]::ReadAllBytes($exe)
+ $pinPresent=[Text.Encoding]::ASCII.GetString($binary).Contains($descriptorHash)
+ Write-TwoUserJson (Join-Path $out 'bundle-read-access.json') @{facts=$accessFacts;descriptorSha256=$descriptorHash;descriptorPinPresentInActualExe=$pinPresent;readOnly=$true}
  $ledger=[Collections.Generic.Dictionary[int,object]]::new();$manager=$null;$runtimeState=@{service=$null;completed=$false;cooperativeStopFailed=$false}
  $result=[ordered]@{ephemeralGuard=$c.ephemeralGuard;sid=$sid;profile=$nativeProfile;processHome=$env:USERPROFILE;localAppData=$env:LOCALAPPDATA;desktopRoot=$root;opencodexHome=$nativeHome;installation=$installed;result='fail';runtimeProxyVerification='not-verified';verifyRuntimePorts=($c.verifyRuntimePorts -eq $true);sandbox=$false}
  $start={
   $listener=[Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback,0);$listener.Start();$port=$listener.LocalEndpoint.Port;$listener.Stop()
   $info=[Diagnostics.ProcessStartInfo]::new();$info.FileName=$exe;$info.WorkingDirectory=$installed;$info.UseShellExecute=$false
+  # PowerShell/.NET can preserve a removed process environment value as empty.
+  # Delete the actual child dictionary keys; empty is not an unset smoke port.
+  foreach($key in @('OPENCODEX_SANDBOX','OPENCODEX_SANDBOX_ROOT','OPENCODEX_WINDOWS_SMOKE_CDP_PORT','HOME','OPENCODEX_HOME','CODEX_HOME','WEBVIEW2_USER_DATA_FOLDER','WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS')){[void]$info.Environment.Remove($key)}
+  if($info.Environment.ContainsKey('OPENCODEX_WINDOWS_SMOKE_CDP_PORT') -or $info.Environment.ContainsKey('OPENCODEX_SANDBOX')){throw 'Native manager child still has test overrides'}
   # Standard WebView2 diagnostics only, NOT the sandbox-only product smoke hook.
   $info.Environment['WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS']="--remote-debugging-address=127.0.0.1 --remote-debugging-port=$port"
   $p=[Diagnostics.Process]::Start($info);$fact=Get-TwoUserProcessFact $p $sid;$ledger[[int]$fact.pid]=$fact
@@ -589,6 +623,7 @@ function Invoke-TwoUserChild([string]$InputFile) {
   foreach($listenerFact in $listeners){$null=Assert-TwoUserLive $ledger[[int]$listenerFact.OwningProcess]}
   $info=[Diagnostics.ProcessStartInfo]::new();$info.FileName=$c.node;$info.UseShellExecute=$false;$info.RedirectStandardOutput=$true;$info.RedirectStandardError=$true
   foreach($a in @((Join-Path $code 'two-user-driver.mjs'),"http://127.0.0.1:$($app.port)",$evidence)){$info.ArgumentList.Add($a)}
+  if($c.diagnosticSweep){$info.ArgumentList.Add('--diagnostic-sweep')}
   $driver=[Diagnostics.Process]::Start($info);$driverFact=Get-TwoUserProcessFact $driver $sid;$ledger[[int]$driverFact.pid]=$driverFact
   $stderr=$driver.StandardError.ReadToEndAsync();$stdout=$driver.StandardOutput.ReadToEndAsync();$deadline=[datetime]::UtcNow.AddSeconds(200)
   while(!$driver.HasExited -and [datetime]::UtcNow -lt $deadline){if(Test-Path -LiteralPath (Join-Path $out 'stop')){throw 'Controller requested stop'};Add-TwoUserDescendants $app.fact $ledger;Start-Sleep -Milliseconds 300}
@@ -603,15 +638,30 @@ function Invoke-TwoUserChild([string]$InputFile) {
   if(!(Test-TwoUserSamePath $facts.paths.desktopRoot.path $root) -or !(Test-TwoUserSamePath $facts.paths.opencodexHome.path $nativeHome)){throw 'Snapshot D/H mismatch'}
   if(!(Test-TwoUserSamePath $facts.paths.installationRoot.path $installed) -or !(Test-TwoUserSamePath $facts.paths.managerExecutable.path $exe)){throw 'Product installation context escaped private copy'}
   $null=Assert-TwoUserUnder $installed (Assert-TwoUserLocalPath (($facts.paths.runtimePrefix.path -replace '^\\\\\?\\','')))
+  if(!$c.diagnosticSweep){
   if($facts.runtime.kind -cne 'managed' -or !(Test-TwoUserSamePath $facts.runtime.path $facts.paths.runtimeEntry.path)){throw 'NotReady: actual runtime source is not the own managed entry'}
+  }
   $appLog=Join-Path $root 'logs/app.log'
   if(!(Test-Path -LiteralPath $appLog) -or !(Get-Content -LiteralPath $appLog -Raw).Contains('commit='+$c.commit)){throw 'NotReady: EXE source commit provenance missing'}
+  if($c.diagnosticSweep){Write-TwoUserJson (Join-Path $out ('observation-'+$phase+'.json')) @{facts=$facts;window=$window;token=$token;manager=$app.fact;diagnosticOnly=$true;accepted=$false}}
   [pscustomobject]@{facts=$facts;window=$window;directory=$evidence;token=$token}
  }
  try{
   # Let the real product initialize structure2 before editing isolated CLI prefs.
   $manager=& $start;$initial=& $screen $manager 'initial'
   if($initial.facts.cliEnabled -ne $false){throw 'Default CLI was enabled'}
+  if($c.diagnosticSweep){
+   Invoke-TwoUserSweepCheck 'private-bundle-supply' {
+    if($initial.facts.paths.program.consistency -cne 'consistent' -or $initial.facts.paths.runtimeEntry.status -cne 'valid' -or $initial.facts.paths.runtimePrefix.status -cne 'valid' -or $initial.facts.runtime.kind -cne 'managed'){throw 'Actual private first-start runtime supply is not consistent/managed'}
+    $initial.facts.paths.program
+   }|Out-Null
+   Invoke-TwoUserSweepCheck 'runtime-readiness' {
+    if($initial.facts.runtime.kind -cne 'managed' -or $initial.facts.environment.value.gate -cne 'ready'){throw ('Actual production readiness refused: '+$initial.facts.environment.error.message)}
+    $initial.facts.environment
+   }|Out-Null
+   Invoke-TwoUserSweepCheck 'path-snapshot' {if(!(Test-TwoUserSamePath $initial.facts.paths.desktopRoot.path $root) -or !(Test-TwoUserSamePath $initial.facts.paths.opencodexHome.path $nativeHome)){throw 'Actual snapshot D/H escaped current Profile'};$initial.facts.paths}|Out-Null
+  }
+
   Add-TwoUserDescendants $manager.fact $ledger
   foreach($fact in @($ledger.Values|Sort-Object {[long]$_.creationTicks} -Descending)){Stop-TwoUserTracked $fact};$ledger.Clear();$manager.process.Dispose()
   $prefs=Join-Path $root 'manager-state/preferences.json'
@@ -626,6 +676,7 @@ function Invoke-TwoUserChild([string]$InputFile) {
   $pointer=Join-Path $root 'manager-location.json';$metadata=Join-Path $root 'manager-state/data-root.json'
   $location=Get-Content -LiteralPath $pointer -Raw|ConvertFrom-Json;$meta=Get-Content -LiteralPath $metadata -Raw|ConvertFrom-Json
   if($location.schemaVersion -ne 1 -or !(Test-TwoUserSamePath $location.activeRoot (Join-Path $nativeProfile '.codex-desktop')) -or $meta.structure_version -cne '2'){throw 'Actual fixed pointer/structure2 missing'}
+  Invoke-TwoUserSweepCheck 'same-user-ipc' {
   $same=Invoke-TwoUserCli $cli @('status','--json');Write-TwoUserJson (Join-Path $out 'same-user-status.json') $same
   $data=Invoke-TwoUserCli $cli @('data-root','show','--json')
   if(!(Test-TwoUserSamePath $data.data.active_data_root $root) -or !(Test-TwoUserSamePath $data.data.opencodex_home $nativeHome)){throw 'Candidate CLI uses another D/H'}
@@ -634,6 +685,8 @@ function Invoke-TwoUserChild([string]$InputFile) {
   try{$own.Connect(5000);[uint32]$serverId=0
    if(![OcxTwoUserWindow]::GetNamedPipeServerProcessId($own.SafePipeHandle.DangerousGetHandle(),[ref]$serverId) -or $serverId -ne $manager.fact.pid){throw 'Actual product pipe server PID differs'}
   }finally{$own.Dispose()}
+  }|Out-Null
+  $pipe=Get-TwoUserPipeName $sid
   Add-Type -AssemblyName System.Security.Cryptography.ProtectedData
   $plain=[Security.Cryptography.RandomNumberGenerator]::GetBytes(32)
   try{
@@ -642,7 +695,8 @@ function Invoke-TwoUserChild([string]$InputFile) {
    if([Convert]::ToBase64String($plain) -cne [Convert]::ToBase64String($ownPlain)){throw 'Own DPAPI readback failed'}
    [Array]::Clear($ownPlain,0,$ownPlain.Length);[IO.File]::WriteAllBytes((Join-Path $out 'synthetic-dpapi.bin'),$cipher)
   }finally{[Array]::Clear($plain,0,$plain.Length)}
-  $result.manager=$manager.fact;$result.window=$live.window;$result.applicationToken=$live.token;$result.pipe=$pipe;$result.defaultCliDisabled=$true;$result.sameUserCli=$true
+  $result.manager=$manager.fact;$result.window=$live.window;$result.applicationToken=$live.token;$result.pipe=$pipe;$result.defaultCliDisabled=$true;$result.sameUserCli=if($c.diagnosticSweep){(Get-Content -LiteralPath (Join-Path $out 'sweep-same-user-ipc.json') -Raw|ConvertFrom-Json).status -ceq 'pass'}else{$true}
+  if($c.diagnosticSweep){$result.accepted=$false;$result.diagnosticOnly=$true;$result.runtimeReady=($live.facts.paths.program.consistency -ceq 'consistent' -and $live.facts.runtime.kind -ceq 'managed' -and $live.facts.environment.value.gate -ceq 'ready')}
   Write-TwoUserJson (Join-Path $out 'ready.json') $result
   $peerFile=Join-Path $out 'peer.json';$deadline=[datetime]::UtcNow.AddSeconds(720)
   while(!(Test-Path -LiteralPath $peerFile)){
@@ -652,23 +706,31 @@ function Invoke-TwoUserChild([string]$InputFile) {
   }
   $peer=Get-Content -LiteralPath $peerFile -Raw|ConvertFrom-Json
   if($peer.sid -ceq $sid -or $peer.pipe -cne (Get-TwoUserPipeName $peer.sid)){throw 'Peer identity differs'}
+  Invoke-TwoUserSweepCheck 'peer-business-data' {
   $peerDataDenied=$false
   try{$peerFileHandle=[IO.File]::Open($peer.privateFile,'Open','Read','ReadWrite');$peerFileHandle.Dispose()}catch [UnauthorizedAccessException]{$peerDataDenied=$true}
   if(!$peerDataDenied){throw 'Other account actual business data was readable'}
   $result.peerBusinessData='access-denied'
+  }|Out-Null
+  Invoke-TwoUserSweepCheck 'cross-user-ipc' {
   $peerStream=[IO.Pipes.NamedPipeClientStream]::new('.',$peer.pipe,[IO.Pipes.PipeDirection]::InOut);$denied=$false
   try{$peerStream.Connect(3000)}catch [UnauthorizedAccessException]{$denied=$true}
   catch [IO.IOException]{if(($_.Exception.HResult -band 0xffff) -eq 5){$denied=$true}else{throw 'NotReady: peer pipe denial unproven'}}
   finally{$peerStream.Dispose()}
   if(!$denied){throw 'Other SID pipe accepted or denial unproven'}
   $result.crossPipe='access-denied-real-token';$result.crossPipeServer=$peer.manager.pid
+  }|Out-Null
+  Invoke-TwoUserSweepCheck 'cross-user-dpapi' {
   $dpapiDenied=$false;$peerBytes=[IO.File]::ReadAllBytes($peer.cipher)
   try{$unexpected=[Security.Cryptography.ProtectedData]::Unprotect($peerBytes,$null,[Security.Cryptography.DataProtectionScope]::CurrentUser);[Array]::Clear($unexpected,0,$unexpected.Length)}catch [Security.Cryptography.CryptographicException]{$dpapiDenied=$true}
   if(!$dpapiDenied){throw 'Other SID synthetic DPAPI accepted'}
   $result.dpapi='own-roundtrip-and-peer-denied-synthetic-subscope-only'
+  }|Out-Null
+  Invoke-TwoUserSweepCheck 'same-sid-single-instance' {
   $before=@{};foreach($f in @($pointer,$metadata)){$before[$f]=(Get-FileHash -LiteralPath $f).Hash}
   $lockFile=Join-Path $root 'manager-state/app.lock';$lockBefore=Get-Item -LiteralPath $lockFile
   $duplicateInfo=[Diagnostics.ProcessStartInfo]::new();$duplicateInfo.FileName=$exe;$duplicateInfo.WorkingDirectory=$installed;$duplicateInfo.UseShellExecute=$false
+  foreach($key in @('OPENCODEX_SANDBOX','OPENCODEX_SANDBOX_ROOT','OPENCODEX_WINDOWS_SMOKE_CDP_PORT','HOME','OPENCODEX_HOME','CODEX_HOME','WEBVIEW2_USER_DATA_FOLDER','WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS')){[void]$duplicateInfo.Environment.Remove($key)}
   $duplicateProcess=[Diagnostics.Process]::Start($duplicateInfo)
   try{[void]$duplicateProcess.Handle
    if(!$duplicateProcess.WaitForExit(20000)){$dupFact=Get-TwoUserProcessFact $duplicateProcess $sid;$ledger[[int]$dupFact.pid]=$dupFact;throw 'Same-SID second Manager remained alive'}
@@ -681,8 +743,9 @@ function Invoke-TwoUserChild([string]$InputFile) {
   $lockAfter=Get-Item -LiteralPath $lockFile
   if($lockBefore.Length -ne $lockAfter.Length -or $lockBefore.LastWriteTimeUtc -ne $lockAfter.LastWriteTimeUtc){throw 'Duplicate changed lock metadata'}
   $result.duplicate=[ordered]@{rejected=$true;secondPid=$duplicatePid;secondExitCode=$duplicateExit;originalPid=$manager.fact.pid;originalWindowUnchanged=$true;pointerMetadataHashUnchanged=$true;lockSizeAndWriteTimeUnchanged=$true;lockContentHash='unavailable-while-byte-range-lock-held'}
-  $result.result='pass-user-isolation';Write-TwoUserJson (Join-Path $out 'checked.json') $result
-  if($c.verifyRuntimePorts -eq $true){
+  }|Out-Null
+  $result.result=if($c.diagnosticSweep){'diagnostic-only'}else{'pass-user-isolation'};Write-TwoUserJson (Join-Path $out 'checked.json') $result
+  if($c.verifyRuntimePorts -eq $true -and (!$c.diagnosticSweep -or $result.runtimeReady)){
    Invoke-TwoUserRuntimeSession $c $manager $ledger ($live.facts.paths.runtimePrefix.path -replace '^\\\\\?\\','') $runtimeState
    if(!$runtimeState.completed){throw 'Runtime protocol not completed'}
    $result.runtimeProxyVerification='verified-runtime-ports'
@@ -705,6 +768,11 @@ function Invoke-TwoUserChild([string]$InputFile) {
    foreach($file in @(Get-ChildItem -LiteralPath $logDirectory -File -Filter '*.log'|Select-Object -First 32)){
     if($file.Length -le 8MB -and !($file.Attributes -band [IO.FileAttributes]::ReparsePoint)){Copy-Item -LiteralPath $file.FullName -Destination (Join-Path $retainedLogs $file.Name)}
    }
+  }
+  $programDiagnostics=Join-Path $out 'program-diagnostics';New-Item -ItemType Directory -Force $programDiagnostics|Out-Null
+  foreach($relative in @('.runtime-bundle-failure.json','.runtime-bundle-pending.json','runtime-bundle/runtime-bundle.manifest.json','runtime/opencodex/.runtime-manifest.json')){
+   $path=Join-Path $installed $relative
+   if(Test-Path -LiteralPath $path){$file=Get-Item -LiteralPath $path;if(!$file.PSIsContainer -and $file.Length -le 1MB -and !($file.Attributes -band [IO.FileAttributes]::ReparsePoint)){Copy-Item -LiteralPath $path -Destination (Join-Path $programDiagnostics ($relative.Replace('/','_').TrimStart('.')))}}
   }
   try{$result.finalInventory=Get-TwoUserTreeHash (Join-Path $nativeProfile '.codex-desktop');$result.inventory='hashed'}catch{$result.inventory='unavailable';if($result.result -ceq 'pass-user-isolation'){$result.result='evidence-incomplete'}}
   Write-TwoUserJson (Join-Path $out 'finished.json') $result

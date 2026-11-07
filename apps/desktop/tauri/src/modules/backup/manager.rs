@@ -52,23 +52,50 @@ fn observed_lock(
     root: &Path,
     action: BackupAction,
     observer: &mut dyn MaintenanceObserver,
-) -> AppResult<File> {
+) -> AppResult<BackupLease> {
     lock(root).inspect_err(|_| observer.backup_result(action, SOURCE_UNAVAILABLE, false))
 }
 
-fn lock(root: &Path) -> AppResult<File> {
+struct BackupLease {
+    _file: File,
+    _removal: crate::modules::data_root::removal_gate::SharedLease,
+}
+
+fn open_lock(path: &Path) -> AppResult<File> {
+    #[cfg(windows)]
+    {
+        // Elevated default TokenOwner may be Administrators. Creation must use
+        // the same actual-TokenUser authority as startup and removal checks.
+        crate::infrastructure::platform::open_or_create_private_file(path, 0o600)
+            .map_err(|e| fail(e.to_string()))
+    }
+    #[cfg(not(windows))]
+    {
+        safety::open_file(path, true)
+    }
+}
+
+fn lock(root: &Path) -> AppResult<BackupLease> {
+    let removal = crate::modules::data_root::removal_gate::shared(root)?;
     let path = root.join(LOCK_FILE_NAME);
     safety::check_path(root, &path, true)?;
-    let file = safety::open_file(&path, true)?;
+    let file = open_lock(&path)?;
     file.lock().map_err(|e| fail(e.to_string()))?;
-    Ok(file)
+    Ok(BackupLease {
+        _file: file,
+        _removal: removal,
+    })
 }
 /// Uninstall must refuse a live backup transaction instead of waiting for it.
 #[cfg(any(windows, test))]
-pub(crate) fn try_lock_for_removal(root: &Path) -> AppResult<File> {
+pub(crate) fn try_lock_for_removal(
+    root: &Path,
+    capability: &crate::modules::data_root::removal_gate::RemovalLeaseSet,
+) -> AppResult<File> {
+    capability.require(root)?;
     let path = root.join(LOCK_FILE_NAME);
     safety::check_path(root, &path, true)?;
-    let file = safety::open_file(&path, true)?;
+    let file = open_lock(&path)?;
     file.try_lock()
         .map_err(|_| safety::fail("backup mutation is active during removal"))?;
     Ok(file)
@@ -76,7 +103,7 @@ pub(crate) fn try_lock_for_removal(root: &Path) -> AppResult<File> {
 /// Cooperative cross-process guard. Keep alive through the entire mutation.
 /// Uses the same lock as W2 restore, pin and cleanup. Lock release never deletes backups.
 pub struct PreferencesProtectionGuard {
-    _lock: File,
+    _lock: BackupLease,
     pub backup: Option<UpgradeBackupResult>,
     /// Best-effort maintenance failure after a successful protection backup.
     /// The backup and mutation lock remain valid. Also emitted to diagnostics.
@@ -1113,6 +1140,23 @@ mod tests {
             .save(&Preferences::default())
             .unwrap();
         root
+    }
+    #[cfg(windows)]
+    #[test]
+    fn windows_backup_lock_uses_actual_token_user_and_reopens_without_repair() {
+        use std::io::Write;
+        let fixture = tempfile::tempdir().unwrap();
+        let path = fixture.path().join(LOCK_FILE_NAME);
+        let mut first = open_lock(&path).unwrap();
+        first.write_all(b"owned lock bytes").unwrap();
+        first.sync_all().unwrap();
+        crate::infrastructure::windows_private_create::verify_private_handle(&first, false)
+            .unwrap();
+        drop(first);
+        let second = open_lock(&path).unwrap();
+        crate::infrastructure::windows_private_create::verify_private_handle(&second, false)
+            .unwrap();
+        assert_eq!(std::fs::read(&path).unwrap(), b"owned lock bytes");
     }
     fn manual(root: &Path, age: i64) -> BackupRecord {
         managed_backup(

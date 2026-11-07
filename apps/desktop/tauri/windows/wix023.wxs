@@ -232,7 +232,10 @@ SOFTWARE.
                  A missing staged offline payload is a compile error, not a
                  network/old-program fallback. No business U/H files here. -->
             <Directory Id="OCX023Documents" Name="resources">
-                <Component Id="OCX023Documents" Guid="*" Win64="$(var.Win64)">
+                <!-- WiX CNDL0230: multiple files with an HKCU key path need
+                     an explicit stable component GUID. This x64 component
+                     identity remains fixed across builds and reinstalls. -->
+                <Component Id="OCX023Documents" Guid="9501D6A2-BA37-53EA-B53A-10CB8E34412E" Win64="$(var.Win64)">
                     <File Id="OCX023License" Source="$(var.SourceDir)\..\..\..\resources\LICENSE" />
                     <File Id="OCX023Notices" Source="$(var.SourceDir)\..\..\..\resources\THIRD-PARTY-NOTICES.txt" />
                     <RegistryValue Root="HKCU" Key="Software\\{{manufacturer}}\\{{product_name}}\023\Components" Name="Documents" Type="string" Value="[INSTALLDIR]" KeyPath="yes" />
@@ -240,7 +243,7 @@ SOFTWARE.
                 </Component>
             </Directory>
             <Directory Id="OCX023RuntimeBundle" Name="runtime-bundle">
-                <Component Id="OCX023RuntimeBundle" Guid="*" Win64="$(var.Win64)">
+                <Component Id="OCX023RuntimeBundle" Guid="7F3ED10E-ADBA-56E4-B6A1-EFC692135F8C" Win64="$(var.Win64)">
                     <File Id="OCX023RuntimeArchive" Source="$(var.SourceDir)\..\..\..\resources\runtime-bundle\runtime-bundle-0.2.23-win32-x64.tar.gz" />
                     <File Id="OCX023RuntimeSource" Source="$(var.SourceDir)\..\..\..\resources\runtime-bundle\maintained-runtime.tgz" />
                     <File Id="OCX023RuntimeManifest" Source="$(var.SourceDir)\..\..\..\resources\runtime-bundle\runtime-bundle.manifest.json" />

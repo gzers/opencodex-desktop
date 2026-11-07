@@ -419,6 +419,22 @@ mod tests {
         )
     }
 
+    #[cfg(windows)]
+    #[test]
+    fn existing_extract_target_is_not_overwritten_by_a_second_archive() {
+        let dir = tempfile::tempdir().unwrap();
+        let archive = official_tgz(dir.path());
+        let dest = dir.path().join("out");
+        extract(&archive, Some("0.3.1"), &dest).unwrap();
+        let entry = dest.join("package.json");
+        std::fs::write(&entry, b"preserve existing bytes").unwrap();
+        assert!(matches!(
+            extract(&archive, Some("0.3.1"), &dest),
+            Err(ArchiveRejection::Read)
+        ));
+        assert_eq!(std::fs::read(entry).unwrap(), b"preserve existing bytes");
+    }
+
     #[test]
     fn accepts_official_package_and_reports_entry() {
         let dir = tempfile::tempdir().expect("temp");

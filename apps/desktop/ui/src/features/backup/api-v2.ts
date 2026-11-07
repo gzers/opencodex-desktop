@@ -7,7 +7,7 @@ export interface RestorePreviewV2 {restoreId:string;planDigest:string;groups:str
 export interface RestoreReceiptV2 {
   restoreId:string;originalOperationId:string;groups:string[]
   status:'applied'|'partial';completedGroups:string[]
-  refreshFileSnapshot:boolean;failureCode:string|null
+  refreshFileSnapshot:boolean;refreshSyncScope?:boolean;failureCode:string|null
 }
 export interface RestoreOperationV2 {restoreId:string;originalOperationId:string;planDigest:string;groups:string[];receipt:RestoreReceiptV2|null}
 export const transferBackupV2Api={

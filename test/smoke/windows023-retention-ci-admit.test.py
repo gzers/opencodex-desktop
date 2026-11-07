@@ -289,6 +289,22 @@ FunctionEnd''' + upstream[end:]
         self.assertNotIn('RemoveFile', text)
         self.assertNotIn('RemoveFolderEx', text)
 
+    def test_multiple_file_registry_keypath_components_have_fixed_distinct_guids(self):
+        text = (self.root / "windows/wix023.wxs").read_text()
+        payload = text.split('<!-- OCX023-PAYLOAD-BEGIN', 1)[1].split('<!-- OCX023-PAYLOAD-END -->', 1)[0]
+        expected = {
+            "OCX023Documents": "9501D6A2-BA37-53EA-B53A-10CB8E34412E",
+            "OCX023RuntimeBundle": "7F3ED10E-ADBA-56E4-B6A1-EFC692135F8C",
+        }
+        for name, guid in expected.items():
+            match = re.search(r'<Component Id="' + name + r'".*?</Component>', payload, re.S)
+            component = ET.fromstring(match.group())
+            self.assertEqual(component.attrib["Guid"], guid)
+            self.assertGreater(len(component.findall("File")), 1)
+            self.assertEqual(component.find("RegistryValue").attrib["KeyPath"], "yes")
+            self.assertEqual(component.find("RegistryValue").attrib["Root"], "HKCU")
+        self.assertEqual(len(set(expected.values())), len(expected))
+
     def test_nsis_replaces_only_registered_022_program_and_never_purges_data(self):
         hooks = (self.root / "windows/installer-hooks.nsh").read_text()
         pre = hooks.split('!macro NSIS_HOOK_PREINSTALL\n')[1].split('!macroend')[0]

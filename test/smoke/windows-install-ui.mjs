@@ -4,6 +4,7 @@ import {verifyWindowsOfflineDrop} from './windows-offline-drop.mjs'
 import {writeFile} from 'node:fs/promises'
 import {join,win32} from 'node:path'
 import {runtimeInstallHost,runtimeInstallDomExpression,runtimeInstallExpression,closeRuntimeInstallTerminal} from './windows-021-runtime-host.mjs'
+import {readInitialRuntimeEnvironment} from './windows023-runtime-layout.mjs'
 import {assertModelSandbox} from './windows-model-ui.mjs'
 function readablePrefix(value){
  const native=win32.normalize(value)
@@ -24,7 +25,12 @@ export async function verifyWindowsInstallUi(call,output,install=false,sandbox){
  const closed='!document.querySelector('+JSON.stringify(host.selector)+')'
  let installedSource,readyEndpoint,readyBefore,readyAfter
  await click('概览','.side');await wait("!!document.querySelector('.ov')");
- const prerequisites=await evaluate("window.__TAURI_INTERNALS__.invoke('discover_environment',{request:null})");
+ const prerequisites=await evaluate('('+readInitialRuntimeEnvironment.toString()+')(window.__TAURI_INTERNALS__.invoke,'+JSON.stringify(about.version)+')');
+ if(about.version==='0.2.23'&&prerequisites.gate==='integrated_runtime_not_ready'){
+  assert.equal(prerequisites.readyVerified,false)
+  await wait("!!document.querySelector('[data-testid=environment-gate]')")
+  await writeFile(join(output,'runtime-initial-unresolved.json'),JSON.stringify({result:'expected-not-ready',discovery:prerequisites,reason:'fresh sandbox deliberately skips automatic bundle provision; real install below is required'},null,2)+'\n')
+ }
  const initialSource=await evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')");
  let overviewInstaller=false;
  if(prerequisites.gate==='missing_ocx'&&initialSource.kind==='unresolved'){
@@ -38,7 +44,7 @@ export async function verifyWindowsInstallUi(call,output,install=false,sandbox){
  await click('设置','.side');await wait("!!document.querySelector('.settings-tabs')");
  await click('安装配置','.route-section.active');await wait("!!document.querySelector('[data-testid=runtime-install]')");
  const source=await evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')");
- await click('安装 OpenCodex','.route-section.active');await wait(inInstall(root=>!!document.querySelector(root+' #wiz-prefix')));
+ await click(about.version==='0.2.23'?'安装程序':'安装 OpenCodex','.route-section.active');await wait(inInstall(root=>!!document.querySelector(root+' #wiz-prefix')));
  const initial=await evaluate(inInstall(root=>{const d=document.querySelector(root);return {value:d.querySelector('#wiz-prefix').value,nextDisabled:[...d.querySelectorAll('button')].find(e=>e.textContent.trim()==='开始安装').disabled,error:d.querySelector('.wiz-error')?.textContent||'',hint:d.querySelector('.wiz-hint')?.textContent||''}}));
  assert.equal(initial.value,readablePrefix(source.managedPrefix));assert.equal(initial.nextDisabled,true,'explicit confirmation is required before installation');assert.equal(initial.error,'');assert.equal(win32.isAbsolute(initial.value),true);
  await evaluate(inInstall(root=>{const i=document.querySelector(root+' #wiz-prefix');i.value='relative';i.dispatchEvent(new Event('input',{bubbles:true}));return true}));
@@ -52,7 +58,7 @@ export async function verifyWindowsInstallUi(call,output,install=false,sandbox){
  await click('取消',host.selector);await wait(closed);
  const after=await evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')");for(const field of ['kind','path','managedPrefix','defaultPrefix','history'])assert.deepEqual(after[field],source[field],'wizard cancel changed '+field);
  if(install){
-  await click('安装 OpenCodex','.route-section.active');await wait(inInstall(root=>!!document.querySelector(root+' #wiz-prefix')));
+  await click(about.version==='0.2.23'?'安装程序':'安装 OpenCodex','.route-section.active');await wait(inInstall(root=>!!document.querySelector(root+' #wiz-prefix')));
 
   await evaluate(inInstall(root=>{document.querySelector(root+' [data-testid=wiz-ack]').click();return true}));
   await wait(inInstall(root=>!!document.querySelector(root+' input[aria-label="版本"]')));

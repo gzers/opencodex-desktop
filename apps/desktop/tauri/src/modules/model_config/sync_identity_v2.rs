@@ -38,6 +38,11 @@ const MAX_MAP_BYTES: u64 = 8 * 1024 * 1024;
 const MAX_BINDINGS: usize = 20000;
 const MAX_PREVIEWS: usize = 64;
 
+#[cfg(test)]
+thread_local! {
+    static CAPTURE_COUNT: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+}
+
 fn err(code: &str) -> ModelError {
     invalid(code, "同步渠道身份事实无法核对，请重新预览或明确选择映射")
 }
@@ -578,6 +583,8 @@ impl SyncIdentityOwnerV2 {
         }).map_err(model)
     }
     fn capture(&self, request: &CaptureRequestV2) -> ModelResult<capture::CapturedSnapshotV2> {
+        #[cfg(test)]
+        CAPTURE_COUNT.with(|count| count.set(count.get() + 1));
         capture::capture(&self.root, &self.home, request, self.credentials.as_ref())
     }
     /// Only narrow the LOCAL saved-source request. Remote choices remain in
@@ -889,6 +896,34 @@ impl SyncIdentityOwnerV2 {
                 .adopt_template_defaults
                 .retain(|r| schema_v2::revision(&observed.library, r).is_ok());
             self.local_nonmodel_sources(&mut request)?;
+            // The UI can select an existing local definition or a cloud-only
+            // definition. Bind each side to its own observed bytes: a local
+            // digest is a receive-target guard, not the incoming definition.
+            // Keep local-only objects available for the later Upload decision.
+            for selected in &mut remote.mcp_sources {
+                let local_digest = request
+                    .selection
+                    .mcp_sources
+                    .iter()
+                    .find(|m| m.name == selected.name)
+                    .map(|m| m.definition_digest.as_str());
+                let cloud_digest = cloud
+                    .partitions()
+                    .assets
+                    .mcps
+                    .iter()
+                    .find(|m| m.name == selected.name)
+                    .map(super::objects_overlay_v2::mcp_source_digest)
+                    .transpose()?;
+                if local_digest != Some(selected.definition_digest.as_str())
+                    && cloud_digest.as_deref() != Some(selected.definition_digest.as_str())
+                {
+                    return Err(err("capture_mcp_source_changed"));
+                }
+                if let Some(digest) = cloud_digest {
+                    selected.definition_digest = digest;
+                }
+            }
         }
         let captured = self.capture(&request)?;
         let atoms = file_objects_v2::save_state(&captured.objects)?;
@@ -994,8 +1029,13 @@ fn absence(observed: &ObservedLocal, namespace: &str, b: &ReceiveBindingV2) -> M
         "observedProviderRosterDigest": observed.roster_digest }),
     )
 }
-impl TrustedMappingOwnerV2 for SyncIdentityOwnerV2 {
-    fn verify(&self, binding: &LocalTargetBindingV2) -> ModelResult<()> {
+impl SyncIdentityOwnerV2 {
+    /// One admission snapshot, with before/after public facts checked under
+    /// the existing locked readers. Never cache a user source across calls.
+    fn verified_capture(
+        &self,
+        binding: &LocalTargetBindingV2,
+    ) -> ModelResult<capture::CapturedSnapshotV2> {
         let facts = self
             .issued
             .lock()
@@ -1051,27 +1091,15 @@ impl TrustedMappingOwnerV2 for SyncIdentityOwnerV2 {
         if !observed.same_source(&self.observe()?) || mapping_bytes(&self.root)? != before {
             return Err(err("capture_stale"));
         }
-        Ok(())
+        Ok(captured)
     }
-    fn project_saved_to_remote(
-        &self,
+
+    /// Pure identity projection of already admitted saved objects. Callers
+    /// own source admission and a final fresh verification around this work.
+    fn project_objects(
         objects: SavedObjects,
         binding: &LocalTargetBindingV2,
     ) -> ModelResult<SavedObjects> {
-        self.verify(binding)?;
-        let facts = self
-            .issued
-            .lock()
-            .map_err(|_| err("sync_identity_read"))?
-            .get(&binding.digest)
-            .and_then(Weak::upgrade)
-            .ok_or_else(|| err("sync_identity_untrusted_preview"))?;
-        let actual = self.capture(&facts.request)?;
-        if file_objects_v2::semantic_digest(&objects)? != actual.semantic_digest
-            || file_objects_v2::save_state(&objects)? != actual.save_state
-        {
-            return Err(err("sync_identity_projection_source"));
-        }
         let CapturedObjects {
             mut models,
             manager,
@@ -1134,8 +1162,54 @@ impl TrustedMappingOwnerV2 for SyncIdentityOwnerV2 {
             Some(&PayloadAuthorizationV2),
         )?;
         projected.validate_remote_sync_scope()?;
+        Ok(projected)
+    }
+}
+impl TrustedMappingOwnerV2 for SyncIdentityOwnerV2 {
+    fn verify(&self, binding: &LocalTargetBindingV2) -> ModelResult<()> {
+        self.verified_capture(binding).map(|_| ())
+    }
+    fn project_saved_to_remote(
+        &self,
+        objects: SavedObjects,
+        binding: &LocalTargetBindingV2,
+    ) -> ModelResult<SavedObjects> {
+        let actual = self.verified_capture(binding)?;
+        if file_objects_v2::semantic_digest(&objects)? != actual.semantic_digest
+            || file_objects_v2::save_state(&objects)? != actual.save_state
+        {
+            return Err(err("sync_identity_projection_source"));
+        }
+        let projected = Self::project_objects(objects, binding)?;
         self.verify(binding)?;
         Ok(projected)
+    }
+    fn capture_projected(
+        &self,
+        local: &dyn super::sync_host_v2::CaptureProviderV2,
+        binding: &LocalTargetBindingV2,
+    ) -> ModelResult<super::sync_host_v2::HostCapturedV2> {
+        // Admit before reading the supplied local provider. Its returned
+        // facts must exactly match this owner's fresh snapshot, so a different
+        // root/source/provider cannot borrow the issued mapping's authority.
+        let actual = self.verified_capture(binding)?;
+        let local = local.capture_saved(&binding.local_scope)?;
+        if local.root_revision != actual.root_revision
+            || local.source_guard != actual.source_guard
+            || file_objects_v2::semantic_digest(&local.objects)? != actual.semantic_digest
+            || file_objects_v2::save_state(&local.objects)? != actual.save_state
+        {
+            return Err(err("sync_identity_projection_source"));
+        }
+        let objects = Self::project_objects(local.objects, binding)?;
+        // External edits during capture/projection still invalidate the gate.
+        // The next gate repeats all fresh reads; this is not a source cache.
+        self.verify(binding)?;
+        Ok(super::sync_host_v2::HostCapturedV2 {
+            objects,
+            root_revision: local.root_revision,
+            source_guard: local.source_guard,
+        })
     }
 }
 

@@ -429,9 +429,6 @@ impl Dir {
                     let d = Self::anchor_access(&path, created && secret)?;
                     #[cfg(windows)]
                     if secret {
-                        if created {
-                            win_private::protect(&d.handle, true)?;
-                        }
                         win_private::verify(&d.handle, true)?;
                     }
                     Ok(Some(d))
@@ -501,7 +498,7 @@ impl Dir {
                 {
                     win_private::single_link(&f)?;
                     if create {
-                        win_private::protect(&f, false)?;
+                        win_private::verify(&f, false)?;
                     }
                 }
                 regular(&io(f.metadata())?, create)?;
@@ -1441,210 +1438,19 @@ fn test_point(event: TestEvent) -> Result<()> {
 #[path = "model_transaction_v2_tests.rs"]
 mod tests;
 
-// POSIX 0600/0700 equivalent on Windows: a protected owner-only DACL. Apply it
-// before writing any bytes, and verify existing private objects without changing
-// their permissions. The three authorization declarations avoid adding a Cargo
-// feature solely for this adapter; all types are from existing windows-sys.
+// Use the same strict actual-TokenUser/SYSTEM authority as private creation.
+// Verification never repairs existing descriptors or grants group access.
 #[cfg(windows)]
 mod win_private {
     use super::*;
-    use std::{
-        ffi::c_void,
-        os::windows::io::{AsRawHandle, FromRawHandle, OwnedHandle},
-        ptr,
+    use std::os::windows::io::AsRawHandle;
+    use windows_sys::Win32::Storage::FileSystem::{
+        GetFileInformationByHandle, BY_HANDLE_FILE_INFORMATION,
     };
-    use windows_sys::Win32::{
-        Foundation::LocalFree,
-        Security::{
-            EqualSid, GetSecurityDescriptorControl, GetSecurityDescriptorDacl, GetTokenInformation,
-            TokenUser, ACL, TOKEN_QUERY, TOKEN_USER,
-        },
-        Storage::FileSystem::{GetFileInformationByHandle, BY_HANDLE_FILE_INFORMATION},
-        System::Threading::{GetCurrentProcess, OpenProcessToken},
-    };
-    #[link(name = "advapi32")]
-    extern "system" {
-        fn ConvertStringSecurityDescriptorToSecurityDescriptorW(
-            text: *const u16,
-            revision: u32,
-            descriptor: *mut *mut c_void,
-            length: *mut u32,
-        ) -> i32;
-        fn GetSecurityInfo(
-            handle: *mut c_void,
-            kind: i32,
-            information: u32,
-            owner: *mut *mut c_void,
-            group: *mut *mut c_void,
-            dacl: *mut *mut ACL,
-            sacl: *mut *mut ACL,
-            descriptor: *mut *mut c_void,
-        ) -> u32;
-        fn SetSecurityInfo(
-            handle: *mut c_void,
-            kind: i32,
-            information: u32,
-            owner: *mut c_void,
-            group: *mut c_void,
-            dacl: *const ACL,
-            sacl: *const ACL,
-        ) -> u32;
-    }
-    struct Descriptor(*mut c_void);
-    impl Drop for Descriptor {
-        fn drop(&mut self) {
-            // SAFETY: Windows returned this LocalAlloc-owned descriptor.
-            unsafe {
-                LocalFree(self.0);
-            }
-        }
-    }
-    fn descriptor(directory: bool) -> Result<Descriptor> {
-        let text = if directory {
-            "D:P(A;OICI;FA;;;OW)"
-        } else {
-            "D:P(A;;FA;;;OW)"
-        };
-        let text: Vec<u16> = text.encode_utf16().chain(Some(0)).collect();
-        let mut sd = ptr::null_mut();
-        // SAFETY: terminated input and a live output pointer; revision is SDDL 1.
-        if unsafe {
-            ConvertStringSecurityDescriptorToSecurityDescriptorW(
-                text.as_ptr(),
-                1,
-                &mut sd,
-                ptr::null_mut(),
-            )
-        } == 0
-        {
-            return Err(fault("model_transaction_permissions"));
-        }
-        Ok(Descriptor(sd))
-    }
-    fn dacl(sd: &Descriptor) -> Result<*mut ACL> {
-        let mut present = 0;
-        let mut defaulted = 0;
-        let mut acl = ptr::null_mut();
-        // SAFETY: descriptor is owned and valid; outputs are initialized by Win32.
-        if unsafe { GetSecurityDescriptorDacl(sd.0, &mut present, &mut acl, &mut defaulted) } == 0
-            || present == 0
-            || acl.is_null()
-        {
-            return Err(fault("model_transaction_permissions"));
-        }
-        Ok(acl)
-    }
-    pub(super) fn protect(file: &File, directory: bool) -> Result<()> {
-        let expected = descriptor(directory)?;
-        let acl = dacl(&expected)?;
-        // SAFETY: live file handle and ACL; protect the DACL against inheritance.
-        if unsafe {
-            SetSecurityInfo(
-                file.as_raw_handle(),
-                1,
-                0x80000004,
-                ptr::null_mut(),
-                ptr::null_mut(),
-                acl,
-                ptr::null(),
-            )
-        } != 0
-        {
-            return Err(fault("model_transaction_permissions"));
-        }
-        verify(file, directory)
-    }
-    fn current_owner(owner: *mut c_void) -> Result<()> {
-        let mut token = ptr::null_mut();
-        // SAFETY: pseudo process handle and a live output pointer.
-        if unsafe { OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &mut token) } == 0 {
-            return Err(fault("model_transaction_permissions"));
-        }
-        // SAFETY: successful OpenProcessToken transfers a new owned handle.
-        let token = unsafe { OwnedHandle::from_raw_handle(token) };
-        let mut size = 0;
-        // SAFETY: the first call only queries the required buffer length.
-        unsafe {
-            GetTokenInformation(
-                token.as_raw_handle(),
-                TokenUser,
-                ptr::null_mut(),
-                0,
-                &mut size,
-            );
-        }
-        if size < std::mem::size_of::<TOKEN_USER>() as u32 || size > 65536 {
-            return Err(fault("model_transaction_permissions"));
-        }
-        let mut buffer = vec![0usize; (size as usize).div_ceil(std::mem::size_of::<usize>())];
-        // SAFETY: buffer is aligned for TOKEN_USER and has at least size bytes.
-        if unsafe {
-            GetTokenInformation(
-                token.as_raw_handle(),
-                TokenUser,
-                buffer.as_mut_ptr().cast(),
-                size,
-                &mut size,
-            )
-        } == 0
-        {
-            return Err(fault("model_transaction_permissions"));
-        }
-        // SAFETY: successful TokenUser query initialized this aligned structure.
-        let sid = unsafe { (*(buffer.as_ptr().cast::<TOKEN_USER>())).User.Sid };
-        // SAFETY: both SIDs originate from successful Windows security queries.
-        if owner.is_null() || unsafe { EqualSid(owner, sid) } == 0 {
-            return Err(fault("model_transaction_permissions"));
-        }
-        Ok(())
-    }
+
     pub(super) fn verify(file: &File, directory: bool) -> Result<()> {
-        let expected = descriptor(directory)?;
-        let expected_acl = dacl(&expected)?;
-        let mut owner = ptr::null_mut();
-        let mut acl = ptr::null_mut();
-        let mut sd = ptr::null_mut();
-        // SAFETY: live handle and output pointers; request owner and DACL only.
-        if unsafe {
-            GetSecurityInfo(
-                file.as_raw_handle(),
-                1,
-                5,
-                &mut owner,
-                ptr::null_mut(),
-                &mut acl,
-                ptr::null_mut(),
-                &mut sd,
-            )
-        } != 0
-        {
-            return Err(fault("model_transaction_permissions"));
-        }
-        let sd = Descriptor(sd);
-        current_owner(owner)?;
-        let mut control = 0;
-        let mut revision = 0;
-        // SAFETY: live security descriptor and valid output pointers.
-        if unsafe { GetSecurityDescriptorControl(sd.0, &mut control, &mut revision) } == 0
-            || control & 0x1000 == 0
-            || acl.is_null()
-        {
-            return Err(fault("model_transaction_permissions"));
-        }
-        // SAFETY: successful security queries guarantee valid ACL headers and
-        // AclSize-byte buffers, both kept alive by their descriptor guards.
-        let equal = unsafe {
-            let a = std::slice::from_raw_parts(acl.cast::<u8>(), (*acl).AclSize as usize);
-            let b = std::slice::from_raw_parts(
-                expected_acl.cast::<u8>(),
-                (*expected_acl).AclSize as usize,
-            );
-            a == b
-        };
-        if !equal {
-            return Err(fault("model_transaction_permissions"));
-        }
-        Ok(())
+        crate::infrastructure::windows_private_create::verify_private_handle(file, directory)
+            .map_err(|_| fault("model_transaction_permissions"))
     }
     pub(super) fn single_link(file: &File) -> Result<()> {
         let mut info = std::mem::MaybeUninit::<BY_HANDLE_FILE_INFORMATION>::uninit();

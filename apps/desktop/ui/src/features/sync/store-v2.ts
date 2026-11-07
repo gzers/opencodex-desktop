@@ -17,10 +17,10 @@ export const useConfigSyncV2Store=defineStore('config-sync-v2',()=>{
   const cancelledSessions=new Set<string>(),secretState={read:null as string|null,write:null as string|null}
   const cancelledSessionPromises=new Map<string,Promise<void>>()
   let catalogSequence=0,prepareSequence=0,resultSequence=0,confirmedSession:string|null=null,frozenGeneration=-1
-  const scopeWrite=ref(false),scopeError=ref(''),scopeEditRevision=ref(0)
+  const scopeWrite=ref(false),scopeError=ref(''),scopeEditRevision=ref(0),restoreScopePending=ref(false)
   let writeSequence=Promise.resolve(),scopeQueued=0
   const previewBusy=computed(()=>preparing.value||executing.value)
-  const canConfirm=computed(()=>!!preview.value&&!previewStale.value&&!previewBusy.value&&!error.value&&!preview.value.noChange&&preview.value.plan.kind!=='no_change'&&!preview.value.entries.some(e=>e.status==='unavailable'||e.status==='source_required'))
+  const canConfirm=computed(()=>!restoreScopePending.value&&!!preview.value&&!previewStale.value&&!previewBusy.value&&!error.value&&!preview.value.noChange&&preview.value.plan.kind!=='no_change'&&!preview.value.entries.some(e=>e.status==='unavailable'||e.status==='source_required'))
   function secrets(read:string|null,write:string|null){secretState.read=read;secretState.write=write;preview.value=null;previewStale.value=true;scopeGeneration.value++}
   function clearSecrets(){secretState.read=null;secretState.write=null}
   function endpointChanged(){endpointGeneration.value++;catalogSequence++;catalogBusy.value=false;catalog.value=null;forcedDirection.value=null;selectedHead.value=null;scopeGeneration.value++;recoveryPlanStale.value=true;resumePreflight.value=null;void closePreview()}
@@ -29,7 +29,7 @@ export const useConfigSyncV2Store=defineStore('config-sync-v2',()=>{
   async function loadCatalog(){
     if(executing.value)return
     const seq=++catalogSequence,generation=scopeGeneration.value;catalogBusy.value=true;error.value='';failure.value=null;forcedDirection.value=null;selectedHead.value=null;backupBeforeUpdate.value=true
-    try{const value=await configV2Api.catalog(secretState.read);if(!value||!Array.isArray(value.entries)||!Array.isArray(value.mcpSources)||!value.selected||value.selected.selection.usage!=='remote_sync'||!Array.isArray(value.heads)||!Array.isArray(value.recoveryActions))throw new Error('目录回执不完整，原范围保持，请重新读取。');if(seq!==catalogSequence)return;catalog.value=value;if(generation===scopeGeneration.value){scope.value=clone(value.selected);scopeGeneration.value++}preview.value=null;previewStale.value=true;if(['conflict','initialization_ambiguous'].includes(value.cloudState))recoveryOpen.value=true}
+    try{const value=await configV2Api.catalog(secretState.read);if(!value||!Array.isArray(value.entries)||!Array.isArray(value.mcpSources)||!value.selected||value.selected.selection.usage!=='remote_sync'||!Array.isArray(value.heads)||!Array.isArray(value.recoveryActions))throw new Error('目录回执不完整，原范围保持，请重新读取。');if(seq!==catalogSequence)return;catalog.value=value;if(generation===scopeGeneration.value){scope.value=clone(value.selected);scopeGeneration.value++;restoreScopePending.value=false}preview.value=null;previewStale.value=true;if(['conflict','initialization_ambiguous'].includes(value.cloudState))recoveryOpen.value=true}
     catch(cause){if(seq===catalogSequence)captureFailure(cause)}finally{if(seq===catalogSequence)catalogBusy.value=false}
   }
   function setScope(value:ScopeRequestV2){if(executing.value)return;scope.value=clone(value);scopeGeneration.value++;scopeEditRevision.value++;previewStale.value=true;recoveryPlanStale.value=true;error.value=''}
@@ -41,10 +41,22 @@ export const useConfigSyncV2Store=defineStore('config-sync-v2',()=>{
   function credentialEntry(entry:ObjectEntryV2,value:boolean){const next=clone(scope.value),key=entry.kind==='skill'?'skillNames':'mcpNames';if(!selected(entry))return;next.selection.extensionCredentials[key]=next.selection.extensionCredentials[key].filter(n=>n!==entry.id);if(value)next.selection.extensionCredentials[key].push(entry.id);setScope(next)}
   function templateRevision(reference:import('@/features/models/api-v2').RefV2,value:boolean){const supplied=catalog.value?.entries.some(e=>e.kind==='template'&&e.revisions.some(r=>JSON.stringify(r)===JSON.stringify(reference)));if(value&&!supplied){error.value='确切保存版本不在当前目录，未按名称或最新候选补齐。';return}const next=clone(scope.value);next.selection.templateRefs=next.selection.templateRefs.filter(r=>r.templateId!==reference.templateId||r.revisionId!==reference.revisionId);if(value)next.selection.templateRefs.push(clone(reference));else next.selection.adoptTemplateDefaults=next.selection.adoptTemplateDefaults.filter(r=>r.templateId!==reference.templateId||r.revisionId!==reference.revisionId);setScope(next)}
   function adoptDefault(reference:import('@/features/models/api-v2').RefV2,value:boolean){const next=clone(scope.value);if(value&&!next.selection.templateRefs.some(r=>JSON.stringify(r)===JSON.stringify(reference))){error.value='只有已明确选择的确切保存版本才可作为同步采用默认。';return}next.selection.adoptTemplateDefaults=next.selection.adoptTemplateDefaults.filter(r=>r.templateId!==reference.templateId);if(value)next.selection.adoptTemplateDefaults.push(clone(reference));setScope(next)}
-  async function persistScope(){const value=clone(scope.value),queued=++scopeQueued;scopeWrite.value=true;scopeError.value='';writeSequence=writeSequence.catch(()=>{}).then(async()=>{try{await configV2Api.saveScope(value)}catch(cause){if(queued===scopeQueued)scopeError.value=errorText(cause)}});await writeSequence;if(queued===scopeQueued)scopeWrite.value=false}
+  async function refreshScopeAfterRestore(){
+    if(executing.value||scopeWrite.value)throw new Error('同步范围正在保存或执行，请稍后读取恢复结果。')
+    restoreScopePending.value=true
+    await closePreview()
+    const generation=++scopeGeneration.value;catalogSequence++;catalogBusy.value=false;catalog.value=null
+    preview.value=null;previewStale.value=true;recoveryPlanStale.value=true
+    const saved=await configV2Api.readScope()
+    if(generation!==scopeGeneration.value)throw new Error('读取恢复范围期间选择已变化，请重新读取恢复结果。')
+    scope.value=saved?clone(saved):{selection:emptySelectionV2(),mcpClients:{},assetsReviewed:false}
+    restoreScopePending.value=false
+  }
+  async function persistScope(){if(restoreScopePending.value){scopeError.value='恢复后的同步范围尚未读回，请先重新读取恢复结果或配置目录。';return}const value=clone(scope.value),queued=++scopeQueued;scopeWrite.value=true;scopeError.value='';writeSequence=writeSequence.catch(()=>{}).then(async()=>{try{await configV2Api.saveScope(value)}catch(cause){if(queued===scopeQueued)scopeError.value=errorText(cause)}});await writeSequence;if(queued===scopeQueued)scopeWrite.value=false}
   function invalidate(){scopeGeneration.value++;previewStale.value=true;prepareSequence++;preparing.value=false}
   async function prepare(direction:typeof forcedDirection.value=forcedDirection.value){
     if(executing.value)return
+    if(restoreScopePending.value){error.value='恢复后的同步范围尚未读回，请先重新读取恢复结果或配置目录。';return}
     forcedDirection.value=direction;const generation=scopeGeneration.value,seq=++prepareSequence;preparing.value=true;previewOpen.value=true;previewStale.value=true;error.value='';failure.value=null
     const old=preview.value;preview.value=null;if(old)await cancelPrepared(old.sessionId)
     if(seq!==prepareSequence||generation!==scopeGeneration.value||!previewOpen.value)return
@@ -83,5 +95,5 @@ export const useConfigSyncV2Store=defineStore('config-sync-v2',()=>{
     if(action.kind==='repreview_upload'||action.kind==='repreview_download'){resultOpen.value=false;await loadCatalog();if(!error.value)await prepare(action.kind==='repreview_upload'?'upload':'download');return}
     recoveryOpen.value=true;recoveryStatus.value=action.kind==='select_empty_directory'?'请在连接设置选择另一个已核实空目录，再重新读取；本页不清理原目录。':action.kind==='return_to_original_connection'?'请回到原操作的实际连接，保持原操作标识后重新核对。':'请核对原操作错误与来源，原目录和操作保持。'
   }
-  return {resumePreflight,recoveryPreview,recoveryReceipt,recoveryBusy,recoveryPlanStale,preflightResume,confirmResume,resumeReceiveOriginal,confirmRecovery,readRecovery,closeRecovery,catalog,scope,preview,fact,previewOpen,resultOpen,recoveryOpen,catalogBusy,preparing,executing,resultBusy,error,resultError,recoveryStatus,failure,forcedDirection,selectedHead,backupBeforeUpdate,scopeGeneration,previewStale,scopeWrite,scopeError,scopeEditRevision,previewBusy,canConfirm,endpointGeneration,factEndpointGeneration,secrets,clearSecrets,loadCatalog,endpointChanged,setScope,selected,toggleEntry,setMcpClient,channelSubset,channelOption,credentialEntry,templateRevision,adoptDefault,persistScope,invalidate,prepare,changeBackup,chooseHead,closePreview,confirm,readResult,verifyOriginal,resumeOriginal,stopConfirmed,recoveryAction}
+  return {refreshScopeAfterRestore,resumePreflight,recoveryPreview,recoveryReceipt,recoveryBusy,recoveryPlanStale,preflightResume,confirmResume,resumeReceiveOriginal,confirmRecovery,readRecovery,closeRecovery,catalog,scope,preview,fact,previewOpen,resultOpen,recoveryOpen,catalogBusy,preparing,executing,resultBusy,error,resultError,recoveryStatus,failure,forcedDirection,selectedHead,backupBeforeUpdate,scopeGeneration,previewStale,scopeWrite,scopeError,scopeEditRevision,previewBusy,canConfirm,endpointGeneration,factEndpointGeneration,secrets,clearSecrets,loadCatalog,endpointChanged,setScope,selected,toggleEntry,setMcpClient,channelSubset,channelOption,credentialEntry,templateRevision,adoptDefault,persistScope,invalidate,prepare,changeBackup,chooseHead,closePreview,confirm,readResult,verifyOriginal,resumeOriginal,stopConfirmed,recoveryAction}
 })
