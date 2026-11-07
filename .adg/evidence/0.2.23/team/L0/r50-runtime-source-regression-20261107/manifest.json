@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "status": "source-tree regression passed; exact committed build stamp rerun in progress",
+  "sourceTree": "9437625f4d5432a2fcbc5918fdc4904b6baf7fb9",
+  "initialBuildStamp": "e722dc4d7ae61e59f61cdc45a99df4ad7ca2da69",
+  "checks": {
+    "workspace": {
+      "binaries": 49,
+      "passed": 2212,
+      "failed": 0,
+      "ignored": 37
+    },
+    "doctest": "pass",
+    "strict": "pass"
+  },
+  "reasonForExactRerun": "initial command compiled same current source files before Git commit; old build commit metadata must not stand in for final candidate identity",
+  "candidate": {
+    "run": 42339481442,
+    "source": "9437625f4d5432a2fcbc5918fdc4904b6baf7fb9",
+    "job": 128303762460,
+    "status": "running; unchanged all49/defaultworkers/originalbudgets/elevated/native/installer/twoSID scope"
+  },
+  "files": [
+    {
+      "path": "ocxd023-candidate14-source.json",
+      "bytes": 6052,
+      "sha256": "2dea4df7bd734d9d6005d1882526629fb98ce0610fb27e74f1b6abfbfa17adec"
+    },
+    {
+      "path": "ocxd023-current-runtime-source-full.log",
+      "bytes": 269745,
+      "sha256": "b367fd30751b45c2213ef7ebb3973069d93c87c40960cb6fa34e15949488fb9e"
+    },
+    {
+      "path": "ocxd023-runtime-source-clippy.log",
+      "bytes": 252,
+      "sha256": "a0c9c4f0b241e80f3d515b2f28979cb2fbe84a165695ac351f00adcfd1339ddb"
+    },
+    {
+      "path": "ocxd023-runtime-source-precommit-counts.json",
+      "bytes": 2402,
+      "sha256": "0b0608440183fafa770c8f109d53eacadb42f2c64e7cc440c0019a65bc3ea3b6"
+    }
+  ]
+}

@@ -280,3 +280,10 @@ f86620e83补真实消费者缺口：原None恢复取消选择后，cloud-only MC
 阶段日志显示网络请求0～5ms、图观察最多45ms、锁等待最多33ms（受查失败组），超时位于这些阶段外。源码确认上传同一context guard先取root_revision再取source，实际完整本机捕获重复两次。e2f1d7fc8改为单次新鲜捕获同时证明两项，每个写门禁仍重新捕获，不缓存日常配置/Key；仅编译固定种子解析/校验OnceLock，返回独立clone，用户文件仍严格验证。
 
 运行时身份用例在旧代码实际复现跨入独立Tauri全局执行器；208f4d9a7沿调用方Tokio执行器派发并保留断开观察者不取消已准入工作的lease/supervisor语义，原2s/5s/10s及90s门均不增。两项原None路径断言仅因Windows反斜杠，9437625f4只统一夹具清单拼写。更新15/IPC47/core34/host28/service28本机定向过，完整及strict续验，Windows是否解决仍待新候选，未发布。
+
+
+## R30 返修后完整本机回归与候选冻结（2026-11-07）
+
+9437625f4d5432a2fcbc5918fdc4904b6baf7fb9源码已远端核实；新完整Windows候选42339481442/job128303762460实际head匹配。scope仍全部49/默认workers/原预算、独立提权14及nativecred、NSIS/MSI与两SID，当前运行不标通过。
+
+返修源码完整本机workspace49binary2212过/0败/37原忽略、doc及strict过。但该命令在提交前启动，实际库d文件env-dep OPENCODEX_BUILD_COMMIT仍为e722；当前文件哈希与943树核对留证，不冒已冻结制品身份。现串行重编精确943并再验，后继实际制品必须stamp一致。r50。
