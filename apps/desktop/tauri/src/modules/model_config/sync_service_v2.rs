@@ -48,6 +48,9 @@ impl ServiceDirectionV2 {
 pub struct PreviewRequestV2 {
     pub selection: SelectionV2,
     pub mcp_clients: BTreeMap<String, String>,
+    /// Deprecated manual-review declaration; required wire value remains frozen
+    /// in the original request hash. Neither value grants source authority or
+    /// adds a write gate; explicit selection/source/digest checks still apply.
     pub assets_reviewed: bool,
     pub selected_head: Option<CommitRef>,
     pub forced_direction: Option<ServiceDirectionV2>,
@@ -64,6 +67,9 @@ pub struct ConfirmRequestV2 {
 pub struct ScopeRequestV2 {
     pub selection: SelectionV2,
     pub mcp_clients: BTreeMap<String, String>,
+    /// Deprecated manual-review declaration; required wire value remains frozen
+    /// in the original request hash. Neither value grants source authority or
+    /// adds a write gate; explicit selection/source/digest checks still apply.
     pub assets_reviewed: bool,
 }
 /// Invoke may accept only this operation-specific secret argument, converted to
@@ -224,6 +230,9 @@ pub struct ResumePreflightV2 {
 pub struct RecoveryRequestV2 {
     pub selection: SelectionV2,
     pub mcp_clients: BTreeMap<String, String>,
+    /// Deprecated manual-review declaration; required wire value remains frozen
+    /// in the original request hash. Neither value grants source authority or
+    /// adds a write gate; explicit selection/source/digest checks still apply.
     pub assets_reviewed: bool,
     pub generation: GenerationRef,
     pub head: CommitRef,

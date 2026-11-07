@@ -1,6 +1,7 @@
 //! Real wrapper/capture/receiver/backup/file transaction in temporary D/H.
 use super::super::objects_overlay_v2::ChannelSelectionV2;
 use super::*;
+use crate::infrastructure::atomic_write::atomic_write;
 use serde_json::{json, Value};
 use tempfile::TempDir;
 const PASSWORD: &str = "synthetic-file-only-passphrase-023";
@@ -600,7 +601,7 @@ fn original_provider_public_field_domain_survives_saved_full_export() {
     }
 }
 #[test]
-fn skill_and_mcp_contents_review_and_credentials_are_separate_import_scopes() {
+fn skill_and_mcp_contents_do_not_require_manual_review_and_keep_credential_scope() {
     let source = Fixture::new(true);
     let (bytes, _) = exported(&source, false);
     let mut captured = decode(&bytes, None).unwrap().objects.into_captured();
@@ -642,13 +643,13 @@ fn skill_and_mcp_contents_review_and_credentials_are_separate_import_scopes() {
     let p = o
         .prepare_import(bytes, None, Some(scope.clone()), Default::default())
         .unwrap();
-    assert!(!p.can_confirm);
-    assert_eq!(
-        p.reason_code.as_deref(),
-        Some("capture_assets_review_required")
+    assert!(
+        p.can_confirm,
+        "default-false review is not a manual approval requirement: {:?}",
+        p.reason_code
     );
     let choices = ImportBindingsV2 {
-        assets_reviewed: true,
+        assets_reviewed: false,
         mcp_clients: BTreeMap::from([("fixture-mcp".into(), "managed".into())]),
         ..Default::default()
     };
@@ -1233,4 +1234,208 @@ fn import_inventory_preserves_only_actual_public_account_platform_metadata() {
     assert!(item.information_supported);
     assert_eq!(item.label, "Synthetic account");
     assert!(!serde_json::to_string(item).unwrap().contains("accessToken"));
+}
+
+#[test]
+fn default_false_review_actual_asset_export_import_keeps_sources_cancel_and_target_guards() {
+    let source = Fixture::new(true);
+    let skill = source.h.join(".agents/skills/review-fixture");
+    std::fs::create_dir_all(&skill).unwrap();
+    std::fs::write(
+        skill.join("SKILL.md"),
+        b"# Explicitly selected content\nNo manual review gate.\n",
+    )
+    .unwrap();
+    std::fs::create_dir_all(source.h.join(".codex")).unwrap();
+    std::fs::create_dir_all(source.h.join(".hermes")).unwrap();
+    std::fs::write(
+        source.h.join(".codex/config.toml"),
+        "[mcp_servers.reviewfixture]\ncommand = 'chosen-codex'\n",
+    )
+    .unwrap();
+    std::fs::write(
+        source.h.join(".hermes/config.yaml"),
+        "mcp_servers:\n  reviewfixture:\n    command: different-hermes\n",
+    )
+    .unwrap();
+    let clients = BTreeMap::from([("reviewfixture".into(), "codex".into())]);
+    let (assets, conflicts) = portable_assets::export_with_credential_scope(
+        &source.d,
+        &source.h,
+        &["review-fixture".into()],
+        &["reviewfixture".into()],
+        &clients,
+        false,
+        false,
+        Some(&[]),
+    )
+    .unwrap();
+    assert!(conflicts.is_empty());
+    let request = CaptureRequestV2 {
+        selection: SelectionV2 {
+            usage: UsageV2::LocalFile,
+            skill_names: vec!["review-fixture".into()],
+            mcp_sources: vec![objects_overlay_v2::McpSourceSelectionV2 {
+                name: "reviewfixture".into(),
+                definition_digest: objects_overlay_v2::mcp_source_digest(&assets.mcps[0]).unwrap(),
+            }],
+            ..Default::default()
+        },
+        mcp_clients: clients,
+        assets_reviewed: false,
+    };
+    let clone_request = |r: &CaptureRequestV2| {
+        serde_json::from_slice::<CaptureRequestV2>(&serde_json::to_vec(r).unwrap()).unwrap()
+    };
+    let before = source.business();
+    let mut producer = source.owner();
+    let p = producer
+        .prepare_export(clone_request(&request), None)
+        .unwrap();
+    let frozen = producer.bytes(&p.id).unwrap().to_vec();
+    let decoded = decode(&frozen, None).unwrap();
+    assert_eq!(
+        decoded.objects.partitions().assets.mcps[0].definition["command"],
+        "chosen-codex"
+    );
+    assert_eq!(decoded.objects.summary().extension_secret_count, 0);
+    assert_eq!(source.business(), before);
+    let mut ambiguous = clone_request(&request);
+    ambiguous.mcp_clients.clear();
+    assert_eq!(
+        code(producer.prepare_export(ambiguous, None)),
+        "capture_mcp_source_required"
+    );
+    let mut wrong = clone_request(&request);
+    wrong
+        .mcp_clients
+        .insert("reviewfixture".into(), "not-a-client".into());
+    assert!(producer.prepare_export(wrong, None).is_err());
+    let mut changed = clone_request(&request);
+    changed.selection.mcp_sources[0].definition_digest =
+        schema_v2::digest(b"not the actual chosen definition");
+    assert_eq!(
+        code(producer.prepare_export(changed, None)),
+        "capture_mcp_source_changed"
+    );
+    let mut missing = clone_request(&request);
+    missing.selection.skill_names = vec!["missing-skill".into()];
+    assert!(producer.prepare_export(missing, None).is_err());
+    let target = Fixture::new(false);
+    let scope = request.selection.clone();
+    let choices = ImportBindingsV2 {
+        mcp_clients: BTreeMap::from([("reviewfixture".into(), "managed".into())]),
+        ..Default::default()
+    };
+    assert!(!choices.assets_reviewed);
+    let clone_choices = || {
+        serde_json::from_slice::<ImportBindingsV2>(&serde_json::to_vec(&choices).unwrap()).unwrap()
+    };
+    let mut owner = target.owner();
+    let cancelled = owner
+        .prepare_import(frozen.clone(), None, Some(scope.clone()), clone_choices())
+        .unwrap();
+    assert!(cancelled.can_confirm, "{:?}", cancelled.reason_code);
+    owner.cancel_import(&cancelled.operation_id).unwrap();
+    assert!(owner
+        .confirm_import(&cancelled.operation_id, &cancelled.plan_digest, None)
+        .is_err());
+    assert!(!discovery::skills_store_dir(&target.d)
+        .join("review-fixture")
+        .exists());
+    assert!(portable_assets::stored_public(&target.d)
+        .unwrap()
+        .is_empty());
+    let import = owner
+        .prepare_import(frozen.clone(), None, Some(scope.clone()), clone_choices())
+        .unwrap();
+    assert!(import.can_confirm, "{:?}", import.reason_code);
+    let wrong_digest = owner
+        .reselect(
+            &import.operation_id,
+            &import.plan_digest,
+            {
+                let mut altered = scope.clone();
+                altered.mcp_sources[0].definition_digest =
+                    schema_v2::digest(b"wrong incoming source");
+                altered
+            },
+            clone_choices(),
+        )
+        .unwrap();
+    assert!(!wrong_digest.can_confirm);
+    let import = owner
+        .reselect(
+            &wrong_digest.operation_id,
+            &wrong_digest.plan_digest,
+            scope.clone(),
+            clone_choices(),
+        )
+        .unwrap();
+    assert!(import.can_confirm);
+    let before = target.business();
+    atomic_write(
+        &target.h.join("config.json"),
+        br#"{"providers":{},"changedAfterPreview":true}"#,
+        0o600,
+    )
+    .unwrap();
+    assert!(owner
+        .confirm_import(&import.operation_id, &import.plan_digest, None)
+        .is_err());
+    assert!(portable_assets::stored_public(&target.d)
+        .unwrap()
+        .is_empty());
+    assert!(!discovery::skills_store_dir(&target.d)
+        .join("review-fixture")
+        .exists());
+    assert_ne!(target.business(), before);
+    let ready = Fixture::new(false);
+    let mut owner = ready.owner();
+    let import = owner
+        .prepare_import(frozen.clone(), None, Some(scope.clone()), clone_choices())
+        .unwrap();
+    assert!(import.can_confirm);
+    let receipt = owner
+        .confirm_import(&import.operation_id, &import.plan_digest, None)
+        .unwrap();
+    assert_eq!(receipt.operation_id, import.operation_id);
+    assert_eq!(
+        std::fs::read(discovery::skills_store_dir(&ready.d).join("review-fixture/SKILL.md"))
+            .unwrap(),
+        b"# Explicitly selected content\nNo manual review gate.\n"
+    );
+    assert_eq!(
+        portable_assets::stored_public(&ready.d).unwrap()[0].value["command"],
+        "chosen-codex"
+    );
+    assert!(ready
+        .d
+        .join("manager-state/model-receive-v2")
+        .join(&import.operation_id)
+        .join("receipt.json")
+        .is_file());
+    let only_skill = Fixture::new(false);
+    let mut owner = only_skill.owner();
+    let mut selected = scope;
+    selected.mcp_sources.clear();
+    let import = owner
+        .prepare_import(frozen, None, Some(selected), ImportBindingsV2::default())
+        .unwrap();
+    assert!(import.can_confirm);
+    owner
+        .confirm_import(&import.operation_id, &import.plan_digest, None)
+        .unwrap();
+    assert!(portable_assets::stored_public(&only_skill.d)
+        .unwrap()
+        .is_empty());
+    assert!(discovery::skills_store_dir(&only_skill.d)
+        .join("review-fixture/SKILL.md")
+        .exists());
+    #[cfg(unix)]
+    {
+        std::fs::remove_file(skill.join("SKILL.md")).unwrap();
+        std::os::unix::fs::symlink(source.h.join("config.json"), skill.join("SKILL.md")).unwrap();
+        assert!(producer.prepare_export(request, None).is_err());
+    }
 }
