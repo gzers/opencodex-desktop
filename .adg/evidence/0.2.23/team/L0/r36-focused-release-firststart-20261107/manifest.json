@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "status": "pass for actual focused release first-start environment-ready overview; full release remains pending Windows and restore scope decision",
+  "causalCorrection": "initial white snapshots were inactive directly spawned apps; both original default-feature release and explicit custom-protocol release render the normal ready overview when the exact owned app is activated. Missing custom-protocol was NOT proven the cause. b24b00be2 retains explicit packaging feature as build hardening, not a claimed white-window product fix.",
+  "actualNativeBinary": {
+    "sourceStamp": "dd70800681894107f8fe9c986f3f5539fc49cdc8",
+    "sha256": "1631a722df2ec9096b3f6bee028d2cef757c86019c07a71c5310bf76bd98c58e",
+    "features": [
+      "custom-protocol",
+      "default"
+    ],
+    "sourceDifferenceToB24": "workflow build arguments only, no production-code difference"
+  },
+  "observedScreenshot": "normal overview, 未运行, 启动 OpenCodex, no missing system Node/Homebrew guide, connection未配置",
+  "serviceStarted": false,
+  "realNetworkAllowed": false,
+  "dailyConfigChanged": false,
+  "artifact": {
+    "path": "/private/tmp/ocxd023-protocol-release-dmg-oo8olqzt/OpenCodeX_Desktop_0.2.23_aarch64.dmg",
+    "bytes": 262781307,
+    "sha256": "1f021a795a315e57a9b00625053b5b0028799bd11ef11808abeb202c09eb6a71",
+    "signatureAndReadOnlyMountAndSourceUnchanged": true
+  },
+  "windowsCandidate": {
+    "run": 42327388977,
+    "source": "b24b00be2941f9bf439e199d6d8abdc96ff4155b",
+    "status": "in progress; not passed"
+  },
+  "files": [
+    {
+      "path": "ocxd023-protocol-release-dmg-package.log",
+      "bytes": 362,
+      "sha256": "abde2c0ce91bce82145d45bf001d9d4b5ee6e1cd7348e83a5497112e0df7b579"
+    },
+    {
+      "path": "ocxd023-repaired-release-custom-protocol-build.log",
+      "bytes": 7278,
+      "sha256": "9257f1017032c20e9614800d423bd65fc6350407788925d61a1377cac40a9ef7"
+    },
+    {
+      "path": "ocxd023-repaired-release-default-focused-evidence/app.log",
+      "bytes": 106,
+      "sha256": "8761faa92edd6ba3f4b0d28fb420919bfd07388af8ef3ec50da0bacbafae5745"
+    },
+    {
+      "path": "ocxd023-repaired-release-default-focused-evidence/ax-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-repaired-release-default-focused-evidence/capwin-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-repaired-release-default-focused-evidence/final-app.log",
+      "bytes": 185,
+      "sha256": "19bbba3ee8f1e208e48b8cf0f5a916093fcd116c3e492d235e383e1fdb91cc4a"
+    },
+    {
+      "path": "ocxd023-repaired-release-default-focused-evidence/network-denial.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "path": "ocxd023-repaired-release-default-focused-evidence/ordinary-first-screen-ax.json",
+      "bytes": 4650,
+      "sha256": "5c29dc59037541f02193010dcce46f2d02646fa161c1ad11c10a38a35d1adc10"
+    },
+    {
+      "path": "ocxd023-repaired-release-default-focused-evidence/ordinary-first-screen.png",
+      "bytes": 2985159,
+      "sha256": "c07218bd180f4ec870f76af6c3353f9712bd178968e70c9f8c453d206251b69e"
+    },
+    {
+      "path": "ocxd023-repaired-release-default-focused-evidence/report.json",
+      "bytes": 1869,
+      "sha256": "ff4e6957ce0d710e18ea89acbc9ac3f8c4b40b7d249cbf5396f68db2efe0db68"
+    },
+    {
+      "path": "ocxd023-repaired-release-default-focused-evidence/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-repaired-release-protocol-firststart-evidence/app.log",
+      "bytes": 106,
+      "sha256": "3de4e4f5c5e432f38b11ac2cc873212e8ad6c51bee6b957a6226ea1bd0cc97df"
+    },
+    {
+      "path": "ocxd023-repaired-release-protocol-firststart-evidence/ax-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-repaired-release-protocol-firststart-evidence/capwin-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-repaired-release-protocol-firststart-evidence/final-app.log",
+      "bytes": 185,
+      "sha256": "0fcdf28aa8764ac43739524b22b2fd579a8c2e19d6cba50aee11006e58e9eb4b"
+    },
+    {
+      "path": "ocxd023-repaired-release-protocol-firststart-evidence/network-denial.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "path": "ocxd023-repaired-release-protocol-firststart-evidence/ordinary-first-screen-ax.json",
+      "bytes": 2504,
+      "sha256": "640db950990619b8728e712f760c03282046a22ceca9c192de24aaa0d2a39758"
+    },
+    {
+      "path": "ocxd023-repaired-release-protocol-firststart-evidence/ordinary-first-screen.png",
+      "bytes": 74612,
+      "sha256": "d85309b2f576b17388f96cf291785f76cf2c5612dac699ce4d25f67a7b486178"
+    },
+    {
+      "path": "ocxd023-repaired-release-protocol-firststart-evidence/report.json",
+      "bytes": 1880,
+      "sha256": "5e6372e0b7be72b4a9c245bc8a114f828805fc09b7af6c922f813a070f037d8e"
+    },
+    {
+      "path": "ocxd023-repaired-release-protocol-firststart-evidence/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-repaired-release-protocol-focused-evidence/app.log",
+      "bytes": 106,
+      "sha256": "1b82fdcb1f9811a82de4e1de6fff2e4deb36d8b8707e43ce6d9ad037699f472f"
+    },
+    {
+      "path": "ocxd023-repaired-release-protocol-focused-evidence/ax-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-repaired-release-protocol-focused-evidence/capwin-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ocxd023-repaired-release-protocol-focused-evidence/final-app.log",
+      "bytes": 185,
+      "sha256": "1ef0c7d754abf4ad884ca7a0153c4c77bc404a584e4fb64561023c0dda9ce0b4"
+    },
+    {
+      "path": "ocxd023-repaired-release-protocol-focused-evidence/network-denial.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "path": "ocxd023-repaired-release-protocol-focused-evidence/ordinary-first-screen-ax.json",
+      "bytes": 4659,
+      "sha256": "62d4670650f14ba0d3a0e6dc1671eff0b753e4cf8055ce56a5116518d43b4407"
+    },
+    {
+      "path": "ocxd023-repaired-release-protocol-focused-evidence/ordinary-first-screen.png",
+      "bytes": 2981638,
+      "sha256": "e9dc9e2cf7da317e5699fe9d71d3ce0c380773e39a94fd59d54fcc21095158c4"
+    },
+    {
+      "path": "ocxd023-repaired-release-protocol-focused-evidence/report.json",
+      "bytes": 1896,
+      "sha256": "07bdf6370763f9f79b3094c0dc4bfa25fe06d3e1d919bc7937ac922255fa0fd3"
+    },
+    {
+      "path": "ocxd023-repaired-release-protocol-focused-evidence/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "package-evidence.json",
+      "bytes": 14734,
+      "sha256": "c68781254b5433bd383fae295001f0152b46fa7ba8035b88e48289ecdffe8765"
+    }
+  ]
+}

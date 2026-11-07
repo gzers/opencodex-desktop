@@ -242,3 +242,8 @@ U=当前用户HOME/.codex-desktop，D=U/desktop，H=U/opencodex/home；固定指
 ## R23 打包界面协议显式化（2026-11-07）
 
 Mac release实际实屏白窗，虽后端供应成功但不通过UI门；编译fingerprint只有default，未含custom-protocol。b24b00be2让Windows候选taskBuildArgs、MacCI与正式release显式启用custom-protocol，重建实际rustc已观察该feature，46打包/发布工具检查过；实屏修后仍待。正在执行的54c5198a候选42325691178不含本修复及后继Windows接收GENERIC_READ，不作最终同源制品；保留其完整回归证据后再定后继候选。失败报告的后端pass不冒认界面pass，见r35。
+
+
+## R24 原生白窗对照更正与当前候选（2026-11-07）
+
+R23的缺custom-protocol因果判断撤回：同一已封装release包，未激活截图白窗，显式激活精确owned PID后正常首页；原default构建与显式custom-protocol构建均重复此现象。此次为直接启动执行器未激活产生的呈现问题，不认定产品资源加载失败。b24b00be2保留显式参数作构建约束。维护包普通首装、实际环境就绪首页与签名/DMG/源不变通过（r36），没有启动真实服务/同步。新Windows候选42327388977固定b24b00be2包含后继句柄和构建约束，完整回归/安装/双SID待；54候选保留为回归前序证据。

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "kind": "isolated release-bundle ordinary first start; provisioning plus visible environment screen",
+  "app": "/private/tmp/ocxd023-repaired-release-protocol-installed-m2hsz89j/OpenCodeX Desktop.app",
+  "root": "/private/tmp/ocxd023-native-startup-gv0kavu3",
+  "version": "0.2.23",
+  "checks": [
+    "actual native process stayed alive and owned application explicitly focused",
+    "actual sandbox U/data desktop and opencodex/home split with fixed v2 pointer",
+    "actual normal startup provisions pinned offline runtime from copied release resources",
+    "no legacy .opencodex or retired D/opencodex-home created"
+  ],
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "visualChecks": "requires actual nonblank overview screenshot review; backend-only result is not UI pass",
+  "pid": 84218,
+  "pointer": {
+    "schemaVersion": 1,
+    "activeRoot": "/private/tmp/ocxd023-native-startup-gv0kavu3/home/.codex-desktop"
+  },
+  "metadata": {
+    "structure_version": "2",
+    "opencodex_home_mode": "inside"
+  },
+  "startupEvent": "2026-11-07T02:08:12.163Z [manager] startup version=0.2.23 commit=dd70800681894107f8fe9c986f3f5539fc49cdc8",
+  "provisionedRuntimeVersion": "2.97.0-desktop023.names.1",
+  "runtimeSource": {
+    "schema_version": 1,
+    "source": "managed",
+    "path": "/private/tmp/ocxd023-repaired-release-protocol-installed-m2hsz89j/runtime/bin/ocx",
+    "resolved_version": "2.97.0-desktop023.names.1",
+    "resolved_at": "2026-11-07T02:08:14Z",
+    "history": []
+  },
+  "installation": "/private/tmp/ocxd023-repaired-release-protocol-installed-m2hsz89j",
+  "result": "pass",
+  "ownedExit": -15,
+  "binarySha256": "1631a722df2ec9096b3f6bee028d2cef757c86019c07a71c5310bf76bd98c58e",
+  "cleanup": "task-owned subprocess exited; sandbox evidence root removed after recording"
+}
