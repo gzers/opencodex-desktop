@@ -152,7 +152,7 @@ jobs:
           # Invoke its JavaScript entry through the native node executable.
           $taskTauriCli = Join-Path (npm root --global) '@tauri-apps/cli/tauri.js'
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          $taskBuildArgs = @('build','--bundles','nsis,msi')
+          $taskBuildArgs = @('build','--features','custom-protocol','--bundles','nsis,msi')
           if ((Get-Content tauri.conf.json -Raw | ConvertFrom-Json).version -ceq '0.2.23') {
             $taskBuildArgs += @('--config','tauri.runtime-bundle.conf.json')
           }

@@ -369,4 +369,4 @@ jobs:
         # tauri.conf.json 在 apps/desktop/tauri（仓库根没有），必须在应用目录里执行 CLI，
         # 否则根目录直接以「could not find tauri.conf.json」失败（IMP-03 目录迁移后遗留）。
         working-directory: apps/desktop/tauri
-        run: tauri build --target aarch64-apple-darwin
+        run: tauri build --features custom-protocol --target aarch64-apple-darwin
