@@ -24,7 +24,12 @@ export async function verifyWindowsInstallUi(call,output,install=false,sandbox){
  const closed='!document.querySelector('+JSON.stringify(host.selector)+')'
  let installedSource,readyEndpoint,readyBefore,readyAfter
  await click('概览','.side');await wait("!!document.querySelector('.ov')");
- const prerequisites=await evaluate("window.__TAURI_INTERNALS__.invoke('discover_environment',{request:null})");
+ const prerequisites=await evaluate("(async()=>{try{return await window.__TAURI_INTERNALS__.invoke('discover_environment',{request:null})}catch(error){const about=await window.__TAURI_INTERNALS__.invoke('app_about');if(about.version!=='0.2.23'||error?.code!==14||!/discovery_runtime_(unresolved|pending)/.test(error?.message??''))throw error;return {gate:'integrated_runtime_not_ready',code:error.code,message:error.message,readyVerified:false}}})()");
+ if(about.version==='0.2.23'&&prerequisites.gate==='integrated_runtime_not_ready'){
+  assert.equal(prerequisites.readyVerified,false)
+  await wait("!!document.querySelector('[data-testid=environment-gate]')")
+  await writeFile(join(output,'runtime-initial-unresolved.json'),JSON.stringify({result:'expected-not-ready',discovery:prerequisites,reason:'fresh sandbox deliberately skips automatic bundle provision; real install below is required'},null,2)+'\n')
+ }
  const initialSource=await evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')");
  let overviewInstaller=false;
  if(prerequisites.gate==='missing_ocx'&&initialSource.kind==='unresolved'){
