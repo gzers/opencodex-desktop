@@ -47,6 +47,10 @@ jobs:
         if: always()
         continue-on-error: true
         run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '02' -Name current-binary -Task build
+      - name: 25 backend-state-observer-build
+        if: always()
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '25' -Name backend-state-observer-build -Task state-observer
       - name: 24 windows-bundle-root-regression
         if: always()
         continue-on-error: true

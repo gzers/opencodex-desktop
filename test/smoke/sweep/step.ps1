@@ -2,7 +2,7 @@ param(
  [Parameter(Mandatory=$true)][string]$Step,
  [Parameter(Mandatory=$true)][string]$Name,
  [Parameter(Mandatory=$true)][string]$Directory,
- [Parameter(Mandatory=$true)][ValidateSet('inputs','build','bundle-roots','policy-prepare','policy-restore','installer','native','two-user','collect')][string]$Task,
+ [Parameter(Mandatory=$true)][ValidateSet('inputs','build','state-observer','bundle-roots','policy-prepare','policy-restore','installer','native','two-user','collect')][string]$Task,
  [string]$Kind,[string]$Mode,[string]$Probe
 )
 $ErrorActionPreference='Stop'
@@ -49,11 +49,19 @@ $receipt=Invoke-SweepCheck $recordDirectory $Step $Name {
    if(!$env:OCXD_SWEEP_PROGRAM){throw 'Original complete resources prerequisite unavailable'}
    & npm --prefix apps/desktop/ui ci *> (Join-Path $evidence 'npm-ci.log');if($LASTEXITCODE -ne 0){throw 'Frontend dependency install failed'}
    & npm --prefix apps/desktop/ui run build *> (Join-Path $evidence 'frontend-build.log');if($LASTEXITCODE -ne 0){throw 'Frontend build failed'}
-   & cargo build --manifest-path apps/desktop/tauri/Cargo.toml --locked --features custom-protocol --bins --jobs 2 *> (Join-Path $evidence 'native-build.log');if($LASTEXITCODE -ne 0){throw 'Current native binary build failed'}
+   & cargo build --manifest-path apps/desktop/tauri/Cargo.toml --locked --features custom-protocol --bins --jobs 2 --message-format=json 1> (Join-Path $evidence 'native-build-messages.json') 2> (Join-Path $evidence 'native-build.log');if($LASTEXITCODE -ne 0){throw 'Current native binary build failed'}
    & rustc --edition 2021 test/smoke/sweep/filesystem.rs -o (Join-Path $env:OCXD_SWEEP_PROGRAM 'sweep-filesystem.exe') *> (Join-Path $evidence 'filesystem-probe-build.log');if($LASTEXITCODE -ne 0){throw 'Test-only filesystem observer build failed'}
-   & rustc --edition 2021 test/smoke/sweep/state.rs --extern ('opencodex_desktop_lib='+ (Join-Path $repo 'apps/desktop/tauri/target/debug/deps/libopencodex_desktop_lib.rlib')) -L ('dependency='+ (Join-Path $repo 'apps/desktop/tauri/target/debug/deps')) -o (Join-Path $env:OCXD_SWEEP_PROGRAM 'sweep-state.exe') *> (Join-Path $evidence 'state-probe-build.log');if($LASTEXITCODE -ne 0){throw 'Actual backend preferences observer build failed'}
    foreach($file in @('opencodex-desktop.exe','ocxd.exe')){Copy-Item -LiteralPath (Join-Path $repo ('apps/desktop/tauri/target/debug/'+$file)) -Destination $env:OCXD_SWEEP_PROGRAM}
    @{source=(git -C $repo rev-parse HEAD).Trim();appsTree=(git -C $repo rev-parse HEAD:apps).Trim();profile='debug custom-protocol; diagnostic-only';files=@(Get-ChildItem $env:OCXD_SWEEP_PROGRAM -File|ForEach-Object{@{name=$_.Name;sha256=(Get-FileHash $_.FullName).Hash.ToLowerInvariant()}})}
+  }
+  state-observer {
+   $nativePaths=@(Get-Content -LiteralPath (Join-Path $evidence 'native-build-messages.json')|ForEach-Object {$_|ConvertFrom-Json}|Where-Object reason -ceq 'build-script-executed'|ForEach-Object {$_.linked_paths}|Sort-Object -Unique)
+   if(!$nativePaths.Count){throw 'Actual cargo native link directories unavailable; no guessed SDK/library paths'}
+   $arguments=@('--edition','2021','test/smoke/sweep/state.rs','--extern',('opencodex_desktop_lib='+ (Join-Path $repo 'apps/desktop/tauri/target/debug/deps/libopencodex_desktop_lib.rlib')),'-L',('dependency='+ (Join-Path $repo 'apps/desktop/tauri/target/debug/deps')))
+   foreach($path in $nativePaths){$arguments+=@('-L',$path)}
+   $arguments+=@('-o',(Join-Path $env:OCXD_SWEEP_PROGRAM 'sweep-state.exe'))
+   & rustc @arguments *> (Join-Path $evidence 'state-probe-build.log');if($LASTEXITCODE -ne 0){throw 'Independent actual backend preferences observer build failed; product candidate remains available'}
+   @{source=(git -C $repo rev-parse HEAD).Trim();nativePaths=$nativePaths;observerSha256=(Get-FileHash (Join-Path $env:OCXD_SWEEP_PROGRAM 'sweep-state.exe')).Hash.ToLowerInvariant();accepted=$false}
   }
   bundle-roots {
    & cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib windows_bundle_roots -- --nocapture *> (Join-Path $evidence 'windows-bundle-root-regression.log')
