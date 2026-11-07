@@ -715,6 +715,11 @@ function Invoke-TwoUserChild([string]$InputFile) {
     if($file.Length -le 8MB -and !($file.Attributes -band [IO.FileAttributes]::ReparsePoint)){Copy-Item -LiteralPath $file.FullName -Destination (Join-Path $retainedLogs $file.Name)}
    }
   }
+  $programDiagnostics=Join-Path $out 'program-diagnostics';New-Item -ItemType Directory -Force $programDiagnostics|Out-Null
+  foreach($relative in @('.runtime-bundle-failure.json','.runtime-bundle-pending.json','runtime-bundle/runtime-bundle.manifest.json','runtime/opencodex/.runtime-manifest.json')){
+   $path=Join-Path $installed $relative
+   if(Test-Path -LiteralPath $path){$file=Get-Item -LiteralPath $path;if(!$file.PSIsContainer -and $file.Length -le 1MB -and !($file.Attributes -band [IO.FileAttributes]::ReparsePoint)){Copy-Item -LiteralPath $path -Destination (Join-Path $programDiagnostics ($relative.Replace('/','_').TrimStart('.')))}}
+  }
   try{$result.finalInventory=Get-TwoUserTreeHash (Join-Path $nativeProfile '.codex-desktop');$result.inventory='hashed'}catch{$result.inventory='unavailable';if($result.result -ceq 'pass-user-isolation'){$result.result='evidence-incomplete'}}
   Write-TwoUserJson (Join-Path $out 'finished.json') $result
   if($manager){$manager.process.Dispose()}
