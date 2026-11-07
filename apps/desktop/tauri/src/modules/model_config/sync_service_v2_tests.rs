@@ -1920,3 +1920,100 @@ async fn real_model_applied_interruption_reopens_with_dual_proofs_and_only_finis
     assert_eq!(repeated.local_apply_status, LocalApplyStatus::Applied);
     assert_eq!(gets, target.remote.gets.load(Ordering::SeqCst));
 }
+
+#[tokio::test]
+async fn explicit_download_updates_an_existing_different_mcp_definition_in_managed_store_only() {
+    use crate::modules::sync::portable_assets;
+    let source = Env::new();
+    let mut upload_request = source.request();
+    add_full_saved_scope(&source, &mut upload_request);
+    upload_request.selection = SelectionV2 {
+        mcp_sources: upload_request.selection.mcp_sources.clone(),
+        ..Default::default()
+    };
+    let upload = production_service(&source);
+    let preview = upload
+        .preview(upload_request, ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    upload
+        .confirm(ConfirmRequestV2 {
+            session_id: preview.session_id,
+            plan_digest: preview.plan_digest,
+        })
+        .await
+        .unwrap();
+    let mut target = Env::new();
+    target.remote = source.remote.clone();
+    std::fs::create_dir_all(target.home.join(".codex")).unwrap();
+    let config = target.home.join(".codex/config.toml");
+    std::fs::write(
+        &config,
+        "[mcp_servers.service_fixture]\ncommand = 'different-local-command'\nargs = []\n",
+    )
+    .unwrap();
+    let unselected = target.home.join(".claude.json");
+    let unselected_bytes =
+        br#"{"mcpServers":{"service_fixture":{"command":"unselected-client-command","args":[]}}}"#;
+    std::fs::write(&unselected, unselected_bytes).unwrap();
+    std::fs::remove_file(
+        target
+            .root
+            .join(crate::modules::model_config::store_v2::DRAFT_PATH),
+    )
+    .unwrap();
+    let sources = BTreeMap::from([("service_fixture".into(), "codex".into())]);
+    let (assets, conflicts) = portable_assets::export_with_credential_scope(
+        &target.root,
+        &target.home,
+        &[],
+        &["service_fixture".into()],
+        &sources,
+        false,
+        false,
+        Some(&[]),
+    )
+    .unwrap();
+    assert!(conflicts.is_empty());
+    let request = PreviewRequestV2 {
+        selection: SelectionV2 {
+            mcp_sources: vec![McpSourceSelectionV2 {
+                name: "service_fixture".into(),
+                definition_digest: super::super::objects_overlay_v2::mcp_source_digest(
+                    &assets.mcps[0],
+                )
+                .unwrap(),
+            }],
+            ..Default::default()
+        },
+        mcp_clients: sources,
+        assets_reviewed: false,
+        selected_head: None,
+        forced_direction: Some(ServiceDirectionV2::Download),
+        backup_before_update: true,
+    };
+    let client = production_service(&target);
+    let before = std::fs::read(&config).unwrap();
+    let puts = source.remote.puts.load(Ordering::SeqCst);
+    let preview = client
+        .preview(request, ServiceSecretsV2::default())
+        .await
+        .unwrap();
+    assert!(matches!(preview.chosen_direction, DirectionV2::Download));
+    assert_eq!(std::fs::read(&config).unwrap(), before);
+    let actual = client
+        .confirm(ConfirmRequestV2 {
+            session_id: preview.session_id,
+            plan_digest: preview.plan_digest,
+        })
+        .await
+        .unwrap();
+    assert!(actual.local_apply_status == LocalApplyStatus::Applied);
+    let after = std::fs::read_to_string(config).unwrap();
+    assert!(after.contains("different-local-command"));
+    let managed =
+        std::fs::read_to_string(target.root.join("manager-state/mcp-definitions.json")).unwrap();
+    assert!(managed.contains("service-fixture-command"));
+    assert_eq!(source.remote.puts.load(Ordering::SeqCst), puts);
+    assert_eq!(std::fs::read(unselected).unwrap(), unselected_bytes);
+}

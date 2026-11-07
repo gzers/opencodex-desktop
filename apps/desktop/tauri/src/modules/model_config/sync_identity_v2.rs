@@ -889,6 +889,34 @@ impl SyncIdentityOwnerV2 {
                 .adopt_template_defaults
                 .retain(|r| schema_v2::revision(&observed.library, r).is_ok());
             self.local_nonmodel_sources(&mut request)?;
+            // The UI can select an existing local definition or a cloud-only
+            // definition. Bind each side to its own observed bytes: a local
+            // digest is a receive-target guard, not the incoming definition.
+            // Keep local-only objects available for the later Upload decision.
+            for selected in &mut remote.mcp_sources {
+                let local_digest = request
+                    .selection
+                    .mcp_sources
+                    .iter()
+                    .find(|m| m.name == selected.name)
+                    .map(|m| m.definition_digest.as_str());
+                let cloud_digest = cloud
+                    .partitions()
+                    .assets
+                    .mcps
+                    .iter()
+                    .find(|m| m.name == selected.name)
+                    .map(super::objects_overlay_v2::mcp_source_digest)
+                    .transpose()?;
+                if local_digest != Some(selected.definition_digest.as_str())
+                    && cloud_digest.as_deref() != Some(selected.definition_digest.as_str())
+                {
+                    return Err(err("capture_mcp_source_changed"));
+                }
+                if let Some(digest) = cloud_digest {
+                    selected.definition_digest = digest;
+                }
+            }
         }
         let captured = self.capture(&request)?;
         let atoms = file_objects_v2::save_state(&captured.objects)?;

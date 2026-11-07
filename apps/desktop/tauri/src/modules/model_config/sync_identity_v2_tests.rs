@@ -374,6 +374,84 @@ fn first_empty_device_full_remote_scope_keeps_only_actual_local_capture_sources(
 }
 
 #[test]
+fn receive_mcp_binds_local_selection_to_exact_cloud_definition_and_rejects_unknown_digest() {
+    let f = Fixture::new(false);
+    let (cloud, mut request) = full_cloud(&f);
+    request.selection = super::super::objects_overlay_v2::SelectionV2 {
+        mcp_sources: request.selection.mcp_sources,
+        ..Default::default()
+    };
+    std::fs::create_dir(f.home.join(".codex")).unwrap();
+    std::fs::write(
+        f.home.join(".codex/config.toml"),
+        "[mcp_servers.fixture]\ncommand='synthetic-local-command'\n",
+    )
+    .unwrap();
+    request.mcp_clients.insert("fixture".into(), "codex".into());
+    f.owner.local_nonmodel_sources(&mut request).unwrap();
+    let local = request.selection.clone();
+    let mut forged = CaptureRequestV2 {
+        selection: request.selection.clone(),
+        mcp_clients: request.mcp_clients.clone(),
+        assets_reviewed: request.assets_reviewed,
+    };
+    forged.selection.mcp_sources[0].definition_digest = schema_v2::digest(b"unobserved");
+    assert_eq!(
+        code(
+            f.owner
+                .freeze_preview(DirectionV2::Download, forged, Some(&cloud))
+        ),
+        "capture_mcp_source_changed"
+    );
+    let preview = f
+        .owner
+        .freeze_preview(DirectionV2::Download, request, Some(&cloud))
+        .unwrap();
+    assert_eq!(preview.binding().local_scope, local);
+    assert_ne!(
+        preview.binding().remote_scope.mcp_sources,
+        local.mcp_sources
+    );
+    assert_eq!(
+        preview.binding().remote_scope.mcp_sources[0].definition_digest,
+        super::super::objects_overlay_v2::mcp_source_digest(&cloud.partitions().assets.mcps[0])
+            .unwrap()
+    );
+    f.owner.verify(preview.binding()).unwrap();
+}
+
+#[test]
+fn local_only_mcp_remains_available_for_upload_when_cloud_has_other_objects() {
+    let f = Fixture::new(false);
+    let (cloud, mut request) = full_cloud(&f);
+    request.selection = super::super::objects_overlay_v2::SelectionV2 {
+        mcp_sources: request.selection.mcp_sources,
+        ..Default::default()
+    };
+    request.selection.mcp_sources[0].name = "local_only".into();
+    request.mcp_clients = BTreeMap::from([("local_only".into(), "codex".into())]);
+    std::fs::create_dir(f.home.join(".codex")).unwrap();
+    std::fs::write(
+        f.home.join(".codex/config.toml"),
+        "[mcp_servers.local_only]\ncommand='synthetic-local-command'\n",
+    )
+    .unwrap();
+    f.owner.local_nonmodel_sources(&mut request).unwrap();
+    let local = request.selection.clone();
+    let receive = f
+        .owner
+        .freeze_preview(DirectionV2::Download, request, Some(&cloud))
+        .unwrap();
+    assert_eq!(receive.binding().remote_scope, local);
+    let upload = f
+        .owner
+        .freeze_preview(DirectionV2::Upload, receive.local_capture_request(), None)
+        .unwrap();
+    assert_eq!(upload.binding().remote_scope, local);
+    f.owner.verify(upload.binding()).unwrap();
+}
+
+#[test]
 fn existing_nonmodel_sources_keep_actual_local_mcp_digest_and_explicit_client_guard() {
     let f = Fixture::new(false);
     let (cloud, mut request) = full_cloud(&f);
