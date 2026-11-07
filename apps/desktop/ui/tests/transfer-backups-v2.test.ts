@@ -59,6 +59,7 @@ describe('actual scope-backup v2 consumer with deterministic owner receipts',()=
   const restore=vi.spyOn(transferBackupV2Api,'restore').mockResolvedValue({...receipt(),refreshSyncScope:true})
   await store.load();await store.choose(store.rows[0]!);await store.restore()
   expect(store.active!.receipt!.status).toBe('applied');expect(store.active!.refreshError).toContain('scope readback failed')
+  const sync=useConfigSyncV2Store();await sync.prepare();await sync.persistScope();expect(sync.error).toContain('尚未读回');expect(calls('config_v2_preview')).toHaveLength(0);expect(calls('config_v2_save_scope')).toHaveLength(0)
   await store.refreshSaved();expect(read).toHaveBeenCalledTimes(2);expect(restore).toHaveBeenCalledTimes(1)
   expect(store.active!.refreshError).toBe('')
  })
