@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "kind": "isolated release-bundle ordinary first start; provisioning plus visible environment screen",
+  "app": "/private/tmp/ocxd023-backup-lock-release-installed-5pue267k/OpenCodeX Desktop.app",
+  "root": "/private/tmp/ocxd023-native-startup-rzm9ch_k",
+  "version": "0.2.23",
+  "checks": [
+    "actual native process stayed alive and exact owned application explicitly focused",
+    "actual sandbox U/data desktop and opencodex/home split with fixed v2 pointer",
+    "actual normal startup provisions pinned offline runtime from copied release resources",
+    "no legacy .opencodex or retired D/opencodex-home created"
+  ],
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "visualChecks": "exact owned app focused; screenshot requires normal overview review",
+  "pid": 88495,
+  "pointer": {
+    "schemaVersion": 1,
+    "activeRoot": "/private/tmp/ocxd023-native-startup-rzm9ch_k/home/.codex-desktop"
+  },
+  "metadata": {
+    "structure_version": "2",
+    "opencodex_home_mode": "inside"
+  },
+  "startupEvent": "2026-11-07T02:38:10.901Z [manager] startup version=0.2.23 commit=7f5057366f2a05a29edc5e17368fc4df6efac59a",
+  "provisionedRuntimeVersion": "2.97.0-desktop023.names.1",
+  "runtimeSource": {
+    "schema_version": 1,
+    "source": "managed",
+    "path": "/private/tmp/ocxd023-backup-lock-release-installed-5pue267k/runtime/bin/ocx",
+    "resolved_version": "2.97.0-desktop023.names.1",
+    "resolved_at": "2026-11-07T02:39:03Z",
+    "history": []
+  },
+  "installation": "/private/tmp/ocxd023-backup-lock-release-installed-5pue267k",
+  "result": "pass",
+  "ownedExit": -15,
+  "binarySha256": "47235fd59a8f6a8376dcf71feff8b298306bbe7bccc8b61780fe1bd8b7762e7b",
+  "cleanup": "task-owned subprocess exited; sandbox evidence root removed after recording"
+}
