@@ -429,7 +429,7 @@ jobs:
           path: test/out/windows-installer-retention
 
   native-ui:
-    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023' && inputs.admission_run != 'msi-compiler-023' && inputs.admission_run != 'native-replay-414' && inputs.admission_run != 'raw-msi-3d-diagnostic'
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023' && inputs.admission_run != 'msi-compiler-023' && inputs.admission_run != 'native-replay-414' && inputs.admission_run != 'raw-msi-3d-diagnostic' && inputs.admission_run != 'raw-full-0c-diagnostic'
     runs-on: windows-latest
     timeout-minutes: 40
     defaults:
@@ -739,3 +739,99 @@ jobs:
             test/out/raw-msi3d/evidence/*startup/startup/*.json
             test/out/raw-msi3d/evidence/*startup/startup/*.log
             test/out/raw-msi3d/evidence/*startup/startup/*.png
+
+  raw-full0c-diagnostic:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run == 'raw-full-0c-diagnostic'
+    permissions:
+      contents: read
+      actions: read
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: gzers/opencodex-desktop
+          run-id: 42374536779
+          name: windows-raw-installers-unverified-0c869d9497c102b714dea1ee89394f999da8c4ec
+          path: test/out/raw-full0c/input
+      - name: Prepare disposable Server MSI client-equivalent fixture
+        id: raw_msi_fixture
+        shell: pwsh
+        run: ./test/smoke/windows-msi-server-fixture.ps1 -Mode prepare -EvidenceDirectory test/out/raw-full0c/evidence
+      - name: Verify exact raw originals then diagnose one default MSI installation
+        shell: pwsh
+        run: |
+          $root=(Resolve-Path test/out/raw-full0c/input).Path
+          $receipt=Get-Content -LiteralPath (Join-Path $root 'build-identities.json') -Raw|ConvertFrom-Json
+          $expected='0c869d9497c102b714dea1ee89394f999da8c4ec'
+          if($receipt.source -cne $expected -or $receipt.appsTree -cne 'cf7ca5b19438d9157ada555d0451f91d768b1cf9' -or $receipt.status -cne 'unverified-build-only' -or $receipt.installationAccepted -or $receipt.releaseAccepted -or @($receipt.files).Count -ne 3){throw 'Unverified original identity differs'}
+          foreach($file in $receipt.files){
+            if($file.name -notin @('opencodex-desktop.exe','OpenCodeX Desktop_0.2.23_x64-setup.exe','OpenCodeX Desktop_0.2.23_x64_en-US.msi')){throw 'Unexpected original file'}
+            $path=Join-Path $root $file.name
+            if((Get-Item -LiteralPath $path).Length -ne $file.bytes -or (Get-FileHash -LiteralPath $path).Hash.ToLowerInvariant() -cne $file.sha256){throw 'Original bytes changed'}
+          }
+          $bundle=Join-Path $root 'bundle'
+          New-Item -ItemType Directory -Force (Join-Path $bundle 'msi')|Out-Null
+          New-Item -ItemType Directory -Force (Join-Path $bundle 'nsis')|Out-Null
+          Copy-Item -LiteralPath (Join-Path $root 'OpenCodeX Desktop_0.2.23_x64-setup.exe') -Destination (Join-Path $bundle 'nsis')
+          Copy-Item -LiteralPath (Join-Path $root 'OpenCodeX Desktop_0.2.23_x64_en-US.msi') -Destination (Join-Path $bundle 'msi')
+          & test/smoke/windows-installer.ps1 -BundleDirectory $bundle -BuiltExecutable (Join-Path $root 'opencodex-desktop.exe') -Node (Get-Command node).Source -OutputDirectory test/out/raw-full0c/evidence -ExpectedCommit $expected -Kind all -Mode all
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+      - uses: actions/checkout@v5
+        with:
+          ref: 0c869d9497c102b714dea1ee89394f999da8c4ec
+          path: test/out/raw-full0c/original-source
+      - name: Verify two actual SIDs and ports from the same complete original MSI payload
+        shell: pwsh
+        run: |
+          $taskRoot=(Resolve-Path test/out/raw-full0c/input).Path
+          $taskPayload=Join-Path $env:RUNNER_TEMP ('ocxd023-raw-payload-'+[guid]::NewGuid().ToString('N'))
+          $taskMsi=Join-Path $taskRoot 'OpenCodeX Desktop_0.2.23_x64_en-US.msi'
+          $taskProcess=Start-Process msiexec.exe -ArgumentList ('/a "'+$taskMsi+'" /qn TARGETDIR="'+$taskPayload+'" /L*v "'+(Join-Path $taskRoot 'administrative-extract.log')+'"') -Wait -PassThru
+          if($taskProcess.ExitCode -ne 0){throw 'Original MSI payload extraction failed'}
+          $taskImages=@(Get-ChildItem -LiteralPath $taskPayload -Recurse -Filter opencodex-desktop.exe)
+          if($taskImages.Count -ne 1){throw 'One exact complete original MSI payload required'}
+          $taskProgram=$taskImages[0].DirectoryName
+          node test/smoke/windows-bundle-identity.mjs (Join-Path $taskRoot 'opencodex-desktop.exe') $taskImages[0].FullName msi
+          if($LASTEXITCODE -ne 0){throw 'Extracted original payload identity differs'}
+          $taskDriver=Join-Path $env:RUNNER_TEMP ('ocxd023-raw-node-'+[guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory $taskDriver|Out-Null
+          $taskBundle=Join-Path $taskProgram 'runtime-bundle/runtime-bundle-0.2.23-win32-x64.tar.gz'
+          if(!(Test-Path -LiteralPath $taskBundle)){throw 'Original MSI complete runtime bundle absent'}
+          tar -xzf $taskBundle -C $taskDriver runtime/node
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+          $taskTools=(Resolve-Path test/smoke).Path
+          $taskEvidence=[IO.Path]::GetFullPath('test/out/raw-full0c/two-user')
+          Push-Location test/out/raw-full0c/original-source
+          try{
+            & (Join-Path $taskTools 'windows023-two-user-native.ps1') -Executable $taskImages[0].FullName -Node (Join-Path $taskDriver 'runtime/node/node.exe') -OutputDirectory $taskEvidence -ExpectedCommit '0c869d9497c102b714dea1ee89394f999da8c4ec' -VerifyRuntimePorts
+            if($LASTEXITCODE -ne 0){throw 'Original package actual twoSID/runtime ports failed'}
+            $taskResult=Get-Content -LiteralPath (Join-Path $taskEvidence 'two-user-native.json') -Raw|ConvertFrom-Json
+            if(!$taskResult.fullVersionGatePassed -or $taskResult.runtimeProxyPortIsolation -cne 'verified-runtime-ports'){throw 'Original twoSID evidence incomplete'}
+          }finally{Pop-Location}
+      - name: Restore exact Server MSI policy
+        if: always()
+        shell: pwsh
+        run: if(Test-Path test/out/raw-full0c/evidence/msi-server-policy.original.json){ & ./test/smoke/windows-msi-server-fixture.ps1 -Mode restore -EvidenceDirectory test/out/raw-full0c/evidence }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw-full0c-diagnostic
+          if-no-files-found: error
+          path: |
+            test/out/raw-full0c/input/build-identities.json
+            test/out/raw-full0c/two-user/*.json
+            test/out/raw-full0c/two-user/*.log
+            test/out/raw-full0c/input/administrative-extract.log
+            test/out/raw-full0c/evidence/*.json
+            test/out/raw-full0c/evidence/*.log
+            test/out/raw-full0c/evidence/*startup/*.json
+            test/out/raw-full0c/evidence/*startup/*.log
+            test/out/raw-full0c/evidence/*startup/startup/*.json
+            test/out/raw-full0c/evidence/*startup/startup/*.log
+            test/out/raw-full0c/evidence/*startup/startup/*.png
