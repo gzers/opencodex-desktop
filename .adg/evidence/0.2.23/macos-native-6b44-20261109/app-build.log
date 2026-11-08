@@ -1,0 +1,64 @@
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `npm --prefix ui run build`
+
+> opencodex-desktop-ui@0.2.23 build
+> vue-tsc --noEmit && vite build
+
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 353 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                 1.90 kB │ gzip:   0.55 kB
+dist/assets/ConnectionDialog-Dc4z0wnu.css       0.47 kB │ gzip:   0.24 kB
+dist/assets/ImportedConnections-BnDbboj-.css    0.48 kB │ gzip:   0.25 kB
+dist/assets/TransferBackups-DGI7bYZj.css        1.28 kB │ gzip:   0.43 kB
+dist/assets/SyncRoute-BnsWbMLo.css              1.45 kB │ gzip:   0.54 kB
+dist/assets/UiDialog-BSTAUjfO.css               1.49 kB │ gzip:   0.56 kB
+dist/assets/ModelSaveHistory-DTAfbq1A.css       1.53 kB │ gzip:   0.50 kB
+dist/assets/ModelTransfer-Bx2wkqsG.css         11.44 kB │ gzip:   2.50 kB
+dist/assets/ModelsRoute-lYCQz6F8.css           20.87 kB │ gzip:   4.06 kB
+dist/assets/index-CJcfIQHj.css                130.63 kB │ gzip:  23.19 kB
+dist/assets/rolldown-runtime-DK3Fl9T5.js        0.15 kB │ gzip:   0.15 kB
+dist/assets/event-BvXB7Igl.js                   1.13 kB │ gzip:   0.59 kB
+dist/assets/preload-helper-BZ1Pz5am.js          1.21 kB │ gzip:   0.69 kB
+dist/assets/update-V5YWvBVt.js                  1.89 kB │ gzip:   0.91 kB
+dist/assets/core-DNNVStWM.js                    2.85 kB │ gzip:   1.14 kB
+dist/assets/ImportedConnections-DZ2RYNI2.js     3.13 kB │ gzip:   1.57 kB
+dist/assets/SyncRoute-CCTcre3T.js               3.19 kB │ gzip:   1.52 kB
+dist/assets/api-DQk0yoll.js                     3.77 kB │ gzip:   1.39 kB
+dist/assets/api-DJ3SDe3A.js                     4.55 kB │ gzip:   1.82 kB
+dist/assets/UiDialog-CjDOh6IP.js                5.84 kB │ gzip:   2.65 kB
+dist/assets/pinia-BcIhIhku.js                   5.93 kB │ gzip:   2.81 kB
+dist/assets/ConnectionDialog-B2LeRrDe.js        6.51 kB │ gzip:   2.71 kB
+dist/assets/store-BE-oT62N.js                   6.64 kB │ gzip:   2.29 kB
+dist/assets/ModelSaveHistory-DOoX8Hre.js        8.71 kB │ gzip:   3.79 kB
+dist/assets/TransferBackups-DNn9n3lO.js         8.77 kB │ gzip:   3.57 kB
+dist/assets/store-DOEp9TjL.js                  27.97 kB │ gzip:   4.72 kB
+dist/assets/store-v2-D-B8Hp3_.js               36.28 kB │ gzip:  11.48 kB
+dist/assets/ModelTransfer-Cxr-rJGw.js          67.69 kB │ gzip:  19.33 kB
+dist/assets/vue-framework-Hnj8juRO.js          76.46 kB │ gzip:  29.89 kB
+dist/assets/app-B4oIYgUm.js                   106.00 kB │ gzip:  29.25 kB
+dist/assets/ModelsRoute-Tj3uPWlR.js           182.84 kB │ gzip:  52.63 kB
+dist/assets/index-7Vzg69VO.js                 378.56 kB │ gzip: 127.13 kB
+
+✓ built in 335ms
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+warning: opencodex-desktop@0.2.23: STATIC_VCRUNTIME is deprecated; use build.windows.staticVCRuntime in tauri.conf.json or tauri_build::WindowsAttributes::static_vc_runtime instead.
+    Finished `release` profile [optimized] target(s) in 3m 48s
+       Built application at: /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/opencodex-desktop
+    Bundling OpenCodeX Desktop.app (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app)
+     Signing with identity "-"
+Signing with identity "-"
+Signing /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocxd
+/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocxd: replacing existing signature
+Signing with identity "-"
+Signing /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop
+/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop: replacing existing signature
+Signing with identity "-"
+Signing /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app
+/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app: replacing existing signature
+        Warn skipping app notarization, no APPLE_ID & APPLE_PASSWORD & APPLE_TEAM_ID or APPLE_API_KEY & APPLE_API_ISSUER & APPLE_API_KEY_PATH environment variables found
+    Finished 1 bundle at:
+        /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app
+

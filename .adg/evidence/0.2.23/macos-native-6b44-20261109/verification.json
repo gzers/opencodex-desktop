@@ -1,0 +1,33 @@
+{
+  "source": "6b44bf84f466a4ded52f8d6a72bafd7d5699c219",
+  "binarySha256": "f41d528121fa5cda6bb94c7aeffdfb4aa3f581bd07674260911dc06e450ed94d",
+  "checks": [
+    "strict deep ad-hoc codesign verified",
+    "actual native app supplies pinned offline names.2 from own install",
+    "native service first; real check/save 54430; exact disk/HOME readback",
+    "window physically resized to1800x1200 pixels at2x =900x600 logical",
+    "dark service controls and single summary fit at minimum size",
+    "light long paths wrap and label/value align; restore label is adopted 诊断与恢复安装",
+    "program status and preserved install/offline/update/uninstall consumers visible at900x600"
+  ],
+  "noProxyStarted": true,
+  "outboundBlocked": true,
+  "localBindPositiveControl": true,
+  "adHocNotFormalUpdaterAcceptance": true,
+  "accepted": false,
+  "pendingFinding": {
+    "id": "INSTALL23-UI-05-save-refresh",
+    "observed": "After port save created config.json, directory snapshot still showed initial missing badge until explicit refresh; actual disk exists.",
+    "proposed": "After successful port save notify directory path owner to refresh actual snapshot, retain failed/stale states if refresh fails.",
+    "action": "collect with full R24 outcome before any product edit"
+  },
+  "cleanup": {
+    "ownedManagerExited": true,
+    "ownProcessImagesRemaining": 0,
+    "exactRemoved": [
+      "/private/tmp/ocxd023-6b44-port-I-c8pd0gfm",
+      "/private/tmp/ocxd023-6b44-port-U-y9r6mwbo"
+    ],
+    "dailyHomeOrServicesChanged": false
+  }
+}

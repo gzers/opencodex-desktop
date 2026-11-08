@@ -226,3 +226,9 @@ run42501966034/source1f1dcb9d0，artifact13627165760，35882967字节/SHA256 708
 同批f71222c35生命周期、d745924ab界面、6b44bf84f诊断汇总已统一推送；前端1601过，完整工作区2238过/0失败/38忽略（后继deadline/DTO小改另有owner6/start3/process8/DTO4和strict Clippy过），正式dist首屏4项过，PowerShell双用户合同/25项UI驱动及5项summary行为测试过。都不冒充最终Windows原生通过。完整原包、原回执及审计见[本轮证据](../../.adg/evidence/0.2.23/sweep-r23-42501966034/analysis.json)。
 
 第24轮已启动run42505546007，固定source6b44bf84f，28项全量诊断，accepted:false；等待全部回执后再处置，不先修第一项重跑。
+
+## 当前6b44原生界面复验与刷新遗漏（2026-11-09）
+
+source6b44bf84f当前.app完成构建，binarySHA256 f41d528121fa5cda6bb94c7aeffdfb4aa3f581bd07674260911dc06e450ed94d，codesign deep strict ad-hoc通过，非正式更新签名验收。独立I/U/H，禁止日常HOME读写与出站，正向本地bind可用；离线names.2供应verified。CUA真实操作检查并保存54430，实际config与mode/H绑定读回一致、无运行记录／未启动代理；实际拖拽窗口得到1800×1200物理像素（2x，即900×600逻辑），暗色服务控件和单行摘要可见，浅色长路径换行对齐，恢复入口已为“诊断与恢复安装”，保留管理入口可见。
+
+本轮又确认首次保存创建config.json后，目录卡片沿用旧“缺失”快照，需保存成功后触发目录拥有者重新读取；刷新失败仍应保留明确旧快照／错误，不伪造valid。已记录[本轮原生证据](../../.adg/evidence/0.2.23/macos-native-6b44-20261109/verification.json)pendingFinding，等待第24轮完整28项回执后整批修改，不提前改正在诊断源。软件/原型全部一致仍未关闭。真实进程及精确I/U已清理，原生截图保留在对话CUA，未假称另有本地截图。
