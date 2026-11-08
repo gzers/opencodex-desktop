@@ -257,3 +257,7 @@ source6b44bf84f当前.app完成构建，binarySHA256 f41d528121fa5cda6bb94c7aeff
 [全表](../../.adg/evidence/0.2.23/sweep-r25-42508921613/status-table.md)已先展示，原始22/6与失败ZIP保留。用户1新进程在CIM时间／映像组合检查失败，原泛化错误不能分辨子项；不扩时间容差，改为同一保留句柄原生FILETIME/PID/映像两次精确核对夹住真实CIM SID/PID/映像检查。Profile清理先确认原引导句柄已退出再释放，原30秒卸载等待不变；仍活或身份不明继续保留并失败。正式dist旧首卡断言改为三卡完整顺序。121项PowerShell离线合同（包括1tick/PID/映像反例）、4项实际dist检查通过，不等同Windows原生通过。此次未执行到服务Start，R24超时仍待，不以本轮门前失败掩盖。
 
 第26轮整批推送后派发：[run42511797254](https://github.com/gzers/opencodex-desktop/actions/runs/42511797254)，固定06109397afcd9e0ad34d7ab18c5b2bf11dbb97eb，job128826259846已确认运行；依旧完整28项、accepted:false。先补回真实夹具身份／清理证据，再判断服务原30秒启动／端口协议，禁止把R25门前失败当成旧超时已修复。
+
+### 当前前端同树CI闭合（2026-11-09）
+
+[06109397a前端证据](../../.adg/evidence/0.2.23/frontend-061-20261109/verification.json)：run42511777996/job128826198045通过，216文件1603项、typecheck/build及4项正式dist首屏／三卡顺序／真实Vue与合成IPC检查均过。CI实际checkout为PR merge ac1e4000，其tree9731a9ad与实现HEAD06109397a完全相同，分开记录SHA而非伪称同提交。原始4703097字节ZIP与GitHub摘要核验，完整像素证据保留；合成IPC页面不代替原生生命周期／安装器／升级验收，整版仍未完成。
