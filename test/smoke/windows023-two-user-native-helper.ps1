@@ -161,6 +161,13 @@ function Assert-TwoUserNativeIdentity($Observed,[int]$ExpectedPid,[string]$Expec
  $created=[datetime]::Parse($Observed.creationTimeUtc,[Globalization.CultureInfo]::InvariantCulture,[Globalization.DateTimeStyles]::RoundtripKind).ToUniversalTime().Ticks
  if([string]$created -cne $ExpectedTicks){throw 'Retained native creation generation mismatch'}
 }
+function Assert-TwoUserCimIdentity($Row,$Owner,$Native,[string]$ExpectedSid) {
+ if(!$Row -or !$Owner -or $Row.ProcessId -ne $Native.processId -or $Owner.ReturnValue -ne 0 -or $Owner.Sid -cne $ExpectedSid){throw 'Tracked SID/PID mismatch'}
+ # CIM can omit ExecutablePath for an ordinary user's sandboxed child.
+ # It has no image authority when missing. The SAME retained native handle is
+ # still required to report exact PID/image/FILETIME both before and after CIM.
+ if(![string]::IsNullOrWhiteSpace($Row.ExecutablePath) -and $Native.executable -ine $Row.ExecutablePath){throw 'Tracked supplied-CIM/native image mismatch'}
+}
 function Get-TwoUserProcessFact([Diagnostics.Process]$Process,[string]$ExpectedSid) {
  [void]$Process.Handle
  if($Process.HasExited){throw 'Tracked process exited'}
@@ -172,12 +179,11 @@ function Get-TwoUserProcessFact([Diagnostics.Process]$Process,[string]$ExpectedS
  Assert-TwoUserNativeIdentity $before $Process.Id $image $ticks
  $row=Get-CimInstance Win32_Process -Filter ('ProcessId='+$Process.Id) -ErrorAction Stop
  $owner=Invoke-CimMethod -InputObject $row -MethodName GetOwnerSid -ErrorAction Stop
- if($row.ProcessId -ne $Process.Id -or $owner.ReturnValue -ne 0 -or $owner.Sid -cne $ExpectedSid){throw 'Tracked SID/PID mismatch'}
- if($image -ine $row.ExecutablePath){throw 'Tracked native/CIM image mismatch'}
  $after=Get-TwoUserProcessObservation $Process
  Assert-TwoUserNativeIdentity $after $Process.Id $image $ticks
+ Assert-TwoUserCimIdentity $row $owner $after $ExpectedSid
  Save-TwoUserProcessHandle $Process $ticks
- [pscustomobject]@{pid=$Process.Id;sid=$owner.Sid;path=$image;creationTicks=$ticks;sessionId=$row.SessionId;generationSource='retained-handle-native-filetime'}
+ [pscustomobject]@{pid=$Process.Id;sid=$owner.Sid;path=$image;creationTicks=$ticks;sessionId=$row.SessionId;generationSource='retained-handle-native-filetime';cimImageSupplied=(![string]::IsNullOrWhiteSpace($row.ExecutablePath))}
 }
 function Assert-TwoUserLive($Fact) {
  $p=Get-Process -Id $Fact.pid -ErrorAction Stop

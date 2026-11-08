@@ -82,8 +82,19 @@ $identityType=@($observerAst.FindAll({param($n) $n -is [Management.Automation.La
 Assert-Test ($identityType.Count -eq 1) 'retained-identity-native-source-unique'
 if(!('OcxNativeProcessIdentity' -as [type])){Add-Type -TypeDefinition $identityType[0].Value}
 Assert-Test (!$identityType[0].Value.Contains('OpenProcessToken') -and !$identityType[0].Value.Contains('GetTokenInformation') -and $identityType[0].Value.Contains('DangerousAddRef') -and $identityType[0].Value.Contains('GetProcessTimes')) 'restricted-renderer-identity-does-not-require-token-query'
-Assert-Test ($helper.Contains('Assert-WindowsProcessMode -Observation $actualToken -Mode ordinary') -and $helper.Contains('$owner.Sid -cne $ExpectedSid')) 'manager-ordinary-token-and-all-process-SID-assertions-preserved'
+Assert-Test ($helper.Contains('Assert-WindowsProcessMode -Observation $actualToken -Mode ordinary') -and $helper.Contains('$Owner.Sid -cne $ExpectedSid')) 'manager-ordinary-token-and-all-process-SID-assertions-preserved'
 Assert-Test ($main.Contains('if(!$account.fact){$account.fact=Get-TwoUserProcessFact $account.process $account.sid;') -and $main.Contains("result='bootstrap-identity-retained'")) 'unadmitted-live-bootstrap-requires-exact-native-recheck-or-retention'
+$cim=@{ProcessId=42;ExecutablePath=$null};$owner=@{ReturnValue=0;Sid='S-1-5-21-1-2-3-1001'}
+Assert-TwoUserCimIdentity $cim $owner $native $owner.Sid
+Assert-Test $true 'absent-CIM-image-does-not-replace-native-image-authority'
+$cim.ExecutablePath='C:\peer\app.exe'
+Assert-Throws {Assert-TwoUserCimIdentity $cim $owner $native $owner.Sid} 'provided-CIM-other-image-refused'
+$cim.ExecutablePath=$native.executable;$cim.ProcessId=43
+Assert-Throws {Assert-TwoUserCimIdentity $cim $owner $native $owner.Sid} 'CIM-other-PID-refused'
+$cim.ProcessId=42
+Assert-Throws {Assert-TwoUserCimIdentity $cim $owner $native 'S-1-5-21-1-2-3-1002'} 'CIM-other-SID-refused'
+$owner.ReturnValue=2
+Assert-Throws {Assert-TwoUserCimIdentity $cim $owner $native $owner.Sid} 'CIM-owner-query-failure-refused'
 # Pure naming fixture: synthetic strings here are never used as client tokens.
 $one=Get-TwoUserPipeName 'S-1-5-21-1-2-3-1001';$two=Get-TwoUserPipeName 'S-1-5-21-1-2-3-1002'
 Assert-Test ($one -cne $two -and $one -match '^OpenCodeXDesktop-[0-9a-f]{24}$') 'distinct-SID-pipe-name-fixture-only'
