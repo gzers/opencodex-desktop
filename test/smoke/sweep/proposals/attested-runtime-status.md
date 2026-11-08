@@ -30,3 +30,12 @@
 - 产品修改后需正式同源候选及后续保留/OTA/回退/发布合同，不用模拟或sweep代替正式验收。
 
 当前仅记录提案，未实施以上产品改动。用户前次仅额外授权Windows根路径和ProcessContext/路径快照问题；本次变更官方状态读取来源，需要单独确认。
+
+## 官方实际接口复核（2026-11-08；实施前必须补齐）
+
+以维护包原始tgz摘要afb72a4c792c1ca70a0fcd9209d212c78249281d2d7bc42f8eee63aa4464b26b读取源码，各源文件摘要见同目录attested-runtime-source-contract.json。没有使用日常安装或真实服务。
+
+- /healthz实现挑战HMAC；/readyz返回service/PID/port/version/status，但**没有挑战签名**。不能把相同PID/端口的未签名ready响应当作独立密码学证明；原提案第3条需要官方就绪签名协议或明确完整会话绑定设计，并在实现前测试攻击/复用情形。
+- /api/startup-health的fresh读取会调用完整CLI/Windows服务管理器诊断。响应认证不等于满足5秒预算；不得从超时或stale fallback推断protection=none或rebootSafe。
+- 暂不把只读健康取代完整诊断作为已解决方案。若采用新来源，需要同时补齐官方就绪认证与有界状态投影，可能涉及维护运行包修订、固定摘要及双平台bundle重新构建，而非仅改Desktop一个函数。
+- 没有修改产品实现，没有新增诊断轮。当前只等待已发出的产品范围确认；若同意，仍先按上述合同细化和验证，不执行缺认证的捷径。
