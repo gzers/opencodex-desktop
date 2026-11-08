@@ -171,6 +171,39 @@ mod tests {
     }
 
     #[test]
+    fn explicit_official_cli_startup_diagnostic() {
+        let Some(program) = option_env!("OCXD_STARTUP_PROBE_RUNTIME") else {
+            return;
+        };
+        let identity = check_context();
+        let program = PathBuf::from(program);
+        let bun = program.join("runtime/bun/bun.exe");
+        assert!(program.is_absolute() && bun.is_file());
+        let started = std::time::Instant::now();
+        let mut child = Command::new(bun)
+            .args(["--no-env-file", "-e", include_str!("../startup-probe.ts")])
+            .env("OCXD_STARTUP_DIAG_PROGRAM", &program)
+            .spawn()
+            .unwrap();
+        let status = loop {
+            if let Some(status) = child.try_wait().unwrap() {
+                break status;
+            }
+            if started.elapsed() > std::time::Duration::from_secs(75) {
+                let _ = child.kill();
+                let _ = child.wait();
+                panic!("startup diagnosis exceeded its own budget");
+            }
+            std::thread::sleep(std::time::Duration::from_millis(25));
+        };
+        assert!(
+            status.success(),
+            "diagnostic execution failed, never accepted"
+        );
+        println!("startup-diagnostic-only: SID={identity} accepted=false fullSoftwarePassed=false original executor owns terminal process cleanup");
+    }
+
+    #[test]
     fn ordinary_profile_temp_and_exact_child_round_trip() {
         assert!(
             env::var_os(CHILD_MARKER).is_none(),
