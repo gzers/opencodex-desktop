@@ -1,0 +1,64 @@
+{
+  "runId": 42530900446,
+  "source": "a581ea0cac0b61644983bf60aa00cef8cdff089c",
+  "artifactId": 13637087322,
+  "artifactBytes": 3101,
+  "artifactSha256": "7a59e804e04ef45a8e88cc6efb7ede9825a723e4181222593889dfe96d9fb883",
+  "status": "complete-readonly-observation",
+  "accepted": false,
+  "sourceBytesEqualPinnedOriginalTar": true,
+  "runtimeInstrumented": false,
+  "productStarted": false,
+  "businessInferenceOrSync": false,
+  "serviceOrTaskWrites": false,
+  "timingsMilliseconds": {
+    "import-service": 559.0106000000001,
+    "import-scheduler": 0.11760000000003856,
+    "import-native-service": 0.08100000000001728,
+    "respawn-risk-default-real-query": 791.0074000000001,
+    "scheduler-real-query-1": 679.4984,
+    "scheduler-real-query-2": 676.7464,
+    "native-service-real-query": 15.491300000000138
+  },
+  "actualResults": {
+    "import-service": {
+      "loaded": true
+    },
+    "import-scheduler": {
+      "loaded": true
+    },
+    "import-native-service": {
+      "loaded": true
+    },
+    "respawn-risk-default-real-query": {
+      "risk": "none"
+    },
+    "scheduler-real-query-1": {
+      "status": "absent",
+      "queryFailureDetailPresent": false,
+      "timeoutMentioned": false
+    },
+    "scheduler-real-query-2": {
+      "status": "absent",
+      "queryFailureDetailPresent": false,
+      "timeoutMentioned": false
+    },
+    "native-service-real-query": {
+      "status": "nonexistent"
+    }
+  },
+  "interpretation": "ThisfreshRunnertokenprobeobserves~0.56simport/~0.68to0.79sTaskScheduler/~0.02sSCM. Nonehits15s. ItdoesnotproveinnerqueriesaloneexplainordinarySIDactualPOST9.8s. Retainasnegativeevidenceagainstassumingtimeoutcapisactualcost.",
+  "limitations": "Noactualserver/clientrestore/ordinarySIDoperationmeasured. Do notclaimStopfixoracceptance.",
+  "nextInvestigation": "RefineofficialHTTPcapabilities/post/clientrestoreboundaries with exactoriginalsemantics; preserve10s/ownership/normalclientrestoration. No maintainedruntimechangeauthorizedbythisread-onlyresult itself.",
+  "cleanupProof": {
+    "exactOwnedFixtureAndUntrackedStagedResourceAbsenceChecks": true,
+    "originalStep": {
+      "name": "Clean only this exact disposable fixture after preserving evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 7,
+      "started_at": "2026-11-08T22:37:16Z",
+      "completed_at": "2026-11-08T22:37:18Z"
+    }
+  }
+}
