@@ -1,0 +1,27 @@
+{
+  "source": "8a9e0fa1c3eb594c4ec62e965141e240fda7879c",
+  "passed": 24,
+  "failed": 4,
+  "accepted": false,
+  "artifactId": 13631252582,
+  "artifactBytes": 35647612,
+  "artifactSha256": "c530212a1af5b15072bf49676c8ae8acb63293386d98658917e19c39be7b3bac",
+  "manifestFiles": 257,
+  "evidence": {
+    "11": "Two real ordinarySIDManagers overlap proved,16/17IPC passed.",
+    "12": "Both supply workers log provisioned/verified. User2supplied-observation failed on Trackednative/CIMimage mismatch before freshscreen receipt; initialpending snapshot retained, so supply/readiness fails correctly.",
+    "13": "User2initial discovery_runtime_pending; no successful fresh supplied snapshot.",
+    "14": "Both environment prerequisites not met; no serviceStart protocol performed. Original30s issue remains open.",
+    "18": "User2 bootstrap/descendant identity cleanup read failed; account/Profile retained. User1actual removed."
+  },
+  "unknown": "GenericR27image mismatch does not record whether CIMimage was absent or a nonempty conflict; no definitive missing-field cause claim.",
+  "batchSource": "2373829e7",
+  "correction": "Same retained native handle exact PID/image/FILETIME checked before and afterCIMowner; mandatory actualSID/PID fromCIM. NonemptyCIMimage conflict still refuses; absentCIMfield has no image authority and exact native identity remains required. RecordcimImageSupplied. Handleexit checked before optionalCIMimage to avoid masking actualexit.",
+  "assertionStrength": "NoPID-only or time-tolerance fallback; native exactimage,100ns creation,live handle,exactSID required. DedicatedManagerordinary token checks retained.",
+  "checks": {
+    "offlineContracts": 132,
+    "nativeExecuted": false
+  },
+  "productOrRuntimeBehaviorChanged": false,
+  "nextFullDiagnosticDispatched": false
+}
