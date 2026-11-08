@@ -9,6 +9,8 @@ import json
 from pathlib import Path
 import shutil
 import subprocess
+import time
+import urllib.error
 import urllib.request
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -19,16 +21,46 @@ def digest(p):
     with p.open('rb') as f:
         for block in iter(lambda:f.read(1024*1024),b''):h.update(block)
     return h.hexdigest()
+def download_base(destination):
+    """Retry transient transport failures only; publish solely exact pinned bytes.
+
+    Each failed response/partial remains separately named with a receipt. A
+    digest/budget error is final and must never become a successful retry.
+    """
+    attempts=destination.parent/'base-downloads'
+    attempts.mkdir(exist_ok=False)
+    for attempt in range(1,4):
+        partial=attempts/f'attempt-{attempt}.bin'
+        receipt={'attempt':attempt,'url':BASE_URL,'accepted':False,'status':'fail'}
+        transient=False
+        try:
+            with urllib.request.urlopen(BASE_URL,timeout=60) as response,partial.open('xb') as f:
+                size=0
+                while block:=response.read(1024*1024):
+                    size+=len(block)
+                    if size>32*1024*1024:raise ValueError('base runtime exceeds budget')
+                    f.write(block)
+            if digest(partial)!=BASE_SHA:raise ValueError('base runtime digest differs')
+            if destination.exists():raise ValueError('base destination appeared during download')
+            shutil.copyfile(partial,destination)
+            receipt['status']='pass'
+        except (urllib.error.URLError, TimeoutError, ConnectionError) as error:
+            transient=not isinstance(error,urllib.error.HTTPError) or error.code in (408,429,500,502,503,504)
+            receipt.update(error=type(error).__name__,httpStatus=getattr(error,'code',None),transient=transient)
+            if not transient or attempt==3:raise
+        except Exception as error:
+            receipt.update(error=type(error).__name__,firstError=str(error).splitlines()[0],transient=False)
+            raise
+        finally:
+            if partial.exists():receipt.update(bytes=partial.stat().st_size,sha256=digest(partial))
+            (attempts/f'attempt-{attempt}.json').write_text(json.dumps(receipt,indent=2)+'\n',encoding='utf-8')
+        if receipt['status']=='pass':return
+        time.sleep(attempt)
 def stage(platform,node,npm,output,base=None):
     output.mkdir(parents=True,exist_ok=True)
     original=Path(base) if base else output/'base-runtime.tgz'
     if not original.exists():
-        with urllib.request.urlopen(BASE_URL,timeout=60) as response,original.open('wb') as f:
-            size=0
-            while block:=response.read(1024*1024):
-                size+=len(block)
-                if size>32*1024*1024:raise ValueError('base runtime exceeds budget')
-                f.write(block)
+        download_base(original)
     if digest(original)!=BASE_SHA:raise ValueError('base runtime digest differs')
     names=output/'maintained-runtime'
     subprocess.run(['python3',str(ROOT/'.github/scripts/build_runtime_023.py'),str(names),'--archive',str(original)],check=True)

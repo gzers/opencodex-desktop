@@ -14,7 +14,7 @@ output=root/'artifact'
 output.mkdir(exist_ok=False)
 files=[]
 excluded=[]
-for directory in ['sweep','evidence','current-runtime-stage/maintained-runtime']:
+for directory in ['sweep','evidence','current-runtime-stage/base-downloads','current-runtime-stage/maintained-runtime']:
     source=root/directory
     if not source.exists():continue
     for current, dirs, names in os.walk(source, followlinks=False):
