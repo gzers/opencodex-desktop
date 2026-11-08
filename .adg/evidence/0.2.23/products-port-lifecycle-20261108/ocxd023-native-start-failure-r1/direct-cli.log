@@ -1,0 +1,9 @@
+🚀 opencodex proxy running on http://localhost:58038
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+🔐 Claude intercept proxy active on http://127.0.0.1:58138 (CONNECT api.anthropic.com → local TLS)
+[opencodex] Codex write refused (service-home): this proxy could not prove it owns the installed service homes, so catalog sync and Codex config injection were skipped. POST /api/sync returns the specific reason.
+Client startup work complete.

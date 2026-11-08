@@ -1,0 +1,11 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.29s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-58a8535d3845a745)
+
+running 3 tests
+test infrastructure::process_runner::managed_observation_tests::bounded_diagnostics_do_not_keep_or_return_arbitrary_upstream_output ... ok
+test infrastructure::process_runner::managed_observation_tests::immediate_and_delayed_failure_keep_exit_code_without_secret_output ... ok
+test infrastructure::process_runner::managed_observation_tests::zero_exit_or_live_process_without_authenticated_ready_is_not_started ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2012 filtered out; finished in 1.47s
+

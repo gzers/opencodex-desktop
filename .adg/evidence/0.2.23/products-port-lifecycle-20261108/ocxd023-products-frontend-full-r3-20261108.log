@@ -1,0 +1,636 @@
+
+> opencodex-desktop-ui@0.2.23 test
+> vitest --run
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/settings-uninstall.test.ts (8 tests | 8 failed) 386ms
+   ❯ 统一卸载弹窗（Revision 11） (8)
+     × 按来源渲染方案、备份只提醒，且未确认前主行动禁用并给出原因 103ms
+     × 勾选确认后按完整卸载请求执行，并渲染真实步骤与残留核验 49ms
+     × 形态无法确认时禁止确认并显示原因 35ms
+     × 有失败步骤时不显示 100% 成功，而是报出失败步数 42ms
+     × present 证据不显示完成或 100% undefined 50ms
+     × unknown 证据不显示完成或 100% undefined 32ms
+     × missing 证据不显示完成或 100% undefined 40ms
+     × skipped 证据不显示完成或 100% undefined 35ms
+ ❯ tests/post09-remaining-representative.test.ts (10 tests | 5 failed) 554ms
+   ❯ POST-09 remaining representative hosts (10)
+     × cancels uninstall preparation without issuing any uninstall request 62ms
+     × guards uninstall x while executing, then exposes a result without an exit footer 61ms
+     × guards uninstall escape while executing, then exposes a result without an exit footer 54ms
+     × guards uninstall native-cancel while executing, then exposes a result without an exit footer 21ms
+     × guards uninstall backdrop while executing, then exposes a result without an exit footer 46ms
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/post09-remaining-representative.test.ts > POST-09 remaining representative hosts > cancels uninstall preparation without issuing any uninstall request
+Error: Unable to get dialog[open] within: <body>
+  <div data-v-app="">
+    <!--teleport start-->
+    <!--teleport end-->
+    <!--teleport start-->
+    <!--teleport end-->
+    <section data-v-d98acdc2="" class="route-section active" style="--page-tabs-inset-top: 0px; --page-tabs-inset-left: 0px; --page-tabs-inset-right: 0px; --page-tabs-height: 0px;">
+      <app-topbar-stub data-v-d98acdc2="" compact="false"></app-topbar-stub>
+      <div data-v-710133bf="" data-v-d98acdc2="" class="sticky-page-tabs">
+        <div data-v-d98acdc2="" class="settings-tabs" role="tablist"><button data-v-d98acdc2="" class="">通用</button><button data-v-d98acdc2="" class="active">安装配置</button><button data-v-d98acdc2="" class="">数据与备份</button><button data-v-d98acdc2="" class="">扩展管理</button><button data-v-d98acdc2="" class="">Agent 配置</button><button data-v-d98acdc2="" class="">日志与通知</button><button data-v-d98acdc2="" class="">CLI 控制面</button><button data-v-d98acdc2="" class="">版本升级</button><button data-v-d98acdc2="" class="">关于</button></div>
+      </div>
+      <section data-v-d98acdc2="" class="settings-panel active">
+        <article data-v-a22fde62="" data-v-d98acdc2="" class="card" id="runtime-port-settings" data-testid="runtime-port-settings">
+          <div data-v-a22fde62="" class="card-head">
+            <div>
+              <h2 data-v-a22fde62="">OpenCodex 服务</h2>
+              <p data-v-a22fde62="">设置代理服务的运行端口。</p>
+            </div>
+          </div>
+          <fieldset data-v-a22fde62="" class="port-field">
+            <legend data-v-a22fde62="">运行端口</legend>
+            <div data-v-a22fde62="" class="port-modes"><label data-v-a22fde62=""><input data-v-a22fde62="" type="radio" name="runtime-port-mode" value="auto">自动分配</label><label data-v-a22fde62=""><input data-v-a22fde62="" type="radio" name="runtime-port-mode" value="fixed">指定端口</label></div>
+            <!--v-if-->
+            <!--v-if-->
+          </fieldset>
+          <p data-v-a22fde62="" class="port-summary" role="status" aria-live="polite">端口设置尚未读取。</p>
+          <p data-v-a22fde62="" role="alert">端口操作未确认完成，请刷新核对。</p>
+          <div data-v-a22fde62="" class="port-actions"><button data-v-a22fde62="" class="btn" type="button" disabled="">
+              <!--v-if--><span class="btn-content">检查并保存</span>
+            </button><button data-v-a22fde62="" class="btn ghost" type="button" disabled="">
+              <!--v-if--><span class="btn-content">还原修改</span>
+            </button>
+            <!--v-if-->
+            <!--v-if--><button data-v-a22fde62="" class="btn" type="button" disabled="">
+              <!--v-if--><span class="btn-content">启动 OpenCodex</span>
+            </button>
+            <!--v-if--><button data-v-a22fde62="" class="btn ghost" type="button">
+              <!--v-if--><span class="btn-content">刷新设置</span>
+            </button>
+          </div>
+          <!--teleport start-->
+          <!--teleport end-->
+        </article>
+        <article data-v-d98acdc2="" class="card paths-v2" data-testid="settings-paths-v2">
+          <div data-v-d98acdc2="" class="card-head">
+            <div data-v-d98acdc2="">
+              <h2 data-v-d98acdc2="">用户目录与程序安装</h2>
+              <p data-v-d98acdc2="">配置保存在当前用户目录，程序位于 Desktop 安装目录。</p>
+            </div>
+          </div>
+          <!--v-if-->
+          <p data-v-d98acdc2="" role="alert">目录快照结构版本暂不支持。 尚无可用快照；未推断路径或缺失状态。</p>
+          <section data-v-d98acdc2="" class="directory-group">
+            <h3 data-v-d98acdc2="">用户数据与配置</h3>
+            <dl data-v-d98acdc2="" class="paths-facts">
+              <dt data-v-d98acdc2="">用户配置根</dt>
+              <dd data-v-d98acdc2="" data-path-key="aggregateRoot"><span data-v-d98acdc2="">尚未读取</span></dd>
+              <dt data-v-d98acdc2="">Desktop 数据</dt>
+              <dd data-v-d98acdc2="" data-path-key="desktopRoot"><span data-v-d98acdc2="">尚未读取</span></dd>
+              <dt data-v-d98acdc2="">OpenCodex HOME</dt>
+              <dd data-v-d98acdc2="" data-path-key="opencodexHome"><span data-v-d98acdc2="">尚未读取</span></dd>
+              <dt data-v-d98acdc2="">渠道配置文件</dt>
+              <dd data-v-d98acdc2="" data-path-key="configPath"><span data-v-d98acdc2="">尚未读取</span></dd>
+            </dl>
+            <div data-v-d98acdc2="" class="runtime-actions"><button data-v-d98acdc2="" class="btn btn ghost" type="button" disabled="" data-testid="paths-details">
+                <!--v-if--><span class="btn-content">完整查看与复制路径</span>
+              </button><button data-v-d98acdc2="" class="btn btn ghost" type="button" disabled="">
+                <!--v-if--><span class="btn-content">读取渠道配置说明</span>
+              </button>
+              <!--v-if-->
+            </div>
+            <!--v-if-->
+            <p data-v-d98acdc2="" role="alert">用户目录绑定配置读取失败；路径修改已暂停，请刷新核对。</p>
+            <!--v-if-->
+          </section>
+          <section data-v-d98acdc2="" class="directory-group">
+            <h3 data-v-d98acdc2="">程序安装</h3>
+            <dl data-v-d98acdc2="" class="paths-facts">
+              <dt data-v-d98acdc2="">Desktop 安装根</dt>
+              <dd data-v-d98acdc2="" data-path-key="installationRoot"><span data-v-d98acdc2="">尚未读取</span></dd>
+              <dt data-v-d98acdc2="">Desktop 本体</dt>
+              <dd data-v-d98acdc2="" data-path-key="managerExecutable"><span data-v-d98acdc2="">尚未读取</span></dd>
+              <dt data-v-d98acdc2="">运行包目录</dt>
+              <dd data-v-d98acdc2="" data-path-key="runtimePrefix"><span data-v-d98acdc2="">尚未读取</span></dd>
+              <dt data-v-d98acdc2="">程序入口</dt>
+              <dd data-v-d98acdc2="" data-path-key="runtimeEntry"><span data-v-d98acdc2="">尚未读取</span></dd>
+            </dl>
+            <div data-v-d98acdc2="" class="directory-status">
+              <dl data-v-d98acdc2="" class="paths-facts">
+                <dt data-v-d98acdc2="">运行状态</dt>
+                <dd data-v-d98acdc2="">待核对</dd>
+                <dt data-v-d98acdc2="">包 / 清单 / 来源</dt>
+                <dd data-v-d98acdc2="">尚未读取</dd>
+                <dt data-v-d98acdc2="">程序有效性</dt>
+                <dd data-v-d98acdc2="" data-testid="program-validity">尚未核验</dd>
+              </dl>
+            </div>
+            <div data-v-d98acdc2="" class="runtime-actions"><button data-v-d98acdc2="" class="btn btn primary" type="button" disabled="" data-testid="runtime-install">
+                <!--v-if--><span class="btn-content">安装程序</span>
+              </button>
+              <div data-v-1c19690b="" data-v-d98acdc2="" class="runtime-recovery-entry"><button data-v-1c19690b="" class="btn" type="button" data-testid="runtime-recovery-entry">
+                  <!--v-if--><span class="btn-content">诊断与恢复程序</span>
+                </button>
+                <!--v-if-->
+                <!--v-if-->
+              </div><button data-v-d98acdc2="" class="btn btn ghost" type="button" data-testid="paths-refresh">
+                <!--v-if--><span class="btn-content">刷新位置</span>
+              </button>
+            </div>
+            <!--v-if-->
+            <div data-v-d98acdc2="" class="runtime-actions" data-testid="runtime-source-card"><button data-v-d98acdc2="" class="btn btn ghost" type="button" disabled="" data-testid="runtime-import-offline">
+                <!--v-if--><span class="btn-content">导入离线包</span>
+              </button><button data-v-d98acdc2="" class="btn btn ghost" type="button">
+                <!--v-if--><span class="btn-content">更新面板</span>
+              </button><button data-v-d98acdc2="" class="btn btn danger" type="button" disabled="" data-testid="runtime-uninstall">
+                <!--v-if--><span class="btn-content">卸载</span>
+              </button></div>
+          </section>
+        </article>
+      </section>
+    </section>
+    <!--teleport start-->
+    <!--teleport end-->
+    <!--v-if-->
+  </div>
+  <dialog data-v-f2b1bc8e="" class="ui-dialog runtime-recovery-v2 wide" aria-labelledby="v-0" role="dialog" tabindex="-1">
+    <header data-v-f2b1bc8e="" class="ui-dialog-header">
+      <h2 data-v-f2b1bc8e="" id="v-0">诊断与恢复程序</h2>
+      <div data-v-f2b1bc8e="" class="ui-dialog-header-actions"><button data-v-f2b1bc8e="" type="button" class="icon-btn ui-icon-control modal-close" aria-label="关闭" aria-busy="false" title="关闭"><svg data-v-f2b1bc8e="" viewBox="0 0 24 24" aria-hidden="true">
+            <path data-v-f2b1bc8e="" d="m6 6 12 12M18 6 6 18"></path>
+          </svg></button></div>
+    </header>
+    <div data-v-f2b1bc8e="" class="ui-dialog-content">
+      <p data-v-f4c70b59="">先检查程序安装与恢复来源，预览实际影响后再确认恢复。</p>
+      <div data-v-f4c70b59="" class="recovery-actions"><button data-v-f4c70b59="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">运行只读诊断</span>
+        </button></div>
+      <!--v-if-->
+      <!--v-if-->
+      <div data-v-2494b5ac="" data-v-f4c70b59="" class="select"><button data-v-2494b5ac="" type="button" class="select-trigger" aria-label="程序恢复来源" aria-haspopup="listbox" aria-expanded="false"><span data-v-2494b5ac="">本版随包程序</span></button><span hidden=""></span>
+        <!--teleport start-->
+        <!--teleport end-->
+      </div>
+      <p data-v-f4c70b59="">使用本版固定资源与编译校验记录；资源不可用时保留原程序并显示实际错误。</p>
+      <!--v-if-->
+      <!--v-if-->
+    </div>
+    <footer data-v-f2b1bc8e=""><button data-v-f4c70b59="" class="btn" type="button">
+        <!--v-if--><span class="btn-content">取消</span>
+      </button><button data-v-f4c70b59="" class="btn primary" type="button">
+        <!--v-if--><span class="btn-content">预览恢复方案</span>
+      </button></footer>
+    <!--v-if-->
+  </dialog>
+  <dialog data-v-f2b1bc8e="" data-testid="update-center" class="ui-dialog update-center wide" aria-labelledby="v-1" role="dialog" tabindex="-1">
+    <header data-v-f2b1bc8e="" class="ui-dialog-header">
+      <h2 data-v-f2b1bc8e="" id="v-1">检查更新结果</h2>
+      <div data-v-f2b1bc8e="" class="ui-dialog-header-actions"><button data-v-f2b1bc8e="" type="button" class="icon-btn ui-icon-control modal-close" aria-label="关闭" aria-busy="false" title="关闭"><svg data-v-f2b1bc8e="" viewBox="0 0 24 24" aria-hidden="true">
+            <path data-v-f2b1bc8e="" d="m6 6 12 12M18 6 6 18"></path>
+          </svg></button></div>
+    </header>
+    <div data-v-f2b1bc8e="" class="ui-dialog-content">
+      <div data-v-c975c606="" class="update-center-body">
+        <p data-v-c975c606="" class="update-hint">分别查看更新内容与范围，确认后才会开始更新。</p>
+        <div data-v-c975c606="" class="update-result-rows" data-testid="update-result-rows">
+          <section data-v-c975c606="" class="update-result-row" data-testid="manager-update-row">
+            <div data-v-c975c606="" class="update-result-main">
+              <div data-v-c975c606="" class="update-result-title"><strong data-v-c975c606="">桌面管理器</strong><span data-v-c975c606="" class="tag">尚未检查</span></div>
+              <div data-v-c975c606="" class="update-result-version"><span data-v-c975c606="">未知</span>
+                <!--v-if-->
+              </div>
+              <p data-v-c975c606="" class="update-result-source">OpenCodex Desktop · stable</p>
+              <!--v-if-->
+              <!--v-if-->
+              <p data-v-c975c606="" class="update-result-empty">尚未检查。</p>
+            </div>
+            <div data-v-c975c606="" class="update-result-actions"><button data-v-c975c606="" class="btn" type="button" data-testid="manager-update-detail">
+                <!--v-if--><span class="btn-content">查看详情</span>
+              </button></div>
+          </section>
+          <section data-v-c975c606="" class="update-result-row" data-testid="official-update-row">
+            <div data-v-c975c606="" class="update-result-main">
+              <div data-v-c975c606="" class="update-result-title"><strong data-v-c975c606="">OpenCodex 面板</strong><span data-v-c975c606="" class="tag">尚未检查</span></div>
+              <div data-v-c975c606="" class="update-result-version"><span data-v-c975c606="">未知</span>
+                <!--v-if-->
+              </div>
+              <p data-v-c975c606="" class="update-result-source">官方项目 · @bitkyc08/opencodex</p>
+              <!--v-if-->
+              <!--v-if-->
+              <p data-v-c975c606="" class="update-result-empty">当前没有待确认的更新。</p>
+            </div>
+            <div data-v-c975c606="" class="update-result-actions"><button data-v-c975c606="" class="btn" type="button" data-testid="official-update-detail">
+                <!--v-if--><span class="btn-content">查看详情</span>
+              </button></div>
+          </section>
+        </div>
+      </div>
+    </div>
+    <!---->
+  </dialog>
+  <dialog data-v-f2b1bc8e="" class="ui-dialog" aria-labelledby="v-2" role="dialog" tabindex="-1">
+    <header data-v-f2b1bc8e="" class="ui-dialog-header">
+      <h2 data-v-f2b1bc8e="" id="v-2">重启并应用端口设置</h2>
+      <div data-v-f2b1bc8e="" class="ui-dialog-header-actions"><button data-v-f2b1bc8e="" type="button" class="icon-btn ui-icon-control modal-close" aria-label="关闭" aria-busy="false" title="关闭"><svg data-v-f2b1bc8e="" viewBox="0 0 24 24" aria-hidden="true">
+            <path data-v-f2b1bc8e="" d="m6 6 12 12M18 6 6 18"></path>
+          </svg></button></div>
+    </header>
+    <div data-v-f2b1bc8e="" class="ui-dialog-content">
+      <p data-v-a22fde62="">将停止当前用户的 OpenCodex 服务，按已保存的设置重新启动。进行中的请求可能中断。</p>
+      <dl data-v-a22fde62="" class="port-facts">
+        <dt data-v-a22fde62="">当前端口</dt>
+        <dd data-v-a22fde62="">读取中</dd>
+        <dt data-v-a22fde62="">下次启动</dt>
+        <dd data-v-a22fde62=""></dd>
+      </dl>
+    </div>
+    <footer data-v-f2b1bc8e=""><button data-v-a22fde62="" class="btn ghost" type="button">
+        <!--v-if--><span class="btn-content">取消</span>
+      </button><button data-v-a22fde62="" class="btn" type="button">
+        <!--v-if--><span class="btn-content">确认重启</span>
+      </button></footer>
+  </dialog>
+  <dialog data-v-f2b1bc8e="" data-testid="runtime-uninstall-modal" class="ui-dialog wiz wiz-uninstall" aria-labelledby="v-3" role="dialog" tabindex="-1">
+    <header data-v-f2b1bc8e="" class="ui-dialog-header">
+      <h2 data-v-f2b1bc8e="" id="v-3">卸载 OpenCodex</h2>
+      <div data-v-f2b1bc8e="" class="ui-dialog-header-actions"><button data-v-f2b1bc8e="" type="button" class="icon-btn ui-icon-control modal-close" aria-label="关闭" aria-busy="false" title="关闭"><svg data-v-f2b1bc8e="" viewBox="0 0 24 24" aria-hidden="true">
+            <path data-v-f2b1bc8e="" d="m6 6 12 12M18 6 6 18"></path>
+          </svg></button></div>
+    </header>
+    <div data-v-f2b1bc8e="" class="ui-dialog-content">
+      <p data-v-d98acdc2="" class="wiz-hint">按当前运行来源 <code data-v-d98acdc2="" class="local-path">未解析</code> 卸载；范围越大后果越重。</p>
+      <div data-v-d98acdc2="" class="wiz-choices"><label data-v-d98acdc2="" class="wiz-choice-block on"><input data-v-d98acdc2="" type="radio" data-testid="uninstall-scope-full" value="full"><span data-v-d98acdc2=""><b data-v-d98acdc2="">完整卸载（推荐）</b><small data-v-d98acdc2="">先由应用执行官方 <code data-v-d98acdc2="">ocx uninstall</code> 清理 service / shim / config，再移除包体与入口。</small></span></label><label data-v-d98acdc2="" class="wiz-choice-block"><input data-v-d98acdc2="" type="radio" data-testid="uninstall-scope-body" value="body"><span data-v-d98acdc2=""><b data-v-d98acdc2="">仅移除包体与入口</b><small data-v-d98acdc2="">只删包体与入口；<b data-v-d98acdc2="">不碰</b> service / shim / config / OPENCODEX_HOME。</small></span></label></div>
+      <!--v-if-->
+      <!--v-if-->
+    </div>
+    <footer data-v-f2b1bc8e="">
+      <div data-v-d98acdc2="" class="uninstall-confirmation"><label data-v-d98acdc2="" class="wiz-ack"><input data-v-d98acdc2="" type="checkbox" data-testid="uninstall-ack"><span data-v-d98acdc2=""><b data-v-d98acdc2="">我已阅读清单并确认继续</b><small data-v-d98acdc2="">停代理 → 备份 → 执行官方 ocx uninstall → 移除包体与入口 → 残留核验（全部由应用代执行）。</small></span></label>
+        <p data-v-d98acdc2="" class="wiz-ack-hint" data-testid="uninstall-ack-hint">勾选上面这一项，「卸载」才会亮起。</p>
+        <div data-v-d98acdc2="" class="uninstall-actions"><button data-v-d98acdc2="" class="btn ghost" type="button">
+            <!--v-if--><span class="btn-content">取消</span>
+          </button><button data-v-d98acdc2="" class="btn danger" type="button" disabled="" data-testid="uninstall-confirm">
+            <!--v-if--><span class="btn-content">卸载</span>
+          </button></div>
+      </div>
+    </footer>
+  </dialog>
+</body>
+ ❯ DOMWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ dialog tests/post09-remaining-representative.test.ts:28:83
+     26| })
+     27| afterEach(() => { wrappers.splice(0).forEach(w => w.unmount()); docume…
+     28| function dialog(selector = 'dialog[open]') { return new DOMWrapper(doc…
+       |                                                                                   ^
+     29| async function exit(channel: string, selector = 'dialog[open]') {
+     30|   const root = dialog(selector)
+ ❯ tests/post09-remaining-representative.test.ts:67:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/13]⎯
+
+ FAIL  tests/post09-remaining-representative.test.ts > POST-09 remaining representative hosts > guards uninstall x while executing, then exposes a result without an exit footer
+ FAIL  tests/post09-remaining-representative.test.ts > POST-09 remaining representative hosts > guards uninstall escape while executing, then exposes a result without an exit footer
+ FAIL  tests/post09-remaining-representative.test.ts > POST-09 remaining representative hosts > guards uninstall native-cancel while executing, then exposes a result without an exit footer
+ FAIL  tests/post09-remaining-representative.test.ts > POST-09 remaining representative hosts > guards uninstall backdrop while executing, then exposes a result without an exit footer
+Error: Unable to get dialog[open] within: <body>
+  <div data-v-app="">
+    <!--teleport start-->
+    <!--teleport end-->
+    <!--teleport start-->
+    <!--teleport end-->
+    <section data-v-d98acdc2="" class="route-section active" style="--page-tabs-inset-top: 0px; --page-tabs-inset-left: 0px; --page-tabs-inset-right: 0px; --page-tabs-height: 0px;">
+      <app-topbar-stub data-v-d98acdc2="" compact="false"></app-topbar-stub>
+      <div data-v-710133bf="" data-v-d98acdc2="" class="sticky-page-tabs">
+        <div data-v-d98acdc2="" class="settings-tabs" role="tablist"><button data-v-d98acdc2="" class="">通用</button><button data-v-d98acdc2="" class="active">安装配置</button><button data-v-d98acdc2="" class="">数据与备份</button><button data-v-d98acdc2="" class="">扩展管理</button><button data-v-d98acdc2="" class="">Agent 配置</button><button data-v-d98acdc2="" class="">日志与通知</button><button data-v-d98acdc2="" class="">CLI 控制面</button><button data-v-d98acdc2="" class="">版本升级</button><button data-v-d98acdc2="" class="">关于</button></div>
+      </div>
+      <section data-v-d98acdc2="" class="settings-panel active">
+        <article data-v-a22fde62="" data-v-d98acdc2="" class="card" id="runtime-port-settings" data-testid="runtime-port-settings">
+          <div data-v-a22fde62="" class="card-head">
+            <div>
+              <h2 data-v-a22fde62="">OpenCodex 服务</h2>
+              <p data-v-a22fde62="">设置代理服务的运行端口。</p>
+            </div>
+          </div>
+          <fieldset data-v-a22fde62="" class="port-field">
+            <legend data-v-a22fde62="">运行端口</legend>
+            <div data-v-a22fde62="" class="port-modes"><label data-v-a22fde62=""><input data-v-a22fde62="" type="radio" name="runtime-port-mode" value="auto">自动分配</label><label data-v-a22fde62=""><input data-v-a22fde62="" type="radio" name="runtime-port-mode" value="fixed">指定端口</label></div>
+            <!--v-if-->
+            <!--v-if-->
+          </fieldset>
+          <p data-v-a22fde62="" class="port-summary" role="status" aria-live="polite">端口设置尚未读取。</p>
+          <p data-v-a22fde62="" role="alert">端口操作未确认完成，请刷新核对。</p>
+          <div data-v-a22fde62="" class="port-actions"><button data-v-a22fde62="" class="btn" type="button" disabled="">
+              <!--v-if--><span class="btn-content">检查并保存</span>
+            </button><button data-v-a22fde62="" class="btn ghost" type="button" disabled="">
+              <!--v-if--><span class="btn-content">还原修改</span>
+            </button>
+            <!--v-if-->
+            <!--v-if--><button data-v-a22fde62="" class="btn" type="button" disabled="">
+              <!--v-if--><span class="btn-content">启动 OpenCodex</span>
+            </button>
+            <!--v-if--><button data-v-a22fde62="" class="btn ghost" type="button">
+              <!--v-if--><span class="btn-content">刷新设置</span>
+            </button>
+          </div>
+          <!--teleport start-->
+          <!--teleport end-->
+        </article>
+        <article data-v-d98acdc2="" class="card paths-v2" data-testid="settings-paths-v2">
+          <div data-v-d98acdc2="" class="card-head">
+            <div data-v-d98acdc2="">
+              <h2 data-v-d98acdc2="">用户目录与程序安装</h2>
+              <p data-v-d98acdc2="">配置保存在当前用户目录，程序位于 Desktop 安装目录。</p>
+            </div>
+          </div>
+          <!--v-if-->
+          <p data-v-d98acdc2="" role="alert">目录快照结构版本暂不支持。 尚无可用快照；未推断路径或缺失状态。</p>
+          <section data-v-d98acdc2="" class="directory-group">
+            <h3 data-v-d98acdc2="">用户数据与配置</h3>
+            <dl data-v-d98acdc2="" class="paths-facts">
+              <dt data-v-d98acdc2="">用户配置根</dt>
+              <dd data-v-d98acdc2="" data-path-key="aggregateRoot"><span data-v-d98acdc2="">尚未读取</span></dd>
+              <dt data-v-d98acdc2="">Desktop 数据</dt>
+              <dd data-v-d98acdc2="" data-path-key="desktopRoot"><span data-v-d98acdc2="">尚未读取</span></dd>
+              <dt data-v-d98acdc2="">OpenCodex HOME</dt>
+              <dd data-v-d98acdc2="" data-path-key="opencodexHome"><span data-v-d98acdc2="">尚未读取</span></dd>
+              <dt data-v-d98acdc2="">渠道配置文件</dt>
+              <dd data-v-d98acdc2="" data-path-key="configPath"><span data-v-d98acdc2="">尚未读取</span></dd>
+            </dl>
+            <div data-v-d98acdc2="" class="runtime-actions"><button data-v-d98acdc2="" class="btn btn ghost" type="button" disabled="" data-testid="paths-details">
+                <!--v-if--><span class="btn-content">完整查看与复制路径</span>
+              </button><button data-v-d98acdc2="" class="btn btn ghost" type="button" disabled="">
+                <!--v-if--><span class="btn-content">读取渠道配置说明</span>
+              </button>
+              <!--v-if-->
+            </div>
+            <!--v-if-->
+            <p data-v-d98acdc2="" role="alert">用户目录绑定配置读取失败；路径修改已暂停，请刷新核对。</p>
+            <!--v-if-->
+          </section>
+          <section data-v-d98acdc2="" class="directory-group">
+            <h3 data-v-d98acdc2="">程序安装</h3>
+            <dl data-v-d98acdc2="" class="paths-facts">
+              <dt data-v-d98acdc2="">Desktop 安装根</dt>
+              <dd data-v-d98acdc2="" data-path-key="installationRoot"><span data-v-d98acdc2="">尚未读取</span></dd>
+              <dt data-v-d98acdc2="">Desktop 本体</dt>
+              <dd data-v-d98acdc2="" data-path-key="managerExecutable"><span data-v-d98acdc2="">尚未读取</span></dd>
+              <dt data-v-d98acdc2="">运行包目录</dt>
+              <dd data-v-d98acdc2="" data-path-key="runtimePrefix"><span data-v-d98acdc2="">尚未读取</span></dd>
+              <dt data-v-d98acdc2="">程序入口</dt>
+              <dd data-v-d98acdc2="" data-path-key="runtimeEntry"><span data-v-d98acdc2="">尚未读取</span></dd>
+            </dl>
+            <div data-v-d98acdc2="" class="directory-status">
+              <dl data-v-d98acdc2="" class="paths-facts">
+                <dt data-v-d98acdc2="">运行状态</dt>
+                <dd data-v-d98acdc2="">待核对</dd>
+                <dt data-v-d98acdc2="">包 / 清单 / 来源</dt>
+                <dd data-v-d98acdc2="">尚未读取</dd>
+                <dt data-v-d98acdc2="">程序有效性</dt>
+                <dd data-v-d98acdc2="" data-testid="program-validity">尚未核验</dd>
+              </dl>
+            </div>
+            <div data-v-d98acdc2="" class="runtime-actions"><button data-v-d98acdc2="" class="btn btn primary" type="button" disabled="" data-testid="runtime-install">
+                <!--v-if--><span class="btn-content">安装程序</span>
+              </button>
+              <div data-v-1c19690b="" data-v-d98acdc2="" class="runtime-recovery-entry"><button data-v-1c19690b="" class="btn" type="button" data-testid="runtime-recovery-entry">
+                  <!--v-if--><span class="btn-content">诊断与恢复程序</span>
+                </button>
+                <!--v-if-->
+                <!--v-if-->
+              </div><button data-v-d98acdc2="" class="btn btn ghost" type="button" data-testid="paths-refresh">
+                <!--v-if--><span class="btn-content">刷新位置</span>
+              </button>
+            </div>
+            <!--v-if-->
+            <div data-v-d98acdc2="" class="runtime-actions" data-testid="runtime-source-card"><button data-v-d98acdc2="" class="btn btn ghost" type="button" disabled="" data-testid="runtime-import-offline">
+                <!--v-if--><span class="btn-content">导入离线包</span>
+              </button><button data-v-d98acdc2="" class="btn btn ghost" type="button">
+                <!--v-if--><span class="btn-content">更新面板</span>
+              </button><button data-v-d98acdc2="" class="btn btn danger" type="button" disabled="" data-testid="runtime-uninstall">
+                <!--v-if--><span class="btn-content">卸载</span>
+              </button></div>
+          </section>
+        </article>
+      </section>
+    </section>
+    <!--teleport start-->
+    <!--teleport end-->
+    <!--v-if-->
+  </div>
+  <dialog data-v-f2b1bc8e="" class="ui-dialog runtime-recovery-v2 wide" aria-labelledby="v-0" role="dialog" tabindex="-1">
+    <header data-v-f2b1bc8e="" class="ui-dialog-header">
+      <h2 data-v-f2b1bc8e="" id="v-0">诊断与恢复程序</h2>
+      <div data-v-f2b1bc8e="" class="ui-dialog-header-actions"><button data-v-f2b1bc8e="" type="button" class="icon-btn ui-icon-control modal-close" aria-label="关闭" aria-busy="false" title="关闭"><svg data-v-f2b1bc8e="" viewBox="0 0 24 24" aria-hidden="true">
+            <path data-v-f2b1bc8e="" d="m6 6 12 12M18 6 6 18"></path>
+          </svg></button></div>
+    </header>
+    <div data-v-f2b1bc8e="" class="ui-dialog-content">
+      <p data-v-f4c70b59="">先检查程序安装与恢复来源，预览实际影响后再确认恢复。</p>
+      <div data-v-f4c70b59="" class="recovery-actions"><button data-v-f4c70b59="" class="btn" type="button">
+          <!--v-if--><span class="btn-content">运行只读诊断</span>
+        </button></div>
+      <!--v-if-->
+      <!--v-if-->
+      <div data-v-2494b5ac="" data-v-f4c70b59="" class="select"><button data-v-2494b5ac="" type="button" class="select-trigger" aria-label="程序恢复来源" aria-haspopup="listbox" aria-expanded="false"><span data-v-2494b5ac="">本版随包程序</span></button><span hidden=""></span>
+        <!--teleport start-->
+        <!--teleport end-->
+      </div>
+      <p data-v-f4c70b59="">使用本版固定资源与编译校验记录；资源不可用时保留原程序并显示实际错误。</p>
+      <!--v-if-->
+      <!--v-if-->
+    </div>
+    <footer data-v-f2b1bc8e=""><button data-v-f4c70b59="" class="btn" type="button">
+        <!--v-if--><span class="btn-content">取消</span>
+      </button><button data-v-f4c70b59="" class="btn primary" type="button">
+        <!--v-if--><span class="btn-content">预览恢复方案</span>
+      </button></footer>
+    <!--v-if-->
+  </dialog>
+  <dialog data-v-f2b1bc8e="" data-testid="update-center" class="ui-dialog update-center wide" aria-labelledby="v-1" role="dialog" tabindex="-1">
+    <header data-v-f2b1bc8e="" class="ui-dialog-header">
+      <h2 data-v-f2b1bc8e="" id="v-1">检查更新结果</h2>
+      <div data-v-f2b1bc8e="" class="ui-dialog-header-actions"><button data-v-f2b1bc8e="" type="button" class="icon-btn ui-icon-control modal-close" aria-label="关闭" aria-busy="false" title="关闭"><svg data-v-f2b1bc8e="" viewBox="0 0 24 24" aria-hidden="true">
+            <path data-v-f2b1bc8e="" d="m6 6 12 12M18 6 6 18"></path>
+          </svg></button></div>
+    </header>
+    <div data-v-f2b1bc8e="" class="ui-dialog-content">
+      <div data-v-c975c606="" class="update-center-body">
+        <p data-v-c975c606="" class="update-hint">分别查看更新内容与范围，确认后才会开始更新。</p>
+        <div data-v-c975c606="" class="update-result-rows" data-testid="update-result-rows">
+          <section data-v-c975c606="" class="update-result-row" data-testid="manager-update-row">
+            <div data-v-c975c606="" class="update-result-main">
+              <div data-v-c975c606="" class="update-result-title"><strong data-v-c975c606="">桌面管理器</strong><span data-v-c975c606="" class="tag">尚未检查</span></div>
+              <div data-v-c975c606="" class="update-result-version"><span data-v-c975c606="">未知</span>
+                <!--v-if-->
+              </div>
+              <p data-v-c975c606="" class="update-result-source">OpenCodex Desktop · stable</p>
+              <!--v-if-->
+              <!--v-if-->
+              <p data-v-c975c606="" class="update-result-empty">尚未检查。</p>
+            </div>
+            <div data-v-c975c606="" class="update-result-actions"><button data-v-c975c606="" class="btn" type="button" data-testid="manager-update-detail">
+                <!--v-if--><span class="btn-content">查看详情</span>
+              </button></div>
+          </section>
+          <section data-v-c975c606="" class="update-result-row" data-testid="official-update-row">
+            <div data-v-c975c606="" class="update-result-main">
+              <div data-v-c975c606="" class="update-result-title"><strong data-v-c975c606="">OpenCodex 面板</strong><span data-v-c975c606="" class="tag">尚未检查</span></div>
+              <div data-v-c975c606="" class="update-result-version"><span data-v-c975c606="">未知</span>
+                <!--v-if-->
+              </div>
+              <p data-v-c975c606="" class="update-result-source">官方项目 · @bitkyc08/opencodex</p>
+              <!--v-if-->
+              <!--v-if-->
+              <p data-v-c975c606="" class="update-result-empty">当前没有待确认的更新。</p>
+            </div>
+            <div data-v-c975c606="" class="update-result-actions"><button data-v-c975c606="" class="btn" type="button" data-testid="official-update-detail">
+                <!--v-if--><span class="btn-content">查看详情</span>
+              </button></div>
+          </section>
+        </div>
+      </div>
+    </div>
+    <!---->
+  </dialog>
+  <dialog data-v-f2b1bc8e="" class="ui-dialog" aria-labelledby="v-2" role="dialog" tabindex="-1">
+    <header data-v-f2b1bc8e="" class="ui-dialog-header">
+      <h2 data-v-f2b1bc8e="" id="v-2">重启并应用端口设置</h2>
+      <div data-v-f2b1bc8e="" class="ui-dialog-header-actions"><button data-v-f2b1bc8e="" type="button" class="icon-btn ui-icon-control modal-close" aria-label="关闭" aria-busy="false" title="关闭"><svg data-v-f2b1bc8e="" viewBox="0 0 24 24" aria-hidden="true">
+            <path data-v-f2b1bc8e="" d="m6 6 12 12M18 6 6 18"></path>
+          </svg></button></div>
+    </header>
+    <div data-v-f2b1bc8e="" class="ui-dialog-content">
+      <p data-v-a22fde62="">将停止当前用户的 OpenCodex 服务，按已保存的设置重新启动。进行中的请求可能中断。</p>
+      <dl data-v-a22fde62="" class="port-facts">
+        <dt data-v-a22fde62="">当前端口</dt>
+        <dd data-v-a22fde62="">读取中</dd>
+        <dt data-v-a22fde62="">下次启动</dt>
+        <dd data-v-a22fde62=""></dd>
+      </dl>
+    </div>
+    <footer data-v-f2b1bc8e=""><button data-v-a22fde62="" class="btn ghost" type="button">
+        <!--v-if--><span class="btn-content">取消</span>
+      </button><button data-v-a22fde62="" class="btn" type="button">
+        <!--v-if--><span class="btn-content">确认重启</span>
+      </button></footer>
+  </dialog>
+  <dialog data-v-f2b1bc8e="" data-testid="runtime-uninstall-modal" class="ui-dialog wiz wiz-uninstall" aria-labelledby="v-3" role="dialog" tabindex="-1">
+    <header data-v-f2b1bc8e="" class="ui-dialog-header">
+      <h2 data-v-f2b1bc8e="" id="v-3">卸载 OpenCodex</h2>
+      <div data-v-f2b1bc8e="" class="ui-dialog-header-actions"><button data-v-f2b1bc8e="" type="button" class="icon-btn ui-icon-control modal-close" aria-label="关闭" aria-busy="false" title="关闭"><svg data-v-f2b1bc8e="" viewBox="0 0 24 24" aria-hidden="true">
+            <path data-v-f2b1bc8e="" d="m6 6 12 12M18 6 6 18"></path>
+          </svg></button></div>
+    </header>
+    <div data-v-f2b1bc8e="" class="ui-dialog-content">
+      <p data-v-d98acdc2="" class="wiz-hint">按当前运行来源 <code data-v-d98acdc2="" class="local-path">未解析</code> 卸载；范围越大后果越重。</p>
+      <div data-v-d98acdc2="" class="wiz-choices"><label data-v-d98acdc2="" class="wiz-choice-block on"><input data-v-d98acdc2="" type="radio" data-testid="uninstall-scope-full" value="full"><span data-v-d98acdc2=""><b data-v-d98acdc2="">完整卸载（推荐）</b><small data-v-d98acdc2="">先由应用执行官方 <code data-v-d98acdc2="">ocx uninstall</code> 清理 service / shim / config，再移除包体与入口。</small></span></label><label data-v-d98acdc2="" class="wiz-choice-block"><input data-v-d98acdc2="" type="radio" data-testid="uninstall-scope-body" value="body"><span data-v-d98acdc2=""><b data-v-d98acdc2="">仅移除包体与入口</b><small data-v-d98acdc2="">只删包体与入口；<b data-v-d98acdc2="">不碰</b> service / shim / config / OPENCODEX_HOME。</small></span></label></div>
+      <!--v-if-->
+      <!--v-if-->
+    </div>
+    <footer data-v-f2b1bc8e="">
+      <div data-v-d98acdc2="" class="uninstall-confirmation"><label data-v-d98acdc2="" class="wiz-ack"><input data-v-d98acdc2="" type="checkbox" data-testid="uninstall-ack"><span data-v-d98acdc2=""><b data-v-d98acdc2="">我已阅读清单并确认继续</b><small data-v-d98acdc2="">停代理 → 备份 → 执行官方 ocx uninstall → 移除包体与入口 → 残留核验（全部由应用代执行）。</small></span></label>
+        <p data-v-d98acdc2="" class="wiz-ack-hint" data-testid="uninstall-ack-hint">勾选上面这一项，「卸载」才会亮起。</p>
+        <div data-v-d98acdc2="" class="uninstall-actions"><button data-v-d98acdc2="" class="btn ghost" type="button">
+            <!--v-if--><span class="btn-content">取消</span>
+          </button><button data-v-d98acdc2="" class="btn danger" type="button" disabled="" data-testid="uninstall-confirm">
+            <!--v-if--><span class="btn-content">卸载</span>
+          </button></div>
+      </div>
+    </footer>
+  </dialog>
+</body>
+ ❯ DOMWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ dialog tests/post09-remaining-representative.test.ts:28:83
+     26| })
+     27| afterEach(() => { wrappers.splice(0).forEach(w => w.unmount()); docume…
+     28| function dialog(selector = 'dialog[open]') { return new DOMWrapper(doc…
+       |                                                                                   ^
+     29| async function exit(channel: string, selector = 'dialog[open]') {
+     30|   const root = dialog(selector)
+ ❯ tests/post09-remaining-representative.test.ts:77:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/13]⎯
+
+ FAIL  tests/settings-uninstall.test.ts > 统一卸载弹窗（Revision 11） > 按来源渲染方案、备份只提醒，且未确认前主行动禁用并给出原因
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/settings-uninstall.test.ts:115:28
+    113|
+    114|     const modal = new DOMWrapper(document.body).find('dialog[data-test…
+    115|     expect(modal.exists()).toBe(true)
+       |                            ^
+    116|     // 范围两级
+    117|     expect(modal.find('[data-testid="uninstall-scope-full"]').exists()…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/13]⎯
+
+ FAIL  tests/settings-uninstall.test.ts > 统一卸载弹窗（Revision 11） > 勾选确认后按完整卸载请求执行，并渲染真实步骤与残留核验
+Error: Cannot call find on an empty DOMWrapper.
+ ❯ Object.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:1479:27
+ ❯ tests/settings-uninstall.test.ts:151:17
+    149|
+    150|     const modal = new DOMWrapper(document.body).find('dialog[data-test…
+    151|     await modal.find('[data-testid="uninstall-ack"]').setValue(true)
+       |                 ^
+    152|     await nextTick()
+    153|     expect(modal.find('[data-testid="uninstall-confirm"]').attributes(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/13]⎯
+
+ FAIL  tests/settings-uninstall.test.ts > 统一卸载弹窗（Revision 11） > 形态无法确认时禁止确认并显示原因
+Error: Cannot call find on an empty DOMWrapper.
+ ❯ Object.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:1479:27
+ ❯ tests/settings-uninstall.test.ts:190:18
+    188|
+    189|     const modal = new DOMWrapper(document.body).find('dialog[data-test…
+    190|     expect(modal.find('[data-testid="uninstall-not-removable"]').text(…
+       |                  ^
+    191|     await modal.find('[data-testid="uninstall-ack"]').setValue(true)
+    192|     await nextTick()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/13]⎯
+
+ FAIL  tests/settings-uninstall.test.ts > 统一卸载弹窗（Revision 11） > 有失败步骤时不显示 100% 成功，而是报出失败步数
+Error: Cannot call find on an empty DOMWrapper.
+ ❯ Object.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:1479:27
+ ❯ tests/settings-uninstall.test.ts:219:17
+    217|
+    218|     const modal = new DOMWrapper(document.body).find('dialog[data-test…
+    219|     await modal.find('[data-testid="uninstall-ack"]').setValue(true)
+       |                 ^
+    220|     await nextTick()
+    221|     await modal.find('[data-testid="uninstall-confirm"]').trigger('cli…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/13]⎯
+
+ FAIL  tests/settings-uninstall.test.ts > 统一卸载弹窗（Revision 11） > present 证据不显示完成或 100% undefined
+ FAIL  tests/settings-uninstall.test.ts > 统一卸载弹窗（Revision 11） > unknown 证据不显示完成或 100% undefined
+ FAIL  tests/settings-uninstall.test.ts > 统一卸载弹窗（Revision 11） > missing 证据不显示完成或 100% undefined
+ FAIL  tests/settings-uninstall.test.ts > 统一卸载弹窗（Revision 11） > skipped 证据不显示完成或 100% undefined
+Error: Cannot call find on an empty DOMWrapper.
+ ❯ Object.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:1479:27
+ ❯ tests/settings-uninstall.test.ts:248:17
+    246|     await openUninstall(wrapper)
+    247|     const modal = new DOMWrapper(document.body).find('dialog[data-test…
+    248|     await modal.find('[data-testid="uninstall-ack"]').setValue(true)
+       |                 ^
+    249|     await modal.find('[data-testid="uninstall-confirm"]').trigger('cli…
+    250|     await flushPromises()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/13]⎯
+
+
+ Test Files  2 failed | 214 passed (216)
+      Tests  13 failed | 1587 passed (1600)
+   Start at  23:35:54
+   Duration  31.95s (tests 38%, environment 37%, transform 14%, import 10%)
+
+Environment  jsdom was created 216 times · 78.80s total, 37% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

@@ -1,0 +1,79 @@
+
+> opencodex-desktop-ui@0.2.23 test
+> vitest --run
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/runtime-protection.test.ts (12 tests | 1 failed) 375ms
+   ❯ local panel protection status and retry (12)
+     × blocks installation and port controls until a clean protection read finishes 40ms
+ ❯ tests/runtime-port-settings.test.ts (10 tests | 10 failed) 160ms
+   ❯ installed runtime port settings (10)
+     × uses a single summary, hides fixed input, and does not save while reading 97ms
+     × waits for the backend check and readback before displaying saved success 8ms
+     × rejects invalid fixed 0 without invoking a write 8ms
+     × rejects invalid fixed 65536 without invoking a write 6ms
+     × rejects invalid fixed 1.5 without invoking a write 7ms
+     × rejects invalid fixed -1 without invoking a write 6ms
+     × rejects invalid fixed abc without invoking a write 5ms
+     × saves a fixed port and restores unsaved edits without another write 7ms
+     × preserves the running port until confirmed restart; cancelling sends no lifecycle request 6ms
+     × shows check failure, keeps saved value, and never resolves it by optimistic UI 10ms
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/runtime-port-settings.test.ts > installed runtime port settings > uses a single summary, hides fixed input, and does not save while reading
+ FAIL  tests/runtime-port-settings.test.ts > installed runtime port settings > waits for the backend check and readback before displaying saved success
+ FAIL  tests/runtime-port-settings.test.ts > installed runtime port settings > rejects invalid fixed 0 without invoking a write
+ FAIL  tests/runtime-port-settings.test.ts > installed runtime port settings > rejects invalid fixed 65536 without invoking a write
+ FAIL  tests/runtime-port-settings.test.ts > installed runtime port settings > rejects invalid fixed 1.5 without invoking a write
+ FAIL  tests/runtime-port-settings.test.ts > installed runtime port settings > rejects invalid fixed -1 without invoking a write
+ FAIL  tests/runtime-port-settings.test.ts > installed runtime port settings > rejects invalid fixed abc without invoking a write
+ FAIL  tests/runtime-port-settings.test.ts > installed runtime port settings > saves a fixed port and restores unsaved edits without another write
+ FAIL  tests/runtime-port-settings.test.ts > installed runtime port settings > preserves the running port until confirmed restart; cancelling sends no lifecycle request
+ FAIL  tests/runtime-port-settings.test.ts > installed runtime port settings > shows check failure, keeps saved value, and never resolves it by optimistic UI
+TypeError: Cannot read properties of undefined (reading 'runtime')
+ ❯ ComputedRefImpl.fn src/features/runtime/RuntimePortSettings.vue:15:54
+     13| const lifecycle=useLifecycleStore(),app=useAppStore()
+     14| const saved=ref<PortSnapshot|null>(null),mode=ref<Mode>('auto'),port=r…
+     15| const running=computed(()=>lifecycle.statusSnapshot?.matrix.runtime===…
+       |                                                      ^
+     16| const actual=computed(()=>running.value?lifecycle.statusSnapshot?.port…
+     17| const busy=computed(()=>loading.value||saving.value||lifecycle.process…
+ ❯ refreshComputed node_modules/@vue/reactivity/dist/reactivity.cjs.js:422:28
+ ❯ ComputedRefImpl.get value [as value] node_modules/@vue/reactivity/dist/reactivity.cjs.js:1743:5
+ ❯ ComputedRefImpl.fn src/features/runtime/RuntimePortSettings.vue:20:36
+ ❯ refreshComputed node_modules/@vue/reactivity/dist/reactivity.cjs.js:422:28
+ ❯ ComputedRefImpl.get value [as value] node_modules/@vue/reactivity/dist/reactivity.cjs.js:1743:5
+ ❯ unref node_modules/@vue/reactivity/dist/reactivity.cjs.js:1568:45
+ ❯ Object.get node_modules/@vue/reactivity/dist/reactivity.cjs.js:1574:64
+ ❯ src/features/runtime/RuntimePortSettings.vue:45:23
+ ❯ renderFnWithContext node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:704:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  tests/runtime-protection.test.ts > local panel protection status and retry > blocks installation and port controls until a clean protection read finishes
+AssertionError: expected undefined to be defined
+ ❯ tests/runtime-protection.test.ts:81:83
+     79|   it('blocks installation and port controls until a clean protection r…
+     80|     const{runtime,wrapper}=setup(none);runtime.protection=null;runtime…
+     81|     expect(wrapper.get('[data-testid="runtime-install"]').attributes('…
+       |                                                                                   ^
+     82|     expect(wrapper.get('[data-testid="runtime-port-settings"] fieldset…
+     83|     await flushPromises();expect(wrapper.get('[data-testid="runtime-in…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+
+ Test Files  2 failed | 214 passed (216)
+      Tests  11 failed | 1589 passed (1600)
+   Start at  23:31:00
+   Duration  34.19s (tests 42%, environment 36%, transform 12%, import 10%)
+
+Environment  jsdom was created 216 times · 72.00s total, 36% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

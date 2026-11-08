@@ -1,0 +1,21 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 36.98s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-58a8535d3845a745)
+
+running 1 test
+test commands::real_port_lifecycle_tests::exact_names2_port_save_start_stop_with_native_client_restore has been running for over 60 seconds
+native start: result=ProcessActionResult { lifecycle_state: StartingFailed, result: None, can_start: true, can_stop: false, can_restart: false, failure: Some(ProcessActionFailure { code: "lifecycle_timeout", message: "操作未在规定时间内确认完成，请核对服务状态。" }) } elapsed_ms=30313 port=Some(58038)
+
+thread 'commands::real_port_lifecycle_tests::exact_names2_port_save_start_stop_with_native_client_restore' (142075292) panicked at src/commands/mod.rs:1168:13:
+native start did not pass; retained fixture /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd023-real-port-lifecycle-WYga1K
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test commands::real_port_lifecycle_tests::exact_names2_port_save_start_stop_with_native_client_restore ... FAILED
+
+failures:
+
+failures:
+    commands::real_port_lifecycle_tests::exact_names2_port_save_start_stop_with_native_client_restore
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2014 filtered out; finished in 89.96s
+
+error: test failed, to rerun pass `--lib`

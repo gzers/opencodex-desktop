@@ -1,0 +1,149 @@
+
+> opencodex-desktop-ui@0.2.23 test
+> vitest --run
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/settings-paths-v2.test.ts (0 test)
+ ❯ tests/settings-uninstall.test.ts (0 test)
+ ❯ tests/settings-data-root-migration.test.ts (0 test)
+ ❯ tests/update-center.test.ts (0 test)
+ ❯ tests/extension-detail.test.ts (0 test)
+ ❯ tests/overview-mods.test.ts (0 test)
+ ❯ tests/model-save-feedback.test.ts (0 test)
+ ❯ tests/settings-install-feedback.test.ts (0 test)
+ ❯ tests/post09-remaining-representative.test.ts (0 test)
+ ❯ tests/panel.test.ts (0 test)
+ ❯ tests/settings-install-path.test.ts (0 test)
+ ❯ tests/notification-center.test.ts (0 test)
+ ❯ tests/settings-skills-source.test.ts (0 test)
+ ❯ tests/interface-scale.test.ts (0 test)
+ ❯ tests/post09-remaining-model-hosts.test.ts (0 test)
+ ❯ tests/startup-preferences.test.ts (0 test)
+ ❯ tests/model-template-library-v2.test.ts (0 test)
+ ❯ tests/topbar.test.ts (0 test)
+ ❯ tests/settings-update-retry.test.ts (0 test)
+ ❯ tests/runtime-protection.test.ts (0 test)
+ ❯ tests/settings-codex-shim.test.ts (0 test)
+ ❯ tests/extensions-clients.test.ts (0 test)
+ ❯ tests/overview-motion.test.ts (0 test)
+ ❯ tests/global-refresh.test.ts (0 test)
+ ❯ tests/app-modal.test.ts (0 test)
+ ❯ tests/post09-remaining-overview.test.ts (0 test)
+ ❯ tests/model-template-version-context.test.ts (0 test)
+ ❯ tests/post09-owned-consumers.test.ts (0 test)
+ ❯ tests/model-view-context.test.ts (0 test)
+ ❯ tests/upgrade-auto-backup.test.ts (0 test)
+ ❯ tests/effects.test.ts (0 test)
+ ❯ tests/extensions-pagination.test.ts (0 test)
+ ❯ tests/windows-path-surfaces.test.ts (0 test)
+ ❯ tests/technical-input-autocapitalize.test.ts (0 test)
+ ❯ tests/overview-status-announce.test.ts (0 test)
+ ❯ tests/model-agent-entry.test.ts (0 test)
+ ❯ tests/install-discovery-source.test.ts (0 test)
+ ❯ tests/log-categories.test.ts (0 test)
+ ❯ tests/model-save-result-flow.test.ts (0 test)
+ ❯ tests/open-data.test.ts (0 test)
+ ❯ tests/transfer-notification-v2.test.ts (0 test)
+ ❯ tests/tray-route-copy.test.ts (0 test)
+ ❯ tests/settings-readonly.test.ts (0 test)
+ ❯ tests/restore.test.ts (0 test)
+ ❯ tests/post10-panel.test.ts (0 test)
+ ❯ tests/sync-route.test.ts (0 test)
+ ❯ tests/tray-events.test.ts (0 test)
+ ❯ tests/model-templates-route-v2.test.ts (0 test)
+ ❯ tests/settings-windows-cli.test.ts (0 test)
+ ❯ tests/idle-ipc.test.ts (0 test)
+ ❯ tests/notification-history-cleanup.test.ts (0 test)
+ ❯ tests/settings-guide-listener.test.ts (0 test)
+ ❯ tests/runtime-source.test.ts (0 test)
+ ❯ tests/sync-conflict-default.test.ts (0 test)
+ ❯ tests/tray-bridge-failure.test.ts (0 test)
+ ❯ tests/runtime-source-environment-refresh.test.ts (0 test)
+ ❯ tests/environment-gate.test.ts (0 test)
+ ❯ tests/post021-sync.test.ts (0 test)
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+ ❯ tests/logs-ordering.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 59 ⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/app-modal.test.ts [ tests/app-modal.test.ts ]
+ FAIL  tests/effects.test.ts [ tests/effects.test.ts ]
+ FAIL  tests/environment-gate.test.ts [ tests/environment-gate.test.ts ]
+ FAIL  tests/extension-detail.test.ts [ tests/extension-detail.test.ts ]
+ FAIL  tests/extensions-clients.test.ts [ tests/extensions-clients.test.ts ]
+ FAIL  tests/extensions-pagination.test.ts [ tests/extensions-pagination.test.ts ]
+ FAIL  tests/global-refresh.test.ts [ tests/global-refresh.test.ts ]
+ FAIL  tests/idle-ipc.test.ts [ tests/idle-ipc.test.ts ]
+ FAIL  tests/install-discovery-source.test.ts [ tests/install-discovery-source.test.ts ]
+ FAIL  tests/interface-scale.test.ts [ tests/interface-scale.test.ts ]
+ FAIL  tests/log-categories.test.ts [ tests/log-categories.test.ts ]
+ FAIL  tests/logs-ordering.test.ts [ tests/logs-ordering.test.ts ]
+ FAIL  tests/model-agent-entry.test.ts [ tests/model-agent-entry.test.ts ]
+ FAIL  tests/model-save-feedback.test.ts [ tests/model-save-feedback.test.ts ]
+ FAIL  tests/model-save-result-flow.test.ts [ tests/model-save-result-flow.test.ts ]
+ FAIL  tests/model-template-library-v2.test.ts [ tests/model-template-library-v2.test.ts ]
+ FAIL  tests/model-template-version-context.test.ts [ tests/model-template-version-context.test.ts ]
+ FAIL  tests/model-templates-route-v2.test.ts [ tests/model-templates-route-v2.test.ts ]
+ FAIL  tests/model-view-context.test.ts [ tests/model-view-context.test.ts ]
+ FAIL  tests/notification-center.test.ts [ tests/notification-center.test.ts ]
+ FAIL  tests/notification-history-cleanup.test.ts [ tests/notification-history-cleanup.test.ts ]
+ FAIL  tests/open-data.test.ts [ tests/open-data.test.ts ]
+ FAIL  tests/overview-mods.test.ts [ tests/overview-mods.test.ts ]
+ FAIL  tests/overview-motion.test.ts [ tests/overview-motion.test.ts ]
+ FAIL  tests/overview-status-announce.test.ts [ tests/overview-status-announce.test.ts ]
+ FAIL  tests/panel.test.ts [ tests/panel.test.ts ]
+ FAIL  tests/post021-sync.test.ts [ tests/post021-sync.test.ts ]
+ FAIL  tests/post09-owned-consumers.test.ts [ tests/post09-owned-consumers.test.ts ]
+ FAIL  tests/post09-remaining-model-hosts.test.ts [ tests/post09-remaining-model-hosts.test.ts ]
+ FAIL  tests/post09-remaining-overview.test.ts [ tests/post09-remaining-overview.test.ts ]
+ FAIL  tests/post09-remaining-representative.test.ts [ tests/post09-remaining-representative.test.ts ]
+ FAIL  tests/post10-panel.test.ts [ tests/post10-panel.test.ts ]
+ FAIL  tests/restore.test.ts [ tests/restore.test.ts ]
+ FAIL  tests/runtime-protection.test.ts [ tests/runtime-protection.test.ts ]
+ FAIL  tests/runtime-source-environment-refresh.test.ts [ tests/runtime-source-environment-refresh.test.ts ]
+ FAIL  tests/runtime-source.test.ts [ tests/runtime-source.test.ts ]
+ FAIL  tests/settings-codex-shim.test.ts [ tests/settings-codex-shim.test.ts ]
+ FAIL  tests/settings-data-root-migration.test.ts [ tests/settings-data-root-migration.test.ts ]
+ FAIL  tests/settings-guide-listener.test.ts [ tests/settings-guide-listener.test.ts ]
+ FAIL  tests/settings-install-feedback.test.ts [ tests/settings-install-feedback.test.ts ]
+ FAIL  tests/settings-install-path.test.ts [ tests/settings-install-path.test.ts ]
+ FAIL  tests/settings-paths-v2.test.ts [ tests/settings-paths-v2.test.ts ]
+ FAIL  tests/settings-readonly.test.ts [ tests/settings-readonly.test.ts ]
+ FAIL  tests/settings-skills-source.test.ts [ tests/settings-skills-source.test.ts ]
+ FAIL  tests/settings-uninstall.test.ts [ tests/settings-uninstall.test.ts ]
+ FAIL  tests/settings-update-retry.test.ts [ tests/settings-update-retry.test.ts ]
+ FAIL  tests/settings-windows-cli.test.ts [ tests/settings-windows-cli.test.ts ]
+ FAIL  tests/startup-preferences.test.ts [ tests/startup-preferences.test.ts ]
+ FAIL  tests/sync-conflict-default.test.ts [ tests/sync-conflict-default.test.ts ]
+ FAIL  tests/sync-route.test.ts [ tests/sync-route.test.ts ]
+ FAIL  tests/technical-input-autocapitalize.test.ts [ tests/technical-input-autocapitalize.test.ts ]
+ FAIL  tests/topbar.test.ts [ tests/topbar.test.ts ]
+ FAIL  tests/transfer-notification-v2.test.ts [ tests/transfer-notification-v2.test.ts ]
+ FAIL  tests/tray-bridge-failure.test.ts [ tests/tray-bridge-failure.test.ts ]
+ FAIL  tests/tray-events.test.ts [ tests/tray-events.test.ts ]
+ FAIL  tests/tray-route-copy.test.ts [ tests/tray-route-copy.test.ts ]
+ FAIL  tests/update-center.test.ts [ tests/update-center.test.ts ]
+ FAIL  tests/upgrade-auto-backup.test.ts [ tests/upgrade-auto-backup.test.ts ]
+ FAIL  tests/windows-path-surfaces.test.ts [ tests/windows-path-surfaces.test.ts ]
+SyntaxError: v-else/v-else-if has no adjacent v-if or v-else-if.
+1149 |      <template v-if="pathDialog !== 'details' && pathDialog !== 'json'" #actions>
+1150 |        <UiButton class="btn ghost" :disabled="dataRoots.switching || dataRoots.saving || dataRoots.homeSaving" @click=...
+1151 |        <UiButton v-else-if="pathDialog === 'initialize'" class="btn primary" :disabled="dataRootBindingDisabled" @clic...
+     |         ^
+1152 |      </template>
+1153 |    </UiDialog>
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/59]⎯
+
+
+ Test Files  59 failed | 156 passed (215)
+      Tests  1143 passed (1143)
+   Start at  23:20:42
+   Duration  31.83s (environment 51%, tests 36%, import 7%, transform 6%, worker 1%)
+
+Environment  jsdom was created 215 times · 73.22s total, 51% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

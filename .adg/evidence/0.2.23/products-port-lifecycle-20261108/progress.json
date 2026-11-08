@@ -1,0 +1,39 @@
+{
+  "source": "040cdcd9f (product 40d5015a5; diagnostic assembly 040cdcd9f)",
+  "frontendFull": {
+    "files": 216,
+    "passed": 1600,
+    "failed": 0,
+    "extraLifecycleFailureTargeted": 13
+  },
+  "backendFullBeforeLastPortArgsAndObserverPatch": {
+    "passed": 2000,
+    "ignored": 15,
+    "failed": 0
+  },
+  "latestBackendFull": {
+    "passed": 2000,
+    "failed": 0,
+    "ignored": 15,
+    "scope": "full backend at launch; subsequent external-port-read refinement verified with eight targeted tests and strict clippy"
+  },
+  "nativeMacLifecycle": {
+    "accepted": false,
+    "reason": "official service-home refused: launchd job loaded but plist missing in isolated HOME",
+    "dailyServiceNotChanged": true,
+    "ownedTestResidueCleaned": true
+  },
+  "productPage": {
+    "checks": 8,
+    "adapter": "actual Vue components, synthetic IPC",
+    "nativeAccepted": false
+  },
+  "formalCandidateAccepted": false,
+  "releasePublished": false,
+  "windowsNext": "full 28-step diagnostic; accepted:false always",
+  "strictClippy": "all-targets -D warnings passed",
+  "finalPortTests": {
+    "passed": 8,
+    "failed": 0
+  }
+}

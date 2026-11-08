@@ -1,0 +1,38 @@
+
+> opencodex-desktop-ui@0.2.23 test
+> vitest --run tests/process-action.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/process-action.test.ts (13 tests | 1 failed) 74ms
+   ❯ typed lifecycle failures remain visible until actual ready (1)
+     × keeps a rejected start as failed over a stopped observation and clears on true running 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/process-action.test.ts > typed lifecycle failures remain visible until actual ready > keeps a rejected start as failed over a stopped observation and clears on true running
+AssertionError: expected undefined to be 'starting_failed' // Object.is equality
+
+- Expected:
+"starting_failed"
+
++ Received:
+undefined
+
+ ❯ tests/process-action.test.ts:320:54
+    318|     expect(result?.failure?.code).toBe('port_conflict')
+    319|     await lifecycle.loadStatusSnapshot()
+    320|     expect(lifecycle.statusSnapshot?.matrix.runtime).toBe('starting_fa…
+       |                                                      ^
+    321|     expect(lifecycle.statusSnapshot?.pid).toBeNull()
+    322|     expect(lifecycle.processProgressError).toContain('端口已被占用')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 passed (13)
+   Start at  23:54:06
+   Duration  1.98s (transform 85%, environment 8%, tests 4%, import 3%)
+

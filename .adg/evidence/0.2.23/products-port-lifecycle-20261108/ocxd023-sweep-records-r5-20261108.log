@@ -1,0 +1,5 @@
+PASS: wrappers continue, refuse overwrite, and preserve normal strict assertions
+PASS: real controller state function waits for the independent SID and never converts failure to ready
+PASS: PID probe completes readonly frame and rejects mismatched, failed, oversized and truncated responses
+PASS: incomplete actual named-pipe ValueTask awaits completion before GetResult
+PASS: original signalled handle stops cleanup before any reused PID lookup; generation key remains strict
