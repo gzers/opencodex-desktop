@@ -58,6 +58,29 @@ class SweepTests(unittest.TestCase):
             with self.assertRaises(FileExistsError):collector.collect(root)
             self.assertEqual(before,(root/'sweep/12-private-bundle-supply.json').read_bytes())
 
+    def test_environment_success_and_late_ready_cannot_masquerade_as_runtime_ready(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            def put(path,value):
+                target=root/path;target.parent.mkdir(parents=True,exist_ok=True);target.write_text(json.dumps(value))
+            for i in (1,2):
+                put(f"evidence/two-user/user{i}/sweep-runtime-readiness.json",dict(status="pass",accepted=False,diagnosticOnly=True,evidence={"gate":"ready"}))
+            collector.collect(root,selected="13")
+            target=root/"sweep/13-runtime-readiness.json"
+            self.assertEqual(json.loads(target.read_text())["status"],"fail")
+            target.unlink() # test-only scratch; the real collector never overwrites receipts
+            for i in (1,2):
+                put(f"evidence/two-user/user{i}/runtime-1/runtime-step.json",dict(mode="start",result="pass-runtime-step",action={"result":"started"},startBudget={"budgetMilliseconds":30000,"elapsedMilliseconds":12000},status={"runtime":"running","health":"healthy","pid":"42","port":12345},record={"pid":42,"port":12345},attestation="verified-production-challenge"))
+            collector.collect(root,selected="13")
+            self.assertEqual(json.loads(target.read_text())["status"],"pass")
+            target.unlink()
+            path=root/"evidence/two-user/user1/runtime-1/runtime-step.json";row=json.loads(path.read_text());row["action"]["result"]=None;path.write_text(json.dumps(row))
+            collector.collect(root,selected="13")
+            self.assertEqual(json.loads(target.read_text())["status"],"fail")
+            target.unlink();row["action"]["result"]="started";row["startBudget"]["elapsedMilliseconds"]=30001;path.write_text(json.dumps(row))
+            collector.collect(root,selected="13")
+            self.assertEqual(json.loads(target.read_text())["status"],"fail")
+
     def test_every_gate_always_continues_and_complete_artifact(self):
         workflow=(HERE.parents[2]/'.github/workflows/windows023-sweep.yml').read_text()
         for block in workflow.split('      - name: ')[1:]:

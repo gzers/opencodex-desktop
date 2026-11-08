@@ -43,7 +43,28 @@ def collect(root, selected=None):
         return result
 
     write("12", "private-bundle-supply", lambda: both("private-bundle-supply"), ["11"])
-    write("13", "runtime-readiness", lambda: both("runtime-readiness"), ["12"])
+    def actual_readiness():
+        environment = both("runtime-readiness")
+        starts = []
+        for index in (1, 2):
+            candidates = [read(path) for path in sorted((users / f"user{index}").glob("runtime-*/runtime-step.json"))]
+            candidates = [row for row in candidates if row.get("mode") == "start" and row.get("result") == "pass-runtime-step"]
+            require(len(candidates) == 1, f"user{index}: no unique successful actual runtime start receipt; environment-ready is not service-ready")
+            row = candidates[0]
+            require(row.get("action", {}).get("result") == "started", f"user{index}: official manager did not confirm start within its original budget")
+            budget = row.get("startBudget") or {}
+            require(budget.get("budgetMilliseconds") == 30000 and isinstance(budget.get("elapsedMilliseconds"), (int, float))
+                    and 0 <= budget["elapsedMilliseconds"] <= 30000,
+                    f"user{index}: shared original start/readiness budget not proved")
+            status, record = row.get("status") or {}, row.get("record") or {}
+            require(status.get("runtime") == "running" and status.get("health") == "healthy"
+                    and str(status.get("pid")) == str(record.get("pid")) and status.get("port") == record.get("port")
+                    and row.get("attestation") == "verified-production-challenge",
+                    f"user{index}: actual ready identity/port/HMAC not proved")
+            starts.append(row)
+        return dict(environment=environment, actualStarts=starts)
+
+    write("13", "runtime-readiness", actual_readiness, ["12"])
 
     def ports():
         d = read(users / "two-user-native.json")

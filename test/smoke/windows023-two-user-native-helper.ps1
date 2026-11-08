@@ -387,7 +387,7 @@ async function runtimeCommand(c){
  };
  const action=async action=>{
   await bound();const r=await runtimeInvoke('process_action',{request:{action,confirm:true}},action==='stop'?15000:35000);
-  const value={lifecycleState:r.lifecycleState,result:r.result};runtimePublic.action=value;return value;
+  const value={lifecycleState:r.lifecycleState,result:r.result,failureCode:r.failure?.code??null};runtimePublic.action=value;return value;
  };
  const statusConflict=s=>/conflict|port[_ -]?(in[_ -]?use|occupied)/i.test(String(s.protection))||s.runtime==='external_takeover';
  const diagnosticConflict=async()=>{
@@ -421,8 +421,8 @@ async function runtimeCommand(c){
   try{await handle.writeFile(JSON.stringify(fixtureConfig(c.port))+'\n','utf8');await handle.sync();}finally{await handle.close();}
   try{await rename(temp,configPath);}catch(e){await unlink(temp).catch(()=>{});throw e;}
   result.config={path:configPath,providers:1,syntheticOnly:true,liveModels:false,utf8Bom:false,atomicRename:true};
-  runtimeStage='manager-start';result.action=await action('start');
-  const until=Date.now()+30000;let last;
+  runtimeStage='manager-start';const startBegan=Date.now();result.action=await action('start');
+  const until=startBegan+30000;let last;
   if(c.mode==='conflict'){
    let marker=false;
    do{assert(!(await record()),'B published an owned service record on A port');last=await snapshot();
@@ -433,12 +433,14 @@ async function runtimeCommand(c){
   }else{
    runtimeStage='wait-owned-health';let observed;
    const samples=[];
-   do{try{observed=await health();last=await snapshot();samples.push({at:Date.now(),health:runtimePublic.health,status:last});if(last.runtime==='running'&&last.health==='healthy'&&Number(last.pid)===observed.record.pid&&last.port===c.port)break;}
+   do{try{observed=await health();last=await snapshot();samples.push({at:Date.now(),elapsedMilliseconds:Date.now()-startBegan,health:runtimePublic.health,status:last});if(last.runtime==='running'&&last.health==='healthy'&&Number(last.pid)===observed.record.pid&&last.port===c.port)break;}
     catch(error){samples.push({at:Date.now(),health:runtimePublic.health??null,error:runtimeFailureCode(error)});}
     await runtimeSleep(250);
    }while(Date.now()<until);
-   await writeFile(join(output,'owned-health-observations.json'),JSON.stringify({samples:samples.slice(0,64),originalBudgetMilliseconds:30000,accepted:false})+'\n');
-   if(!(observed&&last?.runtime==='running'&&last.health==='healthy'&&Number(last.pid)===observed.record.pid&&last.port===c.port)){
+   await writeFile(join(output,'owned-health-observations.json'),JSON.stringify({samples:samples.slice(0,64),originalBudgetMilliseconds:30000,startAction:result.action,totalMilliseconds:Date.now()-startBegan,accepted:false})+'\n');
+   const startElapsedMilliseconds=Date.now()-startBegan;
+   const startBudgetPassed=result.action.result==='started'&&startElapsedMilliseconds<=30000;
+   if(!(startBudgetPassed&&observed&&last?.runtime==='running'&&last.health==='healthy'&&Number(last.pid)===observed.record.pid&&last.port===c.port)){
     // Additional readonly diagnosis follows the already failed original budget;
     // its result cannot make this attempt pass or authorize the next service.
     await writeFile(join(output,'production-attempt-failed.json'),JSON.stringify({accepted:false,originalBudgetPassed:false,budgetMilliseconds:30000})+'\n');
@@ -446,7 +448,7 @@ async function runtimeCommand(c){
     await diagnosticReadiness();
     throw Error('Actual service not healthy within production start budget');
    }
-   result={...result,...observed,status:last,port:c.port,automaticPort:requestedPort===0?runtimePublic.automaticPort:null};
+   result={...result,...observed,status:last,port:c.port,startBudget:{budgetMilliseconds:30000,elapsedMilliseconds:startElapsedMilliseconds},automaticPort:requestedPort===0?runtimePublic.automaticPort:null};
    const clientConfig=join(process.env.USERPROFILE,'.codex/config.toml');
    const clientStat=await lstat(clientConfig);assert(clientStat.isFile()&&!clientStat.isSymbolicLink()&&clientStat.size>0&&clientStat.size<=512*1024,'Actual Codex config injection missing');
    const injected=await readFile(clientConfig,'utf8');assert(injected.includes('openai_base_url')&&injected.includes(':'+c.port),'Codex routing did not use actual assigned port');

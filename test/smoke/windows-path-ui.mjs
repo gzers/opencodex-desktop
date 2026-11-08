@@ -51,13 +51,14 @@ export async function verifyWindowsPathUi(call, output, sandbox){
       const snapshot=await evaluate("window.__TAURI_INTERNALS__.invoke('model_paths_v2_snapshot')")
       const keys=['aggregateRoot','desktopRoot','opencodexHome','configPath','installationRoot','managerExecutable','runtimePrefix','runtimeEntry']
       await wait("document.querySelectorAll('.paths-facts dd[data-path-key] code').length===8")
-      const paths=await evaluate("[...document.querySelectorAll('.paths-facts dd[data-path-key]')].map(e=>({key:e.dataset.pathKey,path:e.querySelector('code')?.textContent,status:e.querySelector('[data-path-status]')?.dataset.pathStatus}))")
+      const paths=await evaluate("[...document.querySelectorAll('.paths-facts dd[data-path-key]')].map(e=>({key:e.dataset.pathKey,path:e.querySelector('code')?.textContent,status:e.dataset.pathStatus,badge:e.querySelector('[data-path-status]')?.dataset.pathStatus}))")
       assert.equal(snapshot.schemaVersion,1)
       for(const key of keys){
         const visible=paths.find(p=>p.key===key)
         assert(visible,'missing actual 023 path: '+key)
         assert.equal(visible.path,snapshot[key].path)
         assert.equal(visible.status,snapshot[key].status)
+        assert.equal(visible.badge,snapshot[key].status==='valid'?undefined:snapshot[key].status)
       }
       assert.equal(ordinary(snapshot.desktopRoot.path).toLowerCase(),ordinary(config.currentDataRoot).toLowerCase())
       assert.equal(ordinary(snapshot.opencodexHome.path).toLowerCase(),ordinary(config.currentOpencodexHome).toLowerCase())
