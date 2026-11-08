@@ -11,6 +11,13 @@ const pkg=join(program,'runtime/opencodex/node_modules/@bitkyc08/opencodex');
 const version=JSON.parse(readFileSync(join(pkg,'package.json'),'utf8')).version;
 if(version!=='2.97.0-desktop023.names.2')throw Error('exact runtime required');
 mkdirSync(home,{recursive:true});
+const initializeClient=process.env.OCXD_STARTUP_DIAG_INITIALIZE_CODEX==='1';
+if(initializeClient){
+ const client=join(profile,'.codex');
+ if(existsSync(client))throw Error('fresh client fixture required');
+ mkdirSync(client,{mode:0o700});
+ console.log(JSON.stringify({probe:'explicit-empty-codex-home-fixture',configSeeded:false,catalogSeeded:false,accepted:false}));
+}
 if(existsSync(join(home,'config.json')))throw Error('fresh diagnostic H required');
 const config={hostname:'127.0.0.1',openaiProviderTierVersion:2,defaultProvider:'sweep-fixture',defaultModelAliases:false,providers:{'sweep-fixture':{adapter:'openai-chat',baseUrl:'http://127.0.0.1:1/v1',allowPrivateNetwork:true,apiKey:'synthetic-unused',models:['sweep-fixture-model'],selectedModels:['sweep-fixture-model'],liveModels:false,defaultAliases:false}}};
 writeFileSync(join(home,'config.json'),JSON.stringify(config),{mode:0o600,flag:'wx'});
@@ -35,7 +42,7 @@ while(Date.now()-started<60000&&exit===null){
  }catch{}
  await sleep(250);
 }
-console.log(JSON.stringify({probe:'actual-official-cli-readiness-diagnostic',version,elapsedMilliseconds:Date.now()-started,samples,exit,accepted:false,fullSoftwarePassed:false,cleanupAuthority:'original ordinary executor retained SID/image/creation/process handles; no PID-only kill here'}));
+console.log(JSON.stringify({probe:'actual-official-cli-readiness-diagnostic',version,initializeClient,elapsedMilliseconds:Date.now()-started,samples,exit,accepted:false,fullSoftwarePassed:false,cleanupAuthority:'original ordinary executor retained SID/image/creation/process handles; no PID-only kill here'}));
 // The unchanged executor owns this process family and must prove exit of all
 // retained handles before removing the disposable account/Profile.
 child.unref();

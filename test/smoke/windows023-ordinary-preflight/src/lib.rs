@@ -183,6 +183,10 @@ mod tests {
         let mut child = Command::new(bun)
             .args(["--no-env-file", "-e", include_str!("../startup-probe.ts")])
             .env("OCXD_STARTUP_DIAG_PROGRAM", &program)
+            .env(
+                "OCXD_STARTUP_DIAG_INITIALIZE_CODEX",
+                option_env!("OCXD_STARTUP_PROBE_INITIALIZE_CODEX").unwrap_or("0"),
+            )
             .spawn()
             .unwrap();
         let status = loop {

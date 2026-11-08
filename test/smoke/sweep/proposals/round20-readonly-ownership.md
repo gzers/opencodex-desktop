@@ -17,3 +17,9 @@ Run42469644038，source5cba024a2，26过/1失败，accepted:false。272份manife
 只读运行42472622892、source07b5b746b完成。真实普通SID原版inspectNativeCodexOwnership用时776ms返回owned/no_service_claim；sc.exe实查1060无服务，schtasks目标非0后完整CSV查询0退出，证明无任务。没有创建.codex或config.json，原执行器账户/Profile、进程、ACL清理通过。因此没有证据允许修改或绕过服务归属门禁；前面的服务归属猜测已被该环境反例否定。
 
 后继只增显式普通账户CLI启动对照：同一精确固定Node→原版bin/ocx.mjs start，子进程环境按生产清空重建，纯模拟127.0.0.1:1静态provider，省略port、当前tier格式。保留原版启动stdout/stderr与60秒独立诊断时间线（不是延长原30秒验收），记录实际readyz身份/终态；不关闭客户端集成、不注入ready、不替换原版默认逻辑。原执行器持有全代际进程账本并在测试结束证明全部退出和新账户/Profile移除；诊断不以PID-only taskkill清理。仅此新测试明确启动自己的原版进程；前次只读诊断仍不启动服务，两个模式互斥。小crate编译、固定Bun语法、原ordinary静态合同和YAML核对通过，Mac未执行Windows分支。正式候选继续原运行，不重新启动全量sweep。
+
+## Windows直接启动输出已确认缺少客户端HOME
+
+运行42473371702实际普通账户/Node→names.2原CLI，10.214秒readyz终态failed；stderr原文明确Codex home不存在，须先启动Codex生成HOME再sync。原执行器进程/账户/Profile与ACL清理通过。因而这次失败不是端口冲突或状态读取错误，原测试没满足默认客户端集成的既有前置。
+
+后继只加可显式选择的空客户端目录对照，不预置config/catalog，不关闭集成、不改ready条件。原“无客户端HOME”诊断保持可单独执行、原件保留，不覆盖成通过。两种模式互斥，通过编译时显式flag选择；正式双SID测试尚未修改，待原版实际注入/ready结果确认再补正确场景前置。
