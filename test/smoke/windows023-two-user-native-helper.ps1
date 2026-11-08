@@ -86,6 +86,33 @@ function Get-TwoUserTreeHash([string]$Directory) {
  $sorted=@($entries|Sort-Object {$_.path});$json=ConvertTo-Json -InputObject $sorted -Depth 5 -Compress
  [pscustomobject]@{sha256=[Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($json))).ToLowerInvariant();entries=$sorted}
 }
+function Save-TwoUserProcessHandle($Process,[string]$CreationTicks) {
+ if(!('OcxRetainedProcess' -as [type])){Add-Type -TypeDefinition @'
+using System;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
+public sealed class OcxRetainedProcess : IDisposable {
+ [DllImport("kernel32.dll",SetLastError=true)] static extern bool DuplicateHandle(IntPtr sourceProcess,IntPtr source,IntPtr targetProcess,out SafeWaitHandle duplicate,uint access,bool inherit,uint options);
+ [DllImport("kernel32.dll",SetLastError=true)] static extern uint WaitForSingleObject(SafeWaitHandle handle,uint milliseconds);
+ SafeWaitHandle handle;
+ public OcxRetainedProcess(IntPtr source){if(!DuplicateHandle(new IntPtr(-1),source,new IntPtr(-1),out handle,0,false,2))throw new Win32Exception();}
+ public bool Exited(){uint result=WaitForSingleObject(handle,0);if(result==0)return true;if(result==258)return false;throw new Win32Exception();}
+ public void Dispose(){handle.Dispose();}
+}
+'@}
+ if(!$script:twoUserRetainedHandles){$script:twoUserRetainedHandles=@{}}
+ $key=[string]$Process.Id+'/'+$CreationTicks
+ if(!$script:twoUserRetainedHandles.ContainsKey($key)){$script:twoUserRetainedHandles[$key]=[OcxRetainedProcess]::new($Process.Handle)}
+}
+function Test-TwoUserOriginalExited($Fact) {
+ $key=[string]$Fact.pid+'/'+[string]$Fact.creationTicks
+ if($script:twoUserRetainedHandles -and $script:twoUserRetainedHandles.ContainsKey($key)){return $script:twoUserRetainedHandles[$key].Exited()}
+ return $false
+}
+function Close-TwoUserProcessHandles {
+ if($script:twoUserRetainedHandles){foreach($handle in $script:twoUserRetainedHandles.Values){$handle.Dispose()};$script:twoUserRetainedHandles.Clear()}
+}
 function Get-TwoUserProcessFact([Diagnostics.Process]$Process,[string]$ExpectedSid) {
  [void]$Process.Handle
  if($Process.HasExited){throw 'Tracked process exited'}
@@ -94,6 +121,7 @@ function Get-TwoUserProcessFact([Diagnostics.Process]$Process,[string]$ExpectedS
  if($owner.ReturnValue -ne 0 -or $owner.Sid -cne $ExpectedSid){throw 'Tracked SID mismatch'}
  $ticks=$Process.StartTime.ToUniversalTime().Ticks;$delta=$ticks-$row.CreationDate.ToUniversalTime().Ticks
  if($delta -lt 0 -or $delta -gt 9 -or $Process.Path -ine $row.ExecutablePath){throw 'Tracked generation/image mismatch'}
+ Save-TwoUserProcessHandle $Process ([string]$ticks)
  [pscustomobject]@{pid=$Process.Id;sid=$owner.Sid;path=$Process.Path;creationTicks=[string]$ticks;sessionId=$row.SessionId}
 }
 function Assert-TwoUserLive($Fact) {
@@ -116,6 +144,7 @@ function Add-TwoUserDescendants($Root,[Collections.Generic.Dictionary[int,object
  }}while($changed)
 }
 function Stop-TwoUserTracked($Fact) {
+ if(Test-TwoUserOriginalExited $Fact){return}
  $p=Get-Process -Id $Fact.pid -ErrorAction SilentlyContinue
  if(!$p){return}
  try{
@@ -123,7 +152,7 @@ function Stop-TwoUserTracked($Fact) {
   # identity query. An exited object needs no kill; a still-live unknown object
   # remains a refusal, including a reused PID or another SID.
   if($p.HasExited){return}
-  try{$now=Get-TwoUserProcessFact $p $Fact.sid}catch{if($p.HasExited){return};throw}
+  try{$now=Get-TwoUserProcessFact $p $Fact.sid}catch{if($p.HasExited -or (Test-TwoUserOriginalExited $Fact)){return};throw}
   if($now.creationTicks -cne $Fact.creationTicks -or $now.path -ine $Fact.path){throw 'Refusing changed PID/SID/image/creation cleanup'}
   $p.Kill();if(!$p.WaitForExit(10000)){throw 'Tracked child did not exit'}
  }finally{$p.Dispose()}
@@ -1070,6 +1099,7 @@ function Invoke-TwoUserChild([string]$InputFile) {
    if(Test-Path -LiteralPath $path){$file=Get-Item -LiteralPath $path;if(!$file.PSIsContainer -and $file.Length -le 1MB -and !($file.Attributes -band [IO.FileAttributes]::ReparsePoint)){Copy-Item -LiteralPath $path -Destination (Join-Path $programDiagnostics ($relative.Replace('/','_').TrimStart('.')))}}
   }
   try{$result.finalInventory=Get-TwoUserTreeHash (Join-Path $nativeProfile '.codex-desktop');$result.inventory='hashed'}catch{$result.inventory='unavailable';if($result.result -ceq 'pass-user-isolation'){$result.result='evidence-incomplete'}}
+  Close-TwoUserProcessHandles
   Write-TwoUserJson (Join-Path $out 'finished.json') $result
   if($manager){$manager.process.Dispose()}
  }

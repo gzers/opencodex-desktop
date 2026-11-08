@@ -82,3 +82,15 @@ public static class SweepDelayedPipe {
 $delayed=[SweepDelayedPipe]::Reader();$delayedBytes=[byte[]]::new(3)
 try{Read-TwoUserBoundedPipeBytes $delayed $delayedBytes;if(($delayedBytes -join ',') -cne '7,8,9'){throw 'Actual delayed asynchronous named-pipe read differed'}}finally{$delayed.Dispose()}
 Write-Output 'PASS: incomplete actual named-pipe ValueTask awaits completion before GetResult'
+
+$oldHandles=$script:twoUserRetainedHandles
+try{
+ $signalled=[pscustomobject]@{}
+ $signalled|Add-Member ScriptMethod Exited {return $true}
+ $script:twoUserRetainedHandles=@{'987654/123'=$signalled}
+ # This PID need not exist. The exact retained original handle is authority;
+ # consulting or killing a replacement process is neither needed nor allowed.
+ Stop-TwoUserTracked @{pid=987654;creationTicks='123';sid='original';path='original.exe'}
+ if(Test-TwoUserOriginalExited @{pid=987654;creationTicks='different'}){throw 'Retained handle crossed process generations'}
+}finally{$script:twoUserRetainedHandles=$oldHandles}
+Write-Output 'PASS: original signalled handle stops cleanup before any reused PID lookup; generation key remains strict'

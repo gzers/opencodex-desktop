@@ -183,6 +183,7 @@ try {
   if(Test-Path -LiteralPath $tracked){
    try{foreach($fact in @(Get-Content -LiteralPath $tracked -Raw|ConvertFrom-Json)){
     if($fact.sid -cne $account.sid -or [long]$fact.creationTicks -lt [long]$account.fact.creationTicks){throw 'Runtime cleanup ledger escaped new account/generation'}
+    if(Test-TwoUserOriginalExited $fact){continue}
     $observedProcess=Get-Process -Id $fact.pid -ErrorAction SilentlyContinue
     if($observedProcess){
      try{
@@ -202,6 +203,7 @@ try {
   try{Stop-TwoUserTracked $fact;$cleanup.Add(@{pid=$fact.pid;sid=$fact.sid;creationTicks=$fact.creationTicks;image=$fact.path;result='stopped-or-exited'})}
   catch{$cleanup.Add(@{pid=$fact.pid;sid=$fact.sid;result='retained-unproven'});$taskSummary.result='cleanup-failed'}
  }
+ Close-TwoUserProcessHandles
  # Restore nested desktop grants in reverse order to exactly restore original ACL.
  for($i=$taskAccess.Count-1;$i -ge 0;$i--){try{$taskAccess[$i].Dispose()}catch{$taskDesktopRestored=$false;$taskSummary.result='cleanup-failed'}}
  foreach($account in $taskAccounts){
