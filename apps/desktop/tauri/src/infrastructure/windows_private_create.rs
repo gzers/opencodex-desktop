@@ -303,6 +303,14 @@ unsafe fn sid_string(sid: *const c_void) -> io::Result<String> {
         .map_err(|_| denied("private object SID is invalid"))
 }
 fn verify(file: &File, directory: bool, expected: &str) -> io::Result<()> {
+    verify_authority(file, directory, expected, true)
+}
+fn verify_authority(
+    file: &File,
+    directory: bool,
+    expected: &str,
+    require_system: bool,
+) -> io::Result<()> {
     information(file, directory, true)?;
     let (sd, owner, dacl) = read_security(file)?;
     if unsafe { sid_string(owner)? } != expected {
@@ -325,7 +333,8 @@ fn verify(file: &File, directory: bool, expected: &str) -> io::Result<()> {
         || dacl.is_null()
         || actual != dacl
         || unsafe { IsValidAcl(dacl) } == 0
-        || unsafe { (*dacl).AceCount } != 2
+        || !matches!(unsafe { (*dacl).AceCount }, 1 | 2)
+        || require_system && unsafe { (*dacl).AceCount } != 2
     {
         return Err(denied(
             "private object requires an explicit protected two-principal DACL",
@@ -333,7 +342,7 @@ fn verify(file: &File, directory: bool, expected: &str) -> io::Result<()> {
     }
     let mut user = false;
     let mut system = false;
-    for i in 0..2 {
+    for i in 0..unsafe { (*dacl).AceCount } as u32 {
         let mut raw = ptr::null_mut();
         if unsafe { GetAce(dacl, i, &mut raw) } == 0 {
             return Err(io::Error::last_os_error());
@@ -363,7 +372,7 @@ fn verify(file: &File, directory: bool, expected: &str) -> io::Result<()> {
             ));
         }
     }
-    if !user || !system {
+    if !user || require_system && !system {
         return Err(denied(
             "private object does not match User/SYSTEM authority",
         ));
@@ -376,6 +385,14 @@ fn verify(file: &File, directory: bool, expected: &str) -> io::Result<()> {
 /// if they rely on that pathname. This never sets permissions or takes ownership.
 pub(crate) fn verify_private_handle(file: &File, directory: bool) -> io::Result<()> {
     verify(file, directory, &user_sid()?)
+}
+
+/// The official runtime hardens its secret record to a protected owner-only
+/// DACL. That is also private: SYSTEM is optional for this read-only consumer.
+/// Owner, protection, exact full-control grants, ordinary single-link file and
+/// rejection of every other principal remain identical. Never repairs an ACL.
+pub(crate) fn verify_runtime_record_handle(file: &File) -> io::Result<()> {
+    verify_authority(file, false, &user_sid()?, false)
 }
 
 /// CREATE_NEW only, read/write, non-inheritable handle. Parents must exist; every

@@ -2,6 +2,60 @@ use super::*;
 use tokio::io::AsyncBufReadExt;
 use tokio::{net::TcpListener, task::JoinHandle};
 const VERSION: &str = "2.97.0-desktop023.names.1";
+
+#[cfg(windows)]
+fn icacls(path: &Path, arguments: &[&str]) {
+    #[link(name = "kernel32")]
+    extern "system" {
+        fn GetSystemDirectoryW(buffer: *mut u16, size: u32) -> u32;
+    }
+    use std::os::windows::ffi::OsStringExt;
+    let mut units = vec![0u16; 32768];
+    let n = unsafe { GetSystemDirectoryW(units.as_mut_ptr(), units.len() as u32) } as usize;
+    assert!(n > 0 && n < units.len());
+    let executable = PathBuf::from(std::ffi::OsString::from_wide(&units[..n])).join("icacls.exe");
+    let status = std::process::Command::new(executable)
+        .arg(path)
+        .args(arguments)
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .status()
+        .unwrap();
+    assert!(status.success());
+}
+
+#[cfg(windows)]
+#[tokio::test]
+async fn official_owner_only_protected_record_is_private_without_system_grant() {
+    let (f, task) = server("valid").await;
+    let path = f.home.join("runtime-port.json");
+    icacls(&path, &["/remove:g", "*S-1-5-18"]);
+    let file = crate::modules::backup::safety::open_file(&path, false).unwrap();
+    // Creation keeps its stricter two-principal contract. The runtime reader
+    // accepts the official protected owner-only form without repairing it.
+    assert!(super::super::windows_private_create::verify_private_handle(&file, false).is_err());
+    assert_eq!(record(&f.home).unwrap().1, f.bytes);
+    assert_eq!(
+        observe(&f.home, &f.record, &f.bytes, VERSION)
+            .await
+            .unwrap()["status"],
+        "running"
+    );
+    task.await.unwrap();
+}
+
+#[cfg(windows)]
+#[test]
+fn runtime_record_reader_still_rejects_broad_acl_and_multiple_links() {
+    let f = Fixture::new(12345);
+    let path = f.home.join("runtime-port.json");
+    icacls(&path, &["/grant", "*S-1-1-0:(F)"]);
+    assert!(record(&f.home).is_err());
+    icacls(&path, &["/remove:g", "*S-1-1-0"]);
+    assert!(record(&f.home).is_ok());
+    std::fs::hard_link(&path, f.home.join("second-link")).unwrap();
+    assert!(record(&f.home).is_err());
+}
 struct Fixture {
     _temp: tempfile::TempDir,
     home: PathBuf,

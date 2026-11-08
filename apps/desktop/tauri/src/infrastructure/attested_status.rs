@@ -43,7 +43,7 @@ fn record(home: &Path) -> Result<(Record, Vec<u8>), CollectError> {
         }
     }
     #[cfg(windows)]
-    super::windows_private_create::verify_private_handle(&file, false).map_err(unavailable)?;
+    super::windows_private_create::verify_runtime_record_handle(&file).map_err(unavailable)?;
     if metadata.len() > 4096 {
         return Err(CollectError::Parse);
     }
