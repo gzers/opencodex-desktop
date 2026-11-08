@@ -14,6 +14,9 @@ $taskWaiter=Get-Content -LiteralPath $taskMethod -Raw -Encoding utf8
 $taskCases=[Collections.Generic.List[object]]::new()
 $taskCleanup=[Collections.Generic.List[object]]::new()
 $taskChecks=0
+$taskFailures=[Collections.Generic.List[object]]::new()
+$taskPhase='preflight'
+$script:taskFixtureReaders=@{}
 function Check([bool]$Condition,[string]$Message){
     if(!$Condition){throw $Message}
     $script:taskChecks++
@@ -29,15 +32,34 @@ function Start-ControlledShell([string[]]$Arguments){
     $taskInfo.RedirectStandardInput=$true;$taskInfo.RedirectStandardOutput=$true
     $taskInfo.RedirectStandardError=$true
     foreach($taskArgument in $Arguments){$taskInfo.ArgumentList.Add($taskArgument)}
-    return [Diagnostics.Process]::Start($taskInfo)
+    $taskProcess=[Diagnostics.Process]::Start($taskInfo)
+    # Drain known fixture stderr immediately. Its raw text is never serialized.
+    # A pipe must not block the controlled readiness handshake.
+    $script:taskFixtureReaders[$taskProcess.Id]=$taskProcess.StandardError.ReadToEndAsync()
+    return $taskProcess
 }
-function Start-Parent {
+function Start-Parent([string]$Case) {
+    $taskStarted=[Diagnostics.Stopwatch]::StartNew()
     $taskProcess=Start-ControlledShell @('-NoLogo','-NoProfile','-NonInteractive','-Command',
         "[Console]::Out.WriteLine('PARENT_READY');[Console]::Out.Flush();if([Console]::In.ReadLine() -cne 'FINISH'){exit 51}")
     $taskRead=$taskProcess.StandardOutput.ReadLineAsync()
-    if(!$taskRead.Wait(15000) -or $taskRead.Result -cne 'PARENT_READY'){
+    $taskReadyInBudget=$taskRead.Wait(15000)
+    $taskParentFact=[ordered]@{case=$Case;role='controlled-parent';readinessBudgetMilliseconds=15000;elapsedMilliseconds=$taskStarted.ElapsedMilliseconds
+        ready=$taskReadyInBudget -and $taskRead.Result -ceq 'PARENT_READY';readCompleted=$taskReadyInBudget
+        stdoutHadUnexpectedLine=$taskReadyInBudget -and $null -ne $taskRead.Result -and $taskRead.Result -cne 'PARENT_READY'
+        exitedAtObservation=$taskProcess.HasExited;stderrReadCompleted=$script:taskFixtureReaders[$taskProcess.Id].IsCompleted;productStarted=$false}
+    if($taskProcess.HasExited){$taskParentFact.exitCode=$taskProcess.ExitCode}
+    $taskParentFact | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $taskOutput ($Case+'-parent-readiness.json')) -Encoding utf8
+    if(!$taskParentFact.ready){
         $taskProcess.StandardInput.Close()
-        if(!$taskProcess.WaitForExit(5000)){$taskProcess.Kill()}
+        if(!$taskProcess.WaitForExit(5000)){
+            $taskProcess.Kill()
+            $taskCleanup.Add(@{role='parent-readiness-failed';case=$Case;forcedFixtureTermination=$true})
+            if(!$taskProcess.WaitForExit(5000)){
+                $taskCleanup.Add(@{role='parent-readiness-failed';case=$Case;exitUnproven=$true})
+                throw 'Failed controlled parent cleanup did not prove exit'
+            }
+        }
         $taskProcess.Dispose()
         throw 'Controlled parent did not become ready'
     }
@@ -92,7 +114,9 @@ try {
         $taskParent=$null;$taskHelper=$null
         $taskMarker=Join-Path $taskOutput ($taskCase+'-target.json')
         try {
-            $taskParent=Start-Parent
+            $taskPhase='parent-readiness'
+            $taskParent=Start-Parent $taskCase
+            $taskPhase='waiter-and-contract'
             $taskOffset=if($taskCase -eq 'wrong-generation'){1}else{0}
             $taskTimeout=if($taskCase -eq 'exit-deadline'){300}else{30000}
             $taskTargetPath=if($taskCase -eq 'wrong-target'){Join-Path $taskOutput 'missing-executable.exe'}else{$taskSystemShell}
@@ -141,11 +165,19 @@ try {
             $taskCases.Add(@{case=$taskCase;status='passed';parentPid=$taskParent.Id
                 parentCreationFileTime=$taskParent.StartTime.ToFileTimeUtc()
                 helperExitCode=$taskHelper.ExitCode;productStarted=$false})
+        }catch{
+            $taskFailure=[ordered]@{case=$taskCase;status='failed';phase=$taskPhase;errorType=$_.Exception.GetType().FullName
+                # All scripts here are fixed fixture/product source. Keep only a
+                # fixed stage/type, never exception paths, argv or environment.
+                originalReadinessBudgetMilliseconds=15000;productStarted=$false}
+            $taskFailures.Add($taskFailure)
+            $taskFailure | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $taskOutput ($taskCase+'-failure.json')) -Encoding utf8
         }finally{
             Cleanup-Owned $taskHelper 'waiter'
             Cleanup-Owned $taskParent 'parent'
         }
     }
+    if($taskFailures.Count -ne 0){throw 'At least one independent handoff case failed; all original case evidence retained'}
     Check ($taskCleanup.Count -eq 0) 'A fixture required forced cleanup'
     Check (@(Get-Process -Name opencodex-desktop,ocxd -ErrorAction SilentlyContinue).Count -eq 0) 'Native product appeared during background tests'
     [ordered]@{
@@ -159,7 +191,7 @@ try {
     Get-Content -LiteralPath (Join-Path $taskOutput 'result.json') -Raw
 }catch{
     [ordered]@{status='failed';checks=$taskChecks;completedCases=$taskCases.ToArray();cleanup=$taskCleanup.ToArray()
-        errorType=$_.Exception.GetType().FullName;productStarted=$false;nativeRecoveryGatePassed=$false} |
+        errorType=$_.Exception.GetType().FullName;caseFailures=$taskFailures.ToArray();productStarted=$false;nativeRecoveryGatePassed=$false} |
         ConvertTo-Json -Depth 7 | Set-Content -LiteralPath (Join-Path $taskOutput 'failure.json') -Encoding utf8
     throw
 }
