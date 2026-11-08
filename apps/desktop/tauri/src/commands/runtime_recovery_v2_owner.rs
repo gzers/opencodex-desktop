@@ -105,65 +105,93 @@ impl SystemServiceOwnerProofProvider {
         let started = Instant::now();
         let budget = crate::modules::process::stop_timeout()
             .min(action_deadline.saturating_duration_since(started));
+        let phase = std::cell::Cell::new("context");
+        let timings = std::cell::RefCell::new(Vec::with_capacity(16));
+        let mark = |next: &'static str| {
+            phase.set(next);
+            if timings.borrow().len() < 16 {
+                timings
+                    .borrow_mut()
+                    .push((next, started.elapsed().as_millis()));
+            }
+        };
         let remaining = || {
             budget
                 .checked_sub(started.elapsed())
                 .filter(|d| !d.is_zero())
                 .ok_or(AppError::Timeout)
         };
-        self.same_context(context)?;
-        let (identity, pid) = match self.query_inner()? {
-            ServiceOwnerProof::Owned { identity, pid } => (identity, pid),
-            ServiceOwnerProof::Stopped => {
-                remaining()?;
-                return Ok(());
-            }
-            ServiceOwnerProof::Unknown => {
-                return Err(fail(
-                    "lifecycle_owner_unknown",
-                    "无法证明当前用户服务归属，未发送停止请求",
-                ))
-            }
-        };
-        let record = self.checked_owned(&identity, pid)?;
-        if !self.host.manager_absent()? {
-            return Err(fail(
-                "lifecycle_supervised",
-                "服务由官方服务管理器托管，未绕过其停止及还原流程",
-            ));
-        }
-        let wait_budget = remaining()?;
-        tauri::async_runtime::block_on(async {
-            tokio::time::timeout(wait_budget, async {
-                self.checked_owned(&identity, pid)?;
-                crate::infrastructure::attested_status::stop_official(
-                    context.runtime.clone(),
-                    context.opencodex_home.clone(),
-                    pid,
-                )
-                .await
-                .map_err(|_| {
-                    fail(
-                        "lifecycle_stop_unknown",
-                        "官方停止或客户端还原结果未确认；未强制终止或宣称已停止",
-                    )
-                })
-            })
-            .await
-        })
-        .map_err(|_| AppError::Timeout)??;
-        loop {
-            remaining()?;
-            if self.query_inner()? == ServiceOwnerProof::Stopped {
-                // A missing/stale record is not proof. The OS observer above proves
-                // process generation, configured HOME and socket absence as well.
-                if self.host.process(pid)?.is_none() && self.host.port_clear(record.runtime.port)? {
+        let result = (|| {
+            self.same_context(context)?;
+            mark("initial-owner");
+            let (identity, pid) = match self.query_inner()? {
+                ServiceOwnerProof::Owned { identity, pid } => (identity, pid),
+                ServiceOwnerProof::Stopped => {
                     remaining()?;
                     return Ok(());
                 }
+                ServiceOwnerProof::Unknown => {
+                    return Err(fail(
+                        "lifecycle_owner_unknown",
+                        "无法证明当前用户服务归属，未发送停止请求",
+                    ))
+                }
+            };
+            mark("recheck-owner");
+            let record = self.checked_owned(&identity, pid)?;
+            mark("service-manager");
+            if !self.host.manager_absent()? {
+                return Err(fail(
+                    "lifecycle_supervised",
+                    "服务由官方服务管理器托管，未绕过其停止及还原流程",
+                ));
             }
-            std::thread::sleep(Duration::from_millis(50));
-        }
+            let wait_budget = remaining()?;
+            tauri::async_runtime::block_on(async {
+                tokio::time::timeout(wait_budget, async {
+                    mark("final-owner-before-stop");
+                    self.checked_owned(&identity, pid)?;
+                    mark("authenticated-official-stop");
+                    crate::infrastructure::attested_status::stop_official(
+                        context.runtime.clone(),
+                        context.opencodex_home.clone(),
+                        pid,
+                    )
+                    .await
+                    .map_err(|_| {
+                        fail(
+                            "lifecycle_stop_unknown",
+                            "官方停止或客户端还原结果未确认；未强制终止或宣称已停止",
+                        )
+                    })
+                })
+                .await
+            })
+            .map_err(|_| AppError::Timeout)??;
+            mark("wait-os-absence");
+            loop {
+                remaining()?;
+                if self.query_inner()? == ServiceOwnerProof::Stopped {
+                    mark("final-os-absence");
+                    // Require process generation, configured HOME, socket and
+                    // service-manager absence; missing record is insufficient.
+                    if self.host.process(pid)?.is_none()
+                        && self.host.port_clear(record.runtime.port)?
+                    {
+                        remaining()?;
+                        return Ok(());
+                    }
+                }
+                std::thread::sleep(Duration::from_millis(50));
+            }
+        })();
+        result.map_err(|error| match error {
+            AppError::Timeout => fail("lifecycle_timeout", format!(
+                "停止未在原预算内完成全部证明；phase={}, elapsed_ms={}, timings={:?}。未延长预算或宣称已停止。",
+                phase.get(), started.elapsed().as_millis(), timings.borrow(),
+            )),
+            other => other,
+        })
     }
     pub fn new(installation_root: PathBuf, process_context: ProcessContext) -> AppResult<Self> {
         Self::with_guard(
@@ -735,6 +763,8 @@ mod native {
             size: usize,
             read: *mut usize,
         ) -> i32;
+        #[cfg(test)]
+        fn GetSystemDirectoryW(buffer: *mut u16, size: u32) -> u32;
     }
     #[link(name = "advapi32")]
     extern "system" {
@@ -993,6 +1023,23 @@ mod native {
     }
     fn runtime_image(name: &str) -> bool {
         ["node.exe", "bun.exe", "ocx.exe", "opencodex.exe"].contains(&name.to_lowercase().as_str())
+    }
+    // The isolated native owner test needs a trusted system directory for its
+    // synthetic Node child even though production Task Scheduler no longer
+    // launches a shell. Keep this test-only helper and its OS lookup intact.
+    #[cfg(test)]
+    pub(super) fn system_directory() -> AppResult<PathBuf> {
+        let mut buffer = vec![0u16; 32768];
+        let n = unsafe { GetSystemDirectoryW(buffer.as_mut_ptr(), buffer.len() as u32) };
+        if n == 0 || n as usize >= buffer.len() {
+            return Err(io(
+                "resolve recovery system directory",
+                std::io::Error::last_os_error(),
+            ));
+        }
+        Ok(PathBuf::from(std::ffi::OsString::from_wide(
+            &buffer[..n as usize],
+        )))
     }
     impl Host for PlatformHost {
         fn owner(&self) -> AppResult<String> {

@@ -52,7 +52,12 @@ impl ProcessActionResult {
             crate::errors::AppError::RuntimeManaged { code, .. } if code == "lifecycle_timeout" => {
                 (
                     code.clone(),
-                    "启动未在规定时间内就绪，请查看诊断日志后重试。".into(),
+                    if self.lifecycle_state == ProcessLifecycleState::StartingFailed {
+                        "启动未在规定时间内就绪，请查看诊断日志后重试。"
+                    } else {
+                        "操作未在规定时间内确认完成，请核对服务状态并查看诊断日志。"
+                    }
+                    .into(),
                 )
             }
             crate::errors::AppError::RuntimeManaged { code, detail }
@@ -86,6 +91,20 @@ pub fn validate_action_request(request: &ProcessActionRequest) -> Result<(), &'s
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn stop_timeout_keeps_running_state_and_hides_internal_phase_timings() {
+        let error = crate::errors::AppError::RuntimeManaged {
+            code: "lifecycle_timeout".into(),
+            detail: "phase=wait-os-absence; timings=internal".into(),
+        };
+        let value =
+            ProcessActionResult::from_state(ProcessLifecycleState::Running).with_failure(&error);
+        assert_eq!(value.lifecycle_state, ProcessLifecycleState::Running);
+        let json = serde_json::to_string(&value).unwrap();
+        assert!(!json.contains("phase=") && !json.contains("timings=") && !json.contains("启动未"));
+        assert!(json.contains("核对服务状态"));
+    }
 
     #[test]
     fn startup_timing_diagnostics_stay_out_of_the_product_failure_message() {
