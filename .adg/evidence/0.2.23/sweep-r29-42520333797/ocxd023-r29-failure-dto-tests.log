@@ -1,0 +1,13 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 17.09s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-58a8535d3845a745)
+
+running 5 tests
+test types::process_action::tests::result_exposes_frozen_action_gates ... ok
+test types::process_action::tests::requires_confirm_for_every_action ... ok
+test types::process_action::tests::serializes_camel_case_frontend_contract ... ok
+test types::process_action::tests::stop_timeout_keeps_running_state_and_hides_internal_phase_timings ... ok
+test types::process_action::tests::startup_timing_diagnostics_stay_out_of_the_product_failure_message ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2013 filtered out; finished in 0.01s
+

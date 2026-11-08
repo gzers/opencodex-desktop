@@ -1,0 +1,56 @@
+{
+  "source": "c14565a58f782e4f549a722cd709f1dfb3173e0c",
+  "passed": 24,
+  "failed": 4,
+  "accepted": false,
+  "artifactId": 13633623355,
+  "artifactBytes": 36084342,
+  "artifactSha256": "6140be32bd2104021f68365405833cba08e6a5ec3869f5d96f19a5cb093d6558",
+  "manifestFiles": 305,
+  "actualEvidence": {
+    "startA": {
+      "milliseconds": 26415,
+      "port": 57714,
+      "actualManagerResult": "started",
+      "authenticatedReadiness": true,
+      "actualCodexConfigPortBound": true
+    },
+    "startB": {
+      "milliseconds": 19352,
+      "port": 59352,
+      "actualManagerResult": "started",
+      "authenticatedReadiness": true,
+      "actualCodexConfigPortBound": true
+    },
+    "fixedConflictB": {
+      "milliseconds": 316,
+      "typedCode": "port_conflict",
+      "peerPreserved": true,
+      "normalAutoStartAfterwards": true
+    },
+    "stopA": "Original10s timedout at10052ms, noStoppedclaim.",
+    "stopB": "Original10s timedout at10036ms; laterrecordgone does not prove withinbudget officialstop/OSabsence.",
+    "compileFailure": "24/26/28 allE0425 owner_tests.rs499 calls removednative::system_directory; sameCIbackendfailure.",
+    "cleanup": "Bothactualaccount/Profile/process cleanup passed."
+  },
+  "batchSource": "e77ca190988c629479128c5aa6b54b55be742bca",
+  "fixes": [
+    "Restoretest-onlyWindowsGetSystemDirectoryW helper required by actualnativeownerfixture; productionCOMroute retained.",
+    "Addmax16fixedstageelapsedmarkers toStoptimeout, noPID/path/key/upstreamtext inmarkers; exactchecks/order/budgetunchanged.",
+    "Keepinternalmarkers outofDTO/toast,Stopgenericoperationtimeout message preservesRunning state instead of startup-onlywording."
+  ],
+  "checks": {
+    "owner": {
+      "passed": 6,
+      "explicitPlatformIgnored": 1
+    },
+    "processFailureDto": {
+      "passed": 5
+    },
+    "workspaceAllTargetsStrictClippy": "pass"
+  },
+  "nextAction": "Pushbatch and waitactualWindowsall-targetClippy/nativepreflight before dispatchnewfullsweep; avoid repeatingknowncompilefailure.",
+  "stopRootCauseStillUnresolved": true,
+  "nextFullSweepDispatched": false,
+  "maintainedRuntimeChanged": false
+}
