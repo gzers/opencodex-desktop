@@ -48,31 +48,22 @@
     const host = root.document.getElementById('ocxd023Settings'); if (!host) return;
     const s=controller.state(),p=s.snapshot;
     const paths = rows => facts(rows.map(([key,label])=>[label,s.scene==='loading'?'正在读取…':p[key]]));
-    host.innerHTML = '<div class="card-head"><div><h2>用户目录与程序安装</h2><p>用户配置与程序分开存放；路径显示当前实际生效位置。</p></div></div>' +
+    host.innerHTML = '<div class="card-head"><div><h2>用户目录与程序安装</h2><p>配置保存在当前用户目录，程序位于 Desktop 安装目录。</p></div></div>' +
       (validity[s.scene]?'<p class="mp-alert" role="status">'+esc(validity[s.scene])+'</p>':'') +
-      '<h3>用户数据与配置</h3>'+paths([['aggregateRoot','用户集合根'],['desktopRoot','Desktop 工作根'],['opencodexHome','OpenCodex HOME'],['configPath','渠道配置文件']])+
-      '<div class="mp-actions">'+button('完整查看与复制路径','path-details',s.scene==='loading')+button('选择新版目录','path-select',!['valid','pending'].includes(s.scene))+button('手动恢复渠道说明','path-json')+(s.scene==='missing'?button('初始化用户目录','path-init',false,true):'')+'</div>'+
-      (s.pending?'<h3>等待重启生效</h3>'+facts([['当前位置',p.aggregateRoot],['待生效位置',s.pending.aggregateRoot]])+button('模拟重启并核对','path-restart',false,true):'')+
-      '<h3>程序安装</h3>'+paths([['installationRoot','Desktop 安装根'],['managerExecutable','Desktop 本体'],['runtimePrefix','运行包前缀'],['runtimeEntry','稳定程序入口']])+facts([['运行状态','代理已停止（演示）'],['包 / 清单 / 来源',s.scene==='corrupted'?'一致性待核对':p.packageVersion+' / 一致'],['程序有效性',s.scene==='missing'?'尚未安装':s.scene==='loading'?'检查中':'位置已记录，身份另行核验']])+
-      '<div class="mp-actions">'+button('诊断与恢复安装','install-open',false,true)+button('刷新位置','path-refresh')+'</div><p class="mp-muted">Desktop 与 OpenCodex 分别更新；本体更新保留签名 .app 之外的 runtime。程序路径不从配置根推导。</p>';
+      '<section class="dr023-section" aria-labelledby="dr023UserTitle"><h3 id="dr023UserTitle">用户数据与配置</h3>'+paths([['aggregateRoot','用户配置根'],['desktopRoot','Desktop 数据'],['opencodexHome','OpenCodex HOME'],['configPath','渠道配置文件']])+
+      '<div class="mp-actions dr023-actions">'+button('完整查看与复制路径','path-details',s.scene==='loading')+button('读取渠道配置说明','path-json')+(s.scene==='missing'?button('初始化用户目录','path-init',false,true):'')+'</div></section>'+
+      '<section class="dr023-section" aria-labelledby="dr023ProgramTitle"><h3 id="dr023ProgramTitle">程序安装</h3>'+paths([['installationRoot','Desktop 安装根'],['managerExecutable','Desktop 本体'],['runtimePrefix','运行包目录'],['runtimeEntry','程序入口']])+'<div class="dr023-status">'+facts([['运行状态','代理已停止（演示）'],['包 / 清单 / 来源',s.scene==='corrupted'?'一致性待核对':p.packageVersion+' / 一致'],['程序有效性',s.scene==='missing'?'尚未安装':s.scene==='loading'?'检查中':'位置已记录，身份另行核验']])+'</div>'+
+      '<div class="mp-actions dr023-actions">'+button('诊断与恢复安装','install-open',false,true)+button('刷新位置','path-refresh')+'</div></section>';
   }
   function pathDetails() {
     const p=controller.state().snapshot;
-    dialog('完整路径',facts([['用户集合根',p.aggregateRoot],['Desktop 工作根',p.desktopRoot],['OpenCodex HOME',p.opencodexHome],['渠道配置文件',p.configPath],['安装根',p.installationRoot],['程序入口',p.runtimeEntry]])+'<label>选择文本手动复制<textarea class="input" readonly aria-label="完整路径文本">'+esc(Object.values(p).filter(v=>typeof v==='string'&&(/[\/]/.test(v))).join('\n'))+'</textarea></label><p id="o23CopyStatus" role="status">原型不访问剪贴板；可选择文本手动复制。</p>');
-  }
-  function selectPath() {
-    const s=controller.state();
-    dialog('选择新版用户目录','<label>明确的目标绝对路径<input id="o23RootTarget" class="input" value="'+esc(s.snapshot.aggregateRoot+'-selected')+'"></label><p>仅切换到已校验的新结构，不复制旧资料；确认前只读检查。</p><p id="o23PathError" role="alert"></p>','校验并预览',()=>{
-      const plan=controller.prepare(root.document.getElementById('o23RootTarget').value.trim());
-      if(!plan.valid){root.document.getElementById('o23PathError').textContent='请输入明确的绝对路径。';return;}
-      dialog('确认使用此位置',facts([['当前生效',s.snapshot.aggregateRoot],['待生效',plan.path]])+'<p>新结构校验通过（声明 mock）。确认后记录切换意图，重启核对后生效；安装根保持。</p>','确认使用此位置',()=>{controller.confirm(plan);ui.close();render();});
-    });
+    dialog('完整路径',facts([['用户配置根',p.aggregateRoot],['Desktop 数据',p.desktopRoot],['OpenCodex HOME',p.opencodexHome],['渠道配置文件',p.configPath],['安装根',p.installationRoot],['程序入口',p.runtimeEntry]])+'<label>选择文本手动复制<textarea class="input" readonly aria-label="完整路径文本">'+esc(Object.values(p).filter(v=>typeof v==='string'&&(/[\/]/.test(v))).join('\n'))+'</textarea></label><p id="o23CopyStatus" role="status">原型不访问剪贴板；可选择文本手动复制。</p>');
   }
   function mount() {
     const panel=root.document.getElementById('settings-installation'); if(!panel)return;
-    const host=root.document.createElement('article');host.id='ocxd023Settings';host.className='card mp-page';panel.prepend(host);
+    const host=root.document.createElement('article');host.id='ocxd023Settings';host.className='card mp-page dr023';panel.prepend(host);
     for(const id of ['card-install-runtime','card-runtime-source','card-install-paths','card-install-partitions','dataPathsDemo']){const old=root.document.getElementById(id);if(old){old.hidden=true;if(id==='dataPathsDemo')old.dataset.protoContexts='legacy-path-demo';}}
-    const rail=root.document.getElementById('protoStdCards');if(rail){const tools=root.document.createElement('section');tools.className='proto-card';tools.dataset.protoContexts='settings:installation';tools.innerHTML='<div class="proto-note-title">0.2.23 · 目录状态演示</div>'+select('演示平台','path-platform',[['macos','macOS'],['windows','Windows']],'macos')+select('目录状态','path-scene',scenes,'valid');rail.append(tools);}
+    const rail=root.document.getElementById('protoStdCards');if(rail){const tools=root.document.createElement('section');tools.className='proto-card';tools.dataset.protoContexts='settings:installation';tools.innerHTML='<div class="proto-note-title">0.2.23 · 目录状态演示</div>'+select('演示平台','path-platform',[['macos','macOS'],['windows','Windows']],'macos')+select('目录状态','path-scene',scenes.filter(row=>row[0]!=='pending'),'valid');rail.append(tools);}
     render();
     root.document.addEventListener('change',event=>{
       const key=event.target.dataset.o23Select;
@@ -83,11 +74,9 @@
       const el=event.target.closest('[data-o23]');if(!el||el.disabled)return;
       const action=el.dataset.o23;
       if(action==='path-details')pathDetails();
-      if(action==='path-select')selectPath();
-      if(action==='path-restart'){controller.restart();render();}
       if(action==='path-refresh')render();
       if(action==='path-init')dialog('初始化用户目录','<p>将仅初始化新版用户目录结构；不读取或搬移旧目录。配置及程序安装分别核对。</p>','确认初始化',()=>{controller.scene('valid');ui.close();render();});
-      if(action==='path-json')dialog('手动恢复渠道',facts([['放入位置',controller.state().snapshot.configPath]])+'<p>将当前支持格式的 config.json 放入新 HOME，再使用“读取现有渠道”。格式错误、认证引用缺失或空结果均保留原草稿。</p>','前往读取渠道',()=>{ui.close();root.setRoute('models');});
+      if(action==='path-json')dialog('读取渠道配置说明',facts([['配置文件',controller.state().snapshot.configPath]])+'<p>将当前支持格式的 config.json 放入此位置，再使用“读取现有渠道”。格式错误、认证引用缺失或空结果均保留原草稿。</p>','前往读取渠道',()=>{ui.close();root.setRoute('models');});
       if(action==='install-open')root.runtimeRecovery023?.open();
     });
   }

@@ -1,0 +1,94 @@
+{
+  "prototypeChecks": 18,
+  "pageErrors": 0,
+  "prototypeQA": "passed",
+  "designStatus": "adopted by user; prototype ready for review",
+  "productionImplemented": false,
+  "productAccepted": false,
+  "entryIncrementOnly": true,
+  "sources": {
+    "index.html": "aac8a4131d9936805954f5d427330f2a5d6b943ecde22c32d4f06e23f2b2ab94",
+    "runtime-port-023.js": "f10051af8f76ebec89aae10f5ee275201b685c3a34cabfae0cb799cf248c30ae",
+    "runtime-port-023.css": "878f950509be68776501bee7509cd7c8e892235431f96448cf54f1f70a734a28"
+  },
+  "files": {
+    "browser-qa-first-attempt.cjs": {
+      "bytes": 6144,
+      "sha256": "dd304b1d3c6047b614f91ea495e4a255564403e4e503a7556db0a3b0fc7263ab"
+    },
+    "02-conflict.png": {
+      "bytes": 564889,
+      "sha256": "01a2b7abe19d43f14ea7a749389a92aed3bed801ef5788a700999b2bf2f4bd8e"
+    },
+    "browser-qa-third-attempt.cjs": {
+      "bytes": 7244,
+      "sha256": "63f1b4a9a3deed5f082510aae404fc68067e6c2158a4af949301a226439c5af9"
+    },
+    "07-narrow.png": {
+      "bytes": 314649,
+      "sha256": "e4c73c8469886910a92ce80e1b02e1ef004dcdd43832aaa1e04b2f9ea32a699d"
+    },
+    "01-auto.png": {
+      "bytes": 551632,
+      "sha256": "f9b5b21f313063f31cc6f778015a55804b8b8c9fe15fa2b75b7db67df6aaafec"
+    },
+    "04-pending.png": {
+      "bytes": 561421,
+      "sha256": "a795420aa5e380d41ba45adfc5c9e85a76552ad858c5051180d5494ae1ac249e"
+    },
+    "browser-qa.cjs": {
+      "bytes": 7234,
+      "sha256": "759ed531ed1b20b278383c4d9b5aec77d6ff87a17275d0c51b319414c28e22cc"
+    },
+    "05-restart-confirm.png": {
+      "bytes": 555910,
+      "sha256": "e1be7ae06dc3ef20ae7550de36379ed820fc75d3d779c788f3cb4aae56eb7fa5"
+    },
+    "baseline.json": {
+      "bytes": 379,
+      "sha256": "f679a3c36671596d87679cca1232565adc949544c9d22ede544b9bf2b00161d8"
+    },
+    "06-dark-failure.png": {
+      "bytes": 556266,
+      "sha256": "66ef059cb15939ba71d5723b249ca01e7588b878a34a58f1c59e8ba22ae3ca0c"
+    },
+    "third-attempt-failure.json": {
+      "bytes": 157,
+      "sha256": "d791e52cf0bd54c3618196dd3011d8c3a781cb8c34c552de22ff9249bf7d5a23"
+    },
+    "second-attempt-failure.json": {
+      "bytes": 205,
+      "sha256": "d1f2960f2a2eb9fd06c2582a798578028ff17c1222ef208ab7cc24e8695ce264"
+    },
+    "browser-result.json": {
+      "bytes": 2399,
+      "sha256": "5250e3fe8337443f4241cbab6b4df4bb594f0e60b023dd15df98c5df53908c39"
+    },
+    "browser-qa-second-attempt.cjs": {
+      "bytes": 6355,
+      "sha256": "ed791a2a2b00dd60f61ab384b4b3116baf5dddc9c2e68b02e25b934295f206e4"
+    },
+    "entry-increment.diff": {
+      "bytes": 531,
+      "sha256": "858fc16a3b4d136f361dea8b3157831d4130fa73f1360c7be1c85b21c8729031"
+    },
+    "03-notification.png": {
+      "bytes": 650186,
+      "sha256": "9eb963b58927a6da0cafe54f6209731417280a46ee14e1f62b02bcde028b53ee"
+    },
+    "first-attempt-failure.json": {
+      "bytes": 160,
+      "sha256": "d5631ccb001a1b204ab4c734f0979919eaac37181740cf415b5cf0ee569ced21"
+    }
+  },
+  "cleanup": {
+    "browserClosed": true,
+    "serverStarted": false,
+    "realNetworkOrSettingsWrites": false
+  },
+  "limitations": [
+    "当前index包含用户既有并行原型草稿；本轮仅增两行资源加载和独立端口资源，不采用其它草稿为整版基线。",
+    "原型固定合成端口55581，不证明真实端口分配或双SID启停。",
+    "临时目录保留原型QA原件与用户入口快照作恢复点，不包含产品安装或服务残留。"
+  ]
+}

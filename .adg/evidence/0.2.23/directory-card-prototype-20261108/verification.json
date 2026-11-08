@@ -1,0 +1,33 @@
+{
+  "prototypeQA": "passed",
+  "browserChecks": 11,
+  "existingRegressionChecks": {
+    "command": "node --test directory-runtime-023.test.cjs runtime-recovery-023.test.cjs",
+    "pass": 8,
+    "fail": 0
+  },
+  "entryIncrementOnly": true,
+  "productImplemented": false,
+  "productAccepted": false,
+  "sources": {
+    "index.html": "952c0d0a3321725ac47638d1b978686ddfb55a1ec3df9744241da83c9bfe117d",
+    "directory-runtime-023.js": "5258e2e5d5c9c8625cd791ab75c3021b6796013a0917a2dcdaa3ea602d504536",
+    "directory-runtime-023.css": "7bc24a026ade4b13863cfafa48854dbdb466885d8cd5ef0286a7f44b26863fb5"
+  },
+  "cleanup": {
+    "browserClosed": true,
+    "serverStarted": false,
+    "realServiceOrDailyConfigChanged": false
+  },
+  "files": {
+    "01-dark-macos.png": "73e6c97f7391b421504fd4264c50a064839e5cbe8326c3f0404eb1436e7f0028",
+    "04-narrow-windows.png": "0f949d7b309c79f1b8ceead5b8a5a1d84daf98da4a549ea37c00bc94617d4b73",
+    "browser-qa.cjs": "6213771aeaf52045eae7fca33a3c36a97cd1053c3b662b5fdf199a56e7fd3a76",
+    "baseline.json": "4f2c59f6a19b3f821aa66f104b41606900b097fb8c73e723e33357870edeaf44",
+    "02-dark-windows.png": "988e43c4c38f1e2822657676499e9ca7c5245e08848da02aac13c6babc58698a",
+    "directory-runtime-023.js.diff": "ca492554a17153a5772c065520bdfdbb9dc44a5722824ea60a9856d54a8177a9",
+    "browser-result.json": "09e8ff83787d1d225000222ff2ef5b8255a0121756be59cb6a86ae6c5df30e4b",
+    "index.html.diff": "dcdb70d712c4ccf3ba56d45b6a42143723cfb4095dbeb755746718dd9d245363",
+    "03-light-windows.png": "c5e50f1ae69e17ce77c9835250c2ad7b32006eb185fd9e4ffad5a74fe8604077"
+  }
+}

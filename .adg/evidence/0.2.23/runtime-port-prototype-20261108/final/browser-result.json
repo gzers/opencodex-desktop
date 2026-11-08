@@ -1,0 +1,124 @@
+{
+  "checks": [
+    {
+      "name": "默认自动分配，未运行不伪造端口",
+      "pass": true
+    },
+    {
+      "name": "空值、越界、小数、负数和文字拒绝保存",
+      "pass": true
+    },
+    {
+      "name": "固定端口保存",
+      "pass": true
+    },
+    {
+      "name": "还原修改不保存",
+      "pass": true
+    },
+    {
+      "name": "固定冲突显示失败、无运行端口",
+      "pass": true
+    },
+    {
+      "name": "通知中心真实点击打开失败详情",
+      "pass": true
+    },
+    {
+      "name": "失败详情直达端口设置",
+      "pass": true
+    },
+    {
+      "name": "保存不提前解决失败",
+      "pass": true
+    },
+    {
+      "name": "恢复自动分配后重试就绪，原通知解决且保留",
+      "pass": true
+    },
+    {
+      "name": "运行中保存保留当前实际端口",
+      "pass": true
+    },
+    {
+      "name": "取消重启不影响当前服务",
+      "pass": true
+    },
+    {
+      "name": "确认重启应用固定端口",
+      "pass": true
+    },
+    {
+      "name": "权限和其它错误分开呈现",
+      "pass": true
+    },
+    {
+      "name": "900×600窗口卡片无横向溢出",
+      "pass": true
+    },
+    {
+      "name": "概览启动入口复用失败状态",
+      "pass": true
+    },
+    {
+      "name": "失败Toast真实点击直达端口设置",
+      "pass": true
+    },
+    {
+      "name": "原有启动失败样例也使用新恢复入口",
+      "pass": true
+    },
+    {
+      "name": "刷新仅重置mock内存，不持久化设置",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "layout": {
+    "width": 607,
+    "scroll": 607,
+    "controls": [
+      {
+        "id": "rp023Auto",
+        "left": 448,
+        "right": 461
+      },
+      {
+        "id": "rp023Fixed",
+        "left": 558,
+        "right": 571
+      },
+      {
+        "id": "rp023Port",
+        "left": 435,
+        "right": 715
+      },
+      {
+        "id": "save",
+        "left": 435,
+        "right": 509
+      },
+      {
+        "id": "revert",
+        "left": 517,
+        "right": 591
+      },
+      {
+        "id": "start",
+        "left": 599,
+        "right": 718.78125
+      },
+      {
+        "id": "notice",
+        "left": 435,
+        "right": 533
+      },
+      {
+        "id": "retry",
+        "left": 541,
+        "right": 615
+      }
+    ]
+  },
+  "productAccepted": false
+}

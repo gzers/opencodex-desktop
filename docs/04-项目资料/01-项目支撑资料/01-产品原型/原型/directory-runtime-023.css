@@ -1,0 +1,19 @@
+/* Scoped to the directory summary; shared dialog/detail lists remain unchanged. */
+#ocxd023Settings .card-head{margin-bottom:22px}
+#ocxd023Settings .card-head p{margin-top:6px;line-height:1.6}
+#ocxd023Settings .dr023-section{min-width:0}
+#ocxd023Settings .dr023-section+.dr023-section{margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}
+#ocxd023Settings .dr023-section h3{margin:0 0 16px;font-size:var(--text-body,14px);font-weight:600;line-height:1.6}
+#ocxd023Settings .sx-detail-list{margin:0;grid-template-columns:144px minmax(0,1fr);column-gap:20px;row-gap:14px;align-items:start}
+#ocxd023Settings .sx-detail-list dt,#ocxd023Settings .sx-detail-list dd{margin:0;line-height:1.65;min-width:0}
+#ocxd023Settings .sx-detail-list dt{white-space:nowrap}
+#ocxd023Settings .sx-detail-list dd{overflow-wrap:anywhere;word-break:normal}
+#ocxd023Settings .dr023-actions{margin-top:18px;gap:10px}
+#ocxd023Settings .dr023-status{margin-top:22px;padding-top:18px;border-top:1px solid var(--border)}
+@container(max-width:520px){
+  #ocxd023Settings .sx-detail-list{grid-template-columns:128px minmax(0,1fr);column-gap:14px}
+}
+@container(max-width:380px){
+  #ocxd023Settings .sx-detail-list{grid-template-columns:minmax(0,1fr);row-gap:6px}
+  #ocxd023Settings .sx-detail-list dd:not(:last-child){margin-bottom:10px}
+}

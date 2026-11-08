@@ -1,0 +1,58 @@
+{
+  "checks": [
+    {
+      "name": "服务板块第一位",
+      "pass": true
+    },
+    {
+      "name": "初次未保存不能启动，不伪造运行端口",
+      "pass": true
+    },
+    {
+      "name": "检查中不提前保存，防止重复提交",
+      "pass": true
+    },
+    {
+      "name": "检查完成保存端口号，未启动仅显示已保存",
+      "pass": true
+    },
+    {
+      "name": "端口结果在选择控件下方",
+      "pass": true
+    },
+    {
+      "name": "启动使用已保存的具体端口",
+      "pass": true
+    },
+    {
+      "name": "重新分配保存新端口，不改变运行实例",
+      "pass": true
+    },
+    {
+      "name": "取消重启保留原端口",
+      "pass": true
+    },
+    {
+      "name": "确认重启应用已保存端口",
+      "pass": true
+    },
+    {
+      "name": "检查失败不覆盖已保存和运行端口",
+      "pass": true
+    },
+    {
+      "name": "固定值校验和保存继续可用",
+      "pass": true
+    },
+    {
+      "name": "亮暗主题与窄窗布局检查",
+      "pass": true
+    },
+    {
+      "name": "仅内存原型，刷新不写真实配置",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "productAccepted": false
+}
