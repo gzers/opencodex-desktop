@@ -25,3 +25,11 @@ A实际管理器省略port，自动55581，在原预算内running/healthy、heal
 原包四格重放42478818655：来源校验、哨兵合同、实际完整installer调用和Server策略还原步骤均退出0，但upload-artifact遍历已删除ordinary账户的私有sandbox目录触发realpath EPERM，整轮failure，无artifact。完整job日志保留/private/tmp/ocxd023-installer-replay-42478818655/full-job.log。没有把缺少完整回执的步骤绿色解释成最终验收。
 
 后继先显式收集受控回执/log/png/txt：在任何stat/realpath/递归之前按原sandbox前缀跳过私有树，普通证据符号链接拒绝；输出全新artifact并逐文件记录bytes/SHA256和排除原因。上传只访问新收集目录。原目录不清空、不修ACL、不覆盖；遇到既有输出拒绝。两条真实文件行为测试通过，包括禁止遍历模拟私有树/保留嵌套回执/不覆盖前次目录与拒绝证据链接。第21轮既有summary已全表展示；本后继只修证据装配，不触及产品或冒充27项sweep。
+
+## 精确原包四格重放最终证据
+
+42479461424、harness4c61a0cd968388cbed7abb6787adca6e0e784a4a重放完成。52份manifest成员大小/SHA256全部一致，8个私有sandbox树被明确排除但相邻回执保留。原source5cba024a298154bfb4378d4607b4905b4e2e167e，built EXE5734ecf9427631de2282f8b5d0adb51ddb900601bdd5c9ae97ffa8645e8b42d0。
+
+MSI-default、MSI-custom、NSIS-default、NSIS-custom均实际pass；两个默认卸载均证明executableRemoved/userDataRetained/testFixtureCleanup，两个custom均证明原首屏、精确bundle EXE、显式helper新夹具清理、卸载EXE移除及保留数据。真实ordinary账户/Profile removed、Server原策略还原pass。原失败候选/首轮上传失败原件全部保持。证据/private/tmp/ocxd023-installer-replay-42479461424/及verification.json。
+
+此结果关闭同账户哨兵夹具冲突和证据上传EPERM两项测试装配故障。仍是原包诊断重放accepted:false/formalCandidateAccepted:false，不将失败候选工作流转换成功，不宣称两SID/停止/五格保留/签名OTA/正式发行。产品生命周期边界见同目录lifecycle-fix-scope-after-round21.md，仍待用户明确采用，apps尚未实施该提案。
