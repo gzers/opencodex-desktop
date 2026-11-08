@@ -657,8 +657,8 @@ impl Drop for HandoverReceipt {
     }
 }
 
-/// Bounded system-only read process. Shared Windows job implementation prevents
-/// a timed-out query from leaving descendants. Nothing launches the installed CLI.
+/// Bounded Unix system-only read process. Nothing launches the installed CLI.
+#[cfg(unix)]
 async fn system_query(path: &Path, args: &[String]) -> AppResult<(i32, Vec<u8>)> {
     use tokio::io::AsyncReadExt;
     let mut command = tokio::process::Command::new(path);
@@ -670,28 +670,11 @@ async fn system_query(path: &Path, args: &[String]) -> AppResult<(i32, Vec<u8>)>
         .stdout(std::process::Stdio::piped())
         .stderr(std::process::Stdio::null())
         .kill_on_drop(true);
-    #[cfg(windows)]
-    let job = crate::infrastructure::windows_query_job::OwnedQueryJob::new(&mut command)
-        .map_err(|e| io("create recovery OS query job", e))?;
-    #[cfg(windows)]
-    {
-        let system = native::system_directory()?;
-        let root = system
-            .parent()
-            .ok_or_else(|| fail("recovery_os_query", "系统目录没有父目录"))?;
-        command
-            .env("SystemRoot", root)
-            .env("WINDIR", root)
-            .env("PATH", &system);
-    }
     #[cfg(unix)]
     command.process_group(0);
     let mut child = command
         .spawn()
         .map_err(|e| io("spawn recovery OS query", e))?;
-    #[cfg(windows)]
-    job.assign_and_resume(&child)
-        .map_err(|e| io("assign recovery OS query", e))?;
     let mut stdout = child
         .stdout
         .take()
@@ -703,10 +686,6 @@ async fn system_query(path: &Path, args: &[String]) -> AppResult<(i32, Vec<u8>)>
         Ok::<_, std::io::Error>(status)
     })
     .await;
-    #[cfg(windows)]
-    job.terminate_and_wait()
-        .await
-        .map_err(|e| io("finish recovery OS query", e))?;
     let status = result
         .map_err(|_| fail("recovery_os_query_timeout", "系统归属查询超时；归属未判定"))?
         .map_err(|e| io("read recovery OS query", e))?;
@@ -756,7 +735,6 @@ mod native {
             size: usize,
             read: *mut usize,
         ) -> i32;
-        fn GetSystemDirectoryW(buffer: *mut u16, size: u32) -> u32;
     }
     #[link(name = "advapi32")]
     extern "system" {
@@ -1016,19 +994,6 @@ mod native {
     fn runtime_image(name: &str) -> bool {
         ["node.exe", "bun.exe", "ocx.exe", "opencodex.exe"].contains(&name.to_lowercase().as_str())
     }
-    pub(super) fn system_directory() -> AppResult<PathBuf> {
-        let mut buffer = vec![0u16; 32768];
-        let n = unsafe { GetSystemDirectoryW(buffer.as_mut_ptr(), buffer.len() as u32) };
-        if n == 0 || n as usize >= buffer.len() {
-            return Err(io(
-                "resolve recovery system directory",
-                std::io::Error::last_os_error(),
-            ));
-        }
-        Ok(PathBuf::from(std::ffi::OsString::from_wide(
-            &buffer[..n as usize],
-        )))
-    }
     impl Host for PlatformHost {
         fn owner(&self) -> AppResult<String> {
             crate::infrastructure::windows_startup_root::user_scope::current_user_sid()
@@ -1232,34 +1197,20 @@ mod native {
                     "无法确认原生服务缺席",
                 ));
             }
-            // Task Scheduler COM enumerates registrations; no localized error
-            // string is interpreted as absence and no task is modified.
-            let powershell = system_directory()?.join("WindowsPowerShell/v1.0/powershell.exe");
-            let script = "$ErrorActionPreference='Stop';$s=New-Object -ComObject Schedule.Service;$s.Connect();$f=$s.GetFolder('\\');$found=$false;foreach($t in $f.GetTasks(1)){if($t.Name -eq 'opencodex-proxy'){$found=$true}};if($found){[Console]::Write('present')}else{[Console]::Write('absent')}";
-            let (code, output) = tauri::async_runtime::block_on(system_query(
-                &powershell,
-                &[
-                    "-NoLogo".into(),
-                    "-NoProfile".into(),
-                    "-NonInteractive".into(),
-                    "-Command".into(),
-                    script.into(),
-                ],
-            ))?;
-            if code != 0 {
-                return Err(fail(
-                    "recovery_service_domain_unknown",
-                    "无法确认计划任务服务缺席",
-                ));
-            }
-            match output.as_slice() {
-                b"absent" => Ok(true),
-                b"present" => Ok(false),
-                _ => Err(fail(
-                    "recovery_service_domain_unknown",
-                    "计划任务查询响应无效",
-                )),
-            }
+            crate::infrastructure::windows_task_scheduler::opencodex_task_absent().map_err(
+                |error| {
+                    fail(
+                        if error
+                            == crate::infrastructure::windows_task_scheduler::QueryError::Timeout
+                        {
+                            "recovery_os_query_timeout"
+                        } else {
+                            "recovery_service_domain_unknown"
+                        },
+                        "无法确认计划任务服务缺席；原生只读查询未提供有效结论",
+                    )
+                },
+            )
         }
     }
 }
