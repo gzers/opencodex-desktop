@@ -247,3 +247,7 @@ source6b44bf84f当前.app完成构建，binarySHA256 f41d528121fa5cda6bb94c7aeff
 本轮整批提交8b3ac3328＋b5e23bb51：保存成功通知路径owner真实重读，失败仍显示旧快照／非最新；程序卡就近显示读取异常；既有版本来源断言定位到实际程序卡。Windows重复安装先在原UI预算等待保护读回后的真实enabled入口，不绕过门禁。启动仅增加最多16个固定结果标签及时间区间，无上游输出／密钥／路径，不改变运行包或原30秒判定。受影响前端36项、新刷新两场景（所在文件24项）、Rust运行器6项、typecheck/build及原生脚本语法检查通过，详见[批次回执](../../.adg/evidence/0.2.23/sweep-r24-42505546007/batch-result.json)。启动根因未闭合，下一轮须区分服务实际ready与观测耗时，不得据此称13/14已修复。
 
 第25轮完整28项诊断已于整批推送后派发：[run42508921613](https://github.com/gzers/opencodex-desktop/actions/runs/42508921613)，固定b5e23bb51bbeb1e5094901f1c792ddb8cc28a9ba，job128817526099已确认运行。诊断仍accepted:false；表13/14尚未关闭，新计时只辅助定位，不改预算或静默更换维护包。
+
+### 同源macOS路径刷新真实复验（2026-11-09）
+
+[b5e23bb51原生应用证据](../../.adg/evidence/0.2.23/macos-native-b5e2-20261109/verification.json)：严格deep codesign校验、完整离线供应后，实际点击检查并保存62220；保存前config.json显示缺失，保存后路径owner自动重读，读取中明确非最新，完成后缺失标记消失，无需手动刷新。实际磁盘config端口与Desktop模式均读回62220。未启动代理，外网／日常HOME读写由OS guard拒绝，本次I/U及管理器已精确清理。仅证明本次保存刷新缺陷修复，不替代生命周期、Windows诊断或正式签名升级验收。截图在CUA对话内，未伪称为本地图片文件。

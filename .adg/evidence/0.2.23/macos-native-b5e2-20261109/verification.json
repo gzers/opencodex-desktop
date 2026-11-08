@@ -1,0 +1,31 @@
+{
+  "source": "b5e23bb51bbeb1e5094901f1c792ddb8cc28a9ba",
+  "binarySha256": "3e2dd046f9998aedd74125c4338d5e819a729f4f66cf7a5650e5b42034debcb2",
+  "nativeObserved": {
+    "beforeSave": "config.json missing badge",
+    "savePort": 62220,
+    "duringReadback": "old snapshot explicitly marked non-current",
+    "afterSave": "config path refreshed automatically without missing badge or manual refresh",
+    "screenEvidence": "CUA app screenshots in conversation; no exported screenshot file claimed"
+  },
+  "diskReadback": {
+    "configPort": 62220,
+    "desktopModeSettings": {
+      "schemaVersion": 1,
+      "home": "/private/tmp/ocxd023-b5e2-port-U-gn29y9f2/home/.codex-desktop/opencodex/home",
+      "mode": "auto",
+      "port": 62220
+    }
+  },
+  "accepted": false,
+  "scope": "native port-save path refresh only; no lifecycle or formal updater acceptance",
+  "cleanup": {
+    "managerExited": true,
+    "proxyNeverStarted": true,
+    "ownedInstallationRemoved": "/private/tmp/ocxd023-b5e2-port-I-l6972g_6",
+    "ownedUserRootRemoved": "/private/tmp/ocxd023-b5e2-port-U-gn29y9f2",
+    "dailyHomeUnchangedByGuard": true,
+    "outboundDenied": true,
+    "loopbackBindPositiveControl": true
+  }
+}
