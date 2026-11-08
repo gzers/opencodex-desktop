@@ -256,6 +256,9 @@ def build(args):
            'npm_config_update_notifier': 'false', 'npm_config_progress': 'false'}
     if os.name == 'nt':
         env['SystemRoot'] = os.environ['SystemRoot']
+    if getattr(args, 'proxy', None):
+        env['npm_config_proxy'] = args.proxy
+        env['npm_config_https_proxy'] = args.proxy
     node_archive = args.node_archive
     if node_archive is None:
         node_archive = output/target['nodeArchive']['name']
@@ -355,6 +358,7 @@ if __name__ == '__main__':
     parser.add_argument('--npm-cli', type=Path, required=True)
     parser.add_argument('--cache', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--proxy', help='Explicit build-only npm proxy; never writes npm configuration')
     parser.add_argument('--offline', action='store_true')
     parser.add_argument('--execute', action='store_true')
     args = parser.parse_args()

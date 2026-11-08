@@ -14,7 +14,7 @@ output=root/'artifact'
 output.mkdir(exist_ok=False)
 files=[]
 excluded=[]
-for directory in ['sweep','evidence']:
+for directory in ['sweep','evidence','current-runtime-stage/maintained-runtime']:
     source=root/directory
     if not source.exists():continue
     for current, dirs, names in os.walk(source, followlinks=False):
@@ -26,7 +26,7 @@ for directory in ['sweep','evidence']:
         for name in names:
             p=base/name
             if p.is_symlink():raise ValueError('Evidence symlink refused: '+str(p.relative_to(root)))
-            if p.suffix not in {'.json','.log','.png','.txt','.bin'}:continue
+            if p.suffix not in {'.json','.log','.png','.txt','.bin','.sha256'} and not (directory=='current-runtime-stage/maintained-runtime' and p.suffix=='.tgz'):continue
             relative=p.relative_to(root)
             target=output/relative;target.parent.mkdir(parents=True,exist_ok=True)
             shutil.copy2(p,target)

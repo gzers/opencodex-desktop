@@ -47,8 +47,13 @@ def collect(root, selected=None):
 
     def ports():
         d = read(users / "two-user-native.json")
-        require(d.get("runtimeProxyPortIsolation") == "verified-runtime-ports",
-                "Actual runtime port protocol not verified; unready supply/identity cannot authorize service mutations")
+        if d.get("runtimeProxyPortIsolation") != "verified-runtime-ports":
+            for index in (1, 2):
+                for path in sorted((users / f"user{index}").glob("runtime-*/runtime-step.json")):
+                    failure = read(path)
+                    if failure.get("result") == "fail":
+                        raise ValueError(f"user{index}: {failure.get('failureCode', 'runtime-step-failed')}; stage={failure.get('stage', 'unknown')}")
+            raise ValueError("Actual runtime port protocol not verified; actual readiness/identity or protocol prerequisite remains unproved")
         protocol = d.get("runtimeProtocol") or {}
         require(protocol.get("servicesStopped") is True, "Actual owned services stop receipt is missing")
         return protocol

@@ -37,16 +37,25 @@ $receipt=Invoke-SweepCheck $recordDirectory $Step $Name {
    if((Get-FileHash -LiteralPath (Join-Path $resources $descriptor.archiveName)).Hash.ToLowerInvariant() -cne $descriptor.archiveSha256){throw 'Original complete resource archive digest differs'}
    $destination=Join-Path $repo 'apps/desktop/tauri/resources/runtime-bundle'
    if(Test-Path -LiteralPath $destination){throw 'Fresh source resource destination required'}
-   Copy-Item -LiteralPath $resources -Destination $destination -Recurse
+   # Original resources stay bound to the old installer cells only. Current
+   # product probes must stage the newly adopted policy, never reuse old bytes.
    $candidate=Join-Path $env:RUNNER_TEMP ('ocxd023-sweep-complete-'+[guid]::NewGuid().ToString('N'))
    [IO.Directory]::CreateDirectory($candidate)|Out-Null
-   Copy-Item -LiteralPath $resources -Destination $candidate -Recurse
    'OCXD_SWEEP_PROGRAM='+$candidate >> $env:GITHUB_ENV
    'OCXD_REQUIRE_RUNTIME_BUNDLE=1' >> $env:GITHUB_ENV
    @{productOriginal=$original.source;originalBuild=$original;resourceDescriptorSha256=(Get-FileHash (Join-Path $resources 'runtime-bundle.manifest.json')).Hash.ToLowerInvariant();candidateDirectory=$candidate}
   }
   build {
    if(!$env:OCXD_SWEEP_PROGRAM){throw 'Original complete resources prerequisite unavailable'}
+   $node=(Get-Command node.exe).Source;$npm=Join-Path (Split-Path -Parent $node) 'node_modules/npm/bin/npm-cli.js'
+   & python .github/scripts/stage_runtime_bundle_023.py --platform win32-x64 --build-node $node --npm-cli $npm --output (Join-Path $root 'current-runtime-stage') *> (Join-Path $evidence 'current-runtime-stage.log')
+   if($LASTEXITCODE -ne 0){throw 'Current adopted runtime resources staging failed; old installers cannot substitute'}
+   $resources=Join-Path $repo 'apps/desktop/tauri/resources/runtime-bundle'
+   Copy-Item -LiteralPath $resources -Destination $env:OCXD_SWEEP_PROGRAM -Recurse
+   $descriptor=Get-Content -LiteralPath (Join-Path $resources 'runtime-bundle.manifest.json') -Raw|ConvertFrom-Json
+   $policy=Get-Content -LiteralPath (Join-Path $repo '.github/runtime-platforms-023.json') -Raw|ConvertFrom-Json -AsHashtable
+   if($descriptor.runtimeVersion -cne $policy.runtime.version -or $descriptor.runtimeArchiveSha256 -cne $policy.runtime.sha256){throw 'Current resource runtime identity differs from adopted policy'}
+   @{runtimeVersion=$descriptor.runtimeVersion;runtimeArchiveSha256=$descriptor.runtimeArchiveSha256;descriptorSha256=(Get-FileHash (Join-Path $resources 'runtime-bundle.manifest.json')).Hash.ToLowerInvariant();archiveSha256=$descriptor.archiveSha256}|ConvertTo-Json|Set-Content (Join-Path $evidence 'current-runtime-resource-identity.json')
    & npm --prefix apps/desktop/ui ci *> (Join-Path $evidence 'npm-ci.log');if($LASTEXITCODE -ne 0){throw 'Frontend dependency install failed'}
    & npm --prefix apps/desktop/ui run build *> (Join-Path $evidence 'frontend-build.log');if($LASTEXITCODE -ne 0){throw 'Frontend build failed'}
    & cargo build --manifest-path apps/desktop/tauri/Cargo.toml --locked --features custom-protocol --bins --jobs 2 --message-format=json 1> (Join-Path $evidence 'native-build-messages.json') 2> (Join-Path $evidence 'native-build.log');if($LASTEXITCODE -ne 0){throw 'Current native binary build failed'}
