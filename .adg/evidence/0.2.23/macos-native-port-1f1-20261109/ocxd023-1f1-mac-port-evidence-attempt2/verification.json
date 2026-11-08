@@ -1,0 +1,31 @@
+{
+  "source": "1f1dcb9d08319ab900a836d7c9537826931992e7",
+  "binarySha256": "c776523540da56924b2e3666c20eb9563c92ef234377f0c5ef8bb969fbef79ca",
+  "nativeMacSettings": "pass",
+  "checks": [
+    "actual isolated signed app starts and supplies names.2",
+    "real UI service section first, one summary, no prototype text",
+    "automatic check/save config and desktop mode read back 61764",
+    "navigate away and return reads saved value",
+    "invalid 65536 disabled; actual config unchanged",
+    "fixed mode saved and exact same config port retained",
+    "unsaved 61765 reverted by real control to 61764"
+  ],
+  "nativeServiceStartStop": "not run; separate original failure retained",
+  "noRealBusinessNetwork": true,
+  "localBindPositiveControl": true,
+  "dailyHomeAndServiceUnchanged": true,
+  "evidenceScreenshot": "native CUA screenshot retained in conversation; no separately exported local screenshot claimed",
+  "finalPort": 61764,
+  "finalMode": "fixed",
+  "noRuntimeRecords": true,
+  "cleanup": {
+    "ownedManagerExited": true,
+    "ownedExecutableImagesRemaining": 0,
+    "onlyExactRootsRemoved": [
+      "/private/tmp/ocxd023-1f1-port-I-cbl2fkfa",
+      "/private/tmp/ocxd023-1f1-port-U-pvavngdw"
+    ]
+  },
+  "accepted": false
+}
