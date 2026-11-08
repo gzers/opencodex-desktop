@@ -44,7 +44,7 @@ await page.addInitScript(()=>{
  await page.locator('.side').getByRole('button',{name:'设置',exact:true}).click()
  await page.getByRole('button',{name:'安装配置',exact:true}).click()
  await page.locator('[data-testid=runtime-port-settings]').waitFor({timeout:20000})
- assert.equal(await page.locator('.settings-panel.active>.card').first().getAttribute('data-testid'),'runtime-port-settings');checks.push('production installation page service card is first')
+ assert.deepEqual(await page.locator('.settings-panel.active>.card').evaluateAll(cards=>cards.map(card=>card.getAttribute('data-testid'))),['settings-program-installation','runtime-port-settings','settings-paths-v2']);checks.push('production installation page matches adopted program, port, user card order')
  await page.getByRole('button',{name:'检查并保存',exact:true}).click()
  await page.waitForFunction(()=>document.querySelector('.port-summary')?.textContent.includes('55581'))
  checks.push('production radio component and synthetic IPC save result render')
