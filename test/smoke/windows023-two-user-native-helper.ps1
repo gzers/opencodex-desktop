@@ -389,9 +389,16 @@ try{
  if(process.argv.includes('--diagnostic-sweep')){
   const environmentStarted=Date.now();
   try{
-   const environment=await call('Runtime.evaluate',{expression:"(async()=>{try{return {value:await window.__TAURI_INTERNALS__.invoke('discover_environment',{request:null})}}catch(error){return {error:{code:error?.code,message:error?.message}}}})()",awaitPromise:true,returnByValue:true});
+   const environment=await call('Runtime.evaluate',{expression:"(async()=>{const started=performance.now();window.__ocxdSweepEnvironment={pending:true};try{const value=await window.__TAURI_INTERNALS__.invoke('discover_environment',{request:null});return window.__ocxdSweepEnvironment={pending:false,elapsedMilliseconds:performance.now()-started,value}}catch(error){return window.__ocxdSweepEnvironment={pending:false,elapsedMilliseconds:performance.now()-started,error:{code:error?.code,message:error?.message}}}})()",awaitPromise:true,returnByValue:true});
    facts.environment=environment.exceptionDetails?{error:{message:'Actual environment IPC raised an exception'}}:environment.result.value;
-  }catch(error){facts.environment={error:{message:'Actual environment observation failed within unchanged 10000ms budget: '+String(error)}};}
+  }catch(error){
+   facts.environment={error:{message:'Actual environment observation failed within unchanged 10000ms budget: '+String(error)}};
+   // The original observation remains failed. Retain a late result only to
+   // diagnose its owned processes; this never authorizes readiness or ports.
+   const lateUntil=Date.now()+30000;let late;
+   do{const readback=await call('Runtime.evaluate',{expression:'window.__ocxdSweepEnvironment??null',returnByValue:true});late=readback.result?.value;if(late?.pending===false)break;await new Promise(r=>setTimeout(r,100));}while(Date.now()<lateUntil);
+   await writeFile(join(output,'environment-late-result.json'),JSON.stringify({accepted:false,originalBudgetPassed:false,diagnosticOnly:true,result:late??null})+'\n');
+  }
   await writeFile(join(output,'environment-call.json'),JSON.stringify({elapsedMilliseconds:Date.now()-environmentStarted,budgetMilliseconds:10000,...facts.environment,accepted:false})+'\n');
  }
 

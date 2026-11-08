@@ -179,11 +179,23 @@ async fn discover(
             "无法建立只读检查的隔离工作区",
         )
     })?;
-    let report = probe_paths(
+    // Diagnostic builds retain stage timings only: never output arguments,
+    // paths, credentials or version stdout, and never substitute them for gates.
+    #[cfg(debug_assertions)]
+    let trace = handle
+        .store()
+        .path()
+        .parent()
+        .and_then(Path::parent)
+        .map(crate::infrastructure::runtime_log::RuntimeLog::new);
+    #[cfg(not(debug_assertions))]
+    let trace = None;
+    let report = probe_paths_traced(
         &paths,
         managed.as_ref().map(|m| m.script.as_path()),
         temp.path(),
         Duration::from_secs(10),
+        trace.as_ref(),
     )
     .await;
     if let Some(expected) = managed {
@@ -250,12 +262,23 @@ async fn check(
         version,
     }
 }
+#[cfg(test)]
 async fn probe_paths(
     paths: &EnvironmentPaths,
     managed_script: Option<&Path>,
     home: &Path,
     timeout: Duration,
 ) -> EnvironmentReportDto {
+    probe_paths_traced(paths, managed_script, home, timeout, None).await
+}
+async fn probe_paths_traced(
+    paths: &EnvironmentPaths,
+    managed_script: Option<&Path>,
+    home: &Path,
+    timeout: Duration,
+    trace: Option<&crate::infrastructure::runtime_log::RuntimeLog>,
+) -> EnvironmentReportDto {
+    let started = std::time::Instant::now();
     let node = check(
         &paths.node,
         &["--version".into()],
@@ -264,6 +287,7 @@ async fn probe_paths(
         timeout,
     )
     .await;
+    trace_probe(trace, "node", started, node.found);
     let mut report = EnvironmentReportDto {
         node,
         npm: not_checked(),
@@ -279,6 +303,7 @@ async fn probe_paths(
         .npm
         .extension()
         .is_some_and(|v| v == "js" || v == "mjs" || v == "cjs");
+    let started = std::time::Instant::now();
     report.npm = if npm_is_js {
         check(
             &paths.node,
@@ -291,10 +316,12 @@ async fn probe_paths(
     } else {
         check(&paths.npm, &["--version".into()], &paths.npm, home, timeout).await
     };
+    trace_probe(trace, "npm", started, report.npm.found);
     report.gate = EnvironmentGate::MissingNpm;
     if !report.npm.found {
         return report;
     }
+    let started = std::time::Instant::now();
     report.ocx = if let Some(script) = managed_script {
         check(
             &paths.node,
@@ -307,6 +334,7 @@ async fn probe_paths(
     } else {
         check(&paths.ocx, &["--version".into()], &paths.ocx, home, timeout).await
     };
+    trace_probe(trace, "ocx", started, report.ocx.found);
     report.gate = if report.ocx.found {
         EnvironmentGate::Ready
     } else {
@@ -314,6 +342,19 @@ async fn probe_paths(
     };
     report.short_circuited = false;
     report
+}
+fn trace_probe(
+    trace: Option<&crate::infrastructure::runtime_log::RuntimeLog>,
+    stage: &str,
+    started: std::time::Instant,
+    found: bool,
+) {
+    if let Some(log) = trace {
+        let _ = log.append_event(&format!(
+            "environment probe stage={stage} elapsed_ms={} found={found}",
+            started.elapsed().as_millis(),
+        ));
+    }
 }
 /// Execute only --version with an empty inherited environment and bounded pipe
 /// reads/deadline. No installation, config/profile reads, server or PATH lookup.
