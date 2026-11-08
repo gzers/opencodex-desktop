@@ -1,0 +1,31 @@
+{
+  "head": "16b4ce700b3be845a0454762b410b7f328f5a4f2",
+  "ciMerge": "c848b89eb9059428624bdd20716c9ed00bd2969d",
+  "sameHeadAndMergeTree": "9d76125c92ea697f6fce9ea7c09683ab0a4ac1d0",
+  "ciRun": 42531978066,
+  "windowsBackendJob": 128887950886,
+  "wholeBackendJobPending": true,
+  "strictAllTargetClippy": {
+    "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 8,
+    "started_at": "2026-11-08T22:48:21Z",
+    "completed_at": "2026-11-08T22:50:55Z"
+  },
+  "windowsSmokeJob": 128887950822,
+  "artifactId": 13637981161,
+  "artifactBytes": 11077,
+  "artifactSha256": "da0b620628941b45dfd2785b032d182c3f95f7d0026a9becaaef9dae718f963e",
+  "rawVerifiedChecks": {
+    "COMTests": 2,
+    "productReadOnlyQueryWithinOriginal8s": true,
+    "processIdentityGenerationRefusalAndCleanup": true,
+    "restartHandoffCases": 5,
+    "restartChecks": 40,
+    "forcedCleanup": false,
+    "productStartedByHandoff": false
+  },
+  "scope": "Native query and fixture readiness only, not normalDesktopStop/ordinarytwoSIDacceptance. No proofthatall32-gatespassed.",
+  "accepted": false
+}
