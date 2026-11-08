@@ -2,7 +2,7 @@ param(
  [Parameter(Mandatory=$true)][string]$Step,
  [Parameter(Mandatory=$true)][string]$Name,
  [Parameter(Mandatory=$true)][string]$Directory,
- [Parameter(Mandatory=$true)][ValidateSet('inputs','build','state-observer','bundle-roots','policy-prepare','policy-restore','installer','native','two-user','collect')][string]$Task,
+ [Parameter(Mandatory=$true)][ValidateSet('inputs','build','state-observer','attested-status','bundle-roots','policy-prepare','policy-restore','installer','native','two-user','collect')][string]$Task,
  [string]$Kind,[string]$Mode,[string]$Probe
 )
 $ErrorActionPreference='Stop'
@@ -68,6 +68,13 @@ $receipt=Invoke-SweepCheck $recordDirectory $Step $Name {
     Copy-Item -LiteralPath (Join-Path $repo 'apps/desktop/tauri/target/debug/examples/ocxd-sweep-state.exe') -Destination (Join-Path $env:OCXD_SWEEP_PROGRAM 'sweep-state.exe')
    }finally{Remove-Item -LiteralPath $example -Force}
    @{source=(git -C $repo rev-parse HEAD).Trim();builtBy='Cargo exact product dependency/feature/linker graph';transientSourceRemoved=(!(Test-Path -LiteralPath $example));observerSha256=(Get-FileHash (Join-Path $env:OCXD_SWEEP_PROGRAM 'sweep-state.exe')).Hash.ToLowerInvariant();accepted=$false}
+  }
+  attested-status {
+   & cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib infrastructure::attested_status -- --nocapture *> (Join-Path $evidence 'attested-status-regression.log')
+   if($LASTEXITCODE -ne 0){throw 'Actual Windows attested status transport/consumer regression failed'}
+   $log=Get-Content -LiteralPath (Join-Path $evidence 'attested-status-regression.log') -Raw
+   if($log -notmatch '5 passed; 0 failed'){throw 'All five Windows attested status tests must actually execute'}
+   @{source=(git -C $repo rev-parse HEAD).Trim();tests=5;platform='Windows actual loopback TCP/private files/consumer';accepted=$false}
   }
   bundle-roots {
    & cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib windows_bundle_roots -- --nocapture *> (Join-Path $evidence 'windows-bundle-root-regression.log')

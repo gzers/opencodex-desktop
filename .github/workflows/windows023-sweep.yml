@@ -55,6 +55,10 @@ jobs:
         if: always()
         continue-on-error: true
         run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '24' -Name windows-bundle-root-regression -Task bundle-roots
+      - name: 26 attested-status-regression
+        if: always()
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '26' -Name attested-status-regression -Task attested-status
       - name: 03 server-msi-prepare
         if: always()
         continue-on-error: true
