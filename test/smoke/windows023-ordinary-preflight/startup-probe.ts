@@ -45,4 +45,21 @@ while(Date.now()-started<60000&&exit===null){
 console.log(JSON.stringify({probe:'actual-official-cli-readiness-diagnostic',version,initializeClient,elapsedMilliseconds:Date.now()-started,samples,exit,accepted:false,fullSoftwarePassed:false,cleanupAuthority:'original ordinary executor retained SID/image/creation/process handles; no PID-only kill here'}));
 // The unchanged executor owns this process family and must prove exit of all
 // retained handles before removing the disposable account/Profile.
+if(process.env.OCXD_STARTUP_DIAG_LIFECYCLE==='1'&&samples.at(-1)?.status==='ready'){
+ const original=JSON.parse(readFileSync(join(home,'runtime-port.json'),'utf8'));
+ const conflictHome=join(profile,'.codex-desktop/opencodex/conflict-probe');mkdirSync(conflictHome,{recursive:false});
+ writeFileSync(join(conflictHome,'config.json'),JSON.stringify({...config,port:original.port}),{mode:0o600,flag:'wx'});
+ const execute=async(action:string,h:string,budget:number)=>{
+  const started=Date.now();const p=spawn(node,[join(pkg,'bin/ocx.mjs'),action],{cwd:profile,env:{...env,OPENCODEX_HOME:h},stdio:['ignore','inherit','inherit'],windowsHide:true});
+  let result:any=null;p.on('exit',(code,signal)=>{result={code,signal}});
+  while(result===null&&Date.now()-started<budget)await sleep(100);
+  const report={probe:'actual-official-'+action+'-diagnostic',pid:p.pid,elapsedMilliseconds:Date.now()-started,budgetMilliseconds:budget,exited:result!==null,exit:result,accepted:false};
+  console.log(JSON.stringify(report));p.unref();return report;
+ };
+ await execute('start',conflictHome,30000);
+ const same=JSON.parse(readFileSync(join(home,'runtime-port.json'),'utf8'));
+ console.log(JSON.stringify({probe:'after-explicit-conflict',originalUnchanged:same.pid===original.pid&&same.port===original.port,conflictRecordPresent:existsSync(join(conflictHome,'runtime-port.json')),accepted:false}));
+ await execute('stop',home,10000);
+ console.log(JSON.stringify({probe:'after-original-stop-budget',originalRecordPresent:existsSync(join(home,'runtime-port.json')),accepted:false}));
+}
 child.unref();

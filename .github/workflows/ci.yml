@@ -17,6 +17,9 @@ jobs:
       - name: Verify installer matrix completeness and parameter isolation
         shell: pwsh
         run: ./test/smoke/windows-installer-matrix.test.ps1 -OutputDirectory test/out/windows-process-token/installer-matrix
+      - name: Verify exact uninstall-retention fixture cleanup
+        shell: pwsh
+        run: ./test/smoke/windows-retention-fixture.test.ps1 -OutputDirectory test/out/windows-process-token/retention-fixture
       - name: Verify isolated acceptance Profile admission
         shell: pwsh
         run: ./test/smoke/windows-acceptance-profile.test.ps1 -OutputDirectory test/out/windows-process-token/profile

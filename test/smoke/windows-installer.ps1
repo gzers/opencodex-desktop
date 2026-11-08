@@ -54,7 +54,8 @@ function Invoke-Installer([string]$File, [string]$Arguments) {
     if ($process.ExitCode -notin @(0, 3010)) { throw "Installer failed with exit code $($process.ExitCode)" }
     return $process.ExitCode
 }
-function Complete-DefaultUninstall([string]$InstallerKind,[string]$Package,[string]$InstallRoot,[string]$Sentinel,[string]$SentinelHash){
+. (Join-Path $PSScriptRoot 'windows-retention-fixture.ps1')
+function Complete-DefaultUninstall([string]$InstallerKind,[string]$Package,[string]$InstallRoot,[string]$Sentinel,[string]$SentinelHash,$Fixture){
     $item=@{kind=$InstallerKind;result='fail';exitCode=$null;executableRemoved=$false;userDataRetained=$false}
     try{
         $item.exitCode=if($InstallerKind -ceq 'nsis'){Invoke-Installer (Join-Path $InstallRoot 'uninstall.exe') '/S'}else{Invoke-Installer 'msiexec.exe' ('/x "'+$Package+'" /qn /norestart')}
@@ -63,16 +64,15 @@ function Complete-DefaultUninstall([string]$InstallerKind,[string]$Package,[stri
         if(Test-Path -LiteralPath (Join-Path $InstallRoot 'opencodex-desktop.exe')){throw 'Default uninstall left its exact application image'}
         $item.executableRemoved=$true
         if(!$Sentinel -or (Get-FileHash -LiteralPath $Sentinel).Hash -cne $SentinelHash){throw 'Default uninstall user-data retention was not proved'}
-        $item.userDataRetained=$true;$item.result='pass'
+        $item.userDataRetained=$true
+        if(!$Fixture -or $Fixture.path -cne $Sentinel -or $Fixture.hash -cne $SentinelHash){throw 'Exact new retention fixture identity required after uninstall proof'}
+        $item.testFixtureCleanup=Remove-InstallerRetentionFixture $Fixture
+        $item.result='pass'
     }finally{$taskResult.defaultUninstallChecks+=,$item}
 }
 function New-DefaultRetentionSentinel {
     if(!$AsInstallationOwner){return @{path=$null;hash=$null}}
-    $directory=Join-Path $env:USERPROFILE '.codex-desktop/desktop/sweep-retention'
-    New-Item -ItemType Directory -Force $directory|Out-Null
-    $file=Join-Path $directory ([guid]::NewGuid().ToString('N')+'.sentinel')
-    [IO.File]::WriteAllText($file,'owned installer default user-data retention fixture',[Text.UTF8Encoding]::new($false))
-    @{path=$file;hash=(Get-FileHash -LiteralPath $file).Hash}
+    New-InstallerRetentionFixture (Join-Path $env:USERPROFILE '.codex-desktop')
 }
 function Find-DefaultInstalledDirectory {
     $roots=@('HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*','HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*','HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*')
@@ -185,7 +185,7 @@ try {
                 if(!(Test-Path -LiteralPath (Join-Path $defaultRoot ('resources/'+$resource)))){throw 'Installed local documentation resource missing'}
             }
         }finally{
-            if($AsInstallationOwner){Complete-DefaultUninstall $installerKind $package[0].FullName $defaultRoot $defaultRetention.path $defaultRetention.hash}
+            if($AsInstallationOwner){Complete-DefaultUninstall $installerKind $package[0].FullName $defaultRoot $defaultRetention.path $defaultRetention.hash $defaultRetention}
             elseif($installerKind -eq 'nsis'){[void](Invoke-Installer (Join-Path $defaultRoot 'uninstall.exe') '/S')}
             else{[void](Invoke-Installer 'msiexec.exe' ('/x "'+$package[0].FullName+'" /qn /norestart'))}
         }
@@ -291,7 +291,7 @@ try {
             foreach($resource in @('LICENSE','THIRD-PARTY-NOTICES.txt')){
                 if(!(Test-Path -LiteralPath (Join-Path $defaultRoot ('resources/'+$resource)))){throw 'Installed local documentation resource missing'}
             }
-        }finally{if($AsInstallationOwner){Complete-DefaultUninstall 'nsis' $package[0].FullName $defaultRoot $defaultRetention.path $defaultRetention.hash}else{[void](Invoke-Installer (Join-Path $defaultRoot 'uninstall.exe') '/S')}}
+        }finally{if($AsInstallationOwner){Complete-DefaultUninstall 'nsis' $package[0].FullName $defaultRoot $defaultRetention.path $defaultRetention.hash $defaultRetention}else{[void](Invoke-Installer (Join-Path $defaultRoot 'uninstall.exe') '/S')}}
     }
     Assert-WindowsInstallerMatrix -Kind $Kind -Mode $Mode -DefaultChecks @($taskResult.defaultInstallChecks) -CustomChecks @($taskResult.installers)
     $taskResult.result = 'pass'

@@ -75,6 +75,10 @@ jobs:
       - name: Verify process-token evidence and all Windows smoke syntax
         run: |
           & ../../../test/smoke/windows-process-token.test.ps1 -OutputDirectory ../../../test/out/windows-candidate/process-token
+      - name: Verify exact uninstall-retention fixture cleanup
+        run: |
+          & ../../../test/smoke/windows-retention-fixture.test.ps1 -OutputDirectory ../../../test/out/windows-candidate/retention-fixture
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
       - uses: actions/setup-node@v5
         with:
           # Bundle resolution must use the same Node/npm pair as the pinned closure.
@@ -450,7 +454,7 @@ jobs:
           path: test/out/windows-installer-retention
 
   native-ui:
-    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023' && inputs.admission_run != 'ordinary-ownership-023' && inputs.admission_run != 'ordinary-startup-023' && inputs.admission_run != 'ordinary-startup-initialized-023' && inputs.admission_run != 'msi-compiler-023' && inputs.admission_run != 'native-replay-414' && inputs.admission_run != 'raw-msi-3d-diagnostic' && inputs.admission_run != 'raw-full-0c-diagnostic' && inputs.admission_run != 'full-bundle-two-user-debug'
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023' && inputs.admission_run != 'ordinary-ownership-023' && inputs.admission_run != 'ordinary-startup-023' && inputs.admission_run != 'ordinary-startup-initialized-023' && inputs.admission_run != 'ordinary-lifecycle-023' && inputs.admission_run != 'msi-compiler-023' && inputs.admission_run != 'native-replay-414' && inputs.admission_run != 'raw-msi-3d-diagnostic' && inputs.admission_run != 'raw-full-0c-diagnostic' && inputs.admission_run != 'full-bundle-two-user-debug'
     runs-on: windows-latest
     timeout-minutes: 40
     defaults:
@@ -528,7 +532,7 @@ jobs:
           }
 
   ordinary-preflight:
-    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && (inputs.admission_run == 'ordinary-preflight-023' || inputs.admission_run == 'ordinary-ownership-023' || (inputs.admission_run == 'ordinary-startup-023' || inputs.admission_run == 'ordinary-startup-initialized-023'))
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && (inputs.admission_run == 'ordinary-preflight-023' || inputs.admission_run == 'ordinary-ownership-023' || (inputs.admission_run == 'ordinary-startup-023' || (inputs.admission_run == 'ordinary-startup-initialized-023' || inputs.admission_run == 'ordinary-lifecycle-023')))
     runs-on: windows-latest
     timeout-minutes: 15
     steps:
@@ -538,16 +542,17 @@ jobs:
           node-version: 26.8.1
       - uses: dtolnay/rust-toolchain@stable
       - name: Stage exact adopted runtime for readonly ordinary ownership diagnosis
-        if: inputs.admission_run == 'ordinary-ownership-023' || (inputs.admission_run == 'ordinary-startup-023' || inputs.admission_run == 'ordinary-startup-initialized-023')
+        if: inputs.admission_run == 'ordinary-ownership-023' || (inputs.admission_run == 'ordinary-startup-023' || (inputs.admission_run == 'ordinary-startup-initialized-023' || inputs.admission_run == 'ordinary-lifecycle-023'))
         shell: pwsh
         run: |
           $node=(Get-Command node.exe).Source
           $npm=Join-Path (Split-Path -Parent $node) 'node_modules/npm/bin/npm-cli.js'
           python .github/scripts/stage_runtime_bundle_023.py --platform win32-x64 --build-node $node --npm-cli $npm --output test/out/ownership-runtime-stage
           if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
-          $name=if('${{ inputs.admission_run }}' -in @('ordinary-startup-023','ordinary-startup-initialized-023')){'OCXD_STARTUP_PROBE_RUNTIME'}else{'OCXD_OWNERSHIP_PROBE_RUNTIME'}
+          $name=if('${{ inputs.admission_run }}' -in @('ordinary-startup-023','ordinary-startup-initialized-023','ordinary-lifecycle-023')){'OCXD_STARTUP_PROBE_RUNTIME'}else{'OCXD_OWNERSHIP_PROBE_RUNTIME'}
           $name+'='+[IO.Path]::GetFullPath('test/out/ownership-runtime-stage/platform-bundle/runtime-bundle') >> $env:GITHUB_ENV
-          if('${{ inputs.admission_run }}' -ceq 'ordinary-startup-initialized-023'){'OCXD_STARTUP_PROBE_INITIALIZE_CODEX=1' >> $env:GITHUB_ENV}
+          if('${{ inputs.admission_run }}' -in @('ordinary-startup-initialized-023','ordinary-lifecycle-023')){'OCXD_STARTUP_PROBE_INITIALIZE_CODEX=1' >> $env:GITHUB_ENV}
+          if('${{ inputs.admission_run }}' -ceq 'ordinary-lifecycle-023'){'OCXD_STARTUP_PROBE_LIFECYCLE=1' >> $env:GITHUB_ENV}
       - name: Verify unchanged runner contracts
         shell: pwsh
         run: |

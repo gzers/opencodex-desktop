@@ -187,13 +187,17 @@ mod tests {
                 "OCXD_STARTUP_DIAG_INITIALIZE_CODEX",
                 option_env!("OCXD_STARTUP_PROBE_INITIALIZE_CODEX").unwrap_or("0"),
             )
+            .env(
+                "OCXD_STARTUP_DIAG_LIFECYCLE",
+                option_env!("OCXD_STARTUP_PROBE_LIFECYCLE").unwrap_or("0"),
+            )
             .spawn()
             .unwrap();
         let status = loop {
             if let Some(status) = child.try_wait().unwrap() {
                 break status;
             }
-            if started.elapsed() > std::time::Duration::from_secs(75) {
+            if started.elapsed() > std::time::Duration::from_secs(110) {
                 let _ = child.kill();
                 let _ = child.wait();
                 panic!("startup diagnosis exceeded its own budget");
