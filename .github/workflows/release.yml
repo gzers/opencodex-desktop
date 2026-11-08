@@ -161,12 +161,25 @@ jobs:
 
       # Keep the release private until its actual installer bytes pass the existing
       # ephemeral-runner checks. This does not replace updater signature validation.
+      - name: Prepare disposable Server MSI client-equivalent fixture
+        if: runner.os == 'Windows'
+        shell: pwsh
+        working-directory: apps/desktop/tauri
+        run: |
+          & ../../../test/smoke/windows-msi-server-fixture.ps1 -Mode prepare -EvidenceDirectory ../../../test/out/release-windows-installer
+
       - name: Verify Windows release installers on isolated runner
         if: runner.os == 'Windows'
         shell: pwsh
         working-directory: apps/desktop/tauri
         run: |
           & ../../../test/smoke/windows-installer.ps1 -BundleDirectory target/release/bundle -BuiltExecutable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/release-windows-installer
+
+      - name: Restore exact Server MSI policy
+        if: always() && runner.os == 'Windows'
+        shell: pwsh
+        working-directory: apps/desktop/tauri
+        run: if(Test-Path ../../../test/out/release-windows-installer/msi-server-policy.original.json){ & ../../../test/smoke/windows-msi-server-fixture.ps1 -Mode restore -EvidenceDirectory ../../../test/out/release-windows-installer }
 
       - name: Preserve Windows release installer evidence
         if: always() && runner.os == 'Windows'
