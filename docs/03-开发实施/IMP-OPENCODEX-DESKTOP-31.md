@@ -271,3 +271,5 @@ source6b44bf84f当前.app完成构建，binarySHA256 f41d528121fa5cda6bb94c7aeff
 ### 第27轮24过4失败与句柄映像返修（2026-11-09）
 
 [原始全表](../../.adg/evidence/0.2.23/sweep-r27-42514160566/status-table.md)已展示，257成员及ZIP摘要核验。双方实际供应日志均verified，用户2后继观察被通用native/CIMimage比较拒绝，因此旧pending快照不能当供应通过。原错误未保留CIM字段缺省／实值，不能断言一定缺省。2373829e7保持同保留句柄原生PID/映像/精确FILETIME前后两次证明及CIM必需真实SID/PID，CIM有值矛盾仍拒绝，无值不作为映像权威；回执新增是否提供标志。原生后观察先于CIM映像比较，以先识别实际退出，不以缺省误认另一映像。不存在时间容差／PID单值降级，实际Manager普通令牌门不变。原生供应／清理须下一轮验证，服务Start本轮未执行，旧30秒问题仍待。
+
+2373829e7轻量Windows实际前置原回执已核验，8072字节ZIP摘要b6f0dd38f197e419e7282a705f70f36a62cb980364a38286745f5e62149aed91，实际自身／自有子进程精确身份、变化拒绝与清理pass；不作为renderer／双SID／生命周期通过。其后派发[第28轮完整诊断](https://github.com/gzers/opencodex-desktop/actions/runs/42517021663)，固定2373829e7d5384c7f131168382ca4796156bf5ed、job128842169524已确认运行，accepted:false及原预算保持。
