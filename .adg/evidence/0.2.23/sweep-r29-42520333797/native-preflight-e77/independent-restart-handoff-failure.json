@@ -1,0 +1,20 @@
+{
+  "ciRun": 42522782198,
+  "jobId": 128859724262,
+  "jobConclusion": "failure",
+  "failedStep": "Verify recovery restart waits for the old process exit",
+  "controlledError": "Controlled parent did not become ready",
+  "sourceLocation": "test/smoke/windows-restart-handoff.test.ps1:42",
+  "originalReadinessBudgetMilliseconds": 15000,
+  "completedCases": 0,
+  "productStarted": false,
+  "causeNotYetProven": "HiddenWindowsPowerShellfixture parentdidnotproduceexpectedreadiness; retainedfailuredoesnotproveproductrestartfailure.",
+  "separateVerifiedScopes": [
+    "NativeproductCOM2testsand8squery",
+    "Ownprocessidentity/cleanup",
+    "Windowsbackendall-targetstrictClippystep"
+  ],
+  "wholeWindowsSmokeAccepted": false,
+  "nextAction": "Preservefailure; inspectwithcompleteR30outcomeandbatchallindependentfixes. Do not alter assertion/budget or rerunonlythisstep.",
+  "accepted": false
+}
