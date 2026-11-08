@@ -1,0 +1,19 @@
+{
+  "source": "b5e23bb51bbeb1e5094901f1c792ddb8cc28a9ba",
+  "ciRun": 42508893547,
+  "frontendJob": 128817438175,
+  "tests": {
+    "files": 216,
+    "passed": 1603,
+    "failed": 0
+  },
+  "productionDistBoot": {
+    "pass": false,
+    "observedFirstCard": "settings-program-installation",
+    "oldExpectedFirstCard": "runtime-port-settings",
+    "location": "apps/desktop/ui/qa/production-boot.mjs:47",
+    "disposition": "Adopted UI already changed; next batch must assert all3card order, keep actual dist mount and errors/outbound assertions."
+  },
+  "diagnosticSweepStillInProgress": true,
+  "accepted": false
+}
