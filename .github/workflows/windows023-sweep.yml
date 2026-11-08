@@ -63,6 +63,10 @@ jobs:
         if: always()
         continue-on-error: true
         run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '26' -Name attested-status-regression -Task attested-status
+      - name: 28 runtime-port-save-regression
+        if: always()
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '28' -Name runtime-port-save-regression -Task runtime-port-save
       - name: 03 server-msi-prepare
         if: always()
         continue-on-error: true

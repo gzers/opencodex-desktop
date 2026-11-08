@@ -2,7 +2,7 @@ param(
  [Parameter(Mandatory=$true)][string]$Step,
  [Parameter(Mandatory=$true)][string]$Name,
  [Parameter(Mandatory=$true)][string]$Directory,
- [Parameter(Mandatory=$true)][ValidateSet('inputs','build','fixture-schema','state-observer','attested-status','bundle-roots','policy-prepare','policy-restore','installer','native','two-user','collect')][string]$Task,
+ [Parameter(Mandatory=$true)][ValidateSet('inputs','build','fixture-schema','state-observer','attested-status','runtime-port-save','bundle-roots','policy-prepare','policy-restore','installer','native','two-user','collect')][string]$Task,
  [string]$Kind,[string]$Mode,[string]$Probe
 )
 $ErrorActionPreference='Stop'
@@ -89,8 +89,15 @@ $receipt=Invoke-SweepCheck $recordDirectory $Step $Name {
    & cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib infrastructure::attested_status -- --nocapture *> (Join-Path $evidence 'attested-status-regression.log')
    if($LASTEXITCODE -ne 0){throw 'Actual Windows attested status transport/consumer regression failed'}
    $log=Get-Content -LiteralPath (Join-Path $evidence 'attested-status-regression.log') -Raw
-   if($log -notmatch '7 passed; 0 failed'){throw 'All seven Windows attested status tests must actually execute'}
-   @{source=(git -C $repo rev-parse HEAD).Trim();tests=7;platform='Windows actual loopback TCP/private files/consumer including official owner-only ACL';accepted=$false}
+   if($log -notmatch '8 passed; 0 failed'){throw 'All eight Windows attested status/official stop tests must actually execute'}
+   @{source=(git -C $repo rev-parse HEAD).Trim();tests=8;platform='Windows actual loopback TCP/private files/consumer including official owner-only ACL and authenticated same-connection stop';accepted=$false}
+  }
+  runtime-port-save {
+   & cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib modules::runtime::port::tests:: -- --nocapture *> (Join-Path $evidence 'runtime-port-save-regression.log')
+   if($LASTEXITCODE -ne 0){throw 'Actual Windows port persistence/SQLite coordination regression failed'}
+   $log=Get-Content -LiteralPath (Join-Path $evidence 'runtime-port-save-regression.log') -Raw
+   if($log -notmatch '8 passed; 0 failed'){throw 'All eight real port persistence and contention tests must execute'}
+   @{source=(git -C $repo rev-parse HEAD).Trim();tests=8;accepted=$false}
   }
   bundle-roots {
    & cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib windows_bundle_roots -- --nocapture *> (Join-Path $evidence 'windows-bundle-root-regression.log')
