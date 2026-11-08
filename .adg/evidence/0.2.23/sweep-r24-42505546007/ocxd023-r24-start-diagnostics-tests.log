@@ -1,0 +1,14 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 30.95s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-58a8535d3845a745)
+
+running 6 tests
+test infrastructure::process_runner::tests::environment_keys_are_frozen ... ok
+test infrastructure::process_runner::tests::cancel_pending_is_repeatable_and_does_not_panic ... ok
+test infrastructure::process_runner::tests::validates_explicit_context_before_spawning ... ok
+test infrastructure::process_runner::tests::frozen_timeouts_match_fz10 ... ok
+test infrastructure::process_runner::tests::failed_spawn_bumps_failure_epoch_without_running_process ... ok
+test infrastructure::process_runner::tests::rapid_stop_exits_preserve_the_nonzero_status ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 2011 filtered out; finished in 0.34s
+

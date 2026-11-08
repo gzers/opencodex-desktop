@@ -1,0 +1,31 @@
+{
+  "source": "b5e23bb51bbeb1e5094901f1c792ddb8cc28a9ba",
+  "fixes": [
+    "8b3ac3328: confirmed port-save event refreshes actual path owner; preserves stale/error on failed readback; program card gets local read warning; existing source/version assertions follow actual program card",
+    "b5e23bb51: repeated native install waits up to original UI budget for real enabled protected entry; no forced enable/click; startup timeout reports max16 fixed-label sample durations only"
+  ],
+  "checks": {
+    "existingFrontendAffected": {
+      "files": 3,
+      "passed": 36
+    },
+    "pathRefreshWithNewCases": {
+      "passed": 24,
+      "newCases": 2
+    },
+    "rustProcessRunner": {
+      "passed": 6,
+      "failed": 0
+    },
+    "typecheck": "pass",
+    "productionBuild": "pass",
+    "nativeScriptSyntax": "pass"
+  },
+  "notYetProven": [
+    "Repeated Windows installation recovery after real protection readback",
+    "Runtime actual start inside original30s and full dual-user port/stop protocol"
+  ],
+  "nextAction": "Push whole batch; complete diagnostic sweep for all28, keep accepted:false; use timing evidence to distinguish runtime readiness latency and attestation observation latency.",
+  "maintainedRuntimeBytesChanged": false,
+  "startupAcceptanceChanged": false
+}
