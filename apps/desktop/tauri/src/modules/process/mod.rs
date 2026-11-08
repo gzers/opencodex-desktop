@@ -54,6 +54,16 @@ pub enum LifecycleResult {
 /// 进程运行器必须可测试；不得从 PATH 搜索命令。
 pub trait ProcessRunner {
     fn execute(&self, command: &ProcessCommand) -> Result<LifecycleResult, AppError>;
+    /// Production start confirmation uses the same validated runtime identity as status.
+    /// Deterministic runners retain their explicit fixture contract.
+    fn execute_in_context(
+        &self,
+        command: &ProcessCommand,
+        _runtime: &crate::infrastructure::runtime_executable::SharedRuntimeExecutable,
+        _deadline: std::time::Instant,
+    ) -> Result<LifecycleResult, AppError> {
+        self.execute(command)
+    }
     fn cancel_pending(&self) -> Result<(), AppError>;
 }
 
@@ -64,6 +74,9 @@ pub struct ProcessCommand {
     pub executable: PathBuf,
     pub working_directory: PathBuf,
     pub environment: EnvironmentPolicy,
+    /// A checked, persisted port is passed explicitly so the official CLI
+    /// cannot silently hop away from a user-selected fixed port.
+    pub requested_port: Option<u16>,
 }
 
 /// FZ-09 允许透传的环境键；其余键不主动透传。
@@ -127,6 +140,7 @@ impl ProcessCommand {
             action,
             executable,
             working_directory,
+            requested_port: None,
             environment: EnvironmentPolicy {
                 opencodex_home,
                 ..Default::default()

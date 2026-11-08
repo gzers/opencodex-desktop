@@ -61,11 +61,12 @@ describe('local panel protection status and retry', () => {
     const warning = wrapper.get('[data-testid="runtime-protection"]')
     expect(warning.text()).toContain('面板更新保护核对')
     expect(warning.text()).toContain(status.state === 'unreadable' ? '记录与备份均保留' : '备份')
-    for (const testid of ['runtime-install', 'runtime-import-offline', 'runtime-uninstall', 'paths-select', 'paths-initialize', 'runtime-change-source', 'runtime-restore-source']) {
+    for (const testid of ['runtime-install', 'runtime-import-offline', 'runtime-uninstall', 'paths-initialize']) {
       expect(wrapper.get('[data-testid="' + testid + '"]').attributes('disabled')).toBeDefined()
     }
-    const home = wrapper.findAll('button').find(button => button.text() === '设置 OpenCodex HOME')!
-    expect(home.attributes('disabled')).toBeDefined()
+    expect(wrapper.find('[data-testid="paths-select"]').exists()).toBe(false)
+    expect(wrapper.findAll('button').some(button=>button.text()==='设置 OpenCodex HOME')).toBe(false)
+    expect(wrapper.get('[data-testid="runtime-port-settings"] fieldset').attributes('disabled')).toBeDefined()
     expect(wrapper.find('#data-root-input').exists()).toBe(false)
     if (status.state === 'unreadable') expect(warning.text()).not.toContain('bk_exact')
     const diagnosis = warning.findAll('button').find(button => button.text() === '查看诊断')!
@@ -75,46 +76,26 @@ describe('local panel protection status and retry', () => {
     wrapper.unmount()
   })
 
-  it('blocks source changes until a clean protection read finishes', async () => {
-    const { runtime, wrapper } = setup(none)
-    runtime.protection = null
-    runtime.protectionLoading = true
-    await wrapper.vm.$nextTick()
-    expect(wrapper.get('[data-testid="runtime-change-source"]').attributes('disabled')).toBeDefined()
-    expect(wrapper.get('[data-testid="runtime-restore-source"]').attributes('disabled')).toBeDefined()
-    await flushPromises()
-    expect(wrapper.get('[data-testid="runtime-change-source"]').attributes('disabled')).toBeUndefined()
-    expect(wrapper.get('[data-testid="runtime-restore-source"]').attributes('disabled')).toBeUndefined()
-    wrapper.unmount()
+  it('blocks installation and port controls until a clean protection read finishes',async()=>{
+    const{runtime,wrapper}=setup(none);runtime.protection=null;runtime.protectionLoading=true;await wrapper.vm.$nextTick()
+    expect(wrapper.get('[data-testid="runtime-install"]').attributes('disabled')).toBeDefined()
+    expect(wrapper.get('[data-testid="runtime-port-settings"] fieldset').attributes('disabled')).toBeDefined()
+    await flushPromises();expect(wrapper.get('[data-testid="runtime-install"]').attributes('disabled')).toBeUndefined()
+    expect(wrapper.get('[data-testid="runtime-port-settings"] fieldset').attributes('disabled')).toBeUndefined();wrapper.unmount()
   })
-
-  it('rechecks protection when the source file dialog returns', async () => {
-    const { runtime, wrapper } = setup(none)
-    await flushPromises()
-    const selected = deferred<string>()
-    open.mockReturnValue(selected.promise)
-    await wrapper.get('[data-testid="runtime-change-source"]').trigger('click')
-    expect(open).toHaveBeenCalledTimes(1)
-    runtime.protection = pending
-    selected.resolve('/selected/new/ocx')
-    await flushPromises()
-    expect(invoke.mock.calls.map(call => call[0])).not.toContain('set_runtime_source')
-    expect(runtime.source?.explicitPath).toBe('/selected/bin/ocx')
-    expect(wrapper.get('[data-testid="runtime-change-source"]').attributes('disabled')).toBeDefined()
-    wrapper.unmount()
+  it('does not open the removed legacy executable picker while protection changes',async()=>{
+    const{runtime,wrapper}=setup(none);await flushPromises();runtime.protection=pending;await wrapper.vm.$nextTick()
+    expect(wrapper.find('[data-testid="runtime-change-source"]').exists()).toBe(false)
+    expect(wrapper.find('[data-testid="runtime-restore-source"]').exists()).toBe(false)
+    expect(open).not.toHaveBeenCalled();expect(invoke.mock.calls.map(call=>call[0])).not.toContain('set_runtime_source')
+    expect(runtime.source?.explicitPath).toBe('/selected/bin/ocx');wrapper.unmount()
   })
-
-  it('allows a selected source when protection stays clean', async () => {
-    const { runtime, wrapper } = setup(none)
-    await flushPromises()
-    open.mockResolvedValue('/selected/new/ocx')
-    const read = invoke.getMockImplementation()!
-    invoke.mockImplementation(async (command, ...args) => command === 'set_runtime_source'
-      ? { ...runtime.source, explicitPath: '/selected/new/ocx' } : read(command, ...args))
-    await wrapper.get('[data-testid="runtime-change-source"]').trigger('click')
-    await flushPromises()
-    expect(invoke).toHaveBeenCalledWith('set_runtime_source', { path: '/selected/new/ocx' })
-    wrapper.unmount()
+  it('clean protection keeps managed recovery available without legacy source selection',async()=>{
+    const{wrapper}=setup(none);await flushPromises()
+    expect(wrapper.find('[data-testid="runtime-change-source"]').exists()).toBe(false)
+    expect(wrapper.find('[data-testid="runtime-restore-source"]').exists()).toBe(false)
+    expect(wrapper.get('[data-testid="runtime-recovery-entry"]').attributes('disabled')).toBeUndefined()
+    expect(invoke.mock.calls.map(call=>call[0])).not.toContain('set_runtime_source');wrapper.unmount()
   })
 
   it('shows transport failures as unknown rather than a clean protection state', async () => {

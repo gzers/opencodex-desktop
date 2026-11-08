@@ -16,17 +16,22 @@ pub const RUNTIME_LOG_ROTATIONS: usize = 1;
 #[derive(Debug, Clone)]
 pub struct RuntimeLog {
     path: PathBuf,
+    data_root: PathBuf,
 }
 
 impl RuntimeLog {
     pub fn new(data_root: &Path) -> Self {
         Self {
             path: data_root.join("logs").join(APP_LOG_FILE_NAME),
+            data_root: data_root.to_path_buf(),
         }
     }
 
     pub fn path(&self) -> &Path {
         &self.path
+    }
+    pub(crate) fn data_root(&self) -> &Path {
+        &self.data_root
     }
 
     pub fn append_event(&self, message: &str) -> Result<(), AppError> {

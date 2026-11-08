@@ -24,6 +24,7 @@ pub mod preferences;
 pub mod release_details;
 pub mod retired_files;
 pub mod runtime;
+pub mod runtime_port;
 pub mod runtime_recovery_v2;
 pub mod runtime_recovery_v2_owner;
 pub mod runtime_recovery_v2_sources;
@@ -112,40 +113,47 @@ pub fn app_status() -> AppResult<AppStatus> {
 }
 
 #[tauri::command]
-pub fn process_action(
+pub async fn process_action(
     request: ProcessActionRequest,
-    runner: tauri::State<'_, SharedProcessRunner>,
     context: tauri::State<'_, SharedProcessContext>,
     data_root: tauri::State<'_, crate::state::SharedDataRoot>,
-    notifications: tauri::State<'_, crate::state::SharedNotificationStore>,
     app: tauri::AppHandle,
 ) -> AppResult<ProcessActionResult> {
     use tauri::Manager;
-    let _storage = crate::infrastructure::storage_writers::global().admit()?;
     let mutation = app.state::<crate::state::SharedRuntimeInstall>();
-    let _lease = mutation.acquire().ok_or(AppError::NotConfigured)?;
-    let runtime_log = crate::infrastructure::runtime_log::RuntimeLog::new(&data_root.0);
-    // 偏好只控制新增失败通知；真实成功仍需解除已有同 scope 失败。
-    let publisher = Some(notifications::NotificationPublisher {
-        store: notifications.inner(),
-        data_root: &data_root.0,
-    });
-    let before = notifications.lock().ok().map(|store| store.clone());
-    let result =
-        process_action_with_runner(request, runner.inner(), &context, &runtime_log, publisher);
-    let changed =
-        before.is_some_and(|before| notifications.lock().is_ok_and(|store| *store != before));
-    if changed {
-        let _ = crate::commands::event_delivery::emit_signal(
-            &app,
-            notifications::NOTIFICATIONS_CHANGED_EVENT,
-            crate::modules::notifications::registry::Job::NotificationMutation,
-            crate::modules::notifications::registry::Trigger::Commit,
-            crate::modules::notifications::registry::Channel::Local,
-            (),
-        );
-    }
-    result
+    let lease = mutation.acquire().ok_or(AppError::NotConfigured)?;
+    let context = context.inner().clone();
+    let root = data_root.0.clone();
+    run_blocking("process action", move || {
+        // The worker owns both the storage admission and mutation reservation.
+        // Closing an IPC observer cannot release a still-running lifecycle action.
+        let _lease = lease;
+        let runner = app.state::<SharedProcessRunner>();
+        let notifications = app.state::<crate::state::SharedNotificationStore>();
+        let runtime_log = crate::infrastructure::runtime_log::RuntimeLog::new(&root);
+        // 偏好只控制新增失败通知；真实成功仍需解除已有同 scope 失败。
+        let publisher = Some(notifications::NotificationPublisher {
+            store: notifications.inner(),
+            data_root: &root,
+        });
+        let before = notifications.lock().ok().map(|store| store.clone());
+        let result =
+            process_action_with_runner(request, runner.inner(), &context, &runtime_log, publisher);
+        let changed =
+            before.is_some_and(|before| notifications.lock().is_ok_and(|store| *store != before));
+        if changed {
+            let _ = crate::commands::event_delivery::emit_signal(
+                &app,
+                notifications::NOTIFICATIONS_CHANGED_EVENT,
+                crate::modules::notifications::registry::Job::NotificationMutation,
+                crate::modules::notifications::registry::Trigger::Commit,
+                crate::modules::notifications::registry::Channel::Local,
+                (),
+            );
+        }
+        result
+    })
+    .await
 }
 
 /// 只有开启「启停结果通知」时才构造通知发布器；否则返回 `None`（不写任何持久通知）。
@@ -211,7 +219,7 @@ where
         .ok()
     });
     let started_at = std::time::Instant::now();
-    let outcome = runner.execute(&command);
+    let outcome = execute_lifecycle(runner, &command, context, runtime_log.data_root());
     let duration_ms = started_at.elapsed().as_millis();
     let failed;
     let result = match &outcome {
@@ -251,12 +259,16 @@ where
         }
         Err(error) => {
             failed = true;
-            machine.rollback_to_observation(before);
+            if matches!(request.action, LifecycleAction::Start) {
+                machine.mark_start_failed();
+            } else {
+                machine.rollback_to_observation(before);
+            }
             let _ = runtime_log.append_result(
                 action_log_label(request.action),
                 Err(format!("{}; duration_ms={duration_ms}", error)),
             );
-            Ok(ProcessActionResult::from_state(machine.current()))
+            Ok(ProcessActionResult::from_state(machine.current()).with_failure(error))
         }
     };
     let verified_success = matches!(
@@ -309,7 +321,13 @@ where
                 identity,
                 evidence,
                 occurred_at: chrono::Utc::now(),
-                detail: None,
+                detail: outcome.as_ref().err().map(|error| {
+                    crate::modules::notifications::registry::Detail::LifecycleFailure(
+                        crate::modules::notifications::registry::LifecycleFailureReason::from_error(
+                            error,
+                        ),
+                    )
+                }),
             };
             if let Err(error) = publisher.publish_event(&delivery) {
                 let _ = runtime_log.append_result(
@@ -320,6 +338,87 @@ where
         }
     }
     result
+}
+
+fn execute_lifecycle<R: ProcessRunner + ?Sized>(
+    runner: &R,
+    command: &crate::modules::process::ProcessCommand,
+    context: &ProcessContext,
+    data_root: &std::path::Path,
+) -> AppResult<crate::modules::process::LifecycleResult> {
+    use crate::modules::process::{restart_limit, runner_start_timeout, LifecycleResult};
+    let Some(root) = context.runtime.managed_installation_root() else {
+        return runner.execute(command);
+    };
+    let identity = crate::modules::runtime::install::resolve_managed_installation(&root)?;
+    if context.executable()? != identity.entry {
+        return Err(AppError::NotConfigured);
+    }
+    if command.action == LifecycleAction::Start {
+        match std::fs::symlink_metadata(context.opencodex_home.join("runtime-port.json")) {
+            Ok(_) => {
+                use runtime_recovery_v2::{ServiceOwnerProof, ServiceOwnerProofProvider};
+                let owner = runtime_recovery_v2_owner::SystemServiceOwnerProofProvider::new(
+                    root.clone(),
+                    context.clone(),
+                )?;
+                let proof = owner.query(context)?;
+                let observed =
+                    tauri::async_runtime::block_on(crate::infrastructure::attested_status::fetch(
+                        context.runtime.clone(),
+                        context.opencodex_home.clone(),
+                    ));
+                if matches!(proof, ServiceOwnerProof::Owned { .. })
+                    && owner.query(context)? == proof
+                    && matches!(observed,Ok(Some(ref value)) if value["ready"]==true && value["status"]=="running")
+                {
+                    return Ok(LifecycleResult::Started);
+                }
+                return Err(AppError::RuntimeManaged {
+                    code: "lifecycle_existing_unconfirmed".into(),
+                    detail: "已有运行记录尚未核验就绪，未改端口或重复启动，请刷新核对。".into(),
+                });
+            }
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+            Err(_) => return Err(AppError::NotConfigured),
+        }
+    }
+    let deadline = std::time::Instant::now()
+        + if command.action == LifecycleAction::Stop {
+            crate::modules::process::stop_timeout()
+        } else if command.action == LifecycleAction::Restart {
+            restart_limit()
+        } else {
+            runner_start_timeout()
+        };
+    if matches!(
+        command.action,
+        LifecycleAction::Stop | LifecycleAction::Restart
+    ) {
+        let owner =
+            runtime_recovery_v2_owner::SystemServiceOwnerProofProvider::new(root, context.clone())?;
+        owner.stop_lifecycle(context)?;
+        if command.action == LifecycleAction::Stop {
+            return Ok(LifecycleResult::Stopped);
+        }
+    }
+    let mut start = command.clone();
+    start.action = LifecycleAction::Start;
+    for attempt in 0..3 {
+        let saved =
+            crate::modules::runtime::port::prepare_start(data_root, &context.opencodex_home)?;
+        start.requested_port = saved.port;
+        let result = runner.execute_in_context(&start, &context.runtime, deadline);
+        match &result {
+            Err(AppError::RuntimeManaged { code, .. })
+                if code == "port_conflict"
+                    && saved.mode == crate::modules::runtime::port::Mode::Auto
+                    && attempt < 2
+                    && std::time::Instant::now() < deadline => {}
+            _ => return result,
+        }
+    }
+    Err(AppError::Timeout)
 }
 
 /// 生命周期动作真实失败 → 一条 `danger` 操作性通知（FZ-43、`领域模型` §16.1）。
@@ -990,5 +1089,132 @@ mod writer_dispatch_tests {
         })
         .await
         .expect("actual worker releases admission on completion");
+    }
+}
+
+#[cfg(all(test, target_os = "macos", target_arch = "aarch64"))]
+mod real_port_lifecycle_tests {
+    use super::*;
+    use std::path::PathBuf;
+    #[test]
+    #[ignore = "requires explicit pinned complete bundle and isolated native client HOME"]
+    fn exact_names2_port_save_start_stop_with_native_client_restore() {
+        let archive =
+            PathBuf::from(std::env::var_os("OCXD_TEST_BUNDLE_ARCHIVE").expect("explicit archive"));
+        let descriptor = PathBuf::from(
+            std::env::var_os("OCXD_TEST_BUNDLE_DESCRIPTOR").expect("explicit descriptor"),
+        );
+        let temp = tempfile::Builder::new()
+            .prefix("ocxd023-real-port-lifecycle-")
+            .tempdir()
+            .unwrap();
+        let root = temp.path().canonicalize().unwrap();
+        let installation = root.join("program I");
+        let home = root.join("profile");
+        let desktop = home.join(".codex-desktop/desktop");
+        let h = home.join(".codex-desktop/opencodex/home");
+        for dir in [&installation, &desktop, &h, &home.join(".codex")] {
+            crate::infrastructure::platform::create_private_dir_all(dir, 0o700).unwrap();
+        }
+        let bytes = std::fs::read(&descriptor).unwrap();
+        let pin = crate::infrastructure::hash::sha256_hex(&bytes);
+        assert_eq!(
+            pin,
+            "6c1415a2c2fa7bdc403c8db5c0c1df06d2b9b6a8a1b35cd01248dbb3d8c1f3d7"
+        );
+        crate::modules::runtime::bundled::provision(
+            &installation,
+            &desktop,
+            &archive,
+            &bytes,
+            &pin,
+        )
+        .unwrap();
+        let config = serde_json::json!({"hostname":"127.0.0.1","openaiProviderTierVersion":2,"defaultProvider":"port-fixture","defaultModelAliases":false,"providers":{"port-fixture":{"adapter":"openai-chat","baseUrl":"http://127.0.0.1:1/v1","allowPrivateNetwork":true,"apiKey":"synthetic-unused","models":["port-fixture-model"],"selectedModels":["port-fixture-model"],"liveModels":false,"defaultAliases":false}}});
+        crate::infrastructure::atomic_write::atomic_write(
+            &h.join("config.json"),
+            &serde_json::to_vec(&config).unwrap(),
+            0o600,
+        )
+        .unwrap();
+        let runtime =
+            crate::modules::runtime::RuntimeHandle::initialize_managed(&desktop, &installation);
+        let context = ProcessContext {
+            runtime,
+            working_directory: home.clone(),
+            opencodex_home: h.clone(),
+        };
+        let current = crate::modules::runtime::port::load(&desktop, &h).unwrap();
+        let saved = crate::modules::runtime::port::save(
+            &desktop,
+            &h,
+            &crate::modules::runtime::port::SaveRequest {
+                mode: crate::modules::runtime::port::Mode::Auto,
+                port: None,
+                expected_revision: current.revision,
+            },
+        )
+        .unwrap();
+        let runner =
+            Mutex::new(crate::infrastructure::process_runner::ControlledProcessRunner::new(&home));
+        let log = crate::infrastructure::runtime_log::RuntimeLog::new(&desktop);
+        let started = std::time::Instant::now();
+        let result = process_action_with_runner(
+            ProcessActionRequest {
+                action: LifecycleAction::Start,
+                confirm: true,
+            },
+            &runner,
+            &context,
+            &log,
+            None,
+        )
+        .unwrap();
+        eprintln!(
+            "native start: result={result:?} elapsed_ms={} port={:?}",
+            started.elapsed().as_millis(),
+            saved.port
+        );
+        if result.result != Some(crate::modules::process::LifecycleResult::Started) {
+            // Preserve only this owned fixture for diagnosis, never touch daily HOME.
+            let retained = temp.keep();
+            panic!(
+                "native start did not pass; retained fixture {}",
+                retained.display()
+            );
+        }
+        let catalog = std::fs::read_to_string(home.join(".codex/config.toml")).unwrap();
+        assert!(catalog.contains(&format!(":{}", saved.port.unwrap())));
+        let stopped = std::time::Instant::now();
+        let result = process_action_with_runner(
+            ProcessActionRequest {
+                action: LifecycleAction::Stop,
+                confirm: true,
+            },
+            &runner,
+            &context,
+            &log,
+            None,
+        )
+        .unwrap();
+        eprintln!(
+            "native stop: result={result:?} elapsed_ms={}",
+            stopped.elapsed().as_millis()
+        );
+        if result.result != Some(crate::modules::process::LifecycleResult::Stopped) {
+            let retained = temp.keep();
+            panic!(
+                "native stop did not pass; retained fixture {}",
+                retained.display()
+            );
+        }
+        assert!(stopped.elapsed() < crate::modules::process::stop_timeout());
+        assert!(!h.join("runtime-port.json").exists());
+        assert!(!h.join("ocx.pid").exists());
+        let restored = std::fs::read_to_string(home.join(".codex/config.toml")).unwrap_or_default();
+        assert!(
+            !restored.contains(&format!(":{}", saved.port.unwrap())),
+            "official native client routing must be restored"
+        );
     }
 }

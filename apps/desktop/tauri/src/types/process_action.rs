@@ -20,6 +20,15 @@ pub struct ProcessActionResult {
     pub can_start: bool,
     pub can_stop: bool,
     pub can_restart: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub failure: Option<ProcessActionFailure>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProcessActionFailure {
+    pub code: String,
+    pub message: String,
 }
 
 impl ProcessActionResult {
@@ -30,11 +39,32 @@ impl ProcessActionResult {
             can_start: state.can_start(),
             can_stop: state.can_stop(),
             can_restart: state.can_restart(),
+            failure: None,
         }
     }
 
     pub fn with_result(mut self, result: LifecycleResult) -> Self {
         self.result = Some(result);
+        self
+    }
+    pub fn with_failure(mut self, error: &crate::errors::AppError) -> Self {
+        let (code, message) = match error {
+            crate::errors::AppError::RuntimeManaged { code, detail }
+                if code.starts_with("lifecycle_")
+                    || ["port_conflict", "port_permission"].contains(&code.as_str()) =>
+            {
+                (code.clone(), detail.clone())
+            }
+            crate::errors::AppError::Timeout => (
+                "lifecycle_timeout".into(),
+                "操作未在规定时间内确认完成，请核对服务状态。".into(),
+            ),
+            _ => (
+                "lifecycle_unconfirmed".into(),
+                "操作未确认完成，已保留当前配置，请查看诊断日志。".into(),
+            ),
+        };
+        self.failure = Some(ProcessActionFailure { code, message });
         self
     }
 }

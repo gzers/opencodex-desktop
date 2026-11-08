@@ -51,6 +51,19 @@ export function useAppController(initialize = false) {
     if (!notification) return
     if (!notification.read) app.markNotificationRead(id)
     const label = notification.kind === 'warning' ? '警告' : notification.kind === 'danger' ? '风险' : '信息'
+    if (!notification.resolved && /^(run-start-failed|run-restart-failed)(:|$)/.test(notification.id)) {
+      app.openModal({
+        title:notification.title,
+        body:notification.detail,
+        confirmLabel:'重试启动',
+        onConfirm:()=>{void runAction('start')},
+        resolveLabel:'前往端口设置',
+        onResolve:()=>{routes.go('settings',{section:'installation'});void import('vue').then(({nextTick})=>nextTick(()=>document.getElementById('runtime-port-settings')?.scrollIntoView({block:'start'})))},
+        deleteLabel:'查看日志',
+        onDelete:()=>routes.go('logs',{tab:'logs'}),
+      })
+      return
+    }
     app.openModal({
       title: notification.title,
       body: `${notification.detail}<span class="modal-meta">${formatNotificationTime(notification.time)} · ${label}</span>`,

@@ -18,6 +18,7 @@ import UiSegmented from '@/components/ui/UiSegmented.vue'
 import AgentExecutionField from '@/features/models/AgentExecutionField.vue'
 import RuntimeRecoveryEntry from '@/features/runtime/RuntimeRecoveryEntry.vue'
 import RuntimeRecoveryHost from '@/features/runtime/RuntimeRecoveryHost.vue'
+import RuntimePortSettings from '@/features/runtime/RuntimePortSettings.vue'
 import { settingsSections } from '@/navigation'
 import { checkNetworkProxy, type PreferencesDto } from '@/features/preferences/api'
 import { getCodexShimStatus, setCodexShim, type CodexShimDto } from '@/features/codex-shim/api'
@@ -27,7 +28,7 @@ import { useGlowRenderStore } from '@/app/appearance/glowRender'
 import type { InstallSourceKind } from '@/features/runtime/api'
 import { displayPath } from '@/lib/paths'
 import { useDataRootStore } from '@/features/data-root/store'
-import { validateDataRootStructure, type PathKeyV2, type PathStatusV2 } from '@/features/data-root/api'
+import { type PathKeyV2, type PathStatusV2 } from '@/features/data-root/api'
 
 const routes = useRouteStore()
 const app = useAppStore()
@@ -35,10 +36,6 @@ const runtimeProtection = useRuntimeStore()
 const protectionBlocked = computed(() => runtimeProtection.protectionRetrying
   || !!runtimeProtection.protectionError
   || (!!runtimeProtection.protection && runtimeProtection.protection.state !== 'none'))
-const runtimeSourceBindingDisabled = computed(() => protectionBlocked.value
-  || runtimeProtection.protectionLoading || !runtimeProtection.protection
-  || app.runtimeInstalling || app.runtimeUninstallBusy
-  || app.dataRootPendingRestart || app.dataRootReconciliationRequired)
 const protectionDescription = computed(() => {
   switch (runtimeProtection.protection?.state) {
     case 'pending': return '上次面板更新的安装证据尚未核验，关联备份继续保留。核对完成前无法安装、卸载、更换运行来源或切换数据目录。'
@@ -48,17 +45,11 @@ const protectionDescription = computed(() => {
   }
 })
 const dataRoots = useDataRootStore()
-const pathDialog = ref<'details' | 'select' | 'confirm' | 'initialize' | 'home' | 'json' | null>(null)
-const switchInput = ref('')
-const externalHomeInput = ref('')
-const confirmedRoot = ref('')
-const selectionError = ref('')
-const selectionChecking = ref(false)
-let selectionRead = 0
+const pathDialog = ref<'details' | 'initialize' | 'json' | null>(null)
 const pathLabels: Record<PathKeyV2, string> = {
-  aggregateRoot: '用户集合根', desktopRoot: 'Desktop 工作根', opencodexHome: 'OpenCodex HOME',
+  aggregateRoot: '用户配置根', desktopRoot: 'Desktop 数据', opencodexHome: 'OpenCodex HOME',
   configPath: '渠道配置文件', installationRoot: 'Desktop 安装根', managerExecutable: 'Desktop 本体',
-  runtimePrefix: '运行包前缀', runtimeEntry: '稳定程序入口',
+  runtimePrefix: '运行包目录', runtimeEntry: '程序入口',
 }
 const userPathKeys: PathKeyV2[] = ['aggregateRoot', 'desktopRoot', 'opencodexHome', 'configPath']
 const programPathKeys: PathKeyV2[] = ['installationRoot', 'managerExecutable', 'runtimePrefix', 'runtimeEntry']
@@ -81,41 +72,7 @@ function refreshPaths() {
   void dataRoots.loadPaths()
   void dataRoots.loadConfig()
 }
-function closePathDialog() {
-  selectionRead++
-  selectionChecking.value = false
-  pathDialog.value = null
-}
-function selectRoot() {
-  selectionRead++
-  switchInput.value = ''
-  confirmedRoot.value = ''
-  selectionError.value = ''
-  pathDialog.value = 'select'
-}
-async function previewRoot() {
-  if (selectionChecking.value || dataRootBindingDisabled.value) return
-  const target = switchInput.value.trim()
-  if (!target) { selectionError.value = '请输入明确的目标绝对路径。'; return }
-  const read = ++selectionRead
-  selectionChecking.value = true
-  selectionError.value = ''
-  try {
-    const validation = await validateDataRootStructure(target)
-    if (read !== selectionRead) return
-    if (validation !== 'valid') {
-      selectionError.value = validation === 'future_version' ? '目标目录结构版本过新，未切换引用。'
-        : validation === 'uninitialized' ? '目标尚未初始化为新版目录，请明确初始化后再选择。' : '目标目录结构损坏，未切换引用。'
-      return
-    }
-    confirmedRoot.value = target
-    pathDialog.value = 'confirm'
-  } catch {
-    if (read === selectionRead) selectionError.value = '目标目录校验失败；未切换引用。'
-  } finally {
-    if (read === selectionRead) selectionChecking.value = false
-  }
-}
+function closePathDialog() { pathDialog.value=null }
 async function copyActualPaths() {
   const p = dataRoots.paths
   if (!p) return
@@ -309,25 +266,6 @@ async function saveDataRoot() {
   const saved = await dataRoots.save(dataRoots.paths.aggregateRoot.path)
   if (saved) { closePathDialog(); app.showToast('新版用户目录已初始化。') }
   await dataRoots.loadPaths()
-}
-async function applyDataRootSwitch() {
-  if (dataRootBindingDisabled.value || !confirmedRoot.value) return
-  const saved = await dataRoots.switchTo(confirmedRoot.value)
-  if (saved) {
-    closePathDialog()
-    app.showToast(dataRoots.reconciliationRequired ? '切换结果待核对；请重启管理器。' : '用户目录引用已保存；请重启管理器使其生效。')
-    await dataRoots.loadPaths()
-  }
-}
-async function applyOpencodexHome(mode: 'inside' | 'external') {
-  if (dataRootBindingDisabled.value) return
-  const saved = await dataRoots.saveHome(mode, mode === 'external' ? externalHomeInput.value : undefined)
-  if (saved) {
-    closePathDialog()
-    externalHomeInput.value = ''
-    app.showToast('OpenCodex HOME 已保存；请重启管理器使其生效。')
-    await dataRoots.loadPaths()
-  }
 }
 const officialProject = computed(() => app.officialProject)
 const officialVersion = computed(() => {
@@ -611,7 +549,6 @@ function closeSelects(event: MouseEvent) {
 }
 if (typeof window !== 'undefined') window.addEventListener('click', closeSelects)
 onBeforeUnmount(() => {
-  selectionRead++
   window.removeEventListener('opencodex:guide-installation', onGuideInstallation)
   window.removeEventListener('click', closeSelects)
   stopCodexShimTimer()
@@ -793,13 +730,6 @@ function residueLabel(status: string) {
   return '未知（未确认清除）'
 }
 
-async function chooseRuntimeSource() {
-  if (runtimeSourceBindingDisabled.value) return
-  const picked = await open({ multiple: false, title: '选择 ocx 可执行文件' })
-  if (typeof picked !== 'string' || runtimeSourceBindingDisabled.value) return
-  await app.setRuntimeSourcePath(picked)
-}
-
 function openUninstall() {
   uninstallOpen.value = true
   uninstallScope.value = 'full'
@@ -911,20 +841,19 @@ function restoreGeneralDefaults() {
     <!-- 页面标题在卡片外，卡片内是自己的标题行（模型模版助手 · 本机共用 + 摘要 + 按钮），与原型层级一致。 -->
     <section v-else-if="section === 'agent'" class="settings-panel active"><h2 class="settings-panel-title">Agent 配置</h2><UiCard><AgentExecutionField /></UiCard></section>
     <section v-else-if="section === 'installation'" class="settings-panel active">
+      <RuntimePortSettings :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" />
       <article class="card paths-v2" data-testid="settings-paths-v2">
-        <div class="card-head"><div><h2>用户目录与程序安装</h2><p>用户配置与程序分开存放；路径显示后端返回的实际位置。</p></div></div>
+        <div class="card-head"><div><h2>用户目录与程序安装</h2><p>配置保存在当前用户目录，程序位于 Desktop 安装目录。</p></div></div>
         <p v-if="dataRoots.pathsLoading" role="status">正在读取实际位置…{{ dataRoots.paths ? '下方保留上次快照（非最新）。' : '' }}</p>
         <p v-if="dataRoots.pathsError" role="alert">{{ dataRoots.pathsError }} {{ dataRoots.paths ? '已保留上次快照（非最新），请刷新后核对。' : '尚无可用快照；未推断路径或缺失状态。' }}</p>
-        <h3>用户数据与配置{{ restartPending ? ' · 待生效位置' : '' }}</h3>
+        <section class="directory-group"><h3>用户数据与配置{{ restartPending ? ' · 待生效位置' : '' }}</h3>
         <dl class="paths-facts">
-          <template v-for="key in userPathKeys" :key="key"><dt>{{ pathLabels[key] }}</dt><dd :data-path-key="key"><template v-if="dataRoots.paths"><code class="local-path">{{ dataRoots.paths[key].path }}</code><span class="tag" :data-path-status="dataRoots.paths[key].status">{{ pathStatusLabels[dataRoots.paths[key].status] }}</span></template><span v-else>尚未读取</span></dd></template>
+          <template v-for="key in userPathKeys" :key="key"><dt>{{ pathLabels[key] }}</dt><dd :data-path-key="key"><template v-if="dataRoots.paths"><code class="local-path">{{ dataRoots.paths[key].path }}</code><span v-if="dataRoots.paths[key].status!=='valid'" class="tag" :data-path-status="dataRoots.paths[key].status">{{ pathStatusLabels[dataRoots.paths[key].status] }}</span></template><span v-else>尚未读取</span></dd></template>
         </dl>
         <div class="runtime-actions">
           <UiButton class="btn ghost" data-testid="paths-details" :disabled="!dataRoots.paths" @click="pathDialog = 'details'">完整查看与复制路径</UiButton>
-          <UiButton class="btn ghost" data-testid="paths-select" :disabled="dataRootBindingDisabled" @click="selectRoot">选择新版目录</UiButton>
-          <UiButton class="btn ghost" :disabled="!dataRoots.paths" @click="pathDialog = 'json'">手动恢复渠道说明</UiButton>
+          <UiButton class="btn ghost" :disabled="!dataRoots.paths" @click="pathDialog = 'json'">读取渠道配置说明</UiButton>
           <UiButton v-if="dataRoots.paths?.aggregateRoot.status === 'missing' || dataRoots.paths?.desktopRoot.status === 'missing'" class="btn" data-testid="paths-initialize" :disabled="dataRootBindingDisabled" @click="pathDialog = 'initialize'">初始化用户目录</UiButton>
-          <UiButton class="btn ghost" :disabled="dataRootBindingDisabled" @click="pathDialog = 'home'">设置 OpenCodex HOME</UiButton>
         </div>
         <div v-if="restartPending" data-testid="paths-pending">
           <h3>等待重启生效</h3>
@@ -934,13 +863,14 @@ function restoreGeneralDefaults() {
         </div>
         <p v-if="dataRoots.configError" role="alert">用户目录绑定配置读取失败；路径修改已暂停，请刷新核对。</p>
         <p v-if="dataRoots.error" role="alert">{{ dataRoots.error }}</p>
-        <h3>受管程序</h3>
+        </section><section class="directory-group"><h3>程序安装</h3>
         <dl class="paths-facts">
-          <template v-for="key in programPathKeys" :key="key"><dt>{{ pathLabels[key] }}</dt><dd :data-path-key="key"><template v-if="dataRoots.paths"><code class="local-path">{{ dataRoots.paths[key].path }}</code><span class="tag" :data-path-status="dataRoots.paths[key].status">{{ pathStatusLabels[dataRoots.paths[key].status] }}</span></template><span v-else>尚未读取</span></dd></template>
+          <template v-for="key in programPathKeys" :key="key"><dt>{{ pathLabels[key] }}</dt><dd :data-path-key="key"><template v-if="dataRoots.paths"><code class="local-path">{{ dataRoots.paths[key].path }}</code><span v-if="dataRoots.paths[key].status!=='valid'" class="tag" :data-path-status="dataRoots.paths[key].status">{{ pathStatusLabels[dataRoots.paths[key].status] }}</span></template><span v-else>尚未读取</span></dd></template>
+        </dl><div class="directory-status"><dl class="paths-facts"><dt>运行状态</dt><dd>{{ app.runtimeState === 'running' ? '运行中' : app.runtimeState === 'stopped' ? '已停止' : app.runtimeState === 'starting_failed' ? '启动失败' : '待核对' }}</dd>
           <dt>包 / 清单 / 来源</dt><dd v-if="dataRoots.paths">{{ dataRoots.paths.program.packageVersion ?? '未记录' }} / {{ dataRoots.paths.program.manifestVersion ?? '未记录' }} / {{ dataRoots.paths.program.sourceVersion ?? '未记录' }}</dd><dd v-else>尚未读取</dd>
           <dt>程序有效性</dt><dd data-testid="program-validity">{{ programValidity }}</dd>
         </dl>
-        <div class="runtime-actions"><UiButton class="btn primary" data-testid="runtime-install" :disabled="protectionBlocked || restartPending" @click="openInstallModal('registry')">安装程序</UiButton><RuntimeRecoveryEntry :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" /><UiButton class="btn ghost" data-testid="paths-refresh" @click="refreshPaths">刷新位置</UiButton></div>
+        </div><div class="runtime-actions"><UiButton class="btn primary" data-testid="runtime-install" :disabled="protectionBlocked || runtimeProtection.protectionLoading || !runtimeProtection.protection || restartPending" @click="openInstallModal('registry')">安装程序</UiButton><RuntimeRecoveryEntry :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" /><UiButton class="btn ghost" data-testid="paths-refresh" @click="refreshPaths">刷新位置</UiButton></div>
         <div v-if="protectionBlocked || runtimeProtection.protectionLoading || runtimeProtection.protectionFeedback" class="setting-row" data-testid="runtime-protection" :aria-busy="runtimeProtection.protectionLoading || runtimeProtection.protectionRetrying">
           <div>
             <div class="setting-title">面板更新保护核对</div>
@@ -953,16 +883,12 @@ function restoreGeneralDefaults() {
             <UiButton v-if="protectionBlocked" type="button" class="btn ghost" @click="routes.go('logs', { tab: 'logs' })">查看诊断</UiButton>
           </div>
         </div>
-        <div v-if="app.runtimeSource" data-testid="runtime-source-card">
-          <div class="runtime-actions">
-            <UiButton class="btn ghost" type="button" data-testid="runtime-import-offline" :disabled="protectionBlocked || restartPending" @click="openInstallModal('offline')">导入离线包</UiButton>
-            <UiButton class="btn ghost" type="button" data-testid="runtime-change-source" :disabled="runtimeSourceBindingDisabled" @click="chooseRuntimeSource">更换运行来源…</UiButton>
-            <UiButton class="btn ghost" type="button" data-testid="runtime-restore-source" :disabled="runtimeSourceBindingDisabled || !app.runtimeSource.explicitPath" @click="app.restoreDiscoveredRuntime()">恢复自动发现</UiButton>
-            <UiButton v-if="app.runtimeSource.kind === 'managed'" class="btn ghost" type="button" @click="routes.go('settings', { section: 'upgrade' })">更新（官方 ocx update）</UiButton>
-            <UiButton v-if="app.runtimeSource.kind !== 'unresolved'" class="btn danger" type="button" data-testid="runtime-uninstall" :disabled="protectionBlocked || restartPending" @click="openUninstall()">卸载</UiButton>
-          </div>
+        <div v-if="app.runtimeSource" class="runtime-actions" data-testid="runtime-source-card">
+          <UiButton class="btn ghost" type="button" data-testid="runtime-import-offline" :disabled="protectionBlocked||runtimeProtection.protectionLoading||!runtimeProtection.protection||restartPending" @click="openInstallModal('offline')">导入离线包</UiButton>
+          <UiButton v-if="app.runtimeSource.kind==='managed'" class="btn ghost" type="button" @click="routes.go('settings',{section:'upgrade'})">更新面板</UiButton>
+          <UiButton v-if="app.runtimeSource.kind!=='unresolved'" class="btn danger" type="button" data-testid="runtime-uninstall" :disabled="protectionBlocked||runtimeProtection.protectionLoading||!runtimeProtection.protection||restartPending" @click="openUninstall">卸载</UiButton>
         </div>
-        <p class="setting-desc">Desktop 与 OpenCodex 分别更新；本体更新保留签名 .app 之外的 runtime。程序路径由实际安装上下文提供。</p>
+        </section>
       </article>
 
     </section>
@@ -1210,34 +1136,19 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
         </div>
       </template>
   </UiDialog>
-  <UiDialog v-if="pathDialog" :open="true" :title="pathDialog === 'details' ? '完整路径' : pathDialog === 'select' ? '选择新版用户目录' : pathDialog === 'confirm' ? '确认使用此位置' : pathDialog === 'initialize' ? '初始化用户目录' : pathDialog === 'home' ? '设置 OpenCodex HOME' : '手动恢复渠道'" :busy="dataRoots.switching || dataRoots.saving || dataRoots.homeSaving" panel-class="paths-v2-dialog" data-testid="paths-dialog" @close="closePathDialog">
+  <UiDialog v-if="pathDialog" :open="true" :title="pathDialog === 'details' ? '完整路径' : pathDialog === 'initialize' ? '初始化用户目录' : '读取渠道配置说明'" :busy="dataRoots.switching || dataRoots.saving || dataRoots.homeSaving" panel-class="paths-v2-dialog" data-testid="paths-dialog" @close="closePathDialog">
     <div class="paths-v2">
       <p v-if="dataRoots.pathsStale" role="status">上次快照（非最新），请刷新后核对。</p>
       <template v-if="pathDialog === 'details' && dataRoots.paths">
         <dl class="paths-facts"><template v-for="key in [...userPathKeys, ...programPathKeys]" :key="key"><dt>{{ pathLabels[key] }}</dt><dd><code class="local-path">{{ dataRoots.paths[key].path }}</code><span class="tag">{{ pathStatusLabels[dataRoots.paths[key].status] }}</span></dd></template></dl>
         <UiButton class="btn ghost" data-testid="paths-copy" @click="copyActualPaths">复制完整路径</UiButton>
       </template>
-      <template v-else-if="pathDialog === 'select'">
-        <label for="switch-root-input">明确的目标绝对路径</label><input id="switch-root-input" v-model="switchInput" class="input local-path" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" :disabled="selectionChecking">
-        <p>仅切换到已校验的新版目录，不复制旧资料；确认前只读检查，原目录内容保留。</p>
-        <p v-if="selectionError" role="alert">{{ selectionError }}</p>
-      </template>
-      <template v-else-if="pathDialog === 'confirm'">
-        <dl class="paths-facts"><dt>当前生效</dt><dd>{{ dataRoots.paths?.currentAggregateRoot }}</dd><dt>待生效</dt><dd><code class="local-path">{{ confirmedRoot }}</code></dd></dl>
-        <p>新结构校验通过。确认后仅记录引用，重启核对后生效；原目录内容保留，不复制、删除资料或搬移程序。目标中的 HOME 按已有明确设置读取。</p>
-        <p v-if="dataRoots.switching" role="status" aria-busy="true" data-testid="data-root-progress">正在核对新版目录引用，请等待；完成后需要重启。</p>
-        <p v-if="dataRoots.error" role="alert">{{ dataRoots.error }}</p>
-      </template>
-      <template v-else-if="pathDialog === 'initialize'"><p>将仅初始化下方明确的新版用户集合根；不读取或搬移旧目录。初始化后可选择该新版目录。</p><code class="local-path">{{ dataRoots.paths?.aggregateRoot.path }}</code><p v-if="dataRoots.error" role="alert">{{ dataRoots.error }}</p></template>
-      <template v-else-if="pathDialog === 'home'"><label for="external-home-input">外部 OpenCodex HOME 的明确绝对路径</label><input id="external-home-input" v-model="externalHomeInput" class="input local-path" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"><p>内部 HOME 由后端确定；外部路径仅使用你的明确设置。保存后等待重启生效。</p><p v-if="dataRoots.error" role="alert">{{ dataRoots.error }}</p></template>
+      <template v-else-if="pathDialog === 'initialize'"><p>将仅初始化下方明确的新版用户集合根；不读取或搬移旧目录。初始化不会搬移其它目录内容。</p><code class="local-path">{{ dataRoots.paths?.aggregateRoot.path }}</code><p v-if="dataRoots.error" role="alert">{{ dataRoots.error }}</p></template>
       <template v-else-if="pathDialog === 'json'"><dl class="paths-facts"><dt>放入位置</dt><dd>{{ dataRoots.paths?.configPath.path }}</dd></dl><p>将当前支持格式的 config.json 放入此位置，再前往模型页“读取现有渠道”。格式错误、认证引用缺失或空结果均保留原草稿。</p></template>
     </div>
     <template v-if="pathDialog !== 'details' && pathDialog !== 'json'" #actions>
       <UiButton class="btn ghost" :disabled="dataRoots.switching || dataRoots.saving || dataRoots.homeSaving" @click="closePathDialog">取消</UiButton>
-      <UiButton v-if="pathDialog === 'select'" class="btn primary" data-testid="paths-preview" :disabled="selectionChecking || dataRootBindingDisabled" @click="previewRoot">{{ selectionChecking ? '校验中…' : '校验并预览' }}</UiButton>
-      <UiButton v-else-if="pathDialog === 'confirm'" class="btn primary" data-testid="paths-confirm" :disabled="dataRootBindingDisabled" @click="applyDataRootSwitch">确认使用此位置</UiButton>
-      <UiButton v-else-if="pathDialog === 'initialize'" class="btn primary" :disabled="dataRootBindingDisabled" @click="saveDataRoot">确认初始化</UiButton>
-      <template v-else-if="pathDialog === 'home'"><UiButton class="btn ghost" :disabled="dataRootBindingDisabled" @click="applyOpencodexHome('inside')">使用内部 HOME</UiButton><UiButton class="btn primary" :disabled="dataRootBindingDisabled" @click="applyOpencodexHome('external')">使用外部路径</UiButton></template>
+      <UiButton v-if="pathDialog === 'initialize'" class="btn primary" :disabled="dataRootBindingDisabled" @click="saveDataRoot">确认初始化</UiButton>
     </template>
   </UiDialog>
 
@@ -1252,7 +1163,19 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
 .paths-facts dd { margin:0; min-width:0; overflow-wrap:anywhere; white-space:pre-wrap; }
 .paths-v2 .local-path { overflow-wrap:anywhere; white-space:pre-wrap; word-break:break-word; }
 .paths-facts .tag { margin-left:8px; white-space:normal; }
-.paths-v2 .runtime-actions { flex-wrap:wrap; }
+.paths-v2 {container-type:inline-size;min-width:0}
+.paths-v2>.card-head{margin-bottom:22px}
+.paths-v2>.card-head p{margin-top:6px;line-height:1.6}
+.paths-v2 .directory-group+.directory-group{margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}
+.paths-v2 .directory-group h3{margin:0 0 16px;font-size:var(--text-body,13px);font-weight:600;line-height:1.6}
+.paths-v2 .paths-facts{margin:0;grid-template-columns:144px minmax(0,1fr);gap:14px 20px;align-items:start}
+.paths-v2 .paths-facts dt,.paths-v2 .paths-facts dd{line-height:1.65;margin:0;min-width:0}
+.paths-v2 .paths-facts dt{white-space:nowrap}
+.paths-v2 .paths-facts code{font:inherit;white-space:pre-wrap;overflow-wrap:anywhere}
+.paths-v2 .runtime-actions {display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.paths-v2 .directory-status{margin-top:22px;padding-top:18px;border-top:1px solid var(--border)}
+@container(max-width:520px){.paths-v2 .paths-facts{grid-template-columns:128px minmax(0,1fr);column-gap:14px}}
+@container(max-width:380px){.paths-v2 .paths-facts{grid-template-columns:minmax(0,1fr);row-gap:6px}.paths-v2 .paths-facts dd:not(:last-child){margin-bottom:10px}}
 @media (max-width:600px) { .paths-facts { grid-template-columns:minmax(0, 1fr); gap:6px; } .paths-facts dd { margin-bottom:8px; } }
 
 .uninstall-confirmation { display:grid; gap:10px; width:100%; }

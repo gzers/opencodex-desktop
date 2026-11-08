@@ -404,3 +404,127 @@ async fn real_status_consumer_uses_fresh_proofs_and_rejects_disappearing_service
             .is_err());
     }
 }
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn stop_uses_one_attested_connection_and_requires_official_client_teardown() {
+    for mode in [
+        "valid",
+        "forged",
+        "deferred",
+        "refused",
+        "record-changed",
+        "capability-pid",
+    ] {
+        let listener = TcpListener::bind((std::net::Ipv4Addr::LOCALHOST, 0))
+            .await
+            .unwrap();
+        let f = Fixture::new(listener.local_addr().unwrap().port());
+        let root = installation(&f.home);
+        let data = f.home.join("desktop");
+        std::fs::create_dir(&data).unwrap();
+        let runtime = crate::modules::runtime::RuntimeHandle::initialize_managed(&data, &root);
+        let token = format!("ocx_admin_{}", "x".repeat(43));
+        crate::infrastructure::atomic_write::atomic_write(
+            &f.home.join("admin-api-token"),
+            token.as_bytes(),
+            0o600,
+        )
+        .unwrap();
+        let r = f.record.clone();
+        let home = f.home.clone();
+        let record_bytes = f.bytes.clone();
+        let requests = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
+        let log = requests.clone();
+        let task = tokio::spawn(async move {
+            let (stream, _) = listener.accept().await.unwrap();
+            let mut io = BufReader::new(stream);
+            for index in 0..4 {
+                let mut request = String::new();
+                loop {
+                    let mut line = String::new();
+                    if io.read_line(&mut line).await.unwrap_or(0) == 0 {
+                        return;
+                    }
+                    request.push_str(&line);
+                    if line == "\r\n" {
+                        break;
+                    }
+                }
+                log.lock().unwrap().push((
+                    request.lines().next().unwrap().to_string(),
+                    request.contains("Authorization: Bearer"),
+                ));
+                let health = index == 0 || index == 2;
+                let mut proof = String::new();
+                let mut body = if health {
+                    let challenge = request
+                        .lines()
+                        .find_map(|line| line.strip_prefix("x-opencodex-attestation-challenge: "))
+                        .unwrap();
+                    let mut mac = Hmac::<Sha256>::new_from_slice(if mode == "forged" {
+                        b"foreign"
+                    } else {
+                        r.attestation_secret.as_bytes()
+                    })
+                    .unwrap();
+                    mac.update(
+                        format!(
+                            "opencodex-local-management-v1\n{challenge}\n{}\n{}",
+                            r.pid, r.port
+                        )
+                        .as_bytes(),
+                    );
+                    proof = format!(
+                        "x-opencodex-attestation-proof: {}\r\n",
+                        URL_SAFE_NO_PAD.encode(mac.finalize().into_bytes())
+                    );
+                    json!({"service":"opencodex","status":"ok","pid":r.pid,"port":r.port,"version":VERSION})
+                } else if index == 1 {
+                    json!({"schema":"ocx-stop-capabilities/1","connectedClientOwnership":true,"pid":if mode=="capability-pid"{43}else{r.pid}})
+                } else {
+                    json!({"success":mode!="refused","sharedTeardown":if mode=="deferred"{"deferred"}else{"performed"}})
+                };
+                if mode == "record-changed" && index == 2 {
+                    std::fs::write(home.join("runtime-port.json"), b"{}").unwrap();
+                }
+                let bytes = serde_json::to_vec(&body.take()).unwrap();
+                let response=format!("HTTP/1.1 200 OK\r\nContent-Length: {}\r\nConnection: keep-alive\r\n{proof}\r\n",bytes.len());
+                if io.get_mut().write_all(response.as_bytes()).await.is_err() {
+                    return;
+                }
+                if io.get_mut().write_all(&bytes).await.is_err() {
+                    return;
+                }
+                let _ = io.get_mut().flush().await;
+            }
+            // No second connection is used by stop_official, including its POST.
+            assert!(
+                tokio::time::timeout(std::time::Duration::from_millis(30), listener.accept())
+                    .await
+                    .is_err()
+            );
+            let _ = record_bytes;
+        });
+        let outcome = tokio::time::timeout(
+            std::time::Duration::from_secs(2),
+            stop_official(runtime, f.home.clone(), 42),
+        )
+        .await
+        .unwrap();
+        task.await.unwrap();
+        let requests = requests.lock().unwrap();
+        assert_eq!(outcome.is_ok(), mode == "valid", "{mode}");
+        if mode == "forged" {
+            assert_eq!(requests.len(), 1);
+            assert!(!requests[0].1, "no token before identity proof");
+        }
+        if ["record-changed", "capability-pid"].contains(&mode) {
+            assert!(!requests.iter().any(|r| r.0.starts_with("POST")));
+        }
+        if mode == "valid" {
+            assert_eq!(requests.len(), 4);
+            assert_eq!(requests[3].0, "POST /api/stop HTTP/1.1");
+            assert!(requests[3].1);
+        }
+    }
+}

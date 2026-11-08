@@ -45,6 +45,8 @@ tempfile = "3"
 uuid = { version = "1.26.1", features = ["v4"] }
 sha2 = "0.10"
 hmac = "0.12"
+# Cooperate with the official runtime's SQLite config-mutation lock.
+rusqlite = { version = "=0.37.0", features = ["bundled"] }
 argon2 = { version = "0.5.3", features = ["std", "zeroize"] }
 aes-gcm = { version = "0.10.3", features = ["std", "zeroize"] }
 base64 = "0.22.1"

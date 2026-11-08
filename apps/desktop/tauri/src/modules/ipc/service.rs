@@ -1361,6 +1361,14 @@ fn execute_ipc_lifecycle<R: ProcessRunner + ?Sized>(
         publisher,
     )
     .map_err(|_| IpcErrorCode::InternalError)?;
+    if let Some(failure) = &result.failure {
+        return Err(match failure.code.as_str() {
+            "port_conflict" => IpcErrorCode::TargetStateConflict,
+            "port_permission" => IpcErrorCode::AccessDenied,
+            "lifecycle_timeout" => IpcErrorCode::Timeout,
+            _ => IpcErrorCode::ExecutionFailed,
+        });
+    }
     if !matches!(
         (action, result.result),
         (

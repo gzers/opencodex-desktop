@@ -40,7 +40,10 @@ async function fault() {
   useFeedbackStore().reportUiFault('Fixture rendering error'); await flushPromises(); return w
 }
 async function uninstall() {
+  const backend=invoke.getMockImplementation()!
+  invoke.mockImplementation((command,...args)=>command==='runtime_protection_status'?Promise.resolve({state:'none',version:null,backupId:null}):backend(command,...args))
   useRuntimeStore().source = source as never
+  useRuntimeStore().protection={state:'none',version:null,backupId:null}
   useRouteStore().go('settings', { section: 'installation' })
   const w = mount(SettingsRoute, { global: { plugins: [pinia], stubs: { AppTopbar: true, BackupManagement: true, AgentExecutionField: true } }, attachTo: document.body }); wrappers.push(w)
   await flushPromises(); await w.get('[data-testid="runtime-uninstall"]').trigger('click'); await flushPromises(); return w

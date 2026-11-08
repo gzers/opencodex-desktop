@@ -77,10 +77,27 @@ struct Session {
 }
 impl Session {
     async fn get(&mut self, path: &str, challenge: Option<&str>) -> Result<Response, CollectError> {
+        self.request("GET", path, challenge, None).await
+    }
+    async fn request(
+        &mut self,
+        method: &str,
+        path: &str,
+        challenge: Option<&str>,
+        token: Option<&str>,
+    ) -> Result<Response, CollectError> {
         let challenge = challenge
             .map(|c| format!("x-opencodex-attestation-challenge: {c}\r\n"))
             .unwrap_or_default();
-        let request=format!("GET {path} HTTP/1.1\r\nHost: 127.0.0.1:{}\r\nConnection: keep-alive\r\nAccept: application/json\r\n{challenge}\r\n",self.port);
+        let auth = token
+            .map(|token| format!("Authorization: Bearer {token}\r\n"))
+            .unwrap_or_default();
+        let body = if method == "POST" {
+            "Content-Length: 0\r\n"
+        } else {
+            ""
+        };
+        let request=zeroize::Zeroizing::new(format!("{method} {path} HTTP/1.1\r\nHost: 127.0.0.1:{}\r\nConnection: keep-alive\r\nAccept: application/json\r\n{challenge}{auth}{body}\r\n",self.port));
         self.io
             .get_mut()
             .write_all(request.as_bytes())
@@ -147,6 +164,80 @@ impl Session {
         let value = serde_json::from_slice(&bytes).map_err(|_| CollectError::Parse)?;
         Ok(Response { code, proof, value })
     }
+}
+
+/// The write stays on the TCP connection that proved this HOME's key. Never
+/// forward the reusable admin token to a newly connected port after attestation.
+pub(crate) async fn stop_official(
+    runtime: SharedRuntimeExecutable,
+    home: PathBuf,
+    pid: u32,
+) -> Result<(), CollectError> {
+    let root = runtime
+        .managed_installation_root()
+        .ok_or(CollectError::Unreachable)?;
+    let identity = crate::modules::runtime::install::resolve_managed_installation(&root)
+        .map_err(unavailable)?;
+    if runtime.executable().as_ref() != Some(&identity.entry) {
+        return Err(CollectError::Unreachable);
+    }
+    let (expected, bytes) = record(&home)?;
+    if expected.pid != pid {
+        return Err(CollectError::Unreachable);
+    }
+    let stream = TcpStream::connect((std::net::Ipv4Addr::LOCALHOST, expected.port))
+        .await
+        .map_err(unavailable)?;
+    let mut session = Session {
+        io: BufReader::new(stream),
+        port: expected.port,
+    };
+    health(&mut session, &expected, &identity.package_version).await?;
+    let path = home.join("admin-api-token");
+    safety::check_path(&home, &path, false).map_err(unavailable)?;
+    let token = zeroize::Zeroizing::new(safety::read_file(&path, 512).map_err(unavailable)?);
+    let token = std::str::from_utf8(&token)
+        .map_err(|_| CollectError::Parse)?
+        .trim();
+    if !token.starts_with("ocx_admin_")
+        || token.len() != 53
+        || !token[10..]
+            .bytes()
+            .all(|c| c.is_ascii_alphanumeric() || b"-_".contains(&c))
+    {
+        return Err(CollectError::Parse);
+    }
+    let capability = session
+        .request("GET", "/api/stop", None, Some(token))
+        .await?;
+    if capability.code != 200
+        || capability.value["schema"] != "ocx-stop-capabilities/1"
+        || capability.value["connectedClientOwnership"] != true
+        || capability.value["pid"].as_u64() != Some(pid.into())
+    {
+        return Err(CollectError::Unreachable);
+    }
+    health(&mut session, &expected, &identity.package_version).await?;
+    if record(&home)?.1 != bytes
+        || crate::modules::runtime::install::resolve_managed_installation(&root)
+            .map_err(unavailable)?
+            != identity
+    {
+        return Err(CollectError::Unreachable);
+    }
+    let stopped = session
+        .request("POST", "/api/stop", None, Some(token))
+        .await?;
+    if stopped.code != 200
+        || stopped.value["success"] != true
+        || !matches!(
+            stopped.value["sharedTeardown"].as_str(),
+            Some("performed" | "not-owned")
+        )
+    {
+        return Err(CollectError::Unreachable);
+    }
+    Ok(())
 }
 fn identity(value: &Value, record: &Record, version: &str) -> bool {
     value["service"] == "opencodex"
@@ -236,10 +327,10 @@ async fn observe(
         "pending"
     };
     Ok(
-        json!({"status":state,"ready":state=="running","port":expected.port,"pid":expected.pid.to_string(),"runtimeLabel":"bundled","versionDrift":version,"opencodexHome":home,"statusObservation":"attested-same-connection","startup":{}}),
+        json!({"status":state,"ready":state=="running","officialReadiness":ready.value["status"],"port":expected.port,"pid":expected.pid.to_string(),"runtimeLabel":"bundled","versionDrift":version,"opencodexHome":home,"statusObservation":"attested-same-connection","startup":{}}),
     )
 }
-pub(super) async fn fetch(
+pub(crate) async fn fetch(
     runtime: SharedRuntimeExecutable,
     home: PathBuf,
 ) -> Result<Option<Value>, CollectError> {

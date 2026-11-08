@@ -95,6 +95,71 @@ pub struct SystemServiceOwnerProofProvider {
     last_record: Mutex<Option<Record>>,
 }
 impl SystemServiceOwnerProofProvider {
+    /// Ordinary lifecycle stop retains the official connected-client teardown.
+    /// Unlike an installation handover it never writes a deferral receipt.
+    pub(crate) fn stop_lifecycle(&self, context: &ProcessContext) -> AppResult<()> {
+        let started = Instant::now();
+        let budget = crate::modules::process::stop_timeout();
+        let remaining = || {
+            budget
+                .checked_sub(started.elapsed())
+                .filter(|d| !d.is_zero())
+                .ok_or(AppError::Timeout)
+        };
+        self.same_context(context)?;
+        let (identity, pid) = match self.query_inner()? {
+            ServiceOwnerProof::Owned { identity, pid } => (identity, pid),
+            ServiceOwnerProof::Stopped => {
+                remaining()?;
+                return Ok(());
+            }
+            ServiceOwnerProof::Unknown => {
+                return Err(fail(
+                    "lifecycle_owner_unknown",
+                    "无法证明当前用户服务归属，未发送停止请求",
+                ))
+            }
+        };
+        let record = self.checked_owned(&identity, pid)?;
+        if !self.host.manager_absent()? {
+            return Err(fail(
+                "lifecycle_supervised",
+                "服务由官方服务管理器托管，未绕过其停止及还原流程",
+            ));
+        }
+        let wait_budget = remaining()?;
+        tauri::async_runtime::block_on(async {
+            tokio::time::timeout(wait_budget, async {
+                self.checked_owned(&identity, pid)?;
+                crate::infrastructure::attested_status::stop_official(
+                    context.runtime.clone(),
+                    context.opencodex_home.clone(),
+                    pid,
+                )
+                .await
+                .map_err(|_| {
+                    fail(
+                        "lifecycle_stop_unknown",
+                        "官方停止或客户端还原结果未确认；未强制终止或宣称已停止",
+                    )
+                })
+            })
+            .await
+        })
+        .map_err(|_| AppError::Timeout)??;
+        loop {
+            remaining()?;
+            if self.query_inner()? == ServiceOwnerProof::Stopped {
+                // A missing/stale record is not proof. The OS observer above proves
+                // process generation, configured HOME and socket absence as well.
+                if self.host.process(pid)?.is_none() && self.host.port_clear(record.runtime.port)? {
+                    remaining()?;
+                    return Ok(());
+                }
+            }
+            std::thread::sleep(Duration::from_millis(50));
+        }
+    }
     pub fn new(installation_root: PathBuf, process_context: ProcessContext) -> AppResult<Self> {
         Self::with_guard(
             installation_root,
