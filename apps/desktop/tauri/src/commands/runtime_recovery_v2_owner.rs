@@ -97,9 +97,14 @@ pub struct SystemServiceOwnerProofProvider {
 impl SystemServiceOwnerProofProvider {
     /// Ordinary lifecycle stop retains the official connected-client teardown.
     /// Unlike an installation handover it never writes a deferral receipt.
-    pub(crate) fn stop_lifecycle(&self, context: &ProcessContext) -> AppResult<()> {
+    pub(crate) fn stop_lifecycle(
+        &self,
+        context: &ProcessContext,
+        action_deadline: Instant,
+    ) -> AppResult<()> {
         let started = Instant::now();
-        let budget = crate::modules::process::stop_timeout();
+        let budget = crate::modules::process::stop_timeout()
+            .min(action_deadline.saturating_duration_since(started));
         let remaining = || {
             budget
                 .checked_sub(started.elapsed())
@@ -302,14 +307,17 @@ impl SystemServiceOwnerProofProvider {
         process.argv.iter().skip(1).any(|arg| {
             let arg = Path::new(arg);
             arg.is_absolute()
-                && ["bin/ocx.mjs", "bin/ocx.js", "src/index.ts"]
-                    .iter()
-                    .any(|entry| {
-                        path_key(arg)
-                            == path_key(
-                                &prefix.join("node_modules/@bitkyc08/opencodex").join(entry),
-                            )
-                    })
+                && [
+                    "bin/ocx.mjs",
+                    "bin/ocx.js",
+                    "src/index.ts",
+                    "src/cli/index.ts",
+                ]
+                .iter()
+                .any(|entry| {
+                    path_key(arg)
+                        == path_key(&prefix.join("node_modules/@bitkyc08/opencodex").join(entry))
+                })
         })
     }
     fn identity(&self, process: &ProcessIdentity, record: &Record) -> AppResult<String> {

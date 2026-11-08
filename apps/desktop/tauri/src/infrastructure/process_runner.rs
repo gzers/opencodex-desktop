@@ -231,6 +231,7 @@ impl ControlledProcessRunner {
         runtime: Option<crate::infrastructure::runtime_executable::SharedRuntimeExecutable>,
         budget: Duration,
     ) -> Result<LifecycleResult, AppError> {
+        let action_started = Instant::now();
         Self::validate_spawn_context(command)?;
         let timeout = Self::timeout_for(command.action).min(budget);
 
@@ -263,7 +264,9 @@ impl ControlledProcessRunner {
             let Some(runtime) = runtime else {
                 return Ok(LifecycleResult::Started);
             };
-            let started = Instant::now();
+            let started = action_started;
+            let (mut observations, mut pending_ready, mut rejected, mut absent_record) =
+                (0u32, 0u32, 0u32, 0u32);
             loop {
                 if started.elapsed() >= timeout {
                     #[cfg(test)]
@@ -285,7 +288,7 @@ impl ControlledProcessRunner {
                             }
                         }
                     }
-                    return Err(AppError::Timeout);
+                    return Err(AppError::RuntimeManaged {code:"lifecycle_timeout".into(),detail:format!("启动未在原预算内证明就绪；observations={observations}, pending={pending_ready}, rejected={rejected}, absent_record={absent_record}。未延长预算或判定运行成功。")});
                 }
                 match exit.try_recv() {
                     Ok(Some(code)) if code != 0 => {
@@ -313,7 +316,22 @@ impl ControlledProcessRunner {
                     }
                     _ => {}
                 }
+                // Before publication there is no endpoint to authenticate. Do
+                // not hash the complete managed Node activation every 50ms
+                // while its cold child is competing for the same disk/CPU.
+                // This is only an early non-success check; every real sample
+                // below still performs full activation/HMAC/readback validation.
+                if matches!(std::fs::symlink_metadata(command.environment.opencodex_home.join("runtime-port.json")),Err(ref e) if e.kind()==std::io::ErrorKind::NotFound)
+                {
+                    absent_record += 1;
+                    tokio::time::sleep(
+                        Duration::from_millis(250).min(timeout.saturating_sub(started.elapsed())),
+                    )
+                    .await;
+                    continue;
+                }
                 let remaining = timeout.saturating_sub(started.elapsed());
+                observations += 1;
                 let observed = tokio::time::timeout(
                     remaining,
                     super::attested_status::fetch(
@@ -322,11 +340,20 @@ impl ControlledProcessRunner {
                     ),
                 )
                 .await;
+                if !matches!(&observed, Ok(Ok(Some(_)))) {
+                    rejected += 1;
+                }
                 if let Ok(Ok(Some(value))) = observed {
+                    if value["officialReadiness"] == "pending" {
+                        pending_ready += 1;
+                    }
                     if value["officialReadiness"] == "failed" {
                         return Err(AppError::RuntimeManaged {code:"lifecycle_readiness_failed".into(),detail:"官方服务已报告启动未就绪，可能存在客户端配置或服务归属问题；请查看诊断，未放宽校验。".into()});
                     }
                     if value["ready"] == true && value["status"] == "running" {
+                        if started.elapsed() >= timeout {
+                            return Err(AppError::Timeout);
+                        }
                         if command
                             .requested_port
                             .is_some_and(|port| value["port"].as_u64() != Some(port.into()))
@@ -346,7 +373,10 @@ impl ControlledProcessRunner {
                         return Ok(LifecycleResult::Started);
                     }
                 }
-                tokio::time::sleep(Duration::from_millis(50)).await;
+                tokio::time::sleep(
+                    Duration::from_millis(250).min(timeout.saturating_sub(started.elapsed())),
+                )
+                .await;
             }
         }
 
@@ -864,7 +894,7 @@ mod managed_observation_tests {
     async fn zero_exit_or_live_process_without_authenticated_ready_is_not_started() {
         for script in ["#!/bin/sh\nexit 0\n", "#!/bin/sh\nsleep 0.3\nexit 0\n"] {
             let (e, _root, _t) = run(script).await;
-            assert!(matches!(e, AppError::Timeout));
+            assert!(matches!(e, AppError::RuntimeManaged{code,..} if code=="lifecycle_timeout"));
         }
     }
     #[test]

@@ -347,6 +347,14 @@ fn execute_lifecycle<R: ProcessRunner + ?Sized>(
     data_root: &std::path::Path,
 ) -> AppResult<crate::modules::process::LifecycleResult> {
     use crate::modules::process::{restart_limit, runner_start_timeout, LifecycleResult};
+    let deadline = std::time::Instant::now()
+        + if command.action == LifecycleAction::Stop {
+            crate::modules::process::stop_timeout()
+        } else if command.action == LifecycleAction::Restart {
+            restart_limit()
+        } else {
+            runner_start_timeout()
+        };
     let Some(root) = context.runtime.managed_installation_root() else {
         return runner.execute(command);
     };
@@ -379,6 +387,9 @@ fn execute_lifecycle<R: ProcessRunner + ?Sized>(
                         && owner.query(context)? == proof
                         && matches!(observed,Ok(Some(ref value)) if value["ready"]==true && value["status"]=="running")
                     {
+                        if std::time::Instant::now() >= deadline {
+                            return Err(AppError::Timeout);
+                        }
                         return Ok(LifecycleResult::Started);
                     }
                     return Err(AppError::RuntimeManaged {
@@ -391,21 +402,13 @@ fn execute_lifecycle<R: ProcessRunner + ?Sized>(
             Err(_) => return Err(AppError::NotConfigured),
         }
     }
-    let deadline = std::time::Instant::now()
-        + if command.action == LifecycleAction::Stop {
-            crate::modules::process::stop_timeout()
-        } else if command.action == LifecycleAction::Restart {
-            restart_limit()
-        } else {
-            runner_start_timeout()
-        };
     if matches!(
         command.action,
         LifecycleAction::Stop | LifecycleAction::Restart
     ) {
         let owner =
             runtime_recovery_v2_owner::SystemServiceOwnerProofProvider::new(root, context.clone())?;
-        owner.stop_lifecycle(context)?;
+        owner.stop_lifecycle(context, deadline)?;
         if command.action == LifecycleAction::Stop {
             return Ok(LifecycleResult::Stopped);
         }

@@ -344,6 +344,9 @@ impl LifecycleFailureReason {
                 Self::Permission
             }
             crate::errors::AppError::Timeout => Self::Timeout,
+            crate::errors::AppError::RuntimeManaged { code, .. } if code == "lifecycle_timeout" => {
+                Self::Timeout
+            }
             _ => Self::Unconfirmed,
         }
     }

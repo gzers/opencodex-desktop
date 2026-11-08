@@ -49,6 +49,12 @@ impl ProcessActionResult {
     }
     pub fn with_failure(mut self, error: &crate::errors::AppError) -> Self {
         let (code, message) = match error {
+            crate::errors::AppError::RuntimeManaged { code, .. } if code == "lifecycle_timeout" => {
+                (
+                    code.clone(),
+                    "启动未在规定时间内就绪，请查看诊断日志后重试。".into(),
+                )
+            }
             crate::errors::AppError::RuntimeManaged { code, detail }
                 if code.starts_with("lifecycle_")
                     || ["port_conflict", "port_permission"].contains(&code.as_str()) =>
@@ -80,6 +86,19 @@ pub fn validate_action_request(request: &ProcessActionRequest) -> Result<(), &'s
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn startup_timing_diagnostics_stay_out_of_the_product_failure_message() {
+        let error = crate::errors::AppError::RuntimeManaged {
+            code: "lifecycle_timeout".into(),
+            detail: "observations=14 rejected=2 absent_record=10".into(),
+        };
+        let failure = ProcessActionResult::from_state(ProcessLifecycleState::StartingFailed)
+            .with_failure(&error);
+        let json = serde_json::to_string(&failure).unwrap();
+        assert!(!json.contains("observations") && !json.contains("absent_record"));
+        assert!(json.contains("lifecycle_timeout") && json.contains("诊断日志"));
+    }
 
     fn request(action: LifecycleAction, confirm: bool) -> ProcessActionRequest {
         ProcessActionRequest { action, confirm }

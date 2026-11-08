@@ -234,6 +234,52 @@ fn identity_binds_user_creation_executable_home_record_and_context() {
 }
 
 #[test]
+fn actual_bun_cli_child_is_owned_only_at_exact_managed_entry_home_and_owner() {
+    let f = Fixture::new();
+    f.record(4242);
+    let mut process = f.process(4242);
+    process.image = f
+        .provider
+        .installation_root
+        .join("runtime/opencodex/node_modules/bun/bin/bun.exe");
+    process.argv = vec![
+        process.image.to_string_lossy().into_owned(),
+        f.provider
+            .installation_root
+            .join("runtime/opencodex/node_modules/@bitkyc08/opencodex/src/cli/index.ts")
+            .to_string_lossy()
+            .into_owned(),
+        "start".into(),
+    ];
+    f.host
+        .processes
+        .lock()
+        .unwrap()
+        .insert(4242, process.clone());
+    assert!(matches!(
+        f.query(),
+        ServiceOwnerProof::Owned { pid: 4242, .. }
+    ));
+    for arg in [
+        "src/cli/index.ts".into(),
+        f.provider
+            .installation_root
+            .join("other/src/cli/index.ts")
+            .to_string_lossy()
+            .into_owned(),
+    ] {
+        let mut changed = process.clone();
+        changed.argv[1] = arg;
+        f.host.processes.lock().unwrap().insert(4242, changed);
+        assert_eq!(f.query(), ServiceOwnerProof::Unknown);
+    }
+    let mut changed = process;
+    changed.home = Some(f.provider.context.working_directory.join("foreign-H"));
+    f.host.processes.lock().unwrap().insert(4242, changed);
+    assert_eq!(f.query(), ServiceOwnerProof::Unknown);
+}
+
+#[test]
 fn malformed_or_foreign_records_are_never_absence_and_receipts_only_delete_owned_unsent_file() {
     let f = Fixture::new();
     let h = &f.provider.context.opencodex_home;
