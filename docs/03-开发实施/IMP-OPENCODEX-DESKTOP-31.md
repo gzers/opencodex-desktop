@@ -265,3 +265,5 @@ source6b44bf84f当前.app完成构建，binarySHA256 f41d528121fa5cda6bb94c7aeff
 ### 第26轮全回执与原生前置返修（2026-11-09）
 
 [完整20过/8失败表](../../.adg/evidence/0.2.23/sweep-r26-42511797254/status-table.md)先展示再批量处理。R25返修把令牌提升检查用于所有子进程，受限WebView拒绝；另有空Process.Path引发参数门拒绝。8a9e0fa1c用专门同句柄PID/映像/FILETIME身份观察，不要求renderer令牌权限，保留CIM真实SID与映像及实际管理器普通令牌检查。初始追踪失败可仅按完整原生身份重新登记保留的bootstrap，未知继续保留并失败。新增自有进程原生轻量前置，先在CI早期执行再进入完整诊断；127离线合同通过，不等同原生通过。此次apps产品和维护包均未修改，未降低30/10/5秒预算。
+
+8a9e0fa1c轻量Windows原生前置回执已核验（CI42513970986/job128832828476，原ZIP8064字节/SHA256 fc45c7e6da284617319eed943b7aa1d236ac6bb4dcf89e44e8c119defb63922d）：实际自身及自有Node的保留句柄精确身份、1tick变化拒绝与退出清理均pass，accepted:false；不是受限renderer／普通两SID／服务生命周期通过。[前置证据](../../.adg/evidence/0.2.23/sweep-r26-42511797254/native-preflight-8a9/admission.json)。随后派发[第27轮完整28项](https://github.com/gzers/opencodex-desktop/actions/runs/42514160566)，source8a9e0fa1c3eb594c4ec62e965141e240fda7879c、job128833412769已确认运行，原预算及诊断accepted:false不变。
