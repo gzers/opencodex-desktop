@@ -1,0 +1,42 @@
+{
+  "kind": "read-only-existing-evidence-scope-audit",
+  "source": "8a9e0fa1c3eb594c4ec62e965141e240fda7879c",
+  "nativeTraceValidationSource": ".adg/evidence/0.2.23/team/L0/r9-prototype-and-ci-followup-20261107/ac-match-05-trace/evidence-validation.json",
+  "unchangedProducerFiles": [
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/matching_v2.rs",
+      "recordedSha256": "71f6553360f546339a218abf9f821e3b286eba41fb1e2656aa99be10b53ed282",
+      "actualSha256": "71f6553360f546339a218abf9f821e3b286eba41fb1e2656aa99be10b53ed282",
+      "unchanged": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/matching_v2_trace_tests.rs",
+      "recordedSha256": "8a78f7e4ac728423e3d7167a43e3fc9fec677ea4fb7fde2d31988bdbb18d5ed9",
+      "actualSha256": "8a78f7e4ac728423e3d7167a43e3fc9fec677ea4fb7fde2d31988bdbb18d5ed9",
+      "unchanged": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/model_config_v2.rs",
+      "recordedSha256": "5fe9b38749ea24978ea487a2a9a2dc1444cc885a42d608b1c59196055a2d519c",
+      "actualSha256": "5fe9b38749ea24978ea487a2a9a2dc1444cc885a42d608b1c59196055a2d519c",
+      "unchanged": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/model_config_v2_trace_tests.rs",
+      "recordedSha256": "fe1cc2e32a3ecd66185649a29e5f221851cd478b68712d8add8e3ccb4ee7ae4a",
+      "actualSha256": "fe1cc2e32a3ecd66185649a29e5f221851cd478b68712d8add8e3ccb4ee7ae4a",
+      "unchanged": true
+    }
+  ],
+  "scope": "Existing14frozen cases and native trace wire/schema evidence retained for identical4files only; not a new whole-product acceptance.",
+  "existingReselectionLog": {
+    "manifest": ".adg/evidence/0.2.23/team/L0/r45-explicit-reselection-confirm-20261107/manifest.json",
+    "bytesAndSha256Verified": true,
+    "scope": "Historic4actualApplied/0PUT synthetic-remote confirmations; source-specific only"
+  },
+  "syncChangedSinceMcpEvidence": [
+    "apps/desktop/tauri/src/modules/model_config/sync_identity_v2.rs"
+  ],
+  "syncReuseLimit": "Do not accept oldMCP/service logs alone as current source proof. Current whole regression/source and final artifacts still required.",
+  "accepted": false
+}
