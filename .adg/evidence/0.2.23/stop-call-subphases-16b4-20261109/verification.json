@@ -1,0 +1,36 @@
+{
+  "source": "16b4ce700b3be845a0454762b410b7f328f5a4f2",
+  "kind": "diagnostic-checkpoint-refinement-not-performance-fix",
+  "productFiles": {
+    "apps/desktop/tauri/src/infrastructure/attested_status.rs": "7db0478350fb846dc7cf38eee41361c8010a9aba330f004efc87ada41774d557",
+    "apps/desktop/tauri/src/infrastructure/attested_status_tests.rs": "68b9dec375eae65e09a44ba4e2f3ef065c1a2c408dd29e411c0b1c02e5b1d917",
+    "apps/desktop/tauri/src/commands/runtime_recovery_v2_owner.rs": "273a855c59dac7d3d2d8fe3f65a0935104eb6a5372545b52b3668eb73eefde6c"
+  },
+  "fixedPhaseMarkers": [
+    "stop-runtime-activation",
+    "stop-protected-record",
+    "stop-connect",
+    "stop-first-attestation",
+    "stop-private-token",
+    "stop-read-capabilities",
+    "stop-second-attestation",
+    "stop-revalidate-before-write",
+    "stop-post-client-restore",
+    "stop-response-verified"
+  ],
+  "sameTcpAndFullVerificationOrderPreserved": true,
+  "normalClientTeardownRequired": true,
+  "original10sStopBudgetUnchanged": true,
+  "newNoSecretsInMarkers": true,
+  "checks": {
+    "attestedTransportAndStopTests": 7,
+    "failures": 0,
+    "allTargetsWorkspaceStrictClippy": "pass",
+    "delayedRestore": "2s fixturedeadline stillfails atPOSTstage, never responseverified; production10sunchanged",
+    "forgedOrChangedOwnership": "NoPOST and noPOSTstage; notokensbeforeidentity proof"
+  },
+  "testIterationNote": "Initial localdelayedreplycase used100ms/250ms andpassed; successorusesexistingnormal2s deadline with3sdelay to avoid a needlesslytightWindows transportfixture cutoff. Productbudgets and normalcase2sdeadline unchanged.",
+  "nativeStopAcceptance": false,
+  "nextFullSweepDispatched": false,
+  "remaining": "UseexactsourceWin32fullcompilationandnativepreflight, thencomplete28sweep forofficialcapability/POST/restore attribution; 0.2.23 stillunreleased."
+}
