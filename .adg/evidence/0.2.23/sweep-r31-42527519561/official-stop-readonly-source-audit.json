@@ -1,0 +1,23 @@
+{
+  "kind": "read-only-archived-runtime-source-inspection",
+  "runtimeVersion": "2.97.0-desktop023.names.2",
+  "runtimeArchiveSha256": "fcd2740ecc32ae1e11c1c79d84c801b2c5d5447ae89e070ab060548d61f75ee6",
+  "materializedFilesEqualPinnedArchive": {
+    "src/server/management-api.ts": {
+      "bytes": 32072,
+      "sha256": "439e1bbeb0eb75f5809aea11888e7c2ab1ef2b29c7fa7c971e1d3d592061110f"
+    },
+    "src/service/windows-scheduler.ts": {
+      "bytes": 35182,
+      "sha256": "9467556243fddbb2ffc2cb0026ab3a6d740c6860e1a2eb7d4fe21e98174b2382"
+    },
+    "src/server/stop-teardown.ts": {
+      "bytes": 10215,
+      "sha256": "923560e14fc7ea94bf637553112ec20d0cae1a030d822f145dc1c3d272c0fb30"
+    }
+  },
+  "observedContract": "OfficialPOSTstop independently queriesservice/scheduler, performsclientrestoration, returnsJSONteardown then schedulesdrain/exit200mslater. No reason to assume it waitsforitsownHTTPconnectionbeforeJSON.",
+  "potentialBudgetInteraction": "WindowsquerySchtasks execFileSync has15000msperquery; namedquery can fallbackCSVlist; DesktopwholeStop budget10000ms. This identifiesa possible independentinnerread cost, notproof ofactualelapsedcause.",
+  "currentDecision": "WaitcompleteR31same-sourcephase timings beforeproduct/runtimeproposal; do notweakenownership, clientrestore orbudget. Maintainedpackageunchanged.",
+  "accepted": false
+}
