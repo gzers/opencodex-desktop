@@ -454,7 +454,7 @@ jobs:
           path: test/out/windows-installer-retention
 
   native-ui:
-    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023' && inputs.admission_run != 'ordinary-ownership-023' && inputs.admission_run != 'ordinary-startup-023' && inputs.admission_run != 'ordinary-startup-initialized-023' && inputs.admission_run != 'ordinary-lifecycle-023' && inputs.admission_run != 'msi-compiler-023' && inputs.admission_run != 'native-replay-414' && inputs.admission_run != 'raw-msi-3d-diagnostic' && inputs.admission_run != 'raw-full-0c-diagnostic' && inputs.admission_run != 'full-bundle-two-user-debug'
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023' && inputs.admission_run != 'ordinary-ownership-023' && inputs.admission_run != 'ordinary-startup-023' && inputs.admission_run != 'ordinary-startup-initialized-023' && inputs.admission_run != 'ordinary-lifecycle-023' && inputs.admission_run != 'raw-final023-replay' && inputs.admission_run != 'msi-compiler-023' && inputs.admission_run != 'native-replay-414' && inputs.admission_run != 'raw-msi-3d-diagnostic' && inputs.admission_run != 'raw-full-0c-diagnostic' && inputs.admission_run != 'full-bundle-two-user-debug'
     runs-on: windows-latest
     timeout-minutes: 40
     defaults:
@@ -985,3 +985,72 @@ jobs:
             test/out/full-bundle-two-user-debug/evidence/user2/*/*.json
             test/out/full-bundle-two-user-debug/evidence/user2/*/*.log
             test/out/full-bundle-two-user-debug/evidence/user2/*/*.png
+
+  raw-final023-replay:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run == 'raw-final023-replay'
+    permissions:
+      contents: read
+      actions: read
+    runs-on: windows-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: gzers/opencodex-desktop
+          run-id: 42469646550
+          artifact-ids: 13614917946
+          merge-multiple: true
+          path: test/out/final023-installer-replay/input
+      - name: Verify exact original package and unchanged product source
+        run: |
+          $taskReplayRoot=[IO.Path]::GetFullPath('test/out/final023-installer-replay')
+          $taskReplayInput=Join-Path $taskReplayRoot 'input'
+          $identity=Get-Content -LiteralPath (Join-Path $taskReplayInput 'build-identities.json') -Raw|ConvertFrom-Json
+          $expected='5cba024a298154bfb4378d4607b4905b4e2e167e'
+          if($identity.source -cne $expected -or $identity.appsTree -cne 'e106149ef8a0f88ef4e2a51035fa821a32a6a486' -or $identity.run -cne '42469646550' -or $identity.attempt -cne '1' -or $identity.status -cne 'unverified-build-only' -or $identity.files.Count -ne 3){throw 'Exact raw originals required; never an accepted candidate'}
+          $changed=@(git diff --name-only $expected HEAD -- apps)
+          if($LASTEXITCODE -ne 0 -or $changed.Count){throw 'Product changed since these original installer bytes'}
+          foreach($f in $identity.files){
+            if($f.name -notin @('opencodex-desktop.exe','OpenCodeX Desktop_0.2.23_x64-setup.exe','OpenCodeX Desktop_0.2.23_x64_en-US.msi')){throw 'Unexpected original member'}
+            $path=Join-Path $taskReplayInput $f.name
+            if((Get-Item -LiteralPath $path).Length -ne $f.bytes -or (Get-FileHash -LiteralPath $path).Hash.ToLowerInvariant() -cne $f.sha256){throw 'Original package member differs'}
+          }
+          if((Get-FileHash -LiteralPath (Join-Path $taskReplayInput 'opencodex-desktop.exe')).Hash.ToLowerInvariant() -cne '5734ecf9427631de2282f8b5d0adb51ddb900601bdd5c9ae97ffa8645e8b42d0'){throw 'Original built EXE differs'}
+          foreach($kind in @('msi','nsis')){New-Item -ItemType Directory -Path (Join-Path $taskReplayRoot ('bundle/'+$kind))|Out-Null}
+          Copy-Item -LiteralPath (Join-Path $taskReplayInput 'OpenCodeX Desktop_0.2.23_x64_en-US.msi') -Destination (Join-Path $taskReplayRoot 'bundle/msi')
+          Copy-Item -LiteralPath (Join-Path $taskReplayInput 'OpenCodeX Desktop_0.2.23_x64-setup.exe') -Destination (Join-Path $taskReplayRoot 'bundle/nsis')
+          Copy-Item -LiteralPath (Join-Path $taskReplayInput 'build-identities.json') -Destination (Join-Path $taskReplayRoot 'original-build-identities.json')
+      - name: Verify exact sentinel lifecycle without installers
+        run: ./test/smoke/windows-retention-fixture.test.ps1 -OutputDirectory test/out/final023-installer-replay/fixture-contract
+      - name: Prepare disposable Server MSI fixture
+        run: ./test/smoke/windows-msi-server-fixture.ps1 -Mode prepare -EvidenceDirectory test/out/final023-installer-replay/evidence
+      - name: Replay all original installer cells after test-only correction
+        run: |
+          & ./test/smoke/windows-installer.ps1 -BundleDirectory test/out/final023-installer-replay/bundle -BuiltExecutable test/out/final023-installer-replay/input/opencodex-desktop.exe -Node (Get-Command node.exe).Source -OutputDirectory test/out/final023-installer-replay/evidence -ExpectedCommit '5cba024a298154bfb4378d4607b4905b4e2e167e' -Kind all -Mode all
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+          @{accepted=$false;diagnosticOnly=$true;formalCandidateAccepted=$false;source='5cba024a298154bfb4378d4607b4905b4e2e167e';harness=(git rev-parse HEAD).Trim();artifact=13614917946;scope='original four installer cells only; no two-user/OTA/release acceptance'}|ConvertTo-Json|Set-Content test/out/final023-installer-replay/diagnostic.json
+      - name: Restore exact Server MSI policy
+        if: always()
+        run: if(Test-Path test/out/final023-installer-replay/evidence/msi-server-policy.original.json){ & ./test/smoke/windows-msi-server-fixture.ps1 -Mode restore -EvidenceDirectory test/out/final023-installer-replay/evidence }
+      - name: Preserve successful and failed replay receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: final023-original-installer-replay-${{ github.sha }}
+          path: |
+            test/out/final023-installer-replay/evidence
+            test/out/final023-installer-replay/fixture-contract
+            test/out/final023-installer-replay/diagnostic.json
+            test/out/final023-installer-replay/original-build-identities.json
+            !test/out/final023-installer-replay/evidence/**/sandbox-*/**
+          if-no-files-found: warn
