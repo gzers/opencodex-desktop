@@ -841,29 +841,9 @@ function restoreGeneralDefaults() {
     <!-- 页面标题在卡片外，卡片内是自己的标题行（模型模版助手 · 本机共用 + 摘要 + 按钮），与原型层级一致。 -->
     <section v-else-if="section === 'agent'" class="settings-panel active"><h2 class="settings-panel-title">Agent 配置</h2><UiCard><AgentExecutionField /></UiCard></section>
     <section v-else-if="section === 'installation'" class="settings-panel active">
-      <RuntimePortSettings :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" />
-      <article class="card paths-v2" data-testid="settings-paths-v2">
-        <div class="card-head"><div><h2>用户目录与程序安装</h2><p>配置保存在当前用户目录，程序位于 Desktop 安装目录。</p></div></div>
-        <p v-if="dataRoots.pathsLoading" role="status">正在读取实际位置…{{ dataRoots.paths ? '下方保留上次快照（非最新）。' : '' }}</p>
-        <p v-if="dataRoots.pathsError" role="alert">{{ dataRoots.pathsError }} {{ dataRoots.paths ? '已保留上次快照（非最新），请刷新后核对。' : '尚无可用快照；未推断路径或缺失状态。' }}</p>
-        <section class="directory-group"><h3>用户数据与配置{{ restartPending ? ' · 待生效位置' : '' }}</h3>
-        <dl class="paths-facts">
-          <template v-for="key in userPathKeys" :key="key"><dt>{{ pathLabels[key] }}</dt><dd :data-path-key="key" :data-path-status="dataRoots.paths?.[key].status"><template v-if="dataRoots.paths"><code class="local-path">{{ dataRoots.paths[key].path }}</code><span v-if="dataRoots.paths[key].status!=='valid'" class="tag" :data-path-status="dataRoots.paths[key].status">{{ pathStatusLabels[dataRoots.paths[key].status] }}</span></template><span v-else>尚未读取</span></dd></template>
-        </dl>
-        <div class="runtime-actions">
-          <UiButton class="btn ghost" data-testid="paths-details" :disabled="!dataRoots.paths" @click="pathDialog = 'details'">完整查看与复制路径</UiButton>
-          <UiButton class="btn ghost" :disabled="!dataRoots.paths" @click="pathDialog = 'json'">读取渠道配置说明</UiButton>
-          <UiButton v-if="dataRoots.paths?.aggregateRoot.status === 'missing' || dataRoots.paths?.desktopRoot.status === 'missing'" class="btn" data-testid="paths-initialize" :disabled="dataRootBindingDisabled" @click="pathDialog = 'initialize'">初始化用户目录</UiButton>
-        </div>
-        <div v-if="restartPending" data-testid="paths-pending">
-          <h3>等待重启生效</h3>
-          <dl class="paths-facts"><dt>当前用户集合根</dt><dd>{{ dataRoots.paths?.currentAggregateRoot ?? '待读取' }}</dd><dt>待生效用户集合根</dt><dd>{{ dataRoots.config?.aggregateRoot ?? dataRoots.paths?.aggregateRoot.path ?? '待读取' }}</dd><dt>当前 Desktop 工作根</dt><dd>{{ dataRoots.config?.currentDataRoot ?? '待读取' }}</dd><dt>待生效 Desktop 工作根</dt><dd>{{ dataRoots.config?.activeDataRoot ?? '待读取' }}</dd><dt>当前 OpenCodex HOME</dt><dd>{{ dataRoots.config?.currentOpencodexHome ?? '待读取' }}</dd><dt>待生效 OpenCodex HOME</dt><dd>{{ dataRoots.config?.opencodexHome ?? '待读取' }}</dd></dl>
-          <p v-if="dataRoots.reconciliationRequired" role="alert">绑定可能已保存，持久性核对尚未通过；待生效位置仅为预期目标。写入已暂停，请重启管理器核对。</p>
-          <p v-else role="status">已保存新位置，写入已暂停；当前服务仍使用当前路径，请重启管理器后回读确认。</p>
-        </div>
-        <p v-if="dataRoots.configError" role="alert">用户目录绑定配置读取失败；路径修改已暂停，请刷新核对。</p>
-        <p v-if="dataRoots.error" role="alert">{{ dataRoots.error }}</p>
-        </section><section class="directory-group"><h3>程序安装</h3>
+      <article class="card paths-v2" data-testid="settings-program-installation">
+        <div class="card-head"><div><h2>程序安装与卸载</h2><p>程序位于 Desktop 安装目录。</p></div></div>
+        <section class="directory-group">
         <dl class="paths-facts">
           <template v-for="key in programPathKeys" :key="key"><dt>{{ pathLabels[key] }}</dt><dd :data-path-key="key" :data-path-status="dataRoots.paths?.[key].status"><template v-if="dataRoots.paths"><code class="local-path">{{ dataRoots.paths[key].path }}</code><span v-if="dataRoots.paths[key].status!=='valid'" class="tag" :data-path-status="dataRoots.paths[key].status">{{ pathStatusLabels[dataRoots.paths[key].status] }}</span></template><span v-else>尚未读取</span></dd></template>
         </dl><div class="directory-status"><dl class="paths-facts"><dt>运行状态</dt><dd>{{ app.runtimeState === 'running' ? '运行中' : app.runtimeState === 'stopped' ? '已停止' : app.runtimeState === 'starting_failed' ? '启动失败' : '待核对' }}</dd>
@@ -888,6 +868,30 @@ function restoreGeneralDefaults() {
           <UiButton v-if="app.runtimeSource.kind==='managed'" class="btn ghost" type="button" @click="routes.go('settings',{section:'upgrade'})">更新面板</UiButton>
           <UiButton v-if="app.runtimeSource.kind!=='unresolved'" class="btn danger" type="button" data-testid="runtime-uninstall" :disabled="protectionBlocked||runtimeProtection.protectionLoading||!runtimeProtection.protection||restartPending" @click="openUninstall">卸载</UiButton>
         </div>
+        </section>
+      </article>
+      <RuntimePortSettings :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" />
+      <article class="card paths-v2" data-testid="settings-paths-v2">
+        <div class="card-head"><div><h2>用户数据与配置{{ restartPending ? ' · 待生效位置' : '' }}</h2><p>配置保存在当前用户目录。</p></div></div>
+        <p v-if="dataRoots.pathsLoading" role="status">正在读取实际位置…{{ dataRoots.paths ? '下方保留上次快照（非最新）。' : '' }}</p>
+        <p v-if="dataRoots.pathsError" role="alert">{{ dataRoots.pathsError }} {{ dataRoots.paths ? '已保留上次快照（非最新），请刷新后核对。' : '尚无可用快照；未推断路径或缺失状态。' }}</p>
+        <section class="directory-group">
+        <dl class="paths-facts">
+          <template v-for="key in userPathKeys" :key="key"><dt>{{ pathLabels[key] }}</dt><dd :data-path-key="key" :data-path-status="dataRoots.paths?.[key].status"><template v-if="dataRoots.paths"><code class="local-path">{{ dataRoots.paths[key].path }}</code><span v-if="dataRoots.paths[key].status!=='valid'" class="tag" :data-path-status="dataRoots.paths[key].status">{{ pathStatusLabels[dataRoots.paths[key].status] }}</span></template><span v-else>尚未读取</span></dd></template>
+        </dl>
+        <div class="runtime-actions">
+          <UiButton class="btn ghost" data-testid="paths-details" :disabled="!dataRoots.paths" @click="pathDialog = 'details'">完整查看与复制路径</UiButton>
+          <UiButton class="btn ghost" :disabled="!dataRoots.paths" @click="pathDialog = 'json'">读取渠道配置说明</UiButton>
+          <UiButton v-if="dataRoots.paths?.aggregateRoot.status === 'missing' || dataRoots.paths?.desktopRoot.status === 'missing'" class="btn" data-testid="paths-initialize" :disabled="dataRootBindingDisabled" @click="pathDialog = 'initialize'">初始化用户目录</UiButton>
+        </div>
+        <div v-if="restartPending" data-testid="paths-pending">
+          <h3>等待重启生效</h3>
+          <dl class="paths-facts"><dt>当前用户集合根</dt><dd>{{ dataRoots.paths?.currentAggregateRoot ?? '待读取' }}</dd><dt>待生效用户集合根</dt><dd>{{ dataRoots.config?.aggregateRoot ?? dataRoots.paths?.aggregateRoot.path ?? '待读取' }}</dd><dt>当前 Desktop 工作根</dt><dd>{{ dataRoots.config?.currentDataRoot ?? '待读取' }}</dd><dt>待生效 Desktop 工作根</dt><dd>{{ dataRoots.config?.activeDataRoot ?? '待读取' }}</dd><dt>当前 OpenCodex HOME</dt><dd>{{ dataRoots.config?.currentOpencodexHome ?? '待读取' }}</dd><dt>待生效 OpenCodex HOME</dt><dd>{{ dataRoots.config?.opencodexHome ?? '待读取' }}</dd></dl>
+          <p v-if="dataRoots.reconciliationRequired" role="alert">绑定可能已保存，持久性核对尚未通过；待生效位置仅为预期目标。写入已暂停，请重启管理器核对。</p>
+          <p v-else role="status">已保存新位置，写入已暂停；当前服务仍使用当前路径，请重启管理器后回读确认。</p>
+        </div>
+        <p v-if="dataRoots.configError" role="alert">用户目录绑定配置读取失败；路径修改已暂停，请刷新核对。</p>
+        <p v-if="dataRoots.error" role="alert">{{ dataRoots.error }}</p>
         </section>
       </article>
 
