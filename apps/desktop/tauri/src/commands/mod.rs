@@ -363,21 +363,29 @@ fn execute_lifecycle<R: ProcessRunner + ?Sized>(
                     context.clone(),
                 )?;
                 let proof = owner.query(context)?;
-                let observed =
-                    tauri::async_runtime::block_on(crate::infrastructure::attested_status::fetch(
-                        context.runtime.clone(),
-                        context.opencodex_home.clone(),
-                    ));
-                if matches!(proof, ServiceOwnerProof::Owned { .. })
-                    && owner.query(context)? == proof
-                    && matches!(observed,Ok(Some(ref value)) if value["ready"]==true && value["status"]=="running")
-                {
-                    return Ok(LifecycleResult::Started);
+                // A stale record is not a live service. Only the OS-backed
+                // observer may prove absence twice; the official CLI then owns
+                // its normal stale-record reconciliation. Unknown stays refused.
+                if proof == ServiceOwnerProof::Stopped && owner.query(context)? == proof {
+                    // Proceed to the ordinary authenticated start below.
+                } else {
+                    let observed = tauri::async_runtime::block_on(
+                        crate::infrastructure::attested_status::fetch(
+                            context.runtime.clone(),
+                            context.opencodex_home.clone(),
+                        ),
+                    );
+                    if matches!(proof, ServiceOwnerProof::Owned { .. })
+                        && owner.query(context)? == proof
+                        && matches!(observed,Ok(Some(ref value)) if value["ready"]==true && value["status"]=="running")
+                    {
+                        return Ok(LifecycleResult::Started);
+                    }
+                    return Err(AppError::RuntimeManaged {
+                        code: "lifecycle_existing_unconfirmed".into(),
+                        detail: "已有运行记录尚未核验就绪，未改端口或重复启动，请刷新核对。".into(),
+                    });
                 }
-                return Err(AppError::RuntimeManaged {
-                    code: "lifecycle_existing_unconfirmed".into(),
-                    detail: "已有运行记录尚未核验就绪，未改端口或重复启动，请刷新核对。".into(),
-                });
             }
             Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
             Err(_) => return Err(AppError::NotConfigured),

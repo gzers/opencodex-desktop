@@ -424,6 +424,7 @@ fn windows_stop_observes_actual_zero_and_nonzero_exit_codes() {
             executable: entry,
             working_directory: root.path().to_owned(),
             environment: environment(root.path()),
+            requested_port: None,
         };
         assert_eq!(
             ControlledProcessRunner::new(root.path())

@@ -407,6 +407,16 @@ mod tests {
     fn runtime_sqlite_mutation_and_generation_are_shared_not_an_independent_lock() {
         let (_t, root, home) = fixture();
         let before = load(&root, &home).unwrap();
+        // Use the same TokenUser-owned creation contract as production. On an
+        // elevated Windows token, SQLite's default owner can be Administrators;
+        // that is deliberately not accepted as the current user's private file.
+        drop(
+            crate::infrastructure::platform::create_new_private_file(
+                &home.join("config-mutation.sqlite"),
+                0o600,
+            )
+            .unwrap(),
+        );
         let connection = rusqlite::Connection::open(home.join("config-mutation.sqlite")).unwrap();
         connection.execute_batch("BEGIN IMMEDIATE").unwrap();
         let bytes = std::fs::read(home.join("config.json")).unwrap();
