@@ -1,0 +1,29 @@
+{
+  "source": "06109397afcd9e0ad34d7ab18c5b2bf11dbb97eb",
+  "passed": 20,
+  "failed": 8,
+  "accepted": false,
+  "artifact": {
+    "id": 13630920388,
+    "bytes": 34943359,
+    "sha256": "bebe0a871f776b9390d7e92c616cef73682768bf0738d76a71ba37713bcb4112",
+    "manifestFiles": 183
+  },
+  "rootCauses": [
+    "R25followup reused elevation/token observation for every process; restricted WebView process refused OpenProcessToken; actual error AccessDenied at helper134.",
+    "Controller ParameterBindingValidation at helper128 due empty Process.Path forwarded to mandatory executable parameter.",
+    "Bootstrap launch could be alive before initial ledger admission failed; user2account/Profile retained correctly, not counted clean."
+  ],
+  "batchSource": "8a9e0fa1c",
+  "fixes": [
+    "Dedicated native same-retained-handle identity uses PID/image/FILETIME only; all SID/image/generation checks retained; actualManager ordinary elevation admission remains explicit.",
+    "Cleanup can re-admit only same retained untracked bootstrap using complete identities; if unknown, retain and fail.",
+    "Real own-process/own-node retained-handle preflight wired before accounts and early CI smoke; max1tick counterexample rejects."
+  ],
+  "offlineContractsPassed": 127,
+  "nativePreflightPending": true,
+  "productCodeChanged": false,
+  "maintainedRuntimeChanged": false,
+  "runtime30sIssueStillOpen": true,
+  "nextDiagnosticDispatched": false
+}
