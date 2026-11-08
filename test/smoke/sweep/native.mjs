@@ -26,7 +26,10 @@ async function install(version){
  // Close only an actual settled installation via the same enabled header X.
  const existing=await evaluate(runtimeInstallExpression('0.2.23'))
  if(existing.present){assert.equal(existing.installing,false,'Previous installation still in flight; no competing mutation');await closeRuntimeInstallTerminal({wait,click},'0.2.23',existing.done?'done':'failed')}
- await click('设置','.side');await wait("!!document.querySelector('.settings-tabs')");await click('安装配置');await click('安装程序')
+ await click('设置','.side');await wait("!!document.querySelector('.settings-tabs')");await click('安装配置');
+ // Installation completion/source readback starts a real protection query.
+ // Wait within the existing UI budget for its enabled entry, never bypass it.
+ await wait("[...document.querySelectorAll('.route-section.active [data-testid=runtime-install]')].some(b=>!b.disabled&&b.getClientRects().length)");await click('安装程序')
  const expression=(fn,...args)=>runtimeInstallDomExpression('0.2.23',fn,...args)
  await wait(expression(root=>!!document.querySelector(root+' #wiz-prefix')))
  await evaluate(expression((root,value)=>{const input=document.querySelector(root+' input[aria-label="版本"]');input.value=value;input.dispatchEvent(new Event('input',{bubbles:true}));document.querySelector(root+' [data-testid=wiz-ack]').click()},version))

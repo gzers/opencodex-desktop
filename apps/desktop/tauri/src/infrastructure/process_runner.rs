@@ -267,6 +267,8 @@ impl ControlledProcessRunner {
             let started = action_started;
             let (mut observations, mut pending_ready, mut rejected, mut absent_record) =
                 (0u32, 0u32, 0u32, 0u32);
+            // Fixed labels/timings only: no server payload, key, path or upstream output.
+            let mut sample_timings = Vec::with_capacity(16);
             loop {
                 if started.elapsed() >= timeout {
                     #[cfg(test)]
@@ -288,7 +290,7 @@ impl ControlledProcessRunner {
                             }
                         }
                     }
-                    return Err(AppError::RuntimeManaged {code:"lifecycle_timeout".into(),detail:format!("启动未在原预算内证明就绪；observations={observations}, pending={pending_ready}, rejected={rejected}, absent_record={absent_record}。未延长预算或判定运行成功。")});
+                    return Err(AppError::RuntimeManaged {code:"lifecycle_timeout".into(),detail:format!("启动未在原预算内证明就绪；observations={observations}, pending={pending_ready}, rejected={rejected}, absent_record={absent_record}, samples={sample_timings:?}。未延长预算或判定运行成功。")});
                 }
                 match exit.try_recv() {
                     Ok(Some(code)) if code != 0 => {
@@ -332,6 +334,7 @@ impl ControlledProcessRunner {
                 }
                 let remaining = timeout.saturating_sub(started.elapsed());
                 observations += 1;
+                let sample_started = started.elapsed().as_millis();
                 let observed = tokio::time::timeout(
                     remaining,
                     super::attested_status::fetch(
@@ -340,6 +343,20 @@ impl ControlledProcessRunner {
                     ),
                 )
                 .await;
+                if sample_timings.len() < 16 {
+                    let outcome = match &observed {
+                        Ok(Ok(Some(value))) if value["ready"] == true => "ready",
+                        Ok(Ok(Some(value))) if value["officialReadiness"] == "pending" => "pending",
+                        Ok(Ok(Some(_))) => "not-ready",
+                        Ok(Ok(None)) => "no-source",
+                        Ok(Err(crate::modules::status::CollectError::Timeout)) | Err(_) => {
+                            "timeout"
+                        }
+                        Ok(Err(crate::modules::status::CollectError::Parse)) => "parse",
+                        Ok(Err(_)) => "unreachable",
+                    };
+                    sample_timings.push((sample_started, started.elapsed().as_millis(), outcome));
+                }
                 if !matches!(&observed, Ok(Ok(Some(_)))) {
                     rejected += 1;
                 }
