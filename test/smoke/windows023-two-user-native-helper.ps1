@@ -291,10 +291,31 @@ async function runtimeCommand(c){
     res.on('error',reject);res.on('end',()=>accept({status:res.statusCode,proof:res.headers['x-opencodex-attestation-proof'],body:Buffer.concat(chunks)}));
    });req.on('error',reject);req.setTimeout(5000,()=>req.destroy(Error('Loopback health deadline')));req.end();
   });
-  assert(response.status===200&&proofMatches(r.attestationSecret,challenge,r.pid,r.port,response.proof),'Production attestation failed');
+  runtimePublic.health={status:response.status,proofPresent:typeof response.proof==='string',attestationVerified:proofMatches(r.attestationSecret,challenge,r.pid,r.port,response.proof)};
+  assert(response.status===200&&runtimePublic.health.attestationVerified,'Production attestation failed');
   const h=JSON.parse(response.body.toString('utf8'));assert(h.service==='opencodex'&&h.pid===r.pid&&h.port===r.port,'Health identity changed');
   const again=await record();assert(again&&again.pid===r.pid&&again.port===r.port&&again.attestationSecret===r.attestationSecret,'Runtime binding changed');
   return {record:publicRecord(r),attestation:'verified-production-challenge',healthService:h.service,version:typeof h.version==='string'?h.version:null};
+ };
+ const diagnosticStatus=async()=>{
+  const paths=await bound(),install=resolve(paths.runtimePrefix.path,'../..'),node=join(install,'runtime/node/node.exe');
+  const packageRoot=join(paths.runtimePrefix.path,'node_modules/@bitkyc08/opencodex');
+  const declaration=JSON.parse(await readFile(join(packageRoot,'package.json'),'utf8'));
+  const relative=typeof declaration.bin==='string'?declaration.bin:declaration.bin?.ocx;
+  assert(typeof relative==='string'&&!relative.includes('..')&&!relative.startsWith('/'),'Diagnostic actual package bin required');
+  const script=join(packageRoot,relative);
+  const result=await new Promise(resolveResult=>{
+   const env={HOME:process.env.USERPROFILE,USERPROFILE:process.env.USERPROFILE,OPENCODEX_HOME:c.home,CODEX_HOME:join(c.home,'diagnostic-unused-codex'),PATH:join(install,'runtime/node'),CI:'1',OCX_NO_DESKTOP_HANDOFF:'1'};
+   for(const key of ['SystemRoot','WINDIR','COMSPEC','TEMP','TMP','APPDATA','LOCALAPPDATA'])if(process.env[key])env[key]=process.env[key];
+   const child=diagnosticSpawn(node,[script,'status','--json'],{env,stdio:['ignore','pipe','ignore'],cwd:c.home,windowsHide:true});
+   let output='',overflow=false;const started=Date.now();
+   const timer=setTimeout(()=>child.kill(),5000);
+   child.stdout.on('data',chunk=>{if(Buffer.byteLength(output)+chunk.length>1024*1024){overflow=true;child.kill();}else output+=chunk.toString('utf8');});
+   child.on('error',()=>{clearTimeout(timer);resolveResult({result:'spawn-failed',accepted:false});});
+   child.on('close',(code,signal)=>{clearTimeout(timer);let status;try{status=JSON.parse(output);}catch{}
+    resolveResult({exitCode:code,signal,elapsedMilliseconds:Date.now()-started,outputOverflow:overflow,parsed:!!status,proxy:status?.proxy?{running:status.proxy.running,pid:status.proxy.pid,port:status.proxy.port}:null,startup:status?.startup?{status:status.startup.status}:null,accepted:false});});
+  });
+  await writeFile(join(output,'actual-readonly-status-diagnostic.json'),JSON.stringify(result)+'\n');
  };
  const action=async action=>{
   await bound();const r=await runtimeInvoke('process_action',{request:{action,confirm:true}},action==='stop'?15000:35000);
@@ -336,8 +357,18 @@ async function runtimeCommand(c){
    result.conflict={rejected:true,ownedRecordAbsent:true,diagnosticMarker:true};result.status=last;
   }else{
    runtimeStage='wait-owned-health';let observed;
-   do{try{observed=await health();last=await snapshot();if(last.runtime==='running'&&last.health==='healthy'&&Number(last.pid)===observed.record.pid&&last.port===c.port)break;}catch{}await runtimeSleep(250);}while(Date.now()<until);
-   assert(observed&&last?.runtime==='running'&&last.health==='healthy'&&Number(last.pid)===observed.record.pid&&last.port===c.port,'Actual service not healthy within production start budget');
+   const samples=[];
+   do{try{observed=await health();last=await snapshot();samples.push({at:Date.now(),health:runtimePublic.health,status:last});if(last.runtime==='running'&&last.health==='healthy'&&Number(last.pid)===observed.record.pid&&last.port===c.port)break;}
+    catch(error){samples.push({at:Date.now(),health:runtimePublic.health??null,error:runtimeFailureCode(error)});}
+    await runtimeSleep(250);
+   }while(Date.now()<until);
+   await writeFile(join(output,'owned-health-observations.json'),JSON.stringify({samples:samples.slice(0,64),originalBudgetMilliseconds:30000,accepted:false})+'\n');
+   if(!(observed&&last?.runtime==='running'&&last.health==='healthy'&&Number(last.pid)===observed.record.pid&&last.port===c.port)){
+    // Additional readonly diagnosis follows the already failed original budget;
+    // its result cannot make this attempt pass or authorize the next service.
+    try{await diagnosticStatus();}catch{await writeFile(join(output,'actual-readonly-status-diagnostic.json'),JSON.stringify({result:'diagnostic-failed',accepted:false})+'\n');}
+    throw Error('Actual service not healthy within production start budget');
+   }
    result={...result,...observed,status:last};
   }
  }else if(c.mode==='observe'){
@@ -361,6 +392,7 @@ import assert from 'node:assert/strict';
 import {writeFile,readFile,open,rename,lstat,readdir,unlink} from 'node:fs/promises';
 import {createHmac,randomBytes,timingSafeEqual} from 'node:crypto';
 import {request as loopbackRequest} from 'node:http';
+import {spawn as diagnosticSpawn} from 'node:child_process';
 import {join,resolve} from 'node:path';
 import {discoverMainTarget} from './windows-cdp.mjs';
 const [endpoint,output,commandFile]=process.argv.slice(2);
