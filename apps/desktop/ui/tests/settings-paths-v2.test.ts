@@ -57,6 +57,31 @@ describe('settings paths v2 real Vue / Tauri contract', () => {
     expect(page.find('[data-path-key="opencodexHome"] [data-path-status]').exists()).toBe(false)
     expect(writes()).toEqual([])
   })
+  it.each([false, true])('refreshes actual paths after a confirmed port save; readback failure=%s', async failReadback => {
+    let saved = false
+    invoke.mockImplementation(async command => {
+      if (command === 'runtime_port_load') return { mode: 'auto', port: saved ? 55581 : null, revision: saved ? 'r2' : 'r1', reconciliationRequired: false }
+      if (command === 'runtime_port_save') { saved = true; paths.configPath.status = 'valid'; return { mode: 'auto', port: 55581, revision: 'r2', reconciliationRequired: false } }
+      if (command === 'model_paths_v2_snapshot' && saved && failReadback) throw new Error('path readback denied')
+      return read(command)
+    })
+    const { page, store } = await setup()
+    expect(page.get('[data-path-key="configPath"] [data-path-status]').text()).toBe('缺失')
+    const save = page.get('[data-testid="runtime-port-settings"]').findAll('button').find(b => b.text() === '检查并保存')!
+    await save.trigger('click'); await flushPromises()
+    expect(invoke.mock.calls.filter(([c]) => c === 'runtime_port_save')).toHaveLength(1)
+    expect(invoke.mock.calls.filter(([c]) => c === 'model_paths_v2_snapshot')).toHaveLength(2)
+    if (failReadback) {
+      expect(store.paths?.configPath.status).toBe('missing'); expect(store.pathsStale).toBe(true)
+      for (const id of ['settings-program-installation', 'settings-paths-v2']) {
+        expect(page.get('[data-testid="' + id + '"]').text()).toContain('path readback denied')
+        expect(page.get('[data-testid="' + id + '"]').text()).toContain('非最新')
+      }
+    } else {
+      expect(store.paths?.configPath.status).toBe('valid'); expect(store.pathsStale).toBe(false)
+      expect(page.find('[data-path-key="configPath"] .tag').exists()).toBe(false)
+    }
+  })
   it('copies full raw paths including Windows extended and long identities; view has only X exit', async () => {
     paths.runtimePrefix.path = '\\\\?\\D:\\' + 'directory with spaces\\'.repeat(40) + 'runtime'
     const { page } = await setup()

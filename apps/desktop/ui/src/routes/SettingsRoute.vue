@@ -843,6 +843,8 @@ function restoreGeneralDefaults() {
     <section v-else-if="section === 'installation'" class="settings-panel active">
       <article class="card paths-v2" data-testid="settings-program-installation">
         <div class="card-head"><div><h2>程序安装与卸载</h2><p>程序位于 Desktop 安装目录。</p></div></div>
+        <p v-if="dataRoots.pathsLoading" role="status">正在读取实际位置…{{ dataRoots.paths ? '下方保留上次快照（非最新）。' : '' }}</p>
+        <p v-if="dataRoots.pathsError" role="alert">{{ dataRoots.pathsError }} {{ dataRoots.paths ? '已保留上次快照（非最新），请刷新后核对。' : '尚无可用快照；未推断路径或缺失状态。' }}</p>
         <section class="directory-group">
         <dl class="paths-facts">
           <template v-for="key in programPathKeys" :key="key"><dt>{{ pathLabels[key] }}</dt><dd :data-path-key="key" :data-path-status="dataRoots.paths?.[key].status"><template v-if="dataRoots.paths"><code class="local-path">{{ dataRoots.paths[key].path }}</code><span v-if="dataRoots.paths[key].status!=='valid'" class="tag" :data-path-status="dataRoots.paths[key].status">{{ pathStatusLabels[dataRoots.paths[key].status] }}</span></template><span v-else>尚未读取</span></dd></template>
@@ -870,7 +872,7 @@ function restoreGeneralDefaults() {
         </div>
         </section>
       </article>
-      <RuntimePortSettings :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" />
+      <RuntimePortSettings @saved="refreshPaths" :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" />
       <article class="card paths-v2" data-testid="settings-paths-v2">
         <div class="card-head"><div><h2>用户数据与配置{{ restartPending ? ' · 待生效位置' : '' }}</h2><p>配置保存在当前用户目录。</p></div></div>
         <p v-if="dataRoots.pathsLoading" role="status">正在读取实际位置…{{ dataRoots.paths ? '下方保留上次快照（非最新）。' : '' }}</p>

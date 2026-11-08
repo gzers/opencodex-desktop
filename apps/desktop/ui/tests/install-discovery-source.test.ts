@@ -56,15 +56,15 @@ describe('安装发现采用真实 v2 程序位置和三方证据', () => {
     expect(page.get('[data-path-key="runtimeEntry"] code').text()).toBe(paths.runtimeEntry.path)
     expect(page.get('[data-testid="program-validity"]').text()).toBe('安装证据一致；运行状态另行核验')
     expect(page.find('[data-testid="runtime-source-card"]').exists()).toBe(true)
-    expect(page.get('[data-testid="settings-paths-v2"]').text()).not.toContain('/old/default/prefix')
+    expect(page.get('[data-testid="settings-program-installation"]').text()).not.toContain('/old/default/prefix')
   })
 
   it('分别显示包、清单、来源版本，不用旧发现版本或托管标签掩盖不一致', async () => {
     const paths = actualPaths()
     paths.program.sourceVersion = '2.94.0'; paths.program.consistency = 'mismatch'
     const page = await setup(paths)
-    expect(page.get('[data-testid="settings-paths-v2"]').text()).toContain('2.93.0 / 2.93.0 / 2.94.0')
-    expect(page.get('[data-testid="settings-paths-v2"]').text()).not.toContain('1.0-stale-discovery')
+    expect(page.get('[data-testid="settings-program-installation"]').text()).toContain('2.93.0 / 2.93.0 / 2.94.0')
+    expect(page.get('[data-testid="settings-program-installation"]').text()).not.toContain('1.0-stale-discovery')
     expect(page.get('[data-testid="program-validity"]').text()).toContain('不一致，待核对')
   })
 
@@ -76,6 +76,6 @@ describe('安装发现采用真实 v2 程序位置和三方证据', () => {
     expect(page.get('[data-path-key="runtimeEntry"] [data-path-status]').attributes('data-path-status')).toBe(consistency)
     expect(page.get('[data-testid="program-validity"]').text()).toMatch(consistency === 'missing' ? /尚未安装/ : /无法读取，待核对/)
     expect(page.get('[data-testid="program-validity"]').text()).not.toContain('安装证据一致')
-    expect(page.get('[data-testid="settings-paths-v2"]').text()).toContain('未记录 / 未记录 / 未记录')
+    expect(page.get('[data-testid="settings-program-installation"]').text()).toContain('未记录 / 未记录 / 未记录')
   })
 })

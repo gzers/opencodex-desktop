@@ -10,6 +10,7 @@ import {useAppStore} from '@/stores/app'
 type Mode='auto'|'fixed'
 interface PortSnapshot {mode:Mode;port:number|null;revision:string;reconciliationRequired:boolean}
 const props=defineProps<{disabled?:boolean}>()
+const emit=defineEmits<{saved:[]}>()
 const lifecycle=useLifecycleStore(),app=useAppStore()
 const saved=ref<PortSnapshot|null>(null),mode=ref<Mode>('auto'),port=ref(''),loading=ref(true),saving=ref(false),error=ref(''),restartOpen=ref(false)
 const running=computed(()=>lifecycle.statusSnapshot?.matrix.runtime==='running')
@@ -22,7 +23,7 @@ const summary=computed(()=>loading.value?'正在读取端口设置…':saving.va
 function accept(value:PortSnapshot){saved.value=value;mode.value=value.mode;port.value=String(value.port??'');}
 function message(e:unknown){return typeof e==='object'&&e!==null&&'detail' in e&&typeof e.detail==='string'?e.detail:'端口操作未确认完成，请刷新核对。';}
 async function load(){loading.value=true;try{accept(await invoke<PortSnapshot>('runtime_port_load'));error.value='';}catch(e){error.value=message(e);}finally{loading.value=false;}}
-async function save(){if(busy.value||!saved.value||!valid.value)return;saving.value=true;error.value='';try{const value=await invoke<PortSnapshot>('runtime_port_save',{request:{mode:mode.value,port:mode.value==='fixed'?Number(port.value):null,expectedRevision:saved.value.revision}});accept(value);app.showToast('端口 '+value.port+' 已保存。');}catch(e){error.value=message(e);try{accept(await invoke<PortSnapshot>('runtime_port_load'));}catch{/* retain error and last readable snapshot */}}finally{saving.value=false;}}
+async function save(){if(busy.value||!saved.value||!valid.value)return;saving.value=true;error.value='';try{const value=await invoke<PortSnapshot>('runtime_port_save',{request:{mode:mode.value,port:mode.value==='fixed'?Number(port.value):null,expectedRevision:saved.value.revision}});accept(value);if(!value.reconciliationRequired)emit('saved');app.showToast('端口 '+value.port+' 已保存。');}catch(e){error.value=message(e);try{accept(await invoke<PortSnapshot>('runtime_port_load'));}catch{/* retain error and last readable snapshot */}}finally{saving.value=false;}}
 async function reconcile(){if(busy.value)return;saving.value=true;try{accept(await invoke<PortSnapshot>('runtime_port_reconcile'));error.value='';}catch(e){error.value=message(e);}finally{saving.value=false;}}
 function revert(){if(saved.value){accept(saved.value);error.value='';}}
 async function action(restart=false){restartOpen.value=false;try{const result=await lifecycle.requestProcessAction(restart?'restart':'start');await load();if(result?.failure)error.value=result.failure.message;}catch(e){error.value=message(e);}}
