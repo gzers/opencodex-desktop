@@ -254,7 +254,7 @@ function runtimeFailureCode(error){
  return codes.get(error?.message)||'runtime_binding_or_transport_failed';
 }
 const runtimeSleep=ms=>new Promise(r=>setTimeout(r,ms));
-function fixtureConfig(port){assert(Number.isInteger(port)&&port>=1024&&port<=65535);return {port,hostname:'127.0.0.1',providers:{}};}
+function fixtureConfig(port){assert(Number.isInteger(port)&&(port===0||(port>=1024&&port<=65535)));return port===0?{hostname:'127.0.0.1',providers:{}}:{port,hostname:'127.0.0.1',providers:{}};}
 function publicRecord(record){
  assert(Number.isInteger(record.pid)&&record.pid>0&&Number.isInteger(record.port)&&record.port>=1024&&record.port<=65535,'Runtime public identity invalid');
  return {pid:record.pid,port:record.port};
@@ -271,7 +271,7 @@ function runtimeSelfTest(){
  assert(!proofMatches(secret,challenge,42,54322,proof));assert(!proofMatches(secret,challenge,42,54321,'bad'));
  assert.deepEqual(publicRecord({pid:42,port:54321,attestationSecret:secret}),{pid:42,port:54321});
  assert(!JSON.stringify(publicRecord({pid:42,port:54321,attestationSecret:secret})).includes(secret));
- assert.deepEqual(fixtureConfig(54321),{port:54321,hostname:'127.0.0.1',providers:{}});assert.throws(()=>fixtureConfig(0));
+ assert.deepEqual(fixtureConfig(54321),{port:54321,hostname:'127.0.0.1',providers:{}});assert.deepEqual(fixtureConfig(0),{hostname:'127.0.0.1',providers:{}});assert.throws(()=>fixtureConfig(-1));
  assert.notEqual(Buffer.from(JSON.stringify(fixtureConfig(54321)),'utf8')[0],0xef);
  console.log('pass-runtime-pure-fixtures-only');
 }
@@ -310,8 +310,11 @@ async function runtimeCommand(c){
   assert(st.isFile()&&!st.isSymbolicLink()&&st.size<=4096,'Unsafe runtime record');
   const r=JSON.parse(await readFile(recordPath,'utf8'));runtimePublic.record=publicRecord(r);return r;
  };
+ const requestedPort=c.port;
  const health=async()=>{
-  const r=await record();assert(r&&r.port===c.port&&(!c.expectedPid||r.pid===c.expectedPid),'Runtime record changed');
+  const r=await record();
+  if(c.mode==='start'&&requestedPort===0&&c.port===0&&r){c.port=r.port;runtimePublic.automaticPort={requested:'omitted',selected:r.port,source:'actual-opencodex-runtime-record'};runtimePublic.port=r.port;}
+  assert(r&&r.port===c.port&&(!c.expectedPid||r.pid===c.expectedPid),'Runtime record changed');
   const challenge=randomBytes(32).toString('base64url');
   // Literal loopback, no proxies/redirects, no admin key or inference request.
   const response=await new Promise((accept,reject)=>{
@@ -407,7 +410,7 @@ async function runtimeCommand(c){
     try{await diagnosticStatus();}catch{await writeFile(join(output,'actual-readonly-status-diagnostic.json'),JSON.stringify({result:'diagnostic-failed',accepted:false})+'\n');}
     throw Error('Actual service not healthy within production start budget');
    }
-   result={...result,...observed,status:last};
+   result={...result,...observed,status:last,port:c.port,automaticPort:requestedPort===0?runtimePublic.automaticPort:null};
   }
  }else if(c.mode==='observe'){
   runtimeStage='observe';result={...result,...await health(),status:await snapshot()};
@@ -553,14 +556,6 @@ function Get-TwoUserRuntimeSteps([int]$Role) {
  if($Role -eq 2){return @('conflict','start','overlap','stop','complete')}
  throw 'Invalid runtime fixture role'
 }
-function Get-TwoUserFreeRuntimePort([int[]]$Excluded) {
- for($attempt=0;$attempt -lt 20;$attempt++){
-  $socket=[Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback,0)
-  try{$socket.Start();$chosen=[int]$socket.LocalEndpoint.Port}finally{$socket.Stop()}
-  if($chosen -ge 1024 -and $chosen -notin $Excluded -and !(Get-NetTCPConnection -State Listen -LocalPort $chosen -ErrorAction SilentlyContinue)){return $chosen}
- }
- throw 'No free ephemeral fixture port; do not evict any listener'
-}
 function Invoke-TwoUserRuntimeDriver($Context,$App,$Ledger,[string]$Mode,[int]$Port,[int]$ExpectedPid,[string]$Label) {
  Assert-TwoUserChildGuard
  Assert-TwoUserNoReparseAncestors (Join-Path $Context.profile '.codex-desktop/opencodex/home')
@@ -636,7 +631,7 @@ function Invoke-TwoUserRuntimeSession($Context,$App,$Ledger,[string]$RuntimePref
     $port=if($step -ceq 'conflict'){
      if($Context.runtimeRole -ne 2 -or [int]$command.port -lt 1024 -or [int]$command.port -gt 65535 -or [int]$command.peerPid -le 0){throw 'Explicit peer port identity required'}
      [int]$command.port
-    }else{Get-TwoUserFreeRuntimePort @([int]$command.peerPort,[int]$App.port)}
+    }else{0} # No chosen port in the file: the adopted runtime must allocate it.
     $observed=Invoke-TwoUserRuntimeDriver $Context $App $Ledger $step $port 0 ([string]$index)
     if($step -ceq 'conflict'){
      $listeners=@(Get-NetTCPConnection -State Listen -LocalPort $port -ErrorAction SilentlyContinue)
@@ -644,7 +639,8 @@ function Invoke-TwoUserRuntimeSession($Context,$App,$Ledger,[string]$RuntimePref
      $reply.conflict=$observed;$reply.peerListenerUnchanged=$true
     }else{
      $State.service=Get-TwoUserOwnedRuntime $Context $App $Ledger $observed.record $RuntimePrefix $null
-     $reply.service=$State.service;$reply.health=$observed
+     if($observed.automaticPort.requested -cne 'omitted' -or $observed.automaticPort.selected -ne $State.service.port){throw 'Actual omitted-port automatic allocation not proved'}
+     $reply.service=$State.service;$reply.health=$observed;$reply.automaticPort=$observed.automaticPort
     }
    }elseif($step -ceq 'complete'){
     if($State.service){throw 'Runtime must be stopped before completion'}
