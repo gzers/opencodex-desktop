@@ -20,12 +20,28 @@ use std::{
     time::Duration,
 };
 
+#[path = "discovery_flight.rs"]
+mod discovery_flight;
+
 #[tauri::command]
 pub async fn discover_environment(
     request: Option<DiscoveryRequest>,
     handle: tauri::State<'_, Arc<RuntimeHandle>>,
 ) -> AppResult<EnvironmentReportDto> {
-    discover(request, handle.inner().clone()).await
+    let handle = handle.inner().clone();
+    // Explicit path reports never join a managed observation. Equal default
+    // requests share only the currently running checks on this exact handle.
+    if explicit(request.clone())?.is_some() {
+        return discover(request, handle).await;
+    }
+    static FLIGHTS: std::sync::OnceLock<Arc<discovery_flight::Flights>> =
+        std::sync::OnceLock::new();
+    let key = Arc::as_ptr(&handle) as usize;
+    FLIGHTS
+        .get_or_init(|| Arc::new(discovery_flight::Flights::default()))
+        .clone()
+        .run(key, async move { discover(request, handle).await })
+        .await
 }
 fn error(code: &str, detail: &str) -> AppError {
     AppError::RuntimeManaged {
@@ -113,13 +129,15 @@ fn managed(handle: &RuntimeHandle) -> AppResult<Managed> {
             "集成运行包或激活证明不一致，请核对当前安装来源",
         )
     })?;
-    let (node, npm) = super::runtime::managed_executables(handle)?;
-    let (Some(node), Some(npm)) = (node, npm) else {
-        return Err(error(
-            "discovery_runtime_invalid",
-            "固定 Node/npm 依赖未就绪",
-        ));
-    };
+    // resolve_managed_installation above already fully verifies Node, launcher,
+    // package and bin. Repeating managed_executables would hash the same Node
+    // a second time here; retain one full check both BEFORE and AFTER probes.
+    let (node, npm) = install::managed_dependency_paths(root);
+    for path in [&node, &npm] {
+        safety::check_path(root, path, false)?;
+    }
+    runtime::paths::validate_executable(&node)
+        .map_err(|_| error("discovery_runtime_invalid", "固定 Node 依赖未就绪"))?;
     if identity.node != node || identity.entry != handle.managed_entry() {
         return Err(error(
             "discovery_runtime_invalid",
@@ -261,15 +279,6 @@ async fn check(
         path: Some(reported.to_string_lossy().into_owned()),
         version,
     }
-}
-#[cfg(test)]
-async fn probe_paths(
-    paths: &EnvironmentPaths,
-    managed_script: Option<&Path>,
-    home: &Path,
-    timeout: Duration,
-) -> EnvironmentReportDto {
-    probe_paths_traced(paths, managed_script, home, timeout, None).await
 }
 async fn probe_paths_traced(
     paths: &EnvironmentPaths,

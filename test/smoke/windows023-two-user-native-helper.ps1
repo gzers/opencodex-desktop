@@ -769,6 +769,9 @@ function Invoke-TwoUserChild([string]$InputFile) {
    if(!(Get-Content -LiteralPath $appLog -Raw).Contains('commit='+$c.commit)){throw 'Actual own Manager source provenance differs'}
    if(!$supplyTerminal){throw 'NotReady: still-verifying supply is not interrupted for an IPC fixture'}
    Add-TwoUserDescendants $manager.fact $ledger
+   # Close the Manager's owned query Job handles first. Waiting for a child
+   # while its owner remains alive can retain a still-supervised generation.
+   Stop-TwoUserTracked $manager.fact
    foreach($fact in @($ledger.Values|Sort-Object {[long]$_.creationTicks} -Descending)){Stop-TwoUserTracked $fact};$ledger.Clear();$manager.process.Dispose()
    $prefs=Join-Path $root 'manager-state/preferences.json'
    $document=if(Test-Path -LiteralPath $prefs){Get-Content -LiteralPath $prefs -Raw|ConvertFrom-Json -AsHashtable}else{@{schema_version=2}}
@@ -992,6 +995,7 @@ function Invoke-TwoUserChild([string]$InputFile) {
   }
  }catch{
   $result.failureKind=$_.Exception.GetType().FullName;$result.failureLine=$_.InvocationInfo.ScriptLineNumber
+  if($c.diagnosticSweep){$result.actualFailure=($_.Exception.Message -split "\r?\n",2)[0]}
   $result.failureCode=if($_.Exception.Message.StartsWith('NotReady:')){$_.Exception.Message}else{'Native identity/UI/IPC/cleanup assertion failed; inspect stage and retained evidence'}
   $result.result=if($_.Exception.Message.StartsWith('NotReady:')){'not-ready'}else{'fail'}
   Write-TwoUserJson (Join-Path $out 'failure.json') $result
