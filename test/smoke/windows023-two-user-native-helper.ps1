@@ -254,7 +254,11 @@ function runtimeFailureCode(error){
  return codes.get(error?.message)||'runtime_binding_or_transport_failed';
 }
 const runtimeSleep=ms=>new Promise(r=>setTimeout(r,ms));
-function fixtureConfig(port){assert(Number.isInteger(port)&&(port===0||(port>=1024&&port<=65535)));return port===0?{hostname:'127.0.0.1',providers:{}}:{port,hostname:'127.0.0.1',providers:{}};}
+function fixtureConfig(port){
+ assert(Number.isInteger(port)&&(port===0||(port>=1024&&port<=65535)));
+ const config={hostname:'127.0.0.1',defaultProvider:'sweep-fixture',defaultModelAliases:false,providers:{'sweep-fixture':{adapter:'openai-chat',baseUrl:'http://127.0.0.1:1/v1',allowPrivateNetwork:true,apiKey:'synthetic-unused',models:['sweep-fixture-model'],selectedModels:['sweep-fixture-model'],liveModels:false,defaultAliases:false}}};
+ if(port!==0)config.port=port;return config;
+}
 function publicRecord(record){
  assert(Number.isInteger(record.pid)&&record.pid>0&&Number.isInteger(record.port)&&record.port>=1024&&record.port<=65535,'Runtime public identity invalid');
  return {pid:record.pid,port:record.port};
@@ -271,7 +275,8 @@ function runtimeSelfTest(){
  assert(!proofMatches(secret,challenge,42,54322,proof));assert(!proofMatches(secret,challenge,42,54321,'bad'));
  assert.deepEqual(publicRecord({pid:42,port:54321,attestationSecret:secret}),{pid:42,port:54321});
  assert(!JSON.stringify(publicRecord({pid:42,port:54321,attestationSecret:secret})).includes(secret));
- assert.deepEqual(fixtureConfig(54321),{port:54321,hostname:'127.0.0.1',providers:{}});assert.deepEqual(fixtureConfig(0),{hostname:'127.0.0.1',providers:{}});assert.throws(()=>fixtureConfig(-1));
+ assert.equal(fixtureConfig(54321).port,54321);assert(!Object.hasOwn(fixtureConfig(0),'port'));
+ assert.equal(fixtureConfig(0).defaultProvider,'sweep-fixture');assert.equal(Object.keys(fixtureConfig(0).providers).length,1);assert.equal(fixtureConfig(0).providers['sweep-fixture'].liveModels,false);assert.throws(()=>fixtureConfig(-1));
  assert.notEqual(Buffer.from(JSON.stringify(fixtureConfig(54321)),'utf8')[0],0xef);
  console.log('pass-runtime-pure-fixtures-only');
 }
@@ -382,11 +387,11 @@ async function runtimeCommand(c){
   }
   const configPath=join(c.home,'config.json'),temp=join(c.home,'config.json.two-user-'+randomBytes(12).toString('hex'));
   let old;try{const st=await lstat(configPath);assert(st.isFile()&&!st.isSymbolicLink()&&st.size<512*1024);old=JSON.parse(await readFile(configPath,'utf8'));}catch(e){if(e.code!=='ENOENT')throw e;}
-  assert(!old||!old.providers||Object.keys(old.providers).length===0,'Fixture H contains providers');
+  assert(!old||!old.providers||Object.keys(old.providers).length===0||(Object.keys(old.providers).length===1&&JSON.stringify(old.providers)===JSON.stringify(fixtureConfig(0).providers)),'Fixture H contains unexpected providers');
   const handle=await open(temp,'wx',0o600);
   try{await handle.writeFile(JSON.stringify(fixtureConfig(c.port))+'\n','utf8');await handle.sync();}finally{await handle.close();}
   try{await rename(temp,configPath);}catch(e){await unlink(temp).catch(()=>{});throw e;}
-  result.config={path:configPath,providers:0,utf8Bom:false,atomicRename:true};
+  result.config={path:configPath,providers:1,syntheticOnly:true,liveModels:false,utf8Bom:false,atomicRename:true};
   runtimeStage='manager-start';result.action=await action('start');
   const until=Date.now()+30000;let last;
   if(c.mode==='conflict'){
@@ -585,7 +590,24 @@ function Invoke-TwoUserRuntimeDriver($Context,$App,$Ledger,[string]$Mode,[int]$P
   $reply=Join-Path $dir 'runtime-step.json'
   if(!(Test-Path -LiteralPath $reply)){throw 'Runtime driver returned no controlled receipt'}
   $value=Get-Content -LiteralPath $reply -Raw|ConvertFrom-Json
-  if($driver.ExitCode -ne 0 -or $value.result -cne 'pass-runtime-step'){throw ('Runtime step failed: '+$Label)}
+  if($driver.ExitCode -ne 0 -or $value.result -cne 'pass-runtime-step'){
+   # The unchanged production attempt has already failed. Preserve actual
+   # backend timing/error separately; this observation never changes the gate.
+   $installation=Split-Path -Parent $App.fact.path
+   $observer=Join-Path $installation 'sweep-state.exe'
+   if(Test-Path -LiteralPath $observer){
+    $probeInfo=[Diagnostics.ProcessStartInfo]::new();$probeInfo.FileName=$observer;$probeInfo.UseShellExecute=$false;$probeInfo.RedirectStandardOutput=$true;$probeInfo.RedirectStandardError=$true
+    foreach($arg in @('--runtime-observe',$installation,(Join-Path $Context.profile '.codex-desktop/desktop'),(Join-Path $Context.profile '.codex-desktop/opencodex/home'))){$probeInfo.ArgumentList.Add($arg)}
+    $probe=[Diagnostics.Process]::Start($probeInfo)
+    try{
+     $probeFact=Get-TwoUserProcessFact $probe $Context.accountSid;$Ledger[[int]$probeFact.pid]=$probeFact
+     $probeOutput=$probe.StandardOutput.ReadToEndAsync();$probeError=$probe.StandardError.ReadToEndAsync()
+     if(!$probe.WaitForExit(12000)){Stop-TwoUserTracked $probeFact;Write-TwoUserJson (Join-Path $dir 'actual-backend-status-observer.json') @{timedOut=$true;accepted=$false}}
+     else{$probeOutput.GetAwaiter().GetResult()|Set-Content -LiteralPath (Join-Path $dir 'actual-backend-status-observer.log')}
+    }finally{$probe.Dispose()}
+   }
+   throw ('Runtime step failed: '+$Label)
+  }
   $value
  }finally{$driver.Dispose()}
 }

@@ -50,6 +50,10 @@ $receipt=Invoke-SweepCheck $recordDirectory $Step $Name {
    $node=(Get-Command node.exe).Source;$npm=Join-Path (Split-Path -Parent $node) 'node_modules/npm/bin/npm-cli.js'
    & python .github/scripts/stage_runtime_bundle_023.py --platform win32-x64 --build-node $node --npm-cli $npm --output (Join-Path $root 'current-runtime-stage') *> (Join-Path $evidence 'current-runtime-stage.log')
    if($LASTEXITCODE -ne 0){throw 'Current adopted runtime resources staging failed; old installers cannot substitute'}
+   $schemaRuntime=Join-Path $root 'current-runtime-stage/platform-bundle/runtime-bundle/runtime/opencodex/node_modules/@bitkyc08/opencodex'
+   $schemaBun=Join-Path $root 'current-runtime-stage/platform-bundle/runtime-bundle/runtime/bun/bun.exe'
+   & python test/smoke/sweep/check_runtime_fixture.py --runtime $schemaRuntime --bun $schemaBun *> (Join-Path $evidence 'actual-runtime-fixture-schema.log')
+   if($LASTEXITCODE -ne 0){throw 'Real-user synthetic fixture rejected by actual adopted runtime schema'}
    $resources=Join-Path $repo 'apps/desktop/tauri/resources/runtime-bundle'
    Copy-Item -LiteralPath $resources -Destination $env:OCXD_SWEEP_PROGRAM -Recurse
    $descriptor=Get-Content -LiteralPath (Join-Path $resources 'runtime-bundle.manifest.json') -Raw|ConvertFrom-Json
@@ -82,8 +86,8 @@ $receipt=Invoke-SweepCheck $recordDirectory $Step $Name {
    & cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib infrastructure::attested_status -- --nocapture *> (Join-Path $evidence 'attested-status-regression.log')
    if($LASTEXITCODE -ne 0){throw 'Actual Windows attested status transport/consumer regression failed'}
    $log=Get-Content -LiteralPath (Join-Path $evidence 'attested-status-regression.log') -Raw
-   if($log -notmatch '5 passed; 0 failed'){throw 'All five Windows attested status tests must actually execute'}
-   @{source=(git -C $repo rev-parse HEAD).Trim();tests=5;platform='Windows actual loopback TCP/private files/consumer';accepted=$false}
+   if($log -notmatch '7 passed; 0 failed'){throw 'All seven Windows attested status tests must actually execute'}
+   @{source=(git -C $repo rev-parse HEAD).Trim();tests=7;platform='Windows actual loopback TCP/private files/consumer including official owner-only ACL';accepted=$false}
   }
   bundle-roots {
    & cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib windows_bundle_roots -- --nocapture *> (Join-Path $evidence 'windows-bundle-root-regression.log')
