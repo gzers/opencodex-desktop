@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-09",
+  "targetVersion": "0.2.23",
+  "adoptedDocsSource": "62e58b6d820f93bcc74c8e5dadb7b2f3c7ad47db",
+  "implementationSource": "9dbfe4d43e04eb1cb0ae651c48ea367bee7e81ac",
+  "scope": [
+    "ocxd023Program",
+    "runtimePort023",
+    "ocxd023Settings"
+  ],
+  "order": [
+    "程序安装与卸载",
+    "OpenCodex 服务（端口）",
+    "用户数据与配置"
+  ],
+  "change": "Split program and user cards; move program first, port second, user paths third. Business behavior unchanged.",
+  "sources": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": {
+      "bytes": 640568,
+      "sha256": "5f58a01e6ef34893b9ea17205d176e794f8c4a42578027ecbffe8eb910f13ea4"
+    },
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/directory-runtime-023.js": {
+      "bytes": 11239,
+      "sha256": "b21b7d1f8a6a2e9cb06c040ebefeb07ab87902884ff7599eea26718f31283bc6"
+    },
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/directory-runtime-023.css": {
+      "bytes": 1636,
+      "sha256": "59ce50803d5d98eff77c741e330fb2723d3e849fe764e093600dea622ba5068d"
+    },
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/runtime-port-023.js": {
+      "bytes": 13853,
+      "sha256": "086fc6d7d1a09a23028b2bd024e45a9ffe06cec5fd7ca0f0b409eb22efdce333"
+    },
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/runtime-port-023.css": {
+      "bytes": 1081,
+      "sha256": "878f950509be68776501bee7509cd7c8e892235431f96448cf54f1f70a734a28"
+    },
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/runtime-recovery-023.js": {
+      "bytes": 8171,
+      "sha256": "162261d18c818e38db2a4e2e3b0156c2c12e880283338351c078600b9c36ce5c"
+    },
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/annotation-cards.js": {
+      "bytes": 21896,
+      "sha256": "8646b8a95a0f610d2841abfafd826bd7d9bde7a1c1b74365aa090e8baa71e047"
+    }
+  },
+  "sourceBasis": "Committed Git blobs only; unrelated parallel working prototype drafts excluded.",
+  "predecessor": ".adg/evidence/0.2.23/installation-ui-checklist-20261108/source-manifest.json",
+  "verification": {
+    "kind": "source-diff-review-only",
+    "testsRun": false,
+    "reason": "User requested no tests for the pure UI ordering change.",
+    "productVisualAcceptance": false
+  },
+  "releaseAccepted": false
+}
