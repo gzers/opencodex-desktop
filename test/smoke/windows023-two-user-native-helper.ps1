@@ -113,16 +113,28 @@ function Test-TwoUserOriginalExited($Fact) {
 function Close-TwoUserProcessHandles {
  if($script:twoUserRetainedHandles){foreach($handle in $script:twoUserRetainedHandles.Values){$handle.Dispose()};$script:twoUserRetainedHandles.Clear()}
 }
+function Assert-TwoUserNativeIdentity($Observed,[int]$ExpectedPid,[string]$ExpectedPath,[string]$ExpectedTicks) {
+ if($Observed.status -cne 'observed' -or $Observed.processId -ne $ExpectedPid -or $Observed.executable -ine $ExpectedPath){throw 'Retained native PID/image mismatch'}
+ $created=[datetime]::Parse($Observed.creationTimeUtc,[Globalization.CultureInfo]::InvariantCulture,[Globalization.DateTimeStyles]::RoundtripKind).ToUniversalTime().Ticks
+ if([string]$created -cne $ExpectedTicks){throw 'Retained native creation generation mismatch'}
+}
 function Get-TwoUserProcessFact([Diagnostics.Process]$Process,[string]$ExpectedSid) {
  [void]$Process.Handle
  if($Process.HasExited){throw 'Tracked process exited'}
+ $ticks=[string]$Process.StartTime.ToUniversalTime().Ticks;$image=$Process.Path
+ # Native observation brackets CIM ownership with the SAME retained process
+ # handle and exact FILETIME. CIM's microsecond CreationDate is not the process
+ # generation authority. No timestamp tolerance or PID-only fallback is used.
+ $before=Get-WindowsProcessToken -Process $Process -ExpectedExecutable $image
+ Assert-TwoUserNativeIdentity $before $Process.Id $image $ticks
  $row=Get-CimInstance Win32_Process -Filter ('ProcessId='+$Process.Id) -ErrorAction Stop
  $owner=Invoke-CimMethod -InputObject $row -MethodName GetOwnerSid -ErrorAction Stop
- if($owner.ReturnValue -ne 0 -or $owner.Sid -cne $ExpectedSid){throw 'Tracked SID mismatch'}
- $ticks=$Process.StartTime.ToUniversalTime().Ticks;$delta=$ticks-$row.CreationDate.ToUniversalTime().Ticks
- if($delta -lt 0 -or $delta -gt 9 -or $Process.Path -ine $row.ExecutablePath){throw 'Tracked generation/image mismatch'}
- Save-TwoUserProcessHandle $Process ([string]$ticks)
- [pscustomobject]@{pid=$Process.Id;sid=$owner.Sid;path=$Process.Path;creationTicks=[string]$ticks;sessionId=$row.SessionId}
+ if($row.ProcessId -ne $Process.Id -or $owner.ReturnValue -ne 0 -or $owner.Sid -cne $ExpectedSid){throw 'Tracked SID/PID mismatch'}
+ if($image -ine $row.ExecutablePath){throw 'Tracked native/CIM image mismatch'}
+ $after=Get-WindowsProcessToken -Process $Process -ExpectedExecutable $image
+ Assert-TwoUserNativeIdentity $after $Process.Id $image $ticks
+ Save-TwoUserProcessHandle $Process $ticks
+ [pscustomobject]@{pid=$Process.Id;sid=$owner.Sid;path=$image;creationTicks=$ticks;sessionId=$row.SessionId;generationSource='retained-handle-native-filetime'}
 }
 function Assert-TwoUserLive($Fact) {
  $p=Get-Process -Id $Fact.pid -ErrorAction Stop

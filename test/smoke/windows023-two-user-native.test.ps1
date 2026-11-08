@@ -64,6 +64,18 @@ Assert-Test ($main.Contains('twoSidNativePassed=$false') -and $main.Contains('$t
 Assert-Test ($main.Contains('runtimeProxyPortIsolation=''not-verified''') -and $main.Contains('fullVersionGatePassed=$false')) 'no-false-complete-runtime-gate'
 Assert-Test ($helper.Contains('lockContentHash=''unavailable-while-byte-range-lock-held''')) 'unavailable-lock-bytes-not-invented'
 Assert-Test ($main.Contains('minimumSeconds=6') -and $main.Contains('Get-TwoUserWindow $f.manager')) 'overlap-is-live-generations-and-visible-owned-windows'
+# Exact native generation fixture; reject a 100ns difference, SID is checked
+# separately through CIM bracketed by retained-handle native observations.
+$native=@{status='observed';processId=42;executable='C:\fixture\app.exe';creationTimeUtc='2026-11-08T18:35:44.4648146Z'}
+$nativeTicks=[string][datetime]::Parse($native.creationTimeUtc,[Globalization.CultureInfo]::InvariantCulture,[Globalization.DateTimeStyles]::RoundtripKind).ToUniversalTime().Ticks
+Assert-TwoUserNativeIdentity $native 42 'C:\fixture\app.exe' $nativeTicks
+Assert-Test $true 'native-generation-exact-filetime-accepted'
+Assert-Throws {Assert-TwoUserNativeIdentity $native 42 'C:\fixture\app.exe' ([string]([long]$nativeTicks+1))} 'native-generation-one-tick-change-refused'
+Assert-Throws {Assert-TwoUserNativeIdentity $native 43 'C:\fixture\app.exe' $nativeTicks} 'native-generation-other-PID-refused'
+Assert-Throws {Assert-TwoUserNativeIdentity $native 42 'C:\peer\app.exe' $nativeTicks} 'native-generation-other-image-refused'
+Assert-Test ($helper.Contains('$before=Get-WindowsProcessToken') -and $helper.Contains('$after=Get-WindowsProcessToken') -and !$helper.Contains('$delta -gt 9')) 'same-retained-handle-brackets-CIM-owner-without-time-tolerance'
+Assert-Test ($main.IndexOf('$account.process.Dispose();$account.process=$null') -lt $main.IndexOf('$profiles=@(Get-CimInstance Win32_UserProfile')) 'exited-bootstrap-handle-released-before-profile-unload'
+Assert-Test ($main.Contains('if(!$account.process.HasExited)') -and $main.Contains('Original bootstrap handle is still live; retain Profile/account')) 'live-bootstrap-still-blocks-profile-delete'
 # Pure naming fixture: synthetic strings here are never used as client tokens.
 $one=Get-TwoUserPipeName 'S-1-5-21-1-2-3-1001';$two=Get-TwoUserPipeName 'S-1-5-21-1-2-3-1002'
 Assert-Test ($one -cne $two -and $one -match '^OpenCodeXDesktop-[0-9a-f]{24}$') 'distinct-SID-pipe-name-fixture-only'

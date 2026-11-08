@@ -210,6 +210,13 @@ try {
   try{
    if($account.runtimeCleanupUnproven){throw 'Runtime identity unproven; retain new account/Profile'}
    if(@($cleanup|Where-Object {$_.sid -ceq $account.sid -and $_.result -ceq 'retained-unproven'}).Count){throw 'Live ownership not proven; retain corresponding Profile/account'}
+   # Release the exact terminated bootstrap handle BEFORE Profile unload.
+   # A retained Windows process object can keep its logon token referenced.
+   # Do not release or delete anything while that original handle is still live.
+   if($account.process){
+    if(!$account.process.HasExited){throw 'Original bootstrap handle is still live; retain Profile/account'}
+    $account.process.Dispose();$account.process=$null
+   }
    $current=Get-LocalUser -SID $account.sid -ErrorAction Stop
    if($current.Name -cne $account.name -or $current.Name -notlike 'ocxacc*'){throw 'Cleanup account identity changed'}
    $profiles=@(Get-CimInstance Win32_UserProfile|Where-Object {$_.SID -ceq $account.sid})
