@@ -414,6 +414,7 @@ async fn stop_uses_one_attested_connection_and_requires_official_client_teardown
         "refused",
         "record-changed",
         "capability-pid",
+        "slow-stop",
     ] {
         let listener = TcpListener::bind((std::net::Ipv4Addr::LOCALHOST, 0))
             .await
@@ -487,6 +488,9 @@ async fn stop_uses_one_attested_connection_and_requires_official_client_teardown
                 if mode == "record-changed" && index == 2 {
                     std::fs::write(home.join("runtime-port.json"), b"{}").unwrap();
                 }
+                if mode == "slow-stop" && index == 3 {
+                    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
+                }
                 let bytes = serde_json::to_vec(&body.take()).unwrap();
                 let response=format!("HTTP/1.1 200 OK\r\nContent-Length: {}\r\nConnection: keep-alive\r\n{proof}\r\n",bytes.len());
                 if io.get_mut().write_all(response.as_bytes()).await.is_err() {
@@ -505,12 +509,30 @@ async fn stop_uses_one_attested_connection_and_requires_official_client_teardown
             );
             let _ = record_bytes;
         });
-        let outcome = tokio::time::timeout(
+        let progress = std::cell::RefCell::new(Vec::new());
+        let observed = tokio::time::timeout(
             std::time::Duration::from_secs(2),
-            stop_official(runtime, f.home.clone(), 42),
+            stop_official(runtime, f.home.clone(), 42, |phase| {
+                progress.borrow_mut().push(phase)
+            }),
         )
-        .await
-        .unwrap();
+        .await;
+        if mode == "slow-stop" {
+            assert!(
+                observed.is_err(),
+                "delayed restoration response must remain timed out"
+            );
+            assert_eq!(progress.borrow().last(), Some(&"stop-post-client-restore"));
+            assert!(!progress.borrow().contains(&"stop-response-verified"));
+            assert_eq!(
+                requests.lock().unwrap().last().unwrap().0,
+                "POST /api/stop HTTP/1.1"
+            );
+            task.abort();
+            let _ = task.await;
+            continue;
+        }
+        let outcome = observed.unwrap();
         task.await.unwrap();
         let requests = requests.lock().unwrap();
         assert_eq!(outcome.is_ok(), mode == "valid", "{mode}");
@@ -521,6 +543,15 @@ async fn stop_uses_one_attested_connection_and_requires_official_client_teardown
         if ["record-changed", "capability-pid"].contains(&mode) {
             assert!(!requests.iter().any(|r| r.0.starts_with("POST")));
         }
+        if ["forged", "record-changed", "capability-pid"].contains(&mode) {
+            assert!(!progress.borrow().contains(&"stop-post-client-restore"));
+        }
+        assert!(progress
+            .borrow()
+            .iter()
+            .all(|phase| !phase.contains("ocx_admin_")
+                && !phase.contains(&f.record.attestation_secret)));
+
         if mode == "valid" {
             assert_eq!(requests.len(), 4);
             assert_eq!(requests[3].0, "POST /api/stop HTTP/1.1");

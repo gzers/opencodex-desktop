@@ -172,7 +172,9 @@ pub(crate) async fn stop_official(
     runtime: SharedRuntimeExecutable,
     home: PathBuf,
     pid: u32,
+    phase: impl Fn(&'static str),
 ) -> Result<(), CollectError> {
+    phase("stop-runtime-activation");
     let root = runtime
         .managed_installation_root()
         .ok_or(CollectError::Unreachable)?;
@@ -181,10 +183,12 @@ pub(crate) async fn stop_official(
     if runtime.executable().as_ref() != Some(&identity.entry) {
         return Err(CollectError::Unreachable);
     }
+    phase("stop-protected-record");
     let (expected, bytes) = record(&home)?;
     if expected.pid != pid {
         return Err(CollectError::Unreachable);
     }
+    phase("stop-connect");
     let stream = TcpStream::connect((std::net::Ipv4Addr::LOCALHOST, expected.port))
         .await
         .map_err(unavailable)?;
@@ -192,7 +196,9 @@ pub(crate) async fn stop_official(
         io: BufReader::new(stream),
         port: expected.port,
     };
+    phase("stop-first-attestation");
     health(&mut session, &expected, &identity.package_version).await?;
+    phase("stop-private-token");
     let path = home.join("admin-api-token");
     safety::check_path(&home, &path, false).map_err(unavailable)?;
     let token = zeroize::Zeroizing::new(safety::read_file(&path, 512).map_err(unavailable)?);
@@ -207,6 +213,7 @@ pub(crate) async fn stop_official(
     {
         return Err(CollectError::Parse);
     }
+    phase("stop-read-capabilities");
     let capability = session
         .request("GET", "/api/stop", None, Some(token))
         .await?;
@@ -217,7 +224,9 @@ pub(crate) async fn stop_official(
     {
         return Err(CollectError::Unreachable);
     }
+    phase("stop-second-attestation");
     health(&mut session, &expected, &identity.package_version).await?;
+    phase("stop-revalidate-before-write");
     if record(&home)?.1 != bytes
         || crate::modules::runtime::install::resolve_managed_installation(&root)
             .map_err(unavailable)?
@@ -225,6 +234,7 @@ pub(crate) async fn stop_official(
     {
         return Err(CollectError::Unreachable);
     }
+    phase("stop-post-client-restore");
     let stopped = session
         .request("POST", "/api/stop", None, Some(token))
         .await?;
@@ -237,6 +247,7 @@ pub(crate) async fn stop_official(
     {
         return Err(CollectError::Unreachable);
     }
+    phase("stop-response-verified");
     Ok(())
 }
 fn identity(value: &Value, record: &Record, version: &str) -> bool {

@@ -156,6 +156,7 @@ impl SystemServiceOwnerProofProvider {
                         context.runtime.clone(),
                         context.opencodex_home.clone(),
                         pid,
+                        &mark,
                     )
                     .await
                     .map_err(|_| {
