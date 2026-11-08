@@ -315,7 +315,7 @@ mod unix {
         assert_eq!(report.npm.version.as_deref(), Some("11.19.0"));
         assert_eq!(
             report.ocx.version.as_deref(),
-            Some("2.97.0-desktop023.names.1")
+            Some("2.97.0-desktop023.names.2")
         );
         assert!(!report.brew_found);
         assert_eq!(saved, std::fs::read(handle.store().path()).unwrap());

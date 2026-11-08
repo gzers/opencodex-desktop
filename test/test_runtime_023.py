@@ -269,7 +269,7 @@ class FullSourceIntegration(unittest.TestCase):
         records = {row['path']: row['sha256'] for row in json.loads(self.files[builder.COMPATIBILITY])['files']}
         for name in ['package.json', *builder.SOURCE_PATHS]:
             self.assertEqual(records[name], builder.sha(self.files[name]))
-        self.assertEqual(self.files['bin/ocx.mjs'], old['bin/ocx.mjs'])
+        self.assertEqual(builder.sha(self.files['bin/ocx.mjs']), next(row['afterSha256'] for row in json.loads(builder.REVIEW.read_bytes())['files'] if row['path']=='bin/ocx.mjs'))
         self.assertTrue(self.report['reproducibility']['equalBytes'])
 
     def test_03_review_and_patch_drift_fail_closed(self):
@@ -284,6 +284,52 @@ class FullSourceIntegration(unittest.TestCase):
             changed.write_bytes(builder.PATCH.read_bytes()+b'\n')
             with patch.object(builder, 'PATCH', changed), self.assertRaisesRegex(ValueError, 'Reviewed patch changed'):
                 builder.patched_files(old, review)
+
+    def test_05_real_allocator_and_omitted_port_policy(self):
+        script = r"""
+import assert from 'node:assert/strict';
+import {createServer} from 'node:net';
+const {findAvailablePort}=await import('./src/server/ports.ts');
+const {configSchema}=await import('./src/config/schema/config-schema.ts');
+const bound=[];
+const bind=port=>new Promise((resolve,reject)=>{const server=createServer(socket=>socket.destroy());server.once('error',reject);server.listen({host:'127.0.0.1',port},()=>{bound.push(server);resolve(server.address().port);});});
+try{
+ const {decideStartWithLiveOwner}=await import('./src/cli/dispatch.ts');
+ assert.equal(decideStartWithLiveOwner({livePort:15432,livePid:42,requestedPort:undefined,ocxService:undefined}),'refuse');
+ assert.equal(decideStartWithLiveOwner({livePort:15432,livePid:42,requestedPort:undefined,ocxService:'1'}),'service-stay-out');
+ const base={defaultProvider:'probe',providers:{probe:{adapter:'openai-chat',baseUrl:'https://runtime023.invalid/v1',apiKey:'synthetic-unused'}}};
+ const {getDefaultConfig}=await import('./src/config/proxy-env.ts');assert.equal(getDefaultConfig().port,0);
+ const {loadConfig}=await import('./src/config.ts');assert.equal(loadConfig().port,0);
+ const policy=configSchema.parse(base);assert.equal(policy.port,0);assert.equal(configSchema.parse({...base,port:15432}).port,15432);
+ const selectedA=await findAvailablePort(policy.port,'127.0.0.1');const a=await bind(selectedA);
+ const selectedB=await findAvailablePort(policy.port,'127.0.0.1');const b=await bind(selectedB);
+ assert(a>0&&b>0&&a!==b);
+ await assert.rejects(findAvailablePort(a,'127.0.0.1',{allowEphemeralFallback:false}),/busy/);
+ assert.equal(bound[0].listening,true);assert.equal(bound[1].listening,true);
+ console.log(JSON.stringify({accepted:false,scope:'actual source allocator and pure schema; not two-SID service acceptance',a,b,explicitConflictRejected:true}));
+}finally{await Promise.all(bound.map(server=>new Promise(resolve=>server.close(resolve))));}
+"""
+        env = {'HOME':str(self.output/'allocator-unused-home'),'OPENCODEX_HOME':str(self.output/'allocator-unused-ocx'),'PATH':'','CI':'1'}
+        result = subprocess.run([str(OPTIONS.bun),'--no-env-file','-e',script],cwd=self.runtime,env=env,capture_output=True,text=True,timeout=10)
+        (self.output/'runtime023-allocator-test.log').write_text(result.stdout+result.stderr)
+        self.assertEqual(result.returncode,0,(result.stdout+result.stderr)[-4000:])
+
+    def test_06_actual_node_version_entry_is_readonly_and_preserves_format(self):
+        if not OPTIONS.node:
+            self.skipTest('Exact production Node path is required for launcher execution')
+        env={'HOME':str(self.output/'version-unused-home'),'OPENCODEX_HOME':str(self.output/'version-unused-ocx'),'CODEX_HOME':str(self.output/'version-unused-codex'),'PATH':'','CI':'1','OCX_NO_DESKTOP_HANDOFF':'1'}
+        guard=self.runtime/'version-proof-guard.mjs'
+        guard.write_text("import {createRequire,syncBuiltinESMExports} from 'node:module';const r=createRequire(import.meta.url),c=r('node:child_process'),f=r('node:fs');for(const k of ['spawn','spawnSync','exec','execSync','execFile','execFileSync','fork'])c[k]=()=>{throw Error('child forbidden')};for(const k of ['writeFileSync','mkdirSync','renameSync','unlinkSync','rmSync','chmodSync'])f[k]=()=>{throw Error('mutation forbidden')};syncBuiltinESMExports();globalThis.fetch=()=>{throw Error('network forbidden')};")
+        rows=[]
+        try:
+            for flag in ['--version','-v','version']:
+                result=subprocess.run([str(OPTIONS.node),'--import',str(guard),str(self.runtime/'bin/ocx.mjs'),flag],cwd=self.runtime,env=env,capture_output=True,text=True,timeout=5)
+                self.assertEqual(result.returncode,0,result.stderr)
+                self.assertEqual(result.stdout,'opencodex '+builder.VERSION+'\n');self.assertEqual(result.stderr,'')
+                rows.append(dict(flag=flag,exitCode=result.returncode,stdout=result.stdout))
+        finally:
+            guard.unlink()
+        (self.output/'runtime023-version-entry.json').write_text(json.dumps(dict(checks=rows,networkAndChildExecution='forbidden',accepted=False),indent=2)+'\n')
 
     def test_04_original_source_exposes_name_regression(self):
         old, modes = builder.read_archive(OPTIONS.archive.read_bytes())
@@ -303,7 +349,7 @@ class FullSourceIntegration(unittest.TestCase):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    for flag in ('archive', 'original', 'bun', 'dependencies', 'output'):
+    for flag in ('archive', 'original', 'bun', 'dependencies', 'output','node'):
         parser.add_argument('--'+flag, type=Path)
     args, remaining = parser.parse_known_args()
     if any(vars(args).values()):

@@ -433,7 +433,7 @@ impl SystemServiceOwnerProofProvider {
             let health = bounded_json(health).await?;
             let supported = health["version"].as_str().is_some_and(|version| {
                 option_env!("OCXD_BUNDLED_RUNTIME_SOURCE_VERSION") == Some(version)
-                    || ["2.97.0-desktop023.names.1", "2.97.0-post021.ownerquery.2"]
+                    || ["2.97.0-desktop023.names.2", "2.97.0-post021.ownerquery.2"]
                         .contains(&version)
             });
             if !supported || health["pid"].as_u64() != Some(pid.into()) {

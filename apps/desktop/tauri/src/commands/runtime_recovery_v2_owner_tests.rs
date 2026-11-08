@@ -325,7 +325,7 @@ const server=http.createServer((req,res)=>{
   if(url.pathname==='/healthz'){
     const challenge=req.headers['x-opencodex-attestation-challenge'];
     if(challenge)res.setHeader('x-opencodex-attestation-proof',crypto.createHmac('sha256',fs.existsSync(path.join(h,'bad-attestation'))?'foreign-proof':secret).update('opencodex-local-management-v1\n'+challenge+'\n'+process.pid+'\n'+port).digest('base64url'));
-    res.end(JSON.stringify({service:'opencodex',pid:process.pid,version:fs.existsSync(path.join(h,'unsupported-version'))?'0.0.0-unsupported':'2.97.0-desktop023.names.1'}));return;
+    res.end(JSON.stringify({service:'opencodex',pid:process.pid,version:fs.existsSync(path.join(h,'unsupported-version'))?'0.0.0-unsupported':'2.97.0-desktop023.names.2'}));return;
   }
   if(req.headers.authorization!=='Bearer '+token){res.statusCode=401;res.end('{}');return;}
   if(url.pathname==='/api/stop'&&req.method==='GET'){

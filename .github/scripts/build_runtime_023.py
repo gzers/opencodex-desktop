@@ -18,17 +18,12 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 REVIEW = ROOT / 'test/smoke/runtime023-name-review.json'
 PATCH = ROOT / 'test/smoke/runtime023-name-projection.patch'
-VERSION = '2.97.0-desktop023.names.1'
+VERSION = '2.97.0-desktop023.names.2'
 BASE_VERSION = '2.97.0-post021.ownerquery.2'
 BASE_SHA256 = 'bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957'
 ORIGINAL_SHA256 = '3859a64198a05b0ebdbac0593b0cc6b675ec14f32b69ee100cda7a173404e552'
-SOURCE_PATHS = (
-    'src/codex/catalog/derive-entry.ts',
-    'src/codex/catalog/gather-capture.ts',
-    'src/codex/catalog/model-hints.ts',
-    'src/codex/catalog/parsing.ts',
-    'src/types/provider.ts',
-)
+SOURCE_PATHS = ('bin/ocx.mjs', 'src/codex/catalog/derive-entry.ts', 'src/codex/catalog/gather-capture.ts', 'src/codex/catalog/model-hints.ts', 'src/codex/catalog/parsing.ts', 'src/config/diagnostics.ts', 'src/config/live-reconcile.ts', 'src/config/proxy-env.ts', 'src/config/schema/config-schema.ts', 'src/types/provider.ts')
+
 COMPATIBILITY = 'src/generated/compatibility-version.json'
 TEMP_ROOT = Path('/private/tmp') if Path('/private/tmp').is_dir() else Path(tempfile.gettempdir())
 
@@ -92,7 +87,7 @@ def patched_files(original, review):
             target = source/name
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(files[name])
-        command = ['git', '-c', 'core.autocrlf=false', 'apply', '--no-index', '--whitespace=error']
+        command = ['git', '-c', 'core.autocrlf=false', 'apply', '--no-index', '--unidiff-zero', '--whitespace=error']
         subprocess.run([*command, '--check', str(PATCH)], cwd=source, check=True, capture_output=True)
         subprocess.run([*command, str(PATCH)], cwd=source, check=True, capture_output=True)
         actual = sorted(p.relative_to(source).as_posix() for p in source.rglob('*') if p.is_file())
@@ -118,8 +113,8 @@ def patched_files(original, review):
     records = {row['path']: row for row in manifest['files']}
     require(len(records) == len(manifest['files']), 'Duplicate compatibility records')
     for name in ('package.json', *SOURCE_PATHS):
-        require(name in records, 'Missing compatibility record: ' + name)
-        records[name] = {**records[name], 'sha256': sha(files[name])}
+        require(name in records or name == 'bin/ocx.mjs', 'Missing compatibility record: ' + name)
+        records[name] = {**records.get(name, {'path': name}), 'sha256': sha(files[name])}
     manifest['files'] = [records[key] for key in sorted(records)]
     files[COMPATIBILITY] = json_bytes(manifest)
     allowed = {'package.json', COMPATIBILITY, *SOURCE_PATHS}

@@ -35,7 +35,9 @@ function inside(root, path) {
 export async function verifyTree(root, descriptor) {
   assert.equal(descriptor.schemaVersion, 1);
   assert(['darwin-arm64', 'win32-x64'].includes(descriptor.platform));
-  assert.equal(descriptor.runtimeVersion, '2.97.0-desktop023.names.1');
+  const adopted=JSON.parse(readFileSync(new URL('../../.github/runtime-platforms-023.json',import.meta.url),'utf8'));
+  assert.equal(descriptor.runtimeVersion,adopted.runtime.version);
+  assert.equal(descriptor.runtimeArchiveSha256,adopted.runtime.sha256);
   assert.equal(descriptor.nodeVersion, '26.8.1');
   assert.equal(descriptor.bunVersion, '1.4.4');
   assert.match(descriptor.archiveSha256, /^[a-f0-9]{64}$/);
@@ -156,10 +158,10 @@ export async function executeReadonly(root, descriptor, evidence) {
   run('bun-native-load',bun,['--no-env-file','-e',requireCode],/wreq-js loaded/);
   if(win) {
     const cmd=join(env.SystemRoot,'System32/cmd.exe');
-    run('ocx-version',cmd,['/d','/s','/c','""'+launcher+'" --version"'],/2\.97\.0-desktop023\.names\.1/);
+    run('ocx-version',cmd,['/d','/s','/c','""'+launcher+'" --version"'],new RegExp('^opencodex '+descriptor.runtimeVersion.split('.').join('\\.')+'\\s*$'));
     run('ocx-config-validate',cmd,['/d','/s','/c','""'+launcher+'" config validate "'+config+'" --json"'],/"ok"\s*:\s*true/);
   } else {
-    run('ocx-version',launcher,['--version'],/2\.97\.0-desktop023\.names\.1/);
+    run('ocx-version',launcher,['--version'],new RegExp('^opencodex '+descriptor.runtimeVersion.split('.').join('\\.')+'\\s*$'));
     run('ocx-config-validate',launcher,['config','validate',config,'--json'],/"ok"\s*:\s*true/);
   }
   assert.deepEqual(readFileSync(config),before,'Read-only config input changed');
