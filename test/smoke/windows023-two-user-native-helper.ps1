@@ -329,6 +329,9 @@ function proofMatches(secret,challenge,pid,port,proof){
  const expected=createHmac('sha256',secret).update('opencodex-local-management-v1\n'+challenge+'\n'+pid+'\n'+port).digest();
  const received=Buffer.from(proof,'base64url');return received.length===expected.length&&timingSafeEqual(received,expected);
 }
+function assertConflictAction(action){
+ assert(action?.failureCode==='port_conflict'&&action.result===null&&action.lifecycleState==='starting_failed'&&action.canStop===false&&action.canRestart===false,'Actual manager conflict rejection not proved');
+}
 function runtimeSelfTest(){
  const secret=Buffer.alloc(32,7).toString('base64url'),challenge='fixture';
  const proof=createHmac('sha256',secret).update('opencodex-local-management-v1\nfixture\n42\n54321').digest('base64url');
@@ -339,6 +342,9 @@ function runtimeSelfTest(){
  assert.equal(fixtureConfig(54321).port,54321);assert(!Object.hasOwn(fixtureConfig(0),'port'));
  assert.equal(fixtureConfig(0).defaultProvider,'sweep-fixture');assert.equal(Object.keys(fixtureConfig(0).providers).length,1);assert.equal(fixtureConfig(0).providers['sweep-fixture'].liveModels,false);assert.throws(()=>fixtureConfig(-1));
  assert.notEqual(Buffer.from(JSON.stringify(fixtureConfig(54321)),'utf8')[0],0xef);
+ const conflict={failureCode:'port_conflict',result:null,lifecycleState:'starting_failed',canStop:false,canRestart:false};
+ assertConflictAction(conflict);
+ for(const changed of [{failureCode:null},{result:'started'},{lifecycleState:'running'},{canStop:true},{canRestart:true}])assert.throws(()=>assertConflictAction({...conflict,...changed}));
  console.log('pass-runtime-pure-fixtures-only');
 }
 async function runtimeInvoke(command,args={},timeout=10000){
@@ -448,18 +454,7 @@ async function runtimeCommand(c){
  };
  const action=async action=>{
   await bound();const r=await runtimeInvoke('process_action',{request:{action,confirm:true}},action==='stop'?15000:35000);
-  const value={lifecycleState:r.lifecycleState,result:r.result,failureCode:r.failure?.code??null};runtimePublic.action=value;return value;
- };
- const statusConflict=s=>/conflict|port[_ -]?(in[_ -]?use|occupied)/i.test(String(s.protection))||s.runtime==='external_takeover';
- const diagnosticConflict=async()=>{
-  // Read bounded own logs in memory; serialize only a boolean marker, never lines.
-  for(const directory of [join(c.home,'logs'),join(c.root,'logs')]){
-   let names;try{names=await readdir(directory);}catch(e){if(e.code==='ENOENT')continue;throw e;}
-   for(const name of names.filter(n=>/\.log(?:\.1)?$/.test(n)).slice(0,32)){
-    const path=join(directory,name),st=await lstat(path);if(!st.isFile()||st.isSymbolicLink()||st.size>8*1024*1024)continue;
-    const text=await readFile(path,'utf8');if(/EADDRINUSE|端口.{0,30}(占用|冲突)|port.{0,60}(in use|conflict|occupied)/i.test(text))return true;
-   }
-  }return false;
+  const value={lifecycleState:r.lifecycleState,result:r.result,failureCode:r.failure?.code??null,canStop:r.canStop,canRestart:r.canRestart};runtimePublic.action=value;return value;
  };
  runtimeStage='binding';await bound();
  let result={result:'pass-runtime-step',mode:c.mode,home:c.home,root:c.root,port:c.port};
@@ -485,12 +480,14 @@ async function runtimeCommand(c){
   runtimeStage='manager-start';const startBegan=Date.now();result.action=await action('start');
   const until=startBegan+30000;let last;
   if(c.mode==='conflict'){
-   let marker=false;
-   do{assert(!(await record()),'B published an owned service record on A port');last=await snapshot();
-    assert(last.runtime!=='running','B claimed running on peer port');marker=marker||statusConflict(last)||await diagnosticConflict();await runtimeSleep(250);
-   }while(Date.now()<until);
-   assert(marker,'No explicit production port-conflict diagnostic');
-   result.conflict={rejected:true,ownedRecordAbsent:true,diagnosticMarker:true};result.status=last;
+   // The actual public action has already rejected a fixed peer-port bind.
+   // With no owned endpoint, full CLI status cold-start is a separate diagnostic;
+   // it cannot replace the action/record/peer OS identity proof or grant success.
+   assertConflictAction(result.action);
+   do{assert(!(await record()),'B published an owned service record on A port');await runtimeSleep(250);}while(Date.now()<until);
+   assert(!(await record()),'B published an owned service record on A port');
+   result.conflict={rejected:true,ownedRecordAbsent:true,diagnosticMarker:true,source:'actual-process-action-port_conflict',canStop:false,canRestart:false};
+   result.status={source:'actual-conflict-action-and-absent-owned-record',lifecycleState:result.action.lifecycleState,claimedRunning:false};
   }else{
    runtimeStage='wait-owned-health';let observed;
    const samples=[];

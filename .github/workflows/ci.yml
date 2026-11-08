@@ -17,6 +17,13 @@ jobs:
       - name: Verify real retained-handle identity before account workloads
         shell: pwsh
         run: ./test/smoke/windows023-process-identity.test.ps1 -Node (Get-Command node.exe).Source -OutputDirectory test/out/windows-process-token/native-identity
+      - name: Verify actual product native Task Scheduler source before desktop builds
+        shell: pwsh
+        run: |
+          cargo test --locked --manifest-path test/smoke/windows-task-scheduler-check/Cargo.toml -- --nocapture *> test/out/windows-process-token/task-scheduler-tests.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo run --locked --manifest-path test/smoke/windows-task-scheduler-check/Cargo.toml *> test/out/windows-process-token/task-scheduler-observation.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify installer matrix completeness and parameter isolation
         shell: pwsh
         run: ./test/smoke/windows-installer-matrix.test.ps1 -OutputDirectory test/out/windows-process-token/installer-matrix

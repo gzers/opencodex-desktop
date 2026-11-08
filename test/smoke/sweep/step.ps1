@@ -90,7 +90,11 @@ $receipt=Invoke-SweepCheck $recordDirectory $Step $Name {
    if($LASTEXITCODE -ne 0){throw 'Actual Windows attested status transport/consumer regression failed'}
    $log=Get-Content -LiteralPath (Join-Path $evidence 'attested-status-regression.log') -Raw
    if($log -notmatch '8 passed; 0 failed'){throw 'All eight Windows attested status/official stop tests must actually execute'}
-   @{source=(git -C $repo rev-parse HEAD).Trim();tests=8;platform='Windows actual loopback TCP/private files/consumer including official owner-only ACL and authenticated same-connection stop';accepted=$false}
+   & cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib infrastructure::windows_task_scheduler -- --nocapture *> (Join-Path $evidence 'native-task-scheduler-regression.log')
+   if($LASTEXITCODE -ne 0){throw 'Actual native read-only Task Scheduler observation failed'}
+   $scheduler=Get-Content -LiteralPath (Join-Path $evidence 'native-task-scheduler-regression.log') -Raw
+   if($scheduler -notmatch '2 passed; 0 failed'){throw 'Both native Task Scheduler and fail-closed query tests must execute'}
+   @{source=(git -C $repo rev-parse HEAD).Trim();tests=8;taskSchedulerTests=2;platform='Windows actual loopback TCP/private files/consumer including official owner-only ACL and authenticated same-connection stop';accepted=$false}
   }
   runtime-port-save {
    & cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib modules::runtime::port::tests:: -- --nocapture *> (Join-Path $evidence 'runtime-port-save-regression.log')
