@@ -327,7 +327,7 @@ pub fn run() {
                 runtime_executable.clone(),
                 home.clone(),
                 status_environment.clone(),
-            );
+            ).with_mutation_gate(runtime_install.clone());
             let collector = std::sync::Arc::new(std::sync::Mutex::new(
                 crate::modules::status::StatusCollector::new(status_source),
             ));

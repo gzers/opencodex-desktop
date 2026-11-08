@@ -25,6 +25,7 @@ pub struct OfficialStatusSource {
     working_directory: PathBuf,
     environment: crate::modules::process::EnvironmentPolicy,
     cache: Mutex<Option<CachedStatus>>,
+    mutation: Option<crate::state::SharedRuntimeInstall>,
 }
 #[derive(Debug, Clone)]
 struct CachedStatus {
@@ -46,7 +47,20 @@ impl OfficialStatusSource {
             working_directory: working_directory.into(),
             environment,
             cache: Mutex::new(None),
+            mutation: None,
         }
+    }
+
+    /// Background observation shares the SAME worker-owned mutation lease.
+    /// No endpoint during an active operation cannot authorize a cold status
+    /// CLI that competes with boot or keeps an own-H process alive during stop.
+    pub fn with_mutation_gate(mut self, mutation: crate::state::SharedRuntimeInstall) -> Self {
+        self.mutation = Some(mutation);
+        self
+    }
+    fn mutation_in_progress(&self) -> bool {
+        self.runtime.managed_installation_root().is_some()
+            && self.mutation.as_ref().is_some_and(|gate| gate.is_running())
     }
 
     pub fn set_environment(&mut self, opencodex_home: PathBuf) {
@@ -107,6 +121,14 @@ impl OfficialStatusSource {
             return Err(CollectError::Unreachable);
         }
 
+        // An early NON-success check only: no cache, port discovery, trust in
+        // metadata or invented stopped/ready state. Actual endpoints below still
+        // undergo full activation/record/HMAC/readiness and readback proofs.
+        if self.mutation_in_progress()
+            && matches!(std::fs::symlink_metadata(self.environment.opencodex_home.join("runtime-port.json")), Err(ref e) if e.kind() == std::io::ErrorKind::NotFound)
+        {
+            return Err(CollectError::Unreachable);
+        }
         if let Some(payload) = super::attested_status::fetch(
             self.runtime.clone(),
             self.environment.opencodex_home.clone(),
@@ -116,6 +138,12 @@ impl OfficialStatusSource {
             // Never use the legacy lightweight cache for this partial, freshly
             // authenticated report. Every call repeats record/connection proofs.
             return Ok(payload);
+        }
+        // The lease may have become active during the endpoint observation.
+        // Returning unknown preserves the collector's last state; it never
+        // bypasses any proof required by the lifecycle action itself.
+        if self.mutation_in_progress() {
+            return Err(CollectError::Unreachable);
         }
         let budget = status_collect_timeout()
             .checked_sub(started.elapsed())
@@ -327,6 +355,93 @@ mod tests {
             home,
             root.join("opencodex-home"),
         )
+    }
+
+    #[derive(Debug)]
+    struct ManagedFixture {
+        entry: PathBuf,
+        root: PathBuf,
+    }
+    impl crate::infrastructure::runtime_executable::RuntimeExecutableProvider for ManagedFixture {
+        fn executable(&self) -> Option<PathBuf> {
+            Some(self.entry.clone())
+        }
+        fn managed_installation_root(&self) -> Option<PathBuf> {
+            Some(self.root.clone())
+        }
+    }
+
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn active_managed_mutation_without_record_defers_cli_and_preserves_last_observation() {
+        let root = tempfile::tempdir().unwrap();
+        let marker = root.path().join("cli-observations");
+        let mut source = script_source(
+            root.path(),
+            &format!(
+                "#!/bin/sh\necho invoked >> '{}'\necho '{{\"status\":\"stopped\"}}'\n",
+                marker.display()
+            ),
+        );
+        let mutation = crate::state::SharedRuntimeInstall::new();
+        source = source.with_mutation_gate(mutation.clone());
+        let mut collector = crate::modules::status::StatusCollector::new(source);
+        collector.refresh().unwrap();
+        let before = collector.matrix();
+        collector.source.runtime = std::sync::Arc::new(ManagedFixture {
+            entry: root.path().join("ocx-fixture"),
+            root: root.path().join("managed-I"),
+        });
+        let lease = mutation.acquire().unwrap();
+        let started = Instant::now();
+        assert_eq!(
+            collector.refresh_at(started + Duration::from_secs(2)),
+            Err(CollectError::Unreachable)
+        );
+        assert_eq!(collector.matrix(), before);
+        assert_eq!(std::fs::read_to_string(&marker).unwrap().lines().count(), 1);
+        assert!(started.elapsed() < Duration::from_secs(1));
+        drop(lease);
+        // Missing activation after release must STILL fail, never fall back to
+        // a convenient CLI or accept record absence as a stopped proof.
+        assert_eq!(
+            collector.source.fetch_inner().await,
+            Err(CollectError::Unreachable)
+        );
+        assert_eq!(std::fs::read_to_string(&marker).unwrap().lines().count(), 1);
+    }
+
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn mutation_gate_does_not_trust_unvalidated_record_or_restrict_unmanaged_diagnostic() {
+        let root = tempfile::tempdir().unwrap();
+        let marker = root.path().join("explicit-cli");
+        let mutation = crate::state::SharedRuntimeInstall::new();
+        let lease = mutation.acquire().unwrap();
+        let mut source = script_source(
+            root.path(),
+            &format!(
+                "#!/bin/sh\necho observed > '{}'\necho '{{\"status\":\"stopped\"}}'\n",
+                marker.display()
+            ),
+        )
+        .with_mutation_gate(mutation);
+        assert_eq!(source.fetch_inner().await.unwrap()["status"], "stopped");
+        std::fs::remove_file(&marker).unwrap();
+        source.runtime = std::sync::Arc::new(ManagedFixture {
+            entry: root.path().join("ocx-fixture"),
+            root: root.path().join("invalid-managed-I"),
+        });
+        std::fs::create_dir_all(&source.environment.opencodex_home).unwrap();
+        std::fs::write(
+            source.environment.opencodex_home.join("runtime-port.json"),
+            br#"{"pid":42,"port":55581}"#,
+        )
+        .unwrap();
+        assert_eq!(source.fetch_inner().await, Err(CollectError::Unreachable));
+        assert!(
+            !marker.exists(),
+            "unvalidated endpoint must never cause a CLI fallback or accept running"
+        );
+        drop(lease);
     }
 
     #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
