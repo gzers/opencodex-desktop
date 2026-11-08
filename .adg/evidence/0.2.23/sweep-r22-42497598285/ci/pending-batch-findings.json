@@ -1,0 +1,21 @@
+{
+  "source": "040cdcd9f",
+  "ciRun": 42497593127,
+  "windowsJob": 128783201390,
+  "findings": [
+    {
+      "firstError": "2026-11-08T16:04:19.0549097Z error[E0063]: missing field `requested_port` in initializer of `opencodex_desktop_lib::modules::process::ProcessCommand`",
+      "context": [
+        "2026-11-08T16:04:19.0549097Z error[E0063]: missing field `requested_port` in initializer of `opencodex_desktop_lib::modules::process::ProcessCommand`",
+        "2026-11-08T16:04:19.0564383Z    --> tests\\windows_runtime.rs:422:23",
+        "2026-11-08T16:04:19.0590504Z     |",
+        "2026-11-08T16:04:19.0625845Z 422 |         let command = ProcessCommand {",
+        "2026-11-08T16:04:19.0632365Z     |                       ^^^^^^^^^^^^^^ missing `requested_port`",
+        "2026-11-08T16:04:19.0711772Z ",
+        "2026-11-08T16:04:19.2316351Z For more information about this error, try `rustc --explain E0063`.",
+        "2026-11-08T16:04:19.2426586Z error: could not compile `opencodex-desktop` (test \"windows_runtime\") due to 1 previous error"
+      ]
+    }
+  ],
+  "action": "fix together after full sweep summary; no rerun yet"
+}

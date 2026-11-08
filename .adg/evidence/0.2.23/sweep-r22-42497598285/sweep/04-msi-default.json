@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "step": "04",
+  "name": "msi-default",
+  "status": "pass",
+  "firstError": "",
+  "accepted": false,
+  "diagnosticOnly": true,
+  "dependencies": [],
+  "evidence": {
+    "cleanup": {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+      "profile": "C:\\Users\\ocxaccb56de622",
+      "removed": true
+    },
+    "receipt": {
+      "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+      "sourceCommit": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+      "builtExecutableSha256": "c59a2a72a231b004443b5250036b5b1cf19db770ffd009f09c88ba915f1af21b",
+      "version": "0.2.23",
+      "codeSigned": false,
+      "releaseAccepted": false,
+      "result": "pass",
+      "installers": [],
+      "defaultUninstallChecks": [
+        {
+          "exitCode": 0,
+          "executableRemoved": true,
+          "testFixtureCleanup": {
+            "scope": "exact new sentinel and empty parents after default-uninstall hash proof",
+            "removed": true,
+            "productRetentionProved": true
+          },
+          "userDataRetained": true,
+          "result": "pass",
+          "kind": "msi"
+        }
+      ],
+      "installationOwnerToken": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 6792,
+        "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+        "creationTimeUtc": "2026-11-08T16:16:23.6974201Z",
+        "elevated": false,
+        "elevationType": 1,
+        "collectedAtUtc": "2026-11-08T16:16:24.9649169Z"
+      },
+      "installationOwnerProfile": "C:\\Users\\ocxaccb56de622",
+      "installerPolicies": [
+        {
+          "DisableMSI": 0,
+          "DisableUserInstalls": null,
+          "path": "HKLM:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+          "AlwaysInstallElevated": null,
+          "exists": true
+        },
+        {
+          "DisableMSI": null,
+          "DisableUserInstalls": null,
+          "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+          "AlwaysInstallElevated": null,
+          "exists": false
+        }
+      ],
+      "defaultInstallChecks": [
+        {
+          "pathOverride": false,
+          "kind": "msi",
+          "installDirectory": "C:\\Users\\ocxaccb56de622\\AppData\\Local\\Programs\\OpenCodeX Desktop\\",
+          "result": "pass",
+          "boundary": "fresh isolated runner; no earlier installed product or directory override"
+        }
+      ],
+      "defaultMsiRegistryCleanup": [],
+      "defaultInstallRootObservation": {
+        "actual": "C:\\Users\\ocxaccb56de622\\AppData\\Local\\Programs\\OpenCodeX Desktop\\",
+        "expectedOwner": "C:\\Users\\ocxaccb56de622\\AppData\\Local\\Programs\\OpenCodeX Desktop"
+      }
+    }
+  },
+  "atUtc": "2026-11-08T16:17:13.8666878Z"
+}

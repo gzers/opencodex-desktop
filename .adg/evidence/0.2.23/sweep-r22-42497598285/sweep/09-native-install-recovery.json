@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "step": "09",
+  "name": "native-install-recovery",
+  "status": "fail",
+  "firstError": "probe-precondition: UI wait: !!window.__TAURI_INTERNALS__?.invoke&&!!document.querySelector('.side')",
+  "accepted": false,
+  "diagnosticOnly": true,
+  "dependencies": [],
+  "evidence": {
+    "line": 132,
+    "errorType": "System.Management.Automation.RuntimeException"
+  },
+  "atUtc": "2026-11-08T16:21:48.4895011Z"
+}

@@ -1,0 +1,79 @@
+{
+  "source": "040cdcd9f6707460318040db31a57bada7b1b7d5",
+  "artifact": {
+    "run": 42497598285,
+    "attempt": 1,
+    "id": 13625087236,
+    "bytes": 33530210,
+    "sha256": "7810ff312a11618cfa5957ea2f2334f28fbba211e5f0b6379cfcfbd5cce8ae5a",
+    "verifiedFiles": 228
+  },
+  "summarySha256": "22a71829ebd4aa0a5ae57d9fbd49236853f08a1998d50bd88901376c5cb5ed95",
+  "passed": 18,
+  "failed": 10,
+  "accepted": false,
+  "rootCauses": [
+    {
+      "items": [
+        "08",
+        "09",
+        "10",
+        "12",
+        "13",
+        "14",
+        "15",
+        "21",
+        "22"
+      ],
+      "finding": "Production ESM framework chunk initialization crash; CDP cannot prove native screen or invoke",
+      "fix": "Keep Vue/framework internals in one production chunk, add actual-dist browser gate",
+      "nativePassNotClaimed": true
+    },
+    {
+      "items": [
+        "28"
+      ],
+      "finding": "Elevated Windows SQLite fixture file created with OS default owner instead of production TokenUser-private constructor",
+      "fix": "Create fixture DB through unchanged private-file constructor; retain exact ownership and SQL-contention assertions",
+      "windowsRerunRequired": true
+    },
+    {
+      "items": [
+        "CI-Windows"
+      ],
+      "finding": "windows_runtime.rs ProcessCommand omitted requested_port",
+      "fix": "Explicit None in prior exit-code test; preserve actual exit assertions"
+    },
+    {
+      "items": [
+        "CI-macOS"
+      ],
+      "finding": "Old test expected Stopped after explicit Start failure",
+      "fix": "Require StartingFailed, retry allowed and stop/restart forbidden; preserve stop observation"
+    }
+  ],
+  "batch": {
+    "head": "1f1dcb9d0",
+    "product": "7d82a2229",
+    "productionBundle": "ae02c6725",
+    "frontendTests": 1601,
+    "workspace": {
+      "passed": 2237,
+      "failed": 0,
+      "ignored": 38,
+      "note": "full workspace precedes final verified-absence guard refinement; final process_action 8 tests and all-targets clippy also pass"
+    },
+    "productionBoot": {
+      "originalConfiguration": "failed with real module initialization TypeError",
+      "fixed": "four actual-dist checks passed with synthetic IPC only"
+    },
+    "budgetsAndAssertionsUnchanged": true
+  },
+  "correction": "Earlier progress used Actions step conclusion to infer checks 08/09/10 passed; corrected by complete JSON receipts. Future pass/fail must come from immutable receipts, never green continue-on-error status.",
+  "nextRun": {
+    "run": 42501966034,
+    "source": "1f1dcb9d0",
+    "accepted": false,
+    "state": "running"
+  }
+}

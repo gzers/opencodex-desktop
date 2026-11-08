@@ -1,0 +1,2189 @@
+{
+  "schemaVersion": 1,
+  "diagnosticOnly": true,
+  "accepted": false,
+  "status": "diagnostic-complete",
+  "passed": 18,
+  "failed": 10,
+  "steps": [
+    {
+      "schemaVersion": 1,
+      "step": "01",
+      "name": "original-inputs",
+      "status": "pass",
+      "firstError": "",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [],
+      "evidence": {
+        "productOriginal": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+        "resourceDescriptorSha256": "c567b2d73b294c913e504085e93489fc0ab89f717a1c368c9b873747018cede0",
+        "originalBuild": {
+          "source": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+          "appsTree": "cf7ca5b19438d9157ada555d0451f91d768b1cf9",
+          "run": "42374536779",
+          "attempt": "1",
+          "status": "unverified-build-only",
+          "installationAccepted": false,
+          "releaseAccepted": false,
+          "files": [
+            {
+              "bytes": 288911360,
+              "sha256": "4b29b5607b6af416c7eac55d3698ea923f170896152d39e77754385d2b089719",
+              "name": "OpenCodeX Desktop_0.2.23_x64_en-US.msi"
+            },
+            {
+              "bytes": 287581782,
+              "sha256": "7f4fac1404d43a23e59bc97abaaf2bd91b0df292376d16a608f8a5fc26b89fe0",
+              "name": "OpenCodeX Desktop_0.2.23_x64-setup.exe"
+            },
+            {
+              "bytes": 17320448,
+              "sha256": "c59a2a72a231b004443b5250036b5b1cf19db770ffd009f09c88ba915f1af21b",
+              "name": "opencodex-desktop.exe"
+            }
+          ]
+        },
+        "candidateDirectory": "D:\\a\\_temp\\ocxd023-sweep-complete-158c89448f5e4e24936fe6eb4f0591d5"
+      },
+      "atUtc": "2026-11-08T16:01:49.7569422Z"
+    },
+    {
+      "schemaVersion": 1,
+      "step": "02",
+      "name": "current-binary",
+      "status": "pass",
+      "firstError": "",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [],
+      "evidence": {
+        "source": "040cdcd9f6707460318040db31a57bada7b1b7d5",
+        "files": [
+          {
+            "sha256": "3ec66fa8d121d0d538cc4482c16ac583ea32043c06e2e21413810f610a4c7384",
+            "name": "ocxd.exe"
+          },
+          {
+            "sha256": "ec37e406f334a4e61f4620fe92c7088d062dc31d9b0195efdad2654e245bf4c5",
+            "name": "opencodex-desktop.exe"
+          },
+          {
+            "sha256": "2e1322d5a8fcdfdd55c1cdfd2baabdd12406a4818aba1b30d0d176565babdacf",
+            "name": "sweep-filesystem.exe"
+          },
+          {
+            "sha256": "50d4f91c5c05772f7bca76dbddd3f43579710e2f86e6612ede7118c7f8d525c6",
+            "name": "sweep-filesystem.pdb"
+          }
+        ],
+        "appsTree": "a4c4fa7a0d5cf3c4f427b310f52e7624dcb0966f",
+        "profile": "debug custom-protocol; diagnostic-only"
+      },
+      "atUtc": "2026-11-08T16:08:07.0045475Z"
+    },
+    {
+      "schemaVersion": 1,
+      "step": "03",
+      "name": "server-msi-prepare",
+      "status": "pass",
+      "firstError": "",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [],
+      "evidence": {
+        "changed": true,
+        "server": true,
+        "scope": "temporary disposable Server fixture for unmanaged per-user MSI; normal Windows client behavior; no AlwaysInstallElevated or product privilege changes",
+        "run": "42497598285",
+        "attempt": "1",
+        "schemaVersion": 1,
+        "original": {
+          "kind": null,
+          "valueExisted": false,
+          "keyExisted": false,
+          "value": null
+        }
+      },
+      "atUtc": "2026-11-08T16:15:57.2478009Z"
+    },
+    {
+      "schemaVersion": 1,
+      "step": "04",
+      "name": "msi-default",
+      "status": "pass",
+      "firstError": "",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [],
+      "evidence": {
+        "cleanup": {
+          "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+          "profile": "C:\\Users\\ocxaccb56de622",
+          "removed": true
+        },
+        "receipt": {
+          "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+          "sourceCommit": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+          "builtExecutableSha256": "c59a2a72a231b004443b5250036b5b1cf19db770ffd009f09c88ba915f1af21b",
+          "version": "0.2.23",
+          "codeSigned": false,
+          "releaseAccepted": false,
+          "result": "pass",
+          "installers": [],
+          "defaultUninstallChecks": [
+            {
+              "exitCode": 0,
+              "executableRemoved": true,
+              "testFixtureCleanup": {
+                "scope": "exact new sentinel and empty parents after default-uninstall hash proof",
+                "removed": true,
+                "productRetentionProved": true
+              },
+              "userDataRetained": true,
+              "result": "pass",
+              "kind": "msi"
+            }
+          ],
+          "installationOwnerToken": {
+            "schemaVersion": 1,
+            "status": "observed",
+            "processId": 6792,
+            "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+            "creationTimeUtc": "2026-11-08T16:16:23.6974201Z",
+            "elevated": false,
+            "elevationType": 1,
+            "collectedAtUtc": "2026-11-08T16:16:24.9649169Z"
+          },
+          "installationOwnerProfile": "C:\\Users\\ocxaccb56de622",
+          "installerPolicies": [
+            {
+              "DisableMSI": 0,
+              "DisableUserInstalls": null,
+              "path": "HKLM:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+              "AlwaysInstallElevated": null,
+              "exists": true
+            },
+            {
+              "DisableMSI": null,
+              "DisableUserInstalls": null,
+              "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+              "AlwaysInstallElevated": null,
+              "exists": false
+            }
+          ],
+          "defaultInstallChecks": [
+            {
+              "pathOverride": false,
+              "kind": "msi",
+              "installDirectory": "C:\\Users\\ocxaccb56de622\\AppData\\Local\\Programs\\OpenCodeX Desktop\\",
+              "result": "pass",
+              "boundary": "fresh isolated runner; no earlier installed product or directory override"
+            }
+          ],
+          "defaultMsiRegistryCleanup": [],
+          "defaultInstallRootObservation": {
+            "actual": "C:\\Users\\ocxaccb56de622\\AppData\\Local\\Programs\\OpenCodeX Desktop\\",
+            "expectedOwner": "C:\\Users\\ocxaccb56de622\\AppData\\Local\\Programs\\OpenCodeX Desktop"
+          }
+        }
+      },
+      "atUtc": "2026-11-08T16:17:13.8666878Z"
+    },
+    {
+      "schemaVersion": 1,
+      "step": "05",
+      "name": "msi-custom",
+      "status": "pass",
+      "firstError": "",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [],
+      "evidence": {
+        "cleanup": {
+          "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+          "profile": "C:\\Users\\ocxaccceb5c876",
+          "removed": true
+        },
+        "receipt": {
+          "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+          "sourceCommit": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+          "builtExecutableSha256": "c59a2a72a231b004443b5250036b5b1cf19db770ffd009f09c88ba915f1af21b",
+          "version": "0.2.23",
+          "codeSigned": false,
+          "releaseAccepted": false,
+          "result": "pass",
+          "installers": [
+            {
+              "kind": "msi",
+              "name": "OpenCodeX Desktop_0.2.23_x64_en-US.msi",
+              "bytes": 288911360,
+              "sha256": "4b29b5607b6af416c7eac55d3698ea923f170896152d39e77754385d2b089719",
+              "installDirectory": "C:\\Users\\ocxaccceb5c876\\AppData\\Local\\Temp\\ocxd-candidate-msi-7f74beb83425471d921a29bc0c728067",
+              "result": "pass",
+              "registryCleanup": [],
+              "installExitCode": 0,
+              "installedExecutableSha256": "8efc2f6488dc2b1667790ed94bf63ab3d176f9b93eb35063de13165221d9948e",
+              "expectedInstalledExecutableSha256": "8efc2f6488dc2b1667790ed94bf63ab3d176f9b93eb35063de13165221d9948e",
+              "bundleMarker": "MSI",
+              "bundleMarkerOffset": 16431941,
+              "productVersion": "0.2.23",
+              "firstScreen": "pass",
+              "explicitCleanupHelper": {
+                "scope": "disposable hosted runner actual TokenUser profile; current v2 fixed pointer and selected aggregate",
+                "structureVersion": 2,
+                "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+                "profile": "C:\\Users\\ocxaccceb5c876",
+                "unconfirmedExitCode": 2,
+                "confirmedExitCode": 0,
+                "repeatExitCode": 0,
+                "fixedAndSelectedDesktopRemoved": true,
+                "externalHomeUnchanged": true,
+                "unselectedLegacyPathUnchanged": true,
+                "durableExternalGatesRetainedByProduct": true,
+                "newFixturesCleanedByHarness": true,
+                "applicationRetained": true,
+                "legacyCompatibilityTested": false,
+                "hostAcceptanceClaimed": false
+              },
+              "uninstallExitCode": 0,
+              "uninstallRemovedExecutable": true,
+              "defaultUninstallRetainedData": true
+            }
+          ],
+          "defaultUninstallChecks": [],
+          "installationOwnerToken": {
+            "schemaVersion": 1,
+            "status": "observed",
+            "processId": 7504,
+            "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+            "creationTimeUtc": "2026-11-08T16:17:34.9990444Z",
+            "elevated": false,
+            "elevationType": 1,
+            "collectedAtUtc": "2026-11-08T16:17:36.1000714Z"
+          },
+          "installationOwnerProfile": "C:\\Users\\ocxaccceb5c876",
+          "installerPolicies": [
+            {
+              "DisableMSI": 0,
+              "AlwaysInstallElevated": null,
+              "path": "HKLM:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+              "DisableUserInstalls": null,
+              "exists": true
+            },
+            {
+              "DisableMSI": null,
+              "AlwaysInstallElevated": null,
+              "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+              "DisableUserInstalls": null,
+              "exists": false
+            }
+          ],
+          "defaultInstallChecks": []
+        }
+      },
+      "atUtc": "2026-11-08T16:18:16.4193288Z"
+    },
+    {
+      "schemaVersion": 1,
+      "step": "06",
+      "name": "nsis-default",
+      "status": "pass",
+      "firstError": "",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [],
+      "evidence": {
+        "cleanup": {
+          "sid": "S-1-5-21-3289802278-1561746829-1498425070-1005",
+          "profile": "C:\\Users\\ocxaccd7fa2acd",
+          "removed": true
+        },
+        "receipt": {
+          "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+          "sourceCommit": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+          "builtExecutableSha256": "c59a2a72a231b004443b5250036b5b1cf19db770ffd009f09c88ba915f1af21b",
+          "version": "0.2.23",
+          "codeSigned": false,
+          "releaseAccepted": false,
+          "result": "pass",
+          "installers": [],
+          "defaultUninstallChecks": [
+            {
+              "kind": "nsis",
+              "userDataRetained": true,
+              "executableRemoved": true,
+              "testFixtureCleanup": {
+                "removed": true,
+                "scope": "exact new sentinel and empty parents after default-uninstall hash proof",
+                "productRetentionProved": true
+              },
+              "result": "pass",
+              "exitCode": 0
+            }
+          ],
+          "installationOwnerToken": {
+            "schemaVersion": 1,
+            "status": "observed",
+            "processId": 9092,
+            "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+            "creationTimeUtc": "2026-11-08T16:18:30.2718642Z",
+            "elevated": false,
+            "elevationType": 1,
+            "collectedAtUtc": "2026-11-08T16:18:31.4263198Z"
+          },
+          "installationOwnerProfile": "C:\\Users\\ocxaccd7fa2acd",
+          "installerPolicies": [
+            {
+              "DisableMSI": 0,
+              "DisableUserInstalls": null,
+              "AlwaysInstallElevated": null,
+              "exists": true,
+              "path": "HKLM:\\Software\\Policies\\Microsoft\\Windows\\Installer"
+            },
+            {
+              "DisableMSI": null,
+              "DisableUserInstalls": null,
+              "AlwaysInstallElevated": null,
+              "exists": false,
+              "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Installer"
+            }
+          ],
+          "defaultInstallChecks": [
+            {
+              "pathOverride": false,
+              "installDirectory": "C:\\Users\\ocxaccd7fa2acd\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+              "boundary": "fresh isolated runner; no earlier installed product or directory override",
+              "result": "pass",
+              "kind": "nsis"
+            }
+          ],
+          "defaultInstallRootObservation": {
+            "expectedOwner": "C:\\Users\\ocxaccd7fa2acd\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+            "actual": "C:\\Users\\ocxaccd7fa2acd\\AppData\\Local\\Programs\\OpenCodeX Desktop"
+          }
+        }
+      },
+      "atUtc": "2026-11-08T16:19:33.5573498Z"
+    },
+    {
+      "schemaVersion": 1,
+      "step": "07",
+      "name": "nsis-custom",
+      "status": "pass",
+      "firstError": "",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [],
+      "evidence": {
+        "cleanup": {
+          "sid": "S-1-5-21-3289802278-1561746829-1498425070-1006",
+          "profile": "C:\\Users\\ocxaccaac920b7",
+          "removed": true
+        },
+        "receipt": {
+          "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+          "sourceCommit": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+          "builtExecutableSha256": "c59a2a72a231b004443b5250036b5b1cf19db770ffd009f09c88ba915f1af21b",
+          "version": "0.2.23",
+          "codeSigned": false,
+          "releaseAccepted": false,
+          "result": "pass",
+          "installers": [
+            {
+              "kind": "nsis",
+              "name": "OpenCodeX Desktop_0.2.23_x64-setup.exe",
+              "bytes": 287581782,
+              "sha256": "7f4fac1404d43a23e59bc97abaaf2bd91b0df292376d16a608f8a5fc26b89fe0",
+              "installDirectory": "C:\\Users\\ocxaccaac920b7\\AppData\\Local\\Temp\\ocxd-candidate-nsis-20f461012f6647f8a9439d422a58ba4c",
+              "result": "pass",
+              "installExitCode": 0,
+              "installedExecutableSha256": "04bffaea237fa85c299f35582be25c279e1ee0c2475661e86232047706258176",
+              "expectedInstalledExecutableSha256": "04bffaea237fa85c299f35582be25c279e1ee0c2475661e86232047706258176",
+              "bundleMarker": "NSS",
+              "bundleMarkerOffset": 16431941,
+              "productVersion": "0.2.23",
+              "firstScreen": "pass",
+              "explicitCleanupHelper": {
+                "scope": "disposable hosted runner actual TokenUser profile; current v2 fixed pointer and selected aggregate",
+                "structureVersion": 2,
+                "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1006",
+                "profile": "C:\\Users\\ocxaccaac920b7",
+                "unconfirmedExitCode": 2,
+                "confirmedExitCode": 0,
+                "repeatExitCode": 0,
+                "fixedAndSelectedDesktopRemoved": true,
+                "externalHomeUnchanged": true,
+                "unselectedLegacyPathUnchanged": true,
+                "durableExternalGatesRetainedByProduct": true,
+                "newFixturesCleanedByHarness": true,
+                "applicationRetained": true,
+                "legacyCompatibilityTested": false,
+                "hostAcceptanceClaimed": false
+              },
+              "uninstallExitCode": 0,
+              "uninstallRemovedExecutable": true,
+              "defaultUninstallRetainedData": true
+            }
+          ],
+          "defaultUninstallChecks": [],
+          "installationOwnerToken": {
+            "schemaVersion": 1,
+            "status": "observed",
+            "processId": 820,
+            "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+            "creationTimeUtc": "2026-11-08T16:19:48.5422257Z",
+            "elevated": false,
+            "elevationType": 1,
+            "collectedAtUtc": "2026-11-08T16:19:49.6237395Z"
+          },
+          "installationOwnerProfile": "C:\\Users\\ocxaccaac920b7",
+          "installerPolicies": [
+            {
+              "DisableMSI": 0,
+              "AlwaysInstallElevated": null,
+              "path": "HKLM:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+              "exists": true,
+              "DisableUserInstalls": null
+            },
+            {
+              "DisableMSI": null,
+              "AlwaysInstallElevated": null,
+              "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+              "exists": false,
+              "DisableUserInstalls": null
+            }
+          ],
+          "defaultInstallChecks": []
+        }
+      },
+      "atUtc": "2026-11-08T16:20:46.3446251Z"
+    },
+    {
+      "schemaVersion": 1,
+      "step": "08",
+      "name": "path-snapshot-and-copy",
+      "status": "fail",
+      "firstError": "probe-precondition: UI wait: !!window.__TAURI_INTERNALS__?.invoke&&!!document.querySelector('.side')",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [],
+      "evidence": {
+        "line": 132,
+        "errorType": "System.Management.Automation.RuntimeException"
+      },
+      "atUtc": "2026-11-08T16:21:24.7680384Z"
+    },
+    {
+      "schemaVersion": 1,
+      "step": "09",
+      "name": "native-install-recovery",
+      "status": "fail",
+      "firstError": "probe-precondition: UI wait: !!window.__TAURI_INTERNALS__?.invoke&&!!document.querySelector('.side')",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [],
+      "evidence": {
+        "line": 132,
+        "errorType": "System.Management.Automation.RuntimeException"
+      },
+      "atUtc": "2026-11-08T16:21:48.4895011Z"
+    },
+    {
+      "schemaVersion": 1,
+      "step": "10",
+      "name": "query-and-update-recovery",
+      "status": "fail",
+      "firstError": "probe-precondition: UI wait: !!window.__TAURI_INTERNALS__?.invoke&&!!document.querySelector('.side')",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [],
+      "evidence": {
+        "line": 132,
+        "errorType": "System.Management.Automation.RuntimeException"
+      },
+      "atUtc": "2026-11-08T16:22:12.0862838Z"
+    },
+    {
+      "schemaVersion": 1,
+      "step": "11",
+      "name": "two-real-sids",
+      "status": "pass",
+      "firstError": "",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [],
+      "evidence": [
+        "{\r\n  \"schemaVersion\": 1,\r\n  \"ephemeralGuard\": {\r\n    \"passed\": true,\r\n    \"windows\": true,\r\n    \"githubActions\": \"true\",\r\n    \"runnerTemp\": \"D:\\\\a\\\\_temp\",\r\n    \"checkedBeforeProvisioning\": true\r\n  },\r\n  \"result\": \"diagnostic-only\",\r\n  \"expectedCommit\": \"040cdcd9f6707460318040db31a57bada7b1b7d5\",\r\n  \"nativeExecuted\": true,\r\n  \"verifyRuntimePorts\": true,\r\n  \"twoSidNativePassed\": false,\r\n  \"userIsolation\": \"not-verified\",\r\n  \"fullVersionGatePassed\": false,\r\n  \"runtimeProxyPortIsolation\": \"not-verified\",\r\n  \"cleanup\": [\r\n    {\r\n      \"pid\": 6180,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\opencodex\\\\node_modules\\\\bun\\\\bin\\\\bun.exe\",\r\n      \"creationTicks\": \"639297520988857557\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 8244,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520987751427\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 5000,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520987410166\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 7460,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520987373472\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 8676,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\opencodex\\\\node_modules\\\\bun\\\\bin\\\\bun.exe\",\r\n      \"creationTicks\": \"639297520958565649\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 4204,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520957587635\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 6160,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520957308081\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 9152,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520957281128\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 6156,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520945095202\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 7924,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520945018059\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 2636,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\opencodex\\\\node_modules\\\\bun\\\\bin\\\\bun.exe\",\r\n      \"creationTicks\": \"639297520932424950\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 1632,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520931323451\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 2136,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520930988321\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 4816,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520930955328\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 3720,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\ocxd.exe\",\r\n      \"creationTicks\": \"639297520927675213\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 6136,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297520918558594\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 6680,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297520917848223\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 6324,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297520917487163\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 3772,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297520917433550\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 1988,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297520915385665\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 3204,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297520915110149\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 4584,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520914051260\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 3572,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\opencodex-desktop.exe\",\r\n      \"creationTicks\": \"639297520913910690\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 4528,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520913747347\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 6752,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520913716935\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 6628,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520897624078\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 8552,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\ocxd.exe\",\r\n      \"creationTicks\": \"639297520897436771\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 7896,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520897392285\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 6708,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297520890480142\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 6192,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297520889567604\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 7656,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297520889423515\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 4112,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297520889391696\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 3920,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297520887186020\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 2596,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297520886844227\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 5416,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\opencodex-desktop.exe\",\r\n      \"creationTicks\": \"639297520885614354\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 1436,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520839449335\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 8520,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520839414805\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 8152,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\opencodex\\\\node_modules\\\\bun\\\\bin\\\\bun.exe\",\r\n      \"creationTicks\": \"639297520806483583\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 3056,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520805766949\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 1224,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520805518227\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 8628,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520805502572\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 6256,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520805476927\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 7668,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520805260295\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 4212,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520805230124\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 1476,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\opencodex\\\\node_modules\\\\bun\\\\bin\\\\bun.exe\",\r\n      \"creationTicks\": \"639297520795028369\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 2844,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520793912394\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 8456,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520793641222\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 4304,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520793614769\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 5324,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520775655450\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 7180,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520775417513\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 5068,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520775391519\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 8936,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\opencodex\\\\node_modules\\\\bun\\\\bin\\\\bun.exe\",\r\n      \"creationTicks\": \"639297520686488073\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 740,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520685589900\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 2492,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520685339661\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 1880,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520685311475\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 1036,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520655617244\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 6932,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520655333423\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 4176,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520655302385\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 3904,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520643959662\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 8860,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520643684386\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 8604,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520643653151\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 5644,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\opencodex\\\\node_modules\\\\bun\\\\bin\\\\bun.exe\",\r\n      \"creationTicks\": \"639297520626835545\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 7188,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520625916051\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 3756,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520625552806\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 8752,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520625511025\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 7352,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520595342117\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 608,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520595305565\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 5036,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520539786014\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 5728,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520539461058\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 6292,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520539417532\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 8988,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520475526221\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 5344,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520475213431\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 1820,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520475175437\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 3996,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\opencodex\\\\node_modules\\\\bun\\\\bin\\\\bun.exe\",\r\n      \"creationTicks\": \"639297520446221056\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 628,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520445404546\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 7624,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520445167161\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 7576,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520445137921\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 5116,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520324832261\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 836,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520324472463\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 6396,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520324424873\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 1464,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520305067811\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 6600,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\opencodex\\\\node_modules\\\\bun\\\\bin\\\\bun.exe\",\r\n      \"creationTicks\": \"639297520296022723\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 5560,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520294655758\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 6384,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520294371163\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 7900,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520294340774\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 620,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\opencodex\\\\node_modules\\\\bun\\\\bin\\\\bun.exe\",\r\n      \"creationTicks\": \"639297520206153251\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 8256,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520205218150\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 4424,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520204979203\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 1156,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520204949978\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 572,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520103760871\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 6620,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520103717551\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 2724,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\opencodex\\\\node_modules\\\\bun\\\\bin\\\\bun.exe\",\r\n      \"creationTicks\": \"639297520074753428\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 7932,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520073786957\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 2332,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520073484529\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 6996,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520073452010\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 1844,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520043431312\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 8584,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520043398377\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 8156,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\opencodex\\\\node_modules\\\\bun\\\\bin\\\\bun.exe\",\r\n      \"creationTicks\": \"639297520007361466\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 6856,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\opencodex\\\\node_modules\\\\bun\\\\bin\\\\bun.exe\",\r\n      \"creationTicks\": \"639297520006117126\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 2160,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520006112699\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 3540,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520005763178\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 7116,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520005732689\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 7336,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297520005208062\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 3608,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297520004892502\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 4960,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297520004846960\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 4376,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297519939341104\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 5708,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297519939121366\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 4416,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297519939095298\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 6564,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\opencodex\\\\node_modules\\\\bun\\\\bin\\\\bun.exe\",\r\n      \"creationTicks\": \"639297519906296329\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 1084,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\runtime\\\\node\\\\node.exe\",\r\n      \"creationTicks\": \"639297519905176241\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 2436,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297519904834461\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 8048,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\cmd.exe\",\r\n      \"creationTicks\": \"639297519904801397\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 6224,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\hostedtoolcache\\\\windows\\\\node\\\\26.8.1\\\\x64\\\\node.exe\",\r\n      \"creationTicks\": \"639297519677459505\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 5196,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\hostedtoolcache\\\\windows\\\\node\\\\26.8.1\\\\x64\\\\node.exe\",\r\n      \"creationTicks\": \"639297519660663118\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 7580,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297518802832030\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 7088,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\hostedtoolcache\\\\windows\\\\node\\\\26.8.1\\\\x64\\\\node.exe\",\r\n      \"creationTicks\": \"639297517787095199\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 8312,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297517773511506\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 8476,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297517772223970\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 1160,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297517770842245\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 7248,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297517770836597\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 3296,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297517768599835\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 4388,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297517768376541\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 6040,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\opencodex-desktop.exe\",\r\n      \"creationTicks\": \"639297517766870925\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 504,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\",\r\n      \"creationTicks\": \"639297517717341096\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 5284,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297517702209452\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 1300,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\",\r\n      \"creationTicks\": \"639297517702167072\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    },\r\n    {\r\n      \"pid\": 6096,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\hostedtoolcache\\\\windows\\\\node\\\\26.8.1\\\\x64\\\\node.exe\",\r\n      \"creationTicks\": \"639297517692218918\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 8172,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297517683740449\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 7492,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297517648937344\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 2464,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297517622165262\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 4140,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297517602713226\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 4048,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297517599896461\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 1116,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\156.0.4314.58\\\\msedgewebview2.exe\",\r\n      \"creationTicks\": \"639297517599682074\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 5300,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\opencodex-desktop.exe\",\r\n      \"creationTicks\": \"639297517596352138\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 3944,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\",\r\n      \"creationTicks\": \"639297517502678781\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 3928,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Windows\\\\system32\\\\conhost.exe\",\r\n      \"creationTicks\": \"639297517486255706\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"pid\": 7920,\r\n      \"result\": \"stopped-or-exited\",\r\n      \"image\": \"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\",\r\n      \"creationTicks\": \"639297517486217571\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"result\": \"account-and-profile-removed\",\r\n      \"profile\": \"C:\\\\Users\\\\ocxaccc423517726\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\"\r\n    },\r\n    {\r\n      \"result\": \"account-and-profile-removed\",\r\n      \"profile\": \"C:\\\\Users\\\\ocxacc7f893e4d66\",\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\"\r\n    }\r\n  ],\r\n  \"evidenceDirectory\": \"D:\\\\a\\\\_temp\\\\ocxd023-sweep-users-8f1f152c74394b1c92eb5bb3376fc29e\",\r\n  \"unverified\": [\r\n    \"Complete runtime proxy ports: no start/stop or conflict experiment performed\",\r\n    \"Synthetic DPAPI proves OS CurrentUser sub-scope, not all application credential flows\",\r\n    \"ocxd has no peer-pipe override; cross-pipe denial uses actual other-SID .NET client\",\r\n    \"Instance lock contents cannot be hashed while Windows byte-range lock is held; size/time plus schema/pointer hashes checked\"\r\n  ],\r\n  \"nodeVersion\": \"v26.8.1\",\r\n  \"executableSha256\": \"ec37e406f334a4e61f4620fe92c7088d062dc31d9b0195efdad2654e245bf4c5\",\r\n  \"nodeSha256\": \"5cba0ea928508c65ddadefc0681d2fb6d95f1f3beea4428f04397631140ee8e5\",\r\n  \"reusedSourceSha256\": \"67a03112abef8b3659ba4154f8d16b92053e1163a2ea6e27010ce1fbbab798ce\",\r\n  \"scriptHashes\": [\r\n    {\r\n      \"sha256\": \"a896d7b5f7adf078aa94b3622ea14aa290235ec7fd769ce8961dcacfdedf30cf\",\r\n      \"name\": \"windows023-two-user-native.ps1\"\r\n    },\r\n    {\r\n      \"sha256\": \"3b1d791247b1cfc7dfad8e438fe19c883fd11f11845672097141031c33eccba4\",\r\n      \"name\": \"windows023-two-user-native-helper.ps1\"\r\n    },\r\n    {\r\n      \"sha256\": \"2c3512b4ad51127883a8fee6a37ee53ced616fea286a9825876eec54c7c9feca\",\r\n      \"name\": \"windows-process-token.ps1\"\r\n    },\r\n    {\r\n      \"sha256\": \"9426b6deed269c9000a6a242358da9aa16676675e1a4814c7a430cc124c85c60\",\r\n      \"name\": \"windows-cdp.mjs\"\r\n    }\r\n  ],\r\n  \"createProfileHResult\": 0,\r\n  \"overlap\": {\r\n    \"fromUtc\": \"2026-11-08T16:28:19.7227274Z\",\r\n    \"toUtc\": \"2026-11-08T16:28:26.6664096Z\",\r\n    \"minimumSeconds\": 6,\r\n    \"observedSeconds\": 6.9437282,\r\n    \"managers\": [\r\n      {\r\n        \"pid\": 5416,\r\n        \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\",\r\n        \"path\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\opencodex-desktop.exe\",\r\n        \"creationTicks\": \"639297520885614354\",\r\n        \"sessionId\": 2\r\n      },\r\n      {\r\n        \"pid\": 3572,\r\n        \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\",\r\n        \"path\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\opencodex-desktop.exe\",\r\n        \"creationTicks\": \"639297520913910690\",\r\n        \"sessionId\": 2\r\n      }\r\n    ]\r\n  },\r\n  \"users\": [\r\n    {\r\n      \"ephemeralGuard\": {\r\n        \"passed\": true,\r\n        \"windows\": true,\r\n        \"githubActions\": \"true\",\r\n        \"runnerTemp\": \"D:\\\\a\\\\_temp\",\r\n        \"checkedBeforeProvisioning\": true\r\n      },\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\",\r\n      \"profile\": \"C:\\\\Users\\\\ocxaccc423517726\",\r\n      \"processHome\": \"C:\\\\Users\\\\ocxaccc423517726\",\r\n      \"localAppData\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\",\r\n      \"desktopRoot\": \"C:\\\\Users\\\\ocxaccc423517726\\\\.codex-desktop\\\\desktop\",\r\n      \"opencodexHome\": \"C:\\\\Users\\\\ocxaccc423517726\\\\.codex-desktop\\\\opencodex\\\\home\",\r\n      \"installation\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\",\r\n      \"result\": \"diagnostic-only\",\r\n      \"runtimeProxyVerification\": \"not-verified\",\r\n      \"verifyRuntimePorts\": true,\r\n      \"sandbox\": false,\r\n      \"manager\": {\r\n        \"pid\": 5416,\r\n        \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1007\",\r\n        \"path\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\opencodex-desktop.exe\",\r\n        \"creationTicks\": \"639297520885614354\",\r\n        \"sessionId\": 2\r\n      },\r\n      \"window\": {\r\n        \"pid\": 5416,\r\n        \"handle\": \"655908\",\r\n        \"ownedVisible\": true,\r\n        \"observedUtc\": \"2026-11-08T16:28:08.6365132Z\"\r\n      },\r\n      \"applicationToken\": {\r\n        \"schemaVersion\": 1,\r\n        \"status\": \"observed\",\r\n        \"processId\": 5416,\r\n        \"executable\": \"C:\\\\Users\\\\ocxaccc423517726\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\opencodex-desktop.exe\",\r\n        \"creationTimeUtc\": \"2026-11-08T16:28:08.5614354Z\",\r\n        \"elevated\": false,\r\n        \"elevationType\": 1,\r\n        \"collectedAtUtc\": \"2026-11-08T16:28:08.6379182Z\"\r\n      },\r\n      \"pipe\": \"OpenCodeXDesktop-6d9f5498b3dd34093add1e6f\",\r\n      \"accepted\": false,\r\n      \"diagnosticOnly\": true,\r\n      \"runtimeReady\": false,\r\n      \"peerBusinessData\": \"access-denied\",\r\n      \"crossPipe\": \"access-denied-real-token\",\r\n      \"crossPipeServer\": 3572,\r\n      \"dpapi\": \"own-roundtrip-and-peer-denied-synthetic-subscope-only\",\r\n      \"duplicate\": {\r\n        \"rejected\": true,\r\n        \"secondPid\": 5016,\r\n        \"secondExitCode\": 101,\r\n        \"originalPid\": 5416,\r\n        \"originalWindowUnchanged\": true,\r\n        \"pointerMetadataHashUnchanged\": true,\r\n        \"lockSizeAndWriteTimeUnchanged\": true,\r\n        \"lockContentHash\": \"unavailable-while-byte-range-lock-held\"\r\n      }\r\n    },\r\n    {\r\n      \"ephemeralGuard\": {\r\n        \"passed\": true,\r\n        \"windows\": true,\r\n        \"githubActions\": \"true\",\r\n        \"runnerTemp\": \"D:\\\\a\\\\_temp\",\r\n        \"checkedBeforeProvisioning\": true\r\n      },\r\n      \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\",\r\n      \"profile\": \"C:\\\\Users\\\\ocxacc7f893e4d66\",\r\n      \"processHome\": \"C:\\\\Users\\\\ocxacc7f893e4d66\",\r\n      \"localAppData\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\",\r\n      \"desktopRoot\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\.codex-desktop\\\\desktop\",\r\n      \"opencodexHome\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\.codex-desktop\\\\opencodex\\\\home\",\r\n      \"installation\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\",\r\n      \"result\": \"diagnostic-only\",\r\n      \"runtimeProxyVerification\": \"not-verified\",\r\n      \"verifyRuntimePorts\": true,\r\n      \"sandbox\": false,\r\n      \"manager\": {\r\n        \"pid\": 3572,\r\n        \"sid\": \"S-1-5-21-3289802278-1561746829-1498425070-1008\",\r\n        \"path\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\opencodex-desktop.exe\",\r\n        \"creationTicks\": \"639297520913910690\",\r\n        \"sessionId\": 2\r\n      },\r\n      \"window\": {\r\n        \"pid\": 3572,\r\n        \"handle\": \"131738\",\r\n        \"ownedVisible\": true,\r\n        \"observedUtc\": \"2026-11-08T16:28:11.4821067Z\"\r\n      },\r\n      \"applicationToken\": {\r\n        \"schemaVersion\": 1,\r\n        \"status\": \"observed\",\r\n        \"processId\": 3572,\r\n        \"executable\": \"C:\\\\Users\\\\ocxacc7f893e4d66\\\\AppData\\\\Local\\\\Programs\\\\OpenCodeX Desktop\\\\opencodex-desktop.exe\",\r\n        \"creationTimeUtc\": \"2026-11-08T16:28:11.391069Z\",\r\n        \"elevated\": false,\r\n        \"elevationType\": 1,\r\n        \"collectedAtUtc\": \"2026-11-08T16:28:11.4824319Z\"\r\n      },\r\n      \"pipe\": \"OpenCodeXDesktop-f41c6b2bf7f2d0dbb4900c39\",\r\n      \"accepted\": false,\r\n      \"diagnosticOnly\": true,\r\n      \"runtimeReady\": false,\r\n      \"peerBusinessData\": \"access-denied\",\r\n      \"crossPipe\": \"access-denied-real-token\",\r\n      \"crossPipeServer\": 5416,\r\n      \"dpapi\": \"own-roundtrip-and-peer-denied-synthetic-subscope-only\",\r\n      \"duplicate\": {\r\n        \"rejected\": true,\r\n        \"secondPid\": 212,\r\n        \"secondExitCode\": 101,\r\n        \"originalPid\": 3572,\r\n        \"originalWindowUnchanged\": true,\r\n        \"pointerMetadataHashUnchanged\": true,\r\n        \"lockSizeAndWriteTimeUnchanged\": true,\r\n        \"lockContentHash\": \"unavailable-while-byte-range-lock-held\"\r\n      }\r\n    }\r\n  ],\r\n  \"accepted\": false,\r\n  \"diagnosticOnly\": true,\r\n  \"runtimePortPrerequisitesMet\": false,\r\n  \"evidenceAclRestored\": true,\r\n  \"sealedCandidateUnchanged\": true,\r\n  \"desktopAclRestored\": true,\r\n  \"finishedUtc\": \"2026-11-08T16:29:06.1244502Z\"\r\n}",
+        {
+          "fromUtc": "2026-11-08T16:28:19.7227274Z",
+          "toUtc": "2026-11-08T16:28:26.6664096Z",
+          "minimumSeconds": 6,
+          "observedSeconds": 6.9437282,
+          "managers": [
+            {
+              "pid": 5416,
+              "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007",
+              "path": "C:\\Users\\ocxaccc423517726\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+              "creationTicks": "639297520885614354",
+              "sessionId": 2
+            },
+            {
+              "pid": 3572,
+              "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+              "path": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+              "creationTicks": "639297520913910690",
+              "sessionId": 2
+            }
+          ]
+        }
+      ],
+      "atUtc": "2026-11-08T16:29:06.1899543Z"
+    },
+    {
+      "status": "fail",
+      "firstError": "user1: Actual supply observation unavailable: native CDP failed; app logs retain any actual bundle failure",
+      "evidence": null,
+      "schemaVersion": 1,
+      "step": "12",
+      "name": "private-bundle-supply",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [
+        "11"
+      ]
+    },
+    {
+      "status": "fail",
+      "firstError": "user1: Actual production readiness not verified: ",
+      "evidence": null,
+      "schemaVersion": 1,
+      "step": "13",
+      "name": "runtime-readiness",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [
+        "12"
+      ]
+    },
+    {
+      "status": "fail",
+      "firstError": "Actual runtime port protocol not verified; actual readiness/identity or protocol prerequisite remains unproved",
+      "evidence": null,
+      "schemaVersion": 1,
+      "step": "14",
+      "name": "runtime-ports",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [
+        "12",
+        "13"
+      ]
+    },
+    {
+      "status": "fail",
+      "firstError": "user1: Actual path-snapshot IPC unavailable; filesystem pointers do not substitute for a snapshot",
+      "evidence": null,
+      "schemaVersion": 1,
+      "step": "15",
+      "name": "two-user-paths",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [
+        "11"
+      ]
+    },
+    {
+      "status": "pass",
+      "firstError": "",
+      "evidence": [
+        {
+          "name": "same-user-ipc",
+          "status": "pass",
+          "accepted": false,
+          "diagnosticOnly": true,
+          "firstError": "",
+          "evidence": null
+        },
+        {
+          "name": "same-user-ipc",
+          "status": "pass",
+          "accepted": false,
+          "diagnosticOnly": true,
+          "firstError": "",
+          "evidence": null
+        }
+      ],
+      "schemaVersion": 1,
+      "step": "16",
+      "name": "same-user-ipc",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [
+        "11",
+        "15"
+      ]
+    },
+    {
+      "status": "pass",
+      "firstError": "",
+      "evidence": {
+        "peer-business-data": [
+          {
+            "name": "peer-business-data",
+            "status": "pass",
+            "accepted": false,
+            "diagnosticOnly": true,
+            "firstError": "",
+            "evidence": null
+          },
+          {
+            "name": "peer-business-data",
+            "status": "pass",
+            "accepted": false,
+            "diagnosticOnly": true,
+            "firstError": "",
+            "evidence": null
+          }
+        ],
+        "cross-user-ipc": [
+          {
+            "name": "cross-user-ipc",
+            "status": "pass",
+            "accepted": false,
+            "diagnosticOnly": true,
+            "firstError": "",
+            "evidence": null
+          },
+          {
+            "name": "cross-user-ipc",
+            "status": "pass",
+            "accepted": false,
+            "diagnosticOnly": true,
+            "firstError": "",
+            "evidence": null
+          }
+        ],
+        "cross-user-dpapi": [
+          {
+            "name": "cross-user-dpapi",
+            "status": "pass",
+            "accepted": false,
+            "diagnosticOnly": true,
+            "firstError": "",
+            "evidence": null
+          },
+          {
+            "name": "cross-user-dpapi",
+            "status": "pass",
+            "accepted": false,
+            "diagnosticOnly": true,
+            "firstError": "",
+            "evidence": null
+          }
+        ],
+        "same-sid-single-instance": [
+          {
+            "name": "same-sid-single-instance",
+            "status": "pass",
+            "accepted": false,
+            "diagnosticOnly": true,
+            "firstError": "",
+            "evidence": null
+          },
+          {
+            "name": "same-sid-single-instance",
+            "status": "pass",
+            "accepted": false,
+            "diagnosticOnly": true,
+            "firstError": "",
+            "evidence": null
+          }
+        ]
+      },
+      "schemaVersion": 1,
+      "step": "17",
+      "name": "cross-user-ipc",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [
+        "11",
+        "15"
+      ]
+    },
+    {
+      "status": "pass",
+      "firstError": "",
+      "evidence": {
+        "twoUser": [
+          {
+            "pid": 6180,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+            "creationTicks": "639297520988857557",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 8244,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520987751427",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 5000,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520987410166",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 7460,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520987373472",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 8676,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+            "creationTicks": "639297520958565649",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 4204,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520957587635",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 6160,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520957308081",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 9152,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520957281128",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 6156,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520945095202",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 7924,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520945018059",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 2636,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxaccc423517726\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+            "creationTicks": "639297520932424950",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 1632,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxaccc423517726\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520931323451",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 2136,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520930988321",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 4816,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520930955328",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 3720,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\ocxd.exe",
+            "creationTicks": "639297520927675213",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 6136,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297520918558594",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 6680,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297520917848223",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 6324,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297520917487163",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 3772,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297520917433550",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 1988,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297520915385665",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 3204,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297520915110149",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 4584,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxaccc423517726\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520914051260",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 3572,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+            "creationTicks": "639297520913910690",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 4528,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520913747347",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 6752,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520913716935",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 6628,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520897624078",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 8552,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxaccc423517726\\AppData\\Local\\Programs\\OpenCodeX Desktop\\ocxd.exe",
+            "creationTicks": "639297520897436771",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 7896,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520897392285",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 6708,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297520890480142",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 6192,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297520889567604",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 7656,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297520889423515",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 4112,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297520889391696",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 3920,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297520887186020",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 2596,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297520886844227",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 5416,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxaccc423517726\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+            "creationTicks": "639297520885614354",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 1436,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520839449335",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 8520,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520839414805",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 8152,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxaccc423517726\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+            "creationTicks": "639297520806483583",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 3056,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520805766949",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 1224,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxaccc423517726\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520805518227",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 8628,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520805502572",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 6256,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520805476927",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 7668,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520805260295",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 4212,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520805230124",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 1476,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+            "creationTicks": "639297520795028369",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 2844,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520793912394",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 8456,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520793641222",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 4304,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520793614769",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 5324,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520775655450",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 7180,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520775417513",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 5068,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520775391519",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 8936,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+            "creationTicks": "639297520686488073",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 740,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520685589900",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 2492,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520685339661",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 1880,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520685311475",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 1036,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520655617244",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 6932,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520655333423",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 4176,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520655302385",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 3904,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520643959662",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 8860,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520643684386",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 8604,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520643653151",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 5644,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+            "creationTicks": "639297520626835545",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 7188,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520625916051",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 3756,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520625552806",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 8752,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520625511025",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 7352,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520595342117",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 608,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520595305565",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 5036,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxaccc423517726\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520539786014",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 5728,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520539461058",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 6292,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520539417532",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 8988,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520475526221",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 5344,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520475213431",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 1820,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520475175437",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 3996,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+            "creationTicks": "639297520446221056",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 628,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520445404546",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 7624,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520445167161",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 7576,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520445137921",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 5116,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520324832261",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 836,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520324472463",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 6396,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520324424873",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 1464,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520305067811",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 6600,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+            "creationTicks": "639297520296022723",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 5560,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520294655758",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 6384,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520294371163",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 7900,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520294340774",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 620,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxaccc423517726\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+            "creationTicks": "639297520206153251",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 8256,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxaccc423517726\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520205218150",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 4424,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520204979203",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 1156,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520204949978",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 572,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520103760871",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 6620,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520103717551",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 2724,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+            "creationTicks": "639297520074753428",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 7932,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520073786957",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 2332,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520073484529",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 6996,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520073452010",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 1844,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520043431312",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 8584,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520043398377",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 8156,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+            "creationTicks": "639297520007361466",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 6856,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxaccc423517726\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+            "creationTicks": "639297520006117126",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 2160,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520006112699",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 3540,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520005763178",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 7116,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520005732689",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 7336,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxaccc423517726\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297520005208062",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 3608,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297520004892502",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 4960,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297520004846960",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 4376,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxaccc423517726\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297519939341104",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 5708,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297519939121366",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 4416,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297519939095298",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 6564,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxaccc423517726\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+            "creationTicks": "639297519906296329",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 1084,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxaccc423517726\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+            "creationTicks": "639297519905176241",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 2436,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297519904834461",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 8048,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\cmd.exe",
+            "creationTicks": "639297519904801397",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 6224,
+            "result": "stopped-or-exited",
+            "image": "C:\\hostedtoolcache\\windows\\node\\26.8.1\\x64\\node.exe",
+            "creationTicks": "639297519677459505",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 5196,
+            "result": "stopped-or-exited",
+            "image": "C:\\hostedtoolcache\\windows\\node\\26.8.1\\x64\\node.exe",
+            "creationTicks": "639297519660663118",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 7580,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297518802832030",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 7088,
+            "result": "stopped-or-exited",
+            "image": "C:\\hostedtoolcache\\windows\\node\\26.8.1\\x64\\node.exe",
+            "creationTicks": "639297517787095199",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 8312,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297517773511506",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 8476,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297517772223970",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 1160,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297517770842245",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 7248,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297517770836597",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 3296,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297517768599835",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 4388,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297517768376541",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 6040,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxacc7f893e4d66\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+            "creationTicks": "639297517766870925",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 504,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+            "creationTicks": "639297517717341096",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 5284,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297517702209452",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 1300,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+            "creationTicks": "639297517702167072",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          },
+          {
+            "pid": 6096,
+            "result": "stopped-or-exited",
+            "image": "C:\\hostedtoolcache\\windows\\node\\26.8.1\\x64\\node.exe",
+            "creationTicks": "639297517692218918",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 8172,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297517683740449",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 7492,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297517648937344",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 2464,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297517622165262",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 4140,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297517602713226",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 4048,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297517599896461",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 1116,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+            "creationTicks": "639297517599682074",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 5300,
+            "result": "stopped-or-exited",
+            "image": "C:\\Users\\ocxaccc423517726\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+            "creationTicks": "639297517596352138",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 3944,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+            "creationTicks": "639297517502678781",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 3928,
+            "result": "stopped-or-exited",
+            "image": "C:\\Windows\\system32\\conhost.exe",
+            "creationTicks": "639297517486255706",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "pid": 7920,
+            "result": "stopped-or-exited",
+            "image": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+            "creationTicks": "639297517486217571",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "result": "account-and-profile-removed",
+            "profile": "C:\\Users\\ocxaccc423517726",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1007"
+          },
+          {
+            "result": "account-and-profile-removed",
+            "profile": "C:\\Users\\ocxacc7f893e4d66",
+            "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008"
+          }
+        ],
+        "method": "retained PID/SID/image/creation and exact account/Profile/ACL readback"
+      },
+      "schemaVersion": 1,
+      "step": "18",
+      "name": "account-and-process-cleanup",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [
+        "04",
+        "05",
+        "06",
+        "07",
+        "11"
+      ]
+    },
+    {
+      "status": "pass",
+      "firstError": "",
+      "evidence": [
+        {
+          "kind": "msi",
+          "mode": "default",
+          "receipt": {
+            "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+            "sourceCommit": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+            "builtExecutableSha256": "c59a2a72a231b004443b5250036b5b1cf19db770ffd009f09c88ba915f1af21b",
+            "version": "0.2.23",
+            "codeSigned": false,
+            "releaseAccepted": false,
+            "result": "pass",
+            "installers": [],
+            "defaultUninstallChecks": [
+              {
+                "exitCode": 0,
+                "executableRemoved": true,
+                "testFixtureCleanup": {
+                  "scope": "exact new sentinel and empty parents after default-uninstall hash proof",
+                  "removed": true,
+                  "productRetentionProved": true
+                },
+                "userDataRetained": true,
+                "result": "pass",
+                "kind": "msi"
+              }
+            ],
+            "installationOwnerToken": {
+              "schemaVersion": 1,
+              "status": "observed",
+              "processId": 6792,
+              "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+              "creationTimeUtc": "2026-11-08T16:16:23.6974201Z",
+              "elevated": false,
+              "elevationType": 1,
+              "collectedAtUtc": "2026-11-08T16:16:24.9649169Z"
+            },
+            "installationOwnerProfile": "C:\\Users\\ocxaccb56de622",
+            "installerPolicies": [
+              {
+                "DisableMSI": 0,
+                "DisableUserInstalls": null,
+                "path": "HKLM:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+                "AlwaysInstallElevated": null,
+                "exists": true
+              },
+              {
+                "DisableMSI": null,
+                "DisableUserInstalls": null,
+                "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+                "AlwaysInstallElevated": null,
+                "exists": false
+              }
+            ],
+            "defaultInstallChecks": [
+              {
+                "pathOverride": false,
+                "kind": "msi",
+                "installDirectory": "C:\\Users\\ocxaccb56de622\\AppData\\Local\\Programs\\OpenCodeX Desktop\\",
+                "result": "pass",
+                "boundary": "fresh isolated runner; no earlier installed product or directory override"
+              }
+            ],
+            "defaultMsiRegistryCleanup": [],
+            "defaultInstallRootObservation": {
+              "actual": "C:\\Users\\ocxaccb56de622\\AppData\\Local\\Programs\\OpenCodeX Desktop\\",
+              "expectedOwner": "C:\\Users\\ocxaccb56de622\\AppData\\Local\\Programs\\OpenCodeX Desktop"
+            }
+          }
+        },
+        {
+          "kind": "msi",
+          "mode": "custom",
+          "receipt": {
+            "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+            "sourceCommit": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+            "builtExecutableSha256": "c59a2a72a231b004443b5250036b5b1cf19db770ffd009f09c88ba915f1af21b",
+            "version": "0.2.23",
+            "codeSigned": false,
+            "releaseAccepted": false,
+            "result": "pass",
+            "installers": [
+              {
+                "kind": "msi",
+                "name": "OpenCodeX Desktop_0.2.23_x64_en-US.msi",
+                "bytes": 288911360,
+                "sha256": "4b29b5607b6af416c7eac55d3698ea923f170896152d39e77754385d2b089719",
+                "installDirectory": "C:\\Users\\ocxaccceb5c876\\AppData\\Local\\Temp\\ocxd-candidate-msi-7f74beb83425471d921a29bc0c728067",
+                "result": "pass",
+                "registryCleanup": [],
+                "installExitCode": 0,
+                "installedExecutableSha256": "8efc2f6488dc2b1667790ed94bf63ab3d176f9b93eb35063de13165221d9948e",
+                "expectedInstalledExecutableSha256": "8efc2f6488dc2b1667790ed94bf63ab3d176f9b93eb35063de13165221d9948e",
+                "bundleMarker": "MSI",
+                "bundleMarkerOffset": 16431941,
+                "productVersion": "0.2.23",
+                "firstScreen": "pass",
+                "explicitCleanupHelper": {
+                  "scope": "disposable hosted runner actual TokenUser profile; current v2 fixed pointer and selected aggregate",
+                  "structureVersion": 2,
+                  "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+                  "profile": "C:\\Users\\ocxaccceb5c876",
+                  "unconfirmedExitCode": 2,
+                  "confirmedExitCode": 0,
+                  "repeatExitCode": 0,
+                  "fixedAndSelectedDesktopRemoved": true,
+                  "externalHomeUnchanged": true,
+                  "unselectedLegacyPathUnchanged": true,
+                  "durableExternalGatesRetainedByProduct": true,
+                  "newFixturesCleanedByHarness": true,
+                  "applicationRetained": true,
+                  "legacyCompatibilityTested": false,
+                  "hostAcceptanceClaimed": false
+                },
+                "uninstallExitCode": 0,
+                "uninstallRemovedExecutable": true,
+                "defaultUninstallRetainedData": true
+              }
+            ],
+            "defaultUninstallChecks": [],
+            "installationOwnerToken": {
+              "schemaVersion": 1,
+              "status": "observed",
+              "processId": 7504,
+              "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+              "creationTimeUtc": "2026-11-08T16:17:34.9990444Z",
+              "elevated": false,
+              "elevationType": 1,
+              "collectedAtUtc": "2026-11-08T16:17:36.1000714Z"
+            },
+            "installationOwnerProfile": "C:\\Users\\ocxaccceb5c876",
+            "installerPolicies": [
+              {
+                "DisableMSI": 0,
+                "AlwaysInstallElevated": null,
+                "path": "HKLM:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+                "DisableUserInstalls": null,
+                "exists": true
+              },
+              {
+                "DisableMSI": null,
+                "AlwaysInstallElevated": null,
+                "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+                "DisableUserInstalls": null,
+                "exists": false
+              }
+            ],
+            "defaultInstallChecks": []
+          }
+        },
+        {
+          "kind": "nsis",
+          "mode": "default",
+          "receipt": {
+            "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+            "sourceCommit": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+            "builtExecutableSha256": "c59a2a72a231b004443b5250036b5b1cf19db770ffd009f09c88ba915f1af21b",
+            "version": "0.2.23",
+            "codeSigned": false,
+            "releaseAccepted": false,
+            "result": "pass",
+            "installers": [],
+            "defaultUninstallChecks": [
+              {
+                "kind": "nsis",
+                "userDataRetained": true,
+                "executableRemoved": true,
+                "testFixtureCleanup": {
+                  "removed": true,
+                  "scope": "exact new sentinel and empty parents after default-uninstall hash proof",
+                  "productRetentionProved": true
+                },
+                "result": "pass",
+                "exitCode": 0
+              }
+            ],
+            "installationOwnerToken": {
+              "schemaVersion": 1,
+              "status": "observed",
+              "processId": 9092,
+              "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+              "creationTimeUtc": "2026-11-08T16:18:30.2718642Z",
+              "elevated": false,
+              "elevationType": 1,
+              "collectedAtUtc": "2026-11-08T16:18:31.4263198Z"
+            },
+            "installationOwnerProfile": "C:\\Users\\ocxaccd7fa2acd",
+            "installerPolicies": [
+              {
+                "DisableMSI": 0,
+                "DisableUserInstalls": null,
+                "AlwaysInstallElevated": null,
+                "exists": true,
+                "path": "HKLM:\\Software\\Policies\\Microsoft\\Windows\\Installer"
+              },
+              {
+                "DisableMSI": null,
+                "DisableUserInstalls": null,
+                "AlwaysInstallElevated": null,
+                "exists": false,
+                "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Installer"
+              }
+            ],
+            "defaultInstallChecks": [
+              {
+                "pathOverride": false,
+                "installDirectory": "C:\\Users\\ocxaccd7fa2acd\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+                "boundary": "fresh isolated runner; no earlier installed product or directory override",
+                "result": "pass",
+                "kind": "nsis"
+              }
+            ],
+            "defaultInstallRootObservation": {
+              "expectedOwner": "C:\\Users\\ocxaccd7fa2acd\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+              "actual": "C:\\Users\\ocxaccd7fa2acd\\AppData\\Local\\Programs\\OpenCodeX Desktop"
+            }
+          }
+        },
+        {
+          "kind": "nsis",
+          "mode": "custom",
+          "receipt": {
+            "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+            "sourceCommit": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+            "builtExecutableSha256": "c59a2a72a231b004443b5250036b5b1cf19db770ffd009f09c88ba915f1af21b",
+            "version": "0.2.23",
+            "codeSigned": false,
+            "releaseAccepted": false,
+            "result": "pass",
+            "installers": [
+              {
+                "kind": "nsis",
+                "name": "OpenCodeX Desktop_0.2.23_x64-setup.exe",
+                "bytes": 287581782,
+                "sha256": "7f4fac1404d43a23e59bc97abaaf2bd91b0df292376d16a608f8a5fc26b89fe0",
+                "installDirectory": "C:\\Users\\ocxaccaac920b7\\AppData\\Local\\Temp\\ocxd-candidate-nsis-20f461012f6647f8a9439d422a58ba4c",
+                "result": "pass",
+                "installExitCode": 0,
+                "installedExecutableSha256": "04bffaea237fa85c299f35582be25c279e1ee0c2475661e86232047706258176",
+                "expectedInstalledExecutableSha256": "04bffaea237fa85c299f35582be25c279e1ee0c2475661e86232047706258176",
+                "bundleMarker": "NSS",
+                "bundleMarkerOffset": 16431941,
+                "productVersion": "0.2.23",
+                "firstScreen": "pass",
+                "explicitCleanupHelper": {
+                  "scope": "disposable hosted runner actual TokenUser profile; current v2 fixed pointer and selected aggregate",
+                  "structureVersion": 2,
+                  "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1006",
+                  "profile": "C:\\Users\\ocxaccaac920b7",
+                  "unconfirmedExitCode": 2,
+                  "confirmedExitCode": 0,
+                  "repeatExitCode": 0,
+                  "fixedAndSelectedDesktopRemoved": true,
+                  "externalHomeUnchanged": true,
+                  "unselectedLegacyPathUnchanged": true,
+                  "durableExternalGatesRetainedByProduct": true,
+                  "newFixturesCleanedByHarness": true,
+                  "applicationRetained": true,
+                  "legacyCompatibilityTested": false,
+                  "hostAcceptanceClaimed": false
+                },
+                "uninstallExitCode": 0,
+                "uninstallRemovedExecutable": true,
+                "defaultUninstallRetainedData": true
+              }
+            ],
+            "defaultUninstallChecks": [],
+            "installationOwnerToken": {
+              "schemaVersion": 1,
+              "status": "observed",
+              "processId": 820,
+              "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+              "creationTimeUtc": "2026-11-08T16:19:48.5422257Z",
+              "elevated": false,
+              "elevationType": 1,
+              "collectedAtUtc": "2026-11-08T16:19:49.6237395Z"
+            },
+            "installationOwnerProfile": "C:\\Users\\ocxaccaac920b7",
+            "installerPolicies": [
+              {
+                "DisableMSI": 0,
+                "AlwaysInstallElevated": null,
+                "path": "HKLM:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+                "exists": true,
+                "DisableUserInstalls": null
+              },
+              {
+                "DisableMSI": null,
+                "AlwaysInstallElevated": null,
+                "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+                "exists": false,
+                "DisableUserInstalls": null
+              }
+            ],
+            "defaultInstallChecks": []
+          }
+        }
+      ],
+      "schemaVersion": 1,
+      "step": "19",
+      "name": "uninstall-and-retention",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [
+        "04",
+        "05",
+        "06",
+        "07"
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "step": "20",
+      "name": "server-msi-restore",
+      "status": "pass",
+      "firstError": "",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [],
+      "evidence": {
+        "alwaysInstallElevatedChanged": false,
+        "result": "pass",
+        "restored": {
+          "value": null,
+          "keyExisted": false,
+          "valueExisted": false,
+          "kind": null
+        },
+        "run": "42497598285",
+        "changed": true
+      },
+      "atUtc": "2026-11-08T16:29:12.7048815Z"
+    },
+    {
+      "status": "fail",
+      "firstError": "[Errno 2] No such file or directory: 'D:\\\\a\\\\_temp\\\\ocxd023-sweep-42497598285-1\\\\evidence\\\\native-query\\\\native-query-recovery.json'",
+      "evidence": null,
+      "schemaVersion": 1,
+      "step": "21",
+      "name": "query-failure",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [
+        "10"
+      ]
+    },
+    {
+      "status": "fail",
+      "firstError": "[Errno 2] No such file or directory: 'D:\\\\a\\\\_temp\\\\ocxd023-sweep-42497598285-1\\\\evidence\\\\native-query\\\\native-query-recovery.json'",
+      "evidence": null,
+      "schemaVersion": 1,
+      "step": "22",
+      "name": "update-failure-recovery",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [
+        "10"
+      ]
+    },
+    {
+      "status": "pass",
+      "firstError": "",
+      "evidence": [
+        {
+          "handleHasExited": true,
+          "image": "D:\\a\\_temp\\ocxd023-sweep-complete-158c89448f5e4e24936fe6eb4f0591d5\\opencodex-desktop.exe",
+          "method": "retained Process handle exited; scoped child-tree kill only if still running",
+          "pid": 4424,
+          "exitCode": -1
+        },
+        {
+          "method": "retained Process handle exited; scoped child-tree kill only if still running",
+          "handleHasExited": true,
+          "exitCode": -1,
+          "pid": 6368,
+          "image": "D:\\a\\_temp\\ocxd023-sweep-complete-158c89448f5e4e24936fe6eb4f0591d5\\opencodex-desktop.exe"
+        },
+        {
+          "pid": 8268,
+          "handleHasExited": true,
+          "image": "D:\\a\\_temp\\ocxd023-sweep-complete-158c89448f5e4e24936fe6eb4f0591d5\\opencodex-desktop.exe",
+          "exitCode": -1,
+          "method": "retained Process handle exited; scoped child-tree kill only if still running"
+        }
+      ],
+      "schemaVersion": 1,
+      "step": "23",
+      "name": "native-process-cleanup",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [
+        "08",
+        "09",
+        "10"
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "step": "24",
+      "name": "windows-bundle-root-regression",
+      "status": "pass",
+      "firstError": "",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [],
+      "evidence": {
+        "platform": "actual Windows filesystem",
+        "source": "040cdcd9f6707460318040db31a57bada7b1b7d5",
+        "tests": 3,
+        "accepted": false
+      },
+      "atUtc": "2026-11-08T16:13:09.7147381Z"
+    },
+    {
+      "schemaVersion": 1,
+      "step": "25",
+      "name": "backend-state-observer-build",
+      "status": "pass",
+      "firstError": "",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [],
+      "evidence": {
+        "source": "040cdcd9f6707460318040db31a57bada7b1b7d5",
+        "transientSourceRemoved": true,
+        "observerSha256": "1276058b0aaf207a17d03c2903f62971852cc8961ad9ac6375d7e6c7926ee50f",
+        "accepted": false,
+        "builtBy": "Cargo exact product dependency/feature/linker graph"
+      },
+      "atUtc": "2026-11-08T16:10:35.9389605Z"
+    },
+    {
+      "schemaVersion": 1,
+      "step": "26",
+      "name": "attested-status-regression",
+      "status": "pass",
+      "firstError": "",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [],
+      "evidence": {
+        "platform": "Windows actual loopback TCP/private files/consumer including official owner-only ACL and authenticated same-connection stop",
+        "tests": 8,
+        "source": "040cdcd9f6707460318040db31a57bada7b1b7d5",
+        "accepted": false
+      },
+      "atUtc": "2026-11-08T16:15:45.6610545Z"
+    },
+    {
+      "schemaVersion": 1,
+      "step": "27",
+      "name": "actual-runtime-fixture-schema",
+      "status": "pass",
+      "firstError": "",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [],
+      "evidence": {
+        "checks": 2,
+        "temporaryRoots": "cleaned by Python context",
+        "source": "actual adopted runtime configSchema",
+        "accepted": false
+      },
+      "atUtc": "2026-11-08T16:08:09.7273634Z"
+    },
+    {
+      "schemaVersion": 1,
+      "step": "28",
+      "name": "runtime-port-save-regression",
+      "status": "fail",
+      "firstError": "Actual Windows port persistence/SQLite coordination regression failed",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "dependencies": [],
+      "evidence": {
+        "errorType": "System.Management.Automation.RuntimeException",
+        "line": 97
+      },
+      "atUtc": "2026-11-08T16:15:48.4672032Z"
+    }
+  ],
+  "acceptance": "No individual success or all-green sweep is release acceptance"
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "step": "03",
+  "name": "server-msi-prepare",
+  "status": "pass",
+  "firstError": "",
+  "accepted": false,
+  "diagnosticOnly": true,
+  "dependencies": [],
+  "evidence": {
+    "changed": true,
+    "server": true,
+    "scope": "temporary disposable Server fixture for unmanaged per-user MSI; normal Windows client behavior; no AlwaysInstallElevated or product privilege changes",
+    "run": "42497598285",
+    "attempt": "1",
+    "schemaVersion": 1,
+    "original": {
+      "kind": null,
+      "valueExisted": false,
+      "keyExisted": false,
+      "value": null
+    }
+  },
+  "atUtc": "2026-11-08T16:15:57.2478009Z"
+}

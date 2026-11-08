@@ -1,0 +1,17 @@
+{
+  "pass": true,
+  "source": {
+    "commit": null,
+    "distEntrySha256": "a0914d1ea2519a35ba6f66a9e8328b546aab5b586331b06b75e3b189398d6a82"
+  },
+  "checks": [
+    "built production entry mounted without ESM initialization error",
+    "production installation page service card is first",
+    "production radio component and synthetic IPC save result render",
+    "production directory consumer renders without removed selection entry"
+  ],
+  "errors": [],
+  "blocked": [],
+  "adapter": "actual dist ESM and production Vue, synthetic IPC",
+  "nativeAccepted": false
+}
