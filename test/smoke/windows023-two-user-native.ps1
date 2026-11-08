@@ -183,8 +183,19 @@ try {
   if(Test-Path -LiteralPath $tracked){
    try{foreach($fact in @(Get-Content -LiteralPath $tracked -Raw|ConvertFrom-Json)){
     if($fact.sid -cne $account.sid -or [long]$fact.creationTicks -lt [long]$account.fact.creationTicks){throw 'Runtime cleanup ledger escaped new account/generation'}
-    if(Get-Process -Id $fact.pid -ErrorAction SilentlyContinue){$null=Assert-TwoUserLive $fact;$taskLedger[[int]$fact.pid]=$fact}
-   }}catch{$account.runtimeCleanupUnproven=$true;$taskSummary.result='cleanup-failed'}
+    $observedProcess=Get-Process -Id $fact.pid -ErrorAction SilentlyContinue
+    if($observedProcess){
+     try{
+      if(!$observedProcess.HasExited){
+       try{$observedFact=Get-TwoUserProcessFact $observedProcess $fact.sid}catch{if(!$observedProcess.HasExited){throw};$observedFact=$null}
+       if($observedFact){
+        if($observedFact.creationTicks -cne $fact.creationTicks -or $observedFact.path -ine $fact.path){throw 'Refusing changed runtime ledger PID/SID/image/creation'}
+        $taskLedger[[int]$fact.pid]=$fact
+       }
+      }
+     }finally{$observedProcess.Dispose()}
+    }
+   }}catch{$account.runtimeCleanupUnproven=$true;$cleanup.Add(@{sid=$account.sid;result='runtime-ledger-refused';reason=($_.Exception.Message -split "\r?\n",2)[0]});$taskSummary.result='cleanup-failed'}
   }
  }
  foreach($fact in @($taskLedger.Values|Sort-Object {[long]$_.creationTicks} -Descending)){
@@ -210,7 +221,7 @@ try {
    }
    Remove-LocalUser -SID $account.sid -ErrorAction Stop
    $cleanup.Add(@{sid=$account.sid;profile=$account.profile;result='account-and-profile-removed'})
-  }catch{$cleanup.Add(@{sid=$account.sid;result='account-or-profile-retained'});$taskSummary.result='cleanup-failed'}
+  }catch{$cleanup.Add(@{sid=$account.sid;result='account-or-profile-retained';reason=($_.Exception.Message -split "\r?\n",2)[0]});$taskSummary.result='cleanup-failed'}
   if($account.credential){$account.credential.Password.Dispose()};if($account.process){$account.process.Dispose()}
  }
  try{Set-Acl -LiteralPath $taskOutput -AclObject $taskAclBefore;$taskSummary.evidenceAclRestored=$true}catch{$taskSummary.result='cleanup-failed'}

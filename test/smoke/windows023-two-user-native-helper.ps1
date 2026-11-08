@@ -304,18 +304,27 @@ async function runtimeCommand(c){
   const relative=typeof declaration.bin==='string'?declaration.bin:declaration.bin?.ocx;
   assert(typeof relative==='string'&&!relative.includes('..')&&!relative.startsWith('/'),'Diagnostic actual package bin required');
   const script=join(packageRoot,relative);
-  const result=await new Promise(resolveResult=>{
+  const readStatus=async(program,args,budget)=>new Promise(resolveResult=>{
    const env={HOME:process.env.USERPROFILE,USERPROFILE:process.env.USERPROFILE,OPENCODEX_HOME:c.home,CODEX_HOME:join(c.home,'diagnostic-unused-codex'),PATH:join(install,'runtime/node'),CI:'1',OCX_NO_DESKTOP_HANDOFF:'1'};
    for(const key of ['SystemRoot','WINDIR','COMSPEC','TEMP','TMP','APPDATA','LOCALAPPDATA'])if(process.env[key])env[key]=process.env[key];
-   const child=diagnosticSpawn(node,[script,'status','--json'],{env,stdio:['ignore','pipe','ignore'],cwd:c.home,windowsHide:true});
+   const child=diagnosticSpawn(program,args,{env,stdio:['ignore','pipe','ignore'],cwd:c.home,windowsHide:true});
    let output='',overflow=false;const started=Date.now();
-   const timer=setTimeout(()=>child.kill(),5000);
+   const timer=setTimeout(()=>child.kill(),budget);
    child.stdout.on('data',chunk=>{if(Buffer.byteLength(output)+chunk.length>1024*1024){overflow=true;child.kill();}else output+=chunk.toString('utf8');});
    child.on('error',()=>{clearTimeout(timer);resolveResult({result:'spawn-failed',accepted:false});});
    child.on('close',(code,signal)=>{clearTimeout(timer);let status;try{status=JSON.parse(output);}catch{}
     resolveResult({exitCode:code,signal,elapsedMilliseconds:Date.now()-started,outputOverflow:overflow,parsed:!!status,proxy:status?.proxy?{running:status.proxy.running,pid:status.proxy.pid,port:status.proxy.port}:null,startup:status?.startup?{status:status.startup.status}:null,accepted:false});});
   });
+  const result=await readStatus(node,[script,'status','--json'],5000);
   await writeFile(join(output,'actual-readonly-status-diagnostic.json'),JSON.stringify(result)+'\n');
+  // Readonly comparisons only AFTER the unchanged production gate has failed.
+  // Direct bundled Bun helps distinguish launcher/engine startup from status
+  // collection itself; neither this nor the late result can admit a service.
+  const bun=join(install,'runtime/bun/bun.exe'),entry=join(packageRoot,'src/cli/index.ts');
+  const direct=await readStatus(bun,['--no-env-file',entry,'status','--json'],5000);
+  await writeFile(join(output,'direct-bun-status-diagnostic.json'),JSON.stringify(direct)+'\n');
+  const late=await readStatus(node,[script,'status','--json'],15000);
+  await writeFile(join(output,'late-node-status-diagnostic.json'),JSON.stringify({...late,originalBudgetPassed:false})+'\n');
  };
  const action=async action=>{
   await bound();const r=await runtimeInvoke('process_action',{request:{action,confirm:true}},action==='stop'?15000:35000);
@@ -567,7 +576,7 @@ function Get-TwoUserOwnedRuntime($Context,$App,$Ledger,$PublicRecord,[string]$Ru
   if($Expected -and ($fact.pid -ne $Expected.pid -or $fact.creationTicks -cne $Expected.creationTicks -or $fact.path -ine $Expected.path -or $fact.sid -cne $Expected.sid)){throw 'Original service generation changed'}
   # Actual layout: package prefix I/runtime/opencodex; engines are siblings.
   $runtimeRoot=Split-Path -Parent $RuntimePrefix
-  $expectedImages=@((Join-Path $runtimeRoot 'node/node.exe'),(Join-Path $runtimeRoot 'bun/bun.exe'))
+  $expectedImages=@((Join-Path $runtimeRoot 'node/node.exe'),(Join-Path $runtimeRoot 'bun/bun.exe'),(Join-Path $RuntimePrefix 'node_modules/bun/bin/bun.exe'),(Join-Path $RuntimePrefix 'node_modules/@oven/bun-windows-x64/bin/bun.exe'),(Join-Path $RuntimePrefix 'node_modules/@oven/bun-windows-x64-baseline/bin/bun.exe'))
   if(!@($expectedImages|Where-Object {Test-TwoUserSamePath $_ $fact.path}).Count){throw 'Runtime image is not the actual bundled runtime'}
   $null=Assert-TwoUserUnder $runtimeRoot $fact.path
   $token=Get-WindowsProcessToken -Process $p -ExpectedExecutable $fact.path
