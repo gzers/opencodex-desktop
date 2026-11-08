@@ -494,6 +494,10 @@ impl crate::infrastructure::runtime_executable::RuntimeExecutableProvider for Ru
     fn executable(&self) -> Option<PathBuf> {
         RuntimeHandle::executable(self)
     }
+    fn managed_installation_root(&self) -> Option<PathBuf> {
+        self.resolver_managed_only()
+            .then(|| self.installation_root().to_path_buf())
+    }
 }
 
 #[cfg(all(test, unix))]

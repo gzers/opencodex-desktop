@@ -33,3 +33,5 @@ pub(crate) mod windows_smoke;
 pub(crate) mod windows_startup_root;
 #[cfg(any(windows, test))]
 pub(crate) mod windows_tray_icon;
+
+pub(crate) mod attested_status;

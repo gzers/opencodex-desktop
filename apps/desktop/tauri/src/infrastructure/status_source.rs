@@ -87,6 +87,7 @@ impl OfficialStatusSource {
     }
 
     async fn fetch_inner(&self) -> Result<serde_json::Value, CollectError> {
+        let started = Instant::now();
         let executable = self.runtime.executable();
         let validate = || -> Result<(), CollectError> {
             if !self.working_directory.is_dir() {
@@ -106,6 +107,19 @@ impl OfficialStatusSource {
             return Err(CollectError::Unreachable);
         }
 
+        if let Some(payload) = super::attested_status::fetch(
+            self.runtime.clone(),
+            self.environment.opencodex_home.clone(),
+        )
+        .await?
+        {
+            // Never use the legacy lightweight cache for this partial, freshly
+            // authenticated report. Every call repeats record/connection proofs.
+            return Ok(payload);
+        }
+        let budget = status_collect_timeout()
+            .checked_sub(started.elapsed())
+            .ok_or(CollectError::Timeout)?;
         let mut command = self.command(&executable);
         #[cfg(unix)]
         command.process_group(0);
@@ -115,7 +129,7 @@ impl OfficialStatusSource {
         let mut stdout = child.stdout.take().ok_or(CollectError::Unreachable)?;
         let limit = crate::modules::runtime_defaults::status_output_max_bytes();
         let mut bytes = Vec::new();
-        let result = tokio::time::timeout(status_collect_timeout(), async {
+        let result = tokio::time::timeout(budget, async {
             (&mut stdout)
                 .take(limit + 1)
                 .read_to_end(&mut bytes)
@@ -154,6 +168,9 @@ impl OfficialStatusSource {
     }
 
     async fn light_inner(&self) -> Result<serde_json::Value, CollectError> {
+        if self.runtime.managed_installation_root().is_some() {
+            return self.fetch_inner().await;
+        }
         let cached = self
             .cache
             .lock()
