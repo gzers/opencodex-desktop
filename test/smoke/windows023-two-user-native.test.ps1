@@ -14,7 +14,7 @@ $emptyPath=Join-Path $taskOutput 'empty-ledger.json';Write-TwoUserJson $emptyPat
 Assert-Test ((Get-Content -LiteralPath $emptyPath -Raw).Trim() -ceq '[]') 'empty-ledger-is-a-real-JSON-array-not-missing-file'
 $singlePath=Join-Path $taskOutput 'one-ledger.json';Write-TwoUserJson $singlePath @(@{pid=42})
 Assert-Test ((Get-Content -LiteralPath $singlePath -Raw).Trim().StartsWith('[')) 'single-ledger-retains-array-container'
-foreach($file in @($taskMain,$taskHelper,$PSCommandPath)){
+foreach($file in @($taskMain,$taskHelper,$PSCommandPath,(Join-Path $PSScriptRoot 'windows023-process-identity.test.ps1'))){
  $tokens=$null;$errors=$null
  $null=[Management.Automation.Language.Parser]::ParseFile($file,[ref]$tokens,[ref]$errors)
  Assert-Test ($errors.Count -eq 0) ('parse-'+[IO.Path]::GetFileName($file))
@@ -73,9 +73,17 @@ Assert-Test $true 'native-generation-exact-filetime-accepted'
 Assert-Throws {Assert-TwoUserNativeIdentity $native 42 'C:\fixture\app.exe' ([string]([long]$nativeTicks+1))} 'native-generation-one-tick-change-refused'
 Assert-Throws {Assert-TwoUserNativeIdentity $native 43 'C:\fixture\app.exe' $nativeTicks} 'native-generation-other-PID-refused'
 Assert-Throws {Assert-TwoUserNativeIdentity $native 42 'C:\peer\app.exe' $nativeTicks} 'native-generation-other-image-refused'
-Assert-Test ($helper.Contains('$before=Get-WindowsProcessToken') -and $helper.Contains('$after=Get-WindowsProcessToken') -and !$helper.Contains('$delta -gt 9')) 'same-retained-handle-brackets-CIM-owner-without-time-tolerance'
+Assert-Test ($helper.Contains('$before=Get-TwoUserProcessObservation') -and $helper.Contains('$after=Get-TwoUserProcessObservation') -and !$helper.Contains('$delta -gt 9')) 'same-retained-handle-brackets-CIM-owner-without-time-tolerance'
 Assert-Test ($main.IndexOf('$account.process.Dispose();$account.process=$null') -lt $main.IndexOf('$profiles=@(Get-CimInstance Win32_UserProfile')) 'exited-bootstrap-handle-released-before-profile-unload'
 Assert-Test ($main.Contains('if(!$account.process.HasExited)') -and $main.Contains('Original bootstrap handle is still live; retain Profile/account')) 'live-bootstrap-still-blocks-profile-delete'
+# Compile only: the exact process observer deliberately has no token APIs.
+$observerAst=[Management.Automation.Language.Parser]::ParseFile($taskHelper,[ref]$tokens,[ref]$errors)
+$identityType=@($observerAst.FindAll({param($n) $n -is [Management.Automation.Language.StringConstantExpressionAst] -and $n.Value.Contains('public sealed class OcxNativeProcessIdentity')},$true))
+Assert-Test ($identityType.Count -eq 1) 'retained-identity-native-source-unique'
+if(!('OcxNativeProcessIdentity' -as [type])){Add-Type -TypeDefinition $identityType[0].Value}
+Assert-Test (!$identityType[0].Value.Contains('OpenProcessToken') -and !$identityType[0].Value.Contains('GetTokenInformation') -and $identityType[0].Value.Contains('DangerousAddRef') -and $identityType[0].Value.Contains('GetProcessTimes')) 'restricted-renderer-identity-does-not-require-token-query'
+Assert-Test ($helper.Contains('Assert-WindowsProcessMode -Observation $actualToken -Mode ordinary') -and $helper.Contains('$owner.Sid -cne $ExpectedSid')) 'manager-ordinary-token-and-all-process-SID-assertions-preserved'
+Assert-Test ($main.Contains('if(!$account.fact){$account.fact=Get-TwoUserProcessFact $account.process $account.sid;') -and $main.Contains("result='bootstrap-identity-retained'")) 'unadmitted-live-bootstrap-requires-exact-native-recheck-or-retention'
 # Pure naming fixture: synthetic strings here are never used as client tokens.
 $one=Get-TwoUserPipeName 'S-1-5-21-1-2-3-1001';$two=Get-TwoUserPipeName 'S-1-5-21-1-2-3-1002'
 Assert-Test ($one -cne $two -and $one -match '^OpenCodeXDesktop-[0-9a-f]{24}$') 'distinct-SID-pipe-name-fixture-only'

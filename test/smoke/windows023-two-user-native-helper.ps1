@@ -113,6 +113,49 @@ function Test-TwoUserOriginalExited($Fact) {
 function Close-TwoUserProcessHandles {
  if($script:twoUserRetainedHandles){foreach($handle in $script:twoUserRetainedHandles.Values){$handle.Dispose()};$script:twoUserRetainedHandles.Clear()}
 }
+function Get-TwoUserProcessObservation([Diagnostics.Process]$Process) {
+ if(!('OcxNativeProcessIdentity' -as [type])){Add-Type -TypeDefinition @'
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Text;
+using Microsoft.Win32.SafeHandles;
+public sealed class OcxNativeProcessIdentity {
+ public uint ProcessId { get; set; }
+ public string Executable { get; set; }
+ public DateTime CreationTimeUtc { get; set; }
+ [DllImport("kernel32.dll",SetLastError=true)] static extern uint GetProcessId(IntPtr process);
+ [DllImport("kernel32.dll",SetLastError=true)] static extern uint WaitForSingleObject(IntPtr process,uint milliseconds);
+ [DllImport("kernel32.dll",CharSet=CharSet.Unicode,ExactSpelling=true,SetLastError=true)] static extern bool QueryFullProcessImageNameW(IntPtr process,uint flags,StringBuilder name,ref uint size);
+ [DllImport("kernel32.dll",SetLastError=true)] static extern bool GetProcessTimes(IntPtr process,out long created,out long exited,out long kernel,out long user);
+ static void RequireLive(IntPtr handle) {
+  uint result=WaitForSingleObject(handle,0);
+  if(result==0xffffffff)throw new Win32Exception(Marshal.GetLastWin32Error());
+  if(result!=258)throw new InvalidOperationException("Target process exited");
+ }
+ public static OcxNativeProcessIdentity Observe(Process process) {
+  SafeProcessHandle retained=process.SafeHandle;bool referenced=false;
+  try {
+   retained.DangerousAddRef(ref referenced);IntPtr handle=retained.DangerousGetHandle();RequireLive(handle);
+   uint pid=GetProcessId(handle);if(pid==0)throw new Win32Exception(Marshal.GetLastWin32Error());
+   var name=new StringBuilder(32768);uint length=(uint)name.Capacity;
+   if(!QueryFullProcessImageNameW(handle,0,name,ref length))throw new Win32Exception(Marshal.GetLastWin32Error());
+   long created,exited,kernel,user;
+   if(!GetProcessTimes(handle,out created,out exited,out kernel,out user))throw new Win32Exception(Marshal.GetLastWin32Error());
+   RequireLive(handle);
+   return new OcxNativeProcessIdentity{ProcessId=pid,Executable=name.ToString(),CreationTimeUtc=DateTime.FromFileTimeUtc(created)};
+  } finally {if(referenced)retained.DangerousRelease();}
+ }
+}
+'@}
+ # Process ownership is still independently checked through GetOwnerSid below.
+ # Only explicit Manager admission reads elevation. A renderer's restricted
+ # token need not grant token-query access to prove its handle/image/generation.
+ $observed=[OcxNativeProcessIdentity]::Observe($Process)
+ if($observed.ProcessId -ne $Process.Id -or [string]::IsNullOrWhiteSpace($observed.Executable)){throw 'Retained native PID/image unavailable'}
+ [ordered]@{status='observed';processId=$observed.ProcessId;executable=$observed.Executable;creationTimeUtc=$observed.CreationTimeUtc.ToString('o')}
+}
 function Assert-TwoUserNativeIdentity($Observed,[int]$ExpectedPid,[string]$ExpectedPath,[string]$ExpectedTicks) {
  if($Observed.status -cne 'observed' -or $Observed.processId -ne $ExpectedPid -or $Observed.executable -ine $ExpectedPath){throw 'Retained native PID/image mismatch'}
  $created=[datetime]::Parse($Observed.creationTimeUtc,[Globalization.CultureInfo]::InvariantCulture,[Globalization.DateTimeStyles]::RoundtripKind).ToUniversalTime().Ticks
@@ -121,17 +164,17 @@ function Assert-TwoUserNativeIdentity($Observed,[int]$ExpectedPid,[string]$Expec
 function Get-TwoUserProcessFact([Diagnostics.Process]$Process,[string]$ExpectedSid) {
  [void]$Process.Handle
  if($Process.HasExited){throw 'Tracked process exited'}
- $ticks=[string]$Process.StartTime.ToUniversalTime().Ticks;$image=$Process.Path
+ $before=Get-TwoUserProcessObservation $Process
+ $ticks=[string]$Process.StartTime.ToUniversalTime().Ticks;$image=$before.executable
  # Native observation brackets CIM ownership with the SAME retained process
  # handle and exact FILETIME. CIM's microsecond CreationDate is not the process
  # generation authority. No timestamp tolerance or PID-only fallback is used.
- $before=Get-WindowsProcessToken -Process $Process -ExpectedExecutable $image
  Assert-TwoUserNativeIdentity $before $Process.Id $image $ticks
  $row=Get-CimInstance Win32_Process -Filter ('ProcessId='+$Process.Id) -ErrorAction Stop
  $owner=Invoke-CimMethod -InputObject $row -MethodName GetOwnerSid -ErrorAction Stop
  if($row.ProcessId -ne $Process.Id -or $owner.ReturnValue -ne 0 -or $owner.Sid -cne $ExpectedSid){throw 'Tracked SID/PID mismatch'}
  if($image -ine $row.ExecutablePath){throw 'Tracked native/CIM image mismatch'}
- $after=Get-WindowsProcessToken -Process $Process -ExpectedExecutable $image
+ $after=Get-TwoUserProcessObservation $Process
  Assert-TwoUserNativeIdentity $after $Process.Id $image $ticks
  Save-TwoUserProcessHandle $Process $ticks
  [pscustomobject]@{pid=$Process.Id;sid=$owner.Sid;path=$image;creationTicks=$ticks;sessionId=$row.SessionId;generationSource='retained-handle-native-filetime'}

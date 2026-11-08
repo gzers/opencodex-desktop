@@ -46,6 +46,8 @@ try {
  $nodeVersion=(& $taskNode --version).Trim()
  if($LASTEXITCODE -ne 0 -or $nodeVersion -cne ('v'+$nodePin.node.version)){throw 'NotReady: real test-driver Node does not match source-pinned version'}
  $taskSummary.nodeVersion=$nodeVersion
+ & (Join-Path $PSScriptRoot 'windows023-process-identity.test.ps1') -Node $taskNode -OutputDirectory (Join-Path $taskOutput 'process-identity-preflight')
+ if(!$?){throw 'Native retained-handle preflight did not pass'}
  # Read the ACTUAL candidate descriptor/archive only; never stage/download here.
  $bundle=Join-Path $taskCandidate 'runtime-bundle/runtime-bundle.manifest.json'
  if(!(Test-Path -LiteralPath $bundle -PathType Leaf)){throw 'NotReady: complete staged runtime-bundle resources missing'}
@@ -169,7 +171,16 @@ try {
  }
  foreach($account in $taskAccounts){
   if($account.process){
-   try{if(!$account.process.HasExited){Add-TwoUserDescendants $account.fact $taskLedger};[void]$account.process.WaitForExit(20000)}catch{}
+   try{
+    if(!$account.process.HasExited){
+     # Initial observation can fail before the launch root reaches the ledger.
+     # Re-admit only this retained bootstrap using all native/SID assertions;
+     # unknown identity is retained and blocks account/Profile removal.
+     if(!$account.fact){$account.fact=Get-TwoUserProcessFact $account.process $account.sid;$taskLedger[[int]$account.fact.pid]=$account.fact}
+     Add-TwoUserDescendants $account.fact $taskLedger
+    }
+    [void]$account.process.WaitForExit(20000)
+   }catch{$account.runtimeCleanupUnproven=$true;$cleanup.Add(@{sid=$account.sid;result='bootstrap-identity-retained';reason='Exact retained bootstrap/descendant identity was not proved'});$taskSummary.result='cleanup-failed'}
    $finished=Join-Path $account.evidence 'finished.json'
    if($taskSummary.result -ceq 'pass-user-isolation'){
     if(!(Test-Path -LiteralPath $finished)){$taskSummary.result='evidence-incomplete'}
