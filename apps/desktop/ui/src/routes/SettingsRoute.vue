@@ -848,7 +848,7 @@ function restoreGeneralDefaults() {
         <p v-if="dataRoots.pathsError" role="alert">{{ dataRoots.pathsError }} {{ dataRoots.paths ? '已保留上次快照（非最新），请刷新后核对。' : '尚无可用快照；未推断路径或缺失状态。' }}</p>
         <section class="directory-group"><h3>用户数据与配置{{ restartPending ? ' · 待生效位置' : '' }}</h3>
         <dl class="paths-facts">
-          <template v-for="key in userPathKeys" :key="key"><dt>{{ pathLabels[key] }}</dt><dd :data-path-key="key"><template v-if="dataRoots.paths"><code class="local-path">{{ dataRoots.paths[key].path }}</code><span v-if="dataRoots.paths[key].status!=='valid'" class="tag" :data-path-status="dataRoots.paths[key].status">{{ pathStatusLabels[dataRoots.paths[key].status] }}</span></template><span v-else>尚未读取</span></dd></template>
+          <template v-for="key in userPathKeys" :key="key"><dt>{{ pathLabels[key] }}</dt><dd :data-path-key="key" :data-path-status="dataRoots.paths?.[key].status"><template v-if="dataRoots.paths"><code class="local-path">{{ dataRoots.paths[key].path }}</code><span v-if="dataRoots.paths[key].status!=='valid'" class="tag" :data-path-status="dataRoots.paths[key].status">{{ pathStatusLabels[dataRoots.paths[key].status] }}</span></template><span v-else>尚未读取</span></dd></template>
         </dl>
         <div class="runtime-actions">
           <UiButton class="btn ghost" data-testid="paths-details" :disabled="!dataRoots.paths" @click="pathDialog = 'details'">完整查看与复制路径</UiButton>
@@ -865,7 +865,7 @@ function restoreGeneralDefaults() {
         <p v-if="dataRoots.error" role="alert">{{ dataRoots.error }}</p>
         </section><section class="directory-group"><h3>程序安装</h3>
         <dl class="paths-facts">
-          <template v-for="key in programPathKeys" :key="key"><dt>{{ pathLabels[key] }}</dt><dd :data-path-key="key"><template v-if="dataRoots.paths"><code class="local-path">{{ dataRoots.paths[key].path }}</code><span v-if="dataRoots.paths[key].status!=='valid'" class="tag" :data-path-status="dataRoots.paths[key].status">{{ pathStatusLabels[dataRoots.paths[key].status] }}</span></template><span v-else>尚未读取</span></dd></template>
+          <template v-for="key in programPathKeys" :key="key"><dt>{{ pathLabels[key] }}</dt><dd :data-path-key="key" :data-path-status="dataRoots.paths?.[key].status"><template v-if="dataRoots.paths"><code class="local-path">{{ dataRoots.paths[key].path }}</code><span v-if="dataRoots.paths[key].status!=='valid'" class="tag" :data-path-status="dataRoots.paths[key].status">{{ pathStatusLabels[dataRoots.paths[key].status] }}</span></template><span v-else>尚未读取</span></dd></template>
         </dl><div class="directory-status"><dl class="paths-facts"><dt>运行状态</dt><dd>{{ app.runtimeState === 'running' ? '运行中' : app.runtimeState === 'stopped' ? '已停止' : app.runtimeState === 'starting_failed' ? '启动失败' : '待核对' }}</dd>
           <dt>包 / 清单 / 来源</dt><dd v-if="dataRoots.paths">{{ dataRoots.paths.program.packageVersion ?? '未记录' }} / {{ dataRoots.paths.program.manifestVersion ?? '未记录' }} / {{ dataRoots.paths.program.sourceVersion ?? '未记录' }}</dd><dd v-else>尚未读取</dd>
           <dt>程序有效性</dt><dd data-testid="program-validity">{{ programValidity }}</dd>
