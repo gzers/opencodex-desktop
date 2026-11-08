@@ -1,0 +1,17 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 33.96s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-58a8535d3845a745)
+
+running 9 tests
+test infrastructure::status_source::tests::non_executable_file_is_unreachable ... ok
+test infrastructure::status_source::tests::fetches_and_maps_explicit_fixture_output ... ok
+test infrastructure::status_source::tests::invalid_json_maps_to_parse_and_preserves_state ... ok
+test infrastructure::status_source::tests::oversized_diagnostic_is_bounded_and_does_not_seed_cache ... ok
+test infrastructure::status_source::tests::active_managed_mutation_without_record_defers_cli_and_preserves_last_observation ... ok
+test infrastructure::status_source::tests::mutation_gate_does_not_trust_unvalidated_record_or_restrict_unmanaged_diagnostic ... ok
+test infrastructure::status_source::tests::steady_probe_avoids_cli_but_identity_restart_expiry_and_environment_refresh_it ... ok
+test infrastructure::status_source::tests::timeout_maps_to_frozen_timeout_and_preserves_state ... ok
+test infrastructure::status_source::tests::timeout_reaps_only_its_diagnostic_group ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 2011 filtered out; finished in 5.01s
+

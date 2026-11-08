@@ -1,0 +1,35 @@
+{
+  "topLevelResultGroups": 50,
+  "passed": 2242,
+  "failed": 0,
+  "ignored": 38,
+  "nestedFilteredSubprocessResultsExcludedFromTotals": [
+    {
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered": 2019,
+      "seconds": 0.45
+    },
+    {
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered": 2019,
+      "seconds": 21.45
+    }
+  ],
+  "command": "cargo test --locked --workspace --features integration-test",
+  "exitCode": 0,
+  "sourceBasis": "Uncommitted current batch; touched-source hashes will bind exact same content after commit.",
+  "sourceFiles": {
+    "apps/desktop/tauri/src/infrastructure/status_source.rs": "a5d3abd85d5ecd7019a9d995745d514002660be13561bd9c099e923f5aa38e9b",
+    "apps/desktop/tauri/src/lib.rs": "b3715006b1317a2796dcccbdfed37b55acad7c311703dbcc683cfc856bccb487",
+    "test/smoke/windows-restart-handoff.test.ps1": "9cb575c9069480eeba36526beefc4649e02a1ad3166822992ad13676f53afa85"
+  },
+  "nativeWindowsAccepted": false
+}

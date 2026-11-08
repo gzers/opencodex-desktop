@@ -1,0 +1,37 @@
+{
+  "source": "e77ca190988c629479128c5aa6b54b55be742bca",
+  "passed": 26,
+  "failed": 2,
+  "accepted": false,
+  "artifactId": 13635571060,
+  "artifactBytes": 36614704,
+  "artifactSha256": "9d354f5834466eadec39df31fef1d6a442121b722fd4cd9f6f26a820be2b7d20",
+  "manifestFiles": 276,
+  "findings": {
+    "startA": "Original30s fails at30093ms; recordappears~14.3s, samples14291to19304Timeout,19583to24667Timeout,24947to28178Pending,28458to29067Timeout. Later32579mshealthy remainsfailure.",
+    "stop": "NoStopprotocol executed; no newStopphase timings, R29Stop10s remainsopen.",
+    "compile": "24/26/28 and nativeTaskScheduler checks now pass; former testhelper missingfunction resolved.",
+    "independentCI": "restart-handoff parent readiness original15s failed beforeProductStart; error details insufficient to claim cause."
+  },
+  "batchSource": "8ca50832bc783f4759c3f5d8c52bc8c20e2d4674",
+  "productCommit": "6ea561a98",
+  "testCommit": "8ca50832b",
+  "confirmedSourceInterference": "OfficialStatusSource falls back to fullcoldCLI when no endpoint even while sameRuntimeInstall workerleaseactive; statuschild can compete with coldboot or keep sameHOMEprocesspresent duringstop. Exactperformancecausality not proven solely by R30timings.",
+  "productCorrection": "Wireactualsameworkerownedmutationgate into periodic status source. Activelease+noendpoint yieldsunknown/preservesprior, noCLI; actualendpoint still fullactivation/record/HMAC/readiness/recheck everycall. Recheckgate beforefallback. No runtimebytechange or forgedstopped/ready.",
+  "handoffCorrection": "Drainfixedfixturestderr atspawn, immutablepercase readiness flags/exitfacts, all5independentcases continue afterfailure but aggregatefails. All20originalCheckstatements and15sreadiness/waiterdeadlineconstants unchanged. Extraexitwait afterforcedfailedfixturecleanup doesnotaccept failedreadiness.",
+  "verification": {
+    "sourceStatusTests": 9,
+    "workspacePassed": 2242,
+    "workspaceFailed": 0,
+    "workspaceIgnored": 38,
+    "workspaceTopLevelGroups": 50,
+    "workspaceExitCode": 0,
+    "allTargetsStrictClippy": "pass",
+    "restartPowerShellParse": "pass",
+    "nativeWindowsCurrentChanges": "pending",
+    "contentHashesMatchCommittedSource": true
+  },
+  "limits": "Local tests were built beforecommit; contenthashes match commit, but no claim embeddedtestbinarysourceSHA equals latercommit. Finalsame-sourceCI/nativeartifacts stillrequired.",
+  "nextFullDiagnosticDispatched": false,
+  "wholeGoalComplete": false
+}
