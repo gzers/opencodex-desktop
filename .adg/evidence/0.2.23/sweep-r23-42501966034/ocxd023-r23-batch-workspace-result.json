@@ -1,0 +1,267 @@
+{
+  "totals": {
+    "passed": 2238,
+    "failed": 0,
+    "ignored": 38
+  },
+  "targets": {
+    "unittests src/lib.rs": {
+      "passed": 2001,
+      "failed": 0,
+      "ignored": 15
+    },
+    "unittests src/bin/ocxd.rs": {
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0
+    },
+    "unittests src/main.rs": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/about.rs": {
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/app_icon.rs": {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/app_startup_wiring.rs": {
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/app_status.rs": {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/backup_process_lock.rs": {
+      "passed": 2,
+      "failed": 0,
+      "ignored": 1
+    },
+    "tests/channel_rename_native.rs": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    "tests/cli_ipc.rs": {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/client_npm_runtime.rs": {
+      "passed": 18,
+      "failed": 0,
+      "ignored": 2
+    },
+    "tests/client_selection_rename.rs": {
+      "passed": 21,
+      "failed": 0,
+      "ignored": 5
+    },
+    "tests/codex_shim.rs": {
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/config_sync_webdav_real.rs": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 2
+    },
+    "tests/config_v2_transport_real.rs": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    "tests/doctor.rs": {
+      "passed": 9,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/event_registry.rs": {
+      "passed": 43,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/extensions.rs": {
+      "passed": 39,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/layer_boundaries.rs": {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/logs.rs": {
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/model_config_official_real.rs": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 2
+    },
+    "tests/model_file_browser.rs": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    "tests/model_file_live.rs": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 2
+    },
+    "tests/model_research_real.rs": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    "tests/notifications.rs": {
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/official_status_source.rs": {
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/preferences.rs": {
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/process_action.rs": {
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/provider_auth_native.rs": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    "tests/runtime023_manager_name_chain.rs": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    "tests/runtime_bundle_real.rs": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    "tests/runtime_managed_real.rs": {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/runtime_prerelease_real.rs": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    "tests/sandbox_isolation.rs": {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/saved_runtime_reconcile.rs": {
+      "passed": 20,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/status_matrix.rs": {
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/status_snapshot.rs": {
+      "passed": 3,
+      "failed": 0,
+      "ignored": 1
+    },
+    "tests/sync_plaintext.rs": {
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/tray.rs": {
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/tray_icon.rs": {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/tray_left_click.rs": {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/webdav_legacy_real.rs": {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/webdav_real.rs": {
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/webdav_sync_real.rs": {
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/webdav_tls.rs": {
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/window_close.rs": {
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/windows_client_selection_owner.rs": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/windows_runtime.rs": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    "tests/windows_tray_icon.rs": {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    "Doc-tests opencodex_desktop_lib": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    }
+  },
+  "finalTargetedChecks": {
+    "owner": "6 passed;1 explicitly ignored native test",
+    "startObservation": "3 passed",
+    "processActionIntegration": "8 passed",
+    "failureDto": "4 passed"
+  },
+  "finalClippy": "workspace all-targets -D warnings passed",
+  "sourceScope": "Full workspace preceded final deadline/DTO refinement; final targeted checks cover those later changes. Final native source proof remains pending Windows."
+}

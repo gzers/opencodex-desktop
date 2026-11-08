@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "step": "02",
+  "name": "current-binary",
+  "status": "pass",
+  "firstError": "",
+  "accepted": false,
+  "diagnosticOnly": true,
+  "dependencies": [],
+  "evidence": {
+    "source": "1f1dcb9d08319ab900a836d7c9537826931992e7",
+    "files": [
+      {
+        "sha256": "9364d34566ff325dda6d3e8bc6a51cfc0288e423e2b0529e35e41888c7debedd",
+        "name": "ocxd.exe"
+      },
+      {
+        "sha256": "4325fb1f00f5544bf6c051867d4071481c1549573be3e12049fff6ad591b4b76",
+        "name": "opencodex-desktop.exe"
+      },
+      {
+        "sha256": "3d502e384c6071f78ecf27f73674541588bef27f69e1df3b42e4c0716b237334",
+        "name": "sweep-filesystem.exe"
+      },
+      {
+        "sha256": "e2619e739b91b922bca7f2a22183534e0b84d0ac845bd2794fe545aded8dc586",
+        "name": "sweep-filesystem.pdb"
+      }
+    ],
+    "appsTree": "1616f0accbf75ba3b291458c925d41b3717bccd4",
+    "profile": "debug custom-protocol; diagnostic-only"
+  },
+  "atUtc": "2026-11-08T16:58:08.8141500Z"
+}

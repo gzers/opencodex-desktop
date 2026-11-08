@@ -1,0 +1,313 @@
+{
+  "status": "pass",
+  "firstError": "",
+  "evidence": [
+    {
+      "kind": "msi",
+      "mode": "default",
+      "receipt": {
+        "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+        "sourceCommit": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+        "builtExecutableSha256": "c59a2a72a231b004443b5250036b5b1cf19db770ffd009f09c88ba915f1af21b",
+        "version": "0.2.23",
+        "codeSigned": false,
+        "releaseAccepted": false,
+        "result": "pass",
+        "installers": [],
+        "defaultUninstallChecks": [
+          {
+            "executableRemoved": true,
+            "kind": "msi",
+            "userDataRetained": true,
+            "result": "pass",
+            "testFixtureCleanup": {
+              "removed": true,
+              "productRetentionProved": true,
+              "scope": "exact new sentinel and empty parents after default-uninstall hash proof"
+            },
+            "exitCode": 0
+          }
+        ],
+        "installationOwnerToken": {
+          "schemaVersion": 1,
+          "status": "observed",
+          "processId": 3180,
+          "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+          "creationTimeUtc": "2026-11-08T17:06:16.8808635Z",
+          "elevated": false,
+          "elevationType": 1,
+          "collectedAtUtc": "2026-11-08T17:06:17.9743778Z"
+        },
+        "installationOwnerProfile": "C:\\Users\\ocxacc56e61f37",
+        "installerPolicies": [
+          {
+            "AlwaysInstallElevated": null,
+            "exists": true,
+            "DisableUserInstalls": null,
+            "DisableMSI": 0,
+            "path": "HKLM:\\Software\\Policies\\Microsoft\\Windows\\Installer"
+          },
+          {
+            "AlwaysInstallElevated": null,
+            "exists": false,
+            "DisableUserInstalls": null,
+            "DisableMSI": null,
+            "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Installer"
+          }
+        ],
+        "defaultInstallChecks": [
+          {
+            "installDirectory": "C:\\Users\\ocxacc56e61f37\\AppData\\Local\\Programs\\OpenCodeX Desktop\\",
+            "result": "pass",
+            "pathOverride": false,
+            "boundary": "fresh isolated runner; no earlier installed product or directory override",
+            "kind": "msi"
+          }
+        ],
+        "defaultMsiRegistryCleanup": [],
+        "defaultInstallRootObservation": {
+          "expectedOwner": "C:\\Users\\ocxacc56e61f37\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+          "actual": "C:\\Users\\ocxacc56e61f37\\AppData\\Local\\Programs\\OpenCodeX Desktop\\"
+        }
+      }
+    },
+    {
+      "kind": "msi",
+      "mode": "custom",
+      "receipt": {
+        "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+        "sourceCommit": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+        "builtExecutableSha256": "c59a2a72a231b004443b5250036b5b1cf19db770ffd009f09c88ba915f1af21b",
+        "version": "0.2.23",
+        "codeSigned": false,
+        "releaseAccepted": false,
+        "result": "pass",
+        "installers": [
+          {
+            "kind": "msi",
+            "name": "OpenCodeX Desktop_0.2.23_x64_en-US.msi",
+            "bytes": 288911360,
+            "sha256": "4b29b5607b6af416c7eac55d3698ea923f170896152d39e77754385d2b089719",
+            "installDirectory": "C:\\Users\\ocxacc0e3e94d5\\AppData\\Local\\Temp\\ocxd-candidate-msi-92e94b698dc4439b9a22199b27347c2b",
+            "result": "pass",
+            "registryCleanup": [],
+            "installExitCode": 0,
+            "installedExecutableSha256": "8efc2f6488dc2b1667790ed94bf63ab3d176f9b93eb35063de13165221d9948e",
+            "expectedInstalledExecutableSha256": "8efc2f6488dc2b1667790ed94bf63ab3d176f9b93eb35063de13165221d9948e",
+            "bundleMarker": "MSI",
+            "bundleMarkerOffset": 16431941,
+            "productVersion": "0.2.23",
+            "firstScreen": "pass",
+            "explicitCleanupHelper": {
+              "scope": "disposable hosted runner actual TokenUser profile; current v2 fixed pointer and selected aggregate",
+              "structureVersion": 2,
+              "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+              "profile": "C:\\Users\\ocxacc0e3e94d5",
+              "unconfirmedExitCode": 2,
+              "confirmedExitCode": 0,
+              "repeatExitCode": 0,
+              "fixedAndSelectedDesktopRemoved": true,
+              "externalHomeUnchanged": true,
+              "unselectedLegacyPathUnchanged": true,
+              "durableExternalGatesRetainedByProduct": true,
+              "newFixturesCleanedByHarness": true,
+              "applicationRetained": true,
+              "legacyCompatibilityTested": false,
+              "hostAcceptanceClaimed": false
+            },
+            "uninstallExitCode": 0,
+            "uninstallRemovedExecutable": true,
+            "defaultUninstallRetainedData": true
+          }
+        ],
+        "defaultUninstallChecks": [],
+        "installationOwnerToken": {
+          "schemaVersion": 1,
+          "status": "observed",
+          "processId": 2624,
+          "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+          "creationTimeUtc": "2026-11-08T17:07:10.9137363Z",
+          "elevated": false,
+          "elevationType": 1,
+          "collectedAtUtc": "2026-11-08T17:07:11.8846553Z"
+        },
+        "installationOwnerProfile": "C:\\Users\\ocxacc0e3e94d5",
+        "installerPolicies": [
+          {
+            "DisableUserInstalls": null,
+            "AlwaysInstallElevated": null,
+            "path": "HKLM:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+            "exists": true,
+            "DisableMSI": 0
+          },
+          {
+            "DisableUserInstalls": null,
+            "AlwaysInstallElevated": null,
+            "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+            "exists": false,
+            "DisableMSI": null
+          }
+        ],
+        "defaultInstallChecks": []
+      }
+    },
+    {
+      "kind": "nsis",
+      "mode": "default",
+      "receipt": {
+        "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+        "sourceCommit": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+        "builtExecutableSha256": "c59a2a72a231b004443b5250036b5b1cf19db770ffd009f09c88ba915f1af21b",
+        "version": "0.2.23",
+        "codeSigned": false,
+        "releaseAccepted": false,
+        "result": "pass",
+        "installers": [],
+        "defaultUninstallChecks": [
+          {
+            "kind": "nsis",
+            "result": "pass",
+            "userDataRetained": true,
+            "exitCode": 0,
+            "testFixtureCleanup": {
+              "scope": "exact new sentinel and empty parents after default-uninstall hash proof",
+              "removed": true,
+              "productRetentionProved": true
+            },
+            "executableRemoved": true
+          }
+        ],
+        "installationOwnerToken": {
+          "schemaVersion": 1,
+          "status": "observed",
+          "processId": 7024,
+          "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+          "creationTimeUtc": "2026-11-08T17:08:05.4230600Z",
+          "elevated": false,
+          "elevationType": 1,
+          "collectedAtUtc": "2026-11-08T17:08:06.4079701Z"
+        },
+        "installationOwnerProfile": "C:\\Users\\ocxacc76c5875a",
+        "installerPolicies": [
+          {
+            "DisableUserInstalls": null,
+            "DisableMSI": 0,
+            "exists": true,
+            "path": "HKLM:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+            "AlwaysInstallElevated": null
+          },
+          {
+            "DisableUserInstalls": null,
+            "DisableMSI": null,
+            "exists": false,
+            "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+            "AlwaysInstallElevated": null
+          }
+        ],
+        "defaultInstallChecks": [
+          {
+            "result": "pass",
+            "kind": "nsis",
+            "pathOverride": false,
+            "installDirectory": "C:\\Users\\ocxacc76c5875a\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+            "boundary": "fresh isolated runner; no earlier installed product or directory override"
+          }
+        ],
+        "defaultInstallRootObservation": {
+          "expectedOwner": "C:\\Users\\ocxacc76c5875a\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+          "actual": "C:\\Users\\ocxacc76c5875a\\AppData\\Local\\Programs\\OpenCodeX Desktop"
+        }
+      }
+    },
+    {
+      "kind": "nsis",
+      "mode": "custom",
+      "receipt": {
+        "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+        "sourceCommit": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+        "builtExecutableSha256": "c59a2a72a231b004443b5250036b5b1cf19db770ffd009f09c88ba915f1af21b",
+        "version": "0.2.23",
+        "codeSigned": false,
+        "releaseAccepted": false,
+        "result": "pass",
+        "installers": [
+          {
+            "kind": "nsis",
+            "name": "OpenCodeX Desktop_0.2.23_x64-setup.exe",
+            "bytes": 287581782,
+            "sha256": "7f4fac1404d43a23e59bc97abaaf2bd91b0df292376d16a608f8a5fc26b89fe0",
+            "installDirectory": "C:\\Users\\ocxacccf775e35\\AppData\\Local\\Temp\\ocxd-candidate-nsis-51ae64d642a74610b8039ea1c942b1e9",
+            "result": "pass",
+            "installExitCode": 0,
+            "installedExecutableSha256": "04bffaea237fa85c299f35582be25c279e1ee0c2475661e86232047706258176",
+            "expectedInstalledExecutableSha256": "04bffaea237fa85c299f35582be25c279e1ee0c2475661e86232047706258176",
+            "bundleMarker": "NSS",
+            "bundleMarkerOffset": 16431941,
+            "productVersion": "0.2.23",
+            "firstScreen": "pass",
+            "explicitCleanupHelper": {
+              "scope": "disposable hosted runner actual TokenUser profile; current v2 fixed pointer and selected aggregate",
+              "structureVersion": 2,
+              "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1006",
+              "profile": "C:\\Users\\ocxacccf775e35",
+              "unconfirmedExitCode": 2,
+              "confirmedExitCode": 0,
+              "repeatExitCode": 0,
+              "fixedAndSelectedDesktopRemoved": true,
+              "externalHomeUnchanged": true,
+              "unselectedLegacyPathUnchanged": true,
+              "durableExternalGatesRetainedByProduct": true,
+              "newFixturesCleanedByHarness": true,
+              "applicationRetained": true,
+              "legacyCompatibilityTested": false,
+              "hostAcceptanceClaimed": false
+            },
+            "uninstallExitCode": 0,
+            "uninstallRemovedExecutable": true,
+            "defaultUninstallRetainedData": true
+          }
+        ],
+        "defaultUninstallChecks": [],
+        "installationOwnerToken": {
+          "schemaVersion": 1,
+          "status": "observed",
+          "processId": 3812,
+          "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+          "creationTimeUtc": "2026-11-08T17:09:10.9917502Z",
+          "elevated": false,
+          "elevationType": 1,
+          "collectedAtUtc": "2026-11-08T17:09:11.9731671Z"
+        },
+        "installationOwnerProfile": "C:\\Users\\ocxacccf775e35",
+        "installerPolicies": [
+          {
+            "AlwaysInstallElevated": null,
+            "DisableUserInstalls": null,
+            "path": "HKLM:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+            "exists": true,
+            "DisableMSI": 0
+          },
+          {
+            "AlwaysInstallElevated": null,
+            "DisableUserInstalls": null,
+            "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+            "exists": false,
+            "DisableMSI": null
+          }
+        ],
+        "defaultInstallChecks": []
+      }
+    }
+  ],
+  "schemaVersion": 1,
+  "step": "19",
+  "name": "uninstall-and-retention",
+  "accepted": false,
+  "diagnosticOnly": true,
+  "dependencies": [
+    "04",
+    "05",
+    "06",
+    "07"
+  ]
+}

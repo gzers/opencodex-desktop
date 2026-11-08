@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "step": "06",
+  "name": "nsis-default",
+  "status": "pass",
+  "firstError": "",
+  "accepted": false,
+  "diagnosticOnly": true,
+  "dependencies": [],
+  "evidence": {
+    "receipt": {
+      "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+      "sourceCommit": "0c869d9497c102b714dea1ee89394f999da8c4ec",
+      "builtExecutableSha256": "c59a2a72a231b004443b5250036b5b1cf19db770ffd009f09c88ba915f1af21b",
+      "version": "0.2.23",
+      "codeSigned": false,
+      "releaseAccepted": false,
+      "result": "pass",
+      "installers": [],
+      "defaultUninstallChecks": [
+        {
+          "kind": "nsis",
+          "result": "pass",
+          "userDataRetained": true,
+          "exitCode": 0,
+          "testFixtureCleanup": {
+            "scope": "exact new sentinel and empty parents after default-uninstall hash proof",
+            "removed": true,
+            "productRetentionProved": true
+          },
+          "executableRemoved": true
+        }
+      ],
+      "installationOwnerToken": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 7024,
+        "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+        "creationTimeUtc": "2026-11-08T17:08:05.42306Z",
+        "elevated": false,
+        "elevationType": 1,
+        "collectedAtUtc": "2026-11-08T17:08:06.4079701Z"
+      },
+      "installationOwnerProfile": "C:\\Users\\ocxacc76c5875a",
+      "installerPolicies": [
+        {
+          "DisableUserInstalls": null,
+          "DisableMSI": 0,
+          "exists": true,
+          "path": "HKLM:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+          "AlwaysInstallElevated": null
+        },
+        {
+          "DisableUserInstalls": null,
+          "DisableMSI": null,
+          "exists": false,
+          "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+          "AlwaysInstallElevated": null
+        }
+      ],
+      "defaultInstallChecks": [
+        {
+          "result": "pass",
+          "kind": "nsis",
+          "pathOverride": false,
+          "installDirectory": "C:\\Users\\ocxacc76c5875a\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+          "boundary": "fresh isolated runner; no earlier installed product or directory override"
+        }
+      ],
+      "defaultInstallRootObservation": {
+        "expectedOwner": "C:\\Users\\ocxacc76c5875a\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+        "actual": "C:\\Users\\ocxacc76c5875a\\AppData\\Local\\Programs\\OpenCodeX Desktop"
+      }
+    },
+    "cleanup": {
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1005",
+      "profile": "C:\\Users\\ocxacc76c5875a",
+      "removed": true
+    }
+  },
+  "atUtc": "2026-11-08T17:09:02.9196549Z"
+}

@@ -1,0 +1,62 @@
+{
+  "run": 42501966034,
+  "source": "1f1dcb9d08319ab900a836d7c9537826931992e7",
+  "artifact": {
+    "id": 13627165760,
+    "bytes": 35882967,
+    "sha256": "70879477edb359abe0ae4682df8aa7e6130e23fd5204e9b06354750e3a94579d",
+    "verifiedMembers": 306
+  },
+  "originalPassed": 26,
+  "originalFailed": 2,
+  "accepted": false,
+  "summarySha256": "3e0210c15b0723c534730027ae19cba9c826062624f5db113ec31de0b9a04859",
+  "findings": [
+    {
+      "id": "08",
+      "cause": "Native path test expected visible valid badge after adopted UI hides normal-status badges",
+      "resolution": "Keep semantic data-path-status on each real path row, require exact backend status and badge absence only for valid"
+    },
+    {
+      "id": "14",
+      "cause": "Managed Bun child uses exact src/cli/index.ts entry not present in owner argv allowlist; unknown ownership correctly refused stop",
+      "resolution": "Add only exact installed CLI entry; retain SID/uid, H, image, creation/record generation checks and rejecting other paths"
+    },
+    {
+      "id": "13-budget-review",
+      "originalReceiptStatus": "pass",
+      "originalActionResult": {
+        "lifecycleState": "starting_failed",
+        "result": null
+      },
+      "finding": "A start returned lifecycle timeout at ~30s; later independent ready observation received extra 30s. Original receipt cannot prove strict original shared budget. Retain failure as found, do not accept it.",
+      "resolution": "Measure one 30s budget from manager request through readiness, require Started before budget, keep failure diagnostic and cleanup. Remove repeated full activation hashing before runtime record exists; all actual observations retain full proof."
+    },
+    {
+      "id": "INSTALL23-UI-06/07",
+      "cause": "Native minimum window 960x640 versus adopted900x600; recovery label mismatch",
+      "resolution": "Apply adopted minWindow and label; verify final page/native consumer"
+    }
+  ],
+  "assertionsAndSecurity": "No grace or ready weakening; explicit owner entry only. One deadline includes activation, configuration and stop. Runtime package bytes unchanged.",
+  "nativeMacPortProof": "separate scoped real UI save/readback/invalid/revert evidence already pushed docs8bd179f07",
+  "batchState": "committed and pushed; next full sweep dispatched",
+  "batch": {
+    "head": "6b44bf84f",
+    "runtime": "f71222c35",
+    "uiParity": "d745924ab",
+    "diagnostic": "6b44bf84f",
+    "frontendPassed": 1601,
+    "workspacePassed": 2238,
+    "workspaceFailed": 0,
+    "workspaceIgnored": 38,
+    "finalAffectedChecks": "owner6/start3/process8/DTO4 and workspace all-targets strict Clippy passed; full workspace precedes final deadline/DTO refinement",
+    "notes": "Original 26/2 is retained as historical raw receipt. Stage13 environmental-ready not proxy-ready; original A timeout then late ready is not accepted."
+  },
+  "nextRun": {
+    "run": 42505546007,
+    "source": "6b44bf84f",
+    "accepted": false,
+    "state": "running"
+  }
+}

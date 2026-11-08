@@ -1,0 +1,16 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 22.69s
+     Running tests/process_action.rs (target/debug/deps/process_action-96c5f8d5208e46bd)
+
+running 8 tests
+test process_action_requires_explicit_confirm ... ok
+test process_action_reports_start_failure_and_preserves_stop_observation_when_context_is_unavailable ... ok
+test process_action_uses_controlled_context ... ok
+test run_success_publishes_no_notification ... ok
+test spawn_failure_also_publishes_a_danger_notification ... ok
+test stop_reaps_the_child_and_returns_within_the_window ... ok
+test run_failure_publishes_one_deduped_danger_notification ... ok
+test stop_returns_within_a_bounded_window_when_sigterm_is_ignored ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.05s
+

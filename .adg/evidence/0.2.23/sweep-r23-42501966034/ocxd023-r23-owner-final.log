@@ -1,0 +1,15 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 55.22s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-58a8535d3845a745)
+
+running 7 tests
+test commands::runtime_recovery_v2_owner::tests::local_process::actual_process_uid_creation_h_attestation_and_preserving_stop ... ignored, dedicated OS process + attested HTTP fixture: set absolute OPENCODEX_TEST_NODE; run --ignored
+test commands::runtime_recovery_v2_owner::tests::kernel_argument_parser_handles_padding_spaces_and_rejects_ambiguous_home ... ok
+test commands::runtime_recovery_v2_owner::tests::actual_bun_cli_child_is_owned_only_at_exact_managed_entry_home_and_owner ... ok
+test commands::runtime_recovery_v2_owner::tests::identity_binds_user_creation_executable_home_record_and_context ... ok
+test commands::runtime_recovery_v2_owner::tests::actual_os_reports_current_identity_and_listener_ownership_without_service_mutation ... ok
+test commands::runtime_recovery_v2_owner::tests::positive_absence_requires_runtime_scan_endpoint_and_service_evidence ... ok
+test commands::runtime_recovery_v2_owner::tests::malformed_or_foreign_records_are_never_absence_and_receipts_only_delete_owned_unsent_file ... ok
+
+test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 2009 filtered out; finished in 0.05s
+

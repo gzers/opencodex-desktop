@@ -1,0 +1,37 @@
+{
+  "status": "pass",
+  "firstError": "",
+  "evidence": [
+    {
+      "handleHasExited": true,
+      "image": "D:\\a\\_temp\\ocxd023-sweep-complete-bb5f7f39b1764d7fa0f6a1779cd3d94a\\opencodex-desktop.exe",
+      "method": "retained Process handle exited; scoped child-tree kill only if still running",
+      "exitCode": -1,
+      "pid": 2272
+    },
+    {
+      "handleHasExited": true,
+      "pid": 8184,
+      "image": "D:\\a\\_temp\\ocxd023-sweep-complete-bb5f7f39b1764d7fa0f6a1779cd3d94a\\opencodex-desktop.exe",
+      "exitCode": -1,
+      "method": "retained Process handle exited; scoped child-tree kill only if still running"
+    },
+    {
+      "method": "retained Process handle exited; scoped child-tree kill only if still running",
+      "exitCode": -1,
+      "pid": 3088,
+      "image": "D:\\a\\_temp\\ocxd023-sweep-complete-bb5f7f39b1764d7fa0f6a1779cd3d94a\\opencodex-desktop.exe",
+      "handleHasExited": true
+    }
+  ],
+  "schemaVersion": 1,
+  "step": "23",
+  "name": "native-process-cleanup",
+  "accepted": false,
+  "diagnosticOnly": true,
+  "dependencies": [
+    "08",
+    "09",
+    "10"
+  ]
+}

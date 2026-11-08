@@ -1,0 +1,76 @@
+{
+  "status": "pass",
+  "firstError": "",
+  "evidence": [
+    {
+      "name": "runtime-readiness",
+      "status": "pass",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "firstError": "",
+      "evidence": {
+        "pending": false,
+        "elapsedMilliseconds": 2537.3000000000466,
+        "value": {
+          "node": {
+            "found": true,
+            "path": "C:\\Users\\ocxacc20d3151e78\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/node/node.exe",
+            "version": "26.8.1"
+          },
+          "npm": {
+            "found": true,
+            "path": "C:\\Users\\ocxacc20d3151e78\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/node/node_modules/npm/bin/npm-cli.js",
+            "version": "11.19.0"
+          },
+          "ocx": {
+            "found": true,
+            "path": "C:\\Users\\ocxacc20d3151e78\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/bin/ocx.cmd",
+            "version": "2.97.0-desktop023.names.2"
+          },
+          "gate": "ready",
+          "shortCircuited": false,
+          "brewFound": false
+        }
+      }
+    },
+    {
+      "name": "runtime-readiness",
+      "status": "pass",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "firstError": "",
+      "evidence": {
+        "pending": false,
+        "elapsedMilliseconds": 5278.5,
+        "value": {
+          "node": {
+            "found": true,
+            "path": "C:\\Users\\ocxacc60bf16f97b\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/node/node.exe",
+            "version": "26.8.1"
+          },
+          "npm": {
+            "found": true,
+            "path": "C:\\Users\\ocxacc60bf16f97b\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/node/node_modules/npm/bin/npm-cli.js",
+            "version": "11.19.0"
+          },
+          "ocx": {
+            "found": true,
+            "path": "C:\\Users\\ocxacc60bf16f97b\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/bin/ocx.cmd",
+            "version": "2.97.0-desktop023.names.2"
+          },
+          "gate": "ready",
+          "shortCircuited": false,
+          "brewFound": false
+        }
+      }
+    }
+  ],
+  "schemaVersion": 1,
+  "step": "13",
+  "name": "runtime-readiness",
+  "accepted": false,
+  "diagnosticOnly": true,
+  "dependencies": [
+    "12"
+  ]
+}
