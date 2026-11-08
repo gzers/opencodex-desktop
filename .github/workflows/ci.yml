@@ -70,12 +70,18 @@ jobs:
         env:
           OCXD_GLASS_EVIDENCE_DIR: ${{ runner.temp }}
       - run: npm --prefix apps/desktop/ui run build
+      - name: Verify actual built production ESM bootstrap and installation consumer
+        run: node apps/desktop/ui/qa/production-boot.mjs
+        env:
+          OCXD_PRODUCTION_BOOT_EVIDENCE: ${{ runner.temp }}/ocxd023-production-boot-${{ github.run_id }}
       - name: Preserve actual browser pixel evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: frontend-dialog-pixel-evidence
-          path: ${{ runner.temp }}/ocxd023-dialog-glass-*
+          path: |
+            ${{ runner.temp }}/ocxd023-dialog-glass-*
+            ${{ runner.temp }}/ocxd023-production-boot-*
           if-no-files-found: warn
 
   backend:
