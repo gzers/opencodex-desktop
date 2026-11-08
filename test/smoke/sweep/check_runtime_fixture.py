@@ -28,7 +28,9 @@ def main():
     with tempfile.TemporaryDirectory(prefix='ocxd023-fixture-schema-') as temp:
         root = Path(temp)
         script = root / 'check.ts'
-        script.write_text("import assert from 'node:assert/strict';import {configSchema} from " + json.dumps(schema.as_uri()) + ';\n' + function + """
+        imports = "import assert from 'node:assert/strict';import {configSchema} from " + json.dumps(schema.as_uri()) + ';\n'
+        imports += "import {projectOpenAiTierMigration} from " + json.dumps((runtime/'src/providers/openai-tiers.ts').as_uri()) + ';\n'
+        script.write_text(imports + function + """
 for(const port of [0,54321]){
  const config=fixtureConfig(port), parsed=configSchema.parse(config);
  assert.equal(parsed.port,port);
@@ -37,6 +39,10 @@ for(const port of [0,54321]){
  assert.equal(Object.keys(parsed.providers).length,1);
  assert.equal(parsed.providers['sweep-fixture'].liveModels,false);
  assert.equal(parsed.providers['sweep-fixture'].baseUrl,'http://127.0.0.1:1/v1');
+ assert.equal(parsed.openaiProviderTierVersion,2);
+ const projection=projectOpenAiTierMigration(parsed);
+ assert.equal(projection.changed,false);
+ assert.deepEqual(projection.config.providers,parsed.providers);
 }
 console.log('actual-adopted-schema-two-fixtures-passed');
 """, encoding="utf-8")

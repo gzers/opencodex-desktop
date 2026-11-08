@@ -120,6 +120,10 @@ export async function verifyWindowsQueryUi(call, output, sandbox, {dataRoot=sand
     await wait(inUpdate(root=>document.querySelector(root+' [data-testid=official-update-row]')?.textContent.includes('999.0.0-ocx-native-failure')))
     await wait(inUpdate(root=>!document.querySelector(root+' [data-testid=manager-update-row]')?.textContent.includes('正在检查')))
     await evaluate(inUpdate(root=>document.querySelector(root+' [data-testid=official-update-detail]').click()))
+    // A visible version is not the completion of the shared check/render.
+    // Stay within the existing DOM wait budget and require the real, enabled
+    // confirmation control; never invoke the install handler around its gate.
+    report.installConfirm=await wait(inUpdate(root=>{const d=document.querySelector(root),b=d?.querySelector('[data-testid=install-official-update]');return b&&!b.disabled&&b.textContent.trim()==='备份并更新面板'?{visible:true,enabled:true,label:b.textContent.trim(),native:d instanceof HTMLDialogElement}:false}))
     await click('备份并更新面板',updateHost.selector)
     const failedUpdate=await wait(inUpdate(root=>{const d=document.querySelector(root+' [data-testid=official-update-card]'),e=d?.querySelector('[role=alert]')?.textContent,c=d?.querySelector('pre[aria-label="面板安装输出"]')?.textContent;return e&&c?{error:e,console:c,text:d.textContent}:false}),120_000)
     assert(failedUpdate.error.includes('npm pack')&&failedUpdate.error.includes('日志：'),JSON.stringify(failedUpdate))

@@ -256,7 +256,7 @@ function runtimeFailureCode(error){
 const runtimeSleep=ms=>new Promise(r=>setTimeout(r,ms));
 function fixtureConfig(port){
  assert(Number.isInteger(port)&&(port===0||(port>=1024&&port<=65535)));
- const config={hostname:'127.0.0.1',defaultProvider:'sweep-fixture',defaultModelAliases:false,providers:{'sweep-fixture':{adapter:'openai-chat',baseUrl:'http://127.0.0.1:1/v1',allowPrivateNetwork:true,apiKey:'synthetic-unused',models:['sweep-fixture-model'],selectedModels:['sweep-fixture-model'],liveModels:false,defaultAliases:false}}};
+ const config={hostname:'127.0.0.1',openaiProviderTierVersion:2,defaultProvider:'sweep-fixture',defaultModelAliases:false,providers:{'sweep-fixture':{adapter:'openai-chat',baseUrl:'http://127.0.0.1:1/v1',allowPrivateNetwork:true,apiKey:'synthetic-unused',models:['sweep-fixture-model'],selectedModels:['sweep-fixture-model'],liveModels:false,defaultAliases:false}}};
  if(port!==0)config.port=port;return config;
 }
 function publicRecord(record){
@@ -363,6 +363,28 @@ async function runtimeCommand(c){
   const late=await readStatus(node,[script,'status','--json'],15000);
   await writeFile(join(output,'late-node-status-diagnostic.json'),JSON.stringify({...late,originalBudgetPassed:false})+'\n');
  };
+ const diagnosticReadiness=async()=>{
+  // The real thirty-second attempt already failed. These bounded readonly
+  // observations cannot accept it or authorize the next user service.
+  const samples=[];const until=Date.now()+15000;
+  do{
+   try{
+    const verified=await health();
+    const response=await new Promise((accept,reject)=>{
+     const req=loopbackRequest({hostname:'127.0.0.1',port:c.port,path:'/readyz',method:'GET'},res=>{let bytes=0;const chunks=[];res.on('data',chunk=>{bytes+=chunk.length;if(bytes>65536){res.destroy();reject(Error('bounded readiness'))}else chunks.push(chunk)});res.on('error',reject);res.on('end',()=>accept({code:res.statusCode,body:Buffer.concat(chunks)}))});
+     req.on('error',reject);req.setTimeout(1000,()=>req.destroy(Error('readonly probe timeout')));req.end();
+    });
+    const body=JSON.parse(response.body.toString('utf8'));
+    samples.push({at:Date.now(),code:response.code,identity:body.service==='opencodex'&&body.pid===verified.record.pid&&body.port===c.port,status:['ready','pending','failed'].includes(body.status)?body.status:'invalid'});
+   }catch{samples.push({at:Date.now(),status:'observation-failed'})}
+   await runtimeSleep(2000);
+  }while(Date.now()<until);
+  const files={};
+  for(const [name,path] of [['codex',join(process.env.USERPROFILE,'.codex')],['claude',join(process.env.USERPROFILE,'.claude')],['runtimeHome',c.home]]){
+   try{files[name]=(await readdir(path)).filter(n=>/^[a-zA-Z0-9_.-]{1,80}$/.test(n)).slice(0,64)}catch{files[name]=[]}
+  }
+  await writeFile(join(output,'late-readiness-diagnostic.json'),JSON.stringify({samples,files,accepted:false,originalBudgetPassed:false})+'\n');
+ };
  const action=async action=>{
   await bound();const r=await runtimeInvoke('process_action',{request:{action,confirm:true}},action==='stop'?15000:35000);
   const value={lifecycleState:r.lifecycleState,result:r.result};runtimePublic.action=value;return value;
@@ -412,7 +434,9 @@ async function runtimeCommand(c){
    if(!(observed&&last?.runtime==='running'&&last.health==='healthy'&&Number(last.pid)===observed.record.pid&&last.port===c.port)){
     // Additional readonly diagnosis follows the already failed original budget;
     // its result cannot make this attempt pass or authorize the next service.
+    await writeFile(join(output,'production-attempt-failed.json'),JSON.stringify({accepted:false,originalBudgetPassed:false,budgetMilliseconds:30000})+'\n');
     try{await diagnosticStatus();}catch{await writeFile(join(output,'actual-readonly-status-diagnostic.json'),JSON.stringify({result:'diagnostic-failed',accepted:false})+'\n');}
+    await diagnosticReadiness();
     throw Error('Actual service not healthy within production start budget');
    }
    result={...result,...observed,status:last,port:c.port,automaticPort:requestedPort===0?runtimePublic.automaticPort:null};
@@ -580,9 +604,21 @@ function Invoke-TwoUserRuntimeDriver($Context,$App,$Ledger,[string]$Mode,[int]$P
   $stdout=$driver.StandardOutput.ReadToEndAsync();$stderr=$driver.StandardError.ReadToEndAsync()
   # Transport envelope only; the driver keeps production start=30s/stop=10s.
   $deadline=[datetime]::UtcNow.AddSeconds(100)
+  $lastCommandSample=$null
   while(!$driver.HasExited){
    Add-TwoUserDescendants $App.fact $Ledger
    Write-TwoUserJson (Join-Path $Context.evidence 'runtime-tracked.json') @($Ledger.Values)
+   if((Test-Path -LiteralPath (Join-Path $dir 'production-attempt-failed.json')) -and (!$lastCommandSample -or ([datetime]::UtcNow-$lastCommandSample).TotalSeconds -ge 2)){
+    $lastCommandSample=[datetime]::UtcNow
+    $classifications=@();foreach($row in @(Get-CimInstance Win32_Process)){
+     if(!$Ledger.ContainsKey([int]$row.ProcessId)){continue}
+     $fact=$Ledger[[int]$row.ProcessId]
+     if($row.CreationDate.ToUniversalTime().Ticks -lt ([long]$fact.creationTicks-9) -or $row.CreationDate.ToUniversalTime().Ticks -gt [long]$fact.creationTicks){continue}
+     $text=[string]$row.CommandLine
+     $classifications+=@{pid=$row.ProcessId;image=[IO.Path]::GetFileName($fact.path);category=$(if($text -match 'icacls'){'private-acl'}elseif($text -match 'debug.*models|bundled-models'){'codex-catalog'}elseif($text -match '--version'){'version-probe'}elseif($text -match 'Get-AppxPackage|Get-CimInstance|Win32_Service|schtasks|Get-Service'){'windows-discovery'}elseif($text -match 'status.*--json'){'full-status'}else{'other'});accepted=$false}
+    }
+    @{atUtc=$lastCommandSample.ToString('o');processes=$classifications;accepted=$false}|ConvertTo-Json -Depth 5 -Compress|Add-Content -LiteralPath (Join-Path $dir 'owned-process-work-samples.log')
+   }
    if([datetime]::UtcNow -gt $deadline){throw 'Runtime driver transport deadline'}
    Start-Sleep -Milliseconds 100
   }
