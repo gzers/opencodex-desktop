@@ -119,6 +119,58 @@ mod tests {
     }
 
     #[test]
+    fn explicit_readonly_official_ownership_diagnostic() {
+        let Some(runtime) = option_env!("OCXD_OWNERSHIP_PROBE_RUNTIME") else {
+            return;
+        };
+        let identity = check_context();
+        let runtime = PathBuf::from(runtime);
+        assert!(runtime.is_absolute());
+        let bun = runtime.join("runtime/bun/bun.exe");
+        let package = runtime.join("runtime/opencodex/node_modules/@bitkyc08/opencodex");
+        assert!(bun.is_file() && package.join("package.json").is_file());
+        let profile = PathBuf::from(env::var_os("USERPROFILE").unwrap());
+        let h = profile.join(".codex-desktop/opencodex/home");
+        fs::create_dir_all(&h).unwrap();
+        let started = std::time::Instant::now();
+        let mut child = Command::new(bun)
+            .args(["--no-env-file", "-e", include_str!("../ownership-probe.ts")])
+            .env("HOME", &profile)
+            .env("USERPROFILE", &profile)
+            .env("OPENCODEX_HOME", &h)
+            .env("CODEX_HOME", profile.join(".codex"))
+            .env("OCX_NO_DESKTOP_HANDOFF", "1")
+            .env("OCXD_OWNERSHIP_DIAG_PACKAGE", &package)
+            .current_dir(&h)
+            .spawn()
+            .expect("actual adopted Bun readonly ownership probe");
+        let status = loop {
+            if let Some(status) = child.try_wait().unwrap() {
+                break status;
+            }
+            if started.elapsed() > std::time::Duration::from_secs(60) {
+                let _ = child.kill();
+                let _ = child.wait();
+                panic!("readonly ownership probe exceeded its diagnostic budget");
+            }
+            std::thread::sleep(std::time::Duration::from_millis(25));
+        };
+        assert!(
+            status.success(),
+            "readonly diagnostic execution failed; no ownership verdict is accepted"
+        );
+        assert!(
+            !profile.join(".codex").exists(),
+            "readonly diagnostic created client home"
+        );
+        assert!(
+            !h.join("config.json").exists(),
+            "readonly diagnostic created configuration"
+        );
+        println!("ownership-diagnostic-only: SID={identity} elapsed_ms={} fullSoftwarePassed=false accepted=false", started.elapsed().as_millis());
+    }
+
+    #[test]
     fn ordinary_profile_temp_and_exact_child_round_trip() {
         assert!(
             env::var_os(CHILD_MARKER).is_none(),
