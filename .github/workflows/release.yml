@@ -67,6 +67,14 @@ jobs:
           python3 .github/scripts/stage_runtime_bundle_023.py --platform "$platform" --build-node "$node_bin" --npm-cli "$npm_cli" --output test/out/runtime-stage
           echo "OCXD_REQUIRE_RUNTIME_BUNDLE=1" >> "$GITHUB_ENV"
 
+      - name: Install exact packaging CLI for bounded tool-download retries
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --global @tauri-apps/cli@2.11.4
+          echo "OCXD_TAURI_CLI=$(npm root --global)/@tauri-apps/cli/tauri.js" >> "$GITHUB_ENV"
+          echo "OCXD_TAURI_RETRY_EVIDENCE=$GITHUB_WORKSPACE/test/out/release-tauri-downloads" >> "$GITHUB_ENV"
+
       - name: 安装前端依赖
         run: npm --prefix apps/desktop/ui ci
 
@@ -117,13 +125,21 @@ jobs:
         with:
           projectPath: apps/desktop/tauri
           # Custom installer templates are reviewed against this exact bundler.
-          tauriScript: npx --yes @tauri-apps/cli@2.11.4
+          tauriScript: node ${{ github.workspace }}/.github/scripts/tauri_build_retry.mjs
           tagName: ${{ steps.notes.outputs.tag }}
           releaseName: 'OpenCodeX Desktop ${{ steps.notes.outputs.tag }}'
           releaseBody: ${{ steps.notes.outputs.body }}
           releaseDraft: true
           prerelease: true
           args: --features custom-protocol --config tauri.updater.conf.json --config tauri.runtime-bundle.conf.json ${{ matrix.args }}
+
+      - name: Preserve every packaging-tool download attempt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-tauri-downloads-${{ matrix.platform }}
+          path: test/out/release-tauri-downloads
+          if-no-files-found: warn
 
       - name: Verify sealed macOS application bundle and packaged resources
         if: runner.os == 'macOS'

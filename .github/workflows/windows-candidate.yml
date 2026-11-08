@@ -165,7 +165,8 @@ jobs:
             $taskBuildArgs += @('--config','tauri.runtime-bundle.conf.json')
           }
           $taskBuildArgs += @('--','--locked')
-          node $taskTauriCli @taskBuildArgs
+          $env:OCXD_TAURI_RETRY_EVIDENCE=[IO.Path]::GetFullPath('../../../test/out/windows-candidate/tauri-downloads')
+          node ../../../.github/scripts/tauri_build_retry.mjs --cli $taskTauriCli @taskBuildArgs
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       # These are diagnostic originals, explicitly NOT the admitted final
       # candidate artifact. Retention/release admission still requires the
@@ -261,6 +262,8 @@ jobs:
             test/out/windows-candidate/ordinary-rust
             test/out/windows-candidate/ordinary-static
             test/out/windows-candidate/runtime-stage/*.json
+            test/out/windows-candidate/runtime-stage/base-downloads
+            test/out/windows-candidate/tauri-downloads
             test/out/windows-candidate/*-startup/*.json
             test/out/windows-candidate/*-startup/*.log
             test/out/windows-candidate/*-startup/startup/*.json
