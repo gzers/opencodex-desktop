@@ -1042,15 +1042,13 @@ jobs:
       - name: Restore exact Server MSI policy
         if: always()
         run: if(Test-Path test/out/final023-installer-replay/evidence/msi-server-policy.original.json){ & ./test/smoke/windows-msi-server-fixture.ps1 -Mode restore -EvidenceDirectory test/out/final023-installer-replay/evidence }
+      - name: Collect complete controlled receipts without private-tree traversal
+        if: always()
+        run: python test/smoke/collect_installer_replay.py test/out/final023-installer-replay
       - name: Preserve successful and failed replay receipts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: final023-original-installer-replay-${{ github.sha }}
-          path: |
-            test/out/final023-installer-replay/evidence
-            test/out/final023-installer-replay/fixture-contract
-            test/out/final023-installer-replay/diagnostic.json
-            test/out/final023-installer-replay/original-build-identities.json
-            !test/out/final023-installer-replay/evidence/**/sandbox-*/**
+          path: test/out/final023-installer-replay/artifact/**
           if-no-files-found: warn

@@ -50,6 +50,7 @@ jobs:
       - run: python3 -B -m unittest discover -s test -p 'test_windows_release_acceptance.py' -v
       - run: python3 -B -m unittest discover -s test -p 'test_windows_etw_ci.py' -v
       - run: python3 -B -m unittest discover -s test -p 'test_windows_retention_ci.py' -v
+      - run: python3 -B -m unittest discover -s test -p 'test_collect_installer_replay.py' -v
       - run: node --test test/smoke/tauri-build-retry.test.mjs
 
   frontend:
