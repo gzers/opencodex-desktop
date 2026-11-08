@@ -287,3 +287,5 @@ c14565a58同树Windows实际产品源码COM前置已核验：[原始制品与日
 [全表](../../.adg/evidence/0.2.23/sweep-r29-42520333797/status-table.md)已先展示，原件305成员摘要一致、24/4accepted:false。两实际SID均在原30秒内Started/HMAC/真实Codex配置写入：A26415ms/57714，B19352ms/59352；固定冲突316ms明确拒绝且peer不变，后续B自动启动正常，原启动缺口本轮适用范围已取得证明。完整端口协议仍因普通Stop在原10秒超时未通过。B记录随后消失不当预算内成功，A亦未宣称已停。
 
 WindowsCI及本轮24/26/28共同E0425为上一批移除native::system_directory后漏掉owner_tests.rs499测试调用；e77ca1909恢复test-only受信OS辅助。Stop未有精确阶段信息，新增最多16固定阶段名/elapsed记录，保留原检查顺序/官方停止还原/10秒门，无敏感数据；通知隐藏内部计时且停止不再显示启动专属超时文案。owner6过/1显式忽略、DTO5及workspace strictClippy过。完整Stop根因未闭合，下次先等待实际Windowsall-target编译／原生前置通过，再完整诊断，不把新计时当修复完成。
+
+e77ca1909同树Windowsall-target严格Clippy步骤已成功（CI42522782198/job128859724202原步骤回执，后端总job仍运行，未称全回归通过）；轻量原生8577字节制品摘要365652e68f10c41e80a486a8cdb9f63ee0399b3759c318a4d53373c2966c1714及COM2测试／8秒实际产品查询／自有身份清理原回执已核验。PRmergef3838d6f与headtree876db76f完全相同，见[前置采用记录](../../.adg/evidence/0.2.23/sweep-r29-42520333797/native-preflight-e77/admission.json)。其后派发[第30轮完整诊断](https://github.com/gzers/opencodex-desktop/actions/runs/42523238255)，固定e77ca190988c629479128c5aa6b54b55be742bca，job128861110803已确认运行；依旧全28、accepted:false及原30/10/5秒。计时只定位停止，不代替正常Stop通过。

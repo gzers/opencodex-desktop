@@ -1,0 +1,42 @@
+    Updating crates.io index
+ Downloading crates ...
+  Downloaded windows-interface v0.59.3
+  Downloaded windows-threading v0.2.1
+  Downloaded windows-implement v0.60.2
+  Downloaded windows-collections v0.3.2
+  Downloaded windows-link v0.2.1
+  Downloaded windows-result v0.4.1
+  Downloaded windows-strings v0.5.1
+  Downloaded windows-numerics v0.3.1
+  Downloaded quote v1.0.47
+  Downloaded windows-core v0.62.2
+  Downloaded windows-future v0.3.2
+  Downloaded proc-macro2 v1.0.107
+  Downloaded unicode-ident v1.0.26
+  Downloaded syn v2.0.119
+  Downloaded windows v0.62.2
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.26
+   Compiling windows-link v0.2.1
+   Compiling windows-strings v0.5.1
+   Compiling windows-result v0.4.1
+   Compiling windows-threading v0.2.1
+   Compiling syn v2.0.119
+   Compiling windows-implement v0.60.2
+   Compiling windows-interface v0.59.3
+   Compiling windows-core v0.62.2
+   Compiling windows-numerics v0.3.1
+   Compiling windows-future v0.3.2
+   Compiling windows-collections v0.3.2
+   Compiling windows v0.62.2
+   Compiling ocxd-task-scheduler-source-check v0.0.0 (D:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-task-scheduler-check)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 43.17s
+     Running unittests src\main.rs (test\smoke\windows-task-scheduler-check\target\debug\deps\ocxd_task_scheduler_source_check-e031a9c1d8dc7c5b.exe)
+
+running 2 tests
+test windows_task_scheduler::tests::registration_and_query_failure_never_count_as_absence ... ok
+test windows_task_scheduler::tests::native_read_only_enumeration_has_a_bounded_result ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
