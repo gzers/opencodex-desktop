@@ -23,3 +23,9 @@ Run42469644038，source5cba024a2，26过/1失败，accepted:false。272份manife
 运行42473371702实际普通账户/Node→names.2原CLI，10.214秒readyz终态failed；stderr原文明确Codex home不存在，须先启动Codex生成HOME再sync。原执行器进程/账户/Profile与ACL清理通过。因而这次失败不是端口冲突或状态读取错误，原测试没满足默认客户端集成的既有前置。
 
 后继只加可显式选择的空客户端目录对照，不预置config/catalog，不关闭集成、不改ready条件。原“无客户端HOME”诊断保持可单独执行、原件保留，不覆盖成通过。两种模式互斥，通过编译时显式flag选择；正式双SID测试尚未修改，待原版实际注入/ready结果确认再补正确场景前置。
+
+## 已初始化空HOME的实际Windows对照与采用前置
+
+运行42474051343，sourcef7aac6be9，真实普通SID同一原版Node/CLI自动分配59330；14.513秒readyz HTTP200/ready，PID/port一致。stdout明确原版写入内置openai路由，保留catalog缺失警告；没有预置config/catalog，也没关闭客户端集成。原执行器账户/Profile、完整代际进程与ACL清理通过。原未初始化对照仍保留failed，非覆盖。
+
+因此双用户端口实验补齐“Codex已初始化空HOME”必要前置：在每个已验证真实Profile自己的.codex只建空目录，拒绝链接；不种config/catalog、不改客户端开关或就绪断言。成功不仅要求原30秒内实际健康/就绪/HMAC/PID/port，还检查原版真正写入普通有界config.toml，openai_base_url引用本次分配端口。固定端口冲突、两默认自动端口不同、六秒健康重叠、B停A存活、精确停止与完整清理不变。本机新增前置合同和原生成驱动检查、sweep四条回归通过，Windows完整27项后继执行。

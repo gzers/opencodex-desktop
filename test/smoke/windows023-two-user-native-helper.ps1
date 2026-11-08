@@ -404,6 +404,13 @@ async function runtimeCommand(c){
  let result={result:'pass-runtime-step',mode:c.mode,home:c.home,root:c.root,port:c.port};
  if(c.mode==='start'||c.mode==='conflict'){
   runtimeStage='own-config';assert(!(await record()),'Fresh service record required');
+  // Default native integration requires an initialized Codex home directory.
+  // Each new SID owns this EMPTY fixture; the real runtime must create its own
+  // config/catalog and become ready. Never seed artifacts or disable integration.
+  const clientHome=join(process.env.USERPROFILE,'.codex');
+  try{const st=await lstat(clientHome);assert(st.isDirectory()&&!st.isSymbolicLink(),'Unsafe own Codex fixture')}
+  catch(error){if(error.code!=='ENOENT')throw error;await mkdir(clientHome,{mode:0o700})}
+  result.clientHomeFixture={emptyDirectoryInitialized:true,configSeeded:false,catalogSeeded:false,integrationDisabled:false};
   for(const path of [process.env.USERPROFILE,join(process.env.USERPROFILE,'.codex-desktop'),join(process.env.USERPROFILE,'.codex-desktop/opencodex'),c.home]){
    const st=await lstat(path);assert(st.isDirectory()&&!st.isSymbolicLink(),'Own H has a link');
   }
@@ -440,6 +447,10 @@ async function runtimeCommand(c){
     throw Error('Actual service not healthy within production start budget');
    }
    result={...result,...observed,status:last,port:c.port,automaticPort:requestedPort===0?runtimePublic.automaticPort:null};
+   const clientConfig=join(process.env.USERPROFILE,'.codex/config.toml');
+   const clientStat=await lstat(clientConfig);assert(clientStat.isFile()&&!clientStat.isSymbolicLink()&&clientStat.size>0&&clientStat.size<=512*1024,'Actual Codex config injection missing');
+   const injected=await readFile(clientConfig,'utf8');assert(injected.includes('openai_base_url')&&injected.includes(':'+c.port),'Codex routing did not use actual assigned port');
+   result.clientHomeFixture={...result.clientHomeFixture,actualConfigWritten:true,actualAssignedPortBound:true};
   }
  }else if(c.mode==='observe'){
   runtimeStage='observe';result={...result,...await health(),status:await snapshot()};
@@ -459,7 +470,7 @@ async function runtimeCommand(c){
 function Get-TwoUserDriverText {
 $text=@'
 import assert from 'node:assert/strict';
-import {writeFile,readFile,open,rename,lstat,readdir,unlink} from 'node:fs/promises';
+import {writeFile,readFile,open,rename,lstat,readdir,unlink,mkdir} from 'node:fs/promises';
 import {createHmac,randomBytes,timingSafeEqual} from 'node:crypto';
 import {request as loopbackRequest} from 'node:http';
 import {spawn as diagnosticSpawn} from 'node:child_process';
