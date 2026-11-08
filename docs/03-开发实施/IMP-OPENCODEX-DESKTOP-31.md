@@ -299,3 +299,5 @@ e77ca1909同树Windowsall-target严格Clippy步骤已成功（CI42522782198/job1
 6ea561a98将周期状态来源接同一workerowned运行租约：启停／运行事务中缺端点只返回未知／保留原观测，不额外spawnCLI；已存在端点仍逐次完整验证激活、record、HMAC、ready及readback，无mtime缓存、伪造停止或就绪。租约结束后常规诊断恢复；原30/10/5秒不变，维护包不改。8ca50832b及时排空固定夹具stderr，保留每case就绪／退出细节并独立继续诊断；任何失败令整项失败，不重试覆盖。原20条Check/5case/15秒就绪和原waiter退出时限逐条一致，失败后的额外退出确认只为自有残留清理，不能接受该失败就绪。
 
 本批9状态来源回归、后端完整50顶层2242过/0失败/38原忽略及workspace all-target strictClippy通过；PowerShell语法与原断言不变核对过，Windows实际夹具／完整启停仍待。测试在提交前构建，三个改动文件内容SHA与8ca50832b精确相同，不将其冒称嵌入该提交号的最终制品。原失败证据保留；下一步先同源Windows前置／编译，再完整诊断，尚未发布。
+
+8ca50832b同树Windows前置已实际核验（CI42527072045，PRmerge558a29e6/treeb4e133e6与head一致）：11069字节ZIP及SHA256 9a2a926d483d4e435e09353b4955d68ed81ad5aaabe185006baaeeca113cc3cd一致；COM2测试／8秒产品查询／自有身份清理通过，重启交接5case40check均过、无强制清理、原15秒和嵌入waiterSHA保持。它不启动Desktop，不是实际重启／普通SID启停通过；旧失败原件保留。Windowsbackendall-target严格Clippy步骤成功，完整后端job仍待，见[前置采用记录](../../.adg/evidence/0.2.23/sweep-r30-42523238255/native-preflight-8ca/admission.json)。随后派发[第31轮完整诊断](https://github.com/gzers/opencodex-desktop/actions/runs/42527519561)，固定8ca50832bc783f4759c3f5d8c52bc8c20e2d4674/job128874316105已确认运行；仍全28、accepted:false及原预算，正常Stop缺口未提前关闭。

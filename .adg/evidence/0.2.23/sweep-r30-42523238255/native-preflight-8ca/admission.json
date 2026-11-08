@@ -1,0 +1,37 @@
+{
+  "head": "8ca50832bc783f4759c3f5d8c52bc8c20e2d4674",
+  "ciMerge": "558a29e6c3d2ed40274987ed0dbd96763928e23e",
+  "tree": "b4e133e63468ff39bbe13c17b2d16f801fb802ab",
+  "sameHeadTree": true,
+  "ciRun": 42527072045,
+  "nativeSmokeJob": 128872936364,
+  "windowsBackendJob": 128872936462,
+  "allTargetsStrictClippy": {
+    "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 8,
+    "started_at": "2026-11-08T21:49:49Z",
+    "completed_at": "2026-11-08T21:52:37Z"
+  },
+  "backendWholeRegressionPending": true,
+  "artifactId": 13635218630,
+  "artifactBytes": 11069,
+  "artifactSha256": "9a2a926d483d4e435e09353b4955d68ed81ad5aaabe185006baaeeca113cc3cd",
+  "verifiedRawReceipts": {
+    "nativeCOMTests": 2,
+    "actualProductTaskQueryWithin8s": true,
+    "ownProcessIdentityAndCleanup": true,
+    "restartHandoff": {
+      "passedCases": 5,
+      "checks": 40,
+      "allOriginalCasesPresent": true,
+      "forcedCleanup": false,
+      "originalReadiness15000ms": true,
+      "embeddedWaiterSha256": "b649124e4f579f6102993f0dd567d0b02b5df77bccb87ef559288730e7fb36c0",
+      "productStarted": false
+    }
+  },
+  "scope": "ActualrunnerCOM/identity/5handofffixturechecks. NotactualDesktoprestartorordinarySIDlifecycleacceptance. Oldfailedcaseevidenceunchanged.",
+  "accepted": false
+}
