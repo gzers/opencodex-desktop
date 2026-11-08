@@ -2,7 +2,7 @@ param(
  [Parameter(Mandatory=$true)][string]$Step,
  [Parameter(Mandatory=$true)][string]$Name,
  [Parameter(Mandatory=$true)][string]$Directory,
- [Parameter(Mandatory=$true)][ValidateSet('inputs','build','state-observer','attested-status','bundle-roots','policy-prepare','policy-restore','installer','native','two-user','collect')][string]$Task,
+ [Parameter(Mandatory=$true)][ValidateSet('inputs','build','fixture-schema','state-observer','attested-status','bundle-roots','policy-prepare','policy-restore','installer','native','two-user','collect')][string]$Task,
  [string]$Kind,[string]$Mode,[string]$Probe
 )
 $ErrorActionPreference='Stop'
@@ -50,10 +50,6 @@ $receipt=Invoke-SweepCheck $recordDirectory $Step $Name {
    $node=(Get-Command node.exe).Source;$npm=Join-Path (Split-Path -Parent $node) 'node_modules/npm/bin/npm-cli.js'
    & python .github/scripts/stage_runtime_bundle_023.py --platform win32-x64 --build-node $node --npm-cli $npm --output (Join-Path $root 'current-runtime-stage') *> (Join-Path $evidence 'current-runtime-stage.log')
    if($LASTEXITCODE -ne 0){throw 'Current adopted runtime resources staging failed; old installers cannot substitute'}
-   $schemaRuntime=Join-Path $root 'current-runtime-stage/platform-bundle/runtime-bundle/runtime/opencodex/node_modules/@bitkyc08/opencodex'
-   $schemaBun=Join-Path $root 'current-runtime-stage/platform-bundle/runtime-bundle/runtime/bun/bun.exe'
-   & python test/smoke/sweep/check_runtime_fixture.py --runtime $schemaRuntime --bun $schemaBun *> (Join-Path $evidence 'actual-runtime-fixture-schema.log')
-   if($LASTEXITCODE -ne 0){throw 'Real-user synthetic fixture rejected by actual adopted runtime schema'}
    $resources=Join-Path $repo 'apps/desktop/tauri/resources/runtime-bundle'
    Copy-Item -LiteralPath $resources -Destination $env:OCXD_SWEEP_PROGRAM -Recurse
    $descriptor=Get-Content -LiteralPath (Join-Path $resources 'runtime-bundle.manifest.json') -Raw|ConvertFrom-Json
@@ -66,6 +62,13 @@ $receipt=Invoke-SweepCheck $recordDirectory $Step $Name {
    & rustc --edition 2021 test/smoke/sweep/filesystem.rs -o (Join-Path $env:OCXD_SWEEP_PROGRAM 'sweep-filesystem.exe') *> (Join-Path $evidence 'filesystem-probe-build.log');if($LASTEXITCODE -ne 0){throw 'Test-only filesystem observer build failed'}
    foreach($file in @('opencodex-desktop.exe','ocxd.exe')){Copy-Item -LiteralPath (Join-Path $repo ('apps/desktop/tauri/target/debug/'+$file)) -Destination $env:OCXD_SWEEP_PROGRAM}
    @{source=(git -C $repo rev-parse HEAD).Trim();appsTree=(git -C $repo rev-parse HEAD:apps).Trim();profile='debug custom-protocol; diagnostic-only';files=@(Get-ChildItem $env:OCXD_SWEEP_PROGRAM -File|ForEach-Object{@{name=$_.Name;sha256=(Get-FileHash $_.FullName).Hash.ToLowerInvariant()}})}
+  }
+  fixture-schema {
+   $schemaRuntime=Join-Path $root 'current-runtime-stage/platform-bundle/runtime-bundle/runtime/opencodex/node_modules/@bitkyc08/opencodex'
+   $schemaBun=Join-Path $root 'current-runtime-stage/platform-bundle/runtime-bundle/runtime/bun/bun.exe'
+   & python test/smoke/sweep/check_runtime_fixture.py --runtime $schemaRuntime --bun $schemaBun *> (Join-Path $evidence 'actual-runtime-fixture-schema.log')
+   if($LASTEXITCODE -ne 0){throw 'Real-user synthetic fixture rejected by actual adopted runtime schema'}
+   @{checks=2;source='actual adopted runtime configSchema';temporaryRoots='cleaned by Python context';accepted=$false}
   }
   state-observer {
    # Cargo carries its platform linker/native flags. A transient example keeps

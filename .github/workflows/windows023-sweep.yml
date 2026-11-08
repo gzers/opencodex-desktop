@@ -47,6 +47,10 @@ jobs:
         if: always()
         continue-on-error: true
         run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '02' -Name current-binary -Task build
+      - name: 27 actual-runtime-fixture-schema
+        if: always()
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '27' -Name actual-runtime-fixture-schema -Task fixture-schema
       - name: 25 backend-state-observer-build
         if: always()
         continue-on-error: true
