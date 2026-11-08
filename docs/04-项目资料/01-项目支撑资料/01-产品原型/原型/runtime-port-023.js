@@ -7,7 +7,8 @@
   if (!panel) return;
   const card = document.createElement('article');
   card.id = 'runtimePort023'; card.className = 'card rp023';
-  panel.prepend(card);
+  const program = document.getElementById('ocxd023Program');
+  if (program) program.after(card); else panel.prepend(card);
   let saved = {mode:'auto',port:null}, active = null, serial = 0, busy = false, checking = false, checkError = '';
   let scene = 'normal', lastFailure = null, initialized = false;
   const failures = {

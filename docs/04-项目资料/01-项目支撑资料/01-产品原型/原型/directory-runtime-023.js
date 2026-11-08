@@ -48,11 +48,12 @@
     const host = root.document.getElementById('ocxd023Settings'); if (!host) return;
     const s=controller.state(),p=s.snapshot;
     const paths = rows => facts(rows.map(([key,label])=>[label,s.scene==='loading'?'正在读取…':p[key]]));
-    host.innerHTML = '<div class="card-head"><div><h2>用户目录与程序安装</h2><p>配置保存在当前用户目录，程序位于 Desktop 安装目录。</p></div></div>' +
+    host.innerHTML = '<div class="card-head"><div><h2>用户数据与配置</h2><p>配置保存在当前用户目录。</p></div></div>' +
       (validity[s.scene]?'<p class="mp-alert" role="status">'+esc(validity[s.scene])+'</p>':'') +
-      '<section class="dr023-section" aria-labelledby="dr023UserTitle"><h3 id="dr023UserTitle">用户数据与配置</h3>'+paths([['aggregateRoot','用户配置根'],['desktopRoot','Desktop 数据'],['opencodexHome','OpenCodex HOME'],['configPath','渠道配置文件']])+
-      '<div class="mp-actions dr023-actions">'+button('完整查看与复制路径','path-details',s.scene==='loading')+button('读取渠道配置说明','path-json')+(s.scene==='missing'?button('初始化用户目录','path-init',false,true):'')+'</div></section>'+
-      '<section class="dr023-section" aria-labelledby="dr023ProgramTitle"><h3 id="dr023ProgramTitle">程序安装</h3>'+paths([['installationRoot','Desktop 安装根'],['managerExecutable','Desktop 本体'],['runtimePrefix','运行包目录'],['runtimeEntry','程序入口']])+'<div class="dr023-status">'+facts([['运行状态','代理已停止（演示）'],['包 / 清单 / 来源',s.scene==='corrupted'?'一致性待核对':p.packageVersion+' / 一致'],['程序有效性',s.scene==='missing'?'尚未安装':s.scene==='loading'?'检查中':'位置已记录，身份另行核验']])+'</div>'+
+      '<section class="dr023-section" aria-label="用户配置路径">'+paths([['aggregateRoot','用户配置根'],['desktopRoot','Desktop 数据'],['opencodexHome','OpenCodex HOME'],['configPath','渠道配置文件']])+
+      '<div class="mp-actions dr023-actions">'+button('完整查看与复制路径','path-details',s.scene==='loading')+button('读取渠道配置说明','path-json')+(s.scene==='missing'?button('初始化用户目录','path-init',false,true):'')+'</div></section>';
+    root.document.getElementById('ocxd023Program').innerHTML = '<div class="card-head"><div><h2>程序安装与卸载</h2><p>程序位于 Desktop 安装目录。</p></div></div>' +
+      '<section class="dr023-section" aria-label="程序安装位置与状态">'+paths([['installationRoot','Desktop 安装根'],['managerExecutable','Desktop 本体'],['runtimePrefix','运行包目录'],['runtimeEntry','程序入口']])+'<div class="dr023-status">'+facts([['运行状态','代理已停止（演示）'],['包 / 清单 / 来源',s.scene==='corrupted'?'一致性待核对':p.packageVersion+' / 一致'],['程序有效性',s.scene==='missing'?'尚未安装':s.scene==='loading'?'检查中':'位置已记录，身份另行核验']])+'</div>'+
       '<div class="mp-actions dr023-actions">'+button('诊断与恢复安装','install-open',false,true)+button('刷新位置','path-refresh')+'</div></section>';
   }
   function pathDetails() {
@@ -61,7 +62,8 @@
   }
   function mount() {
     const panel=root.document.getElementById('settings-installation'); if(!panel)return;
-    const host=root.document.createElement('article');host.id='ocxd023Settings';host.className='card mp-page dr023';panel.prepend(host);
+    const host=root.document.createElement('article');host.id='ocxd023Settings';host.className='card mp-page dr023';
+    const program=root.document.createElement('article');program.id='ocxd023Program';program.className='card mp-page dr023';panel.prepend(program,host);
     for(const id of ['card-install-runtime','card-runtime-source','card-install-paths','card-install-partitions','dataPathsDemo']){const old=root.document.getElementById(id);if(old){old.hidden=true;if(id==='dataPathsDemo')old.dataset.protoContexts='legacy-path-demo';}}
     const rail=root.document.getElementById('protoStdCards');if(rail){const tools=root.document.createElement('section');tools.className='proto-card';tools.dataset.protoContexts='settings:installation';tools.innerHTML='<div class="proto-note-title">0.2.23 · 目录状态演示</div>'+select('演示平台','path-platform',[['macos','macOS'],['windows','Windows']],'macos')+select('目录状态','path-scene',scenes.filter(row=>row[0]!=='pending'),'valid');rail.append(tools);}
     render();
