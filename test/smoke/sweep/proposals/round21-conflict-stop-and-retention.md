@@ -15,3 +15,5 @@ A实际管理器省略port，自动55581，在原预算内running/healthy、heal
 ## 原版冲突/停止直接诊断
 
 只在显式ordinary-lifecycle-023模式：原普通账户执行器启动原版A（空Codex目录、静态loopback provider），实际ready后另新H用同一A固定端口启动原CLI，保留原stdout/stderr和30秒诊断结果，核对A记录代际不变、B无运行记录；再运行原CLI stop观察原10秒内是否退出。不会手动删除记录、关闭集成、杀A或扩大生产预算；整个独立诊断110秒运输上限，不算原软件验收。普通执行器精确代际进程、账户/Profile、ACL清理仍必须通过。取得实际冲突文案/退出与停止结果后，产品生命周期变更须按用户最新范围另述理由和确认。尚未修改apps产品代码。
+
+生命周期对照首轮42477530823在基础包下载连续三次超时，尚未启动任何账户/服务。原failed.log保留/private/tmp/ocxd023-lifecycle-direct-42477530823/；本轮无产品结论。诊断上传补base-downloads原回执/部分文件。固定下载使用同一原官方asset URL的逐次随机请求标记与no-cache，避免复用短期签名重定向；SHA256/大小上限/三次上限不变。实际本机代理下载成功、固定摘要仍为bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957；证据/private/tmp/ocxd023-r21-fresh-base-fetch/。五条下载行为测试过。后继只运行该未执行的原版对照，不把装配失败改成通过，不扩大产品授权。

@@ -12,6 +12,7 @@ import subprocess
 import time
 import urllib.error
 import urllib.request
+import uuid
 
 ROOT=Path(__file__).resolve().parents[2]
 BASE_URL='https://github.com/gzers/opencodex-desktop/releases/download/v0.2.22/opencodex-2.97.0-post021.ownerquery.2.tgz'
@@ -34,7 +35,11 @@ def download_base(destination):
         receipt={'attempt':attempt,'url':BASE_URL,'accepted':False,'status':'fail'}
         transient=False
         try:
-            with urllib.request.urlopen(BASE_URL,timeout=60) as response,partial.open('xb') as f:
+            # GitHub release redirects are short-lived signed URLs. Each retry
+            # asks the same pinned public asset afresh rather than reusing a
+            # cached failed/expired redirect. Content authority is still SHA256.
+            request=urllib.request.Request(BASE_URL+'?ocxd-build-input='+uuid.uuid4().hex,headers={'Cache-Control':'no-cache'})
+            with urllib.request.urlopen(request,timeout=60) as response,partial.open('xb') as f:
                 size=0
                 while block:=response.read(1024*1024):
                     size+=len(block)

@@ -579,6 +579,7 @@ jobs:
             test/out/windows023-ordinary-preflight
             test/out/ownership-runtime-stage/maintained-runtime/*.json
             test/out/ownership-runtime-stage/platform-bundle/result.json
+            test/out/ownership-runtime-stage/base-downloads
           if-no-files-found: warn
           retention-days: 14
 
