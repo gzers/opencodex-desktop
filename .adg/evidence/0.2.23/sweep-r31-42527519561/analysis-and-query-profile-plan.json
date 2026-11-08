@@ -1,0 +1,50 @@
+{
+  "source": "8ca50832bc783f4759c3f5d8c52bc8c20e2d4674",
+  "passed": 27,
+  "failed": 1,
+  "accepted": false,
+  "artifactId": 13636756983,
+  "artifactBytes": 36118387,
+  "artifactSha256": "17ab96f163426620236c3ba16b69e450c126bdf57c51853e829343d92121b45c",
+  "manifestFiles": 310,
+  "actualFindings": {
+    "startA": {
+      "milliseconds": 27290,
+      "port": 64341
+    },
+    "startB": {
+      "milliseconds": 24594,
+      "port": 59464
+    },
+    "fixedConflict": "204ms typedrejection and peerpreservation; Bnormalstartsuccessful",
+    "stopA": "Initialowner0/recheck3/service6/finalowner11/official21ms; officialreturnsat9854ms then budgetexhaustedbeforeOSexitproof; whole10001ms.",
+    "stopB": "Initial0/recheck4/service7/finalowner74/official86ms; timeoutwhileofficialcallat9775ms; whole10024ms.",
+    "cleanup": "Actualbothaccounts/Profile/processcleanup pass.",
+    "interpretation": "NativeDesktopowner/service checks are tensofms. Officialstopcall consumesalmostall10s; do not inventStopped fromlaterrecordabsence. Exactinnercostnotyetproven."
+  },
+  "nextDiagnostic": {
+    "runId": 42530900446,
+    "jobId": 128884638221,
+    "source": "a581ea0cac0b61644983bf60aa00cef8cdff089c",
+    "purpose": "official-stop-query-profile",
+    "statusObserved": "in_progress",
+    "kind": "Read-only technical attribution, not candidate sweep or acceptance.",
+    "productAppsTreeUnchanged": "4bfcbcc6096767e254fb9fda46bbeac04101a623",
+    "originalPackageBytes": "No instrumentation; source4files compared againstSHA-pinned originaltar before actualread-only functioncalls.",
+    "noProductStartStopOrServiceTaskWrites": true,
+    "accepted": false
+  },
+  "maintainedRuntimeChanged": false,
+  "nextFullCandidateSweepDispatched": false,
+  "localPreparationChecks": {
+    "nodeSyntax": true,
+    "pythonAst": true,
+    "workflowYamlAndRunPowerShellSyntax": true,
+    "nonWindowsGuardRefusalBeforeOutput": true
+  },
+  "orchestrationNotes": [
+    "Firstprofileworkflow orchestrationV8 template parse failed beforeanycommand/file mutation from unescaped GitHubexpression; corrected via placeholders.",
+    "PythonworkflowYAMLvalidator was unavailable; usedinstalledRubybuiltinYAML successfully instead; no dependency added."
+  ],
+  "goalComplete": false
+}
