@@ -63,7 +63,7 @@ def inventory(program):
     files = []
     for p in sorted(program.rglob('*')):
         assert not p.is_symlink(), 'No links in sealed program'
-        if p.is_file() and p.name != 'core-build.json':
+        if p.is_file() and p != program / 'core-build.json':
             files.append(dict(path=p.relative_to(program).as_posix(), bytes=p.stat().st_size, sha256=digest(p)))
     assert files
     return files

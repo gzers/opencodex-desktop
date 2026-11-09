@@ -104,6 +104,12 @@ class CoreTests(unittest.TestCase):
                 with self.assertRaises(AssertionError):
                     core.verify(root, HEAD, '1234')
                 (root/'extra.bin').unlink()
+                # Only the ROOT seal is excluded. A nested file with its name
+                # must be hashed and cannot hide outside the program inventory.
+                self.put(root, 'unexpected/core-build.json', {'unknown': True})
+                with self.assertRaises(AssertionError):
+                    core.verify(root, HEAD, '1234')
+                (root/'unexpected/core-build.json').unlink()
                 (root/'ocxd.exe').write_bytes(b'tampered')
                 with self.assertRaises(AssertionError):
                     core.verify(root, HEAD, '1234')
