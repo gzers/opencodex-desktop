@@ -64,6 +64,17 @@ $taskReplacements=@(
  @("[process.env.USERPROFILE,join(process.env.USERPROFILE,'.codex-desktop'),join(process.env.USERPROFILE,'.codex-desktop/opencodex'),c.home]","[c.fixtureRoot,join(c.fixtureRoot,'data'),join(c.fixtureRoot,'data/opencodex'),c.home]")
 )
 foreach($replacement in $taskReplacements){if(!$taskDriver.Contains($replacement[0])){throw 'Reviewed R33 adaptation no longer matches'};$taskDriver=$taskDriver.Replace($replacement[0],$replacement[1])}
+$taskIdentityWait=@'
+
+// Fixture transport only: keep this driver generation alive until its retained
+// handle/SID/FILETIME admission has completed. Product timers are unchanged.
+if(process.env.OCXD_DRIVER_IDENTITY_ACK){
+ const {access}=await import('node:fs/promises');const until=Date.now()+10000;
+ while(true){try{await access(process.env.OCXD_DRIVER_IDENTITY_ACK);break}catch{if(Date.now()>until)throw Error('Driver identity admission missing');await new Promise(r=>setTimeout(r,20))}}
+}
+'@
+$taskDriver+=$taskIdentityWait
+[IO.File]::AppendAllText((Join-Path $taskCode 'windows023-active-session-rpc.mjs'),$taskIdentityWait)
 [IO.File]::WriteAllText((Join-Path $taskCode 'two-user-driver.mjs'),$taskDriver)
 $taskLedger=[Collections.Generic.Dictionary[int,object]]::new()
 $taskManager=$null;$taskFacts=$null;$taskRuntimeFact=$null
@@ -111,9 +122,12 @@ function Invoke-SessionDriver([string]$Mode,[int]$Port=0,[int]$ExpectedPid=0){
  $driverName=if($Mode -in @('prepare','inspect')){'windows023-active-session-rpc.mjs'}else{'two-user-driver.mjs'}
  foreach($arg in @((Join-Path $taskCode $driverName),('http://127.0.0.1:'+$taskPort),$dir,$inputPath)){$info.ArgumentList.Add($arg)}
  $info.Environment['USERPROFILE']=Join-Path $taskFixture 'home';$info.Environment['HOME']=Join-Path $taskFixture 'home'
+ $identityAck=Join-Path $dir 'driver-identity-admitted'
+ $info.Environment['OCXD_DRIVER_IDENTITY_ACK']=$identityAck
  $driver=[Diagnostics.Process]::Start($info)
  try{
   $fact=Get-TwoUserProcessFact $driver $taskSid;$taskLedger[[int]$fact.pid]=$fact
+  [IO.File]::WriteAllText($identityAck,'retained handle admitted')
   $stdout=$driver.StandardOutput.ReadToEndAsync();$stderr=$driver.StandardError.ReadToEndAsync()
   $deadline=[datetime]::UtcNow.AddSeconds($(if($Mode -eq 'prepare'){360}else{120}))
   while(!$driver.HasExited){
@@ -129,6 +143,27 @@ function Invoke-SessionDriver([string]$Mode,[int]$Port=0,[int]$ExpectedPid=0){
  }finally{$driver.Dispose()}
 }
 try{
+ $listener=[Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback,0);$listener.Start();$taskPort=$listener.LocalEndpoint.Port;$listener.Stop()
+ $info=[Diagnostics.ProcessStartInfo]::new();$info.FileName=$taskExe;$info.WorkingDirectory=$taskInstall;$info.UseShellExecute=$false;$info.CreateNoWindow=$true;$info.RedirectStandardOutput=$true;$info.RedirectStandardError=$true
+ $info.Environment['OPENCODEX_SANDBOX']='1';$info.Environment['OPENCODEX_SANDBOX_ROOT']=$taskFixture;$info.Environment['OPENCODEX_WINDOWS_SMOKE_CDP_PORT']=[string]$taskPort
+ foreach($key in @('HOME','OPENCODEX_HOME','CODEX_HOME','CLAUDE_CONFIG_DIR','WEBVIEW2_USER_DATA_FOLDER','WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS')){[void]$info.Environment.Remove($key)}
+ $taskManager=[Diagnostics.Process]::Start($info);$taskStdout=$taskManager.StandardOutput.ReadToEndAsync();$taskStderr=$taskManager.StandardError.ReadToEndAsync()
+ $taskFacts=Get-TwoUserProcessFact $taskManager $taskSid;$taskLedger[[int]$taskFacts.pid]=$taskFacts
+ $applicationToken=Get-WindowsProcessToken $taskManager $taskExe
+ Assert-WindowsProcessMode $applicationToken $taskMode
+ # Let the real product create its recognized v2 structure BEFORE supply writes D.
+ $bootstrapDeadline=[datetime]::UtcNow.AddSeconds(20)
+ do{
+  Add-SessionDescendants
+  $bootstrapWindow=$null;try{$bootstrapWindow=Get-TwoUserWindow $taskFacts}catch{}
+  $bootstrapReady=$bootstrapWindow -and (Test-Path -LiteralPath (Join-Path $taskFixture 'data/desktop/manager-state/data-root.json'))
+  if(!$bootstrapReady){Start-Sleep -Milliseconds 250}
+ }while(!$bootstrapReady -and [datetime]::UtcNow -lt $bootstrapDeadline)
+ if(!$bootstrapReady -or (Test-Path -LiteralPath (Join-Path $taskFixture 'data/opencodex/home/runtime-port.json'))){throw 'Actual empty-product initialization unproved; no supply permitted'}
+ foreach($fact in @($taskLedger.Values | Sort-Object {[long]$_.creationTicks} -Descending)){Stop-TwoUserTracked $fact}
+ if(!$taskManager.WaitForExit(10000)){throw 'Original initialization generation did not exit'}
+ Write-TwoUserJson (Join-Path $taskOutput 'initialization-only.json') @{identity=$taskFacts;token=$applicationToken;window=$bootstrapWindow;originalHandleExited=$true;runtimeStarted=$false;normalExitTest=$false;method='exact-owned fixture preparation cleanup';accepted=$false}
+ $taskManager.Dispose();$taskManager=$null;$taskFacts=$null
  $provisionInfo=[Diagnostics.ProcessStartInfo]::new();$provisionInfo.FileName=$taskProvision;$provisionInfo.ArgumentList.Add($taskFixture);$provisionInfo.UseShellExecute=$false;$provisionInfo.CreateNoWindow=$true;$provisionInfo.RedirectStandardOutput=$true;$provisionInfo.RedirectStandardError=$true
  $provision=[Diagnostics.Process]::Start($provisionInfo)
  try{
@@ -138,10 +173,6 @@ try{
   Write-TwoUserJson (Join-Path $taskOutput 'offline-provision.json') @{identity=$provisionFact;exitCode=$provision.ExitCode;stdout=$provisionOut.GetAwaiter().GetResult();stderr=$provisionErr.GetAwaiter().GetResult();accepted=$false}
   if($provision.ExitCode -ne 0){throw 'Actual offline provisioner refused fresh fixture'}
  }finally{$provision.Dispose()}
- $listener=[Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback,0);$listener.Start();$taskPort=$listener.LocalEndpoint.Port;$listener.Stop()
- $info=[Diagnostics.ProcessStartInfo]::new();$info.FileName=$taskExe;$info.WorkingDirectory=$taskInstall;$info.UseShellExecute=$false;$info.CreateNoWindow=$true;$info.RedirectStandardOutput=$true;$info.RedirectStandardError=$true
- $info.Environment['OPENCODEX_SANDBOX']='1';$info.Environment['OPENCODEX_SANDBOX_ROOT']=$taskFixture;$info.Environment['OPENCODEX_WINDOWS_SMOKE_CDP_PORT']=[string]$taskPort
- foreach($key in @('HOME','OPENCODEX_HOME','CODEX_HOME','CLAUDE_CONFIG_DIR','WEBVIEW2_USER_DATA_FOLDER','WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS')){[void]$info.Environment.Remove($key)}
  $taskManager=[Diagnostics.Process]::Start($info);$taskStdout=$taskManager.StandardOutput.ReadToEndAsync();$taskStderr=$taskManager.StandardError.ReadToEndAsync()
  $taskFacts=Get-TwoUserProcessFact $taskManager $taskSid;$taskLedger[[int]$taskFacts.pid]=$taskFacts
  $applicationToken=Get-WindowsProcessToken $taskManager $taskExe
@@ -209,6 +240,11 @@ try{
  if(!$taskSummary.dailyConfigBytesUnchanged){$taskCleanupFailed=$true}
  $taskSummary.cleanup=if($taskCleanupFailed){'failed'}else{'tracked-generations-exited'}
  $taskSummary.cleanupReceipts=$cleanup
+ if($taskManager -and $taskManager.HasExited){
+  $taskSummary.managerExitCode=$taskManager.ExitCode
+  if($taskStdout){[IO.File]::WriteAllText((Join-Path $taskOutput 'manager-stdout.log'),$taskStdout.GetAwaiter().GetResult())}
+  if($taskStderr){[IO.File]::WriteAllText((Join-Path $taskOutput 'manager-stderr.log'),$taskStderr.GetAwaiter().GetResult())}
+ }
  if($taskManager){$taskManager.Dispose()};Close-TwoUserProcessHandles
  if(!$taskCleanupFailed){
   $null=Assert-TwoUserUnder $taskOutput $taskPrivate
