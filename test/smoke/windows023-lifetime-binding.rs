@@ -173,3 +173,333 @@ pub(crate) fn verify_candidate_file(path: &Path, home: &Path, sid: &str) -> bool
         ..expected
     })
 }
+
+#[cfg(windows)]
+pub(crate) mod native {
+    use super::*;
+    use std::{
+        ffi::c_void,
+        fs::File,
+        io,
+        os::windows::{
+            ffi::{OsStrExt, OsStringExt},
+            fs::OpenOptionsExt,
+            io::{AsRawHandle, FromRawHandle, OwnedHandle},
+        },
+        ptr,
+    };
+    use windows_sys::Win32::{
+        Foundation::{LocalFree, HANDLE},
+        Security::{
+            EqualSid, GetAce, GetSecurityDescriptorControl, GetTokenInformation, IsValidAcl,
+            TokenUser, ACCESS_ALLOWED_ACE, ACE_HEADER, ACL, SE_DACL_PROTECTED,
+        },
+        Storage::FileSystem::{
+            GetFileInformationByHandle, LockFileEx, UnlockFileEx, BY_HANDLE_FILE_INFORMATION,
+        },
+        System::{
+            JobObjects::{
+                IsProcessInJob, JobObjectBasicAccountingInformation, OpenJobObjectW,
+                QueryInformationJobObject, JOBOBJECT_BASIC_ACCOUNTING_INFORMATION,
+            },
+            Threading::{
+                GetProcessId, GetProcessTimes, OpenProcess, OpenProcessToken,
+                QueryFullProcessImageNameW, WaitForSingleObject, PROCESS_QUERY_LIMITED_INFORMATION,
+            },
+        },
+    };
+    #[link(name = "advapi32")]
+    extern "system" {
+        fn GetSecurityInfo(
+            handle: HANDLE,
+            kind: i32,
+            info: u32,
+            owner: *mut *mut c_void,
+            group: *mut *mut c_void,
+            dacl: *mut *mut ACL,
+            sacl: *mut *mut ACL,
+            descriptor: *mut *mut c_void,
+        ) -> u32;
+        fn ConvertStringSidToSidW(text: *const u16, sid: *mut *mut c_void) -> i32;
+    }
+    fn error() -> io::Error {
+        io::Error::other("Candidate native lifetime witness failed; no Stop authority granted")
+    }
+    fn token_matches(process: HANDLE, sid: &str) -> io::Result<()> {
+        unsafe {
+            let mut raw = ptr::null_mut();
+            if OpenProcessToken(process, 8, &mut raw) == 0 {
+                return Err(error());
+            }
+            let token = OwnedHandle::from_raw_handle(raw);
+            let mut needed = 0;
+            GetTokenInformation(
+                token.as_raw_handle(),
+                TokenUser,
+                ptr::null_mut(),
+                0,
+                &mut needed,
+            );
+            if !(16..=65536).contains(&needed) {
+                return Err(error());
+            }
+            let mut storage =
+                vec![0usize; (needed as usize).div_ceil(std::mem::size_of::<usize>())];
+            if GetTokenInformation(
+                token.as_raw_handle(),
+                TokenUser,
+                storage.as_mut_ptr().cast(),
+                needed,
+                &mut needed,
+            ) == 0
+            {
+                return Err(error());
+            }
+            let base = storage.as_ptr() as usize;
+            let actual = *(base as *const *mut c_void);
+            let address = actual as usize;
+            if address < base
+                || address
+                    .checked_add(8)
+                    .is_none_or(|a| a > base + needed as usize)
+            {
+                return Err(error());
+            }
+            let mut expected = ptr::null_mut();
+            let name = wide(std::ffi::OsStr::new(sid));
+            if ConvertStringSidToSidW(name.as_ptr(), &mut expected) == 0 {
+                return Err(error());
+            }
+            let equal = EqualSid(actual, expected);
+            LocalFree(expected);
+            if equal == 0 {
+                return Err(error());
+            }
+            Ok(())
+        }
+    }
+    fn image_matches(process: HANDLE, expected: &Path) -> io::Result<()> {
+        let mut buffer = vec![0u16; 32768];
+        let mut length = buffer.len() as u32;
+        if unsafe { QueryFullProcessImageNameW(process, 0, buffer.as_mut_ptr(), &mut length) } == 0
+        {
+            return Err(error());
+        }
+        let actual = PathBuf::from(std::ffi::OsString::from_wide(&buffer[..length as usize]));
+        if key(&std::fs::canonicalize(actual)?) != key(&std::fs::canonicalize(expected)?) {
+            return Err(error());
+        }
+        Ok(())
+    }
+    fn wide(value: &std::ffi::OsStr) -> Vec<u16> {
+        value.encode_wide().chain(Some(0)).collect()
+    }
+    fn private_job(job: HANDLE, sid: &str) -> io::Result<()> {
+        unsafe {
+            let (mut owner, mut dacl, mut descriptor) =
+                (ptr::null_mut(), ptr::null_mut(), ptr::null_mut());
+            let code = GetSecurityInfo(
+                job,
+                6,
+                5,
+                &mut owner,
+                ptr::null_mut(),
+                &mut dacl,
+                ptr::null_mut(),
+                &mut descriptor,
+            );
+            if code != 0 {
+                return Err(io::Error::from_raw_os_error(code as i32));
+            }
+            let mut expected = ptr::null_mut();
+            let text = wide(std::ffi::OsStr::new(sid));
+            if ConvertStringSidToSidW(text.as_ptr(), &mut expected) == 0 {
+                LocalFree(descriptor);
+                return Err(error());
+            }
+            let result = (|| {
+                let (mut control, mut revision) = (0u16, 0u32);
+                if EqualSid(owner, expected) == 0
+                    || GetSecurityDescriptorControl(descriptor, &mut control, &mut revision) == 0
+                    || control & SE_DACL_PROTECTED == 0
+                    || dacl.is_null()
+                    || IsValidAcl(dacl) == 0
+                    || (*dacl).AceCount != 1
+                {
+                    return Err(error());
+                }
+                let mut ace = ptr::null_mut();
+                if GetAce(dacl, 0, &mut ace) == 0 {
+                    return Err(error());
+                }
+                let header = &*ace.cast::<ACE_HEADER>();
+                if header.AceType != 0 || header.AceFlags != 0 || header.AceSize < 16 {
+                    return Err(error());
+                }
+                let value = &*ace.cast::<ACCESS_ALLOWED_ACE>();
+                let principal = ptr::addr_of!(value.SidStart).cast::<c_void>();
+                let count = *principal.cast::<u8>().add(1) as u16;
+                if count > 15
+                    || header.AceSize != 16 + count * 4
+                    || ![0x10000000, 0x1f003f].contains(&value.Mask)
+                    || EqualSid(principal.cast_mut(), expected) == 0
+                {
+                    return Err(error());
+                }
+                Ok(())
+            })();
+            LocalFree(expected);
+            LocalFree(descriptor);
+            result
+        }
+    }
+    fn count(job: HANDLE) -> io::Result<u32> {
+        unsafe {
+            let mut value = JOBOBJECT_BASIC_ACCOUNTING_INFORMATION::default();
+            let mut returned = 0;
+            if QueryInformationJobObject(
+                job,
+                JobObjectBasicAccountingInformation,
+                (&mut value as *mut JOBOBJECT_BASIC_ACCOUNTING_INFORMATION).cast(),
+                std::mem::size_of_val(&value) as u32,
+                &mut returned,
+            ) == 0
+                || returned as usize != std::mem::size_of_val(&value)
+            {
+                return Err(error());
+            }
+            Ok(value.ActiveProcesses)
+        }
+    }
+    fn created(process: HANDLE) -> io::Result<String> {
+        unsafe {
+            let (mut born, mut exit, mut kernel, mut user) = (
+                std::mem::zeroed(),
+                std::mem::zeroed(),
+                std::mem::zeroed(),
+                std::mem::zeroed(),
+            );
+            if GetProcessTimes(process, &mut born, &mut exit, &mut kernel, &mut user) == 0 {
+                return Err(error());
+            }
+            Ok((((born.dwHighDateTime as u64) << 32) | born.dwLowDateTime as u64).to_string())
+        }
+    }
+    fn lease_id(file: &File) -> io::Result<(u32, String)> {
+        unsafe {
+            let mut info = BY_HANDLE_FILE_INFORMATION::default();
+            if GetFileInformationByHandle(file.as_raw_handle(), &mut info) == 0
+                || info.dwFileAttributes & 0x410 != 0
+                || info.nNumberOfLinks != 1
+            {
+                return Err(error());
+            }
+            Ok((
+                info.dwVolumeSerialNumber,
+                (((info.nFileIndexHigh as u64) << 32) | info.nFileIndexLow as u64).to_string(),
+            ))
+        }
+    }
+    pub(crate) struct Witness {
+        process: OwnedHandle,
+        job: OwnedHandle,
+        lease: File,
+        binding: Binding,
+    }
+    impl Witness {
+        pub(crate) fn live(
+            record: &Path,
+            home: &Path,
+            sid: &str,
+            expected_image: &Path,
+        ) -> io::Result<Self> {
+            if !verify_candidate_file(record, home, sid) {
+                return Err(error());
+            }
+            let raw = std::fs::read(record)?;
+            let value: serde_json::Value = serde_json::from_slice(&raw).map_err(|_| error())?;
+            let binding: Binding =
+                serde_json::from_value(value["candidateBinding"].clone()).map_err(|_| error())?;
+            let process = unsafe {
+                OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION | 0x100000, 0, binding.pid)
+            };
+            if process.is_null() {
+                return Err(error());
+            }
+            let process = unsafe { OwnedHandle::from_raw_handle(process) };
+            token_matches(process.as_raw_handle(), sid)?;
+            image_matches(process.as_raw_handle(), expected_image)?;
+            if unsafe { GetProcessId(process.as_raw_handle()) } != binding.pid
+                || created(process.as_raw_handle())? != binding.created
+                || unsafe { WaitForSingleObject(process.as_raw_handle(), 0) } != 0x102
+            {
+                return Err(error());
+            }
+            let name = wide(std::ffi::OsStr::new(&binding.job));
+            let job = unsafe { OpenJobObjectW(4 | 0x20000, 0, name.as_ptr()) };
+            if job.is_null() {
+                return Err(error());
+            }
+            let job = unsafe { OwnedHandle::from_raw_handle(job) };
+            private_job(job.as_raw_handle(), sid)?;
+            let mut member = 0;
+            if unsafe { IsProcessInJob(process.as_raw_handle(), job.as_raw_handle(), &mut member) }
+                == 0
+                || member != 1
+                || count(job.as_raw_handle())? < 2
+            {
+                return Err(error());
+            }
+            let lease = std::fs::OpenOptions::new()
+                .read(true)
+                .write(true)
+                .share_mode(3)
+                .custom_flags(0x200000)
+                .open(home.join("runtime-lifetime.lease"))?;
+            crate::infrastructure::windows_private_create::verify_runtime_record_handle(&lease)?;
+            if lease_id(&lease)? != (binding.lease_volume, binding.lease_index.clone()) {
+                return Err(error());
+            }
+            let mut overlap = unsafe { std::mem::zeroed() };
+            if unsafe { LockFileEx(lease.as_raw_handle(), 3, 0, 1, 0, &mut overlap) } != 0 {
+                unsafe { UnlockFileEx(lease.as_raw_handle(), 0, 1, 0, &mut overlap) };
+                return Err(error());
+            }
+            if io::Error::last_os_error().raw_os_error() != Some(33)
+                || std::fs::read(record)? != raw
+            {
+                return Err(error());
+            }
+            token_matches(process.as_raw_handle(), sid)?;
+            image_matches(process.as_raw_handle(), expected_image)?;
+            Ok(Self {
+                process,
+                job,
+                lease,
+                binding,
+            })
+        }
+        pub(crate) fn exited(&self) -> io::Result<()> {
+            if unsafe { WaitForSingleObject(self.process.as_raw_handle(), 0) } != 0
+                || created(self.process.as_raw_handle())? != self.binding.created
+                || count(self.job.as_raw_handle())? != 0
+                || lease_id(&self.lease)?
+                    != (self.binding.lease_volume, self.binding.lease_index.clone())
+            {
+                return Err(error());
+            }
+            private_job(self.job.as_raw_handle(), &self.binding.sid)?;
+            crate::infrastructure::windows_private_create::verify_runtime_record_handle(
+                &self.lease,
+            )?;
+            let mut overlap = unsafe { std::mem::zeroed() };
+            if unsafe { LockFileEx(self.lease.as_raw_handle(), 3, 0, 1, 0, &mut overlap) } == 0 {
+                return Err(error());
+            }
+            if unsafe { UnlockFileEx(self.lease.as_raw_handle(), 0, 1, 0, &mut overlap) } == 0 {
+                return Err(error());
+            }
+            Ok(())
+        }
+    }
+}

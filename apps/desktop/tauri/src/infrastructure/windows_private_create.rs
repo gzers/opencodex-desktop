@@ -797,11 +797,15 @@ mod tests {
                     );
                     let script = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
                         .join("../../../test/smoke/windows023-native-lifecycle-lease.mjs");
-                    let result = std::process::Command::new(&bun)
+                    let mut child = std::process::Command::new(&bun)
                         .arg("--no-env-file")
                         .arg(script)
                         .env("OCXD_RECORD_PROBE_PACKAGE", &package)
                         .env("OCXD_LEASE_PROBE_ROOT", &lease_root)
+                        .env(
+                            "OCXD_LEASE_PROBE_RUST_HANDSHAKE",
+                            if candidate_lifetime { "true" } else { "false" },
+                        )
                         .env(
                             "OCXD_LEASE_PROBE_CANDIDATE",
                             if candidate_lifetime { "true" } else { "false" },
@@ -821,8 +825,41 @@ mod tests {
                         .env("CODEX_HOME", home.join(".codex"))
                         .env("OPENCODEX_HOME", &h)
                         .current_dir(task.path())
-                        .output()
+                        .stdout(std::process::Stdio::piped())
+                        .stderr(std::process::Stdio::piped())
+                        .spawn()
                         .expect("isolated native lifetime prototype");
+                    let witness = if candidate_lifetime {
+                        let until = std::time::Instant::now() + std::time::Duration::from_secs(12);
+                        let result = loop {
+                            if lease_root.join("awaiting-rust-live-witness").exists() {
+                                break super::candidate_lifetime_binding::native::Witness::live(
+                                    &lease_root.join("service-ready"),
+                                    &lease_root,
+                                    &expected,
+                                    &bun,
+                                );
+                            }
+                            if child.try_wait().unwrap().is_some()
+                                || std::time::Instant::now() >= until
+                            {
+                                break Err(std::io::Error::other(
+                                    "Candidate live witness handshake did not arrive",
+                                ));
+                            }
+                            std::thread::sleep(std::time::Duration::from_millis(20));
+                        };
+                        // Permit normal synthetic cleanup even when the consumer rejects.
+                        // Failure is retained and asserted after collecting all child logs.
+                        std::fs::write(lease_root.join("rust-live-witness-observed"), b"observed")
+                            .unwrap();
+                        Some(result)
+                    } else {
+                        None
+                    };
+                    let result = child
+                        .wait_with_output()
+                        .expect("collect exact native prototype exit");
                     std::fs::write(
                         evidence.with_file_name(format!("candidate-{case_key}.stdout.log")),
                         &result.stdout,
@@ -840,6 +877,12 @@ mod tests {
                     report[case_key] = serde_json::from_slice::<serde_json::Value>(&result.stdout)
                         .expect("fixed synthetic lifetime report");
                     if candidate_lifetime {
+                        let witness = witness.unwrap().expect(
+                            "Independent Rust live process/Job/lease witness must be valid",
+                        );
+                        witness.exited().expect("Same retained native handles must prove original process exit, emptyJob and freed lease");
+                        report[case_key]["independentRustKernelWitnessAccepted"] =
+                            serde_json::json!(true);
                         let lease = crate::modules::backup::safety::open_file(
                             &lease_root.join("runtime-lifetime.lease"),
                             false,
