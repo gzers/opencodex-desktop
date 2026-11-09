@@ -1,0 +1,21 @@
+   Compiling ocxd-action-terminal-isolated v0.0.0 (/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd023-action-terminal-pq5y4mrr)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.51s
+     Running unittests src/lib.rs (/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd023-action-terminal-pq5y4mrr/target/debug/deps/ocxd_action_terminal_isolated-b3483e40ea1143b5)
+
+running 7 tests
+test production_action::tests::confirmed_actions_return_terminal_gates_without_a_later_status_poll ... ok
+test production_action::tests::requires_confirm_for_every_action ... ok
+test production_action::tests::result_exposes_frozen_action_gates ... ok
+test production_action::tests::unsuccessful_results_cannot_claim_running_or_stopped ... ok
+test production_action::tests::serializes_camel_case_frontend_contract ... ok
+test production_action::tests::startup_timing_diagnostics_stay_out_of_the_product_failure_message ... ok
+test production_action::tests::stop_timeout_keeps_running_state_and_hides_internal_phase_timings ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ocxd_action_terminal_isolated
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -513,3 +513,14 @@ core入口实现 d79497e06（独立core-build/core-sweep、源码/制品/假设�
 首个core42581940251终态：[完整8项状态/假设对照与原件](../../.adg/evidence/0.2.23/core-entry-20261109/run-42581940251/status-table.md)。582.067秒达8–10分钟目标，7过/合并13失败；accepted:false，不是版本验收。首次完整健康确认31288ms超原30000ms，虽实际PID/port/HMAC一致也不能补判；补充Stop卡stop-post-client-restore（请求593ms已进入、9743ms仍未完成，整次10021ms失败），官方还原与原10秒均保留。双SID、私有供应、路径、两类IPC及完整清理均过；假设未被证伪，原13/14错误独立保留。原1411680字节ZIP/SHA25636220f74339e894dd28f160032ee634ba3f965ecafbfb526550c7190500d710e与全成员摘要核验；先公布全表，再集中分析/修复启动确认与官方停止链，未派下一轮。
 
 全表之后同批集中提交两项装配防误判：545e9770e保证子目录同名core-build.json不能逃过清单；c18a4e217保持30秒原断言，迟到但健康的确认标记runtime_start_confirmation_timeout，避免误导为完全未健康。10项装配行为测试/实际PowerShell helper解析/嵌入Node语法与两个错误类别核对过；不改产品语义，不派新轮，不复跑已闭合原型或完整sweep。实际产品启动确认和官方停止仍待采用维护包方案的完整生产者/消费者集成与定位修复，不把本批装配修正写成产品已修复。
+
+
+### 首轮core后产品与验证装配集中修正（尚未派下一轮）
+
+edb908dcf修复已证明成功的终态映射：此前from_state(next)保留Starting/Stopping，虽result为Started/Stopped却继续禁用终态操作；现在只有执行器确认Started映射Running、Stopped映射Stopped，失败/取消不取得终态权限。真实身份、官方就绪/停止及超时断言不变。直接编入生产DTO、提取生产process枚举/状态方法的隔离Rust crate 7测试与strictClippy过，workspace rustfmt过；仅error shell隔离，不能当成完整locked workspace或Windows门通过。
+
+0fa0943c9/4da5f9679仅验证候选装配：原官方manager-risk、ownership-preflight、manager-stop、official-teardown、native-client-restore、grok-restore调用外加固定标签/单调耗时，不序列化token、响应正文或raw error，不改原返回/异常身份与guard。候选trace行为、TS语法、唯一preimage变换/Node语法及workflow检查过。
+
+重要证据边界修正：42578649105的producer是source-only clone且当时未带--no-install，Bun缺node_modules默认可自动安装，所以旧轮能启动不构成锁定离线依赖证明；撤回此前“可排除依赖装配”的外推，只保留实际启动/签名及失败事实。新候选从已固定离线安装包复制依赖，排除原opencodex源码目录，逐文件摘要前后及候选一致，CLI加--no-install，禁止缓存/网络自动补包。复制/tamper/link边界本地验证过，实际Windows仍待。原失败/日志原件不改。
+
+[隔离验证与源码review证据](../../.adg/evidence/0.2.23/core-batch-terminal-and-trace-20261109/verification.json)说明编译fixture漏枚举及路径别名测试初错与纠正；不把后续命令成功冒充初次通过。没有新派core或完整sweep，剩余产品启动确认总耗时和官方停止链、维护包完整生产者/消费者集成仍未完成。目标继续active、无release。

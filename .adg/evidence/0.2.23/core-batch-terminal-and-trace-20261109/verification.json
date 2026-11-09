@@ -1,0 +1,34 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "source": "4da5f9679a44f92f0b7be96960f04c62909ca1ea",
+  "productCommit": "edb908dcf",
+  "testCommits": [
+    "0fa0943c9",
+    "4da5f9679"
+  ],
+  "productChange": "Only verified Started/Stopped outcomes map to Running/Stopped gates; failed/cancelled retain preexisting state",
+  "validation": {
+    "isolatedExactProductionActionTests": 7,
+    "failed": 0,
+    "isolatedStrictClippy": true,
+    "workspaceRustfmt": true,
+    "producerNodeSyntax": true,
+    "traceCandidateTypeScriptTranspilation": true,
+    "traceBehavior": "return/rejection identity, call count, labels, no error data, output boundary and disabled environment checked",
+    "dependencyCopy": "canonical inventory equal, original runtime excluded, tamper and symlink refusal checked",
+    "workflowActionlint": "windows023-record-contract.yml pass"
+  },
+  "limits": [
+    "Isolated Rust crate imports actual production DTO and extracts actual process types/state; error shell isolated. Not full locked workspace or Windows execution.",
+    "Prior run42578649105 source-only producer clone did not explicitly prohibit Bun auto-install; successful startup is retained but NOT accepted as frozen offline dependency proof.",
+    "New overlay copies exact installed offline dependency inventory, verifies before/after digests, runs actual CLI with --no-install. Native execution not yet performed.",
+    "Official Stop/client restore guards, outcomes and budgets unchanged. Fixed-label trace only around original calls.",
+    "No next Windows diagnostic dispatched; core run42581940251 original failures remain."
+  ],
+  "localFixtureCorrections": [
+    "First isolated build omitted LifecycleAction from extraction; compiler failure then corrected to include exact production enum; no product change for test shell.",
+    "First dependency test compared /var alias with canonical /private path, copy exclusion assertion failed; canonical fixture corrected and rerun; production inputs already resolved.",
+    "Trace boundary explicitly passed to child OS whitelist; no credential inherited."
+  ]
+}
