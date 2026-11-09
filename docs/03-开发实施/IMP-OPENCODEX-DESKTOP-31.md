@@ -422,3 +422,13 @@ b07bf7eb2准备下一批候选验证，当前祖先轮仍运行、未重启。�
 祖先固定42562765970完成：[原8931字节ZIP及结果](../../.adg/evidence/0.2.23/native-ancestor-prototypes-42562765970/analysis.json)，SHA256 f081e74e28ab0be88090fd80e0cc1834d9dbbeee7abdc3e0f733b8d70586d842核验，全部独立case通过，strictClippy及fixture/stage移除成功。HOME重命名/junction祖先/歧义路径拒绝，新对象仍满足原validator；direct152.95ms、Node-detached200.74ms，原父退出子仍活继续拒绝。仍accepted:false、未改正式包，尚非实际官方CLI/还原或跨SID验收。
 
 辅助模块／命名Job原型run42563811368固定b07bf7eb2d8e902b8ae43f3fc93ce76efabc2589/job128985818879已确认执行；原14模块不改，新增候选模块有独立SHA且只在临时暂存包，正式names.2归档不变，accepted:false。候选实际validator、重开Job观察与错误Job反例及原3case完整执行，仍非官方启动/还原/跨SID停止门。
+
+
+de89e975d仅隔离候选接入装配：在同一固定stage下另复制完整包到独立opencodex-record-prototype，不修改原目录；严格比对原atomic-write.ts与归档并按唯一预像替换同步runtime-port临时创建入口/外层祖先pin，新增辅助模块，记录两路径摘要。用原atomicWriteFile入口在独立临时H写记录，再原Desktopvalidator读回；非同步writer、其它文件与正式归档均不变。此项源码已推送，尚未派新验证；当前b07轮仍live，不因观察等待重启。PythonAST、Node3脚本语法、Rustfmt/实际3PowerShell块通过，实际Windows接入结果仍待。
+
+
+辅助模块42563811368完成，原9590字节ZIP/SHA256fcfdcd1d2b3f239c34cfa51089bdf2e94bd2a823318c0118b3d67de7144c4d3a核验。新候选模块实际记录由原Desktopvalidator接受、原writer仍owner-mismatch；两Jobobserver关闭重开及wrongJob反例均过，direct128.40ms、Node-detached175.92ms。全部独立case/strictClippy/fixture与stage清理过，见[原回执及范围](../../.adg/evidence/0.2.23/native-helper-prototypes-42563811368/analysis.json)。Local/defaultDACL仍原型，不外推跨会话/跨SID、官方还原和实际Stop。
+
+7c31be8cd固定候选runtime023-record-owner.patch/review，精确names.2归档preimage，两份独立临时源码应用后恰为atomic-write.ts与新增helper两路径且摘要相同，临时源码已清理；patch文件空白context属于原diff表示，原源码/候选源码摘要不改。未生成/提升新归档。64ab25f00补实际原atomic入口的强制发布前失败：原旧记录内容必须不变、仅本次临时文件清理，不能据此更改旧文件owner。
+
+[atomic-overlay42564664257](https://github.com/gzers/opencodex-desktop/actions/runs/42564664257)固定64ab25f00d340f307d1a0baf12cf7fee8b0c1506/job128988462972已确认运行。原14模块与归档先核对，再复制独立包、记录候选两文件摘要，原源码/正式names.2不动；同一个真实原validator读回实际candidate atomicWriteFile及失败保留分支。原三case独立收错保持，结果accepted:false，不是完整sweep/生产启停或跨SID验收。PythonAST/Rustfmt、嵌入writer Node语法、实际3PowerShell块及两次精确补丁检查通过，实际结果待。

@@ -1,0 +1,21 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "runId": 42564664257,
+  "jobId": 128988462972,
+  "source": "64ab25f00d340f307d1a0baf12cf7fee8b0c1506",
+  "statusObserved": "in_progress",
+  "runtimeArchiveChanged": false,
+  "fullSweep": false,
+  "scope": "Separate fixed original package clone; actual atomicWriteFile calls new private temp creator for runtime-port only, retains original hardener/write/fsync/rename/cleanup; unchanged Desktop validator required. Inject beforeRename failure must preserve old bytes and remove only own temp. Previous three independent native cases retained.",
+  "patch": "test/smoke/runtime023-record-owner.patch",
+  "review": "test/smoke/runtime023-record-owner-review.json",
+  "checks": {
+    "twoIndependentExactPatchApplications": "identical2paths",
+    "embeddedWriterNodeSyntax": "pass",
+    "PythonAST": "pass",
+    "RustFmt": "pass",
+    "ActualPowerShellRunBlocksParsed": 3
+  },
+  "limits": "Not signed maintenance artifact, actual official Start/Stop, crossSID or client restoration acceptance"
+}
