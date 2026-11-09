@@ -76,6 +76,10 @@ helper = 'src/lib/windows-runtime-lifetime.ts'
 assert not (output / helper).exists()
 (output / helper).write_bytes((ROOT / 'test/smoke/runtime023-windows-runtime-lifetime.ts').read_bytes())
 changed[helper] = hashlib.sha256((output / helper).read_bytes()).hexdigest()
+boot_helper = 'src/lib/windows-runtime-start-boot.ts'
+assert not (output / boot_helper).exists()
+(output / boot_helper).write_bytes((ROOT / 'test/smoke/runtime023-windows-start-boot.ts').read_bytes())
+changed[boot_helper] = hashlib.sha256((output / boot_helper).read_bytes()).hexdigest()
 trace_helper = 'src/lib/desktop-lifecycle-trace.ts'
 assert not (output / trace_helper).exists()
 (output / trace_helper).write_bytes((ROOT / 'test/smoke/runtime023-lifecycle-trace.ts').read_bytes())
@@ -84,9 +88,11 @@ changed[trace_helper] = hashlib.sha256((output / trace_helper).read_bytes()).hex
 
 
 def cli(text):
-    text = text.replace('import { serviceStayOutExitCode', 'import { acquireWindowsRuntimeLifetime } from "../lib/windows-runtime-lifetime";\nimport { serviceStayOutExitCode', 1)
+    assert text.startswith('#!/usr/bin/env bun\n')
+    text = replace_one(text, '#!/usr/bin/env bun\n', '#!/usr/bin/env bun\nimport "../lib/windows-runtime-start-boot";\n')
+    text = text.replace('import { serviceStayOutExitCode', 'import { currentWindowsRuntimeLifetime } from "../lib/windows-runtime-lifetime";\nimport { serviceStayOutExitCode', 1)
     return replace_one(text, 'async function handleStart(options: { block?: boolean } = {}) {',
-                       'async function handleStart(options: { block?: boolean } = {}) {\n  acquireWindowsRuntimeLifetime(getConfigDir());')
+                       'async function handleStart(options: { block?: boolean } = {}) {\n  if(process.platform==="win32" && !currentWindowsRuntimeLifetime())throw new Error("Desktop service startup has no pre-import lifetime authority");')
 
 
 def state(text):

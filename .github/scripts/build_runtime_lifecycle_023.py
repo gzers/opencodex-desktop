@@ -44,7 +44,7 @@ def build(output,base):
                 'desktopConsumerVersion':'0.2.23',
                 'baseNamesArchiveSha256':parent['sha256'],
                 'recordPatchSha256':record_report['patchSha256'],
-                'sourceFiles':producer_report['actualWindowsProducerPostimages'],
+                'sourceFiles':producer_report['reviewedProducerPostimages'],
                 'upstreamPublished':False,
             }
             files['package.json']=names.json_bytes(package)
