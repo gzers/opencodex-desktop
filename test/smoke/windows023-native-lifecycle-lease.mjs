@@ -2,7 +2,7 @@
 // No TerminateProcess, terminate-job or kill-on-close flag is used.
 import assert from 'node:assert/strict';
 import {dlopen,ptr,FFIType as T} from 'bun:ffi';
-import {writeFileSync,existsSync,renameSync} from 'node:fs';
+import {readFileSync,writeFileSync,existsSync,renameSync} from 'node:fs';
 import {join,resolve,relative,isAbsolute} from 'node:path';
 import {pathToFileURL} from 'node:url';
 assert(process.platform==='win32'&&process.arch==='x64'&&process.env.GITHUB_ACTIONS==='true');
@@ -23,6 +23,8 @@ const lib=dlopen(join(system,'kernel32.dll'),{
  CreateProcessW:{args:[T.ptr,T.ptr,T.ptr,T.ptr,T.i32,T.u32,T.ptr,T.ptr,T.ptr,T.ptr],returns:T.i32},
  ResumeThread:{args:[T.u64],returns:T.u32},
  GetProcessId:{args:[T.u64],returns:T.u32},
+ GetCurrentProcess:{args:[],returns:T.u64},
+ OpenProcess:{args:[T.u32,T.i32,T.u32],returns:T.u64},
  GetProcessTimes:{args:[T.u64,T.ptr,T.ptr,T.ptr,T.ptr],returns:T.i32},
  GetExitCodeProcess:{args:[T.u64,T.ptr],returns:T.i32},
  WaitForSingleObject:{args:[T.u64,T.u32],returns:T.u32},
@@ -41,7 +43,10 @@ function lock(){
 function birth(h){const t=new BigUint64Array(4);assert(k.GetProcessTimes(h,ptr(t.subarray(0,1)),ptr(t.subarray(1,2)),ptr(t.subarray(2,3)),ptr(t.subarray(3,4))));return t[0];}
 function launch(role,job=0n){
  const quote=s=>{assert(!s.includes(String.fromCharCode(34)));return String.fromCharCode(34)+s+String.fromCharCode(34);};
- const app=wide(process.execPath),line=wide(quote(process.execPath)+' --no-env-file '+quote(import.meta.path)+' '+role),cwd=wide(root);
+ const isLauncher=role==='node-launcher',executable=isLauncher?process.env.OCXD_RECORD_PROBE_NODE:process.execPath;
+ assert(executable&&isAbsolute(executable));
+ const script=isLauncher?join(import.meta.dir,'windows023-native-detached-launcher.cjs'):import.meta.path;
+ const app=wide(executable),line=wide(quote(executable)+(isLauncher?' ':' --no-env-file ')+quote(script)+(isLauncher?'':' '+role)),cwd=wide(root);
  const siStorage=new ArrayBuffer(104),si=new Uint8Array(siStorage);new DataView(siStorage).setUint32(0,104,true);
  const piStorage=new ArrayBuffer(24),pi=new Uint8Array(piStorage),v=new DataView(piStorage);
  assert(k.CreateProcessW(ptr(app),ptr(line),null,null,0,4|0x08000000,null,ptr(cwd),ptr(si),ptr(pi)),'Suspended child creation');
@@ -66,28 +71,34 @@ if(role==='grandchild'){
  lib.close();
 }else if(role==='service'){
  const lease=lock();assert(lease,'Service must acquire own lease');const child=launch('grandchild');
- writeFileSync(join(root,'service-ready'),'1');
+ writeFileSync(join(root,'service-ready.tmp'),JSON.stringify({pid:process.pid,created:birth(BigInt(k.GetCurrentProcess())).toString()}));
+ renameSync(join(root,'service-ready.tmp'),join(root,'service-ready'));
  try{await wait(()=>existsSync(join(root,'release-service')),'service release',10000);}
  finally{lease.release();child.close();lib.close();}
 }else{
  assert.equal(role,'controller');const began=performance.now(),job=BigInt(k.CreateJobObjectW(null,null));assert(job!==0n);
- let service;
+ let service,actualService=0n;
  try{
-  service=launch('service',job);const inJob=new Int32Array(1);assert(k.IsProcessInJob(service.handle,job,ptr(inJob)));assert.equal(inJob[0],1);
+  const detached=process.env.OCXD_LEASE_PROBE_DETACHED==='true';
+  service=launch(detached?'node-launcher':'service',job);const inJob=new Int32Array(1);assert(k.IsProcessInJob(service.handle,job,ptr(inJob)));assert.equal(inJob[0],1);
   await wait(()=>existsSync(join(root,'service-ready'))&&existsSync(join(root,'child-ready')),'both ready');
+  const binding=JSON.parse(readFileSync(join(root,'service-ready'),'utf8'));assert(Number.isInteger(binding.pid)&&binding.pid>0&&/^[0-9]+$/.test(binding.created));
+  actualService=BigInt(k.OpenProcess(0x101000,0,binding.pid));assert(actualService!==0n);assert.equal(k.GetProcessId(actualService),binding.pid);assert.equal(birth(actualService).toString(),binding.created);
+  const serverInJob=new Int32Array(1);assert(k.IsProcessInJob(actualService,job,ptr(serverInJob)));assert.equal(serverInJob[0],1);
+  if(detached){await wait(()=>k.WaitForSingleObject(service.handle,0)===0,'Node launcher exit');assert.equal(k.WaitForSingleObject(actualService,0),0x102);}
   assert(active(job)>=2,'Grandchild must inherit the actual job');assert.equal(lock(),null,'Absent runtime record cannot mean stopped while lease held');
   assert.throws(()=>renameSync(join(root,'lifetime.lease'),join(root,'moved.lease')),'Pinned lease cannot be replaced');
   assert.equal(birth(service.handle),service.created);assert.equal(k.GetProcessId(service.handle),service.pid);
-  writeFileSync(join(root,'release-service'),'1');await wait(()=>k.WaitForSingleObject(service.handle,0)===0,'original service exit');
-  const exit=new Uint32Array(1);assert(k.GetExitCodeProcess(service.handle,ptr(exit)));assert.equal(exit[0],0);
+  writeFileSync(join(root,'release-service'),'1');await wait(()=>k.WaitForSingleObject(actualService,0)===0,'original service exit');
+  const exit=new Uint32Array(1);assert(k.GetExitCodeProcess(actualService,ptr(exit)));assert.equal(exit[0],0);assert.equal(birth(actualService).toString(),binding.created);
   assert(active(job)>=1,'Original PID exit alone cannot prove all controlled children exited');
   const afterExit=lock();assert(afterExit);afterExit.release();
   writeFileSync(join(root,'release-child'),'1');await wait(()=>active(job)===0,'controlled set empty');
   const finalLease=lock();assert(finalLease);finalLease.release();
-  console.log(JSON.stringify({accepted:false,diagnosticOnly:true,runtimeChanged:false,productStarted:false,serviceMutation:false,terminationApiUsed:false,killOnCloseUsed:false,suspendedJobAdmission:true,actualInheritedChildVerified:true,recordAbsentWhileLeaseBusyRefused:true,liveLeaseReplacementRefused:true,retainedServicePidAndCreationVerified:true,serviceExitWithChildAliveRefused:true,finalControlledSetEmpty:true,finalLeaseUnheld:true,milliseconds:performance.now()-began,limits:'Synthetic same-SID processes only. Not full HMAC/official restoration/lifecycle/foreign-SID or unmodified Bun detachment integration proof.'}));
+  console.log(JSON.stringify({accepted:false,diagnosticOnly:true,runtimeChanged:false,productStarted:false,serviceMutation:false,terminationApiUsed:false,killOnCloseUsed:false,suspendedJobAdmission:true,nodeDetachedLauncherUsed:detached,detachedServiceStayedInJob:detached,actualInheritedChildVerified:true,recordAbsentWhileLeaseBusyRefused:true,liveLeaseReplacementRefused:true,retainedServicePidAndCreationVerified:true,serviceExitWithChildAliveRefused:true,finalControlledSetEmpty:true,finalLeaseUnheld:true,milliseconds:performance.now()-began,limits:'Synthetic same-SID processes only. Not full HMAC/official restoration/lifecycle/foreign-SID or unmodified official CLI start proof.'}));
  }finally{
   writeFileSync(join(root,'release-service'),'1');writeFileSync(join(root,'release-child'),'1');
   await wait(()=>active(job)===0,'all owned processes cleanup',15000);
-  if(service)service.close();assert(k.CloseHandle(job));lib.close();
+  if(actualService!==0n)assert(k.CloseHandle(actualService));if(service)service.close();assert(k.CloseHandle(job));lib.close();
  }
 }

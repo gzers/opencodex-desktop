@@ -2,7 +2,7 @@
 // and atomic replace. Never changes an existing object's owner or permissions.
 import assert from 'node:assert/strict';
 import {dlopen,ptr,FFIType as T} from 'bun:ffi';
-import {readFileSync,statSync,existsSync} from 'node:fs';
+import {readFileSync,statSync,existsSync,openSync,closeSync,fstatSync,writeFileSync,fsyncSync} from 'node:fs';
 import {join,resolve,relative,isAbsolute} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
@@ -40,7 +40,7 @@ function information(handle){
  assert.equal(v.getUint32(0,true)&(0x10|0x400),0);assert.equal(v.getUint32(40,true),1);
  return [v.getUint32(28,true),v.getUint32(44,true),v.getUint32(48,true)];
 }
-function createNew(path,content){
+function createNew(path,content,viaDescriptor=false){
  assert(below(h,path));
  const security=new BigUint64Array(1),sddl=wide('O:'+sid+'D:P(A;;FA;;;'+sid+')');
  assert(a.symbols.ConvertStringSecurityDescriptorToSecurityDescriptorW(ptr(sddl),1,ptr(security),null));
@@ -50,7 +50,21 @@ function createNew(path,content){
   handle=BigInt(k.symbols.CreateFileW(ptr(name),0xc0020000,3,ptr(sa),1,0x80|0x200000,0n));
   if(handle===0xffffffffffffffffn||handle===0n)throw Error('CREATE_NEW refused');
   const before=information(handle),bytes=Buffer.from(content),written=new Uint32Array(1);
-  assert(k.symbols.WriteFile(handle,ptr(bytes),bytes.length,ptr(written),null));assert.equal(written[0],bytes.length);assert(k.symbols.FlushFileBuffers(handle));
+  if(viaDescriptor){
+   // Native no-share-delete handle pins the empty CREATE_NEW object until
+   // the existing fs descriptor chain has acquired and checked that object.
+   const fd=openSync(path,'r+');
+   try{
+    const disk=statSync(path,{bigint:true}),opened=fstatSync(fd,{bigint:true});
+    assert(opened.isFile()&&opened.nlink===1n&&opened.ino!==0n);assert.equal(disk.ino,opened.ino);assert.equal(disk.dev,opened.dev);
+    acl.hardenSecretPath(path,{required:true});
+    writeFileSync(fd,content,{encoding:'utf8'});fsyncSync(fd);
+    const after=fstatSync(fd,{bigint:true});assert.equal(after.ino,opened.ino);assert.equal(after.dev,opened.dev);assert.equal(after.nlink,1n);
+   }finally{closeSync(fd);}
+  }else{
+   assert(k.symbols.WriteFile(handle,ptr(bytes),bytes.length,ptr(written),null));assert.equal(written[0],bytes.length);
+  }
+  assert(k.symbols.FlushFileBuffers(handle));
   assert.deepEqual(information(handle),before);
  }finally{
   if(handle!==0n&&handle!==0xffffffffffffffffn)assert(k.symbols.CloseHandle(handle));
@@ -70,5 +84,9 @@ try{
  atomic.renameAtomicFile(temp,target);
  const published=statSync(target,{bigint:true});assert.equal(published.ino,initial.ino);assert.equal(published.dev,initial.dev);assert.equal(published.nlink,1n);
  assert.equal(digest(readFileSync(target)),digest(Buffer.from(bytes)));assert(!existsSync(temp));
- console.log(JSON.stringify({accepted:false,diagnosticOnly:true,explicitNewOwner:true,existingCreateRefused:true,originalAclHardenerUsed:true,originalAtomicRenameUsed:true,identityAndBytesPreserved:true,noExistingOwnerRepair:true,runtimeChanged:false}));
+ const bridgeTemp=join(h,'native-fd-runtime-port.new.tmp'),bridgeTarget=join(h,'native-fd-runtime-port.json');
+ createNew(bridgeTemp,bytes,true);const beforeBridge=statSync(bridgeTemp,{bigint:true});
+ atomic.renameAtomicFile(bridgeTemp,bridgeTarget);const afterBridge=statSync(bridgeTarget,{bigint:true});
+ assert.equal(beforeBridge.ino,afterBridge.ino);assert.equal(beforeBridge.dev,afterBridge.dev);assert.equal(afterBridge.nlink,1n);assert.equal(digest(readFileSync(bridgeTarget)),digest(Buffer.from(bytes)));
+ console.log(JSON.stringify({accepted:false,diagnosticOnly:true,explicitNewOwner:true,existingCreateRefused:true,originalAclHardenerUsed:true,originalAtomicRenameUsed:true,identityAndBytesPreserved:true,existingFsDescriptorBridge:true,bridgeCreatedObjectPinned:true,bridgeHardenedBeforeContent:true,noExistingOwnerRepair:true,runtimeChanged:false}));
 }finally{k.close();a.close();}
