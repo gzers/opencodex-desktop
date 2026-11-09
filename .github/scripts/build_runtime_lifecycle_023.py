@@ -16,6 +16,18 @@ def load(name,path):
     value=importlib.util.module_from_spec(spec);spec.loader.exec_module(value);return value
 
 
+def delivery_manifest(report, policy):
+    # Publication verifies every tagged policy field. Keep the independently
+    # computed archive identity authoritative before attaching provenance.
+    for key in ('version', 'archive', 'sha256', 'bytes', 'maintainer', 'installation', 'recordPathFix'):
+        if report.get(key) != policy.get(key):
+            raise ValueError('Built runtime differs from delivery policy: ' + key)
+    for key in report.keys() & policy.keys():
+        if report[key] != policy[key]:
+            raise ValueError('Runtime report/policy conflict: ' + key)
+    return {**policy, **report}
+
+
 def build(output,base):
     output=Path(output)
     assert not output.exists(),'Fresh canonical output required'
@@ -84,7 +96,9 @@ def build(output,base):
             reproducibility=dict(builds=2,equalBytes=True,sha256=[names.sha(value) for value in results],gzipMtime=0,tarMtime=0,tarOwner='0:0',order='sorted-path',format='pax'),
             accepted=False,diagnosticOnly=True,releaseAccepted=False)
         output.mkdir(parents=True)
-        (output/archive).write_bytes(results[0]);(output/'maintained-runtime.json').write_bytes(names.json_bytes(report))
+        (output/archive).write_bytes(results[0])
+        delivery=delivery_manifest(report,json.loads((ROOT/'.github/maintained-runtime.json').read_bytes()))
+        (output/'maintained-runtime.json').write_bytes(names.json_bytes(delivery))
         (output/'maintained-runtime.sha256').write_text(report['sha256']+'  '+archive+'\n')
         (output/'runtime023-rebuild-summary.json').write_bytes(names.json_bytes({key:report[key] for key in ['version','archive','sha256','bytes','composition','reproducibility','accepted','releaseAccepted']}))
         return report
