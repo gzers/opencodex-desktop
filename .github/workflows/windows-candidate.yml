@@ -8,7 +8,7 @@ on:
       purpose:
         description: Package a candidate, or run one bounded diagnostic without a desktop/package
         type: choice
-        options: [local-session-regression, local-session-build, diagnostic-sweep, official-stop-query-profile, official-stop-history-profile, candidate, ordinary-preflight, retention023, query-etw, installer-retention, native-ui, process-exit]
+        options: [record-contract, local-session-regression, local-session-build, diagnostic-sweep, official-stop-query-profile, official-stop-history-profile, candidate, ordinary-preflight, retention023, query-etw, installer-retention, native-ui, process-exit]
         default: diagnostic-sweep
       admission_run:
         description: Successful exact-head push CI run required for query-etw
@@ -48,6 +48,9 @@ permissions:
   contents: read
 
 jobs:
+  record-contract:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'record-contract'
+    uses: ./.github/workflows/windows023-record-contract.yml
   local-session-regression:
     if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'local-session-regression'
     permissions:
