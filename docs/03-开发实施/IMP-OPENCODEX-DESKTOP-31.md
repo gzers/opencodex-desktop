@@ -531,3 +531,5 @@ edb908dcf修复已证明成功的终态映射：此前from_state(next)保留Star
 core-sweep增加producer技术focus（4162f5234），仅对尚未闭合的实际候选生产者/官方停止链收取01入场、12冻结供应、13合并就绪/端口、18自有fixture清理回执，不重复六组native/foreignJob或既有产品路径/IPC门。此技术focus不执行、也不冒称通过双SID产品验收；已过产品门仅显式引用原源/证据，生产集成后仍必须做受影响的双SID同源回归。整版范围不缩小，不改任何原判据。
 
 [派发前判断H-frozen-producer-stop-20261109-02](../../.adg/evidence/0.2.23/core-producer-frozen-20261109/hypothesis.before-dispatch.json)：在完全固定离线依赖、Bun --no-install后，实际CLI应仍启动并通过签名；若原Stop仍失败，固定阶段计时应定位manager或restore。若供应不闭合、启动失败或无阶段证据则此判断不成立/未证实；若原Stop正常完成则反证“原故障持续”。同样保留未知即拒绝/fixture保留/原预算和accepted:false。输入仅复用42580582994/ab0b5d043封存的离线资源，经完整manifest和当前policy比对，绝不把旧产品exe用于新源验收。15项装配行为测试、3workflow actionlint、18实际PowerShell块解析通过。尚未派发，先提交推送判断。
+
+上述判断先在docs7234bbf90推送后，[技术core42586501118](https://github.com/gzers/opencodex-desktop/actions/runs/42586501118)/job129057491679固定4162f5234已确认运行。仍accepted:false、single-owner technical scope，不代替真实双SID或最终制品门；上一完整core的原失败、供应/路径/IPC/清理证据全部保留，不复跑无改动原型。
