@@ -87,7 +87,7 @@ jobs:
             if(!$case.serviceEnteredPrivateJobBeforeOwnChildren -or !$case.finalControlledSetEmpty -or !$case.finalLeaseUnheld -or !$case.privateJobOwnerAndProtectedDaclVerified -or !$case.bindingSevenTamperCounterexamplesRejected){throw 'Actual self-admission must precede children and prove full lifetime cleanup'}
           }
           foreach($case in @($report.candidateLifetimePrototype,$report.detachedCandidateLifetimePrototype)){
-            if(!$case.candidateLifetimeModuleUsed -or !$case.candidateBindingEightMutationsRejected -or !$case.independentRustBindingReaderAccepted -or !$case.finalControlledSetEmpty -or !$case.finalLeaseUnheld -or !$case.privateJobOwnerAndProtectedDaclVerified){throw 'Actual candidate lifetime module and independent Rust binding reader must verify all mutations'}
+            if(!$case.candidateLifetimeModuleUsed -or !$case.candidateBindingEightMutationsRejected -or !$case.independentRustBindingReaderAccepted -or !$case.candidateDuplicateWhileLeaseBusyRefused -or !$case.candidateReplacementWhileChildAliveRefused -or !$case.finalControlledSetEmpty -or !$case.finalLeaseUnheld -or !$case.privateJobOwnerAndProtectedDaclVerified){throw 'Actual candidate lifetime must verify independent binding and duplicate/replacement refusals'}
           }
           cargo clippy --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib --tests -- -D warnings *> (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'strict-clippy.log')
           if($LASTEXITCODE -ne 0){throw 'Strict checks failed'}

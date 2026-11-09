@@ -104,6 +104,12 @@ function verifyPrivateJob(job){
  }finally{k.LocalFree(sd[0]);}
 }
 function boundProof(record,key){return createHmac('sha256',key).update(JSON.stringify(record)).digest();}
+async function candidateContender(expected){
+ const child=Bun.spawn([process.execPath,'--no-env-file',import.meta.path,'candidate-contender'],{env:{...process.env,OCXD_EXPECTED_LIFETIME_REFUSAL:expected},stdin:'ignore',stdout:'pipe',stderr:'pipe'});
+ const stdout=new Response(child.stdout).text(),stderr=new Response(child.stderr).text();
+ const exit=await child.exited;const [out,err]=await Promise.all([stdout,stderr]);
+ assert.equal(exit,0,'Contender must observe exact typed refusal, never acquire authority');assert.equal(err,'');assert.equal(JSON.parse(out).refusal,expected);
+}
 const role=process.argv[2]??'controller';
 function holdPublishedJob(){
  const name=process.env.OCXD_LEASE_PROBE_JOB;assert(name&&(name.startsWith('Local'+String.fromCharCode(92)+'ocxd-private-prototype-')||name.startsWith('Global'+String.fromCharCode(92)+'opencodex-runtime-')));
@@ -111,7 +117,12 @@ function holdPublishedJob(){
  const member=new Int32Array(1);assert(k.IsProcessInJob(BigInt(k.GetCurrentProcess()),h,ptr(member)));assert.equal(member[0],1);
  return h;
 }
-if(role==='grandchild'){
+if(role==='candidate-contender'){
+ const candidate=await import(pathToFileURL(join(runtime,'src/lib/windows-runtime-lifetime.ts')).href);
+ let reason;try{candidate.acquireWindowsRuntimeLifetime(root);}catch(error){reason=error.message;}
+ assert.equal(reason,'Windows runtime lifetime authority cannot be proved: '+process.env.OCXD_EXPECTED_LIFETIME_REFUSAL);
+ console.log(JSON.stringify({accepted:false,diagnosticOnly:true,refusal:process.env.OCXD_EXPECTED_LIFETIME_REFUSAL}));security.close();lib.close();
+}else if(role==='grandchild'){
  const publishedJob=holdPublishedJob();
  writeFileSync(join(root,'child-ready'),'1');
  await wait(()=>existsSync(join(root,'release-child')),'child release',12000);
@@ -167,15 +178,17 @@ if(role==='grandchild'){
   }
   if(detached){await wait(()=>k.WaitForSingleObject(service.handle,0)===0,'Node launcher exit');assert.equal(k.WaitForSingleObject(actualService,0),0x102);}
   assert(active(job)>=2,'Grandchild must inherit the actual job');assert.equal(lock(),null,'Absent runtime record cannot mean stopped while lease held');
+  if(candidateLifetime)await candidateContender('lease-busy');
   assert.throws(()=>renameSync(join(root,candidateLifetime?'runtime-lifetime.lease':'lifetime.lease'),join(root,'moved.lease')),'Pinned lease cannot be replaced');
   assert.equal(birth(service.handle),service.created);assert.equal(k.GetProcessId(service.handle),service.pid);
   writeFileSync(join(root,'release-service'),'1');await wait(()=>k.WaitForSingleObject(actualService,0)===0,'original service exit');
   const exit=new Uint32Array(1);assert(k.GetExitCodeProcess(actualService,ptr(exit)));assert.equal(exit[0],0);assert.equal(birth(actualService).toString(),binding.created);
   assert(active(job)>=1,'Original PID exit alone cannot prove all controlled children exited');
   const afterExit=lock();assert(afterExit);afterExit.release();
+  if(candidateLifetime)await candidateContender('controlled-set-not-empty');
   writeFileSync(join(root,'release-child'),'1');await wait(()=>active(job)===0,'controlled set empty');
   const finalLease=lock();assert(finalLease);finalLease.release();
-  console.log(JSON.stringify({accepted:false,diagnosticOnly:true,runtimeChanged:false,productStarted:false,serviceMutation:false,terminationApiUsed:false,killOnCloseUsed:false,suspendedJobAdmission:!selfJob,serviceEnteredPrivateJobBeforeOwnChildren:selfJob,candidateLifetimeModuleUsed:candidateLifetime,candidateBindingEightMutationsRejected:candidateLifetime,nodeDetachedLauncherUsed:detached,detachedServiceStayedInJob:detached,observerReopenedNamedJob:true,privateJobOwnerAndProtectedDaclVerified:true,bindingSevenTamperCounterexamplesRejected:true,wrongJobMembershipRejected:true,actualInheritedChildVerified:true,recordAbsentWhileLeaseBusyRefused:true,liveLeaseReplacementRefused:true,retainedServicePidAndCreationVerified:true,serviceExitWithChildAliveRefused:true,finalControlledSetEmpty:true,finalLeaseUnheld:true,milliseconds:performance.now()-began,limits:'Synthetic same-SID candidate or LocalJob/test HMAC. Not protected production record publication, server attestation/official restoration/lifecycle/foreign-SID or original official CLI proof.'}));
+  console.log(JSON.stringify({accepted:false,diagnosticOnly:true,runtimeChanged:false,productStarted:false,serviceMutation:false,terminationApiUsed:false,killOnCloseUsed:false,suspendedJobAdmission:!selfJob,serviceEnteredPrivateJobBeforeOwnChildren:selfJob,candidateLifetimeModuleUsed:candidateLifetime,candidateBindingEightMutationsRejected:candidateLifetime,candidateDuplicateWhileLeaseBusyRefused:candidateLifetime,candidateReplacementWhileChildAliveRefused:candidateLifetime,nodeDetachedLauncherUsed:detached,detachedServiceStayedInJob:detached,observerReopenedNamedJob:true,privateJobOwnerAndProtectedDaclVerified:true,bindingSevenTamperCounterexamplesRejected:true,wrongJobMembershipRejected:true,actualInheritedChildVerified:true,recordAbsentWhileLeaseBusyRefused:true,liveLeaseReplacementRefused:true,retainedServicePidAndCreationVerified:true,serviceExitWithChildAliveRefused:true,finalControlledSetEmpty:true,finalLeaseUnheld:true,milliseconds:performance.now()-began,limits:'Synthetic same-SID candidate or LocalJob/test HMAC. Not protected production record publication, server attestation/official restoration/lifecycle/foreign-SID or original official CLI proof.'}));
  }finally{
   writeFileSync(join(root,'release-service'),'1');writeFileSync(join(root,'release-child'),'1');
   if(job===0n)job=BigInt(k.OpenJobObjectW(4|0x20000,0,ptr(jobWide)));
