@@ -358,3 +358,15 @@ a581ea0ca只增加test/.github只读定位，产品apps树4bfcbcc6与8ca50832b�
 
 
 原生只读原型[run42545767548](https://github.com/gzers/opencodex-desktop/actions/runs/42545767548)固定2c6edebc32909c9a16e6666836c22ca6cf05037d/job128930335757已确认运行，accepted:false；只做技术验证，不是下一完整28项轮。
+
+### 本地真实活动会话排查与集中返修（2026-11-09）
+
+按用户本轮要求，不发布、不改日常配置、不跑真实业务同步；原30秒启动/10秒停止/5秒状态及身份、还原、退出断言不变。先读取IMP-31/32/33，fetch采用2c6edebc3，codex/0.2.23-integration单线推进，原R33全28项26过/2失败保留。[全表、失败边界及清理](../../.adg/evidence/0.2.23/local-active-sessions-20261109/status-table.md)拥有本轮逐项原始回执，不关闭P23-05/10/08/09。
+
+Administrator控制台真实SID…500/session1/elevated true与15119 RDP SID…1001/session2/elevated false同时Active。15119账户属于管理员组但令牌未提升，不能冒充非管理员组标准账户。42547758411精确2c6edebc3的MSVC程序ZIP302488994字节/SHA256 b182dc5877d995fbfc8ee856285a4f62fb35489a22630ae7325813510db4cb8c和6内部成员核验；42549558661工具只调用同源原生离线供应函数准备新Sandbox，产品及names.2运行包字节不改。Sandbox覆盖真实身份/启停/托盘，不替代OS Profile默认根、DPAPI/IPC或正式安装。
+
+有效sessions-04：RDP Start15234ms、PID40612/自动53147/HMAC/真实Codex路由通过，Status384ms。控制台固定53147在360ms typed port_conflict拒绝，原30秒记录缺席且RDP同代次监听/认证保持；但自动选择49500/PID10172后原Start30011ms失败，自己的HMAC有效而Desktop显示peer40612/53147，迟到ready不补判。控制台补充Stop191ms报lifecycle_stop_unknown；RDP正常Stop5143ms报open recovery process identity拒绝访问。控制台后来因夹具快速驱动/CIM竞态被自有清理，不能归因RDP误停；完整双服务互不干扰和还原门未过。双方托盘隐藏重开有用户回报及同PID/窗口日志；RDP正常托盘退出原句柄exit0，控制台正常退出另做独立同源窗口补验，见全表。
+
+集中修复前已说明方案：f19bafcb6修测试准备顺序及产品计时之外的快速驱动身份握手；0eb42ebc0修只读原型小缓冲区物化导致的指针失效；4fff1d5ca拒绝managed缺本H认证记录时CLI误认其它账户的live快照，只接受明确本H/无PID/无矛盾live字段的Stopped诊断，读后仍核对本H记录缺席。正常Stop仍需原归属/还原/退出证明。原型42545767548旧失败ZIP/SHA256 d17068cc56edd3da1c0cc8064e7c81b099bc624229306c33aeaf235e357edd50及本机原样token-pointer保留；修后普通令牌42552474525原ZIP15672139字节/SHA256 a852f012d8197e2fbb27ef83dbcb71500e9596ecf736406ba9e01bff0e76e544、28成员与实际exit0/账户Profile移除/源码及制品和desktop ACL恢复核验，完整三轮4.55/8.19/3.54ms，[原回执](../../.adg/evidence/0.2.23/local-active-sessions-20261109/native-fixed-ci/verification.json)。仅原型技术缺陷修复，未采用维护包或宣称Stop已修复。
+
+普通Stop问题的只读反证：问题进程仅0x1000权限仍error5，WTS不给SID；未采用跳过拒绝访问、按会话推断SID或未知当缺席。后续按H保护租约/退出证明和控制台提升record不可达仍须定位；维护包新行为必须先说明，不把owner猜测当实证。状态保护42552474670实际16过/1原忽略，job因执行器误计数失败；77a641618只改计数，42553369183继续严格回归，最终沿全表，不以局部检查关闭产品门。双方托盘正常退出均有原句柄exit0证明（控制台独立补验）；自有进程/临时任务及私有夹具清理完成，曾被审批拒绝的sessions-03缓存由用户再次按准确路径删除并在10:59:34实证缺席，原失败/首次核验不一致保留。IMP-33的133/58/28/19边界不扩充，整版仍in_progress。

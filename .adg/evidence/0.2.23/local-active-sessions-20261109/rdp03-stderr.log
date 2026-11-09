@@ -1,0 +1,7 @@
+Remove-Item: C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\test\smoke\windows023-active-session.ps1:221
+Line |
+ 221 |    Remove-Item -LiteralPath $taskPrivate -Recurse -Force
+     |    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The process cannot access the file
+     | 'D:\ocxd023-r34-03\rdp\private\sandbox\EBWebView\EBWebView\Default\Cache\No_Vary_Search\journal.baj' because it
+     | is being used by another process.

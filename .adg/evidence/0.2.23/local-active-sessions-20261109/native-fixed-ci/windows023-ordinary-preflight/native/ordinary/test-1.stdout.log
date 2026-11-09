@@ -1,0 +1,17 @@
+
+running 4 tests
+test tests::child_helper ... ok
+test tests::explicit_official_cli_startup_diagnostic ... ok
+
+running 1 test
+executor-preflight-only: exact child wrote own fixture; fullSoftwarePassed=false
+test tests::child_helper ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.03s
+
+test tests::ordinary_profile_temp_and_exact_child_round_trip ... ok
+{"probe":"readonly-native-wrapper-enumeration","accepted":false,"diagnosticOnly":true,"productStarted":false,"serviceOrTaskMutation":false,"terminationApiUsed":false,"fixtureCount":3,"exactMatchAndSuffixForeignHomeCounterexamples":true,"observations":[{"milliseconds":4.551099999999991,"rows":[{"pid":2052,"matched":true,"expectedFixture":true,"fullSameHandleIdentity":true},{"pid":4956,"matched":false,"expectedFixture":true,"fullSameHandleIdentity":true},{"pid":7096,"matched":false,"expectedFixture":true,"fullSameHandleIdentity":true}],"unknown":[],"foreign":[],"exited":[],"complete":true},{"milliseconds":8.19119999999998,"rows":[{"pid":2052,"matched":true,"expectedFixture":true,"fullSameHandleIdentity":true},{"pid":4956,"matched":false,"expectedFixture":true,"fullSameHandleIdentity":true},{"pid":7096,"matched":false,"expectedFixture":true,"fullSameHandleIdentity":true}],"unknown":[],"foreign":[],"exited":[],"complete":true},{"milliseconds":3.537899999999979,"rows":[{"pid":2052,"matched":true,"expectedFixture":true,"fullSameHandleIdentity":true},{"pid":4956,"matched":false,"expectedFixture":true,"fullSameHandleIdentity":true},{"pid":7096,"matched":false,"expectedFixture":true,"fullSameHandleIdentity":true}],"unknown":[],"foreign":[],"exited":[],"complete":true}],"limitations":"Test-only API prototype. Unknown candidates remain unknown; no service absence or actual Stop verdict. No maintained runtime changed. Command lines and token data omitted."}
+test tests::explicit_readonly_official_ownership_diagnostic ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.25s
+

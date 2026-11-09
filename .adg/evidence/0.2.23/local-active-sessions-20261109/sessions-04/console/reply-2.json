@@ -1,0 +1,66 @@
+{
+  "managerAfter": {
+    "pid": 51540,
+    "handle": "3805306",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T02:35:34.9161835Z"
+  },
+  "mode": "start",
+  "restore": null,
+  "sessionId": 1,
+  "runtimeIdentity": null,
+  "managerBefore": {
+    "pid": 51540,
+    "handle": "3805306",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T02:34:20.3060106Z"
+  },
+  "value": {
+    "exitCode": 1,
+    "receipt": {
+      "result": "fail",
+      "failureCode": "runtime_start_not_healthy",
+      "stage": "wait-owned-health",
+      "publicFacts": {
+        "mode": "start",
+        "port": 49500,
+        "action": {
+          "lifecycleState": "starting_failed",
+          "result": null,
+          "failureCode": "lifecycle_timeout",
+          "canStop": false,
+          "canRestart": false
+        },
+        "record": {
+          "pid": 10172,
+          "port": 49500
+        },
+        "automaticPort": {
+          "requested": "omitted",
+          "selected": 49500,
+          "source": "actual-opencodex-runtime-record"
+        },
+        "health": {
+          "status": 200,
+          "proofPresent": true,
+          "attestationVerified": true
+        },
+        "status": {
+          "runtime": "running",
+          "health": "healthy",
+          "source": "live",
+          "pid": "40612",
+          "port": 53147,
+          "protection": "none",
+          "startupStatus": "native",
+          "servicePresent": null,
+          "rebootSafe": true
+        }
+      }
+    },
+    "directory": "D:\\ocxd023-r34-04\\console\\start-d48302ef"
+  },
+  "runtimeToken": null,
+  "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+  "accepted": false
+}

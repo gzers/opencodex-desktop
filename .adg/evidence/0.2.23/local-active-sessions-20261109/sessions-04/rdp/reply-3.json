@@ -1,0 +1,67 @@
+{
+  "managerAfter": {
+    "pid": 98792,
+    "handle": "96670852",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T02:34:31.4898834Z"
+  },
+  "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+  "restore": null,
+  "runtimeToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 40612,
+    "executable": "D:\\ocxd023-r34-04\\rdp\\private\\sandbox\\program\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+    "creationTimeUtc": "2026-11-09T02:31:33.0099793Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-11-09T02:34:33.5603787Z"
+  },
+  "managerBefore": {
+    "pid": 98792,
+    "handle": "96670852",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T02:34:05.5996289Z"
+  },
+  "value": {
+    "exitCode": 0,
+    "receipt": {
+      "result": "pass-runtime-step",
+      "mode": "observe",
+      "home": "D:\\ocxd023-r34-04\\rdp\\private\\sandbox\\data\\opencodex\\home",
+      "root": "D:\\ocxd023-r34-04\\rdp\\private\\sandbox\\data\\desktop",
+      "port": 53147,
+      "record": {
+        "pid": 40612,
+        "port": 53147
+      },
+      "attestation": "verified-production-challenge",
+      "healthService": "opencodex",
+      "version": "2.97.0-desktop023.names.2",
+      "status": {
+        "runtime": "running",
+        "health": "healthy",
+        "source": "live",
+        "pid": "40612",
+        "port": 53147,
+        "protection": null,
+        "startupStatus": null,
+        "servicePresent": null,
+        "rebootSafe": null
+      }
+    },
+    "directory": "D:\\ocxd023-r34-04\\rdp\\observe-492e6713"
+  },
+  "accepted": false,
+  "mode": "observe",
+  "runtimeIdentity": {
+    "pid": 40612,
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+    "path": "D:\\ocxd023-r34-04\\rdp\\private\\sandbox\\program\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+    "creationTicks": "639297882930099793",
+    "sessionId": 2,
+    "generationSource": "retained-handle-native-filetime",
+    "cimImageSupplied": true
+  },
+  "sessionId": 2
+}

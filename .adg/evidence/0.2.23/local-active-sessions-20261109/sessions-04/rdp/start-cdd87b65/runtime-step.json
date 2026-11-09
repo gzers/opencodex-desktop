@@ -1,0 +1,57 @@
+{
+  "result": "pass-runtime-step",
+  "mode": "start",
+  "home": "D:\\ocxd023-r34-04\\rdp\\private\\sandbox\\data\\opencodex\\home",
+  "root": "D:\\ocxd023-r34-04\\rdp\\private\\sandbox\\data\\desktop",
+  "port": 53147,
+  "clientHomeFixture": {
+    "emptyDirectoryInitialized": true,
+    "configSeeded": false,
+    "catalogSeeded": false,
+    "integrationDisabled": false,
+    "actualConfigWritten": true,
+    "actualAssignedPortBound": true
+  },
+  "config": {
+    "path": "D:\\ocxd023-r34-04\\rdp\\private\\sandbox\\data\\opencodex\\home\\config.json",
+    "providers": 1,
+    "syntheticOnly": true,
+    "liveModels": false,
+    "utf8Bom": false,
+    "atomicRename": true
+  },
+  "action": {
+    "lifecycleState": "starting",
+    "result": "started",
+    "failureCode": null,
+    "canStop": false,
+    "canRestart": false
+  },
+  "record": {
+    "pid": 40612,
+    "port": 53147
+  },
+  "attestation": "verified-production-challenge",
+  "healthService": "opencodex",
+  "version": "2.97.0-desktop023.names.2",
+  "status": {
+    "runtime": "running",
+    "health": "healthy",
+    "source": "live",
+    "pid": "40612",
+    "port": 53147,
+    "protection": null,
+    "startupStatus": null,
+    "servicePresent": null,
+    "rebootSafe": null
+  },
+  "startBudget": {
+    "budgetMilliseconds": 30000,
+    "elapsedMilliseconds": 15234
+  },
+  "automaticPort": {
+    "requested": "omitted",
+    "selected": 53147,
+    "source": "actual-opencodex-runtime-record"
+  }
+}

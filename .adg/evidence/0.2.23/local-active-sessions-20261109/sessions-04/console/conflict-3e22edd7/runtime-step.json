@@ -1,0 +1,41 @@
+{
+  "result": "pass-runtime-step",
+  "mode": "conflict",
+  "home": "D:\\ocxd023-r34-04\\console\\private\\sandbox\\data\\opencodex\\home",
+  "root": "D:\\ocxd023-r34-04\\console\\private\\sandbox\\data\\desktop",
+  "port": 53147,
+  "clientHomeFixture": {
+    "emptyDirectoryInitialized": true,
+    "configSeeded": false,
+    "catalogSeeded": false,
+    "integrationDisabled": false
+  },
+  "config": {
+    "path": "D:\\ocxd023-r34-04\\console\\private\\sandbox\\data\\opencodex\\home\\config.json",
+    "providers": 1,
+    "syntheticOnly": true,
+    "liveModels": false,
+    "utf8Bom": false,
+    "atomicRename": true
+  },
+  "action": {
+    "lifecycleState": "starting_failed",
+    "result": null,
+    "failureCode": "port_conflict",
+    "canStop": false,
+    "canRestart": false
+  },
+  "conflict": {
+    "rejected": true,
+    "ownedRecordAbsent": true,
+    "diagnosticMarker": true,
+    "source": "actual-process-action-port_conflict",
+    "canStop": false,
+    "canRestart": false
+  },
+  "status": {
+    "source": "actual-conflict-action-and-absent-owned-record",
+    "lifecycleState": "starting_failed",
+    "claimedRunning": false
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "managerAfter": {
+    "pid": 51540,
+    "handle": "3805306",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T02:34:02.5677602Z"
+  },
+  "mode": "conflict",
+  "restore": null,
+  "sessionId": 1,
+  "runtimeIdentity": null,
+  "managerBefore": {
+    "pid": 51540,
+    "handle": "3805306",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T02:33:17.7522470Z"
+  },
+  "value": {
+    "exitCode": 0,
+    "receipt": {
+      "result": "pass-runtime-step",
+      "mode": "conflict",
+      "home": "D:\\ocxd023-r34-04\\console\\private\\sandbox\\data\\opencodex\\home",
+      "root": "D:\\ocxd023-r34-04\\console\\private\\sandbox\\data\\desktop",
+      "port": 53147,
+      "clientHomeFixture": {
+        "emptyDirectoryInitialized": true,
+        "configSeeded": false,
+        "catalogSeeded": false,
+        "integrationDisabled": false
+      },
+      "config": {
+        "path": "D:\\ocxd023-r34-04\\console\\private\\sandbox\\data\\opencodex\\home\\config.json",
+        "providers": 1,
+        "syntheticOnly": true,
+        "liveModels": false,
+        "utf8Bom": false,
+        "atomicRename": true
+      },
+      "action": {
+        "lifecycleState": "starting_failed",
+        "result": null,
+        "failureCode": "port_conflict",
+        "canStop": false,
+        "canRestart": false
+      },
+      "conflict": {
+        "rejected": true,
+        "ownedRecordAbsent": true,
+        "diagnosticMarker": true,
+        "source": "actual-process-action-port_conflict",
+        "canStop": false,
+        "canRestart": false
+      },
+      "status": {
+        "source": "actual-conflict-action-and-absent-owned-record",
+        "lifecycleState": "starting_failed",
+        "claimedRunning": false
+      }
+    },
+    "directory": "D:\\ocxd023-r34-04\\console\\conflict-3e22edd7"
+  },
+  "runtimeToken": null,
+  "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+  "accepted": false
+}

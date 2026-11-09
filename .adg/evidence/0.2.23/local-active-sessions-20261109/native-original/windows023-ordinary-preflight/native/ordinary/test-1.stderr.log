@@ -1,0 +1,13 @@
+30 | const ntdll=dlopen(join(system,'ntdll.dll'),{
+31 |  NtQueryInformationProcess:{args:[T.u64,T.u32,T.ptr,T.u32,T.ptr],returns:T.i32},
+32 | });
+33 | const k=kernel.symbols,a=advapi.symbols,n=ntdll.symbols;
+34 | const wide=(bytes:Uint8Array)=>new TextDecoder('utf-16le',{fatal:true}).decode(bytes);
+35 | const fail=(name:string)=>{throw Error(name);};
+                                      ^
+error: token-pointer
+      at fail (C:\Users\ocxacc5a869ad1a8\.codex-desktop\opencodex\home\[eval]:35:34)
+      at sid (C:\Users\ocxacc5a869ad1a8\.codex-desktop\opencodex\home\[eval]:46:67)
+      at C:\Users\ocxacc5a869ad1a8\.codex-desktop\opencodex\home\[eval]:80:13
+
+Bun v1.4.4 (Windows x64)

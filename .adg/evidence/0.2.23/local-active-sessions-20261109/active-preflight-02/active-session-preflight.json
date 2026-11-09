@@ -1,0 +1,30 @@
+{
+  "accepted": false,
+  "scope": "fixture guards and own native process only; no app/service started",
+  "checks": [
+    {
+      "passed": true,
+      "name": "session runner parses"
+    },
+    {
+      "passed": true,
+      "name": "exactly three literal binding pairs; no fixture expressions executed"
+    },
+    {
+      "passed": true,
+      "name": "reviewed binding exists"
+    },
+    {
+      "passed": true,
+      "name": "reviewed binding exists"
+    },
+    {
+      "passed": true,
+      "name": "reviewed binding exists"
+    },
+    {
+      "passed": true,
+      "name": "only the three Sandbox binding substitutions; entire original driver retained"
+    }
+  ]
+}

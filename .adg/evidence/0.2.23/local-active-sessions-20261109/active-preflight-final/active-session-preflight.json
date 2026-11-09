@@ -1,0 +1,54 @@
+{
+  "checks": [
+    {
+      "name": "session runner parses",
+      "passed": true
+    },
+    {
+      "name": "exactly three literal binding pairs; no fixture expressions executed",
+      "passed": true
+    },
+    {
+      "name": "reviewed binding exists",
+      "passed": true
+    },
+    {
+      "name": "reviewed binding exists",
+      "passed": true
+    },
+    {
+      "name": "reviewed binding exists",
+      "passed": true
+    },
+    {
+      "name": "only the three Sandbox binding substitutions; entire original driver retained",
+      "passed": true
+    },
+    {
+      "name": "original attestation/config/negative-conflict assertions execute",
+      "passed": true
+    },
+    {
+      "name": "own actual retained PID SID session",
+      "passed": true
+    },
+    {
+      "name": "one-tick changed generation rejected",
+      "passed": true
+    },
+    {
+      "name": "wrong actual SID/session rejected before fixture mutation",
+      "passed": true
+    },
+    {
+      "name": "wrong actual SID/session rejected before fixture mutation",
+      "passed": true
+    },
+    {
+      "name": "own exact test process exits",
+      "passed": true
+    }
+  ],
+  "scope": "fixture guards and own native process only; no app/service started",
+  "accepted": false
+}

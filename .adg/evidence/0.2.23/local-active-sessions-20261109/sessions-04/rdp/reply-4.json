@@ -1,0 +1,50 @@
+{
+  "managerAfter": {
+    "pid": 98792,
+    "handle": "96670852",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T02:37:21.1747869Z"
+  },
+  "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+  "restore": null,
+  "runtimeToken": null,
+  "managerBefore": {
+    "pid": 98792,
+    "handle": "96670852",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T02:37:13.1661417Z"
+  },
+  "value": {
+    "exitCode": 1,
+    "receipt": {
+      "result": "fail",
+      "failureCode": "manager_stop_not_confirmed",
+      "stage": "manager-stop",
+      "publicFacts": {
+        "mode": "stop",
+        "port": 53147,
+        "record": {
+          "pid": 40612,
+          "port": 53147
+        },
+        "health": {
+          "status": 200,
+          "proofPresent": true,
+          "attestationVerified": true
+        },
+        "action": {
+          "lifecycleState": "running",
+          "result": null,
+          "failureCode": "lifecycle_unconfirmed",
+          "canStop": true,
+          "canRestart": true
+        }
+      }
+    },
+    "directory": "D:\\ocxd023-r34-04\\rdp\\stop-a2323bf4"
+  },
+  "accepted": false,
+  "mode": "stop",
+  "runtimeIdentity": null,
+  "sessionId": 2
+}
