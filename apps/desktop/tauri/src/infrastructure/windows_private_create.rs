@@ -529,7 +529,7 @@ mod tests {
         std::fs::create_dir_all(&home).unwrap();
         // Call the unchanged atomic writer used by writeRuntimePort, with a
         // synthetic key. No registry, proxy, service or real client is touched.
-        let script = r#"
+        let original_writer = r#"
           const {mkdirSync}=await import('node:fs');
           const {join}=await import('node:path');
           const {pathToFileURL}=await import('node:url');
@@ -542,7 +542,7 @@ mod tests {
           atomicWriteFile(join(h,'runtime-port.json'),JSON.stringify({pid:process.pid,port:1,attestationSecret:'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'}));
         "#;
         let child = std::process::Command::new(&bun)
-            .args(["--no-env-file", "-e", script])
+            .args(["--no-env-file", "-e", original_writer])
             .env("OCXD_RECORD_PROBE_PACKAGE", &package)
             .env("HOME", &home)
             .env("USERPROFILE", &home)
@@ -651,6 +651,47 @@ mod tests {
                     verify_runtime_record_handle(&helper)
                         .expect("candidate module must satisfy original validator");
                     report["candidateMaintainedHelperAccepted"] = serde_json::json!(true);
+                }
+                if let Some(package_overlay) = std::env::var_os("OCXD_RECORD_PROBE_OVERLAY") {
+                    let package_overlay = std::path::PathBuf::from(package_overlay);
+                    assert!(package_overlay.starts_with(&boundary));
+                    let overlay_home = task.path().join("atomic-overlay-home");
+                    std::fs::create_dir(&overlay_home).unwrap();
+                    let result = std::process::Command::new(&bun)
+                        .args(["--no-env-file", "-e", original_writer])
+                        .env("OCXD_RECORD_PROBE_PACKAGE", &package_overlay)
+                        .env("HOME", &home)
+                        .env("USERPROFILE", &home)
+                        .env("APPDATA", home.join("AppData/Roaming"))
+                        .env("LOCALAPPDATA", home.join("AppData/Local"))
+                        .env("CODEX_HOME", home.join(".codex"))
+                        .env("OPENCODEX_HOME", &overlay_home)
+                        .current_dir(task.path())
+                        .output()
+                        .expect("isolated original atomic overlay");
+                    std::fs::write(
+                        evidence.with_file_name("candidate-atomic-overlay.stdout.log"),
+                        &result.stdout,
+                    )
+                    .unwrap();
+                    std::fs::write(
+                        evidence.with_file_name("candidate-atomic-overlay.stderr.log"),
+                        &result.stderr,
+                    )
+                    .unwrap();
+                    assert!(
+                        result.status.success(),
+                        "Candidate atomic overlay must execute successfully"
+                    );
+                    let published = crate::modules::backup::safety::open_file(
+                        &overlay_home.join("runtime-port.json"),
+                        false,
+                    )
+                    .unwrap();
+                    assert_eq!(owner(&published), expected);
+                    verify_runtime_record_handle(&published)
+                        .expect("actual atomic overlay must satisfy original validator");
+                    report["candidateAtomicOverlayAccepted"] = serde_json::json!(true);
                 }
             }));
             if candidate_result.is_err() {

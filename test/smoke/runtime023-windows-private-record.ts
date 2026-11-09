@@ -5,6 +5,8 @@ import {basename,dirname,win32} from 'node:path';
 
 type Native = ReturnType<typeof native>;
 let loaded: Native | undefined;
+const WINDOWS = process.platform === 'win32';
+const ARCH = process.arch;
 function refusal(): never { throw new Error('Private runtime record creation or identity could not be proved'); }
 function wide(value:string):Uint16Array {
   const result=new Uint16Array(value.length+1);
@@ -32,8 +34,8 @@ function native() {
   return {kernel:kernel.symbols,security:security.symbols,sid};
 }
 function applicable(target:string):boolean {
-  if(process.platform!=='win32'||basename(target).toLowerCase()!=='runtime-port.json')return false;
-  if(process.arch!=='x64')refusal();
+  if(!WINDOWS||basename(target).toLowerCase()!=='runtime-port.json')return false;
+  if(ARCH!=='x64')refusal();
   return true;
 }
 function validate(path:string):void {
