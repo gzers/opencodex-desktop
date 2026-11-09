@@ -43,10 +43,10 @@ def build(archive, output, materialize=False):
                     p = root / name
                     p.parent.mkdir(parents=True, exist_ok=True)
                     p.write_bytes(files[name])
-            args = ['git', 'apply', '--no-index', '--whitespace=error']
+            args = ['git', '-c', 'core.autocrlf=false', 'apply', '--no-index', '--whitespace=error']
             subprocess.run(args + ['--check', str(PATCH)], cwd=root, check=True, capture_output=True)
             subprocess.run(args + [str(PATCH)], cwd=root, check=True, capture_output=True)
-            actual = sorted(str(p.relative_to(root)) for p in root.rglob('*') if p.is_file())
+            actual = sorted(p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file())
             assert actual == sorted(row['path'] for row in review['files'])
             for row in review['files']:
                 data = (root / row['path']).read_bytes()
