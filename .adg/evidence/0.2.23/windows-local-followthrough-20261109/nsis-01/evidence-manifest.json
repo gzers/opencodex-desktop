@@ -1,0 +1,182 @@
+{
+  "sourceDirectory": "D:\\ocx-win-followthrough-20261109-230145\\nsis-01",
+  "archivedUtc": "2026-11-09T16:10:48.463141+00:00",
+  "exclusions": [
+    "private sandbox",
+    "bundle/tool binaries",
+    "download range parts",
+    "files over10MiB"
+  ],
+  "files": [
+    {
+      "path": "code/profile-bootstrap.ps1",
+      "bytes": 4818,
+      "sha256": "78b70abe21d7d13130eece2477b2e542f2d47910d570ca74808c564a5a371658"
+    },
+    {
+      "path": "code/windows-bundle-identity.mjs",
+      "bytes": 2768,
+      "sha256": "c4d187de3947b41b0bd0ca1e08d26fe5e59f0f057c2cebf1b0f7bf47b44b147d"
+    },
+    {
+      "path": "code/windows-process-token.ps1",
+      "bytes": 6168,
+      "sha256": "2c3512b4ad51127883a8fee6a37ee53ced616fea286a9825876eec54c7c9feca"
+    },
+    {
+      "path": "code/windows023-local-installer.ps1",
+      "bytes": 17462,
+      "sha256": "6bec2c16e9b2178b35bbe58cf08bf0e0961e83a23d2eede896d90b78e9832950"
+    },
+    {
+      "path": "code/windows023-two-user-native-helper.ps1",
+      "bytes": 108785,
+      "sha256": "6f0f83796e69d269811ae40f86718ab5efabfe375a4383c94d80bfcf0375909d"
+    },
+    {
+      "path": "controller-finished.json",
+      "bytes": 7070,
+      "sha256": "c47a093b9a2f8641a2547bb5483aa3c7e4e5092cc4d5590bc3d07e38294cfb31"
+    },
+    {
+      "path": "controller-launch.json",
+      "bytes": 95,
+      "sha256": "e0cca60cb404b1755c4c2469632ef11fdd1d36e8a1427294262ed3786c09847c"
+    },
+    {
+      "path": "controller.json",
+      "bytes": 699,
+      "sha256": "71278fa63d508b4bd5f8bdf89d775495e66412377eb209d0ea3f019663f79272"
+    },
+    {
+      "path": "host-environment.json",
+      "bytes": 1179,
+      "sha256": "6cd3183447297f7d8afcf30bef35a18ac2a725fd784e47a29fb2fb21578833ff"
+    },
+    {
+      "path": "launch-controller.ps1",
+      "bytes": 772,
+      "sha256": "752f990957c72be3b974be07bd34614149315a214bc565fc58f55c3b35c7bd20"
+    },
+    {
+      "path": "owner/bootstrap-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "owner/bootstrap-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "owner/cell-custom.json",
+      "bytes": 572,
+      "sha256": "dc911c6a6d8071d789d9cb09596b1924699368a7acfc8ca3653cf84f9bff712d"
+    },
+    {
+      "path": "owner/cell-default.json",
+      "bytes": 579,
+      "sha256": "5cccff4046dad8dea6bfe30d2e8fe6b0d23f4408d27a9c6b541aa9b9b60698fc"
+    },
+    {
+      "path": "owner/custom-install-exit.json",
+      "bytes": 166,
+      "sha256": "7f1e3dca1a6e0bc701d02de0299470450c784b6a2ac549a9c4ba1a3076f29501"
+    },
+    {
+      "path": "owner/custom-installed-image.json",
+      "bytes": 352,
+      "sha256": "475fe83987b9ae559974f6b86fb4de995e9443d1c135c384de2e0df6e2a68ff6"
+    },
+    {
+      "path": "owner/custom-reinstall-exit.json",
+      "bytes": 168,
+      "sha256": "9b448da6c91fd5d6ffcdaa30ea869639eaf13765b0df4defc08719fb09aaafaa"
+    },
+    {
+      "path": "owner/custom-reinstalled-image.json",
+      "bytes": 352,
+      "sha256": "475fe83987b9ae559974f6b86fb4de995e9443d1c135c384de2e0df6e2a68ff6"
+    },
+    {
+      "path": "owner/custom-startup/app.log",
+      "bytes": 1234,
+      "sha256": "dfd94790f90928cadbf610e602853800dd9135a6b43dc0209d58216bc6bb2873"
+    },
+    {
+      "path": "owner/custom-startup/startup.json",
+      "bytes": 1203,
+      "sha256": "988b188b77e81e26cbc13a94c1d603ae3c6ede35e1ca90fcfda6a022a97aac26"
+    },
+    {
+      "path": "owner/custom-uninstall-exit.json",
+      "bytes": 168,
+      "sha256": "ed715f313d8c6c29e197c7aea3aa3439893bd39b6e89f7485da391449062cc7a"
+    },
+    {
+      "path": "owner/default-install-exit.json",
+      "bytes": 167,
+      "sha256": "cafca2144ff50da1032d8697ced7f0fcad822bfbb061bbe9ed769ed4a5e19b43"
+    },
+    {
+      "path": "owner/default-installed-image.json",
+      "bytes": 352,
+      "sha256": "475fe83987b9ae559974f6b86fb4de995e9443d1c135c384de2e0df6e2a68ff6"
+    },
+    {
+      "path": "owner/default-reinstall-exit.json",
+      "bytes": 169,
+      "sha256": "37a00bdebc3fbed596241c172c19a9d7b69adf3d8925429e1d23258a6989cde4"
+    },
+    {
+      "path": "owner/default-reinstalled-image.json",
+      "bytes": 352,
+      "sha256": "475fe83987b9ae559974f6b86fb4de995e9443d1c135c384de2e0df6e2a68ff6"
+    },
+    {
+      "path": "owner/default-startup/app.log",
+      "bytes": 617,
+      "sha256": "97c1463e018229c50e496daf0d81110b5e675cb122f5bbf35f833eaef4a8a546"
+    },
+    {
+      "path": "owner/default-startup/startup.json",
+      "bytes": 1213,
+      "sha256": "44ee9fabb6685ae3c92ca8ad599dba5d0615dffe1356e2f5dfa0cdfe36e999e6"
+    },
+    {
+      "path": "owner/default-uninstall-exit.json",
+      "bytes": 169,
+      "sha256": "2b3ab7a4a6060b9d6fcf891a868b544f5f1c8ce9884cbaf8957c7fae2e7b4ef3"
+    },
+    {
+      "path": "owner/input.json",
+      "bytes": 573,
+      "sha256": "c50399da80b511b572bdf1d06932134e67e29d28c9615f2d70b819036b198704"
+    },
+    {
+      "path": "owner/installer-finished.json",
+      "bytes": 2002,
+      "sha256": "31bf8705e731cbb3c16a48106f48aac0483a911689cfdcf6c1462bd692d44a82"
+    },
+    {
+      "path": "owner/ordinary-known-folders.json",
+      "bytes": 277,
+      "sha256": "978c93197a75b797d9c1f86f4dbe6f69417bad9163ebd3ac0c6adbcb3598df3c"
+    },
+    {
+      "path": "owner/ordinary-profile.json",
+      "bytes": 455,
+      "sha256": "6316b5e3b88b963288030b90e3638e09d712ba515c53594f8b1acedb394e25d9"
+    },
+    {
+      "path": "provisioned.json",
+      "bytes": 842,
+      "sha256": "f15feca9d9935366186cd61842dd50aed76c0efda46cc55bf4f59b6353dcef38"
+    },
+    {
+      "path": "session-samples.jsonl",
+      "bytes": 26358,
+      "sha256": "88447fae2e7dd2c5b4cf7ebda8fcf0a81dadacc5d70eef6810a596535539f6b2"
+    }
+  ]
+}

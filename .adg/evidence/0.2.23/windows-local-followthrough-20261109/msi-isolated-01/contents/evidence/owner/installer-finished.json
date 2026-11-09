@@ -1,0 +1,47 @@
+{
+  "accepted": false,
+  "source": "0302b66082e2c0314e7911f1f9c771d265dddfdf",
+  "kind": "msi",
+  "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+  "profile": "C:\\Users\\ocxaccu145a44467c",
+  "token": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 6156,
+    "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+    "creationTimeUtc": "2026-11-09T15:55:12.3791001Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-09T15:55:14.1402141Z"
+  },
+  "cells": [
+    {
+      "mode": "default",
+      "runtimeTreeSha256": "ed19f96fd40bb19098350aef044739919bb94ee2c5e2a620f86130e160069955",
+      "reinstallExit": 0,
+      "userDataRetained": true,
+      "sentinelSha256": "C021AB5FD0516FE0B3F093BAC937BE4CBB590EA736DE086A4174DE3238C40CC1",
+      "installRoot": "C:\\Users\\ocxaccu145a44467c\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+      "installExit": 0,
+      "sentinel": "C:\\Users\\ocxaccu145a44467c\\.codex-desktop\\desktop\\exports\\local-installer-default.sentinel",
+      "imageRemoved": true,
+      "uninstallExit": 0,
+      "runtimePreservedOnReinstall": true
+    },
+    {
+      "mode": "custom",
+      "runtimeTreeSha256": "13f23cbeb59a52dee004332fbbb44aff067731aec211a9a92ec552f1a477a3fb",
+      "reinstallExit": 0,
+      "userDataRetained": true,
+      "sentinelSha256": "C021AB5FD0516FE0B3F093BAC937BE4CBB590EA736DE086A4174DE3238C40CC1",
+      "installRoot": "C:\\Users\\ocxaccu145a44467c\\Installer fixture Ω\\自定义 程序",
+      "installExit": 0,
+      "sentinel": "C:\\Users\\ocxaccu145a44467c\\.codex-desktop\\desktop\\exports\\local-installer-custom.sentinel",
+      "imageRemoved": true,
+      "uninstallExit": 0,
+      "runtimePreservedOnReinstall": true
+    }
+  ],
+  "passed": true,
+  "scope": "Fresh local owner; default/custom install, exact image, offline supply, same-version reinstall retention, uninstall user-data retention; no service Start/sync"
+}

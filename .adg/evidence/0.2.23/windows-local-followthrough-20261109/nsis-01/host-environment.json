@@ -1,0 +1,19 @@
+{
+  "hypothesis": "New per-user NSIS will install in new owner default and Unicode custom path; offline supply works; same-version reinstall retains runtime and user data; normal uninstall removes image and retains user data",
+  "buildRun": 42645465791,
+  "machine": "EZIO-MINI",
+  "harnessCheckout": "95d91deb62f8d8c5df9cf2d835411f3bd707271a",
+  "sessionInventory": [
+    " USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME",
+    " administrator         console             1  Active    1+23:03  2026/10/10 9:16",
+    ">15119                 rdp-tcp#0           2  Active          .  2026/10/10 9:18",
+    " liangjh23                                 3  Disc         4:54  2026/10/10 9:55"
+  ],
+  "productAppsTree": "a4acf4ad2c0fb25420471d50a7d8e11897362068",
+  "osCaption": "Microsoft Windows Server 2025 Datacenter",
+  "scope": "Only one new ordinary installation owner, own HKCU and private directories; no service Start/no sync/no daily install or machine policy change",
+  "artifact": 13687777600,
+  "productSource": "0302b66082e2c0314e7911f1f9c771d265dddfdf",
+  "writtenUtc": "2026-11-09T15:49:35.5463683Z",
+  "build": "26100"
+}

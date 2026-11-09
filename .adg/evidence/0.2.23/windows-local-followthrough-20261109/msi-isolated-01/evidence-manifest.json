@@ -1,0 +1,237 @@
+{
+  "sourceDirectory": "D:\\ocx-win-followthrough-20261109-230145\\msi-isolated-01",
+  "archivedUtc": "2026-11-09T16:10:48.507655+00:00",
+  "exclusions": [
+    "private sandbox",
+    "bundle/tool binaries",
+    "download range parts",
+    "files over10MiB"
+  ],
+  "files": [
+    {
+      "path": "artifacts.json",
+      "bytes": 970,
+      "sha256": "c1f3f7e533a3d94d7279fbd17f5f1b0eae1e4419ed6d6786b81a6b948a727a75"
+    },
+    {
+      "path": "build-run-latest.json",
+      "bytes": 17934,
+      "sha256": "b8bdddf04058a7c8d9cb562e9411d9621cf16da92b1f34c19e71d1a8fd0c2519"
+    },
+    {
+      "path": "contents/evidence/code/profile-bootstrap.ps1",
+      "bytes": 4818,
+      "sha256": "78b70abe21d7d13130eece2477b2e542f2d47910d570ca74808c564a5a371658"
+    },
+    {
+      "path": "contents/evidence/code/windows-bundle-identity.mjs",
+      "bytes": 2768,
+      "sha256": "c4d187de3947b41b0bd0ca1e08d26fe5e59f0f057c2cebf1b0f7bf47b44b147d"
+    },
+    {
+      "path": "contents/evidence/code/windows-process-token.ps1",
+      "bytes": 6168,
+      "sha256": "2c3512b4ad51127883a8fee6a37ee53ced616fea286a9825876eec54c7c9feca"
+    },
+    {
+      "path": "contents/evidence/code/windows023-local-installer.ps1",
+      "bytes": 17639,
+      "sha256": "a383a534da8d817a0fadb5b527706e83d2ab04c761f2c844d32a9fc8892fc1e5"
+    },
+    {
+      "path": "contents/evidence/code/windows023-two-user-native-helper.ps1",
+      "bytes": 108785,
+      "sha256": "6f0f83796e69d269811ae40f86718ab5efabfe375a4383c94d80bfcf0375909d"
+    },
+    {
+      "path": "contents/evidence/controller-finished.json",
+      "bytes": 7429,
+      "sha256": "71c30872b07d13884efe361276e1a179a31babc840b0728907c5a156c26759f9"
+    },
+    {
+      "path": "contents/evidence/controller.json",
+      "bytes": 692,
+      "sha256": "70cb56b3a4f8f570211ace789de5a4bdc24d08474ebc51a63a3b0a6857037682"
+    },
+    {
+      "path": "contents/evidence/owner/bootstrap-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "contents/evidence/owner/bootstrap-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "contents/evidence/owner/cell-custom.json",
+      "bytes": 572,
+      "sha256": "9e3dd4b5a4871ca83fd61d0dd863c782daa1039dbbd21850d089e3202b0de0d8"
+    },
+    {
+      "path": "contents/evidence/owner/cell-default.json",
+      "bytes": 579,
+      "sha256": "d9a8049a90d2dcb78b45fdfd447131e3ea8d03b96b3ba0ebc98cd0a8b50b98e7"
+    },
+    {
+      "path": "contents/evidence/owner/custom-install-exit.json",
+      "bytes": 164,
+      "sha256": "b8693ef7f303a55c7876def13e78bbd4d6303f30613d6cdf48b94ee315d16f34"
+    },
+    {
+      "path": "contents/evidence/owner/custom-install.log",
+      "bytes": 127748,
+      "sha256": "e4e964e9f32f2999e8471c231ec3f3346ae48bfbcae26bd355b561cb2d096e46"
+    },
+    {
+      "path": "contents/evidence/owner/custom-installed-image.json",
+      "bytes": 352,
+      "sha256": "d423afcbde8ad0ae79a786801f1c6f35b61a7e91997835e9b9f181d78027b0eb"
+    },
+    {
+      "path": "contents/evidence/owner/custom-reinstall-exit.json",
+      "bytes": 166,
+      "sha256": "bdd67f42dfdb3c98ecec52547da2de8569052461a90a6bef64b2edebb4674737"
+    },
+    {
+      "path": "contents/evidence/owner/custom-reinstall.log",
+      "bytes": 127866,
+      "sha256": "bc40b648075a88aa64803fe3f1fd9c304338fd9054915687f8ce2d3d1cd49696"
+    },
+    {
+      "path": "contents/evidence/owner/custom-reinstalled-image.json",
+      "bytes": 352,
+      "sha256": "d423afcbde8ad0ae79a786801f1c6f35b61a7e91997835e9b9f181d78027b0eb"
+    },
+    {
+      "path": "contents/evidence/owner/custom-startup/app.log",
+      "bytes": 1299,
+      "sha256": "236acc9b483fae277855867aeb74a67af88c456adda315522591becda46cb81b"
+    },
+    {
+      "path": "contents/evidence/owner/custom-startup/startup.json",
+      "bytes": 1202,
+      "sha256": "270213ceef00727afc0dcf4487adcc8a05dc0f412014a646a82a16552826298a"
+    },
+    {
+      "path": "contents/evidence/owner/custom-uninstall-exit.json",
+      "bytes": 166,
+      "sha256": "f3ce6a4e0c4c1a15156cd465270e5b391d80d55bb5e2a9d120e4279e812a7d30"
+    },
+    {
+      "path": "contents/evidence/owner/custom-uninstall.log",
+      "bytes": 120374,
+      "sha256": "b258fe4464e374e4e553d9ada05b01b958cee9ec87a9f6b2757868b6e01206d4"
+    },
+    {
+      "path": "contents/evidence/owner/default-install-exit.json",
+      "bytes": 165,
+      "sha256": "5c15dbcec17bea4c1a0f0c2004e99a805b7e03b035cfa07f6720da7465cc4751"
+    },
+    {
+      "path": "contents/evidence/owner/default-install.log",
+      "bytes": 128112,
+      "sha256": "cfba089a5a8d863b6be31ccb5c94149347a4b8e32933f983d8cb7d6064468526"
+    },
+    {
+      "path": "contents/evidence/owner/default-installed-image.json",
+      "bytes": 352,
+      "sha256": "d423afcbde8ad0ae79a786801f1c6f35b61a7e91997835e9b9f181d78027b0eb"
+    },
+    {
+      "path": "contents/evidence/owner/default-reinstall-exit.json",
+      "bytes": 167,
+      "sha256": "fc8871eb96ab66e1344e79706a042c0982a9483a0d774acec025bb679e1a766b"
+    },
+    {
+      "path": "contents/evidence/owner/default-reinstall.log",
+      "bytes": 128878,
+      "sha256": "fe4dc2711abe06bbe39de2ba41f3147cdb2949f360797efd3ffc7a0916d6b887"
+    },
+    {
+      "path": "contents/evidence/owner/default-reinstalled-image.json",
+      "bytes": 352,
+      "sha256": "d423afcbde8ad0ae79a786801f1c6f35b61a7e91997835e9b9f181d78027b0eb"
+    },
+    {
+      "path": "contents/evidence/owner/default-startup/app.log",
+      "bytes": 560,
+      "sha256": "bb73ac0c12fce864f4d083bb075f2e251c0871dc37aaa4048f4e0e63e489650a"
+    },
+    {
+      "path": "contents/evidence/owner/default-startup/startup.json",
+      "bytes": 1212,
+      "sha256": "6594419bc2656b74869363fc58b08fcd94a613a9035b18661d078f65d3e4bce9"
+    },
+    {
+      "path": "contents/evidence/owner/default-uninstall-exit.json",
+      "bytes": 167,
+      "sha256": "fa8e13a307be5ed573a6a77aec1b0d38464a0446ceb86e34b77bf10f7f309ebf"
+    },
+    {
+      "path": "contents/evidence/owner/default-uninstall.log",
+      "bytes": 121134,
+      "sha256": "b4dd7844a06108213f801aad3a42a8f1a39e08aacc1d6435be12fee41ae0f690"
+    },
+    {
+      "path": "contents/evidence/owner/input.json",
+      "bytes": 553,
+      "sha256": "ea361999b518a2ac1f2a02b304eb8ddc3d020d272d097356b625c0546fe7267b"
+    },
+    {
+      "path": "contents/evidence/owner/installer-finished.json",
+      "bytes": 1997,
+      "sha256": "69669ae31321324b3ed3a29db5b509d3ff5d64ba03134a0da4eb5fc65d992311"
+    },
+    {
+      "path": "contents/evidence/owner/ordinary-known-folders.json",
+      "bytes": 277,
+      "sha256": "05c4e116afb8020d12b74e26bb372161c2cb430efeeddd150dc19802822894d0"
+    },
+    {
+      "path": "contents/evidence/owner/ordinary-profile.json",
+      "bytes": 457,
+      "sha256": "e875625ff2e017e5a692cdae8dd2bc293e85e155b9655862399b3578f30902ae"
+    },
+    {
+      "path": "contents/evidence/provisioned.json",
+      "bytes": 837,
+      "sha256": "679979988dd3be849391bc0c69a1750446f606f0b94c9d9ad70868007b7054af"
+    },
+    {
+      "path": "contents/input-identity.json",
+      "bytes": 1120,
+      "sha256": "0b7220e9591b5f1b31ae85e317cf0ff7223a0afb719c6cb3bd7708fe4f05fa18"
+    },
+    {
+      "path": "contents/msi-server-policy.original.json",
+      "bytes": 391,
+      "sha256": "d798eb9427c1a0fad1cb4d2b92ae0c22f36a904b2d8c0e2d076b5fc0ff9a13bd"
+    },
+    {
+      "path": "contents/msi-server-policy.restored.json",
+      "bytes": 228,
+      "sha256": "42d0a7ef5163511a7d992759cb67f6db9caa51d14981cd0d8eabf0885859b41f"
+    },
+    {
+      "path": "dispatch-request.json",
+      "bytes": 586,
+      "sha256": "d7bdd972daa0f4ac94dfffdf5768e057176005f940eae7add41d5d1e63db11d3"
+    },
+    {
+      "path": "dispatch-response.json",
+      "bytes": 80,
+      "sha256": "9f0279e7b702eec517abf0a9f6350f89a2eeaee75973b141423f1edfd730d6b9"
+    },
+    {
+      "path": "jobs-latest.json",
+      "bytes": 32218,
+      "sha256": "7913e9008bd84b57e4fb6ea9f4bdfdf7d4dcd2ed6edb662fe76e4a9f35c6a6f9"
+    },
+    {
+      "path": "windows023-msi-focused-evidence-42649281070.zip",
+      "bytes": 131967,
+      "sha256": "d6e3f12e03dea24adc06d6969c91d911121ecb36f498df34827f624c1d75e82e"
+    }
+  ]
+}

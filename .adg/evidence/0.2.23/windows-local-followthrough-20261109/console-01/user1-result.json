@@ -1,0 +1,391 @@
+{
+  "accepted": false,
+  "startConfirmed": true,
+  "normalStopExecuted": true,
+  "source": "fdf5d4db551f71cbf493dc97b428f8b9a9364a7a",
+  "start": {
+    "pid": 8132,
+    "port": 49331
+  },
+  "normalStopConfirmed": true,
+  "startReceiptCount": 1,
+  "successfulStartReceiptCount": 1,
+  "uniqueSuccessfulStartReceipt": true,
+  "receipts": [
+    {
+      "sequence": 1,
+      "action": "start",
+      "elapsedMilliseconds": 10713.410899999999,
+      "response": {
+        "raw": "{\"lifecycleState\":\"running\",\"result\":\"started\",\"canStart\":false,\"canStop\":true,\"canRestart\":true}",
+        "value": {
+          "lifecycleState": "running",
+          "result": "started",
+          "canStart": false,
+          "canStop": true,
+          "canRestart": true
+        }
+      }
+    },
+    {
+      "sequence": 2,
+      "action": "stop",
+      "elapsedMilliseconds": 17327.9208,
+      "response": {
+        "raw": "{\"lifecycleState\":\"stopped\",\"result\":\"stopped\",\"canStart\":true,\"canStop\":false,\"canRestart\":false}",
+        "value": {
+          "lifecycleState": "stopped",
+          "result": "stopped",
+          "canStart": true,
+          "canStop": false,
+          "canRestart": false
+        }
+      }
+    }
+  ],
+  "trace": [
+    {
+      "sequence": 1,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 26.72399999999999,
+      "atUtc": "2026-11-09T15:58:29.772Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 2,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 118.58869999999999,
+      "atUtc": "2026-11-09T15:58:29.863Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 3,
+      "stage": "start-proof-begin",
+      "elapsedMilliseconds": 119.43780000000001,
+      "atUtc": "2026-11-09T15:58:29.864Z"
+    },
+    {
+      "sequence": 4,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 120.0889,
+      "atUtc": "2026-11-09T15:58:29.865Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 5,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 125.14920000000001,
+      "atUtc": "2026-11-09T15:58:29.870Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 6,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 125.16479999999999,
+      "atUtc": "2026-11-09T15:58:29.870Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 7,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 440.96909999999997,
+      "atUtc": "2026-11-09T15:58:30.186Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 8,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 449.5818,
+      "atUtc": "2026-11-09T15:58:30.194Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 9,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 460.0922,
+      "atUtc": "2026-11-09T15:58:30.205Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 10,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 460.1645,
+      "atUtc": "2026-11-09T15:58:30.205Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 11,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 604.6242,
+      "atUtc": "2026-11-09T15:58:30.349Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 12,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 604.6841999999999,
+      "atUtc": "2026-11-09T15:58:30.350Z",
+      "command": "process_action",
+      "action": "start"
+    },
+    {
+      "sequence": 1,
+      "stage": "action-return",
+      "elapsedMilliseconds": 10715.011199999999,
+      "atUtc": "2026-11-09T15:58:40.460Z",
+      "action": "start",
+      "rejected": null
+    },
+    {
+      "sequence": 14,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 10740.145999999999,
+      "atUtc": "2026-11-09T15:58:40.485Z",
+      "command": "get_status_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 15,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 11059.7276,
+      "atUtc": "2026-11-09T15:58:40.805Z",
+      "command": "get_status_snapshot"
+    },
+    {
+      "sequence": 16,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 11059.7485,
+      "atUtc": "2026-11-09T15:58:40.805Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 17,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 11065.4738,
+      "atUtc": "2026-11-09T15:58:40.810Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 18,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 11065.4931,
+      "atUtc": "2026-11-09T15:58:40.810Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 19,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 11166.226999999999,
+      "atUtc": "2026-11-09T15:58:40.911Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 20,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 11167.9139,
+      "atUtc": "2026-11-09T15:58:40.913Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 21,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 11175.354099999999,
+      "atUtc": "2026-11-09T15:58:40.920Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 22,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 11175.374,
+      "atUtc": "2026-11-09T15:58:40.920Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 23,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 11376.4715,
+      "atUtc": "2026-11-09T15:58:41.121Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 24,
+      "stage": "start-confirmed",
+      "elapsedMilliseconds": 11378.8198,
+      "atUtc": "2026-11-09T15:58:41.124Z",
+      "pid": 8132,
+      "port": 49331
+    },
+    {
+      "sequence": 25,
+      "stage": "normal-stop-begin",
+      "elapsedMilliseconds": 11378.843799999999,
+      "atUtc": "2026-11-09T15:58:41.124Z"
+    },
+    {
+      "sequence": 26,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 11378.940499999999,
+      "atUtc": "2026-11-09T15:58:41.124Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 27,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 11385.113099999999,
+      "atUtc": "2026-11-09T15:58:41.130Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 28,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 11385.1345,
+      "atUtc": "2026-11-09T15:58:41.130Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 29,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 11510.1935,
+      "atUtc": "2026-11-09T15:58:41.255Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 30,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 11512.6299,
+      "atUtc": "2026-11-09T15:58:41.257Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 31,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 11516.966699999999,
+      "atUtc": "2026-11-09T15:58:41.262Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 32,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 11516.9848,
+      "atUtc": "2026-11-09T15:58:41.262Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 33,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 11621.203,
+      "atUtc": "2026-11-09T15:58:41.366Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 34,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 11621.293399999999,
+      "atUtc": "2026-11-09T15:58:41.366Z",
+      "command": "process_action",
+      "action": "stop"
+    },
+    {
+      "sequence": 2,
+      "stage": "action-return",
+      "elapsedMilliseconds": 17334.0203,
+      "atUtc": "2026-11-09T15:58:47.079Z",
+      "action": "stop",
+      "rejected": null
+    },
+    {
+      "sequence": 36,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 17334.0615,
+      "atUtc": "2026-11-09T15:58:47.079Z",
+      "command": "get_status_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 37,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 18119.8247,
+      "atUtc": "2026-11-09T15:58:47.865Z",
+      "command": "get_status_snapshot"
+    },
+    {
+      "sequence": 38,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 18119.8455,
+      "atUtc": "2026-11-09T15:58:47.865Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 39,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 18124.452,
+      "atUtc": "2026-11-09T15:58:47.869Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 40,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 18124.4704,
+      "atUtc": "2026-11-09T15:58:47.869Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 41,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 18226.3793,
+      "atUtc": "2026-11-09T15:58:47.971Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 42,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 18228.0295,
+      "atUtc": "2026-11-09T15:58:47.973Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 43,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 18256.7869,
+      "atUtc": "2026-11-09T15:58:48.002Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 44,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 18256.8052,
+      "atUtc": "2026-11-09T15:58:48.002Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 45,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 18387.9932,
+      "atUtc": "2026-11-09T15:58:48.133Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 46,
+      "stage": "normal-stop-confirmed",
+      "elapsedMilliseconds": 18389.520099999998,
+      "atUtc": "2026-11-09T15:58:48.134Z"
+    }
+  ]
+}

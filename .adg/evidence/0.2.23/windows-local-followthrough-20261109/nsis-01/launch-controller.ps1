@@ -1,0 +1,4 @@
+$ErrorActionPreference='Stop'
+$b=$PSScriptRoot
+@{controllerPid=$PID;sessionId=[Diagnostics.Process]::GetCurrentProcess().SessionId;atUtc=[datetime]::UtcNow.ToString('o')}|ConvertTo-Json|Set-Content -LiteralPath (Join-Path $b 'controller-launch.json') -Encoding utf8
+try{& 'C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\test\smoke\windows023-local-installer.ps1' -Directory $b -BundleDirectory 'D:\ocx-win-followthrough-20261109-230145\installers-build-02\bundle' -Node 'D:\ocx13-stop-build-20261109-220455\tools\runtime\node\node.exe' -Kind nsis}catch{@{message=$_.Exception.Message;line=$_.InvocationInfo.ScriptLineNumber;atUtc=[datetime]::UtcNow.ToString('o')}|ConvertTo-Json|Set-Content -LiteralPath (Join-Path $b 'launch-failure.json') -Encoding utf8;throw}
