@@ -27,6 +27,11 @@ if not manifest.exists():
     if candidate:manifest=Path(candidate)/'core-build.json'
 if manifest.exists():(dest/'program-manifest.json').write_bytes(manifest.read_bytes())
 result=read('user1/user1-result.json',{})
+if result.get('trace'):
+    # Array position is the immutable event order; a receipt's own sequence may
+    # also be present in the raw row. Do not confuse it with the event ordinal.
+    ordered=[{'eventOrdinal':i+1,'rawTraceRow':row} for i,row in enumerate(result['trace'])]
+    (dest/'event-order.json').write_text(json.dumps({'accepted':False,'orderSource':'Original trace array position, no replay or inferred missing events','events':ordered},ensure_ascii=False,indent=2)+chr(10),encoding='utf-8')
 control=read('controller-finished.json',{})
 native=read('user1/runtime-record-native.json',{})
 receipts=[json.loads(f.read_text(encoding='utf-8-sig')) for f in sorted((batch/'user1').glob('action-*.json')) if not f.name.endswith('.raw.json')]
