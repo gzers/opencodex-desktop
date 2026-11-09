@@ -64,3 +64,13 @@ unchanged-boundary-source-proof.json证明旧run42593238885到当前的IPC/insta
 Profile1018仍Loaded:true，无已证明残留进程；ocxaccu16625a3be3仍禁用且已移出Administrators。禁止强卸hive/删Loaded Profile或重登日常会话；这仍是未解决的清理阻点。三个先前被审批拒删的缓存目录也继续单列，不能宣称全机已清净。
 
 H-W6待定向补证：实际Administrator控制台high + 当前15119 RDP未提升、不同SID且两会话Active，同时运行固定端口冲突及Stop peer保持。复用同源sealed程序，新增测试适配器只迁移source/runtime pin、捕获原生action原文和真实退出码，原动作预算/归属/就绪/还原断言不变。A一次auto Start；B一次预期fixed-port conflict（原30秒无自有记录且typed port_conflict），A同PID端口健康；B再一次auto成功；双方observe；Stop B后A保持，再Stop A。这里A1次成功Start，B2次Start尝试中1次预期拒绝、1次成功，不能写成每方仅一次总尝试。此为尚缺跨桌面/冲突证明所需前置，不重跑已通过孤立批次。Sandbox保护日常配置，不新增产品或维护包行为。
+
+## cross-session-01反证与H-W7（2026-11-10 00:23）
+
+真实console500/session1/high/type1与RDP1001/session2/未提升type3均Active。A Start13324ms/PID81400/50106，B固定50106 typed port_conflict及原30秒无自有记录通过，A原代次健康；B auto Start13788ms/PID93216/57395，双方observe同代次健康。RDP正常Stop一次返回lifecycle_stop_unknown，process_action6797ms，原HMAC健康已证实，内部失败阶段未保留，因此原因仍未知。A正常Stop尚未执行，Stop后peer保持未取得；原样失败保留，不能写H-W6通过。
+
+控制器首错后finish只按自有SID/image/FILETIME/保留句柄清理：两边private删除、daily摘要保持，临时任务删除/lastResult0，原PID和监听缺席；这是失败夹具清理，不冒正常Stop或exit0。本旧适配器未采集清理前真实退出码，明确缺证；后继已补原句柄读码。原四项见cross-session-01/verified-summary.json、每动作action.raw.json、invoke-trace.json、runtime-step.json、reply和finished/task-cleanup。全部manifest摘要保留。
+
+H-W7先补固定内部失败阶段/毫秒序列，仅app.log，不改变公开失败、归属、实际还原、Stop逻辑、HTTP认证或30/10/5秒。另在POST响应读回后加一个固定阶段，以区分传输失败与服务端返回未确认。诊断源4d783585645206c52b49bce8656475d26940c1d7，先构建新Desktop及同源供应fixture，不用旧二进制猜新诊断。下一轮只补受影响跨会话启停协议；没有新阶段证据就停止。未更改维护包，未重验安装器/已通过独立单用户。
+
+Profile1018只读事件显示23:33原加载事件，仍Loaded；没有卸载或新持有者线索，不凭猜测强卸/删账户。托盘六处相关Git对象与2c6基线全部相同，tray-boundary-source-proof.json允许复用旧双方隐藏重开及原句柄正常退出范围，不声称本轮新交互。

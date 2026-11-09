@@ -1,0 +1,99 @@
+{
+  "managerBefore": {
+    "pid": 54612,
+    "handle": "5049972",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T16:15:00.2192473Z"
+  },
+  "runtimeToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 81400,
+    "executable": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\console\\private\\sandbox\\program\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+    "creationTimeUtc": "2026-11-09T16:15:01.1529356Z",
+    "elevated": true,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-09T16:15:20.9630607Z"
+  },
+  "restore": null,
+  "accepted": false,
+  "value": {
+    "exitCode": 0,
+    "receipt": {
+      "result": "pass-runtime-step",
+      "mode": "start",
+      "home": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\console\\private\\sandbox\\data\\opencodex\\home",
+      "root": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\console\\private\\sandbox\\data\\desktop",
+      "port": 50106,
+      "clientHomeFixture": {
+        "emptyDirectoryInitialized": true,
+        "configSeeded": false,
+        "catalogSeeded": false,
+        "integrationDisabled": false,
+        "actualConfigWritten": true,
+        "actualAssignedPortBound": true
+      },
+      "config": {
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\console\\private\\sandbox\\data\\opencodex\\home\\config.json",
+        "providers": 1,
+        "syntheticOnly": true,
+        "liveModels": false,
+        "utf8Bom": false,
+        "atomicRename": true
+      },
+      "action": {
+        "lifecycleState": "running",
+        "result": "started",
+        "failureCode": null,
+        "canStop": true,
+        "canRestart": true
+      },
+      "record": {
+        "pid": 81400,
+        "port": 50106
+      },
+      "attestation": "verified-production-challenge",
+      "healthService": "opencodex",
+      "version": "2.97.0-desktop023.lifecycle.3",
+      "status": {
+        "runtime": "running",
+        "health": "healthy",
+        "source": "live",
+        "pid": "81400",
+        "port": 50106,
+        "protection": null,
+        "startupStatus": null,
+        "servicePresent": null,
+        "rebootSafe": null
+      },
+      "startBudget": {
+        "budgetMilliseconds": 30000,
+        "elapsedMilliseconds": 13324
+      },
+      "automaticPort": {
+        "requested": "omitted",
+        "selected": 50106,
+        "source": "actual-opencodex-runtime-record"
+      }
+    },
+    "directory": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\console\\start-46c68074"
+  },
+  "runtimeIdentity": {
+    "pid": 81400,
+    "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+    "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\console\\private\\sandbox\\program\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+    "creationTicks": "639298377011529356",
+    "sessionId": 1,
+    "generationSource": "retained-handle-native-filetime",
+    "cimImageSupplied": true
+  },
+  "managerAfter": {
+    "pid": 54612,
+    "handle": "5049972",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T16:15:19.6659733Z"
+  },
+  "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+  "sessionId": 1,
+  "mode": "start"
+}

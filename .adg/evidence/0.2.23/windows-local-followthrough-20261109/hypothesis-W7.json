@@ -1,0 +1,18 @@
+{
+  "writtenUtc": "2026-11-09T16:21:57.739650+00:00",
+  "id": "H-W7",
+  "sourceFailure": "cross-session-01/rdp/stop-f618ca57",
+  "observed": "RDP own HMAC health verified; official action returned lifecycle_stop_unknown in6797ms. Current error discards fixed internal phase; exact cause unknown. Both actors cleaned, no retry on old binary.",
+  "hypothesis": "Existing phase markers can separate native witness/private token/capability/POST transport/restore-response rejection; adding only fixed failure-log phase and timings should identify affected boundary on same precise cross-session protocol.",
+  "diagnosticSource": "4d783585645206c52b49bce8656475d26940c1d7",
+  "appsTree": "d2facb41f19ce1ef6930c743460c4f00010bfc12",
+  "noRuntimeChange": true,
+  "noPublicFailureChange": true,
+  "budgetsMilliseconds": {
+    "start": 30000,
+    "stop": 10000,
+    "status": 5000
+  },
+  "nextRun": "After fresh exact-source Desktop and provision fixture both seal, one cross-session affected-protocol attempt. No full/core-sweep/installers. If stage still not identified, stop and state block; do not repeat.",
+  "cleanupEvidenceEnhancement": "Capture original retained exit codes before cleanup; preserve original fail receipts unchanged."
+}

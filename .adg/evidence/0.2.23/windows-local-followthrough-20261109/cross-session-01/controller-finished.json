@@ -1,0 +1,72 @@
+{
+  "accepted": false,
+  "hypothesis": "H-W6",
+  "scope": "Only actual console/RDP overlap, fixed peer-port conflict and normal Stop preservation",
+  "startedUtc": "2026-11-09T16:14:58.5589160Z",
+  "passed": false,
+  "harnessCommit": "e023355b5",
+  "sandbox": true,
+  "defaultProfileOrCredentialAcceptance": false,
+  "identities": {
+    "console": {
+      "accepted": false,
+      "sandbox": true,
+      "applicationToken": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 54612,
+        "executable": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\console\\private\\sandbox\\program\\opencodex-desktop.exe",
+        "creationTimeUtc": "2026-11-09T16:14:15.9977606Z",
+        "elevated": true,
+        "elevationType": 1,
+        "collectedAtUtc": "2026-11-09T16:14:17.0751929Z"
+      },
+      "manager": {
+        "pid": 54612,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\console\\private\\sandbox\\program\\opencodex-desktop.exe",
+        "creationTicks": "639298376559977606",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "port": 62529,
+      "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+      "sessionId": 1
+    },
+    "rdp": {
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+      "port": 56022,
+      "sandbox": true,
+      "sessionId": 2,
+      "applicationToken": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 20068,
+        "executable": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\rdp\\private\\sandbox\\program\\opencodex-desktop.exe",
+        "creationTimeUtc": "2026-11-09T16:14:15.7244343Z",
+        "elevated": false,
+        "elevationType": 3,
+        "collectedAtUtc": "2026-11-09T16:14:16.7014545Z"
+      },
+      "accepted": false,
+      "manager": {
+        "pid": 20068,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\rdp\\private\\sandbox\\program\\opencodex-desktop.exe",
+        "creationTicks": "639298376557244343",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      }
+    }
+  },
+  "fixedConflict": true,
+  "overlap": true,
+  "firstFailure": {
+    "line": 26,
+    "message": "Original runtime gate failed: rdp stop",
+    "atUtc": "2026-11-09T16:17:46.0635589Z"
+  },
+  "finishedUtc": "2026-11-09T16:17:46.0705295Z"
+}

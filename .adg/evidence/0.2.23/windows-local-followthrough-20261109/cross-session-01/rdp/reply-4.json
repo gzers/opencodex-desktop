@@ -1,0 +1,50 @@
+{
+  "runtimeIdentity": null,
+  "managerAfter": {
+    "pid": 20068,
+    "handle": "18877106",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T16:17:45.8879522Z"
+  },
+  "mode": "stop",
+  "restore": null,
+  "sessionId": 2,
+  "managerBefore": {
+    "pid": 20068,
+    "handle": "18877106",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T16:17:30.0807305Z"
+  },
+  "accepted": false,
+  "value": {
+    "exitCode": 1,
+    "receipt": {
+      "result": "fail",
+      "failureCode": "manager_stop_not_confirmed",
+      "stage": "manager-stop",
+      "publicFacts": {
+        "mode": "stop",
+        "port": 57395,
+        "record": {
+          "pid": 93216,
+          "port": 57395
+        },
+        "health": {
+          "status": 200,
+          "proofPresent": true,
+          "attestationVerified": true
+        },
+        "action": {
+          "lifecycleState": "running",
+          "result": null,
+          "failureCode": "lifecycle_stop_unknown",
+          "canStop": true,
+          "canRestart": true
+        }
+      }
+    },
+    "directory": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\rdp\\stop-f618ca57"
+  },
+  "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+  "runtimeToken": null
+}

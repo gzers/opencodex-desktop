@@ -1,0 +1,84 @@
+{
+  "accepted": false,
+  "boundedCrossSessionPassed": false,
+  "productSource": "fdf5d4db551f71cbf493dc97b428f8b9a9364a7a",
+  "harnessSource": "e023355b5",
+  "fixedConflict": true,
+  "overlap": true,
+  "firstFailure": {
+    "line": 26,
+    "message": "Original runtime gate failed: rdp stop",
+    "atUtc": "2026-11-09T16:17:46.0635589Z"
+  },
+  "normalStopsConfirmed": 0,
+  "consoleNormalStopAttempted": false,
+  "cleanupIsNotNormalStop": true,
+  "console": {
+    "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+    "session": 1,
+    "elevated": true,
+    "elevationType": 1,
+    "start": {
+      "budgetMilliseconds": 30000,
+      "elapsedMilliseconds": 13324
+    },
+    "record": {
+      "pid": 81400,
+      "port": 50106
+    },
+    "totalActionReceipts": 1,
+    "successfulStartReceipts": 1,
+    "actions": [
+      {
+        "path": "console/start-46c68074/action.raw.json",
+        "raw": "{\"lifecycleState\":\"running\",\"result\":\"started\",\"canStart\":false,\"canStop\":true,\"canRestart\":true}",
+        "started": true,
+        "failure": null
+      }
+    ],
+    "privateFixtureRemoved": true,
+    "dailyConfigBytesUnchanged": true,
+    "cleanup": "tracked-generations-exited",
+    "originalNormalExitCodeBeforeCleanup": "not collected by this older adapter; never infer from absence"
+  },
+  "rdp": {
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+    "session": 2,
+    "elevated": false,
+    "elevationType": 3,
+    "start": {
+      "budgetMilliseconds": 30000,
+      "elapsedMilliseconds": 13788
+    },
+    "record": {
+      "pid": 93216,
+      "port": 57395
+    },
+    "totalActionReceipts": 3,
+    "successfulStartReceipts": 1,
+    "actions": [
+      {
+        "path": "rdp/conflict-bef7ae33/action.raw.json",
+        "raw": "{\"lifecycleState\":\"starting_failed\",\"result\":null,\"canStart\":true,\"canStop\":false,\"canRestart\":false,\"failure\":{\"code\":\"port_conflict\",\"message\":\"端口 50106 已被占用，请调整端口或重新分配\"}}",
+        "started": false,
+        "failure": "port_conflict"
+      },
+      {
+        "path": "rdp/start-e26e6b23/action.raw.json",
+        "raw": "{\"lifecycleState\":\"running\",\"result\":\"started\",\"canStart\":false,\"canStop\":true,\"canRestart\":true}",
+        "started": true,
+        "failure": null
+      },
+      {
+        "path": "rdp/stop-f618ca57/action.raw.json",
+        "raw": "{\"lifecycleState\":\"running\",\"result\":null,\"canStart\":false,\"canStop\":true,\"canRestart\":true,\"failure\":{\"code\":\"lifecycle_stop_unknown\",\"message\":\"官方停止或客户端还原结果未确认；未强制终止或宣称已停止\"}}",
+        "started": false,
+        "failure": "lifecycle_stop_unknown"
+      }
+    ],
+    "privateFixtureRemoved": true,
+    "dailyConfigBytesUnchanged": true,
+    "cleanup": "tracked-generations-exited",
+    "originalNormalExitCodeBeforeCleanup": "not collected by this older adapter; never infer from absence"
+  }
+}

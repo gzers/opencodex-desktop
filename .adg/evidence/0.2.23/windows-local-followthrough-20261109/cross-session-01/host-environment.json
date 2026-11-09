@@ -1,0 +1,19 @@
+{
+  "fixtureRun": "42647303001",
+  "scope": "H-W6 real console/RDP overlap, fixed-port conflict, Stop peer preservation; fresh Sandbox",
+  "sessionLines": [
+    " USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME",
+    " administrator         console             1  Active    1+23:26  2026/10/10 9:16",
+    ">15119                 rdp-tcp#0           2  Active          7  2026/10/10 9:18",
+    " liangjh23                                 3  Disc         5:18  2026/10/10 9:55"
+  ],
+  "ubr": 33438,
+  "timezone": "China Standard Time",
+  "build": "26100",
+  "noProductChanges": true,
+  "programBuild": "42631183420",
+  "product": "Windows Server 2025 Datacenter",
+  "computer": "EZIO-MINI",
+  "harnessCommit": "e023355b5",
+  "observedUtc": "2026-11-09T16:13:22.0920891Z"
+}

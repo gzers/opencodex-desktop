@@ -1,0 +1,99 @@
+{
+  "runtimeIdentity": {
+    "pid": 93216,
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+    "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\rdp\\private\\sandbox\\program\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+    "creationTicks": "639298377841399141",
+    "sessionId": 2,
+    "generationSource": "retained-handle-native-filetime",
+    "cimImageSupplied": true
+  },
+  "managerAfter": {
+    "pid": 20068,
+    "handle": "18877106",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T16:16:43.0185863Z"
+  },
+  "mode": "start",
+  "restore": null,
+  "sessionId": 2,
+  "managerBefore": {
+    "pid": 20068,
+    "handle": "18877106",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T16:16:23.4293022Z"
+  },
+  "accepted": false,
+  "value": {
+    "exitCode": 0,
+    "receipt": {
+      "result": "pass-runtime-step",
+      "mode": "start",
+      "home": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\rdp\\private\\sandbox\\data\\opencodex\\home",
+      "root": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\rdp\\private\\sandbox\\data\\desktop",
+      "port": 57395,
+      "clientHomeFixture": {
+        "emptyDirectoryInitialized": true,
+        "configSeeded": false,
+        "catalogSeeded": false,
+        "integrationDisabled": false,
+        "actualConfigWritten": true,
+        "actualAssignedPortBound": true
+      },
+      "config": {
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\rdp\\private\\sandbox\\data\\opencodex\\home\\config.json",
+        "providers": 1,
+        "syntheticOnly": true,
+        "liveModels": false,
+        "utf8Bom": false,
+        "atomicRename": true
+      },
+      "action": {
+        "lifecycleState": "running",
+        "result": "started",
+        "failureCode": null,
+        "canStop": true,
+        "canRestart": true
+      },
+      "record": {
+        "pid": 93216,
+        "port": 57395
+      },
+      "attestation": "verified-production-challenge",
+      "healthService": "opencodex",
+      "version": "2.97.0-desktop023.lifecycle.3",
+      "status": {
+        "runtime": "running",
+        "health": "healthy",
+        "source": "live",
+        "pid": "93216",
+        "port": 57395,
+        "protection": null,
+        "startupStatus": null,
+        "servicePresent": null,
+        "rebootSafe": null
+      },
+      "startBudget": {
+        "budgetMilliseconds": 30000,
+        "elapsedMilliseconds": 13788
+      },
+      "automaticPort": {
+        "requested": "omitted",
+        "selected": 57395,
+        "source": "actual-opencodex-runtime-record"
+      }
+    },
+    "directory": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\rdp\\start-e26e6b23"
+  },
+  "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+  "runtimeToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 93216,
+    "executable": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\rdp\\private\\sandbox\\program\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+    "creationTimeUtc": "2026-11-09T16:16:24.1399141Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-11-09T16:16:44.1022041Z"
+  }
+}

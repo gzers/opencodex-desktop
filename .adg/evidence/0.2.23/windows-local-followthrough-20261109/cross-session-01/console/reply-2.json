@@ -1,0 +1,67 @@
+{
+  "managerBefore": {
+    "pid": 54612,
+    "handle": "5049972",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T16:16:01.9709585Z"
+  },
+  "runtimeToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 81400,
+    "executable": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\console\\private\\sandbox\\program\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+    "creationTimeUtc": "2026-11-09T16:15:01.1529356Z",
+    "elevated": true,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-09T16:16:21.0408871Z"
+  },
+  "restore": null,
+  "accepted": false,
+  "value": {
+    "exitCode": 0,
+    "receipt": {
+      "result": "pass-runtime-step",
+      "mode": "observe",
+      "home": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\console\\private\\sandbox\\data\\opencodex\\home",
+      "root": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\console\\private\\sandbox\\data\\desktop",
+      "port": 50106,
+      "record": {
+        "pid": 81400,
+        "port": 50106
+      },
+      "attestation": "verified-production-challenge",
+      "healthService": "opencodex",
+      "version": "2.97.0-desktop023.lifecycle.3",
+      "status": {
+        "runtime": "running",
+        "health": "healthy",
+        "source": "live",
+        "pid": "81400",
+        "port": 50106,
+        "protection": null,
+        "startupStatus": null,
+        "servicePresent": null,
+        "rebootSafe": null
+      }
+    },
+    "directory": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\console\\observe-8b4f56ba"
+  },
+  "runtimeIdentity": {
+    "pid": 81400,
+    "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+    "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\console\\private\\sandbox\\program\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+    "creationTicks": "639298377011529356",
+    "sessionId": 1,
+    "generationSource": "retained-handle-native-filetime",
+    "cimImageSupplied": true
+  },
+  "managerAfter": {
+    "pid": 54612,
+    "handle": "5049972",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T16:16:19.7584196Z"
+  },
+  "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+  "sessionId": 1,
+  "mode": "observe"
+}

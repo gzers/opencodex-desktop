@@ -1,0 +1,122 @@
+[
+  {
+    "reply": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\console\\reply-1.json",
+    "sessions": [
+      " USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME",
+      " administrator         console             1  Active    1+23:28  2026/10/10 9:16",
+      ">15119                 rdp-tcp#0           2  Active          9  2026/10/10 9:18",
+      " liangjh23                                 3  Disc         5:20  2026/10/10 9:55"
+    ],
+    "role": "console",
+    "result": "pass-runtime-step",
+    "atUtc": "2026-11-09T16:15:23.0043572Z",
+    "mode": "start",
+    "record": {
+      "pid": 81400,
+      "port": 50106
+    },
+    "driverExitCode": 0
+  },
+  {
+    "reply": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\rdp\\reply-1.json",
+    "sessions": [
+      " USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME",
+      " administrator         console             1  Active    1+23:29  2026/10/10 9:16",
+      ">15119                 rdp-tcp#0           2  Active         10  2026/10/10 9:18",
+      " liangjh23                                 3  Disc         5:21  2026/10/10 9:55"
+    ],
+    "role": "rdp",
+    "result": "pass-runtime-step",
+    "atUtc": "2026-11-09T16:15:58.3435440Z",
+    "mode": "conflict",
+    "record": null,
+    "driverExitCode": 0
+  },
+  {
+    "reply": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\console\\reply-2.json",
+    "sessions": [
+      " USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME",
+      " administrator         console             1  Active    1+23:29  2026/10/10 9:16",
+      ">15119                 rdp-tcp#0           2  Active         10  2026/10/10 9:18",
+      " liangjh23                                 3  Disc         5:21  2026/10/10 9:55"
+    ],
+    "role": "console",
+    "result": "pass-runtime-step",
+    "atUtc": "2026-11-09T16:16:22.2535068Z",
+    "mode": "observe",
+    "record": {
+      "pid": 81400,
+      "port": 50106
+    },
+    "driverExitCode": 0
+  },
+  {
+    "reply": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\rdp\\reply-2.json",
+    "sessions": [
+      " USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME",
+      " administrator         console             1  Active    1+23:30  2026/10/10 9:16",
+      ">15119                 rdp-tcp#0           2  Active         11  2026/10/10 9:18",
+      " liangjh23                                 3  Disc         5:21  2026/10/10 9:55"
+    ],
+    "role": "rdp",
+    "result": "pass-runtime-step",
+    "atUtc": "2026-11-09T16:16:45.9874573Z",
+    "mode": "start",
+    "record": {
+      "pid": 93216,
+      "port": 57395
+    },
+    "driverExitCode": 0
+  },
+  {
+    "reply": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\console\\reply-3.json",
+    "sessions": [
+      " USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME",
+      " administrator         console             1  Active    1+23:30  2026/10/10 9:16",
+      ">15119                 rdp-tcp#0           2  Active         11  2026/10/10 9:18",
+      " liangjh23                                 3  Disc         5:22  2026/10/10 9:55"
+    ],
+    "role": "console",
+    "result": "pass-runtime-step",
+    "atUtc": "2026-11-09T16:17:07.0783598Z",
+    "mode": "observe",
+    "record": {
+      "pid": 81400,
+      "port": 50106
+    },
+    "driverExitCode": 0
+  },
+  {
+    "reply": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\rdp\\reply-3.json",
+    "sessions": [
+      " USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME",
+      " administrator         console             1  Active    1+23:30  2026/10/10 9:16",
+      ">15119                 rdp-tcp#0           2  Active         11  2026/10/10 9:18",
+      " liangjh23                                 3  Disc         5:22  2026/10/10 9:55"
+    ],
+    "role": "rdp",
+    "result": "pass-runtime-step",
+    "atUtc": "2026-11-09T16:17:28.5454309Z",
+    "mode": "observe",
+    "record": {
+      "pid": 93216,
+      "port": 57395
+    },
+    "driverExitCode": 0
+  },
+  {
+    "reply": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-01\\rdp\\reply-4.json",
+    "sessions": [
+      " USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME",
+      " administrator         console             1  Active    1+23:31  2026/10/10 9:16",
+      ">15119                 rdp-tcp#0           2  Active         12  2026/10/10 9:18",
+      " liangjh23                                 3  Disc         5:22  2026/10/10 9:55"
+    ],
+    "role": "rdp",
+    "result": "fail",
+    "atUtc": "2026-11-09T16:17:46.0382230Z",
+    "mode": "stop",
+    "record": null,
+    "driverExitCode": 1
+  }
+]
