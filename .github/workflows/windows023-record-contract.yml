@@ -1,0 +1,71 @@
+name: Windows 0.2.23 original record contract diagnostic
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  record-contract:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/tauri -> target
+          shared-key: windows-native-ui-018
+          cache-on-failure: true
+      - name: Stage unchanged pinned package in a fresh owned root
+        run: |
+          $ErrorActionPreference='Stop'
+          $taskRoot=Join-Path $env:RUNNER_TEMP ('ocxd-record-contract-'+$env:GITHUB_RUN_ID)
+          if(Test-Path -LiteralPath $taskRoot){throw 'Fresh root required; earlier evidence retained'}
+          New-Item -ItemType Directory -Path $taskRoot | Out-Null
+          'OCXD_RECORD_CONTRACT_ROOT='+$taskRoot >> $env:GITHUB_ENV
+          $node=(Get-Command node.exe).Source
+          $npm=Join-Path (Split-Path -Parent $node) 'node_modules/npm/bin/npm-cli.js'
+          python .github/scripts/stage_runtime_bundle_023.py --platform win32-x64 --build-node $node --npm-cli $npm --output (Join-Path $taskRoot 'stage') *> (Join-Path $taskRoot 'stage.log')
+          if($LASTEXITCODE -ne 0){throw 'Pinned original package staging failed'}
+          $bundle=Join-Path $taskRoot 'stage/platform-bundle/runtime-bundle'
+          'OCXD_RECORD_PROBE_PACKAGE='+(Join-Path $bundle 'runtime/opencodex/node_modules/@bitkyc08/opencodex') >> $env:GITHUB_ENV
+          'OCXD_RECORD_PROBE_BUN='+(Join-Path $bundle 'runtime/bun/bun.exe') >> $env:GITHUB_ENV
+          'OCXD_RECORD_PROBE_REPORT='+(Join-Path $taskRoot 'record-contract.json') >> $env:GITHUB_ENV
+      - name: Observe original writer versus original Desktop validator
+        run: |
+          $ErrorActionPreference='Stop'
+          $env:OCXD_REQUIRE_RUNTIME_BUNDLE='1'
+          cargo fmt --manifest-path apps/desktop/tauri/Cargo.toml --all -- --check
+          if($LASTEXITCODE -ne 0){throw 'Rust formatting failed'}
+          python test/smoke/verify-pinned-profile-source.py $env:OCXD_RECORD_PROBE_PACKAGE (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'source-attestation.json')
+          if($LASTEXITCODE -ne 0){throw 'Original bytes differ'}
+          cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib infrastructure::windows_private_create::tests::native_original_runtime_record_diagnostic -- --exact --ignored --nocapture *> (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'record-test.log')
+          if($LASTEXITCODE -ne 0){throw 'Record observation failed; preserve failure'}
+          $log=Get-Content (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'record-test.log') -Raw
+          if($log -notmatch '1 passed; 0 failed; 0 ignored'){throw 'Exact diagnostic must execute'}
+          $report=Get-Content $env:OCXD_RECORD_PROBE_REPORT -Raw | ConvertFrom-Json
+          if($report.accepted -ne $false -or !$report.diagnosticOnly -or !$report.tokenElevated -or !$report.fixtureRemoved){throw 'Diagnostic scope/elevated token/cleanup not proved'}
+          cargo clippy --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib --tests -- -D warnings *> (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'strict-clippy.log')
+          if($LASTEXITCODE -ne 0){throw 'Strict checks failed'}
+      - name: Preserve only evidence, never synthetic secret records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows023-record-contract-${{ github.run_id }}
+          path: |
+            ${{ env.OCXD_RECORD_CONTRACT_ROOT }}/*.json
+            ${{ env.OCXD_RECORD_CONTRACT_ROOT }}/*.log
+          if-no-files-found: error
+      - name: Remove only exact owned staging root after evidence upload
+        if: always() && env.OCXD_RECORD_CONTRACT_ROOT != ''
+        run: |
+          $ErrorActionPreference='Stop'
+          $expected=Join-Path $env:RUNNER_TEMP ('ocxd-record-contract-'+$env:GITHUB_RUN_ID)
+          if($env:OCXD_RECORD_CONTRACT_ROOT -cne $expected){throw 'Cleanup root changed'}
+          Remove-Item -LiteralPath $expected -Recurse -Force
+          if(Test-Path -LiteralPath $expected){throw 'Exact staging root remains'}

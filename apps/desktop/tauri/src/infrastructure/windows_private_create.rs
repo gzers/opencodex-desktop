@@ -502,6 +502,99 @@ mod tests {
         let (_sd, sid, _) = read_security(file).unwrap();
         unsafe { sid_string(sid) }.unwrap()
     }
+
+    #[test]
+    #[ignore = "requires ephemeral Windows Actions and the exact pinned runtime"]
+    fn native_original_runtime_record_diagnostic() {
+        assert_eq!(std::env::var("GITHUB_ACTIONS").as_deref(), Ok("true"));
+        let package = std::path::PathBuf::from(
+            std::env::var_os("OCXD_RECORD_PROBE_PACKAGE").expect("explicit pinned package"),
+        );
+        let bun = std::path::PathBuf::from(
+            std::env::var_os("OCXD_RECORD_PROBE_BUN").expect("explicit pinned Bun"),
+        );
+        let evidence = std::path::PathBuf::from(
+            std::env::var_os("OCXD_RECORD_PROBE_REPORT").expect("fresh evidence file"),
+        );
+        let boundary = std::path::PathBuf::from(std::env::var_os("RUNNER_TEMP").unwrap());
+        assert!(package.is_absolute() && bun.is_absolute() && evidence.is_absolute());
+        assert!(package.starts_with(&boundary) && bun.starts_with(&boundary));
+        assert!(evidence.starts_with(&boundary) && !evidence.exists());
+        let task = tempfile::Builder::new()
+            .prefix("ocxd-original-record-")
+            .tempdir_in(&boundary)
+            .unwrap();
+        let home = task.path().join("profile");
+        let h = home.join(".codex-desktop/opencodex/home");
+        std::fs::create_dir_all(&home).unwrap();
+        // Call the unchanged atomic writer used by writeRuntimePort, with a
+        // synthetic key. No registry, proxy, service or real client is touched.
+        let script = r#"
+          const {mkdirSync}=await import('node:fs');
+          const {join}=await import('node:path');
+          const {pathToFileURL}=await import('node:url');
+          const runtimePackage=process.env.OCXD_RECORD_PROBE_PACKAGE;
+          const metadata=await Bun.file(join(runtimePackage,'package.json')).json();
+          if(metadata.version!=='2.97.0-desktop023.names.2')throw Error('Pinned package required');
+          const {atomicWriteFile}=await import(pathToFileURL(join(runtimePackage,'src/config/atomic-write.ts')).href);
+          const h=process.env.OPENCODEX_HOME;
+          mkdirSync(h,{recursive:true,mode:0o700});
+          atomicWriteFile(join(h,'runtime-port.json'),JSON.stringify({pid:process.pid,port:1,attestationSecret:'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'}));
+        "#;
+        let child = std::process::Command::new(&bun)
+            .args(["--no-env-file", "-e", script])
+            .env("OCXD_RECORD_PROBE_PACKAGE", &package)
+            .env("HOME", &home)
+            .env("USERPROFILE", &home)
+            .env("APPDATA", home.join("AppData/Roaming"))
+            .env("LOCALAPPDATA", home.join("AppData/Local"))
+            .env("CODEX_HOME", home.join(".codex"))
+            .env("OPENCODEX_HOME", &h)
+            .current_dir(task.path())
+            .output()
+            .expect("original atomic writer process");
+        assert!(
+            child.status.success(),
+            "Original atomic writer failed; no acceptance claimed"
+        );
+        let file = crate::modules::backup::safety::open_file(&h.join("runtime-port.json"), false)
+            .expect("read original record with product opener");
+        let record_owner = owner(&file);
+        let expected = user_sid().unwrap();
+        let (elevated, default_owner) = token_evidence();
+        let result = verify_runtime_record_handle(&file);
+        let classification = match result.as_ref().err().map(|e| e.to_string()) {
+            None => "accepted-by-original-validator",
+            Some(s) if s == "private object owner differs from TokenUser" => "owner-mismatch",
+            Some(s) if s.contains("DACL") => "dacl-contract",
+            Some(s)
+                if s.contains("ACE") || s.contains("access mask") || s.contains("principal") =>
+            {
+                "ace-contract"
+            }
+            Some(_) => "other-validation-error",
+        };
+        let mut report = serde_json::json!({
+            "accepted":false,"diagnosticOnly":true,"runtimeChanged":false,
+            "source":crate::build_commit(),"tokenElevated":elevated,
+            "defaultOwnerIsAdministrators":default_owner==ADMINISTRATORS_SID,
+            "recordOwnerMatchesTokenUser":record_owner==expected,
+            "recordOwnerIsAdministrators":record_owner==ADMINISTRATORS_SID,
+            "originalValidatorAccepted":result.is_ok(),"classification":classification,
+            "productStarted":false,"businessNetworkUsed":false,"serviceMutation":false,
+            "scope":"Original atomic writer and actual Desktop record validator only; not lifecycle acceptance"
+        });
+        drop(file);
+        task.close().expect("exact fixture cleanup");
+        report["fixtureRemoved"] = serde_json::json!(true);
+        let mut output = OpenOptions::new()
+            .create_new(true)
+            .write(true)
+            .open(evidence)
+            .unwrap();
+        writeln!(output, "{report}").unwrap();
+        println!("original-record-diagnostic-only: {report}");
+    }
     fn security_bytes(file: &File) -> Vec<u8> {
         let (sd, _, _) = read_security(file).unwrap();
         let len = unsafe { GetSecurityDescriptorLength(sd.0) } as usize;
