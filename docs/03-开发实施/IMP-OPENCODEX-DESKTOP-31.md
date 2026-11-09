@@ -553,3 +553,5 @@ core-sweep增加producer技术focus（4162f5234），仅对尚未闭合的实际
 06bf22396/abbb7c17c补双用户真实原生配置读回，并将原10秒共享预算包含实际Stop/状态/文件确认。合并13仍须两用户originalGenerationExited、stopped、nativeClientRestoredReadback与共享10000预算，不能用servicesStopped布尔替代实际证据；16装配行为测试、5供应入口测试、实际PowerShell及嵌入Node解析过，不降低原断言。
 
 [集成源码范围、原归档/编译与资源恢复证据](../../.adg/evidence/0.2.23/lifecycle-consumer-integration-20261109/scope-and-validation.json)及[准备期假设H-integrated-lifetime-20261109-03](../../.adg/evidence/0.2.23/lifecycle-consumer-integration-20261109/hypothesis.preparation.json)已写；下一同源core-build准备完成后固定真实buildRun，再从标准core-sweep一次跑受影响真实双SID/私有供应/合并就绪端口/路径/IPC/严格清理，先全表再集中返修。Windows原生执行、完整冻结/签名升级回退/发布仍未完成，目标active。
+
+同源构建准备42590269684/job129069917230已确认运行，固定abbb7c17c；准备期假设先在96424b6df提交，现补实际buildRun为42590269684。标准core轮尚未派，等MSVC program+observer/完整供应封存成功。为减少资源占用，保留当前源PR CI42589768614，精确核实同一分支PR事件后取消7个已被当前源取代的自动CI；不取消诊断/发布任务，不把取消记为通过或故障修复。

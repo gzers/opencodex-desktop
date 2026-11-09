@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "id": "H-integrated-lifetime-20261109-03",
+  "source": "abbb7c17c6358c0091e1ee65de840f5c41ed5232",
+  "buildRun": "42590269684",
+  "claim": "The paired lifecycle runtime and Desktop consumer will confirm own-H startup and stop for both real SIDs without reading foreign process environments; both native Codex config readbacks and original shared budgets remain mandatory",
+  "changeUnderTest": "1086c15d3 native signed lifetime consumer; composed lifecycle.1 runtime/pins; confirmed-action terminal mapping; actual native config readback and original shared stop budget in core assertions",
+  "refutation": "Any unproved start/stop, missing lifetime proof, wrong original PID/creation/TokenUser/Job/lease, residual own record/listener, changed peer, stale native routing, budget overrun, or unproved cleanup refutes this integrated claim",
+  "rerunReason": "Native stop authority, runtime archive and actual client restoration consumer changed; dependent dual-SID, supply, readiness/ports, paths, IPC and exact cleanup all participate in one core round. Unchanged installation/MSI/material gates and unmodified producer security prototypes are referenced, not re-executed.",
+  "predictions": [
+    {
+      "step": "11",
+      "status": "pass",
+      "observation": "Two actual distinct SID Managers overlap"
+    },
+    {
+      "step": "12",
+      "status": "pass",
+      "observation": "Both first-start private runtime supplies match new frozen policy"
+    },
+    {
+      "step": "13",
+      "status": "pass",
+      "observation": "Both actual services and original stop/client readbacks pass under shared budgets"
+    },
+    {
+      "step": "15",
+      "status": "pass",
+      "observation": "Both actual path snapshots remain isolated"
+    },
+    {
+      "step": "16",
+      "status": "pass",
+      "observation": "Actual same-user IPC remains bound"
+    },
+    {
+      "step": "17",
+      "status": "pass",
+      "observation": "Original cross-user IPC/DPAPI/same-SID-instance assertions hold"
+    },
+    {
+      "step": "18",
+      "status": "pass",
+      "observation": "Exact original process/account/Profile/ACL cleanup is fully proven"
+    }
+  ],
+  "unchangedPassingEvidence": [
+    {
+      "gate": "installer cells / Server MSI / existing Windows material UI",
+      "source": "prior preserved 0.2.23 source",
+      "evidence": ".adg/evidence/0.2.23/sweep-r33-42539896297/ and local-active-sessions-20261109/",
+      "whyUnaffected": "This batch changes no installer or glass implementation; final same-source installer/release gates still remain"
+    },
+    {
+      "gate": "Producer private record/lease/Job inheritance and foreign-SID denial",
+      "source": "f143d0910bacd47d933ce6ce89426f972368ba59 and 4162f5234c911be28e371f9a8463609ae1fa5d31",
+      "evidence": ".adg/evidence/0.2.23/native-rust-lifetime-witness-42577435871/; foreign-job-authority-42567013704/; core-producer-frozen-20261109/",
+      "whyUnaffected": "Those TypeScript producer postimages are unchanged; new Desktop consumer native behavior is explicitly subject to this affected integration round"
+    }
+  ]
+}
