@@ -68,6 +68,14 @@ impl ProcessActionResult {
                     .into(),
                 )
             }
+            crate::errors::AppError::RuntimeManaged { code, .. }
+                if code == "lifecycle_start_exit" =>
+            {
+                (
+                    code.clone(),
+                    "服务启动进程已退出，请查看诊断日志后重试。".into(),
+                )
+            }
             crate::errors::AppError::RuntimeManaged { code, detail }
                 if code.starts_with("lifecycle_")
                     || ["port_conflict", "port_permission"].contains(&code.as_str()) =>
@@ -125,6 +133,19 @@ mod tests {
         let json = serde_json::to_string(&failure).unwrap();
         assert!(!json.contains("observations") && !json.contains("absent_record"));
         assert!(json.contains("lifecycle_timeout") && json.contains("诊断日志"));
+    }
+
+    #[test]
+    fn native_admission_stage_is_retained_in_logs_not_product_message() {
+        let error = crate::errors::AppError::RuntimeManaged {
+            code: "lifecycle_start_exit".into(),
+            detail: "exit_code=1 lifetime_admission=job-create kind=error win32=5".into(),
+        };
+        let value = ProcessActionResult::from_state(ProcessLifecycleState::StartingFailed)
+            .with_failure(&error);
+        let raw = serde_json::to_string(&value).unwrap();
+        assert!(raw.contains("lifecycle_start_exit"));
+        assert!(!raw.contains("job-create") && !raw.contains("win32="));
     }
 
     fn request(action: LifecycleAction, confirm: bool) -> ProcessActionRequest {

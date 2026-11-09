@@ -35,6 +35,7 @@ fn reap_grace() -> Duration {
 struct StartDiagnostics {
     tail: zeroize::Zeroizing<Vec<u8>>,
     reason: Option<&'static str>,
+    admission_failure: Option<String>,
 }
 impl StartDiagnostics {
     fn push(&mut self, bytes: &[u8]) {
@@ -46,6 +47,13 @@ impl StartDiagnostics {
         }
         let text =
             zeroize::Zeroizing::new(String::from_utf8_lossy(&self.tail).to_ascii_lowercase());
+        for line in text.lines() {
+            if let Some(value) = line.strip_prefix("ocxd-lifetime-admission-failed stage=") {
+                if valid_admission_diagnostic(value) {
+                    self.admission_failure = Some(value.to_owned());
+                }
+            }
+        }
         if text.contains("eaddrinuse")
             || text.contains("proxy already running")
             || text.contains("address already in use")
@@ -57,6 +65,41 @@ impl StartDiagnostics {
             self.reason = Some("port_permission");
         }
     }
+}
+
+fn valid_admission_diagnostic(value: &str) -> bool {
+    let fields: Vec<_> = value.split(' ').collect();
+    if fields.len() != 3 {
+        return false;
+    }
+    let stage = fields[0];
+    let known = [
+        "entry",
+        "load-native",
+        "canonical-home",
+        "lease-create",
+        "lease-identity-acl",
+        "lease-lock",
+        "job-create",
+        "job-identity-acl",
+        "job-limits",
+        "job-self-assign",
+        "job-membership",
+        "process-times",
+        "committed",
+        "unknown",
+    ];
+    let ancestor = stage
+        .strip_prefix("ancestor-")
+        .is_some_and(|n| n.len() <= 2 && !n.is_empty() && n.bytes().all(|b| b.is_ascii_digit()));
+    (known.contains(&stage) || ancestor)
+        && ["kind=reference", "kind=type", "kind=range", "kind=error"].contains(&fields[1])
+        && fields[2].strip_prefix("win32=").is_some_and(|s| {
+            !s.is_empty()
+                && s.len() <= 10
+                && s.bytes().all(|b| b.is_ascii_digit())
+                && s.parse::<u32>().is_ok()
+        })
 }
 
 fn capture_start_output(child: &mut ControlledChild) -> Arc<std::sync::Mutex<StartDiagnostics>> {
@@ -305,9 +348,15 @@ impl ControlledProcessRunner {
                             "port_permission" => "没有权限监听所选端口，请检查权限或调整端口",
                             _ => "官方启动进程退出，服务未确认就绪",
                         };
+                        let admission = diagnostics
+                            .lock()
+                            .ok()
+                            .and_then(|d| d.admission_failure.clone())
+                            .map(|s| format!("；lifetime_admission={s}"))
+                            .unwrap_or_default();
                         return Err(AppError::RuntimeManaged {
                             code: reason.into(),
-                            detail: format!("{message}；exit_code={code}"),
+                            detail: format!("{message}；exit_code={code}{admission}"),
                         });
                     }
                     Ok(None) => {
@@ -914,6 +963,27 @@ mod managed_observation_tests {
             assert!(matches!(e, AppError::RuntimeManaged{code,..} if code=="lifecycle_timeout"));
         }
     }
+    #[test]
+    fn admission_diagnostics_accept_fixed_fields_only() {
+        let mut d = StartDiagnostics::default();
+        d.push(b"ocxd-lifetime-admission-failed stage=job-self-assign kind=error win32=5\n");
+        assert_eq!(
+            d.admission_failure.as_deref(),
+            Some("job-self-assign kind=error win32=5")
+        );
+        for bad in [
+            "secret kind=error win32=5",
+            "job-create kind=secret win32=5",
+            "job-create kind=error win32=4294967296",
+            "job-create kind=error win32=5 path=secret",
+            "ancestor-100 kind=error win32=5",
+        ] {
+            let mut other = StartDiagnostics::default();
+            other.push(format!("ocxd-lifetime-admission-failed stage={bad}\n").as_bytes());
+            assert!(other.admission_failure.is_none());
+        }
+    }
+
     #[test]
     fn bounded_diagnostics_do_not_keep_or_return_arbitrary_upstream_output() {
         let mut diagnostic = StartDiagnostics::default();

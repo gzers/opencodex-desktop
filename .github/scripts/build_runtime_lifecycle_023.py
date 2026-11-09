@@ -8,7 +8,7 @@ from pathlib import Path
 import tempfile
 
 ROOT=Path(__file__).resolve().parents[2]
-VERSION='2.97.0-desktop023.lifecycle.1'
+VERSION='2.97.0-desktop023.lifecycle.2'
 
 
 def load(name,path):

@@ -19,7 +19,10 @@ let active:ReturnType<typeof acquireWindowsRuntimeLifetime>;
 export function currentWindowsRuntimeLifetime():WindowsRuntimeLifetime|undefined{return active?.binding;}
 export function createWindowsRuntimeLifetimeProof(secret:string,challenge:string,port:number):string|undefined{return active?.proof(secret,challenge,port);}
 const IS_WINDOWS=process.platform==='win32';
-function refuse(code='authority-unknown'):never{throw new Error('Windows runtime lifetime authority cannot be proved: '+code);}
+let admissionStage='entry';
+let readAdmissionNativeError:(()=>number)|undefined;
+export function windowsLifetimeAdmissionStage(){return admissionStage;}
+function refuse(code='authority-unknown'):never{const error=new Error('Windows runtime lifetime authority cannot be proved: '+code);if(readAdmissionNativeError)Object.assign(error,{ocxdWin32ErrorCode:readAdmissionNativeError()});throw error;}
 function wide(s:string){const out=new Uint16Array(s.length+1);for(let i=0;i<s.length;i++)out[i]=s.charCodeAt(i);return out;}
 function load(){
   const {resolveTrustedWindowsSystemDirectory}=require('./windows-elevation') as typeof import('./windows-elevation');
@@ -98,8 +101,8 @@ function activeCount(api:Api,job:bigint){
 export function acquireWindowsRuntimeLifetime(home:string):{binding:WindowsRuntimeLifetime;proof:(secret:string,challenge:string,port:number)=>string}|undefined{
   if(!IS_WINDOWS)return undefined;if(process.arch!=='x64'||!win32.isAbsolute(home)||!existsSync(home))refuse();
   if(active)refuse('process-already-bound');
-  const api=load(),k=api.kernel.symbols,pins:bigint[]=[];let lease=0n,job=0n,locked=false,committed=false;
-  const supplied=home.replaceAll(String.fromCharCode(92),'/');
+  admissionStage='load-native';const api=load(),k=api.kernel.symbols,pins:bigint[]=[];readAdmissionNativeError=()=>k.GetLastError();let lease=0n,job=0n,locked=false,committed=false;
+  admissionStage='canonical-home';const supplied=home.replaceAll(String.fromCharCode(92),'/');
   if(supplied.split('/').some(part=>part==='.'||part==='..')||home.includes(String.fromCharCode(0)))refuse();
   const canonical=realpathSync.native(home),normalized=canonical.replaceAll(String.fromCharCode(92),'/').toLowerCase();
   if(normalized.includes('/../')||normalized.includes('/./'))refuse();
@@ -108,27 +111,28 @@ export function acquireWindowsRuntimeLifetime(home:string):{binding:WindowsRunti
     // Check/pin the supplied chain, not just its canonical target. An input
     // junction cannot silently become a different trusted HOME anchor.
     let p=home;const parents=[];for(;;){parents.push(p);const next=win32.dirname(p);if(next===p)break;p=next;}
-    for(const path of parents.reverse()){
+    let ancestor=0;for(const path of parents.reverse()){
+      admissionStage='ancestor-'+ancestor++;
       const name=wide(path),h=BigInt(k.CreateFileW(ptr(name),0x80000000,3,null,3,0x02000000|0x00200000,0n));
       if(h===0n||h===0xffffffffffffffffn)refuse();pins.push(h);fileInfo(api,h,true);
     }
     if(realpathSync.native(home)!==canonical)refuse();
-    let createError=0;lease=descriptor(api,attributes=>{const h=BigInt(k.CreateFileW(ptr(leaseName),0xc0020000,3,ptr(attributes),1,0x80|0x00200000,0n));createError=k.GetLastError();return h;});
+    admissionStage='lease-create';let createError=0;lease=descriptor(api,attributes=>{const h=BigInt(k.CreateFileW(ptr(leaseName),0xc0020000,3,ptr(attributes),1,0x80|0x00200000,0n));createError=k.GetLastError();return h;});
     if(lease===0xffffffffffffffffn||lease===0n){if(createError!==80&&createError!==183)refuse();lease=BigInt(k.CreateFileW(ptr(leaseName),0xc0020000,3,null,3,0x80|0x00200000,0n));}
     if(lease===0n||lease===0xffffffffffffffffn)refuse();
-    const leaseIdentity=fileInfo(api,lease);privateAuthority(api,lease,1,0x1f01ff);
-    if(!k.LockFileEx(lease,3,0,1,0,ptr(overlap))){const error=k.GetLastError();refuse(error===33?'lease-busy':'lease-query-failed');}locked=true;
+    admissionStage='lease-identity-acl';const leaseIdentity=fileInfo(api,lease);privateAuthority(api,lease,1,0x1f01ff);
+    admissionStage='lease-lock';if(!k.LockFileEx(lease,3,0,1,0,ptr(overlap))){const error=k.GetLastError();refuse(error===33?'lease-busy':'lease-query-failed');}locked=true;
     const jobName='Global'+String.fromCharCode(92)+'opencodex-runtime-'+createHash('sha256').update(api.sid).update(String.fromCharCode(0)).update(normalized).digest('hex'),jobWide=wide(jobName);
-    job=descriptor(api,attributes=>BigInt(k.CreateJobObjectW(ptr(attributes),ptr(jobWide))));if(job===0n)refuse();
-    privateAuthority(api,job,6,0x1f003f);if(activeCount(api,job)!==0)refuse('controlled-set-not-empty');
+    admissionStage='job-create';job=descriptor(api,attributes=>BigInt(k.CreateJobObjectW(ptr(attributes),ptr(jobWide))));if(job===0n)refuse();
+    admissionStage='job-identity-acl';privateAuthority(api,job,6,0x1f003f);if(activeCount(api,job)!==0)refuse('controlled-set-not-empty');
     // No breakaway and no kill-on-close are configured; verify the actual flags.
-    const limits=new Uint8Array(144),returned=new Uint32Array(1);
+    admissionStage='job-limits';const limits=new Uint8Array(144),returned=new Uint32Array(1);
     if(!k.QueryInformationJobObject(job,9,ptr(limits),limits.length,ptr(returned))||returned[0]!==144||new DataView(limits.buffer).getUint32(16,true)!==0)refuse();
-    const self=BigInt(k.GetCurrentProcess());if(!k.AssignProcessToJobObject(job,self))refuse();
-    const member=new Int32Array(1);if(!k.IsProcessInJob(self,job,ptr(member))||member[0]!==1||k.GetProcessId(self)!==process.pid)refuse();
-    const times=new BigUint64Array(4);if(!k.GetProcessTimes(self,ptr(times.subarray(0,1)),ptr(times.subarray(1,2)),ptr(times.subarray(2,3)),ptr(times.subarray(3,4))))refuse();
+    admissionStage='job-self-assign';const self=BigInt(k.GetCurrentProcess());if(!k.AssignProcessToJobObject(job,self))refuse();
+    admissionStage='job-membership';const member=new Int32Array(1);if(!k.IsProcessInJob(self,job,ptr(member))||member[0]!==1||k.GetProcessId(self)!==process.pid)refuse();
+    admissionStage='process-times';const times=new BigUint64Array(4);if(!k.GetProcessTimes(self,ptr(times.subarray(0,1)),ptr(times.subarray(1,2)),ptr(times.subarray(2,3)),ptr(times.subarray(3,4))))refuse();
     const binding:WindowsRuntimeLifetime=Object.freeze({schema:'ocxd-runtime-lifetime/1',home:canonical,sid:api.sid,pid:process.pid,created:times[0]!.toString(),generation:randomUUID(),job:jobName,leaseVolume:leaseIdentity.volume,leaseIndex:leaseIdentity.index});
-    committed=true;
+    admissionStage='committed';committed=true;
     // Actual process lifetime owns these handles. No user-space release function
     // can declare absence before the service exits and official restore finishes.
     process.once('exit',()=>{if(locked)k.UnlockFileEx(lease,0,1,0,ptr(overlap));k.CloseHandle(lease);k.CloseHandle(job);for(const h of pins.reverse())k.CloseHandle(h);api.security.close();api.kernel.close();});

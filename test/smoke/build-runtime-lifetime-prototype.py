@@ -12,11 +12,11 @@ ROOT=Path(__file__).resolve().parents[2]
 BASE='33887e710fad9d5ae78eb4f85c6d02f7da0d413238437a65033b5a79fba168e4'
 VERSION='2.97.0-desktop023.lifecycle.1-producer-prototype'
 POSTIMAGES={
- 'src/lib/windows-runtime-start-boot.ts':'ab65e461cbc3017ea13b2d3cc633928a5bfda1a94718472b7fc7b706a5b62973',
+ 'src/lib/windows-runtime-start-boot.ts':'edc335639c7bd1d3bf45a298cd981b67cd0a11883417eb0183cb91ad20d4c7fa',
  'src/cli/index.ts':'21a6e7ab4ee7ec452b18bf57d1fdbf35542e2832256d1d58b117a134b114237b',
  'src/config/process-state.ts':'72dc4297a570b548b2700638b862c3f9782dc3831538d1fd604e75dd31c8e12f',
  'src/server/index/serve-options.ts':'e42646dfe5a025004d781f25a08ce0a28ce69cd199af0765f813461bf1052d8e',
- 'src/lib/windows-runtime-lifetime.ts':'6276147ab1becc2368a060ed2478277c50c87ee4d500dfab5be59e61ab2f7837',
+ 'src/lib/windows-runtime-lifetime.ts':'7edef1d1d180e5d63b298335188cd03148f24b6a022442501159eaa9336be841',
 }
 spec=importlib.util.spec_from_file_location('runtime_builder',ROOT/'.github/scripts/build_runtime_023.py')
 b=importlib.util.module_from_spec(spec);spec.loader.exec_module(b)
@@ -46,7 +46,7 @@ def build(archive,output):
   package['desktop023LifetimeProducerPrototype']=dict(candidateOnly=True,baseArchiveSha256=BASE,
    originalRuntime='2.97.0-desktop023.names.2',sourceFiles=POSTIMAGES,
    priorProducerEvidenceBeforeEarlyBoot=dict(run=42586501118,source='4162f5234c911be28e371f9a8463609ae1fa5d31',artifactSha256='9d5f037d8ee25fd4d5e4f2e9b7010638219c13e736c63c888c6d7b3f59528f0b',accepted=False),
-   limits='Producer/record only; production Desktop consumer, exact client file restoration, same-source dual-SID and final release remain unproved. Early bootstrap order changed after the prior diagnostic; Windows execution pending. Trace hooks excluded.')
+   limits='Producer/record only; production Desktop consumer, exact client file restoration, same-source dual-SID and final release remain unproved. Early bootstrap and fixed admission diagnostics differ from prior passing producer; actual standard-user failure remains under diagnosis. Trace hooks excluded.')
   files['package.json']=b.json_bytes(package)
   compatibility=json.loads(files[b.COMPATIBILITY]);entries={r['path']:r for r in compatibility['files']}
   for p in ['package.json',*POSTIMAGES]:entries[p]={**entries.get(p,{'path':p}),'sha256':b.sha(files[p])}
