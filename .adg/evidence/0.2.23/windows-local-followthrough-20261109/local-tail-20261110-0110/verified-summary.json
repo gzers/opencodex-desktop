@@ -1,0 +1,76 @@
+{
+  "observedUtc": "2026-11-09T17:16:47.689163+00:00",
+  "scope": "Local tail only; no product action or release gate change",
+  "profileSid": "S-1-5-21-587408064-856152790-2583328096-1018",
+  "profileLoaded": true,
+  "ordinaryWts": {
+    "enumerated": 479,
+    "unknown": 299,
+    "matchingSidProcesses": 0
+  },
+  "runAsWts": {
+    "enumerated": 478,
+    "matchingSidProcesses": 0,
+    "unknown": [
+      {
+        "Pid": 0,
+        "Session": 0,
+        "Image": "",
+        "Sid": null,
+        "OwnerKnown": false
+      },
+      {
+        "Pid": 4,
+        "Session": 0,
+        "Image": "System",
+        "Sid": null,
+        "OwnerKnown": false
+      }
+    ],
+    "tokenEvidence": "RunAs requested; actual token not captured for this WTS helper; do not borrow later LSA token"
+  },
+  "matchingLogonReferences": [
+    {
+      "Sid": "S-1-5-21-587408064-856152790-2583328096-1018",
+      "LogonType": 2,
+      "Session": 0,
+      "LogonUtc": "2026-11-09T15:33:23.5073517Z"
+    },
+    {
+      "Sid": "S-1-5-21-587408064-856152790-2583328096-1018",
+      "LogonType": 2,
+      "Session": 0,
+      "LogonUtc": "2026-11-09T15:33:23.5058434Z"
+    }
+  ],
+  "lsa": {
+    "enumerated": 1255,
+    "readFailures": 0,
+    "noSid": 1,
+    "actualToken": {
+      "schemaVersion": 1,
+      "status": "observed",
+      "processId": 83924,
+      "executable": "D:\\ocxu1-20261109-191803\\powershell\\pwsh.exe",
+      "creationTimeUtc": "2026-11-09T17:15:02.5889240Z",
+      "elevated": true,
+      "elevationType": 2,
+      "collectedAtUtc": "2026-11-09T17:15:03.2874575Z"
+    },
+    "elapsedMilliseconds": 125,
+    "apiReturnVerified": true,
+    "wholeCollectorPassed": false,
+    "collectorFailure": {
+      "message": "找不到 ",
+      "line": 189
+    },
+    "originalExitCode": "unknown; child exited before CIM identity admission; do not infer exit0 from result file"
+  },
+  "causalLimit": "Matching historical logon-session data does not prove which process retains the profile, a hive handle or an unload reference; no forced unload justified",
+  "cleanupAllowedNow": false,
+  "restorationGate": "Same exact SID/path, non-Special and Windows Loaded:false, plus exact owned-process cleanup identity; earlier protected-process unknowns are never assumed absent",
+  "noNewAccountOrProfileLoad": true,
+  "noNewProductRun": true,
+  "noStopFixBasedOnGuess": true,
+  "previousCorePassedScopeUnchanged": true
+}

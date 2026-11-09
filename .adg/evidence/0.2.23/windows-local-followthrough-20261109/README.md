@@ -105,3 +105,9 @@ RDP对控制台61175固定冲突经原30秒无自有记录；控制台原94072/6
 用户已要求代码交Mac发版、本机继续跟进。代码4d783585645206c52b49bce8656475d26940c1d7及先前文档04336c43ab024fa28f2d1d7008f068c412b70e8c已远端核验；最新发布交接入口为docs/03-开发实施/0.2.23-contracts/windows-to-mac-release-handoff-20261110.md。本机Profile/缓存清理和旧Stop首错持续归因不再由Windows线单独挂住Mac发布；未完成事实和已知风险保持，Mac仍负责真实最终来源/签名/制品/其它产品门。本线没有执行发布，未声称Mac已收件或已发行。
 
 本机已继续做精确只读核对：Profile1018仍Loaded且SID/SID_Classes两个HKU hive都存在，ProfileList State0及RefCount缺席没有被误判成未Loaded；最后100条Profile事件仅原加载记录，没有新安全卸载线索。profile-background-20261110.json和决策回执单列；未重跑已过产品、没有强卸hive或注销日常会话。后续按正常释放的新状态或新的失败固定阶段继续。
+
+## 本机尾项继续（2026-11-10 01:16）
+
+新原生WTS快照减少旧全机CIM盲区：正常RunAs快照478进程无SID1018匹配，仅0/4 owner未知；Profile仍Loaded。后继真实high/type2的LSA只读API成功发现SID1018两条原23:33:23 type2/session0登录记录，但不能因此证明hive持有者或强卸安全。LSA短命helper在CIM准入竞态失败，原退出码缺证，整轮采集不标过；原结果与失败分别保留。没有新产品运行、没有Profile加载/卸载/日常会话操作、没有重试审批拒删缓存。Mac发布交接保持，本机原Loaded:false清理门仍未满足。
+
+详见docs/03-开发实施/0.2.23-contracts/windows-local-tail-profile-followup-20261110.md和本目录local-tail-20261110-0110原件/manifest/verified-summary；暂无线索可安全进一步变更，等待真实释放状态或明确持有者证据，不盲重跑。
