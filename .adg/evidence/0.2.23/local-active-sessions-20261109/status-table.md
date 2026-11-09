@@ -35,6 +35,10 @@ accepted:false。基线2c6edebc32909c9a16e6666836c22ca6cf05037d；程序构建42
 
 状态保护首轮42552474670的精确Windows源码aa559ddb8：3新增状态准入+8原认证状态/停止+5归属测试通过，1原专用进程用例显式忽略不变。整个job失败于执行器错误预期“6 passed”，严格Clippy尚未执行；3640字节原ZIP/SHA256 4dc30c280c56153f7fcfbfae01661eaaca69cbbb77e0da11596dceb60d791250与日志在status-first-ci。77a641618只改实际计数5并核对1原忽略，apps树与4fff1d5ca相同；后继42553369183定向回归/严格检查另附。不声称首轮job成功或返修已完成真实双服务验收。
 
+42553369183仍是16过/1原忽略，严格Clippy因新增测试模块后还有生产项而失败；6777字节ZIP/SHA256 b1ac755439454c822f360a96b9d85ea6cc7b86daea878850d059d3530cd5d5e4与完整日志在status-second-ci。79c076e06只把相同测试块移至文件末尾，生产文字与测试文字摘要逐字相同，见status-test-order-proof.json；未关闭严格规则。58eda240b合并同一16项为一次libtest调用，仍按3/8/5逐组核对，c0196df01用实际日志行核对计数以减少转义歧义。
+
+最终精确源c0196df01d00c8cde6460136cf5109c86e591259，apps树c05a03f3a29318ccb9b2cee68730e2af5ae937c2，Windows42554424308成功。原ZIP5718字节/SHA256 4faefc76bf73868aade8a59d5b039b80a5f03312bd96dc1c69786aabac027305与全部成员保留在status-final-ci，实际16过/0败/1原忽略，cargo clippy --locked --lib --tests -- -D warnings通过。前序58eda240b的42554349227也成功，5731字节ZIP/SHA256 93c2ad7bd9d4428a57f915dce39c4f0d9d77b3799a8484cd6f15e84ad5728eeb在status-order-ci；两者apps树相同。这里只证明精确产品定向回归，不是完整workspace或新源GUI双服务/正常Stop/控制台提升启动通过，accepted:false、未发布。
+
 ## 夹具失败与清理
 
 sessions-01：公开恢复准备分别报备份文件不存在、进程身份拒绝访问，且驱动退出/CIM采集竞态使整项失败；没有服务Start。sessions-02/03：先供应D导致产品拒绝“nonempty unrecognized directory”，原退出101/stderr保留。sessions-04先由真实产品初始化D、停止该自有初始化代次，再由原供应函数首装，不改产品目录保护。f19bafcb6补此顺序、短命驱动身份握手、原句柄及还原检查；transport握手不改产品时限。
@@ -42,5 +46,11 @@ sessions-01：公开恢复准备分别报备份文件不存在、进程身份拒
 sessions-01/02/04实际自有进程已退出，私有目录移除，临时控制台计划任务移除，双方daily配置前后摘要一致。sessions-03控制台亦已清理；RDP WebView cache journal曾被占用，原清理失败保留，未生成虚假finished。D:/ocxd023-r34-03/rdp/private的两次精确自动删除被审批blocked by policy拒绝，没有绕过；用户第一次报告删除后10:58实际核验仍存在，operator-cleanup-confirmed.json如实为false；用户再次按准确路径删除，10:59:34实际核验缺席，operator-cleanup-final.json为true。原失败、审批拒绝、首次不一致与最终人工清理全部保留。日常程序、真实业务同步和发布未操作。
 
 正常退出补验首个console-exit-only在用户操作前被执行器30秒观察包络超时清理，属于执行器失败，不冒认产品失败或通过；原件保留。替换console-exit-only02改为人工作业等待包络10分钟（不改变任何产品启动/停止/状态预算），用户操作且原句柄exit0。两个退出夹具私有目录与清理任务均在console-window-cleanup.json及console-window-cleanup-task.json实证移除。
+
+两个已退出的小型libtest/布局编译产物单文件删除也被审批拒绝，用户随后清理了整个本轮ocxd023-local-r34临时工作目录；实际核验该目录及两个exe均缺席，Git代码仓库、文档仓库和此前已提交的失败证据均保留，operator-small-build-cleanup.json记录。之后最终Actions原ZIP直接取入本证据目录，不再重建临时程序目录。仅保留Git证据和用户下载的诊断ZIP等显式原件，不留测试服务/任务/私有HOME。
+
+## 接续验收
+
+正常停止的全机不可读进程缺口和控制台提升record不可达仍未修复。下一批先说明并验证按本H启动身份/原进程句柄/受控子进程集合证明退出的方案；不得跳过未知、靠会话推断SID、放宽owner/DACL或免除客户端还原。重新取得提升侧原30秒内认证ready、两侧独立端口同时健康、普通侧原10秒正常Stop及还原/原代次退出/peer保持和原5秒状态；原R33全28项及失败后独立诊断不撤销。本轮Sandbox不补OS Profile/DPAPI/IPC或最终制品门，不采用新维护修订，不发布。
 
 本轮原始记录与evidence-manifest逐项SHA在同目录；最终定向CI结果另附，不用构建成功/局部回归替代以上失败。

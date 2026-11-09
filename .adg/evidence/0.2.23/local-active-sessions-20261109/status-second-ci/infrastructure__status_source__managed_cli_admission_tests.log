@@ -1,0 +1,12 @@
+    Updating crates.io index
+   Compiling opencodex-desktop v0.2.23 (D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2m 42s
+     Running unittests src\lib.rs (apps\desktop\tauri\target\debug\deps\opencodex_desktop_lib-9560cfa22fb896de.exe)
+
+running 3 tests
+test infrastructure::status_source::managed_cli_admission_tests::rejects_other_account_live_payload_even_with_own_config_path ... ok
+test infrastructure::status_source::managed_cli_admission_tests::accepts_only_own_stopped_diagnostic_without_endpoint_authority ... ok
+test infrastructure::status_source::managed_cli_admission_tests::rejects_missing_foreign_or_contradictory_home_and_residual_pid ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 1743 filtered out; finished in 0.00s
+

@@ -1,0 +1,12 @@
+{
+  "accepted": false,
+  "run": 42553369183,
+  "source": "77a641618bf9857bfba079855ab69906cce09332",
+  "zipBytes": 6777,
+  "zipSha256": "b1ac755439454c822f360a96b9d85ea6cc7b86daea878850d059d3530cd5d5e4",
+  "productTestsPassed": 16,
+  "originalIgnored": 1,
+  "jobConclusion": "failure",
+  "failure": "Strict Clippy: new test module was followed by production items. No product assertion failed.",
+  "repair": "79c076e06 moves the identical test block to the end. Production and test text equality is verified separately; lint is not disabled."
+}
