@@ -1,0 +1,45 @@
+{
+  "platform": "darwin-arm64",
+  "execution": "passed-isolated-readonly-cli",
+  "network": "denied-by-macos-sandbox",
+  "externalPath": "empty",
+  "relocated": true,
+  "managedLauncher": "generated-only-in-test-deployment-context",
+  "checks": [
+    {
+      "label": "node-version",
+      "exitCode": 0,
+      "stdout": "v26.8.1"
+    },
+    {
+      "label": "npm-version",
+      "exitCode": 0,
+      "stdout": "11.19.0"
+    },
+    {
+      "label": "bun-version",
+      "exitCode": 0,
+      "stdout": "1.4.4"
+    },
+    {
+      "label": "node-native-load",
+      "exitCode": 0,
+      "stdout": "@napi-rs/keyring loaded native /private/tmp/ocxd023-release-platform-darwin-20261110/execution/relocated I with spaces/runtime/opencodex/node_modules/@napi-rs/keyring-darwin-arm64/keyring.darwin-arm64.node\nwreq-js loaded native /private/tmp/ocxd023-release-platform-darwin-20261110/execution/relocated I with spaces/runtime/opencodex/node_modules/wreq-js/rust/wreq-js.darwin-arm64.node"
+    },
+    {
+      "label": "bun-native-load",
+      "exitCode": 0,
+      "stdout": "@napi-rs/keyring loaded native /private/tmp/ocxd023-release-platform-darwin-20261110/execution/relocated I with spaces/runtime/opencodex/node_modules/@napi-rs/keyring-darwin-arm64/keyring.darwin-arm64.node\nwreq-js loaded native /private/tmp/ocxd023-release-platform-darwin-20261110/execution/relocated I with spaces/runtime/opencodex/node_modules/wreq-js/rust/wreq-js.darwin-arm64.node"
+    },
+    {
+      "label": "ocx-version",
+      "exitCode": 0,
+      "stdout": "opencodex 2.97.0-desktop023.lifecycle.3"
+    },
+    {
+      "label": "ocx-config-validate",
+      "exitCode": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"source\": \"/private/tmp/ocxd023-release-platform-darwin-20261110/execution/H/config-to-validate.json\"\n}"
+    }
+  ]
+}

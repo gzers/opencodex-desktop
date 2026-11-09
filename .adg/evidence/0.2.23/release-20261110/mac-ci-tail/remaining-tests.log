@@ -1,0 +1,208 @@
+   Compiling tauri v2.12.1
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+   Compiling tauri-plugin-fs v2.6.0
+   Compiling tauri-plugin-process v2.4.0
+   Compiling tauri-plugin-updater v2.13.1
+   Compiling tauri-plugin-dialog v2.8.1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 52.14s
+     Running tests/process_action.rs (apps/desktop/tauri/target/debug/deps/process_action-96c5f8d5208e46bd)
+
+running 8 tests
+test process_action_requires_explicit_confirm ... ok
+test process_action_reports_start_failure_and_preserves_stop_observation_when_context_is_unavailable ... ok
+test process_action_uses_controlled_context ... ok
+test run_success_publishes_no_notification ... ok
+test spawn_failure_also_publishes_a_danger_notification ... ok
+test stop_reaps_the_child_and_returns_within_the_window ... ok
+test run_failure_publishes_one_deduped_danger_notification ... ok
+test stop_returns_within_a_bounded_window_when_sigterm_is_ignored ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.09s
+
+     Running tests/provider_auth_native.rs (apps/desktop/tauri/target/debug/deps/provider_auth_native-65051face04d680c)
+
+running 1 test
+test native_protection_reference_resolution_rebind_and_missing_key_refusal ... ignored, requires explicit OPENCODEX_SANDBOX=1; writes/deletes only random owned native credential fixtures
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/runtime023_manager_name_chain.rs (apps/desktop/tauri/target/debug/deps/runtime023_manager_name_chain-919a2b7f2bf9edc6)
+
+running 1 test
+test manager_renames_reach_the_same_installed_runtime_and_own_codex_catalog ... ignored, requires explicit pinned full platform bundle and OS network sandbox
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/runtime_bundle_real.rs (apps/desktop/tauri/target/debug/deps/runtime_bundle_real-b0bb3ee16eeba0ba)
+
+running 1 test
+test complete_bundle_provisions_and_runs_readonly_without_external_node_or_bun ... ignored, requires an explicitly supplied pinned complete platform bundle
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/runtime_managed_real.rs (apps/desktop/tauri/target/debug/deps/runtime_managed_real-6c3d2ae48910c535)
+
+running 1 test
+test real_managed_runtime_round_trip ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/runtime_prerelease_real.rs (apps/desktop/tauri/target/debug/deps/runtime_prerelease_real-7338f723287e87f3)
+
+running 1 test
+test actual_managed_prerelease_install_preserves_full_version_and_survives_failure ... ignored, requires explicit local candidate archive, Node/npm, and public registry access
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/sandbox_isolation.rs (apps/desktop/tauri/target/debug/deps/sandbox_isolation-6a2b2326e40cc441)
+
+running 1 test
+test sandbox_writes_never_touch_daily_root_and_missing_root_fails_closed ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/saved_runtime_reconcile.rs (apps/desktop/tauri/target/debug/deps/saved_runtime_reconcile-a14203c911e056a4)
+
+running 20 tests
+test all_distinct_rename_targets_reload_before_one_complete_batch ... ok
+test canonical_provider_is_included_in_full_saved_reload_order ... ok
+test complete_noop_editor_adopts_roster_default_without_disk_or_secret_roundtrip ... ok
+test empty_rename_map_still_adopts_saved_full_roster_and_default ... ok
+test multiple_old_prefixes_reload_shared_target_once ... ok
+test changed_attested_record_stops_before_provider_operations ... ok
+test missing_saved_public_row_is_not_invented_from_secret_disk_data ... ok
+test linked_saved_config_is_rejected_without_reading_or_modifying_its_target ... ok
+test observation_timestamp_drift_still_refuses_activation_without_clearing_pending ... ok
+test untrusted_listener_never_receives_admin_or_reload_capability ... ok
+test previously_added_or_modified_saved_sibling_is_reloaded_before_rename_batch ... ok
+test retry_after_live_already_adopted_is_idempotent_and_does_not_clear_pending ... ok
+test committed_catalog_accepts_no_change_or_degradation_without_synced_heuristics ... ok
+test stale_or_unsupported_owner_never_uses_repair_writes ... ok
+test invalid_pending_map_stops_before_management_operations ... ok
+test exact_file_drift_fails_even_after_rejection_or_successful_live_adoption ... ok
+test invalid_or_missing_config_does_not_fall_back_to_live_or_defaults ... ok
+test success_flag_and_complete_live_readback_are_required ... ok
+test catalog_failed_skipped_missing_or_malformed_never_finishes_the_action ... ok
+test unknown_secret_and_unexpected_runtime_dto_fields_fail_before_batch ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.36s
+
+     Running tests/status_matrix.rs (apps/desktop/tauri/target/debug/deps/status_matrix-7cec3ca702bc95ca)
+
+running 2 tests
+test status_matrix_guards_start_and_stop_actions ... ok
+test status_enums_cover_the_contracted_matrix ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/status_snapshot.rs (apps/desktop/tauri/target/debug/deps/status_snapshot-d26bb8a913693e67)
+
+running 4 tests
+test ipc::managed_collector_is_injected_into_status_command ... ignored, Tauri tray setup requires the native main thread
+test status_snapshot_reports_unconfigured_without_guessing_live_state ... ok
+test injected_collector_projects_frozen_running_snapshot ... ok
+test injected_collector_preserves_previous_snapshot_on_failure ... ok
+
+test result: ok. 3 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/sync_plaintext.rs (apps/desktop/tauri/target/debug/deps/sync_plaintext-3de49ac120a60778)
+
+running 3 tests
+test tampered_payload_and_manifest_are_rejected ... ok
+test two_isolated_clients_sync_without_any_extra_passphrase ... ok
+test legacy_transport_packages_need_the_original_passphrase ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.01s
+
+     Running tests/tray.rs (apps/desktop/tauri/target/debug/deps/tray-3f149f077f2d43e8)
+
+running 4 tests
+test tray_state_reports_running_address_and_action_gates ... ok
+test tray_state_allows_start_at_risk_without_writing_the_risk_verdict_to_the_tray ... ok
+test tray_state_hides_address_until_live_running_port_exists ... ok
+test tray_state_uses_frozen_labels_for_failure_states ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/tray_icon.rs (apps/desktop/tauri/target/debug/deps/tray_icon-49f588240980e78d)
+
+running 1 test
+test tray_icons_fill_their_canvas ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/tray_left_click.rs (apps/desktop/tauri/target/debug/deps/tray_left_click-00743903a755bab2)
+
+running 1 test
+test tray_shows_its_menu_on_left_click ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/webdav_legacy_real.rs (apps/desktop/tauri/target/debug/deps/webdav_legacy_real-469868b6c1c28ba8)
+
+running 1 test
+test legacy_encrypted_remote_is_read_with_the_original_passphrase ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/webdav_real.rs (apps/desktop/tauri/target/debug/deps/webdav_real-4f869e1a6254d06c)
+
+running 6 tests
+test wrong_password_is_unauthorized ... ok
+test missing_snapshot_is_not_found ... ok
+test upload_then_download_round_trip ... ok
+test probe_reaches_real_server ... ok
+test closed_port_is_reported_as_failure ... ok
+test black_hole_endpoint_times_out_instead_of_hanging ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.12s
+
+     Running tests/webdav_sync_real.rs (apps/desktop/tauri/target/debug/deps/webdav_sync_real-8012fc081d3e4a35)
+
+running 4 tests
+test missing_payload_on_a_valid_manifest_fails_without_touching_local ... ok
+test wrong_password_over_real_server_is_unauthorized ... ok
+test two_isolated_roots_sync_through_a_real_server ... ok
+test concurrent_sync_is_blocked_by_endpoint_lock ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/webdav_tls.rs (apps/desktop/tauri/target/debug/deps/webdav_tls-f580f9f77f4d116c)
+
+running 2 tests
+test tls_backend_is_compiled_in ... ok
+test https_scheme_reaches_the_transport_layer ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+     Running tests/window_close.rs (apps/desktop/tauri/target/debug/deps/window_close-3a4dff43d6f21840)
+
+running 6 tests
+test hidden_window_releases_the_dock_icon_and_showing_it_restores_it ... ok
+test unreadable_preferences_never_quit_the_shell ... ok
+test window_close_only_hides_the_shell_when_keep_proxy_on_close_is_enabled ... ok
+test default_preference_is_keep_proxy_on_close ... ok
+test notification_publisher_is_absent_when_lifecycle_notifications_are_off ... ok
+test lifecycle_notifications_preference_is_consumed ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/windows_client_selection_owner.rs (apps/desktop/tauri/target/debug/deps/windows_client_selection_owner-0b77581f99fdec6e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/windows_runtime.rs (apps/desktop/tauri/target/debug/deps/windows_runtime-8f631bc4e2feffb8)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/windows_tray_icon.rs (apps/desktop/tauri/target/debug/deps/windows_tray_icon-162b1759f2da493b)
+
+running 1 test
+test windows_tray_is_monochrome_transparent_and_readable_at_small_sizes ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
