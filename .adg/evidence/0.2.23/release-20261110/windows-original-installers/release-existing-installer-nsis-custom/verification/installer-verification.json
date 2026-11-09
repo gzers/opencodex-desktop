@@ -1,0 +1,75 @@
+{
+  "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+  "sourceCommit": "e3728109e93498bfbd6e993d49904d57dfd75315",
+  "builtExecutableSha256": "8162012ee70c01e2118245a1bce8a25fec39654472f6ea944135e7f9b7a0076a",
+  "version": "0.2.23",
+  "codeSigned": false,
+  "releaseAccepted": false,
+  "result": "pass",
+  "installers": [
+    {
+      "kind": "nsis",
+      "name": "OpenCodeX.Desktop_0.2.23_x64-setup.exe",
+      "bytes": 288228423,
+      "sha256": "e17a86a7aa3548584f690e9008b154c6ffe09509f35bb4919f7181dd4af792d6",
+      "installDirectory": "C:\\Users\\ocxaccf230cdbd\\AppData\\Local\\Temp\\ocxd-candidate-nsis-9b16e54073e249c9bc0ba9db781dea3b",
+      "result": "pass",
+      "installExitCode": 0,
+      "installedExecutableSha256": "2a38af30a6adb0fbb3e88c4ce727a950f97657225e854fe5db55b0a50130f10d",
+      "expectedInstalledExecutableSha256": "2a38af30a6adb0fbb3e88c4ce727a950f97657225e854fe5db55b0a50130f10d",
+      "bundleMarker": "NSS",
+      "bundleMarkerOffset": 17544037,
+      "productVersion": "0.2.23",
+      "firstScreen": "pass",
+      "explicitCleanupHelper": {
+        "scope": "disposable hosted runner actual TokenUser profile; current v2 fixed pointer and selected aggregate",
+        "structureVersion": 2,
+        "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+        "profile": "C:\\Users\\ocxaccf230cdbd",
+        "unconfirmedExitCode": 2,
+        "confirmedExitCode": 0,
+        "repeatExitCode": 0,
+        "fixedAndSelectedDesktopRemoved": true,
+        "externalHomeUnchanged": true,
+        "unselectedLegacyPathUnchanged": true,
+        "durableExternalGatesRetainedByProduct": true,
+        "newFixturesCleanedByHarness": true,
+        "applicationRetained": true,
+        "legacyCompatibilityTested": false,
+        "hostAcceptanceClaimed": false
+      },
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true,
+      "defaultUninstallRetainedData": true
+    }
+  ],
+  "defaultUninstallChecks": [],
+  "installationOwnerToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 9776,
+    "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+    "creationTimeUtc": "2026-11-09T18:48:54.4802498Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-09T18:48:55.3068550Z"
+  },
+  "installationOwnerProfile": "C:\\Users\\ocxaccf230cdbd",
+  "installerPolicies": [
+    {
+      "AlwaysInstallElevated": null,
+      "DisableMSI": 0,
+      "DisableUserInstalls": null,
+      "exists": true,
+      "path": "HKLM:\\Software\\Policies\\Microsoft\\Windows\\Installer"
+    },
+    {
+      "AlwaysInstallElevated": null,
+      "DisableMSI": null,
+      "DisableUserInstalls": null,
+      "exists": false,
+      "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Installer"
+    }
+  ],
+  "defaultInstallChecks": []
+}

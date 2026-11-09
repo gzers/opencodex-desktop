@@ -40,3 +40,28 @@ Mac后端完成严格编译并通过2203项后，旧tests/process_action.rs仍�
 Windows CI42662755407完整后端回归与TokenUser私有对象所有者检查success，原生凭据及余项仍在原job129318307513执行，未重开。Mac旧测试补齐与前端本机替代已完成，原CI失败/环境取消不改写。为与剩余检查并行，PR72按精确head f8a9a761b合并为089501b26；main补CHANGELOG日期/lifecycle.3/ec14与Windows路径修复说明，最终源e3728109e93498bfbd6e993d49904d57dfd75315，轻量tag v0.2.23已推送。产品源码与4d7835856完全一致，改变仅发布来源清单和测试/说明。
 
 草稿构建42672509824经workflow_dispatch固定v0.2.23启动（tag所指说明提交带skip-ci，无重复push构建）。只准备正式双平台签名制品，尚未公开；Windows CI余项、原包安装/签名/实际升级回退及最终通道读回仍是公开前门。Latest/beta仍0.2.22，不能把tag存在或草稿出包写成已发布。原PR/run源回执及待验项见release-source-freeze.json。
+
+
+### 实际Mac原包与DMG装配补验
+
+Release42672509824 attempt1在平台job创建前遇GitHub Internal server error，原HTML/correlation留证；同tag attempt2正常进入两端构建。Mac原生应用/更新包上传及deep strict seal已过，随后DMG独立目录包装因工作流漏mkdir失败。main11e3c7a7a只补该目录，不移动tag、不重编产品；下载原tar并按旧公钥验签、原摘要核对后，用原package_macos_023.py重新包装并只读挂载确认，原.app完整字节保持，替换草稿DMG。
+
+Release439492773仍draft。Mac updater tar261709752字节/SHA25621629f68e1caa7101069f31d9965ca2f331ce06c50122b74713df4887ce0792a；新布局DMG263472679字节/SHA2563036033bd61600c6bf3b810f12eb39850d084544f058e2477e5ba637636b436f。旧DMG原件保留，不冒新布局通过。runtime_only42676002620已成功补交签名维护包，实际下载ec14归档与tag策略全字段一致，旧公钥签名验证通过；不重建桌面包。
+
+Mac原包原生检查遇锁屏，在启动任何应用前退出并删除自有测试复制目录；已请求解锁，原生/真实OTA仍待，不能记通过。Windows正式包仍构建，CI受管安装及凭据已过，最终EXE编译中。当前未公开或晋升通道。证据mac-original/、runtime-only-build-terminal.original.json和runtime-original-signature.log。
+
+
+### Windows最终CI通过，正式原包安装缺口单独补齐
+
+CI42662755407/job129318307513已success，含完整普通账户后端、TokenUser所有者、隔离凭据、受管安装/离线重装、最终EXE、路径恢复及Node22/26环境步骤。Mac原CI旧终态断言及前端runner取消已分别用明确修正/本机证据补齐，不把原run整体改写绿色。当前正式tag产品源保持e3728109e。
+
+Release42672509824 attempt2的Windows NSIS/MSI及更新签名上传成功，但临时MSI策略夹具要求first-attempt，因run_attempt=2在安装前拒绝。原拒绝不放宽、不改脚本伪装首次；同一签名包的新隔离四格安装run42677222722已派，不重建包。MSI/NSIS两个独立已验签包提取镜像，逐个反转Tauri标记后只存在一个全文一致原像，摘要8162012ee70c01e2118245a1bce8a25fec39654472f6ea944135e7f9b7a0076a，原仓库verifyBundleIdentity两边均通过；该摘要来源是两个签名安装器交叉证明，不谎称首轮单独上传了compiler EXE。初版提取器假定patched标记唯一而失败，纠正为原验证器候选机制，原暂存保留且未执行安装。
+
+已从实际草稿下载并通过旧公钥验签的资产：Mac更新tar、Windows MSI/NSIS以及lifecycle.3运行包；latest.json所有所需平台/实际URL/上传状态/摘要及tag策略均核对。Release439492773仍draft；原安装四格、解锁后的Mac实际原包/OTA、Windows NSIS OTA和公开通道读回仍待。证据windows-final/保存原CI/打包首错/验签及精确原像来源。
+
+
+### 正式Windows安装四格补验通过
+
+42677222722四job均success。原件下载后独立检查每格tag/source、MSI/NSIS摘要、原像身份、actual普通TokenUser、安装首屏/卸载及数据保持回执；四个临时账户/Profile已删除，临时Server策略精确恢复，AlwaysInstallElevated未改。均未重建或替换原资产，default没有路径覆盖，custom安装及显式数据清理helper覆盖按实际报告保留。证据windows-original-installers/verified-summary.json与原件；此通过不代替NSIS真实OTA/手动回退。
+
+当前剩余：Mac锁屏等待解锁后原包正常首装/原生检查，以及两端正式0.2.22→0.2.23签名升级/回退、最终stable/Latest匿名读回。三类更新包及维护包实际签名全过；Release仍draft，通道仍0.2.22，未提前公开。

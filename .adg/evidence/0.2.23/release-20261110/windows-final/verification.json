@@ -1,0 +1,21 @@
+{
+  "accepted": false,
+  "ci": {
+    "run": 42662755407,
+    "job": 129318307513,
+    "result": "success",
+    "source": "be078cda0b3d15e30691c941887a69ed0c729dbc"
+  },
+  "releaseSource": "e3728109e93498bfbd6e993d49904d57dfd75315",
+  "signatureVerification": "All updater entries and maintained runtime passed original tag/old public key, actual remote bytes",
+  "installerGateFailure": "Release attempt2 refused by first-attempt hosted fixture before installation. No policy mutation and no installer ran in that job.",
+  "supplementalInstallersRun": 42677222722,
+  "originalBuiltSha256": "8162012ee70c01e2118245a1bce8a25fec39654472f6ea944135e7f9b7a0076a",
+  "identityMethod": "Two independently signed original payloads converge to one exact full image after original Tauri marker reversal; embedded source matches tag; no standalone compiler blob claim",
+  "pending": [
+    "actual four original installer cells",
+    "Mac unlocked native/OTA",
+    "Windows NSIS signed OTA/rollback",
+    "stable publish/readback"
+  ]
+}

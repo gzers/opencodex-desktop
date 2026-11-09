@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/private/tmp/ocxd023-release-native-check-20261110.py", line 25, in <module>
+    assert permission['axTrusted'] and permission['screenCaptureAllowed'] and not permission['locked'],'Native screen permission unavailable'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Native screen permission unavailable

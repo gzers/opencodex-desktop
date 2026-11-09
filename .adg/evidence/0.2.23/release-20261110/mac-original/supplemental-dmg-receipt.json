@@ -1,0 +1,26 @@
+{
+  "accepted": false,
+  "source": "e3728109e93498bfbd6e993d49904d57dfd75315",
+  "release": 439492773,
+  "draft": true,
+  "macJob": 129349872353,
+  "originalJob": "app/update signature uploaded and strict seal passed, subsequent DMG wrapper failed because output parent missing",
+  "correctiveToolCommit": "11e3c7a7a",
+  "correction": "mkdir for wrapper output; locally ran unchanged package tool against exact signed original tar app",
+  "updatedDraftDmg": {
+    "sha256": "3036033bd61600c6bf3b810f12eb39850d084544f058e2477e5ba637636b436f",
+    "bytes": 263472679
+  },
+  "originalAppTarUnchanged": {
+    "sha256": "21629f68e1caa7101069f31d9965ca2f331ce06c50122b74713df4887ce0792a",
+    "bytes": 261709752
+  },
+  "originalDmgRetainedLocally": {
+    "sha256": "e948299dbc5b7495f2eec7fa2f20d3d0e902c5729ae88546059395bb40a2bbc1",
+    "bytes": 261933305
+  },
+  "nativeAttempt": "blocked by locked screen before app launch; owned temp copy removed, pending user unlock",
+  "runtimeOnlyBuild": 42676002620,
+  "runtimeOnlyPurpose": "attach signed lifecycle.3 to same draft after Mac wrapper supplemental proof; does not rebuild apps",
+  "WindowsReleaseJobStillRunning": 129349872900
+}

@@ -1,0 +1,65 @@
+{
+  "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+  "sourceCommit": "e3728109e93498bfbd6e993d49904d57dfd75315",
+  "builtExecutableSha256": "8162012ee70c01e2118245a1bce8a25fec39654472f6ea944135e7f9b7a0076a",
+  "version": "0.2.23",
+  "codeSigned": false,
+  "releaseAccepted": false,
+  "result": "pass",
+  "installers": [],
+  "defaultUninstallChecks": [
+    {
+      "kind": "msi",
+      "executableRemoved": true,
+      "testFixtureCleanup": {
+        "removed": true,
+        "scope": "exact new sentinel and empty parents after default-uninstall hash proof",
+        "productRetentionProved": true
+      },
+      "result": "pass",
+      "userDataRetained": true,
+      "exitCode": 0
+    }
+  ],
+  "installationOwnerToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 3932,
+    "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+    "creationTimeUtc": "2026-11-09T18:48:53.3268467Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-09T18:48:54.3571599Z"
+  },
+  "installationOwnerProfile": "C:\\Users\\ocxaccdd4d1619",
+  "installerPolicies": [
+    {
+      "DisableUserInstalls": null,
+      "path": "HKLM:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+      "DisableMSI": 0,
+      "AlwaysInstallElevated": null,
+      "exists": true
+    },
+    {
+      "DisableUserInstalls": null,
+      "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Installer",
+      "DisableMSI": null,
+      "AlwaysInstallElevated": null,
+      "exists": false
+    }
+  ],
+  "defaultInstallChecks": [
+    {
+      "result": "pass",
+      "installDirectory": "C:\\Users\\ocxaccdd4d1619\\AppData\\Local\\Programs\\OpenCodeX Desktop\\",
+      "boundary": "fresh isolated runner; no earlier installed product or directory override",
+      "pathOverride": false,
+      "kind": "msi"
+    }
+  ],
+  "defaultMsiRegistryCleanup": [],
+  "defaultInstallRootObservation": {
+    "expectedOwner": "C:\\Users\\ocxaccdd4d1619\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+    "actual": "C:\\Users\\ocxaccdd4d1619\\AppData\\Local\\Programs\\OpenCodeX Desktop\\"
+  }
+}

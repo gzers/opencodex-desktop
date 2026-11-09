@@ -1,0 +1,34 @@
+{
+  "accepted": false,
+  "source": "e3728109e93498bfbd6e993d49904d57dfd75315",
+  "method": "Both independently signed original installer payloads must yield exactly one identical full image by reversing one Tauri MSI/NSS marker; then original repository verifier checks every byte",
+  "notClaimed": "No separate compiler-output artifact was uploaded. Frozen image digest is cross-verified from signed payloads, not a new build",
+  "originalBuiltSha256": "8162012ee70c01e2118245a1bce8a25fec39654472f6ea944135e7f9b7a0076a",
+  "images": [
+    {
+      "kind": "msi",
+      "asset": "OpenCodeX.Desktop_0.2.23_x64_en-US.msi",
+      "assetSha256": "ab4c0af2c91c5573632f3a9f3651e6d26343200d3ecdf10c3a082e895197e810",
+      "signature": "old-key verified",
+      "extractedMember": "Path",
+      "imageSha256": "c4e0dd7fa04b146caa8bb99c3dc499ec009fb38f16b3f91c3f128cac1890dd6c",
+      "imageBytes": 18588160,
+      "patchedMarkerOccurrences": 2,
+      "bundleMarkerOffset": 17544037,
+      "normalizedSha256": "8162012ee70c01e2118245a1bce8a25fec39654472f6ea944135e7f9b7a0076a"
+    },
+    {
+      "kind": "nsis",
+      "asset": "OpenCodeX.Desktop_0.2.23_x64-setup.exe",
+      "assetSha256": "e17a86a7aa3548584f690e9008b154c6ffe09509f35bb4919f7181dd4af792d6",
+      "signature": "old-key verified",
+      "extractedMember": "opencodex-desktop.exe",
+      "imageSha256": "2a38af30a6adb0fbb3e88c4ce727a950f97657225e854fe5db55b0a50130f10d",
+      "imageBytes": 18588160,
+      "patchedMarkerOccurrences": 2,
+      "bundleMarkerOffset": 17544037,
+      "normalizedSha256": "8162012ee70c01e2118245a1bce8a25fec39654472f6ea944135e7f9b7a0076a"
+    }
+  ],
+  "priorToolFailure": "Initial extractor incorrectly required one patched marker; binary contains code literal plus bundle marker. Original repository verifier uses candidate hash identity. Initial scratch remains separate, no installer executed."
+}
