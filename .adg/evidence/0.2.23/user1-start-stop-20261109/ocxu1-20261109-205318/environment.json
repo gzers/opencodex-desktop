@@ -1,0 +1,194 @@
+{
+  "accepted": false,
+  "scope": "one actual user1 only",
+  "source": "a4abf17aa7aa2b9f677c20aa3d30cda59deed5b4",
+  "sid": "S-1-5-21-587408064-856152790-2583328096-1011",
+  "profile": "C:\\Users\\ocxaccu19d9256085",
+  "sessionId": 2,
+  "harnessToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 47364,
+    "executable": "D:\\ocxu1-20261109-191803\\powershell\\pwsh.exe",
+    "creationTimeUtc": "2026-11-09T12:53:38.5851873Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-09T12:53:39.9576294Z"
+  },
+  "startConfirmed": false,
+  "normalStopExecuted": false,
+  "cleanup": "pending",
+  "manager": {
+    "pid": 17312,
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1011",
+    "path": "C:\\Users\\ocxaccu19d9256085\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+    "creationTicks": "639298256226753569",
+    "sessionId": 2,
+    "generationSource": "retained-handle-native-filetime",
+    "cimImageSupplied": true
+  },
+  "applicationToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 17312,
+    "executable": "C:\\Users\\ocxaccu19d9256085\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+    "creationTimeUtc": "2026-11-09T12:53:42.6753569Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-09T12:53:44.0784055Z"
+  },
+  "os": "Microsoft Windows NT 10.0.26100.0",
+  "machine": "EZIO-MINI",
+  "userInteractive": true,
+  "userProfile": "C:\\Users\\ocxaccu19d9256085",
+  "localAppData": "C:\\Users\\ocxaccu19d9256085\\AppData\\Local",
+  "sandbox": false,
+  "actualUtc": "2026-11-09T12:53:45.0574748Z",
+  "desktop": {
+    "pid": 17312,
+    "handle": "139731230",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T12:53:45.0549989Z"
+  },
+  "powershell": "7.6.9",
+  "productSource": "a4abf17aa7aa2b9f677c20aa3d30cda59deed5b4",
+  "documentHandoff": "e6366f07287467c508592af18ca065935e22a451",
+  "artifactId": 13676565494,
+  "artifactRun": "42619237040",
+  "artifactBytes": 304982014,
+  "artifactSha256": "23bae4812098639bd54693d43eae5f5ddb6450c647a12536f6d7244c03365a7d",
+  "artifactIdentityNote": "Values not supplied remain unknown; never reuse previous artifact identity for a rebuilt product",
+  "runtimeVersion": "2.97.0-desktop023.lifecycle.2",
+  "runtimeBytes": 15413257,
+  "runtimeSha256": "c02f4710496775d8f4dfe271bd90d6afdf7dbf960f6e696637271ab9f37bc70b",
+  "scriptCheckout": "a4abf17aa7aa2b9f677c20aa3d30cda59deed5b4",
+  "preconditionController": {
+    "accepted": false,
+    "source": "a4abf17aa7aa2b9f677c20aa3d30cda59deed5b4",
+    "scope": "user1-only; no peer, core-sweep or installer",
+    "startedUtc": "2026-11-09T12:53:33.8573381Z",
+    "controllerToken": {
+      "schemaVersion": 1,
+      "status": "observed",
+      "processId": 24192,
+      "executable": "D:\\ocxu1-20261109-191803\\powershell\\pwsh.exe",
+      "creationTimeUtc": "2026-11-09T12:53:32.0134216Z",
+      "elevated": true,
+      "elevationType": 2,
+      "collectedAtUtc": "2026-11-09T12:53:34.4311565Z"
+    },
+    "programTreeSha256": "9025e847fc0d29e99b2ad7b310000d490357f79105608464f02edf2a408d4313",
+    "accountsCreated": 1,
+    "accountSid": "S-1-5-21-587408064-856152790-2583328096-1011",
+    "accountName": "ocxaccu19d9256085",
+    "profile": "C:\\Users\\ocxaccu19d9256085",
+    "bootstrapExitCode": 0,
+    "desktopAclRestored": true,
+    "residualProcesses": [],
+    "accountRemoved": true,
+    "profileRemoved": true,
+    "userDirectoryRemoved": true,
+    "cleanup": [
+      {
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1011",
+        "result": "exact-owned-exited",
+        "image": "C:\\Users\\ocxaccu19d9256085\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+        "pid": 65464
+      },
+      {
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1011",
+        "result": "exact-owned-exited",
+        "image": "C:\\Windows\\System32\\conhost.exe",
+        "pid": 93364
+      },
+      {
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1011",
+        "result": "exact-owned-exited",
+        "image": "C:\\Windows\\System32\\cmd.exe",
+        "pid": 111040
+      },
+      {
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1011",
+        "result": "exact-owned-exited",
+        "image": "C:\\Windows\\System32\\conhost.exe",
+        "pid": 64580
+      },
+      {
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1011",
+        "result": "exact-owned-exited",
+        "image": "D:\\ocxu1-output-build-20261109-204221\\tools\\runtime\\node\\node.exe",
+        "pid": 82132
+      },
+      {
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1011",
+        "result": "exact-owned-exited",
+        "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+        "pid": 33928
+      },
+      {
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1011",
+        "result": "exact-owned-exited",
+        "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+        "pid": 98124
+      },
+      {
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1011",
+        "result": "exact-owned-exited",
+        "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+        "pid": 68244
+      },
+      {
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1011",
+        "result": "exact-owned-exited",
+        "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+        "pid": 30556
+      },
+      {
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1011",
+        "result": "exact-owned-exited",
+        "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+        "pid": 110304
+      },
+      {
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1011",
+        "result": "exact-owned-exited",
+        "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+        "pid": 100200
+      },
+      {
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1011",
+        "result": "exact-owned-exited",
+        "image": "C:\\Windows\\System32\\conhost.exe",
+        "pid": 106672
+      },
+      {
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1011",
+        "result": "exact-owned-exited",
+        "image": "C:\\Users\\ocxaccu19d9256085\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+        "pid": 17312
+      },
+      {
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1011",
+        "result": "exact-owned-exited",
+        "image": "D:\\ocxu1-20261109-191803\\powershell\\pwsh.exe",
+        "pid": 47364
+      },
+      {
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1011",
+        "result": "exact-owned-exited",
+        "image": "C:\\Windows\\System32\\conhost.exe",
+        "pid": 89232
+      },
+      {
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1011",
+        "result": "exact-owned-exited",
+        "image": "D:\\ocxu1-20261109-191803\\powershell\\pwsh.exe",
+        "pid": 18084
+      }
+    ],
+    "identityUnproven": false,
+    "programUnchanged": true,
+    "finishedUtc": "2026-11-09T13:00:35.9381460Z"
+  },
+  "documentReadAtExecution": "ab66d173bcc058abc5dc700dab67637c1a6e588a"
+}

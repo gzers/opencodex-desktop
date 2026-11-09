@@ -1,0 +1,155 @@
+{
+  "accepted": false,
+  "startConfirmed": false,
+  "normalStopExecuted": false,
+  "source": "a4abf17aa7aa2b9f677c20aa3d30cda59deed5b4",
+  "failure": {
+    "stage": "wait-owned-health",
+    "message": "Actual service not healthy within production start budget",
+    "publicFacts": {
+      "mode": "start",
+      "port": 0,
+      "action": {
+        "lifecycleState": "starting_failed",
+        "result": null,
+        "failureCode": "lifecycle_start_exit",
+        "canStop": false,
+        "canRestart": false
+      },
+      "startBudget": {
+        "budgetMilliseconds": 30000,
+        "elapsedMilliseconds": 30011
+      }
+    }
+  },
+  "startReceiptCount": 1,
+  "successfulStartReceiptCount": 0,
+  "uniqueSuccessfulStartReceipt": false,
+  "receipts": [
+    {
+      "sequence": 1,
+      "action": "start",
+      "elapsedMilliseconds": 12983.7003,
+      "response": {
+        "raw": "{\"lifecycleState\":\"starting_failed\",\"result\":null,\"canStart\":true,\"canStop\":false,\"canRestart\":false,\"failure\":{\"code\":\"lifecycle_start_exit\",\"message\":\"服务启动进程已退出，请查看诊断日志后重试。\"}}",
+        "value": {
+          "lifecycleState": "starting_failed",
+          "result": null,
+          "canStart": true,
+          "canStop": false,
+          "canRestart": false,
+          "failure": {
+            "code": "lifecycle_start_exit",
+            "message": "服务启动进程已退出，请查看诊断日志后重试。"
+          }
+        }
+      }
+    }
+  ],
+  "trace": [
+    {
+      "sequence": 1,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 33.694599999999994,
+      "atUtc": "2026-11-09T12:56:35.628Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 2,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 264.3787,
+      "atUtc": "2026-11-09T12:56:35.859Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 3,
+      "stage": "start-proof-begin",
+      "elapsedMilliseconds": 265.7251,
+      "atUtc": "2026-11-09T12:56:35.861Z"
+    },
+    {
+      "sequence": 4,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 266.4184,
+      "atUtc": "2026-11-09T12:56:35.861Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 5,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 272.47929999999997,
+      "atUtc": "2026-11-09T12:56:35.867Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 6,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 272.4987,
+      "atUtc": "2026-11-09T12:56:35.867Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 7,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 387.1857,
+      "atUtc": "2026-11-09T12:56:35.982Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 8,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 396.8678,
+      "atUtc": "2026-11-09T12:56:35.992Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 9,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 403.96029999999996,
+      "atUtc": "2026-11-09T12:56:35.999Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 10,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 403.99019999999996,
+      "atUtc": "2026-11-09T12:56:35.999Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 11,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 525.9355,
+      "atUtc": "2026-11-09T12:56:36.121Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 12,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 526.0292000000001,
+      "atUtc": "2026-11-09T12:56:36.121Z",
+      "command": "process_action",
+      "action": "start"
+    },
+    {
+      "sequence": 1,
+      "stage": "action-return",
+      "elapsedMilliseconds": 12986.1254,
+      "atUtc": "2026-11-09T12:56:48.581Z",
+      "action": "start",
+      "rejected": null
+    },
+    {
+      "sequence": 14,
+      "stage": "wait-owned-health",
+      "elapsedMilliseconds": 30408.7785,
+      "atUtc": "2026-11-09T12:57:06.004Z",
+      "message": "Actual service not healthy within production start budget"
+    }
+  ]
+}

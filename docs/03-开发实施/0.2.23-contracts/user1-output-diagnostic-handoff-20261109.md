@@ -2,6 +2,8 @@
 
 日期2026-11-09，Asia/Shanghai。用户已同意补脱敏诊断并交Windows做一次user1定向验证。accepted:false；本文件替代[上一交接](user1-start-stop-handoff-20261109.md)中固定旧Desktop产物的下一动作，四项回交和原判据保持。
 
+执行回交更新（2026-11-09 21:00，Asia/Shanghai）：Windows 已先以新源码 a4abf17aa7aa2b9f677c20aa3d30cda59deed5b4 派 purpose=core-build，run42619237040完整成功；新artifact13676565494，ZIP304982014字节/SHA256 23bae4812098639bd54693d43eae5f5ddb6450c647a12536f6d7244c03365a7d，manifest9成员、appsTree、policy和运行包均核验。独立批次ocxu1-20261109-205318仅Start1次、原回执1／成功0；首个失败lifecycle_start_exit/exit1，exit_observed_ms=12276、duration_ms=12430，未观察到服务PID/端口，正常Stop未执行。startup_output两流EOF均true、read_failed均false；stdout384字节且类别未知，stderr2516字节/kind=error/hint=unobserved/site=src/lib/windows-runtime-private-record.ts:10:39。该位置只读核对为公共拒绝出口，尚无具体调用检查或原生准入stage，不能直接定根因。RDP43次采样全Active、无断线事件。账户/Profile/目录均删净、残留进程空、ACL恢复；未改单项判据、未单修第18项、未扩大验证或发布。[本批四项原证据、新构建身份和startup_output摘要](../../../.adg/evidence/0.2.23/user1-start-stop-20261109/ocxu1-20261109-205318/README.md)。诊断accepted:false；下列源码、制品构建要求与边界保留，下一修复位置等待Mac核对。
+
 ## 已核查事实与本批边界
 
 - Windows回交代码dc919da846260b0c11bebc04c56fd32963929d45、文档d4497d3ed及独立RDP对照已读取，原清单209条文件摘要核对一致。两个实际产品批次均只有1条失败启动回执，无运行记录；实际exit1分别8028ms、10325ms，后续30秒确认失败不覆盖首个退出事实。

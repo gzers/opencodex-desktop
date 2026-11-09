@@ -1,0 +1,7 @@
+2026-11-09T12:53:43.503Z [manager] startup version=0.2.23 commit=a4abf17aa7aa2b9f677c20aa3d30cda59deed5b4
+2026-11-09T12:53:43.561Z [manager] window appearance: theme=light material=mica reason=mica build=26100 active=true transparency=true dwm=Some(0) backdrop=Some(2)
+2026-11-09T12:56:34.633Z [manager] integrated runtime provisioned and verified
+2026-11-09T12:56:35.937Z [manager] environment probe stage=node elapsed_ms=1169 found=true
+2026-11-09T12:56:36.366Z [manager] environment probe stage=npm elapsed_ms=426 found=true
+2026-11-09T12:56:36.608Z [manager] environment probe stage=ocx elapsed_ms=240 found=true
+2026-11-09T12:56:48.565Z [manager] start: failed (managed runtime operation failed: lifecycle_start_exit; 官方启动进程退出，服务未确认就绪；exit_code=1；exit_observed_ms=12276；startup_output=stdout[bytes=384,eof=true,read_failed=false,kind=unobserved,hint=unobserved,site=unobserved] stderr[bytes=2516,eof=true,read_failed=false,kind=error,hint=unobserved,site=src/lib/windows-runtime-private-record.ts:10:39]; duration_ms=12430)

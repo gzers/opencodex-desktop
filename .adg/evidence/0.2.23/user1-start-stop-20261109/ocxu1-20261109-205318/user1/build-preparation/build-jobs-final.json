@@ -1,0 +1,299 @@
+{
+  "jobs": [
+    {
+      "id": 129166802469,
+      "name": "core-build / prepare",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Run Swatinem/rust-cache@v2",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Create fresh preparation root",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Build complete exact-source program outside core iteration",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Build exact-source backend observer",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Seal only a completely built program",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Preserve preparation failures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Upload source-bound complete diagnostic program",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Require all preparation outputs without accepting a candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Post Run Swatinem/rust-cache@v2",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 22
+        },
+        {
+          "name": "Post Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 23
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 24
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 25
+        }
+      ]
+    },
+    {
+      "id": 129166803565,
+      "name": "diagnostic-sweep",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166804023,
+      "name": "retention023",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166804259,
+      "name": "native-replay414",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166804335,
+      "name": "core-sweep",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166804359,
+      "name": "msi-compiler023",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166804424,
+      "name": "query-etw",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166804461,
+      "name": "ordinary-preflight",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166804469,
+      "name": "raw-full0c-diagnostic",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166804489,
+      "name": "raw-final023-replay",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166804530,
+      "name": "official-stop-query-profile",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166804544,
+      "name": "full-bundle-two-user-debug",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166804551,
+      "name": "foreign-job-authority",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166804589,
+      "name": "local-session-regression",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166805225,
+      "name": "raw-msi3d-diagnostic",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166805230,
+      "name": "lifetime-producer",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166854384,
+      "name": "local-session-build",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166854399,
+      "name": "package",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166856106,
+      "name": "native-ui",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166860858,
+      "name": "retention",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166864108,
+      "name": "process-exit",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 129166873112,
+      "name": "record-contract",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 42619237040,
+      "logs_url": null,
+      "steps": null
+    }
+  ]
+}

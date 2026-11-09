@@ -1,0 +1,52 @@
+{
+  "accepted": false,
+  "source": "a4abf17aa7aa2b9f677c20aa3d30cda59deed5b4",
+  "batch": "ocxu1-20261109-205318",
+  "start": {
+    "rawReceiptCount": 1,
+    "successfulReceiptCount": 0,
+    "uniqueSuccessfulReceipt": false,
+    "pidPortConsistentWithNativeRecord": null,
+    "publicRecord": null,
+    "nativeRecord": null,
+    "recordObserved": false,
+    "pidPortUnavailableReason": "No protected runtime record observed; do not treat launcher PIDs as service PIDs",
+    "classification": "actual-start-process-exited-before-confirmation",
+    "firstStartTrace": {
+      "file": "user1/desktop-logs/app.log",
+      "line": 7,
+      "text": "2026-11-09T12:56:48.565Z [manager] start: failed (managed runtime operation failed: lifecycle_start_exit; 官方启动进程退出，服务未确认就绪；exit_code=1；exit_observed_ms=12276；startup_output=stdout[bytes=384,eof=true,read_failed=false,kind=unobserved,hint=unobserved,site=unobserved] stderr[bytes=2516,eof=true,read_failed=false,kind=error,hint=unobserved,site=src/lib/windows-runtime-private-record.ts:10:39]; duration_ms=12430)"
+    },
+    "admissionTrace": [],
+    "admissionStageKindWin32": "not-observed; no inference of successful admission"
+  },
+  "startupOutputTrace": [
+    {
+      "file": "user1/desktop-logs/app.log",
+      "line": 7,
+      "text": "2026-11-09T12:56:48.565Z [manager] start: failed (managed runtime operation failed: lifecycle_start_exit; 官方启动进程退出，服务未确认就绪；exit_code=1；exit_observed_ms=12276；startup_output=stdout[bytes=384,eof=true,read_failed=false,kind=unobserved,hint=unobserved,site=unobserved] stderr[bytes=2516,eof=true,read_failed=false,kind=error,hint=unobserved,site=src/lib/windows-runtime-private-record.ts:10:39]; duration_ms=12430)"
+    }
+  ],
+  "stop": {
+    "executed": false,
+    "confirmed": false,
+    "reasonIfNotExecuted": "Start not confirmed; no normal Stop permitted",
+    "traceFile": null,
+    "realOriginalExitEvidence": "user1/original-exits-before-cleanup.json",
+    "separateStopCliExitCode": null,
+    "separateStopCliReason": "Normal product Stop is authenticated HTTP; do not invent a CLI exit code"
+  },
+  "cleanup": {
+    "accountSid": "S-1-5-21-587408064-856152790-2583328096-1011",
+    "accountName": "ocxaccu19d9256085",
+    "profile": "C:\\Users\\ocxaccu19d9256085",
+    "accountRemoved": true,
+    "profileRemoved": true,
+    "userDirectoryRemoved": true,
+    "desktopAclRestored": true,
+    "identityUnproven": false,
+    "cleanupFailure": null,
+    "residualProcesses": [],
+    "programUnchanged": true
+  }
+}

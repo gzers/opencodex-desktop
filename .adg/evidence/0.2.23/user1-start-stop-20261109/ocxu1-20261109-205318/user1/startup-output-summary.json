@@ -1,0 +1,52 @@
+{
+  "accepted": false,
+  "source": "a4abf17aa7aa2b9f677c20aa3d30cda59deed5b4",
+  "buildRun": "42619237040",
+  "artifactId": 13676565494,
+  "firstFailure": {
+    "file": "user1/desktop-logs/app.log",
+    "line": 7,
+    "rawLogLine": "2026-11-09T12:56:48.565Z [manager] start: failed (managed runtime operation failed: lifecycle_start_exit; 官方启动进程退出，服务未确认就绪；exit_code=1；exit_observed_ms=12276；startup_output=stdout[bytes=384,eof=true,read_failed=false,kind=unobserved,hint=unobserved,site=unobserved] stderr[bytes=2516,eof=true,read_failed=false,kind=error,hint=unobserved,site=src/lib/windows-runtime-private-record.ts:10:39]; duration_ms=12430)",
+    "classification": "actual-start-process-exited-before-confirmation",
+    "exitCode": 1,
+    "exitObservedMilliseconds": 12276,
+    "durationMilliseconds": 12430
+  },
+  "streams": {
+    "stdout": {
+      "bytes": 384,
+      "eof": true,
+      "read_failed": false,
+      "kind": "unobserved",
+      "hint": "unobserved",
+      "site": "unobserved"
+    },
+    "stderr": {
+      "bytes": 2516,
+      "eof": true,
+      "read_failed": false,
+      "kind": "error",
+      "hint": "unobserved",
+      "site": "src/lib/windows-runtime-private-record.ts:10:39"
+    }
+  },
+  "streamReadComplete": true,
+  "lifetimeAdmissionFieldObserved": false,
+  "nativeAdmissionStageKindWin32": "not observed; no inference of successful admission or specific refusal stage",
+  "rootCauseIdentified": false,
+  "sourceMapping": {
+    "method": "Read-only exact maintained-runtime.tgz source inspection; no extra product invocation",
+    "runtimeArchiveSha256": "c02f4710496775d8f4dfe271bd90d6afdf7dbf960f6e696637271ab9f37bc70b",
+    "member": "package/src/lib/windows-runtime-private-record.ts",
+    "memberSha256": "7ccc32253a043b79b0d87ddb73fc9a5792ee3e5d068857e2b3852e1d3230fb71",
+    "observedSite": "src/lib/windows-runtime-private-record.ts:10:39",
+    "interpretation": "The observed location is the common refusal throw site in private runtime record code; multiple checks can reach it. The calling check and native error are not identified.",
+    "rawErrorTextExported": false,
+    "rawStackExported": false,
+    "productSourceEdited": false
+  },
+  "laterConfirmationElapsedMilliseconds": 30011,
+  "normalStopExecuted": false,
+  "onlyOneStart": true,
+  "nextEvidenceNeed": "Identify which private-record check reached the common refusal site, under a separately specified diagnostic/fix plan; no automatic rerun."
+}
