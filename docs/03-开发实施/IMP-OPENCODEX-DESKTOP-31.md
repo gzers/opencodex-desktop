@@ -407,3 +407,10 @@ f42733959仅测试原型：原生CREATE_NEW显式TokenUser owner，保留受保�
 
 
 f3f0ce755描述符／真实分离派生原型已派[run42561691867](https://github.com/gzers/opencodex-desktop/actions/runs/42561691867)，固定f3f0ce755067d512f3376693403b228d3b3e86cb/job128979307025已确认运行。新增固定Node以原detached:true/stdio-ignore/windowsHide/unref机制启动合成Bun服务；启动Node原句柄退出后，实际Bun的保留句柄/PID/FILETIME与Job成员仍核对，派生子进程仍受集合约束。服务就绪绑定用原子标记避免半写JSON竞态。直接、detached、记录三case独立收错/保存各日志，最终任何case失败都判负。Bun合成启动不等于原官方CLI、HMAC、还原或跨SID全链；names.2不改，未派完整sweep。Node3脚本语法、Rustfmt和实际3PowerShell块解析过。
+
+
+描述符／分离派生42561691867完成，原8791字节ZIP/SHA2562913374829bc8fbea76c5ada65993b8ef54c2adc20ae3c5d7e9df3d5791ca669核验；[三case原回执](../../.adg/evidence/0.2.23/native-integration-prototypes-42561691867/analysis.json)均过且prototypeFailures为空，仍accepted:false。新建对象由现有fs描述符完成hardener/写入/fsync，再原rename；原validator接受、owner=TokenUser。直接Bun153.53ms；真实固定Node detached启动器退出后Bun服务和子仍在Job，正常释放后集合空/租约释放221.99ms；父退出子仍活反例保持拒绝，无终止API/kill-on-close。严格Clippy、自有fixture/stage清理通过；不是实际官方CLI/HMAC/还原或跨SID停止验收。
+
+6f5b220d0只补原型祖先pin：每级GENERIC_READ、不共享删除、OPEN_REPARSE/备份语义；贯穿原创建/描述符/发布，检查目录重命名拒绝、junction祖先拒绝与5路径歧义反例。本地语法和实际validator5反例通过；工具转义初稿分隔符与控制字符已修正并核对无NUL，未进入正式包。原代码逻辑未改，下一轮仍复跑三case与祖先反例，不派完整sweep。
+
+祖先反例原型run42562765970固定6f5b220d0ea5c9d60e3f4a6ba9aba3eb55de27ed/job128982577243已确认运行；仍是前述3case及pin/reparse反例的opt-in技术验证，accepted:false，不是新完整验收或产品包替换。
