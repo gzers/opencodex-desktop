@@ -1,5 +1,6 @@
 param(
  [Parameter(Mandatory=$true)][switch]$LocalWorkstation,
+ [switch]$ElevatedFirstAccount,
  [Parameter(Mandatory=$true)][string]$Directory,
  [Parameter(Mandatory=$true)][string]$ProgramDirectory,
  [Parameter(Mandatory=$true)][string]$Node,
@@ -29,7 +30,7 @@ $original=Get-TwoUserTreeHash $program
 $accounts=[Collections.Generic.List[object]]::new()
 $access=[Collections.Generic.List[object]]::new()
 $ledger=[Collections.Generic.Dictionary[int,object]]::new()
-$summary=[ordered]@{accepted=$false;source=$ExpectedSource;buildRun=$ExpectedBuildRun;scope='Two new ordinary SIDs on local workstation; concurrent health, stopB/peerA preserved, stopA, exact cleanup';startedUtc=[datetime]::UtcNow.ToString('o');controllerToken=(Get-WindowsHarnessToken);programTreeSha256=$original.sha256;budgetsMilliseconds=@{start=30000;stop=10000;status=5000};protocolPassed=$false;accountsCreated=0}
+$summary=[ordered]@{accepted=$false;source=$ExpectedSource;buildRun=$ExpectedBuildRun;scope='Two new SIDs on local workstation; concurrent health, stopB/peerA preserved, stopA, exact cleanup';elevatedFirstAccount=$ElevatedFirstAccount.IsPresent;startedUtc=[datetime]::UtcNow.ToString('o');controllerToken=(Get-WindowsHarnessToken);programTreeSha256=$original.sha256;budgetsMilliseconds=@{start=30000;stop=10000;status=5000};protocolPassed=$false;accountsCreated=0}
 Write-TwoUserJson (Join-Path $taskRoot 'controller.json') $summary
 $reuse=Get-TwoUserReuseParts (Join-Path $PSScriptRoot 'windows-ordinary-startup.ps1')
 if(!('OcxNativeProfileProvision' -as [type])){Add-Type -TypeDefinition $reuse.ProfileType}
@@ -68,6 +69,11 @@ try{
    $a=[pscustomobject]@{role=$role;name=$name;sid=$user.SID.Value;profile=$null;evidence=(Join-Path $taskRoot ('user'+$role));process=$null;fact=$null;credential=$null;unproven=$false;cleanup=@()}
    $accounts.Add($a);$summary.accountsCreated=$accounts.Count
    Add-LocalGroupMember -Group (Get-LocalGroup -SID 'S-1-5-32-545') -Member $user
+   $expectedMode='ordinary'
+   if($role -eq 1 -and $ElevatedFirstAccount){
+    Add-LocalGroupMember -Group (Get-LocalGroup -SID 'S-1-5-32-544') -Member $user
+    $expectedMode='administrator'
+   }
    $path=[Text.StringBuilder]::new(260);$hr=[OcxNativeProfileProvision]::CreateProfile($a.sid,$name,$path,260)
    if($hr -ne 0){[Runtime.InteropServices.Marshal]::ThrowExceptionForHR($hr)}
    $a.profile=$path.ToString();if((Split-Path -Leaf $a.profile) -cne $name){throw 'Exact Profile identity differs'}
@@ -76,7 +82,7 @@ try{
    & icacls.exe $taskRoot /grant ('*'+$a.sid+':(OI)(CI)RX')|Out-Null;if($LASTEXITCODE -ne 0){throw 'Evidence read ACL failed'}
    & icacls.exe $a.evidence /grant ('*'+$a.sid+':(OI)(CI)M')|Out-Null;if($LASTEXITCODE -ne 0){throw 'Own evidence write ACL failed'}
    $configPath=Join-Path $a.evidence 'input.json'
-   Write-TwoUserJson $configPath @{accountSid=$a.sid;profile=$a.profile;commit=$ExpectedSource;profileOnly=$false;singleUserScript=(Join-Path $code 'windows023-user1-start-stop.ps1');candidateDirectory=$program;node=$Node;evidence=$a.evidence;code=$code;coordination=@{role=$role}}
+   Write-TwoUserJson $configPath @{accountSid=$a.sid;profile=$a.profile;commit=$ExpectedSource;profileOnly=$false;singleUserScript=(Join-Path $code 'windows023-user1-start-stop.ps1');candidateDirectory=$program;node=$Node;evidence=$a.evidence;code=$code;expectedProcessMode=$expectedMode;coordination=@{role=$role}}
    $a.credential=[pscredential]::new(($env:COMPUTERNAME+[char]92+$name),$secure)
    $a.process=Start-Process -FilePath (Join-Path $PSHOME 'pwsh.exe') -Credential $a.credential -LoadUserProfile -WorkingDirectory $a.evidence -ArgumentList @('-NoLogo','-NoProfile','-NonInteractive','-File',('"'+(Join-Path $code 'profile-bootstrap.ps1')+'"'),'-InputFile',('"'+$configPath+'"')) -RedirectStandardOutput (Join-Path $a.evidence 'bootstrap-stdout.log') -RedirectStandardError (Join-Path $a.evidence 'bootstrap-stderr.log') -PassThru
    $a.fact=Get-TwoUserProcessFact $a.process $a.sid;$ledger[[int]$a.fact.pid]=$a.fact

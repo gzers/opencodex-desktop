@@ -19,7 +19,9 @@ if($user1Mode -eq 'Child'){
  $expected=$c.commit
  $identity=[Security.Principal.WindowsIdentity]::GetCurrent();$sid=$identity.User.Value
  if($sid -cne $c.accountSid -or $env:USERPROFILE -ine $c.profile -or (Split-Path -Leaf $c.profile) -notlike 'ocxaccu1*'){throw 'Exact newly provisioned user1 required'}
- if(([Security.Principal.WindowsPrincipal]::new($identity)).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){throw 'user1 must be a genuine nonadministrator'}
+ $expectedProcessMode=if($c.expectedProcessMode){$c.expectedProcessMode}else{'ordinary'}
+ if($expectedProcessMode -notin @('ordinary','administrator')){throw 'Explicit ordinary or administrator process mode required'}
+ if($expectedProcessMode -eq 'ordinary' -and ([Security.Principal.WindowsPrincipal]::new($identity)).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){throw 'user1 must be a genuine nonadministrator'}
  $out=$c.evidence;$profile=$c.profile;$installed=Join-Path $env:LOCALAPPDATA 'Programs/OpenCodeX Desktop'
  $root=Join-Path $profile '.codex-desktop/desktop';$nativeHome=Join-Path $profile '.codex-desktop/opencodex/home'
  $ledger=[Collections.Generic.Dictionary[int,object]]::new();$objects=@{};$manager=$null;$driver=$null
@@ -53,7 +55,7 @@ if($user1Mode -eq 'Child'){
   }
  }
  try{
-  Assert-WindowsProcessMode $result.harnessToken ordinary
+  Assert-WindowsProcessMode $result.harnessToken $expectedProcessMode
   if(Test-Path -LiteralPath $installed){throw 'Fresh user1 private installation required'}
   New-Item -ItemType Directory -Path $installed|Out-Null
   $before=Get-TwoUserTreeHash $c.candidateDirectory
@@ -68,7 +70,7 @@ if($user1Mode -eq 'Child'){
   $info.Environment['WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS']='--remote-debugging-address=127.0.0.1 --remote-debugging-port='+$port
   $manager=[Diagnostics.Process]::Start($info);$managerOut=$manager.StandardOutput.ReadToEndAsync();$managerErr=$manager.StandardError.ReadToEndAsync()
   $managerFact=Admit-User1Process $manager;$result.manager=$managerFact
-  $result.applicationToken=Get-WindowsProcessToken $manager $exe;Assert-WindowsProcessMode $result.applicationToken ordinary
+  $result.applicationToken=Get-WindowsProcessToken $manager $exe;Assert-WindowsProcessMode $result.applicationToken $expectedProcessMode
   $window=$null;$windowDeadline=[datetime]::UtcNow.AddSeconds(40)
   do{try{$window=Get-TwoUserWindow $managerFact}catch{Start-Sleep -Milliseconds 250}}while(!$window -and [datetime]::UtcNow -lt $windowDeadline)
   if(!$window){throw 'Actual user1 native window unavailable'}
