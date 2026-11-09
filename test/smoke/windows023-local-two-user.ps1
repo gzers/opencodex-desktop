@@ -64,7 +64,7 @@ try{
   try{
    $name='ocxaccu1'+[guid]::NewGuid().ToString('N').Substring(0,9)
    $secure=ConvertTo-SecureString ([Convert]::ToBase64String($entropy)+'aA1!') -AsPlainText -Force
-   $user=New-LocalUser -Name $name -Password $secure -AccountNeverExpires -PasswordNeverExpires -Description 'Disposable local Windows peer lifecycle verification'
+   $user=New-LocalUser -Name $name -Password $secure -AccountNeverExpires -PasswordNeverExpires -Description 'Disposable local peer lifecycle test'
    $a=[pscustomobject]@{role=$role;name=$name;sid=$user.SID.Value;profile=$null;evidence=(Join-Path $taskRoot ('user'+$role));process=$null;fact=$null;credential=$null;unproven=$false;cleanup=@()}
    $accounts.Add($a);$summary.accountsCreated=$accounts.Count
    Add-LocalGroupMember -Group (Get-LocalGroup -SID 'S-1-5-32-545') -Member $user
@@ -104,7 +104,10 @@ try{
  if(!$aResult.normalStopConfirmed){throw 'A normal Stop failed; no repeat'}
  foreach($a in $accounts){if(!$a.process.WaitForExit(90000)){throw 'Child evidence envelope elapsed'}}
  $summary.protocolPassed=$true
-}catch{$summary.firstFailure=@{message=$_.Exception.Message;line=$_.InvocationInfo.ScriptLineNumber;atUtc=[datetime]::UtcNow.ToString('o')}}
+}catch{
+ $summary.firstFailure=@{message=$_.Exception.Message;line=$_.InvocationInfo.ScriptLineNumber;atUtc=[datetime]::UtcNow.ToString('o')}
+ Write-TwoUserJson (Join-Path $taskRoot 'first-failure.json') $summary.firstFailure
+}
 finally{
  foreach($a in $accounts){try{Signal-LocalPeer $a 'abort'}catch{}}
  foreach($a in $accounts){
@@ -128,7 +131,7 @@ finally{
  $summary.desktopAclRestored=$true
  for($i=$access.Count-1;$i -ge 0;$i--){try{$access[$i].Dispose()}catch{$summary.desktopAclRestored=$false}}
  $residual=@()
- foreach($row in Get-CimInstance Win32_Process){
+ foreach($row in $(if($accounts.Count){Get-CimInstance Win32_Process}else{@()})){
   $owner=Invoke-CimMethod -InputObject $row -MethodName GetOwnerSid -ErrorAction SilentlyContinue
   foreach($a in $accounts){if($owner.Sid -ceq $a.sid){$a.unproven=$true;$residual+=@{pid=$row.ProcessId;image=$(if($row.ExecutablePath){$row.ExecutablePath}else{'unknown'});sid=$owner.Sid;session=$row.SessionId}}}
  }
