@@ -163,6 +163,7 @@ jobs:
           images=(apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg)
           test "${#images[@]}" -eq 1
           test -f "${images[0]}"
+          mkdir -p test/out/macos023-package
           output="test/out/macos023-package/$(basename "${images[0]}")"
           python3 .github/scripts/package_macos_023.py --app "$app" --output "$output" --metadata test/out/macos023-package/package-evidence.json --expected-version 0.2.23 --input-kind release-input
           # The sealed .app/updater bytes stay unchanged; replace only the DMG.
