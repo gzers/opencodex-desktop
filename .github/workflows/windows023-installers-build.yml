@@ -54,14 +54,15 @@ jobs:
           foreach($f in $files){Copy-Item -LiteralPath $f.FullName -Destination $artifact}
           Copy-Item -LiteralPath target/debug/opencodex-desktop.exe -Destination $artifact
           Copy-Item -LiteralPath resources/runtime-bundle/runtime-bundle.manifest.json -Destination $artifact
-          $policy=Get-Content -LiteralPath ../../../.github/runtime-platforms-023.json -Raw|ConvertFrom-Json
+          $policy=Get-Content -LiteralPath ../../../.github/runtime-platforms-023.json -Raw|ConvertFrom-Json -AsHashtable
           @{source=(git rev-parse HEAD).Trim();appsTree=(git rev-parse HEAD:apps).Trim();run=$env:GITHUB_RUN_ID;attempt=$env:GITHUB_RUN_ATTEMPT;profile='debug custom-protocol MSVC; build-only diagnostic';accepted=$false;releaseAccepted=$false;installExecuted=$false;testsExecuted=$false;runtimeVersion=$policy.runtime.version;runtimeSha256=$policy.runtime.sha256;files=@(Get-ChildItem -LiteralPath $artifact -File|ForEach-Object{@{name=$_.Name;bytes=$_.Length;sha256=(Get-FileHash -LiteralPath $_.FullName).Hash.ToLowerInvariant()}})}|ConvertTo-Json -Depth 7|Set-Content -LiteralPath (Join-Path $artifact 'installer-build.json') -Encoding utf8
       - name: Preserve raw diagnostic installers only
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: windows023-installers-program-${{ github.sha }}
           path: test/out/windows023-installers-build/artifact/**
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 14
       - name: Preserve preparation and bundler logs
         if: always()
