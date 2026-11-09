@@ -53,7 +53,7 @@
 | Item | Requirement |
 |---|---|
 | OS | macOS (Apple Silicon, officially supported) / Windows x64 (test build) |
-| OpenCodex | Starting with 0.2.23, Desktop includes complete Node.js 26.8.1, npm 11.19.0 and maintained runtime 2.97.0-desktop023.names.1, prepared on first launch; no separate Node/npm installation or runtime archive import is required |
+| OpenCodex | Starting with 0.2.23, Desktop includes complete Node.js 26.8.1, npm 11.19.0 and maintained runtime 2.97.0-desktop023.lifecycle.3, prepared on first launch; no separate Node/npm installation or runtime archive import is required |
 
 ### Download
 
@@ -67,7 +67,7 @@
 - **Latest (always the newest)**: <https://github.com/gzers/opencodex-desktop/releases/latest>
 - All releases and history: <https://github.com/gzers/opencodex-desktop/releases>
 
-Starting with 0.2.23, Desktop includes complete Node.js 26.8.1, npm 11.19.0 and the project-maintained OpenCodex runtime `2.97.0-desktop023.names.1` (based on upstream 2.97.0, including the official web panel assets). First launch prepares the environment under `runtime/` in the actual installation directory. These patches are a separate project revision, not a claim that upstream has released or incorporated them. Desktop updates preserve the existing runtime; runtime upgrades require separate explicit confirmation, and online installation still uses the official upstream package. See each release for its supplied components, verification information and limitations.
+Starting with 0.2.23, Desktop includes complete Node.js 26.8.1, npm 11.19.0 and the project-maintained OpenCodex runtime `2.97.0-desktop023.lifecycle.3` (based on upstream 2.97.0, including the official web panel assets). First launch prepares the environment under `runtime/` in the actual installation directory. These patches are a separate project revision, not a claim that upstream has released or incorporated them. Desktop updates preserve the existing runtime; runtime upgrades require separate explicit confirmation, and online installation still uses the official upstream package. See each release for its supplied components, verification information and limitations.
 
 Artifacts are produced by GitHub Actions when a tag is pushed:
 
