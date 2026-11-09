@@ -904,6 +904,52 @@ mod tests {
                 }
             }
         }
+        if let Some(package_producer) = std::env::var_os("OCXD_PRODUCER_PROBE_PACKAGE")
+            .filter(|_| prototype_failures.is_empty())
+        {
+            let producer_root = task.path().join("actual-producer");
+            std::fs::create_dir(&producer_root).unwrap();
+            let script = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+                .join("../../../test/smoke/windows023-runtime-producer-probe.mjs");
+            let result = std::process::Command::new(&bun)
+                .arg("--no-env-file")
+                .arg(script)
+                .env("OCXD_PRODUCER_PROBE_PACKAGE", package_producer)
+                .env("OCXD_PRODUCER_PROBE_ROOT", &producer_root)
+                .current_dir(task.path())
+                .output()
+                .expect("actual isolated candidate producer");
+            std::fs::write(
+                evidence.with_file_name("actual-producer.stdout.log"),
+                &result.stdout,
+            )
+            .unwrap();
+            std::fs::write(
+                evidence.with_file_name("actual-producer.stderr.log"),
+                &result.stderr,
+            )
+            .unwrap();
+            let readback = std::fs::read(producer_root.join("producer-report.json"))
+                .ok()
+                .and_then(|bytes| serde_json::from_slice::<serde_json::Value>(&bytes).ok());
+            if !matches!(readback.as_ref(),Some(value) if value["fixtureSafeToRemove"]==true) {
+                report["actualProducerReadback"] = readback
+                    .unwrap_or(serde_json::json!({"accepted":false,"fixtureSafeToRemove":false}));
+                report["fixtureRemoved"] = serde_json::json!(false);
+                let mut file = OpenOptions::new()
+                    .create_new(true)
+                    .write(true)
+                    .open(&evidence)
+                    .unwrap();
+                writeln!(file, "{report}").unwrap();
+                let _retained = task.keep();
+                panic!("Actual producer cleanup is unproved; exact temporary HOME retained, no force kill or false stopped state");
+            }
+            report["actualProducerReadback"] = readback.unwrap();
+            if !result.status.success() {
+                prototype_failures.push("actual-candidate-producer");
+            }
+        }
         report["prototypeFailures"] = serde_json::json!(prototype_failures);
         task.close().expect("exact fixture cleanup");
         report["fixtureRemoved"] = serde_json::json!(true);
