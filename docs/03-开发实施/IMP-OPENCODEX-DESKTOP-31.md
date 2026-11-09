@@ -445,3 +445,20 @@ atomic-overlay42564664257完成：[原10784字节ZIP与结果](../../.adg/eviden
 2699869f2离线原型归档构建：2.97.0-desktop023.lifecycle.1-record-prototype，15409187字节/SHA25633887e710fad9d5ae78eb4f85c6d02f7da0d413238437a65033b5a79fba168e4，两份独立patch应用/规范打包字节一致；2523实际成员、2408存在compatibility成员摘要核对，原归档未打包的bun.lock与scripts/model-metadata.source.json两条记录保持原样，单独列为inheritedAbsent，不冒充已验内容。初次校验因bun.lock不在归档而拒绝，已按原封包事实区分并完整重建；不删除或伪造缺失成员。原型归档与源review保留在[候选原件](../../.adg/evidence/0.2.23/record-owner-archive-prototype-20261109/verification.json)，仅记录创建修复，不含最终生命周期协议，不改生产pin，不作为release。
 
 下一候选技术轮会在Windows双重构建并展开相同原型归档，直接调用该archive内的实际atomic入口/强制beforeRename反例，仍需原Desktopvalidator接受；仅本机物化源码已精确清理，原件保留。私有Job/绑定轮42565691962仍live，未重复派发；下一批归档验证代码已推送但未派，所有原失败与原30/10/5秒保持。
+
+
+独立权限／归档两个技术门并行派发，均固定7e462c2022902fe3d31b22eeedb12f317600094e：foreign-job-authority42566587832/job128994298969已确认执行；新真实标准账户从实际TokenGroups确认无Administrators SID，对创建者仍持有的私有GlobalJob两种查询权限均须error5，且创建者前后能重开，防止把不存在当拒绝。沿用完整真实用户/Profile/ACL/原进程句柄清理执行器。此门不涉及桌面，托管runner适用；不外推产品用户隔离。小执行器Windows目标cargo check与Rustfmt/YAML/实际PowerShell块已过。
+
+record-contract42566611523/job128994367251同样确认执行，在Windows重建／展开同一candidate-only归档，实际atomic入口与发布前失败保留/原validator门保留，并含私有Job/七身份绑定反例。两门独立于先前sameSID技术轮，未重启该live轮、不派完整sweep。新标准账户覆盖和原型归档不代替本地控制台＋RDP实际服务启停、官方还原、OSProfile/DPAPI/IPC或最终签名制品。正式names.2/pin不变。
+
+
+私有Job/身份绑定42565691962完成，原10966字节ZIP/SHA256ab3bc54ff818624e8ff54da0862d500e6e907f0ef022150d8f23652ae867c06e核验。实际Job owner/受保护DACL/唯一TokenUser ACE与重开observer读回过；本H/SID/PID/FILETIME/Job/代次及错误key共7反例拒绝，direct154.29ms/Node-detached245.68ms，原原子入口及失败保留/所有独立case、strictClippy、fixture/stage清理继续过。见[原件与限制](../../.adg/evidence/0.2.23/private-job-binding-42565691962/analysis.json)。仍sameSID LocalJob及测试HMAC，不是受保护生产record/server attestation/跨SID/实际官方还原或Stop验收。
+
+foreign-job42566587832失败原件128408字节ZIP/SHA256be2b4792b1c4c064e16eb9e051d54a5c2f6bad5eca868fc027c0dd76402c0bd9保留。真实普通二进制exit0、5test reported pass与账户/Profile/ACL/零残留有回执，但libtest默认捕获成功stdout，父流程未见必需实际拒绝访问marker，creator-after未执行；因此整门继续failed/accepted:false，不推断权限已过。bf070287d仅在原执行器允许列表中加--nocapture，保留所有判据/预算/身份及清理；替换诊断42567013704已派，不能用未显示输出的旧轮补判通过。
+
+
+foreign-job替换轮42567013704完成，原129105字节ZIP/SHA256f68c4a1b1577ae09b9820d474cbd5373c249e9989a8847e04097b96441c0426e核验。真实新标准账户TokenGroups不含Administrators，两个不同SID；所需实际marker显示两种Job查询均error5，creator前后重开确认对象存在，原句柄关闭/账户Profile/ACL/零进程残留回执齐全。见[原权限证明及范围](../../.adg/evidence/0.2.23/foreign-job-authority-42567013704/analysis.json)；只关闭私有Job跨SID拒绝访问技术门，不替代真实产品双用户或OSProfile/DPAPI/IPC；原42566587832失败保留。
+
+archive读回42566611523失败于构建前patchSHA断言，后续native未执行。原3364字节ZIP/SHA2561ab8b6803a66cf0cfa109ae0dd0316085af412d1b9685ee4597f2852f09f65c9与candidate-build.log保留，stage清理步骤成功。新patch/helper缺失既有维护patch的LF属性；b4dd038e8集中补.gitattributes两路径、gitapply显式core.autocrlf=false、Path.as_posix枚举。实际core.autocrlf=true临时Gitcheckout后原SHA不变，本机再次双重规范build仍33887e71；没有放宽SHA或原生判据，临时Gitfixture已清理。
+
+替换[run42573713909](https://github.com/gzers/opencodex-desktop/actions/runs/42573713909)固定b4dd038e88b757fa2f96efafbf49a09b964a1caf/job129016639100已确认执行；原归档读回、原子失败保留、私有Job/七绑定反例和全部原3case仍必需，accepted:false，不是完整sweep或生产包替换。两条已终止技术轮各自结果先完整呈现并集中修复，不以新成功覆盖旧失败。

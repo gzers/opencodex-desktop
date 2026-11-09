@@ -1,0 +1,11 @@
+{
+  "accepted": false,
+  "result": "failed-before-actual-diagnostic",
+  "artifactBytes": 3364,
+  "artifactSha256": "1ab8b6803a66cf0cfa109ae0dd0316085af412d1b9685ee4597f2852f09f65c9",
+  "failure": "Reviewed patch SHA check refused before canonical build/actual native test. New patch/helper lacked pinnedLF checkout attributes, in contrast existing reviewed patch.",
+  "cleanupStageVerified": true,
+  "fix": "b4dd038e8 pins exact patch/helper LF, gitapply autocrlf=false, Path.as_posix for crosshost member enumeration. Original digests and native assertions retained. Actual gitcoreautocrlf=truecheckout verified exact preexisting digests. Local2canonicalbuild still SHA33887e710fad9d5ae78eb4f85c6d02f7da0d413238437a65033b5a79fba168e4.",
+  "replacementRun": 42573713909,
+  "actualRecordOrLifecycleAccepted": false
+}

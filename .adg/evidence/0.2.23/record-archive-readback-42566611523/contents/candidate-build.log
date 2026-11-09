@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "D:\a\opencodex-desktop\opencodex-desktop\test\smoke\build-runtime-record-prototype.py", line 116, in <module>
+    build(args.archive, args.output, args.materialize)
+  File "D:\a\opencodex-desktop\opencodex-desktop\test\smoke\build-runtime-record-prototype.py", line 28, in build
+    assert hashlib.sha256(PATCH.read_bytes()).hexdigest() == review['patchSha256']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

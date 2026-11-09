@@ -1,0 +1,17 @@
+
+running 5 tests
+test tests::child_helper ... ok
+test tests::explicit_readonly_official_ownership_diagnostic ... ok
+test tests::explicit_official_cli_startup_diagnostic ... ok
+test tests::explicit_foreign_private_job_query_is_denied ... ok
+
+running 1 test
+executor-preflight-only: exact child wrote own fixture; fullSoftwarePassed=false
+test tests::child_helper ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.01s
+
+test tests::ordinary_profile_temp_and_exact_child_round_trip ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+

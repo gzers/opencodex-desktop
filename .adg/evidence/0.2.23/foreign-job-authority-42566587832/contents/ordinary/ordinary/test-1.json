@@ -1,0 +1,46 @@
+{
+  "process": {
+    "pid": 4696,
+    "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+    "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-ordinary-preflight\\target\\debug\\deps\\windows023_ordinary_preflight-791569d65fb88844.exe",
+    "creationTicks": "639297984501015680",
+    "sessionId": 2,
+    "identityAuthority": "retained-CreateProcess-handle"
+  },
+  "token": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 4696,
+    "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-ordinary-preflight\\target\\debug\\deps\\windows023_ordinary_preflight-791569d65fb88844.exe",
+    "creationTimeUtc": "2026-11-09T05:20:50.1015680Z",
+    "elevated": false,
+    "elevationType": 1,
+    "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+    "authority": "retained-CreateProcess-handle"
+  },
+  "cim": {
+    "rowPresent": true,
+    "pidProvided": true,
+    "pid": 4696,
+    "sidProvided": true,
+    "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+    "imageProvided": false,
+    "image": null,
+    "creationProvided": true,
+    "creationTicks": "639297984501015680",
+    "ownerReturnValue": 0,
+    "queryFailureType": null,
+    "queryHResult": null,
+    "contradictions": []
+  },
+  "exitCode": 0,
+  "exitAuthority": "retained-CreateProcess-handle",
+  "arguments": [],
+  "stdout": "D:\\a\\_temp\\ocxd-foreign-job-42566587832\\ordinary\\ordinary\\test-1.stdout.log",
+  "stderr": "D:\\a\\_temp\\ocxd-foreign-job-42566587832\\ordinary\\ordinary\\test-1.stderr.log",
+  "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-ordinary-preflight",
+  "identityObservedBeforeResume": true,
+  "sha256": "d0fba099cfa8890050de4d726aa3d92726c66b63665cac2b555333f8908917ae",
+  "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows023-ordinary-preflight#0.1.0",
+  "target": "windows023_ordinary_preflight"
+}

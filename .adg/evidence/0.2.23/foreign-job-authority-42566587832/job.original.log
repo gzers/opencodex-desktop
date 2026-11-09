@@ -1,0 +1,411 @@
+foreign-job-authority / foreign-job	UNKNOWN STEP	﻿2026-11-09T05:19:07.3329688Z Current runner version: '2.338.2'
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3738688Z ##[group]Runner Image Provisioner
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3739585Z Hosted Compute Agent
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3740166Z Version: 20261103.629
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3740795Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3741584Z Build Date: 2026-11-03T17:26:59Z
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3742339Z Worker ID: {bd5657e7-4f91-4216-815f-1f546627de6d}
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3743107Z Region: westus
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3743621Z Cloud: Azure
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3744132Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3745624Z ##[group]Operating System
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3746285Z Microsoft Windows Server 2025
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3746954Z 10.0.26100
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3747575Z Datacenter
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3748100Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3748719Z ##[group]Runner Image
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3749369Z Image: windows-2025-vs2026
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3749997Z Version: 20261103.298.1
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3751589Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3753361Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3754848Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3755959Z ##[group]GITHUB_TOKEN Permissions
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3757841Z Contents: read
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3758469Z Metadata: read
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3759001Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3761037Z Secret source: Actions
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3762017Z Cache mode: write
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.3762699Z Prepare workflow directory
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.4912830Z Prepare all required actions
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.4960858Z Getting action download info
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:07.8374290Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:08.0112376Z Download action repository 'actions/setup-node@v5' (SHA:a0853c24544627f65ddf259abe73b1d18a591444)
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:08.2119106Z Download action repository 'dtolnay/rust-toolchain@stable' (SHA:b725eda525362e7cf34af9a7243cac1e3f01a7ec)
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:08.4112976Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:08.8283553Z Uses: gzers/opencodex-desktop/.github/workflows/windows023-foreign-job.yml@refs/heads/codex/0.2.23-integration (7e462c2022902fe3d31b22eeedb12f317600094e)
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:08.8288487Z ##[group] Inputs
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:08.8289027Z   purpose: foreign-job-authority
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:08.8289675Z   diagnostic_path: isolated-replay
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:08.8290386Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:08.8290899Z Complete job name: foreign-job-authority / foreign-job
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.0871635Z ##[group]Run actions/checkout@v5
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.0872691Z with:
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.0873138Z   repository: gzers/opencodex-desktop
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.0877343Z   token: ***
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.0877753Z   ssh-strict: true
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.0878174Z   ssh-user: git
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.0878644Z   persist-credentials: true
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.0879118Z   clean: true
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.0879550Z   sparse-checkout-cone-mode: true
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.0880058Z   fetch-depth: 1
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.0880465Z   fetch-tags: false
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.0880886Z   show-progress: true
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.0881323Z   lfs: false
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.0881716Z   submodules: false
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.0882142Z   set-safe-directory: true
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.0882641Z   allow-unsafe-pr-checkout: false
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.0883365Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.3022456Z Syncing repository: gzers/opencodex-desktop
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.3025688Z ##[group]Getting Git version info
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.3027353Z Working directory is 'D:\a\opencodex-desktop\opencodex-desktop'
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.4250317Z [command]"C:\Program Files\Git\bin\git.exe" version
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.8663058Z git version 2.56.0.windows.4
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.8721193Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.8741350Z Temporarily overriding HOME='D:\a\_temp\bc7bfd33-f310-4081-a1d4-94dd1baf5b28' before making global git config changes
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.8742677Z Adding repository directory to the temporary git global config as a safe directory
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.8755771Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.9687912Z Deleting the contents of 'D:\a\opencodex-desktop\opencodex-desktop'
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.9694959Z ##[group]Initializing the repository
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:09.9706638Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\opencodex-desktop\opencodex-desktop
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:10.1482246Z Initialized empty Git repository in D:/a/opencodex-desktop/opencodex-desktop/.git/
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:10.1538610Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/gzers/opencodex-desktop
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:10.3069595Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:10.3070788Z ##[group]Disabling automatic garbage collection
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:10.3072032Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:10.3457669Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:10.3458795Z ##[group]Setting up auth
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:10.3477796Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:10.3891381Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:12.1201826Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:12.1574903Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:12.7498994Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:12.7891352Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:13.3539538Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:13.3955212Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:13.3956072Z ##[group]Fetching the repository
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:13.3972298Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +7e462c2022902fe3d31b22eeedb12f317600094e:refs/remotes/origin/codex/0.2.23-integration
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:14.8616285Z From https://github.com/gzers/opencodex-desktop
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:14.8617271Z  * [new ref]         7e462c2022902fe3d31b22eeedb12f317600094e -> origin/codex/0.2.23-integration
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:14.8663967Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:14.8664593Z ##[group]Determining the checkout info
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:14.8668009Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:14.8678653Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:14.9298455Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:14.9800361Z ##[group]Checking out the ref
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:14.9810789Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B codex/0.2.23-integration refs/remotes/origin/codex/0.2.23-integration
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:15.4428306Z Switched to a new branch 'codex/0.2.23-integration'
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:15.4530641Z branch 'codex/0.2.23-integration' set up to track 'origin/codex/0.2.23-integration'.
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:15.4589542Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:15.5094992Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:15.5448975Z 7e462c2022902fe3d31b22eeedb12f317600094e
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:15.5928677Z ##[group]Run actions/setup-node@v5
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:15.5929026Z with:
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:15.5929237Z   node-version: 26.8.1
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:15.5929458Z   always-auth: false
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:15.5929698Z   check-latest: false
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:15.5932471Z   token: ***
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:15.5932679Z   package-manager-cache: true
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:15.5932933Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:15.7915733Z Attempting to download 26.8.1...
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:15.8094565Z (node:1976) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:15.8095320Z (Use `node --trace-deprecation ...` to show where the warning was created)
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:16.6368840Z Acquiring 26.8.1 - x64 from https://github.com/actions/node-versions/releases/download/26.8.1-33034053154/node-26.8.1-win32-x64.7z
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:27.7532249Z Unexpected HTTP response: 504
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:27.7533006Z Waiting 11 seconds before trying again
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:49.4621018Z Extracting ...
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:51.8475794Z Adding to the cache ...
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:55.4606392Z ##[group]Environment details
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.6407728Z node: v26.8.1
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.6408094Z npm: 11.19.0
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.6408375Z yarn: 1.22.22
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.6409627Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.6969943Z ##[group]Run dtolnay/rust-toolchain@stable
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.6970387Z with:
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.6970669Z   toolchain: stable
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.6970970Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7040605Z ##[start-action display=Parse toolchain version;id=__dtolnay_rust-toolchain.parse]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7214089Z ##[group]Run if [[ -z $toolchain ]]; then
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7214449Z ^[[36;1mif [[ -z $toolchain ]]; then^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7214976Z ^[[36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7215537Z ^[[36;1m  echo "'toolchain' is a required input" >&2^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7215833Z ^[[36;1m  exit 1^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7216149Z ^[[36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7216554Z ^[[36;1m  if [[ Windows == macOS ]]; then^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7217114Z ^[[36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7217613Z ^[[36;1m  else^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7218002Z ^[[36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7218450Z ^[[36;1m  fi^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7218727Z ^[[36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7219244Z ^[[36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7219703Z ^[[36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7220206Z ^[[36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7220698Z ^[[36;1melse^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7220876Z ^[[36;1m  delimiter=EOF^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7221169Z ^[[36;1m  while [[ $toolchain == *$delimiter* ]]; do delimiter+=_; done^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7221663Z ^[[36;1m  printf 'toolchain<<%s\n%s\n%s\n' "$delimiter" "$toolchain" "$delimiter" >> $GITHUB_OUTPUT^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7222067Z ^[[36;1mfi^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7245666Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7246077Z env:
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7246253Z   toolchain: stable
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.7246447Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.8928937Z ##[end-action id=__dtolnay_rust-toolchain.parse;outcome=success;conclusion=success;duration_ms=188]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.8933664Z ##[start-action display=Set $CARGO_HOME;id=__dtolnay_rust-toolchain.__run]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.9069465Z ##[group]Run echo CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.9069966Z ^[[36;1mecho CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.9086823Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.9087237Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.9507567Z ##[end-action id=__dtolnay_rust-toolchain.__run;outcome=success;conclusion=success;duration_ms=57]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.9509814Z ##[start-action display=Install rustup if needed;id=__dtolnay_rust-toolchain.__run_2]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.9519459Z ##[end-action id=__dtolnay_rust-toolchain.__run_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.9521543Z ##[start-action display=Install rustup if needed on windows;id=__dtolnay_rust-toolchain.__run_3]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.9677157Z ##[group]Run if ! command -v rustup &>/dev/null; then
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.9677542Z ^[[36;1mif ! command -v rustup &>/dev/null; then^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.9678334Z ^[[36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://win.rustup.rs/x86_64 --output 'D:\a\_temp\rustup-init.exe'^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.9679201Z ^[[36;1m  'D:\a\_temp\rustup-init.exe' --default-toolchain none --no-modify-path -y^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.9681888Z ^[[36;1m  echo "$CARGO_HOME\bin" >> $GITHUB_PATH^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.9682250Z ^[[36;1mfi^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.9698799Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.9699212Z env:
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.9699412Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:56.9699682Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0305192Z ##[end-action id=__dtolnay_rust-toolchain.__run_3;outcome=success;conclusion=success;duration_ms=78]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0319314Z ##[start-action display=rustup toolchain install stable;id=__dtolnay_rust-toolchain.__run_4]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0453592Z ##[group]Run set -f  # split targets and components on commas and whitespace, without glob expansion
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0454258Z ^[[36;1mset -f  # split targets and components on commas and whitespace, without glob expansion^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0454680Z ^[[36;1mflags=()^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0454950Z ^[[36;1mfor t in ${targets//,/ }; do flags+=(--target "$t"); done^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0455350Z ^[[36;1mfor c in ${components//,/ }; do flags+=(--component "$c"); done^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0455840Z ^[[36;1mif [[ $toolchain == nightly && -n $components ]]; then flags+=(--allow-downgrade); fi^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0456237Z ^[[36;1mlog=$(mktemp)^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0456448Z ^[[36;1mtrap 'rm -f "$log"' EXIT^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0456685Z ^[[36;1mfor attempt in 1 2 3 4 5; do^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0457244Z ^[[36;1m  if rustup toolchain install "$toolchain" "${flags[@]}" --profile minimal --no-self-update --force-non-host 2>&1 | tee "$log"; then^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0457793Z ^[[36;1m    break^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0457970Z ^[[36;1m  else^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0458156Z ^[[36;1m    status=$?^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0458342Z ^[[36;1m  fi^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0458606Z ^[[36;1m  if [[ $attempt == 5 ]] || ! grep -Fq 'checksum failed for ' "$log" \^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0459149Z ^[[36;1m      || ! grep -Fq 'this is likely due to an ongoing update of the official release server' "$log"; then^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0459610Z ^[[36;1m    exit "$status"^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0459815Z ^[[36;1m  fi^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0460147Z ^[[36;1m  echo "Retrying rustup toolchain install in 30 seconds (retry $attempt of 4)" >&2^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0460547Z ^[[36;1m  sleep 30^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0460731Z ^[[36;1mdone^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0477357Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0477748Z env:
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0477937Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0478191Z   toolchain: stable
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0478369Z   targets: 
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0478704Z   components: 
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0478893Z   RUSTUP_PERMIT_COPY_RENAME: 1
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:19:57.0479110Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:00.6956710Z info: syncing channel updates for stable-x86_64-pc-windows-msvc
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.1542709Z 
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.1860254Z   stable-x86_64-pc-windows-msvc unchanged - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.1860993Z 
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.2477656Z ##[end-action id=__dtolnay_rust-toolchain.__run_4;outcome=success;conclusion=success;duration_ms=4215]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.2485169Z ##[start-action display=rustup default stable;id=__dtolnay_rust-toolchain.__run_5]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.2618246Z ##[group]Run rustup default "$toolchain" --force-non-host
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.2618632Z ^[[36;1mrustup default "$toolchain" --force-non-host^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.2634434Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.2634820Z env:
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.2635008Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.2635274Z   toolchain: stable
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.2635454Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.3639959Z info: using existing install for stable-x86_64-pc-windows-msvc
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.3693112Z info: default toolchain set to stable-x86_64-pc-windows-msvc
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.3694565Z 
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.3906625Z   stable-x86_64-pc-windows-msvc unchanged - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.3907019Z 
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.3990880Z ##[end-action id=__dtolnay_rust-toolchain.__run_5;outcome=success;conclusion=success;duration_ms=150]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.3994610Z ##[start-action display=Create cachekey;id=__dtolnay_rust-toolchain.rustc-version]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.4148151Z ##[group]Run DATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.4149007Z ^[[36;1mDATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.4149686Z ^[[36;1mHASH=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-hash: //p')^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.4150197Z ^[[36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.4166326Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.4166715Z env:
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.4166915Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.4167167Z   toolchain: stable
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:01.4167352Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2079413Z ##[end-action id=__dtolnay_rust-toolchain.rustc-version;outcome=success;conclusion=success;duration_ms=808]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2082475Z ##[start-action display=Disable incremental compilation;id=__dtolnay_rust-toolchain.__run_6]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2212804Z ##[group]Run if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2213165Z ^[[36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2213487Z ^[[36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2213748Z ^[[36;1mfi^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2229807Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2230197Z env:
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2230381Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2230644Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2640900Z ##[end-action id=__dtolnay_rust-toolchain.__run_6;outcome=success;conclusion=success;duration_ms=55]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2643004Z ##[start-action display=Enable colors in Cargo output;id=__dtolnay_rust-toolchain.__run_7]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2765370Z ##[group]Run if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2765723Z ^[[36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2766031Z ^[[36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2766302Z ^[[36;1mfi^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2781980Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2783157Z env:
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2783353Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2783622Z   CARGO_INCREMENTAL: 0
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.2783818Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3178891Z ##[end-action id=__dtolnay_rust-toolchain.__run_7;outcome=success;conclusion=success;duration_ms=53]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3182257Z ##[start-action display=Enable Cargo sparse registry;id=__dtolnay_rust-toolchain.__run_8]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3304579Z ##[group]Run # implemented in 1.66, stabilized in 1.68, made default in 1.70
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3305097Z ^[[36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3305755Z ^[[36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol ]; then^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3306466Z ^[[36;1m  if rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[89]\.'; then^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3306993Z ^[[36;1m    touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3307508Z ^[[36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3308021Z ^[[36;1m  elif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[67]\.'; then^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3308706Z ^[[36;1m    touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3309171Z ^[[36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3309497Z ^[[36;1m  fi^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3309656Z ^[[36;1mfi^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3325049Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3325442Z env:
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3325631Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3325885Z   CARGO_INCREMENTAL: 0
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3326078Z   CARGO_TERM_COLOR: always
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3326276Z   toolchain: stable
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.3326456Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.5225749Z ##[end-action id=__dtolnay_rust-toolchain.__run_8;outcome=success;conclusion=success;duration_ms=204]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.5230715Z ##[start-action display=Work around spurious network errors in curl 8.0;id=__dtolnay_rust-toolchain.__run_9]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.5433523Z ##[group]Run # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.5434325Z ^[[36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.5434932Z ^[[36;1mif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.7[01]\.'; then^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.5435392Z ^[[36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.5435681Z ^[[36;1mfi^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.5451871Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.5452260Z env:
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.5452442Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.5452706Z   CARGO_INCREMENTAL: 0
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.5452905Z   CARGO_TERM_COLOR: always
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.5453111Z   toolchain: stable
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.5453297Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.6509957Z ##[end-action id=__dtolnay_rust-toolchain.__run_9;outcome=success;conclusion=success;duration_ms=127]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.6514898Z ##[start-action display=rustc +stable --version --verbose;id=__dtolnay_rust-toolchain.__run_10]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.6658153Z ##[group]Run rustc +"$toolchain" --version --verbose
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.6658492Z ^[[36;1mrustc +"$toolchain" --version --verbose^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.6674422Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.6674828Z env:
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.6675027Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.6675285Z   CARGO_INCREMENTAL: 0
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.6675482Z   CARGO_TERM_COLOR: always
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.6675682Z   toolchain: stable
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.6675857Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7580684Z rustc 1.99.1 (58cf8f9c3 2026-10-13)
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7581286Z binary: rustc
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7581834Z commit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7582385Z commit-date: 2026-10-13
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7582779Z host: x86_64-pc-windows-msvc
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7583312Z release: 1.99.1
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7583733Z LLVM version: 23.1.1
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7730273Z ##[end-action id=__dtolnay_rust-toolchain.__run_10;outcome=success;conclusion=success;duration_ms=121]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7899304Z ##[group]Run $ErrorActionPreference='Stop'
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7899755Z ^[[36;1m$ErrorActionPreference='Stop'^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7900161Z ^[[36;1m$root=Join-Path $env:RUNNER_TEMP ('ocxd-foreign-job-'+$env:GITHUB_RUN_ID)^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7900757Z ^[[36;1mif(Test-Path -LiteralPath $root){throw 'Fresh evidence root required'}^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7901427Z ^[[36;1mNew-Item -ItemType Directory -Path $root|Out-Null^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7901833Z ^[[36;1m'OCXD_FOREIGN_JOB_OUTPUT='+$root >> $env:GITHUB_ENV^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7902151Z ^[[36;1mAdd-Type -TypeDefinition @'^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7902399Z ^[[36;1musing System;^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7902645Z ^[[36;1musing System.Runtime.InteropServices;^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7903209Z ^[[36;1mpublic static class OcxPrivateJobAuthorityProbe {^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7903840Z ^[[36;1m  [StructLayout(LayoutKind.Sequential)] public struct SA { public int length; public IntPtr descriptor; public int inherit; }^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7905091Z ^[[36;1m  [DllImport("advapi32.dll",CharSet=CharSet.Unicode,SetLastError=true)] static extern bool ConvertStringSecurityDescriptorToSecurityDescriptorW(string text,uint revision,out IntPtr descriptor,out uint bytes);^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7906377Z ^[[36;1m  [DllImport("kernel32.dll",CharSet=CharSet.Unicode,SetLastError=true)] static extern IntPtr CreateJobObjectW(ref SA attributes,string name);^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7907385Z ^[[36;1m  [DllImport("kernel32.dll",CharSet=CharSet.Unicode,SetLastError=true)] static extern IntPtr OpenJobObjectW(uint access,bool inherit,string name);^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7908184Z ^[[36;1m  [DllImport("kernel32.dll")] public static extern bool CloseHandle(IntPtr handle);^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7908729Z ^[[36;1m  [DllImport("kernel32.dll")] static extern IntPtr LocalFree(IntPtr value);^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7909181Z ^[[36;1m  public static IntPtr Create(string name,string sid) {^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7909522Z ^[[36;1m    IntPtr descriptor;uint bytes;^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7910261Z ^[[36;1m    if(!ConvertStringSecurityDescriptorToSecurityDescriptorW("O:"+sid+"D:P(A;;GA;;;"+sid+")",1,out descriptor,out bytes))throw new System.ComponentModel.Win32Exception();^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7911413Z ^[[36;1m    try { var sa=new SA{length=Marshal.SizeOf(typeof(SA)),descriptor=descriptor,inherit=0};var h=CreateJobObjectW(ref sa,name);var error=Marshal.GetLastWin32Error();^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7912235Z ^[[36;1m      if(h==IntPtr.Zero)throw new System.ComponentModel.Win32Exception(error);^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7912872Z ^[[36;1m      if(error==183){CloseHandle(h);throw new Exception("Random private Job name already exists");}return h;^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7913377Z ^[[36;1m    } finally {LocalFree(descriptor);}^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7913626Z ^[[36;1m  }^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7914342Z ^[[36;1m  public static void VerifyStillPresentForCreator(string name) {var h=OpenJobObjectW(0x20004,false,name);if(h==IntPtr.Zero)throw new System.ComponentModel.Win32Exception();CloseHandle(h);}^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7915120Z ^[[36;1m}^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7915270Z ^[[36;1m'@^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7915555Z ^[[36;1m$sid=[Security.Principal.WindowsIdentity]::GetCurrent().User.Value^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7916093Z ^[[36;1m$name='Global'+[char]92+'ocxd-private-job-authority-'+[guid]::NewGuid().ToString('N')^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7916596Z ^[[36;1m$handle=[OcxPrivateJobAuthorityProbe]::Create($name,$sid)^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7917918Z ^[[36;1m$proof=[ordered]@{accepted=$false;diagnosticOnly=$true;source=(git rev-parse HEAD).Trim();creatorSid=$sid;jobCreated=$true;originalHandleHeld=$true;standardAccountProbeExecuted=$false;creatorCanReopenBefore=$false;creatorCanReopenAfter=$false;jobHandleClosed=$false;productStarted=$false;serviceMutation=$false}^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7919365Z ^[[36;1mtry {^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7919835Z ^[[36;1m  [OcxPrivateJobAuthorityProbe]::VerifyStillPresentForCreator($name);$proof.creatorCanReopenBefore=$true^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7922208Z ^[[36;1m  $env:OCXD_FOREIGN_JOB_PROBE=$name^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7922602Z ^[[36;1m  $env:OCXD_FOREIGN_JOB_CREATOR_SID=$sid^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7923146Z ^[[36;1m  $evidence=Join-Path $root 'ordinary'^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7924286Z ^[[36;1m  & test/smoke/windows023-rust-ordinary.ps1 -Cargo (Get-Command cargo.exe).Source -ManifestPath (Join-Path $PWD 'test/smoke/windows023-ordinary-preflight/Cargo.toml') -Node (Get-Command node.exe).Source -OutputDirectory $evidence -ExpectedCommit (git rev-parse HEAD)^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7925549Z ^[[36;1m  if($LASTEXITCODE -ne 0){throw 'Actual ordinary-account test or cleanup failed'}^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7926157Z ^[[36;1m  $result=Get-Content (Join-Path $evidence 'rust-ordinary.json') -Raw|ConvertFrom-Json^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7927416Z ^[[36;1m  if(!$result.accountAndProfileRemoved -or !$result.sourceOrArtifactAclRestored -or !$result.desktopAclRestored -or !$result.sourceBytesUnchanged -or $result.remainingNewSidProcesses.Count -ne 0){throw 'Real account/Profile/ACL/process cleanup must be proved'}^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7928687Z ^[[36;1m  if($result.accountSid -ceq $sid){throw 'Same SID cannot prove foreign access denied'}^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7929260Z ^[[36;1m  $childLog=Get-Content (Join-Path $evidence 'ordinary/test-1.stdout.log') -Raw^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7930221Z ^[[36;1m  if(!$childLog.Contains('foreign-private-job-query-denied: actual_different_sid=true query_and_readcontrol_denied=true accepted=false')){throw 'Actual private Job query denial must execute'}^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7931200Z ^[[36;1m  $proof.standardAccountProbeExecuted=$true;$proof.observerSid=$result.accountSid^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7931893Z ^[[36;1m  [OcxPrivateJobAuthorityProbe]::VerifyStillPresentForCreator($name);$proof.creatorCanReopenAfter=$true^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7932405Z ^[[36;1m} finally {^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7932813Z ^[[36;1m  $proof.jobHandleClosed=[OcxPrivateJobAuthorityProbe]::CloseHandle($handle)^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7933448Z ^[[36;1m  $proof|ConvertTo-Json -Depth 5|Set-Content (Join-Path $root 'foreign-job-authority.json')^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.7933883Z ^[[36;1m}^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.8590095Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.8590536Z env:
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.8590771Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.8591108Z   CARGO_INCREMENTAL: 0
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.8591364Z   CARGO_TERM_COLOR: always
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:02.8591624Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.3336516Z {"result":"pass-ordinary-rust-binaries","stage":"run-ordinary-suite","failureCode":null,"failureType":null,"failureLine":null,"failureHResult":null,"innerFailureHResult":null,"createProfileHResult":0,"nativeSuiteExecuted":true,"allBinariesAttempted":true,"exitCode":0}
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5020831Z ^[[31;1mException: ^[[0mD:\a\_temp\1365b727-b4e4-449a-bd00-11165dd24553.ps1:43^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5021724Z ^[[31;1m^[[0m^[[36;1mLine |^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5023734Z ^[[31;1m^[[0m^[[36;1m^[[36;1m  43 | ^[[0m … cepted=false')){^[[36;1mthrow 'Actual private Job query denial must execute'^[[0m}^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5025717Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m     | ^[[31;1m                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5027235Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m^[[31;1m^[[31;1m^[[36;1m     | ^[[31;1mActual private Job query denial must execute^[[0m
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5371904Z ##[error]Process completed with exit code 1.
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5570121Z ##[group]Run actions/upload-artifact@v4
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5570445Z with:
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5570656Z   name: windows023-foreign-job-42566587832
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5570968Z   path: D:\a\_temp\ocxd-foreign-job-42566587832
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5571264Z   if-no-files-found: error
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5571486Z   compression-level: 6
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5571684Z   overwrite: false
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5571879Z   include-hidden-files: false
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5572085Z env:
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5572263Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5572507Z   CARGO_INCREMENTAL: 0
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5572700Z   CARGO_TERM_COLOR: always
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5572995Z   OCXD_FOREIGN_JOB_OUTPUT: D:\a\_temp\ocxd-foreign-job-42566587832
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.5573313Z ##[endgroup]
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.8011361Z (node:7520) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.8012841Z (Use `node --trace-deprecation ...` to show where the warning was created)
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.8164077Z With the provided path, there will be 23 files uploaded
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.8169625Z Artifact name is valid!
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:58.8171174Z Root directory input is valid!
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:59.2176675Z Beginning upload of artifact content to blob storage
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:59.2864572Z (node:7520) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:59.7505376Z Uploaded bytes 128408
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:59.8283908Z Finished uploading artifact content to blob storage!
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:59.8285280Z SHA256 digest of uploaded artifact zip is be2b4792b1c4c064e16eb9e051d54a5c2f6bad5eca868fc027c0dd76402c0bd9
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:20:59.8287823Z Finalizing artifact upload
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:00.2694856Z Artifact windows023-foreign-job-42566587832.zip successfully finalized. Artifact ID 13651418655
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:00.2697360Z Artifact windows023-foreign-job-42566587832 has been successfully uploaded! Final size is 128408 bytes. Artifact ID is 13651418655
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:00.2710271Z Artifact download URL: https://github.com/gzers/opencodex-desktop/actions/runs/42566587832/artifacts/13651418655
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:00.3085080Z Post job cleanup.
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:00.4981872Z [command]"C:\Program Files\Git\bin\git.exe" version
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:00.5383872Z git version 2.56.0.windows.4
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:00.5463285Z Temporarily overriding HOME='D:\a\_temp\fd3462db-8628-455f-a225-2e0239235128' before making global git config changes
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:00.5465125Z Adding repository directory to the temporary git global config as a safe directory
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:00.5478109Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:00.5870273Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:00.6254093Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:01.1729412Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:01.2136176Z http.https://github.com/.extraheader
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:01.2184448Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:01.2561915Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:01.8316572Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:01.8687987Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:02.4595171Z Cleaning up orphan processes
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:02.5105051Z Terminate orphan process: pid (5692) (vctip)
+foreign-job-authority / foreign-job	UNKNOWN STEP	2026-11-09T05:21:02.5360729Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
