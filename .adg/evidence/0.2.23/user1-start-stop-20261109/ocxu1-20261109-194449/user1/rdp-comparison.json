@@ -1,0 +1,42 @@
+{
+  "accepted": false,
+  "previousBatch": "ocxu1-20261109-192154",
+  "currentBatch": "ocxu1-20261109-194449",
+  "previousFailure": {
+    "appLogLine": 8,
+    "durationMilliseconds": 8028,
+    "actualExitCode": 1,
+    "failureCode": "lifecycle_start_exit",
+    "rdpSessionDisconnectedBeforeStart": true
+  },
+  "currentFailure": {
+    "appLogLine": 13,
+    "durationMilliseconds": 10325,
+    "actualExitCode": 1,
+    "failureCode": "lifecycle_start_exit"
+  },
+  "rdpSession": 2,
+  "sampleCount": 41,
+  "activeSampleCount": 41,
+  "sessionEventsDuringControllerWindow": [],
+  "sessionEventsLog": "rdp-session-events.json",
+  "sessionSampleBytes": "rdp-session-samples.raw.log",
+  "observedControllerWindow": {
+    "startUtc": "2026-11-09T11:45:00.2821575Z",
+    "endUtc": "2026-11-09T11:51:43.8709357Z"
+  },
+  "interpretation": "Same failure reproduced in connected RDP; disconnection is not a necessary condition. Does not establish the root cause or exclude an effect on the earlier run.",
+  "earliestFailurePreserved": true,
+  "laterOriginalConfirmationElapsedMilliseconds": 30174,
+  "normalStopExecuted": false,
+  "originalBudgetMilliseconds": {
+    "start": 30000,
+    "stop": 10000,
+    "status": 5000
+  },
+  "oldEvidenceFilesIndependentlyVerifiedUnchanged": 83,
+  "productChanges": false,
+  "harnessChanges": false,
+  "bootstrapExit0IsNotProductPass": true,
+  "unobservedRuntimeProcesses": "No retained Node/Bun startup identities in this batch; cannot invent exit codes for them."
+}

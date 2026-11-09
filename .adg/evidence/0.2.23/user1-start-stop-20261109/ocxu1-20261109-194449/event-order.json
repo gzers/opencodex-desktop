@@ -1,0 +1,152 @@
+{
+  "accepted": false,
+  "orderSource": "Original trace array position, no replay or inferred missing events",
+  "events": [
+    {
+      "eventOrdinal": 1,
+      "rawTraceRow": {
+        "sequence": 1,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 33.185199999999995,
+        "atUtc": "2026-11-09T11:47:50.651Z",
+        "command": "model_paths_v2_snapshot",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 2,
+      "rawTraceRow": {
+        "sequence": 2,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 136.39409999999998,
+        "atUtc": "2026-11-09T11:47:50.754Z",
+        "command": "model_paths_v2_snapshot"
+      }
+    },
+    {
+      "eventOrdinal": 3,
+      "rawTraceRow": {
+        "sequence": 3,
+        "stage": "start-proof-begin",
+        "elapsedMilliseconds": 137.3526,
+        "atUtc": "2026-11-09T11:47:50.755Z"
+      }
+    },
+    {
+      "eventOrdinal": 4,
+      "rawTraceRow": {
+        "sequence": 4,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 137.95639999999997,
+        "atUtc": "2026-11-09T11:47:50.755Z",
+        "command": "get_data_root_config",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 5,
+      "rawTraceRow": {
+        "sequence": 5,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 141.0976,
+        "atUtc": "2026-11-09T11:47:50.758Z",
+        "command": "get_data_root_config"
+      }
+    },
+    {
+      "eventOrdinal": 6,
+      "rawTraceRow": {
+        "sequence": 6,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 141.1125,
+        "atUtc": "2026-11-09T11:47:50.758Z",
+        "command": "model_paths_v2_snapshot",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 7,
+      "rawTraceRow": {
+        "sequence": 7,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 234.78979999999996,
+        "atUtc": "2026-11-09T11:47:50.852Z",
+        "command": "model_paths_v2_snapshot"
+      }
+    },
+    {
+      "eventOrdinal": 8,
+      "rawTraceRow": {
+        "sequence": 8,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 241.72269999999997,
+        "atUtc": "2026-11-09T11:47:50.859Z",
+        "command": "get_data_root_config",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 9,
+      "rawTraceRow": {
+        "sequence": 9,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 246.75239999999997,
+        "atUtc": "2026-11-09T11:47:50.864Z",
+        "command": "get_data_root_config"
+      }
+    },
+    {
+      "eventOrdinal": 10,
+      "rawTraceRow": {
+        "sequence": 10,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 246.79069999999996,
+        "atUtc": "2026-11-09T11:47:50.864Z",
+        "command": "model_paths_v2_snapshot",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 11,
+      "rawTraceRow": {
+        "sequence": 11,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 349.97729999999996,
+        "atUtc": "2026-11-09T11:47:50.967Z",
+        "command": "model_paths_v2_snapshot"
+      }
+    },
+    {
+      "eventOrdinal": 12,
+      "rawTraceRow": {
+        "sequence": 12,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 350.0336,
+        "atUtc": "2026-11-09T11:47:50.967Z",
+        "command": "process_action",
+        "action": "start"
+      }
+    },
+    {
+      "eventOrdinal": 13,
+      "rawTraceRow": {
+        "sequence": 1,
+        "stage": "action-return",
+        "elapsedMilliseconds": 10716.337599999999,
+        "atUtc": "2026-11-09T11:48:01.334Z",
+        "action": "start",
+        "rejected": null
+      }
+    },
+    {
+      "eventOrdinal": 14,
+      "rawTraceRow": {
+        "sequence": 14,
+        "stage": "wait-owned-health",
+        "elapsedMilliseconds": 30424.4023,
+        "atUtc": "2026-11-09T11:48:21.042Z",
+        "message": "Actual service not healthy within production start budget"
+      }
+    }
+  ]
+}
