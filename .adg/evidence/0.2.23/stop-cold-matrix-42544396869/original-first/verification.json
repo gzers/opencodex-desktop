@@ -1,0 +1,110 @@
+{
+  "order": "original-first",
+  "accepted": false,
+  "cleanupVerified": true,
+  "report": {
+    "probe": "ordinary-readonly-stop-costs",
+    "accepted": false,
+    "diagnosticOnly": true,
+    "fullSoftwarePassed": false,
+    "firstVariant": "original-readonly",
+    "order": [
+      "original-readonly",
+      "filtered-readonly",
+      "filtered-readonly",
+      "original-readonly"
+    ],
+    "phases": [
+      {
+        "name": "official-respawn-risk",
+        "milliseconds": 862.0493999999999,
+        "value": {
+          "risk": "none"
+        },
+        "accepted": false
+      },
+      {
+        "name": "official-scheduler-presence",
+        "milliseconds": 904.6035999999999,
+        "value": {
+          "status": "absent"
+        },
+        "accepted": false
+      },
+      {
+        "name": "official-native-service-presence",
+        "milliseconds": 22.65099999999984,
+        "value": {
+          "status": "nonexistent"
+        },
+        "accepted": false
+      }
+    ],
+    "samples": [
+      {
+        "variant": "original-readonly",
+        "milliseconds": 5022.303,
+        "status": null,
+        "signal": "SIGTERM",
+        "errorCode": "ETIMEDOUT",
+        "stdoutBytes": 0,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrBytes": 0,
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "accepted": false
+      },
+      {
+        "variant": "filtered-readonly",
+        "milliseconds": 1161.5328000000009,
+        "status": 0,
+        "signal": null,
+        "errorCode": null,
+        "stdoutBytes": 0,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrBytes": 0,
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "accepted": false
+      },
+      {
+        "variant": "filtered-readonly",
+        "milliseconds": 645.7928999999986,
+        "status": 0,
+        "signal": null,
+        "errorCode": null,
+        "stdoutBytes": 0,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrBytes": 0,
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "accepted": false
+      },
+      {
+        "variant": "original-readonly",
+        "milliseconds": 690.313900000001,
+        "status": 0,
+        "signal": null,
+        "errorCode": null,
+        "stdoutBytes": 0,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrBytes": 0,
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "accepted": false
+      }
+    ],
+    "sourceFiles": {
+      "src/service/windows-ops.ts": {
+        "bytes": 41251,
+        "sha256": "891bd9f6f4a84aca3a981de1d8b5dc5cf51945f73f0b0ee5c69394bc14963753"
+      },
+      "src/lib/windows-service-wrappers.ts": {
+        "bytes": 3499,
+        "sha256": "cb017aa3f785042372a53fc71abef1483068b23bc46f3fe2dee4148e3cf81e78"
+      }
+    },
+    "matcherBytesUnchanged": true,
+    "mutationSinkReplaced": true,
+    "serviceOrTaskMutation": false,
+    "productStarted": false,
+    "originalChildBudgetMilliseconds": 5000,
+    "limitations": "Read-only projection under one fresh ordinary SID. Filtered query is only an experiment; no runtime patch or real stop acceptance. Zero fixture matches do not prove all matching counterexamples."
+  }
+}

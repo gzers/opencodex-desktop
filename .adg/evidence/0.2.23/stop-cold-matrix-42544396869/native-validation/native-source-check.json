@@ -1,0 +1,35 @@
+{
+  "accepted": false,
+  "declaredApis": [
+    "CreateToolhelp32Snapshot",
+    "Process32FirstW",
+    "Process32NextW",
+    "OpenProcess",
+    "GetProcessId",
+    "GetCurrentProcess",
+    "GetProcessTimes",
+    "QueryFullProcessImageNameW",
+    "WaitForSingleObject",
+    "CloseHandle",
+    "GetLastError",
+    "LocalFree",
+    "lstrlenW",
+    "lstrcpynW",
+    "OpenProcessToken",
+    "GetTokenInformation",
+    "ConvertSidToStringSidW",
+    "NtQueryInformationProcess"
+  ],
+  "readOnlyApis": true,
+  "windows64Offsets": {
+    "PROCESSENTRY32W": 568,
+    "pid": 8,
+    "name": 44
+  },
+  "fixtureCounterexamples": [
+    "exact",
+    "suffix",
+    "other-home"
+  ],
+  "maintainedRuntimeChanged": false
+}

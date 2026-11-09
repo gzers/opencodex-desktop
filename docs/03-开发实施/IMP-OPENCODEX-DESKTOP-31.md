@@ -349,3 +349,12 @@ a581ea0ca只增加test/.github只读定位，产品apps树4bfcbcc6与8ca50832b�
 
 
 独立新VM交叉对照[run42544396869](https://github.com/gzers/opencodex-desktop/actions/runs/42544396869)，固定c2af53ab06d4cc1696744ea06114775acff74878；filtered-first/job128926143915与original-first/job128926144221均已确认运行。每格独立原模块校验、普通SID/Profile/退出与清理；只读诊断accepted:false、不改5秒子预算、不替代启动或停止验收。
+
+
+两个独立新Windows VM对照42544396869已完成，[原件及判读](../../.adg/evidence/0.2.23/stop-cold-matrix-42544396869/analysis.json)。filtered-first原ZIP/SHA256673179d806bd686bc150fa9b3ea1ba353704447d4cdb961863350c9fd7aa6d53；original-first原ZIP/SHA256990368f9d96efd204edae5a09ea33bec565716aec88abac852256fb571ac6bda，两格分别15673261/15673220字节，9模块及清理证明核验。限定先执行仍4148ms；完整先执行5022ms/ETIMEDOUT保留，后续分别469/460/416ms及1162/646/690ms。故不是限定条件即可解决，冷PowerShell/CIM调用无论筛选都昂贵，不采用filter-only修复。诊断accepted:false不变，保持原5秒子门和正常启停验收未过。下一步仅准备原生只读枚举原型和可审查方案：验证受信系统DLL/保留句柄/PID代次/SID/完整命令行匹配，未知不得当缺席，不调用终止API、不修改正式运行包；必要维护行为仍待技术验证后说明采用。
+
+
+原生只读验证原型2c6edebc3已准备：受信System32绝对DLL，Toolhelp候选枚举，同保留句柄PID/FILETIME/映像/SID前后核对，NtQueryInformationProcess类60严格校验返回命令行指针/长度，只按原完整路径边界匹配。无终止API、无服务/任务变更；三个自有cmd夹具覆盖精确命中、相似后缀及另一HOME同名路径，未知保持未知，不能据此声称系统服务缺席。18个API只读/句柄管理核对、5字面边界反例、Bun语法、Rust fmt及实际4workflow块解析通过；Windows真实执行尚待。此为test/.github原型，产品及维护包未变。任何维护包替换须先拿原生实测及客户端还原边界方案，不静默采用。
+
+
+原生只读原型[run42545767548](https://github.com/gzers/opencodex-desktop/actions/runs/42545767548)固定2c6edebc32909c9a16e6666836c22ca6cf05037d/job128930335757已确认运行，accepted:false；只做技术验证，不是下一完整28项轮。

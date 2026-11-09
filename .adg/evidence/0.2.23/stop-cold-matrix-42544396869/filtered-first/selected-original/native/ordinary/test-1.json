@@ -1,0 +1,46 @@
+{
+  "process": {
+    "pid": 2532,
+    "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+    "path": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-ordinary-preflight\\target\\debug\\deps\\windows023_ordinary_preflight-791569d65fb88844.exe",
+    "creationTicks": "639297837791349384",
+    "sessionId": 2,
+    "identityAuthority": "retained-CreateProcess-handle"
+  },
+  "token": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 2532,
+    "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-ordinary-preflight\\target\\debug\\deps\\windows023_ordinary_preflight-791569d65fb88844.exe",
+    "creationTimeUtc": "2026-11-09T01:16:19.1349384Z",
+    "elevated": false,
+    "elevationType": 1,
+    "tokenUser": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+    "authority": "retained-CreateProcess-handle"
+  },
+  "cim": {
+    "rowPresent": true,
+    "pidProvided": true,
+    "pid": 2532,
+    "sidProvided": true,
+    "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+    "imageProvided": false,
+    "image": null,
+    "creationProvided": true,
+    "creationTicks": "639297837791349380",
+    "ownerReturnValue": 0,
+    "queryFailureType": null,
+    "queryHResult": null,
+    "contradictions": []
+  },
+  "exitCode": 0,
+  "exitAuthority": "retained-CreateProcess-handle",
+  "arguments": [],
+  "stdout": "D:\\a\\_temp\\ocxd023-preflight-native-b55a614f157f4a5799022eccec9dc15e\\ordinary\\test-1.stdout.log",
+  "stderr": "D:\\a\\_temp\\ocxd023-preflight-native-b55a614f157f4a5799022eccec9dc15e\\ordinary\\test-1.stderr.log",
+  "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\smoke\\windows023-ordinary-preflight",
+  "identityObservedBeforeResume": true,
+  "sha256": "4d7984353ff4494ae1d8fecd3c171aa4a3ca2dd2a55ac13d6fd2625ec857620f",
+  "packageId": "path+file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows023-ordinary-preflight#0.1.0",
+  "target": "windows023_ordinary_preflight"
+}
