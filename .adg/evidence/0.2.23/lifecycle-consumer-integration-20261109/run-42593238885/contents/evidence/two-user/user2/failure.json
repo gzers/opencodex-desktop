@@ -1,0 +1,67 @@
+{
+  "ephemeralGuard": {
+    "passed": true,
+    "windows": true,
+    "githubActions": "true",
+    "runnerTemp": "D:\\a\\_temp",
+    "checkedBeforeProvisioning": true
+  },
+  "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+  "profile": "C:\\Users\\ocxacc34f4c105c0",
+  "processHome": "C:\\Users\\ocxacc34f4c105c0",
+  "localAppData": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local",
+  "desktopRoot": "C:\\Users\\ocxacc34f4c105c0\\.codex-desktop\\desktop",
+  "opencodexHome": "C:\\Users\\ocxacc34f4c105c0\\.codex-desktop\\opencodex\\home",
+  "installation": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+  "result": "fail",
+  "runtimeProxyVerification": "not-verified",
+  "verifyRuntimePorts": true,
+  "sandbox": false,
+  "manager": {
+    "pid": 6800,
+    "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+    "path": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+    "creationTicks": "639298135280774794",
+    "sessionId": 2,
+    "generationSource": "retained-handle-native-filetime",
+    "cimImageSupplied": true
+  },
+  "window": {
+    "pid": 6800,
+    "handle": "328076",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T09:32:08.1466605Z"
+  },
+  "applicationToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 6800,
+    "executable": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+    "creationTimeUtc": "2026-11-09T09:32:08.0774794Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-09T09:32:08.1468965Z"
+  },
+  "pipe": "OpenCodeXDesktop-6a82df187288d2ceb01ab100",
+  "accepted": false,
+  "diagnosticOnly": true,
+  "runtimeReady": true,
+  "peerBusinessData": "access-denied",
+  "crossPipe": "access-denied-real-token",
+  "crossPipeServer": 9892,
+  "dpapi": "own-roundtrip-and-peer-denied-synthetic-subscope-only",
+  "duplicate": {
+    "rejected": true,
+    "secondPid": 9392,
+    "secondExitCode": 101,
+    "originalPid": 6800,
+    "originalWindowUnchanged": true,
+    "pointerMetadataHashUnchanged": true,
+    "lockSizeAndWriteTimeUnchanged": true,
+    "lockContentHash": "unavailable-while-byte-range-lock-held"
+  },
+  "failureKind": "System.Management.Automation.RuntimeException",
+  "failureLine": 789,
+  "actualFailure": "Runtime protocol interrupted by controller",
+  "failureCode": "Native identity/UI/IPC/cleanup assertion failed; inspect stage and retained evidence"
+}

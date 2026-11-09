@@ -1,0 +1,114 @@
+{
+  "status": "pass",
+  "firstError": "",
+  "evidence": [
+    {
+      "name": "path-snapshot",
+      "status": "pass",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "firstError": "",
+      "evidence": {
+        "schemaVersion": 1,
+        "aggregateRoot": {
+          "path": "\\\\?\\C:\\Users\\ocxacc4f842fc509\\.codex-desktop",
+          "status": "valid"
+        },
+        "desktopRoot": {
+          "path": "\\\\?\\C:\\Users\\ocxacc4f842fc509\\.codex-desktop\\desktop",
+          "status": "valid"
+        },
+        "opencodexHome": {
+          "path": "\\\\?\\C:\\Users\\ocxacc4f842fc509\\.codex-desktop\\opencodex\\home",
+          "status": "valid"
+        },
+        "configPath": {
+          "path": "\\\\?\\C:\\Users\\ocxacc4f842fc509\\.codex-desktop\\opencodex\\home\\config.json",
+          "status": "missing"
+        },
+        "installationRoot": {
+          "path": "C:\\Users\\ocxacc4f842fc509\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+          "status": "valid"
+        },
+        "runtimePrefix": {
+          "path": "C:\\Users\\ocxacc4f842fc509\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/opencodex",
+          "status": "valid"
+        },
+        "runtimeEntry": {
+          "path": "C:\\Users\\ocxacc4f842fc509\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/bin/ocx.cmd",
+          "status": "valid"
+        },
+        "managerExecutable": {
+          "path": "C:\\Users\\ocxacc4f842fc509\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+          "status": "valid"
+        },
+        "program": {
+          "packageVersion": "2.97.0-desktop023.lifecycle.1",
+          "manifestVersion": "2.97.0-desktop023.lifecycle.1",
+          "sourceVersion": "2.97.0-desktop023.lifecycle.1",
+          "consistency": "consistent"
+        },
+        "currentAggregateRoot": "\\\\?\\C:\\Users\\ocxacc4f842fc509\\.codex-desktop",
+        "pendingRestart": false
+      }
+    },
+    {
+      "name": "path-snapshot",
+      "status": "pass",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "firstError": "",
+      "evidence": {
+        "schemaVersion": 1,
+        "aggregateRoot": {
+          "path": "\\\\?\\C:\\Users\\ocxacc34f4c105c0\\.codex-desktop",
+          "status": "valid"
+        },
+        "desktopRoot": {
+          "path": "\\\\?\\C:\\Users\\ocxacc34f4c105c0\\.codex-desktop\\desktop",
+          "status": "valid"
+        },
+        "opencodexHome": {
+          "path": "\\\\?\\C:\\Users\\ocxacc34f4c105c0\\.codex-desktop\\opencodex\\home",
+          "status": "valid"
+        },
+        "configPath": {
+          "path": "\\\\?\\C:\\Users\\ocxacc34f4c105c0\\.codex-desktop\\opencodex\\home\\config.json",
+          "status": "missing"
+        },
+        "installationRoot": {
+          "path": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+          "status": "valid"
+        },
+        "runtimePrefix": {
+          "path": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/opencodex",
+          "status": "valid"
+        },
+        "runtimeEntry": {
+          "path": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/bin/ocx.cmd",
+          "status": "valid"
+        },
+        "managerExecutable": {
+          "path": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+          "status": "valid"
+        },
+        "program": {
+          "packageVersion": "2.97.0-desktop023.lifecycle.1",
+          "manifestVersion": "2.97.0-desktop023.lifecycle.1",
+          "sourceVersion": "2.97.0-desktop023.lifecycle.1",
+          "consistency": "consistent"
+        },
+        "currentAggregateRoot": "\\\\?\\C:\\Users\\ocxacc34f4c105c0\\.codex-desktop",
+        "pendingRestart": false
+      }
+    }
+  ],
+  "schemaVersion": 1,
+  "step": "15",
+  "name": "two-user-paths",
+  "accepted": false,
+  "diagnosticOnly": true,
+  "dependencies": [
+    "11"
+  ]
+}

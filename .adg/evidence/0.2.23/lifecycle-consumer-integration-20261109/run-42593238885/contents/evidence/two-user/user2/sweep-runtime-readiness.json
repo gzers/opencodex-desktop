@@ -1,0 +1,31 @@
+{
+  "name": "runtime-readiness",
+  "status": "pass",
+  "accepted": false,
+  "diagnosticOnly": true,
+  "firstError": "",
+  "evidence": {
+    "pending": false,
+    "elapsedMilliseconds": 370.79999999993015,
+    "value": {
+      "node": {
+        "found": true,
+        "path": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/node/node.exe",
+        "version": "26.8.1"
+      },
+      "npm": {
+        "found": true,
+        "path": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/node/node_modules/npm/bin/npm-cli.js",
+        "version": "11.19.0"
+      },
+      "ocx": {
+        "found": true,
+        "path": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/bin/ocx.cmd",
+        "version": "2.97.0-desktop023.lifecycle.1"
+      },
+      "gate": "ready",
+      "shortCircuited": false,
+      "brewFound": false
+    }
+  }
+}

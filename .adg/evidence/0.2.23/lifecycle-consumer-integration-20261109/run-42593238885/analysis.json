@@ -1,0 +1,28 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "source": "dac30811c14d25f5bbbc60f31409d986e0edbf9d",
+  "passed": 6,
+  "failed": 2,
+  "elapsed": 523.7374682426453,
+  "hypothesis": "refuted",
+  "startup": "original process exit1 without published record; exact admission phase unknown",
+  "cleanup": [
+    {
+      "result": "bootstrap-identity-retained",
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+      "reason": "Exact retained bootstrap/descendant identity was not proved"
+    },
+    {
+      "result": "account-and-profile-removed",
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1003",
+      "profile": "C:\\Users\\ocxacc4f842fc509"
+    },
+    {
+      "result": "account-or-profile-retained",
+      "sid": "S-1-5-21-3289802278-1561746829-1498425070-1004",
+      "reason": "Runtime identity unproven; retain new account/Profile"
+    }
+  ],
+  "remaining": "Actual own-H start, Stop consumer and whole version release"
+}

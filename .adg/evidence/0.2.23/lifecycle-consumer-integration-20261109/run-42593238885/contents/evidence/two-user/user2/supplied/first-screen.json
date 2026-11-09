@@ -1,0 +1,101 @@
+{
+  "mounted": true,
+  "textLength": 259,
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.2.23",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "paths": {
+    "schemaVersion": 1,
+    "aggregateRoot": {
+      "path": "\\\\?\\C:\\Users\\ocxacc34f4c105c0\\.codex-desktop",
+      "status": "valid"
+    },
+    "desktopRoot": {
+      "path": "\\\\?\\C:\\Users\\ocxacc34f4c105c0\\.codex-desktop\\desktop",
+      "status": "valid"
+    },
+    "opencodexHome": {
+      "path": "\\\\?\\C:\\Users\\ocxacc34f4c105c0\\.codex-desktop\\opencodex\\home",
+      "status": "valid"
+    },
+    "configPath": {
+      "path": "\\\\?\\C:\\Users\\ocxacc34f4c105c0\\.codex-desktop\\opencodex\\home\\config.json",
+      "status": "missing"
+    },
+    "installationRoot": {
+      "path": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+      "status": "valid"
+    },
+    "runtimePrefix": {
+      "path": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/opencodex",
+      "status": "valid"
+    },
+    "runtimeEntry": {
+      "path": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/bin/ocx.cmd",
+      "status": "valid"
+    },
+    "managerExecutable": {
+      "path": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+      "status": "valid"
+    },
+    "program": {
+      "packageVersion": "2.97.0-desktop023.lifecycle.1",
+      "manifestVersion": "2.97.0-desktop023.lifecycle.1",
+      "sourceVersion": "2.97.0-desktop023.lifecycle.1",
+      "consistency": "consistent"
+    },
+    "currentAggregateRoot": "\\\\?\\C:\\Users\\ocxacc34f4c105c0\\.codex-desktop",
+    "pendingRestart": false
+  },
+  "config": {
+    "activeDataRoot": "\\\\?\\C:\\Users\\ocxacc34f4c105c0\\.codex-desktop\\desktop",
+    "aggregateRoot": "\\\\?\\C:\\Users\\ocxacc34f4c105c0\\.codex-desktop",
+    "opencodexHomeMode": "inside",
+    "opencodexHome": "\\\\?\\C:\\Users\\ocxacc34f4c105c0\\.codex-desktop\\opencodex\\home",
+    "currentDataRoot": "\\\\?\\C:\\Users\\ocxacc34f4c105c0\\.codex-desktop\\desktop",
+    "currentOpencodexHome": "\\\\?\\C:\\Users\\ocxacc34f4c105c0\\.codex-desktop\\opencodex\\home",
+    "runtimeActive": true
+  },
+  "cliEnabled": false,
+  "runtime": {
+    "kind": "managed",
+    "path": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/bin/ocx.cmd",
+    "version": "2.97.0-desktop023.lifecycle.1",
+    "resolvedAt": "2026-11-09T09:32:02Z",
+    "insideDataRoot": false,
+    "managedEntry": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/bin/ocx.cmd",
+    "managedPrefix": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/opencodex",
+    "defaultPrefix": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/opencodex",
+    "explicitPath": null,
+    "history": []
+  },
+  "environment": {
+    "pending": false,
+    "elapsedMilliseconds": 370.79999999993015,
+    "value": {
+      "node": {
+        "found": true,
+        "path": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/node/node.exe",
+        "version": "26.8.1"
+      },
+      "npm": {
+        "found": true,
+        "path": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/node/node_modules/npm/bin/npm-cli.js",
+        "version": "11.19.0"
+      },
+      "ocx": {
+        "found": true,
+        "path": "C:\\Users\\ocxacc34f4c105c0\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/bin/ocx.cmd",
+        "version": "2.97.0-desktop023.lifecycle.1"
+      },
+      "gate": "ready",
+      "shortCircuited": false,
+      "brewFound": false
+    }
+  }
+}

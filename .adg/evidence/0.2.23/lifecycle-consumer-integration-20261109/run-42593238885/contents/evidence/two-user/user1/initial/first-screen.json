@@ -1,0 +1,85 @@
+{
+  "mounted": true,
+  "textLength": 299,
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.2.23",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "paths": {
+    "schemaVersion": 1,
+    "aggregateRoot": {
+      "path": "\\\\?\\C:\\Users\\ocxacc4f842fc509\\.codex-desktop",
+      "status": "valid"
+    },
+    "desktopRoot": {
+      "path": "\\\\?\\C:\\Users\\ocxacc4f842fc509\\.codex-desktop\\desktop",
+      "status": "valid"
+    },
+    "opencodexHome": {
+      "path": "\\\\?\\C:\\Users\\ocxacc4f842fc509\\.codex-desktop\\opencodex\\home",
+      "status": "valid"
+    },
+    "configPath": {
+      "path": "\\\\?\\C:\\Users\\ocxacc4f842fc509\\.codex-desktop\\opencodex\\home\\config.json",
+      "status": "missing"
+    },
+    "installationRoot": {
+      "path": "C:\\Users\\ocxacc4f842fc509\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+      "status": "valid"
+    },
+    "runtimePrefix": {
+      "path": "C:\\Users\\ocxacc4f842fc509\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/opencodex",
+      "status": "missing"
+    },
+    "runtimeEntry": {
+      "path": "C:\\Users\\ocxacc4f842fc509\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/bin/ocx.cmd",
+      "status": "missing"
+    },
+    "managerExecutable": {
+      "path": "C:\\Users\\ocxacc4f842fc509\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+      "status": "valid"
+    },
+    "program": {
+      "packageVersion": null,
+      "manifestVersion": null,
+      "sourceVersion": null,
+      "consistency": "missing"
+    },
+    "currentAggregateRoot": "\\\\?\\C:\\Users\\ocxacc4f842fc509\\.codex-desktop",
+    "pendingRestart": false
+  },
+  "config": {
+    "activeDataRoot": "\\\\?\\C:\\Users\\ocxacc4f842fc509\\.codex-desktop\\desktop",
+    "aggregateRoot": "\\\\?\\C:\\Users\\ocxacc4f842fc509\\.codex-desktop",
+    "opencodexHomeMode": "inside",
+    "opencodexHome": "\\\\?\\C:\\Users\\ocxacc4f842fc509\\.codex-desktop\\opencodex\\home",
+    "currentDataRoot": "\\\\?\\C:\\Users\\ocxacc4f842fc509\\.codex-desktop\\desktop",
+    "currentOpencodexHome": "\\\\?\\C:\\Users\\ocxacc4f842fc509\\.codex-desktop\\opencodex\\home",
+    "runtimeActive": true
+  },
+  "cliEnabled": false,
+  "runtime": {
+    "kind": "unresolved",
+    "path": null,
+    "version": null,
+    "resolvedAt": "2026-11-09T09:26:17Z",
+    "insideDataRoot": false,
+    "managedEntry": null,
+    "managedPrefix": "C:\\Users\\ocxacc4f842fc509\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/opencodex",
+    "defaultPrefix": "C:\\Users\\ocxacc4f842fc509\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/opencodex",
+    "explicitPath": null,
+    "history": []
+  },
+  "environment": {
+    "pending": false,
+    "elapsedMilliseconds": 6.399999999965075,
+    "error": {
+      "code": 14,
+      "message": "managed runtime operation failed: discovery_runtime_pending; 集成运行包尚待供应或核对，未检查旧环境"
+    }
+  }
+}

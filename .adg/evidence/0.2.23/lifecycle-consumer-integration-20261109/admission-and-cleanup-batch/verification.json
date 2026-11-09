@@ -1,0 +1,33 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "source": "8445d65dca0af76c3275f8617a76c1a726fb8873",
+  "commits": [
+    "76e8a9520",
+    "8445d65dc"
+  ],
+  "checks": {
+    "actualRustTests": 12,
+    "failed": 0,
+    "strictClippy": true,
+    "coreAssemblyTests": 16,
+    "stageTests": 5,
+    "exactBootBodyCounterexamples": true,
+    "actualPowerShellParsed": true,
+    "cleanupRootRace": "live, positive retained original exit, race to exit, unknown-live refusal passed"
+  },
+  "diagnostics": "Fixed phase/kind/u32 only; no raw native error/path/SID/config. Product failure message keeps phases in logs only. Original native admission guards unchanged.",
+  "cleanup": "Root observation accepts positive prior original native handle exit and still performs same descendant identity walk; live unreadable descendant remains failure; no old unknown flag cleared.",
+  "runtime": {
+    "version": "2.97.0-desktop023.lifecycle.2",
+    "sha256": "c02f4710496775d8f4dfe271bd90d6afdf7dbf960f6e696637271ab9f37bc70b",
+    "bytes": 15413257,
+    "canonicalBuildsEqual": true,
+    "accepted": false
+  },
+  "limits": [
+    "Exact cause of Windows standard-user start exit1 not established yet",
+    "Current Stop consumer/client restoration/peer protocol still not reached",
+    "Cleanup race reproduced at orchestration boundary but actual Windows new batch pending"
+  ]
+}

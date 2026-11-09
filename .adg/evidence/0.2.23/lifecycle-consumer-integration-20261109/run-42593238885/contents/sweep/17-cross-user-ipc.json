@@ -1,0 +1,87 @@
+{
+  "status": "pass",
+  "firstError": "",
+  "evidence": {
+    "peer-business-data": [
+      {
+        "name": "peer-business-data",
+        "status": "pass",
+        "accepted": false,
+        "diagnosticOnly": true,
+        "firstError": "",
+        "evidence": null
+      },
+      {
+        "name": "peer-business-data",
+        "status": "pass",
+        "accepted": false,
+        "diagnosticOnly": true,
+        "firstError": "",
+        "evidence": null
+      }
+    ],
+    "cross-user-ipc": [
+      {
+        "name": "cross-user-ipc",
+        "status": "pass",
+        "accepted": false,
+        "diagnosticOnly": true,
+        "firstError": "",
+        "evidence": null
+      },
+      {
+        "name": "cross-user-ipc",
+        "status": "pass",
+        "accepted": false,
+        "diagnosticOnly": true,
+        "firstError": "",
+        "evidence": null
+      }
+    ],
+    "cross-user-dpapi": [
+      {
+        "name": "cross-user-dpapi",
+        "status": "pass",
+        "accepted": false,
+        "diagnosticOnly": true,
+        "firstError": "",
+        "evidence": null
+      },
+      {
+        "name": "cross-user-dpapi",
+        "status": "pass",
+        "accepted": false,
+        "diagnosticOnly": true,
+        "firstError": "",
+        "evidence": null
+      }
+    ],
+    "same-sid-single-instance": [
+      {
+        "name": "same-sid-single-instance",
+        "status": "pass",
+        "accepted": false,
+        "diagnosticOnly": true,
+        "firstError": "",
+        "evidence": null
+      },
+      {
+        "name": "same-sid-single-instance",
+        "status": "pass",
+        "accepted": false,
+        "diagnosticOnly": true,
+        "firstError": "",
+        "evidence": null
+      }
+    ]
+  },
+  "schemaVersion": 1,
+  "step": "17",
+  "name": "cross-user-ipc",
+  "accepted": false,
+  "diagnosticOnly": true,
+  "dependencies": [
+    "11",
+    "15"
+  ]
+}

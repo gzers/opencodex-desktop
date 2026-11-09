@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "id": "H-admission-phase-cleanup-20261109-05",
+  "source": "8445d65dca0af76c3275f8617a76c1a726fb8873",
+  "buildRun": null,
+  "claim": "The unresolved Windows start exit occurs during lifetime admission and will emit an exact fixed native phase; the observed bootstrap exit race can be handled using the retained original handle without accepting an unknown live process",
+  "changeUnderTest": "Native admission fixed-phase/kind/u32 diagnostics and output parser; no ACL/Job admission predicate changed. Cleanup root observation recognizes retained-original exit while continuing exact descendant checks. Candidate lifecycle.2 binds these bytes.",
+  "refutation": "Missing phase on actual exit1, a failure outside lifetime admission, or any still-live/unreadable cleanup object refutes this diagnosis; successful actual startup/stop would also refute persistence of admission failure. No budget overrun, missing native restoration or peer change can pass.",
+  "rerunReason": "Both failures from complete standard core42593238885 were inspected before this batch. Startup classification and cleanup observation changed; repeat their dependent real dual-SID integration once, not unchanged installers or six prototype cases.",
+  "predictions": [
+    {
+      "step": "11",
+      "status": "pass",
+      "observation": "Two actual distinct SID Managers overlap"
+    },
+    {
+      "step": "12",
+      "status": "pass",
+      "observation": "Both first-start private runtime supplies match new frozen policy"
+    },
+    {
+      "step": "13",
+      "status": "fail",
+      "observation": "Actual start exit1 remains failed but fixed lifetime admission stage/kind/win32 appears in native app log, rather than an unclassified generic exit"
+    },
+    {
+      "step": "15",
+      "status": "pass",
+      "observation": "Both actual path snapshots remain isolated"
+    },
+    {
+      "step": "16",
+      "status": "pass",
+      "observation": "Actual same-user IPC remains bound"
+    },
+    {
+      "step": "17",
+      "status": "pass",
+      "observation": "Original cross-user IPC/DPAPI/same-SID-instance assertions hold"
+    },
+    {
+      "step": "18",
+      "status": "pass",
+      "observation": "Positive retained bootstrap exit race is accepted, all live descendants still require exact native identity; two exact account/Profile removals proved"
+    }
+  ],
+  "unchangedPassingEvidence": [
+    {
+      "gate": "installer cells / Server MSI / existing Windows material UI",
+      "source": "prior preserved 0.2.23 source",
+      "evidence": ".adg/evidence/0.2.23/sweep-r33-42539896297/ and local-active-sessions-20261109/",
+      "whyUnaffected": "This batch changes no installer or glass implementation; final same-source installer/release gates still remain"
+    },
+    {
+      "gate": "Producer private record/lease/Job inheritance and foreign-SID denial",
+      "source": "f143d0910bacd47d933ce6ce89426f972368ba59 and 4162f5234c911be28e371f9a8463609ae1fa5d31",
+      "evidence": ".adg/evidence/0.2.23/native-rust-lifetime-witness-42577435871/; foreign-job-authority-42567013704/; core-producer-frozen-20261109/",
+      "whyUnaffected": "Those TypeScript producer postimages are unchanged; new Desktop consumer native behavior is explicitly subject to this affected integration round"
+    }
+  ]
+}
