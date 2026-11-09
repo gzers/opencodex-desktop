@@ -415,6 +415,8 @@ async fn stop_uses_one_attested_connection_and_requires_official_client_teardown
         "record-changed",
         "capability-pid",
         "slow-stop",
+        "witness-refused",
+        "duplicate-lifetime-proof",
     ] {
         let listener = TcpListener::bind((std::net::Ipv4Addr::LOCALHOST, 0))
             .await
@@ -479,6 +481,9 @@ async fn stop_uses_one_attested_connection_and_requires_official_client_teardown
                         "x-opencodex-attestation-proof: {}\r\n",
                         URL_SAFE_NO_PAD.encode(mac.finalize().into_bytes())
                     );
+                    if mode == "duplicate-lifetime-proof" {
+                        proof.push_str("x-opencodex-runtime-lifetime-proof: A\r\nx-opencodex-runtime-lifetime-proof: B\r\n");
+                    }
                     json!({"service":"opencodex","status":"ok","pid":r.pid,"port":r.port,"version":VERSION})
                 } else if index == 1 {
                     json!({"schema":"ocx-stop-capabilities/1","connectedClientOwnership":true,"pid":if mode=="capability-pid"{43}else{r.pid}})
@@ -512,9 +517,19 @@ async fn stop_uses_one_attested_connection_and_requires_official_client_teardown
         let progress = std::cell::RefCell::new(Vec::new());
         let observed = tokio::time::timeout(
             std::time::Duration::from_secs(2),
-            stop_official(runtime, f.home.clone(), 42, |phase| {
-                progress.borrow_mut().push(phase)
-            }),
+            stop_official_with_witness(
+                runtime,
+                f.home.clone(),
+                42,
+                |phase| progress.borrow_mut().push(phase),
+                |_, _, _, _, _| {
+                    if mode == "witness-refused" {
+                        Err(CollectError::Unreachable)
+                    } else {
+                        Ok(())
+                    }
+                },
+            ),
         )
         .await;
         if mode == "slow-stop" {
@@ -536,14 +551,22 @@ async fn stop_uses_one_attested_connection_and_requires_official_client_teardown
         task.await.unwrap();
         let requests = requests.lock().unwrap();
         assert_eq!(outcome.is_ok(), mode == "valid", "{mode}");
-        if mode == "forged" {
+        if ["forged", "witness-refused", "duplicate-lifetime-proof"].contains(&mode) {
             assert_eq!(requests.len(), 1);
             assert!(!requests[0].1, "no token before identity proof");
         }
         if ["record-changed", "capability-pid"].contains(&mode) {
             assert!(!requests.iter().any(|r| r.0.starts_with("POST")));
         }
-        if ["forged", "record-changed", "capability-pid"].contains(&mode) {
+        if [
+            "forged",
+            "record-changed",
+            "capability-pid",
+            "witness-refused",
+            "duplicate-lifetime-proof",
+        ]
+        .contains(&mode)
+        {
             assert!(!progress.borrow().contains(&"stop-post-client-restore"));
         }
         assert!(progress
@@ -558,4 +581,22 @@ async fn stop_uses_one_attested_connection_and_requires_official_client_teardown
             assert!(requests[3].1);
         }
     }
+}
+
+#[cfg(windows)]
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn production_stop_without_lifetime_refuses_before_reusable_token_or_post() {
+    let (f, task) = server("valid").await;
+    let root = installation(&f.home);
+    let data = f.home.join("desktop");
+    std::fs::create_dir(&data).unwrap();
+    let runtime = crate::modules::runtime::RuntimeHandle::initialize_managed(&data, &root);
+    let phases = std::cell::RefCell::new(Vec::new());
+    let outcome = stop_official(runtime, f.home.clone(), 42, |p| phases.borrow_mut().push(p)).await;
+    assert!(matches!(outcome, Err(CollectError::Unreachable)));
+    assert_eq!(phases.borrow().last(), Some(&"stop-lifetime-witness"));
+    assert!(!phases.borrow().contains(&"stop-private-token"));
+    assert!(!phases.borrow().contains(&"stop-post-client-restore"));
+    assert!(!f.home.join("admin-api-token").exists());
+    task.await.unwrap();
 }

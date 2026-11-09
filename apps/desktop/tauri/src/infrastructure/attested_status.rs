@@ -25,6 +25,9 @@ struct Record {
     pid: u32,
     port: u16,
     attestation_secret: String,
+    #[cfg(windows)]
+    #[serde(default)]
+    desktop_lifetime: Option<super::runtime_lifetime::Binding>,
 }
 fn unavailable<T>(_: T) -> CollectError {
     CollectError::Unreachable
@@ -69,6 +72,7 @@ fn record(home: &Path) -> Result<(Record, Vec<u8>), CollectError> {
 struct Response {
     code: u16,
     proof: Option<String>,
+    lifetime_proof: Option<String>,
     value: Value,
 }
 struct Session {
@@ -130,6 +134,7 @@ impl Session {
             .map_err(|_| CollectError::Parse)?;
         let mut length = None;
         let mut proof = None;
+        let mut lifetime_proof = None;
         for line in lines.filter(|s| !s.is_empty()) {
             let (key, value) = line.split_once(':').ok_or(CollectError::Parse)?;
             if key.is_empty() || !key.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'-') {
@@ -149,6 +154,12 @@ impl Session {
                     }
                     proof = Some(value.to_owned());
                 }
+                "x-opencodex-runtime-lifetime-proof" => {
+                    if lifetime_proof.is_some() {
+                        return Err(CollectError::Parse);
+                    }
+                    lifetime_proof = Some(value.to_owned());
+                }
                 "transfer-encoding" | "content-encoding" => return Err(CollectError::Parse),
                 "connection" if !value.eq_ignore_ascii_case("keep-alive") => {
                     return Err(CollectError::Unreachable)
@@ -162,18 +173,87 @@ impl Session {
         let mut bytes = vec![0; length];
         self.io.read_exact(&mut bytes).await.map_err(unavailable)?;
         let value = serde_json::from_slice(&bytes).map_err(|_| CollectError::Parse)?;
-        Ok(Response { code, proof, value })
+        Ok(Response {
+            code,
+            proof,
+            lifetime_proof,
+            value,
+        })
     }
 }
 
 /// The write stays on the TCP connection that proved this HOME's key. Never
 /// forward the reusable admin token to a newly connected port after attestation.
+pub(crate) struct StopWitness {
+    #[cfg(windows)]
+    native: super::runtime_lifetime::native::Witness,
+}
+impl StopWitness {
+    #[cfg(windows)]
+    pub(crate) fn quiescent(&mut self) -> Result<bool, CollectError> {
+        self.native.quiescent().map_err(unavailable)
+    }
+}
+
 pub(crate) async fn stop_official(
     runtime: SharedRuntimeExecutable,
     home: PathBuf,
     pid: u32,
     phase: impl Fn(&'static str),
-) -> Result<(), CollectError> {
+) -> Result<StopWitness, CollectError> {
+    stop_official_with_witness(
+        runtime,
+        home,
+        pid,
+        phase,
+        |installation, home, record, challenge, proof| {
+            #[cfg(windows)]
+            {
+                let sid =
+                    crate::infrastructure::windows_startup_root::user_scope::current_user_sid()
+                        .map_err(unavailable)?;
+                let binding = record
+                    .desktop_lifetime
+                    .as_ref()
+                    .ok_or(CollectError::Unreachable)?;
+                let proof = proof.ok_or(CollectError::Unreachable)?;
+                let signed = super::runtime_lifetime::SignedChallenge {
+                    secret: &record.attestation_secret,
+                    challenge,
+                    port: record.port,
+                    proof,
+                };
+                if !binding.verify_proof(home, &sid, record.pid, &signed) {
+                    return Err(CollectError::Unreachable);
+                }
+                let native = super::runtime_lifetime::native::Witness::live(
+                    binding.clone(),
+                    home,
+                    &sid,
+                    installation,
+                )
+                .map_err(unavailable)?;
+                Ok(StopWitness { native })
+            }
+            #[cfg(not(windows))]
+            {
+                let _ = (installation, home, record, challenge, proof);
+                Ok(StopWitness {})
+            }
+        },
+    )
+    .await
+}
+
+// Separate the exact HTTP proof from the OS witness constructor for transport
+// tests. Only stop_official above is a production entry, with no injected bypass.
+async fn stop_official_with_witness<T>(
+    runtime: SharedRuntimeExecutable,
+    home: PathBuf,
+    pid: u32,
+    phase: impl Fn(&'static str),
+    capture: impl FnOnce(&Path, &Path, &Record, &str, Option<&str>) -> Result<T, CollectError>,
+) -> Result<T, CollectError> {
     phase("stop-runtime-activation");
     let root = runtime
         .managed_installation_root()
@@ -197,7 +277,10 @@ pub(crate) async fn stop_official(
         port: expected.port,
     };
     phase("stop-first-attestation");
-    health(&mut session, &expected, &identity.package_version).await?;
+    let (_, challenge, proof) =
+        health_proof(&mut session, &expected, &identity.package_version).await?;
+    phase("stop-lifetime-witness");
+    let witness = capture(&root, &home, &expected, &challenge, proof.as_deref())?;
     phase("stop-private-token");
     let path = home.join("admin-api-token");
     safety::check_path(&home, &path, false).map_err(unavailable)?;
@@ -248,7 +331,7 @@ pub(crate) async fn stop_official(
         return Err(CollectError::Unreachable);
     }
     phase("stop-response-verified");
-    Ok(())
+    Ok(witness)
 }
 fn identity(value: &Value, record: &Record, version: &str) -> bool {
     value["service"] == "opencodex"
@@ -261,6 +344,14 @@ async fn health(
     record: &Record,
     version: &str,
 ) -> Result<Value, CollectError> {
+    let (value, _, _) = health_proof(session, record, version).await?;
+    Ok(value)
+}
+async fn health_proof(
+    session: &mut Session,
+    record: &Record,
+    version: &str,
+) -> Result<(Value, String, Option<String>), CollectError> {
     let challenge = URL_SAFE_NO_PAD.encode(
         uuid::Uuid::new_v4()
             .as_bytes()
@@ -290,7 +381,7 @@ async fn health(
         .as_bytes(),
     );
     mac.verify_slice(&proof).map_err(unavailable)?;
-    Ok(response.value)
+    Ok((response.value, challenge, response.lifetime_proof))
 }
 async fn observe(
     home: &Path,

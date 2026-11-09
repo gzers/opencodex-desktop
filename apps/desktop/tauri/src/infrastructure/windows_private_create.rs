@@ -245,7 +245,7 @@ fn open_directory(path: &Path, security: bool) -> io::Result<File> {
     information(&file, true, false)?;
     Ok(file)
 }
-fn pin_parents(path: &Path) -> io::Result<Vec<File>> {
+pub(crate) fn pin_parents(path: &Path) -> io::Result<Vec<File>> {
     let mut pins = Vec::new();
     for parent in path
         .ancestors()
@@ -833,12 +833,24 @@ mod tests {
                         let until = std::time::Instant::now() + std::time::Duration::from_secs(12);
                         let result = loop {
                             if lease_root.join("awaiting-rust-live-witness").exists() {
-                                break super::candidate_lifetime_binding::native::Witness::live(
-                                    &lease_root.join("service-ready"),
-                                    &lease_root,
-                                    &expected,
-                                    &bun,
-                                );
+                                let result=super::candidate_lifetime_binding::native::Witness::live(
+                                    &lease_root.join("service-ready"), &lease_root, &expected, &bun,
+                                ).and_then(|original| {
+                                    let bytes=std::fs::read(lease_root.join("service-ready"))?;
+                                    let value:serde_json::Value=serde_json::from_slice(&bytes).map_err(std::io::Error::other)?;
+                                    let binding:crate::infrastructure::runtime_lifetime::Binding=serde_json::from_value(value["candidateBinding"].clone()).map_err(std::io::Error::other)?;
+                                    let secret="A".repeat(43);
+                                    use base64::Engine;
+                                    let challenge=base64::engine::general_purpose::URL_SAFE_NO_PAD.encode([1u8;32]);
+                                    let proof=value["candidateProof"].as_str().ok_or_else(|| std::io::Error::other("Missing candidate proof"))?;
+                                    let pid=value["pid"].as_u64().and_then(|p|u32::try_from(p).ok()).ok_or_else(||std::io::Error::other("Invalid candidate PID"))?;
+                                    let signed=crate::infrastructure::runtime_lifetime::SignedChallenge{secret:&secret,challenge:&challenge,port:1,proof};
+                                    if !binding.verify_proof(&lease_root,&expected,pid,&signed) { return Err(std::io::Error::other("Production protocol rejected live candidate")); }
+                                    let install=bun.ancestors().nth(3).ok_or_else(||std::io::Error::other("Pinned Bun install unavailable"))?;
+                                    let production=crate::infrastructure::runtime_lifetime::native::Witness::live(binding,&lease_root,&expected,install)?;
+                                    Ok((original,production))
+                                });
+                                break result;
                             }
                             if child.try_wait().unwrap().is_some()
                                 || std::time::Instant::now() >= until
@@ -877,10 +889,13 @@ mod tests {
                     report[case_key] = serde_json::from_slice::<serde_json::Value>(&result.stdout)
                         .expect("fixed synthetic lifetime report");
                     if candidate_lifetime {
-                        let witness = witness.unwrap().expect(
-                            "Independent Rust live process/Job/lease witness must be valid",
+                        let (witness,mut production_witness) = witness.unwrap().expect(
+                            "Independent and production live process/Job/lease witnesses must be valid",
                         );
                         witness.exited().expect("Same retained native handles must prove original process exit, emptyJob and freed lease");
+                        assert!(production_witness.quiescent().expect("Production native exit proof must remain readable"),"Production witness must prove original exit/Job empty and hold exclusive lease");
+                        report[case_key]["productionNativeLifetimeConsumerAccepted"] =
+                            serde_json::json!(true);
                         report[case_key]["independentRustKernelWitnessAccepted"] =
                             serde_json::json!(true);
                         let lease = crate::modules::backup::safety::open_file(

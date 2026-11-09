@@ -147,7 +147,7 @@ impl SystemServiceOwnerProofProvider {
                 ));
             }
             let wait_budget = remaining()?;
-            tauri::async_runtime::block_on(async {
+            let verified_stop = tauri::async_runtime::block_on(async {
                 tokio::time::timeout(wait_budget, async {
                     mark("final-owner-before-stop");
                     self.checked_owned(&identity, pid)?;
@@ -169,9 +169,46 @@ impl SystemServiceOwnerProofProvider {
                 .await
             })
             .map_err(|_| AppError::Timeout)??;
+            #[cfg(windows)]
+            let mut witness = verified_stop;
+            #[cfg(not(windows))]
+            let _ = verified_stop;
             mark("wait-os-absence");
             loop {
                 remaining()?;
+                #[cfg(windows)]
+                {
+                    // This signed own-H generation was captured while live.
+                    // Retain its original process/Job/lease; never enumerate or
+                    // skip inaccessible processes from another user's HOME.
+                    let empty = witness.quiescent().map_err(|_| {
+                        fail(
+                            "lifecycle_stop_unknown",
+                            "原生生命周期证明不可读，未宣称已停止",
+                        )
+                    })?;
+                    if empty
+                        && self.record()?.is_none()
+                        && self.read("ocx.pid", 64)?.is_none()
+                        && self.host.process(pid)?.is_none()
+                        && self.host.port_clear(record.runtime.port)?
+                        && self.host.manager_absent()?
+                    {
+                        // Witness still owns the exclusive lease byte here.
+                        // Close late publication/respawn races before return.
+                        if self.record()?.is_none()
+                            && self.read("ocx.pid", 64)?.is_none()
+                            && witness
+                                .quiescent()
+                                .map_err(|_| fail("lifecycle_stop_unknown", "最终租约证明不可读"))?
+                        {
+                            remaining()?;
+                            mark("final-os-absence");
+                            return Ok(());
+                        }
+                    }
+                }
+                #[cfg(not(windows))]
                 if self.query_inner()? == ServiceOwnerProof::Stopped {
                     mark("final-os-absence");
                     // Require process generation, configured HOME, socket and

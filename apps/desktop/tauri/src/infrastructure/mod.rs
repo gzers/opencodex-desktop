@@ -38,3 +38,6 @@ pub(crate) mod attested_status;
 
 #[cfg(windows)]
 pub(crate) mod windows_task_scheduler;
+
+#[cfg(any(windows, test))]
+pub(crate) mod runtime_lifetime;

@@ -47,12 +47,12 @@ jobs:
           cargo fmt --manifest-path apps/desktop/tauri/Cargo.toml --all -- --check
           if($LASTEXITCODE -ne 0){throw 'Formatting failed'}
           $env:OCXD_REQUIRE_RUNTIME_BUNDLE='1'
-          $filters=@('infrastructure::status_source::managed_cli_admission_tests','infrastructure::attested_status','commands::runtime_recovery_v2_owner::tests')
+          $filters=@('infrastructure::status_source::managed_cli_admission_tests','infrastructure::attested_status','commands::runtime_recovery_v2_owner::tests','infrastructure::runtime_lifetime::tests')
           cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib -- @filters --nocapture *> product-regression.log
           if($LASTEXITCODE -ne 0){throw 'Exact product regression failed'}
           $log=Get-Content product-regression.log -Raw
-          if($log -notmatch '16 passed; 0 failed; 1 ignored'){throw 'Original test totals or dedicated OS fixture ignore changed'}
-          foreach($entry in @(@{filter=$filters[0];passed=3},@{filter=$filters[1];passed=8},@{filter=$filters[2];passed=5})){
+          if($log -notmatch '19 passed; 0 failed; 1 ignored'){throw 'Original test totals or dedicated OS fixture ignore changed'}
+          foreach($entry in @(@{filter=$filters[0];passed=3},@{filter=$filters[1];passed=9},@{filter=$filters[2];passed=5},@{filter=$filters[3];passed=2})){
             $actual=@($log.Split([char]10) | Where-Object {$_.StartsWith('test '+$entry.filter) -and $_.TrimEnd([char]13).EndsWith(' ... ok')}).Count
             if($actual -ne $entry.passed){throw 'A required group did not actually execute'}
           }
