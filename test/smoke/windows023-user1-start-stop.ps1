@@ -3,16 +3,20 @@ param(
  [string]$InputFile,
  [string]$Directory,
  [string]$ProgramDirectory,
- [string]$Node
+ [string]$Node,
+ [ValidatePattern('^[a-f0-9]{40}$')][string]$ExpectedSource='8445d65dca0af76c3275f8617a76c1a726fb8873',
+ [ValidatePattern('^[0-9]+$')][string]$ExpectedBuildRun='42602603906'
 )
 $ErrorActionPreference='Stop'
 $user1Mode=$Mode
 . (Join-Path $PSScriptRoot 'windows023-two-user-native-helper.ps1')
 . (Join-Path $PSScriptRoot 'windows-process-token.ps1')
-$expected='8445d65dca0af76c3275f8617a76c1a726fb8873'
+$expected=$ExpectedSource
 if(!$IsWindows){throw 'Native Windows required'}
 if($user1Mode -eq 'Child'){
  $c=Get-Content -LiteralPath $InputFile -Raw|ConvertFrom-Json
+ if($c.commit -cnotmatch '^[a-f0-9]{40}$'){throw 'Explicit full product source required'}
+ $expected=$c.commit
  $identity=[Security.Principal.WindowsIdentity]::GetCurrent();$sid=$identity.User.Value
  if($sid -cne $c.accountSid -or $env:USERPROFILE -ine $c.profile -or (Split-Path -Leaf $c.profile) -notlike 'ocxaccu1*'){throw 'Exact newly provisioned user1 required'}
  if(([Security.Principal.WindowsPrincipal]::new($identity)).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){throw 'user1 must be a genuine nonadministrator'}
@@ -124,7 +128,7 @@ if(!([Security.Principal.WindowsPrincipal]::new($identity)).IsInRole([Security.P
 $taskRoot=Assert-TwoUserLocalPath $Directory;$program=Assert-TwoUserLocalPath $ProgramDirectory
 if(Test-Path -LiteralPath (Join-Path $taskRoot 'controller.json')){throw 'Fresh batch required; no retries or evidence replacement'}
 $manifest=Get-Content -LiteralPath (Join-Path $program 'core-build.json') -Raw|ConvertFrom-Json
-if($manifest.source -cne $expected -or $manifest.run -cne '42602603906'){throw 'Specified source-bound artifact required'}
+if($manifest.source -cne $expected -or $manifest.run -cne $ExpectedBuildRun){throw 'Specified source-bound artifact required'}
 foreach($file in $manifest.files){$path=Join-Path $program $file.path;$null=Assert-TwoUserUnder $program $path;Assert-TwoUserNoReparseAncestors $path;if((Get-Item $path).Length -ne $file.bytes -or (Get-FileHash $path).Hash -ine $file.sha256){throw 'Specified program member differs'}}
 $runtime=Join-Path $program 'runtime-bundle/maintained-runtime.tgz'
 if((Get-Item $runtime).Length -ne 15413257 -or (Get-FileHash $runtime).Hash -ine 'c02f4710496775d8f4dfe271bd90d6afdf7dbf960f6e696637271ab9f37bc70b'){throw 'Specified lifecycle.2 runtime differs'}
