@@ -571,3 +571,5 @@ core-sweep增加producer技术focus（4162f5234），仅对尚未闭合的实际
 标准core全表后同批提交76e8a9520/8445d65dc：启动只补固定stage/kind/u32 Win32码，Rust只接受白名单，内部阶段不进入产品报错文案；不改任何ACL/Job/租约准入判断，具体exit1原生原因仍未确证。清理修正父HasExited到AssertLive间正常退出竞态：仅此前已保留原句柄的正向exit可继续原parent-chain枚举，每个活子仍需精确SID/image/FILETIME，未知拒绝，不清除先前unknown；补固定异常类别/HResult/行号及原bootstrap实际退出标记。实际Rust12/strictClippy、16装配/5供应/精确boot体/PowerShell解析与清理竞态反例通过；不是Windows产品通过。
 
 本批候选lifecycle.2为15413257字节/SHA256c02f4710496775d8f4dfe271bd90d6afdf7dbf960f6e696637271ab9f37bc70b，规范双构建一致；lifecycle.1旧候选与失败原件保留。[H05派发前准备判断](../../.adg/evidence/0.2.23/lifecycle-consumer-integration-20261109/admission-and-cleanup-batch/hypothesis.preparation.json)：exit1应能定位到固定lifetime准入阶段，清理退出竞态应由同原句柄正确分类且两账户完成；若无阶段/其它失败或活未知则反证。原预算/真实账户/配置还原/peer/清理判据不放宽。下一core前固定buildRun并推送；整版验收与发布继续未完。
+
+H05准备判断先提交4c4502d4d后，同源构建42602603906固定8445d65dc已确认启动，候选lifecycle.2/c02f4710。已补真实buildRun到派发前假设；标准core尚未派，无推断启动或清理已修复。
