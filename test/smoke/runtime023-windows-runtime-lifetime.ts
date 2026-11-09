@@ -15,6 +15,9 @@ export interface WindowsRuntimeLifetime {
   leaseVolume:number;
   leaseIndex:string;
 }
+let active:ReturnType<typeof acquireWindowsRuntimeLifetime>;
+export function currentWindowsRuntimeLifetime():WindowsRuntimeLifetime|undefined{return active?.binding;}
+export function createWindowsRuntimeLifetimeProof(secret:string,challenge:string,port:number):string|undefined{return active?.proof(secret,challenge,port);}
 const IS_WINDOWS=process.platform==='win32';
 function refuse(code='authority-unknown'):never{throw new Error('Windows runtime lifetime authority cannot be proved: '+code);}
 function wide(s:string){const out=new Uint16Array(s.length+1);for(let i=0;i<s.length;i++)out[i]=s.charCodeAt(i);return out;}
@@ -94,6 +97,7 @@ function activeCount(api:Api,job:bigint){
 /** Must execute before bind/publication and before any service child is spawned. */
 export function acquireWindowsRuntimeLifetime(home:string):{binding:WindowsRuntimeLifetime;proof:(secret:string,challenge:string,port:number)=>string}|undefined{
   if(!IS_WINDOWS)return undefined;if(process.arch!=='x64'||!win32.isAbsolute(home)||!existsSync(home))refuse();
+  if(active)refuse('process-already-bound');
   const api=load(),k=api.kernel.symbols,pins:bigint[]=[];let lease=0n,job=0n,locked=false,committed=false;
   const supplied=home.replaceAll(String.fromCharCode(92),'/');
   if(supplied.split('/').some(part=>part==='.'||part==='..')||home.includes(String.fromCharCode(0)))refuse();
@@ -128,10 +132,11 @@ export function acquireWindowsRuntimeLifetime(home:string):{binding:WindowsRunti
     // Actual process lifetime owns these handles. No user-space release function
     // can declare absence before the service exits and official restore finishes.
     process.once('exit',()=>{if(locked)k.UnlockFileEx(lease,0,1,0,ptr(overlap));k.CloseHandle(lease);k.CloseHandle(job);for(const h of pins.reverse())k.CloseHandle(h);api.security.close();api.kernel.close();});
-    return {binding,proof(secret,challenge,port){
+    active={binding,proof(secret,challenge,port){
       if(!/^[A-Za-z0-9_-]{43}$/.test(secret)||!/^[A-Za-z0-9_-]{43}$/.test(challenge)||!Number.isInteger(port)||port<1||port>65535)refuse();
       return createHmac('sha256',secret).update('opencodex-runtime-lifetime-v1\n'+challenge+'\n'+port+'\n'+JSON.stringify([binding.schema,binding.home,binding.sid,binding.pid,binding.created,binding.generation,binding.job,binding.leaseVolume,binding.leaseIndex])).digest('base64url');
     }};
+    return active;
   }finally{
     if(!committed){if(locked)k.UnlockFileEx(lease,0,1,0,ptr(overlap));if(lease!==0n&&lease!==0xffffffffffffffffn)k.CloseHandle(lease);if(job!==0n)k.CloseHandle(job);for(const h of pins.reverse())k.CloseHandle(h);api.security.close();api.kernel.close();}
   }
