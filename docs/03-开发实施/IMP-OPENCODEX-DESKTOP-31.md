@@ -509,3 +509,7 @@ f143d0910准备真实producer隔离门，明确只有全部先决case通过后�
 core入口实现 d79497e06（独立core-build/core-sweep、源码/制品/假设入场、完整状态表）、ab0b5d043（停止链仅加有限阶段元信息）已推送。10项行为测试、4个workflow actionlint、46个实际PowerShell块解析与Node语法过；首次本机pwsh缺cmdlet自动载入，改为.NET文件API后重验全部块，不借后续命令成功掩盖前错。构建准备[42580582994](https://github.com/gzers/opencodex-desktop/actions/runs/42580582994)已启动，尚未执行核心轮；[派发前判断及本地检查](../../.adg/evidence/0.2.23/core-entry-20261109/hypothesis.before-dispatch.json)先落盘，等待精确源码完整program准备成功才派。首轮验证新装配线保留完整失败图景，不宣称修复未集成的生产生命周期。
 
 准备42580582994全部成功，精确program artifact13657363010（304915765字节ZIP，SHA25687f33c733f9fab3ac062a465e86eb8884b7697ae65447527c6e4c1b530c13488）已封存。首个[core-sweep42581940251](https://github.com/gzers/opencodex-desktop/actions/runs/42581940251)/job129042512455已派，固定ab0b5d043；完整判断已在先于派发的docs提交d9a1d1278中保存。生产runtime未变，本轮仅证伪新核心装配线保留原失败图景；不派完整sweep，不重跑六组原型。
+
+首个core42581940251终态：[完整8项状态/假设对照与原件](../../.adg/evidence/0.2.23/core-entry-20261109/run-42581940251/status-table.md)。582.067秒达8–10分钟目标，7过/合并13失败；accepted:false，不是版本验收。首次完整健康确认31288ms超原30000ms，虽实际PID/port/HMAC一致也不能补判；补充Stop卡stop-post-client-restore（请求593ms已进入、9743ms仍未完成，整次10021ms失败），官方还原与原10秒均保留。双SID、私有供应、路径、两类IPC及完整清理均过；假设未被证伪，原13/14错误独立保留。原1411680字节ZIP/SHA25636220f74339e894dd28f160032ee634ba3f965ecafbfb526550c7190500d710e与全成员摘要核验；先公布全表，再集中分析/修复启动确认与官方停止链，未派下一轮。
+
+全表之后同批集中提交两项装配防误判：545e9770e保证子目录同名core-build.json不能逃过清单；c18a4e217保持30秒原断言，迟到但健康的确认标记runtime_start_confirmation_timeout，避免误导为完全未健康。10项装配行为测试/实际PowerShell helper解析/嵌入Node语法与两个错误类别核对过；不改产品语义，不派新轮，不复跑已闭合原型或完整sweep。实际产品启动确认和官方停止仍待采用维护包方案的完整生产者/消费者集成与定位修复，不把本批装配修正写成产品已修复。

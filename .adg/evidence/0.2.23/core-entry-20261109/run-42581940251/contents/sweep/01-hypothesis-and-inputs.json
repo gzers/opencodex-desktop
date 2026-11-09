@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "step": "01",
+  "name": "hypothesis-and-inputs",
+  "status": "pass",
+  "firstError": "",
+  "accepted": false,
+  "diagnosticOnly": true,
+  "dependencies": [],
+  "evidence": {
+    "build": {
+      "schemaVersion": 1,
+      "source": "ab0b5d043d9a93b5d9434bf5f0758423fa15f58a",
+      "appsTree": "bb464ecee629629a92dd38eef06c8b5a83659c59",
+      "policySha256": "ea3b403743361ad51ca340c472580a416282c234f0bc94a20ad1546636e42927",
+      "run": "42580582994",
+      "profile": "debug custom-protocol MSVC diagnostic-only",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "files": [
+        {
+          "path": "ocxd.exe",
+          "bytes": 3415552,
+          "sha256": "39bb64a47d7a47d568f610641184a446ed3a956209613150aa216b01778e5971"
+        },
+        {
+          "path": "opencodex-desktop.exe",
+          "bytes": 71162368,
+          "sha256": "3d45cfc53b94e0bfd7224412f8b925bde5721e662ee9c2e1041ab37e93e1b15b"
+        },
+        {
+          "path": "runtime-bundle/maintained-runtime.tgz",
+          "bytes": 15407218,
+          "sha256": "fcd2740ecc32ae1e11c1c79d84c801b2c5d5447ae89e070ab060548d61f75ee6"
+        },
+        {
+          "path": "runtime-bundle/runtime-bundle-0.2.23-win32-x64.tar.gz",
+          "bytes": 265135836,
+          "sha256": "1a54cadf1b317702579c8304502ee67984ba038200fc4665e2e57e46801b77a0"
+        },
+        {
+          "path": "runtime-bundle/runtime-bundle.manifest.json",
+          "bytes": 2130051,
+          "sha256": "133d84387766a2f4d5b75b237f6a3768cb3842ab67268059a509d4bcd07b74ed"
+        },
+        {
+          "path": "runtime-bundle/runtime-bundle.manifest.sha256",
+          "bytes": 66,
+          "sha256": "dc11f3740e0935b2ac1de3f696ad7d87e3ab7ddb648d000e967ec8bc1d4350ea"
+        },
+        {
+          "path": "sweep-filesystem.exe",
+          "bytes": 205312,
+          "sha256": "23d06b55a5f68d6cd59e903f51d8ad01d635209c6a71252fb7b87ae500af8e1a"
+        },
+        {
+          "path": "sweep-filesystem.pdb",
+          "bytes": 1404928,
+          "sha256": "cfd6973402f6744d7d5980d72b736c45f4985ada89a61702ccd8b84afb31b00c"
+        },
+        {
+          "path": "sweep-state.exe",
+          "bytes": 5204992,
+          "sha256": "80f7e558991e4d6f0ed3debb2872bff9fd720c7ba6395a42018da95e88ec2c94"
+        }
+      ]
+    },
+    "manifestSha256": "2ccc49e9ae50a9e8091f29721b3ba2f1f825a2fe073394306cde6af7a6918ca9"
+  },
+  "atUtc": "2026-11-09T07:52:12.2378177Z"
+}

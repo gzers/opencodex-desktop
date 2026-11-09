@@ -1,0 +1,38 @@
+{"probe":"same-component-symlink-metadata","path":"C:","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"C:\\","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"C:\\Users","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"C:\\Users\\ocxacc7a5497b517","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"C:\\Users\\ocxacc7a5497b517\\AppData","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"C:\\Users\\ocxacc7a5497b517\\AppData\\Local","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"C:\\Users\\ocxacc7a5497b517\\AppData\\Local\\Programs","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"C:\\Users\\ocxacc7a5497b517\\AppData\\Local\\Programs\\OpenCodeX Desktop","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"canonicalize","path":"C:\\Users\\ocxacc7a5497b517\\AppData\\Local\\Programs\\OpenCodeX Desktop","status":"pass","value":"\\\\?\\C:\\Users\\ocxacc7a5497b517\\AppData\\Local\\Programs\\OpenCodeX Desktop","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"\\\\?\\C:","status":"fail","firstError":"Incorrect function. (os error 1)","osError":1,"accepted":false}
+{"probe":"same-component-symlink-metadata","path":"\\\\?\\C:\\","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"\\\\?\\C:\\Users","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"\\\\?\\C:\\Users\\ocxacc7a5497b517","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"\\\\?\\C:\\Users\\ocxacc7a5497b517\\AppData","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"\\\\?\\C:\\Users\\ocxacc7a5497b517\\AppData\\Local","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"\\\\?\\C:\\Users\\ocxacc7a5497b517\\AppData\\Local\\Programs","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"\\\\?\\C:\\Users\\ocxacc7a5497b517\\AppData\\Local\\Programs\\OpenCodeX Desktop","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"canonicalize","path":"\\\\?\\C:\\Users\\ocxacc7a5497b517\\AppData\\Local\\Programs\\OpenCodeX Desktop","status":"pass","value":"\\\\?\\C:\\Users\\ocxacc7a5497b517\\AppData\\Local\\Programs\\OpenCodeX Desktop","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"C:","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"C:\\","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"C:\\Users","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"C:\\Users\\ocxacc7a5497b517","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"C:\\Users\\ocxacc7a5497b517\\.codex-desktop","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"C:\\Users\\ocxacc7a5497b517\\.codex-desktop\\desktop","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"canonicalize","path":"C:\\Users\\ocxacc7a5497b517\\.codex-desktop\\desktop","status":"pass","value":"\\\\?\\C:\\Users\\ocxacc7a5497b517\\.codex-desktop\\desktop","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"\\\\?\\C:","status":"fail","firstError":"Incorrect function. (os error 1)","osError":1,"accepted":false}
+{"probe":"same-component-symlink-metadata","path":"\\\\?\\C:\\","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"\\\\?\\C:\\Users","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"\\\\?\\C:\\Users\\ocxacc7a5497b517","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"\\\\?\\C:\\Users\\ocxacc7a5497b517\\.codex-desktop","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"same-component-symlink-metadata","path":"\\\\?\\C:\\Users\\ocxacc7a5497b517\\.codex-desktop\\desktop","status":"pass","value":"directory=true file=false symlink=false","accepted":false}
+{"probe":"canonicalize","path":"\\\\?\\C:\\Users\\ocxacc7a5497b517\\.codex-desktop\\desktop","status":"pass","value":"\\\\?\\C:\\Users\\ocxacc7a5497b517\\.codex-desktop\\desktop","accepted":false}
+{"probe":"read-descriptor","path":"C:\\Users\\ocxacc7a5497b517\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime-bundle/runtime-bundle.manifest.json","status":"pass","value":"bytes=2130051","accepted":false}
+{"probe":"create-own-file","path":"C:\\Users\\ocxacc7a5497b517\\AppData\\Local\\Programs\\OpenCodeX Desktop\\.sweep-filesystem-owned-probe","status":"pass","value":"created-new","accepted":false}
+{"probe":"write-own-file","path":"C:\\Users\\ocxacc7a5497b517\\AppData\\Local\\Programs\\OpenCodeX Desktop\\.sweep-filesystem-owned-probe","status":"pass","value":"written","accepted":false}
+{"probe":"sync-own-file","path":"C:\\Users\\ocxacc7a5497b517\\AppData\\Local\\Programs\\OpenCodeX Desktop\\.sweep-filesystem-owned-probe","status":"pass","value":"synced","accepted":false}
+{"probe":"try-lock-own-file","path":"C:\\Users\\ocxacc7a5497b517\\AppData\\Local\\Programs\\OpenCodeX Desktop\\.sweep-filesystem-owned-probe","status":"pass","value":"locked","accepted":false}
+{"probe":"remove-own-file","path":"C:\\Users\\ocxacc7a5497b517\\AppData\\Local\\Programs\\OpenCodeX Desktop\\.sweep-filesystem-owned-probe","status":"pass","value":"removed","accepted":false}

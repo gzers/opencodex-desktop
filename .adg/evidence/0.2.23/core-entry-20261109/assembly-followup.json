@@ -1,0 +1,22 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "afterCompleteStatusTable": true,
+  "commits": [
+    "545e9770e",
+    "c18a4e217"
+  ],
+  "changes": [
+    "Only ROOT core-build.json is excluded from inventory; nested same-name files must hash",
+    "Keep original start deadline; classify a fully healthy confirmation after 30000ms as runtime_start_confirmation_timeout rather than misleading not-healthy"
+  ],
+  "validation": {
+    "sweepBehaviorTests": 10,
+    "failed": 0,
+    "actualHelperPowerShellParsed": true,
+    "embeddedNodeSyntax": true,
+    "failureKindsDistinct": true
+  },
+  "productBehaviorChanged": false,
+  "newWindowsRoundDispatched": false
+}

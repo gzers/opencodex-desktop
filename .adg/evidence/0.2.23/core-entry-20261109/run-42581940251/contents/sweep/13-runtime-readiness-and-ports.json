@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "step": "13",
+  "name": "runtime-readiness-and-ports",
+  "status": "fail",
+  "firstError": "readiness: user1: no unique successful actual runtime start receipt; environment-ready is not service-ready; ports: user1: runtime_start_not_healthy; stage=wait-owned-health",
+  "accepted": false,
+  "diagnosticOnly": true,
+  "dependencies": [
+    "12"
+  ],
+  "evidence": {
+    "readiness": {
+      "status": "fail",
+      "firstError": "user1: no unique successful actual runtime start receipt; environment-ready is not service-ready",
+      "evidence": null
+    },
+    "ports": {
+      "status": "fail",
+      "firstError": "user1: runtime_start_not_healthy; stage=wait-owned-health",
+      "evidence": null
+    }
+  }
+}

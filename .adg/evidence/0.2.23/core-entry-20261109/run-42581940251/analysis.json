@@ -1,0 +1,83 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "source": "ab0b5d043d9a93b5d9434bf5f0758423fa15f58a",
+  "passed": 7,
+  "failed": 1,
+  "elapsedSeconds": 582.0666828155518,
+  "hypothesis": {
+    "id": "H-core-entry-20261109-01",
+    "claim": "Separating preparation and merging verdict 13 preserves the complete native core failure picture without accepting partial success",
+    "refutation": "Any missing core receipt, a green merged verdict with an original assertion failed, loss of independent path/IPC/cleanup outcomes, or accepted true refutes this assembly claim",
+    "comparisons": [
+      {
+        "step": "11",
+        "predicted": "pass",
+        "observed": "pass",
+        "firstError": "",
+        "matches": true
+      },
+      {
+        "step": "12",
+        "predicted": "pass",
+        "observed": "pass",
+        "firstError": "",
+        "matches": true
+      },
+      {
+        "step": "13",
+        "predicted": "fail",
+        "observed": "fail",
+        "firstError": "readiness: user1: no unique successful actual runtime start receipt; environment-ready is not service-ready; ports: user1: runtime_start_not_healthy; stage=wait-owned-health",
+        "matches": true
+      },
+      {
+        "step": "15",
+        "predicted": "pass",
+        "observed": "pass",
+        "firstError": "",
+        "matches": true
+      },
+      {
+        "step": "16",
+        "predicted": "pass",
+        "observed": "pass",
+        "firstError": "",
+        "matches": true
+      },
+      {
+        "step": "17",
+        "predicted": "pass",
+        "observed": "pass",
+        "firstError": "",
+        "matches": true
+      },
+      {
+        "step": "18",
+        "predicted": "pass",
+        "observed": "pass",
+        "firstError": "",
+        "matches": true
+      }
+    ],
+    "verdict": "not-refuted"
+  },
+  "startConfirmationMilliseconds": 31288,
+  "originalStartBudgetMilliseconds": 30000,
+  "stopFailurePhase": "stop-post-client-restore",
+  "originalStopBudgetMilliseconds": 10000,
+  "closedUnchanged": [
+    "dual SID identity",
+    "private bundle supply",
+    "paths",
+    "same-user IPC",
+    "cross-user IPC",
+    "owned account/process/Profile/ACL cleanup"
+  ],
+  "remaining": [
+    "actual lifecycle budgets",
+    "official restoration",
+    "maintained producer/consumer integration",
+    "whole version acceptance/release"
+  ]
+}
