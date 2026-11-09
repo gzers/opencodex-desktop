@@ -1,5 +1,7 @@
 # Windows Git协作任务：0.2.23
 
+2026-11-10本机后继事实（Asia/Shanghai）：用户已明确扩大授权到剩余Windows双SID/安装器/第18项定向修复，不需每轮Mac中转；仍不core-sweep/全量、不碰日常配置/真实同步、不发布。第13项普通账户原链已过；two-sid-02两新普通SID并行/正常Stop peer保持/双账户清理已过，console-01真实Administrator控制台Sandbox启停已过，NSIS两路径本机及同原包MSI两路径临时托管环境安装/重装保留/卸载已过。本机MSI1625策略拒绝仍独立保留，未改本机策略。新cross-session-01真实控制台500/high/session1及RDP1001/未提升/session2同时Active，两边30秒内启动、固定端口冲突、双服务重叠通过；RDP正常Stop一次6797ms报lifecycle_stop_unknown，未取得停止后peer保持，控制台正常Stop未执行。失败夹具两端已精确清理、daily摘要不变、任务移除；不能用清理冒正常Stop。Profile1018仍Loaded，账户已禁用并移出管理员组，保留清理阻点；先前三个审批拒删缓存仍单列。诊断代码4d783585645206c52b49bce8656475d26940c1d7仅补固定失败阶段日志/原句柄退出码；新Desktop与同源供应fixture正在构建，尚无新运行结果。旧42545767548 token-pointer失败及技术原型范围保留，不写为运行包已修。[逐批原四项证据、来源和H-W7](../../.adg/evidence/0.2.23/windows-local-followthrough-20261109/README.md)、[连续处理范围](0.2.23-contracts/windows-local-followthrough-20261109.md)。此段为后继有界事实，不关闭整版或DIR-07，旧轮次保留来源。
+
 ## 当前第13项：本机普通user1启停已过，停止追加验证（2026-11-09）
 
 用户已授权Windows本机连续原因分析/最小修复/定向验证，不再每轮交Mac中转。现代码fdf5d4db551f71cbf493dc97b428f8b9a9364a7a修复签名普通HOME与Desktop扩展HOME比较不一致；构建42631183420/新artifact13681803354，绑定3项/认证Stop9项全过。真实批次ocxu1-20261109-223434启动15351ms、正常Stop及实际还原8727ms，服务原句柄清理前exit0；账户/Profile/目录删净、进程/端口无残留、ACL恢复。原30/10/5秒及归属/权限/健康/退出断言保持，本轮停止继续测试。三个自建编译/下载缓存目录删除被自动审批拒绝，待手动处理，见[本机接续及证据](0.2.23-contracts/item13-local-stop-home-fix-20261109.md)。不扩大到双SID/安装器/core-sweep/全量，不单修第18项，不改日常配置、不发布。
