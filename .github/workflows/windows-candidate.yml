@@ -461,7 +461,7 @@ jobs:
           path: test/out/windows-installer-retention
 
   native-ui:
-    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023' && inputs.admission_run != 'ordinary-ownership-023' && inputs.admission_run != 'ordinary-stop-readonly-023' && inputs.admission_run != 'ordinary-startup-023' && inputs.admission_run != 'ordinary-startup-initialized-023' && inputs.admission_run != 'ordinary-lifecycle-023' && inputs.admission_run != 'raw-final023-replay' && inputs.admission_run != 'msi-compiler-023' && inputs.admission_run != 'native-replay-414' && inputs.admission_run != 'raw-msi-3d-diagnostic' && inputs.admission_run != 'raw-full-0c-diagnostic' && inputs.admission_run != 'full-bundle-two-user-debug'
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023' && inputs.admission_run != 'ordinary-ownership-023' && inputs.admission_run != 'ordinary-stop-readonly-023' && inputs.admission_run != 'ordinary-native-wrapper-023' && inputs.admission_run != 'ordinary-startup-023' && inputs.admission_run != 'ordinary-startup-initialized-023' && inputs.admission_run != 'ordinary-lifecycle-023' && inputs.admission_run != 'raw-final023-replay' && inputs.admission_run != 'msi-compiler-023' && inputs.admission_run != 'native-replay-414' && inputs.admission_run != 'raw-msi-3d-diagnostic' && inputs.admission_run != 'raw-full-0c-diagnostic' && inputs.admission_run != 'full-bundle-two-user-debug'
     runs-on: windows-latest
     timeout-minutes: 40
     defaults:
@@ -539,7 +539,7 @@ jobs:
           }
 
   ordinary-preflight:
-    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && (inputs.admission_run == 'ordinary-preflight-023' || (inputs.admission_run == 'ordinary-ownership-023' || inputs.admission_run == 'ordinary-stop-readonly-023') || (inputs.admission_run == 'ordinary-startup-023' || (inputs.admission_run == 'ordinary-startup-initialized-023' || inputs.admission_run == 'ordinary-lifecycle-023')))
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && (inputs.admission_run == 'ordinary-preflight-023' || (inputs.admission_run == 'ordinary-ownership-023' || inputs.admission_run == 'ordinary-stop-readonly-023' || inputs.admission_run == 'ordinary-native-wrapper-023') || (inputs.admission_run == 'ordinary-startup-023' || (inputs.admission_run == 'ordinary-startup-initialized-023' || inputs.admission_run == 'ordinary-lifecycle-023')))
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -553,7 +553,7 @@ jobs:
           node-version: 26.8.1
       - uses: dtolnay/rust-toolchain@stable
       - name: Stage exact adopted runtime for readonly ordinary ownership diagnosis
-        if: (inputs.admission_run == 'ordinary-ownership-023' || inputs.admission_run == 'ordinary-stop-readonly-023') || (inputs.admission_run == 'ordinary-startup-023' || (inputs.admission_run == 'ordinary-startup-initialized-023' || inputs.admission_run == 'ordinary-lifecycle-023'))
+        if: (inputs.admission_run == 'ordinary-ownership-023' || inputs.admission_run == 'ordinary-stop-readonly-023' || inputs.admission_run == 'ordinary-native-wrapper-023') || (inputs.admission_run == 'ordinary-startup-023' || (inputs.admission_run == 'ordinary-startup-initialized-023' || inputs.admission_run == 'ordinary-lifecycle-023'))
         shell: pwsh
         run: |
           $node=(Get-Command node.exe).Source
@@ -565,8 +565,9 @@ jobs:
           if('${{ inputs.admission_run }}' -in @('ordinary-startup-initialized-023','ordinary-lifecycle-023')){'OCXD_STARTUP_PROBE_INITIALIZE_CODEX=1' >> $env:GITHUB_ENV}
           if('${{ inputs.admission_run }}' -ceq 'ordinary-lifecycle-023'){'OCXD_STARTUP_PROBE_LIFECYCLE=1' >> $env:GITHUB_ENV}
           if('${{ inputs.admission_run }}' -ceq 'ordinary-stop-readonly-023'){'OCXD_READONLY_STOP_COSTS=${{ matrix.stop_order }}' >> $env:GITHUB_ENV}
+          if('${{ inputs.admission_run }}' -ceq 'ordinary-native-wrapper-023'){'OCXD_READONLY_STOP_COSTS=native-only' >> $env:GITHUB_ENV}
       - name: Attest exact original stop sources before ordinary read-only probe
-        if: inputs.admission_run == 'ordinary-stop-readonly-023'
+        if: inputs.admission_run == 'ordinary-stop-readonly-023' || inputs.admission_run == 'ordinary-native-wrapper-023'
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force test/out/windows023-ordinary-preflight | Out-Null

@@ -133,8 +133,13 @@ mod tests {
         let h = profile.join(".codex-desktop/opencodex/home");
         fs::create_dir_all(&h).unwrap();
         let started = std::time::Instant::now();
+        let source = if option_env!("OCXD_READONLY_STOP_COSTS") == Some("native-only") {
+            include_str!("../native-wrapper-probe.ts")
+        } else {
+            include_str!("../ownership-probe.ts")
+        };
         let mut child = Command::new(bun)
-            .args(["--no-env-file", "-e", include_str!("../ownership-probe.ts")])
+            .args(["--no-env-file", "-e", source])
             .env("HOME", &profile)
             .env("USERPROFILE", &profile)
             .env("OPENCODEX_HOME", &h)
