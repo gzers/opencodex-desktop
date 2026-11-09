@@ -315,6 +315,12 @@ function runtimeFailureCode(error){
  return codes.get(error?.message)||'runtime_binding_or_transport_failed';
 }
 const runtimeSleep=ms=>new Promise(r=>setTimeout(r,ms));
+function freshNativeClientTextRestored(text){
+ return typeof text==='string'
+  && !/^(?:openai_base_url|experimental_realtime_ws_base_url|model_catalog_json)\s*=/m.test(text)
+  && !/^model_provider\s*=\s*["']opencodex["']/m.test(text);
+}
+
 function fixtureConfig(port){
  assert(Number.isInteger(port)&&(port===0||(port>=1024&&port<=65535)));
  const config={hostname:'127.0.0.1',openaiProviderTierVersion:2,defaultProvider:'sweep-fixture',defaultModelAliases:false,providers:{'sweep-fixture':{adapter:'openai-chat',baseUrl:'http://127.0.0.1:1/v1',allowPrivateNetwork:true,apiKey:'synthetic-unused',models:['sweep-fixture-model'],selectedModels:['sweep-fixture-model'],liveModels:false,defaultAliases:false}}};
@@ -345,6 +351,9 @@ function runtimeSelfTest(){
  const conflict={failureCode:'port_conflict',result:null,lifecycleState:'starting_failed',canStop:false,canRestart:false};
  assertConflictAction(conflict);
  for(const changed of [{failureCode:null},{result:'started'},{lifecycleState:'running'},{canStop:true},{canRestart:true}])assert.throws(()=>assertConflictAction({...conflict,...changed}));
+ assert(freshNativeClientTextRestored(''));assert(freshNativeClientTextRestored('model_provider = "openai"\n'));
+ for(const key of ['openai_base_url','experimental_realtime_ws_base_url','model_catalog_json'])assert(!freshNativeClientTextRestored(key+' = "stale"\n'));
+ assert(!freshNativeClientTextRestored('model_provider = "opencodex"\n'));
  console.log('pass-runtime-pure-fixtures-only');
 }
 async function runtimeInvoke(command,args={},timeout=10000){
@@ -540,10 +549,16 @@ async function runtimeCommand(c){
   assert(result.status.runtime==='running'&&result.status.health==='healthy'&&Number(result.status.pid)===result.record.pid&&result.status.port===c.port,'Actual running state lost');
  }else{
   runtimeStage='before-stop';result.before=await health();
-  runtimeStage='manager-stop';result.action=await action('stop');assert(result.action.result==='stopped','Manager did not confirm stop');
-  const until=Date.now()+10000;let last;
+  const stopBegan=Date.now();runtimeStage='manager-stop';result.action=await action('stop');assert(result.action.result==='stopped','Manager did not confirm stop');
+  const until=stopBegan+10000;let last;
   do{last=await snapshot();if(!(await record())&&last.runtime!=='running')break;await runtimeSleep(250);}while(Date.now()<until);
   assert(!(await record())&&last.runtime!=='running','Stop did not clear own service record/state');result.status=last;result.stopped=true;
+  const nativeConfig=join(process.env.USERPROFILE,'.codex/config.toml');let nativeText='';
+  try{const st=await lstat(nativeConfig);assert(st.isFile()&&!st.isSymbolicLink()&&st.size<=512*1024,'Unsafe fresh native client readback');nativeText=await readFile(nativeConfig,'utf8');}catch(error){if(error.code!=='ENOENT')throw error;}
+  assert(freshNativeClientTextRestored(nativeText),'Native client routing/catalog fields survived official Stop');
+  result.nativeClientRestoredReadback=true;result.stopBudget={budgetMilliseconds:10000,elapsedMilliseconds:Date.now()-stopBegan};
+  assert(result.stopBudget.elapsedMilliseconds<=10000,'Stop confirmation exceeded original shared budget');
+
  }
  runtimeStage='final-binding';await bound();
  await writeFile(join(output,'runtime-step.json'),JSON.stringify(result,null,2)+'\n');
