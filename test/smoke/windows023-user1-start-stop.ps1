@@ -84,11 +84,12 @@ if($user1Mode -eq 'Child'){
   if(!$terminal -or !$terminal.Line.Contains('integrated runtime provisioned and verified')){throw 'Real first-start offline supply not confirmed'}
   if(!(Get-Content $log -Raw).Contains('commit='+$expected)){throw 'Program build source differs'}
   $driverInput=Join-Path $out 'driver-input.json';$release=Join-Path $out 'driver-release'
-  Write-TwoUserJson $driverInput @{commit=$expected;root=$root;home=$nativeHome;driverRelease=$release}
+  Write-TwoUserJson $driverInput @{commit=$expected;root=$root;home=$nativeHome;driverRelease=$release;coordination=$c.coordination}
   $di=[Diagnostics.ProcessStartInfo]::new();$di.FileName=$c.node;$di.UseShellExecute=$false;$di.CreateNoWindow=$true;$di.RedirectStandardOutput=$true;$di.RedirectStandardError=$true
   foreach($arg in @((Join-Path $c.code 'user1-driver.mjs'),('http://127.0.0.1:'+$port),$out,$driverInput)){$di.ArgumentList.Add($arg)}
   $driver=[Diagnostics.Process]::Start($di);$driverOut=$driver.StandardOutput.ReadToEndAsync();$driverErr=$driver.StandardError.ReadToEndAsync();$driverFact=Admit-User1Process $driver
-  $deadline=[datetime]::UtcNow.AddSeconds(120)
+  # Peer coordination is outside each original Start/Stop/status action budget.
+  $deadline=[datetime]::UtcNow.AddSeconds($(if($c.coordination){900}else{120}))
   while(!$driver.HasExited){
    Observe-User1Tree
    if(Test-Path -LiteralPath (Join-Path $out 'user1-result.json')){[IO.File]::WriteAllText($release,'parent observed result')}

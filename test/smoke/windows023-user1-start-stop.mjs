@@ -48,6 +48,30 @@ try{
  await rename(join(output,'runtime-step.json'),join(output,'start-runtime-step.json'));
  outcome.startConfirmed=started.result==='pass-runtime-step';assert(outcome.startConfirmed);
  outcome.start={pid:started.record.pid,port:started.record.port};note('start-confirmed',outcome.start);
+ if(config.coordination){
+  const coordinated=async(name,value={})=>writeFile(join(output,name+'.json'),JSON.stringify({source:config.commit,...outcome.start,...value})+nl,{flag:'wx'});
+  const waitPhase=async(name)=>{
+   const deadline=Date.now()+180000;
+   while(true){
+    try{await lstat(join(output,'abort'));throw Error('Controller aborted peer protocol')}catch(error){if(error.code!=='ENOENT')throw error}
+    try{await lstat(join(output,name));return}catch(error){if(error.code!=='ENOENT')throw error}
+    assert(Date.now()<deadline,'Peer phase envelope elapsed; no lifecycle retry');
+    await new Promise(resolve=>setTimeout(resolve,100));
+   }
+  };
+  await coordinated('started');
+  await waitPhase('observe-overlap');
+  await runtimeCommand({mode:'observe',...outcome.start,expectedPid:outcome.start.pid,root:config.root,home:config.home});
+  await rename(join(output,'runtime-step.json'),join(output,'overlap-runtime-step.json'));
+  await coordinated('overlap-confirmed');
+  if(config.coordination.role===1){
+   await waitPhase('observe-after-peer-stop');
+   await runtimeCommand({mode:'observe',...outcome.start,expectedPid:outcome.start.pid,root:config.root,home:config.home});
+   await rename(join(output,'runtime-step.json'),join(output,'survivor-runtime-step.json'));
+   await coordinated('survivor-confirmed');
+  }
+  await waitPhase('stop-now');
+ }
  // No peer or retry between successful proof and the original Stop command.
  outcome.normalStopExecuted=true;note('normal-stop-begin');
  await runtimeCommand({mode:'stop',port:started.record.port,expectedPid:started.record.pid,root:config.root,home:config.home});
