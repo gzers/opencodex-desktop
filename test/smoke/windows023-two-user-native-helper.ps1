@@ -311,7 +311,7 @@ function Get-TwoUserRuntimeDriverText {
 @'
 let runtimeStage='command';let runtimePublic={};
 function runtimeFailureCode(error){
- const codes=new Map([['Actual service not healthy within production start budget','runtime_start_not_healthy'],['B claimed running on peer port','peer_port_claimed_running'],['B published an owned service record on A port','peer_port_owned_record'],['No explicit production port-conflict diagnostic','port_conflict_unproven'],['Manager did not confirm stop','manager_stop_not_confirmed'],['Stop did not clear own service record/state','runtime_stop_incomplete'],['Production attestation failed','runtime_attestation_failed'],['Runtime record changed','runtime_record_changed'],['Public manager command failed','public_manager_command_rejected']]);
+ const codes=new Map([['Actual service not healthy within production start budget','runtime_start_not_healthy'],['Start confirmation exceeded original 30-second budget','runtime_start_confirmation_timeout'],['B claimed running on peer port','peer_port_claimed_running'],['B published an owned service record on A port','peer_port_owned_record'],['No explicit production port-conflict diagnostic','port_conflict_unproven'],['Manager did not confirm stop','manager_stop_not_confirmed'],['Stop did not clear own service record/state','runtime_stop_incomplete'],['Production attestation failed','runtime_attestation_failed'],['Runtime record changed','runtime_record_changed'],['Public manager command failed','public_manager_command_rejected']]);
  return codes.get(error?.message)||'runtime_binding_or_transport_failed';
 }
 const runtimeSleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -497,6 +497,7 @@ async function runtimeCommand(c){
    }while(Date.now()<until);
    await writeFile(join(output,'owned-health-observations.json'),JSON.stringify({samples:samples.slice(0,64),originalBudgetMilliseconds:30000,startAction:result.action,totalMilliseconds:Date.now()-startBegan,accepted:false})+'\n');
    const startElapsedMilliseconds=Date.now()-startBegan;
+   runtimePublic.startBudget={budgetMilliseconds:30000,elapsedMilliseconds:startElapsedMilliseconds};
    const startBudgetPassed=result.action.result==='started'&&startElapsedMilliseconds<=30000;
    if(!(startBudgetPassed&&observed&&last?.runtime==='running'&&last.health==='healthy'&&Number(last.pid)===observed.record.pid&&last.port===c.port)){
     // Additional readonly diagnosis follows the already failed original budget;
@@ -525,7 +526,8 @@ async function runtimeCommand(c){
     if(!diagnosticStop.managerReportedStopped){
      try{await diagnosticStatus();}catch{await writeFile(join(output,'actual-readonly-status-diagnostic.json'),JSON.stringify({result:'diagnostic-failed',accepted:false})+'\n');}
     }
-    throw Error('Actual service not healthy within production start budget');
+    const confirmedLate=startElapsedMilliseconds>30000&&result.action.result==='started'&&observed&&last?.runtime==='running'&&last.health==='healthy'&&Number(last.pid)===observed.record.pid&&last.port===c.port;
+    throw Error(confirmedLate?'Start confirmation exceeded original 30-second budget':'Actual service not healthy within production start budget');
    }
    result={...result,...observed,status:last,port:c.port,startBudget:{budgetMilliseconds:30000,elapsedMilliseconds:startElapsedMilliseconds},automaticPort:requestedPort===0?runtimePublic.automaticPort:null};
    const clientConfig=join(process.env.USERPROFILE,'.codex/config.toml');
