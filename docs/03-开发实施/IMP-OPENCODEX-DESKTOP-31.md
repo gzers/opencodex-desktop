@@ -494,3 +494,16 @@ Rust原生消费者42577435871成功，原17324字节ZIP/SHA2562cfa03ec5f028d9c0
 f143d0910准备真实producer隔离门，明确只有全部先决case通过后才启动独立候选CLI。由prototype archive单独clone后精确hook原handleStart、writeRuntimePort、normalhealth响应proof，记录源前后摘要，正式names.2不变。全新临时profile/Codexfixture，模型仅127.0.0.1:1/synthetic key/liveModelsfalse；不发推理/业务同步请求。驱动只读record、HMAC/独立lifetime proof和ready，PID必须等于本次实际创建的CLIchild；原GETstopcap/再次health认证/POSTstop共用同一TCP连接，token只在认证后发送，freshfixture只接受sharedTeardown=performed，无defer。原30/10/5门，10秒包括官方链与process/job/lease/record退出；未知不强杀不清记录，精确HOME保留并回写失败，未证明清理不能用成功掩盖。
 
 [run42578649105](https://github.com/gzers/opencodex-desktop/actions/runs/42578649105)固定f143d0910bacd47d933ce6ce89426f972368ba59/job129031965706已确认执行。该门真实启动隔离candidate代理，但无真实模型或业务数据，不动日常HOME/安装/服务；继承环境仅OS白名单，不带CI凭据。单脚本Node语法、实际3PowerShell块/Rustfmt和原producer3hook唯一preimage/Bun编译已检查；不是正式GUI/OSProfile/DPAPI/IPC/双用户/签名制品验收，未删除生产全机扫描。
+
+
+### 2026-11-09：采用 core-sweep 节奏（范围与判据不变）
+
+从 core-sweep 入口迭代，只覆盖真实双 SID、私有供应、实际就绪、端口、路径与 IPC；原13/14合成 13-runtime-readiness-and-ports，两套原断言独立执行、任一失败则整项失败，保留各自首错。完整 sweep 仅冻结前跑，不复跑未受影响且已闭合的安装器、回归或原型门。
+
+核心轮目标8–10分钟，构建/封包准备独立。保留原30/10/5秒、真实账户、共享原600秒供应上限和清理判据，过目标如实记录，不改判、不强杀未知进程。每轮派发前写判断、精确源码/构建run、改动、反证条件、逐项预测、复跑理由及不受影响的既有通过证据；无判断不派发。入场复核源码、制品完整清单/摘要、当前runtime policy和构建run成功状态。
+
+每项continue-on-error，逐项pass/fail与首错、新目录原件保留。sweep/summary.json加入预测对照与耗时，始终accepted:false。真实双账户/Profile/ACL/保留句柄身份清理仍属核心必需项；仅不跑安装器的清理，不跳过本轮自有fixture清理。先完整状态表，再批量修复可并行项，才进入下一轮；成功不覆盖旧失败。托管runner结果不代替真实桌面或最终签名制品验收。
+
+实际producer42578649105已终止为failure：[完整状态表与原件](../../.adg/evidence/0.2.23/actual-lifetime-producer-42578649105/status-table.md)。六组native/Rust与archive前置过；真实CLI9114.6081ms就绪、record/HMAC/lifetime proof过；官方停止链ERR_ASSERTION，旧日志缺阶段，不武断归因为依赖、调度器或还原。退出/租约/记录清理未证明、fixture保留；strictClippy未执行；stage根移除成功不代替fixture清理。15260字节原ZIP/SHA256 44cb682f028c43fc82b8f0ab7ee80d45a77ea553ba0b54f3cf18599253d5c480已核验，正式运行包与生产扫描未改。
+
+core入口实现 d79497e06（独立core-build/core-sweep、源码/制品/假设入场、完整状态表）、ab0b5d043（停止链仅加有限阶段元信息）已推送。10项行为测试、4个workflow actionlint、46个实际PowerShell块解析与Node语法过；首次本机pwsh缺cmdlet自动载入，改为.NET文件API后重验全部块，不借后续命令成功掩盖前错。构建准备[42580582994](https://github.com/gzers/opencodex-desktop/actions/runs/42580582994)已启动，尚未执行核心轮；[派发前判断及本地检查](../../.adg/evidence/0.2.23/core-entry-20261109/hypothesis.before-dispatch.json)先落盘，等待精确源码完整program准备成功才派。首轮验证新装配线保留完整失败图景，不宣称修复未集成的生产生命周期。

@@ -1,0 +1,20 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "candidateOnly": true,
+  "originalUnmodified": true,
+  "originalSourcePreimages": {
+    "src/cli/index.ts": "423274a5113a497bfa3cf76ef33b3b6feceda0d9878e6b7eaa79e9c8cbae41c4",
+    "src/config/process-state.ts": "6c0ef969915dc8a115f616775a56fca1292f1d8e15e2196657633dab41e78548",
+    "src/server/index/serve-options.ts": "28675d9cafdf635df9c07e6707520a2946fe98dcd4cfde10340635ac33109140"
+  },
+  "candidateSourcePostimages": {
+    "src/lib/windows-runtime-lifetime.ts": "6276147ab1becc2368a060ed2478277c50c87ee4d500dfab5be59e61ab2f7837",
+    "src/cli/index.ts": "d510a0f4e291604cd06f47b0fbe96d28c47736a1c13b55dd82c901a97042a990",
+    "src/config/process-state.ts": "72dc4297a570b548b2700638b862c3f9782dc3831538d1fd604e75dd31c8e12f",
+    "src/server/index/serve-options.ts": "e42646dfe5a025004d781f25a08ce0a28ce69cd199af0765f813461bf1052d8e"
+  },
+  "source": "f143d0910bacd47d933ce6ce89426f972368ba59",
+  "productionPinsChanged": false,
+  "scope": "Separate disposable producer clone: acquire native lifetime before handleStart side effects; append private binding to record; add per-challenge proof header on original normal health handler. No Stop/client restore code changed."
+}

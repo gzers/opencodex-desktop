@@ -1,0 +1,31 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "run": 42578649105,
+  "source": "f143d0910bacd47d933ce6ce89426f972368ba59",
+  "conclusion": "failure",
+  "result": {
+    "accepted": false,
+    "actualCandidateCliStarted": true,
+    "businessSyncRequests": 0,
+    "controlledSetEmpty": false,
+    "diagnosticOnly": true,
+    "errorCode": "ERR_ASSERTION",
+    "errorType": "AssertionError",
+    "fixtureSafeToRemove": false,
+    "inferenceRequests": 0,
+    "leaseUnheld": false,
+    "lifetimeResponseProof": true,
+    "officialClientRestoreConfirmed": false,
+    "officialStopWithin10000": false,
+    "originalProcessExit": false,
+    "producerVersion": "2.97.0-desktop023.lifecycle.1-record-prototype",
+    "recordAbsent": false,
+    "recordAndHealthAttestation": true,
+    "source": "f143d0910bacd47d933ce6ce89426f972368ba59",
+    "startMilliseconds": 9114.6081,
+    "startWithin30000": true,
+    "syntheticOnly": true
+  },
+  "classification": "Stop assertion insufficiently classified; no inferred cleanup"
+}

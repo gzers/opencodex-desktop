@@ -1,0 +1,20 @@
+    Updating crates.io index
+   Compiling opencodex-desktop v0.2.23 (D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4m 00s
+     Running unittests src\lib.rs (apps\desktop\tauri\target\debug\deps\opencodex_desktop_lib-9560cfa22fb896de.exe)
+
+running 1 test
+
+thread 'infrastructure::windows_private_create::tests::native_original_runtime_record_diagnostic' (7764) panicked at src\infrastructure\windows_private_create.rs:946:17:
+Actual producer cleanup is unproved; exact temporary HOME retained, no force kill or false stopped state
+test infrastructure::windows_private_create::tests::native_original_runtime_record_diagnostic ... FAILED
+
+failures:
+
+failures:
+    infrastructure::windows_private_create::tests::native_original_runtime_record_diagnostic
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1746 filtered out; finished in 20.22s
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+error: test failed, to rerun pass `--lib`

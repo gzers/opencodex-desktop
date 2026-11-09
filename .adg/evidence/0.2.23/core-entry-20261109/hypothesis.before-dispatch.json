@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "id": "H-core-entry-20261109-01",
+  "source": "ab0b5d043d9a93b5d9434bf5f0758423fa15f58a",
+  "buildRun": "42580582994",
+  "claim": "Separating preparation and merging verdict 13 preserves the complete native core failure picture without accepting partial success",
+  "changeUnderTest": "New core entry, source-bound program handoff, merged original readiness and ports collectors, hypothesis comparison",
+  "refutation": "Any missing core receipt, a green merged verdict with an original assertion failed, loss of independent path/IPC/cleanup outcomes, or accepted true refutes this assembly claim",
+  "rerunReason": "First actual execution of the changed core assembly and collector; no unchanged installer, MSI, query/recovery or six synthetic prototype gates are repeated",
+  "predictions": [
+    {
+      "step": "11",
+      "status": "pass",
+      "observation": "Two actual distinct SID Managers overlap using the sealed current program"
+    },
+    {
+      "step": "12",
+      "status": "pass",
+      "observation": "Both original private bundle supply receipts are complete"
+    },
+    {
+      "step": "13",
+      "status": "fail",
+      "observation": "Unintegrated production lifecycle cannot be marked passed by the new merged collector"
+    },
+    {
+      "step": "15",
+      "status": "pass",
+      "observation": "Actual per-SID path snapshot receipts remain independently observable"
+    },
+    {
+      "step": "16",
+      "status": "pass",
+      "observation": "Same-user IPC receipts remain independently observable"
+    },
+    {
+      "step": "17",
+      "status": "pass",
+      "observation": "Cross-user IPC and original associated isolation assertions remain independently observable"
+    },
+    {
+      "step": "18",
+      "status": "pass",
+      "observation": "Exact owned process/account/Profile/ACL cleanup remains required independently of readiness"
+    }
+  ],
+  "unchangedPassingEvidence": [
+    {
+      "gate": "installer cells and Server policy",
+      "source": "R33 42539896297",
+      "evidence": ".adg/evidence/0.2.23/sweep-r33-42539896297/",
+      "whyUnaffected": "Only diagnostic assembly and bounded producer logging changed"
+    },
+    {
+      "gate": "six native lifecycle prototype cases and Rust consumer",
+      "source": "f143d0910bacd47d933ce6ce89426f972368ba59",
+      "evidence": ".adg/evidence/0.2.23/actual-lifetime-producer-42578649105/",
+      "whyUnaffected": "No candidate lifetime module or native consumer changes; prior failures retained"
+    }
+  ]
+}
