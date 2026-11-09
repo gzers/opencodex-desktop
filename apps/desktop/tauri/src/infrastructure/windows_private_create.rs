@@ -710,6 +710,60 @@ mod tests {
                     report["candidateAtomicOverlayReadback"] =
                         serde_json::from_slice::<serde_json::Value>(&result.stdout)
                             .expect("fixed atomic failure preservation report");
+                    if let Some(archive_package) =
+                        std::env::var_os("OCXD_RECORD_PROBE_ARCHIVE_PACKAGE")
+                    {
+                        let archive_package = std::path::PathBuf::from(archive_package);
+                        assert!(archive_package.starts_with(&boundary));
+                        let metadata: serde_json::Value = serde_json::from_slice(
+                            &std::fs::read(archive_package.join("package.json")).unwrap(),
+                        )
+                        .unwrap();
+                        assert_eq!(
+                            metadata["version"],
+                            "2.97.0-desktop023.lifecycle.1-record-prototype"
+                        );
+                        assert_eq!(metadata["desktop023RecordPrototype"]["candidateOnly"], true);
+                        let archive_home = task.path().join("rebuilt-archive-home");
+                        std::fs::create_dir(&archive_home).unwrap();
+                        let result = std::process::Command::new(&bun)
+                            .args(["--no-env-file", "-e", overlay_writer])
+                            .env("OCXD_RECORD_PROBE_PACKAGE", &archive_package)
+                            .env("HOME", &home)
+                            .env("USERPROFILE", &home)
+                            .env("APPDATA", home.join("AppData/Roaming"))
+                            .env("LOCALAPPDATA", home.join("AppData/Local"))
+                            .env("CODEX_HOME", home.join(".codex"))
+                            .env("OPENCODEX_HOME", &archive_home)
+                            .current_dir(task.path())
+                            .output()
+                            .expect("exact rebuilt prototype archive");
+                        std::fs::write(
+                            evidence.with_file_name("candidate-archive.stdout.log"),
+                            &result.stdout,
+                        )
+                        .unwrap();
+                        std::fs::write(
+                            evidence.with_file_name("candidate-archive.stderr.log"),
+                            &result.stderr,
+                        )
+                        .unwrap();
+                        assert!(
+                            result.status.success(),
+                            "Rebuilt candidate archive actual atomic entry failed"
+                        );
+                        let published = crate::modules::backup::safety::open_file(
+                            &archive_home.join("runtime-port.json"),
+                            false,
+                        )
+                        .unwrap();
+                        assert_eq!(owner(&published), expected);
+                        verify_runtime_record_handle(&published)
+                            .expect("actual rebuilt archive must satisfy unchanged validator");
+                        report["candidateArchiveAccepted"] = serde_json::json!(true);
+                        report["candidateArchiveReadback"] =
+                            serde_json::from_slice::<serde_json::Value>(&result.stdout).unwrap();
+                    }
                 }
             }));
             if candidate_result.is_err() {

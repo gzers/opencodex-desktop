@@ -21,11 +21,20 @@
   ],
   "originalOtherArchiveMembersChanged": false,
   "maintenanceVersionAndArchiveNotYetPromoted": true,
-  "windowsAtomicOverlayPassed": false,
+  "windowsAtomicOverlayPassed": true,
   "requiredBeforeAdoption": [
     "Isolated candidate module via originalvalidator",
     "Exact original atomic writer overlay Windows readback",
     "Original failurecleanup/concurrentpublication counterexamples",
     "Final official lifecycle and user-scope regression"
-  ]
+  ],
+  "windowsAtomicOverlayEvidence": {
+    "run": 42564664257,
+    "source": "64ab25f00d340f307d1a0baf12cf7fee8b0c1506",
+    "originalArtifactSha256": "568998dc61c0fc773824dbe8b9bcc80cf3e479e3952e9b8371f1fcdddf872524",
+    "exactOriginalValidatorAccepted": true,
+    "forcedBeforeRenameOldContentAndOwnTempCleanupVerified": true,
+    "accepted": false,
+    "lifetimeProtocolOrReleaseAcceptance": false
+  }
 }
