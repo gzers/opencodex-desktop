@@ -585,6 +585,87 @@ mod tests {
             "scope":"Original atomic writer and actual Desktop record validator only; not lifecycle acceptance"
         });
         drop(file);
+        if std::env::var("OCXD_RECORD_PROBE_CANDIDATE").as_deref() == Ok("true") {
+            let script = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+                .join("../../../test/smoke/windows023-native-private-record.mjs");
+            let result = std::process::Command::new(&bun)
+                .arg("--no-env-file")
+                .arg(script)
+                .env("OCXD_RECORD_PROBE_PACKAGE", &package)
+                .env("OCXD_RECORD_PROBE_TASK", task.path())
+                .env("HOME", &home)
+                .env("USERPROFILE", &home)
+                .env("APPDATA", home.join("AppData/Roaming"))
+                .env("LOCALAPPDATA", home.join("AppData/Local"))
+                .env("CODEX_HOME", home.join(".codex"))
+                .env("OPENCODEX_HOME", &h)
+                .current_dir(task.path())
+                .output()
+                .expect("isolated new-owner prototype");
+            std::fs::write(
+                evidence.with_file_name("candidate-record.stdout.log"),
+                &result.stdout,
+            )
+            .unwrap();
+            std::fs::write(
+                evidence.with_file_name("candidate-record.stderr.log"),
+                &result.stderr,
+            )
+            .unwrap();
+            assert!(
+                result.status.success(),
+                "Isolated native writer prototype failed"
+            );
+            let candidate = crate::modules::backup::safety::open_file(
+                &h.join("native-runtime-port.json"),
+                false,
+            )
+            .unwrap();
+            assert_eq!(owner(&candidate), expected);
+            verify_runtime_record_handle(&candidate)
+                .expect("original validator must accept prototype");
+            report["candidateOriginalValidatorAccepted"] = serde_json::json!(true);
+            report["candidateOwnerMatchesTokenUser"] = serde_json::json!(true);
+            report["candidateReadback"] =
+                serde_json::from_slice::<serde_json::Value>(&result.stdout)
+                    .expect("fixed synthetic prototype report");
+            drop(candidate);
+            let lease_root = task.path().join("lease-fixture");
+            std::fs::create_dir(&lease_root).unwrap();
+            drop(create_new_private_file(&lease_root.join("lifetime.lease"), 0o600).unwrap());
+            let script = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+                .join("../../../test/smoke/windows023-native-lifecycle-lease.mjs");
+            let result = std::process::Command::new(&bun)
+                .arg("--no-env-file")
+                .arg(script)
+                .env("OCXD_RECORD_PROBE_PACKAGE", &package)
+                .env("OCXD_LEASE_PROBE_ROOT", &lease_root)
+                .env("HOME", &home)
+                .env("USERPROFILE", &home)
+                .env("APPDATA", home.join("AppData/Roaming"))
+                .env("LOCALAPPDATA", home.join("AppData/Local"))
+                .env("CODEX_HOME", home.join(".codex"))
+                .env("OPENCODEX_HOME", &h)
+                .current_dir(task.path())
+                .output()
+                .expect("isolated native lifetime prototype");
+            std::fs::write(
+                evidence.with_file_name("candidate-lease.stdout.log"),
+                &result.stdout,
+            )
+            .unwrap();
+            std::fs::write(
+                evidence.with_file_name("candidate-lease.stderr.log"),
+                &result.stderr,
+            )
+            .unwrap();
+            assert!(
+                result.status.success(),
+                "Isolated native lifetime proof failed"
+            );
+            report["leasePrototype"] = serde_json::from_slice::<serde_json::Value>(&result.stdout)
+                .expect("fixed synthetic lifetime report");
+        }
         task.close().expect("exact fixture cleanup");
         report["fixtureRemoved"] = serde_json::json!(true);
         let mut output = OpenOptions::new()

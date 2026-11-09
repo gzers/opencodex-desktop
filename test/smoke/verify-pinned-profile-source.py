@@ -30,7 +30,9 @@ with tarfile.open(archive, 'r:gz') as source:
                      'src/codex/inject/restore.ts', 'src/service/windows-ops.ts',
                      'src/lib/windows-service-wrappers.ts',
                      'src/config/atomic-write.ts', 'src/config/paths.ts',
-                     'src/lib/windows-secret-acl.ts']:
+                     'src/lib/windows-secret-acl.ts',
+                     'src/codex/windows-current-sid.ts',
+                     'src/lib/windows-atomic-replace.ts']:
         expected = source.extractfile('package/' + relative).read()
         actual = (package / relative).read_bytes()
         assert actual == expected, 'Profile source differs from original pinned bytes'
