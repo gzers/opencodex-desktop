@@ -1,0 +1,25 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "source": "dac30811c14d25f5bbbc60f31409d986e0edbf9d",
+  "supersedesCandidateArchive": "3e4d874d7e90174cbd1c19ef6cd958421db9645ce9d0a74bf5c580488ee997fb",
+  "currentCandidateArchive": "c665234a44af4e7da88714e7f0e1f0ed180f18fd0c4b0ca892590e9e97bd96c4",
+  "version": "2.97.0-desktop023.lifecycle.1",
+  "publishedVersionReused": false,
+  "candidateOnly": true,
+  "issue": "handleStart is after static module evaluation; prior placement cannot establish that dependency-initialization children were enrolled.",
+  "fix": "First CLI ESM dependency boot module admits explicit Windows start into private Job/lease before remaining CLI dependency graph. Handler only accepts existing lifetime authority. Other commands never acquire service authority.",
+  "validation": [
+    "Exact boot body argument/proof-prefix start/read-only/no HOME/native failure counterexamples pass",
+    "Actual rebuilt archive first import checked",
+    "Three actual archive TS modules transpile",
+    "Two full canonical compositions same bytes",
+    "16 core assembly and 5 staging tests pass"
+  ],
+  "limitations": [
+    "New bootstrap has not executed on actual Windows yet",
+    "Prior actual producer module proofs remain useful but do not prove changed CLI bootstrap order",
+    "Old preparation42590269684 completes/preserves logs but cannot supply new source integration acceptance"
+  ],
+  "initialBuildFailure": "First composition omitted new boot helper in prototype archive; exact postimage guard raised KeyError before output. Added required member; independent rebuilds then passed. Failed log retained."
+}

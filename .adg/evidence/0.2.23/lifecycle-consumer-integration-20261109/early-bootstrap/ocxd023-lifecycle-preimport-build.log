@@ -1,0 +1,11 @@
+{"accepted": false, "diagnosticOnly": true, "candidateOnly": true, "version": "2.97.0-desktop023.lifecycle.1-record-prototype", "baseArchiveSha256": "fcd2740ecc32ae1e11c1c79d84c801b2c5d5447ae89e070ab060548d61f75ee6", "patchSha256": "406cabf9eba1185d736a4221fb47b7b0acf2e51acfb162c9f03028d76ac976c8", "archive": "opencodex-2.97.0-desktop023.lifecycle.1-record-prototype.tgz", "bytes": 15409187, "sha256": "33887e710fad9d5ae78eb4f85c6d02f7da0d413238437a65033b5a79fba168e4", "twoIndependentBuildsIdentical": true, "archiveMembers": 2523, "compatibilityPresentMembersVerified": 2408, "compatibilityInheritedAbsentMembersUnchanged": ["bun.lock", "scripts/model-metadata.source.json"], "productionPinsChanged": false, "lifetimeProtocolIntegrated": false, "releaseAccepted": false, "materializedExactArchive": false}
+Traceback (most recent call last):
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/.github/scripts/build_runtime_lifecycle_023.py", line 85, in <module>
+    a=p.parse_args();result=build(a.output,a.archive)
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/.github/scripts/build_runtime_lifecycle_023.py", line 30, in build
+    producer.build(work/'record'/record_report['archive'],work/'producer')
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/build-runtime-lifetime-prototype.py", line 43, in build
+    assert {p:b.sha(files[p]) for p in POSTIMAGES}==POSTIMAGES,'Reviewed producer postimages must remain exact'
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/build-runtime-lifetime-prototype.py", line 43, in <dictcomp>
+    assert {p:b.sha(files[p]) for p in POSTIMAGES}==POSTIMAGES,'Reviewed producer postimages must remain exact'
+KeyError: 'src/lib/windows-runtime-start-boot.ts'

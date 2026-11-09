@@ -555,3 +555,8 @@ core-sweep增加producer技术focus（4162f5234），仅对尚未闭合的实际
 [集成源码范围、原归档/编译与资源恢复证据](../../.adg/evidence/0.2.23/lifecycle-consumer-integration-20261109/scope-and-validation.json)及[准备期假设H-integrated-lifetime-20261109-03](../../.adg/evidence/0.2.23/lifecycle-consumer-integration-20261109/hypothesis.preparation.json)已写；下一同源core-build准备完成后固定真实buildRun，再从标准core-sweep一次跑受影响真实双SID/私有供应/合并就绪端口/路径/IPC/严格清理，先全表再集中返修。Windows原生执行、完整冻结/签名升级回退/发布仍未完成，目标active。
 
 同源构建准备42590269684/job129069917230已确认运行，固定abbb7c17c；准备期假设先在96424b6df提交，现补实际buildRun为42590269684。标准core轮尚未派，等MSVC program+observer/完整供应封存成功。为减少资源占用，保留当前源PR CI42589768614，精确核实同一分支PR事件后取消7个已被当前源取代的自动CI；不取消诊断/发布任务，不把取消记为通过或故障修复。
+
+
+集成源码审计补充：handleStart发生在静态依赖加载之后，原3e4d归档尚不能证明初始化派生子进程都入Job；未将该完整性缺口算过。dac30811c将Windows显式start的租约/Job接管放到CLI第一个ESM依赖，在其余依赖求值前完成；handler只接受已有authority，status/stop等不创建服务租约。当前未发布候选lifecycle.1重建为15412808字节/SHA256c665234a44af4e7da88714e7f0e1f0ed180f18fd0c4b0ca892590e9e97bd96c4，旧3e4d原件仍保留；不覆盖已发布版本。16装配/5供应测试、精确boot体反例/实际归档第一import与3TS模块语法、双份规范重建通过；实际Windows新初始化顺序仍待。首次重建漏boot成员被摘要门拒绝，修正后过，失败log保留。
+
+[初始化顺序修正与新候选原件](../../.adg/evidence/0.2.23/lifecycle-consumer-integration-20261109/early-bootstrap/scope.json)及准备期假设H-integrated-preimport-lifetime-20261109-04落盘。原abbb构建42590269684不因观察等待重启，完成后保留其编译/制品证据；它不能替代新dac源码的核心验收。下一候选新core-build将复用可用编译cache但仍重验精确源与新runtime摘要，标准core前补实际buildRun并提交推送判断。当前尚无新core派发。
