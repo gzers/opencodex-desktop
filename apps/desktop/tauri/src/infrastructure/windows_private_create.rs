@@ -657,8 +657,23 @@ mod tests {
                     assert!(package_overlay.starts_with(&boundary));
                     let overlay_home = task.path().join("atomic-overlay-home");
                     std::fs::create_dir(&overlay_home).unwrap();
+                    let overlay_writer = r#"
+                      const {mkdirSync,readFileSync,readdirSync}=await import('node:fs');
+                      const {join}=await import('node:path');
+                      const {pathToFileURL}=await import('node:url');
+                      const runtimePackage=process.env.OCXD_RECORD_PROBE_PACKAGE;
+                      const {atomicWriteFile}=await import(pathToFileURL(join(runtimePackage,'src/config/atomic-write.ts')).href);
+                      const h=process.env.OPENCODEX_HOME;mkdirSync(h,{recursive:true});
+                      const target=join(h,'runtime-port.json');
+                      const first=JSON.stringify({pid:process.pid,port:1,attestationSecret:'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'});
+                      atomicWriteFile(target,first);
+                      let failed=false;
+                      try{atomicWriteFile(target,'synthetic-unpublished',undefined,{beforeRename(){throw Error('forced-before-publication');}});}catch(error){if(error.message!=='forced-before-publication')throw error;failed=true;}
+                      if(!failed||readFileSync(target,'utf8')!==first||readdirSync(h).some(n=>n.startsWith('runtime-port.json.ocx.')))throw Error('Atomic pre-publication failure must preserve original and remove only own temp');
+                      console.log(JSON.stringify({accepted:false,diagnosticOnly:true,actualAtomicEntryUsed:true,forcedPrePublicationFailurePreservedOriginal:true,noOwnTempResidue:true}));
+                    "#;
                     let result = std::process::Command::new(&bun)
-                        .args(["--no-env-file", "-e", original_writer])
+                        .args(["--no-env-file", "-e", overlay_writer])
                         .env("OCXD_RECORD_PROBE_PACKAGE", &package_overlay)
                         .env("HOME", &home)
                         .env("USERPROFILE", &home)
@@ -692,6 +707,9 @@ mod tests {
                     verify_runtime_record_handle(&published)
                         .expect("actual atomic overlay must satisfy original validator");
                     report["candidateAtomicOverlayAccepted"] = serde_json::json!(true);
+                    report["candidateAtomicOverlayReadback"] =
+                        serde_json::from_slice::<serde_json::Value>(&result.stdout)
+                            .expect("fixed atomic failure preservation report");
                 }
             }));
             if candidate_result.is_err() {
