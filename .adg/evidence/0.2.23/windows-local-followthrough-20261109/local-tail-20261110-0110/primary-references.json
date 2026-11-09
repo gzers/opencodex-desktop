@@ -1,0 +1,32 @@
+{
+  "checkedDate": "2026-11-10",
+  "sources": [
+    {
+      "title": "WTSEnumerateProcessesExW",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/wtsapi32/nf-wtsapi32-wtsenumerateprocessesexw",
+      "used": "Native API level0 structs, current/all-session filtering and WTS buffer release; null/unknown SID retained"
+    },
+    {
+      "title": "LsaEnumerateLogonSessions / LsaGetLogonSessionData / SECURITY_LOGON_SESSION_DATA",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsaenumeratelogonsessions",
+      "related": [
+        "https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsagetlogonsessiondata",
+        "https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/ns-ntsecapi-security_logon_session_data"
+      ],
+      "used": "Documented read-only logon-session prefix and status/free-buffer handling; only synthetic matching SID fields output"
+    },
+    {
+      "title": "UnloadUserProfile / LoadUserProfileW",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/userenv/nf-userenv-unloaduserprofile",
+      "related": [
+        "https://learn.microsoft.com/en-us/windows/win32/api/userenv/nf-userenv-loaduserprofilew"
+      ],
+      "used": "UnloadUserProfile requires returned profile hive handle and token; do not invent missing original handle or substitute an unrelated registry key; open handles must close first"
+    },
+    {
+      "title": "CreateProcessWithLogonW",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createprocesswithlogonw",
+      "used": "Profile loading/logon context for earlier credential bootstrap; not proof of present retaining owner"
+    }
+  ]
+}

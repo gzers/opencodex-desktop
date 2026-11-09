@@ -1,0 +1,516 @@
+{
+  "elapsedMilliseconds": 308,
+  "expectedSid": "S-1-5-21-587408064-856152790-2583328096-1018",
+  "scope": "Readonly WTS snapshots plus exact disposable Profile and bounded application events; no identity admission for termination",
+  "observedUtc": "2026-11-09T17:13:13.2284675Z",
+  "noProcessOrRegistryMutation": true,
+  "querySession": 2,
+  "profile": {
+    "loaded": true,
+    "path": "C:\\Users\\ocxaccu16625a3be3",
+    "special": false,
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1018"
+  },
+  "queryProcess": 35424,
+  "unknownIsNotAbsent": true,
+  "wts": [
+    {
+      "RequestedSession": 2,
+      "Succeeded": true,
+      "Win32Error": 0,
+      "Count": 184,
+      "UnknownOwnerCount": 4,
+      "Matches": [],
+      "Unknown": [
+        {
+          "Pid": 16048,
+          "Session": 2,
+          "Image": "csrss.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 16052,
+          "Session": 2,
+          "Image": "winlogon.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1384,
+          "Session": 2,
+          "Image": "fontdrvhost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 4040,
+          "Session": 2,
+          "Image": "dwm.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        }
+      ]
+    },
+    {
+      "RequestedSession": 4294967294,
+      "Succeeded": true,
+      "Win32Error": 0,
+      "Count": 479,
+      "UnknownOwnerCount": 299,
+      "Matches": [],
+      "Unknown": [
+        {
+          "Pid": 0,
+          "Session": 0,
+          "Image": "",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 4,
+          "Session": 0,
+          "Image": "System",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 284,
+          "Session": 0,
+          "Image": "Secure System",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 328,
+          "Session": 0,
+          "Image": "Registry",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 956,
+          "Session": 0,
+          "Image": "smss.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1224,
+          "Session": 0,
+          "Image": "csrss.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1312,
+          "Session": 0,
+          "Image": "wininit.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1320,
+          "Session": 1,
+          "Image": "csrss.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1376,
+          "Session": 1,
+          "Image": "winlogon.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1448,
+          "Session": 0,
+          "Image": "services.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1468,
+          "Session": 0,
+          "Image": "LsaIso.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1476,
+          "Session": 0,
+          "Image": "lsass.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1628,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1660,
+          "Session": 1,
+          "Image": "fontdrvhost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1668,
+          "Session": 0,
+          "Image": "fontdrvhost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1732,
+          "Session": 0,
+          "Image": "WUDFHost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1792,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1956,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 2036,
+          "Session": 1,
+          "Image": "dwm.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1176,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1228,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1556,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1500,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1532,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 1932,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 2208,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 2216,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 2296,
+          "Session": 0,
+          "Image": "IntelCpHDCPSvc.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 2356,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 2396,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 2424,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 2492,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 2576,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 2672,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 2748,
+          "Session": 0,
+          "Image": "vmms.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 2756,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 2872,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 2908,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 2116,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 2140,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 3160,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 3180,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 3196,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 3204,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 3304,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 3376,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 3392,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 3404,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 3476,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 3488,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 3496,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 3596,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 3648,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 3708,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 3756,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 3776,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 3860,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 3964,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 4028,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 4056,
+          "Session": 0,
+          "Image": "helperservice.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 4076,
+          "Session": 0,
+          "Image": "spoolsv.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 4176,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 4312,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 4320,
+          "Session": 0,
+          "Image": "svchost.exe",
+          "Sid": null,
+          "OwnerKnown": false
+        }
+      ]
+    }
+  ],
+  "unloadEvents": [],
+  "eventQueryFailure": null
+}

@@ -1,0 +1,15 @@
+{
+  "noForcedHiveUnload": true,
+  "primaryReferences": [
+    "https://learn.microsoft.com/en-us/windows/win32/api/wtsapi32/nf-wtsapi32-wtsenumerateprocessesexw",
+    "https://learn.microsoft.com/en-us/windows/win32/api/wtsapi32/ns-wtsapi32-wts_process_info_exw",
+    "https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createprocesswithlogonw"
+  ],
+  "id": "H-TAIL-1",
+  "queryTimeoutMilliseconds": 30000,
+  "noProductActions": true,
+  "doNotInferAbsentFromUnknown": true,
+  "observed": "Profile1018 Loaded; prior serial CIM GetOwnerSid sweep stalled and was aborted; original cleanup receipts remain",
+  "hypothesis": "A bounded native WTS SID snapshot plus unload events can identify a real surviving logon process or establish exactly what remains unknown, without rerunning products or touching daily configuration",
+  "writtenUtc": "2026-11-09T17:13:12.1839126Z"
+}

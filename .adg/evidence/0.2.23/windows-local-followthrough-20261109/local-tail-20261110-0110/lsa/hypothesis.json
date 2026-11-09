@@ -1,0 +1,15 @@
+{
+  "id": "H-TAIL-2",
+  "writtenUtc": "2026-11-09T17:15:02.5366336Z",
+  "noProductActions": true,
+  "noForcedHiveUnload": true,
+  "doNotInferAbsentFromUnknown": true,
+  "hypothesis": "A bounded read-only LSA enumeration of matching synthetic SID can reveal retained logon-session references without new login, profile load or product actions",
+  "primaryReferences": [
+    "https://learn.microsoft.com/en-us/windows/win32/api/wtsapi32/nf-wtsapi32-wtsenumerateprocessesexw",
+    "https://learn.microsoft.com/en-us/windows/win32/api/wtsapi32/ns-wtsapi32-wts_process_info_exw",
+    "https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createprocesswithlogonw"
+  ],
+  "queryTimeoutMilliseconds": 30000,
+  "observed": "Elevated WTS snapshot has no matching SID1018 among478 processes, only PID0/System owner unknown; Profile remains Loaded"
+}

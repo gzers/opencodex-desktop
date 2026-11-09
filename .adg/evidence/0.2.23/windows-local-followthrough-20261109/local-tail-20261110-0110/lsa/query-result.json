@@ -1,0 +1,44 @@
+{
+  "scope": "Readonly documented LSA logon-session prefix; output only matching synthetic SID/types/session/time and aggregate unknown counts; no credentials, token handles, other usernames or logon IDs",
+  "lsa": {
+    "EnumerationSucceeded": true,
+    "Status": 0,
+    "Enumerated": 1255,
+    "ReadFailures": 0,
+    "NoSid": 1,
+    "Matches": [
+      {
+        "Sid": "S-1-5-21-587408064-856152790-2583328096-1018",
+        "LogonType": 2,
+        "Session": 0,
+        "LogonUtc": "2026-11-09T15:33:23.5073517Z"
+      },
+      {
+        "Sid": "S-1-5-21-587408064-856152790-2583328096-1018",
+        "LogonType": 2,
+        "Session": 0,
+        "LogonUtc": "2026-11-09T15:33:23.5058434Z"
+      }
+    ]
+  },
+  "observedUtc": "2026-11-09T17:15:03.4964716Z",
+  "expectedSid": "S-1-5-21-587408064-856152790-2583328096-1018",
+  "elapsedMilliseconds": 125,
+  "profile": {
+    "loaded": true,
+    "special": false,
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1018",
+    "path": "C:\\Users\\ocxaccu16625a3be3"
+  },
+  "noProfileLoadUnloadOrLogoff": true,
+  "token": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 83924,
+    "executable": "D:\\ocxu1-20261109-191803\\powershell\\pwsh.exe",
+    "creationTimeUtc": "2026-11-09T17:15:02.5889240Z",
+    "elevated": true,
+    "elevationType": 2,
+    "collectedAtUtc": "2026-11-09T17:15:03.2874575Z"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "querySession": 2,
+  "wts": [
+    {
+      "RequestedSession": 2,
+      "Succeeded": true,
+      "Win32Error": 0,
+      "Count": 183,
+      "UnknownOwnerCount": 0,
+      "Matches": [],
+      "Unknown": []
+    },
+    {
+      "RequestedSession": 4294967294,
+      "Succeeded": true,
+      "Win32Error": 0,
+      "Count": 478,
+      "UnknownOwnerCount": 2,
+      "Matches": [],
+      "Unknown": [
+        {
+          "Pid": 0,
+          "Session": 0,
+          "Image": "",
+          "Sid": null,
+          "OwnerKnown": false
+        },
+        {
+          "Pid": 4,
+          "Session": 0,
+          "Image": "System",
+          "Sid": null,
+          "OwnerKnown": false
+        }
+      ]
+    }
+  ],
+  "queryProcess": 81388,
+  "observedUtc": "2026-11-09T17:13:52.5074482Z",
+  "profile": {
+    "loaded": true,
+    "special": false,
+    "path": "C:\\Users\\ocxaccu16625a3be3",
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1018"
+  },
+  "scope": "Readonly WTS snapshots plus exact disposable Profile and bounded application events; no identity admission for termination",
+  "unknownIsNotAbsent": true,
+  "expectedSid": "S-1-5-21-587408064-856152790-2583328096-1018",
+  "noProcessOrRegistryMutation": true,
+  "eventQueryFailure": null,
+  "elapsedMilliseconds": 308,
+  "unloadEvents": []
+}
