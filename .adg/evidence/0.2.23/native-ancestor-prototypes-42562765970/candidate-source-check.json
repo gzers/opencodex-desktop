@@ -1,0 +1,20 @@
+{
+  "accepted": false,
+  "productionArchiveChanged": false,
+  "candidateModuleSyntax": "Bun build pass",
+  "candidatePlacement": "Disposable staged package src/lib/windows-runtime-private-record.ts only",
+  "candidateDeclaredApis": [
+    "CreateFileW",
+    "GetFileInformationByHandle",
+    "GetFileType",
+    "SetFileInformationByHandle",
+    "CloseHandle",
+    "LocalFree",
+    "ConvertStringSecurityDescriptorToSecurityDescriptorW"
+  ],
+  "existingOwnerRepairApi": false,
+  "pathnameDeletion": false,
+  "emptyCreatedHandleCleanupOnly": true,
+  "originalRuntimeSourceFilesUnmodified": true,
+  "nextRunRequired": "Actual Windows candidate helper via unchanged Desktop validator; namedJob observer reopen and wrong-membership counterexample"
+}

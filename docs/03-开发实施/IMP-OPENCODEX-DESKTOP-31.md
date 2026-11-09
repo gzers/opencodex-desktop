@@ -414,3 +414,11 @@ f3f0ce755描述符／真实分离派生原型已派[run42561691867](https://gith
 6f5b220d0只补原型祖先pin：每级GENERIC_READ、不共享删除、OPEN_REPARSE/备份语义；贯穿原创建/描述符/发布，检查目录重命名拒绝、junction祖先拒绝与5路径歧义反例。本地语法和实际validator5反例通过；工具转义初稿分隔符与控制字符已修正并核对无NUL，未进入正式包。原代码逻辑未改，下一轮仍复跑三case与祖先反例，不派完整sweep。
 
 祖先反例原型run42562765970固定6f5b220d0ea5c9d60e3f4a6ba9aba3eb55de27ed/job128982577243已确认运行；仍是前述3case及pin/reparse反例的opt-in技术验证，accepted:false，不是新完整验收或产品包替换。
+
+
+b07bf7eb2准备下一批候选验证，当前祖先轮仍运行、未重启。新辅助模块仅位于test/smoke，下一次在固定归档与14原模块核对之后复制新增候选文件到全新暂存包，单独记录候选SHA；原源码/归档不变，不冒称已正式集成。模块针对runtime-port.json的新临时对象，CREATE_NEW显式TokenUser、受保护owner-onlyDACL；no-share-delete原创建句柄中交接fs描述符，原失败只清理确认未变且为空的新对象原句柄，无SetSecurityInfo/路径删除旧文件。另补同会话命名Job，服务/子持查询句柄，observer关闭再重开并核对实际成员，错误Job拒绝；Local/defaultDACL仅原型，跨会话SID/生产保护/真实官方还原还待。3脚本Node语法、候选Bun build、Rustfmt与实际3PowerShell块通过，Windows候选执行尚待。
+
+
+祖先固定42562765970完成：[原8931字节ZIP及结果](../../.adg/evidence/0.2.23/native-ancestor-prototypes-42562765970/analysis.json)，SHA256 f081e74e28ab0be88090fd80e0cc1834d9dbbeee7abdc3e0f733b8d70586d842核验，全部独立case通过，strictClippy及fixture/stage移除成功。HOME重命名/junction祖先/歧义路径拒绝，新对象仍满足原validator；direct152.95ms、Node-detached200.74ms，原父退出子仍活继续拒绝。仍accepted:false、未改正式包，尚非实际官方CLI/还原或跨SID验收。
+
+辅助模块／命名Job原型run42563811368固定b07bf7eb2d8e902b8ae43f3fc93ce76efabc2589/job128985818879已确认执行；原14模块不改，新增候选模块有独立SHA且只在临时暂存包，正式names.2归档不变，accepted:false。候选实际validator、重开Job观察与错误Job反例及原3case完整执行，仍非官方启动/还原/跨SID停止门。
