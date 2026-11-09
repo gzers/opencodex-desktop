@@ -1,0 +1,29 @@
+{
+  "accepted": false,
+  "scope": "Exact owned materialized build and completed readonly fixture roots only",
+  "removed": [
+    {
+      "path": "/private/tmp/ocxd023-release-platform-darwin-20261110/runtime-bundle",
+      "files": 11328,
+      "absent": true
+    },
+    {
+      "path": "/private/tmp/ocxd023-release-platform-darwin-20261110/work",
+      "files": 545,
+      "absent": true
+    },
+    {
+      "path": "/private/tmp/ocxd023-release-platform-darwin-20261110/execution/H",
+      "files": 73,
+      "absent": true
+    },
+    {
+      "path": "/private/tmp/ocxd023-release-platform-darwin-20261110/execution/relocated I with spaces",
+      "files": 11327,
+      "absent": true
+    }
+  ],
+  "retained": "Canonical platform tgz, manifests, logs, signed app/update assets and original failure evidence",
+  "signedResourceProof": "ocxd023-release-signed-resource-proof-20261110.json",
+  "dailyConfigurationTouched": false
+}

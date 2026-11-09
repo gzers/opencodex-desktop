@@ -65,3 +65,8 @@ Release42672509824 attempt2的Windows NSIS/MSI及更新签名上传成功，但�
 42677222722四job均success。原件下载后独立检查每格tag/source、MSI/NSIS摘要、原像身份、actual普通TokenUser、安装首屏/卸载及数据保持回执；四个临时账户/Profile已删除，临时Server策略精确恢复，AlwaysInstallElevated未改。均未重建或替换原资产，default没有路径覆盖，custom安装及显式数据清理helper覆盖按实际报告保留。证据windows-original-installers/verified-summary.json与原件；此通过不代替NSIS真实OTA/手动回退。
 
 当前剩余：Mac锁屏等待解锁后原包正常首装/原生检查，以及两端正式0.2.22→0.2.23签名升级/回退、最终stable/Latest匿名读回。三类更新包及维护包实际签名全过；Release仍draft，通道仍0.2.22，未提前公开。
+
+
+### 锁屏停点及正式资源复用核对
+
+再次实际读屏权限：AX/截图权限存在但locked:true，原生首装和Mac真实OTA尚未执行；目标保持未完成，未公开Release。正式签名.app内运行归档eb8b0176及完整descriptor与本机已过只读CLI/依赖检查的规范归档逐字一致，原维护包ec14与封存源一致。该资源证明仅复用离线资源验证，不替代原生界面或OTA。证据signed-resource-supplement-manifest.json。已确认无相关运行子进程后移除本轮4个精确解包/只读fixture暂存目录，保留规范归档、已签名正式资产和原日志；未触及日常配置。
