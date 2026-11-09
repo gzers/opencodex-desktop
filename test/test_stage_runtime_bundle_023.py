@@ -58,7 +58,7 @@ class StageTests(unittest.TestCase):
             def run(args,check):
                 self.assertTrue(check)
                 calls.append(args)
-                if args[1].endswith('/build_runtime_023.py'):
+                if args[1].endswith('/build_runtime_lifecycle_023.py'):
                     d=Path(args[2]);d.mkdir();(d/'names.tgz').write_bytes(b'pinned-names')
                 else:
                     d=Path(args[args.index('--output')+1]);d.mkdir()

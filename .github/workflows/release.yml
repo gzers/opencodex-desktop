@@ -216,7 +216,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-      - name: Reproduce maintained base and Desktop names runtime
+      - name: Reproduce maintained base, names and lifecycle runtime
         shell: bash
         run: |
           set -euo pipefail
@@ -227,7 +227,7 @@ jobs:
           assert len(data)<=32*1024*1024 and hashlib.sha256(data).hexdigest()=="bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957"
           p.write_bytes(data)
           PYRUNTIME
-          python3 .github/scripts/build_runtime_023.py test/out/maintained-runtime --archive test/out/base-runtime.tgz
+          python3 .github/scripts/build_runtime_lifecycle_023.py test/out/maintained-runtime --archive test/out/base-runtime.tgz
       - name: Install pinned signing CLI
         run: npm install --global @tauri-apps/cli@2.11.4
       - name: Sign and attach maintained runtime to the same draft release

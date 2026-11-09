@@ -68,7 +68,7 @@ def stage(platform,node,npm,output,base=None):
         download_base(original)
     if digest(original)!=BASE_SHA:raise ValueError('base runtime digest differs')
     names=output/'maintained-runtime'
-    subprocess.run(['python3',str(ROOT/'.github/scripts/build_runtime_023.py'),str(names),'--archive',str(original)],check=True)
+    subprocess.run(['python3',str(ROOT/'.github/scripts/build_runtime_lifecycle_023.py'),str(names),'--archive',str(original)],check=True)
     runtime_policy=json.loads((ROOT/'.github/runtime-platforms-023.json').read_bytes())
     archive=names/runtime_policy['runtime']['archive']
     bundle=output/'platform-bundle'
