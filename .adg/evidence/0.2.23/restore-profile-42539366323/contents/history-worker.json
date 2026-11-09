@@ -1,0 +1,46 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "scenario": "worker",
+  "source": "070d7a67d5e6efa52c798a7575d66d018c0515b3",
+  "runtimeVersion": "2.97.0-desktop023.names.2",
+  "runtimeArchiveSha256": "fcd2740ecc32ae1e11c1c79d84c801b2c5d5447ae89e070ab060548d61f75ee6",
+  "sources": {
+    "src/codex/history-job.ts": {
+      "bytes": 21041,
+      "sha256": "0bb3ae621fd6821507acbad951e8402560fc29757545381930a5a39295453af4"
+    },
+    "src/codex/history-worker.ts": {
+      "bytes": 10943,
+      "sha256": "92edcb19d9f8cd4fe3291c19c6c8f022fc276f47c8e0eb1a2ff56708c36d3a05"
+    },
+    "src/codex/inject/restore.ts": {
+      "bytes": 44442,
+      "sha256": "7dc77a8b0af53b24513c83b904a59192c9df17976a02cae97ad7bec84f24890b"
+    }
+  },
+  "productStarted": false,
+  "businessNetworkUsed": false,
+  "serviceOrTaskMutation": false,
+  "syntheticFixtureWrites": true,
+  "noRealClientData": true,
+  "measurements": [
+    {
+      "phase": "import-history-job",
+      "milliseconds": 233.96060000000003
+    },
+    {
+      "phase": "actual-history-restore-worker-and-join",
+      "milliseconds": 1723.9551,
+      "result": {
+        "kind": "converged",
+        "reason": null,
+        "rows": 0,
+        "files": 0
+      }
+    }
+  ],
+  "limitations": "Runner token and fresh empty synthetic homes only. No active proxy, injected routing, history rows or official POST; not stop acceptance.",
+  "status": "complete-observation",
+  "totalMilliseconds": 1958.8762
+}

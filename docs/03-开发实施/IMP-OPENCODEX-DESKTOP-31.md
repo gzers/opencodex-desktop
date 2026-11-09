@@ -319,3 +319,12 @@ a581ea0ca只增加test/.github只读定位，产品apps树4bfcbcc6与8ca50832b�
 [完整26过/2失败表](../../.adg/evidence/0.2.23/sweep-r32-42532328743/status-table.md)已先展示，原ZIP及276文件校验。A端点15.4s后3次观测全部超时，30185ms仍未证ready；33842ms迟到健康不补判，Stop未执行所以没有新子阶段计时。d37a1f2c1在失败原Start后增加独立Stop诊断：先鲜验H/record/HMAC，再调真实ManagerStop和原10秒预算，另存supplemental回执accepted:false；恢复原Startaction并继续抛原失败，不生成pass-runtime-step、不放行peer或候选。避免相同启动失败再次遮蔽全部Stop线索，原断言不放宽。
 
 070d7a67d仅test/github：固定原包归档并逐字节核对7模块，在临时新建合成空CODEX_HOME／运行HOME测真实historyWorker和restoreNativeCodexAsync成本。不启动代理／请求上游／调用服务任务写者／修改日常目录；仅fixture写入，结果始终accepted:false，不等同活动客户端还原或普通SIDStop通过。[profile42539366323](https://github.com/gzers/opencodex-desktop/actions/runs/42539366323)/job128910636027已确认运行。产品apps树db4ac662与16b4相同，维护包未改。134离线合同、Node/Python与YAML/5runblock语法及实际非Windows拒绝通过。先待技术剖析再提出必要修复，无新完整候选轮／发布。
+
+
+### 原包还原剖析结果、同树CI与第33轮（2026-11-09）
+
+[隔离还原剖析](../../.adg/evidence/0.2.23/restore-profile-42539366323/analysis.json)原ZIP6208字节/SHA2561558c572dba623c637396c715f588d45e226f16d9056dabc082ffe0b25094358已核验，7源码逐字节等于固定归档，上传后精确清理步骤成功。Worker加载234ms、真实空历史还原并join1724ms；restore模块加载643ms、真实空客户端还原1954ms。两场景均完成但accepted:false，仅Runner令牌及空合成HOME，无活动代理/注入路由/历史行/官方POST；不能解释或替代普通SID真实Stop近9.8s。维护包不改。
+
+[16b4完整CI回执](../../.adg/evidence/0.2.23/ci-16b4-final-42531978066/verification.json)所有适用job成功。原Windows后端ZIP29399046字节/SHA256904f87859cafdfd0c473efed1c4c3577736b067952943b07f9d5036191631d46核验；49个真实普通令牌Rust二进制全部原始退出0，账户/Profile移除、源码与制品ACL/桌面ACL恢复、源码字节不变及新SID进程零残留均有原回执。该二进制组明确不含docTests且fullWorkspacePassed:false，不能凭它声称完整workspace；独立管理员组仍按原CI日志区分。PRmerge c848b89e与source16b4同tree9d76125c，产品apps树db4ac662与070d相同。CI成功不关闭正常启停/安装器/升级回退/发布门。
+
+随后派发[第33轮完整28项](https://github.com/gzers/opencodex-desktop/actions/runs/42539896297)，固定070d7a67d5e6efa52c798a7575d66d018c0515b3、job128912259887已确认运行。仍accepted:false、原30/10/5秒与所有归属/还原/退出检查。真实Stop子阶段及失败Start后的独立supplemental诊断只补定位，不补判失败、不放行peer、不以迟到ready冒称通过。等完整summary后先展示全表，再整批修复；未派其它完整轮，未发布。
