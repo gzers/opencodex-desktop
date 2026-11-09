@@ -99,3 +99,9 @@ Profile1018只读事件显示23:33原加载事件，仍Loaded；没有卸载或�
 RDP对控制台61175固定冲突经原30秒无自有记录；控制台原94072/61175保持。RDP随后自动51582，双方同代次健康；Stop RDP后console reply-4仍94072/61175/healthy，再正常Stop console。controller固定冲突/overlap/peerSurvivedNormalStop/passed均true。按用户要求本场景已过即停，不重复孤立或本场景。
 
 必须保留因果限制：本轮产品仅新增固定失败阶段日志，并未改变Stop/HTTP/维护包；因本轮通过而没有失败阶段可用于确定cross-session-01的旧lifecycle_stop_unknown原因。旧失败仍真实、原因未证实，不能说诊断补丁治愈它；HTTP close仅源码待证线索，未实施放宽。当前有界通过也不是整版或稳定性证明。Profile1018仍Loaded、账户已禁用且移出管理员组，继续作为独立清理阻点；原42545767548 token-pointer失败和技术原型采用限制保持，不发布。
+
+## 用户决定：Mac发版与本机尾项并行（2026-11-10 01:03）
+
+用户已要求代码交Mac发版、本机继续跟进。代码4d783585645206c52b49bce8656475d26940c1d7及先前文档04336c43ab024fa28f2d1d7008f068c412b70e8c已远端核验；最新发布交接入口为docs/03-开发实施/0.2.23-contracts/windows-to-mac-release-handoff-20261110.md。本机Profile/缓存清理和旧Stop首错持续归因不再由Windows线单独挂住Mac发布；未完成事实和已知风险保持，Mac仍负责真实最终来源/签名/制品/其它产品门。本线没有执行发布，未声称Mac已收件或已发行。
+
+本机已继续做精确只读核对：Profile1018仍Loaded且SID/SID_Classes两个HKU hive都存在，ProfileList State0及RefCount缺席没有被误判成未Loaded；最后100条Profile事件仅原加载记录，没有新安全卸载线索。profile-background-20261110.json和决策回执单列；未重跑已过产品、没有强卸hive或注销日常会话。后续按正常释放的新状态或新的失败固定阶段继续。

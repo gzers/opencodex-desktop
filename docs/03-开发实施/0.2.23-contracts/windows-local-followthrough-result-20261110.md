@@ -1,5 +1,8 @@
 # Windows本机定向结果与保留阻点
 
+2026-11-10用户后继决定：本机Profile/缓存清理及旧Stop首错持续归因转Windows后台，不再由本线单独挂为Mac发版前置；已推代码与原通过证据交Mac继续整版发布。旧失败及未完成状态保留，正式来源/签名/其它产品AC不由本说明代签。最新派发及角色边界见[Mac发布交接](windows-to-mac-release-handoff-20261110.md)。
+
+
 2026-11-10，Asia/Shanghai。用户已扩大授权到双SID、安装器及第18项剩余失败的定向修复/验证，沿代码codex/0.2.23-integration和文档docs/governance-main回交；不core-sweep/全量、不改日常配置、不跑真实业务同步、不发布。通过项已停止追加运行。
 
 ## 当前结果及因果边界
@@ -35,7 +38,7 @@ Desktop build42653885333/artifact13692037223，ZIP304979005字节/SHA256 cf5c5e3
 
 安装器同源appsTree a4acf4ad2c0fb25420471d50a7d8e11897362068/source0302b66082e2c0314e7911f1f9c771d265dddfdf/build42645465791；artifact13687777600、ZIP618204696字节/SHA256 57db0b25ef98f725c825fbe8b03c774cfd33c6846f3dd232b4796cbbd768a9d6。它与最后诊断Desktop的字节/来源分开列，不冒充一个制品。最晚诊断只触及Stop日志，不重跑已过安装器。
 
-## 仍需保留的阻点
+## Windows本机并行跟进项
 
 - 临时账户ocxaccu16625a3be3，SID **S-1-5-21-587408064-856152790-2583328096-1018**，Profile **C:\Users\ocxaccu16625a3be3**，Windows仍报告Loaded:true。已禁用并移出Administrators。最终只读报告列实际观察的残留PID/镜像/SID及归属盘点完成度（停滞的全机只读盘点已按原生身份停止，未完成不补零），不能把不可读当缺席。没有新的安全卸载线索，未强卸hive、未删除Loaded Profile、未注销/重启日常会话。第18项不能因此整项关闭。
 - cross-session-01旧lifecycle_stop_unknown根因仍未证实；当前有界场景通过即停，保留固定失败诊断供新线索出现时使用。未建立根因消除或稳定性证明。

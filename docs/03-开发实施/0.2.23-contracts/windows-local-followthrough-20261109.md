@@ -29,3 +29,7 @@
 ## 11月10日有界结果
 
 H-W7新源cross-session-02真实控制台/RDP协议已通过，Start13399/12692ms、正常Stop及还原9621/7862ms、双原exit0/peer保持，停止追加本场景。H-W6原首错原因仍未知，日志补丁不冒因果修复；Profile1018 Loaded和旧审批缓存阻点保留。下一动作按[最终有界交接](windows-local-followthrough-result-20261110.md)，不盲重跑，不关闭整版或发布。
+
+## 11月10日用户发布决定
+
+用户要求推代码给Mac发版，本机尾项并行。Windows既有代码与通过证据已在远端，不再由Profile/缓存或旧首错持续归因单独挂Mac发布；原未完事实不抹去，Mac按最终发布源/制品/签名和其它产品门继续。最新收件以[Mac发布交接](windows-to-mac-release-handoff-20261110.md)为准。

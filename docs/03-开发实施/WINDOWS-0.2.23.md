@@ -1,5 +1,8 @@
 # Windows Git协作任务：0.2.23
 
+2026-11-10发布交接调整：用户决定Windows已推代码及有界通过证据交Mac继续发版，本机Profile/缓存清理及旧Stop首错后续归因并行跟进，不再由Windows线单独追加为Mac发版等待条件。代码4d783585645206c52b49bce8656475d26940c1d7和完整证据已在远端；未完成清理/未确因保持原事实，不代签Mac最终发布门、不在本线执行发布。以[Mac发布交接](0.2.23-contracts/windows-to-mac-release-handoff-20261110.md)为最新收件入口。
+
+
 2026-11-10本机后继有界结果：第13项普通user1、two-sid-02双普通SID、真实控制台孤立启停、NSIS两路径和同原包隔离MSI已过；最新cross-session-02实际console500/high/session1与RDP1001/未提升/session2同时Active，Start13399/12692ms、正常Stop及还原9621/7862ms、双原服务exit0，固定端口冲突/重叠/停止peer保持全部通过并停止追加。代码4d783585645206c52b49bce8656475d26940c1d7只新增失败阶段日志、未改Stop，不能宣称旧cross-session-01首错原因已修；旧原件保留。两端自有private/任务/进程端口清理、daily摘要保持；Profile1018仍Loaded、账户禁用/去管理员，旧审批拒删缓存仍单列。本机MSI1625与隔离成功分开，原42545767548 token-pointer及技术原型范围不覆盖。不core-sweep/全量/真实同步、不改日常配置、不发布，不关闭整版。[完整原因边界、代码制品来源、原四项及清理阻点](0.2.23-contracts/windows-local-followthrough-result-20261110.md)。
 
 ## 当前第13项：本机普通user1启停已过，停止追加验证（2026-11-09）
