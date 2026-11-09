@@ -8,7 +8,7 @@ on:
       purpose:
         description: Package a candidate, or run one bounded diagnostic without a desktop/package
         type: choice
-        options: [core-sweep, core-build, lifetime-producer, foreign-job-authority, record-contract, local-session-regression, local-session-build, diagnostic-sweep, official-stop-query-profile, official-stop-history-profile, candidate, ordinary-preflight, retention023, query-etw, installer-retention, native-ui, process-exit]
+        options: [core-sweep, core-build, installers-build, lifetime-producer, foreign-job-authority, record-contract, local-session-regression, local-session-build, diagnostic-sweep, official-stop-query-profile, official-stop-history-profile, candidate, ordinary-preflight, retention023, query-etw, installer-retention, native-ui, process-exit]
         default: core-sweep
       core_focus:
         description: Integration core or unresolved producer technical diagnosis (never product acceptance)
@@ -57,6 +57,9 @@ permissions:
   contents: read
 
 jobs:
+  installers-build:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'installers-build'
+    uses: ./.github/workflows/windows023-installers-build.yml
   core-build:
     if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'core-build'
     uses: ./.github/workflows/windows023-core-build.yml

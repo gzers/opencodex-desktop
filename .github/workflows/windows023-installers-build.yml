@@ -1,0 +1,76 @@
+name: Windows 0.2.23 focused installer preparation
+on:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/tauri -> target
+          shared-key: windows-native-ui-018
+          cache-on-failure: true
+      - name: Prepare complete pinned resources and frontend only
+        run: |
+          $ErrorActionPreference='Stop'
+          $out='test/out/windows023-installers-build'
+          if(Test-Path -LiteralPath $out){throw 'Fresh build evidence required'}
+          New-Item -ItemType Directory -Path $out|Out-Null
+          $node=(Get-Command node.exe).Source
+          $npm=Join-Path (Split-Path -Parent $node) 'node_modules/npm/bin/npm-cli.js'
+          python .github/scripts/stage_runtime_bundle_023.py --platform win32-x64 --build-node $node --npm-cli $npm --output ($out+'/runtime-stage') *> ($out+'/runtime-stage.log')
+          if($LASTEXITCODE -ne 0){throw 'Pinned runtime preparation failed'}
+          npm --prefix apps/desktop/ui ci *> ($out+'/frontend-install.log')
+          if($LASTEXITCODE -ne 0){throw 'Frontend install failed'}
+          npm --prefix apps/desktop/ui run build *> ($out+'/frontend-build.log')
+          if($LASTEXITCODE -ne 0){throw 'Frontend build failed'}
+          npm install --global @tauri-apps/cli@2.11.4 *> ($out+'/tauri-install.log')
+          if($LASTEXITCODE -ne 0){throw 'Pinned Tauri CLI install failed'}
+          'OCXD_REQUIRE_RUNTIME_BUNDLE=1' >> $env:GITHUB_ENV
+      - name: Build only new-source diagnostic NSIS and MSI
+        working-directory: apps/desktop/tauri
+        run: |
+          $ErrorActionPreference='Stop'
+          $out=[IO.Path]::GetFullPath('../../../test/out/windows023-installers-build')
+          $cli=Join-Path (npm root --global) '@tauri-apps/cli/tauri.js'
+          if($LASTEXITCODE -ne 0){throw 'Tauri CLI path unavailable'}
+          $env:OCXD_TAURI_RETRY_EVIDENCE=Join-Path $out 'tauri-downloads'
+          node ../../../.github/scripts/tauri_build_retry.mjs --cli $cli build --debug --features custom-protocol --bundles nsis,msi --config tauri.runtime-bundle.conf.json -- --locked *> (Join-Path $out 'native-installer-build.log')
+          if($LASTEXITCODE -ne 0){throw 'Diagnostic installer build failed; no tests or install executed'}
+          $artifact=Join-Path $out 'artifact';New-Item -ItemType Directory -Path $artifact|Out-Null
+          $files=@(Get-ChildItem target/debug/bundle/nsis/*-setup.exe,target/debug/bundle/msi/*.msi -File)
+          if($files.Count -ne 2){throw 'Both installer originals required'}
+          foreach($f in $files){Copy-Item -LiteralPath $f.FullName -Destination $artifact}
+          Copy-Item -LiteralPath target/debug/opencodex-desktop.exe -Destination $artifact
+          Copy-Item -LiteralPath resources/runtime-bundle/runtime-bundle.manifest.json -Destination $artifact
+          $policy=Get-Content -LiteralPath ../../../.github/runtime-platforms-023.json -Raw|ConvertFrom-Json
+          @{source=(git rev-parse HEAD).Trim();appsTree=(git rev-parse HEAD:apps).Trim();run=$env:GITHUB_RUN_ID;attempt=$env:GITHUB_RUN_ATTEMPT;profile='debug custom-protocol MSVC; build-only diagnostic';accepted=$false;releaseAccepted=$false;installExecuted=$false;testsExecuted=$false;runtimeVersion=$policy.runtime.version;runtimeSha256=$policy.runtime.sha256;files=@(Get-ChildItem -LiteralPath $artifact -File|ForEach-Object{@{name=$_.Name;bytes=$_.Length;sha256=(Get-FileHash -LiteralPath $_.FullName).Hash.ToLowerInvariant()}})}|ConvertTo-Json -Depth 7|Set-Content -LiteralPath (Join-Path $artifact 'installer-build.json') -Encoding utf8
+      - name: Preserve raw diagnostic installers only
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows023-installers-program-${{ github.sha }}
+          path: test/out/windows023-installers-build/artifact/**
+          if-no-files-found: error
+          retention-days: 14
+      - name: Preserve preparation and bundler logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows023-installers-logs-${{ github.run_id }}
+          path: |
+            test/out/windows023-installers-build/*.log
+            test/out/windows023-installers-build/runtime-stage/*.json
+            test/out/windows023-installers-build/tauri-downloads/**
+          if-no-files-found: warn
+          retention-days: 14
