@@ -119,6 +119,46 @@ mod tests {
     }
 
     #[test]
+    fn explicit_foreign_private_job_query_is_denied() {
+        let Some(name) = option_env!("OCXD_FOREIGN_JOB_PROBE") else {
+            return;
+        };
+        #[cfg(windows)]
+        {
+            let identity = check_context();
+            assert!(!windows::administrator_sid_in_token(), "Actual observer must be a standard account, not merely a non-elevated administrator");
+            assert!(name.starts_with("Global\\ocxd-private-job-authority-"));
+            let observer = option_env!("OCXD_FOREIGN_JOB_CREATOR_SID").expect("actual creator SID");
+            assert_ne!(identity, observer, "Real different SID required");
+            use std::ffi::c_void;
+            #[link(name = "kernel32")]
+            extern "system" {
+                fn OpenJobObjectW(access: u32, inherit: i32, name: *const u16) -> *mut c_void;
+                fn GetLastError() -> u32;
+                fn CloseHandle(handle: *mut c_void) -> i32;
+            }
+            let wide: Vec<u16> = name.encode_utf16().chain(Some(0)).collect();
+            for access in [0x0004u32, 0x0004 | 0x0002_0000] {
+                let handle = unsafe { OpenJobObjectW(access, 0, wide.as_ptr()) };
+                if !handle.is_null() {
+                    unsafe {
+                        CloseHandle(handle);
+                    }
+                    panic!("Foreign real SID opened a private Job; no authority accepted");
+                }
+                assert_eq!(
+                    unsafe { GetLastError() },
+                    5,
+                    "Only exact access denied proves the existing private object refused this SID"
+                );
+            }
+            println!("foreign-private-job-query-denied: actual_different_sid=true query_and_readcontrol_denied=true accepted=false");
+        }
+        #[cfg(not(windows))]
+        panic!("Foreign SID Job authority requires actual Windows: {name}");
+    }
+
+    #[test]
     fn explicit_readonly_official_ownership_diagnostic() {
         let Some(runtime) = option_env!("OCXD_OWNERSHIP_PROBE_RUNTIME") else {
             return;
@@ -341,6 +381,36 @@ mod tests {
                 needed: *mut u32,
             ) -> i32;
             fn ConvertSidToStringSidW(sid: *mut c_void, text: *mut *mut u16) -> i32;
+            fn IsWellKnownSid(sid: *mut c_void, kind: i32) -> i32;
+        }
+        pub fn administrator_sid_in_token() -> bool {
+            unsafe {
+                let mut token = ptr::null_mut();
+                assert_ne!(OpenProcessToken(GetCurrentProcess(), 8, &mut token), 0);
+                let mut needed = 0;
+                GetTokenInformation(token, 2, ptr::null_mut(), 0, &mut needed);
+                assert!(needed >= 8 && needed <= 131072);
+                let mut storage =
+                    vec![0usize; (needed as usize).div_ceil(std::mem::size_of::<usize>())];
+                assert_ne!(
+                    GetTokenInformation(token, 2, storage.as_mut_ptr().cast(), needed, &mut needed),
+                    0
+                );
+                let base = storage.as_ptr() as usize;
+                let count = *(base as *const u32) as usize;
+                assert!(count <= 4096 && 8 + count * 16 <= needed as usize);
+                let mut found = false;
+                for index in 0..count {
+                    let sid = *((base + 8 + index * 16) as *const *mut c_void);
+                    let address = sid as usize;
+                    assert!(address >= base && address + 8 <= base + needed as usize);
+                    if IsWellKnownSid(sid, 26) != 0 {
+                        found = true;
+                    }
+                }
+                CloseHandle(token);
+                found
+            }
         }
         unsafe fn wide(pointer: *const u16) -> String {
             let mut len = 0;
