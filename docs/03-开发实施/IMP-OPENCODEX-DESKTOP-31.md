@@ -399,3 +399,11 @@ f42733959仅测试原型：原生CREATE_NEW显式TokenUser owner，保留受保�
 第二项使用自有合成进程和新建私有lease文件：CreateProcessW挂起创建，先AssignProcessToJobObject再Resume，Job未配置kill-on-close；服务与派生子进程真实计数，服务持排他byte-lock。没有运行记录但租约忙、活跃租约文件替换、原服务退出但子进程仍活着均须拒绝“完成”。最后以正常release marker退出所有自有子进程，验证原句柄/PID/FILETIME、集合为空且租约可取得；无终止API、无代理/服务/真实客户端。只证明合成同SID机制，尚不覆盖原Bun分离启动、跨SID、不受控进程、实际HMAC/官方还原或产品Stop全链。
 
 [原型run42559654026](https://github.com/gzers/opencodex-desktop/actions/runs/42559654026)固定f42733959268e3da07b4e6b75d7067d8d23b2b83/job128973052599已确认运行，结果始终accepted:false；不是新完整sweep。Node两脚本语法、Rustfmt/PythonAST、实际3PowerShell块及无终止/已有owner修复API检查通过。14原模块归档核对、原test诊断中先观察原writer失败，再观察候选满足原validator；必须真实提升令牌、合成进程退出及fixture清理。names.2包和生产路径未改，原30/10/5秒、还原与未知即拒绝不变。
+
+
+双原型42559654026已完成，原7791字节ZIP/SHA256 a760af870baa7b4d36c2fb348c7166ac49ddfe5b3555d4069671af08048e23dd、14源码核对及严格Clippy/自有fixture与stage清理成功。原writer owner-mismatch继续拒绝；原生新建TokenUser对象经原hardener/rename后由原Desktopvalidator接受，同名创建拒绝、内容/对象身份保留。合成租约/集合原型约171.74ms：租约占用时无记录、活跃租约替换、原进程退出但子进程仍存活均拒绝，最终自有集合为空/租约释放，不调用终止API。见[原件及适用边界](../../.adg/evidence/0.2.23/native-lifetime-prototypes-42559654026/analysis.json)。只通过基础机制，accepted:false，不是生产停止或实际双服务通过。
+
+下一批同时补两个缺口：原生CREATE_NEW句柄不共享删除，原文件仍被固定时交接给现有fs描述符，原hardener在内容前执行、fstat/原子rename前后身份与内容复核；另一组以真实固定Node的detached:true/stdio-ignore/windowsHide/unref启动合成Bun服务，核对启动器退出后服务/子仍在同Job并保持租约及原句柄代次。三项独立case继续收集错误与各自日志，任何失败保持最终测试失败，不让第一处失败遮蔽其它case。仍未修改正式包或删除全机扫描，需之后补原官方启动/还原/跨SID/祖先固定等完整集成证据。
+
+
+f3f0ce755描述符／真实分离派生原型已派[run42561691867](https://github.com/gzers/opencodex-desktop/actions/runs/42561691867)，固定f3f0ce755067d512f3376693403b228d3b3e86cb/job128979307025已确认运行。新增固定Node以原detached:true/stdio-ignore/windowsHide/unref机制启动合成Bun服务；启动Node原句柄退出后，实际Bun的保留句柄/PID/FILETIME与Job成员仍核对，派生子进程仍受集合约束。服务就绪绑定用原子标记避免半写JSON竞态。直接、detached、记录三case独立收错/保存各日志，最终任何case失败都判负。Bun合成启动不等于原官方CLI、HMAC、还原或跨SID全链；names.2不改，未派完整sweep。Node3脚本语法、Rustfmt和实际3PowerShell块解析过。

@@ -1,0 +1,11 @@
+    Updating crates.io index
+   Compiling opencodex-desktop v0.2.23 (D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3m 42s
+     Running unittests src\lib.rs (apps\desktop\tauri\target\debug\deps\opencodex_desktop_lib-9560cfa22fb896de.exe)
+
+running 1 test
+original-record-diagnostic-only: {"accepted":false,"businessNetworkUsed":false,"candidateOriginalValidatorAccepted":true,"candidateOwnerMatchesTokenUser":true,"candidateReadback":{"accepted":false,"diagnosticOnly":true,"existingCreateRefused":true,"explicitNewOwner":true,"identityAndBytesPreserved":true,"noExistingOwnerRepair":true,"originalAclHardenerUsed":true,"originalAtomicRenameUsed":true,"runtimeChanged":false},"classification":"owner-mismatch","defaultOwnerIsAdministrators":true,"diagnosticOnly":true,"fixtureRemoved":true,"leasePrototype":{"accepted":false,"actualInheritedChildVerified":true,"diagnosticOnly":true,"finalControlledSetEmpty":true,"finalLeaseUnheld":true,"killOnCloseUsed":false,"limits":"Synthetic same-SID processes only. Not full HMAC/official restoration/lifecycle/foreign-SID or unmodified Bun detachment integration proof.","liveLeaseReplacementRefused":true,"milliseconds":171.7405,"productStarted":false,"recordAbsentWhileLeaseBusyRefused":true,"retainedServicePidAndCreationVerified":true,"runtimeChanged":false,"serviceExitWithChildAliveRefused":true,"serviceMutation":false,"suspendedJobAdmission":true,"terminationApiUsed":false},"originalValidatorAccepted":false,"productStarted":false,"recordOwnerIsAdministrators":true,"recordOwnerMatchesTokenUser":false,"runtimeChanged":false,"scope":"Original atomic writer and actual Desktop record validator only; not lifecycle acceptance","serviceMutation":false,"source":"f42733959268e3da07b4e6b75d7067d8d23b2b83","tokenElevated":true}
+test infrastructure::windows_private_create::tests::native_original_runtime_record_diagnostic ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1746 filtered out; finished in 0.48s
+
