@@ -641,6 +641,17 @@ mod tests {
                 verify_runtime_record_handle(&bridge)
                     .expect("original validator must accept descriptor bridge");
                 report["candidateDescriptorBridgeAccepted"] = serde_json::json!(true);
+                if std::env::var("OCXD_RECORD_PROBE_HELPER").as_deref() == Ok("true") {
+                    let helper = crate::modules::backup::safety::open_file(
+                        &h.join("maintained-helper/runtime-port.json"),
+                        false,
+                    )
+                    .unwrap();
+                    assert_eq!(owner(&helper), expected);
+                    verify_runtime_record_handle(&helper)
+                        .expect("candidate module must satisfy original validator");
+                    report["candidateMaintainedHelperAccepted"] = serde_json::json!(true);
+                }
             }));
             if candidate_result.is_err() {
                 prototype_failures.push("new-record-or-descriptor-bridge");

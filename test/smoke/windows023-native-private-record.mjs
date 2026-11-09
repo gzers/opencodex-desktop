@@ -115,5 +115,22 @@ try{
  createNew(bridgeTemp,bytes,true);const beforeBridge=statSync(bridgeTemp,{bigint:true});
  atomic.renameAtomicFile(bridgeTemp,bridgeTarget);const afterBridge=statSync(bridgeTarget,{bigint:true});
  assert.equal(beforeBridge.ino,afterBridge.ino);assert.equal(beforeBridge.dev,afterBridge.dev);assert.equal(afterBridge.nlink,1n);assert.equal(digest(readFileSync(bridgeTarget)),digest(Buffer.from(bytes)));
- console.log(JSON.stringify({accepted:false,diagnosticOnly:true,explicitNewOwner:true,existingCreateRefused:true,originalAclHardenerUsed:true,originalAtomicRenameUsed:true,identityAndBytesPreserved:true,existingFsDescriptorBridge:true,bridgeCreatedObjectPinned:true,bridgeHardenedBeforeContent:true,ancestorsPinnedWithoutShareDelete:true,ancestorRenameRefused:true,reparseAncestorRefused:true,ambiguousPathsRefused:true,noExistingOwnerRepair:true,runtimeChanged:false}));
+ let candidateHelperValidated=false;
+ if(process.env.OCXD_RECORD_PROBE_HELPER==='true'){
+  const candidate=await module('src/lib/windows-runtime-private-record.ts');
+  const candidateHome=join(h,'maintained-helper');
+  const {mkdirSync}=await import('node:fs');mkdirSync(candidateHome);
+  const destination=join(candidateHome,'runtime-port.json'),scratch=destination+'.ocx.'+process.pid+'.1.tmp';
+  const release=candidate.pinWindowsRuntimeRecordPublication(destination);assert.equal(typeof release,'function');
+  try{
+   const fd=candidate.createWindowsRuntimeRecordTemp(scratch,destination);assert.equal(typeof fd,'number');
+   try{acl.hardenSecretPath(scratch,{required:true});writeFileSync(fd,bytes,{encoding:'utf8'});fsyncSync(fd);}finally{closeSync(fd);}
+   const before=statSync(scratch,{bigint:true});assert.throws(()=>candidate.createWindowsRuntimeRecordTemp(scratch,destination));
+   assert.equal(digest(readFileSync(scratch)),digest(Buffer.from(bytes)));atomic.renameAtomicFile(scratch,destination);
+   const after=statSync(destination,{bigint:true});assert.equal(after.ino,before.ino);assert.equal(after.dev,before.dev);assert.equal(after.nlink,1n);
+   assert.throws(()=>renameSync(candidateHome,candidateHome+'-moved'));
+   candidateHelperValidated=true;
+  }finally{release();}
+ }
+ console.log(JSON.stringify({accepted:false,diagnosticOnly:true,explicitNewOwner:true,existingCreateRefused:true,originalAclHardenerUsed:true,originalAtomicRenameUsed:true,identityAndBytesPreserved:true,existingFsDescriptorBridge:true,bridgeCreatedObjectPinned:true,bridgeHardenedBeforeContent:true,ancestorsPinnedWithoutShareDelete:true,ancestorRenameRefused:true,reparseAncestorRefused:true,ambiguousPathsRefused:true,candidateHelperValidated,candidateSourceAdded:process.env.OCXD_RECORD_PROBE_HELPER==='true',noExistingOwnerRepair:true,runtimeChanged:false}));
 }finally{releaseParents();k.close();a.close();}

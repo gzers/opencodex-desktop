@@ -5,6 +5,7 @@ import {dlopen,ptr,FFIType as T} from 'bun:ffi';
 import {readFileSync,writeFileSync,existsSync,renameSync} from 'node:fs';
 import {join,resolve,relative,isAbsolute} from 'node:path';
 import {pathToFileURL} from 'node:url';
+import {randomUUID} from 'node:crypto';
 assert(process.platform==='win32'&&process.arch==='x64'&&process.env.GITHUB_ACTIONS==='true');
 const root=resolve(process.env.OCXD_LEASE_PROBE_ROOT),boundary=resolve(process.env.RUNNER_TEMP);
 const rel=relative(boundary,root);assert(rel&&!rel.startsWith('..')&&!isAbsolute(rel));
@@ -17,6 +18,7 @@ const lib=dlopen(join(system,'kernel32.dll'),{
  LockFileEx:{args:[T.u64,T.u32,T.u32,T.u32,T.u32,T.ptr],returns:T.i32},
  UnlockFileEx:{args:[T.u64,T.u32,T.u32,T.u32,T.ptr],returns:T.i32},
  CreateJobObjectW:{args:[T.ptr,T.ptr],returns:T.u64},
+ OpenJobObjectW:{args:[T.u32,T.i32,T.ptr],returns:T.u64},
  AssignProcessToJobObject:{args:[T.u64,T.u64],returns:T.i32},
  IsProcessInJob:{args:[T.u64,T.u64,T.ptr],returns:T.i32},
  QueryInformationJobObject:{args:[T.u64,T.i32,T.ptr,T.u32,T.ptr],returns:T.i32},
@@ -65,18 +67,28 @@ function active(job){
  return new DataView(storage).getUint32(40,true);
 }
 const role=process.argv[2]??'controller';
+function holdPublishedJob(){
+ const name=process.env.OCXD_LEASE_PROBE_JOB;assert(name&&name.startsWith('Local'+String.fromCharCode(92)+'ocxd-private-prototype-'));
+ const w=wide(name),h=BigInt(k.OpenJobObjectW(4,0,ptr(w)));assert(h!==0n);
+ const member=new Int32Array(1);assert(k.IsProcessInJob(BigInt(k.GetCurrentProcess()),h,ptr(member)));assert.equal(member[0],1);
+ return h;
+}
 if(role==='grandchild'){
+ const publishedJob=holdPublishedJob();
  writeFileSync(join(root,'child-ready'),'1');
  await wait(()=>existsSync(join(root,'release-child')),'child release',12000);
- lib.close();
+ assert(k.CloseHandle(publishedJob));lib.close();
 }else if(role==='service'){
+ const publishedJob=holdPublishedJob();
  const lease=lock();assert(lease,'Service must acquire own lease');const child=launch('grandchild');
  writeFileSync(join(root,'service-ready.tmp'),JSON.stringify({pid:process.pid,created:birth(BigInt(k.GetCurrentProcess())).toString()}));
  renameSync(join(root,'service-ready.tmp'),join(root,'service-ready'));
  try{await wait(()=>existsSync(join(root,'release-service')),'service release',10000);}
- finally{lease.release();child.close();lib.close();}
+ finally{lease.release();child.close();assert(k.CloseHandle(publishedJob));lib.close();}
 }else{
- assert.equal(role,'controller');const began=performance.now(),job=BigInt(k.CreateJobObjectW(null,null));assert(job!==0n);
+ assert.equal(role,'controller');const began=performance.now();
+ const jobName='Local'+String.fromCharCode(92)+'ocxd-private-prototype-'+randomUUID();process.env.OCXD_LEASE_PROBE_JOB=jobName;
+ const jobWide=wide(jobName);let job=BigInt(k.CreateJobObjectW(null,ptr(jobWide)));assert(job!==0n);
  let service,actualService=0n;
  try{
   const detached=process.env.OCXD_LEASE_PROBE_DETACHED==='true';
@@ -85,6 +97,12 @@ if(role==='grandchild'){
   const binding=JSON.parse(readFileSync(join(root,'service-ready'),'utf8'));assert(Number.isInteger(binding.pid)&&binding.pid>0&&/^[0-9]+$/.test(binding.created));
   actualService=BigInt(k.OpenProcess(0x101000,0,binding.pid));assert(actualService!==0n);assert.equal(k.GetProcessId(actualService),binding.pid);assert.equal(birth(actualService).toString(),binding.created);
   const serverInJob=new Int32Array(1);assert(k.IsProcessInJob(actualService,job,ptr(serverInJob)));assert.equal(serverInJob[0],1);
+  // The server and child retain their own query handles. Reopen a fresh
+  // observer handle, then prove membership again; no cached PID authority.
+  assert(k.CloseHandle(job));job=BigInt(k.OpenJobObjectW(4,0,ptr(jobWide)));assert(job!==0n);
+  serverInJob[0]=0;assert(k.IsProcessInJob(actualService,job,ptr(serverInJob)));assert.equal(serverInJob[0],1);
+  const wrong=BigInt(k.CreateJobObjectW(null,null));assert(wrong!==0n);
+  try{const wrongMember=new Int32Array(1);assert(k.IsProcessInJob(actualService,wrong,ptr(wrongMember)));assert.equal(wrongMember[0],0);}finally{assert(k.CloseHandle(wrong));}
   if(detached){await wait(()=>k.WaitForSingleObject(service.handle,0)===0,'Node launcher exit');assert.equal(k.WaitForSingleObject(actualService,0),0x102);}
   assert(active(job)>=2,'Grandchild must inherit the actual job');assert.equal(lock(),null,'Absent runtime record cannot mean stopped while lease held');
   assert.throws(()=>renameSync(join(root,'lifetime.lease'),join(root,'moved.lease')),'Pinned lease cannot be replaced');
@@ -95,7 +113,7 @@ if(role==='grandchild'){
   const afterExit=lock();assert(afterExit);afterExit.release();
   writeFileSync(join(root,'release-child'),'1');await wait(()=>active(job)===0,'controlled set empty');
   const finalLease=lock();assert(finalLease);finalLease.release();
-  console.log(JSON.stringify({accepted:false,diagnosticOnly:true,runtimeChanged:false,productStarted:false,serviceMutation:false,terminationApiUsed:false,killOnCloseUsed:false,suspendedJobAdmission:true,nodeDetachedLauncherUsed:detached,detachedServiceStayedInJob:detached,actualInheritedChildVerified:true,recordAbsentWhileLeaseBusyRefused:true,liveLeaseReplacementRefused:true,retainedServicePidAndCreationVerified:true,serviceExitWithChildAliveRefused:true,finalControlledSetEmpty:true,finalLeaseUnheld:true,milliseconds:performance.now()-began,limits:'Synthetic same-SID processes only. Not full HMAC/official restoration/lifecycle/foreign-SID or unmodified official CLI start proof.'}));
+  console.log(JSON.stringify({accepted:false,diagnosticOnly:true,runtimeChanged:false,productStarted:false,serviceMutation:false,terminationApiUsed:false,killOnCloseUsed:false,suspendedJobAdmission:true,nodeDetachedLauncherUsed:detached,detachedServiceStayedInJob:detached,observerReopenedNamedJob:true,wrongJobMembershipRejected:true,actualInheritedChildVerified:true,recordAbsentWhileLeaseBusyRefused:true,liveLeaseReplacementRefused:true,retainedServicePidAndCreationVerified:true,serviceExitWithChildAliveRefused:true,finalControlledSetEmpty:true,finalLeaseUnheld:true,milliseconds:performance.now()-began,limits:'Synthetic same-SID processes only; default job DACL is not production ACL adoption. Not full HMAC/official restoration/lifecycle/foreign-SID or unmodified official CLI start proof.'}));
  }finally{
   writeFileSync(join(root,'release-service'),'1');writeFileSync(join(root,'release-child'),'1');
   await wait(()=>active(job)===0,'all owned processes cleanup',15000);
