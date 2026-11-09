@@ -42,9 +42,19 @@ jobs:
         if: always() && steps.root.outcome == 'success'
         continue-on-error: true
         run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '25' -Name backend-state-observer-build -Task state-observer
+      - name: Verify only lifetime binding and authenticated Stop boundaries
+        id: lifecycle
+        if: steps.build.outcome == 'success'
+        continue-on-error: true
+        run: |
+          $ErrorActionPreference='Stop'
+          cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib infrastructure::runtime_lifetime::tests -- --test-threads=1 --nocapture *> (Join-Path $env:OCXD_SWEEP_ROOT 'evidence/lifetime-binding-tests.log')
+          if($LASTEXITCODE -ne 0){throw 'Lifetime binding regression failed'}
+          cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib infrastructure::attested_status -- --test-threads=1 --nocapture *> (Join-Path $env:OCXD_SWEEP_ROOT 'evidence/attested-stop-tests.log')
+          if($LASTEXITCODE -ne 0){throw 'Authenticated Stop boundary regression failed'}
       - name: Seal only a completely built program
         id: seal
-        if: steps.build.outcome == 'success' && steps.observer.outcome == 'success'
+        if: steps.build.outcome == 'success' && steps.observer.outcome == 'success' && steps.lifecycle.outcome == 'success'
         run: python test/smoke/sweep/core.py seal $env:OCXD_SWEEP_PROGRAM
       - name: Preserve preparation failures
         if: always()
