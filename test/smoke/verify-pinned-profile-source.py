@@ -20,7 +20,9 @@ assert hashlib.sha256(archive.read_bytes()).hexdigest() == pin['sha256']
 files = {}
 with tarfile.open(archive, 'r:gz') as source:
     for relative in ['src/service.ts', 'src/service/windows-scheduler.ts',
-                     'src/service/orchestration.ts', 'src/lib/winsw.ts']:
+                     'src/service/orchestration.ts', 'src/lib/winsw.ts',
+                     'src/codex/history-job.ts', 'src/codex/history-worker.ts',
+                     'src/codex/inject/restore.ts']:
         expected = source.extractfile('package/' + relative).read()
         actual = (package / relative).read_bytes()
         assert actual == expected, 'Profile source differs from original pinned bytes'
