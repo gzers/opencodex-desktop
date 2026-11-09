@@ -95,6 +95,8 @@ $cim.ProcessId=42
 Assert-Throws {Assert-TwoUserCimIdentity $cim $owner $native 'S-1-5-21-1-2-3-1002'} 'CIM-other-SID-refused'
 $owner.ReturnValue=2
 Assert-Throws {Assert-TwoUserCimIdentity $cim $owner $native $owner.Sid} 'CIM-owner-query-failure-refused'
+Assert-Test ($helper.Contains('supplemental-stop-after-failed-start.json') -and $helper.Contains('originalStartAccepted:false') -and $helper.Contains('runtimePublic.action=originalStartAction')) 'failed-original-start-preserved-after-independent-product-stop-diagnosis'
+Assert-Test ($helper.Contains('await bound();const own=await health();') -and $helper.Contains("diagnosticStop.action=await action('stop')")) 'supplemental-stop-still-requires-fresh-HMAC-and-real-product-owner-check'
 # Pure naming fixture: synthetic strings here are never used as client tokens.
 $one=Get-TwoUserPipeName 'S-1-5-21-1-2-3-1001';$two=Get-TwoUserPipeName 'S-1-5-21-1-2-3-1002'
 Assert-Test ($one -cne $two -and $one -match '^OpenCodeXDesktop-[0-9a-f]{24}$') 'distinct-SID-pipe-name-fixture-only'

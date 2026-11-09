@@ -502,8 +502,29 @@ async function runtimeCommand(c){
     // Additional readonly diagnosis follows the already failed original budget;
     // its result cannot make this attempt pass or authorize the next service.
     await writeFile(join(output,'production-attempt-failed.json'),JSON.stringify({accepted:false,originalBudgetPassed:false,budgetMilliseconds:30000})+'\n');
-    try{await diagnosticStatus();}catch{await writeFile(join(output,'actual-readonly-status-diagnostic.json'),JSON.stringify({result:'diagnostic-failed',accepted:false})+'\n');}
     await diagnosticReadiness();
+    // Independent cleanup diagnosis after the ORIGINAL start already failed.
+    // Fresh protected-record/HMAC and exact H binding are mandatory. Stop still
+    // uses the public product command with its unchanged10s budget. Supplemental
+    // data never makes pass-runtime-step or authorizes a peer protocol.
+    const originalStartAction=runtimePublic.action;
+    const diagnosticStop={accepted:false,diagnosticOnly:true,originalStartAccepted:false,originalStopBudgetMilliseconds:10000,managerReportedStopped:false};
+    const stopBegan=Date.now();
+    try{
+     await bound();const own=await health();
+     diagnosticStop.verifiedRecord=own.record;
+     diagnosticStop.ownershipBasis='fresh-own-record-and-HMAC-before-official-manager-OS-owner-check';
+     diagnosticStop.action=await action('stop');
+     diagnosticStop.managerReportedStopped=diagnosticStop.action.result==='stopped';
+    }catch(error){diagnosticStop.errorCode=runtimeFailureCode(error);}
+    finally{
+     diagnosticStop.observationMilliseconds=Date.now()-stopBegan;
+     runtimePublic.action=originalStartAction;
+     await writeFile(join(output,'supplemental-stop-after-failed-start.json'),JSON.stringify(diagnosticStop,null,2)+'\n',{flag:'wx'});
+    }
+    if(!diagnosticStop.managerReportedStopped){
+     try{await diagnosticStatus();}catch{await writeFile(join(output,'actual-readonly-status-diagnostic.json'),JSON.stringify({result:'diagnostic-failed',accepted:false})+'\n');}
+    }
     throw Error('Actual service not healthy within production start budget');
    }
    result={...result,...observed,status:last,port:c.port,startBudget:{budgetMilliseconds:30000,elapsedMilliseconds:startElapsedMilliseconds},automaticPort:requestedPort===0?runtimePublic.automaticPort:null};
