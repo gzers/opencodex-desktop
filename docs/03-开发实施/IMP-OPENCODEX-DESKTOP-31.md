@@ -575,3 +575,10 @@ core-sweep增加producer技术focus（4162f5234），仅对尚未闭合的实际
 H05准备判断先提交4c4502d4d后，同源构建42602603906固定8445d65dc已确认启动，候选lifecycle.2/c02f4710。已补真实buildRun到派发前假设；标准core尚未派，无推断启动或清理已修复。
 
 H05同源准备42602603906全部成功，program artifact13667461176/304962844字节ZIP/SHA256048b4d344c1bd8bbf81adb0a73571f14eaa697e122aafdad7ea6aeda7e42f274。标准[core42604447388](https://github.com/gzers/opencodex-desktop/actions/runs/42604447388)固定8445d65dc/lifecycle.2已确认派发，派发前假设已在4e940cac1推送。结果待；不是已修复或验收通过。
+
+
+### 2026-11-09 下一动作调整：Windows单用户定向排查，Mac等待回交
+
+按用户最新指令，下一验证交Windows独立Git执行，仅user1实际启动确认、成功后立即正常停止与精确清理；不新派core-sweep／双SID／安装器／全量，不重跑已失败轮次，不发布。代码8445d65dc及lifecycle.2当前封存产物不预改。四项原证据、制品摘要和环境／回交路径已固定在[单用户交接](0.2.23-contracts/user1-start-stop-handoff-20261109.md)，WINDOWS与TEAM同步指向该入口。
+
+Mac收到回交先区分归属判定拒绝、确认超时和回执收集缺失，再决定修复位置；第18项先不独立修，等第13项因果证据。该调整不宣称现有故障已修，不撤销原预算与断言，前序双SID轮及失败原件保留。本次只完成资料与Git交接，Windows执行／接令及结果仍待。
