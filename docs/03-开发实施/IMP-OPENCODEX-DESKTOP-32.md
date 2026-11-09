@@ -7,9 +7,11 @@ title: "用户目录重划与新版路径实施清单"
 target_version: "0.2.23"
 demand_ids: ["DMD-OPENCODEX-USER-DIRECTORY"]
 task_ids: ["TASK-023-DIRECTORY"]
-summary: "新版目录/身份/完整离线运行供应与macOS正式首装已验证；Windows原生失败、两SID、安装及保留制品门继续，未关闭。"
+summary: "新版目录/用户隔离及正式原包安装、双SID和端口边界已随0.2.23交付；历史Windows Profile/缓存清理与旧Stop归因保留并行。"
 ---
 # 用户目录重划与新版路径实施清单
+
+2026-11-10最新交付状态：**0.2.23已正式发布并成为Latest**，固定源e3728109e、运行包lifecycle.3；实际制品、原公钥、安装/升级/有界手动回退及公开读回见[REL-26](REL-OPENCODEX-DESKTOP-26.md)。历史Windows Profile/缓存清理和旧Stop归因按用户决定并行，未宣称已完成；保留当前正式TASK生命周期，不重写冻结条件。下文较早“未发布/待执行”均为历史时点，当前状态以本段和REL-26为准。
 
 2026-11-10发布交接调整：用户决定Windows已推代码及有界通过证据交Mac继续发版，本机Profile/缓存清理及旧Stop首错后续归因并行跟进，不再由Windows线单独追加为Mac发版等待条件。代码4d783585645206c52b49bce8656475d26940c1d7和完整证据已在远端；未完成清理/未确因保持原事实，不代签Mac最终发布门、不在本线执行发布。以[Mac发布交接](0.2.23-contracts/windows-to-mac-release-handoff-20261110.md)为最新收件入口。
 

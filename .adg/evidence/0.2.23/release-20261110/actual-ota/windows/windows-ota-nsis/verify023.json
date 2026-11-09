@@ -1,0 +1,33 @@
+{
+  "result": "pass",
+  "phase": "verify023",
+  "channel": "beta",
+  "facts": {
+    "about": {
+      "name": "OpenCodeX Desktop",
+      "version": "0.2.23",
+      "identifier": "com.gzers.opencodex.desktop",
+      "platform": "Windows",
+      "framework": "Tauri v2",
+      "license": "MIT License"
+    },
+    "dataRoot": {
+      "activeDataRoot": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-ota-nsis\\actual-sandbox\\data\\desktop",
+      "aggregateRoot": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-ota-nsis\\actual-sandbox\\data",
+      "opencodexHomeMode": "inside",
+      "opencodexHome": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-ota-nsis\\actual-sandbox\\data\\opencodex\\home",
+      "currentDataRoot": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-ota-nsis\\actual-sandbox\\data\\desktop",
+      "currentOpencodexHome": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-ota-nsis\\actual-sandbox\\data\\opencodex\\home",
+      "runtimeActive": true
+    }
+  },
+  "newPaths": {
+    "aggregate": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-ota-nsis\\actual-sandbox\\data",
+    "desktop": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-ota-nsis\\actual-sandbox\\data\\desktop",
+    "home": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-ota-nsis\\actual-sandbox\\data\\opencodex\\home",
+    "config": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-ota-nsis\\actual-sandbox\\data\\opencodex\\home\\config.json"
+  },
+  "oldConfigUnchanged": true,
+  "noMigration": true,
+  "pendingRestartCleared": true
+}

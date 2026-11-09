@@ -29,21 +29,21 @@
       "text": "读取现有渠道成功后按默认已保存/明确指定模版版本自动匹配更新模型草稿，无额外采用确认；人工单模型覆盖保留，来源参数不冒充手工覆盖，失败/空/冲突/晚回保护，保存才写入，重复读取幂等。"
     }
   ],
-  "content_digest": "8aabf685ed464fd46ad13264fa394239b61c891ee0ffa30f2ef511175478b37e",
+  "content_digest": "d012ac0c30b2ccf5f01c2533eaba98ed4c3f6c0f513d3d8cfba9396eba7a145e",
   "id": "DMD-OPENCODEX-TEMPLATE-MATCHING",
   "implementation_ids": [
     "IMP-OPENCODEX-DESKTOP-31",
     "IMP-OPENCODEX-DESKTOP-33"
   ],
   "kind": "DMD",
-  "next_action": "复用正式核心/组件/完整本机回归证据，完成IMP-31最终来源与制品门；不补齐19项或修改日常模版库。",
+  "next_action": "沿REL-26保存已发布事实与原成功/失败证据；Windows历史Profile/缓存清理和旧Stop归因按用户决定并行，不重跑已过验收或改日常配置。",
   "resolution": null,
-  "revision": 2,
-  "source_digest": "fc430309e605a3e1f00880087efa711d97ea3857409888549e320973e880205e",
+  "revision": 3,
+  "source_digest": "b9efcdfa4d522b61d19e5fc5368be7962ae4b096933b4c16a3dcaffc1c61f3a7",
   "source_path": "docs/01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md",
-  "source_revision": 2,
+  "source_revision": 3,
   "state": "in_progress",
-  "summary": "正式v2通用匹配、模型协议/来源、自动草稿与各消费者已集成，冻结133族/58参数/28已选与19未匹配规则保持；最终同源验收中。",
-  "summary_digest": "a1a565e938977db2642a09a81b09c04b1d584f63ec6c7ce7ff3369d69814fa9c",
+  "summary": "本版范围已随0.2.23正式发布，最终同源回归/原包/签名/升级回退/通道证据见REL-26；原历史TASK和Windows并行尾项不伪造关闭。",
+  "summary_digest": "3ff1a6cc5c102872fcb985a6cb6e099926337b3ea551db906f7a746137443551",
   "title": "0.2.23 模型模版通用规则与条件覆盖"
 }

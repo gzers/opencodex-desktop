@@ -1,0 +1,32 @@
+{
+  "accepted": true,
+  "scope": "Actual original signed 022-to023 desktop update and explicit manual rollback; not automatic data migration",
+  "source": "e3728109e93498bfbd6e993d49904d57dfd75315",
+  "mac": {
+    "originalRunResult": "incomplete",
+    "upgradeChecks": "passed before rollback-observer failure",
+    "automaticOldPid": 46068,
+    "automaticNewPid": 46958,
+    "sameAutomaticProcessReadback": true,
+    "manualUpgradeFallbackLaunches": 0,
+    "originalFilesUnchanged": 8,
+    "rollbackSupplement": "Passed original022 native reading of exact post-OTA archived config and two backup preimages; new-layout sentinels unchanged; original failed attempted rollback not rewritten",
+    "rollbackActualArchivedFiles": 3,
+    "ownedProcessesAndContainersCleaned": true
+  },
+  "windows": {
+    "run": 42718532152,
+    "kind": "nsis",
+    "result": "pass",
+    "autoRestart": {
+      "creation": "2026-11-09T23:13:44.615671+00:00",
+      "path": "D:\\a\\_temp\\OpenCodeX023 OTA 中文 83bb2b41b3e24b4d8f2374b7634f61f5\\opencodex-desktop.exe",
+      "version": "0.2.23",
+      "pid": 4184
+    },
+    "manualRollback": "exact022 signed installer in independent folder; original and023 data unchanged",
+    "MSI": "machine-to-user transition uses explicit uninstall/reinstall contract, four installer cells verified separately"
+  },
+  "oldFailuresPreserved": true,
+  "dailyConfigurationTouched": false
+}

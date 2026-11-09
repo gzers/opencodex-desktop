@@ -1,11 +1,40 @@
 ---
 id: "REL-OPENCODEX-DESKTOP-26"
 object_kind: "release"
-state: "in_progress"
+state: "verified"
 title: "0.2.23 配置同步、用户隔离与模型模版发布"
-summary: "Windows回交已接收；按用户目标模式授权进行Mac复验、正式制品和通道验证，尚未发布。"
+summary: "0.2.23已正式发布并成为Latest；双平台原包/签名、实际升级与有界手动回退、公开通道核对通过。Windows既有Profile/缓存及旧Stop归因保留并行，不伪报全清理。"
 ---
 # 0.2.23 发布收口
+
+## 当前结论：已正式发布
+
+2026-11-10 07:21（Asia/Shanghai）公开读回通过。正式版本 [v0.2.23](https://github.com/gzers/opencodex-desktop/releases/tag/v0.2.23) 已为 Latest，非草稿、非预发布；发布 run [42719313142](https://github.com/gzers/opencodex-desktop/actions/runs/42719313142) 成功。固定源码 e3728109e93498bfbd6e993d49904d57dfd75315，tag未移动；后继main仅修正发布装配和测试工具，未替换已验签产品。
+
+| 交付门 | 结论与证据 |
+| --- | --- |
+| 同源回归 | Windows最终CI job129318307513成功；Mac原2203项及后继受影响/剩余64项补齐，前端216文件1603项/typecheck/build/生产入口通过。原CI失败与runner取消保留，不改写成全run绿色。 |
+| 正式签名资产 | Mac更新tar、Windows MSI/NSIS、维护包均用原公钥验证；公开前后12个资产ID/名称/大小/摘要完全相同。Mac DMG只重包装原已签名app为采用的独立安装布局。 |
+| Windows安装 | 42677222722：原签名包MSI/NSIS默认/自定义四格通过，临时Server MSI策略恢复，四账户/Profile清理通过。 |
+| Mac原包 | 解锁后实际首装、内置完整运行供应、原生概览/模型/安装配置和新路径通过；签名应用字节保持，自有目录/进程已清理。 |
+| 实际升级与回退 | Windows NSIS 42677222722安装证据及42718532152真实0.2.22→0.2.23/手动回退通过；Mac原包真实升级自动PID46068→46958且手动升级启动0次，同一进程读回、8旧文件不变。回退由独立原022补验完成，见下方精确范围。 |
+| 公开通道 | Latest/tag/beta三份latest.json匿名读回摘要一致为8df89734ba60520c2b3d490ae1c76af68c695fffbbbd043b59291c43d4ee2fcd；维护tgz匿名下载为ec14，原source/tag一致。 |
+
+### 实际Mac回退的证据边界
+
+首轮旧测试观察器不识别已采用的新独立目录，未开始升级即失败；后继2ac076b3c只修test路径白名单。第二轮实际升级全部检查通过，随后手动回退观察器在AX注册前读取而失败，原报告仍为incomplete。没有重跑已过升级，也未把该原报告改为pass。
+
+独立回退补验使用同一原022签名app，原生读取真实升级轮归档的配置和两个备份前像，共3个真实文件摘要一致；新目录保护哨兵保持。该补验不冒称恢复了升级轮全部8文件；8文件保持属于升级检查。两轮进程与UUID自有容器清理已单独留证。0828a3955仅改善后续测试工具的注册等待和清理前输入归档，未改产品；不声称完整重跑修改后的工具。
+
+### 已采用边界与后续事项
+
+- 正式包采用新用户目录和运行包2.97.0-desktop023.lifecycle.3；无旧路径兼容、无自动配置迁移。用户按既定方案自行备份原config.json，按新版路径放置并读取现有渠道。本次未动日常安装/配置，未运行真实业务WebDAV或模型请求。
+- Windows MSI旧机器级到新用户级采用显式卸载/重装合同，未声称无缝MSI OTA；NSIS已实际OTA。
+- Windows Profile1018仍Loaded、旧拒删缓存和cross-session-01旧Stop归因继续该端并行，沿用户明确决定不作为本次发版等待条件；不得写成已清理或旧Stop根因已修。新的正式安装四格及本轮Mac自有残留清理是独立通过范围。
+- REL verified仅证明本次正式发布与上述证据成立，不将含历史cleanup:owned-residue的TASK-023-ACCEPTANCE强行关闭，不改冻结验收定义、不补造整版CERT。IMP/DMD保留未闭合历史尾项，发布状态以本记录为准。
+
+证据：release-20261110/mac-native-unlocked、actual-ota、public-before-stable、stable-publication。stable-publication/verified-summary.json为最后匿名读回，asset-identities.json列出12个完整摘要，manifest.json绑定原件。以下为各阶段原时点记录，其中“未发布/锁屏”等不覆盖本节最新事实。
+
 
 2026-11-10，Asia/Shanghai。用户在主对话明确授权目标模式继续至发版；正式范围沿IMP-31/32/33及原验收条件。当前未生成通过证书、未宣称整版通过。证据根为.adg/evidence/0.2.23/release-20261110/。
 

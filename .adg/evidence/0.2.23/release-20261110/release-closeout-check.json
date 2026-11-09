@@ -1,0 +1,21 @@
+{
+  "result": "pass",
+  "manifestChecks": [
+    {
+      "phase": "actual-ota",
+      "verifiedFiles": 153
+    },
+    {
+      "phase": "mac-native-unlocked",
+      "verifiedFiles": 12
+    },
+    {
+      "phase": "stable-publication",
+      "verifiedFiles": 10
+    }
+  ],
+  "credentialPrefixScan": "no findings",
+  "originalNativeAcceptedFalse": "Retained: standalone native subset, not whole-version acceptance. report.result=pass for specified scope.",
+  "frozenHistoricalTask": "unchanged; historical cleanup followups remain open",
+  "dailyConfigurationTouched": false
+}

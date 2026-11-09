@@ -1,0 +1,27 @@
+{
+  "version": "0.2.23",
+  "notes": "- 用户数据统一放入当前用户的 `~/.codex-desktop`：`desktop/` 保存管理器数据，`opencodex/home/` 保存 OpenCodex 配置与运行状态。程序及固定 Node/npm/Bun 放在安装目录的 `runtime/`，与用户数据分开。\n- 同一用户保留单实例，不同 Windows 账户使用独立配置、凭据与 IPC；代理端口仍由整机共享，占用时提示冲突，不接管其他用户的服务。\n- 安装配置页增加 OpenCodex 服务端口设置：自动检查空闲端口并保存具体端口，也可指定端口；运行中修改在下次启动生效，重启前确认。端口、目录和程序信息按采用原型统一展示。\n- 启停操作在后台执行，启动等待实际身份与就绪核验；停止通过官方接口完成客户端还原并核对实例退出。启动失败区分端口冲突、权限和其它原因，可从通知前往设置或重试。\n- 修复 Windows 规范长路径与普通盘符路径在服务运行记录和身份核对中的不一致，保持不同用户实例隔离；启动、停止失败保留可定位阶段的脱敏诊断。\n- Windows 新安装默认使用当前用户的 `%LOCALAPPDATA%\\Programs\\OpenCodeX Desktop`。旧版 MSI 为机器级安装，切换到本版用户级 MSI 前，请先卸载旧管理器并保留配置，再安装新版；不要将这一步视为配置自动迁移。\n- **本版不扫描旧目录、不自动迁移配置。升级前请自行保留旧 OpenCodex 配置 JSON；需要恢复渠道时，在新版中明确选择文件读取，按模型模版形成草稿，核对后保存。旧目录与备份保留。**\n- 模型模版改用模型族、数字版本与名称条件组合匹配，支持版本数字位置的点号与连字符等价及名称前后位置；读取现有渠道自动匹配到草稿，人工模型覆盖单独保留，正式保存才写入。移除渠道层默认协议，协议按模型来源、模版及明确覆盖解析。\n- 渠道名称保存后用于实际运行配置与 Codex 模型目录展示，支持中文、空格和斜杠；内部身份及原始模型 ID 保持稳定。新增渠道两步向导、复制与连接编辑按采用原型统一。\n- WebDAV 改用实际文件内容、摘要及提交关系核对，不依赖 ETag；来源下拉允许明确选择上传或下载。同内容不重复写入，并发分支保留，读取失败与损坏不当作空目录，结果未知时可查看并核对原操作。\n- **WebDAV 使用新格式，所有参与设备需先升级。请核实本机完整配置并保留备份，再由用户清空原远端同步目录内的旧文件，重新预览上传；本版不会自动清空远端或兼容旧同步格式。**\n- 文件导入、导出、同步与恢复统一记住范围及凭据选择；首次读取范围全选，之后新增对象不自动勾选。恢复备份使对象回到本机原本不存在的状态时，取消这些对象的同步勾选，云端文件保留；可手动重新选择下载。导出沿日期目录生成独立配置包；可查看真实输出目录、原操作结果及按范围备份恢复记录。\n- 随应用提供完整离线运行包及固定依赖，维护修订为 **2.97.0-desktop023.lifecycle.3**，基于上游 2.97.0，非上游正式发行。修订包 SHA256：`ec14baaee354c6729d1d2545ab9165d207b14a3a4239f354662163087eeb0739`。安装异常保留原目录，并提供明确来源核对与受控恢复。\n- macOS 使用独立的“OpenCodeX Desktop”安装文件夹，请将整个文件夹复制到 `~/Applications`。系统安装包仍为未公证/未做系统发行签名的测试构建，更新制品及维护运行包使用原更新签名校验。既有 RDP 硬件性能例外保留，不作绝对帧率达标承诺。\n\n---\n\n### 安装\n- macOS（Apple Silicon）：下载 .dmg，将其中整个“OpenCodeX Desktop”文件夹复制到 ~/Applications，再打开文件夹中的应用；请勿只复制 .app 或从磁盘映像运行。\n- Windows（x64）：下载 `*-setup.exe`（NSIS）安装包。\n- 均为未签名测试包：macOS 首次打开如被 Gatekeeper 拦截，右键 →「打开」；Windows SmartScreen 可能提示，选择「仍要运行」。",
+  "pub_date": "2026-11-09T18:42:59.990Z",
+  "platforms": {
+    "darwin-aarch64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRUhBVjI1N2lyb1BNa1V3TW1POTZSUFJOR21UN2N6cEkzYWliN3VWTlo1SHJTTXQ2bEowR3VsRHlSNnNvMFRhWWVicG16WEdVczUzZnJFZ0RZM253S2dFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzk0MjQ5MzIxCWZpbGU6T3BlbkNvZGVYIERlc2t0b3AuYXBwLnRhci5negpNZE53OXpNSE5sQWZXTHFJd05wY25YM0w0VUo2Vk42dnZVaDZDMTlwUHZBb3dvK3VRQ1YzU3BNai9RSzBoT3A1Tk1BaloxMEFQN0NoNWZKbVdGV3BCdz09Cg==",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.2.23/OpenCodeX.Desktop_aarch64.app.tar.gz"
+    },
+    "darwin-aarch64-app": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRUhBVjI1N2lyb1BNa1V3TW1POTZSUFJOR21UN2N6cEkzYWliN3VWTlo1SHJTTXQ2bEowR3VsRHlSNnNvMFRhWWVicG16WEdVczUzZnJFZ0RZM253S2dFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzk0MjQ5MzIxCWZpbGU6T3BlbkNvZGVYIERlc2t0b3AuYXBwLnRhci5negpNZE53OXpNSE5sQWZXTHFJd05wY25YM0w0VUo2Vk42dnZVaDZDMTlwUHZBb3dvK3VRQ1YzU3BNai9RSzBoT3A1Tk1BaloxMEFQN0NoNWZKbVdGV3BCdz09Cg==",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.2.23/OpenCodeX.Desktop_aarch64.app.tar.gz"
+    },
+    "windows-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRUZDbHhaaGRVbXJ3NDhxbkY4LzRFM29md1ZYbk9tenllOTM0V203S09QdElWWE8zdlFSL2tlY1lYZllWZVR4dkhkTDVVVWJJTFFZckFjY1ZhSUFpYVFzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzk0MjQ5NzU1CWZpbGU6T3BlbkNvZGVYIERlc2t0b3BfMC4yLjIzX3g2NF9lbi1VUy5tc2kKakJZSVJQT1NqKzA3UVdvWHNtNUFTTUpNWm85QWFmQXlWdFF0bmt5bHVRT0Y2Smh0MW4wc0lYM0sxVWF3VWpMYXdjZ1d4eHgxMU5BWkF5UlgrckpWREE9PQo=",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.2.23/OpenCodeX.Desktop_0.2.23_x64_en-US.msi"
+    },
+    "windows-x86_64-msi": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRUZDbHhaaGRVbXJ3NDhxbkY4LzRFM29md1ZYbk9tenllOTM0V203S09QdElWWE8zdlFSL2tlY1lYZllWZVR4dkhkTDVVVWJJTFFZckFjY1ZhSUFpYVFzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzk0MjQ5NzU1CWZpbGU6T3BlbkNvZGVYIERlc2t0b3BfMC4yLjIzX3g2NF9lbi1VUy5tc2kKakJZSVJQT1NqKzA3UVdvWHNtNUFTTUpNWm85QWFmQXlWdFF0bmt5bHVRT0Y2Smh0MW4wc0lYM0sxVWF3VWpMYXdjZ1d4eHgxMU5BWkF5UlgrckpWREE9PQo=",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.2.23/OpenCodeX.Desktop_0.2.23_x64_en-US.msi"
+    },
+    "windows-x86_64-nsis": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRU9NK01HcnJZeVpqMFlwTXBNUUdLdSsvMnY1K1ZOUXNlU29OZXRZcUY2N2ZpVzRoZG9UVlMwaGt6STdDYnB5R3lWajJVQkZYWUR6Y0t3R201Mko4SndNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzk0MjQ5NzU1CWZpbGU6T3BlbkNvZGVYIERlc2t0b3BfMC4yLjIzX3g2NC1zZXR1cC5leGUKQ1J4VlNscDIzOUJVYk01d1JxdjBqNkI1UUVUZDRRZ1NRaVAvYWJLYnY1eG5hZWxKbnhHZWExelo4UWtNMFlqTHZPZFRFODg1MTJrOHFLOG5DNVN0QlE9PQo=",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.2.23/OpenCodeX.Desktop_0.2.23_x64-setup.exe"
+    }
+  }
+}

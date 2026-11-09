@@ -7,9 +7,11 @@ title: "0.2.23 模型模版通用匹配与候选配置实施清单"
 target_version: "0.2.23"
 demand_ids: ["DMD-OPENCODEX-TEMPLATE-MATCHING"]
 task_ids: ["TASK-023-MODEL-CONSUMERS", "TASK-023-MODELS", "TASK-023-PROTOTYPE"]
-summary: "正式v2匹配、协议、来源、自动草稿、保存、便携/Agent及真实组件消费者已集成并有回归证据；随IMP-31最终同源验收，未关闭。"
+summary: "v2通用匹配、模型协议/来源、自动草稿及真实消费者已通过同源回归并随0.2.23正式发布；历史TASK不随发布自动关闭。"
 ---
 # 0.2.23 模型模版通用匹配与候选配置实施清单
+
+2026-11-10最新交付状态：**0.2.23已正式发布并成为Latest**，固定源e3728109e、运行包lifecycle.3；实际制品、原公钥、安装/升级/有界手动回退及公开读回见[REL-26](REL-OPENCODEX-DESKTOP-26.md)。历史Windows Profile/缓存清理和旧Stop归因按用户决定并行，未宣称已完成；保留当前正式TASK生命周期，不重写冻结条件。下文较早“未发布/待执行”均为历史时点，当前状态以本段和REL-26为准。
 
 2026-11-06。**in_progress**：用户已授权本轮完整实施与发布；当前v2纯核心已并入集成分支，实际消费者及组件继续实现，尚未发布。验收归[DMD-TEMPLATE-MATCHING](../01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md)，配置及说明见[候选目录](../04-项目资料/01-项目支撑资料/06-问题记录/模型模版通用匹配配置/README.md)。总计划IMP-31 P23-11集成，不另维护发布生命周期。
 

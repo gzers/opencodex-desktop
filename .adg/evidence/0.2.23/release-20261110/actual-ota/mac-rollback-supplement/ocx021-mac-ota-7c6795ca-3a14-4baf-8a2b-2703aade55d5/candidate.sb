@@ -1,0 +1,7 @@
+(version 1)
+(allow default)
+(deny network*)
+(allow network-outbound (remote ip "localhost:61285"))
+(deny file-read* file-write* (subpath "/Users/ezio"))
+(deny file-read* file-write* (subpath "/Library/Keychains"))
+(deny mach-lookup (global-name "com.apple.securityd") (global-name "com.apple.secd"))

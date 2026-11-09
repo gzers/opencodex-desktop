@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/ocx023-macos-ota.py", line 186, in main
+    run.publication(); run.launch(); run.baseline_saves(); run.install(); run.restart_readback()
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/ocx021-macos-ota.py", line 377, in launch
+    identity = self.inspect(self.pid); dump(self.out / 'old-process-identity.json', identity)
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/ocx021-macos-ota.py", line 341, in inspect
+    if result.returncode: raise Blocked('Exact owned PID/environment identity unavailable: ' + result.stdout + result.stderr)
+original_native_ota.Blocked: Exact owned PID/environment identity unavailable: {"error":"not an owned isolated OTA executable"}
+

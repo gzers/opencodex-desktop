@@ -25,21 +25,21 @@
       "text": "受影响共享逻辑、路径/凭据/进程及必要原生边界验收齐全，条件补Windows；残留清理、脱敏成功/失败证据保留。"
     }
   ],
-  "content_digest": "22946509c59c5e1ec6e5798fc2828eb2388724e7aae2ae45f7fa652da81a937c",
+  "content_digest": "0b4b4a645dd034ca3774fee69fd9af5832fd623bbe971f3af42ceb7c23d46228",
   "id": "DMD-OPENCODEX-USER-DIRECTORY",
   "implementation_ids": [
     "IMP-OPENCODEX-DESKTOP-31",
     "IMP-OPENCODEX-DESKTOP-32"
   ],
   "kind": "DMD",
-  "next_action": "沿IMP-32与IMP-31收敛当前Windows候选失败及最终同源平台制品，保留旧路径不参与解析和无自动迁移边界。",
+  "next_action": "沿REL-26保存已发布事实与原成功/失败证据；Windows历史Profile/缓存清理和旧Stop归因按用户决定并行，不重跑已过验收或改日常配置。",
   "resolution": null,
-  "revision": 2,
-  "source_digest": "e5e54303f815c94471b1246f4e99b4a31c933b749c848be23bc02e286469099a",
+  "revision": 3,
+  "source_digest": "9e35519e324678e25b04915713857bb6b5366d56c4a5b1d98f701946d828a26e",
   "source_path": "docs/01-需求管理/需求/DMD-OPENCODEX-USER-DIRECTORY.md",
-  "source_revision": 2,
+  "source_revision": 3,
   "state": "in_progress",
-  "summary": "新用户目录、managed运行供应、启动/IPC/恢复/卸载已实现并进入验收；macOS正式首装有实证，Windows实际两SID/安装器/升级保留仍待。",
-  "summary_digest": "4a2247aa51ef430e99faabae9e0d9337c71115785b1757b11bfe8e926b3c5d46",
+  "summary": "本版范围已随0.2.23正式发布，最终同源回归/原包/签名/升级回退/通道证据见REL-26；原历史TASK和Windows并行尾项不伪造关闭。",
+  "summary_digest": "2f4d7e096062a59a838832d3b36bdb9133f9e4489d537747d3d1d7981a610531",
   "title": "用户目录分类与新版路径隔离"
 }

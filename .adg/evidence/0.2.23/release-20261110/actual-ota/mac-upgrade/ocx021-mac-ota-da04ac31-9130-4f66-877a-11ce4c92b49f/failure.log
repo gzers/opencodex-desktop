@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/ocx023-macos-ota.py", line 187, in main
+    run.rollback_original()
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/ocx023-macos-ota.py", line 127, in rollback_original
+    self.wait(lambda s: any(n.get('role') == 'AXWebArea' for n in s['nodes']), 35, 'manual-old-original-rollback-mounted')
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/ocx021-macos-ota.py", line 412, in wait
+    snap = self.snapshot()
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/ocx021-macos-ota.py", line 394, in snapshot
+    value = self.ax('snapshot')
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/ocx021-macos-ota.py", line 390, in ax
+    if result.returncode: raise Blocked('Native AX operation failed: ' + result.stdout + result.stderr)
+original_native_ota.Blocked: Native AX operation failed: {"error":"PID\/executable admission failed"}
+

@@ -1,0 +1,235 @@
+﻿2026-11-09T23:18:08.3358937Z Current runner version: '2.338.2'
+2026-11-09T23:18:08.3384484Z ##[group]Runner Image Provisioner
+2026-11-09T23:18:08.3385384Z Hosted Compute Agent
+2026-11-09T23:18:08.3385932Z Version: 20261028.624
+2026-11-09T23:18:08.3386501Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-09T23:18:08.3387187Z Build Date: 2026-10-28T21:51:42Z
+2026-11-09T23:18:08.3387805Z Worker ID: {20ac48ae-48b7-4a1b-b30f-3f6cb74c96e0}
+2026-11-09T23:18:08.3388455Z Region: westus3
+2026-11-09T23:18:08.3388987Z Cloud: Azure
+2026-11-09T23:18:08.3389510Z ##[endgroup]
+2026-11-09T23:18:08.3391094Z ##[group]Operating System
+2026-11-09T23:18:08.3391662Z Ubuntu
+2026-11-09T23:18:08.3392142Z 26.04.1
+2026-11-09T23:18:08.3392648Z LTS
+2026-11-09T23:18:08.3393118Z ##[endgroup]
+2026-11-09T23:18:08.3393663Z ##[group]Runner Image
+2026-11-09T23:18:08.3394196Z Image: ubuntu-26.04
+2026-11-09T23:18:08.3394733Z Version: 20261101.186.1
+2026-11-09T23:18:08.3395913Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261101.186/images/ubuntu/Ubuntu2604-Readme.md
+2026-11-09T23:18:08.3397303Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261101.186
+2026-11-09T23:18:08.3398180Z ##[endgroup]
+2026-11-09T23:18:08.3399235Z ##[group]GITHUB_TOKEN Permissions
+2026-11-09T23:18:08.3401350Z Contents: write
+2026-11-09T23:18:08.3401901Z Metadata: read
+2026-11-09T23:18:08.3402870Z ##[endgroup]
+2026-11-09T23:18:08.3404938Z Secret source: Actions
+2026-11-09T23:18:08.3405815Z Cache mode: write
+2026-11-09T23:18:08.3406442Z Prepare workflow directory
+2026-11-09T23:18:08.3732121Z Prepare all required actions
+2026-11-09T23:18:08.3781440Z Getting action download info
+2026-11-09T23:18:08.6652783Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+2026-11-09T23:18:09.1715333Z Complete job name: publish
+2026-11-09T23:18:09.2490128Z ##[group]Run actions/checkout@v5
+2026-11-09T23:18:09.2491132Z with:
+2026-11-09T23:18:09.2491652Z   repository: gzers/opencodex-desktop
+2026-11-09T23:18:09.2495366Z   token: ***
+2026-11-09T23:18:09.2495881Z   ssh-strict: true
+2026-11-09T23:18:09.2496383Z   ssh-user: git
+2026-11-09T23:18:09.2496888Z   persist-credentials: true
+2026-11-09T23:18:09.2497413Z   clean: true
+2026-11-09T23:18:09.2497898Z   sparse-checkout-cone-mode: true
+2026-11-09T23:18:09.2498468Z   fetch-depth: 1
+2026-11-09T23:18:09.2498958Z   fetch-tags: false
+2026-11-09T23:18:09.2499486Z   show-progress: true
+2026-11-09T23:18:09.2500105Z   lfs: false
+2026-11-09T23:18:09.2500587Z   submodules: false
+2026-11-09T23:18:09.2501114Z   set-safe-directory: true
+2026-11-09T23:18:09.2501678Z   allow-unsafe-pr-checkout: false
+2026-11-09T23:18:09.2502488Z ##[endgroup]
+2026-11-09T23:18:11.6308802Z Syncing repository: gzers/opencodex-desktop
+2026-11-09T23:18:11.6312366Z ##[group]Getting Git version info
+2026-11-09T23:18:11.6314219Z Working directory is '/home/runner/work/opencodex-desktop/opencodex-desktop'
+2026-11-09T23:18:11.6315688Z [command]/usr/bin/git version
+2026-11-09T23:18:11.6452808Z git version 2.56.0
+2026-11-09T23:18:11.6474867Z ##[endgroup]
+2026-11-09T23:18:11.6489496Z Temporarily overriding HOME='/home/runner/work/_temp/f2680ec2-a36b-470b-8c88-41979179afff' before making global git config changes
+2026-11-09T23:18:11.6495095Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-09T23:18:11.6497917Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/opencodex-desktop/opencodex-desktop
+2026-11-09T23:18:11.6848929Z Deleting the contents of '/home/runner/work/opencodex-desktop/opencodex-desktop'
+2026-11-09T23:18:11.6852792Z ##[group]Initializing the repository
+2026-11-09T23:18:11.6859144Z [command]/usr/bin/git init /home/runner/work/opencodex-desktop/opencodex-desktop
+2026-11-09T23:18:11.7379356Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-09T23:18:11.7381362Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-09T23:18:11.7382749Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-09T23:18:11.7383944Z hint: call:
+2026-11-09T23:18:11.7384529Z hint:
+2026-11-09T23:18:11.7385217Z hint: 	git config --global init.defaultBranch <name>
+2026-11-09T23:18:11.7385984Z hint:
+2026-11-09T23:18:11.7386751Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-09T23:18:11.7388019Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-09T23:18:11.7388952Z hint:
+2026-11-09T23:18:11.7389511Z hint: 	git branch -m <name>
+2026-11-09T23:18:11.7390377Z hint:
+2026-11-09T23:18:11.7391210Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-09T23:18:11.7519439Z Initialized empty Git repository in /home/runner/work/opencodex-desktop/opencodex-desktop/.git/
+2026-11-09T23:18:11.7640707Z [command]/usr/bin/git remote add origin https://github.com/gzers/opencodex-desktop
+2026-11-09T23:18:11.7758284Z ##[endgroup]
+2026-11-09T23:18:11.7760125Z ##[group]Disabling automatic garbage collection
+2026-11-09T23:18:11.7762628Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-09T23:18:11.7794627Z ##[endgroup]
+2026-11-09T23:18:11.7796062Z ##[group]Setting up auth
+2026-11-09T23:18:11.7802267Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-09T23:18:11.7831255Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-09T23:18:11.9916383Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-09T23:18:11.9952708Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-09T23:18:12.0183017Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-09T23:18:12.0215908Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-09T23:18:12.0450477Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-09T23:18:12.0491442Z ##[endgroup]
+2026-11-09T23:18:12.0492485Z ##[group]Fetching the repository
+2026-11-09T23:18:12.0501039Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +2ac076b3c8d75a05ddeb1ddba6252785c0efb128:refs/remotes/origin/main
+2026-11-09T23:18:13.3568350Z From https://github.com/gzers/opencodex-desktop
+2026-11-09T23:18:13.3572577Z  * [new ref]         2ac076b3c8d75a05ddeb1ddba6252785c0efb128 -> origin/main
+2026-11-09T23:18:13.3576600Z ##[endgroup]
+2026-11-09T23:18:13.3578158Z ##[group]Determining the checkout info
+2026-11-09T23:18:13.3580108Z ##[endgroup]
+2026-11-09T23:18:13.3581635Z [command]/usr/bin/git sparse-checkout disable
+2026-11-09T23:18:13.3733425Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-09T23:18:13.3758490Z ##[group]Checking out the ref
+2026-11-09T23:18:13.3761838Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-11-09T23:18:13.4791516Z Switched to a new branch 'main'
+2026-11-09T23:18:13.4843487Z branch 'main' set up to track 'origin/main'.
+2026-11-09T23:18:13.4852311Z ##[endgroup]
+2026-11-09T23:18:13.4896132Z [command]/usr/bin/git log -1 --format=%H
+2026-11-09T23:18:13.4917848Z 2ac076b3c8d75a05ddeb1ddba6252785c0efb128
+2026-11-09T23:18:13.5265413Z ##[group]Run sudo apt-get update && sudo apt-get install -y minisign
+2026-11-09T23:18:13.5267726Z [36;1msudo apt-get update && sudo apt-get install -y minisign[0m
+2026-11-09T23:18:13.5303843Z shell: /usr/bin/bash -e {0}
+2026-11-09T23:18:13.5305045Z ##[endgroup]
+2026-11-09T23:18:13.6612029Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-11-09T23:18:13.6760206Z Get:6 https://packages.microsoft.com/ubuntu/26.04/prod resolute InRelease [3964 B]
+2026-11-09T23:18:13.7032030Z Hit:2 http://azure.archive.ubuntu.com/ubuntu resolute InRelease
+2026-11-09T23:18:13.7052676Z Get:3 http://azure.archive.ubuntu.com/ubuntu resolute-updates InRelease [137 kB]
+2026-11-09T23:18:13.7167145Z Get:4 http://azure.archive.ubuntu.com/ubuntu resolute-backports InRelease [137 kB]
+2026-11-09T23:18:13.7265552Z Get:5 http://azure.archive.ubuntu.com/ubuntu resolute-security InRelease [137 kB]
+2026-11-09T23:18:13.7402998Z Get:7 https://packages.microsoft.com/ubuntu/26.04/prod resolute/main amd64 Packages [151 kB]
+2026-11-09T23:18:13.7523981Z Get:8 https://packages.microsoft.com/ubuntu/26.04/prod resolute/main arm64 Packages [138 kB]
+2026-11-09T23:18:13.7778240Z Get:9 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main amd64v3 Packages [858 kB]
+2026-11-09T23:18:13.7832572Z Get:10 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main Translation-en [194 kB]
+2026-11-09T23:18:13.7891759Z Get:11 http://azure.archive.ubuntu.com/ubuntu resolute-updates/universe amd64v3 Packages [377 kB]
+2026-11-09T23:18:13.7893817Z Get:12 http://azure.archive.ubuntu.com/ubuntu resolute-updates/universe Translation-en [118 kB]
+2026-11-09T23:18:13.7895679Z Get:13 http://azure.archive.ubuntu.com/ubuntu resolute-updates/restricted amd64v3 Packages [594 kB]
+2026-11-09T23:18:13.7911117Z Get:14 http://azure.archive.ubuntu.com/ubuntu resolute-updates/restricted Translation-en [122 kB]
+2026-11-09T23:18:13.7989459Z Get:15 http://azure.archive.ubuntu.com/ubuntu resolute-security/main amd64v3 Packages [668 kB]
+2026-11-09T23:18:13.8025767Z Get:16 http://azure.archive.ubuntu.com/ubuntu resolute-security/main Translation-en [151 kB]
+2026-11-09T23:18:13.8037325Z Get:17 http://azure.archive.ubuntu.com/ubuntu resolute-security/universe amd64v3 Packages [212 kB]
+2026-11-09T23:18:13.8050791Z Get:18 http://azure.archive.ubuntu.com/ubuntu resolute-security/universe Translation-en [70.7 kB]
+2026-11-09T23:18:13.8543155Z Get:19 http://azure.archive.ubuntu.com/ubuntu resolute-security/restricted amd64v3 Packages [538 kB]
+2026-11-09T23:18:13.8571082Z Get:20 http://azure.archive.ubuntu.com/ubuntu resolute-security/restricted Translation-en [110 kB]
+2026-11-09T23:18:18.3943379Z Fetched 4717 kB in 0s (11.1 MB/s)
+2026-11-09T23:18:19.0938283Z Reading package lists...
+2026-11-09T23:18:19.1237112Z Reading package lists...
+2026-11-09T23:18:19.2939703Z Building dependency tree...
+2026-11-09T23:18:19.2947030Z Reading state information...
+2026-11-09T23:18:19.3743441Z Solving dependencies...
+2026-11-09T23:18:19.4877178Z The following NEW packages will be installed:
+2026-11-09T23:18:19.4878093Z   minisign
+2026-11-09T23:18:19.5073683Z 0 upgraded, 1 newly installed, 0 to remove and 34 not upgraded.
+2026-11-09T23:18:19.5074346Z Need to get 18.0 kB of archives.
+2026-11-09T23:18:19.5074937Z After this operation, 56.3 kB of additional disk space will be used.
+2026-11-09T23:18:19.5076149Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-11-09T23:18:19.5729830Z Get:2 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 minisign amd64 0.12-1build1 [18.0 kB]
+2026-11-09T23:18:20.3704300Z Fetched 18.0 kB in 0s (233 kB/s)
+2026-11-09T23:18:20.4297902Z Selecting previously unselected package minisign.
+2026-11-09T23:18:20.4968821Z (Reading database ... 
+2026-11-09T23:18:20.4969206Z (Reading database ... 5%
+2026-11-09T23:18:20.4969540Z (Reading database ... 10%
+2026-11-09T23:18:20.4969867Z (Reading database ... 15%
+2026-11-09T23:18:20.4970505Z (Reading database ... 20%
+2026-11-09T23:18:20.4970967Z (Reading database ... 25%
+2026-11-09T23:18:20.4971950Z (Reading database ... 30%
+2026-11-09T23:18:20.4972266Z (Reading database ... 35%
+2026-11-09T23:18:20.4972546Z (Reading database ... 40%
+2026-11-09T23:18:20.4972782Z (Reading database ... 45%
+2026-11-09T23:18:20.4973008Z (Reading database ... 50%
+2026-11-09T23:18:20.8617729Z (Reading database ... 55%
+2026-11-09T23:18:21.2049174Z (Reading database ... 60%
+2026-11-09T23:18:21.4503569Z (Reading database ... 65%
+2026-11-09T23:18:21.7205382Z (Reading database ... 70%
+2026-11-09T23:18:21.9850998Z (Reading database ... 75%
+2026-11-09T23:18:22.5344853Z (Reading database ... 80%
+2026-11-09T23:18:23.2567852Z (Reading database ... 85%
+2026-11-09T23:18:23.9399142Z (Reading database ... 90%
+2026-11-09T23:18:24.6082945Z (Reading database ... 95%
+2026-11-09T23:18:24.6083737Z (Reading database ... 100%
+2026-11-09T23:18:24.6084637Z (Reading database ... 213197 files and directories currently installed.)
+2026-11-09T23:18:24.6140168Z Preparing to unpack .../minisign_0.12-1build1_amd64v3.deb ...
+2026-11-09T23:18:24.6166049Z Unpacking minisign (0.12-1build1) ...
+2026-11-09T23:18:24.6876624Z Setting up minisign (0.12-1build1) ...
+2026-11-09T23:18:24.6901339Z Processing triggers for man-db (2.13.1-1build1) ...
+2026-11-09T23:18:24.6981986Z Not building database; man-db/auto-update is not 'true'.
+2026-11-09T23:18:25.7017313Z 
+2026-11-09T23:18:25.7018102Z Running kernel seems to be up-to-date.
+2026-11-09T23:18:25.7018469Z 
+2026-11-09T23:18:25.7018565Z Restarting services...
+2026-11-09T23:18:25.7096823Z 
+2026-11-09T23:18:25.7097470Z Service restarts being deferred:
+2026-11-09T23:18:25.7101211Z  systemctl restart hosted-compute-agent.service
+2026-11-09T23:18:25.7101631Z 
+2026-11-09T23:18:25.7102215Z No containers need to be restarted.
+2026-11-09T23:18:25.7102509Z 
+2026-11-09T23:18:25.7121100Z No user sessions are running outdated binaries.
+2026-11-09T23:18:25.7121476Z 
+2026-11-09T23:18:25.7121761Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2026-11-09T23:18:26.4865914Z ##[group]Run set -euo pipefail
+2026-11-09T23:18:26.4866229Z [36;1mset -euo pipefail[0m
+2026-11-09T23:18:26.4866614Z [36;1mtag="${INPUT_TAG:-${GITHUB_REF_NAME#*/}}"[0m
+2026-11-09T23:18:26.4866976Z [36;1mpython3 .github/scripts/publish_release.py "$tag" \[0m
+2026-11-09T23:18:26.4867465Z [36;1m  --repo "$GITHUB_REPOSITORY" --mode "$PUBLISH_MODE" 2>&1 | tee /tmp/publish-diag.txt[0m
+2026-11-09T23:18:26.4902907Z shell: /usr/bin/bash -e {0}
+2026-11-09T23:18:26.4903173Z env:
+2026-11-09T23:18:26.4905584Z   GH_TOKEN: ***
+2026-11-09T23:18:26.4905815Z   INPUT_TAG: v0.2.23
+2026-11-09T23:18:26.4906035Z   PUBLISH_MODE: stable
+2026-11-09T23:18:26.4906251Z ##[endgroup]
+2026-11-09T23:18:26.5535415Z Reading release metadata for v0.2.23
+2026-11-09T23:18:29.6210667Z Downloading candidate manifest for v0.2.23
+2026-11-09T23:18:30.6777525Z Reading tagged updater public key for v0.2.23
+2026-11-09T23:18:37.9734105Z Cryptographically verified darwin-aarch64: OpenCodeX.Desktop_aarch64.app.tar.gz; size=261709752; sha256=21629f68e1caa7101069f31d9965ca2f331ce06c50122b74713df4887ce0792a
+2026-11-09T23:18:45.6097005Z Cryptographically verified windows-x86_64: OpenCodeX.Desktop_0.2.23_x64_en-US.msi; size=289656832; sha256=ab4c0af2c91c5573632f3a9f3651e6d26343200d3ecdf10c3a082e895197e810
+2026-11-09T23:18:52.7240967Z Cryptographically verified windows-x86_64-nsis: OpenCodeX.Desktop_0.2.23_x64-setup.exe; size=288228423; sha256=e17a86a7aa3548584f690e9008b154c6ffe09509f35bb4919f7181dd4af792d6
+2026-11-09T23:18:56.0652278Z Cryptographically verified adopted runtime 2.97.0-desktop023.lifecycle.3: sha256=ec14baaee354c6729d1d2545ab9165d207b14a3a4239f354662163087eeb0739
+2026-11-09T23:18:56.0893517Z Target: v0.2.23; mode: stable; previous Latest: v0.2.22
+2026-11-09T23:18:59.4509044Z Verified anonymously downloadable maintained runtime
+2026-11-09T23:18:59.4509555Z Verified public release v0.2.23; Latest=v0.2.23
+2026-11-09T23:18:59.4723518Z ##[group]Run set -euo pipefail
+2026-11-09T23:18:59.4723843Z [36;1mset -euo pipefail[0m
+2026-11-09T23:18:59.4724125Z [36;1mcp /tmp/publish-diag.txt publish-diag.txt[0m
+2026-11-09T23:18:59.4724462Z [36;1mgit config user.name "opencodex-ci"[0m
+2026-11-09T23:18:59.4724792Z [36;1mgit config user.email "ci@opencodex.invalid"[0m
+2026-11-09T23:18:59.4725102Z [36;1mgit checkout --orphan ci-logs[0m
+2026-11-09T23:18:59.4725401Z [36;1mgit rm -rf --cached . >/dev/null 2>&1 || true[0m
+2026-11-09T23:18:59.4725708Z [36;1mgit add -f publish-diag.txt[0m
+2026-11-09T23:18:59.4726039Z [36;1mgit commit -m "ci: publish 诊断 (42719313142)" >/dev/null[0m
+2026-11-09T23:18:59.4726548Z [36;1mgit push --force origin ci-logs[0m
+2026-11-09T23:18:59.4760176Z shell: /usr/bin/bash -e {0}
+2026-11-09T23:18:59.4760461Z ##[endgroup]
+2026-11-09T23:18:59.5488974Z Switched to a new branch 'ci-logs'
+2026-11-09T23:19:00.8559842Z To https://github.com/gzers/opencodex-desktop
+2026-11-09T23:19:00.8560838Z  + 019cb63...96a51c9 ci-logs -> ci-logs (forced update)
+2026-11-09T23:19:00.8705702Z Post job cleanup.
+2026-11-09T23:19:00.9563986Z [command]/usr/bin/git version
+2026-11-09T23:19:00.9603446Z git version 2.56.0
+2026-11-09T23:19:00.9647615Z Temporarily overriding HOME='/home/runner/work/_temp/8e8693b1-f08c-4f44-a4f5-e96c486e2b31' before making global git config changes
+2026-11-09T23:19:00.9648971Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-09T23:19:00.9653162Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/opencodex-desktop/opencodex-desktop
+2026-11-09T23:19:00.9688991Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-09T23:19:00.9722125Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-09T23:19:00.9971429Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-09T23:19:00.9995426Z http.https://github.com/.extraheader
+2026-11-09T23:19:01.0011219Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-09T23:19:01.0052693Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-09T23:19:01.0316545Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-09T23:19:01.0356457Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-09T23:19:01.0766803Z Cleaning up orphan processes
