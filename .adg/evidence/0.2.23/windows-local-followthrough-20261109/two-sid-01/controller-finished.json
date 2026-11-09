@@ -1,0 +1,36 @@
+{
+  "accepted": false,
+  "source": "fdf5d4db551f71cbf493dc97b428f8b9a9364a7a",
+  "buildRun": "42631183420",
+  "scope": "Two new ordinary SIDs on local workstation; concurrent health, stopB/peerA preserved, stopA, exact cleanup",
+  "startedUtc": "2026-11-09T15:02:53.8308715Z",
+  "controllerToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 94280,
+    "executable": "D:\\ocxu1-20261109-191803\\powershell\\pwsh.exe",
+    "creationTimeUtc": "2026-11-09T15:02:52.5775223Z",
+    "elevated": true,
+    "elevationType": 2,
+    "collectedAtUtc": "2026-11-09T15:02:54.1928191Z"
+  },
+  "programTreeSha256": "969a002c00681303ea739604380273fc3b4fa4a25a48dfd8833f94c9c336840c",
+  "budgetsMilliseconds": {
+    "status": 5000,
+    "start": 30000,
+    "stop": 10000
+  },
+  "protocolPassed": false,
+  "accountsCreated": 0,
+  "firstFailure": {
+    "line": 67,
+    "message": "Cannot validate argument on parameter 'Description'. The character length of the 52 argument is too long. Shorten the character length of the argument so it is fewer than or equal to \"48\" characters, and then try the command again.",
+    "atUtc": "2026-11-09T15:02:54.4831573Z"
+  },
+  "desktopAclRestored": true,
+  "residualProcesses": [],
+  "accountCleanup": [],
+  "programUnchanged": true,
+  "boundedTwoSidPassed": false,
+  "finishedUtc": "2026-11-09T15:05:53.0524488Z"
+}

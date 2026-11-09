@@ -1,0 +1,601 @@
+{
+  "accepted": false,
+  "startConfirmed": true,
+  "normalStopExecuted": true,
+  "source": "fdf5d4db551f71cbf493dc97b428f8b9a9364a7a",
+  "start": {
+    "pid": 52368,
+    "port": 57052
+  },
+  "normalStopConfirmed": true,
+  "startReceiptCount": 1,
+  "successfulStartReceiptCount": 1,
+  "uniqueSuccessfulStartReceipt": true,
+  "receipts": [
+    {
+      "sequence": 1,
+      "action": "start",
+      "elapsedMilliseconds": 17209.8931,
+      "response": {
+        "raw": "{\"lifecycleState\":\"running\",\"result\":\"started\",\"canStart\":false,\"canStop\":true,\"canRestart\":true}",
+        "value": {
+          "lifecycleState": "running",
+          "result": "started",
+          "canStart": false,
+          "canStop": true,
+          "canRestart": true
+        }
+      }
+    },
+    {
+      "sequence": 2,
+      "action": "stop",
+      "elapsedMilliseconds": 35548.4425,
+      "response": {
+        "raw": "{\"lifecycleState\":\"stopped\",\"result\":\"stopped\",\"canStart\":true,\"canStop\":false,\"canRestart\":false}",
+        "value": {
+          "lifecycleState": "stopped",
+          "result": "stopped",
+          "canStart": true,
+          "canStop": false,
+          "canRestart": false
+        }
+      }
+    }
+  ],
+  "trace": [
+    {
+      "sequence": 1,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 59.5297,
+      "atUtc": "2026-11-09T15:11:27.836Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 2,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 1370.4846,
+      "atUtc": "2026-11-09T15:11:29.147Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 3,
+      "stage": "start-proof-begin",
+      "elapsedMilliseconds": 1371.4305,
+      "atUtc": "2026-11-09T15:11:29.148Z"
+    },
+    {
+      "sequence": 4,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 1372.1986,
+      "atUtc": "2026-11-09T15:11:29.148Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 5,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 1581.4788,
+      "atUtc": "2026-11-09T15:11:29.358Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 6,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 1581.4957,
+      "atUtc": "2026-11-09T15:11:29.358Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 7,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 1811.1916,
+      "atUtc": "2026-11-09T15:11:29.587Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 8,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 1814.6559,
+      "atUtc": "2026-11-09T15:11:29.591Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 9,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 1824.5569,
+      "atUtc": "2026-11-09T15:11:29.601Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 10,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 1824.5777,
+      "atUtc": "2026-11-09T15:11:29.601Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 11,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 3363.9728999999998,
+      "atUtc": "2026-11-09T15:11:31.140Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 12,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 3364.033,
+      "atUtc": "2026-11-09T15:11:31.140Z",
+      "command": "process_action",
+      "action": "start"
+    },
+    {
+      "sequence": 1,
+      "stage": "action-return",
+      "elapsedMilliseconds": 17212.0831,
+      "atUtc": "2026-11-09T15:11:44.988Z",
+      "action": "start",
+      "rejected": null
+    },
+    {
+      "sequence": 14,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 17228.1541,
+      "atUtc": "2026-11-09T15:11:45.004Z",
+      "command": "get_status_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 15,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 17691.121,
+      "atUtc": "2026-11-09T15:11:45.467Z",
+      "command": "get_status_snapshot"
+    },
+    {
+      "sequence": 16,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 17691.1409,
+      "atUtc": "2026-11-09T15:11:45.467Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 17,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 17696.2416,
+      "atUtc": "2026-11-09T15:11:45.472Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 18,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 17696.2621,
+      "atUtc": "2026-11-09T15:11:45.472Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 19,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 17786.778299999998,
+      "atUtc": "2026-11-09T15:11:45.563Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 20,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 17788.0006,
+      "atUtc": "2026-11-09T15:11:45.564Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 21,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 17792.2282,
+      "atUtc": "2026-11-09T15:11:45.568Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 22,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 17792.2458,
+      "atUtc": "2026-11-09T15:11:45.568Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 23,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 17888.7848,
+      "atUtc": "2026-11-09T15:11:45.665Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 24,
+      "stage": "start-confirmed",
+      "elapsedMilliseconds": 17891.5502,
+      "atUtc": "2026-11-09T15:11:45.668Z",
+      "pid": 52368,
+      "port": 57052
+    },
+    {
+      "sequence": 25,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 18031.4926,
+      "atUtc": "2026-11-09T15:11:45.808Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 26,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 18061.3155,
+      "atUtc": "2026-11-09T15:11:45.838Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 27,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 18061.342,
+      "atUtc": "2026-11-09T15:11:45.838Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 28,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 18272.4385,
+      "atUtc": "2026-11-09T15:11:46.049Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 29,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 18276.9076,
+      "atUtc": "2026-11-09T15:11:46.053Z",
+      "command": "get_status_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 30,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 18881.8413,
+      "atUtc": "2026-11-09T15:11:46.658Z",
+      "command": "get_status_snapshot"
+    },
+    {
+      "sequence": 31,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 18881.875799999998,
+      "atUtc": "2026-11-09T15:11:46.658Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 32,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 18888.0683,
+      "atUtc": "2026-11-09T15:11:46.664Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 33,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 18888.0898,
+      "atUtc": "2026-11-09T15:11:46.664Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 34,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 19278.4381,
+      "atUtc": "2026-11-09T15:11:47.055Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 35,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 19278.5436,
+      "atUtc": "2026-11-09T15:11:47.055Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 36,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 19338.9227,
+      "atUtc": "2026-11-09T15:11:47.115Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 37,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 19338.9427,
+      "atUtc": "2026-11-09T15:11:47.115Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 38,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 19690.8959,
+      "atUtc": "2026-11-09T15:11:47.467Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 39,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 28389.7816,
+      "atUtc": "2026-11-09T15:11:56.166Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 40,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 28397.4212,
+      "atUtc": "2026-11-09T15:11:56.174Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 41,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 28397.4397,
+      "atUtc": "2026-11-09T15:11:56.174Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 42,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 28525.0883,
+      "atUtc": "2026-11-09T15:11:56.301Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 43,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 28531.0808,
+      "atUtc": "2026-11-09T15:11:56.307Z",
+      "command": "get_status_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 44,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 28755.2108,
+      "atUtc": "2026-11-09T15:11:56.531Z",
+      "command": "get_status_snapshot"
+    },
+    {
+      "sequence": 45,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 28755.2328,
+      "atUtc": "2026-11-09T15:11:56.531Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 46,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 28760.3219,
+      "atUtc": "2026-11-09T15:11:56.537Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 47,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 28760.3422,
+      "atUtc": "2026-11-09T15:11:56.537Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 48,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 28884.4481,
+      "atUtc": "2026-11-09T15:11:56.661Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 49,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 28884.5641,
+      "atUtc": "2026-11-09T15:11:56.661Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 50,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 28896.2992,
+      "atUtc": "2026-11-09T15:11:56.672Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 51,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 28896.318,
+      "atUtc": "2026-11-09T15:11:56.673Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 52,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 29058.711,
+      "atUtc": "2026-11-09T15:11:56.835Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 53,
+      "stage": "normal-stop-begin",
+      "elapsedMilliseconds": 29163.8341,
+      "atUtc": "2026-11-09T15:11:56.940Z"
+    },
+    {
+      "sequence": 54,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 29163.9373,
+      "atUtc": "2026-11-09T15:11:56.940Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 55,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 29169.8658,
+      "atUtc": "2026-11-09T15:11:56.946Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 56,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 29169.8836,
+      "atUtc": "2026-11-09T15:11:56.946Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 57,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 29269.8213,
+      "atUtc": "2026-11-09T15:11:57.046Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 58,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 29272.1648,
+      "atUtc": "2026-11-09T15:11:57.048Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 59,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 29278.0516,
+      "atUtc": "2026-11-09T15:11:57.054Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 60,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 29278.073,
+      "atUtc": "2026-11-09T15:11:57.054Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 61,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 29379.7339,
+      "atUtc": "2026-11-09T15:11:57.156Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 62,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 29379.8148,
+      "atUtc": "2026-11-09T15:11:57.156Z",
+      "command": "process_action",
+      "action": "stop"
+    },
+    {
+      "sequence": 2,
+      "stage": "action-return",
+      "elapsedMilliseconds": 35550.1896,
+      "atUtc": "2026-11-09T15:12:03.326Z",
+      "action": "stop",
+      "rejected": null
+    },
+    {
+      "sequence": 64,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 35550.2276,
+      "atUtc": "2026-11-09T15:12:03.326Z",
+      "command": "get_status_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 65,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 36388.9277,
+      "atUtc": "2026-11-09T15:12:04.165Z",
+      "command": "get_status_snapshot"
+    },
+    {
+      "sequence": 66,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 36388.9736,
+      "atUtc": "2026-11-09T15:12:04.165Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 67,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 36394.568,
+      "atUtc": "2026-11-09T15:12:04.171Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 68,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 36394.5852,
+      "atUtc": "2026-11-09T15:12:04.171Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 69,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 36513.3968,
+      "atUtc": "2026-11-09T15:12:04.290Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 70,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 36516.5954,
+      "atUtc": "2026-11-09T15:12:04.293Z",
+      "command": "get_data_root_config",
+      "action": null
+    },
+    {
+      "sequence": 71,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 36523.7737,
+      "atUtc": "2026-11-09T15:12:04.300Z",
+      "command": "get_data_root_config"
+    },
+    {
+      "sequence": 72,
+      "stage": "invoke-begin",
+      "elapsedMilliseconds": 36523.7939,
+      "atUtc": "2026-11-09T15:12:04.300Z",
+      "command": "model_paths_v2_snapshot",
+      "action": null
+    },
+    {
+      "sequence": 73,
+      "stage": "invoke-return",
+      "elapsedMilliseconds": 36668.067,
+      "atUtc": "2026-11-09T15:12:04.444Z",
+      "command": "model_paths_v2_snapshot"
+    },
+    {
+      "sequence": 74,
+      "stage": "normal-stop-confirmed",
+      "elapsedMilliseconds": 36669.9019,
+      "atUtc": "2026-11-09T15:12:04.446Z"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "source": "fdf5d4db551f71cbf493dc97b428f8b9a9364a7a",
+  "harnessCheckout": "5ad443222585f1bcf395d70703e45200206614d4",
+  "originalBudgetMs": {
+    "status": 5000,
+    "start": 30000,
+    "stop": 10000
+  },
+  "build": "26100",
+  "sessionInventory": [
+    " USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME",
+    " administrator         console             1  Active    1+22:20  2026/10/10 9:16",
+    ">15119                 rdp-tcp#0           2  Active          .  2026/10/10 9:18",
+    " liangjh23                                 3  Disc         4:11  2026/10/10 9:55"
+  ],
+  "observedUtc": "2026-11-09T15:06:52.3717596Z",
+  "machine": "EZIO-MINI",
+  "buildRun": 42631183420,
+  "remoteLatestNotReconfirmedBecause": "Proxy TLS handshake failure",
+  "hypothesis": "Two distinct ordinary SIDs: overlapping authenticated services, stopB keepsA same generation, stopA; exact account/Profile cleanup",
+  "artifact": 13681803354,
+  "timezone": "China Standard Time",
+  "documentRef": "f60a4b8656f805df9941719fbb7999a7b9340cfb",
+  "scope": "No core-sweep/full/installer in this batch; no daily configuration",
+  "osCaption": "Microsoft Windows Server 2025 Datacenter"
+}
