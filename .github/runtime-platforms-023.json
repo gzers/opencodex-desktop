@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "bundleVersion": "0.2.23",
   "runtime": {
-    "version": "2.97.0-desktop023.lifecycle.2",
-    "archive": "opencodex-2.97.0-desktop023.lifecycle.2.tgz",
-    "sha256": "c02f4710496775d8f4dfe271bd90d6afdf7dbf960f6e696637271ab9f37bc70b"
+    "version": "2.97.0-desktop023.lifecycle.3",
+    "archive": "opencodex-2.97.0-desktop023.lifecycle.3.tgz",
+    "sha256": "ec14baaee354c6729d1d2545ab9165d207b14a3a4239f354662163087eeb0739"
   },
   "node": {
     "version": "26.8.1",
@@ -58,7 +58,7 @@
     "version": "0.2.23",
     "private": true,
     "dependencies": {
-      "@bitkyc08/opencodex": "file:sources/opencodex-2.97.0-desktop023.lifecycle.2.tgz"
+      "@bitkyc08/opencodex": "file:sources/opencodex-2.97.0-desktop023.lifecycle.3.tgz"
     }
   },
   "packageLock": {
@@ -71,13 +71,13 @@
         "name": "opencodex-desktop-runtime",
         "version": "0.2.23",
         "dependencies": {
-          "@bitkyc08/opencodex": "file:sources/opencodex-2.97.0-desktop023.lifecycle.2.tgz"
+          "@bitkyc08/opencodex": "file:sources/opencodex-2.97.0-desktop023.lifecycle.3.tgz"
         }
       },
       "node_modules/@bitkyc08/opencodex": {
-        "version": "2.97.0-desktop023.lifecycle.2",
-        "resolved": "file:sources/opencodex-2.97.0-desktop023.lifecycle.2.tgz",
-        "integrity": "sha512-vZ08IHbbIdi9pLYWaO2h/i6JXuqL74Ck3XswHOVAViV50KQPSBtcAQfZ2k1yr+A3UATFCW4hwnWySjVykqW1BA==",
+        "version": "2.97.0-desktop023.lifecycle.3",
+        "resolved": "file:sources/opencodex-2.97.0-desktop023.lifecycle.3.tgz",
+        "integrity": "sha512-WmQENDAFiGCRefKrPLJqZ86uZ2tSqANgTcMLsG/wG8zFsRa682oZ/60hrEPcmv84zY1ufWcYo15n23e5kFEK3A==",
         "license": "MIT",
         "dependencies": {
           "@bufbuild/protobuf": "^2.14.0",

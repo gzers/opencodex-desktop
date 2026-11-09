@@ -131,7 +131,7 @@ $manifest=Get-Content -LiteralPath (Join-Path $program 'core-build.json') -Raw|C
 if($manifest.source -cne $expected -or $manifest.run -cne $ExpectedBuildRun){throw 'Specified source-bound artifact required'}
 foreach($file in $manifest.files){$path=Join-Path $program $file.path;$null=Assert-TwoUserUnder $program $path;Assert-TwoUserNoReparseAncestors $path;if((Get-Item $path).Length -ne $file.bytes -or (Get-FileHash $path).Hash -ine $file.sha256){throw 'Specified program member differs'}}
 $runtime=Join-Path $program 'runtime-bundle/maintained-runtime.tgz'
-if((Get-Item $runtime).Length -ne 15413257 -or (Get-FileHash $runtime).Hash -ine 'c02f4710496775d8f4dfe271bd90d6afdf7dbf960f6e696637271ab9f37bc70b'){throw 'Specified lifecycle.2 runtime differs'}
+if((Get-Item $runtime).Length -ne 15413397 -or (Get-FileHash $runtime).Hash -ine 'ec14baaee354c6729d1d2545ab9165d207b14a3a4239f354662163087eeb0739'){throw 'Specified lifecycle.3 runtime differs'}
 $original=Get-TwoUserTreeHash $program
 $summary=[ordered]@{accepted=$false;source=$expected;scope='user1-only; no peer, core-sweep or installer';startedUtc=[datetime]::UtcNow.ToString('o');controllerToken=(Get-WindowsHarnessToken);programTreeSha256=$original.sha256;accountsCreated=0}
 Write-TwoUserJson (Join-Path $taskRoot 'controller.json') $summary

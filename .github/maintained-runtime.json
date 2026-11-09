@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "maintainer": "gzers/opencodex-desktop",
-  "version": "2.97.0-desktop023.lifecycle.2",
-  "archive": "opencodex-2.97.0-desktop023.lifecycle.2.tgz",
-  "sha256": "c02f4710496775d8f4dfe271bd90d6afdf7dbf960f6e696637271ab9f37bc70b",
-  "bytes": 15413257,
+  "version": "2.97.0-desktop023.lifecycle.3",
+  "archive": "opencodex-2.97.0-desktop023.lifecycle.3.tgz",
+  "sha256": "ec14baaee354c6729d1d2545ab9165d207b14a3a4239f354662163087eeb0739",
+  "bytes": 15413397,
   "baseVersion": "2.97.0",
   "baseGitHead": "cab7eb7d0332ae0ebb4289d7c6bac1de666b6e40",
   "baseSha256": "3859a64198a05b0ebdbac0593b0cc6b675ec14f32b69ee100cda7a173404e552",
@@ -21,5 +21,17 @@
     "sha256": "fcd2740ecc32ae1e11c1c79d84c801b2c5d5447ae89e070ab060548d61f75ee6",
     "bytes": 15407218
   },
-  "lifetimeProtocol": "ocxd-runtime-lifetime/1"
+  "lifetimeProtocol": "ocxd-runtime-lifetime/1",
+  "previousLifecycleRevision": {
+    "version": "2.97.0-desktop023.lifecycle.2",
+    "archive": "opencodex-2.97.0-desktop023.lifecycle.2.tgz",
+    "sha256": "c02f4710496775d8f4dfe271bd90d6afdf7dbf960f6e696637271ab9f37bc70b",
+    "bytes": 15413257
+  },
+  "recordPathFix": {
+    "member": "src/lib/windows-runtime-private-record.ts",
+    "beforeSha256": "7ccc32253a043b79b0d87ddb73fc9a5792ee3e5d068857e2b3852e1d3230fb71",
+    "afterSha256": "3f60a3fde9689a10353bb085cfd824d8156b816f30e6c53ebc651489baa001a4",
+    "scope": "Admit canonical extended local drive paths; preserve original bytes and all native identity/ACL/publication guards"
+  }
 }

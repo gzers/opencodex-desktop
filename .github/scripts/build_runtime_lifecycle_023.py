@@ -8,7 +8,7 @@ from pathlib import Path
 import tempfile
 
 ROOT=Path(__file__).resolve().parents[2]
-VERSION='2.97.0-desktop023.lifecycle.2'
+VERSION='2.97.0-desktop023.lifecycle.3'
 
 
 def load(name,path):
@@ -22,6 +22,7 @@ def build(output,base):
     names=load('names_runtime_builder','.github/scripts/build_runtime_023.py')
     record=load('record_runtime_builder','test/smoke/build-runtime-record-prototype.py')
     producer=load('lifetime_runtime_builder','test/smoke/build-runtime-lifetime-prototype.py')
+    path_fix=load('record_path_fix','.github/scripts/runtime_record_path_023.py')
     with tempfile.TemporaryDirectory(prefix='ocxd023-lifecycle-composition-',dir=names.TEMP_ROOT) as directory:
         work=Path(directory)
         parent=names.build(work/'names',base)
@@ -33,6 +34,7 @@ def build(output,base):
         results=[]
         for _ in range(2):
             files=dict(original)
+            files[path_fix.MEMBER]=path_fix.apply(files[path_fix.MEMBER])
             package=json.loads(files['package.json'])
             package['version']=VERSION
             del package['desktop023RecordPrototype']
@@ -47,13 +49,20 @@ def build(output,base):
                 'sourceFiles':producer_report['reviewedProducerPostimages'],
                 'upstreamPublished':False,
             }
+            package['desktop023RecordPathFix']={
+                'member':path_fix.MEMBER,
+                'beforeSha256':path_fix.BEFORE_SHA256,
+                'afterSha256':names.sha(files[path_fix.MEMBER]),
+                'scope':'Admit canonical extended local drive paths; preserve original bytes and all native identity/ACL/publication guards',
+            }
             files['package.json']=names.json_bytes(package)
             compatibility=json.loads(files[names.COMPATIBILITY])
             entries={row['path']:row for row in compatibility['files']}
             entries['package.json']={**entries['package.json'],'sha256':names.sha(files['package.json'])}
+            entries[path_fix.MEMBER]={**entries[path_fix.MEMBER],'sha256':names.sha(files[path_fix.MEMBER])}
             compatibility['files']=[entries[key] for key in sorted(entries)]
             files[names.COMPATIBILITY]=names.json_bytes(compatibility)
-            assert {p for p in files if files[p]!=original[p]}=={'package.json',names.COMPATIBILITY}
+            assert {p for p in files if files[p]!=original[p]}=={'package.json',names.COMPATIBILITY,path_fix.MEMBER}
             results.append(names.canonical_archive(files,modes))
         assert results[0]==results[1]
         decoded,_=names.read_archive(results[0]);assert decoded==files
@@ -68,6 +77,7 @@ def build(output,base):
             installation='desktop-integrated-runtime',upstreamPublished=False,version=VERSION,archive=archive,
             sha256=names.sha(results[0]),bytes=len(results[0]),base=parent['base'],original=parent['original'],
             composition=dict(names=parent['sha256'],record=record_report['sha256'],producer=producer_report['sha256']),
+            recordPathFix=package['desktop023RecordPathFix'],
             runtimeFiles={p:names.sha(files[p]) for p in ['src/config/atomic-write.ts','src/lib/windows-runtime-private-record.ts',*producer.POSTIMAGES]},
             compatibilityInheritedAbsentMembersUnchanged=absent,
             files=[dict(path=p,sha256=names.sha(files[p]),bytes=len(files[p])) for p in sorted(files)],
