@@ -74,3 +74,11 @@ H-W6待定向补证：实际Administrator控制台high + 当前15119 RDP未提�
 H-W7先补固定内部失败阶段/毫秒序列，仅app.log，不改变公开失败、归属、实际还原、Stop逻辑、HTTP认证或30/10/5秒。另在POST响应读回后加一个固定阶段，以区分传输失败与服务端返回未确认。诊断源4d783585645206c52b49bce8656475d26940c1d7，先构建新Desktop及同源供应fixture，不用旧二进制猜新诊断。下一轮只补受影响跨会话启停协议；没有新阶段证据就停止。未更改维护包，未重验安装器/已通过独立单用户。
 
 Profile1018只读事件显示23:33原加载事件，仍Loaded；没有卸载或新持有者线索，不凭猜测强卸/删账户。托盘六处相关Git对象与2c6基线全部相同，tray-boundary-source-proof.json允许复用旧双方隐藏重开及原句柄正常退出范围，不声称本轮新交互。
+
+### H-W7新源构建已通过，实际运行仍待（00:40）
+
+代码4d783585645206c52b49bce8656475d26940c1d7/appsTree d2facb41f19ce1ef6930c743460c4f00010bfc12；build42653885333完成。原program artifact13692037223/304979005字节/SHA256 cf5c5e319102b921ab204dfb990214363a829df7428f603bf3ada41d971a0ad6，9成员全部核验，Desktop b0f671ef6406a1af2daae14ab93cb8b4c55ada3162c88c74c454291e4f87e5a7区别于旧程序。原绑定3/认证状态与Stop9用例实际通过，未跑全量。lifecycle.3及ec14运行包摘要保持。
+
+同源fixture build42653892698成功，工具EXE SHA256 91bc8038a7ed34a2d796308a20f229437e04ae8fa019fe9696dfa9e88f45870f，来源/appsTree/descriptor核验。两构建所有ZIP均由指定代理下载并核对API摘要；watcher最后汇总时因整型字典key导致ConvertTo-Json错误，发生于全部下载解包之后，downloads-verified.json单列，没有重派构建或重下。原失败状态不抹去。
+
+下一cross-session-02启动准备已采用新源码程序和新fixture。H-W7固定阶段诊断外，在失败清理前采集原句柄真实退出码、RDP自己新鲜Sandbox客户端路由字段/摘要，不追加产品动作。只读正式task查询的首次HResult格式化有符号转换错误亦保留，r2以原生COM错误80070002证明精确opencodex-proxy任务不存在；没有修改任务/策略。此只读结果本身不证明Stop通过。HTTP close边界仅作待证源码线索，不写为原因或修复。

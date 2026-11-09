@@ -1,0 +1,11 @@
+{
+  "observedUtc": "2026-11-09T16:28:33.7844282Z",
+  "claim": "Connection close signals closure after the response; Content-Length still requires complete exact bytes. A final authenticated Stop response can be valid even when its TCP connection will close. This is a protocol possibility, not yet a proven cause of cross-session-01.",
+  "source": "RFC9112",
+  "sections": [
+    "6.3 Message Body Length",
+    "9.6 Tear-down"
+  ],
+  "runtimeChanged": false,
+  "url": "https://www.rfc-editor.org/rfc/rfc9112.html"
+}
