@@ -1,0 +1,33 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "platform": "macOS arm64",
+  "runtimeBytesUnchanged": true,
+  "source": "070d7a67d5e6efa52c798a7575d66d018c0515b3",
+  "fixtureBytes": 145803984,
+  "fixtureSha256": "ebd2d552c7bebde593dd0390530963ad28de56bccde6ce387cdbe55fb0b6fb8e",
+  "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+  "sha2Version": "0.10.9",
+  "devOverride": "sha2 opt-level=3, same as current product",
+  "releaseProfile": "opt-level=s, lto=true, codegen-units=1, panic=abort, strip=true, same as product",
+  "debugMilliseconds": [
+    257,
+    242,
+    248
+  ],
+  "releaseMilliseconds": [
+    516,
+    495,
+    496
+  ],
+  "binarySha256": {
+    "debug": "64b25733464e99915bc1aa612297253ad945a3b100f65f385b597eb91eb0bfb5",
+    "release": "3d969ff6f2e994c695a3b912fbfdcc287fb8d54dbc5d939abe0e2a3feb326fec"
+  },
+  "conclusion": "No local evidence that debug hashing explains Windows 9.8s stop or 5s observations. No source/build-profile change adopted. Mac scratch measurement omits production activation/ACL and cannot replace real Windows subphases.",
+  "cleanup": {
+    "ownedFixtureRemoved": true,
+    "ownedBuildTargetRemoved": true,
+    "evidenceRetained": true
+  }
+}

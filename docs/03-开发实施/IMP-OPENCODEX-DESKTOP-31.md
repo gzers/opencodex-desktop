@@ -328,3 +328,6 @@ a581ea0ca只增加test/.github只读定位，产品apps树4bfcbcc6与8ca50832b�
 [16b4完整CI回执](../../.adg/evidence/0.2.23/ci-16b4-final-42531978066/verification.json)所有适用job成功。原Windows后端ZIP29399046字节/SHA256904f87859cafdfd0c473efed1c4c3577736b067952943b07f9d5036191631d46核验；49个真实普通令牌Rust二进制全部原始退出0，账户/Profile移除、源码与制品ACL/桌面ACL恢复、源码字节不变及新SID进程零残留均有原回执。该二进制组明确不含docTests且fullWorkspacePassed:false，不能凭它声称完整workspace；独立管理员组仍按原CI日志区分。PRmerge c848b89e与source16b4同tree9d76125c，产品apps树db4ac662与070d相同。CI成功不关闭正常启停/安装器/升级回退/发布门。
 
 随后派发[第33轮完整28项](https://github.com/gzers/opencodex-desktop/actions/runs/42539896297)，固定070d7a67d5e6efa52c798a7575d66d018c0515b3、job128912259887已确认运行。仍accepted:false、原30/10/5秒与所有归属/还原/退出检查。真实Stop子阶段及失败Start后的独立supplemental诊断只补定位，不补判失败、不放行peer、不以迟到ready冒称通过。等完整summary后先展示全表，再整批修复；未派其它完整轮，未发布。
+
+
+补充排除性测量：[摘要成本对照](../../.adg/evidence/0.2.23/hash-cost-profile-20261109/analysis.json)在本机复制同一139MB原Node，仅测相同sha2版本/64KiB读取；现行dev（sha2 opt-level=3）三次257/242/248ms，原release配置516/495/496ms，摘要全部相同。故没有本机证据支持把Windows近9.8秒停止归因于Debug摘要；不据此改构建profile。该夹具不含生产ACL/激活检查，不能替代Windows真实阶段。原源码/日志/摘要保留，精确复制的Node与构建target已移除。
