@@ -186,6 +186,17 @@ impl OfficialStatusSource {
             let _ = child.wait().await;
         }
         let payload: serde_json::Value = result?;
+        if self.runtime.managed_installation_root().is_some() {
+            admit_managed_cli_without_record(&payload, &self.environment.opencodex_home)?;
+            // A CLI started without our record cannot acquire authority over an
+            // endpoint which appeared while it was collecting system-wide facts.
+            if !matches!(
+                std::fs::symlink_metadata(self.environment.opencodex_home.join("runtime-port.json")),
+                Err(error) if error.kind() == std::io::ErrorKind::NotFound
+            ) {
+                return Err(CollectError::Unreachable);
+            }
+        }
         *self.cache.lock().map_err(|_| CollectError::Unreachable)? = Some(CachedStatus {
             executable,
             at: Instant::now(),
@@ -266,6 +277,122 @@ impl OfficialStatusSource {
             }
         }
         self.fetch_inner().await
+    }
+}
+
+/// The official CLI may discover another account's listener when this H has
+/// no endpoint. A managed live observation must come through the authenticated
+/// record path above, never through that global fallback. Diagnostic Stopped
+/// observations still require the explicit own H and grant no Stop authority.
+fn admit_managed_cli_without_record(
+    payload: &serde_json::Value,
+    home: &std::path::Path,
+) -> Result<(), CollectError> {
+    use crate::types::status::{ConnectionState, OperationState, RuntimeState};
+    let report = crate::modules::status::OfficialStatusReport::from_value(payload.clone());
+    let mapped = crate::modules::status::map_official_output(
+        &report,
+        None,
+        ConnectionState::Unconfigured,
+        OperationState::Idle,
+    );
+    let own = |path: &std::path::Path| {
+        let key = |p: &std::path::Path| {
+            #[cfg(windows)]
+            {
+                p.to_string_lossy()
+                    .replace('\\', "/")
+                    .trim_start_matches("//?/")
+                    .to_lowercase()
+            }
+            #[cfg(not(windows))]
+            {
+                p.to_string_lossy().into_owned()
+            }
+        };
+        path.is_absolute()
+            && (key(path) == key(home) || key(path) == key(&home.join("config.json")))
+    };
+    if mapped.runtime != RuntimeState::Stopped
+        || mapped.pid.is_some()
+        || payload["proxy"]["running"] == true
+        || payload["ready"] == true
+        || !mapped.facts.opencodex_home.as_deref().is_some_and(own)
+    {
+        return Err(CollectError::Unreachable);
+    }
+    // Contradictory aliases cannot be hidden behind the mapper's first choice.
+    for value in [
+        payload.get("opencodexHome"),
+        payload.get("opencodex_home"),
+        payload.get("home"),
+        payload.get("paths").and_then(|p| p.get("config")),
+    ]
+    .into_iter()
+    .flatten()
+    {
+        let path = value.as_str().or_else(|| value.get("path")?.as_str());
+        if !path.is_some_and(|p| own(std::path::Path::new(p))) {
+            return Err(CollectError::Unreachable);
+        }
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+mod managed_cli_admission_tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn accepts_only_own_stopped_diagnostic_without_endpoint_authority() {
+        let root = tempfile::tempdir().unwrap();
+        let home = root.path().join("own H");
+        for reported in [&home, &home.join("config.json")] {
+            assert_eq!(
+                admit_managed_cli_without_record(
+                    &json!({"status":"stopped","paths":{"config":reported},"proxy":{"running":false}}),
+                    &home
+                ),
+                Ok(())
+            );
+        }
+    }
+
+    #[test]
+    fn rejects_other_account_live_payload_even_with_own_config_path() {
+        let root = tempfile::tempdir().unwrap();
+        let home = root.path().join("own H");
+        let peer = json!({"status":"running","pid":"40612","port":53147,"opencodexHome":home,"health":"healthy","proxy":{"running":true,"pid":40612}});
+        assert_eq!(
+            admit_managed_cli_without_record(&peer, &home),
+            Err(CollectError::Unreachable)
+        );
+        let mut contradictory = peer;
+        contradictory["status"] = json!("stopped");
+        contradictory.as_object_mut().unwrap().remove("pid");
+        assert_eq!(
+            admit_managed_cli_without_record(&contradictory, &home),
+            Err(CollectError::Unreachable)
+        );
+    }
+
+    #[test]
+    fn rejects_missing_foreign_or_contradictory_home_and_residual_pid() {
+        let root = tempfile::tempdir().unwrap();
+        let home = root.path().join("own H");
+        for value in [
+            json!({"status":"stopped"}),
+            json!({"status":"stopped","opencodexHome":root.path().join("peer H")}),
+            json!({"status":"stopped","opencodexHome":home,"paths":{"config":root.path().join("peer H/config.json")}}),
+            json!({"status":"stopped","opencodexHome":home,"pid":"40612"}),
+            json!({"status":"stopped","opencodexHome":home,"ready":true}),
+        ] {
+            assert_eq!(
+                admit_managed_cli_without_record(&value, &home),
+                Err(CollectError::Unreachable)
+            );
+        }
     }
 }
 
