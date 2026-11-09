@@ -4,6 +4,17 @@ use hmac::{Hmac, Mac};
 use serde::Deserialize;
 use sha2::{Digest, Sha256};
 use std::path::{Path, PathBuf};
+fn read_candidate(path: &Path) -> Option<Vec<u8>> {
+    use std::io::Read;
+    let file = std::fs::File::open(path).ok()?;
+    let metadata = file.metadata().ok()?;
+    if !metadata.is_file() || metadata.len() > 8192 {
+        return None;
+    }
+    let mut bytes = Vec::new();
+    file.take(8193).read_to_end(&mut bytes).ok()?;
+    (bytes.len() <= 8192).then_some(bytes)
+}
 
 #[derive(Clone, Debug, Deserialize, serde::Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -101,7 +112,7 @@ impl Binding {
 }
 
 pub(crate) fn verify_candidate_file(path: &Path, home: &Path, sid: &str) -> bool {
-    let Ok(bytes) = std::fs::read(path) else {
+    let Some(bytes) = read_candidate(path) else {
         return false;
     };
     if bytes.len() > 8192 {
@@ -416,7 +427,7 @@ pub(crate) mod native {
             if !verify_candidate_file(record, home, sid) {
                 return Err(error());
             }
-            let raw = std::fs::read(record)?;
+            let raw = read_candidate(record).ok_or_else(error)?;
             let value: serde_json::Value = serde_json::from_slice(&raw).map_err(|_| error())?;
             let binding: Binding =
                 serde_json::from_value(value["candidateBinding"].clone()).map_err(|_| error())?;
@@ -466,7 +477,7 @@ pub(crate) mod native {
                 return Err(error());
             }
             if io::Error::last_os_error().raw_os_error() != Some(33)
-                || std::fs::read(record)? != raw
+                || read_candidate(record).ok_or_else(error)? != raw
             {
                 return Err(error());
             }
