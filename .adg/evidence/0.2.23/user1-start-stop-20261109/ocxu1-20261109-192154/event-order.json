@@ -1,0 +1,152 @@
+{
+  "accepted": false,
+  "orderSource": "Original trace array position, no replay or inferred missing events",
+  "events": [
+    {
+      "eventOrdinal": 1,
+      "rawTraceRow": {
+        "sequence": 1,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 38.1554,
+        "atUtc": "2026-11-09T11:24:12.055Z",
+        "command": "model_paths_v2_snapshot",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 2,
+      "rawTraceRow": {
+        "sequence": 2,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 124.63539999999999,
+        "atUtc": "2026-11-09T11:24:12.142Z",
+        "command": "model_paths_v2_snapshot"
+      }
+    },
+    {
+      "eventOrdinal": 3,
+      "rawTraceRow": {
+        "sequence": 3,
+        "stage": "start-proof-begin",
+        "elapsedMilliseconds": 126.04520000000001,
+        "atUtc": "2026-11-09T11:24:12.143Z"
+      }
+    },
+    {
+      "eventOrdinal": 4,
+      "rawTraceRow": {
+        "sequence": 4,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 126.633,
+        "atUtc": "2026-11-09T11:24:12.144Z",
+        "command": "get_data_root_config",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 5,
+      "rawTraceRow": {
+        "sequence": 5,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 130.8394,
+        "atUtc": "2026-11-09T11:24:12.148Z",
+        "command": "get_data_root_config"
+      }
+    },
+    {
+      "eventOrdinal": 6,
+      "rawTraceRow": {
+        "sequence": 6,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 130.85449999999997,
+        "atUtc": "2026-11-09T11:24:12.148Z",
+        "command": "model_paths_v2_snapshot",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 7,
+      "rawTraceRow": {
+        "sequence": 7,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 206.41900000000004,
+        "atUtc": "2026-11-09T11:24:12.224Z",
+        "command": "model_paths_v2_snapshot"
+      }
+    },
+    {
+      "eventOrdinal": 8,
+      "rawTraceRow": {
+        "sequence": 8,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 210.44640000000004,
+        "atUtc": "2026-11-09T11:24:12.228Z",
+        "command": "get_data_root_config",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 9,
+      "rawTraceRow": {
+        "sequence": 9,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 213.4361,
+        "atUtc": "2026-11-09T11:24:12.231Z",
+        "command": "get_data_root_config"
+      }
+    },
+    {
+      "eventOrdinal": 10,
+      "rawTraceRow": {
+        "sequence": 10,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 213.464,
+        "atUtc": "2026-11-09T11:24:12.231Z",
+        "command": "model_paths_v2_snapshot",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 11,
+      "rawTraceRow": {
+        "sequence": 11,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 289.4499,
+        "atUtc": "2026-11-09T11:24:12.307Z",
+        "command": "model_paths_v2_snapshot"
+      }
+    },
+    {
+      "eventOrdinal": 12,
+      "rawTraceRow": {
+        "sequence": 12,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 289.5215,
+        "atUtc": "2026-11-09T11:24:12.307Z",
+        "command": "process_action",
+        "action": "start"
+      }
+    },
+    {
+      "eventOrdinal": 13,
+      "rawTraceRow": {
+        "sequence": 1,
+        "stage": "action-return",
+        "elapsedMilliseconds": 8346.9137,
+        "atUtc": "2026-11-09T11:24:20.364Z",
+        "action": "start",
+        "rejected": null
+      }
+    },
+    {
+      "eventOrdinal": 14,
+      "rawTraceRow": {
+        "sequence": 14,
+        "stage": "wait-owned-health",
+        "elapsedMilliseconds": 30313.1633,
+        "atUtc": "2026-11-09T11:24:42.330Z",
+        "message": "Actual service not healthy within production start budget"
+      }
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "accepted": false,
+  "source": "8445d65dca0af76c3275f8617a76c1a726fb8873",
+  "batch": "ocxu1-20261109-192154",
+  "start": {
+    "rawReceiptCount": 1,
+    "successfulReceiptCount": 0,
+    "uniqueSuccessfulReceipt": false,
+    "pidPortConsistentWithNativeRecord": null,
+    "publicRecord": null,
+    "nativeRecord": null,
+    "recordObserved": false,
+    "pidPortUnavailableReason": "No protected runtime record observed; do not treat launcher PIDs as service PIDs",
+    "classification": "actual-start-process-exited-before-confirmation",
+    "firstStartTrace": {
+      "file": "user1/desktop-logs/app.log",
+      "line": 8,
+      "text": "2026-11-09T11:24:20.348Z [manager] start: failed (managed runtime operation failed: lifecycle_start_exit; 官方启动进程退出，服务未确认就绪；exit_code=1; duration_ms=8028)"
+    },
+    "admissionTrace": [],
+    "admissionStageKindWin32": "not-observed; no inference of successful admission"
+  },
+  "stop": {
+    "executed": false,
+    "confirmed": false,
+    "reasonIfNotExecuted": "Start not confirmed; no normal Stop permitted",
+    "traceFile": null,
+    "realOriginalExitEvidence": "user1/original-exits-before-cleanup.json",
+    "separateStopCliExitCode": null,
+    "separateStopCliReason": "Normal product Stop is authenticated HTTP; do not invent a CLI exit code"
+  },
+  "cleanup": {
+    "accountSid": "S-1-5-21-587408064-856152790-2583328096-1009",
+    "accountName": "ocxaccu1a66ac3cb9",
+    "profile": "C:\\Users\\ocxaccu1a66ac3cb9",
+    "accountRemoved": true,
+    "profileRemoved": true,
+    "userDirectoryRemoved": true,
+    "desktopAclRestored": true,
+    "identityUnproven": false,
+    "cleanupFailure": null,
+    "residualProcesses": [],
+    "programUnchanged": true
+  }
+}

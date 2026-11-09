@@ -2,6 +2,8 @@
 
 日期：2026-11-09。状态：Git交接准备；Windows执行和回交待完成，诊断结论 accepted:false。此指令覆盖 WINDOWS、TEAM 和 IMP-31 中此前下一轮 core-sweep／双SID／安装器的下一动作；历史证据保留。
 
+执行回交更新（2026-11-09 19:28，Asia/Shanghai）：Windows已按本合同执行指定封存产物的单用户诊断，产品Start仅1次，原回执1条／成功0条，无受保护记录及服务PID／端口；首个失败为8028ms实际启动链exit1，固定准入stage/kind/win32未观察到，不归因准入已过／被拒，也不把后续30102ms确认失败覆盖首因。启动未成功，正常Stop未执行。账户/Profile/原用户目录全删除，残留进程空，桌面ACL恢复。两次新装配前置失败独立保留，不是旧轮重跑。代码仅test/**沿codex/0.2.23-integration@dc919da846260b0c11bebc04c56fd32963929d45回交；[完整四项原证据与环境](../../../.adg/evidence/0.2.23/user1-start-stop-20261109/README.md)，实际产品批次ocxu1-20261109-192154，诊断accepted:false。下文固定输入和判定合同保持；未产品返修、未core-sweep／双SID／安装器／发布。
+
 ## 固定输入
 
 - 仓库：gzers/opencodex-desktop。
