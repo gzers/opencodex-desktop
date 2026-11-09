@@ -109,6 +109,12 @@ class Ota023(base.OtaRun):
         assert not any(p['pgid'] == pgid for p in base.process_rows()), 'Automatic new process did not exit for manual rollback'
         old_data = {rel: base.sha(self.root / rel) for rel in self.business}
         new_data = base.inventory(self.root / 'data')
+        # Keep exact rollback inputs outside the disposable container even if
+        # a native observer fails before the old process mounts its WebView.
+        for rel in self.business:
+            target = self.out / 'rollback-inputs' / rel
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(self.root / rel, target)
         rollback = self.container / 'rollback'
         rollback.mkdir(mode=0o700)
         self.app = rollback / 'OpenCodeX Desktop.app'
@@ -124,6 +130,15 @@ class Ota023(base.OtaRun):
         self.owned[self.pid] = {'pid': self.pid, 'pgid': self.pid, 'command': str(self.exe)}
         self.report['rollbackExecuted'] = True
         self.report['rollbackLaunchCalls'] = 1
+        registration_deadline = time.monotonic() + 10
+        while True:
+            if self.rollback_process.poll() is not None:
+                raise base.Blocked('Original rollback process exited before native registration')
+            if any(p['pid'] == self.pid for p in self.find_apps()):
+                break
+            if time.monotonic() >= registration_deadline:
+                raise base.Blocked('Original rollback process was not registered in the native app list')
+            time.sleep(.1)
         self.wait(lambda s: any(n.get('role') == 'AXWebArea' for n in s['nodes']), 35, 'manual-old-original-rollback-mounted')
         self.ax('focus'); self.press('模型'); self.press('渠道模型')
         readback = self.wait(lambda s: 'ota021-preserve' in self.text(s), 25, 'manual-old-original-rollback-channels')
