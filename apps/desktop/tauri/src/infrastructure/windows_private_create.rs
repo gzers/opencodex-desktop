@@ -788,7 +788,6 @@ mod tests {
                     (true, true, false) => "detachedSelfJobLeasePrototype",
                     (false, _, true) => "candidateLifetimePrototype",
                     (true, _, true) => "detachedCandidateLifetimePrototype",
-                    _ => unreachable!("fixed independent diagnostic cases"),
                 };
                 let lease_result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                     let lease_root = task.path().join(case_key);
