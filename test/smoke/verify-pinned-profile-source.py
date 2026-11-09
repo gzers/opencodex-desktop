@@ -11,9 +11,14 @@ if os.name != 'nt' or os.environ.get('GITHUB_ACTIONS') != 'true':
 repo = Path(__file__).resolve().parents[2]
 package = Path(sys.argv[1]).resolve()
 output = Path(sys.argv[2]).resolve()
-boundary = Path(os.environ['RUNNER_TEMP']).resolve()
-package.relative_to(boundary)
-output.relative_to(boundary)
+if len(sys.argv) == 4 and sys.argv[3] == '--ordinary-stop-profile':
+    package.relative_to((repo / 'test/out/ownership-runtime-stage/platform-bundle/runtime-bundle').resolve())
+    output.relative_to((repo / 'test/out/windows023-ordinary-preflight').resolve())
+else:
+    assert len(sys.argv) == 3
+    boundary = Path(os.environ['RUNNER_TEMP']).resolve()
+    package.relative_to(boundary)
+    output.relative_to(boundary)
 pin = json.loads((repo / '.github/maintained-runtime.json').read_text())
 archive = repo / 'apps/desktop/tauri/resources/runtime-bundle/maintained-runtime.tgz'
 assert hashlib.sha256(archive.read_bytes()).hexdigest() == pin['sha256']
@@ -22,7 +27,8 @@ with tarfile.open(archive, 'r:gz') as source:
     for relative in ['src/service.ts', 'src/service/windows-scheduler.ts',
                      'src/service/orchestration.ts', 'src/lib/winsw.ts',
                      'src/codex/history-job.ts', 'src/codex/history-worker.ts',
-                     'src/codex/inject/restore.ts']:
+                     'src/codex/inject/restore.ts', 'src/service/windows-ops.ts',
+                     'src/lib/windows-service-wrappers.ts']:
         expected = source.extractfile('package/' + relative).read()
         actual = (package / relative).read_bytes()
         assert actual == expected, 'Profile source differs from original pinned bytes'

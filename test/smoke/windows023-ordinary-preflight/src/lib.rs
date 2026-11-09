@@ -141,6 +141,10 @@ mod tests {
             .env("CODEX_HOME", profile.join(".codex"))
             .env("OCX_NO_DESKTOP_HANDOFF", "1")
             .env("OCXD_OWNERSHIP_DIAG_PACKAGE", &package)
+            .env(
+                "OCXD_READONLY_STOP_COSTS",
+                option_env!("OCXD_READONLY_STOP_COSTS").unwrap_or("0"),
+            )
             .current_dir(&h)
             .spawn()
             .expect("actual adopted Bun readonly ownership probe");

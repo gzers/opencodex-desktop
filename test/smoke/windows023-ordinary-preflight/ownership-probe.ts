@@ -22,3 +22,39 @@ const runRaw=(file:string,args:string[],options:any)=>{
 const start=Date.now();
 const ownership=native.inspectNativeCodexOwnership({runRaw});
 console.log(JSON.stringify({probe:'actual-adopted-ordinary-native-ownership',version:meta.version,elapsedMilliseconds:Date.now()-start,ownership:ownership.ownership,reason:reason(ownership.reason),commands,clientHomeExists:existsSync(process.env.CODEX_HOME!),configExists:existsSync(join(process.env.OPENCODEX_HOME!,'config.json')),accepted:false,fullSoftwarePassed:false}));
+
+if(process.env.OCXD_READONLY_STOP_COSTS==='1'){
+ const {spawnSync}=await import('node:child_process');
+ const wrappers=await import(pathToFileURL(join(root,'src/lib/windows-service-wrappers.ts')).href);
+ const elevation=await import(pathToFileURL(join(root,'src/lib/windows-elevation.ts')).href);
+ const state=await import(pathToFileURL(join(root,'src/service/state.ts')).href);
+ const service=await import(pathToFileURL(join(root,'src/service.ts')).href);
+ const scheduler=await import(pathToFileURL(join(root,'src/service/windows-scheduler.ts')).href);
+ const winsw=await import(pathToFileURL(join(root,'src/lib/winsw.ts')).href);
+ const phases:any[]=[];
+ const measure=(name:string,work:()=>unknown)=>{const t=performance.now();try{const value=work();phases.push({name,milliseconds:performance.now()-t,value,accepted:false});}catch(error){phases.push({name,milliseconds:performance.now()-t,errorType:error?.constructor?.name??'unknown',accepted:false});}};
+ measure('official-respawn-risk',()=>({risk:service.installedServiceRespawnRisk()}));
+ measure('official-scheduler-presence',()=>({status:scheduler.probeWindowsSchedulerTask().status}));
+ measure('official-native-service-presence',()=>({status:winsw.statusWinswRaw()}));
+ const original=wrappers.windowsWrapperKillScript([state.windowsServiceScriptPath(),state.windowsLauncherVbsPath()]);
+ const sink='ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }';
+ if(original.split(sink).length!==2||!original.endsWith(sink))throw Error('Exact original wrapper sink changed');
+ // Keep the original token/path matcher; replace its sole mutation sink with
+ // sorted IDs. Never invoke the wrapper killer or a service stop function.
+ const readonly=original.slice(0,-sink.length)+'ForEach-Object { $_.ProcessId } | Sort-Object';
+ const fullQuery='Get-CimInstance Win32_Process';
+ if(readonly.split(fullQuery).length!==2||/Stop-Process|taskkill|Invoke-CimMethod|Remove-CimInstance/.test(readonly))throw Error('Read-only projection admission failed');
+ const filter=String.fromCharCode(34)+"Name='cmd.exe' OR Name='wscript.exe' OR Name='cscript.exe'"+String.fromCharCode(34);
+ const filtered=readonly.replace(fullQuery,fullQuery+' -Filter '+filter);
+ const powershell=elevation.resolveTrustedWindowsPowerShellExe();
+ const samples:any[]=[];
+ // Counterbalance fresh processes; retain the original 5s child budget.
+ for(const variant of ['original-readonly','filtered-readonly','filtered-readonly','original-readonly']){
+  const command=variant==='original-readonly'?readonly:filtered,t=performance.now();
+  const value=spawnSync(powershell,['-NoProfile','-NoLogo','-NonInteractive','-Command',command],{stdio:['ignore','pipe','pipe'],timeout:5000,windowsHide:true});
+  const stdout=Buffer.from(value.stdout??[]),stderr=Buffer.from(value.stderr??[]);
+  samples.push({variant,milliseconds:performance.now()-t,status:value.status,signal:value.signal,errorCode:value.error?.code??null,stdoutBytes:stdout.length,stdoutSha256:digest(stdout),stderrBytes:stderr.length,stderrSha256:digest(stderr),accepted:false});
+ }
+ const sourceFiles:any={};for(const relative of ['src/service/windows-ops.ts','src/lib/windows-service-wrappers.ts']){const b=readFileSync(join(root,relative));sourceFiles[relative]={bytes:b.length,sha256:digest(b)};}
+ console.log(JSON.stringify({probe:'ordinary-readonly-stop-costs',accepted:false,diagnosticOnly:true,fullSoftwarePassed:false,phases,samples,sourceFiles,matcherBytesUnchanged:true,mutationSinkReplaced:true,serviceOrTaskMutation:false,productStarted:false,originalChildBudgetMilliseconds:5000,limitations:'Read-only projection under one fresh ordinary SID. Filtered query is only an experiment; no runtime patch or real stop acceptance. Zero fixture matches do not prove all matching counterexamples.'}));
+}
