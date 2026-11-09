@@ -1,0 +1,19 @@
+{
+  "source": "fdf5d4db551f71cbf493dc97b428f8b9a9364a7a",
+  "budgetsMilliseconds": {
+    "stop": 10000,
+    "start": 30000,
+    "status": 5000
+  },
+  "nativeTestExpectation": "Start within30s; immediately normalStop within10s with actual restore and original process exit0; then cleanup",
+  "downloadProxy": "http://127.0.0.1:3060",
+  "observedUtc": "2026-11-09T14:34:34.5010048Z",
+  "artifactId": 13681803354,
+  "hypothesis": "Equivalent safe DOS/verbatim HOME spellings rejected by lifetime consumer; two HOME comparisons fixed without signed-byte or native-authority changes",
+  "documentRef": "e98d1252bc1c5897134dcca64aba9c9a49fe7c43",
+  "artifactBytes": 304980804,
+  "artifactSha256": "a44664fb38780898d6ce1907f8c277f61c996d1afd008d9ec1935cf9ed17824a",
+  "run": "42631183420",
+  "authorization": "User delegated item13 direct analysis/minimal fix/affected verification; no Mac relay",
+  "temporaryAccountCountBefore": 0
+}

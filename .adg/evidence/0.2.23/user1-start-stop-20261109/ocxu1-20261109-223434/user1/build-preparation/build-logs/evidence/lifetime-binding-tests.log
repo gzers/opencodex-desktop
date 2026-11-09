@@ -1,0 +1,11 @@
+   Compiling opencodex-desktop v0.2.23 (D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3m 02s
+     Running unittests src\lib.rs (apps\desktop\tauri\target\debug\deps\opencodex_desktop_lib-9560cfa22fb896de.exe)
+
+running 3 tests
+test infrastructure::runtime_lifetime::tests::fixed_binding_rejects_every_mutated_field_and_request_context ... ok
+test infrastructure::runtime_lifetime::tests::signed_but_wrong_job_schema_or_malformed_identity_never_gains_authority ... ok
+test infrastructure::runtime_lifetime::tests::signed_dos_home_matches_extended_context_without_rewriting_binding ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 1755 filtered out; finished in 0.00s
+

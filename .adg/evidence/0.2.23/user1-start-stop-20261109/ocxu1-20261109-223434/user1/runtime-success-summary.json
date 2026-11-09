@@ -1,0 +1,44 @@
+{
+  "item13BoundedRuntimePassed": true,
+  "cleanupPending": false,
+  "versionAcceptance": false,
+  "source": "fdf5d4db551f71cbf493dc97b428f8b9a9364a7a",
+  "runtimeVersion": "2.97.0-desktop023.lifecycle.3",
+  "start": {
+    "receiptCount": 1,
+    "successfulReceiptCount": 1,
+    "unique": true,
+    "budgetMilliseconds": 30000,
+    "elapsedMilliseconds": 15351,
+    "pid": 81424,
+    "port": 61934,
+    "protectedRecordNativeListenerAndHealthAgree": true,
+    "actualClientConfigWrittenAndAssignedPortBound": true
+  },
+  "stop": {
+    "receiptCount": 1,
+    "confirmed": true,
+    "budgetMilliseconds": 10000,
+    "elapsedMilliseconds": 8727,
+    "startProofToStopPhaseMilliseconds": 0.016999999999825377,
+    "clientRestoreReadback": true,
+    "recordAbsentAndStatusNotRunning": true,
+    "serviceOriginalHandleExitedBeforeCleanup": true,
+    "serviceActualExitCodeBeforeCleanup": 0,
+    "driverExitCode": 0,
+    "stopCliExitCode": null,
+    "stopCliNote": "Product Stop uses authenticated HTTP. Original service exit0 is retained independently; no separate Stop CLI exit invented."
+  },
+  "failure": null,
+  "noAdditionalStartOrStop": true,
+  "startupOutput": {
+    "observed": false,
+    "reason": "Successful original start/stop logs have no startup_output field; no prior failed output imported."
+  },
+  "hypothesisResult": "Safe equivalent HOME comparison fix admits the same signed HOME; native witness and full official teardown/exit now pass without authority/budget changes.",
+  "item13BoundedPassed": true,
+  "accountProfileAndServiceCleanupPassed": true,
+  "buildScratchCleanupComplete": false,
+  "buildScratchCleanupBlock": "Automatic approval rejected recursive deletion of own compiled target and downloaded ZIP parts: blocked by policy; see task-scratch-cleanup.json",
+  "noFurtherRuntimeTestsAfterPassing": true
+}

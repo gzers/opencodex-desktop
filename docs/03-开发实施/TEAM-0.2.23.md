@@ -1,5 +1,7 @@
 # 0.2.23 多对话团队协作文件
 
+2026-11-09最新第13项责任及结果：用户授权Windows直接负责该项原因分析/最小修复/定向验证，无需每轮Mac中转。fdf5d4db551f71cbf493dc97b428f8b9a9364a7a修复HOME等价拼写，真实普通user1启动15351ms、正常Stop/实际还原8727ms、原服务exit0，账户/Profile及进程清理通过，已停止追加测试；自建编译/下载缓存删除遭自动审批拒绝单列。详见[第13项本机记录](0.2.23-contracts/item13-local-stop-home-fix-20261109.md)。此后继指令仅覆盖第13项旧中转要求，不授权双SID/安装器/core-sweep/全量、第18项独立修复或发布；整版仍未验收。
+
 2026-11-07，Asia/Shanghai。**按用户最新指令，已有贡献回交后统一由主对话完成剩余修复、验证、治理和发布，不再派发新工作。** 前序R0/G0段落作为过程来源保留；本文拥有责任边界、启动条件和回交合同，不复制需求验收，不维护第二份任务状态。
 
 执行阶段/整版顺序唯一归[IMP-31](IMP-OPENCODEX-DESKTOP-31.md#3-实施顺序与并行边界)，目录及Windows细目归[IMP-32](IMP-OPENCODEX-DESKTOP-32.md)，模版细目归[IMP-33](IMP-OPENCODEX-DESKTOP-33.md)。范围/验收归[DMD-POST022](../01-需求管理/需求/DMD-OPENCODEX-POST022.md)、[DMD-USER-DIRECTORY](../01-需求管理/需求/DMD-OPENCODEX-USER-DIRECTORY.md)、[DMD-TEMPLATE-MATCHING](../01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md)。本文件不授权发布、真实同步或修改日常配置。

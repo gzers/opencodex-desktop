@@ -1,0 +1,40 @@
+{
+  "result": "pass-runtime-step",
+  "mode": "stop",
+  "home": "C:\\Users\\ocxaccu154d6c1104\\.codex-desktop\\opencodex\\home",
+  "root": "C:\\Users\\ocxaccu154d6c1104\\.codex-desktop\\desktop",
+  "port": 61934,
+  "before": {
+    "record": {
+      "pid": 81424,
+      "port": 61934
+    },
+    "attestation": "verified-production-challenge",
+    "healthService": "opencodex",
+    "version": "2.97.0-desktop023.lifecycle.3"
+  },
+  "action": {
+    "lifecycleState": "stopped",
+    "result": "stopped",
+    "failureCode": null,
+    "canStop": false,
+    "canRestart": false
+  },
+  "status": {
+    "runtime": "stopped",
+    "health": "unknown",
+    "source": "live",
+    "pid": null,
+    "port": 61934,
+    "protection": "none",
+    "startupStatus": "native",
+    "servicePresent": null,
+    "rebootSafe": true
+  },
+  "stopped": true,
+  "nativeClientRestoredReadback": true,
+  "stopBudget": {
+    "budgetMilliseconds": 10000,
+    "elapsedMilliseconds": 8727
+  }
+}

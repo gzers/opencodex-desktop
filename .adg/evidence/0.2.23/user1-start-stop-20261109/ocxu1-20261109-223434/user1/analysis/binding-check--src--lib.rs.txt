@@ -1,0 +1,300 @@
+//! Authenticated per-HOME Windows lifetime consumer. No global process scan,
+//! forced termination, ACL repair, missing-as-stopped or reusable credentials.
+use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine};
+use hmac::{Hmac, Mac};
+use serde::Deserialize;
+use sha2::{Digest, Sha256};
+use std::path::{Path, PathBuf};
+#[derive(Clone, Debug, Deserialize, serde::Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub(crate) struct Binding {
+    schema: String,
+    home: PathBuf,
+    sid: String,
+    pid: u32,
+    created: String,
+    generation: String,
+    job: String,
+    lease_volume: u32,
+    lease_index: String,
+}
+fn key(path: &Path) -> String {
+    path.to_string_lossy().replace('\\', "/").to_lowercase()
+}
+fn same_home(left: &Path, right: &Path) -> bool {
+    // Bun publishes a safe DOS spelling; Desktop may retain a verbatim one.
+    // Compare equivalent spellings without changing the signed tuple/Job hash.
+    key(dunce::simplified(left)) == key(dunce::simplified(right))
+}
+#[derive(Clone, Copy)]
+struct Expected<'a> {
+    home: &'a Path,
+    sid: &'a str,
+    pid: u32,
+    created: &'a str,
+    secret: &'a str,
+    challenge: &'a str,
+    port: u16,
+    proof: &'a str,
+}
+pub(crate) struct SignedChallenge<'a> {
+    pub secret: &'a str,
+    pub challenge: &'a str,
+    pub port: u16,
+    pub proof: &'a str,
+}
+impl Binding {
+    pub(crate) fn verify_proof(
+        &self,
+        home: &Path,
+        sid: &str,
+        pid: u32,
+        signed: &SignedChallenge<'_>,
+    ) -> bool {
+        self.authenticates(&Expected {
+            home,
+            sid,
+            pid,
+            created: &self.created,
+            secret: signed.secret,
+            challenge: signed.challenge,
+            port: signed.port,
+            proof: signed.proof,
+        })
+    }
+
+    fn authenticates(&self, expected: &Expected<'_>) -> bool {
+        let Expected {
+            home: expected_home,
+            sid: expected_sid,
+            pid: expected_pid,
+            created: expected_created,
+            secret,
+            challenge,
+            port,
+            proof,
+        } = *expected;
+        let valid_key =
+            |v: &str| v.len() == 43 && URL_SAFE_NO_PAD.decode(v).is_ok_and(|b| b.len() == 32);
+        let home = key(&self.home);
+        let mut job_digest = Sha256::new();
+        job_digest.update(self.sid.as_bytes());
+        job_digest.update([0]);
+        job_digest.update(home.as_bytes());
+        let expected_job = format!(
+            "Global{}opencodex-runtime-{:x}",
+            char::from(92),
+            job_digest.finalize()
+        );
+        if self.schema != "ocxd-runtime-lifetime/1"
+            || !self.home.is_absolute()
+            || !same_home(&self.home, expected_home)
+            || self.sid != expected_sid
+            || self.pid == 0
+            || self.pid != expected_pid
+            || self.created != expected_created
+            || self.created.parse::<u64>().is_err()
+            || self.lease_index.parse::<u64>().is_err()
+            || uuid::Uuid::parse_str(&self.generation).is_err()
+            || self.job != expected_job
+            || port == 0
+            || !valid_key(secret)
+            || !valid_key(challenge)
+        {
+            return false;
+        }
+        let tuple = serde_json::json!([
+            self.schema,
+            self.home,
+            self.sid,
+            self.pid,
+            self.created,
+            self.generation,
+            self.job,
+            self.lease_volume,
+            self.lease_index
+        ]);
+        let Ok(tuple) = serde_json::to_string(&tuple) else {
+            return false;
+        };
+        let Ok(actual) = URL_SAFE_NO_PAD.decode(proof) else {
+            return false;
+        };
+        let Ok(mut mac) = Hmac::<Sha256>::new_from_slice(secret.as_bytes()) else {
+            return false;
+        };
+        mac.update(
+            format!("opencodex-runtime-lifetime-v1\n{challenge}\n{port}\n{tuple}").as_bytes(),
+        );
+        mac.verify_slice(&actual).is_ok()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    fn fixture() -> (Binding, String, String) {
+        let home = std::env::temp_dir().join("ocxd-lifetime-signature-fixture");
+        let sid = "S-1-5-21-100-200-300-1001".to_string();
+        let mut hash = Sha256::new();
+        hash.update(sid.as_bytes());
+        hash.update([0]);
+        hash.update(key(&home).as_bytes());
+        let value = Binding {
+            schema: "ocxd-runtime-lifetime/1".into(),
+            home,
+            sid,
+            pid: 42,
+            created: "123456789".into(),
+            generation: "6d72c769-ed86-4638-9ce4-6703134f9381".into(),
+            job: format!(
+                "Global{}opencodex-runtime-{:x}",
+                char::from(92),
+                hash.finalize()
+            ),
+            lease_volume: 123,
+            lease_index: "456".into(),
+        };
+        (
+            value,
+            URL_SAFE_NO_PAD.encode([7u8; 32]),
+            URL_SAFE_NO_PAD.encode([1u8; 32]),
+        )
+    }
+    fn sign(value: &Binding, secret: &str, challenge: &str, port: u16) -> String {
+        let tuple = serde_json::json!([
+            value.schema,
+            value.home,
+            value.sid,
+            value.pid,
+            value.created,
+            value.generation,
+            value.job,
+            value.lease_volume,
+            value.lease_index
+        ]);
+        let mut mac = Hmac::<Sha256>::new_from_slice(secret.as_bytes()).unwrap();
+        mac.update(
+            format!(
+                "opencodex-runtime-lifetime-v1\n{challenge}\n{port}\n{}",
+                serde_json::to_string(&tuple).unwrap()
+            )
+            .as_bytes(),
+        );
+        URL_SAFE_NO_PAD.encode(mac.finalize().into_bytes())
+    }
+    #[test]
+    fn fixed_binding_rejects_every_mutated_field_and_request_context() {
+        let (value, secret, challenge) = fixture();
+        let proof = sign(&value, &secret, &challenge, 55581);
+        let signed = SignedChallenge {
+            secret: &secret,
+            challenge: &challenge,
+            port: 55581,
+            proof: &proof,
+        };
+        assert!(value.verify_proof(&value.home, &value.sid, 42, &signed));
+        for (field, bad) in [
+            ("schema", serde_json::json!("other")),
+            ("home", serde_json::json!(value.home.join("other"))),
+            ("sid", serde_json::json!("S-1-5-21-9")),
+            ("pid", serde_json::json!(43)),
+            ("created", serde_json::json!("987654321")),
+            (
+                "generation",
+                serde_json::json!(uuid::Uuid::new_v4().to_string()),
+            ),
+            ("job", serde_json::json!("Global\\other")),
+            ("leaseVolume", serde_json::json!(124)),
+            ("leaseIndex", serde_json::json!("457")),
+        ] {
+            let mut row = serde_json::to_value(&value).unwrap();
+            row[field] = bad;
+            let changed: Binding = serde_json::from_value(row).unwrap();
+            assert!(
+                !changed.verify_proof(&value.home, &value.sid, 42, &signed),
+                "{field}"
+            );
+        }
+        assert!(!value.verify_proof(&value.home.join("other"), &value.sid, 42, &signed));
+        assert!(!value.verify_proof(&value.home, "S-1-5-21-9", 42, &signed));
+        assert!(!value.verify_proof(&value.home, &value.sid, 43, &signed));
+        let other = URL_SAFE_NO_PAD.encode([8u8; 32]);
+        for changed in [
+            SignedChallenge {
+                secret: &other,
+                ..signed
+            },
+            SignedChallenge {
+                challenge: &other,
+                ..signed
+            },
+            SignedChallenge {
+                port: 55582,
+                ..signed
+            },
+            SignedChallenge {
+                proof: &other,
+                ..signed
+            },
+        ] {
+            assert!(!value.verify_proof(&value.home, &value.sid, 42, &changed));
+        }
+    }
+    #[test]
+    #[cfg(windows)]
+    fn signed_dos_home_matches_extended_context_without_rewriting_binding() {
+        let (mut value, secret, challenge) = fixture();
+        value.home = PathBuf::from(r"C:\Users\fixture\.codex-desktop\opencodex\home");
+        let mut hash = Sha256::new();
+        hash.update(value.sid.as_bytes());
+        hash.update([0]);
+        hash.update(key(&value.home).as_bytes());
+        value.job = format!("Global{}opencodex-runtime-{:x}", char::from(92), hash.finalize());
+        let proof = sign(&value, &secret, &challenge, 55581);
+        let signed = SignedChallenge { secret: &secret, challenge: &challenge, port: 55581, proof: &proof };
+        let original = serde_json::to_vec(&value).unwrap();
+        let extended = PathBuf::from(format!(r"\\?\{}", value.home.display()));
+        assert!(value.verify_proof(&extended, &value.sid, 42, &signed));
+        assert_eq!(serde_json::to_vec(&value).unwrap(), original);
+        assert!(!value.verify_proof(&extended.join("other"), &value.sid, 42, &signed));
+        for wrong in [r"C:Users\fixture\.codex-desktop\opencodex\home", r"\\.\C:\Users\fixture\.codex-desktop\opencodex\home", r"\\?\UNC\C:\Users\fixture\.codex-desktop\opencodex\home", r"\\?\C:\Users\fixture\.codex-desktop\opencodex\home.", r"\\?\C:\Users\fixture\.codex-desktop\opencodex\home "] {
+            assert!(!value.verify_proof(Path::new(wrong), &value.sid, 42, &signed), "{wrong}");
+        }
+        // A new spelling in the signed tuple must still fail the original HMAC.
+        value.home = extended.clone();
+        assert!(!value.verify_proof(&extended, &value.sid, 42, &signed));
+    }
+    #[test]
+    fn signed_but_wrong_job_schema_or_malformed_identity_never_gains_authority() {
+        let (value, secret, challenge) = fixture();
+        for (field, bad) in [
+            ("schema", "other"),
+            ("job", "Global\\wrong"),
+            ("created", "not-a-time"),
+            ("leaseIndex", "not-an-id"),
+            ("generation", "not-a-uuid"),
+        ] {
+            let mut row = serde_json::to_value(&value).unwrap();
+            row[field] = serde_json::json!(bad);
+            let changed: Binding = serde_json::from_value(row).unwrap();
+            let proof = sign(&changed, &secret, &challenge, 55581);
+            let signed = SignedChallenge {
+                secret: &secret,
+                challenge: &challenge,
+                port: 55581,
+                proof: &proof,
+            };
+            assert!(
+                !changed.verify_proof(&value.home, &value.sid, 42, &signed),
+                "{field}"
+            );
+        }
+        let mut row = serde_json::to_value(&value).unwrap();
+        row["unknownField"] = serde_json::json!(true);
+        assert!(serde_json::from_value::<Binding>(row).is_err());
+        let mut row = serde_json::to_value(&value).unwrap();
+        row.as_object_mut().unwrap().remove("leaseIndex");
+        assert!(serde_json::from_value::<Binding>(row).is_err());
+    }
+}

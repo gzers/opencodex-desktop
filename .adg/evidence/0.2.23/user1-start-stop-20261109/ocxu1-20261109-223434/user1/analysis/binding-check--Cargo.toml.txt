@@ -1,0 +1,12 @@
+[package]
+name="ocxd13-binding-check"
+version="0.0.0"
+edition="2021"
+[dependencies]
+base64="=0.22.1"
+hmac="=0.12.1"
+sha2="=0.10.9"
+serde={version="1",features=["derive"]}
+serde_json="1"
+uuid={version="=1.26.1",features=["v4"]}
+dunce="=1.0.5"

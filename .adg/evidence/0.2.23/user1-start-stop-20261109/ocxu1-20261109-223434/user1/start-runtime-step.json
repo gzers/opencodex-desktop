@@ -1,0 +1,57 @@
+{
+  "result": "pass-runtime-step",
+  "mode": "start",
+  "home": "C:\\Users\\ocxaccu154d6c1104\\.codex-desktop\\opencodex\\home",
+  "root": "C:\\Users\\ocxaccu154d6c1104\\.codex-desktop\\desktop",
+  "port": 61934,
+  "clientHomeFixture": {
+    "emptyDirectoryInitialized": true,
+    "configSeeded": false,
+    "catalogSeeded": false,
+    "integrationDisabled": false,
+    "actualConfigWritten": true,
+    "actualAssignedPortBound": true
+  },
+  "config": {
+    "path": "C:\\Users\\ocxaccu154d6c1104\\.codex-desktop\\opencodex\\home\\config.json",
+    "providers": 1,
+    "syntheticOnly": true,
+    "liveModels": false,
+    "utf8Bom": false,
+    "atomicRename": true
+  },
+  "action": {
+    "lifecycleState": "running",
+    "result": "started",
+    "failureCode": null,
+    "canStop": true,
+    "canRestart": true
+  },
+  "record": {
+    "pid": 81424,
+    "port": 61934
+  },
+  "attestation": "verified-production-challenge",
+  "healthService": "opencodex",
+  "version": "2.97.0-desktop023.lifecycle.3",
+  "status": {
+    "runtime": "running",
+    "health": "healthy",
+    "source": "live",
+    "pid": "81424",
+    "port": 61934,
+    "protection": null,
+    "startupStatus": null,
+    "servicePresent": null,
+    "rebootSafe": null
+  },
+  "startBudget": {
+    "budgetMilliseconds": 30000,
+    "elapsedMilliseconds": 15351
+  },
+  "automaticPort": {
+    "requested": "omitted",
+    "selected": 61934,
+    "source": "actual-opencodex-runtime-record"
+  }
+}

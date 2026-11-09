@@ -1,0 +1,3 @@
+import{realpathSync,mkdirSync,rmSync}from'node:fs';import{join}from'node:path';import{createHash}from'node:crypto';
+const p=join(process.argv[2],'path-fixture');mkdirSync(p);
+try{const extended=String.fromCharCode(92,92)+'?'+String.fromCharCode(92)+p;const key=s=>s.replaceAll(String.fromCharCode(92),'/').toLowerCase();const rows=[p,extended].map(s=>({supplied:s,canonical:realpathSync.native(s),consumerKey:key(s),producerKey:key(realpathSync.native(s)),sameKey:key(s)===key(realpathSync.native(s))}));process.stdout.write(JSON.stringify({runtime:process.version,platform:process.platform,rows},null,2));}finally{rmSync(p);}

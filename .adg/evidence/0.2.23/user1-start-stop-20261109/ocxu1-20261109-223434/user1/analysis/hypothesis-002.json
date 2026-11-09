@@ -1,0 +1,13 @@
+{
+  "actualPinnedBun": "1.4.4",
+  "prediction": "Targeted binding test and attested Stop tests pass; fresh-source Desktop Start then Stop and restore pass inside original 30/10/5 budgets",
+  "minimalFix": "Use already pinned dunce::simplified only in HOME equivalence comparisons in Binding and native Witness; signed raw HOME, Job digest, HMAC, ACL, native lease/Job/process/exit checks unchanged",
+  "newBehavior": "Recognize safe equivalent HOME spellings; no path rewriting or compatibility scan",
+  "hypothesis": "Desktop extended HOME versus Bun canonical DOS HOME causes the first lifetime binding comparison to reject an otherwise valid signed binding before Stop POST",
+  "noUnchangedFailedServiceRerun": true,
+  "fixtureResult": "Bun realpathSync.native strips safe verbatim drive prefix; original Rust Binding regression fails while prior tamper tests pass",
+  "writtenUtc": "2026-11-09T14:04:34.5556227Z",
+  "priorActualDesktopHome": "\\\\?\\C:\\Users\\ocxaccu16eb88db7a\\.codex-desktop\\opencodex\\home",
+  "counterexamples": "Other HOME, device and extended UNC, drive-relative, trailing dot/space, modified signed tuple retain refusal",
+  "nativeValidationPending": true
+}

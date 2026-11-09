@@ -1,6 +1,10 @@
 # Windows Git协作任务：0.2.23
 
-## 当前优先入口：lifecycle.3路径修复后单次user1（2026-11-09）
+## 当前第13项：本机普通user1启停已过，停止追加验证（2026-11-09）
+
+用户已授权Windows本机连续原因分析/最小修复/定向验证，不再每轮交Mac中转。现代码fdf5d4db551f71cbf493dc97b428f8b9a9364a7a修复签名普通HOME与Desktop扩展HOME比较不一致；构建42631183420/新artifact13681803354，绑定3项/认证Stop9项全过。真实批次ocxu1-20261109-223434启动15351ms、正常Stop及实际还原8727ms，服务原句柄清理前exit0；账户/Profile/目录删净、进程/端口无残留、ACL恢复。原30/10/5秒及归属/权限/健康/退出断言保持，本轮停止继续测试。三个自建编译/下载缓存目录删除被自动审批拒绝，待手动处理，见[本机接续及证据](0.2.23-contracts/item13-local-stop-home-fix-20261109.md)。不扩大到双SID/安装器/core-sweep/全量，不单修第18项，不改日常配置、不发布。
+
+## 前序入口：lifecycle.3路径修复后单次user1（保留来源）
 
 按[路径修复交接](0.2.23-contracts/user1-record-path-fix-handoff-20261109.md)执行。代码d3b34a234e32b63365672052772c2c72c719f97c；新运行包2.97.0-desktop023.lifecycle.3，SHA256 ec14baaee354c6729d1d2545ab9165d207b14a3a4239f354662163087eeb0739。先构建新同源Desktop，再只运行一次user1启动／成功后正常Stop／清理，四项证据独立Git回交。旧a4ab/lifecycle.2包不含路径修复。第18项不先独立修，不派core-sweep／双SID／安装器或发布。
 
