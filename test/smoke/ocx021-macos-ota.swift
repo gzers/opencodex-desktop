@@ -16,7 +16,8 @@ func physical(_ path: String) -> String {
     return String(cString: resolved)
 }
 let expected = physical(args[2])
-guard expected.hasPrefix("/private/tmp/ocx021-mac-ota-"), expected.contains("/installed/OpenCodeX Desktop.app/Contents/MacOS/") else {
+let ownedPattern = #"^/private/tmp/ocx021-mac-ota-[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/(?:installed/(?:OpenCodeX Desktop/)?|rollback/)OpenCodeX Desktop\.app/Contents/MacOS/opencodex-desktop$"#
+guard expected.range(of: ownedPattern, options: .regularExpression) != nil else {
     emit(["error": "not an owned isolated OTA executable"]); exit(3)
 }
 func processStart(_ app: NSRunningApplication) -> (Double, String) {
