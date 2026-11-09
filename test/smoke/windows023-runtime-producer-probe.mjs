@@ -18,7 +18,7 @@ writeFileSync(join(home,'config.json'),JSON.stringify({hostname:'127.0.0.1',port
 const expectedVersion=JSON.parse(readFileSync(join(runtime,'package.json'),'utf8')).version;
 const osEnvironment=Object.fromEntries(Object.entries(process.env).filter(([key])=>['systemroot','windir','comspec','path','pathext','temp','tmp','github_actions'].includes(key.toLowerCase())));
 const tracePath=join(root,'lifecycle-trace.jsonl');
-const env={...osEnvironment,OCXD_CANDIDATE_TRACE_FILE:tracePath,HOME:profile,USERPROFILE:profile,APPDATA:join(profile,'AppData/Roaming'),LOCALAPPDATA:join(profile,'AppData/Local'),OPENCODEX_HOME:home,CODEX_HOME:client,CLAUDE_CONFIG_DIR:join(profile,'.claude'),OCX_OWNER_REGISTRY_DIR:join(home,'owner-registry-fixture'),CI:'1',OCX_NO_DESKTOP_HANDOFF:'1'};
+const env={...osEnvironment,RUNNER_TEMP:boundary,OCXD_CANDIDATE_TRACE_FILE:tracePath,HOME:profile,USERPROFILE:profile,APPDATA:join(profile,'AppData/Roaming'),LOCALAPPDATA:join(profile,'AppData/Local'),OPENCODEX_HOME:home,CODEX_HOME:client,CLAUDE_CONFIG_DIR:join(profile,'.claude'),OCX_OWNER_REGISTRY_DIR:join(home,'owner-registry-fixture'),CI:'1',OCX_NO_DESKTOP_HANDOFF:'1'};
 delete env.OCX_SERVICE;delete env.OCX_SERVICE_MANAGED;delete env.OPENCODEX_API_AUTH_TOKEN;
 const child=Bun.spawn([process.execPath,'--no-env-file','--no-install',join(runtime,'src/cli/index.ts'),'start'],{env,cwd:root,stdin:'ignore',stdout:'ignore',stderr:'ignore'});
 child.unref();
