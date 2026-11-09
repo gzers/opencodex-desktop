@@ -44,6 +44,14 @@ impl ProcessActionResult {
     }
 
     pub fn with_result(mut self, result: LifecycleResult) -> Self {
+        // The runner has finished its ownership/readiness or stop proof. Do
+        // not return the pre-execution Starting/Stopping gates after success.
+        // Failed/cancelled work gains no terminal-state authority here.
+        match result {
+            LifecycleResult::Started => self = Self::from_state(ProcessLifecycleState::Running),
+            LifecycleResult::Stopped => self = Self::from_state(ProcessLifecycleState::Stopped),
+            LifecycleResult::Cancelled | LifecycleResult::Failed => {}
+        }
         self.result = Some(result);
         self
     }
@@ -150,6 +158,42 @@ mod tests {
         assert!(value.can_stop);
         assert!(value.can_restart);
         assert_eq!(value.result, Some(LifecycleResult::Started));
+    }
+
+    #[test]
+    fn confirmed_actions_return_terminal_gates_without_a_later_status_poll() {
+        for before in [
+            ProcessLifecycleState::Starting,
+            ProcessLifecycleState::Stopping,
+        ] {
+            let started =
+                ProcessActionResult::from_state(before).with_result(LifecycleResult::Started);
+            assert_eq!(started.lifecycle_state, ProcessLifecycleState::Running);
+            assert!(!started.can_start && started.can_stop && started.can_restart);
+            assert_eq!(started.result, Some(LifecycleResult::Started));
+        }
+        let stopped = ProcessActionResult::from_state(ProcessLifecycleState::Stopping)
+            .with_result(LifecycleResult::Stopped);
+        assert_eq!(stopped.lifecycle_state, ProcessLifecycleState::Stopped);
+        assert!(stopped.can_start && !stopped.can_stop && !stopped.can_restart);
+        assert_eq!(stopped.result, Some(LifecycleResult::Stopped));
+    }
+
+    #[test]
+    fn unsuccessful_results_cannot_claim_running_or_stopped() {
+        for before in [
+            ProcessLifecycleState::Starting,
+            ProcessLifecycleState::Stopping,
+        ] {
+            for outcome in [LifecycleResult::Failed, LifecycleResult::Cancelled] {
+                let value = ProcessActionResult::from_state(before).with_result(outcome.clone());
+                assert_eq!(value.lifecycle_state, before);
+                assert_eq!(value.can_start, before.can_start());
+                assert_eq!(value.can_stop, before.can_stop());
+                assert_eq!(value.can_restart, before.can_restart());
+                assert_eq!(value.result, Some(outcome));
+            }
+        }
     }
 
     #[test]
