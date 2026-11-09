@@ -54,7 +54,7 @@ jobs:
             $env:OCXD_FOREIGN_JOB_PROBE=$name
             $env:OCXD_FOREIGN_JOB_CREATOR_SID=$sid
             $evidence=Join-Path $root 'ordinary'
-            & test/smoke/windows023-rust-ordinary.ps1 -Cargo (Get-Command cargo.exe).Source -ManifestPath (Join-Path $PWD 'test/smoke/windows023-ordinary-preflight/Cargo.toml') -Node (Get-Command node.exe).Source -OutputDirectory $evidence -ExpectedCommit (git rev-parse HEAD)
+            & test/smoke/windows023-rust-ordinary.ps1 -Cargo (Get-Command cargo.exe).Source -ManifestPath (Join-Path $PWD 'test/smoke/windows023-ordinary-preflight/Cargo.toml') -Node (Get-Command node.exe).Source -OutputDirectory $evidence -ExpectedCommit (git rev-parse HEAD) -TestArguments @('--nocapture')
             if($LASTEXITCODE -ne 0){throw 'Actual ordinary-account test or cleanup failed'}
             $result=Get-Content (Join-Path $evidence 'rust-ordinary.json') -Raw|ConvertFrom-Json
             if(!$result.accountAndProfileRemoved -or !$result.sourceOrArtifactAclRestored -or !$result.desktopAclRestored -or !$result.sourceBytesUnchanged -or $result.remainingNewSidProcesses.Count -ne 0){throw 'Real account/Profile/ACL/process cleanup must be proved'}
