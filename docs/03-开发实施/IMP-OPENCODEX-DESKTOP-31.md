@@ -343,3 +343,9 @@ a581ea0ca只增加test/.github只读定位，产品apps树4bfcbcc6与8ca50832b�
 
 
 只读普通SID成本对照[run42543638672](https://github.com/gzers/opencodex-desktop/actions/runs/42543638672)固定9c340f24ed783c6f54147c21df9c5f78b4151d47/job128923849212已确认运行；这是保留原包的诊断剖析，accepted:false，不是下一完整验收轮。原始9模块与归档逐字节核对后，实际普通令牌执行、保留原生SID/句柄/退出/账户及Profile清理合同。未采用限定枚举作为产品修复。
+
+
+只读普通SID对照42543638672已完成，[原件及限制](../../.adg/evidence/0.2.23/ordinary-stop-profile-42543638672/analysis.json)原15673228字节ZIP/SHA25668eb9e8a7354bc60129e6d1e777edd93ca2a0a7798e3cfa50e0c827489f7c9bd、9原模块与实际普通令牌退出/账户Profile移除/ACL恢复/零残留核验。实际官方respawn/scheduler/native查询约579/579/18ms。首次完整PowerShell枚举4532ms，限定500/503ms，再次完整538ms；原版也在后续变快，所以不能把热调用比较当限定查询有效。本次不采用运行包修复。c2af53ab0仅test/.github，为两个独立全新Windows VM交换第一调用顺序，fail-fast:false、每次仍5秒、其它模式仍单格；逐项保留artifact，不是新完整验收。Bun语法及实际4workflow块/矩阵YAML解析通过；产品和维护包仍未改。
+
+
+独立新VM交叉对照[run42544396869](https://github.com/gzers/opencodex-desktop/actions/runs/42544396869)，固定c2af53ab06d4cc1696744ea06114775acff74878；filtered-first/job128926143915与original-first/job128926144221均已确认运行。每格独立原模块校验、普通SID/Profile/退出与清理；只读诊断accepted:false、不改5秒子预算、不替代启动或停止验收。
