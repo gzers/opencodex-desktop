@@ -2,8 +2,8 @@
 // and atomic replace. Never changes an existing object's owner or permissions.
 import assert from 'node:assert/strict';
 import {dlopen,ptr,FFIType as T} from 'bun:ffi';
-import {readFileSync,statSync,existsSync,openSync,closeSync,fstatSync,writeFileSync,fsyncSync} from 'node:fs';
-import {join,resolve,relative,isAbsolute} from 'node:path';
+import {readFileSync,statSync,existsSync,openSync,closeSync,fstatSync,writeFileSync,fsyncSync,renameSync,symlinkSync,rmdirSync} from 'node:fs';
+import {join,resolve,relative,isAbsolute,dirname,win32} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 assert(process.platform==='win32'&&process.arch==='x64'&&process.env.GITHUB_ACTIONS==='true');
@@ -33,12 +33,32 @@ const a=dlopen(join(system,'advapi32.dll'),{
 });
 const wide=s=>{const value=new Uint16Array(s.length+1);for(let i=0;i<s.length;i++)value[i]=s.charCodeAt(i);return value;};
 const digest=b=>createHash('sha256').update(b).digest('hex');
-function information(handle){
+function information(handle,directory=false){
  const storage=new ArrayBuffer(52),bytes=new Uint8Array(storage),v=new DataView(storage);
  assert(k.symbols.GetFileInformationByHandle(handle,ptr(bytes)));
  assert.equal(k.symbols.GetFileType(handle),1);
- assert.equal(v.getUint32(0,true)&(0x10|0x400),0);assert.equal(v.getUint32(40,true),1);
+ assert.equal(v.getUint32(0,true)&0x400,0);assert.equal(!!(v.getUint32(0,true)&0x10),directory);if(!directory)assert.equal(v.getUint32(40,true),1);
  return [v.getUint32(28,true),v.getUint32(44,true),v.getUint32(48,true)];
+}
+function validatePath(path){
+ assert(win32.isAbsolute(path)&&!path.startsWith(String.fromCharCode(92,92,63,92))&&!path.startsWith(String.fromCharCode(92,92,46,92))&&!path.includes(String.fromCharCode(0)));
+ const root=win32.parse(path).root;assert(root);
+ for(const part of path.slice(root.length).replaceAll(String.fromCharCode(92),'/').split('/')){
+  assert(part&&part!=='.'&&part!=='..'&&!Array.from(part).some(c=>c.charCodeAt(0)<32||[58,60,62,34,124,63,42].includes(c.charCodeAt(0)))&&!/[ .]$/.test(part));
+  assert(!/^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$/i.test(part.split('.')[0]));
+ }
+}
+function pinParents(path){
+ validatePath(path);const chain=[];let p=dirname(path);while(true){chain.push(p);const next=dirname(p);if(next===p)break;p=next;}
+ const pins=[];
+ try{
+  for(const parent of chain.reverse()){
+   const name=wide(parent),handle=BigInt(k.symbols.CreateFileW(ptr(name),0x80000000,3,null,3,0x02000000|0x00200000,0n));
+   if(handle===0n||handle===0xffffffffffffffffn)throw Error('Ancestor open failed');
+   pins.push(handle);information(handle,true);
+  }
+  return ()=>{for(const handle of pins.reverse())assert(k.symbols.CloseHandle(handle));};
+ }catch(error){for(const handle of pins.reverse())k.symbols.CloseHandle(handle);throw error;}
 }
 function createNew(path,content,viaDescriptor=false){
  assert(below(h,path));
@@ -71,7 +91,14 @@ function createNew(path,content,viaDescriptor=false){
   k.symbols.LocalFree(security[0]);
  }
 }
+const releaseParents=pinParents(join(h,'native-runtime-port.json'));
 try{
+ assert.throws(()=>renameSync(h,h+'-moved'),'Pinned HOME ancestor cannot be renamed');
+ const link=join(h,'junction-probe');assert(!existsSync(link));
+ symlinkSync(h,link,'junction');
+ try{assert.throws(()=>pinParents(join(link,'must-refuse.json')),'Reparse ancestor must refuse before creation');}
+ finally{rmdirSync(link);}
+ for(const invalid of [join(h,'bad:stream'),h+String.fromCharCode(92)+'..'+String.fromCharCode(92)+'escape',join(h,'NUL.txt'),join(h,'trailing.')])assert.throws(()=>validatePath(invalid));
  const target=join(h,'native-runtime-port.json'),temp=join(h,'native-runtime-port.new.tmp');assert(!existsSync(target)&&!existsSync(temp));
  const bytes=JSON.stringify({pid:process.pid,port:1,attestationSecret:'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'});
  createNew(temp,bytes);const initial=statSync(temp,{bigint:true});assert(initial.isFile()&&initial.nlink===1n&&initial.ino!==0n);
@@ -88,5 +115,5 @@ try{
  createNew(bridgeTemp,bytes,true);const beforeBridge=statSync(bridgeTemp,{bigint:true});
  atomic.renameAtomicFile(bridgeTemp,bridgeTarget);const afterBridge=statSync(bridgeTarget,{bigint:true});
  assert.equal(beforeBridge.ino,afterBridge.ino);assert.equal(beforeBridge.dev,afterBridge.dev);assert.equal(afterBridge.nlink,1n);assert.equal(digest(readFileSync(bridgeTarget)),digest(Buffer.from(bytes)));
- console.log(JSON.stringify({accepted:false,diagnosticOnly:true,explicitNewOwner:true,existingCreateRefused:true,originalAclHardenerUsed:true,originalAtomicRenameUsed:true,identityAndBytesPreserved:true,existingFsDescriptorBridge:true,bridgeCreatedObjectPinned:true,bridgeHardenedBeforeContent:true,noExistingOwnerRepair:true,runtimeChanged:false}));
-}finally{k.close();a.close();}
+ console.log(JSON.stringify({accepted:false,diagnosticOnly:true,explicitNewOwner:true,existingCreateRefused:true,originalAclHardenerUsed:true,originalAtomicRenameUsed:true,identityAndBytesPreserved:true,existingFsDescriptorBridge:true,bridgeCreatedObjectPinned:true,bridgeHardenedBeforeContent:true,ancestorsPinnedWithoutShareDelete:true,ancestorRenameRefused:true,reparseAncestorRefused:true,ambiguousPathsRefused:true,noExistingOwnerRepair:true,runtimeChanged:false}));
+}finally{releaseParents();k.close();a.close();}
