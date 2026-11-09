@@ -1,0 +1,153 @@
+{
+  "accepted": false,
+  "source": "fdf5d4db551f71cbf493dc97b428f8b9a9364a7a",
+  "buildRun": "42631183420",
+  "scope": "Two new SIDs on local workstation; concurrent health, stopB/peerA preserved, stopA, exact cleanup",
+  "elevatedFirstAccount": true,
+  "startedUtc": "2026-11-09T15:33:22.3340067Z",
+  "controllerToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 108248,
+    "executable": "D:\\ocxu1-20261109-191803\\powershell\\pwsh.exe",
+    "creationTimeUtc": "2026-11-09T15:33:20.8925828Z",
+    "elevated": true,
+    "elevationType": 2,
+    "collectedAtUtc": "2026-11-09T15:33:22.7418539Z"
+  },
+  "programTreeSha256": "969a002c00681303ea739604380273fc3b4fa4a25a48dfd8833f94c9c336840c",
+  "budgetsMilliseconds": {
+    "stop": 10000,
+    "start": 30000,
+    "status": 5000
+  },
+  "protocolPassed": false,
+  "accountsCreated": 2,
+  "firstFailure": {
+    "message": "Peer exited or failed; preserve first failure, no retry",
+    "line": 66,
+    "atUtc": "2026-11-09T15:34:54.3820049Z"
+  },
+  "desktopAclRestored": true,
+  "residualProcesses": [],
+  "accountCleanup": [
+    {
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1018",
+      "name": "ocxaccu16625a3be3",
+      "profile": "C:\\Users\\ocxaccu16625a3be3",
+      "identityUnproven": false,
+      "processCleanup": [
+        {
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1018",
+          "pid": 93320,
+          "image": "C:\\Windows\\System32\\conhost.exe",
+          "result": "original-exited-or-exact-owned-cleanup"
+        },
+        {
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1018",
+          "pid": 106200,
+          "image": "C:\\Users\\ocxaccu16625a3be3\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+          "result": "original-exited-or-exact-owned-cleanup"
+        },
+        {
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1018",
+          "pid": 101808,
+          "image": "D:\\ocxu1-20261109-191803\\powershell\\pwsh.exe",
+          "result": "original-exited-or-exact-owned-cleanup"
+        },
+        {
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1018",
+          "pid": 47140,
+          "image": "C:\\Windows\\System32\\conhost.exe",
+          "result": "original-exited-or-exact-owned-cleanup"
+        },
+        {
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1018",
+          "pid": 39884,
+          "image": "D:\\ocxu1-20261109-191803\\powershell\\pwsh.exe",
+          "result": "original-exited-or-exact-owned-cleanup"
+        },
+        {
+          "phase": "bootstrap-exit",
+          "exitCode": -1
+        }
+      ],
+      "accountRemoved": false,
+      "profileRemoved": false,
+      "userDirectoryRemoved": false,
+      "failure": "Profile loaded or identity changed"
+    },
+    {
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1019",
+      "name": "ocxaccu1303fecfd2",
+      "profile": "C:\\Users\\ocxaccu1303fecfd2",
+      "identityUnproven": false,
+      "processCleanup": [
+        {
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1019",
+          "pid": 60908,
+          "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+          "result": "original-exited-or-exact-owned-cleanup"
+        },
+        {
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1019",
+          "pid": 32348,
+          "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+          "result": "original-exited-or-exact-owned-cleanup"
+        },
+        {
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1019",
+          "pid": 54548,
+          "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+          "result": "original-exited-or-exact-owned-cleanup"
+        },
+        {
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1019",
+          "pid": 23248,
+          "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+          "result": "original-exited-or-exact-owned-cleanup"
+        },
+        {
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1019",
+          "pid": 28492,
+          "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+          "result": "original-exited-or-exact-owned-cleanup"
+        },
+        {
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1019",
+          "pid": 47964,
+          "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+          "result": "original-exited-or-exact-owned-cleanup"
+        },
+        {
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1019",
+          "pid": 43900,
+          "image": "C:\\Windows\\System32\\conhost.exe",
+          "result": "original-exited-or-exact-owned-cleanup"
+        },
+        {
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1019",
+          "pid": 59696,
+          "image": "C:\\Users\\ocxaccu1303fecfd2\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+          "result": "original-exited-or-exact-owned-cleanup"
+        },
+        {
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1019",
+          "pid": 46676,
+          "image": "D:\\ocxu1-20261109-191803\\powershell\\pwsh.exe",
+          "result": "original-exited-or-exact-owned-cleanup"
+        },
+        {
+          "phase": "bootstrap-exit",
+          "exitCode": 0
+        }
+      ],
+      "accountRemoved": true,
+      "profileRemoved": true,
+      "userDirectoryRemoved": true
+    }
+  ],
+  "programUnchanged": true,
+  "boundedTwoSidPassed": false,
+  "finishedUtc": "2026-11-09T15:39:05.6175452Z"
+}

@@ -1,0 +1,9 @@
+{
+  "writtenUtc": "2026-11-09T15:29:17.0240767Z",
+  "observed": "Admin token was medium; peer manager started after initial controller descendant snapshot; bootstrap cleaned but manager orphaned and profile correctly retained",
+  "budgetsUnchanged": true,
+  "hypothesis": "Publish exact process ledger on each admission, respond to cancellation before Manager/driver and during supply, and keep descendant observations active during cancellation wait",
+  "sourceFailure": "elevated-peer-01",
+  "productChanges": false,
+  "plannedCounterexample": "Abort before child creates Manager must prevent product actions; original process identity and profile deletion gates retained"
+}

@@ -1,0 +1,22 @@
+{
+  "method": "Primary maintainer issue comments consulted; only references and paraphrase committed, no original bodies or commands executed",
+  "sources": [
+    {
+      "repository": "MicrosoftEdge/WebView2Feedback",
+      "issue": 2984,
+      "comment": 1531849566,
+      "author": "LiangTheDev",
+      "authorAssociation": "MEMBER",
+      "interpretation": "Elevated WebView2 uses Explorer to launch a non-elevated browser; this supports investigating desktop identity rather than weakening SID checks."
+    },
+    {
+      "repository": "MicrosoftEdge/WebView2Feedback",
+      "issue": 2984,
+      "comment": 1561821574,
+      "author": "LiangTheDev",
+      "authorAssociation": "MEMBER",
+      "interpretation": "Impersonated thread tokens are not simply propagated across WebView2 initialization threads; no unsupported flag or UAC policy workaround adopted."
+    }
+  ],
+  "localObservation": "The two processes observed from exact test Manager generation belonged to active RDP user1001, not temporary elevated user1018. Actual console Administrator identity will be tested separately."
+}

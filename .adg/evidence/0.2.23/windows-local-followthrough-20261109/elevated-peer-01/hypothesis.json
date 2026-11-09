@@ -1,0 +1,16 @@
+{
+  "tokenPrecondition": "Both bootstrap and Desktop must actually report elevated true for role1; if not, fail before role1 app and preserve precondition; admin group alone is not pass",
+  "name": "H-W3 actual elevated token plus ordinary peer",
+  "productChanges": false,
+  "writtenUtc": "2026-11-09T15:18:01.8993585Z",
+  "scope": "RDP session2 elevation only; not a claim of local console session1 acceptance",
+  "basis": "Dual ordinary services and native cleanup passed. Prior elevation defect on old names.2 remains unverified after lifecycle.3/path consumer fixes.",
+  "noUnchangedFailedProductRerun": true,
+  "budgetsMs": {
+    "stop": 10000,
+    "status": 5000,
+    "start": 30000
+  },
+  "temporaryOnly": "Only newly created role1 account receives Administrators membership, removed with its Profile; no daily group/policy modification",
+  "hypothesis": "A new administrator-group account credential launch will yield an actual elevated token, then same-source Desktop will prove Start/Stop/native authority while ordinary peer remains independent"
+}
