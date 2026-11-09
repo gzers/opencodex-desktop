@@ -1,0 +1,23 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 30.83s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-58a8535d3845a745)
+
+running 15 tests
+test infrastructure::process_start_output::tests::unknown_messages_paths_and_control_characters_never_escape ... ok
+test infrastructure::process_runner::managed_observation_tests::admission_diagnostics_accept_fixed_fields_only ... ok
+test infrastructure::process_start_output::tests::split_error_and_windows_stack_export_only_fixed_fields ... ok
+test infrastructure::process_runner::tests::environment_keys_are_frozen ... ok
+test infrastructure::process_runner::managed_observation_tests::unfinished_output_cannot_extend_diagnostic_or_original_budget ... ok
+test infrastructure::process_runner::tests::cancel_pending_is_repeatable_and_does_not_panic ... ok
+test infrastructure::process_runner::tests::validates_explicit_context_before_spawning ... ok
+test infrastructure::process_runner::tests::frozen_timeouts_match_fz10 ... ok
+test infrastructure::process_runner::tests::failed_spawn_bumps_failure_epoch_without_running_process ... ok
+test infrastructure::process_start_output::tests::empty_incomplete_and_failed_reads_are_distinct_and_retention_is_bounded ... ok
+test infrastructure::process_runner::managed_observation_tests::bounded_diagnostics_do_not_keep_or_return_arbitrary_upstream_output ... ok
+test infrastructure::process_runner::managed_observation_tests::terminal_exit_retains_completed_pipe_diagnostics_without_raw_error_text ... ok
+test infrastructure::process_runner::tests::rapid_stop_exits_preserve_the_nonzero_status ... ok
+test infrastructure::process_runner::managed_observation_tests::immediate_and_delayed_failure_keep_exit_code_without_secret_output ... ok
+test infrastructure::process_runner::managed_observation_tests::zero_exit_or_live_process_without_authenticated_ready_is_not_started ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 2019 filtered out; finished in 1.41s
+

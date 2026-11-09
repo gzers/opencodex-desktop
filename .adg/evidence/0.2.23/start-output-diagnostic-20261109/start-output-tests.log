@@ -1,0 +1,12 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0502]: cannot borrow `self.tail` as immutable because it is also borrowed as mutable
+  --> src/infrastructure/process_start_output.rs:19:31
+   |
+19 |             self.tail.drain(..self.tail.len() - 8192);
+   |             --------- -----   ^^^^^^^^^ immutable borrow occurs here
+   |             |         |
+   |             |         mutable borrow later used by call
+   |             mutable borrow occurs here
+
+For more information about this error, try `rustc --explain E0502`.
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

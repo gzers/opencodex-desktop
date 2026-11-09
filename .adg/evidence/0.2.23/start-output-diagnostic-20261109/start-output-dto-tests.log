@@ -1,0 +1,15 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.36s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-58a8535d3845a745)
+
+running 8 tests
+test types::process_action::tests::requires_confirm_for_every_action ... ok
+test types::process_action::tests::confirmed_actions_return_terminal_gates_without_a_later_status_poll ... ok
+test types::process_action::tests::result_exposes_frozen_action_gates ... ok
+test types::process_action::tests::unsuccessful_results_cannot_claim_running_or_stopped ... ok
+test types::process_action::tests::serializes_camel_case_frontend_contract ... ok
+test types::process_action::tests::stop_timeout_keeps_running_state_and_hides_internal_phase_timings ... ok
+test types::process_action::tests::startup_timing_diagnostics_stay_out_of_the_product_failure_message ... ok
+test types::process_action::tests::native_admission_stage_is_retained_in_logs_not_product_message ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 2027 filtered out; finished in 0.00s
+

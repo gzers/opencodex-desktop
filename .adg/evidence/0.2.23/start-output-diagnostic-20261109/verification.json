@@ -1,0 +1,93 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "source": "a4abf17aa7aa2b9f677c20aa3d30cda59deed5b4",
+  "runtimeVersion": "2.97.0-desktop023.lifecycle.2",
+  "runtimeSha256": "c02f4710496775d8f4dfe271bd90d6afdf7dbf960f6e696637271ab9f37bc70b",
+  "scope": "Mac isolated regression and source review only; Windows single-user execution pending",
+  "productChanges": "Output collection and fixed-field diagnostics only; ownership/readiness/Stop criteria unchanged",
+  "priorWindowsEvidence": {
+    "source": "8445d65dca0af76c3275f8617a76c1a726fb8873",
+    "docsCommit": "d4497d3ed",
+    "manifestEntriesChecked": 209,
+    "mismatches": 0,
+    "knownFailure": "Actual start exited 1 before readiness; native admission stage still unknown"
+  },
+  "checks": [
+    {
+      "name": "process and output regressions",
+      "passed": 17,
+      "failed": 0,
+      "log": "start-output-tests-final.log"
+    },
+    {
+      "name": "process action DTO regressions",
+      "passed": 8,
+      "failed": 0,
+      "log": "start-output-dto-tests.log"
+    },
+    {
+      "name": "collector identity / immutable event order / mismatched source",
+      "passed": 2,
+      "failed": 0,
+      "log": "user1-collector-tests-final.log"
+    },
+    {
+      "name": "strict project Clippy lib and tests",
+      "exitCode": 0,
+      "log": "start-output-clippy-final.log"
+    },
+    {
+      "name": "PowerShell AST only",
+      "result": "pass",
+      "shell": "local PowerShell7 parser",
+      "file": "test/smoke/windows023-user1-start-stop.ps1",
+      "observedOutput": "PowerShell AST: pass",
+      "nativeWindowsExecution": false
+    }
+  ],
+  "initialFailure": {
+    "log": "start-output-tests.log",
+    "exitCode": 101,
+    "cause": "New Rust buffer drain expression borrowed self.tail both mutably and immutably (E0502)",
+    "correction": "Compute discard length before calling drain; rerun actual project tests and Clippy"
+  },
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/mod.rs",
+      "sha256": "27845cd9b84ff3aaa78c93731e2bba234b2a93287b66b023db214c85b401c836"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/process_runner.rs",
+      "sha256": "7194f35a54e0f96857d0bccabee3ec93ded052a3b0d2d6c8f741b05caed6ff45"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/process_start_output.rs",
+      "sha256": "296c2c84d7585add30f45b14678de6fad8ed259c897e35afd53d58c8a686f887"
+    },
+    {
+      "path": "test/smoke/test_windows023_user1_evidence.py",
+      "sha256": "b093401d20faf7aed72994eb021c6139711c57befd97753c9150d76cae476e88"
+    },
+    {
+      "path": "test/smoke/windows023-user1-evidence.py",
+      "sha256": "7a50828d5e7235123e045173a13f4b3a82c880adc3164bd707e491c4f00b090f"
+    },
+    {
+      "path": "test/smoke/windows023-user1-start-stop.ps1",
+      "sha256": "401f2228fcd5815a75a7a21ae5022c849505d90ce507b03301a6efa6e1f97aae"
+    }
+  ],
+  "windowsExecution": {
+    "dispatchedFromMac": false,
+    "status": "pending Windows Git handoff",
+    "newDesktopBuildRequired": true,
+    "oldArtifactMustNotBeReused": 13667461176,
+    "coreSweep": false,
+    "dualSid": false,
+    "installer": false
+  },
+  "accountCleanupItem18": "No independent product fix; original historical failure remains open",
+  "released": false,
+  "skillReference": "development-knowledge/references/platforms/windows/processes-locks.md"
+}

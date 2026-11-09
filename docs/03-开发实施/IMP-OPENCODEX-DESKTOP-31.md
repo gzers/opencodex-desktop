@@ -582,3 +582,12 @@ H05同源准备42602603906全部成功，program artifact13667461176/304962844�
 按用户最新指令，下一验证交Windows独立Git执行，仅user1实际启动确认、成功后立即正常停止与精确清理；不新派core-sweep／双SID／安装器／全量，不重跑已失败轮次，不发布。代码8445d65dc及lifecycle.2当前封存产物不预改。四项原证据、制品摘要和环境／回交路径已固定在[单用户交接](0.2.23-contracts/user1-start-stop-handoff-20261109.md)，WINDOWS与TEAM同步指向该入口。
 
 Mac收到回交先区分归属判定拒绝、确认超时和回执收集缺失，再决定修复位置；第18项先不独立修，等第13项因果证据。该调整不宣称现有故障已修，不撤销原预算与断言，前序双SID轮及失败原件保留。本次只完成资料与Git交接，Windows执行／接令及结果仍待。
+
+
+### 2026-11-09 user1回交核查与输出诊断补丁
+
+Windows代码dc919da84、文档d4497d3ed回交已接收；原证据209条manifest记录摘要一致。实际产品两批均唯一失败回执、无运行记录，首次exit1分别8028/10325ms，后续30秒观察不覆盖首错；RDP全Active对照仍失败。实际宿主是Windows Server2025 Datacenter/build26100，不采用旧README误写Windows11。正常Stop未执行，本轮账户/Profile/目录删净，但历史第18项不据此关闭。
+
+用户同意先补脱敏诊断后再Windows单次user1验证。8dfcc5281分流记录bytes/eof/read_failed和固定kind/hint/受控源码行列，归属标记分流识别；非零退出输出收尾至多100ms且在原剩余预算内，不改健康/归属/ACL/Job/租约与运行包。a4abf17aa将新源与真实buildRun显式传入单用户入口，采集器不再沿用旧制品身份。17进程诊断/8DTO/2采集器测试、strictClippy/PS7AST通过；初次编译借用错误与修正后检查分别保留，不写成Windows原生通过。
+
+[证据](../../.adg/evidence/0.2.23/start-output-diagnostic-20261109/verification.json)、[下一单次交接](0.2.23-contracts/user1-output-diagnostic-handoff-20261109.md)。新代码完整SHA a4abf17aa7aa2b9f677c20aa3d30cda59deed5b4；Windows需先构建新程序，不复用旧Desktop跑诊断。Mac没有派core-sweep或全量，第18项不单独修，无发布；真实退出原因与新Windows结果仍待。

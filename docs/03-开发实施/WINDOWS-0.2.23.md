@@ -1,6 +1,10 @@
 # Windows Git协作任务：0.2.23
 
-## 当前优先入口：仅user1定向排查（2026-11-09）
+## 当前优先入口：新诊断源码的user1单次验证（2026-11-09）
+
+先读[新输出诊断交接](0.2.23-contracts/user1-output-diagnostic-handoff-20261109.md)。代码a4abf17aa7aa2b9f677c20aa3d30cda59deed5b4已补脱敏诊断，Windows需先构建新同源程序再仅执行一次user1；旧8445/artifact13667461176不含补丁，不再作为下一次运行输入。运行包lifecycle.2不变，四项原证据及startup_output固定摘要一起Git回交。Mac不派core，第18项不单修，不发布。
+
+### 前序单用户交接（保留来源）
 
 按[第13项单用户交接](0.2.23-contracts/user1-start-stop-handoff-20261109.md)执行。固定8445d65dc与当前封存程序，只跑user1启动确认、成功后正常停止和精确清理，回交四项原证据。下文core／双SID／安装器下一动作均为历史，不据此扩大本轮。Mac不跑验证、不预改第13／18项；第18项等第13项结论，不发布。
 

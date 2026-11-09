@@ -133,3 +133,8 @@ Windows R1代码及证据已集成；此前入口未随代码批次更新，已�
 ## 2026-11-09 第13项交Windows独立Git定向排查
 
 最新用户指令覆盖此前Mac控制CI的下一动作：Windows对话仅执行[当前user1交接](0.2.23-contracts/user1-start-stop-handoff-20261109.md)，固定8445d65dc与当前封存程序，单真实user1启动／成功后停止／清理，按独立证据目录注明环境并Git回交。无第二账户、peer等待、安装器、core或全量派发。Mac只交接和收件后归因，不预改产品；第18项等第13项结论再决定，不发布。既有历史派发与失败证据保留，未收到回交不写执行完成。
+
+
+## 2026-11-09 user1回交审核后补输出诊断
+
+已收到d4497d3ed/doc与dc919da84/test回交，实际产品exit1发生在确认结束前；归属stage仍未知。用户同意后Mac只补脱敏输出诊断并做隔离回归，代码a4abf17aa7aa2b9f677c20aa3d30cda59deed5b4。Windows下一动作以[新交接](0.2.23-contracts/user1-output-diagnostic-handoff-20261109.md)为准：先准备同源新Desktop程序，再一轮user1启动／成功后正常Stop／清理，四项及固定输出摘要独立Git回交。旧产物不能运行新诊断；不得默认core-sweep、双SID或安装器。Mac不冒称已派／已收到执行，第18项暂缓，未发布。
