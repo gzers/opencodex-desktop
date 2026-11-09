@@ -1,0 +1,69 @@
+name: Windows 0.2.23 local session diagnostic build
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: 2c6edebc32909c9a16e6666836c22ca6cf05037d
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/tauri -> target
+          shared-key: windows-native-ui-018
+          cache-on-failure: true
+      - name: Stage exact existing runtime and frontend
+        run: |
+          $ErrorActionPreference='Stop'
+          $node=(Get-Command node.exe).Source
+          $npm=Join-Path (Split-Path -Parent $node) 'node_modules/npm/bin/npm-cli.js'
+          python .github/scripts/stage_runtime_bundle_023.py --platform win32-x64 --build-node $node --npm-cli $npm --output test/out/local-session-build/stage *> runtime-stage.log
+          if($LASTEXITCODE -ne 0){throw 'Pinned runtime staging failed'}
+          npm --prefix apps/desktop/ui ci *> frontend-install.log
+          if($LASTEXITCODE -ne 0){throw 'Frontend install failed'}
+          npm --prefix apps/desktop/ui run build *> frontend-build.log
+          if($LASTEXITCODE -ne 0){throw 'Frontend build failed'}
+      - name: Build and seal diagnostics without installation or acceptance
+        run: |
+          $ErrorActionPreference='Stop'
+          $env:OCXD_REQUIRE_RUNTIME_BUNDLE='1'
+          cargo build --manifest-path apps/desktop/tauri/Cargo.toml --locked --features custom-protocol --bins --jobs 2 *> native-build.log
+          if($LASTEXITCODE -ne 0){throw 'Exact-source MSVC build failed'}
+          $output='test/out/local-session-build/program'
+          New-Item -ItemType Directory -Path $output | Out-Null
+          foreach($name in @('opencodex-desktop.exe','ocxd.exe')){Copy-Item -LiteralPath ('apps/desktop/tauri/target/debug/'+$name) -Destination $output}
+          Copy-Item -LiteralPath apps/desktop/tauri/resources/runtime-bundle -Destination $output -Recurse
+          $files=@(Get-ChildItem -LiteralPath $output -Recurse -File | ForEach-Object {
+            @{path=[IO.Path]::GetRelativePath([IO.Path]::GetFullPath($output),$_.FullName);bytes=$_.Length;sha256=(Get-FileHash -LiteralPath $_.FullName).Hash.ToLowerInvariant()}
+          })
+          @{schemaVersion=1;source=(git rev-parse HEAD).Trim();appsTree=(git rev-parse HEAD:apps).Trim();profile='debug custom-protocol MSVC';run=$env:GITHUB_RUN_ID;accepted=$false;releaseAccepted=$false;files=$files} | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath ($output+'/diagnostic-build.json')
+      - name: Preserve build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows023-local-session-build-logs-${{ github.run_id }}
+          path: '*.log'
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Upload diagnostic program
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows023-local-session-program-2c6edebc3
+          path: test/out/local-session-build/program
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 14
