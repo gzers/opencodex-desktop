@@ -1,0 +1,75 @@
+"""Read-only verification of the newly built user1 diagnostic inputs."""
+import hashlib, json, subprocess
+from pathlib import Path, PurePosixPath
+
+ROOT = Path(__file__).resolve().parent
+REPO = Path(r'C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code')
+SOURCE = 'd3b34a234e32b63365672052772c2c72c719f97c'
+RUN = '42625073747'
+PROGRAM = ROOT / 'program'
+
+def read(path):
+    return json.loads(path.read_text(encoding='utf-8-sig'))
+
+def sha(path):
+    h = hashlib.sha256()
+    with path.open('rb') as stream:
+        for chunk in iter(lambda: stream.read(4 * 1024 * 1024), b''):
+            h.update(chunk)
+    return h.hexdigest()
+
+manifest = read(PROGRAM / 'core-build.json')
+run = read(ROOT / 'build-run-final.json')
+artifact = read(ROOT / 'program-artifact.json')
+assert run['head_sha'] == SOURCE and str(run['id']) == RUN
+assert run['status'] == 'completed' and run['conclusion'] == 'success'
+assert artifact['workflow_run']['head_sha'] == SOURCE
+assert str(artifact['workflow_run']['id']) == RUN
+assert artifact['name'] == 'windows023-core-program-' + SOURCE
+assert not artifact['expired']
+assert manifest['source'] == SOURCE and str(manifest['run']) == RUN
+assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=REPO,text=True).strip() == SOURCE
+assert manifest['appsTree'] == subprocess.check_output(['git','rev-parse',SOURCE+':apps'],cwd=REPO,text=True).strip()
+assert manifest['policySha256'] == sha(REPO / '.github/runtime-platforms-023.json')
+assert manifest['accepted'] is False and manifest['diagnosticOnly'] is True
+seen = set()
+for member in manifest['files']:
+    name = member['path']
+    parts = PurePosixPath(name)
+    assert name and not parts.is_absolute() and parts.as_posix() == name
+    assert not any(p in ('', '.', '..') for p in parts.parts)
+    assert ':' not in name and chr(92) not in name
+    assert name.casefold() not in seen
+    seen.add(name.casefold())
+    file = PROGRAM / name
+    assert file.resolve().is_relative_to(PROGRAM.resolve()) and not file.is_symlink()
+    assert file.stat().st_size == member['bytes'] and sha(file) == member['sha256'], name
+actual = {f.relative_to(PROGRAM).as_posix().casefold() for f in PROGRAM.rglob('*') if f.is_file() and f.name != 'core-build.json'}
+assert actual == seen, 'Unlisted or missing member'
+for name in ('opencodex-desktop.exe','ocxd.exe','sweep-state.exe','sweep-filesystem.exe'):
+    assert name in seen
+policy = read(REPO / '.github/runtime-platforms-023.json')
+descriptor = read(PROGRAM / 'runtime-bundle/runtime-bundle.manifest.json')
+assert descriptor['runtimeVersion'] == policy['runtime']['version'] == '2.97.0-desktop023.lifecycle.3'
+assert descriptor['runtimeArchiveSha256'] == policy['runtime']['sha256'] == 'ec14baaee354c6729d1d2545ab9165d207b14a3a4239f354662163087eeb0739'
+runtime = PROGRAM / 'runtime-bundle/maintained-runtime.tgz'
+assert runtime.stat().st_size == 15413397 and sha(runtime) == descriptor['runtimeArchiveSha256']
+archive = PROGRAM / 'runtime-bundle' / descriptor['archiveName']
+assert archive.resolve().is_relative_to(PROGRAM.resolve())
+assert sha(archive) == descriptor['archiveSha256']
+zip_file = ROOT / 'program.zip'
+zip_hash = sha(zip_file)
+if artifact.get('digest'):
+    assert artifact['digest'] == 'sha256:' + zip_hash
+old_program = Path(r'D:\ocxu1-output-build-20261109-204221\program\opencodex-desktop.exe')
+assert sha(PROGRAM / 'opencodex-desktop.exe') != sha(old_program), 'Old Desktop must not be reused'
+report = dict(accepted=False, verified=True, source=SOURCE, run=RUN, artifactId=artifact['id'],
+    artifactName=artifact['name'], artifactBytes=zip_file.stat().st_size, artifactSha256=zip_hash,
+    artifactApiSizeInBytes=artifact.get('size_in_bytes'), artifactApiDigest=artifact.get('digest'),
+    appsTree=manifest['appsTree'], policySha256=manifest['policySha256'],
+    memberCount=len(manifest['files']), allMembersVerified=True, noUnlistedMembers=True,
+    desktopSha256=sha(PROGRAM / 'opencodex-desktop.exe'), desktopDiffersFromOldProduct=True,
+    runtimeVersion=descriptor['runtimeVersion'], runtimeBytes=runtime.stat().st_size, runtimeSha256=sha(runtime),
+    programDirectory=str(PROGRAM), programManifestSha256=sha(PROGRAM / 'core-build.json'))
+(ROOT / 'new-program-verification.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+chr(10),encoding='utf-8')
+print(json.dumps(report,ensure_ascii=False,indent=2))

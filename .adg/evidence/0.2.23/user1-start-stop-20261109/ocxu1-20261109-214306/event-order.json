@@ -1,0 +1,383 @@
+{
+  "accepted": false,
+  "orderSource": "Original trace array position, no replay or inferred missing events",
+  "events": [
+    {
+      "eventOrdinal": 1,
+      "rawTraceRow": {
+        "sequence": 1,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 40.0617,
+        "atUtc": "2026-11-09T13:46:05.539Z",
+        "command": "model_paths_v2_snapshot",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 2,
+      "rawTraceRow": {
+        "sequence": 2,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 856.816,
+        "atUtc": "2026-11-09T13:46:06.356Z",
+        "command": "model_paths_v2_snapshot"
+      }
+    },
+    {
+      "eventOrdinal": 3,
+      "rawTraceRow": {
+        "sequence": 3,
+        "stage": "start-proof-begin",
+        "elapsedMilliseconds": 858.8721,
+        "atUtc": "2026-11-09T13:46:06.358Z"
+      }
+    },
+    {
+      "eventOrdinal": 4,
+      "rawTraceRow": {
+        "sequence": 4,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 859.6013,
+        "atUtc": "2026-11-09T13:46:06.359Z",
+        "command": "get_data_root_config",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 5,
+      "rawTraceRow": {
+        "sequence": 5,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 867.2704,
+        "atUtc": "2026-11-09T13:46:06.367Z",
+        "command": "get_data_root_config"
+      }
+    },
+    {
+      "eventOrdinal": 6,
+      "rawTraceRow": {
+        "sequence": 6,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 867.2973000000001,
+        "atUtc": "2026-11-09T13:46:06.367Z",
+        "command": "model_paths_v2_snapshot",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 7,
+      "rawTraceRow": {
+        "sequence": 7,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 963.9593,
+        "atUtc": "2026-11-09T13:46:06.463Z",
+        "command": "model_paths_v2_snapshot"
+      }
+    },
+    {
+      "eventOrdinal": 8,
+      "rawTraceRow": {
+        "sequence": 8,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 968.1483000000001,
+        "atUtc": "2026-11-09T13:46:06.468Z",
+        "command": "get_data_root_config",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 9,
+      "rawTraceRow": {
+        "sequence": 9,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 972.211,
+        "atUtc": "2026-11-09T13:46:06.472Z",
+        "command": "get_data_root_config"
+      }
+    },
+    {
+      "eventOrdinal": 10,
+      "rawTraceRow": {
+        "sequence": 10,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 972.2334000000001,
+        "atUtc": "2026-11-09T13:46:06.472Z",
+        "command": "model_paths_v2_snapshot",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 11,
+      "rawTraceRow": {
+        "sequence": 11,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 1087.1665,
+        "atUtc": "2026-11-09T13:46:06.587Z",
+        "command": "model_paths_v2_snapshot"
+      }
+    },
+    {
+      "eventOrdinal": 12,
+      "rawTraceRow": {
+        "sequence": 12,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 1087.3817000000001,
+        "atUtc": "2026-11-09T13:46:06.587Z",
+        "command": "process_action",
+        "action": "start"
+      }
+    },
+    {
+      "eventOrdinal": 13,
+      "rawTraceRow": {
+        "sequence": 1,
+        "stage": "action-return",
+        "elapsedMilliseconds": 15702.7883,
+        "atUtc": "2026-11-09T13:46:21.202Z",
+        "action": "start",
+        "rejected": null
+      }
+    },
+    {
+      "eventOrdinal": 14,
+      "rawTraceRow": {
+        "sequence": 14,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 15715.3075,
+        "atUtc": "2026-11-09T13:46:21.215Z",
+        "command": "get_status_snapshot",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 15,
+      "rawTraceRow": {
+        "sequence": 15,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 15925.2595,
+        "atUtc": "2026-11-09T13:46:21.425Z",
+        "command": "get_status_snapshot"
+      }
+    },
+    {
+      "eventOrdinal": 16,
+      "rawTraceRow": {
+        "sequence": 16,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 15925.2873,
+        "atUtc": "2026-11-09T13:46:21.425Z",
+        "command": "get_data_root_config",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 17,
+      "rawTraceRow": {
+        "sequence": 17,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 15931.2357,
+        "atUtc": "2026-11-09T13:46:21.431Z",
+        "command": "get_data_root_config"
+      }
+    },
+    {
+      "eventOrdinal": 18,
+      "rawTraceRow": {
+        "sequence": 18,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 15931.2605,
+        "atUtc": "2026-11-09T13:46:21.431Z",
+        "command": "model_paths_v2_snapshot",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 19,
+      "rawTraceRow": {
+        "sequence": 19,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 16040.1556,
+        "atUtc": "2026-11-09T13:46:21.540Z",
+        "command": "model_paths_v2_snapshot"
+      }
+    },
+    {
+      "eventOrdinal": 20,
+      "rawTraceRow": {
+        "sequence": 20,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 16041.277,
+        "atUtc": "2026-11-09T13:46:21.541Z",
+        "command": "get_data_root_config",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 21,
+      "rawTraceRow": {
+        "sequence": 21,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 16044.5384,
+        "atUtc": "2026-11-09T13:46:21.544Z",
+        "command": "get_data_root_config"
+      }
+    },
+    {
+      "eventOrdinal": 22,
+      "rawTraceRow": {
+        "sequence": 22,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 16044.5951,
+        "atUtc": "2026-11-09T13:46:21.544Z",
+        "command": "model_paths_v2_snapshot",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 23,
+      "rawTraceRow": {
+        "sequence": 23,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 16150.426,
+        "atUtc": "2026-11-09T13:46:21.650Z",
+        "command": "model_paths_v2_snapshot"
+      }
+    },
+    {
+      "eventOrdinal": 24,
+      "rawTraceRow": {
+        "sequence": 24,
+        "stage": "start-confirmed",
+        "elapsedMilliseconds": 16152.1315,
+        "atUtc": "2026-11-09T13:46:21.652Z",
+        "pid": 14788,
+        "port": 53668
+      }
+    },
+    {
+      "eventOrdinal": 25,
+      "rawTraceRow": {
+        "sequence": 25,
+        "stage": "normal-stop-begin",
+        "elapsedMilliseconds": 16152.1504,
+        "atUtc": "2026-11-09T13:46:21.652Z"
+      }
+    },
+    {
+      "eventOrdinal": 26,
+      "rawTraceRow": {
+        "sequence": 26,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 16152.2307,
+        "atUtc": "2026-11-09T13:46:21.652Z",
+        "command": "get_data_root_config",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 27,
+      "rawTraceRow": {
+        "sequence": 27,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 16155.6111,
+        "atUtc": "2026-11-09T13:46:21.655Z",
+        "command": "get_data_root_config"
+      }
+    },
+    {
+      "eventOrdinal": 28,
+      "rawTraceRow": {
+        "sequence": 28,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 16155.6338,
+        "atUtc": "2026-11-09T13:46:21.655Z",
+        "command": "model_paths_v2_snapshot",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 29,
+      "rawTraceRow": {
+        "sequence": 29,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 16248.8575,
+        "atUtc": "2026-11-09T13:46:21.748Z",
+        "command": "model_paths_v2_snapshot"
+      }
+    },
+    {
+      "eventOrdinal": 30,
+      "rawTraceRow": {
+        "sequence": 30,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 16256.1597,
+        "atUtc": "2026-11-09T13:46:21.756Z",
+        "command": "get_data_root_config",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 31,
+      "rawTraceRow": {
+        "sequence": 31,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 16263.5665,
+        "atUtc": "2026-11-09T13:46:21.763Z",
+        "command": "get_data_root_config"
+      }
+    },
+    {
+      "eventOrdinal": 32,
+      "rawTraceRow": {
+        "sequence": 32,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 16263.5995,
+        "atUtc": "2026-11-09T13:46:21.763Z",
+        "command": "model_paths_v2_snapshot",
+        "action": null
+      }
+    },
+    {
+      "eventOrdinal": 33,
+      "rawTraceRow": {
+        "sequence": 33,
+        "stage": "invoke-return",
+        "elapsedMilliseconds": 16362.529299999998,
+        "atUtc": "2026-11-09T13:46:21.862Z",
+        "command": "model_paths_v2_snapshot"
+      }
+    },
+    {
+      "eventOrdinal": 34,
+      "rawTraceRow": {
+        "sequence": 34,
+        "stage": "invoke-begin",
+        "elapsedMilliseconds": 16362.615699999998,
+        "atUtc": "2026-11-09T13:46:21.862Z",
+        "command": "process_action",
+        "action": "stop"
+      }
+    },
+    {
+      "eventOrdinal": 35,
+      "rawTraceRow": {
+        "sequence": 2,
+        "stage": "action-return",
+        "elapsedMilliseconds": 16598.6635,
+        "atUtc": "2026-11-09T13:46:22.098Z",
+        "action": "stop",
+        "rejected": null
+      }
+    },
+    {
+      "eventOrdinal": 36,
+      "rawTraceRow": {
+        "sequence": 36,
+        "stage": "manager-stop",
+        "elapsedMilliseconds": 16599.3689,
+        "atUtc": "2026-11-09T13:46:22.099Z",
+        "message": "Manager did not confirm stop"
+      }
+    }
+  ]
+}

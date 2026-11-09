@@ -1,0 +1,71 @@
+{
+  "accepted": false,
+  "source": "d3b34a234e32b63365672052772c2c72c719f97c",
+  "batch": "ocxu1-20261109-214306",
+  "start": {
+    "rawReceiptCount": 1,
+    "successfulReceiptCount": 1,
+    "uniqueSuccessfulReceipt": true,
+    "pidPortConsistentWithNativeRecord": true,
+    "publicRecord": {
+      "pid": 14788,
+      "port": 53668
+    },
+    "nativeRecord": {
+      "recordAcl": "O:S-1-5-21-587408064-856152790-2583328096-1012G:S-1-5-21-587408064-856152790-2583328096-513D:PAI(A;;FA;;;S-1-5-21-587408064-856152790-2583328096-1012)",
+      "secretOmitted": true,
+      "native": {
+        "pid": 14788,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1012",
+        "path": "C:\\Users\\ocxaccu16eb88db7a\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+        "creationTicks": "639298287670267237",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "listeners": [
+        {
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53668,
+          "OwningProcess": 14788
+        }
+      ],
+      "pid": 14788,
+      "port": 53668,
+      "observedUtc": "2026-11-09T13:46:31.6557886Z"
+    },
+    "recordObserved": true,
+    "pidPortUnavailableReason": null,
+    "classification": "start-confirmed",
+    "firstStartTrace": {
+      "file": "user1/desktop-logs/app.log",
+      "line": 7,
+      "text": "2026-11-09T13:46:21.193Z [manager] start: start confirmed"
+    },
+    "admissionTrace": [],
+    "admissionStageKindWin32": "not-observed; no inference of successful admission"
+  },
+  "startupOutputTrace": [],
+  "stop": {
+    "executed": true,
+    "confirmed": false,
+    "reasonIfNotExecuted": null,
+    "traceFile": null,
+    "realOriginalExitEvidence": "user1/original-exits-before-cleanup.json",
+    "separateStopCliExitCode": null,
+    "separateStopCliReason": "Normal product Stop is authenticated HTTP; do not invent a CLI exit code"
+  },
+  "cleanup": {
+    "accountSid": "S-1-5-21-587408064-856152790-2583328096-1012",
+    "accountName": "ocxaccu16eb88db7a",
+    "profile": "C:\\Users\\ocxaccu16eb88db7a",
+    "accountRemoved": true,
+    "profileRemoved": true,
+    "userDirectoryRemoved": true,
+    "desktopAclRestored": true,
+    "identityUnproven": false,
+    "cleanupFailure": null,
+    "residualProcesses": [],
+    "programUnchanged": true
+  }
+}

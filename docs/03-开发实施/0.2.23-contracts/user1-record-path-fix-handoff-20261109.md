@@ -2,6 +2,8 @@
 
 2026-11-09，Asia/Shanghai。用户已采用直接修维护包路径校验、构建推送并交Windows一次user1验证。本交接覆盖[输出诊断交接](user1-output-diagnostic-handoff-20261109.md)中继续使用lifecycle.2的下一动作；诊断accepted:false，尚未关闭启动、停止或版本验收。
 
+执行回交更新（2026-11-09 21:49，Asia/Shanghai）：新源码d3b34a234e32b63365672052772c2c72c719f97c的purpose=core-build/run42625073747完整成功；新artifact13678273054，ZIP304980630字节/SHA256 7746177f4284e4e96a2417b2e741e6a2227903f495347dd7fb72f426a1305d26，9成员、appsTree、policy及lifecycle.3原摘要均核验。独立批次ocxu1-20261109-214306只Start1次，唯一成功回执，原30秒内15072ms确认健康，服务PID14788/端口53668与原生身份及监听一致，实际客户端配置写入断言通过。随后立即正常Stop1次，187ms返回lifecycle_stop_unknown；原服务句柄清理前未退出、退出码空，客户端还原未确认，诊断driver exit1，整体accepted:false。后续精确清理完成，账户/Profile/目录均删除、残留进程空、ACL恢复。RDP40次采样全Active。没有扩大验证、单修第18项或发布。[四项原证据、新构建及Stop失败trace](../../../.adg/evidence/0.2.23/user1-start-stop-20261109/ocxu1-20261109-214306/README.md)。本轮启动通过，正常停止/还原仍待Mac依据原证据定位；下述原合同保留，不自动再跑。
+
 ## 修复事实与固定来源
 
 新代码：codex/0.2.23-integration@d3b34a234e32b63365672052772c2c72c719f97c。文档：docs/governance-main，以含本交接的实际远端提交为准。

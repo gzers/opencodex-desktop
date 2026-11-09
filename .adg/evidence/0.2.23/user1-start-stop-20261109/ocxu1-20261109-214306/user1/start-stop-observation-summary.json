@@ -1,0 +1,191 @@
+{
+  "accepted": false,
+  "source": "d3b34a234e32b63365672052772c2c72c719f97c",
+  "runtimeVersion": "2.97.0-desktop023.lifecycle.3",
+  "batch": "ocxu1-20261109-214306",
+  "start": {
+    "confirmed": true,
+    "rawReceiptCount": 1,
+    "successfulReceiptCount": 1,
+    "uniqueSuccessfulReceipt": true,
+    "elapsedMilliseconds": 15072,
+    "budgetMilliseconds": 30000,
+    "pid": 14788,
+    "port": 53668,
+    "pidPortAndNativeListenerAgree": true,
+    "nativeSid": "S-1-5-21-587408064-856152790-2583328096-1012",
+    "attestation": "verified-production-challenge",
+    "clientConfigurationActuallyWrittenAndPortBound": true
+  },
+  "stop": {
+    "normalStopExecuted": true,
+    "confirmed": false,
+    "successfulReceiptCount": 0,
+    "rawReceiptCount": 1,
+    "failureCode": "lifecycle_stop_unknown",
+    "firstFailure": {
+      "file": "user1/desktop-logs/app.log",
+      "line": 8,
+      "text": "2026-11-09T13:46:22.076Z [manager] stop: failed (managed runtime operation failed: lifecycle_stop_unknown; 官方停止或客户端还原结果未确认；未强制终止或宣称已停止; duration_ms=187)"
+    },
+    "productActionDurationMilliseconds": 187,
+    "publicInvokeElapsedMilliseconds": 236.04780000000028,
+    "originalBudgetMilliseconds": 10000,
+    "startConfirmationToStopPhaseMilliseconds": 0.018900000000940054,
+    "startConfirmationToStopInvokeMilliseconds": 210.48419999999896,
+    "rawEvents": [
+      {
+        "eventOrdinal": 25,
+        "rawTraceRow": {
+          "sequence": 25,
+          "stage": "normal-stop-begin",
+          "elapsedMilliseconds": 16152.1504,
+          "atUtc": "2026-11-09T13:46:21.652Z"
+        }
+      },
+      {
+        "eventOrdinal": 26,
+        "rawTraceRow": {
+          "sequence": 26,
+          "stage": "invoke-begin",
+          "elapsedMilliseconds": 16152.2307,
+          "atUtc": "2026-11-09T13:46:21.652Z",
+          "command": "get_data_root_config",
+          "action": null
+        }
+      },
+      {
+        "eventOrdinal": 27,
+        "rawTraceRow": {
+          "sequence": 27,
+          "stage": "invoke-return",
+          "elapsedMilliseconds": 16155.6111,
+          "atUtc": "2026-11-09T13:46:21.655Z",
+          "command": "get_data_root_config"
+        }
+      },
+      {
+        "eventOrdinal": 28,
+        "rawTraceRow": {
+          "sequence": 28,
+          "stage": "invoke-begin",
+          "elapsedMilliseconds": 16155.6338,
+          "atUtc": "2026-11-09T13:46:21.655Z",
+          "command": "model_paths_v2_snapshot",
+          "action": null
+        }
+      },
+      {
+        "eventOrdinal": 29,
+        "rawTraceRow": {
+          "sequence": 29,
+          "stage": "invoke-return",
+          "elapsedMilliseconds": 16248.8575,
+          "atUtc": "2026-11-09T13:46:21.748Z",
+          "command": "model_paths_v2_snapshot"
+        }
+      },
+      {
+        "eventOrdinal": 30,
+        "rawTraceRow": {
+          "sequence": 30,
+          "stage": "invoke-begin",
+          "elapsedMilliseconds": 16256.1597,
+          "atUtc": "2026-11-09T13:46:21.756Z",
+          "command": "get_data_root_config",
+          "action": null
+        }
+      },
+      {
+        "eventOrdinal": 31,
+        "rawTraceRow": {
+          "sequence": 31,
+          "stage": "invoke-return",
+          "elapsedMilliseconds": 16263.5665,
+          "atUtc": "2026-11-09T13:46:21.763Z",
+          "command": "get_data_root_config"
+        }
+      },
+      {
+        "eventOrdinal": 32,
+        "rawTraceRow": {
+          "sequence": 32,
+          "stage": "invoke-begin",
+          "elapsedMilliseconds": 16263.5995,
+          "atUtc": "2026-11-09T13:46:21.763Z",
+          "command": "model_paths_v2_snapshot",
+          "action": null
+        }
+      },
+      {
+        "eventOrdinal": 33,
+        "rawTraceRow": {
+          "sequence": 33,
+          "stage": "invoke-return",
+          "elapsedMilliseconds": 16362.529299999998,
+          "atUtc": "2026-11-09T13:46:21.862Z",
+          "command": "model_paths_v2_snapshot"
+        }
+      },
+      {
+        "eventOrdinal": 34,
+        "rawTraceRow": {
+          "sequence": 34,
+          "stage": "invoke-begin",
+          "elapsedMilliseconds": 16362.615699999998,
+          "atUtc": "2026-11-09T13:46:21.862Z",
+          "command": "process_action",
+          "action": "stop"
+        }
+      },
+      {
+        "eventOrdinal": 35,
+        "rawTraceRow": {
+          "sequence": 2,
+          "stage": "action-return",
+          "elapsedMilliseconds": 16598.6635,
+          "atUtc": "2026-11-09T13:46:22.098Z",
+          "action": "stop",
+          "rejected": null
+        }
+      },
+      {
+        "eventOrdinal": 36,
+        "rawTraceRow": {
+          "sequence": 36,
+          "stage": "manager-stop",
+          "elapsedMilliseconds": 16599.3689,
+          "atUtc": "2026-11-09T13:46:22.099Z",
+          "message": "Manager did not confirm stop"
+        }
+      }
+    ],
+    "nativeRecordObservedAfterStopReturnUtc": "2026-11-09T13:46:31.6557886Z",
+    "serviceExitedBeforeCleanup": false,
+    "serviceExitCodeBeforeCleanup": null,
+    "clientRestoreConfirmed": false,
+    "clientRestoreReason": "Public Stop failed before original client restore readback; no successful restore assertion executed",
+    "normalStopCliExitCode": null,
+    "normalStopCliReason": "Actual product Stop uses authenticated HTTP; no separate Stop CLI process",
+    "diagnosticDriver": {
+      "identity": {
+        "pid": 88748,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1012",
+        "path": "D:\\ocxu1-lifecycle3-build-20261109-212335\\tools\\runtime\\node\\node.exe",
+        "creationTicks": "639298287653616852",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "exitCode": 1,
+      "originalHandleExited": true
+    }
+  },
+  "startupOutput": {
+    "observed": false,
+    "reason": "Start confirmed; original app.log has no startup_output field. Do not import failure summaries from prior lifecycle.2 batches."
+  },
+  "cleanupNotNormalStop": true,
+  "rootCauseOfStopFailureKnown": false,
+  "furtherInvocations": 0
+}
