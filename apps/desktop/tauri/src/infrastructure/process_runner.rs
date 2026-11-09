@@ -36,8 +36,35 @@ struct StartDiagnostics {
     tail: zeroize::Zeroizing<Vec<u8>>,
     reason: Option<&'static str>,
     admission_failure: Option<String>,
+    stdout: super::process_start_output::OutputStream,
+    stderr: super::process_start_output::OutputStream,
 }
 impl StartDiagnostics {
+    fn stream(&mut self, stderr: bool) -> &mut super::process_start_output::OutputStream {
+        if stderr {
+            &mut self.stderr
+        } else {
+            &mut self.stdout
+        }
+    }
+
+    fn summary(&self) -> String {
+        format!(
+            "startup_output={} {}",
+            self.stdout.summary("stdout"),
+            self.stderr.summary("stderr")
+        )
+    }
+
+    fn push_stream(&mut self, stderr: bool, bytes: &[u8]) {
+        self.push(bytes);
+        let stream = self.stream(stderr);
+        stream.push(bytes);
+        if let Some(admission) = stream.admission_failure.clone() {
+            self.admission_failure = Some(admission);
+        }
+    }
+
     fn push(&mut self, bytes: &[u8]) {
         // Only a bounded rolling window is retained, and no upstream text is logged.
         self.tail.extend_from_slice(bytes);
@@ -67,7 +94,7 @@ impl StartDiagnostics {
     }
 }
 
-fn valid_admission_diagnostic(value: &str) -> bool {
+pub(super) fn valid_admission_diagnostic(value: &str) -> bool {
     let fields: Vec<_> = value.split(' ').collect();
     if fields.len() != 3 {
         return false;
@@ -108,16 +135,30 @@ fn capture_start_output(child: &mut ControlledChild) -> Arc<std::sync::Mutex<Sta
     fn drain(
         reader: impl std::io::Read + Send + 'static,
         state: Arc<std::sync::Mutex<StartDiagnostics>>,
+        stderr: bool,
     ) {
         std::thread::spawn(move || {
             let mut reader = reader;
             let mut buffer = zeroize::Zeroizing::new([0u8; 2048]);
-            while let Ok(n) = reader.read(&mut buffer[..]) {
-                if n == 0 {
-                    break;
-                }
+            loop {
+                let n = match reader.read(&mut buffer[..]) {
+                    Ok(0) => {
+                        if let Ok(mut state) = state.lock() {
+                            state.stream(stderr).eof = true;
+                        }
+                        break;
+                    }
+                    Ok(n) => n,
+                    Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
+                    Err(_) => {
+                        if let Ok(mut state) = state.lock() {
+                            state.stream(stderr).read_failed = true;
+                        }
+                        break;
+                    }
+                };
                 if let Ok(mut state) = state.lock() {
-                    state.push(&buffer[..n]);
+                    state.push_stream(stderr, &buffer[..n]);
                 }
             }
         });
@@ -126,28 +167,70 @@ fn capture_start_output(child: &mut ControlledChild) -> Arc<std::sync::Mutex<Sta
     fn drain(
         reader: impl tokio::io::AsyncRead + Unpin + Send + 'static,
         state: Arc<std::sync::Mutex<StartDiagnostics>>,
+        stderr: bool,
     ) {
         tauri::async_runtime::spawn(async move {
             use tokio::io::AsyncReadExt;
             let mut reader = reader;
             let mut buffer = zeroize::Zeroizing::new([0u8; 2048]);
-            while let Ok(n) = reader.read(&mut buffer[..]).await {
-                if n == 0 {
-                    break;
-                }
+            loop {
+                let n = match reader.read(&mut buffer[..]).await {
+                    Ok(0) => {
+                        if let Ok(mut state) = state.lock() {
+                            state.stream(stderr).eof = true;
+                        }
+                        break;
+                    }
+                    Ok(n) => n,
+                    Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
+                    Err(_) => {
+                        if let Ok(mut state) = state.lock() {
+                            state.stream(stderr).read_failed = true;
+                        }
+                        break;
+                    }
+                };
                 if let Ok(mut state) = state.lock() {
-                    state.push(&buffer[..n]);
+                    state.push_stream(stderr, &buffer[..n]);
                 }
             }
         });
     }
     if let Some(stdout) = child.stdout.take() {
-        drain(stdout, captured.clone());
+        drain(stdout, captured.clone(), false);
+    } else if let Ok(mut state) = captured.lock() {
+        state.stdout.read_failed = true;
     }
     if let Some(stderr) = child.stderr.take() {
-        drain(stderr, captured.clone());
+        drain(stderr, captured.clone(), true);
+    } else if let Ok(mut state) = captured.lock() {
+        state.stderr.read_failed = true;
     }
     captured
+}
+
+async fn finish_start_output(
+    diagnostics: &Arc<std::sync::Mutex<StartDiagnostics>>,
+    remaining: Duration,
+) {
+    // Only after a terminal nonzero exit. Never extend the original action
+    // deadline or wait for a surviving descendant that inherited the pipes.
+    let deadline = tokio::time::Instant::now() + remaining.min(Duration::from_millis(100));
+    loop {
+        let done = diagnostics
+            .lock()
+            .map(|d| {
+                (d.stdout.eof || d.stdout.read_failed) && (d.stderr.eof || d.stderr.read_failed)
+            })
+            .unwrap_or(true);
+        if done || tokio::time::Instant::now() >= deadline {
+            break;
+        }
+        tokio::time::sleep_until(
+            deadline.min(tokio::time::Instant::now() + Duration::from_millis(2)),
+        )
+        .await;
+    }
 }
 
 /// 统一标记取消请求；只能等待已发出的系统调用结束，不强制终止。
@@ -333,10 +416,20 @@ impl ControlledProcessRunner {
                             }
                         }
                     }
-                    return Err(AppError::RuntimeManaged {code:"lifecycle_timeout".into(),detail:format!("启动未在原预算内证明就绪；observations={observations}, pending={pending_ready}, rejected={rejected}, absent_record={absent_record}, samples={sample_timings:?}。未延长预算或判定运行成功。")});
+                    let output = diagnostics
+                        .lock()
+                        .map(|d| d.summary())
+                        .unwrap_or_else(|_| "startup_output=unavailable".into());
+                    return Err(AppError::RuntimeManaged {code:"lifecycle_timeout".into(),detail:format!("启动未在原预算内证明就绪；observations={observations}, pending={pending_ready}, rejected={rejected}, absent_record={absent_record}, samples={sample_timings:?}；{output}。未延长预算或判定运行成功。")});
                 }
                 match exit.try_recv() {
                     Ok(Some(code)) if code != 0 => {
+                        let exit_observed_ms = started.elapsed().as_millis();
+                        finish_start_output(
+                            &diagnostics,
+                            timeout.saturating_sub(started.elapsed()),
+                        )
+                        .await;
                         self.bump_failure_epoch();
                         let reason = diagnostics
                             .lock()
@@ -354,9 +447,20 @@ impl ControlledProcessRunner {
                             .and_then(|d| d.admission_failure.clone())
                             .map(|s| format!("；lifetime_admission={s}"))
                             .unwrap_or_default();
+                        // Preserve port failures' existing product text; generic
+                        // startup failures already hide internal detail in the DTO.
+                        let output = if reason == "lifecycle_start_exit" {
+                            let summary = diagnostics
+                                .lock()
+                                .map(|d| d.summary())
+                                .unwrap_or_else(|_| "startup_output=unavailable".into());
+                            format!("；exit_observed_ms={exit_observed_ms}；{summary}")
+                        } else {
+                            String::new()
+                        };
                         return Err(AppError::RuntimeManaged {
                             code: reason.into(),
-                            detail: format!("{message}；exit_code={code}{admission}"),
+                            detail: format!("{message}；exit_code={code}{admission}{output}"),
                         });
                     }
                     Ok(None) => {
@@ -963,6 +1067,35 @@ mod managed_observation_tests {
             assert!(matches!(e, AppError::RuntimeManaged{code,..} if code=="lifecycle_timeout"));
         }
     }
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn terminal_exit_retains_completed_pipe_diagnostics_without_raw_error_text() {
+        let (error, _root, _fixture) = run(
+            "#!/bin/sh\nprintf 'ReferenceError: Cannot access PRIVATE before initialization\\n    at C:/Users/PRIVATE/src/lib/windows-runtime-lifetime.ts:121:9)\\n' >&2\nexit 19\n",
+        ).await;
+        match error {
+            AppError::RuntimeManaged { code, detail } => {
+                assert_eq!(code, "lifecycle_start_exit");
+                assert!(detail.contains("exit_code=19"));
+                assert!(
+                    detail
+                        .contains("eof=true,read_failed=false,kind=reference,hint=initialization"),
+                    "{detail}"
+                );
+                assert!(detail.contains("src/lib/windows-runtime-lifetime.ts:121:9"));
+                assert!(!detail.contains("PRIVATE") && !detail.contains("C:/Users"));
+            }
+            other => panic!("{other:?}"),
+        }
+    }
+
+    #[tokio::test]
+    async fn unfinished_output_cannot_extend_diagnostic_or_original_budget() {
+        let diagnostics = Arc::new(std::sync::Mutex::new(StartDiagnostics::default()));
+        let started = Instant::now();
+        finish_start_output(&diagnostics, Duration::ZERO).await;
+        assert!(started.elapsed() < Duration::from_millis(50));
+        assert!(diagnostics.lock().unwrap().summary().contains("eof=false"));
+    }
     #[test]
     fn admission_diagnostics_accept_fixed_fields_only() {
         let mut d = StartDiagnostics::default();
@@ -982,6 +1115,19 @@ mod managed_observation_tests {
             other.push(format!("ocxd-lifetime-admission-failed stage={bad}\n").as_bytes());
             assert!(other.admission_failure.is_none());
         }
+    }
+
+    #[test]
+    fn interleaved_stdout_cannot_break_a_split_stderr_admission_marker() {
+        let mut d = StartDiagnostics::default();
+        d.push_stream(true, b"ocxd-lifetime-admission-failed stage=job-");
+        d.push_stream(false, b"unrelated startup output\n");
+        d.push_stream(true, b"self-assign kind=error win32=5\n");
+        assert_eq!(
+            d.admission_failure.as_deref(),
+            Some("job-self-assign kind=error win32=5")
+        );
+        assert!(d.summary().contains("kind=unobserved"));
     }
 
     #[test]

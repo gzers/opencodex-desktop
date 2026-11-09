@@ -11,6 +11,7 @@ pub mod official_cli_source;
 pub mod official_version_source;
 pub mod platform;
 pub mod process_runner;
+mod process_start_output;
 pub mod runtime_executable;
 pub mod runtime_log;
 pub mod status_source;
