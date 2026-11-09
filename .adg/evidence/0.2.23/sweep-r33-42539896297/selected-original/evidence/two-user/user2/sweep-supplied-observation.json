@@ -1,0 +1,108 @@
+{
+  "name": "supplied-observation",
+  "status": "pass",
+  "accepted": false,
+  "diagnosticOnly": true,
+  "firstError": "",
+  "evidence": {
+    "mounted": true,
+    "textLength": 259,
+    "about": {
+      "name": "OpenCodeX Desktop",
+      "version": "0.2.23",
+      "identifier": "com.gzers.opencodex.desktop",
+      "platform": "Windows",
+      "framework": "Tauri v2",
+      "license": "MIT License"
+    },
+    "paths": {
+      "schemaVersion": 1,
+      "aggregateRoot": {
+        "path": "\\\\?\\C:\\Users\\ocxacc50cd09d273\\.codex-desktop",
+        "status": "valid"
+      },
+      "desktopRoot": {
+        "path": "\\\\?\\C:\\Users\\ocxacc50cd09d273\\.codex-desktop\\desktop",
+        "status": "valid"
+      },
+      "opencodexHome": {
+        "path": "\\\\?\\C:\\Users\\ocxacc50cd09d273\\.codex-desktop\\opencodex\\home",
+        "status": "valid"
+      },
+      "configPath": {
+        "path": "\\\\?\\C:\\Users\\ocxacc50cd09d273\\.codex-desktop\\opencodex\\home\\config.json",
+        "status": "missing"
+      },
+      "installationRoot": {
+        "path": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+        "status": "valid"
+      },
+      "runtimePrefix": {
+        "path": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/opencodex",
+        "status": "valid"
+      },
+      "runtimeEntry": {
+        "path": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/bin/ocx.cmd",
+        "status": "valid"
+      },
+      "managerExecutable": {
+        "path": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+        "status": "valid"
+      },
+      "program": {
+        "packageVersion": "2.97.0-desktop023.names.2",
+        "manifestVersion": "2.97.0-desktop023.names.2",
+        "sourceVersion": "2.97.0-desktop023.names.2",
+        "consistency": "consistent"
+      },
+      "currentAggregateRoot": "\\\\?\\C:\\Users\\ocxacc50cd09d273\\.codex-desktop",
+      "pendingRestart": false
+    },
+    "config": {
+      "activeDataRoot": "\\\\?\\C:\\Users\\ocxacc50cd09d273\\.codex-desktop\\desktop",
+      "aggregateRoot": "\\\\?\\C:\\Users\\ocxacc50cd09d273\\.codex-desktop",
+      "opencodexHomeMode": "inside",
+      "opencodexHome": "\\\\?\\C:\\Users\\ocxacc50cd09d273\\.codex-desktop\\opencodex\\home",
+      "currentDataRoot": "\\\\?\\C:\\Users\\ocxacc50cd09d273\\.codex-desktop\\desktop",
+      "currentOpencodexHome": "\\\\?\\C:\\Users\\ocxacc50cd09d273\\.codex-desktop\\opencodex\\home",
+      "runtimeActive": true
+    },
+    "cliEnabled": false,
+    "runtime": {
+      "kind": "managed",
+      "path": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/bin/ocx.cmd",
+      "version": "2.97.0-desktop023.names.2",
+      "resolvedAt": "2026-11-09T00:52:53Z",
+      "insideDataRoot": false,
+      "managedEntry": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/bin/ocx.cmd",
+      "managedPrefix": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/opencodex",
+      "defaultPrefix": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/opencodex",
+      "explicitPath": null,
+      "history": []
+    },
+    "environment": {
+      "pending": false,
+      "elapsedMilliseconds": 865.3000000000466,
+      "value": {
+        "node": {
+          "found": true,
+          "path": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/node/node.exe",
+          "version": "26.8.1"
+        },
+        "npm": {
+          "found": true,
+          "path": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/node/node_modules/npm/bin/npm-cli.js",
+          "version": "11.19.0"
+        },
+        "ocx": {
+          "found": true,
+          "path": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime/bin/ocx.cmd",
+          "version": "2.97.0-desktop023.names.2"
+        },
+        "gate": "ready",
+        "shortCircuited": false,
+        "brewFound": false
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "accepted": false,
+  "source": "070d7a67d5e6efa52c798a7575d66d018c0515b3",
+  "passed": 26,
+  "failed": 2,
+  "manifestMembers": 277,
+  "artifactSha256": "da203e2e8a1013c797edb596b29ae8a1b46af2e4137359f32ebc44fbeba765d9",
+  "findings": {
+    "startup": "A30134ms failure: record15.5s then two5s timeout, pending26.3-28.7s, timeout28.96-29.33s. Authenticated healthy only32328ms; remains failed.",
+    "supplementalStop": "Real ManagerStop10059ms failure, independent diagnostic accepted:false. Same context/protected record/HMAC before action, original Start result restored.",
+    "stopPhasesMilliseconds": {
+      "initialOwner": 1,
+      "serviceManager": 16,
+      "officialCall": 26,
+      "activationVerified": 388,
+      "capabilityRead": 394,
+      "secondAttestation": 423,
+      "revalidate": 424,
+      "postClientRestore": 732,
+      "timeoutObserved": 9775
+    },
+    "localization": "Official POST waits >9s. Neither activation (~0.67s twice) nor capability/health (~36ms) explains it. Official orchestration unconditionally calls Windows wrapper enumeration even if service/task absent; original PowerShell child has5s budget. Owned process samples observe PowerShell during POST. Correlation is not yet causal proof.",
+    "other": "All26 remaining gates including real SID, supply, IPC, account/Profile/process cleanup and policy restoration passed."
+  },
+  "batchSource": "9c340f24ed783c6f54147c21df9c5f78b4151d47",
+  "appsTreeUnchanged": "db4ac662f6216626c6dae2aae7f1d49866871052",
+  "scope": "test/.github only. No new full sweep. No product or maintained-runtime mutation.",
+  "batch": "Fresh actual ordinary SID read-only comparison: unchanged native ownership and official service queries; exact wrapper path/token matcher with sole mutation sink replaced by sorted IDs. Four fresh PowerShell processes original/filtered/filtered/original retain5000ms child deadline. Filter is experiment only, not adopted runtime behavior.",
+  "checks": {
+    "ordinaryExecutorContracts": 141,
+    "workflowActualRunBlocksParsed": 4,
+    "generatedReadOnlyQueryCommandAst": 2,
+    "BunSyntaxBuild": true,
+    "RustFmt": true,
+    "PythonAST": true
+  },
+  "normalStartFixed": false,
+  "normalStopFixed": false,
+  "nextFullSweepDispatched": false
+}

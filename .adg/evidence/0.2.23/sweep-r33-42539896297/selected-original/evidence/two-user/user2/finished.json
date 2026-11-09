@@ -1,0 +1,431 @@
+{
+  "ephemeralGuard": {
+    "passed": true,
+    "windows": true,
+    "githubActions": "true",
+    "runnerTemp": "D:\\a\\_temp",
+    "checkedBeforeProvisioning": true
+  },
+  "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+  "profile": "C:\\Users\\ocxacc50cd09d273",
+  "processHome": "C:\\Users\\ocxacc50cd09d273",
+  "localAppData": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local",
+  "desktopRoot": "C:\\Users\\ocxacc50cd09d273\\.codex-desktop\\desktop",
+  "opencodexHome": "C:\\Users\\ocxacc50cd09d273\\.codex-desktop\\opencodex\\home",
+  "installation": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+  "result": "fail",
+  "runtimeProxyVerification": "not-verified",
+  "verifyRuntimePorts": true,
+  "sandbox": false,
+  "manager": {
+    "pid": 8484,
+    "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+    "path": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+    "creationTicks": "639297823815600591",
+    "sessionId": 2,
+    "generationSource": "retained-handle-native-filetime",
+    "cimImageSupplied": true
+  },
+  "window": {
+    "pid": 8484,
+    "handle": "131814",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T00:53:01.7520451Z"
+  },
+  "applicationToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 8484,
+    "executable": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+    "creationTimeUtc": "2026-11-09T00:53:01.5600591Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-09T00:53:01.7523260Z"
+  },
+  "pipe": "OpenCodeXDesktop-f41c6b2bf7f2d0dbb4900c39",
+  "accepted": false,
+  "diagnosticOnly": true,
+  "runtimeReady": true,
+  "peerBusinessData": "access-denied",
+  "crossPipe": "access-denied-real-token",
+  "crossPipeServer": 9076,
+  "dpapi": "own-roundtrip-and-peer-denied-synthetic-subscope-only",
+  "duplicate": {
+    "rejected": true,
+    "secondPid": 7996,
+    "secondExitCode": 101,
+    "originalPid": 8484,
+    "originalWindowUnchanged": true,
+    "pointerMetadataHashUnchanged": true,
+    "lockSizeAndWriteTimeUnchanged": true,
+    "lockContentHash": "unavailable-while-byte-range-lock-held"
+  },
+  "failureKind": "System.Management.Automation.RuntimeException",
+  "failureLine": 772,
+  "actualFailure": "Runtime protocol interrupted by controller",
+  "failureCode": "Native identity/UI/IPC/cleanup assertion failed; inspect stage and retained evidence",
+  "cleanup": [
+    {
+      "process": {
+        "pid": 1188,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+        "creationTicks": "639297824916766800",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 824,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Windows\\System32\\conhost.exe",
+        "creationTicks": "639297824914322508",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 8528,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Windows\\System32\\cmd.exe",
+        "creationTicks": "639297824914244551",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 3272,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+        "creationTicks": "639297824441987997",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 8004,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+        "creationTicks": "639297824436669880",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 3368,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Windows\\System32\\conhost.exe",
+        "creationTicks": "639297824434220232",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 6812,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Windows\\System32\\cmd.exe",
+        "creationTicks": "639297824434164233",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 6508,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+        "creationTicks": "639297824321832431",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 2016,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Windows\\System32\\conhost.exe",
+        "creationTicks": "639297824314656865",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 1352,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Windows\\System32\\cmd.exe",
+        "creationTicks": "639297824314312638",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 2248,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Windows\\System32\\conhost.exe",
+        "creationTicks": "639297823943965921",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 5216,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop\\runtime\\node\\node.exe",
+        "creationTicks": "639297823942605466",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 8884,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+        "creationTicks": "639297823824811641",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 5860,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+        "creationTicks": "639297823823745426",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 1468,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+        "creationTicks": "639297823823576264",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 6780,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+        "creationTicks": "639297823823576000",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 2492,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+        "creationTicks": "639297823819877376",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 2788,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.58\\msedgewebview2.exe",
+        "creationTicks": "639297823819281560",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    },
+    {
+      "process": {
+        "pid": 8484,
+        "sid": "S-1-5-21-3289802278-1561746829-1498425070-1008",
+        "path": "C:\\Users\\ocxacc50cd09d273\\AppData\\Local\\Programs\\OpenCodeX Desktop\\opencodex-desktop.exe",
+        "creationTicks": "639297823815600591",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "stopped-or-exited"
+    }
+  ],
+  "finalInventory": {
+    "sha256": "9f2412cf6ad5fe59700f34eeb1e7ab00af35cc60f2923f762cd50d70d37364c3",
+    "entries": [
+      {
+        "path": ".desktop-removal.lock",
+        "kind": "file",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "desktop",
+        "kind": "directory"
+      },
+      {
+        "path": "desktop\\audit.log",
+        "kind": "file",
+        "bytes": 985,
+        "sha256": "1d07b1f61c102b56acba31b53d145ccc1130dc8765e3ce29a9b3536930a7fe2a"
+      },
+      {
+        "path": "desktop\\backups",
+        "kind": "directory"
+      },
+      {
+        "path": "desktop\\cache",
+        "kind": "directory"
+      },
+      {
+        "path": "desktop\\exports",
+        "kind": "directory"
+      },
+      {
+        "path": "desktop\\logs",
+        "kind": "directory"
+      },
+      {
+        "path": "desktop\\logs\\app.log",
+        "kind": "file",
+        "bytes": 1649,
+        "sha256": "88f3b2cfb53b48058466979260a86abf678a71cd53e3713330a0128992775986"
+      },
+      {
+        "path": "desktop\\manager-location.json",
+        "kind": "file",
+        "bytes": 94,
+        "sha256": "c3c6b4b740e6b801db145385fca8439c12fae40c34e3cd5214351eb7a4fe0170"
+      },
+      {
+        "path": "desktop\\manager-startup.lock",
+        "kind": "file",
+        "bytes": 40,
+        "sha256": "36a846ebba34f91775c14e796200ecca0c5e782bede164aa66c74fddce0c0d15"
+      },
+      {
+        "path": "desktop\\manager-state",
+        "kind": "directory"
+      },
+      {
+        "path": "desktop\\manager-state\\app.lock",
+        "kind": "file",
+        "bytes": 40,
+        "sha256": "7b9fad924b09e53f25596cf73b8bdac5c672e27ba7f15b5e9e213d6ac982f450"
+      },
+      {
+        "path": "desktop\\manager-state\\data-root.json",
+        "kind": "file",
+        "bytes": 65,
+        "sha256": "d5fb6f9aa1c6b872dda878591c350beb55765e6a0e2b33588426a0a3032a7eff"
+      },
+      {
+        "path": "desktop\\manager-state\\event-scope.json",
+        "kind": "file",
+        "bytes": 325,
+        "sha256": "cadc3eb1eb7cd1fcc88b21e97c3beedd81b9cb0811dc9abd2fe43d22db9aeb58"
+      },
+      {
+        "path": "desktop\\manager-state\\event-scope.lock",
+        "kind": "file",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "desktop\\manager-state\\notifications.json",
+        "kind": "file",
+        "bytes": 640,
+        "sha256": "b1889a05e476bb7569754c2150045cf032e302fe63cbb0ccfb31391a86403225"
+      },
+      {
+        "path": "desktop\\manager-state\\preferences.json",
+        "kind": "file",
+        "bytes": 282,
+        "sha256": "334f8e8cb825d2745029c2568cd864157a9c6c257e96c73e85272a5fcee2df35"
+      },
+      {
+        "path": "desktop\\manager-state\\preferences.json.lock",
+        "kind": "file",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "desktop\\manager-state\\runtime.json",
+        "kind": "file",
+        "bytes": 264,
+        "sha256": "9f37b6e3a697895ce3fac67f8b4e1d4c52a9ed139548096c6e9b66bb8632ccfd"
+      },
+      {
+        "path": "desktop\\manager-state\\structure.lock",
+        "kind": "file",
+        "bytes": 6,
+        "sha256": "14493f5f5470ed48c3f103d917ec52ae9005fa3913128031d0fac2a49ac3cc41"
+      },
+      {
+        "path": "desktop\\manager-state\\sync-service-v2",
+        "kind": "directory"
+      },
+      {
+        "path": "desktop\\manager-state\\sync-v2-transactions",
+        "kind": "directory"
+      },
+      {
+        "path": "desktop\\sync-state",
+        "kind": "directory"
+      },
+      {
+        "path": "opencodex",
+        "kind": "directory"
+      },
+      {
+        "path": "opencodex\\home",
+        "kind": "directory"
+      }
+    ]
+  },
+  "inventory": "hashed"
+}

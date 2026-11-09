@@ -331,3 +331,15 @@ a581ea0ca只增加test/.github只读定位，产品apps树4bfcbcc6与8ca50832b�
 
 
 补充排除性测量：[摘要成本对照](../../.adg/evidence/0.2.23/hash-cost-profile-20261109/analysis.json)在本机复制同一139MB原Node，仅测相同sha2版本/64KiB读取；现行dev（sha2 opt-level=3）三次257/242/248ms，原release配置516/495/496ms，摘要全部相同。故没有本机证据支持把Windows近9.8秒停止归因于Debug摘要；不据此改构建profile。该夹具不含生产ACL/激活检查，不能替代Windows真实阶段。原源码/日志/摘要保留，精确复制的Node与构建target已移除。
+
+
+### 第33轮全表与官方POST内部成本定位（2026-11-09）
+
+[完整26过/2失败表](../../.adg/evidence/0.2.23/sweep-r33-42539896297/status-table.md)已先展示，原ZIP36023985字节/SHA256 da203e2e8a1013c797edb596b29ae8a1b46af2e4137359f32ebc44fbeba765d9及277成员逐项核验。13/14仍失败：A30134ms启动未在原30秒就绪，32328ms迟到认证健康不补判；其余26项含供应、真实SID/IPC、双方账户Profile及进程清理、策略还原均过。
+
+独立supplemental实际Stop也超时，原Start失败保持。app.log固定阶段：26ms入官方调用，388ms激活完成，394ms读能力、423ms二次验签、424ms写前重核、732ms进入POST还原，9775ms仍等待POST；完整Manager10059ms失败。故耗时在官方POST内部，不能继续归因Desktop前置归属/摘要/GET能力。源码查到即使服务不存在，官方stopServiceIfInstalledDetailed也无条件进入包装器枚举，其PowerShell子预算5秒；本轮POST时确实观察到PowerShell，仍不把相关性当唯一因果。
+
+整批9c340f24e仅test/.github，产品apps树db4ac662及names.2维护包字节不变。在既有真实普通SID执行器加只读成本模式：原生归属/实际官方查询及包装器原完整匹配器；只把终止sink换为排序PID读取，原版/限定cmd-wscript-cscript枚举交错各两次，子预算仍5秒。限定枚举只是实验，未作为运行包修复采用。141执行器合同、Bun语法构建、Python AST/Rust fmt、4实际workflow块及2实际生成只读PowerShell命令AST核对通过；首次系统Ruby不支持filter_map已纠正并严格计数重验，不把未生成输入的输出当通过。先查成本再定必要维护修复，未派新完整轮、未发布，原预算/身份/还原语义不降。
+
+
+只读普通SID成本对照[run42543638672](https://github.com/gzers/opencodex-desktop/actions/runs/42543638672)固定9c340f24ed783c6f54147c21df9c5f78b4151d47/job128923849212已确认运行；这是保留原包的诊断剖析，accepted:false，不是下一完整验收轮。原始9模块与归档逐字节核对后，实际普通令牌执行、保留原生SID/句柄/退出/账户及Profile清理合同。未采用限定枚举作为产品修复。

@@ -1,0 +1,1421 @@
+{
+  "accepted": false,
+  "originalsPreserved": true,
+  "files": [
+    {
+      "path": "sweep\\01-original-inputs.json",
+      "bytes": 1460,
+      "sha256": "aad74d6e0b051dfc7363061fb474ef9dd26337ca9ad616ad94171ce2a4f3778f"
+    },
+    {
+      "path": "sweep\\02-current-binary.json",
+      "bytes": 1026,
+      "sha256": "ffe079940e136933022e04591a2bf8543a2d4f986f6e7c3e248082c7029d9b35"
+    },
+    {
+      "path": "sweep\\03-server-msi-prepare.json",
+      "bytes": 666,
+      "sha256": "d408441ba225e06a1cf2bc93aaa1da542ab1ff8395b42a2d9cc3ca107d85c191"
+    },
+    {
+      "path": "sweep\\04-msi-default.json",
+      "bytes": 2922,
+      "sha256": "fd80c542d9b689cef1204d31ad0c7e13b7a9d2a3296833fdbfef888d395d2fe4"
+    },
+    {
+      "path": "sweep\\05-msi-custom.json",
+      "bytes": 3721,
+      "sha256": "cd3a3e5e2246c90051fbaca4f608b1609321681d27e548d38315e56842953ff8"
+    },
+    {
+      "path": "sweep\\06-nsis-default.json",
+      "bytes": 2881,
+      "sha256": "ed5170d374b2157cc1bc26b01bb0735512c13da9e1e524a07767bb8f239da7eb"
+    },
+    {
+      "path": "sweep\\07-nsis-custom.json",
+      "bytes": 3691,
+      "sha256": "99b465797ee8195d6a25efa7d2acc8767810527ea207c58bfddb16a4482ec45c"
+    },
+    {
+      "path": "sweep\\08-path-snapshot-and-copy.json",
+      "bytes": 7579,
+      "sha256": "29478c69daa3c5a87b81fc625a66c6ba25e5979729c95a054f39be0eb1752201"
+    },
+    {
+      "path": "sweep\\09-native-install-recovery.json",
+      "bytes": 34900,
+      "sha256": "e86abff6e8b31bf0c3316305ed5ae69487936f10fda859642171169650f45d78"
+    },
+    {
+      "path": "sweep\\10-query-and-update-recovery.json",
+      "bytes": 43844,
+      "sha256": "208369dd6028889ce36d4f7ac2d2d76a4f6fb81105498ccf3cf9cd3b2f0799ce"
+    },
+    {
+      "path": "sweep\\11-two-real-sids.json",
+      "bytes": 35045,
+      "sha256": "13091df0fab55be0ce79abebfd40b7101484c3b3ad92bd7977a97d46a2e0585c"
+    },
+    {
+      "path": "sweep\\12-private-bundle-supply.json",
+      "bytes": 1023,
+      "sha256": "347293ecef7ccaba7abcea541780a9d264043e1dc67076c56bbdd5ab57a28dad"
+    },
+    {
+      "path": "sweep\\13-runtime-readiness.json",
+      "bytes": 320,
+      "sha256": "a912e8926343b3aff4a41a8cac2625af7a7191358614b0582df8f69ed2948d48"
+    },
+    {
+      "path": "sweep\\14-runtime-ports.json",
+      "bytes": 288,
+      "sha256": "08a8f33a2a964c4d7a17971960936aba85333157b1fa877d29360f5ab9274396"
+    },
+    {
+      "path": "sweep\\15-two-user-paths.json",
+      "bytes": 4074,
+      "sha256": "a7524f36ed44995f14fada85262816bd21d0f9685338e0b52a0f5c7ee7584b64"
+    },
+    {
+      "path": "sweep\\16-same-user-ipc.json",
+      "bytes": 588,
+      "sha256": "6b2d9f70bbf22f672568361ff24be851d7cda418869913b4e284ccf4e5ea5e5e"
+    },
+    {
+      "path": "sweep\\17-cross-user-ipc.json",
+      "bytes": 1969,
+      "sha256": "2738f66d602439190b1725d0b06e20ad823763dbe7aa5b39bc36a498b2835cfb"
+    },
+    {
+      "path": "sweep\\18-account-and-process-cleanup.json",
+      "bytes": 22317,
+      "sha256": "1e6f2ef64a8301696f2c474012fd8d7656d60bf67f6b6bff2f63b5d0da1d1816"
+    },
+    {
+      "path": "sweep\\19-uninstall-and-retention.json",
+      "bytes": 12651,
+      "sha256": "b8f64691e59613995281629af7b696436e5ad6150ed1ba2e410beba2e2adeebc"
+    },
+    {
+      "path": "sweep\\20-server-msi-restore.json",
+      "bytes": 499,
+      "sha256": "fd37aaf5158aa55c299317803ba337a96d250824be39bcae6c8f00dad6d8bfe5"
+    },
+    {
+      "path": "sweep\\21-query-failure.json",
+      "bytes": 329,
+      "sha256": "8e615a562041eeab6a1dc73e6b1ce9b5e8f6dc8109afc33c980d01fbb79e68b5"
+    },
+    {
+      "path": "sweep\\22-update-failure-recovery.json",
+      "bytes": 462,
+      "sha256": "16dc721d31228b752f8a3058a8f3db0dccd3e23ae64e32e9cfcb6b084a7cfec0"
+    },
+    {
+      "path": "sweep\\23-native-process-cleanup.json",
+      "bytes": 1146,
+      "sha256": "b9764777f8d5e977b00c458f2f2c2fc6433172423d7d7055cc932408f8d9f525"
+    },
+    {
+      "path": "sweep\\24-windows-bundle-root-regression.json",
+      "bytes": 414,
+      "sha256": "1c9ce82f727e2ea3bef8452282e58ad1b2044bbf59e583606464732abd909dff"
+    },
+    {
+      "path": "sweep\\25-backend-state-observer-build.json",
+      "bytes": 548,
+      "sha256": "28c2e97c3087ec068c457cb7a2e7dd8b074c5026d7ba3165b42e003a5ddc55bb"
+    },
+    {
+      "path": "sweep\\26-attested-status-regression.json",
+      "bytes": 538,
+      "sha256": "8d81ca7e8687c879cd9da89eec6d134b6cdacd80a837959d0cf76d2c759a15b9"
+    },
+    {
+      "path": "sweep\\27-actual-runtime-fixture-schema.json",
+      "bytes": 415,
+      "sha256": "d45ee118569bd43720cedcdb0beeb8b4c2d2c4ecc9392b4e60f758755e123296"
+    },
+    {
+      "path": "sweep\\28-runtime-port-save-regression.json",
+      "bytes": 366,
+      "sha256": "6b452ab2d7f272fd333931ac558e8817c700a42f535ecbded70f1874a413ae37"
+    },
+    {
+      "path": "sweep\\summary.json",
+      "bytes": 206756,
+      "sha256": "7d6c615b604819e90546fdc44925f1298dbc2e570dbb4f7a9208d0d0352cfae9"
+    },
+    {
+      "path": "evidence\\actual-runtime-fixture-schema.log",
+      "bytes": 95,
+      "sha256": "94c928f8ebec008421d6b605f2e853c52396ac4bbcd9f11d5c542fa40dc7e7eb"
+    },
+    {
+      "path": "evidence\\administrative-extract.log",
+      "bytes": 96806,
+      "sha256": "3ed2df08ad6b92215ef7222d3da9753115adceb430a9ae2f4214b7c14a81ece6"
+    },
+    {
+      "path": "evidence\\attested-status-regression.log",
+      "bytes": 1393,
+      "sha256": "a6645826e54fd3c05e7590b857929c4b32a8dc2defd38d0f3935c6c65be767f3"
+    },
+    {
+      "path": "evidence\\current-runtime-resource-identity.json",
+      "bytes": 329,
+      "sha256": "0d9055e5a455b0a917909c861b82ab73ee93312bb1a7bde75295cf26fbfde3a2"
+    },
+    {
+      "path": "evidence\\current-runtime-stage.log",
+      "bytes": 2085,
+      "sha256": "a0718e8743927420ad30860e08432be821c6e3a217219a56987a742cda8cf58f"
+    },
+    {
+      "path": "evidence\\filesystem-probe-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence\\frontend-build.log",
+      "bytes": 2742,
+      "sha256": "a80ca64e230b771b389e2c66478575c625ff68ba6da1d55c67241a6c9969dfff"
+    },
+    {
+      "path": "evidence\\native-build-messages.json",
+      "bytes": 440275,
+      "sha256": "ccd8ecc51975c35c61ed5f191089417a1549bc1e22f43d2df952b36cc7f559bd"
+    },
+    {
+      "path": "evidence\\native-build.log",
+      "bytes": 206,
+      "sha256": "d7d976e59fee13e76123da806856f397211dd8a7fd9f4de02896d8a24a9b0276"
+    },
+    {
+      "path": "evidence\\native-task-scheduler-regression.log",
+      "bytes": 536,
+      "sha256": "972f3fa1919518765bc64e5210f2b4b7cdf0741731d60fd98701fb2db3d774f3"
+    },
+    {
+      "path": "evidence\\npm-ci.log",
+      "bytes": 405,
+      "sha256": "178e53dde066aa91a36630386c52dae7d0bbfc90ff7b230eb25e2edfbc1ba9c5"
+    },
+    {
+      "path": "evidence\\runtime-port-save-regression.log",
+      "bytes": 1123,
+      "sha256": "fa61e0efdcc64a0049e30ff97832f016eb712c2c4816e55172401a590ccc7aa8"
+    },
+    {
+      "path": "evidence\\state-probe-build.log",
+      "bytes": 176,
+      "sha256": "5be11f5875e76337847a9d7431a66514ec5224c37a4d689e8ccfc917c8e3afc1"
+    },
+    {
+      "path": "evidence\\windows-bundle-root-regression.log",
+      "bytes": 805,
+      "sha256": "454c477d09a4b035cfab9d802ee95eccdb265184690830a9d00d49e726bb2aaa"
+    },
+    {
+      "path": "evidence\\msi-custom\\installation-owner-cleanup.json",
+      "bytes": 128,
+      "sha256": "e863b13fa5cdf792befaa232715883a1425794e0f2e68c115958e0ad20dd0cb7"
+    },
+    {
+      "path": "evidence\\msi-custom\\installer-verification.json",
+      "bytes": 2997,
+      "sha256": "ce6fa94058bab7ee30a419e47c3c57c2f336d31714805da34df239257192d533"
+    },
+    {
+      "path": "evidence\\msi-custom\\msi-install.log",
+      "bytes": 129868,
+      "sha256": "f1a5c6e99b660a40967ee0e176a3ef06af02342c0fb35d7b17b369a0df3a86e3"
+    },
+    {
+      "path": "evidence\\msi-custom\\msi-uninstall.log",
+      "bytes": 122126,
+      "sha256": "d8d2be2db30db0861d265db14cc8a8262c824d739b7d8582cd4b0720d8732355"
+    },
+    {
+      "path": "evidence\\msi-custom\\ordinary-input.json",
+      "bytes": 725,
+      "sha256": "9c9a9f9fbf853d41303f1cedeb279d51620f7e8366fce6e5764705333e5a256e"
+    },
+    {
+      "path": "evidence\\msi-custom\\ordinary-installer-input.json",
+      "bytes": 341,
+      "sha256": "80e09ddb863eceb80ab924fc83cf00af2e7b270824e8c352d21817b37a0e2b33"
+    },
+    {
+      "path": "evidence\\msi-custom\\ordinary-known-folders.json",
+      "bytes": 262,
+      "sha256": "e352b59c43fb45d5a3109fd4e286e0984be2814281ae412d9b012b71770ed264"
+    },
+    {
+      "path": "evidence\\msi-custom\\ordinary-profile.json",
+      "bytes": 448,
+      "sha256": "86c73fb04709c749a9cc574c4be05b055b5cd6be6a3dab5090299974b2fae32b"
+    },
+    {
+      "path": "evidence\\msi-custom\\ordinary-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence\\msi-custom\\ordinary-stdout.log",
+      "bytes": 71,
+      "sha256": "bae6c2a6bb43e87697dcd469f1fbd863a97d66287e436aa7c6e8a3d7a6324a0f"
+    },
+    {
+      "path": "evidence\\msi-custom\\msi-startup\\cdp-diagnostics.json",
+      "bytes": 1780,
+      "sha256": "bf48342900ad74e67bf53a8acb78539dcfd7d91848ed9adb2d243980245a9624"
+    },
+    {
+      "path": "evidence\\msi-custom\\msi-startup\\main-window.png",
+      "bytes": 510306,
+      "sha256": "ebbfe6ec3eee21f4ea04b502466cd52cf0d912c09fd6606a902d00a0180dc006"
+    },
+    {
+      "path": "evidence\\msi-custom\\msi-startup\\model-native-ui.json",
+      "bytes": 1596,
+      "sha256": "a7a1f912bfc22fe516796565579d9fe1edbc94be8f2b3f83bfee15534a597023"
+    },
+    {
+      "path": "evidence\\msi-custom\\msi-startup\\model023-native.png",
+      "bytes": 65987,
+      "sha256": "1137bb50c274105eb03695bae0f3c564a30b82b30c6f85b5b8e16b0262709a08"
+    },
+    {
+      "path": "evidence\\msi-custom\\msi-startup\\sandbox-file-inventory.json",
+      "bytes": 2230,
+      "sha256": "3ac564bb2d2483e3aba326cb4b688e1bf7f70277a7ea207ccf0ddc33c5c121b7"
+    },
+    {
+      "path": "evidence\\msi-custom\\msi-startup\\startup-diagnostics.json",
+      "bytes": 9010,
+      "sha256": "33c941a17bebfef0458f63f00d2ae017023552734c2ac2e98cf22d71d9e8cf55"
+    },
+    {
+      "path": "evidence\\msi-custom\\msi-startup\\startup-stderr.log",
+      "bytes": 90,
+      "sha256": "b7fa67888053e3c53fb9efc412f361e6fb244dd43e47dc585736159c1c833dad"
+    },
+    {
+      "path": "evidence\\msi-custom\\msi-startup\\startup-stdout.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": "evidence\\msi-custom\\msi-startup\\startup.json",
+      "bytes": 1480,
+      "sha256": "fe3a23391881d28bf87364a1d987db0ae5b29de71a7266c5a30afd0d0c44b93b"
+    },
+    {
+      "path": "evidence\\msi-custom\\msi-startup\\webview.json",
+      "bytes": 599,
+      "sha256": "a74dfecf62bfb12780b50e66daf8093b4e4988192d013a38d859cac741a8a8d5"
+    },
+    {
+      "path": "evidence\\msi-default\\installation-owner-cleanup.json",
+      "bytes": 128,
+      "sha256": "67a90d0824e32e6d0b01d495698d0fd767ae67b6cbce57571972893fe2c41e58"
+    },
+    {
+      "path": "evidence\\msi-default\\installer-verification.json",
+      "bytes": 2241,
+      "sha256": "dfb6bae468f3f97bec0ae411eddf58e913a424df8208f63346546a326fc9048a"
+    },
+    {
+      "path": "evidence\\msi-default\\msi-default-install.log",
+      "bytes": 127228,
+      "sha256": "573fb488b1ccb3cf0d8da680975be44f4e9b7cc39e646cbe997edc297d7221ab"
+    },
+    {
+      "path": "evidence\\msi-default\\ordinary-input.json",
+      "bytes": 727,
+      "sha256": "255da8264568f6da0347a699d482b121676b191e236abfdd817f0ef23c48858e"
+    },
+    {
+      "path": "evidence\\msi-default\\ordinary-installer-input.json",
+      "bytes": 343,
+      "sha256": "a4a9102234e207b6dc27ce58ab018b2ce8d5f004c844d360b55c2774f2680987"
+    },
+    {
+      "path": "evidence\\msi-default\\ordinary-known-folders.json",
+      "bytes": 262,
+      "sha256": "4cf945015d78d48d0b153e5977d5d307c3d0fb649dbe60b9e69ea9a1477ebacf"
+    },
+    {
+      "path": "evidence\\msi-default\\ordinary-profile.json",
+      "bytes": 448,
+      "sha256": "4d856fc01a79e2ec7149e314c2f8f1bae37a2540bb9f072d2b1e8e8aa4d2930b"
+    },
+    {
+      "path": "evidence\\msi-default\\ordinary-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence\\msi-default\\ordinary-stdout.log",
+      "bytes": 71,
+      "sha256": "bae6c2a6bb43e87697dcd469f1fbd863a97d66287e436aa7c6e8a3d7a6324a0f"
+    },
+    {
+      "path": "evidence\\msi-default\\msi-default-startup\\cdp-diagnostics.json",
+      "bytes": 1780,
+      "sha256": "174660d4d8fe15a76c4647063de30e6e93b9f75280de2983c5fbb244aa2cda1f"
+    },
+    {
+      "path": "evidence\\msi-default\\msi-default-startup\\main-window.png",
+      "bytes": 506974,
+      "sha256": "f42ea7bdeb61effa9b46443bb9eebe4b3ddb51103e7261403bff26cf4f775db6"
+    },
+    {
+      "path": "evidence\\msi-default\\msi-default-startup\\model-native-ui.json",
+      "bytes": 1605,
+      "sha256": "39bace9d675d7bd1621af2c5f65f1d9b0e5d3352757d7d700c4f5f9983717c25"
+    },
+    {
+      "path": "evidence\\msi-default\\msi-default-startup\\model023-native.png",
+      "bytes": 66095,
+      "sha256": "e577b72a7e2b9e295af256ac8858cf81b4a85ec6779d93e0d8d3448787569067"
+    },
+    {
+      "path": "evidence\\msi-default\\msi-default-startup\\sandbox-file-inventory.json",
+      "bytes": 2239,
+      "sha256": "03b302a5d2984aed2835de919c0b8e6f8d2bd64a5a1176e8e1012cafe000ada5"
+    },
+    {
+      "path": "evidence\\msi-default\\msi-default-startup\\startup-diagnostics.json",
+      "bytes": 8987,
+      "sha256": "95a3e80aef55bd2dca8bd9166f3b0d7edc4026114fc5afd94442f98e812cee4a"
+    },
+    {
+      "path": "evidence\\msi-default\\msi-default-startup\\startup-stderr.log",
+      "bytes": 90,
+      "sha256": "b7fa67888053e3c53fb9efc412f361e6fb244dd43e47dc585736159c1c833dad"
+    },
+    {
+      "path": "evidence\\msi-default\\msi-default-startup\\startup-stdout.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": "evidence\\msi-default\\msi-default-startup\\startup.json",
+      "bytes": 1430,
+      "sha256": "a04c20240f6464079b52e62559720015ccddab756eb1107a87d76de55e3d1f13"
+    },
+    {
+      "path": "evidence\\msi-default\\msi-default-startup\\webview.json",
+      "bytes": 599,
+      "sha256": "a74dfecf62bfb12780b50e66daf8093b4e4988192d013a38d859cac741a8a8d5"
+    },
+    {
+      "path": "evidence\\native-install\\application-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence\\native-install\\application-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence\\native-install\\execution.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence\\native-install\\install-0.0.0-ocx-missing-native-recovery.png",
+      "bytes": 198246,
+      "sha256": "65f7a314af3c8e9604cc3e2db176545262a3d16d6342541f6b6ac1ad8d3bdf4f"
+    },
+    {
+      "path": "evidence\\native-install\\install-2.91.0.png",
+      "bytes": 174850,
+      "sha256": "ac2157e978d5da5390d77b9fb9ba0d152e40fa76a01c17d44d0874a3e135bd62"
+    },
+    {
+      "path": "evidence\\native-install\\install-2.93.0.png",
+      "bytes": 175536,
+      "sha256": "1d350197390548704a5bc00a62950ff7ee30a401454b6c541e83baa9a0b8a171"
+    },
+    {
+      "path": "evidence\\native-install\\launcher.json",
+      "bytes": 1630,
+      "sha256": "7ed44486d42caec98985917f742c1339681cb973a1edc0a075bef9451f96ac63"
+    },
+    {
+      "path": "evidence\\native-install\\native-sweep.json",
+      "bytes": 29937,
+      "sha256": "eec21941ca4df1a7151924ab8f31d68a3b8994a5c7a8ba32b2d29309be763cde"
+    },
+    {
+      "path": "evidence\\native-install\\sweep-initial-install.json",
+      "bytes": 19130,
+      "sha256": "0de9c02e6359c07d261528f08d0ecc7b538b8d9305842d3cafcf0abf59eb0241"
+    },
+    {
+      "path": "evidence\\native-install\\sweep-missing-version-retains-original.json",
+      "bytes": 413,
+      "sha256": "f4e19eb182e91888f83f31c013bee3a4a7c0df32786196d2c98011f9114f1edf"
+    },
+    {
+      "path": "evidence\\native-install\\sweep-post-install-readiness.json",
+      "bytes": 844,
+      "sha256": "f04eb0f228221399b3617688989ce36949316718bab6a429523ababc1e8910ba"
+    },
+    {
+      "path": "evidence\\native-install\\sweep-recover-upgrade.json",
+      "bytes": 2171,
+      "sha256": "438ad2a7967b25465e6d942433934033613eca4123c66fef85034eb1e7e7a42a"
+    },
+    {
+      "path": "evidence\\native-paths\\application-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence\\native-paths\\application-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence\\native-paths\\execution.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence\\native-paths\\launcher.json",
+      "bytes": 1626,
+      "sha256": "3f12d72c7e47d2b079809081da8387aa35db284867ee6af8f59855c1a2248535"
+    },
+    {
+      "path": "evidence\\native-paths\\native-sweep.json",
+      "bytes": 7000,
+      "sha256": "a58b5d540c903762580aefa8cb890825c6f2151906e5d4e7e7adecfb42632008"
+    },
+    {
+      "path": "evidence\\native-paths\\paths-backup-before.png",
+      "bytes": 92987,
+      "sha256": "c659cd8e747464bf6208817dcb85e8f65e445eface135b61d4530b01e5aaccca"
+    },
+    {
+      "path": "evidence\\native-paths\\paths-backup-created.png",
+      "bytes": 84541,
+      "sha256": "d511a3087a018eac521a3666ea56fc31311327ae41616ad2e1323e22a163afd9"
+    },
+    {
+      "path": "evidence\\native-paths\\paths-extension-directories.png",
+      "bytes": 114242,
+      "sha256": "f5695c272bb952204222fc5fb5051f0eadf330876d9893551e7c46084c1e9c3d"
+    },
+    {
+      "path": "evidence\\native-paths\\sweep-path-snapshot-copy.json",
+      "bytes": 5483,
+      "sha256": "07e9160323eea9001dd76c3b8b961b3734ad525133ee3d322a0568443b93da36"
+    },
+    {
+      "path": "evidence\\native-paths\\windows-path-ui.json",
+      "bytes": 5241,
+      "sha256": "88d0b4379e44eeec71c54058709d36f856af317e6a19d8e223f7ff5df6186378"
+    },
+    {
+      "path": "evidence\\native-query\\application-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence\\native-query\\application-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence\\native-query\\execution.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence\\native-query\\install-2.91.0.png",
+      "bytes": 174711,
+      "sha256": "a32c13b84ac1424693dc2c958cab1b05ee7dd6501f48a5d21f0e30a434879241"
+    },
+    {
+      "path": "evidence\\native-query\\launcher.json",
+      "bytes": 1626,
+      "sha256": "f617463d40af4ca37b1b0bd41fad510575da53c0ff583fc8be2c0d56a02bf7a7"
+    },
+    {
+      "path": "evidence\\native-query\\native-query-recovery.json",
+      "bytes": 11698,
+      "sha256": "16220bbcd58e0d56d1d5702dd651f74a4ade568befcd95f79985741d5750c6f2"
+    },
+    {
+      "path": "evidence\\native-query\\native-sweep.json",
+      "bytes": 38696,
+      "sha256": "92ab2d7f6b8ff25abb36a37963b4b0ac1e84d5c56cfa64de9c478c016ba3d1fb"
+    },
+    {
+      "path": "evidence\\native-query\\query-failure-details.png",
+      "bytes": 166112,
+      "sha256": "977b1d94c8582787d7ccec202f66b38abf5fa8758c25c239022708f2d1b1a920"
+    },
+    {
+      "path": "evidence\\native-query\\query-recovered.png",
+      "bytes": 151984,
+      "sha256": "5db33399d8a5326c67c35a816191aa38170752d65073968cbe56ed15b76f1c98"
+    },
+    {
+      "path": "evidence\\native-query\\sweep-initial-install.json",
+      "bytes": 19018,
+      "sha256": "05dadb593805964ededf0781aa7dba208fff6b6f7eaac162344e91fa883b7ff4"
+    },
+    {
+      "path": "evidence\\native-query\\sweep-query-update-recovery.json",
+      "bytes": 12071,
+      "sha256": "7e03a3fa21fac3c64c0129143c102ec5128aea988e5bc83c42afe94ad2dcd1bd"
+    },
+    {
+      "path": "evidence\\native-query\\update-failure-retains-output.png",
+      "bytes": 152256,
+      "sha256": "2f6da90d208b4220f90efaa697c022905841c8b0d6427159ef5c76cddfebf3c5"
+    },
+    {
+      "path": "evidence\\nsis-custom\\installation-owner-cleanup.json",
+      "bytes": 128,
+      "sha256": "c3adfb206c216b21309c2dfebe3f0c8836b279c919dc960f6fa5b6cd0be3556a"
+    },
+    {
+      "path": "evidence\\nsis-custom\\installer-verification.json",
+      "bytes": 2970,
+      "sha256": "e6d7c0e4c5f5a163bbf375995ca81c14c3aff630ebbbd4e91ecaf45f91c5d58a"
+    },
+    {
+      "path": "evidence\\nsis-custom\\ordinary-input.json",
+      "bytes": 727,
+      "sha256": "e29485d29dcba9a7fcff128a25d8d9a87c544651b7e2c890ab836bdbdfa690fe"
+    },
+    {
+      "path": "evidence\\nsis-custom\\ordinary-installer-input.json",
+      "bytes": 343,
+      "sha256": "43f84ac97e4555622b58ddebf1f0ea6fafca70099d27510475a6168e5ba2b842"
+    },
+    {
+      "path": "evidence\\nsis-custom\\ordinary-known-folders.json",
+      "bytes": 262,
+      "sha256": "e5b4270848480301ca194e66e149636207c586494ed19d33e0b620bf9314e716"
+    },
+    {
+      "path": "evidence\\nsis-custom\\ordinary-profile.json",
+      "bytes": 448,
+      "sha256": "4687b62757c0a17df2328b481fe30b38f7cdba18257f51bb391c8b93ec719baf"
+    },
+    {
+      "path": "evidence\\nsis-custom\\ordinary-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence\\nsis-custom\\ordinary-stdout.log",
+      "bytes": 71,
+      "sha256": "bae6c2a6bb43e87697dcd469f1fbd863a97d66287e436aa7c6e8a3d7a6324a0f"
+    },
+    {
+      "path": "evidence\\nsis-custom\\nsis-startup\\cdp-diagnostics.json",
+      "bytes": 1780,
+      "sha256": "f8be438a66499b1511f42417d697a3317122638204cb3a947a185909167ef545"
+    },
+    {
+      "path": "evidence\\nsis-custom\\nsis-startup\\main-window.png",
+      "bytes": 517922,
+      "sha256": "dee85842d524e8d7e6e07cafe19ea029d8570ad79740d222fde018191b2eda47"
+    },
+    {
+      "path": "evidence\\nsis-custom\\nsis-startup\\model-native-ui.json",
+      "bytes": 1598,
+      "sha256": "f1a378b316fa56103a2258bafb2a2844c74eb1f3819d620fb0405e834b361ede"
+    },
+    {
+      "path": "evidence\\nsis-custom\\nsis-startup\\model023-native.png",
+      "bytes": 66166,
+      "sha256": "36d37e8607b63e25ec006c55e437a66e99df1031cacb4e54de13e52229f67059"
+    },
+    {
+      "path": "evidence\\nsis-custom\\nsis-startup\\sandbox-file-inventory.json",
+      "bytes": 2232,
+      "sha256": "b7779f8cb5f21e58b31cd199acd1e0461b7559c809b6b7b2723944af3d6a2377"
+    },
+    {
+      "path": "evidence\\nsis-custom\\nsis-startup\\startup-diagnostics.json",
+      "bytes": 9038,
+      "sha256": "7e83cc5d05774b980c8c9997f93dab6a1ae9e13c588c7312b875a6c86c7a17c1"
+    },
+    {
+      "path": "evidence\\nsis-custom\\nsis-startup\\startup-stderr.log",
+      "bytes": 90,
+      "sha256": "b7fa67888053e3c53fb9efc412f361e6fb244dd43e47dc585736159c1c833dad"
+    },
+    {
+      "path": "evidence\\nsis-custom\\nsis-startup\\startup-stdout.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": "evidence\\nsis-custom\\nsis-startup\\startup.json",
+      "bytes": 1485,
+      "sha256": "1e9cffb9bed1bec72807d216bdd3469ba16836b7075cb8f327310f2f41157d1e"
+    },
+    {
+      "path": "evidence\\nsis-custom\\nsis-startup\\webview.json",
+      "bytes": 599,
+      "sha256": "a74dfecf62bfb12780b50e66daf8093b4e4988192d013a38d859cac741a8a8d5"
+    },
+    {
+      "path": "evidence\\nsis-default\\installation-owner-cleanup.json",
+      "bytes": 128,
+      "sha256": "3ac8d5d9ef71e29ef9fb9527d7f1b88a7537b7a1b0d53e43d36b74a850626044"
+    },
+    {
+      "path": "evidence\\nsis-default\\installer-verification.json",
+      "bytes": 2203,
+      "sha256": "85c8bb12b612a66aad582acf1dbc16d15f215b04e3c65f23ba0a4d090f0b0cdf"
+    },
+    {
+      "path": "evidence\\nsis-default\\ordinary-input.json",
+      "bytes": 729,
+      "sha256": "828f4fc54dbcbe4c59122cdbe1feda1dfe985031d9d092e41527bbb384b5d6a7"
+    },
+    {
+      "path": "evidence\\nsis-default\\ordinary-installer-input.json",
+      "bytes": 345,
+      "sha256": "75941e197e5a5ad493d37bd6a09f181a9f47574753c13e05b76063db1ecf5c99"
+    },
+    {
+      "path": "evidence\\nsis-default\\ordinary-known-folders.json",
+      "bytes": 262,
+      "sha256": "bf5053316b16ede95d2dbc705682f1ee5f411df5754e3c2f3cee563924e0e0ae"
+    },
+    {
+      "path": "evidence\\nsis-default\\ordinary-profile.json",
+      "bytes": 448,
+      "sha256": "27d35de04cf97105feaaf70b93cd7ae34c4986ea6161da8580e31985c3f71578"
+    },
+    {
+      "path": "evidence\\nsis-default\\ordinary-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence\\nsis-default\\ordinary-stdout.log",
+      "bytes": 71,
+      "sha256": "bae6c2a6bb43e87697dcd469f1fbd863a97d66287e436aa7c6e8a3d7a6324a0f"
+    },
+    {
+      "path": "evidence\\nsis-default\\nsis-default-startup\\cdp-diagnostics.json",
+      "bytes": 1780,
+      "sha256": "5338e679bfa07c07803289032a780cd15af6965468d19488ac0370b8b33870b6"
+    },
+    {
+      "path": "evidence\\nsis-default\\nsis-default-startup\\main-window.png",
+      "bytes": 514547,
+      "sha256": "548cb89b9a46ee9cb05450e932eef715add360643f3361e1a9bc2066d577bbc2"
+    },
+    {
+      "path": "evidence\\nsis-default\\nsis-default-startup\\model-native-ui.json",
+      "bytes": 1607,
+      "sha256": "0b125bdb41b09767a733cb8a6df574a94fb378101bb62d1abaa8e0b576350cd6"
+    },
+    {
+      "path": "evidence\\nsis-default\\nsis-default-startup\\model023-native.png",
+      "bytes": 66091,
+      "sha256": "85face374ef6f90a42549f9a227b34491f952b679b92b6d7d4c706074f580cf8"
+    },
+    {
+      "path": "evidence\\nsis-default\\nsis-default-startup\\sandbox-file-inventory.json",
+      "bytes": 2241,
+      "sha256": "d260412739b02c22ce245ddc1f59e23dae35b93194cf2f9a18715c7b57985949"
+    },
+    {
+      "path": "evidence\\nsis-default\\nsis-default-startup\\startup-diagnostics.json",
+      "bytes": 8996,
+      "sha256": "1d04e9c5c6c784cdcf4cdffae40b8e623e58c6c0855d0fdab406aa2bacf11f8b"
+    },
+    {
+      "path": "evidence\\nsis-default\\nsis-default-startup\\startup-stderr.log",
+      "bytes": 90,
+      "sha256": "b7fa67888053e3c53fb9efc412f361e6fb244dd43e47dc585736159c1c833dad"
+    },
+    {
+      "path": "evidence\\nsis-default\\nsis-default-startup\\startup-stdout.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": "evidence\\nsis-default\\nsis-default-startup\\startup.json",
+      "bytes": 1432,
+      "sha256": "7fbdbbc2ffd621633f13820b71ea882272d53ce458400ed90b1a7d95438e9646"
+    },
+    {
+      "path": "evidence\\nsis-default\\nsis-default-startup\\webview.json",
+      "bytes": 599,
+      "sha256": "a74dfecf62bfb12780b50e66daf8093b4e4988192d013a38d859cac741a8a8d5"
+    },
+    {
+      "path": "evidence\\server-policy\\msi-server-policy.original.json",
+      "bytes": 391,
+      "sha256": "74987891956a1ca146024d54c42b1fbc9e7a3423a5831fed80016edd8e11c804"
+    },
+    {
+      "path": "evidence\\server-policy\\msi-server-policy.restored.json",
+      "bytes": 228,
+      "sha256": "25c30091bd4ffc1aa1a68560293c3ec17645f6dbbba5262a4bfb971110dd49d2"
+    },
+    {
+      "path": "evidence\\two-user\\sealed-candidate-after.json",
+      "bytes": 1940,
+      "sha256": "763f5fd72e4a6d0108f64504fd46c3562a8446bf19145f1e5b436a64f9f61cb6"
+    },
+    {
+      "path": "evidence\\two-user\\sealed-candidate-before.json",
+      "bytes": 1940,
+      "sha256": "763f5fd72e4a6d0108f64504fd46c3562a8446bf19145f1e5b436a64f9f61cb6"
+    },
+    {
+      "path": "evidence\\two-user\\two-user-native.json",
+      "bytes": 29316,
+      "sha256": "0bb9ffd1f42581f4d0f9bc03db2ad4281da1147fad3b30610c3bea5521e2ecf1"
+    },
+    {
+      "path": "evidence\\two-user\\process-identity-preflight\\native-process-identity.json",
+      "bytes": 862,
+      "sha256": "9e1f4d7a1e81ac6f418a5c3e1c9997c40bccc6a675d693ade132a3c1254b42a5"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\actual-preferences-loader.after-checks.log",
+      "bytes": 324,
+      "sha256": "5ab0f37f72962e7cd8c31b17be066d2c89ac51608f872a685d139c17f640e439"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\actual-preferences-loader.before-restart.log",
+      "bytes": 324,
+      "sha256": "5ab0f37f72962e7cd8c31b17be066d2c89ac51608f872a685d139c17f640e439"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\bundle-read-access.json",
+      "bytes": 2111,
+      "sha256": "62c102c3a539e5920b068d668776eda6714ab1a884d050176001c039b2cef2ad"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\checked.json",
+      "bytes": 2306,
+      "sha256": "e2473c3a5052ed41ae6bc19472f8225baca65dc700ef07e3d87bc8ebf15e489b"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\child-stderr.log",
+      "bytes": 677,
+      "sha256": "4145f0f2a28f7c14162f049aa3567b1b071d9ac59a27c6b75d3e6c52e25ea110"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\child-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\cli-data-root-show---json.json",
+      "bytes": 558,
+      "sha256": "e7b1dd725d34e98526403ca1e598a51443e503d21ab5cd0ce4b0876ff18b914b"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\cli-status---json.json",
+      "bytes": 628,
+      "sha256": "028311124f59b61157459286b529fc90f531b5272bf604e5d253631ec1af3f03"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\diagnostic-startup.json",
+      "bytes": 969,
+      "sha256": "f956f704d7e4387b31d51da94e107c771b773c64f4d3be718331807a9fdb520e"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\explicit-test-preferences.after-checks.json",
+      "bytes": 282,
+      "sha256": "f13c698da8bb8aa4dcfe3ba58685c88ef909f313084b2a58eb938ab2ad8e71cd"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\explicit-test-preferences.before-restart.json",
+      "bytes": 282,
+      "sha256": "f13c698da8bb8aa4dcfe3ba58685c88ef909f313084b2a58eb938ab2ad8e71cd"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\failure.json",
+      "bytes": 2537,
+      "sha256": "af48dd67fd562032f52fc0ee9885b879a757c626fd26f8c3c40395456c1ef3b5"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\filesystem-observations.log",
+      "bytes": 6785,
+      "sha256": "25b2c1bbad00b042b51f4781b931c89eeca836b9ff3d48f96c2bf4feffaf45fa"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\finished.json",
+      "bytes": 25158,
+      "sha256": "a715f8e50e25fe9a9cbb24902f6c44f2098e75b3f8dc8b86bdc92c5cdcd288ff"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\input.json",
+      "bytes": 1041,
+      "sha256": "77ba8b08a2be82a334fde9497324bc1931fbb03045cdb39d01800c7933954c21"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\installation-copy.json",
+      "bytes": 1940,
+      "sha256": "763f5fd72e4a6d0108f64504fd46c3562a8446bf19145f1e5b436a64f9f61cb6"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\observation-initial.json",
+      "bytes": 4192,
+      "sha256": "7c8a9f24793edef1f2a292c4d4bd04de8674e72273087965dc57b9dcfcb2ca4d"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\observation-supplied.json",
+      "bytes": 5062,
+      "sha256": "9f0c7a6539d2cecd1ec87c58f1fe4b6a6087ed10f0e7863ae51b9945601e67f7"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\ordinary-known-folders.json",
+      "bytes": 272,
+      "sha256": "fbba8c325bc3343afcaecc114dcd7889a7694a1dcdea35dac019b765e336ffe6"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\ordinary-profile.json",
+      "bytes": 454,
+      "sha256": "6ac93443d4276694a32b70220d6d7129a7813a0cbab8148e943c46cb5b599b0d"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\owned-pipe-frame.json",
+      "bytes": 444,
+      "sha256": "3eb49139a5b163fbc9f88b84079cae2c4b3bc483b034cb0303687068e33b98d7"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\peer.json",
+      "bytes": 708,
+      "sha256": "1ff8bc7daa68e65bdc87a1c66337067cf895c16dba350dc8308523bfe28e72d4"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\ready.json",
+      "bytes": 1799,
+      "sha256": "4f7317bbf207266df5b81ffc9fef4929fd826a6381a27e23a5e36c7da5c215ea"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\runtime-command-1.json",
+      "bytes": 74,
+      "sha256": "4015e1241dd40dc0d9ad35096a6b1e5363bdf6e70a5ed12db50b5e539aa45847"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\runtime-tracked.json",
+      "bytes": 10878,
+      "sha256": "707ad3a8a3a0f7b1d8e632cbfb3db29670fbe99a7ec7720f5d8ea4fc49c7c65f"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\same-user-data-root.json",
+      "bytes": 398,
+      "sha256": "430f65701ff9f8cff4520ced2c197ec86d681c73abe96245ac4a827d1bb84609"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\same-user-status.json",
+      "bytes": 615,
+      "sha256": "8306f96dfcaa22c2a5c4984eca8dec956ee934c66b92678d9408e0dfac483630"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\single-instance-window-readback.json",
+      "bytes": 807,
+      "sha256": "922bdff542ec7af1b4501a58028702374d1718996eea66a8c83f2e684cf05ab4"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\supply-worker-terminal.json",
+      "bytes": 453,
+      "sha256": "1235c9db619d6bc36e946ab7301239e57a299aee17828f1a8d41086a840684bd"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\sweep-cross-user-dpapi.json",
+      "bytes": 148,
+      "sha256": "991a32707e2b01ff85d7f59a42653f5616b610e5024e3acbe70f641ca924b448"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\sweep-cross-user-ipc.json",
+      "bytes": 146,
+      "sha256": "eed11ca28fc000686e9395785fade397c68a1b14c23796c32ad88c010925be06"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\sweep-native-observation.json",
+      "bytes": 3388,
+      "sha256": "e87b3fa4335277887623d6ac40002872abdc5a677e27c4cb564ed5ff5318c239"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\sweep-path-snapshot.json",
+      "bytes": 1725,
+      "sha256": "3fdb215c440c8b275105147455d1c9fd54943ff5d71af0822b487d0430d36224"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\sweep-peer-business-data.json",
+      "bytes": 150,
+      "sha256": "23ced29650a543ff62a69e3eb1bbae71e44f4e7d950997b4afa36bdbc2c10bce"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\sweep-private-bundle-supply.json",
+      "bytes": 344,
+      "sha256": "d8df66c01614ea868889e0f647a2835c938dce09c3db0a5714dc6a16ef859339"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\sweep-runtime-readiness.json",
+      "bytes": 954,
+      "sha256": "da0e01fc67521adad5c07b81737cdee353cb28e113c1f46d7be5d19b9365defa"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\sweep-same-sid-single-instance.json",
+      "bytes": 156,
+      "sha256": "9f7f147ec70bb12764fe21a3bcd523af31f8accdd6cc239a3b4a18c9e866cf8c"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\sweep-same-user-ipc.json",
+      "bytes": 145,
+      "sha256": "fbf281ce86c95c18afd9f66fbbce5fa51ab74cb9f695edbf9162123024ce8dd0"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\sweep-supplied-observation.json",
+      "bytes": 4260,
+      "sha256": "51aded1934cbd14af754ac736587880868d0ae4d6418b13e0fb16bd841c4fb53"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\synthetic-dpapi.bin",
+      "bytes": 262,
+      "sha256": "f923ceb0872e9394afce9fe043effd13b2427f1800dc66600304479d0166806a"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\application-logs\\app.log",
+      "bytes": 3158,
+      "sha256": "0d52f284ea3f626a3f3a0a6a6982fe380110db9b46dfc2b9f762f2f37b7cf4d4"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\initial\\driver-stderr.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\initial\\environment-call.json",
+      "bytes": 237,
+      "sha256": "3bf2e7d452638571b0422011a533adb0e14021be528cc03939780a12e6d7608a"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\initial\\first-screen.json",
+      "bytes": 2991,
+      "sha256": "8e6817bdb627da321e1040d902a055589edc827e95d441b1a692cfbc0307eb75"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\initial\\first-screen.png",
+      "bytes": 59144,
+      "sha256": "c1da940f007498c3b8fc56a4cc07239f10a700e412f6583e7ee86c93c187717e"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\initial\\snapshot-call-latency.json",
+      "bytes": 118,
+      "sha256": "b72757c6a947892a9bf840cdc8a3646a1efe0757e54ca46a2ec0d317e8650af0"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\program-diagnostics\\runtime_opencodex_.runtime-manifest.json",
+      "bytes": 965,
+      "sha256": "cb989488868f75df79b431c5e0673dc9c2c00555ab647fc778c028929366594b"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\runtime-1\\actual-backend-status-observer.log",
+      "bytes": 318,
+      "sha256": "a8133d39ca191228fde767a53b89fbb4d097028647a9e685383dad4bdbe05f56"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\runtime-1\\actual-readonly-status-diagnostic.json",
+      "bytes": 147,
+      "sha256": "22d39f8015793edb104302408d7c65fbf9b7dfb540ccc980150018f96e14d562"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\runtime-1\\command.json",
+      "bytes": 202,
+      "sha256": "94748f90dac4f14edb95ce38b1d87bd72e116fea10502524bb5baa6797b65557"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\runtime-1\\direct-bun-status-diagnostic.json",
+      "bytes": 177,
+      "sha256": "efa3ae7afba69e3aafaeab4b9d7b29f10e0b317cd60a77862257de2257a88de4"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\runtime-1\\late-node-status-diagnostic.json",
+      "bytes": 206,
+      "sha256": "2c6a3c9b530e6ab8338b5bb210eaf43ba6ac25e015398acec547b1edafdeaa93"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\runtime-1\\late-readiness-diagnostic.json",
+      "bytes": 1192,
+      "sha256": "1fc964301aea1ffaaada01c37b44ae9db69fa1da789149254f2375fd03d670cc"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\runtime-1\\owned-health-observations.json",
+      "bytes": 517,
+      "sha256": "e4106e500373c3a42d5ebd7de6240c01e0ee15f1a9b2e2c37431252a3e04c427"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\runtime-1\\owned-process-work-samples.log",
+      "bytes": 14513,
+      "sha256": "426333c7739593c54a1c8cd1e4c25f6ad63eedeeaf82b7cfb6b670d5b64ae7b6"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\runtime-1\\production-attempt-failed.json",
+      "bytes": 75,
+      "sha256": "d61e04463fd8aca43fbdf66bfb7ffc949d28085b50d5c96b463da039158b6f31"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\runtime-1\\runtime-step.json",
+      "bytes": 638,
+      "sha256": "28c4017a34c0fb9e69a0fd9e61d984b0abf0aa37ce31b49df829410c0da70abe"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\runtime-1\\supplemental-stop-after-failed-start.json",
+      "bytes": 504,
+      "sha256": "8f548a37074fb2da3cc15fad44e4ff3317b3e76c7ea265920d3c355c389c1c63"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\supplied\\driver-stderr.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\supplied\\environment-call.json",
+      "bytes": 646,
+      "sha256": "fb5ae12ef561f75333957a0cfafee08cbb08db4fbc80020f9ee3c5695ca47738"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\supplied\\first-screen.json",
+      "bytes": 3813,
+      "sha256": "7368fc93de18eff13a325ebbdf0decd8f6f777280eea734783944e6f8a059fcd"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\supplied\\first-screen.png",
+      "bytes": 64321,
+      "sha256": "5b69ca3e2c0faa30e5763fcac60a3f350886b9e53f62d68ad2f609cbd57f0866"
+    },
+    {
+      "path": "evidence\\two-user\\user1\\supplied\\snapshot-call-latency.json",
+      "bytes": 105,
+      "sha256": "791a6e158694fb26da19cd8251c8ab4212a6f948d603a5d6408b9e70c48aebad"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\actual-preferences-loader.after-checks.log",
+      "bytes": 324,
+      "sha256": "25d49a2cab92bfe1ccbb733e60aab269a41fd0f7a57e9642852fc39f4ee53667"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\actual-preferences-loader.before-restart.log",
+      "bytes": 324,
+      "sha256": "25d49a2cab92bfe1ccbb733e60aab269a41fd0f7a57e9642852fc39f4ee53667"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\bundle-read-access.json",
+      "bytes": 2111,
+      "sha256": "97598ac9e9fead535d5d751694bb8fe737c2aa8c19a4bc83d569c5a5bf0e7d4a"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\checked.json",
+      "bytes": 2306,
+      "sha256": "0df72dbaa85b13c29f30e2450fc9a8c60ccd0022833d6cc330d374ae5a244bc4"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\child-stderr.log",
+      "bytes": 589,
+      "sha256": "053fbed1ded0fa60955b9d5271c90d40450a855a1168dc39544776acf0bad83a"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\child-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\cli-data-root-show---json.json",
+      "bytes": 557,
+      "sha256": "929dbd4979739fc0d81f93bc5ab4a00e5902f3c3be8648673dc6d3d8317efccd"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\cli-status---json.json",
+      "bytes": 628,
+      "sha256": "49da1f7337ca2961b356e3219268d155c9f3de0406ced56157d851c982b43029"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\diagnostic-startup.json",
+      "bytes": 970,
+      "sha256": "aea0216e1e8e36e04092a38e3a63d626faa990611a31d8b5054b0c45487a109f"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\explicit-test-preferences.after-checks.json",
+      "bytes": 282,
+      "sha256": "334f8e8cb825d2745029c2568cd864157a9c6c257e96c73e85272a5fcee2df35"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\explicit-test-preferences.before-restart.json",
+      "bytes": 282,
+      "sha256": "334f8e8cb825d2745029c2568cd864157a9c6c257e96c73e85272a5fcee2df35"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\failure.json",
+      "bytes": 2557,
+      "sha256": "836cdc84a4506d4aa0a37e7ed970bfaec61279b57cec0dea8aad0b9ae0e9e031"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\filesystem-observations.log",
+      "bytes": 6785,
+      "sha256": "0926bebfa94b1e3d9ab4ec4c6ad71d31299ad20fe195fbcb645ea833d2d31343"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\finished.json",
+      "bytes": 14890,
+      "sha256": "352a91dcf66824ead014e65390e68415cf459d143a35a0c20c7d1ed5faeaada9"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\input.json",
+      "bytes": 1041,
+      "sha256": "18606da7dfe5cef311069a8bb3ce2ba56ded73e55d5c360b8c7ba6fe50a64dd9"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\installation-copy.json",
+      "bytes": 1940,
+      "sha256": "763f5fd72e4a6d0108f64504fd46c3562a8446bf19145f1e5b436a64f9f61cb6"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\observation-initial.json",
+      "bytes": 4210,
+      "sha256": "bb7437fa9dff0c23ab3a062e3928f4189c89545a8833d3b54799d881353e1a3e"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\observation-supplied.json",
+      "bytes": 5062,
+      "sha256": "6892e78f7663c74c7ebdd7f43fab1e36098fef5acbb5018114fcc5325d6b3b99"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\ordinary-known-folders.json",
+      "bytes": 272,
+      "sha256": "511da7ebe6d9d701d0ddf5c9b737b1eada7fc1e15ca9cb88d7a8a839186657ef"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\ordinary-profile.json",
+      "bytes": 454,
+      "sha256": "f68d18f4fb119e242ccc3b9c6d1271cbe15cd812960a0407ae5cae41b8786770"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\owned-pipe-frame.json",
+      "bytes": 444,
+      "sha256": "cc90911c0bf2d7653dfcfc9de6665422679f52507bc18a7ff31fa44cc20a1132"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\peer.json",
+      "bytes": 708,
+      "sha256": "66a4277073fe867a6d5dd97e3a6914c0ef83c9ba5ea54bb655ba196d493391b6"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\ready.json",
+      "bytes": 1799,
+      "sha256": "4f4f8ab784a2f12dd2bd8b701b552690e9fb11a487774d8ee37dfabce6026af0"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\same-user-data-root.json",
+      "bytes": 398,
+      "sha256": "b4f0040298e338b9ad42868a1c13a4565614bfd6f333d59e31280328064a8c16"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\same-user-status.json",
+      "bytes": 615,
+      "sha256": "224d560e389b37c9faf3bf7da627816caf76e2b987006e745539fd11d8f29c02"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\single-instance-window-readback.json",
+      "bytes": 807,
+      "sha256": "45aa83ab0bd365da90d67516ba0bd9d1df7fb791bfae8b317d08926484f9f7a2"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\supply-worker-terminal.json",
+      "bytes": 453,
+      "sha256": "561b20dc357cd68d01741f13247595ae9796a7d1cbe224ef628f0bc19fa643f5"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\sweep-cross-user-dpapi.json",
+      "bytes": 148,
+      "sha256": "991a32707e2b01ff85d7f59a42653f5616b610e5024e3acbe70f641ca924b448"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\sweep-cross-user-ipc.json",
+      "bytes": 146,
+      "sha256": "eed11ca28fc000686e9395785fade397c68a1b14c23796c32ad88c010925be06"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\sweep-native-observation.json",
+      "bytes": 3405,
+      "sha256": "2bc841a5ae1764cf83eb49098ecdf1810cd0edc8ca7c339726facf7a579776a4"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\sweep-path-snapshot.json",
+      "bytes": 1725,
+      "sha256": "90afa4f66f8ab1aecdbf9f503bd563f06c0f696768d5c53885665345c358967d"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\sweep-peer-business-data.json",
+      "bytes": 150,
+      "sha256": "23ced29650a543ff62a69e3eb1bbae71e44f4e7d950997b4afa36bdbc2c10bce"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\sweep-private-bundle-supply.json",
+      "bytes": 344,
+      "sha256": "d8df66c01614ea868889e0f647a2835c938dce09c3db0a5714dc6a16ef859339"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\sweep-runtime-readiness.json",
+      "bytes": 953,
+      "sha256": "824c099c24ee342120e229fbe70003c76729082711390ec56c250f70609f8461"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\sweep-same-sid-single-instance.json",
+      "bytes": 156,
+      "sha256": "9f7f147ec70bb12764fe21a3bcd523af31f8accdd6cc239a3b4a18c9e866cf8c"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\sweep-same-user-ipc.json",
+      "bytes": 145,
+      "sha256": "fbf281ce86c95c18afd9f66fbbce5fa51ab74cb9f695edbf9162123024ce8dd0"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\sweep-supplied-observation.json",
+      "bytes": 4259,
+      "sha256": "8dd489ff5b66787c3fab94ee6eda687465768af3c5d6812197247f7726d14448"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\synthetic-dpapi.bin",
+      "bytes": 262,
+      "sha256": "0bc77ccfcfbcc4f014207d706544bf40c0d65d9fb08806be2b97a5e9eee2742b"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\application-logs\\app.log",
+      "bytes": 1649,
+      "sha256": "88f3b2cfb53b48058466979260a86abf678a71cd53e3713330a0128992775986"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\initial\\driver-stderr.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\initial\\environment-call.json",
+      "bytes": 254,
+      "sha256": "926aad5cda55e5fd5c4e51578afe4f23143d33244f3892ad6d7da2fb7f261bf8"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\initial\\first-screen.json",
+      "bytes": 3008,
+      "sha256": "a9074b37de5b465a108fa64237c3e5872d0c46b15a86ccfa80baae1ae5690bd1"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\initial\\first-screen.png",
+      "bytes": 549922,
+      "sha256": "12c1acc49c7de58c28f0e15e6b76fbc4acecc5ed243c0b392e93229b7ff15d2b"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\initial\\snapshot-call-latency.json",
+      "bytes": 100,
+      "sha256": "9b12a5969b29e38fce12d5ebed37042892ac6bed17de132c3c3ceea4f853b37d"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\program-diagnostics\\runtime_opencodex_.runtime-manifest.json",
+      "bytes": 965,
+      "sha256": "daa45081d91d562fc0be00cb83289252a594f11c897d3b10a19294eee87c4d8c"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\supplied\\driver-stderr.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\supplied\\environment-call.json",
+      "bytes": 645,
+      "sha256": "db322058c86691e21bedb220ea624da179a20e4479ae2178bd3079bdd4a00bbc"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\supplied\\first-screen.json",
+      "bytes": 3812,
+      "sha256": "b4c7d16b26c8dc1945f374bf913272d9657f7f20634ee2f86ba1a0c0a2f2d9a1"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\supplied\\first-screen.png",
+      "bytes": 366813,
+      "sha256": "35dddb81bbc50f09894e7d9d22a12ef6e1d0e9b5eb632f69336059e5ad9c9915"
+    },
+    {
+      "path": "evidence\\two-user\\user2\\supplied\\snapshot-call-latency.json",
+      "bytes": 105,
+      "sha256": "ee4cea47530dbd62fd601468c3e686c8d3da765c176a8738e4b24a339ba5038d"
+    },
+    {
+      "path": "current-runtime-stage\\base-downloads\\attempt-1.bin",
+      "bytes": 15406072,
+      "sha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957"
+    },
+    {
+      "path": "current-runtime-stage\\base-downloads\\attempt-1.json",
+      "bytes": 292,
+      "sha256": "c2cae7c68703055de496fc87bc7ae4275c0fa5e985fd308f0766cafcf0fde813"
+    },
+    {
+      "path": "current-runtime-stage\\maintained-runtime\\maintained-runtime.json",
+      "bytes": 426307,
+      "sha256": "42f5bb0a51b580b75496f634ae735183831424e0a0edf73427e6c8f391b888d1"
+    },
+    {
+      "path": "current-runtime-stage\\maintained-runtime\\maintained-runtime.sha256",
+      "bytes": 107,
+      "sha256": "a117cd19798ea10781ce16b0080c94f82b20a578307344ce0a0a2fa148c3a9ed"
+    },
+    {
+      "path": "current-runtime-stage\\maintained-runtime\\opencodex-2.97.0-desktop023.names.2.tgz",
+      "bytes": 15407218,
+      "sha256": "fcd2740ecc32ae1e11c1c79d84c801b2c5d5447ae89e070ab060548d61f75ee6"
+    },
+    {
+      "path": "current-runtime-stage\\maintained-runtime\\runtime023-rebuild-summary.json",
+      "bytes": 993,
+      "sha256": "c4d493b8ef7e9011852d891aecfd2121c889d274a98a47699686f32f72db80b8"
+    }
+  ],
+  "excluded": [
+    {
+      "path": "evidence\\msi-custom\\msi-startup\\sandbox-3f2d46340c9149d7bc431985e4bdc341",
+      "reason": "owned private sandbox/browser/resource tree; controlled receipts/logs retained separately"
+    },
+    {
+      "path": "evidence\\msi-default\\msi-default-startup\\sandbox-c772e2293541482696a60d75d56445a1",
+      "reason": "owned private sandbox/browser/resource tree; controlled receipts/logs retained separately"
+    },
+    {
+      "path": "evidence\\native-install\\OpenCodeX Native 中文 Spaces",
+      "reason": "owned private sandbox/browser/resource tree; controlled receipts/logs retained separately"
+    },
+    {
+      "path": "evidence\\native-paths\\OpenCodeX Native 中文 Spaces",
+      "reason": "owned private sandbox/browser/resource tree; controlled receipts/logs retained separately"
+    },
+    {
+      "path": "evidence\\native-query\\OpenCodeX Native 中文 Spaces",
+      "reason": "owned private sandbox/browser/resource tree; controlled receipts/logs retained separately"
+    },
+    {
+      "path": "evidence\\nsis-custom\\nsis-startup\\sandbox-681c072d33704283a076a672148869e5",
+      "reason": "owned private sandbox/browser/resource tree; controlled receipts/logs retained separately"
+    },
+    {
+      "path": "evidence\\nsis-default\\nsis-default-startup\\sandbox-bf0de79708fe483c864e61be2a02d84c",
+      "reason": "owned private sandbox/browser/resource tree; controlled receipts/logs retained separately"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+2026-11-09T00:48:29.498Z [manager] startup version=0.2.23 commit=070d7a67d5e6efa52c798a7575d66d018c0515b3
+2026-11-09T00:48:29.899Z [manager] windows tray artwork refresh deferred: tray icon error: Access is denied. (os error 5)
+2026-11-09T00:48:30.025Z [manager] window appearance: theme=light material=mica reason=mica build=26100 active=true transparency=true dwm=Some(0) backdrop=Some(2)
+2026-11-09T00:48:30.496Z [manager] window appearance: theme=light material=solid reason=inactive build=26100 active=false transparency=true dwm=Some(0) backdrop=Some(1)
+2026-11-09T00:52:33.796Z [manager] integrated runtime provisioned and verified
+2026-11-09T00:52:34.283Z [manager] environment probe stage=node elapsed_ms=257 found=true
+2026-11-09T00:52:36.409Z [manager] environment probe stage=npm elapsed_ms=2118 found=true
+2026-11-09T00:52:37.308Z [manager] environment probe stage=ocx elapsed_ms=879 found=true
+2026-11-09T00:52:39.104Z [manager] environment probe stage=node elapsed_ms=365 found=true
+2026-11-09T00:52:41.096Z [manager] environment probe stage=npm elapsed_ms=1985 found=true
+2026-11-09T00:52:41.785Z [manager] environment probe stage=ocx elapsed_ms=661 found=true
+2026-11-09T00:52:46.495Z [manager] startup version=0.2.23 commit=070d7a67d5e6efa52c798a7575d66d018c0515b3
+2026-11-09T00:52:46.687Z [manager] windows tray artwork refresh deferred: tray icon error: Access is denied. (os error 5)
+2026-11-09T00:52:46.787Z [manager] window appearance: theme=light material=mica reason=mica build=26100 active=true transparency=true dwm=Some(0) backdrop=Some(2)
+2026-11-09T00:52:50.127Z [manager] environment probe stage=node elapsed_ms=659 found=true
+2026-11-09T00:52:53.044Z [manager] environment probe stage=npm elapsed_ms=2848 found=true
+2026-11-09T00:52:53.773Z [manager] integrated runtime provisioned and verified
+2026-11-09T00:52:55.079Z [manager] environment probe stage=ocx elapsed_ms=2014 found=true
+2026-11-09T00:53:01.861Z [manager] window appearance: theme=light material=solid reason=inactive build=26100 active=false transparency=true dwm=Some(0) backdrop=Some(1)
+2026-11-09T00:53:59.843Z [manager] start: failed (managed runtime operation failed: lifecycle_timeout; 启动未在原预算内证明就绪；observations=4, pending=1, rejected=3, absent_record=51, samples=[(15525, 20537, "timeout"), (20813, 25911, "timeout"), (26291, 28694, "pending"), (28955, 29331, "timeout")]。未延长预算或判定运行成功。; duration_ms=30134)
+2026-11-09T00:54:28.941Z [manager] stop: failed (managed runtime operation failed: lifecycle_timeout; 停止未在原预算内完成全部证明；phase=stop-post-client-restore, elapsed_ms=9775, timings=[("initial-owner", 1), ("recheck-owner", 6), ("service-manager", 16), ("final-owner-before-stop", 21), ("authenticated-official-stop", 26), ("stop-runtime-activation", 26), ("stop-protected-record", 388), ("stop-connect", 388), ("stop-first-attestation", 393), ("stop-private-token", 394), ("stop-read-capabilities", 394), ("stop-second-attestation", 423), ("stop-revalidate-before-write", 424), ("stop-post-client-restore", 732)]。未延长预算或宣称已停止。; duration_ms=10059)
