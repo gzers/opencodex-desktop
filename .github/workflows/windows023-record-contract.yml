@@ -68,6 +68,9 @@ jobs:
           if(!$report.candidateMaintainedHelperAccepted -or !$report.candidateReadback.candidateHelperValidated){throw 'Candidate helper must satisfy unchanged product validator'}
           if(!$report.candidateAtomicOverlayAccepted){throw 'Actual original atomic writer overlay must satisfy unchanged validator'}
           if(!$report.candidateAtomicOverlayReadback.forcedPrePublicationFailurePreservedOriginal -or !$report.candidateAtomicOverlayReadback.noOwnTempResidue){throw 'Original publication failure semantics must remain intact'}
+          foreach($case in @($report.leasePrototype,$report.detachedLeasePrototype)){
+            if(!$case.privateJobOwnerAndProtectedDaclVerified -or !$case.bindingSevenTamperCounterexamplesRejected){throw 'Private Job authority and all binding mutations must be checked'}
+          }
           cargo clippy --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib --tests -- -D warnings *> (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'strict-clippy.log')
           if($LASTEXITCODE -ne 0){throw 'Strict checks failed'}
       - name: Preserve only evidence, never synthetic secret records
