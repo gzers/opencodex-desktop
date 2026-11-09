@@ -372,3 +372,16 @@ Administrator控制台真实SID…500/session1/elevated true与15119 RDP SID…1
 普通Stop问题的只读反证：问题进程仅0x1000权限仍error5，WTS不给SID；未采用跳过拒绝访问、按会话推断SID或未知当缺席。后续按H保护租约/退出证明和控制台提升record不可达仍须定位；维护包新行为必须先说明，不把owner猜测当实证。状态保护42552474670实际16过/1原忽略，job因执行器误计数失败；77a641618只改计数，42553369183继续严格回归，最终沿全表，不以局部检查关闭产品门。双方托盘正常退出均有原句柄exit0证明（控制台独立补验）；自有进程/临时任务及私有夹具清理完成，曾被审批拒绝的sessions-03缓存由用户再次按准确路径删除并在10:59:34实证缺席，原失败/首次核验不一致保留。IMP-33的133/58/28/19边界不扩充，整版仍in_progress。
 
 本批交接终态：42553369183的16项仍通过，但严格检查指出测试块布局，原失败ZIP/日志保留；79c076e06仅移动同一测试块，生产/测试文字摘要相同，未关闭规则。58eda240b/42554349227和c0196df01/42554424308均实际成功，最终源c0196df01d00c8cde6460136cf5109c86e591259、apps树c05a03f3a29318ccb9b2cee68730e2af5ae937c2，16过/0败/1原忽略与Windows lib/tests严格Clippy通过；最终5718字节ZIP/SHA256 4faefc76bf73868aade8a59d5b039b80a5f03312bd96dc1c69786aabac027305及全部成员在[最终回执](../../.adg/evidence/0.2.23/local-active-sessions-20261109/status-final-ci/verification.json)。不是完整workspace或新源真实双服务验收。双方托盘重开和正常管理器退出已证明，所有本轮服务/任务/私有HOME清理实证齐全；用户随后移除本轮临时工作目录，Git失败证据保留。普通正常Stop、提升启动、完整互不干扰及原制品门继续未完成，不发布、不改日常配置/真实同步、不采用维护修订。
+
+
+### Windows本地回交后续与提升记录契约隔离验证（2026-11-09）
+
+已fast-forward接入Windows代码c0196df01与文档7f08e4bc5；[原双活动会话交接](../../.adg/evidence/0.2.23/local-active-sessions-20261109/status-table.md)的250项原manifest已逐文件校验。原型token-pointer已返修，状态误显示peer已在精确Windows16过/0败/1原忽略及严格Clippy通过；新源GUI双服务及正常Stop仍未取得。RDP账户属于管理员组但未提升，不冒称非管理员组标准账户；Sandbox不替代真实OS Profile/DPAPI/IPC/最终制品。R33原26/2与全部原失败不变。
+
+源码复核：attested_status::record调用现行verify_runtime_record_handle，严格要求TokenUser owner、受保护DACL与精确full-control授予；原型读取认证失败之前未细分此契约。提升侧55次unreachable而自身HMAC健康，独立Stop191ms拒绝，足以要求隔离确认，尚不足以证明owner一定是Administrators。停止后query_inner缺本H记录时又扫描全机runtime形态，遇不可读对象即失败；不能以跳过该对象或会话推断SID修补。
+
+7c69d1991/cd0788e49只增显式忽略的Windows原版记录契约诊断及test/workflow装配，非测试产品逻辑和names.2维护包未改。固定归档并核对12模块，原atomic writer写临时HOME合成runtime-port记录，不调用代理/服务/任务/owner registry，不接触真实配置；再用实际Desktop opener/原validator，输出owner是否TokenUser/Administrators、原DACL/ACE分类与真实提升状态，不输出秘密。测试结束明确移除自有fixture，artifact仅JSON/log；额外暂存运行包上传证据后精确清理。新ignore属于opt-in技术诊断，不计作原忽略或产品通过。
+
+[record-contract42557070951](https://github.com/gzers/opencodex-desktop/actions/runs/42557070951)固定cd0788e4937e0ca48a08f2b33a16bbab5b2973fe/job128965087177已确认运行，accepted:false，不是下一完整sweep或桌面验收。Rustfmt/PythonAST/3实际PowerShell块及嵌入writer Node语法检查通过；本地最初使用JS保留字package的脚本语法错误已修正并重验，未执行错误writer。先取实际契约差异再定修复，不改owner/DACL验收强度或原30/10/5秒，不静默替换维护包。
+
+停止替代证明的未采用草案见[本H运行租约／原句柄／受控集合方案](../../.adg/evidence/0.2.23/record-contract-42557070951/stop-proof-proposal.md)。当前没有闭合Windows不可读对象反例，未删除全机检查、未用名称或会话降级；草案不表示运行包已采用。
