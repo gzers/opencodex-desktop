@@ -477,3 +477,13 @@ ff1b7e637扩展实际候选生命周期模块。服务自身在派生前加入Gl
 
 
 d3a3b6542下一批集中补反例（源码已推，当前ff1轮不变、未重启）：候选Home保留supplied祖先链、拒绝reparse后再用canonical身份；第二个真实自有候选进程在同H原租约持有时须typed lease-busy，原服务退出但子仍活时须typed controlled-set-not-empty，不能取得启动权限。独立Rust读取实际候选TS协议并拒绝8字段/key/challenge/port的消费者接入也同批保留；无终止、owner修复或预算变化。Node语法/Bun build/Rustfmt和实际3PowerShell块通过，实际ff1全部case结果先收齐再修，不以源码准备当验收。
+
+
+候选模块42574893853终态为failure，原17726字节ZIP/SHA2560f5d57e13cba9bae0a3dfab1992100aa2d87a794d3abf9a496d183bbdaa912cd核验，[完整技术状态表](../../.adg/evidence/0.2.23/runtime-lifetime-module-42574893853/status-table.md)已先展示。六case均实际过：controller direct153.79/detached200.86ms，service-self direct152.55/detached192.81ms，实际candidate模块direct153.46/detached194.79ms；原归档读回/原子失败保留继续过，prototypeFailures为空且fixture/stage清理过。但strictClippy指出穷尽bool tuple后的冗余_分支不可达，整门继续失败，不用原生通过冒称完整检查过。下一批只删除冗余分支，保留-Dwarnings，连同已准备的独立Rust消费者/同H重复与子活替换反例集中验证；正式包及扫描未改。
+
+
+集中返修轮42576221641成功，原17324字节ZIP/SHA256c8645f1959614a5516ec2bddf5f0e6536e9ceac29a536d96de2427bbfe4cc43c核验。六nativecase/实际candidateTS证明的独立Rust消费者/同Hleasebusy与子仍活时替换拒绝/原型archive实际atomic入口与失败保留均过，strictClippy及fixture/stage清理成功。原42574893853 wholefailure不覆盖，仍accepted:false，见[精确结果范围](../../.adg/evidence/0.2.23/lifetime-binding-batch-42576221641/analysis.json)。
+
+ccba4bb7e增加测试原生消费者Witness，实际服务仍活时先verifyTSbinding，再OpenProcess保留同PID/FILETIME，原生TokenUser及固定Bunimage前后核对，OpenJob/私有owner/protected唯一用户ACE/真实成员/count>=2，openlease经原validator/同volumeindex/实际lockbusy；driver按marker正常释放后同句柄wait-exit、jobcount0、lease仍同身份且可锁再释放才完成。握手拒绝仍让自有子正常退出、保存失败，不强杀。小隔离crateWindows目标check/strictClippy过，仅签名stub（执行必panic）用于编译，未当作实际validator/native通过，编译target已精确移除。
+
+[run42577435871](https://github.com/gzers/opencodex-desktop/actions/runs/42577435871)固定ccba4bb7e042cbd3789af1ddeb77cab9c2654df9/job129028221849已确认运行，仍原6case及所有archive/atomic/失败反例；actualWindows使用项目原validator、RustWitness和真实TS运行身份，不替换成stub。结果仍accepted:false，未接生产Stop扫描/官方HTTP还原或发布。实际CLI/start record/HTTP证明的隔离producer装配已准备但未启动真实代理，继续保留后续完整集成门。

@@ -1,0 +1,51 @@
+{
+  "accepted": false,
+  "result": "whole-diagnostic-failed-strict-clippy",
+  "source": "ff1b7e6371a876d764e56df60def57edb765ea7c",
+  "artifactBytes": 17726,
+  "artifactSha256": "0f5d57e13cba9bae0a3dfab1992100aa2d87a794d3abf9a496d183bbdaa912cd",
+  "allSixNativeCaseResults": {
+    "leasePrototype": {
+      "result": "pass",
+      "milliseconds": 153.7903,
+      "candidateModule": false,
+      "selfJob": false
+    },
+    "detachedLeasePrototype": {
+      "result": "pass",
+      "milliseconds": 200.8572,
+      "candidateModule": false,
+      "selfJob": false
+    },
+    "selfJobLeasePrototype": {
+      "result": "pass",
+      "milliseconds": 152.5546,
+      "candidateModule": false,
+      "selfJob": true
+    },
+    "detachedSelfJobLeasePrototype": {
+      "result": "pass",
+      "milliseconds": 192.807,
+      "candidateModule": false,
+      "selfJob": true
+    },
+    "candidateLifetimePrototype": {
+      "result": "pass",
+      "milliseconds": 153.46450000000002,
+      "candidateModule": true,
+      "selfJob": true
+    },
+    "detachedCandidateLifetimePrototype": {
+      "result": "pass",
+      "milliseconds": 194.789,
+      "candidateModule": true,
+      "selfJob": true
+    }
+  },
+  "candidateArchiveAndAtomicFailurePreservationPassed": true,
+  "strictClippy": "fail-unreachable-exhaustive-match-fallback",
+  "fixtureAndStageCleanupVerified": true,
+  "interpretation": "Native results complete, but whole diagnostic remains failed. Redundant fallback in already exhaustive tuple match is removed; do not add allow or reduce strict checks.",
+  "batch": "Independent Rust proof reader+sameHbusy/childalive contenders+input-chain pin fixes already prepared; next diagnostic retains all prior cases and atomic archive checks.",
+  "productionArchiveChanged": false
+}

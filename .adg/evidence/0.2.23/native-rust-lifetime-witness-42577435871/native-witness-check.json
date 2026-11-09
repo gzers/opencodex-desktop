@@ -1,0 +1,19 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "scope": "Windows target compile and strict lint only, not actual native execution. Small isolated crate supplies signature-only validator stub that panics if called; actual project callback required in Windows test.",
+  "sameCandidateReaderSource": "test/smoke/windows023-lifetime-binding.rs",
+  "sourceSha256": "ca6de900fe8d50c972a056ce879dfd83aefe8fd7523b30a5e6dc25e8cecad9b8",
+  "crossCheck": "pass",
+  "crossStrictClippy": "pass",
+  "nativeChecksPrepared": [
+    "actual process TokenUser beforeafter",
+    "exact pinned Bun image beforeafter",
+    "same retained process PID/FILETIME and alive->exited",
+    "private Job owner/protected exact userACE, real membership and >=2 active whilelive ->0after",
+    "same lease filevolume/index/privateownerDACL and lockedwhilelive ->unheldafter"
+  ],
+  "productionStopAuthorityRegistered": false,
+  "productArchiveChanged": false,
+  "ownedCompileTargetRemoved": true
+}
