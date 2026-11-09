@@ -95,9 +95,11 @@ using Microsoft.Win32.SafeHandles;
 public sealed class OcxRetainedProcess : IDisposable {
  [DllImport("kernel32.dll",SetLastError=true)] static extern bool DuplicateHandle(IntPtr sourceProcess,IntPtr source,IntPtr targetProcess,out SafeWaitHandle duplicate,uint access,bool inherit,uint options);
  [DllImport("kernel32.dll",SetLastError=true)] static extern uint WaitForSingleObject(SafeWaitHandle handle,uint milliseconds);
+ [DllImport("kernel32.dll",SetLastError=true)] static extern bool GetExitCodeProcess(SafeWaitHandle handle,out uint code);
  SafeWaitHandle handle;
  public OcxRetainedProcess(IntPtr source){if(!DuplicateHandle(new IntPtr(-1),source,new IntPtr(-1),out handle,0,false,2))throw new Win32Exception();}
  public bool Exited(){uint result=WaitForSingleObject(handle,0);if(result==0)return true;if(result==258)return false;throw new Win32Exception();}
+ public uint ExitCode(){if(!Exited())throw new InvalidOperationException("Original process is still live");uint code;if(!GetExitCodeProcess(handle,out code))throw new Win32Exception();return code;}
  public void Dispose(){handle.Dispose();}
 }
 '@}
@@ -109,6 +111,12 @@ function Test-TwoUserOriginalExited($Fact) {
  $key=[string]$Fact.pid+'/'+[string]$Fact.creationTicks
  if($script:twoUserRetainedHandles -and $script:twoUserRetainedHandles.ContainsKey($key)){return $script:twoUserRetainedHandles[$key].Exited()}
  return $false
+}
+function Get-TwoUserOriginalExit($Fact) {
+ $key=[string]$Fact.pid+'/'+[string]$Fact.creationTicks
+ if(!$script:twoUserRetainedHandles -or !$script:twoUserRetainedHandles.ContainsKey($key)){throw 'Original retained handle unavailable; do not infer exit code'}
+ $original=$script:twoUserRetainedHandles[$key];$exited=$original.Exited()
+ [pscustomobject]@{originalHandleExited=$exited;exitCode=$(if($exited){$original.ExitCode()}else{$null})}
 }
 function Close-TwoUserProcessHandles {
  if($script:twoUserRetainedHandles){foreach($handle in $script:twoUserRetainedHandles.Values){$handle.Dispose()};$script:twoUserRetainedHandles.Clear()}
