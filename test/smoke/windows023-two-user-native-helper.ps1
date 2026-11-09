@@ -192,8 +192,20 @@ function Assert-TwoUserLive($Fact) {
   $now
  }finally{$p.Dispose()}
 }
+function Assert-TwoUserRootForDescendantObservation($Root) {
+ # Original native handle exit is a positive OS fact. The Process object may
+ # finish between a parent HasExited check and this call; do not re-admit an
+ # exited root by PID or convert a genuine identity failure into absence.
+ if(Test-TwoUserOriginalExited $Root){return 'original-exited'}
+ try{$null=Assert-TwoUserLive $Root;return 'original-live'}
+ catch{if(Test-TwoUserOriginalExited $Root){return 'original-exited'};throw}
+}
 function Add-TwoUserDescendants($Root,[Collections.Generic.Dictionary[int,object]]$Ledger) {
- $null=Assert-TwoUserLive $Root;$snapshot=@(Get-CimInstance Win32_Process)
+ $rootObservation=Assert-TwoUserRootForDescendantObservation $Root
+ # The original native handle remains retained, including after exit. Continue
+ # the same parent-chain snapshot and exact SID/image/creation checks for every
+ # discovered descendant; an unreadable live descendant still refuses cleanup.
+ $snapshot=@(Get-CimInstance Win32_Process -ErrorAction Stop)
  $parents=[Collections.Generic.HashSet[int]]::new();[void]$parents.Add([int]$Root.pid);$Ledger[[int]$Root.pid]=$Root
  do{$changed=$false;foreach($row in $snapshot){
   if($parents.Contains([int]$row.ParentProcessId) -and !$parents.Contains([int]$row.ProcessId) -and $row.CreationDate.ToUniversalTime().Ticks -ge ([long]$Root.creationTicks-9)){

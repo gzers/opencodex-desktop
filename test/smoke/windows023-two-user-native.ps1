@@ -180,7 +180,7 @@ try {
      Add-TwoUserDescendants $account.fact $taskLedger
     }
     [void]$account.process.WaitForExit(20000)
-   }catch{$account.runtimeCleanupUnproven=$true;$cleanup.Add(@{sid=$account.sid;result='bootstrap-identity-retained';reason='Exact retained bootstrap/descendant identity was not proved'});$taskSummary.result='cleanup-failed'}
+   }catch{$account.runtimeCleanupUnproven=$true;$cleanup.Add(@{sid=$account.sid;result='bootstrap-identity-retained';reason='Exact retained bootstrap/descendant identity was not proved';failureType=$_.Exception.GetType().FullName;failureHResult=$_.Exception.HResult;failureLine=$_.InvocationInfo.ScriptLineNumber;originalBootstrapExited=$(if($account.fact){Test-TwoUserOriginalExited $account.fact}else{$false})});$taskSummary.result='cleanup-failed'}
    $finished=Join-Path $account.evidence 'finished.json'
    if($taskSummary.result -ceq 'pass-user-isolation'){
     if(!(Test-Path -LiteralPath $finished)){$taskSummary.result='evidence-incomplete'}
