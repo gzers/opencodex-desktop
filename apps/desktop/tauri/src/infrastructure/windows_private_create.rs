@@ -769,13 +769,22 @@ mod tests {
             if candidate_result.is_err() {
                 prototype_failures.push("new-record-or-descriptor-bridge");
             }
-            for (detached, self_job) in [(false, false), (true, false), (false, true), (true, true)]
-            {
-                let case_key = match (detached, self_job) {
-                    (false, false) => "leasePrototype",
-                    (true, false) => "detachedLeasePrototype",
-                    (false, true) => "selfJobLeasePrototype",
-                    (true, true) => "detachedSelfJobLeasePrototype",
+            for (detached, self_job, candidate_lifetime) in [
+                (false, false, false),
+                (true, false, false),
+                (false, true, false),
+                (true, true, false),
+                (false, true, true),
+                (true, true, true),
+            ] {
+                let case_key = match (detached, self_job, candidate_lifetime) {
+                    (false, false, false) => "leasePrototype",
+                    (true, false, false) => "detachedLeasePrototype",
+                    (false, true, false) => "selfJobLeasePrototype",
+                    (true, true, false) => "detachedSelfJobLeasePrototype",
+                    (false, _, true) => "candidateLifetimePrototype",
+                    (true, _, true) => "detachedCandidateLifetimePrototype",
+                    _ => unreachable!("fixed independent diagnostic cases"),
                 };
                 let lease_result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                     let lease_root = task.path().join(case_key);
@@ -790,6 +799,10 @@ mod tests {
                         .arg(script)
                         .env("OCXD_RECORD_PROBE_PACKAGE", &package)
                         .env("OCXD_LEASE_PROBE_ROOT", &lease_root)
+                        .env(
+                            "OCXD_LEASE_PROBE_CANDIDATE",
+                            if candidate_lifetime { "true" } else { "false" },
+                        )
                         .env(
                             "OCXD_LEASE_PROBE_SELF_JOB",
                             if self_job { "true" } else { "false" },
@@ -823,6 +836,17 @@ mod tests {
                     );
                     report[case_key] = serde_json::from_slice::<serde_json::Value>(&result.stdout)
                         .expect("fixed synthetic lifetime report");
+                    if candidate_lifetime {
+                        let lease = crate::modules::backup::safety::open_file(
+                            &lease_root.join("runtime-lifetime.lease"),
+                            false,
+                        )
+                        .unwrap();
+                        assert_eq!(owner(&lease), expected);
+                        verify_runtime_record_handle(&lease).expect(
+                            "candidate lease must satisfy original private record validator",
+                        );
+                    }
                 }));
                 if lease_result.is_err() {
                     prototype_failures.push(case_key);

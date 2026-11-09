@@ -49,7 +49,7 @@ const security=dlopen(join(system,'advapi32.dll'),{
 const wide=s=>{const v=new Uint16Array(s.length+1);for(let i=0;i<s.length;i++)v[i]=s.charCodeAt(i);return v;};
 const wait=async(predicate,label,ms=7000)=>{const until=performance.now()+ms;while(!predicate()){if(performance.now()>=until)throw Error(label+' diagnostic deadline');await Bun.sleep(20);}};
 function lock(){
- const name=wide(join(root,'lifetime.lease'));
+ const name=wide(join(root,process.env.OCXD_LEASE_PROBE_CANDIDATE==='true'?'runtime-lifetime.lease':'lifetime.lease'));
  const handle=BigInt(k.CreateFileW(ptr(name),0xc0020000,3,null,3,0x80|0x200000,0n));assert(handle!==0n&&handle!==0xffffffffffffffffn);
  const storage=new ArrayBuffer(32),overlapped=new Uint8Array(storage);
  if(!k.LockFileEx(handle,3,0,1,0,ptr(overlapped))){const error=k.GetLastError();k.CloseHandle(handle);assert.equal(error,33,'Only lock contention is busy');return null;}
@@ -106,7 +106,7 @@ function verifyPrivateJob(job){
 function boundProof(record,key){return createHmac('sha256',key).update(JSON.stringify(record)).digest();}
 const role=process.argv[2]??'controller';
 function holdPublishedJob(){
- const name=process.env.OCXD_LEASE_PROBE_JOB;assert(name&&name.startsWith('Local'+String.fromCharCode(92)+'ocxd-private-prototype-'));
+ const name=process.env.OCXD_LEASE_PROBE_JOB;assert(name&&(name.startsWith('Local'+String.fromCharCode(92)+'ocxd-private-prototype-')||name.startsWith('Global'+String.fromCharCode(92)+'opencodex-runtime-')));
  const w=wide(name),h=BigInt(k.OpenJobObjectW(4|0x20000,0,ptr(w)));assert(h!==0n);verifyPrivateJob(h);
  const member=new Int32Array(1);assert(k.IsProcessInJob(BigInt(k.GetCurrentProcess()),h,ptr(member)));assert.equal(member[0],1);
  return h;
@@ -117,29 +117,36 @@ if(role==='grandchild'){
  await wait(()=>existsSync(join(root,'release-child')),'child release',12000);
  assert(k.CloseHandle(publishedJob));security.close();lib.close();
 }else if(role==='service'){
- let publishedJob;
- if(process.env.OCXD_LEASE_PROBE_SELF_JOB==='true'){
+ let publishedJob,lease,lifetime;
+ if(process.env.OCXD_LEASE_PROBE_CANDIDATE==='true'){
+  const candidate=await import(pathToFileURL(join(runtime,'src/lib/windows-runtime-lifetime.ts')).href);
+  lifetime=candidate.acquireWindowsRuntimeLifetime(root);assert(lifetime);
+  process.env.OCXD_LEASE_PROBE_JOB=lifetime.binding.job;publishedJob=holdPublishedJob();
+ }else if(process.env.OCXD_LEASE_PROBE_SELF_JOB==='true'){
   publishedJob=privateJob(process.env.OCXD_LEASE_PROBE_JOB);verifyPrivateJob(publishedJob);
   assert(k.AssignProcessToJobObject(publishedJob,BigInt(k.GetCurrentProcess())),'Service must enter private Job before any child spawn');
  }else{publishedJob=holdPublishedJob();}
- const lease=lock();assert(lease,'Service must acquire own lease');const child=launch('grandchild');
- writeFileSync(join(root,'service-ready.tmp'),JSON.stringify({pid:process.pid,created:birth(BigInt(k.GetCurrentProcess())).toString()}));
+ if(!lifetime){lease=lock();assert(lease,'Service must acquire own lease');}
+ const child=launch('grandchild');
+ const record={pid:process.pid,created:birth(BigInt(k.GetCurrentProcess())).toString(),job:process.env.OCXD_LEASE_PROBE_JOB};
+ if(lifetime){record.candidateBinding=lifetime.binding;record.candidateProof=lifetime.proof('A'.repeat(43),'B'.repeat(43),1);}
+ writeFileSync(join(root,'service-ready.tmp'),JSON.stringify(record));
  renameSync(join(root,'service-ready.tmp'),join(root,'service-ready'));
  try{await wait(()=>existsSync(join(root,'release-service')),'service release',10000);}
- finally{lease.release();child.close();assert(k.CloseHandle(publishedJob));security.close();lib.close();}
+ finally{if(lease)lease.release();child.close();assert(k.CloseHandle(publishedJob));security.close();lib.close();}
 }else{
  assert.equal(role,'controller');const began=performance.now();
  const jobName='Local'+String.fromCharCode(92)+'ocxd-private-prototype-'+randomUUID();process.env.OCXD_LEASE_PROBE_JOB=jobName;
- const selfJob=process.env.OCXD_LEASE_PROBE_SELF_JOB==='true';
- const jobWide=wide(jobName);let job=selfJob?0n:privateJob(jobName);if(job!==0n)verifyPrivateJob(job);
+ const candidateLifetime=process.env.OCXD_LEASE_PROBE_CANDIDATE==='true',selfJob=candidateLifetime||process.env.OCXD_LEASE_PROBE_SELF_JOB==='true';
+ let jobWide=wide(jobName),job=selfJob?0n:privateJob(jobName);if(job!==0n)verifyPrivateJob(job);
  let service,actualService=0n;
  try{
   const detached=process.env.OCXD_LEASE_PROBE_DETACHED==='true';
   service=launch(detached?'node-launcher':'service',job);
   if(!selfJob){const inJob=new Int32Array(1);assert(k.IsProcessInJob(service.handle,job,ptr(inJob)));assert.equal(inJob[0],1);}
   await wait(()=>existsSync(join(root,'service-ready'))&&existsSync(join(root,'child-ready')),'both ready');
-  if(selfJob){job=BigInt(k.OpenJobObjectW(4|0x20000,0,ptr(jobWide)));assert(job!==0n);verifyPrivateJob(job);}
   const binding=JSON.parse(readFileSync(join(root,'service-ready'),'utf8'));assert(Number.isInteger(binding.pid)&&binding.pid>0&&/^[0-9]+$/.test(binding.created));
+  if(selfJob){jobWide=wide(binding.job);job=BigInt(k.OpenJobObjectW(4|0x20000,0,ptr(jobWide)));assert(job!==0n);verifyPrivateJob(job);}
   actualService=BigInt(k.OpenProcess(0x101000,0,binding.pid));assert(actualService!==0n);assert.equal(k.GetProcessId(actualService),binding.pid);assert.equal(birth(actualService).toString(),binding.created);
   const serverInJob=new Int32Array(1);assert(k.IsProcessInJob(actualService,job,ptr(serverInJob)));assert.equal(serverInJob[0],1);
   // The server and child retain their own query handles. Reopen a fresh
@@ -152,9 +159,15 @@ if(role==='grandchild'){
   const proof=boundProof(bound,key);assert(timingSafeEqual(proof,boundProof(bound,key)));
   for(const changed of [{home:root+'-other'},{sid:currentSid+'-other'},{pid:binding.pid+1},{created:String(BigInt(binding.created)+1n)},{job:jobName+'-other'},{generation:randomUUID()}])assert(!timingSafeEqual(proof,boundProof({...bound,...changed},key)));
   assert(!timingSafeEqual(proof,boundProof(bound,randomBytes(32))));
+  if(candidateLifetime){
+   assert.equal(binding.candidateBinding.pid,binding.pid);assert.equal(binding.candidateBinding.created,binding.created);assert.equal(binding.candidateBinding.sid,currentSid);assert.equal(binding.candidateBinding.job,binding.job);
+   const signed=record=>createHmac('sha256','A'.repeat(43)).update('opencodex-runtime-lifetime-v1\n'+'B'.repeat(43)+'\n1\n'+JSON.stringify([record.schema,record.home,record.sid,record.pid,record.created,record.generation,record.job,record.leaseVolume,record.leaseIndex])).digest('base64url');
+   assert.equal(signed(binding.candidateBinding),binding.candidateProof);
+   for(const change of [{home:root+'-different'},{sid:currentSid+'-different'},{pid:binding.pid+1},{created:String(BigInt(binding.created)+1n)},{job:binding.job+'-different'},{generation:randomUUID()},{leaseVolume:binding.candidateBinding.leaseVolume+1},{leaseIndex:String(BigInt(binding.candidateBinding.leaseIndex)+1n)}])assert.notEqual(signed({...binding.candidateBinding,...change}),binding.candidateProof);
+  }
   if(detached){await wait(()=>k.WaitForSingleObject(service.handle,0)===0,'Node launcher exit');assert.equal(k.WaitForSingleObject(actualService,0),0x102);}
   assert(active(job)>=2,'Grandchild must inherit the actual job');assert.equal(lock(),null,'Absent runtime record cannot mean stopped while lease held');
-  assert.throws(()=>renameSync(join(root,'lifetime.lease'),join(root,'moved.lease')),'Pinned lease cannot be replaced');
+  assert.throws(()=>renameSync(join(root,candidateLifetime?'runtime-lifetime.lease':'lifetime.lease'),join(root,'moved.lease')),'Pinned lease cannot be replaced');
   assert.equal(birth(service.handle),service.created);assert.equal(k.GetProcessId(service.handle),service.pid);
   writeFileSync(join(root,'release-service'),'1');await wait(()=>k.WaitForSingleObject(actualService,0)===0,'original service exit');
   const exit=new Uint32Array(1);assert(k.GetExitCodeProcess(actualService,ptr(exit)));assert.equal(exit[0],0);assert.equal(birth(actualService).toString(),binding.created);
@@ -162,7 +175,7 @@ if(role==='grandchild'){
   const afterExit=lock();assert(afterExit);afterExit.release();
   writeFileSync(join(root,'release-child'),'1');await wait(()=>active(job)===0,'controlled set empty');
   const finalLease=lock();assert(finalLease);finalLease.release();
-  console.log(JSON.stringify({accepted:false,diagnosticOnly:true,runtimeChanged:false,productStarted:false,serviceMutation:false,terminationApiUsed:false,killOnCloseUsed:false,suspendedJobAdmission:!selfJob,serviceEnteredPrivateJobBeforeOwnChildren:selfJob,nodeDetachedLauncherUsed:detached,detachedServiceStayedInJob:detached,observerReopenedNamedJob:true,privateJobOwnerAndProtectedDaclVerified:true,bindingSevenTamperCounterexamplesRejected:true,wrongJobMembershipRejected:true,actualInheritedChildVerified:true,recordAbsentWhileLeaseBusyRefused:true,liveLeaseReplacementRefused:true,retainedServicePidAndCreationVerified:true,serviceExitWithChildAliveRefused:true,finalControlledSetEmpty:true,finalLeaseUnheld:true,milliseconds:performance.now()-began,limits:'Synthetic same-SID LocalJob and test-only HMAC binding. Not protected production record publication, server attestation/official restoration/lifecycle/foreign-SID or original official CLI proof.'}));
+  console.log(JSON.stringify({accepted:false,diagnosticOnly:true,runtimeChanged:false,productStarted:false,serviceMutation:false,terminationApiUsed:false,killOnCloseUsed:false,suspendedJobAdmission:!selfJob,serviceEnteredPrivateJobBeforeOwnChildren:selfJob,candidateLifetimeModuleUsed:candidateLifetime,candidateBindingEightMutationsRejected:candidateLifetime,nodeDetachedLauncherUsed:detached,detachedServiceStayedInJob:detached,observerReopenedNamedJob:true,privateJobOwnerAndProtectedDaclVerified:true,bindingSevenTamperCounterexamplesRejected:true,wrongJobMembershipRejected:true,actualInheritedChildVerified:true,recordAbsentWhileLeaseBusyRefused:true,liveLeaseReplacementRefused:true,retainedServicePidAndCreationVerified:true,serviceExitWithChildAliveRefused:true,finalControlledSetEmpty:true,finalLeaseUnheld:true,milliseconds:performance.now()-began,limits:'Synthetic same-SID candidate or LocalJob/test HMAC. Not protected production record publication, server attestation/official restoration/lifecycle/foreign-SID or original official CLI proof.'}));
  }finally{
   writeFileSync(join(root,'release-service'),'1');writeFileSync(join(root,'release-child'),'1');
   if(job===0n)job=BigInt(k.OpenJobObjectW(4|0x20000,0,ptr(jobWide)));
