@@ -40,9 +40,13 @@ function sid(handle:bigint):string{
   const size=new Uint32Array(1);
   a.GetTokenInformation(token[0]!,1,null,0,ptr(size));
   if(size[0]!<8||size[0]!>65536)return fail('token-size');
-  const buffer=new Uint8Array(size[0]!);
+  // Bun may materialize a small typed array's .buffer into different storage.
+  // Allocate the backing ArrayBuffer before the native API writes its SID pointer.
+  const storage=new ArrayBuffer(size[0]!),buffer=new Uint8Array(storage),view=new DataView(storage);
+  const start=BigInt(ptr(buffer));
   if(!a.GetTokenInformation(token[0]!,1,ptr(buffer),buffer.length,ptr(size)))return fail('token-read');
-  const address=new DataView(buffer.buffer).getBigUint64(0,true),start=BigInt(ptr(buffer));
+  if(BigInt(ptr(buffer))!==start||size[0]!>buffer.length)return fail('token-storage-changed');
+  const address=view.getBigUint64(0,true);
   if(address<start||address+8n>start+BigInt(buffer.length))return fail('token-pointer');
   const text=new BigUint64Array(1);
   if(!a.ConvertSidToStringSidW(address,ptr(text)))return fail('token-string');
@@ -67,9 +71,10 @@ function image(handle:bigint):string{
 function command(handle:bigint):string{
  const needed=new Uint32Array(1);n.NtQueryInformationProcess(handle,60,null,0,ptr(needed));
  if(needed[0]!<16||needed[0]!>65552)return fail('command-size');
- const buffer=new Uint8Array(needed[0]!),base=BigInt(ptr(buffer));
+ const storage=new ArrayBuffer(needed[0]!),buffer=new Uint8Array(storage),v=new DataView(storage),base=BigInt(ptr(buffer));
  if(n.NtQueryInformationProcess(handle,60,ptr(buffer),buffer.length,ptr(needed))<0)return fail('command-read');
- const v=new DataView(buffer.buffer),length=v.getUint16(0,true),maximum=v.getUint16(2,true),address=v.getBigUint64(8,true);
+ if(BigInt(ptr(buffer))!==base||needed[0]!>buffer.length)return fail('command-storage-changed');
+ const length=v.getUint16(0,true),maximum=v.getUint16(2,true),address=v.getBigUint64(8,true);
  if(length===0||length%2||length>maximum||address<base||address+BigInt(length)>base+BigInt(buffer.length))return fail('command-pointer');
  const offset=Number(address-base);return wide(buffer.subarray(offset,offset+length));
 }
