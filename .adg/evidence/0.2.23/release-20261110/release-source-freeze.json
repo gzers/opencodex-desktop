@@ -1,0 +1,26 @@
+{
+  "accepted": false,
+  "published": false,
+  "source": "e3728109e93498bfbd6e993d49904d57dfd75315",
+  "tag": "v0.2.23",
+  "merge": "089501b26be8be2036d7d678100819bd97de6be5",
+  "pr": 72,
+  "buildRun": 42672509824,
+  "buildPurpose": "Signed private draft assets, not public stable",
+  "unchangedProductFromWindows": "4d783585645206c52b49bce8656475d26940c1d7",
+  "productTree": "63a982ef128477812165719fb5c9513ab2f19356",
+  "frontendTree": "ef6a9a3e7875ce1b1378989b5c94e225a6eb7a75",
+  "changesAfterWindows": "delivery manifest provenance, README/CHANGELOG, Unix integration expectation only",
+  "pending": [
+    "Windows current CI native followups",
+    "exact draft signed assets and installer evidence",
+    "Mac original app/native/OTA/rollback",
+    "Windows NSIS actual022-to023 OTA/rollback",
+    "stable/latest anonymous readback"
+  ],
+  "ciRun": 42662755407,
+  "ciWindowsJob": 129318307513,
+  "ciWindowsRegression": "success",
+  "ciWindowsNativeOwner": "success",
+  "ciWindowsCredentials": "in progress"
+}

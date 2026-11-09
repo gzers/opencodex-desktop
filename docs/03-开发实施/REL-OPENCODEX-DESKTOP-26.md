@@ -33,3 +33,10 @@ CI42662755407前端未获得macOS ARM runner，15分钟后由平台取消（无�
 Mac后端完成严格编译并通过2203项后，旧tests/process_action.rs仍期待Started后Starting且不能Stop/Restart，唯一断言失败。该期待与此前edb908已采用终态契约冲突；f8a9a761b仅修Unix集成测试为Running/允许Stop/Restart，产品字节不改。本机补失败目标和其后未执行22目标，64项过、5条件忽略，doctest过；不重跑已过前段，原失败log保留。Windows原轮仍在执行。
 
 另Mac完整lifecycle.3离线平台归档237753388字节，SHA256 eb8b0176a9fb9a2e3c282cd307a3110d1b54df5b5107d31a2e64ceb32ad2dd03，两个规范归档一致，11328条目、原生依赖/只读CLI通过；只读运行包不冒最终签名Desktop/正常服务验收。证据位于release-20261110/local-frontend、mac-platform和mac-ci-tail，原包留外置临时复现输入。
+
+
+### 最终源码合入及私有发行草稿准备（2026-11-10）
+
+Windows CI42662755407完整后端回归与TokenUser私有对象所有者检查success，原生凭据及余项仍在原job129318307513执行，未重开。Mac旧测试补齐与前端本机替代已完成，原CI失败/环境取消不改写。为与剩余检查并行，PR72按精确head f8a9a761b合并为089501b26；main补CHANGELOG日期/lifecycle.3/ec14与Windows路径修复说明，最终源e3728109e93498bfbd6e993d49904d57dfd75315，轻量tag v0.2.23已推送。产品源码与4d7835856完全一致，改变仅发布来源清单和测试/说明。
+
+草稿构建42672509824经workflow_dispatch固定v0.2.23启动（tag所指说明提交带skip-ci，无重复push构建）。只准备正式双平台签名制品，尚未公开；Windows CI余项、原包安装/签名/实际升级回退及最终通道读回仍是公开前门。Latest/beta仍0.2.22，不能把tag存在或草稿出包写成已发布。原PR/run源回执及待验项见release-source-freeze.json。
