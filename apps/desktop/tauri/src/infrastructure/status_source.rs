@@ -339,63 +339,6 @@ fn admit_managed_cli_without_record(
     Ok(())
 }
 
-#[cfg(test)]
-mod managed_cli_admission_tests {
-    use super::*;
-    use serde_json::json;
-
-    #[test]
-    fn accepts_only_own_stopped_diagnostic_without_endpoint_authority() {
-        let root = tempfile::tempdir().unwrap();
-        let home = root.path().join("own H");
-        for reported in [&home, &home.join("config.json")] {
-            assert_eq!(
-                admit_managed_cli_without_record(
-                    &json!({"status":"stopped","paths":{"config":reported},"proxy":{"running":false}}),
-                    &home
-                ),
-                Ok(())
-            );
-        }
-    }
-
-    #[test]
-    fn rejects_other_account_live_payload_even_with_own_config_path() {
-        let root = tempfile::tempdir().unwrap();
-        let home = root.path().join("own H");
-        let peer = json!({"status":"running","pid":"40612","port":53147,"opencodexHome":home,"health":"healthy","proxy":{"running":true,"pid":40612}});
-        assert_eq!(
-            admit_managed_cli_without_record(&peer, &home),
-            Err(CollectError::Unreachable)
-        );
-        let mut contradictory = peer;
-        contradictory["status"] = json!("stopped");
-        contradictory.as_object_mut().unwrap().remove("pid");
-        assert_eq!(
-            admit_managed_cli_without_record(&contradictory, &home),
-            Err(CollectError::Unreachable)
-        );
-    }
-
-    #[test]
-    fn rejects_missing_foreign_or_contradictory_home_and_residual_pid() {
-        let root = tempfile::tempdir().unwrap();
-        let home = root.path().join("own H");
-        for value in [
-            json!({"status":"stopped"}),
-            json!({"status":"stopped","opencodexHome":root.path().join("peer H")}),
-            json!({"status":"stopped","opencodexHome":home,"paths":{"config":root.path().join("peer H/config.json")}}),
-            json!({"status":"stopped","opencodexHome":home,"pid":"40612"}),
-            json!({"status":"stopped","opencodexHome":home,"ready":true}),
-        ] {
-            assert_eq!(
-                admit_managed_cli_without_record(&value, &home),
-                Err(CollectError::Unreachable)
-            );
-        }
-    }
-}
-
 async fn probe_local(port: u16) -> Result<(serde_json::Value, serde_json::Value), CollectError> {
     static CLIENT: std::sync::OnceLock<reqwest::Client> = std::sync::OnceLock::new();
     let client = CLIENT.get_or_init(|| {
@@ -841,5 +784,62 @@ mod tests {
         );
         unrelated.kill().unwrap();
         unrelated.wait().unwrap();
+    }
+}
+
+#[cfg(test)]
+mod managed_cli_admission_tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn accepts_only_own_stopped_diagnostic_without_endpoint_authority() {
+        let root = tempfile::tempdir().unwrap();
+        let home = root.path().join("own H");
+        for reported in [&home, &home.join("config.json")] {
+            assert_eq!(
+                admit_managed_cli_without_record(
+                    &json!({"status":"stopped","paths":{"config":reported},"proxy":{"running":false}}),
+                    &home
+                ),
+                Ok(())
+            );
+        }
+    }
+
+    #[test]
+    fn rejects_other_account_live_payload_even_with_own_config_path() {
+        let root = tempfile::tempdir().unwrap();
+        let home = root.path().join("own H");
+        let peer = json!({"status":"running","pid":"40612","port":53147,"opencodexHome":home,"health":"healthy","proxy":{"running":true,"pid":40612}});
+        assert_eq!(
+            admit_managed_cli_without_record(&peer, &home),
+            Err(CollectError::Unreachable)
+        );
+        let mut contradictory = peer;
+        contradictory["status"] = json!("stopped");
+        contradictory.as_object_mut().unwrap().remove("pid");
+        assert_eq!(
+            admit_managed_cli_without_record(&contradictory, &home),
+            Err(CollectError::Unreachable)
+        );
+    }
+
+    #[test]
+    fn rejects_missing_foreign_or_contradictory_home_and_residual_pid() {
+        let root = tempfile::tempdir().unwrap();
+        let home = root.path().join("own H");
+        for value in [
+            json!({"status":"stopped"}),
+            json!({"status":"stopped","opencodexHome":root.path().join("peer H")}),
+            json!({"status":"stopped","opencodexHome":home,"paths":{"config":root.path().join("peer H/config.json")}}),
+            json!({"status":"stopped","opencodexHome":home,"pid":"40612"}),
+            json!({"status":"stopped","opencodexHome":home,"ready":true}),
+        ] {
+            assert_eq!(
+                admit_managed_cli_without_record(&value, &home),
+                Err(CollectError::Unreachable)
+            );
+        }
     }
 }
