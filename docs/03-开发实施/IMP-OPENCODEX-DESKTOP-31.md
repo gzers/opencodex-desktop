@@ -560,3 +560,5 @@ core-sweep增加producer技术focus（4162f5234），仅对尚未闭合的实际
 集成源码审计补充：handleStart发生在静态依赖加载之后，原3e4d归档尚不能证明初始化派生子进程都入Job；未将该完整性缺口算过。dac30811c将Windows显式start的租约/Job接管放到CLI第一个ESM依赖，在其余依赖求值前完成；handler只接受已有authority，status/stop等不创建服务租约。当前未发布候选lifecycle.1重建为15412808字节/SHA256c665234a44af4e7da88714e7f0e1f0ed180f18fd0c4b0ca892590e9e97bd96c4，旧3e4d原件仍保留；不覆盖已发布版本。16装配/5供应测试、精确boot体反例/实际归档第一import与3TS模块语法、双份规范重建通过；实际Windows新初始化顺序仍待。首次重建漏boot成员被摘要门拒绝，修正后过，失败log保留。
 
 [初始化顺序修正与新候选原件](../../.adg/evidence/0.2.23/lifecycle-consumer-integration-20261109/early-bootstrap/scope.json)及准备期假设H-integrated-preimport-lifetime-20261109-04落盘。原abbb构建42590269684不因观察等待重启，完成后保留其编译/制品证据；它不能替代新dac源码的核心验收。下一候选新core-build将复用可用编译cache但仍重验精确源与新runtime摘要，标准core前补实际buildRun并提交推送判断。当前尚无新core派发。
+
+原abbb构建42590269684完整成功（MSVC主程序/observer/制品封存/cache），终态与artifact身份原件保留，只作该源编译证据，不派它的核心验收；初始化顺序修正已改变候选。新[准备42591865886](https://github.com/gzers/opencodex-desktop/actions/runs/42591865886)固定dac30811c已确认运行，使用c665候选；H-integrated-preimport-lifetime-20261109-04已补真实buildRun，标准core仍未派。已精确清理本机3个自有解压/构建cache目录，保留Mac原平台归档/摘要/日志与4旧资源恢复回执，不动日常安装。
