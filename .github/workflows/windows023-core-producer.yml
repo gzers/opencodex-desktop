@@ -1,0 +1,94 @@
+name: Windows 0.2.23 core unresolved producer diagnostic
+on:
+  workflow_call:
+    inputs:
+      build_run:
+        type: string
+        required: true
+      source:
+        type: string
+        required: true
+      hypothesis:
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+jobs:
+  producer:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      CORE_HYPOTHESIS: ${{ inputs.hypothesis }}
+      CORE_BUILD_RUN: ${{ inputs.build_run }}
+      CORE_SOURCE: ${{ inputs.source }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - name: Require prewritten unresolved producer hypothesis
+        id: hypothesis
+        continue-on-error: true
+        run: |
+          $root=Join-Path $env:RUNNER_TEMP ('ocxd023-core-producer-'+$env:GITHUB_RUN_ID+'-'+$env:GITHUB_RUN_ATTEMPT)
+          if(Test-Path -LiteralPath $root){throw 'Never replace an earlier diagnostic'}
+          New-Item -ItemType Directory (Join-Path $root 'sweep') | Out-Null
+          New-Item -ItemType Directory (Join-Path $root 'evidence') | Out-Null
+          New-Item -ItemType Directory (Join-Path $root 'work') | Out-Null
+          'root='+$root >> $env:GITHUB_OUTPUT
+          'OCXD_SWEEP_ROOT='+$root >> $env:GITHUB_ENV
+          if((git rev-parse HEAD).Trim() -cne $env:CORE_SOURCE){throw 'Exact current test source required'}
+          python test/smoke/sweep/producer_core.py admit $root
+          if($LASTEXITCODE -ne 0){throw 'No hypothesis means no native execution'}
+          $h=Get-Content (Join-Path $root 'sweep/hypothesis.json') -Raw | ConvertFrom-Json
+          'input_source='+$h.inputSource >> $env:GITHUB_OUTPUT
+      - uses: actions/download-artifact@v4
+        if: steps.hypothesis.outcome == 'success'
+        continue-on-error: true
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.build_run }}
+          name: windows023-core-program-${{ steps.hypothesis.outputs.input_source }}
+          path: ${{ steps.hypothesis.outputs.root }}/program
+      - name: 01 hypothesis-and-inputs
+        id: inputs
+        if: always() && steps.hypothesis.outputs.root != ''
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api ('repos/'+$env:GITHUB_REPOSITORY+'/actions/runs/'+$env:CORE_BUILD_RUN) > (Join-Path $env:OCXD_SWEEP_ROOT 'evidence/build-run.json')
+          python test/smoke/sweep/producer_core.py verify $env:OCXD_SWEEP_ROOT
+      - name: 12 frozen-producer-supply
+        id: supply
+        if: always() && steps.hypothesis.outputs.root != ''
+        continue-on-error: true
+        run: |
+          python test/smoke/sweep/producer_core.py supply $env:OCXD_SWEEP_ROOT *> (Join-Path $env:OCXD_SWEEP_ROOT 'evidence/supply.log')
+          if($LASTEXITCODE -ne 0){throw 'Frozen candidate supply failed; no native execution'}
+      - name: 13 runtime-readiness-and-ports
+        if: always() && steps.hypothesis.outputs.root != ''
+        continue-on-error: true
+        run: python test/smoke/sweep/producer_core.py execute $env:OCXD_SWEEP_ROOT
+      - name: 18 owned-producer-cleanup
+        if: always() && steps.hypothesis.outputs.root != ''
+        continue-on-error: true
+        run: python test/smoke/sweep/producer_core.py cleanup $env:OCXD_SWEEP_ROOT
+      - name: Complete technical hypothesis table without accepting product gates
+        if: always() && steps.hypothesis.outputs.root != ''
+        run: python test/smoke/sweep/producer_core.py finish $env:OCXD_SWEEP_ROOT
+      - name: Preserve all controlled original evidence
+        if: always() && steps.hypothesis.outputs.root != ''
+        run: python test/smoke/sweep/artifact.py $env:OCXD_SWEEP_ROOT
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.hypothesis.outputs.root != ''
+        with:
+          name: windows023-core-producer-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ steps.hypothesis.outputs.root }}/artifact/**
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 14

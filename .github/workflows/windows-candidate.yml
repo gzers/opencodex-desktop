@@ -10,6 +10,11 @@ on:
         type: choice
         options: [core-sweep, core-build, lifetime-producer, foreign-job-authority, record-contract, local-session-regression, local-session-build, diagnostic-sweep, official-stop-query-profile, official-stop-history-profile, candidate, ordinary-preflight, retention023, query-etw, installer-retention, native-ui, process-exit]
         default: core-sweep
+      core_focus:
+        description: Integration core or unresolved producer technical diagnosis (never product acceptance)
+        type: choice
+        options: [integration, producer]
+        default: integration
       core_hypothesis:
         description: Prewritten falsifiable core-sweep hypothesis JSON
         type: string
@@ -62,6 +67,7 @@ jobs:
       actions: read
     uses: ./.github/workflows/windows023-core-sweep.yml
     with:
+      focus: ${{ inputs.core_focus }}
       build_run: ${{ inputs.candidate_run }}
       source: ${{ inputs.candidate_head }}
       hypothesis: ${{ inputs.core_hypothesis }}

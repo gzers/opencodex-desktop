@@ -2,6 +2,9 @@ name: Windows 0.2.23 core hypothesis sweep
 on:
   workflow_dispatch:
     inputs:
+      focus:
+        type: string
+        default: integration
       build_run:
         type: string
         required: true
@@ -16,6 +19,9 @@ on:
         description: Prewritten falsifiable hypothesis JSON; no hypothesis means no execution
   workflow_call:
     inputs:
+      focus:
+        type: string
+        default: integration
       build_run:
         type: string
         required: true
@@ -29,7 +35,15 @@ permissions:
   contents: read
   actions: read
 jobs:
+  producer:
+    if: inputs.focus == 'producer'
+    uses: ./.github/workflows/windows023-core-producer.yml
+    with:
+      build_run: ${{ inputs.build_run }}
+      source: ${{ inputs.source }}
+      hypothesis: ${{ inputs.hypothesis }}
   core:
+    if: inputs.focus == 'integration'
     runs-on: windows-latest
     # 8-10 minute operational target; existing product/cleanup deadlines stay
     # intact. An overrun is recorded, never hidden by killing an unknown service.
