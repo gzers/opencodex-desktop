@@ -51,8 +51,9 @@ jobs:
             $log=$filter.Replace(':','_')+'.log'
             cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib $filter -- --nocapture *> $log
             if($LASTEXITCODE -ne 0){throw ('Exact product regression failed: '+$filter)}
-            $expected=if($filter -like '*managed_cli*'){3}elseif($filter -like '*attested_status*'){8}else{6}
+            $expected=if($filter -like '*managed_cli*'){3}elseif($filter -like '*attested_status*'){8}else{5}
             if((Get-Content $log -Raw) -notmatch ($expected.ToString()+' passed; 0 failed')){throw 'Expected real tests did not execute'}
+            if($filter -like '*owner::tests' -and (Get-Content $log -Raw) -notmatch '5 passed; 0 failed; 1 ignored'){throw 'Original dedicated OS fixture ignore changed'}
           }
           cargo clippy --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib --tests -- -D warnings *> strict-clippy.log
           if($LASTEXITCODE -ne 0){throw 'Strict product lint failed'}
