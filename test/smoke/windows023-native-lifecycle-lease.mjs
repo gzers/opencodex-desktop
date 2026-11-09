@@ -117,7 +117,11 @@ if(role==='grandchild'){
  await wait(()=>existsSync(join(root,'release-child')),'child release',12000);
  assert(k.CloseHandle(publishedJob));security.close();lib.close();
 }else if(role==='service'){
- const publishedJob=holdPublishedJob();
+ let publishedJob;
+ if(process.env.OCXD_LEASE_PROBE_SELF_JOB==='true'){
+  publishedJob=privateJob(process.env.OCXD_LEASE_PROBE_JOB);verifyPrivateJob(publishedJob);
+  assert(k.AssignProcessToJobObject(publishedJob,BigInt(k.GetCurrentProcess())),'Service must enter private Job before any child spawn');
+ }else{publishedJob=holdPublishedJob();}
  const lease=lock();assert(lease,'Service must acquire own lease');const child=launch('grandchild');
  writeFileSync(join(root,'service-ready.tmp'),JSON.stringify({pid:process.pid,created:birth(BigInt(k.GetCurrentProcess())).toString()}));
  renameSync(join(root,'service-ready.tmp'),join(root,'service-ready'));
@@ -126,12 +130,15 @@ if(role==='grandchild'){
 }else{
  assert.equal(role,'controller');const began=performance.now();
  const jobName='Local'+String.fromCharCode(92)+'ocxd-private-prototype-'+randomUUID();process.env.OCXD_LEASE_PROBE_JOB=jobName;
- const jobWide=wide(jobName);let job=privateJob(jobName);verifyPrivateJob(job);
+ const selfJob=process.env.OCXD_LEASE_PROBE_SELF_JOB==='true';
+ const jobWide=wide(jobName);let job=selfJob?0n:privateJob(jobName);if(job!==0n)verifyPrivateJob(job);
  let service,actualService=0n;
  try{
   const detached=process.env.OCXD_LEASE_PROBE_DETACHED==='true';
-  service=launch(detached?'node-launcher':'service',job);const inJob=new Int32Array(1);assert(k.IsProcessInJob(service.handle,job,ptr(inJob)));assert.equal(inJob[0],1);
+  service=launch(detached?'node-launcher':'service',job);
+  if(!selfJob){const inJob=new Int32Array(1);assert(k.IsProcessInJob(service.handle,job,ptr(inJob)));assert.equal(inJob[0],1);}
   await wait(()=>existsSync(join(root,'service-ready'))&&existsSync(join(root,'child-ready')),'both ready');
+  if(selfJob){job=BigInt(k.OpenJobObjectW(4|0x20000,0,ptr(jobWide)));assert(job!==0n);verifyPrivateJob(job);}
   const binding=JSON.parse(readFileSync(join(root,'service-ready'),'utf8'));assert(Number.isInteger(binding.pid)&&binding.pid>0&&/^[0-9]+$/.test(binding.created));
   actualService=BigInt(k.OpenProcess(0x101000,0,binding.pid));assert(actualService!==0n);assert.equal(k.GetProcessId(actualService),binding.pid);assert.equal(birth(actualService).toString(),binding.created);
   const serverInJob=new Int32Array(1);assert(k.IsProcessInJob(actualService,job,ptr(serverInJob)));assert.equal(serverInJob[0],1);
@@ -155,10 +162,11 @@ if(role==='grandchild'){
   const afterExit=lock();assert(afterExit);afterExit.release();
   writeFileSync(join(root,'release-child'),'1');await wait(()=>active(job)===0,'controlled set empty');
   const finalLease=lock();assert(finalLease);finalLease.release();
-  console.log(JSON.stringify({accepted:false,diagnosticOnly:true,runtimeChanged:false,productStarted:false,serviceMutation:false,terminationApiUsed:false,killOnCloseUsed:false,suspendedJobAdmission:true,nodeDetachedLauncherUsed:detached,detachedServiceStayedInJob:detached,observerReopenedNamedJob:true,privateJobOwnerAndProtectedDaclVerified:true,bindingSevenTamperCounterexamplesRejected:true,wrongJobMembershipRejected:true,actualInheritedChildVerified:true,recordAbsentWhileLeaseBusyRefused:true,liveLeaseReplacementRefused:true,retainedServicePidAndCreationVerified:true,serviceExitWithChildAliveRefused:true,finalControlledSetEmpty:true,finalLeaseUnheld:true,milliseconds:performance.now()-began,limits:'Synthetic same-SID LocalJob and test-only HMAC binding. Not protected production record publication, server attestation/official restoration/lifecycle/foreign-SID or original official CLI proof.'}));
+  console.log(JSON.stringify({accepted:false,diagnosticOnly:true,runtimeChanged:false,productStarted:false,serviceMutation:false,terminationApiUsed:false,killOnCloseUsed:false,suspendedJobAdmission:!selfJob,serviceEnteredPrivateJobBeforeOwnChildren:selfJob,nodeDetachedLauncherUsed:detached,detachedServiceStayedInJob:detached,observerReopenedNamedJob:true,privateJobOwnerAndProtectedDaclVerified:true,bindingSevenTamperCounterexamplesRejected:true,wrongJobMembershipRejected:true,actualInheritedChildVerified:true,recordAbsentWhileLeaseBusyRefused:true,liveLeaseReplacementRefused:true,retainedServicePidAndCreationVerified:true,serviceExitWithChildAliveRefused:true,finalControlledSetEmpty:true,finalLeaseUnheld:true,milliseconds:performance.now()-began,limits:'Synthetic same-SID LocalJob and test-only HMAC binding. Not protected production record publication, server attestation/official restoration/lifecycle/foreign-SID or original official CLI proof.'}));
  }finally{
   writeFileSync(join(root,'release-service'),'1');writeFileSync(join(root,'release-child'),'1');
-  await wait(()=>active(job)===0,'all owned processes cleanup',15000);
+  if(job===0n)job=BigInt(k.OpenJobObjectW(4|0x20000,0,ptr(jobWide)));
+  assert(job!==0n,'Missing job cannot prove cleanup');await wait(()=>active(job)===0,'all owned processes cleanup',15000);
   if(actualService!==0n)assert(k.CloseHandle(actualService));if(service)service.close();assert(k.CloseHandle(job));security.close();lib.close();
  }
 }

@@ -769,18 +769,16 @@ mod tests {
             if candidate_result.is_err() {
                 prototype_failures.push("new-record-or-descriptor-bridge");
             }
-            for detached in [false, true] {
-                let case_key = if detached {
-                    "detachedLeasePrototype"
-                } else {
-                    "leasePrototype"
+            for (detached, self_job) in [(false, false), (true, false), (false, true), (true, true)]
+            {
+                let case_key = match (detached, self_job) {
+                    (false, false) => "leasePrototype",
+                    (true, false) => "detachedLeasePrototype",
+                    (false, true) => "selfJobLeasePrototype",
+                    (true, true) => "detachedSelfJobLeasePrototype",
                 };
                 let lease_result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                    let lease_root = task.path().join(if detached {
-                        "lease-detached-fixture"
-                    } else {
-                        "lease-fixture"
-                    });
+                    let lease_root = task.path().join(case_key);
                     std::fs::create_dir(&lease_root).unwrap();
                     drop(
                         create_new_private_file(&lease_root.join("lifetime.lease"), 0o600).unwrap(),
@@ -792,6 +790,10 @@ mod tests {
                         .arg(script)
                         .env("OCXD_RECORD_PROBE_PACKAGE", &package)
                         .env("OCXD_LEASE_PROBE_ROOT", &lease_root)
+                        .env(
+                            "OCXD_LEASE_PROBE_SELF_JOB",
+                            if self_job { "true" } else { "false" },
+                        )
                         .env(
                             "OCXD_LEASE_PROBE_DETACHED",
                             if detached { "true" } else { "false" },
@@ -806,20 +808,12 @@ mod tests {
                         .output()
                         .expect("isolated native lifetime prototype");
                     std::fs::write(
-                        evidence.with_file_name(if detached {
-                            "candidate-detached-lease.stdout.log"
-                        } else {
-                            "candidate-lease.stdout.log"
-                        }),
+                        evidence.with_file_name(format!("candidate-{case_key}.stdout.log")),
                         &result.stdout,
                     )
                     .unwrap();
                     std::fs::write(
-                        evidence.with_file_name(if detached {
-                            "candidate-detached-lease.stderr.log"
-                        } else {
-                            "candidate-lease.stderr.log"
-                        }),
+                        evidence.with_file_name(format!("candidate-{case_key}.stderr.log")),
                         &result.stderr,
                     )
                     .unwrap();
