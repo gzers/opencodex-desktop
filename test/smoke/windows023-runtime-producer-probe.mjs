@@ -1,6 +1,7 @@
 // Actual candidate CLI/proxy on synthetic temporary HOME, loopback-only model
 // destination, no inference or business sync request. Not Desktop acceptance.
 import assert from 'node:assert/strict';
+import {injectedClientRoute,restoredFreshNativeClient} from './runtime023-client-restore-proof.mjs';
 import {dlopen,ptr,FFIType as T} from 'bun:ffi';
 import {readFileSync,writeFileSync,mkdirSync,existsSync} from 'node:fs';
 import {join,resolve,relative,isAbsolute} from 'node:path';
@@ -62,6 +63,7 @@ try{
   if(socket)socket.destroy();await sleep(100);
  }
  report.startMilliseconds=performance.now()-start;assert(ready&&report.startMilliseconds<30000);report.startWithin30000=true;
+ assert(injectedClientRoute(Bun.TOML.parse(readFileSync(join(client,'config.toml'),'utf8')),captured.value.port),'Fresh native client must actually route to this exact assigned port before Stop');report.nativeClientInjectedReadback=true;
  stage='job-observer';const {resolveTrustedWindowsSystemDirectory}=await import(pathToFileURL(join(runtime,'src/lib/windows-elevation.ts')).href);
  library=dlopen(join(resolveTrustedWindowsSystemDirectory(),'kernel32.dll'),{
   OpenJobObjectW:{args:[T.u32,T.i32,T.ptr],returns:T.u64},QueryInformationJobObject:{args:[T.u64,T.i32,T.ptr,T.u32,T.ptr],returns:T.i32},CreateFileW:{args:[T.ptr,T.u32,T.u32,T.ptr,T.u32,T.u32,T.u64],returns:T.u64},LockFileEx:{args:[T.u64,T.u32,T.u32,T.u32,T.u32,T.ptr],returns:T.i32},UnlockFileEx:{args:[T.u64,T.u32,T.u32,T.u32,T.ptr],returns:T.i32},CloseHandle:{args:[T.u64],returns:T.i32},
@@ -73,12 +75,14 @@ try{
  stage='stop-attestation';verify(await request('GET','/healthz',undefined,Math.min(5000,remaining())));const token=readFileSync(join(home,'admin-api-token'),'utf8').trim();assert(/^ocx_admin_[A-Za-z0-9_-]{43}$/.test(token));
  stage='stop-capabilities';const capabilities=await request('GET','/api/stop',token,Math.min(5000,remaining()));report.capabilitiesReply={status:capabilities.status,schemaMatches:capabilities.value.schema==='ocx-stop-capabilities/1',connectedClientOwnership:capabilities.value.connectedClientOwnership===true,pidMatches:capabilities.value.pid===captured.value.pid};assert.equal(capabilities.status,200);assert.equal(capabilities.value.schema,'ocx-stop-capabilities/1');assert.equal(capabilities.value.connectedClientOwnership,true);assert.equal(capabilities.value.pid,captured.value.pid);
  stage='pre-stop-reattestation';verify(await request('GET','/healthz',undefined,Math.min(5000,remaining())));
- stage='official-stop';const result=await request('POST','/api/stop',token,remaining());report.stopReply={status:result.status,success:result.value.success===true,sharedTeardown:['performed','deferred','not-owned','refused'].includes(result.value.sharedTeardown)?result.value.sharedTeardown:'unknown',code:['respawnable_service','self_unload_service','service_state_unknown','desktop_supervised'].includes(result.value.code)?result.value.code:'none-or-other'};assert.equal(result.status,200);assert.equal(result.value.success,true);assert.equal(result.value.sharedTeardown,'performed','Fresh fixture owns its restore obligation');report.officialClientRestoreConfirmed=true;
+ stage='official-stop';const result=await request('POST','/api/stop',token,remaining());report.stopReply={status:result.status,success:result.value.success===true,sharedTeardown:['performed','deferred','not-owned','refused'].includes(result.value.sharedTeardown)?result.value.sharedTeardown:'unknown',code:['respawnable_service','self_unload_service','service_state_unknown','desktop_supervised'].includes(result.value.code)?result.value.code:'none-or-other'};assert.equal(result.status,200);assert.equal(result.value.success,true);assert.equal(result.value.sharedTeardown,'performed','Fresh fixture owns its restore obligation');report.officialClientRestoreReply=true;
  const active=()=>{const storage=new ArrayBuffer(48),bytes=new Uint8Array(storage),returned=new Uint32Array(1);assert(library.symbols.QueryInformationJobObject(job,1,ptr(bytes),bytes.length,ptr(returned)));assert.equal(returned[0],48);return new DataView(storage).getUint32(40,true);};
  stage='normal-exit';while(performance.now()-stopStart<10000){if(active()===0&&child.exitCode!==null&&!existsSync(join(home,'runtime-port.json'))&&!existsSync(join(home,'ocx.pid')))break;await sleep(25);}
  report.stopMilliseconds=performance.now()-stopStart;report.originalProcessExit=child.exitCode===0;report.controlledSetEmpty=active()===0;report.recordAbsent=!existsSync(join(home,'runtime-port.json'))&&!existsSync(join(home,'ocx.pid'));
  stage='lease-release';const leasePath=wide(join(home,'runtime-lifetime.lease'));const lease=BigInt(library.symbols.CreateFileW(ptr(leasePath),0xc0020000,3,null,3,0x80|0x200000,0n));assert(lease!==0n&&lease!==0xffffffffffffffffn);
  try{const overlap=new Uint8Array(new ArrayBuffer(32));assert(library.symbols.LockFileEx(lease,3,0,1,0,ptr(overlap)));report.leaseUnheld=true;assert(library.symbols.UnlockFileEx(lease,0,1,0,ptr(overlap)));}finally{library.symbols.CloseHandle(lease);}
+
+ assert(restoredFreshNativeClient(Bun.TOML.parse(readFileSync(join(client,'config.toml'),'utf8'))),'Official reply must be followed by actual fresh native config restoration');report.nativeClientRestoredReadback=true;report.officialClientRestoreConfirmed=report.officialClientRestoreReply&&report.nativeClientRestoredReadback;report.stopMilliseconds=performance.now()-stopStart;
  report.officialStopWithin10000=report.stopMilliseconds<10000&&report.originalProcessExit&&report.controlledSetEmpty&&report.recordAbsent&&report.leaseUnheld;
  report.fixtureSafeToRemove=report.originalProcessExit&&report.controlledSetEmpty&&report.recordAbsent&&report.leaseUnheld;
  assert(report.officialStopWithin10000);
