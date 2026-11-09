@@ -45,3 +45,22 @@ installers-build/run42642616981：原生日志确认新源码NSIS/MSI均已成�
 - 第13项遗留三个编译/下载缓存删除曾被自动审批blocked by policy拒绝，不绕过，仍按原清单单列。
 
 另一次额外提权只读进度观察也遭自动审批blocked by policy，命令未执行；没有换机制绕过，实际结果仅用既有控制器回执。目录各有evidence-manifest.json，原字节大小/SHA256已核验。
+
+## 2026-11-10 00:12 接续核验（Asia/Shanghai）
+
+上节23:55为当时快照；当前控制台、NSIS、隔离MSI均已结束，以下为新回执，不覆盖旧失败。代码9859977d6c588526992cde87ffa6adffb350952e，产品仍为fdf5d4db551f71cbf493dc97b428f8b9a9364a7a/appsTree a4acf4ad2c0fb25420471d50a7d8e11897362068/lifecycle.3。以下三个批次通过即停止独立重验。
+
+| 范围 | 实际结果 | 清理/限制 |
+|---|---|---|
+| console-01 实际Administrator500/session1/high/type1，Sandbox | 唯一Start10718ms，PID8132/49331，正常Stop及还原6716ms，原服务句柄exit0 | private删除、临时任务删除且lastResult0，日常配置摘要不变；不等于默认Profile/DPAPI验收 |
+| nsis-01 本机新普通SID1020，未提升 | default/custom中文路径各安装/原供应/同版本重装/卸载均exit0，runtime及用户哨兵按要求保留 | 账户/Profile/目录删除，ACL恢复，残留进程空；不启动服务或同步 |
+| msi-01 本机新普通SID1021 | 首次实际安装exit1625；日志Non-assigned apps are disabled for non-admin users | 本机Server策略只读不修改，不重复失败；账户/Profile/目录删除，ACL恢复，残留空 |
+| msi-isolated-01 临时托管Windows，新普通SID1003/type1但elevated:false | run42649281070成功；同一原包default/custom各安装/供应/同版本重装/卸载exit0，runtime/用户哨兵保留 | 账户/Profile/目录删除，ACL恢复，残留空；既有Server客户端等价夹具策略精确还原，AlwaysInstallElevated未改；不能记为本机MSI安装通过 |
+
+隔离MSI输入build42645465791/source0302b66082e2c0314e7911f1f9c771d265dddfdf/artifact13687777600。输出证据artifact13688898895/131967字节/SHA256 d6e3f12e03dea24adc06d6969c91d911121ecb36f498df34827f624c1d75e82e，原ZIP和展开件均已留存。各批evidence-manifest逐文件bytes/SHA256核验；大制品/下载分段和私有缓存不入Git，仅来源/原摘要。fixture工具源2da679b9e与产品appsTree、descriptor一致，program构建42631183420和installer构建42645465791的来源并列，不冒充相同EXE字节。
+
+unchanged-boundary-source-proof.json证明旧run42593238885到当前的IPC/instance/data_root/keychain/credentials/windows_user_scope对象完全相同，可复用此前crossPipe真实access-denied、同SID重复实例被拒且原窗口/元数据保持、peer业务数据拒绝等已过范围。DPAPI仅synthetic subscope own-roundtrip/peer-denied，不升级为完整凭据或同SID多会话验收。
+
+Profile1018仍Loaded:true，无已证明残留进程；ocxaccu16625a3be3仍禁用且已移出Administrators。禁止强卸hive/删Loaded Profile或重登日常会话；这仍是未解决的清理阻点。三个先前被审批拒删的缓存目录也继续单列，不能宣称全机已清净。
+
+H-W6待定向补证：实际Administrator控制台high + 当前15119 RDP未提升、不同SID且两会话Active，同时运行固定端口冲突及Stop peer保持。复用同源sealed程序，新增测试适配器只迁移source/runtime pin、捕获原生action原文和真实退出码，原动作预算/归属/就绪/还原断言不变。A一次auto Start；B一次预期fixed-port conflict（原30秒无自有记录且typed port_conflict），A同PID端口健康；B再一次auto成功；双方observe；Stop B后A保持，再Stop A。这里A1次成功Start，B2次Start尝试中1次预期拒绝、1次成功，不能写成每方仅一次总尝试。此为尚缺跨桌面/冲突证明所需前置，不重跑已通过孤立批次。Sandbox保护日常配置，不新增产品或维护包行为。
