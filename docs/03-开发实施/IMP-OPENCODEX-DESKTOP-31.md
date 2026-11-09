@@ -533,3 +533,10 @@ core-sweep增加producer技术focus（4162f5234），仅对尚未闭合的实际
 [派发前判断H-frozen-producer-stop-20261109-02](../../.adg/evidence/0.2.23/core-producer-frozen-20261109/hypothesis.before-dispatch.json)：在完全固定离线依赖、Bun --no-install后，实际CLI应仍启动并通过签名；若原Stop仍失败，固定阶段计时应定位manager或restore。若供应不闭合、启动失败或无阶段证据则此判断不成立/未证实；若原Stop正常完成则反证“原故障持续”。同样保留未知即拒绝/fixture保留/原预算和accepted:false。输入仅复用42580582994/ab0b5d043封存的离线资源，经完整manifest和当前policy比对，绝不把旧产品exe用于新源验收。15项装配行为测试、3workflow actionlint、18实际PowerShell块解析通过。尚未派发，先提交推送判断。
 
 上述判断先在docs7234bbf90推送后，[技术core42586501118](https://github.com/gzers/opencodex-desktop/actions/runs/42586501118)/job129057491679固定4162f5234已确认运行。仍accepted:false、single-owner technical scope，不代替真实双SID或最终制品门；上一完整core的原失败、供应/路径/IPC/清理证据全部保留，不复跑无改动原型。
+
+
+技术core42586501118终态：[完整4项表与反证](../../.adg/evidence/0.2.23/core-producer-frozen-20261109/run-42586501118/status-table.md)。4pass/0fail、44.183秒，但accepted:false；冻结4054依赖文件/308400749字节且--no-install，启动6732.7923ms、实际官方HTTP200/performed、退出/Job/lease/record/精确清理过，stop8141.3016ms，反证原“Stop持续失败”预测。不得反推旧失败已过或归因为单一依赖/硬件。manager-stop5497.1401ms、native-client-restore1807.4541ms，原包装器扫描是高耗时段，尚无授权跳过完整性证明的优化实现。
+
+证据边界纠正：本轮officialClientRestoreConfirmed仅由官方performed响应判定，实际配置文件读回未验证；旧JSON字段原样保留，分析明确不作为文件恢复证明。ef1a81a54后续新增实际注入localhost/assigned-port读回与restore回openai/删除代理路由/catalog字段，计入原10秒；纯反例函数通过，实际新门待与consumer集成同批跑，未因此另派一轮。
+
+459d3dd5c将与Windows实际producer同摘要的4源码路径规范封为2.97.0-desktop023.lifecycle.1-producer-prototype，15412656字节/SHA256faa2ef83ed1096c39c0d7283fbba47c2623e89e160b676ad1626824672990e70，2524成员、两份独立构建相同，兼容清单存在成员均核对；原缺失bun.lock/model-metadata记录保持，非已验内容。归档无trace/依赖树，原件保留在[原型封包](../../.adg/evidence/0.2.23/core-producer-frozen-20261109/producer-archive-prototype/verification.json)。仍缺生产Desktop消费者、文件还原读回、Windows归档重建/实际读回及同源双SID；正式pin不提升，不用producer局部成功当整版完成。15装配行为测试、文件读回纯反例/Node语法与规范build通过；当前无新core派发。

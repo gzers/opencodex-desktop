@@ -1,0 +1,324 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "source": "4162f5234c911be28e371f9a8463609ae1fa5d31",
+  "actualReport": {
+    "accepted": false,
+    "diagnosticOnly": true,
+    "source": "4162f5234c911be28e371f9a8463609ae1fa5d31",
+    "producerVersion": "2.97.0-desktop023.lifecycle.1-record-prototype",
+    "syntheticOnly": true,
+    "inferenceRequests": 0,
+    "businessSyncRequests": 0,
+    "actualCandidateCliStarted": true,
+    "startWithin30000": true,
+    "recordAndHealthAttestation": true,
+    "lifetimeResponseProof": true,
+    "officialStopWithin10000": true,
+    "officialClientRestoreConfirmed": true,
+    "originalProcessExit": true,
+    "controlledSetEmpty": true,
+    "leaseUnheld": true,
+    "recordAbsent": true,
+    "fixtureSafeToRemove": true,
+    "httpObservations": [
+      {
+        "stage": "startup",
+        "requestPhase": "GET /healthz",
+        "status": 200,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 301
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /readyz",
+        "status": 503,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 351
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /healthz",
+        "status": 200,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 309
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /readyz",
+        "status": 503,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 351
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /healthz",
+        "status": 200,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 301
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /readyz",
+        "status": 503,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 351
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /healthz",
+        "status": 200,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 309
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /readyz",
+        "status": 503,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 351
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /healthz",
+        "status": 200,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 301
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /readyz",
+        "status": 503,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 351
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /healthz",
+        "status": 200,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 300
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /readyz",
+        "status": 503,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 351
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /healthz",
+        "status": 200,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 301
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /readyz",
+        "status": 503,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 360
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /healthz",
+        "status": 200,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 301
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /readyz",
+        "status": 503,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 360
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /healthz",
+        "status": 200,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 309
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /readyz",
+        "status": 503,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 351
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /healthz",
+        "status": 200,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 301
+      },
+      {
+        "stage": "startup",
+        "requestPhase": "GET /readyz",
+        "status": 200,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 349
+      },
+      {
+        "stage": "stop-attestation",
+        "requestPhase": "GET /healthz",
+        "status": 200,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 301
+      },
+      {
+        "stage": "stop-capabilities",
+        "requestPhase": "GET /api/stop",
+        "status": 200,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 79
+      },
+      {
+        "stage": "pre-stop-reattestation",
+        "requestPhase": "GET /healthz",
+        "status": 200,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 300
+      },
+      {
+        "stage": "official-stop",
+        "requestPhase": "POST /api/stop",
+        "status": 200,
+        "transferEncoded": false,
+        "contentEncoded": false,
+        "hasContentLength": true,
+        "contentLength": 96
+      }
+    ],
+    "observationLimitReached": true,
+    "startMilliseconds": 6732.7923,
+    "capabilitiesReply": {
+      "status": 200,
+      "schemaMatches": true,
+      "connectedClientOwnership": true,
+      "pidMatches": true
+    },
+    "stopReply": {
+      "status": 200,
+      "success": true,
+      "sharedTeardown": "performed",
+      "code": "none-or-other"
+    },
+    "stopMilliseconds": 8141.301600000001,
+    "officialPhaseTimings": [
+      {
+        "label": "manager-risk",
+        "state": "begin",
+        "elapsedMilliseconds": 0
+      },
+      {
+        "label": "manager-risk",
+        "state": "end",
+        "elapsedMilliseconds": 471.6268
+      },
+      {
+        "label": "ownership-preflight",
+        "state": "begin",
+        "elapsedMilliseconds": 0
+      },
+      {
+        "label": "ownership-preflight",
+        "state": "end",
+        "elapsedMilliseconds": 2.175799999999981
+      },
+      {
+        "label": "manager-stop",
+        "state": "begin",
+        "elapsedMilliseconds": 0
+      },
+      {
+        "label": "manager-stop",
+        "state": "end",
+        "elapsedMilliseconds": 5497.1401000000005
+      },
+      {
+        "label": "official-teardown",
+        "state": "begin",
+        "elapsedMilliseconds": 0
+      },
+      {
+        "label": "native-client-restore",
+        "state": "begin",
+        "elapsedMilliseconds": 0
+      },
+      {
+        "label": "native-client-restore",
+        "state": "end",
+        "elapsedMilliseconds": 1807.454099999999
+      },
+      {
+        "label": "grok-restore",
+        "state": "begin",
+        "elapsedMilliseconds": 0
+      },
+      {
+        "label": "grok-restore",
+        "state": "end",
+        "elapsedMilliseconds": 1.4058999999997468
+      },
+      {
+        "label": "official-teardown",
+        "state": "end",
+        "elapsedMilliseconds": 1812.7813999999998
+      }
+    ]
+  },
+  "hypothesisVerdict": "refuted",
+  "clientFileRestorationProved": false,
+  "sameSourceDualSidAcceptance": false,
+  "scope": "Exact frozen candidate source/CLI/HTTP protocol and owned cleanup, not full Desktop or release"
+}

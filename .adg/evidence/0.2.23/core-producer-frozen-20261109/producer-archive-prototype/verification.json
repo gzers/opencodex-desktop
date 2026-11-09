@@ -1,0 +1,31 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "candidateOnly": true,
+  "productionPinsChanged": false,
+  "version": "2.97.0-desktop023.lifecycle.1-producer-prototype",
+  "baseArchiveSha256": "33887e710fad9d5ae78eb4f85c6d02f7da0d413238437a65033b5a79fba168e4",
+  "archive": "opencodex-2.97.0-desktop023.lifecycle.1-producer-prototype.tgz",
+  "bytes": 15412656,
+  "sha256": "faa2ef83ed1096c39c0d7283fbba47c2623e89e160b676ad1626824672990e70",
+  "twoIndependentBuildsIdentical": true,
+  "memberCount": 2524,
+  "originalSourcePreimages": {
+    "src/cli/index.ts": "423274a5113a497bfa3cf76ef33b3b6feceda0d9878e6b7eaa79e9c8cbae41c4",
+    "src/config/process-state.ts": "6c0ef969915dc8a115f616775a56fca1292f1d8e15e2196657633dab41e78548",
+    "src/server/index/serve-options.ts": "28675d9cafdf635df9c07e6707520a2946fe98dcd4cfde10340635ac33109140"
+  },
+  "actualWindowsProducerPostimages": {
+    "src/cli/index.ts": "d510a0f4e291604cd06f47b0fbe96d28c47736a1c13b55dd82c901a97042a990",
+    "src/config/process-state.ts": "72dc4297a570b548b2700638b862c3f9782dc3831538d1fd604e75dd31c8e12f",
+    "src/server/index/serve-options.ts": "e42646dfe5a025004d781f25a08ce0a28ce69cd199af0765f813461bf1052d8e",
+    "src/lib/windows-runtime-lifetime.ts": "6276147ab1becc2368a060ed2478277c50c87ee4d500dfab5be59e61ab2f7837"
+  },
+  "traceHooksIncluded": false,
+  "dependencyTreesIncluded": false,
+  "compatibilityInheritedAbsentMembersUnchanged": [
+    "bun.lock",
+    "scripts/model-metadata.source.json"
+  ],
+  "lifetimeConsumerIntegrated": false
+}

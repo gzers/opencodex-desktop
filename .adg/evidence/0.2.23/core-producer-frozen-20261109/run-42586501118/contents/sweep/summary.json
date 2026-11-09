@@ -1,0 +1,439 @@
+{
+  "schemaVersion": 1,
+  "diagnosticOnly": true,
+  "accepted": false,
+  "status": "diagnostic-complete",
+  "passed": 4,
+  "failed": 0,
+  "steps": [
+    {
+      "schemaVersion": 1,
+      "step": "01",
+      "name": "hypothesis-and-inputs",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "status": "pass",
+      "firstError": "",
+      "evidence": {
+        "accepted": false,
+        "diagnosticOnly": true,
+        "resourcesSource": "ab0b5d043d9a93b5d9434bf5f0758423fa15f58a",
+        "testSource": "4162f5234c911be28e371f9a8463609ae1fa5d31",
+        "programExecuted": false,
+        "manifestSha256": "2ccc49e9ae50a9e8091f29721b3ba2f1f825a2fe073394306cde6af7a6918ca9"
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "step": "12",
+      "name": "frozen-producer-supply",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "status": "pass",
+      "firstError": "",
+      "evidence": {
+        "source": "exact frozen offline bundle",
+        "autoInstallDisabled": true,
+        "count": 4054,
+        "bytes": 308400749,
+        "inventorySha256": "637557b7356853bf5c6dfd12efff72043750061a8e8d5aabdb9e5d3e3d5e0c41",
+        "originalUnchanged": true,
+        "candidateBytesEqual": true
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "step": "13",
+      "name": "runtime-readiness-and-ports",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "status": "pass",
+      "firstError": "",
+      "evidence": {
+        "accepted": false,
+        "diagnosticOnly": true,
+        "source": "4162f5234c911be28e371f9a8463609ae1fa5d31",
+        "producerVersion": "2.97.0-desktop023.lifecycle.1-record-prototype",
+        "syntheticOnly": true,
+        "inferenceRequests": 0,
+        "businessSyncRequests": 0,
+        "actualCandidateCliStarted": true,
+        "startWithin30000": true,
+        "recordAndHealthAttestation": true,
+        "lifetimeResponseProof": true,
+        "officialStopWithin10000": true,
+        "officialClientRestoreConfirmed": true,
+        "originalProcessExit": true,
+        "controlledSetEmpty": true,
+        "leaseUnheld": true,
+        "recordAbsent": true,
+        "fixtureSafeToRemove": true,
+        "httpObservations": [
+          {
+            "stage": "startup",
+            "requestPhase": "GET /healthz",
+            "status": 200,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 301
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /readyz",
+            "status": 503,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 351
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /healthz",
+            "status": 200,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 309
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /readyz",
+            "status": 503,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 351
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /healthz",
+            "status": 200,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 301
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /readyz",
+            "status": 503,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 351
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /healthz",
+            "status": 200,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 309
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /readyz",
+            "status": 503,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 351
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /healthz",
+            "status": 200,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 301
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /readyz",
+            "status": 503,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 351
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /healthz",
+            "status": 200,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 300
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /readyz",
+            "status": 503,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 351
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /healthz",
+            "status": 200,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 301
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /readyz",
+            "status": 503,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 360
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /healthz",
+            "status": 200,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 301
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /readyz",
+            "status": 503,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 360
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /healthz",
+            "status": 200,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 309
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /readyz",
+            "status": 503,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 351
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /healthz",
+            "status": 200,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 301
+          },
+          {
+            "stage": "startup",
+            "requestPhase": "GET /readyz",
+            "status": 200,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 349
+          },
+          {
+            "stage": "stop-attestation",
+            "requestPhase": "GET /healthz",
+            "status": 200,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 301
+          },
+          {
+            "stage": "stop-capabilities",
+            "requestPhase": "GET /api/stop",
+            "status": 200,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 79
+          },
+          {
+            "stage": "pre-stop-reattestation",
+            "requestPhase": "GET /healthz",
+            "status": 200,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 300
+          },
+          {
+            "stage": "official-stop",
+            "requestPhase": "POST /api/stop",
+            "status": 200,
+            "transferEncoded": false,
+            "contentEncoded": false,
+            "hasContentLength": true,
+            "contentLength": 96
+          }
+        ],
+        "observationLimitReached": true,
+        "startMilliseconds": 6732.7923,
+        "capabilitiesReply": {
+          "status": 200,
+          "schemaMatches": true,
+          "connectedClientOwnership": true,
+          "pidMatches": true
+        },
+        "stopReply": {
+          "status": 200,
+          "success": true,
+          "sharedTeardown": "performed",
+          "code": "none-or-other"
+        },
+        "stopMilliseconds": 8141.301600000001,
+        "officialPhaseTimings": [
+          {
+            "label": "manager-risk",
+            "state": "begin",
+            "elapsedMilliseconds": 0
+          },
+          {
+            "label": "manager-risk",
+            "state": "end",
+            "elapsedMilliseconds": 471.6268
+          },
+          {
+            "label": "ownership-preflight",
+            "state": "begin",
+            "elapsedMilliseconds": 0
+          },
+          {
+            "label": "ownership-preflight",
+            "state": "end",
+            "elapsedMilliseconds": 2.175799999999981
+          },
+          {
+            "label": "manager-stop",
+            "state": "begin",
+            "elapsedMilliseconds": 0
+          },
+          {
+            "label": "manager-stop",
+            "state": "end",
+            "elapsedMilliseconds": 5497.1401000000005
+          },
+          {
+            "label": "official-teardown",
+            "state": "begin",
+            "elapsedMilliseconds": 0
+          },
+          {
+            "label": "native-client-restore",
+            "state": "begin",
+            "elapsedMilliseconds": 0
+          },
+          {
+            "label": "native-client-restore",
+            "state": "end",
+            "elapsedMilliseconds": 1807.454099999999
+          },
+          {
+            "label": "grok-restore",
+            "state": "begin",
+            "elapsedMilliseconds": 0
+          },
+          {
+            "label": "grok-restore",
+            "state": "end",
+            "elapsedMilliseconds": 1.4058999999997468
+          },
+          {
+            "label": "official-teardown",
+            "state": "end",
+            "elapsedMilliseconds": 1812.7813999999998
+          }
+        ]
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "step": "18",
+      "name": "owned-producer-cleanup",
+      "accepted": false,
+      "diagnosticOnly": true,
+      "status": "pass",
+      "firstError": "",
+      "evidence": {
+        "ownedFixtureRemoved": true,
+        "terminationUsed": false,
+        "evidencePreserved": true,
+        "dailyConfigurationTouched": false
+      }
+    }
+  ],
+  "acceptance": "No individual success or all-green sweep is release acceptance",
+  "mode": "core-sweep",
+  "focus": "candidate-producer-technical-only",
+  "dualSidProductAcceptance": false,
+  "untouchedGates": [
+    {
+      "gate": "six native lifetime/Rust witness cases and foreign SID private Job denial",
+      "source": "f143d0910bacd47d933ce6ce89426f972368ba59",
+      "evidence": ".adg/evidence/0.2.23/actual-lifetime-producer-42578649105/; foreign-job-authority-42567013704/",
+      "whyUnaffected": "Candidate native helper and independent Rust consumer unchanged; no acceptance extrapolation"
+    },
+    {
+      "gate": "dual SID, private supply, per-user paths, IPC and exact account cleanup",
+      "source": "ab0b5d043d9a93b5d9434bf5f0758423fa15f58a",
+      "evidence": ".adg/evidence/0.2.23/core-entry-20261109/run-42581940251/",
+      "whyUnaffected": "No implementation of those product boundaries changed except already separately tracked confirmed-action DTO mapping; this technical run makes no claim to close its same-source integration regression"
+    }
+  ],
+  "hypothesis": {
+    "id": "H-frozen-producer-stop-20261109-02",
+    "claim": "With exact frozen offline dependencies and Bun auto-install disabled, the candidate CLI will still start and authenticate; any remaining official Stop failure will be isolated to fixed original manager/restore stages rather than unresolved dependency supply",
+    "refutation": "Supply mismatch or missing dependency, failure to authenticate startup, or a stop failure without the actual bounded stage trace refutes or leaves this causal judgment unproved; a complete stop would refute persistence of the old failure",
+    "comparisons": [
+      {
+        "step": "12",
+        "predicted": "pass",
+        "observed": "pass",
+        "firstError": "",
+        "matches": true
+      },
+      {
+        "step": "13",
+        "predicted": "fail",
+        "observed": "pass",
+        "firstError": "",
+        "matches": false
+      },
+      {
+        "step": "18",
+        "predicted": "fail",
+        "observed": "pass",
+        "firstError": "",
+        "matches": false
+      }
+    ],
+    "verdict": "refuted"
+  },
+  "cadence": {
+    "elapsedSeconds": 44.183274030685425,
+    "targetSeconds": [
+      480,
+      600
+    ],
+    "budgetsUnchanged": true
+  }
+}
