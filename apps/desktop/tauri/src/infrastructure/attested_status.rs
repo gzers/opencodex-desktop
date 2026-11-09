@@ -321,6 +321,7 @@ async fn stop_official_with_witness<T>(
     let stopped = session
         .request("POST", "/api/stop", None, Some(token))
         .await?;
+    phase("stop-post-response");
     if stopped.code != 200
         || stopped.value["success"] != true
         || !matches!(

@@ -101,6 +101,7 @@ impl SystemServiceOwnerProofProvider {
         &self,
         context: &ProcessContext,
         action_deadline: Instant,
+        data_root: &Path,
     ) -> AppResult<()> {
         let started = Instant::now();
         let budget = crate::modules::process::stop_timeout()
@@ -223,6 +224,18 @@ impl SystemServiceOwnerProofProvider {
                 std::thread::sleep(Duration::from_millis(50));
             }
         })();
+        if result.is_err() {
+            // Fixed internal stages and durations only. Do not expose paths,
+            // HTTP bodies, tokens or native proof material in the public DTO.
+            let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root).append_event(
+                &format!(
+                    "stop-proof: failed phase={} elapsed_ms={} timings={:?}",
+                    phase.get(),
+                    started.elapsed().as_millis(),
+                    timings.borrow(),
+                ),
+            );
+        }
         result.map_err(|error| match error {
             AppError::Timeout => fail("lifecycle_timeout", format!(
                 "停止未在原预算内完成全部证明；phase={}, elapsed_ms={}, timings={:?}。未延长预算或宣称已停止。",

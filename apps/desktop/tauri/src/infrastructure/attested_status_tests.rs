@@ -576,6 +576,7 @@ async fn stop_uses_one_attested_connection_and_requires_official_client_teardown
                 && !phase.contains(&f.record.attestation_secret)));
 
         if mode == "valid" {
+            assert!(progress.borrow().contains(&"stop-post-response"));
             assert_eq!(requests.len(), 4);
             assert_eq!(requests[3].0, "POST /api/stop HTTP/1.1");
             assert!(requests[3].1);

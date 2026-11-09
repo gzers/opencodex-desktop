@@ -408,7 +408,7 @@ fn execute_lifecycle<R: ProcessRunner + ?Sized>(
     ) {
         let owner =
             runtime_recovery_v2_owner::SystemServiceOwnerProofProvider::new(root, context.clone())?;
-        owner.stop_lifecycle(context, deadline)?;
+        owner.stop_lifecycle(context, deadline, data_root)?;
         if command.action == LifecycleAction::Stop {
             return Ok(LifecycleResult::Stopped);
         }
