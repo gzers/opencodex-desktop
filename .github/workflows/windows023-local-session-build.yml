@@ -52,6 +52,42 @@ jobs:
             @{path=[IO.Path]::GetRelativePath([IO.Path]::GetFullPath($output),$_.FullName);bytes=$_.Length;sha256=(Get-FileHash -LiteralPath $_.FullName).Hash.ToLowerInvariant()}
           })
           @{schemaVersion=1;source=(git rev-parse HEAD).Trim();appsTree=(git rev-parse HEAD:apps).Trim();profile='debug custom-protocol MSVC';run=$env:GITHUB_RUN_ID;accepted=$false;releaseAccepted=$false;files=$files} | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath ($output+'/diagnostic-build.json')
+      - name: Build fixture-only access to the unchanged offline provisioner
+        run: |
+          $ErrorActionPreference='Stop'
+          New-Item -ItemType Directory -Path apps/desktop/tauri/examples -Force | Out-Null
+          @'
+          use std::path::PathBuf;
+          fn main() {
+              assert_eq!(opencodex_desktop_lib::build_commit(), "2c6edebc32909c9a16e6666836c22ca6cf05037d");
+              let root=PathBuf::from(std::env::args_os().nth(1).expect("explicit fresh Sandbox"));
+              assert!(root.is_absolute());
+              let installation=root.join("program");
+              assert!(!installation.join("runtime").exists(), "fresh runtime only");
+              std::env::set_var("OPENCODEX_SANDBOX", "1");
+              std::env::set_var("OPENCODEX_SANDBOX_ROOT", &root);
+              let resources=installation.join("runtime-bundle");
+              let descriptor=std::fs::read(resources.join("runtime-bundle.manifest.json")).unwrap();
+              let result=opencodex_desktop_lib::modules::runtime::bundled::provision(
+                  &installation, &root.join("data/desktop"),
+                  &resources.join("runtime-bundle-0.2.23-win32-x64.tar.gz"), &descriptor,
+                  "133d84387766a2f4d5b75b237f6a3768cb3842ab67268059a509d4bcd07b74ed");
+              match result { Ok(value)=>println!("{:?}",value), Err(error)=>{eprintln!("{}",error);std::process::exit(1)} }
+          }
+          '@ | Set-Content -LiteralPath apps/desktop/tauri/examples/ocxd-local-provision.rs
+          $env:OCXD_REQUIRE_RUNTIME_BUNDLE='1'
+          cargo build --manifest-path apps/desktop/tauri/Cargo.toml --locked --features custom-protocol --example ocxd-local-provision --jobs 2 *> fixture-build.log
+          if($LASTEXITCODE -ne 0){throw 'Exact-source fixture build failed'}
+          New-Item -ItemType Directory -Path test/out/local-fixture | Out-Null
+          Copy-Item apps/desktop/tauri/target/debug/examples/ocxd-local-provision.exe test/out/local-fixture
+          @{source=(git rev-parse HEAD).Trim();appsTree=(git rev-parse HEAD:apps).Trim();fixtureSourceSha256=(Get-FileHash apps/desktop/tauri/examples/ocxd-local-provision.rs).Hash.ToLowerInvariant();sha256=(Get-FileHash test/out/local-fixture/ocxd-local-provision.exe).Hash.ToLowerInvariant();descriptorSha256='133d84387766a2f4d5b75b237f6a3768cb3842ab67268059a509d4bcd07b74ed';accepted=$false;productBinaryChanged=$false} | ConvertTo-Json | Set-Content test/out/local-fixture/fixture-build.json
+      - name: Upload isolated fixture tool
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows023-local-session-fixture
+          path: test/out/local-fixture
+          if-no-files-found: error
+          retention-days: 14
       - name: Preserve build logs
         if: always()
         uses: actions/upload-artifact@v4
