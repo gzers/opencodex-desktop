@@ -1,56 +1,32 @@
-import { mount, flushPromises } from '@vue/test-utils'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import {mount,flushPromises,DOMWrapper,type VueWrapper} from '@vue/test-utils'
+import {afterEach,beforeEach,describe,expect,it,vi} from 'vitest'
+import {createPinia,setActivePinia} from 'pinia'
 import ExternalTaskDialog from '@/features/models/ExternalTaskDialog.vue'
-import { modelApi, type ModelSnapshot, type TaskBundle } from '@/features/models/api'
-import { installNativeDialogStub } from './helpers/nativeDialog'
-vi.mock('@/features/models/api', async original => ({ ...await original<object>(), modelApi: { external: vi.fn(), activate: vi.fn() } }))
-const snapshot: ModelSnapshot = { library: { schemaVersion: 1, templates: [] }, policy: { schemaVersion: 1, templateRefs: [], channels: [] }, libraryDigest: 'baseline', policyDigest: 'policy', workspace: null, workspaceDigest: 'workspace' }
-const bundle = { taskId: 'task', content: '完整指令 + 同源字段契约 + 目标', grant: { task: { id: 'task', contractVersion: 1, scene: 'from_sources', targets: [], allowNew: true, requirements: '', expectedLibrary: 'baseline', expiresAt: '2026-10-25', revoked: false }, token: 'capability' } } as TaskBundle
-beforeEach(() => { vi.useFakeTimers(); vi.clearAllMocks(); vi.mocked(modelApi.external).mockResolvedValue(bundle); vi.mocked(modelApi.activate).mockResolvedValue() })
-afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals() })
-const dialog = { template: '<div><slot/><slot name="actions" :close="$emit.bind(null, &quot;close&quot;)" /></div>' }
-describe('single external-task dialog', () => {
-  it.each(['x', 'escape', 'backdrop', 'cancel'])('guards %s while an explicitly requested copy activates its grant', async channel => {
-    installNativeDialogStub()
-    const writeText = vi.fn().mockResolvedValue(undefined)
-    vi.stubGlobal('navigator', { clipboard: { writeText } })
-    let finish!: () => void
-    vi.mocked(modelApi.activate).mockImplementation(() => new Promise<void>(resolve => { finish = resolve }))
-    const wrapper = mount(ExternalTaskDialog, { props: { open: false, snapshot }, attachTo: document.body })
-    try {
-      await wrapper.setProps({ open: true }); await vi.advanceTimersByTimeAsync(250); await flushPromises()
-      ;([...document.querySelectorAll('dialog footer button')].find(b => b.textContent?.includes('复制完整任务')) as HTMLButtonElement).click()
-      await flushPromises()
-      const dialog = document.querySelector<HTMLDialogElement>('dialog[open]')!
-      if (channel === 'x') (dialog.querySelector('header .modal-close') as HTMLButtonElement).click()
-      if (channel === 'escape') dialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }))
-      if (channel === 'backdrop') dialog.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: -10, clientY: -10 }))
-      if (channel === 'cancel') ([...dialog.querySelectorAll('footer button')].find(b => b.textContent?.includes('取消')) as HTMLButtonElement).click()
-      await flushPromises()
-      expect(wrapper.emitted('close')).toBeUndefined(); expect(writeText).not.toHaveBeenCalled()
-      finish(); await flushPromises()
-      expect(writeText).toHaveBeenCalledExactlyOnceWith(bundle.content)
-      expect(modelApi.activate).toHaveBeenCalledExactlyOnceWith(bundle.grant)
-    } finally { wrapper.unmount(); document.body.innerHTML = '' }
-  })
-
-  it('prepares locally without activation, then copies one complete payload', async () => {
-    const writeText = vi.fn().mockResolvedValue(undefined)
-    vi.stubGlobal('navigator', { clipboard: { writeText } })
-    const wrapper = mount(ExternalTaskDialog, { props: { open: false, snapshot }, global: { stubs: { UiDialog: dialog } } })
-    await wrapper.setProps({ open: true }); await vi.advanceTimersByTimeAsync(250); await flushPromises()
-    expect(modelApi.external).toHaveBeenCalled(); expect(modelApi.activate).not.toHaveBeenCalled()
-    const copy = wrapper.findAll('button').find(b => b.text() === '复制完整任务')!
-    await copy.trigger('click'); await flushPromises()
-    expect(modelApi.activate).toHaveBeenCalledWith(bundle.grant); expect(writeText).toHaveBeenCalledExactlyOnceWith(bundle.content)
-    wrapper.unmount()
-  })
-  it('preserves supplemental input and updates one preview without a second dialog or task queue', async () => {
-    const wrapper = mount(ExternalTaskDialog, { props: { open: false, snapshot }, global: { stubs: { UiDialog: dialog } } })
-    await wrapper.setProps({ open: true }); await wrapper.findAll('textarea')[0]!.setValue('保留我的资料')
-    await vi.advanceTimersByTimeAsync(250); await flushPromises()
-    expect(modelApi.external).toHaveBeenLastCalledWith(expect.objectContaining({ requirements: '保留我的资料', expectedLibrary: 'baseline' }))
-    expect(wrapper.findAll('textarea')).toHaveLength(2); expect(wrapper.text()).not.toContain('创建任务')
-    expect(modelApi.activate).not.toHaveBeenCalled(); wrapper.unmount()
-  })
+import UiSelectField from '@/components/ui/UiSelectField.vue'
+import {useModelsV2Store} from '@/features/models/store-v2'
+import {useModalStore} from '@/app/modal/store'
+import {modelV2Api} from '@/features/models/api-v2'
+import {agentLibrary,agentId,agentReview,agentReport,copyAgent,externalRunView} from './helpers/modelAgentV2'
+import {installNativeDialogStub} from './helpers/nativeDialog'
+import {deferredWorkspace} from './helpers/modelWorkspaceV2'
+const ipc=vi.hoisted(()=>vi.fn())
+vi.mock('@tauri-apps/api/core',()=>({invoke:ipc}))
+const bundle={taskId:agentId(9),content:'完整指令 + 同源字段契约 + 目标',preparedTicket:'private-prepared-ticket',expiresAt:'2026-11-07T10:00:00Z'}
+const dialog={props:['open'],template:'<section v-if="open"><slot/><slot name="actions" :close="() => $emit(&quot;close&quot;)"/></section>'}
+let writeText:ReturnType<typeof vi.fn>,store:ReturnType<typeof useModelsV2Store>,wrappers:VueWrapper[]=[]
+const button=(w:Pick<VueWrapper,'findAll'>,name:string)=>w.findAll('button').find(b=>b.text()===name)??new DOMWrapper(document.body).findAll('button').find(b=>b.text()===name)!
+function render(native=false,extra:Record<string,unknown>={}){const w=mount(ExternalTaskDialog,{props:{open:true,snapshot:agentLibrary(),...extra},global:{stubs:native?{}:{UiDialog:dialog,UiSelectField:true}},attachTo:native?document.body:undefined});wrappers.push(w);return w}
+beforeEach(()=>{setActivePinia(createPinia());store=useModelsV2Store();store.snapshot=agentLibrary();ipc.mockReset();ipc.mockImplementation(async(command,args)=>{if(command==='model_v2_external_prepare')return bundle;if(command==='model_v2_external_activate'||command==='model_v2_external_revoke')return;if(command==='model_v2_agent_buffer')return {...args.request,digest:'sha256:'+'a'.repeat(64)};if(command==='model_v2_external_run')return externalRunView();if(command==='model_v2_agent_latest')return agentReview();if(command==='model_v2_agent_accept')return {...agentReview(),phase:'accepted'};if(command==='model_v2_library')return agentLibrary();throw new Error('Unexpected v1 command '+command)});writeText=vi.fn().mockResolvedValue(undefined);vi.stubGlobal('navigator',{clipboard:{writeText}})})
+afterEach(()=>{wrappers.splice(0).forEach(w=>w.unmount());vi.restoreAllMocks();vi.unstubAllGlobals();document.body.innerHTML=''})
+describe('single external-task dialog',()=>{
+ it('checks uncertain acceptance by the exact external run before retry, never a later task targeting the same template',async()=>{const session=store.agentSession('external:'+bundle.taskId);session.result=agentReview();vi.spyOn(modelV2Api,'agentAccept').mockRejectedValueOnce(new Error('readback unknown'));await store.acceptAgent('external:'+bundle.taskId,agentId(1));expect(session.acceptRequest?.runId).toBe(bundle.taskId);const original=JSON.stringify(session.acceptRequest);vi.spyOn(modelV2Api,'externalRun').mockResolvedValueOnce(externalRunView({...agentReview(),phase:'accepted'}));await store.acceptAgent('external:'+bundle.taskId,agentId(1));expect(ipc.mock.calls.some(c=>c[0]==='model_v2_agent_latest')).toBe(false);expect(modelV2Api.externalRun).toHaveBeenCalledExactlyOnceWith(bundle.taskId);expect(modelV2Api.agentAccept).toHaveBeenCalledTimes(1);expect(JSON.stringify(session.acceptRequest)).toBe(original);expect(session.result?.phase).toBe('accepted')})
+ it('restores an original notification task from backend metadata without any prepared ticket or latest-task fallback',async()=>{store.externalNotificationTarget={taskId:bundle.taskId};const w=render();await flushPromises();expect(ipc).not.toHaveBeenCalled();await button(w,'读取原任务结果').trigger('click');await flushPromises();expect(ipc.mock.calls).toEqual([['model_v2_external_run',{taskId:bundle.taskId}]]);expect(w.text()).toContain('待审阅建议');expect(store.externalTasks[bundle.taskId]!.request.targets).toEqual(externalRunView().targets);expect(w.get<HTMLTextAreaElement>('textarea[aria-label="完整外部任务内容"]').element.value).toBe('');expect(button(w,'复制完整任务并激活').attributes('disabled')).toBeDefined();expect(store.agentSession('external:'+bundle.taskId).result?.runId).toBe(bundle.taskId)})
+ it('does not replace a previous observer with a late exact-task response after a different notification is selected',async()=>{store.externalNotificationTarget={taskId:bundle.taskId};const w=render(),pending=deferredWorkspace<ReturnType<typeof externalRunView>>();vi.spyOn(modelV2Api,'externalRun').mockReturnValueOnce(pending.promise);await button(w,'读取原任务结果').trigger('click');store.externalNotificationTarget={taskId:agentId(99)};await flushPromises();pending.resolve(externalRunView());await flushPromises();expect(store.agentSession('external:'+bundle.taskId).result).toBeNull();expect(store.agentSession('external:'+agentId(99)).result).toBeNull();expect(w.text()).not.toContain('待审阅建议');expect(w.text()).toContain(agentId(99))})
+ it.each(['x','escape','backdrop','cancel'])('guards %s while an explicit copy waits for activation, with clipboard completed first',async exit=>{installNativeDialogStub();const pending=deferredWorkspace<void>(),activate=vi.spyOn(modelV2Api,'externalActivate').mockReturnValueOnce(pending.promise),w=render(true);await flushPromises();await button(w,'准备完整任务').trigger('click');await flushPromises();await button(w,'复制完整任务并激活').trigger('click');await flushPromises();expect(writeText).toHaveBeenCalledExactlyOnceWith(bundle.content);expect(activate).toHaveBeenCalledExactlyOnceWith(bundle.taskId,bundle.preparedTicket);expect(writeText.mock.invocationCallOrder[0]!).toBeLessThan(activate.mock.invocationCallOrder[0]!);const sheet=document.querySelector<HTMLDialogElement>('dialog[open]')!;if(exit==='x')sheet.querySelector<HTMLButtonElement>('.modal-close')!.click();if(exit==='escape')sheet.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true,cancelable:true}));if(exit==='backdrop')sheet.dispatchEvent(new MouseEvent('click',{bubbles:true,clientX:-10,clientY:-10}));if(exit==='cancel')[...sheet.querySelectorAll<HTMLButtonElement>('footer button')].find(b=>b.textContent==='关闭')!.click();await flushPromises();expect(w.emitted('close')).toBeUndefined();pending.resolve();await flushPromises();expect(document.body.textContent).toContain('完整任务已复制并激活')})
+ it('prepares without activation, copies only complete content, and keeps the ticket out of DOM, clipboard and Pinia',async()=>{const w=render();await flushPromises();expect(ipc).not.toHaveBeenCalled();await button(w,'准备完整任务').trigger('click');await flushPromises();expect(ipc.mock.calls[0]).toEqual(['model_v2_external_prepare',{request:expect.objectContaining({targets:[{templateId:agentId(1),revisionId:agentId(2),digest:agentLibrary().library.templates[0]!.revisions[0]!.digest}],expectedLibrary:agentLibrary().libraryDigest})}]);expect(ipc.mock.calls.some(c=>c[0]==='model_v2_external_activate')).toBe(false);expect(w.html()).not.toContain(bundle.preparedTicket);await button(w,'复制完整任务并激活').trigger('click');await flushPromises();expect(writeText).toHaveBeenCalledExactlyOnceWith(bundle.content);expect(JSON.stringify(store.$state)).not.toContain(bundle.preparedTicket);expect(store.executionPreference).toBeNull()})
+ it('preserves supplemental input and prepares a single exact task without a second dialog or automatic newest-version fallback',async()=>{const snapshot=agentLibrary();snapshot.library.templates[0]!.revisions.push({...copyAgent(snapshot.library.templates[0]!.revisions[0]!),id:agentId(4),digest:'sha256:'+'4'.repeat(64)});const w=render(false,{snapshot,versions:{[agentId(1)]:agentId(4)}});await w.get('textarea[aria-label="外部任务补充要求"]').setValue('保留我的资料');await button(w,'准备完整任务').trigger('click');await flushPromises();expect(ipc.mock.calls[0]![1].request).toMatchObject({requirements:'保留我的资料',targets:[{templateId:agentId(1),revisionId:agentId(4),digest:'sha256:'+'4'.repeat(64)}]});expect(w.findAll('textarea')).toHaveLength(2);expect(ipc.mock.calls.some(c=>c[0]==='model_v2_external_activate')).toBe(false)})
+ it('does not activate when clipboard fails and permits retry of the same prepared task',async()=>{writeText.mockRejectedValueOnce(new Error('clipboard denied'));const w=render();await button(w,'准备完整任务').trigger('click');await flushPromises();await button(w,'复制完整任务并激活').trigger('click');await flushPromises();expect(ipc.mock.calls.some(c=>c[0]==='model_v2_external_activate')).toBe(false);expect(w.text()).toContain('任务未激活');await button(w,'复制完整任务并激活').trigger('click');await flushPromises();expect(ipc.mock.calls.filter(c=>c[0]==='model_v2_external_prepare')).toHaveLength(1);expect(ipc.mock.calls.filter(c=>c[0]==='model_v2_external_activate')).toHaveLength(1)})
+ it('reports copied but unactivated after activation failure and requires a new prepare',async()=>{vi.spyOn(modelV2Api,'externalActivate').mockRejectedValueOnce(new Error('binding changed'));const w=render();await button(w,'准备完整任务').trigger('click');await flushPromises();await button(w,'复制完整任务并激活').trigger('click');await flushPromises();expect(writeText).toHaveBeenCalledOnce();expect(w.text()).toContain('已复制但未激活');expect(button(w,'复制完整任务并激活').attributes('disabled')).toBeDefined();await button(w,'重新准备任务').trigger('click');await flushPromises();expect(ipc.mock.calls).toContainEqual(['model_v2_external_revoke',{taskId:bundle.taskId}]);expect(ipc.mock.calls.filter(c=>c[0]==='model_v2_external_prepare')).toHaveLength(2)})
+ it('prepares an unsaved complete v2 buffer and reads the exact task getter only when runId equals the original task',async()=>{const d={templateId:agentId(80),baseRevision:null,label:'new',content:agentLibrary().library.templates[0]!.revisions[0]!.content,makeDefault:false};const w=render(false,{draft:d,generation:7});await button(w,'准备完整任务').trigger('click');await flushPromises();expect(ipc.mock.calls[0]).toEqual(['model_v2_agent_buffer',{request:{target:null,label:'new',content:d.content,generation:7}}]);expect(ipc.mock.calls[1]![1].request).toMatchObject({targets:[],allowNew:true,buffer:{target:null,generation:7,digest:'sha256:'+'a'.repeat(64)}});vi.spyOn(modelV2Api,'externalRun').mockResolvedValueOnce({...externalRunView(),taskId:agentId(99)});await button(w,'读取原任务结果').trigger('click');await flushPromises();expect(ipc.mock.calls.some(c=>c[0]==='model_v2_agent_latest'&&c[1].templateId===agentId(80))).toBe(false);expect(w.text()).toContain('结果不属于原外部任务');expect(store.agentSession('external:'+bundle.taskId).result).toBeNull()})
+ it('checks return a report with no accept, while ordinary exact review uses unified v2 accept after one confirmation',async()=>{const w=render();await button(w,'准备完整任务').trigger('click');await flushPromises();await button(w,'读取原任务结果').trigger('click');await flushPromises();expect(w.text()).toContain('完整 v2 条件内容');await button(w,'接受外部完整建议').trigger('click');expect(ipc.mock.calls.some(c=>c[0]==='model_v2_agent_accept')).toBe(false);useModalStore().resolve('confirm');await flushPromises();expect(ipc.mock.calls.filter(c=>c[0]==='model_v2_agent_accept')).toHaveLength(1);const request=ipc.mock.calls.find(c=>c[0]==='model_v2_agent_accept')![1].request;expect(request.runId).toBe(bundle.taskId);expect(JSON.parse(request.reviewedResponse).contractVersion).toBe(2);expect(w.text()).toContain('原任务建议已接受保存');await button(w,'重新准备任务').trigger('click');await flushPromises();w.findAllComponents(UiSelectField).find(c=>c.props('label')==='任务场景')!.vm.$emit('update:modelValue','check_only');await flushPromises();await button(w,'重新准备任务').trigger('click');await flushPromises();vi.spyOn(modelV2Api,'externalRun').mockResolvedValueOnce(externalRunView(agentReport()));await button(w,'读取原任务结果').trigger('click');await flushPromises();expect(w.text()).toContain('检查报告');expect(w.findAll('button').some(b=>b.text()==='接受外部完整建议')).toBe(false);expect(ipc.mock.calls.filter(c=>c[0]==='model_v2_agent_accept')).toHaveLength(1)})
 })

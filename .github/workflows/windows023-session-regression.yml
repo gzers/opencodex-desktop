@@ -1,0 +1,70 @@
+name: Windows 0.2.23 active session regression
+on:
+  workflow_call:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  regression:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/tauri -> target
+          shared-key: windows-native-ui-018
+          cache-on-failure: true
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: gzers/opencodex-desktop
+          run-id: 42547758411
+          name: windows023-local-session-program-2c6edebc3
+          path: test/out/session-regression/input
+      - name: Reuse verified existing resources and build frontend
+        run: |
+          $ErrorActionPreference='Stop'
+          $inputRoot='test/out/session-regression/input'
+          $identity=Get-Content ($inputRoot+'/diagnostic-build.json') -Raw | ConvertFrom-Json
+          if($identity.source -cne '2c6edebc32909c9a16e6666836c22ca6cf05037d'){throw 'Exact original source required'}
+          foreach($file in $identity.files){if((Get-FileHash (Join-Path $inputRoot $file.path)).Hash -ine $file.sha256){throw 'Original resource/member differs'}}
+          Copy-Item -LiteralPath ($inputRoot+'/runtime-bundle') -Destination apps/desktop/tauri/resources -Recurse
+          npm --prefix apps/desktop/ui ci *> frontend-install.log
+          if($LASTEXITCODE -ne 0){throw 'Frontend install failed'}
+          npm --prefix apps/desktop/ui run build *> frontend-build.log
+          if($LASTEXITCODE -ne 0){throw 'Frontend build failed'}
+      - name: Run exact product admission and existing authenticated stop regressions
+        run: |
+          $ErrorActionPreference='Stop'
+          cargo fmt --manifest-path apps/desktop/tauri/Cargo.toml --all -- --check
+          if($LASTEXITCODE -ne 0){throw 'Formatting failed'}
+          $env:OCXD_REQUIRE_RUNTIME_BUNDLE='1'
+          $filters=@('infrastructure::status_source::managed_cli_admission_tests','infrastructure::attested_status','commands::runtime_recovery_v2_owner::tests','infrastructure::runtime_lifetime::tests')
+          cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib -- @filters --nocapture *> product-regression.log
+          if($LASTEXITCODE -ne 0){throw 'Exact product regression failed'}
+          $log=Get-Content product-regression.log -Raw
+          if($log -notmatch '19 passed; 0 failed; 1 ignored'){throw 'Original test totals or dedicated OS fixture ignore changed'}
+          foreach($entry in @(@{filter=$filters[0];passed=3},@{filter=$filters[1];passed=9},@{filter=$filters[2];passed=5},@{filter=$filters[3];passed=2})){
+            $actual=@($log.Split([char]10) | Where-Object {$_.StartsWith('test '+$entry.filter) -and $_.TrimEnd([char]13).EndsWith(' ... ok')}).Count
+            if($actual -ne $entry.passed){throw 'A required group did not actually execute'}
+          }
+          cargo clippy --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib --tests -- -D warnings *> strict-clippy.log
+          if($LASTEXITCODE -ne 0){throw 'Strict product lint failed'}
+          @{source=(git rev-parse HEAD).Trim();appsTree=(git rev-parse HEAD:apps).Trim();accepted=$false;scope='Windows MSVC targeted product regression only; no full lifecycle or release acceptance'} | ConvertTo-Json | Set-Content regression.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows023-session-regression-${{ github.run_id }}
+          path: |
+            *.log
+            regression.json
+          if-no-files-found: error
+          retention-days: 14

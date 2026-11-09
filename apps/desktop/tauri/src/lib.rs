@@ -16,6 +16,38 @@ pub fn build_commit() -> &'static str {
     option_env!("OPENCODEX_BUILD_COMMIT").unwrap_or("")
 }
 
+#[cfg(target_os = "macos")]
+struct InstallationRemediation(String);
+
+#[cfg(target_os = "macos")]
+fn show_installation_remediation(detail: &str) {
+    use objc2::msg_send;
+    use objc2::rc::Retained;
+    use objc2::runtime::{AnyClass, AnyObject};
+    let detail = std::ffi::CString::new(detail).expect("fixed installation diagnostic");
+    // RunEvent::Ready is on the AppKit thread. Use an app-owned NSAlert rather
+    // than a parentless CFUserNotification hosted by a different OS process.
+    unsafe {
+        let app_class = AnyClass::get(c"NSApplication").expect("application class");
+        let app: *mut AnyObject = msg_send![app_class, sharedApplication];
+        let _: () = msg_send![app, activateIgnoringOtherApps: true];
+        let string_class = AnyClass::get(c"NSString").expect("string class");
+        let title: *mut AnyObject =
+            msg_send![string_class, stringWithUTF8String: c"请调整安装位置".as_ptr()];
+        let body: *mut AnyObject = msg_send![string_class, stringWithUTF8String: detail.as_ptr()];
+        let button: *mut AnyObject =
+            msg_send![string_class, stringWithUTF8String: c"确定".as_ptr()];
+        let alert_class = AnyClass::get(c"NSAlert").expect("alert class");
+        let raw: *mut AnyObject = msg_send![alert_class, new];
+        let alert = Retained::from_raw(raw).expect("native alert");
+        let _: () = msg_send![&*alert, setMessageText: title];
+        let _: () = msg_send![&*alert, setInformativeText: body];
+        let _: () = msg_send![&*alert, setAlertStyle: 2usize];
+        let _: *mut AnyObject = msg_send![&*alert, addButtonWithTitle: button];
+        let _: isize = msg_send![&*alert, runModal];
+    }
+}
+
 /// 把入口名写成一条非敏感运行日志；失败不阻断导航，也不携带窗口/凭据细节。
 fn record_window_event(data_root: &std::path::Path, message: &str) {
     let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root).append_event(message);
@@ -70,6 +102,30 @@ fn record_startup_event(data_root: &std::path::Path, version: &str) {
 pub fn run() {
     use tauri::Manager;
     let context = tauri::generate_context!();
+    #[cfg(target_os = "macos")]
+    let context = {
+        let mut context = context;
+        let invalid_container = std::env::current_exe().ok().is_some_and(|executable| {
+            matches!(
+                crate::modules::data_root::layout::Layout::installation_root(
+                    &executable,
+                    crate::modules::data_root::layout::Platform::Macos,
+                ),
+                Err(crate::errors::AppError::RuntimeManaged { code, .. })
+                    if code == "macos_install_container"
+            )
+        });
+        if invalid_container {
+            // The remediation-only branch must not mount a frontend whose
+            // commands require the deliberately uninitialized user data root.
+            context
+                .config_mut()
+                .app
+                .windows
+                .retain(|window| window.label != "main");
+        }
+        context
+    };
     #[cfg(windows)]
     let (context, smoke_window, startup_window) = {
         let mut context = context;
@@ -89,6 +145,9 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .setup(move |app| {
+            // The frontend may query activity while installation admission is
+            // still showing its remediation dialog. This state has no disk IO.
+            app.manage(crate::infrastructure::app_activity::AppActivity::default());
             crate::modules::model_config::feedback::configure(app.handle().clone());
             crate::modules::model_config::broker::configure(app.handle().clone());
             use tauri::Manager;
@@ -99,25 +158,24 @@ pub fn run() {
                     .build()?;
             }
 
-            let default_root = app.path().app_data_dir().map_err(|error| {
-                Box::new(crate::errors::AppError::FileSystem {
-                    operation: "resolve app data directory".to_string(),
-                    detail: error.to_string(),
-                }) as Box<dyn std::error::Error>
-            })?;
-            let executable = std::env::current_exe()?;
-            // 沙箱完全绕过个人启动选择；普通 Windows 在任何业务状态注册前完成恢复准入。
-            #[cfg(windows)]
-            let resolution = if crate::modules::test_sandbox::enabled() {
-                crate::modules::data_root::bootstrap::resolve_default_startup(&default_root, &executable)?
-            } else {
-                match crate::infrastructure::windows_startup_root::prepare(app.handle(), &default_root, &executable)? {
-                    Some(resolution) => resolution,
-                    None => return Ok(()), // 仅保留原生选择/错误对话框，业务服务尚未启动。
+            let user_home=crate::infrastructure::platform::home_dir().ok_or(crate::errors::AppError::NotConfigured)?;
+            let default_root=user_home.join(".codex-desktop");
+            let executable=std::env::current_exe()?;
+            let resolution=match crate::modules::data_root::bootstrap::resolve_default_startup(&default_root,&executable) {
+                Ok(resolution) => resolution,
+                #[cfg(target_os = "macos")]
+                Err(crate::errors::AppError::RuntimeManaged { code, detail })
+                    if code == "macos_install_container" => {
+                    // Installation admission failed before U/D/H or runtime
+                    // initialization. Show the remedy without starting services.
+                    if let Some(window) = app.get_webview_window("main") {
+                        let _ = window.hide();
+                    }
+                    app.manage(InstallationRemediation(detail));
+                    return Ok(());
                 }
+                Err(error) => return Err(error.into()),
             };
-            #[cfg(not(windows))]
-            let resolution = crate::modules::data_root::bootstrap::resolve_default_startup(&default_root, &executable)?;
             let crate::modules::data_root::bootstrap::StartupResolution {
                 anchor, sandbox_boundary, runtime_config, locks,
             } = resolution;
@@ -127,12 +185,6 @@ pub fn run() {
             app.manage(crate::state::SharedDataRootAnchor(anchor));
             app.manage(crate::state::SharedSandboxBoundary(sandbox_boundary));
             app.manage(crate::state::InstanceState { locks: std::sync::Mutex::new(locks) });
-            // 配置格式自动转换（§5）：启动时按需迁移旧 schema 偏好并完成未提交事务；
-            // 已是当前 schema 不写盘，损坏/过新不覆盖原件。失败只记日志，不阻断启动。
-            if let Err(error) = crate::modules::config_migration::migrate_preferences_on_startup(&data_root)
-            {
-                record_window_event(&data_root, &format!("config migration: {error}"));
-            }
             app.manage(crate::state::SharedDataRoot(data_root.clone()));
             #[cfg(windows)]
             if let Some(config) = startup_window {
@@ -173,10 +225,6 @@ pub fn run() {
             // 已删除功能的残留文件：删代码不等于删数据，固定文件名在这里就地清掉。
             // 只删「读取代码已完全删除」的文件，不遍历目录、不碰用户配置与历史备份。
             crate::commands::retired_files::purge_retired(&data_root);
-            // Repeatable, bounded upgrade of layout/candidates only. Failure
-            // keeps source bytes and does not stop unrelated application use.
-            let model_layout_migration =
-                crate::modules::model_config::legacy_migration::migrate(&data_root);
             // 「启动时清理」：开启时按保留策略做一次有界的轻量清理（日志截断、通知与
             // 通知保留期），必须在通知集合载入前完成；启动不扫描、校验或删除备份。
             let (startup_cleanup, cleanup_identity) =
@@ -198,9 +246,6 @@ pub fn run() {
             app.manage(std::sync::Arc::new(std::sync::Mutex::new(
                 crate::commands::notifications::startup_notification_store(&data_root),
             )));
-            crate::modules::model_config::feedback::migration_startup(
-                app.handle(), &data_root, &model_layout_migration,
-            );
             // Terminal facts use the post-cleanup store, never an earlier in-memory copy.
             if match &startup_cleanup { Ok(outcome) => outcome.ran, Err(_) => true } {
                 crate::commands::event_delivery::publish(
@@ -230,18 +275,34 @@ pub fn run() {
             // 运行来源解析层（FZ-48）：显式指定 > 托管安装 > 自动发现候选，不读 PATH。
             // 发现候选按文档口径给出（受控默认目录 + Homebrew 两个固定前缀），
             // 逐个做可执行校验，缺失即跳过。
-            let runtime = crate::modules::runtime::RuntimeHandle::initialize(
-                &data_root,
-                crate::infrastructure::discovery_paths::runtime_candidates(&home),
-            );
+            let platform=if cfg!(windows){crate::modules::data_root::layout::Platform::Windows}else if cfg!(target_os="macos"){crate::modules::data_root::layout::Platform::Macos}else{crate::modules::data_root::layout::Platform::Unix};
+            let install_root=if crate::modules::test_sandbox::enabled(){
+                crate::modules::test_sandbox::sandbox_root().ok_or(crate::errors::AppError::NotConfigured)?.join("program")
+            } else {crate::modules::data_root::layout::Layout::installation_root(&executable,platform)?};
+            let runtime=crate::modules::runtime::RuntimeHandle::initialize_managed(&data_root,&install_root);
             let runtime_executable: crate::infrastructure::runtime_executable::SharedRuntimeExecutable =
                 runtime.clone();
             app.manage(runtime.clone());
             // 托管安装 / 卸载的进行态（取消 + 同一时刻只允许一个写者）。
             let runtime_install = crate::state::SharedRuntimeInstall::new();
             app.manage(runtime_install.clone());
-            app.manage(crate::modules::runtime::offline_drop::SharedOfflineDrop::default());
-            crate::commands::runtime::reconcile_startup(data_root.clone(), runtime_install);
+            // Acquire the shared admission before dispatching large offline I/O.
+            if !crate::modules::test_sandbox::enabled() {
+                if let Some(pin) = option_env!("OCXD_BUNDLED_RUNTIME_DESCRIPTOR_SHA256") {
+                    let source_events = app.handle().clone();
+                    if crate::modules::runtime::startup_bundle::start(
+                        install_root.clone(), data_root.clone(),
+                        app.path().resource_dir()?.join("runtime-bundle"), pin,
+                        runtime.clone(), runtime_install.clone(),
+                        move || crate::commands::runtime::broadcast_source_changed(&source_events),
+                    ).is_err() {
+                        record_window_event(&data_root, "integrated runtime provisioning not started; installer busy");
+                    }
+                }
+            }
+            let offline_drop = crate::modules::runtime::offline_drop::SharedOfflineDrop::default();
+            app.manage(offline_drop.clone());
+            crate::commands::runtime::reconcile_startup(data_root.clone(), runtime_install.clone());
             #[cfg(windows)]
             app.manage(crate::commands::update::SharedPendingUpdate::new(None));
             app.manage(crate::commands::update_schedule::SharedSchedule::default());
@@ -249,6 +310,13 @@ pub fn run() {
             let active_data_root = runtime_config.active_data_root.clone();
             let opencodex_home = crate::modules::data_root::resolve_opencodex_home(&runtime_config);
             let process_path = crate::infrastructure::discovery_paths::process_path(&home, &discovery_paths);
+            // IPC services resolve this state from with_app_handle(). Register it
+            // before spawning any endpoint worker, including immediate CLI calls.
+            app.manage(crate::state::ProcessContext {
+                runtime: runtime_executable.clone(),
+                working_directory: home.clone(),
+                opencodex_home: opencodex_home.clone(),
+            });
             let status_environment = crate::modules::process::EnvironmentPolicy {
                 opencodex_home: opencodex_home.clone(),
                 home: Some(home.clone().into_os_string()),
@@ -259,7 +327,7 @@ pub fn run() {
                 runtime_executable.clone(),
                 home.clone(),
                 status_environment.clone(),
-            );
+            ).with_mutation_gate(runtime_install.clone());
             let collector = std::sync::Arc::new(std::sync::Mutex::new(
                 crate::modules::status::StatusCollector::new(status_source),
             ));
@@ -393,14 +461,40 @@ pub fn run() {
             app.manage(std::sync::Mutex::new(
                 crate::modules::process::ControlledProcessRunner::new(home.clone()),
             ));
-            app.manage(crate::state::ProcessContext {
-                runtime: runtime_executable,
-                working_directory: home.clone(),
-                opencodex_home,
-            });
+            let recovery_process = crate::state::ProcessContext {
+                runtime: runtime.clone(), working_directory: home.clone(),
+                opencodex_home: crate::modules::data_root::resolve_opencodex_home(&runtime_config),
+            };
+            app.manage(crate::commands::runtime_recovery_v2::SharedRuntimeRecoveryV2::new(
+                crate::commands::runtime_recovery_v2::RecoveryContext::new(
+                    runtime.clone(), data_root.clone(), recovery_process.opencodex_home.clone(), recovery_process.clone(),
+                )?, runtime_install.clone(),
+                std::sync::Arc::new(crate::commands::runtime_recovery_v2_sources::FixedResourceSourceResolver::from_compiled(
+                    app.path().resource_dir()?.join("runtime-bundle"), offline_drop,
+                )?),
+                std::sync::Arc::new(crate::commands::runtime_recovery_v2_owner::SystemServiceOwnerProofProvider::new(
+                    install_root.clone(), recovery_process,
+                )?),
+            ));
+            app.manage(crate::commands::config_file_transfer_v2::SharedConfigFileTransferV2(
+                std::sync::Arc::new(std::sync::Mutex::new(
+                    crate::modules::model_config::file_transfer_v2::FileTransferOwnerV2::new(
+                        data_root.clone(), crate::modules::data_root::resolve_opencodex_home(&runtime_config),
+                        std::sync::Arc::new(crate::modules::model_config::saved_objects_capture_v2::SystemCaptureCredentialsV2),
+                    ).map_err(|e| crate::errors::AppError::FileSystem {
+                        operation: "initialize configuration file owner".into(), detail: e.code,
+                    })?.with_draft_capture(std::sync::Arc::new(
+                        crate::modules::model_config::config_file::v2::export::ConfigDraftFileCaptureV2,
+                    )).with_namespace_receive(std::sync::Arc::new(
+                        crate::modules::model_config::config_file::v2::receive::SystemNamespaceReceiveV2,
+                    )),
+                )),
+            ));
+            app.manage(crate::commands::config_sync_v2::SharedConfigSyncV2::production(
+                data_root.clone(), crate::modules::data_root::resolve_opencodex_home(&runtime_config),
+            ));
             crate::modules::model_config::broker::resume(data_root.clone());
 
-            app.manage(crate::infrastructure::app_activity::AppActivity::default());
             app.manage(crate::commands::panel::PanelLifetime::default());
             crate::infrastructure::app_activity::install(app.handle());
             crate::infrastructure::window_appearance::install(app.handle());
@@ -556,82 +650,80 @@ pub fn run() {
             }
         })
         .invoke_handler(tauri::generate_handler![
-            commands::model_transfer::model_transfer_export,
-            commands::model_transfer::model_transfer_protect,
-            commands::model_transfer::model_transfer_discard_unattempted,
-            commands::model_transfer::model_transfer_prepare,
-            commands::model_transfer::model_transfer_prepare_draft,
-            commands::model_transfer::model_transfer_receive,
-            commands::model_transfer::model_transfer_accept,
-            commands::model_transfer::model_transfer_select,
-            commands::model_transfer::portable_latest_incoming,
-            commands::model_transfer::portable_recompare,
-            commands::model_transfer::portable_open_received,
-            commands::model_transfer::portable_extension_catalog,
-            commands::model_transfer::portable_asset_detail,
-            commands::model_transfer::portable_account_catalog,
-            commands::model_transfer::portable_channel_catalog,
-            commands::model_transfer::config_sync_scope,
-            commands::model_transfer::config_sync_observe,
-            commands::model_transfer::transfer_choices,
-            commands::model_transfer::transfer_result,
-            commands::model_transfer::open_transfer_export_directory,
-            commands::model_transfer::import_credential_choices,
-            commands::model_transfer::transfer_backup_status,
-            commands::model_transfer::list_transfer_backups,
-            commands::model_transfer::preview_transfer_restore,
-            commands::model_transfer::restore_transfer_backup,
-            commands::model_transfer::save_transfer_choices,
-            commands::model_transfer::transfer_protection,
-            commands::model_transfer::save_transfer_protection,
-            commands::model_transfer::config_sync_save_scope,
-            commands::model_transfer::config_sync_prepare,
-            commands::model_transfer::config_sync_publish,
-            commands::model_transfer::config_sync_download,
-            commands::model_transfer::config_sync_latest_upload,
-            commands::model_transfer::config_sync_check,
-            commands::model_transfer::config_sync_catalog,
-            commands::model_config::model_config_snapshot,
-            commands::model_config::model_file_snapshot,
-            commands::model_config::model_file_save,
-            commands::model_config::model_file_credential,
-            commands::model_config::model_template_save,
-            commands::model_config::model_template_usage,
-            commands::model_config::model_template_set_default,
-            commands::model_config::model_template_delete,
-            commands::model_config::model_match_preview,
-            commands::model_config::model_policy_preview,
-            commands::model_config::model_policy_prepare,
-            commands::model_config::model_policy_apply,
-            commands::model_config::model_policy_result,
-            commands::model_config::model_policy_save_blocked,
-            commands::model_config::model_policy_latest,
-            commands::model_config::model_policy_history,
+            commands::scope_backup_v2::transfer_v2_backup_list,
+            commands::scope_backup_v2::transfer_v2_backup_restore_operations,
+            commands::scope_backup_v2::transfer_v2_backup_preview,
+            commands::scope_backup_v2::transfer_v2_backup_restore,
+            commands::config_file_transfer_v2::catalog_config_file_v2,
+            commands::config_file_transfer_v2::result_owner_v2,
+            commands::config_file_transfer_v2::file_v2_read_scope,
+            commands::config_file_transfer_v2::file_v2_save_scope,
+            commands::config_file_transfer_v2::prepare_config_file_export_v2,
+            commands::config_file_transfer_v2::prepare_draft_config_file_export_v2,
+            commands::config_file_transfer_v2::save_config_file_export_v2,
+            commands::config_file_transfer_v2::config_file_export_output_v2,
+            commands::config_file_transfer_v2::open_config_file_export_directory_v2,
+            commands::config_file_transfer_v2::cancel_config_file_export_v2,
+            commands::config_file_transfer_v2::open_config_file_import_v2,
+            commands::config_file_transfer_v2::reselect_config_file_import_v2,
+            commands::config_file_transfer_v2::confirm_config_file_import_v2,
+            commands::config_file_transfer_v2::cancel_config_file_import_v2,
+            commands::config_file_transfer_v2::reopen_config_file_export_v2,
+            commands::config_file_transfer_v2::reopen_config_file_import_v2,
+            commands::config_file_transfer_v2::recoverable_config_file_operations_v2,
+            commands::config_sync_v2::config_v2_catalog,
+            commands::config_sync_v2::config_v2_read_scope,
+            commands::config_sync_v2::config_v2_save_scope,
+            commands::config_sync_v2::config_v2_preview,
+            commands::config_sync_v2::config_v2_confirm,
+            commands::config_sync_v2::config_v2_result,
+            commands::config_sync_v2::config_v2_verify,
+            commands::config_sync_v2::config_v2_resume,
+            commands::config_sync_v2::config_v2_resume_receive,
+            commands::config_sync_v2::config_v2_resume_preflight,
+            commands::config_sync_v2::config_v2_cancel,
+            commands::config_sync_v2::config_v2_recovery_preview,
+            commands::config_sync_v2::config_v2_recovery_confirm,
+            commands::config_sync_v2::config_v2_recovery_result,
+            commands::model_config_v2::model_v2_validate_content,
+            commands::model_config_v2::model_v2_library,
+            commands::model_config_v2::model_v2_save_revision,
+            commands::model_config_v2::model_v2_preview_conditions,
+            commands::model_config_v2::model_v2_file_snapshot,
+            commands::model_config_v2::model_v2_read_existing,
+            commands::model_config_v2::model_v2_begin_draft,
+            commands::model_config_v2::model_v2_stage_connection,
+            commands::model_config_v2::model_v2_file_save,
+            commands::model_config_v2::model_v2_file_project,
+            commands::model_config_v2::model_v2_file_discard,
+            commands::model_config_v2::model_v2_file_history,
+            commands::model_config_v2::model_v2_file_history_prepare,
+            commands::model_config_v2::model_v2_file_history_accept,
+            commands::model_config_v2::model_v2_copy_channel,
+            commands::model_config_v2::model_v2_discover,
+            commands::model_config_v2::model_v2_stage_credential,
+            commands::model_config_v2::model_v2_credential_view,
+            commands::model_config_v2::model_v2_measure_nodes,
+            commands::model_config_v2::model_v2_change_library,
+            commands::model_config_v2::model_v2_template_usage,
+            commands::model_config_v2::model_v2_execution_directory,
+            commands::data_paths_v2::model_paths_v2_snapshot,
+            commands::model_config_v2::model_v2_bind_agent,
+            commands::model_config_v2::model_v2_agent_prepare,
+            commands::model_config_v2::model_v2_agent_buffer,
+            commands::model_config_v2::model_v2_agent_generate,
+            commands::model_config_v2::model_v2_agent_stop,
+            commands::model_config_v2::model_v2_agent_latest,
+            commands::model_config_v2::model_v2_agent_accept,
+            commands::model_config_v2::model_v2_external_prepare,
+            commands::model_config_v2::model_v2_external_activate,
+            commands::model_config_v2::model_v2_external_revoke,
+            commands::model_config_v2::model_v2_external_run,
             commands::model_config::model_policy_refresh_cache,
-            commands::model_config::model_policy_recovery_prepare,
-            commands::model_config::model_policy_recovery_accept,
-            commands::model_config::model_policy_compensate,
-            commands::model_config::model_policy_abandon,
-            commands::model_config::model_upstream_snapshot,
-            commands::model_config::model_channel_discover,
-            commands::model_config::model_new_channel_preview,
-            commands::model_config::model_channel_forget_credential,
-            commands::model_config::model_node_measure,
             commands::model_config::model_node_measure_stop,
-            commands::model_config::model_external_task,
-            commands::model_config::model_external_activate,
-            commands::model_config::model_external_result,
             commands::model_config::model_agent_preferences,
-            commands::model_config::model_agent_directory,
-            commands::model_config::model_agent_preferences_save,
             commands::model_config::model_research_sources,
             commands::model_config::model_research_search,
-            commands::model_config::model_agent_generate,
-            commands::model_config::model_agent_stop,
-            commands::model_config::model_agent_accept_review,
-            commands::model_config::model_agent_latest_result,
-            commands::model_config::model_agent_conversation,
-            commands::model_config::model_agent_conversation_save,
             commands::backup::backup_files,
             commands::backup::open_backup_file,
             commands::backup::create_preferences_backup,
@@ -699,7 +791,6 @@ pub fn run() {
             commands::sync::test_sync_connection,
             commands::sync::test_sync_candidate,
             commands::sync::get_sync_status,
-            commands::sync::run_sync_now,
             commands::workspace::get_managed_path_targets,
             commands::workspace::open_managed_path,
             commands::workspace::open_external_link,
@@ -708,6 +799,13 @@ pub fn run() {
             commands::migration::import_migration,
             crate::infrastructure::app_activity::app_foreground,
             commands::drain_tray_requests,
+            commands::runtime_recovery_v2::runtime_recovery_v2_prepare,
+            commands::runtime_port::runtime_port_load,
+            commands::runtime_port::runtime_port_save,
+            commands::runtime_port::runtime_port_reconcile,
+            commands::runtime_recovery_v2::runtime_recovery_v2_apply,
+            commands::runtime_recovery_v2::runtime_recovery_v2_status,
+            commands::runtime_recovery_v2::runtime_recovery_v2_cancel,
             commands::runtime::runtime_source,
             commands::runtime::runtime_protection_status,
             commands::runtime::retry_runtime_protection,
@@ -761,14 +859,22 @@ pub fn run() {
             // 否则用户会以为应用「卡住」了——macOS 用 Reopen 事件表达这一意图。
             #[cfg(target_os = "macos")]
             {
+                if matches!(event, tauri::RunEvent::Ready) {
+                    if let Some(remediation) = app_handle.try_state::<InstallationRemediation>() {
+                        let _ = app_handle.set_activation_policy(tauri::ActivationPolicy::Regular);
+                        show_installation_remediation(&remediation.0);
+                        app_handle.exit(1);
+                    }
+                }
                 if let tauri::RunEvent::Reopen {
                     has_visible_windows,
                     ..
                 } = event
                 {
                     if !has_visible_windows {
-                        let data_root = app_handle.state::<crate::state::SharedDataRoot>();
-                        reveal_main_window(app_handle, "dock:reopen", &data_root.0);
+                        if let Some(data_root) = app_handle.try_state::<crate::state::SharedDataRoot>() {
+                            reveal_main_window(app_handle, "dock:reopen", &data_root.0);
+                        }
                     }
                     }
             }

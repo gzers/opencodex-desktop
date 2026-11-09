@@ -1,12 +1,29 @@
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useAppStore } from '@/stores/app'
+import { useDataRootStore } from '@/features/data-root/store'
+import type { PathsSnapshotV2 } from '@/features/data-root/api'
 
 const invoke = vi.fn()
 
 vi.mock('@tauri-apps/api/core', () => ({
   invoke: (...args: unknown[]) => invoke(...args),
 }))
+
+function pathsSnapshot(): PathsSnapshotV2 {
+  return { schemaVersion: 1,
+    aggregateRoot: { path: '/fixtures/U', status: 'valid' },
+    desktopRoot: { path: '/fixtures/U/desktop', status: 'valid' },
+    opencodexHome: { path: '/fixtures/explicit HOME', status: 'valid' },
+    configPath: { path: '/fixtures/explicit HOME/config.json', status: 'missing' },
+    installationRoot: { path: '/fixtures/I', status: 'valid' },
+    runtimePrefix: { path: '/fixtures/program/runtime', status: 'valid' },
+    runtimeEntry: { path: '/fixtures/program/bin/ocx', status: 'valid' },
+    managerExecutable: { path: '/fixtures/I/desktop', status: 'valid' },
+    program: { packageVersion: '2.93.0', manifestVersion: '2.93.0', sourceVersion: '2.93.0', consistency: 'consistent' },
+    currentAggregateRoot: '/fixtures/U', pendingRestart: false,
+  }
+}
 
 describe('data root integration', () => {
   beforeEach(() => {
@@ -17,14 +34,14 @@ describe('data root integration', () => {
   it('validates before initialization and stores created result', async () => {
     invoke.mockImplementation(async (command: string) => {
       if (command === 'validate_data_root_structure') return 'valid'
-      if (command === 'initialize_data_root') return { created: true, structureVersion: '1' }
+      if (command === 'initialize_data_root') return { created: true, structureVersion: '2' }
       throw new Error(`unexpected command: ${command}`)
     })
     const app = useAppStore()
-    await app.saveDataRoot('/fixtures/data-root')
-    expect(invoke).toHaveBeenCalledWith('validate_data_root_structure', { rootPath: '/fixtures/data-root' })
+    await app.saveDataRoot('/fixtures/U')
+    expect(invoke).toHaveBeenCalledWith('validate_data_root_structure', { rootPath: '/fixtures/U' })
     expect(app.dataRootLastValidation).toBe('valid')
-    expect(app.dataRootPath).toBe('/fixtures/data-root')
+    expect(app.dataRootPath).toBe('/fixtures/U')
     expect(app.dataRootError).toBe('')
   })
 
@@ -42,7 +59,7 @@ describe('data root integration', () => {
   it('initializes an empty directory without treating it as damaged', async () => {
     invoke.mockImplementation(async (command: string) => {
       if (command === 'validate_data_root_structure') return 'uninitialized'
-      if (command === 'initialize_data_root') return { created: true, structureVersion: '1' }
+      if (command === 'initialize_data_root') return { created: true, structureVersion: '2' }
       throw new Error(`unexpected command: ${command}`)
     })
     const app = useAppStore()
@@ -64,12 +81,14 @@ describe('data root integration', () => {
     expect(app.dataRootPath).toBe('')
   })
 
-  it('reports failure without modifying target', async () => {
+  it('reports initialization uncertainty without claiming a successful binding', async () => {
     invoke.mockRejectedValue(new Error('backend unavailable'))
     const app = useAppStore()
     const saved = await app.saveDataRoot('/fixtures/failing-root')
     expect(saved).toBe(false)
-    expect(app.dataRootError).toContain('未修改目标目录')
+    expect(app.dataRootError).toContain('重新读取实际位置核对')
+    expect(app.dataRootLastResult).toBeNull()
+    expect(invoke).toHaveBeenCalledExactlyOnceWith('validate_data_root_structure', { rootPath: '/fixtures/failing-root' })
     expect(app.dataRootPath).toBe('')
     expect(app.dataRootSaving).toBe(false)
   })
@@ -86,7 +105,7 @@ describe('data root integration', () => {
   it('distinguishes unverified runtime from busy work without saving a binding', async () => {
     const app = useAppStore()
     invoke.mockResolvedValue({ status: 'blocked', blocked: 'runtime_unverified', config: null })
-    await expect(app.switchDataRoot('/fixtures/target', true)).resolves.toBe(false)
+    await expect(app.switchDataRoot('/fixtures/target', false)).resolves.toBe(false)
     expect(app.dataRootError).toContain('未能确认面板运行状态')
     expect(app.dataRootError).not.toContain('仍在运行')
     await expect(app.saveOpencodexHome('external', '/fixtures/home')).resolves.toBe(false)
@@ -97,11 +116,11 @@ describe('data root integration', () => {
 
   it('loads and projects runtime data root config', async () => {
     const config = {
-      activeDataRoot: '/fixtures/data-root',
+      aggregateRoot: '/fixtures/U', activeDataRoot: '/fixtures/U/desktop',
       opencodexHomeMode: 'inside',
-      opencodexHome: '/fixtures/data-root/opencodex-home',
-      currentDataRoot: '/fixtures/data-root',
-      currentOpencodexHome: '/fixtures/data-root/opencodex-home',
+      opencodexHome: '/fixtures/U/opencodex',
+      currentDataRoot: '/fixtures/U/desktop',
+      currentOpencodexHome: '/fixtures/U/opencodex',
       runtimeActive: true,
     }
     invoke.mockResolvedValueOnce(config)
@@ -123,11 +142,11 @@ describe('data root integration', () => {
       status: 'restart_required',
       blocked: null,
       config: {
-        activeDataRoot: '/fixtures/target',
+        aggregateRoot: '/fixtures/target', activeDataRoot: '/fixtures/target/desktop',
         opencodexHomeMode: 'inside',
-        opencodexHome: '/fixtures/target/opencodex-home',
-        currentDataRoot: '/fixtures/data-root',
-        currentOpencodexHome: '/fixtures/data-root/opencodex-home',
+        opencodexHome: '/fixtures/target/opencodex',
+        currentDataRoot: '/fixtures/U/desktop',
+        currentOpencodexHome: '/fixtures/U/opencodex',
         runtimeActive: false,
       },
     })
@@ -135,7 +154,8 @@ describe('data root integration', () => {
     expect(invoke).toHaveBeenCalledWith('switch_data_root', {
       request: { targetPath: '/fixtures/target', mode: 'reference_only' },
     })
-    expect(app.dataRootConfig?.activeDataRoot).toBe('/fixtures/target')
+    expect(app.dataRootConfig?.aggregateRoot).toBe('/fixtures/target')
+    expect(app.dataRootConfig?.activeDataRoot).toBe('/fixtures/target/desktop')
 
     invoke.mockReset()
     await expect(app.switchDataRoot('/fixtures/nested', false)).resolves.toBe(false)
@@ -144,15 +164,15 @@ describe('data root integration', () => {
     expect(app.dataRootSwitching).toBe(false)
   })
 
-  it('latches an uncertain migration result across rereads and blocks HOME edits', async () => {
+  it('latches an uncertain reference switch across rereads and blocks HOME edits', async () => {
     const app = useAppStore()
-    const old = { activeDataRoot: '/fixtures/source', opencodexHomeMode: 'inside', opencodexHome: '/fixtures/source/opencodex-home', currentDataRoot: '/fixtures/source', currentOpencodexHome: '/fixtures/source/opencodex-home', runtimeActive: true }
-    invoke.mockResolvedValueOnce({ status: 'restart_required', reconciliationRequired: true, blocked: null, config: { ...old, activeDataRoot: '/fixtures/target', runtimeActive: false } })
-    await expect(app.switchDataRoot('/fixtures/target', true)).resolves.toBe(true)
-    expect(invoke).toHaveBeenCalledWith('switch_data_root', { request: { targetPath: '/fixtures/target', mode: 'migrate_data' } })
+    const old = { aggregateRoot: '/fixtures/U', activeDataRoot: '/fixtures/U/desktop', opencodexHomeMode: 'inside', opencodexHome: '/fixtures/U/opencodex', currentDataRoot: '/fixtures/U/desktop', currentOpencodexHome: '/fixtures/U/opencodex', runtimeActive: true }
+    invoke.mockResolvedValueOnce({ status: 'restart_required', reconciliationRequired: true, blocked: null, config: { ...old, aggregateRoot: '/fixtures/target', activeDataRoot: '/fixtures/target/desktop', runtimeActive: false } })
+    await expect(app.switchDataRoot('/fixtures/target', false)).resolves.toBe(true)
+    expect(invoke).toHaveBeenCalledWith('switch_data_root', { request: { targetPath: '/fixtures/target', mode: 'reference_only' } })
     expect(app.dataRootReconciliationRequired).toBe(true)
     expect(app.dataRootPendingRestart).toBe(true)
-    expect(app.dataRootConfig?.currentDataRoot).toBe('/fixtures/source')
+    expect(app.dataRootConfig?.currentDataRoot).toBe('/fixtures/U/desktop')
     invoke.mockResolvedValueOnce(old)
     await app.loadDataRootConfig() // Old binding readback cannot release a freeze.
     invoke.mockReset()
@@ -162,31 +182,38 @@ describe('data root integration', () => {
     expect(app.dataRootReconciliationRequired).toBe(true)
   })
 
-  it('reports a partial-copy failure without changing the active config', async () => {
+  it('reads back an uncertain reference save before allowing further binding changes', async () => {
     const app = useAppStore()
-    invoke.mockResolvedValueOnce({ activeDataRoot: '/fixtures/source', opencodexHomeMode: 'inside', opencodexHome: '/fixtures/source/opencodex-home', currentDataRoot: '/fixtures/source', currentOpencodexHome: '/fixtures/source/opencodex-home', runtimeActive: true })
+    invoke.mockResolvedValueOnce({ aggregateRoot: '/fixtures/U', activeDataRoot: '/fixtures/U/desktop', opencodexHomeMode: 'inside', opencodexHome: '/fixtures/U/opencodex', currentDataRoot: '/fixtures/U/desktop', currentOpencodexHome: '/fixtures/U/opencodex', runtimeActive: true })
     await app.loadDataRootConfig()
     const old = app.dataRootConfig
-    invoke.mockRejectedValueOnce(new Error('copy failed'))
-    await expect(app.switchDataRoot('/fixtures/target', true)).resolves.toBe(false)
-    expect(app.dataRootError).toContain('未完成副本')
+    invoke.mockImplementation(async command => {
+      if (command === 'switch_data_root') throw new Error('response lost')
+      if (command === 'get_data_root_config') return old
+      if (command === 'model_paths_v2_snapshot') return pathsSnapshot()
+      throw new Error('unexpected command: ' + command)
+    })
+    await expect(app.switchDataRoot('/fixtures/target', false)).resolves.toBe(false)
+    expect(app.dataRootError).toContain('引用切换结果未确认')
+    expect(invoke.mock.calls.slice(-3).map(([command]) => command)).toEqual(['switch_data_root', 'get_data_root_config', 'model_paths_v2_snapshot'])
+    expect(useDataRootStore().paths).toEqual(pathsSnapshot())
     expect(app.dataRootError).not.toContain('未修改目标')
     expect(app.dataRootConfig).toEqual(old)
     expect(app.dataRootPendingRestart).toBe(false)
     expect(app.dataRootSwitching).toBe(false)
   })
 
-  it('does not send concurrent path commands while migration is running', async () => {
+  it('does not send concurrent path commands while a reference switch is running', async () => {
     const app = useAppStore()
     let finish!: (value: unknown) => void
     invoke.mockImplementationOnce(() => new Promise(resolve => { finish = resolve }))
-    const migration = app.switchDataRoot('/fixtures/target', true)
+    const switching = app.switchDataRoot('/fixtures/target', false)
     await vi.waitFor(() => expect(invoke).toHaveBeenCalledTimes(1))
     await expect(app.saveOpencodexHome('external', '/fixtures/home')).resolves.toBe(false)
     await expect(app.switchDataRoot('/fixtures/other', false)).resolves.toBe(false)
     expect(invoke).toHaveBeenCalledTimes(1)
     finish({ status: 'blocked', blocked: 'running', config: null, reconciliationRequired: false })
-    await expect(migration).resolves.toBe(false)
+    await expect(switching).resolves.toBe(false)
     expect(app.dataRootSwitching).toBe(false)
   })
 
@@ -199,11 +226,11 @@ describe('data root integration', () => {
       status: 'restart_required',
       blocked: null,
       config: {
-        activeDataRoot: '/fixtures/data-root',
+        aggregateRoot: '/fixtures/U', activeDataRoot: '/fixtures/U/desktop',
         opencodexHomeMode: 'external',
         opencodexHome: '/fixtures/external-home',
-        currentDataRoot: '/fixtures/data-root',
-        currentOpencodexHome: '/fixtures/data-root/opencodex-home',
+        currentDataRoot: '/fixtures/U/desktop',
+        currentOpencodexHome: '/fixtures/U/opencodex',
         runtimeActive: false,
       },
     })
@@ -217,9 +244,9 @@ describe('data root integration', () => {
   it('preserves the existing binding when HOME save is blocked by a running task', async () => {
     const app = useAppStore()
     const before = {
-      activeDataRoot: '/fixtures/data-root', opencodexHomeMode: 'inside' as const,
-      opencodexHome: '/fixtures/data-root/opencodex-home', currentDataRoot: '/fixtures/data-root',
-      currentOpencodexHome: '/fixtures/data-root/opencodex-home', runtimeActive: true,
+      aggregateRoot: '/fixtures/U', activeDataRoot: '/fixtures/U/desktop', opencodexHomeMode: 'inside' as const,
+      opencodexHome: '/fixtures/U/opencodex', currentDataRoot: '/fixtures/U/desktop',
+      currentOpencodexHome: '/fixtures/U/opencodex', runtimeActive: true,
     }
     invoke.mockResolvedValueOnce(before)
     await app.loadDataRootConfig()
@@ -229,4 +256,35 @@ describe('data root integration', () => {
     expect(app.dataRootError).toContain('面板或安装任务仍在运行')
     expect(app.dataRootHomeSaving).toBe(false)
   })
+  it('rejects retired migration before IPC instead of silently treating it as a reference switch', async () => {
+    const app = useAppStore()
+    await expect(app.switchDataRoot('/fixtures/target', true)).resolves.toBe(false)
+    expect(app.dataRootError).toContain('不支持数据迁移')
+    expect(invoke).not.toHaveBeenCalled()
+    expect(app.dataRootConfig).toBeNull()
+  })
+
+  it('loads independent actual path facts without inferring a missing config from HOME', async () => {
+    const paths = pathsSnapshot()
+    invoke.mockResolvedValue(paths)
+    const store = useDataRootStore()
+    await store.loadPaths()
+    expect(invoke).toHaveBeenCalledExactlyOnceWith('model_paths_v2_snapshot')
+    expect(store.paths).toEqual(paths)
+    expect(store.paths?.configPath.status).toBe('missing')
+    expect(store.paths?.opencodexHome.status).toBe('valid')
+    expect(store.pathsLoading).toBe(false)
+    expect(store.pathsStale).toBe(false)
+  })
+
+  it('rejects malformed initial snapshot facts rather than fabricating normal paths', async () => {
+    invoke.mockResolvedValue({ ...pathsSnapshot(), configPath: { path: '/unverified/config.json', status: 'unknown' } })
+    const store = useDataRootStore()
+    await store.loadPaths()
+    expect(store.paths).toBeNull()
+    expect(store.pathsError).toContain('未推断路径或文件状态')
+    expect(store.pathsLoading).toBe(false)
+    expect(invoke).toHaveBeenCalledExactlyOnceWith('model_paths_v2_snapshot')
+  })
+
 })

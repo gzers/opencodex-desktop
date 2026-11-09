@@ -2,6 +2,7 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 fn main() {
+    track_runtime_bundle();
     track_windows_test_manifest();
     track_frontend_dist();
     track_build_commit();
@@ -155,4 +156,73 @@ fn collect(dir: &Path, out: &mut Vec<PathBuf>) {
             out.push(path);
         }
     }
+}
+
+/// A release may carry a complete pinned platform runtime. Its descriptor hash
+/// is compiled into the signed application; a changed adjacent resource cannot
+/// choose its own trusted digest. Ordinary developer/test builds omit resources.
+fn track_runtime_bundle() {
+    let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("resources/runtime-bundle");
+    println!("cargo:rerun-if-env-changed=OCXD_REQUIRE_RUNTIME_BUNDLE");
+    println!("cargo:rerun-if-changed={}", directory.display());
+    let descriptor = directory.join("runtime-bundle.manifest.json");
+    let pin = directory.join("runtime-bundle.manifest.sha256");
+    if !descriptor.exists() {
+        if std::env::var_os("OCXD_REQUIRE_RUNTIME_BUNDLE").is_some() {
+            panic!("release requires the complete pinned runtime bundle");
+        }
+        return;
+    }
+    let expected = std::fs::read_to_string(&pin).expect("runtime descriptor pin missing");
+    let expected = expected.trim();
+    if expected.len() != 64
+        || !expected
+            .bytes()
+            .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+    {
+        panic!("runtime descriptor pin is invalid");
+    }
+    let manifest: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(&descriptor).expect("runtime descriptor unreadable"))
+            .expect("runtime descriptor invalid");
+    let platform = match (
+        std::env::var("CARGO_CFG_TARGET_OS").as_deref(),
+        std::env::var("CARGO_CFG_TARGET_ARCH").as_deref(),
+    ) {
+        (Ok("macos"), Ok("aarch64")) => "darwin-arm64",
+        (Ok("windows"), Ok("x86_64")) => "win32-x64",
+        _ => panic!("unsupported bundled runtime target"),
+    };
+    if manifest["platform"] != platform || manifest["schemaVersion"] != 1 {
+        panic!("runtime descriptor target mismatch");
+    }
+    let name = manifest["archiveName"]
+        .as_str()
+        .expect("runtime archive name missing");
+    if name.contains(['/', '\\']) || !directory.join(name).is_file() {
+        panic!("runtime archive missing");
+    }
+    if !directory.join("maintained-runtime.tgz").is_file() {
+        panic!("runtime recovery source missing");
+    }
+    let source_version = manifest["runtimeVersion"]
+        .as_str()
+        .expect("runtime version missing");
+    let source_digest = manifest["runtimeArchiveSha256"]
+        .as_str()
+        .expect("runtime digest missing");
+    if source_digest.len() != 64
+        || !source_digest
+            .bytes()
+            .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+        || source_version.is_empty()
+        || source_version
+            .chars()
+            .any(|c| !c.is_ascii_alphanumeric() && !".+-".contains(c))
+    {
+        panic!("runtime recovery source identity invalid");
+    }
+    println!("cargo:rustc-env=OCXD_BUNDLED_RUNTIME_SOURCE_VERSION={source_version}");
+    println!("cargo:rustc-env=OCXD_BUNDLED_RUNTIME_SOURCE_SHA256={source_digest}");
+    println!("cargo:rustc-env=OCXD_BUNDLED_RUNTIME_DESCRIPTOR_SHA256={expected}");
 }

@@ -13,6 +13,15 @@ pub mod file_saves;
 pub mod owner_saves;
 
 const FILE: &str = "manager-state/saved-content-versions.json";
+/// Frozen target for L0's unified content + version-byte transaction.
+pub const SAVED_VERSIONS_PATH: &str = FILE;
+const MAX_VERSION_BYTES: usize = 8 * 1024 * 1024;
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PlannedVersionsV2 {
+    pub before: Option<Vec<u8>>,
+    pub after: Vec<u8>,
+}
 
 pub type SaveState = BTreeMap<String, String>;
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
@@ -87,10 +96,9 @@ fn read(root: &Path) -> ModelResult<BTreeMap<String, Version>> {
     }
     Ok(records)
 }
-fn update(
-    root: &Path,
-    f: impl FnOnce(&mut BTreeMap<String, Version>) -> ModelResult<()>,
-) -> ModelResult<()> {
+/// Caller retains outer file-save admission before taking this version lock.
+/// Pure planners never acquire it again; keep it through commit and readback.
+pub fn lock_versions(root: &Path) -> ModelResult<TargetFileLock> {
     let p = root.join(FILE);
     safety::check_path(root, &p, true)?;
     safety::check_path(
@@ -99,10 +107,12 @@ fn update(
         true,
     )?;
     checkpoint("before_version_lock")?;
-    let _g = TargetFileLock::lock(&p)?;
+    let guard = TargetFileLock::lock(&p)?;
     checkpoint("version_locked")?;
-    let mut records = read(root)?;
-    f(&mut records)?;
+    Ok(guard)
+}
+
+fn encode_records(records: &BTreeMap<String, Version>) -> ModelResult<Vec<u8>> {
     if records.len() > 30000 {
         return Err(invalid("content_version", "保存版本数量超过上限"));
     }
@@ -110,6 +120,18 @@ fn update(
     if bytes.len() > 8 * 1024 * 1024 {
         return Err(invalid("content_version", "保存版本文件超过上限"));
     }
+    Ok(bytes)
+}
+
+fn update(
+    root: &Path,
+    f: impl FnOnce(&mut BTreeMap<String, Version>) -> ModelResult<()>,
+) -> ModelResult<()> {
+    let p = root.join(FILE);
+    let _guard = lock_versions(root)?;
+    let mut records = read(root)?;
+    f(&mut records)?;
+    let bytes = encode_records(&records)?;
     atomic_write(&p, &bytes, 0o600)?;
     if safety::read_file(&p, 8 * 1024 * 1024)? != bytes {
         return Err(invalid(
@@ -175,69 +197,133 @@ pub(super) fn record_at_validated(
     }
     update(root, |records| {
         validate()?;
-        for (key, digest) in after {
-            if before.get(key) == Some(digest) {
-                continue;
-            }
-            let old = records.get(key);
-            // A real save can restore old bytes after an external edit. Only
-            // this same durable event is a replay, even if bytes/time repeat.
-            if let Some(old) = old.filter(|old| old.last_event.as_deref() == Some(event_id)) {
-                if old.content_digest != *digest || old.saved_at != time {
-                    return Err(invalid(
-                        "content_version_event_conflict",
-                        "同一保存事件的内容或时间不同",
-                    ));
-                }
-                continue;
-            }
-            let floor = old.and_then(Version::lower_bound);
-            let unreliable = if old.is_some_and(|old| old.time_kind == TimeKind::ClockUnreliable) {
-                floor.is_none_or(|floor| instant <= floor)
-            } else {
-                floor.is_some_and(|floor| instant < floor)
-            };
-            let trusted_floor = if unreliable {
-                floor.map(|time| time.to_rfc3339())
-            } else {
-                Some(
-                    floor
-                        .map_or(instant, |floor| floor.max(instant))
-                        .to_rfc3339(),
-                )
-            };
-            records.insert(
-                key.clone(),
-                Version {
-                    scope_key: key.clone(),
-                    content_digest: digest.clone(),
-                    revision: old.map_or(1, |v| v.revision.saturating_add(1)),
-                    saved_at: time.into(),
-                    time_kind: if unreliable {
-                        TimeKind::ClockUnreliable
-                    } else {
-                        TimeKind::Saved
-                    },
-                    trusted_floor,
-                    last_event: Some(event_id.into()),
-                },
-            );
-        }
-        for key in before.keys().filter(|key| !after.contains_key(*key)) {
-            if let Some(old) = records.get_mut(key) {
-                if old.last_event.as_deref() == Some(event_id) {
-                    continue;
-                }
-                // A removed object must not erase the clock high-water mark.
-                old.trusted_floor = old.lower_bound().map(|time| time.to_rfc3339());
-                old.content_digest.clear();
-                old.revision = old.revision.saturating_add(1);
-                old.last_event = Some(event_id.into());
-            }
-        }
-        Ok(())
+        apply_save_at(records, before, after, time, event_id, instant)
     })
 }
+
+/// Single source for old writes and v2 plans: no IO, clock reads or callbacks.
+fn apply_save_at(
+    records: &mut BTreeMap<String, Version>,
+    before: &SaveState,
+    after: &SaveState,
+    time: &str,
+    event_id: &str,
+    instant: chrono::DateTime<chrono::FixedOffset>,
+) -> ModelResult<()> {
+    for (key, digest) in after {
+        if before.get(key) == Some(digest) {
+            continue;
+        }
+        let old = records.get(key);
+        // A real save can restore old bytes after an external edit. Only
+        // this same durable event is a replay, even if bytes/time repeat.
+        if let Some(old) = old.filter(|old| old.last_event.as_deref() == Some(event_id)) {
+            if old.content_digest != *digest || old.saved_at != time {
+                return Err(invalid(
+                    "content_version_event_conflict",
+                    "同一保存事件的内容或时间不同",
+                ));
+            }
+            continue;
+        }
+        let floor = old.and_then(Version::lower_bound);
+        let unreliable = if old.is_some_and(|old| old.time_kind == TimeKind::ClockUnreliable) {
+            floor.is_none_or(|floor| instant <= floor)
+        } else {
+            floor.is_some_and(|floor| instant < floor)
+        };
+        let trusted_floor = if unreliable {
+            floor.map(|time| time.to_rfc3339())
+        } else {
+            Some(
+                floor
+                    .map_or(instant, |floor| floor.max(instant))
+                    .to_rfc3339(),
+            )
+        };
+        records.insert(
+            key.clone(),
+            Version {
+                scope_key: key.clone(),
+                content_digest: digest.clone(),
+                revision: old.map_or(1, |v| v.revision.saturating_add(1)),
+                saved_at: time.into(),
+                time_kind: if unreliable {
+                    TimeKind::ClockUnreliable
+                } else {
+                    TimeKind::Saved
+                },
+                trusted_floor,
+                last_event: Some(event_id.into()),
+            },
+        );
+    }
+    for key in before.keys().filter(|key| !after.contains_key(*key)) {
+        if let Some(old) = records.get_mut(key) {
+            if old.last_event.as_deref() == Some(event_id) {
+                continue;
+            }
+            // A removed object must not erase the clock high-water mark.
+            old.trusted_floor = old.lower_bound().map(|time| time.to_rfc3339());
+            old.content_digest.clear();
+            old.revision = old.revision.saturating_add(1);
+            old.last_event = Some(event_id.into());
+        }
+    }
+    Ok(())
+}
+
+/// Prepare exact receipt bytes without taking locks or writing any file.
+/// The caller must hold file-save admission, then lock_versions(root), through
+/// this read/plan and the unified transaction commit/readback. Replay keeps the
+/// frozen event/time; neither mtime nor the current wall clock is consulted.
+pub fn plan_save_at(
+    root: &Path,
+    before: &SaveState,
+    after: &SaveState,
+    time: &str,
+    event_id: &str,
+) -> ModelResult<PlannedVersionsV2> {
+    require_uuid(event_id)?;
+    let instant = chrono::DateTime::parse_from_rfc3339(time)
+        .map_err(|_| invalid("content_version", "保存时间格式无效"))?;
+    let path = root.join(FILE);
+    safety::check_path(root, &path, true)?;
+    let original = match std::fs::symlink_metadata(&path) {
+        Ok(_) => Some(safety::read_file(&path, MAX_VERSION_BYTES as u64)?),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => None,
+        Err(error) => return Err(error.into()),
+    };
+    let mut records: BTreeMap<String, Version> = match &original {
+        Some(bytes) => {
+            let value = super::schema_v2::parse_strict_json_v2(bytes).map_err(|error| {
+                invalid(&error.code, "保存版本文件不是严格有效JSON，原件已保留")
+            })?;
+            serde_json::from_value(value)?
+        }
+        None => BTreeMap::new(),
+    };
+    for (key, version) in &mut records {
+        if version.scope_key.is_empty() {
+            version.scope_key = key.clone();
+        }
+    }
+    // Still strictly validate no-op documents; do not normalize their aliases,
+    // whitespace, saved times, revisions or clock floors merely by observing.
+    if before == after {
+        encode_records(&records)?;
+        return Ok(PlannedVersionsV2 {
+            before: original.clone(),
+            after: original.unwrap_or_else(|| b"{}".to_vec()),
+        });
+    }
+    apply_save_at(&mut records, before, after, time, event_id, instant)?;
+    Ok(PlannedVersionsV2 {
+        before: original,
+        after: encode_records(&records)?,
+    })
+}
+
 /// Import only exact applied content. Re-receiving identical bytes cannot change
 /// an existing content time, including an unknown legacy time.
 pub fn inherit(root: &Path, versions: &[Version]) -> ModelResult<()> {
@@ -359,3 +445,7 @@ mod tests {
         );
     }
 }
+
+#[cfg(test)]
+#[path = "content_versions_v2_tests.rs"]
+mod v2_tests;

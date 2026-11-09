@@ -1,0 +1,123 @@
+name: Windows 0.2.23 original record contract diagnostic
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      producer:
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  record-contract:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/tauri -> target
+          shared-key: windows-native-ui-018
+          cache-on-failure: true
+      - name: Stage unchanged pinned package in a fresh owned root
+        run: |
+          $ErrorActionPreference='Stop'
+          $taskRoot=Join-Path $env:RUNNER_TEMP ('ocxd-record-contract-'+$env:GITHUB_RUN_ID)
+          if(Test-Path -LiteralPath $taskRoot){throw 'Fresh root required; earlier evidence retained'}
+          New-Item -ItemType Directory -Path $taskRoot | Out-Null
+          'OCXD_RECORD_CONTRACT_ROOT='+$taskRoot >> $env:GITHUB_ENV
+          $node=(Get-Command node.exe).Source
+          $npm=Join-Path (Split-Path -Parent $node) 'node_modules/npm/bin/npm-cli.js'
+          python .github/scripts/stage_runtime_bundle_023.py --platform win32-x64 --build-node $node --npm-cli $npm --output (Join-Path $taskRoot 'stage') *> (Join-Path $taskRoot 'stage.log')
+          if($LASTEXITCODE -ne 0){throw 'Pinned original package staging failed'}
+          $bundle=Join-Path $taskRoot 'stage/platform-bundle/runtime-bundle'
+          'OCXD_RECORD_PROBE_PACKAGE='+(Join-Path $bundle 'runtime/opencodex/node_modules/@bitkyc08/opencodex') >> $env:GITHUB_ENV
+          'OCXD_RECORD_PROBE_BUN='+(Join-Path $bundle 'runtime/bun/bun.exe') >> $env:GITHUB_ENV
+          'OCXD_RECORD_PROBE_NODE='+(Join-Path $bundle 'runtime/node/node.exe') >> $env:GITHUB_ENV
+          'OCXD_RECORD_PROBE_REPORT='+(Join-Path $taskRoot 'record-contract.json') >> $env:GITHUB_ENV
+      - name: Observe original writer versus original Desktop validator
+        run: |
+          $ErrorActionPreference='Stop'
+          $env:OCXD_REQUIRE_RUNTIME_BUNDLE='1'
+          $env:OCXD_RECORD_PROBE_CANDIDATE='true'
+          cargo fmt --manifest-path apps/desktop/tauri/Cargo.toml --all -- --check
+          if($LASTEXITCODE -ne 0){throw 'Rust formatting failed'}
+          python test/smoke/verify-pinned-profile-source.py $env:OCXD_RECORD_PROBE_PACKAGE (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'source-attestation.json')
+          if($LASTEXITCODE -ne 0){throw 'Original bytes differ'}
+          $candidate=Join-Path $env:OCXD_RECORD_PROBE_PACKAGE 'src/lib/windows-runtime-private-record.ts'
+          if(Test-Path -LiteralPath $candidate){throw 'Fresh candidate module only'}
+          Copy-Item -LiteralPath test/smoke/runtime023-windows-private-record.ts -Destination $candidate
+          @{candidateSourceAdded=$true;originalArchiveChanged=$false;path='src/lib/windows-runtime-private-record.ts';sha256=(Get-FileHash -LiteralPath $candidate).Hash.ToLowerInvariant();accepted=$false} | ConvertTo-Json | Set-Content (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'candidate-helper-source.json')
+          $env:OCXD_RECORD_PROBE_HELPER='true'
+          $lifetimeCandidate=Join-Path $env:OCXD_RECORD_PROBE_PACKAGE 'src/lib/windows-runtime-lifetime.ts'
+          if(Test-Path -LiteralPath $lifetimeCandidate){throw 'Fresh lifecycle candidate module only'}
+          Copy-Item -LiteralPath test/smoke/runtime023-windows-runtime-lifetime.ts -Destination $lifetimeCandidate
+          @{candidateOnly=$true;originalArchiveChanged=$false;path='src/lib/windows-runtime-lifetime.ts';sha256=(Get-FileHash -LiteralPath $lifetimeCandidate).Hash.ToLowerInvariant();accepted=$false} | ConvertTo-Json | Set-Content (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'candidate-lifetime-source.json')
+          $overlay=Join-Path (Split-Path -Parent $env:OCXD_RECORD_PROBE_PACKAGE) 'opencodex-record-prototype'
+          python test/smoke/stage-runtime-record-candidate.py $env:OCXD_RECORD_PROBE_PACKAGE $overlay (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'atomic-overlay-source.json')
+          if($LASTEXITCODE -ne 0){throw 'Exact isolated atomic overlay staging failed'}
+          $env:OCXD_RECORD_PROBE_OVERLAY=$overlay
+          $archiveCandidate=Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'candidate-build'
+          python test/smoke/build-runtime-record-prototype.py --archive apps/desktop/tauri/resources/runtime-bundle/maintained-runtime.tgz --output $archiveCandidate --materialize *> (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'candidate-build.log')
+          if($LASTEXITCODE -ne 0){throw 'Canonical candidate archive build failed'}
+          $archiveProof=Get-Content (Join-Path $archiveCandidate 'verification.json') -Raw|ConvertFrom-Json
+          if(!$archiveProof.twoIndependentBuildsIdentical -or !$archiveProof.candidateOnly -or !$archiveProof.materializedExactArchive){throw 'Exact rebuilt archive proof missing'}
+          Copy-Item -LiteralPath (Join-Path $archiveCandidate 'verification.json') -Destination (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'candidate-archive.json')
+          $env:OCXD_RECORD_PROBE_ARCHIVE_PACKAGE=Join-Path $archiveCandidate 'package'
+          if('${{ inputs.producer }}' -ceq 'true'){
+            $producer=Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'lifetime-producer-package'
+            python test/smoke/stage-runtime-lifetime-candidate.py $env:OCXD_RECORD_PROBE_ARCHIVE_PACKAGE $producer (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'lifetime-producer-source.json') $env:OCXD_RECORD_PROBE_PACKAGE
+            if($LASTEXITCODE -ne 0){throw 'Exact isolated producer hooks failed to stage'}
+            $env:OCXD_PRODUCER_PROBE_PACKAGE=$producer
+          }
+          cargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib infrastructure::windows_private_create::tests::native_original_runtime_record_diagnostic -- --exact --ignored --nocapture *> (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'record-test.log')
+          if($LASTEXITCODE -ne 0){throw 'Record observation failed; preserve failure'}
+          $log=Get-Content (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'record-test.log') -Raw
+          if($log -notmatch '1 passed; 0 failed; 0 ignored'){throw 'Exact diagnostic must execute'}
+          $report=Get-Content $env:OCXD_RECORD_PROBE_REPORT -Raw | ConvertFrom-Json
+          if($report.accepted -ne $false -or !$report.diagnosticOnly -or !$report.tokenElevated -or !$report.fixtureRemoved){throw 'Diagnostic scope/elevated token/cleanup not proved'}
+          if(!$report.candidateOriginalValidatorAccepted -or !$report.candidateOwnerMatchesTokenUser){throw 'Candidate must satisfy the unchanged validator'}
+          if(!$report.leasePrototype.finalControlledSetEmpty -or !$report.leasePrototype.serviceExitWithChildAliveRefused -or !$report.leasePrototype.finalLeaseUnheld){throw 'Actual controlled lifetime proof is incomplete'}
+          if(!$report.candidateDescriptorBridgeAccepted -or !$report.detachedLeasePrototype.detachedServiceStayedInJob -or !$report.detachedLeasePrototype.finalControlledSetEmpty -or $report.prototypeFailures.Count -ne 0){throw 'Descriptor bridge and detached Node/Bun cases must independently pass'}
+          if(!$report.candidateMaintainedHelperAccepted -or !$report.candidateReadback.candidateHelperValidated){throw 'Candidate helper must satisfy unchanged product validator'}
+          if(!$report.candidateAtomicOverlayAccepted){throw 'Actual original atomic writer overlay must satisfy unchanged validator'}
+          if(!$report.candidateAtomicOverlayReadback.forcedPrePublicationFailurePreservedOriginal -or !$report.candidateAtomicOverlayReadback.noOwnTempResidue){throw 'Original publication failure semantics must remain intact'}
+          if(!$report.candidateArchiveAccepted -or !$report.candidateArchiveReadback.actualAtomicEntryUsed){throw 'Actual rebuilt prototype archive must satisfy unchanged validator'}
+          foreach($case in @($report.leasePrototype,$report.detachedLeasePrototype)){
+            if(!$case.privateJobOwnerAndProtectedDaclVerified -or !$case.bindingSevenTamperCounterexamplesRejected){throw 'Private Job authority and all binding mutations must be checked'}
+          }
+          foreach($case in @($report.selfJobLeasePrototype,$report.detachedSelfJobLeasePrototype)){
+            if(!$case.serviceEnteredPrivateJobBeforeOwnChildren -or !$case.finalControlledSetEmpty -or !$case.finalLeaseUnheld -or !$case.privateJobOwnerAndProtectedDaclVerified -or !$case.bindingSevenTamperCounterexamplesRejected){throw 'Actual self-admission must precede children and prove full lifetime cleanup'}
+          }
+          foreach($case in @($report.candidateLifetimePrototype,$report.detachedCandidateLifetimePrototype)){
+            if(!$case.candidateLifetimeModuleUsed -or !$case.candidateBindingEightMutationsRejected -or !$case.independentRustBindingReaderAccepted -or !$case.independentRustKernelWitnessAccepted -or !$case.candidateDuplicateWhileLeaseBusyRefused -or !$case.candidateReplacementWhileChildAliveRefused -or !$case.finalControlledSetEmpty -or !$case.finalLeaseUnheld -or !$case.privateJobOwnerAndProtectedDaclVerified){throw 'Actual candidate lifetime must verify independent native witness and duplicate/replacement refusals'}
+          }
+          if('${{ inputs.producer }}' -ceq 'true'){
+            if(!$report.actualProducerReadback.officialStopWithin10000 -or !$report.actualProducerReadback.lifetimeResponseProof -or !$report.actualProducerReadback.fixtureSafeToRemove){throw 'Actual producer must prove authenticated startup, official restore and exit inside original budgets'}
+          }
+          cargo clippy --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib --tests -- -D warnings *> (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'strict-clippy.log')
+          if($LASTEXITCODE -ne 0){throw 'Strict checks failed'}
+      - name: Preserve only evidence, never synthetic secret records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows023-record-contract-${{ github.run_id }}
+          path: |
+            ${{ env.OCXD_RECORD_CONTRACT_ROOT }}/*.json
+            ${{ env.OCXD_RECORD_CONTRACT_ROOT }}/*.log
+          if-no-files-found: error
+      - name: Remove only exact owned staging root after evidence upload
+        if: always() && env.OCXD_RECORD_CONTRACT_ROOT != ''
+        run: |
+          $ErrorActionPreference='Stop'
+          $expected=Join-Path $env:RUNNER_TEMP ('ocxd-record-contract-'+$env:GITHUB_RUN_ID)
+          if($env:OCXD_RECORD_CONTRACT_ROOT -cne $expected){throw 'Cleanup root changed'}
+          Remove-Item -LiteralPath $expected -Recurse -Force
+          if(Test-Path -LiteralPath $expected){throw 'Exact staging root remains'}

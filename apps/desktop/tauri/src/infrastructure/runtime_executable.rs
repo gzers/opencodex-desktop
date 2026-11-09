@@ -13,6 +13,10 @@ use std::sync::Arc;
 pub trait RuntimeExecutableProvider: Send + Sync + std::fmt::Debug {
     /// 当前已解析出的 `ocx` 绝对路径；未解析时为 `None`。
     fn executable(&self) -> Option<PathBuf>;
+    /// Only the fixed Desktop installation may use authenticated live status.
+    fn managed_installation_root(&self) -> Option<PathBuf> {
+        None
+    }
 }
 
 /// 命令层与基础设施层共享的只读句柄。

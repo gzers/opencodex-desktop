@@ -2,6 +2,28 @@ param([Parameter(Mandatory=$true)][string]$OutputDirectory)
 $ErrorActionPreference='Stop'
 . (Join-Path $PSScriptRoot 'windows-installer-matrix.ps1')
 $checks=[Collections.Generic.List[string]]::new()
+$sourceFixture='a'*40
+$priorGit=Get-Item Function:git -ErrorAction SilentlyContinue
+try {
+    function git { throw 'Explicit source must not call git' }
+    $global:LASTEXITCODE=7
+    if ((Get-WindowsInstallerSource $sourceFixture) -cne $sourceFixture) { throw 'Explicit source lost' }
+    foreach($bad in @('HEAD',('A'*40),('a'*39))) {
+        $rejected=$false
+        try { $null=Get-WindowsInstallerSource $bad } catch { if ($_.Exception.Message -cne 'Source commit missing') { throw };$rejected=$true }
+        if (!$rejected) { throw 'Malformed explicit source accepted' }
+    }
+    function git { $global:LASTEXITCODE=1;return $sourceFixture }
+    $rejected=$false
+    try { $null=Get-WindowsInstallerSource '' } catch { if ($_.Exception.Message -cne 'Source commit missing') { throw };$rejected=$true }
+    if (!$rejected) { throw 'Failed git source accepted' }
+    function git { $global:LASTEXITCODE=0;return $sourceFixture }
+    if ((Get-WindowsInstallerSource '') -cne $sourceFixture) { throw 'Successful git source lost' }
+    $checks.Add('explicit-source-independent-of-stale-exit-and-git-fallback-verified')
+} finally {
+    if ($priorGit) { Set-Item Function:git $priorGit.ScriptBlock } else { Remove-Item Function:git }
+    $global:LASTEXITCODE=0
+}
 function Assert-MatrixRejects([scriptblock]$Action){
     $rejected=$false
     try{& $Action}catch{
@@ -43,6 +65,18 @@ foreach($loop in $ast.FindAll({param($node) $node -is [Management.Automation.Lan
 $calls=@($ast.FindAll({param($node) $node -is [Management.Automation.Language.CommandAst] -and $node.GetCommandName() -ceq 'Assert-WindowsInstallerMatrix'},$true))
 if($calls.Count -ne 1){throw 'Production installer must call the matrix gate exactly once before success'}
 $checks.Add('production-loops-preserve-requested-kind-and-mode')
+$slash=[string][char]92
+$owner='C:'+ $slash +'Users'+$slash+'owned'+$slash+'AppData'+$slash+'Local'+$slash+'Programs'+$slash+'OpenCodeX Desktop'
+foreach($actual in @($owner,($owner+$slash),($owner.Replace($slash,'/')+'/'),($owner.ToUpperInvariant()+$slash))){
+ if(!(Test-WindowsInstallerSameDirectory $actual $owner)){throw 'Same owner directory spelling was rejected'}
+}
+foreach($actual in @(($owner+' sibling'),($owner.Replace('owned','other')),($owner+$slash+'child'),'relative')){
+ if(Test-WindowsInstallerSameDirectory $actual $owner){throw 'Foreign owner/child directory accepted'}
+}
+$checks.Add('MSI trailing native separator matches only same ordinary owner directory')
+$comparisons=@($ast.FindAll({param($n) $n -is [Management.Automation.Language.CommandAst] -and $n.GetCommandName() -ceq 'Test-WindowsInstallerSameDirectory'},$true))
+if($comparisons.Count -ne 3){throw 'Both defaults and exact NSIS fixture cleanup must use the same owner-root comparison'}
+$checks.Add('Both default installer branches retain exact owner-root comparison')
 $output=[IO.Path]::GetFullPath($OutputDirectory)
 New-Item -ItemType Directory -Force $output | Out-Null
 [ordered]@{result='pass';powershell=$PSVersionTable.PSVersion.ToString();checks=@($checks)} |

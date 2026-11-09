@@ -4,6 +4,7 @@ import { DOMWrapper, flushPromises, mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import SettingsRoute from '@/routes/SettingsRoute.vue'
+import { useRuntimeStore } from '@/features/runtime/store'
 import { useAppStore } from '@/stores/app'
 import { useRouteStore } from '@/stores/routes'
 
@@ -73,8 +74,11 @@ const resultDto = () => ({
 })
 
 async function mountInstallation() {
+  const backend=invoke.getMockImplementation()!
+  invoke.mockImplementation((command,...args)=>command==='runtime_protection_status'?Promise.resolve({state:'none',version:null,backupId:null}):backend(command,...args))
   const pinia = createPinia()
   setActivePinia(pinia)
+  useRuntimeStore().protection={state:'none',version:null,backupId:null}
   useRouteStore().go('settings', { section: 'installation' })
   const wrapper = mount(SettingsRoute, { global: { plugins: [pinia] }, attachTo: document.body })
   await flushPromises()

@@ -20,6 +20,15 @@ pub struct ProcessActionResult {
     pub can_start: bool,
     pub can_stop: bool,
     pub can_restart: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub failure: Option<ProcessActionFailure>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProcessActionFailure {
+    pub code: String,
+    pub message: String,
 }
 
 impl ProcessActionResult {
@@ -30,11 +39,59 @@ impl ProcessActionResult {
             can_start: state.can_start(),
             can_stop: state.can_stop(),
             can_restart: state.can_restart(),
+            failure: None,
         }
     }
 
     pub fn with_result(mut self, result: LifecycleResult) -> Self {
+        // The runner has finished its ownership/readiness or stop proof. Do
+        // not return the pre-execution Starting/Stopping gates after success.
+        // Failed/cancelled work gains no terminal-state authority here.
+        match result {
+            LifecycleResult::Started => self = Self::from_state(ProcessLifecycleState::Running),
+            LifecycleResult::Stopped => self = Self::from_state(ProcessLifecycleState::Stopped),
+            LifecycleResult::Cancelled | LifecycleResult::Failed => {}
+        }
         self.result = Some(result);
+        self
+    }
+    pub fn with_failure(mut self, error: &crate::errors::AppError) -> Self {
+        let (code, message) = match error {
+            crate::errors::AppError::RuntimeManaged { code, .. } if code == "lifecycle_timeout" => {
+                (
+                    code.clone(),
+                    if self.lifecycle_state == ProcessLifecycleState::StartingFailed {
+                        "启动未在规定时间内就绪，请查看诊断日志后重试。"
+                    } else {
+                        "操作未在规定时间内确认完成，请核对服务状态并查看诊断日志。"
+                    }
+                    .into(),
+                )
+            }
+            crate::errors::AppError::RuntimeManaged { code, .. }
+                if code == "lifecycle_start_exit" =>
+            {
+                (
+                    code.clone(),
+                    "服务启动进程已退出，请查看诊断日志后重试。".into(),
+                )
+            }
+            crate::errors::AppError::RuntimeManaged { code, detail }
+                if code.starts_with("lifecycle_")
+                    || ["port_conflict", "port_permission"].contains(&code.as_str()) =>
+            {
+                (code.clone(), detail.clone())
+            }
+            crate::errors::AppError::Timeout => (
+                "lifecycle_timeout".into(),
+                "操作未在规定时间内确认完成，请核对服务状态。".into(),
+            ),
+            _ => (
+                "lifecycle_unconfirmed".into(),
+                "操作未确认完成，已保留当前配置，请查看诊断日志。".into(),
+            ),
+        };
+        self.failure = Some(ProcessActionFailure { code, message });
         self
     }
 }
@@ -50,6 +107,46 @@ pub fn validate_action_request(request: &ProcessActionRequest) -> Result<(), &'s
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn stop_timeout_keeps_running_state_and_hides_internal_phase_timings() {
+        let error = crate::errors::AppError::RuntimeManaged {
+            code: "lifecycle_timeout".into(),
+            detail: "phase=wait-os-absence; timings=internal".into(),
+        };
+        let value =
+            ProcessActionResult::from_state(ProcessLifecycleState::Running).with_failure(&error);
+        assert_eq!(value.lifecycle_state, ProcessLifecycleState::Running);
+        let json = serde_json::to_string(&value).unwrap();
+        assert!(!json.contains("phase=") && !json.contains("timings=") && !json.contains("启动未"));
+        assert!(json.contains("核对服务状态"));
+    }
+
+    #[test]
+    fn startup_timing_diagnostics_stay_out_of_the_product_failure_message() {
+        let error = crate::errors::AppError::RuntimeManaged {
+            code: "lifecycle_timeout".into(),
+            detail: "observations=14 rejected=2 absent_record=10".into(),
+        };
+        let failure = ProcessActionResult::from_state(ProcessLifecycleState::StartingFailed)
+            .with_failure(&error);
+        let json = serde_json::to_string(&failure).unwrap();
+        assert!(!json.contains("observations") && !json.contains("absent_record"));
+        assert!(json.contains("lifecycle_timeout") && json.contains("诊断日志"));
+    }
+
+    #[test]
+    fn native_admission_stage_is_retained_in_logs_not_product_message() {
+        let error = crate::errors::AppError::RuntimeManaged {
+            code: "lifecycle_start_exit".into(),
+            detail: "exit_code=1 lifetime_admission=job-create kind=error win32=5".into(),
+        };
+        let value = ProcessActionResult::from_state(ProcessLifecycleState::StartingFailed)
+            .with_failure(&error);
+        let raw = serde_json::to_string(&value).unwrap();
+        assert!(raw.contains("lifecycle_start_exit"));
+        assert!(!raw.contains("job-create") && !raw.contains("win32="));
+    }
 
     fn request(action: LifecycleAction, confirm: bool) -> ProcessActionRequest {
         ProcessActionRequest { action, confirm }
@@ -82,6 +179,42 @@ mod tests {
         assert!(value.can_stop);
         assert!(value.can_restart);
         assert_eq!(value.result, Some(LifecycleResult::Started));
+    }
+
+    #[test]
+    fn confirmed_actions_return_terminal_gates_without_a_later_status_poll() {
+        for before in [
+            ProcessLifecycleState::Starting,
+            ProcessLifecycleState::Stopping,
+        ] {
+            let started =
+                ProcessActionResult::from_state(before).with_result(LifecycleResult::Started);
+            assert_eq!(started.lifecycle_state, ProcessLifecycleState::Running);
+            assert!(!started.can_start && started.can_stop && started.can_restart);
+            assert_eq!(started.result, Some(LifecycleResult::Started));
+        }
+        let stopped = ProcessActionResult::from_state(ProcessLifecycleState::Stopping)
+            .with_result(LifecycleResult::Stopped);
+        assert_eq!(stopped.lifecycle_state, ProcessLifecycleState::Stopped);
+        assert!(stopped.can_start && !stopped.can_stop && !stopped.can_restart);
+        assert_eq!(stopped.result, Some(LifecycleResult::Stopped));
+    }
+
+    #[test]
+    fn unsuccessful_results_cannot_claim_running_or_stopped() {
+        for before in [
+            ProcessLifecycleState::Starting,
+            ProcessLifecycleState::Stopping,
+        ] {
+            for outcome in [LifecycleResult::Failed, LifecycleResult::Cancelled] {
+                let value = ProcessActionResult::from_state(before).with_result(outcome.clone());
+                assert_eq!(value.lifecycle_state, before);
+                assert_eq!(value.can_start, before.can_start());
+                assert_eq!(value.can_stop, before.can_stop());
+                assert_eq!(value.can_restart, before.can_restart());
+                assert_eq!(value.result, Some(outcome));
+            }
+        }
     }
 
     #[test]

@@ -6,11 +6,13 @@
 //! 优先级（`FZ-48`）：用户显式指定 > 托管安装 > 自动发现候选。**不读取 PATH**。
 
 pub mod archive;
+pub mod bundled;
 pub mod install;
 pub(crate) mod offline_drop;
 pub mod paths;
+pub mod port;
 pub(crate) mod protection;
-pub(crate) mod relocation;
+pub(crate) mod startup_bundle;
 pub mod uninstall;
 
 use serde::{Deserialize, Serialize};
@@ -229,6 +231,7 @@ impl RuntimeResolution {
 pub struct RuntimeResolver {
     managed_entry: PathBuf,
     discovered: Vec<PathBuf>,
+    managed_only: bool,
 }
 
 impl RuntimeResolver {
@@ -237,6 +240,7 @@ impl RuntimeResolver {
         Self {
             managed_entry: data_root.join(MANAGED_ENTRY_RELATIVE),
             discovered,
+            managed_only: false,
         }
     }
 
@@ -250,12 +254,35 @@ impl RuntimeResolver {
     /// `explicit` 只有在**通过可执行校验**时才生效；校验失败即静默回落到下一档，
     /// 避免一个失效的手填路径把整个应用卡成「未解析」。
     pub fn resolve(&self, explicit: Option<&Path>) -> RuntimeResolution {
-        if let Some(path) = explicit {
-            if let Ok(valid) = paths::validate_executable(path) {
-                return RuntimeResolution {
-                    kind: RuntimeSourceKind::Explicit,
-                    path: Some(valid),
-                };
+        if self.managed_only {
+            let root = self
+                .managed_entry
+                .parent()
+                .and_then(Path::parent)
+                .and_then(Path::parent);
+            if let Some(root) = root {
+                let node = root.join(if cfg!(windows) {
+                    "runtime/node/node.exe"
+                } else {
+                    "runtime/node/bin/node"
+                });
+                if install::validate_managed_installation(root, Some(&node)).is_ok() {
+                    return RuntimeResolution {
+                        kind: RuntimeSourceKind::Managed,
+                        path: Some(self.managed_entry.clone()),
+                    };
+                }
+            }
+            return RuntimeResolution::unresolved();
+        }
+        if !self.managed_only {
+            if let Some(path) = explicit {
+                if let Ok(valid) = paths::validate_executable(path) {
+                    return RuntimeResolution {
+                        kind: RuntimeSourceKind::Explicit,
+                        path: Some(valid),
+                    };
+                }
             }
         }
         if let Ok(valid) = paths::validate_executable(&self.managed_entry) {
@@ -264,12 +291,14 @@ impl RuntimeResolver {
                 path: Some(valid),
             };
         }
-        for candidate in &self.discovered {
-            if let Ok(valid) = paths::validate_executable(candidate) {
-                return RuntimeResolution {
-                    kind: RuntimeSourceKind::Discovered,
-                    path: Some(valid),
-                };
+        if !self.managed_only {
+            for candidate in &self.discovered {
+                if let Ok(valid) = paths::validate_executable(candidate) {
+                    return RuntimeResolution {
+                        kind: RuntimeSourceKind::Discovered,
+                        path: Some(valid),
+                    };
+                }
             }
         }
         RuntimeResolution::unresolved()
@@ -310,6 +339,33 @@ impl RuntimeHandle {
         handle
     }
 
+    /// v2 installed program source is independent from manager state and legacy discovery.
+    pub fn initialize_managed(data_root: &Path, installation_root: &Path) -> Arc<Self> {
+        let store = RuntimeStore::new(data_root);
+        let resolver = RuntimeResolver {
+            managed_entry: installation_root.join(MANAGED_ENTRY_RELATIVE),
+            discovered: vec![],
+            managed_only: true,
+        };
+        let current = resolver.resolve(None);
+        let handle = Arc::new(Self {
+            store,
+            resolver,
+            explicit: Mutex::new(None),
+            current: Mutex::new(current),
+        });
+        let _ = handle.persist();
+        handle
+    }
+    pub fn installation_root(&self) -> &Path {
+        self.resolver
+            .managed_entry
+            .parent()
+            .and_then(Path::parent)
+            .and_then(Path::parent)
+            .expect("managed entry under installation/runtime/bin")
+    }
+
     /// 当前解析结果（不做 I/O）。
     pub fn current(&self) -> RuntimeResolution {
         self.current
@@ -340,6 +396,9 @@ impl RuntimeHandle {
     }
 
     /// 托管入口路径（`FZ-47`），与当前是否解析到它无关。
+    pub fn resolver_managed_only(&self) -> bool {
+        self.resolver.managed_only
+    }
     pub fn managed_entry(&self) -> PathBuf {
         self.resolver.managed_entry.clone()
     }
@@ -385,6 +444,9 @@ impl RuntimeHandle {
     ///
     /// 传入的路径必须通过可执行校验，否则会被忽略（调用方在 B5 负责给用户提示）。
     pub fn set_explicit(&self, path: Option<PathBuf>) -> RuntimeResolution {
+        if self.resolver.managed_only {
+            return self.refresh();
+        }
         let accepted = match path {
             Some(candidate) if RuntimeResolver::validate_explicit(&candidate).is_ok() => {
                 Some(candidate)
@@ -433,6 +495,10 @@ impl crate::infrastructure::runtime_executable::RuntimeExecutableProvider for Ru
     fn executable(&self) -> Option<PathBuf> {
         RuntimeHandle::executable(self)
     }
+    fn managed_installation_root(&self) -> Option<PathBuf> {
+        self.resolver_managed_only()
+            .then(|| self.installation_root().to_path_buf())
+    }
 }
 
 #[cfg(all(test, unix))]
@@ -455,6 +521,63 @@ mod tests {
         let managed = data_root.join(MANAGED_ENTRY_RELATIVE);
         let discovered = root.path().join("home/.local/bin/ocx");
         (root, data_root, managed, discovered)
+    }
+
+    #[test]
+    fn managed_v2_never_uses_legacy_or_explicit_programs() {
+        let root = tempfile::tempdir().unwrap();
+        let data = root.path().join("user/desktop");
+        let install = root.path().join("installed");
+        let legacy = data.join(MANAGED_ENTRY_RELATIVE);
+        let explicit = root.path().join("old/ocx");
+        write_executable(&legacy);
+        write_executable(&explicit);
+        let handle = RuntimeHandle::initialize_managed(&data, &install);
+        assert_eq!(handle.kind(), RuntimeSourceKind::Unresolved);
+        assert_eq!(
+            handle.set_explicit(Some(explicit)).kind,
+            RuntimeSourceKind::Unresolved
+        );
+        assert!(handle.explicit_path().is_none());
+        assert_eq!(handle.installation_root(), install);
+        let entry = install.join(MANAGED_ENTRY_RELATIVE);
+        write_executable(&entry);
+        assert_eq!(handle.refresh().kind, RuntimeSourceKind::Unresolved); // executable alone is not install proof
+        let prefix = install.join(MANAGED_PREFIX_RELATIVE);
+        let package = prefix.join(install::PACKAGE_SUBPATH);
+        std::fs::create_dir_all(package.join("bin")).unwrap();
+        let node = install.join("runtime/node/bin/node");
+        write_executable(&node);
+        let script = package.join("bin/ocx.mjs");
+        write_executable(&script);
+        std::fs::write(package.join("package.json"),serde_json::to_vec(&serde_json::json!({"name":OFFICIAL_PACKAGE,"version":"2.97.0-desktop023.names.1","bin":{"ocx":"bin/ocx.mjs"}})).unwrap()).unwrap();
+        std::fs::write(&entry, install::entry_script(Some(&node), &script)).unwrap();
+        let proof = protection::activation_proof(
+            &prefix,
+            &uuid::Uuid::new_v4().to_string(),
+            "bin/ocx.mjs",
+            &node,
+        )
+        .unwrap();
+        let manifest = install::RuntimeManifest {
+            activation: Some(proof),
+            package: OFFICIAL_PACKAGE.into(),
+            version: "2.97.0-desktop023.names.1".into(),
+            tarball_sha256: "a".repeat(64),
+            installed_at: "2026-11-06T00:00:00Z".into(),
+            npm_path: "fixture".into(),
+            scripts_enabled: false,
+            source: install::InstallSourceKind::Offline,
+        };
+        std::fs::write(
+            prefix.join(MANIFEST_FILENAME),
+            serde_json::to_vec(&manifest).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(handle.refresh().path, Some(entry));
+        std::fs::remove_file(handle.managed_entry()).unwrap();
+        assert_eq!(handle.refresh().kind, RuntimeSourceKind::Unresolved);
+        assert!(legacy.exists());
     }
 
     #[test]

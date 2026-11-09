@@ -1,0 +1,156 @@
+name: Windows 0.2.23 core hypothesis sweep
+on:
+  workflow_dispatch:
+    inputs:
+      focus:
+        type: string
+        default: integration
+      build_run:
+        type: string
+        required: true
+        description: Successful exact-source core preparation run
+      source:
+        type: string
+        required: true
+        description: Full source SHA, equal to this workflow checkout
+      hypothesis:
+        type: string
+        required: true
+        description: Prewritten falsifiable hypothesis JSON; no hypothesis means no execution
+  workflow_call:
+    inputs:
+      focus:
+        type: string
+        default: integration
+      build_run:
+        type: string
+        required: true
+      source:
+        type: string
+        required: true
+      hypothesis:
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+jobs:
+  producer:
+    if: inputs.focus == 'producer'
+    uses: ./.github/workflows/windows023-core-producer.yml
+    with:
+      build_run: ${{ inputs.build_run }}
+      source: ${{ inputs.source }}
+      hypothesis: ${{ inputs.hypothesis }}
+  core:
+    if: inputs.focus == 'integration'
+    runs-on: windows-latest
+    # 8-10 minute operational target; existing product/cleanup deadlines stay
+    # intact. An overrun is recorded, never hidden by killing an unknown service.
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      CORE_HYPOTHESIS: ${{ inputs.hypothesis }}
+      CORE_SOURCE: ${{ inputs.source }}
+      CORE_BUILD_RUN: ${{ inputs.build_run }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - name: Open immutable round and admit prewritten hypothesis
+        id: hypothesis
+        continue-on-error: true
+        run: |
+          $root=Join-Path $env:RUNNER_TEMP ('ocxd023-core-'+$env:GITHUB_RUN_ID+'-'+$env:GITHUB_RUN_ATTEMPT)
+          if(Test-Path -LiteralPath $root){throw 'Earlier diagnostic evidence must not be overwritten'}
+          New-Item -ItemType Directory (Join-Path $root 'sweep') | Out-Null
+          New-Item -ItemType Directory (Join-Path $root 'evidence') | Out-Null
+          'OCXD_SWEEP_ROOT='+$root >> $env:GITHUB_ENV
+          'root='+$root >> $env:GITHUB_OUTPUT
+          python test/smoke/sweep/core.py admit $root --source $env:CORE_SOURCE --build-run $env:CORE_BUILD_RUN
+          if($LASTEXITCODE -ne 0){throw 'Missing/invalid falsifiable hypothesis: no native execution allowed'}
+      - name: Download exact prepared artifact
+        id: download
+        if: steps.hypothesis.outcome == 'success'
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.build_run }}
+          name: windows023-core-program-${{ inputs.source }}
+          path: ${{ steps.hypothesis.outputs.root }}/program
+      - name: 01 hypothesis-and-inputs
+        id: inputs
+        if: always() && steps.hypothesis.outputs.root != ''
+        continue-on-error: true
+        env:
+          ADMISSION: ${{ steps.hypothesis.outcome }}
+          DOWNLOAD: ${{ steps.download.outcome }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          . ./test/smoke/sweep/records.ps1
+          $r=Invoke-SweepCheck (Join-Path $env:OCXD_SWEEP_ROOT 'sweep') '01' 'hypothesis-and-inputs' {
+            if($env:ADMISSION -cne 'success' -or $env:DOWNLOAD -cne 'success'){throw 'Hypothesis/build artifact prerequisite failed; native driver not executed'}
+            $metadata=gh api ('repos/'+$env:GITHUB_REPOSITORY+'/actions/runs/'+$env:CORE_BUILD_RUN) | ConvertFrom-Json
+            if($LASTEXITCODE -ne 0 -or $metadata.head_sha -cne $env:CORE_SOURCE -or $metadata.status -cne 'completed' -or $metadata.conclusion -cne 'success'){throw 'Successful exact-source preparation run required'}
+            if($metadata.path -cne '.github/workflows/windows-candidate.yml' -and $metadata.path -cne '.github/workflows/windows023-core-build.yml'){throw 'Unexpected preparation workflow'}
+            $metadata | ConvertTo-Json -Depth 15 | Set-Content (Join-Path $env:OCXD_SWEEP_ROOT 'evidence/build-run.json')
+            python test/smoke/sweep/core.py verify (Join-Path $env:OCXD_SWEEP_ROOT 'program') --source $env:CORE_SOURCE --build-run $env:CORE_BUILD_RUN > (Join-Path $env:OCXD_SWEEP_ROOT 'evidence/program-verification.json')
+            if($LASTEXITCODE -ne 0){throw 'Exact-source complete program manifest validation failed'}
+            'OCXD_SWEEP_PROGRAM='+(Join-Path $env:OCXD_SWEEP_ROOT 'program') >> $env:GITHUB_ENV
+            Get-Content (Join-Path $env:OCXD_SWEEP_ROOT 'evidence/program-verification.json') -Raw | ConvertFrom-Json
+          }
+          if($r.status -cne 'pass'){exit 1}
+      - name: 11 two-real-sids with original protocol and exact cleanup
+        if: always() && steps.hypothesis.outputs.root != ''
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '11' -Name two-real-sids -Task two-user
+      - name: 12 private-bundle-supply
+        if: always() && steps.hypothesis.outputs.root != ''
+        continue-on-error: true
+        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --core --step '12'
+      - name: 13 runtime-readiness-and-ports
+        if: always() && steps.hypothesis.outputs.root != ''
+        continue-on-error: true
+        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --core --step '13'
+      - name: 15 two-user-paths
+        if: always() && steps.hypothesis.outputs.root != ''
+        continue-on-error: true
+        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --core --step '15'
+      - name: 16 same-user-ipc
+        if: always() && steps.hypothesis.outputs.root != ''
+        continue-on-error: true
+        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --core --step '16'
+      - name: 17 cross-user-ipc
+        if: always() && steps.hypothesis.outputs.root != ''
+        continue-on-error: true
+        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --core --step '17'
+      - name: 18 account-and-process-cleanup
+        if: always() && steps.hypothesis.outputs.root != ''
+        continue-on-error: true
+        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --core --step '18'
+      - name: Complete status table and compare against prewritten hypothesis
+        if: always() && steps.hypothesis.outputs.root != ''
+        run: |
+          python test/smoke/sweep/core.py finish $env:OCXD_SWEEP_ROOT
+          if($LASTEXITCODE -ne 0){throw 'Complete immutable core summary failed'}
+          $s=Get-Content (Join-Path $env:OCXD_SWEEP_ROOT 'sweep/summary.json') -Raw | ConvertFrom-Json
+          '| Step | Status | First error |' >> $env:GITHUB_STEP_SUMMARY
+          '| --- | --- | --- |' >> $env:GITHUB_STEP_SUMMARY
+          foreach($r in $s.steps){'| '+$r.step+' '+$r.name+' | '+$r.status+' | '+($r.firstError -replace '[|\r\n]',' ')+' |' >> $env:GITHUB_STEP_SUMMARY}
+          'Diagnostic only: accepted:false; hypothesis '+$s.hypothesis.verdict >> $env:GITHUB_STEP_SUMMARY
+      - name: Inventory complete controlled evidence
+        if: always() && steps.hypothesis.outputs.root != ''
+        run: python test/smoke/sweep/artifact.py $env:OCXD_SWEEP_ROOT
+      - name: Upload all original failures and hypothesis comparison
+        if: always() && steps.hypothesis.outputs.root != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows023-core-sweep-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ steps.hypothesis.outputs.root }}/artifact/**
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 14

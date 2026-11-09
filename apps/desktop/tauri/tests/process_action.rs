@@ -64,7 +64,8 @@ async fn process_action_requires_explicit_confirm() {
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
-async fn process_action_preserves_observation_when_context_is_unavailable() {
+async fn process_action_reports_start_failure_and_preserves_stop_observation_when_context_is_unavailable(
+) {
     let fixture = fixture();
     let runner = std::sync::Mutex::new(ControlledProcessRunner::new(
         fixture.context.working_directory.clone(),
@@ -84,10 +85,18 @@ async fn process_action_preserves_observation_when_context_is_unavailable() {
         &fixture.runtime_log,
         None,
     )
-    .expect("unconfigured runtime should preserve state");
-    assert_eq!(start.lifecycle_state, ProcessLifecycleState::Stopped);
+    .expect(
+        "unconfigured runtime should report a failed start without inventing a running process",
+    );
+    assert_eq!(start.lifecycle_state, ProcessLifecycleState::StartingFailed);
     assert_eq!(start.result, None);
     assert!(start.can_start);
+    assert!(!start.can_stop);
+    assert!(!start.can_restart);
+    assert_eq!(
+        start.failure.as_ref().map(|failure| failure.code.as_str()),
+        Some("lifecycle_unconfirmed")
+    );
 
     let stop = process_action_with_runner(
         ProcessActionRequest {
@@ -123,11 +132,11 @@ async fn process_action_uses_controlled_context() {
         None,
     )
     .expect("fixture context should execute");
-    assert_eq!(result.lifecycle_state, ProcessLifecycleState::Starting);
+    assert_eq!(result.lifecycle_state, ProcessLifecycleState::Running);
     assert_eq!(result.result, Some(LifecycleResult::Started));
     assert!(!result.can_start);
-    assert!(!result.can_stop);
-    assert!(!result.can_restart);
+    assert!(result.can_stop);
+    assert!(result.can_restart);
 }
 
 // ---- 真实通知生产者（FZ-43 / 领域模型 §16.1）----

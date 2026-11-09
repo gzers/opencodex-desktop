@@ -594,9 +594,15 @@ class OtaRun:
         dump(self.out / 'automatic-restart-identity.json', self.restarted)
         self.wait(lambda s: any(n.get('role') == 'AXWebArea' for n in s['nodes']), 35, 'same-auto-process-mounted')
         self.ax('focus'); self.capture('same-auto-process-mounted')
-        assert 'startup version=' + TO_VERSION + ' commit=' + self.args.source_sha in (self.root / 'logs/app.log').read_text()
+        assert 'startup version=' + TO_VERSION + ' commit=' + self.args.source_sha in self.restarted_log().read_text()
         assert inventory(self.app) == self.target_inventory
         self.verify_bundle(self.app, TO_VERSION, self.args.source_sha, 'automatic-process-installed' + TO_VERSION)
+        self.restarted_business_readback()
+
+    def restarted_log(self):
+        return self.root / 'logs/app.log'
+
+    def restarted_business_readback(self):
         self.press('模型'); self.press('渠道模型'); self.press('编辑')
         snap = self.wait(lambda s: '渠道配置' in self.text(s), 20, 'same-auto-process-business-readback')
         assert 'ota021-preserve' in self.text(snap) and 'vendor/a:8b' in self.text(snap) and 'Mixed_Case/V2' in self.text(snap)

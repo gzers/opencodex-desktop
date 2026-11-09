@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "version": "2.97.0-desktop023.names.2",
+  "baseVersion": "2.97.0-post021.ownerquery.2",
+  "baseSha256": "bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957",
+  "originalSha256": "3859a64198a05b0ebdbac0593b0cc6b675ec14f32b69ee100cda7a173404e552",
+  "patchSha256": "57da534adb9f03606a590eae0fd2d45a47d0741c25ff96ad26b70f0cc6c2da73",
+  "files": [
+    {
+      "path": "bin/ocx.mjs",
+      "beforeSha256": "ef45f83d8c41d0aa91ace16ca11dd6831da9d9a2a14148a32fc3184b1f4b2fc6",
+      "afterSha256": "9b0031fb41cfcfd455a6e3bda191b8ec1524dcf04c67e17a66984150217afdeb",
+      "summary": "Exact plain version requests preserve official output without Bun/bootstrap/home or service mutation."
+    },
+    {
+      "path": "src/codex/catalog/derive-entry.ts",
+      "beforeSha256": "39c8b95208f0aaf0cedfb782626b2446a6885cc556c2c54c66b8cdaf26145baa",
+      "afterSha256": "9da253a9d8586738221605b923c5fac460e4b4f1059a612c7e45dc66aa567769",
+      "summary": "Default routed display_name uses captured name plus original model id; existing aliases and later explicit displayName still win."
+    },
+    {
+      "path": "src/codex/catalog/gather-capture.ts",
+      "beforeSha256": "a63d1ce429624cc750371682ab70b8aff760feaaceee9a52ba135512fc724f06",
+      "afterSha256": "3d44393a5148e3c509ecfe92d92e24c36d0c4bb0cdfeee28fce09ee64b18654f",
+      "summary": "Name joins the gather fingerprint so concurrent old/new configurations do not coalesce."
+    },
+    {
+      "path": "src/codex/catalog/model-hints.ts",
+      "beforeSha256": "9707a32e1b6544b6014c0880443e99edbe6d96103b0314998df60a617f28dc82",
+      "afterSha256": "94d14b5419024b9470d594974c7c05948f3a9e5f1a56f134baa47cf67aa177f2",
+      "summary": "Capture saved provider.name in detached hints; discard stale cached labels; exclude official OpenAI and combos."
+    },
+    {
+      "path": "src/codex/catalog/parsing.ts",
+      "beforeSha256": "b4886ad9662565c58c8e5b678aba6409e17e1ebd24e500152600aa331838c202",
+      "afterSha256": "3baf653b530a7e6104e0288d98446fdd7caf086edac8a1a2eb2195f46b35dad2",
+      "summary": "Add display-only providerDisplayName to catalog material; do not alter provider, id or alias."
+    },
+    {
+      "path": "src/config/diagnostics.ts",
+      "summary": "Keep missing-port defaults consistent with automatic OS allocation; explicit configured values remain unchanged.",
+      "beforeSha256": "bdd80fbd2abb303c63f0753455010085a08cec528837f2a9118e7772d9f63951",
+      "afterSha256": "24cd9825b3c6e42cf6d36770ccb72c1a2860e914b1810f2378669d0719de67bb"
+    },
+    {
+      "path": "src/config/live-reconcile.ts",
+      "summary": "Keep missing-port defaults consistent with automatic OS allocation; explicit configured values remain unchanged.",
+      "beforeSha256": "056c6ff1e783a80f52cdb51101bed4f64728f29a0eb152fdfbc86ddc8cc95c0d",
+      "afterSha256": "b12aa2b94fdefde689a8635ba6490a9415fe94ab69088a0e274c20011e7caf4f"
+    },
+    {
+      "path": "src/config/proxy-env.ts",
+      "summary": "Keep missing-port defaults consistent with automatic OS allocation; explicit configured values remain unchanged.",
+      "beforeSha256": "3a7d1f883daaf0c360694b2c4f14d4e9ebe4398063626edea0f8e056efc19679",
+      "afterSha256": "01a1903d4c72b986f984d0a35e48902e5c42cd1e3c236956f0a167176a69f01d"
+    },
+    {
+      "path": "src/config/schema/config-schema.ts",
+      "beforeSha256": "e49256521bff11a081cf68671b248d4f09fc12b0efd9b6495e36630ceaab62c2",
+      "afterSha256": "67f615f4e2ee823f7f7caa07af2902530372e1db8256b443793391c9471abe8a",
+      "summary": "Desktop maintained runtime uses OS-assigned port only when port is omitted; explicit configured/fixed ports remain unchanged."
+    },
+    {
+      "path": "src/types/provider.ts",
+      "beforeSha256": "d583a86439985e2ee70fb3f2202e62590fd3925c0fd34000c5f24baeca5126eb",
+      "afterSha256": "a1721878fc4ca333df8624f2deebc89518ba63a3f15944d36a7210d549bd444b",
+      "summary": "Type the already preserved provider.name field without changing passthrough schema or unknown fields."
+    }
+  ],
+  "packageChanges": [
+    "package.json: independent version and desktop023Runtime provenance; retain post021Candidate as ancestry",
+    "src/generated/compatibility-version.json: refresh only package.json and ten reviewed source hashes"
+  ],
+  "projection": {
+    "source": "Persisted providers[legalKey].name in actual runtime config.json",
+    "chain": [
+      "loadConfig",
+      "captureGatherFlight / captureProviderGather",
+      "applyProviderConfigHints",
+      "CatalogModel.providerDisplayName",
+      "deriveEntry / buildCatalogEntriesFromObservedState",
+      "syncCatalogModels actual catalog file display_name"
+    ],
+    "priority": [
+      "explicit model displayName / modelDisplayNames",
+      "existing effective model aliases and providerAlias behavior",
+      "saved provider.name + original model.id",
+      "existing default raw slug / provider special labels"
+    ],
+    "boundaries": [
+      "No route slug or wire id rewrite",
+      "No native OpenAI, account-bound native or combo relabeling",
+      "No Desktop directory scanning, DEV source, service or inference",
+      "Retain existing model route, ownership and explicit-port policies; only adopted default auto-port and exact version early return are added."
+    ]
+  },
+  "validation": {
+    "runner": "test/test_runtime_023.py --archive OLD_TGZ --original ORIGINAL_TGZ --bun ABSOLUTE_BUN --dependencies EXISTING_NODE_MODULES --output FRESH_TEMP",
+    "required": "Full extracted sources, installed dependencies, isolated I/runtime and H; denied network and process execution. Missing dependencies fails integration."
+  }
+}

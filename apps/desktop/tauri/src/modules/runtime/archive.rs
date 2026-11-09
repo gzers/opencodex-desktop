@@ -267,15 +267,32 @@ fn scan(
                 return Err(ArchiveRejection::PathEscape { entry: raw_display });
             }
             if entry_type.is_dir() {
-                std::fs::create_dir_all(&target).map_err(|_| ArchiveRejection::Read)?;
+                if !target.is_dir() {
+                    crate::infrastructure::platform::create_private_dir_all(&target, 0o700)
+                        .map_err(|_| ArchiveRejection::Read)?;
+                }
             } else {
                 if let Some(parent) = target.parent() {
-                    std::fs::create_dir_all(parent).map_err(|_| ArchiveRejection::Read)?;
+                    if !parent.is_dir() {
+                        crate::infrastructure::platform::create_private_dir_all(parent, 0o700)
+                            .map_err(|_| ArchiveRejection::Read)?;
+                    }
                 }
                 let mut payload = Vec::with_capacity(size as usize);
                 entry
                     .read_to_end(&mut payload)
                     .map_err(|_| ArchiveRejection::Read)?;
+                #[cfg(windows)]
+                {
+                    use std::io::Write;
+                    let mut file =
+                        crate::infrastructure::platform::create_new_private_file(&target, 0o600)
+                            .map_err(|_| ArchiveRejection::Read)?;
+                    file.write_all(&payload)
+                        .map_err(|_| ArchiveRejection::Read)?;
+                    file.sync_all().map_err(|_| ArchiveRejection::Read)?;
+                }
+                #[cfg(not(windows))]
                 std::fs::write(&target, &payload).map_err(|_| ArchiveRejection::Read)?;
                 // tar 保留权限位；补一次显式设置，避免解包后入口不可执行。
                 if let Ok(mode) = entry.header().mode() {
@@ -400,6 +417,22 @@ mod tests {
             official_json("0.3.1"),
             &[("package/bin/ocx.js", b"#!/usr/bin/env node\n", true)],
         )
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn existing_extract_target_is_not_overwritten_by_a_second_archive() {
+        let dir = tempfile::tempdir().unwrap();
+        let archive = official_tgz(dir.path());
+        let dest = dir.path().join("out");
+        extract(&archive, Some("0.3.1"), &dest).unwrap();
+        let entry = dest.join("package.json");
+        std::fs::write(&entry, b"preserve existing bytes").unwrap();
+        assert!(matches!(
+            extract(&archive, Some("0.3.1"), &dest),
+            Err(ArchiveRejection::Read)
+        ));
+        assert_eq!(std::fs::read(entry).unwrap(), b"preserve existing bytes");
     }
 
     #[test]

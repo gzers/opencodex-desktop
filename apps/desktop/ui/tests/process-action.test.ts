@@ -309,3 +309,21 @@ describe('process action integration', () => {
     expect(projected.health).toBe('正常')
   })
 })
+
+describe('typed lifecycle failures remain visible until actual ready',()=>{
+  beforeEach(()=>{setActivePinia(createPinia());invoke.mockReset()})
+  it('keeps a rejected start as failed over a stopped observation and clears on true running',async()=>{
+    const lifecycle=useLifecycleStore()
+    invoke.mockImplementation(async(command:string)=>command==='process_action'?{...backendResult('starting_failed'),result:null,failure:{code:'port_conflict',message:'端口已被占用，请调整端口。'}}:snapshot('stopped'))
+    const result=await lifecycle.requestProcessAction('start')
+    expect(result?.failure?.code).toBe('port_conflict')
+    lifecycle.setStatusSnapshot(snapshot('stopped'))
+    expect(lifecycle.statusSnapshot?.matrix.runtime).toBe('starting_failed')
+    expect(lifecycle.statusSnapshot?.pid).toBeNull()
+    expect(lifecycle.processProgressError).toContain('端口已被占用')
+    lifecycle.setStatusSnapshot(snapshot('running'))
+    expect(lifecycle.lastStartFailed).toBe(false)
+    expect(lifecycle.statusSnapshot?.matrix.runtime).toBe('running')
+    lifecycle.finishProcessAction()
+  })
+})

@@ -424,6 +424,7 @@ fn windows_stop_observes_actual_zero_and_nonzero_exit_codes() {
             executable: entry,
             working_directory: root.path().to_owned(),
             environment: environment(root.path()),
+            requested_port: None,
         };
         assert_eq!(
             ControlledProcessRunner::new(root.path())
@@ -720,11 +721,13 @@ impl NpmRunner for RuntimeFixtureNpm {
         _sink: &dyn InstallProgressSink,
         _cancel: &CancelFlag,
     ) -> Result<NpmOutcome, opencodex_desktop_lib::modules::runtime::install::InstallError> {
-        archive::extract(
-            &self.archive,
-            None,
-            &request.prefix.join("node_modules/@bitkyc08/opencodex"),
-        )?;
+        let package = request.prefix.join("node_modules/@bitkyc08/opencodex");
+        // Simulate npm reinstalling the package in this attempt's owned staging
+        // prefix. The archive reader intentionally refuses existing Windows files.
+        if package.exists() {
+            std::fs::remove_dir_all(&package).unwrap();
+        }
+        archive::extract(&self.archive, None, &package)?;
         std::fs::write(request.prefix.join("package-lock.json"), b"{}").map_err(|error| {
             opencodex_desktop_lib::modules::runtime::install::InstallError::FileSystem {
                 operation: "fixture package lock".into(),

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "REPLACE-before-dispatch",
+  "source": "REPLACE-with-full-current-source-SHA",
+  "buildRun": "REPLACE-with-successful-core-build-run",
+  "claim": "REPLACE with one concrete falsifiable causal judgment",
+  "changeUnderTest": "REPLACE with the exact source or assembly change being tested",
+  "refutation": "REPLACE with observations that would disprove the judgment",
+  "rerunReason": "REPLACE with why these core integration checks are affected",
+  "predictions": [
+    {
+      "step": "13",
+      "status": "pass",
+      "observation": "Both original actual readiness and full port/stop protocol assertions pass within unchanged budgets"
+    }
+  ],
+  "unchangedPassingEvidence": []
+}

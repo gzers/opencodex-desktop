@@ -21,6 +21,7 @@ export interface EnvironmentCheckPresentation {
 export interface EnvironmentPresentation {
   state:
     | 'checking'
+    | 'not_ready'
     | 'ready'
     | 'ready_via_source'
     | 'missing_node_brew'
@@ -103,7 +104,17 @@ export function buildEnvironmentPresentation(
   loading = false,
   runtimeKind: RuntimeSourceKind | null = null,
   platform: string | null = null,
+  error = '',
 ): EnvironmentPresentation {
+  if (!loading && error) {
+    return {
+      state: 'not_ready', title: '集成运行程序检查未就绪',
+      description: '可稍后重新检查或查看安装状态；本次检查未提供可用的运行环境结论。',
+      tag: '未就绪', statusClass: '', hidden: false, blocked: true,
+      checks: CHECK_NAMES.map(name => ({ name, value: '未声明', state: 'muted', label: '未检查' })),
+      commands: [], contractNote: false,
+    }
+  }
   if (loading || !report) {
     return {
       state: 'checking',

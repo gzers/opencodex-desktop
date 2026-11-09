@@ -69,6 +69,265 @@ struct Stored {
     protection: String,
 }
 
+/// Explicit D-bound read for snapshot/endpoint owners. It neither configures
+/// the process singleton nor reads its cache; another root cannot reuse a value.
+pub fn load_optional_at(
+    root: &Path,
+    purpose: &str,
+    ref_id: &str,
+) -> Result<Option<Zeroizing<String>>, AppError> {
+    if !root.is_absolute()
+        || root
+            .components()
+            .any(|c| matches!(c, std::path::Component::ParentDir))
+    {
+        return Err(AppError::NotConfigured);
+    }
+    if ![WEBDAV_CREDENTIAL_PURPOSE, ENCRYPTION_PASSWORD_PURPOSE].contains(&purpose) {
+        return Err(AppError::NotConfigured);
+    }
+    let account = account_key(purpose, ref_id)?;
+    let path = path_for(root, &account);
+    crate::modules::backup::safety::check_path(root, &path, true)?;
+    let bytes = match std::fs::symlink_metadata(&path) {
+        Ok(_) => Zeroizing::new(crate::modules::backup::safety::read_file(
+            &path,
+            1024 * 1024,
+        )?),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+        Err(_) => return Err(AppError::NotConfigured),
+    };
+    decode(&bytes, &account).map(Some)
+}
+
+/// Root-bound writes for a LocalFile receive owner. These never configure the
+/// singleton or borrow a credential from another D. The caller owns its storage
+/// lease and operation receipt; ordinary readers see the same protected format.
+pub fn store_at(root: &Path, purpose: &str, ref_id: &str, password: &str) -> Result<(), AppError> {
+    if password.is_empty() || password.len() > 1024 * 512 {
+        return Err(AppError::NotConfigured);
+    }
+    let account = explicit_account(root, purpose, ref_id)?;
+    let path = path_for(root, &account);
+    crate::modules::backup::safety::check_path(root, &path, true)?;
+    for dir in [root.join("manager-state"), root.join(CREDENTIALS_DIR)] {
+        crate::infrastructure::platform::create_private_dir_all(&dir, 0o700)
+            .map_err(|_| AppError::NotConfigured)?;
+        crate::modules::backup::safety::check_path(root, &dir, false)?;
+        crate::infrastructure::platform::set_mode(&dir, 0o700)
+            .map_err(|_| AppError::NotConfigured)?;
+    }
+    let bytes = Zeroizing::new(encode(&account, password)?);
+    crate::infrastructure::atomic_write::atomic_write(&path, &bytes, 0o600)?;
+    invalidate_at(root, &account);
+    // Read the actual protected file before reporting successful installation.
+    let actual = load_optional_at(root, purpose, ref_id)?.ok_or(AppError::NotConfigured)?;
+    if actual.as_str() != password {
+        return Err(AppError::NotConfigured);
+    }
+    Ok(())
+}
+
+/// Idempotent deletion within the selected D; no process-wide root lookup.
+pub fn remove_at(root: &Path, purpose: &str, ref_id: &str) -> Result<(), AppError> {
+    let account = explicit_account(root, purpose, ref_id)?;
+    let path = path_for(root, &account);
+    crate::modules::backup::safety::check_path(root, &path, true)?;
+    match std::fs::remove_file(&path) {
+        Ok(()) => (),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => (),
+        Err(_) => return Err(AppError::NotConfigured),
+    }
+    invalidate_at(root, &account);
+    match std::fs::symlink_metadata(&path) {
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(()),
+        _ => Err(AppError::NotConfigured),
+    }
+}
+fn explicit_account(root: &Path, purpose: &str, ref_id: &str) -> Result<String, AppError> {
+    if !root.is_absolute()
+        || root
+            .components()
+            .any(|c| matches!(c, std::path::Component::ParentDir))
+    {
+        return Err(AppError::NotConfigured);
+    }
+    crate::modules::backup::safety::check_path(root, root, false)?;
+    account_key(purpose, ref_id)
+}
+fn invalidate_at(root: &Path, account: &str) {
+    if ROOT.get().is_some_and(|configured| configured == root) {
+        if let Ok(mut guard) = cache().lock() {
+            guard.remove(account);
+        }
+    }
+}
+
+#[cfg(test)]
+mod explicit_root_tests {
+    use super::*;
+    #[test]
+    fn root_bound_install_replace_and_remove_preserve_other_roots_and_purposes() {
+        let temp = tempfile::tempdir().unwrap();
+        let a = temp.path().join("a");
+        let b = temp.path().join("b");
+        std::fs::create_dir_all(&a).unwrap();
+        std::fs::create_dir_all(&b).unwrap();
+        let reference = crate::infrastructure::keychain::new_ref_id();
+        store_at(&a, WEBDAV_CREDENTIAL_PURPOSE, &reference, "synthetic-a").unwrap();
+        store_at(&b, WEBDAV_CREDENTIAL_PURPOSE, &reference, "synthetic-b").unwrap();
+        store_at(
+            &a,
+            ENCRYPTION_PASSWORD_PURPOSE,
+            &reference,
+            "synthetic-lock",
+        )
+        .unwrap();
+        store_at(&a, WEBDAV_CREDENTIAL_PURPOSE, &reference, "synthetic-new").unwrap();
+        assert_eq!(
+            load_optional_at(&a, WEBDAV_CREDENTIAL_PURPOSE, &reference)
+                .unwrap()
+                .unwrap()
+                .as_str(),
+            "synthetic-new"
+        );
+        remove_at(&a, WEBDAV_CREDENTIAL_PURPOSE, &reference).unwrap();
+        remove_at(&a, WEBDAV_CREDENTIAL_PURPOSE, &reference).unwrap();
+        assert!(load_optional_at(&a, WEBDAV_CREDENTIAL_PURPOSE, &reference)
+            .unwrap()
+            .is_none());
+        assert_eq!(
+            load_optional_at(&b, WEBDAV_CREDENTIAL_PURPOSE, &reference)
+                .unwrap()
+                .unwrap()
+                .as_str(),
+            "synthetic-b"
+        );
+        assert_eq!(
+            load_optional_at(&a, ENCRYPTION_PASSWORD_PURPOSE, &reference)
+                .unwrap()
+                .unwrap()
+                .as_str(),
+            "synthetic-lock"
+        );
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            let account = account_key(ENCRYPTION_PASSWORD_PURPOSE, &reference).unwrap();
+            assert_eq!(
+                std::fs::metadata(path_for(&a, &account))
+                    .unwrap()
+                    .permissions()
+                    .mode()
+                    & 0o777,
+                0o600
+            );
+            assert_eq!(
+                std::fs::metadata(a.join(CREDENTIALS_DIR))
+                    .unwrap()
+                    .permissions()
+                    .mode()
+                    & 0o777,
+                0o700
+            );
+        }
+    }
+    #[test]
+    fn invalid_root_reference_or_secret_never_creates_credentials() {
+        let temp = tempfile::tempdir().unwrap();
+        let reference = crate::infrastructure::keychain::new_ref_id();
+        for root in [
+            PathBuf::from("relative"),
+            temp.path().join("a/../b"),
+            temp.path().join("missing"),
+        ] {
+            assert!(store_at(&root, WEBDAV_CREDENTIAL_PURPOSE, &reference, "synthetic").is_err());
+            assert!(remove_at(&root, WEBDAV_CREDENTIAL_PURPOSE, &reference).is_err());
+        }
+        assert!(store_at(temp.path(), "other", &reference, "synthetic").is_err());
+        assert!(store_at(
+            temp.path(),
+            WEBDAV_CREDENTIAL_PURPOSE,
+            "../bad",
+            "synthetic"
+        )
+        .is_err());
+        assert!(store_at(temp.path(), WEBDAV_CREDENTIAL_PURPOSE, &reference, "").is_err());
+        assert_eq!(std::fs::read_dir(temp.path()).unwrap().count(), 0);
+    }
+    #[cfg(unix)]
+    #[test]
+    fn root_bound_install_and_remove_refuse_symlinked_credential_directory() {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().join("root");
+        let outside = temp.path().join("outside");
+        std::fs::create_dir_all(root.join("manager-state")).unwrap();
+        std::fs::create_dir_all(&outside).unwrap();
+        std::os::unix::fs::symlink(&outside, root.join(CREDENTIALS_DIR)).unwrap();
+        let reference = crate::infrastructure::keychain::new_ref_id();
+        assert!(store_at(&root, WEBDAV_CREDENTIAL_PURPOSE, &reference, "synthetic").is_err());
+        assert!(remove_at(&root, WEBDAV_CREDENTIAL_PURPOSE, &reference).is_err());
+        assert_eq!(std::fs::read_dir(&outside).unwrap().count(), 0);
+    }
+
+    #[test]
+    fn explicit_reads_never_reuse_another_roots_cache_or_create_missing_files() {
+        let temp = tempfile::tempdir().unwrap();
+        let a = temp.path().join("a");
+        let b = temp.path().join("b");
+        std::fs::create_dir_all(&a).unwrap();
+        std::fs::create_dir_all(&b).unwrap();
+        let reference = crate::infrastructure::keychain::new_ref_id();
+        let account = account_key(WEBDAV_CREDENTIAL_PURPOSE, &reference).unwrap();
+        for (root, value) in [(&a, "a-synthetic"), (&b, "b-synthetic")] {
+            let file = path_for(root, &account);
+            std::fs::create_dir_all(file.parent().unwrap()).unwrap();
+            std::fs::write(file, encode(&account, value).unwrap()).unwrap();
+        }
+        cache()
+            .lock()
+            .unwrap()
+            .insert(account.clone(), Zeroizing::new("wrong-cached-value".into()));
+        assert_eq!(
+            load_optional_at(&a, WEBDAV_CREDENTIAL_PURPOSE, &reference)
+                .unwrap()
+                .unwrap()
+                .as_str(),
+            "a-synthetic"
+        );
+        assert_eq!(
+            load_optional_at(&b, WEBDAV_CREDENTIAL_PURPOSE, &reference)
+                .unwrap()
+                .unwrap()
+                .as_str(),
+            "b-synthetic"
+        );
+        let missing = temp.path().join("missing");
+        std::fs::create_dir_all(&missing).unwrap();
+        assert!(
+            load_optional_at(&missing, WEBDAV_CREDENTIAL_PURPOSE, &reference)
+                .unwrap()
+                .is_none()
+        );
+        assert_eq!(std::fs::read_dir(&missing).unwrap().count(), 0);
+        cache().lock().unwrap().remove(&account);
+    }
+    #[cfg(unix)]
+    #[test]
+    fn explicit_read_refuses_symlink_outside_root() {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().join("root");
+        std::fs::create_dir_all(root.join("manager-state")).unwrap();
+        std::os::unix::fs::symlink(temp.path(), root.join(CREDENTIALS_DIR)).unwrap();
+        assert!(load_optional_at(
+            &root,
+            WEBDAV_CREDENTIAL_PURPOSE,
+            &crate::infrastructure::keychain::new_ref_id()
+        )
+        .is_err());
+    }
+}
+
 fn encode(account: &str, password: &str) -> Result<Vec<u8>, AppError> {
     #[cfg(windows)]
     let (value, protection) = (dpapi::protect(password)?, "dpapi");
@@ -111,7 +370,8 @@ fn store(purpose: &str, ref_id: &str, password: &str) -> Result<(), AppError> {
     let root = root()?;
     let account = account_key(purpose, ref_id)?;
     let dir = root.join(CREDENTIALS_DIR);
-    std::fs::create_dir_all(&dir).map_err(|_| AppError::NotConfigured)?;
+    crate::infrastructure::platform::create_private_dir_all(&dir, 0o700)
+        .map_err(|_| AppError::NotConfigured)?;
     crate::infrastructure::platform::set_mode(&dir, 0o700).map_err(|_| AppError::NotConfigured)?;
     let bytes = encode(&account, password)?;
     crate::infrastructure::atomic_write::atomic_write(&path_for(root, &account), &bytes, 0o600)?;

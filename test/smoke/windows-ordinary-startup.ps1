@@ -3,7 +3,8 @@ param(
  [Parameter(Mandatory=$true)][string]$Node,
  [Parameter(Mandatory=$true)][string]$OutputDirectory,
  [string]$ExpectedCommit='',
- [switch]$ProfileOnly
+ [switch]$ProfileOnly,
+ [string]$InstallerSuiteConfig = ''
 )
 $ErrorActionPreference='Stop'
 if(!$IsWindows -or $env:GITHUB_ACTIONS -ne 'true'){throw 'Restricted to an ephemeral Windows Actions runner'}
@@ -81,7 +82,7 @@ public sealed class OcxTemporaryDesktopAccess : IDisposable {
  }
  $taskChild=Join-Path $taskOutput 'ordinary-child.ps1'
  $taskConfig=Join-Path $taskOutput 'ordinary-input.json'
- [ordered]@{executable=$taskExe;node=$taskNode;output=(Join-Path $taskOutput 'startup');script=(Join-Path $PSScriptRoot 'windows-startup.ps1');commit=$ExpectedCommit;accountSid=$taskUser.SID.Value;profileOnly=[bool]$ProfileOnly} | ConvertTo-Json | Set-Content -LiteralPath $taskConfig -Encoding utf8
+ [ordered]@{executable=$taskExe;node=$taskNode;output=(Join-Path $taskOutput 'startup');script=(Join-Path $PSScriptRoot 'windows-startup.ps1');commit=$ExpectedCommit;accountSid=$taskUser.SID.Value;profileOnly=[bool]$ProfileOnly;installerSuite=$InstallerSuiteConfig;installerScript=(Join-Path $PSScriptRoot 'windows-installer.ps1')} | ConvertTo-Json | Set-Content -LiteralPath $taskConfig -Encoding utf8
  @'
 param([string]$InputFile)
 $ErrorActionPreference='Stop'
@@ -147,6 +148,13 @@ public static class OcxFirstLogonFolders {
  New-Item -ItemType Directory -Force $env:TEMP | Out-Null
  [ordered]@{result='pass';method='Native created temporary Profile; fresh-process Known Folder readback; only new SID user-folder registry initialized if image default was outside';imageLocalAppDataCorrected=$imageLocalCorrected;sid=$identity.User.Value;profile=$profile;roaming=$roaming;local=$local} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path (Split-Path -Parent $InputFile) 'ordinary-profile.json') -Encoding utf8
  if($c.profileOnly){exit 0}
+ if ($c.installerSuite) {
+  $suite = Get-Content -LiteralPath $c.installerSuite -Raw | ConvertFrom-Json
+  if ($suite.source -cne $c.commit) { throw 'Installer suite source mismatch' }
+  $env:RUNNER_TEMP=$env:TEMP
+  & $c.installerScript -BundleDirectory $suite.bundle -BuiltExecutable $suite.built -Node $c.node -OutputDirectory $suite.output -ExpectedCommit $c.commit -Kind $suite.kind -Mode $suite.mode -AsInstallationOwner
+  exit $LASTEXITCODE
+ }
  & $c.script -Executable $c.executable -Node $c.node -OutputDirectory $c.output -Mode ordinary -ExpectedCommit $c.commit
  if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
  exit 0
@@ -154,15 +162,22 @@ public static class OcxFirstLogonFolders {
 '@ | Set-Content -LiteralPath $taskChild -Encoding utf8
  $taskCredential=[pscredential]::new(($env:COMPUTERNAME+'\'+$taskName),$taskSecure)
  $taskProcess=Start-Process -FilePath (Join-Path $PSHOME 'pwsh.exe') -Credential $taskCredential -LoadUserProfile -WorkingDirectory $taskOutput -ArgumentList @('-NoLogo','-NoProfile','-NonInteractive','-File',('"'+$taskChild+'"'),'-InputFile',('"'+$taskConfig+'"')) -RedirectStandardOutput (Join-Path $taskOutput 'ordinary-stdout.log') -RedirectStandardError (Join-Path $taskOutput 'ordinary-stderr.log') -PassThru
- if(!$taskProcess.WaitForExit(300000)){$taskProcess.Kill($true);throw 'Ordinary native startup deadline expired'}
+ $taskEnvelope = if ($InstallerSuiteConfig) { 1200000 } else { 300000 }
+ if(!$taskProcess.WaitForExit($taskEnvelope)){$taskProcess.Kill($true);throw 'Ordinary native startup deadline expired'}
  if($taskProcess.ExitCode -ne 0){
-  foreach($name in @('ordinary-stderr.log','ordinary-known-folders.json','startup/startup-stderr.log')){
+  foreach($name in @('ordinary-stderr.log','ordinary-known-folders.json','startup/startup.json','startup/startup-stderr.log')){
    $path=Join-Path $taskOutput $name
    if(Test-Path -LiteralPath $path){Get-Content -LiteralPath $path -Tail 20 | Write-Output}
   }
   throw 'Ordinary native startup failed; see retained output'
  }
  if($ProfileOnly){Get-Content -LiteralPath (Join-Path $taskOutput 'ordinary-profile.json') -Raw | Write-Output;return}
+ if ($InstallerSuiteConfig) {
+  $suite=Get-Content -LiteralPath $InstallerSuiteConfig -Raw|ConvertFrom-Json
+  $receipt=Get-Content -LiteralPath (Join-Path $suite.output 'installer-verification.json') -Raw|ConvertFrom-Json
+  if ($receipt.result -cne 'pass' -or $receipt.sourceCommit -cne $ExpectedCommit) { throw 'Ordinary installer receipt invalid' }
+  return
+ }
  $taskReport=Get-Content -LiteralPath (Join-Path $taskOutput 'startup/startup.json') -Raw|ConvertFrom-Json
  if($taskReport.result -cne 'pass' -or $taskReport.applicationToken.elevated -ne $false -or !$taskReport.applicationModeMatched){throw 'Ordinary application token evidence missing'}
  [ordered]@{result='pass';scope='temporary nonadministrator local account with genuine loaded Profile; isolated sandbox, final EXE and WebView2 business checks';accountSid=$taskUser.SID.Value;applicationElevated=$taskReport.applicationToken.elevated;applicationModeMatched=$taskReport.applicationModeMatched;dailyUserChanged=$false;temporarySidDesktopAccess=$true;desktopAclRestoredOnExit=$false} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $taskOutput 'ordinary-summary.json') -Encoding utf8
@@ -172,6 +187,26 @@ public static class OcxFirstLogonFolders {
   $summary=Join-Path $taskOutput 'ordinary-summary.json'
   if(Test-Path -LiteralPath $summary){$report=Get-Content -LiteralPath $summary -Raw|ConvertFrom-Json;$report.desktopAclRestoredOnExit=$true;$report|ConvertTo-Json|Set-Content -LiteralPath $summary -Encoding utf8}
  }
- if($taskUser){Remove-LocalUser -SID $taskUser.SID}
+ if ($taskUser -and $InstallerSuiteConfig) {
+  # This account was created by this invocation. Delete only its registered
+  # unloaded Profile; preserve it on ambiguity or a still-loaded hive.
+  $cleanup=[ordered]@{sid=$taskUser.SID.Value;profile=$taskProfilePath.ToString();removed=$false}
+  try {
+   $until=[datetime]::UtcNow.AddSeconds(30)
+   do {
+    $profiles=@(Get-CimInstance Win32_UserProfile | Where-Object SID -CEQ $taskUser.SID.Value)
+    if (@($profiles | Where-Object Loaded).Count -eq 0) { break }
+    Start-Sleep -Milliseconds 250
+   } while ([datetime]::UtcNow -lt $until)
+   foreach ($profile in $profiles) {
+    if ($profile.Special -or $profile.Loaded -or $profile.LocalPath -ine $cleanup.profile) { throw 'Created installation-owner Profile not safe to remove' }
+    Remove-CimInstance -InputObject $profile
+   }
+   $owner=Get-LocalUser -SID $taskUser.SID
+   if ($owner.Name -cne $taskName) { throw 'Created installation-owner account changed' }
+   Remove-LocalUser -SID $taskUser.SID
+   $cleanup.removed=$true
+  } finally { $cleanup | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $taskOutput 'installation-owner-cleanup.json') }
+ } elseif ($taskUser) { Remove-LocalUser -SID $taskUser.SID }
  [Array]::Clear($taskSecret,0,$taskSecret.Length)
 }

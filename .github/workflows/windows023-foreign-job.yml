@@ -1,0 +1,75 @@
+name: Windows 0.2.23 private Job foreign SID diagnostic
+on:
+  workflow_dispatch:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  foreign-job:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Hold exact private Job while a real standard account probes it
+        run: |
+          $ErrorActionPreference='Stop'
+          $root=Join-Path $env:RUNNER_TEMP ('ocxd-foreign-job-'+$env:GITHUB_RUN_ID)
+          if(Test-Path -LiteralPath $root){throw 'Fresh evidence root required'}
+          New-Item -ItemType Directory -Path $root|Out-Null
+          'OCXD_FOREIGN_JOB_OUTPUT='+$root >> $env:GITHUB_ENV
+          Add-Type -TypeDefinition @'
+          using System;
+          using System.Runtime.InteropServices;
+          public static class OcxPrivateJobAuthorityProbe {
+            [StructLayout(LayoutKind.Sequential)] public struct SA { public int length; public IntPtr descriptor; public int inherit; }
+            [DllImport("advapi32.dll",CharSet=CharSet.Unicode,SetLastError=true)] static extern bool ConvertStringSecurityDescriptorToSecurityDescriptorW(string text,uint revision,out IntPtr descriptor,out uint bytes);
+            [DllImport("kernel32.dll",CharSet=CharSet.Unicode,SetLastError=true)] static extern IntPtr CreateJobObjectW(ref SA attributes,string name);
+            [DllImport("kernel32.dll",CharSet=CharSet.Unicode,SetLastError=true)] static extern IntPtr OpenJobObjectW(uint access,bool inherit,string name);
+            [DllImport("kernel32.dll")] public static extern bool CloseHandle(IntPtr handle);
+            [DllImport("kernel32.dll")] static extern IntPtr LocalFree(IntPtr value);
+            public static IntPtr Create(string name,string sid) {
+              IntPtr descriptor;uint bytes;
+              if(!ConvertStringSecurityDescriptorToSecurityDescriptorW("O:"+sid+"D:P(A;;GA;;;"+sid+")",1,out descriptor,out bytes))throw new System.ComponentModel.Win32Exception();
+              try { var sa=new SA{length=Marshal.SizeOf(typeof(SA)),descriptor=descriptor,inherit=0};var h=CreateJobObjectW(ref sa,name);var error=Marshal.GetLastWin32Error();
+                if(h==IntPtr.Zero)throw new System.ComponentModel.Win32Exception(error);
+                if(error==183){CloseHandle(h);throw new Exception("Random private Job name already exists");}return h;
+              } finally {LocalFree(descriptor);}
+            }
+            public static void VerifyStillPresentForCreator(string name) {var h=OpenJobObjectW(0x20004,false,name);if(h==IntPtr.Zero)throw new System.ComponentModel.Win32Exception();CloseHandle(h);}
+          }
+          '@
+          $sid=[Security.Principal.WindowsIdentity]::GetCurrent().User.Value
+          $name='Global'+[char]92+'ocxd-private-job-authority-'+[guid]::NewGuid().ToString('N')
+          $handle=[OcxPrivateJobAuthorityProbe]::Create($name,$sid)
+          $proof=[ordered]@{accepted=$false;diagnosticOnly=$true;source=(git rev-parse HEAD).Trim();creatorSid=$sid;jobCreated=$true;originalHandleHeld=$true;standardAccountProbeExecuted=$false;creatorCanReopenBefore=$false;creatorCanReopenAfter=$false;jobHandleClosed=$false;productStarted=$false;serviceMutation=$false}
+          try {
+            [OcxPrivateJobAuthorityProbe]::VerifyStillPresentForCreator($name);$proof.creatorCanReopenBefore=$true
+            $env:OCXD_FOREIGN_JOB_PROBE=$name
+            $env:OCXD_FOREIGN_JOB_CREATOR_SID=$sid
+            $evidence=Join-Path $root 'ordinary'
+            & test/smoke/windows023-rust-ordinary.ps1 -Cargo (Get-Command cargo.exe).Source -ManifestPath (Join-Path $PWD 'test/smoke/windows023-ordinary-preflight/Cargo.toml') -Node (Get-Command node.exe).Source -OutputDirectory $evidence -ExpectedCommit (git rev-parse HEAD) -TestArguments @('--nocapture')
+            if($LASTEXITCODE -ne 0){throw 'Actual ordinary-account test or cleanup failed'}
+            $result=Get-Content (Join-Path $evidence 'rust-ordinary.json') -Raw|ConvertFrom-Json
+            if(!$result.accountAndProfileRemoved -or !$result.sourceOrArtifactAclRestored -or !$result.desktopAclRestored -or !$result.sourceBytesUnchanged -or $result.remainingNewSidProcesses.Count -ne 0){throw 'Real account/Profile/ACL/process cleanup must be proved'}
+            if($result.accountSid -ceq $sid){throw 'Same SID cannot prove foreign access denied'}
+            $childLog=Get-Content (Join-Path $evidence 'ordinary/test-1.stdout.log') -Raw
+            if(!$childLog.Contains('foreign-private-job-query-denied: actual_different_sid=true query_and_readcontrol_denied=true accepted=false')){throw 'Actual private Job query denial must execute'}
+            $proof.standardAccountProbeExecuted=$true;$proof.observerSid=$result.accountSid
+            [OcxPrivateJobAuthorityProbe]::VerifyStillPresentForCreator($name);$proof.creatorCanReopenAfter=$true
+          } finally {
+            $proof.jobHandleClosed=[OcxPrivateJobAuthorityProbe]::CloseHandle($handle)
+            $proof|ConvertTo-Json -Depth 5|Set-Content (Join-Path $root 'foreign-job-authority.json')
+          }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows023-foreign-job-${{ github.run_id }}
+          path: ${{ env.OCXD_FOREIGN_JOB_OUTPUT }}
+          if-no-files-found: error

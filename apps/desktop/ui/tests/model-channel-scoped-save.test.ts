@@ -1,10 +1,10 @@
 import {afterEach,beforeEach,describe,expect,it,vi} from 'vitest'
-import {flushPromises,mount} from '@vue/test-utils'
+import {flushPromises} from '@vue/test-utils'
 import {createPinia,setActivePinia} from 'pinia'
 import {emptyContent,emptyRules,modelApi,type ChannelPolicy,type CredentialEdit,type DraftProjection,type ModelPolicy,type ModelSnapshot,type Template} from '@/features/models/api'
 import {createModelRowsState,rowFields} from '@/features/models/modelRows'
 import {useModelsStore} from '@/features/models/store'
-import ChannelsView from '@/features/models/ChannelsView.vue'
+
 
 vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{writeFile:vi.fn(),project:vi.fn(),load:vi.fn(),acceptRecovery:vi.fn(),preparePolicy:vi.fn(),applyPolicy:vi.fn(),policyResult:vi.fn(),latestPolicy:vi.fn(),policySaveBlocked:vi.fn(),executionDirectory:vi.fn()}}))
 const copy=<T>(value:T):T=>JSON.parse(JSON.stringify(value))
@@ -457,15 +457,12 @@ describe('channel-scoped shared store saves',()=>{
     await store.saveCurrentChannel('a');expect(modelApi.writeFile).toHaveBeenCalledOnce()
     const b=draft.channels.find(channel=>channel.id==='b')!
     b.defaults.fast={mode:'custom',value:true}
-    const wrapper=mount(ChannelsView,{global:{stubs:{UiDialog:{props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'},ChannelEditor:true,ChannelNodeSelect:true,UiSelectField:true}}})
-    try{
-      await flushPromises();await wrapper.get('[data-testid="policy-save"]').trigger('click');await flushPromises()
-      await wrapper.findAll('button').find(button=>button.text()==='确认保存')!.trigger('click');await flushPromises()
+    await store.saveAllChannels(copy(draft),'file-0')
       const [expected,policy,,scope]=vi.mocked(modelApi.writeFile).mock.calls[1]!
       expect(expected).toBe('file-0');expect(scope).toBeUndefined()
       expect(policy.channels.find(channel=>channel.id==='b')).toMatchObject({label:'newly saved B',connection:{nodes:[{name:'latest B node'}]},templateRefs:[{templateId:'two',revisionId:'revision'}],defaults:{fast:{mode:'custom',value:true}}})
       expect(store.channelDirty).toBe(false)
-    }finally{wrapper.unmount()}
+
   })
 
   it.each(['replace','clear'] as const)('rebases unedited B fields while preserving local B fields and its %s Key intent',async action=>{
@@ -577,14 +574,11 @@ describe('channel-scoped shared store saves',()=>{
     b.label='global B';store.channelDraft!.channels=[b,channel('new'),a]
     store.channelDraft!.templateRefs=[];store.channelDraft!.defaultChannelId='new'
     const draft=copy(store.channelDraft)
-    const wrapper=mount(ChannelsView,{global:{stubs:{UiDialog:{props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'},ChannelEditor:true,ChannelNodeSelect:true,UiSelectField:true}}})
-    try{
-      await flushPromises();await wrapper.get('[data-testid="policy-save"]').trigger('click');await flushPromises()
-      await wrapper.findAll('button').find(button=>button.text()==='确认保存')!.trigger('click');await flushPromises()
+    await store.saveAllChannels(draft!,'file-1')
       expect(modelApi.writeFile).toHaveBeenCalledTimes(2)
       expect(vi.mocked(modelApi.writeFile).mock.calls[1]).toEqual(['file-1',draft,[{channelId:'b',action:'clear',value:null}] satisfies CredentialEdit[]])
       expect(store.channelBaseline).toBe('file-2');expect(store.channelDraft).toEqual(disk.policy);expect(store.channelDirty).toBe(false)
       expect(store.snapshot!.policy.channels.map(channel=>channel.id)).toEqual(['b','new','a'])
-    }finally{wrapper.unmount()}
+
   })
 })

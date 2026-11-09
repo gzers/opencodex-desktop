@@ -5,7 +5,8 @@ param(
     [Parameter(Mandatory=$true)][string]$OutputDirectory,
     [string]$ExpectedCommit = '',
     [ValidateSet('all','msi','nsis')][string]$Kind='all',
-    [ValidateSet('all','default','custom')][string]$Mode='all'
+    [ValidateSet('all','default','custom')][string]$Mode='all',
+    [switch]$AsInstallationOwner
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'windows-installer-matrix.ps1')
@@ -15,22 +16,63 @@ if (!$IsWindows -or $env:GITHUB_ACTIONS -ne 'true') {
 $taskBundle = (Resolve-Path -LiteralPath $BundleDirectory).Path
 $taskBuilt = (Resolve-Path -LiteralPath $BuiltExecutable).Path
 $taskOutput = [System.IO.Path]::GetFullPath($OutputDirectory)
-$taskSource = if ($ExpectedCommit) { $ExpectedCommit } else { (& git rev-parse HEAD).Trim() }
-if ($LASTEXITCODE -ne 0 -or $taskSource -notmatch '^[0-9a-f]{40}$') { throw 'Source commit missing' }
+$taskSource = Get-WindowsInstallerSource $ExpectedCommit
 $taskHash = (Get-FileHash -LiteralPath $taskBuilt -Algorithm SHA256).Hash.ToLower()
 $taskVersion = (Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../apps/desktop/tauri/tauri.conf.json') -Raw | ConvertFrom-Json).version
 if ([string]::IsNullOrWhiteSpace($taskVersion)) { throw 'Expected version missing from tauri.conf.json' }
 New-Item -ItemType Directory -Force $taskOutput | Out-Null
+if ($taskVersion -ceq '0.2.23' -and !$AsInstallationOwner) {
+    # Both 023 installers are per-user. Install, start and uninstall as ONE
+    # ordinary account; a second SID cannot read the installer's private I.
+    $suiteInput = Join-Path $taskOutput 'ordinary-installer-input.json'
+    @{bundle=$taskBundle;built=$taskBuilt;kind=$Kind;mode=$Mode;source=$taskSource;output=$taskOutput} |
+        ConvertTo-Json | Set-Content -LiteralPath $suiteInput -Encoding utf8
+    & (Join-Path $PSScriptRoot 'windows-ordinary-startup.ps1') -Executable $taskBuilt -Node $Node -OutputDirectory $taskOutput -ExpectedCommit $taskSource -InstallerSuiteConfig $suiteInput
+    if ($LASTEXITCODE -ne 0) { throw 'Ordinary installation-owner suite failed' }
+    return
+}
+if ($AsInstallationOwner) {
+    . (Join-Path $PSScriptRoot 'windows-process-token.ps1')
+    $ownerToken = Get-WindowsHarnessToken
+    if ($taskVersion -cne '0.2.23' -or $ownerToken.elevated -ne $false) { throw '023 installer owner must be an ordinary native token' }
+}
 $taskResult = [ordered]@{
     scope = 'ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance'
     sourceCommit = $taskSource; builtExecutableSha256 = $taskHash
     version = $taskVersion; codeSigned = $false; releaseAccepted = $false
-    result = 'fail'; installers = @()
+    result = 'fail'; installers = @(); defaultUninstallChecks=@()
 }
+if ($AsInstallationOwner) { $taskResult.installationOwnerToken=$ownerToken; $taskResult.installationOwnerProfile=$env:USERPROFILE }
+# Read-only policy evidence. Never relax a machine/user installer policy.
+$taskResult.installerPolicies=@(foreach($policyPath in @('HKLM:\Software\Policies\Microsoft\Windows\Installer','HKCU:\Software\Policies\Microsoft\Windows\Installer')){
+ $properties=Get-ItemProperty -LiteralPath $policyPath -ErrorAction SilentlyContinue
+ @{path=$policyPath;exists=($null -ne $properties);DisableMSI=$properties.DisableMSI;DisableUserInstalls=$properties.DisableUserInstalls;AlwaysInstallElevated=$properties.AlwaysInstallElevated}
+})
+
 function Invoke-Installer([string]$File, [string]$Arguments) {
     $process = Start-Process -FilePath $File -ArgumentList $Arguments -Wait -PassThru
     if ($process.ExitCode -notin @(0, 3010)) { throw "Installer failed with exit code $($process.ExitCode)" }
     return $process.ExitCode
+}
+. (Join-Path $PSScriptRoot 'windows-retention-fixture.ps1')
+function Complete-DefaultUninstall([string]$InstallerKind,[string]$Package,[string]$InstallRoot,[string]$Sentinel,[string]$SentinelHash,$Fixture){
+    $item=@{kind=$InstallerKind;result='fail';exitCode=$null;executableRemoved=$false;userDataRetained=$false}
+    try{
+        $item.exitCode=if($InstallerKind -ceq 'nsis'){Invoke-Installer (Join-Path $InstallRoot 'uninstall.exe') '/S'}else{Invoke-Installer 'msiexec.exe' ('/x "'+$Package+'" /qn /norestart')}
+        $deadline=(Get-Date).AddSeconds(30)
+        while((Test-Path -LiteralPath (Join-Path $InstallRoot 'opencodex-desktop.exe')) -and (Get-Date) -lt $deadline){Start-Sleep -Milliseconds 250}
+        if(Test-Path -LiteralPath (Join-Path $InstallRoot 'opencodex-desktop.exe')){throw 'Default uninstall left its exact application image'}
+        $item.executableRemoved=$true
+        if(!$Sentinel -or (Get-FileHash -LiteralPath $Sentinel).Hash -cne $SentinelHash){throw 'Default uninstall user-data retention was not proved'}
+        $item.userDataRetained=$true
+        if(!$Fixture -or $Fixture.path -cne $Sentinel -or $Fixture.hash -cne $SentinelHash){throw 'Exact new retention fixture identity required after uninstall proof'}
+        $item.testFixtureCleanup=Remove-InstallerRetentionFixture $Fixture
+        $item.result='pass'
+    }finally{$taskResult.defaultUninstallChecks+=,$item}
+}
+function New-DefaultRetentionSentinel {
+    if(!$AsInstallationOwner){return @{path=$null;hash=$null}}
+    New-InstallerRetentionFixture (Join-Path $env:USERPROFILE '.codex-desktop')
 }
 function Find-DefaultInstalledDirectory {
     $roots=@('HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*','HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*','HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*')
@@ -45,7 +87,32 @@ function Find-DefaultInstalledDirectory {
     if($found.Count -ne 1){throw 'Could not identify one product-owned default install directory'}
     return $found[0]
 }
+function Clear-OwnedNsisRememberedDirectory([string]$ExpectedPath) {
+    if(!$AsInstallationOwner -or !$ExpectedPath){throw 'Only the exact new ordinary owner NSIS fixture may be cleared'}
+    $cleared=@()
+    foreach($view in @([Microsoft.Win32.RegistryView]::Registry32,[Microsoft.Win32.RegistryView]::Registry64)){
+        $base=[Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::CurrentUser,$view)
+        $key=$base.OpenSubKey('Software\gzers\OpenCodeX Desktop',$true)
+        try{
+            if($key -and '' -in $key.GetValueNames()){
+                $actual=[string]$key.GetValue('')
+                if(!(Test-WindowsInstallerSameDirectory $actual $ExpectedPath)){throw 'NSIS remembered directory is not this matrix custom fixture; not cleared'}
+                $key.DeleteValue('',$true)
+                if('' -in $key.GetValueNames()){throw 'Owned NSIS remembered value remained'}
+                $cleared+=@{hive='CurrentUser';view=$view.ToString();valueName='';prior=$actual;scope='exact own earlier NSIS custom fixture only'}
+            }
+        }finally{if($key){$key.Dispose()};$base.Dispose()}
+    }
+    return $cleared
+}
 function Clear-ProductRememberedInstallDirectory {
+    if ($AsInstallationOwner) {
+        # Only this test owner's NEW-version key; no other SID/HKLM/old root.
+        $key='HKCU:\Software\gzers\OpenCodeX Desktop\023'
+        if (Test-Path -LiteralPath $key) { Remove-ItemProperty -LiteralPath $key -Name InstallDir -ErrorAction SilentlyContinue }
+        if ((Get-ItemProperty -LiteralPath $key -Name InstallDir -ErrorAction SilentlyContinue).InstallDir) { throw 'Owner remembered install directory remains' }
+        return @()
+    }
     # WiX AppSearch restores the remembered location before resolving INSTALLDIR.
     # Clear only this product-owned value in both views/hives, then prove it is
     # absent so a later MSI command cannot silently be redirected by stale state.
@@ -91,13 +158,20 @@ try {
         if($installerKind -eq 'nsis'){[void](Invoke-Installer $package[0].FullName '/S')}
         else{
             $entryCleanup = Clear-ProductRememberedInstallDirectory
-            [void](Invoke-Installer 'msiexec.exe' ('/i "'+$package[0].FullName+'" /qn /norestart'))
+            [void](Invoke-Installer 'msiexec.exe' ('/i "'+$package[0].FullName+'" /qn /norestart /L*v "'+(Join-Path $taskOutput 'msi-default-install.log')+'"'))
             $taskResult.defaultMsiRegistryCleanup = @($entryCleanup)
         }
         $defaultRoot=Find-DefaultInstalledDirectory
+        $expectedOwnerRoot=Join-Path $env:LOCALAPPDATA 'Programs/OpenCodeX Desktop'
+        $taskResult.defaultInstallRootObservation=@{actual=$defaultRoot;expectedOwner=$expectedOwnerRoot}
+        if ($AsInstallationOwner -and !(Test-WindowsInstallerSameDirectory $defaultRoot $expectedOwnerRoot)) { throw '023 default installation escaped actual ordinary owner Programs directory' }
+        $defaultRetention=New-DefaultRetentionSentinel
         try{
             $defaultExe=Join-Path $defaultRoot 'opencodex-desktop.exe'
-            if($installerKind -eq 'nsis'){
+            if ($AsInstallationOwner) {
+                & (Join-Path $PSScriptRoot 'windows-startup.ps1') -Executable $defaultExe -Node $Node -OutputDirectory (Join-Path $taskOutput ($installerKind+'-default-startup')) -ExpectedCommit $taskSource -Mode ordinary
+                if ($LASTEXITCODE -ne 0) { throw 'Default per-user package failed ordinary installation-owner startup' }
+            } elseif($installerKind -eq 'nsis'){
                 # Default NSIS is per-user under the installing account's AppData;
                 # another temporary user's token correctly cannot read that tree.
                 & (Join-Path $PSScriptRoot 'windows-startup.ps1') -Executable $defaultExe -Node $Node -OutputDirectory (Join-Path $taskOutput ($installerKind+'-default-startup')) -ExpectedCommit $taskSource -Mode any
@@ -111,7 +185,8 @@ try {
                 if(!(Test-Path -LiteralPath (Join-Path $defaultRoot ('resources/'+$resource)))){throw 'Installed local documentation resource missing'}
             }
         }finally{
-            if($installerKind -eq 'nsis'){[void](Invoke-Installer (Join-Path $defaultRoot 'uninstall.exe') '/S')}
+            if($AsInstallationOwner){Complete-DefaultUninstall $installerKind $package[0].FullName $defaultRoot $defaultRetention.path $defaultRetention.hash $defaultRetention}
+            elseif($installerKind -eq 'nsis'){[void](Invoke-Installer (Join-Path $defaultRoot 'uninstall.exe') '/S')}
             else{[void](Invoke-Installer 'msiexec.exe' ('/x "'+$package[0].FullName+'" /qn /norestart'))}
         }
     }
@@ -154,7 +229,11 @@ try {
             $version = (Get-Item -LiteralPath $installed).VersionInfo.ProductVersion
             $entry.productVersion = $version
             if ($version -cne $taskVersion) { throw "Unexpected version $version; expected $taskVersion from tauri.conf.json" }
-            & (Join-Path $PSScriptRoot 'windows-ordinary-startup.ps1') -Executable $installed -Node $Node -OutputDirectory (Join-Path $taskOutput ($installerKind + '-startup')) -ExpectedCommit $taskSource
+            if ($AsInstallationOwner) {
+                & (Join-Path $PSScriptRoot 'windows-startup.ps1') -Executable $installed -Node $Node -OutputDirectory (Join-Path $taskOutput ($installerKind + '-startup')) -ExpectedCommit $taskSource -Mode ordinary
+            } else {
+                & (Join-Path $PSScriptRoot 'windows-ordinary-startup.ps1') -Executable $installed -Node $Node -OutputDirectory (Join-Path $taskOutput ($installerKind + '-startup')) -ExpectedCommit $taskSource
+            }
             if($LASTEXITCODE -ne 0){throw 'Custom-path installed EXE failed ordinary-account startup smoke'}
             $entry.firstScreen = 'pass'
             $entry.explicitCleanupHelper = & (Join-Path $PSScriptRoot 'windows-uninstall-data.ps1') -InstallDirectory $installRoot
@@ -190,17 +269,29 @@ try {
         $installerKind='nsis'
         $package=@(Get-ChildItem -LiteralPath (Join-Path $taskBundle $installerKind) -Filter '*-setup.exe' -File)
         if($package.Count -ne 1){throw 'Exact default NSIS installer package missing'}
+        # The earlier custom NSIS cell deliberately remembers /D. This is a
+        # fresh-default cell, so clear only the exact earlier custom value in this NEW test owner hive.
+        if($AsInstallationOwner){
+            $ownCustom=@($taskResult.installers|Where-Object kind -ceq 'nsis')
+            if($ownCustom.Count -ne 1 -or $ownCustom[0].result -cne 'pass'){throw 'Earlier exact NSIS custom fixture must have passed'}
+            $taskResult.defaultNsisRegistryCleanup=@(Clear-OwnedNsisRememberedDirectory $ownCustom[0].installDirectory)
+        }
         [void](Invoke-Installer $package[0].FullName '/S')
         $defaultRoot=Find-DefaultInstalledDirectory
+        $expectedOwnerRoot=Join-Path $env:LOCALAPPDATA 'Programs/OpenCodeX Desktop'
+        $taskResult.defaultNsisRootObservation=@{actual=$defaultRoot;expectedOwner=$expectedOwnerRoot}
+        if ($AsInstallationOwner -and !(Test-WindowsInstallerSameDirectory $defaultRoot $expectedOwnerRoot)) { throw '023 NSIS default installation escaped actual ordinary owner Programs directory' }
+        $defaultRetention=New-DefaultRetentionSentinel
         try{
             $defaultExe=Join-Path $defaultRoot 'opencodex-desktop.exe'
-            & (Join-Path $PSScriptRoot 'windows-startup.ps1') -Executable $defaultExe -Node $Node -OutputDirectory (Join-Path $taskOutput 'nsis-default-startup') -ExpectedCommit $taskSource -Mode any
+            $startupMode = if ($AsInstallationOwner) { 'ordinary' } else { 'any' }
+            & (Join-Path $PSScriptRoot 'windows-startup.ps1') -Executable $defaultExe -Node $Node -OutputDirectory (Join-Path $taskOutput 'nsis-default-startup') -ExpectedCommit $taskSource -Mode $startupMode
             if($LASTEXITCODE -ne 0){throw 'Default per-user NSIS EXE failed owner-account startup smoke'}
             $taskResult.defaultInstallChecks+=@{kind='nsis';result='pass';installDirectory=$defaultRoot;pathOverride=$false;boundary='per-user NSIS is checked after MSI cells to avoid contaminating MSI AppSearch'}
             foreach($resource in @('LICENSE','THIRD-PARTY-NOTICES.txt')){
                 if(!(Test-Path -LiteralPath (Join-Path $defaultRoot ('resources/'+$resource)))){throw 'Installed local documentation resource missing'}
             }
-        }finally{[void](Invoke-Installer (Join-Path $defaultRoot 'uninstall.exe') '/S')}
+        }finally{if($AsInstallationOwner){Complete-DefaultUninstall 'nsis' $package[0].FullName $defaultRoot $defaultRetention.path $defaultRetention.hash $defaultRetention}else{[void](Invoke-Installer (Join-Path $defaultRoot 'uninstall.exe') '/S')}}
     }
     Assert-WindowsInstallerMatrix -Kind $Kind -Mode $Mode -DefaultChecks @($taskResult.defaultInstallChecks) -CustomChecks @($taskResult.installers)
     $taskResult.result = 'pass'

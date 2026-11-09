@@ -141,24 +141,6 @@ impl Tasks {
     }
     /// Authenticate the listener before the external host forwards its bearer.
     /// The verifier derives this key locally; the key is never returned by API.
-    pub(super) fn broker_proof(
-        &self,
-        id: &str,
-        challenge: &str,
-        authority: &str,
-        pid: u32,
-    ) -> ModelResult<String> {
-        use hmac::{Hmac, Mac};
-        require_uuid(challenge)?;
-        let record = self.record(id)?;
-        if record.task.id != id || record.task.revoked {
-            return Err(invalid("task_authorization", "任务已撤销或身份无效"));
-        }
-        let mut mac = Hmac::<sha2::Sha256>::new_from_slice(record.token_digest.as_bytes())
-            .map_err(|_| invalid("task_proof", "任务入口核验失败"))?;
-        mac.update(format!("ocxd-model-task-v1\n{id}\n{challenge}\n{authority}\n{pid}").as_bytes());
-        Ok(format!("{:x}", mac.finalize().into_bytes()))
-    }
     fn active(task: &Task) -> ModelResult<()> {
         if chrono::DateTime::parse_from_rfc3339(&task.expires_at)
             .map_err(|_| invalid("task_expired", "任务期限无效"))?

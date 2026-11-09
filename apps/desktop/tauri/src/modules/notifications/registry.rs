@@ -325,6 +325,41 @@ impl BlockedReason {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Detail {
     ModelPolicyBlocked(BlockedReason),
+    LifecycleFailure(LifecycleFailureReason),
+}
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LifecycleFailureReason {
+    PortConflict,
+    Permission,
+    Timeout,
+    Unconfirmed,
+}
+impl LifecycleFailureReason {
+    pub fn from_error(error: &crate::errors::AppError) -> Self {
+        match error {
+            crate::errors::AppError::RuntimeManaged { code, .. } if code == "port_conflict" => {
+                Self::PortConflict
+            }
+            crate::errors::AppError::RuntimeManaged { code, .. } if code == "port_permission" => {
+                Self::Permission
+            }
+            crate::errors::AppError::Timeout => Self::Timeout,
+            crate::errors::AppError::RuntimeManaged { code, .. } if code == "lifecycle_timeout" => {
+                Self::Timeout
+            }
+            _ => Self::Unconfirmed,
+        }
+    }
+    fn text(self) -> &'static str {
+        match self {
+            Self::PortConflict => {
+                "端口已被占用，请前往端口设置调整或重新分配后重试；未停止占用者。"
+            }
+            Self::Permission => "没有权限监听所选端口，请检查权限或调整端口后重试。",
+            Self::Timeout => "启停操作未在规定时间内确认完成，请核对服务状态；未强制终止其它服务。",
+            Self::Unconfirmed => "官方启停或客户端还原结果未确认，请查看日志核对；未宣称操作成功。",
+        }
+    }
 }
 /// 终态适配器：job 来自配置，身份来自操作开始时捕获的 scope。
 /// 成功证据必须由任务拥有者核验；此函数不把检查/请求成功推断为操作成功。
@@ -550,6 +585,21 @@ pub fn deliver(
                     "本次确认没有写入：{}。草稿保留，可回到模型配置重新核对后再保存。",
                     reason.text()
                 );
+            }
+            if let Some(Detail::LifecycleFailure(reason)) = delivery.detail {
+                if !matches!(
+                    event.id.as_str(),
+                    "run-start-failed" | "run-stop-failed" | "run-restart-failed"
+                ) {
+                    return Err(RegistryError::InvalidFact);
+                }
+                item.body = reason.text().into();
+                if matches!(
+                    reason,
+                    LifecycleFailureReason::PortConflict | LifecycleFailureReason::Permission
+                ) {
+                    item.action_ref = Some(NotificationAction::SettingsInstallation);
+                }
             }
             let scope = format!(
                 "{}:{:?}:{:?}:{:?}:{}",

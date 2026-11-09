@@ -11,24 +11,34 @@ pub mod official_cli_source;
 pub mod official_version_source;
 pub mod platform;
 pub mod process_runner;
+mod process_start_output;
 pub mod runtime_executable;
 pub mod runtime_log;
 pub mod status_source;
 pub(crate) mod storage_writers;
 pub mod tray_controller;
 pub mod webdav_client;
+pub mod webdav_config_v2;
 
 pub mod app_activity;
 pub mod window_appearance;
+#[cfg(windows)]
+pub(crate) mod windows_private_create;
 #[cfg(all(windows, test))]
 pub(crate) mod windows_query_fixture;
 #[cfg(windows)]
 pub(crate) mod windows_query_job;
-#[cfg(windows)]
-pub(crate) mod windows_restart;
 #[cfg(any(windows, test))]
 pub(crate) mod windows_smoke;
 #[cfg(any(windows, test))]
 pub(crate) mod windows_startup_root;
 #[cfg(any(windows, test))]
 pub(crate) mod windows_tray_icon;
+
+pub(crate) mod attested_status;
+
+#[cfg(windows)]
+pub(crate) mod windows_task_scheduler;
+
+#[cfg(any(windows, test))]
+pub(crate) mod runtime_lifetime;

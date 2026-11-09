@@ -54,6 +54,7 @@ export const useLifecycleStore = defineStore("lifecycle", {
     statusSnapshot: null as StatusSnapshot | null,
     stopStatusEventStream: null as (() => void) | null,
     lifecycleState: "stopped" as ProcessLifecycleState,
+    lastStartFailed: false,
     processActionBusy: false,
     processAction: null as LifecycleAction | null,
     processProgressAction: null as LifecycleAction | null,
@@ -76,6 +77,10 @@ export const useLifecycleStore = defineStore("lifecycle", {
   actions: {
     // 状态快照只在真实观测到运行状态迁移时登记一条事件，不臆测结论。
     setStatusSnapshot(snapshot: StatusSnapshot | null) {
+      if (snapshot?.matrix.runtime === 'running') this.lastStartFailed=false
+      if (snapshot?.matrix.runtime === 'stopped' && this.lastStartFailed) {
+        snapshot={...snapshot,matrix:{...snapshot.matrix,runtime:'starting_failed'}}
+      }
       const previous = this.statusSnapshot?.matrix.runtime
       this.statusSnapshot = snapshot
       const next = snapshot?.matrix.runtime
@@ -256,15 +261,17 @@ export const useLifecycleStore = defineStore("lifecycle", {
       try {
         const result = await runProcessAction(action)
         this.lifecycleState = result.lifecycleState
+        if (result.failure && action !== 'stop') this.lastStartFailed=true
+        if (result.result==='started') this.lastStartFailed=false
         if (
           result.result === null ||
           result.result === "failed" ||
           result.result === "cancelled"
         ) {
-          this.processProgressError =
+          this.processProgressError = result.failure?.message ?? (
             action === "stop"
               ? "停止指令未完成；当前状态未被桌面管理器臆测修改。"
-              : "启动指令未完成；当前状态未被桌面管理器臆测修改。"
+              : "启动指令未完成；当前状态未被桌面管理器臆测修改。")
           this.finishProcessAction()
         } else if (action === "stop" && result.result === "stopped") {
           this.finishProcessAction()

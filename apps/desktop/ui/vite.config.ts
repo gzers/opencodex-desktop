@@ -13,6 +13,18 @@ export default defineConfig({
     },
   },
   clearScreen: false,
+  build: {
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          // Vue's barrel re-exports runtime-dom, which calls shared helpers
+          // during module evaluation. Keep the framework in one execution unit
+          // so production chunk ordering cannot read those helpers before init.
+          groups: [{ name: 'vue-framework', test: /node_modules[\\/](?:@vue[\\/]|vue[\\/])/ }],
+        },
+      },
+    },
+  },
   server: {
     strictPort: true,
   },

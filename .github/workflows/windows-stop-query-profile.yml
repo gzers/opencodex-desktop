@@ -1,0 +1,143 @@
+name: Windows official stop read-only query profile
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      mode:
+        type: string
+        default: query
+permissions:
+  contents: read
+jobs:
+  query-profile:
+    if: github.repository == 'gzers/opencodex-desktop'
+    runs-on: windows-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - name: Stage exact pinned original runtime into one owned fixture
+        run: |
+          if (!$IsWindows -or $env:GITHUB_ACTIONS -cne 'true') { throw 'Ephemeral Windows Actions required' }
+          $taskRoot=Join-Path $env:RUNNER_TEMP ('ocxd-stop-query-'+$env:GITHUB_RUN_ID+'-'+$env:GITHUB_RUN_ATTEMPT)
+          if (Test-Path -LiteralPath $taskRoot) { throw 'Do not overwrite earlier evidence' }
+          New-Item -ItemType Directory -Path $taskRoot | Out-Null
+          'OCXD_QUERY_PROFILE_ROOT='+$taskRoot >> $env:GITHUB_ENV
+          $taskNode=(Get-Command node.exe).Source
+          $taskNpm=Join-Path (Split-Path -Parent $taskNode) 'node_modules/npm/bin/npm-cli.js'
+          & python .github/scripts/stage_runtime_bundle_023.py --platform win32-x64 --build-node $taskNode --npm-cli $taskNpm --output (Join-Path $taskRoot 'stage') *> (Join-Path $taskRoot 'stage.log')
+          if ($LASTEXITCODE -ne 0) { throw 'Pinned original runtime staging failed' }
+      - name: Measure actual read-only queries without any product action
+        if: inputs.mode != 'history'
+        run: |
+          $taskBundle=Join-Path $env:OCXD_QUERY_PROFILE_ROOT 'stage/platform-bundle/runtime-bundle'
+          $taskPackage=Join-Path $taskBundle 'runtime/opencodex/node_modules/@bitkyc08/opencodex'
+          $taskBun=Join-Path $taskBundle 'runtime/bun/bun.exe'
+          & python test/smoke/verify-pinned-profile-source.py $taskPackage (Join-Path $env:OCXD_QUERY_PROFILE_ROOT 'source-attestation.json')
+          if ($LASTEXITCODE -ne 0) { throw 'Original runtime source attestation failed' }
+          $taskProfile=Join-Path $env:OCXD_QUERY_PROFILE_ROOT 'profile'
+          foreach($taskPath in @($taskProfile,(Join-Path $taskProfile 'tmp'),(Join-Path $taskProfile 'AppData/Local'),(Join-Path $taskProfile 'AppData/Roaming'))) { New-Item -ItemType Directory -Force -Path $taskPath | Out-Null }
+          $taskInfo=[Diagnostics.ProcessStartInfo]::new()
+          $taskInfo.FileName=$taskBun
+          $taskInfo.UseShellExecute=$false
+          $taskInfo.WorkingDirectory=$env:OCXD_QUERY_PROFILE_ROOT
+          $taskInfo.RedirectStandardOutput=$true
+          $taskInfo.RedirectStandardError=$true
+          $taskInfo.Environment.Clear()
+          foreach($taskKey in @('SystemRoot','WINDIR','COMSPEC','GITHUB_ACTIONS','RUNNER_TEMP','GITHUB_SHA')) { if([Environment]::GetEnvironmentVariable($taskKey)){ $taskInfo.Environment[$taskKey]=[Environment]::GetEnvironmentVariable($taskKey) } }
+          $taskInfo.Environment['HOME']=$taskProfile
+          $taskInfo.Environment['USERPROFILE']=$taskProfile
+          $taskInfo.Environment['APPDATA']=Join-Path $taskProfile 'AppData/Roaming'
+          $taskInfo.Environment['LOCALAPPDATA']=Join-Path $taskProfile 'AppData/Local'
+          $taskInfo.Environment['OPENCODEX_HOME']=Join-Path $taskProfile '.codex-desktop/opencodex/home'
+          $taskInfo.Environment['CODEX_HOME']=Join-Path $taskProfile '.codex'
+          $taskInfo.Environment['TEMP']=Join-Path $taskProfile 'tmp'
+          $taskInfo.Environment['TMP']=$taskInfo.Environment['TEMP']
+          $taskInfo.Environment['PATH']=[Environment]::GetFolderPath('System')
+          foreach($taskArg in @((Join-Path $env:GITHUB_WORKSPACE 'test/smoke/official-stop-query-profile.mjs'),$taskPackage,(Join-Path $env:OCXD_QUERY_PROFILE_ROOT 'query-profile.json'))) { $taskInfo.ArgumentList.Add($taskArg) }
+          $taskProcess=[Diagnostics.Process]::Start($taskInfo)
+          try {
+            $taskStdout=$taskProcess.StandardOutput.ReadToEndAsync()
+            $taskStderr=$taskProcess.StandardError.ReadToEndAsync()
+            $taskProcess.WaitForExit()
+            [IO.File]::WriteAllText((Join-Path $env:OCXD_QUERY_PROFILE_ROOT 'query-profile.stdout.log'),$taskStdout.GetAwaiter().GetResult())
+            [IO.File]::WriteAllText((Join-Path $env:OCXD_QUERY_PROFILE_ROOT 'query-profile.stderr.log'),$taskStderr.GetAwaiter().GetResult())
+            if($taskProcess.ExitCode -ne 0) { throw 'Read-only query harness failed; original logs retained' }
+          } finally { $taskProcess.Dispose() }
+      - name: Measure original restore functions on fresh synthetic empty homes
+        if: inputs.mode == 'history'
+        run: |
+          $taskProfileFailures=@()
+          foreach($taskScenario in @('worker','restore')) {
+          $taskBundle=Join-Path $env:OCXD_QUERY_PROFILE_ROOT 'stage/platform-bundle/runtime-bundle'
+          $taskPackage=Join-Path $taskBundle 'runtime/opencodex/node_modules/@bitkyc08/opencodex'
+          $taskBun=Join-Path $taskBundle 'runtime/bun/bun.exe'
+          & python test/smoke/verify-pinned-profile-source.py $taskPackage (Join-Path $env:OCXD_QUERY_PROFILE_ROOT ('source-attestation-'+$taskScenario+'.json'))
+          if ($LASTEXITCODE -ne 0) { throw 'Original runtime source attestation failed' }
+          $taskProfile=Join-Path $env:OCXD_QUERY_PROFILE_ROOT ('profile-'+$taskScenario)
+          foreach($taskPath in @($taskProfile,(Join-Path $taskProfile 'tmp'),(Join-Path $taskProfile 'AppData/Local'),(Join-Path $taskProfile 'AppData/Roaming'))) { New-Item -ItemType Directory -Force -Path $taskPath | Out-Null }
+          $taskInfo=[Diagnostics.ProcessStartInfo]::new()
+          $taskInfo.FileName=$taskBun
+          $taskInfo.UseShellExecute=$false
+          $taskInfo.WorkingDirectory=$env:OCXD_QUERY_PROFILE_ROOT
+          $taskInfo.RedirectStandardOutput=$true
+          $taskInfo.RedirectStandardError=$true
+          $taskInfo.Environment.Clear()
+          foreach($taskKey in @('SystemRoot','WINDIR','COMSPEC','GITHUB_ACTIONS','RUNNER_TEMP','GITHUB_SHA')) { if([Environment]::GetEnvironmentVariable($taskKey)){ $taskInfo.Environment[$taskKey]=[Environment]::GetEnvironmentVariable($taskKey) } }
+          $taskInfo.Environment['HOME']=$taskProfile
+          $taskInfo.Environment['USERPROFILE']=$taskProfile
+          $taskInfo.Environment['APPDATA']=Join-Path $taskProfile 'AppData/Roaming'
+          $taskInfo.Environment['LOCALAPPDATA']=Join-Path $taskProfile 'AppData/Local'
+          $taskInfo.Environment['OPENCODEX_HOME']=Join-Path $taskProfile '.codex-desktop/opencodex/home'
+          $taskInfo.Environment['CODEX_HOME']=Join-Path $taskProfile '.codex'
+          $taskInfo.Environment['TEMP']=Join-Path $taskProfile 'tmp'
+          $taskInfo.Environment['TMP']=$taskInfo.Environment['TEMP']
+          $taskInfo.Environment['PATH']=[Environment]::GetFolderPath('System')
+          foreach($taskArg in @((Join-Path $env:GITHUB_WORKSPACE 'test/smoke/official-history-restore-profile.mjs'),$taskPackage,(Join-Path $env:OCXD_QUERY_PROFILE_ROOT ('history-'+$taskScenario+'.json')),$taskScenario)) { $taskInfo.ArgumentList.Add($taskArg) }
+          $taskProcess=[Diagnostics.Process]::Start($taskInfo)
+          try {
+            $taskStdout=$taskProcess.StandardOutput.ReadToEndAsync()
+            $taskStderr=$taskProcess.StandardError.ReadToEndAsync()
+            $taskProcess.WaitForExit()
+            [IO.File]::WriteAllText((Join-Path $env:OCXD_QUERY_PROFILE_ROOT ('history-'+$taskScenario+'.stdout.log')),$taskStdout.GetAwaiter().GetResult())
+            [IO.File]::WriteAllText((Join-Path $env:OCXD_QUERY_PROFILE_ROOT ('history-'+$taskScenario+'.stderr.log')),$taskStderr.GetAwaiter().GetResult())
+            if($taskProcess.ExitCode -ne 0) { $taskProfileFailures+=@{scenario=$taskScenario;exitCode=$taskProcess.ExitCode} }
+          } finally { $taskProcess.Dispose() }
+          }
+          if($taskProfileFailures.Count){ $taskProfileFailures | ConvertTo-Json | Set-Content (Join-Path $env:OCXD_QUERY_PROFILE_ROOT 'history-profile-failures.json'); throw 'At least one isolated restore profile did not complete; both independent logs retained' }
+      - name: Preserve all query and staging diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-stop-query-profile-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ env.OCXD_QUERY_PROFILE_ROOT }}/*.json
+            ${{ env.OCXD_QUERY_PROFILE_ROOT }}/*.log
+            ${{ env.OCXD_QUERY_PROFILE_ROOT }}/stage/*.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Clean only this exact disposable fixture after preserving evidence
+        if: always()
+        run: |
+          $taskRoot=$env:OCXD_QUERY_PROFILE_ROOT
+          if (!$taskRoot) { exit 0 }
+          $taskExpected=Join-Path $env:RUNNER_TEMP ('ocxd-stop-query-'+$env:GITHUB_RUN_ID+'-'+$env:GITHUB_RUN_ATTEMPT)
+          if ([IO.Path]::GetFullPath($taskRoot) -cne [IO.Path]::GetFullPath($taskExpected)) { throw 'Owned fixture boundary differs' }
+          if (Test-Path -LiteralPath $taskRoot) {
+            if ((Get-Item -LiteralPath $taskRoot -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) { throw 'Refusing redirected fixture cleanup' }
+            Remove-Item -LiteralPath $taskRoot -Recurse -Force
+          }
+          if (Test-Path -LiteralPath $taskRoot) { throw 'Owned fixture cleanup incomplete' }
+          $taskResources=Join-Path $env:GITHUB_WORKSPACE 'apps/desktop/tauri/resources/runtime-bundle'
+          $taskTracked=@(git ls-files -- apps/desktop/tauri/resources/runtime-bundle)
+          if($LASTEXITCODE -ne 0 -or $taskTracked.Count -ne 0){throw 'Refusing cleanup of tracked resources'}
+          if(Test-Path -LiteralPath $taskResources){
+            if((Get-Item -LiteralPath $taskResources -Force).Attributes -band [IO.FileAttributes]::ReparsePoint){throw 'Refusing redirected staged resource cleanup'}
+            Remove-Item -LiteralPath $taskResources -Recurse -Force
+          }
+          if(Test-Path -LiteralPath $taskResources){throw 'Disposable staged resources remain'}

@@ -1,0 +1,80 @@
+--- a/bin/ocx.mjs
++++ b/bin/ocx.mjs
+@@ -117,0 +118,12 @@
++}
++
++// Plain version queries must not bootstrap Bun, inspect HOME or start services.
++// Preserve the official output and dispatch every other invocation unchanged.
++if (process.argv.length === 3 && ["--version", "-v", "version"].includes(process.argv[2])) {
++  const version = currentPackageVersion();
++  if (typeof version !== "string" || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(version)) {
++    console.error("opencodex: installed package version is invalid");
++    process.exit(1);
++  }
++  console.log('opencodex ' + version);
++  process.exit(0);
+--- a/src/codex/catalog/derive-entry.ts
++++ b/src/codex/catalog/derive-entry.ts
+@@ -69 +69,2 @@
+- * keep the raw slug exactly as before.
++ * keep the raw slug unless a persisted channel display name was captured. Explicit
++ * aliases and later model display-name overrides retain their existing precedence.
+@@ -74,0 +76,9 @@
++  // Apply only to an ordinary canonical routed row. A name may contain Unicode,
++  // spaces or slashes; neither it nor the original wire id is used to rewrite slug.
++  const channelName = model?.providerDisplayName;
++  // A null decision also owns the canonical label after alias collision suppression.
++  const hasProviderAlias = model?.providerAlias !== undefined;
++  if (channelName && model && model.provider === provider && model.provider !== COMBO_NAMESPACE
++    && !model.alias && !model.nativeAlias && !hasProviderAlias) {
++    return `${channelName}/${model.id}`;
++  }
+--- a/src/codex/catalog/gather-capture.ts
++++ b/src/codex/catalog/gather-capture.ts
+@@ -548,0 +549 @@
++    providerDisplayName: typeof prov.name === "string" ? prov.name.trim() : null,
+--- a/src/codex/catalog/model-hints.ts
++++ b/src/codex/catalog/model-hints.ts
+@@ -302,0 +303,5 @@
++  // Official OpenAI surfaces keep their native naming contract. Names are presentation
++  // data from the captured provider, never identifiers and never discovered metadata.
++  const providerDisplayName = name !== OPENAI_CODEX_PROVIDER_ID && name !== OPENAI_API_PROVIDER_ID
++    && name !== COMBO_NAMESPACE && typeof prov.name === "string" && prov.name.trim()
++    ? prov.name.trim() : undefined;
+@@ -354,0 +360 @@
++    providerDisplayName: _staleProviderDisplayName,
+@@ -384,0 +391 @@
++    ...(providerDisplayName !== undefined ? { providerDisplayName } : {}),
+--- a/src/codex/catalog/parsing.ts
++++ b/src/codex/catalog/parsing.ts
+@@ -86,0 +87,2 @@
++  /** Current persisted channel label, used only for the default routed picker name. */
++  providerDisplayName?: string;
+--- a/src/config/diagnostics.ts
++++ b/src/config/diagnostics.ts
+@@ -595 +595 @@
+-      typeof proxyPort === "number" ? proxyPort : 10100,
++      typeof proxyPort === "number" ? proxyPort : 0,
+@@ -660 +660 @@
+-  const proxyPort = typeof raw.port === "number" ? raw.port : 10100;
++  const proxyPort = typeof raw.port === "number" ? raw.port : 0;
+--- a/src/config/live-reconcile.ts
++++ b/src/config/live-reconcile.ts
+@@ -519 +519 @@
+-    ? 10100
++    ? 0
+--- a/src/config/proxy-env.ts
++++ b/src/config/proxy-env.ts
+@@ -40 +40 @@
+-    port: 10100,
++    port: 0,
+--- a/src/config/schema/config-schema.ts
++++ b/src/config/schema/config-schema.ts
+@@ -109 +109 @@
+-  port: z.number().int().min(0).max(65535).default(10100),
++  port: z.number().int().min(0).max(65535).default(0),
+--- a/src/types/provider.ts
++++ b/src/types/provider.ts
+@@ -309,0 +310,2 @@
++  /** Persisted display-only channel name; never a provider key or routing alias. */
++  name?: string;

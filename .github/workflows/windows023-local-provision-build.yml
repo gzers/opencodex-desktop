@@ -1,0 +1,59 @@
+name: Windows source-bound local provision fixture build
+on:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: windows-latest
+    timeout-minutes: 35
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/tauri -> target
+          shared-key: windows-native-ui-018
+          cache-on-failure: true
+      - name: Stage same pinned resources for fixture compilation
+        run: |
+          $ErrorActionPreference='Stop'
+          $out='test/out/local-provision-build';New-Item -ItemType Directory -Path $out|Out-Null
+          $node=(Get-Command node.exe).Source;$npm=Join-Path (Split-Path -Parent $node) 'node_modules/npm/bin/npm-cli.js'
+          python .github/scripts/stage_runtime_bundle_023.py --platform win32-x64 --build-node $node --npm-cli $npm --output ($out+'/stage') *> ($out+'/runtime-stage.log')
+          if($LASTEXITCODE -ne 0){throw 'Pinned stage failed'}
+          npm --prefix apps/desktop/ui ci *> ($out+'/frontend-install.log');if($LASTEXITCODE -ne 0){throw 'Frontend install failed'}
+          npm --prefix apps/desktop/ui run build *> ($out+'/frontend-build.log');if($LASTEXITCODE -ne 0){throw 'Frontend build failed'}
+          'OCXD_REQUIRE_RUNTIME_BUNDLE=1' >> $env:GITHUB_ENV
+      - name: Compile only fixture access to actual offline provisioner
+        run: |
+          $ErrorActionPreference='Stop'
+          $out='test/out/local-provision-build'
+          New-Item -ItemType Directory -Path apps/desktop/tauri/examples -Force|Out-Null
+          $example='apps/desktop/tauri/examples/ocxd-local-provision.rs'
+          if(Test-Path -LiteralPath $example){throw 'Fresh fixture example required'}
+          Copy-Item -LiteralPath test/smoke/windows023-local-provision.rs -Destination $example
+          cargo build --manifest-path apps/desktop/tauri/Cargo.toml --locked --features custom-protocol --example ocxd-local-provision --jobs 2 *> ($out+'/fixture-build.log')
+          if($LASTEXITCODE -ne 0){throw 'Fixture compile failed'}
+          $artifact=$out+'/artifact';New-Item -ItemType Directory -Path $artifact|Out-Null
+          Copy-Item -LiteralPath apps/desktop/tauri/target/debug/examples/ocxd-local-provision.exe -Destination $artifact
+          @{source=(git rev-parse HEAD).Trim();appsTree=(git rev-parse HEAD:apps).Trim();run=$env:GITHUB_RUN_ID;accepted=$false;fixtureOnly=$true;serviceStarted=$false;descriptorSha256=(Get-FileHash apps/desktop/tauri/resources/runtime-bundle/runtime-bundle.manifest.json).Hash.ToLowerInvariant();fixtureSourceSha256=(Get-FileHash test/smoke/windows023-local-provision.rs).Hash.ToLowerInvariant();sha256=(Get-FileHash ($artifact+'/ocxd-local-provision.exe')).Hash.ToLowerInvariant()}|ConvertTo-Json|Set-Content ($artifact+'/fixture-build.json') -Encoding utf8
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows023-local-provision-${{ github.sha }}
+          path: test/out/local-provision-build/artifact/**
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows023-local-provision-logs-${{ github.run_id }}
+          path: test/out/local-provision-build/*.log
+          if-no-files-found: warn
+          retention-days: 14

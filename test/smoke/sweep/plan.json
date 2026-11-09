@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "steps": [
+    {
+      "step": "01",
+      "name": "original-inputs"
+    },
+    {
+      "step": "02",
+      "name": "current-binary"
+    },
+    {
+      "step": "03",
+      "name": "server-msi-prepare"
+    },
+    {
+      "step": "04",
+      "name": "msi-default"
+    },
+    {
+      "step": "05",
+      "name": "msi-custom"
+    },
+    {
+      "step": "06",
+      "name": "nsis-default"
+    },
+    {
+      "step": "07",
+      "name": "nsis-custom"
+    },
+    {
+      "step": "08",
+      "name": "path-snapshot-and-copy"
+    },
+    {
+      "step": "09",
+      "name": "native-install-recovery"
+    },
+    {
+      "step": "10",
+      "name": "query-and-update-recovery"
+    },
+    {
+      "step": "11",
+      "name": "two-real-sids"
+    },
+    {
+      "step": "12",
+      "name": "private-bundle-supply"
+    },
+    {
+      "step": "13",
+      "name": "runtime-readiness-and-ports"
+    },
+    {
+      "step": "15",
+      "name": "two-user-paths"
+    },
+    {
+      "step": "16",
+      "name": "same-user-ipc"
+    },
+    {
+      "step": "17",
+      "name": "cross-user-ipc"
+    },
+    {
+      "step": "18",
+      "name": "account-and-process-cleanup"
+    },
+    {
+      "step": "19",
+      "name": "uninstall-and-retention"
+    },
+    {
+      "step": "20",
+      "name": "server-msi-restore"
+    },
+    {
+      "step": "21",
+      "name": "query-failure"
+    },
+    {
+      "step": "22",
+      "name": "update-failure-recovery"
+    },
+    {
+      "step": "23",
+      "name": "native-process-cleanup"
+    },
+    {
+      "step": "24",
+      "name": "windows-bundle-root-regression"
+    },
+    {
+      "step": "25",
+      "name": "backend-state-observer-build"
+    },
+    {
+      "step": "26",
+      "name": "attested-status-regression"
+    },
+    {
+      "step": "27",
+      "name": "actual-runtime-fixture-schema"
+    },
+    {
+      "step": "28",
+      "name": "runtime-port-save-regression"
+    }
+  ]
+}

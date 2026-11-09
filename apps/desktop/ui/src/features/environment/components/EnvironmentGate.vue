@@ -10,6 +10,7 @@ import { computed, ref } from 'vue'
 import { useRouteStore } from '@/stores/routes'
 import { useAppStore } from '@/stores/app'
 import { buildEnvironmentPresentation, environmentChecksOrdered } from '../presentation'
+import { useEnvironmentStore } from '../store'
 import type { InstallSourceKind } from '@/features/runtime/api'
 
 const props = defineProps<{ onRecheck?: () => void }>()
@@ -18,7 +19,7 @@ const routes = useRouteStore()
 // 门禁要读运行来源：托管安装落在数据根内、不在发现候选里，只按「自动发现」
 // 判断会误报「未发现 OpenCodex」（`UI规范` §18.5）。
 const presentation = computed(() =>
-  buildEnvironmentPresentation(app.environment, app.environmentLoading, app.runtimeSource?.kind ?? null, app.aboutApp?.platform),
+  buildEnvironmentPresentation(app.environment, app.environmentLoading, app.runtimeSource?.kind ?? null, app.aboutApp?.platform, useEnvironmentStore().error),
 )
 const checks = computed(() =>
   environmentChecksOrdered(presentation.value.checks, presentation.value.state === 'checking'),
@@ -29,6 +30,7 @@ const checking = computed(() => presentation.value.state === 'checking')
 // 门禁卡标题与修复区标题分开（原型 gateTitle / guidance 两组文案）。
 const gateTitle: Record<string, string> = {
   checking: '检查启动条件',
+  not_ready: '集成运行程序检查未就绪',
   missing_node_brew: '缺少 Node.js',
   missing_node_nobrew: '缺少 Node.js',
   missing_npm: 'npm 不可用',
@@ -36,6 +38,7 @@ const gateTitle: Record<string, string> = {
 }
 const repairTitle: Record<string, string> = {
   checking: '检查顺序',
+  not_ready: '重新检查运行程序',
   missing_node_brew: '安装 Node.js',
   missing_node_nobrew: '安装 Node.js',
   missing_npm: '修复 npm',
@@ -44,7 +47,7 @@ const repairTitle: Record<string, string> = {
 const title = computed(() => gateTitle[presentation.value.state] ?? '检查启动条件')
 const repair = computed(() => repairTitle[presentation.value.state] ?? '检查顺序')
 const subtitle = computed(() =>
-  checking.value ? '确认完成前暂不提供运行操作。' : '补全启动条件后，即可继续使用 OpenCodex。',
+  presentation.value.state === 'not_ready' ? presentation.value.description : checking.value ? '确认完成前暂不提供运行操作。' : '补全启动条件后，即可继续使用 OpenCodex。',
 )
 // 主卡只显示最相关的一条命令；其余校验命令在完整指引里查看（原型同款）。
 // `missing_ocx` 也保留官方 npm 命令作为**终端备选**（安全边界要求可核对真实命令）。
@@ -52,6 +55,7 @@ const command = computed(() => presentation.value.commands[0] ?? null)
 const note = computed(() =>
   presentation.value.state === 'missing_ocx'
     ? '安装仅写管理器数据目录；已有安装可在设置中指定来源。'
+    : presentation.value.state === 'not_ready' ? '本次没有可用的检查结论，不表示缺少系统 Node.js 或 npm。'
     : '未执行的项目显示「待检查」；补全前置条件后继续。',
 )
 

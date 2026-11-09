@@ -8,8 +8,17 @@ on:
       purpose:
         description: Package a candidate, or run one bounded diagnostic without a desktop/package
         type: choice
-        options: [candidate, query-etw, installer-retention, native-ui, process-exit]
-        default: candidate
+        options: [core-sweep, core-build, installers-build, msi-focused-verify, local-provision-build, lifetime-producer, foreign-job-authority, record-contract, local-session-regression, local-session-build, diagnostic-sweep, official-stop-query-profile, official-stop-history-profile, candidate, ordinary-preflight, retention023, query-etw, installer-retention, native-ui, process-exit]
+        default: core-sweep
+      core_focus:
+        description: Integration core or unresolved producer technical diagnosis (never product acceptance)
+        type: choice
+        options: [integration, producer]
+        default: integration
+      core_hypothesis:
+        description: Prewritten falsifiable core-sweep hypothesis JSON
+        type: string
+        default: ''
       admission_run:
         description: Successful exact-head push CI run required for query-etw
         type: string
@@ -19,15 +28,104 @@ on:
         type: choice
         options: [isolated-replay, post-build-runner-temp]
         default: isolated-replay
+      candidate_run:
+        description: Exact successful 023 candidate run
+        type: string
+        default: ''
+      candidate_attempt:
+        description: Exact successful candidate attempt
+        type: string
+        default: ''
+      candidate_head:
+        description: Full candidate source SHA
+        type: string
+        default: ''
+      artifact_id:
+        description: Exact installer artifact ID
+        type: string
+        default: ''
+      artifact_bytes:
+        description: Artifact ZIP byte size
+        type: string
+        default: ''
+      artifact_sha256:
+        description: Artifact ZIP SHA256
+        type: string
+        default: ''
 
 permissions:
   contents: read
 
 jobs:
+  msi-focused-verify:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'msi-focused-verify'
+    permissions:
+      contents: read
+      actions: read
+    uses: ./.github/workflows/windows023-msi-focused-verify.yml
+    with:
+      build_run: ${{ inputs.candidate_run }}
+      source: ${{ inputs.candidate_head }}
+      artifact_id: ${{ inputs.artifact_id }}
+  local-provision-build:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'local-provision-build'
+    uses: ./.github/workflows/windows023-local-provision-build.yml
+  installers-build:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'installers-build'
+    uses: ./.github/workflows/windows023-installers-build.yml
+  core-build:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'core-build'
+    uses: ./.github/workflows/windows023-core-build.yml
+  core-sweep:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'core-sweep'
+    permissions:
+      contents: read
+      actions: read
+    uses: ./.github/workflows/windows023-core-sweep.yml
+    with:
+      focus: ${{ inputs.core_focus }}
+      build_run: ${{ inputs.candidate_run }}
+      source: ${{ inputs.candidate_head }}
+      hypothesis: ${{ inputs.core_hypothesis }}
+  lifetime-producer:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'lifetime-producer'
+    uses: ./.github/workflows/windows023-record-contract.yml
+    with:
+      producer: true
+  foreign-job-authority:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'foreign-job-authority'
+    uses: ./.github/workflows/windows023-foreign-job.yml
+  record-contract:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'record-contract'
+    uses: ./.github/workflows/windows023-record-contract.yml
+  local-session-regression:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'local-session-regression'
+    permissions:
+      contents: read
+      actions: read
+    uses: ./.github/workflows/windows023-session-regression.yml
+  local-session-build:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'local-session-build'
+    uses: ./.github/workflows/windows023-local-session-build.yml
+  official-stop-query-profile:
+    if: github.event_name == 'workflow_dispatch' && (inputs.purpose == 'official-stop-query-profile' || inputs.purpose == 'official-stop-history-profile')
+    permissions:
+      contents: read
+    uses: ./.github/workflows/windows-stop-query-profile.yml
+    with:
+      mode: ${{ inputs.purpose == 'official-stop-history-profile' && 'history' || 'query' }}
+  diagnostic-sweep:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'diagnostic-sweep'
+    permissions:
+      contents: read
+      actions: read
+    uses: ./.github/workflows/windows023-sweep.yml
   package:
     if: github.event_name != 'workflow_dispatch' || inputs.purpose == 'candidate'
     runs-on: windows-latest
-    timeout-minutes: 45
+    # Full offline closure, MSVC debug/release builds and actual two-user
+    # services share this job. Product start/stop and smoke deadlines stay fixed.
+    timeout-minutes: 90
     defaults:
       run:
         shell: pwsh
@@ -43,9 +141,14 @@ jobs:
       - name: Verify process-token evidence and all Windows smoke syntax
         run: |
           & ../../../test/smoke/windows-process-token.test.ps1 -OutputDirectory ../../../test/out/windows-candidate/process-token
+      - name: Verify exact uninstall-retention fixture cleanup
+        run: |
+          & ../../../test/smoke/windows-retention-fixture.test.ps1 -OutputDirectory ../../../test/out/windows-candidate/retention-fixture
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          # Bundle resolution must use the same Node/npm pair as the pinned closure.
+          node-version: 26.8.1
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
@@ -65,6 +168,16 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           npm --prefix ../ui run build
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      # Produce the complete 0.2.23 closure before compilation, matching release pins.
+      - name: Stage complete 0.2.23 offline runtime
+        if: steps.identity.outputs.version == '0.2.23'
+        run: |
+          $taskNode = (Get-Command node).Source
+          $taskNpm = node -e 'const p=require("node:path"),f=require("node:fs"),d=p.dirname(process.execPath);const a=[p.join(d,"node_modules/npm/bin/npm-cli.js"),p.join(d,"../lib/node_modules/npm/bin/npm-cli.js")];const n=a.find(x=>f.existsSync(x));if(!n)process.exit(1);process.stdout.write(p.resolve(n))'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python ../../../.github/scripts/stage_runtime_bundle_023.py --platform win32-x64 --build-node $taskNode --npm-cli $taskNpm --output ../../../test/out/windows-candidate/runtime-stage
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          'OCXD_REQUIRE_RUNTIME_BUNDLE=1' >> $env:GITHUB_ENV
       - name: Freeze and record dependency resolution
         run: |
           New-Item -ItemType Directory -Force ../../../test/out/windows-candidate | Out-Null
@@ -81,7 +194,35 @@ jobs:
           cargo clippy --locked --workspace --all-targets -- -D warnings
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $env:OPENCODEX_TEST_NODE = (Get-Command node).Source
-          cargo test --locked --workspace --features integration-test
+          cargo test --locked --workspace --features integration-test --doc
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $taskStatic = Join-Path $env:RUNNER_TEMP ('ocxd023-rust-static-' + [guid]::NewGuid().ToString('N'))
+          & ../../../test/smoke/windows023-rust-ordinary.test.ps1 -OutputDirectory $taskStatic
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $taskOrdinary = Join-Path $env:RUNNER_TEMP ('ocxd023-rust-ordinary-' + [guid]::NewGuid().ToString('N'))
+          try {
+            & ../../../test/smoke/windows023-rust-ordinary.ps1 -Cargo (Get-Command cargo.exe).Source -ManifestPath (Join-Path $PWD 'Cargo.toml') -Node (Get-Command node.exe).Source -OutputDirectory $taskOrdinary -ExpectedCommit (git rev-parse HEAD)
+            if ($LASTEXITCODE -ne 0) { throw 'Actual ordinary-account workspace binaries failed; original evidence retained' }
+          } finally {
+            if (Test-Path -LiteralPath $taskOrdinary) { Copy-Item -LiteralPath $taskOrdinary -Destination ../../../test/out/windows-candidate/ordinary-rust -Recurse }
+            if (Test-Path -LiteralPath $taskStatic) { Copy-Item -LiteralPath $taskStatic -Destination ../../../test/out/windows-candidate/ordinary-static -Recurse }
+          }
+      - name: Preserve elevated private creation boundary
+        if: always()
+        run: |
+          cargo test --locked --lib infrastructure::windows_private_create::tests -- --test-threads=1 --nocapture
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo test --locked --lib modules::backup::manager::tests::windows_backup_lock_uses_actual_token_user_and_reopens_without_repair -- --exact --test-threads=1 --nocapture
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Preserve native credential protection evidence
+        if: always()
+        run: |
+          $env:OPENCODEX_SANDBOX = '1'
+          cargo test --locked --test provider_auth_native -- --ignored --test-threads=1 --nocapture
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo test --locked --test channel_rename_native -- --ignored --test-threads=1 --nocapture
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo test --locked --lib native_secure_store_round_trip -- --ignored --test-threads=1 --nocapture
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Build NSIS and MSI candidates
         run: |
@@ -89,11 +230,81 @@ jobs:
           # Invoke its JavaScript entry through the native node executable.
           $taskTauriCli = Join-Path (npm root --global) '@tauri-apps/cli/tauri.js'
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          node $taskTauriCli build --bundles nsis,msi -- --locked
+          $taskBuildArgs = @('build','--features','custom-protocol','--bundles','nsis,msi')
+          if ((Get-Content tauri.conf.json -Raw | ConvertFrom-Json).version -ceq '0.2.23') {
+            $taskBuildArgs += @('--config','tauri.runtime-bundle.conf.json')
+          }
+          $taskBuildArgs += @('--','--locked')
+          $env:OCXD_TAURI_RETRY_EVIDENCE=[IO.Path]::GetFullPath('../../../test/out/windows-candidate/tauri-downloads')
+          node ../../../.github/scripts/tauri_build_retry.mjs --cli $taskTauriCli @taskBuildArgs
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      # These are diagnostic originals, explicitly NOT the admitted final
+      # candidate artifact. Retention/release admission still requires the
+      # separately named verified artifact and successful package job below.
+      - name: Record exact unverified installer build identities
+        shell: pwsh
+        run: |
+          $taskRaw = [IO.Path]::GetFullPath('../../../test/out/windows-raw-candidate')
+          New-Item -ItemType Directory -Force $taskRaw | Out-Null
+          $taskRawFiles = @(Get-ChildItem target/release/bundle/nsis/*-setup.exe,target/release/bundle/msi/*.msi -File)
+          if ($taskRawFiles.Count -ne 2) { throw 'Both raw installer originals required' }
+          foreach ($taskRawFile in $taskRawFiles) { Copy-Item -LiteralPath $taskRawFile.FullName -Destination $taskRaw }
+          Copy-Item -LiteralPath target/release/opencodex-desktop.exe -Destination $taskRaw
+          [ordered]@{
+            source=(git rev-parse HEAD).Trim();appsTree=(git rev-parse HEAD:apps).Trim();run=$env:GITHUB_RUN_ID;attempt=$env:GITHUB_RUN_ATTEMPT
+            status='unverified-build-only';installationAccepted=$false;releaseAccepted=$false
+            files=@(Get-ChildItem $taskRaw -File | ForEach-Object { @{name=$_.Name;bytes=$_.Length;sha256=(Get-FileHash -LiteralPath $_.FullName).Hash.ToLowerInvariant()} })
+          } | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $taskRaw 'build-identities.json')
+      - name: Preserve unverified originals for bounded followup only
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-raw-installers-unverified-${{ github.sha }}
+          path: test/out/windows-raw-candidate
+          if-no-files-found: error
+          retention-days: 14
+      - name: Prepare disposable Server MSI client-equivalent fixture
+        id: msi_server_fixture
+        run: |
+          & ../../../test/smoke/windows-msi-server-fixture.ps1 -Mode prepare -EvidenceDirectory ../../../test/out/windows-candidate
       - name: Install, verify final EXE and uninstall on isolated runner
         run: |
           & ../../../test/smoke/windows-installer.ps1 -BundleDirectory target/release/bundle -BuiltExecutable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-candidate
+      - name: Stage exact complete program for two real user accounts
+        if: steps.identity.outputs.version == '0.2.23'
+        run: |
+          cargo build --locked --release --bin ocxd
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $taskCandidate = Join-Path $env:RUNNER_TEMP ('ocxd023-two-user-candidate-'+[guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $taskCandidate | Out-Null
+          Copy-Item -LiteralPath target/release/opencodex-desktop.exe -Destination $taskCandidate
+          Copy-Item -LiteralPath target/release/ocxd.exe -Destination $taskCandidate
+          Copy-Item -LiteralPath resources/runtime-bundle -Destination $taskCandidate -Recurse
+          'OCXD_TWO_USER_CANDIDATE='+$taskCandidate >> $env:GITHUB_ENV
+          $taskDriver = Join-Path $env:RUNNER_TEMP ('ocxd023-two-user-node-'+[guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $taskDriver | Out-Null
+          $taskTar = (Get-ChildItem -LiteralPath ../../../test/out/windows-candidate/runtime-stage/platform-bundle -Filter 'runtime-bundle-0.2.23-win32-x64.tar.gz').FullName
+          tar -xzf $taskTar -C $taskDriver runtime/node
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          'OCXD_TWO_USER_NODE='+(Join-Path $taskDriver 'runtime/node/node.exe') >> $env:GITHUB_ENV
+      - name: Verify two-user runner guard and fixture contracts
+        if: steps.identity.outputs.version == '0.2.23'
+        run: |
+          $taskOutput = Join-Path $env:RUNNER_TEMP ('ocxd023-two-user-static-'+[guid]::NewGuid().ToString('N'))
+          & ../../../test/smoke/windows023-two-user-native.test.ps1 -OutputDirectory $taskOutput -Node $env:OCXD_TWO_USER_NODE
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Copy-Item -LiteralPath $taskOutput -Destination ../../../test/out/windows-candidate/two-user-static -Recurse
+      - name: Verify simultaneous real SID managers and actual runtime ports
+        if: steps.identity.outputs.version == '0.2.23'
+        run: |
+          $taskOutput = Join-Path $env:RUNNER_TEMP ('ocxd023-two-user-native-'+[guid]::NewGuid().ToString('N'))
+          try {
+            & ../../../test/smoke/windows023-two-user-native.ps1 -Executable (Join-Path $env:OCXD_TWO_USER_CANDIDATE 'opencodex-desktop.exe') -Node $env:OCXD_TWO_USER_NODE -OutputDirectory $taskOutput -ExpectedCommit (git rev-parse HEAD) -VerifyRuntimePorts
+            if ($LASTEXITCODE -ne 0) { throw 'Two actual SID native acceptance failed; original evidence retained' }
+            $taskTwoUser = Get-Content -LiteralPath (Join-Path $taskOutput 'two-user-native.json') -Raw | ConvertFrom-Json
+            if (!$taskTwoUser.fullVersionGatePassed -or $taskTwoUser.runtimeProxyPortIsolation -cne 'verified-runtime-ports') { throw 'Actual runtime-port acceptance is incomplete' }
+          } finally {
+            if (Test-Path -LiteralPath $taskOutput) { Copy-Item -LiteralPath $taskOutput -Destination ../../../test/out/windows-candidate/two-user-native -Recurse }
+          }
       - name: Upload verified Windows installers
         uses: actions/upload-artifact@v4
         with:
@@ -104,6 +315,10 @@ jobs:
             apps/desktop/tauri/target/release/bundle/nsis/*-setup.exe
             apps/desktop/tauri/target/release/bundle/msi/*.msi
             test/out/windows-candidate/installer-verification.json
+      - name: Restore exact Server MSI policy
+        if: always()
+        run: |
+          if(Test-Path ../../../test/out/windows-candidate/msi-server-policy.original.json){ & ../../../test/smoke/windows-msi-server-fixture.ps1 -Mode restore -EvidenceDirectory ../../../test/out/windows-candidate }
       - name: Preserve package evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -111,7 +326,34 @@ jobs:
           name: windows-candidate-evidence
           if-no-files-found: error
           retention-days: 14
-          path: test/out/windows-candidate
+          path: |
+            test/out/windows-candidate/*.json
+            test/out/windows-candidate/*.log
+            test/out/windows-candidate/ordinary-rust
+            test/out/windows-candidate/ordinary-static
+            test/out/windows-candidate/runtime-stage/*.json
+            test/out/windows-candidate/runtime-stage/base-downloads
+            test/out/windows-candidate/tauri-downloads
+            test/out/windows-candidate/*-startup/*.json
+            test/out/windows-candidate/*-startup/*.log
+            test/out/windows-candidate/*-startup/startup/*.json
+            test/out/windows-candidate/*-startup/startup/*.log
+            test/out/windows-candidate/*-startup/startup/*.png
+            test/out/windows-candidate/two-user-native/*.json
+            test/out/windows-candidate/two-user-native/*.log
+            test/out/windows-candidate/two-user-native/user1/*.json
+            test/out/windows-candidate/two-user-native/user1/*.log
+            test/out/windows-candidate/two-user-native/user1/*/*.json
+            test/out/windows-candidate/two-user-native/user1/*/*.log
+            test/out/windows-candidate/two-user-native/user1/*/*.png
+            test/out/windows-candidate/two-user-native/user1/*.png
+            test/out/windows-candidate/two-user-native/user2/*.json
+            test/out/windows-candidate/two-user-native/user2/*.log
+            test/out/windows-candidate/two-user-native/user2/*/*.json
+            test/out/windows-candidate/two-user-native/user2/*/*.log
+            test/out/windows-candidate/two-user-native/user2/*/*.png
+            test/out/windows-candidate/two-user-native/user2/*.png
+            test/out/windows-candidate/two-user-static
 
   query-etw:
     if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'query-etw' && github.repository == 'gzers/opencodex-desktop'
@@ -240,7 +482,7 @@ jobs:
             test/runtime/ci-bd2-query-etw/capture
 
   retention:
-    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'installer-retention' && github.repository == 'gzers/opencodex-desktop'
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'installer-retention' && !startsWith(inputs.admission_run, '{"mode":"retention023"') && github.repository == 'gzers/opencodex-desktop'
     strategy:
       fail-fast: false
       matrix:
@@ -278,7 +520,7 @@ jobs:
           path: test/out/windows-installer-retention
 
   native-ui:
-    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui'
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run != 'ordinary-preflight-023' && inputs.admission_run != 'ordinary-ownership-023' && inputs.admission_run != 'ordinary-stop-readonly-023' && inputs.admission_run != 'ordinary-native-wrapper-023' && inputs.admission_run != 'ordinary-startup-023' && inputs.admission_run != 'ordinary-startup-initialized-023' && inputs.admission_run != 'ordinary-lifecycle-023' && inputs.admission_run != 'raw-final023-replay' && inputs.admission_run != 'msi-compiler-023' && inputs.admission_run != 'native-replay-414' && inputs.admission_run != 'raw-msi-3d-diagnostic' && inputs.admission_run != 'raw-full-0c-diagnostic' && inputs.admission_run != 'full-bundle-two-user-debug'
     runs-on: windows-latest
     timeout-minutes: 40
     defaults:
@@ -289,7 +531,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          node-version: 26.8.1
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
         with:
@@ -354,3 +596,538 @@ jobs:
             cargo test -- --nocapture
             if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
           }
+
+  ordinary-preflight:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && (inputs.admission_run == 'ordinary-preflight-023' || (inputs.admission_run == 'ordinary-ownership-023' || inputs.admission_run == 'ordinary-stop-readonly-023' || inputs.admission_run == 'ordinary-native-wrapper-023') || (inputs.admission_run == 'ordinary-startup-023' || (inputs.admission_run == 'ordinary-startup-initialized-023' || inputs.admission_run == 'ordinary-lifecycle-023')))
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        stop_order: ${{ fromJSON(inputs.admission_run == 'ordinary-stop-readonly-023' && '["original-first","filtered-first"]' || '["original-first"]') }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Stage exact adopted runtime for readonly ordinary ownership diagnosis
+        if: (inputs.admission_run == 'ordinary-ownership-023' || inputs.admission_run == 'ordinary-stop-readonly-023' || inputs.admission_run == 'ordinary-native-wrapper-023') || (inputs.admission_run == 'ordinary-startup-023' || (inputs.admission_run == 'ordinary-startup-initialized-023' || inputs.admission_run == 'ordinary-lifecycle-023'))
+        shell: pwsh
+        run: |
+          $node=(Get-Command node.exe).Source
+          $npm=Join-Path (Split-Path -Parent $node) 'node_modules/npm/bin/npm-cli.js'
+          python .github/scripts/stage_runtime_bundle_023.py --platform win32-x64 --build-node $node --npm-cli $npm --output test/out/ownership-runtime-stage
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+          $name=if('${{ inputs.admission_run }}' -in @('ordinary-startup-023','ordinary-startup-initialized-023','ordinary-lifecycle-023')){'OCXD_STARTUP_PROBE_RUNTIME'}else{'OCXD_OWNERSHIP_PROBE_RUNTIME'}
+          $name+'='+[IO.Path]::GetFullPath('test/out/ownership-runtime-stage/platform-bundle/runtime-bundle') >> $env:GITHUB_ENV
+          if('${{ inputs.admission_run }}' -in @('ordinary-startup-initialized-023','ordinary-lifecycle-023')){'OCXD_STARTUP_PROBE_INITIALIZE_CODEX=1' >> $env:GITHUB_ENV}
+          if('${{ inputs.admission_run }}' -ceq 'ordinary-lifecycle-023'){'OCXD_STARTUP_PROBE_LIFECYCLE=1' >> $env:GITHUB_ENV}
+          if('${{ inputs.admission_run }}' -ceq 'ordinary-stop-readonly-023'){'OCXD_READONLY_STOP_COSTS=${{ matrix.stop_order }}' >> $env:GITHUB_ENV}
+          if('${{ inputs.admission_run }}' -ceq 'ordinary-native-wrapper-023'){'OCXD_READONLY_STOP_COSTS=native-only' >> $env:GITHUB_ENV}
+      - name: Attest exact original stop sources before ordinary read-only probe
+        if: inputs.admission_run == 'ordinary-stop-readonly-023' || inputs.admission_run == 'ordinary-native-wrapper-023'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force test/out/windows023-ordinary-preflight | Out-Null
+          python test/smoke/verify-pinned-profile-source.py test/out/ownership-runtime-stage/platform-bundle/runtime-bundle/runtime/opencodex/node_modules/@bitkyc08/opencodex test/out/windows023-ordinary-preflight/stop-source-attestation.json --ordinary-stop-profile
+          if($LASTEXITCODE -ne 0){throw 'Pinned original stop sources differ'}
+      - name: Verify unchanged runner contracts
+        shell: pwsh
+        run: |
+          $taskStatic = Join-Path $env:RUNNER_TEMP ('ocxd023-preflight-static-' + [guid]::NewGuid().ToString('N'))
+          & test/smoke/windows023-rust-ordinary.test.ps1 -OutputDirectory $taskStatic
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Exercise the real runner with a small default Rust test binary
+        shell: pwsh
+        run: |
+          $taskEvidence = Join-Path $env:RUNNER_TEMP ('ocxd023-preflight-native-' + [guid]::NewGuid().ToString('N'))
+          try {
+            & test/smoke/windows023-rust-ordinary.ps1 -Cargo (Get-Command cargo.exe).Source -ManifestPath (Join-Path $PWD 'test/smoke/windows023-ordinary-preflight/Cargo.toml') -Node (Get-Command node.exe).Source -OutputDirectory $taskEvidence -ExpectedCommit (git rev-parse HEAD)
+            if ($LASTEXITCODE -ne 0) { throw 'Ordinary runner preflight failed; original receipts retained' }
+          } finally {
+            New-Item -ItemType Directory -Force test/out/windows023-ordinary-preflight | Out-Null
+            if (Test-Path -LiteralPath $taskEvidence) { Copy-Item -LiteralPath $taskEvidence -Destination test/out/windows023-ordinary-preflight/native -Recurse }
+          }
+      - name: Preserve exact native runner and cleanup evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows023-ordinary-preflight-${{ github.sha }}${{ inputs.admission_run == 'ordinary-stop-readonly-023' && format('-{0}', matrix.stop_order) || '' }}
+          path: |
+            test/out/windows023-ordinary-preflight
+            test/out/ownership-runtime-stage/maintained-runtime/*.json
+            test/out/ownership-runtime-stage/platform-bundle/result.json
+            test/out/ownership-runtime-stage/base-downloads
+          if-no-files-found: warn
+          retention-days: 14
+
+  native-replay414:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run == 'native-replay-414'
+    runs-on: windows-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 42347427165
+          artifact-ids: 13566576723
+          merge-multiple: true
+          path: test/out/native-replay414/input
+      - name: Verify exact already built MSVC image and unchanged product source
+        shell: pwsh
+        run: |
+          $inputRoot = (Resolve-Path test/out/native-replay414/input).Path
+          $receipt = Get-Content (Join-Path $inputRoot 'candidate.json') -Raw | ConvertFrom-Json
+          $expected = '414d62bab35060e8aa2011300dab926a66727946'
+          if ($receipt.requestedHead -cne $expected -or $receipt.checkedCommit -cne '01032c5df1c6b8de849a9999a20a9e9b2d5efb3b' -or $receipt.appsTree -cne '95ca3f35cd29919bba22ec6d84bd867c2f35fc54' -or $receipt.runId -ne '42347427165' -or $receipt.target -cne 'x86_64-pc-windows-msvc') { throw 'Native original candidate identity mismatch' }
+          $exe = Join-Path $inputRoot 'opencodex-desktop.exe'
+          if ((Get-Item $exe).Length -ne 17220096 -or (Get-FileHash $exe).Hash -ine '4cf2f44e737024ab6ec599217839d90e926b83bed0551ab9a2b3e1b568081265') { throw 'Native original EXE bytes mismatch' }
+          # Only test/workflow corrections can consume this original image.
+          $changes = @(git diff --name-only $expected HEAD -- apps)
+          if ($LASTEXITCODE -ne 0 -or $changes.Count) { throw 'Product source changed since original EXE' }
+          & test/smoke/windows-ordinary-startup.ps1 -Executable $exe -Node (Get-Command node).Source -OutputDirectory test/out/native-replay414/evidence -ExpectedCommit $receipt.checkedCommit
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-replay414-${{ github.sha }}
+          path: |
+            test/out/native-replay414/evidence/*.json
+            test/out/native-replay414/evidence/*.log
+            test/out/native-replay414/evidence/startup/*.json
+            test/out/native-replay414/evidence/startup/*.log
+            test/out/native-replay414/evidence/startup/*.png
+          if-no-files-found: warn
+
+  msi-compiler023:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run == 'msi-compiler-023'
+    runs-on: windows-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: apps/desktop/tauri
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - name: Install pinned bundle compiler only
+        run: npm install --global @tauri-apps/cli@2.11.4
+      - name: Compile actual MSI template with explicitly synthetic payload
+        run: |
+          & ../../../test/smoke/windows023-msi-compiler.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Preserve exact generated WiX and native compiler output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows023-msi-compiler-${{ github.sha }}
+          path: test/out/windows023-msi-compiler
+          if-no-files-found: error
+          retention-days: 14
+
+  retention023:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'installer-retention' && startsWith(inputs.admission_run, '{"mode":"retention023"')
+    permissions:
+      contents: read
+      actions: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {kind: nsis, scenario: adjacent}
+          - {kind: nsis, scenario: fresh023}
+          - {kind: msi, scenario: adjacent}
+          - {kind: msi, scenario: explicit-conversion}
+          - {kind: msi, scenario: fresh023}
+    runs-on: windows-latest
+    timeout-minutes: 35
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v5
+      - name: Verify bounded admission and retention fixture contracts
+        run: |
+          python test/smoke/windows023-retention-ci-admit.test.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $taskFixtures = Join-Path $env:RUNNER_TEMP ('ocxd023-retention-fixtures-' + [guid]::NewGuid().ToString('N'))
+          & test/smoke/windows023-installer-retention.test.ps1 -OutputDirectory $taskFixtures
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Admit published 0.2.22 and exact successful candidate bytes
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OCXD_CANDIDATE_RUN: ${{ fromJSON(inputs.admission_run).candidate_run }}
+          OCXD_CANDIDATE_ATTEMPT: ${{ fromJSON(inputs.admission_run).candidate_attempt }}
+          OCXD_CANDIDATE_HEAD: ${{ fromJSON(inputs.admission_run).candidate_head }}
+          OCXD_ARTIFACT_ID: ${{ fromJSON(inputs.admission_run).artifact_id }}
+          OCXD_ARTIFACT_BYTES: ${{ fromJSON(inputs.admission_run).artifact_bytes }}
+          OCXD_ARTIFACT_SHA256: ${{ fromJSON(inputs.admission_run).artifact_sha256 }}
+          OCXD_INSTALLER_KIND: ${{ matrix.kind }}
+          OCXD_INSTALLER_SCENARIO: ${{ matrix.scenario }}
+        run: |
+          python test/smoke/windows023-retention-ci-admit.py $env:OCXD_INSTALLER_KIND --scenario $env:OCXD_INSTALLER_SCENARIO --candidate-run $env:OCXD_CANDIDATE_RUN --candidate-attempt $env:OCXD_CANDIDATE_ATTEMPT --candidate-head $env:OCXD_CANDIDATE_HEAD --artifact-id $env:OCXD_ARTIFACT_ID --artifact-bytes $env:OCXD_ARTIFACT_BYTES --artifact-sha256 $env:OCXD_ARTIFACT_SHA256
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Prepare disposable Server MSI client-equivalent fixture
+        id: retention_msi_fixture
+        run: ./test/smoke/windows-msi-server-fixture.ps1 -Mode prepare -EvidenceDirectory test/out/windows023-installer-retention
+      - name: Verify actual default upgrade uninstall and reinstall
+        run: |
+          foreach ($taskName in @('GITHUB_TOKEN','GH_TOKEN','ACTIONS_RUNTIME_TOKEN','ACTIONS_ID_TOKEN_REQUEST_TOKEN')) {
+            [Environment]::SetEnvironmentVariable($taskName, $null, 'Process')
+          }
+          & test/smoke/windows023-installer-retention.ps1 -AdmissionPath test/out/windows023-installer-retention/admission.json -Execute
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Restore exact Server MSI policy
+        if: always()
+        run: if(Test-Path test/out/windows023-installer-retention/msi-server-policy.original.json){ & ./test/smoke/windows-msi-server-fixture.ps1 -Mode restore -EvidenceDirectory test/out/windows023-installer-retention }
+      - name: Preserve admission execution and cleanup evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows023-retention-${{ matrix.kind }}-${{ matrix.scenario }}-${{ github.sha }}
+          path: test/out/windows023-installer-retention
+          if-no-files-found: warn
+          retention-days: 14
+
+  raw-msi3d-diagnostic:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run == 'raw-msi-3d-diagnostic'
+    permissions:
+      contents: read
+      actions: read
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: gzers/opencodex-desktop
+          run-id: 42365850198
+          name: windows-raw-installers-unverified-3d45558c1e76fa326852318ce899987be408b9fb
+          path: test/out/raw-msi3d/input
+      - name: Prepare disposable Server MSI client-equivalent fixture
+        id: raw_msi_fixture
+        shell: pwsh
+        run: ./test/smoke/windows-msi-server-fixture.ps1 -Mode prepare -EvidenceDirectory test/out/raw-msi3d/evidence
+      - name: Verify exact raw originals then diagnose one default MSI installation
+        shell: pwsh
+        run: |
+          $root=(Resolve-Path test/out/raw-msi3d/input).Path
+          $receipt=Get-Content -LiteralPath (Join-Path $root 'build-identities.json') -Raw|ConvertFrom-Json
+          $expected='3d45558c1e76fa326852318ce899987be408b9fb'
+          if($receipt.source -cne $expected -or $receipt.appsTree -cne '95ca3f35cd29919bba22ec6d84bd867c2f35fc54' -or $receipt.status -cne 'unverified-build-only' -or $receipt.installationAccepted -or $receipt.releaseAccepted -or @($receipt.files).Count -ne 3){throw 'Unverified original identity differs'}
+          foreach($file in $receipt.files){
+            if($file.name -notin @('opencodex-desktop.exe','OpenCodeX Desktop_0.2.23_x64-setup.exe','OpenCodeX Desktop_0.2.23_x64_en-US.msi')){throw 'Unexpected original file'}
+            $path=Join-Path $root $file.name
+            if((Get-Item -LiteralPath $path).Length -ne $file.bytes -or (Get-FileHash -LiteralPath $path).Hash.ToLowerInvariant() -cne $file.sha256){throw 'Original bytes changed'}
+          }
+          $bundle=Join-Path $root 'bundle'
+          New-Item -ItemType Directory -Force (Join-Path $bundle 'msi')|Out-Null
+          Copy-Item -LiteralPath (Join-Path $root 'OpenCodeX Desktop_0.2.23_x64_en-US.msi') -Destination (Join-Path $bundle 'msi')
+          & test/smoke/windows-installer.ps1 -BundleDirectory $bundle -BuiltExecutable (Join-Path $root 'opencodex-desktop.exe') -Node (Get-Command node).Source -OutputDirectory test/out/raw-msi3d/evidence -ExpectedCommit $expected -Kind msi -Mode default
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+      - name: Restore exact Server MSI policy
+        if: always()
+        shell: pwsh
+        run: if(Test-Path test/out/raw-msi3d/evidence/msi-server-policy.original.json){ & ./test/smoke/windows-msi-server-fixture.ps1 -Mode restore -EvidenceDirectory test/out/raw-msi3d/evidence }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw-msi3d-diagnostic
+          if-no-files-found: error
+          path: |
+            test/out/raw-msi3d/input/build-identities.json
+            test/out/raw-msi3d/evidence/*.json
+            test/out/raw-msi3d/evidence/*.log
+            test/out/raw-msi3d/evidence/*startup/*.json
+            test/out/raw-msi3d/evidence/*startup/*.log
+            test/out/raw-msi3d/evidence/*startup/startup/*.json
+            test/out/raw-msi3d/evidence/*startup/startup/*.log
+            test/out/raw-msi3d/evidence/*startup/startup/*.png
+
+  raw-full0c-diagnostic:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run == 'raw-full-0c-diagnostic'
+    permissions:
+      contents: read
+      actions: read
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: gzers/opencodex-desktop
+          run-id: 42374536779
+          name: windows-raw-installers-unverified-0c869d9497c102b714dea1ee89394f999da8c4ec
+          path: test/out/raw-full0c/input
+      - name: Prepare disposable Server MSI client-equivalent fixture
+        id: raw_msi_fixture
+        shell: pwsh
+        run: ./test/smoke/windows-msi-server-fixture.ps1 -Mode prepare -EvidenceDirectory test/out/raw-full0c/evidence
+      - name: Verify exact raw originals then diagnose one default MSI installation
+        shell: pwsh
+        run: |
+          $root=(Resolve-Path test/out/raw-full0c/input).Path
+          $receipt=Get-Content -LiteralPath (Join-Path $root 'build-identities.json') -Raw|ConvertFrom-Json
+          $expected='0c869d9497c102b714dea1ee89394f999da8c4ec'
+          if($receipt.source -cne $expected -or $receipt.appsTree -cne 'cf7ca5b19438d9157ada555d0451f91d768b1cf9' -or $receipt.status -cne 'unverified-build-only' -or $receipt.installationAccepted -or $receipt.releaseAccepted -or @($receipt.files).Count -ne 3){throw 'Unverified original identity differs'}
+          foreach($file in $receipt.files){
+            if($file.name -notin @('opencodex-desktop.exe','OpenCodeX Desktop_0.2.23_x64-setup.exe','OpenCodeX Desktop_0.2.23_x64_en-US.msi')){throw 'Unexpected original file'}
+            $path=Join-Path $root $file.name
+            if((Get-Item -LiteralPath $path).Length -ne $file.bytes -or (Get-FileHash -LiteralPath $path).Hash.ToLowerInvariant() -cne $file.sha256){throw 'Original bytes changed'}
+          }
+          $bundle=Join-Path $root 'bundle'
+          New-Item -ItemType Directory -Force (Join-Path $bundle 'msi')|Out-Null
+          New-Item -ItemType Directory -Force (Join-Path $bundle 'nsis')|Out-Null
+          Copy-Item -LiteralPath (Join-Path $root 'OpenCodeX Desktop_0.2.23_x64-setup.exe') -Destination (Join-Path $bundle 'nsis')
+          Copy-Item -LiteralPath (Join-Path $root 'OpenCodeX Desktop_0.2.23_x64_en-US.msi') -Destination (Join-Path $bundle 'msi')
+          & test/smoke/windows-installer.ps1 -BundleDirectory $bundle -BuiltExecutable (Join-Path $root 'opencodex-desktop.exe') -Node (Get-Command node).Source -OutputDirectory test/out/raw-full0c/evidence -ExpectedCommit $expected -Kind all -Mode all
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+      - uses: actions/checkout@v5
+        with:
+          ref: 0c869d9497c102b714dea1ee89394f999da8c4ec
+          path: test/out/raw-full0c/original-source
+      - name: Apply only observed test-helper environment fix to exact original product checkout
+        shell: pwsh
+        run: |
+          Copy-Item -LiteralPath test/smoke/windows023-two-user-native-helper.ps1 -Destination test/out/raw-full0c/original-source/test/smoke/windows023-two-user-native-helper.ps1 -Force
+          $changed=@(git -C test/out/raw-full0c/original-source diff --name-only)
+          if($changed.Count -gt 1 -or ($changed.Count -eq 1 -and $changed[0] -cne 'test/smoke/windows023-two-user-native-helper.ps1')){throw 'Only the declared diagnostic helper may differ'}
+          if((git -C test/out/raw-full0c/original-source rev-parse HEAD:apps).Trim() -cne 'cf7ca5b19438d9157ada555d0451f91d768b1cf9'){throw 'Original product source differs'}
+          [ordered]@{productSource='0c869d9497c102b714dea1ee89394f999da8c4ec';helperSource=(git rev-parse HEAD).Trim();helperSha256=(Get-FileHash test/smoke/windows023-two-user-native-helper.ps1).Hash.ToLowerInvariant();changed=$changed;productChanged=$false}|ConvertTo-Json|Set-Content test/out/raw-full0c/input/declared-test-helper.json
+      - name: Verify two actual SIDs and ports from the same complete original MSI payload
+        shell: pwsh
+        run: |
+          $taskRoot=(Resolve-Path test/out/raw-full0c/input).Path
+          $taskPayload=Join-Path $env:RUNNER_TEMP ('ocxd023-raw-payload-'+[guid]::NewGuid().ToString('N'))
+          $taskMsi=Join-Path $taskRoot 'OpenCodeX Desktop_0.2.23_x64_en-US.msi'
+          $taskProcess=Start-Process msiexec.exe -ArgumentList ('/a "'+$taskMsi+'" /qn TARGETDIR="'+$taskPayload+'" /L*v "'+(Join-Path $taskRoot 'administrative-extract.log')+'"') -Wait -PassThru
+          if($taskProcess.ExitCode -ne 0){throw 'Original MSI payload extraction failed'}
+          $taskImages=@(Get-ChildItem -LiteralPath $taskPayload -Recurse -Filter opencodex-desktop.exe)
+          if($taskImages.Count -ne 1){throw 'One exact complete original MSI payload required'}
+          $taskProgram=$taskImages[0].DirectoryName
+          node test/smoke/windows-bundle-identity.mjs (Join-Path $taskRoot 'opencodex-desktop.exe') $taskImages[0].FullName msi
+          if($LASTEXITCODE -ne 0){throw 'Extracted original payload identity differs'}
+          $taskDriver=Join-Path $env:RUNNER_TEMP ('ocxd023-raw-node-'+[guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory $taskDriver|Out-Null
+          $taskBundle=Join-Path $taskProgram 'runtime-bundle/runtime-bundle-0.2.23-win32-x64.tar.gz'
+          if(!(Test-Path -LiteralPath $taskBundle)){throw 'Original MSI complete runtime bundle absent'}
+          tar -xzf $taskBundle -C $taskDriver runtime/node
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+          $taskTools=(Resolve-Path test/out/raw-full0c/original-source/test/smoke).Path
+          $taskEvidence=Join-Path $env:RUNNER_TEMP ('ocxd023-raw-two-user-'+[guid]::NewGuid().ToString('N'))
+          $taskFinalEvidence=[IO.Path]::GetFullPath('test/out/raw-full0c/two-user')
+          Push-Location test/out/raw-full0c/original-source
+          try{
+            & (Join-Path $taskTools 'windows023-two-user-native.ps1') -Executable $taskImages[0].FullName -Node (Join-Path $taskDriver 'runtime/node/node.exe') -OutputDirectory $taskEvidence -ExpectedCommit '0c869d9497c102b714dea1ee89394f999da8c4ec' -VerifyRuntimePorts
+            if($LASTEXITCODE -ne 0){throw 'Original package actual twoSID/runtime ports failed'}
+            $taskResult=Get-Content -LiteralPath (Join-Path $taskEvidence 'two-user-native.json') -Raw|ConvertFrom-Json
+            if(!$taskResult.fullVersionGatePassed -or $taskResult.runtimeProxyPortIsolation -cne 'verified-runtime-ports'){throw 'Original twoSID evidence incomplete'}
+          }finally{
+            Pop-Location
+            if(Test-Path -LiteralPath $taskEvidence){Copy-Item -LiteralPath $taskEvidence -Destination $taskFinalEvidence -Recurse}
+          }
+      - name: Restore exact Server MSI policy
+        if: always()
+        shell: pwsh
+        run: if(Test-Path test/out/raw-full0c/evidence/msi-server-policy.original.json){ & ./test/smoke/windows-msi-server-fixture.ps1 -Mode restore -EvidenceDirectory test/out/raw-full0c/evidence }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw-full0c-diagnostic
+          if-no-files-found: error
+          path: |
+            test/out/raw-full0c/input/build-identities.json
+            test/out/raw-full0c/two-user/*.json
+            test/out/raw-full0c/two-user/*.log
+            test/out/raw-full0c/two-user/user1/*.json
+            test/out/raw-full0c/two-user/user1/*.log
+            test/out/raw-full0c/two-user/user1/*/*.json
+            test/out/raw-full0c/two-user/user1/*/*.log
+            test/out/raw-full0c/two-user/user1/*/*.png
+            test/out/raw-full0c/two-user/user1/*.png
+            test/out/raw-full0c/two-user/user2/*.json
+            test/out/raw-full0c/two-user/user2/*.log
+            test/out/raw-full0c/two-user/user2/*/*.json
+            test/out/raw-full0c/two-user/user2/*/*.log
+            test/out/raw-full0c/two-user/user2/*/*.png
+            test/out/raw-full0c/two-user/user2/*.png
+            test/out/raw-full0c/input/administrative-extract.log
+            test/out/raw-full0c/input/declared-test-helper.json
+            test/out/raw-full0c/evidence/*.json
+            test/out/raw-full0c/evidence/*.log
+            test/out/raw-full0c/evidence/*startup/*.json
+            test/out/raw-full0c/evidence/*startup/*.log
+            test/out/raw-full0c/evidence/*startup/startup/*.json
+            test/out/raw-full0c/evidence/*startup/startup/*.log
+            test/out/raw-full0c/evidence/*startup/startup/*.png
+
+  full-bundle-two-user-debug:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run == 'full-bundle-two-user-debug'
+    permissions:
+      contents: read
+      actions: read
+    runs-on: windows-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/tauri -> target
+          shared-key: windows-native-ui-018
+          cache-on-failure: true
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: gzers/opencodex-desktop
+          run-id: 42374536779
+          name: windows-raw-installers-unverified-0c869d9497c102b714dea1ee89394f999da8c4ec
+          path: test/out/full-bundle-two-user-debug/input
+      - name: Stage exact original distribution resources only
+        shell: pwsh
+        run: |
+          $root=(Resolve-Path test/out/full-bundle-two-user-debug/input).Path
+          $receipt=Get-Content (Join-Path $root 'build-identities.json') -Raw|ConvertFrom-Json
+          if($receipt.source -cne '0c869d9497c102b714dea1ee89394f999da8c4ec' -or $receipt.status -cne 'unverified-build-only'){throw 'Original distribution identity differs'}
+          foreach($file in $receipt.files){if((Get-FileHash -LiteralPath (Join-Path $root $file.name)).Hash.ToLowerInvariant() -cne $file.sha256){throw 'Original bytes differ'}}
+          $payload=Join-Path $env:RUNNER_TEMP ('ocxd023-debug-payload-'+[guid]::NewGuid().ToString('N'))
+          $p=Start-Process msiexec.exe -ArgumentList ('/a "'+(Join-Path $root 'OpenCodeX Desktop_0.2.23_x64_en-US.msi')+'" /qn TARGETDIR="'+$payload+'"') -Wait -PassThru
+          if($p.ExitCode -ne 0){throw 'Original resource payload extraction failed'}
+          $images=@(Get-ChildItem $payload -Recurse -Filter opencodex-desktop.exe)
+          if($images.Count -ne 1){throw 'One complete original payload required'}
+          $resources=Join-Path $images[0].DirectoryName 'runtime-bundle'
+          Copy-Item -LiteralPath $resources -Destination apps/desktop/tauri/resources/runtime-bundle -Recurse
+          'OCXD_REQUIRE_RUNTIME_BUNDLE=1' >> $env:GITHUB_ENV
+          'OCXD_DEBUG_PAYLOAD='+$images[0].DirectoryName >> $env:GITHUB_ENV
+      - name: Build current production code with exact complete distribution pin
+        shell: pwsh
+        run: |
+          npm --prefix apps/desktop/ui ci
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+          npm --prefix apps/desktop/ui run build
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+          cargo build --manifest-path apps/desktop/tauri/Cargo.toml --locked --features custom-protocol --bins --jobs 2
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+      - name: Run actual two ordinary users with current binary and original pinned resources
+        shell: pwsh
+        run: |
+          $candidate=Join-Path $env:RUNNER_TEMP ('ocxd023-debug-complete-'+[guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory $candidate|Out-Null
+          Copy-Item apps/desktop/tauri/target/debug/opencodex-desktop.exe,apps/desktop/tauri/target/debug/ocxd.exe -Destination $candidate
+          Copy-Item -LiteralPath (Join-Path $env:OCXD_DEBUG_PAYLOAD 'runtime-bundle') -Destination $candidate -Recurse
+          $driver=Join-Path $env:RUNNER_TEMP ('ocxd023-debug-node-'+[guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory $driver|Out-Null
+          tar -xzf (Join-Path $candidate 'runtime-bundle/runtime-bundle-0.2.23-win32-x64.tar.gz') -C $driver runtime/node
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+          $out=Join-Path $env:RUNNER_TEMP ('ocxd023-debug-users-'+[guid]::NewGuid().ToString('N'))
+          try{ & test/smoke/windows023-two-user-native.ps1 -Executable (Join-Path $candidate 'opencodex-desktop.exe') -Node (Join-Path $driver 'runtime/node/node.exe') -OutputDirectory $out -ExpectedCommit (git rev-parse HEAD).Trim() -VerifyRuntimePorts }
+          finally{if(Test-Path $out){Copy-Item -LiteralPath $out -Destination test/out/full-bundle-two-user-debug/evidence -Recurse}}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: full-bundle-two-user-debug
+          if-no-files-found: error
+          path: |
+            test/out/full-bundle-two-user-debug/input/build-identities.json
+            test/out/full-bundle-two-user-debug/evidence/*.json
+            test/out/full-bundle-two-user-debug/evidence/*.log
+            test/out/full-bundle-two-user-debug/evidence/user1/*.json
+            test/out/full-bundle-two-user-debug/evidence/user1/*.log
+            test/out/full-bundle-two-user-debug/evidence/user1/*/*.json
+            test/out/full-bundle-two-user-debug/evidence/user1/*/*.log
+            test/out/full-bundle-two-user-debug/evidence/user1/*/*.png
+            test/out/full-bundle-two-user-debug/evidence/user2/*.json
+            test/out/full-bundle-two-user-debug/evidence/user2/*.log
+            test/out/full-bundle-two-user-debug/evidence/user2/*/*.json
+            test/out/full-bundle-two-user-debug/evidence/user2/*/*.log
+            test/out/full-bundle-two-user-debug/evidence/user2/*/*.png
+
+  raw-final023-replay:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui' && inputs.admission_run == 'raw-final023-replay'
+    permissions:
+      contents: read
+      actions: read
+    runs-on: windows-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: gzers/opencodex-desktop
+          run-id: 42469646550
+          artifact-ids: 13614917946
+          merge-multiple: true
+          path: test/out/final023-installer-replay/input
+      - name: Verify exact original package and unchanged product source
+        run: |
+          $taskReplayRoot=[IO.Path]::GetFullPath('test/out/final023-installer-replay')
+          $taskReplayInput=Join-Path $taskReplayRoot 'input'
+          $identity=Get-Content -LiteralPath (Join-Path $taskReplayInput 'build-identities.json') -Raw|ConvertFrom-Json
+          $expected='5cba024a298154bfb4378d4607b4905b4e2e167e'
+          if($identity.source -cne $expected -or $identity.appsTree -cne 'e106149ef8a0f88ef4e2a51035fa821a32a6a486' -or $identity.run -cne '42469646550' -or $identity.attempt -cne '1' -or $identity.status -cne 'unverified-build-only' -or $identity.files.Count -ne 3){throw 'Exact raw originals required; never an accepted candidate'}
+          $changed=@(git diff --name-only $expected HEAD -- apps)
+          if($LASTEXITCODE -ne 0 -or $changed.Count){throw 'Product changed since these original installer bytes'}
+          foreach($f in $identity.files){
+            if($f.name -notin @('opencodex-desktop.exe','OpenCodeX Desktop_0.2.23_x64-setup.exe','OpenCodeX Desktop_0.2.23_x64_en-US.msi')){throw 'Unexpected original member'}
+            $path=Join-Path $taskReplayInput $f.name
+            if((Get-Item -LiteralPath $path).Length -ne $f.bytes -or (Get-FileHash -LiteralPath $path).Hash.ToLowerInvariant() -cne $f.sha256){throw 'Original package member differs'}
+          }
+          if((Get-FileHash -LiteralPath (Join-Path $taskReplayInput 'opencodex-desktop.exe')).Hash.ToLowerInvariant() -cne '5734ecf9427631de2282f8b5d0adb51ddb900601bdd5c9ae97ffa8645e8b42d0'){throw 'Original built EXE differs'}
+          foreach($kind in @('msi','nsis')){New-Item -ItemType Directory -Path (Join-Path $taskReplayRoot ('bundle/'+$kind))|Out-Null}
+          Copy-Item -LiteralPath (Join-Path $taskReplayInput 'OpenCodeX Desktop_0.2.23_x64_en-US.msi') -Destination (Join-Path $taskReplayRoot 'bundle/msi')
+          Copy-Item -LiteralPath (Join-Path $taskReplayInput 'OpenCodeX Desktop_0.2.23_x64-setup.exe') -Destination (Join-Path $taskReplayRoot 'bundle/nsis')
+          Copy-Item -LiteralPath (Join-Path $taskReplayInput 'build-identities.json') -Destination (Join-Path $taskReplayRoot 'original-build-identities.json')
+      - name: Verify exact sentinel lifecycle without installers
+        run: ./test/smoke/windows-retention-fixture.test.ps1 -OutputDirectory test/out/final023-installer-replay/fixture-contract
+      - name: Prepare disposable Server MSI fixture
+        run: ./test/smoke/windows-msi-server-fixture.ps1 -Mode prepare -EvidenceDirectory test/out/final023-installer-replay/evidence
+      - name: Replay all original installer cells after test-only correction
+        run: |
+          & ./test/smoke/windows-installer.ps1 -BundleDirectory test/out/final023-installer-replay/bundle -BuiltExecutable test/out/final023-installer-replay/input/opencodex-desktop.exe -Node (Get-Command node.exe).Source -OutputDirectory test/out/final023-installer-replay/evidence -ExpectedCommit '5cba024a298154bfb4378d4607b4905b4e2e167e' -Kind all -Mode all
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+          @{accepted=$false;diagnosticOnly=$true;formalCandidateAccepted=$false;source='5cba024a298154bfb4378d4607b4905b4e2e167e';harness=(git rev-parse HEAD).Trim();artifact=13614917946;scope='original four installer cells only; no two-user/OTA/release acceptance'}|ConvertTo-Json|Set-Content test/out/final023-installer-replay/diagnostic.json
+      - name: Restore exact Server MSI policy
+        if: always()
+        run: if(Test-Path test/out/final023-installer-replay/evidence/msi-server-policy.original.json){ & ./test/smoke/windows-msi-server-fixture.ps1 -Mode restore -EvidenceDirectory test/out/final023-installer-replay/evidence }
+      - name: Collect complete controlled receipts without private-tree traversal
+        if: always()
+        run: python test/smoke/collect_installer_replay.py test/out/final023-installer-replay
+      - name: Preserve successful and failed replay receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: final023-original-installer-replay-${{ github.sha }}
+          path: test/out/final023-installer-replay/artifact/**
+          if-no-files-found: warn

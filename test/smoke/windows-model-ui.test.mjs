@@ -50,7 +50,8 @@ test('021 uses public native AppModal/header X; the 020 upgrade image keeps its 
  assert.deepEqual(nativeModelUiContract('0.2.21'),{publicDialogs:true,confirmation:'dialog.app-modal-dialog[open]',close:'dialog[open] > .ui-dialog-header'})
  assert.deepEqual(nativeModelUiContract('0.2.20'),{publicDialogs:false,confirmation:'.modal-mask',close:'dialog[open]'})
  for(const version of ['0.2.19','0.2.18','0.2.17','0.2.16'])assert.equal(nativeModelUiContract(version).publicDialogs,false)
- assert.throws(()=>nativeModelUiContract('0.2.23'))
+ assert.deepEqual(nativeModelUiContract('0.2.23'),nativeModelUiContract('0.2.22'))
+ assert.throws(()=>nativeModelKeyboardChecksRequired('0.2.23'))
 })
 function defaultConfirmationFixture(version,mutate=()=>{}){
  class Dialog {

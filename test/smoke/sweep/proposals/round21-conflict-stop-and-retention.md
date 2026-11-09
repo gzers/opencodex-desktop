@@ -1,0 +1,35 @@
+# 第21轮：真正就绪通过，固定冲突诊断与管理器停止仍未完成
+
+Run42474583331，sourceab5a9a3d8，26过/1失败，accepted:false。272份manifest成员大小/SHA256全部相符；summary SHA256 af13ab259b299afbb8f84a0ee1830a2eba971ce25069841f0d56cf3864c100f2。原目录/private/tmp/ocxd023-sweep-r21-42474583331-download/windows023-sweep-42474583331-1/保持。01～13、15～27过，14失败，不将局部过当成完整端口通过。
+
+A实际管理器省略port，自动55581，在原预算内running/healthy、health挑战证明/PID/port与names.2一致；实际config.toml写入本次端口，只有空客户端目录由夹具创建。B显式占用A端口没有自己的runtime record，但没有公开冲突诊断；其原process_action却返回started，app.log只有start confirmed。终止协议后清理尝试公开manager stop，CDP返回未完成，原进程仍健康，最终严格账本兜底清理和两账户/Profile/ACL均通过。不能因此认定manager stop通过。
+
+源码核查：ControlledProcessRunner对Start/Restart在spawn后立即Started，退出观察接收端被丢弃；stdout/stderr为null，异步非0启动结果无法通知消费者。process_action仍为同步Tauri命令，Stop等待在调用线程执行，可能阻塞WebView。前者为明确源码事实；停止的具体原版耗时尚待直接CLI对照，不依据这轮超时猜测放宽预算或改产品。
+
+## 同期正式候选与测试夹具冲突
+
+正式候选42469646550（5cba）NSIS/MSI已构建。MSI默认与自定义原生普通用户首屏、精确EXE校验通过，默认卸载保留哨兵已通过。随后同账户custom清理测试要求.codex-desktop原本不存在，与前一默认格的保留哨兵相撞，拒绝覆盖既有根。原拒绝保留；安装套件未通过、未进入两SID，不外推后续NSIS成功。真实账户/Profile已移除，原Server策略精确还原。
+
+修正只归test/.github：default卸载先核对哨兵hash证明保留，然后由测试工具清理本次新建的精确哨兵及空父目录。前置根必须不存在；删除前完整树仅允许root/desktop/sweep-retention/随机UUID.sentinel四对象、无链接、内容一致。遇到其他内容保留报错；不递归删除、不修权限、不清日常配置。success回执单独记录testFixtureCleanup，不能替代productRetention proof。实际文件系统成功/既有根/额外文件/内容变化拒绝等检查、原矩阵与发行装配检查均过。
+
+## 原版冲突/停止直接诊断
+
+只在显式ordinary-lifecycle-023模式：原普通账户执行器启动原版A（空Codex目录、静态loopback provider），实际ready后另新H用同一A固定端口启动原CLI，保留原stdout/stderr和30秒诊断结果，核对A记录代际不变、B无运行记录；再运行原CLI stop观察原10秒内是否退出。不会手动删除记录、关闭集成、杀A或扩大生产预算；整个独立诊断110秒运输上限，不算原软件验收。普通执行器精确代际进程、账户/Profile、ACL清理仍必须通过。取得实际冲突文案/退出与停止结果后，产品生命周期变更须按用户最新范围另述理由和确认。尚未修改apps产品代码。
+
+生命周期对照首轮42477530823在基础包下载连续三次超时，尚未启动任何账户/服务。原failed.log保留/private/tmp/ocxd023-lifecycle-direct-42477530823/；本轮无产品结论。诊断上传补base-downloads原回执/部分文件。固定下载使用同一原官方asset URL的逐次随机请求标记与no-cache，避免复用短期签名重定向；SHA256/大小上限/三次上限不变。实际本机代理下载成功、固定摘要仍为bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957；证据/private/tmp/ocxd023-r21-fresh-base-fetch/。五条下载行为测试过。后继只运行该未执行的原版对照，不把装配失败改成通过，不扩大产品授权。
+
+## 待产品范围确认时的独立安装验证
+
+产品生命周期范围仍等待明确采用。只追加原安装包四格重放：固定run42469646550/attempt1/artifact13614917946（原ZIP584378787bytes，服务摘要5eff1295ae6247b681c01a69dec5e7b0bfe1f8f07c4af16b80ac31a0dde6e249），source5cba024a298154bfb4378d4607b4905b4e2e167e，apps树e106149ef8a0f88ef4e2a51035fa821a32a6a486。逐成员大小/摘要与built EXE5734ecf9427631de2282f8b5d0adb51ddb900601bdd5c9ae97ffa8645e8b42d0核对；HEAD的apps只要有差异即拒绝。使用新ordinary账户执行原MSI/NSIS默认与custom四格、显式清理和卸载保留，原Server策略always还原。当前test-only哨兵修正是唯一消费者变化，产品原字节不重建。重放结果diagnosticOnly/accepted:false，不能成为失败候选的替代正式证书，更不能外推双用户/OTA/发布。13项发行装配与YAML/来源门核对通过。
+
+原包四格重放42478818655：来源校验、哨兵合同、实际完整installer调用和Server策略还原步骤均退出0，但upload-artifact遍历已删除ordinary账户的私有sandbox目录触发realpath EPERM，整轮failure，无artifact。完整job日志保留/private/tmp/ocxd023-installer-replay-42478818655/full-job.log。没有把缺少完整回执的步骤绿色解释成最终验收。
+
+后继先显式收集受控回执/log/png/txt：在任何stat/realpath/递归之前按原sandbox前缀跳过私有树，普通证据符号链接拒绝；输出全新artifact并逐文件记录bytes/SHA256和排除原因。上传只访问新收集目录。原目录不清空、不修ACL、不覆盖；遇到既有输出拒绝。两条真实文件行为测试通过，包括禁止遍历模拟私有树/保留嵌套回执/不覆盖前次目录与拒绝证据链接。第21轮既有summary已全表展示；本后继只修证据装配，不触及产品或冒充27项sweep。
+
+## 精确原包四格重放最终证据
+
+42479461424、harness4c61a0cd968388cbed7abb6787adca6e0e784a4a重放完成。52份manifest成员大小/SHA256全部一致，8个私有sandbox树被明确排除但相邻回执保留。原source5cba024a298154bfb4378d4607b4905b4e2e167e，built EXE5734ecf9427631de2282f8b5d0adb51ddb900601bdd5c9ae97ffa8645e8b42d0。
+
+MSI-default、MSI-custom、NSIS-default、NSIS-custom均实际pass；两个默认卸载均证明executableRemoved/userDataRetained/testFixtureCleanup，两个custom均证明原首屏、精确bundle EXE、显式helper新夹具清理、卸载EXE移除及保留数据。真实ordinary账户/Profile removed、Server原策略还原pass。原失败候选/首轮上传失败原件全部保持。证据/private/tmp/ocxd023-installer-replay-42479461424/及verification.json。
+
+此结果关闭同账户哨兵夹具冲突和证据上传EPERM两项测试装配故障。仍是原包诊断重放accepted:false/formalCandidateAccepted:false，不将失败候选工作流转换成功，不宣称两SID/停止/五格保留/签名OTA/正式发行。产品生命周期边界见同目录lifecycle-fix-scope-after-round21.md，仍待用户明确采用，apps尚未实施该提案。

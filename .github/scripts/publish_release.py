@@ -148,7 +148,8 @@ def verify_maintained_runtime(repo, tag, release, policy, root, key_file):
     name = policy["archive"]
     if not isinstance(name, str) or not re.fullmatch(r"opencodex-[A-Za-z0-9.+-]+[.]tgz", name):
         raise PublishError("Invalid maintained runtime archive identity")
-    if policy.get("maintainer") != repo or policy.get("installation") != "explicit-offline-import":
+    allowed_installation="desktop-integrated-runtime" if version(tag)>=(0,2,23) else "explicit-offline-import"
+    if policy.get("maintainer") != repo or policy.get("installation") != allowed_installation:
         raise PublishError("Maintained runtime policy owner or installation mode mismatch")
     assets = release_assets(repo, tag, release)
     for asset_name in (name, name + ".sig", "maintained-runtime.json", "maintained-runtime.sha256"):

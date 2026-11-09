@@ -11,6 +11,13 @@ use std::sync::Mutex;
 use crate::modules::ipc::{
     validate_request, IpcCommand, IpcError, IpcErrorCode, IpcRequest, IpcResponse,
 };
+use crate::modules::model_config::{
+    sync_service_v2::{
+        CatalogV2, ConfirmRequestV2, PreviewRequestV2, ServicePlanV2, ServiceSecretsV2,
+        SyncServiceV2,
+    },
+    sync_v2::types as sync_types,
+};
 use crate::modules::process::{LifecycleAction, LifecycleResult, ProcessRunner};
 use crate::types::runtime_status::StatusSnapshotDto;
 
@@ -85,8 +92,7 @@ pub struct IpcSyncData {
 pub struct IpcDependencies {
     pub process_context: crate::state::ProcessContext,
     pub active_data_root: std::path::PathBuf,
-    /// 固定的应用数据目录（`app_data_dir`）。运行期配置只从这里读取，
-    /// 因此切换数据根时也必须写回这里，否则第二次切换重启后会丢失。
+    /// Fixed current-user D captured from SharedDataRootAnchor, never active D.
     pub app_data_root: std::path::PathBuf,
     /// 用户主目录：同步要把 Skills 软链接投射到各客户端的真实目录。
     pub home: std::path::PathBuf,
@@ -94,6 +100,21 @@ pub struct IpcDependencies {
     pub external_home: Option<std::path::PathBuf>,
     pub current_version: &'static str,
     pub runtime_log: crate::infrastructure::runtime_log::RuntimeLog,
+}
+
+struct BindingAccess<'a> {
+    anchor: &'a std::path::Path,
+    installation: &'a std::path::Path,
+    boundary: Option<&'a std::path::Path>,
+    locks: &'a [crate::modules::instance::AppInstanceLock],
+    update_pending: bool,
+}
+
+#[cfg(test)]
+struct TestBindingContext {
+    startup: crate::modules::data_root::bootstrap::StartupResolution,
+    installation: std::path::PathBuf,
+    update_pending: bool,
 }
 
 #[derive(Clone)]
@@ -109,8 +130,13 @@ pub struct IpcService {
     dependencies: IpcDependencies,
     writers: Arc<crate::infrastructure::storage_writers::WriterGate>,
     sync_operations: Arc<tokio::sync::Mutex<()>>,
+    /// One instance per fixed GUI process D/H; clones retain prepared sessions.
+    /// Construct under the owned storage/sync admission, never at an endpoint.
+    sync_v2: Arc<Mutex<Option<Arc<SyncServiceV2>>>>,
     runtime_mutations: crate::state::SharedRuntimeInstall,
     app: Option<tauri::AppHandle>,
+    #[cfg(test)]
+    binding_context: Option<Arc<Mutex<TestBindingContext>>>,
 }
 
 impl IpcService {
@@ -132,8 +158,11 @@ impl IpcService {
             dependencies,
             writers,
             sync_operations: crate::commands::sync::sync_operation_gate(),
+            sync_v2: Arc::new(Mutex::new(None)),
             runtime_mutations: crate::state::SharedRuntimeInstall::default(),
             app: None,
+            #[cfg(test)]
+            binding_context: None,
         }
     }
 
@@ -145,6 +174,12 @@ impl IpcService {
             .state::<crate::state::SharedRuntimeInstall>()
             .inner()
             .clone();
+        self.dependencies.app_data_root =
+            app.state::<crate::state::SharedDataRootAnchor>().0.clone();
+        self.dependencies.active_data_root = app.state::<crate::state::SharedDataRoot>().0.clone();
+        let context = app.state::<crate::state::SharedProcessContext>();
+        self.dependencies.opencodex_home = context.opencodex_home.clone();
+        self.dependencies.process_context = context.inner().clone();
         self.app = Some(app);
         self
     }
@@ -210,19 +245,49 @@ impl IpcService {
             Ok(value) => value,
             Err(response) => return response,
         };
+        // Unsupported public operations return before admissions, status probes,
+        // filesystem audits, environment secrets or legacy container reads.
+        if matches!(request.command, IpcCommand::Export | IpcCommand::Import)
+            || (request.command == IpcCommand::DataRootSwitch
+                && request
+                    .args
+                    .get("migrate")
+                    .is_some_and(|mode| mode == "true"))
+        {
+            let mut response =
+                owned_response(request.request_id, Err(IpcErrorCode::ValidationFailed));
+            response.error.as_mut().expect("error response").message =
+                "unsupported: v2 permits initialized aggregate-root selection only; migration and copying are disabled.".into();
+            return response;
+        }
+        if request.command == IpcCommand::DataRootSwitch
+            && request
+                .args
+                .get("migrate")
+                .is_some_and(|mode| mode != "false")
+        {
+            return owned_response(request.request_id, Err(IpcErrorCode::ValidationFailed));
+        }
         // A disconnected/cancelled observer must not cancel an admitted mutation or
         // release its old-root admission before terminal feedback and audit.
         if request.command == IpcCommand::SyncRun {
+            // CLI sync has no authority-bearing scope/head/password arguments.
+            // Only the GUI's persisted scope and backend catalog may supply them.
+            if !request.args.is_empty() || request.secret.is_some() {
+                return owned_response(request.request_id, Err(IpcErrorCode::ValidationFailed));
+            }
             let request_id = request.request_id.clone();
-            return owned_response(request_id, self.sync_run(request, started).await);
+            let mut response = owned_response(request_id, self.sync_run(request, started).await);
+            if let Some(error) = response.error.as_mut() {
+                if error.code == IpcErrorCode::PassphraseRequired {
+                    error.message = sync_v2_ipc_error_message(error.code).into();
+                }
+            }
+            return response;
         }
         if request.command == IpcCommand::BackupCreate {
             let request_id = request.request_id.clone();
             return owned_response(request_id, self.create_backup(request, started).await);
-        }
-        if matches!(request.command, IpcCommand::Export | IpcCommand::Import) {
-            let request_id = request.request_id.clone();
-            return owned_response(request_id, self.migrate_config(request, started).await);
         }
         if matches!(
             request.command,
@@ -362,12 +427,7 @@ impl IpcService {
         args: &BTreeMap<String, String>,
         saved_pending: &mut bool,
     ) -> Result<serde_json::Value, IpcErrorCode> {
-        let target = args.get("target").ok_or(IpcErrorCode::ValidationFailed)?;
-        let mode = match args.get("migrate").map(String::as_str) {
-            Some("true") => crate::modules::data_root::DataRootSwitchMode::MigrateData,
-            Some("false") | None => crate::modules::data_root::DataRootSwitchMode::ReferenceOnly,
-            Some(_) => crate::modules::data_root::DataRootSwitchMode::MigrateData,
-        };
+        use tauri::Manager;
         {
             let mut collector = self
                 .collector
@@ -384,34 +444,114 @@ impl IpcService {
                 return Err(IpcErrorCode::TargetStateConflict);
             }
         }
-        let _transaction = crate::modules::backup::manager::acquire_preferences_transaction(
+        let root = &self.dependencies.active_data_root;
+        let _transaction = crate::modules::backup::manager::acquire_preferences_transaction(root)
+            .map_err(map_app_error)?;
+        crate::modules::runtime::protection::ensure_binding_ready(root).map_err(map_app_error)?;
+        if let Some(app) = &self.app {
+            let anchor = app.state::<crate::state::SharedDataRootAnchor>();
+            let sandbox = app.state::<crate::state::SharedSandboxBoundary>();
+            let runtime = app.state::<Arc<crate::modules::runtime::RuntimeHandle>>();
+            let status = app.state::<crate::commands::update::SharedUpdateStatus>();
+            let status = status
+                .lock()
+                .map_err(|_| IpcErrorCode::TargetStateConflict)?;
+            let instances = app.state::<crate::state::InstanceState>();
+            let locks = instances
+                .locks
+                .lock()
+                .map_err(|_| IpcErrorCode::TargetStateConflict)?;
+            return self.save_reference(
+                args,
+                saved_pending,
+                BindingAccess {
+                    anchor: &anchor.0,
+                    installation: runtime.installation_root(),
+                    boundary: sandbox.0.as_deref(),
+                    locks: &locks,
+                    update_pending: status.installing || status.pending_restart.is_some(),
+                },
+            );
+        }
+        #[cfg(test)]
+        if let Some(context) = &self.binding_context {
+            let context = context
+                .lock()
+                .map_err(|_| IpcErrorCode::TargetStateConflict)?;
+            return self.save_reference(
+                args,
+                saved_pending,
+                BindingAccess {
+                    anchor: &context.startup.anchor,
+                    installation: &context.installation,
+                    boundary: context.startup.sandbox_boundary.as_deref(),
+                    locks: &context.startup.locks,
+                    update_pending: context.update_pending,
+                },
+            );
+        }
+        // A detached CLI cannot invent service ownership or startup locks.
+        Err(IpcErrorCode::TargetStateConflict)
+    }
+
+    fn save_reference(
+        &self,
+        args: &BTreeMap<String, String>,
+        saved_pending: &mut bool,
+        access: BindingAccess<'_>,
+    ) -> Result<serde_json::Value, IpcErrorCode> {
+        use crate::commands::data_root::{
+            require_current_locks, switch_data_root_with_paths, validate_reference_target,
+            DataRootSwitchStatus,
+        };
+        if access.update_pending {
+            return Err(IpcErrorCode::TargetStateConflict);
+        }
+        require_current_locks(
+            access.locks,
+            access.anchor,
             &self.dependencies.active_data_root,
         )
-        .map_err(map_app_error)?;
-        // 与 GUI 命令保持一致：把引用写回固定的应用数据目录。
-        // 写到「当前活动根」会让第二次切换落在旧目标里，重启后按单跳读取就丢失。
-        let config = crate::modules::data_root::switch_reference(
-            &self.dependencies.app_data_root,
-            std::path::Path::new(target),
-            mode,
+        .map_err(|_| IpcErrorCode::TargetStateConflict)?;
+        let target =
+            std::path::Path::new(args.get("target").ok_or(IpcErrorCode::ValidationFailed)?);
+        validate_reference_target(target, access.boundary, access.installation)
+            .map_err(|_| IpcErrorCode::ValidationFailed)?;
+        let result = switch_data_root_with_paths(
+            access.anchor,
+            target,
+            crate::modules::data_root::DataRootSwitchMode::ReferenceOnly,
         )
         .map_err(map_app_error)?;
-        *saved_pending = !crate::modules::data_root::runtime_binding_matches(
-            &config,
-            &self.dependencies.active_data_root,
-            &self.dependencies.opencodex_home,
-        );
+        *saved_pending = result.reconciliation_required
+            || result.config.as_ref().is_some_and(|config| {
+                !crate::modules::data_root::same_runtime_directory(
+                    std::path::Path::new(&config.active_data_root),
+                    &self.dependencies.active_data_root,
+                ) || !crate::modules::data_root::same_runtime_directory(
+                    std::path::Path::new(&config.opencodex_home),
+                    &self.dependencies.opencodex_home,
+                )
+            });
+        if result.reconciliation_required {
+            return Err(IpcErrorCode::TargetStateConflict);
+        }
+        if result.status == DataRootSwitchStatus::Blocked {
+            return Err(IpcErrorCode::ValidationFailed);
+        }
         serde_json::to_value(IpcMessageData {
-            status: "switched".to_string(),
-            message: if matches!(
-                mode,
-                crate::modules::data_root::DataRootSwitchMode::ReferenceOnly
-            ) {
-                "Data root reference switched; restart is required."
+            status: if *saved_pending {
+                "restart_required"
             } else {
-                "Data root switched; restart is required."
+                "applied"
             }
-            .to_string(),
+            .into(),
+            message: if *saved_pending {
+                "Aggregate root reference saved; restart is required."
+            } else {
+                "Aggregate root already matches the running services."
+            }
+            .into(),
         })
         .map_err(|_| IpcErrorCode::InternalError)
     }
@@ -442,113 +582,17 @@ impl IpcService {
         .await
     }
 
-    async fn migrate_config(
-        &self,
-        request: IpcRequest,
-        started: chrono::DateTime<chrono::Utc>,
-    ) -> Result<serde_json::Value, IpcErrorCode> {
-        let dependencies = self.dependencies.clone();
-        let app = self.app.clone();
-        let worker_request = request.clone();
-        let operation = match request.command {
-            IpcCommand::Export => "CLI config export",
-            IpcCommand::Import => "CLI config import",
-            _ => unreachable!("migration accepts only export/import"),
-        };
-        run_ipc_storage_owned(
-            self.writers.clone(),
-            dependencies.active_data_root.clone(),
-            request,
-            started,
-            operation,
-            move || match worker_request.command {
-                IpcCommand::Export => {
-                    Self::export_config(&dependencies, &worker_request.args, app.as_ref())
-                }
-                IpcCommand::Import => Self::import_config(
-                    &dependencies,
-                    &worker_request.args,
-                    worker_request.secret.as_deref(),
-                    app.as_ref(),
-                ),
-                _ => unreachable!("migration accepts only export/import"),
-            },
-        )
-        .await
-    }
-
-    fn export_config(
-        dependencies: &IpcDependencies,
-        args: &BTreeMap<String, String>,
-        app: Option<&tauri::AppHandle>,
-    ) -> Result<serde_json::Value, IpcErrorCode> {
-        if args.contains_key("password") {
-            return Err(IpcErrorCode::ValidationFailed);
-        }
-        let output = args.get("output").ok_or(IpcErrorCode::ValidationFailed)?;
-        // 新版明文容器不需要口令；不再读取标准输入内容。
-        let result = crate::commands::migration::export_container_registered(
-            &dependencies.active_data_root,
-            std::path::Path::new(output),
-            dependencies.current_version,
-            app,
-        )
-        .map_err(map_app_error)?;
-        Ok(serde_json::to_value(IpcExportData {
-            path: result.path.display().to_string(),
-            backup_id: result.backup_id,
-            document_sha256: result.document_sha256,
-            format_version: result.format_version,
-            sections: result.sections,
-        })
-        .unwrap_or(serde_json::Value::Null))
-    }
-
-    fn import_config(
-        dependencies: &IpcDependencies,
-        args: &BTreeMap<String, String>,
-        secret: Option<&str>,
-        app: Option<&tauri::AppHandle>,
-    ) -> Result<serde_json::Value, IpcErrorCode> {
-        if args.contains_key("password") {
-            return Err(IpcErrorCode::ValidationFailed);
-        }
-        let input = args.get("input").ok_or(IpcErrorCode::ValidationFailed)?;
-        // 只有旧版加密容器才需要口令；未提供时由迁移模块返回 PassphraseRequired，
-        // 调用方据此提示输入，而不是把它当成普通失败（此前被压成 ExecutionFailed）。
-        let passphrase = secret
-            .map(str::to_string)
-            .or_else(|| std::env::var("OCXD_PASSPHRASE").ok());
-        let result = crate::commands::migration::import_container_registered(
-            &dependencies.active_data_root,
-            std::path::Path::new(input),
-            &dependencies.home,
-            passphrase.as_deref(),
-            app,
-        )
-        .map_err(map_app_error)?;
-        Ok(serde_json::to_value(IpcImportData {
-            backup_id: result.backup_id,
-            document_sha256: result.document_sha256,
-            format_version: result.format_version,
-            applied_sections: result.applied_sections,
-            skipped_sections: result
-                .skipped_sections
-                .into_iter()
-                .map(|item| item.section)
-                .collect(),
-        })
-        .unwrap_or(serde_json::Value::Null))
-    }
-
     async fn sync_run(
         &self,
         request: IpcRequest,
         started: chrono::DateTime<chrono::Utc>,
     ) -> Result<serde_json::Value, IpcErrorCode> {
         let root = self.dependencies.active_data_root.clone();
-        let home = self.dependencies.home.clone();
+        let home = self.dependencies.process_context.opencodex_home.clone();
         let app = self.app.clone();
+        let service = self.sync_v2.clone();
+        let runtime = tokio::runtime::Handle::current();
+        let worker_request = request.clone();
         let worker_root = root.clone();
         run_ipc_sync_owned(
             self.writers.clone(),
@@ -557,11 +601,28 @@ impl IpcService {
             request,
             started,
             move || {
-                project_ipc_sync(crate::commands::sync::execute_sync_now(
+                // Validation already ran at execute(), but this boundary must
+                // never turn a missing CLI confirmation into a GUI confirm.
+                if !worker_request.confirm {
+                    return Err(IpcErrorCode::RequireConfirm);
+                }
+                begin_ipc_sync_v2(app.as_ref(), &worker_request.request_id, started);
+                let notification_candidate = ipc_sync_notification_candidate(&worker_root);
+                let mut terminal = IpcSyncTerminalV2::default();
+                let result = (|| {
+                    let service = ipc_sync_service_v2(&service, worker_root.clone(), home)?;
+                    runtime.block_on(execute_ipc_sync_v2(service.as_ref(), &mut terminal))
+                })();
+                finish_ipc_sync_v2(
                     app.as_ref(),
                     &worker_root,
-                    &home,
-                ))
+                    &worker_request.request_id,
+                    started,
+                    &result,
+                    terminal.conflict_observed,
+                    notification_candidate.as_deref(),
+                );
+                result
             },
         )
         .await
@@ -655,7 +716,412 @@ fn map_backup_worker_error(error: crate::errors::AppError) -> IpcErrorCode {
     }
 }
 
+fn ipc_sync_service_v2(
+    slot: &Mutex<Option<Arc<SyncServiceV2>>>,
+    root: std::path::PathBuf,
+    home: std::path::PathBuf,
+) -> Result<Arc<SyncServiceV2>, IpcErrorCode> {
+    let mut slot = slot.lock().map_err(|_| IpcErrorCode::InternalError)?;
+    if let Some(service) = slot.as_ref() {
+        return Ok(service.clone());
+    }
+    let service = Arc::new(SyncServiceV2::production(root, home).map_err(map_sync_v2_failure)?);
+    *slot = Some(service.clone());
+    Ok(service)
+}
+
+/// No plaintext fallback, implicit head choice, legacy snapshot or engine call.
+/// Catalog is required even with a saved scope: it proves current availability
+/// and source options without replacing a deliberately empty saved selection.
+#[derive(Default)]
+struct IpcSyncTerminalV2 {
+    conflict_observed: bool,
+}
+impl IpcSyncTerminalV2 {
+    fn failure(&mut self, failure: sync_types::SyncFailure) -> IpcErrorCode {
+        self.conflict_observed |= matches!(
+            failure.code,
+            sync_types::ErrorCode::SyncRemoteConflict
+                | sync_types::ErrorCode::SyncGenerationAmbiguous
+        );
+        map_sync_v2_failure(failure)
+    }
+}
+async fn execute_ipc_sync_v2(
+    service: &SyncServiceV2,
+    terminal: &mut IpcSyncTerminalV2,
+) -> Result<serde_json::Value, IpcErrorCode> {
+    let saved = service.read_scope().await.map_err(map_sync_v2_failure)?;
+    let catalog = service
+        .catalog(None)
+        .await
+        .map_err(|f| terminal.failure(f))?;
+    terminal.conflict_observed = matches!(
+        catalog.cloud_state,
+        sync_types::RemoteState::Conflict | sync_types::RemoteState::InitializationAmbiguous
+    ) || catalog.mcp_sources.iter().any(|sources| {
+        !sources.differing_fields.is_empty()
+            && !catalog
+                .selected
+                .selection
+                .mcp_sources
+                .iter()
+                .any(|s| s.name == sources.name)
+    });
+    validate_ipc_sync_catalog(&catalog)?;
+    if saved.as_ref().is_some_and(|scope| {
+        serde_json::to_value(scope).ok() != serde_json::to_value(&catalog.selected).ok()
+    }) {
+        return Err(IpcErrorCode::TargetStateConflict);
+    }
+    let scope = catalog.selected;
+    let preview = service
+        .preview(
+            PreviewRequestV2 {
+                selection: scope.selection,
+                mcp_clients: scope.mcp_clients,
+                assets_reviewed: scope.assets_reviewed,
+                selected_head: None,
+                forced_direction: None,
+                backup_before_update: true,
+            },
+            ServiceSecretsV2::default(),
+        )
+        .await
+        .map_err(|f| terminal.failure(f))?;
+    let (operation_id, kind) = match &preview.plan {
+        ServicePlanV2::NoChange if preview.no_change => {
+            // No remote/local application fact exists for a semantic no-op.
+            service
+                .cancel(preview.session_id)
+                .await
+                .map_err(map_sync_v2_failure)?;
+            return Ok(
+                serde_json::json!({"snapshot_id":"", "artifacts":0, "direction":"no_change", "status":"no_change"}),
+            );
+        }
+        ServicePlanV2::Upload(plan) if !preview.no_change => {
+            (plan.operation_id.clone(), sync_types::OperationKind::Upload)
+        }
+        ServicePlanV2::Download(plan) if !preview.no_change => (
+            plan.operation_id.clone(),
+            sync_types::OperationKind::Download,
+        ),
+        _ => return Err(IpcErrorCode::ExecutionFailed),
+    };
+    let fact = service
+        .confirm(ConfirmRequestV2 {
+            session_id: preview.session_id,
+            plan_digest: preview.plan_digest,
+        })
+        .await
+        .map_err(|f| terminal.failure(f))?;
+    terminal.conflict_observed |= matches!(
+        fact.relation.remote,
+        sync_types::RemoteRelation::Conflict | sync_types::RemoteRelation::InitializationAmbiguous
+    );
+    project_ipc_sync_v2(&operation_id, kind, &fact)
+}
+
+fn validate_ipc_sync_catalog(c: &CatalogV2) -> Result<(), IpcErrorCode> {
+    use sync_types::RemoteState;
+    if !c.initialized
+        || matches!(
+            c.cloud_state,
+            RemoteState::Conflict | RemoteState::InitializationAmbiguous
+        )
+    {
+        return Err(IpcErrorCode::TargetStateConflict);
+    }
+    if !matches!(
+        c.cloud_state,
+        RemoteState::Empty | RemoteState::GenerationEmpty | RemoteState::Ready
+    ) {
+        return Err(IpcErrorCode::ExecutionFailed);
+    }
+    for sources in &c.mcp_sources {
+        let selected = c
+            .selected
+            .selection
+            .mcp_sources
+            .iter()
+            .find(|s| s.name == sources.name);
+        // Initial all-selected must not silently omit conflicting definitions.
+        if !sources.differing_fields.is_empty() && selected.is_none() {
+            return Err(IpcErrorCode::TargetStateConflict);
+        }
+        if let Some(selected) = selected {
+            let source = c
+                .selected
+                .mcp_clients
+                .get(&selected.name)
+                .ok_or(IpcErrorCode::TargetStateConflict)?;
+            if !sources
+                .sources
+                .iter()
+                .any(|s| &s.source == source && s.definition_digest == selected.definition_digest)
+            {
+                return Err(IpcErrorCode::TargetStateConflict);
+            }
+        }
+    }
+    for selected in &c.selected.selection.mcp_sources {
+        if !c.entries.iter().any(|e| {
+            e.kind == crate::modules::model_config::sync_service_v2::ObjectKindV2::Mcp
+                && e.id == selected.name
+                && (e.available_local || e.available_cloud)
+        }) {
+            return Err(IpcErrorCode::TargetStateConflict);
+        }
+    }
+    Ok(())
+}
+
+fn project_ipc_sync_v2(
+    id: &str,
+    kind: sync_types::OperationKind,
+    fact: &sync_types::OperationFact,
+) -> Result<serde_json::Value, IpcErrorCode> {
+    use sync_types::{LocalApplyStatus, OperationKind, Phase, RemoteRelation, StorageStatus};
+    if fact.operation_id != id
+        || fact.kind != kind
+        || !uuid::Uuid::parse_str(id).is_ok_and(|u| u.to_string() == id && u.get_version_num() == 4)
+    {
+        return Err(IpcErrorCode::ExecutionFailed);
+    }
+    if let Some(failure) = &fact.failure {
+        return Err(map_sync_v2_failure(failure.clone()));
+    }
+    if matches!(
+        fact.relation.remote,
+        RemoteRelation::Conflict
+            | RemoteRelation::InitializationAmbiguous
+            | RemoteRelation::GenerationChanged
+    ) {
+        return Err(IpcErrorCode::TargetStateConflict);
+    }
+    let (status, direction) = match kind {
+        OperationKind::Upload
+            if fact.phase == Phase::Settled
+                && fact.storage_status == StorageStatus::Stored
+                && fact
+                    .commit
+                    .as_ref()
+                    .is_some_and(|commit| commit.operation_id == id)
+                && fact.stored_at.is_some() =>
+        {
+            ("stored", "upload")
+        }
+        OperationKind::Download
+            if fact.phase == Phase::Settled
+                && fact.local_apply_status == LocalApplyStatus::Applied
+                && fact.storage_status == StorageStatus::Stored
+                && fact.commit.is_some() =>
+        {
+            ("download_applied", "download")
+        }
+        _ => return Err(IpcErrorCode::ExecutionFailed),
+    };
+    let mut data = serde_json::to_value(IpcSyncData {
+        snapshot_id: fact.operation_id.clone(),
+        // One verified v2 wrapper; never reinterpret unrelated model/resource
+        // counts as old per-artifact transport or local application evidence.
+        artifacts: 1,
+        direction,
+    })
+    .map_err(|_| IpcErrorCode::InternalError)?;
+    data["status"] = serde_json::json!(status);
+    // Preserve independent storage/application/local/remote facts verbatim.
+    data["operation"] = serde_json::to_value(fact).map_err(|_| IpcErrorCode::InternalError)?;
+    Ok(data)
+}
+
+fn map_sync_v2_failure(failure: sync_types::SyncFailure) -> IpcErrorCode {
+    use sync_types::ErrorCode as E;
+    match failure.code {
+        E::SyncPassphraseRequired | E::SyncPassphraseInvalid => IpcErrorCode::PassphraseRequired,
+        E::SyncAuthRequired => IpcErrorCode::AccessDenied,
+        E::SyncCollectionMissing => IpcErrorCode::TargetNotFound,
+        E::SyncCancelled => IpcErrorCode::Cancelled,
+        E::SyncGenerationAmbiguous
+        | E::SyncGenerationChanged
+        | E::SyncRemoteConflict
+        | E::SyncSourceChanged
+        | E::SyncScopeChanged
+        | E::SyncEndpointChanged
+        | E::SyncPlanChanged
+        | E::SyncPlanExpired
+        | E::SyncLocalChanged
+        | E::SyncOperationCollision => IpcErrorCode::TargetStateConflict,
+        E::SyncNetwork if failure.cause == Some(sync_types::Cause::Timeout) => {
+            IpcErrorCode::Timeout
+        }
+        _ => IpcErrorCode::ExecutionFailed,
+    }
+}
+
+fn sync_v2_ipc_error_message(code: IpcErrorCode) -> &'static str {
+    if code == IpcErrorCode::PassphraseRequired {
+        "Protected v2 configuration requires a passphrase; continue in the GUI."
+    } else {
+        crate::modules::ipc::error_message(code)
+    }
+}
+
+/// Called inside the same admitted worker before execute_and_audit returns.
+/// Notification delivery failure cannot rewrite a committed operation result.
+fn finish_ipc_sync_v2(
+    app: Option<&tauri::AppHandle>,
+    root: &std::path::Path,
+    request_id: &str,
+    started: chrono::DateTime<chrono::Utc>,
+    result: &Result<serde_json::Value, IpcErrorCode>,
+    conflict_observed: bool,
+    notification_candidate: Option<&[u8]>,
+) {
+    use crate::modules::notifications::registry::{Channel, Trigger};
+    use crate::types::status::{ConnectionState, OperationState};
+    use tauri::Manager;
+    let Some(app) = app else {
+        return;
+    };
+    if let Some(status) = app.try_state::<crate::state::SharedSyncStatus>() {
+        if let Ok(mut run) = status.lock() {
+            run.run_id = request_id.into();
+            run.started_at = started;
+            run.finished_at = Some(chrono::Utc::now());
+            run.snapshot_id = result
+                .as_ref()
+                .ok()
+                .and_then(|d| d["snapshot_id"].as_str())
+                .filter(|id| !id.is_empty())
+                .map(str::to_owned);
+            run.items_done = result
+                .as_ref()
+                .ok()
+                .and_then(|d| d["artifacts"].as_u64())
+                .unwrap_or(0) as usize;
+            run.items_total = run.items_done;
+            run.failure_reason = result
+                .as_ref()
+                .err()
+                .map(|e| sync_v2_ipc_error_message(*e).into());
+            if result
+                .as_ref()
+                .ok()
+                .is_some_and(|d| d["direction"] == "download")
+            {
+                run.direction = crate::modules::sync::SyncDirection::Download;
+            } else {
+                run.direction = crate::modules::sync::SyncDirection::Upload;
+            }
+            run.connection_state = match result {
+                Ok(data)
+                    if data["status"] == "no_change"
+                        || (data["operation"]["relation"]["local"] == "observed_equal"
+                            && data["operation"]["relation"]["remote"] == "observed_equal") =>
+                {
+                    ConnectionState::Synced
+                }
+                Ok(_) => ConnectionState::Disconnected, // Stored is not proof of current equality.
+                Err(_) if conflict_observed => ConnectionState::Conflict,
+                Err(_) => ConnectionState::Failed,
+            };
+            run.operation_state = if result.is_ok() {
+                OperationState::Succeeded
+            } else {
+                OperationState::Failed
+            };
+        }
+    }
+    // A no-change observation is not a new upload/apply success event.
+    if result
+        .as_ref()
+        .ok()
+        .is_some_and(|d| d["status"] == "no_change")
+    {
+        return;
+    }
+    // Stable endpoint candidate allows a later verified success to resolve its
+    // previous failure. Public configuration only; no credential retrieval.
+    if ipc_sync_notification_candidate(root).as_deref() != notification_candidate {
+        let _ = crate::infrastructure::runtime_log::RuntimeLog::new(root)
+            .append_event("CLI v2 sync terminal endpoint changed; notification not projected");
+        return;
+    }
+    let candidate = notification_candidate.unwrap_or(request_id.as_bytes());
+    let event = if result.is_ok() {
+        "sync-run-succeeded"
+    } else {
+        "sync-run-failed"
+    };
+    let identity = crate::commands::event_delivery::prepare(
+        root,
+        "sync-run-failed",
+        Channel::Local,
+        candidate,
+    );
+    crate::commands::event_delivery::publish(app, root, event, identity, Trigger::User);
+    if conflict_observed
+        && crate::modules::preferences::PreferencesStore::new(root)
+            .load()
+            .map(|p| p.sync_conflict_alerts)
+            .unwrap_or(true)
+    {
+        let identity = crate::commands::event_delivery::prepare(
+            root,
+            "sync-conflict-detected",
+            Channel::Local,
+            candidate,
+        );
+        crate::commands::event_delivery::publish(
+            app,
+            root,
+            "sync-conflict-detected",
+            identity,
+            Trigger::User,
+        );
+    }
+}
+
+fn ipc_sync_notification_candidate(root: &std::path::Path) -> Option<Vec<u8>> {
+    crate::modules::sync::config::SyncConfigStore::new(root)
+        .load()
+        .ok()
+        .and_then(|config| {
+            config
+                .active()
+                .and_then(|endpoint| serde_json::to_vec(endpoint).ok())
+        })
+}
+
+fn begin_ipc_sync_v2(
+    app: Option<&tauri::AppHandle>,
+    request_id: &str,
+    started: chrono::DateTime<chrono::Utc>,
+) {
+    use tauri::Manager;
+    if let Some(status) = app.and_then(|app| app.try_state::<crate::state::SharedSyncStatus>()) {
+        if let Ok(mut run) = status.lock() {
+            run.run_id = request_id.into();
+            run.started_at = started;
+            run.finished_at = None;
+            run.connection_state = crate::types::status::ConnectionState::Connecting;
+            run.operation_state = crate::types::status::OperationState::Validating;
+            run.snapshot_id = None;
+            run.items_total = 0;
+            run.items_done = 0;
+            run.failure_reason = None;
+        }
+    }
+}
+
+#[cfg(test)]
+#[path = "service_sync_v2_tests.rs"]
+mod sync_v2_tests;
+
 /// 同步失败按「原因」映射退出码，而不是一律 `ExecutionFailed`。
+#[cfg(test)]
 fn map_sync_run_failure(failure: crate::modules::sync::runner::SyncRunFailure) -> IpcErrorCode {
     use crate::infrastructure::webdav_client::WebDavError;
     use crate::modules::sync::runner::SyncRunFailure;
@@ -714,9 +1180,9 @@ where
         .admit()
         .map_err(|_| IpcErrorCode::TargetStateConflict)?;
     let audit = super::audit::AuditStore::with_writers(&root, writers);
-    tauri::async_runtime::spawn(async move {
+    tokio::spawn(async move {
         let _admission = admission;
-        let result = tauri::async_runtime::spawn(async move { task().await })
+        let result = tokio::spawn(async move { task().await })
             .await
             .unwrap_or(Err(IpcErrorCode::InternalError));
         crate::commands::run_readonly("CLI update query audit", move || {
@@ -895,6 +1361,14 @@ fn execute_ipc_lifecycle<R: ProcessRunner + ?Sized>(
         publisher,
     )
     .map_err(|_| IpcErrorCode::InternalError)?;
+    if let Some(failure) = &result.failure {
+        return Err(match failure.code.as_str() {
+            "port_conflict" => IpcErrorCode::TargetStateConflict,
+            "port_permission" => IpcErrorCode::AccessDenied,
+            "lifecycle_timeout" => IpcErrorCode::Timeout,
+            _ => IpcErrorCode::ExecutionFailed,
+        });
+    }
     if !matches!(
         (action, result.result),
         (
@@ -960,6 +1434,7 @@ fn execute_and_audit(
     result
 }
 
+#[cfg(test)]
 fn project_ipc_sync(
     result: Result<
         crate::commands::sync::VerifiedSyncOutcome,
@@ -1057,6 +1532,8 @@ mod tests {
     async fn sync_run_without_endpoint_reports_failure_instead_of_fake_success() {
         let root = tempfile::tempdir().unwrap();
         let mut service = IpcService::for_tests_with(root.path().into(), root.path().into());
+        // The v2 production boundary requires the actual fixed HOME to exist.
+        service.dependencies.process_context.opencodex_home = root.path().into();
         let request = IpcRequest {
             request_id: "req_00000000-0000-0000-0000-0000000000ff".to_string(),
             command: IpcCommand::SyncRun,
@@ -1069,7 +1546,7 @@ mod tests {
         assert!(!response.ok, "没有端点配置时 CLI 同步不得返回成功");
         assert_eq!(
             response.error.map(|error| error.code),
-            Some(IpcErrorCode::ExecutionFailed)
+            Some(IpcErrorCode::TargetStateConflict)
         );
     }
 
@@ -1663,6 +2140,56 @@ mod tests {
         }
     }
 
+    #[cfg(unix)]
+    fn v2_binding_service(user: &std::path::Path, sandbox: Option<&std::path::Path>) -> IpcService {
+        use crate::modules::data_root;
+        use std::os::unix::fs::PermissionsExt;
+        let startup = data_root::startup_v2::resolve(user, sandbox).unwrap();
+        let root = startup.runtime_config.active_data_root.clone();
+        let home = data_root::resolve_opencodex_home(&startup.runtime_config);
+        let installation = sandbox
+            .unwrap_or_else(|| user.parent().unwrap())
+            .join("program");
+        std::fs::create_dir_all(&installation).unwrap();
+        let executable = installation.join("stopped-ocx");
+        std::fs::write(
+            &executable,
+            b"#!/bin/sh\necho '{\"status\":\"stopped\",\"dataRoot\":\"/tmp/fixture\"}'\n",
+        )
+        .unwrap();
+        std::fs::set_permissions(&executable, std::fs::Permissions::from_mode(0o755)).unwrap();
+        let mut service = IpcService::for_tests_with(root, startup.anchor.clone());
+        service.dependencies.opencodex_home = home.clone();
+        service.dependencies.process_context.opencodex_home = home.clone();
+        service.dependencies.home = user.into();
+        service.collector = Arc::new(Mutex::new(crate::modules::status::StatusCollector::new(
+            crate::infrastructure::status_source::OfficialStatusSource::new(
+                crate::infrastructure::runtime_executable::FixedRuntimeExecutable::resolved(
+                    executable,
+                ),
+                &home,
+                crate::modules::process::EnvironmentPolicy {
+                    opencodex_home: home.clone(),
+                    ..Default::default()
+                },
+            ),
+        )));
+        service.binding_context = Some(Arc::new(Mutex::new(TestBindingContext {
+            startup,
+            installation,
+            update_pending: false,
+        })));
+        service
+    }
+
+    fn reference_request(target: &std::path::Path) -> IpcRequest {
+        let mut request = backup_request(IpcCommand::DataRootSwitch);
+        request
+            .args
+            .insert("target".into(), target.display().to_string());
+        request
+    }
+
     fn migration_request(command: IpcCommand, path: &std::path::Path) -> IpcRequest {
         let mut request = backup_request(command);
         let key = match command {
@@ -1675,157 +2202,73 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn cli_migration_roundtrip_uses_explicit_home_and_preserves_wire_contract() {
-        use crate::modules::extensions::{ClientId, ClientTarget, ExtensionConfig, CLIENT_IDS};
-        use crate::modules::preferences::{Preferences, PreferencesStore};
-        let temp = tempfile::tempdir().unwrap();
-        let source = temp.path().join("source");
-        let target = temp.path().join("target");
-        let home = temp.path().join("explicit-home");
-        let cwd = temp.path().join("missing-working-directory");
-        for root in [&source, &target] {
-            crate::modules::data_root::initialize(root).unwrap();
-            preferences_fixture(root);
-        }
-        std::fs::create_dir(&home).unwrap();
-        PreferencesStore::new(&source)
-            .save(&Preferences {
-                interface_scale: 150,
-                ..Default::default()
-            })
-            .unwrap();
-        // Force the extension section to validate client destinations. An absent
-        // process cwd must not invalidate the valid, explicitly supplied HOME.
-        let mut config = ExtensionConfig {
-            enablement: CLIENT_IDS
-                .map(|client| (client, client == ClientId::Codex))
-                .into_iter()
-                .collect(),
-            sync_method: "copy".into(),
-            ..Default::default()
-        };
-        let targets = CLIENT_IDS.map(|client| ClientTarget::user_target(client, &home, true, true));
-        crate::modules::extensions::projection::save_with_config(&source, &mut config, &targets)
-            .unwrap();
-        let output = temp.path().join("exports/config.ocx");
-        let mut exporter = IpcService::for_tests_with(source.clone(), source.clone());
-        let exported = exporter
-            .execute(migration_request(IpcCommand::Export, &output))
-            .await;
-        assert!(exported.ok, "{:?}", exported.error);
-        let data = exported.data.unwrap();
-        assert_eq!(data["path"], output.display().to_string());
-        assert!(data["backup_id"].is_null());
-        assert_eq!(data["format_version"], 2);
-        assert!(data["sections"]
-            .as_array()
-            .unwrap()
-            .contains(&"preferences".into()));
-        assert!(data.get("documentSha256").is_none());
-        let digest = data["document_sha256"].clone();
-        let mut importer = IpcService::for_tests_with(target.clone(), target.clone());
-        importer.dependencies.home = home;
-        importer.dependencies.process_context.working_directory = cwd.clone();
-        let imported = importer
-            .execute(migration_request(IpcCommand::Import, &output))
-            .await;
-        assert!(imported.ok, "{:?}", imported.error);
-        let data = imported.data.unwrap();
-        assert_eq!(data["document_sha256"], digest);
-        assert_eq!(data["format_version"], 2);
-        assert!(data["backup_id"].as_str().unwrap().starts_with("bk_"));
-        assert!(data["applied_sections"]
-            .as_array()
-            .unwrap()
-            .contains(&"extension_config".into()));
-        assert!(data["skipped_sections"]
-            .as_array()
-            .unwrap()
-            .contains(&"asset_files".into()));
-        assert_eq!(
-            PreferencesStore::new(&target)
-                .load()
+    async fn cli_migration_is_explicitly_unsupported_without_reading_or_changing_files() {
+        for command in [IpcCommand::Export, IpcCommand::Import] {
+            let t = tempfile::tempdir().unwrap();
+            let root = t.path().join("desktop");
+            crate::modules::data_root::initialize(&root).unwrap();
+            let metadata =
+                std::fs::read(root.join(crate::modules::data_root::METADATA_RELATIVE_PATH))
+                    .unwrap();
+            let container = t.path().join("old-container");
+            let home = t.path().join("native-home");
+            std::fs::create_dir(&home).unwrap();
+            std::fs::write(home.join("config.json"), b"native config").unwrap();
+            std::fs::write(&container, b"legacy secret payload").unwrap();
+            let mut service = IpcService::for_tests_with(root.clone(), root.clone());
+            service.dependencies.home = home.clone();
+            let mut request = migration_request(command, &container);
+            request.secret = Some("must never echo".into());
+            let response = service.execute(request).await;
+            assert!(!response.ok && response.data.is_none());
+            let wire = serde_json::to_value(&response).unwrap();
+            assert_eq!(wire["error"]["code"], "validation_failed");
+            assert!(wire["error"]["message"]
+                .as_str()
                 .unwrap()
-                .interface_scale,
-            150
-        );
-        assert_eq!(
-            crate::modules::extensions::projection::load_config_lenient(&target).sync_method,
-            "copy"
-        );
-        assert!(!cwd.exists());
-        for (root, command) in [(&source, IpcCommand::Export), (&target, IpcCommand::Import)] {
-            let audit = audit_records(root);
-            assert_eq!(audit.len(), 1);
-            assert_eq!(audit[0].command, command);
-            assert_eq!(audit[0].result, super::super::AuditResult::Succeeded);
+                .contains("unsupported"));
+            assert!(!wire.to_string().contains("must never echo"));
+            assert_eq!(std::fs::read(&container).unwrap(), b"legacy secret payload");
+            assert_eq!(
+                std::fs::read(home.join("config.json")).unwrap(),
+                b"native config"
+            );
+            assert_eq!(
+                std::fs::read(root.join(crate::modules::data_root::METADATA_RELATIVE_PATH))
+                    .unwrap(),
+                metadata
+            );
+            assert!(!root.join("audit.log").exists());
+            assert!(!root.join(".backup-w2.lock").exists());
         }
     }
 
     #[tokio::test(flavor = "current_thread")]
-    async fn cli_migration_lock_wait_keeps_executor_responsive_and_owns_audit_after_disconnect() {
+    async fn cli_migration_refusal_does_not_wait_for_legacy_file_locks_or_create_targets() {
         use crate::infrastructure::locking::TargetFileLock;
-        use std::time::{Duration, Instant};
+        use std::time::Duration;
         for command in [IpcCommand::Export, IpcCommand::Import] {
-            let temp = tempfile::tempdir().unwrap();
-            let root = temp.path().join("root");
-            crate::modules::data_root::initialize(&root).unwrap();
-            preferences_fixture(&root);
-            let container = temp.path().join("config.ocx");
-            if command == IpcCommand::Import {
-                crate::modules::migration::export_with_container_file(&root, &container, "0.1.9")
-                    .unwrap();
-            }
-            let target = if command == IpcCommand::Export {
-                container.clone()
-            } else {
-                root.join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH)
-            };
-            let guard = TargetFileLock::lock(&target).unwrap();
-            let (release, released) = std::sync::mpsc::channel();
-            // Bounded watchdog also releases on assertion failure, avoiding an
-            // orphaned lock. This tests async liveness, not native performance.
-            let holder = std::thread::spawn(move || {
-                let _ = released.recv_timeout(Duration::from_secs(2));
-                drop(guard);
-            });
+            let t = tempfile::tempdir().unwrap();
+            let root = t.path().join("missing-desktop");
+            let container = t.path().join("locked-legacy-container");
+            std::fs::write(&container, b"retained").unwrap();
+            let _lock = TargetFileLock::lock(&container).unwrap();
             let mut service = IpcService::for_tests_with(root.clone(), root.clone());
-            service.dependencies.home = temp.path().to_path_buf();
-            let writers = service.writers.clone();
-            let started = Instant::now();
-            let request = migration_request(command, &container);
-            let observer = tokio::spawn(async move { service.execute(request).await });
-            tokio::time::sleep(Duration::from_millis(20)).await;
-            assert!(started.elapsed() < Duration::from_secs(1));
-            assert!(!observer.is_finished());
-            assert!(writers.freeze().unwrap().is_none());
-            observer.abort();
-            assert!(observer.await.unwrap_err().is_cancelled());
-            assert!(writers.freeze().unwrap().is_none());
-            assert!(!root.join("audit.log").exists());
-            release.send(()).unwrap();
-            holder.join().unwrap();
-            tokio::time::timeout(Duration::from_secs(2), async {
-                loop {
-                    if writers.freeze().unwrap().is_some() {
-                        break;
-                    }
-                    tokio::task::yield_now().await;
-                }
-            })
+            let response = tokio::time::timeout(
+                Duration::from_secs(1),
+                service.execute(migration_request(command, &container)),
+            )
             .await
             .unwrap();
-            let audit = audit_records(&root);
-            assert_eq!(audit.len(), 1);
-            assert_eq!(audit[0].command, command);
-            assert_eq!(audit[0].result, super::super::AuditResult::Succeeded);
-            assert!(container.is_file());
             assert_eq!(
-                crate::modules::preferences::PreferencesStore::new(&root)
-                    .load()
-                    .unwrap(),
-                crate::modules::preferences::Preferences::default()
+                response.error.as_ref().unwrap().code,
+                IpcErrorCode::ValidationFailed
             );
+            assert!(response.error.unwrap().message.contains("unsupported"));
+            assert!(!root.exists());
+            assert_eq!(std::fs::read(container).unwrap(), b"retained");
+            assert!(service.writers.admit().is_ok());
+            assert!(service.runtime_mutations.acquire().is_some());
         }
     }
 
@@ -1849,7 +2292,7 @@ mod tests {
                     .error
                     .unwrap()
                     .code,
-                IpcErrorCode::TargetStateConflict
+                IpcErrorCode::ValidationFailed
             );
             assert_eq!(std::fs::read_dir(root.path()).unwrap().count(), 0);
             drop(binding);
@@ -1862,13 +2305,8 @@ mod tests {
             );
             assert!(!container.exists());
             assert!(!root.path().join("manager-state").exists());
-            let audit = audit_records(root.path());
-            assert_eq!(audit.len(), 1);
-            assert_eq!(audit[0].command, command);
-            assert_eq!(audit[0].result, super::super::AuditResult::Failed);
-            assert!(!std::fs::read_to_string(root.path().join("audit.log"))
-                .unwrap()
-                .contains("test-only-secret-not-for-audit"));
+            assert!(!root.path().join("audit.log").exists());
+            assert_eq!(std::fs::read_dir(root.path()).unwrap().count(), 0);
         }
     }
 
@@ -2176,7 +2614,11 @@ mod tests {
     async fn backup_list_lock_wait_keeps_executor_responsive_and_survives_observer_drop() {
         use std::time::{Duration, Instant};
         let root = tempfile::tempdir().unwrap();
-        let lock = std::fs::File::create(root.path().join(".backup-w2.lock")).unwrap();
+        let lock = crate::infrastructure::platform::create_new_private_file(
+            &root.path().join(".backup-w2.lock"),
+            0o600,
+        )
+        .unwrap();
         lock.lock().unwrap();
         let (release, released) = std::sync::mpsc::channel();
         // A watchdog releases the real lock even if a regression blocks this
@@ -2267,69 +2709,46 @@ mod tests {
 
     #[cfg(unix)]
     #[tokio::test(flavor = "current_thread")]
-    async fn public_binding_lock_wait_persists_reference_after_disconnect_and_keeps_root_frozen() {
-        use std::os::unix::fs::PermissionsExt;
-        use std::time::{Duration, Instant};
-        let temp = tempfile::tempdir().unwrap();
-        let app_root = temp.path().join("app-data");
-        let root = temp.path().join("active");
-        let target = temp.path().join("target");
-        for path in [&app_root, &root, &target] {
-            crate::modules::data_root::initialize(path).unwrap();
-        }
-        let mut service = IpcService::for_tests_with(root.clone(), app_root.clone());
-        let executable = temp.path().join("stopped-ocx");
-        std::fs::write(
-            &executable,
-            b"#!/bin/sh\necho '{\"status\":\"stopped\",\"dataRoot\":\"/tmp/fixture\"}'\n",
-        )
-        .unwrap();
-        std::fs::set_permissions(&executable, std::fs::Permissions::from_mode(0o755)).unwrap();
-        service.collector = Arc::new(Mutex::new(crate::modules::status::StatusCollector::new(
-            crate::infrastructure::status_source::OfficialStatusSource::new(
-                crate::infrastructure::runtime_executable::FixedRuntimeExecutable::resolved(
-                    executable,
-                ),
-                temp.path(),
-                crate::modules::process::EnvironmentPolicy {
-                    opencodex_home: temp.path().join("opencodex-home"),
-                    ..Default::default()
-                },
-            ),
-        )));
-        let before = crate::modules::data_root::load_runtime_config(&app_root).unwrap();
+    async fn public_binding_lock_wait_persists_v2_fixed_pointer_after_disconnect() {
+        use crate::modules::data_root;
+        use std::time::Duration;
+        let t = tempfile::tempdir().unwrap();
+        let mut service = v2_binding_service(&t.path().join("user"), None);
+        let root = service.dependencies.active_data_root.clone();
+        let anchor = service.dependencies.app_data_root.clone();
+        let target = t.path().join("selected");
+        data_root::initialize(&target.join("desktop")).unwrap();
+        let before = std::fs::read(anchor.join("manager-location.json")).unwrap();
         let writers = service.writers.clone();
         let mutations = service.runtime_mutations.clone();
-        let lock = std::fs::File::create(root.join(".backup-w2.lock")).unwrap();
+        // Retain real service locks after the disconnected service clone exits.
+        let _context = service.binding_context.clone();
+        let lock = crate::infrastructure::platform::create_new_private_file(
+            &root.join(".backup-w2.lock"),
+            0o600,
+        )
+        .unwrap();
         lock.lock().unwrap();
         let (release, released) = std::sync::mpsc::channel();
         let holder = std::thread::spawn(move || {
-            let _ = released.recv_timeout(Duration::from_secs(2));
+            let _ = released.recv_timeout(Duration::from_secs(3));
             drop(lock);
         });
-        let mut request = backup_request(IpcCommand::DataRootSwitch);
-        request
-            .args
-            .insert("target".into(), target.display().to_string());
-        let started = Instant::now();
+        let request = reference_request(&target);
         let observer = tokio::spawn(async move { service.execute(request).await });
-        tokio::time::sleep(Duration::from_millis(20)).await;
-        assert!(started.elapsed() < Duration::from_secs(1));
+        tokio::time::sleep(Duration::from_millis(30)).await;
         assert!(!observer.is_finished());
         assert!(writers.frozen());
         assert!(mutations.acquire().is_none());
         observer.abort();
         assert!(observer.await.unwrap_err().is_cancelled());
-        assert!(writers.admit().is_err());
-        assert!(mutations.acquire().is_none());
         assert_eq!(
-            crate::modules::data_root::load_runtime_config(&app_root).unwrap(),
+            std::fs::read(anchor.join("manager-location.json")).unwrap(),
             before
         );
-        assert!(!root.join("audit.log").exists());
         release.send(()).unwrap();
         holder.join().unwrap();
-        tokio::time::timeout(Duration::from_secs(2), async {
+        tokio::time::timeout(Duration::from_secs(3), async {
             loop {
                 if mutations.acquire().is_some() {
                     break;
@@ -2339,24 +2758,24 @@ mod tests {
         })
         .await
         .unwrap();
-        let records = audit_records(&root);
-        assert_eq!(records.len(), 1);
-        assert_eq!(records[0].command, IpcCommand::DataRootSwitch);
-        assert_eq!(records[0].result, super::super::AuditResult::Succeeded);
         assert!(writers.frozen());
         assert!(writers.admit().is_err());
         assert_eq!(
-            crate::modules::data_root::load_runtime_config(&app_root)
+            data_root::startup_v2::selected_config(&anchor)
                 .unwrap()
                 .active_data_root,
-            target
+            data_root::startup_v2::checked_path(&target.join("desktop")).unwrap()
         );
-        assert_ne!(
-            crate::modules::data_root::load_runtime_config(&root)
+        assert!(!target.join("desktop/manager-location.json").exists());
+        assert_eq!(
+            data_root::load_runtime_config(&root)
                 .unwrap()
                 .active_data_root,
-            target
+            root
         );
+        let audit = audit_records(&root);
+        assert_eq!(audit.len(), 1);
+        assert_eq!(audit[0].result, super::super::AuditResult::Succeeded);
     }
 
     #[tokio::test(flavor = "current_thread")]
@@ -2742,142 +3161,112 @@ mod tests {
     /// 启动只从应用数据目录单跳读取，重启后第二次切换就丢了。
     #[cfg(unix)]
     #[tokio::test(flavor = "multi_thread")]
-    async fn switch_data_root_records_reference_in_the_fixed_app_data_root() {
-        let temp = tempfile::tempdir().expect("temp");
-        let app_root = temp.path().join("app-data");
-        let first = temp.path().join("root-a");
-        let second = temp.path().join("root-b");
-        for path in [&app_root, &first, &second] {
-            crate::modules::data_root::initialize(path).expect("init");
+    async fn switch_data_root_uses_fixed_d_and_target_u_across_actual_ipc_restart() {
+        use crate::modules::data_root;
+        let t = tempfile::tempdir().unwrap();
+        let user = t.path().join("user");
+        let first = t.path().join("first");
+        let second = t.path().join("second");
+        for target in [&first, &second] {
+            data_root::initialize(&target.join("desktop")).unwrap();
         }
-        // 模拟「已经切过一次」的运行实例：活动根是 first。
-        let mut service = IpcService::for_tests_with(first.clone(), app_root.clone());
-        use std::os::unix::fs::PermissionsExt;
-        let executable = temp.path().join("stopped-ocx");
-        std::fs::write(
-            &executable,
-            b"#!/bin/sh\necho '{\"status\":\"stopped\",\"dataRoot\":\"/tmp/fixture\"}'\n",
-        )
-        .unwrap();
-        std::fs::set_permissions(&executable, std::fs::Permissions::from_mode(0o755)).unwrap();
-        service.collector = Arc::new(Mutex::new(crate::modules::status::StatusCollector::new(
-            crate::infrastructure::status_source::OfficialStatusSource::new(
-                crate::infrastructure::runtime_executable::FixedRuntimeExecutable::resolved(
-                    executable,
-                ),
-                temp.path(),
-                crate::modules::process::EnvironmentPolicy {
-                    opencodex_home: temp.path().join("opencodex-home"),
-                    ..Default::default()
-                },
-            ),
-        )));
-        let mut args = std::collections::BTreeMap::new();
-        args.insert("target".to_string(), second.display().to_string());
-        let request = IpcRequest {
-            request_id: "req_00000000-0000-0000-0000-0000000000fe".to_string(),
-            command: IpcCommand::DataRootSwitch,
-            args,
-            confirm: true,
-            contract_version: 1,
-            secret: None,
-        };
-        let response = service.execute(request).await;
-        assert!(response.ok, "切换应成功：{:?}", response.error);
-
-        assert!(service.writers.frozen());
-        let audit_before = std::fs::read(first.join("audit.log")).expect("binding audit retained");
-        let mut read = IpcRequest {
-            request_id: "req_00000000-0000-0000-0000-0000000000fc".into(),
-            command: IpcCommand::DataRootShow,
-            args: BTreeMap::new(),
-            confirm: false,
-            contract_version: 1,
-            secret: None,
-        };
-        read.request_id = "req_00000000-0000-0000-0000-0000000000fd".into();
-        assert!(
-            service.execute(read).await.ok,
-            "pending binding remains readable"
-        );
-        let mut write = IpcRequest {
-            request_id: "req_00000000-0000-0000-0000-0000000000fb".into(),
-            command: IpcCommand::BackupCreate,
-            args: BTreeMap::new(),
-            confirm: false,
-            contract_version: 1,
-            secret: None,
-        };
-        write.confirm = true;
+        let mut service = v2_binding_service(&user, None);
+        let anchor = service.dependencies.app_data_root.clone();
+        assert!(service.execute(reference_request(&first)).await.ok);
+        drop(service);
+        let mut service = v2_binding_service(&user, None);
+        let current_d = service.dependencies.active_data_root.clone();
+        let current_h = service.dependencies.opencodex_home.clone();
         assert_eq!(
-            service.execute(write).await.error.unwrap().code,
+            current_d,
+            data_root::startup_v2::checked_path(&first.join("desktop")).unwrap()
+        );
+        let metadata = std::fs::read(data_root::runtime_config_path(&current_d)).unwrap();
+        let target_metadata =
+            std::fs::read(data_root::runtime_config_path(&second.join("desktop"))).unwrap();
+        let response = service.execute(reference_request(&second)).await;
+        assert!(response.ok, "{:?}", response.error);
+        assert_eq!(response.data.unwrap()["status"], "restart_required");
+        assert!(service.writers.frozen());
+        assert_eq!(
+            std::fs::read(data_root::runtime_config_path(&current_d)).unwrap(),
+            metadata
+        );
+        assert_eq!(
+            std::fs::read(data_root::runtime_config_path(&second.join("desktop"))).unwrap(),
+            target_metadata
+        );
+        assert!(!current_d.join("manager-location.json").exists());
+        assert!(!second.join("desktop/manager-location.json").exists());
+        let pointer: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(anchor.join("manager-location.json")).unwrap())
+                .unwrap();
+        assert_eq!(
+            pointer["activeRoot"],
+            data_root::startup_v2::checked_path(&second)
+                .unwrap()
+                .display()
+                .to_string()
+        );
+        let before_audit = std::fs::read(current_d.join("audit.log")).unwrap();
+        let show = service
+            .execute(backup_request(IpcCommand::DataRootShow))
+            .await;
+        assert!(show.ok);
+        assert_eq!(
+            show.data.unwrap()["opencodex_home"],
+            current_h.display().to_string()
+        );
+        assert_eq!(
+            service
+                .execute(backup_request(IpcCommand::BackupCreate))
+                .await
+                .error
+                .unwrap()
+                .code,
             IpcErrorCode::TargetStateConflict
         );
         assert_eq!(
-            std::fs::read(first.join("audit.log")).unwrap(),
-            audit_before,
-            "no post-save old-root audit writes"
+            std::fs::read(current_d.join("audit.log")).unwrap(),
+            before_audit
         );
-
-        let config = crate::modules::data_root::load_runtime_config(&app_root)
-            .expect("app data root config");
+        drop(service);
+        let restarted = v2_binding_service(&user, None);
+        assert_eq!(restarted.dependencies.app_data_root, anchor);
         assert_eq!(
-            config.active_data_root, second,
-            "引用必须记录在应用数据目录，供重启时单跳读取"
+            restarted.dependencies.active_data_root,
+            data_root::startup_v2::checked_path(&second.join("desktop")).unwrap()
         );
-        assert!(
-            crate::modules::data_root::load_runtime_config(&first)
-                .map(|config| config.active_data_root != second)
-                .unwrap_or(true),
-            "不得把引用写进旧的活动根"
+        assert_eq!(
+            restarted.dependencies.opencodex_home,
+            data_root::startup_v2::checked_path(&second.join("opencodex/home")).unwrap()
         );
     }
+
     #[tokio::test(flavor = "multi_thread")]
     async fn binding_refuses_busy_writer_and_validation_failure_reopens_admission() {
-        let temp = tempfile::tempdir().unwrap();
-        let root = temp.path().join("root");
-        let target = temp.path().join("target");
-        for path in [&root, &target] {
-            crate::modules::data_root::initialize(path).unwrap();
-        }
+        let t = tempfile::tempdir().unwrap();
+        let root = t.path().join("desktop");
+        crate::modules::data_root::initialize(&root).unwrap();
         let mut service = IpcService::for_tests_with(root.clone(), root.clone());
-        let request = |target: &std::path::Path| IpcRequest {
-            request_id: "req_00000000-0000-0000-0000-0000000000fa".into(),
-            command: IpcCommand::DataRootSwitch,
-            args: BTreeMap::from([("target".into(), target.display().to_string())]),
-            confirm: true,
-            contract_version: 1,
-            secret: None,
-        };
+        let target = t.path().join("missing");
         let active = service.writers.admit().unwrap();
         assert_eq!(
-            service.execute(request(&target)).await.error.unwrap().code,
+            service
+                .execute(reference_request(&target))
+                .await
+                .error
+                .unwrap()
+                .code,
             IpcErrorCode::TargetStateConflict
         );
         assert!(!service.writers.frozen());
-        assert_eq!(
-            crate::modules::data_root::load_runtime_config(&root)
-                .unwrap()
-                .active_data_root,
-            root
-        );
         drop(active);
-        assert!(
-            !service
-                .execute(request(&temp.path().join("missing")))
-                .await
-                .ok
-        );
-        assert!(
-            service.writers.admit().is_ok(),
-            "failed validation reopens writers"
-        );
+        assert!(!service.execute(reference_request(&target)).await.ok);
+        assert!(service.writers.admit().is_ok());
+        assert!(!target.exists());
     }
 
-    /// 回归：旧版容器缺口令是「可以让用户补口令」的状态，不是普通执行失败。
-    ///
-    /// 修复前 `map_app_error` 把任何 AppError 一律压成 ExecutionFailed，
-    /// CLI/GUI 都看不到「需要原口令」，只能显示一句笼统的失败。
     #[test]
     fn passphrase_required_is_reported_distinctly() {
         assert_eq!(
@@ -2896,5 +3285,107 @@ mod tests {
                 .to_lowercase()
                 .contains("passphrase")
         );
+    }
+
+    #[tokio::test]
+    async fn cli_root_migrate_is_unsupported_before_status_audit_or_target_creation() {
+        let t = tempfile::tempdir().unwrap();
+        let root = t.path().join("not-created-desktop");
+        let target = t.path().join("not-created-target");
+        let mut service = IpcService::for_tests_with(root.clone(), root.clone());
+        let binding = service.writers.freeze().unwrap().unwrap();
+        let mut request = reference_request(&target);
+        request.args.insert("migrate".into(), "true".into());
+        let response = service.execute(request).await;
+        assert_eq!(
+            response.error.as_ref().unwrap().code,
+            IpcErrorCode::ValidationFailed
+        );
+        assert!(response.error.unwrap().message.contains("unsupported"));
+        assert!(!root.exists() && !target.exists());
+        assert!(service.runtime_mutations.acquire().is_some());
+        drop(binding);
+        assert!(service.writers.admit().is_ok());
+    }
+
+    #[cfg(unix)]
+    #[tokio::test(flavor = "multi_thread")]
+    async fn actual_ipc_reference_checks_sandbox_installation_update_and_current_locks() {
+        use crate::modules::data_root;
+        for rejected in [0, 1, 2, 3, 4] {
+            let t = tempfile::tempdir().unwrap();
+            let sandbox = t.path().canonicalize().unwrap().join("sandbox");
+            let mut service = v2_binding_service(&t.path().join("unused-user"), Some(&sandbox));
+            let anchor = service.dependencies.app_data_root.clone();
+            let pointer = std::fs::read(anchor.join("manager-location.json")).unwrap();
+            let target = if rejected == 0 {
+                t.path().join("outside")
+            } else if rejected == 1 {
+                sandbox.join("program/forbidden-data")
+            } else {
+                sandbox.join("selected")
+            };
+            if rejected != 1 {
+                data_root::initialize(&target.join("desktop")).unwrap();
+            }
+            if rejected == 2 {
+                data_root::set_opencodex_home(
+                    &target.join("desktop"),
+                    data_root::OpenCodexHomeMode::External,
+                    Some(&t.path().join("outside-home")),
+                )
+                .unwrap();
+            }
+            if rejected == 3 {
+                service
+                    .binding_context
+                    .as_ref()
+                    .unwrap()
+                    .lock()
+                    .unwrap()
+                    .update_pending = true;
+            }
+            if rejected == 4 {
+                service
+                    .binding_context
+                    .as_ref()
+                    .unwrap()
+                    .lock()
+                    .unwrap()
+                    .startup
+                    .locks
+                    .pop();
+            }
+            {
+                let mut collector = service.collector.lock().unwrap();
+                collector.refresh().unwrap();
+                assert_eq!(
+                    collector.matrix().runtime,
+                    crate::types::status::RuntimeState::Stopped
+                );
+            }
+            let response = service.execute(reference_request(&target)).await;
+            assert!(!response.ok, "rejected case {rejected}");
+            assert_eq!(
+                response.error.unwrap().code,
+                if rejected <= 2 {
+                    IpcErrorCode::ValidationFailed
+                } else {
+                    IpcErrorCode::TargetStateConflict
+                },
+                "case {rejected}"
+            );
+            assert_eq!(
+                std::fs::read(anchor.join("manager-location.json")).unwrap(),
+                pointer
+            );
+            assert!(service.writers.admit().is_ok());
+            assert!(!target.join("desktop/manager-location.json").exists());
+            assert!(!t.path().join("outside-home").exists());
+            assert!(!t.path().join("unused-user").exists());
+            if rejected == 1 {
+                assert!(!target.exists());
+            }
+        }
     }
 }

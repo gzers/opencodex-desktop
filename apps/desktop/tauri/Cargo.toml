@@ -1,6 +1,6 @@
 [package]
 name = "opencodex-desktop"
-version = "0.2.22"
+version = "0.2.23"
 description = "OpenCodeX Desktop manager shell"
 license = "MIT"
 edition = "2021"
@@ -45,10 +45,14 @@ tempfile = "3"
 uuid = { version = "1.26.1", features = ["v4"] }
 sha2 = "0.10"
 hmac = "0.12"
+# Cooperate with the official runtime's SQLite config-mutation lock.
+rusqlite = { version = "=0.37.0", features = ["bundled"] }
 argon2 = { version = "0.5.3", features = ["std", "zeroize"] }
 aes-gcm = { version = "0.10.3", features = ["std", "zeroize"] }
 base64 = "0.22.1"
 async-trait = "0.1.89"
+quick-xml = "0.42"
+percent-encoding = "2"
 zeroize = "1.8.1"
 thiserror = "2"
 tokio = { version = "1.53.1", features = ["macros", "net", "process", "rt-multi-thread", "sync", "time", "io-util"] }
@@ -65,6 +69,7 @@ keyring = { version = "3", default-features = false, features = ["apple-native"]
 
 [target.'cfg(target_os = "windows")'.dependencies]
 keyring = { version = "3", default-features = false, features = ["windows-native"] }
+windows = { version = "=0.62.2", features = ["Win32_Foundation", "Win32_System_Com", "Win32_System_Ole", "Win32_System_TaskScheduler", "Win32_System_Variant"] }
 windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_Globalization", "Win32_Graphics_Dwm", "Win32_Security", "Win32_Security_Cryptography", "Win32_Storage_FileSystem", "Win32_System_Diagnostics_ToolHelp", "Win32_System_JobObjects", "Win32_System_IO", "Win32_System_SystemServices", "Win32_System_Registry", "Win32_System_Threading", "Win32_UI_Accessibility", "Win32_UI_Controls", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging"] }
 
 [dev-dependencies]
@@ -83,3 +88,9 @@ lto = true
 opt-level = "s"
 panic = "abort"
 strip = true
+
+# Diagnostic/dev builds verify the same full Node/package/launcher digests as
+# release. Optimize the hashing core rather than caching or skipping admission.
+# The test profile inherits dev package overrides; release is already optimized.
+[profile.dev.package.sha2]
+opt-level = 3

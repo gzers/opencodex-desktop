@@ -6,6 +6,7 @@ export interface ProcessActionResult {
   canStart: boolean
   canStop: boolean
   canRestart: boolean
+  failure?: { code: string; message: string }
 }
 
 export async function runProcessAction(action: LifecycleAction): Promise<ProcessActionResult> {

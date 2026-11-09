@@ -61,6 +61,8 @@ function Write-SandboxFileInventory([string]$SandboxRoot, [string]$OutputRoot) {
 
 New-Item -ItemType Directory -Path $taskOutput -Force | Out-Null
 $taskSandbox = Join-Path $taskOutput ('sandbox-' + [guid]::NewGuid().ToString('N'))
+$taskSmokeVersion = (Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../apps/desktop/tauri/tauri.conf.json') -Raw | ConvertFrom-Json).version
+$taskData = if ($taskSmokeVersion -ceq '0.2.23') { Join-Path $taskSandbox 'data/desktop' } else { $taskSandbox }
 if ($ManagedInstall) {
     if ($env:GITHUB_ACTIONS -cne 'true') { throw 'Real managed UI installation requires a disposable CI runner' }
     $taskTools = Join-Path $taskSandbox 'home/.local/bin'
@@ -120,13 +122,13 @@ try {
     $taskResult.mainWindowPresent = $true
     $taskResult.responding = $taskProcess.Responding
     Write-SandboxFileInventory $taskSandbox $taskOutput
-    $taskLog = Join-Path $taskSandbox 'logs/app.log'
+    $taskLog = Join-Path $taskData 'logs/app.log'
     if (!(Test-Path -LiteralPath $taskLog)) { throw 'Sandbox startup log missing; see sandbox-file-inventory.json' }
     if (!(Get-Content -LiteralPath $taskLog -Raw).Contains("commit=$ExpectedCommit")) {
         throw "EXE build provenance does not match source commit $ExpectedCommit"
     }
     $taskResult.sourceCommitMatched = $true
-    if (!(Test-Path -LiteralPath (Join-Path $taskSandbox 'manager-state/data-root.json'))) { throw 'Sandbox data root not initialized' }
+    if (!(Test-Path -LiteralPath (Join-Path $taskData 'manager-state/data-root.json'))) { throw 'Sandbox data root not initialized' }
     & $taskNode (Join-Path $PSScriptRoot 'windows-webview.mjs') "http://127.0.0.1:$taskPort" $taskOutput $taskSandbox $(if ($ManagedInstall) { 'managed-install' } else { 'no-managed-install' })
     if ($LASTEXITCODE -ne 0) { throw "WebView smoke failed: $LASTEXITCODE" }
     $taskResult.applicationToken = Get-WindowsProcessToken -Process $taskProcess -ExpectedExecutable $taskExe

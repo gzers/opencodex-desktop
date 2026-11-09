@@ -6,6 +6,7 @@ import { writeFile, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { describeError, discoverMainTarget } from './windows-cdp.mjs'
 import {verifyWindowsModelUi} from './windows-model-ui.mjs'
+import {verify023Native} from './windows023-native-model.mjs'
 const [endpoint, output, modelSandbox, installMode] = process.argv.slice(2)
 assert(endpoint && output, 'Usage: node windows-webview.mjs <loopback CDP endpoint> <output directory>')
 assert.equal(new URL(endpoint).hostname, '127.0.0.1')
@@ -73,9 +74,19 @@ try {
   const invoke = await call('Runtime.evaluate', {
     expression: `(async () => {
       const invoke = window.__TAURI_INTERNALS__.invoke;
+      const about = await invoke('app_about');
+      let discovery;
+      try { discovery = await invoke('discover_environment', {request: null}); }
+      catch (error) {
+        // An explicitly standalone 023 EXE has no packaged runtime closure.
+        // Record the typed refusal; never fabricate ready or use old PATH.
+        if (about.version !== '0.2.23' || error?.code !== 14 ||
+            !/discovery_runtime_(unresolved|pending)/.test(error?.message ?? '')) throw error;
+        discovery = {gate:'integrated_runtime_not_ready', code:error.code, message:error.message, readyVerified:false};
+      }
       return {
-        about: await invoke('app_about'),
-        discovery: await invoke('discover_environment', {request: null}),
+        about,
+        discovery,
         preferences: await invoke('get_preferences'),
         dataRoot: await invoke('get_data_root_config')
       };
@@ -98,8 +109,12 @@ try {
     about: facts.about, discovery: facts.discovery, cliEnabled: facts.preferences.cliEnabled,
     sandboxDataRootInitialized: true,
   }, null, 2) + '\n')
-  if(modelSandbox){diagnostics.phase='model-native-ui';await verifyWindowsModelUi(call,output,facts,modelSandbox)}
-  if(modelSandbox){diagnostics.phase='runtime-install-ui';await verifyWindowsInstallUi(call,output,installMode==='managed-install',modelSandbox)}
+  if (modelSandbox && facts.about.version==='0.2.23') {
+    diagnostics.phase='023-native-boundary';await verify023Native(call,output,facts,modelSandbox)
+  } else {
+    if(modelSandbox){diagnostics.phase='model-native-ui';await verifyWindowsModelUi(call,output,facts,modelSandbox)}
+    if(modelSandbox){diagnostics.phase='runtime-install-ui';await verifyWindowsInstallUi(call,output,installMode==='managed-install',modelSandbox)}
+  }
   diagnostics.result = 'pass'
   diagnostics.phase = 'complete'
   await saveDiagnostics(diagnostics)

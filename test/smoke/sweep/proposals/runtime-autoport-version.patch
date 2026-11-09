@@ -1,0 +1,21 @@
+--- a/bin/ocx.mjs
++++ b/bin/ocx.mjs
+@@ -119,0 +120,13 @@
++}
++
++// A plain version request is read-only. Preserve the official output while
++// avoiding Bun installation/bootstrap, home inspection and service discovery.
++// Other commands and argument-bearing requests retain their original dispatch.
++if (process.argv.length === 3 && ["--version", "-v", "version"].includes(process.argv[2])) {
++  const version = currentPackageVersion();
++  if (typeof version !== "string" || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(version)) {
++    console.error("opencodex: installed package version is invalid");
++    process.exit(1);
++  }
++  console.log('opencodex ' + version);
++  process.exit(0);
+--- a/src/config/schema/config-schema.ts
++++ b/src/config/schema/config-schema.ts
+@@ -109 +109 @@
+-  port: z.number().int().min(0).max(65535).default(10100),
++  port: z.number().int().min(0).max(65535).default(0),

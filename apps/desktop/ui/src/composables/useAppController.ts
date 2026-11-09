@@ -16,6 +16,7 @@ import { useLifecycleStore } from '@/app/lifecycle/store'
 import { TRAY_FALLBACK_MS, TRAY_BACKOFF_MS } from '@/config/runtimeDefaults'
 import type { NotificationItem } from '@/types/ui'
 import { useUpdateScheduler } from '@/features/updates/useUpdateScheduler'
+import { useEnvironmentStore } from '@/features/environment/store'
 
 // 组合根（IMP-04 §19.4 E）：把诊断与生命周期控制器组合起来，并向调用方暴露与拆分前一致的字段。
 export function useAppController(initialize = false) {
@@ -50,6 +51,19 @@ export function useAppController(initialize = false) {
     if (!notification) return
     if (!notification.read) app.markNotificationRead(id)
     const label = notification.kind === 'warning' ? '警告' : notification.kind === 'danger' ? '风险' : '信息'
+    if (!notification.resolved && /^(run-start-failed|run-restart-failed)(:|$)/.test(notification.id)) {
+      app.openModal({
+        title:notification.title,
+        body:notification.detail,
+        confirmLabel:'重试启动',
+        onConfirm:()=>{void runAction('start')},
+        resolveLabel:'前往端口设置',
+        onResolve:()=>{routes.go('settings',{section:'installation'});void import('vue').then(({nextTick})=>nextTick(()=>document.getElementById('runtime-port-settings')?.scrollIntoView({block:'start'})))},
+        deleteLabel:'查看日志',
+        onDelete:()=>routes.go('logs',{tab:'logs'}),
+      })
+      return
+    }
     app.openModal({
       title: notification.title,
       body: `${notification.detail}<span class="modal-meta">${formatNotificationTime(notification.time)} · ${label}</span>`,
@@ -60,11 +74,11 @@ export function useAppController(initialize = false) {
         else if (notification.action === 'transfer_result') void import('@/features/sync/store').then(({useSyncStore})=>useSyncStore().openResult(notification.objectId??undefined))
         else if (notification.action === 'logs') routes.go('logs', { tab: 'logs' })
         else if (notification.action === 'model_policy') {
-          void import('@/features/models/store').then(({useModelsStore})=>{if(notification.objectId)useModelsStore().policyNotificationTarget={planId:notification.objectId};routes.go('models')})
+          void import('@/features/models/store-v2').then(({useModelsV2Store})=>{if(notification.objectId)useModelsV2Store().policyNotificationTarget={operationId:notification.objectId};routes.go('models')})
         }
         else if (notification.action === 'models') {
-          void import('@/features/models/store').then(({ useModelsStore }) => {
-            if (notification.objectId && notification.candidateId) useModelsStore().notificationTarget = { taskId:notification.objectId,submissionId:notification.candidateId }
+          void import('@/features/models/store-v2').then(({useModelsV2Store})=>{
+            if(notification.objectId)useModelsV2Store().externalNotificationTarget={taskId:notification.objectId}
             routes.go('models')
           })
         }
@@ -132,8 +146,10 @@ export function useAppController(initialize = false) {
       } else if (route === 'extensions') {
         await Promise.all([app.loadExtensions(), app.loadExtensionConfig()])
       } else if (route === 'models') {
-        const { useModelsStore } = await import('@/features/models/store')
-        await useModelsStore().load()
+        const { useModelsV2Store } = await import('@/features/models/store-v2')
+        const models=useModelsV2Store()
+        await models.loadChannels()
+        await models.load()
       } else if (route === 'logs') {
         if (routes.diagnosticsTab === 'notifications') await app.loadNotifications()
         else if (routes.diagnosticsTab === 'doctor') await runDoctor()
@@ -229,6 +245,18 @@ export function useAppController(initialize = false) {
   })
 
   if (initialize) {
+    // Only the initialized root owns cross-feature source/environment orchestration.
+    // Ignore read timestamps/history: repeated card reads must not start a loop.
+    const environment = useEnvironmentStore()
+    watch(() => {
+      const source = app.runtimeSource
+      return source ? JSON.stringify([source.kind, source.path, source.version,
+        source.managedEntry, source.managedPrefix, source.explicitPath]) : null
+    }, async (identity, previous) => {
+      if (disposed || !identity || !previous && app.runtimeSource?.kind === 'unresolved') return
+      const ok = await environment.refresh()
+      if (!disposed && !ok) app.showToast(environment.error)
+    })
     watch(currentLogKind, () => {
       void loadLogs()
       void app.loadNotifications()

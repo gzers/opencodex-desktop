@@ -48,6 +48,46 @@ fn digest(root: &Path, path: &Path, limit: u64) -> AppResult<String> {
     safety::check_path(root, path, false)?;
     Ok(format!("{:x}", Sha256::digest(read_owned(path, limit)?)))
 }
+
+const MAX_NODE_BYTES: u64 = 512 * 1024 * 1024;
+
+/// Hash the opened, single-link regular file with bounded memory and I/O.
+/// The fixed-I admission remains the caller's responsibility; legacy isolated
+/// fixtures may inject an explicit dependency outside I, never a PATH lookup.
+fn node_digest(root: &Path, node: &Path) -> AppResult<String> {
+    let anchor = if node.starts_with(root) {
+        root
+    } else {
+        node.parent().ok_or_else(fail)?
+    };
+    safety::check_path(anchor, node, false)?;
+    let file = safety::open_file(node, false)?;
+    safety::require_single_link(&file)?;
+    let expected_bytes = file.metadata().map_err(|_| fail())?.len();
+    if expected_bytes == 0 || expected_bytes > MAX_NODE_BYTES {
+        return Err(fail());
+    }
+    let mut reader = file.take(MAX_NODE_BYTES + 1);
+    let mut hash = Sha256::new();
+    let mut buffer = [0u8; 64 * 1024];
+    let mut bytes = 0u64;
+    loop {
+        let count = reader.read(&mut buffer).map_err(|_| fail())?;
+        if count == 0 {
+            break;
+        }
+        bytes += count as u64;
+        if bytes > MAX_NODE_BYTES || bytes > expected_bytes {
+            return Err(fail());
+        }
+        hash.update(&buffer[..count]);
+    }
+    if bytes != expected_bytes || reader.get_ref().metadata().map_err(|_| fail())?.len() != bytes {
+        return Err(fail());
+    }
+    safety::require_single_link(reader.get_ref())?;
+    Ok(format!("{:x}", hash.finalize()))
+}
 fn valid_digest(value: &str) -> bool {
     value.len() == 64
         && value
@@ -56,9 +96,23 @@ fn valid_digest(value: &str) -> bool {
 }
 fn valid_absolute(path: &Path) -> bool {
     path.is_absolute()
+        && !path.to_string_lossy().chars().any(char::is_control)
         && !path
             .components()
             .any(|c| matches!(c, Component::ParentDir | Component::CurDir))
+}
+
+/// Only the fixed suffix of a recorded managed prefix establishes I. No caller
+/// supplied launcher/root and no data-root fallback participate in this mapping.
+pub(super) fn installation_root_for_prefix(prefix: &Path) -> AppResult<&Path> {
+    if !valid_absolute(prefix) {
+        return Err(fail());
+    }
+    let root = prefix.parent().and_then(Path::parent).ok_or_else(fail)?;
+    if root.join(super::MANAGED_PREFIX_RELATIVE) != prefix {
+        return Err(fail());
+    }
+    Ok(root)
 }
 fn valid_bin(path: &str) -> bool {
     !path.is_empty()
@@ -70,12 +124,14 @@ fn valid_bin(path: &str) -> bool {
 }
 
 /// Written to the installed manifest only after package probe and final activation.
-/// Hashes detect changed metadata/launcher/script; this is not a package signature.
+/// Hashes detect changed Node/metadata/launcher/script; this is not a package signature.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ActivationProof {
     attempt_id: String,
     bin: String,
+    node: PathBuf,
+    node_sha256: String,
     entry_sha256: String,
     package_sha256: String,
     bin_sha256: String,
@@ -84,6 +140,9 @@ impl ActivationProof {
     fn validate(&self) -> AppResult<()> {
         if uuid::Uuid::parse_str(&self.attempt_id).is_err()
             || !valid_bin(&self.bin)
+            || !valid_absolute(&self.node)
+            || self.node.as_os_str().len() > 4096
+            || !valid_digest(&self.node_sha256)
             || !valid_digest(&self.entry_sha256)
             || !valid_digest(&self.package_sha256)
             || !valid_digest(&self.bin_sha256)
@@ -92,20 +151,36 @@ impl ActivationProof {
         }
         Ok(())
     }
+    pub(super) fn node(&self) -> &Path {
+        &self.node
+    }
+    pub(super) fn verify(&self, prefix: &Path, bin: &str) -> AppResult<()> {
+        self.validate()?;
+        if self.bin != bin || activation_proof(prefix, &self.attempt_id, bin, &self.node)? != *self
+        {
+            return Err(fail());
+        }
+        Ok(())
+    }
 }
 pub(super) fn activation_proof(
-    root: &Path,
     prefix: &Path,
     attempt_id: &str,
     bin: &str,
+    node: &Path,
 ) -> AppResult<ActivationProof> {
     if !valid_bin(bin) {
         return Err(fail());
     }
+    let root = installation_root_for_prefix(prefix)?;
+    safety::check_path(root, prefix, false)?;
+    super::paths::validate_executable(node).map_err(|_| fail())?;
     let package = prefix.join(install::PACKAGE_SUBPATH);
     let proof = ActivationProof {
         attempt_id: attempt_id.into(),
         bin: bin.into(),
+        node: node.into(),
+        node_sha256: node_digest(root, node)?,
         entry_sha256: digest(root, &root.join(MANAGED_ENTRY_RELATIVE), 64 * 1024)?,
         package_sha256: digest(prefix, &package.join("package.json"), 64 * 1024)?,
         bin_sha256: digest(prefix, &package.join(bin), 16 * 1024 * 1024)?,
@@ -123,8 +198,13 @@ pub(crate) struct PanelProtection {
     prefix: PathBuf,
     version: String,
     node: Option<PathBuf>,
+    #[serde(default = "registry_source")]
+    source: install::InstallSourceKind,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     verified: Option<ActivationProof>,
+}
+fn registry_source() -> install::InstallSourceKind {
+    install::InstallSourceKind::Registry
 }
 impl PanelProtection {
     /// The guard serializes load/CAS/write with cleanup, restore and other updates.
@@ -134,6 +214,25 @@ impl PanelProtection {
         prefix: &Path,
         version: &str,
         node: Option<&Path>,
+    ) -> AppResult<Option<Self>> {
+        Self::arm_for_source(
+            root,
+            guard,
+            prefix,
+            version,
+            node,
+            install::InstallSourceKind::Registry,
+        )
+    }
+    /// Recovery freezes its explicitly selected source rather than treating an
+    /// offline replacement as a registry update during reopen reconciliation.
+    pub(crate) fn arm_for_source(
+        root: &Path,
+        guard: &PreferencesProtectionGuard,
+        prefix: &Path,
+        version: &str,
+        node: Option<&Path>,
+        source: install::InstallSourceKind,
     ) -> AppResult<Option<Self>> {
         reconcile_pending(root, guard)?;
         let Some(protection) = guard.protection_ref(root)? else {
@@ -146,6 +245,7 @@ impl PanelProtection {
             prefix: prefix.into(),
             version: version.into(),
             node: node.map(Path::to_path_buf),
+            source,
             verified: None,
         };
         record.validate()?;
@@ -157,6 +257,7 @@ impl PanelProtection {
     }
     fn validate(&self) -> AppResult<()> {
         self.protection.validate()?;
+        installation_root_for_prefix(&self.prefix)?;
         if self.schema != 1
             || uuid::Uuid::parse_str(&self.attempt_id).is_err()
             || !valid_absolute(&self.prefix)
@@ -165,13 +266,13 @@ impl PanelProtection {
             || self
                 .node
                 .as_ref()
-                .is_some_and(|p| !valid_absolute(p) || p.as_os_str().len() > 4096)
+                .is_none_or(|p| !valid_absolute(p) || p.as_os_str().len() > 4096)
         {
             return Err(fail());
         }
         if let Some(proof) = &self.verified {
             proof.validate()?;
-            if proof.attempt_id != self.attempt_id {
+            if proof.attempt_id != self.attempt_id || Some(proof.node()) != self.node.as_deref() {
                 return Err(fail());
             }
         }
@@ -205,7 +306,9 @@ impl PanelProtection {
         }
         Ok(())
     }
-    fn activation(&self, root: &Path) -> AppResult<ActivationProof> {
+    fn activation(&self) -> AppResult<ActivationProof> {
+        let root = installation_root_for_prefix(&self.prefix)?;
+        safety::check_path(root, &self.prefix, false)?;
         // Same prefix lock as the installer, without following a link at the lock path.
         let parent = self.prefix.parent().ok_or_else(fail)?;
         let lock_path = crate::infrastructure::locking::lock_path_for(&self.prefix);
@@ -222,9 +325,10 @@ impl PanelProtection {
         proof.validate()?;
         if manifest.package != OFFICIAL_PACKAGE
             || manifest.version != self.version
-            || manifest.source != install::InstallSourceKind::Registry
+            || manifest.source != self.source
             || proof.attempt_id != self.attempt_id
-            || activation_proof(root, &self.prefix, &self.attempt_id, &proof.bin)? != proof
+            || proof.node() != self.node.as_deref().ok_or_else(fail)?
+            || activation_proof(&self.prefix, &self.attempt_id, &proof.bin, proof.node())? != proof
         {
             return Err(fail());
         }
@@ -272,7 +376,7 @@ impl PanelProtection {
         }
         let mut verified = self.clone();
         if verified.verified.is_none() {
-            verified.verified = Some(self.activation(root)?);
+            verified.verified = Some(self.activation()?);
         }
         guard.reconcile_panel_recorded(root, &self.protection, self.verified.is_some(), || {
             if Self::load(root)?.as_ref() != Some(self) {
@@ -384,19 +488,24 @@ mod tests {
             .save(&Preferences::default())
             .unwrap();
         let guard = manager::begin_preferences_protection(root.path(), true).unwrap();
+        let node = root
+            .path()
+            .join(if cfg!(windows) { "node.exe" } else { "node" });
+        std::fs::write(&node, b"#!/bin/sh\nexit 0\n").unwrap();
+        crate::infrastructure::platform::set_mode(&node, 0o755).unwrap();
         let receipt = PanelProtection::arm(
             root.path(),
             &guard,
             &root.path().join(super::super::MANAGED_PREFIX_RELATIVE),
             "0.3.1",
-            None,
+            Some(&node),
         )
         .unwrap()
         .unwrap();
         (root, guard, receipt)
     }
     // Synthetic activation bytes test reconciliation; real installer has a separate probe test.
-    fn activate(root: &Path, receipt: &PanelProtection, attempt: &str) {
+    fn activate(_root: &Path, receipt: &PanelProtection, attempt: &str) {
         let package = receipt.prefix.join(install::PACKAGE_SUBPATH);
         std::fs::create_dir_all(package.join("bin")).unwrap();
         std::fs::write(
@@ -409,13 +518,21 @@ mod tests {
         .unwrap();
         let bin = package.join("bin/ocx.js");
         std::fs::write(&bin, b"console.log('fixture');\n").unwrap();
-        let entry = root.join(MANAGED_ENTRY_RELATIVE);
+        let entry = installation_root_for_prefix(&receipt.prefix)
+            .unwrap()
+            .join(MANAGED_ENTRY_RELATIVE);
         std::fs::create_dir_all(entry.parent().unwrap()).unwrap();
         std::fs::write(&entry, install::entry_script(receipt.node.as_deref(), &bin)).unwrap();
         crate::infrastructure::platform::set_mode(&entry, 0o755).unwrap();
         let manifest = install::RuntimeManifest {
             activation: Some(
-                activation_proof(root, &receipt.prefix, attempt, "bin/ocx.js").unwrap(),
+                activation_proof(
+                    &receipt.prefix,
+                    attempt,
+                    "bin/ocx.js",
+                    receipt.node.as_deref().unwrap(),
+                )
+                .unwrap(),
             ),
             package: OFFICIAL_PACKAGE.into(),
             version: receipt.version.clone(),
@@ -480,7 +597,7 @@ mod tests {
         assert_active(root.path(), &receipt);
         let mut verified = receipt.clone();
         activate(root.path(), &verified, &verified.attempt_id);
-        verified.verified = Some(verified.activation(root.path()).unwrap());
+        verified.verified = Some(verified.activation().unwrap());
         verified.save(root.path()).unwrap();
         assert_eq!(status(root.path()).state, ProtectionState::VerifiedPending);
         let verified_bytes = std::fs::read(state_path(root.path())).unwrap();
@@ -630,7 +747,7 @@ mod tests {
         for expire in [false, true] {
             let (root, guard, mut receipt) = fixture();
             activate(root.path(), &receipt, &receipt.attempt_id);
-            receipt.verified = Some(receipt.activation(root.path()).unwrap());
+            receipt.verified = Some(receipt.activation().unwrap());
             receipt.save(root.path()).unwrap();
             guard
                 .reconcile_panel_recorded(root.path(), &receipt.protection, true, || Ok(()))
@@ -778,6 +895,74 @@ mod tests {
         receipt.discard(root.path()).unwrap();
         assert!(PanelProtection::load(root.path()).unwrap().is_none());
         assert_active(root.path(), &receipt);
+    }
+
+    #[test]
+    fn node_digest_is_required_strict_and_persisted_in_verified_receipt() {
+        let (root, _guard, mut receipt) = fixture();
+        activate(root.path(), &receipt, &receipt.attempt_id);
+        let proof = receipt.activation().unwrap();
+        let bytes = std::fs::read(receipt.node.as_ref().unwrap()).unwrap();
+        assert_eq!(proof.node_sha256, format!("{:x}", Sha256::digest(bytes)));
+        let good = serde_json::to_value(&proof).unwrap();
+        for bad_hash in [
+            "".to_string(),
+            "a".repeat(63),
+            "a".repeat(65),
+            "G".repeat(64),
+            "A".repeat(64),
+        ] {
+            let mut bad = good.clone();
+            bad["node_sha256"] = bad_hash.into();
+            assert!(serde_json::from_value::<ActivationProof>(bad)
+                .unwrap()
+                .validate()
+                .is_err());
+        }
+        let mut missing = good;
+        missing.as_object_mut().unwrap().remove("node_sha256");
+        assert!(serde_json::from_value::<ActivationProof>(missing).is_err());
+        receipt.verified = Some(proof);
+        receipt.save(root.path()).unwrap();
+        assert_eq!(
+            PanelProtection::load(root.path())
+                .unwrap()
+                .unwrap()
+                .verified,
+            receipt.verified
+        );
+    }
+
+    #[test]
+    fn node_hash_rejects_empty_and_over_budget_files_before_reading_payload() {
+        let root = tempfile::tempdir().unwrap();
+        let node = root.path().join("node");
+        let file = std::fs::File::create(&node).unwrap();
+        assert!(node_digest(root.path(), &node).is_err());
+        // Sparse: enforce the exact bundle limit without allocating 512 MiB.
+        file.set_len(MAX_NODE_BYTES + 1).unwrap();
+        assert!(node_digest(root.path(), &node).is_err());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn linked_node_never_releases_protection_or_touches_link_target() {
+        for hard in [false, true] {
+            let (root, guard, mut receipt) = fixture();
+            activate(root.path(), &receipt, &receipt.attempt_id);
+            let node = receipt.node.as_ref().unwrap();
+            let target = root.path().join("original-node");
+            let original = std::fs::read(node).unwrap();
+            std::fs::rename(node, &target).unwrap();
+            if hard {
+                std::fs::hard_link(&target, node).unwrap();
+            } else {
+                std::os::unix::fs::symlink(&target, node).unwrap();
+            }
+            assert!(receipt.reconcile(root.path(), &guard).is_err());
+            assert_eq!(std::fs::read(target).unwrap(), original);
+            assert_active(root.path(), &receipt);
+        }
     }
 
     #[cfg(unix)]

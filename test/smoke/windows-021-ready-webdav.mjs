@@ -5,7 +5,8 @@ import assert from 'node:assert/strict'
 import {writeFile} from 'node:fs/promises'
 import {join} from 'node:path'
 import {assert021Admission,inspect021Webdav,assert021WebdavState} from './windows-021-probes.mjs'
-import {observe021Ipc} from './windows-021-observer.mjs'
+import {observe021Ipc,assert021IpcSafety} from './windows-021-observer.mjs'
+import {assert023RuntimeAdmission} from './windows023-runtime-layout.mjs'
 import {assertNoNativeUiFault} from './windows-021-public-hosts.mjs'
 
 export function assert021OwnedEndpoint(config){
@@ -14,13 +15,23 @@ export function assert021OwnedEndpoint(config){
  assert(/^[a-f0-9]{64}$/.test(e.revision),'Ready WebDAV needs a real backend endpoint revision')
  return e
 }
+export function assert023ReadyIpcSafety(commands,writes=[],extraReads=[]){
+ assert.deepEqual(writes,[],'023 ready observation cannot authorize writes')
+ assert.deepEqual(extraReads,[])
+ const v2Reads=new Set(['config_v2_catalog','config_v2_read_scope','model_paths_v2_snapshot'])
+ assert021IpcSafety(commands.filter(command=>!v2Reads.has(command)))
+}
+function admission(facts,expected){
+ if(facts.about.version==='0.2.23')return assert023RuntimeAdmission(facts,expected)
+ return assert021Admission(facts,expected)
+}
 async function currentFacts({invoke},expected){
  const facts={about:await invoke('app_about'),dataRoot:await invoke('get_data_root_config')}
- assert021Admission(facts,expected)
+ admission(facts,expected)
  return facts
 }
 export async function prepare021ReadyWebdav(driver,facts,expected,seedIfAbsent=false){
- assert021Admission(facts,expected)
+ admission(facts,expected)
  await currentFacts(driver,expected)
  let config=await driver.invoke('get_sync_config'),created=false
  if(!config.endpoint){
@@ -55,7 +66,7 @@ export function assert021ReadyWebdavFacts(environment,source,installed,scene,end
  return readiness
 }
 export async function verify021ReadyWebdav(driver,output,facts,expected,prepared,installed,stage){
- assert021Admission(facts,expected)
+ admission(facts,expected)
  assert(['managed-before-offline-drop','managed-after-offline-drop','recovery-installed'].includes(stage),'Unknown ready WebDAV checkpoint')
  const endpoint=assert021OwnedEndpoint(prepared.config),report={schemaVersion:1,result:'fail',stage,admittedRoot:expected,endpointRevision:endpoint.revision,fixtureCreated:prepared.created}
  let observer
@@ -65,7 +76,7 @@ export async function verify021ReadyWebdav(driver,output,facts,expected,prepared
   report.source=await driver.invoke('runtime_source')
   report.readiness=assert021ActualReadyEnvironment(report.environment,report.source)
   assert.deepEqual(await driver.invoke('get_sync_config'),prepared.config,'Ready WebDAV endpoint binding changed')
-  observer=await observe021Ipc(driver)
+  observer=await observe021Ipc(driver,facts.about.version==='0.2.23'?assert023ReadyIpcSafety:assert021IpcSafety)
   await assertNoNativeUiFault(driver,facts.about.version)
   await driver.click('概览','.side')
   await driver.wait("!!document.querySelector('[data-testid=overview-remote-version]')||!!document.querySelector('[data-testid=environment-gate] .overview-gate-count')?.textContent.includes('/ 3')")
@@ -79,7 +90,7 @@ export async function verify021ReadyWebdav(driver,output,facts,expected,prepared
   await writeFile(join(output,'native021-ready-webdav-'+stage+'.png'),Buffer.from(shot.data,'base64'))
   report.finalFacts=await currentFacts(driver,expected)
   assert.deepEqual(await driver.invoke('get_sync_config'),prepared.config,'Viewing ready overview mutated the endpoint')
-  report.ipc=await observer.finish([],report.scene.versionCheckAvailable?['config_sync_observe']:[]);observer=null
+  report.ipc=await observer.finish([],facts.about.version!=='0.2.23'&&report.scene.versionCheckAvailable?['config_sync_observe']:[]);observer=null
   // Return through production navigation to the install surface owned by the
   // caller, so the unchanged offline-drop/query checks retain their precondition.
   await driver.click('设置','.side')
@@ -90,7 +101,7 @@ export async function verify021ReadyWebdav(driver,output,facts,expected,prepared
   return report
  }catch(error){report.error=error.message;throw error}
  finally{
-  try{if(observer)report.ipc=await observer.finish([],report.scene?.versionCheckAvailable?['config_sync_observe']:[])}
+  try{if(observer)report.ipc=await observer.finish([],facts.about.version!=='0.2.23'&&report.scene?.versionCheckAvailable?['config_sync_observe']:[])}
   catch(error){report.ipcError=error.message;report.result='fail';throw error}
   finally{await writeFile(join(output,'native021-ready-webdav-'+stage+'.json'),JSON.stringify(report,null,2)+String.fromCharCode(10))}
  }

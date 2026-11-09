@@ -31,6 +31,208 @@ fn reap_grace() -> Duration {
     crate::modules::runtime_defaults::process_reap_grace()
 }
 
+#[derive(Default)]
+struct StartDiagnostics {
+    tail: zeroize::Zeroizing<Vec<u8>>,
+    reason: Option<&'static str>,
+    admission_failure: Option<String>,
+    stdout: super::process_start_output::OutputStream,
+    stderr: super::process_start_output::OutputStream,
+}
+impl StartDiagnostics {
+    fn stream(&mut self, stderr: bool) -> &mut super::process_start_output::OutputStream {
+        if stderr {
+            &mut self.stderr
+        } else {
+            &mut self.stdout
+        }
+    }
+
+    fn summary(&self) -> String {
+        format!(
+            "startup_output={} {}",
+            self.stdout.summary("stdout"),
+            self.stderr.summary("stderr")
+        )
+    }
+
+    fn push_stream(&mut self, stderr: bool, bytes: &[u8]) {
+        self.push(bytes);
+        let stream = self.stream(stderr);
+        stream.push(bytes);
+        if let Some(admission) = stream.admission_failure.clone() {
+            self.admission_failure = Some(admission);
+        }
+    }
+
+    fn push(&mut self, bytes: &[u8]) {
+        // Only a bounded rolling window is retained, and no upstream text is logged.
+        self.tail.extend_from_slice(bytes);
+        if self.tail.len() > 8192 {
+            let discard = self.tail.len() - 8192;
+            self.tail.drain(..discard);
+        }
+        let text =
+            zeroize::Zeroizing::new(String::from_utf8_lossy(&self.tail).to_ascii_lowercase());
+        for line in text.lines() {
+            if let Some(value) = line.strip_prefix("ocxd-lifetime-admission-failed stage=") {
+                if valid_admission_diagnostic(value) {
+                    self.admission_failure = Some(value.to_owned());
+                }
+            }
+        }
+        if text.contains("eaddrinuse")
+            || text.contains("proxy already running")
+            || text.contains("address already in use")
+        {
+            self.reason = Some("port_conflict");
+        } else if self.reason.is_none()
+            && (text.contains("eacces") || text.contains("permission denied"))
+        {
+            self.reason = Some("port_permission");
+        }
+    }
+}
+
+pub(super) fn valid_admission_diagnostic(value: &str) -> bool {
+    let fields: Vec<_> = value.split(' ').collect();
+    if fields.len() != 3 {
+        return false;
+    }
+    let stage = fields[0];
+    let known = [
+        "entry",
+        "load-native",
+        "canonical-home",
+        "lease-create",
+        "lease-identity-acl",
+        "lease-lock",
+        "job-create",
+        "job-identity-acl",
+        "job-limits",
+        "job-self-assign",
+        "job-membership",
+        "process-times",
+        "committed",
+        "unknown",
+    ];
+    let ancestor = stage
+        .strip_prefix("ancestor-")
+        .is_some_and(|n| n.len() <= 2 && !n.is_empty() && n.bytes().all(|b| b.is_ascii_digit()));
+    (known.contains(&stage) || ancestor)
+        && ["kind=reference", "kind=type", "kind=range", "kind=error"].contains(&fields[1])
+        && fields[2].strip_prefix("win32=").is_some_and(|s| {
+            !s.is_empty()
+                && s.len() <= 10
+                && s.bytes().all(|b| b.is_ascii_digit())
+                && s.parse::<u32>().is_ok()
+        })
+}
+
+fn capture_start_output(child: &mut ControlledChild) -> Arc<std::sync::Mutex<StartDiagnostics>> {
+    let captured = Arc::new(std::sync::Mutex::new(StartDiagnostics::default()));
+    #[cfg(unix)]
+    fn drain(
+        reader: impl std::io::Read + Send + 'static,
+        state: Arc<std::sync::Mutex<StartDiagnostics>>,
+        stderr: bool,
+    ) {
+        std::thread::spawn(move || {
+            let mut reader = reader;
+            let mut buffer = zeroize::Zeroizing::new([0u8; 2048]);
+            loop {
+                let n = match reader.read(&mut buffer[..]) {
+                    Ok(0) => {
+                        if let Ok(mut state) = state.lock() {
+                            state.stream(stderr).eof = true;
+                        }
+                        break;
+                    }
+                    Ok(n) => n,
+                    Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
+                    Err(_) => {
+                        if let Ok(mut state) = state.lock() {
+                            state.stream(stderr).read_failed = true;
+                        }
+                        break;
+                    }
+                };
+                if let Ok(mut state) = state.lock() {
+                    state.push_stream(stderr, &buffer[..n]);
+                }
+            }
+        });
+    }
+    #[cfg(not(unix))]
+    fn drain(
+        reader: impl tokio::io::AsyncRead + Unpin + Send + 'static,
+        state: Arc<std::sync::Mutex<StartDiagnostics>>,
+        stderr: bool,
+    ) {
+        tauri::async_runtime::spawn(async move {
+            use tokio::io::AsyncReadExt;
+            let mut reader = reader;
+            let mut buffer = zeroize::Zeroizing::new([0u8; 2048]);
+            loop {
+                let n = match reader.read(&mut buffer[..]).await {
+                    Ok(0) => {
+                        if let Ok(mut state) = state.lock() {
+                            state.stream(stderr).eof = true;
+                        }
+                        break;
+                    }
+                    Ok(n) => n,
+                    Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
+                    Err(_) => {
+                        if let Ok(mut state) = state.lock() {
+                            state.stream(stderr).read_failed = true;
+                        }
+                        break;
+                    }
+                };
+                if let Ok(mut state) = state.lock() {
+                    state.push_stream(stderr, &buffer[..n]);
+                }
+            }
+        });
+    }
+    if let Some(stdout) = child.stdout.take() {
+        drain(stdout, captured.clone(), false);
+    } else if let Ok(mut state) = captured.lock() {
+        state.stdout.read_failed = true;
+    }
+    if let Some(stderr) = child.stderr.take() {
+        drain(stderr, captured.clone(), true);
+    } else if let Ok(mut state) = captured.lock() {
+        state.stderr.read_failed = true;
+    }
+    captured
+}
+
+async fn finish_start_output(
+    diagnostics: &Arc<std::sync::Mutex<StartDiagnostics>>,
+    remaining: Duration,
+) {
+    // Only after a terminal nonzero exit. Never extend the original action
+    // deadline or wait for a surviving descendant that inherited the pipes.
+    let deadline = tokio::time::Instant::now() + remaining.min(Duration::from_millis(100));
+    loop {
+        let done = diagnostics
+            .lock()
+            .map(|d| {
+                (d.stdout.eof || d.stdout.read_failed) && (d.stderr.eof || d.stderr.read_failed)
+            })
+            .unwrap_or(true);
+        if done || tokio::time::Instant::now() >= deadline {
+            break;
+        }
+        tokio::time::sleep_until(
+            deadline.min(tokio::time::Instant::now() + Duration::from_millis(2)),
+        )
+        .await;
+    }
+}
+
 /// 统一标记取消请求；只能等待已发出的系统调用结束，不强制终止。
 #[derive(Debug)]
 pub struct CancellationToken {
@@ -145,10 +347,21 @@ impl ControlledProcessRunner {
 
     /// 用冻结窗口执行一次官方生命周期动作。
     async fn execute_inner(&self, command: &ProcessCommand) -> Result<LifecycleResult, AppError> {
-        Self::validate_spawn_context(command)?;
-        let timeout = Self::timeout_for(command.action);
+        self.execute_inner_observed(command, None, Self::timeout_for(command.action))
+            .await
+    }
 
-        let child = self
+    async fn execute_inner_observed(
+        &self,
+        command: &ProcessCommand,
+        runtime: Option<crate::infrastructure::runtime_executable::SharedRuntimeExecutable>,
+        budget: Duration,
+    ) -> Result<LifecycleResult, AppError> {
+        let action_started = Instant::now();
+        Self::validate_spawn_context(command)?;
+        let timeout = Self::timeout_for(command.action).min(budget);
+
+        let mut child = self
             .spawn(command)
             .await
             .inspect_err(|_| {
@@ -158,6 +371,7 @@ impl ControlledProcessRunner {
                 operation: "spawn controlled ocx process".to_string(),
                 detail: error.to_string(),
             })?;
+        let diagnostics = capture_start_output(&mut child);
 
         #[cfg(unix)]
         let pid = Some(child.id());
@@ -170,8 +384,170 @@ impl ControlledProcessRunner {
             self.clear_running();
             // 后台独立线程负责回收，避免 start/stop 的子进程变成僵尸。
             // Unix 子进程只交给该线程，不参与 Tokio 的孤儿回收队列。
-            let _exit_observer = observe_child_exit(child);
-            return Ok(LifecycleResult::Started);
+            let mut exit = observe_child_exit(child);
+            // A managed Start is confirmed by fresh authenticated readiness, never spawn.
+            // Keep the exit receiver alive until success/failure or the original deadline.
+            let Some(runtime) = runtime else {
+                return Ok(LifecycleResult::Started);
+            };
+            let started = action_started;
+            let (mut observations, mut pending_ready, mut rejected, mut absent_record) =
+                (0u32, 0u32, 0u32, 0u32);
+            // Fixed labels/timings only: no server payload, key, path or upstream output.
+            let mut sample_timings = Vec::with_capacity(16);
+            loop {
+                if started.elapsed() >= timeout {
+                    #[cfg(test)]
+                    if std::env::var_os("OCXD_TEST_LIFECYCLE_DIAGNOSTIC").is_some() {
+                        if let Ok(captured) = diagnostics.lock() {
+                            for line in
+                                String::from_utf8_lossy(&captured.tail).lines().filter(|l| {
+                                    ["failed", "Failed", "Error", "error", "home", "HOME"]
+                                        .iter()
+                                        .any(|word| l.contains(word))
+                                })
+                            {
+                                if let Some(line) = crate::modules::logs::sanitize_line(line) {
+                                    eprintln!(
+                                        "isolated-start-diagnostic: {}",
+                                        line.chars().take(512).collect::<String>()
+                                    );
+                                }
+                            }
+                        }
+                    }
+                    let output = diagnostics
+                        .lock()
+                        .map(|d| d.summary())
+                        .unwrap_or_else(|_| "startup_output=unavailable".into());
+                    return Err(AppError::RuntimeManaged {code:"lifecycle_timeout".into(),detail:format!("启动未在原预算内证明就绪；observations={observations}, pending={pending_ready}, rejected={rejected}, absent_record={absent_record}, samples={sample_timings:?}；{output}。未延长预算或判定运行成功。")});
+                }
+                match exit.try_recv() {
+                    Ok(Some(code)) if code != 0 => {
+                        let exit_observed_ms = started.elapsed().as_millis();
+                        finish_start_output(
+                            &diagnostics,
+                            timeout.saturating_sub(started.elapsed()),
+                        )
+                        .await;
+                        self.bump_failure_epoch();
+                        let reason = diagnostics
+                            .lock()
+                            .ok()
+                            .and_then(|d| d.reason)
+                            .unwrap_or("lifecycle_start_exit");
+                        let message = match reason {
+                            "port_conflict" => "端口已被占用，请调整运行端口或重新分配后重试",
+                            "port_permission" => "没有权限监听所选端口，请检查权限或调整端口",
+                            _ => "官方启动进程退出，服务未确认就绪",
+                        };
+                        let admission = diagnostics
+                            .lock()
+                            .ok()
+                            .and_then(|d| d.admission_failure.clone())
+                            .map(|s| format!("；lifetime_admission={s}"))
+                            .unwrap_or_default();
+                        // Preserve port failures' existing product text; generic
+                        // startup failures already hide internal detail in the DTO.
+                        let output = if reason == "lifecycle_start_exit" {
+                            let summary = diagnostics
+                                .lock()
+                                .map(|d| d.summary())
+                                .unwrap_or_else(|_| "startup_output=unavailable".into());
+                            format!("；exit_observed_ms={exit_observed_ms}；{summary}")
+                        } else {
+                            String::new()
+                        };
+                        return Err(AppError::RuntimeManaged {
+                            code: reason.into(),
+                            detail: format!("{message}；exit_code={code}{admission}{output}"),
+                        });
+                    }
+                    Ok(None) => {
+                        return Err(AppError::RuntimeManaged {
+                            code: "lifecycle_start_exit".into(),
+                            detail: "官方启动进程未提供正常退出状态".into(),
+                        })
+                    }
+                    _ => {}
+                }
+                // Before publication there is no endpoint to authenticate. Do
+                // not hash the complete managed Node activation every 50ms
+                // while its cold child is competing for the same disk/CPU.
+                // This is only an early non-success check; every real sample
+                // below still performs full activation/HMAC/readback validation.
+                if matches!(std::fs::symlink_metadata(command.environment.opencodex_home.join("runtime-port.json")),Err(ref e) if e.kind()==std::io::ErrorKind::NotFound)
+                {
+                    absent_record += 1;
+                    tokio::time::sleep(
+                        Duration::from_millis(250).min(timeout.saturating_sub(started.elapsed())),
+                    )
+                    .await;
+                    continue;
+                }
+                let remaining = timeout.saturating_sub(started.elapsed());
+                observations += 1;
+                let sample_started = started.elapsed().as_millis();
+                let observed = tokio::time::timeout(
+                    remaining,
+                    super::attested_status::fetch(
+                        runtime.clone(),
+                        command.environment.opencodex_home.clone(),
+                    ),
+                )
+                .await;
+                if sample_timings.len() < 16 {
+                    let outcome = match &observed {
+                        Ok(Ok(Some(value))) if value["ready"] == true => "ready",
+                        Ok(Ok(Some(value))) if value["officialReadiness"] == "pending" => "pending",
+                        Ok(Ok(Some(_))) => "not-ready",
+                        Ok(Ok(None)) => "no-source",
+                        Ok(Err(crate::modules::status::CollectError::Timeout)) | Err(_) => {
+                            "timeout"
+                        }
+                        Ok(Err(crate::modules::status::CollectError::Parse)) => "parse",
+                        Ok(Err(_)) => "unreachable",
+                    };
+                    sample_timings.push((sample_started, started.elapsed().as_millis(), outcome));
+                }
+                if !matches!(&observed, Ok(Ok(Some(_)))) {
+                    rejected += 1;
+                }
+                if let Ok(Ok(Some(value))) = observed {
+                    if value["officialReadiness"] == "pending" {
+                        pending_ready += 1;
+                    }
+                    if value["officialReadiness"] == "failed" {
+                        return Err(AppError::RuntimeManaged {code:"lifecycle_readiness_failed".into(),detail:"官方服务已报告启动未就绪，可能存在客户端配置或服务归属问题；请查看诊断，未放宽校验。".into()});
+                    }
+                    if value["ready"] == true && value["status"] == "running" {
+                        if started.elapsed() >= timeout {
+                            return Err(AppError::Timeout);
+                        }
+                        if command
+                            .requested_port
+                            .is_some_and(|port| value["port"].as_u64() != Some(port.into()))
+                        {
+                            return Err(AppError::RuntimeManaged {
+                                code: "lifecycle_port_changed".into(),
+                                detail: "运行端口与已保存端口不一致，未宣称启动成功。".into(),
+                            });
+                        }
+                        // An exit received concurrently takes precedence over a stale observation.
+                        if matches!(exit.try_recv(), Ok(Some(code)) if code != 0) {
+                            return Err(AppError::RuntimeManaged {
+                                code: "lifecycle_start_exit".into(),
+                                detail: "启动进程异常退出，未确认持续运行".into(),
+                            });
+                        }
+                        return Ok(LifecycleResult::Started);
+                    }
+                }
+                tokio::time::sleep(
+                    Duration::from_millis(250).min(timeout.saturating_sub(started.elapsed())),
+                )
+                .await;
+            }
         }
 
         let started_at = chrono::Utc::now().to_rfc3339();
@@ -256,10 +632,13 @@ impl ControlledProcessRunner {
             .current_dir(&command.working_directory)
             .env_clear()
             .env("OPENCODEX_HOME", &command.environment.opencodex_home)
-            .stdout(Stdio::null())
-            .stderr(Stdio::null())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
             .stdin(Stdio::null())
             .kill_on_drop(false);
+        if let Some(port) = command.requested_port {
+            process.arg("--port").arg(port.to_string());
+        }
 
         crate::infrastructure::platform::apply_user_environment(
             process.as_std_mut(),
@@ -406,6 +785,28 @@ impl ControlledProcessRunner {
 }
 
 impl ProcessRunner for ControlledProcessRunner {
+    fn execute_in_context(
+        &self,
+        command: &ProcessCommand,
+        runtime: &crate::infrastructure::runtime_executable::SharedRuntimeExecutable,
+        deadline: Instant,
+    ) -> Result<LifecycleResult, AppError> {
+        if runtime.managed_installation_root().is_none() {
+            return self.execute(command);
+        }
+        std::thread::scope(|scope| {
+            scope
+                .spawn(|| {
+                    tauri::async_runtime::block_on(self.execute_inner_observed(
+                        command,
+                        Some(runtime.clone()),
+                        deadline.saturating_duration_since(Instant::now()),
+                    ))
+                })
+                .join()
+                .unwrap_or_else(|_| Err(AppError::NotConfigured))
+        })
+    }
     fn execute(&self, command: &ProcessCommand) -> Result<LifecycleResult, AppError> {
         // Tauri 同步 command 运行在主线程，需要切换到共享异步 runtime 的
         // 阻塞池执行；不依赖当前线程是否进入 runtime。
@@ -602,5 +1003,143 @@ mod tests {
                 "OPENCODEX_HOME"
             ]
         );
+    }
+}
+
+#[cfg(all(test, unix))]
+mod managed_observation_tests {
+    use super::*;
+    use std::os::unix::fs::PermissionsExt;
+    #[derive(Debug)]
+    struct Unready {
+        root: PathBuf,
+        entry: PathBuf,
+    }
+    impl crate::infrastructure::runtime_executable::RuntimeExecutableProvider for Unready {
+        fn executable(&self) -> Option<PathBuf> {
+            Some(self.entry.clone())
+        }
+        fn managed_installation_root(&self) -> Option<PathBuf> {
+            Some(self.root.clone())
+        }
+    }
+    async fn run(script: &str) -> (AppError, PathBuf, tempfile::TempDir) {
+        let t = tempfile::tempdir().unwrap();
+        let root = t.path().canonicalize().unwrap();
+        let executable = root.join("only-test-child");
+        let home = root.join("H");
+        std::fs::create_dir(&home).unwrap();
+        std::fs::write(&executable, script).unwrap();
+        std::fs::set_permissions(&executable, std::fs::Permissions::from_mode(0o700)).unwrap();
+        let runtime = Arc::new(Unready {
+            root: root.clone(),
+            entry: executable.clone(),
+        });
+        let runner = ControlledProcessRunner::new(&root);
+        let command = ProcessCommand::new(LifecycleAction::Start, executable, root.clone(), home);
+        let result = runner
+            .execute_inner_observed(&command, Some(runtime), Duration::from_millis(700))
+            .await;
+        (result.unwrap_err(), root, t)
+    }
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn immediate_and_delayed_failure_keep_exit_code_without_secret_output() {
+        for script in [
+            "#!/bin/sh\necho 'apiKey=synthetic_secret EADDRINUSE' >&2\nexit 17\n",
+            "#!/bin/sh\nsleep 0.1\necho 'Proxy already running (port 12345)' >&2\nexit 19\n",
+        ] {
+            let (e, _root, _t) = run(script).await;
+            let text = e.to_string();
+            assert!(!text.contains("synthetic_secret"));
+            match e {
+                AppError::RuntimeManaged { code, detail } => {
+                    assert_eq!(code, "port_conflict");
+                    assert!(detail.contains("exit_code=17") || detail.contains("exit_code=19"));
+                }
+                other => panic!("{other:?}"),
+            }
+        }
+    }
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn zero_exit_or_live_process_without_authenticated_ready_is_not_started() {
+        for script in ["#!/bin/sh\nexit 0\n", "#!/bin/sh\nsleep 0.3\nexit 0\n"] {
+            let (e, _root, _t) = run(script).await;
+            assert!(matches!(e, AppError::RuntimeManaged{code,..} if code=="lifecycle_timeout"));
+        }
+    }
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn terminal_exit_retains_completed_pipe_diagnostics_without_raw_error_text() {
+        let (error, _root, _fixture) = run(
+            "#!/bin/sh\nprintf 'ReferenceError: Cannot access PRIVATE before initialization\\n    at C:/Users/PRIVATE/src/lib/windows-runtime-lifetime.ts:121:9)\\n' >&2\nexit 19\n",
+        ).await;
+        match error {
+            AppError::RuntimeManaged { code, detail } => {
+                assert_eq!(code, "lifecycle_start_exit");
+                assert!(detail.contains("exit_code=19"));
+                assert!(
+                    detail
+                        .contains("eof=true,read_failed=false,kind=reference,hint=initialization"),
+                    "{detail}"
+                );
+                assert!(detail.contains("src/lib/windows-runtime-lifetime.ts:121:9"));
+                assert!(!detail.contains("PRIVATE") && !detail.contains("C:/Users"));
+            }
+            other => panic!("{other:?}"),
+        }
+    }
+
+    #[tokio::test]
+    async fn unfinished_output_cannot_extend_diagnostic_or_original_budget() {
+        let diagnostics = Arc::new(std::sync::Mutex::new(StartDiagnostics::default()));
+        let started = Instant::now();
+        finish_start_output(&diagnostics, Duration::ZERO).await;
+        assert!(started.elapsed() < Duration::from_millis(50));
+        assert!(diagnostics.lock().unwrap().summary().contains("eof=false"));
+    }
+    #[test]
+    fn admission_diagnostics_accept_fixed_fields_only() {
+        let mut d = StartDiagnostics::default();
+        d.push(b"ocxd-lifetime-admission-failed stage=job-self-assign kind=error win32=5\n");
+        assert_eq!(
+            d.admission_failure.as_deref(),
+            Some("job-self-assign kind=error win32=5")
+        );
+        for bad in [
+            "secret kind=error win32=5",
+            "job-create kind=secret win32=5",
+            "job-create kind=error win32=4294967296",
+            "job-create kind=error win32=5 path=secret",
+            "ancestor-100 kind=error win32=5",
+        ] {
+            let mut other = StartDiagnostics::default();
+            other.push(format!("ocxd-lifetime-admission-failed stage={bad}\n").as_bytes());
+            assert!(other.admission_failure.is_none());
+        }
+    }
+
+    #[test]
+    fn interleaved_stdout_cannot_break_a_split_stderr_admission_marker() {
+        let mut d = StartDiagnostics::default();
+        d.push_stream(true, b"ocxd-lifetime-admission-failed stage=job-");
+        d.push_stream(false, b"unrelated startup output\n");
+        d.push_stream(true, b"self-assign kind=error win32=5\n");
+        assert_eq!(
+            d.admission_failure.as_deref(),
+            Some("job-self-assign kind=error win32=5")
+        );
+        assert!(d.summary().contains("kind=unobserved"));
+    }
+
+    #[test]
+    fn bounded_diagnostics_do_not_keep_or_return_arbitrary_upstream_output() {
+        let mut diagnostic = StartDiagnostics::default();
+        for _ in 0..500 {
+            diagnostic.push(&[b'x'; 2048]);
+        }
+        assert!(diagnostic.tail.len() <= 8192);
+        diagnostic.push(b"permission denied");
+        assert_eq!(diagnostic.reason, Some("port_permission"));
+        diagnostic.push(b"EADDRINUSE");
+        assert_eq!(diagnostic.reason, Some("port_conflict"));
     }
 }

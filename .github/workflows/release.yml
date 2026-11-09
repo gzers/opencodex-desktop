@@ -50,11 +50,30 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          # Bundle resolution must use the same Node/npm pair as the pinned closure.
+          node-version: 26.8.1
 
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.rust_targets }}
+
+      - name: Stage complete pinned platform runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          node_bin="$(node -p 'process.execPath')"
+          npm_cli="$(node -e 'const p=require("node:path"),fs=require("node:fs");const n=process.execPath;const paths=[p.join(p.dirname(n),"node_modules/npm/bin/npm-cli.js"),p.join(p.dirname(n),"../lib/node_modules/npm/bin/npm-cli.js")];const hit=paths.find(v=>fs.existsSync(v));if(!hit)process.exit(1);process.stdout.write(p.resolve(hit))')"
+          if [ "$RUNNER_OS" = Windows ]; then platform=win32-x64; else platform=darwin-arm64; fi
+          python3 .github/scripts/stage_runtime_bundle_023.py --platform "$platform" --build-node "$node_bin" --npm-cli "$npm_cli" --output test/out/runtime-stage
+          echo "OCXD_REQUIRE_RUNTIME_BUNDLE=1" >> "$GITHUB_ENV"
+
+      - name: Install exact packaging CLI for bounded tool-download retries
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --global @tauri-apps/cli@2.11.4
+          echo "OCXD_TAURI_CLI=$(npm root --global)/@tauri-apps/cli/tauri.js" >> "$GITHUB_ENV"
+          echo "OCXD_TAURI_RETRY_EVIDENCE=$GITHUB_WORKSPACE/test/out/release-tauri-downloads" >> "$GITHUB_ENV"
 
       - name: 安装前端依赖
         run: npm --prefix apps/desktop/ui ci
@@ -85,7 +104,7 @@ jobs:
             echo "---"
             echo ""
             echo "### 安装"
-            echo "- macOS（Apple Silicon）：下载 \`.dmg\`，拖入「应用程序」。"
+            echo '- macOS（Apple Silicon）：下载 .dmg，将其中整个“OpenCodeX Desktop”文件夹复制到 ~/Applications，再打开文件夹中的应用；请勿只复制 .app 或从磁盘映像运行。'
             echo "- Windows（x64）：下载 \`*-setup.exe\`（NSIS）安装包。"
             echo "- 均为未签名测试包：macOS 首次打开如被 Gatekeeper 拦截，右键 →「打开」；Windows SmartScreen 可能提示，选择「仍要运行」。"
             echo "CHANGELOG_EOF"
@@ -105,12 +124,22 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           projectPath: apps/desktop/tauri
+          # Custom installer templates are reviewed against this exact bundler.
+          tauriScript: node ${{ github.workspace }}/.github/scripts/tauri_build_retry.mjs
           tagName: ${{ steps.notes.outputs.tag }}
           releaseName: 'OpenCodeX Desktop ${{ steps.notes.outputs.tag }}'
           releaseBody: ${{ steps.notes.outputs.body }}
           releaseDraft: true
           prerelease: true
-          args: --config tauri.updater.conf.json ${{ matrix.args }}
+          args: --features custom-protocol --config tauri.updater.conf.json --config tauri.runtime-bundle.conf.json ${{ matrix.args }}
+
+      - name: Preserve every packaging-tool download attempt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-tauri-downloads-${{ matrix.platform }}
+          path: test/out/release-tauri-downloads
+          if-no-files-found: warn
 
       - name: Verify sealed macOS application bundle and packaged resources
         if: runner.os == 'macOS'
@@ -122,14 +151,51 @@ jobs:
           codesign -dvv "$app" 2>&1
           test -s "$app/Contents/Resources/resources/LICENSE"
           test -s "$app/Contents/Resources/resources/THIRD-PARTY-NOTICES.txt"
+      - name: Package verified macOS app in its independent user installation folder
+        if: runner.os == 'macOS'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+        run: |
+          set -euo pipefail
+          app="apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app"
+          images=(apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg)
+          test "${#images[@]}" -eq 1
+          test -f "${images[0]}"
+          output="test/out/macos023-package/$(basename "${images[0]}")"
+          python3 .github/scripts/package_macos_023.py --app "$app" --output "$output" --metadata test/out/macos023-package/package-evidence.json --expected-version 0.2.23 --input-kind release-input
+          # The sealed .app/updater bytes stay unchanged; replace only the DMG.
+          cp "$output" "${images[0]}"
+          gh release upload "$RELEASE_TAG" "$output" --repo "$GITHUB_REPOSITORY" --clobber
+      - uses: actions/upload-artifact@v4
+        if: always() && runner.os == 'macOS'
+        with:
+          name: release-macos-installation-layout-evidence
+          path: test/out/macos023-package/package-evidence.json
+          if-no-files-found: ignore
+
       # Keep the release private until its actual installer bytes pass the existing
       # ephemeral-runner checks. This does not replace updater signature validation.
+      - name: Prepare disposable Server MSI client-equivalent fixture
+        if: runner.os == 'Windows'
+        shell: pwsh
+        working-directory: apps/desktop/tauri
+        run: |
+          & ../../../test/smoke/windows-msi-server-fixture.ps1 -Mode prepare -EvidenceDirectory ../../../test/out/release-windows-installer
+
       - name: Verify Windows release installers on isolated runner
         if: runner.os == 'Windows'
         shell: pwsh
         working-directory: apps/desktop/tauri
         run: |
           & ../../../test/smoke/windows-installer.ps1 -BundleDirectory target/release/bundle -BuiltExecutable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/release-windows-installer
+
+      - name: Restore exact Server MSI policy
+        if: always() && runner.os == 'Windows'
+        shell: pwsh
+        working-directory: apps/desktop/tauri
+        run: if(Test-Path ../../../test/out/release-windows-installer/msi-server-policy.original.json){ & ../../../test/smoke/windows-msi-server-fixture.ps1 -Mode restore -EvidenceDirectory ../../../test/out/release-windows-installer }
 
       - name: Preserve Windows release installer evidence
         if: always() && runner.os == 'Windows'
@@ -150,8 +216,18 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-      - name: Reproduce adopted offline runtime from pinned original and patches
-        run: python3 .github/scripts/build_maintained_runtime.py test/out/maintained-runtime
+      - name: Reproduce maintained base, names and lifecycle runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PYRUNTIME'
+          import hashlib,pathlib,urllib.request
+          p=pathlib.Path("test/out/base-runtime.tgz");p.parent.mkdir(parents=True,exist_ok=True)
+          with urllib.request.urlopen("https://github.com/gzers/opencodex-desktop/releases/download/v0.2.22/opencodex-2.97.0-post021.ownerquery.2.tgz",timeout=60) as r: data=r.read(32*1024*1024+1)
+          assert len(data)<=32*1024*1024 and hashlib.sha256(data).hexdigest()=="bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957"
+          p.write_bytes(data)
+          PYRUNTIME
+          python3 .github/scripts/build_runtime_lifecycle_023.py test/out/maintained-runtime --archive test/out/base-runtime.tgz
       - name: Install pinned signing CLI
         run: npm install --global @tauri-apps/cli@2.11.4
       - name: Sign and attach maintained runtime to the same draft release

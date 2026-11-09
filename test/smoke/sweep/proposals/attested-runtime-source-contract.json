@@ -1,0 +1,33 @@
+{
+  "runtimeArchiveSha256": "afb72a4c792c1ca70a0fcd9209d212c78249281d2d7bc42f8eee63aa4464b26b",
+  "runtimeVersion": "2.97.0-desktop023.names.1",
+  "evidence": "exact adopted archive read only; no service started",
+  "sources": [
+    {
+      "sourcePath": "src/server/index/serve-options.ts",
+      "sha256": "28675d9cafdf635df9c07e6707520a2946fe98dcd4cfde10340635ac33109140",
+      "facts": {
+        "healthChallengeProof": true,
+        "readyChallengeProof": true,
+        "readyStatusFromGate": true
+      }
+    },
+    {
+      "sourcePath": "src/server/startup-health-cache.ts",
+      "sha256": "37d25bc71d245139d7c863f31a6837d30e5d50d0d171761bd3597b486fd169d6",
+      "facts": {}
+    },
+    {
+      "sourcePath": "src/server/local-management-read-client.ts",
+      "sha256": "ddb4b97800cb9d5861206a9bd818ff7956e243027d1b1c8a85e9ba138d3b5054",
+      "facts": {}
+    },
+    {
+      "sourcePath": "src/cli/status.ts",
+      "sha256": "590e20f588c089536b7a50170aba46f664370f148804f86f75447a390b82ec19",
+      "facts": {}
+    }
+  ],
+  "accepted": false,
+  "implementationApplied": false
+}
