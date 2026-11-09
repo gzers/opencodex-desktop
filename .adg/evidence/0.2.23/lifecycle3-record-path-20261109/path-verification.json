@@ -1,0 +1,62 @@
+{
+  "accepted": false,
+  "nativeWindowsVerified": false,
+  "changedMembers": [
+    "package/package.json",
+    "package/src/generated/compatibility-version.json",
+    "package/src/lib/windows-runtime-private-record.ts"
+  ],
+  "guardCases": [
+    {
+      "name": "canonical-local-drive",
+      "before": false,
+      "after": true
+    },
+    {
+      "name": "ordinary-equivalent",
+      "before": true,
+      "after": true
+    },
+    {
+      "name": "extended-UNC",
+      "before": false,
+      "after": false
+    },
+    {
+      "name": "device-namespace",
+      "before": false,
+      "after": false
+    },
+    {
+      "name": "drive-relative",
+      "before": false,
+      "after": false
+    },
+    {
+      "name": "parent-traversal",
+      "before": false,
+      "after": false
+    },
+    {
+      "name": "alternate-stream",
+      "before": false,
+      "after": false
+    },
+    {
+      "name": "trailing-space",
+      "before": false,
+      "after": false
+    },
+    {
+      "name": "reserved-name",
+      "before": false,
+      "after": false
+    }
+  ],
+  "sourceDriftRejected": true,
+  "repeatedPatchRejected": true,
+  "nativeCheckBodiesUnchanged": true,
+  "compatibilityPresentMembersVerified": true,
+  "beforeMemberSha256": "7ccc32253a043b79b0d87ddb73fc9a5792ee3e5d068857e2b3852e1d3230fb71",
+  "afterMemberSha256": "3f60a3fde9689a10353bb085cfd824d8156b816f30e6c53ebc651489baa001a4"
+}

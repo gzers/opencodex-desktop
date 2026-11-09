@@ -1,6 +1,11 @@
 # Windows Git协作任务：0.2.23
 
-## 当前优先入口：新诊断源码的user1单次验证（2026-11-09）
+## 当前优先入口：lifecycle.3路径修复后单次user1（2026-11-09）
+
+按[路径修复交接](0.2.23-contracts/user1-record-path-fix-handoff-20261109.md)执行。代码d3b34a234e32b63365672052772c2c72c719f97c；新运行包2.97.0-desktop023.lifecycle.3，SHA256 ec14baaee354c6729d1d2545ab9165d207b14a3a4239f354662163087eeb0739。先构建新同源Desktop，再只运行一次user1启动／成功后正常Stop／清理，四项证据独立Git回交。旧a4ab/lifecycle.2包不含路径修复。第18项不先独立修，不派core-sweep／双SID／安装器或发布。
+
+
+## 前序输出诊断入口（已回交，保留来源）
 
 先读[新输出诊断交接](0.2.23-contracts/user1-output-diagnostic-handoff-20261109.md)。代码a4abf17aa7aa2b9f677c20aa3d30cda59deed5b4已补脱敏诊断，Windows需先构建新同源程序再仅执行一次user1；旧8445/artifact13667461176不含补丁，不再作为下一次运行输入。运行包lifecycle.2不变，四项原证据及startup_output固定摘要一起Git回交。Mac不派core，第18项不单修，不发布。
 

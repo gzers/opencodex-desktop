@@ -1,0 +1,66 @@
+{
+  "accepted": false,
+  "evidenceCommit": "4712139d6",
+  "verifiedManifestEntries": 73,
+  "archiveSha256": "c02f4710496775d8f4dfe271bd90d6afdf7dbf960f6e696637271ab9f37bc70b",
+  "sourceMemberSha256": "7ccc32253a043b79b0d87ddb73fc9a5792ee3e5d068857e2b3852e1d3230fb71",
+  "method": "Exact pure validator with TypeScript annotations removed; Windows path semantics from node:path.win32; no OS/FFI/service execution",
+  "cases": [
+    {
+      "name": "actual-canonical-home",
+      "current": false,
+      "candidate": true,
+      "expected": true
+    },
+    {
+      "name": "normal-DOS-equivalent",
+      "current": true,
+      "candidate": true,
+      "expected": true
+    },
+    {
+      "name": "extended-UNC",
+      "current": false,
+      "candidate": false,
+      "expected": false
+    },
+    {
+      "name": "device",
+      "current": false,
+      "candidate": false,
+      "expected": false
+    },
+    {
+      "name": "drive-relative",
+      "current": false,
+      "candidate": false,
+      "expected": false
+    },
+    {
+      "name": "parent-traversal",
+      "current": false,
+      "candidate": false,
+      "expected": false
+    },
+    {
+      "name": "alternate-stream",
+      "current": false,
+      "candidate": false,
+      "expected": false
+    },
+    {
+      "name": "trailing-space",
+      "current": false,
+      "candidate": false,
+      "expected": false
+    },
+    {
+      "name": "reserved-name",
+      "current": false,
+      "candidate": false,
+      "expected": false
+    }
+  ],
+  "candidateGuardExpression": "(path.startsWith(String.fromCharCode(92,92,63,92))&&!/^[A-Za-z]:\\\\/.test(path.slice(4)))",
+  "productSourceChanged": false
+}

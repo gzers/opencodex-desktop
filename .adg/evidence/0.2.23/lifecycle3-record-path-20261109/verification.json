@@ -1,0 +1,79 @@
+{
+  "accepted": false,
+  "releaseAccepted": false,
+  "source": "d3b34a234e32b63365672052772c2c72c719f97c",
+  "priorRuntime": "2.97.0-desktop023.lifecycle.2",
+  "runtimeVersion": "2.97.0-desktop023.lifecycle.3",
+  "runtimeArchive": "opencodex-2.97.0-desktop023.lifecycle.3.tgz",
+  "runtimeSha256": "ec14baaee354c6729d1d2545ab9165d207b14a3a4239f354662163087eeb0739",
+  "runtimeBytes": 15413397,
+  "reproducibility": {
+    "builds": 2,
+    "equalBytes": true,
+    "sha256": [
+      "ec14baaee354c6729d1d2545ab9165d207b14a3a4239f354662163087eeb0739",
+      "ec14baaee354c6729d1d2545ab9165d207b14a3a4239f354662163087eeb0739"
+    ],
+    "gzipMtime": 0,
+    "tarMtime": 0,
+    "tarOwner": "0:0",
+    "order": "sorted-path",
+    "format": "pax"
+  },
+  "evidenceBase": {
+    "docsCommit": "4712139d6",
+    "batch": "ocxu1-20261109-205318",
+    "verifiedManifestEntries": 73,
+    "mismatches": 0,
+    "observedFailure": "private-record common refusal, actual HOME uses extended local drive path"
+  },
+  "actualFix": "Accept only the canonical extended local drive namespace in the private runtime record path guard; keep supplied bytes and native publication controls",
+  "verificationScope": "Exact old/new archived predicate executed using node:path.win32; canonical source builds and metadata/lock validation; no native Windows run",
+  "checks": {
+    "archiveChangedSourceMembers": 1,
+    "pathCases": 9,
+    "sourceDriftRejected": true,
+    "repeatedPatchRejected": true,
+    "stageUnitTestsPassed": 5,
+    "collectorUnitTestsPassed": 2,
+    "powershell7Ast": "pass",
+    "policyAndLockIdentity": "pass"
+  },
+  "sourceFiles": [
+    {
+      "path": ".github/maintained-runtime.json",
+      "sha256": "2f92500efe59cb416463df91d500c5f086287787b448cea28684675817b9d8e7"
+    },
+    {
+      "path": ".github/runtime-platforms-023.json",
+      "sha256": "420dafee47819ad5bd4a3f4b37676d44e0ff79f0e9454a44bf816f89b52dcb20"
+    },
+    {
+      "path": ".github/scripts/build_runtime_lifecycle_023.py",
+      "sha256": "efb1000bc98e45b07bedd3ffab77c4117133a47ce07335cdcad7202cf718638a"
+    },
+    {
+      "path": ".github/scripts/runtime_record_path_023.py",
+      "sha256": "ee5e3a667f475510548c8c99787b44e01e4da3bfcbccd512eef5ae6fd44b48b7"
+    },
+    {
+      "path": "test/smoke/verify_runtime_record_path_023.py",
+      "sha256": "2cf0d2b50eb9995e76ae11944f8edcc930c7366db253d71c1625b17f710955d7"
+    },
+    {
+      "path": "test/smoke/windows023-user1-evidence.py",
+      "sha256": "1bd807fbbed058f02aae1962532174b802ff4fa9464be705e2aba99dc4123989"
+    },
+    {
+      "path": "test/smoke/windows023-user1-start-stop.ps1",
+      "sha256": "c8e4710068d0b3085068218c5c9b4cfcdf688627e679aa256da8697415d331f6"
+    }
+  ],
+  "windowsNativeStatus": "pending one user1 new-source/new-runtime build and run; no core-sweep dispatched",
+  "preserved": "Previous candidates, failed rounds, security/health/Stop assertions, budgets and daily configuration",
+  "item18": "No independent cleanup fix; historical failure not closed",
+  "runtimeInheritedMissingCompatibilityMembers": [
+    "bun.lock",
+    "scripts/model-metadata.source.json"
+  ]
+}

@@ -138,3 +138,8 @@ Windows R1代码及证据已集成；此前入口未随代码批次更新，已�
 ## 2026-11-09 user1回交审核后补输出诊断
 
 已收到d4497d3ed/doc与dc919da84/test回交，实际产品exit1发生在确认结束前；归属stage仍未知。用户同意后Mac只补脱敏输出诊断并做隔离回归，代码a4abf17aa7aa2b9f677c20aa3d30cda59deed5b4。Windows下一动作以[新交接](0.2.23-contracts/user1-output-diagnostic-handoff-20261109.md)为准：先准备同源新Desktop程序，再一轮user1启动／成功后正常Stop／清理，四项及固定输出摘要独立Git回交。旧产物不能运行新诊断；不得默认core-sweep、双SID或安装器。Mac不冒称已派／已收到执行，第18项暂缓，未发布。
+
+
+## 2026-11-09 维护包路径修复交Windows单用户验证
+
+4712139d6回交已核对73条manifest，输出完整但private-record公共拒绝；真实规范HOME被原guard直接拒绝，已用实际归档复现。用户采用修复后，Mac完成lifecycle.3重建、9路径回归和policy/锁定摘要更新；代码d3b34a234e32b63365672052772c2c72c719f97c。下一动作唯一来源为[路径修复交接](0.2.23-contracts/user1-record-path-fix-handoff-20261109.md)：Windows先构建新产物，再一次user1启动与成功后Stop、清理，四项原证据回交。无第二账户、core-sweep、安装器、全量或发布；第18项暂缓，旧失败保留。仅Git交付已准备，不推定Windows已执行。
