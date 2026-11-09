@@ -132,11 +132,11 @@ async fn process_action_uses_controlled_context() {
         None,
     )
     .expect("fixture context should execute");
-    assert_eq!(result.lifecycle_state, ProcessLifecycleState::Starting);
+    assert_eq!(result.lifecycle_state, ProcessLifecycleState::Running);
     assert_eq!(result.result, Some(LifecycleResult::Started));
     assert!(!result.can_start);
-    assert!(!result.can_stop);
-    assert!(!result.can_restart);
+    assert!(result.can_stop);
+    assert!(result.can_restart);
 }
 
 // ---- 真实通知生产者（FZ-43 / 领域模型 §16.1）----
