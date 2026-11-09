@@ -462,3 +462,18 @@ foreign-job替换轮42567013704完成，原129105字节ZIP/SHA256f68c4a1b1577ae0
 archive读回42566611523失败于构建前patchSHA断言，后续native未执行。原3364字节ZIP/SHA2561ab8b6803a66cf0cfa109ae0dd0316085af412d1b9685ee4597f2852f09f65c9与candidate-build.log保留，stage清理步骤成功。新patch/helper缺失既有维护patch的LF属性；b4dd038e8集中补.gitattributes两路径、gitapply显式core.autocrlf=false、Path.as_posix枚举。实际core.autocrlf=true临时Gitcheckout后原SHA不变，本机再次双重规范build仍33887e71；没有放宽SHA或原生判据，临时Gitfixture已清理。
 
 替换[run42573713909](https://github.com/gzers/opencodex-desktop/actions/runs/42573713909)固定b4dd038e88b757fa2f96efafbf49a09b964a1caf/job129016639100已确认执行；原归档读回、原子失败保留、私有Job/七绑定反例和全部原3case仍必需，accepted:false，不是完整sweep或生产包替换。两条已终止技术轮各自结果先完整呈现并集中修复，不以新成功覆盖旧失败。
+
+
+LF修复替换轮42573713909完成，[原12613字节ZIP及结果](../../.adg/evidence/0.2.23/record-archive-lf-fixed-42573713909/analysis.json)SHA256cf0bcbed8f338064a6df3be874151f41c37cd17888e1d420be98ea7c89475d87核验。Windows两次重建的record-prototype归档SHA与Mac33887e710fad9d5ae78eb4f85c6d02f7da0d413238437a65033b5a79fba168e4完全一致，直接用实际archive内atomic入口写记录，原Desktopvalidator通过；forced-beforeRename旧字节保留且本次temp清理，无任何prototypeFailures，strictClippy/fixture及stage清理成功。原writer仍owner-mismatch，私有Job/七绑定/旧nativecase全部继续过，仍accepted:false、productionpin不变，原42566611523失败保留，不当作GUI/实际Stop或正式制品通过。
+
+ff1b7e637扩展实际候选生命周期模块。服务自身在派生前加入Global私有Job、真实PID/FILETIME、TokenUser/protectedACE读回；本H排他bytelease绑定文件volume/index，严格重解析祖先检查并保留no-share-delete目录/文件句柄到进程退出，没有任意提前release或kill-on-close。H/SID/PID/FILETIME/Job/代次/leaseVolume/leaseIndex纳入固定9字段tupleHMAC，8字段篡改拒绝。该模块仍仅test候选，独立stage新增文件有单独SHA，原运行包字节不改。
+
+[run42574893853](https://github.com/gzers/opencodex-desktop/actions/runs/42574893853)固定ff1b7e6371a876d764e56df60def57edb765ea7c/job129020286993已确认执行，原native2case、自挂接2case、实际candidate模块2case共6个独立收错，原归档/owner/原子失败保留检查保留。Rustfmt/Node语法/Bun模块构建/实际3PowerShell块通过，候选API清单与无控制字符重验完成；测试inventory初次脚本换行转义出错后已纠正重验，不使用其空结果。仍非官方start/真实server attestation/官方还原/跨SID整体生命周期；未删除全机扫描，未派全量sweep或发布。
+
+
+独立Rust协议消费者已准备，源码test/smoke/windows023-lifetime-binding.rs仅由测试引用，未注册生产Stop权限。固定9字段tuple，复核本H/SID/PID/FILETIME与SID/H派生Job名称，再验证TypeScript候选证明；8字段/key/challenge/port变化拒绝。小型Mac隔离crate实际读取Node tuple证明与全部反例通过，strictClippy过，编译target已移除；只证明协议编码一致，缓存依赖解析不冒充Desktop锁定workspace或原生Windows验收，见[范围回执](../../.adg/evidence/0.2.23/lifetime-protocol-reader-20261109/local-verification.json)。
+
+当前ff1候选轮42574893853仍live未重启，消费者接入尚未派新轮。下一轮将由实际Windows项目同一测试读取真实candidate模块service-ready/证明，原文件owner验证与6case继续独立收错；生产names.2及扫描未改。合成challenge已使用32字节正规base64url，避免非法尾位测试串干扰Rust严格解码；协议和真实密钥规则不放宽。
+
+
+d3a3b6542下一批集中补反例（源码已推，当前ff1轮不变、未重启）：候选Home保留supplied祖先链、拒绝reparse后再用canonical身份；第二个真实自有候选进程在同H原租约持有时须typed lease-busy，原服务退出但子仍活时须typed controlled-set-not-empty，不能取得启动权限。独立Rust读取实际候选TS协议并拒绝8字段/key/challenge/port的消费者接入也同批保留；无终止、owner修复或预算变化。Node语法/Bun build/Rustfmt和实际3PowerShell块通过，实际ff1全部case结果先收齐再修，不以源码准备当验收。
