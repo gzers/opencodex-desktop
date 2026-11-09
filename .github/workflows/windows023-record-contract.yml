@@ -73,7 +73,7 @@ jobs:
           $env:OCXD_RECORD_PROBE_ARCHIVE_PACKAGE=Join-Path $archiveCandidate 'package'
           if('${{ inputs.producer }}' -ceq 'true'){
             $producer=Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'lifetime-producer-package'
-            python test/smoke/stage-runtime-lifetime-candidate.py $env:OCXD_RECORD_PROBE_ARCHIVE_PACKAGE $producer (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'lifetime-producer-source.json')
+            python test/smoke/stage-runtime-lifetime-candidate.py $env:OCXD_RECORD_PROBE_ARCHIVE_PACKAGE $producer (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'lifetime-producer-source.json') $env:OCXD_RECORD_PROBE_PACKAGE
             if($LASTEXITCODE -ne 0){throw 'Exact isolated producer hooks failed to stage'}
             $env:OCXD_PRODUCER_PROBE_PACKAGE=$producer
           }

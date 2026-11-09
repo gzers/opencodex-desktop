@@ -17,9 +17,10 @@ writeFileSync(join(client,'config.toml'),'model_provider = "openai"\n');
 writeFileSync(join(home,'config.json'),JSON.stringify({hostname:'127.0.0.1',port:0,openaiProviderTierVersion:2,defaultProvider:'producer-fixture',defaultModelAliases:false,providers:{'producer-fixture':{adapter:'openai-chat',baseUrl:'http://127.0.0.1:1/v1',allowPrivateNetwork:true,apiKey:'synthetic-unused',models:['producer-fixture-model'],selectedModels:['producer-fixture-model'],liveModels:false,defaultAliases:false}}}));
 const expectedVersion=JSON.parse(readFileSync(join(runtime,'package.json'),'utf8')).version;
 const osEnvironment=Object.fromEntries(Object.entries(process.env).filter(([key])=>['systemroot','windir','comspec','path','pathext','temp','tmp','github_actions'].includes(key.toLowerCase())));
-const env={...osEnvironment,HOME:profile,USERPROFILE:profile,APPDATA:join(profile,'AppData/Roaming'),LOCALAPPDATA:join(profile,'AppData/Local'),OPENCODEX_HOME:home,CODEX_HOME:client,CLAUDE_CONFIG_DIR:join(profile,'.claude'),OCX_OWNER_REGISTRY_DIR:join(home,'owner-registry-fixture'),CI:'1',OCX_NO_DESKTOP_HANDOFF:'1'};
+const tracePath=join(root,'lifecycle-trace.jsonl');
+const env={...osEnvironment,OCXD_CANDIDATE_TRACE_FILE:tracePath,HOME:profile,USERPROFILE:profile,APPDATA:join(profile,'AppData/Roaming'),LOCALAPPDATA:join(profile,'AppData/Local'),OPENCODEX_HOME:home,CODEX_HOME:client,CLAUDE_CONFIG_DIR:join(profile,'.claude'),OCX_OWNER_REGISTRY_DIR:join(home,'owner-registry-fixture'),CI:'1',OCX_NO_DESKTOP_HANDOFF:'1'};
 delete env.OCX_SERVICE;delete env.OCX_SERVICE_MANAGED;delete env.OPENCODEX_API_AUTH_TOKEN;
-const child=Bun.spawn([process.execPath,'--no-env-file',join(runtime,'src/cli/index.ts'),'start'],{env,cwd:root,stdin:'ignore',stdout:'ignore',stderr:'ignore'});
+const child=Bun.spawn([process.execPath,'--no-env-file','--no-install',join(runtime,'src/cli/index.ts'),'start'],{env,cwd:root,stdin:'ignore',stdout:'ignore',stderr:'ignore'});
 child.unref();
 const report={accepted:false,diagnosticOnly:true,source:process.env.GITHUB_SHA,producerVersion:expectedVersion,syntheticOnly:true,inferenceRequests:0,businessSyncRequests:0,actualCandidateCliStarted:true,startWithin30000:false,recordAndHealthAttestation:false,lifetimeResponseProof:false,officialStopWithin10000:false,officialClientRestoreConfirmed:false,originalProcessExit:false,controlledSetEmpty:false,leaseUnheld:false,recordAbsent:false,fixtureSafeToRemove:false};
 const readRecord=()=>{const b=readFileSync(join(home,'runtime-port.json'));assert(b.length<=8192);return {bytes:b,value:JSON.parse(b)};};
@@ -84,6 +85,9 @@ try{
 }catch(error){report.errorStage=stage;report.requestPhase=requestPhase;report.errorType=error?.constructor?.name??'unknown';report.errorCode=error?.code??null;process.exitCode=1;}
 finally{
  if(socket)socket.destroy();if(library){if(job!==0n)library.symbols.CloseHandle(job);library.close();}
+ if(existsSync(tracePath)){
+  try{const raw=readFileSync(tracePath);assert(raw.length<=16384);const rows=raw.toString('utf8').trim().split('\n').map(line=>JSON.parse(line));assert(rows.length<=64);const allowed=new Set(['manager-risk','manager-stop','ownership-preflight','official-teardown','native-client-restore','grok-restore']);assert(rows.every(row=>Object.keys(row).sort().join(',')==='elapsedMilliseconds,label,state'&&allowed.has(row.label)&&['begin','end','throw'].includes(row.state)&&Number.isFinite(row.elapsedMilliseconds)&&row.elapsedMilliseconds>=0));report.officialPhaseTimings=rows;}catch{report.phaseTraceInvalid=true;}
+ }
  writeFileSync(join(root,'producer-report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));
  // Unknown live instances are retained for exact owned cleanup, never killed
  // to obtain a successful Stop assertion or erased with their HOME.

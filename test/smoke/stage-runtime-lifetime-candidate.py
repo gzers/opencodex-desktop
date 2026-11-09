@@ -8,13 +8,50 @@ import sys
 
 assert os.name == 'nt' and os.environ.get('GITHUB_ACTIONS') == 'true'
 ROOT = Path(__file__).resolve().parents[2]
-original, output, report = [Path(p).resolve() for p in sys.argv[1:4]]
+assert len(sys.argv) == 5, 'Explicit frozen installed dependency source required'
+original, output, report, installed = [Path(p).resolve() for p in sys.argv[1:5]]
 boundary = Path(os.environ['RUNNER_TEMP']).resolve()
-for p in [original, output, report]:
+for p in [original, output, report, installed]:
     p.relative_to(boundary)
 assert not output.exists() and not report.exists()
 assert json.loads((original / 'package.json').read_bytes())['version'] == '2.97.0-desktop023.lifecycle.1-record-prototype'
+# A source-only archive is NOT a dependency supply proof: Bun auto-install
+# otherwise resolves missing packages from its cache/network. Copy only the
+# exact already-offline-installed dependency tree; the runtime runs --no-install.
+policy = json.loads((ROOT / '.github/runtime-platforms-023.json').read_bytes())
+assert installed.name == 'opencodex' and installed.parent.name == '@bitkyc08'
+assert json.loads((installed / 'package.json').read_bytes())['version'] == policy['runtime']['version']
+dependency_root = installed.parents[1]
+assert dependency_root.name == 'node_modules'
+for name, row in policy['packageLock']['packages'].items():
+    if not name.startswith('node_modules/') or name == 'node_modules/@bitkyc08/opencodex':
+        continue
+    declaration = dependency_root.parent / name / 'package.json'
+    if declaration.exists():
+        assert json.loads(declaration.read_bytes())['version'] == row['version'], name
+
+def dependency_inventory(root):
+    rows = []
+    for p in sorted(root.rglob('*')):
+        assert not p.is_symlink(), 'Dependency links are not accepted'
+        if p == installed or installed in p.parents:
+            continue
+        if p.is_file():
+            raw = p.read_bytes()
+            rows.append(dict(path=p.relative_to(root).as_posix(), bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest()))
+    assert rows and len(rows) < 100000 and sum(r['bytes'] for r in rows) < 1024**3
+    return rows
+
+supplied_dependencies = dependency_inventory(dependency_root)
 shutil.copytree(original, output)
+assert not (output / 'node_modules').exists()
+# Skip the original runtime package only; all supplied dependencies are retained.
+shutil.copytree(dependency_root, output / 'node_modules',
+                ignore=lambda path, names: ['opencodex'] if Path(path).resolve() == installed.parent else [])
+assert dependency_inventory(dependency_root) == supplied_dependencies
+candidate_dependencies = dependency_inventory(output / 'node_modules')
+assert candidate_dependencies == supplied_dependencies, 'Copied dependency bytes differ'
+
 before = {}
 changed = {}
 
@@ -39,6 +76,11 @@ helper = 'src/lib/windows-runtime-lifetime.ts'
 assert not (output / helper).exists()
 (output / helper).write_bytes((ROOT / 'test/smoke/runtime023-windows-runtime-lifetime.ts').read_bytes())
 changed[helper] = hashlib.sha256((output / helper).read_bytes()).hexdigest()
+trace_helper = 'src/lib/desktop-lifecycle-trace.ts'
+assert not (output / trace_helper).exists()
+(output / trace_helper).write_bytes((ROOT / 'test/smoke/runtime023-lifecycle-trace.ts').read_bytes())
+changed[trace_helper] = hashlib.sha256((output / trace_helper).read_bytes()).hexdigest()
+
 
 
 def cli(text):
@@ -68,6 +110,31 @@ def health(text):
 update('src/cli/index.ts', cli)
 update('src/config/process-state.ts', state)
 update('src/server/index/serve-options.ts', health)
+
+
+def management(text):
+    text = 'import { traceSync, traceAsync } from "../lib/desktop-lifecycle-trace";\n' + text
+    text = replace_one(text, 'installedServiceRespawnRisk();',
+                       'traceSync("manager-risk", () => installedServiceRespawnRisk());')
+    text = replace_one(text, 'const refusal = preflightStopTeardownOwnership();',
+                       'const refusal = traceSync("ownership-preflight", () => preflightStopTeardownOwnership());')
+    text = replace_one(text, 'serviceStop = sibling ? "absent" : stopServiceIfInstalledDetailed();',
+                       'serviceStop = sibling ? "absent" : traceSync("manager-stop", () => stopServiceIfInstalledDetailed());')
+    return replace_one(text, 'const teardown = await performStopTeardown(url, { ownsReceipt: deferralMatchesReceipt });',
+                       'const teardown = await traceAsync("official-teardown", () => performStopTeardown(url, { ownsReceipt: deferralMatchesReceipt }));')
+
+
+def teardown(text):
+    text = 'import { traceSync, traceAsync } from "../lib/desktop-lifecycle-trace";\n' + text
+    text = replace_one(text, 'await (await import("../codex/inject")).restoreNativeCodexAsync(options);',
+                       'await traceAsync("native-client-restore", async () => (await import("../codex/inject")).restoreNativeCodexAsync(options));')
+    return replace_one(text, 'grok = guard.run(() => strip());',
+                       'grok = traceSync("grok-restore", () => guard.run(() => strip()));')
+
+
+update('src/server/management-api.ts', management)
+update('src/server/stop-teardown.ts', teardown)
+
 package = json.loads((output / 'package.json').read_bytes())
 package['desktop023LifetimeProducerPrototype'] = dict(candidateOnly=True, userAdopted='2026-11-09', source=os.environ.get('GITHUB_SHA'), files=changed, limits='Not released; Desktop Stop consumer and official restore/foreign-user lifecycle still required.')
 (output / 'package.json').write_bytes((json.dumps(package, indent=2, ensure_ascii=False)+'\n').encode())
@@ -81,5 +148,6 @@ compatibility_path.write_bytes((json.dumps(compatibility, indent=2, ensure_ascii
 with report.open('x', encoding='utf-8') as stream:
     json.dump(dict(accepted=False, diagnosticOnly=True, candidateOnly=True, originalUnmodified=True,
                    originalSourcePreimages=before, candidateSourcePostimages=changed,
+                   dependencies=dict(source='exact frozen offline bundle', autoInstallDisabled=True, count=len(supplied_dependencies), bytes=sum(r['bytes'] for r in supplied_dependencies), inventorySha256=hashlib.sha256(json.dumps(supplied_dependencies,sort_keys=True,separators=(',', ':')).encode()).hexdigest(), originalUnchanged=True, candidateBytesEqual=True),
                    source=os.environ.get('GITHUB_SHA'), productionPinsChanged=False,
-                   scope='Separate disposable producer clone: acquire native lifetime before handleStart side effects; append private binding to record; add per-challenge proof header on original normal health handler. No Stop/client restore code changed.'), stream, indent=2)
+                   scope='Separate disposable producer clone: acquire native lifetime before handleStart side effects; append private binding to record; add per-challenge proof header on original normal health handler. Fixed-label monotonic trace observes original manager/restore calls; no verdict, guard or client restore body changed.'), stream, indent=2)
