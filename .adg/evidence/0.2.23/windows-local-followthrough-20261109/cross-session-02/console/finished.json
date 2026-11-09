@@ -1,0 +1,371 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "role": "console",
+  "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+  "sessionId": 1,
+  "harnessToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 71748,
+    "executable": "D:\\ocxu1-20261109-191803\\powershell\\pwsh.exe",
+    "creationTimeUtc": "2026-11-09T16:40:08.9416328Z",
+    "elevated": true,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-09T16:40:09.7139890Z"
+  },
+  "source": "4d783585645206c52b49bce8656475d26940c1d7",
+  "sandbox": true,
+  "productionUserRootVerified": false,
+  "dailyClientDirectoriesUsed": false,
+  "cleanup": "tracked-generations-exited",
+  "manager": {
+    "pid": 69764,
+    "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+    "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\program\\opencodex-desktop.exe",
+    "creationTicks": "639298393293685780",
+    "sessionId": 1,
+    "generationSource": "retained-handle-native-filetime",
+    "cimImageSupplied": true
+  },
+  "applicationToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 69764,
+    "executable": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\program\\opencodex-desktop.exe",
+    "creationTimeUtc": "2026-11-09T16:42:09.3685780Z",
+    "elevated": true,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-09T16:42:10.7862984Z"
+  },
+  "result": "diagnostic-complete",
+  "dailyConfigBytesUnchanged": true,
+  "cleanupReceipts": [
+    {
+      "identity": {
+        "pid": 27884,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\program\\runtime\\node\\node.exe",
+        "creationTicks": "639298395272865265",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    },
+    {
+      "identity": {
+        "pid": 19544,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\program\\runtime\\node\\node.exe",
+        "creationTicks": "639298395053164291",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    },
+    {
+      "identity": {
+        "pid": 84348,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\program\\runtime\\node\\node.exe",
+        "creationTicks": "639298394483012153",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    },
+    {
+      "identity": {
+        "pid": 42580,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\program\\runtime\\node\\node.exe",
+        "creationTicks": "639298394058823543",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    },
+    {
+      "identity": {
+        "pid": 94072,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\program\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+        "creationTicks": "639298393462792772",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    },
+    {
+      "identity": {
+        "pid": 89288,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\program\\runtime\\node\\node.exe",
+        "creationTicks": "639298393461820692",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    },
+    {
+      "identity": {
+        "pid": 91572,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "C:\\Windows\\System32\\conhost.exe",
+        "creationTicks": "639298393461145442",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    },
+    {
+      "identity": {
+        "pid": 99948,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "C:\\Windows\\System32\\cmd.exe",
+        "creationTicks": "639298393460896909",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    },
+    {
+      "identity": {
+        "pid": 51628,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\program\\runtime\\node\\node.exe",
+        "creationTicks": "639298393446202449",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    },
+    {
+      "identity": {
+        "pid": 76764,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\program\\runtime\\node\\node.exe",
+        "creationTicks": "639298393308237651",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    },
+    {
+      "identity": {
+        "pid": 75328,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+        "creationTicks": "639298393298540674",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "exact-owned-cleanup"
+    },
+    {
+      "identity": {
+        "pid": 22080,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+        "creationTicks": "639298393298532577",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "exact-owned-cleanup"
+    },
+    {
+      "identity": {
+        "pid": 104552,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+        "creationTicks": "639298393297382007",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "exact-owned-cleanup"
+    },
+    {
+      "identity": {
+        "pid": 95736,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+        "creationTicks": "639298393297357410",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "exact-owned-cleanup"
+    },
+    {
+      "identity": {
+        "pid": 20672,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+        "creationTicks": "639298393295035303",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "exact-owned-cleanup"
+    },
+    {
+      "identity": {
+        "pid": 67568,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+        "creationTicks": "639298393294805445",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "exact-owned-cleanup"
+    },
+    {
+      "identity": {
+        "pid": 81796,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "C:\\Windows\\System32\\conhost.exe",
+        "creationTicks": "639298393293734191",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "exact-owned-cleanup"
+    },
+    {
+      "identity": {
+        "pid": 69764,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\program\\opencodex-desktop.exe",
+        "creationTicks": "639298393293685780",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "exact-owned-cleanup"
+    },
+    {
+      "identity": {
+        "pid": 7736,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\stop-phase-build\\fixture-build\\tool\\ocxd-local-provision.exe",
+        "creationTicks": "639298392317403697",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    },
+    {
+      "identity": {
+        "pid": 105960,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+        "creationTicks": "639298392111508943",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    },
+    {
+      "identity": {
+        "pid": 97320,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+        "creationTicks": "639298392110854831",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    },
+    {
+      "identity": {
+        "pid": 80452,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+        "creationTicks": "639298392110669629",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    },
+    {
+      "identity": {
+        "pid": 53116,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+        "creationTicks": "639298392110648538",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    },
+    {
+      "identity": {
+        "pid": 75996,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+        "creationTicks": "639298392109868076",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    },
+    {
+      "identity": {
+        "pid": 61904,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+        "creationTicks": "639298392109714838",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    },
+    {
+      "identity": {
+        "pid": 40108,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "C:\\Windows\\System32\\conhost.exe",
+        "creationTicks": "639298392108854312",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    },
+    {
+      "identity": {
+        "pid": 59336,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\program\\opencodex-desktop.exe",
+        "creationTicks": "639298392108752687",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "result": "original-exited"
+    }
+  ],
+  "managerExitCode": -1,
+  "privateFixtureRemoved": true
+}

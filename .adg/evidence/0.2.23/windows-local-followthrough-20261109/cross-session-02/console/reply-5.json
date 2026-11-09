@@ -1,0 +1,75 @@
+{
+  "managerAfter": {
+    "pid": 69764,
+    "handle": "3803912",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T16:45:41.3536129Z"
+  },
+  "sessionId": 1,
+  "runtimeIdentity": null,
+  "accepted": false,
+  "value": {
+    "exitCode": 0,
+    "receipt": {
+      "result": "pass-runtime-step",
+      "mode": "stop",
+      "home": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\data\\opencodex\\home",
+      "root": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\data\\desktop",
+      "port": 61175,
+      "before": {
+        "record": {
+          "pid": 94072,
+          "port": 61175
+        },
+        "attestation": "verified-production-challenge",
+        "healthService": "opencodex",
+        "version": "2.97.0-desktop023.lifecycle.3"
+      },
+      "action": {
+        "lifecycleState": "stopped",
+        "result": "stopped",
+        "failureCode": null,
+        "canStop": false,
+        "canRestart": false
+      },
+      "status": {
+        "runtime": "stopped",
+        "health": "unknown",
+        "source": "live",
+        "pid": null,
+        "port": 61175,
+        "protection": "none",
+        "startupStatus": "native",
+        "servicePresent": null,
+        "rebootSafe": true
+      },
+      "stopped": true,
+      "nativeClientRestoredReadback": true,
+      "stopBudget": {
+        "budgetMilliseconds": 10000,
+        "elapsedMilliseconds": 9621
+      }
+    },
+    "directory": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\stop-cbbde6e2"
+  },
+  "mode": "stop",
+  "managerBefore": {
+    "pid": 69764,
+    "handle": "3803912",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T16:45:26.1359521Z"
+  },
+  "restore": {
+    "listenerAbsent": true,
+    "ownRecordAbsent": true,
+    "clientRouteRemoved": true,
+    "passed": true,
+    "originalServiceExit": {
+      "originalHandleExited": true,
+      "exitCode": 0
+    },
+    "originalServiceGenerationExited": true
+  },
+  "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+  "runtimeToken": null
+}

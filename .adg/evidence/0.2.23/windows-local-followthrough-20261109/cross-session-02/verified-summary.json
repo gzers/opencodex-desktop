@@ -1,0 +1,240 @@
+{
+  "accepted": false,
+  "boundedCrossSessionPassed": true,
+  "hypothesis": "H-W7",
+  "source": "4d783585645206c52b49bce8656475d26940c1d7",
+  "appsTree": "d2facb41f19ce1ef6930c743460c4f00010bfc12",
+  "programBuild": "42653885333",
+  "fixtureBuild": "42653892698",
+  "sandbox": true,
+  "defaultProfileOrWholeCredentialAcceptance": false,
+  "dailyRdpAccountGroupNote": "15119 belongs to Administrators but actual app and service were medium/unlifted type3, not a non-administrator-group account",
+  "budgetsMilliseconds": {
+    "start": 30000,
+    "stop": 10000,
+    "status": 5000
+  },
+  "fixedPortConflictAndOverlapPassed": true,
+  "survivorOriginalPidPortHealthAfterNormalStop": true,
+  "priorCrossSession01FailureRootCause": "unknown; diagnostic-only code has no stop behavior change; latest pass is not evidence that prior failure cause was fixed",
+  "httpCloseHypothesis": "not established; no transport or maintained runtime change made",
+  "taskCleanup": {
+    "observedUtc": "2026-11-09T16:46:23.0844512Z",
+    "taskName": "OCXD023-cross-3e97e86b4b",
+    "scope": "Only own exact completed cross-session task and readback; no normal Stop inferred from cleanup",
+    "lastTaskResult": 0,
+    "taskRemoved": true,
+    "formerServiceProcesses": [],
+    "formerListeners": [],
+    "privateFixturesAbsent": true,
+    "finishedUtc": "2026-11-09T16:46:26.9279338Z"
+  },
+  "console": {
+    "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+    "session": 1,
+    "elevated": true,
+    "elevationType": 1,
+    "start": {
+      "budgetMilliseconds": 30000,
+      "elapsedMilliseconds": 13399
+    },
+    "stop": {
+      "budgetMilliseconds": 10000,
+      "elapsedMilliseconds": 9621
+    },
+    "record": {
+      "pid": 94072,
+      "port": 61175
+    },
+    "actualRuntimeIdentity": {
+      "pid": 94072,
+      "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+      "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\program\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+      "creationTicks": "639298393462792772",
+      "sessionId": 1,
+      "generationSource": "retained-handle-native-filetime",
+      "cimImageSupplied": true
+    },
+    "actualRuntimeToken": {
+      "schemaVersion": 1,
+      "status": "observed",
+      "processId": 94072,
+      "executable": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\program\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+      "creationTimeUtc": "2026-11-09T16:42:26.2792772Z",
+      "elevated": true,
+      "elevationType": 1,
+      "collectedAtUtc": "2026-11-09T16:42:44.9083400Z"
+    },
+    "allActionReceipts": [
+      {
+        "path": "console/start-d816243c/action.raw.json",
+        "raw": "{\"lifecycleState\":\"running\",\"result\":\"started\",\"canStart\":false,\"canStop\":true,\"canRestart\":true}",
+        "result": "started",
+        "failure": null
+      },
+      {
+        "path": "console/stop-cbbde6e2/action.raw.json",
+        "raw": "{\"lifecycleState\":\"stopped\",\"result\":\"stopped\",\"canStart\":true,\"canStop\":false,\"canRestart\":false}",
+        "result": "stopped",
+        "failure": null
+      }
+    ],
+    "startAttemptCount": 1,
+    "successfulStartCount": 1,
+    "expectedConflictCount": 0,
+    "normalStopCount": 1,
+    "rawActionDoesNotCarryPidPort": true,
+    "pidPortConsistency": "Same action folder runtime-step authenticated protected record, actual status pid/port and native process/token; raw public action alone has no PID/port fields",
+    "pidPortConsistent": true,
+    "statusCallMilliseconds": [
+      242,
+      346,
+      244,
+      310,
+      1258
+    ],
+    "stopRestoration": {
+      "listenerAbsent": true,
+      "ownRecordAbsent": true,
+      "clientRouteRemoved": true,
+      "passed": true,
+      "originalServiceExit": {
+        "originalHandleExited": true,
+        "exitCode": 0
+      },
+      "originalServiceGenerationExited": true
+    },
+    "originalServiceExitBeforeCleanup": {
+      "identity": {
+        "pid": 94072,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\program\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+        "creationTicks": "639298393462792772",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "exit": {
+        "originalHandleExited": true,
+        "exitCode": 0
+      }
+    },
+    "privateRemoved": true,
+    "dailyBytesUnchanged": true,
+    "accountsCreated": 0,
+    "accountProfileDeletion": "Not applicable to current existing console/RDP identities; only own Sandbox deleted"
+  },
+  "rdp": {
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+    "session": 2,
+    "elevated": false,
+    "elevationType": 3,
+    "start": {
+      "budgetMilliseconds": 30000,
+      "elapsedMilliseconds": 12692
+    },
+    "stop": {
+      "budgetMilliseconds": 10000,
+      "elapsedMilliseconds": 7862
+    },
+    "record": {
+      "pid": 24676,
+      "port": 51582
+    },
+    "actualRuntimeIdentity": {
+      "pid": 24676,
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+      "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\rdp\\private\\sandbox\\program\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+      "creationTicks": "639298394272400099",
+      "sessionId": 2,
+      "generationSource": "retained-handle-native-filetime",
+      "cimImageSupplied": true
+    },
+    "actualRuntimeToken": {
+      "schemaVersion": 1,
+      "status": "observed",
+      "processId": 24676,
+      "executable": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\rdp\\private\\sandbox\\program\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+      "creationTimeUtc": "2026-11-09T16:43:47.2400099Z",
+      "elevated": false,
+      "elevationType": 3,
+      "collectedAtUtc": "2026-11-09T16:44:05.4619889Z"
+    },
+    "allActionReceipts": [
+      {
+        "path": "rdp/conflict-96fba123/action.raw.json",
+        "raw": "{\"lifecycleState\":\"starting_failed\",\"result\":null,\"canStart\":true,\"canStop\":false,\"canRestart\":false,\"failure\":{\"code\":\"port_conflict\",\"message\":\"端口 61175 已被占用，请调整端口或重新分配\"}}",
+        "result": null,
+        "failure": "port_conflict"
+      },
+      {
+        "path": "rdp/start-7be5e08b/action.raw.json",
+        "raw": "{\"lifecycleState\":\"running\",\"result\":\"started\",\"canStart\":false,\"canStop\":true,\"canRestart\":true}",
+        "result": "started",
+        "failure": null
+      },
+      {
+        "path": "rdp/stop-a9362ca8/action.raw.json",
+        "raw": "{\"lifecycleState\":\"stopped\",\"result\":\"stopped\",\"canStart\":true,\"canStop\":false,\"canRestart\":false}",
+        "result": "stopped",
+        "failure": null
+      }
+    ],
+    "startAttemptCount": 2,
+    "successfulStartCount": 1,
+    "expectedConflictCount": 1,
+    "normalStopCount": 1,
+    "rawActionDoesNotCarryPidPort": true,
+    "pidPortConsistency": "Same action folder runtime-step authenticated protected record, actual status pid/port and native process/token; raw public action alone has no PID/port fields",
+    "pidPortConsistent": true,
+    "statusCallMilliseconds": [
+      185,
+      188,
+      1118
+    ],
+    "stopRestoration": {
+      "clientRouteRemoved": true,
+      "ownRecordAbsent": true,
+      "originalServiceGenerationExited": true,
+      "originalServiceExit": {
+        "originalHandleExited": true,
+        "exitCode": 0
+      },
+      "passed": true,
+      "listenerAbsent": true
+    },
+    "originalServiceExitBeforeCleanup": {
+      "exit": {
+        "originalHandleExited": true,
+        "exitCode": 0
+      },
+      "identity": {
+        "pid": 24676,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\rdp\\private\\sandbox\\program\\runtime\\opencodex\\node_modules\\bun\\bin\\bun.exe",
+        "creationTicks": "639298394272400099",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      }
+    },
+    "privateRemoved": true,
+    "dailyBytesUnchanged": true,
+    "accountsCreated": 0,
+    "accountProfileDeletion": "Not applicable to current existing console/RDP identities; only own Sandbox deleted"
+  },
+  "rdpFreshClientReadback": {
+    "rawContentsOmitted": true,
+    "formerPortTextPresent": false,
+    "ownFreshSandboxOnly": true,
+    "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "exists": true,
+    "opencodexProviderPresent": false,
+    "routeFieldsPresent": {
+      "openai_base_url": false,
+      "model_catalog_json": false,
+      "experimental_realtime_ws_base_url": false
+    },
+    "observedUtc": "2026-11-09T16:45:04.0254980Z"
+  }
+}

@@ -1,0 +1,6 @@
+$ErrorActionPreference='Stop'
+$b=$PSScriptRoot
+@{pid=$PID;sid=[Security.Principal.WindowsIdentity]::GetCurrent().User.Value;session=[Diagnostics.Process]::GetCurrentProcess().SessionId;startedUtc=[datetime]::UtcNow.ToString('o')}|ConvertTo-Json|Set-Content -LiteralPath (Join-Path $b 'console-task-launch.json') -Encoding utf8
+try{
+ & 'C:\Users\15119\.codex\worktrees\ocxd-023-windows-r1\code\test\smoke\windows023-current-session.ps1' -RunDirectory $b -Role console -ProgramDirectory 'D:\ocx-win-followthrough-20261109-230145\stop-phase-build\program-build\program' -ProvisionTool 'D:\ocx-win-followthrough-20261109-230145\stop-phase-build\fixture-build\tool\ocxd-local-provision.exe' -ExpectedSid 'S-1-5-21-587408064-856152790-2583328096-500' -ExpectedSessionId 1 -ExpectedSource 4d783585645206c52b49bce8656475d26940c1d7 -ExpectedBuildRun 42653885333 -ExpectedAppsTree d2facb41f19ce1ef6930c743460c4f00010bfc12
+}catch{@{message=$_.Exception.Message;line=$_.InvocationInfo.ScriptLineNumber;atUtc=[datetime]::UtcNow.ToString('o')}|ConvertTo-Json|Set-Content -LiteralPath (Join-Path $b 'console-task-failure.json') -Encoding utf8;throw}

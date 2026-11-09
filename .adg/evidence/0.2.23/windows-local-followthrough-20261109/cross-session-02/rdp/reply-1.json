@@ -1,0 +1,66 @@
+{
+  "runtimeToken": null,
+  "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+  "runtimeIdentity": null,
+  "managerBefore": {
+    "pid": 86788,
+    "handle": "10491306",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T16:42:48.5621560Z"
+  },
+  "managerAfter": {
+    "pid": 86788,
+    "handle": "10491306",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T16:43:22.3783566Z"
+  },
+  "restore": null,
+  "mode": "conflict",
+  "value": {
+    "exitCode": 0,
+    "receipt": {
+      "result": "pass-runtime-step",
+      "mode": "conflict",
+      "home": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\rdp\\private\\sandbox\\data\\opencodex\\home",
+      "root": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\rdp\\private\\sandbox\\data\\desktop",
+      "port": 61175,
+      "clientHomeFixture": {
+        "emptyDirectoryInitialized": true,
+        "configSeeded": false,
+        "catalogSeeded": false,
+        "integrationDisabled": false
+      },
+      "config": {
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\rdp\\private\\sandbox\\data\\opencodex\\home\\config.json",
+        "providers": 1,
+        "syntheticOnly": true,
+        "liveModels": false,
+        "utf8Bom": false,
+        "atomicRename": true
+      },
+      "action": {
+        "lifecycleState": "starting_failed",
+        "result": null,
+        "failureCode": "port_conflict",
+        "canStop": false,
+        "canRestart": false
+      },
+      "conflict": {
+        "rejected": true,
+        "ownedRecordAbsent": true,
+        "diagnosticMarker": true,
+        "source": "actual-process-action-port_conflict",
+        "canStop": false,
+        "canRestart": false
+      },
+      "status": {
+        "source": "actual-conflict-action-and-absent-owned-record",
+        "lifecycleState": "starting_failed",
+        "claimedRunning": false
+      }
+    },
+    "directory": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\rdp\\conflict-96fba123"
+  },
+  "accepted": false,
+  "sessionId": 2
+}

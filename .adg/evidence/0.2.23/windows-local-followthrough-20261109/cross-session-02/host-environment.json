@@ -1,0 +1,18 @@
+{
+  "timezone": "China Standard Time",
+  "programBuild": "42653885333",
+  "observedUtc": "2026-11-09T16:41:37.8193604Z",
+  "product": "Windows Server 2025 Datacenter",
+  "scope": "H-W7 fixed-phase Stop diagnosis, real console/RDP overlap, fresh Sandbox; no public failure or policy/budget changes",
+  "ubr": 33438,
+  "computer": "EZIO-MINI",
+  "fixtureRun": "42653892698",
+  "sessionLines": [
+    " USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME",
+    " administrator         console             1  Active    1+23:55  2026/10/10 9:16",
+    ">15119                 rdp-tcp#0           2  Active          1  2026/10/10 9:18",
+    " liangjh23                                 3  Disc         5:46  2026/10/10 9:55"
+  ],
+  "build": "26100",
+  "harnessCommit": "4d783585645206c52b49bce8656475d26940c1d7"
+}

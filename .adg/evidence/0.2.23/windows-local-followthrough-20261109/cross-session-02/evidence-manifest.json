@@ -1,0 +1,721 @@
+{
+  "archivedUtc": "2026-11-09T16:48:05.951811+00:00",
+  "sourceDirectory": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02",
+  "files": [
+    {
+      "path": "complete-cross-task-02.ps1",
+      "bytes": 2133,
+      "sha256": "409e1f3d57118ce269d6a3a1dfcd393c958a7e262929e12437df8e691c265ea1"
+    },
+    {
+      "path": "console/app.log",
+      "bytes": 926,
+      "sha256": "834c3011f84e31727cef5817a8ad2a737b4c1699d104179a38c470293f4bd9f7"
+    },
+    {
+      "path": "console/command-1.json",
+      "bytes": 60,
+      "sha256": "2a62e0eb03af5dc3134ac116beb8197082b5d6122e04f83186c6b6b1790f56b9"
+    },
+    {
+      "path": "console/command-2.json",
+      "bytes": 70,
+      "sha256": "aec47ea6b60f0e02c443eb0c6c9560de1e6fed499e9c580f08c0f47f50118bd9"
+    },
+    {
+      "path": "console/command-3.json",
+      "bytes": 70,
+      "sha256": "aec47ea6b60f0e02c443eb0c6c9560de1e6fed499e9c580f08c0f47f50118bd9"
+    },
+    {
+      "path": "console/command-4.json",
+      "bytes": 70,
+      "sha256": "aec47ea6b60f0e02c443eb0c6c9560de1e6fed499e9c580f08c0f47f50118bd9"
+    },
+    {
+      "path": "console/command-5.json",
+      "bytes": 67,
+      "sha256": "6821e154362ac5e99a5fbaf541b12840735e193020eff31a903318ca58b9c28e"
+    },
+    {
+      "path": "console/command-6.json",
+      "bytes": 92,
+      "sha256": "c3c34e456240bc1236fab399fb51c6b3d028058d701ee254924c62242d63a42a"
+    },
+    {
+      "path": "console/daily-config-after.json",
+      "bytes": 936,
+      "sha256": "a024e468fcca288c39f7650dd812ae059c7cb7dad8eceef28e5ac003a9f92cc2"
+    },
+    {
+      "path": "console/daily-config-before.json",
+      "bytes": 936,
+      "sha256": "a024e468fcca288c39f7650dd812ae059c7cb7dad8eceef28e5ac003a9f92cc2"
+    },
+    {
+      "path": "console/executed-code/two-user-driver.mjs",
+      "bytes": 29293,
+      "sha256": "c9b746e943d99ca1e9edc9c9a3b6a8e70932158fc2a4ce5a3f14dd7a14b0bb86"
+    },
+    {
+      "path": "console/executed-code/windows-cdp.mjs",
+      "bytes": 3493,
+      "sha256": "9426b6deed269c9000a6a242358da9aa16676675e1a4814c7a430cc124c85c60"
+    },
+    {
+      "path": "console/executed-code/windows-process-token.ps1",
+      "bytes": 6168,
+      "sha256": "2c3512b4ad51127883a8fee6a37ee53ced616fea286a9825876eec54c7c9feca"
+    },
+    {
+      "path": "console/executed-code/windows023-current-session-rpc.mjs",
+      "bytes": 4462,
+      "sha256": "9d24a5f52b5cff4cceb07ba9d10762c37bc7baef317fa8bb2fc567cdbc8dbf6e"
+    },
+    {
+      "path": "console/executed-code/windows023-current-session.ps1",
+      "bytes": 24087,
+      "sha256": "f9c2bca4c64174ad44a97d57d2524a9dc57b8447948decc35a92bf28150104de"
+    },
+    {
+      "path": "console/executed-code/windows023-two-user-native-helper.ps1",
+      "bytes": 108785,
+      "sha256": "6f0f83796e69d269811ae40f86718ab5efabfe375a4383c94d80bfcf0375909d"
+    },
+    {
+      "path": "console/finished.json",
+      "bytes": 13973,
+      "sha256": "b0d4c3dfd0e740e55db621c26915f550e55083385cd867aba086b55fc6bcc1ec"
+    },
+    {
+      "path": "console/fixture-acl.log",
+      "bytes": 153,
+      "sha256": "a675eef50f32dd0fde4612873027b7ab6e3a1f5e66d0cd6b49abdf342fa9d9df"
+    },
+    {
+      "path": "console/fixture-owner.log",
+      "bytes": 256,
+      "sha256": "3d201f50d503b7e189416ad9bd1ecfcbc7b2d57a80ad0e09b8a3fe346e74e024"
+    },
+    {
+      "path": "console/identity.json",
+      "bytes": 1463,
+      "sha256": "5496b46de76d76ccb30ead390164ddbd966d9ea179221d2627455bcd6932a148"
+    },
+    {
+      "path": "console/initialization-only.json",
+      "bytes": 1104,
+      "sha256": "5e4cebf3b08ca1d82a57cecf4bbc6e138126ea0f27839ca779d035e00d18c6bc"
+    },
+    {
+      "path": "console/manager-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "console/manager-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "console/new-fixture-owner.log",
+      "bytes": 1904,
+      "sha256": "adbb9c811ab91b0521242a3985dfce904fb705a9eda43b3bc91737f3d539da0c"
+    },
+    {
+      "path": "console/observe-017b7f24/command.json",
+      "bytes": 418,
+      "sha256": "ad0fea93c01bc27484d7e4e81c5f1831f164c867310c2d94157ec04d876ec157"
+    },
+    {
+      "path": "console/observe-017b7f24/driver-exit.json",
+      "bytes": 441,
+      "sha256": "d3019d3f779157de21a9c822bee1a9399efe026ed3d4be2e08aa4f66e4720fad"
+    },
+    {
+      "path": "console/observe-017b7f24/driver-identity-admitted",
+      "bytes": 24,
+      "sha256": "726c2bcbdc8ad2c2a61e1356533ea2c954271cef52561e966c17dc4dde019bee"
+    },
+    {
+      "path": "console/observe-017b7f24/invoke-trace.json",
+      "bytes": 1792,
+      "sha256": "5a3a100d4d0e5778cbae53fd7081dc02c30e1e85970d244542f2b60a952c39af"
+    },
+    {
+      "path": "console/observe-017b7f24/runtime-step.json",
+      "bytes": 728,
+      "sha256": "78a0b13d997d1c7b3fc4a8302067ffa75bdf9801b3fda041213a5af368fc110c"
+    },
+    {
+      "path": "console/observe-123138f6/command.json",
+      "bytes": 418,
+      "sha256": "ad0fea93c01bc27484d7e4e81c5f1831f164c867310c2d94157ec04d876ec157"
+    },
+    {
+      "path": "console/observe-123138f6/driver-exit.json",
+      "bytes": 441,
+      "sha256": "2b8cab5bc80817c83a174233ba28068c8fef1652cffa9858ee3c9d9c4313adbe"
+    },
+    {
+      "path": "console/observe-123138f6/driver-identity-admitted",
+      "bytes": 24,
+      "sha256": "726c2bcbdc8ad2c2a61e1356533ea2c954271cef52561e966c17dc4dde019bee"
+    },
+    {
+      "path": "console/observe-123138f6/invoke-trace.json",
+      "bytes": 1792,
+      "sha256": "f54069a6238ea24ce4825ec629958e0ed68460a3d4dc5466594de21d6aa264bd"
+    },
+    {
+      "path": "console/observe-123138f6/runtime-step.json",
+      "bytes": 728,
+      "sha256": "78a0b13d997d1c7b3fc4a8302067ffa75bdf9801b3fda041213a5af368fc110c"
+    },
+    {
+      "path": "console/observe-714ea2dc/command.json",
+      "bytes": 418,
+      "sha256": "ad0fea93c01bc27484d7e4e81c5f1831f164c867310c2d94157ec04d876ec157"
+    },
+    {
+      "path": "console/observe-714ea2dc/driver-exit.json",
+      "bytes": 441,
+      "sha256": "b0502782ab6bfb8d51a9c097097a428f87b9e0994eebbe78ea31e029083816b1"
+    },
+    {
+      "path": "console/observe-714ea2dc/driver-identity-admitted",
+      "bytes": 24,
+      "sha256": "726c2bcbdc8ad2c2a61e1356533ea2c954271cef52561e966c17dc4dde019bee"
+    },
+    {
+      "path": "console/observe-714ea2dc/invoke-trace.json",
+      "bytes": 1793,
+      "sha256": "5d515161eee79b2f987a0000a6a379fc9432c7a7a662be173d3156d3c1761e16"
+    },
+    {
+      "path": "console/observe-714ea2dc/runtime-step.json",
+      "bytes": 728,
+      "sha256": "78a0b13d997d1c7b3fc4a8302067ffa75bdf9801b3fda041213a5af368fc110c"
+    },
+    {
+      "path": "console/offline-provision.json",
+      "bytes": 611,
+      "sha256": "a03c9c46f7d6f2faeebbb4c1246b9be9165c116742a86896e41e6fe2a940f893"
+    },
+    {
+      "path": "console/original-exits-before-cleanup.json",
+      "bytes": 13026,
+      "sha256": "b544bbb09512c77a1813b8db1b7c999c24ba6202fae8e0a03728abf7996e5b93"
+    },
+    {
+      "path": "console/prepare-a902ae47/command.json",
+      "bytes": 410,
+      "sha256": "8b7d9d427768be62cb7097289de72ee105b680e784fd2124927f331595f0ccd7"
+    },
+    {
+      "path": "console/prepare-a902ae47/driver-exit.json",
+      "bytes": 441,
+      "sha256": "5248daebd0602109a7c038f3f51567690bb4e78721b4d6bff1e80cdd3f5e9ee6"
+    },
+    {
+      "path": "console/prepare-a902ae47/driver-identity-admitted",
+      "bytes": 24,
+      "sha256": "726c2bcbdc8ad2c2a61e1356533ea2c954271cef52561e966c17dc4dde019bee"
+    },
+    {
+      "path": "console/prepare-a902ae47/rpc-result.json",
+      "bytes": 3556,
+      "sha256": "bc2113b931a4552f79957b92412f50b9242da10e616b929896e4a603dedf2cc7"
+    },
+    {
+      "path": "console/prepare-a902ae47/screen.png",
+      "bytes": 81138,
+      "sha256": "8fb99602ca4273e75b4f6eeb1356673b980d1f903669579a0e36dcb2ae9c9bc0"
+    },
+    {
+      "path": "console/prepared.json",
+      "bytes": 3916,
+      "sha256": "e365321b595088cddb5aac68b22850d503d3a68907afd1aaf5f091e5b3cd0fb9"
+    },
+    {
+      "path": "console/ready.json",
+      "bytes": 938,
+      "sha256": "789dd0029f8612d180a29717a93d5590feb6eabc88e6234fe6606065ef95b609"
+    },
+    {
+      "path": "console/reply-1.json",
+      "bytes": 3337,
+      "sha256": "c65f55305a34ed15105fda7cb9a3fa8902357462a6aee22c3561a057bd0b89d0"
+    },
+    {
+      "path": "console/reply-2.json",
+      "bytes": 2319,
+      "sha256": "06bc3b0b8f0e74a08b6dadfc325353bc099e9328349feefe985a6347f452f05d"
+    },
+    {
+      "path": "console/reply-3.json",
+      "bytes": 2319,
+      "sha256": "0c1c51d45c55c75caa71ee2a68858960c4cf7d8f85fa5f152f988de46e62a097"
+    },
+    {
+      "path": "console/reply-4.json",
+      "bytes": 2319,
+      "sha256": "7532afb5b5f6b6763d10bec8384d67a42da263e8da65282a80308096bbb1da12"
+    },
+    {
+      "path": "console/reply-5.json",
+      "bytes": 2163,
+      "sha256": "fcfd934a21d271f130b2bac8e1e66bf106902dc1d9e50679f0a0b7e9f7422e32"
+    },
+    {
+      "path": "console/start-d816243c/action-envelope.json",
+      "bytes": 270,
+      "sha256": "bede421e602cffcbb27d9f7bdaf3276081e81916dead72b5dae7a7bfddd6f77d"
+    },
+    {
+      "path": "console/start-d816243c/action.raw.json",
+      "bytes": 97,
+      "sha256": "8e14e20d99b9604221f5fb42613844dcd25329a979a4a7986c1f31e18687cce0"
+    },
+    {
+      "path": "console/start-d816243c/command.json",
+      "bytes": 408,
+      "sha256": "51077c8e13ae423e694e92ff824c99a29a3f4b7e5335b839f080f3da49ed2cd1"
+    },
+    {
+      "path": "console/start-d816243c/driver-exit.json",
+      "bytes": 441,
+      "sha256": "9e5662e887b514a47e1bba983b26a8eae6dd7a43d2e72cc23e40fcf7e84a143a"
+    },
+    {
+      "path": "console/start-d816243c/driver-identity-admitted",
+      "bytes": 24,
+      "sha256": "726c2bcbdc8ad2c2a61e1356533ea2c954271cef52561e966c17dc4dde019bee"
+    },
+    {
+      "path": "console/start-d816243c/invoke-trace.json",
+      "bytes": 2554,
+      "sha256": "cb29cccd4e09dcecba53e67d2e79e60c1c62482803b50c27092cfd921d69360d"
+    },
+    {
+      "path": "console/start-d816243c/owned-health-observations.json",
+      "bytes": 498,
+      "sha256": "6f7a53156621b1c97142a1d829c72efa12014ae64a9f3398eaa8dc25b36f44c0"
+    },
+    {
+      "path": "console/start-d816243c/runtime-step.json",
+      "bytes": 1590,
+      "sha256": "5dd6a7164d22a92a733461a4ecc677485376fbcb3932d80c9cd393e173c5c6e7"
+    },
+    {
+      "path": "console/stop-cbbde6e2/action-envelope.json",
+      "bytes": 272,
+      "sha256": "ecc93a38c4270066c4d4a17deba6b980cfb673fe3418a4c89542750403cdc46a"
+    },
+    {
+      "path": "console/stop-cbbde6e2/action.raw.json",
+      "bytes": 98,
+      "sha256": "3c088682b9cf4537841e289e8d039915d9dd0dd0f343c17fd1a5d438abf6dd90"
+    },
+    {
+      "path": "console/stop-cbbde6e2/command.json",
+      "bytes": 415,
+      "sha256": "fcb9e1c09b3a78a40d64eff4704714332fdea1026ac906f98a9a29ea36b833a0"
+    },
+    {
+      "path": "console/stop-cbbde6e2/driver-exit.json",
+      "bytes": 441,
+      "sha256": "c7bc8a39ebf90b3f3a2fe09e899ac30ea5eaff45d8d0e49e06bbb3723219ddc5"
+    },
+    {
+      "path": "console/stop-cbbde6e2/driver-identity-admitted",
+      "bytes": 24,
+      "sha256": "726c2bcbdc8ad2c2a61e1356533ea2c954271cef52561e966c17dc4dde019bee"
+    },
+    {
+      "path": "console/stop-cbbde6e2/invoke-trace.json",
+      "bytes": 2554,
+      "sha256": "a0e183ebecb3768159c594377b99fd9a9c54e7f98383b36c8cfd3f504278a7f9"
+    },
+    {
+      "path": "console/stop-cbbde6e2/runtime-step.json",
+      "bytes": 1055,
+      "sha256": "041bdc7bd2975eb3a2d339f6a805ceb3b275bafeee2e1f7ea62860b419857d93"
+    },
+    {
+      "path": "console-launch.ps1",
+      "bytes": 1134,
+      "sha256": "ba6a6f7a1879f6c348c254d63106874c5349bee5acb5fb9d3d9bb8cfd537b4a5"
+    },
+    {
+      "path": "console-task-launch.json",
+      "bytes": 145,
+      "sha256": "4a3b5c3b5a51ff7ba5f6ac9a887a2f02575746501aa8112ad798ac50e35bfb29"
+    },
+    {
+      "path": "controller-finished.json",
+      "bytes": 3946,
+      "sha256": "c90d9239ef26a5330477ab215e08ced9ebd35e2ab0987e9afec40c3d316c4aa5"
+    },
+    {
+      "path": "controller-trace.json",
+      "bytes": 6288,
+      "sha256": "ce2d1b43102877821be667b3957bf64a11437d9179ac36e8bdbce4ae6a53f793"
+    },
+    {
+      "path": "coordinate-cross-session-02.ps1",
+      "bytes": 5655,
+      "sha256": "5795cdcb727f47d09dfbeb031f51b23e9719eb42bba180e64ab618e1ead59868"
+    },
+    {
+      "path": "core-build.json",
+      "bytes": 1929,
+      "sha256": "e0cdd55f75ac6b6f7d38be7543399ecbade9cc4c0cff28c4e57b9ec9df0ef6c2"
+    },
+    {
+      "path": "fixture-build.json",
+      "bytes": 486,
+      "sha256": "f9a584a7849202b657db45dec7e3a842d04f68dea8214ff9907823dd776a4512"
+    },
+    {
+      "path": "host-environment.json",
+      "bytes": 846,
+      "sha256": "1dbbe8a7fe15f716ba0488de8018146468ff9a7d3a4d384226499493a4d9ea28"
+    },
+    {
+      "path": "rdp/app.log",
+      "bytes": 1093,
+      "sha256": "b1396d5e63b31c7250790f3fe6b566cec0dac52ae4b932c1fe5789921055cb89"
+    },
+    {
+      "path": "rdp/command-1.json",
+      "bytes": 71,
+      "sha256": "6614334e5995bbe876af6ca536147220160d182faf796311f1d601e360055f6e"
+    },
+    {
+      "path": "rdp/command-2.json",
+      "bytes": 60,
+      "sha256": "2a62e0eb03af5dc3134ac116beb8197082b5d6122e04f83186c6b6b1790f56b9"
+    },
+    {
+      "path": "rdp/command-3.json",
+      "bytes": 70,
+      "sha256": "862d66f71285b377f9e87c4f452d074b735a0428b99542a0edabc6487807b660"
+    },
+    {
+      "path": "rdp/command-4.json",
+      "bytes": 67,
+      "sha256": "e8c6ea013460b7a7e4f22410a096ba0523af56c93ede25175ae789a68f395786"
+    },
+    {
+      "path": "rdp/command-5.json",
+      "bytes": 92,
+      "sha256": "c3c34e456240bc1236fab399fb51c6b3d028058d701ee254924c62242d63a42a"
+    },
+    {
+      "path": "rdp/conflict-96fba123/action-envelope.json",
+      "bytes": 525,
+      "sha256": "f1ba64db4952422b369dd5c7f915ffaae1a7ee800a7bd03e960ac89d5c625d45"
+    },
+    {
+      "path": "rdp/conflict-96fba123/action.raw.json",
+      "bytes": 207,
+      "sha256": "20dbfa3dcf6213d6ad1ee1bc25fae20988b51d0a637fac6541a3ebf5dc02ed83"
+    },
+    {
+      "path": "rdp/conflict-96fba123/command.json",
+      "bytes": 407,
+      "sha256": "cab1d29c9238b643dce0162d2de811a3a6aa09cc2d14cb5d039bd1f9fbf17b41"
+    },
+    {
+      "path": "rdp/conflict-96fba123/driver-exit.json",
+      "bytes": 438,
+      "sha256": "5255dcb9b90101a57c9a438f9980a75c1cda49b3bc50ee0f81790a0b97d53d98"
+    },
+    {
+      "path": "rdp/conflict-96fba123/driver-identity-admitted",
+      "bytes": 24,
+      "sha256": "726c2bcbdc8ad2c2a61e1356533ea2c954271cef52561e966c17dc4dde019bee"
+    },
+    {
+      "path": "rdp/conflict-96fba123/invoke-trace.json",
+      "bytes": 1787,
+      "sha256": "9c4838090f4e9ffa37a225495f8206e3a1e84f71b025fd4528e4369b67d0df79"
+    },
+    {
+      "path": "rdp/conflict-96fba123/runtime-step.json",
+      "bytes": 1251,
+      "sha256": "f5a006206705fe7811c96bd4c79653e2c91f104a91bd7d2e6387bcab77051427"
+    },
+    {
+      "path": "rdp/daily-config-after.json",
+      "bytes": 949,
+      "sha256": "837017816a651b13463d56526566d389025ff41f5b3580d40b36854335b84714"
+    },
+    {
+      "path": "rdp/daily-config-before.json",
+      "bytes": 949,
+      "sha256": "837017816a651b13463d56526566d389025ff41f5b3580d40b36854335b84714"
+    },
+    {
+      "path": "rdp/executed-code/two-user-driver.mjs",
+      "bytes": 29293,
+      "sha256": "c9b746e943d99ca1e9edc9c9a3b6a8e70932158fc2a4ce5a3f14dd7a14b0bb86"
+    },
+    {
+      "path": "rdp/executed-code/windows-cdp.mjs",
+      "bytes": 3493,
+      "sha256": "9426b6deed269c9000a6a242358da9aa16676675e1a4814c7a430cc124c85c60"
+    },
+    {
+      "path": "rdp/executed-code/windows-process-token.ps1",
+      "bytes": 6168,
+      "sha256": "2c3512b4ad51127883a8fee6a37ee53ced616fea286a9825876eec54c7c9feca"
+    },
+    {
+      "path": "rdp/executed-code/windows023-current-session-rpc.mjs",
+      "bytes": 4462,
+      "sha256": "9d24a5f52b5cff4cceb07ba9d10762c37bc7baef317fa8bb2fc567cdbc8dbf6e"
+    },
+    {
+      "path": "rdp/executed-code/windows023-current-session.ps1",
+      "bytes": 24087,
+      "sha256": "f9c2bca4c64174ad44a97d57d2524a9dc57b8447948decc35a92bf28150104de"
+    },
+    {
+      "path": "rdp/executed-code/windows023-two-user-native-helper.ps1",
+      "bytes": 108785,
+      "sha256": "6f0f83796e69d269811ae40f86718ab5efabfe375a4383c94d80bfcf0375909d"
+    },
+    {
+      "path": "rdp/finished.json",
+      "bytes": 13479,
+      "sha256": "7ed4e2bc5d40934faf9e7dee4c0680d19ab8bd39d4315d506634984b5832387a"
+    },
+    {
+      "path": "rdp/fixture-acl.log",
+      "bytes": 146,
+      "sha256": "817951cd3cd7e075250f334361fa74f03b7abac9cd9dbdb58b823d42e8296760"
+    },
+    {
+      "path": "rdp/fixture-owner.log",
+      "bytes": 247,
+      "sha256": "51ea5d6121fedb565914fcc4d3fa7afcb91be30cd82f9d1b8bef8e8a6686a874"
+    },
+    {
+      "path": "rdp/identity.json",
+      "bytes": 1455,
+      "sha256": "f248b4aba854de0a4d398a740d6d6fd8b640f77d50b3a35f6384b8ebb5fe5ec3"
+    },
+    {
+      "path": "rdp/initialization-only.json",
+      "bytes": 1098,
+      "sha256": "7f855979f5903216900f74431a4265138a408365b7bfed9b06d33e3aa5ba4392"
+    },
+    {
+      "path": "rdp/manager-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "rdp/manager-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "rdp/native-client-stop-readback.json",
+      "bytes": 437,
+      "sha256": "dd8c5d97582a9dfe26e926930b839a3f5e91d3b5e76b69d709c21c252ecd5fa6"
+    },
+    {
+      "path": "rdp/new-fixture-owner.log",
+      "bytes": 1793,
+      "sha256": "4867da7465591646c3fbf6f532be1f4cd7cbe42def99eb13085cea0906e70381"
+    },
+    {
+      "path": "rdp/observe-9818ba9a/command.json",
+      "bytes": 406,
+      "sha256": "2c70881630d0edd41805ed7a848f2286559ce1576411aea5e738e075c9b992ba"
+    },
+    {
+      "path": "rdp/observe-9818ba9a/driver-exit.json",
+      "bytes": 438,
+      "sha256": "aeda6e7a5a57d5c6482448ec0d40b16bc5730223e9f7af177c043f60b8527b9d"
+    },
+    {
+      "path": "rdp/observe-9818ba9a/driver-identity-admitted",
+      "bytes": 24,
+      "sha256": "726c2bcbdc8ad2c2a61e1356533ea2c954271cef52561e966c17dc4dde019bee"
+    },
+    {
+      "path": "rdp/observe-9818ba9a/invoke-trace.json",
+      "bytes": 1788,
+      "sha256": "e081cb6b8da4ed740b052b520647273cbbadaa632ea4a4a0cc43c5f495bafac9"
+    },
+    {
+      "path": "rdp/observe-9818ba9a/runtime-step.json",
+      "bytes": 720,
+      "sha256": "352aafc51475971d8429a09613603d2b70ced40d4145b0edd755bb886f336178"
+    },
+    {
+      "path": "rdp/offline-provision.json",
+      "bytes": 613,
+      "sha256": "153b50b2b26236ff39377e47bd90c902ab16ded0487b0bd2276bea5cd00337e0"
+    },
+    {
+      "path": "rdp/original-exits-before-cleanup.json",
+      "bytes": 12517,
+      "sha256": "a36ef4b85c8cb0b099266f0f759e7bcc17c1b27a29c93999fe38368beb1add57"
+    },
+    {
+      "path": "rdp/prepare-5d78f269/command.json",
+      "bytes": 398,
+      "sha256": "df91a6f82bec6abafc5ec6b4a68621a8a5a8bcaf8c6fc3a7c757597465224456"
+    },
+    {
+      "path": "rdp/prepare-5d78f269/driver-exit.json",
+      "bytes": 438,
+      "sha256": "6354ae34a7212b5f16a3ec1e03d075928a92a4f526586453eb0efb88481dba29"
+    },
+    {
+      "path": "rdp/prepare-5d78f269/driver-identity-admitted",
+      "bytes": 24,
+      "sha256": "726c2bcbdc8ad2c2a61e1356533ea2c954271cef52561e966c17dc4dde019bee"
+    },
+    {
+      "path": "rdp/prepare-5d78f269/rpc-result.json",
+      "bytes": 3484,
+      "sha256": "11a3ca53264cd583c2ea688b5fe2e75b1397b8c19f325058e901551853a1acc1"
+    },
+    {
+      "path": "rdp/prepare-5d78f269/screen.png",
+      "bytes": 2430391,
+      "sha256": "e6e7b9b5e216b9720a4c737fba5f68aaa5486ec99f11244f58f1e86e36ed600c"
+    },
+    {
+      "path": "rdp/prepared.json",
+      "bytes": 3840,
+      "sha256": "e2f42a40b396eb08578f884026b5cb629c583d65bd5e30c9644af614e6d0f4ca"
+    },
+    {
+      "path": "rdp/ready.json",
+      "bytes": 933,
+      "sha256": "8e9303608f6baa2e18d44810eeb1a64c457a7e705ccde011f18252be7a508a8b"
+    },
+    {
+      "path": "rdp/reply-1.json",
+      "bytes": 2115,
+      "sha256": "927e338f0d996d970149d3d3a1d5217ae6536c5d82f984559204e54b5db6d43d"
+    },
+    {
+      "path": "rdp/reply-2.json",
+      "bytes": 3318,
+      "sha256": "bf2ba9a1bacc39d7ddb48e4758a40a66109d2aa74dd93eeeeabf4772460c58d9"
+    },
+    {
+      "path": "rdp/reply-3.json",
+      "bytes": 2304,
+      "sha256": "3afd9d2fb7aff0c079bed8e87fa9e677b49938058bc803af90ebbe208201c0a6"
+    },
+    {
+      "path": "rdp/reply-4.json",
+      "bytes": 2154,
+      "sha256": "c8cd21d2d3d3d7105b1fc879bcb5335d3649850b226f1a0344ae291aa949fef0"
+    },
+    {
+      "path": "rdp/start-7be5e08b/action-envelope.json",
+      "bytes": 270,
+      "sha256": "bede421e602cffcbb27d9f7bdaf3276081e81916dead72b5dae7a7bfddd6f77d"
+    },
+    {
+      "path": "rdp/start-7be5e08b/action.raw.json",
+      "bytes": 97,
+      "sha256": "8e14e20d99b9604221f5fb42613844dcd25329a979a4a7986c1f31e18687cce0"
+    },
+    {
+      "path": "rdp/start-7be5e08b/command.json",
+      "bytes": 396,
+      "sha256": "2af0b3aa48528d16c6f01c63c9659d1e03627985f2921a7433e8cd6efa0b3584"
+    },
+    {
+      "path": "rdp/start-7be5e08b/driver-exit.json",
+      "bytes": 439,
+      "sha256": "eeef4e333013bbe723a4bc0d0d20bc38f208a3032dbb2f563def7129968b2634"
+    },
+    {
+      "path": "rdp/start-7be5e08b/driver-identity-admitted",
+      "bytes": 24,
+      "sha256": "726c2bcbdc8ad2c2a61e1356533ea2c954271cef52561e966c17dc4dde019bee"
+    },
+    {
+      "path": "rdp/start-7be5e08b/invoke-trace.json",
+      "bytes": 2549,
+      "sha256": "585de3d171e1e5de245fa38f204093387880e6d11fb4a41521e020161b947ec2"
+    },
+    {
+      "path": "rdp/start-7be5e08b/owned-health-observations.json",
+      "bytes": 498,
+      "sha256": "2c835dfad1cb9bbdb261a16dc7099ff2b5e658f728387acaa02747d4934c986d"
+    },
+    {
+      "path": "rdp/start-7be5e08b/runtime-step.json",
+      "bytes": 1578,
+      "sha256": "24b5eb4588904fef1917b3ffe02a4e48ac5c5e9644b78beb9a2507977f989d46"
+    },
+    {
+      "path": "rdp/stop-a9362ca8/action-envelope.json",
+      "bytes": 272,
+      "sha256": "ecc93a38c4270066c4d4a17deba6b980cfb673fe3418a4c89542750403cdc46a"
+    },
+    {
+      "path": "rdp/stop-a9362ca8/action.raw.json",
+      "bytes": 98,
+      "sha256": "3c088682b9cf4537841e289e8d039915d9dd0dd0f343c17fd1a5d438abf6dd90"
+    },
+    {
+      "path": "rdp/stop-a9362ca8/command.json",
+      "bytes": 403,
+      "sha256": "90a50edb3aeba853ca97dc767017292516bc09879030dc44d5d049dcc88280ff"
+    },
+    {
+      "path": "rdp/stop-a9362ca8/driver-exit.json",
+      "bytes": 438,
+      "sha256": "f87028dcd1f89bfc6d293c4e0ddb48ee0ab2968f9f3ab49c186e0db7493bfe16"
+    },
+    {
+      "path": "rdp/stop-a9362ca8/driver-identity-admitted",
+      "bytes": 24,
+      "sha256": "726c2bcbdc8ad2c2a61e1356533ea2c954271cef52561e966c17dc4dde019bee"
+    },
+    {
+      "path": "rdp/stop-a9362ca8/invoke-trace.json",
+      "bytes": 2549,
+      "sha256": "a7e4ed55a2ddbb6a6d13c7e3aed35bacfaa3f4351b4a4871900a0d417f2b2375"
+    },
+    {
+      "path": "rdp/stop-a9362ca8/runtime-step.json",
+      "bytes": 1047,
+      "sha256": "bedf493326d015baa9b5d37792b9824c3a4b3d3356c9b3a31f88a0b2010f6219"
+    },
+    {
+      "path": "start-cross-console-02.ps1",
+      "bytes": 2769,
+      "sha256": "13a6d1400158f5b88a4dbabc5997957743a21b8c1439eee5db08a00bc6364ced"
+    },
+    {
+      "path": "task-cleanup.json",
+      "bytes": 399,
+      "sha256": "ab3bcc34b4376984bdd72e2d32fb8be10b3a3fe120117e9dbad1e474e554f711"
+    },
+    {
+      "path": "task-registration.json",
+      "bytes": 457,
+      "sha256": "2b4e9b5c787ee9f1be9fec825893d19ae08564346bed3741d083add83a4f36e5"
+    },
+    {
+      "path": "verified-summary.json",
+      "bytes": 9189,
+      "sha256": "6650e87358ba9538064046a601e1d345fea92f483246bba5f537c4385b024277"
+    }
+  ]
+}

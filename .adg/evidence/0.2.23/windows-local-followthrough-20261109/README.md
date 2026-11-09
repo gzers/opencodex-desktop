@@ -82,3 +82,20 @@ Profile1018只读事件显示23:33原加载事件，仍Loaded；没有卸载或�
 同源fixture build42653892698成功，工具EXE SHA256 91bc8038a7ed34a2d796308a20f229437e04ae8fa019fe9696dfa9e88f45870f，来源/appsTree/descriptor核验。两构建所有ZIP均由指定代理下载并核对API摘要；watcher最后汇总时因整型字典key导致ConvertTo-Json错误，发生于全部下载解包之后，downloads-verified.json单列，没有重派构建或重下。原失败状态不抹去。
 
 下一cross-session-02启动准备已采用新源码程序和新fixture。H-W7固定阶段诊断外，在失败清理前采集原句柄真实退出码、RDP自己新鲜Sandbox客户端路由字段/摘要，不追加产品动作。只读正式task查询的首次HResult格式化有符号转换错误亦保留，r2以原生COM错误80070002证明精确opencodex-proxy任务不存在；没有修改任务/策略。此只读结果本身不证明Stop通过。HTTP close边界仅作待证源码线索，不写为原因或修复。
+
+## cross-session-02：新源码有界通过，停止追加该场景（2026-11-10 00:47）
+
+产品及适配器4d783585645206c52b49bce8656475d26940c1d7/build42653885333，fixture同源build42653892698，lifecycle.3字节保持。实际控制台Administrator SID…500/session1/high/type1，RDP15119 SID…1001/session2/未提升type3，两会话全程Active。15119虽属于Administrators但实际令牌未提升，不冒称非管理员组账户。Sandbox保护日常配置，不能替代默认Profile/全凭据/同SID多会话验收。
+
+| 原四项 | 控制台 | RDP |
+|---|---|---|
+| 启动回执原文/数量/唯一性 | start-d816243c/action.raw.json；成功Start1、正常Stop1，无额外成功回执 | conflict+start/action.raw.json共2次Start尝试：预期port_conflict1、成功1；正常Stop1 |
+| 启动trace/分类 | 13399ms，PID94072/61175，官方状态/受保护record/HMAC/原生SID及token一致；失败分类空 | 12692ms，PID24676/51582；同样全部一致，预期固定peer冲突单独typed port_conflict |
+| 停止trace/真实原退出码 | 原9621ms完成正常Stop及实际还原，reply-5和original-exits-before-cleanup原服务exit0 | 原7862ms，reply-4同样还原/原服务exit0；新鲜客户端三路由字段/opencodex provider/原端口均清除 |
+| 清理 | private已删、daily摘要保持、角色全部已准入代次退出；无新账户/Profile | 同左；不删除现有日常RDP/console账户；task-cleanup证明临时任务移除/last0，原PID/端口空 |
+
+原public action DTO没有PID/port字段，因此不伪造“原回执含PID”；一致性由同一动作目录runtime-step/官方状态/受保护record/HMAC及reply中native identity/token关联。verified-summary.json逐条独立断言原文、成功数量/唯一性和所有PID/端口一致性。原30/10/5秒保持，所有get_status_snapshot调用<=5秒。双方正常Stop后原服务句柄exit0与清理前数组另核验，不用事后PID缺席推退出码。
+
+RDP对控制台61175固定冲突经原30秒无自有记录；控制台原94072/61175保持。RDP随后自动51582，双方同代次健康；Stop RDP后console reply-4仍94072/61175/healthy，再正常Stop console。controller固定冲突/overlap/peerSurvivedNormalStop/passed均true。按用户要求本场景已过即停，不重复孤立或本场景。
+
+必须保留因果限制：本轮产品仅新增固定失败阶段日志，并未改变Stop/HTTP/维护包；因本轮通过而没有失败阶段可用于确定cross-session-01的旧lifecycle_stop_unknown原因。旧失败仍真实、原因未证实，不能说诊断补丁治愈它；HTTP close仅源码待证线索，未实施放宽。当前有界通过也不是整版或稳定性证明。Profile1018仍Loaded、账户已禁用且移出管理员组，继续作为独立清理阻点；原42545767548 token-pointer失败和技术原型采用限制保持，不发布。

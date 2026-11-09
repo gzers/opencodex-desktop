@@ -25,3 +25,7 @@
 ## 11月10日接续
 
 控制台console-01、NSIS default/custom和隔离MSI run42649281070定向证据均已通过并归档；本机MSI1625原失败独立保留。Profile1018仍Loaded并已禁用/去管理员身份，保留清理阻点。下一步仅H-W6实际控制台/RDP并行固定端口冲突及停止peer保持，假设、精确尝试次数和限制见证据README末节；不自动关闭IMP或发布。
+
+## 11月10日有界结果
+
+H-W7新源cross-session-02真实控制台/RDP协议已通过，Start13399/12692ms、正常Stop及还原9621/7862ms、双原exit0/peer保持，停止追加本场景。H-W6原首错原因仍未知，日志补丁不冒因果修复；Profile1018 Loaded和旧审批缓存阻点保留。下一动作按[最终有界交接](windows-local-followthrough-result-20261110.md)，不盲重跑，不关闭整版或发布。

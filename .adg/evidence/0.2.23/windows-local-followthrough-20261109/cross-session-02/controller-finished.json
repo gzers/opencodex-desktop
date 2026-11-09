@@ -1,0 +1,125 @@
+{
+  "accepted": false,
+  "hypothesis": "H-W7",
+  "scope": "Only actual console/RDP overlap, fixed peer-port conflict and normal Stop preservation",
+  "startedUtc": "2026-11-09T16:40:36.1404484Z",
+  "passed": true,
+  "harnessCommit": "4d783585645206c52b49bce8656475d26940c1d7",
+  "sandbox": true,
+  "defaultProfileOrCredentialAcceptance": false,
+  "identities": {
+    "console": {
+      "port": 60421,
+      "manager": {
+        "pid": 69764,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\program\\opencodex-desktop.exe",
+        "creationTicks": "639298393293685780",
+        "sessionId": 1,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "accepted": false,
+      "sandbox": true,
+      "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+      "applicationToken": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 69764,
+        "executable": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\console\\private\\sandbox\\program\\opencodex-desktop.exe",
+        "creationTimeUtc": "2026-11-09T16:42:09.368578Z",
+        "elevated": true,
+        "elevationType": 1,
+        "collectedAtUtc": "2026-11-09T16:42:10.7862984Z"
+      },
+      "sessionId": 1
+    },
+    "rdp": {
+      "manager": {
+        "pid": 86788,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+        "path": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\rdp\\private\\sandbox\\program\\opencodex-desktop.exe",
+        "creationTicks": "639298392987690001",
+        "sessionId": 2,
+        "generationSource": "retained-handle-native-filetime",
+        "cimImageSupplied": true
+      },
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+      "accepted": false,
+      "sandbox": true,
+      "port": 61770,
+      "applicationToken": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 86788,
+        "executable": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\rdp\\private\\sandbox\\program\\opencodex-desktop.exe",
+        "creationTimeUtc": "2026-11-09T16:41:38.7690001Z",
+        "elevated": false,
+        "elevationType": 3,
+        "collectedAtUtc": "2026-11-09T16:41:39.6399115Z"
+      },
+      "sessionId": 2
+    }
+  },
+  "fixedConflict": true,
+  "overlap": true,
+  "peerSurvivedNormalStop": true,
+  "console": {
+    "record": {
+      "pid": 94072,
+      "port": 61175
+    },
+    "successfulStarts": 1,
+    "stop": {
+      "budgetMilliseconds": 10000,
+      "elapsedMilliseconds": 9621
+    },
+    "start": {
+      "budgetMilliseconds": 30000,
+      "elapsedMilliseconds": 13399
+    },
+    "normalStops": 1,
+    "restore": {
+      "listenerAbsent": true,
+      "ownRecordAbsent": true,
+      "clientRouteRemoved": true,
+      "passed": true,
+      "originalServiceExit": {
+        "originalHandleExited": true,
+        "exitCode": 0
+      },
+      "originalServiceGenerationExited": true
+    },
+    "totalStartActions": 1
+  },
+  "rdp": {
+    "successfulStarts": 1,
+    "record": {
+      "pid": 24676,
+      "port": 51582
+    },
+    "stop": {
+      "budgetMilliseconds": 10000,
+      "elapsedMilliseconds": 7862
+    },
+    "expectedConflicts": 1,
+    "totalStartActions": 2,
+    "restore": {
+      "clientRouteRemoved": true,
+      "ownRecordAbsent": true,
+      "originalServiceGenerationExited": true,
+      "originalServiceExit": {
+        "originalHandleExited": true,
+        "exitCode": 0
+      },
+      "passed": true,
+      "listenerAbsent": true
+    },
+    "normalStops": 1,
+    "start": {
+      "budgetMilliseconds": 30000,
+      "elapsedMilliseconds": 12692
+    }
+  },
+  "finishedUtc": "2026-11-09T16:45:42.4693108Z"
+}

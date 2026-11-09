@@ -1,0 +1,75 @@
+{
+  "runtimeToken": null,
+  "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+  "runtimeIdentity": null,
+  "managerBefore": {
+    "pid": 86788,
+    "handle": "10491306",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T16:44:48.9104477Z"
+  },
+  "managerAfter": {
+    "pid": 86788,
+    "handle": "10491306",
+    "ownedVisible": true,
+    "observedUtc": "2026-11-09T16:45:02.7914138Z"
+  },
+  "restore": {
+    "clientRouteRemoved": true,
+    "ownRecordAbsent": true,
+    "originalServiceGenerationExited": true,
+    "originalServiceExit": {
+      "originalHandleExited": true,
+      "exitCode": 0
+    },
+    "passed": true,
+    "listenerAbsent": true
+  },
+  "mode": "stop",
+  "value": {
+    "exitCode": 0,
+    "receipt": {
+      "result": "pass-runtime-step",
+      "mode": "stop",
+      "home": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\rdp\\private\\sandbox\\data\\opencodex\\home",
+      "root": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\rdp\\private\\sandbox\\data\\desktop",
+      "port": 51582,
+      "before": {
+        "record": {
+          "pid": 24676,
+          "port": 51582
+        },
+        "attestation": "verified-production-challenge",
+        "healthService": "opencodex",
+        "version": "2.97.0-desktop023.lifecycle.3"
+      },
+      "action": {
+        "lifecycleState": "stopped",
+        "result": "stopped",
+        "failureCode": null,
+        "canStop": false,
+        "canRestart": false
+      },
+      "status": {
+        "runtime": "stopped",
+        "health": "unknown",
+        "source": "live",
+        "pid": null,
+        "port": 51582,
+        "protection": "none",
+        "startupStatus": "native",
+        "servicePresent": null,
+        "rebootSafe": true
+      },
+      "stopped": true,
+      "nativeClientRestoredReadback": true,
+      "stopBudget": {
+        "budgetMilliseconds": 10000,
+        "elapsedMilliseconds": 7862
+      }
+    },
+    "directory": "D:\\ocx-win-followthrough-20261109-230145\\cross-session-02\\rdp\\stop-a9362ca8"
+  },
+  "accepted": false,
+  "sessionId": 2
+}
