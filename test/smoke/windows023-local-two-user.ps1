@@ -1,6 +1,7 @@
 param(
  [Parameter(Mandatory=$true)][switch]$LocalWorkstation,
  [switch]$ElevatedFirstAccount,
+ [switch]$RequestElevation,
  [Parameter(Mandatory=$true)][string]$Directory,
  [Parameter(Mandatory=$true)][string]$ProgramDirectory,
  [Parameter(Mandatory=$true)][string]$Node,
@@ -9,6 +10,7 @@ param(
 )
 $ErrorActionPreference='Stop'
 if(!$IsWindows -or !$LocalWorkstation){throw 'Explicit native local workstation scope required'}
+if($RequestElevation -and !$ElevatedFirstAccount){throw 'Elevation request requires the newly created administrator test account'}
 $identity=[Security.Principal.WindowsIdentity]::GetCurrent()
 if(!([Security.Principal.WindowsPrincipal]::new($identity)).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){throw 'Elevated local controller required'}
 . (Join-Path $PSScriptRoot 'windows023-two-user-native-helper.ps1')
@@ -38,6 +40,15 @@ if(!('OcxTemporaryDesktopAccess' -as [type])){Add-Type -TypeDefinition $reuse.De
 $code=Join-Path $taskRoot 'code';New-Item -ItemType Directory -Path $code|Out-Null
 foreach($name in @('windows023-local-two-user.ps1','windows023-user1-start-stop.ps1','windows023-user1-start-stop.mjs','windows023-two-user-native-helper.ps1','windows-process-token.ps1','windows-cdp.mjs')){Copy-Item -LiteralPath (Join-Path $PSScriptRoot $name) -Destination $code}
 $bootstrap=$reuse.Bootstrap.Replace('& $c.nativeHelper -Mode Child -ConfigPath $InputFile','& $c.singleUserScript -Mode Child -InputFile $InputFile')
+$elevationBridge=@'
+if($c.requestElevation){
+  @{requestedUtc=[datetime]::UtcNow.ToString('o');method='Windows Shell RunAs consent';sid=[Security.Principal.WindowsIdentity]::GetCurrent().User.Value;profile=$env:USERPROFILE}|ConvertTo-Json|Set-Content -LiteralPath (Join-Path $c.evidence 'elevation-request.json') -Encoding utf8
+  $elevated=Start-Process -FilePath (Join-Path $PSHOME 'pwsh.exe') -Verb RunAs -WindowStyle Hidden -WorkingDirectory $c.evidence -ArgumentList @('-NoLogo','-NoProfile','-NonInteractive','-File',('"'+$c.singleUserScript+'"'),'-Mode','Child','-InputFile',('"'+$InputFile+'"')) -Wait -PassThru
+  try{$code=$elevated.ExitCode;@{finishedUtc=[datetime]::UtcNow.ToString('o');exitCode=$code;pid=$elevated.Id}|ConvertTo-Json|Set-Content -LiteralPath (Join-Path $c.evidence 'elevation-exit.json') -Encoding utf8}finally{$elevated.Dispose()}
+  exit $code
+}else{& $c.singleUserScript -Mode Child -InputFile $InputFile}
+'@
+$bootstrap=$bootstrap.Replace('& $c.singleUserScript -Mode Child -InputFile $InputFile',$elevationBridge)
 $bootstrap|Set-Content -LiteralPath (Join-Path $code 'profile-bootstrap.ps1') -Encoding utf8
 $control=Get-TwoUserRuntimeDriverText
 $from=$control.IndexOf('    await diagnosticReadiness();',[StringComparison]::Ordinal)
@@ -82,7 +93,7 @@ try{
    & icacls.exe $taskRoot /grant ('*'+$a.sid+':(OI)(CI)RX')|Out-Null;if($LASTEXITCODE -ne 0){throw 'Evidence read ACL failed'}
    & icacls.exe $a.evidence /grant ('*'+$a.sid+':(OI)(CI)M')|Out-Null;if($LASTEXITCODE -ne 0){throw 'Own evidence write ACL failed'}
    $configPath=Join-Path $a.evidence 'input.json'
-   Write-TwoUserJson $configPath @{accountSid=$a.sid;profile=$a.profile;commit=$ExpectedSource;profileOnly=$false;singleUserScript=(Join-Path $code 'windows023-user1-start-stop.ps1');candidateDirectory=$program;node=$Node;evidence=$a.evidence;code=$code;expectedProcessMode=$expectedMode;coordination=@{role=$role}}
+   Write-TwoUserJson $configPath @{accountSid=$a.sid;profile=$a.profile;commit=$ExpectedSource;profileOnly=$false;singleUserScript=(Join-Path $code 'windows023-user1-start-stop.ps1');candidateDirectory=$program;node=$Node;evidence=$a.evidence;code=$code;expectedProcessMode=$expectedMode;requestElevation=($role -eq 1 -and $RequestElevation.IsPresent);coordination=@{role=$role}}
    $a.credential=[pscredential]::new(($env:COMPUTERNAME+[char]92+$name),$secure)
    $a.process=Start-Process -FilePath (Join-Path $PSHOME 'pwsh.exe') -Credential $a.credential -LoadUserProfile -WorkingDirectory $a.evidence -ArgumentList @('-NoLogo','-NoProfile','-NonInteractive','-File',('"'+(Join-Path $code 'profile-bootstrap.ps1')+'"'),'-InputFile',('"'+$configPath+'"')) -RedirectStandardOutput (Join-Path $a.evidence 'bootstrap-stdout.log') -RedirectStandardError (Join-Path $a.evidence 'bootstrap-stderr.log') -PassThru
    $a.fact=Get-TwoUserProcessFact $a.process $a.sid;$ledger[[int]$a.fact.pid]=$a.fact
