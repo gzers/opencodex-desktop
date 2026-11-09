@@ -21,6 +21,11 @@ pub(crate) struct Binding {
 fn key(path: &Path) -> String {
     path.to_string_lossy().replace('\\', "/").to_lowercase()
 }
+fn same_home(left: &Path, right: &Path) -> bool {
+    // Bun publishes a safe DOS spelling; Desktop may retain a verbatim one.
+    // Compare equivalent spellings without changing the signed tuple/Job hash.
+    key(dunce::simplified(left)) == key(dunce::simplified(right))
+}
 #[derive(Clone, Copy)]
 struct Expected<'a> {
     home: &'a Path,
@@ -83,7 +88,7 @@ impl Binding {
         );
         if self.schema != "ocxd-runtime-lifetime/1"
             || !self.home.is_absolute()
-            || home != key(expected_home)
+            || !same_home(&self.home, expected_home)
             || self.sid != expected_sid
             || self.pid == 0
             || self.pid != expected_pid
@@ -396,7 +401,7 @@ pub(crate) mod native {
             sid: &str,
             installation: &Path,
         ) -> io::Result<Self> {
-            if key(home) != key(&binding.home) || binding.sid != sid {
+            if !same_home(home, &binding.home) || binding.sid != sid {
                 return Err(error());
             }
             let parents = crate::infrastructure::windows_private_create::pin_parents(
@@ -623,6 +628,48 @@ mod tests {
         ] {
             assert!(!value.verify_proof(&value.home, &value.sid, 42, &changed));
         }
+    }
+    #[test]
+    #[cfg(windows)]
+    fn signed_dos_home_matches_extended_context_without_rewriting_binding() {
+        let (mut value, secret, challenge) = fixture();
+        value.home = PathBuf::from(r"C:\Users\fixture\.codex-desktop\opencodex\home");
+        let mut hash = Sha256::new();
+        hash.update(value.sid.as_bytes());
+        hash.update([0]);
+        hash.update(key(&value.home).as_bytes());
+        value.job = format!(
+            "Global{}opencodex-runtime-{:x}",
+            char::from(92),
+            hash.finalize()
+        );
+        let proof = sign(&value, &secret, &challenge, 55581);
+        let signed = SignedChallenge {
+            secret: &secret,
+            challenge: &challenge,
+            port: 55581,
+            proof: &proof,
+        };
+        let original = serde_json::to_vec(&value).unwrap();
+        let extended = PathBuf::from(format!(r"\\?\{}", value.home.display()));
+        assert!(value.verify_proof(&extended, &value.sid, 42, &signed));
+        assert_eq!(serde_json::to_vec(&value).unwrap(), original);
+        assert!(!value.verify_proof(&extended.join("other"), &value.sid, 42, &signed));
+        for wrong in [
+            r"C:Users\fixture\.codex-desktop\opencodex\home",
+            r"\\.\C:\Users\fixture\.codex-desktop\opencodex\home",
+            r"\\?\UNC\C:\Users\fixture\.codex-desktop\opencodex\home",
+            r"\\?\C:\Users\fixture\.codex-desktop\opencodex\home.",
+            r"\\?\C:\Users\fixture\.codex-desktop\opencodex\home ",
+        ] {
+            assert!(
+                !value.verify_proof(Path::new(wrong), &value.sid, 42, &signed),
+                "{wrong}"
+            );
+        }
+        // A new spelling in the signed tuple must still fail the original HMAC.
+        value.home = extended.clone();
+        assert!(!value.verify_proof(&extended, &value.sid, 42, &signed));
     }
     #[test]
     fn signed_but_wrong_job_schema_or_malformed_identity_never_gains_authority() {
