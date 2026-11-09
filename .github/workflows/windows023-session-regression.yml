@@ -53,7 +53,7 @@ jobs:
           $log=Get-Content product-regression.log -Raw
           if($log -notmatch '16 passed; 0 failed; 1 ignored'){throw 'Original test totals or dedicated OS fixture ignore changed'}
           foreach($entry in @(@{filter=$filters[0];passed=3},@{filter=$filters[1];passed=8},@{filter=$filters[2];passed=5})){
-            $actual=[regex]::Matches($log,('(?m)^test '+[regex]::Escape($entry.filter)+'[^\r\n]* \.\.\. ok\r?$')).Count
+            $actual=@($log.Split([char]10) | Where-Object {$_.StartsWith('test '+$entry.filter) -and $_.TrimEnd([char]13).EndsWith(' ... ok')}).Count
             if($actual -ne $entry.passed){throw 'A required group did not actually execute'}
           }
           cargo clippy --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib --tests -- -D warnings *> strict-clippy.log
