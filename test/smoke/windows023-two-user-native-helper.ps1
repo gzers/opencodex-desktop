@@ -317,8 +317,8 @@ function runtimeFailureCode(error){
 const runtimeSleep=ms=>new Promise(r=>setTimeout(r,ms));
 function freshNativeClientTextRestored(text){
  return typeof text==='string'
-  && !/^(?:openai_base_url|experimental_realtime_ws_base_url|model_catalog_json)\s*=/m.test(text)
-  && !/^model_provider\s*=\s*["']opencodex["']/m.test(text);
+  && !/^[ \t]*(?:openai_base_url|experimental_realtime_ws_base_url|model_catalog_json)\s*=/m.test(text)
+  && !/^[ \t]*model_provider\s*=\s*["']opencodex["']/m.test(text);
 }
 
 function fixtureConfig(port){

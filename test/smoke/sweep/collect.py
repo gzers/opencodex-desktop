@@ -78,6 +78,19 @@ def collect(root, selected=None, *, core=False, merge_runtime=False):
             raise ValueError("Actual runtime port protocol not verified; actual readiness/identity or protocol prerequisite remains unproved")
         protocol = d.get("runtimeProtocol") or {}
         require(protocol.get("servicesStopped") is True, "Actual owned services stop receipt is missing")
+        for name in ("aStop", "bStop"):
+            receipt = protocol.get(name) or {}
+            stop = receipt.get("stop") or {}
+            budget = stop.get("stopBudget") or {}
+            elapsed = budget.get("elapsedMilliseconds")
+            require(receipt.get("originalGenerationExited") is True
+                    and stop.get("stopped") is True
+                    and stop.get("action", {}).get("result") == "stopped"
+                    and stop.get("nativeClientRestoredReadback") is True,
+                    name + ": original generation exit and actual native client restoration not proved")
+            require(budget.get("budgetMilliseconds") == 10000
+                    and type(elapsed) in (int, float) and 0 <= elapsed <= 10000,
+                    name + ": shared original stop budget not proved")
         return protocol
 
     if core or merge_runtime:

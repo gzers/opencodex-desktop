@@ -48,7 +48,12 @@ class CoreTests(unittest.TestCase):
                     self.ready(root)
                 self.put(root, 'evidence/two-user/two-user-native.json',
                          dict(runtimeProxyPortIsolation='verified-runtime-ports' if ports else 'not-verified',
-                              runtimeProtocol={'servicesStopped': True}))
+                              runtimeProtocol={'servicesStopped': True, **{name: {
+                                  'originalGenerationExited': True, 'stop': {
+                                      'stopped': True, 'action': {'result': 'stopped'},
+                                      'nativeClientRestoredReadback': True,
+                                      'stopBudget': {'budgetMilliseconds': 10000, 'elapsedMilliseconds': 8000}}}
+                                  for name in ('aStop', 'bStop')}}))
                 collect.collect(root, selected='13', core=True)
                 path = root / 'sweep/13-runtime-readiness-and-ports.json'
                 row = json.loads(path.read_text())
@@ -61,6 +66,22 @@ class CoreTests(unittest.TestCase):
                 self.assertEqual(before, path.read_bytes())
                 self.assertFalse(row['accepted'])
                 self.assertFalse((root / 'sweep/14-runtime-ports.json').exists())
+
+    def test_stop_reply_without_real_client_readback_or_shared_budget_never_passes(self):
+        for broken in ('readback', 'late', 'wrong-budget', 'generation'):
+            with self.subTest(broken=broken), tempfile.TemporaryDirectory() as directory:
+                root=Path(directory);self.ready(root)
+                stop={'stopped': True, 'action': {'result': 'stopped'}, 'nativeClientRestoredReadback': broken!='readback',
+                      'stopBudget': {'budgetMilliseconds': 15000 if broken=='wrong-budget' else 10000,
+                                     'elapsedMilliseconds': 10001 if broken=='late' else 8000}}
+                receipt={'originalGenerationExited': broken!='generation','stop':stop}
+                self.put(root,'evidence/two-user/two-user-native.json',dict(runtimeProxyPortIsolation='verified-runtime-ports',
+                    runtimeProtocol={'servicesStopped':True,'aStop':receipt,'bStop':receipt}))
+                collect.collect(root, selected='13', core=True)
+                row=json.loads((root/'sweep/13-runtime-readiness-and-ports.json').read_text())
+                self.assertEqual(row['evidence']['readiness']['status'],'pass')
+                self.assertEqual(row['evidence']['ports']['status'],'fail')
+                self.assertEqual(row['status'],'fail');self.assertFalse(row['accepted'])
 
     def test_core_cleanup_still_requires_both_profiles_acl_and_no_unknown_process(self):
         for broken in (None, 'retained', 'same-sid', 'acl'):
