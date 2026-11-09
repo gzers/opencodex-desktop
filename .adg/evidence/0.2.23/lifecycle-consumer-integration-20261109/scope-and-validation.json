@@ -1,0 +1,52 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "source": "abbb7c17c6358c0091e1ee65de840f5c41ed5232",
+  "commits": [
+    "1086c15d3",
+    "433f7ee5e",
+    "06bf22396",
+    "abbb7c17c"
+  ],
+  "product": "Windows official Stop captures lifetime-signed current-H binding before reusable credential; retained native original PID/creation/TokenUser/image, private non-breakaway Job and pinned exclusive lease replace post-stop global enumeration. Original manager/port/record checks remain.",
+  "runtime": {
+    "version": "2.97.0-desktop023.lifecycle.1",
+    "sha256": "3e4d874d7e90174cbd1c19ef6cd958421db9645ce9d0a74bf5c580488ee997fb",
+    "bytes": 15412424,
+    "canonicalBuilds": 2,
+    "sourceModulesEqualExecutedPrototype": true,
+    "releaseAccepted": false
+  },
+  "mac": {
+    "actualLockedProjectTests": 16,
+    "failed": 0,
+    "strictProjectClippy": true,
+    "newPinnedResourcesUsed": true,
+    "originalResourcesRestored": true,
+    "platformArchiveSha256": "f37f7e29af38cd22a581965efb234824a67348cef405d0f5b6089adefbaa398d",
+    "platformManifestSha256": "b7e1509d74f044fcd2a7b1faad39d841f40933896728f1910d59c755ac455f0f",
+    "stagingCommand": "failed at final copy because old resource directory existed; complete platform artifact verified and temporarily staged without overwriting old bytes; original restored"
+  },
+  "windows": {
+    "sdkCrossCompile": true,
+    "sdkOnlyPanicStubs": true,
+    "nativeExecutionAccepted": false,
+    "fullProjectCheckPending": true
+  },
+  "harness": {
+    "behaviorTests": 16,
+    "failed": 0,
+    "stageTests": 5,
+    "helperPowerShellParsed": true,
+    "embeddedDriverNodeSyntax": true,
+    "actualClientReadbackAdded": true,
+    "sharedStopBudgetMilliseconds": 10000,
+    "readyAndPortsMerged": true
+  },
+  "remaining": [
+    "Windows same-source MSVC compile and actual dual-SID integration",
+    "Native consumer actual original-handle/Job/lease regression",
+    "Configuration readback in actual stop",
+    "Full pre-freeze sweep, final artifacts, signed upgrade/rollback and release readback"
+  ]
+}

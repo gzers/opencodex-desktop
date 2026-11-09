@@ -540,3 +540,16 @@ core-sweep增加producer技术focus（4162f5234），仅对尚未闭合的实际
 证据边界纠正：本轮officialClientRestoreConfirmed仅由官方performed响应判定，实际配置文件读回未验证；旧JSON字段原样保留，分析明确不作为文件恢复证明。ef1a81a54后续新增实际注入localhost/assigned-port读回与restore回openai/删除代理路由/catalog字段，计入原10秒；纯反例函数通过，实际新门待与consumer集成同批跑，未因此另派一轮。
 
 459d3dd5c将与Windows实际producer同摘要的4源码路径规范封为2.97.0-desktop023.lifecycle.1-producer-prototype，15412656字节/SHA256faa2ef83ed1096c39c0d7283fbba47c2623e89e160b676ad1626824672990e70，2524成员、两份独立构建相同，兼容清单存在成员均核对；原缺失bun.lock/model-metadata记录保持，非已验内容。归档无trace/依赖树，原件保留在[原型封包](../../.adg/evidence/0.2.23/core-producer-frozen-20261109/producer-archive-prototype/verification.json)。仍缺生产Desktop消费者、文件还原读回、Windows归档重建/实际读回及同源双SID；正式pin不提升，不用producer局部成功当整版完成。15装配行为测试、文件读回纯反例/Node语法与规范build通过；当前无新core派发。
+
+
+### 生命周期生产者／Desktop消费者候选集成（待真实Windows核心轮）
+
+1086c15d3接入已采用的本H生命周期消费者：官方health签名后、发送可复用token前，验证固定tuple的生命周期签名，捕获原PID/FILETIME/TokenUser/安装内真实Bun映像、私有Job原生owner/protected唯一ACE/无逃逸flag/成员、原私有lease文件身份及祖先固定。官方GETcap/再认证/POST还原不改。Windows正常Stop成功响应后，以保留的原进程句柄exit0、Jobempty、同lease身份和独占锁证明本代结束；锁持有到运行记录/PID文件、全OS监听端口、原生服务管理器缺席及最终回查全部完成，替代此阶段的全机进程环境扫描。未知即拒绝，不读不到就跳过，不强杀、不删记录。Mac正常停止路径保持原OS回查；Windows缺少新协议拒绝在token前，旧版兼容未新增。原HTTP传输反例全部保留，并新增拒绝witness/重复协议header和Windows缺协议不得发送token的测试。
+
+433f7ee5e将成对候选供应固化为2.97.0-desktop023.lifecycle.1，15412424字节/SHA2563e4d874d7e90174cbd1c19ef6cd958421db9645ce9d0a74bf5c580488ee997fb。从已采用022原件→names.2→record→实际producer源码重建，两次最终归档字节一致，无计时hook/依赖树，source模块与实际执行producer一致；双平台policy/锁定依赖完整性/恢复原件和release构建入口同源更新。只是候选引用，未签名发布或升级日常安装；生产消费者与Windows归档实读仍待。
+
+本机实际locked项目16测试（协议/HTTP/动作终态）及strictClippy过，SDK Windows目标编译/Clippy过但使用必须panic的隔离安全API stub，只作SDK类型校验，不能充当Windows原生通过。新Mac离线平台归档SHA256f37f7e29af38cd22a581965efb234824a67348cef405d0f5b6089adefbaa398d完成，原stage命令在最后复制时因旧资源存在而拒绝，完整失败log保留；按新manifest/hash核对后临时换入新资源跑16测试/Clippy，4个旧资源字节与目录已精确恢复，不覆盖旧候选或日常安装。
+
+06bf22396/abbb7c17c补双用户真实原生配置读回，并将原10秒共享预算包含实际Stop/状态/文件确认。合并13仍须两用户originalGenerationExited、stopped、nativeClientRestoredReadback与共享10000预算，不能用servicesStopped布尔替代实际证据；16装配行为测试、5供应入口测试、实际PowerShell及嵌入Node解析过，不降低原断言。
+
+[集成源码范围、原归档/编译与资源恢复证据](../../.adg/evidence/0.2.23/lifecycle-consumer-integration-20261109/scope-and-validation.json)及[准备期假设H-integrated-lifetime-20261109-03](../../.adg/evidence/0.2.23/lifecycle-consumer-integration-20261109/hypothesis.preparation.json)已写；下一同源core-build准备完成后固定真实buildRun，再从标准core-sweep一次跑受影响真实双SID/私有供应/合并就绪端口/路径/IPC/严格清理，先全表再集中返修。Windows原生执行、完整冻结/签名升级回退/发布仍未完成，目标active。

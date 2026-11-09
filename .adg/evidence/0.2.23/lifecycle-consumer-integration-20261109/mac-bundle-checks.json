@@ -1,0 +1,1619 @@
+{
+  "platform": "darwin-arm64",
+  "nativeFiles": {
+    "node": {
+      "path": "runtime/node/bin/node",
+      "kind": "mach-o-arm64",
+      "sha256": "ebd2d552c7bebde593dd0390530963ad28de56bccde6ce387cdbe55fb0b6fb8e",
+      "bytes": 145803984
+    },
+    "bun": {
+      "path": "runtime/opencodex/node_modules/@oven/bun-darwin-aarch64/bin/bun",
+      "kind": "mach-o-arm64",
+      "sha256": "0a2237cdcfa0d16ef501d9acca9f0026309ef348bea7393a64e8d1e3609565cc",
+      "bytes": 88660864
+    },
+    "keyring": {
+      "path": "runtime/opencodex/node_modules/@napi-rs/keyring-darwin-arm64/keyring.darwin-arm64.node",
+      "kind": "mach-o-arm64",
+      "sha256": "9627560bd2490b8495504df6b48dafe0153883aab09fd8eee976f826c74a6fff",
+      "bytes": 491232
+    },
+    "wreq": {
+      "path": "runtime/opencodex/node_modules/wreq-js/rust/wreq-js.darwin-arm64.node",
+      "kind": "mach-o-arm64",
+      "sha256": "a688531fc6df035a2195eed25a4483873e2e3ed8241dffc5834df42712321f24",
+      "bytes": 7222992
+    }
+  },
+  "lifecycleScriptsExecuted": false,
+  "npmCiIgnoreScripts": true,
+  "bunPlaceholderBeforeSha256": "3877c58dda42c0c5ce4f33d21bfde4733c8e6906e8268e136cfdd6ea522df040",
+  "bunMaterializedSha256": "0a2237cdcfa0d16ef501d9acca9f0026309ef348bea7393a64e8d1e3609565cc",
+  "productionDependencies": [
+    {
+      "path": "node_modules/@bitkyc08/opencodex",
+      "version": "2.97.0-desktop023.lifecycle.1",
+      "resolved": "file:sources/opencodex-2.97.0-desktop023.lifecycle.1.tgz",
+      "integrity": "sha512-CWgc30ah9uBEp0mjLbNgMaKqmHQzuHycwVEFLDfo7aDQGoH8cKv3Auy7PG2U6xAhuhnImm0fDnsDHIFpIyXo0w==",
+      "scripts": {
+        "dev": "bun run src/cli/index.ts start",
+        "dev:proxy": "bun run src/cli/index.ts start",
+        "dev:gui": "cd gui && bun run dev",
+        "start": "bun run src/cli/index.ts start",
+        "test": "bun scripts/test.ts",
+        "test:changed": "bun scripts/test.ts --changed=dev",
+        "typecheck": "bun check --no-script --noEmit",
+        "typecheck:tsc": "bun x tsc --noEmit",
+        "typecheck:gui:if-changed": "bun scripts/typecheck-gui-if-changed.ts",
+        "audit:high": "bun audit --audit-level=high && cd gui && bun audit --audit-level=high",
+        "privacy:scan": "bun scripts/privacy-scan.ts",
+        "favicons": "bun scripts/brand-favicons.ts",
+        "favicons:check": "bun scripts/brand-favicons.ts --check",
+        "docs:clients": "bun scripts/generate-client-support-matrix.ts",
+        "docs:clients:check": "bun scripts/generate-client-support-matrix.ts --check",
+        "skill:surface": "bun scripts/generate-ocx-skill-surface.ts",
+        "skill:surface:check": "bun scripts/generate-ocx-skill-surface.ts --check",
+        "structure:index": "bun scripts/structure-ssot.ts --fix",
+        "structure:check": "bun scripts/structure-ssot.ts",
+        "ratchet:update": "bun scripts/file-size-ratchet.ts --update",
+        "generate:model-metadata": "bun scripts/generate-model-metadata.ts",
+        "build:gui": "cd gui && bun install --frozen-lockfile && bun run build && cd .. && bun run prepare:package",
+        "build:remote-workspace-helper": "cargo build --release --locked --manifest-path native/remote-workspace-helper/Cargo.toml",
+        "test:remote-workspace-helper": "cargo test --locked --manifest-path native/remote-workspace-helper/Cargo.toml",
+        "build:standalone": "bun scripts/build-standalone.ts",
+        "test:macos": "swift run --package-path app MenuBarCoreTests",
+        "prepare:package": "bun scripts/prepare-package.ts",
+        "prepack": "bun run prepare:package",
+        "prepublishOnly": "bun run audit:high && bun run typecheck:tsc && bun run build:gui",
+        "release": "bun scripts/release.ts",
+        "release:watch": "bun scripts/release.ts watch",
+        "prepush": "bun run typecheck && bun run typecheck:gui:if-changed && bun run lint:gui:if-changed && bun run test && bun run privacy:scan && bun run doctor:gui:if-changed",
+        "lint:gui": "cd gui && bun run lint",
+        "lint:gui:if-changed": "bun scripts/lint-gui-if-changed.ts",
+        "doctor:gui": "cd gui && bun run doctor",
+        "doctor:gui:full": "cd gui && bun run doctor:full",
+        "doctor:gui:if-changed": "bun scripts/doctor-gui-if-changed.ts",
+        "setup:hooks": "bun scripts/setup-hooks.ts"
+      }
+    },
+    {
+      "path": "node_modules/@bufbuild/protobuf",
+      "version": "2.17.0",
+      "resolved": "https://registry.npmjs.org/@bufbuild/protobuf/-/protobuf-2.17.0.tgz",
+      "integrity": "sha512-hcPkSz6D7MiTU/5VBBhK+kxaYDoOdQ6yJRFJ3kS8Nydp+VZXfg1vrpABKPNod8bXMufsVCmiUJVIKFzCzta4uw==",
+      "scripts": {
+        "prebuild": "rm -rf ./dist/*",
+        "build": "npm run build:cjs && npm run build:esm",
+        "build:cjs": "../../node_modules/typescript/bin/tsc --project tsconfig.json --module commonjs --verbatimModuleSyntax false --moduleResolution node10 --ignoreDeprecations 6.0 --outDir ./dist/cjs && echo >./dist/cjs/package.json '{\"type\":\"commonjs\"}'",
+        "build:esm": "../../node_modules/typescript/bin/tsc --project tsconfig.json --outDir ./dist/esm",
+        "bootstrap": "npm run bootstrap:inject && npm run bootstrap:wkt",
+        "bootstrap:inject": "node scripts/bootstrap-inject.mjs src",
+        "bootstrap:wkt": "protoc --es_out=src/wkt --es_opt=bootstrap_wkt=true,target=ts,import_extension=js,json_types=true --proto_path $(upstream-include wkt) $(upstream-files wkt)",
+        "postbootstrap:wkt": "license-header src/wkt/google",
+        "format": "biome format --write",
+        "license-header": "license-header --ignore 'src/wire/varint.ts'",
+        "lint": "biome lint --error-on-warnings",
+        "attw": "attw --pack"
+      }
+    },
+    {
+      "path": "node_modules/@hono/node-server",
+      "version": "2.1.6",
+      "resolved": "https://registry.npmjs.org/@hono/node-server/-/node-server-2.1.6.tgz",
+      "integrity": "sha512-p/KH9MnfNcsm3sR6x4lNgm5j+QN4Et8srKredl9DZfXiyZ1UQ3aQ2YVpFLbqktYN5JI+DB+VZFKM2PqE5hLKjQ==",
+      "scripts": {
+        "test": "vitest",
+        "build": "tsdown --external hono",
+        "watch": "tsdown --watch",
+        "postbuild": "publint",
+        "prerelease": "pnpm run build && pnpm run test --run",
+        "release": "np --no-publish",
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint src test",
+        "lint:fix": "eslint src test --fix",
+        "format": "prettier --check \"src/**/*.{js,ts}\" \"test/**/*.{js,ts}\"",
+        "format:fix": "prettier --write \"src/**/*.{js,ts}\" \"test/**/*.{js,ts}\""
+      }
+    },
+    {
+      "path": "node_modules/@modelcontextprotocol/sdk",
+      "version": "1.32.2",
+      "resolved": "https://registry.npmjs.org/@modelcontextprotocol/sdk/-/sdk-1.32.2.tgz",
+      "integrity": "sha512-SWsVtH/0vULSQStoZ6xxH2K09Li8fXYTMC64ZeogCdpZ3XSi1eCPOByV1OpuJxuI3OcmHhosDWYyii07tpPsLw==",
+      "scripts": {
+        "fetch:spec-types": "tsx scripts/fetch-spec-types.ts",
+        "typecheck": "tsgo --noEmit",
+        "build": "npm run build:esm && npm run build:cjs",
+        "build:esm": "mkdir -p dist/esm && echo '{\"type\": \"module\"}' > dist/esm/package.json && tsc -p tsconfig.prod.json",
+        "build:esm:w": "npm run build:esm -- -w",
+        "build:cjs": "mkdir -p dist/cjs && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && tsc -p tsconfig.cjs.json",
+        "build:cjs:w": "npm run build:cjs -- -w",
+        "examples:simple-server:w": "tsx --watch src/examples/server/simpleStreamableHttp.ts --oauth",
+        "prepack": "npm run build:esm && npm run build:cjs",
+        "lint": "eslint src/ && prettier --check .",
+        "lint:fix": "eslint src/ --fix && prettier --write .",
+        "check": "npm run typecheck && npm run lint",
+        "test": "vitest run --exclude \"test/e2e/**\"",
+        "test:e2e": "vitest run test/e2e",
+        "test:watch": "vitest",
+        "start": "npm run server",
+        "server": "tsx watch --clear-screen=false scripts/cli.ts server",
+        "client": "tsx scripts/cli.ts client",
+        "test:conformance:server": "test/conformance/scripts/run-server-conformance.sh --expected-failures test/conformance/conformance-baseline.yml",
+        "test:conformance:server:all": "test/conformance/scripts/run-server-conformance.sh --suite all --expected-failures test/conformance/conformance-baseline.yml",
+        "test:conformance:server:run": "npx tsx test/conformance/src/everythingServer.ts",
+        "test:conformance:client": "npx @modelcontextprotocol/conformance client --command 'npx tsx test/conformance/src/everythingClient.ts' --expected-failures test/conformance/conformance-baseline.yml",
+        "test:conformance:client:all": "npx @modelcontextprotocol/conformance client --command 'npx tsx test/conformance/src/everythingClient.ts' --suite all --expected-failures test/conformance/conformance-baseline.yml"
+      }
+    },
+    {
+      "path": "node_modules/@napi-rs/keyring",
+      "version": "1.3.0",
+      "resolved": "https://registry.npmjs.org/@napi-rs/keyring/-/keyring-1.3.0.tgz",
+      "integrity": "sha512-WrOw/bcXm0f9qHkumlT1QlArXSTWqaY9sunsDpOk+yCCorCKMxvWT/a3xko4EYHVdeZoh00yI2TydXn6eyICDA==",
+      "scripts": {
+        "artifacts": "napi artifacts",
+        "build": "napi build --platform --release",
+        "build:debug": "napi build --platform",
+        "format": "run-p format:prettier format:rs format:toml",
+        "format:prettier": "prettier . -w",
+        "format:toml": "taplo format",
+        "format:rs": "cargo fmt",
+        "lint": "oxlint",
+        "prepublishOnly": "napi prepublish -t npm",
+        "test": "ava -s",
+        "preversion": "napi build --platform && git add .",
+        "version": "napi version"
+      }
+    },
+    {
+      "path": "node_modules/@napi-rs/keyring-darwin-arm64",
+      "version": "1.3.0",
+      "resolved": "https://registry.npmjs.org/@napi-rs/keyring-darwin-arm64/-/keyring-darwin-arm64-1.3.0.tgz",
+      "integrity": "sha512-pl76hJvdYUBn6I24bXiOBMA9nbDapo3I5B+f3OorjDU4dUMSypXeKbOVehJe8fhgTiH24flMyTS3aAIy43xegQ==",
+      "scripts": {}
+    },
+    {
+      "path": "node_modules/@oven/bun-darwin-aarch64",
+      "version": "1.4.4",
+      "resolved": "https://registry.npmjs.org/@oven/bun-darwin-aarch64/-/bun-darwin-aarch64-1.4.4.tgz",
+      "integrity": "sha512-zW/hxwc8sJAILGwB5eTC4i48ouGXf0V4lrxmEOk3JIE6JkYVW1TZh1E2pIempqsezgW1sckTIIDudFON8bJ2Mw==",
+      "scripts": {}
+    },
+    {
+      "path": "node_modules/accepts",
+      "version": "2.0.0",
+      "resolved": "https://registry.npmjs.org/accepts/-/accepts-2.0.0.tgz",
+      "integrity": "sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==",
+      "scripts": {
+        "lint": "eslint .",
+        "test": "mocha --reporter spec --check-leaks --bail test/",
+        "test-ci": "nyc --reporter=lcov --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test"
+      }
+    },
+    {
+      "path": "node_modules/ajv",
+      "version": "8.20.0",
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-8.20.0.tgz",
+      "integrity": "sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA==",
+      "scripts": {
+        "eslint": "eslint \"lib/**/*.ts\" \"spec/**/*.*s\" --ignore-pattern spec/JSON-Schema-Test-Suite",
+        "prettier:write": "prettier --write \"./**/*.{json,yaml,js,ts}\"",
+        "prettier:check": "prettier --list-different \"./**/*.{json,yaml,js,ts}\"",
+        "test-spec": "cross-env TS_NODE_PROJECT=spec/tsconfig.json mocha -r ts-node/register \"spec/**/*.spec.{ts,js}\" -R dot",
+        "test-codegen": "nyc cross-env TS_NODE_PROJECT=spec/tsconfig.json mocha -r ts-node/register 'spec/codegen.spec.ts' -R spec",
+        "test-debug": "npm run test-spec -- --inspect-brk",
+        "test-cov": "nyc npm run test-spec",
+        "rollup": "rm -rf bundle && rollup -c",
+        "bundle": "rm -rf bundle && node ./scripts/bundle.js ajv ajv7 ajv7 && node ./scripts/bundle.js 2019 ajv2019 ajv2019 && node ./scripts/bundle.js 2020 ajv2020 ajv2020 && node ./scripts/bundle.js jtd ajvJTD ajvJTD",
+        "build": "rm -rf dist && tsc && cp -r lib/refs dist && rm dist/refs/json-schema-2019-09/index.ts && rm dist/refs/json-schema-2020-12/index.ts && rm dist/refs/jtd-schema.ts",
+        "json-tests": "rm -rf spec/_json/*.js && node scripts/jsontests",
+        "test-karma": "karma start",
+        "test-browser": "rm -rf .browser && npm run bundle && scripts/prepare-tests && karma start",
+        "test-all": "npm run test-cov",
+        "test": "npm run json-tests && npm run prettier:check && npm run eslint && npm link && npm link --legacy-peer-deps ajv && npm run test-cov",
+        "test-ci": "AJV_FULL_TEST=true npm test",
+        "prepublish": "npm run build",
+        "benchmark": "npm i && npm run build && npm link && cd ./benchmark && npm link --legacy-peer-deps ajv && npm i && node ./jtd",
+        "docs:dev": "./scripts/prepare-site && vuepress dev docs",
+        "docs:build": "./scripts/prepare-site && vuepress build docs"
+      }
+    },
+    {
+      "path": "node_modules/ajv-formats",
+      "version": "3.0.1",
+      "resolved": "https://registry.npmjs.org/ajv-formats/-/ajv-formats-3.0.1.tgz",
+      "integrity": "sha512-8iUql50EUR+uUcdRQ3HDqa6EVyo3docL8g5WJ3FNcWmu62IbkGUue/pEyLBW8VGKKucTPgqeks4fIU1DA4yowQ==",
+      "scripts": {
+        "build": "tsc",
+        "prettier:write": "prettier --write \"./**/*.{md,json,yaml,js,ts}\"",
+        "prettier:check": "prettier --list-different \"./**/*.{md,json,yaml,js,ts}\"",
+        "eslint": "eslint --ext .ts ./src/**/*",
+        "test-spec": "jest",
+        "test-cov": "jest --coverage",
+        "test": "npm run prettier:check && npm run build && npm run eslint && npm run test-cov",
+        "ci-test": "npm run test"
+      }
+    },
+    {
+      "path": "node_modules/body-parser",
+      "version": "2.4.0",
+      "resolved": "https://registry.npmjs.org/body-parser/-/body-parser-2.4.0.tgz",
+      "integrity": "sha512-Ifk1KcLrxaGt1occQagQNFNNOqRt1LFuehEnHHzB8Z6cRgIxRU1TBaiIsUiCdA+gy5PL7Y1IX31DNKkRmxtXjQ==",
+      "scripts": {
+        "lint": "eslint .",
+        "test": "mocha --reporter spec --check-leaks test/",
+        "test-ci": "nyc --reporter=lcovonly --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test"
+      }
+    },
+    {
+      "path": "node_modules/body-parser/node_modules/content-type",
+      "version": "2.1.0",
+      "resolved": "https://registry.npmjs.org/content-type/-/content-type-2.1.0.tgz",
+      "integrity": "sha512-mj7UPXE0jaqaOsukNZRUEfEi2AcL7C/vwmwcHV0O97eO1E1pxBZuyjlZrx5seTaNBg1U6+o35wpa35Qfcc+7ag==",
+      "scripts": {
+        "bench": "vitest bench",
+        "build": "ts-scripts build",
+        "format": "ts-scripts format",
+        "prepare": "ts-scripts install && npm run build",
+        "specs": "ts-scripts specs",
+        "test": "ts-scripts test"
+      }
+    },
+    {
+      "path": "node_modules/bun",
+      "version": "1.4.4",
+      "resolved": "https://registry.npmjs.org/bun/-/bun-1.4.4.tgz",
+      "integrity": "sha512-hj0ASdG6PNjLZGFAXktWb3Uaj/dcv/1wCsIttoEXADNIQBsGjTr+5uLKYbrDkuc7NT0Tkj4yPIqJI2jDxXdvVg==",
+      "scripts": {
+        "postinstall": "node install.js"
+      }
+    },
+    {
+      "path": "node_modules/bytes",
+      "version": "3.1.2",
+      "resolved": "https://registry.npmjs.org/bytes/-/bytes-3.1.2.tgz",
+      "integrity": "sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==",
+      "scripts": {
+        "lint": "eslint .",
+        "test": "mocha --check-leaks --reporter spec",
+        "test-ci": "nyc --reporter=lcov --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test"
+      }
+    },
+    {
+      "path": "node_modules/call-bind-apply-helpers",
+      "version": "1.0.2",
+      "resolved": "https://registry.npmjs.org/call-bind-apply-helpers/-/call-bind-apply-helpers-1.0.2.tgz",
+      "integrity": "sha512-Sp1ablJ0ivDkSzjcaJdxEunN5/XvksFJ2sMBFfq6x0ryhQV/2b/KwFe21cMpmHtPOSij8K99/wSfoEuTObmuMQ==",
+      "scripts": {
+        "prepack": "npmignore --auto --commentLines=auto",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "prepublishOnly": "safe-publish-latest",
+        "prelint": "evalmd README.md",
+        "lint": "eslint --ext=.js,.mjs .",
+        "postlint": "tsc -p . && attw -P",
+        "pretest": "npm run lint",
+        "tests-only": "nyc tape 'test/**/*.js'",
+        "test": "npm run tests-only",
+        "posttest": "npx npm@'>=10.2' audit --production",
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
+      }
+    },
+    {
+      "path": "node_modules/call-bound",
+      "version": "1.0.4",
+      "resolved": "https://registry.npmjs.org/call-bound/-/call-bound-1.0.4.tgz",
+      "integrity": "sha512-+ys997U96po4Kx/ABpBCqhA9EuxJaQWDQg7295H4hBphv3IZg0boBKuwYpt4YXp6MZ5AmZQnU/tyMTlRpaSejg==",
+      "scripts": {
+        "prepack": "npmignore --auto --commentLines=auto",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "prepublishOnly": "safe-publish-latest",
+        "prelint": "evalmd README.md",
+        "lint": "eslint --ext=.js,.mjs .",
+        "postlint": "tsc -p . && attw -P",
+        "pretest": "npm run lint",
+        "tests-only": "nyc tape 'test/**/*.js'",
+        "test": "npm run tests-only",
+        "posttest": "npx npm@'>=10.2' audit --production",
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
+      }
+    },
+    {
+      "path": "node_modules/content-disposition",
+      "version": "2.0.1",
+      "resolved": "https://registry.npmjs.org/content-disposition/-/content-disposition-2.0.1.tgz",
+      "integrity": "sha512-e+H0ZXHSWYrENhQzw1LPuP4oF5MzVKmDU6d3hxlvaPEYLLg62MxtQNPRx4SYSuYJSBUgnQIG4HIN2tEtNv7Dog==",
+      "scripts": {
+        "bench": "vitest bench",
+        "build": "ts-scripts build",
+        "demo": "node demo/server.js",
+        "format": "ts-scripts format",
+        "lint": "ts-scripts lint",
+        "prepare": "ts-scripts install && npm run build",
+        "specs": "ts-scripts specs",
+        "test": "ts-scripts test"
+      }
+    },
+    {
+      "path": "node_modules/content-type",
+      "version": "1.0.5",
+      "resolved": "https://registry.npmjs.org/content-type/-/content-type-1.0.5.tgz",
+      "integrity": "sha512-nTjqfcBFEipKdXCv4YDQWCfmcLZKm81ldF0pAopTvyrFGVbcR6P/VAAd5G7N+0tTr8QqiU0tFadD6FK4NtJwOA==",
+      "scripts": {
+        "lint": "eslint .",
+        "test": "mocha --reporter spec --check-leaks --bail test/",
+        "test-ci": "nyc --reporter=lcovonly --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test",
+        "version": "node scripts/version-history.js && git add HISTORY.md"
+      }
+    },
+    {
+      "path": "node_modules/cookie",
+      "version": "0.7.2",
+      "resolved": "https://registry.npmjs.org/cookie/-/cookie-0.7.2.tgz",
+      "integrity": "sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==",
+      "scripts": {
+        "bench": "node benchmark/index.js",
+        "lint": "eslint .",
+        "test": "mocha --reporter spec --bail --check-leaks test/",
+        "test-ci": "nyc --reporter=lcov --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test",
+        "update-bench": "node scripts/update-benchmark.js"
+      }
+    },
+    {
+      "path": "node_modules/cookie-signature",
+      "version": "1.2.2",
+      "resolved": "https://registry.npmjs.org/cookie-signature/-/cookie-signature-1.2.2.tgz",
+      "integrity": "sha512-D76uU73ulSXrD1UXF4KE2TMxVVwhsnCgfAyTg9k8P6KGZjlXKrOLe4dJQKI3Bxi5wjesZoFXJWElNWBjPZMbhg==",
+      "scripts": {
+        "test": "mocha --require should --reporter spec"
+      }
+    },
+    {
+      "path": "node_modules/cors",
+      "version": "2.8.6",
+      "resolved": "https://registry.npmjs.org/cors/-/cors-2.8.6.tgz",
+      "integrity": "sha512-tJtZBBHA6vjIAaF6EnIaq6laBBP9aq/Y3ouVJjEfoHbRBcHBAHYcMh/w8LDrk2PvIMMq8gmopa5D4V8RmbrxGw==",
+      "scripts": {
+        "test": "npm run lint && npm run test-ci",
+        "test-ci": "nyc --reporter=lcov --reporter=text mocha --require test/support/env",
+        "lint": "eslint lib test"
+      }
+    },
+    {
+      "path": "node_modules/cross-spawn",
+      "version": "7.0.6",
+      "resolved": "https://registry.npmjs.org/cross-spawn/-/cross-spawn-7.0.6.tgz",
+      "integrity": "sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==",
+      "scripts": {
+        "lint": "eslint .",
+        "test": "jest --env node --coverage",
+        "prerelease": "npm t && npm run lint",
+        "release": "standard-version",
+        "postrelease": "git push --follow-tags origin HEAD && npm publish"
+      }
+    },
+    {
+      "path": "node_modules/debug",
+      "version": "4.4.3",
+      "resolved": "https://registry.npmjs.org/debug/-/debug-4.4.3.tgz",
+      "integrity": "sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==",
+      "scripts": {
+        "lint": "xo",
+        "test": "npm run test:node && npm run test:browser && npm run lint",
+        "test:node": "mocha test.js test.node.js",
+        "test:browser": "karma start --single-run",
+        "test:coverage": "cat ./coverage/lcov.info | coveralls"
+      }
+    },
+    {
+      "path": "node_modules/depd",
+      "version": "2.0.0",
+      "resolved": "https://registry.npmjs.org/depd/-/depd-2.0.0.tgz",
+      "integrity": "sha512-g7nH6P6dyDioJogAAGprGpCtVImJhpPk/roCzdb3fIh61/s/nPsfR6onyMwkCAR/OlC3yBC0lESvUoQEAssIrw==",
+      "scripts": {
+        "bench": "node benchmark/index.js",
+        "lint": "eslint --plugin markdown --ext js,md .",
+        "test": "mocha --reporter spec --bail test/",
+        "test-ci": "istanbul cover --print=none node_modules/mocha/bin/_mocha -- --reporter spec test/ && istanbul report lcovonly text-summary",
+        "test-cov": "istanbul cover --print=none node_modules/mocha/bin/_mocha -- --reporter dot test/ && istanbul report lcov text-summary"
+      }
+    },
+    {
+      "path": "node_modules/dunder-proto",
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/dunder-proto/-/dunder-proto-1.0.1.tgz",
+      "integrity": "sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==",
+      "scripts": {
+        "prepack": "npmignore --auto --commentLines=autogenerated",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "prepublishOnly": "safe-publish-latest",
+        "prelint": "evalmd README.md",
+        "lint": "eslint --ext=.js,.mjs .",
+        "postlint": "tsc -p . && attw -P",
+        "pretest": "npm run lint",
+        "tests-only": "nyc tape 'test/**/*.js'",
+        "test": "npm run tests-only",
+        "posttest": "npx npm@'>= 10.2' audit --production",
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
+      }
+    },
+    {
+      "path": "node_modules/ee-first",
+      "version": "1.1.1",
+      "resolved": "https://registry.npmjs.org/ee-first/-/ee-first-1.1.1.tgz",
+      "integrity": "sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==",
+      "scripts": {
+        "test": "mocha --reporter spec --bail --check-leaks test/",
+        "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --reporter dot --check-leaks test/",
+        "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --reporter spec --check-leaks test/"
+      }
+    },
+    {
+      "path": "node_modules/encodeurl",
+      "version": "2.0.1",
+      "resolved": "https://registry.npmjs.org/encodeurl/-/encodeurl-2.0.1.tgz",
+      "integrity": "sha512-Ev/hIyePLZtpL98x562lvPtenrUfGr0lfaf44HFZ+hDEwso7ccV9QAZrEVLg0hxNAzygaAFxy2dYaAKKM0G06A==",
+      "scripts": {
+        "lint": "eslint .",
+        "test": "mocha --check-leaks --reporter spec",
+        "test-ci": "nyc --reporter=lcov --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test"
+      }
+    },
+    {
+      "path": "node_modules/es-define-property",
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/es-define-property/-/es-define-property-1.0.1.tgz",
+      "integrity": "sha512-e3nRfgfUZ4rNGL232gUgX06QNyyez04KdjFrF+LTRoOXmrOgFKDg4BCdsjW8EnT69eqdYGmRpJwiPVYNrCaW3g==",
+      "scripts": {
+        "prepack": "npmignore --auto --commentLines=autogenerated",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "prepublishOnly": "safe-publish-latest",
+        "prelint": "evalmd README.md",
+        "lint": "eslint --ext=js,mjs .",
+        "postlint": "tsc -p .",
+        "pretest": "npm run lint",
+        "tests-only": "nyc tape 'test/**/*.js'",
+        "test": "npm run tests-only",
+        "posttest": "npx npm@'>= 10.2' audit --production",
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
+      }
+    },
+    {
+      "path": "node_modules/es-errors",
+      "version": "1.3.0",
+      "resolved": "https://registry.npmjs.org/es-errors/-/es-errors-1.3.0.tgz",
+      "integrity": "sha512-Zf5H2Kxt2xjTvbJvP2ZWLEICxA6j+hAmMzIlypy4xcBg1vKVnx89Wy0GbS+kf5cwCVFFzdCFh2XSCFNULS6csw==",
+      "scripts": {
+        "prepack": "npmignore --auto --commentLines=autogenerated",
+        "prepublishOnly": "safe-publish-latest",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "pretest": "npm run lint",
+        "test": "npm run tests-only",
+        "tests-only": "nyc tape 'test/**/*.js'",
+        "posttest": "aud --production",
+        "prelint": "evalmd README.md",
+        "lint": "eslint --ext=js,mjs .",
+        "postlint": "tsc -p . && eclint check $(git ls-files | xargs find 2> /dev/null | grep -vE 'node_modules|\\.git' | grep -v dist/)",
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
+      }
+    },
+    {
+      "path": "node_modules/es-object-atoms",
+      "version": "1.1.2",
+      "resolved": "https://registry.npmjs.org/es-object-atoms/-/es-object-atoms-1.1.2.tgz",
+      "integrity": "sha512-HWcBoN6NileqtSydK2FqHbS/LoDd2pqrnQHLyJzBj4kOp/ky2MWMN694xOfkK8/SnUsW2DH7EfyVlydKCsm1Zw==",
+      "scripts": {
+        "prepack": "npmignore --auto --commentLines=autogenerated",
+        "prepublishOnly": "safe-publish-latest",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "pretest": "npm run lint",
+        "test": "npm run tests-only",
+        "tests-only": "nyc tape 'test/**/*.js'",
+        "posttest": "npx npm@\">= 10.2\" audit --production",
+        "prelint": "evalmd README.md",
+        "lint": "eslint --ext=js,mjs .",
+        "postlint": "tsc -p . && eclint check $(git ls-files | xargs find 2> /dev/null | grep -vE 'node_modules|\\.git' | grep -v dist/)",
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
+      }
+    },
+    {
+      "path": "node_modules/escape-html",
+      "version": "1.0.3",
+      "resolved": "https://registry.npmjs.org/escape-html/-/escape-html-1.0.3.tgz",
+      "integrity": "sha512-NiSupZ4OeuGwr68lGIeym/ksIZMJodUGOSCZ/FSnTxcrekbvqrgdUxlJOMpijaKZVjAJrWrGs/6Jy8OMuyj9ow==",
+      "scripts": {
+        "bench": "node benchmark/index.js"
+      }
+    },
+    {
+      "path": "node_modules/etag",
+      "version": "1.8.1",
+      "resolved": "https://registry.npmjs.org/etag/-/etag-1.8.1.tgz",
+      "integrity": "sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==",
+      "scripts": {
+        "bench": "node benchmark/index.js",
+        "lint": "eslint --plugin markdown --ext js,md .",
+        "test": "mocha --reporter spec --bail --check-leaks test/",
+        "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --reporter dot --check-leaks test/",
+        "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --reporter spec --check-leaks test/"
+      }
+    },
+    {
+      "path": "node_modules/eventsource",
+      "version": "3.0.7",
+      "resolved": "https://registry.npmjs.org/eventsource/-/eventsource-3.0.7.tgz",
+      "integrity": "sha512-CRT1WTyuQoD771GW56XEZFQ/ZoSfWid1alKGDYMmkt2yl8UXrVR4pspqWNEcqKvVIzg6PAltWjxcSSPrboA4iA==",
+      "scripts": {
+        "build": "pkg-utils build && pkg-utils --strict",
+        "build:watch": "pkg-utils watch",
+        "clean": "rimraf dist coverage",
+        "lint": "eslint . && tsc --noEmit",
+        "posttest": "npm run lint",
+        "prebuild": "npm run clean",
+        "prepare": "npm run build",
+        "test": "npm run test:node && npm run test:browser",
+        "test:browser": "tsx test/browser/client.browser.test.ts",
+        "test:bun": "bun run test/bun/client.bun.test.ts",
+        "test:deno": "deno run --allow-net --allow-read --allow-env --unstable-sloppy-imports test/deno/client.deno.test.ts",
+        "test:node": "tsx test/node/client.node.test.ts"
+      }
+    },
+    {
+      "path": "node_modules/eventsource-parser",
+      "version": "3.1.1",
+      "resolved": "https://registry.npmjs.org/eventsource-parser/-/eventsource-parser-3.1.1.tgz",
+      "integrity": "sha512-EKN1vKAMcZ8MlYMpaNuxN6R9yakzH6uajHcHVTqWJzvu5pWw9DyhbP35HH8MVBQ+dZjAfDxk+A8NiR9KWaXiyQ==",
+      "scripts": {
+        "build": "pkg-utils build && pkg-utils --strict",
+        "clean": "rimraf dist coverage",
+        "check": "npm run clean && npm run format && npm run lint && npm run build && vitest run",
+        "format": "oxfmt",
+        "format:check": "oxfmt --check",
+        "bench": "node --expose-gc --experimental-strip-types --no-warnings=ExperimentalWarning bench/parse.bench.ts",
+        "bundle-size": "node --experimental-strip-types --no-warnings=ExperimentalWarning scripts/bundle-size.ts",
+        "knip": "knip",
+        "lint": "oxlint && tsc --noEmit",
+        "posttest": "npm run lint",
+        "prebuild": "npm run clean",
+        "prepublishOnly": "npm run build",
+        "test": "npm run test:node",
+        "test:bun": "bun test",
+        "test:deno": "deno run --allow-write --allow-net --allow-run --allow-sys --allow-ffi --allow-env --allow-read npm:vitest",
+        "test:node": "vitest --reporter=verbose"
+      }
+    },
+    {
+      "path": "node_modules/express",
+      "version": "5.3.0",
+      "resolved": "https://registry.npmjs.org/express/-/express-5.3.0.tgz",
+      "integrity": "sha512-qCqy1xSoaugxOD4IVHb1ZWdkvCF2W3aE2okKouWj8VwJ+ztskSiXoBnCSJqfKT+cVPJhuJqe9YLbY425+Zh00g==",
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "test": "mocha --require test/support/env --reporter spec --check-leaks test/ test/acceptance/",
+        "test-ci": "nyc --exclude examples --exclude test --exclude benchmarks --reporter=lcovonly --reporter=text npm test",
+        "test-cov": "nyc --exclude examples --exclude test --exclude benchmarks --reporter=html --reporter=text npm test",
+        "test-tap": "mocha --require test/support/env --reporter tap --check-leaks test/ test/acceptance/"
+      }
+    },
+    {
+      "path": "node_modules/express-rate-limit",
+      "version": "8.7.3",
+      "resolved": "https://registry.npmjs.org/express-rate-limit/-/express-rate-limit-8.7.3.tgz",
+      "integrity": "sha512-zPLqDI2f0gV2WmGnacLf9XSSqn4VldRyP5LCzOwx0BKH40mO6+2PCFkoSsRO2jePx87/Kf6NUF6P2QOTKXHbQA==",
+      "scripts": {
+        "clean": "del-cli dist/ coverage/ *.log *.tmp *.bak *.tgz",
+        "build:cjs": "esbuild --packages=external --platform=node --bundle --target=es2020 --format=cjs --outfile=dist/index.cjs --footer:js=\"module.exports = Object.assign(rateLimit, module.exports);\" source/index.ts",
+        "build:esm": "esbuild --packages=external --platform=node --bundle --target=es2020 --format=esm --outfile=dist/index.mjs source/index.ts",
+        "build:types": "dts-bundle-generator --out-file=dist/index.d.ts source/index.ts && cp dist/index.d.ts dist/index.d.cts && cp dist/index.d.ts dist/index.d.mts",
+        "compile": "run-s clean build:*",
+        "docs": "cd docs && mintlify dev",
+        "lint:code": "biome check",
+        "lint:docs": "prettier --check docs/ *.md",
+        "lint": "run-s lint:*",
+        "format:code": "biome check --write",
+        "format:docs": "prettier --write docs/ *.md",
+        "format": "run-s format:*",
+        "test:lib": "jest",
+        "test:ext": "cd test/external/ && bash run-all-tests",
+        "test": "run-s lint test:lib",
+        "format-test": "run-s format test:lib",
+        "pre-commit": "lint-staged",
+        "prepare": "run-s compile && husky"
+      }
+    },
+    {
+      "path": "node_modules/express/node_modules/content-type",
+      "version": "2.1.0",
+      "resolved": "https://registry.npmjs.org/content-type/-/content-type-2.1.0.tgz",
+      "integrity": "sha512-mj7UPXE0jaqaOsukNZRUEfEi2AcL7C/vwmwcHV0O97eO1E1pxBZuyjlZrx5seTaNBg1U6+o35wpa35Qfcc+7ag==",
+      "scripts": {
+        "bench": "vitest bench",
+        "build": "ts-scripts build",
+        "format": "ts-scripts format",
+        "prepare": "ts-scripts install && npm run build",
+        "specs": "ts-scripts specs",
+        "test": "ts-scripts test"
+      }
+    },
+    {
+      "path": "node_modules/fast-deep-equal",
+      "version": "3.1.3",
+      "resolved": "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz",
+      "integrity": "sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==",
+      "scripts": {
+        "eslint": "eslint *.js benchmark/*.js spec/*.js",
+        "build": "node build",
+        "benchmark": "npm i && npm run build && cd ./benchmark && npm i && node ./",
+        "test-spec": "mocha spec/*.spec.js -R spec",
+        "test-cov": "nyc npm run test-spec",
+        "test-ts": "tsc --target ES5 --noImplicitAny index.d.ts",
+        "test": "npm run build && npm run eslint && npm run test-ts && npm run test-cov",
+        "prepublish": "npm run build"
+      }
+    },
+    {
+      "path": "node_modules/fast-uri",
+      "version": "3.1.9",
+      "resolved": "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.9.tgz",
+      "integrity": "sha512-hS/0Wt3Ya043oKXs0sIxrMpKQITXhMLIrVAKKXi4gozGC9v7YRWVnXIZzjNPTO02M9BdxLCWqK1yRXgNziVyJQ==",
+      "scripts": {
+        "lint": "eslint",
+        "lint:fix": "eslint --fix",
+        "test": "npm run test:unit && npm run test:typescript",
+        "test:browser:chromium": "playwright-test ./test/* --runner tape --browser=chromium",
+        "test:browser:firefox": "playwright-test ./test/* --runner tape --browser=firefox",
+        "test:browser:webkit": "playwright-test ./test/* --runner tape --browser=webkit",
+        "test:browser": "npm run test:browser:chromium && npm run test:browser:firefox && npm run test:browser:webkit",
+        "test:unit": "tape test/**/*.js",
+        "test:unit:dev": "npm run test:unit -- --coverage-report=html",
+        "test:typescript": "tsd"
+      }
+    },
+    {
+      "path": "node_modules/finalhandler",
+      "version": "2.1.1",
+      "resolved": "https://registry.npmjs.org/finalhandler/-/finalhandler-2.1.1.tgz",
+      "integrity": "sha512-S8KoZgRZN+a5rNwqTxlZZePjT/4cnm0ROV70LedRHZ0p8u9fRID0hJUZQpkKLzro8LfmC8sx23bY6tVNxv8pQA==",
+      "scripts": {
+        "lint": "eslint .",
+        "test": "mocha --reporter spec --check-leaks test/",
+        "test-ci": "nyc --reporter=lcovonly --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test",
+        "test-inspect": "mocha --reporter spec --inspect --inspect-brk test/"
+      }
+    },
+    {
+      "path": "node_modules/forwarded",
+      "version": "0.2.0",
+      "resolved": "https://registry.npmjs.org/forwarded/-/forwarded-0.2.0.tgz",
+      "integrity": "sha512-buRG0fpBtRHSTCOASe6hD258tEubFoRLb4ZNA6NxMVHNw2gOcwHo9wyablzMzOA5z9xA9L1KNjk/Nt6MT9aYow==",
+      "scripts": {
+        "bench": "node benchmark/index.js",
+        "lint": "eslint .",
+        "test": "mocha --reporter spec --bail --check-leaks test/",
+        "test-ci": "nyc --reporter=lcov --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test",
+        "version": "node scripts/version-history.js && git add HISTORY.md"
+      }
+    },
+    {
+      "path": "node_modules/fresh",
+      "version": "2.0.0",
+      "resolved": "https://registry.npmjs.org/fresh/-/fresh-2.0.0.tgz",
+      "integrity": "sha512-Rx/WycZ60HOaqLKAi6cHRKKI7zxWbJ31MhntmtwMoaTeF7XFH9hhBp8vITaMidfljRQ6eYWCKkaTK+ykVJHP2A==",
+      "scripts": {
+        "bench": "node benchmark/index.js",
+        "lint": "eslint .",
+        "test": "mocha --reporter spec --check-leaks --bail test/",
+        "test-ci": "nyc --reporter=lcov --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test"
+      }
+    },
+    {
+      "path": "node_modules/function-bind",
+      "version": "1.1.2",
+      "resolved": "https://registry.npmjs.org/function-bind/-/function-bind-1.1.2.tgz",
+      "integrity": "sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==",
+      "scripts": {
+        "prepublishOnly": "safe-publish-latest",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "prepack": "npmignore --auto --commentLines=autogenerated",
+        "pretest": "npm run lint",
+        "test": "npm run tests-only",
+        "posttest": "aud --production",
+        "tests-only": "nyc tape 'test/**/*.js'",
+        "lint": "eslint --ext=js,mjs .",
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
+      }
+    },
+    {
+      "path": "node_modules/get-intrinsic",
+      "version": "1.3.0",
+      "resolved": "https://registry.npmjs.org/get-intrinsic/-/get-intrinsic-1.3.0.tgz",
+      "integrity": "sha512-9fSjSaos/fRIVIp+xSJlE6lfwhES7LNtKaCBIamHsjr2na1BiABJPo0mOjjz8GJDURarmCPGqaiVg5mfjb98CQ==",
+      "scripts": {
+        "prepack": "npmignore --auto --commentLines=autogenerated",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "prepublishOnly": "safe-publish-latest",
+        "prelint": "evalmd README.md",
+        "lint": "eslint --ext=.js,.mjs .",
+        "pretest": "npm run lint",
+        "tests-only": "nyc tape 'test/**/*.js'",
+        "test": "npm run tests-only",
+        "posttest": "npx npm@'>= 10.2' audit --production",
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
+      }
+    },
+    {
+      "path": "node_modules/get-proto",
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/get-proto/-/get-proto-1.0.1.tgz",
+      "integrity": "sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g==",
+      "scripts": {
+        "prepack": "npmignore --auto --commentLines=autogenerated",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "prepublishOnly": "safe-publish-latest",
+        "pretest": "npm run --silent lint",
+        "test": "npm run tests-only",
+        "posttest": "npx npm@\">=10.2\" audit --production",
+        "tests-only": "nyc tape 'test/**/*.js'",
+        "prelint": "evalmd README.md",
+        "lint": "eslint --ext=js,mjs .",
+        "postlint": "tsc && attw -P",
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
+      }
+    },
+    {
+      "path": "node_modules/gopd",
+      "version": "1.2.0",
+      "resolved": "https://registry.npmjs.org/gopd/-/gopd-1.2.0.tgz",
+      "integrity": "sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==",
+      "scripts": {
+        "prepack": "npmignore --auto --commentLines=autogenerated",
+        "prepublishOnly": "safe-publish-latest",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "prelint": "tsc -p . && attw -P",
+        "lint": "eslint --ext=js,mjs .",
+        "postlint": "evalmd README.md",
+        "pretest": "npm run lint",
+        "tests-only": "tape 'test/**/*.js'",
+        "test": "npm run tests-only",
+        "posttest": "npx npm@'>=10.2' audit --production",
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
+      }
+    },
+    {
+      "path": "node_modules/has-symbols",
+      "version": "1.1.0",
+      "resolved": "https://registry.npmjs.org/has-symbols/-/has-symbols-1.1.0.tgz",
+      "integrity": "sha512-1cDNdwJ2Jaohmb3sg4OmKaMBwuC48sYni5HUw2DvsC8LjGTLK9h+eb1X6RyuOHe4hT0ULCW68iomhjUoKUqlPQ==",
+      "scripts": {
+        "prepack": "npmignore --auto --commentLines=autogenerated",
+        "prepublishOnly": "safe-publish-latest",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "pretest": "npm run --silent lint",
+        "test": "npm run tests-only",
+        "posttest": "npx npm@'>=10.2' audit --production",
+        "tests-only": "npm run test:stock && npm run test:shams",
+        "test:stock": "nyc node test",
+        "test:staging": "nyc node --harmony --es-staging test",
+        "test:shams": "npm run --silent test:shams:getownpropertysymbols && npm run --silent test:shams:corejs",
+        "test:shams:corejs": "nyc node test/shams/core-js.js",
+        "test:shams:getownpropertysymbols": "nyc node test/shams/get-own-property-symbols.js",
+        "lint": "eslint --ext=js,mjs .",
+        "postlint": "tsc -p . && attw -P",
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
+      }
+    },
+    {
+      "path": "node_modules/hasown",
+      "version": "2.0.4",
+      "resolved": "https://registry.npmjs.org/hasown/-/hasown-2.0.4.tgz",
+      "integrity": "sha512-T2UbfbBEF32wiepXIsMlTW9+dDYC6wMh/t/vYA4tuOMKqWz/n3vr1NFSxQiyP+zk2mXsoMA/i/7qV6LKut1t1A==",
+      "scripts": {
+        "prepack": "npmignore --auto --commentLines=autogenerated",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "prepublishOnly": "safe-publish-latest",
+        "prelint": "evalmd README.md",
+        "lint": "eslint .",
+        "postlint": "npm run tsc",
+        "pretest": "npm run lint",
+        "tsc": "tsc -p .",
+        "posttsc": "attw -P",
+        "tests-only": "nyc tape 'test/**/*.js'",
+        "test": "npm run tests-only",
+        "posttest": "npx npm@\">= 10.2\" audit --production",
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
+      }
+    },
+    {
+      "path": "node_modules/hono",
+      "version": "4.13.16",
+      "resolved": "https://registry.npmjs.org/hono/-/hono-4.13.16.tgz",
+      "integrity": "sha512-AOLOEhvrV+iH92xXCnFr/5+3KjPKcI3xP63XJtX5spAnkznPdHijlIsUTpi7/9EhWqrTCekw5c5zh1K+YsVw7A==",
+      "scripts": {
+        "test": "tsc -p tsconfig.spec.json && vp test --run",
+        "test:watch": "vp test --watch",
+        "test:deno": "deno test --allow-read --allow-env --allow-write --allow-net -c runtime-tests/deno/deno.json runtime-tests/deno && deno test --no-lock -c runtime-tests/deno-jsx/deno.precompile.json runtime-tests/deno-jsx && deno test --no-lock -c runtime-tests/deno-jsx/deno.react-jsx.json runtime-tests/deno-jsx",
+        "test:bun": "bun test --jsx-import-source ../../src/jsx runtime-tests/bun",
+        "test:fastly": "vp test --run --project fastly",
+        "test:node": "vp test --run --project node",
+        "test:workerd": "vp test --run --project workerd",
+        "test:all": "pnpm run test && pnpm run test:deno && pnpm run test:bun",
+        "check": "vp check",
+        "check:fix": "vp check --fix",
+        "lint": "vp lint src runtime-tests build perf-measures benchmarks adapters",
+        "lint:fix": "vp lint --fix src runtime-tests build perf-measures benchmarks adapters",
+        "format": "vp fmt --check \"src/**/*.{js,ts,tsx}\" \"runtime-tests/**/*.{js,ts,tsx}\" \"build/**/*.{js,ts,tsx}\" \"perf-measures/**/*.{js,ts,tsx}\" \"benchmarks/**/*.{js,ts,tsx}\" \"adapters/**/*.{js,ts,tsx}\"",
+        "format:fix": "vp fmt \"src/**/*.{js,ts,tsx}\" \"runtime-tests/**/*.{js,ts,tsx}\" \"build/**/*.{js,ts,tsx}\" \"perf-measures/**/*.{js,ts,tsx}\" \"benchmarks/**/*.{js,ts,tsx}\" \"adapters/**/*.{js,ts,tsx}\"",
+        "editorconfig-checker": "editorconfig-checker",
+        "copy:package.cjs.json": "cp ./package.cjs.json ./dist/cjs/package.json && cp ./package.cjs.json ./dist/types/package.json",
+        "build": "pnpm run remove-dist && vp pack && pnpm run copy:package.cjs.json && publint",
+        "watch": "pnpm run remove-dist && vp pack --watch && pnpm run copy:package.cjs.json",
+        "coverage": "vp test --run --coverage",
+        "prerelease": "pnpm run test:deno && pnpm run build",
+        "release": "np --no-publish",
+        "remove-dist": "rm -rf dist",
+        "build:adapters": "pnpm -r --filter \"./adapters/*\" run build",
+        "test:adapters": "pnpm -r --filter \"./adapters/*\" run test",
+        "release:adapter": "node ./build/release-adapter.ts"
+      }
+    },
+    {
+      "path": "node_modules/http-errors",
+      "version": "2.0.1",
+      "resolved": "https://registry.npmjs.org/http-errors/-/http-errors-2.0.1.tgz",
+      "integrity": "sha512-4FbRdAX+bSdmo4AUFuS0WNiPz8NgFt+r8ThgNWmlrjQjt1Q7ZR9+zTlce2859x4KSXrwIsaeTqDoKQmtP8pLmQ==",
+      "scripts": {
+        "lint": "eslint . && node ./scripts/lint-readme-list.js",
+        "test": "mocha --reporter spec",
+        "test-ci": "nyc --reporter=lcov --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test",
+        "version": "node scripts/version-history.js && git add HISTORY.md"
+      }
+    },
+    {
+      "path": "node_modules/iconv-lite",
+      "version": "0.7.3",
+      "resolved": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.7.3.tgz",
+      "integrity": "sha512-IKXpvIzjnC9XTAUbVBcMfGS0EPaIXtW6v+zr+RRp+hqULEpo0owZax6wyRwPOJbWbzjYspQwusTsfVr0ifh4uQ==",
+      "scripts": {
+        "lint": "eslint",
+        "lint:fix": "eslint --fix",
+        "test": "mocha --reporter spec --check-leaks --grep .",
+        "test:ci": "nyc --exclude test --reporter=lcovonly --reporter=text npm test",
+        "test:cov": "nyc --exclude test --reporter=html --reporter=text npm test",
+        "test:performance": "node --allow-natives-syntax performance/index.js",
+        "test:tap": "mocha --reporter tap --check-leaks --grep .",
+        "test:typescript": "tsc && attw --pack",
+        "test:webpack": "npm pack && mv iconv-lite-*.tgz test/webpack/iconv-lite.tgz && cd test/webpack && npm install && npm run test && rm iconv-lite.tgz",
+        "typegen": "node generation/gen-typings.js"
+      }
+    },
+    {
+      "path": "node_modules/inherits",
+      "version": "2.0.4",
+      "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.4.tgz",
+      "integrity": "sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==",
+      "scripts": {
+        "test": "tap"
+      }
+    },
+    {
+      "path": "node_modules/ip-address",
+      "version": "10.7.6",
+      "resolved": "https://registry.npmjs.org/ip-address/-/ip-address-10.7.6.tgz",
+      "integrity": "sha512-00LYkM6byILa9eQIx6qoaXCM40xTLd56AZ4vyaPW3YTyb49VZYPo5xsiAq4tuQ54GH4R7gVdYScJ1B7B77PuTg==",
+      "scripts": {
+        "docs": "tsx scripts/build-readme.ts",
+        "docs:check": "tsx scripts/build-readme.ts --check",
+        "build": "rm -rf dist; mkdir dist; tsc",
+        "prepack": "npm run docs && npm run build",
+        "prepare": "git config core.hooksPath hooks || true",
+        "lint": "prettier --check . && eslint . --ext .ts,.js --max-warnings 0",
+        "lint:fix": "prettier --write . && eslint . --ext .ts,.js --max-warnings 0 --fix",
+        "test-ci": "c8 --experimental-monocart mocha",
+        "test": "mocha",
+        "watch": "mocha --watch"
+      }
+    },
+    {
+      "path": "node_modules/ipaddr.js",
+      "version": "1.9.1",
+      "resolved": "https://registry.npmjs.org/ipaddr.js/-/ipaddr.js-1.9.1.tgz",
+      "integrity": "sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==",
+      "scripts": {
+        "test": "cake build test"
+      }
+    },
+    {
+      "path": "node_modules/is-promise",
+      "version": "4.0.0",
+      "resolved": "https://registry.npmjs.org/is-promise/-/is-promise-4.0.0.tgz",
+      "integrity": "sha512-hvpoI6korhJMnej285dSg6nu1+e6uxs7zG3BYAm5byqDsgJNWwxzM6z6iZiAgQR4TJ30JmBTOwqZUw3WlyH3AQ==",
+      "scripts": {
+        "test": "node test"
+      }
+    },
+    {
+      "path": "node_modules/isexe",
+      "version": "2.0.0",
+      "resolved": "https://registry.npmjs.org/isexe/-/isexe-2.0.0.tgz",
+      "integrity": "sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==",
+      "scripts": {
+        "test": "tap test/*.js --100",
+        "preversion": "npm test",
+        "postversion": "npm publish",
+        "postpublish": "git push origin --all; git push origin --tags"
+      }
+    },
+    {
+      "path": "node_modules/jose",
+      "version": "6.2.15",
+      "resolved": "https://registry.npmjs.org/jose/-/jose-6.2.15.tgz",
+      "integrity": "sha512-qdF6ewcZARtef63fJ9AKKZPgxw+t7USH6HLXYcD4CrdmSvDp79rpJSPFEKc90QBeGS63u1KQtN2MZQHC0yDIzA==",
+      "scripts": {}
+    },
+    {
+      "path": "node_modules/json-schema-traverse",
+      "version": "1.0.0",
+      "resolved": "https://registry.npmjs.org/json-schema-traverse/-/json-schema-traverse-1.0.0.tgz",
+      "integrity": "sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==",
+      "scripts": {
+        "eslint": "eslint index.js spec",
+        "test-spec": "mocha spec -R spec",
+        "test": "npm run eslint && nyc npm run test-spec"
+      }
+    },
+    {
+      "path": "node_modules/json-schema-typed",
+      "version": "8.0.2",
+      "resolved": "https://registry.npmjs.org/json-schema-typed/-/json-schema-typed-8.0.2.tgz",
+      "integrity": "sha512-fQhoXdcvc3V28x7C7BMs4P5+kNlgUURe2jmUT1T//oBRMDrqy1QPelJimwZGo7Hg9VPV3EQV5Bnq4hbFy2vetA==",
+      "scripts": {}
+    },
+    {
+      "path": "node_modules/math-intrinsics",
+      "version": "1.1.0",
+      "resolved": "https://registry.npmjs.org/math-intrinsics/-/math-intrinsics-1.1.0.tgz",
+      "integrity": "sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==",
+      "scripts": {
+        "prepack": "npmignore --auto --commentLines=autogenerated",
+        "prepublishOnly": "safe-publish-latest",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "pretest": "npm run lint",
+        "test": "npm run tests-only",
+        "tests-only": "nyc tape 'test/**/*.js'",
+        "posttest": "npx npm@'>= 10.2' audit --production",
+        "prelint": "evalmd README.md && eclint check $(git ls-files | xargs find 2> /dev/null | grep -vE 'node_modules|\\.git' | grep -v dist/)",
+        "lint": "eslint --ext=js,mjs .",
+        "postlint": "tsc && attw -P",
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
+      }
+    },
+    {
+      "path": "node_modules/media-typer",
+      "version": "1.1.1",
+      "resolved": "https://registry.npmjs.org/media-typer/-/media-typer-1.1.1.tgz",
+      "integrity": "sha512-yz3xRaG20c6/BOzvYoDaGtPmGscs7YivItZEEqe6GbwNfHuxu9YNmvnEkMzKldAGY4/80pRcQRZSEnhquk9XuQ==",
+      "scripts": {
+        "lint": "eslint --plugin markdown --ext js,md .",
+        "test": "mocha --reporter spec --check-leaks --bail test/",
+        "test-ci": "nyc --reporter=lcov --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test"
+      }
+    },
+    {
+      "path": "node_modules/merge-descriptors",
+      "version": "2.0.0",
+      "resolved": "https://registry.npmjs.org/merge-descriptors/-/merge-descriptors-2.0.0.tgz",
+      "integrity": "sha512-Snk314V5ayFLhp3fkUREub6WtjBfPdCPY1Ln8/8munuLuiYhsABgBVWsozAG+MWMbVEvcdcpbi9R7ww22l9Q3g==",
+      "scripts": {
+        "test": "xo && ava"
+      }
+    },
+    {
+      "path": "node_modules/mime-db",
+      "version": "1.54.0",
+      "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.54.0.tgz",
+      "integrity": "sha512-aU5EJuIN2WDemCcAp2vFBfp/m4EAhWJnUNSSw0ixs7/kXbd6Pg64EmwJkNdFhB8aWt1sH2CTXrLxo/iAGV3oPQ==",
+      "scripts": {
+        "build": "node scripts/build",
+        "fetch": "node scripts/fetch-apache && node scripts/fetch-iana && node scripts/fetch-nginx",
+        "lint": "eslint .",
+        "test": "mocha --reporter spec --check-leaks test/",
+        "test-ci": "nyc --reporter=lcovonly --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test",
+        "update": "npm run fetch && npm run build",
+        "version": "node scripts/version-history.js && git add HISTORY.md"
+      }
+    },
+    {
+      "path": "node_modules/mime-types",
+      "version": "3.0.2",
+      "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-3.0.2.tgz",
+      "integrity": "sha512-Lbgzdk0h4juoQ9fCKXW4by0UJqj+nOOrI9MJ1sSj4nI8aI2eo1qmvQEie4VD1glsS250n15LsWsYtCugiStS5A==",
+      "scripts": {
+        "lint": "eslint .",
+        "test": "mocha --reporter spec test/test.js",
+        "test-ci": "nyc --reporter=lcov --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test"
+      }
+    },
+    {
+      "path": "node_modules/ms",
+      "version": "2.1.3",
+      "resolved": "https://registry.npmjs.org/ms/-/ms-2.1.3.tgz",
+      "integrity": "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==",
+      "scripts": {
+        "precommit": "lint-staged",
+        "lint": "eslint lib/* bin/*",
+        "test": "mocha tests.js"
+      }
+    },
+    {
+      "path": "node_modules/negotiator",
+      "version": "1.1.0",
+      "resolved": "https://registry.npmjs.org/negotiator/-/negotiator-1.1.0.tgz",
+      "integrity": "sha512-NMPBRMJgiQHjbd8phG3Vebdx4kZ1H121rbl5IkMqeOsahptB9BKo/d7oJ3zTXqTgagn2bWlNSXkh0QUGM31RYg==",
+      "scripts": {
+        "bench": "vitest bench",
+        "lint": "eslint .",
+        "test": "mocha --reporter spec --check-leaks test/",
+        "test:debug": "mocha --reporter spec --check-leaks --inspect --inspect-brk test/",
+        "test-ci": "nyc --reporter=lcovonly --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test"
+      }
+    },
+    {
+      "path": "node_modules/negotiator/node_modules/content-type",
+      "version": "2.1.0",
+      "resolved": "https://registry.npmjs.org/content-type/-/content-type-2.1.0.tgz",
+      "integrity": "sha512-mj7UPXE0jaqaOsukNZRUEfEi2AcL7C/vwmwcHV0O97eO1E1pxBZuyjlZrx5seTaNBg1U6+o35wpa35Qfcc+7ag==",
+      "scripts": {
+        "bench": "vitest bench",
+        "build": "ts-scripts build",
+        "format": "ts-scripts format",
+        "prepare": "ts-scripts install && npm run build",
+        "specs": "ts-scripts specs",
+        "test": "ts-scripts test"
+      }
+    },
+    {
+      "path": "node_modules/object-assign",
+      "version": "4.1.1",
+      "resolved": "https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz",
+      "integrity": "sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==",
+      "scripts": {
+        "test": "xo && ava",
+        "bench": "matcha bench.js"
+      }
+    },
+    {
+      "path": "node_modules/object-inspect",
+      "version": "1.13.4",
+      "resolved": "https://registry.npmjs.org/object-inspect/-/object-inspect-1.13.4.tgz",
+      "integrity": "sha512-W67iLl4J2EXEGTbfeHCffrjDfitvLANg0UlX3wFUUSTx92KXRFegMHUVgSqE+wvhAbi4WqjGg9czysTV2Epbew==",
+      "scripts": {
+        "prepack": "npmignore --auto --commentLines=autogenerated",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "prepublishOnly": "safe-publish-latest",
+        "pretest": "npm run lint",
+        "lint": "eslint --ext=js,mjs .",
+        "postlint": "npx @pkgjs/support validate",
+        "test": "npm run tests-only && npm run test:corejs",
+        "tests-only": "nyc tape 'test/*.js'",
+        "test:corejs": "nyc tape test-core-js.js 'test/*.js'",
+        "posttest": "npx npm@'>=10.2' audit --production",
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
+      }
+    },
+    {
+      "path": "node_modules/on-finished",
+      "version": "2.4.2",
+      "resolved": "https://registry.npmjs.org/on-finished/-/on-finished-2.4.2.tgz",
+      "integrity": "sha512-ATWUv387i+nLD49EiDoOft5scf32Vsdz3ktrQJG9bi7jRFmaXTssvyvj1EmeKVVgvesbqUtvQQvaS2TpTukAZQ==",
+      "scripts": {
+        "lint": "eslint .",
+        "test": "mocha --reporter spec --check-leaks test/",
+        "test-ci": "nyc --reporter=lcovonly --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test"
+      }
+    },
+    {
+      "path": "node_modules/once",
+      "version": "1.4.0",
+      "resolved": "https://registry.npmjs.org/once/-/once-1.4.0.tgz",
+      "integrity": "sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==",
+      "scripts": {
+        "test": "tap test/*.js"
+      }
+    },
+    {
+      "path": "node_modules/parseurl",
+      "version": "1.3.3",
+      "resolved": "https://registry.npmjs.org/parseurl/-/parseurl-1.3.3.tgz",
+      "integrity": "sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==",
+      "scripts": {
+        "bench": "node benchmark/index.js",
+        "lint": "eslint .",
+        "test": "mocha --check-leaks --bail --reporter spec test/",
+        "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --check-leaks --reporter dot test/",
+        "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --check-leaks --reporter spec test/"
+      }
+    },
+    {
+      "path": "node_modules/path-key",
+      "version": "3.1.1",
+      "resolved": "https://registry.npmjs.org/path-key/-/path-key-3.1.1.tgz",
+      "integrity": "sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==",
+      "scripts": {
+        "test": "xo && ava && tsd"
+      }
+    },
+    {
+      "path": "node_modules/path-to-regexp",
+      "version": "8.4.2",
+      "resolved": "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-8.4.2.tgz",
+      "integrity": "sha512-qRcuIdP69NPm4qbACK+aDogI5CBDMi1jKe0ry5rSQJz8JVLsC7jV8XpiJjGRLLol3N+R5ihGYcrPLTno6pAdBA==",
+      "scripts": {
+        "bench": "vitest bench",
+        "build": "ts-scripts build",
+        "format": "ts-scripts format",
+        "lint": "ts-scripts lint",
+        "prepare": "ts-scripts install && npm run build",
+        "size": "size-limit",
+        "specs": "ts-scripts specs",
+        "test": "ts-scripts test && npm run size"
+      }
+    },
+    {
+      "path": "node_modules/pkce-challenge",
+      "version": "5.0.1",
+      "resolved": "https://registry.npmjs.org/pkce-challenge/-/pkce-challenge-5.0.1.tgz",
+      "integrity": "sha512-wQ0b/W4Fr01qtpHlqSqspcj3EhBvimsdh0KlHhH8HRZnMsEa0ea2fTULOXOS9ccQr3om+GcGRk4e+isrZWV8qQ==",
+      "scripts": {
+        "watch": "tsc --watch --declaration",
+        "preprocess": "env=browser diverge -f src/index.ts src/index.browser.ts && env=node diverge -f src/index.ts src/index.node.ts && env=node diverge -f src/index.ts src/index.node.cts",
+        "build": "npm run preprocess && tsc --declaration",
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+        "test:bundle": "npm run --prefix browser-test build"
+      }
+    },
+    {
+      "path": "node_modules/proxy-addr",
+      "version": "2.0.8",
+      "resolved": "https://registry.npmjs.org/proxy-addr/-/proxy-addr-2.0.8.tgz",
+      "integrity": "sha512-5nnx0yGyVUcY6t9RnWcARWtwT9F1D8O9rt08htPvnd49W1IgZtmLkhu9WfMzQj1cFxjHIO6connUNVW5k7AVyQ==",
+      "scripts": {
+        "bench": "node benchmark/index.js",
+        "lint": "eslint .",
+        "test": "mocha --reporter spec --bail --check-leaks test/",
+        "test-ci": "nyc --reporter=lcov --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test"
+      }
+    },
+    {
+      "path": "node_modules/qs",
+      "version": "6.17.1",
+      "resolved": "https://registry.npmjs.org/qs/-/qs-6.17.1.tgz",
+      "integrity": "sha512-jd3COkaKVgGUW+ZHyEHCG9bH7RoaaiWuMgzsIBjUMVjLAaWGWpoUAVwljVvBHxRu/2qEHnadLGZrkutYUBPQJA==",
+      "scripts": {
+        "prepack": "npmignore --auto --commentLines=autogenerated && npm run dist",
+        "prepublishOnly": "safe-publish-latest",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "pretest": "npm run lint",
+        "test": "npm run tests-only",
+        "tests-only": "nyc tape 'test/**/*.js'",
+        "posttest": "npx npm@'>=10.2' audit --production",
+        "postlint": "eclint check $(git ls-files | xargs find 2> /dev/null | grep -vE 'node_modules|\\.git' | grep -v dist/)",
+        "prelint": "evalmd --eslint README.md",
+        "lint": "eslint .",
+        "dist": "mkdirp dist && browserify --standalone Qs -g unassertify -g @browserify/envify -g [@browserify/uglifyify --mangle.keep_fnames --compress.keep_fnames --format.indent_level=1 --compress.arrows=false --compress.passes=4 --compress.typeofs=false] -p common-shakeify -p bundle-collapser/plugin lib/index.js > dist/qs.js"
+      }
+    },
+    {
+      "path": "node_modules/range-parser",
+      "version": "1.3.0",
+      "resolved": "https://registry.npmjs.org/range-parser/-/range-parser-1.3.0.tgz",
+      "integrity": "sha512-hek2mFQpPuI4E1BBKrSto+BU3e3x4xuarsbiwr3+lf7p44juvFMV0XFWQAP3xUyqXA4RrXLIoaSUGbSt056ZMw==",
+      "scripts": {
+        "lint": "eslint --plugin markdown --ext js,md .",
+        "test": "mocha --reporter spec",
+        "test-ci": "nyc --reporter=lcovonly --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test"
+      }
+    },
+    {
+      "path": "node_modules/raw-body",
+      "version": "3.0.2",
+      "resolved": "https://registry.npmjs.org/raw-body/-/raw-body-3.0.2.tgz",
+      "integrity": "sha512-K5zQjDllxWkf7Z5xJdV0/B0WTNqx6vxG70zJE4N0kBs4LovmEYWJzQGxC9bS9RAKu3bgM40lrd5zoLJ12MQ5BA==",
+      "scripts": {
+        "lint": "eslint",
+        "lint:fix": "eslint --fix",
+        "test": "mocha --trace-deprecation --reporter spec --check-leaks test/",
+        "test:ci": "nyc --reporter=lcovonly --reporter=text npm test",
+        "test:cov": "nyc --reporter=html --reporter=text npm test",
+        "version": "node scripts/version-history.js && git add HISTORY.md"
+      }
+    },
+    {
+      "path": "node_modules/require-from-string",
+      "version": "2.0.2",
+      "resolved": "https://registry.npmjs.org/require-from-string/-/require-from-string-2.0.2.tgz",
+      "integrity": "sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==",
+      "scripts": {
+        "test": "mocha"
+      }
+    },
+    {
+      "path": "node_modules/router",
+      "version": "2.2.0",
+      "resolved": "https://registry.npmjs.org/router/-/router-2.2.0.tgz",
+      "integrity": "sha512-nLTrUKm2UyiL7rlhapu/Zl45FwNgkZGaCpZbIHajDYgwlJCOzLSk+cIPAnsEqV955GjILJnKbdQC1nVPz+gAYQ==",
+      "scripts": {
+        "lint": "standard",
+        "test": "mocha --reporter spec --bail --check-leaks test/",
+        "test:debug": "mocha --reporter spec --bail --check-leaks test/ --inspect --inspect-brk",
+        "test-ci": "nyc --reporter=lcov --reporter=text npm test",
+        "test-cov": "nyc --reporter=text npm test",
+        "version": "node scripts/version-history.js && git add HISTORY.md"
+      }
+    },
+    {
+      "path": "node_modules/safer-buffer",
+      "version": "2.1.2",
+      "resolved": "https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz",
+      "integrity": "sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==",
+      "scripts": {
+        "browserify-test": "browserify --external tape tests.js > browserify-tests.js && tape browserify-tests.js",
+        "test": "standard && tape tests.js"
+      }
+    },
+    {
+      "path": "node_modules/send",
+      "version": "1.2.1",
+      "resolved": "https://registry.npmjs.org/send/-/send-1.2.1.tgz",
+      "integrity": "sha512-1gnZf7DFcoIcajTjTwjwuDjzuz4PPcY2StKPlsGAQ1+YH20IRVrBaXSWmdjowTJ6u8Rc01PoYOGHXfP1mYcZNQ==",
+      "scripts": {
+        "lint": "eslint .",
+        "test": "mocha --check-leaks --reporter spec",
+        "test-ci": "nyc --reporter=lcovonly --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test",
+        "version": "node scripts/version-history.js && git add HISTORY.md"
+      }
+    },
+    {
+      "path": "node_modules/serve-static",
+      "version": "2.2.1",
+      "resolved": "https://registry.npmjs.org/serve-static/-/serve-static-2.2.1.tgz",
+      "integrity": "sha512-xRXBn0pPqQTVQiC8wyQrKs2MOlX24zQ0POGaj0kultvoOCstBQM5yvOhAVSUwOMjQtTvsPWoNCHfPGwaaQJhTw==",
+      "scripts": {
+        "lint": "eslint .",
+        "test": "mocha --reporter spec --bail --check-leaks test/",
+        "test-ci": "nyc --reporter=lcov --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test",
+        "version": "node scripts/version-history.js && git add HISTORY.md"
+      }
+    },
+    {
+      "path": "node_modules/setprototypeof",
+      "version": "1.2.0",
+      "resolved": "https://registry.npmjs.org/setprototypeof/-/setprototypeof-1.2.0.tgz",
+      "integrity": "sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==",
+      "scripts": {
+        "test": "standard && mocha",
+        "testallversions": "npm run node010 && npm run node4 && npm run node6 && npm run node9 && npm run node11",
+        "testversion": "docker run -it --rm -v $(PWD):/usr/src/app -w /usr/src/app node:${NODE_VER} npm install mocha@${MOCHA_VER:-latest} && npm t",
+        "node010": "NODE_VER=0.10 MOCHA_VER=3 npm run testversion",
+        "node4": "NODE_VER=4 npm run testversion",
+        "node6": "NODE_VER=6 npm run testversion",
+        "node9": "NODE_VER=9 npm run testversion",
+        "node11": "NODE_VER=11 npm run testversion",
+        "prepublishOnly": "npm t",
+        "postpublish": "git push origin && git push origin --tags"
+      }
+    },
+    {
+      "path": "node_modules/shebang-command",
+      "version": "2.0.0",
+      "resolved": "https://registry.npmjs.org/shebang-command/-/shebang-command-2.0.0.tgz",
+      "integrity": "sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==",
+      "scripts": {
+        "test": "xo && ava"
+      }
+    },
+    {
+      "path": "node_modules/shebang-regex",
+      "version": "3.0.0",
+      "resolved": "https://registry.npmjs.org/shebang-regex/-/shebang-regex-3.0.0.tgz",
+      "integrity": "sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==",
+      "scripts": {
+        "test": "xo && ava && tsd"
+      }
+    },
+    {
+      "path": "node_modules/side-channel",
+      "version": "1.1.1",
+      "resolved": "https://registry.npmjs.org/side-channel/-/side-channel-1.1.1.tgz",
+      "integrity": "sha512-6x6dK6zJdpTzF4sQeNYxwtvBzf6Eg4GtlesS94HOvTudUeyK2WXAaIfmDgsyslYrRBeFIlsi54AYsFGUuhmvrQ==",
+      "scripts": {
+        "prepack": "npmignore --auto --commentLines=autogenerated",
+        "prepublishOnly": "safe-publish-latest",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "prelint": "eclint check $(git ls-files | xargs find 2> /dev/null | grep -vE 'node_modules|\\.git')",
+        "lint": "eslint --ext=js,mjs .",
+        "postlint": "tsc -p . && attw -P",
+        "pretest": "npm run lint",
+        "tests-only": "nyc tape 'test/**/*.js'",
+        "test": "npm run tests-only",
+        "posttest": "npx npm@'>=10.2' audit --production",
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
+      }
+    },
+    {
+      "path": "node_modules/side-channel-list",
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/side-channel-list/-/side-channel-list-1.0.1.tgz",
+      "integrity": "sha512-mjn/0bi/oUURjc5Xl7IaWi/OJJJumuoJFQJfDDyO46+hBWsfaVM65TBHq2eoZBhzl9EchxOijpkbRC8SVBQU0w==",
+      "scripts": {
+        "prepack": "npmignore --auto --commentLines=autogenerated",
+        "prepublishOnly": "safe-publish-latest",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "prelint": "evalmd README.md && eclint check $(git ls-files | xargs find 2> /dev/null | grep -vE 'node_modules|\\.git')",
+        "lint": "eslint --ext=js,mjs .",
+        "postlint": "tsc -p . && attw -P",
+        "pretest": "npm run lint",
+        "tests-only": "nyc tape 'test/**/*.js'",
+        "test": "npm run tests-only",
+        "posttest": "npx npm@'>= 10.2' audit --production",
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
+      }
+    },
+    {
+      "path": "node_modules/side-channel-map",
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/side-channel-map/-/side-channel-map-1.0.1.tgz",
+      "integrity": "sha512-VCjCNfgMsby3tTdo02nbjtM/ewra6jPHmpThenkTYh8pG9ucZ/1P8So4u4FGBek/BjpOVsDCMoLA/iuBKIFXRA==",
+      "scripts": {
+        "prepack": "npmignore --auto --commentLines=autogenerated",
+        "prepublishOnly": "safe-publish-latest",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "prelint": "evalmd README.md && eclint check $(git ls-files | xargs find 2> /dev/null | grep -vE 'node_modules|\\.git')",
+        "lint": "eslint --ext=js,mjs .",
+        "postlint": "tsc -p . && attw -P",
+        "pretest": "npm run lint",
+        "tests-only": "nyc tape 'test/**/*.js'",
+        "test": "npm run tests-only",
+        "posttest": "npx npm@'>= 10.2' audit --production",
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
+      }
+    },
+    {
+      "path": "node_modules/side-channel-weakmap",
+      "version": "1.0.2",
+      "resolved": "https://registry.npmjs.org/side-channel-weakmap/-/side-channel-weakmap-1.0.2.tgz",
+      "integrity": "sha512-WPS/HvHQTYnHisLo9McqBHOJk2FkHO/tlpvldyrnem4aeQp4hai3gythswg6p01oSoTl58rcpiFAjF2br2Ak2A==",
+      "scripts": {
+        "prepack": "npmignore --auto --commentLines=autogenerated",
+        "prepublishOnly": "safe-publish-latest",
+        "prepublish": "not-in-publish || npm run prepublishOnly",
+        "prelint": "eclint check $(git ls-files | xargs find 2> /dev/null | grep -vE 'node_modules|\\.git')",
+        "lint": "eslint --ext=js,mjs .",
+        "postlint": "tsc -p . && attw -P",
+        "pretest": "npm run lint",
+        "tests-only": "nyc tape 'test/**/*.js'",
+        "test": "npm run tests-only",
+        "posttest": "npx npm@'>=10.2' audit --production",
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
+      }
+    },
+    {
+      "path": "node_modules/statuses",
+      "version": "2.0.2",
+      "resolved": "https://registry.npmjs.org/statuses/-/statuses-2.0.2.tgz",
+      "integrity": "sha512-DvEy55V3DB7uknRo+4iOGT5fP1slR8wQohVdknigZPMpMstaKJQWhwiYBACJE3Ul2pTnATihhBYnRhZQHGBiRw==",
+      "scripts": {
+        "build": "node scripts/build.js",
+        "fetch": "node scripts/fetch-apache.js && node scripts/fetch-iana.js && node scripts/fetch-nginx.js && node scripts/fetch-node.js",
+        "lint": "eslint --plugin markdown --ext js,md .",
+        "test": "mocha --reporter spec --check-leaks --bail test/",
+        "test-ci": "nyc --reporter=lcov --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test",
+        "update": "npm run fetch && npm run build",
+        "version": "node scripts/version-history.js && git add HISTORY.md"
+      }
+    },
+    {
+      "path": "node_modules/toidentifier",
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/toidentifier/-/toidentifier-1.0.1.tgz",
+      "integrity": "sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==",
+      "scripts": {
+        "lint": "eslint .",
+        "test": "mocha --reporter spec --bail --check-leaks test/",
+        "test-ci": "nyc --reporter=lcov --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test",
+        "version": "node scripts/version-history.js && git add HISTORY.md"
+      }
+    },
+    {
+      "path": "node_modules/type-is",
+      "version": "2.1.0",
+      "resolved": "https://registry.npmjs.org/type-is/-/type-is-2.1.0.tgz",
+      "integrity": "sha512-faYHw0anBbc/kWF3zFTEnxSFOAGUX9GFbOBthvDdLsIlEoWOFOtS0zgCiQYwIskL9iGXZL3kAXD8OoZ4GmMATA==",
+      "scripts": {
+        "lint": "eslint .",
+        "test": "mocha --reporter spec --check-leaks --bail test/",
+        "test:debug": "mocha --reporter spec --check-leaks --inspect --inspect-brk test/",
+        "test-ci": "nyc --reporter=lcovonly --reporter=text npm test",
+        "test-cov": "nyc --reporter=html --reporter=text npm test"
+      }
+    },
+    {
+      "path": "node_modules/type-is/node_modules/content-type",
+      "version": "2.1.0",
+      "resolved": "https://registry.npmjs.org/content-type/-/content-type-2.1.0.tgz",
+      "integrity": "sha512-mj7UPXE0jaqaOsukNZRUEfEi2AcL7C/vwmwcHV0O97eO1E1pxBZuyjlZrx5seTaNBg1U6+o35wpa35Qfcc+7ag==",
+      "scripts": {
+        "bench": "vitest bench",
+        "build": "ts-scripts build",
+        "format": "ts-scripts format",
+        "prepare": "ts-scripts install && npm run build",
+        "specs": "ts-scripts specs",
+        "test": "ts-scripts test"
+      }
+    },
+    {
+      "path": "node_modules/unpipe",
+      "version": "1.0.0",
+      "resolved": "https://registry.npmjs.org/unpipe/-/unpipe-1.0.0.tgz",
+      "integrity": "sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==",
+      "scripts": {
+        "test": "mocha --reporter spec --bail --check-leaks test/",
+        "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --reporter dot --check-leaks test/",
+        "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --reporter spec --check-leaks test/"
+      }
+    },
+    {
+      "path": "node_modules/vary",
+      "version": "1.1.2",
+      "resolved": "https://registry.npmjs.org/vary/-/vary-1.1.2.tgz",
+      "integrity": "sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==",
+      "scripts": {
+        "bench": "node benchmark/index.js",
+        "lint": "eslint --plugin markdown --ext js,md .",
+        "test": "mocha --reporter spec --bail --check-leaks test/",
+        "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --reporter dot --check-leaks test/",
+        "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --reporter spec --check-leaks test/"
+      }
+    },
+    {
+      "path": "node_modules/which",
+      "version": "2.0.2",
+      "resolved": "https://registry.npmjs.org/which/-/which-2.0.2.tgz",
+      "integrity": "sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==",
+      "scripts": {
+        "test": "tap",
+        "preversion": "npm test",
+        "postversion": "npm publish",
+        "prepublish": "npm run changelog",
+        "prechangelog": "bash gen-changelog.sh",
+        "changelog": "git add CHANGELOG.md",
+        "postchangelog": "git commit -m 'update changelog - '${npm_package_version}",
+        "postpublish": "git push origin --follow-tags"
+      }
+    },
+    {
+      "path": "node_modules/wrappy",
+      "version": "1.0.2",
+      "resolved": "https://registry.npmjs.org/wrappy/-/wrappy-1.0.2.tgz",
+      "integrity": "sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==",
+      "scripts": {
+        "test": "tap --coverage test/*.js"
+      }
+    },
+    {
+      "path": "node_modules/wreq-js",
+      "version": "2.3.1",
+      "resolved": "https://registry.npmjs.org/wreq-js/-/wreq-js-2.3.1.tgz",
+      "integrity": "sha512-vaKasaKeskrDKEuuO5Q5uamEG9a6FrF5ZSicH7TCvYS4RxF7/gzaU/vYqwJzcs+uydyJPVWY1KCvfVCgp0tiGA==",
+      "scripts": {
+        "build": "npm run build:rust && npm run build:ts",
+        "build:rust": "napi build --platform --release --manifest-path rust/Cargo.toml",
+        "build:ts": "tsdown",
+        "artifacts": "napi artifacts",
+        "test": "npm run test:run",
+        "test:run": "tsx src/test/run-with-local-server.ts",
+        "test:build": "npm run build && npm run test:run",
+        "test:coverage": "npm run test:coverage:run",
+        "test:coverage:run": "c8 --reporter=html --reporter=text --reporter=lcov tsx src/test/run-with-local-server.ts",
+        "test:coverage:ci": "npm run build && npm run test:coverage:run",
+        "build:bench-server": "cargo build --release --manifest-path rust/bench-server/Cargo.toml",
+        "bench": "npm run build:rust && npm run build:bench-server && tsx --expose-gc src/bench/run.ts",
+        "bench:run": "tsx --expose-gc src/bench/run.ts",
+        "bench:quick": "npm run build:rust && tsx --expose-gc src/bench/run.ts --scenario wreq.session.get.small",
+        "perf:aws:setup-iam": "bash ./scripts/aws-perf/setup-iam.sh",
+        "perf:aws:compare": "bash ./scripts/aws-perf/ec2-compare.sh",
+        "perf:aws:cleanup": "bash ./scripts/aws-perf/cleanup-stale.sh",
+        "check": "biome check .",
+        "check:fix": "biome check --write .",
+        "typecheck": "tsgo --noEmit -p tsconfig.json",
+        "typecheck:tsc": "tsc --noEmit -p tsconfig.json",
+        "clean": "rimraf dist rust/target rust/*.node",
+        "clean:dist": "rimraf dist",
+        "ci:biome": "biome ci .",
+        "docs:install": "npm --prefix docs install",
+        "docs:dev": "npm --prefix docs run dev",
+        "prepare": "husky"
+      }
+    },
+    {
+      "path": "node_modules/zod",
+      "version": "4.6.6",
+      "resolved": "https://registry.npmjs.org/zod/-/zod-4.6.6.tgz",
+      "integrity": "sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA==",
+      "scripts": {
+        "clean": "git clean -xdf . -e node_modules",
+        "build": "nub exec --node zshy --project tsconfig.build.json",
+        "postbuild": "nub ../../scripts/write-stub-package-jsons.ts && nub exec --node biome check --write .",
+        "test:watch": "nub exec --node vitest",
+        "test": "nub exec --node vitest run",
+        "prepublishOnly": "nub ../../scripts/check-versions.ts"
+      }
+    },
+    {
+      "path": "node_modules/zod-to-json-schema",
+      "version": "3.25.2",
+      "resolved": "https://registry.npmjs.org/zod-to-json-schema/-/zod-to-json-schema-3.25.2.tgz",
+      "integrity": "sha512-O/PgfnpT1xKSDeQYSCfRI5Gy3hPf91mKVDuYLUHZJMiDFptvP41MSnWofm8dnCm0256ZNfZIM7DSzuSMAFnjHA==",
+      "scripts": {
+        "build:test": "npm --prefix ./dist-test-v3 test && npm --prefix ./dist-test-v4 test",
+        "build:types": "tsc -p tsconfig.types.json",
+        "build:cjs": "tsc -p tsconfig.cjs.json && tsx postcjs.ts",
+        "build:esm": "tsc -p tsconfig.esm.json && tsx postesm.ts",
+        "build": "npm i && npm run gen && npm test && rimraf ./dist && npm run build:types && npm run build:cjs && npm run build:esm && npm run build:test",
+        "dry": "npm run build && npm pub --dry-run",
+        "test:watch": "tsx watch test/index.ts",
+        "test:gen": "tsx test/createIndex.ts",
+        "test": "tsx test/index.ts",
+        "gen": "tsx createIndex.ts"
+      }
+    }
+  ],
+  "execution": "not-run",
+  "runtimeSourceSha256": "3e4d874d7e90174cbd1c19ef6cd958421db9645ce9d0a74bf5c580488ee997fb",
+  "unpackedBytes": 619176019,
+  "entries": 11327,
+  "reproducibleRepacks": 2,
+  "archiveSha256": "f37f7e29af38cd22a581965efb234824a67348cef405d0f5b6089adefbaa398d",
+  "descriptorSha256": "b7e1509d74f044fcd2a7b1faad39d841f40933896728f1910d59c755ac455f0f",
+  "structure": "passed-complete-tree-and-relative-symlinks"
+}
