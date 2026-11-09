@@ -8,8 +8,12 @@ on:
       purpose:
         description: Package a candidate, or run one bounded diagnostic without a desktop/package
         type: choice
-        options: [lifetime-producer, foreign-job-authority, record-contract, local-session-regression, local-session-build, diagnostic-sweep, official-stop-query-profile, official-stop-history-profile, candidate, ordinary-preflight, retention023, query-etw, installer-retention, native-ui, process-exit]
-        default: diagnostic-sweep
+        options: [core-sweep, core-build, lifetime-producer, foreign-job-authority, record-contract, local-session-regression, local-session-build, diagnostic-sweep, official-stop-query-profile, official-stop-history-profile, candidate, ordinary-preflight, retention023, query-etw, installer-retention, native-ui, process-exit]
+        default: core-sweep
+      core_hypothesis:
+        description: Prewritten falsifiable core-sweep hypothesis JSON
+        type: string
+        default: ''
       admission_run:
         description: Successful exact-head push CI run required for query-etw
         type: string
@@ -48,6 +52,19 @@ permissions:
   contents: read
 
 jobs:
+  core-build:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'core-build'
+    uses: ./.github/workflows/windows023-core-build.yml
+  core-sweep:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'core-sweep'
+    permissions:
+      contents: read
+      actions: read
+    uses: ./.github/workflows/windows023-core-sweep.yml
+    with:
+      build_run: ${{ inputs.candidate_run }}
+      source: ${{ inputs.candidate_head }}
+      hypothesis: ${{ inputs.core_hypothesis }}
   lifetime-producer:
     if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'lifetime-producer'
     uses: ./.github/workflows/windows023-record-contract.yml

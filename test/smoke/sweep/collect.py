@@ -13,7 +13,7 @@ def require(value, message):
         raise ValueError(message)
 
 
-def collect(root, selected=None):
+def collect(root, selected=None, *, core=False, merge_runtime=False):
     root = Path(root)
     sweep, evidence = root / "sweep", root / "evidence"
     sweep.mkdir(parents=True, exist_ok=True)
@@ -64,7 +64,8 @@ def collect(root, selected=None):
             starts.append(row)
         return dict(environment=environment, actualStarts=starts)
 
-    write("13", "runtime-readiness", actual_readiness, ["12"])
+    if not (core or merge_runtime):
+        write("13", "runtime-readiness", actual_readiness, ["12"])
 
     def ports():
         d = read(users / "two-user-native.json")
@@ -79,7 +80,24 @@ def collect(root, selected=None):
         require(protocol.get("servicesStopped") is True, "Actual owned services stop receipt is missing")
         return protocol
 
-    write("14", "runtime-ports", ports, ["12", "13"])
+    if core or merge_runtime:
+        # Execute BOTH original assertion sets even if readiness fails. A green
+        # environment or a lone port is never a substitute for the full protocol.
+        if selected in (None, "13"):
+            parts = {}
+            for name, check in (("readiness", actual_readiness), ("ports", ports)):
+                try:
+                    parts[name] = dict(status="pass", firstError="", evidence=check())
+                except Exception as error:
+                    parts[name] = dict(status="fail", firstError=str(error).splitlines()[0], evidence=None)
+            failures = [f"{name}: {row['firstError']}" for name, row in parts.items() if row["status"] == "fail"]
+            row = dict(schemaVersion=1, step="13", name="runtime-readiness-and-ports",
+                       status="fail" if failures else "pass", firstError="; ".join(failures),
+                       accepted=False, diagnosticOnly=True, dependencies=["12"], evidence=parts)
+            with (sweep / "13-runtime-readiness-and-ports.json").open("x", encoding="utf-8") as stream:
+                json.dump(row, stream, ensure_ascii=False, indent=2)
+    else:
+        write("14", "runtime-ports", ports, ["12", "13"])
     write("15", "two-user-paths", lambda: both("path-snapshot"), ["11"])
     write("16", "same-user-ipc", lambda: both("same-user-ipc"), ["11", "15"])
     write("17", "cross-user-ipc", lambda: {k: both(k) for k in
@@ -121,13 +139,14 @@ def collect(root, selected=None):
                 "Unproven live generations or retained account/Profile; cleanup failed")
         require(d.get("desktopAclRestored") is True and d.get("evidenceAclRestored") is True and
                 d.get("sealedCandidateUnchanged") is True, "Original ACL/sealed candidate restoration failed")
-        for kind in ("msi", "nsis"):
-            for mode in ("default", "custom"):
-                receipt = read(evidence / f"{kind}-{mode}/installation-owner-cleanup.json")
-                require(receipt.get("removed") is True, f"{kind}/{mode}: installer owner cleanup not proved")
+        if not core:
+            for kind in ("msi", "nsis"):
+                for mode in ("default", "custom"):
+                    receipt = read(evidence / f"{kind}-{mode}/installation-owner-cleanup.json")
+                    require(receipt.get("removed") is True, f"{kind}/{mode}: installer owner cleanup not proved")
         return dict(twoUser=rows, method="retained PID/SID/image/creation and exact account/Profile/ACL readback")
 
-    write("18", "account-and-process-cleanup", cleanup, ["04", "05", "06", "07", "11"])
+    write("18", "account-and-process-cleanup", cleanup, ["11"] if core else ["04", "05", "06", "07", "11"])
 
     def uninstalls():
         result = []
@@ -157,8 +176,12 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("root", type=Path)
     p.add_argument("--step")
+    p.add_argument("--core", action="store_true")
+    p.add_argument("--merge-runtime", action="store_true")
     a = p.parse_args()
-    collect(a.root, a.step)
+    if a.core and a.step not in {"12", "13", "15", "16", "17", "18"}:
+        p.error("Core collection requires one explicit core step")
+    collect(a.root, a.step, core=a.core, merge_runtime=a.merge_runtime)
     if a.step:
         rows = list((a.root / "sweep").glob(a.step + "-*.json"))
         if len(rows) != 1 or read(rows[0])["status"] != "pass":

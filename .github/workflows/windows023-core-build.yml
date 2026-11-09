@@ -1,0 +1,72 @@
+name: Windows 0.2.23 core preparation
+on:
+  workflow_dispatch:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26.8.1
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/tauri -> target
+          shared-key: windows-native-ui-018
+          cache-on-failure: true
+      - name: Create fresh preparation root
+        id: root
+        run: |
+          $root=Join-Path $env:RUNNER_TEMP ('ocxd023-core-build-'+$env:GITHUB_RUN_ID+'-'+$env:GITHUB_RUN_ATTEMPT)
+          if(Test-Path -LiteralPath $root){throw 'Earlier evidence must not be overwritten'}
+          New-Item -ItemType Directory (Join-Path $root 'evidence') | Out-Null
+          New-Item -ItemType Directory (Join-Path $root 'program') | Out-Null
+          'OCXD_SWEEP_ROOT='+$root >> $env:GITHUB_ENV
+          'OCXD_SWEEP_PROGRAM='+(Join-Path $root 'program') >> $env:GITHUB_ENV
+          'OCXD_REQUIRE_RUNTIME_BUNDLE=1' >> $env:GITHUB_ENV
+          'root='+$root >> $env:GITHUB_OUTPUT
+      - name: Build complete exact-source program outside core iteration
+        id: build
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '02' -Name current-binary -Task build
+      - name: Build exact-source backend observer
+        id: observer
+        if: always() && steps.root.outcome == 'success'
+        continue-on-error: true
+        run: ./test/smoke/sweep/step.ps1 -Directory $env:OCXD_SWEEP_ROOT -Step '25' -Name backend-state-observer-build -Task state-observer
+      - name: Seal only a completely built program
+        id: seal
+        if: steps.build.outcome == 'success' && steps.observer.outcome == 'success'
+        run: python test/smoke/sweep/core.py seal $env:OCXD_SWEEP_PROGRAM
+      - name: Preserve preparation failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows023-core-build-logs-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ steps.root.outputs.root }}/sweep/**
+            ${{ steps.root.outputs.root }}/evidence/**
+          if-no-files-found: error
+      - name: Upload source-bound complete diagnostic program
+        if: steps.seal.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows023-core-program-${{ github.sha }}
+          path: ${{ steps.root.outputs.root }}/program/**
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 14
+      - name: Require all preparation outputs without accepting a candidate
+        if: always()
+        env:
+          SEALED: ${{ steps.seal.outcome }}
+        run: |
+          if($env:SEALED -cne 'success'){throw 'Core build preparation incomplete; original failures retained'}

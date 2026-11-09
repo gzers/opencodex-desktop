@@ -107,14 +107,10 @@ jobs:
         if: always()
         continue-on-error: true
         run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --step '12'
-      - name: 13 runtime-readiness
+      - name: 13 runtime-readiness-and-ports
         if: always()
         continue-on-error: true
-        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --step '13'
-      - name: 14 runtime-ports
-        if: always()
-        continue-on-error: true
-        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --step '14'
+        run: python test/smoke/sweep/collect.py $env:OCXD_SWEEP_ROOT --step '13' --merge-runtime
       - name: 15 two-user-paths
         if: always()
         continue-on-error: true
