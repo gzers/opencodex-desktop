@@ -30,7 +30,12 @@ if($user1Mode -eq 'Child'){
   $fact=Get-TwoUserProcessFact $p $sid;$ledger[[int]$fact.pid]=$fact
   $key=[string]$fact.pid+'/'+$fact.creationTicks
   if(!$objects.ContainsKey($key)){$objects[$key]=@{process=$p;fact=$fact}}else{$p.Dispose()}
+  # Publish each exact generation before another process can outlive its parent.
+  Write-TwoUserJson (Join-Path $out 'runtime-tracked.json') @($ledger.Values)
   $fact
+ }
+ function Assert-User1NotCancelled {
+  if($c.coordination -and (Test-Path -LiteralPath (Join-Path $out 'abort'))){throw 'Controller cancelled before next product action'}
  }
  function Observe-User1Tree {
   if(!$managerFact){return}
@@ -55,6 +60,7 @@ if($user1Mode -eq 'Child'){
   }
  }
  try{
+  Assert-User1NotCancelled
   Assert-WindowsProcessMode $result.harnessToken $expectedProcessMode
   if(Test-Path -LiteralPath $installed){throw 'Fresh user1 private installation required'}
   New-Item -ItemType Directory -Path $installed|Out-Null
@@ -68,6 +74,7 @@ if($user1Mode -eq 'Child'){
   $info=[Diagnostics.ProcessStartInfo]::new();$info.FileName=$exe;$info.WorkingDirectory=$installed;$info.UseShellExecute=$false;$info.CreateNoWindow=$true;$info.RedirectStandardOutput=$true;$info.RedirectStandardError=$true
   foreach($key in @('OPENCODEX_SANDBOX','OPENCODEX_SANDBOX_ROOT','OPENCODEX_WINDOWS_SMOKE_CDP_PORT','HOME','OPENCODEX_HOME','CODEX_HOME','CLAUDE_CONFIG_DIR','WEBVIEW2_USER_DATA_FOLDER','WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS')){[void]$info.Environment.Remove($key)}
   $info.Environment['WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS']='--remote-debugging-address=127.0.0.1 --remote-debugging-port='+$port
+  Assert-User1NotCancelled
   $manager=[Diagnostics.Process]::Start($info);$managerOut=$manager.StandardOutput.ReadToEndAsync();$managerErr=$manager.StandardError.ReadToEndAsync()
   $managerFact=Admit-User1Process $manager;$result.manager=$managerFact
   $result.applicationToken=Get-WindowsProcessToken $manager $exe;Assert-WindowsProcessMode $result.applicationToken $expectedProcessMode
@@ -77,6 +84,7 @@ if($user1Mode -eq 'Child'){
   Write-TwoUserJson (Join-Path $out 'environment.json') ($result+[ordered]@{os=[Environment]::OSVersion.VersionString;machine=$env:COMPUTERNAME;userInteractive=[Environment]::UserInteractive;userProfile=$env:USERPROFILE;localAppData=$env:LOCALAPPDATA;sandbox=$false;actualUtc=[datetime]::UtcNow.ToString('o');desktop=$window;powershell=$PSVersionTable.PSVersion.ToString()})
   $supplyDeadline=[datetime]::UtcNow.AddSeconds(600);$terminal=$null
   do{
+   Assert-User1NotCancelled
    Observe-User1Tree
    $log=Join-Path $root 'logs/app.log'
    if(Test-Path $log){$terminal=Get-Content $log|Select-String 'integrated runtime (provisioned and verified|provisioning failed)'|Select-Object -Last 1}
@@ -85,6 +93,7 @@ if($user1Mode -eq 'Child'){
   Write-TwoUserJson (Join-Path $out 'supply-terminal.json') @{line=$terminal.Line;accepted=$false}
   if(!$terminal -or !$terminal.Line.Contains('integrated runtime provisioned and verified')){throw 'Real first-start offline supply not confirmed'}
   if(!(Get-Content $log -Raw).Contains('commit='+$expected)){throw 'Program build source differs'}
+  Assert-User1NotCancelled
   $driverInput=Join-Path $out 'driver-input.json';$release=Join-Path $out 'driver-release'
   Write-TwoUserJson $driverInput @{commit=$expected;root=$root;home=$nativeHome;driverRelease=$release;coordination=$c.coordination}
   $di=[Diagnostics.ProcessStartInfo]::new();$di.FileName=$c.node;$di.UseShellExecute=$false;$di.CreateNoWindow=$true;$di.RedirectStandardOutput=$true;$di.RedirectStandardError=$true

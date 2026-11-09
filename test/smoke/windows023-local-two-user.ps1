@@ -129,8 +129,12 @@ finally{
  foreach($a in $accounts){try{Signal-LocalPeer $a 'abort'}catch{}}
  foreach($a in $accounts){
   if($a.process){try{
-   if($a.fact){Add-TwoUserDescendants $a.fact $ledger}
-   if(!$a.process.HasExited){[void]$a.process.WaitForExit(20000)}
+   $until=[datetime]::UtcNow.AddSeconds(20)
+   do{
+    if($a.fact){Add-TwoUserDescendants $a.fact $ledger}
+    if($a.process.HasExited){break}
+    Start-Sleep -Milliseconds 200
+   }while([datetime]::UtcNow -lt $until)
   }catch{$a.unproven=$true;$a.cleanup+=@{phase='bootstrap-descendants';error=$_.Exception.Message}}}
   $tracked=Join-Path $a.evidence 'runtime-tracked.json'
   if(Test-Path -LiteralPath $tracked){foreach($f in @(Get-Content -LiteralPath $tracked -Raw|ConvertFrom-Json)){
