@@ -52,7 +52,7 @@ try{
  let ready=false;
  while(performance.now()-start<30000){
   try{
-   captured=readRecord();assert(captured.value.pid>0&&captured.value.port>0);
+   captured=readRecord();assert(captured.value.pid===child.pid&&captured.value.port>0);
    socket=connect({host:'127.0.0.1',port:captured.value.port});socket.on('error',()=>{});await Promise.race([once(socket,'connect'),sleep(1000).then(()=>{throw Error('connect-timeout');})]);
    const health=await request('GET','/healthz');verify(health);report.recordAndHealthAttestation=true;report.lifetimeResponseProof=true;
    const readiness=await request('GET','/readyz');if(readiness.status===200&&readiness.value.status==='ready'&&readiness.value.pid===captured.value.pid){ready=true;break;}
