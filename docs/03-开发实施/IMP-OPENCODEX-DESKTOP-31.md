@@ -524,3 +524,10 @@ edb908dcf修复已证明成功的终态映射：此前from_state(next)保留Star
 重要证据边界修正：42578649105的producer是source-only clone且当时未带--no-install，Bun缺node_modules默认可自动安装，所以旧轮能启动不构成锁定离线依赖证明；撤回此前“可排除依赖装配”的外推，只保留实际启动/签名及失败事实。新候选从已固定离线安装包复制依赖，排除原opencodex源码目录，逐文件摘要前后及候选一致，CLI加--no-install，禁止缓存/网络自动补包。复制/tamper/link边界本地验证过，实际Windows仍待。原失败/日志原件不改。
 
 [隔离验证与源码review证据](../../.adg/evidence/0.2.23/core-batch-terminal-and-trace-20261109/verification.json)说明编译fixture漏枚举及路径别名测试初错与纠正；不把后续命令成功冒充初次通过。没有新派core或完整sweep，剩余产品启动确认总耗时和官方停止链、维护包完整生产者/消费者集成仍未完成。目标继续active、无release。
+
+
+### 未闭合producer专项判断（派发前）
+
+core-sweep增加producer技术focus（4162f5234），仅对尚未闭合的实际候选生产者/官方停止链收取01入场、12冻结供应、13合并就绪/端口、18自有fixture清理回执，不重复六组native/foreignJob或既有产品路径/IPC门。此技术focus不执行、也不冒称通过双SID产品验收；已过产品门仅显式引用原源/证据，生产集成后仍必须做受影响的双SID同源回归。整版范围不缩小，不改任何原判据。
+
+[派发前判断H-frozen-producer-stop-20261109-02](../../.adg/evidence/0.2.23/core-producer-frozen-20261109/hypothesis.before-dispatch.json)：在完全固定离线依赖、Bun --no-install后，实际CLI应仍启动并通过签名；若原Stop仍失败，固定阶段计时应定位manager或restore。若供应不闭合、启动失败或无阶段证据则此判断不成立/未证实；若原Stop正常完成则反证“原故障持续”。同样保留未知即拒绝/fixture保留/原预算和accepted:false。输入仅复用42580582994/ab0b5d043封存的离线资源，经完整manifest和当前policy比对，绝不把旧产品exe用于新源验收。15项装配行为测试、3workflow actionlint、18实际PowerShell块解析通过。尚未派发，先提交推送判断。

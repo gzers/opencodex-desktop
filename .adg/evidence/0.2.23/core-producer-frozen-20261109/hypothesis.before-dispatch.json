@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "H-frozen-producer-stop-20261109-02",
+  "source": "4162f5234c911be28e371f9a8463609ae1fa5d31",
+  "inputSource": "ab0b5d043d9a93b5d9434bf5f0758423fa15f58a",
+  "buildRun": "42580582994",
+  "validationScope": "candidate-producer-technical-only",
+  "claim": "With exact frozen offline dependencies and Bun auto-install disabled, the candidate CLI will still start and authenticate; any remaining official Stop failure will be isolated to fixed original manager/restore stages rather than unresolved dependency supply",
+  "changeUnderTest": "Explicit offline dependency copy/digest verification, --no-install, and fixed-label monotonic trace around unchanged official calls; original producer/owner/lifetime module and 30/10/5 assertions unchanged",
+  "refutation": "Supply mismatch or missing dependency, failure to authenticate startup, or a stop failure without the actual bounded stage trace refutes or leaves this causal judgment unproved; a complete stop would refute persistence of the old failure",
+  "rerunReason": "Previous actual producer failure is unresolved and its dependency closure was not established. Diagnose this changed candidate assembly only; do not repeat six native prototypes, private Job foreign-SID denial, installers, paths or IPC. This single-owner technical diagnostic cannot accept dual-SID product or final version gates.",
+  "predictions": [
+    {
+      "step": "12",
+      "status": "pass",
+      "observation": "Original frozen dependency bytes equal copied candidate bytes; no runtime auto install"
+    },
+    {
+      "step": "13",
+      "status": "fail",
+      "observation": "Original unresolved official Stop remains failed but fixed-phase trace identifies manager or restore substage after actual startup attestation"
+    },
+    {
+      "step": "18",
+      "status": "fail",
+      "observation": "An unconfirmed original service exit retains the exact fixture instead of force kill or false cleanup"
+    }
+  ],
+  "unchangedPassingEvidence": [
+    {
+      "gate": "six native lifetime/Rust witness cases and foreign SID private Job denial",
+      "source": "f143d0910bacd47d933ce6ce89426f972368ba59",
+      "evidence": ".adg/evidence/0.2.23/actual-lifetime-producer-42578649105/; foreign-job-authority-42567013704/",
+      "whyUnaffected": "Candidate native helper and independent Rust consumer unchanged; no acceptance extrapolation"
+    },
+    {
+      "gate": "dual SID, private supply, per-user paths, IPC and exact account cleanup",
+      "source": "ab0b5d043d9a93b5d9434bf5f0758423fa15f58a",
+      "evidence": ".adg/evidence/0.2.23/core-entry-20261109/run-42581940251/",
+      "whyUnaffected": "No implementation of those product boundaries changed except already separately tracked confirmed-action DTO mapping; this technical run makes no claim to close its same-source integration regression"
+    }
+  ]
+}
