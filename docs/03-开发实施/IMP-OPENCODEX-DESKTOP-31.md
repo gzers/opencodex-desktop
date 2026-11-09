@@ -487,3 +487,10 @@ d3a3b6542下一批集中补反例（源码已推，当前ff1轮不变、未重�
 ccba4bb7e增加测试原生消费者Witness，实际服务仍活时先verifyTSbinding，再OpenProcess保留同PID/FILETIME，原生TokenUser及固定Bunimage前后核对，OpenJob/私有owner/protected唯一用户ACE/真实成员/count>=2，openlease经原validator/同volumeindex/实际lockbusy；driver按marker正常释放后同句柄wait-exit、jobcount0、lease仍同身份且可锁再释放才完成。握手拒绝仍让自有子正常退出、保存失败，不强杀。小隔离crateWindows目标check/strictClippy过，仅签名stub（执行必panic）用于编译，未当作实际validator/native通过，编译target已精确移除。
 
 [run42577435871](https://github.com/gzers/opencodex-desktop/actions/runs/42577435871)固定ccba4bb7e042cbd3789af1ddeb77cab9c2654df9/job129028221849已确认运行，仍原6case及所有archive/atomic/失败反例；actualWindows使用项目原validator、RustWitness和真实TS运行身份，不替换成stub。结果仍accepted:false，未接生产Stop扫描/官方HTTP还原或发布。实际CLI/start record/HTTP证明的隔离producer装配已准备但未启动真实代理，继续保留后续完整集成门。
+
+
+Rust原生消费者42577435871成功，原17324字节ZIP/SHA2562cfa03ec5f028d9c06cd1596500a36c4fde3e6d6f1d1a75632c403f7ef5ac81e核验；实际candidate direct264.32ms/detached330.96ms，独立Rust签名与nativeWitness均过。真实TokenUser/固定Bun映像/PID/FILETIME前后、privateJob/成员/计数、原leaseowner/DACL/volumeindex/活跃锁busy；正常退出后同保留句柄originalexit/jobempty/leasefree全部证明，6case/原型archive/原子失败保留/strictClippy/fixturestage清理继续过。见[原生消费者结果](../../.adg/evidence/0.2.23/native-rust-lifetime-witness-42577435871/analysis.json)，仍accepted:false，不外推真实CLI/HTTP官方还原/用户GUI或发布。
+
+f143d0910准备真实producer隔离门，明确只有全部先决case通过后才启动独立候选CLI。由prototype archive单独clone后精确hook原handleStart、writeRuntimePort、normalhealth响应proof，记录源前后摘要，正式names.2不变。全新临时profile/Codexfixture，模型仅127.0.0.1:1/synthetic key/liveModelsfalse；不发推理/业务同步请求。驱动只读record、HMAC/独立lifetime proof和ready，PID必须等于本次实际创建的CLIchild；原GETstopcap/再次health认证/POSTstop共用同一TCP连接，token只在认证后发送，freshfixture只接受sharedTeardown=performed，无defer。原30/10/5门，10秒包括官方链与process/job/lease/record退出；未知不强杀不清记录，精确HOME保留并回写失败，未证明清理不能用成功掩盖。
+
+[run42578649105](https://github.com/gzers/opencodex-desktop/actions/runs/42578649105)固定f143d0910bacd47d933ce6ce89426f972368ba59/job129031965706已确认执行。该门真实启动隔离candidate代理，但无真实模型或业务数据，不动日常HOME/安装/服务；继承环境仅OS白名单，不带CI凭据。单脚本Node语法、实际3PowerShell块/Rustfmt和原producer3hook唯一preimage/Bun编译已检查；不是正式GUI/OSProfile/DPAPI/IPC/双用户/签名制品验收，未删除生产全机扫描。

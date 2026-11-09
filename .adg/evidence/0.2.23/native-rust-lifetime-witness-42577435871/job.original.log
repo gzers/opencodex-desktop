@@ -1,0 +1,528 @@
+record-contract / record-contract	UNKNOWN STEP	﻿2026-11-09T07:08:56.2264558Z Current runner version: '2.338.2'
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2528391Z ##[group]Runner Image Provisioner
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2529179Z Hosted Compute Agent
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2529745Z Version: 20261103.629
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2530353Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2531122Z Build Date: 2026-11-03T17:26:59Z
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2531750Z Worker ID: {ac3f9369-cfdb-4796-b4ea-75bbb7712981}
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2532392Z Region: westus2
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2532857Z Cloud: Azure
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2533339Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2534730Z ##[group]Operating System
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2535297Z Microsoft Windows Server 2025
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2535849Z 10.0.26100
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2536357Z Datacenter
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2536883Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2537458Z ##[group]Runner Image
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2538003Z Image: windows-2025-vs2026
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2538628Z Version: 20261103.298.1
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2540396Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2542033Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2543163Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2544271Z ##[group]GITHUB_TOKEN Permissions
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2546271Z Contents: read
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2546830Z Metadata: read
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2547329Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2549414Z Secret source: Actions
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2550289Z Cache mode: write
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.2550934Z Prepare workflow directory
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.3654465Z Prepare all required actions
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.3707429Z Getting action download info
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.7098221Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:56.8751618Z Download action repository 'actions/setup-node@v5' (SHA:a0853c24544627f65ddf259abe73b1d18a591444)
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:57.1278606Z Download action repository 'dtolnay/rust-toolchain@stable' (SHA:b725eda525362e7cf34af9a7243cac1e3f01a7ec)
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:57.3235143Z Download action repository 'Swatinem/rust-cache@v2' (SHA:d1527c8f67ef9af357290475d4af4b0fab8f12e0)
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:57.6141321Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:58.6119933Z Uses: gzers/opencodex-desktop/.github/workflows/windows023-record-contract.yml@refs/heads/codex/0.2.23-integration (ccba4bb7e042cbd3789af1ddeb77cab9c2654df9)
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:58.6125666Z ##[group] Inputs
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:58.6126250Z   purpose: record-contract
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:58.6126831Z   diagnostic_path: isolated-replay
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:58.6127487Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:58.6128045Z Complete job name: record-contract / record-contract
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.4212772Z ##[group]Run actions/checkout@v5
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.4214460Z with:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.4215415Z   repository: gzers/opencodex-desktop
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.4223057Z   token: ***
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.4223745Z   ssh-strict: true
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.4224427Z   ssh-user: git
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.4225127Z   persist-credentials: true
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.4225882Z   clean: true
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.4226568Z   sparse-checkout-cone-mode: true
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.4227389Z   fetch-depth: 1
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.4228044Z   fetch-tags: false
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.4228730Z   show-progress: true
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.4229422Z   lfs: false
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.4230080Z   submodules: false
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.4230883Z   set-safe-directory: true
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.4231849Z   allow-unsafe-pr-checkout: false
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.4233091Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.6245470Z Syncing repository: gzers/opencodex-desktop
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.6247842Z ##[group]Getting Git version info
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.6249040Z Working directory is 'D:\a\opencodex-desktop\opencodex-desktop'
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:08:59.7063935Z [command]"C:\Program Files\Git\bin\git.exe" version
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:00.0163308Z git version 2.56.0.windows.4
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:00.0217796Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:00.0259434Z Temporarily overriding HOME='D:\a\_temp\1df7748c-4e7a-43ae-a5cf-2f539b220684' before making global git config changes
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:00.0261772Z Adding repository directory to the temporary git global config as a safe directory
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:00.0263810Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:00.0910982Z Deleting the contents of 'D:\a\opencodex-desktop\opencodex-desktop'
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:00.0917831Z ##[group]Initializing the repository
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:00.0926893Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\opencodex-desktop\opencodex-desktop
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:00.1760071Z Initialized empty Git repository in D:/a/opencodex-desktop/opencodex-desktop/.git/
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:00.1814484Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/gzers/opencodex-desktop
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:00.2702568Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:00.2704525Z ##[group]Disabling automatic garbage collection
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:00.2717240Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:00.3238783Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:00.3245143Z ##[group]Setting up auth
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:00.3257194Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:00.3707480Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:01.8163920Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:01.8572903Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:02.3988409Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:02.4374804Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:02.9854531Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:03.0271402Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:03.0272135Z ##[group]Fetching the repository
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:03.0361086Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +ccba4bb7e042cbd3789af1ddeb77cab9c2654df9:refs/remotes/origin/codex/0.2.23-integration
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:04.4995815Z From https://github.com/gzers/opencodex-desktop
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:04.4996688Z  * [new ref]         ccba4bb7e042cbd3789af1ddeb77cab9c2654df9 -> origin/codex/0.2.23-integration
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:04.5049177Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:04.5049731Z ##[group]Determining the checkout info
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:04.5052710Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:04.5062572Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:04.5618300Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:04.6039635Z ##[group]Checking out the ref
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:04.6049469Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B codex/0.2.23-integration refs/remotes/origin/codex/0.2.23-integration
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:05.0842268Z Switched to a new branch 'codex/0.2.23-integration'
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:05.0938272Z branch 'codex/0.2.23-integration' set up to track 'origin/codex/0.2.23-integration'.
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:05.1001379Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:05.1533467Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:05.2082337Z ccba4bb7e042cbd3789af1ddeb77cab9c2654df9
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:05.2695307Z ##[group]Run actions/setup-node@v5
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:05.2695754Z with:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:05.2695975Z   node-version: 26.8.1
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:05.2696196Z   always-auth: false
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:05.2696394Z   check-latest: false
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:05.2699119Z   token: ***
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:05.2699329Z   package-manager-cache: true
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:05.2699588Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:05.4668968Z Attempting to download 26.8.1...
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:05.4862247Z (node:7964) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:05.4863335Z (Use `node --trace-deprecation ...` to show where the warning was created)
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:06.0292686Z Acquiring 26.8.1 - x64 from https://github.com/actions/node-versions/releases/download/26.8.1-33034053154/node-26.8.1-win32-x64.7z
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:06.4345601Z Extracting ...
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:08.7147898Z Adding to the cache ...
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:11.9762418Z ##[group]Environment details
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7163254Z node: v26.8.1
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7163607Z npm: 11.19.0
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7163885Z yarn: 1.22.22
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7164439Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7649814Z ##[group]Run dtolnay/rust-toolchain@stable
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7650143Z with:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7650324Z   toolchain: stable
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7650495Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7730068Z ##[start-action display=Parse toolchain version;id=__dtolnay_rust-toolchain.parse]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7928744Z ##[group]Run if [[ -z $toolchain ]]; then
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7929164Z ^[[36;1mif [[ -z $toolchain ]]; then^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7929787Z ^[[36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7930423Z ^[[36;1m  echo "'toolchain' is a required input" >&2^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7930780Z ^[[36;1m  exit 1^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7931160Z ^[[36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7931638Z ^[[36;1m  if [[ Windows == macOS ]]; then^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7932311Z ^[[36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7933279Z ^[[36;1m  else^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7933727Z ^[[36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7934147Z ^[[36;1m  fi^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7934425Z ^[[36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7934948Z ^[[36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7935380Z ^[[36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7936079Z ^[[36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7936599Z ^[[36;1melse^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7936771Z ^[[36;1m  delimiter=EOF^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7937056Z ^[[36;1m  while [[ $toolchain == *$delimiter* ]]; do delimiter+=_; done^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7937519Z ^[[36;1m  printf 'toolchain<<%s\n%s\n%s\n' "$delimiter" "$toolchain" "$delimiter" >> $GITHUB_OUTPUT^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7937900Z ^[[36;1mfi^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7959724Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7960093Z env:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7960268Z   toolchain: stable
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:12.7960456Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.0434382Z ##[end-action id=__dtolnay_rust-toolchain.parse;outcome=success;conclusion=success;duration_ms=270]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.0438759Z ##[start-action display=Set $CARGO_HOME;id=__dtolnay_rust-toolchain.__run]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.0573240Z ##[group]Run echo CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.0573903Z ^[[36;1mecho CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.0672258Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.0672652Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.1101243Z ##[end-action id=__dtolnay_rust-toolchain.__run;outcome=success;conclusion=success;duration_ms=66]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.1103875Z ##[start-action display=Install rustup if needed;id=__dtolnay_rust-toolchain.__run_2]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.1114085Z ##[end-action id=__dtolnay_rust-toolchain.__run_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.1116286Z ##[start-action display=Install rustup if needed on windows;id=__dtolnay_rust-toolchain.__run_3]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.1249497Z ##[group]Run if ! command -v rustup &>/dev/null; then
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.1249862Z ^[[36;1mif ! command -v rustup &>/dev/null; then^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.1250595Z ^[[36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://win.rustup.rs/x86_64 --output 'D:\a\_temp\rustup-init.exe'^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.1251376Z ^[[36;1m  'D:\a\_temp\rustup-init.exe' --default-toolchain none --no-modify-path -y^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.1253502Z ^[[36;1m  echo "$CARGO_HOME\bin" >> $GITHUB_PATH^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.1253815Z ^[[36;1mfi^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.1268555Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.1268922Z env:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.1269117Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.1269371Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.1865588Z ##[end-action id=__dtolnay_rust-toolchain.__run_3;outcome=success;conclusion=success;duration_ms=74]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.1880129Z ##[start-action display=rustup toolchain install stable;id=__dtolnay_rust-toolchain.__run_4]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2027686Z ##[group]Run set -f  # split targets and components on commas and whitespace, without glob expansion
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2028516Z ^[[36;1mset -f  # split targets and components on commas and whitespace, without glob expansion^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2029010Z ^[[36;1mflags=()^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2029316Z ^[[36;1mfor t in ${targets//,/ }; do flags+=(--target "$t"); done^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2029786Z ^[[36;1mfor c in ${components//,/ }; do flags+=(--component "$c"); done^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2030367Z ^[[36;1mif [[ $toolchain == nightly && -n $components ]]; then flags+=(--allow-downgrade); fi^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2030845Z ^[[36;1mlog=$(mktemp)^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2031078Z ^[[36;1mtrap 'rm -f "$log"' EXIT^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2031350Z ^[[36;1mfor attempt in 1 2 3 4 5; do^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2032017Z ^[[36;1m  if rustup toolchain install "$toolchain" "${flags[@]}" --profile minimal --no-self-update --force-non-host 2>&1 | tee "$log"; then^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2032648Z ^[[36;1m    break^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2032927Z ^[[36;1m  else^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2033181Z ^[[36;1m    status=$?^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2033388Z ^[[36;1m  fi^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2033673Z ^[[36;1m  if [[ $attempt == 5 ]] || ! grep -Fq 'checksum failed for ' "$log" \^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2034184Z ^[[36;1m      || ! grep -Fq 'this is likely due to an ongoing update of the official release server' "$log"; then^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2034610Z ^[[36;1m    exit "$status"^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2034810Z ^[[36;1m  fi^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2035133Z ^[[36;1m  echo "Retrying rustup toolchain install in 30 seconds (retry $attempt of 4)" >&2^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2035512Z ^[[36;1m  sleep 30^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2035688Z ^[[36;1mdone^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2049901Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2050279Z env:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2050483Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2050740Z   toolchain: stable
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2050930Z   targets: 
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2051283Z   components: 
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2051470Z   RUSTUP_PERMIT_COPY_RENAME: 1
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:13.2051686Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:16.6855795Z info: syncing channel updates for stable-x86_64-pc-windows-msvc
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.0822499Z 
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.1141397Z   stable-x86_64-pc-windows-msvc unchanged - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.1141922Z 
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.1462304Z ##[end-action id=__dtolnay_rust-toolchain.__run_4;outcome=success;conclusion=success;duration_ms=3958]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.1469446Z ##[start-action display=rustup default stable;id=__dtolnay_rust-toolchain.__run_5]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.1624874Z ##[group]Run rustup default "$toolchain" --force-non-host
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.1625231Z ^[[36;1mrustup default "$toolchain" --force-non-host^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.1639067Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.1639428Z env:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.1639616Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.1639872Z   toolchain: stable
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.1640057Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.2345154Z info: using existing install for stable-x86_64-pc-windows-msvc
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.2415365Z info: default toolchain set to stable-x86_64-pc-windows-msvc
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.2416631Z 
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.2641532Z   stable-x86_64-pc-windows-msvc unchanged - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.2642062Z 
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.2738099Z ##[end-action id=__dtolnay_rust-toolchain.__run_5;outcome=success;conclusion=success;duration_ms=126]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.2741323Z ##[start-action display=Create cachekey;id=__dtolnay_rust-toolchain.rustc-version]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.2864355Z ##[group]Run DATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.2865277Z ^[[36;1mDATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.2866085Z ^[[36;1mHASH=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-hash: //p')^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.2866554Z ^[[36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.2879893Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.2880264Z env:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.2880466Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.2880707Z   toolchain: stable
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:17.2880885Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.0939841Z ##[end-action id=__dtolnay_rust-toolchain.rustc-version;outcome=success;conclusion=success;duration_ms=819]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.0942219Z ##[start-action display=Disable incremental compilation;id=__dtolnay_rust-toolchain.__run_6]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1067203Z ##[group]Run if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1067576Z ^[[36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1067882Z ^[[36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1068166Z ^[[36;1mfi^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1081928Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1082309Z env:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1082521Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1082799Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1518051Z ##[end-action id=__dtolnay_rust-toolchain.__run_6;outcome=success;conclusion=success;duration_ms=57]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1520598Z ##[start-action display=Enable colors in Cargo output;id=__dtolnay_rust-toolchain.__run_7]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1646416Z ##[group]Run if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1646767Z ^[[36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1647061Z ^[[36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1647331Z ^[[36;1mfi^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1660785Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1661857Z env:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1662047Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1662298Z   CARGO_INCREMENTAL: 0
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.1662490Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2072314Z ##[end-action id=__dtolnay_rust-toolchain.__run_7;outcome=success;conclusion=success;duration_ms=55]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2076247Z ##[start-action display=Enable Cargo sparse registry;id=__dtolnay_rust-toolchain.__run_8]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2207805Z ##[group]Run # implemented in 1.66, stabilized in 1.68, made default in 1.70
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2208295Z ^[[36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2208886Z ^[[36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol ]; then^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2209520Z ^[[36;1m  if rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[89]\.'; then^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2209999Z ^[[36;1m    touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2210463Z ^[[36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2210938Z ^[[36;1m  elif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[67]\.'; then^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2211579Z ^[[36;1m    touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2212000Z ^[[36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2212306Z ^[[36;1m  fi^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2212486Z ^[[36;1mfi^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2225775Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2226143Z env:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2226338Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2226584Z   CARGO_INCREMENTAL: 0
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2226899Z   CARGO_TERM_COLOR: always
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2227504Z   toolchain: stable
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.2227703Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.4219232Z ##[end-action id=__dtolnay_rust-toolchain.__run_8;outcome=success;conclusion=success;duration_ms=214]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.4224218Z ##[start-action display=Work around spurious network errors in curl 8.0;id=__dtolnay_rust-toolchain.__run_9]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.4387295Z ##[group]Run # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.4388003Z ^[[36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.4388579Z ^[[36;1mif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.7[01]\.'; then^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.4389015Z ^[[36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.4389300Z ^[[36;1mfi^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.4409226Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.4409607Z env:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.4409829Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.4410108Z   CARGO_INCREMENTAL: 0
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.4410312Z   CARGO_TERM_COLOR: always
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.4410529Z   toolchain: stable
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.4410717Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.5460636Z ##[end-action id=__dtolnay_rust-toolchain.__run_9;outcome=success;conclusion=success;duration_ms=123]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.5465364Z ##[start-action display=rustc +stable --version --verbose;id=__dtolnay_rust-toolchain.__run_10]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.5589773Z ##[group]Run rustc +"$toolchain" --version --verbose
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.5590106Z ^[[36;1mrustc +"$toolchain" --version --verbose^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.5603600Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.5603958Z env:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.5604147Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.5604394Z   CARGO_INCREMENTAL: 0
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.5604587Z   CARGO_TERM_COLOR: always
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.5604782Z   toolchain: stable
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.5604968Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6460283Z rustc 1.99.1 (58cf8f9c3 2026-10-13)
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6460823Z binary: rustc
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6461277Z commit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6461758Z commit-date: 2026-10-13
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6462145Z host: x86_64-pc-windows-msvc
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6462547Z release: 1.99.1
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6462869Z LLVM version: 23.1.1
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6606040Z ##[end-action id=__dtolnay_rust-toolchain.__run_10;outcome=success;conclusion=success;duration_ms=113]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6828244Z ##[group]Run Swatinem/rust-cache@v2
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6828581Z with:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6828789Z   workspaces: apps/desktop/tauri -> target
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6829068Z   shared-key: windows-native-ui-018
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6829320Z   cache-on-failure: true
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6829536Z   prefix-key: v0-rust
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6829742Z   add-job-id-key: true
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6829971Z   add-rust-environment-hash-key: true
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6830251Z   cache-targets: true
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6830455Z   cache-all-crates: false
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6830685Z   cache-workspace-crates: false
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6830918Z   save-if: true
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6831116Z   cache-provider: github
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6831325Z   cache-bin: true
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6831510Z   lookup-only: false
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6831704Z   cmd-format: {0}
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6831883Z env:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6832070Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6832358Z   CARGO_INCREMENTAL: 0
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6832554Z   CARGO_TERM_COLOR: always
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:18.6832759Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9235153Z ##[group]Cache Configuration
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9236350Z Cache Provider:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9237141Z     github
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9237622Z Workspaces:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9238343Z     D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9239165Z Cache Paths:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9245057Z     C:\Users\runneradmin\.cargo\bin
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9262438Z     C:\Users\runneradmin\.cargo\.crates.toml
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9264077Z     C:\Users\runneradmin\.cargo\.crates2.json
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9265300Z     C:\Users\runneradmin\.cargo\registry
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9266254Z     C:\Users\runneradmin\.cargo\git
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9267308Z     D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9268674Z Restore Key:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9269485Z     v0-rust-windows-native-ui-018-Windows_NT-x64-e70cdc14
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9270560Z Cache Key:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9271471Z     v0-rust-windows-native-ui-018-Windows_NT-x64-e70cdc14-34f7670e
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9272438Z .. Prefix:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9273035Z   - v0-rust-windows-native-ui-018-Windows_NT-x64
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9273738Z .. Environment considered:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9274147Z   - Rust Versions:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9274642Z     - 1.99.1 x86_64-pc-windows-msvc 58cf8f9c35b355199727627d07ae34a4e2846d67
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9275215Z   - CARGO_HOME
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9275507Z   - CARGO_INCREMENTAL
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9275823Z   - CARGO_TERM_COLOR
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9276154Z .. Lockfiles considered:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9276722Z   - D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\Cargo.lock
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9277545Z   - D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\Cargo.toml
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9278667Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9278865Z 
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:20.9279023Z ... Restoring cache ...
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:21.3046730Z Cache hit for: v0-rust-windows-native-ui-018-Windows_NT-x64-e70cdc14-34f7670e
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:22.5835948Z Received 37748736 of 818804186 (4.6%), 35.9 MBs/sec
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:23.5868070Z Received 171966464 of 818804186 (21.0%), 81.4 MBs/sec
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:24.5936545Z Received 306184192 of 818804186 (37.4%), 96.6 MBs/sec
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:25.5941199Z Received 402653184 of 818804186 (49.2%), 95.5 MBs/sec
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:26.5943957Z Received 536870912 of 818804186 (65.6%), 101.9 MBs/sec
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:27.5986606Z Received 671088640 of 818804186 (82.0%), 106.2 MBs/sec
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:28.6016985Z Received 801112064 of 818804186 (97.8%), 108.7 MBs/sec
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:29.2153341Z Received 818804186 of 818804186 (100.0%), 102.2 MBs/sec
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:29.2153978Z Cache Size: ~781 MB (818804186 B)
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:29.2158509Z [command]"C:\Program Files\Git\usr\bin\tar.exe" -xf D:/a/_temp/0c186c07-699d-4c3f-a472-ee74e0bc5382/cache.tzst -P -C D:/a/opencodex-desktop/opencodex-desktop --force-local --use-compress-program "zstd -d"
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.1476081Z Cache restored successfully
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.2222423Z Restored from cache key "v0-rust-windows-native-ui-018-Windows_NT-x64-e70cdc14-34f7670e" full match: true.
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.2518264Z ##[group]Run $ErrorActionPreference='Stop'
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.2519055Z ^[[36;1m$ErrorActionPreference='Stop'^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.2519587Z ^[[36;1m$taskRoot=Join-Path $env:RUNNER_TEMP ('ocxd-record-contract-'+$env:GITHUB_RUN_ID)^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.2520234Z ^[[36;1mif(Test-Path -LiteralPath $taskRoot){throw 'Fresh root required; earlier evidence retained'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.2520784Z ^[[36;1mNew-Item -ItemType Directory -Path $taskRoot | Out-Null^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.2521221Z ^[[36;1m'OCXD_RECORD_CONTRACT_ROOT='+$taskRoot >> $env:GITHUB_ENV^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.2521569Z ^[[36;1m$node=(Get-Command node.exe).Source^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.2521992Z ^[[36;1m$npm=Join-Path (Split-Path -Parent $node) 'node_modules/npm/bin/npm-cli.js'^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.2522836Z ^[[36;1mpython .github/scripts/stage_runtime_bundle_023.py --platform win32-x64 --build-node $node --npm-cli $npm --output (Join-Path $taskRoot 'stage') *> (Join-Path $taskRoot 'stage.log')^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.2523711Z ^[[36;1mif($LASTEXITCODE -ne 0){throw 'Pinned original package staging failed'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.2524192Z ^[[36;1m$bundle=Join-Path $taskRoot 'stage/platform-bundle/runtime-bundle'^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.2524825Z ^[[36;1m'OCXD_RECORD_PROBE_PACKAGE='+(Join-Path $bundle 'runtime/opencodex/node_modules/@bitkyc08/opencodex') >> $env:GITHUB_ENV^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.2525512Z ^[[36;1m'OCXD_RECORD_PROBE_BUN='+(Join-Path $bundle 'runtime/bun/bun.exe') >> $env:GITHUB_ENV^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.2526065Z ^[[36;1m'OCXD_RECORD_PROBE_NODE='+(Join-Path $bundle 'runtime/node/node.exe') >> $env:GITHUB_ENV^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.2526646Z ^[[36;1m'OCXD_RECORD_PROBE_REPORT='+(Join-Path $taskRoot 'record-contract.json') >> $env:GITHUB_ENV^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.3228089Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.3228452Z env:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.3228703Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.3228987Z   CARGO_INCREMENTAL: 0
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.3229238Z   CARGO_TERM_COLOR: always
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.3229471Z   CACHE_ON_FAILURE: true
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:09:45.3229716Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0667897Z ##[group]Run $ErrorActionPreference='Stop'
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0668669Z ^[[36;1m$ErrorActionPreference='Stop'^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0669036Z ^[[36;1m$env:OCXD_REQUIRE_RUNTIME_BUNDLE='1'^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0669384Z ^[[36;1m$env:OCXD_RECORD_PROBE_CANDIDATE='true'^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0669853Z ^[[36;1mcargo fmt --manifest-path apps/desktop/tauri/Cargo.toml --all -- --check^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0670389Z ^[[36;1mif($LASTEXITCODE -ne 0){throw 'Rust formatting failed'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0671148Z ^[[36;1mpython test/smoke/verify-pinned-profile-source.py $env:OCXD_RECORD_PROBE_PACKAGE (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'source-attestation.json')^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0672308Z ^[[36;1mif($LASTEXITCODE -ne 0){throw 'Original bytes differ'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0672877Z ^[[36;1m$candidate=Join-Path $env:OCXD_RECORD_PROBE_PACKAGE 'src/lib/windows-runtime-private-record.ts'^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0673631Z ^[[36;1mif(Test-Path -LiteralPath $candidate){throw 'Fresh candidate module only'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0674319Z ^[[36;1mCopy-Item -LiteralPath test/smoke/runtime023-windows-private-record.ts -Destination $candidate^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0675924Z ^[[36;1m@{candidateSourceAdded=$true;originalArchiveChanged=$false;path='src/lib/windows-runtime-private-record.ts';sha256=(Get-FileHash -LiteralPath $candidate).Hash.ToLowerInvariant();accepted=$false} | ConvertTo-Json | Set-Content (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'candidate-helper-source.json')^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0677115Z ^[[36;1m$env:OCXD_RECORD_PROBE_HELPER='true'^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0677658Z ^[[36;1m$lifetimeCandidate=Join-Path $env:OCXD_RECORD_PROBE_PACKAGE 'src/lib/windows-runtime-lifetime.ts'^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0678343Z ^[[36;1mif(Test-Path -LiteralPath $lifetimeCandidate){throw 'Fresh lifecycle candidate module only'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0679098Z ^[[36;1mCopy-Item -LiteralPath test/smoke/runtime023-windows-runtime-lifetime.ts -Destination $lifetimeCandidate^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0680480Z ^[[36;1m@{candidateOnly=$true;originalArchiveChanged=$false;path='src/lib/windows-runtime-lifetime.ts';sha256=(Get-FileHash -LiteralPath $lifetimeCandidate).Hash.ToLowerInvariant();accepted=$false} | ConvertTo-Json | Set-Content (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'candidate-lifetime-source.json')^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0681800Z ^[[36;1m$overlay=Join-Path (Split-Path -Parent $env:OCXD_RECORD_PROBE_PACKAGE) 'opencodex-record-prototype'^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0682750Z ^[[36;1mpython test/smoke/stage-runtime-record-candidate.py $env:OCXD_RECORD_PROBE_PACKAGE $overlay (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'atomic-overlay-source.json')^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0683586Z ^[[36;1mif($LASTEXITCODE -ne 0){throw 'Exact isolated atomic overlay staging failed'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0684050Z ^[[36;1m$env:OCXD_RECORD_PROBE_OVERLAY=$overlay^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0684606Z ^[[36;1m$archiveCandidate=Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'candidate-build'^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0685712Z ^[[36;1mpython test/smoke/build-runtime-record-prototype.py --archive apps/desktop/tauri/resources/runtime-bundle/maintained-runtime.tgz --output $archiveCandidate --materialize *> (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'candidate-build.log')^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0686813Z ^[[36;1mif($LASTEXITCODE -ne 0){throw 'Canonical candidate archive build failed'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0687430Z ^[[36;1m$archiveProof=Get-Content (Join-Path $archiveCandidate 'verification.json') -Raw|ConvertFrom-Json^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0688408Z ^[[36;1mif(!$archiveProof.twoIndependentBuildsIdentical -or !$archiveProof.candidateOnly -or !$archiveProof.materializedExactArchive){throw 'Exact rebuilt archive proof missing'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0689572Z ^[[36;1mCopy-Item -LiteralPath (Join-Path $archiveCandidate 'verification.json') -Destination (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'candidate-archive.json')^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0690419Z ^[[36;1m$env:OCXD_RECORD_PROBE_ARCHIVE_PACKAGE=Join-Path $archiveCandidate 'package'^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0693466Z ^[[36;1mcargo test --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib infrastructure::windows_private_create::tests::native_original_runtime_record_diagnostic -- --exact --ignored --nocapture *> (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'record-test.log')^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0694686Z ^[[36;1mif($LASTEXITCODE -ne 0){throw 'Record observation failed; preserve failure'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0695267Z ^[[36;1m$log=Get-Content (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'record-test.log') -Raw^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0695869Z ^[[36;1mif($log -notmatch '1 passed; 0 failed; 0 ignored'){throw 'Exact diagnostic must execute'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0696474Z ^[[36;1m$report=Get-Content $env:OCXD_RECORD_PROBE_REPORT -Raw | ConvertFrom-Json^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0697320Z ^[[36;1mif($report.accepted -ne $false -or !$report.diagnosticOnly -or !$report.tokenElevated -or !$report.fixtureRemoved){throw 'Diagnostic scope/elevated token/cleanup not proved'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0698426Z ^[[36;1mif(!$report.candidateOriginalValidatorAccepted -or !$report.candidateOwnerMatchesTokenUser){throw 'Candidate must satisfy the unchanged validator'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0700422Z ^[[36;1mif(!$report.leasePrototype.finalControlledSetEmpty -or !$report.leasePrototype.serviceExitWithChildAliveRefused -or !$report.leasePrototype.finalLeaseUnheld){throw 'Actual controlled lifetime proof is incomplete'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0702252Z ^[[36;1mif(!$report.candidateDescriptorBridgeAccepted -or !$report.detachedLeasePrototype.detachedServiceStayedInJob -or !$report.detachedLeasePrototype.finalControlledSetEmpty -or $report.prototypeFailures.Count -ne 0){throw 'Descriptor bridge and detached Node/Bun cases must independently pass'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0703935Z ^[[36;1mif(!$report.candidateMaintainedHelperAccepted -or !$report.candidateReadback.candidateHelperValidated){throw 'Candidate helper must satisfy unchanged product validator'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0704998Z ^[[36;1mif(!$report.candidateAtomicOverlayAccepted){throw 'Actual original atomic writer overlay must satisfy unchanged validator'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0706270Z ^[[36;1mif(!$report.candidateAtomicOverlayReadback.forcedPrePublicationFailurePreservedOriginal -or !$report.candidateAtomicOverlayReadback.noOwnTempResidue){throw 'Original publication failure semantics must remain intact'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0707763Z ^[[36;1mif(!$report.candidateArchiveAccepted -or !$report.candidateArchiveReadback.actualAtomicEntryUsed){throw 'Actual rebuilt prototype archive must satisfy unchanged validator'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0708681Z ^[[36;1mforeach($case in @($report.leasePrototype,$report.detachedLeasePrototype)){^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0709597Z ^[[36;1m  if(!$case.privateJobOwnerAndProtectedDaclVerified -or !$case.bindingSevenTamperCounterexamplesRejected){throw 'Private Job authority and all binding mutations must be checked'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0710409Z ^[[36;1m}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0710839Z ^[[36;1mforeach($case in @($report.selfJobLeasePrototype,$report.detachedSelfJobLeasePrototype)){^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0712674Z ^[[36;1m  if(!$case.serviceEnteredPrivateJobBeforeOwnChildren -or !$case.finalControlledSetEmpty -or !$case.finalLeaseUnheld -or !$case.privateJobOwnerAndProtectedDaclVerified -or !$case.bindingSevenTamperCounterexamplesRejected){throw 'Actual self-admission must precede children and prove full lifetime cleanup'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0713933Z ^[[36;1m}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0714405Z ^[[36;1mforeach($case in @($report.candidateLifetimePrototype,$report.detachedCandidateLifetimePrototype)){^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0717244Z ^[[36;1m  if(!$case.candidateLifetimeModuleUsed -or !$case.candidateBindingEightMutationsRejected -or !$case.independentRustBindingReaderAccepted -or !$case.independentRustKernelWitnessAccepted -or !$case.candidateDuplicateWhileLeaseBusyRefused -or !$case.candidateReplacementWhileChildAliveRefused -or !$case.finalControlledSetEmpty -or !$case.finalLeaseUnheld -or !$case.privateJobOwnerAndProtectedDaclVerified){throw 'Actual candidate lifetime must verify independent native witness and duplicate/replacement refusals'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0719191Z ^[[36;1m}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0719872Z ^[[36;1mcargo clippy --manifest-path apps/desktop/tauri/Cargo.toml --locked --lib --tests -- -D warnings *> (Join-Path $env:OCXD_RECORD_CONTRACT_ROOT 'strict-clippy.log')^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0720647Z ^[[36;1mif($LASTEXITCODE -ne 0){throw 'Strict checks failed'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0796831Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0797227Z env:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0797505Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0797828Z   CARGO_INCREMENTAL: 0
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0798113Z   CARGO_TERM_COLOR: always
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0798384Z   CACHE_ON_FAILURE: true
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0798755Z   OCXD_RECORD_CONTRACT_ROOT: D:\a\_temp\ocxd-record-contract-42577435871
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0799605Z   OCXD_RECORD_PROBE_PACKAGE: D:\a\_temp\ocxd-record-contract-42577435871\stage\platform-bundle\runtime-bundle\runtime\opencodex\node_modules\@bitkyc08\opencodex
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0800750Z   OCXD_RECORD_PROBE_BUN: D:\a\_temp\ocxd-record-contract-42577435871\stage\platform-bundle\runtime-bundle\runtime\bun\bun.exe
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0801567Z   OCXD_RECORD_PROBE_NODE: D:\a\_temp\ocxd-record-contract-42577435871\stage\platform-bundle\runtime-bundle\runtime\node\node.exe
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0802305Z   OCXD_RECORD_PROBE_REPORT: D:\a\_temp\ocxd-record-contract-42577435871\record-contract.json
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:12:35.0802741Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7446501Z ##[group]Run actions/upload-artifact@v4
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7446998Z with:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7447343Z   name: windows023-record-contract-42577435871
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7448087Z   path: D:\a\_temp\ocxd-record-contract-42577435871/*.json
+record-contract / record-contract	UNKNOWN STEP	D:\a\_temp\ocxd-record-contract-42577435871/*.log
+record-contract / record-contract	UNKNOWN STEP	
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7448616Z   if-no-files-found: error
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7448913Z   compression-level: 6
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7449220Z   overwrite: false
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7449486Z   include-hidden-files: false
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7450211Z env:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7450471Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7450832Z   CARGO_INCREMENTAL: 0
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7451091Z   CARGO_TERM_COLOR: always
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7451367Z   CACHE_ON_FAILURE: true
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7451735Z   OCXD_RECORD_CONTRACT_ROOT: D:\a\_temp\ocxd-record-contract-42577435871
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7452605Z   OCXD_RECORD_PROBE_PACKAGE: D:\a\_temp\ocxd-record-contract-42577435871\stage\platform-bundle\runtime-bundle\runtime\opencodex\node_modules\@bitkyc08\opencodex
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7453592Z   OCXD_RECORD_PROBE_BUN: D:\a\_temp\ocxd-record-contract-42577435871\stage\platform-bundle\runtime-bundle\runtime\bun\bun.exe
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7454424Z   OCXD_RECORD_PROBE_NODE: D:\a\_temp\ocxd-record-contract-42577435871\stage\platform-bundle\runtime-bundle\runtime\node\node.exe
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7455151Z   OCXD_RECORD_PROBE_REPORT: D:\a\_temp\ocxd-record-contract-42577435871\record-contract.json
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:18:56.7455676Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:03.5943374Z (node:6588) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:03.5944831Z (Use `node --trace-deprecation ...` to show where the warning was created)
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:03.8850164Z With the provided path, there will be 28 files uploaded
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:03.8855728Z Artifact name is valid!
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:03.8857426Z Root directory input is valid!
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:05.3864645Z Beginning upload of artifact content to blob storage
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:05.6782981Z (node:6588) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.1784105Z Uploaded bytes 17324
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.2593129Z Finished uploading artifact content to blob storage!
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.2594630Z SHA256 digest of uploaded artifact zip is 2cfa03ec5f028d9c06cd1596500a36c4fde3e6d6f1d1a75632c403f7ef5ac81e
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.2595973Z Finalizing artifact upload
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.6710857Z Artifact windows023-record-contract-42577435871.zip successfully finalized. Artifact ID 13656555414
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.6712990Z Artifact windows023-record-contract-42577435871 has been successfully uploaded! Final size is 17324 bytes. Artifact ID is 13656555414
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.6997211Z Artifact download URL: https://github.com/gzers/opencodex-desktop/actions/runs/42577435871/artifacts/13656555414
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.8950078Z ##[group]Run $ErrorActionPreference='Stop'
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.8950553Z ^[[36;1m$ErrorActionPreference='Stop'^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.8951054Z ^[[36;1m$expected=Join-Path $env:RUNNER_TEMP ('ocxd-record-contract-'+$env:GITHUB_RUN_ID)^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.8951672Z ^[[36;1mif($env:OCXD_RECORD_CONTRACT_ROOT -cne $expected){throw 'Cleanup root changed'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.8952195Z ^[[36;1mRemove-Item -LiteralPath $expected -Recurse -Force^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.8952926Z ^[[36;1mif(Test-Path -LiteralPath $expected){throw 'Exact staging root remains'}^[[0m
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.9027985Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.9028497Z env:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.9028786Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.9029196Z   CARGO_INCREMENTAL: 0
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.9029497Z   CARGO_TERM_COLOR: always
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.9029830Z   CACHE_ON_FAILURE: true
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.9030360Z   OCXD_RECORD_CONTRACT_ROOT: D:\a\_temp\ocxd-record-contract-42577435871
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.9051681Z   OCXD_RECORD_PROBE_PACKAGE: D:\a\_temp\ocxd-record-contract-42577435871\stage\platform-bundle\runtime-bundle\runtime\opencodex\node_modules\@bitkyc08\opencodex
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.9053290Z   OCXD_RECORD_PROBE_BUN: D:\a\_temp\ocxd-record-contract-42577435871\stage\platform-bundle\runtime-bundle\runtime\bun\bun.exe
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.9054673Z   OCXD_RECORD_PROBE_NODE: D:\a\_temp\ocxd-record-contract-42577435871\stage\platform-bundle\runtime-bundle\runtime\node\node.exe
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.9055841Z   OCXD_RECORD_PROBE_REPORT: D:\a\_temp\ocxd-record-contract-42577435871\record-contract.json
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:06.9056323Z ##[endgroup]
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:09.8162312Z Post job cleanup.
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:10.0116819Z Cache up-to-date.
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:10.0560586Z Post job cleanup.
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:10.2206027Z (node:1172) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:10.2207604Z (Use `node --trace-deprecation ...` to show where the warning was created)
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:10.2562790Z Post job cleanup.
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:10.5776270Z [command]"C:\Program Files\Git\bin\git.exe" version
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:10.6251771Z git version 2.56.0.windows.4
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:10.6330046Z Temporarily overriding HOME='D:\a\_temp\e57f7509-7265-4c3d-8642-8079ee4ee30d' before making global git config changes
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:10.6331773Z Adding repository directory to the temporary git global config as a safe directory
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:10.6342904Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:10.6794042Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:10.7479520Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:11.3722348Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:11.4068897Z http.https://github.com/.extraheader
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:11.4133321Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:11.5245474Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:12.2062018Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:12.2578032Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:12.8722573Z Cleaning up orphan processes
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:12.9714514Z Terminate orphan process: pid (7632) (vctip)
+record-contract / record-contract	UNKNOWN STEP	2026-11-09T07:19:13.3741299Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -1,0 +1,49 @@
+{
+  "version": "2.97.0-desktop023.names.2",
+  "archive": "opencodex-2.97.0-desktop023.names.2.tgz",
+  "sha256": "fcd2740ecc32ae1e11c1c79d84c801b2c5d5447ae89e070ab060548d61f75ee6",
+  "bytes": 15407218,
+  "changedFiles": [
+    "bin/ocx.mjs",
+    "package.json",
+    "src/codex/catalog/derive-entry.ts",
+    "src/codex/catalog/gather-capture.ts",
+    "src/codex/catalog/model-hints.ts",
+    "src/codex/catalog/parsing.ts",
+    "src/config/diagnostics.ts",
+    "src/config/live-reconcile.ts",
+    "src/config/proxy-env.ts",
+    "src/config/schema/config-schema.ts",
+    "src/generated/compatibility-version.json",
+    "src/types/provider.ts"
+  ],
+  "reproducibility": {
+    "builds": 2,
+    "sha256": [
+      "fcd2740ecc32ae1e11c1c79d84c801b2c5d5447ae89e070ab060548d61f75ee6",
+      "fcd2740ecc32ae1e11c1c79d84c801b2c5d5447ae89e070ab060548d61f75ee6"
+    ],
+    "equalBytes": true,
+    "gzipMtime": 0,
+    "tarMtime": 0,
+    "tarOwner": "0:0",
+    "order": "sorted-path",
+    "format": "pax"
+  }
+}
+{
+  "platform": "win32-x64",
+  "archiveName": "runtime-bundle-0.2.23-win32-x64.tar.gz",
+  "archiveSha256": "1a54cadf1b317702579c8304502ee67984ba038200fc4665e2e57e46801b77a0",
+  "archiveBytes": 265135836,
+  "archive": "D:\\a\\_temp\\ocxd-record-contract-42577435871\\stage\\platform-bundle\\runtime-bundle-0.2.23-win32-x64.tar.gz",
+  "manifest": "D:\\a\\_temp\\ocxd-record-contract-42577435871\\stage\\platform-bundle\\runtime-bundle-0.2.23-win32-x64.manifest.json",
+  "manifestSha256": "133d84387766a2f4d5b75b237f6a3768cb3842ab67268059a509d4bcd07b74ed",
+  "checks": "D:\\a\\_temp\\ocxd-record-contract-42577435871\\stage\\platform-bundle\\checks.json",
+  "execution": "not-run"
+}
+{
+  "resourceDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\resources\\runtime-bundle",
+  "descriptorSha256": "133d84387766a2f4d5b75b237f6a3768cb3842ab67268059a509d4bcd07b74ed",
+  "tauriConfig": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\tauri.runtime-bundle.conf.json"
+}
