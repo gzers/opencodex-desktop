@@ -1,0 +1,20 @@
+{
+  "accepted": false,
+  "candidateOnly": true,
+  "source": "780c98a48",
+  "nextRunDispatched": false,
+  "currentRunUnchanged": 42564664257,
+  "scope": "Synthetic sameSID Job owner/protected DACL exact one user ACE, observed via GetSecurityInfo/GetAce/native SID string not SDDL aliases. Recheck on observer reopen. Test HMAC binds home/SID/PID/FILETIME/job/generation; reject six field substitutions and wrong key. No actual protected runtime record/server attestation yet.",
+  "checks": {
+    "NodeSyntax": "pass",
+    "NoEmbeddedControls": "pass",
+    "ActualPowerShellBlocksParsed": 3,
+    "NoSetSecurityInfoOrTerminateApi": "pass"
+  },
+  "productionArchiveChanged": false,
+  "limits": [
+    "Local named Job only",
+    "Not foreignSID or crosssession proof",
+    "Not official proxy Start/Stop/client restoration or full lifecycle acceptance"
+  ]
+}

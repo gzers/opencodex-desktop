@@ -432,3 +432,16 @@ de89e975d仅隔离候选接入装配：在同一固定stage下另复制完整包
 7c31be8cd固定候选runtime023-record-owner.patch/review，精确names.2归档preimage，两份独立临时源码应用后恰为atomic-write.ts与新增helper两路径且摘要相同，临时源码已清理；patch文件空白context属于原diff表示，原源码/候选源码摘要不改。未生成/提升新归档。64ab25f00补实际原atomic入口的强制发布前失败：原旧记录内容必须不变、仅本次临时文件清理，不能据此更改旧文件owner。
 
 [atomic-overlay42564664257](https://github.com/gzers/opencodex-desktop/actions/runs/42564664257)固定64ab25f00d340f307d1a0baf12cf7fee8b0c1506/job128988462972已确认运行。原14模块与归档先核对，再复制独立包、记录候选两文件摘要，原源码/正式names.2不动；同一个真实原validator读回实际candidate atomicWriteFile及失败保留分支。原三case独立收错保持，结果accepted:false，不是完整sweep/生产启停或跨SID验收。PythonAST/Rustfmt、嵌入writer Node语法、实际3PowerShell块及两次精确补丁检查通过，实际结果待。
+
+
+780c98a48继续原型权限/绑定边界：命名Job显式TokenUser owner/protected DACL，GetSecurityInfo/GetAce原生检查唯一用户ACE与full-control，在observer重开时再次读回；不用SDDL简称比较。测试HMAC绑定本H/SID/PID/FILETIME/Job/实例随机代次，六字段分别改变及错误key均拒绝，仍未接真实受保护runtime record/server attestation。Node语法/无控制字符/实际3PowerShell块及无SetSecurityInfo/终止API核对过；代码已推送，未派下一轮，当前atomic42564664257仍live。Local/sameSID范围不外推跨会话/跨SID/官方客户端还原与完整Stop。
+
+
+atomic-overlay42564664257完成：[原10784字节ZIP与结果](../../.adg/evidence/0.2.23/atomic-record-overlay-42564664257/analysis.json)，SHA256568998dc61c0fc773824dbe8b9bcc80cf3e479e3952e9b8371f1fcdddf872524核验。真实提升令牌下，独立原源码副本的实际atomicWriteFile接入通过原Desktopvalidator；强制beforeRename失败保留旧记录字节，仅本次temp清理，无残留。原writer仍owner-mismatch，候选helper/descriptor/祖先反例及direct152.86ms/Node-detached199.03ms独立case都过，strictClippy和fixture/stage清理成功。仍accepted:false，不把隔离原子入口当产品GUI/官方还原或跨SID验收。
+
+私有Job/身份绑定[run42565691962](https://github.com/gzers/opencodex-desktop/actions/runs/42565691962)固定780c98a486a06e799e4db28fd46c14694a88b554/job128991600596已确认运行；显式TokenUser owner/protectedDACL的真实ACE与原生SID读回，observer重开再验；本H/SID/PID/FILETIME/Job/代次六字段及错误key的测试HMAC反例全覆盖。先前所有独立case和原子失败保留门保留；Local/sameSID不外推跨session/foreignSID，未接生产server attestation，未替换正式names.2或删除全机扫描。
+
+
+2699869f2离线原型归档构建：2.97.0-desktop023.lifecycle.1-record-prototype，15409187字节/SHA25633887e710fad9d5ae78eb4f85c6d02f7da0d413238437a65033b5a79fba168e4，两份独立patch应用/规范打包字节一致；2523实际成员、2408存在compatibility成员摘要核对，原归档未打包的bun.lock与scripts/model-metadata.source.json两条记录保持原样，单独列为inheritedAbsent，不冒充已验内容。初次校验因bun.lock不在归档而拒绝，已按原封包事实区分并完整重建；不删除或伪造缺失成员。原型归档与源review保留在[候选原件](../../.adg/evidence/0.2.23/record-owner-archive-prototype-20261109/verification.json)，仅记录创建修复，不含最终生命周期协议，不改生产pin，不作为release。
+
+下一候选技术轮会在Windows双重构建并展开相同原型归档，直接调用该archive内的实际atomic入口/强制beforeRename反例，仍需原Desktopvalidator接受；仅本机物化源码已精确清理，原件保留。私有Job/绑定轮42565691962仍live，未重复派发；下一批归档验证代码已推送但未派，所有原失败与原30/10/5秒保持。
