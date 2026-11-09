@@ -5,6 +5,8 @@ param(
  [Parameter(Mandatory=$true)][ValidateSet('console','rdp')][string]$Role,
  [Parameter(Mandatory=$true)][string]$ExpectedSid,
  [Parameter(Mandatory=$true)][string]$ExpectedSource,
+ [Parameter(Mandatory=$true)][string]$ExpectedBuildRun,
+ [Parameter(Mandatory=$true)][string]$ExpectedAppsTree,
  [Parameter(Mandatory=$true)][int]$ExpectedSessionId
 )
 $ErrorActionPreference='Stop'
@@ -35,7 +37,7 @@ $taskInstall=Join-Path $taskFixture 'program'
 New-Item -ItemType Directory -Path $taskInstall | Out-Null
 foreach($entry in Get-ChildItem -LiteralPath $taskProgram -Force){Copy-Item -LiteralPath $entry.FullName -Destination $taskInstall -Recurse}
 $taskBuild=Get-Content -LiteralPath (Join-Path $taskProgram 'core-build.json') -Raw | ConvertFrom-Json
-if($taskBuild.source -cne $ExpectedSource -or $taskBuild.run -cne '42631183420' -or $taskBuild.appsTree -cne 'a4acf4ad2c0fb25420471d50a7d8e11897362068' -or @($taskBuild.files).Count -ne 9 -or $taskBuild.accepted -ne $false){throw 'Exact unaccepted source build required'}
+if($taskBuild.source -cne $ExpectedSource -or $taskBuild.run -cne $ExpectedBuildRun -or $taskBuild.appsTree -cne $ExpectedAppsTree -or @($taskBuild.files).Count -ne 9 -or $taskBuild.accepted -ne $false){throw 'Exact unaccepted source build required'}
 foreach($entry in $taskBuild.files){
  $path=Join-Path $taskInstall $entry.path
  $null=Assert-TwoUserUnder $taskInstall $path
@@ -50,7 +52,7 @@ if((Get-FileHash -LiteralPath $taskArchive).Hash -ine $taskDescriptor.archiveSha
 # It refuses every existing I/runtime; product recovery is tested separately.
 $taskProvision=(Resolve-Path -LiteralPath $ProvisionTool).ProviderPath
 $taskProvisionBuild=Get-Content -LiteralPath (Join-Path (Split-Path -Parent $taskProvision) 'fixture-build.json') -Raw | ConvertFrom-Json
-if(!$taskProvisionBuild.fixtureOnly -or $taskProvisionBuild.source -cne '2da679b9eb013b863bc458f73e8474b2f2dfd94b' -or $taskProvisionBuild.appsTree -cne $taskBuild.appsTree -or $taskProvisionBuild.descriptorSha256 -cne 'aefa7bee63a1c32d96d912a5c919249c46bae86656e2275e1036146a6cee3576' -or (Get-FileHash -LiteralPath $taskProvision).Hash -ine $taskProvisionBuild.sha256){throw 'Fixture binary/source/pin differs'}
+if(!$taskProvisionBuild.fixtureOnly -or $taskProvisionBuild.source -cne $ExpectedSource -or $taskProvisionBuild.appsTree -cne $taskBuild.appsTree -or $taskProvisionBuild.descriptorSha256 -cne 'aefa7bee63a1c32d96d912a5c919249c46bae86656e2275e1036146a6cee3576' -or (Get-FileHash -LiteralPath $taskProvision).Hash -ine $taskProvisionBuild.sha256){throw 'Fixture binary/source/pin differs'}
 New-Item -ItemType Directory -Path (Join-Path $taskFixture 'home') | Out-Null
 & icacls.exe $taskFixture /setowner ('*'+$taskSid) /T /C *> (Join-Path $taskOutput 'new-fixture-owner.log')
 if($LASTEXITCODE -ne 0){throw 'New Sandbox ownership setup failed'}
@@ -253,6 +255,11 @@ try{
  Write-TwoUserJson (Join-Path $taskOutput 'failure.json') $taskSummary
 }finally{
  $cleanup=@();$taskCleanupFailed=$false
+ $exits=@(foreach($fact in $taskLedger.Values){
+  try{@{identity=$fact;exit=(Get-TwoUserOriginalExit $fact)}}
+  catch{@{identity=$fact;exitUnknown=$true}}
+ })
+ Write-TwoUserJson (Join-Path $taskOutput 'original-exits-before-cleanup.json') $exits
  if($taskManager -and !$taskManager.HasExited -and $taskFacts){
   try{Add-SessionDescendants}catch{$taskCleanupFailed=$true;$cleanup+=@{result='descendant-identity-unproved'}}
  }
