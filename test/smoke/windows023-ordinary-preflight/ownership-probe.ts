@@ -23,7 +23,7 @@ const start=Date.now();
 const ownership=native.inspectNativeCodexOwnership({runRaw});
 console.log(JSON.stringify({probe:'actual-adopted-ordinary-native-ownership',version:meta.version,elapsedMilliseconds:Date.now()-start,ownership:ownership.ownership,reason:reason(ownership.reason),commands,clientHomeExists:existsSync(process.env.CODEX_HOME!),configExists:existsSync(join(process.env.OPENCODEX_HOME!,'config.json')),accepted:false,fullSoftwarePassed:false}));
 
-if(process.env.OCXD_READONLY_STOP_COSTS==='1'){
+if(['1','original-first','filtered-first'].includes(process.env.OCXD_READONLY_STOP_COSTS??'')){
  const {spawnSync}=await import('node:child_process');
  const wrappers=await import(pathToFileURL(join(root,'src/lib/windows-service-wrappers.ts')).href);
  const elevation=await import(pathToFileURL(join(root,'src/lib/windows-elevation.ts')).href);
@@ -49,12 +49,15 @@ if(process.env.OCXD_READONLY_STOP_COSTS==='1'){
  const powershell=elevation.resolveTrustedWindowsPowerShellExe();
  const samples:any[]=[];
  // Counterbalance fresh processes; retain the original 5s child budget.
- for(const variant of ['original-readonly','filtered-readonly','filtered-readonly','original-readonly']){
+ const firstVariant=process.env.OCXD_READONLY_STOP_COSTS==='filtered-first'?'filtered-readonly':'original-readonly';
+ const secondVariant=firstVariant==='filtered-readonly'?'original-readonly':'filtered-readonly';
+ const order=[firstVariant,secondVariant,secondVariant,firstVariant];
+ for(const variant of order){
   const command=variant==='original-readonly'?readonly:filtered,t=performance.now();
   const value=spawnSync(powershell,['-NoProfile','-NoLogo','-NonInteractive','-Command',command],{stdio:['ignore','pipe','pipe'],timeout:5000,windowsHide:true});
   const stdout=Buffer.from(value.stdout??[]),stderr=Buffer.from(value.stderr??[]);
   samples.push({variant,milliseconds:performance.now()-t,status:value.status,signal:value.signal,errorCode:value.error?.code??null,stdoutBytes:stdout.length,stdoutSha256:digest(stdout),stderrBytes:stderr.length,stderrSha256:digest(stderr),accepted:false});
  }
  const sourceFiles:any={};for(const relative of ['src/service/windows-ops.ts','src/lib/windows-service-wrappers.ts']){const b=readFileSync(join(root,relative));sourceFiles[relative]={bytes:b.length,sha256:digest(b)};}
- console.log(JSON.stringify({probe:'ordinary-readonly-stop-costs',accepted:false,diagnosticOnly:true,fullSoftwarePassed:false,phases,samples,sourceFiles,matcherBytesUnchanged:true,mutationSinkReplaced:true,serviceOrTaskMutation:false,productStarted:false,originalChildBudgetMilliseconds:5000,limitations:'Read-only projection under one fresh ordinary SID. Filtered query is only an experiment; no runtime patch or real stop acceptance. Zero fixture matches do not prove all matching counterexamples.'}));
+ console.log(JSON.stringify({probe:'ordinary-readonly-stop-costs',accepted:false,diagnosticOnly:true,fullSoftwarePassed:false,firstVariant,order,phases,samples,sourceFiles,matcherBytesUnchanged:true,mutationSinkReplaced:true,serviceOrTaskMutation:false,productStarted:false,originalChildBudgetMilliseconds:5000,limitations:'Read-only projection under one fresh ordinary SID. Filtered query is only an experiment; no runtime patch or real stop acceptance. Zero fixture matches do not prove all matching counterexamples.'}));
 }
