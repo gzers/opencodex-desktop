@@ -1,0 +1,28 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "originalWriterOwnerMismatchProved": true,
+  "recordOwnerIsAdministrators": true,
+  "originalValidatorRejected": true,
+  "tokenElevated": true,
+  "source": "cd0788e4937e0ca48a08f2b33a16bbab5b2973fe",
+  "artifactSha256": "d82a05b25e12f37b8037e85d9cd51e569575c42836df22cfc2ad40f9804ea0c0",
+  "artifactBytes": 5832,
+  "fixtureAndStageCleanupVerified": true,
+  "limits": "Original writer under elevated token and original Desktop validator only; does not close actual GUI lifecycle.",
+  "adoption": {
+    "confirmedByUser": "2026-11-09",
+    "directions": [
+      "Explicit TokenUser owner on newly created runtime records, retaining original DACL and atomic publication safeguards",
+      "Prototype per-H lifecycle lease, retained process handles and controlled process set; only replace full-system scan after complete proof"
+    ],
+    "unchanged": [
+      "30/10/5 seconds",
+      "official client restoration",
+      "unknown refuses",
+      "no old file ownership repair",
+      "no skipping unreadable objects",
+      "no daily configuration or real business network"
+    ]
+  }
+}

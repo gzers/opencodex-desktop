@@ -1,0 +1,11 @@
+    Updating crates.io index
+   Compiling opencodex-desktop v0.2.23 (D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2m 13s
+     Running unittests src\lib.rs (apps\desktop\tauri\target\debug\deps\opencodex_desktop_lib-9560cfa22fb896de.exe)
+
+running 1 test
+original-record-diagnostic-only: {"accepted":false,"businessNetworkUsed":false,"classification":"owner-mismatch","defaultOwnerIsAdministrators":true,"diagnosticOnly":true,"fixtureRemoved":true,"originalValidatorAccepted":false,"productStarted":false,"recordOwnerIsAdministrators":true,"recordOwnerMatchesTokenUser":false,"runtimeChanged":false,"scope":"Original atomic writer and actual Desktop record validator only; not lifecycle acceptance","serviceMutation":false,"source":"cd0788e4937e0ca48a08f2b33a16bbab5b2973fe","tokenElevated":true}
+test infrastructure::windows_private_create::tests::native_original_runtime_record_diagnostic ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1746 filtered out; finished in 0.09s
+

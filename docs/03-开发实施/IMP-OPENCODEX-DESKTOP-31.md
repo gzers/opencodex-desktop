@@ -385,3 +385,17 @@ Administrator控制台真实SID…500/session1/elevated true与15119 RDP SID…1
 [record-contract42557070951](https://github.com/gzers/opencodex-desktop/actions/runs/42557070951)固定cd0788e4937e0ca48a08f2b33a16bbab5b2973fe/job128965087177已确认运行，accepted:false，不是下一完整sweep或桌面验收。Rustfmt/PythonAST/3实际PowerShell块及嵌入writer Node语法检查通过；本地最初使用JS保留字package的脚本语法错误已修正并重验，未执行错误writer。先取实际契约差异再定修复，不改owner/DACL验收强度或原30/10/5秒，不静默替换维护包。
 
 停止替代证明的未采用草案见[本H运行租约／原句柄／受控集合方案](../../.adg/evidence/0.2.23/record-contract-42557070951/stop-proof-proposal.md)。当前没有闭合Windows不可读对象反例，未删除全机检查、未用名称或会话降级；草案不表示运行包已采用。
+
+
+提升记录契约42557070951已完成并核验：原5832字节ZIP/SHA256 d82a05b25e12f37b8037e85d9cd51e569575c42836df22cfc2ad40f9804ea0c0，原atomic writer在真实提升令牌下新记录owner=Administrators，与TokenUser不等；原Desktop校验明确owner-mismatch拒绝。原测试1过只证明观察完成，accepted:false；严格Clippy及自有fixture／staging精确移除步骤通过，见[原因与采用记录](../../.adg/evidence/0.2.23/record-contract-42557070951/analysis-and-adoption.json)。实际双会话还需修复后复验，不把本定位当GUI通过。
+
+用户已明确采用两项维护修订方向：新建记录显式TokenUser owner；先原型验证本H运行租约／保留句柄／受控子集合，完整证明后再替代全机扫描。保持原DACL与原子发布检查、30/10/5秒、官方客户端还原及未知即拒绝；不修补旧文件权限、不跳过不可读对象。先隔离原型和反例，后维护包集成；尚未更换names.2字节或发布。
+
+
+### 已采用维护方向的两项隔离原型（2026-11-09）
+
+f42733959仅测试原型：原生CREATE_NEW显式TokenUser owner，保留受保护owner-fullcontrolDACL，复用原版hardener/原子rename并对照原始Desktopvalidator；同名已存在须拒绝、写入及发布前后volume/fileID/链接数和内容一致。实际业务原子writer尚未替换；生产集成前还需祖先句柄固定及原失败清理/并发替换反例，不因原型通过放宽。
+
+第二项使用自有合成进程和新建私有lease文件：CreateProcessW挂起创建，先AssignProcessToJobObject再Resume，Job未配置kill-on-close；服务与派生子进程真实计数，服务持排他byte-lock。没有运行记录但租约忙、活跃租约文件替换、原服务退出但子进程仍活着均须拒绝“完成”。最后以正常release marker退出所有自有子进程，验证原句柄/PID/FILETIME、集合为空且租约可取得；无终止API、无代理/服务/真实客户端。只证明合成同SID机制，尚不覆盖原Bun分离启动、跨SID、不受控进程、实际HMAC/官方还原或产品Stop全链。
+
+[原型run42559654026](https://github.com/gzers/opencodex-desktop/actions/runs/42559654026)固定f42733959268e3da07b4e6b75d7067d8d23b2b83/job128973052599已确认运行，结果始终accepted:false；不是新完整sweep。Node两脚本语法、Rustfmt/PythonAST、实际3PowerShell块及无终止/已有owner修复API检查通过。14原模块归档核对、原test诊断中先观察原writer失败，再观察候选满足原validator；必须真实提升令牌、合成进程退出及fixture清理。names.2包和生产路径未改，原30/10/5秒、还原与未知即拒绝不变。
