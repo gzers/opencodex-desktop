@@ -607,3 +607,10 @@ Windows代码dc919da84、文档d4497d3ed回交已接收；原证据209条manifes
 代码d3b34a234e32b63365672052772c2c72c719f97c：只修改维护包private-record扩展本地盘符根的guard，原始路径、owner/DACL、ancestor pin、CREATE_NEW、身份及原子发布实现不变；原设备/穿越/ADS/保留名拒绝保留。lifecycle.3归档15413397字节，SHA256 ec14baaee354c6729d1d2545ab9165d207b14a3a4239f354662163087eeb0739；双平台policy、锁定SHA512、单用户脚本／采集器同批更新，旧lifecycle.2和历史失败不改。
 
 两次规范重建同字节；实际旧／新归档只一处源码及package/兼容摘要差异。9路径用例、漂移和重复补丁拒绝、5装配/2采集器测试、PowerShell7 AST通过。无Rust源码变化，不重跑无关Rust/UI；Windows原生和正常Stop仍待，不能以静态guard通过宣称全链通过。[原件与验证](../../.adg/evidence/0.2.23/lifecycle3-record-path-20261109/verification.json)、[Windows下一单次交接](0.2.23-contracts/user1-record-path-fix-handoff-20261109.md)。Mac未派原生/双SID/core或发布，第18项不独立修。
+
+
+### 2026-11-10 主对话恢复目标模式至正式发布
+
+用户明确授权继续至发版，Windows代码4d7835856/文档e67ddd5d2已接收；14原manifest的696文件记录摘要一致，含原失败。普通user1、双普通SID、控制台+RDP冲突/停止隔离、NSIS/隔离MSI定向通过范围沿Windows发布交接，不扩大sandbox/默认Profile证据。Profile1018及旧缓存清理、cross-session-01未知Stop原因由Windows并行跟进，保留未完，不再单独阻塞Mac发版。实际正式候选新失败仍须处理。
+
+发布记录[REL-26](REL-OPENCODEX-DESKTOP-26.md)已建立。be078cda0补齐维护包delivery manifest与tag策略来源，独立身份先核对，ec14归档字节不变；3契约/29发布工具及Mac7认证状态Stop测试通过。08a3c65ac只对齐共享README版本。最终CI42662755407进行中，尚未tag/发布；后续正式包/签名/升级回退/通道匿名读回继续，任务不提前关闭。

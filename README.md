@@ -53,7 +53,7 @@
 | 项 | 要求 |
 |---|---|
 | 操作系统 | macOS（Apple Silicon，正式支持）／ Windows x64（测试构建） |
-| OpenCodex | 从 0.2.23 开始随 Desktop 附带完整 Node.js 26.8.1、npm 11.19.0 与维护运行时 2.97.0-desktop023.names.1，首次启动准备，无需另装 Node/npm 或单独导入运行包 |
+| OpenCodex | 从 0.2.23 开始随 Desktop 附带完整 Node.js 26.8.1、npm 11.19.0 与维护运行时 2.97.0-desktop023.lifecycle.3，首次启动准备，无需另装 Node/npm 或单独导入运行包 |
 
 ### 下载
 
@@ -67,7 +67,7 @@
 - **最新版本（永远指向最新）**：<https://github.com/gzers/opencodex-desktop/releases/latest>
 - 全部版本与历史：<https://github.com/gzers/opencodex-desktop/releases>
 
-从 0.2.23 开始，Desktop 附带完整 Node.js 26.8.1、npm 11.19.0 和本项目维护的 OpenCodex 运行时 `2.97.0-desktop023.names.1`（基于上游 2.97.0，含官方 Web 面板资源）。首次启动在实际安装目录的 `runtime/` 下准备运行环境。维护修补是本项目的独立修订，不代表上游已发布或吸收这些修改。Desktop 更新保留已有 runtime；runtime 独立升级仍需明确确认，“联网安装”使用官方上游包。各版供应内容、校验信息和已知限制以对应 Releases 为准。
+从 0.2.23 开始，Desktop 附带完整 Node.js 26.8.1、npm 11.19.0 和本项目维护的 OpenCodex 运行时 `2.97.0-desktop023.lifecycle.3`（基于上游 2.97.0，含官方 Web 面板资源）。首次启动在实际安装目录的 `runtime/` 下准备运行环境。维护修补是本项目的独立修订，不代表上游已发布或吸收这些修改。Desktop 更新保留已有 runtime；runtime 独立升级仍需明确确认，“联网安装”使用官方上游包。各版供应内容、校验信息和已知限制以对应 Releases 为准。
 
 发布包由 GitHub Actions 在打 tag 后自动产出：
 

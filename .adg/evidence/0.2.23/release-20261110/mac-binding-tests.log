@@ -1,0 +1,10 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.59s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-58a8535d3845a745)
+
+running 2 tests
+test infrastructure::runtime_lifetime::tests::signed_but_wrong_job_schema_or_malformed_identity_never_gains_authority ... ok
+test infrastructure::runtime_lifetime::tests::fixed_binding_rejects_every_mutated_field_and_request_context ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2034 filtered out; finished in 0.00s
+

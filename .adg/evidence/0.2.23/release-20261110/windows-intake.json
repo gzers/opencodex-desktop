@@ -1,0 +1,98 @@
+{
+  "accepted": false,
+  "source": "4d783585645206c52b49bce8656475d26940c1d7",
+  "docsSource": "e67ddd5d28601989bd27846a91b4356aedd7b83e",
+  "manifests": [
+    {
+      "manifest": ".adg/evidence/0.2.23/windows-local-followthrough-20261109/console-01/evidence-manifest.json",
+      "entries": 33,
+      "sha256": "04f88080205767908694c281125cf9f45198bb8a2d8775e0ecd7eb188d1a96c9",
+      "mismatches": 0
+    },
+    {
+      "manifest": ".adg/evidence/0.2.23/windows-local-followthrough-20261109/console-fixture-build/evidence-manifest.json",
+      "entries": 11,
+      "sha256": "16a2ca457476a10078d534866beeeb425e2d848e7b7d68e86a04cfb1c98abcee",
+      "mismatches": 0
+    },
+    {
+      "manifest": ".adg/evidence/0.2.23/windows-local-followthrough-20261109/cross-session-01/evidence-manifest.json",
+      "entries": 123,
+      "sha256": "74ac7995fb338eb465fda25651405eca55ac0b1ed72200daecc9814420e296dc",
+      "mismatches": 0
+    },
+    {
+      "manifest": ".adg/evidence/0.2.23/windows-local-followthrough-20261109/cross-session-02/evidence-manifest.json",
+      "entries": 143,
+      "sha256": "8ff96ae4a4ef7062ce48eaed807f8c629588ec31c6142f54b6e791bb4521b1e6",
+      "mismatches": 0
+    },
+    {
+      "manifest": ".adg/evidence/0.2.23/windows-local-followthrough-20261109/elevated-peer-01/evidence-manifest.json",
+      "entries": 41,
+      "sha256": "f645230030978145764bc78c5f8cd9bb75b18a3ebee0f1f7dcb493156b8da9fd",
+      "mismatches": 0
+    },
+    {
+      "manifest": ".adg/evidence/0.2.23/windows-local-followthrough-20261109/elevated-peer-02/evidence-manifest.json",
+      "entries": 53,
+      "sha256": "5223233473d6a46b1ba5141b739611ab3ef5533b293857d1f48b617f2f5f8443",
+      "mismatches": 0
+    },
+    {
+      "manifest": ".adg/evidence/0.2.23/windows-local-followthrough-20261109/installers-build/evidence-manifest.json",
+      "entries": 18,
+      "sha256": "b5b12181cc68e1b2914572de3aab7a2e9b6af81e8c8727d05a0e37c5cd20fe57",
+      "mismatches": 0
+    },
+    {
+      "manifest": ".adg/evidence/0.2.23/windows-local-followthrough-20261109/installers-build-02/evidence-manifest.json",
+      "entries": 22,
+      "sha256": "dadecb20f5f4d7acd97a5ae470ea5d185d6e2550d6518badf2a4a9f8ed045905",
+      "mismatches": 0
+    },
+    {
+      "manifest": ".adg/evidence/0.2.23/windows-local-followthrough-20261109/msi-01/evidence-manifest.json",
+      "entries": 19,
+      "sha256": "9891f5043a6eff69ace8392a4964bf6736b739c444c6ed4a8150ba3eae1e3bd6",
+      "mismatches": 0
+    },
+    {
+      "manifest": ".adg/evidence/0.2.23/windows-local-followthrough-20261109/msi-isolated-01/evidence-manifest.json",
+      "entries": 45,
+      "sha256": "2e3b41b6ba8e893e83fde42a845528637f3b5f641ebcff9464db7b264aba51a6",
+      "mismatches": 0
+    },
+    {
+      "manifest": ".adg/evidence/0.2.23/windows-local-followthrough-20261109/nsis-01/evidence-manifest.json",
+      "entries": 34,
+      "sha256": "189dd81b6a5edad0bfd526437950a1638771fb74b25f05cd89a2b7205eba51aa",
+      "mismatches": 0
+    },
+    {
+      "manifest": ".adg/evidence/0.2.23/windows-local-followthrough-20261109/stop-phase-build/evidence-manifest.json",
+      "entries": 55,
+      "sha256": "f0b43a9159212dd1b8002cd01bcf534fd7001ca829b177da51ad93f1bbb7a49d",
+      "mismatches": 0
+    },
+    {
+      "manifest": ".adg/evidence/0.2.23/windows-local-followthrough-20261109/two-sid-01/evidence-manifest.json",
+      "entries": 15,
+      "sha256": "f1bf95385c0ba1a162bdecc1d707493897a25e3196257f0a7b4dda685b2bc4c6",
+      "mismatches": 0
+    },
+    {
+      "manifest": ".adg/evidence/0.2.23/windows-local-followthrough-20261109/two-sid-02/evidence-manifest.json",
+      "entries": 84,
+      "sha256": "c0dc0bbc7fd877f33395eeeaacda0574b6a23789fd5cf77124d7647ff5cf753e",
+      "mismatches": 0
+    }
+  ],
+  "scope": "Verify original bytes; preserve failed as well as passing rounds. Latest cross-session and user1 pass scopes reviewed; no closure of historical Profile/Stop unknown.",
+  "parallelWindowsFollowup": [
+    "temporary Profile1018 loaded",
+    "old blocked cache deletions",
+    "cross-session-01 Stop unknown cause"
+  ],
+  "releaseAuthorization": "User requested goal mode through release in this chat on 2026-11-10"
+}
