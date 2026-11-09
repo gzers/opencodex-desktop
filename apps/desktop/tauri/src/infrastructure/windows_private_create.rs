@@ -481,6 +481,10 @@ pub(crate) fn create_private_dir_all(path: &Path, mode: u32) -> io::Result<()> {
 }
 
 #[cfg(test)]
+#[path = "../../../../../test/smoke/windows023-lifetime-binding.rs"]
+mod candidate_lifetime_binding;
+
+#[cfg(test)]
 mod tests {
     use super::*;
     use std::io::{Read, Seek, SeekFrom, Write};
@@ -846,6 +850,11 @@ mod tests {
                         verify_runtime_record_handle(&lease).expect(
                             "candidate lease must satisfy original private record validator",
                         );
+                        assert!(super::candidate_lifetime_binding::verify_candidate_file(
+                            &lease_root.join("service-ready"), &lease_root, &expected,
+                        ), "Actual candidate TypeScript proof must verify in independent Rust reader; changed fields/key/challenge/port must refuse");
+                        report[case_key]["independentRustBindingReaderAccepted"] =
+                            serde_json::json!(true);
                     }
                 }));
                 if lease_result.is_err() {

@@ -129,7 +129,7 @@ if(role==='grandchild'){
  if(!lifetime){lease=lock();assert(lease,'Service must acquire own lease');}
  const child=launch('grandchild');
  const record={pid:process.pid,created:birth(BigInt(k.GetCurrentProcess())).toString(),job:process.env.OCXD_LEASE_PROBE_JOB};
- if(lifetime){record.candidateBinding=lifetime.binding;record.candidateProof=lifetime.proof('A'.repeat(43),'B'.repeat(43),1);}
+ if(lifetime){record.candidateBinding=lifetime.binding;record.candidateProof=lifetime.proof('A'.repeat(43),Buffer.alloc(32,1).toString('base64url'),1);}
  writeFileSync(join(root,'service-ready.tmp'),JSON.stringify(record));
  renameSync(join(root,'service-ready.tmp'),join(root,'service-ready'));
  try{await wait(()=>existsSync(join(root,'release-service')),'service release',10000);}
@@ -161,7 +161,7 @@ if(role==='grandchild'){
   assert(!timingSafeEqual(proof,boundProof(bound,randomBytes(32))));
   if(candidateLifetime){
    assert.equal(binding.candidateBinding.pid,binding.pid);assert.equal(binding.candidateBinding.created,binding.created);assert.equal(binding.candidateBinding.sid,currentSid);assert.equal(binding.candidateBinding.job,binding.job);
-   const signed=record=>createHmac('sha256','A'.repeat(43)).update('opencodex-runtime-lifetime-v1\n'+'B'.repeat(43)+'\n1\n'+JSON.stringify([record.schema,record.home,record.sid,record.pid,record.created,record.generation,record.job,record.leaseVolume,record.leaseIndex])).digest('base64url');
+   const signed=record=>createHmac('sha256','A'.repeat(43)).update('opencodex-runtime-lifetime-v1\n'+Buffer.alloc(32,1).toString('base64url')+'\n1\n'+JSON.stringify([record.schema,record.home,record.sid,record.pid,record.created,record.generation,record.job,record.leaseVolume,record.leaseIndex])).digest('base64url');
    assert.equal(signed(binding.candidateBinding),binding.candidateProof);
    for(const change of [{home:root+'-different'},{sid:currentSid+'-different'},{pid:binding.pid+1},{created:String(BigInt(binding.created)+1n)},{job:binding.job+'-different'},{generation:randomUUID()},{leaseVolume:binding.candidateBinding.leaseVolume+1},{leaseIndex:String(BigInt(binding.candidateBinding.leaseIndex)+1n)}])assert.notEqual(signed({...binding.candidateBinding,...change}),binding.candidateProof);
   }
