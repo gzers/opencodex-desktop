@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
@@ -59,8 +60,9 @@ public static class Native {
     finally {LocalFree(sd);}
   }
   [DllImport("iphlpapi", SetLastError=true)] static extern uint GetExtendedTcpTable(IntPtr table,ref int size,bool order,uint family,int kind,uint reserved);
-  public static uint[] Listeners(int port) {
-    var ids=new List<uint>();
+  public static uint[] Listeners(int port) {return TcpListeners().Where(x=>(int)x["port"]==port).Select(x=>(uint)x["pid"]).ToArray();}
+  public static Dictionary<string,object>[] TcpListeners() {
+    var rows=new List<Dictionary<string,object>>();
     foreach(uint family in new uint[]{2,23}) {
       int size=0; uint rc=GetExtendedTcpTable(IntPtr.Zero,ref size,false,family,3,0);
       if(rc!=122 && rc!=0) throw new Win32Exception((int)rc);
@@ -70,11 +72,11 @@ public static class Native {
         if(count<0 || 4L+count*(long)stride>size) throw new InvalidOperationException("incomplete TCP table");
         for(int i=0;i<count;i++) { int row=4+i*stride,p=family==2?row+8:row+20,state=family==2?row:row+48;
           int actual=(Marshal.ReadByte(b,p)<<8)|Marshal.ReadByte(b,p+1);
-          if(actual==port && Marshal.ReadInt32(b,state)==2) ids.Add(unchecked((uint)Marshal.ReadInt32(b,row+stride-4)));
+          if(Marshal.ReadInt32(b,state)==2){var addr=new byte[family==2?4:16];Marshal.Copy(IntPtr.Add(b,family==2?row+4:row),addr,0,addr.Length);var ip=family==2?new IPAddress(addr):new IPAddress(addr,unchecked((uint)Marshal.ReadInt32(b,row+16)));rows.Add(new Dictionary<string,object>{{"family",family==2?"IPv4":"IPv6"},{"address",ip.ToString()},{"port",actual},{"pid",unchecked((uint)Marshal.ReadInt32(b,row+stride-4))}});}
         }
       } finally {Marshal.FreeHGlobal(b);}
     }
-    return ids.ToArray();
+    return rows.ToArray();
   }
   [StructLayout(LayoutKind.Sequential)] public struct LUID { public uint low; public int high; }
   [StructLayout(LayoutKind.Sequential)] public struct TP { public int count; public LUID luid; public uint attributes; }
@@ -122,6 +124,8 @@ public sealed class Guard : IDisposable {
 }
 
 public sealed class Owned : IDisposable {
+  readonly Dictionary<uint,IntPtr> children=new Dictionary<uint,IntPtr>();
+  readonly Dictionary<uint,Dictionary<string,object>> childFacts=new Dictionary<uint,Dictionary<string,object>>();
   public IntPtr Job {get;private set;} public IntPtr Process {get;private set;} public IntPtr Thread {get;private set;}
   public bool Resumed {get;private set;} public Dictionary<string,object> Identity {get;private set;}
   public Owned(string exe,string command,string cwd,IDictionary env,string stdout,string stderr,string sid) {
@@ -149,6 +153,16 @@ public sealed class Owned : IDisposable {
   public uint ExitCode() { if(!Exited()) throw new InvalidOperationException("original handle not signalled"); uint code; Native.Check(Native.GetExitCodeProcess(Process,out code)); return code; }
   public uint Active() { var b=Marshal.AllocHGlobal(48); try { int n; Native.Check(Native.QueryInformationJobObject(Job,1,b,48,out n)); return unchecked((uint)Marshal.ReadInt32(b,40)); } finally {Marshal.FreeHGlobal(b);} }
   public uint Limits() { var b=Marshal.AllocHGlobal(144);try{int n;Native.Check(Native.QueryInformationJobObject(Job,9,b,144,out n));return unchecked((uint)Marshal.ReadInt32(b,16));}finally{Marshal.FreeHGlobal(b);} }
+  public Dictionary<string,object>[] TrackMembers(){
+    var facts=new List<Dictionary<string,object>>();
+    foreach(uint id in Members()){
+      if(id==(uint)Identity["pid"]){facts.Add(Identity);continue;}
+      if(!children.ContainsKey(id)){IntPtr h=Native.OpenProcess(0x101000,false,id);Native.Check(h!=IntPtr.Zero);try{bool member;Native.Check(Native.IsProcessInJob(h,Job,out member));if(!member)throw new InvalidOperationException("member generation changed");var fact=Native.Observe(h);if((string)fact["sid"]!=(string)Identity["sid"])throw new InvalidOperationException("Job child SID differs");children.Add(id,h);childFacts.Add(id,fact);}catch{Native.CloseHandle(h);throw;}}
+      facts.Add(childFacts[id]);
+    }
+    return facts.ToArray();
+  }
+  public Dictionary<string,object>[] TrackedExits(){var result=new List<Dictionary<string,object>>();foreach(var pair in children){uint wait=Native.WaitForSingleObject(pair.Value,0);if(wait==0xffffffff)throw new Win32Exception(Marshal.GetLastWin32Error());uint code=0;if(wait==0)Native.Check(Native.GetExitCodeProcess(pair.Value,out code));result.Add(new Dictionary<string,object>{{"identity",childFacts[pair.Key]},{"exited",wait==0},{"exitCode",wait==0?(object)code:null}});}return result.ToArray();}
   public Dictionary<string,object>[] MemberIdentities() {
     var facts=new List<Dictionary<string,object>>();
     foreach(uint id in Members()) {
@@ -162,6 +176,6 @@ public sealed class Owned : IDisposable {
   }
   public uint[] Members() { int size=65536; var b=Marshal.AllocHGlobal(size); try { int n; Native.Check(Native.QueryInformationJobObject(Job,3,b,size,out n)); int assigned=Marshal.ReadInt32(b),count=Marshal.ReadInt32(b,4); if(assigned!=count || count<0 || count>(size-8)/IntPtr.Size) throw new InvalidOperationException("incomplete Job PID list"); var ids=new uint[count];for(int i=0;i<count;i++) ids[i]=unchecked((uint)Marshal.ReadIntPtr(b,8+i*IntPtr.Size).ToInt64());return ids; } finally {Marshal.FreeHGlobal(b);} }
   public void ForceOwnedCleanup() { Native.Check(Native.TerminateJobObject(Job,242)); }
-  public void Dispose() { if(Thread!=IntPtr.Zero){Native.CloseHandle(Thread);Thread=IntPtr.Zero;} if(Process!=IntPtr.Zero){Native.CloseHandle(Process);Process=IntPtr.Zero;} if(Job!=IntPtr.Zero){Native.CloseHandle(Job);Job=IntPtr.Zero;} }
+  public void Dispose() {foreach(var h in children.Values)Native.CloseHandle(h);children.Clear();childFacts.Clear();if(Thread!=IntPtr.Zero){Native.CloseHandle(Thread);Thread=IntPtr.Zero;} if(Process!=IntPtr.Zero){Native.CloseHandle(Process);Process=IntPtr.Zero;} if(Job!=IntPtr.Zero){Native.CloseHandle(Job);Job=IntPtr.Zero;} }
 }
 }

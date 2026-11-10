@@ -1,5 +1,5 @@
 # Invoke once as administrator; starts one NEW ordinary account and retains its Profile handle.
-param([Parameter(Mandatory)][string]$Directory,[Parameter(Mandatory)][string]$InputRoot,[Parameter(Mandatory)][string]$ArchiveRoot)
+param([Parameter(Mandatory)][string]$Directory,[Parameter(Mandatory)][string]$InputRoot,[Parameter(Mandatory)][string]$ArchiveRoot,[switch]$RestorationRevision2)
 $ErrorActionPreference='Stop'
 Set-StrictMode -Version Latest
 Add-Type -Path (Join-Path $PSScriptRoot 'Native.cs')
@@ -28,14 +28,17 @@ try {
  if((Split-Path -Leaf $profile) -cne $name){throw 'OS Profile path differs'}
  $code=Join-Path $dir 'code';$output=Join-Path $dir 'ordinary';$tools=Join-Path $dir 'powershell';$inputs=Join-Path $dir 'input';$archive=Join-Path $dir 'archive'
  $null=New-Item -ItemType Directory -Path $code,$output,$inputs,$archive
- foreach($f in @('Native.cs','host.ps1','policy.ps1')){Copy-Item -LiteralPath (Join-Path $PSScriptRoot $f) -Destination $code}
+ $hostLeaf=if($RestorationRevision2){'host-r2.ps1'}else{'host.ps1'}
+ $copyLeaves=@('Native.cs',$hostLeaf,'policy.ps1');if($RestorationRevision2){$copyLeaves+=@('Recovery.cs','lock-worker.ts')}
+ foreach($f in $copyLeaves){Copy-Item -LiteralPath (Join-Path $PSScriptRoot $f) -Destination $code}
  Copy-Item -LiteralPath $PSHOME -Destination $tools -Recurse
  Copy-Item -LiteralPath (Join-Path $InputRoot 'node_modules') -Destination $inputs -Recurse
  Copy-Item -LiteralPath (Join-Path $InputRoot 'package-lock.json') -Destination $inputs
  Copy-Item -LiteralPath (Join-Path $ArchiveRoot 'package') -Destination $archive -Recurse
  $bun=Join-Path $inputs 'node_modules/@oven/bun-windows-x64/bin/bun.exe'
  $input=@{sid=$sid;profile=$profile;output=$output;inputRoot=$inputs;archiveRoot=$archive;bunSha256=(Hash $bun);bunVersion=(& $bun --version).Trim();archiveSha256=(Hash (Join-Path $ArchiveRoot 'official.tgz'));lockSha256=(Hash (Join-Path $inputs 'package-lock.json'))}
- $report.input=$input;$report.hostHashes=@{native=(Hash (Join-Path $code 'Native.cs'));host=(Hash (Join-Path $code 'host.ps1'));provisioner=(Hash $PSCommandPath);powershell=(Hash (Join-Path $tools 'pwsh.exe'))}
+ $report.input=$input;$report.hostHashes=@{native=(Hash (Join-Path $code 'Native.cs'));host=(Hash (Join-Path $code $hostLeaf));hostLeaf=$hostLeaf;provisioner=(Hash $PSCommandPath);powershell=(Hash (Join-Path $tools 'pwsh.exe'))}
+ if($RestorationRevision2){$report.hostHashes.recovery=Hash (Join-Path $code 'Recovery.cs');$report.hostHashes.lockWorker=Hash (Join-Path $code 'lock-worker.ts')}
  $config=Join-Path $dir 'input.json';[IO.File]::WriteAllText($config,($input|ConvertTo-Json -Depth 8))
  # Grants affect only this freshly created fixture tree; no existing Profile/source ACL is repaired.
  $acl=Get-Acl $dir;$acl.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new($account.SID,'ReadAndExecute','ContainerInherit,ObjectInherit','None','Allow'));Set-Acl -LiteralPath $dir -AclObject $acl
@@ -46,7 +49,7 @@ try {
  [Official299Proof.Native]::Check([Official299Proof.Native]::LoadUserProfileW($token,[ref]$profileInfo));$report.originalProfileHandleRetained=$true;Save
  $ev=@{SystemRoot=$env:SystemRoot;WINDIR=$env:WINDIR;COMSPEC=(Join-Path $env:SystemRoot 'System32/cmd.exe');PATH=($tools+';'+$env:SystemRoot+'\System32');PATHEXT='.COM;.EXE;.BAT;.CMD';USERPROFILE=$profile;HOME=$profile;USERNAME=$name;USERDOMAIN=$env:COMPUTERNAME;APPDATA=(Join-Path $profile 'AppData/Roaming');LOCALAPPDATA=(Join-Path $profile 'AppData/Local');TEMP=(Join-Path $profile 'AppData/Local/Temp');TMP=(Join-Path $profile 'AppData/Local/Temp')}
  $envBlock=[Official299Proof.Native]::EnvironmentBlock($ev);$si=[Official299Proof.Native+SI]::new();$si.cb=[Runtime.InteropServices.Marshal]::SizeOf($si)
- $command='"'+(Join-Path $tools 'pwsh.exe')+'" -NoLogo -NoProfile -NonInteractive -File "'+(Join-Path $code 'host.ps1')+'" -InputFile "'+$config+'"'
+ $command='"'+(Join-Path $tools 'pwsh.exe')+'" -NoLogo -NoProfile -NonInteractive -File "'+(Join-Path $code $hostLeaf)+'" -InputFile "'+$config+'"'
  $report.stage='ordinary-host'
  [Official299Proof.Native]::Check([Official299Proof.Native]::CreateProcessWithLogonW($name,$env:COMPUTERNAME,$password,0,(Join-Path $tools 'pwsh.exe'),[Text.StringBuilder]::new($command),0x08000400,$envBlock,$dir,[ref]$si,[ref]$pi))
  $report.ordinaryOriginalIdentity=[Official299Proof.Native]::Observe($pi.process);$password=$null;Save
