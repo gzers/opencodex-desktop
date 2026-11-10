@@ -1,4 +1,5 @@
 use super::*;
+use crate::modules::runtime::RuntimeHandle;
 use serde_json::{json, Value};
 use std::os::unix::fs::PermissionsExt;
 
@@ -78,9 +79,88 @@ fn versioned_supply_verifies_and_selects_one_official_image_without_execution() 
     assert_eq!(snapshot, tree_snapshot(&f.i));
 }
 
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn versioned_existing_image_needs_no_program_write_access_or_bundle_archive() {
+    let f = versioned_fixture();
+    let (descriptor, pin) = f.bytes();
+    versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).unwrap();
+    let snapshot = tree_snapshot(&f.i);
+    let lock = f.i.join(".runtime-program.lock");
+    fs::set_permissions(&lock, fs::Permissions::from_mode(0)).unwrap();
+    fs::set_permissions(&f.i, fs::Permissions::from_mode(0o500)).unwrap();
+    let other = f.root.join("user-b/desktop");
+    let result = versioned::provision(
+        &f.i,
+        &other,
+        &f.root.join("missing-bundle"),
+        b"not needed",
+        "not needed",
+    );
+    fs::set_permissions(&f.i, fs::Permissions::from_mode(0o700)).unwrap();
+    fs::set_permissions(&lock, fs::Permissions::from_mode(0o600)).unwrap();
+    assert_eq!(
+        result.unwrap(),
+        ProvisionResult::AlreadyInstalled {
+            version: "2.99.0".into()
+        }
+    );
+    assert_eq!(snapshot, tree_snapshot(&f.i));
+    assert_eq!(
+        RuntimeStore::new(&other).load().resolved_version.as_deref(),
+        Some("2.99.0")
+    );
+}
+
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+#[ignore = "requires explicit official2.99 complete platform bundle"]
+fn real_official299_versioned_supply_reopen_preserves_home_and_source() {
+    let archive =
+        PathBuf::from(std::env::var_os("OCXD_TEST_BUNDLE_ARCHIVE").expect("explicit archive"));
+    let descriptor = PathBuf::from(
+        std::env::var_os("OCXD_TEST_BUNDLE_DESCRIPTOR").expect("explicit descriptor"),
+    );
+    let pin = std::env::var("OCXD_TEST_BUNDLE_PIN").expect("explicit trusted pin");
+    assert!(archive.is_absolute() && descriptor.is_absolute());
+    let temp = tempfile::tempdir().unwrap();
+    let root = temp.path().canonicalize().unwrap();
+    let program = root.join("program 中文 with spaces");
+    let data = root.join("data/desktop");
+    let home = root.join("data/opencodex/home");
+    fs::create_dir_all(&home).unwrap();
+    let config = b"{\"port\":55581,\"providers\":{},\"untouched\":true}";
+    fs::write(home.join("config.json"), config).unwrap();
+    let bytes = fs::read(&descriptor).unwrap();
+    let started = std::time::Instant::now();
+    let supplied = versioned::provision(&program, &data, &archive, &bytes, &pin).unwrap();
+    let handle = RuntimeHandle::initialize_versioned(&data, &program);
+    assert_eq!(handle.kind(), RuntimeSourceKind::Managed);
+    let selected = handle.selected_program().unwrap().unwrap();
+    assert_eq!(selected.selection.version, "2.99.0");
+    let (node, npm) = crate::commands::runtime::managed_executables(&handle).unwrap();
+    assert_eq!(node, Some(selected.paths.node.clone()));
+    assert_eq!(npm, Some(selected.paths.npm.clone()));
+    let identity = crate::infrastructure::runtime_executable::RuntimeExecutableProvider::managed_program_identity(handle.as_ref()).unwrap();
+    assert_eq!(identity.package_version, "2.99.0");
+    assert_eq!(identity.prefix, selected.paths.package_root);
+    let reopened = RuntimeHandle::initialize_versioned(&data, &program);
+    assert_eq!(reopened.selected_program().unwrap().unwrap(), selected);
+    assert!(matches!(
+        versioned::provision(&program, &data, &root.join("absent"), b"unused", "unused").unwrap(),
+        ProvisionResult::AlreadyInstalled { .. }
+    ));
+    assert_eq!(fs::read(home.join("config.json")).unwrap(), config);
+    assert!(!program.join("runtime/bin/ocx").exists());
+    println!(
+        "OFFICIAL299_REAL_SUPPLY {}",
+        json!({"version":"2.99.0","result":format!("{supplied:?}"),"elapsedMs":started.elapsed().as_millis(),"programRoot":program,"identityPrefix":identity.prefix,"node":selected.paths.node,"npm":selected.paths.npm,"homeBytesPreserved":true,"reopenSelectionEqual":true,"legacyCliNotExposed":true,"actualProcessExecuted":false})
+    );
+}
+
 #[test]
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-fn versioned_supply_never_adopts_or_overwrites_unselected_flat_programs() {
+fn versioned_supply_only_creates_new_paths_without_adopting_unrelated_programs() {
     let f = versioned_fixture();
     fs::create_dir_all(f.i.join("runtime/opencodex")).unwrap();
     fs::write(
@@ -89,13 +169,32 @@ fn versioned_supply_never_adopts_or_overwrites_unselected_flat_programs() {
     )
     .unwrap();
     let (descriptor, pin) = f.bytes();
-    assert!(versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).is_err());
+    assert_eq!(
+        versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).unwrap(),
+        ProvisionResult::Installed {
+            version: "2.99.0".into()
+        }
+    );
     assert_eq!(
         fs::read(f.i.join("runtime/opencodex/sentinel")).unwrap(),
         b"foreign installation"
     );
-    assert!(!f.i.join("runtime/current.json").exists());
+    assert!(f.i.join("runtime/current.json").is_file());
     assert!(!f.i.join("runtime/bin/ocx").exists());
+    assert!(f.i.join("runtime/bin/ocx-runtime").is_file());
+}
+
+#[test]
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn versioned_reserved_target_collision_preserves_unknown_content() {
+    let f = versioned_fixture();
+    fs::create_dir_all(f.i.join("runtime/versions/2.99.0")).unwrap();
+    let sentinel = f.i.join("runtime/versions/2.99.0/unknown");
+    fs::write(&sentinel, b"must not overwrite").unwrap();
+    let (descriptor, pin) = f.bytes();
+    assert!(versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).is_err());
+    assert_eq!(fs::read(sentinel).unwrap(), b"must not overwrite");
+    assert!(!f.i.join("runtime/current.json").exists());
 }
 
 #[test]

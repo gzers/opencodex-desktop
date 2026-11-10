@@ -17,6 +17,12 @@ pub(crate) fn start(
     install: SharedRuntimeInstall,
     ready: impl FnOnce() + Send + 'static,
 ) -> AppResult<()> {
+    if runtime.uses_versioned_programs() && matches!(runtime.selected_program(), Ok(Some(_))) {
+        // Initial source admission already verified this image. A normal
+        // startup does not rewrite or re-unpack a readable installed program.
+        ready();
+        return Ok(());
+    }
     let storage = crate::infrastructure::storage_writers::global().admit()?;
     let lease = install.acquire().ok_or(AppError::RuntimeManaged {
         code: "install_in_progress".into(),
@@ -42,13 +48,23 @@ pub(crate) fn start(
                     !s.is_empty() && *s != "." && *s != ".." && !s.contains(['/', '\\', ':'])
                 })
                 .ok_or(AppError::NotConfigured)?;
-            super::bundled::provision(
-                &installation,
-                &desktop,
-                &resources.join(name),
-                &descriptor,
-                descriptor_pin,
-            )?;
+            if runtime.uses_versioned_programs() {
+                super::bundled::versioned::provision(
+                    &installation,
+                    &desktop,
+                    &resources.join(name),
+                    &descriptor,
+                    descriptor_pin,
+                )?;
+            } else {
+                super::bundled::provision(
+                    &installation,
+                    &desktop,
+                    &resources.join(name),
+                    &descriptor,
+                    descriptor_pin,
+                )?;
+            }
             runtime.refresh();
             ready();
             Ok(())

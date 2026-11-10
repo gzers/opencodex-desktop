@@ -203,6 +203,35 @@ impl RuntimeStore {
         })?;
         crate::infrastructure::atomic_write::atomic_write(&self.path, &payload, 0o600)
     }
+
+    fn load_for_update(&self) -> Result<RuntimeSourceRecord, AppError> {
+        match std::fs::symlink_metadata(&self.path) {
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => {
+                return Ok(RuntimeSourceRecord::default())
+            }
+            Err(_) => return Err(AppError::NotConfigured),
+            Ok(_) => {}
+        }
+        let root = self
+            .path
+            .parent()
+            .and_then(Path::parent)
+            .ok_or(AppError::NotConfigured)?;
+        crate::modules::backup::safety::check_path(root, &self.path, false)?;
+        let raw = crate::modules::backup::safety::read_file(&self.path, 1024 * 1024)?;
+        let record: RuntimeSourceRecord =
+            serde_json::from_slice(&raw).map_err(|_| AppError::RuntimeManaged {
+                code: "runtime_history_invalid".into(),
+                detail: "运行程序历史记录无效，原件保留；未将其作为当前执行来源".into(),
+            })?;
+        if record.schema_version != RUNTIME_SCHEMA_VERSION {
+            return Err(AppError::RuntimeManaged {
+                code: "runtime_history_invalid".into(),
+                detail: "运行程序历史记录版本未知，原件保留".into(),
+            });
+        }
+        Ok(record.normalized())
+    }
 }
 
 /// `runtime.json` 的文件名。
@@ -234,6 +263,23 @@ pub struct RuntimeResolver {
     managed_entry: PathBuf,
     discovered: Vec<PathBuf>,
     managed_only: bool,
+    versioned: bool,
+}
+
+#[derive(Debug, Clone)]
+struct RuntimeObservation {
+    resolution: RuntimeResolution,
+    selected: Option<program_selection::SelectedProgram>,
+    problem: Option<String>,
+}
+impl RuntimeObservation {
+    fn legacy(resolution: RuntimeResolution) -> Self {
+        Self {
+            resolution,
+            selected: None,
+            problem: None,
+        }
+    }
 }
 
 impl RuntimeResolver {
@@ -243,6 +289,7 @@ impl RuntimeResolver {
             managed_entry: data_root.join(MANAGED_ENTRY_RELATIVE),
             discovered,
             managed_only: false,
+            versioned: false,
         }
     }
 
@@ -256,6 +303,9 @@ impl RuntimeResolver {
     /// `explicit` 只有在**通过可执行校验**时才生效；校验失败即静默回落到下一档，
     /// 避免一个失效的手填路径把整个应用卡成「未解析」。
     pub fn resolve(&self, explicit: Option<&Path>) -> RuntimeResolution {
+        if self.versioned {
+            return self.observe(explicit).resolution;
+        }
         if self.managed_only {
             let root = self
                 .managed_entry
@@ -305,6 +355,38 @@ impl RuntimeResolver {
         }
         RuntimeResolution::unresolved()
     }
+
+    fn observe(&self, explicit: Option<&Path>) -> RuntimeObservation {
+        if !self.versioned {
+            return RuntimeObservation::legacy(self.resolve(explicit));
+        }
+        let result = (|| {
+            let root = self
+                .managed_entry
+                .parent()
+                .and_then(Path::parent)
+                .and_then(Path::parent)
+                .ok_or(AppError::NotConfigured)?;
+            let (target, platform) = program_layout::host_target()?;
+            program_selection::read(root, platform, target)
+        })();
+        match result {
+            Ok(Some(selected)) => RuntimeObservation {
+                resolution: RuntimeResolution {
+                    kind: RuntimeSourceKind::Managed,
+                    path: Some(selected.stable_entry.clone()),
+                },
+                selected: Some(selected),
+                problem: None,
+            },
+            Ok(None) => RuntimeObservation::legacy(RuntimeResolution::unresolved()),
+            Err(error) => RuntimeObservation {
+                resolution: RuntimeResolution::unresolved(),
+                selected: None,
+                problem: Some(error.to_string()),
+            },
+        }
+    }
 }
 
 /// 可重解析的共享句柄（`FZ-48`：发现 / 状态 / Doctor / 版本 / 启停 / IPC 共用同一份结果）。
@@ -316,7 +398,7 @@ pub struct RuntimeHandle {
     store: RuntimeStore,
     resolver: RuntimeResolver,
     explicit: Mutex<Option<PathBuf>>,
-    current: Mutex<RuntimeResolution>,
+    current: Mutex<RuntimeObservation>,
 }
 
 impl RuntimeHandle {
@@ -335,7 +417,7 @@ impl RuntimeHandle {
             store,
             resolver,
             explicit: Mutex::new(explicit),
-            current: Mutex::new(resolution),
+            current: Mutex::new(RuntimeObservation::legacy(resolution)),
         });
         let _ = handle.persist();
         handle
@@ -343,13 +425,38 @@ impl RuntimeHandle {
 
     /// v2 installed program source is independent from manager state and legacy discovery.
     pub fn initialize_managed(data_root: &Path, installation_root: &Path) -> Arc<Self> {
+        Self::initialize_program(data_root, installation_root, false)
+    }
+
+    /// Production startup selects only the current version record. Older flat
+    /// fixtures keep their explicit constructor; this path never falls back.
+    pub fn initialize_versioned(data_root: &Path, installation_root: &Path) -> Arc<Self> {
+        Self::initialize_program(data_root, installation_root, true)
+    }
+
+    fn initialize_program(
+        data_root: &Path,
+        installation_root: &Path,
+        versioned: bool,
+    ) -> Arc<Self> {
         let store = RuntimeStore::new(data_root);
         let resolver = RuntimeResolver {
-            managed_entry: installation_root.join(MANAGED_ENTRY_RELATIVE),
+            managed_entry: installation_root.join(if versioned {
+                program_layout::runtime_entry_relative(if cfg!(windows) {
+                    crate::modules::data_root::layout::Platform::Windows
+                } else if cfg!(target_os = "macos") {
+                    crate::modules::data_root::layout::Platform::Macos
+                } else {
+                    crate::modules::data_root::layout::Platform::Unix
+                })
+            } else {
+                MANAGED_ENTRY_RELATIVE
+            }),
             discovered: vec![],
             managed_only: true,
+            versioned,
         };
-        let current = resolver.resolve(None);
+        let current = resolver.observe(None);
         let handle = Arc::new(Self {
             store,
             resolver,
@@ -372,12 +479,37 @@ impl RuntimeHandle {
     pub fn current(&self) -> RuntimeResolution {
         self.current
             .lock()
-            .map(|value| value.clone())
+            .map(|value| value.resolution.clone())
             .unwrap_or_else(|_| RuntimeResolution::unresolved())
+    }
+    pub fn uses_versioned_programs(&self) -> bool {
+        self.resolver.versioned
+    }
+
+    /// Cached full admission plus bounded record/entry freshness. High-frequency
+    /// status never hashes Node/Bun again; action/source refresh owns that check.
+    pub fn source_problem(&self) -> Option<String> {
+        self.selected_program().err().map(|e| e.to_string())
+    }
+    pub fn selected_program(&self) -> Result<Option<program_selection::SelectedProgram>, AppError> {
+        let current = self.current.lock().map_err(|_| AppError::NotConfigured)?;
+        if let Some(detail) = &current.problem {
+            return Err(AppError::RuntimeManaged {
+                code: "runtime_source_unconfirmed".into(),
+                detail: detail.clone(),
+            });
+        }
+        if let Some(selected) = &current.selected {
+            program_selection::verify_current(self.installation_root(), selected)?;
+        }
+        Ok(current.selected.clone())
     }
 
     /// 当前可执行文件路径；未解析时为 `None`。
     pub fn executable(&self) -> Option<PathBuf> {
+        if self.source_problem().is_some() {
+            return None;
+        }
         self.current().path
     }
 
@@ -407,7 +539,23 @@ impl RuntimeHandle {
 
     /// 记录并持久化最新的已知版本（由版本检查在读取成功后回填）。
     pub fn record_resolved_version(&self, version: &str) {
-        let mut record = self.store.load();
+        if self.uses_versioned_programs()
+            && !self
+                .selected_program()
+                .ok()
+                .flatten()
+                .is_some_and(|p| p.selection.version == version)
+        {
+            return;
+        }
+        let mut record = if self.uses_versioned_programs() {
+            let Ok(record) = self.store.load_for_update() else {
+                return;
+            };
+            record
+        } else {
+            self.store.load()
+        };
         let resolution = self.current();
         record.schema_version = RUNTIME_SCHEMA_VERSION;
         record.source = resolution.kind;
@@ -422,23 +570,35 @@ impl RuntimeHandle {
 
     /// 追加一条安装 / 卸载历史（只在**终态**调用）。
     pub fn record_history(&self, entry: InstallHistoryEntry) -> Result<(), AppError> {
-        let mut record = self.store.load();
+        let mut record = if self.uses_versioned_programs() {
+            self.store.load_for_update()?
+        } else {
+            self.store.load()
+        };
         record.push_history(entry);
         self.store.save(&record)
     }
 
     /// 重新解析并落盘。安装 / 卸载完成、或用户改动显式指定后调用。
     pub fn refresh(&self) -> RuntimeResolution {
+        let resolution = self.observe_current();
+        let _ = self.persist();
+        resolution
+    }
+
+    /// Explicit source/version query re-admits actual programs without writing
+    /// history or changing the user's selected program.
+    pub fn observe_current(&self) -> RuntimeResolution {
         let explicit = self
             .explicit
             .lock()
             .map(|value| value.clone())
             .unwrap_or_default();
-        let resolution = self.resolver.resolve(explicit.as_deref());
+        let observation = self.resolver.observe(explicit.as_deref());
+        let resolution = observation.resolution.clone();
         if let Ok(mut current) = self.current.lock() {
-            *current = resolution.clone();
+            *current = observation;
         }
-        let _ = self.persist();
         resolution
     }
 
@@ -467,8 +627,15 @@ impl RuntimeHandle {
     }
 
     fn persist(&self) -> Result<(), AppError> {
+        // Unknown source cannot erase a prior recorded installation/history.
+        // That record remains historical, never an executable fallback.
+        let selected = self.selected_program()?;
         let resolution = self.current();
-        let mut record = self.store.load();
+        let mut record = if self.uses_versioned_programs() {
+            self.store.load_for_update()?
+        } else {
+            self.store.load()
+        };
         record.schema_version = RUNTIME_SCHEMA_VERSION;
         record.source = resolution.kind;
         let resolved_path = resolution
@@ -480,6 +647,9 @@ impl RuntimeHandle {
         // 版本挂在新的来源上（`FZ-48`：`resolved_version` 描述当前来源）。
         if record.path != resolved_path {
             record.resolved_version = None;
+        }
+        if self.uses_versioned_programs() {
+            record.resolved_version = selected.map(|p| p.selection.version);
         }
         record.path = resolved_path;
         record.resolved_at = Some(now_rfc3339());
@@ -501,6 +671,27 @@ impl crate::infrastructure::runtime_executable::RuntimeExecutableProvider for Ru
         self.resolver_managed_only()
             .then(|| self.installation_root().to_path_buf())
     }
+    fn source_problem(&self) -> Option<String> {
+        RuntimeHandle::source_problem(self)
+    }
+    fn managed_program_identity(
+        &self,
+    ) -> crate::errors::AppResult<install::ManagedRuntimeIdentity> {
+        if !self.uses_versioned_programs() {
+            return install::resolve_managed_installation(self.installation_root())
+                .map_err(Into::into);
+        }
+        let (target, platform) = program_layout::host_target()?;
+        let selected = program_selection::read(self.installation_root(), platform, target)?
+            .ok_or(AppError::NotConfigured)?;
+        Ok(install::ManagedRuntimeIdentity {
+            installation_root: self.installation_root().into(),
+            prefix: selected.paths.package_root,
+            entry: selected.stable_entry,
+            node: selected.paths.node,
+            package_version: selected.selection.version,
+        })
+    }
 }
 
 #[cfg(all(test, unix))]
@@ -508,6 +699,84 @@ mod tests {
     use super::*;
     use std::fs::Permissions;
     use std::os::unix::fs::PermissionsExt;
+
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    #[test]
+    fn versioned_source_uses_actual_image_and_preserves_history_on_unknown() {
+        let f = program_selection::tests::Fixture::new();
+        let state = tempfile::tempdir().unwrap();
+        let root = state.path().canonicalize().unwrap().join("desktop");
+        let handle = RuntimeHandle::initialize_versioned(&root, &f.root);
+        assert_eq!(handle.kind(), RuntimeSourceKind::Managed);
+        assert_eq!(
+            handle.executable(),
+            Some(f.root.join("runtime/bin/ocx-runtime"))
+        );
+        assert_eq!(handle.selected_program().unwrap().unwrap().paths, f.paths);
+        assert_eq!(
+            handle.store.load().resolved_version.as_deref(),
+            Some("2.99.0")
+        );
+        let record = std::fs::read(handle.store.path()).unwrap();
+        handle.record_resolved_version("9.9.9");
+        assert_eq!(std::fs::read(handle.store.path()).unwrap(), record);
+        std::fs::write(f.root.join("runtime/current.json"), b"{").unwrap();
+        assert!(handle.executable().is_none());
+        assert!(handle.source_problem().is_some());
+        assert_eq!(std::fs::read(handle.store.path()).unwrap(), record);
+        assert_eq!(handle.refresh().kind, RuntimeSourceKind::Unresolved);
+        assert!(handle.source_problem().is_some());
+        assert!(handle.selected_program().is_err());
+        assert_eq!(std::fs::read(handle.store.path()).unwrap(), record);
+    }
+
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    #[test]
+    fn versioned_source_never_uses_flat_or_explicit_fallback() {
+        let t = tempfile::tempdir().unwrap();
+        let root = t.path().canonicalize().unwrap();
+        let program = root.join("program");
+        let data = root.join("desktop");
+        let handle = RuntimeHandle::initialize_versioned(&data, &program);
+        assert!(handle.source_problem().is_none());
+        assert_eq!(handle.kind(), RuntimeSourceKind::Unresolved);
+        write_executable(&program.join("runtime/bin/ocx"));
+        let external = root.join("external/ocx");
+        write_executable(&external);
+        assert_eq!(
+            handle.set_explicit(Some(external)).kind,
+            RuntimeSourceKind::Unresolved
+        );
+        assert!(handle.source_problem().is_none());
+        assert!(handle.selected_program().unwrap().is_none());
+    }
+
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    #[test]
+    fn damaged_history_cannot_override_source_or_be_erased_by_observation() {
+        let f = program_selection::tests::Fixture::new();
+        let t = tempfile::tempdir().unwrap();
+        let data = t.path().canonicalize().unwrap().join("desktop");
+        let store = RuntimeStore::new(&data);
+        std::fs::create_dir_all(store.path().parent().unwrap()).unwrap();
+        std::fs::write(store.path(), b"{unreadable history").unwrap();
+        let before = std::fs::read(store.path()).unwrap();
+        let handle = RuntimeHandle::initialize_versioned(&data, &f.root);
+        assert_eq!(handle.kind(), RuntimeSourceKind::Managed);
+        assert_eq!(
+            handle
+                .selected_program()
+                .unwrap()
+                .unwrap()
+                .selection
+                .version,
+            "2.99.0"
+        );
+        handle.observe_current();
+        handle.refresh();
+        handle.record_resolved_version("2.99.0");
+        assert_eq!(std::fs::read(store.path()).unwrap(), before);
+    }
 
     fn write_executable(path: &Path) {
         if let Some(parent) = path.parent() {

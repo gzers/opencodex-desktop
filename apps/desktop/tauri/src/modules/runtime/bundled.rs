@@ -765,6 +765,9 @@ fn existing(i: &Path) -> AppResult<String> {
         .package_version)
 }
 fn persist(d: &Path, i: &Path, version: &str) -> AppResult<()> {
+    persist_entry(d, &i.join(MANAGED_ENTRY_RELATIVE), version)
+}
+fn persist_entry(d: &Path, entry: &Path, version: &str) -> AppResult<()> {
     absolute(d)?;
     mkdir(d)?;
     let store = RuntimeStore::new(d);
@@ -784,11 +787,7 @@ fn persist(d: &Path, i: &Path, version: &str) -> AppResult<()> {
         RuntimeSourceRecord::default()
     };
     record.source = RuntimeSourceKind::Managed;
-    record.path = Some(
-        i.join(MANAGED_ENTRY_RELATIVE)
-            .to_string_lossy()
-            .into_owned(),
-    );
+    record.path = Some(entry.to_string_lossy().into_owned());
     record.resolved_version = Some(version.into());
     record.resolved_at = Some(now_rfc3339());
     store.save(&record)?;

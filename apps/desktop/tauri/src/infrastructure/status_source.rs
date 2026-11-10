@@ -102,6 +102,9 @@ impl OfficialStatusSource {
 
     async fn fetch_inner(&self) -> Result<serde_json::Value, CollectError> {
         let started = Instant::now();
+        if self.runtime.source_problem().is_some() {
+            return Err(CollectError::Unreachable);
+        }
         let executable = self.runtime.executable();
         let validate = || -> Result<(), CollectError> {
             if !self.working_directory.is_dir() {
@@ -401,6 +404,9 @@ impl StatusSource for OfficialStatusSource {
     /// 概览/托盘等消费同一份快照的地方必须立刻不再允许启动。
     fn resolved(&self) -> bool {
         self.runtime.executable().is_some_and(|path| path.is_file())
+    }
+    fn source_unknown(&self) -> bool {
+        self.runtime.source_problem().is_some()
     }
 }
 

@@ -272,14 +272,13 @@ pub fn run() {
                 })?;
             let discovery_paths = crate::infrastructure::discovery_paths::paths_for_home(&home);
             app.manage(crate::state::SharedHomeDir(home.clone()));
-            // 运行来源解析层（FZ-48）：显式指定 > 托管安装 > 自动发现候选，不读 PATH。
-            // 发现候选按文档口径给出（受控默认目录 + Homebrew 两个固定前缀），
-            // 逐个做可执行校验，缺失即跳过。
+            // Production runtime uses only the current user program selection.
+            // Discovery/legacy paths never become an executable fallback.
             let platform=if cfg!(windows){crate::modules::data_root::layout::Platform::Windows}else if cfg!(target_os="macos"){crate::modules::data_root::layout::Platform::Macos}else{crate::modules::data_root::layout::Platform::Unix};
             let install_root=if crate::modules::test_sandbox::enabled(){
                 crate::modules::test_sandbox::sandbox_root().ok_or(crate::errors::AppError::NotConfigured)?.join("program")
             } else {crate::modules::data_root::layout::Layout::installation_root_for_user(&executable,&home,platform)?};
-            let runtime=crate::modules::runtime::RuntimeHandle::initialize_managed(&data_root,&install_root);
+            let runtime=crate::modules::runtime::RuntimeHandle::initialize_versioned(&data_root,&install_root);
             let runtime_executable: crate::infrastructure::runtime_executable::SharedRuntimeExecutable =
                 runtime.clone();
             app.manage(runtime.clone());

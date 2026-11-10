@@ -93,6 +93,31 @@ fn managed(handle: &RuntimeHandle) -> AppResult<Managed> {
         ));
     }
     let root = handle.installation_root();
+    if handle.uses_versioned_programs() {
+        let selected = handle.selected_program()?.ok_or_else(|| {
+            error(
+                "discovery_runtime_unresolved",
+                "集成运行程序尚未准备完成，未检查旧环境",
+            )
+        })?;
+        let identity = ManagedRuntimeIdentity {
+            installation_root: root.to_path_buf(),
+            prefix: selected.paths.package_root.clone(),
+            entry: selected.stable_entry.clone(),
+            node: selected.paths.node.clone(),
+            package_version: selected.selection.version.clone(),
+        };
+        return Ok(Managed {
+            paths: EnvironmentPaths::new(
+                selected.paths.node,
+                selected.paths.npm,
+                selected.stable_entry,
+            ),
+            identity,
+            script: selected.script,
+            npm_digest: selected.image.npm_sha256,
+        });
+    }
     if !root.is_absolute() || !root.is_dir() {
         return Err(error(
             "discovery_runtime_unresolved",
@@ -174,9 +199,14 @@ fn managed(handle: &RuntimeHandle) -> AppResult<Managed> {
     })
 }
 async fn checked_managed(handle: Arc<RuntimeHandle>) -> AppResult<Managed> {
-    tauri::async_runtime::spawn_blocking(move || managed(&handle))
-        .await
-        .map_err(|_| error("discovery_worker", "集成来源检查中断"))?
+    tauri::async_runtime::spawn_blocking(move || {
+        if handle.uses_versioned_programs() {
+            handle.observe_current();
+        }
+        managed(&handle)
+    })
+    .await
+    .map_err(|_| error("discovery_worker", "集成来源检查中断"))?
 }
 async fn discover(
     request: Option<DiscoveryRequest>,
@@ -230,10 +260,17 @@ async fn discover(
                 "集成依赖或运行入口版本探测未成功，请核对当前安装来源；不会回退到系统安装指引",
             ));
         }
-        let pins: serde_json::Value = serde_json::from_str(include_str!(concat!(
-            env!("CARGO_MANIFEST_DIR"),
-            "/../../../.github/runtime-platforms-023.json"
-        )))
+        let pins: serde_json::Value = serde_json::from_str(if handle.uses_versioned_programs() {
+            include_str!(concat!(
+                env!("CARGO_MANIFEST_DIR"),
+                "/../../../.github/runtime-platforms-024.json"
+            ))
+        } else {
+            include_str!(concat!(
+                env!("CARGO_MANIFEST_DIR"),
+                "/../../../.github/runtime-platforms-023.json"
+            ))
+        })
         .map_err(|_| error("discovery_runtime_policy", "集成依赖版本合同不可用"))?;
         for (check, version) in [
             (&report.node, pins["node"]["version"].as_str()),

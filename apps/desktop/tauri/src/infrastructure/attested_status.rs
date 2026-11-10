@@ -258,8 +258,7 @@ async fn stop_official_with_witness<T>(
     let root = runtime
         .managed_installation_root()
         .ok_or(CollectError::Unreachable)?;
-    let identity = crate::modules::runtime::install::resolve_managed_installation(&root)
-        .map_err(unavailable)?;
+    let identity = runtime.managed_program_identity().map_err(unavailable)?;
     if runtime.executable().as_ref() != Some(&identity.entry) {
         return Err(CollectError::Unreachable);
     }
@@ -311,9 +310,7 @@ async fn stop_official_with_witness<T>(
     health(&mut session, &expected, &identity.package_version).await?;
     phase("stop-revalidate-before-write");
     if record(&home)?.1 != bytes
-        || crate::modules::runtime::install::resolve_managed_installation(&root)
-            .map_err(unavailable)?
-            != identity
+        || runtime.managed_program_identity().map_err(unavailable)? != identity
     {
         return Err(CollectError::Unreachable);
     }
@@ -437,16 +434,14 @@ pub(crate) async fn fetch(
     runtime: SharedRuntimeExecutable,
     home: PathBuf,
 ) -> Result<Option<Value>, CollectError> {
-    let Some(root) = runtime.managed_installation_root() else {
+    let Some(_) = runtime.managed_installation_root() else {
         return Ok(None);
     };
     tokio::time::timeout(status_collect_timeout(), async move {
-        let final_root = root.clone();
         let final_runtime = runtime.clone();
         let prepared = tokio::task::spawn_blocking(move || {
             // Full activation validation on every observation; no mtime trust/cache.
-            let identity = crate::modules::runtime::install::resolve_managed_installation(&root)
-                .map_err(unavailable)?;
+            let identity = runtime.managed_program_identity().map_err(unavailable)?;
             if runtime.executable().as_ref() != Some(&identity.entry) {
                 return Err(CollectError::Unreachable);
             }
@@ -465,10 +460,11 @@ pub(crate) async fn fetch(
             return Ok(None);
         };
         let payload = observe(&home, &record, &bytes, &version).await?;
+        let final_source = final_runtime.clone();
         let (verified, final_bytes) = tokio::task::spawn_blocking(move || {
-            let identity =
-                crate::modules::runtime::install::resolve_managed_installation(&final_root)
-                    .map_err(unavailable)?;
+            let identity = final_source
+                .managed_program_identity()
+                .map_err(unavailable)?;
             let (_, bytes) = self::record(&home)?;
             Ok::<_, CollectError>((identity, bytes))
         })

@@ -92,6 +92,15 @@ fn fixed_executables(root: &Path) -> AppResult<(PathBuf, PathBuf)> {
 pub fn managed_executables(
     handle: &RuntimeHandle,
 ) -> AppResult<(Option<PathBuf>, Option<PathBuf>)> {
+    if handle.uses_versioned_programs() {
+        let selected = handle
+            .selected_program()?
+            .ok_or_else(|| AppError::RuntimeManaged {
+                code: "managed_dependency_missing".into(),
+                detail: "集成运行程序尚未准备完成".into(),
+            })?;
+        return Ok((Some(selected.paths.node), Some(selected.paths.npm)));
+    }
     if !handle.resolver_managed_only() {
         return Ok(discovered_executables());
     }
@@ -165,12 +174,18 @@ pub(crate) fn broadcast_source_changed(app: &tauri::AppHandle) {
     );
 }
 
-fn source_dto(handle: &RuntimeHandle, data_root: &Path) -> RuntimeSourceDto {
+fn source_dto(handle: &RuntimeHandle, data_root: &Path) -> AppResult<RuntimeSourceDto> {
     let resolution = handle.current();
     let record = handle.store().load();
+    let selected = handle.selected_program()?;
     // 卸载与「重装同版本」按**安装记录登记的**前缀定位（`FZ-51`）：
     // `FZ-47` 允许自定义前缀，那时前缀不再是数据根的默认位置。
-    let managed_prefix = if handle.resolver_managed_only() {
+    let managed_prefix = if handle.uses_versioned_programs() {
+        selected
+            .as_ref()
+            .map(|p| p.paths.package_root.clone())
+            .unwrap_or_else(|| handle.installation_root().join("runtime/versions"))
+    } else if handle.resolver_managed_only() {
         handle
             .installation_root()
             .join(crate::modules::runtime::MANAGED_PREFIX_RELATIVE)
@@ -178,7 +193,7 @@ fn source_dto(handle: &RuntimeHandle, data_root: &Path) -> RuntimeSourceDto {
         record.installed_prefix(data_root)
     };
     let managed_entry = handle.managed_entry().to_path_buf();
-    RuntimeSourceDto {
+    Ok(RuntimeSourceDto {
         kind: resolution.kind,
         inside_data_root: resolution
             .path
@@ -189,7 +204,11 @@ fn source_dto(handle: &RuntimeHandle, data_root: &Path) -> RuntimeSourceDto {
             .path
             .as_ref()
             .map(|path| path.to_string_lossy().into_owned()),
-        version: record.resolved_version.clone(),
+        version: if handle.uses_versioned_programs() {
+            selected.as_ref().map(|p| p.selection.version.clone())
+        } else {
+            record.resolved_version.clone()
+        },
         resolved_at: record.resolved_at.clone(),
         managed_entry: matches!(resolution.kind, RuntimeSourceKind::Managed)
             .then(|| managed_entry.to_string_lossy().into_owned()),
@@ -199,7 +218,7 @@ fn source_dto(handle: &RuntimeHandle, data_root: &Path) -> RuntimeSourceDto {
             .explicit_path()
             .map(|path| path.to_string_lossy().into_owned()),
         history: record.history,
-    }
+    })
 }
 
 /// 代理进程是否在运行；运行中的来源切换要提示「需重启」（`FZ-48`）。
@@ -217,11 +236,17 @@ fn proxy_is_running(collector: &SharedStatusCollector) -> bool {
 }
 
 #[tauri::command]
-pub fn runtime_source(
+pub async fn runtime_source(
     handle: tauri::State<'_, std::sync::Arc<RuntimeHandle>>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> AppResult<RuntimeSourceDto> {
-    Ok(source_dto(handle.inner(), &data_root.0))
+    let handle = handle.inner().clone();
+    let root = data_root.0.clone();
+    crate::commands::run_blocking("read actual runtime source", move || {
+        handle.observe_current();
+        source_dto(&handle, &root)
+    })
+    .await
 }
 
 #[tauri::command]
@@ -336,7 +361,7 @@ async fn change_runtime_source(
         }
         handle.set_explicit(candidate);
         broadcast_source_changed(&app);
-        Ok(source_dto(&handle, &data_root))
+        source_dto(&handle, &data_root)
     })
     .await
 }
@@ -1143,7 +1168,7 @@ mod tests {
         let root = tempfile::tempdir().expect("temp");
         let data_root = root.path().join("data-root");
         let handle = handle_for(&data_root);
-        let dto = source_dto(&handle, &data_root);
+        let dto = source_dto(&handle, &data_root).unwrap();
         assert_eq!(dto.kind, RuntimeSourceKind::Unresolved);
         assert_eq!(dto.path, None);
         assert!(!dto.inside_data_root);
@@ -1169,13 +1194,37 @@ mod tests {
         std::fs::set_permissions(&entry, std::fs::Permissions::from_mode(0o755)).expect("chmod");
 
         let handle = handle_for(&data_root);
-        let dto = source_dto(&handle, &data_root);
+        let dto = source_dto(&handle, &data_root).unwrap();
         assert_eq!(dto.kind, RuntimeSourceKind::Managed);
         assert!(dto.inside_data_root);
         assert_eq!(
             dto.managed_entry.as_deref(),
             Some(entry.to_string_lossy().as_ref())
         );
+    }
+
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    #[test]
+    fn source_dto_uses_selected_disk_version_and_keeps_invalid_history_untouched() {
+        let f = crate::modules::runtime::program_selection::tests::Fixture::new();
+        let t = tempfile::tempdir().unwrap();
+        let data = t.path().canonicalize().unwrap().join("desktop");
+        let store = crate::modules::runtime::RuntimeStore::new(&data);
+        std::fs::create_dir_all(store.path().parent().unwrap()).unwrap();
+        std::fs::write(store.path(), b"{invalid historical metadata").unwrap();
+        let before = std::fs::read(store.path()).unwrap();
+        let h = RuntimeHandle::initialize_versioned(&data, &f.root);
+        let dto = source_dto(&h, &data).unwrap();
+        assert_eq!(dto.version.as_deref(), Some("2.99.0"));
+        assert_eq!(dto.managed_prefix, f.paths.package_root.to_string_lossy());
+        assert!(dto
+            .managed_entry
+            .unwrap()
+            .ends_with("runtime/bin/ocx-runtime"));
+        assert_eq!(std::fs::read(store.path()).unwrap(), before);
+        std::fs::write(f.root.join("runtime/current.json"), b"{").unwrap();
+        assert!(source_dto(&h, &data).is_err());
+        assert_eq!(std::fs::read(store.path()).unwrap(), before);
     }
 
     #[test]

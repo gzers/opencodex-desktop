@@ -5,12 +5,38 @@ use std::path::{Component, Path, PathBuf};
 
 pub const CURRENT_FILENAME: &str = "current.json";
 
+pub fn runtime_entry_relative(platform: Platform) -> &'static str {
+    if platform == Platform::Windows {
+        "runtime/bin/ocx-runtime.cmd"
+    } else {
+        "runtime/bin/ocx-runtime"
+    }
+}
+pub fn cli_entry_relative(platform: Platform) -> &'static str {
+    if platform == Platform::Windows {
+        "runtime/bin/ocx.cmd"
+    } else {
+        "runtime/bin/ocx"
+    }
+}
+
+pub fn host_target() -> Result<(&'static str, Platform), AppError> {
+    if cfg!(all(target_os = "macos", target_arch = "aarch64")) {
+        Ok(("darwin-arm64", Platform::Macos))
+    } else if cfg!(all(windows, target_arch = "x86_64")) {
+        Ok(("win32-x64", Platform::Windows))
+    } else {
+        Err(invalid("当前平台不支持集成运行程序"))
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ProgramLocations {
     pub desktop_application: PathBuf,
     pub program_root: PathBuf,
     pub runtime_root: PathBuf,
     pub stable_entry: PathBuf,
+    pub cli_entry: PathBuf,
     pub versions_root: PathBuf,
     pub current_record: PathBuf,
     platform: Platform,
@@ -32,7 +58,7 @@ fn invalid(detail: &str) -> AppError {
     }
 }
 
-fn clean_absolute(path: &Path) -> bool {
+pub(super) fn clean_absolute(path: &Path) -> bool {
     path.is_absolute()
         && path.to_str().is_some()
         && !path.to_string_lossy().chars().any(char::is_control)
@@ -83,14 +109,13 @@ impl ProgramLocations {
             )
         };
         let runtime_root = program_root.join("runtime");
+        let stable_entry = program_root.join(runtime_entry_relative(platform));
+        let cli_entry = program_root.join(cli_entry_relative(platform));
         Ok(Self {
             desktop_application,
             program_root,
-            stable_entry: runtime_root.join(if platform == Platform::Windows {
-                "bin/ocx.cmd"
-            } else {
-                "bin/ocx"
-            }),
+            stable_entry,
+            cli_entry,
             versions_root: runtime_root.join("versions"),
             current_record: runtime_root.join(CURRENT_FILENAME),
             runtime_root,
@@ -186,7 +211,8 @@ mod tests {
         )
         .unwrap();
         assert_eq!(p.program_root, custom);
-        assert_eq!(p.stable_entry, custom.join("runtime/bin/ocx.cmd"));
+        assert_eq!(p.stable_entry, custom.join("runtime/bin/ocx-runtime.cmd"));
+        assert_eq!(p.cli_entry, custom.join("runtime/bin/ocx.cmd"));
         assert_eq!(
             p.version("2.99.0").unwrap().node,
             custom.join("runtime/versions/2.99.0/dependencies/node/node.exe")

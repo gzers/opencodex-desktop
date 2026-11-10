@@ -46,13 +46,45 @@ pub struct ImageManifest {
     pub bun_launcher_sha256: String,
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct SelectedProgram {
     pub selection: CurrentSelection,
     pub image: ImageManifest,
     pub paths: RuntimeVersionPaths,
     pub stable_entry: PathBuf,
     pub script: PathBuf,
+}
+
+/// Bounded freshness check for a previously fully admitted image. This does
+/// not re-admit modified binaries or substitute for action-time full admission.
+pub fn verify_current(program_root: &Path, selected: &SelectedProgram) -> AppResult<()> {
+    if !root_present(program_root)? {
+        return Err(invalid("已选择的程序根已不可确认"));
+    }
+    let runtime = program_root.join("runtime");
+    let pending = runtime.join(ACTIVATION_PENDING);
+    safety::check_path(program_root, &pending, true).map_err(|_| invalid("激活路径不可确认"))?;
+    match std::fs::symlink_metadata(&pending) {
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
+        _ => return Err(invalid("版本激活尚未完成")),
+    }
+    let current: CurrentSelection =
+        serde_json::from_slice(&metadata(program_root, &runtime.join(CURRENT_FILENAME))?)
+            .map_err(|_| invalid("程序选择记录已变化"))?;
+    if current != selected.selection
+        || hash::sha256_hex(&metadata(
+            program_root,
+            &selected.paths.version_root.join(IMAGE_MANIFEST),
+        )?) != selected.selection.image_sha256
+    {
+        return Err(invalid("所选程序代次已变化，需要重新核对"));
+    }
+    if metadata(program_root, &selected.stable_entry)?
+        != install::entry_script(Some(&selected.paths.node), &selected.script).as_bytes()
+    {
+        return Err(invalid("稳定入口已变化，需要重新核对"));
+    }
+    Ok(())
 }
 
 fn invalid(detail: &'static str) -> AppError {
@@ -66,6 +98,32 @@ fn digest(value: &str) -> bool {
         && value
             .bytes()
             .all(|c| c.is_ascii_digit() || (b'a'..=b'f').contains(&c))
+}
+fn root_present(root: &Path) -> AppResult<bool> {
+    if !super::program_layout::clean_absolute(root) {
+        return Err(invalid("程序根路径无效"));
+    }
+    let mut path = PathBuf::new();
+    for component in root.components() {
+        path.push(component);
+        #[cfg(windows)]
+        if matches!(component, Component::Prefix(_)) {
+            continue;
+        }
+        match std::fs::symlink_metadata(&path) {
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(false),
+            Err(_) => return Err(invalid("程序根状态不可读")),
+            Ok(_) => {
+                if !safety::inspect(&path)
+                    .map_err(|_| invalid("程序根存在重定向或未知对象"))?
+                    .is_dir()
+                {
+                    return Err(invalid("程序根不是目录"));
+                }
+            }
+        }
+    }
+    Ok(true)
 }
 fn metadata(root: &Path, path: &Path) -> AppResult<Vec<u8>> {
     safety::check_path(root, path, false).map_err(|_| invalid("运行程序记录路径不可信"))?;
@@ -149,6 +207,9 @@ fn read_inner(
         || !["darwin-arm64", "win32-x64", "linux-x64", "linux-arm64"].contains(&target)
     {
         return Err(invalid("运行程序平台不支持"));
+    }
+    if !root_present(program_root)? {
+        return Ok(None);
     }
     let runtime = program_root.join("runtime");
     if !activating {
@@ -250,11 +311,7 @@ fn read_inner(
     for path in [&paths.node, &paths.bun, &script] {
         super::paths::validate_executable(path).map_err(|_| invalid("所选运行程序不可执行"))?;
     }
-    let stable_entry = runtime.join(if platform == Platform::Windows {
-        "bin/ocx.cmd"
-    } else {
-        "bin/ocx"
-    });
+    let stable_entry = program_root.join(super::program_layout::runtime_entry_relative(platform));
     if metadata(program_root, &stable_entry)?
         != install::entry_script(Some(&paths.node), &script).as_bytes()
     {
@@ -277,4 +334,4 @@ fn read_inner(
 
 #[cfg(all(test, unix))]
 #[path = "program_selection_tests.rs"]
-mod tests;
+pub(crate) mod tests;

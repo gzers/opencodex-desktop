@@ -1,14 +1,14 @@
 use super::*;
 use std::{fs, os::unix::fs::PermissionsExt};
 
-struct Fixture {
+pub(crate) struct Fixture {
     _temp: tempfile::TempDir,
-    root: PathBuf,
-    paths: RuntimeVersionPaths,
+    pub(crate) root: PathBuf,
+    pub(crate) paths: RuntimeVersionPaths,
     image: ImageManifest,
 }
 impl Fixture {
-    fn new() -> Self {
+    pub(crate) fn new() -> Self {
         let temp = tempfile::tempdir().unwrap();
         let root = temp.path().canonicalize().unwrap();
         let paths =
@@ -37,7 +37,7 @@ impl Fixture {
             fs::write(&path, bytes).unwrap();
             fs::set_permissions(&path, fs::Permissions::from_mode(mode)).unwrap();
         }
-        let entry = root.join("runtime/bin/ocx");
+        let entry = root.join("runtime/bin/ocx-runtime");
         fs::create_dir_all(entry.parent().unwrap()).unwrap();
         fs::write(&entry, install::entry_script(Some(&paths.node), &script)).unwrap();
         fs::set_permissions(&entry, fs::Permissions::from_mode(0o755)).unwrap();
@@ -85,6 +85,17 @@ impl Fixture {
     fn read(&self) -> AppResult<Option<SelectedProgram>> {
         read(&self.root, Platform::Macos, "darwin-arm64")
     }
+}
+
+#[test]
+fn absent_program_root_is_not_created_or_adopted() {
+    let t = tempfile::tempdir().unwrap();
+    let root = t.path().canonicalize().unwrap().join("not-installed");
+    assert_eq!(read(&root, Platform::Macos, "darwin-arm64").unwrap(), None);
+    assert!(!root.exists());
+    let alias = t.path().canonicalize().unwrap().join("alias");
+    std::os::unix::fs::symlink(t.path(), &alias).unwrap();
+    assert!(read(&alias.join("missing"), Platform::Macos, "darwin-arm64").is_err());
 }
 
 #[test]
@@ -137,7 +148,7 @@ fn every_critical_program_file_and_stable_launcher_are_bound() {
             f.paths.bun.clone(),
             package.join("package.json"),
             package.join("bin/ocx.mjs"),
-            f.root.join("runtime/bin/ocx"),
+            f.root.join("runtime/bin/ocx-runtime"),
             f.paths.package_root.join("node_modules/bun/bin/bun.exe"),
         ][which]
             .clone();

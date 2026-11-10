@@ -122,6 +122,10 @@ pub trait StatusSource {
     fn resolved(&self) -> bool {
         true
     }
+    /// Invalid/incomplete admission is not evidence that installation is absent.
+    fn source_unknown(&self) -> bool {
+        false
+    }
 }
 
 /// 官方输出的宽松读取视图；未知 JSON 形状不会导致整个报告被丢弃。
@@ -789,7 +793,11 @@ where
 
     /// 使用注入时钟刷新；去抖期内共享上次结果，不额外调用来源。
     pub fn refresh_at(&mut self, now: Instant) -> Result<MappedOfficialStatus, CollectError> {
-        if !self.request_allowed(now) && !self.last_was_light && self.source.resolved() {
+        if !self.request_allowed(now)
+            && !self.last_was_light
+            && self.source.resolved()
+            && !self.source.source_unknown()
+        {
             return self
                 .last_result
                 .clone()
@@ -799,7 +807,7 @@ where
     }
 
     pub fn refresh_light_at(&mut self, now: Instant) -> Result<MappedOfficialStatus, CollectError> {
-        if !self.request_allowed(now) {
+        if !self.request_allowed(now) && !self.source.source_unknown() {
             return self
                 .last_result
                 .clone()
@@ -826,7 +834,12 @@ where
                 // 运行来源未解析（或解析到的入口已不存在）= 未发现安装。这是确定性事实，
                 // 不能沿用上一份「未运行 / 可启动」状态——否则卸载后概览、托盘等仍显示
                 // 可启动（真机反馈）。只有瞬时失败才保留上一份状态（FZ-07 / FZ-08）。
-                if !self.source.resolved() {
+                if self.source.source_unknown() {
+                    self.matrix.runtime = RuntimeState::Unreachable;
+                    self.facts = RuntimeFacts::default();
+                    self.port = None;
+                    self.pid = None;
+                } else if !self.source.resolved() {
                     self.matrix = StatusMatrix {
                         runtime: RuntimeState::NotFound,
                         connection: self.matrix.connection,
@@ -1304,6 +1317,53 @@ mod tests {
         assert_eq!(collector.facts().health, HealthState::Unknown);
         assert_eq!(collector.port(), None);
         assert_eq!(collector.pid(), None);
+    }
+
+    #[test]
+    fn source_admission_failure_is_unknown_and_bypasses_cached_success() {
+        use std::cell::Cell;
+        struct Source {
+            unknown: Cell<bool>,
+            calls: Cell<u32>,
+        }
+        impl StatusSource for Source {
+            fn fetch(&self) -> Result<Value, CollectError> {
+                self.calls.set(self.calls.get() + 1);
+                if self.unknown.get() {
+                    return Err(CollectError::Unreachable);
+                }
+                Ok(
+                    json!({"status":"running","ready":true,"health":"healthy","pid":"42","port":12345,"dataRoot":"/fixture","startup":{"protection":"none","rebootSafe":false}}),
+                )
+            }
+            fn resolved(&self) -> bool {
+                !self.unknown.get()
+            }
+            fn source_unknown(&self) -> bool {
+                self.unknown.get()
+            }
+        }
+        for light in [false, true] {
+            let mut collector = StatusCollector::new(Source {
+                unknown: Cell::new(false),
+                calls: Cell::new(0),
+            });
+            let now = Instant::now();
+            collector.refresh_at(now).unwrap();
+            assert_eq!(collector.matrix.runtime, RuntimeState::Running);
+            collector.source.unknown.set(true);
+            let result = if light {
+                collector.refresh_light_at(now + Duration::from_millis(1))
+            } else {
+                collector.refresh_at(now + Duration::from_millis(1))
+            };
+            assert_eq!(result.unwrap_err(), CollectError::Unreachable);
+            assert_eq!(collector.source.calls.get(), 2);
+            assert_eq!(collector.matrix.runtime, RuntimeState::Unreachable);
+            assert_eq!(collector.facts.health, HealthState::Unknown);
+            assert_eq!(collector.port, None);
+            assert_eq!(collector.pid, None);
+        }
     }
 
     /// 瞬时失败（超时）仍保留上一份状态，不因一次抖动就清空事实。

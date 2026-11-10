@@ -1,25 +1,12 @@
 //! First supply into the versioned program layout. Archive verification remains
 //! the pinned complete-tree verifier; activation never overwrites unknown files.
 use super::*;
-use crate::modules::{
-    data_root::layout::Platform,
-    runtime::{
-        program_layout::RuntimeVersionPaths,
-        program_selection::{
-            self, CurrentSelection, ImageManifest, ACTIVATION_PENDING, IMAGE_MANIFEST,
-        },
+use crate::modules::runtime::{
+    program_layout::RuntimeVersionPaths,
+    program_selection::{
+        self, CurrentSelection, ImageManifest, ACTIVATION_PENDING, IMAGE_MANIFEST,
     },
 };
-
-fn host_target() -> (&'static str, Platform) {
-    if cfg!(all(target_os = "macos", target_arch = "aarch64")) {
-        ("darwin-arm64", Platform::Macos)
-    } else if cfg!(all(windows, target_arch = "x86_64")) {
-        ("win32-x64", Platform::Windows)
-    } else {
-        ("unsupported", Platform::Unix)
-    }
-}
 
 fn create_bytes(path: &Path, bytes: &[u8], mode: u32) -> AppResult<()> {
     let mut file =
@@ -90,8 +77,8 @@ fn copy_npm(raw: &Path, image: &Path, plan: &Plan) -> AppResult<()> {
     Ok(())
 }
 
-/// An existing valid selected image is preserved. Missing current.json never
-/// authorizes adoption or migration of a flat/foreign runtime tree.
+/// Existing unrelated files are never read/adopted. Only fresh reserved paths
+/// are created, and collisions never authorize overwrite or migration.
 pub fn provision(
     program_root: &Path,
     desktop_root: &Path,
@@ -110,10 +97,18 @@ pub(super) fn provision_inner(
     pin: &str,
     inject_activation_failure: bool,
 ) -> AppResult<ProvisionResult> {
-    let (target, platform) = host_target();
+    let (target, platform) = crate::modules::runtime::program_layout::host_target()?;
     #[cfg(target_os = "macos")]
     crate::modules::data_root::layout::validate_macos_installation_root(i, None)?;
     roots(i, d)?;
+    // Existing selected programs are read-only inputs. Another OS user or a
+    // normal launch from a protected installation must not need a write lock.
+    if let Some(selected) = program_selection::read(i, platform, target)? {
+        persist_entry(d, &selected.stable_entry, &selected.selection.version)?;
+        return Ok(ProvisionResult::AlreadyInstalled {
+            version: selected.selection.version,
+        });
+    }
     let plan = load(descriptor, pin)?;
     if plan.descriptor.platform != target {
         return Err(invalid("运行资源平台与本机不一致"));
@@ -131,25 +126,12 @@ pub(super) fn provision_inner(
     lock.try_lock()
         .map_err(|_| fail("bundle_locked", "运行程序正在操作，请稍后重试"))?;
     if let Some(selected) = program_selection::read(i, platform, target)? {
-        persist(d, i, &selected.selection.version)?;
+        persist_entry(d, &selected.stable_entry, &selected.selection.version)?;
         return Ok(ProvisionResult::AlreadyInstalled {
             version: selected.selection.version,
         });
     }
     let runtime = i.join("runtime");
-    if runtime.exists()
-        && fs::read_dir(&runtime)
-            .map_err(io)?
-            .next()
-            .transpose()
-            .map_err(io)?
-            .is_some()
-    {
-        return Err(fail(
-            "runtime_unselected_content",
-            "运行目录已有未选择内容，未覆盖或自动迁移",
-        ));
-    }
     let stage = tempfile::Builder::new()
         .prefix(".runtime-version-stage-")
         .tempdir_in(i)
@@ -240,11 +222,7 @@ pub(super) fn provision_inner(
     // No-replace publication preserves even an unknown empty version directory.
     publish(&image, &version.version_root)?;
     safety::sync_directories(i, &runtime.join("versions"))?;
-    let entry = runtime.join(if platform == Platform::Windows {
-        "bin/ocx.cmd"
-    } else {
-        "bin/ocx"
-    });
+    let entry = i.join(crate::modules::runtime::program_layout::runtime_entry_relative(platform));
     let script = version
         .package_root
         .join(install::PACKAGE_SUBPATH)
@@ -270,7 +248,7 @@ pub(super) fn provision_inner(
     }
     fs::remove_file(&pending).map_err(io)?;
     safety::sync_directories(i, &runtime)?;
-    persist(d, i, &manifest.version)?;
+    persist_entry(d, &entry, &manifest.version)?;
     Ok(ProvisionResult::Installed {
         version: manifest.version,
     })
