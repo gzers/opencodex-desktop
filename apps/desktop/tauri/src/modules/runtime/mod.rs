@@ -11,6 +11,7 @@ pub mod install;
 pub(crate) mod offline_drop;
 pub mod paths;
 pub mod port;
+pub mod program_layout;
 pub(crate) mod protection;
 pub(crate) mod startup_bundle;
 pub mod uninstall;

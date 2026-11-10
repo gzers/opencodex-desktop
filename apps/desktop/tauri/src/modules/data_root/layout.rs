@@ -30,8 +30,8 @@ fn invalid(detail: &str) -> AppError {
     }
 }
 
-/// Read-only admission for the macOS whole-folder installation contract.
-/// Compare locations, not ownership/write access: another user may share I.
+/// Read-only admission for a dedicated runtime program directory.
+/// The signed .app is a read-only resource source, never this write target.
 pub(crate) fn validate_macos_installation_root(
     install: &Path,
     user_home: Option<&Path>,
@@ -97,7 +97,7 @@ pub(crate) fn validate_macos_installation_root(
     if container {
         return Err(AppError::RuntimeManaged {
             code: "macos_install_container".into(),
-            detail: "macOS 需要整文件夹安装：请将应用与随包运行程序放在独立安装文件夹中（例如 ~/Applications/OpenCodeX Desktop/），不能直接使用 Applications、用户 HOME 或卷根作为安装根。原应用与配置未移动或迁移。".into(),
+            detail: "运行程序需要独立目录，不能直接使用 Applications、用户 HOME 或卷根。Desktop 应用可以直接放在 Applications；运行程序存放在当前用户的独立程序目录。原应用与配置未移动。".into(),
         });
     }
     Ok(install)
@@ -204,36 +204,26 @@ impl Layout {
 
     /// Resolve only the running application location; no other installation fallback.
     pub fn installation_root(executable: &Path, platform: Platform) -> Result<PathBuf, AppError> {
-        if !absolute_clean(executable) {
-            return Err(invalid("absolute current executable is required"));
-        }
+        let home = crate::infrastructure::platform::home_dir()
+            .ok_or_else(|| invalid("absolute current-user HOME is required"))?;
+        Self::installation_root_for_user(executable, &home, platform)
+    }
+
+    /// The program root is independent of both the .app location and the
+    /// configurable data root. Passing HOME explicitly keeps startup, supply,
+    /// installation and CLI consumers on the same current-user identity.
+    pub fn installation_root_for_user(
+        executable: &Path,
+        user_home: &Path,
+        platform: Platform,
+    ) -> Result<PathBuf, AppError> {
+        let locations = crate::modules::runtime::program_layout::ProgramLocations::resolve(
+            executable, user_home, platform,
+        )?;
         if platform == Platform::Macos {
-            let macos = executable
-                .parent()
-                .ok_or_else(|| invalid("missing app executable directory"))?;
-            let contents = macos
-                .parent()
-                .ok_or_else(|| invalid("missing app Contents"))?;
-            let bundle = contents
-                .parent()
-                .ok_or_else(|| invalid("missing app bundle"))?;
-            if macos.file_name().is_some_and(|v| v == "MacOS")
-                && contents.file_name().is_some_and(|v| v == "Contents")
-                && bundle.extension().is_some_and(|v| v == "app")
-            {
-                let install = bundle
-                    .parent()
-                    .ok_or_else(|| invalid("missing app installation root"));
-                return validate_macos_installation_root(install?, None);
-            }
-            return Err(invalid(
-                "development executables require explicit installation context",
-            ));
+            return validate_macos_installation_root(&locations.program_root, Some(user_home));
         }
-        executable
-            .parent()
-            .map(Path::to_path_buf)
-            .ok_or_else(|| invalid("missing executable installation directory"))
+        Ok(locations.program_root)
     }
 }
 
@@ -241,22 +231,21 @@ impl Layout {
 mod tests {
     use super::*;
     #[test]
-    fn mac_application_container_is_not_an_installation() {
+    fn mac_standard_app_uses_current_user_program_directory() {
         // Resolve only: never create or launch anything in the real container.
-        let error = Layout::installation_root(
+        let t = tempfile::tempdir().unwrap();
+        let home = t.path().join("current-user");
+        let program = Layout::installation_root_for_user(
             Path::new("/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"),
+            &home,
             Platform::Macos,
         )
-        .unwrap_err();
-        #[cfg(target_os = "macos")]
-        {
-            let diagnostic = error.to_string();
-            assert!(diagnostic.contains("macos_install_container"));
-            assert!(diagnostic.contains("~/Applications/OpenCodeX Desktop/"));
-            assert!(diagnostic.contains("原应用与配置未移动或迁移"));
-        }
-        #[cfg(not(target_os = "macos"))]
-        let _ = error;
+        .unwrap();
+        assert_eq!(
+            program,
+            home.join("Library/Application Support/OpenCodeX Desktop")
+        );
+        assert!(!home.exists());
     }
     #[test]
     fn distinct_users_share_program_but_never_state_or_home() {
@@ -271,17 +260,19 @@ mod tests {
         assert!(!a.aggregate_root.exists()); // resolution never creates real data
     }
     #[test]
-    fn mac_runtime_is_sibling_of_signed_bundle() {
+    fn mac_runtime_is_separate_from_signed_bundle_and_data() {
         let t = tempfile::tempdir().unwrap();
         let executable = t
             .path()
             .join("installation/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop");
-        let install = Layout::installation_root(&executable, Platform::Macos).unwrap();
-        let l = Layout::new(&t.path().join("user"), &install, Platform::Macos).unwrap();
+        let home = t.path().join("user");
+        let install =
+            Layout::installation_root_for_user(&executable, &home, Platform::Macos).unwrap();
+        let l = Layout::new(&home, &install, Platform::Macos).unwrap();
         assert_eq!(
             l.runtime_prefix,
             super::super::startup_v2::checked_path(
-                &t.path().join("installation/runtime/opencodex")
+                &home.join("Library/Application Support/OpenCodeX Desktop/runtime/opencodex")
             )
             .unwrap()
         );

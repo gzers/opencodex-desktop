@@ -278,7 +278,7 @@ pub fn run() {
             let platform=if cfg!(windows){crate::modules::data_root::layout::Platform::Windows}else if cfg!(target_os="macos"){crate::modules::data_root::layout::Platform::Macos}else{crate::modules::data_root::layout::Platform::Unix};
             let install_root=if crate::modules::test_sandbox::enabled(){
                 crate::modules::test_sandbox::sandbox_root().ok_or(crate::errors::AppError::NotConfigured)?.join("program")
-            } else {crate::modules::data_root::layout::Layout::installation_root(&executable,platform)?};
+            } else {crate::modules::data_root::layout::Layout::installation_root_for_user(&executable,&home,platform)?};
             let runtime=crate::modules::runtime::RuntimeHandle::initialize_managed(&data_root,&install_root);
             let runtime_executable: crate::infrastructure::runtime_executable::SharedRuntimeExecutable =
                 runtime.clone();

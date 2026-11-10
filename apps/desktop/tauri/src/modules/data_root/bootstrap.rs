@@ -30,7 +30,7 @@ pub(crate) fn resolve_default_startup(
     };
     let install = match &sandbox {
         Some(root) => root.join("program"),
-        None => layout::Layout::installation_root(executable, platform)?,
+        None => layout::Layout::installation_root_for_user(executable, &home, platform)?,
     };
     startup_v2::resolve_with_install(&home, sandbox.as_deref(), Some(&install))
 }
