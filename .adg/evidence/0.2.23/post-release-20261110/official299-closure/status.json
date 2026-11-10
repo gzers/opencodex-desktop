@@ -15,11 +15,11 @@
     ]
   },
   "windowsLifecycle": {
-    "status": "contract-gap-confirmed; native-proof-pending",
+    "status": "native-test-host-partial-proof; complete-client-restoration-failed",
     "offlineOfficialContractChecks": 10,
     "nativeWindowsValidated": false,
     "reason": "official health HMAC does not supply old lifetime tuple; current Desktop Windows stop requires it",
-    "environment": "User confirmed Git handoff to existing Windows chat; Mac has no directly callable Windows host; native execution pending.",
+    "environment": "Windows Git return received at docs/official299-windows-proof; raw bytes/source digests and offline consistency verified on Mac; no Mac native rerun.",
     "mustProve": [
       "Desktop-owned TokenUser/HOME/process creation identity and protected record",
       "retained process handles and controlled Job child-set proof",
@@ -27,7 +27,24 @@
       "30/10/5-second budgets",
       "normal stop with shared client restoration plus original process exit code and Job empty",
       "peer unaffected, wrong identity/unknown fail closed, cleanup"
-    ]
+    ],
+    "nativeTestHostObserved": true,
+    "nativeSummary": {
+      "startMs": 11410,
+      "statusMs": 10,
+      "stopMs": 6171,
+      "uniqueStartupReceipt": true,
+      "originalExitCode": 0,
+      "jobEmpty": true,
+      "mainListenerGone": true,
+      "fourOriginalFilesEqual": true,
+      "completeClientTreeRestored": false,
+      "extraFileCount": 5,
+      "companionListenerWithinBudget": "not-proven",
+      "catalogRestore": "not-exercised",
+      "GrokInjection": "refused-by-official-fixture"
+    },
+    "next": "Classify generated Agent definitions and stable lock lifecycle; design safe restoration or isolation; preserve original failure and do not delete stable locks or weaken acceptance."
   },
   "implementationChecklist": {
     "status": "existing adopted UX updated; remaining gates and prototype source now linked; no formal IMP freeze or release readiness claim",
@@ -37,6 +54,8 @@
     "revision": 1,
     "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/20261110-Windows官方299定向验证交接.md",
     "allowed": "isolated test-only prototype then one-user targeted native validation; no apps production changes or release",
-    "delivery": "Git"
+    "delivery": "Git",
+    "receivedDocsCommit": "60ec741551a01759a09deef4d2abb29035d0a399",
+    "receivedCodeCommit": "e98ddcc6a9b9b5946b8b426507ed8a0f5e9eda4c"
   }
 }

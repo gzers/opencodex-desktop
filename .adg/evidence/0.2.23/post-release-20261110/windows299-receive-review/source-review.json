@@ -1,0 +1,17 @@
+{
+  "scope": "readonly installed official299 sources; matching pinned archive established by earlier source-identity.json",
+  "sha256": {
+    "cli/claude-agent-startup-sync.ts": "1ae90b238b0049cf373f6df316022412a31ce5bf4f4c611e5607d79a84d7c8c0",
+    "claude/agents-inject.ts": "a0f4c2b3528109f14c7aa20c8abcc260a4c21bc68f8ff26c47ef28e55eb1f1e8",
+    "codex/native-main-lock-file.ts": "3a8712222b92c4187cf03ad05e89bfb80069f7423e1c604ec3ea251de0022c27",
+    "codex/native-main-owner.ts": "64a756d4b432200141e333f1c492248c8fa4a7133fae9719e07778a9cd91b14d",
+    "codex/native-main-claim.ts": "f68443d088f08ef8b84e663939d83d8010157a7a6377eb85142e5c09f8247931",
+    "cli/stop-restore.ts": "6c7f506ca383688c642b925a23578c16065e878b0ebdd10f402f720314769eaf"
+  },
+  "findings": [
+    "startup sync generates owned Claude Agent definitions; no exact original-tree restoration shown in stop boundary",
+    "stable lock helper closes descriptors and asserts inode identity; owner release closes DB/file without unlink",
+    "none of these observations authorizes deleting lock files or accepting original Windows failure",
+    "additional Claude listener has only later cleanup evidence; Grok actual injection and model catalog restoration not exercised"
+  ]
+}
