@@ -1,0 +1,29 @@
+{
+  "referenceProducer": {
+    "commit": "df66f5bba5d20f387a143acc1e94fa6fa9aa9d90",
+    "path": "test/official299-windows/producer-r4.ts",
+    "sha256": "74096dc5dd78cb569111ac65da2ec4ba9797b5a4d89c27e7fa691420e0e9c2ac",
+    "copyNote": "Kept in private fixture during validation; replay obtains exact git blob adjacent to candidate in test folder."
+  },
+  "originalWindowsEvidenceManifestSha256": "a699ef055a8d0c5d3823aefa10512fcc1567a5c5a52ff20ca7ec8ef9f222677a",
+  "originalEvidenceFilesVerified": 65,
+  "syntheticInputSha256": {
+    "result.json": "b316d27637ef73dbc4c20a85d1acbc3b8c9f74b2e82e87f6bcdce8034893f281",
+    "capture-before.json": "dca9a9dfe5285053a5d73fe9d3fb7d00664b70114c576322694b49de710d7062",
+    "capture-ready.json": "dd30ca5660bd83634c294973dc661be337c5fd35dba75aaf923c2aac7bccaa7a",
+    "capture-pre-stop.json": "63b9b5c8809bf6d2adff8eafb5ee292b823dd42ef111359f75311313e90d4a7c",
+    "capture-official-stop.json": "88570c4c6f0d6a96ab8326eba8802642042c5653a07e0efd91bfd2841c5ead3b"
+  },
+  "officialSourcesReadOnly": {
+    "server/index.ts": "14aa1dd9c2a53677d9343c9f02763a4163141d679607f28c024406729942080d",
+    "codex/catalog/retained-sync.ts": "a065c2ad8c6ec705939ee20792a475561c2d3e502105c4c77af0be5db984cb40",
+    "codex/convergence.ts": "c10b49c071b1242266f9f2b13b843bd41e82402bef741a4e49863241e7b235b4"
+  },
+  "proposedCandidateSha256": {
+    "cache-candidate.ts": "36e566b66a0fe3664e15b2628ed5f556177e240ee8578db325fe4f92ec6de170",
+    "cache-candidate.test.ts": "d80584832ba1e54b594912121a6cd0307903d8e45bacf6c1afcf60d4ace2a6f5",
+    "cache-candidate-cli.ts": "768b5dc5eaf3f0a62bf7300ac2c15ee86813bfce0fc3dc7fe3cec86ee5aea5cc"
+  },
+  "runtime": "Bun1.4.4 macOS arm64; no dependency install; no official service launch",
+  "scope": "candidate is evidence prototype only, not production source or retroactive release proof"
+}

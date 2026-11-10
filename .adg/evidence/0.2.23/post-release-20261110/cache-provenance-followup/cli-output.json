@@ -1,0 +1,38 @@
+{
+  "accepted": true,
+  "rows": [
+    {
+      "path": "codex/config.toml",
+      "accepted": true,
+      "reason": "TOML-values-from-original-or-controlled-ready-only-no-routing"
+    },
+    {
+      "path": "codex/opencodex-catalog.json",
+      "accepted": true,
+      "reason": "native-row-subset-of-fixed-original-or-ready-projection"
+    },
+    {
+      "path": "codex/models_cache.json",
+      "accepted": true,
+      "reason": "controlled-originally-absent-startup-cache",
+      "action": "compensate-to-original-absence"
+    },
+    {
+      "path": "codex/opencodex-catalog-audit.jsonl",
+      "accepted": true,
+      "reason": "known-official-writer-PID-schema-and-no-late-audit-append"
+    },
+    {
+      "path": "grok/config.toml.bak-opencodex",
+      "accepted": true,
+      "reason": "exact-original-backup-or-original-Grok-copy"
+    }
+  ],
+  "scope": "test-only per-path authorization; no full-service acceptance or new artifact exception",
+  "cacheCandidate": {
+    "accepted": true,
+    "branch": "controlled-originally-absent-startup-cache",
+    "action": "compensate-to-original-absence",
+    "scope": "bound synthetic transaction only; native exclusion and final full restoration still required"
+  }
+}

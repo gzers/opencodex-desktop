@@ -1,0 +1,197 @@
+{
+  "result": "pass",
+  "checks": [
+    {
+      "case": "real-r4-captures-proposed-cache-authorization",
+      "pass": true,
+      "originalServiceAccepted": false,
+      "candidatePerPathAuthorization": true
+    },
+    {
+      "case": "external-cache-content-after-seal",
+      "pass": true,
+      "rejection": "cache-changed-since-controlled-ready"
+    },
+    {
+      "case": "replacement-file-id",
+      "pass": true,
+      "rejection": "cache-changed-since-controlled-ready"
+    },
+    {
+      "case": "wrong-owner",
+      "pass": true,
+      "rejection": "cache-owner-or-identity"
+    },
+    {
+      "case": "late-acl-change",
+      "pass": true,
+      "rejection": "unexpected-dacl-principal"
+    },
+    {
+      "case": "broad-acl-even-consistent",
+      "pass": true,
+      "rejection": "unexpected-dacl-principal"
+    },
+    {
+      "case": "unknown-field-even-in-all-sealed-stages",
+      "pass": true,
+      "rejection": "unknown-cache-wrapper"
+    },
+    {
+      "case": "unknown-model-even-if-all-stages-and-catalog-match",
+      "pass": true,
+      "rejection": "undeclared-cache-route"
+    },
+    {
+      "case": "late-audit-append",
+      "pass": true,
+      "rejection": "audit-late-change-or-lost-prefix"
+    },
+    {
+      "case": "wrong-audit-writer-pid",
+      "pass": true,
+      "rejection": "no-matching-official-startup-cache-event"
+    },
+    {
+      "case": "no-official-startup-cache-event",
+      "pass": true,
+      "rejection": "no-matching-official-startup-cache-event"
+    },
+    {
+      "case": "audit-before-transaction",
+      "pass": true,
+      "rejection": "no-matching-official-startup-cache-event"
+    },
+    {
+      "case": "original-cache-preexisted",
+      "pass": true,
+      "rejection": "original-cache-not-absent"
+    },
+    {
+      "case": "wrong-home",
+      "pass": true,
+      "rejection": "unbound-native-generation"
+    },
+    {
+      "case": "wrong-root-scope",
+      "pass": true,
+      "rejection": "unbound-fixture-root"
+    },
+    {
+      "case": "wrong-sid",
+      "pass": true,
+      "rejection": "unbound-native-generation"
+    },
+    {
+      "case": "wrong-filetime",
+      "pass": true,
+      "rejection": "unbound-native-generation"
+    },
+    {
+      "case": "missing-witness",
+      "pass": true,
+      "rejection": "unbound-native-generation"
+    },
+    {
+      "case": "job-not-empty",
+      "pass": true,
+      "rejection": "normal-exit-or-job-listener-proof-missing"
+    },
+    {
+      "case": "listener-not-gone",
+      "pass": true,
+      "rejection": "normal-exit-or-job-listener-proof-missing"
+    },
+    {
+      "case": "unexited-child",
+      "pass": true,
+      "rejection": "normal-exit-or-job-listener-proof-missing"
+    },
+    {
+      "case": "nonzero-original-exit",
+      "pass": true,
+      "rejection": "normal-exit-or-job-listener-proof-missing"
+    },
+    {
+      "case": "late-stop",
+      "pass": true,
+      "rejection": "stop-receipt-or-budget-missing"
+    },
+    {
+      "case": "missing-stage-ledger",
+      "pass": true,
+      "rejection": "stage-ledger-missing"
+    },
+    {
+      "case": "bad-stage-ledger-digest",
+      "pass": true,
+      "rejection": "protected-stage-integrity"
+    },
+    {
+      "case": "unknown-capture-state",
+      "pass": true,
+      "rejection": "unreadable-or-unknown"
+    },
+    {
+      "case": "wrong-stage-name",
+      "pass": true,
+      "rejection": "wrong-capture-stage"
+    },
+    {
+      "case": "duplicate-cache-path",
+      "pass": true,
+      "rejection": "duplicate-or-missing-path"
+    },
+    {
+      "case": "corrupt-base64-sha",
+      "pass": true,
+      "rejection": "raw-byte-integrity"
+    },
+    {
+      "case": "inconsistent-captured-length",
+      "pass": true,
+      "rejection": "raw-byte-integrity"
+    },
+    {
+      "case": "cache-path-link-state",
+      "pass": true,
+      "rejection": "unreadable-or-unknown"
+    },
+    {
+      "case": "missing-startup-declarations",
+      "pass": true,
+      "rejection": "missing-startup-declarations"
+    },
+    {
+      "case": "existing-native-cache-branch-remains",
+      "pass": true
+    },
+    {
+      "case": "no-bound-context-keeps-legacy-refusal",
+      "pass": true
+    },
+    {
+      "case": "config-external-not-hidden-by-cache-branch",
+      "pass": true
+    },
+    {
+      "case": "catalog-unknown-not-hidden-by-cache-branch",
+      "pass": true
+    },
+    {
+      "case": "backup-external-not-hidden-by-cache-branch",
+      "pass": true
+    }
+  ],
+  "count": 37,
+  "actualR4OldPolicyAccepted": false,
+  "newCandidatePerPathAuthorization": true,
+  "originalWindowsAcceptedRemains": false,
+  "scope": "offline immutable synthetic r4 images; no file compensation, no native Windows rerun or product changes",
+  "limits": [
+    "Protected capture/witness context is supplied by trusted test host; JSON replay is not independent authority",
+    "No malicious same-SID writer proof or arbitrary daily-file provenance",
+    "Native handles, root/stage ledger integrity and final revalidation under official locks must be implemented/verified in Windows host",
+    "Actual five-path compensation and two-lock reacquisition still not run; service accepted stays false"
+  ]
+}
