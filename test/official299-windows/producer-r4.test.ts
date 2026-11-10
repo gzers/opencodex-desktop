@@ -1,0 +1,11 @@
+import {validate} from './producer-r4.ts';import assert from 'node:assert/strict';import {writeFileSync} from 'node:fs';
+const row=(Path:string,text:string,id='1')=>({Path,State:'file',Image:{Id:id,Sha256:Bun.hash(text).toString(),Bytes:Buffer.from(text).toString('base64')}}),abs=(Path:string)=>({Path,State:'absent'});
+const paths=['codex/config.toml','codex/opencodex-catalog.json','codex/models_cache.json','codex/opencodex-catalog-audit.jsonl','grok/config.toml.bak-opencodex'];
+const before=[row(paths[0],'model="native"'),row(paths[1],'{"models":[{"slug":"native"}]}'),abs(paths[2]),abs(paths[3]),abs(paths[4]),row('grok/config.toml','original-Grok')];
+const audit=JSON.stringify({at:new Date().toISOString(),pid:123,ppid:1,command:'retained-sync',writer:'retained-sync',target:'catalog',outcome:'written',reason:null,intent:'restore',configSource:'file',routedBefore:0,routedAfter:1,opencodexHome:'synthetic'})+'\n';
+const ready=[row(paths[0],'model="native"\nopenai_base_url="http://127.0.0.1:12345"'),row(paths[1],'{"models":[{"slug":"native"},{"slug":"fixture/model"}]}'),row(paths[2],'{"models":[{"slug":"fixture/model"}]}'),row(paths[3],audit),row(paths[4],'original-Grok')];
+const after=[before[0],before[1],row(paths[2],'{"models":[{"slug":"native"}],"fetched_at":"synthetic","client_version":"synthetic"}'),ready[3],ready[4]];
+const checks=[];assert(validate(before,ready,ready,after,123).accepted);checks.push('known-stage-projections-accepted');
+for(const [label,index,value] of [['unknown-TOML-field',0,'model="native"\nexternal="third"'],['external-audit-append',3,audit+'{"pid":999,"writer":"external"}\n'],['unknown-catalog-model',1,'{"models":[{"slug":"unknown"}]}'],['cache-unknown-field',2,'{"models":[],"external":true}']] as const){const a=structuredClone(after);a[index]=row(paths[index],value);assert(!validate(before,ready,ready,a,123).accepted);checks.push(label+'-refused');}
+const late=structuredClone(ready);late[0]=row(paths[0],'late-edit');assert(!validate(before,ready,late,after,123).accepted);checks.push('late-prestop-change-refused');
+writeFileSync(process.argv[2],JSON.stringify({pass:true,checks,scope:'small provenance-policy cases, no official service'}));console.log(JSON.stringify({pass:true,count:checks.length}));
