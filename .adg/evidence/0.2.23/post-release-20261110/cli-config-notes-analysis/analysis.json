@@ -1,0 +1,182 @@
+{
+  "recordedAt": "2026-11-10T10:46:50.290578+08:00",
+  "scope": "read-only source, registry/download integrity, HTTP probes and current metadata; not repair or complete migration acceptance",
+  "sourceCommit": "0828a3955615df0a2a3e52fb96ab8249f2e04d1b",
+  "sourceRefs": [
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/install.rs",
+      "sha256": "6a05f085cecbb04377f706750c8d69fab65338aa0327fcaf422dcabf5859e9fb"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/process_runner.rs",
+      "sha256": "7194f35a54e0f96857d0bccabee3ec93ded052a3b0d2d6c8f741b05caed6ff45"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/update/release_notes.rs",
+      "sha256": "34fd6cb5fc524fd835f5e13d04e09d47709555549a00a99ecd77223adde39a80"
+    },
+    {
+      "path": "apps/desktop/tauri/config/runtime.defaults.json",
+      "sha256": "24481b673a3930929f80c93f27758438d113ed7f89751f77f253ac138efbbc97"
+    },
+    {
+      "path": "apps/desktop/tauri/windows/nsis023.nsi",
+      "sha256": "a2717b29e03d8f1d0325a324f077e7bb4ef2ded0724a5482e2e44e53dbf75016"
+    },
+    {
+      "path": "apps/desktop/tauri/windows/wix023.wxs",
+      "sha256": "c655c287dbc284410b3fac1e792f86b6c1164dbd08ef2c46724c833bc0565b2e"
+    }
+  ],
+  "configEntryComparisons": [
+    {
+      "path": "src/config.ts",
+      "same": true,
+      "sha297": "aa7d9df78039a163933abf3aea73f69761dbb539701ceb3cc53bc12fad731ae5",
+      "sha299": "aa7d9df78039a163933abf3aea73f69761dbb539701ceb3cc53bc12fad731ae5"
+    },
+    {
+      "path": "src/config/schema/config-schema.ts",
+      "same": true,
+      "sha297": "e49256521bff11a081cf68671b248d4f09fc12b0efd9b6495e36630ceaab62c2",
+      "sha299": "e49256521bff11a081cf68671b248d4f09fc12b0efd9b6495e36630ceaab62c2"
+    },
+    {
+      "path": "src/config/schema/leaf-validators.ts",
+      "same": true,
+      "sha297": "41da10696b929dc75e680e468f2e1ab4bf38617ba0215fffc56bc095cfd73484",
+      "sha299": "41da10696b929dc75e680e468f2e1ab4bf38617ba0215fffc56bc095cfd73484"
+    },
+    {
+      "path": "src/config/paths.ts",
+      "same": true,
+      "sha297": "a22d54bac86ea5c27c0ae93a089e6de1e87c7c3dc74a1e8a9a73204d9ff17686",
+      "sha299": "a22d54bac86ea5c27c0ae93a089e6de1e87c7c3dc74a1e8a9a73204d9ff17686"
+    },
+    {
+      "path": "src/config/provider-name.ts",
+      "same": true,
+      "sha297": "3b19ad53e350808174a5e40fc1c873054e8b869c3ae463d984ee608e9d5bbcb3",
+      "sha299": "3b19ad53e350808174a5e40fc1c873054e8b869c3ae463d984ee608e9d5bbcb3"
+    },
+    {
+      "path": "src/config/provider-validation.ts",
+      "same": false,
+      "sha297": "476d9fabcdff4d411825521710b1cd1146f49496f12a4a0ecdf8e13cf38e435b",
+      "sha299": "da9eb1f94f6fcad2adce8549621e2d259031bb251015ad02e6f8fdaea3a4caba"
+    },
+    {
+      "path": "src/server/auth-cors.ts",
+      "same": true,
+      "sha297": "cbe1e432b359b39799b15214d5f6e5f3ace06b9ab280d80f01d0c0d7aefca664",
+      "sha299": "cbe1e432b359b39799b15214d5f6e5f3ace06b9ab280d80f01d0c0d7aefca664"
+    },
+    {
+      "path": "src/server/management/provider-routes.ts",
+      "same": false,
+      "sha297": "108f2388147bbeeb0acc0ddfd46c849060cd8094807135cdcb636b24ed25779f",
+      "sha299": "01ce02616e8cf680e7f9a2712e29c19230cb0b61675ba9a043e194150f7aa4e7"
+    }
+  ],
+  "npmArchives": [
+    {
+      "version": "2.97.0",
+      "bytes": 15537348,
+      "sha256": "3859a64198a05b0ebdbac0593b0cc6b675ec14f32b69ee100cda7a173404e552",
+      "npmSha1AndSha512Verified": true,
+      "executed": false,
+      "installed": false
+    },
+    {
+      "version": "2.99.0",
+      "bytes": 19923693,
+      "sha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+      "npmSha1AndSha512Verified": true,
+      "executed": false,
+      "installed": false
+    }
+  ],
+  "cli": {
+    "userReportedError": "zsh: command not found: ocx",
+    "currentShellWhichOcx": null,
+    "userLocalOcxEntryPresent": false,
+    "sourceLauncher": "absolute Node + package bin; no OPENCODEX_HOME binding",
+    "managerProcessRunner": "explicitly injects OPENCODEX_HOME",
+    "upstreamDefaultWithoutOverride": "current user ~/.opencodex",
+    "conclusion": "Internal managed entry is not terminal registration; directly exposing it alone does not bind Desktop HOME",
+    "windows": "NSIS/MSI templates contain no effective runtime/bin ocx PATH registration; MSI Environment feature label alone is not registration; no new native Windows replay"
+  },
+  "userHandoff": {
+    "status": "reported historical facts; not independently replayed",
+    "originalConfigBytes": 107020,
+    "originalConfigSha256": "c75ff638d1fdf4072e5ff02ec65b08724c205b206e0485f58d2e1413ac0b7aae",
+    "providerCount": 26,
+    "credentials": "25 nonempty apiKey providers plus one pool per user report; original secret file not received or archived",
+    "entry": "embedded upstream Providers > JSON editor - providers",
+    "errors": [
+      "provider editor config must contain only defaultProvider and providers",
+      "provider A6api contains non-editable field initialModelSelection",
+      "provider editor baseline is stale",
+      "provider config is unavailable"
+    ],
+    "migrationSucceeded": false,
+    "priorPublicDtoCopy": "secrets removed, not complete credential migration",
+    "historicalPids": [
+      59417,
+      59923,
+      62879
+    ],
+    "duplicateDisposition": "merge config import/errors/context under S23-POST-04 and CLI under POST-03; Windows prior Profile/Stop tails remain separate"
+  },
+  "configFindings": {
+    "sameCoreSchemaAndLoader": true,
+    "editorRestrictionsPresentInBoth297And299": true,
+    "newCapabilityAxis": "mistralMaxImages; 2.99 accepts integer1..1000, 2.97 validator does not recognise axis; no evidence of entire-format replacement",
+    "providerName": "2.99 provider schema passthrough preserves unknown name field but official catalogue does not contain Desktop-maintained name projection",
+    "saveAdmission": "read snapshot, file source, diagnostics.error null; stale compares actual disk public DTO before save and within write boundary",
+    "observabilityGap": "snapshot read errors collapse missing to default or other IO to fallback invalid_json; unavailable response omits specific IO/source diagnosis",
+    "unresolved": [
+      "which historical Desktop served editor",
+      "actual historical HOME/version",
+      "cause of baseline drift",
+      "specific unavailable file/read/schema failure",
+      "full secret-preserving migration and restart/readback not completed"
+    ],
+    "lifetimeProtocolScan": {
+      "needle": "ocxd-runtime-lifetime/1",
+      "official299Files": [],
+      "maintainedFiles": [
+        "package/package.json",
+        "package/src/lib/windows-runtime-lifetime.ts"
+      ]
+    }
+  },
+  "currentReadOnlySnapshot": {
+    "method": "ps pid/ppid/comm only, disk Info.plist/package.json version and config metadata; no args/environ or secret values printed",
+    "desktopPid": 59923,
+    "desktopExecutable": "/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+    "diskDesktopVersion": "0.2.22",
+    "servicePid": 64928,
+    "serviceImage": "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/runtime/opencodex/node_modules/bun/bin/bun.exe",
+    "diskRuntimePackageVersion": "2.94.0",
+    "registryHome": "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/opencodex-home",
+    "configExists": true,
+    "configBytes": 102782,
+    "configSha256": "87d5613f860fc00221dfd4f6cf9b9c265afe2155806747ba80608eb54dad00de",
+    "jsonSyntaxValid": true,
+    "providersIsObject": true,
+    "providerCount": 26,
+    "defaultReferencesExisting": true,
+    "limits": "Disk version is not proof of running process loaded version. Registry HOME not process-attested HOME. JSON validity not full schema/read admission. Not original107020bytes config. Current state differs from historical handoff."
+  },
+  "releaseNotes": {
+    "currentProbes": "Direct and task-only proxy each npm + GitHub: 200, identities pass, below262144bytes, notes body exists. Python HTTP probes not actual Tauri reqwest replay.",
+    "historicalCause": "unresolved; no original failing request diagnostics",
+    "failureMapping": "network/status/timeout/size/source validation collapsed to generic failed, not cached; transport root cause omitted",
+    "noFakeFix": true
+  },
+  "productChanged": false,
+  "dailyConfigChanged": false,
+  "actualUpgradeOrImportPerformed": false,
+  "upstreamPackageScriptsExecuted": false
+}
