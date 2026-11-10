@@ -92,3 +92,43 @@ captures synthetic failed config/catalog postimage bytes for a possible future
 run. That collection change has not been rerun as a service and does not repair
 the missing postimage bytes from the recorded attempt. No further native service
 retry is implied by this handoff.
+
+Revision 4: docs baseline 5ecf5b1a9f7f3046be17537916d9b511032ef6c2.
+Use run.ps1 -RestorationRevision4. FiveRecovery captures only the exact five
+registered Codex/Grok paths plus explicitly synthetic original config/credentials;
+it retains differing and invalid raw bytes, length, SHA256, file ID, owner/DACL,
+absent and unknown classifications. Each before/ready/pre-stop/official-stop/
+compensated/finally phase is archived under a protected transaction directory;
+unreached phases stay unreached. No runtime/admin/HMAC secret is an allowed target.
+
+five-test.ps1 verifies auxiliary-original-absent and auxiliary-original-existing
+cases, whole-batch refusal, same-prefix unknown files, external edits/audit append,
+links/hardlinks/unreadability, tampered plans/originals, exclusive native handles,
+CREATE_NEW collisions, second-operation rollback, and actual process exit 91 after
+one complete write. A fresh process accepts only original or sealed postimage
+contents and known file IDs; third contents are refused before other writes.
+Durable intent is flushed before each operation; the independent protected plan
+SHA binds before/after images and exact roots. This is a bounded crash test after
+a full first write; arbitrary torn writes/power-loss recovery is not proven.
+
+coordinator-r4.ts holds the unchanged official exclusive claim, N transaction and
+K primitive for a maximum 2-second local test barrier, while the already-running
+native host performs its synchronous handle batch. It does not call service or
+spawn subprocesses under K. N is rolled back/closed and all locks released. This
+is a test-only bridge across the Bun/native host processes, not production lock
+integration. Its short test and exact namespace cleanup receipts are retained.
+
+The exact five target paths are codex/config.toml, codex/opencodex-catalog.json,
+codex/models_cache.json, codex/opencodex-catalog-audit.jsonl, and
+grok/config.toml.bak-opencodex, relative to the freshly created fixture. A
+producer-stage policy requires controlled ready/pre-stop consistency and narrow
+official projections before authorizing any write. It is deliberately scoped to
+synthetic fixtures and does not establish arbitrary daily-file authorship.
+
+The single revision4 service run used df66f5bba5d20f387a143acc1e94fa6fa9aa9d90.
+It stopped safely at the cache authorization gate: cache still held the controlled
+routed model and did not satisfy the tested native-cache rule. No five-path batch
+or current-run lock reacquisition followed. Full raw official-stop and finally
+images are preserved; analyze-r4.ts and verify-r4.mjs review them offline. There
+is no second service run or retroactive success label. Only the two specifically
+adopted stable-lock paths may be excepted; all other differences still fail.
