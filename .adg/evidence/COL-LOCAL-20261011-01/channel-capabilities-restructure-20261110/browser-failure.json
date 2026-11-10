@@ -1,0 +1,27 @@
+{
+  "error": "Error: locator.innerText: Error: strict mode violation: locator('[data-capability=notes]') resolved to 2 elements:\n    1) <div role=\"row\" class=\"cc-cap-row\" data-capability=\"notes\">…</div> aka getByRole('region', { name: '模型列表' }).getByText('历史与笔记◦ 待核对当前服务不可用原生')\n    2) <div role=\"row\" class=\"cc-cap-row\" data-capability=\"notes\">…</div> aka getByRole('row', { name: '验证历史与笔记 历史与笔记 ◦ 待核对' })\n\nCall log:\n\u001b[2m  - waiting for locator('[data-capability=notes]')\u001b[22m\n",
+  "stack": "locator.innerText: Error: strict mode violation: locator('[data-capability=notes]') resolved to 2 elements:\n    1) <div role=\"row\" class=\"cc-cap-row\" data-capability=\"notes\">…</div> aka getByRole('region', { name: '模型列表' }).getByText('历史与笔记◦ 待核对当前服务不可用原生')\n    2) <div role=\"row\" class=\"cc-cap-row\" data-capability=\"notes\">…</div> aka getByRole('row', { name: '验证历史与笔记 历史与笔记 ◦ 待核对' })\n\nCall log:\n\u001b[2m  - waiting for locator('[data-capability=notes]')\u001b[22m\n\n    at text (/private/tmp/ocx-capability-restructure-browser.cjs:9:35)\n    at run (/private/tmp/ocx-capability-restructure-browser.cjs:53:51)",
+  "checks": [
+    "1180-light-single-credential-type",
+    "1180-light-credential-key-same-form",
+    "1180-light-no-abilities-in-basic",
+    "1180-light-site-in-nodes",
+    "1180-light-four-original-sections",
+    "1180-light-connection-dialog-title",
+    "1180-light-connection-no-model-or-identity",
+    "1180-light-connection-result-path",
+    "1180-light-connection-no-config-side-effects",
+    "1180-light-native-root-preview",
+    "1180-light-live-final-address",
+    "1180-light-cancel-path-keeps-draft",
+    "1180-light-reject-full-url-in-path",
+    "1180-light-custom-path-saved-to-draft",
+    "1180-light-path-invalidates-auth",
+    "1180-light-separate-feature-dialog",
+    "1180-light-model-from-channel-list",
+    "1180-light-feature-auth-needed",
+    "1180-light-auth-not-model-discovery",
+    "1180-light-auth-no-config-mutation"
+  ],
+  "errors": []
+}

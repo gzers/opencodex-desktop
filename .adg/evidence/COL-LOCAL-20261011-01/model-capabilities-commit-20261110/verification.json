@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "date": "2026-11-10",
+  "branch": "docs/governance-main",
+  "researchCommit": "8125b09ee4db8a995aabbfb138efde6f64eda5b6",
+  "prototypeCommit": "b1f5986eb9214d1be26d4c49920fa6d685d3d978",
+  "checks": {
+    "stagedNodePassed": 49,
+    "stagedNodeFailed": 0,
+    "browserPassed": 27,
+    "browserErrors": 0,
+    "sizes": [
+      [
+        1180,
+        760
+      ],
+      [
+        900,
+        600
+      ]
+    ],
+    "nodeLog": "staged-tests.tap",
+    "browserLog": "browser-checks.json"
+  },
+  "method": "Exported the staged Git index to an isolated snapshot; index.html contains only model resource changes. No uncommitted overview, sync, maintenance or production files used.",
+  "setupFailure": "First run lacked COMPONENT_JSDOM_PATH in the exported snapshot. Existing local jsdom was then referenced without installation or copying production files. Original failure retained as staged-tests-missing-jsdom.tap.",
+  "committedSourceSha256": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/channel-capabilities.js": "3fe34852e8038d9feb93a436877884622fbffa24013a11bcebd09eb13177a2a6",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/channel-capabilities.css": "b5d73b05f284676c3c767898f4c8466f4b31da86007438e92a0cbb33ca1f5d0c",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/channel-capabilities.test.cjs": "800cdc03f2644d768b5e5f1c5bb8332c9514aa1356a1bb537c8760899cb64a0b",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.js": "29a216e15b02b3df0b07fe7b36ea02630b1e3e23efaf07309b551af1dbcacd13",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.css": "d5a79c2c839b1caf8cda944d10f0a37e25de953c1143eede07f7a82960b2de45",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "e5fa5215f2ac5e824dc88ea51daddde3a2b8e9426eb9293ba6087069971508f4"
+  },
+  "boundaries": [
+    "In-memory prototype; not production or real-service acceptance.",
+    "Other uncommitted changes are retained in the working directory.",
+    "No push performed."
+  ]
+}

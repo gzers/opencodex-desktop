@@ -1,0 +1,28 @@
+{
+  "error": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-mp=save-current-channel]')\u001b[22m\n",
+  "stack": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-mp=save-current-channel]')\u001b[22m\n\n    at /private/tmp/ocx-capability-browser.cjs:54:189\n    at async run (/private/tmp/ocx-capability-browser.cjs:54:3)",
+  "checks": [
+    "1180-light-scope",
+    "1180-light-four-sections",
+    "1180-light-identity-ready",
+    "1180-light-sol-ultra-supported",
+    "1180-light-notes-unavailable",
+    "1180-light-terra-no-ultra",
+    "1180-light-center-dialog",
+    "1180-light-two-tabs",
+    "1180-light-check-no-config-side-effect",
+    "1180-light-notes-result",
+    "1180-light-backup-no-auth",
+    "1180-light-testing-not-node-switch",
+    "1180-light-backup-separate-auth",
+    "1180-light-stop-ignores-late-result",
+    "1180-light-escape-close",
+    "1180-light-binding-pending",
+    "1180-light-binding-not-fake-observation",
+    "1180-light-changed-access-invalidated",
+    "1180-light-old-binding-invalidated",
+    "1180-light-unsaved-binding",
+    "1180-light-cannot-apply-unsaved"
+  ],
+  "errors": []
+}
