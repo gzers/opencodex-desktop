@@ -1,0 +1,74 @@
+{
+  "recordedDate": "2026-11-10",
+  "timezone": "Asia/Shanghai",
+  "kind": "reported-screenshots-and-readonly-analysis",
+  "sourceCommit": "0828a3955615df0a2a3e52fb96ab8249f2e04d1b",
+  "references": [
+    {
+      "path": "apps/desktop/tauri/src/commands/discovery.rs",
+      "sha256": "495b3a01fffbaca9ede00f9fd4558a730981a3e8a26fce82c80be12091ebe461"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/startup_bundle.rs",
+      "sha256": "e5f95ff6d9e154557dffa009bb1e4bed989e41e556ef80a956e6313abc60db02"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/bundled.rs",
+      "sha256": "3077dea1a5854d238f16ba77060b24b31011a4ed6c3ce48c0fb72148e9f8fe3b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/paths.rs",
+      "sha256": "4e53df5440966336c6e2c11977712caf7c3bbbaf37c58647fa7d24dceecb31d7"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/install.rs",
+      "sha256": "6a05f085cecbb04377f706750c8d69fab65338aa0327fcaf422dcabf5859e9fb"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/environment/presentation.ts",
+      "sha256": "6aaeb0290d4d80f1e8f5922a0dafbf79a11c740b30780fa53f945aa79e1eb4e8"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/environment/store.ts",
+      "sha256": "a554c65d299f124a1246037f63188ea9811e9bfa9f9ceaaf392ce1f3655bf938"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/installPath.ts",
+      "sha256": "5f072932d60134c9c660e049d54acb519f5e9acfd63face3fc5e0d1d596ced30"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/store.ts",
+      "sha256": "50228ddde3f017ea4685826877cf1580cb1003c6d3d939042a0f3766418937bd"
+    },
+    {
+      "path": "apps/desktop/ui/src/composables/useAppController.ts",
+      "sha256": "be84f700296b29e835cae8eb30ce2e29617d495594b9623c31bb774da6df394f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/update/release_notes.rs",
+      "sha256": "34fd6cb5fc524fd835f5e13d04e09d47709555549a00a99ecd77223adde39a80"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/ReleaseNotes.vue",
+      "sha256": "209f6ee90bc1a7c2a34ebedf626ff0943ac61dae30adbe80bb6e1088091b8e62"
+    }
+  ],
+  "localLogExtract": [
+    "2026-11-10T00:54:51.635Z [manager] startup version=0.2.23 commit=e3728109e93498bfbd6e993d49904d57dfd75315",
+    "2026-11-10T00:55:45.022Z [manager] integrated runtime provisioned and verified"
+  ],
+  "localLogScope": "Historical first-start events on this Mac only; not proof of current files, other-device installation or user action sequence. Recorded target /Applications/OpenCodeX Desktop/runtime no longer present at this read; current app exists at /Applications/OpenCodeX Desktop.app. No reinstall or process launch performed.",
+  "findings": {
+    "startupImage": "Node checking and later steps pending; does not prove Node missing or failed. Frontend forces first row busy for any whole-report loading.",
+    "packagedEnvironment": "Default backend discovery binds bundled fixed Node/npm/OpenCodex and validates before/after probes; no PATH/system-global discovery fallback.",
+    "firstStart": "Background offline supply starts after runtime initialization and independently of initial UI checks; completion refreshes runtime source and source-identity watcher reruns environment check.",
+    "protectedInstall": "Screenshot confirms UI rejection; UI top-level Applications prefix and backend write-target policy both reject this path, while whole-folder admission and first supply allow its dedicated subfolder. Manual install is blocked before submission; screenshot not a failed npm execution.",
+    "releaseNotes": "Separate transaction verifies npm package and fetches GitHub release notes; screenshot confirms notes failure only, no installation/update success or 2.99 config compatibility."
+  },
+  "limitations": [
+    "No real-device replay or timing measurement from screenshots",
+    "Other-device exact runtime paths and original error/request traces unavailable",
+    "Network cause of release-notes failure unknown",
+    "No product tests or fixes; no daily config changes"
+  ]
+}
