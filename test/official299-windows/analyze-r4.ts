@@ -1,6 +1,6 @@
 // Offline stage comparison on explicitly registered synthetic artifacts only.
 import {join} from 'node:path';import {existsSync,readFileSync,writeFileSync} from 'node:fs';import {createHash} from 'node:crypto';import assert from 'node:assert/strict';
-const [root]=process.argv.slice(2),p=join(root,'attempt-r4-01/ordinary'),r=JSON.parse(readFileSync(join(p,'result.json'),'utf8'));
+const [root,attempt='attempt-r4-01']=process.argv.slice(2),p=join(root,attempt,'ordinary'),r=JSON.parse(readFileSync(join(p,'result.json'),'utf8'));
 const stages=['before','ready','pre-stop','official-stop','host-compensated','failure-finally'],captures:any={},checks:any[]=[];
 for(const stage of stages){const path=join(p,'capture-'+stage+'.json');if(!existsSync(path)){captures[stage]={state:'phase-not-reached-or-no-artifact',rows:[]};continue;}const raw=readFileSync(path),rows=JSON.parse(raw.toString('utf8'));const ledger=r.captures.find((x:any)=>x.stage===stage);assert(ledger,'missing stage protection ledger');assert.equal(createHash('sha256').update(raw).digest('hex'),ledger.sha256);for(const row of rows){assert(['file','absent','unknown'].includes(row.State));if(row.State==='file'){const bytes=Buffer.from(row.Image.Bytes,'base64');assert.equal(bytes.length,row.Length);assert.equal(createHash('sha256').update(bytes).digest('hex'),row.Image.Sha256);checks.push({stage,path:row.Path,size:bytes.length,sha256:row.Image.Sha256,rawRoundTrip:true});}}captures[stage]={state:'captured',rows};}
 const before=captures.before.rows,delta=(a:any,b:any,path:string)=>{

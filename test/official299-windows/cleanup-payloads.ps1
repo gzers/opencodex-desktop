@@ -6,7 +6,7 @@ Add-Type -Path (Join-Path $PSScriptRoot 'Native.cs')
 $report=[ordered]@{utc=[datetime]::UtcNow.ToString('o');result='pending';attempts=@();preparation=@();error=$null;normalStopResultsUnchanged=$true}
 try {
  foreach($prefix in $AttemptKeys){
-  if($prefix -cnotmatch '^attempt-(?:r[24]-)?[0-9]{2}$'){throw 'explicit attempt identifier required'}
+  if($prefix -cnotmatch '^attempt-(?:r[245]-)?[0-9]{2}$'){throw 'explicit attempt identifier required'}
   $loc=Get-Content -LiteralPath (Join-Path $EvidenceRoot ($prefix+'-location.json')) -Raw|ConvertFrom-Json
   $dir=[IO.Path]::GetFullPath($loc.directory)
   if((Split-Path -Parent $dir) -ine 'C:\ProgramData' -or (Split-Path -Leaf $dir) -cnotmatch '^ocxd299-proof-[a-f0-9]{10}$'){throw 'payload cleanup escaped original fixture'}
@@ -37,7 +37,7 @@ try {
   $report.attempts+=@{attempt=$prefix;accountSid=$c.account.sid;accountExists=$false;profileRecords=$profiles;profileDirectoryExists=$false;ports=$ports;payloads=$removed;failedDirectoryPreserved=(Test-Path -LiteralPath $dir);originalResultPreserved=(Test-Path -LiteralPath (Join-Path $dir 'ordinary/result.json'));scheduledTask='no scheduled task creation call in this harness; not used'}
  }
  foreach($leaf in $PreparationLeaves){
-  if($leaf -cnotin @('ocxd-official299-input-20261110','ocxd-official299-deps-20261110','ocxd299-r4-official','ocxd299-r4-deps')){throw 'unregistered task preparation directory'}
+  if($leaf -cnotin @('ocxd-official299-input-20261110','ocxd-official299-deps-20261110','ocxd299-r4-official','ocxd299-r4-deps','ocxd299-r5-official','ocxd299-r5-deps')){throw 'unregistered task preparation directory'}
   $tempRoot=[IO.Path]::GetFullPath($PreparationTempRoot);$path=[IO.Path]::GetFullPath((Join-Path $tempRoot $leaf))
   if((Split-Path -Parent $path) -ine $tempRoot -or $tempRoot -ine 'C:\Users\15119\AppData\Local\Temp'){throw 'preparation cleanup escaped explicitly created task directories'}
   $g=[Official299Proof.Guard]::new($path,$true);$g.Dispose();Remove-Item -LiteralPath $path -Recurse -Force
