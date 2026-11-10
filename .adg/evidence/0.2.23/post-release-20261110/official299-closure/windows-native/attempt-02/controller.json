@@ -1,0 +1,119 @@
+{
+  "schema": "official299-windows-controller/1",
+  "accepted": false,
+  "stage": "ordinary-finished",
+  "firstError": null,
+  "cleanup": [
+    {
+      "win32": 0,
+      "success": true,
+      "kind": "original-hProfile-unload"
+    },
+    {
+      "values": [
+        {
+          "SID": "S-1-5-21-587408064-856152790-2583328096-1023",
+          "LocalPath": "C:\\Users\\ocx299f54aa23577",
+          "Loaded": false,
+          "Special": false
+        }
+      ],
+      "kind": "profile-readback"
+    }
+  ],
+  "ordinary": {
+    "schema": "official299-windows-proof/1",
+    "accepted": false,
+    "stage": "private-package-copy",
+    "runtimeCreationEntered": false,
+    "start": null,
+    "status": null,
+    "stop": null,
+    "firstError": {
+      "hresult": -2147024891,
+      "type": "System.Security.AccessControl.PrivilegeNotHeldException",
+      "stage": "private-package-copy",
+      "message": "The process does not possess the 'SeSecurityPrivilege' privilege which is required for this operation.",
+      "line": 57
+    },
+    "counterexamples": [],
+    "cleanup": [
+      {
+        "kind": "no-runtime-creation-entered",
+        "jobMembers": [],
+        "reason": "failure before native service constructor; no runtime/version subprocess launched",
+        "jobActive": 0
+      }
+    ],
+    "budgetsMs": {
+      "status": 5000,
+      "start": 30000,
+      "stop": 10000
+    },
+    "utc": "2026-11-10T09:07:17.4443289Z",
+    "host": {
+      "pid": 55912,
+      "filetime": "134387752361592889",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1023",
+      "session": 2,
+      "image": "C:\\ProgramData\\ocxd299-proof-8ab41747b4\\powershell\\pwsh.exe",
+      "elevated": false,
+      "elevationType": 1
+    },
+    "hostSourceSha256": "ca66838e8e5b64b1573241c2c5e3c99c9d805d28c9026d4d58479217e1d261c5",
+    "nativeSourceSha256": "9cac86a9766da51bb61a715ae467abad0fb802dcf83e69ba5ec652af4009a62c",
+    "fixture": "C:\\Users\\ocx299f54aa23577\\official299-proof",
+    "privateRoot": {
+      "sddl": "O:S-1-5-21-587408064-856152790-2583328096-1023G:S-1-5-21-587408064-856152790-2583328096-513D:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;S-1-5-21-587408064-856152790-2583328096-1023)",
+      "protected": true,
+      "path": "C:\\Users\\ocx299f54aa23577\\official299-proof"
+    }
+  },
+  "profileUnloaded": true,
+  "profileDeleted": true,
+  "accountDeleted": true,
+  "noScheduledTaskCreated": true,
+  "parent": {
+    "pid": 79932,
+    "filetime": "134387752101588973",
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+    "session": 2,
+    "image": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+    "elevated": true,
+    "elevationType": 2
+  },
+  "account": {
+    "name": "ocx299f54aa23577",
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1023"
+  },
+  "createProfileHResult": 0,
+  "profile": "C:\\Users\\ocx299f54aa23577",
+  "input": {
+    "profile": "C:\\Users\\ocx299f54aa23577",
+    "inputRoot": "C:\\ProgramData\\ocxd299-proof-8ab41747b4\\input",
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1023",
+    "bunVersion": "1.4.4",
+    "lockSha256": "949232457be41cfe3e447e54fb3b21e9457e047cc9732407ee1aa2aa9a8350c2",
+    "archiveRoot": "C:\\ProgramData\\ocxd299-proof-8ab41747b4\\archive",
+    "output": "C:\\ProgramData\\ocxd299-proof-8ab41747b4\\ordinary",
+    "archiveSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+    "bunSha256": "cb1d8e6564e655e49d30cead359750a1cbbd12f42651caa4b62244d7bd93c244"
+  },
+  "hostHashes": {
+    "provisioner": "4127b6d1f6f145226f6ae2119f0620e9baeb97900ba65b87b8d96768a56f48bc",
+    "host": "ca66838e8e5b64b1573241c2c5e3c99c9d805d28c9026d4d58479217e1d261c5",
+    "powershell": "2a6769a3330dc1084d0154bfde7d164ab750ca7f700f313f9d417c1be78b2233",
+    "native": "9cac86a9766da51bb61a715ae467abad0fb802dcf83e69ba5ec652af4009a62c"
+  },
+  "originalProfileHandleRetained": true,
+  "ordinaryOriginalIdentity": {
+    "pid": 55912,
+    "filetime": "134387752361592889",
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1023",
+    "session": 2,
+    "image": "C:\\ProgramData\\ocxd299-proof-8ab41747b4\\powershell\\pwsh.exe",
+    "elevated": false,
+    "elevationType": 1
+  },
+  "ordinaryOriginalExit": 1
+}

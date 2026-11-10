@@ -1,0 +1,66 @@
+{
+  "pass": true,
+  "utc": "2026-11-10T09:00:18.4033268Z",
+  "scope": "test host native primitive counterexamples; no official runtime launched",
+  "checks": [
+    {
+      "case": "suspended-assigned-before-execution",
+      "pass": true,
+      "resumed": false,
+      "members": [
+        25024
+      ],
+      "identity": {
+        "pid": 25024,
+        "filetime": "134387748174892400",
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+        "session": 2,
+        "image": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+        "elevated": false,
+        "elevationType": 3
+      }
+    },
+    {
+      "case": "normal-zero-exit",
+      "jobActive": 0,
+      "pass": true,
+      "exitCode": 0,
+      "members": []
+    },
+    {
+      "members": [
+        70444,
+        17324
+      ],
+      "rootExitCode": 0,
+      "cleanupDecision": "refused-until-empty",
+      "pass": true,
+      "root": {
+        "pid": 96980,
+        "filetime": "134387748178722336",
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+        "session": 2,
+        "image": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+        "elevated": false,
+        "elevationType": 3
+      },
+      "case": "root-exit-with-child-does-not-mean-clean",
+      "jobActive": 2
+    },
+    {
+      "case": "separate-forced-counterexample-cleanup",
+      "jobActive": 0,
+      "pass": true,
+      "members": []
+    },
+    {
+      "case": "retained-path-rename-denied",
+      "pass": true,
+      "fileIdentity": "247287385:720896:525162"
+    },
+    {
+      "case": "hardlink-refused",
+      "pass": true
+    }
+  ]
+}

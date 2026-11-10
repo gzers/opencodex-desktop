@@ -1,0 +1,124 @@
+{
+  "utc": "2026-11-10T09:03:37.6746935Z",
+  "scope": "test host native primitive counterexamples; no official runtime launched",
+  "checks": [
+    {
+      "case": "suspended-assigned-before-execution",
+      "resumed": false,
+      "members": [
+        99712
+      ],
+      "identity": {
+        "pid": 99712,
+        "filetime": "134387750167378488",
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+        "session": 2,
+        "image": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+        "elevated": false,
+        "elevationType": 3
+      },
+      "pass": true
+    },
+    {
+      "case": "normal-zero-exit",
+      "exitCode": 0,
+      "jobActive": 0,
+      "members": [],
+      "pass": true
+    },
+    {
+      "pass": true,
+      "case": "root-exit-with-child-does-not-mean-clean",
+      "members": [
+        60856,
+        29816
+      ],
+      "rootExitCode": 0,
+      "root": {
+        "pid": 59996,
+        "filetime": "134387750170561147",
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+        "session": 2,
+        "image": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+        "elevated": false,
+        "elevationType": 3
+      },
+      "jobActive": 2,
+      "cleanupDecision": "refused-until-empty"
+    },
+    {
+      "case": "separate-forced-counterexample-cleanup",
+      "jobActive": 0,
+      "members": [],
+      "pass": true
+    },
+    {
+      "case": "retained-path-rename-denied",
+      "fileIdentity": "247287385:902496256:170278",
+      "pass": true
+    },
+    {
+      "pass": true,
+      "case": "hardlink-refused"
+    },
+    {
+      "case": "binding-wrong-schema",
+      "destructiveRequests": 0,
+      "decision": "refused",
+      "pass": true
+    },
+    {
+      "case": "binding-wrong-pid",
+      "destructiveRequests": 0,
+      "decision": "refused",
+      "pass": true
+    },
+    {
+      "case": "binding-wrong-filetime",
+      "destructiveRequests": 0,
+      "decision": "refused",
+      "pass": true
+    },
+    {
+      "case": "binding-wrong-sid",
+      "destructiveRequests": 0,
+      "decision": "refused",
+      "pass": true
+    },
+    {
+      "case": "binding-wrong-home",
+      "destructiveRequests": 0,
+      "decision": "refused",
+      "pass": true
+    },
+    {
+      "case": "binding-wrong-homeIdentity",
+      "destructiveRequests": 0,
+      "decision": "refused",
+      "pass": true
+    },
+    {
+      "case": "missing-binding",
+      "readback": {
+        "readable": false,
+        "value": null,
+        "failureType": "System.Management.Automation.MethodInvocationException"
+      },
+      "destructiveRequests": 0,
+      "decision": "unknown",
+      "pass": true
+    },
+    {
+      "case": "actual-unreadable-binding",
+      "readback": {
+        "readable": false,
+        "value": null,
+        "failureType": "System.Management.Automation.MethodInvocationException"
+      },
+      "destructiveRequests": 0,
+      "decision": "unknown",
+      "pass": true
+    }
+  ],
+  "pass": true
+}

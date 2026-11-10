@@ -1,0 +1,7 @@
+{
+  "correction": "early-cleanup.json hardcoded nativeConstructorLine as 96. Actual sealed attempted host source places the native constructor at line 88, observed by Select-String. Failure remains line 40, before any process creation. This corrects attribution only; the original cleanup receipt is retained unchanged.",
+  "hostSourceSha256": "ae84a463ad76f10a2f0310827a055ee473ed9dd0147498ba73c3470c3ac49150",
+  "actualNativeConstructorLine": 88,
+  "actualFailureLine": 40,
+  "accountAndProfileDeletionReadback": "attempt-01/early-cleanup.json"
+}

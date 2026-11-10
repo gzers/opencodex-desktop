@@ -1,0 +1,64 @@
+{
+  "scope": "test host native primitive counterexamples; no official runtime launched",
+  "checks": [
+    {
+      "identity": {
+        "pid": 19496,
+        "filetime": "134387748036138157",
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+        "session": 2,
+        "image": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+        "elevated": false,
+        "elevationType": 3
+      },
+      "case": "suspended-assigned-before-execution",
+      "resumed": false,
+      "members": [
+        19496
+      ],
+      "pass": true
+    },
+    {
+      "exitCode": 0,
+      "case": "normal-zero-exit",
+      "members": [],
+      "jobActive": 0,
+      "pass": true
+    },
+    {
+      "members": [
+        102676,
+        52552
+      ],
+      "pass": true,
+      "case": "root-exit-with-child-does-not-mean-clean",
+      "cleanupDecision": "refused-until-empty",
+      "rootExitCode": 0,
+      "jobActive": 2,
+      "root": {
+        "pid": 91900,
+        "filetime": "134387748040250505",
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+        "session": 2,
+        "image": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+        "elevated": false,
+        "elevationType": 3
+      }
+    },
+    {
+      "case": "separate-forced-counterexample-cleanup",
+      "members": [],
+      "jobActive": 0,
+      "pass": true
+    },
+    {
+      "type": "System.Management.Automation.RuntimeException",
+      "case": "first-error",
+      "line": 30,
+      "message": "guard did not prevent rename",
+      "pass": false
+    }
+  ],
+  "utc": "2026-11-10T09:00:04.7033008Z",
+  "pass": false
+}

@@ -1,0 +1,51 @@
+{
+  "attemptedCommits": [
+    {
+      "attempt": 1,
+      "commit": "50d3aca896458c0504dc556a927ecbcdd2988630"
+    },
+    {
+      "attempt": 2,
+      "commit": "35b2bdd7e98d4677b1de266fc6c8954a74f73611"
+    },
+    {
+      "attempt": 3,
+      "commit": "ba1ded500f578670f850d62808abe3362c12864a"
+    },
+    {
+      "attempt": 4,
+      "commit": "43d8b50c1fc8f065c8a468eb1dd8aa2b0cc6f54b"
+    }
+  ],
+  "testDeliveryCommit": "e98ddcc6a9b9b5946b8b426507ed8a0f5e9eda4c",
+  "dependencies": {
+    "lockSha256": "949232457be41cfe3e447e54fb3b21e9457e047cc9732407ee1aa2aa9a8350c2",
+    "treeSha256": "a6841d620158f14af1919d4472681656e7ffff3b2b05a5eeef34443b75113389",
+    "inventory": "dependency-inventory.json",
+    "installLifecycleScriptsExecuted": false
+  },
+  "docsBaseline": "f7c573349cf21c9c2984763a457fdc0926d21316",
+  "official": {
+    "sha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+    "sha512MatchesMetadata": true,
+    "archiveFiles": 2664,
+    "package": "@bitkyc08/opencodex",
+    "integrity": "sha512-pAlx+xXd1Ujbmw6yW/V5P0xNZi04e80qRUhmJQ7Ia4v6cJkaMvkvMTqKIx0kOSw2vx/tiQLjDkHsCgPAu15wyg==",
+    "bytes": 19923693,
+    "version": "2.99.0"
+  },
+  "bun": {
+    "sha256": "cb1d8e6564e655e49d30cead359750a1cbbd12f42651caa4b62244d7bd93c244",
+    "version": "1.4.4",
+    "package": "@oven/bun-windows-x64"
+  },
+  "desktopBaseline": "0828a3955615df0a2a3e52fb96ab8249f2e04d1b",
+  "scope": "test-only feasibility; no production, full suite or release",
+  "tools": {
+    "powershell": "7.6.9",
+    "node": "v22.12.0",
+    "powershellSha256": "2a6769a3330dc1084d0154bfde7d164ab750ca7f700f313f9d417c1be78b2233",
+    "os": "Microsoft Windows 10.0.26100",
+    "nodeSha256": "fcbea8362b092a5894ed99cc7ead9932fdd29922ab77670c5d39300b35d9343e"
+  }
+}

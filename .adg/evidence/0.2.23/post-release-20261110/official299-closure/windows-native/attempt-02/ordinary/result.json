@@ -1,0 +1,48 @@
+{
+  "schema": "official299-windows-proof/1",
+  "accepted": false,
+  "stage": "private-package-copy",
+  "runtimeCreationEntered": false,
+  "start": null,
+  "status": null,
+  "stop": null,
+  "firstError": {
+    "hresult": -2147024891,
+    "type": "System.Security.AccessControl.PrivilegeNotHeldException",
+    "stage": "private-package-copy",
+    "message": "The process does not possess the 'SeSecurityPrivilege' privilege which is required for this operation.",
+    "line": 57
+  },
+  "counterexamples": [],
+  "cleanup": [
+    {
+      "kind": "no-runtime-creation-entered",
+      "jobMembers": [],
+      "reason": "failure before native service constructor; no runtime/version subprocess launched",
+      "jobActive": 0
+    }
+  ],
+  "budgetsMs": {
+    "status": 5000,
+    "start": 30000,
+    "stop": 10000
+  },
+  "utc": "2026-11-10T09:07:17.4443289Z",
+  "host": {
+    "pid": 55912,
+    "filetime": "134387752361592889",
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1023",
+    "session": 2,
+    "image": "C:\\ProgramData\\ocxd299-proof-8ab41747b4\\powershell\\pwsh.exe",
+    "elevated": false,
+    "elevationType": 1
+  },
+  "hostSourceSha256": "ca66838e8e5b64b1573241c2c5e3c99c9d805d28c9026d4d58479217e1d261c5",
+  "nativeSourceSha256": "9cac86a9766da51bb61a715ae467abad0fb802dcf83e69ba5ec652af4009a62c",
+  "fixture": "C:\\Users\\ocx299f54aa23577\\official299-proof",
+  "privateRoot": {
+    "sddl": "O:S-1-5-21-587408064-856152790-2583328096-1023G:S-1-5-21-587408064-856152790-2583328096-513D:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;S-1-5-21-587408064-856152790-2583328096-1023)",
+    "protected": true,
+    "path": "C:\\Users\\ocx299f54aa23577\\official299-proof"
+  }
+}

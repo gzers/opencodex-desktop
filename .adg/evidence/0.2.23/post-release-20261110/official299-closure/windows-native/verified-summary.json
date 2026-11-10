@@ -1,0 +1,99 @@
+{
+  "status": "consistent-recorded-failure",
+  "accepted": false,
+  "start": {
+    "pass": true,
+    "elapsedMs": 11410,
+    "receiptCount": 1
+  },
+  "statusAction": {
+    "pass": true,
+    "elapsedMs": 10
+  },
+  "stop": {
+    "pass": false,
+    "elapsedMs": 6171,
+    "normalApiReceipt": "performed",
+    "originalExitCode": 0,
+    "jobEmpty": true,
+    "mainListenerGone": true,
+    "fourOriginalFilesRestored": true,
+    "completeClientTreeRestored": false,
+    "additionalClientFiles": [
+      {
+        "sha256": "aa81625446a5c5d48aada0c40de3d64f068cedb8f5e50d3d73ba2a6841a76b87",
+        "relative": "claude/agents/ocx-gpt-6-1-sol.md",
+        "length": 1261
+      },
+      {
+        "sha256": "c62922e6c0cd7562257366e287734460bff0d6d806e1a848a7f0c76ee26f39f6",
+        "relative": "claude/agents/ocx-gpt-6-astra.md",
+        "length": 1261
+      },
+      {
+        "sha256": "7604453b35c9754f1a2b4c541a6a178739ae4cdd4de3843ee3466c85bbfa89a3",
+        "relative": "claude/agents/ocx-gpt-6-luna.md",
+        "length": 1255
+      },
+      {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "relative": "codex/.opencodex-native-main.claim.sqlite",
+        "length": 0
+      },
+      {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "relative": "codex/.opencodex-native-main.owner.sqlite",
+        "length": 0
+      }
+    ]
+  },
+  "counterexamples": [
+    {
+      "case": "wrong-pid",
+      "stopRequests": 0,
+      "decision": "refused"
+    },
+    {
+      "case": "wrong-filetime",
+      "stopRequests": 0,
+      "decision": "refused"
+    },
+    {
+      "case": "wrong-sid",
+      "stopRequests": 0,
+      "decision": "refused"
+    },
+    {
+      "case": "wrong-home",
+      "stopRequests": 0,
+      "decision": "refused"
+    },
+    {
+      "case": "wrong-homeIdentity",
+      "stopRequests": 0,
+      "decision": "refused"
+    },
+    {
+      "case": "missing-proof",
+      "stopRequests": 0,
+      "decision": "unknown"
+    },
+    {
+      "case": "write-locked-proof",
+      "actualWriteDenied": true,
+      "decision": "unknown-on-unreadable"
+    },
+    {
+      "decision": "refused",
+      "case": "signature-tampered"
+    }
+  ],
+  "accountAndProfileDeleted": true,
+  "limits": [
+    "Offline verifier cannot recompute omitted health HMAC secrets; execution-time native verification and source are retained.",
+    "Grok injection was refused by the official runtime for this synthetic fixture; no Grok changed-and-restored claim.",
+    "No native model catalog was present; no catalog restoration claim.",
+    "Stop budget readback covers the primary listener. Additional Claude intercept listener is identified in stdout and separately checked after execution; late readback does not extend the action budget.",
+    "Prototype checks before source-digest recording retain raw outputs; they are not assigned invented historical source digests."
+  ]
+}

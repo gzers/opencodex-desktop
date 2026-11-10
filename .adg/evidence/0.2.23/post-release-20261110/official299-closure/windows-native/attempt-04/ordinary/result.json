@@ -1,0 +1,210 @@
+{
+  "schema": "official299-windows-proof/1",
+  "accepted": false,
+  "stage": "stop",
+  "runtimeCreationEntered": true,
+  "start": {
+    "pass": true,
+    "elapsedMs": 11410,
+    "receiptCount": 1,
+    "receipt": "{\"kind\":\"host-start-receipt\",\"pid\":104884,\"filetime\":\"134387756205396910\",\"sid\":\"S-1-5-21-587408064-856152790-2583328096-1025\",\"home\":\"C:\\\\Users\\\\ocx29913462168b5\\\\official299-proof\\\\runtime\",\"homeIdentity\":\"247287385:65536:1141605\",\"port\":54861,\"jobMembers\":[29732,106688,104884,110964],\"officialCompletionLine\":\"Client startup work complete.\",\"challenge\":\"yVaAZ0hGS6axpmWahffMmOdIT290VxAu-0y2SHveSw8\",\"health\":{\"status\":200,\"body\":\"{\\\"status\\\":\\\"ok\\\",\\\"service\\\":\\\"opencodex\\\",\\\"version\\\":\\\"2.99.0\\\",\\\"instanceId\\\":\\\"home_53cf8da4b87843a4a7282db1ece093b5\\\",\\\"uptime\\\":11.1856858,\\\"pid\\\":104884,\\\"port\\\":54861,\\\"restartCapability\\\":\\\"v1\\\",\\\"providerReloadCapability\\\":\\\"v1\\\",\\\"asideSyncCapability\\\":\\\"v1\\\",\\\"guiPairCapability\\\":\\\"v2\\\"}\",\"proof\":\"Oq71wUPTu22UBRsS8utuOvZVrBWXCvBM20Vd1faeSpc\"},\"ready\":{\"status\":200,\"body\":\"{\\\"service\\\":\\\"opencodex\\\",\\\"version\\\":\\\"2.99.0\\\",\\\"uptime\\\":11.191461499999999,\\\"pid\\\":104884,\\\"port\\\":54861,\\\"status\\\":\\\"ready\\\",\\\"protocol\\\":1,\\\"minimumClientProtocol\\\":1,\\\"managementUrl\\\":\\\"http://127.0.0.1:54861\\\",\\\"features\\\":[\\\"quota-pool/1\\\",\\\"fallback-policy/1\\\",\\\"link-management-relay\\\",\\\"served-by-header\\\",\\\"relay-auth/2\\\",\\\"link-peer-report/1\\\"]}\",\"proof\":null}}",
+    "createdSuspended": true,
+    "assignedBeforeResume": true,
+    "jobInitialMembers": [
+      104884
+    ],
+    "jobInitialActive": 1
+  },
+  "status": {
+    "pass": true,
+    "identity": {
+      "pid": 104884,
+      "filetime": "134387756205396910",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1025",
+      "session": 2,
+      "image": "C:\\Users\\ocx29913462168b5\\official299-proof\\program\\node_modules\\@oven\\bun-windows-x64\\bin\\bun.exe",
+      "elevated": false,
+      "elevationType": 1
+    },
+    "health": {
+      "status": 200,
+      "body": "{\"status\":\"ok\",\"service\":\"opencodex\",\"version\":\"2.99.0\",\"instanceId\":\"home_53cf8da4b87843a4a7282db1ece093b5\",\"uptime\":11.2365033,\"pid\":104884,\"port\":54861,\"restartCapability\":\"v1\",\"providerReloadCapability\":\"v1\",\"asideSyncCapability\":\"v1\",\"guiPairCapability\":\"v2\"}",
+      "proof": "23xk3n5WuipHbf4P9OaUSH3d3K7_bdK1djtejoO90tg"
+    },
+    "challenge": "uLs2UW6L3NiWu1bXfGXi2-xuidW5aMpTn5f3mWJ5fVQ",
+    "elapsedMs": 10,
+    "ready": {
+      "status": 200,
+      "body": "{\"service\":\"opencodex\",\"version\":\"2.99.0\",\"uptime\":11.237791600000001,\"pid\":104884,\"port\":54861,\"status\":\"ready\",\"protocol\":1,\"minimumClientProtocol\":1,\"managementUrl\":\"http://127.0.0.1:54861\",\"features\":[\"quota-pool/1\",\"fallback-policy/1\",\"link-management-relay\",\"served-by-header\",\"relay-auth/2\",\"link-peer-report/1\"]}",
+      "proof": null
+    }
+  },
+  "stop": {
+    "pass": false,
+    "normalRequested": true,
+    "response": {
+      "status": 200,
+      "body": "{\"success\":true,\"message\":\"Proxy stopping, native Codex restored.\",\"sharedTeardown\":\"performed\"}",
+      "proof": null
+    },
+    "originalExited": true,
+    "originalExitCode": 0,
+    "jobActive": 0,
+    "jobMembers": [],
+    "listenerOwners": [],
+    "restored": [
+      {
+        "bytesBase64": "IyBzeW50aGV0aWMgb3JpZ2luYWwKbW9kZWwgPSAic3ludGhldGljLW5hdGl2ZSIKbW9kZWxfcHJvdmlkZXIgPSAib3BlbmFpIgo=",
+        "beforeSha256": "a986719c0d5f4cb05b728cc525566f7c5e1380be571e392104a5573211ade081",
+        "relative": "codex/config.toml",
+        "afterSha256": "a986719c0d5f4cb05b728cc525566f7c5e1380be571e392104a5573211ade081",
+        "restored": true
+      },
+      {
+        "bytesBase64": "IyBzeW50aGV0aWMgb3JpZ2luYWwKbW9kZWwgPSAic3ludGhldGljLWdyb2siCg==",
+        "beforeSha256": "9f07633b9958cc7d6a1db3a47ca9b66f993ae92931f013d998cdfe2b4962f62f",
+        "relative": "grok/config.toml",
+        "afterSha256": "9f07633b9958cc7d6a1db3a47ca9b66f993ae92931f013d998cdfe2b4962f62f",
+        "restored": true
+      },
+      {
+        "bytesBase64": "eyAiZW52IjogeyAiU1lOVEhFVElDX1NFTlRJTkVMIjogIm9yaWdpbmFsIiB9IH0=",
+        "beforeSha256": "a7ed528018cdeaafbfb546a44b6748fb81d8ee669f6f3722a4dca088c4f9d45f",
+        "relative": "claude/settings.json",
+        "afterSha256": "a7ed528018cdeaafbfb546a44b6748fb81d8ee669f6f3722a4dca088c4f9d45f",
+        "restored": true
+      },
+      {
+        "bytesBase64": "eyAiT1BFTkFJX0FQSV9LRVkiOiAic3ludGhldGljLW5vdC1hLXJlYWwtY3JlZGVudGlhbCIgfQ==",
+        "beforeSha256": "f9e13beadacfe3ba21722f896c68d34ceda0cbd1edefa55b824cae832f7a9e3e",
+        "relative": "codex/auth.json",
+        "afterSha256": "f9e13beadacfe3ba21722f896c68d34ceda0cbd1edefa55b824cae832f7a9e3e",
+        "restored": true
+      }
+    ],
+    "elapsedMs": 6171,
+    "clientTreeRestored": false,
+    "clientConfigWasChanged": true
+  },
+  "firstError": {
+    "type": "System.Management.Automation.RuntimeException",
+    "message": "normal Stop full proof failed",
+    "hresult": -2146233087,
+    "stage": "stop",
+    "line": 10
+  },
+  "counterexamples": [
+    {
+      "case": "wrong-pid",
+      "stopRequests": 0,
+      "decision": "refused"
+    },
+    {
+      "case": "wrong-filetime",
+      "stopRequests": 0,
+      "decision": "refused"
+    },
+    {
+      "case": "wrong-sid",
+      "stopRequests": 0,
+      "decision": "refused"
+    },
+    {
+      "case": "wrong-home",
+      "stopRequests": 0,
+      "decision": "refused"
+    },
+    {
+      "case": "wrong-homeIdentity",
+      "stopRequests": 0,
+      "decision": "refused"
+    },
+    {
+      "case": "missing-proof",
+      "stopRequests": 0,
+      "decision": "unknown"
+    },
+    {
+      "case": "write-locked-proof",
+      "actualWriteDenied": true,
+      "decision": "unknown-on-unreadable"
+    },
+    {
+      "decision": "refused",
+      "case": "signature-tampered"
+    }
+  ],
+  "cleanup": [
+    {
+      "jobActive": 0,
+      "originalExited": true,
+      "exitCode": 0,
+      "memberIdentities": [],
+      "kind": "before-forced-cleanup",
+      "jobMembers": []
+    }
+  ],
+  "budgetsMs": {
+    "status": 5000,
+    "stop": 10000,
+    "start": 30000
+  },
+  "utc": "2026-11-10T09:12:43.7769718Z",
+  "host": {
+    "pid": 103040,
+    "filetime": "134387755622595195",
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1025",
+    "session": 2,
+    "image": "C:\\ProgramData\\ocxd299-proof-3e2e12c581\\powershell\\pwsh.exe",
+    "elevated": false,
+    "elevationType": 1
+  },
+  "hostSourceSha256": "c6bf5d93639d92801f08391971af901deff82ab4dc12104752f409def352163c",
+  "nativeSourceSha256": "78329892ad429a71a1ab2ac586dc03af5797d905cf337dfa05fe72dc404fe140",
+  "fixture": "C:\\Users\\ocx29913462168b5\\official299-proof",
+  "privateRoot": {
+    "protected": true,
+    "sddl": "O:S-1-5-21-587408064-856152790-2583328096-1025G:S-1-5-21-587408064-856152790-2583328096-513D:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;S-1-5-21-587408064-856152790-2583328096-1025)",
+    "path": "C:\\Users\\ocx29913462168b5\\official299-proof"
+  },
+  "programReadOnlySddl": "O:S-1-5-21-587408064-856152790-2583328096-1025G:S-1-5-21-587408064-856152790-2583328096-513D:PAI(A;OICIIO;GA;;;SY)(A;;FA;;;SY)(A;OICIIO;GXGR;;;S-1-5-21-587408064-856152790-2583328096-1025)(A;;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1025)",
+  "package": {
+    "bunSha256": "cb1d8e6564e655e49d30cead359750a1cbbd12f42651caa4b62244d7bd93c244",
+    "bunVersion": "1.4.4",
+    "archiveSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+    "mismatches": [],
+    "version": "2.99.0",
+    "lockSha256": "949232457be41cfe3e447e54fb3b21e9457e047cc9732407ee1aa2aa9a8350c2",
+    "filesCompared": 2664,
+    "privateProgram": "C:\\Users\\ocx29913462168b5\\official299-proof\\program"
+  },
+  "port": 54861,
+  "job": {
+    "unnamed": true,
+    "breakawayAllowed": false,
+    "retainedHandle": true,
+    "limitFlags": 0,
+    "sddl": "O:S-1-5-21-587408064-856152790-2583328096-1025D:P(A;;GA;;;S-1-5-21-587408064-856152790-2583328096-1025)(A;;GA;;;SY)"
+  },
+  "runtime": {
+    "pid": 104884,
+    "filetime": "134387756205396910",
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1025",
+    "session": 2,
+    "image": "C:\\Users\\ocx29913462168b5\\official299-proof\\program\\node_modules\\@oven\\bun-windows-x64\\bin\\bun.exe",
+    "elevated": false,
+    "elevationType": 1
+  },
+  "binding": {
+    "writeAndDeleteSharingDenied": true,
+    "sddl": "O:S-1-5-21-587408064-856152790-2583328096-1025G:S-1-5-21-587408064-856152790-2583328096-513D:AI(A;ID;FA;;;SY)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1025)",
+    "value": {
+      "filetime": "134387756205396910",
+      "homeIdentity": "247287385:65536:1141605",
+      "home": "C:\\Users\\ocx29913462168b5\\official299-proof\\runtime",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1025",
+      "pid": 104884,
+      "schema": "official299-host-binding/1"
+    }
+  }
+}

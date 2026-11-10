@@ -1,0 +1,111 @@
+{
+  "schema": "official299-windows-controller/1",
+  "accepted": false,
+  "stage": "ordinary-finished",
+  "firstError": null,
+  "cleanup": [
+    {
+      "success": true,
+      "kind": "original-hProfile-unload",
+      "win32": 0
+    },
+    {
+      "kind": "profile-readback",
+      "values": [
+        {
+          "SID": "S-1-5-21-587408064-856152790-2583328096-1022",
+          "LocalPath": "C:\\Users\\ocx2997a83aee495",
+          "Loaded": false,
+          "Special": false
+        }
+      ]
+    },
+    {
+      "childExited": true,
+      "kind": "retained-profile-account",
+      "jobClear": false,
+      "reason": "loaded-or-incomplete-owned-process-proof"
+    }
+  ],
+  "ordinary": {
+    "schema": "official299-windows-proof/1",
+    "accepted": false,
+    "stage": "ordinary-identity",
+    "start": null,
+    "status": null,
+    "stop": null,
+    "firstError": {
+      "message": "Cannot overwrite variable HOME because it is read-only or constant.",
+      "line": 40,
+      "hresult": -2146233087,
+      "stage": "ordinary-identity",
+      "type": "System.Management.Automation.SessionStateUnauthorizedAccessException"
+    },
+    "counterexamples": [],
+    "cleanup": [],
+    "budgetsMs": {
+      "status": 5000,
+      "start": 30000,
+      "stop": 10000
+    },
+    "utc": "2026-11-10T09:05:42.4547868Z",
+    "host": {
+      "pid": 94780,
+      "filetime": "134387751414442930",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1022",
+      "session": 2,
+      "image": "C:\\ProgramData\\ocxd299-proof-b9b2becf1b\\powershell\\pwsh.exe",
+      "elevated": false,
+      "elevationType": 1
+    },
+    "hostSourceSha256": "ae84a463ad76f10a2f0310827a055ee473ed9dd0147498ba73c3470c3ac49150",
+    "nativeSourceSha256": "9cac86a9766da51bb61a715ae467abad0fb802dcf83e69ba5ec652af4009a62c"
+  },
+  "profileUnloaded": true,
+  "profileDeleted": false,
+  "accountDeleted": false,
+  "noScheduledTaskCreated": true,
+  "parent": {
+    "pid": 69972,
+    "filetime": "134387751093090433",
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+    "session": 2,
+    "image": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+    "elevated": true,
+    "elevationType": 2
+  },
+  "account": {
+    "name": "ocx2997a83aee495",
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1022"
+  },
+  "createProfileHResult": 0,
+  "profile": "C:\\Users\\ocx2997a83aee495",
+  "input": {
+    "bunSha256": "cb1d8e6564e655e49d30cead359750a1cbbd12f42651caa4b62244d7bd93c244",
+    "profile": "C:\\Users\\ocx2997a83aee495",
+    "archiveSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1022",
+    "bunVersion": "1.4.4",
+    "archiveRoot": "C:\\ProgramData\\ocxd299-proof-b9b2becf1b\\archive",
+    "lockSha256": "949232457be41cfe3e447e54fb3b21e9457e047cc9732407ee1aa2aa9a8350c2",
+    "inputRoot": "C:\\ProgramData\\ocxd299-proof-b9b2becf1b\\input",
+    "output": "C:\\ProgramData\\ocxd299-proof-b9b2becf1b\\ordinary"
+  },
+  "hostHashes": {
+    "native": "9cac86a9766da51bb61a715ae467abad0fb802dcf83e69ba5ec652af4009a62c",
+    "powershell": "2a6769a3330dc1084d0154bfde7d164ab750ca7f700f313f9d417c1be78b2233",
+    "host": "ae84a463ad76f10a2f0310827a055ee473ed9dd0147498ba73c3470c3ac49150",
+    "provisioner": "4127b6d1f6f145226f6ae2119f0620e9baeb97900ba65b87b8d96768a56f48bc"
+  },
+  "originalProfileHandleRetained": true,
+  "ordinaryOriginalIdentity": {
+    "pid": 94780,
+    "filetime": "134387751414442930",
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1022",
+    "session": 2,
+    "image": "C:\\ProgramData\\ocxd299-proof-b9b2becf1b\\powershell\\pwsh.exe",
+    "elevated": false,
+    "elevationType": 1
+  },
+  "ordinaryOriginalExit": 1
+}

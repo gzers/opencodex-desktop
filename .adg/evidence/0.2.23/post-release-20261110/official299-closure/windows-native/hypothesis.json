@@ -1,0 +1,16 @@
+{
+  "revision": 1,
+  "docsBaseline": "f7c573349cf21c9c2984763a457fdc0926d21316",
+  "desktopReadOnlyBaseline": "0828a3955615df0a2a3e52fb96ab8249f2e04d1b",
+  "hypothesis": "A Desktop-side independent host retaining original process handles, TokenUser/HOME/FILETIME identity and a controlled Job can combine official readyz and health HMAC with the normal stop API to prove runtime, exit and synthetic client restoration without changing official 2.99 or scanning unknown processes, within the unchanged 30/10/5 second budgets.",
+  "recordedBeforeOfficialRuntimeLaunch": true,
+  "startBudgetMs": 30000,
+  "stopBudgetMs": 10000,
+  "statusBudgetMs": 5000,
+  "allowed": ["test/** prototype", "one fresh ordinary account", "synthetic clients only", "separate docs evidence branch"],
+  "excluded": ["production edits", "full suite", "installer", "tray", "dual SID", "core sweep", "release"],
+  "prototypeAttempts": [
+    {"attempt": "prototype-01", "result": "failed", "firstError": "FILE_READ_ATTRIBUTES handle did not prevent path rename; preserve this failure"},
+    {"attempt": "prototype-02", "result": "passed", "hypothesisChange": "Use GENERIC_READ on no-delete path guard handles; verify rename rejection and hardlink rejection natively"}
+  ]
+}

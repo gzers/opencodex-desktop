@@ -1,0 +1,109 @@
+{
+  "status": "pass",
+  "sourceBytes": [
+    {
+      "attempt": 1,
+      "commit": "50d3aca896458c0504dc556a927ecbcdd2988630",
+      "path": "test/official299-windows/Native.cs",
+      "sha256": "9cac86a9766da51bb61a715ae467abad0fb802dcf83e69ba5ec652af4009a62c",
+      "matchesExecutedBytes": true
+    },
+    {
+      "attempt": 1,
+      "commit": "50d3aca896458c0504dc556a927ecbcdd2988630",
+      "path": "test/official299-windows/host.ps1",
+      "sha256": "ae84a463ad76f10a2f0310827a055ee473ed9dd0147498ba73c3470c3ac49150",
+      "matchesExecutedBytes": true
+    },
+    {
+      "attempt": 1,
+      "commit": "50d3aca896458c0504dc556a927ecbcdd2988630",
+      "path": "test/official299-windows/run.ps1",
+      "sha256": "4127b6d1f6f145226f6ae2119f0620e9baeb97900ba65b87b8d96768a56f48bc",
+      "matchesExecutedBytes": true
+    },
+    {
+      "attempt": 2,
+      "commit": "35b2bdd7e98d4677b1de266fc6c8954a74f73611",
+      "path": "test/official299-windows/Native.cs",
+      "sha256": "9cac86a9766da51bb61a715ae467abad0fb802dcf83e69ba5ec652af4009a62c",
+      "matchesExecutedBytes": true
+    },
+    {
+      "attempt": 2,
+      "commit": "35b2bdd7e98d4677b1de266fc6c8954a74f73611",
+      "path": "test/official299-windows/host.ps1",
+      "sha256": "ca66838e8e5b64b1573241c2c5e3c99c9d805d28c9026d4d58479217e1d261c5",
+      "matchesExecutedBytes": true
+    },
+    {
+      "attempt": 2,
+      "commit": "35b2bdd7e98d4677b1de266fc6c8954a74f73611",
+      "path": "test/official299-windows/run.ps1",
+      "sha256": "4127b6d1f6f145226f6ae2119f0620e9baeb97900ba65b87b8d96768a56f48bc",
+      "matchesExecutedBytes": true
+    },
+    {
+      "attempt": 3,
+      "commit": "ba1ded500f578670f850d62808abe3362c12864a",
+      "path": "test/official299-windows/Native.cs",
+      "sha256": "fe16acc3af053f84d430f84500f1e7d145fba4cbd4419fc6dc09c6f23986c2e2",
+      "matchesExecutedBytes": true
+    },
+    {
+      "attempt": 3,
+      "commit": "ba1ded500f578670f850d62808abe3362c12864a",
+      "path": "test/official299-windows/host.ps1",
+      "sha256": "d171df34654f7e93959d7d18d150c8fbd13c84385d6a899d7738c2c71a56df60",
+      "matchesExecutedBytes": true
+    },
+    {
+      "attempt": 3,
+      "commit": "ba1ded500f578670f850d62808abe3362c12864a",
+      "path": "test/official299-windows/run.ps1",
+      "sha256": "4127b6d1f6f145226f6ae2119f0620e9baeb97900ba65b87b8d96768a56f48bc",
+      "matchesExecutedBytes": true
+    },
+    {
+      "attempt": 4,
+      "commit": "43d8b50c1fc8f065c8a468eb1dd8aa2b0cc6f54b",
+      "path": "test/official299-windows/Native.cs",
+      "sha256": "78329892ad429a71a1ab2ac586dc03af5797d905cf337dfa05fe72dc404fe140",
+      "matchesExecutedBytes": true
+    },
+    {
+      "attempt": 4,
+      "commit": "43d8b50c1fc8f065c8a468eb1dd8aa2b0cc6f54b",
+      "path": "test/official299-windows/host.ps1",
+      "sha256": "c6bf5d93639d92801f08391971af901deff82ab4dc12104752f409def352163c",
+      "matchesExecutedBytes": true
+    },
+    {
+      "attempt": 4,
+      "commit": "43d8b50c1fc8f065c8a468eb1dd8aa2b0cc6f54b",
+      "path": "test/official299-windows/run.ps1",
+      "sha256": "4127b6d1f6f145226f6ae2119f0620e9baeb97900ba65b87b8d96768a56f48bc",
+      "matchesExecutedBytes": true
+    }
+  ],
+  "finalPrototypeSourceBytesMatchGit": true,
+  "codeChangedPaths": [
+    "test/official299-windows/Native.cs",
+    "test/official299-windows/README.md",
+    "test/official299-windows/cleanup-early-attempt.ps1",
+    "test/official299-windows/cleanup-payloads.ps1",
+    "test/official299-windows/host.ps1",
+    "test/official299-windows/inventory.mjs",
+    "test/official299-windows/policy.ps1",
+    "test/official299-windows/prototype-test.ps1",
+    "test/official299-windows/run.ps1",
+    "test/official299-windows/verify-evidence.mjs"
+  ],
+  "productionPathsChanged": false,
+  "fullSuiteExecuted": false,
+  "releaseExecuted": false,
+  "cleanupReadbackPassed": true,
+  "secretPatternScannedFiles": 99,
+  "secretPatternMatches": 0,
+  "limits": "Pattern scan supplements the explicit no-secret serialization design; it is not proof that arbitrary secrets can always be detected."
+}

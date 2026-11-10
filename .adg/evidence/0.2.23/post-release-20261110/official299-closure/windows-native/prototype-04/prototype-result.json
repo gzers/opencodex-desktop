@@ -1,0 +1,131 @@
+{
+  "checks": [
+    {
+      "resumed": false,
+      "case": "suspended-assigned-before-execution",
+      "pass": true,
+      "members": [
+        7000
+      ],
+      "identity": {
+        "pid": 7000,
+        "filetime": "134387749807922725",
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+        "session": 2,
+        "image": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+        "elevated": false,
+        "elevationType": 3
+      }
+    },
+    {
+      "members": [],
+      "case": "normal-zero-exit",
+      "pass": true,
+      "jobActive": 0,
+      "exitCode": 0
+    },
+    {
+      "root": {
+        "pid": 74056,
+        "filetime": "134387749811443823",
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+        "session": 2,
+        "image": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+        "elevated": false,
+        "elevationType": 3
+      },
+      "cleanupDecision": "refused-until-empty",
+      "jobActive": 2,
+      "rootExitCode": 0,
+      "case": "root-exit-with-child-does-not-mean-clean",
+      "members": [
+        26900,
+        93424
+      ],
+      "pass": true
+    },
+    {
+      "members": [],
+      "case": "separate-forced-counterexample-cleanup",
+      "pass": true,
+      "jobActive": 0
+    },
+    {
+      "fileIdentity": "247287385:1048576:168172",
+      "case": "retained-path-rename-denied",
+      "pass": true
+    },
+    {
+      "case": "hardlink-refused",
+      "pass": true
+    },
+    {
+      "case": "binding-wrong-schema",
+      "pass": true,
+      "decision": "refused",
+      "destructiveRequests": 0
+    },
+    {
+      "case": "binding-wrong-pid",
+      "pass": true,
+      "decision": "refused",
+      "destructiveRequests": 0
+    },
+    {
+      "case": "binding-wrong-filetime",
+      "pass": true,
+      "decision": "refused",
+      "destructiveRequests": 0
+    },
+    {
+      "case": "binding-wrong-sid",
+      "pass": true,
+      "decision": "refused",
+      "destructiveRequests": 0
+    },
+    {
+      "case": "binding-wrong-home",
+      "pass": true,
+      "decision": "refused",
+      "destructiveRequests": 0
+    },
+    {
+      "case": "binding-wrong-homeIdentity",
+      "pass": true,
+      "decision": "refused",
+      "destructiveRequests": 0
+    },
+    {
+      "case": "missing-binding",
+      "pass": true,
+      "readback": {
+        "readable": false,
+        "value": null,
+        "failureType": "System.Management.Automation.MethodInvocationException"
+      },
+      "decision": "unknown",
+      "destructiveRequests": 0
+    },
+    {
+      "case": "actual-unreadable-binding",
+      "pass": true,
+      "readback": {
+        "readable": false,
+        "value": null,
+        "failureType": "System.Management.Automation.MethodInvocationException"
+      },
+      "decision": "unknown",
+      "destructiveRequests": 0
+    },
+    {
+      "message": "The process does not possess the 'SeSecurityPrivilege' privilege which is required for this operation.",
+      "case": "first-error",
+      "pass": false,
+      "type": "System.Security.AccessControl.PrivilegeNotHeldException",
+      "line": 46
+    }
+  ],
+  "pass": false,
+  "utc": "2026-11-10T09:03:01.7716852Z",
+  "scope": "test host native primitive counterexamples; no official runtime launched"
+}

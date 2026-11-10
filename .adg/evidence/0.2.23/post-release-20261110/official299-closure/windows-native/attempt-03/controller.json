@@ -1,0 +1,244 @@
+{
+  "schema": "official299-windows-controller/1",
+  "accepted": false,
+  "stage": "ordinary-finished",
+  "firstError": null,
+  "cleanup": [
+    {
+      "win32": 0,
+      "success": true,
+      "kind": "original-hProfile-unload"
+    },
+    {
+      "values": [
+        {
+          "SID": "S-1-5-21-587408064-856152790-2583328096-1024",
+          "LocalPath": "C:\\Users\\ocx299b35d1d31b5",
+          "Loaded": false,
+          "Special": false
+        }
+      ],
+      "kind": "profile-readback"
+    }
+  ],
+  "ordinary": {
+    "schema": "official299-windows-proof/1",
+    "accepted": false,
+    "stage": "status",
+    "runtimeCreationEntered": true,
+    "start": {
+      "pass": true,
+      "elapsedMs": 11470,
+      "receiptCount": 1,
+      "receipt": "{\"kind\":\"host-start-receipt\",\"pid\":19156,\"filetime\":\"134387754512495444\",\"sid\":\"S-1-5-21-587408064-856152790-2583328096-1024\",\"home\":\"C:\\\\Users\\\\ocx299b35d1d31b5\\\\official299-proof\\\\runtime\",\"homeIdentity\":\"247287385:131072:1130634\",\"port\":59492,\"jobMembers\":[111176,16772,78800,19156,42356,39048],\"officialCompletionLine\":\"Client startup work complete.\",\"challenge\":\"B_QkXQEb95ZlAxWqgj6jVXX88d84KzJGZCXVixGTcu0\",\"health\":{\"status\":200,\"proof\":\"CToHqM0LIXCZ4_SmrfrW_cdw5zqPXu5raKdTwurDVd0\",\"body\":\"{\\\"status\\\":\\\"ok\\\",\\\"service\\\":\\\"opencodex\\\",\\\"version\\\":\\\"2.99.0\\\",\\\"instanceId\\\":\\\"home_5f868a34fd15456eb4791ead497124d2\\\",\\\"uptime\\\":11.0670563,\\\"pid\\\":19156,\\\"port\\\":59492,\\\"restartCapability\\\":\\\"v1\\\",\\\"providerReloadCapability\\\":\\\"v1\\\",\\\"asideSyncCapability\\\":\\\"v1\\\",\\\"guiPairCapability\\\":\\\"v2\\\"}\"},\"ready\":{\"status\":200,\"proof\":null,\"body\":\"{\\\"service\\\":\\\"opencodex\\\",\\\"version\\\":\\\"2.99.0\\\",\\\"uptime\\\":11.2966719,\\\"pid\\\":19156,\\\"port\\\":59492,\\\"status\\\":\\\"ready\\\",\\\"protocol\\\":1,\\\"minimumClientProtocol\\\":1,\\\"managementUrl\\\":\\\"http://127.0.0.1:59492\\\",\\\"features\\\":[\\\"quota-pool/1\\\",\\\"fallback-policy/1\\\",\\\"link-management-relay\\\",\\\"served-by-header\\\",\\\"relay-auth/2\\\",\\\"link-peer-report/1\\\"]}\"}}",
+      "createdSuspended": true,
+      "assignedBeforeResume": true,
+      "jobInitialMembers": [
+        19156
+      ],
+      "jobInitialActive": 1
+    },
+    "status": {
+      "health": {
+        "status": 200,
+        "proof": "_1exTdky9lER8ijgyeEX8UhHO6G8Va8huzMtqPKV4hU",
+        "body": "{\"status\":\"ok\",\"service\":\"opencodex\",\"version\":\"2.99.0\",\"instanceId\":\"home_5f868a34fd15456eb4791ead497124d2\",\"uptime\":11.335389800000002,\"pid\":19156,\"port\":59492,\"restartCapability\":\"v1\",\"providerReloadCapability\":\"v1\",\"asideSyncCapability\":\"v1\",\"guiPairCapability\":\"v2\"}"
+      },
+      "elapsedMs": 17,
+      "pass": true,
+      "identity": {
+        "pid": 19156,
+        "filetime": "134387754512495444",
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1024",
+        "session": 2,
+        "image": "C:\\Users\\ocx299b35d1d31b5\\official299-proof\\program\\node_modules\\@oven\\bun-windows-x64\\bin\\bun.exe",
+        "elevated": false,
+        "elevationType": 1
+      },
+      "challenge": "x1jirnUUKCWMh9yx9AvkycU0IRKYIKHEUIJ-g9PV8bM",
+      "ready": {
+        "status": 200,
+        "proof": null,
+        "body": "{\"service\":\"opencodex\",\"version\":\"2.99.0\",\"uptime\":11.3423465,\"pid\":19156,\"port\":59492,\"status\":\"ready\",\"protocol\":1,\"minimumClientProtocol\":1,\"managementUrl\":\"http://127.0.0.1:59492\",\"features\":[\"quota-pool/1\",\"fallback-policy/1\",\"link-management-relay\",\"served-by-header\",\"relay-auth/2\",\"link-peer-report/1\"]}"
+      }
+    },
+    "stop": null,
+    "firstError": {
+      "hresult": -2147024864,
+      "line": 11,
+      "message": "The process cannot access the file 'C:\\Users\\ocx299b35d1d31b5\\official299-proof\\codex\\.opencodex-native-main.owner.sqlite' because it is being used by another process.",
+      "stage": "status",
+      "type": "System.IO.IOException"
+    },
+    "counterexamples": [
+      {
+        "decision": "refused",
+        "stopRequests": 0,
+        "case": "wrong-pid"
+      },
+      {
+        "decision": "refused",
+        "stopRequests": 0,
+        "case": "wrong-filetime"
+      },
+      {
+        "decision": "refused",
+        "stopRequests": 0,
+        "case": "wrong-sid"
+      },
+      {
+        "decision": "refused",
+        "stopRequests": 0,
+        "case": "wrong-home"
+      },
+      {
+        "decision": "refused",
+        "stopRequests": 0,
+        "case": "wrong-homeIdentity"
+      },
+      {
+        "decision": "unknown",
+        "stopRequests": 0,
+        "case": "missing-proof"
+      },
+      {
+        "decision": "unknown-on-unreadable",
+        "actualWriteDenied": true,
+        "case": "write-locked-proof"
+      },
+      {
+        "decision": "refused",
+        "case": "signature-tampered"
+      }
+    ],
+    "cleanup": [
+      {
+        "exitCode": null,
+        "jobMembers": [
+          111176,
+          19156
+        ],
+        "kind": "before-forced-cleanup",
+        "jobActive": 2,
+        "originalExited": false
+      },
+      {
+        "exitCode": null,
+        "jobMembers": [],
+        "kind": "separate-forced-owned-job",
+        "jobActive": 0,
+        "normalStopUnchanged": true
+      }
+    ],
+    "budgetsMs": {
+      "status": 5000,
+      "stop": 10000,
+      "start": 30000
+    },
+    "utc": "2026-11-10T09:09:57.7207667Z",
+    "host": {
+      "pid": 74716,
+      "filetime": "134387753958354903",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1024",
+      "session": 2,
+      "image": "C:\\ProgramData\\ocxd299-proof-035cc55bf5\\powershell\\pwsh.exe",
+      "elevated": false,
+      "elevationType": 1
+    },
+    "hostSourceSha256": "d171df34654f7e93959d7d18d150c8fbd13c84385d6a899d7738c2c71a56df60",
+    "nativeSourceSha256": "fe16acc3af053f84d430f84500f1e7d145fba4cbd4419fc6dc09c6f23986c2e2",
+    "fixture": "C:\\Users\\ocx299b35d1d31b5\\official299-proof",
+    "privateRoot": {
+      "path": "C:\\Users\\ocx299b35d1d31b5\\official299-proof",
+      "sddl": "O:S-1-5-21-587408064-856152790-2583328096-1024G:S-1-5-21-587408064-856152790-2583328096-513D:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;S-1-5-21-587408064-856152790-2583328096-1024)",
+      "protected": true
+    },
+    "programReadOnlySddl": "O:S-1-5-21-587408064-856152790-2583328096-1024G:S-1-5-21-587408064-856152790-2583328096-513D:PAI(A;OICIIO;GA;;;SY)(A;;FA;;;SY)(A;OICIIO;GXGR;;;S-1-5-21-587408064-856152790-2583328096-1024)(A;;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1024)",
+    "package": {
+      "mismatches": [],
+      "archiveSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+      "bunSha256": "cb1d8e6564e655e49d30cead359750a1cbbd12f42651caa4b62244d7bd93c244",
+      "version": "2.99.0",
+      "lockSha256": "949232457be41cfe3e447e54fb3b21e9457e047cc9732407ee1aa2aa9a8350c2",
+      "filesCompared": 2664,
+      "privateProgram": "C:\\Users\\ocx299b35d1d31b5\\official299-proof\\program",
+      "bunVersion": "1.4.4"
+    },
+    "port": 59492,
+    "job": {
+      "breakawayAllowed": false,
+      "unnamed": true,
+      "retainedHandle": true,
+      "sddl": "O:S-1-5-21-587408064-856152790-2583328096-1024D:P(A;;GA;;;S-1-5-21-587408064-856152790-2583328096-1024)(A;;GA;;;SY)",
+      "limitFlags": 0
+    },
+    "runtime": {
+      "pid": 19156,
+      "filetime": "134387754512495444",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1024",
+      "session": 2,
+      "image": "C:\\Users\\ocx299b35d1d31b5\\official299-proof\\program\\node_modules\\@oven\\bun-windows-x64\\bin\\bun.exe",
+      "elevated": false,
+      "elevationType": 1
+    },
+    "binding": {
+      "sddl": "O:S-1-5-21-587408064-856152790-2583328096-1024G:S-1-5-21-587408064-856152790-2583328096-513D:AI(A;ID;FA;;;SY)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1024)",
+      "value": {
+        "home": "C:\\Users\\ocx299b35d1d31b5\\official299-proof\\runtime",
+        "pid": 19156,
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1024",
+        "schema": "official299-host-binding/1",
+        "homeIdentity": "247287385:131072:1130634",
+        "filetime": "134387754512495444"
+      },
+      "writeAndDeleteSharingDenied": true
+    }
+  },
+  "profileUnloaded": true,
+  "profileDeleted": true,
+  "accountDeleted": true,
+  "noScheduledTaskCreated": true,
+  "parent": {
+    "pid": 76616,
+    "filetime": "134387753672686534",
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+    "session": 2,
+    "image": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+    "elevated": true,
+    "elevationType": 2
+  },
+  "account": {
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1024",
+    "name": "ocx299b35d1d31b5"
+  },
+  "createProfileHResult": 0,
+  "profile": "C:\\Users\\ocx299b35d1d31b5",
+  "input": {
+    "archiveRoot": "C:\\ProgramData\\ocxd299-proof-035cc55bf5\\archive",
+    "bunVersion": "1.4.4",
+    "bunSha256": "cb1d8e6564e655e49d30cead359750a1cbbd12f42651caa4b62244d7bd93c244",
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1024",
+    "lockSha256": "949232457be41cfe3e447e54fb3b21e9457e047cc9732407ee1aa2aa9a8350c2",
+    "inputRoot": "C:\\ProgramData\\ocxd299-proof-035cc55bf5\\input",
+    "archiveSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+    "output": "C:\\ProgramData\\ocxd299-proof-035cc55bf5\\ordinary",
+    "profile": "C:\\Users\\ocx299b35d1d31b5"
+  },
+  "hostHashes": {
+    "powershell": "2a6769a3330dc1084d0154bfde7d164ab750ca7f700f313f9d417c1be78b2233",
+    "native": "fe16acc3af053f84d430f84500f1e7d145fba4cbd4419fc6dc09c6f23986c2e2",
+    "host": "d171df34654f7e93959d7d18d150c8fbd13c84385d6a899d7738c2c71a56df60",
+    "provisioner": "4127b6d1f6f145226f6ae2119f0620e9baeb97900ba65b87b8d96768a56f48bc"
+  },
+  "originalProfileHandleRetained": true,
+  "ordinaryOriginalIdentity": {
+    "pid": 74716,
+    "filetime": "134387753958354903",
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1024",
+    "session": 2,
+    "image": "C:\\ProgramData\\ocxd299-proof-035cc55bf5\\powershell\\pwsh.exe",
+    "elevated": false,
+    "elevationType": 1
+  },
+  "ordinaryOriginalExit": 1
+}
