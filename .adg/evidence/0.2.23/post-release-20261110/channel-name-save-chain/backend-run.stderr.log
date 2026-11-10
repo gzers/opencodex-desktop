@@ -1,0 +1,4 @@
+
+thread 'modules::model_config::config_file::v2::tests::predev024_actual_new_and_rename_name_chain' (150857831) panicked at src/modules/model_config/config_file_v2_tests.rs:797:141:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_protocol_missing", issues: [MatchIssueV2 { code: "model_protocol_missing", channel_id: Some("126f75ad-536f-48ec-8bfc-75d1c4081cb7"), raw_model_id: Some("gpt-6-sol"), field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["configure_model_protocol", "edit_template"] }] }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

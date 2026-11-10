@@ -1,0 +1,6 @@
+{
+  "initialFailure": "new enabled model had no chosen model protocol; real save correctly refused model_protocol_missing",
+  "correction": "add explicit per-model openai-chat protocol for new model through real ModelEditV2, no product guard/logic changed",
+  "existingRenameResult": "first ASCII rename saved before the next create failure; failed round retained",
+  "rerunScope": "affected diagnostic only"
+}

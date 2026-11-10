@@ -1,0 +1,145 @@
+{
+  "models": [
+    {
+      "slug": "Krill-New/gpt-6-sol",
+      "display_name": "Krill-New/gpt-6-sol",
+      "description": "Routed via opencodex → Krill-New (Krill-New).",
+      "shell_type": "unified_exec",
+      "visibility": "list",
+      "supported_in_api": true,
+      "priority": 1000,
+      "base_instructions": "You are a helpful coding assistant.",
+      "web_search_tool_type": "text_and_image",
+      "supports_search_tool": true,
+      "tool_mode": "code_mode_only",
+      "supported_reasoning_levels": [
+        {
+          "effort": "low",
+          "description": "Fast responses with lighter reasoning"
+        },
+        {
+          "effort": "medium",
+          "description": "Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "effort": "high",
+          "description": "Greater reasoning depth for complex problems"
+        },
+        {
+          "effort": "xhigh",
+          "description": "Extra high reasoning depth for complex problems"
+        },
+        {
+          "effort": "max",
+          "description": "Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "effort": "ultra",
+          "description": "Maximum reasoning with automatic task delegation"
+        }
+      ],
+      "default_reasoning_level": "medium",
+      "opencodex_capability_provenance": {
+        "provider": "Krill-New",
+        "model_id": "gpt-6-sol"
+      },
+      "node_repl_disabled": false,
+      "node_repl_auto_review_required": false,
+      "include_plugin_usage_instructions": false,
+      "include_apps_usage_instructions": true,
+      "supports_reasoning_summaries": false,
+      "default_reasoning_summary": "none",
+      "support_verbosity": true,
+      "default_verbosity": "low",
+      "apply_patch_tool_type": "freeform",
+      "truncation_policy": {
+        "mode": "tokens",
+        "limit": 10000
+      },
+      "supports_parallel_tool_calls": true,
+      "supports_image_detail_original": false,
+      "experimental_supported_tools": [],
+      "input_modalities": [
+        "text"
+      ],
+      "context_window": 128000,
+      "max_context_window": 128000,
+      "effective_context_window_percent": 95,
+      "comp_hash": null,
+      "auto_compact_token_limit": 115200,
+      "opencodex_spawn_priority": 5,
+      "auto_review_model_override": null
+    },
+    {
+      "slug": "Krill-New/vendor-custom",
+      "display_name": "Krill-New/vendor-custom",
+      "description": "Routed via opencodex → Krill-New (Krill-New).",
+      "shell_type": "unified_exec",
+      "visibility": "list",
+      "supported_in_api": true,
+      "priority": 1001,
+      "base_instructions": "You are a helpful coding assistant.",
+      "web_search_tool_type": "text_and_image",
+      "supports_search_tool": true,
+      "tool_mode": "code_mode_only",
+      "supported_reasoning_levels": [
+        {
+          "effort": "low",
+          "description": "Fast responses with lighter reasoning"
+        },
+        {
+          "effort": "medium",
+          "description": "Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "effort": "high",
+          "description": "Greater reasoning depth for complex problems"
+        },
+        {
+          "effort": "xhigh",
+          "description": "Extra high reasoning depth for complex problems"
+        },
+        {
+          "effort": "max",
+          "description": "Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "effort": "ultra",
+          "description": "Maximum reasoning with automatic task delegation"
+        }
+      ],
+      "default_reasoning_level": "medium",
+      "context_window": 4096,
+      "max_context_window": 4096,
+      "auto_compact_token_limit": 3686,
+      "opencodex_capability_provenance": {
+        "provider": "Krill-New",
+        "model_id": "vendor/custom",
+        "context_window": 4096
+      },
+      "node_repl_disabled": false,
+      "node_repl_auto_review_required": false,
+      "include_plugin_usage_instructions": false,
+      "include_apps_usage_instructions": true,
+      "supports_reasoning_summaries": false,
+      "default_reasoning_summary": "none",
+      "support_verbosity": true,
+      "default_verbosity": "low",
+      "apply_patch_tool_type": "freeform",
+      "truncation_policy": {
+        "mode": "tokens",
+        "limit": 10000
+      },
+      "supports_parallel_tool_calls": true,
+      "supports_image_detail_original": false,
+      "experimental_supported_tools": [],
+      "input_modalities": [
+        "text"
+      ],
+      "effective_context_window_percent": 95,
+      "comp_hash": null,
+      "opencodex_spawn_priority": 5,
+      "auto_review_model_override": null
+    }
+  ]
+}

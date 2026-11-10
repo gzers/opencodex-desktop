@@ -1,0 +1,39 @@
+{
+  "fixture": "/private/tmp/ocxd24rename-g175hyan",
+  "fixtureAbsent": true,
+  "logicalBytesRemoved": 170082291,
+  "testProcessGroups": [
+    62527,
+    63238,
+    63041
+  ],
+  "remainingTestProcesses": [],
+  "exactFixtureGlobalLocks": [
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/c6606fe04f6fa1f8a31341b78b1eb9364ebec12a723c475462c682307b0a8d67.sqlite",
+      "existed": true,
+      "sha256": "1ce3eef502d32cab4bfe4451ef344081d77ad13c8a24122394be0996c3d47e47",
+      "noOpenHandles": true,
+      "absentAfter": true
+    },
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/c6606fe04f6fa1f8a31341b78b1eb9364ebec12a723c475462c682307b0a8d67.sqlite-journal",
+      "existed": false,
+      "absentAfter": true
+    },
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/c6606fe04f6fa1f8a31341b78b1eb9364ebec12a723c475462c682307b0a8d67.sqlite-wal",
+      "existed": false,
+      "absentAfter": true
+    },
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/c6606fe04f6fa1f8a31341b78b1eb9364ebec12a723c475462c682307b0a8d67.sqlite-shm",
+      "existed": false,
+      "absentAfter": true
+    }
+  ],
+  "existingCacheRestored": "cache-restoration.json",
+  "dailyConfigModified": false,
+  "realModelOrBusinessRequest": false,
+  "officialSourcesModified": false
+}
