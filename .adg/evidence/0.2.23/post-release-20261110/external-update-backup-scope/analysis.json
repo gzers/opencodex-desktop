@@ -1,0 +1,83 @@
+{
+  "date": "2026-11-10T11:38:16.433244+08:00",
+  "scope": "source review only; no backup/export/import or current CLI executed",
+  "sourceRefs": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/official_version_source.rs",
+      "sha256": "e6314a2d0f22bb237030e74ae4cf5e922f551c327e734117d1c3ab23724fde02"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/about.rs",
+      "sha256": "939be348ccb29911f037ff14bd7bbd3b69b4d6e3e4095500025f23c6b357f1d6"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/mod.rs",
+      "sha256": "916aec9644ab514587f1c64a54157414c667de2f24fca6edef85a942cbb6eda3"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/store.ts",
+      "sha256": "3763d69fd461e909f1abcd93a93ac363453e110434c8427eba85d4ba7c363e37"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+      "sha256": "91849a16e4c2ad6f579b58b410d82a7fe4d62d79e5d60f649ee51c21314bc3e7"
+    },
+    {
+      "path": "apps/desktop/ui/src/stores/app.ts",
+      "sha256": "d260abe258a6b84542477c20fc37b9138f21bfbefbc4cf9731f9fa1f0ee0f21d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/upgrade.rs",
+      "sha256": "c34ca418b7dbfe335d51b28433c8c9747d3ba5310c1bbb7bc3fb631a7c1a0882"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/backup/manager.rs",
+      "sha256": "4070112893e55c8a754b1dee3ff3a9298c30b97a594d0e6f222a60f1a8a71708"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/transfer_backup.rs",
+      "sha256": "c9a9015fd4d12efe1fb402bb79f86c4a62105ea1cd9cf8aa40da1161498578f7"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/saved_objects_capture_v2.rs",
+      "sha256": "bb9c7363539c7a8a5c0cbb6b2a79fe20ce014d38447be20a529dd3b14ca7427f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/model_receive_file_v2.rs",
+      "sha256": "0b79242283b0c1b65d3258a952840a1b57358a9895d64460ea32c114182f9374"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/provider_auth.rs",
+      "sha256": "49cc378e9181a3cf49bcb8fdf113804e173b5122e974cd7814eb30c6b1c2c74c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/config_file.rs",
+      "sha256": "1187e80c81739f521ef0c41a7f25bda1a2006e996c9bac0171d2ff68fdbbcb41"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/file_transfer_v2.rs",
+      "sha256": "67c197a4df3564ac21ec57c0084f4b23bf7059f3a7f9e8e2b83ef3fefe0aac1b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/model_receive_file_v2_tests.rs",
+      "sha256": "a2eed71e8948df0964a7cd3eaed09822357c95cd33e135421742e6c8f9f7e85c"
+    }
+  ],
+  "versionFinding": {
+    "issueConfirmed": "external-updated actual package299 while managed/source records294 per prior independently collected snapshot",
+    "correction": "Not universally record-only: OfficialCliVersionSource executes controlled current ocx --version; updates uses officialProject.version, source cards may use stored fact. Refresh failure retains old officialProject+error; managed resolver can reject changed activation before any CLI probe.",
+    "proposal": "Separate actual installed package/entry version, proved live process version, recorded managed revision. External update invalidates freshness; check before offering/applying update, not overwrite managed proof from version string; distinguish changed identity and unsupported runtime from no updates."
+  },
+  "configBackupFinding": {
+    "genericUpgradeBackup": "commands/upgrade -> backup::manager::create_upgrade_observed backs only preferences target, not entire bound OpenCodex config. runtime update protection likewise preferences protection; cannot imply complete provider/key recovery.",
+    "scopedBackup": "transfer_backup::targets includes bound HOME/config.json when channel payload exists; whole raw file image is retained for recovery, independent from portable export selected-secret policy.",
+    "selectedSecretExport": "capture include_key or include_authorization reads selected credentials; no automatic every-secret export. Key scope is active key; authorization path includes supported pool/headers/etc.",
+    "secretApply": "model_receive_file materializes selected key/authorization to OfficialConfig, config_file credential row preserve-other-pool replace/explicit clear, file locks/transaction/readback already implemented",
+    "rawConfigImport": "file_transfer decode requires OCXDCONF format3, not arbitrary native raw config.json; manual placement/read-existing distinct from native file picker restoration.",
+    "missing": "clear supported native config file import/full snapshot restore UX + accurate backup scope and299 integration proof; not blanket write permission to app/home folders.",
+    "proposal": "Before panel update/complete config restore protect actual bound HOME/config.json with full credentials and structural validation. Recover only current-owned authorized targets, keep unselected fields, complete parse/readback and optional service reload. External secret stores need separate support/explicit limits, JSON not everything."
+  },
+  "nativeValidation": "not rerun; existing source tests inspected, no claim current299 full credentials roundtrip acceptance",
+  "dailyDataChanged": false,
+  "status": "new issue07 external update state drift; issue08 upgrade backup scope gap; existing03/04 credential handling linked without duplication"
+}
