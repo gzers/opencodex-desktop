@@ -1,0 +1,5 @@
+import {join} from 'node:path';import {writeFileSync} from 'node:fs';import assert from 'node:assert/strict';
+const {validateConfigCandidate}=await import(join(process.env.OFFICIAL_SRC!,'config/diagnostics.ts'));
+const id='vendor-'+('x'.repeat(75));const raw:any={port:55581,defaultProvider:'fixture',providers:{fixture:{adapter:'openai-responses',baseUrl:'https://fixture.invalid/v1',apiKey:'synthetic-never-sent',liveModels:false,models:[id],selectedModels:[id]}},syncResumeHistory:false};
+const baseline=validateConfigCandidate(raw);const combo=JSON.parse(JSON.stringify(raw));combo.combos={ocxd_view_long:{strategy:'failover',alias:'fixture/'+id,displayName:'Long/'+id,targets:[{provider:'fixture',model:id}]}};const modified=validateConfigCandidate(combo);
+const result={modelIdLength:id.length,baselineProviderModelIdAllowed:baseline.ok,baselineError:baseline.ok?null:baseline.error,comboSchemaAccepted:modified.ok,comboError:modified.ok?null:modified.error};writeFileSync(join(process.env.PROBE_ROOT!,'out/long-id-validated.json'),JSON.stringify(result,null,2));assert(baseline.ok);assert(!modified.ok);console.log(JSON.stringify(result));

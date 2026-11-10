@@ -1,7 +1,7 @@
 {
   "scope": "post023 official299 feasibility validation; no production development or real user settings changed",
   "nameProjection": {
-    "status": "feasibility-prototype-passed",
+    "status": "controlled-launch-feasibility-passed; default-client-production-design-not-frozen",
     "realConfigLoadCases": 14,
     "realRouteProjectionCases": 12,
     "nativeRowPreserved": true,
@@ -11,7 +11,8 @@
     "limits": [
       "requires Desktop-controlled client invocation to select independent catalog via explicit override",
       "standalone manually opened Codex App GUI launch path not verified",
-      "post-save refresh, restart and recovery integration remains to implement and verify"
+      "post-save refresh, restart and recovery integration remains to implement and verify",
+      "official single-target combo preserves target/name but changes routeKind/capability/source and restricts long model IDs; not adopted as transparent display repair"
     ]
   },
   "windowsLifecycle": {
@@ -122,7 +123,7 @@
   },
   "implementationChecklist": {
     "status": "existing adopted UX updated; remaining gates and prototype source now linked; no formal IMP freeze or release readiness claim",
-    "version": "tentative 0.2.24"
+    "version": "0.2.24"
   },
   "windowsHandoff": {
     "revision": 1,
@@ -141,6 +142,11 @@
     "actualGuiVerified": false,
     "guiLimit": "isolated private instance refused at Chromium singleton socket directory; daily instance/config untouched",
     "allPrerequisitesClosed": false,
-    "next": "redesign default GUI name projection selection/publication boundary; freeze v2 intent-preserving reconciliation contract; no Windows recovery rerun"
+    "next": "User decision required before revisiting unchanged official299 boundary; current name design not frozen. Remaining scope/implementation dependency and conditional acceptance recorded in docs matrix; no repeated Windows single-user test.",
+    "officialComboNameCases": 4,
+    "officialComboTransparentRepairAccepted": false,
+    "officialComboLongIdCounterexample": "82-character model ID valid in provider config, invalid as combo alias; independently asserted",
+    "shortPrivateGuiAttempt": "exit21 same ProcessSingleton socket directory failure; no GUI",
+    "nameRuntimeBoundaryChangeAdopted": false
   }
 }

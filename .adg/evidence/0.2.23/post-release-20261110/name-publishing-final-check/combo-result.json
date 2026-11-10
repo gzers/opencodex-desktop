@@ -1,0 +1,291 @@
+{
+  "scope": "official299 full config validation/load/catalog refresh plus route preview; no source patch/inference",
+  "cases": [
+    {
+      "name": "Krill-Renamed",
+      "slug": "fixture/gpt-6.1-sol",
+      "label": "Krill-Renamed/gpt-6.1-sol",
+      "provider": "fixture",
+      "modelId": "gpt-6.1-sol",
+      "routeKind": "combo",
+      "refreshOutcome": "committed",
+      "entryChanges": [
+        "display_name",
+        "description",
+        "supported_reasoning_levels",
+        "opencodex_capability_provenance",
+        "owned_by"
+      ],
+      "beforeSelectedFields": {
+        "display_name": "fixture/gpt-6.1-sol",
+        "description": "Routed via opencodex → fixture (fixture).",
+        "supported_reasoning_levels": [
+          {
+            "effort": "low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "effort": "medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "effort": "high",
+            "description": "Greater reasoning depth for complex problems"
+          },
+          {
+            "effort": "max",
+            "description": "Maximum reasoning depth for the hardest problems"
+          },
+          {
+            "effort": "ultra",
+            "description": "Maximum reasoning with automatic task delegation"
+          }
+        ],
+        "opencodex_capability_provenance": {
+          "provider": "fixture",
+          "model_id": "gpt-6.1-sol",
+          "context_window": 128000
+        },
+        "owned_by": null
+      },
+      "afterSelectedFields": {
+        "display_name": "Krill-Renamed/gpt-6.1-sol",
+        "description": "Routed via opencodex → combo (combo).",
+        "supported_reasoning_levels": [
+          {
+            "effort": "low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "effort": "medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "effort": "high",
+            "description": "Greater reasoning depth for complex problems"
+          }
+        ],
+        "opencodex_capability_provenance": null,
+        "owned_by": "combo"
+      }
+    },
+    {
+      "name": "中文渠道",
+      "slug": "fixture/gpt-6.1-sol",
+      "label": "中文渠道/gpt-6.1-sol",
+      "provider": "fixture",
+      "modelId": "gpt-6.1-sol",
+      "routeKind": "combo",
+      "refreshOutcome": "committed",
+      "entryChanges": [
+        "display_name",
+        "description",
+        "supported_reasoning_levels",
+        "opencodex_capability_provenance",
+        "owned_by"
+      ],
+      "beforeSelectedFields": {
+        "display_name": "fixture/gpt-6.1-sol",
+        "description": "Routed via opencodex → fixture (fixture).",
+        "supported_reasoning_levels": [
+          {
+            "effort": "low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "effort": "medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "effort": "high",
+            "description": "Greater reasoning depth for complex problems"
+          },
+          {
+            "effort": "max",
+            "description": "Maximum reasoning depth for the hardest problems"
+          },
+          {
+            "effort": "ultra",
+            "description": "Maximum reasoning with automatic task delegation"
+          }
+        ],
+        "opencodex_capability_provenance": {
+          "provider": "fixture",
+          "model_id": "gpt-6.1-sol",
+          "context_window": 128000
+        },
+        "owned_by": null
+      },
+      "afterSelectedFields": {
+        "display_name": "中文渠道/gpt-6.1-sol",
+        "description": "Routed via opencodex → combo (combo).",
+        "supported_reasoning_levels": [
+          {
+            "effort": "low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "effort": "medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "effort": "high",
+            "description": "Greater reasoning depth for complex problems"
+          }
+        ],
+        "opencodex_capability_provenance": null,
+        "owned_by": "combo"
+      }
+    },
+    {
+      "name": "Team One",
+      "slug": "fixture/gpt-6.1-sol",
+      "label": "Team One/gpt-6.1-sol",
+      "provider": "fixture",
+      "modelId": "gpt-6.1-sol",
+      "routeKind": "combo",
+      "refreshOutcome": "committed",
+      "entryChanges": [
+        "display_name",
+        "description",
+        "supported_reasoning_levels",
+        "opencodex_capability_provenance",
+        "owned_by"
+      ],
+      "beforeSelectedFields": {
+        "display_name": "fixture/gpt-6.1-sol",
+        "description": "Routed via opencodex → fixture (fixture).",
+        "supported_reasoning_levels": [
+          {
+            "effort": "low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "effort": "medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "effort": "high",
+            "description": "Greater reasoning depth for complex problems"
+          },
+          {
+            "effort": "max",
+            "description": "Maximum reasoning depth for the hardest problems"
+          },
+          {
+            "effort": "ultra",
+            "description": "Maximum reasoning with automatic task delegation"
+          }
+        ],
+        "opencodex_capability_provenance": {
+          "provider": "fixture",
+          "model_id": "gpt-6.1-sol",
+          "context_window": 128000
+        },
+        "owned_by": null
+      },
+      "afterSelectedFields": {
+        "display_name": "Team One/gpt-6.1-sol",
+        "description": "Routed via opencodex → combo (combo).",
+        "supported_reasoning_levels": [
+          {
+            "effort": "low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "effort": "medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "effort": "high",
+            "description": "Greater reasoning depth for complex problems"
+          }
+        ],
+        "opencodex_capability_provenance": null,
+        "owned_by": "combo"
+      }
+    },
+    {
+      "name": "团队/海外",
+      "slug": "fixture/gpt-6.1-sol",
+      "label": "团队/海外/gpt-6.1-sol",
+      "provider": "fixture",
+      "modelId": "gpt-6.1-sol",
+      "routeKind": "combo",
+      "refreshOutcome": "committed",
+      "entryChanges": [
+        "display_name",
+        "description",
+        "supported_reasoning_levels",
+        "opencodex_capability_provenance",
+        "owned_by"
+      ],
+      "beforeSelectedFields": {
+        "display_name": "fixture/gpt-6.1-sol",
+        "description": "Routed via opencodex → fixture (fixture).",
+        "supported_reasoning_levels": [
+          {
+            "effort": "low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "effort": "medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "effort": "high",
+            "description": "Greater reasoning depth for complex problems"
+          },
+          {
+            "effort": "max",
+            "description": "Maximum reasoning depth for the hardest problems"
+          },
+          {
+            "effort": "ultra",
+            "description": "Maximum reasoning with automatic task delegation"
+          }
+        ],
+        "opencodex_capability_provenance": {
+          "provider": "fixture",
+          "model_id": "gpt-6.1-sol",
+          "context_window": 128000
+        },
+        "owned_by": null
+      },
+      "afterSelectedFields": {
+        "display_name": "团队/海外/gpt-6.1-sol",
+        "description": "Routed via opencodex → combo (combo).",
+        "supported_reasoning_levels": [
+          {
+            "effort": "low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "effort": "medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "effort": "high",
+            "description": "Greater reasoning depth for complex problems"
+          }
+        ],
+        "opencodex_capability_provenance": null,
+        "owned_by": "combo"
+      }
+    }
+  ],
+  "baseline": {
+    "slug": "fixture/gpt-6.1-sol",
+    "label": "fixture/gpt-6.1-sol",
+    "routeKind": "explicit-provider",
+    "provider": "fixture",
+    "modelId": "gpt-6.1-sol"
+  },
+  "longId": {
+    "length": 82,
+    "baselineProviderModelIdAllowed": true,
+    "comboSchemaAccepted": false,
+    "error": "schema_invalid: combos.ocxd_view_long.alias: alias must use letters, numbers, dot, underscore, or hyphen, with at most one \"/\" segment"
+  },
+  "status": "completed"
+}
