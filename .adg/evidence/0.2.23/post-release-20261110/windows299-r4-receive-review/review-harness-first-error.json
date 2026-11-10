@@ -1,0 +1,4 @@
+{
+  "error": "Receiver initially looked for Length inside Image; actual schema stores Length on capture row. Source evidence unmodified.",
+  "corrected": "Receiver now checks row.Length plus raw byte digest and per-stage ledger; all37pass"
+}

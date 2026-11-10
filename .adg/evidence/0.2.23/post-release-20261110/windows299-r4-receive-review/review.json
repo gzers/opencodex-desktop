@@ -1,0 +1,241 @@
+{
+  "docsCommit": "aabbe19f0ba67b9dfa01db06b72b7bcba9ff0de0",
+  "codeDeliveryCommit": "8309837173f06e9d08bf08f4fe347f407885f310",
+  "actualServiceCommit": "df66f5bba5d20f387a143acc1e94fa6fa9aa9d90",
+  "manifestFilesVerified": 65,
+  "bytes": 5714521,
+  "actualSourceHashesVerified": 8,
+  "offlineVerifierExit": 0,
+  "summaryExactMatch": true,
+  "independentRawRoundTrips": [
+    {
+      "stage": "before",
+      "path": "codex/config.toml",
+      "size": 166,
+      "sha256": "3a7b8f1c4a82247df659832275bc4d717d151c97c0a75d5dd3c0be6d979657e8"
+    },
+    {
+      "stage": "before",
+      "path": "codex/opencodex-catalog.json",
+      "size": 294198,
+      "sha256": "cfab95ffae957d49aa3ebe4520db56774a7339c77da67668b0222ce77e93d6f5"
+    },
+    {
+      "stage": "before",
+      "path": "codex/auth.json",
+      "size": 55,
+      "sha256": "f9e13beadacfe3ba21722f896c68d34ceda0cbd1edefa55b824cae832f7a9e3e"
+    },
+    {
+      "stage": "before",
+      "path": "claude/settings.json",
+      "size": 47,
+      "sha256": "a7ed528018cdeaafbfb546a44b6748fb81d8ee669f6f3722a4dca088c4f9d45f"
+    },
+    {
+      "stage": "before",
+      "path": "grok/config.toml",
+      "size": 122,
+      "sha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe"
+    },
+    {
+      "stage": "ready",
+      "path": "codex/config.toml",
+      "size": 348,
+      "sha256": "5f6d42034e89ff1847030200702730ad30e462e1d3c6bee01d514b895114b1d5"
+    },
+    {
+      "stage": "ready",
+      "path": "codex/opencodex-catalog.json",
+      "size": 2375,
+      "sha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51"
+    },
+    {
+      "stage": "ready",
+      "path": "codex/models_cache.json",
+      "size": 2375,
+      "sha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51"
+    },
+    {
+      "stage": "ready",
+      "path": "codex/opencodex-catalog-audit.jsonl",
+      "size": 286,
+      "sha256": "3949c0815b4b2152c323d93619db311554f4e10ecd25bba553569d23169c0469"
+    },
+    {
+      "stage": "ready",
+      "path": "grok/config.toml.bak-opencodex",
+      "size": 122,
+      "sha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe"
+    },
+    {
+      "stage": "ready",
+      "path": "codex/auth.json",
+      "size": 55,
+      "sha256": "f9e13beadacfe3ba21722f896c68d34ceda0cbd1edefa55b824cae832f7a9e3e"
+    },
+    {
+      "stage": "ready",
+      "path": "claude/settings.json",
+      "size": 47,
+      "sha256": "a7ed528018cdeaafbfb546a44b6748fb81d8ee669f6f3722a4dca088c4f9d45f"
+    },
+    {
+      "stage": "ready",
+      "path": "grok/config.toml",
+      "size": 8650,
+      "sha256": "042f94c048a70f412b7cc9eb099e271c156f55a8358654a850fd0fb4c0a5775c"
+    },
+    {
+      "stage": "pre-stop",
+      "path": "codex/config.toml",
+      "size": 348,
+      "sha256": "5f6d42034e89ff1847030200702730ad30e462e1d3c6bee01d514b895114b1d5"
+    },
+    {
+      "stage": "pre-stop",
+      "path": "codex/opencodex-catalog.json",
+      "size": 2375,
+      "sha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51"
+    },
+    {
+      "stage": "pre-stop",
+      "path": "codex/models_cache.json",
+      "size": 2375,
+      "sha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51"
+    },
+    {
+      "stage": "pre-stop",
+      "path": "codex/opencodex-catalog-audit.jsonl",
+      "size": 286,
+      "sha256": "3949c0815b4b2152c323d93619db311554f4e10ecd25bba553569d23169c0469"
+    },
+    {
+      "stage": "pre-stop",
+      "path": "grok/config.toml.bak-opencodex",
+      "size": 122,
+      "sha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe"
+    },
+    {
+      "stage": "pre-stop",
+      "path": "codex/auth.json",
+      "size": 55,
+      "sha256": "f9e13beadacfe3ba21722f896c68d34ceda0cbd1edefa55b824cae832f7a9e3e"
+    },
+    {
+      "stage": "pre-stop",
+      "path": "claude/settings.json",
+      "size": 47,
+      "sha256": "a7ed528018cdeaafbfb546a44b6748fb81d8ee669f6f3722a4dca088c4f9d45f"
+    },
+    {
+      "stage": "pre-stop",
+      "path": "grok/config.toml",
+      "size": 8650,
+      "sha256": "042f94c048a70f412b7cc9eb099e271c156f55a8358654a850fd0fb4c0a5775c"
+    },
+    {
+      "stage": "official-stop",
+      "path": "codex/config.toml",
+      "size": 65,
+      "sha256": "cba8830e7bd0df1cc8f54b63a1ff1bd75e9af34a7d46c2cf756d7064c9c0d2ca"
+    },
+    {
+      "stage": "official-stop",
+      "path": "codex/opencodex-catalog.json",
+      "size": 275337,
+      "sha256": "07a99e78c40f29b3aba65ae99eb7dd789670616d8a3c6b8dc2c558d77ab207de"
+    },
+    {
+      "stage": "official-stop",
+      "path": "codex/models_cache.json",
+      "size": 2375,
+      "sha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51"
+    },
+    {
+      "stage": "official-stop",
+      "path": "codex/opencodex-catalog-audit.jsonl",
+      "size": 286,
+      "sha256": "3949c0815b4b2152c323d93619db311554f4e10ecd25bba553569d23169c0469"
+    },
+    {
+      "stage": "official-stop",
+      "path": "grok/config.toml.bak-opencodex",
+      "size": 122,
+      "sha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe"
+    },
+    {
+      "stage": "official-stop",
+      "path": "codex/auth.json",
+      "size": 55,
+      "sha256": "f9e13beadacfe3ba21722f896c68d34ceda0cbd1edefa55b824cae832f7a9e3e"
+    },
+    {
+      "stage": "official-stop",
+      "path": "claude/settings.json",
+      "size": 47,
+      "sha256": "a7ed528018cdeaafbfb546a44b6748fb81d8ee669f6f3722a4dca088c4f9d45f"
+    },
+    {
+      "stage": "official-stop",
+      "path": "grok/config.toml",
+      "size": 122,
+      "sha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe"
+    },
+    {
+      "stage": "failure-finally",
+      "path": "codex/config.toml",
+      "size": 65,
+      "sha256": "cba8830e7bd0df1cc8f54b63a1ff1bd75e9af34a7d46c2cf756d7064c9c0d2ca"
+    },
+    {
+      "stage": "failure-finally",
+      "path": "codex/opencodex-catalog.json",
+      "size": 275337,
+      "sha256": "07a99e78c40f29b3aba65ae99eb7dd789670616d8a3c6b8dc2c558d77ab207de"
+    },
+    {
+      "stage": "failure-finally",
+      "path": "codex/models_cache.json",
+      "size": 2375,
+      "sha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51"
+    },
+    {
+      "stage": "failure-finally",
+      "path": "codex/opencodex-catalog-audit.jsonl",
+      "size": 286,
+      "sha256": "3949c0815b4b2152c323d93619db311554f4e10ecd25bba553569d23169c0469"
+    },
+    {
+      "stage": "failure-finally",
+      "path": "grok/config.toml.bak-opencodex",
+      "size": 122,
+      "sha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe"
+    },
+    {
+      "stage": "failure-finally",
+      "path": "codex/auth.json",
+      "size": 55,
+      "sha256": "f9e13beadacfe3ba21722f896c68d34ceda0cbd1edefa55b824cae832f7a9e3e"
+    },
+    {
+      "stage": "failure-finally",
+      "path": "claude/settings.json",
+      "size": 47,
+      "sha256": "a7ed528018cdeaafbfb546a44b6748fb81d8ee669f6f3722a4dca088c4f9d45f"
+    },
+    {
+      "stage": "failure-finally",
+      "path": "grok/config.toml",
+      "size": 122,
+      "sha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe"
+    }
+  ],
+  "structuredAnalyzerReexecutionExit": 0,
+  "structuredAnalysisExactMatch": true,
+  "controlledCacheByteAndIdentityContinuityVerified": true,
+  "cacheContainsFixtureRoutedModel": true,
+  "accepted": false,
+  "scope": "Git bytes, source/receipt and synthetic afterimage consistency; not Mac Windows rerun",
+  "snapshot": "/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd299-r4-review-qgz0zpe_"
+}
