@@ -1,0 +1,36 @@
+{
+  "result": "pass",
+  "checks": [
+    "actual official create/overwrite/prune restored by bounded operation write-set",
+    "user-owned prefixed file preserved",
+    "official disable setting prunes prior generated files so is not restoration",
+    "concurrent rejects entire preflight without overwriting earlier items",
+    "symlink rejects entire preflight without overwriting earlier items",
+    "hardlink rejects entire preflight without overwriting earlier items",
+    "unexpected user file kept; full-tree mismatch must remain failure"
+  ],
+  "beforeFileCount": 4,
+  "operationChanges": [
+    {
+      "name": "ocx-old.md",
+      "before": "cd53c79aef0686a0abe93bbf9e18079cf9611d6ba8486bfcb5f49980ed7b4861",
+      "after": null
+    },
+    {
+      "name": "ocx-shared.md",
+      "before": "72048da24312b68ebc344af9d8b136f6c8df37b405793cfab3e300ed4e2f44cb",
+      "after": "091059ea5bfa53676c92289d1fdab644a95b12d322e6e883e68c603bf71bb398"
+    },
+    {
+      "name": "ocx-new.md",
+      "before": null,
+      "after": "88a59cc92e911e761c6b5e1f70b876bf130d3dd1be71b42ae512b699d0ed6c0f"
+    }
+  ],
+  "limits": [
+    "Synthetic files only; actual official producer API exercised",
+    "Candidate write-set algorithm is not integrated Desktop code",
+    "No Windows exclusive handle race-proof or crash transaction validation; these must precede native acceptance",
+    "No broad prefix cleanup or deletion of stable lock files"
+  ]
+}

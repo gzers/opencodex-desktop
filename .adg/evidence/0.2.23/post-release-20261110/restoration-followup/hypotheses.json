@@ -1,0 +1,10 @@
+{
+  "beforeRun": true,
+  "scope": "isolated official APIs and bounded filesystem algorithm prototypes only",
+  "claims": [
+    "generated Agent definitions require a per-operation before/after write-set to restore overwritten/deleted originals and remove only newly-owned unmodified files",
+    "disabling official injectAgents alone prunes old generated files and is not an original-tree restoration solution",
+    "official stable locks can release cross-process SQLite exclusion while retaining the same file identity; unlink is not needed for release",
+    "valid Grok fixture must prove actual injection before restoration is counted"
+  ]
+}

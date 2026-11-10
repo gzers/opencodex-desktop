@@ -1,0 +1,29 @@
+{
+  "result": "pass",
+  "checks": [
+    "two real independent processes contend on retained official stable path",
+    "release closes SQLite transaction and handle without unlink",
+    "new process acquires after release on same inode"
+  ],
+  "cases": [
+    {
+      "name": ".opencodex-native-main.claim.sqlite",
+      "whileHeld": "contended",
+      "afterRelease": "acquired",
+      "inodePreserved": true,
+      "fileRetained": true
+    },
+    {
+      "name": ".opencodex-native-main.owner.sqlite",
+      "whileHeld": "contended",
+      "afterRelease": "acquired",
+      "inodePreserved": true,
+      "fileRetained": true
+    }
+  ],
+  "scope": "official stable lock helper + real cross-process Bun SQLite; POSIX host only",
+  "limits": [
+    "Windows file identity, DACL and full owner/claim API probes remain native work",
+    "No adopted acceptance exception; full-tree original failure stays false"
+  ]
+}
