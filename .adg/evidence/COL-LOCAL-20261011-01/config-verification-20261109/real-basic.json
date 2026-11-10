@@ -1,0 +1,92 @@
+{
+  "atUtc": "2026-11-09T13:02:17.725695+00:00",
+  "route": "http://127.0.0.1:10100/v1/responses",
+  "requestedModel": "Krill-1/gpt-6.1-terra",
+  "scenario": "basic",
+  "syntheticInputOnly": true,
+  "credentialsRead": false,
+  "dailyConfigModified": false,
+  "maxOutputTokens": 512,
+  "scriptSha256": "e47a7ff3bba2516e4cf770679ceb141698c957e65cafc00356cb237a4a167b9a",
+  "actualClientRequests": 1,
+  "checks": [
+    {
+      "id": "real_basic_response",
+      "status": "passed",
+      "scope": "requested route and synthetic task only; catalog presence is not proof of service availability"
+    }
+  ],
+  "proxyIdentity": {
+    "service": "opencodex",
+    "version": "2.97.0",
+    "pid": 58713
+  },
+  "httpStatus": 200,
+  "responseStatus": "completed",
+  "servedModel": "gpt-6.1-terra",
+  "syntheticOutput": "PROBE_OK",
+  "usage": {
+    "input_tokens": 4111,
+    "input_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0
+    },
+    "output_tokens": 7,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 4118,
+    "attribution": {
+      "items": {
+        "msg_044b1868734474bd016af1c45b60d087d09d57d7dc229d6fb6": {
+          "input_tokens": 21,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0,
+          "content": [
+            {
+              "input_tokens": 21,
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "output_tokens": 0
+            }
+          ]
+        },
+        "msg_044b1868734474bd016af1c45c07a087d0bac0fc8aa987c619": {
+          "input_tokens": 2,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 7,
+          "content": [
+            {
+              "input_tokens": 2,
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "output_tokens": 7
+            }
+          ]
+        },
+        "msg_b8fd3f57-6e53-5bb5-aeb8-1c5f2f05c2ff": {
+          "input_tokens": 4088,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0,
+          "content": [
+            {
+              "input_tokens": 4088,
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "output_tokens": 0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "outputKinds": [
+    "message"
+  ],
+  "serviceTier": "default",
+  "status": "passed",
+  "elapsedSeconds": 2.609
+}

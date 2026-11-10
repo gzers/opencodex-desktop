@@ -1,0 +1,128 @@
+{
+  "atUtc": "2026-11-09T13:24:33.262835+00:00",
+  "phase": "catalog",
+  "transport": "direct",
+  "origin": "https://api.kbsfdxc.net",
+  "prefix": "/backend-api/codex",
+  "proxy": null,
+  "session": "fe2ebc1d-0376-422d-8c57-495ffda2c3b6",
+  "syntheticSessionOnly": true,
+  "dailyConfigModified": false,
+  "calls": [
+    {
+      "id": "native_catalog",
+      "url": "https://api.kbsfdxc.net/backend-api/codex/models",
+      "method": "GET",
+      "http": 200,
+      "contentType": "application/json",
+      "models": [
+        {
+          "slug": "gpt-6.1-sol",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "2x speed, increased usage"
+            },
+            {
+              "id": "ultrafast",
+              "name": "Ultrafast",
+              "description": "The fastest available responses for latency-sensitive work."
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "gpt-6-astra",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "2x speed, increased usage"
+            },
+            {
+              "id": "ultrafast",
+              "name": "Ultrafast",
+              "description": "The fastest available responses for latency-sensitive work."
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "gpt-6.1-terra",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "1.5x speed"
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "gpt-6-sol",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "1.5x speed"
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "gpt-5.6-sol",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "1.5x speed, increased usage"
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "gpt-5.6-terra",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "1.5x speed, increased usage"
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "gpt-5.6-luna",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "1.5x speed, increased usage"
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "codex-auto-review",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "1.5x speed, increased usage"
+            }
+          ],
+          "supports_experimental_context": false
+        }
+      ],
+      "status": "passed",
+      "elapsedSeconds": 2.441
+    }
+  ],
+  "tlsCertificateVerification": true,
+  "scriptSha256": "687df31249161f8282c737a84b33bc44e44861497848d2e7cc3d1a38c9c97073",
+  "configSha256Before": "0a0ec45ae79a2960ed39fb45712481a7862f7b87b5dbfbf8e7ba922bbe27da3e",
+  "configSha256After": "0a0ec45ae79a2960ed39fb45712481a7862f7b87b5dbfbf8e7ba922bbe27da3e",
+  "configUnchanged": true,
+  "completed": true
+}

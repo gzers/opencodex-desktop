@@ -1,0 +1,185 @@
+{
+  "atUtc": "2026-11-09T13:10:18.791847+00:00",
+  "codexVersion": "codex-cli 0.167.0-alpha.3.2",
+  "opencodexVersion": "2.97.0",
+  "model": "Krill-1/gpt-6.1-terra",
+  "effort": "low",
+  "isolatedChecks": 36,
+  "isolatedResults": {
+    "passed": 36
+  },
+  "isolatedChecksIncludeExpectedRejections": true,
+  "realClientModelRequests": 12,
+  "realCompletedResponses": 11,
+  "realRejectedModelRequests": 1,
+  "reportedTokenUsage": {
+    "input_tokens": 86572,
+    "output_tokens": 321,
+    "total_tokens": 86893
+  },
+  "realRequests": [
+    {
+      "source": "real-basic.json",
+      "label": "basic",
+      "usage": {
+        "input_tokens": 4111,
+        "output_tokens": 7,
+        "total_tokens": 4118
+      },
+      "completed": true,
+      "effort": "low"
+    },
+    {
+      "source": "real-search.json",
+      "label": "search",
+      "usage": {
+        "input_tokens": 8708,
+        "output_tokens": 54,
+        "total_tokens": 8762
+      },
+      "completed": true,
+      "effort": "low"
+    },
+    {
+      "source": "real-feature-round.json",
+      "label": "tier_priority",
+      "usage": {
+        "input_tokens": 4109,
+        "output_tokens": 7,
+        "total_tokens": 4116
+      },
+      "completed": true,
+      "effort": "low"
+    },
+    {
+      "source": "real-feature-round.json",
+      "label": "tier_ultrafast",
+      "usage": {},
+      "completed": false,
+      "effort": "low"
+    },
+    {
+      "source": "real-feature-round.json",
+      "label": "tool_request",
+      "usage": {
+        "input_tokens": 4231,
+        "output_tokens": 35,
+        "total_tokens": 4266
+      },
+      "completed": true,
+      "effort": "low"
+    },
+    {
+      "source": "real-feature-round.json",
+      "label": "tool_result",
+      "usage": {
+        "input_tokens": 4291,
+        "output_tokens": 7,
+        "total_tokens": 4298
+      },
+      "completed": true,
+      "effort": "low"
+    },
+    {
+      "source": "real-feature-round.json",
+      "label": "compact",
+      "usage": {
+        "input_tokens": 4215,
+        "output_tokens": 56,
+        "total_tokens": 4271
+      },
+      "completed": true,
+      "effort": "low"
+    },
+    {
+      "source": "real-feature-round.json",
+      "label": "compact_continue",
+      "usage": {
+        "input_tokens": 4238,
+        "output_tokens": 9,
+        "total_tokens": 4247
+      },
+      "completed": true,
+      "effort": "low"
+    },
+    {
+      "source": "real-native-child-catalog.json",
+      "label": "parent0",
+      "usage": {
+        "input_tokens": 13084,
+        "output_tokens": 54,
+        "total_tokens": 13138
+      },
+      "completed": true,
+      "effort": "low"
+    },
+    {
+      "source": "real-native-child-catalog.json",
+      "label": "parent1",
+      "usage": {
+        "input_tokens": 15424,
+        "output_tokens": 78,
+        "total_tokens": 15502
+      },
+      "completed": true,
+      "effort": "low"
+    },
+    {
+      "source": "real-native-child-catalog.json",
+      "label": "child2",
+      "usage": {
+        "input_tokens": 8547,
+        "output_tokens": 7,
+        "total_tokens": 8554
+      },
+      "completed": true,
+      "effort": "low"
+    },
+    {
+      "source": "real-native-child-catalog.json",
+      "label": "parent3",
+      "usage": {
+        "input_tokens": 15614,
+        "output_tokens": 7,
+        "total_tokens": 15621
+      },
+      "completed": true,
+      "effort": "low"
+    }
+  ],
+  "extraWebSocketHandshake": {
+    "http": 426,
+    "configuredWebsockets": false,
+    "outcome": "not_enabled_on_live_ingress"
+  },
+  "dailyFiles": [
+    {
+      "path": "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/opencodex-home/config.json",
+      "sha256Before": "e8ded9b9cea1762226c81f91f0a0fb76c665ec8e7438159b79c9912cf0cdc03b",
+      "sha256After": "e8ded9b9cea1762226c81f91f0a0fb76c665ec8e7438159b79c9912cf0cdc03b",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/ezio/.codex/config.toml",
+      "sha256Before": "bb9ebcd18231fc253fcf972ba2f4cbe6375736dd083577a5dbd99c590df7fd23",
+      "sha256After": "bb9ebcd18231fc253fcf972ba2f4cbe6375736dd083577a5dbd99c590df7fd23",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/ezio/.codex/opencodex-catalog.json",
+      "sha256Before": "8a216c79174944cff719efa8927486cb1925c6ec49c81dca274cbc8c56480f39",
+      "sha256After": "8a216c79174944cff719efa8927486cb1925c6ec49c81dca274cbc8c56480f39",
+      "unchanged": true
+    }
+  ],
+  "sourceNotes": "source-notes.json",
+  "initialNativeFixture": "real-native-child.json",
+  "nativeFixtureCorrection": "Loaded unchanged target model metadata with code_mode_only, then real parent and child both completed. Initial missing-catalog probe is not a product failure.",
+  "ownedTemporaryDirectoriesRemaining": [],
+  "documentAndEvidenceChecks": {
+    "localLinks": 17,
+    "checklistItems": 15,
+    "countsConsistent": true,
+    "dailyConfigAndCatalogUnchanged": true
+  }
+}

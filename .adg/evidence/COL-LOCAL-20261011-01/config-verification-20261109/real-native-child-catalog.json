@@ -1,0 +1,133 @@
+{
+  "atUtc": "2026-11-09T13:08:36.430269+00:00",
+  "model": "Krill-1/gpt-6.1-terra",
+  "effort": "low",
+  "syntheticParent": false,
+  "realChildForwarding": true,
+  "actualRealRequests": 4,
+  "credentialsRead": false,
+  "dailyConfigModified": false,
+  "requests": [
+    {
+      "child": false,
+      "model": "Krill-1/gpt-6.1-terra",
+      "effort": "low",
+      "threadId": "01a1c06c-c604-72a2-bdd1-e860229b2e78",
+      "parentId": null,
+      "instructionMarkerPresent": true
+    },
+    {
+      "child": false,
+      "model": "Krill-1/gpt-6.1-terra",
+      "effort": "low",
+      "threadId": "01a1c06c-c604-72a2-bdd1-e860229b2e78",
+      "parentId": null,
+      "instructionMarkerPresent": true
+    },
+    {
+      "child": true,
+      "model": "Krill-1/gpt-6.1-terra",
+      "effort": "low",
+      "threadId": "01a1c06c-e3b1-7810-9415-838bbe37bfac",
+      "parentId": "01a1c06c-c604-72a2-bdd1-e860229b2e78",
+      "instructionMarkerPresent": true
+    },
+    {
+      "child": false,
+      "model": "Krill-1/gpt-6.1-terra",
+      "effort": "low",
+      "threadId": "01a1c06c-c604-72a2-bdd1-e860229b2e78",
+      "parentId": null,
+      "instructionMarkerPresent": true
+    }
+  ],
+  "checks": [
+    {
+      "id": "native_spawn_real_krill_child",
+      "status": "passed",
+      "scope": "Native default model and effort to real child; parent is real only when syntheticParent=false. Child tools disabled for this probe."
+    }
+  ],
+  "scriptSha256": "daf9991103811af2019acc3ded779d7031efa98d2aba666a491c20dd644e639b",
+  "catalog": {
+    "source": "/Users/ezio/.codex/opencodex-catalog.json",
+    "sourceSha256": "8a216c79174944cff719efa8927486cb1925c6ec49c81dca274cbc8c56480f39",
+    "selectedModel": "Krill-1/gpt-6.1-terra",
+    "toolMode": "code_mode_only",
+    "multiAgentVersion": "v1",
+    "metadataUnmodified": true
+  },
+  "realResponses": [
+    {
+      "child": false,
+      "status": "completed",
+      "model": "gpt-6.1-terra",
+      "text": "I’ll run the single native child test and wait for its reply.",
+      "outputKinds": [
+        "message",
+        "custom_tool_call"
+      ],
+      "usage": {
+        "input_tokens": 13084,
+        "output_tokens": 54,
+        "total_tokens": 13138
+      }
+    },
+    {
+      "child": false,
+      "status": "completed",
+      "model": "gpt-6.1-terra",
+      "text": "",
+      "outputKinds": [
+        "custom_tool_call"
+      ],
+      "usage": {
+        "input_tokens": 15424,
+        "output_tokens": 78,
+        "total_tokens": 15502
+      }
+    },
+    {
+      "child": true,
+      "status": "completed",
+      "model": "gpt-6.1-terra",
+      "text": "CHILD_OK",
+      "outputKinds": [
+        "message"
+      ],
+      "usage": {
+        "input_tokens": 8547,
+        "output_tokens": 7,
+        "total_tokens": 8554
+      }
+    },
+    {
+      "child": false,
+      "status": "completed",
+      "model": "gpt-6.1-terra",
+      "text": "PARENT_OK",
+      "outputKinds": [
+        "message"
+      ],
+      "usage": {
+        "input_tokens": 15614,
+        "output_tokens": 7,
+        "total_tokens": 15621
+      }
+    }
+  ],
+  "childResponse": {
+    "status": "completed",
+    "model": "gpt-6.1-terra",
+    "text": "CHILD_OK",
+    "outputKinds": [
+      "message"
+    ],
+    "usage": {
+      "input_tokens": 8547,
+      "output_tokens": 7,
+      "total_tokens": 8554
+    }
+  },
+  "status": "passed"
+}

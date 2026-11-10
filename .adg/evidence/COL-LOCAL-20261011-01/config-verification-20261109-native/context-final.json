@@ -1,0 +1,421 @@
+{
+  "atUtc": "2026-11-09T13:48:33.801200+00:00",
+  "mode": "context",
+  "model": "gpt-6.1-sol",
+  "effort": "low",
+  "nativeAuthFileShape": [
+    "personal_access_token",
+    "OPENAI_API_KEY"
+  ],
+  "origin": "https://api.kbsfdxc.net",
+  "proxy": "http://127.0.0.1:3060",
+  "calls": [
+    {
+      "method": "GET",
+      "path": "/v1/user-auth-credential/whoami",
+      "upstreamDispatched": true,
+      "nativeContentEncoding": "identity",
+      "nativeAuthHeaderPresent": true,
+      "http": 200,
+      "responseType": "dict",
+      "status": "completed",
+      "elapsedSeconds": 0.235
+    },
+    {
+      "method": "GET",
+      "path": "/v1/user-auth-credential/whoami",
+      "upstreamDispatched": true,
+      "nativeContentEncoding": "identity",
+      "nativeAuthHeaderPresent": true,
+      "http": 200,
+      "responseType": "dict",
+      "status": "completed",
+      "elapsedSeconds": 0.241
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/plugins/featured",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/installed",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/installed",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/codex/models",
+      "upstreamDispatched": true,
+      "nativeContentEncoding": "identity",
+      "nativeAuthHeaderPresent": true,
+      "http": 200,
+      "targetModelMetadata": [
+        {
+          "slug": "gpt-6.1-sol",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "2x speed, increased usage"
+            },
+            {
+              "id": "ultrafast",
+              "name": "Ultrafast",
+              "description": "The fastest available responses for latency-sensitive work."
+            }
+          ],
+          "supports_experimental_context": false
+        }
+      ],
+      "status": "completed",
+      "elapsedSeconds": 1.077
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/list",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/suggested/codex",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/wham/accounts/check",
+      "upstreamDispatched": true,
+      "nativeContentEncoding": "identity",
+      "nativeAuthHeaderPresent": true,
+      "http": 200,
+      "responseType": "dict",
+      "status": "completed",
+      "elapsedSeconds": 0.273
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/installed",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/codex/models",
+      "upstreamDispatched": true,
+      "nativeContentEncoding": "identity",
+      "nativeAuthHeaderPresent": true,
+      "http": 200,
+      "targetModelMetadata": [
+        {
+          "slug": "gpt-6.1-sol",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "2x speed, increased usage"
+            },
+            {
+              "id": "ultrafast",
+              "name": "Ultrafast",
+              "description": "The fastest available responses for latency-sensitive work."
+            }
+          ],
+          "supports_experimental_context": false
+        }
+      ],
+      "status": "completed",
+      "elapsedSeconds": 0.798
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/suggested/codex",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "POST",
+      "path": "/backend-api/ps/mcp",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/suggested/codex",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "POST",
+      "path": "/backend-api/ps/mcp",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/suggested/codex",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/wham/settings/user",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/suggested/codex",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "POST",
+      "path": "/backend-api/codex/alpha/notes/v2/thread_hint",
+      "upstreamDispatched": true,
+      "nativeContentEncoding": "identity",
+      "bodyKeys": [
+        "context"
+      ],
+      "syntheticSessionId": "01a1c091-5e40-7373-95ba-85857742c818",
+      "nativeAuthHeaderPresent": true,
+      "http": 404,
+      "error": "{\"detail\":\"Not Found\"}",
+      "status": "rejected",
+      "elapsedSeconds": 0.57
+    },
+    {
+      "method": "POST",
+      "path": "/backend-api/codex/responses",
+      "upstreamDispatched": true,
+      "nativeContentEncoding": "zstd",
+      "requestedModel": "gpt-6.1-sol",
+      "requestedTier": null,
+      "requestedEffort": "low",
+      "toolSurface": [],
+      "probeOutputBound": 768,
+      "nativeAuthHeaderPresent": true,
+      "http": 200,
+      "responseTiers": [
+        {
+          "event": "response.created",
+          "tier": "auto"
+        },
+        {
+          "event": "response.in_progress",
+          "tier": "auto"
+        },
+        {
+          "event": "response.completed",
+          "tier": "default"
+        }
+      ],
+      "response": {
+        "status": "completed",
+        "model": "gpt-6.1-sol",
+        "serviceTier": "default",
+        "text": "I’ll list the history windows and notes matching that prefix without reading contents or writing anything.",
+        "outputKinds": [
+          "message",
+          "function_call"
+        ],
+        "usage": {
+          "input_tokens": 13324,
+          "output_tokens": 39,
+          "total_tokens": 13363
+        }
+      },
+      "status": "completed",
+      "elapsedSeconds": 2.759
+    },
+    {
+      "method": "POST",
+      "path": "/backend-api/codex/alpha/history/v2/list_windows",
+      "upstreamDispatched": true,
+      "nativeContentEncoding": "identity",
+      "bodyKeys": [
+        "context"
+      ],
+      "syntheticSessionId": "01a1c091-5e40-7373-95ba-85857742c818",
+      "nativeAuthHeaderPresent": true,
+      "http": 404,
+      "error": "{\"detail\":\"Not Found\"}",
+      "status": "rejected",
+      "elapsedSeconds": 0.29
+    },
+    {
+      "method": "POST",
+      "path": "/backend-api/ps/mcp",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/suggested/codex",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "POST",
+      "path": "/backend-api/codex/responses",
+      "upstreamDispatched": true,
+      "nativeContentEncoding": "zstd",
+      "requestedModel": "gpt-6.1-sol",
+      "requestedTier": null,
+      "requestedEffort": "low",
+      "toolSurface": [],
+      "probeOutputBound": 768,
+      "nativeAuthHeaderPresent": true,
+      "http": 200,
+      "responseTiers": [
+        {
+          "event": "response.created",
+          "tier": "auto"
+        },
+        {
+          "event": "response.in_progress",
+          "tier": "auto"
+        },
+        {
+          "event": "response.completed",
+          "tier": "default"
+        }
+      ],
+      "response": {
+        "status": "completed",
+        "model": "gpt-6.1-sol",
+        "serviceTier": "default",
+        "text": "",
+        "outputKinds": [
+          "function_call"
+        ],
+        "usage": {
+          "input_tokens": 13384,
+          "output_tokens": 26,
+          "total_tokens": 13410
+        }
+      },
+      "status": "completed",
+      "elapsedSeconds": 1.827
+    },
+    {
+      "method": "POST",
+      "path": "/backend-api/codex/alpha/notes/v2/list_files_by_prefix",
+      "upstreamDispatched": true,
+      "nativeContentEncoding": "identity",
+      "bodyKeys": [
+        "context",
+        "prefix"
+      ],
+      "syntheticSessionId": "01a1c091-5e40-7373-95ba-85857742c818",
+      "nativeAuthHeaderPresent": true,
+      "http": 404,
+      "error": "{\"detail\":\"Not Found\"}",
+      "status": "rejected",
+      "elapsedSeconds": 0.635
+    },
+    {
+      "method": "POST",
+      "path": "/backend-api/ps/mcp",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/suggested/codex",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "POST",
+      "path": "/backend-api/codex/responses",
+      "upstreamDispatched": true,
+      "nativeContentEncoding": "zstd",
+      "requestedModel": "gpt-6.1-sol",
+      "requestedTier": null,
+      "requestedEffort": "low",
+      "toolSurface": [],
+      "probeOutputBound": 768,
+      "nativeAuthHeaderPresent": true,
+      "http": 200,
+      "responseTiers": [
+        {
+          "event": "response.created",
+          "tier": "auto"
+        },
+        {
+          "event": "response.in_progress",
+          "tier": "auto"
+        },
+        {
+          "event": "response.completed",
+          "tier": "default"
+        }
+      ],
+      "response": {
+        "status": "completed",
+        "model": "gpt-6.1-sol",
+        "serviceTier": "default",
+        "text": "Both native tools are available, but both listing requests failed with backend errors. No contents were read and no notes were written.",
+        "outputKinds": [
+          "message"
+        ],
+        "usage": {
+          "input_tokens": 13433,
+          "output_tokens": 29,
+          "total_tokens": 13462
+        }
+      },
+      "status": "completed",
+      "elapsedSeconds": 2.122
+    }
+  ],
+  "turns": [
+    {
+      "status": "completed",
+      "error": "None"
+    }
+  ],
+  "modelRequests": 3,
+  "dailyConfigModified": false,
+  "scriptSha256": "36998721c4e98a8cbb2889b7332d3a7c3193b2fb7a92b105fc5725c9465a461e",
+  "captureRelayTLS": "Ephemeral localhost certificate trusted only by isolated child SSL_CERT_FILE; no system trust changes; upstream verified independently.",
+  "initializeSucceeded": true,
+  "accountType": "chatgpt",
+  "requiresOpenaiAuth": true,
+  "syntheticThreadId": "01a1c091-5e40-7373-95ba-85857742c818",
+  "localCaptureWsFallback": [
+    "/backend-api/codex/responses"
+  ],
+  "status": "completed",
+  "nativeErrors": [],
+  "temporaryRootRemoved": true,
+  "configSha256Before": "0a0ec45ae79a2960ed39fb45712481a7862f7b87b5dbfbf8e7ba922bbe27da3e",
+  "configSha256After": "0a0ec45ae79a2960ed39fb45712481a7862f7b87b5dbfbf8e7ba922bbe27da3e",
+  "dailyConfigUnchanged": true
+}

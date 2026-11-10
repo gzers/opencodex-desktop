@@ -1,0 +1,58 @@
+{
+  "atUtc": "2026-11-09T13:26:25.684697+00:00",
+  "phase": "websocket",
+  "transport": "proxy",
+  "origin": "https://api.kbsfdxc.net",
+  "prefix": "/codex/v1",
+  "proxy": "http://127.0.0.1:3060",
+  "session": "d2a23158-4334-4cdf-9329-a4f58838c019",
+  "syntheticSessionOnly": true,
+  "dailyConfigModified": false,
+  "calls": [
+    {
+      "id": "websocket",
+      "url": "wss://api.kbsfdxc.net/codex/v1/responses",
+      "modelRequestSent": true,
+      "proxyConnectStatus": "HTTP/1.1 200 Connection established",
+      "upgradeStatus": "HTTP/1.1 101 Switching Protocols",
+      "http": 101,
+      "requestedModel": "gpt-6.1-sol",
+      "requestedEffort": "low",
+      "requestedTier": "default",
+      "maxOutputTokens": 256,
+      "eventTypes": [
+        "response.completed",
+        "response.content_part.added",
+        "response.content_part.done",
+        "response.created",
+        "response.in_progress",
+        "response.output_item.added",
+        "response.output_item.done",
+        "response.output_text.delta",
+        "response.output_text.done"
+      ],
+      "response": {
+        "status": "completed",
+        "model": "gpt-6.1-sol",
+        "serviceTier": "default",
+        "outputKinds": [
+          "message"
+        ],
+        "syntheticText": "WS_OK",
+        "usage": {
+          "input_tokens": 4170,
+          "output_tokens": 6,
+          "total_tokens": 4176
+        }
+      },
+      "status": "passed",
+      "elapsedSeconds": 2.439
+    }
+  ],
+  "tlsCertificateVerification": true,
+  "scriptSha256": "d1c373142332abdc780f8bdccc75aa5f04dbca1db7b58b8eab2c47931db02527",
+  "configSha256Before": "0a0ec45ae79a2960ed39fb45712481a7862f7b87b5dbfbf8e7ba922bbe27da3e",
+  "configSha256After": "0a0ec45ae79a2960ed39fb45712481a7862f7b87b5dbfbf8e7ba922bbe27da3e",
+  "configUnchanged": true,
+  "completed": true
+}

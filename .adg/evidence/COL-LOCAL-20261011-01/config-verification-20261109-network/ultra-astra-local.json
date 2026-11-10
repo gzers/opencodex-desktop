@@ -1,0 +1,57 @@
+{
+  "atUtc": "2026-11-09T13:24:33.262836+00:00",
+  "phase": "ultrafast",
+  "transport": "local",
+  "origin": "http://127.0.0.1:10100",
+  "prefix": "/v1",
+  "proxy": null,
+  "session": "1f984e63-1c2f-4fc4-a07d-ca680e416631",
+  "syntheticSessionOnly": true,
+  "dailyConfigModified": false,
+  "calls": [
+    {
+      "id": "ultrafast_gpt-6-astra",
+      "url": "http://127.0.0.1:10100/v1/responses",
+      "method": "POST",
+      "requestedModel": "Krill-1/gpt-6-astra",
+      "requestedEffort": "low",
+      "requestedTier": "ultrafast",
+      "maxOutputTokens": 256,
+      "http": 200,
+      "contentType": "text/event-stream; charset=utf-8",
+      "eventTypes": [
+        "response.completed",
+        "response.content_part.added",
+        "response.content_part.done",
+        "response.created",
+        "response.in_progress",
+        "response.output_item.added",
+        "response.output_item.done",
+        "response.output_text.delta",
+        "response.output_text.done"
+      ],
+      "response": {
+        "status": "completed",
+        "model": "gpt-6-astra",
+        "serviceTier": "default",
+        "outputKinds": [
+          "message"
+        ],
+        "syntheticText": "ULTRA_OK",
+        "usage": {
+          "input_tokens": 4110,
+          "output_tokens": 7,
+          "total_tokens": 4117
+        }
+      },
+      "status": "inconclusive",
+      "elapsedSeconds": 3.738
+    }
+  ],
+  "tlsCertificateVerification": false,
+  "scriptSha256": "687df31249161f8282c737a84b33bc44e44861497848d2e7cc3d1a38c9c97073",
+  "configSha256Before": "0a0ec45ae79a2960ed39fb45712481a7862f7b87b5dbfbf8e7ba922bbe27da3e",
+  "configSha256After": "0a0ec45ae79a2960ed39fb45712481a7862f7b87b5dbfbf8e7ba922bbe27da3e",
+  "configUnchanged": true,
+  "completed": true
+}

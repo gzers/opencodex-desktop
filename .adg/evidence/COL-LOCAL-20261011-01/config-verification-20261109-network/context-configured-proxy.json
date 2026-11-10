@@ -1,0 +1,39 @@
+{
+  "atUtc": "2026-11-09T13:24:57.944678+00:00",
+  "phase": "context",
+  "transport": "proxy",
+  "origin": "https://api.kbsfdxc.net",
+  "prefix": "/backend-api/codex",
+  "proxy": "http://127.0.0.1:3060",
+  "session": "4f5417c8-fc54-4a6a-8094-a35eaa8fcdc3",
+  "syntheticSessionOnly": true,
+  "dailyConfigModified": false,
+  "calls": [
+    {
+      "id": "history_list",
+      "url": "https://api.kbsfdxc.net/backend-api/codex/alpha/history/v2/list_windows",
+      "method": "POST",
+      "http": 404,
+      "contentType": "application/json",
+      "status": "rejected",
+      "error": "{\"detail\":\"Not Found\"}",
+      "elapsedSeconds": 0.265
+    },
+    {
+      "id": "notes_list",
+      "url": "https://api.kbsfdxc.net/backend-api/codex/alpha/notes/v2/list_files_by_prefix",
+      "method": "POST",
+      "http": 404,
+      "contentType": "application/json",
+      "status": "rejected",
+      "error": "{\"detail\":\"Not Found\"}",
+      "elapsedSeconds": 0.232
+    }
+  ],
+  "tlsCertificateVerification": true,
+  "scriptSha256": "687df31249161f8282c737a84b33bc44e44861497848d2e7cc3d1a38c9c97073",
+  "configSha256Before": "0a0ec45ae79a2960ed39fb45712481a7862f7b87b5dbfbf8e7ba922bbe27da3e",
+  "configSha256After": "0a0ec45ae79a2960ed39fb45712481a7862f7b87b5dbfbf8e7ba922bbe27da3e",
+  "configUnchanged": true,
+  "completed": true
+}

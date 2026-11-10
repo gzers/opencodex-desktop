@@ -1,0 +1,671 @@
+{
+  "atUtc": "2026-11-09T13:28:05.704059+00:00",
+  "requestCount": 17,
+  "modelRequestCount": 7,
+  "modelResponseCount": 7,
+  "websocketCompleteCount": 4,
+  "ultrafastRequestedCount": 4,
+  "ultrafastReportedCount": 0,
+  "reportedUsage": {
+    "input_tokens": 29138,
+    "output_tokens": 45,
+    "total_tokens": 29183
+  },
+  "calls": [
+    {
+      "evidence": "catalog-direct.json",
+      "transport": "direct",
+      "origin": "https://api.kbsfdxc.net",
+      "id": "native_catalog",
+      "url": "https://api.kbsfdxc.net/backend-api/codex/models",
+      "method": "GET",
+      "http": 200,
+      "contentType": "application/json",
+      "models": [
+        {
+          "slug": "gpt-6.1-sol",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "2x speed, increased usage"
+            },
+            {
+              "id": "ultrafast",
+              "name": "Ultrafast",
+              "description": "The fastest available responses for latency-sensitive work."
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "gpt-6-astra",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "2x speed, increased usage"
+            },
+            {
+              "id": "ultrafast",
+              "name": "Ultrafast",
+              "description": "The fastest available responses for latency-sensitive work."
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "gpt-6.1-terra",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "1.5x speed"
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "gpt-6-sol",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "1.5x speed"
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "gpt-5.6-sol",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "1.5x speed, increased usage"
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "gpt-5.6-terra",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "1.5x speed, increased usage"
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "gpt-5.6-luna",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "1.5x speed, increased usage"
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "codex-auto-review",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "1.5x speed, increased usage"
+            }
+          ],
+          "supports_experimental_context": false
+        }
+      ],
+      "status": "passed",
+      "elapsedSeconds": 2.441
+    },
+    {
+      "evidence": "catalog-historical-direct.json",
+      "transport": "direct",
+      "origin": "https://api.krill-code.net",
+      "id": "native_catalog",
+      "url": "https://api.krill-code.net/backend-api/codex/models",
+      "method": "GET",
+      "status": "network_or_transport_error",
+      "error": "URLError: <urlopen error [Errno 8] nodename nor servname provided, or not known>",
+      "elapsedSeconds": 0.062
+    },
+    {
+      "evidence": "catalog-historical-proxy.json",
+      "transport": "proxy",
+      "origin": "https://api.krill-code.net",
+      "id": "native_catalog",
+      "url": "https://api.krill-code.net/backend-api/codex/models",
+      "method": "GET",
+      "status": "network_or_transport_error",
+      "error": "URLError: <urlopen error EOF occurred in violation of protocol (_ssl.c:1129)>",
+      "elapsedSeconds": 5.713
+    },
+    {
+      "evidence": "catalog-proxy.json",
+      "transport": "proxy",
+      "origin": "https://api.kbsfdxc.net",
+      "id": "native_catalog",
+      "url": "https://api.kbsfdxc.net/backend-api/codex/models",
+      "method": "GET",
+      "http": 200,
+      "contentType": "application/json",
+      "models": [
+        {
+          "slug": "gpt-6.1-sol",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "2x speed, increased usage"
+            },
+            {
+              "id": "ultrafast",
+              "name": "Ultrafast",
+              "description": "The fastest available responses for latency-sensitive work."
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "gpt-6-astra",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "2x speed, increased usage"
+            },
+            {
+              "id": "ultrafast",
+              "name": "Ultrafast",
+              "description": "The fastest available responses for latency-sensitive work."
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "gpt-6.1-terra",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "1.5x speed"
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "gpt-6-sol",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "1.5x speed"
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "gpt-5.6-sol",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "1.5x speed, increased usage"
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "gpt-5.6-terra",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "1.5x speed, increased usage"
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "gpt-5.6-luna",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "1.5x speed, increased usage"
+            }
+          ],
+          "supports_experimental_context": false
+        },
+        {
+          "slug": "codex-auto-review",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "1.5x speed, increased usage"
+            }
+          ],
+          "supports_experimental_context": false
+        }
+      ],
+      "status": "passed",
+      "elapsedSeconds": 0.832
+    },
+    {
+      "evidence": "context-configured-direct.json",
+      "transport": "direct",
+      "origin": "https://api.kbsfdxc.net",
+      "id": "history_list",
+      "url": "https://api.kbsfdxc.net/backend-api/codex/alpha/history/v2/list_windows",
+      "method": "POST",
+      "http": 404,
+      "contentType": "application/json",
+      "status": "rejected",
+      "error": "{\"detail\":\"Not Found\"}",
+      "elapsedSeconds": 0.913
+    },
+    {
+      "evidence": "context-configured-direct.json",
+      "transport": "direct",
+      "origin": "https://api.kbsfdxc.net",
+      "id": "notes_list",
+      "url": "https://api.kbsfdxc.net/backend-api/codex/alpha/notes/v2/list_files_by_prefix",
+      "method": "POST",
+      "http": 404,
+      "contentType": "application/json",
+      "status": "rejected",
+      "error": "{\"detail\":\"Not Found\"}",
+      "elapsedSeconds": 2.394
+    },
+    {
+      "evidence": "context-configured-proxy.json",
+      "transport": "proxy",
+      "origin": "https://api.kbsfdxc.net",
+      "id": "history_list",
+      "url": "https://api.kbsfdxc.net/backend-api/codex/alpha/history/v2/list_windows",
+      "method": "POST",
+      "http": 404,
+      "contentType": "application/json",
+      "status": "rejected",
+      "error": "{\"detail\":\"Not Found\"}",
+      "elapsedSeconds": 0.265
+    },
+    {
+      "evidence": "context-configured-proxy.json",
+      "transport": "proxy",
+      "origin": "https://api.kbsfdxc.net",
+      "id": "notes_list",
+      "url": "https://api.kbsfdxc.net/backend-api/codex/alpha/notes/v2/list_files_by_prefix",
+      "method": "POST",
+      "http": 404,
+      "contentType": "application/json",
+      "status": "rejected",
+      "error": "{\"detail\":\"Not Found\"}",
+      "elapsedSeconds": 0.232
+    },
+    {
+      "evidence": "context-historical-proxy.json",
+      "transport": "proxy",
+      "origin": "https://api.krill-code.net",
+      "id": "history_list",
+      "url": "https://api.krill-code.net/backend-api/codex/alpha/history/v2/list_windows",
+      "method": "POST",
+      "status": "network_or_transport_error",
+      "error": "URLError: <urlopen error EOF occurred in violation of protocol (_ssl.c:1129)>",
+      "elapsedSeconds": 5.721
+    },
+    {
+      "evidence": "context-historical-proxy.json",
+      "transport": "proxy",
+      "origin": "https://api.krill-code.net",
+      "id": "notes_list",
+      "url": "https://api.krill-code.net/backend-api/codex/alpha/notes/v2/list_files_by_prefix",
+      "method": "POST",
+      "status": "network_or_transport_error",
+      "error": "URLError: <urlopen error EOF occurred in violation of protocol (_ssl.c:1129)>",
+      "elapsedSeconds": 0.108
+    },
+    {
+      "evidence": "ultra-astra-local.json",
+      "transport": "local",
+      "origin": "http://127.0.0.1:10100",
+      "id": "ultrafast_gpt-6-astra",
+      "url": "http://127.0.0.1:10100/v1/responses",
+      "method": "POST",
+      "requestedModel": "Krill-1/gpt-6-astra",
+      "requestedEffort": "low",
+      "requestedTier": "ultrafast",
+      "maxOutputTokens": 256,
+      "http": 200,
+      "contentType": "text/event-stream; charset=utf-8",
+      "eventTypes": [
+        "response.completed",
+        "response.content_part.added",
+        "response.content_part.done",
+        "response.created",
+        "response.in_progress",
+        "response.output_item.added",
+        "response.output_item.done",
+        "response.output_text.delta",
+        "response.output_text.done"
+      ],
+      "response": {
+        "status": "completed",
+        "model": "gpt-6-astra",
+        "serviceTier": "default",
+        "outputKinds": [
+          "message"
+        ],
+        "syntheticText": "ULTRA_OK",
+        "usage": {
+          "input_tokens": 4110,
+          "output_tokens": 7,
+          "total_tokens": 4117
+        }
+      },
+      "status": "inconclusive",
+      "elapsedSeconds": 3.738
+    },
+    {
+      "evidence": "ultra-sol-local.json",
+      "transport": "local",
+      "origin": "http://127.0.0.1:10100",
+      "id": "ultrafast_gpt-6.1-sol",
+      "url": "http://127.0.0.1:10100/v1/responses",
+      "method": "POST",
+      "requestedModel": "Krill-1/gpt-6.1-sol",
+      "requestedEffort": "low",
+      "requestedTier": "ultrafast",
+      "maxOutputTokens": 256,
+      "http": 200,
+      "contentType": "text/event-stream; charset=utf-8",
+      "eventTypes": [
+        "response.completed",
+        "response.content_part.added",
+        "response.content_part.done",
+        "response.created",
+        "response.in_progress",
+        "response.output_item.added",
+        "response.output_item.done",
+        "response.output_text.delta",
+        "response.output_text.done"
+      ],
+      "response": {
+        "status": "completed",
+        "model": "gpt-6.1-sol",
+        "serviceTier": "default",
+        "outputKinds": [
+          "message"
+        ],
+        "syntheticText": "ULTRA_OK",
+        "usage": {
+          "input_tokens": 4174,
+          "output_tokens": 7,
+          "total_tokens": 4181
+        }
+      },
+      "status": "inconclusive",
+      "elapsedSeconds": 4.117
+    },
+    {
+      "evidence": "ultra-sol-native-proxy.json",
+      "transport": "proxy",
+      "origin": "https://api.kbsfdxc.net",
+      "id": "ultrafast_gpt-6.1-sol",
+      "url": "https://api.kbsfdxc.net/backend-api/codex/responses",
+      "method": "POST",
+      "requestedModel": "gpt-6.1-sol",
+      "requestedEffort": "low",
+      "requestedTier": "ultrafast",
+      "maxOutputTokens": 256,
+      "http": 200,
+      "contentType": "text/event-stream; charset=utf-8",
+      "eventTypes": [
+        "response.completed",
+        "response.content_part.added",
+        "response.content_part.done",
+        "response.created",
+        "response.in_progress",
+        "response.output_item.added",
+        "response.output_item.done",
+        "response.output_text.delta",
+        "response.output_text.done"
+      ],
+      "response": {
+        "status": "completed",
+        "model": "gpt-6.1-sol",
+        "serviceTier": "default",
+        "outputKinds": [
+          "message"
+        ],
+        "syntheticText": "ULTRA_OK",
+        "usage": {
+          "input_tokens": 4174,
+          "output_tokens": 7,
+          "total_tokens": 4181
+        }
+      },
+      "status": "inconclusive",
+      "elapsedSeconds": 3.648
+    },
+    {
+      "evidence": "ws-configured-compatible-proxy.json",
+      "transport": "proxy",
+      "origin": "https://api.kbsfdxc.net",
+      "id": "websocket",
+      "url": "wss://api.kbsfdxc.net/codex/v1/responses",
+      "modelRequestSent": true,
+      "proxyConnectStatus": "HTTP/1.1 200 Connection established",
+      "upgradeStatus": "HTTP/1.1 101 Switching Protocols",
+      "http": 101,
+      "requestedModel": "gpt-6.1-sol",
+      "requestedEffort": "low",
+      "requestedTier": "default",
+      "maxOutputTokens": 256,
+      "eventTypes": [
+        "response.completed",
+        "response.content_part.added",
+        "response.content_part.done",
+        "response.created",
+        "response.in_progress",
+        "response.output_item.added",
+        "response.output_item.done",
+        "response.output_text.delta",
+        "response.output_text.done"
+      ],
+      "response": {
+        "status": "completed",
+        "model": "gpt-6.1-sol",
+        "serviceTier": "default",
+        "outputKinds": [
+          "message"
+        ],
+        "syntheticText": "WS_OK",
+        "usage": {
+          "input_tokens": 4170,
+          "output_tokens": 6,
+          "total_tokens": 4176
+        }
+      },
+      "status": "passed",
+      "elapsedSeconds": 2.439
+    },
+    {
+      "evidence": "ws-configured-native-direct.json",
+      "transport": "direct",
+      "origin": "https://api.kbsfdxc.net",
+      "id": "websocket",
+      "url": "wss://api.kbsfdxc.net/backend-api/codex/responses",
+      "modelRequestSent": true,
+      "upgradeStatus": "HTTP/1.1 101 Switching Protocols",
+      "http": 101,
+      "requestedModel": "gpt-6.1-sol",
+      "requestedEffort": "low",
+      "requestedTier": "default",
+      "maxOutputTokens": 256,
+      "eventTypes": [
+        "response.completed",
+        "response.content_part.added",
+        "response.content_part.done",
+        "response.created",
+        "response.in_progress",
+        "response.output_item.added",
+        "response.output_item.done",
+        "response.output_text.delta",
+        "response.output_text.done"
+      ],
+      "response": {
+        "status": "completed",
+        "model": "gpt-6.1-sol",
+        "serviceTier": "default",
+        "outputKinds": [
+          "message"
+        ],
+        "syntheticText": "WS_OK",
+        "usage": {
+          "input_tokens": 4170,
+          "output_tokens": 6,
+          "total_tokens": 4176
+        }
+      },
+      "status": "passed",
+      "elapsedSeconds": 3.75
+    },
+    {
+      "evidence": "ws-configured-native-proxy.json",
+      "transport": "proxy",
+      "origin": "https://api.kbsfdxc.net",
+      "id": "websocket",
+      "url": "wss://api.kbsfdxc.net/backend-api/codex/responses",
+      "modelRequestSent": true,
+      "proxyConnectStatus": "HTTP/1.1 200 Connection established",
+      "upgradeStatus": "HTTP/1.1 101 Switching Protocols",
+      "http": 101,
+      "requestedModel": "gpt-6.1-sol",
+      "requestedEffort": "low",
+      "maxOutputTokens": 256,
+      "eventTypes": [
+        "response.completed",
+        "response.content_part.added",
+        "response.content_part.done",
+        "response.created",
+        "response.in_progress",
+        "response.output_item.added",
+        "response.output_item.done",
+        "response.output_text.delta",
+        "response.output_text.done"
+      ],
+      "response": {
+        "status": "completed",
+        "model": "gpt-6.1-sol",
+        "serviceTier": "default",
+        "outputKinds": [
+          "message"
+        ],
+        "syntheticText": "WS_OK",
+        "usage": {
+          "input_tokens": 4170,
+          "output_tokens": 6,
+          "total_tokens": 4176
+        }
+      },
+      "status": "passed",
+      "elapsedSeconds": 2.855
+    },
+    {
+      "evidence": "ws-ultra-configured-proxy.json",
+      "transport": "proxy",
+      "origin": "https://api.kbsfdxc.net",
+      "id": "websocket",
+      "url": "wss://api.kbsfdxc.net/backend-api/codex/responses",
+      "modelRequestSent": true,
+      "proxyConnectStatus": "HTTP/1.1 200 Connection established",
+      "upgradeStatus": "HTTP/1.1 101 Switching Protocols",
+      "http": 101,
+      "requestedModel": "gpt-6.1-sol",
+      "requestedEffort": "low",
+      "requestedTier": "ultrafast",
+      "maxOutputTokens": 256,
+      "eventTypes": [
+        "response.completed",
+        "response.content_part.added",
+        "response.content_part.done",
+        "response.created",
+        "response.in_progress",
+        "response.output_item.added",
+        "response.output_item.done",
+        "response.output_text.delta",
+        "response.output_text.done"
+      ],
+      "response": {
+        "status": "completed",
+        "model": "gpt-6.1-sol",
+        "serviceTier": "default",
+        "outputKinds": [
+          "message"
+        ],
+        "syntheticText": "WS_OK",
+        "usage": {
+          "input_tokens": 4170,
+          "output_tokens": 6,
+          "total_tokens": 4176
+        }
+      },
+      "status": "passed",
+      "ultrafastVerification": "inconclusive_reported_default",
+      "elapsedSeconds": 4.646
+    }
+  ],
+  "dailyConfigUnchangedWithinThisRound": true,
+  "baselineConfigSha256": "0a0ec45ae79a2960ed39fb45712481a7862f7b87b5dbfbf8e7ba922bbe27da3e",
+  "finalConfigSha256": "0a0ec45ae79a2960ed39fb45712481a7862f7b87b5dbfbf8e7ba922bbe27da3e",
+  "comparisonToEarlierRound": [
+    {
+      "path": "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/opencodex-home/config.json",
+      "unchangedFromRoundOne": false
+    },
+    {
+      "path": "/Users/ezio/.codex/config.toml",
+      "unchangedFromRoundOne": true
+    },
+    {
+      "path": "/Users/ezio/.codex/opencodex-catalog.json",
+      "unchangedFromRoundOne": true
+    }
+  ],
+  "baselineNote": "Current config differs from the prior round baseline; every request in this follow-up has the same before/after digest. No inference about external changes; no configuration writes by the probe.",
+  "secretsPrintedOrSaved": false,
+  "credentialsUsage": "Configured Krill key stays in memory, verified TLS only; proxy CONNECT. No redirects.",
+  "notesWrites": 0,
+  "privateHistoryOrNotesRead": false,
+  "userClarification": {
+    "currentOrigin": "https://api.kbsfdxc.net",
+    "retiredOrigin": "https://api.krill-code.net",
+    "retiredDomainIsNotRemainingBlocker": true,
+    "noFurtherRetiredDomainRetries": true
+  },
+  "scriptPath": "ocx-0110-main/test/architecture-probes/probe_krill_network_followup.py",
+  "latestScriptSha256": "64313dec75091c2556d892a483c4807df64f048ed2c71af720b204d670269bdb",
+  "existingServiceAfter": {
+    "pid": 58713,
+    "version": "2.97.0",
+    "service": "opencodex",
+    "status": "ok"
+  },
+  "postRunScriptChange": "Removed retired-origin execution option after user clarified domain retirement. Per-request run hashes remain original.",
+  "verification": {
+    "linksChecked": 29,
+    "checklistItems": 15,
+    "countsMatch": true,
+    "newOriginContextBothTransports404": true,
+    "secretScanPassed": true,
+    "currentConfigStillUnchanged": true
+  }
+}

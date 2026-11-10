@@ -1,0 +1,39 @@
+{
+  "atUtc": "2026-11-09T14:08:35.551506+00:00",
+  "model": "Krill-1/gpt-6.1-terra",
+  "effort": "low",
+  "realRequests": 1,
+  "scope": "Dedicated manager-owned title generation and native write/read, not existing App automatic title hook.",
+  "checks": [
+    {
+      "id": "selected_model_generates_title",
+      "status": "passed"
+    },
+    {
+      "id": "native_name_only_write_read",
+      "status": "passed",
+      "threadIdStable": true,
+      "threadModelUnchanged": true,
+      "nativeModelRequests": 0
+    }
+  ],
+  "scriptSha256": "1ba17aa071d675d2858253e50ca985b42e46afbdc905b4b267770b0c5721fa57",
+  "generatedTitle": "查看本地图表演示",
+  "usage": {
+    "input_tokens": 4129,
+    "output_tokens": 10,
+    "total_tokens": 4139
+  },
+  "status": "passed",
+  "temporaryRootRemoved": true,
+  "dailyConfigs": [
+    {
+      "path": "/Users/ezio/.codex/config.toml",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/opencodex-home/config.json",
+      "unchanged": true
+    }
+  ]
+}

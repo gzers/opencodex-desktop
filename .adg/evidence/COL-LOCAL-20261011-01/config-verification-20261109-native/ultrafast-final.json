@@ -1,0 +1,260 @@
+{
+  "atUtc": "2026-11-09T13:48:33.801260+00:00",
+  "mode": "ultrafast",
+  "model": "gpt-6.1-sol",
+  "effort": "low",
+  "nativeAuthFileShape": [
+    "personal_access_token",
+    "OPENAI_API_KEY"
+  ],
+  "origin": "https://api.kbsfdxc.net",
+  "proxy": "http://127.0.0.1:3060",
+  "calls": [
+    {
+      "method": "GET",
+      "path": "/v1/user-auth-credential/whoami",
+      "upstreamDispatched": true,
+      "nativeContentEncoding": "identity",
+      "nativeAuthHeaderPresent": true,
+      "http": 200,
+      "responseType": "dict",
+      "status": "completed",
+      "elapsedSeconds": 0.258
+    },
+    {
+      "method": "GET",
+      "path": "/v1/user-auth-credential/whoami",
+      "upstreamDispatched": true,
+      "nativeContentEncoding": "identity",
+      "nativeAuthHeaderPresent": true,
+      "http": 200,
+      "responseType": "dict",
+      "status": "completed",
+      "elapsedSeconds": 0.241
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/installed",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/plugins/featured",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/installed",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/list",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/codex/models",
+      "upstreamDispatched": true,
+      "nativeContentEncoding": "identity",
+      "nativeAuthHeaderPresent": true,
+      "http": 200,
+      "targetModelMetadata": [
+        {
+          "slug": "gpt-6.1-sol",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "2x speed, increased usage"
+            },
+            {
+              "id": "ultrafast",
+              "name": "Ultrafast",
+              "description": "The fastest available responses for latency-sensitive work."
+            }
+          ],
+          "supports_experimental_context": false
+        }
+      ],
+      "status": "completed",
+      "elapsedSeconds": 0.536
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/suggested/codex",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/wham/accounts/check",
+      "upstreamDispatched": true,
+      "nativeContentEncoding": "identity",
+      "nativeAuthHeaderPresent": true,
+      "http": 200,
+      "responseType": "dict",
+      "status": "completed",
+      "elapsedSeconds": 0.265
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/installed",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/codex/models",
+      "upstreamDispatched": true,
+      "nativeContentEncoding": "identity",
+      "nativeAuthHeaderPresent": true,
+      "http": 200,
+      "targetModelMetadata": [
+        {
+          "slug": "gpt-6.1-sol",
+          "service_tiers": [
+            {
+              "id": "priority",
+              "name": "Fast",
+              "description": "2x speed, increased usage"
+            },
+            {
+              "id": "ultrafast",
+              "name": "Ultrafast",
+              "description": "The fastest available responses for latency-sensitive work."
+            }
+          ],
+          "supports_experimental_context": false
+        }
+      ],
+      "status": "completed",
+      "elapsedSeconds": 0.57
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/suggested/codex",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "POST",
+      "path": "/backend-api/ps/mcp",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/suggested/codex",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "POST",
+      "path": "/backend-api/ps/mcp",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/suggested/codex",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/wham/settings/user",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "GET",
+      "path": "/backend-api/ps/plugins/suggested/codex",
+      "upstreamDispatched": false,
+      "nativeContentEncoding": "identity",
+      "status": "blocked_by_probe"
+    },
+    {
+      "method": "POST",
+      "path": "/backend-api/codex/responses",
+      "upstreamDispatched": true,
+      "nativeContentEncoding": "zstd",
+      "requestedModel": "gpt-6.1-sol",
+      "requestedTier": "ultrafast",
+      "requestedEffort": "low",
+      "toolSurface": [],
+      "probeOutputBound": 768,
+      "nativeAuthHeaderPresent": true,
+      "http": 200,
+      "responseTiers": [
+        {
+          "event": "response.created",
+          "tier": "auto"
+        },
+        {
+          "event": "response.in_progress",
+          "tier": "auto"
+        },
+        {
+          "event": "response.completed",
+          "tier": "default"
+        }
+      ],
+      "response": {
+        "status": "completed",
+        "model": "gpt-6.1-sol",
+        "serviceTier": "default",
+        "text": "NATIVE_ULTRA_OK",
+        "outputKinds": [
+          "message"
+        ],
+        "usage": {
+          "input_tokens": 11311,
+          "output_tokens": 9,
+          "total_tokens": 11320
+        }
+      },
+      "status": "completed",
+      "elapsedSeconds": 5.613
+    }
+  ],
+  "turns": [
+    {
+      "status": "completed",
+      "error": "None"
+    }
+  ],
+  "modelRequests": 1,
+  "dailyConfigModified": false,
+  "scriptSha256": "36998721c4e98a8cbb2889b7332d3a7c3193b2fb7a92b105fc5725c9465a461e",
+  "captureRelayTLS": "Ephemeral localhost certificate trusted only by isolated child SSL_CERT_FILE; no system trust changes; upstream verified independently.",
+  "initializeSucceeded": true,
+  "accountType": "chatgpt",
+  "requiresOpenaiAuth": true,
+  "syntheticThreadId": "01a1c091-5e50-77f0-90a0-9c0aed7c1790",
+  "localCaptureWsFallback": [
+    "/backend-api/codex/responses"
+  ],
+  "status": "completed",
+  "nativeErrors": [],
+  "temporaryRootRemoved": true,
+  "configSha256Before": "0a0ec45ae79a2960ed39fb45712481a7862f7b87b5dbfbf8e7ba922bbe27da3e",
+  "configSha256After": "0a0ec45ae79a2960ed39fb45712481a7862f7b87b5dbfbf8e7ba922bbe27da3e",
+  "dailyConfigUnchanged": true
+}

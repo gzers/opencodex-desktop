@@ -1,0 +1,195 @@
+{
+  "atUtc": "2026-11-09T13:05:08.570769+00:00",
+  "model": "Krill-1/gpt-6.1-terra",
+  "effort": "low",
+  "checks": [
+    {
+      "id": "service_tier_priority",
+      "status": "passed",
+      "observed": {
+        "requested": "priority",
+        "reported": "priority",
+        "scope": "Server-reported tier only; not latency benefit or billing verification."
+      }
+    },
+    {
+      "id": "service_tier_ultrafast",
+      "status": "failed",
+      "error": "RuntimeError: HTTP 400"
+    },
+    {
+      "id": "tool_call_and_result_continuation",
+      "status": "passed",
+      "observed": {
+        "tool": "fixture_echo",
+        "argumentsMatched": true,
+        "continuationCompleted": true,
+        "externalToolExecuted": false
+      }
+    },
+    {
+      "id": "real_proxy_compact_then_continue",
+      "status": "passed",
+      "observed": {
+        "compactionItemObserved": true,
+        "markerRetained": true,
+        "scope": "Existing routed proxy compaction; isolated service probe separately identifies summary conversion."
+      }
+    },
+    {
+      "id": "real_websocket_ingress",
+      "status": "failed",
+      "error": "RuntimeError: upgrade rejected: HTTP/1.1 426 Upgrade Required"
+    }
+  ],
+  "calls": [
+    {
+      "label": "tier_priority",
+      "path": "/v1/responses",
+      "requestedModel": "Krill-1/gpt-6.1-terra",
+      "requestedEffort": "low",
+      "requestedTier": "priority",
+      "maxOutputTokens": 512,
+      "httpStatus": 200,
+      "response": {
+        "status": "completed",
+        "model": "gpt-6.1-terra",
+        "serviceTier": "priority",
+        "reasoningEffortEcho": "low",
+        "outputKinds": [
+          "message"
+        ],
+        "usage": {
+          "input_tokens": 4109,
+          "output_tokens": 7,
+          "total_tokens": 4116
+        },
+        "syntheticText": "TIER_OK"
+      },
+      "elapsedSeconds": 3.496
+    },
+    {
+      "label": "tier_ultrafast",
+      "path": "/v1/responses",
+      "requestedModel": "Krill-1/gpt-6.1-terra",
+      "requestedEffort": "low",
+      "requestedTier": "ultrafast",
+      "maxOutputTokens": 512,
+      "httpStatus": 400,
+      "error": "{\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"code\":\"unsupported_value\",\"message\":\"model gpt-6.1-terra does not support ultrafast\",\"param\":\"service_tier\"},\"status\":400}",
+      "elapsedSeconds": 0.252
+    },
+    {
+      "label": "tool_request",
+      "path": "/v1/responses",
+      "requestedModel": "Krill-1/gpt-6.1-terra",
+      "requestedEffort": "low",
+      "requestedTier": "default",
+      "maxOutputTokens": 512,
+      "httpStatus": 200,
+      "response": {
+        "status": "completed",
+        "model": "gpt-6.1-terra",
+        "serviceTier": "default",
+        "reasoningEffortEcho": "low",
+        "outputKinds": [
+          "message",
+          "function_call"
+        ],
+        "usage": {
+          "input_tokens": 4231,
+          "output_tokens": 35,
+          "total_tokens": 4266
+        },
+        "syntheticText": "I’ll run the requested echo."
+      },
+      "elapsedSeconds": 2.413
+    },
+    {
+      "label": "tool_result",
+      "path": "/v1/responses",
+      "requestedModel": "Krill-1/gpt-6.1-terra",
+      "requestedEffort": "low",
+      "requestedTier": "default",
+      "maxOutputTokens": 512,
+      "httpStatus": 200,
+      "response": {
+        "status": "completed",
+        "model": "gpt-6.1-terra",
+        "serviceTier": "default",
+        "reasoningEffortEcho": "low",
+        "outputKinds": [
+          "message"
+        ],
+        "usage": {
+          "input_tokens": 4291,
+          "output_tokens": 7,
+          "total_tokens": 4298
+        },
+        "syntheticText": "TOOL_OK"
+      },
+      "elapsedSeconds": 1.707
+    },
+    {
+      "label": "compact",
+      "path": "/v1/responses",
+      "requestedModel": "Krill-1/gpt-6.1-terra",
+      "requestedEffort": "low",
+      "requestedTier": "default",
+      "maxOutputTokens": 512,
+      "httpStatus": 200,
+      "response": {
+        "status": "completed",
+        "model": "gpt-6.1-terra",
+        "serviceTier": null,
+        "reasoningEffortEcho": null,
+        "outputKinds": [
+          "compaction"
+        ],
+        "usage": {
+          "input_tokens": 4215,
+          "output_tokens": 56,
+          "total_tokens": 4271
+        },
+        "syntheticText": ""
+      },
+      "elapsedSeconds": 8.491
+    },
+    {
+      "label": "compact_continue",
+      "path": "/v1/responses",
+      "requestedModel": "Krill-1/gpt-6.1-terra",
+      "requestedEffort": "low",
+      "requestedTier": "default",
+      "maxOutputTokens": 512,
+      "httpStatus": 200,
+      "response": {
+        "status": "completed",
+        "model": "gpt-6.1-terra",
+        "serviceTier": "default",
+        "reasoningEffortEcho": "low",
+        "outputKinds": [
+          "message"
+        ],
+        "usage": {
+          "input_tokens": 4238,
+          "output_tokens": 9,
+          "total_tokens": 4247
+        },
+        "syntheticText": "ORCHID_42"
+      },
+      "elapsedSeconds": 1.701
+    }
+  ],
+  "syntheticInputOnly": true,
+  "credentialsRead": false,
+  "dailyConfigModified": false,
+  "scriptSha256": "b179e45bbe5683a27d76c321f06bcdbdf86933b0fbe3958087b775838e9d90e1",
+  "proxyIdentity": {
+    "service": "opencodex",
+    "version": "2.97.0",
+    "pid": 58713
+  },
+  "status": "completed",
+  "actualClientRequests": 6
+}
