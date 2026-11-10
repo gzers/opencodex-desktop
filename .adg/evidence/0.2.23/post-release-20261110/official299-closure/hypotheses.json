@@ -1,0 +1,26 @@
+{
+  "scope": "isolated feasibility validation only; no production implementation; official299 unchanged",
+  "beforeRun": true,
+  "hypotheses": [
+    {
+      "id": "H1",
+      "claim": "Direct modelDisplayNames cannot represent channel/model; full validator rejects slash."
+    },
+    {
+      "id": "H2",
+      "claim": "Using provider.alias and identity modelAliases to obtain slash display may be accepted by schema but removed by real config load."
+    },
+    {
+      "id": "H3",
+      "claim": "Renaming a legal ASCII provider key propagates through real config load, catalog gather/build and raw route selection."
+    },
+    {
+      "id": "H4",
+      "claim": "A Desktop-only label projection can preserve every official catalog field except display_name and be consumed by the actual Codex model/list reader."
+    },
+    {
+      "id": "H5",
+      "claim": "Old Desktop Windows lifetime verification requires a tuple absent from official299; previous maintenance-package Windows pass is not reusable as299 acceptance."
+    }
+  ]
+}

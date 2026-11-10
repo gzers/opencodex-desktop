@@ -1,0 +1,16 @@
+import {join} from 'node:path';import {readFileSync,writeFileSync,readdirSync} from 'node:fs';import {createHmac} from 'node:crypto';import assert from 'node:assert/strict';
+const root=process.env.PROBE_ROOT!,imp=(p:string)=>import(join(root,'package/src',p));const {createLocalAttestationSecret,createLocalAttestationChallenge,createLocalAttestationProof,verifyLocalAttestationProof}=await imp('lib/local-management-attestation.ts');const {stopProxyGracefully}=await imp('lib/process-control.ts');
+const secret=createLocalAttestationSecret(),challenge=createLocalAttestationChallenge(),pid=12345,port=52345,proof=createLocalAttestationProof(secret,challenge,pid,port);const checks=[];
+assert(verifyLocalAttestationProof(secret,challenge,pid,port,proof));checks.push('official local management proof verifies');
+assert(!verifyLocalAttestationProof(secret,challenge,pid+1,port,proof));assert(!verifyLocalAttestationProof(secret,challenge,pid,port+1,proof));assert(!verifyLocalAttestationProof(secret,createLocalAttestationChallenge(),pid,port,proof));checks.push('pid port and challenge changes reject');
+const legacy=createHmac('sha256',secret).update('opencodex-runtime-lifetime-v1\n'+challenge+'\n'+port+'\n[]').digest('base64url');assert(!verifyLocalAttestationProof(secret,challenge,pid,port,legacy));checks.push('legacy lifetime protocol is distinct from official health proof');
+for(const [name,status,body,exit,expected] of [
+ ['performed-and-exit',200,{success:true,sharedTeardown:'performed'},true,true],
+ ['no-receipt',200,{success:true},true,'teardown-unconfirmed'],
+ ['no-exit',200,{success:true,sharedTeardown:'performed'},false,false],
+ ['ownership-refused',409,{code:'fixture-refused'},false,'refused'],
+ ['server-error',500,{},true,false],
+ ['wrong-teardown',200,{success:true,sharedTeardown:'deferred'},true,'teardown-unconfirmed']
+] as const){let calls=0;const value=await stopProxyGracefully(pid,{runtimeEndpoint:{hostname:'127.0.0.1',port},exitTimeoutMs:10000,fetchFn:async(url:string,options:any)=>{calls++;assert(url.endsWith('/api/stop'));assert.equal(options.method,'POST');return new Response(JSON.stringify(body),{status})},waitExit:()=>exit});assert.equal(value,expected);assert.equal(calls,1);checks.push(name);}
+const matches=[];function scan(dir:string){for(const entry of readdirSync(dir,{withFileTypes:true})){const path=join(dir,entry.name);if(entry.isDirectory())scan(path);else if(entry.isFile()&&/\.(ts|mjs|js)$/.test(entry.name)&&readFileSync(path,'utf8').includes('ocxd-runtime-lifetime/1'))matches.push(path)}}scan(join(root,'package/src'));assert.equal(matches.length,0);checks.push('pinned official src has no old lifetime producer marker');
+writeFileSync(join(root,'out/lifecycle-contract-result.json'),JSON.stringify({scope:'platform-independent official contract helper tests with in-memory HTTP and exit-observation inputs; not Windows native acceptance',checks,oldLifetimeProducerFound:false,healthProofAttests:['challenge','pid','port'],healthProofDoesNotEstablish:['TokenUser SID','process creation FILETIME','HOME identity','Job membership and empty state','process exit code','complete client restoration'],nativeWindowsValidated:false},null,2));console.log(JSON.stringify({result:'pass',checks:checks.length,nativeWindowsValidated:false}));

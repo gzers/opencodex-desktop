@@ -1,0 +1,99 @@
+{
+  "scope": "official299 full config validator+real file load+static gather+catalog build+route; no upstream HTTP",
+  "results": [
+    {
+      "case": "direct-display-map",
+      "name": "Krill",
+      "result": "rejected",
+      "reason": "slash forbidden"
+    },
+    {
+      "case": "direct-display-map",
+      "name": "中文渠道",
+      "result": "rejected",
+      "reason": "slash forbidden"
+    },
+    {
+      "case": "direct-display-map",
+      "name": "Team One",
+      "result": "rejected",
+      "reason": "slash forbidden"
+    },
+    {
+      "case": "direct-display-map",
+      "name": "团队/海外",
+      "result": "rejected",
+      "reason": "slash forbidden"
+    },
+    {
+      "case": "identity-alias-through-real-load",
+      "name": "Krill",
+      "schemaAccepted": true,
+      "providerAliasAfterLoad": "Krill",
+      "modelAliasAfterLoad": null
+    },
+    {
+      "case": "identity-alias-through-real-load",
+      "name": "中文渠道",
+      "schemaAccepted": true,
+      "providerAliasAfterLoad": null,
+      "modelAliasAfterLoad": null
+    },
+    {
+      "case": "identity-alias-through-real-load",
+      "name": "Team One",
+      "schemaAccepted": true,
+      "providerAliasAfterLoad": null,
+      "modelAliasAfterLoad": null
+    },
+    {
+      "case": "identity-alias-through-real-load",
+      "name": "团队/海外",
+      "schemaAccepted": true,
+      "providerAliasAfterLoad": null,
+      "modelAliasAfterLoad": null
+    },
+    {
+      "case": "provider-key-real-flow",
+      "name": "Krill",
+      "result": "pass",
+      "catalogSlug": "Krill/gpt-6.1-sol",
+      "catalogLabel": "Krill/gpt-6.1-sol",
+      "routeProvider": "Krill",
+      "routeModel": "gpt-6.1-sol"
+    },
+    {
+      "case": "provider-key-real-flow",
+      "name": "Krill-Renamed",
+      "result": "pass",
+      "catalogSlug": "Krill-Renamed/gpt-6.1-sol",
+      "catalogLabel": "Krill-Renamed/gpt-6.1-sol",
+      "routeProvider": "Krill-Renamed",
+      "routeModel": "gpt-6.1-sol"
+    },
+    {
+      "case": "provider-key-real-flow",
+      "name": "Team_One",
+      "result": "pass",
+      "catalogSlug": "Team_One/gpt-6.1-sol",
+      "catalogLabel": "Team_One/gpt-6.1-sol",
+      "routeProvider": "Team_One",
+      "routeModel": "gpt-6.1-sol"
+    },
+    {
+      "case": "provider-key-real-flow",
+      "name": "中文渠道",
+      "result": "schema-rejected"
+    },
+    {
+      "case": "provider-key-real-flow",
+      "name": "Team One",
+      "result": "schema-rejected"
+    },
+    {
+      "case": "provider-key-real-flow",
+      "name": "团队/海外",
+      "result": "schema-rejected"
+    }
+  ]
+}

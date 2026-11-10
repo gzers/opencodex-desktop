@@ -1,0 +1,30 @@
+{
+  "scope": "platform-independent official contract helper tests with in-memory HTTP and exit-observation inputs; not Windows native acceptance",
+  "checks": [
+    "official local management proof verifies",
+    "pid port and challenge changes reject",
+    "legacy lifetime protocol is distinct from official health proof",
+    "performed-and-exit",
+    "no-receipt",
+    "no-exit",
+    "ownership-refused",
+    "server-error",
+    "wrong-teardown",
+    "pinned official src has no old lifetime producer marker"
+  ],
+  "oldLifetimeProducerFound": false,
+  "healthProofAttests": [
+    "challenge",
+    "pid",
+    "port"
+  ],
+  "healthProofDoesNotEstablish": [
+    "TokenUser SID",
+    "process creation FILETIME",
+    "HOME identity",
+    "Job membership and empty state",
+    "process exit code",
+    "complete client restoration"
+  ],
+  "nativeWindowsValidated": false
+}

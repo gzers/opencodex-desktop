@@ -1,0 +1,92 @@
+{
+  "scope": "Real config load + official static gather/build + Desktop-only display label projection + actual route resolution",
+  "cases": [
+    {
+      "slug": "fixture0/gpt-6-sol",
+      "label": "人工指定名称",
+      "routeProvider": "fixture0",
+      "routeModel": "gpt-6-sol",
+      "explicitDisplayPreserved": true
+    },
+    {
+      "slug": "fixture0/gpt-6.1-sol",
+      "label": "Krill-Renamed/gpt-6.1-sol",
+      "routeProvider": "fixture0",
+      "routeModel": "gpt-6.1-sol",
+      "explicitDisplayPreserved": false
+    },
+    {
+      "slug": "fixture0/vendor-gpt-6.1-sol",
+      "label": "Krill-Renamed/vendor/gpt-6.1-sol",
+      "routeProvider": "fixture0",
+      "routeModel": "vendor/gpt-6.1-sol",
+      "explicitDisplayPreserved": false
+    },
+    {
+      "slug": "fixture1/gpt-6-sol",
+      "label": "人工指定名称",
+      "routeProvider": "fixture1",
+      "routeModel": "gpt-6-sol",
+      "explicitDisplayPreserved": true
+    },
+    {
+      "slug": "fixture1/gpt-6.1-sol",
+      "label": "中文渠道/gpt-6.1-sol",
+      "routeProvider": "fixture1",
+      "routeModel": "gpt-6.1-sol",
+      "explicitDisplayPreserved": false
+    },
+    {
+      "slug": "fixture1/vendor-gpt-6.1-sol",
+      "label": "中文渠道/vendor/gpt-6.1-sol",
+      "routeProvider": "fixture1",
+      "routeModel": "vendor/gpt-6.1-sol",
+      "explicitDisplayPreserved": false
+    },
+    {
+      "slug": "fixture2/gpt-6-sol",
+      "label": "人工指定名称",
+      "routeProvider": "fixture2",
+      "routeModel": "gpt-6-sol",
+      "explicitDisplayPreserved": true
+    },
+    {
+      "slug": "fixture2/gpt-6.1-sol",
+      "label": "Team One/gpt-6.1-sol",
+      "routeProvider": "fixture2",
+      "routeModel": "gpt-6.1-sol",
+      "explicitDisplayPreserved": false
+    },
+    {
+      "slug": "fixture2/vendor-gpt-6.1-sol",
+      "label": "Team One/vendor/gpt-6.1-sol",
+      "routeProvider": "fixture2",
+      "routeModel": "vendor/gpt-6.1-sol",
+      "explicitDisplayPreserved": false
+    },
+    {
+      "slug": "fixture3/gpt-6-sol",
+      "label": "人工指定名称",
+      "routeProvider": "fixture3",
+      "routeModel": "gpt-6-sol",
+      "explicitDisplayPreserved": true
+    },
+    {
+      "slug": "fixture3/gpt-6.1-sol",
+      "label": "团队/海外/gpt-6.1-sol",
+      "routeProvider": "fixture3",
+      "routeModel": "gpt-6.1-sol",
+      "explicitDisplayPreserved": false
+    },
+    {
+      "slug": "fixture3/vendor-gpt-6.1-sol",
+      "label": "团队/海外/vendor/gpt-6.1-sol",
+      "routeProvider": "fixture3",
+      "routeModel": "vendor/gpt-6.1-sol",
+      "explicitDisplayPreserved": false
+    }
+  ],
+  "nativeEntryUnchanged": true,
+  "nonDisplayFieldsUnchanged": true,
+  "upstreamSourceModified": false
+}

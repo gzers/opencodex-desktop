@@ -1,0 +1,653 @@
+[
+  {
+    "id": 1,
+    "result": {
+      "userAgent": "ocxd299-closure/0.167.0-alpha.3.2 (Mac OS 27.0.1; arm64) unknown (ocxd299-closure; 1)",
+      "codexHome": "/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd-official299-gates-1g7e493p/user/codex",
+      "platformFamily": "unix",
+      "platformOs": "macos"
+    }
+  },
+  {
+    "method": "remoteControl/status/changed",
+    "params": {
+      "status": "disabled",
+      "serverName": "EZIO-MacbookPro.local",
+      "installationId": "b4fad9e5-3e43-4a9b-98ed-50edee04e9b4",
+      "environmentId": null
+    },
+    "emittedAtMs": 1794297656113
+  },
+  {
+    "id": 2,
+    "result": {
+      "data": [
+        {
+          "id": "fixture0/gpt-6-sol",
+          "model": "fixture0/gpt-6-sol",
+          "upgrade": null,
+          "upgradeInfo": null,
+          "availabilityNux": null,
+          "displayName": "人工指定名称",
+          "description": "Routed via opencodex → fixture0 (fixture0).",
+          "modelSpecialty": null,
+          "hidden": false,
+          "supportedReasoningEfforts": [
+            {
+              "reasoningEffort": "low",
+              "description": "Fast responses with lighter reasoning"
+            },
+            {
+              "reasoningEffort": "medium",
+              "description": "Balances speed and reasoning depth for everyday tasks"
+            },
+            {
+              "reasoningEffort": "high",
+              "description": "Greater reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "xhigh",
+              "description": "Extra high reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "max",
+              "description": "Maximum reasoning depth for the hardest problems"
+            },
+            {
+              "reasoningEffort": "ultra",
+              "description": "Maximum reasoning with automatic task delegation"
+            }
+          ],
+          "defaultReasoningEffort": "medium",
+          "inputModalities": [
+            "text"
+          ],
+          "supportsPersonality": false,
+          "multiAgentVersion": null,
+          "additionalSpeedTiers": [],
+          "serviceTiers": [],
+          "defaultServiceTier": null,
+          "availableAccessPrograms": null,
+          "isDefault": true
+        },
+        {
+          "id": "fixture0/gpt-6.1-sol",
+          "model": "fixture0/gpt-6.1-sol",
+          "upgrade": null,
+          "upgradeInfo": null,
+          "availabilityNux": null,
+          "displayName": "Krill-Renamed/gpt-6.1-sol",
+          "description": "Routed via opencodex → fixture0 (fixture0).",
+          "modelSpecialty": null,
+          "hidden": false,
+          "supportedReasoningEfforts": [
+            {
+              "reasoningEffort": "low",
+              "description": "Fast responses with lighter reasoning"
+            },
+            {
+              "reasoningEffort": "medium",
+              "description": "Balances speed and reasoning depth for everyday tasks"
+            },
+            {
+              "reasoningEffort": "high",
+              "description": "Greater reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "xhigh",
+              "description": "Extra high reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "max",
+              "description": "Maximum reasoning depth for the hardest problems"
+            },
+            {
+              "reasoningEffort": "ultra",
+              "description": "Maximum reasoning with automatic task delegation"
+            }
+          ],
+          "defaultReasoningEffort": "medium",
+          "inputModalities": [
+            "text"
+          ],
+          "supportsPersonality": false,
+          "multiAgentVersion": null,
+          "additionalSpeedTiers": [],
+          "serviceTiers": [],
+          "defaultServiceTier": null,
+          "availableAccessPrograms": null,
+          "isDefault": false
+        },
+        {
+          "id": "fixture0/vendor-gpt-6.1-sol",
+          "model": "fixture0/vendor-gpt-6.1-sol",
+          "upgrade": null,
+          "upgradeInfo": null,
+          "availabilityNux": null,
+          "displayName": "Krill-Renamed/vendor/gpt-6.1-sol",
+          "description": "Routed via opencodex → fixture0 (fixture0).",
+          "modelSpecialty": null,
+          "hidden": false,
+          "supportedReasoningEfforts": [
+            {
+              "reasoningEffort": "low",
+              "description": "Fast responses with lighter reasoning"
+            },
+            {
+              "reasoningEffort": "medium",
+              "description": "Balances speed and reasoning depth for everyday tasks"
+            },
+            {
+              "reasoningEffort": "high",
+              "description": "Greater reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "xhigh",
+              "description": "Extra high reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "max",
+              "description": "Maximum reasoning depth for the hardest problems"
+            },
+            {
+              "reasoningEffort": "ultra",
+              "description": "Maximum reasoning with automatic task delegation"
+            }
+          ],
+          "defaultReasoningEffort": "medium",
+          "inputModalities": [
+            "text"
+          ],
+          "supportsPersonality": false,
+          "multiAgentVersion": null,
+          "additionalSpeedTiers": [],
+          "serviceTiers": [],
+          "defaultServiceTier": null,
+          "availableAccessPrograms": null,
+          "isDefault": false
+        },
+        {
+          "id": "fixture1/gpt-6-sol",
+          "model": "fixture1/gpt-6-sol",
+          "upgrade": null,
+          "upgradeInfo": null,
+          "availabilityNux": null,
+          "displayName": "人工指定名称",
+          "description": "Routed via opencodex → fixture1 (fixture1).",
+          "modelSpecialty": null,
+          "hidden": false,
+          "supportedReasoningEfforts": [
+            {
+              "reasoningEffort": "low",
+              "description": "Fast responses with lighter reasoning"
+            },
+            {
+              "reasoningEffort": "medium",
+              "description": "Balances speed and reasoning depth for everyday tasks"
+            },
+            {
+              "reasoningEffort": "high",
+              "description": "Greater reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "xhigh",
+              "description": "Extra high reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "max",
+              "description": "Maximum reasoning depth for the hardest problems"
+            },
+            {
+              "reasoningEffort": "ultra",
+              "description": "Maximum reasoning with automatic task delegation"
+            }
+          ],
+          "defaultReasoningEffort": "medium",
+          "inputModalities": [
+            "text"
+          ],
+          "supportsPersonality": false,
+          "multiAgentVersion": null,
+          "additionalSpeedTiers": [],
+          "serviceTiers": [],
+          "defaultServiceTier": null,
+          "availableAccessPrograms": null,
+          "isDefault": false
+        },
+        {
+          "id": "fixture1/gpt-6.1-sol",
+          "model": "fixture1/gpt-6.1-sol",
+          "upgrade": null,
+          "upgradeInfo": null,
+          "availabilityNux": null,
+          "displayName": "中文渠道/gpt-6.1-sol",
+          "description": "Routed via opencodex → fixture1 (fixture1).",
+          "modelSpecialty": null,
+          "hidden": false,
+          "supportedReasoningEfforts": [
+            {
+              "reasoningEffort": "low",
+              "description": "Fast responses with lighter reasoning"
+            },
+            {
+              "reasoningEffort": "medium",
+              "description": "Balances speed and reasoning depth for everyday tasks"
+            },
+            {
+              "reasoningEffort": "high",
+              "description": "Greater reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "xhigh",
+              "description": "Extra high reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "max",
+              "description": "Maximum reasoning depth for the hardest problems"
+            },
+            {
+              "reasoningEffort": "ultra",
+              "description": "Maximum reasoning with automatic task delegation"
+            }
+          ],
+          "defaultReasoningEffort": "medium",
+          "inputModalities": [
+            "text"
+          ],
+          "supportsPersonality": false,
+          "multiAgentVersion": null,
+          "additionalSpeedTiers": [],
+          "serviceTiers": [],
+          "defaultServiceTier": null,
+          "availableAccessPrograms": null,
+          "isDefault": false
+        },
+        {
+          "id": "fixture1/vendor-gpt-6.1-sol",
+          "model": "fixture1/vendor-gpt-6.1-sol",
+          "upgrade": null,
+          "upgradeInfo": null,
+          "availabilityNux": null,
+          "displayName": "中文渠道/vendor/gpt-6.1-sol",
+          "description": "Routed via opencodex → fixture1 (fixture1).",
+          "modelSpecialty": null,
+          "hidden": false,
+          "supportedReasoningEfforts": [
+            {
+              "reasoningEffort": "low",
+              "description": "Fast responses with lighter reasoning"
+            },
+            {
+              "reasoningEffort": "medium",
+              "description": "Balances speed and reasoning depth for everyday tasks"
+            },
+            {
+              "reasoningEffort": "high",
+              "description": "Greater reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "xhigh",
+              "description": "Extra high reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "max",
+              "description": "Maximum reasoning depth for the hardest problems"
+            },
+            {
+              "reasoningEffort": "ultra",
+              "description": "Maximum reasoning with automatic task delegation"
+            }
+          ],
+          "defaultReasoningEffort": "medium",
+          "inputModalities": [
+            "text"
+          ],
+          "supportsPersonality": false,
+          "multiAgentVersion": null,
+          "additionalSpeedTiers": [],
+          "serviceTiers": [],
+          "defaultServiceTier": null,
+          "availableAccessPrograms": null,
+          "isDefault": false
+        },
+        {
+          "id": "fixture2/gpt-6-sol",
+          "model": "fixture2/gpt-6-sol",
+          "upgrade": null,
+          "upgradeInfo": null,
+          "availabilityNux": null,
+          "displayName": "人工指定名称",
+          "description": "Routed via opencodex → fixture2 (fixture2).",
+          "modelSpecialty": null,
+          "hidden": false,
+          "supportedReasoningEfforts": [
+            {
+              "reasoningEffort": "low",
+              "description": "Fast responses with lighter reasoning"
+            },
+            {
+              "reasoningEffort": "medium",
+              "description": "Balances speed and reasoning depth for everyday tasks"
+            },
+            {
+              "reasoningEffort": "high",
+              "description": "Greater reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "xhigh",
+              "description": "Extra high reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "max",
+              "description": "Maximum reasoning depth for the hardest problems"
+            },
+            {
+              "reasoningEffort": "ultra",
+              "description": "Maximum reasoning with automatic task delegation"
+            }
+          ],
+          "defaultReasoningEffort": "medium",
+          "inputModalities": [
+            "text"
+          ],
+          "supportsPersonality": false,
+          "multiAgentVersion": null,
+          "additionalSpeedTiers": [],
+          "serviceTiers": [],
+          "defaultServiceTier": null,
+          "availableAccessPrograms": null,
+          "isDefault": false
+        },
+        {
+          "id": "fixture2/gpt-6.1-sol",
+          "model": "fixture2/gpt-6.1-sol",
+          "upgrade": null,
+          "upgradeInfo": null,
+          "availabilityNux": null,
+          "displayName": "Team One/gpt-6.1-sol",
+          "description": "Routed via opencodex → fixture2 (fixture2).",
+          "modelSpecialty": null,
+          "hidden": false,
+          "supportedReasoningEfforts": [
+            {
+              "reasoningEffort": "low",
+              "description": "Fast responses with lighter reasoning"
+            },
+            {
+              "reasoningEffort": "medium",
+              "description": "Balances speed and reasoning depth for everyday tasks"
+            },
+            {
+              "reasoningEffort": "high",
+              "description": "Greater reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "xhigh",
+              "description": "Extra high reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "max",
+              "description": "Maximum reasoning depth for the hardest problems"
+            },
+            {
+              "reasoningEffort": "ultra",
+              "description": "Maximum reasoning with automatic task delegation"
+            }
+          ],
+          "defaultReasoningEffort": "medium",
+          "inputModalities": [
+            "text"
+          ],
+          "supportsPersonality": false,
+          "multiAgentVersion": null,
+          "additionalSpeedTiers": [],
+          "serviceTiers": [],
+          "defaultServiceTier": null,
+          "availableAccessPrograms": null,
+          "isDefault": false
+        },
+        {
+          "id": "fixture2/vendor-gpt-6.1-sol",
+          "model": "fixture2/vendor-gpt-6.1-sol",
+          "upgrade": null,
+          "upgradeInfo": null,
+          "availabilityNux": null,
+          "displayName": "Team One/vendor/gpt-6.1-sol",
+          "description": "Routed via opencodex → fixture2 (fixture2).",
+          "modelSpecialty": null,
+          "hidden": false,
+          "supportedReasoningEfforts": [
+            {
+              "reasoningEffort": "low",
+              "description": "Fast responses with lighter reasoning"
+            },
+            {
+              "reasoningEffort": "medium",
+              "description": "Balances speed and reasoning depth for everyday tasks"
+            },
+            {
+              "reasoningEffort": "high",
+              "description": "Greater reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "xhigh",
+              "description": "Extra high reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "max",
+              "description": "Maximum reasoning depth for the hardest problems"
+            },
+            {
+              "reasoningEffort": "ultra",
+              "description": "Maximum reasoning with automatic task delegation"
+            }
+          ],
+          "defaultReasoningEffort": "medium",
+          "inputModalities": [
+            "text"
+          ],
+          "supportsPersonality": false,
+          "multiAgentVersion": null,
+          "additionalSpeedTiers": [],
+          "serviceTiers": [],
+          "defaultServiceTier": null,
+          "availableAccessPrograms": null,
+          "isDefault": false
+        },
+        {
+          "id": "fixture3/gpt-6-sol",
+          "model": "fixture3/gpt-6-sol",
+          "upgrade": null,
+          "upgradeInfo": null,
+          "availabilityNux": null,
+          "displayName": "人工指定名称",
+          "description": "Routed via opencodex → fixture3 (fixture3).",
+          "modelSpecialty": null,
+          "hidden": false,
+          "supportedReasoningEfforts": [
+            {
+              "reasoningEffort": "low",
+              "description": "Fast responses with lighter reasoning"
+            },
+            {
+              "reasoningEffort": "medium",
+              "description": "Balances speed and reasoning depth for everyday tasks"
+            },
+            {
+              "reasoningEffort": "high",
+              "description": "Greater reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "xhigh",
+              "description": "Extra high reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "max",
+              "description": "Maximum reasoning depth for the hardest problems"
+            },
+            {
+              "reasoningEffort": "ultra",
+              "description": "Maximum reasoning with automatic task delegation"
+            }
+          ],
+          "defaultReasoningEffort": "medium",
+          "inputModalities": [
+            "text"
+          ],
+          "supportsPersonality": false,
+          "multiAgentVersion": null,
+          "additionalSpeedTiers": [],
+          "serviceTiers": [],
+          "defaultServiceTier": null,
+          "availableAccessPrograms": null,
+          "isDefault": false
+        },
+        {
+          "id": "fixture3/gpt-6.1-sol",
+          "model": "fixture3/gpt-6.1-sol",
+          "upgrade": null,
+          "upgradeInfo": null,
+          "availabilityNux": null,
+          "displayName": "团队/海外/gpt-6.1-sol",
+          "description": "Routed via opencodex → fixture3 (fixture3).",
+          "modelSpecialty": null,
+          "hidden": false,
+          "supportedReasoningEfforts": [
+            {
+              "reasoningEffort": "low",
+              "description": "Fast responses with lighter reasoning"
+            },
+            {
+              "reasoningEffort": "medium",
+              "description": "Balances speed and reasoning depth for everyday tasks"
+            },
+            {
+              "reasoningEffort": "high",
+              "description": "Greater reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "xhigh",
+              "description": "Extra high reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "max",
+              "description": "Maximum reasoning depth for the hardest problems"
+            },
+            {
+              "reasoningEffort": "ultra",
+              "description": "Maximum reasoning with automatic task delegation"
+            }
+          ],
+          "defaultReasoningEffort": "medium",
+          "inputModalities": [
+            "text"
+          ],
+          "supportsPersonality": false,
+          "multiAgentVersion": null,
+          "additionalSpeedTiers": [],
+          "serviceTiers": [],
+          "defaultServiceTier": null,
+          "availableAccessPrograms": null,
+          "isDefault": false
+        },
+        {
+          "id": "fixture3/vendor-gpt-6.1-sol",
+          "model": "fixture3/vendor-gpt-6.1-sol",
+          "upgrade": null,
+          "upgradeInfo": null,
+          "availabilityNux": null,
+          "displayName": "团队/海外/vendor/gpt-6.1-sol",
+          "description": "Routed via opencodex → fixture3 (fixture3).",
+          "modelSpecialty": null,
+          "hidden": false,
+          "supportedReasoningEfforts": [
+            {
+              "reasoningEffort": "low",
+              "description": "Fast responses with lighter reasoning"
+            },
+            {
+              "reasoningEffort": "medium",
+              "description": "Balances speed and reasoning depth for everyday tasks"
+            },
+            {
+              "reasoningEffort": "high",
+              "description": "Greater reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "xhigh",
+              "description": "Extra high reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "max",
+              "description": "Maximum reasoning depth for the hardest problems"
+            },
+            {
+              "reasoningEffort": "ultra",
+              "description": "Maximum reasoning with automatic task delegation"
+            }
+          ],
+          "defaultReasoningEffort": "medium",
+          "inputModalities": [
+            "text"
+          ],
+          "supportsPersonality": false,
+          "multiAgentVersion": null,
+          "additionalSpeedTiers": [],
+          "serviceTiers": [],
+          "defaultServiceTier": null,
+          "availableAccessPrograms": null,
+          "isDefault": false
+        },
+        {
+          "id": "gpt-5.6",
+          "model": "gpt-5.6",
+          "upgrade": null,
+          "upgradeInfo": null,
+          "availabilityNux": null,
+          "displayName": "gpt-5.6",
+          "description": "OpenAI native model (Codex OAuth passthrough).",
+          "modelSpecialty": null,
+          "hidden": false,
+          "supportedReasoningEfforts": [
+            {
+              "reasoningEffort": "low",
+              "description": "Fast responses with lighter reasoning"
+            },
+            {
+              "reasoningEffort": "medium",
+              "description": "Balances speed and reasoning depth for everyday tasks"
+            },
+            {
+              "reasoningEffort": "high",
+              "description": "Greater reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "xhigh",
+              "description": "Extra high reasoning depth for complex problems"
+            },
+            {
+              "reasoningEffort": "max",
+              "description": "Maximum reasoning depth for the hardest problems"
+            },
+            {
+              "reasoningEffort": "ultra",
+              "description": "Maximum reasoning with automatic task delegation"
+            }
+          ],
+          "defaultReasoningEffort": "medium",
+          "inputModalities": [
+            "text"
+          ],
+          "supportsPersonality": false,
+          "multiAgentVersion": null,
+          "additionalSpeedTiers": [],
+          "serviceTiers": [],
+          "defaultServiceTier": null,
+          "availableAccessPrograms": null,
+          "isDefault": false
+        }
+      ],
+      "nextCursor": null
+    }
+  }
+]

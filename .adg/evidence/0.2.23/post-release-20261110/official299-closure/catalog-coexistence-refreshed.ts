@@ -1,0 +1,9 @@
+import {join} from 'node:path';import {readFileSync,writeFileSync} from 'node:fs';import assert from 'node:assert/strict';
+const root=process.env.PROBE_ROOT!,imp=(p:string)=>import(join(root,'package/src',p));
+const {loadConfig}=await imp('config.ts');const {readCodexCatalogPath}=await imp('codex/paths.ts');const {syncCatalogModels}=await imp('codex/catalog/retained-sync.ts');
+const originalPath=join(root,'out/official-catalog.json'),desktopPath=join(root,'out/desktop-catalog.json');
+writeFileSync(join(process.env.CODEX_HOME!,'config.toml'),'model_catalog_json = '+JSON.stringify(originalPath)+'\n');
+assert.equal(readCodexCatalogPath(),originalPath);const before=readFileSync(desktopPath,'utf8');const config=loadConfig();
+const synced=await syncCatalogModels(config);assert.equal(readFileSync(desktopPath,'utf8'),before);
+writeFileSync(join(root,'out/coexistence-result.json'),JSON.stringify({scope:'real official299 retained catalog sync and separate candidate file; client override consumption tested separately',officialSelectedPathIsSeparate:readCodexCatalogPath()!==desktopPath,desktopProjectionUnchanged:true,sync:{catalogWritten:synced.catalogWritten,refreshOutcome:synced.refreshOutcome??null,skippedReason:synced.skippedReason??null,added:synced.added}},null,2));
+console.log(JSON.stringify({catalogWritten:synced.catalogWritten,refreshOutcome:synced.refreshOutcome??null,skippedReason:synced.skippedReason??null,added:synced.added}));

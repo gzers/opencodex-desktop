@@ -1,0 +1,17 @@
+221 |         : "";
+222 |       if (code !== "ENOENT") throw cause;
+223 |       databaseWasAbsent = true;
+224 |     }
+225 | 
+226 |     database = new Database(databasePath, { create: true });
+                     ^
+SQLiteError: unable to open database file
+      errno: 14,
+ byteOffset: -1,
+       code: "SQLITE_CANTOPEN"
+
+      at new Database (bun:sqlite:268:28)
+      at withCatalogWriteSerialization (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd-official299-gates-1g7e493p/package/src/codex/catalog-write-serialization.ts:226:16)
+      at syncCatalogModels (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd-official299-gates-1g7e493p/package/src/codex/catalog/retained-sync.ts:678:21)
+
+Bun v1.4.4 (macOS arm64)
