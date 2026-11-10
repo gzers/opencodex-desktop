@@ -1,0 +1,55 @@
+{
+  "scope": "Extracted 2.99 provider DTO/parser and initial PUT admission only; synthetic config and supplied admission snapshots; not actual Mac reproduction, full schema or complete save/credentials acceptance",
+  "result": "pass",
+  "cases": [
+    {
+      "name": "full-config-extra-root",
+      "result": "pass",
+      "observed": "invalid_provider_editor_body"
+    },
+    {
+      "name": "reject-apiKey",
+      "result": "pass",
+      "observed": "invalid_provider_editor_field"
+    },
+    {
+      "name": "reject-apiKeyPool",
+      "result": "pass",
+      "observed": "invalid_provider_editor_field"
+    },
+    {
+      "name": "reject-initialModelSelection",
+      "result": "pass",
+      "observed": "invalid_provider_editor_field"
+    },
+    {
+      "name": "unchanged-public-baseline-passes",
+      "result": "pass",
+      "observed": 200
+    },
+    {
+      "name": "changed-disk-public-dto-stale",
+      "result": "pass",
+      "observed": "stale_provider_editor_baseline"
+    },
+    {
+      "name": "missing-unavailable",
+      "result": "pass",
+      "observed": "provider_config_unavailable"
+    },
+    {
+      "name": "io-failure-unavailable",
+      "result": "pass",
+      "observed": "provider_config_unavailable"
+    },
+    {
+      "name": "schema-failure-unavailable",
+      "result": "pass",
+      "observed": "provider_config_unavailable"
+    }
+  ],
+  "sourceSha256": "cbe1e432b359b39799b15214d5f6e5f3ace06b9ab280d80f01d0c0d7aefca664",
+  "admissionBlockSha256": "fce8128d498324899d3460e2e6bc7d9e7fe65e3190f534edb0abe750fa335852",
+  "realCredentialsUsed": false,
+  "networkOrRealConfigWrites": false
+}

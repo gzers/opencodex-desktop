@@ -1,0 +1,67 @@
+{
+  "recordedAt": "2026-11-10T11:07:17.424957+08:00",
+  "userConfirmedIncidentVersion": "OpenCodex2.99.0, accepted as historical incident version; later current disk metadata does not rebut this",
+  "references": [
+    {
+      "path": "apps/desktop/tauri/src/commands/release_details.rs",
+      "sha256": "b43e93970bbe42e5d61cfb91dc227037dfb43408fad3d105572838a52d4c8a15"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/update/release_notes.rs",
+      "sha256": "34fd6cb5fc524fd835f5e13d04e09d47709555549a00a99ecd77223adde39a80"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/network.rs",
+      "sha256": "9ce47815969f79d8ed25e0f355e7576eeab7909feea921bf16f565ca97e92974"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/preferences/mod.rs",
+      "sha256": "a327116a2210d32810a5a1bc13869b48a90408da046d8aff1f6167fbe0ad94c0"
+    },
+    {
+      "path": "apps/desktop/tauri/config/preferences.defaults.json",
+      "sha256": "f1b398ca4a3d9b93b87765710402cc40b6b7a950e75f8dadf022033a7c1d235d"
+    },
+    {
+      "path": "apps/desktop/tauri/config/network.defaults.json",
+      "sha256": "92c0f8d006a0deae48b21503c54bfd34ff1c16a3d8b99282be4c37f697309591"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+      "sha256": "56ba6e8afd3e9245ff35bfac8b032235e62a8633137a96db9b52e473b7f545ea"
+    }
+  ],
+  "upstream": [
+    "2.97.0 cab7eb7d0332ae0ebb4289d7c6bac1de666b6e40",
+    "2.99.0 667662903a6c139524506667d12656d9ad50fad0"
+  ],
+  "providerInvestigation": {
+    "actual299AdmissionReplay": "9 synthetic cases pass; exact parser/projection/initial PUT admission extracted, source helpers stubbed for custom provider, diagnostic snapshots injected. No full schema, real Mac, actual persistence or credentials migration proof.",
+    "entryComparison": "PUT handler byte-identical; GUI hook equal after only build symbol normalization; classic299 uses same payload",
+    "remaining": "Historical baseline changed fields and snapshot IO/schema failure not identified; no claim user did not use299 or full config compatible."
+  },
+  "network": {
+    "existingSettings": "Settings > General > Network: none/system/manualHTTPorSOCKS5",
+    "notesConsumer": "release_details takes proxy_policy_for_app and creates HttpSource; None explicitly no_proxy, Manual Proxy::all, System client default",
+    "defaultMode": "none",
+    "currentOldRootDiskPreference": "none; manual host not configured. Current snapshot only, not original failing299 preference.",
+    "connectivityProbeTarget": "https://github.com/gzers/opencodex-desktop",
+    "notesActualTargets": [
+      "https://registry.npmjs.org/@bitkyc08%2fopencodex/2.99.0",
+      "https://api.github.com/repos/lidge-jun/opencodex/releases/tags/v2.99.0"
+    ],
+    "notesFailureBuckets": [
+      "network/HTTP non-success/timeout",
+      "size",
+      "identity metadata",
+      "pre-request candidate cache/source admission"
+    ],
+    "historyRootCause": "not known, network plausible not proven",
+    "proposalNotAdopted": "Reuse existing app network proxy; explicitly list release notes in scope, test actual API and npm separately, expose effective mode and safe failure category/status/timing, link failure state to network settings/retry. Add per-host override only if later real split-routing need. Keep TLS and source identity checks.",
+    "githubSeparateSettingNeededNow": false
+  },
+  "dailyConfigChanged": false,
+  "upstreamScriptsExecuted": false,
+  "liveServicesStarted": false,
+  "windowsNativeRetested": false
+}
