@@ -187,7 +187,7 @@ try {
  $r.stop.stableLocksReleased=($r.stop.stableLockReacquisition.Count -eq 2)
  $r.restorationChainPassed=($r.stop.agentRestored -and $r.stop.catalogRestored -and $r.stop.allListenersGone -and $r.stop.stableLocksReleased -and $r.injection.grokChanged -and $r.injection.catalogChanged -and $r.injection.catalogRoutedModelPresent -and $r.injection.codexConfigChanged -and @($after|Where-Object {!$_.restored}).Count -eq 0 -and $sw.ElapsedMilliseconds -lt 10000)
  Write-Proof 'client-restored.json' $after
- Require ($r.stop.originalExited -and $r.stop.originalExitCode -eq 0 -and $r.stop.jobActive -eq 0 -and $r.stop.jobMembers.Count -eq 0 -and $r.stop.listenerOwners.Count -eq 0 -and @($after|Where-Object {!$_.restored}).Count -eq 0 -and $treeSame -and $r.stop.clientConfigWasChanged -and $sw.ElapsedMilliseconds -lt 10000) 'normal Stop full proof failed'
+ Require ($r.restorationChainPassed -and $r.stop.originalExited -and $r.stop.originalExitCode -eq 0 -and $r.stop.jobActive -eq 0 -and $r.stop.jobMembers.Count -eq 0 -and $r.stop.listenerOwners.Count -eq 0 -and @($after|Where-Object {!$_.restored}).Count -eq 0 -and $treeSame -and $r.stop.clientConfigWasChanged -and $sw.ElapsedMilliseconds -lt 10000) 'normal Stop complete original tree and revision2 recovery proof required; stable-lock exception not adopted'
  $r.stop.pass=$true;$r.accepted=$true;$r.stage='complete'
 } catch {
  $r.firstError=@{stage=$r.stage;type=$_.Exception.GetType().FullName;message=$_.Exception.Message;line=$_.InvocationInfo.ScriptLineNumber;hresult=$_.Exception.HResult}
