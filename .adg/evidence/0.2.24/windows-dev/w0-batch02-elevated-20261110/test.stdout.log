@@ -1,0 +1,36 @@
+
+running 4 tests
+test tests::linked_or_broad_objects_are_refused_without_repair ... ok
+test tests::private_record_pins_bytes_and_generation ... ok
+test tests::real_token_user_is_observed ... ok
+test tests::unsafe_names_and_bounds_fail_before_creation ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 7 tests
+test case_duplicate_environment_is_rejected_without_running_child ... ok
+test home_environment_arguments_and_pre_resume_window ... ok
+test real_ipv4_ipv6_listeners_bind_to_original_job_generation ... native IPv4/IPv6 observations: OwnedListeners { listeners: [(Listener { family: Ipv4, address: 127.0.0.1, scope_id: 0, port: 57624, pid: 56328 }, ProcessIdentity { pid: 56328, creation_filetime: 134387998068797816, token: TokenIdentity { sid: "S-1-5-21-587408064-856152790-2583328096-1001", session_id: 2, elevated: true, elevation_type: 2 }, executable: "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd024-process-46220-2\\fixture.exe" }), (Listener { family: Ipv6, address: ::1, scope_id: 0, port: 57625, pid: 56328 }, ProcessIdentity { pid: 56328, creation_filetime: 134387998068797816, token: TokenIdentity { sid: "S-1-5-21-587408064-856152790-2583328096-1001", session_id: 2, elevated: true, elevation_type: 2 }, executable: "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd024-process-46220-2\\fixture.exe" })], family: FamilyState { root: Running, active_processes: 2, active_members: [ProcessIdentity { pid: 56328, creation_filetime: 134387998068797816, token: TokenIdentity { sid: "S-1-5-21-587408064-856152790-2583328096-1001", session_id: 2, elevated: true, elevation_type: 2 }, executable: "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd024-process-46220-2\\fixture.exe" }, ProcessIdentity { pid: 45728, creation_filetime: 134387998068972118, token: TokenIdentity { sid: "S-1-5-21-587408064-856152790-2583328096-1001", session_id: 2, elevated: true, elevation_type: 2 }, executable: "C:\\Windows\\System32\\conhost.exe" }], retained_members: [(ProcessIdentity { pid: 45728, creation_filetime: 134387998068972118, token: TokenIdentity { sid: "S-1-5-21-587408064-856152790-2583328096-1001", session_id: 2, elevated: true, elevation_type: 2 }, executable: "C:\\Windows\\System32\\conhost.exe" }, Running)] } }
+ok
+test replaced_listener_on_original_endpoint_prevents_exit_readback ... ok
+test root_exit_is_not_complete_while_owned_child_remains ... controlled original family: FamilyState { root: Running, active_processes: 3, active_members: [ProcessIdentity { pid: 96808, creation_filetime: 134387998069826043, token: TokenIdentity { sid: "S-1-5-21-587408064-856152790-2583328096-1001", session_id: 2, elevated: true, elevation_type: 2 }, executable: "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd024-process-46220-4\\fixture.exe" }, ProcessIdentity { pid: 23312, creation_filetime: 134387998069914480, token: TokenIdentity { sid: "S-1-5-21-587408064-856152790-2583328096-1001", session_id: 2, elevated: true, elevation_type: 2 }, executable: "C:\\Windows\\System32\\conhost.exe" }, ProcessIdentity { pid: 23480, creation_filetime: 134387998070069752, token: TokenIdentity { sid: "S-1-5-21-587408064-856152790-2583328096-1001", session_id: 2, elevated: true, elevation_type: 2 }, executable: "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd024-process-46220-4\\fixture.exe" }], retained_members: [(ProcessIdentity { pid: 23480, creation_filetime: 134387998070069752, token: TokenIdentity { sid: "S-1-5-21-587408064-856152790-2583328096-1001", session_id: 2, elevated: true, elevation_type: 2 }, executable: "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd024-process-46220-4\\fixture.exe" }, Running), (ProcessIdentity { pid: 23312, creation_filetime: 134387998069914480, token: TokenIdentity { sid: "S-1-5-21-587408064-856152790-2583328096-1001", session_id: 2, elevated: true, elevation_type: 2 }, executable: "C:\\Windows\\System32\\conhost.exe" }, Running)] }
+ok
+test suspended_binding_and_original_nonzero_exit ... native root binding before resume: RootBinding { process: ProcessIdentity { pid: 29496, creation_filetime: 134387998071253951, token: TokenIdentity { sid: "S-1-5-21-587408064-856152790-2583328096-1001", session_id: 2, elevated: true, elevation_type: 2 }, executable: "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd024-process-46220-5\\fixture.exe" }, home: "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd024-process-46220-5\\home", home_id: FileIdentity { volume: 247287385, index: 3940649675039261 }, executable_id: FileIdentity { volume: 247287385, index: 4222124651749916 } }
+original exit through retained handles: FamilyState { root: Exited { code: 7 }, active_processes: 0, active_members: [], retained_members: [(ProcessIdentity { pid: 44744, creation_filetime: 134387998071339971, token: TokenIdentity { sid: "S-1-5-21-587408064-856152790-2583328096-1001", session_id: 2, elevated: true, elevation_type: 2 }, executable: "C:\\Windows\\System32\\conhost.exe" }, Exited { code: 0 })] }
+ok
+test timeout_is_observation_only_and_force_is_separately_typed ... separate forced-cleanup fact, not normal stop: ForcedCleanup { forced: true, final_state: FamilyState { root: Exited { code: 242 }, active_processes: 0, active_members: [], retained_members: [(ProcessIdentity { pid: 20484, creation_filetime: 134387998071771558, token: TokenIdentity { sid: "S-1-5-21-587408064-856152790-2583328096-1001", session_id: 2, elevated: true, elevation_type: 2 }, executable: "C:\\Windows\\System32\\conhost.exe" }, Exited { code: 242 })] } }
+ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.44s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

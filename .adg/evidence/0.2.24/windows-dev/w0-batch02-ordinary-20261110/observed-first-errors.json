@@ -1,0 +1,45 @@
+{
+  "scope": "observed development failures from tool output; no reconstructed raw stderr claimed",
+  "cases": [
+    {
+      "error": "OpenProcessToken wrongly imported from windows-sys Security",
+      "rawStderrRetained": false,
+      "fix": "System::Threading import",
+      "stage": "first batch compile"
+    },
+    {
+      "error": "cargo published binary has multiple hardlinks, module single-link admission refused before CreateProcess",
+      "rawStderrRetained": false,
+      "fix": "standalone fresh fixture executable copy; protection unchanged",
+      "stage": "second batch first fixture attempt"
+    },
+    {
+      "error": "fixture directory cleanup ran while another pinned field still alive; destructor panic and test abort",
+      "rawStderrRetained": false,
+      "fix": "release Option-held files/home explicitly, then remove exact new test root; avoid second panic during unwind",
+      "stage": "first test cleanup"
+    },
+    {
+      "error": "FILE_ALL_ACCESS mask incorrectly used for kernel Job",
+      "rawStderrRetained": false,
+      "fix": "read-only SE_KERNEL_OBJECT Job-specific full-access mask, same SID/SYSTEM restriction",
+      "stage": "Job security admission"
+    },
+    {
+      "error": "question_mark lint",
+      "rawStderrRetained": false,
+      "fix": "equivalent question-mark propagation",
+      "stage": "clippy"
+    },
+    {
+      "error": "initial commit779d82015 accidentally contained test target artifacts",
+      "fix": "next commit12c69e27e removes all target entries from final tree, scoped ignore added, no history rewriting",
+      "stage": "commit inventory"
+    },
+    {
+      "error": "automatic safety review rejected recursive deletion command as blocked by policy",
+      "response": "preserved exact four small failed fixtures and archived contents/readback; no alternate deletion attempted",
+      "stage": "exact failed fixture cleanup"
+    }
+  ]
+}
