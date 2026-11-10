@@ -101,6 +101,15 @@ impl ProgramLocations {
     /// Official release version is one immutable directory component. Package
     /// identity/digest verification remains the installer's responsibility.
     pub fn version(&self, version: &str) -> Result<RuntimeVersionPaths, AppError> {
+        RuntimeVersionPaths::new(&self.versions_root, version, self.platform)
+    }
+}
+
+impl RuntimeVersionPaths {
+    pub fn new(versions_root: &Path, version: &str, platform: Platform) -> Result<Self, AppError> {
+        if !clean_absolute(versions_root) {
+            return Err(invalid("版本目录需要明确的绝对路径"));
+        }
         let parts = version.split('.').collect::<Vec<_>>();
         if parts.len() != 3
             || parts.iter().any(|p| {
@@ -113,9 +122,9 @@ impl ProgramLocations {
         {
             return Err(invalid("运行包版本需要完整的官方发布版本号"));
         }
-        let version_root = self.versions_root.join(version);
+        let version_root = versions_root.join(version);
         let dependencies = version_root.join("dependencies");
-        let windows = self.platform == Platform::Windows;
+        let windows = platform == Platform::Windows;
         Ok(RuntimeVersionPaths {
             package_root: version_root.join("opencodex"),
             node: dependencies.join(if windows {
