@@ -132,3 +132,28 @@ or current-run lock reacquisition followed. Full raw official-stop and finally
 images are preserved; analyze-r4.ts and verify-r4.mjs review them offline. There
 is no second service run or retroactive success label. Only the two specifically
 adopted stable-lock paths may be excepted; all other differences still fail.
+
+Revision 5 uses docs 1f35d520f74ac261f32c407f038e8f07a21c15fd and
+run.ps1 -RestorationRevision5. cache-candidate.ts and its CLI/test inputs were
+copied from the exact handoff Git blobs after manifest verification. The legacy
+producer-r4 implementation remains unchanged: the original native-cache branch
+and the other four path rules still run. The added cache branch can only restore
+an originally absent cache to absence after verifying fixed official wrapping,
+same raw bytes/file ID/owner/DACL through ready/pre-stop/official-stop, ready
+catalog equality, independently frozen pre-start model declarations, and a
+matching startup-cache audit event. It grants no artifact-retention exception.
+
+host-r5 freezes scope before original service creation and records current native
+context only after original normal exit, complete Job/listener observations and
+Agent restoration. It copies the CURRENT integer elapsedMs from the original
+Stop stopwatch, seals context/scope/stages with retained no-write/no-delete
+sharing handles and hashes, invokes a create-only output CLI, and rechecks input
+hashes before building the exact five-path plan. CLI, serialization, coordination,
+batch writes, lock workers and final readback all consume the same 10 seconds.
+
+The single recorded service run is 66afa61133d7654d3a2dfd172f49845bfb5272c3.
+It passed the isolated proof under only the two previously adopted stable-lock
+exceptions. Complete original-tree equality remains false because those two
+files remain. That old assertion is retained separately. New code/verification
+does not relabel any historical failure or constitute production integration,
+daily-file provenance, dual-user acceptance, installer acceptance or release.
