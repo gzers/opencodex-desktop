@@ -1,0 +1,16 @@
+
+running 11 tests
+test modules::data_root::layout::tests::aliases_cannot_hide_nested_installation_or_user_data ... ok
+test modules::data_root::layout::tests::distinct_users_share_program_but_never_state_or_home ... ok
+test modules::data_root::layout::tests::mac_container_aliases_are_refused_without_touching_old_bundle_or_config ... ok
+test modules::data_root::layout::tests::mac_container_case_comparison_follows_the_actual_volume ... ok
+test modules::data_root::layout::tests::mac_dedicated_custom_and_shared_read_only_folders_remain_valid ... ok
+test modules::data_root::layout::tests::mac_explicit_home_and_personal_applications_are_containers ... ok
+test modules::data_root::layout::tests::mac_runtime_is_separate_from_signed_bundle_and_data ... ok
+test modules::data_root::layout::tests::mac_shared_containers_and_volume_roots_are_refused_read_only ... ok
+test modules::data_root::layout::tests::mac_standard_app_uses_current_user_program_directory ... ok
+test modules::data_root::layout::tests::refuses_relative_parent_and_nested_program_roots ... ok
+test modules::data_root::layout::tests::windows_layout_does_not_gain_macos_container_policy ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 2028 filtered out; finished in 0.01s
+

@@ -1,7 +1,7 @@
 {
   "$id": "ADG-VNEXT-SHARED-PATH-POLICY-01",
   "policy_id": "SPP-OPENCODEX-APP",
-  "revision": 5,
+  "revision": 6,
   "shared_paths": [
     ".adg/authority-policy.json",
     ".adg/cache/**",
@@ -10,16 +10,20 @@
     ".adg/shared-path-policy.json",
     "docs/01-需求管理/README.md",
     "docs/01-需求管理/需求/DMD-OPENCODEX-POST022.md",
+    "docs/01-需求管理/需求/DMD-OPENCODEX-POST023.md",
     "docs/01-需求管理/需求/DMD-OPENCODEX-TEMPLATE-MATCHING.md",
     "docs/01-需求管理/需求/DMD-OPENCODEX-USER-DIRECTORY.md",
     "docs/02-项目核心/**",
     "docs/03-开发实施/0.2.23-contracts/**",
+    "docs/03-开发实施/0.2.24-contracts/program-layout-r1.md",
     "docs/03-开发实施/01-实施/**",
     "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-31.md",
     "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-32.md",
     "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-33.md",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-34.md",
     "docs/03-开发实施/README.md",
     "docs/03-开发实施/TEAM-0.2.23.md",
+    "docs/03-开发实施/TEAM-0.2.24.md",
     "docs/03-开发实施/WINDOWS-0.2.23.md",
     "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md",
     "docs/04-项目资料/01-项目支撑资料/01-产品原型/glass-components.css",
@@ -201,5 +205,5 @@
     "docs/04-项目资料/README.md",
     "docs/README.md"
   ],
-  "policy_digest": "15e1da8e987aabe23a4a0ca5f50b9c27bdb06f138caaa1352fd5dff54c6b7229"
+  "policy_digest": "cdc9f824a8ab89c831eb00838646dc4a1ee1d5ae226013a02349e9d2c19a8228"
 }
