@@ -25,7 +25,7 @@ function Check-Private([string]$path){
  return $acl.Sddl
 }
 $guards=[Collections.Generic.List[IDisposable]]::new();$runtime=$null;$http=$null;$bindingLock=$null
-$r=[ordered]@{schema='official299-windows-proof/1';accepted=$false;stage='ordinary-identity';start=$null;status=$null;stop=$null;firstError=$null;counterexamples=@();cleanup=@();budgetsMs=@{start=30000;status=5000;stop=10000};utc=[datetime]::UtcNow.ToString('o')}
+$r=[ordered]@{schema='official299-windows-proof/1';accepted=$false;stage='ordinary-identity';runtimeCreationEntered=$false;start=$null;status=$null;stop=$null;firstError=$null;counterexamples=@();cleanup=@();budgetsMs=@{start=30000;status=5000;stop=10000};utc=[datetime]::UtcNow.ToString('o')}
 $trace=[Collections.Generic.List[object]]::new()
 try {
  Require ($sid -ceq $c.sid) 'new account SID differs'
@@ -37,11 +37,11 @@ try {
  $r.host=$self;$r.hostSourceSha256=Digest $PSCommandPath;$r.nativeSourceSha256=Digest (Join-Path $PSScriptRoot 'Native.cs')
  $fixture=Join-Path $c.profile 'official299-proof';Private-Directory $fixture
  foreach($leaf in @('home','runtime','codex','claude','grok','temp','program')){Private-Directory (Join-Path $fixture $leaf)}
- $home=Join-Path $fixture 'home';$runtimeHome=Join-Path $fixture 'runtime';$codex=Join-Path $fixture 'codex';$claude=Join-Path $fixture 'claude';$grok=Join-Path $fixture 'grok'
+ $isolatedHome=Join-Path $fixture 'home';$runtimeHome=Join-Path $fixture 'runtime';$codex=Join-Path $fixture 'codex';$claude=Join-Path $fixture 'claude';$grok=Join-Path $fixture 'grok'
  $r.fixture=$fixture
  $p=$fixture
  while($p){$guards.Add([Official299Proof.Guard]::new($p,$true));$next=Split-Path -Parent $p;if($next -eq $p){break};$p=$next}
- foreach($path in @($home,$runtimeHome,$codex,$claude,$grok)){$guards.Add([Official299Proof.Guard]::new($path,$true));$null=Check-Private $path}
+ foreach($path in @($isolatedHome,$runtimeHome,$codex,$claude,$grok)){$guards.Add([Official299Proof.Guard]::new($path,$true));$null=Check-Private $path}
  $r.privateRoot=@{path=$fixture;sddl=(Check-Private $fixture);protected=(Get-Acl $fixture).AreAccessRulesProtected}
  Require $r.privateRoot.protected 'private root still inherits'
  $r.stage='private-package-copy'
@@ -71,7 +71,7 @@ try {
  $config=@{hostname='127.0.0.1';port=$port;providers=@{};syncResumeHistory=$false;shutdownTimeoutMs=5000}
  [IO.File]::WriteAllText((Join-Path $runtimeHome 'config.json'),($config|ConvertTo-Json -Depth 8))
  $admin=[Convert]::ToHexString([Security.Cryptography.RandomNumberGenerator]::GetBytes(32)).ToLowerInvariant()
- $ev=@{SystemRoot=$env:SystemRoot;WINDIR=$env:WINDIR;COMSPEC=(Join-Path $env:SystemRoot 'System32/cmd.exe');PATH=((Split-Path -Parent $bun)+';'+$env:SystemRoot+'\System32;'+$PSHOME);PATHEXT='.COM;.EXE;.BAT;.CMD';USERPROFILE=$c.profile;HOME=$home;OPENCODEX_HOME=$runtimeHome;CODEX_HOME=$codex;CLAUDE_CONFIG_DIR=$claude;GROK_HOME=$grok;APPDATA=(Join-Path $c.profile 'AppData/Roaming');LOCALAPPDATA=(Join-Path $c.profile 'AppData/Local');TEMP=(Join-Path $fixture 'temp');TMP=(Join-Path $fixture 'temp');USERNAME=$env:USERNAME;USERDOMAIN=$env:USERDOMAIN;OPENCODEX_ADMIN_AUTH_TOKEN=$admin;NO_COLOR='1';CI='1'}
+ $ev=@{SystemRoot=$env:SystemRoot;WINDIR=$env:WINDIR;COMSPEC=(Join-Path $env:SystemRoot 'System32/cmd.exe');PATH=((Split-Path -Parent $bun)+';'+$env:SystemRoot+'\System32;'+$PSHOME);PATHEXT='.COM;.EXE;.BAT;.CMD';USERPROFILE=$c.profile;HOME=$isolatedHome;OPENCODEX_HOME=$runtimeHome;CODEX_HOME=$codex;CLAUDE_CONFIG_DIR=$claude;GROK_HOME=$grok;APPDATA=(Join-Path $c.profile 'AppData/Roaming');LOCALAPPDATA=(Join-Path $c.profile 'AppData/Local');TEMP=(Join-Path $fixture 'temp');TMP=(Join-Path $fixture 'temp');USERNAME=$env:USERNAME;USERDOMAIN=$env:USERDOMAIN;OPENCODEX_ADMIN_AUTH_TOKEN=$admin;NO_COLOR='1';CI='1'}
  $handler=[Net.Http.HttpClientHandler]::new();$handler.UseProxy=$false;$http=[Net.Http.HttpClient]::new($handler);$http.Timeout=[Threading.Timeout]::InfiniteTimeSpan
  function Request([string]$path,[string]$method,[long]$remaining,[hashtable]$headers){
   Require ($remaining -gt 0) 'action budget exhausted before HTTP'
@@ -85,6 +85,7 @@ try {
   try{$expected=[Convert]::ToBase64String($mac.ComputeHash([Text.Encoding]::UTF8.GetBytes(('opencodex-local-management-v1',$challenge,$processId,$endpoint -join [char]10)))).TrimEnd('=').Replace('+','-').Replace('/','_');return [Security.Cryptography.CryptographicOperations]::FixedTimeEquals([Text.Encoding]::ASCII.GetBytes($expected),[Text.Encoding]::ASCII.GetBytes($proof))}finally{$mac.Dispose()}
  }
  $r.stage='start';$watch=[Diagnostics.Stopwatch]::StartNew()
+ $r.runtimeCreationEntered=$true
  $runtime=[Official299Proof.Owned]::new($bun,('"'+$bun+'" run "'+(Join-Path $package 'src/cli/index.ts')+'" start --port '+$port),$package,$ev,(Join-Path $out 'startup.stdout.log'),(Join-Path $out 'startup.stderr.log'),$sid)
  Require (($runtime.Limits() -band 0x1800) -eq 0) 'Job permits child breakaway'
  $r.job=@{unnamed=$true;retainedHandle=$true;limitFlags=$runtime.Limits();breakawayAllowed=$false;sddl=('O:'+$sid+'D:P(A;;GA;;;'+$sid+')(A;;GA;;;SY)')}
@@ -149,6 +150,7 @@ try {
  if($r.stage -eq 'start' -and $r.start){$r.start.elapsedMs=$watch.ElapsedMilliseconds}
  if($r.stage -eq 'stop' -and $r.stop){$r.stop.elapsedMs=$sw.ElapsedMilliseconds}
 } finally {
+ if(!$r.runtimeCreationEntered){$r.cleanup+=@{kind='no-runtime-creation-entered';jobActive=0;jobMembers=@();reason='failure before native service constructor; no runtime/version subprocess launched'}}
  if($runtime){try{$pre=@{kind='before-forced-cleanup';originalExited=$runtime.Exited();jobActive=$runtime.Active();jobMembers=@($runtime.Members());exitCode=$(if($runtime.Exited()){$runtime.ExitCode()}else{$null})};$r.cleanup+=$pre;if($pre.jobActive -gt 0){$runtime.ForceOwnedCleanup();$wait=[Diagnostics.Stopwatch]::StartNew();while($runtime.Active() -gt 0 -and $wait.ElapsedMilliseconds -lt 5000){Start-Sleep -Milliseconds 25};$r.cleanup+=@{kind='separate-forced-owned-job';jobActive=$runtime.Active();jobMembers=@($runtime.Members());exitCode=$(if($runtime.Exited()){$runtime.ExitCode()}else{$null});normalStopUnchanged=$true}}}catch{$r.cleanup+=@{kind='unknown';error=$_.Exception.Message}}}
  if($bindingLock){$bindingLock.Dispose()};foreach($g in $guards){$g.Dispose()};if($runtime){$runtime.Dispose()};if($http){$http.Dispose()}
  Write-Proof 'startup-trace.json' $trace.ToArray();Write-Proof 'result.json' $r
