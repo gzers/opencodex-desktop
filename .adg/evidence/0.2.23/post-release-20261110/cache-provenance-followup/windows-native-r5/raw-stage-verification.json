@@ -1,0 +1,639 @@
+{
+  "pass": true,
+  "stageStates": {
+    "before": "captured",
+    "ready": "captured",
+    "pre-stop": "captured",
+    "official-stop": "captured",
+    "host-compensated": "captured",
+    "failure-finally": "captured"
+  },
+  "rawChecks": [
+    {
+      "stage": "before",
+      "path": "codex/config.toml",
+      "size": 166,
+      "sha256": "fedfba9e0fc61dba095de2639f4a7772b1224f149bcf1f84ede490b5a1efaf4f",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "before",
+      "path": "codex/opencodex-catalog.json",
+      "size": 294198,
+      "sha256": "cfab95ffae957d49aa3ebe4520db56774a7339c77da67668b0222ce77e93d6f5",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "before",
+      "path": "codex/auth.json",
+      "size": 55,
+      "sha256": "f9e13beadacfe3ba21722f896c68d34ceda0cbd1edefa55b824cae832f7a9e3e",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "before",
+      "path": "claude/settings.json",
+      "size": 47,
+      "sha256": "a7ed528018cdeaafbfb546a44b6748fb81d8ee669f6f3722a4dca088c4f9d45f",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "before",
+      "path": "grok/config.toml",
+      "size": 122,
+      "sha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "ready",
+      "path": "codex/config.toml",
+      "size": 348,
+      "sha256": "1b50e4f8868be7786375a65d435ba943bad74f60d80f3979aecca76221f499e1",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "ready",
+      "path": "codex/opencodex-catalog.json",
+      "size": 2375,
+      "sha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "ready",
+      "path": "codex/models_cache.json",
+      "size": 2375,
+      "sha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "ready",
+      "path": "codex/opencodex-catalog-audit.jsonl",
+      "size": 286,
+      "sha256": "21f6443d5cf4a7d073089cc5cb2e5815340d8ac361a506a24734a8da967c9b98",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "ready",
+      "path": "grok/config.toml.bak-opencodex",
+      "size": 122,
+      "sha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "ready",
+      "path": "codex/auth.json",
+      "size": 55,
+      "sha256": "f9e13beadacfe3ba21722f896c68d34ceda0cbd1edefa55b824cae832f7a9e3e",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "ready",
+      "path": "claude/settings.json",
+      "size": 47,
+      "sha256": "a7ed528018cdeaafbfb546a44b6748fb81d8ee669f6f3722a4dca088c4f9d45f",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "ready",
+      "path": "grok/config.toml",
+      "size": 8650,
+      "sha256": "3948346c10648786f00c7c56d6424396eddf929553ae8378b8b89f656346158c",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "pre-stop",
+      "path": "codex/config.toml",
+      "size": 348,
+      "sha256": "1b50e4f8868be7786375a65d435ba943bad74f60d80f3979aecca76221f499e1",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "pre-stop",
+      "path": "codex/opencodex-catalog.json",
+      "size": 2375,
+      "sha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "pre-stop",
+      "path": "codex/models_cache.json",
+      "size": 2375,
+      "sha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "pre-stop",
+      "path": "codex/opencodex-catalog-audit.jsonl",
+      "size": 286,
+      "sha256": "21f6443d5cf4a7d073089cc5cb2e5815340d8ac361a506a24734a8da967c9b98",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "pre-stop",
+      "path": "grok/config.toml.bak-opencodex",
+      "size": 122,
+      "sha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "pre-stop",
+      "path": "codex/auth.json",
+      "size": 55,
+      "sha256": "f9e13beadacfe3ba21722f896c68d34ceda0cbd1edefa55b824cae832f7a9e3e",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "pre-stop",
+      "path": "claude/settings.json",
+      "size": 47,
+      "sha256": "a7ed528018cdeaafbfb546a44b6748fb81d8ee669f6f3722a4dca088c4f9d45f",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "pre-stop",
+      "path": "grok/config.toml",
+      "size": 8650,
+      "sha256": "3948346c10648786f00c7c56d6424396eddf929553ae8378b8b89f656346158c",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "official-stop",
+      "path": "codex/config.toml",
+      "size": 65,
+      "sha256": "cba8830e7bd0df1cc8f54b63a1ff1bd75e9af34a7d46c2cf756d7064c9c0d2ca",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "official-stop",
+      "path": "codex/opencodex-catalog.json",
+      "size": 275337,
+      "sha256": "07a99e78c40f29b3aba65ae99eb7dd789670616d8a3c6b8dc2c558d77ab207de",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "official-stop",
+      "path": "codex/models_cache.json",
+      "size": 2375,
+      "sha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "official-stop",
+      "path": "codex/opencodex-catalog-audit.jsonl",
+      "size": 286,
+      "sha256": "21f6443d5cf4a7d073089cc5cb2e5815340d8ac361a506a24734a8da967c9b98",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "official-stop",
+      "path": "grok/config.toml.bak-opencodex",
+      "size": 122,
+      "sha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "official-stop",
+      "path": "codex/auth.json",
+      "size": 55,
+      "sha256": "f9e13beadacfe3ba21722f896c68d34ceda0cbd1edefa55b824cae832f7a9e3e",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "official-stop",
+      "path": "claude/settings.json",
+      "size": 47,
+      "sha256": "a7ed528018cdeaafbfb546a44b6748fb81d8ee669f6f3722a4dca088c4f9d45f",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "official-stop",
+      "path": "grok/config.toml",
+      "size": 122,
+      "sha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "host-compensated",
+      "path": "codex/config.toml",
+      "size": 166,
+      "sha256": "fedfba9e0fc61dba095de2639f4a7772b1224f149bcf1f84ede490b5a1efaf4f",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "host-compensated",
+      "path": "codex/opencodex-catalog.json",
+      "size": 294198,
+      "sha256": "cfab95ffae957d49aa3ebe4520db56774a7339c77da67668b0222ce77e93d6f5",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "host-compensated",
+      "path": "codex/auth.json",
+      "size": 55,
+      "sha256": "f9e13beadacfe3ba21722f896c68d34ceda0cbd1edefa55b824cae832f7a9e3e",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "host-compensated",
+      "path": "claude/settings.json",
+      "size": 47,
+      "sha256": "a7ed528018cdeaafbfb546a44b6748fb81d8ee669f6f3722a4dca088c4f9d45f",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "host-compensated",
+      "path": "grok/config.toml",
+      "size": 122,
+      "sha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "failure-finally",
+      "path": "codex/config.toml",
+      "size": 166,
+      "sha256": "fedfba9e0fc61dba095de2639f4a7772b1224f149bcf1f84ede490b5a1efaf4f",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "failure-finally",
+      "path": "codex/opencodex-catalog.json",
+      "size": 294198,
+      "sha256": "cfab95ffae957d49aa3ebe4520db56774a7339c77da67668b0222ce77e93d6f5",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "failure-finally",
+      "path": "codex/auth.json",
+      "size": 55,
+      "sha256": "f9e13beadacfe3ba21722f896c68d34ceda0cbd1edefa55b824cae832f7a9e3e",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "failure-finally",
+      "path": "claude/settings.json",
+      "size": 47,
+      "sha256": "a7ed528018cdeaafbfb546a44b6748fb81d8ee669f6f3722a4dca088c4f9d45f",
+      "rawRoundTrip": true
+    },
+    {
+      "stage": "failure-finally",
+      "path": "grok/config.toml",
+      "size": 122,
+      "sha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe",
+      "rawRoundTrip": true
+    }
+  ],
+  "structuredDifferences": {
+    "ready": [
+      {
+        "path": "codex/config.toml",
+        "beforeState": "file",
+        "afterState": "file",
+        "beforeSha256": "fedfba9e0fc61dba095de2639f4a7772b1224f149bcf1f84ede490b5a1efaf4f",
+        "afterSha256": "1b50e4f8868be7786375a65d435ba943bad74f60d80f3979aecca76221f499e1",
+        "bytesEqual": false,
+        "fieldsAdded": [
+          "openai_base_url",
+          "experimental_realtime_ws_base_url"
+        ],
+        "fieldsRemoved": [
+          "model_provider"
+        ],
+        "fieldsChanged": []
+      },
+      {
+        "path": "codex/opencodex-catalog.json",
+        "beforeState": "file",
+        "afterState": "file",
+        "beforeSha256": "cfab95ffae957d49aa3ebe4520db56774a7339c77da67668b0222ce77e93d6f5",
+        "afterSha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51",
+        "bytesEqual": false,
+        "slugAdded": [
+          "fixture/gpt-6.1-sol"
+        ],
+        "slugRemoved": [
+          "gpt-6-astra",
+          "gpt-5.6-sol",
+          "gpt-5.6-terra",
+          "gpt-5.6-luna",
+          "gpt-daybreak-blue-latest",
+          "gpt-daybreak-red-latest",
+          "gpt-5.5",
+          "gpt-5.4",
+          "codex-auto-review"
+        ],
+        "slugChanged": []
+      },
+      {
+        "path": "codex/models_cache.json",
+        "beforeState": "absent",
+        "afterState": "file",
+        "beforeSha256": null,
+        "afterSha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51",
+        "bytesEqual": false
+      },
+      {
+        "path": "codex/opencodex-catalog-audit.jsonl",
+        "beforeState": "absent",
+        "afterState": "file",
+        "beforeSha256": null,
+        "afterSha256": "21f6443d5cf4a7d073089cc5cb2e5815340d8ac361a506a24734a8da967c9b98",
+        "bytesEqual": false
+      },
+      {
+        "path": "grok/config.toml.bak-opencodex",
+        "beforeState": "absent",
+        "afterState": "file",
+        "beforeSha256": null,
+        "afterSha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe",
+        "bytesEqual": false
+      },
+      {
+        "path": "grok/config.toml",
+        "beforeState": "file",
+        "afterState": "file",
+        "beforeSha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe",
+        "afterSha256": "3948346c10648786f00c7c56d6424396eddf929553ae8378b8b89f656346158c",
+        "bytesEqual": false,
+        "parseState": "failed-but-raw-bytes-retained",
+        "parseErrorType": "SyntaxError"
+      }
+    ],
+    "pre-stop": [
+      {
+        "path": "codex/config.toml",
+        "beforeState": "file",
+        "afterState": "file",
+        "beforeSha256": "fedfba9e0fc61dba095de2639f4a7772b1224f149bcf1f84ede490b5a1efaf4f",
+        "afterSha256": "1b50e4f8868be7786375a65d435ba943bad74f60d80f3979aecca76221f499e1",
+        "bytesEqual": false,
+        "fieldsAdded": [
+          "openai_base_url",
+          "experimental_realtime_ws_base_url"
+        ],
+        "fieldsRemoved": [
+          "model_provider"
+        ],
+        "fieldsChanged": []
+      },
+      {
+        "path": "codex/opencodex-catalog.json",
+        "beforeState": "file",
+        "afterState": "file",
+        "beforeSha256": "cfab95ffae957d49aa3ebe4520db56774a7339c77da67668b0222ce77e93d6f5",
+        "afterSha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51",
+        "bytesEqual": false,
+        "slugAdded": [
+          "fixture/gpt-6.1-sol"
+        ],
+        "slugRemoved": [
+          "gpt-6-astra",
+          "gpt-5.6-sol",
+          "gpt-5.6-terra",
+          "gpt-5.6-luna",
+          "gpt-daybreak-blue-latest",
+          "gpt-daybreak-red-latest",
+          "gpt-5.5",
+          "gpt-5.4",
+          "codex-auto-review"
+        ],
+        "slugChanged": []
+      },
+      {
+        "path": "codex/models_cache.json",
+        "beforeState": "absent",
+        "afterState": "file",
+        "beforeSha256": null,
+        "afterSha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51",
+        "bytesEqual": false
+      },
+      {
+        "path": "codex/opencodex-catalog-audit.jsonl",
+        "beforeState": "absent",
+        "afterState": "file",
+        "beforeSha256": null,
+        "afterSha256": "21f6443d5cf4a7d073089cc5cb2e5815340d8ac361a506a24734a8da967c9b98",
+        "bytesEqual": false
+      },
+      {
+        "path": "grok/config.toml.bak-opencodex",
+        "beforeState": "absent",
+        "afterState": "file",
+        "beforeSha256": null,
+        "afterSha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe",
+        "bytesEqual": false
+      },
+      {
+        "path": "grok/config.toml",
+        "beforeState": "file",
+        "afterState": "file",
+        "beforeSha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe",
+        "afterSha256": "3948346c10648786f00c7c56d6424396eddf929553ae8378b8b89f656346158c",
+        "bytesEqual": false,
+        "parseState": "failed-but-raw-bytes-retained",
+        "parseErrorType": "SyntaxError"
+      }
+    ],
+    "official-stop": [
+      {
+        "path": "codex/config.toml",
+        "beforeState": "file",
+        "afterState": "file",
+        "beforeSha256": "fedfba9e0fc61dba095de2639f4a7772b1224f149bcf1f84ede490b5a1efaf4f",
+        "afterSha256": "cba8830e7bd0df1cc8f54b63a1ff1bd75e9af34a7d46c2cf756d7064c9c0d2ca",
+        "bytesEqual": false,
+        "fieldsAdded": [],
+        "fieldsRemoved": [
+          "model_catalog_json"
+        ],
+        "fieldsChanged": []
+      },
+      {
+        "path": "codex/opencodex-catalog.json",
+        "beforeState": "file",
+        "afterState": "file",
+        "beforeSha256": "cfab95ffae957d49aa3ebe4520db56774a7339c77da67668b0222ce77e93d6f5",
+        "afterSha256": "07a99e78c40f29b3aba65ae99eb7dd789670616d8a3c6b8dc2c558d77ab207de",
+        "bytesEqual": false,
+        "slugAdded": [],
+        "slugRemoved": [
+          "gpt-5.4"
+        ],
+        "slugChanged": []
+      },
+      {
+        "path": "codex/models_cache.json",
+        "beforeState": "absent",
+        "afterState": "file",
+        "beforeSha256": null,
+        "afterSha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51",
+        "bytesEqual": false
+      },
+      {
+        "path": "codex/opencodex-catalog-audit.jsonl",
+        "beforeState": "absent",
+        "afterState": "file",
+        "beforeSha256": null,
+        "afterSha256": "21f6443d5cf4a7d073089cc5cb2e5815340d8ac361a506a24734a8da967c9b98",
+        "bytesEqual": false
+      },
+      {
+        "path": "grok/config.toml.bak-opencodex",
+        "beforeState": "absent",
+        "afterState": "file",
+        "beforeSha256": null,
+        "afterSha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe",
+        "bytesEqual": false
+      },
+      {
+        "path": "grok/config.toml",
+        "beforeState": "file",
+        "afterState": "file",
+        "beforeSha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe",
+        "afterSha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe",
+        "bytesEqual": true,
+        "parseState": "failed-but-raw-bytes-retained",
+        "parseErrorType": "SyntaxError"
+      }
+    ],
+    "host-compensated": [
+      {
+        "path": "codex/config.toml",
+        "beforeState": "file",
+        "afterState": "file",
+        "beforeSha256": "fedfba9e0fc61dba095de2639f4a7772b1224f149bcf1f84ede490b5a1efaf4f",
+        "afterSha256": "fedfba9e0fc61dba095de2639f4a7772b1224f149bcf1f84ede490b5a1efaf4f",
+        "bytesEqual": true,
+        "fieldsAdded": [],
+        "fieldsRemoved": [],
+        "fieldsChanged": []
+      },
+      {
+        "path": "codex/opencodex-catalog.json",
+        "beforeState": "file",
+        "afterState": "file",
+        "beforeSha256": "cfab95ffae957d49aa3ebe4520db56774a7339c77da67668b0222ce77e93d6f5",
+        "afterSha256": "cfab95ffae957d49aa3ebe4520db56774a7339c77da67668b0222ce77e93d6f5",
+        "bytesEqual": true,
+        "slugAdded": [],
+        "slugRemoved": [],
+        "slugChanged": []
+      },
+      {
+        "path": "codex/models_cache.json",
+        "beforeState": "absent",
+        "afterState": "absent",
+        "beforeSha256": null,
+        "afterSha256": null,
+        "bytesEqual": true
+      },
+      {
+        "path": "codex/opencodex-catalog-audit.jsonl",
+        "beforeState": "absent",
+        "afterState": "absent",
+        "beforeSha256": null,
+        "afterSha256": null,
+        "bytesEqual": true
+      },
+      {
+        "path": "grok/config.toml.bak-opencodex",
+        "beforeState": "absent",
+        "afterState": "absent",
+        "beforeSha256": null,
+        "afterSha256": null,
+        "bytesEqual": true
+      },
+      {
+        "path": "grok/config.toml",
+        "beforeState": "file",
+        "afterState": "file",
+        "beforeSha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe",
+        "afterSha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe",
+        "bytesEqual": true,
+        "parseState": "failed-but-raw-bytes-retained",
+        "parseErrorType": "SyntaxError"
+      }
+    ],
+    "failure-finally": [
+      {
+        "path": "codex/config.toml",
+        "beforeState": "file",
+        "afterState": "file",
+        "beforeSha256": "fedfba9e0fc61dba095de2639f4a7772b1224f149bcf1f84ede490b5a1efaf4f",
+        "afterSha256": "fedfba9e0fc61dba095de2639f4a7772b1224f149bcf1f84ede490b5a1efaf4f",
+        "bytesEqual": true,
+        "fieldsAdded": [],
+        "fieldsRemoved": [],
+        "fieldsChanged": []
+      },
+      {
+        "path": "codex/opencodex-catalog.json",
+        "beforeState": "file",
+        "afterState": "file",
+        "beforeSha256": "cfab95ffae957d49aa3ebe4520db56774a7339c77da67668b0222ce77e93d6f5",
+        "afterSha256": "cfab95ffae957d49aa3ebe4520db56774a7339c77da67668b0222ce77e93d6f5",
+        "bytesEqual": true,
+        "slugAdded": [],
+        "slugRemoved": [],
+        "slugChanged": []
+      },
+      {
+        "path": "codex/models_cache.json",
+        "beforeState": "absent",
+        "afterState": "absent",
+        "beforeSha256": null,
+        "afterSha256": null,
+        "bytesEqual": true
+      },
+      {
+        "path": "codex/opencodex-catalog-audit.jsonl",
+        "beforeState": "absent",
+        "afterState": "absent",
+        "beforeSha256": null,
+        "afterSha256": null,
+        "bytesEqual": true
+      },
+      {
+        "path": "grok/config.toml.bak-opencodex",
+        "beforeState": "absent",
+        "afterState": "absent",
+        "beforeSha256": null,
+        "afterSha256": null,
+        "bytesEqual": true
+      },
+      {
+        "path": "grok/config.toml",
+        "beforeState": "file",
+        "afterState": "file",
+        "beforeSha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe",
+        "afterSha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe",
+        "bytesEqual": true,
+        "parseState": "failed-but-raw-bytes-retained",
+        "parseErrorType": "SyntaxError"
+      }
+    ]
+  },
+  "routingScan": [
+    {
+      "path": "codex/config.toml",
+      "fixtureRoutePresent": false,
+      "loopbackHttpReferencePresent": false,
+      "scope": "synthetic raw text scan, not a replacement for typed selector parsing"
+    },
+    {
+      "path": "codex/opencodex-catalog.json",
+      "fixtureRoutePresent": false,
+      "loopbackHttpReferencePresent": false,
+      "scope": "synthetic raw text scan, not a replacement for typed selector parsing"
+    },
+    {
+      "path": "grok/config.toml",
+      "fixtureRoutePresent": false,
+      "loopbackHttpReferencePresent": false,
+      "scope": "synthetic raw text scan, not a replacement for typed selector parsing"
+    }
+  ],
+  "originalRecordedResult": true,
+  "firstError": null,
+  "lateFinallyEvidenceNotCountedInsideBudget": true
+}

@@ -1,0 +1,100 @@
+{
+  "status": "verified-single-user-proof-passed",
+  "accepted": true,
+  "docsBaseline": "1f35d520f74ac261f32c407f038e8f07a21c15fd",
+  "actualCommit": "66afa61133d7654d3a2dfd172f49845bfb5272c3",
+  "serviceRuns": 1,
+  "budgetsMs": {
+    "start": 15339,
+    "status": 4,
+    "stop": 6425,
+    "contextAt": 5220
+  },
+  "reached": {
+    "controlledCacheAuthorization": true,
+    "fivePlan": true,
+    "coordination": true,
+    "fiveCompensation": true,
+    "compensatedCapture": true,
+    "lockReacquisition": 2,
+    "finalTree": true
+  },
+  "currentRunLockCount": 2,
+  "rawCaptureChecks": 39,
+  "completeOriginalTree": false,
+  "exactTwoLockExceptionTree": true,
+  "firstError": null,
+  "sourceBytes": [
+    {
+      "file": "Native.cs",
+      "sha256": "fcf3d01b445e6204b2a4bbaad161edf292ce855f82738e9ed686ed452db0679c",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    },
+    {
+      "file": "Recovery.cs",
+      "sha256": "948b6e81472c0d2269c0eff5ddfe4acee29eeb14840de3249cb654618af1a0a9",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    },
+    {
+      "file": "FiveRecovery.cs",
+      "sha256": "db27fa799cc4804bbe43c464804a1e275c3ddbdc41b98be00899300d7072bc44",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    },
+    {
+      "file": "producer-r4.ts",
+      "sha256": "74096dc5dd78cb569111ac65da2ec4ba9797b5a4d89c27e7fa691420e0e9c2ac",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    },
+    {
+      "file": "coordinator-r4.ts",
+      "sha256": "882422bb9589eaba23c4dca86b26f07c2f1e00cba732c398eba3938b30afeabc",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    },
+    {
+      "file": "lock-worker.ts",
+      "sha256": "fc6c20bc26818d2371970c061470088a4be26d2359a6d677816c38c884fc0a5e",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    },
+    {
+      "file": "cache-candidate.ts",
+      "sha256": "36e566b66a0fe3664e15b2628ed5f556177e240ee8578db325fe4f92ec6de170",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    },
+    {
+      "file": "cache-candidate-cli.ts",
+      "sha256": "768b5dc5eaf3f0a62bf7300ac2c15ee86813bfce0fc3dc7fe3cec86ee5aea5cc",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    },
+    {
+      "file": "host-r5.ps1",
+      "sha256": "be0286c66037551717808cdb37fe9cb5f5d6d2925ecba174a8ac829a668e6499",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    },
+    {
+      "file": "run.ps1",
+      "sha256": "ff09d025ccd628951aac520cb7d03e11f7e843e76b40ec68519da15c9daf6cb8",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    }
+  ],
+  "permissionDelta": {
+    "stage": "extra offline inspection after original cleanup, not in-budget new evidence",
+    "extendedExactAllOriginalSddlCheckPassed": false,
+    "deltas": [
+      {
+        "sddlBefore": "O:S-1-5-21-587408064-856152790-2583328096-1029G:S-1-5-21-587408064-856152790-2583328096-513D:AI(A;ID;FA;;;SY)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1029)",
+        "path": "grok/config.toml",
+        "bytesEqual": true,
+        "ownerAfter": "S-1-5-21-587408064-856152790-2583328096-1029",
+        "sddlAfter": "O:S-1-5-21-587408064-856152790-2583328096-1029G:S-1-5-21-587408064-856152790-2583328096-513D:PAI(A;;FA;;;S-1-5-21-587408064-856152790-2583328096-1029)",
+        "ownerBefore": "S-1-5-21-587408064-856152790-2583328096-1029"
+      }
+    ],
+    "originalRecordedAccepted": true
+  },
+  "limits": [
+    "HMAC secret is intentionally omitted; offline verification checks source and signed receipt consistency, not a second secret recomputation.",
+    "Test-only isolated synthetic account proof; no production adaptation, full suite, dual SID or release claim.",
+    "Historical revision4 accepted:false is unchanged.",
+    "An additional offline requirement of exact SDDL equality for every original failed for Grok main config: unchanged bytes/owner but official DACL hardening to SID-only. Exact DACL restoration is verified for the five-path transaction originals and Agent; other explicit originals are checked for private SID/SYSTEM grants. No permission delta is hidden or relabeled as exact equality."
+  ]
+}

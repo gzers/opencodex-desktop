@@ -1,0 +1,145 @@
+{
+  "docsBaseline": "1f35d520f74ac261f32c407f038e8f07a21c15fd",
+  "testBaseline": "8309837173f06e9d08bf08f4fe347f407885f310",
+  "actualOfficialServiceCommit": "66afa61133d7654d3a2dfd172f49845bfb5272c3",
+  "testDeliveryCommit": "cba03b42151843c753f25f53ca71a6b2b31dccef",
+  "serviceRuns": 1,
+  "official": {
+    "bunSha256": "cb1d8e6564e655e49d30cead359750a1cbbd12f42651caa4b62244d7bd93c244",
+    "bunVersion": "1.4.4",
+    "package": "@bitkyc08/opencodex",
+    "integrity": "sha512-pAlx+xXd1Ujbmw6yW/V5P0xNZi04e80qRUhmJQ7Ia4v6cJkaMvkvMTqKIx0kOSw2vx/tiQLjDkHsCgPAu15wyg==",
+    "sha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+    "lifecycleScriptsExecuted": false,
+    "bytes": 19923693,
+    "version": "2.99.0"
+  },
+  "dependencyDifferences": {
+    "fixedRuntimePayloadBytesUnchanged": true,
+    "differences": [
+      {
+        "before": {
+          "path": "node_modules/.package-lock.json",
+          "size": 51850,
+          "sha256": "45455db27d33d17240c028f86f975584e15964ae56e62131ac1919c0c2000b35"
+        },
+        "after": {
+          "path": "node_modules/.package-lock.json",
+          "size": 53189,
+          "sha256": "a4260a908320f6a8311b83dc83ef407e4be3a5f901fbcab33d00ff2b8d9ba508"
+        }
+      },
+      {
+        "before": {
+          "path": "package-lock.json",
+          "size": 63176,
+          "sha256": "949232457be41cfe3e447e54fb3b21e9457e047cc9732407ee1aa2aa9a8350c2"
+        },
+        "after": {
+          "path": "package-lock.json",
+          "size": 63152,
+          "sha256": "2657ba5179d6e001e75e7b983d7e226903625c05ee19973a1b543bba3d960773"
+        }
+      },
+      {
+        "before": {
+          "path": "package.json",
+          "size": 149,
+          "sha256": "756d339ada8ac36dea25a380019e1f7456790e56d5eb4ddf7345396d02eaf72f"
+        },
+        "after": {
+          "path": "package.json",
+          "size": 141,
+          "sha256": "2e387d5d5626be9beee5e4672f15db50afa1f81193dffc06762e63502f97689e"
+        }
+      }
+    ],
+    "rootLock": "only task-local official.tgz locator rewritten; versions/integrities unchanged",
+    "preparationMetadataDifferencesDisclosed": true
+  },
+  "actualCopiedInputs": {
+    "files": 6734,
+    "treeSha256": "63a3e2a759827f9d0e4eb554362a88a89294ac475ffde8ed4992e55efd2ca3c3",
+    "matchesPreparation": true
+  },
+  "actualSourceFiles": [
+    {
+      "file": "Native.cs",
+      "sha256": "fcf3d01b445e6204b2a4bbaad161edf292ce855f82738e9ed686ed452db0679c",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    },
+    {
+      "file": "Recovery.cs",
+      "sha256": "948b6e81472c0d2269c0eff5ddfe4acee29eeb14840de3249cb654618af1a0a9",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    },
+    {
+      "file": "FiveRecovery.cs",
+      "sha256": "db27fa799cc4804bbe43c464804a1e275c3ddbdc41b98be00899300d7072bc44",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    },
+    {
+      "file": "producer-r4.ts",
+      "sha256": "74096dc5dd78cb569111ac65da2ec4ba9797b5a4d89c27e7fa691420e0e9c2ac",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    },
+    {
+      "file": "coordinator-r4.ts",
+      "sha256": "882422bb9589eaba23c4dca86b26f07c2f1e00cba732c398eba3938b30afeabc",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    },
+    {
+      "file": "lock-worker.ts",
+      "sha256": "fc6c20bc26818d2371970c061470088a4be26d2359a6d677816c38c884fc0a5e",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    },
+    {
+      "file": "cache-candidate.ts",
+      "sha256": "36e566b66a0fe3664e15b2628ed5f556177e240ee8578db325fe4f92ec6de170",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    },
+    {
+      "file": "cache-candidate-cli.ts",
+      "sha256": "768b5dc5eaf3f0a62bf7300ac2c15ee86813bfce0fc3dc7fe3cec86ee5aea5cc",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    },
+    {
+      "file": "host-r5.ps1",
+      "sha256": "be0286c66037551717808cdb37fe9cb5f5d6d2925ecba174a8ac829a668e6499",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    },
+    {
+      "file": "run.ps1",
+      "sha256": "ff09d025ccd628951aac520cb7d03e11f7e843e76b40ec68519da15c9daf6cb8",
+      "commit": "66afa61133d7654d3a2dfd172f49845bfb5272c3"
+    }
+  ],
+  "candidateProvenance": {
+    "pass": true,
+    "docsCommit": "1f35d520f74ac261f32c407f038e8f07a21c15fd",
+    "manifestFilesVerified": 22,
+    "legacyProducerSha256": "74096dc5dd78cb569111ac65da2ec4ba9797b5a4d89c27e7fa691420e0e9c2ac",
+    "candidateFilesCopiedFromExactGitBlobs": true,
+    "oldSyntheticInputsVerified": 5
+  },
+  "smallCandidateTestSha256": "d80584832ba1e54b594912121a6cd0307903d8e45bacf6c1afcf60d4ace2a6f5",
+  "bridgeSourceLimit": "bridge run was before commit and before removal of unused missing-proof file creation; no retrospective hash is assigned to that exploratory wrapper. Candidate/CLI exact blobs unchanged; native input lock and create-only receipts are retained.",
+  "postRunChanges": "offline analysis/verification, task-only cleanup wrappers, README. Expanded offline all-original exact-SDDL failure retained separately; no service rerun or runtime result modification.",
+  "changedCodePaths": [
+    "test/official299-windows/README.md",
+    "test/official299-windows/analyze-r4.ts",
+    "test/official299-windows/cache-bridge-test.ps1",
+    "test/official299-windows/cache-candidate-cli.ts",
+    "test/official299-windows/cache-candidate.test.ts",
+    "test/official299-windows/cache-candidate.ts",
+    "test/official299-windows/cleanup-payloads.ps1",
+    "test/official299-windows/cleanup-r5.ps1",
+    "test/official299-windows/host-r5.ps1",
+    "test/official299-windows/run.ps1",
+    "test/official299-windows/verify-r5.mjs"
+  ],
+  "productionOrWorkflowChanged": false,
+  "fullSuiteExecuted": false,
+  "releaseExecuted": false,
+  "cleanupVerified": true
+}
