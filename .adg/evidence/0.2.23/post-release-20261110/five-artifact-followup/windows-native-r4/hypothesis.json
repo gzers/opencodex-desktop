@@ -1,0 +1,21 @@
+{
+  "revision": 4,
+  "stableLockException": [
+    "codex/.opencodex-native-main.claim.sqlite",
+    "codex/.opencodex-native-main.owner.sqlite"
+  ],
+  "chronology": "Hypothesis first stated in commentary; this explicit on-disk record follows initial small prototype attempts, before revised coordinator prototype and any official service run. Do not claim it predates the first small prototypes.",
+  "serviceRunsAllowed": 1,
+  "hypothesis": "Within unchanged total Stop10s, protected exact producer-bound five-object pre/postimages plus native batch exclusion and durable intent can restore 2 original files and 3 auxiliary objects; unclear ownership refuses, all raw failure afterimages remain diagnosable. Two stable locks are only retained with separate proof.",
+  "initialFailures": [
+    "five-01: absent-slot race fixture had both images absent and therefore did not exercise reservation; corrected input original-file/after-absent",
+    "coordinator-01: invalid synthetic TOML correctly refused N coordinator initialization; corrected to valid synthetic TOML"
+  ],
+  "codeBaseline": "03480916ca369ce7648afdf82c20819e87c74ee7",
+  "docsBaseline": "5ecf5b1a9f7f3046be17537916d9b511032ef6c2",
+  "budgetsMs": {
+    "start": 30000,
+    "status": 5000,
+    "stop": 10000
+  }
+}

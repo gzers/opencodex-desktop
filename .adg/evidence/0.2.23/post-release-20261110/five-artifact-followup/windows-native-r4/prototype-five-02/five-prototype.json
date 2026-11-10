@@ -1,0 +1,3040 @@
+{
+  "sourceSha256": {
+    "five-test.ps1": "d3ac43992e83223faec191529f9ed4ff296b6e59c25d195861c0645cf296e15a",
+    "race-worker.ps1": "a9d7e85c412e37c6316998accba22c6b01fcc4f0cb88478484389ae4da85334b",
+    "five-worker.ps1": "8039b182224b19392f3b3308f4d681a799a2dc9e53a83c5dbb360b6973888744",
+    "FiveRecovery.cs": "91bcbda6e23f69602042a3671d2c133d978c0135a53df98a22db334dc674d4c1",
+    "Recovery.cs": "235121ac6f87aa39d9400e87a4ce1c175beb08f6501432f5ed7f5c9a13d036fa",
+    "Native.cs": "fcf3d01b445e6204b2a4bbaad161edf292ce855f82738e9ed686ed452db0679c"
+  },
+  "checks": [
+    {
+      "unregisteredRuntimeSecretRejected": true,
+      "rows": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098132",
+            "Sha256": "e9ad58f80f54740a31b5228fa45e06157eaef7c8fa0b87a9334615b405558fe1",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9jb25maWcudG9tbA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "failed-finally",
+          "CapturedUtc": "2026-11-10T12:47:36.4906688Z",
+          "Length": 46
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098133",
+            "Sha256": "45165e93d333f48af84741fe0e7f082aae9a7af73cb24ae13143b2956ce024f6",
+            "Bytes": "e2ludmFsaWQtY2hhbmdlZC1qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "failed-finally",
+          "CapturedUtc": "2026-11-10T12:47:36.4910776Z",
+          "Length": 21
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "unknown",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 5,
+          "Stage": "failed-finally",
+          "CapturedUtc": "2026-11-10T12:47:36.4914079Z",
+          "Length": 0
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "failed-finally",
+          "CapturedUtc": "2026-11-10T12:47:36.4917555Z",
+          "Length": 0
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "unknown",
+          "Image": null,
+          "FailureType": "System.InvalidOperationException",
+          "Error": -2146233079,
+          "Stage": "failed-finally",
+          "CapturedUtc": "2026-11-10T12:47:36.4920536Z",
+          "Length": 0
+        }
+      ],
+      "pass": true,
+      "case": "changed-invalid-unreadable-absent-link-continued-raw-capture"
+    },
+    {
+      "unknownExtraRetained": true,
+      "auditPostimageArchivedInPlan": true,
+      "operations": [
+        "restore:codex/config.toml",
+        "restore:codex/opencodex-catalog.json",
+        "restore:codex/models_cache.json",
+        "restore:codex/opencodex-catalog-audit.jsonl",
+        "restore:grok/config.toml.bak-opencodex"
+      ],
+      "pass": true,
+      "case": "normal-five-existing-aux-False"
+    },
+    {
+      "unknownExtraRetained": true,
+      "auditPostimageArchivedInPlan": true,
+      "operations": [
+        "restore:codex/config.toml",
+        "restore:codex/opencodex-catalog.json",
+        "restore:codex/models_cache.json",
+        "restore:codex/opencodex-catalog-audit.jsonl",
+        "restore:grok/config.toml.bak-opencodex"
+      ],
+      "pass": true,
+      "case": "normal-five-existing-aux-True"
+    },
+    {
+      "batchRefusedBeforeEarlierChange": true,
+      "wholeTreeClaimed": false,
+      "pass": true,
+      "error": {
+        "message": "Exception calling \"Apply\" with \"7\" argument(s): \"late-postimage-conflict\"",
+        "type": "System.Management.Automation.MethodInvocationException"
+      },
+      "case": "external-edit"
+    },
+    {
+      "batchRefusedBeforeEarlierChange": true,
+      "wholeTreeClaimed": false,
+      "pass": true,
+      "error": {
+        "message": "Exception calling \"Apply\" with \"7\" argument(s): \"late-postimage-conflict\"",
+        "type": "System.Management.Automation.MethodInvocationException"
+      },
+      "case": "audit-append"
+    },
+    {
+      "batchRefusedBeforeEarlierChange": true,
+      "wholeTreeClaimed": false,
+      "pass": true,
+      "error": {
+        "message": "Exception calling \"Apply\" with \"7\" argument(s): \"unsafe-file: link, directory or multiple hardlinks\"",
+        "type": "System.Management.Automation.MethodInvocationException"
+      },
+      "case": "symbolic-link"
+    },
+    {
+      "batchRefusedBeforeEarlierChange": true,
+      "wholeTreeClaimed": false,
+      "pass": true,
+      "error": {
+        "message": "Exception calling \"Apply\" with \"7\" argument(s): \"unsafe-file: link, directory or multiple hardlinks\"",
+        "type": "System.Management.Automation.MethodInvocationException"
+      },
+      "case": "hardlink"
+    },
+    {
+      "batchRefusedBeforeEarlierChange": true,
+      "wholeTreeClaimed": false,
+      "pass": true,
+      "error": {
+        "message": "Exception calling \"Apply\" with \"7\" argument(s): \"拒绝访问。\"",
+        "type": "System.Management.Automation.MethodInvocationException"
+      },
+      "case": "unreadable"
+    },
+    {
+      "batchRefusedBeforeEarlierChange": true,
+      "wholeTreeClaimed": false,
+      "pass": true,
+      "error": {
+        "message": "Exception calling \"Apply\" with \"7\" argument(s): \"late-postimage-conflict\"",
+        "type": "System.Management.Automation.MethodInvocationException"
+      },
+      "case": "missing"
+    },
+    {
+      "batchRefusedBeforeEarlierChange": true,
+      "wholeTreeClaimed": false,
+      "pass": true,
+      "error": {
+        "message": "Exception calling \"Apply\" with \"7\" argument(s): \"plan-integrity-changed\"",
+        "type": "System.Management.Automation.MethodInvocationException"
+      },
+      "case": "tampered-plan"
+    },
+    {
+      "batchRefusedBeforeEarlierChange": true,
+      "wholeTreeClaimed": false,
+      "pass": true,
+      "error": {
+        "message": "Exception calling \"Apply\" with \"7\" argument(s): \"plan-integrity-changed\"",
+        "type": "System.Management.Automation.MethodInvocationException"
+      },
+      "case": "tampered-original"
+    },
+    {
+      "batchRefusedBeforeEarlierChange": true,
+      "wholeTreeClaimed": false,
+      "pass": true,
+      "error": {
+        "message": "Exception calling \"Apply\" with \"7\" argument(s): \"linked or wrong-kind proof path\"",
+        "type": "System.Management.Automation.MethodInvocationException"
+      },
+      "case": "parent-link"
+    },
+    {
+      "batchRefusedBeforeEarlierChange": true,
+      "wholeTreeClaimed": false,
+      "pass": true,
+      "error": {
+        "message": "Exception calling \"Apply\" with \"7\" argument(s): \"injected-second-write-failure\"",
+        "type": "System.Management.Automation.MethodInvocationException"
+      },
+      "case": "second-write-failure"
+    },
+    {
+      "batchRefusedBeforeEarlierChange": true,
+      "wholeTreeClaimed": false,
+      "pass": true,
+      "error": {
+        "message": "Exception calling \"Apply\" with \"7\" argument(s): \"文件存在。\"",
+        "type": "System.Management.Automation.MethodInvocationException"
+      },
+      "case": "absent-slot-race"
+    },
+    {
+      "batchRefusedBeforeEarlierChange": false,
+      "wholeTreeClaimed": false,
+      "pass": true,
+      "error": null,
+      "case": "separate-writer"
+    },
+    {
+      "freshRecovery": {
+        "identity": {
+          "pid": 104580,
+          "filetime": "134387884583473731",
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+          "session": 2,
+          "image": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+          "elevated": false,
+          "elevationType": 3
+        },
+        "exitCode": 0,
+        "stderr": "",
+        "stdout": "\"recover:codex/config.toml\"\r\n"
+      },
+      "pass": true,
+      "case": "actual-crash-recovery-third-state-False",
+      "crashed": {
+        "identity": {
+          "pid": 61756,
+          "filetime": "134387884573333495",
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+          "session": 2,
+          "image": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+          "elevated": false,
+          "elevationType": 3
+        },
+        "exitCode": 91,
+        "stderr": "",
+        "stdout": ""
+      }
+    },
+    {
+      "freshRecovery": {
+        "identity": {
+          "pid": 52064,
+          "filetime": "134387884600499102",
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+          "session": 2,
+          "image": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+          "elevated": false,
+          "elevationType": 3
+        },
+        "exitCode": 1,
+        "stderr": "five-worker.ps1: Exception calling \"Apply\" with \"7\" argument(s): \"recovery-third-state-refused\"\r\n",
+        "stdout": ""
+      },
+      "pass": true,
+      "case": "actual-crash-recovery-third-state-True",
+      "crashed": {
+        "identity": {
+          "pid": 104136,
+          "filetime": "134387884592153162",
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+          "session": 2,
+          "image": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+          "elevated": false,
+          "elevationType": 3
+        },
+        "exitCode": 91,
+        "stderr": "",
+        "stdout": ""
+      }
+    }
+  ],
+  "scope": "native small synthetic fixtures only; no official service launched",
+  "pass": true,
+  "utc": "2026-11-10T12:47:41.0470130Z",
+  "cases": [
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\capture",
+      "digest": "80500a32927bd797f824ae29bdc54b042c4eb044c2bbf1bdf38b39c6ff74e772",
+      "after": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098132",
+            "Sha256": "e9ad58f80f54740a31b5228fa45e06157eaef7c8fa0b87a9334615b405558fe1",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9jb25maWcudG9tbA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.4021919Z",
+          "Length": 46
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098133",
+            "Sha256": "285f67936ac7fa34e9d074cc8f6637f76f68e357a6d38dcb8d5cdb07780821ca",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.4025897Z",
+          "Length": 57
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:393216:1098134",
+            "Sha256": "89c094492d4483ac3e33a38d0ca26d19595028886e3b66ff3cdf6fbe2946fb08",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9tb2RlbHNfY2FjaGUuanNvbg==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.4028934Z",
+          "Length": 52
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:393216:1098135",
+            "Sha256": "d11e35b4678095702b87cb4c2379264f72b041b6d087d03e16eb0cd680033c44",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy1hdWRpdC5qc29ubA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.4031769Z",
+          "Length": 64
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:393216:1098136",
+            "Sha256": "8df55d5f1d205a997e9076a74c46c16ab879e87ea2ca0cbf27f7964156e2f8e7",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpncm9rL2NvbmZpZy50b21sLmJhay1vcGVuY29kZXg=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.4034619Z",
+          "Length": 59
+        }
+      ],
+      "journal": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\capture\\intent.jsonl",
+      "plan": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\capture\\protected-plan.json",
+      "before": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098132",
+            "Sha256": "7aa0cf0081a5d8a1f51a65536844cb691318c88dd74789c86d3fbc63301a9bf0",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L2NvbmZpZy50b21s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.3930471Z",
+          "Length": 36
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098133",
+            "Sha256": "5c1dc4cbb57d6709d2f6822bd1c30229197358ec792c6a2926e3dc33e5ef2208",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLmpzb24=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.3976365Z",
+          "Length": 47
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.3980409Z",
+          "Length": 0
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.3986785Z",
+          "Length": 0
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.3990477Z",
+          "Length": 0
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\normal-False",
+      "digest": "fa25f48763792aee1790079504375b2f140162dfc6cc2a886bcd25f1fec1984e",
+      "after": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:458752:1098140",
+            "Sha256": "e9ad58f80f54740a31b5228fa45e06157eaef7c8fa0b87a9334615b405558fe1",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9jb25maWcudG9tbA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.5193847Z",
+          "Length": 46
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:458752:1098141",
+            "Sha256": "285f67936ac7fa34e9d074cc8f6637f76f68e357a6d38dcb8d5cdb07780821ca",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.5198230Z",
+          "Length": 57
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:458752:1098142",
+            "Sha256": "89c094492d4483ac3e33a38d0ca26d19595028886e3b66ff3cdf6fbe2946fb08",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9tb2RlbHNfY2FjaGUuanNvbg==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.5201534Z",
+          "Length": 52
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:458752:1098143",
+            "Sha256": "d11e35b4678095702b87cb4c2379264f72b041b6d087d03e16eb0cd680033c44",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy1hdWRpdC5qc29ubA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.5204510Z",
+          "Length": 64
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:458752:1098144",
+            "Sha256": "8df55d5f1d205a997e9076a74c46c16ab879e87ea2ca0cbf27f7964156e2f8e7",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpncm9rL2NvbmZpZy50b21sLmJhay1vcGVuY29kZXg=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.5207433Z",
+          "Length": 59
+        }
+      ],
+      "journal": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\normal-False\\intent.jsonl",
+      "plan": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\normal-False\\protected-plan.json",
+      "before": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:458752:1098140",
+            "Sha256": "7aa0cf0081a5d8a1f51a65536844cb691318c88dd74789c86d3fbc63301a9bf0",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L2NvbmZpZy50b21s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.5154572Z",
+          "Length": 36
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:458752:1098141",
+            "Sha256": "5c1dc4cbb57d6709d2f6822bd1c30229197358ec792c6a2926e3dc33e5ef2208",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLmpzb24=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.5158778Z",
+          "Length": 47
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.5162265Z",
+          "Length": 0
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.5166042Z",
+          "Length": 0
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.5169632Z",
+          "Length": 0
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\normal-True",
+      "digest": "84f4a65dbfb470ac6d2581d64a3fe508921a2439b67526be869b788391612f0e",
+      "after": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098148",
+            "Sha256": "e9ad58f80f54740a31b5228fa45e06157eaef7c8fa0b87a9334615b405558fe1",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9jb25maWcudG9tbA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.5684396Z",
+          "Length": 46
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098149",
+            "Sha256": "285f67936ac7fa34e9d074cc8f6637f76f68e357a6d38dcb8d5cdb07780821ca",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.5688009Z",
+          "Length": 57
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:393216:1098150",
+            "Sha256": "89c094492d4483ac3e33a38d0ca26d19595028886e3b66ff3cdf6fbe2946fb08",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9tb2RlbHNfY2FjaGUuanNvbg==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.5690920Z",
+          "Length": 52
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:393216:1098151",
+            "Sha256": "d11e35b4678095702b87cb4c2379264f72b041b6d087d03e16eb0cd680033c44",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy1hdWRpdC5qc29ubA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.5694118Z",
+          "Length": 64
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:393216:1098152",
+            "Sha256": "8df55d5f1d205a997e9076a74c46c16ab879e87ea2ca0cbf27f7964156e2f8e7",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpncm9rL2NvbmZpZy50b21sLmJhay1vcGVuY29kZXg=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.5696859Z",
+          "Length": 59
+        }
+      ],
+      "journal": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\normal-True\\intent.jsonl",
+      "plan": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\normal-True\\protected-plan.json",
+      "before": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098148",
+            "Sha256": "7aa0cf0081a5d8a1f51a65536844cb691318c88dd74789c86d3fbc63301a9bf0",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L2NvbmZpZy50b21s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.5652565Z",
+          "Length": 36
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098149",
+            "Sha256": "5c1dc4cbb57d6709d2f6822bd1c30229197358ec792c6a2926e3dc33e5ef2208",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLmpzb24=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.5657029Z",
+          "Length": 47
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:393216:1098150",
+            "Sha256": "179e1ac2764a39bca1217c63c0686aba9bb10191e0190c258d9a2ef84b8d0c9c",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L21vZGVsc19jYWNoZS5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.5660403Z",
+          "Length": 42
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:393216:1098151",
+            "Sha256": "0d069580ea669d6677fd41143fe785846011ebf603c85f5172c65201a7362bee",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLWF1ZGl0Lmpzb25s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.5663335Z",
+          "Length": 54
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:393216:1098152",
+            "Sha256": "79376e9f948da13654789d9cf2a05cd279fe48776ad413ae8666d235586f915d",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmdyb2svY29uZmlnLnRvbWwuYmFrLW9wZW5jb2RleA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.5666194Z",
+          "Length": 49
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\external-edit",
+      "digest": "65fb3820017f16aa639813cfa33504b054e16952af00be8d524446c2ca815e18",
+      "after": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098159",
+            "Sha256": "e9ad58f80f54740a31b5228fa45e06157eaef7c8fa0b87a9334615b405558fe1",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9jb25maWcudG9tbA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6056887Z",
+          "Length": 46
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098160",
+            "Sha256": "285f67936ac7fa34e9d074cc8f6637f76f68e357a6d38dcb8d5cdb07780821ca",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6061137Z",
+          "Length": 57
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:393216:1098161",
+            "Sha256": "89c094492d4483ac3e33a38d0ca26d19595028886e3b66ff3cdf6fbe2946fb08",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9tb2RlbHNfY2FjaGUuanNvbg==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6064385Z",
+          "Length": 52
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:393216:1098162",
+            "Sha256": "d11e35b4678095702b87cb4c2379264f72b041b6d087d03e16eb0cd680033c44",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy1hdWRpdC5qc29ubA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6067766Z",
+          "Length": 64
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:393216:1098163",
+            "Sha256": "8df55d5f1d205a997e9076a74c46c16ab879e87ea2ca0cbf27f7964156e2f8e7",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpncm9rL2NvbmZpZy50b21sLmJhay1vcGVuY29kZXg=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6070723Z",
+          "Length": 59
+        }
+      ],
+      "journal": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\external-edit\\intent.jsonl",
+      "plan": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\external-edit\\protected-plan.json",
+      "before": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098159",
+            "Sha256": "7aa0cf0081a5d8a1f51a65536844cb691318c88dd74789c86d3fbc63301a9bf0",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L2NvbmZpZy50b21s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6021770Z",
+          "Length": 36
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098160",
+            "Sha256": "5c1dc4cbb57d6709d2f6822bd1c30229197358ec792c6a2926e3dc33e5ef2208",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLmpzb24=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6025974Z",
+          "Length": 47
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6029425Z",
+          "Length": 0
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6033049Z",
+          "Length": 0
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6036054Z",
+          "Length": 0
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\audit-append",
+      "digest": "23acbaf1492195aa1b46effd02ef51b43d5f11e4149c988951dcebaa510ba08a",
+      "after": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098169",
+            "Sha256": "e9ad58f80f54740a31b5228fa45e06157eaef7c8fa0b87a9334615b405558fe1",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9jb25maWcudG9tbA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6372674Z",
+          "Length": 46
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098170",
+            "Sha256": "285f67936ac7fa34e9d074cc8f6637f76f68e357a6d38dcb8d5cdb07780821ca",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6386296Z",
+          "Length": 57
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:393216:1098171",
+            "Sha256": "89c094492d4483ac3e33a38d0ca26d19595028886e3b66ff3cdf6fbe2946fb08",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9tb2RlbHNfY2FjaGUuanNvbg==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6391694Z",
+          "Length": 52
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:393216:1098172",
+            "Sha256": "d11e35b4678095702b87cb4c2379264f72b041b6d087d03e16eb0cd680033c44",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy1hdWRpdC5qc29ubA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6396194Z",
+          "Length": 64
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:393216:1098173",
+            "Sha256": "8df55d5f1d205a997e9076a74c46c16ab879e87ea2ca0cbf27f7964156e2f8e7",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpncm9rL2NvbmZpZy50b21sLmJhay1vcGVuY29kZXg=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6399757Z",
+          "Length": 59
+        }
+      ],
+      "journal": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\audit-append\\intent.jsonl",
+      "plan": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\audit-append\\protected-plan.json",
+      "before": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098169",
+            "Sha256": "7aa0cf0081a5d8a1f51a65536844cb691318c88dd74789c86d3fbc63301a9bf0",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L2NvbmZpZy50b21s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6326533Z",
+          "Length": 36
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098170",
+            "Sha256": "5c1dc4cbb57d6709d2f6822bd1c30229197358ec792c6a2926e3dc33e5ef2208",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLmpzb24=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6331612Z",
+          "Length": 47
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6335791Z",
+          "Length": 0
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6340507Z",
+          "Length": 0
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6344524Z",
+          "Length": 0
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\symbolic-link",
+      "digest": "4e6590aa07d55327384eb8df0adc1fe1166cfd22bab99bf43333243d330a9ed7",
+      "after": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098179",
+            "Sha256": "e9ad58f80f54740a31b5228fa45e06157eaef7c8fa0b87a9334615b405558fe1",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9jb25maWcudG9tbA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6654031Z",
+          "Length": 46
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098180",
+            "Sha256": "285f67936ac7fa34e9d074cc8f6637f76f68e357a6d38dcb8d5cdb07780821ca",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6659260Z",
+          "Length": 57
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:393216:1098181",
+            "Sha256": "89c094492d4483ac3e33a38d0ca26d19595028886e3b66ff3cdf6fbe2946fb08",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9tb2RlbHNfY2FjaGUuanNvbg==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6664074Z",
+          "Length": 52
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:393216:1098182",
+            "Sha256": "d11e35b4678095702b87cb4c2379264f72b041b6d087d03e16eb0cd680033c44",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy1hdWRpdC5qc29ubA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6667374Z",
+          "Length": 64
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:393216:1098183",
+            "Sha256": "8df55d5f1d205a997e9076a74c46c16ab879e87ea2ca0cbf27f7964156e2f8e7",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpncm9rL2NvbmZpZy50b21sLmJhay1vcGVuY29kZXg=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6670750Z",
+          "Length": 59
+        }
+      ],
+      "journal": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\symbolic-link\\intent.jsonl",
+      "plan": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\symbolic-link\\protected-plan.json",
+      "before": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098179",
+            "Sha256": "7aa0cf0081a5d8a1f51a65536844cb691318c88dd74789c86d3fbc63301a9bf0",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L2NvbmZpZy50b21s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6612496Z",
+          "Length": 36
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098180",
+            "Sha256": "5c1dc4cbb57d6709d2f6822bd1c30229197358ec792c6a2926e3dc33e5ef2208",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLmpzb24=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6617511Z",
+          "Length": 47
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6621359Z",
+          "Length": 0
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6625705Z",
+          "Length": 0
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6629248Z",
+          "Length": 0
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\hardlink",
+      "digest": "6d6b7d9144f1b863e21aa0d037f06be6455fc5a951e18b9dacbe30ec52c3aac4",
+      "after": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098189",
+            "Sha256": "e9ad58f80f54740a31b5228fa45e06157eaef7c8fa0b87a9334615b405558fe1",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9jb25maWcudG9tbA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6899541Z",
+          "Length": 46
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098190",
+            "Sha256": "285f67936ac7fa34e9d074cc8f6637f76f68e357a6d38dcb8d5cdb07780821ca",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6903975Z",
+          "Length": 57
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:393216:1098191",
+            "Sha256": "89c094492d4483ac3e33a38d0ca26d19595028886e3b66ff3cdf6fbe2946fb08",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9tb2RlbHNfY2FjaGUuanNvbg==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6907670Z",
+          "Length": 52
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:393216:1098192",
+            "Sha256": "d11e35b4678095702b87cb4c2379264f72b041b6d087d03e16eb0cd680033c44",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy1hdWRpdC5qc29ubA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6911122Z",
+          "Length": 64
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:393216:1098193",
+            "Sha256": "8df55d5f1d205a997e9076a74c46c16ab879e87ea2ca0cbf27f7964156e2f8e7",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpncm9rL2NvbmZpZy50b21sLmJhay1vcGVuY29kZXg=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.6914707Z",
+          "Length": 59
+        }
+      ],
+      "journal": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\hardlink\\intent.jsonl",
+      "plan": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\hardlink\\protected-plan.json",
+      "before": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098189",
+            "Sha256": "7aa0cf0081a5d8a1f51a65536844cb691318c88dd74789c86d3fbc63301a9bf0",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L2NvbmZpZy50b21s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6854881Z",
+          "Length": 36
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098190",
+            "Sha256": "5c1dc4cbb57d6709d2f6822bd1c30229197358ec792c6a2926e3dc33e5ef2208",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLmpzb24=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6859835Z",
+          "Length": 47
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6864552Z",
+          "Length": 0
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6869022Z",
+          "Length": 0
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.6873042Z",
+          "Length": 0
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\unreadable",
+      "digest": "4fc1b2d9d464674c95ed12eac4bf2c2bb739f68200ab3f8576342701f624c282",
+      "after": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098198",
+            "Sha256": "e9ad58f80f54740a31b5228fa45e06157eaef7c8fa0b87a9334615b405558fe1",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9jb25maWcudG9tbA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7076039Z",
+          "Length": 46
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098199",
+            "Sha256": "285f67936ac7fa34e9d074cc8f6637f76f68e357a6d38dcb8d5cdb07780821ca",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7080747Z",
+          "Length": 57
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:393216:1098200",
+            "Sha256": "89c094492d4483ac3e33a38d0ca26d19595028886e3b66ff3cdf6fbe2946fb08",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9tb2RlbHNfY2FjaGUuanNvbg==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7084019Z",
+          "Length": 52
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:393216:1098201",
+            "Sha256": "d11e35b4678095702b87cb4c2379264f72b041b6d087d03e16eb0cd680033c44",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy1hdWRpdC5qc29ubA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7087198Z",
+          "Length": 64
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:393216:1098202",
+            "Sha256": "8df55d5f1d205a997e9076a74c46c16ab879e87ea2ca0cbf27f7964156e2f8e7",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpncm9rL2NvbmZpZy50b21sLmJhay1vcGVuY29kZXg=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7090311Z",
+          "Length": 59
+        }
+      ],
+      "journal": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\unreadable\\intent.jsonl",
+      "plan": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\unreadable\\protected-plan.json",
+      "before": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098198",
+            "Sha256": "7aa0cf0081a5d8a1f51a65536844cb691318c88dd74789c86d3fbc63301a9bf0",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L2NvbmZpZy50b21s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7031212Z",
+          "Length": 36
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098199",
+            "Sha256": "5c1dc4cbb57d6709d2f6822bd1c30229197358ec792c6a2926e3dc33e5ef2208",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLmpzb24=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7038471Z",
+          "Length": 47
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7043350Z",
+          "Length": 0
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7049516Z",
+          "Length": 0
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7053644Z",
+          "Length": 0
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\missing",
+      "digest": "f98bd50045210d726ca5747f36911fe4b469e3ea38888ba8e7bd634e1e163682",
+      "after": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098208",
+            "Sha256": "e9ad58f80f54740a31b5228fa45e06157eaef7c8fa0b87a9334615b405558fe1",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9jb25maWcudG9tbA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7255304Z",
+          "Length": 46
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098209",
+            "Sha256": "285f67936ac7fa34e9d074cc8f6637f76f68e357a6d38dcb8d5cdb07780821ca",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7259808Z",
+          "Length": 57
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:393216:1098210",
+            "Sha256": "89c094492d4483ac3e33a38d0ca26d19595028886e3b66ff3cdf6fbe2946fb08",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9tb2RlbHNfY2FjaGUuanNvbg==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7263389Z",
+          "Length": 52
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:393216:1098211",
+            "Sha256": "d11e35b4678095702b87cb4c2379264f72b041b6d087d03e16eb0cd680033c44",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy1hdWRpdC5qc29ubA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7266642Z",
+          "Length": 64
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:393216:1098212",
+            "Sha256": "8df55d5f1d205a997e9076a74c46c16ab879e87ea2ca0cbf27f7964156e2f8e7",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpncm9rL2NvbmZpZy50b21sLmJhay1vcGVuY29kZXg=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7269819Z",
+          "Length": 59
+        }
+      ],
+      "journal": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\missing\\intent.jsonl",
+      "plan": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\missing\\protected-plan.json",
+      "before": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098208",
+            "Sha256": "7aa0cf0081a5d8a1f51a65536844cb691318c88dd74789c86d3fbc63301a9bf0",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L2NvbmZpZy50b21s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7216534Z",
+          "Length": 36
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098209",
+            "Sha256": "5c1dc4cbb57d6709d2f6822bd1c30229197358ec792c6a2926e3dc33e5ef2208",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLmpzb24=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7221288Z",
+          "Length": 47
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7225000Z",
+          "Length": 0
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7229113Z",
+          "Length": 0
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7232573Z",
+          "Length": 0
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\tampered-plan",
+      "digest": "652d77ddceeb2dd916e0450cb878a4ebf86e61b4f4ca32d65222cb65f091a5ff",
+      "after": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098217",
+            "Sha256": "e9ad58f80f54740a31b5228fa45e06157eaef7c8fa0b87a9334615b405558fe1",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9jb25maWcudG9tbA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7395759Z",
+          "Length": 46
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098218",
+            "Sha256": "285f67936ac7fa34e9d074cc8f6637f76f68e357a6d38dcb8d5cdb07780821ca",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7399909Z",
+          "Length": 57
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:393216:1098219",
+            "Sha256": "89c094492d4483ac3e33a38d0ca26d19595028886e3b66ff3cdf6fbe2946fb08",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9tb2RlbHNfY2FjaGUuanNvbg==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7403178Z",
+          "Length": 52
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:393216:1098220",
+            "Sha256": "d11e35b4678095702b87cb4c2379264f72b041b6d087d03e16eb0cd680033c44",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy1hdWRpdC5qc29ubA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7406405Z",
+          "Length": 64
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:393216:1098221",
+            "Sha256": "8df55d5f1d205a997e9076a74c46c16ab879e87ea2ca0cbf27f7964156e2f8e7",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpncm9rL2NvbmZpZy50b21sLmJhay1vcGVuY29kZXg=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7409543Z",
+          "Length": 59
+        }
+      ],
+      "journal": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\tampered-plan\\intent.jsonl",
+      "plan": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\tampered-plan\\protected-plan.json",
+      "before": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098217",
+            "Sha256": "7aa0cf0081a5d8a1f51a65536844cb691318c88dd74789c86d3fbc63301a9bf0",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L2NvbmZpZy50b21s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7359296Z",
+          "Length": 36
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098218",
+            "Sha256": "5c1dc4cbb57d6709d2f6822bd1c30229197358ec792c6a2926e3dc33e5ef2208",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLmpzb24=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7363942Z",
+          "Length": 47
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7367353Z",
+          "Length": 0
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7371394Z",
+          "Length": 0
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7374742Z",
+          "Length": 0
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\tampered-original",
+      "digest": "607563a683ab323fbda830aa7c79df5f1c7eb27c2ad5abdd36098f201248d5fd",
+      "after": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098226",
+            "Sha256": "e9ad58f80f54740a31b5228fa45e06157eaef7c8fa0b87a9334615b405558fe1",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9jb25maWcudG9tbA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7505609Z",
+          "Length": 46
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098227",
+            "Sha256": "285f67936ac7fa34e9d074cc8f6637f76f68e357a6d38dcb8d5cdb07780821ca",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7509750Z",
+          "Length": 57
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:393216:1098228",
+            "Sha256": "89c094492d4483ac3e33a38d0ca26d19595028886e3b66ff3cdf6fbe2946fb08",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9tb2RlbHNfY2FjaGUuanNvbg==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7513385Z",
+          "Length": 52
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:393216:1098229",
+            "Sha256": "d11e35b4678095702b87cb4c2379264f72b041b6d087d03e16eb0cd680033c44",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy1hdWRpdC5qc29ubA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7516817Z",
+          "Length": 64
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:393216:1098230",
+            "Sha256": "8df55d5f1d205a997e9076a74c46c16ab879e87ea2ca0cbf27f7964156e2f8e7",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpncm9rL2NvbmZpZy50b21sLmJhay1vcGVuY29kZXg=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7519848Z",
+          "Length": 59
+        }
+      ],
+      "journal": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\tampered-original\\intent.jsonl",
+      "plan": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\tampered-original\\protected-plan.json",
+      "before": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098226",
+            "Sha256": "7aa0cf0081a5d8a1f51a65536844cb691318c88dd74789c86d3fbc63301a9bf0",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L2NvbmZpZy50b21s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7467104Z",
+          "Length": 36
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098227",
+            "Sha256": "5c1dc4cbb57d6709d2f6822bd1c30229197358ec792c6a2926e3dc33e5ef2208",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLmpzb24=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7471812Z",
+          "Length": 47
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7475460Z",
+          "Length": 0
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7479692Z",
+          "Length": 0
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7483302Z",
+          "Length": 0
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\parent-link",
+      "digest": "11f75cc7d90f0a3fe6cc599bc147110d4137b2dece78386226e1c2d1dd03d1b7",
+      "after": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098235",
+            "Sha256": "e9ad58f80f54740a31b5228fa45e06157eaef7c8fa0b87a9334615b405558fe1",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9jb25maWcudG9tbA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7834846Z",
+          "Length": 46
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098236",
+            "Sha256": "285f67936ac7fa34e9d074cc8f6637f76f68e357a6d38dcb8d5cdb07780821ca",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7839528Z",
+          "Length": 57
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:393216:1098237",
+            "Sha256": "89c094492d4483ac3e33a38d0ca26d19595028886e3b66ff3cdf6fbe2946fb08",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9tb2RlbHNfY2FjaGUuanNvbg==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7843070Z",
+          "Length": 52
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:393216:1098238",
+            "Sha256": "d11e35b4678095702b87cb4c2379264f72b041b6d087d03e16eb0cd680033c44",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy1hdWRpdC5qc29ubA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7846402Z",
+          "Length": 64
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:393216:1098239",
+            "Sha256": "8df55d5f1d205a997e9076a74c46c16ab879e87ea2ca0cbf27f7964156e2f8e7",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpncm9rL2NvbmZpZy50b21sLmJhay1vcGVuY29kZXg=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.7850013Z",
+          "Length": 59
+        }
+      ],
+      "journal": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\parent-link\\intent.jsonl",
+      "plan": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\parent-link\\protected-plan.json",
+      "before": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098235",
+            "Sha256": "7aa0cf0081a5d8a1f51a65536844cb691318c88dd74789c86d3fbc63301a9bf0",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L2NvbmZpZy50b21s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7795763Z",
+          "Length": 36
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098236",
+            "Sha256": "5c1dc4cbb57d6709d2f6822bd1c30229197358ec792c6a2926e3dc33e5ef2208",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLmpzb24=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7800168Z",
+          "Length": 47
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7803587Z",
+          "Length": 0
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7807460Z",
+          "Length": 0
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.7810624Z",
+          "Length": 0
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\second-write-failure",
+      "digest": "4394c760c92dba01deff998fd25aea07bbb8340612489e0ce2d18673d8210626",
+      "after": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098246",
+            "Sha256": "e9ad58f80f54740a31b5228fa45e06157eaef7c8fa0b87a9334615b405558fe1",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9jb25maWcudG9tbA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.8078919Z",
+          "Length": 46
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098247",
+            "Sha256": "285f67936ac7fa34e9d074cc8f6637f76f68e357a6d38dcb8d5cdb07780821ca",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.8084198Z",
+          "Length": 57
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:393216:1098248",
+            "Sha256": "89c094492d4483ac3e33a38d0ca26d19595028886e3b66ff3cdf6fbe2946fb08",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9tb2RlbHNfY2FjaGUuanNvbg==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.8087845Z",
+          "Length": 52
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:393216:1098249",
+            "Sha256": "d11e35b4678095702b87cb4c2379264f72b041b6d087d03e16eb0cd680033c44",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy1hdWRpdC5qc29ubA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.8091091Z",
+          "Length": 64
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:393216:1098250",
+            "Sha256": "8df55d5f1d205a997e9076a74c46c16ab879e87ea2ca0cbf27f7964156e2f8e7",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpncm9rL2NvbmZpZy50b21sLmJhay1vcGVuY29kZXg=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.8094424Z",
+          "Length": 59
+        }
+      ],
+      "journal": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\second-write-failure\\intent.jsonl",
+      "plan": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\second-write-failure\\protected-plan.json",
+      "before": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098246",
+            "Sha256": "7aa0cf0081a5d8a1f51a65536844cb691318c88dd74789c86d3fbc63301a9bf0",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L2NvbmZpZy50b21s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.8034896Z",
+          "Length": 36
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098247",
+            "Sha256": "5c1dc4cbb57d6709d2f6822bd1c30229197358ec792c6a2926e3dc33e5ef2208",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLmpzb24=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.8040563Z",
+          "Length": 47
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.8044656Z",
+          "Length": 0
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.8048872Z",
+          "Length": 0
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.8052802Z",
+          "Length": 0
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\absent-slot-race",
+      "digest": "7818f3b3a2923ec8061adc751ffdefacbad9c4ccf850eb7669cdf6c8fa02b730",
+      "after": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098256",
+            "Sha256": "e9ad58f80f54740a31b5228fa45e06157eaef7c8fa0b87a9334615b405558fe1",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9jb25maWcudG9tbA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.8373927Z",
+          "Length": 46
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098257",
+            "Sha256": "285f67936ac7fa34e9d074cc8f6637f76f68e357a6d38dcb8d5cdb07780821ca",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.8377925Z",
+          "Length": 57
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:393216:1098258",
+            "Sha256": "89c094492d4483ac3e33a38d0ca26d19595028886e3b66ff3cdf6fbe2946fb08",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9tb2RlbHNfY2FjaGUuanNvbg==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.8381314Z",
+          "Length": 52
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:393216:1098259",
+            "Sha256": "d11e35b4678095702b87cb4c2379264f72b041b6d087d03e16eb0cd680033c44",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy1hdWRpdC5qc29ubA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.8384703Z",
+          "Length": 64
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:393216:1098260",
+            "Sha256": "8df55d5f1d205a997e9076a74c46c16ab879e87ea2ca0cbf27f7964156e2f8e7",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpncm9rL2NvbmZpZy50b21sLmJhay1vcGVuY29kZXg=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.8387907Z",
+          "Length": 59
+        }
+      ],
+      "journal": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\absent-slot-race\\intent.jsonl",
+      "plan": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\absent-slot-race\\protected-plan.json",
+      "before": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098256",
+            "Sha256": "7aa0cf0081a5d8a1f51a65536844cb691318c88dd74789c86d3fbc63301a9bf0",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L2NvbmZpZy50b21s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.8339546Z",
+          "Length": 36
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098257",
+            "Sha256": "5c1dc4cbb57d6709d2f6822bd1c30229197358ec792c6a2926e3dc33e5ef2208",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLmpzb24=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.8344171Z",
+          "Length": 47
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:393216:1098258",
+            "Sha256": "179e1ac2764a39bca1217c63c0686aba9bb10191e0190c258d9a2ef84b8d0c9c",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L21vZGVsc19jYWNoZS5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.8347740Z",
+          "Length": 42
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:393216:1098259",
+            "Sha256": "0d069580ea669d6677fd41143fe785846011ebf603c85f5172c65201a7362bee",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLWF1ZGl0Lmpzb25s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.8351055Z",
+          "Length": 54
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:393216:1098260",
+            "Sha256": "79376e9f948da13654789d9cf2a05cd279fe48776ad413ae8666d235586f915d",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmdyb2svY29uZmlnLnRvbWwuYmFrLW9wZW5jb2RleA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.8354367Z",
+          "Length": 49
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\separate-writer",
+      "digest": "544ae588a1ab9a51d5d9e45a9138a043b8bc0afd298f9c2d7eae9f35dc0071eb",
+      "after": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098266",
+            "Sha256": "e9ad58f80f54740a31b5228fa45e06157eaef7c8fa0b87a9334615b405558fe1",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9jb25maWcudG9tbA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.8649485Z",
+          "Length": 46
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098267",
+            "Sha256": "285f67936ac7fa34e9d074cc8f6637f76f68e357a6d38dcb8d5cdb07780821ca",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.8654389Z",
+          "Length": 57
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:393216:1098268",
+            "Sha256": "89c094492d4483ac3e33a38d0ca26d19595028886e3b66ff3cdf6fbe2946fb08",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9tb2RlbHNfY2FjaGUuanNvbg==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.8658089Z",
+          "Length": 52
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:393216:1098269",
+            "Sha256": "d11e35b4678095702b87cb4c2379264f72b041b6d087d03e16eb0cd680033c44",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy1hdWRpdC5qc29ubA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.8662103Z",
+          "Length": 64
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:393216:1098270",
+            "Sha256": "8df55d5f1d205a997e9076a74c46c16ab879e87ea2ca0cbf27f7964156e2f8e7",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpncm9rL2NvbmZpZy50b21sLmJhay1vcGVuY29kZXg=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:36.8665442Z",
+          "Length": 59
+        }
+      ],
+      "journal": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\separate-writer\\intent.jsonl",
+      "plan": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\separate-writer\\protected-plan.json",
+      "before": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098266",
+            "Sha256": "7aa0cf0081a5d8a1f51a65536844cb691318c88dd74789c86d3fbc63301a9bf0",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L2NvbmZpZy50b21s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.8606674Z",
+          "Length": 36
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098267",
+            "Sha256": "5c1dc4cbb57d6709d2f6822bd1c30229197358ec792c6a2926e3dc33e5ef2208",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLmpzb24=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.8611869Z",
+          "Length": 47
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.8615652Z",
+          "Length": 0
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.8620097Z",
+          "Length": 0
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:36.8623902Z",
+          "Length": 0
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\crash-False",
+      "digest": "b73e6d3b8760bb8273baf422efec76f1dcc59739546a295ae9faf801c75784e7",
+      "after": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098274",
+            "Sha256": "e9ad58f80f54740a31b5228fa45e06157eaef7c8fa0b87a9334615b405558fe1",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9jb25maWcudG9tbA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:37.3210927Z",
+          "Length": 46
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098275",
+            "Sha256": "285f67936ac7fa34e9d074cc8f6637f76f68e357a6d38dcb8d5cdb07780821ca",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:37.3215006Z",
+          "Length": 57
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:393216:1098276",
+            "Sha256": "89c094492d4483ac3e33a38d0ca26d19595028886e3b66ff3cdf6fbe2946fb08",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9tb2RlbHNfY2FjaGUuanNvbg==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:37.3218543Z",
+          "Length": 52
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:393216:1098277",
+            "Sha256": "d11e35b4678095702b87cb4c2379264f72b041b6d087d03e16eb0cd680033c44",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy1hdWRpdC5qc29ubA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:37.3221875Z",
+          "Length": 64
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:393216:1098278",
+            "Sha256": "8df55d5f1d205a997e9076a74c46c16ab879e87ea2ca0cbf27f7964156e2f8e7",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpncm9rL2NvbmZpZy50b21sLmJhay1vcGVuY29kZXg=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:37.3224879Z",
+          "Length": 59
+        }
+      ],
+      "journal": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\crash-False\\intent.jsonl",
+      "plan": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\crash-False\\protected-plan.json",
+      "before": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098274",
+            "Sha256": "7aa0cf0081a5d8a1f51a65536844cb691318c88dd74789c86d3fbc63301a9bf0",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L2NvbmZpZy50b21s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:37.3173104Z",
+          "Length": 36
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:393216:1098275",
+            "Sha256": "5c1dc4cbb57d6709d2f6822bd1c30229197358ec792c6a2926e3dc33e5ef2208",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLmpzb24=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:37.3177146Z",
+          "Length": 47
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:37.3180906Z",
+          "Length": 0
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:37.3184190Z",
+          "Length": 0
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:37.3187175Z",
+          "Length": 0
+        }
+      ]
+    },
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\crash-True",
+      "digest": "25e5686dcaeb8097358d67a0ffb0e58660ae5f7b16b0d144b38abbc692b41665",
+      "after": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098284",
+            "Sha256": "e9ad58f80f54740a31b5228fa45e06157eaef7c8fa0b87a9334615b405558fe1",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9jb25maWcudG9tbA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:39.2110625Z",
+          "Length": 46
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:458752:1098285",
+            "Sha256": "285f67936ac7fa34e9d074cc8f6637f76f68e357a6d38dcb8d5cdb07780821ca",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy5qc29u",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:39.2114740Z",
+          "Length": 57
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "file",
+          "Image": {
+            "Name": "models_cache.json",
+            "Id": "247287385:393216:1098286",
+            "Sha256": "89c094492d4483ac3e33a38d0ca26d19595028886e3b66ff3cdf6fbe2946fb08",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9tb2RlbHNfY2FjaGUuanNvbg==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:39.2118006Z",
+          "Length": 52
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog-audit.jsonl",
+            "Id": "247287385:458752:1098287",
+            "Sha256": "d11e35b4678095702b87cb4c2379264f72b041b6d087d03e16eb0cd680033c44",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpjb2RleC9vcGVuY29kZXgtY2F0YWxvZy1hdWRpdC5qc29ubA==",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:39.2121091Z",
+          "Length": 64
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml.bak-opencodex",
+            "Id": "247287385:393216:1098288",
+            "Sha256": "8df55d5f1d205a997e9076a74c46c16ab879e87ea2ca0cbf27f7964156e2f8e7",
+            "Bytes": "c3ludGhldGljLXByb2R1Y2VyLXBvc3RpbWFnZTpncm9rL2NvbmZpZy50b21sLmJhay1vcGVuY29kZXg=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "postimage",
+          "CapturedUtc": "2026-11-10T12:47:39.2123956Z",
+          "Length": 59
+        }
+      ],
+      "journal": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\crash-True\\intent.jsonl",
+      "plan": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-five-02\\crash-True\\protected-plan.json",
+      "before": [
+        {
+          "Path": "codex/config.toml",
+          "State": "file",
+          "Image": {
+            "Name": "config.toml",
+            "Id": "247287385:393216:1098284",
+            "Sha256": "7aa0cf0081a5d8a1f51a65536844cb691318c88dd74789c86d3fbc63301a9bf0",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L2NvbmZpZy50b21s",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:39.2072345Z",
+          "Length": 36
+        },
+        {
+          "Path": "codex/opencodex-catalog.json",
+          "State": "file",
+          "Image": {
+            "Name": "opencodex-catalog.json",
+            "Id": "247287385:458752:1098285",
+            "Sha256": "5c1dc4cbb57d6709d2f6822bd1c30229197358ec792c6a2926e3dc33e5ef2208",
+            "Bytes": "c3ludGhldGljLW9yaWdpbmFsOmNvZGV4L29wZW5jb2RleC1jYXRhbG9nLmpzb24=",
+            "Sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1004)(A;ID;0x1301bf;;;S-1-5-21-1074983779-1565451746-1420812610-550522239)(A;ID;0x1301ff;;;S-1-5-21-3188286339-872246054-2637595877-555227071)(A;ID;0x1301ff;;;S-1-5-21-2413225729-64912597-2221709747-3933731957)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;FA;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)",
+            "Owner": "S-1-5-21-587408064-856152790-2583328096-1001"
+          },
+          "FailureType": null,
+          "Error": 0,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:39.2077077Z",
+          "Length": 47
+        },
+        {
+          "Path": "codex/models_cache.json",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:39.2080452Z",
+          "Length": 0
+        },
+        {
+          "Path": "codex/opencodex-catalog-audit.jsonl",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:39.2084455Z",
+          "Length": 0
+        },
+        {
+          "Path": "grok/config.toml.bak-opencodex",
+          "State": "absent",
+          "Image": null,
+          "FailureType": "System.ComponentModel.Win32Exception",
+          "Error": 2,
+          "Stage": "before",
+          "CapturedUtc": "2026-11-10T12:47:39.2087717Z",
+          "Length": 0
+        }
+      ]
+    }
+  ]
+}
