@@ -1,0 +1,33 @@
+{
+  "schema": "official299-windows-restoration/2",
+  "accepted": false,
+  "restorationChainPassed": false,
+  "stableLockExceptionAdopted": false,
+  "stage": "ordinary-identity",
+  "runtimeCreationEntered": false,
+  "start": null,
+  "status": null,
+  "stop": null,
+  "firstError": {
+    "stage": "ordinary-identity",
+    "line": 42,
+    "hresult": -2146233087,
+    "message": "Exception calling \"Observe\" with \"1\" argument(s): \"句柄无效。\"",
+    "type": "System.Management.Automation.MethodInvocationException"
+  },
+  "counterexamples": [],
+  "cleanup": [
+    {
+      "kind": "no-runtime-creation-entered",
+      "jobActive": 0,
+      "jobMembers": [],
+      "reason": "failure before native service constructor; no runtime/version subprocess launched"
+    }
+  ],
+  "budgetsMs": {
+    "start": 30000,
+    "stop": 10000,
+    "status": 5000
+  },
+  "utc": "2026-11-10T11:52:15.1205761Z"
+}

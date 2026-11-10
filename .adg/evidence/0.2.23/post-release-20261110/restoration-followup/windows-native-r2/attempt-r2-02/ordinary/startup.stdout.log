@@ -1,0 +1,18 @@
+🚀 opencodex proxy running on http://localhost:54968
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+   + 1 models appended to Codex catalog (C:\Users\ocx299f0b7375d2f\official299-proof\codex\opencodex-catalog.json)
+Pointed Codex's built-in openai provider at the opencodex proxy (openai_base_url + realtime sideband override).
+  Codex model catalog: C:\Users\ocx299f0b7375d2f\official299-proof\codex\opencodex-catalog.json
+  Codex resume history: left unchanged (syncResumeHistory=false).
+  All models now route through opencodex proxy (like OpenRouter).
+  OpenAI models (gpt-5.5, etc.) are passed through to OpenAI.
+  Custom models route to their configured providers.
+  Fallback reference: C:\Users\ocx299f0b7375d2f\official299-proof\codex\opencodex.config.toml
+   Target Codex home: C:\Users\[USER]\official299-proof\codex
+🔐 Claude intercept proxy active on http://127.0.0.1:55068 (CONNECT api.anthropic.com → local TLS)
+   + Grok Build config updated (~/.grok/config.toml)
+Client startup work complete.

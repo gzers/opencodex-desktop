@@ -1,0 +1,43 @@
+{
+  "extraFiles": [
+    {
+      "relative": "codex/.opencodex-native-main.claim.sqlite",
+      "length": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "codex/.opencodex-native-main.owner.sqlite",
+      "length": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative": "codex/models_cache.json",
+      "length": 2375,
+      "sha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51"
+    },
+    {
+      "relative": "codex/opencodex-catalog-audit.jsonl",
+      "length": 286,
+      "sha256": "2239fd7e92ed26ae406ff983c4e329019b578bbf30d68b5d6cd565f83e7a67b2"
+    },
+    {
+      "relative": "grok/config.toml.bak-opencodex",
+      "length": 122,
+      "sha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe"
+    }
+  ],
+  "afterRawContentLimit": "Changed config/catalog after bytes were not serialized; original result and SHA256/inventory are preserved, Profile was removed by authorized cleanup. Do not infer unrecorded raw bytes from source.",
+  "fullOriginalTreeRestored": false,
+  "changedFiles": [
+    {
+      "after": "cba8830e7bd0df1cc8f54b63a1ff1bd75e9af34a7d46c2cf756d7064c9c0d2ca",
+      "before": "a5a3feb8edc5b0e15e47ce38bd218bfaaa32bca141faaf2031b0a6b90f9e5a5e",
+      "relative": "codex/config.toml"
+    },
+    {
+      "after": "07a99e78c40f29b3aba65ae99eb7dd789670616d8a3c6b8dc2c558d77ab207de",
+      "before": "cfab95ffae957d49aa3ebe4520db56774a7339c77da67668b0222ce77e93d6f5",
+      "relative": "codex/opencodex-catalog.json"
+    }
+  ]
+}

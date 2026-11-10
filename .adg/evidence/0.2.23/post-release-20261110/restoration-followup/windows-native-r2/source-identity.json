@@ -1,0 +1,130 @@
+{
+  "docsBaseline": "7b30abcdfe4b95808d260af13d1737323bbcd2aa",
+  "previousDocsDelivery": "60ec741551a01759a09deef4d2abb29035d0a399",
+  "desktopReadOnlyBaseline": "0828a3955615df0a2a3e52fb96ab8249f2e04d1b",
+  "testBaseline": "e98ddcc6a9b9b5946b8b426507ed8a0f5e9eda4c",
+  "testDeliveryCommit": "03480916ca369ce7648afdf82c20819e87c74ee7",
+  "actualAttempts": [
+    {
+      "attempt": "attempt-r2-01",
+      "commit": "b19fc72f0bf0a9b6d95175abab1da3f0731fb4e0",
+      "hashes": {
+        "recovery": "ccce98121db9c56c25e51bd0b21603329b08cb1d3a91fb9afebb2df6e2e8cac1",
+        "lockWorker": "fc6c20bc26818d2371970c061470088a4be26d2359a6d677816c38c884fc0a5e",
+        "powershell": "2a6769a3330dc1084d0154bfde7d164ab750ca7f700f313f9d417c1be78b2233",
+        "native": "d8cf24134606b5af89c68aa982b98fcd717630885e60fc89f3cfa8a4ba4ad42e",
+        "provisioner": "1a4f72fcfb7c3d8a78a66cd110ad37363e089bbc060c6618b36562dbd2791041",
+        "host": "b346c77e4cd34ab0d9aba51e8dbfcc7849f4dca6d8e3b2c2d946052ed0ec2f2a",
+        "hostLeaf": "host-r2.ps1"
+      }
+    },
+    {
+      "attempt": "attempt-r2-02",
+      "commit": "709baa59d03a15fa46820d01ce3a28e605ecb51f",
+      "hashes": {
+        "host": "6029a96b0eaa453a480e36ba8f8733a33d88f454783234d9bab4859e43f94e1a",
+        "hostLeaf": "host-r2.ps1",
+        "lockWorker": "fc6c20bc26818d2371970c061470088a4be26d2359a6d677816c38c884fc0a5e",
+        "provisioner": "355b130aa3e2a56d95b3839bd0cbf30dadb00f3ccc3145a755e349ec713407a5",
+        "recovery": "ccce98121db9c56c25e51bd0b21603329b08cb1d3a91fb9afebb2df6e2e8cac1",
+        "powershell": "2a6769a3330dc1084d0154bfde7d164ab750ca7f700f313f9d417c1be78b2233",
+        "native": "fcf3d01b445e6204b2a4bbaad161edf292ce855f82738e9ed686ed452db0679c"
+      }
+    }
+  ],
+  "official": {
+    "integrity": "sha512-pAlx+xXd1Ujbmw6yW/V5P0xNZi04e80qRUhmJQ7Ia4v6cJkaMvkvMTqKIx0kOSw2vx/tiQLjDkHsCgPAu15wyg==",
+    "sha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+    "bunSha256": "cb1d8e6564e655e49d30cead359750a1cbbd12f42651caa4b62244d7bd93c244",
+    "bytes": 19923693,
+    "bunVersion": "1.4.4",
+    "fixedOfficialVersion": "2.99.0"
+  },
+  "dependencyBaseline": {
+    "runtimePayloadMatched": true,
+    "rootPinnedLockMatches": true,
+    "comparedPayloadFiles": 6733,
+    "differences": [
+      {
+        "path": "node_modules/.package-lock.json",
+        "before": {
+          "path": "node_modules/.package-lock.json",
+          "size": 51850,
+          "sha256": "45455db27d33d17240c028f86f975584e15964ae56e62131ac1919c0c2000b35"
+        },
+        "after": {
+          "path": "node_modules/.package-lock.json",
+          "size": 53201,
+          "sha256": "8d34379dec6be3e61ca45d0c4afdc89d94abc05248f5db25237a0fbcf763ae27"
+        }
+      },
+      {
+        "path": "package.json",
+        "before": {
+          "path": "package.json",
+          "size": 149,
+          "sha256": "756d339ada8ac36dea25a380019e1f7456790e56d5eb4ddf7345396d02eaf72f"
+        },
+        "after": {
+          "path": "package.json",
+          "size": 153,
+          "sha256": "dccc6d6bb0fc29c119a794d2362869446c827a6f242b8ccf8279852ff09039db"
+        }
+      }
+    ],
+    "allInputBytesIdentical": false,
+    "initialStrictComparison": "failed: npm ci regenerated its private node_modules/.package-lock.json and fixture root manifest formatting; failure is preserved explicitly",
+    "reason": "all dependency executable/source/data bytes and the fixed root package-lock.json match; only these two npm preparation metadata files differ",
+    "lifecycleScriptsExecuted": false
+  },
+  "prototypeSourceVerification": [
+    {
+      "path": "race-worker.ps1",
+      "sha256": "a9d7e85c412e37c6316998accba22c6b01fcc4f0cb88478484389ae4da85334b",
+      "gitCommit": "33baba80adfb472560f8ade8229d93c42cd17116"
+    },
+    {
+      "path": "recovery-test.ps1",
+      "sha256": "88ce57659e1540e05c537f88db9cc31980ead9585099f817e680b4ea848ac2a4",
+      "gitCommit": "33baba80adfb472560f8ade8229d93c42cd17116"
+    },
+    {
+      "path": "Native.cs",
+      "sha256": "d8cf24134606b5af89c68aa982b98fcd717630885e60fc89f3cfa8a4ba4ad42e",
+      "gitCommit": "33baba80adfb472560f8ade8229d93c42cd17116"
+    },
+    {
+      "path": "agent-producer.ts",
+      "sha256": "4881370ca5ce09e5c890ad2354731515d1ab9fa4721b9f5537bdac9dd4f2331c",
+      "gitCommit": "33baba80adfb472560f8ade8229d93c42cd17116"
+    },
+    {
+      "path": "Recovery.cs",
+      "sha256": "ccce98121db9c56c25e51bd0b21603329b08cb1d3a91fb9afebb2df6e2e8cac1",
+      "gitCommit": "33baba80adfb472560f8ade8229d93c42cd17116"
+    }
+  ],
+  "lockAndTcpPrototypeSourcesMatchGit": true,
+  "earlyAgentPrototype01": "exploratory raw output retained; original pre-commit script body is not assigned a retrospective Git identity",
+  "codeChangedPaths": [
+    "test/official299-windows/Native.cs",
+    "test/official299-windows/README.md",
+    "test/official299-windows/Recovery.cs",
+    "test/official299-windows/agent-producer.ts",
+    "test/official299-windows/cleanup-payloads.ps1",
+    "test/official299-windows/cleanup-r2.ps1",
+    "test/official299-windows/host-r2.ps1",
+    "test/official299-windows/lock-test.ps1",
+    "test/official299-windows/lock-worker.ts",
+    "test/official299-windows/race-worker.ps1",
+    "test/official299-windows/recovery-test.ps1",
+    "test/official299-windows/run.ps1",
+    "test/official299-windows/verify-restoration-evidence.mjs"
+  ],
+  "productionOrWorkflowChanged": false,
+  "fullSuiteExecuted": false,
+  "published": false,
+  "cleanupVerified": true,
+  "failedDirectoriesPreserved": true,
+  "collectionOnlyDeliveryChange": "failed synthetic config/catalog postimages will be serialized by later host-r2 code; this change was syntax checked only and was not the actual attempted service source"
+}
