@@ -51,9 +51,10 @@ public static class Native {
   [DllImport("kernel32")] public static extern IntPtr LocalFree(IntPtr h);
   [DllImport("advapi32", SetLastError=true)] static extern bool GetSecurityDescriptorDacl(IntPtr sd,out bool present,out IntPtr dacl,out bool defaulted);
   [DllImport("advapi32", CharSet=CharSet.Unicode)] static extern uint SetNamedSecurityInfoW(string path,int kind,uint info,IntPtr owner,IntPtr group,IntPtr dacl,IntPtr sacl);
-  public static void RestoreSyntheticDacl(string path,string sddl) {
+  public static void RestoreSyntheticDacl(string path,string sddl) { SetFixtureDacl(path,sddl,false); }
+  public static void SetFixtureDacl(string path,string sddl,bool protect) {
     IntPtr sd;uint len;Check(ConvertStringSecurityDescriptorToSecurityDescriptorW(sddl,1,out sd,out len));
-    try { bool present,def;IntPtr acl;Check(GetSecurityDescriptorDacl(sd,out present,out acl,out def));if(!present||acl==IntPtr.Zero)throw new InvalidOperationException("null DACL refused");uint rc=SetNamedSecurityInfoW(path,1,0x20000004,IntPtr.Zero,IntPtr.Zero,acl,IntPtr.Zero);if(rc!=0)throw new Win32Exception((int)rc); }
+    try { bool present,def;IntPtr acl;Check(GetSecurityDescriptorDacl(sd,out present,out acl,out def));if(!present||acl==IntPtr.Zero)throw new InvalidOperationException("null DACL refused");uint rc=SetNamedSecurityInfoW(path,1,protect?0x80000004u:0x20000004u,IntPtr.Zero,IntPtr.Zero,acl,IntPtr.Zero);if(rc!=0)throw new Win32Exception((int)rc); }
     finally {LocalFree(sd);}
   }
   [DllImport("iphlpapi", SetLastError=true)] static extern uint GetExtendedTcpTable(IntPtr table,ref int size,bool order,uint family,int kind,uint reserved);

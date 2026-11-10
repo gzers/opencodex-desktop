@@ -52,9 +52,7 @@ try {
  $mismatches=@();$srcCount=0
  foreach($f in Get-ChildItem -LiteralPath (Join-Path $c.archiveRoot 'package') -File -Recurse){$rel=[IO.Path]::GetRelativePath((Join-Path $c.archiveRoot 'package'),$f.FullName);$dest=Join-Path $package $rel;if(!(Test-Path -LiteralPath $dest) -or (Digest $f.FullName) -cne (Digest $dest)){$mismatches+=$rel};$srcCount++}
  Require ($mismatches.Count -eq 0) 'official package differs from fixed archive'
- $sealed=[Security.AccessControl.DirectorySecurity]::new();$sealed.SetOwner($identity.User);$sealed.SetAccessRuleProtection($true,$false)
- $sealed.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new($identity.User,'ReadAndExecute','ContainerInherit,ObjectInherit','None','Allow'))
- $sealed.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new([Security.Principal.SecurityIdentifier]::new('S-1-5-18'),'FullControl','ContainerInherit,ObjectInherit','None','Allow'));Set-Acl -LiteralPath $program -AclObject $sealed
+ [Official299Proof.Native]::SetFixtureDacl($program,('D:P(A;OICI;GRGX;;;'+$sid+')(A;OICI;GA;;;SY)'),$true)
  $r.programReadOnlySddl=(Get-Acl -LiteralPath $program).Sddl
  $guards.Add([Official299Proof.Guard]::new($program,$true));$guards.Add([Official299Proof.Guard]::new($package,$true));$guards.Add([Official299Proof.Guard]::new($bun,$false))
  $r.package=@{version='2.99.0';archiveSha256=$c.archiveSha256;filesCompared=$srcCount;mismatches=$mismatches;bunSha256=$c.bunSha256;bunVersion=$c.bunVersion;lockSha256=$c.lockSha256;privateProgram=$program}
@@ -67,6 +65,10 @@ try {
  }
  $before=@();foreach($rel in $originals.Keys){$path=Join-Path $fixture $rel;[IO.File]::WriteAllText($path,$originals[$rel]);$before+=@{relative=$rel;sha256=(Digest $path);bytesBase64=[Convert]::ToBase64String([IO.File]::ReadAllBytes($path))}}
  Write-Proof 'client-originals.json' $before
+ function Client-Inventory {
+  $entries=@();foreach($client in @('codex','claude','grok')){foreach($file in Get-ChildItem -LiteralPath (Join-Path $fixture $client) -File -Recurse){$guard=[Official299Proof.Guard]::new($file.FullName,$false);try{$entries+=@{relative=([IO.Path]::GetRelativePath($fixture,$file.FullName).Replace('\','/'));length=$file.Length;sha256=(Digest $file.FullName)}}finally{$guard.Dispose()}}};return @($entries|Sort-Object relative)
+ }
+ $clientBaseline=@(Client-Inventory);Write-Proof 'client-tree-before.json' $clientBaseline
  $listener=[Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback,0);$listener.Start();$port=$listener.LocalEndpoint.Port;$listener.Stop();$r.port=$port
  $config=@{hostname='127.0.0.1';port=$port;providers=@{};syncResumeHistory=$false;shutdownTimeoutMs=5000}
  [IO.File]::WriteAllText((Join-Path $runtimeHome 'config.json'),($config|ConvertTo-Json -Depth 8))
@@ -133,17 +135,18 @@ try {
  try{$deny=[IO.File]::Open($record,'Open','Write','ReadWrite');$deny.Dispose();throw 'protected binding unexpectedly writable'}catch [IO.IOException]{$r.counterexamples+=@{case='write-locked-proof';decision='unknown-on-unreadable';actualWriteDenied=$true}}
  $badProof=if($health.proof[0] -ceq 'A'){'B'+$health.proof.Substring(1)}else{'A'+$health.proof.Substring(1)}
  Require (!(Verify-Proof $state.attestationSecret $challenge $state.pid $port $badProof)) 'tampered signature accepted';$r.counterexamples+=@{case='signature-tampered';decision='refused'}
- $during=@();foreach($v in $before){$during+=@{relative=$v.relative;sha256=(Digest (Join-Path $fixture $v.relative));changed=((Digest (Join-Path $fixture $v.relative)) -cne $v.sha256)}};Write-Proof 'clients-during.json' $during
+ $during=@();foreach($v in $before){$during+=@{relative=$v.relative;sha256=(Digest (Join-Path $fixture $v.relative));changed=((Digest (Join-Path $fixture $v.relative)) -cne $v.sha256)}};Write-Proof 'clients-during.json' $during;Write-Proof 'client-tree-during.json' @(Client-Inventory)
  $r.stage='stop';$sw=[Diagnostics.Stopwatch]::StartNew();$r.stop=[ordered]@{pass=$false;normalRequested=$false;response=$null;originalExited=$false;originalExitCode=$null;jobActive=$null;jobMembers=$null;listenerOwners=$null;restored=$null;elapsedMs=$null}
  Require ((Get-ProofDecision $binding (Read-ProofBinding $record) ([Official299Proof.Native]::Observe($runtime.Process)) $homeGuard.Identity) -ceq 'admitted' -and !$runtime.Exited()) 'stop authority lost'
  $r.stop.normalRequested=$true;$stop=Request '/api/stop' 'POST' (10000-$sw.ElapsedMilliseconds) @{'x-opencodex-api-key'=$admin};$r.stop.response=$stop
  $sb=$stop.body|ConvertFrom-Json;Require ($stop.status -eq 200 -and $sb.success -eq $true -and $sb.sharedTeardown -ceq 'performed') 'server restoration unconfirmed'
  while($sw.ElapsedMilliseconds -lt 10000 -and (!$runtime.Exited() -or $runtime.Active() -ne 0)){Start-Sleep -Milliseconds 25}
  $r.stop.originalExited=$runtime.Exited();if($r.stop.originalExited){$r.stop.originalExitCode=$runtime.ExitCode()};$r.stop.jobActive=$runtime.Active();$r.stop.jobMembers=@($runtime.Members());$r.stop.listenerOwners=@([Official299Proof.Native]::Listeners($port))
- $after=@();foreach($v in $before){$path=Join-Path $fixture $v.relative;$digest=if(Test-Path -LiteralPath $path){Digest $path}else{$null};$after+=@{relative=$v.relative;beforeSha256=$v.sha256;afterSha256=$digest;restored=($v.sha256 -ceq $digest);bytesBase64=$(if($digest){[Convert]::ToBase64String([IO.File]::ReadAllBytes($path))}else{$null})}}
+ $after=@();foreach($v in $before){$path=Join-Path $fixture $v.relative;$digest=if(Test-Path -LiteralPath $path){Digest $path}else{$null};$after+=@{relative=$v.relative;beforeSha256=$v.sha256;afterSha256=$digest;restored=($v.sha256 -ceq $digest);bytesBase64=$(if($digest -ceq $v.sha256){[Convert]::ToBase64String([IO.File]::ReadAllBytes($path))}else{$null})}}
+ $clientFinal=@(Client-Inventory);$treeSame=(($clientBaseline|ConvertTo-Json -Compress) -ceq ($clientFinal|ConvertTo-Json -Compress));$r.stop.clientTreeRestored=$treeSame;$r.stop.clientConfigWasChanged=(@($during|Where-Object {$_.relative -eq 'codex/config.toml' -and $_.changed}).Count -eq 1);Write-Proof 'client-tree-after.json' $clientFinal
  $r.stop.restored=$after;$r.stop.elapsedMs=$sw.ElapsedMilliseconds
  Write-Proof 'client-restored.json' $after
- Require ($r.stop.originalExited -and $r.stop.originalExitCode -eq 0 -and $r.stop.jobActive -eq 0 -and $r.stop.jobMembers.Count -eq 0 -and $r.stop.listenerOwners.Count -eq 0 -and @($after|Where-Object {!$_.restored}).Count -eq 0 -and $sw.ElapsedMilliseconds -lt 10000) 'normal Stop full proof failed'
+ Require ($r.stop.originalExited -and $r.stop.originalExitCode -eq 0 -and $r.stop.jobActive -eq 0 -and $r.stop.jobMembers.Count -eq 0 -and $r.stop.listenerOwners.Count -eq 0 -and @($after|Where-Object {!$_.restored}).Count -eq 0 -and $treeSame -and $r.stop.clientConfigWasChanged -and $sw.ElapsedMilliseconds -lt 10000) 'normal Stop full proof failed'
  $r.stop.pass=$true;$r.accepted=$true;$r.stage='complete'
 } catch {
  $r.firstError=@{stage=$r.stage;type=$_.Exception.GetType().FullName;message=$_.Exception.Message;line=$_.InvocationInfo.ScriptLineNumber;hresult=$_.Exception.HResult}

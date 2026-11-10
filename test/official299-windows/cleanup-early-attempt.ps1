@@ -8,7 +8,9 @@ try {
  $source=Join-Path $dir 'code/host.ps1'
  if((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash -ine $ExpectedHostSha256 -or $c.hostHashes.host -cne $ExpectedHostSha256){throw 'actual attempted source differs'}
  if($c.ordinaryOriginalExit -ne 1 -or $c.ordinary.stage -cne 'ordinary-identity' -or $c.ordinary.firstError.line -ne 40 -or $null -ne $c.ordinary.start -or $c.ordinary.firstError.type -cne 'System.Management.Automation.SessionStateUnauthorizedAccessException'){throw 'not the exact pre-process HOME-variable failure'}
- $r.noRuntimeProof=@{exactSourceSha256=$ExpectedHostSha256;failureLine=40;nativeConstructorLine=96;ordinaryOriginalExit=$c.ordinaryOriginalExit;processCreationNotReached=$true}
+ $constructor=Select-String -LiteralPath $source -SimpleMatch -Pattern '$runtime=[Official299Proof.Owned]::new'
+ if(@($constructor).Count -ne 1 -or $constructor.LineNumber -le 40){throw 'native constructor position could not be verified'}
+ $r.noRuntimeProof=@{exactSourceSha256=$ExpectedHostSha256;failureLine=40;nativeConstructorLine=$constructor.LineNumber;ordinaryOriginalExit=$c.ordinaryOriginalExit;processCreationNotReached=$true}
  $a=Get-LocalUser -SID $c.account.sid
  if($a.Name -cne $c.account.name -or $a.Name -cnotmatch '^ocx299[a-f0-9]{10}$' -or $a.Enabled){throw 'exact disabled new account required'}
  $profiles=@(Get-CimInstance Win32_UserProfile -Filter ("SID='"+$c.account.sid+"'"))
