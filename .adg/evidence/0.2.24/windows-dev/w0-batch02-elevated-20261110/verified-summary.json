@@ -1,0 +1,123 @@
+{
+  "status": "pass",
+  "scope": "new standalone W0 native source only; no registered product call",
+  "actualCommit": "b2e89665d2864ea8e29bbaa91ac7843dff7ac4cb",
+  "nativeChecksPassed": 11,
+  "commandExitCodes": [
+    0,
+    0,
+    0
+  ],
+  "toolchain": {
+    "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+    "elevated": true,
+    "os": "Microsoft Windows 10.0.26100",
+    "session": 2,
+    "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+    "hostSid": "S-1-5-21-587408064-856152790-2583328096-1001"
+  },
+  "sourceBytes": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/README.md",
+      "gitSha256": "02effa93591f13de31d04e5fdb9047d61bab4860046a46bbea2ea769707eebb6",
+      "executedWorkingTreeSha256": "02effa93591f13de31d04e5fdb9047d61bab4860046a46bbea2ea769707eebb6",
+      "rawMatches": true,
+      "lineEndingOnlyDifference": false
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/listeners.rs",
+      "gitSha256": "d4d52cea05aae0e268bdf1c190843df775f748b377f5f3b7a5cb0cb3e32758f2",
+      "executedWorkingTreeSha256": "d4d52cea05aae0e268bdf1c190843df775f748b377f5f3b7a5cb0cb3e32758f2",
+      "rawMatches": true,
+      "lineEndingOnlyDifference": false
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs",
+      "gitSha256": "5f2be88c4f733bb66ef74c44a23902437e1fe0e263694aa942ff4ea0eeb60981",
+      "executedWorkingTreeSha256": "5f2be88c4f733bb66ef74c44a23902437e1fe0e263694aa942ff4ea0eeb60981",
+      "rawMatches": true,
+      "lineEndingOnlyDifference": false
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths.rs",
+      "gitSha256": "c7125bcc87e8710f2b7a6098208f1889319f80ad6de4cd888c366e68a1cade74",
+      "executedWorkingTreeSha256": "c7125bcc87e8710f2b7a6098208f1889319f80ad6de4cd888c366e68a1cade74",
+      "rawMatches": true,
+      "lineEndingOnlyDifference": false
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "gitSha256": "ae915ddf37ff94d195c74cae4d731c68a52801fb74cfa6d61d0874c35e8e4559",
+      "executedWorkingTreeSha256": "ae915ddf37ff94d195c74cae4d731c68a52801fb74cfa6d61d0874c35e8e4559",
+      "rawMatches": true,
+      "lineEndingOnlyDifference": false
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/security.rs",
+      "gitSha256": "3f8a36e9647889b9ebd29b60b96c201ec379faa2c32c25204b9087444c57e0ca",
+      "executedWorkingTreeSha256": "3f8a36e9647889b9ebd29b60b96c201ec379faa2c32c25204b9087444c57e0ca",
+      "rawMatches": true,
+      "lineEndingOnlyDifference": false
+    },
+    {
+      "path": "test/windows024-native/.gitignore",
+      "gitSha256": "306fd52e74fca6746e12acc750f232de15e71da917756a1270d74c91f5eb7368",
+      "executedWorkingTreeSha256": "517b2c5ebb94b4ec644cc7999710d327942ee37d73168930b0c6f5f4b44bf6ae",
+      "rawMatches": false,
+      "lineEndingOnlyDifference": true
+    },
+    {
+      "path": "test/windows024-native/Cargo.lock",
+      "gitSha256": "2e5f0ffb48e9763dda2953e491daa826e9e172ad2e1ca784fd91d82184b6d6b9",
+      "executedWorkingTreeSha256": "2e5f0ffb48e9763dda2953e491daa826e9e172ad2e1ca784fd91d82184b6d6b9",
+      "rawMatches": true,
+      "lineEndingOnlyDifference": false
+    },
+    {
+      "path": "test/windows024-native/Cargo.toml",
+      "gitSha256": "1e3dcf13dee0fb73ea7bd120c4c7b5828070d60695fb4bc3938456fb2c420498",
+      "executedWorkingTreeSha256": "1e3dcf13dee0fb73ea7bd120c4c7b5828070d60695fb4bc3938456fb2c420498",
+      "rawMatches": true,
+      "lineEndingOnlyDifference": false
+    },
+    {
+      "path": "test/windows024-native/fixture.rs",
+      "gitSha256": "73afc01332a05f0485c31cabcd3697f5fd653f57c3e84617dfb78eb78cced198",
+      "executedWorkingTreeSha256": "73afc01332a05f0485c31cabcd3697f5fd653f57c3e84617dfb78eb78cced198",
+      "rawMatches": true,
+      "lineEndingOnlyDifference": false
+    },
+    {
+      "path": "test/windows024-native/lib.rs",
+      "gitSha256": "5903bfd6c22d1361fa09413ece01d03a09c1a4843e52954ec1c52fae04d46d33",
+      "executedWorkingTreeSha256": "5903bfd6c22d1361fa09413ece01d03a09c1a4843e52954ec1c52fae04d46d33",
+      "rawMatches": true,
+      "lineEndingOnlyDifference": false
+    },
+    {
+      "path": "test/windows024-native/record-checks.ps1",
+      "gitSha256": "67bcbabf14f2cceb8f9c85f1699270f79d07c97f8ef2bb8f4928d14e7300a3be",
+      "executedWorkingTreeSha256": "67bcbabf14f2cceb8f9c85f1699270f79d07c97f8ef2bb8f4928d14e7300a3be",
+      "rawMatches": true,
+      "lineEndingOnlyDifference": false
+    },
+    {
+      "path": "test/windows024-native/tests/process.rs",
+      "gitSha256": "2cbe573f4a34a3bd7d851709fa4146e22c38af1e54d0776b36ac0675f6e3f38c",
+      "executedWorkingTreeSha256": "2cbe573f4a34a3bd7d851709fa4146e22c38af1e54d0776b36ac0675f6e3f38c",
+      "rawMatches": true,
+      "lineEndingOnlyDifference": false
+    }
+  ],
+  "referenceOnlyRevision5": {
+    "testDelivery": "cba03b42151843c753f25f53ca71a6b2b31dccef",
+    "actualRuntime": "66afa61133d7654d3a2dfd172f49845bfb5272c3",
+    "newOfficialRuntimeChainExecuted": false
+  },
+  "limitations": [
+    "Product parent/IPC/schema/health-HMAC/state-machine/restoration and total30/5/10s integrated flow are not registered or tested.",
+    "No dual SID, CLI/PATH, installer, final full acceptance or publication.",
+    "Only observed Job members have retained original handles; no invented historical exit-code proof.",
+    "Four first-error fixture directories retained after safety review rejected recursive removal, raw cleanup readback records them."
+  ]
+}
