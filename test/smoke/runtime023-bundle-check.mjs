@@ -32,10 +32,10 @@ function inside(root, path) {
   assert(name && !name.startsWith('..'+sep) && name !== '..' && !isAbsolute(name));
 }
 
-export async function verifyTree(root, descriptor) {
+export async function verifyTree(root, descriptor, policy = new URL('../../.github/runtime-platforms-023.json', import.meta.url)) {
   assert.equal(descriptor.schemaVersion, 1);
   assert(['darwin-arm64', 'win32-x64'].includes(descriptor.platform));
-  const adopted=JSON.parse(readFileSync(new URL('../../.github/runtime-platforms-023.json',import.meta.url),'utf8'));
+  const adopted=JSON.parse(readFileSync(policy,'utf8'));
   assert.equal(descriptor.runtimeVersion,adopted.runtime.version);
   assert.equal(descriptor.runtimeArchiveSha256,adopted.runtime.sha256);
   assert.equal(descriptor.nodeVersion, '26.8.1');
@@ -132,8 +132,8 @@ export async function executeReadonly(root, descriptor, evidence) {
     // Network deny includes outbound inference and listening. Real configuration
     // trees are unreadable even if a future CLI bypasses HOME selection.
     const realHome=process.env.OCX_REAL_HOME??process.env.HOME;
-    const forbidden=realHome?['.opencodex','.codex','.claude'].map(p=>'(deny file-read* (subpath '+JSON.stringify(join(realHome,p))+'))').join('\n'):'';
-    writeFileSync(policy,'(version 1)\n(allow default)\n(deny network*)\n'+forbidden+'\n');
+    const forbidden=realHome?['.opencodex','.codex','.codex-desktop','.claude','Library/Keychains','Library/Application Support/com.gzers.opencodex.desktop/opencodex-home','Library/Application Support/com.gzers.opencodex.desktop/manager-state'].map(p=>'(deny file-read* (subpath '+JSON.stringify(join(realHome,p))+'))').join('\n'):'';
+    writeFileSync(policy,'(version 1)\n(allow default)\n(deny network*)\n(deny file-write*)\n(allow file-write* (subpath '+JSON.stringify(evidence)+'))\n(allow file-write* (literal "/dev/null"))\n(deny mach-lookup (global-name "com.apple.securityd"))\n'+forbidden+'\n');
     sandbox=['/usr/bin/sandbox-exec','-f',policy];
   }
   const results=[];
@@ -177,7 +177,7 @@ async function main() {
   const get=name=>{const i=args.indexOf(name);return i<0?undefined:args[i+1];};
   const root=resolve(get('--root'));
   const descriptor=JSON.parse(readFileSync(get('--descriptor'),'utf8'));
-  const checked=await verifyTree(root,descriptor);
+  const checked=await verifyTree(root,descriptor,get('--policy'));
   console.log(JSON.stringify({platform:descriptor.platform,structuralChecks:'passed',...checked}));
   if(args.includes('--execute')) console.log(JSON.stringify(await executeReadonly(root,descriptor,resolve(get('--evidence')))));
 }

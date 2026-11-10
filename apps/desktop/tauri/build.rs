@@ -202,7 +202,7 @@ fn track_runtime_bundle() {
     if name.contains(['/', '\\']) || !directory.join(name).is_file() {
         panic!("runtime archive missing");
     }
-    if !directory.join("maintained-runtime.tgz").is_file() {
+    if !directory.join("official-runtime.tgz").is_file() {
         panic!("runtime recovery source missing");
     }
     let source_version = manifest["runtimeVersion"]

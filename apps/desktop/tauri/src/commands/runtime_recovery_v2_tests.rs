@@ -141,7 +141,7 @@ fn fixed_resource_resolver_authenticates_descriptor_and_both_bundled_and_staged_
     let original = root.path().join("opencodex-1.2.3.tgz");
     tgz(&original, b"console.log('1.2.3')");
     let source_pin = fixture_pin(&original);
-    let archive = resources.join("maintained-runtime.tgz");
+    let archive = resources.join("official-runtime.tgz");
     std::fs::copy(&original, &archive).unwrap();
     let descriptor = serde_json::to_vec(&serde_json::json!({
         "schemaVersion":1,
