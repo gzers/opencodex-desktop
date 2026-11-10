@@ -8,7 +8,7 @@ if(!([Security.Principal.WindowsPrincipal]::new($parent)).IsInRole([Security.Pri
 $dir=[IO.Path]::GetFullPath($Directory)
 if((Split-Path -Parent $dir) -ine 'C:\ProgramData' -or (Split-Path -Leaf $dir) -cnotmatch '^ocxd299-proof-[a-f0-9]{10}$' -or (Test-Path -LiteralPath $dir)){throw 'fresh explicitly scoped ProgramData directory required'}
 $null=New-Item -ItemType Directory -Path $dir
-$report=[ordered]@{schema='official299-windows-controller/1';accepted=$false;stage='input';firstError=$null;cleanup=@();ordinary=$null;profileUnloaded=$false;profileDeleted=$false;accountDeleted=$false;noScheduledTaskCreated=$true;parent=[Official299Proof.Native]::Observe([Diagnostics.Process]::GetCurrentProcess().Handle)}
+$report=[ordered]@{schema='official299-windows-controller/1';accepted=$false;stage='input';firstError=$null;cleanup=@();ordinary=$null;profileUnloaded=$false;profileDeleted=$false;accountDeleted=$false;noScheduledTaskCreated=$true;parent=[Official299Proof.Native]::ObserveSelf()}
 function Save { [IO.File]::WriteAllText((Join-Path $dir 'controller.json'),($report|ConvertTo-Json -Depth 35)) }
 function Hash([string]$p){(Get-FileHash -LiteralPath $p -Algorithm SHA256).Hash.ToLowerInvariant()}
 $account=$null;$token=[IntPtr]::Zero;$profileInfo=[Official299Proof.Native+PROFILE]::new();$pi=[Official299Proof.Native+PI]::new();$envBlock=[IntPtr]::Zero;$password=$null;$profile=$null

@@ -39,7 +39,7 @@ try {
  Require (!([Security.Principal.WindowsPrincipal]::new($identity)).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) 'ordinary account required'
  Require ($env:USERPROFILE -ieq $c.profile) 'actual profile differs'
  Require ((Split-Path -Leaf $c.profile) -cmatch '^ocx299[a-f0-9]{10}$') 'disposable profile required'
- $self=[Official299Proof.Native]::Observe([Diagnostics.Process]::GetCurrentProcess().Handle)
+ $self=[Official299Proof.Native]::ObserveSelf()
  Require (!$self.elevated -and $self.sid -ceq $sid) 'actual ordinary host token differs'
  $r.host=$self;$r.hostSourceSha256=Digest $PSCommandPath;$r.nativeSourceSha256=Digest (Join-Path $PSScriptRoot 'Native.cs')
  $fixture=Join-Path $c.profile 'official299-proof';Private-Directory $fixture

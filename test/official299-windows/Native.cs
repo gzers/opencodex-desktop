@@ -105,6 +105,7 @@ public static class Native {
       return new Dictionary<string,object>{{"pid",pid},{"filetime",c.ToString()},{"sid",sid},{"session",session},{"image",path.ToString()},{"elevated",elevated!=0},{"elevationType",type}};
     } finally { CloseHandle(t); }
   }
+  public static Dictionary<string,object> ObserveSelf(){using(var p=Process.GetCurrentProcess()){var result=Observe(p.Handle);GC.KeepAlive(p);return result;}}
 }
 
 public sealed class Guard : IDisposable {
