@@ -15,7 +15,7 @@
     ]
   },
   "windowsLifecycle": {
-    "status": "revision4-complete-afterimage; five-path-batch-safely-refused-at-controlled-cache-policy",
+    "status": "revision5-isolated-single-user-feasibility-passed; production-integration-pending",
     "offlineOfficialContractChecks": 10,
     "nativeWindowsValidated": false,
     "reason": "official health HMAC does not supply old lifetime tuple; current Desktop Windows stop requires it",
@@ -44,7 +44,7 @@
       "catalogRestore": "not-exercised",
       "GrokInjection": "refused-by-official-fixture"
     },
-    "next": "Windows revision5: small native candidate integration and counterexamples, then one new single-user chain only; no full-suite or production changes.",
+    "next": "Stop repeating single-user feasibility; carry pinned prototype/acceptance/permission boundary into0.2.24implementation. Production adaptation, conditional dual-SID and other independent gates remain pending.",
     "latestNativeResult": {
       "docsCommit": "a129d585c25be4a1942f762c63f2bd719b2a921a",
       "codeDeliveryCommit": "03480916ca369ce7648afdf82c20819e87c74ee7",
@@ -98,6 +98,26 @@
       "newArtifactExceptions": false,
       "nativeWindowsServiceReexecuted": false,
       "pending": "test-host context/independent declarations binding, five-path actual compensation under native coordination, current-run two-lock reacquisition and full final restoration in original10s"
+    },
+    "nativeSingleUserFeasibilityValidated": true,
+    "nativeWindowsValidatedMeaning": "Overall product/native integration acceptance remains pending; isolated single-user prototype is explicitly validated in nativeSingleUserFeasibilityValidated.",
+    "latestR5Result": {
+      "docsCommit": "c80208ee14c44eed3e6a73c0511f09f064927e69",
+      "codeDeliveryCommit": "cba03b42151843c753f25f53ca71a6b2b31dccef",
+      "actualServiceCommit": "66afa61133d7654d3a2dfd172f49845bfb5272c3",
+      "serviceRuns": 1,
+      "rawRoundTrips": 39,
+      "startMs": 15339,
+      "statusMs": 4,
+      "stopMs": 6425,
+      "isolatedTestAccepted": true,
+      "completeOriginalTree": false,
+      "exactTwoLockExceptionTree": true,
+      "fivePathCompensation": "executed-and-readback-verified",
+      "currentRunOfficialCoordination": "claim-N-K-acquired-and-released",
+      "currentRunLockReacquisition": 2,
+      "permissionDelta": "Grok main config original bytes/owner unchanged; DACL tightened to same SID only; extra exact-all-original-SDDL check failure retained",
+      "productionIntegrationAccepted": false
     }
   },
   "implementationChecklist": {
