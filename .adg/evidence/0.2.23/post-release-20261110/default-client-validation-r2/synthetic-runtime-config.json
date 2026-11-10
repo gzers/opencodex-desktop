@@ -1,0 +1,68 @@
+{
+  "hostname": "127.0.0.1",
+  "port": 55581,
+  "defaultProvider": "fixture0",
+  "providers": {
+    "fixture0": {
+      "adapter": "openai-responses",
+      "baseUrl": "http://127.0.0.1:9/v1",
+      "apiKey": "synthetic-never-sent",
+      "liveModels": false,
+      "models": [
+        "gpt-5.6-sol"
+      ],
+      "selectedModels": [
+        "gpt-5.6-sol"
+      ]
+    },
+    "fixture1": {
+      "adapter": "openai-responses",
+      "baseUrl": "http://127.0.0.1:9/v1",
+      "apiKey": "synthetic-never-sent",
+      "liveModels": false,
+      "models": [
+        "gpt-5.6-sol"
+      ],
+      "selectedModels": [
+        "gpt-5.6-sol"
+      ]
+    },
+    "fixture2": {
+      "adapter": "openai-responses",
+      "baseUrl": "http://127.0.0.1:9/v1",
+      "apiKey": "synthetic-never-sent",
+      "liveModels": false,
+      "models": [
+        "gpt-5.6-sol"
+      ],
+      "selectedModels": [
+        "gpt-5.6-sol"
+      ]
+    },
+    "fixture3": {
+      "adapter": "openai-responses",
+      "baseUrl": "http://127.0.0.1:9/v1",
+      "apiKey": "synthetic-never-sent",
+      "liveModels": false,
+      "models": [
+        "gpt-5.6-sol"
+      ],
+      "selectedModels": [
+        "gpt-5.6-sol"
+      ]
+    },
+    "fixture4": {
+      "adapter": "openai-responses",
+      "baseUrl": "http://127.0.0.1:9/v1",
+      "apiKey": "synthetic-never-sent",
+      "liveModels": false,
+      "models": [
+        "vendor-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      ],
+      "selectedModels": [
+        "vendor-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      ]
+    }
+  },
+  "syncResumeHistory": false
+}

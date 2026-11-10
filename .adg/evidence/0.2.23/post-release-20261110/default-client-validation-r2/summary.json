@@ -1,0 +1,20 @@
+{
+  "scope": "isolated real installed Codex renderer; no production or official runtime changes",
+  "officialVersion": "2.99.0",
+  "guiEnvironmentRootCause": "Chromium Apple uses MAC_CHROMIUM_TMPDIR/NSTemporaryDirectory, not TMPDIR; corrected private temp avoids ProcessSingleton failure",
+  "nestedSandboxLimit": "inner Chromium --no-sandbox only for outer-seatbelt isolated test; normal native production launch not certified",
+  "realCodexMenuObserved": true,
+  "fiveNameCases": 5,
+  "renameFreshProcess": true,
+  "officialRefreshNamePreserved": false,
+  "officialRefreshLabelChanges": 5,
+  "officialRefreshOriginalRoutesPreserved": true,
+  "freshGuiObservedNamesOverwritten": true,
+  "rollbackOriginalBytesAndSelection": true,
+  "manualFinderDockDefaultEntryValidated": false,
+  "displayPublicationDesignFrozen": false,
+  "officialRuntimeUnmodified": true,
+  "newRuntimePatchTested": false,
+  "WindowsRerun": false,
+  "cleanup": "cleanup.json"
+}

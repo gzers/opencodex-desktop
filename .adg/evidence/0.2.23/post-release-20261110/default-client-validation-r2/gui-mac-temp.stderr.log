@@ -1,0 +1,80 @@
+sandbox initialization failed: Operation not permitted
+aperitif: Failed to initialize sandbox
+sandbox initialization failed: Operation not permitted
+aperitif: Failed to initialize sandbox
+[1110/224451.789635:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16aed4000, 0x8000): (os/kern) invalid address (1)
+
+DevTools listening on ws://127.0.0.1:50080/devtools/browser/5a712e59-048e-43ad-92bd-bcd08bb03d71
+aperitif: Failed to initialize sandbox
+[58140:150792647:1110/224451.962965:ERROR:owl/browser/api/electron_api_app.cc:858] Ignoring late userData path change after native startup. Requested '/tmp/ocxd24v-b3ifd2h6/u/Library/Application Support/Codex', selected '/private/tmp/ocxd24v-b3ifd2h6/u/Library/Application Support/Codex'.
+[1110/224452.008404:WARNING:third_party/crashpad/crashpad/util/numeric/in_range_cast.h:38] value -143893734 out of range
+[1110/224452.020143:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16fcd8000, 0x8000): (os/kern) invalid address (1)
+[1110/224452.255005:WARNING:third_party/crashpad/crashpad/util/numeric/in_range_cast.h:38] value -143893734 out of range
+[1110/224452.266277:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16b404000, 0x8000): (os/kern) invalid address (1)
+[1110/224452.497205:WARNING:third_party/crashpad/crashpad/util/numeric/in_range_cast.h:38] value -143893734 out of range
+[58140:150792647:1110/224452.797870:ERROR:content/browser/network_service_instance_impl.cc:652] Network service crashed or was terminated, restarting service.
+[58140:150792647:1110/224452.798201:ERROR:content/browser/gpu/gpu_process_host.cc:1043] GPU process exited unexpectedly: exit_code=6
+aperitif: Failed to initialize sandbox
+[1110/224452.827657:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16f99c000, 0x8000): (os/kern) invalid address (1)
+sandbox initialization failed: Operation not permitted
+aperitif: Failed to initialize sandbox
+sandbox initialization failed: Operation not permitted
+aperitif: Failed to initialize sandbox
+aperitif: Failed to initialize sandbox
+Failed to start the Codex app tools native pipe errorCode=EPERM errorMessage="listen EPERM: operation not permitted /tmp/codex-app-tools/d282eee1-dd6e-4c65-bb87-487ca609652a.sock" errorName=Error errorStack="Error: listen EPERM: operation not permitted /tmp/codex-app-tools/d282eee1-dd6e-4c65-bb87-487ca609652a.sock\n    at Server.setupListenHandle [as _listen2] (node:net:2369:9)\n    at listenInCluster (node:net:2501:12)\n    at Server.listen (node:net:2643:5)\n    at started (/Applications/ChatGPT.app/Contents/Resources/app.asar/.vite/build/early-bootstrap-815-e030c49be4b9c405.js:104:21770)\n    at new Promise (<anonymous>)\n    at lt.start (/Applications/ChatGPT.app/Contents/Resources/app.asar/.vite/build/early-bootstrap-815-e030c49be4b9c405.js:104:21710)\n    at async le (/Applications/ChatGPT.app/Contents/Resources/app.asar/.vite/build/early-bootstrap-815-e030c49be4b9c405.js:104:21000)\n    at async /Applications/ChatGPT.app/Contents/Resources/app.asar/.vite/build/early-bootstrap-815-e030c49be4b9c405.js:1587:40845\n    at async eAc (/Applications/ChatGPT.app/Contents/Resources/app.asar/.vite/build/early-bootstrap-815-e030c49be4b9c405.js:1587:40411)\n    at async /Applications/ChatGPT.app/Contents/Resources/app.asar/.vite/build/early-bootstrap-339-cb7e73ca5a71df7c.js:1124:4919"
+[codex-app-tools-mcp] Codex app tools unavailable for this Core launch reason=missing-pipe
+[IpcClient] Received broadcast but no handler is configured method=client-status-changed
+(electron) The default sandbox option for windows without nodeIntegration is changing. Presently, by default, when a window has a preload script, it defaults to being unsandboxed. In Electron 20, this default will be changing, and all windows that have nodeIntegration: false (which is the default) will be sandboxed by default. If your preload script doesn't use Node, no action is needed. If your preload script does use Node, either refactor it to move Node usage to the main process, or specify sandbox: false in your WebPreferences.
+(node:58140) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 destroyed listeners added to [WebContents]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(Use `ChatGPT --trace-warnings ...` to show where the warning was created)
+(node:58140) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+[IpcClient] Received broadcast but no handler is configured method=client-status-changed
+[remote-connections/window-context] refresh_local_remote_control_client_id_failed errorMessage="Sign in to ChatGPT to check remote control authorization." errorName=Error errorStack="Error: Sign in to ChatGPT to check remote control authorization.\n    at pr (/Applications/ChatGPT.app/Contents/Resources/app.asar/.vite/build/early-bootstrap-339-cb7e73ca5a71df7c.js:1124:28045)\n    at runNextTicks (node:internal/process/task_queues:65:5)\n    at process.processImmediate (node:internal/timers:541:9)\n    at async appServerClient (/Applications/ChatGPT.app/Contents/Resources/app.asar/.vite/build/early-bootstrap-815-e030c49be4b9c405.js:1392:20409)\n    at async edV.refreshLocalRemoteControlClientId (/Applications/ChatGPT.app/Contents/Resources/app.asar/.vite/build/early-bootstrap-815-e030c49be4b9c405.js:1392:19282)\n    at async Promise.all (index 1)"
+[IpcClient] Received broadcast but no handler is configured method=client-status-changed
+aperitif: Failed to initialize sandbox
+aperitif: Failed to initialize sandbox
+[1110/224453.063026:WARNING:third_party/crashpad/crashpad/util/numeric/in_range_cast.h:38] value -143893734 out of range
+[1110/224453.074398:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16f8b4000, 0x8000): (os/kern) invalid address (1)
+aperitif: Failed to initialize sandbox
+[1110/224453.429576:WARNING:third_party/crashpad/crashpad/util/numeric/in_range_cast.h:38] value -143893734 out of range
+[1110/224453.445044:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16bd60000, 0x8000): (os/kern) invalid address (1)
+[58140:150792647:1110/224453.445808:ERROR:content/browser/network_service_instance_impl.cc:652] Network service crashed or was terminated, restarting service.
+sandbox initialization failed: Operation not permitted
+aperitif: Failed to initialize sandbox
+[1110/224453.761178:WARNING:third_party/crashpad/crashpad/util/numeric/in_range_cast.h:38] value -143893734 out of range
+[1110/224453.774996:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16d04c000, 0x8000): (os/kern) invalid address (1)
+[58140:150792647:1110/224453.775050:ERROR:content/browser/gpu/gpu_process_host.cc:1043] GPU process exited unexpectedly: exit_code=6
+Recoverable Chromium child process gone exitCode=6 name=null processType=GPU reason=crashed serviceName=GPU
+sandbox initialization failed: Operation not permitted
+aperitif: Failed to initialize sandbox
+[1110/224454.009375:WARNING:third_party/crashpad/crashpad/util/numeric/in_range_cast.h:38] value -143893734 out of range
+[1110/224454.022422:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16bde0000, 0x8000): (os/kern) invalid address (1)
+[1110/224454.259742:WARNING:third_party/crashpad/crashpad/util/numeric/in_range_cast.h:38] value -143893734 out of range
+[1110/224454.280175:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16cfac000, 0x8000): (os/kern) invalid address (1)
+[1110/224454.499855:WARNING:third_party/crashpad/crashpad/util/numeric/in_range_cast.h:38] value -143893734 out of range
+[1110/224454.511541:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16b7d0000, 0x8000): (os/kern) invalid address (1)
+[58140:150792647:1110/224454.512227:ERROR:owl/browser/api/electron_api_web_contents_runtime.cc:3101] Electron renderer process gone reason=crashed exit_code=6
+[1110/224454.737860:WARNING:third_party/crashpad/crashpad/util/numeric/in_range_cast.h:38] value -143893734 out of range
+[1110/224454.750828:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16faa0000, 0x8000): (os/kern) invalid address (1)
+aperitif: Failed to initialize sandbox
+[1110/224454.960996:WARNING:third_party/crashpad/crashpad/util/numeric/in_range_cast.h:38] value -143893734 out of range
+[1110/224454.972748:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16dc3c000, 0x8000): (os/kern) invalid address (1)
+[58140:150792647:1110/224454.973341:ERROR:content/browser/network_service_instance_impl.cc:652] Network service crashed or was terminated, restarting service.
+sandbox initialization failed: Operation not permitted
+aperitif: Failed to initialize sandbox
+[window-manager] Failed to load bundle at documentPath=/Applications/ChatGPT.app/Contents/Resources/app.asar/webview/index.html errorCode=ERR_ABORTED errorMessage="ERR_ABORTED (-3) loading 'app://-/index.html'" errorName=Error errorStack="Error: ERR_ABORTED (-3) loading 'app://-/index.html'\n    at rejectAndCleanup (node:electron/js2c/browser_init:2:88942)\n    at WebContents.navigationListener (node:electron/js2c/browser_init:2:89222)\n    at WebContents.emit (node:events:514:28)\n    at Timeout._onTimeout (/Applications/ChatGPT.app/Contents/Resources/app.asar/.vite/build/early-bootstrap-815-e030c49be4b9c405.js:1582:18729)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+aperitif: Failed to initialize sandbox
+aperitif: Failed to initialize sandbox
+[1110/224455.184272:WARNING:third_party/crashpad/crashpad/util/numeric/in_range_cast.h:38] value -143893734 out of range
+[1110/224455.195365:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16b3c8000, 0x8000): (os/kern) invalid address (1)
+[58140:150792647:1110/224455.195514:ERROR:content/browser/gpu/gpu_process_host.cc:1043] GPU process exited unexpectedly: exit_code=6
+[58140:150792647:1110/224455.195537:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:385] GPU process isn't usable. Goodbye.
+[1110/224455.414789:WARNING:third_party/crashpad/crashpad/util/numeric/in_range_cast.h:38] value -143893734 out of range
+[1110/224455.429645:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16f0f8000, 0x8000): (os/kern) invalid address (1)
+[1110/224455.657116:WARNING:third_party/crashpad/crashpad/util/numeric/in_range_cast.h:38] value -143893734 out of range
+[1110/224455.671642:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16d660000, 0x8000): (os/kern) invalid address (1)
+[1110/224455.880759:WARNING:third_party/crashpad/crashpad/util/numeric/in_range_cast.h:38] value -143893734 out of range
+[1110/224455.892255:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16ddd4000, 0x8000): (os/kern) invalid address (1)
+[1110/224456.097568:WARNING:third_party/crashpad/crashpad/util/numeric/in_range_cast.h:38] value -143893734 out of range
+[1110/224456.114272:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16f2c8000, 0x8000): (os/kern) invalid address (1)
+[1110/224456.326778:WARNING:third_party/crashpad/crashpad/util/numeric/in_range_cast.h:38] value -143893734 out of range

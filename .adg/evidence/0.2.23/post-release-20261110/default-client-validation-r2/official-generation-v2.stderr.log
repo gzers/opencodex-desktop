@@ -1,0 +1,18 @@
+221 |         : "";
+222 |       if (code !== "ENOENT") throw cause;
+223 |       databaseWasAbsent = true;
+224 |     }
+225 | 
+226 |     database = new Database(databasePath, { create: true });
+                     ^
+SQLiteError: unable to open database file
+      errno: 14,
+ byteOffset: -1,
+       code: "SQLITE_CANTOPEN"
+
+      at new Database (bun:sqlite:268:28)
+      at withCatalogWriteSerialization (/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/runtime/opencodex/node_modules/@bitkyc08/opencodex/src/codex/catalog-write-serialization.ts:226:16)
+      at syncCatalogModels (/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/runtime/opencodex/node_modules/@bitkyc08/opencodex/src/codex/catalog/retained-sync.ts:678:21)
+      at async refreshCodexModelCatalog (/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/runtime/opencodex/node_modules/@bitkyc08/opencodex/src/codex/refresh.ts:60:29)
+
+Bun v1.4.4 (macOS arm64)

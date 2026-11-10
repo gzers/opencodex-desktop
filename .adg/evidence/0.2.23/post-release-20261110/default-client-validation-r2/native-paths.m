@@ -1,0 +1,5 @@
+#import <Foundation/Foundation.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <errno.h>
+int main(){@autoreleasepool{char darwin[4096]={0};confstr(_CS_DARWIN_USER_TEMP_DIR,darwin,sizeof darwin);NSMutableDictionary *o=[@{@"HOME":@(getenv("HOME")?:""),@"TMPDIR":@(getenv("TMPDIR")?:""),@"CFFIXED_USER_HOME":@(getenv("CFFIXED_USER_HOME")?:""),@"NSHomeDirectory":NSHomeDirectory(),@"NSTemporaryDirectory":NSTemporaryDirectory(),@"DarwinTemp":@(darwin),@"ApplicationSupport":NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,NSUserDomainMask,YES)} mutableCopy];NSString *pattern=[NSTemporaryDirectory() stringByAppendingPathComponent:@"ocxd-native-temp-XXXXXX"];char *p=strdup(pattern.fileSystemRepresentation);char *created=mkdtemp(p);o[@"mkdtempSuccess"]=@(created!=NULL);o[@"errno"]=@(errno);if(created){o[@"createdPath"]=@(created);rmdir(created);}free(p);NSData *data=[NSJSONSerialization dataWithJSONObject:o options:NSJSONWritingPrettyPrinted error:nil];fwrite(data.bytes,1,data.length,stdout);puts("");}return 0;}

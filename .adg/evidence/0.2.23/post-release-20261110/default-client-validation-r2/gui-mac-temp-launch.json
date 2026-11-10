@@ -1,0 +1,26 @@
+{
+  "hypothesisBeforeExecution": "Chromium Apple GetTempDir uses MAC_CHROMIUM_TMPDIR then NSTemporaryDirectory, not TMPDIR. Add only MAC_CHROMIUM_TMPDIR to prior failed isolated launch; no sandbox widening.",
+  "argv": [
+    "/usr/bin/sandbox-exec",
+    "-f",
+    "/private/tmp/ocxd24v-b3ifd2h6/gui-v2.sb",
+    "/Applications/ChatGPT.app/Contents/MacOS/ChatGPT",
+    "--remote-debugging-port=0",
+    "--disable-gpu",
+    "--disable-background-networking"
+  ],
+  "env": {
+    "PATH": "/usr/bin:/bin",
+    "HOME": "/private/tmp/ocxd24v-b3ifd2h6/u",
+    "CFFIXED_USER_HOME": "/private/tmp/ocxd24v-b3ifd2h6/u",
+    "TMPDIR": "/private/tmp/ocxd24v-b3ifd2h6/t/",
+    "CODEX_HOME": "/private/tmp/ocxd24v-b3ifd2h6/h",
+    "CODEX_SQLITE_HOME": "/private/tmp/ocxd24v-b3ifd2h6/h",
+    "LANG": "en_US.UTF-8",
+    "SHELL": "/bin/zsh",
+    "OPENAI_API_KEY": "synthetic-never-sent",
+    "ELECTRON_ENABLE_LOGGING": "1",
+    "MAC_CHROMIUM_TMPDIR": "/private/tmp/ocxd24v-b3ifd2h6/t"
+  },
+  "policy": "gui-v2.sb"
+}

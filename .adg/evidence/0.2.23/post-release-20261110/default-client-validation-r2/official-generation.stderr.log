@@ -1,0 +1,15 @@
+1 | import {join} from 'node:path';import {readFileSync,writeFileSync} from 'node:fs';import assert from 'node:assert/strict';
+2 | const r=process.env.PROBE_ROOT!,src=process.env.OFFICIAL_SRC!,{validateConfigCandidate}=await import(join(src,'config/diagnostics.ts')),{loadConfig}=await import(join(src,'config.ts')),{refreshCodexModelCatalog}=await import(join(src,'codex/refresh.ts')),{previewRouteModel}=await import(join(src,'router.ts'));
+3 | const c=JSON.parse(readFileSync(join(r,'runtime/config.json'),'utf8'));const valid=validateConfigCandidate(c);assert(valid.ok,valid.ok?'':valid.error);const config=loadConfig();const before=JSON.parse(readFileSync(join(r,'h/catalog.json'),'utf8'));const refreshed=await refreshCodexModelCatalog(config);const after=JSON.parse(readFileSync(join(r,'h/catalog.json'),'utf8'));const keys=Object.keys(c.providers);const routes=keys.map(k=>{const id=c.providers[k].models[0];const route=previewRouteModel(config,k+'/'+id);return {slug:k+'/'+id,provider:route.providerName,modelId:route.modelId,routeKind:route.routeKind}});writeFileSync(join(r,'out/refresh-result.json'),JSON.stringify({refreshed,routes,before,after},null,2));console.log(JSON.stringify({catalogWritten:refreshed.catalogWritten,refreshOutcome:refreshed.refreshOutcome,routes}));
+
+AssertionError: schema_invalid: providers.fixture0.baseUrl: baseUrl points to a loopback address; set allowPrivateNetwork:true only for intentionally local/self-hosted providers; providers.fixture1.baseUrl: baseUrl points to a loopback address; set allowPrivateNetwork:true only for intentionally local/self-hosted providers; providers.fixture2.baseUrl: baseUrl points to a loopback address; set allowPrivateNetwork:true only for intentionally local/self-hosted providers; providers.fixture3.baseUrl: baseUrl points to a loopback address; set allowPrivateNetwork:true only for intentionally local/self-hosted providers; providers.fixture4.baseUrl: baseUrl points to a loopback address; set allowPrivateNetwork:true only for intentionally local/self-hosted providers
+ generatedMessage: false,
+     actual: false,
+   expected: true,
+   operator: "==",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /private/tmp/ocxd24v-b3ifd2h6/refresh.ts:3:111
+
+Bun v1.4.4 (macOS arm64)
