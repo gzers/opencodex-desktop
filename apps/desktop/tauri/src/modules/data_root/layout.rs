@@ -235,12 +235,14 @@ mod tests {
         // Resolve only: never create or launch anything in the real container.
         let t = tempfile::tempdir().unwrap();
         let home = t.path().join("current-user");
-        let program = Layout::installation_root_for_user(
-            Path::new("/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"),
-            &home,
-            Platform::Macos,
-        )
-        .unwrap();
+        let executable = if cfg!(target_os = "macos") {
+            PathBuf::from("/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop")
+        } else {
+            t.path()
+                .join("Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop")
+        };
+        let program =
+            Layout::installation_root_for_user(&executable, &home, Platform::Macos).unwrap();
         assert_eq!(
             program,
             home.join("Library/Application Support/OpenCodeX Desktop")

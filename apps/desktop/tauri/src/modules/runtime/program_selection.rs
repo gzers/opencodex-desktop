@@ -17,6 +17,7 @@ use std::{
 };
 
 pub const IMAGE_MANIFEST: &str = ".runtime-image.json";
+pub const ACTIVATION_PENDING: &str = ".selection-pending.json";
 const MAX_METADATA: u64 = 64 * 1024;
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -42,6 +43,7 @@ pub struct ImageManifest {
     pub node_sha256: String,
     pub npm_sha256: String,
     pub bun_sha256: String,
+    pub bun_launcher_sha256: String,
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -117,6 +119,25 @@ pub fn read(
     platform: Platform,
     target: &str,
 ) -> AppResult<Option<SelectedProgram>> {
+    read_inner(program_root, platform, target, false)
+}
+
+/// Installer-only final readback while its own serialized journal is present.
+/// Ordinary runtime/status consumers must use read(), which refuses that state.
+pub(super) fn read_activating(
+    program_root: &Path,
+    platform: Platform,
+    target: &str,
+) -> AppResult<Option<SelectedProgram>> {
+    read_inner(program_root, platform, target, true)
+}
+
+fn read_inner(
+    program_root: &Path,
+    platform: Platform,
+    target: &str,
+    activating: bool,
+) -> AppResult<Option<SelectedProgram>> {
     let expected_prefix = if platform == Platform::Windows {
         "win32-"
     } else if platform == Platform::Macos {
@@ -130,6 +151,20 @@ pub fn read(
         return Err(invalid("运行程序平台不支持"));
     }
     let runtime = program_root.join("runtime");
+    if !activating {
+        let pending = runtime.join(ACTIVATION_PENDING);
+        safety::check_path(program_root, &pending, true)
+            .map_err(|_| invalid("版本激活状态路径不可信"))?;
+        match std::fs::symlink_metadata(&pending) {
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
+            _ => {
+                return Err(AppError::RuntimeManaged {
+                    code: "runtime_selection_pending".into(),
+                    detail: "运行程序版本激活尚未完成，请核对恢复；未采用其它来源".into(),
+                })
+            }
+        }
+    }
     let current_path = runtime.join(CURRENT_FILENAME);
     safety::check_path(program_root, &current_path, true)
         .map_err(|_| invalid("运行程序选择路径不可信"))?;
@@ -165,10 +200,14 @@ pub fn read(
             &image.node_sha256,
             &image.npm_sha256,
             &image.bun_sha256,
+            &image.bun_launcher_sha256,
         ]
         .into_iter()
         .any(|v| !digest(v))
+        || image.bun_launcher_sha256 != image.bun_sha256
         || image.bin.is_empty()
+        || image.bin.len() > 4096
+        || image.bin.chars().any(char::is_control)
         || image.bin.contains(['\\', ':'])
         || image
             .bin
@@ -188,6 +227,10 @@ pub fn read(
         (paths.node.clone(), &image.node_sha256),
         (paths.npm.clone(), &image.npm_sha256),
         (paths.bun.clone(), &image.bun_sha256),
+        (
+            paths.package_root.join("node_modules/bun/bin/bun.exe"),
+            &image.bun_launcher_sha256,
+        ),
     ] {
         if file_digest(program_root, &path)? != *expected {
             return Err(invalid("运行程序文件与版本清单不一致"));

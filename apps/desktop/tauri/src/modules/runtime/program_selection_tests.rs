@@ -27,6 +27,11 @@ impl Fixture {
             (paths.node.clone(), b"#!/bin/sh\nexit 93\n", 0o755),
             (paths.npm.clone(), b"throw Error('do not run npm');", 0o600),
             (paths.bun.clone(), b"#!/bin/sh\nexit 94\n", 0o755),
+            (
+                paths.package_root.join("node_modules/bun/bin/bun.exe"),
+                b"#!/bin/sh\nexit 94\n",
+                0o755,
+            ),
         ] {
             fs::create_dir_all(path.parent().unwrap()).unwrap();
             fs::write(&path, bytes).unwrap();
@@ -48,6 +53,10 @@ impl Fixture {
             node_sha256: hash::sha256_file(&paths.node).unwrap(),
             npm_sha256: hash::sha256_file(&paths.npm).unwrap(),
             bun_sha256: hash::sha256_file(&paths.bun).unwrap(),
+            bun_launcher_sha256: hash::sha256_file(
+                &paths.package_root.join("node_modules/bun/bin/bun.exe"),
+            )
+            .unwrap(),
         };
         let f = Self {
             _temp: temp,
@@ -119,7 +128,7 @@ fn corrupt_or_duplicate_selection_is_unknown_not_uninstalled() {
 
 #[test]
 fn every_critical_program_file_and_stable_launcher_are_bound() {
-    for which in 0..6 {
+    for which in 0..7 {
         let f = Fixture::new();
         let package = f.paths.package_root.join(install::PACKAGE_SUBPATH);
         let target = [
@@ -129,6 +138,7 @@ fn every_critical_program_file_and_stable_launcher_are_bound() {
             package.join("package.json"),
             package.join("bin/ocx.mjs"),
             f.root.join("runtime/bin/ocx"),
+            f.paths.package_root.join("node_modules/bun/bin/bun.exe"),
         ][which]
             .clone();
         fs::write(&target, b"changed").unwrap();

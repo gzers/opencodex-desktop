@@ -4,6 +4,131 @@ use std::os::unix::fs::PermissionsExt;
 
 const VERSION: &str = "2.97.0-desktop023.names.1";
 const PACKAGE: &str = "runtime/opencodex/node_modules/@bitkyc08/opencodex";
+
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn versioned_fixture() -> Fixture {
+    let mut f = Fixture::new();
+    f.descriptor["runtimeVersion"] = json!("2.99.0");
+    let package = f
+        .rows
+        .iter_mut()
+        .find(|(row, _)| row["path"] == format!("{PACKAGE}/package.json"))
+        .unwrap();
+    let mut value: Value = serde_json::from_slice(&package.1).unwrap();
+    value["version"] = json!("2.99.0");
+    package.1 = serde_json::to_vec(&value).unwrap();
+    package.0["bytes"] = json!(package.1.len());
+    package.0["sha256"] = json!(hash::sha256_hex(&package.1));
+    let source = f
+        .rows
+        .iter_mut()
+        .find(|(row, _)| {
+            row["path"]
+                .as_str()
+                .is_some_and(|p| p.starts_with("runtime/opencodex/sources/"))
+        })
+        .unwrap();
+    source.0["path"] = json!("runtime/opencodex/sources/opencodex-2.99.0.tgz");
+    let mut launcher = f
+        .rows
+        .iter()
+        .find(|(row, _)| row["path"] == "runtime/bun/bun")
+        .unwrap()
+        .clone();
+    launcher.0["path"] = json!("runtime/opencodex/node_modules/bun/bin/bun.exe");
+    f.rows.push(launcher);
+    f.repack();
+    f
+}
+
+#[test]
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn versioned_supply_verifies_and_selects_one_official_image_without_execution() {
+    let f = versioned_fixture();
+    let (descriptor, pin) = f.bytes();
+    let result = versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).unwrap();
+    assert_eq!(
+        result,
+        ProvisionResult::Installed {
+            version: "2.99.0".into()
+        }
+    );
+    let selected = crate::modules::runtime::program_selection::read(
+        &f.i,
+        crate::modules::data_root::layout::Platform::Macos,
+        "darwin-arm64",
+    )
+    .unwrap()
+    .unwrap();
+    assert_eq!(selected.selection.version, "2.99.0");
+    assert!(selected
+        .paths
+        .version_root
+        .ends_with("runtime/versions/2.99.0"));
+    assert!(selected.paths.npm.is_file());
+    assert!(!f.i.join("runtime/opencodex").exists());
+    assert!(!f.i.join("runtime/.selection-pending.json").exists());
+    let snapshot = tree_snapshot(&f.i);
+    assert_eq!(
+        versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).unwrap(),
+        ProvisionResult::AlreadyInstalled {
+            version: "2.99.0".into()
+        }
+    );
+    assert_eq!(snapshot, tree_snapshot(&f.i));
+}
+
+#[test]
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn versioned_supply_never_adopts_or_overwrites_unselected_flat_programs() {
+    let f = versioned_fixture();
+    fs::create_dir_all(f.i.join("runtime/opencodex")).unwrap();
+    fs::write(
+        f.i.join("runtime/opencodex/sentinel"),
+        b"foreign installation",
+    )
+    .unwrap();
+    let (descriptor, pin) = f.bytes();
+    assert!(versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).is_err());
+    assert_eq!(
+        fs::read(f.i.join("runtime/opencodex/sentinel")).unwrap(),
+        b"foreign installation"
+    );
+    assert!(!f.i.join("runtime/current.json").exists());
+    assert!(!f.i.join("runtime/bin/ocx").exists());
+}
+
+#[test]
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn interrupted_version_activation_remains_unknown_and_never_reports_installed() {
+    let f = versioned_fixture();
+    let (descriptor, pin) = f.bytes();
+    assert!(versioned::provision_inner(&f.i, &f.d, &f.archive, &descriptor, &pin, true).is_err());
+    assert!(f.i.join("runtime/.selection-pending.json").is_file());
+    assert!(!f.i.join("runtime/current.json").exists());
+    assert!(crate::modules::runtime::program_selection::read(
+        &f.i,
+        crate::modules::data_root::layout::Platform::Macos,
+        "darwin-arm64"
+    )
+    .is_err());
+    let snapshot = tree_snapshot(&f.i);
+    assert!(versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).is_err());
+    assert_eq!(snapshot, tree_snapshot(&f.i));
+    assert!(!RuntimeStore::new(&f.d).path().exists());
+}
+
+#[test]
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn invalid_versioned_archive_cannot_publish_a_current_selection() {
+    let f = versioned_fixture();
+    let (descriptor, pin) = f.bytes();
+    fs::write(&f.archive, b"changed archive").unwrap();
+    assert!(versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).is_err());
+    assert!(!f.i.join("runtime/current.json").exists());
+    assert!(!f.i.join("runtime/versions/2.99.0").exists());
+    assert!(!RuntimeStore::new(&f.d).path().exists());
+}
 struct Fixture {
     _temp: tempfile::TempDir,
     root: PathBuf,

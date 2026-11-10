@@ -30,6 +30,9 @@ const PENDING: &str = ".runtime-bundle-pending.json";
 const FAILURE: &str = ".runtime-bundle-failure.json";
 const OWNER: &str = ".ocxd-bundle-owner.json";
 
+#[path = "bundled_versioned.rs"]
+pub mod versioned;
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ProvisionResult {
     Installed { version: String },
