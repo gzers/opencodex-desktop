@@ -1,0 +1,26 @@
+{
+  "target": "Desktop0.2.24",
+  "baseline": "Desktop0.2.23",
+  "backend": {
+    "status": "cause-and-existing-explicit-rebase-path-confirmed",
+    "realRustCases": 8,
+    "productionFixed": false,
+    "remainingImplementation": "front-end safe revalidation/replay of local intent, whitelist formatting/bookkeeping semantics and final lock check"
+  },
+  "client": {
+    "bundledReaderCases": 5,
+    "persistedConfigLabel": true,
+    "newReaderAfterRename": true,
+    "pointerRollback": true,
+    "actualGuiVerified": false,
+    "appBundleIdentity": "com.openai.codex (ChatGPT.app)",
+    "officialRefreshOverwritesPersistedLabels": true,
+    "explicitProfileRejectedForAppServer": true,
+    "status": "manual-GUI architecture not frozen; actual persistent root writer conflict reproduced"
+  },
+  "productionAppsChanged": false,
+  "dailyConfigUsed": false,
+  "WindowsServiceRerun": false,
+  "allPrerequisitesClosed": false,
+  "next": "freeze save/rebase development contract using confirmed backend; redesign client display source/selection without unapproved name downgrade or shared-writer races; GUI verification requires working isolated profile/desktop"
+}

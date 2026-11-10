@@ -1,0 +1,14 @@
+{
+  "result": "pass",
+  "checks": [
+    "persisted user config without CLI override reads exact full display label",
+    "new actual client process reads renamed persisted label",
+    "app-server rejects --profile on this actual binary; cannot use profile flag as GUI shortcut",
+    "unselected separate profile does not replace default catalog pointer",
+    "root pointer rollback and fresh reader restore original route/label"
+  ],
+  "count": 5,
+  "scope": "Actual bundled Codex parser/model-list via fresh app-server processes; no GUI render or inference",
+  "manualGuiVerified": false,
+  "originalSourceCatalogUnmodified": true
+}

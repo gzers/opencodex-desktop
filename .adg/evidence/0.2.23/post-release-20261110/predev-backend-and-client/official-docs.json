@@ -1,0 +1,17 @@
+{
+  "accessedOn": "2026-11-10 Asia/Shanghai",
+  "route": "OpenAI Docs; official pages searched and fetched before Codex config claims",
+  "sources": [
+    {
+      "url": "https://learn.chatgpt.com/docs/config-file/config-reference",
+      "key": "model_catalog_json",
+      "fact": "Local JSON catalog path is read on startup."
+    },
+    {
+      "url": "https://learn.chatgpt.com/docs/config-file/config-advanced",
+      "key": "Profiles",
+      "fact": "Separate profile-name.config.toml layers selected by --profile; legacy inline profiles and default top-level profile selector no longer supported since0.134."
+    }
+  ],
+  "actualBinaryNote": "0.167.0-alpha.3.2 app-server invocation explicitly refuses --profile; this does not refute CLI runtime profile support or prove GUI profile selection."
+}

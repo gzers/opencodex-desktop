@@ -1,0 +1,130 @@
+{
+  "scope": "Read-only installed bootstrap snippets; no user files",
+  "hits": [
+    {
+      "path": "/.vite/build/early-bootstrap-133-68be35d8b32e1fce.js",
+      "term": "CODEX_HOME",
+      "context": "\"PATH\",\"HOME\",\"PWD\",\"OLDPWD\",\"SHELL\",\"SHLVL\",\"IFS\",\"ENV\",\"BASH_ENV\",\"BASHOPTS\",\"SHELLOPTS\",\"CDPATH\",\"FUNCNAME\",\"GLOBIGNORE\",\"HISTCMD\",\"NODE_OPTIONS\",\"OPTIND\",\"CODEX_ACCESS_TOKEN\",\"CODEX_HOME\",\"CODEX_PROXY_CERT\",\"CODEX_ENVIRONMENT_ID\",\"CODEX_EXEC_SERVER_REMOTE_BASE_URL\",\"CODEX_PRIMARY_RUNTIME\",\"CODEX_PRIMARY_RUNTIME_BUNDLE_VERSION\",\"CODEX_PRIMARY_RUNTIME_ROOT\",\"CODEX_PRIMARY_RUNTIME_NODE\",\"CODEX_PRIMARY_RUNT"
+    },
+    {
+      "path": "/.vite/build/early-bootstrap-133-68be35d8b32e1fce.js",
+      "term": "CODEX_HOME",
+      "context": "ge:\"Sign out\"},R={messageId:\"desktop.workspacePolicyRecovery.quit\",defaultMessage:\"Quit\"},x=null;function E(){return x}async function I(){x=null,await (0,f.z1)(),null!=process.env.CODEX_HOME&&(process.env.CODEX_HOME=(0,n.resolve)(process.env.CODEX_HOME));let e=!1,t=!1,r=!1,E=0,I=null,P=null;for(;;){E+=1;let f=\"home-creation\";try{t||(\"win32\"===process.platform&&s.app.isPackaged?await async function(){let e=("
+    },
+    {
+      "path": "/.vite/build/early-bootstrap-133-68be35d8b32e1fce.js",
+      "term": "CODEX_HOME",
+      "context": "Id:\"desktop.workspacePolicyRecovery.quit\",defaultMessage:\"Quit\"},x=null;function E(){return x}async function I(){x=null,await (0,f.z1)(),null!=process.env.CODEX_HOME&&(process.env.CODEX_HOME=(0,n.resolve)(process.env.CODEX_HOME));let e=!1,t=!1,r=!1,E=0,I=null,P=null;for(;;){E+=1;let f=\"home-creation\";try{t||(\"win32\"===process.platform&&s.app.isPackaged?await async function(){let e=(0,a.Dn)();if(await (0,i.m"
+    },
+    {
+      "path": "/.vite/build/early-bootstrap-339-cb7e73ca5a71df7c.js",
+      "term": "CODEX_HOME",
+      "context": "(\"\"))}; ${n}`,a='exec /bin/sh -c \"$CODEX_REMOTE_PAYLOAD\"',s=[\"set loginsh=1\",\"if ( -r /etc/csh.login ) source /etc/csh.login\",\"if ( -r ~/.login ) source ~/.login\",a].join(\"; \"),o=`CODEX_HOME=\"$\\{CODEX_HOME:-$HOME/.codex}\"; export CODEX_HOME; ${a}`,l=`if [ -z \"$SHELL\" ] || [ ! -x \"$SHELL\" ]; then echo \"Codex remote SSH requires SHELL to point to an executable login shell\" >&2; exit 127; fi; CODEX_REMOTE_PAYL"
+    },
+    {
+      "path": "/.vite/build/early-bootstrap-339-cb7e73ca5a71df7c.js",
+      "term": "CODEX_HOME",
+      "context": "='exec /bin/sh -c \"$CODEX_REMOTE_PAYLOAD\"',s=[\"set loginsh=1\",\"if ( -r /etc/csh.login ) source /etc/csh.login\",\"if ( -r ~/.login ) source ~/.login\",a].join(\"; \"),o=`CODEX_HOME=\"$\\{CODEX_HOME:-$HOME/.codex}\"; export CODEX_HOME; ${a}`,l=`if [ -z \"$SHELL\" ] || [ ! -x \"$SHELL\" ]; then echo \"Codex remote SSH requires SHELL to point to an executable login shell\" >&2; exit 127; fi; CODEX_REMOTE_PAYLOAD=\"$1\"; expor"
+    },
+    {
+      "path": "/.vite/build/early-bootstrap-339-cb7e73ca5a71df7c.js",
+      "term": "CODEX_HOME",
+      "context": "YLOAD\"',s=[\"set loginsh=1\",\"if ( -r /etc/csh.login ) source /etc/csh.login\",\"if ( -r ~/.login ) source ~/.login\",a].join(\"; \"),o=`CODEX_HOME=\"$\\{CODEX_HOME:-$HOME/.codex}\"; export CODEX_HOME; ${a}`,l=`if [ -z \"$SHELL\" ] || [ ! -x \"$SHELL\" ]; then echo \"Codex remote SSH requires SHELL to point to an executable login shell\" >&2; exit 127; fi; CODEX_REMOTE_PAYLOAD=\"$1\"; export CODEX_REMOTE_PAYLOAD; case \"$\\{SH"
+    },
+    {
+      "path": "/.vite/build/early-bootstrap-339-cb7e73ca5a71df7c.js",
+      "term": "requestSingleInstanceLock",
+      "context": "rModelId((0,h.m)(W)));let Y=(0,p.Hg)({isMacOS:H,isPackaged:r.app.isPackaged,hasExplicitUserDataPath:!!process.env.CODEX_ELECTRON_USER_DATA_PATH?.trim()}),z=(0,F.Yy)();if(!Y||r.app.requestSingleInstanceLock({startupTask:\"startup-task\"===z})){(function(){let e,t;if(\"darwin\"!==process.platform||!r.app.isPackaged)return!1;let n=(e=f().dirname(f().dirname(process.execPath)),(t=f().dirname(e)).endsWith(\".app\")?t:null),i=f().joi"
+    },
+    {
+      "path": "/.vite/build/early-bootstrap-339-cb7e73ca5a71df7c.js",
+      "term": "requestSingleInstanceLock",
+      "context": "sFolder:N=function(e){if(!(\"moveToApplicationsFolder\"in r.app))return\"unavailable\";r.app.releaseSingleInstanceLock(),e();try{let e=r.app.moveToApplicationsFolder();return e||r.app.requestSingleInstanceLock(),e?\"moved\":\"canceled\"}catch(e){throw r.app.requestSingleInstanceLock(),e}}}={}){if(\"darwin\"!==h||!u)return!1;if(I())return await async function({clearPendingSourceDmgPath:e,detachSourceDmg:t,getPendingSourceDmgPath:n,s"
+    },
+    {
+      "path": "/.vite/build/early-bootstrap-339-cb7e73ca5a71df7c.js",
+      "term": "requestSingleInstanceLock",
+      "context": "unavailable\";r.app.releaseSingleInstanceLock(),e();try{let e=r.app.moveToApplicationsFolder();return e||r.app.requestSingleInstanceLock(),e?\"moved\":\"canceled\"}catch(e){throw r.app.requestSingleInstanceLock(),e}}}={}){if(\"darwin\"!==h||!u)return!1;if(I())return await async function({clearPendingSourceDmgPath:e,detachSourceDmg:t,getPendingSourceDmgPath:n,sourceDmgExists:r,trashItem:a}){let s=n();null==s||await async function"
+    },
+    {
+      "path": "/.vite/build/early-bootstrap-339-cb7e73ca5a71df7c.js",
+      "term": "setPath(\"userData\"",
+      "context": "={appVersion:r.app.getVersion(),buildFlavor:G,buildCommit:process.env.CODEX_BUILD_COMMIT?.trim()||(0,N.C)(\"codexBuildCommit\")};(0,x.Ky)(),(0,U.p)(),r.app.setName((0,g.V)(W)),r.app.setPath(\"userData\",function({appDataPath:e,buildFlavor:t,env:n}){let r=n.CODEX_ELECTRON_USER_DATA_PATH?.trim();if(r)return(0,m.resolve)(r);let i=(0,g.D)(t),a=(0,m.join)(e,null==i?\"Codex\":`Codex (${i})`),s=n.CODEX_ELECTRON_AGENT_RUN_ID?.tr"
+    },
+    {
+      "path": "/.vite/build/early-bootstrap-650-86829a84611f294d.js",
+      "term": "CODEX_HOME",
+      "context": "one\n    code=$?\n    case \"$code\" in 0|1) ;; 2) discovery_code=2 ;; 141) exit 0 ;; *) exit \"$code\" ;; esac\n  fi\n}\n{\n  discovery_code=0\n  scan \"$HOME/.agents/skills\" user\n  scan \"$\\{CODEX_HOME:-$HOME/.codex}/skills\" user\n  directory=$1\n  while :; do\n    scope=repo\n    if [ \"$directory\" = \"$HOME\" ]; then scope=user; fi\n    scan \"$directory/.agents/skills\" \"$scope\"\n    scan \"$directory/.codex/skills\" \"$scope\"\n "
+    },
+    {
+      "path": "/.vite/build/early-bootstrap-650-86829a84611f294d.js",
+      "term": "CODEX_HOME",
+      "context": "pe\"\n    scan \"$directory/.codex/skills\" \"$scope\"\n    if [ \"$directory\" = / ] || [ -e \"$directory/.git\" ]; then break; fi\n    directory=$(dirname -- \"$directory\")\n  done\n  scan \"$\\{CODEX_HOME:-$HOME/.codex}/plugins/cache\" user\n  exit \"$discovery_code\"\n} | {\n  # Stock macOS Bash lacks associative arrays. %q makes each path one line,\n  # even when the filename contains a newline. Compare complete lines literal"
+    },
+    {
+      "path": "/.vite/build/early-bootstrap-815-e030c49be4b9c405.js",
+      "term": "user-data-dir",
+      "context": "),eb.mkdir(t,{recursive:!0,mode:448})]),await (0,rD.promisify)(tp.execFile)(\"/usr/bin/open\",[\"-n\",\"--env\",\"CODEX_HOME=\"+e,\"--env\",\"CODEX_ELECTRON_USER_DATA_PATH=\"+t,VP,\"--args\",\"--user-data-dir=\"+t],{env:(0,ed.IHi)(process.env),timeout:6e4}),{status:\"launched\"}}catch{return{status:\"error\",code:\"launch-failed\",message:\"The demo build could not be opened. Please try again.\"}}}}class VM{backend;logger=(0,ed.$Cz)("
+    },
+    {
+      "path": "/.vite/build/early-bootstrap-815-e030c49be4b9c405.js",
+      "term": "CODEX_HOME",
+      "context": "n\\n## Responding\\n\\n- Answer the user normally and concisely. Explain what you found, what you did, and what the user should focus on now.\\n- Automations: use the memory file at `$CODEX_HOME/automations/<automation_id>/memory.md` (create it if missing).\\n  - Read it first (if present) to avoid repeating recent work, especially for \"changes since last run\" tasks.\\n  - Memory is important: some tasks must bui"
+    },
+    {
+      "path": "/.vite/build/early-bootstrap-815-e030c49be4b9c405.js",
+      "term": "CODEX_HOME",
+      "context": "te(i.lastRunAt).toISOString()} (${i.lastRunAt})`:\"never\",z={threadId:Y,turnTrigger:`automation_cron_${t}`,input:[{type:\"text\",text:`${I}\nAutomation ID: ${i.id}\nAutomation memory: $CODEX_HOME/automations/${i.id}/memory.md\nLast run: ${Q}\n\n${i.prompt}`,text_elements:[]}],cwd:D.cwd,approvalPolicy:J.approvalPolicy,approvalsReviewer:J.approvalsReviewer,permissions:L,sandboxPolicy:null==L?O:void 0,runtimeWorkspace"
+    },
+    {
+      "path": "/.vite/build/early-bootstrap-815-e030c49be4b9c405.js",
+      "term": "CODEX_HOME",
+      "context": "r-data\");try{return await Promise.all([eb.mkdir(e,{recursive:!0,mode:448}),eb.mkdir(t,{recursive:!0,mode:448})]),await (0,rD.promisify)(tp.execFile)(\"/usr/bin/open\",[\"-n\",\"--env\",\"CODEX_HOME=\"+e,\"--env\",\"CODEX_ELECTRON_USER_DATA_PATH=\"+t,VP,\"--args\",\"--user-data-dir=\"+t],{env:(0,ed.IHi)(process.env),timeout:6e4}),{status:\"launched\"}}catch{return{status:\"error\",code:\"launch-failed\",message:\"The demo build co"
+    },
+    {
+      "path": "/.vite/build/early-bootstrap-824-8c6252e0131a7fe3.js",
+      "term": "CODEX_HOME",
+      "context": "}),L=(0,l.promisify)(n.execFile),M=[100,250,500,1e3,2500,5e3],N=[65536,262144,1048576],D=[\"bin\",\"wsl\"],j=[\"codex-resources\",\"bwrap\"],$='CODEX_SQLITE_HOME=\"$HOME/.codex/sqlite\"',U=\"CODEX_HOME\",F=[\"CODEX_APP_SERVER_LOGIN_ISSUER\",\"CODEX_APP_SERVER_LOGIN_CLIENT_ID\",\"CODEX_REFRESH_TOKEN_URL_OVERRIDE\",\"CODEX_REVOKE_TOKEN_URL_OVERRIDE\"];class H{options;ioStatsTracker;readyState=k.vj.Connecting;onopen=null;onmessag"
+    },
+    {
+      "path": "/.vite/build/early-bootstrap-824-8c6252e0131a7fe3.js",
+      "term": "CODEX_HOME",
+      "context": ":b}),C=(0,x.nS)({distro:t,cwd:k,command:I}),B=(i={windowsCodexHome:y,defaultOriginator:e.defaultOriginator??O,cliBinDirectory:_.binDirectory,repoRoot:e.repoRoot},u={...process.env,CODEX_HOME:i.windowsCodexHome,LOG_FORMAT:\"json\",RUST_LOG:process.env.RUST_LOG??\"warn\",CODEX_INTERNAL_ORIGINATOR_OVERRIDE:i.defaultOriginator,WSLENV:(0,x.hN)(process.env.WSLENV,[...x.UF,...F,{name:\"CODEX_HOME\",type:\"path\"},\"LOG_FOR"
+    },
+    {
+      "path": "/.vite/build/early-bootstrap-824-8c6252e0131a7fe3.js",
+      "term": "CODEX_HOME",
+      "context": "owsCodexHome,LOG_FORMAT:\"json\",RUST_LOG:process.env.RUST_LOG??\"warn\",CODEX_INTERNAL_ORIGINATOR_OVERRIDE:i.defaultOriginator,WSLENV:(0,x.hN)(process.env.WSLENV,[...x.UF,...F,{name:\"CODEX_HOME\",type:\"path\"},\"LOG_FORMAT\",\"RUST_LOG\",\"CODEX_INTERNAL_ORIGINATOR_OVERRIDE\",\"CODEX_APP_TOOLS_PIPE_PATH\"])},delete u.CODEX_WINDOWS_REGISTERED_CORE,delete u.CODEX_WINDOWS_SANDBOX_PACKAGE_FAMILY,null!=(d=(0,v.AC)(u))&&(0,v."
+    },
+    {
+      "path": "/.vite/build/early-bootstrap.js",
+      "term": "CODEX_HOME",
+      "context": "requestMeta:v,sentryUserId:x,traceMeta:b=!1,shouldUseWslPaths:y}){if(null==f||null==h)return null;let w={NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS:\"1000\",[i]:m,[r]:f,[u]:p([t,m],g),CODEX_HOME:t};null!=v&&(w[o]=v),null!=x&&(w.NODE_REPL_SENTRY_USER_ID=x),b&&(w[c]=\"1\"),Object.assign(w,function(e){let t={};for(let[n,a]of Object.entries(e??{}))null!=a&&(t[n]=a);return t}(l)),null!=e&&d(g)&&(w[a]=e);let _=n;if(\"wi"
+    },
+    {
+      "path": "/.vite/build/early-bootstrap.js",
+      "term": "CODEX_HOME",
+      "context": "003),i=n.n(a);function r(e){return i().posix.normalize(e.replaceAll(\"\\\\\",\"/\"))}n(60662),n.d(t,{},{YH:function(e){let t,n=e??(t=(void 0)??(\"u\">typeof process?process.env:void 0),t?.CODEX_HOME&&t.CODEX_HOME.length>0?r(t.CODEX_HOME):t?.HOME&&t.HOME.length>0?i().posix.join(r(t.HOME),\".codex\"):\"/.codex\");return i().posix.join(r(n),\"worktrees\")}})},58973(e,t,n){\"use strict\";var a=n(35553),i=n(99365),r=n(84766),o="
+    },
+    {
+      "path": "/.vite/build/early-bootstrap.js",
+      "term": "CODEX_HOME",
+      "context": "function r(e){return i().posix.normalize(e.replaceAll(\"\\\\\",\"/\"))}n(60662),n.d(t,{},{YH:function(e){let t,n=e??(t=(void 0)??(\"u\">typeof process?process.env:void 0),t?.CODEX_HOME&&t.CODEX_HOME.length>0?r(t.CODEX_HOME):t?.HOME&&t.HOME.length>0?i().posix.join(r(t.HOME),\".codex\"):\"/.codex\");return i().posix.join(r(n),\"worktrees\")}})},58973(e,t,n){\"use strict\";var a=n(35553),i=n(99365),r=n(84766),o=n(87196),s=n(8"
+    },
+    {
+      "path": "/.vite/build/worker.js",
+      "term": "CODEX_HOME",
+      "context": ")();if(e&&\"win32\"===process.platform){let e=function(){var e;let t;if(void 0!==f)return f;if(Date.now()<c0)return;let r=(0,cw.tZ)(),n=c3([\"/usr/bin/env\",\"bash\",\"-lc\",'printf %s \"${CODEX_HOME:-$HOME/.codex}\"'],\"readCodexHomePathFromWslEnv\",r);if(!n){c0=Date.now()+3e4;return}if(lI(n))return f=lN(n);if(lC(n))return f=lN(lO(n));let i=(t=c3([\"wslpath\",\"-w\",e=n],`resolveCodexHomeFromWsl:wslpath(${e})`,r))?lN(t):v"
+    },
+    {
+      "path": "/.vite/build/worker.js",
+      "term": "CODEX_HOME",
+      "context": "l] Unable to translate Linux path\",{safe:{},sensitive:{linuxPath:n}}),c0=Date.now()+3e4}();if(e)return e;t.info(\"[resolveCodexHome] Falling back to host home directory because WSL CODEX_HOME could not be resolved\")}return process.env.CODEX_HOME??cW.join(cH.homedir(),\".codex\")}let ur=/^(\\d{4}-\\d{2}-\\d{2})?[T ]?(?:(\\d{2}):\\d{2}(?::\\d{2}(?:\\.\\d+)?)?)?(Z|[-+]\\d{2}:\\d{2})?$/i;class un extends Date{#l=!1;#c=!1;#u"
+    },
+    {
+      "path": "/.vite/build/worker.js",
+      "term": "CODEX_HOME",
+      "context": "{linuxPath:n}}),c0=Date.now()+3e4}();if(e)return e;t.info(\"[resolveCodexHome] Falling back to host home directory because WSL CODEX_HOME could not be resolved\")}return process.env.CODEX_HOME??cW.join(cH.homedir(),\".codex\")}let ur=/^(\\d{4}-\\d{2}-\\d{2})?[T ]?(?:(\\d{2}):\\d{2}(?::\\d{2}(?:\\.\\d+)?)?)?(Z|[-+]\\d{2}:\\d{2})?$/i;class un extends Date{#l=!1;#c=!1;#u=null;constructor(e){let t=!0,r=!0,n=\"Z\";if(\"string\"=="
+    }
+  ]
+}

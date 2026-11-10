@@ -1,0 +1,12 @@
+   Compiling opencodex-desktop v0.2.23 (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd023-real-backend-7sp8hzaa/apps/desktop/tauri)
+error: couldn't read `/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd023-real-backend-7sp8hzaa/apps/desktop/tauri/../../../.github/runtime-platforms-023.json`: No such file or directory (os error 2)
+   --> src/commands/discovery.rs:233:60
+    |
+233 |           let pins: serde_json::Value = serde_json::from_str(include_str!(concat!(
+    |  ____________________________________________________________^
+234 | |             env!("CARGO_MANIFEST_DIR"),
+235 | |             "/../../../.github/runtime-platforms-023.json"
+236 | |         )))
+    | |__________^
+
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

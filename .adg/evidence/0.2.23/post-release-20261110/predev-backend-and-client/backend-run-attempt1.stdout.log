@@ -1,0 +1,21 @@
+
+running 8 tests
+test modules::model_config::config_file::v2::tests::predev024_claude_bookkeeping ... PREDEV_CASE {"case":"claude-appliedAt-only","draftPreserved":true,"explicitRead":"read-success","filePreserved":true,"firstSave":"model_save_stale","freshSnapshotRetainsOldDraftBase":true,"retry":"model_save_stale"}
+ok
+test modules::model_config::config_file::v2::tests::predev024_current_source_normal_save ... PREDEV_CASE {"case":"normal-save-and-reopen","pass":true}
+ok
+test modules::model_config::config_file::v2::tests::predev024_discovery_bookkeeping ... PREDEV_CASE {"case":"discovery-knownModels-only","draftPreserved":true,"explicitRead":"read-success","filePreserved":true,"firstSave":"model_save_stale","freshSnapshotRetainsOldDraftBase":true,"retry":"model_save_stale"}
+ok
+test modules::model_config::config_file::v2::tests::predev024_format_only ... PREDEV_CASE {"case":"json-format-only","draftPreserved":true,"explicitRead":"read-success","filePreserved":true,"firstSave":"model_save_stale","freshSnapshotRetainsOldDraftBase":true,"retry":"model_save_stale"}
+ok
+test modules::model_config::config_file::v2::tests::predev024_real_key_change ... PREDEV_CASE {"case":"actual-provider-apiKey-change","draftPreserved":true,"explicitRead":"read-success","filePreserved":true,"firstSave":"model_save_stale","freshSnapshotRetainsOldDraftBase":true,"retry":"model_save_stale"}
+ok
+test modules::model_config::config_file::v2::tests::predev024_real_node_change ... PREDEV_CASE {"case":"actual-provider-baseUrl-change","draftPreserved":true,"explicitRead":"read-success","filePreserved":true,"firstSave":"model_save_stale","freshSnapshotRetainsOldDraftBase":true,"retry":"model_save_stale"}
+ok
+test modules::model_config::config_file::v2::tests::predev024_staged_key_intent_preserved_on_bookkeeping_conflict ... PREDEV_CASE {"case":"staged-credential-conflict-keeps-private-intent","pass":true}
+ok
+test modules::model_config::config_file::v2::tests::predev024_unknown_global_change ... PREDEV_CASE {"case":"unknown-global-change","draftPreserved":true,"explicitRead":"read-success","filePreserved":true,"firstSave":"model_save_stale","freshSnapshotRetainsOldDraftBase":true,"retry":"model_save_stale"}
+ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 2036 filtered out; finished in 1.14s
+

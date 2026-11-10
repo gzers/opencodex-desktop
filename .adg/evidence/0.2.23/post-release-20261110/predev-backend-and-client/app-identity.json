@@ -1,0 +1,15 @@
+{
+  "bundle": "/Applications/ChatGPT.app",
+  "identity": {
+    "CFBundleIdentifier": "com.openai.codex",
+    "CFBundleExecutable": "ChatGPT",
+    "CFBundleVersion": "25894",
+    "CFBundleShortVersionString": "26.1103.60933"
+  },
+  "binarySha256": "75d42141ee272cd9a3905b04a2009318fa89730becfd8e8af840f5d994f907ad",
+  "codexReaderVersion": "0.167.0-alpha.3.2",
+  "correction": "Earlier app-name-only absence inference was wrong; actual bundle is com.openai.codex.",
+  "userDataIsolationEnv": "CODEX_ELECTRON_USER_DATA_PATH; confirmed by read-only bootstrap",
+  "guiAttempt": "separate private HOME/CODEX_HOME/Electron data; external network/daily data/keychain denied; Chromium private socket directory failure before window",
+  "guiVerified": false
+}

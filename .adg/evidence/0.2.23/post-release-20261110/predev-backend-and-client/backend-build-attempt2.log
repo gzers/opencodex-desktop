@@ -1,0 +1,61 @@
+   Compiling opencodex-desktop v0.2.23 (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd023-real-backend-7sp8hzaa/apps/desktop/tauri)
+error: couldn't read `/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd023-real-backend-7sp8hzaa/apps/desktop/tauri/../../../.github/runtime-platforms-023.json`: No such file or directory (os error 2)
+   --> src/commands/discovery.rs:233:60
+    |
+233 |           let pins: serde_json::Value = serde_json::from_str(include_str!(concat!(
+    |  ____________________________________________________________^
+234 | |             env!("CARGO_MANIFEST_DIR"),
+235 | |             "/../../../.github/runtime-platforms-023.json"
+236 | |         )))
+    | |__________^
+
+error[E0277]: `modules::model_config::config_file::v2::FileSnapshotV2` doesn't implement `Debug`
+   --> src/modules/model_config/config_file_v2_tests.rs:792:72
+    |
+792 | ...home,req).unwrap_err();assert_eq!(error.code,"model_save_stale", "{case}");
+    |              ^^^^^^^^^^ the trait `Debug` is not implemented for `modules::model_config::config_file::v2::FileSnapshotV2`
+    |
+    = note: add `#[derive(Debug)]` to `modules::model_config::config_file::v2::FileSnapshotV2` or manually `impl Debug for modules::model_config::config_file::v2::FileSnapshotV2`
+note: required by a bound in `std::result::Result::<T, E>::unwrap_err`
+   --> /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/core/src/result.rs:1324:4
+help: consider annotating `modules::model_config::config_file::v2::FileSnapshotV2` with `#[derive(Debug)]`
+   --> src/modules/model_config/config_file_v2.rs:27:1
+    |
+ 27 + #[derive(Debug)]
+ 28 | pub struct FileSnapshotV2 {
+    |
+
+error[E0277]: `modules::model_config::config_file::v2::FileSnapshotV2` doesn't implement `Debug`
+   --> src/modules/model_config/config_file_v2_tests.rs:796:58
+    |
+796 |  let retry=save(&root,&home,predev_save_request(&fresh)).unwrap_err();assert_eq!(retry.code,"model_save_stale");
+    |                                                          ^^^^^^^^^^ the trait `Debug` is not implemented for `modules::model_config::config_file::v2::FileSnapshotV2`
+    |
+    = note: add `#[derive(Debug)]` to `modules::model_config::config_file::v2::FileSnapshotV2` or manually `impl Debug for modules::model_config::config_file::v2::FileSnapshotV2`
+note: required by a bound in `std::result::Result::<T, E>::unwrap_err`
+   --> /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/core/src/result.rs:1324:4
+help: consider annotating `modules::model_config::config_file::v2::FileSnapshotV2` with `#[derive(Debug)]`
+   --> src/modules/model_config/config_file_v2.rs:27:1
+    |
+ 27 + #[derive(Debug)]
+ 28 | pub struct FileSnapshotV2 {
+    |
+
+error[E0277]: `modules::model_config::config_file::v2::FileSnapshotV2` doesn't implement `Debug`
+   --> src/modules/model_config/config_file_v2_tests.rs:821:55
+    |
+821 | ...&staged)).unwrap_err();assert_eq!(e.code,"model_save_stale");assert_eq!(std::fs::read(&draft_path).unwrap(),draft_bytes);assert_...
+    |              ^^^^^^^^^^ the trait `Debug` is not implemented for `modules::model_config::config_file::v2::FileSnapshotV2`
+    |
+    = note: add `#[derive(Debug)]` to `modules::model_config::config_file::v2::FileSnapshotV2` or manually `impl Debug for modules::model_config::config_file::v2::FileSnapshotV2`
+note: required by a bound in `std::result::Result::<T, E>::unwrap_err`
+   --> /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/core/src/result.rs:1324:4
+help: consider annotating `modules::model_config::config_file::v2::FileSnapshotV2` with `#[derive(Debug)]`
+   --> src/modules/model_config/config_file_v2.rs:27:1
+    |
+ 27 + #[derive(Debug)]
+ 28 | pub struct FileSnapshotV2 {
+    |
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `opencodex-desktop` (lib test) due to 4 previous errors

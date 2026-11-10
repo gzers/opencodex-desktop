@@ -1,0 +1,6 @@
+[1110/215934.726872:FATAL:third_party/crashpad/crashpad/util/posix/close_stdio.cc:39] Check failed: . open: Operation not permitted (1)
+[1110/215934.801896:ERROR:third_party/crashpad/crashpad/util/file/file_io.cc:103] ReadExactly: expected 8, observed 0
+[1110/215934.803258:FATAL:third_party/crashpad/crashpad/util/posix/close_stdio.cc:39] Check failed: . open: Operation not permitted (1)
+[1110/215934.870810:ERROR:third_party/crashpad/crashpad/util/file/file_io.cc:103] ReadExactly: expected 8, observed 0
+[49083:150693403:1110/215934.927844:ERROR:chrome/browser/process_singleton_posix.cc:1053] Failed to create socket directory.
+[49083:150693403:1110/215934.927935:ERROR:chrome/app/chrome_main_delegate.cc:677] Failed to create a ProcessSingleton for your profile directory. This means that running multiple instances would start multiple browser processes rather than opening a new window in the existing process. Aborting now to avoid profile corruption.

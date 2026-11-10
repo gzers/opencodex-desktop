@@ -1,0 +1,92 @@
+{
+  "result": {
+    "label": "client-restart-renamed",
+    "args": [],
+    "modelListOnly": true,
+    "models": [
+      {
+        "model": "fixture/gpt-6.1-sol",
+        "displayName": "新渠道 名/gpt-6.1-sol"
+      }
+    ],
+    "state": "read",
+    "exit": 0
+  },
+  "responses": [
+    {
+      "id": 1,
+      "result": {
+        "userAgent": "ocxd024-predev/0.167.0-alpha.3.2 (Mac OS 27.0.1; arm64) unknown (ocxd024-predev; 1)",
+        "codexHome": "/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd024-client-entry-ac2_o8xk/codex",
+        "platformFamily": "unix",
+        "platformOs": "macos"
+      }
+    },
+    {
+      "method": "remoteControl/status/changed",
+      "params": {
+        "status": "disabled",
+        "serverName": "EZIO-MacbookPro.local",
+        "installationId": "a5368540-93ca-4e2c-bd5f-42d76aeee87e",
+        "environmentId": null
+      },
+      "emittedAtMs": 1794319021442
+    },
+    {
+      "id": 2,
+      "result": {
+        "data": [
+          {
+            "id": "fixture/gpt-6.1-sol",
+            "model": "fixture/gpt-6.1-sol",
+            "upgrade": null,
+            "upgradeInfo": null,
+            "availabilityNux": null,
+            "displayName": "新渠道 名/gpt-6.1-sol",
+            "description": "Routed via opencodex → fixture (fixture).",
+            "modelSpecialty": null,
+            "hidden": false,
+            "supportedReasoningEfforts": [
+              {
+                "reasoningEffort": "low",
+                "description": "Fast responses with lighter reasoning"
+              },
+              {
+                "reasoningEffort": "medium",
+                "description": "Balances speed and reasoning depth for everyday tasks"
+              },
+              {
+                "reasoningEffort": "high",
+                "description": "Greater reasoning depth for complex problems"
+              },
+              {
+                "reasoningEffort": "xhigh",
+                "description": "Extra high reasoning depth for complex problems"
+              },
+              {
+                "reasoningEffort": "max",
+                "description": "Maximum reasoning depth for the hardest problems"
+              },
+              {
+                "reasoningEffort": "ultra",
+                "description": "Maximum reasoning with automatic task delegation"
+              }
+            ],
+            "defaultReasoningEffort": "medium",
+            "inputModalities": [
+              "text"
+            ],
+            "supportsPersonality": false,
+            "multiAgentVersion": null,
+            "additionalSpeedTiers": [],
+            "serviceTiers": [],
+            "defaultServiceTier": null,
+            "availableAccessPrograms": null,
+            "isDefault": true
+          }
+        ],
+        "nextCursor": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "beforeExecution": true,
+  "backend": [
+    "true config_file_v2::save rejects format-only or known-bookkeeping byte changes while preserving file/draft and staged Key intent",
+    "normal same-source save and reopened actual snapshot succeeds",
+    "current snapshot carries changed source digest and old draft base; repeated Save cannot reconcile; explicit Read behavior will be observed"
+  ],
+  "client": [
+    "explicit CLI catalog override works from prior evidence",
+    "new process using persisted top-level catalog pointer reads display labels without CLI override",
+    "independent profile can be selected by flag but top-level profile is not current documented manual-start selector",
+    "actual GUI render cannot be claimed without an isolated supported app environment"
+  ]
+}

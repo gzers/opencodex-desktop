@@ -1,0 +1,31 @@
+   Compiling opencodex-desktop v0.2.23 (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd023-real-backend-7sp8hzaa/apps/desktop/tauri)
+error[E0609]: no field `draft` on type `ReadResponseV2`
+   --> src/modules/model_config/config_file_v2_tests.rs:800:26
+    |
+800 |    let read_base=rebased.draft.as_ref().unwrap().base.clone();assert_eq!(read_base.source_digest,fresh.source_digest);
+    |                          ^^^^^ unknown field
+    |
+help: one of the expressions' fields has a field of the same name
+    |
+800 |    let read_base=rebased.snapshot.draft.as_ref().unwrap().base.clone();assert_eq!(read_base.source_digest,fresh.source_digest);
+    |                          +++++++++
+
+error[E0308]: mismatched types
+   --> src/modules/model_config/config_file_v2_tests.rs:801:51
+    |
+801 |    let saved=save(&root,&home,predev_save_request(&rebased)).unwrap();assert!(saved.draft.is_none());
+    |                               ------------------- ^^^^^^^^ expected `&FileSnapshotV2`, found `&ReadResponseV2`
+    |                               |
+    |                               arguments to this function are incorrect
+    |
+    = note: expected reference `&modules::model_config::config_file::v2::FileSnapshotV2`
+               found reference `&ReadResponseV2`
+note: function defined here
+   --> src/modules/model_config/config_file_v2_tests.rs:783:4
+    |
+783 | fn predev_save_request(s:&FileSnapshotV2) -> SaveRequestV2 {
+    |    ^^^^^^^^^^^^^^^^^^^ -----------------
+
+Some errors have detailed explanations: E0308, E0609.
+For more information about an error, try `rustc --explain E0308`.
+error: could not compile `opencodex-desktop` (lib test) due to 2 previous errors

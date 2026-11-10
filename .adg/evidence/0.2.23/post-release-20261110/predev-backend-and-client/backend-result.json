@@ -1,0 +1,78 @@
+{
+  "tag": "v0.2.23",
+  "commit": "e3728109e93498bfbd6e993d49904d57dfd75315",
+  "testCount": 8,
+  "result": "pass",
+  "cases": [
+    {
+      "case": "claude-appliedAt-only",
+      "draftPreserved": true,
+      "explicitRead": "read-rebase-save-success-external-values-kept",
+      "filePreserved": true,
+      "firstSave": "model_save_stale",
+      "freshSnapshotRetainsOldDraftBase": true,
+      "retry": "model_save_stale"
+    },
+    {
+      "case": "normal-save-and-reopen",
+      "pass": true
+    },
+    {
+      "case": "discovery-knownModels-only",
+      "draftPreserved": true,
+      "explicitRead": "read-rebase-save-success-external-values-kept",
+      "filePreserved": true,
+      "firstSave": "model_save_stale",
+      "freshSnapshotRetainsOldDraftBase": true,
+      "retry": "model_save_stale"
+    },
+    {
+      "case": "json-format-only",
+      "draftPreserved": true,
+      "explicitRead": "read-rebase-save-success-external-values-kept",
+      "filePreserved": true,
+      "firstSave": "model_save_stale",
+      "freshSnapshotRetainsOldDraftBase": true,
+      "retry": "model_save_stale"
+    },
+    {
+      "case": "actual-provider-apiKey-change",
+      "draftPreserved": true,
+      "explicitRead": "read-rebase-save-success-external-values-kept",
+      "filePreserved": true,
+      "firstSave": "model_save_stale",
+      "freshSnapshotRetainsOldDraftBase": true,
+      "retry": "model_save_stale"
+    },
+    {
+      "case": "actual-provider-baseUrl-change",
+      "draftPreserved": true,
+      "explicitRead": "read-rebase-save-success-external-values-kept",
+      "filePreserved": true,
+      "firstSave": "model_save_stale",
+      "freshSnapshotRetainsOldDraftBase": true,
+      "retry": "model_save_stale"
+    },
+    {
+      "case": "staged-credential-conflict-keeps-private-intent",
+      "explicitReadRetainsCredentialIntent": true,
+      "pass": true
+    },
+    {
+      "case": "unknown-global-change",
+      "draftPreserved": true,
+      "explicitRead": "read-rebase-save-success-external-values-kept",
+      "filePreserved": true,
+      "firstSave": "model_save_stale",
+      "freshSnapshotRetainsOldDraftBase": true,
+      "retry": "model_save_stale"
+    }
+  ],
+  "scope": "actual tagged Rust config_file_v2 save/snapshot/read_existing and stage_credential with real tempfile files+locks; only credential vault is memory-injected",
+  "backendRealFileWrites": true,
+  "dailyConfigurationUsed": false,
+  "OSKeychainUsed": false,
+  "networkDenied": true,
+  "diagnosis": "raw byte source digest treats formatting/bookkeeping changes as stale as well as real changes; preserves files/drafts; repeated Save does not rebase; actual explicit Read can rebase and Save preserves current external values; UI path still needs input-preserving reconciliation",
+  "productFixImplemented": false
+}
