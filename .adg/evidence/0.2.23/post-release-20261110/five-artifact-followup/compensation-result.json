@@ -1,0 +1,26 @@
+{
+  "result": "pass",
+  "checks": [
+    "pipeline-attempt4: actual official changed artifacts restore exact originals/modes; synthetic audit retained in transaction evidence",
+    "pipeline-preexisting: actual official changed artifacts restore exact originals/modes; synthetic audit retained in transaction evidence",
+    "external-change: whole preflight refused without earlier file write",
+    "symlink: whole preflight refused without earlier file write",
+    "hardlink: whole preflight refused without earlier file write",
+    "missing: whole preflight refused without earlier file write",
+    "unreadable: whole preflight refused without earlier file write",
+    "tampered-plan: whole preflight refused without earlier file write",
+    "parent-link: whole preflight refused without earlier file write",
+    "mid-batch injected failure rolls back to sealed official postimage",
+    "actual child abrupt exit after one write: fresh parent recovers postimage then exact restore succeeds",
+    "unknown extra user file preserved and full-tree mismatch remains unaccepted",
+    "recovery refuses external contents before touching other files"
+  ],
+  "checkCount": 13,
+  "scope": "POSIX isolated candidate compensation primitives against actual official pipeline captures; not product/native Windows acceptance",
+  "limits": [
+    "Only fixed synthetic transaction paths; observed afterimage is not authority by itself for daily user data",
+    "No POSIX advisory lock asserted to exclude arbitrary writers; Windows exclusive-handle/official-coordinator integration still required",
+    "Actual crash is bounded after-one-write child death; not exhaustive crash or production recovery proof",
+    "No unknown artifact cleanup and no extra lock exception"
+  ]
+}

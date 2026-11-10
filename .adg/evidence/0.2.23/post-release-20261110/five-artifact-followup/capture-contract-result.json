@@ -1,0 +1,44 @@
+{
+  "result": "pass",
+  "checks": [
+    "changed contents saved verbatim without equality gate",
+    "invalid JSON raw afterimage captured; parse failure cannot discard it",
+    "unreadable does not mean absent and does not abort remaining collection",
+    "actual missing recorded distinctly",
+    "symlink not followed or serialized",
+    "all serialized raw bytes match recorded size/digest",
+    "unregistered credential or discovered target rejected"
+  ],
+  "count": 7,
+  "scope": "explicit synthetic allowlist; POSIX collector proof, not PowerShell/Windows production capture",
+  "states": [
+    {
+      "path": "codex/config.toml",
+      "state": "file",
+      "size": 33,
+      "sha256": "870571b89fd3663f4ff758a6e57ccab3e10983b601af83b9d029d35e665af643"
+    },
+    {
+      "path": "codex/opencodex-catalog.json",
+      "state": "file",
+      "size": 27,
+      "sha256": "30e8b295a3bfd98610543674d8f0e24196c22b187b182a4beef1d52821046228"
+    },
+    {
+      "path": "codex/models_cache.json",
+      "state": "unknown",
+      "errorType": "PermissionError",
+      "errno": 13
+    },
+    {
+      "path": "codex/opencodex-catalog-audit.jsonl",
+      "state": "absent"
+    },
+    {
+      "path": "grok/config.toml.bak-opencodex",
+      "state": "unknown",
+      "errorType": "ValueError",
+      "errno": null
+    }
+  ]
+}

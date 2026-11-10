@@ -1,0 +1,18 @@
+ 6 | writeFileSync(catalogPath,readFileSync(join(src,'codex/data/upstream-models.json')));writeFileSync(join(grok,'config.toml'),'# synthetic fixture\nmodel = "native"\n\n[model.native]\nmodel = "grok-fixture"\nname = "Synthetic native"\napi_backend = "xai"\n');
+ 7 | const config={hostname:'127.0.0.1',port:55581,defaultProvider:'fixture',providers:{fixture:{adapter:'openai-responses',baseUrl:'https://fixture.invalid/v1',apiKey:'synthetic-never-sent',liveModels:false,models:['gpt-6.1-sol'],selectedModels:['gpt-6.1-sol']}},syncResumeHistory:false,shutdownTimeoutMs:5000};writeFileSync(join(root,'runtime/config.json'),JSON.stringify(config));
+ 8 | const selected=['codex/config.toml','codex/opencodex-catalog.json','codex/models_cache.json','codex/opencodex-catalog-audit.jsonl','grok/config.toml.bak-opencodex','grok/config.toml'];
+ 9 | function capture(phase:string){const files=selected.map(path=>{const file=join(root,path);if(!existsSync(file))return {path,state:'absent'};const st=lstatSync(file);assert(st.isFile()&&!st.isSymbolicLink()&&st.nlink===1);const bytes=readFileSync(file);return {path,state:'file',size:bytes.length,sha256:hash(bytes),mode:st.mode&0o777,bytesBase64:bytes.toString('base64')}});writeFileSync(join(root,'out',phase+'.json'),JSON.stringify({phase,files},null,2));return files}
+10 | const summary:any={scope:'actual official APIs; no service/HTTP/model call; synthetic fixture only',steps:[]};
+11 | try{capture('before');const c=loadConfig();const refresh=await refreshCodexModelCatalog(c);summary.steps.push({step:'catalog-refresh',result:refresh});assert(refresh.catalogWritten&&refresh.cacheSynced);const injected=await injectCodexConfig(55581,c,{catalogPath});summary.steps.push({step:'config-inject',result:injected});assert(injected.success,injected.message);const g=injectGrokConfig(55581,[{id:'fixture/gpt-6.1-sol'}],{grokHome:grok,hostname:'127.0.0.1'});assert(g.ok&&g.changed);summary.steps.push({step:'grok-inject',result:g});capture('during');
+
+AssertionError: Codex configuration was not written: EPERM: operation not permitted, open '/private/tmp/opencodex-runtime-v1-501/native-write-locks/.abecfd39ff865bec2fc10d6fb5fda198560ad163bba303027063fd9f36eb3c94.sqlite.adopt-35449-bb97c2e2-43ec-44ca-bf54-a4eb64e0dfa0.tmp'
+ generatedMessage: false,
+     actual: false,
+   expected: true,
+   operator: "==",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd299-five-artifacts-r2-y9fsak7n/pipeline.ts:11:325
+
+Bun v1.4.4 (macOS arm64)
