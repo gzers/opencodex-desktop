@@ -44,6 +44,11 @@ try {
  $acl.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new([Security.Principal.SecurityIdentifier]::new('S-1-5-18'),'FullControl','Allow'));Set-Acl -LiteralPath $unreadable -AclObject $acl
  try {$read=Read-ProofBinding $unreadable;if($read.readable -or (Get-ProofDecision $expected $read $observed '1:2:3') -cne 'unknown'){throw 'unreadable proof granted authority'};$checks.Add(@{case='actual-unreadable-binding';pass=$true;readback=$read;decision='unknown';destructiveRequests=0})}
  finally {[Official299Proof.Native]::RestoreSyntheticDacl($unreadable,$savedAcl);if((Get-Acl -LiteralPath $unreadable).GetSecurityDescriptorSddlForm('Access') -cne $savedAcl){throw 'synthetic DACL restoration readback differs'}}
+ $sealed=Join-Path $OutputDirectory 'read-only-program';$null=New-Item -ItemType Directory -Path $sealed
+ $sealedFile=Join-Path $sealed 'source.txt';[IO.File]::WriteAllText($sealedFile,'unchanged-official-source-fixture')
+ [Official299Proof.Native]::SetFixtureDacl($sealed,('D:P(A;OICI;GRGX;;;'+$sid+')(A;OICI;GA;;;SY)'),$true)
+ try {try{[IO.File]::WriteAllText($sealedFile,'forbidden');throw 'read-only child writable'}catch [Management.Automation.MethodInvocationException]{if($_.Exception.InnerException -isnot [UnauthorizedAccessException]){throw};$checks.Add(@{case='ordinary-read-only-program-tree';pass=$true;sddl=(Get-Acl -LiteralPath $sealed).Sddl})}}
+ finally {[Official299Proof.Native]::SetFixtureDacl($sealed,('D:P(A;OICI;GA;;;'+$sid+')(A;OICI;GA;;;SY)'),$true)}
  $passed=$true
 } catch {$checks.Add(@{case='first-error';pass=$false;type=$_.Exception.GetType().FullName;message=$_.Exception.Message;line=$_.InvocationInfo.ScriptLineNumber})}
 finally {
