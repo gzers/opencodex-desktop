@@ -1,5 +1,5 @@
 # Invoke once as administrator; starts one NEW ordinary account and retains its Profile handle.
-param([Parameter(Mandatory)][string]$Directory,[Parameter(Mandatory)][string]$InputRoot,[Parameter(Mandatory)][string]$ArchiveRoot,[switch]$RestorationRevision2,[switch]$RestorationRevision4)
+param([Parameter(Mandatory)][string]$Directory,[Parameter(Mandatory)][string]$InputRoot,[Parameter(Mandatory)][string]$ArchiveRoot,[switch]$RestorationRevision2,[switch]$RestorationRevision4,[switch]$RestorationRevision5)
 $ErrorActionPreference='Stop'
 Set-StrictMode -Version Latest
 Add-Type -Path (Join-Path $PSScriptRoot 'Native.cs')
@@ -28,9 +28,9 @@ try {
  if((Split-Path -Leaf $profile) -cne $name){throw 'OS Profile path differs'}
  $code=Join-Path $dir 'code';$output=Join-Path $dir 'ordinary';$tools=Join-Path $dir 'powershell';$inputs=Join-Path $dir 'input';$archive=Join-Path $dir 'archive'
  $null=New-Item -ItemType Directory -Path $code,$output,$inputs,$archive
- if($RestorationRevision2 -and $RestorationRevision4){throw 'select one revision'}
- $hostLeaf=if($RestorationRevision4){'host-r4.ps1'}elseif($RestorationRevision2){'host-r2.ps1'}else{'host.ps1'}
- $copyLeaves=@('Native.cs',$hostLeaf,'policy.ps1');if($RestorationRevision2 -or $RestorationRevision4){$copyLeaves+=@('Recovery.cs','lock-worker.ts')};if($RestorationRevision4){$copyLeaves+=@('FiveRecovery.cs','producer-r4.ts','coordinator-r4.ts')}
+ if(@(@($RestorationRevision2,$RestorationRevision4,$RestorationRevision5)|Where-Object {$_}).Count -gt 1){throw 'select one revision'}
+ $hostLeaf=if($RestorationRevision5){'host-r5.ps1'}elseif($RestorationRevision4){'host-r4.ps1'}elseif($RestorationRevision2){'host-r2.ps1'}else{'host.ps1'}
+ $copyLeaves=@('Native.cs',$hostLeaf,'policy.ps1');if($RestorationRevision2 -or $RestorationRevision4 -or $RestorationRevision5){$copyLeaves+=@('Recovery.cs','lock-worker.ts')};if($RestorationRevision4 -or $RestorationRevision5){$copyLeaves+=@('FiveRecovery.cs','producer-r4.ts','coordinator-r4.ts')};if($RestorationRevision5){$copyLeaves+=@('cache-candidate.ts','cache-candidate-cli.ts')}
  foreach($f in $copyLeaves){Copy-Item -LiteralPath (Join-Path $PSScriptRoot $f) -Destination $code}
  Copy-Item -LiteralPath $PSHOME -Destination $tools -Recurse
  Copy-Item -LiteralPath (Join-Path $InputRoot 'node_modules') -Destination $inputs -Recurse
@@ -39,8 +39,9 @@ try {
  $bun=Join-Path $inputs 'node_modules/@oven/bun-windows-x64/bin/bun.exe'
  $input=@{sid=$sid;profile=$profile;output=$output;inputRoot=$inputs;archiveRoot=$archive;bunSha256=(Hash $bun);bunVersion=(& $bun --version).Trim();archiveSha256=(Hash (Join-Path $ArchiveRoot 'official.tgz'));lockSha256=(Hash (Join-Path $inputs 'package-lock.json'))}
  $report.input=$input;$report.hostHashes=@{native=(Hash (Join-Path $code 'Native.cs'));host=(Hash (Join-Path $code $hostLeaf));hostLeaf=$hostLeaf;provisioner=(Hash $PSCommandPath);powershell=(Hash (Join-Path $tools 'pwsh.exe'))}
- if($RestorationRevision2 -or $RestorationRevision4){$report.hostHashes.recovery=Hash (Join-Path $code 'Recovery.cs');$report.hostHashes.lockWorker=Hash (Join-Path $code 'lock-worker.ts')}
- if($RestorationRevision4){$report.hostHashes.five=Hash (Join-Path $code 'FiveRecovery.cs');$report.hostHashes.producer=Hash (Join-Path $code 'producer-r4.ts');$report.hostHashes.coordinator=Hash (Join-Path $code 'coordinator-r4.ts')}
+ if($RestorationRevision2 -or $RestorationRevision4 -or $RestorationRevision5){$report.hostHashes.recovery=Hash (Join-Path $code 'Recovery.cs');$report.hostHashes.lockWorker=Hash (Join-Path $code 'lock-worker.ts')}
+ if($RestorationRevision4 -or $RestorationRevision5){$report.hostHashes.five=Hash (Join-Path $code 'FiveRecovery.cs');$report.hostHashes.producer=Hash (Join-Path $code 'producer-r4.ts');$report.hostHashes.coordinator=Hash (Join-Path $code 'coordinator-r4.ts')}
+ if($RestorationRevision5){$report.hostHashes.cacheCandidate=Hash (Join-Path $code 'cache-candidate.ts');$report.hostHashes.cacheCli=Hash (Join-Path $code 'cache-candidate-cli.ts')}
  $config=Join-Path $dir 'input.json';[IO.File]::WriteAllText($config,($input|ConvertTo-Json -Depth 8))
  # Grants affect only this freshly created fixture tree; no existing Profile/source ACL is repaired.
  $acl=Get-Acl $dir;$acl.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new($account.SID,'ReadAndExecute','ContainerInherit,ObjectInherit','None','Allow'));Set-Acl -LiteralPath $dir -AclObject $acl
