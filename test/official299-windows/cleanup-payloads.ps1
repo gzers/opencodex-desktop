@@ -1,12 +1,13 @@
 # Remove only copied package/helper payloads, preserving every original failed output directory.
-param([Parameter(Mandatory)][string]$EvidenceRoot,[Parameter(Mandatory)][string]$PreparationTempRoot)
+param([Parameter(Mandatory)][string]$EvidenceRoot,[Parameter(Mandatory)][string]$PreparationTempRoot,[string[]]$AttemptKeys=@('attempt-01','attempt-02','attempt-03','attempt-04'))
 $ErrorActionPreference='Stop'
 Set-StrictMode -Version Latest
 Add-Type -Path (Join-Path $PSScriptRoot 'Native.cs')
 $report=[ordered]@{utc=[datetime]::UtcNow.ToString('o');result='pending';attempts=@();preparation=@();error=$null;normalStopResultsUnchanged=$true}
 try {
- foreach($n in 1..4){
-  $prefix='attempt-'+$n.ToString('00');$loc=Get-Content -LiteralPath (Join-Path $EvidenceRoot ($prefix+'-location.json')) -Raw|ConvertFrom-Json
+ foreach($prefix in $AttemptKeys){
+  if($prefix -cnotmatch '^attempt-(?:r2-)?[0-9]{2}$'){throw 'explicit attempt identifier required'}
+  $loc=Get-Content -LiteralPath (Join-Path $EvidenceRoot ($prefix+'-location.json')) -Raw|ConvertFrom-Json
   $dir=[IO.Path]::GetFullPath($loc.directory)
   if((Split-Path -Parent $dir) -ine 'C:\ProgramData' -or (Split-Path -Leaf $dir) -cnotmatch '^ocxd299-proof-[a-f0-9]{10}$'){throw 'payload cleanup escaped original fixture'}
   $c=Get-Content -LiteralPath (Join-Path $dir 'controller.json') -Raw|ConvertFrom-Json
@@ -19,6 +20,7 @@ try {
   $ports=@();if($null -ne $c.ordinary.start){
    $text=[IO.File]::ReadAllText((Join-Path $dir 'ordinary/startup.stdout.log'))
    $numbers=[Collections.Generic.HashSet[int]]::new();[void]$numbers.Add([int]$c.ordinary.port)
+   $history=Join-Path $dir 'ordinary/listener-history.json';if(Test-Path -LiteralPath $history){foreach($row in @(Get-Content -LiteralPath $history -Raw|ConvertFrom-Json)){if($row.sid -cne $c.account.sid){throw 'listener history escaped new account SID'};[void]$numbers.Add([int]$row.port)}}
    foreach($match in [regex]::Matches($text,'Claude intercept proxy active on http://127\.0\.0\.1:([0-9]+)')){[void]$numbers.Add([int]$match.Groups[1].Value)}
    foreach($port in $numbers){$owners=@([Official299Proof.Native]::Listeners($port));$ports+=@{port=$port;listenerOwners=$owners;scope='post-execution-cleanup-readback; does not retroactively satisfy any action budget'};if($owners.Count){throw 'previous test port currently has a listener; retain without killing it'}}
   }
@@ -32,7 +34,7 @@ try {
    $removed+=@{path=$path;existsAfter=(Test-Path -LiteralPath $path)}
    if(Test-Path -LiteralPath $path){throw 'payload remains after removal'}
   }
-  $report.attempts+=@{attempt=$n;accountSid=$c.account.sid;accountExists=$false;profileRecords=$profiles;profileDirectoryExists=$false;ports=$ports;payloads=$removed;failedDirectoryPreserved=(Test-Path -LiteralPath $dir);originalResultPreserved=(Test-Path -LiteralPath (Join-Path $dir 'ordinary/result.json'));scheduledTask='no scheduled task creation call in this harness; not used'}
+  $report.attempts+=@{attempt=$prefix;accountSid=$c.account.sid;accountExists=$false;profileRecords=$profiles;profileDirectoryExists=$false;ports=$ports;payloads=$removed;failedDirectoryPreserved=(Test-Path -LiteralPath $dir);originalResultPreserved=(Test-Path -LiteralPath (Join-Path $dir 'ordinary/result.json'));scheduledTask='no scheduled task creation call in this harness; not used'}
  }
  foreach($leaf in @('ocxd-official299-input-20261110','ocxd-official299-deps-20261110')){
   $tempRoot=[IO.Path]::GetFullPath($PreparationTempRoot);$path=[IO.Path]::GetFullPath((Join-Path $tempRoot $leaf))
