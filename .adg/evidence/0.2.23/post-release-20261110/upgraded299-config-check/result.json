@@ -1,0 +1,65 @@
+{
+  "scope": "Actual installed299 source validates private copy of actual current config and isolated candidate edits. No real file write, server/API persistence or model request. Does not prove Desktop entire read-compile-save or reload compatibility.",
+  "packageVersion": "2.99.0",
+  "currentInput": {
+    "bytes": 102782,
+    "sha256": "87d5613f860fc00221dfd4f6cf9b9c265afe2155806747ba80608eb54dad00de",
+    "equalDownloadedBackup": true,
+    "providerCount": 26,
+    "apiKeyProviders": 25,
+    "keyPoolProviders": 1
+  },
+  "admission": {
+    "kind": "read",
+    "source": "file",
+    "errorClass": null,
+    "errorDigest": null
+  },
+  "readonlyLoad": {
+    "providerCount": 26,
+    "publicProjectionSameAsDiagnostic": true,
+    "publicDifferentPaths": [],
+    "rawVersusLoadedPublicDifferentPaths": [],
+    "warningCount": 0
+  },
+  "cases": [
+    {
+      "name": "unchanged-config",
+      "ok": true,
+      "errorClass": null,
+      "errorDigest": null,
+      "credentialsPreservedInCandidate": true
+    },
+    {
+      "name": "channel-note-edit",
+      "ok": true,
+      "errorClass": null,
+      "errorDigest": null,
+      "credentialsPreservedInCandidate": true
+    },
+    {
+      "name": "existing-model-selection",
+      "ok": true,
+      "errorClass": null,
+      "errorDigest": null,
+      "credentialsPreservedInCandidate": true
+    },
+    {
+      "name": "existing-model-context",
+      "ok": true,
+      "errorClass": null,
+      "errorDigest": null,
+      "credentialsPreservedInCandidate": true
+    },
+    {
+      "name": "add-custom-channel-and-model",
+      "ok": true,
+      "errorClass": null,
+      "errorDigest": null,
+      "credentialsPreservedInCandidate": true
+    }
+  ],
+  "fixtureBytesUnchanged": true,
+  "realConfigWritten": false,
+  "credentialsPrinted": false
+}

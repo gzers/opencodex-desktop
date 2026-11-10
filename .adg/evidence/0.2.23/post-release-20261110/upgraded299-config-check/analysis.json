@@ -1,0 +1,78 @@
+{
+  "recordedAt": "2026-11-10T11:32:13.675843+08:00",
+  "source": "User explicitly updated locally to299; disk package independently verified2.99.0; not a claim of healthy service or actual request behavior",
+  "currentConfig": "102782bytes, sha25687d5613f860fc00221dfd4f6cf9b9c265afe2155806747ba80608eb54dad00de; exact unchanged from Downloads backup, distinct from earlier107020bytes incident input",
+  "structure": "Same root/provider structure and all26providers;25apiKey-bearing +1pool; no secret bytes stored in evidence",
+  "validation": "5 full-config candidate cases accepted by actual installed299 validateConfigCandidate. Current file admission source=file,error=null and loaded-vs-diagnostic public DTO identical. No real save/restart or upstream credential check.",
+  "desktopIntegration": "Raw file compiler overlays providers/model fields and protected credentials, not upstream public JSON editor; source analysis only, complete current Desktop read/compile/commit/reload not run.",
+  "identityDrift": {
+    "diskPackage": "2.99.0",
+    "oldRuntimeManifest": "2.94.0",
+    "oldSourceRecord": "2.94.0",
+    "manifestActivationPresent": false,
+    "newRootSourceRecord": "2.97.0-desktop023.lifecycle.3 at /Applications/OpenCodeX Desktop/runtime/bin/ocx; physical target absent at prior observation",
+    "meaning": "Old package metadata changed without corresponding Desktop managed records. Current23 resolver requires activation proof; cannot treat this old root as valid23 installation. No manifest repair performed."
+  },
+  "maintainedBoundary": "Official299 provider raw schema can accept basic writes, but Desktop-specific name display/lifecycle behavior not supplied by official299. Basic schema compatibility not whole integration compatibility.",
+  "sourceRefs": [
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/compiler_v2.rs",
+      "sha256": "d899ae433650e35a50b570d93fedb81c1b5f561f9584363bbbe8d393cdca684a"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/config_file_v2.rs",
+      "sha256": "7a0fc0da360269c516b1172cf223081015e6130920989fa32cf156774531b177"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/provider_import.rs",
+      "sha256": "cc6b0baa1e81ad8ea620482a6d7aa5f4ebf9cdbfb9cb3edcfc9afc75a15a788b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/install.rs",
+      "sha256": "6a05f085cecbb04377f706750c8d69fab65338aa0327fcaf422dcabf5859e9fb"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/discovery.rs",
+      "sha256": "495b3a01fffbaca9ede00f9fd4558a730981a3e8a26fce82c80be12091ebe461"
+    }
+  ],
+  "installed299Refs": [
+    {
+      "path": "src/config.ts",
+      "sha256": "aa7d9df78039a163933abf3aea73f69761dbb539701ceb3cc53bc12fad731ae5"
+    },
+    {
+      "path": "src/config/diagnostics.ts",
+      "sha256": "b05acb066ed4b6495970eb19acb73258c10b6c47ce727d7602fa95006156ccfe"
+    },
+    {
+      "path": "src/config/schema/config-schema.ts",
+      "sha256": "e49256521bff11a081cf68671b248d4f09fc12b0efd9b6495e36630ceaab62c2"
+    },
+    {
+      "path": "src/config/schema/leaf-validators.ts",
+      "sha256": "41da10696b929dc75e680e468f2e1ab4bf38617ba0215fffc56bc095cfd73484"
+    },
+    {
+      "path": "src/server/auth-cors.ts",
+      "sha256": "cbe1e432b359b39799b15214d5f6e5f3ace06b9ab280d80f01d0c0d7aefca664"
+    }
+  ],
+  "remaining": [
+    "historical107020bytes incident trigger not identified",
+    "actual Desktop UI save and live reload not verified",
+    "credentials validity not tested"
+  ],
+  "realConfigModified": false,
+  "fixtureWithSecretsWillBeDeleted": true,
+  "laterSnapshot": {
+    "sha256": "eb2a88b81f7041baa39d98f0a4f55e39441bf0a8fb67b31eaee833b9062052b0",
+    "onlyChangedJsonPath": "/claudeCode/desktopProfile/appliedAt",
+    "allProvidersModelsAndCredentialValuesEqualBackup": true,
+    "observedExternalWriteDuringAnalysis": true,
+    "writerNotIdentified": true,
+    "laterSchemaAndAdmissionStillPass": true,
+    "publicEditorProjectionUnchanged": true,
+    "notEvidenceOfPriorStaleCause": true
+  }
+}
