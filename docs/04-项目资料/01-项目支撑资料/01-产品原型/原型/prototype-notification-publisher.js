@@ -73,6 +73,27 @@
   if(window.syncPrototype?.openReceipt(item.sync.operationId))return true;
   openModal(item.title,'<p>'+logEsc(item.detail)+'</p>','关闭',null,{hideConfirm:true,cancelLabel:'关闭',onDelete:()=>deleteNotification(id)});return true;
  }
+ const modelReadDefinition=window.MaintenanceEvents.events.find(e=>e.id==='model.channels.read.completed'&&e.implemented==='prototype');
+ const modelReadDeliveries=[];
+ function publishModelRead(options){
+  const spec=modelReadDefinition,keys=['matched','updated','explicit','unmatched','conflicts'];
+  if(!spec||Object.keys(options).some(k=>!['operationId',...keys].includes(k))||!/^[1-9][0-9]{0,8}$/.test(String(options.operationId)))throw Error('渠道读取通知仅允许操作身份与计数');
+  const payload={operationId:String(options.operationId)};
+  for(const key of keys){const n=options[key];if(!Number.isSafeInteger(n)||n<0||n>100000)throw Error('渠道读取通知计数无效');payload[key]=n;}
+  const id='model-read:'+payload.operationId;if(notifications.some(n=>n.id===id))return id;
+  const warning=payload.unmatched+payload.conflicts>0,title=warning?'渠道已读取，部分模型需处理':'渠道已读取到草稿';
+  const detail='自动匹配 '+payload.matched+' 项 · 更新草稿 '+payload.updated+' 项 · 保留人工指定 '+payload.explicit+' 项 · 未匹配 '+payload.unmatched+' 项 · 冲突 '+payload.conflicts+' 项。单模型自定义保留；正式配置在保存后更新。';
+  const item={id,eventId:spec.id,cat:spec.category,op:payload.operationId,dedupe:id,deleted:false,title,detail,kind:warning?'warning':'info',time:clockLabel(),read:false,resolved:!warning,modelRead:payload};
+  if(item.resolved)item.resolvedAt=item.time;
+  notifications.unshift(item);modelReadDeliveries.unshift({eventId:spec.id,delivery:[...spec.delivery],payload:{...payload}});if(modelReadDeliveries.length>100)modelReadDeliveries.length=100;
+  renderNotifications();toast(title,{kind:warning?'warning':'success',detail,action:'查看结果',duration:spec.toastDurationMs});
+  document.querySelector('#toastEl .toast-act').dataset.modelReadNotice=id;return id;
+ }
+ function openModelRead(id){
+  const item=notifications.find(n=>n.id===id&&!n.deleted&&n.eventId===modelReadDefinition?.id);if(!item)return false;
+  item.read=true;closeNotificationPanel();renderNotifications();document.getElementById('toastEl').classList.remove('show');
+  return window.modelPrototype.openReadResult(item.modelRead.operationId);
+ }
  const phases=['准备样例','核对内容','完成'];
  const states={running:['正在处理示例任务','info',false],success:['示例任务已完成','info',true],failed:['示例任务未完成','warning',false],stopped:['示例任务已停止','info',true]};
  let lastToast='';
@@ -101,6 +122,7 @@
   showTask({notificationId:item.id,title:item.title,phase:item.detail,running:state==='running',kind:state==='stopped'?'neutral':item.kind,steps:phases.map((p,i)=>[p,i<step?'done':i===step&&state==='running'?'active':state==='failed'&&i===step?'failed':'pending']),acts:state==='running'?[['推进一步','component-demo-next'],['停止','component-demo-stop']]:state==='failed'?[['重试','component-demo-retry']]:[]});
  }
  function publish(eventId,options={}){
+  if(eventId==='model.channels.read.completed')return publishModelRead(options);
   if(eventId==='overview.demo.notification')return overview(options);
   if(eventId.startsWith('sync.'))return publishSync(eventId,options);
   const definition=definitions.get(eventId);if(!definition)throw Error('未注册的组件演示通知');
@@ -122,6 +144,7 @@
   renderNotifications();if(eventId==='component.demo.task')task(item);return id;
  }
  function open(id){
+  if(notifications.some(n=>n.id===id&&n.eventId===modelReadDefinition?.id))return openModelRead(id);
   const overviewItem=notifications.find(n=>n.id===id&&!n.deleted&&n.eventId==='overview.demo.notification');
   if(overviewItem){overviewItem.read=true;hidden.delete(id);closeNotificationPanel();renderNotifications();showTask({notificationId:id,title:overviewItem.title,phase:overviewItem.detail,running:false,kind:overviewItem.kind,steps:[],acts:[]});return true;}
   if(notifications.some(n=>n.id===id&&syncDefinitions.has(n.eventId)))return openSync(id);
@@ -144,6 +167,7 @@
  }
  // 删除不影响任务本体，只移除对应观察视图；业务通知不在此订阅范围内。
  new MutationObserver(()=>{for(const n of notifications)if(definitions.has(n.eventId)&&n.deleted)clearTask(n.id);}).observe(document.getElementById('notificationList'),{childList:true,subtree:true});
+ document.getElementById('toastEl').addEventListener('click',event=>{const button=event.target.closest('[data-model-read-notice]');if(!button)return;event.preventDefault();event.stopImmediatePropagation();openModelRead(button.dataset.modelReadNotice);},true);
  document.getElementById('toastEl').addEventListener('click',event=>{const button=event.target.closest('[data-sync-notice]');if(!button)return;event.preventDefault();event.stopImmediatePropagation();openSync(button.dataset.syncNotice);},true);
- window.prototypeNotificationPublisher={publish,open,action,hide:id=>{hidden.add(id);const host=[...document.querySelectorAll('#taskHost .task-card')].find(el=>el.dataset.taskNotification===id);if(host)window.NotificationCountdown.get(host)?.destroy();},reset,state:()=>notifications.filter(n=>definitions.has(n.eventId)).map(n=>({id:n.id,eventId:n.eventId,read:n.read,resolved:n.resolved,deleted:n.deleted,demo:{...n.demo}})),deliveries:()=>JSON.parse(JSON.stringify(syncDeliveries))};
+ window.prototypeNotificationPublisher={publish,open,action,hide:id=>{hidden.add(id);const host=[...document.querySelectorAll('#taskHost .task-card')].find(el=>el.dataset.taskNotification===id);if(host)window.NotificationCountdown.get(host)?.destroy();},reset,state:()=>notifications.filter(n=>definitions.has(n.eventId)).map(n=>({id:n.id,eventId:n.eventId,read:n.read,resolved:n.resolved,deleted:n.deleted,demo:{...n.demo}})),deliveries:()=>JSON.parse(JSON.stringify([...syncDeliveries,...modelReadDeliveries]))};
 })();

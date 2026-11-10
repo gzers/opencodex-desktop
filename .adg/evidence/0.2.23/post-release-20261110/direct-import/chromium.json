@@ -1,0 +1,18 @@
+{
+  "result": "pass",
+  "checks": [
+    "one import form; no file disables import",
+    "selection stays in same form without preview or side effects",
+    "cancel after selection causes no backup or import",
+    "one import click immediately starts backup; no second confirmation",
+    "operation continues when hidden; one verified backup; local port preserved",
+    "completion reports imported without claiming runtime restart",
+    "invalid blocks in same form",
+    "references blocks in same form",
+    "changed input rejects stale candidate with no writes and inline reselect",
+    "reselect obtains fresh candidate and imports without preview",
+    "backup failure has no overwrite and returns to original form",
+    "escape and no page errors"
+  ],
+  "errors": []
+}

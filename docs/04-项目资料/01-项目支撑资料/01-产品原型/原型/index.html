@@ -6276,6 +6276,7 @@ function openNotificationDetail(id){
   if(item.eventId?.startsWith('component.demo.')){window.prototypeNotificationPublisher?.open(item.id);return;}
   if(item.eventId==='overview.demo.notification'){window.prototypeNotificationPublisher?.open(item.id);return;}
   if(item.eventId?.startsWith('sync.')){window.prototypeNotificationPublisher?.open(item.id);return;}
+  if(item.eventId==='model.channels.read.completed'){window.prototypeNotificationPublisher?.open(item.id);return;}
   if(item.eventId==='model.template.external'){window.openExternalTaskNotification?.(item.id);return;}
   if(item.eventId==='model.policy.save'){window.openModelSaveNotification(item.id);return;}
   const kindLabel={warning:'警告',danger:'风险',info:'信息'}[item.kind]||'信息';

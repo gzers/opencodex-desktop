@@ -1,0 +1,52 @@
+{
+  "scope": "prototype-only; all network requests blocked; memory sample only; browsers closed; no daily config or services modified",
+  "checks": {
+    "chromium": {
+      "result": "pass",
+      "checks": [
+        "one import form; no file disables import",
+        "selection stays in same form without preview or side effects",
+        "cancel after selection causes no backup or import",
+        "one import click immediately starts backup; no second confirmation",
+        "operation continues when hidden; one verified backup; local port preserved",
+        "completion reports imported without claiming runtime restart",
+        "invalid blocks in same form",
+        "references blocks in same form",
+        "changed input rejects stale candidate with no writes and inline reselect",
+        "reselect obtains fresh candidate and imports without preview",
+        "backup failure has no overwrite and returns to original form",
+        "escape and no page errors"
+      ],
+      "errors": []
+    },
+    "webkit": {
+      "result": "pass",
+      "checks": [
+        "one import form; no file disables import",
+        "selection stays in same form without preview or side effects",
+        "cancel after selection causes no backup or import",
+        "one import click immediately starts backup; no second confirmation",
+        "operation continues when hidden; one verified backup; local port preserved",
+        "completion reports imported without claiming runtime restart",
+        "invalid blocks in same form",
+        "references blocks in same form",
+        "changed input rejects stale candidate with no writes and inline reselect",
+        "reselect obtains fresh candidate and imports without preview",
+        "backup failure has no overwrite and returns to original form",
+        "escape and no page errors"
+      ],
+      "errors": []
+    }
+  },
+  "sha256": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/post023-runtime-ui.js": "0e05add0237d4eccc651eb6fad6de99664717d7cf5145f573a5ccc6ac86ea955",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/0.2.23后继修复原型说明.md": "6f4533d7f869d2d6e68cb634af447b1f468d80ac0b074377eb94a51ec0736245",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md": "20645efd3b1ab7c8f659e64d1bc31b58a4acb18be299e809799d56d05a62d451",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.23-bugs.md": "94f00759f939bb4ae4bc48cf003fdaaa0a9ad2d30156046ac2c73bb9fd0ab278",
+    ".adg/evidence/0.2.23/post-release-20261110/direct-import/webkit.json": "f0eb894b9930e8dab3d2e52fc837e42f97565a85a3cfccb694f0db535ebf4ff4",
+    ".adg/evidence/0.2.23/post-release-20261110/direct-import/chromium.json": "f0eb894b9930e8dab3d2e52fc837e42f97565a85a3cfccb694f0db535ebf4ff4",
+    ".adg/evidence/0.2.23/post-release-20261110/direct-import/check.cjs": "45df6f0a9981fbd2f454b9e2332a12386af93159ab10d005f0dd4edbff574888",
+    ".adg/evidence/0.2.23/post-release-20261110/direct-import/webkit-ready.png": "b6650461b67e3d164176faa23857b95bcf2cf4f84bdc44354707b4a386f71d76",
+    ".adg/evidence/0.2.23/post-release-20261110/direct-import/chromium-ready.png": "041e3989836d5f98604a619fab06499767733144da2927696a9c3f146b99a578"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "stage": "fixture preparation; no browser executed",
+  "error": "git ls-files included index-added parallel overview-events.js absent from HEAD; git show failed",
+  "correction": "Use git ls-tree HEAD so only committed base participates; apply four owned resources and single index route."
+}

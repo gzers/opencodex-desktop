@@ -1,0 +1,58 @@
+{
+  "scope": "prototype-only; local resources; external requests blocked; daily config untouched",
+  "results": {
+    "chromium": {
+      "result": "pass",
+      "checks": [
+        "no persistent result strip",
+        "registered toast center log and common eight-second lifetime",
+        "real read counts and draft-only semantics",
+        "toast opens read-only result without redundant footer",
+        "center reopens same result",
+        "repaint and duplicate completion do not redeliver",
+        "deleted notification not resurrected",
+        "new deliberate read has separate operation",
+        "unmatched and conflicts produce unresolved warning",
+        "credential payload rejected",
+        "previous import toolbar and simplified copy retained",
+        "import preview and cancel preserve adopted semantics",
+        "no page errors"
+      ],
+      "errors": []
+    },
+    "webkit": {
+      "result": "pass",
+      "checks": [
+        "no persistent result strip",
+        "registered toast center log and common eight-second lifetime",
+        "real read counts and draft-only semantics",
+        "toast opens read-only result without redundant footer",
+        "center reopens same result",
+        "repaint and duplicate completion do not redeliver",
+        "deleted notification not resurrected",
+        "new deliberate read has separate operation",
+        "unmatched and conflicts produce unresolved warning",
+        "credential payload rejected",
+        "previous import toolbar and simplified copy retained",
+        "import preview and cancel preserve adopted semantics",
+        "no page errors"
+      ],
+      "errors": []
+    }
+  },
+  "sourceNote": "Current workspace index.html also includes pre-existing parallel overview changes; this task adds one notification detail route only. Other changed files listed are task-owned.",
+  "sha256": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "aaf88291a85119b82d2da285b36a2cdc3bd0b51f30466a4783de117e12521c9f",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.js": "729148a3750f3174cff859ffd345ccecb586244be22c89e38f86c5a559c9e27e",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/maintenance-events.js": "69ab9f85254bd9d9ffcea476af602a61eaa86c58683565ce6cfc7ba82fb2342e",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/prototype-notification-publisher.js": "ad62696386d790bef4c05fa4153d8380b23dd1af4063bdaf64bc702846e4dc62",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/0.2.23后继修复原型说明.md": "9f27429d9006436b591bc17510d1bcbecc12347b01ca6f07a18dad055b5c8b7f",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.23-bugs.md": "7f0ce5006f9ff796e54162fd2708b3e2618b9ba41b2fca31ac3a618b4024e808",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md": "cb364887626a76c38157ffafd8c5d49fa78dee84da9ad447e9a816c33f9bdcfc",
+    ".adg/evidence/0.2.23/post-release-20261110/model-read-notification/webkit-toast.png": "909c492fd7677df4384da09715acceb471e1d79f83a83a6ccd67443d7aec5063",
+    ".adg/evidence/0.2.23/post-release-20261110/model-read-notification/chromium-toast.png": "c82b55a52ae2458744187a3c0226ede665e688794f944bb71452f2e60710a462",
+    ".adg/evidence/0.2.23/post-release-20261110/model-read-notification/webkit.json": "bd196c0505f306e3b42f3bd55b850f785fbab111abeef2b618cce5b7b5f90f3a",
+    ".adg/evidence/0.2.23/post-release-20261110/model-read-notification/chromium.json": "bd196c0505f306e3b42f3bd55b850f785fbab111abeef2b618cce5b7b5f90f3a",
+    ".adg/evidence/0.2.23/post-release-20261110/model-read-notification/check.cjs": "38689aaf142f9972f38c0edfd5eb1b80a8819a24f00a4588e63807decd1a4533"
+  }
+}
