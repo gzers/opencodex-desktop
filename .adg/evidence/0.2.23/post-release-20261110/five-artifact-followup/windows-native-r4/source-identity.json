@@ -1,0 +1,165 @@
+{
+  "docsBaseline": "5ecf5b1a9f7f3046be17537916d9b511032ef6c2",
+  "codeBaseline": "03480916ca369ce7648afdf82c20819e87c74ee7",
+  "actualOfficialServiceCommit": "df66f5bba5d20f387a143acc1e94fa6fa9aa9d90",
+  "codeDeliveryCommit": "8309837173f06e9d08bf08f4fe347f407885f310",
+  "officialServiceRuns": 1,
+  "originalProductReadOnlyBaseline": "0828a3955615df0a2a3e52fb96ab8249f2e04d1b",
+  "actualSourceBytes": [
+    {
+      "file": "Native.cs",
+      "sha256": "fcf3d01b445e6204b2a4bbaad161edf292ce855f82738e9ed686ed452db0679c",
+      "actualCommit": "df66f5bba5d20f387a143acc1e94fa6fa9aa9d90"
+    },
+    {
+      "file": "Recovery.cs",
+      "sha256": "235121ac6f87aa39d9400e87a4ce1c175beb08f6501432f5ed7f5c9a13d036fa",
+      "actualCommit": "df66f5bba5d20f387a143acc1e94fa6fa9aa9d90"
+    },
+    {
+      "file": "FiveRecovery.cs",
+      "sha256": "db27fa799cc4804bbe43c464804a1e275c3ddbdc41b98be00899300d7072bc44",
+      "actualCommit": "df66f5bba5d20f387a143acc1e94fa6fa9aa9d90"
+    },
+    {
+      "file": "host-r4.ps1",
+      "sha256": "1a3594ad0d7bf428d359f698f66d0649324fd53dfcc71ffa07a0cbabd6056433",
+      "actualCommit": "df66f5bba5d20f387a143acc1e94fa6fa9aa9d90"
+    },
+    {
+      "file": "producer-r4.ts",
+      "sha256": "74096dc5dd78cb569111ac65da2ec4ba9797b5a4d89c27e7fa691420e0e9c2ac",
+      "actualCommit": "df66f5bba5d20f387a143acc1e94fa6fa9aa9d90"
+    },
+    {
+      "file": "coordinator-r4.ts",
+      "sha256": "882422bb9589eaba23c4dca86b26f07c2f1e00cba732c398eba3938b30afeabc",
+      "actualCommit": "df66f5bba5d20f387a143acc1e94fa6fa9aa9d90"
+    },
+    {
+      "file": "run.ps1",
+      "sha256": "ed8ddf7ab5f80f9451b45a8e23e336dd35e1e5d60bb74a16292734b86afb2ba8",
+      "actualCommit": "df66f5bba5d20f387a143acc1e94fa6fa9aa9d90"
+    },
+    {
+      "file": "lock-worker.ts",
+      "sha256": "fc6c20bc26818d2371970c061470088a4be26d2359a6d677816c38c884fc0a5e",
+      "actualCommit": "df66f5bba5d20f387a143acc1e94fa6fa9aa9d90"
+    }
+  ],
+  "finalPrototypeSourceChecks": [
+    {
+      "file": "race-worker.ps1",
+      "sha256": "a9d7e85c412e37c6316998accba22c6b01fcc4f0cb88478484389ae4da85334b",
+      "commit": "df66f5bba5d20f387a143acc1e94fa6fa9aa9d90"
+    },
+    {
+      "file": "Native.cs",
+      "sha256": "fcf3d01b445e6204b2a4bbaad161edf292ce855f82738e9ed686ed452db0679c",
+      "commit": "df66f5bba5d20f387a143acc1e94fa6fa9aa9d90"
+    },
+    {
+      "file": "five-worker.ps1",
+      "sha256": "8039b182224b19392f3b3308f4d681a799a2dc9e53a83c5dbb360b6973888744",
+      "commit": "df66f5bba5d20f387a143acc1e94fa6fa9aa9d90"
+    },
+    {
+      "file": "Recovery.cs",
+      "sha256": "235121ac6f87aa39d9400e87a4ce1c175beb08f6501432f5ed7f5c9a13d036fa",
+      "commit": "df66f5bba5d20f387a143acc1e94fa6fa9aa9d90"
+    },
+    {
+      "file": "five-test.ps1",
+      "sha256": "49020f17f881bb9877bcab9c127e52f573b7cc180560877dd7867fb88c4bc6aa",
+      "commit": "df66f5bba5d20f387a143acc1e94fa6fa9aa9d90"
+    },
+    {
+      "file": "FiveRecovery.cs",
+      "sha256": "db27fa799cc4804bbe43c464804a1e275c3ddbdc41b98be00899300d7072bc44",
+      "commit": "df66f5bba5d20f387a143acc1e94fa6fa9aa9d90"
+    }
+  ],
+  "actualInputFiles": 6734,
+  "actualInputTreeSha256": "9608b6c8810e74b92c3e2460781cd78f2de385101fe3cc09e1cfb3d9c230e24d",
+  "actualCopyMatchesPreparation": true,
+  "official": {
+    "bunVersion": "1.4.4",
+    "bunSha256": "cb1d8e6564e655e49d30cead359750a1cbbd12f42651caa4b62244d7bd93c244",
+    "bytes": 19923693,
+    "integrity": "sha512-pAlx+xXd1Ujbmw6yW/V5P0xNZi04e80qRUhmJQ7Ia4v6cJkaMvkvMTqKIx0kOSw2vx/tiQLjDkHsCgPAu15wyg==",
+    "sha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+    "installScriptsRun": false
+  },
+  "dependencyDifferences": {
+    "fixedPayloadBytesMatch": true,
+    "changedPreparationMetadata": [
+      {
+        "path": "node_modules/.package-lock.json",
+        "before": {
+          "path": "node_modules/.package-lock.json",
+          "size": 51850,
+          "sha256": "45455db27d33d17240c028f86f975584e15964ae56e62131ac1919c0c2000b35"
+        },
+        "after": {
+          "path": "node_modules/.package-lock.json",
+          "size": 53189,
+          "sha256": "9c4d23362249db94e59942b8eb6cd335d0f5d85c2acdb77f2906044dd3b87041"
+        }
+      },
+      {
+        "path": "package-lock.json",
+        "before": {
+          "path": "package-lock.json",
+          "size": 63176,
+          "sha256": "949232457be41cfe3e447e54fb3b21e9457e047cc9732407ee1aa2aa9a8350c2"
+        },
+        "after": {
+          "path": "package-lock.json",
+          "size": 63152,
+          "sha256": "5e5ea1fd903481d0d94152bc74517d0bcf4961f3200023f9c602948b5435bdb8"
+        }
+      },
+      {
+        "path": "package.json",
+        "before": {
+          "path": "package.json",
+          "size": 149,
+          "sha256": "756d339ada8ac36dea25a380019e1f7456790e56d5eb4ddf7345396d02eaf72f"
+        },
+        "after": {
+          "path": "package.json",
+          "size": 141,
+          "sha256": "1c8555737f922183a3369f508286f1e862f78e18e19ab797d6d9b728e6cfde9e"
+        }
+      }
+    ],
+    "rootLockChange": "Only local official.tgz locator rewritten from old removed task directory to ocxd299-r4-official; versions and npm integrities unchanged. Root/internal lock full raw bytes are retained."
+  },
+  "codeChangedPaths": [
+    "test/official299-windows/FiveRecovery.cs",
+    "test/official299-windows/README.md",
+    "test/official299-windows/Recovery.cs",
+    "test/official299-windows/analyze-r4.ts",
+    "test/official299-windows/cleanup-payloads.ps1",
+    "test/official299-windows/cleanup-r4-coordinators.ps1",
+    "test/official299-windows/cleanup-r4.ps1",
+    "test/official299-windows/coordinator-r4.ts",
+    "test/official299-windows/coordinator-test.ps1",
+    "test/official299-windows/five-test.ps1",
+    "test/official299-windows/five-worker.ps1",
+    "test/official299-windows/host-r4.ps1",
+    "test/official299-windows/producer-r4.test.ts",
+    "test/official299-windows/producer-r4.ts",
+    "test/official299-windows/run.ps1",
+    "test/official299-windows/verify-r4.mjs"
+  ],
+  "postRunChanges": "offline analysis/verification, cleanup-only native method and cleanup wrappers, README; no rerun and no retroactive change to service source",
+  "scope": {
+    "productionChanged": false,
+    "workflowChanged": false,
+    "fullSuite": false,
+    "published": false,
+    "oldFailuresChanged": false
+  },
+  "cleanupVerified": true
+}

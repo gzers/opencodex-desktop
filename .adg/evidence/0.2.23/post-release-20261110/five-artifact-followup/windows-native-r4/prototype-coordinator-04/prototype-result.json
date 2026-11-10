@@ -1,0 +1,48 @@
+{
+  "workerIdentity": {
+    "pid": 55684,
+    "filetime": "134387887673312600",
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+    "session": 2,
+    "image": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-deps\\node_modules\\@oven\\bun-windows-x64\\bin\\bun.exe",
+    "elevated": false,
+    "elevationType": 3
+  },
+  "jobActive": 0,
+  "scope": "bounded test rendezvous while unchanged official claim/N/K held, no subprocess spawned under lock callback; no product integration claim",
+  "held": {
+    "pid": 55684,
+    "home": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-coordinator-04\\codex",
+    "claim": true,
+    "n": true,
+    "k": true,
+    "released": false,
+    "normalResult": false,
+    "namespace": {
+      "npath": "C:\\Users\\15119\\AppData\\Local\\OpenCodex\\Runtime\\v1\\S-1-5-21-587408064-856152790-2583328096-1001\\native-write-locks\\57863f0e63851253164d2b09ab7982e3280e0886f6c609456c5048911157ed84.sqlite",
+      "kpath": "C:\\Users\\15119\\AppData\\Local\\OpenCodex\\Runtime\\v1\\S-1-5-21-587408064-856152790-2583328096-1001\\catalog-write-locks\\57863f0e63851253164d2b09ab7982e3280e0886f6c609456c5048911157ed84.sqlite"
+    },
+    "barrierMaxMs": 2000
+  },
+  "exitCode": 0,
+  "operations": [
+    "restore:codex/config.toml",
+    "restore:codex/opencodex-catalog-audit.jsonl",
+    "restore:grok/config.toml.bak-opencodex"
+  ],
+  "pass": true,
+  "released": {
+    "pid": 55684,
+    "home": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r4-coordinator-04\\codex",
+    "claim": true,
+    "n": true,
+    "k": true,
+    "released": true,
+    "normalResult": true,
+    "namespace": {
+      "npath": "C:\\Users\\15119\\AppData\\Local\\OpenCodex\\Runtime\\v1\\S-1-5-21-587408064-856152790-2583328096-1001\\native-write-locks\\57863f0e63851253164d2b09ab7982e3280e0886f6c609456c5048911157ed84.sqlite",
+      "kpath": "C:\\Users\\15119\\AppData\\Local\\OpenCodex\\Runtime\\v1\\S-1-5-21-587408064-856152790-2583328096-1001\\catalog-write-locks\\57863f0e63851253164d2b09ab7982e3280e0886f6c609456c5048911157ed84.sqlite"
+    },
+    "barrierMaxMs": 2000
+  }
+}
