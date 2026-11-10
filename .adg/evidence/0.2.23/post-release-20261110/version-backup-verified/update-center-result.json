@@ -1,0 +1,23 @@
+{
+  "result": "pass",
+  "sourceSha256": "91849a16e4c2ad6f579b58b410d82a7fe4d62d79e5d60f649ee51c21314bc3e7",
+  "cases": [
+    {
+      "name": "external299-but-last-local294-no-refresh",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "local-probe-failed-retained294",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "refreshed-local299",
+      "expected": false,
+      "actual": false
+    }
+  ],
+  "correction": "Store helper ignores error, but actual UpdateCenter officialAvailable explicitly blocks on local/remote errors. Do not claim failed local probe enables its install button. Stale cached local without invalidation can still present an update; actual backend behavior not executed.",
+  "scope": "Exact actual UI computed expression with supplied snapshots; not mounted UI or real upgrade"
+}

@@ -1,0 +1,35 @@
+{
+  "result": "pass",
+  "cases": [
+    {
+      "case": "initial294-vs299",
+      "probeCalls": 1,
+      "result": true
+    },
+    {
+      "case": "external-updated-without-refresh",
+      "actualFixtureVersion": "2.99.0",
+      "uiVersion": "2.94.0",
+      "updateAvailable": true,
+      "confirmedDefect": "no automatic invalidation from external change in this store"
+    },
+    {
+      "case": "refresh-fails-retains294-and-comparison",
+      "errorFlag": true,
+      "uiVersion": "2.94.0",
+      "updateAvailable": true,
+      "confirmedDefect": "comparison action ignores local error flag"
+    },
+    {
+      "case": "successful-probe-updates299",
+      "uiVersion": "2.99.0",
+      "updateAvailable": false
+    }
+  ],
+  "actualCode": "Complete real updates store actions and version comparator compiled; injected IPC responses and minimal defineStore harness; no actual GUI/network or external update run",
+  "sourceHashes": {
+    "store": "3763d69fd461e909f1abcd93a93ac363453e110434c8427eba85d4ba7c363e37",
+    "version": "3899349091e320cc345e196177873cfd81b7ee38d86ddfd665e464f8adce693c"
+  },
+  "noProductChange": true
+}

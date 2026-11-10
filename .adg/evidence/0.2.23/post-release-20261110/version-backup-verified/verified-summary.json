@@ -1,0 +1,69 @@
+{
+  "date": "2026-11-10T11:45:29.625816+08:00",
+  "scope": "Confirm current-version drift semantics, credential application, scoped file backup/restore and generic upgrade backup scope; no product fix",
+  "result": "verified within scope",
+  "sourceCommit": "0828a3955615df0a2a3e52fb96ab8249f2e04d1b",
+  "rustTests": 13,
+  "rustTestsAllPass": true,
+  "frontendScenarios": 7,
+  "frontendReplay": "real store actions+comparator and real UpdateCenter computed expression with injected snapshots/IPC; no actual UI installation interaction",
+  "sourceRefs": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/official_version_source.rs",
+      "sha256": "e6314a2d0f22bb237030e74ae4cf5e922f551c327e734117d1c3ab23724fde02"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/store.ts",
+      "sha256": "3763d69fd461e909f1abcd93a93ac363453e110434c8427eba85d4ba7c363e37"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+      "sha256": "91849a16e4c2ad6f579b58b410d82a7fe4d62d79e5d60f649ee51c21314bc3e7"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/backup/manager.rs",
+      "sha256": "4070112893e55c8a754b1dee3ff3a9298c30b97a594d0e6f222a60f1a8a71708"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/upgrade.rs",
+      "sha256": "c34ca418b7dbfe335d51b28433c8c9747d3ba5310c1bbb7bc3fb631a7c1a0882"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/file_transfer_v2.rs",
+      "sha256": "67c197a4df3564ac21ec57c0084f4b23bf7059f3a7f9e8e2b83ef3fefe0aac1b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/provider_auth.rs",
+      "sha256": "49cc378e9181a3cf49bcb8fdf113804e173b5122e974cd7814eb30c6b1c2c74c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/model_receive_file_v2_tests.rs",
+      "sha256": "a2eed71e8948df0964a7cd3eaed09822357c95cd33e135421742e6c8f9f7e85c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/config_file_v2_tests.rs",
+      "sha256": "37aa74f5a0df0b2f780401c40960fc5c871cbcab68d8c7004f347ba7948a92e5"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_local_v2_restore_tests.rs",
+      "sha256": "ff0942c7f3dc284bc1fb9eb10e9e45ae2e3f14eb4e12b80892e46eea0ec9afa4"
+    }
+  ],
+  "confirmed": {
+    "version": "CLI probe exists. Actual updates UI allows stale older version before invalidation; explicit local-error flag blocks install eligibility; successful refresh converges. No claim probe failure enables updating. Actual external update already observed prior disk vs record discrepancy.",
+    "genericBackup": "Upgrade test actual target preferences.json, protection helper same source; no original OpenCodex config/key backup from that entry. Gap confirmed, not speculative.",
+    "keySave": "Actual config-file transaction replace/clear retains unselected pool slots, tests pass.",
+    "portableAuthorization": "pool/header/active-key roundtrip and selected-auth packaging fixtures pass; selected secret semantics preserved. Not all account/OAuth/system-store credentials universally portable.",
+    "scopedBackupRestore": "Actual receiver protected OfficialConfig image, backup failure no business writes, file-transfer apply/readback and ready-backup restore pass. Does not prove everysecret roundtrip through299 runtime.",
+    "nativeRawImport": "FileTransfer decode source requires OCXDCONF v3; native config.json lacks wrapper and rejected. Need distinct user-directed native recovery flow, not widen entire directory writes."
+  },
+  "retainedFailuresOrLimits": [
+    "No production GUI upgrade/install executed",
+    "No new original299 incident attribution",
+    "No full raw config+allcredentials restore feature exists to accept",
+    "No live restart/auth/model request or Windows native rerun"
+  ],
+  "productChanged": false,
+  "dailyConfigurationChangedByTests": false,
+  "noGoalCreated": true
+}

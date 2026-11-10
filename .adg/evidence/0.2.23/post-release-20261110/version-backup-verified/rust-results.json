@@ -1,0 +1,102 @@
+{
+  "sourceCommit": "0828a3955",
+  "binarySha256": "e0f594230db7c546309634eb148cc98c70a6bccbae923c4eb30b90636950ae6d",
+  "cargoOfflineBuild": "success",
+  "tests": [
+    {
+      "test": "commands::upgrade::tests::creates_upgrade_backup_from_real_preferences",
+      "result": "pass",
+      "exitCode": 0,
+      "seconds": 0.053,
+      "log": "01.log"
+    },
+    {
+      "test": "modules::backup::manager::tests::protection_helper_keeps_raw_bytes_and_holds_shared_lock",
+      "result": "pass",
+      "exitCode": 0,
+      "seconds": 0.05,
+      "log": "02.log"
+    },
+    {
+      "test": "modules::model_config::config_file::v2::receive::tests::backup_failure_has_zero_business_writes_and_cannot_claim_protection",
+      "result": "pass",
+      "exitCode": 0,
+      "seconds": 0.817,
+      "log": "03.log"
+    },
+    {
+      "test": "modules::model_config::config_file::v2::receive::tests::backup_images_require_actual_protection_and_keep_original_before_after_without_receipt_targets",
+      "result": "pass",
+      "exitCode": 0,
+      "seconds": 0.466,
+      "log": "04.log"
+    },
+    {
+      "test": "modules::model_config::config_file::v2::receive::tests::key_replace_preserves_unselected_pool_slots",
+      "result": "pass",
+      "exitCode": 0,
+      "seconds": 1.0,
+      "log": "05.log"
+    },
+    {
+      "test": "modules::model_config::config_file::v2::receive::tests::portable_authorization_is_materialized_into_file_without_system_credentials",
+      "result": "pass",
+      "exitCode": 0,
+      "seconds": 0.442,
+      "log": "06.log"
+    },
+    {
+      "test": "modules::model_config::config_file::v2::tests::explicit_key_only_replace_preserves_other_pool_slots_and_clear_keeps_auth_mode",
+      "result": "pass",
+      "exitCode": 0,
+      "seconds": 0.831,
+      "log": "07.log"
+    },
+    {
+      "test": "modules::model_config::provider_auth::tests::file_import_preserves_pool_headers_and_active_key_without_runtime_binding",
+      "result": "pass",
+      "exitCode": 0,
+      "seconds": 0.016,
+      "log": "08.log"
+    },
+    {
+      "test": "modules::model_config::provider_auth::tests::portable_pool_is_complete_and_private_blocks_never_enter_public_fields",
+      "result": "pass",
+      "exitCode": 0,
+      "seconds": 0.012,
+      "log": "09.log"
+    },
+    {
+      "test": "modules::model_config::saved_objects_capture_v2::tests::selected_file_authorization_uses_actual_source_and_validates_scoped_public",
+      "result": "pass",
+      "exitCode": 0,
+      "seconds": 4.653,
+      "log": "10.log"
+    },
+    {
+      "test": "modules::model_config::file_transfer_v2::tests::preview_reselect_no_business_write_confirm_real_receiver_and_no_reapply_after_edits",
+      "result": "pass",
+      "exitCode": 0,
+      "seconds": 9.61,
+      "log": "11.log"
+    },
+    {
+      "test": "modules::model_config::file_transfer_v2::tests::real_backup_failure_prevents_business_writes_and_can_retry_original_operation",
+      "result": "pass",
+      "exitCode": 0,
+      "seconds": 1.017,
+      "log": "12.log"
+    },
+    {
+      "test": "modules::model_config::sync_local_v2::restore::tests::actual_receiver_and_namespace_production_traits_issue_ready_restorable_backups",
+      "result": "pass",
+      "exitCode": 0,
+      "seconds": 4.968,
+      "log": "13.log"
+    }
+  ],
+  "count": 13,
+  "allPassed": true,
+  "actualDailyConfigTouched": false,
+  "scope": "Actual production Rust modules/temporary file fixtures; not raw-native full import UX or299 integration acceptance"
+}
