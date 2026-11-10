@@ -1,0 +1,110 @@
+{
+  "scope": "W0 standalone actual Rust platform module only",
+  "expectedCommit": "12c69e27e615fc3d27dc3d341a9f66d3e0e72903",
+  "actualCommit": "12c69e27e615fc3d27dc3d341a9f66d3e0e72903",
+  "accepted": true,
+  "productIntegrated": false,
+  "finalAcceptanceExecuted": false,
+  "releaseExecuted": false,
+  "commands": [
+    {
+      "exitCode": 0,
+      "program": "cargo",
+      "elapsedMs": 193,
+      "arguments": [
+        "fmt",
+        "--manifest-path",
+        "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\Cargo.toml",
+        "--",
+        "--check"
+      ]
+    },
+    {
+      "exitCode": 0,
+      "program": "cargo",
+      "elapsedMs": 1043,
+      "arguments": [
+        "test",
+        "--manifest-path",
+        "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\Cargo.toml",
+        "--locked",
+        "--offline",
+        "--",
+        "--test-threads=1"
+      ]
+    },
+    {
+      "exitCode": 0,
+      "program": "cargo",
+      "elapsedMs": 256,
+      "arguments": [
+        "clippy",
+        "--manifest-path",
+        "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\Cargo.toml",
+        "--locked",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ]
+    }
+  ],
+  "firstError": null,
+  "toolchain": {
+    "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+    "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+    "session": 2,
+    "os": "Microsoft Windows 10.0.26100",
+    "elevated": false,
+    "hostSid": "S-1-5-21-587408064-856152790-2583328096-1001"
+  },
+  "sourceFiles": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/README.md",
+      "sha256": "885672a6582c966445ffbaa8b05b26bc92e4219af46315a0a3fad48b517f5b77",
+      "bytes": 1367
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs",
+      "sha256": "f72880b9a9ddfc9199036365f35cadc4296fd087f6543c62f5b590ebc309fb3e",
+      "bytes": 596
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths.rs",
+      "sha256": "c7125bcc87e8710f2b7a6098208f1889319f80ad6de4cd888c366e68a1cade74",
+      "bytes": 9253
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/security.rs",
+      "sha256": "bfbfe177dd7468077d6e1e3a48d88281187562989ce67d0b5c171a55ff6d8ce9",
+      "bytes": 9046
+    },
+    {
+      "path": "test/windows024-native/.gitignore",
+      "sha256": "517b2c5ebb94b4ec644cc7999710d327942ee37d73168930b0c6f5f4b44bf6ae",
+      "bytes": 10
+    },
+    {
+      "path": "test/windows024-native/Cargo.lock",
+      "sha256": "2e5f0ffb48e9763dda2953e491daa826e9e172ad2e1ca784fd91d82184b6d6b9",
+      "bytes": 630
+    },
+    {
+      "path": "test/windows024-native/Cargo.toml",
+      "sha256": "2d0ce25c41facf14d5dcbbb8a8f5d46795dd838f8e9ff236b15cef2da91465bd",
+      "bytes": 480
+    },
+    {
+      "path": "test/windows024-native/lib.rs",
+      "sha256": "5903bfd6c22d1361fa09413ece01d03a09c1a4843e52954ec1c52fae04d46d33",
+      "bytes": 3501
+    },
+    {
+      "path": "test/windows024-native/record-checks.ps1",
+      "sha256": "24137bf5e9f7324273843f1a507e86671f324040b73c023378be398a1697afc6",
+      "bytes": 2809
+    }
+  ],
+  "workingTreeStatus": []
+}
