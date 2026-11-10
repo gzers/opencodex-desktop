@@ -1,0 +1,62 @@
+{
+  "recordedAt": "2026-11-10T11:14:16.412973+08:00",
+  "version": "official OpenCodex2.99.0",
+  "source": "npm integrity verified as previously pinned; full official src modules used, not previous extracted-mock test",
+  "codeRefs": [
+    {
+      "path": "src/config.ts",
+      "sha256": "aa7d9df78039a163933abf3aea73f69761dbb539701ceb3cc53bc12fad731ae5"
+    },
+    {
+      "path": "src/config/diagnostics.ts",
+      "sha256": "b05acb066ed4b6495970eb19acb73258c10b6c47ce727d7602fa95006156ccfe"
+    },
+    {
+      "path": "src/config/load-degrade.ts",
+      "sha256": "daf25d418904007d5135c430ccfe870df4902472f6b31315a5a96efc3b7fcc0c"
+    },
+    {
+      "path": "src/config/schema/config-schema.ts",
+      "sha256": "e49256521bff11a081cf68671b248d4f09fc12b0efd9b6495e36630ceaab62c2"
+    },
+    {
+      "path": "src/server/auth-cors.ts",
+      "sha256": "cbe1e432b359b39799b15214d5f6e5f3ace06b9ab280d80f01d0c0d7aefca664"
+    },
+    {
+      "path": "src/server/management/config-routes.ts",
+      "sha256": "e39ceb846909d2e14e88ba005b7800c3de70741b90173d22fea5e633776f28c0"
+    },
+    {
+      "path": "src/server/management/provider-routes.ts",
+      "sha256": "01ce02616e8cf680e7f9a2712e29c19230cb0b61675ba9a043e194150f7aa4e7"
+    },
+    {
+      "path": "src/server/management/provider-capability-config.ts",
+      "sha256": "e2980cc39becdc2637258cea145afabaaa228aa488c1040ff6dc579d9e158ef5"
+    }
+  ],
+  "actualModules": [
+    "loadConfig",
+    "readConfigAdmissionSnapshot",
+    "safeConfigDTO",
+    "withProviderCatalogCapabilityDTO",
+    "providerEditorConfigDTO",
+    "parseProviderEditorConfigDTO",
+    "handleProviderRoutes PUT rejection before remote checks/persistence"
+  ],
+  "reproduction": "4 alias-only cases produce stale without any other process or external content write; loaded runtime drops alias while diagnostics retains it. Invalid sidecar case produces unavailable with still readable valid JSON and displayed provider/key preserved. Missing/invalid-json and actual public model change are independent controls.",
+  "caseCount": 9,
+  "isolation": "sandbox-exec denies all network, all outside fixture writes and reads of real Codex/OpenCodex/Desktop data. HOME/OPENCODEX_HOME/CODEX_HOME point to owned fixture. No server listener or actual client restart.",
+  "deps": "Reused existing dependency directory read-only; Bun1.4.4 and zod4.6.6 match exact official299 declarations; transitive environment is not newly installed/frozen299.",
+  "notClaimed": [
+    "original107020bytes config trigger identified",
+    "original baseline writer found",
+    "original file read OS failure found",
+    "successful full credential migration",
+    "product patched or acceptance passed"
+  ],
+  "productChanged": false,
+  "dailyConfigChanged": false,
+  "evidenceType": "bounded real-module reproduction, not original-device reproduction"
+}

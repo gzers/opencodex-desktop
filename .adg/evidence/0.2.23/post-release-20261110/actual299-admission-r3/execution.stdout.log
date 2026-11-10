@@ -1,0 +1,175 @@
+{
+  "scope": "Actual official299 loadConfig, disk diagnostics, dashboard DTO and provider PUT rejection route; synthetic fixtures; no listening server, remote network or real credentials. Dependency packages reused read-only: Bun1.4.4/zod4.6.6 match declared exact versions; other existing transitive versions not a clean pinned299 install.",
+  "result": "pass",
+  "cases": [
+    {
+      "name": "valid-control",
+      "fileUnchangedByLoad": true,
+      "publicDifferingPaths": [],
+      "loadedProviderCount": 1,
+      "loadedKeyPreserved": true,
+      "diskKind": "read",
+      "diskSource": "file",
+      "diagnosticError": null,
+      "baselineMatchesDisk": true,
+      "route": null,
+      "fileUnchangedByAdmission": true,
+      "fixtureSha256": "93a453bb75f862c7003b4ce640a098847a1cb8613b0d190b8d0a51abd443068e"
+    },
+    {
+      "name": "invalid-provider-alias",
+      "fileUnchangedByLoad": true,
+      "publicDifferingPaths": [
+        "/providers/fixture/alias"
+      ],
+      "loadedProviderCount": 1,
+      "loadedKeyPreserved": true,
+      "diskKind": "read",
+      "diskSource": "file",
+      "diagnosticError": null,
+      "baselineMatchesDisk": false,
+      "route": {
+        "status": 409,
+        "code": "stale_provider_editor_baseline",
+        "error": "provider editor baseline is stale"
+      },
+      "fileUnchangedByAdmission": true,
+      "fixtureSha256": "fef1834eddc01f340cb9f10545af8cd3598e559be99e10ef5092905fc7b35d81"
+    },
+    {
+      "name": "colliding-provider-alias",
+      "fileUnchangedByLoad": true,
+      "publicDifferingPaths": [
+        "/providers/fixture/alias"
+      ],
+      "loadedProviderCount": 1,
+      "loadedKeyPreserved": true,
+      "diskKind": "read",
+      "diskSource": "file",
+      "diagnosticError": null,
+      "baselineMatchesDisk": false,
+      "route": {
+        "status": 409,
+        "code": "stale_provider_editor_baseline",
+        "error": "provider editor baseline is stale"
+      },
+      "fileUnchangedByAdmission": true,
+      "fixtureSha256": "281f32693faf456889a01b69411cd933897dc280594effa49f11f07a1a03b74a"
+    },
+    {
+      "name": "invalid-model-alias",
+      "fileUnchangedByLoad": true,
+      "publicDifferingPaths": [
+        "/providers/fixture/modelAliases/fixture-model"
+      ],
+      "loadedProviderCount": 1,
+      "loadedKeyPreserved": true,
+      "diskKind": "read",
+      "diskSource": "file",
+      "diagnosticError": null,
+      "baselineMatchesDisk": false,
+      "route": {
+        "status": 409,
+        "code": "stale_provider_editor_baseline",
+        "error": "provider editor baseline is stale"
+      },
+      "fileUnchangedByAdmission": true,
+      "fixtureSha256": "477f101a25d940b9f5152453e6991f6c38f2ad150942539aaebae6eeffb29c70"
+    },
+    {
+      "name": "reserved-model-alias",
+      "fileUnchangedByLoad": true,
+      "publicDifferingPaths": [
+        "/providers/fixture/modelAliases/fixture-model"
+      ],
+      "loadedProviderCount": 1,
+      "loadedKeyPreserved": true,
+      "diskKind": "read",
+      "diskSource": "file",
+      "diagnosticError": null,
+      "baselineMatchesDisk": false,
+      "route": {
+        "status": 409,
+        "code": "stale_provider_editor_baseline",
+        "error": "provider editor baseline is stale"
+      },
+      "fileUnchangedByAdmission": true,
+      "fixtureSha256": "7fd9d7da5105e951efdd4307a1099b27573402c837a8e2c35a284343798629dd"
+    },
+    {
+      "name": "invalid-sidecar-instance",
+      "fileUnchangedByLoad": true,
+      "publicDifferingPaths": [],
+      "loadedProviderCount": 1,
+      "loadedKeyPreserved": true,
+      "diskKind": "read",
+      "diskSource": "file",
+      "diagnosticError": "schema_invalid: webSearchSidecar.anthropicInstance: must be anthropic or anthropic2",
+      "baselineMatchesDisk": false,
+      "route": {
+        "status": 409,
+        "code": "provider_config_unavailable",
+        "error": "provider config is unavailable"
+      },
+      "fileUnchangedByAdmission": true,
+      "fixtureSha256": "adbb0a881a2fc6689af150c2f0bf2348baa3a5d862cbdca23efc4f30deecf565"
+    },
+    {
+      "name": "missing-after-load",
+      "fileUnchangedByLoad": true,
+      "publicDifferingPaths": [],
+      "loadedProviderCount": 1,
+      "loadedKeyPreserved": true,
+      "diskKind": "unreadable",
+      "diskSource": "default",
+      "diagnosticError": null,
+      "baselineMatchesDisk": false,
+      "route": {
+        "status": 409,
+        "code": "provider_config_unavailable",
+        "error": "provider config is unavailable"
+      },
+      "fileUnchangedByAdmission": true,
+      "fixtureSha256": null
+    },
+    {
+      "name": "invalid-json-after-load",
+      "fileUnchangedByLoad": true,
+      "publicDifferingPaths": [],
+      "loadedProviderCount": 1,
+      "loadedKeyPreserved": true,
+      "diskKind": "read",
+      "diskSource": "fallback",
+      "diagnosticError": "invalid_json",
+      "baselineMatchesDisk": false,
+      "route": {
+        "status": 409,
+        "code": "provider_config_unavailable",
+        "error": "provider config is unavailable"
+      },
+      "fileUnchangedByAdmission": true,
+      "fixtureSha256": "591cd708e81c0a925553c9e879b398293bd0d60ba805500a30ed767537467393"
+    },
+    {
+      "name": "models-changed-after-load",
+      "fileUnchangedByLoad": true,
+      "publicDifferingPaths": [
+        "/providers/fixture/models/1"
+      ],
+      "loadedProviderCount": 1,
+      "loadedKeyPreserved": true,
+      "diskKind": "read",
+      "diskSource": "file",
+      "diagnosticError": null,
+      "baselineMatchesDisk": false,
+      "route": {
+        "status": 409,
+        "code": "stale_provider_editor_baseline",
+        "error": "provider editor baseline is stale"
+      },
+      "fileUnchangedByAdmission": true,
+      "fixtureSha256": "b34a2f6144b23fd280f378bdb397c2664456936d279a0adfd92883d89143ede8"
+    }
+  ],
+  "productionConfigModified": false
+}
