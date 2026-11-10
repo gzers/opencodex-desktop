@@ -1,0 +1,10 @@
+{
+  "codeCommit": "2d68a28bc",
+  "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+  "sourceSha256": "ae915ddf37ff94d195c74cae4d731c68a52801fb74cfa6d61d0874c35e8e4559",
+  "observedSource": "environment() overwrites HOME and OPENCODEX_HOME with LaunchSpec.home; create_suspended pins that private HOME",
+  "productRequirement": "user_profile and opencodex_home are separate; preserve original private opencodex-home binding",
+  "nativeFailureClaimed": false,
+  "WindowsRemediationDispatchedByHost": false,
+  "codeModifiedInWindowsOwnedFile": false
+}

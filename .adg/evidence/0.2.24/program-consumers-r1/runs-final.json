@@ -1,0 +1,38 @@
+[
+  {
+    "label": "handle-final",
+    "filter": "modules::runtime::tests::",
+    "exit": 0,
+    "elapsedSeconds": 0.8199151249136776,
+    "summary": [
+      "test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 2042 filtered out; finished in 0.15s"
+    ]
+  },
+  {
+    "label": "source-dto-final",
+    "filter": "commands::runtime::tests::source_dto_",
+    "exit": 0,
+    "elapsedSeconds": 0.03244295786134899,
+    "summary": [
+      "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2056 filtered out; finished in 0.01s"
+    ]
+  },
+  {
+    "label": "resource-source-final",
+    "filter": "fixed_resource_resolver_authenticates_descriptor_and_both_bundled_and_staged_sources",
+    "exit": 0,
+    "elapsedSeconds": 0.030034750001505017,
+    "summary": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2058 filtered out; finished in 0.01s"
+    ]
+  },
+  {
+    "label": "attested-final",
+    "filter": "infrastructure::attested_status::tests::",
+    "exit": 0,
+    "elapsedSeconds": 2.344787959009409,
+    "summary": [
+      "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 2052 filtered out; finished in 2.33s"
+    ]
+  }
+]

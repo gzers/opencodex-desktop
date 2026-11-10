@@ -1,0 +1,14 @@
+# Windows W0产品接入前接口修正 r1
+
+2026-11-11，本机review来源：main2d68a28bc，贡献b2e89665d；源码infrastructure/windows_official_runtime024/process.rs的LaunchSpec.home及environment()。这是独立原语产品接入问题，不改已完成组件测试的原结果，不声称原生全链已经出错。
+
+当前environment()对HOME和OPENCODEX_HOME强制写同一个spec.home，且PinnedDirectory::open_private(spec.home)与绑定home_id固定该路径。实际产品需要两个不同输入：
+
+- user_profile：真实当前OS用户目录，HOME/USERPROFILE按它设置；不得改OS用户环境、系统HOME或权限。
+- opencodex_home：当前绑定实例的OpenCodex数据目录，OPENCODEX_HOME按它设置并继续用于私有目录pin/绑定/记录/归属检查，不能改去pin宽权限用户Profile。
+
+共享ProcessContext已经区分EnvironmentPolicy.home和opencodex_home；Windows原语必须保留这种区别。即使environment传入正确HOME，目前循环仍会覆盖，单靠上层传参不能解决。官方包自己的源码/默认路径不改。
+
+Windows下一次独占提交：将LaunchSpec区分这两个路径并据此生成环境，RootBinding继续证明opencodex_home。新进程fixture分别打印/验证HOME、USERPROFILE、OPENCODEX_HOME，使用两个不同合成目录；篡改实例HOME/SID/PID/FILETIME/Job等原拒绝用例保持。只跑受影响组件/反例，保持原deadline/安全权限，不重复r5单用户、双SID或完整官方服务。对现有本线fixture适配后提交推送代码和docs证据SHA，主线接线仍由本对话处理。
+
+如Windows线尚未消费此修正，Mac继续独立开发，相关产品原生接线保持未完。此文不是已发送的宿主消息或已接令回执；沿Git提供真实源码/合同，不虚构Windows新结果。
