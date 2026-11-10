@@ -1,0 +1,27 @@
+{
+  "pass": true,
+  "allFixturePortsGone": true,
+  "sourceSha256": "d8cf24134606b5af89c68aa982b98fcd717630885e60fc89f3cfa8a4ba4ad42e",
+  "cases": [
+    {
+      "port": 60013,
+      "family": "InterNetwork",
+      "observed": {
+        "family": "IPv4",
+        "address": "127.0.0.1",
+        "port": 60013,
+        "pid": 105072
+      }
+    },
+    {
+      "port": 60014,
+      "family": "InterNetworkV6",
+      "observed": {
+        "family": "IPv6",
+        "address": "::1",
+        "port": 60014,
+        "pid": 105072
+      }
+    }
+  ]
+}

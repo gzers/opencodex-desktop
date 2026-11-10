@@ -1,0 +1,145 @@
+{
+  "status": "consistent-recorded-failure",
+  "accepted": false,
+  "restorationChainPassed": false,
+  "docsBaseline": "7b30abcdfe4b95808d260af13d1737323bbcd2aa",
+  "actualSourceCommit": "709baa59d03a15fa46820d01ce3a28e605ecb51f",
+  "budgets": {
+    "startMs": 14924,
+    "statusMs": 9,
+    "stopMs": 5597
+  },
+  "passed": {
+    "startupReceiptAndIdentity": true,
+    "readyAndHealth": true,
+    "agentOriginalBytesAndAcl": true,
+    "grokChangedThenOriginalBytes": true,
+    "officialLocksReleasedAndReacquired": true,
+    "allThreeActualListenersGone": true,
+    "originalExitCode": 0,
+    "jobEmpty": true
+  },
+  "failed": {
+    "codexConfigOriginalBytes": true,
+    "catalogOriginalBytes": true,
+    "completeOriginalTree": true
+  },
+  "clientDelta": {
+    "extraFiles": [
+      {
+        "relative": "codex/.opencodex-native-main.claim.sqlite",
+        "length": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "relative": "codex/.opencodex-native-main.owner.sqlite",
+        "length": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "relative": "codex/models_cache.json",
+        "length": 2375,
+        "sha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51"
+      },
+      {
+        "relative": "codex/opencodex-catalog-audit.jsonl",
+        "length": 286,
+        "sha256": "2239fd7e92ed26ae406ff983c4e329019b578bbf30d68b5d6cd565f83e7a67b2"
+      },
+      {
+        "relative": "grok/config.toml.bak-opencodex",
+        "length": 122,
+        "sha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe"
+      }
+    ],
+    "afterRawContentLimit": "Changed config/catalog after bytes were not serialized; original result and SHA256/inventory are preserved, Profile was removed by authorized cleanup. Do not infer unrecorded raw bytes from source.",
+    "fullOriginalTreeRestored": false,
+    "changedFiles": [
+      {
+        "after": "cba8830e7bd0df1cc8f54b63a1ff1bd75e9af34a7d46c2cf756d7064c9c0d2ca",
+        "before": "a5a3feb8edc5b0e15e47ce38bd218bfaaa32bca141faaf2031b0a6b90f9e5a5e",
+        "relative": "codex/config.toml"
+      },
+      {
+        "after": "07a99e78c40f29b3aba65ae99eb7dd789670616d8a3c6b8dc2c558d77ab207de",
+        "before": "cfab95ffae957d49aa3ebe4520db56774a7339c77da67668b0222ce77e93d6f5",
+        "relative": "codex/opencodex-catalog.json"
+      }
+    ]
+  },
+  "scope": {
+    "smallAgentCases": 9,
+    "actualOfficialWindowsLockKinds": 2,
+    "fullSuite": false,
+    "productionCodeChanged": false,
+    "release": false
+  },
+  "sources": [
+    {
+      "attempt": "attempt-r2-01",
+      "commit": "b19fc72f0bf0a9b6d95175abab1da3f0731fb4e0",
+      "path": "Native.cs",
+      "sha256": "d8cf24134606b5af89c68aa982b98fcd717630885e60fc89f3cfa8a4ba4ad42e"
+    },
+    {
+      "attempt": "attempt-r2-01",
+      "commit": "b19fc72f0bf0a9b6d95175abab1da3f0731fb4e0",
+      "path": "host-r2.ps1",
+      "sha256": "b346c77e4cd34ab0d9aba51e8dbfcc7849f4dca6d8e3b2c2d946052ed0ec2f2a"
+    },
+    {
+      "attempt": "attempt-r2-01",
+      "commit": "b19fc72f0bf0a9b6d95175abab1da3f0731fb4e0",
+      "path": "Recovery.cs",
+      "sha256": "ccce98121db9c56c25e51bd0b21603329b08cb1d3a91fb9afebb2df6e2e8cac1"
+    },
+    {
+      "attempt": "attempt-r2-01",
+      "commit": "b19fc72f0bf0a9b6d95175abab1da3f0731fb4e0",
+      "path": "lock-worker.ts",
+      "sha256": "fc6c20bc26818d2371970c061470088a4be26d2359a6d677816c38c884fc0a5e"
+    },
+    {
+      "attempt": "attempt-r2-01",
+      "commit": "b19fc72f0bf0a9b6d95175abab1da3f0731fb4e0",
+      "path": "run.ps1",
+      "sha256": "1a4f72fcfb7c3d8a78a66cd110ad37363e089bbc060c6618b36562dbd2791041"
+    },
+    {
+      "attempt": "attempt-r2-02",
+      "commit": "709baa59d03a15fa46820d01ce3a28e605ecb51f",
+      "path": "Native.cs",
+      "sha256": "fcf3d01b445e6204b2a4bbaad161edf292ce855f82738e9ed686ed452db0679c"
+    },
+    {
+      "attempt": "attempt-r2-02",
+      "commit": "709baa59d03a15fa46820d01ce3a28e605ecb51f",
+      "path": "host-r2.ps1",
+      "sha256": "6029a96b0eaa453a480e36ba8f8733a33d88f454783234d9bab4859e43f94e1a"
+    },
+    {
+      "attempt": "attempt-r2-02",
+      "commit": "709baa59d03a15fa46820d01ce3a28e605ecb51f",
+      "path": "Recovery.cs",
+      "sha256": "ccce98121db9c56c25e51bd0b21603329b08cb1d3a91fb9afebb2df6e2e8cac1"
+    },
+    {
+      "attempt": "attempt-r2-02",
+      "commit": "709baa59d03a15fa46820d01ce3a28e605ecb51f",
+      "path": "lock-worker.ts",
+      "sha256": "fc6c20bc26818d2371970c061470088a4be26d2359a6d677816c38c884fc0a5e"
+    },
+    {
+      "attempt": "attempt-r2-02",
+      "commit": "709baa59d03a15fa46820d01ce3a28e605ecb51f",
+      "path": "run.ps1",
+      "sha256": "355b130aa3e2a56d95b3839bd0cbf30dadb00f3ccc3145a755e349ec713407a5"
+    }
+  ],
+  "limits": [
+    "Execution-time HMAC verification cannot be recomputed offline without omitted secret.",
+    "Synchronous native compensation rollback and separate-process race cases passed; abrupt-crash/durable-restart recovery was not validated.",
+    "Changed config/catalog after raw bytes were omitted in actual attempt and cannot be reconstructed after Profile cleanup. Future capture-only code was syntax checked, not rerun as a service.",
+    "Stable-lock exception was not adopted. Even adopting only that exception would not resolve the other changed/new files."
+  ]
+}

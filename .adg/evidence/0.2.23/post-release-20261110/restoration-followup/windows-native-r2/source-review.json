@@ -1,0 +1,26 @@
+{
+  "kind": "read-only fixed-official source review; not an execution substitute",
+  "configRestore": {
+    "file": "src/codex/inject/restore.ts",
+    "sha256": "7dc77a8b0af53b24513c83b904a59192c9df17976a02cae97ad7bec84f24890b",
+    "inferenceLimit": "No root-cause claim for actual config byte difference; original hash and after hash differ in actual evidence."
+  },
+  "catalogRestore": {
+    "file": "src/codex/catalog/restore.ts",
+    "observedSourceBehavior": "restore builds a native projection and serializes JSON with two-space indentation and LF; it also filters retired native model rows. This source does not promise original byte replay.",
+    "sha256": "c22c73dc4691b24bee39b9b75ed0c3343acaf1e4fd543925b63a66ea71a3a4b8",
+    "inferenceLimit": "The actual failed after bytes were not captured. This source behavior alone does not establish the exact cause or semantic contents of the Windows after image."
+  },
+  "networkInputs": {
+    "models": [
+      "gpt-6.1-sol"
+    ],
+    "noPublicModelDiscoveryRequested": true,
+    "baseUrl": "https://fixture.invalid/v1",
+    "limit": "Synthetic static input and no model/OAuth action. No claim of a general-purpose OS network sandbox or network traffic audit.",
+    "liveModels": false,
+    "provider": "fixture",
+    "noRealModelCallIssued": true,
+    "oauthCredentialsProvisioned": false
+  }
+}

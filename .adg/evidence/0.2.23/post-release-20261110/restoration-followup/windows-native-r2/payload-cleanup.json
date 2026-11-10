@@ -1,0 +1,92 @@
+{
+  "utc": "2026-11-10T11:58:12.1227419Z",
+  "result": "pass",
+  "attempts": [
+    {
+      "accountExists": false,
+      "accountSid": "S-1-5-21-587408064-856152790-2583328096-1026",
+      "payloads": [
+        {
+          "path": "C:\\ProgramData\\ocxd299-proof-b68dabed7a\\input",
+          "existsAfter": false
+        },
+        {
+          "path": "C:\\ProgramData\\ocxd299-proof-b68dabed7a\\archive",
+          "existsAfter": false
+        },
+        {
+          "path": "C:\\ProgramData\\ocxd299-proof-b68dabed7a\\powershell",
+          "existsAfter": false
+        },
+        {
+          "path": "C:\\ProgramData\\ocxd299-proof-b68dabed7a\\code",
+          "existsAfter": false
+        }
+      ],
+      "failedDirectoryPreserved": true,
+      "ports": [],
+      "attempt": "attempt-r2-01",
+      "profileRecords": [],
+      "originalResultPreserved": true,
+      "profileDirectoryExists": false,
+      "scheduledTask": "no scheduled task creation call in this harness; not used"
+    },
+    {
+      "accountExists": false,
+      "accountSid": "S-1-5-21-587408064-856152790-2583328096-1027",
+      "payloads": [
+        {
+          "path": "C:\\ProgramData\\ocxd299-proof-b927d10cd7\\input",
+          "existsAfter": false
+        },
+        {
+          "path": "C:\\ProgramData\\ocxd299-proof-b927d10cd7\\archive",
+          "existsAfter": false
+        },
+        {
+          "path": "C:\\ProgramData\\ocxd299-proof-b927d10cd7\\powershell",
+          "existsAfter": false
+        },
+        {
+          "path": "C:\\ProgramData\\ocxd299-proof-b927d10cd7\\code",
+          "existsAfter": false
+        }
+      ],
+      "failedDirectoryPreserved": true,
+      "ports": [
+        {
+          "scope": "post-execution-cleanup-readback; does not retroactively satisfy any action budget",
+          "port": 54968,
+          "listenerOwners": []
+        },
+        {
+          "scope": "post-execution-cleanup-readback; does not retroactively satisfy any action budget",
+          "port": 55015,
+          "listenerOwners": []
+        },
+        {
+          "scope": "post-execution-cleanup-readback; does not retroactively satisfy any action budget",
+          "port": 55068,
+          "listenerOwners": []
+        }
+      ],
+      "attempt": "attempt-r2-02",
+      "profileRecords": [],
+      "originalResultPreserved": true,
+      "profileDirectoryExists": false,
+      "scheduledTask": "no scheduled task creation call in this harness; not used"
+    }
+  ],
+  "preparation": [
+    {
+      "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd-official299-input-20261110",
+      "existsAfter": false
+    },
+    {
+      "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd-official299-deps-20261110",
+      "existsAfter": false
+    }
+  ],
+  "error": null,
+  "normalStopResultsUnchanged": true
+}

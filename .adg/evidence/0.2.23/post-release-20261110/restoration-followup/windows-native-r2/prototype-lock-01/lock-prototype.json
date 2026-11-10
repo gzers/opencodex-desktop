@@ -1,0 +1,257 @@
+{
+  "checks": [
+    {
+      "sddlAfter": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:PAI(A;;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)",
+      "holderExit": {
+        "identity": {
+          "pid": 94652,
+          "filetime": "134387849558180336",
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+          "session": 2,
+          "image": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd-official299-deps-20261110\\node_modules\\@oven\\bun-windows-x64\\bin\\bun.exe",
+          "elevated": false,
+          "elevationType": 3
+        },
+        "result": {
+          "pid": 94652,
+          "platform": "win32",
+          "kind": "claim",
+          "mode": "hold",
+          "acquired": true,
+          "released": true,
+          "code": null,
+          "identity": {
+            "claim": {
+              "dev": "247287385",
+              "ino": "2251799814782926",
+              "links": "1",
+              "file": true,
+              "symlink": false
+            },
+            "owner": {
+              "unknown": true,
+              "code": "ENOENT"
+            }
+          }
+        },
+        "exitCode": 0,
+        "jobActive": 0
+      },
+      "blocked": {
+        "identity": {
+          "pid": 86744,
+          "filetime": "134387849561210418",
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+          "session": 2,
+          "image": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd-official299-deps-20261110\\node_modules\\@oven\\bun-windows-x64\\bin\\bun.exe",
+          "elevated": false,
+          "elevationType": 3
+        },
+        "result": {
+          "pid": 86744,
+          "platform": "win32",
+          "kind": "claim",
+          "mode": "probe",
+          "acquired": false,
+          "released": false,
+          "code": "NATIVE_MAIN_CLAIM_BUSY",
+          "identity": {
+            "claim": {
+              "dev": "247287385",
+              "ino": "2251799814782926",
+              "links": "1",
+              "file": true,
+              "symlink": false
+            },
+            "owner": {
+              "unknown": true,
+              "code": "ENOENT"
+            }
+          }
+        },
+        "exitCode": 0,
+        "jobActive": 0
+      },
+      "fileIdentityAfter": "247287385:524288:1097678",
+      "sddlBefore": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:PAI(A;;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)",
+      "kind": "claim",
+      "pass": true,
+      "reacquired": {
+        "identity": {
+          "pid": 97856,
+          "filetime": "134387849563823041",
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+          "session": 2,
+          "image": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd-official299-deps-20261110\\node_modules\\@oven\\bun-windows-x64\\bin\\bun.exe",
+          "elevated": false,
+          "elevationType": 3
+        },
+        "result": {
+          "pid": 97856,
+          "platform": "win32",
+          "kind": "claim",
+          "mode": "probe",
+          "acquired": true,
+          "released": true,
+          "code": null,
+          "identity": {
+            "claim": {
+              "dev": "247287385",
+              "ino": "2251799814782926",
+              "links": "1",
+              "file": true,
+              "symlink": false
+            },
+            "owner": {
+              "unknown": true,
+              "code": "ENOENT"
+            }
+          }
+        },
+        "exitCode": 0,
+        "jobActive": 0
+      },
+      "fileRetained": true,
+      "fileIdentityBefore": "247287385:524288:1097678"
+    },
+    {
+      "sddlAfter": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:PAI(A;;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)",
+      "holderExit": {
+        "identity": {
+          "pid": 108184,
+          "filetime": "134387849566068009",
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+          "session": 2,
+          "image": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd-official299-deps-20261110\\node_modules\\@oven\\bun-windows-x64\\bin\\bun.exe",
+          "elevated": false,
+          "elevationType": 3
+        },
+        "result": {
+          "pid": 108184,
+          "platform": "win32",
+          "kind": "owner",
+          "mode": "hold",
+          "acquired": true,
+          "released": true,
+          "code": null,
+          "ownerSnapshot": {
+            "status": "held",
+            "homeId": "56acfc21d2b371587dc125731dcb9007b002c44bb6a0207f67f7fbfa43a0a9f3"
+          },
+          "identity": {
+            "claim": {
+              "dev": "247287385",
+              "ino": "2251799814782926",
+              "links": "1",
+              "file": true,
+              "symlink": false
+            },
+            "owner": {
+              "dev": "247287385",
+              "ino": "1407374884650970",
+              "links": "1",
+              "file": true,
+              "symlink": false
+            }
+          }
+        },
+        "exitCode": 0,
+        "jobActive": 0
+      },
+      "blocked": {
+        "identity": {
+          "pid": 60920,
+          "filetime": "134387849568463696",
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+          "session": 2,
+          "image": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd-official299-deps-20261110\\node_modules\\@oven\\bun-windows-x64\\bin\\bun.exe",
+          "elevated": false,
+          "elevationType": 3
+        },
+        "result": {
+          "pid": 60920,
+          "platform": "win32",
+          "kind": "owner",
+          "mode": "probe",
+          "acquired": false,
+          "released": true,
+          "code": "NATIVE_MAIN_OWNER_BUSY",
+          "ownerSnapshot": {
+            "status": "contended",
+            "homeId": "56acfc21d2b371587dc125731dcb9007b002c44bb6a0207f67f7fbfa43a0a9f3"
+          },
+          "identity": {
+            "claim": {
+              "dev": "247287385",
+              "ino": "2251799814782926",
+              "links": "1",
+              "file": true,
+              "symlink": false
+            },
+            "owner": {
+              "dev": "247287385",
+              "ino": "1407374884650970",
+              "links": "1",
+              "file": true,
+              "symlink": false
+            }
+          }
+        },
+        "exitCode": 0,
+        "jobActive": 0
+      },
+      "fileIdentityAfter": "247287385:327680:1097690",
+      "sddlBefore": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:PAI(A;;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)",
+      "kind": "owner",
+      "pass": true,
+      "reacquired": {
+        "identity": {
+          "pid": 22404,
+          "filetime": "134387849571105259",
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+          "session": 2,
+          "image": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd-official299-deps-20261110\\node_modules\\@oven\\bun-windows-x64\\bin\\bun.exe",
+          "elevated": false,
+          "elevationType": 3
+        },
+        "result": {
+          "pid": 22404,
+          "platform": "win32",
+          "kind": "owner",
+          "mode": "probe",
+          "acquired": true,
+          "released": true,
+          "code": null,
+          "ownerSnapshot": {
+            "status": "held",
+            "homeId": "56acfc21d2b371587dc125731dcb9007b002c44bb6a0207f67f7fbfa43a0a9f3"
+          },
+          "identity": {
+            "claim": {
+              "dev": "247287385",
+              "ino": "2251799814782926",
+              "links": "1",
+              "file": true,
+              "symlink": false
+            },
+            "owner": {
+              "dev": "247287385",
+              "ino": "1407374884650970",
+              "links": "1",
+              "file": true,
+              "symlink": false
+            }
+          }
+        },
+        "exitCode": 0,
+        "jobActive": 0
+      },
+      "fileRetained": true,
+      "fileIdentityBefore": "247287385:327680:1097690"
+    }
+  ],
+  "pass": true,
+  "nativeSourceSha256": "d8cf24134606b5af89c68aa982b98fcd717630885e60fc89f3cfa8a4ba4ad42e",
+  "workerSourceSha256": "fc6c20bc26818d2371970c061470088a4be26d2359a6d677816c38c884fc0a5e",
+  "utc": "2026-11-10T11:49:17.3481909Z"
+}

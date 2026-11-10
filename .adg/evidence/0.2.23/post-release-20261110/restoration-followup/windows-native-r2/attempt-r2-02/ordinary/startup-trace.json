@@ -1,0 +1,28 @@
+[
+  {
+    "elapsedMs": 99,
+    "stage": "resumed",
+    "pid": 10792
+  },
+  {
+    "elapsedMs": 8861,
+    "stage": "ready-probe",
+    "body": "{\"service\":\"opencodex\",\"version\":\"2.99.0\",\"uptime\":8.734620999999999,\"pid\":10792,\"port\":54968,\"status\":\"pending\",\"protocol\":1,\"minimumClientProtocol\":1,\"managementUrl\":\"http://127.0.0.1:54968\",\"features\":[\"quota-pool/1\",\"fallback-policy/1\",\"link-management-relay\",\"served-by-header\",\"relay-auth/2\",\"link-peer-report/1\"]}",
+    "completionLines": 0,
+    "http": 503
+  },
+  {
+    "elapsedMs": 14798,
+    "stage": "ready-probe",
+    "body": "{\"service\":\"opencodex\",\"version\":\"2.99.0\",\"uptime\":14.6739594,\"pid\":10792,\"port\":54968,\"status\":\"ready\",\"protocol\":1,\"minimumClientProtocol\":1,\"managementUrl\":\"http://127.0.0.1:54968\",\"features\":[\"quota-pool/1\",\"fallback-policy/1\",\"link-management-relay\",\"served-by-header\",\"relay-auth/2\",\"link-peer-report/1\"]}",
+    "completionLines": 0,
+    "http": 200
+  },
+  {
+    "elapsedMs": 14915,
+    "stage": "ready-probe",
+    "body": "{\"service\":\"opencodex\",\"version\":\"2.99.0\",\"uptime\":14.791653,\"pid\":10792,\"port\":54968,\"status\":\"ready\",\"protocol\":1,\"minimumClientProtocol\":1,\"managementUrl\":\"http://127.0.0.1:54968\",\"features\":[\"quota-pool/1\",\"fallback-policy/1\",\"link-management-relay\",\"served-by-header\",\"relay-auth/2\",\"link-peer-report/1\"]}",
+    "completionLines": 1,
+    "http": 200
+  }
+]

@@ -1,0 +1,37 @@
+{
+  "runtimePayloadMatched": true,
+  "rootPinnedLockMatches": true,
+  "comparedPayloadFiles": 6733,
+  "differences": [
+    {
+      "path": "node_modules/.package-lock.json",
+      "before": {
+        "path": "node_modules/.package-lock.json",
+        "size": 51850,
+        "sha256": "45455db27d33d17240c028f86f975584e15964ae56e62131ac1919c0c2000b35"
+      },
+      "after": {
+        "path": "node_modules/.package-lock.json",
+        "size": 53201,
+        "sha256": "8d34379dec6be3e61ca45d0c4afdc89d94abc05248f5db25237a0fbcf763ae27"
+      }
+    },
+    {
+      "path": "package.json",
+      "before": {
+        "path": "package.json",
+        "size": 149,
+        "sha256": "756d339ada8ac36dea25a380019e1f7456790e56d5eb4ddf7345396d02eaf72f"
+      },
+      "after": {
+        "path": "package.json",
+        "size": 153,
+        "sha256": "dccc6d6bb0fc29c119a794d2362869446c827a6f242b8ccf8279852ff09039db"
+      }
+    }
+  ],
+  "allInputBytesIdentical": false,
+  "initialStrictComparison": "failed: npm ci regenerated its private node_modules/.package-lock.json and fixture root manifest formatting; failure is preserved explicitly",
+  "reason": "all dependency executable/source/data bytes and the fixed root package-lock.json match; only these two npm preparation metadata files differ",
+  "lifecycleScriptsExecuted": false
+}
