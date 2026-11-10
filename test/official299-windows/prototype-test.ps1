@@ -53,6 +53,7 @@ try {
 } catch {$checks.Add(@{case='first-error';pass=$false;type=$_.Exception.GetType().FullName;message=$_.Exception.Message;line=$_.InvocationInfo.ScriptLineNumber})}
 finally {
  if($p){$p.ForceOwnedCleanup();$checks.Add(@{case='failure-owned-cleanup';members=@($p.Members());active=$p.Active()});$p.Dispose()};if($g){$g.Dispose()}
- [IO.File]::WriteAllText((Join-Path $OutputDirectory 'prototype-result.json'),(@{pass=$passed;checks=$checks.ToArray();scope='test host native primitive counterexamples; no official runtime launched';utc=[datetime]::UtcNow.ToString('o')}|ConvertTo-Json -Depth 20))
+ $source=@{};foreach($leaf in @('Native.cs','policy.ps1','prototype-test.ps1')){$source[$leaf]=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $leaf) -Algorithm SHA256).Hash.ToLowerInvariant()}
+ [IO.File]::WriteAllText((Join-Path $OutputDirectory 'prototype-result.json'),(@{pass=$passed;checks=$checks.ToArray();sourceSha256=$source;scope='test host native primitive counterexamples; no official runtime launched';utc=[datetime]::UtcNow.ToString('o')}|ConvertTo-Json -Depth 20))
 }
 if(!$passed){exit 1}
