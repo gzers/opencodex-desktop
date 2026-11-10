@@ -1,0 +1,16 @@
+4 | const [beforeFile,readyFile,preFile,afterFile,contextFile,scopeFile,out]=process.argv.slice(2);if(!out)throw Error('seven input/output paths required');
+5 | const sha=(b:Buffer)=>createHash('sha256').update(b).digest('hex'),stages=['before','ready','pre-stop','official-stop'];
+6 | const raw=[beforeFile,readyFile,preFile,afterFile].map(p=>{const b=readFileSync(p);if(b.length>8*1024*1024)throw Error('stage too large');return b});
+7 | const rows=raw.map(b=>JSON.parse(b.toString('utf8'))),context=JSON.parse(readFileSync(contextFile,'utf8')),scope=JSON.parse(readFileSync(scopeFile,'utf8'));
+8 | context.stageBytesSha256={};context.stageCanonicalSha256={};for(let i=0;i<stages.length;i++){context.stageBytesSha256[stages[i]]=sha(raw[i]);context.stageCanonicalSha256[stages[i]]=sha(Buffer.from(JSON.stringify(rows[i])))}
+9 | const result=validate(rows[0],rows[1],rows[2],rows[3],context.runtime.pid,{context,scope});writeFileSync(out,JSON.stringify(result,null,2),{flag:'wx'});
+                                                                                               ^
+EEXIST: file already exists, open 'C:\Users\15119\AppData\Local\Temp\ocxd299-r5-cache-bridge-01\authorization.json'
+    path: "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd299-r5-cache-bridge-01\\authorization.json",
+ syscall: "open",
+   errno: -4075,
+    code: "EEXIST"
+
+      at C:\Users\15119\.codex\worktrees\official299-windows-test\code\test\official299-windows\cache-candidate-cli.ts:9:92
+
+Bun v1.4.4 (Windows x64)

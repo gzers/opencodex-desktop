@@ -1,0 +1,15 @@
+{
+  "stage": "extra offline inspection after original cleanup, not in-budget new evidence",
+  "extendedExactAllOriginalSddlCheckPassed": false,
+  "deltas": [
+    {
+      "sddlBefore": "O:S-1-5-21-587408064-856152790-2583328096-1029G:S-1-5-21-587408064-856152790-2583328096-513D:AI(A;ID;FA;;;SY)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1029)",
+      "path": "grok/config.toml",
+      "bytesEqual": true,
+      "ownerAfter": "S-1-5-21-587408064-856152790-2583328096-1029",
+      "sddlAfter": "O:S-1-5-21-587408064-856152790-2583328096-1029G:S-1-5-21-587408064-856152790-2583328096-513D:PAI(A;;FA;;;S-1-5-21-587408064-856152790-2583328096-1029)",
+      "ownerBefore": "S-1-5-21-587408064-856152790-2583328096-1029"
+    }
+  ],
+  "originalRecordedAccepted": true
+}

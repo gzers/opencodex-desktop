@@ -1,0 +1,12 @@
+{"state":"apply-intent","planSha256":"0200394c804c929585073385881ec8de929cc61551444bbfa25b49004aaa7e1d","transactionId":"3b259f49da5c4a3c97151d763185a5e7","utc":"2026-11-10T13:31:17.8492841Z"}
+{"state":"before-operation","path":"codex/config.toml","expected":"file","want":"file"}
+{"state":"after-operation","path":"codex/config.toml","want":"file"}
+{"state":"before-operation","path":"codex/opencodex-catalog.json","expected":"file","want":"file"}
+{"state":"after-operation","path":"codex/opencodex-catalog.json","want":"file"}
+{"state":"before-operation","path":"codex/models_cache.json","expected":"file","want":"absent"}
+{"state":"after-operation","path":"codex/models_cache.json","want":"absent"}
+{"state":"before-operation","path":"codex/opencodex-catalog-audit.jsonl","expected":"file","want":"absent"}
+{"state":"after-operation","path":"codex/opencodex-catalog-audit.jsonl","want":"absent"}
+{"state":"before-operation","path":"grok/config.toml.bak-opencodex","expected":"file","want":"absent"}
+{"state":"after-operation","path":"grok/config.toml.bak-opencodex","want":"absent"}
+{"state":"committed-originals","planSha256":"0200394c804c929585073385881ec8de929cc61551444bbfa25b49004aaa7e1d"}

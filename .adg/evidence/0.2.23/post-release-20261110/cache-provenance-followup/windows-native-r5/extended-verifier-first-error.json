@@ -1,0 +1,11 @@
+{
+  "error": "ERR_ASSERTION: Grok main config DACL differs",
+  "actualSddl": "O:S-1-5-21-587408064-856152790-2583328096-1029G:S-1-5-21-587408064-856152790-2583328096-513D:PAI(A;;FA;;;S-1-5-21-587408064-856152790-2583328096-1029)",
+  "result": "fail",
+  "originalLiveRunModified": false,
+  "serviceRerun": false,
+  "sourceCommit": "c9bae4f62e345a9718820e323c79b6e7155b53eb",
+  "check": "exact SDDL equality of every captured original",
+  "followup": "retain this stricter offline failure separately; verify required five-path/Agent exact permissions and private owner/DACL for other originals, disclosing Grok hardening",
+  "originalSddl": "O:S-1-5-21-587408064-856152790-2583328096-1029G:S-1-5-21-587408064-856152790-2583328096-513D:AI(A;ID;FA;;;SY)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1029)"
+}
