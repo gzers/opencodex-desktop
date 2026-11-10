@@ -32,6 +32,7 @@ public static class Native {
   [DllImport("kernel32", SetLastError=true)] public static extern bool GetExitCodeProcess(IntPtr h,out uint code);
   [DllImport("kernel32", SetLastError=true)] public static extern bool GetProcessTimes(IntPtr h,out long created,out long exit,out long kernel,out long user);
   [DllImport("kernel32", SetLastError=true)] public static extern uint GetProcessId(IntPtr h);
+  [DllImport("kernel32", SetLastError=true)] public static extern IntPtr OpenProcess(uint rights,bool inherit,uint pid);
   [DllImport("kernel32", SetLastError=true)] public static extern bool ProcessIdToSessionId(uint pid,out uint session);
   [DllImport("kernel32", SetLastError=true, CharSet=CharSet.Unicode)] public static extern bool QueryFullProcessImageNameW(IntPtr h,uint flags,StringBuilder path,ref uint length);
   [DllImport("advapi32", SetLastError=true)] public static extern bool OpenProcessToken(IntPtr h,uint rights,out IntPtr token);
@@ -148,6 +149,17 @@ public sealed class Owned : IDisposable {
   public uint ExitCode() { if(!Exited()) throw new InvalidOperationException("original handle not signalled"); uint code; Native.Check(Native.GetExitCodeProcess(Process,out code)); return code; }
   public uint Active() { var b=Marshal.AllocHGlobal(48); try { int n; Native.Check(Native.QueryInformationJobObject(Job,1,b,48,out n)); return unchecked((uint)Marshal.ReadInt32(b,40)); } finally {Marshal.FreeHGlobal(b);} }
   public uint Limits() { var b=Marshal.AllocHGlobal(144);try{int n;Native.Check(Native.QueryInformationJobObject(Job,9,b,144,out n));return unchecked((uint)Marshal.ReadInt32(b,16));}finally{Marshal.FreeHGlobal(b);} }
+  public Dictionary<string,object>[] MemberIdentities() {
+    var facts=new List<Dictionary<string,object>>();
+    foreach(uint id in Members()) {
+      IntPtr h=Native.OpenProcess(0x101000,false,id);
+      if(h==IntPtr.Zero){facts.Add(new Dictionary<string,object>{{"pid",id},{"state","unknown"},{"win32",Marshal.GetLastWin32Error()}});continue;}
+      try { bool member;Native.Check(Native.IsProcessInJob(h,Job,out member));if(!member)throw new InvalidOperationException("PID generation no longer belongs to retained Job");var fact=Native.Observe(h);fact["state"]="same-retained-job";facts.Add(fact); }
+      catch(Exception e){facts.Add(new Dictionary<string,object>{{"pid",id},{"state","unknown"},{"errorType",e.GetType().FullName}});}
+      finally{Native.CloseHandle(h);}
+    }
+    return facts.ToArray();
+  }
   public uint[] Members() { int size=65536; var b=Marshal.AllocHGlobal(size); try { int n; Native.Check(Native.QueryInformationJobObject(Job,3,b,size,out n)); int assigned=Marshal.ReadInt32(b),count=Marshal.ReadInt32(b,4); if(assigned!=count || count<0 || count>(size-8)/IntPtr.Size) throw new InvalidOperationException("incomplete Job PID list"); var ids=new uint[count];for(int i=0;i<count;i++) ids[i]=unchecked((uint)Marshal.ReadIntPtr(b,8+i*IntPtr.Size).ToInt64());return ids; } finally {Marshal.FreeHGlobal(b);} }
   public void ForceOwnedCleanup() { Native.Check(Native.TerminateJobObject(Job,242)); }
   public void Dispose() { if(Thread!=IntPtr.Zero){Native.CloseHandle(Thread);Thread=IntPtr.Zero;} if(Process!=IntPtr.Zero){Native.CloseHandle(Process);Process=IntPtr.Zero;} if(Job!=IntPtr.Zero){Native.CloseHandle(Job);Job=IntPtr.Zero;} }

@@ -65,8 +65,8 @@ try {
  }
  $before=@();foreach($rel in $originals.Keys){$path=Join-Path $fixture $rel;[IO.File]::WriteAllText($path,$originals[$rel]);$before+=@{relative=$rel;sha256=(Digest $path);bytesBase64=[Convert]::ToBase64String([IO.File]::ReadAllBytes($path))}}
  Write-Proof 'client-originals.json' $before
- function Client-Inventory {
-  $entries=@();foreach($client in @('codex','claude','grok')){foreach($file in Get-ChildItem -LiteralPath (Join-Path $fixture $client) -File -Recurse){$guard=[Official299Proof.Guard]::new($file.FullName,$false);try{$entries+=@{relative=([IO.Path]::GetRelativePath($fixture,$file.FullName).Replace('\','/'));length=$file.Length;sha256=(Digest $file.FullName)}}finally{$guard.Dispose()}}};return @($entries|Sort-Object relative)
+ function Client-Inventory([switch]$AllowUnreadable) {
+  $entries=@();foreach($client in @('codex','claude','grok')){foreach($file in Get-ChildItem -LiteralPath (Join-Path $fixture $client) -File -Recurse){$guard=$null;$rel=[IO.Path]::GetRelativePath($fixture,$file.FullName).Replace('\','/');try{$guard=[Official299Proof.Guard]::new($file.FullName,$false);$entries+=@{relative=$rel;length=$file.Length;sha256=(Digest $file.FullName)}}catch{if(!$AllowUnreadable){throw};$entries+=@{relative=$rel;length=$file.Length;sha256=$null;readState='unknown';failureType=$_.Exception.GetType().FullName;failureHResult=$_.Exception.HResult}}finally{if($guard){$guard.Dispose()}}}};return @($entries|Sort-Object relative)
  }
  $clientBaseline=@(Client-Inventory);Write-Proof 'client-tree-before.json' $clientBaseline
  $listener=[Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback,0);$listener.Start();$port=$listener.LocalEndpoint.Port;$listener.Stop();$r.port=$port
@@ -135,7 +135,7 @@ try {
  try{$deny=[IO.File]::Open($record,'Open','Write','ReadWrite');$deny.Dispose();throw 'protected binding unexpectedly writable'}catch [IO.IOException]{$r.counterexamples+=@{case='write-locked-proof';decision='unknown-on-unreadable';actualWriteDenied=$true}}
  $badProof=if($health.proof[0] -ceq 'A'){'B'+$health.proof.Substring(1)}else{'A'+$health.proof.Substring(1)}
  Require (!(Verify-Proof $state.attestationSecret $challenge $state.pid $port $badProof)) 'tampered signature accepted';$r.counterexamples+=@{case='signature-tampered';decision='refused'}
- $during=@();foreach($v in $before){$during+=@{relative=$v.relative;sha256=(Digest (Join-Path $fixture $v.relative));changed=((Digest (Join-Path $fixture $v.relative)) -cne $v.sha256)}};Write-Proof 'clients-during.json' $during;Write-Proof 'client-tree-during.json' @(Client-Inventory)
+ $during=@();foreach($v in $before){$during+=@{relative=$v.relative;sha256=(Digest (Join-Path $fixture $v.relative));changed=((Digest (Join-Path $fixture $v.relative)) -cne $v.sha256)}};Write-Proof 'clients-during.json' $during;Write-Proof 'client-tree-during.json' @(Client-Inventory -AllowUnreadable)
  $r.stage='stop';$sw=[Diagnostics.Stopwatch]::StartNew();$r.stop=[ordered]@{pass=$false;normalRequested=$false;response=$null;originalExited=$false;originalExitCode=$null;jobActive=$null;jobMembers=$null;listenerOwners=$null;restored=$null;elapsedMs=$null}
  Require ((Get-ProofDecision $binding (Read-ProofBinding $record) ([Official299Proof.Native]::Observe($runtime.Process)) $homeGuard.Identity) -ceq 'admitted' -and !$runtime.Exited()) 'stop authority lost'
  $r.stop.normalRequested=$true;$stop=Request '/api/stop' 'POST' (10000-$sw.ElapsedMilliseconds) @{'x-opencodex-api-key'=$admin};$r.stop.response=$stop
@@ -154,7 +154,7 @@ try {
  if($r.stage -eq 'stop' -and $r.stop){$r.stop.elapsedMs=$sw.ElapsedMilliseconds}
 } finally {
  if(!$r.runtimeCreationEntered){$r.cleanup+=@{kind='no-runtime-creation-entered';jobActive=0;jobMembers=@();reason='failure before native service constructor; no runtime/version subprocess launched'}}
- if($runtime){try{$pre=@{kind='before-forced-cleanup';originalExited=$runtime.Exited();jobActive=$runtime.Active();jobMembers=@($runtime.Members());exitCode=$(if($runtime.Exited()){$runtime.ExitCode()}else{$null})};$r.cleanup+=$pre;if($pre.jobActive -gt 0){$runtime.ForceOwnedCleanup();$wait=[Diagnostics.Stopwatch]::StartNew();while($runtime.Active() -gt 0 -and $wait.ElapsedMilliseconds -lt 5000){Start-Sleep -Milliseconds 25};$r.cleanup+=@{kind='separate-forced-owned-job';jobActive=$runtime.Active();jobMembers=@($runtime.Members());exitCode=$(if($runtime.Exited()){$runtime.ExitCode()}else{$null});normalStopUnchanged=$true}}}catch{$r.cleanup+=@{kind='unknown';error=$_.Exception.Message}}}
+ if($runtime){try{$pre=@{kind='before-forced-cleanup';originalExited=$runtime.Exited();jobActive=$runtime.Active();jobMembers=@($runtime.Members());memberIdentities=@($runtime.MemberIdentities());exitCode=$(if($runtime.Exited()){$runtime.ExitCode()}else{$null})};$r.cleanup+=$pre;if($pre.jobActive -gt 0){$runtime.ForceOwnedCleanup();$wait=[Diagnostics.Stopwatch]::StartNew();while((!$runtime.Exited() -or $runtime.Active() -gt 0) -and $wait.ElapsedMilliseconds -lt 5000){Start-Sleep -Milliseconds 25};$r.cleanup+=@{kind='separate-forced-owned-job';originalExited=$runtime.Exited();jobActive=$runtime.Active();jobMembers=@($runtime.Members());exitCode=$(if($runtime.Exited()){$runtime.ExitCode()}else{$null});listenerOwners=@([Official299Proof.Native]::Listeners($port));normalStopUnchanged=$true}}}catch{$r.cleanup+=@{kind='unknown';error=$_.Exception.Message}}}
  if($bindingLock){$bindingLock.Dispose()};foreach($g in $guards){$g.Dispose()};if($runtime){$runtime.Dispose()};if($http){$http.Dispose()}
  Write-Proof 'startup-trace.json' $trace.ToArray();Write-Proof 'result.json' $r
 }
