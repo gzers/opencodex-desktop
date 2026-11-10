@@ -1,0 +1,11 @@
+{
+  "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('option', { name: 'Windows · 自定义位置', exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" role=\"option\" tabindex=\"-1\" class=\"select-option\" data-option-index=\"2\" aria-selected=\"false\">Windows · 自定义位置</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    58 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at select (/private/tmp/ocxd-post023-prototype-20261110/browser-check.cjs:5:334)\n    at async /private/tmp/ocxd-post023-prototype-20261110/browser-check.cjs:8:1",
+  "checks": [
+    "entry has no startup exception",
+    "program first and port second",
+    "Mac standalone app path",
+    "runtime outside app in user program directory",
+    "port fixture is consistent"
+  ],
+  "errors": []
+}

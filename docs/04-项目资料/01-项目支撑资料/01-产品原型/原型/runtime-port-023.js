@@ -45,7 +45,8 @@
     $('#rp023Port').setAttribute('aria-invalid',String(invalid));
     for(const input of card.querySelectorAll('input'))input.disabled=busy||checking;
     $('[data-rp023=save]').disabled=busy||checking||invalid||!dirty();
-    $('[data-rp023=save]').textContent=checking?'正在检查空闲端口…':$('#rp023Auto').checked?'检查并保存':'保存设置';
+    const saveLabel=checking?'正在检查空闲端口…':$('#rp023Auto').checked?'检查并保存':'保存设置';
+    if($('[data-rp023=save]').textContent!==saveLabel)$('[data-rp023=save]').textContent=saveLabel;
     $('[data-rp023=allocate]').hidden=!$('#rp023Auto').checked||!saved.port;
     $('[data-rp023=allocate]').disabled=busy||checking;
     $('[data-rp023=revert]').disabled=busy||checking||!dirty();
@@ -142,5 +143,5 @@
   $('[data-rp023-demo-stop]').addEventListener('click',()=>{if(!busy){active=null;showState('stopped');}});
   let queued=false;
   new MutationObserver(()=>{if(queued)return;queued=true;queueMicrotask(()=>{queued=false;sync();});}).observe($('#card-overview-status [data-b=statetext]'),{childList:true,characterData:true,subtree:true});
-  window.runtimePort023={openSettings,notice:()=>lastFailure&&notice(lastFailure),snapshot:()=>({saved:{...saved},active:active&&{...active},busy,scene})};
+  window.runtimePort023={openSettings,notice:()=>lastFailure&&notice(lastFailure),snapshot:()=>({saved:{...saved},active:active&&{...active},busy,scene}),setDeclaredPort(port,mode=saved.mode){if(busy||!Number.isInteger(Number(port))||Number(port)<1||Number(port)>65535)return false;saved={mode,port:String(port)};render();return true;}};
 })();

@@ -1,0 +1,16 @@
+✔ absolute values come from the injected snapshot, not current host or aggregate root guesses (0.528042ms)
+✔ path preparation and cancel are read only; confirm records pending state until restart (0.150916ms)
+✔ invalid or stale root selection cannot silently replace active snapshot (0.061125ms)
+✔ prepare/cancel before confirmation never backs up or replaces installation (0.377792ms)
+✔ source mismatch cannot create an executable plan (0.063375ms)
+✔ backup failure stops before replacing; occupied other user is never stopped (0.128125ms)
+✔ replacement cannot claim retraction and status reopens the same operation (0.068083ms)
+✔ unknown replacement preserves failure and verifies original instead of reinstalling (0.178416ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 36.935208

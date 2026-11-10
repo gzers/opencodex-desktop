@@ -1,0 +1,16 @@
+1 | import {deriveEntry} from '/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/runtime/opencodex/node_modules/@bitkyc08/opencodex/src/codex/catalog/derive-entry';
+2 | import {validateConfigCandidate} from '/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/runtime/opencodex/node_modules/@bitkyc08/opencodex/src/config/diagnostics';
+3 | import assert from 'node:assert/strict';
+4 | const results=[];for(const name of ['Krill','中文渠道','Team One','团队/海外']){const id='gpt-6.1-sol',displayName=name+'/'+id;const config={port:0,defaultProvider:'fixture',providers:{fixture:{adapter:'openai-responses',baseUrl:'https://fixture.invalid/v1',apiKey:'synthetic-never-sent',models:[id],modelDisplayNames:{[id]:displayName}}}};const valid=validateConfigCandidate(config);assert(valid.ok,valid.ok?'':valid.error);const e=deriveEntry(null,'fixture/'+id,'fixture',1,{id,provider:'fixture',displayName} as any);assert.equal(e.slug,'fixture/'+id);assert.equal(e.display_name,displayName);results.push({nameCase:name,sourceField:'modelDisplayNames',displayAccepted:true,rawRouteUnchanged:true});}console.log(JSON.stringify({scope:'Official299 accepted display field + actual catalog deriveEntry with supplied model hint; no source patch, real config or complete saved catalog refresh',cases:results},null,2));
+
+AssertionError: schema_invalid: providers.fixture.modelDisplayNames: modelDisplayNames."gpt-6.1-sol" must not contain /; providers.fixture.modelDisplayNames: modelDisplayNames."gpt-6.1-sol" must not contain /
+ generatedMessage: false,
+     actual: false,
+   expected: true,
+   operator: "==",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /private/tmp/ocxd-post023-prototype-20261110/official-display-proof.ts:4:377
+
+Bun v1.4.4 (macOS arm64)

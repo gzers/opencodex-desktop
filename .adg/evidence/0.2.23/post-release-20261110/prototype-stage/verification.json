@@ -1,0 +1,84 @@
+{
+  "scope": "Single maintained Desktop prototype and planning up to prototype stage only. No production implementation or release.",
+  "status": "prototype checked; awaiting user visual review; production technical gates retained",
+  "currentWorkingBrowserPhases": {
+    "chromium": {
+      "main": 41,
+      "windowAndPort": 13,
+      "final": 7
+    },
+    "webkit": {
+      "main": 41,
+      "windowAndPort": 13,
+      "final": 7
+    }
+  },
+  "workingPageExceptions": {
+    "chromium": [],
+    "webkit": []
+  },
+  "deliverySnapshot": "Committed prototype baseline plus only own resource/port/entry patch; Chromium/WebKit each41core+7last-change checks passed. No parallel staged overview dependency. Final own-modal keyboard3checks per engine also pass.",
+  "existingNodeRegression": 8,
+  "actualProductWindow": {
+    "width": 900,
+    "height": 600,
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "effects": [
+      "high",
+      "mid",
+      "low"
+    ]
+  },
+  "failuresPreserved": true,
+  "firstLocatorAttempt": "Hidden native backing-select timeout occurred; raw first report was overwritten by next attempt before checkpoint. Later attempts originals retained; initial missing original explicitly disclosed.",
+  "prototypeFixes": [
+    "CLI fixture changes now rerender consumer",
+    "Tool-panel open scrolls actual product into view so X stays reachable in stacked narrow layout",
+    "Port save avoids redundant button text-node replacement; actual WebKit mouse path passes supplemental checks",
+    "All restore port values read current shared memory; full rollback captures original backup port",
+    "WebKit Tab navigation explicitly cycles only own p24 modal controls; Escape still uses shared cancellation; final3checks per engine pass"
+  ],
+  "actualAPIOrFileAccessFromPrototype": false,
+  "realConfigOrPATHChanged": false,
+  "productionAppsChanged": false,
+  "allReportedBrowserChecksPassed": true,
+  "workingKeyboard": {
+    "chromium": {
+      "result": "pass",
+      "checks": [
+        "focus remains in shared dialog",
+        "Escape cancels without restore",
+        "Escape CLI confirm has no side effect"
+      ]
+    },
+    "webkit": {
+      "result": "pass",
+      "checks": [
+        "focus remains in shared dialog",
+        "Escape cancels without restore",
+        "Escape CLI confirm has no side effect"
+      ]
+    }
+  },
+  "deliveryKeyboard": {
+    "chromium": {
+      "result": "pass",
+      "checks": [
+        "focus remains in shared dialog",
+        "Escape cancels without restore",
+        "Escape CLI confirm has no side effect"
+      ]
+    },
+    "webkit": {
+      "result": "pass",
+      "checks": [
+        "focus remains in shared dialog",
+        "Escape cancels without restore",
+        "Escape CLI confirm has no side effect"
+      ]
+    }
+  }
+}
