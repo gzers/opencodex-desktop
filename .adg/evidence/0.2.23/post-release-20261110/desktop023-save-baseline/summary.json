@@ -1,0 +1,32 @@
+{
+  "baselineVersion": "Desktop0.2.23",
+  "targetVersion": "Desktop0.2.24",
+  "legacy022ExactFrontendConditionInActiveView": false,
+  "activeView": "ChannelsView->useModelsV2Store; routes subscribe model-config-changed->loadChannels",
+  "verifiedFrontendCases": 4,
+  "backendSourceInspection": {
+    "file": "config_file_v2.rs",
+    "sourceDigest": "digest(original config.json bytes), no runtime-only field stripping in this helper",
+    "saveGuard": "source != request.expected.source_digest => model_save_stale",
+    "conclusion": "same-type source-stale refusal remains possible after raw-byte-only changes; not proof of user-specific2.99 change or an actual Rust/backend reproduction"
+  },
+  "frontendResults": [
+    "pending explicit intent blocks refresh before fileSnapshot; preserves file+intent",
+    "new v2 saves use draft.base and reach own fileSave API; no old store split check",
+    "mock source-stale backend failure preserves draft/intent and same guarded retry",
+    "normal current-source save succeeds"
+  ],
+  "notClaimed": [
+    "0.2.23 cannot save generally",
+    "0.2.22 screenshot necessarily reproduced by same mechanism in0.2.23",
+    "actual live2.99 write identified",
+    "runtime-only field changes reproduced through Rust backend",
+    "product fix complete"
+  ],
+  "acceptance024": [
+    "test latest source/draft/refresh/credential paths through v2 contracts",
+    "distinguish runtime-only and real changed config with guarded reconfirmation",
+    "preserve Key/import/draft state and reject true external conflicts",
+    "backend final-lock/source recheck remains"
+  ]
+}
