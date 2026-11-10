@@ -15,7 +15,7 @@
     ]
   },
   "windowsLifecycle": {
-    "status": "native-test-host-partial-proof; complete-client-restoration-failed",
+    "status": "revision2-native-agent-lock-all-listener-proof-passed; codex-config-catalog-and-three-extra-artifacts-unresolved",
     "offlineOfficialContractChecks": 10,
     "nativeWindowsValidated": false,
     "reason": "official health HMAC does not supply old lifetime tuple; current Desktop Windows stop requires it",
@@ -44,7 +44,31 @@
       "catalogRestore": "not-exercised",
       "GrokInjection": "refused-by-official-fixture"
     },
-    "next": "Classify generated Agent definitions and stable lock lifecycle; design safe restoration or isolation; preserve original failure and do not delete stable locks or weaken acceptance."
+    "next": "Identify exact config/catalog and cache/audit/backup restoration scope using pinned official source; validate failed-postimage capture before any further native run; no new exception adopted.",
+    "latestNativeResult": {
+      "docsCommit": "a129d585c25be4a1942f762c63f2bd719b2a921a",
+      "codeDeliveryCommit": "03480916ca369ce7648afdf82c20819e87c74ee7",
+      "actualSourceCommit": "709baa59d03a15fa46820d01ce3a28e605ecb51f",
+      "startMs": 14924,
+      "statusMs": 9,
+      "stopMs": 5597,
+      "agentCompensation": true,
+      "GrokOriginalFileRestored": true,
+      "bothOfficialLocksReleasedAndReacquired": true,
+      "threeActualListenersGone": true,
+      "originalAccepted": false,
+      "adoptedR3Accepted": false,
+      "remainingChangedOriginals": [
+        "codex/config.toml",
+        "codex/opencodex-catalog.json"
+      ],
+      "remainingExtraFiles": [
+        "codex/models_cache.json",
+        "codex/opencodex-catalog-audit.jsonl",
+        "grok/config.toml.bak-opencodex"
+      ],
+      "failedAfterBytesCaptured": false
+    }
   },
   "implementationChecklist": {
     "status": "existing adopted UX updated; remaining gates and prototype source now linked; no formal IMP freeze or release readiness claim",

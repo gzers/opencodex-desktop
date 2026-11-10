@@ -1,0 +1,47 @@
+{
+  "docsCommit": "a129d585c25be4a1942f762c63f2bd719b2a921a",
+  "codeCommit": "03480916ca369ce7648afdf82c20819e87c74ee7",
+  "manifestEntriesVerified": 71,
+  "bytes": 5640132,
+  "actualSourceHashesVerified": 10,
+  "offlineVerifierExit": 0,
+  "summaryExactMatch": true,
+  "rawRevision2Accepted": false,
+  "adoptedRevision3Result": {
+    "accepted": false,
+    "allowedLockPathsProofPresent": true,
+    "remainingChangedOriginalFiles": [
+      {
+        "after": "cba8830e7bd0df1cc8f54b63a1ff1bd75e9af34a7d46c2cf756d7064c9c0d2ca",
+        "before": "a5a3feb8edc5b0e15e47ce38bd218bfaaa32bca141faaf2031b0a6b90f9e5a5e",
+        "relative": "codex/config.toml"
+      },
+      {
+        "after": "07a99e78c40f29b3aba65ae99eb7dd789670616d8a3c6b8dc2c558d77ab207de",
+        "before": "cfab95ffae957d49aa3ebe4520db56774a7339c77da67668b0222ce77e93d6f5",
+        "relative": "codex/opencodex-catalog.json"
+      }
+    ],
+    "remainingExtraFiles": [
+      {
+        "relative": "codex/models_cache.json",
+        "length": 2375,
+        "sha256": "61067bb4179b6e41278273c76f02da0eb9cc72509cbd4a9e9e98b34d3c84ff51"
+      },
+      {
+        "relative": "codex/opencodex-catalog-audit.jsonl",
+        "length": 286,
+        "sha256": "2239fd7e92ed26ae406ff983c4e329019b578bbf30d68b5d6cd565f83e7a67b2"
+      },
+      {
+        "relative": "grok/config.toml.bak-opencodex",
+        "length": 122,
+        "sha256": "44c4dc3c1f879f76d2cab741d074ee8eefbf3dbb82483094ab2309b093a598fe"
+      }
+    ],
+    "reason": "Two-lock exception does not cover changed original config/catalog or other new files"
+  },
+  "failedAfterBytesAvailable": false,
+  "scope": "Raw Git evidence and actual-code consistency; Mac did not rerun Windows",
+  "snapshot": "/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd299-r2-receive-rz11a7ci"
+}

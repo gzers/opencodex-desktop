@@ -1,0 +1,1 @@
+{"stage":"hardlink counterexample verification","error":"Safety reader correctly refused a now-multi-link target used as a hardlink source by the test; verifier incorrectly reused safety reader to compare unchanged content.","productChanges":false,"correction":"Use exact expected original content hash to assess no prior writes; keep refusal checks unchanged."}

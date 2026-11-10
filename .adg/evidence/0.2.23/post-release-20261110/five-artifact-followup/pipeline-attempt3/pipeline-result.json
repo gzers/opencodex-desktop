@@ -1,0 +1,67 @@
+{
+  "scope": "actual official APIs; no service/HTTP/model call; synthetic fixture only",
+  "steps": [
+    {
+      "step": "catalog-refresh",
+      "result": {
+        "added": 1,
+        "path": "/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd299-five-artifacts-r3-p2yc3fd5/codex/opencodex-catalog.json",
+        "catalogWritten": true,
+        "comboOmissions": [],
+        "refreshOutcome": "committed",
+        "catalogExists": true,
+        "cacheSynced": true
+      }
+    },
+    {
+      "step": "config-inject",
+      "result": {
+        "success": true,
+        "configChanged": true,
+        "message": "Pointed Codex's built-in openai provider at the opencodex proxy (openai_base_url + realtime sideband override).\n  Codex model catalog: /private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd299-five-artifacts-r3-p2yc3fd5/codex/opencodex-catalog.json\n  Codex resume history: left unchanged (syncResumeHistory=false).\n  All models now route through opencodex proxy (like OpenRouter).\n  OpenAI models (gpt-5.5, etc.) are passed through to OpenAI.\n  Custom models route to their configured providers.\n  Fallback reference: /private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd299-five-artifacts-r3-p2yc3fd5/codex/opencodex.config.toml"
+      }
+    },
+    {
+      "step": "grok-inject",
+      "result": {
+        "ok": true,
+        "changed": true,
+        "message": "Added the opencodex managed block to Grok config."
+      }
+    },
+    {
+      "step": "native-restore",
+      "success": false,
+      "message": "Codex config restored from opencodex journal. Catalog restored to 8 native model(s) (dropped 1 proxy-routed). ⚠️ Codex resume history could NOT be restored: the history worker failed (unable to open database file). Run 'ocx doctor'.",
+      "artifacts": {
+        "config": {
+          "state": "ok",
+          "changed": true,
+          "action": "journal-restored",
+          "message": "Codex config restored from opencodex journal."
+        },
+        "catalog": {
+          "state": "ok",
+          "changed": true,
+          "removed": 1,
+          "kept": 8,
+          "path": "/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd299-five-artifacts-r3-p2yc3fd5/codex/opencodex-catalog.json",
+          "message": "Codex catalog restored."
+        },
+        "history": {
+          "state": "failed",
+          "changed": false,
+          "rows": 0,
+          "files": 0,
+          "ejectedRows": 0,
+          "message": "Codex resume history could NOT be restored: the history worker failed (unable to open database file). Run 'ocx doctor'."
+        }
+      }
+    }
+  ],
+  "result": "failed",
+  "error": {
+    "name": "AssertionError",
+    "message": "Codex config restored from opencodex journal. Catalog restored to 8 native model(s) (dropped 1 proxy-routed). ⚠️ Codex resume history could NOT be restored: the history worker failed (unable to open database file). Run 'ocx doctor'."
+  }
+}

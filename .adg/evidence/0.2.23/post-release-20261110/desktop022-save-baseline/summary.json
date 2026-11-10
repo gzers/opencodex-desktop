@@ -1,0 +1,17 @@
+{
+  "status": "specific-trigger-reproduced; original-device-writer-unidentified",
+  "exactScreenshotToast": "未写入：保存基准已变化，请重新核对；当前输入已保留。",
+  "testsPassed": 5,
+  "testsFailed": 0,
+  "frontendWriteIpcCallsInFailure": 0,
+  "requiresOpenCodex299": false,
+  "trigger": "Dirty draft from file A + later store.load returning snapshot B; channelBaseline remains A and snapshot.policyDigest becomes B; saveAllChannels rejects before project/writeFile",
+  "sameModeledPolicyCase": "A and B modeled policies equal; raw file digest changed (synthetic receipt). This proves frontend cannot distinguish bookkeeping/formatting from real external edits here. Does not identify original runtime writer.",
+  "actualExternalEditControl": "Changed node URL also rejects and retains edits; protection must remain",
+  "repeatSave": "same stale state rejects on repeated clicks",
+  "differentFromUpstreamEditor": "Old provider editor load-normalization/stale-provider baseline is a separate HTTP/DTO path; this is Desktop frontend state guard",
+  "initialHarnessFailure": "tagged UI-only snapshot missed tagged tauri/config/event-registry.json; attempt1 no test cases ran; add exact same-tag config and attempt2 passes5",
+  "runtimeCurrentVersion": "not probed; not inferred from screenshot",
+  "dailyConfigAccess": false,
+  "productPatched": false
+}

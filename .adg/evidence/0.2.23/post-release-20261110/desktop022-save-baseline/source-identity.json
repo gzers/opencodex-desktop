@@ -1,0 +1,24 @@
+{
+  "tag": "v0.2.22",
+  "commit": "1b5c8402dc340540711efa2c2c2037bce673a479",
+  "files": [
+    {
+      "path": "apps/desktop/ui/src/features/models/store.ts",
+      "sha256": "79a55df11df0cd862a8cf740923c04f61ef5327fddfa3bdefb847bf1f596396a"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "sha256": "51234ebdda380238e60cb111f6039f3c95aefeff9c75efaab3dd6e0590f70682"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "sha256": "62b98a1eeec18218a128b1c8fe865d495c6cb93e59c8bce9bdebaa49e9ddba78"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/config_file.rs",
+      "sha256": "e1a32499ed62a76b3c6c3e89e72f837463a6df097249c9ee3420732c1e67f938"
+    }
+  ],
+  "deps": "read-only reuse main checkout UI node_modules; exact tagged src and tauri/config extracted; no install",
+  "proof": "actual Pinia store and ChannelsView confirmation; IPC responses synthetic, no OpenCodex runtime or service started"
+}

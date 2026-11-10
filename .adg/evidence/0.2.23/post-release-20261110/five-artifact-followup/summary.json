@@ -1,0 +1,42 @@
+{
+  "scope": "local isolated pre-development official function pipeline and candidate primitive validation; Windows native handoff only",
+  "targetDesktop": "0.2.24",
+  "baselineDesktop": "0.2.23",
+  "officialVersion": "2.99.0",
+  "officialPipelinesCompleted": 2,
+  "pipelineScenarios": [
+    "auxiliary files absent before",
+    "auxiliary cache/audit/user backup preexisting"
+  ],
+  "verifiedFacts": {
+    "localCodexConfigOriginalBytesRestored": true,
+    "localGrokConfigOriginalBytesRestored": true,
+    "catalogOriginalBytesRestoredByOfficial": false,
+    "removedNativeSlug": "gpt-5.4",
+    "restoredCatalogHasFixtureRoutes": false,
+    "restoredCacheHasFixtureRoutes": false,
+    "auditAndBackupPersistAsExpectedByOfficialSource": true
+  },
+  "candidateCompensationChecks": 13,
+  "boundedCaptureChecks": 7,
+  "captureRoundtripsVerified": 64,
+  "preservedHarnessFailures": [
+    "attempt1 official adoption temporary SQLite write denied",
+    "attempt2 regex escaping still denied",
+    "attempt3 history-worker separate exact coordinator not permitted; entire native restore false",
+    "compensation attempt1 verifier used safety reader on intentionally hardlinked source; guard refusal correct"
+  ],
+  "userAcceptanceScope": "Only two stable lock file exception; no cache/audit/backup exceptions added",
+  "historicalWindowsAfterimage": "still missing; no historical cause claim",
+  "WindowsHandoffRevision": 4,
+  "unproven": [
+    "Windows exclusive-handle/coordinator binding for five paths",
+    "actual service Stop within unchanged10s including compensation",
+    "production ownership of daily-data postimages",
+    "complete production crash recovery",
+    "GUI name entry and latest-save baseline independent prerequisites"
+  ],
+  "productionChanged": false,
+  "dailyConfigReadWrite": false,
+  "networkDenied": true
+}

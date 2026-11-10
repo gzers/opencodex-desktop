@@ -1,0 +1,82 @@
+{
+  "scope": "this Mac isolated official function pipeline; not Windows historical afterimage",
+  "artifacts": [
+    {
+      "path": "codex/config.toml",
+      "beforeState": "file",
+      "duringState": "file",
+      "afterState": "file",
+      "bytesEqual": true,
+      "sizes": [
+        209,
+        391,
+        209
+      ]
+    },
+    {
+      "path": "codex/opencodex-catalog.json",
+      "beforeState": "file",
+      "duringState": "file",
+      "afterState": "file",
+      "bytesEqual": false,
+      "sizes": [
+        294198,
+        2306,
+        275337
+      ],
+      "removedNativeSlugs": [
+        "gpt-5.4"
+      ],
+      "postRestoreRoutedSlugs": []
+    },
+    {
+      "path": "codex/models_cache.json",
+      "beforeState": "absent",
+      "duringState": "file",
+      "afterState": "file",
+      "bytesEqual": false,
+      "sizes": [
+        0,
+        2375,
+        275406
+      ],
+      "cacheHasRoutedRows": false
+    },
+    {
+      "path": "codex/opencodex-catalog-audit.jsonl",
+      "beforeState": "absent",
+      "duringState": "file",
+      "afterState": "file",
+      "bytesEqual": false,
+      "sizes": [
+        0,
+        687,
+        1371
+      ]
+    },
+    {
+      "path": "grok/config.toml.bak-opencodex",
+      "beforeState": "absent",
+      "duringState": "file",
+      "afterState": "file",
+      "bytesEqual": false,
+      "sizes": [
+        0,
+        122,
+        122
+      ]
+    },
+    {
+      "path": "grok/config.toml",
+      "beforeState": "file",
+      "duringState": "file",
+      "afterState": "file",
+      "bytesEqual": true,
+      "sizes": [
+        122,
+        526,
+        122
+      ]
+    }
+  ]
+}

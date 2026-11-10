@@ -1,0 +1,23 @@
+{
+  "beforeRun": true,
+  "scope": "official299 isolated function pipeline; no production code/service/daily data",
+  "claims": [
+    {
+      "id": "F1",
+      "claim": "Official catalog and cache restore are projections, not byte replay; exact observed differences can be recorded using synthetic originals and full after capture."
+    },
+    {
+      "id": "F2",
+      "claim": "Catalog/cache/audit/Grok backup are observable transaction changes at fixed paths and can be handled by an operation-bound before/ready/pre-stop/post-stop write-set without broad cleanup."
+    },
+    {
+      "id": "F3",
+      "claim": "Full failed postimage capture must serialize changed bytes too; observed differences cannot be inferred only from hashes."
+    },
+    {
+      "id": "F4",
+      "claim": "Guarded multi-file compensation must preflight the entire batch and refuse external change/unknown/link/hardlink/ownership gaps without partial overwrite; sync error must roll back to sealed postimage."
+    }
+  ],
+  "knownHistoricalGap": "Windows revision2 failed config/catalog after bytes missing; this run cannot recreate that historical afterimage"
+}
