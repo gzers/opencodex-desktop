@@ -57,3 +57,38 @@ is copied to Git. package program files are sealed read-only for the runtime SID
 Run/fixture preparation is separate from action budgets and is not acceptance
 of an old candidate. Evidence records exact attempted commit and raw file hashes;
 later delivery-only commits do not rewrite the identity of prior attempts.
+
+Revision 2 continues from docs 7b30abcdfe4b95808d260af13d1737323bbcd2aa.
+Use run.ps1 -RestorationRevision2 to select host-r2.ps1. Recovery.cs captures
+Agent original bytes/identities/permissions, forms a generated-marker operation
+plan, then locks all existing target handles before reserving deleted paths with
+CREATE_NEW. A mismatched/linked/unreadable postimage refuses the batch. Injected
+write failures restore the sealed postimage through the same retained handles;
+separate-process racing writes and absent-slot collisions are covered by
+recovery-test.ps1. This is synchronous rollback evidence, not abrupt-crash or
+durable-restart recovery evidence. Private preimage backup stays write/delete
+locked and its digest is rechecked before compensation.
+
+The after-ready Agent snapshot must still match at the pre-stop seal and after
+the official process exits. A late change is unknown; it never silently enlarges
+the write-set. Unrelated new user files are preserved and keep full-tree failure.
+Compensation is explicitly attributed to the test host, separately from the
+official /api/stop response. No broad prefix deletion or disable-injection trick
+is used. The host holds every currently observed Job child's original handle,
+captures actual IPv4/IPv6 listener rows, and checks those listeners and original
+child exits within the same stop stopwatch. Ports are not inferred from +100.
+
+lock-test.ps1 exercises unchanged official retainNativeMainOwner and
+withNativeMainExclusiveClaim in real independent Windows Bun processes. A live
+holder blocks the contender. A new process acquires after release without unlink,
+with unchanged file ID and DACL. host-r2 performs the post-stop acquisitions as
+the same new ordinary SID, within the original 10-second stop budget.
+
+The native revision-2 run recorded at 709baa59d has Agent/Grok/lock/listener
+proofs, but config.toml and the genuinely injected catalog differ after Stop;
+five additional client files also remain. It is a failure regardless of the
+still-unadopted exception for the two stable-lock files. Later delivery code
+captures synthetic failed config/catalog postimage bytes for a possible future
+run. That collection change has not been rerun as a service and does not repair
+the missing postimage bytes from the recorded attempt. No further native service
+retry is implied by this handoff.

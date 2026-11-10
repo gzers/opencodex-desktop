@@ -179,7 +179,10 @@ try {
   $r.stop.stableLockReacquisition+=@{kind=$lf.kind;workerIdentity=$worker.Identity;originalExitCode=$worker.ExitCode();jobActive=$worker.Active();result=$lockResult;fileIdentityBefore=$lf.id;fileIdentityAfter=$afterId;sddlBefore=$lf.sddl;sddlAfter=$afterSddl;elapsedWithinStopMs=$sw.ElapsedMilliseconds}
   Require ($lockResult.acquired -and $lockResult.released -and $afterId -ceq $lf.id -and $afterSddl -ceq $lf.sddl) 'stable lock reacquisition/identity/ACL proof failed'
  }
- $after=@();foreach($v in $before){$path=Join-Path $fixture $v.relative;$digest=if(Test-Path -LiteralPath $path){Digest $path}else{$null};$after+=@{relative=$v.relative;beforeSha256=$v.sha256;afterSha256=$digest;restored=($v.sha256 -ceq $digest);bytesBase64=$(if($digest -ceq $v.sha256){[Convert]::ToBase64String([IO.File]::ReadAllBytes($path))}else{$null})}}
+ # All four paths below were created here from explicit synthetic bytes. Capture a
+ # failed postimage too; never serialize runtime tokens or arbitrary discovered files.
+ $after=@();foreach($v in $before){$path=Join-Path $fixture $v.relative;$digest=if(Test-Path -LiteralPath $path){Digest $path}else{$null};$after+=@{relative=$v.relative;beforeSha256=$v.sha256;afterSha256=$digest;restored=($v.sha256 -ceq $digest);bytesBase64=$(if($digest){[Convert]::ToBase64String([IO.File]::ReadAllBytes($path))}else{$null})}}
+ Write-Proof 'catalog-postimage.json' @{sha256=(Digest $catalogPath);bytesBase64=[Convert]::ToBase64String([IO.File]::ReadAllBytes($catalogPath));scope='this transaction synthetic catalog only'}
  $clientFinal=@(Client-Inventory);$treeSame=(($clientBaseline|ConvertTo-Json -Compress) -ceq ($clientFinal|ConvertTo-Json -Compress));$r.stop.clientTreeRestored=$treeSame;$r.stop.clientConfigWasChanged=(@($during|Where-Object {$_.relative -eq 'codex/config.toml' -and $_.changed}).Count -eq 1);Write-Proof 'client-tree-after.json' $clientFinal
  $r.stop.restored=$after;$r.stop.elapsedMs=$sw.ElapsedMilliseconds
  $r.stop.catalogRestored=((Digest $catalogPath) -ceq $catalogOriginal);$r.stop.catalogAfterSha256=Digest $catalogPath
