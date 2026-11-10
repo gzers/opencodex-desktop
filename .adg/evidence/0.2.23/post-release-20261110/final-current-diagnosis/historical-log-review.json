@@ -1,0 +1,37 @@
+{
+  "recordedAt": "2026-11-10T12:37:14.465106+08:00",
+  "rows": [
+    {
+      "path": "/Users/ezio/.codex-desktop/desktop/logs/app.log",
+      "matches": {
+        "http403": 0,
+        "http429": 0,
+        "notesFailure": 0,
+        "providerBaselineError": 0,
+        "providerUnavailableError": 0
+      },
+      "rawLogNotArchived": true
+    },
+    {
+      "path": "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/logs/app.log",
+      "matches": {
+        "http403": 0,
+        "http429": 0,
+        "notesFailure": 0,
+        "providerBaselineError": 0,
+        "providerUnavailableError": 0
+      },
+      "rawLogNotArchived": true
+    },
+    {
+      "path": "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/cache/updates/release-notes/panel-latest.json",
+      "repository": "lidge-jun/opencodex",
+      "candidateVersion": "2.99.0",
+      "notesState": "ready",
+      "notesPresent": true,
+      "fetchedAt": 1794281612,
+      "scope": "current successful cache only, does not reconstruct earlier failure"
+    }
+  ],
+  "conclusion": "No matched retained original provider/notes failure diagnostics in bounded app logs. Incidental digits403/429 are not evidence of HTTP response codes; only explicit patterns counted."
+}

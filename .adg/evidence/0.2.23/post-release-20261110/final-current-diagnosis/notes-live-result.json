@@ -1,0 +1,27 @@
+{
+  "query": {
+    "cacheHit": false,
+    "candidateVersion": "2.99.0",
+    "notesPresent": true,
+    "notesSource": "github_release",
+    "notesState": "Ready"
+  },
+  "queryMs": 552,
+  "scope": "Actual Desktop production HttpSource and release_notes::query, direct mode, isolated cache; no GUI command preadmission or install",
+  "steps": [
+    {
+      "bytes": 4928,
+      "elapsedMs": 1065,
+      "error": null,
+      "result": "received",
+      "target": "npm"
+    },
+    {
+      "bytes": 48212,
+      "elapsedMs": 1148,
+      "error": null,
+      "result": "received",
+      "target": "github-api"
+    }
+  ]
+}

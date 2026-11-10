@@ -1,0 +1,23 @@
+{
+  "recordedAt": "2026-11-10T12:33:11.284658+08:00",
+  "method": "exact local GET /healthz HMAC challenge; no admin token/model/sync requests",
+  "httpStatus": 200,
+  "response": {
+    "status": "ok",
+    "service": "opencodex",
+    "version": "2.99.0",
+    "pid": 83648,
+    "port": 10100,
+    "restartCapability": "v1",
+    "providerReloadCapability": "v1"
+  },
+  "hmacProofVerified": true,
+  "recordUnchangedDuringProbe": true,
+  "homeInstanceMatchesOnDiskIdentity": true,
+  "home": "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/opencodex-home",
+  "configPath": "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/opencodex-home/config.json",
+  "processImage": "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/runtime/opencodex/node_modules/@bitkyc08/opencodex/node_modules/bun/bin/bun.exe",
+  "desktopDiskVersion": "0.2.22",
+  "desktopProcess": 59923,
+  "limits": "Service identity and HOME verified by HMAC+homeInstance ID, read-only records and process image. No original historical failing window attribution."
+}
