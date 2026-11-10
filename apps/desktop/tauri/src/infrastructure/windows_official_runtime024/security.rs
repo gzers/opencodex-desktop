@@ -8,8 +8,9 @@ use std::{
 use windows_sys::Win32::{
     Foundation::{LocalFree, HANDLE},
     Security::{
-        GetAce, GetTokenInformation, TokenElevation, TokenElevationType, TokenSessionId, TokenUser,
-        ACCESS_ALLOWED_ACE, ACL, SECURITY_ATTRIBUTES, TOKEN_QUERY, TOKEN_USER,
+        GetAce, GetTokenInformation, IsValidAcl, TokenElevation, TokenElevationType,
+        TokenSessionId, TokenUser, ACCESS_ALLOWED_ACE, ACE_HEADER, ACL, SECURITY_ATTRIBUTES,
+        TOKEN_QUERY, TOKEN_USER,
     },
     System::Threading::{GetCurrentProcess, OpenProcessToken},
 };
@@ -190,13 +191,25 @@ impl PrivateDescriptor {
 /// Read-only validation: never repairs old ownership or permissions. Accept only
 /// TokenUser/SYSTEM allow ACEs, with owner full access and no null/empty ACL.
 pub(super) fn verify_private(handle: HANDLE, sid: &str, protected: bool) -> io::Result<()> {
+    verify_object(handle, sid, protected, 1, 0x001f01ff)
+}
+pub(super) fn verify_private_job(handle: HANDLE, sid: &str) -> io::Result<()> {
+    verify_object(handle, sid, true, 6, 0x001f003f)
+}
+fn verify_object(
+    handle: HANDLE,
+    sid: &str,
+    protected: bool,
+    kind: i32,
+    full_access: u32,
+) -> io::Result<()> {
     let mut owner = ptr::null_mut();
     let mut acl = ptr::null_mut();
     let mut sd = ptr::null_mut();
     let code = unsafe {
         GetSecurityInfo(
             handle,
-            1,
+            kind,
             1 | 4,
             &mut owner,
             ptr::null_mut(),
@@ -209,7 +222,7 @@ pub(super) fn verify_private(handle: HANDLE, sid: &str, protected: bool) -> io::
         return Err(io::Error::from_raw_os_error(code as i32));
     }
     let _sd = Local(sd);
-    if sid_text(owner)? != sid || acl.is_null() {
+    if sid_text(owner)? != sid || acl.is_null() || unsafe { IsValidAcl(acl) } == 0 {
         return Err(denied("private owner/DACL differs"));
     }
     let mut control = 0;
@@ -235,17 +248,14 @@ pub(super) fn verify_private(handle: HANDLE, sid: &str, protected: bool) -> io::
         if start < acl_start + size_of::<ACL>() || start + 8 > acl_end {
             return Err(denied("invalid ACE boundary"));
         }
-        let allowed = unsafe { &*ace.cast::<ACCESS_ALLOWED_ACE>() };
+        let header = unsafe { &*ace.cast::<ACE_HEADER>() };
         let end = start
-            .checked_add(allowed.Header.AceSize as usize)
+            .checked_add(header.AceSize as usize)
             .ok_or_else(|| denied("ACE overflow"))?;
-        if allowed.Header.AceType != 0
-            || allowed.Header.AceFlags & 8 != 0
-            || end > acl_end
-            || end < start + 16
-        {
+        if header.AceType != 0 || header.AceFlags & 8 != 0 || end > acl_end || end < start + 16 {
             return Err(denied("unsupported private ACE"));
         }
+        let allowed = unsafe { &*ace.cast::<ACCESS_ALLOWED_ACE>() };
         let raw_sid = unsafe { ace.cast::<u8>().add(8) }.cast::<c_void>();
         let subauthorities = unsafe { *raw_sid.cast::<u8>().add(1) } as usize;
         if 8 + 4 * subauthorities > end - (start + 8) {
@@ -258,7 +268,7 @@ pub(super) fn verify_private(handle: HANDLE, sid: &str, protected: bool) -> io::
         if who != sid && who != "S-1-5-18" {
             return Err(denied("unexpected private DACL principal"));
         }
-        if who == sid && allowed.Mask & 0x001f01ff == 0x001f01ff {
+        if who == sid && allowed.Mask & full_access == full_access {
             owner_full = true;
         }
     }

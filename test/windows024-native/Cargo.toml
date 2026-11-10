@@ -13,3 +13,7 @@ windows-sys = { version = "=0.61.2", features = ["Win32_Foundation", "Win32_Secu
 
 [lib]
 path = "lib.rs"
+
+[[bin]]
+name = "native024-fixture"
+path = "fixture.rs"

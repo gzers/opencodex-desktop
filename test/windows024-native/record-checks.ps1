@@ -11,7 +11,7 @@ $report=[ordered]@{scope='W0 standalone actual Rust platform module only';expect
 try{
  $report.toolchain=@{cargo=(& cargo --version);rustc=(& rustc --version);os=[Runtime.InteropServices.RuntimeInformation]::OSDescription;hostSid=[Security.Principal.WindowsIdentity]::GetCurrent().User.Value;session=[Diagnostics.Process]::GetCurrentProcess().SessionId;elevated=([Security.Principal.WindowsPrincipal]::new([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)}
  foreach($kind in @('fmt','test','clippy')){
-  $arguments=switch($kind){'fmt'{@('fmt','--manifest-path',$manifest,'--','--check')};'test'{@('test','--manifest-path',$manifest,'--locked','--offline','--','--test-threads=1')};'clippy'{@('clippy','--manifest-path',$manifest,'--locked','--offline','--all-targets','--','-D','warnings')}}
+  $arguments=switch($kind){'fmt'{@('fmt','--manifest-path',$manifest,'--','--check')};'test'{@('test','--manifest-path',$manifest,'--locked','--offline','--','--test-threads=1','--nocapture')};'clippy'{@('clippy','--manifest-path',$manifest,'--locked','--offline','--all-targets','--','-D','warnings')}}
   $sw=[Diagnostics.Stopwatch]::StartNew();& cargo @arguments 1> (Join-Path $EvidenceDirectory ($kind+'.stdout.log')) 2> (Join-Path $EvidenceDirectory ($kind+'.stderr.log'));$exit=$LASTEXITCODE
   $report.commands+=@{program='cargo';arguments=$arguments;exitCode=$exit;elapsedMs=$sw.ElapsedMilliseconds}
   if($exit -ne 0){throw ('targeted '+$kind+' check failed')}
