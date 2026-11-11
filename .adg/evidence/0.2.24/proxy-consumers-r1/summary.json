@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "code": "80afa4418af7d255c8823e5cdecb026fbb03412c",
+  "scope": "Saved proxy bypass propagated to updater metadata/artifact request hook, npm install/pack and metadata environment",
+  "accepted": false,
+  "backend": {
+    "totalUniqueRelatedPassed": 31,
+    "composition": {
+      "updaterProxy": 3,
+      "npmEnvironment": 1,
+      "versionedInstaller": 4,
+      "metadataQuery": 7,
+      "actualNodeNpmLoopbackRoute": 1,
+      "managerUpdate": 15
+    }
+  },
+  "checks": {
+    "fmt": 0,
+    "strictClippyAllTargets": 0,
+    "diffCheck": 0,
+    "newTransitiveVersions": false
+  },
+  "actualNpm": {
+    "sourceNodeVersion": "v26.8.1",
+    "sourceNpmVersion": "11.19.0",
+    "nodeSha256": "ebd2d552c7bebde593dd0390530963ad28de56bccde6ce387cdbe55fb0b6fb8e",
+    "npmCliSha256": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7"
+  },
+  "requests": {
+    "loopbackOnlyForNetworkFixtures": true,
+    "realRegistryOrGitHub": false,
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "businessModelsSyncOrInstallation": false
+  },
+  "limits": [
+    "standalone updater hook client tested; complete signed plugin download/install acceptance remains final candidate work",
+    "npm System mode still lacks platform-native proxy discovery; not claimed complete",
+    "one exact preexisting metadata timeout test runs without OS sandbox because system ps is kernel-denied inside sandbox; private HOME/TMP and PID-scoped readback retained"
+  ],
+  "failureEvidence": [
+    "standalone updater fixture omitted plugin-owned rustls provider initialization; panic retained, test mirrors real plugin setup",
+    "Clippy large enum fixed with Box, no suppression",
+    "preexisting metadata timeout process readback ps EPERM under sandbox retained; exact isolated test passed without sandbox",
+    "one fmt attempt ran from repository root with no Cargo manifest; corrected actual working directory",
+    "review caught plugin-level no_proxy would alter System mode, removed before final commit and added native-request regression"
+  ],
+  "cleanup": {
+    "fixtureRootsRemoved": true,
+    "dailyProxyOrNpmConfigTouched": false,
+    "duplicatedTestToolsRemoved": true,
+    "duplicateReceiptRootRemoved": true
+  },
+  "remaining": [
+    "npm platform System proxy support",
+    "Windows W0 HOME/Profile/W1/W2",
+    "P24-NAME",
+    "latest product rebuild/native full lifecycle and client restore",
+    "new official distribution publication verifier and final candidate"
+  ]
+}
