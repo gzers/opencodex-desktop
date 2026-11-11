@@ -42,3 +42,7 @@ Mac真实构建：11,467个文件/633,363,932未压缩字节，bundle SHA256 5b1
 ## 2026-11-11 版本化安装接线后继
 
 main b617717c3 已将 versioned handle 的 install_runtime/install_official_update 接至 [版本化候选装配及激活](versioned-install-r1.md)，不再选择 flat 前缀。真实服务停止准入、当前依赖绑定、原包树核对、配置保护与事务history接线见该合同。历史文本“安装/更新消费者仍待接”不再描述此后命令分流，但pending恢复UI、原生版本化归属、完整同版本修复、卸载和CLI仍未完成；W1/W2仍待后继共享合同与候选。
+
+## 2026-11-11 Mac用户终端入口后继
+
+maine9b00583c 已实现 [显式Mac终端ocx启停/转交](terminal-cli-r1.md)，内部ocx-runtime与用户ocx保持分离。新终端入口通过Desktop专用早期dispatch每次重新核对版本选择与实际D/H，用户HOME不替换；当前Windows原生注册/PATH与卸载撤销仍待接入，不将共享dispatch声明为双平台CLI完成。原“CLI消费者待接”描述由本合同对应Mac范围更新，W1/W2仍未放行。
