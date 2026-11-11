@@ -17,6 +17,12 @@ pub(crate) fn start(
     install: SharedRuntimeInstall,
     ready: impl FnOnce() + Send + 'static,
 ) -> AppResult<()> {
+    if runtime.uses_versioned_programs()
+        && super::program_removal::intentionally_removed(&installation, &desktop)?
+    {
+        ready();
+        return Ok(());
+    }
     if runtime.uses_versioned_programs() && matches!(runtime.selected_program(), Ok(Some(_))) {
         // Initial source admission already verified this image. A normal
         // startup does not rewrite or re-unpack a readable installed program.

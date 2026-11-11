@@ -1,13 +1,13 @@
 use super::*;
 use crate::modules::{data_root, runtime::program_selection::tests::Fixture as ProgramFixture};
 use std::os::unix::fs::PermissionsExt;
-struct Fixture {
+pub(crate) struct Fixture {
     _program: ProgramFixture,
     _root: tempfile::TempDir,
-    c: Context,
+    pub(crate) c: Context,
 }
 impl Fixture {
-    fn new() -> Self {
+    pub(crate) fn new() -> Self {
         let root = tempfile::tempdir().unwrap();
         let base = root.path().canonicalize().unwrap();
         let profile = base.join("user space ' literal $name");
@@ -58,7 +58,7 @@ impl Fixture {
     fn preview(&self, a: Action) -> Preview {
         preview(&self.c, a, "/bin/zsh", &[]).unwrap()
     }
-    fn change(&self, a: Action) {
+    pub(crate) fn change(&self, a: Action) {
         let p = self.preview(a);
         apply(&self.c, a, "/bin/zsh", &[], &p.confirmation_digest).unwrap();
     }

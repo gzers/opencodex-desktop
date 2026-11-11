@@ -74,7 +74,7 @@ impl Fixture {
         }
         f
     }
-    fn image(root: &Path, version: &str) -> CurrentSelection {
+    pub(crate) fn image(root: &Path, version: &str) -> CurrentSelection {
         let (target, platform) = program_layout::host_target().unwrap();
         let paths =
             RuntimeVersionPaths::new(&root.join("runtime/versions"), version, platform).unwrap();

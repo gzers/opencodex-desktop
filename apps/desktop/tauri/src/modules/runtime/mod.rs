@@ -14,6 +14,7 @@ pub mod port;
 pub mod program_activation;
 pub mod program_image;
 pub mod program_layout;
+pub mod program_removal;
 pub mod program_selection;
 pub(crate) mod protection;
 pub(crate) mod startup_bundle;
@@ -633,6 +634,12 @@ impl RuntimeHandle {
         // Unknown source cannot erase a prior recorded installation/history.
         // That record remains historical, never an executable fallback.
         let selected = self.selected_program()?;
+        // A missing version selection is an observation, not a new install or
+        // uninstall transaction. In particular, do not rewrite the exact source
+        // after-image retained by a completed explicit removal.
+        if self.uses_versioned_programs() && selected.is_none() {
+            return Ok(());
+        }
         let resolution = self.current();
         let mut record = if self.uses_versioned_programs() {
             self.store.load_for_update()?

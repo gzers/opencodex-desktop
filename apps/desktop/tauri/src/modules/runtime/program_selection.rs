@@ -63,6 +63,7 @@ pub fn verify_current(program_root: &Path, selected: &SelectedProgram) -> AppRes
         return Err(invalid("已选择的程序根已不可确认"));
     }
     let runtime = program_root.join("runtime");
+    require_no_removal(program_root)?;
     let pending = runtime.join(ACTIVATION_PENDING);
     safety::check_path(program_root, &pending, true).map_err(|_| invalid("激活路径不可确认"))?;
     match std::fs::symlink_metadata(&pending) {
@@ -93,6 +94,19 @@ fn invalid(detail: &'static str) -> AppError {
         code: "runtime_selection_invalid".into(),
         detail: detail.into(),
     }
+}
+fn require_no_removal(program_root: &Path) -> AppResult<()> {
+    let path = program_root
+        .join("runtime")
+        .join(super::program_removal::PENDING);
+    safety::check_path(program_root, &path, true)?;
+    if !matches!(std::fs::symlink_metadata(path),Err(e) if e.kind()==std::io::ErrorKind::NotFound) {
+        return Err(AppError::RuntimeManaged {
+            code: "runtime_removal_pending".into(),
+            detail: "原卸载操作尚未完成，请核对原操作；未重新安装或启动".into(),
+        });
+    }
+    Ok(())
 }
 fn digest(value: &str) -> bool {
     value.len() == 64
@@ -212,6 +226,7 @@ fn read_inner(
     if !root_present(program_root)? {
         return Ok(None);
     }
+    require_no_removal(program_root)?;
     let runtime = program_root.join("runtime");
     if !activating {
         let pending = runtime.join(ACTIVATION_PENDING);

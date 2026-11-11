@@ -863,4 +863,4 @@ fn forwarding_command(c: &Context, args: Vec<OsString>) -> AppResult<Command> {
 
 #[cfg(all(test, target_os = "macos", target_arch = "aarch64"))]
 #[path = "terminal_cli_tests.rs"]
-mod tests;
+pub(crate) mod tests;

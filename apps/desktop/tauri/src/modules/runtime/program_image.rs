@@ -15,9 +15,9 @@ fn fail() -> AppError {
         detail: "运行版本文件树无法核对，原目录保留".into(),
     }
 }
-#[derive(serde::Serialize)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
-enum Entry {
+pub(crate) enum Entry {
     Directory,
     File {
         bytes: u64,
@@ -28,6 +28,17 @@ enum Entry {
 /// Excludes only the root image manifest to avoid a self-referential hash. The
 /// manifest itself is bound by CurrentSelection or the exact activation receipt.
 pub fn content_digest(root: &Path) -> AppResult<String> {
+    let rows = inventory(root)?;
+    if rows.is_empty() {
+        return Err(fail());
+    }
+    inventory_digest(&rows)
+}
+pub(crate) fn inventory_digest(rows: &BTreeMap<String, Entry>) -> AppResult<String> {
+    let bytes = serde_json::to_vec(rows).map_err(|_| fail())?;
+    Ok(hash::sha256_hex(&bytes))
+}
+pub(crate) fn inventory(root: &Path) -> AppResult<BTreeMap<String, Entry>> {
     if !super::program_layout::clean_absolute(root) || !safety::inspect(root)?.is_dir() {
         return Err(fail());
     }
@@ -67,56 +78,15 @@ pub fn content_digest(root: &Path) -> AppResult<String> {
                 stack.push((path, depth + 1));
                 Entry::Directory
             } else {
-                let file = safety::open_file(&path, false)?;
-                safety::require_single_link(&file)?;
-                let before = file.metadata().map_err(|_| fail())?;
-                if before.len() > MAX_FILE {
+                let entry = file_entry(&path)?;
+                let Entry::File { bytes, .. } = &entry else {
                     return Err(fail());
-                }
+                };
                 total = total
-                    .checked_add(before.len())
+                    .checked_add(*bytes)
                     .filter(|n| *n <= MAX_BYTES)
                     .ok_or_else(fail)?;
-                let mut read = file.take(MAX_FILE + 1);
-                let mut digest = sha2::Sha256::new();
-                let mut buffer = [0u8; 64 * 1024];
-                let mut bytes = 0u64;
-                use sha2::Digest;
-                loop {
-                    let n = read.read(&mut buffer).map_err(|_| fail())?;
-                    if n == 0 {
-                        break;
-                    }
-                    bytes += n as u64;
-                    if bytes > before.len() {
-                        return Err(fail());
-                    }
-                    digest.update(&buffer[..n]);
-                }
-                let after = read.get_ref().metadata().map_err(|_| fail())?;
-                safety::require_single_link(read.get_ref())?;
-                if bytes != before.len()
-                    || after.len() != before.len()
-                    || after.modified().map_err(|_| fail())?
-                        != before.modified().map_err(|_| fail())?
-                {
-                    return Err(fail());
-                }
-                #[cfg(unix)]
-                let executable = {
-                    use std::os::unix::fs::PermissionsExt;
-                    if after.permissions().mode() != before.permissions().mode() {
-                        return Err(fail());
-                    }
-                    before.permissions().mode() & 0o111 != 0
-                };
-                #[cfg(not(unix))]
-                let executable = false;
-                Entry::File {
-                    bytes,
-                    sha256: format!("{:x}", digest.finalize()),
-                    executable,
-                }
+                entry
             };
             rows.insert(name, entry);
         }
@@ -127,11 +97,57 @@ pub fn content_digest(root: &Path) -> AppResult<String> {
             return Err(fail());
         }
     }
-    if rows.is_empty() {
+    Ok(rows)
+}
+pub(crate) fn file_entry(path: &Path) -> AppResult<Entry> {
+    if !safety::inspect(path)?.is_file() {
         return Err(fail());
     }
-    let bytes = serde_json::to_vec(&rows).map_err(|_| fail())?;
-    Ok(hash::sha256_hex(&bytes))
+    let file = safety::open_file(path, false)?;
+    safety::require_single_link(&file)?;
+    let before = file.metadata().map_err(|_| fail())?;
+    if before.len() > MAX_FILE {
+        return Err(fail());
+    }
+    let mut read = file.take(MAX_FILE + 1);
+    let mut digest = sha2::Sha256::new();
+    let mut buffer = [0u8; 64 * 1024];
+    let mut bytes = 0u64;
+    use sha2::Digest;
+    loop {
+        let n = read.read(&mut buffer).map_err(|_| fail())?;
+        if n == 0 {
+            break;
+        }
+        bytes += n as u64;
+        if bytes > before.len() {
+            return Err(fail());
+        }
+        digest.update(&buffer[..n]);
+    }
+    let after = read.get_ref().metadata().map_err(|_| fail())?;
+    safety::require_single_link(read.get_ref())?;
+    if bytes != before.len()
+        || after.len() != before.len()
+        || after.modified().map_err(|_| fail())? != before.modified().map_err(|_| fail())?
+    {
+        return Err(fail());
+    }
+    #[cfg(unix)]
+    let executable = {
+        use std::os::unix::fs::PermissionsExt;
+        if after.permissions().mode() != before.permissions().mode() {
+            return Err(fail());
+        }
+        before.permissions().mode() & 0o111 != 0
+    };
+    #[cfg(not(unix))]
+    let executable = false;
+    Ok(Entry::File {
+        bytes,
+        sha256: format!("{:x}", digest.finalize()),
+        executable,
+    })
 }
 pub fn verify(selected: &super::program_selection::SelectedProgram) -> AppResult<()> {
     if content_digest(&selected.paths.version_root)? != selected.image.tree_sha256 {
