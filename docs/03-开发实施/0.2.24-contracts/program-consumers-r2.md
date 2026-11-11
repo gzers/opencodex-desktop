@@ -38,3 +38,7 @@ Mac真实构建：11,467个文件/633,363,932未压缩字节，bundle SHA256 5b1
 版本更新切换/取消/中断恢复、卸载、用户CLI启用/禁用与UI/原包仍待接；WindowsW0产品启停/持久归属/完整恢复、W1安装器/PATH及W2最终候选尚未完成。本批不发布W1完整接线放行，不用单Mac包证明双平台。
 
 另Windows接口必须在产品接入前区分user_profile（HOME/USERPROFILE）和opencodex_home（OPENCODEX_HOME）；详同目录windows-w0-integration-findings-r1.md。该改动可由Windows在独占模块内先处理，不等待本机安装器/更新实现，也不需要重跑旧r5服务链。
+
+## 2026-11-11 版本化安装接线后继
+
+main b617717c3 已将 versioned handle 的 install_runtime/install_official_update 接至 [版本化候选装配及激活](versioned-install-r1.md)，不再选择 flat 前缀。真实服务停止准入、当前依赖绑定、原包树核对、配置保护与事务history接线见该合同。历史文本“安装/更新消费者仍待接”不再描述此后命令分流，但pending恢复UI、原生版本化归属、完整同版本修复、卸载和CLI仍未完成；W1/W2仍待后继共享合同与候选。
