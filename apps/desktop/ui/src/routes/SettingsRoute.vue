@@ -8,6 +8,7 @@ import AppTopbar from '@/components/AppTopbar.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
 import UiCard from '@/components/ui/UiCard.vue'
 import BackupManagement from '@/features/backup/BackupManagement.vue'
+import NativeConfigRollback from '@/features/backup/NativeConfigRollback.vue'
 import UiSelectMenu from '@/components/ui/UiSelectMenu.vue'
 import UiCardHeader from '@/components/ui/UiCardHeader.vue'
 import SettingRow from '@/components/patterns/SettingRow.vue'
@@ -900,6 +901,7 @@ function restoreGeneralDefaults() {
     </section>
 
     <section v-else-if="section === 'backup'" class="settings-panel active">
+      <NativeConfigRollback />
       <article class="card"><div class="card-head"><div><h2>数据与备份</h2><p>备份边界基于安装配置里的数据目录。</p></div><UiButton class="btn ghost" @click="routes.go('settings', { section: 'installation' })">打开安装配置</UiButton></div>
         <div class="setting-list">
           <div class="setting-row"><div><div class="setting-title">升级前备份</div><div class="setting-desc">面板更新前必须备份，失败时阻断安装；管理器备份选项在更新详情中确认。</div></div><div class="controls"><span class="tag">面板必需</span></div></div>

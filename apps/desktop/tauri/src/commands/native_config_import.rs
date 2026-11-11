@@ -15,6 +15,7 @@ use crate::{
     },
     state::{SharedDataRoot, SharedProcessContext, SharedRuntimeInstall},
 };
+use serde::Serialize;
 use std::{
     path::PathBuf,
     sync::{Arc, Mutex},
@@ -31,6 +32,70 @@ struct Prepared {
     selected_at: Instant,
     runtime: SelectedProgram,
     selection: native_import::Selection,
+}
+
+fn remember(
+    selections: &Selections,
+    runtime: SelectedProgram,
+    selection: native_import::Selection,
+) -> Result<String> {
+    let id = uuid::Uuid::new_v4().to_string();
+    *selections
+        .0
+        .lock()
+        .map_err(|_| schema_v2::error("native_import_stale"))? = Some(Prepared {
+        id: id.clone(),
+        selected_at: Instant::now(),
+        runtime,
+        selection,
+    });
+    Ok(id)
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RollbackSelection {
+    pub id: String,
+    pub preview: native_import::RollbackPreview,
+}
+
+#[tauri::command]
+pub async fn model_v2_native_rollback_list(
+    data: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, SharedProcessContext>,
+) -> Result<Vec<native_import::BackupSummary>> {
+    let data = data.0.clone();
+    let home = context.opencodex_home.clone();
+    tauri::async_runtime::spawn_blocking(move || native_import::list_backups(&data, &home))
+        .await
+        .map_err(|_| schema_v2::error("model_storage"))?
+}
+
+#[tauri::command]
+pub async fn model_v2_native_rollback_select(
+    backup_id: String,
+    data: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, SharedProcessContext>,
+    runtime: tauri::State<'_, Arc<RuntimeHandle>>,
+    selections: tauri::State<'_, Arc<Selections>>,
+) -> Result<RollbackSelection> {
+    let data = data.0.clone();
+    let home = context.opencodex_home.clone();
+    let runtime = runtime.inner().clone();
+    let selections = selections.inner().clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        let runtime = program(&runtime)?;
+        let (selection, preview) =
+            native_import::prepare_rollback(&data, &home, &backup_id, |bytes| {
+                validate(&runtime, bytes)
+            })?;
+        Ok(RollbackSelection {
+            id: remember(&selections, runtime, selection)?,
+            preview,
+        })
+    })
+    .await
+    .map_err(|_| schema_v2::error("model_storage"))?
 }
 
 fn program(handle: &RuntimeHandle) -> Result<SelectedProgram> {
@@ -156,17 +221,7 @@ pub async fn model_v2_native_import_select(
         let runtime = program(&runtime)?;
         let selection =
             native_import::prepare(&data, &home, &path, |bytes| validate(&runtime, bytes))?;
-        let id = uuid::Uuid::new_v4().to_string();
-        *selections
-            .0
-            .lock()
-            .map_err(|_| schema_v2::error("native_import_stale"))? = Some(Prepared {
-            id: id.clone(),
-            selected_at: Instant::now(),
-            runtime,
-            selection,
-        });
-        Ok(id)
+        remember(&selections, runtime, selection)
     })
     .await
     .map_err(|_| schema_v2::error("model_storage"))?
@@ -175,6 +230,30 @@ pub async fn model_v2_native_import_select(
 #[tauri::command]
 pub async fn model_v2_native_import_apply(
     id: String,
+    data: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, SharedProcessContext>,
+    runtime: tauri::State<'_, Arc<RuntimeHandle>>,
+    selections: tauri::State<'_, Arc<Selections>>,
+    lease: tauri::State<'_, SharedRuntimeInstall>,
+) -> Result<native_import::Outcome> {
+    apply_selection(id, false, data, context, runtime, selections, lease).await
+}
+
+#[tauri::command]
+pub async fn model_v2_native_rollback_apply(
+    id: String,
+    data: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, SharedProcessContext>,
+    runtime: tauri::State<'_, Arc<RuntimeHandle>>,
+    selections: tauri::State<'_, Arc<Selections>>,
+    lease: tauri::State<'_, SharedRuntimeInstall>,
+) -> Result<native_import::Outcome> {
+    apply_selection(id, true, data, context, runtime, selections, lease).await
+}
+
+async fn apply_selection(
+    id: String,
+    rollback: bool,
     data: tauri::State<'_, SharedDataRoot>,
     context: tauri::State<'_, SharedProcessContext>,
     runtime: tauri::State<'_, Arc<RuntimeHandle>>,
@@ -198,10 +277,11 @@ pub async fn model_v2_native_import_apply(
                 .0
                 .lock()
                 .map_err(|_| schema_v2::error("native_import_stale"))?;
-            if slot
-                .as_ref()
-                .is_none_or(|p| p.id != id || p.selected_at.elapsed() > Duration::from_secs(600))
-            {
+            if slot.as_ref().is_none_or(|p| {
+                p.id != id
+                    || p.selection.is_rollback() != rollback
+                    || p.selected_at.elapsed() > Duration::from_secs(600)
+            }) {
                 return Err(schema_v2::error("native_import_stale"));
             }
             slot.take().unwrap()
