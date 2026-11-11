@@ -42,6 +42,10 @@ pub mod upgrade;
 pub mod window;
 pub mod workspace;
 
+#[cfg(all(test, target_os = "macos", target_arch = "aarch64"))]
+#[path = "lifecycle_versioned_tests.rs"]
+mod lifecycle_versioned_tests;
+
 use crate::errors::{AppError, AppResult};
 use crate::modules::notifications::Notification;
 #[cfg(test)]
@@ -363,8 +367,12 @@ fn execute_lifecycle<R: ProcessRunner + ?Sized>(
     let Some(root) = context.runtime.managed_installation_root() else {
         return runner.execute(command);
     };
-    let identity = crate::modules::runtime::install::resolve_managed_installation(&root)?;
-    if context.executable()? != identity.entry {
+    // Lifecycle, status and version observation share the admitted provider.
+    // Reconstructing the old flat prefix rejects a valid versioned selection
+    // before the official process can start. This remains full action-time
+    // admission, not the provider's cheaper observation/cache path.
+    let identity = context.runtime.managed_program_identity()?;
+    if identity.installation_root != root || context.executable()? != identity.entry {
         return Err(AppError::NotConfigured);
     }
     if command.action == LifecycleAction::Start {
