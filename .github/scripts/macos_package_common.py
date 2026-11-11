@@ -142,4 +142,3 @@ def destination(value):
     if not raw.parent.is_dir():
         raise ValueError(f'destination parent must already exist: {raw.parent}')
     return resolved
-
