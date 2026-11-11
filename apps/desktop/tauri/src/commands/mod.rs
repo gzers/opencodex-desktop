@@ -32,6 +32,7 @@ pub mod runtime_recovery_v2_owner;
 pub mod runtime_recovery_v2_sources;
 pub mod scope_backup_v2;
 pub mod sync;
+pub mod terminal_cli;
 pub mod tray;
 pub mod update;
 pub mod update_schedule;

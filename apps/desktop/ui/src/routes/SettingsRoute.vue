@@ -18,6 +18,7 @@ import { useRouteStore } from '@/stores/routes'
 import UiSegmented from '@/components/ui/UiSegmented.vue'
 import AgentExecutionField from '@/features/models/AgentExecutionField.vue'
 import RuntimeActivationRecovery from '@/features/runtime/RuntimeActivationRecovery.vue'
+import RuntimeTerminalCli from '@/features/runtime/RuntimeTerminalCli.vue'
 import RuntimePortSettings from '@/features/runtime/RuntimePortSettings.vue'
 import { settingsSections } from '@/navigation'
 import { checkNetworkProxy, type PreferencesDto } from '@/features/preferences/api'
@@ -895,6 +896,7 @@ function restoreGeneralDefaults() {
         <p v-if="dataRoots.error" role="alert">{{ dataRoots.error }}</p>
         </section>
       </article>
+      <RuntimeTerminalCli :disabled="dataRootBindingDisabled||app.runtimeInstalling||app.runtimeUninstallBusy" />
 
     </section>
 

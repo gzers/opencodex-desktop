@@ -16,6 +16,7 @@ pub mod program_layout;
 pub mod program_selection;
 pub(crate) mod protection;
 pub(crate) mod startup_bundle;
+pub mod terminal_cli;
 pub mod uninstall;
 
 use serde::{Deserialize, Serialize};
