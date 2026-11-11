@@ -389,6 +389,11 @@ async fn probe_local(port: u16) -> Result<(serde_json::Value, serde_json::Value)
 }
 
 impl StatusSource for OfficialStatusSource {
+    fn manager_paths(&self) -> Option<(PathBuf, PathBuf)> {
+        self.client_recovery_root
+            .as_ref()
+            .map(|data| (data.clone(), self.environment.opencodex_home.clone()))
+    }
     fn client_recovery(&self) -> crate::modules::status::ClientRecoveryState {
         use crate::modules::status::ClientRecoveryState as State;
         if self.runtime.managed_installation_root().is_none() {
@@ -451,6 +456,31 @@ mod tests {
     use crate::modules::process::{EnvironmentPolicy, LifecycleAction, ProcessCommand};
     use std::os::unix::fs::PermissionsExt;
     use std::path::Path;
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn explicit_desktop_context_projects_real_status_command_without_guessing_config_file_home(
+    ) {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().canonicalize().unwrap();
+        let data = root.join("desktop");
+        let home = root.join("official-home");
+        std::fs::create_dir(&data).unwrap();
+        std::fs::create_dir(&home).unwrap();
+        let mut source=script_source(&root,"#!/bin/sh\nprintf '%s\n' '{\"schemaVersion\":1,\"proxy\":{\"running\":false,\"pid\":1234},\"listen\":{\"port\":54109},\"paths\":{\"config\":\"/payload/config.json\"},\"startup\":{\"status\":\"native\",\"protection\":\"none\",\"rebootSafe\":true}}'\n");
+        source.set_environment(home.clone());
+        let source = source.with_client_recovery_root(data.clone());
+        let mut collector = crate::modules::status::StatusCollector::new(source);
+        let value = collector.refresh().unwrap();
+        assert_eq!(value.runtime, crate::types::status::RuntimeState::Stopped);
+        assert_eq!((value.port, value.pid), (None, None));
+        assert_eq!(value.facts.data_root, data);
+        assert_eq!(value.facts.opencodex_home, Some(home));
+        assert_eq!(
+            std::fs::read_dir(&data).unwrap().count(),
+            0,
+            "status projection does not write manager files"
+        );
+        println!("CONTEXT_STATUS_COMMAND_OK stopped=true endpointsAbsent=true explicitDesktopAndHome=true managerWrites=false");
+    }
 
     fn command_fixture(root: &Path) -> ProcessCommand {
         let executable = root.join("ocx");

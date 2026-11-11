@@ -470,6 +470,9 @@ model_provider = "openai"
         .is_ok_and(|value| value.client_recovery_required);
     let reopened_gate = matches!(&reopened,Ok(snapshot) if
         snapshot.matrix.runtime==crate::types::status::RuntimeState::Stopped
+        && snapshot.port.is_none() && snapshot.pid.is_none()
+        && snapshot.facts.data_root == data
+        && snapshot.facts.opencodex_home.as_ref() == Some(&h)
         && !snapshot.can_stop && !snapshot.can_restart
         && if expects_pending {snapshot.facts.client_recovery==crate::modules::status::ClientRecoveryState::Required && !snapshot.can_start}
            else {snapshot.facts.client_recovery==crate::modules::status::ClientRecoveryState::NotRequired}

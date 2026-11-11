@@ -38,6 +38,8 @@ pub fn max_backoff() -> Duration {
 }
 #[cfg(test)]
 mod client_recovery_gate_tests;
+#[cfg(test)]
+mod context_paths_tests;
 pub mod polling;
 
 pub fn max_emissions_per_second() -> u32 {
@@ -131,6 +133,11 @@ pub enum CollectError {
 
 /// 官方采集器边界。真实实现必须在 5 秒内返回或转换为 Timeout。
 pub trait StatusSource {
+    /// Resolved Desktop launch context, distinct from official config-file
+    /// paths. Payload fields and directory-name guesses cannot supply it.
+    fn manager_paths(&self) -> Option<(PathBuf, PathBuf)> {
+        None
+    }
     /// Separate native manager fact. Official JSON cannot mint or clear it.
     fn client_recovery(&self) -> ClientRecoveryState {
         ClientRecoveryState::NotRequired
@@ -580,8 +587,19 @@ pub fn map_official_output(
         };
     }
 
-    let port = report.port();
-    let pid = report.pid().or_else(|| report.proxy_pid());
+    let explicit_inactive = matches!(report.string(&["status", "state", "runtime"]),Field::Present(value) if matches!(normalized(&value).as_str(),"stopped"|"stop-confirmed"|"stopped-confirmed"|"not-found"|"not_found"|"notfound"))
+        || matches!(
+            report.nested_boolean(report.nested_object("proxy"), &["running"]),
+            Field::Present(false)
+        );
+    let inactive =
+        explicit_inactive && matches!(runtime, RuntimeState::Stopped | RuntimeState::NotFound);
+    let port = if inactive { None } else { report.port() };
+    let pid = if inactive {
+        None
+    } else {
+        report.pid().or_else(|| report.proxy_pid())
+    };
     let runtime_version = {
         let skew = report.nested_object("versionSkew");
         match report.nested_string(skew, &["cliVersion", "cli_version"]) {
@@ -604,9 +622,7 @@ pub fn map_official_output(
         client_recovery: ClientRecoveryState::NotRequired,
         health,
         runtime_label,
-        opencodex_home: report
-            .path(&["opencodexHome", "opencodex_home", "home"])
-            .or_else(|| report.nested_path("paths", &["config"])),
+        opencodex_home: report.path(&["opencodexHome", "opencodex_home", "home"]),
         data_root: report
             .path(&["dataRoot", "data_root"])
             .or_else(|| report.nested_path("paths", &["home", "dataRoot", "data_root"]))
@@ -813,6 +829,13 @@ where
     pub fn record_failure(&mut self) {
         self.failure_count = self.failure_count.saturating_add(1);
     }
+    fn refresh_manager_facts(&mut self) {
+        self.facts.client_recovery = self.source.client_recovery();
+        if let Some((data_root, home)) = self.source.manager_paths() {
+            self.facts.data_root = data_root;
+            self.facts.opencodex_home = Some(home);
+        }
+    }
 
     pub fn refresh(&mut self) -> Result<MappedOfficialStatus, CollectError> {
         self.refresh_at(Instant::now())
@@ -820,7 +843,7 @@ where
 
     /// 使用注入时钟刷新；去抖期内共享上次结果，不额外调用来源。
     pub fn refresh_at(&mut self, now: Instant) -> Result<MappedOfficialStatus, CollectError> {
-        self.facts.client_recovery = self.source.client_recovery();
+        self.refresh_manager_facts();
         if !self.request_allowed(now)
             && !self.last_was_light
             && self.source.resolved()
@@ -832,6 +855,8 @@ where
                 .unwrap_or(Err(CollectError::Timeout))
                 .map(|mut result| {
                     result.facts.client_recovery = self.facts.client_recovery;
+                    result.facts.data_root = self.facts.data_root.clone();
+                    result.facts.opencodex_home = self.facts.opencodex_home.clone();
                     result
                 });
         }
@@ -839,7 +864,7 @@ where
     }
 
     pub fn refresh_light_at(&mut self, now: Instant) -> Result<MappedOfficialStatus, CollectError> {
-        self.facts.client_recovery = self.source.client_recovery();
+        self.refresh_manager_facts();
         if !self.request_allowed(now) && !self.source.source_unknown() {
             return self
                 .last_result
@@ -847,6 +872,8 @@ where
                 .unwrap_or(Err(CollectError::Timeout))
                 .map(|mut result| {
                     result.facts.client_recovery = self.facts.client_recovery;
+                    result.facts.data_root = self.facts.data_root.clone();
+                    result.facts.opencodex_home = self.facts.opencodex_home.clone();
                     result
                 });
         }
@@ -897,6 +924,10 @@ where
                     self.pid = None;
                 }
                 self.facts.client_recovery = client_recovery;
+                if let Some((data_root, home)) = self.source.manager_paths() {
+                    self.facts.data_root = data_root;
+                    self.facts.opencodex_home = Some(home);
+                }
                 self.last_result = Some(Err(error));
                 return Err(error);
             }
@@ -909,6 +940,13 @@ where
             self.matrix.operation,
         );
         mapped.facts.client_recovery = client_recovery;
+        if let Some((data_root, home)) = self.source.manager_paths() {
+            mapped.facts.data_root = data_root;
+            mapped.facts.opencodex_home = Some(home);
+            mapped
+                .downgrade_reasons
+                .retain(|reason| *reason != DowngradeReason::MissingDataRoot);
+        }
         self.matrix = StatusMatrix {
             runtime: mapped.runtime,
             connection: mapped.connection,
@@ -1188,10 +1226,9 @@ mod tests {
         assert_eq!(mapped.port, Some(10100));
         assert_eq!(mapped.facts.runtime_label.as_deref(), Some("bundled"));
         assert_eq!(mapped.facts.version_drift.as_deref(), Some("2.50.0"));
-        assert_eq!(
-            mapped.facts.opencodex_home,
-            Some(PathBuf::from("/tmp/opencodex-home/config.json"))
-        );
+        // Official paths.config is a file, not an admissible HOME. The real
+        // Desktop collector supplies its independently resolved context.
+        assert_eq!(mapped.facts.opencodex_home, None);
     }
 
     #[test]
