@@ -1,0 +1,3 @@
+First compile: exit 101. Summary of original tool response (not raw stderr).
+E0308 at commands/model_config_v2.rs:334 and feedback_channel_read_tests.rs:43,124: expected Result<ReadResponseV2, ModelError>, found Result<ReadResponseV2, MatchErrorV2>.
+Corrected the new notification projection to consume the existing schema_v2::Result. Domain error semantics unchanged.

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "code": "b6dc941cf6e2e990bae30799c071d732fc77b097",
+  "scope": "Registered channel-read result feedback and notification refresh race",
+  "backend": {
+    "readProjection": 3,
+    "eventRegistry": 43,
+    "existingReadSave": 24
+  },
+  "frontend": {
+    "tests": 49,
+    "files": 6,
+    "typecheck": 0
+  },
+  "checks": {
+    "fmt": 0,
+    "clippyAllTargetsWarningsDenied": 0
+  },
+  "visual": {
+    "sizes": [
+      "1040x760",
+      "420x640"
+    ],
+    "nativeIpc": false,
+    "actualComponents": [
+      "ToastHost",
+      "NotificationItem"
+    ],
+    "detailShell": "isolated fixture"
+  },
+  "failuresRetained": [
+    "initial-compile-error.txt: explanatory excerpt, not raw stderr",
+    "backend-status.json: read projection registry rejection; existing 24 domain cases passed",
+    "backend-final-status.json: incomplete success-receipt registration; 41 registry failures retained"
+  ],
+  "cleanup": {
+    "fixtureRootsRemoved": true,
+    "uiFixtureAndRunnerRemoved": true,
+    "dailyConfigurationModified": false,
+    "businessModelOrSyncRequests": false,
+    "duplicateReceiptRootRemoved": true
+  },
+  "remaining": [
+    "Explicit bundled reinstall and damaged-image repair",
+    "Version/network UI",
+    "Windows W0 HOME/Profile correction and W1/W2",
+    "P24-NAME",
+    "Native candidate/build and final acceptance"
+  ],
+  "accepted": false
+}
