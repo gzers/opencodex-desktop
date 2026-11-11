@@ -35,3 +35,7 @@ program_selection::read是程序准入/激活完整核验接口，会读取并�
 main60e9fc640 将首次供应接入 [program_activation共享事务](program-activation-r1.md)，后继代码以该合同为准：稳定内部入口、current.json和当前D的runtime.json不再分别写后清pending；三者按原件/后像校验、保留回执后才完成。候选镜像仍须来自已准入供应器，read_image不是另一条上游信任策略或任意版本发现入口。当前源码不会恢复旧flat树，也不会在启动时隐式完成pending。
 
 共享Rust API可显式继续/回退，保留版本镜像；但常规更新源装配、产品恢复命令/UI、真实生命周期准入及CLI尚未全接，W1/W2继续等待。此前检查点关于“无显式恢复API”的描述为当时事实，不再描述此后共享核心；不能将新增核心API当整版安装/更新完成。
+
+## 2026-11-11 完整目录摘要后继
+
+mainbcb081ee4 的 ImageManifest 必需treeSha256，具体产生/消费和完整目录边界见[镜像目录合同](program-image-tree-r1.md)。current结构不变；缺字段的旧开发镜像不补写兼容。固定资源清单中的Node文件别名在新版本落位前实体化，原包/固定资源本身未修改。该能力用于动作/后继卸载准入，不增加高频状态整树扫描，不代表版本化卸载已实现。

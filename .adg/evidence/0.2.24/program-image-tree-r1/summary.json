@@ -1,0 +1,58 @@
+{
+  "codeCommit": "bcb081ee475da80aecc02add61727cacab928420",
+  "synthetic": {
+    "imageInventory": 3,
+    "selection": 7,
+    "activation": 7,
+    "supply": 33,
+    "versionedInstall": 4,
+    "terminal": 9,
+    "totalPassed": 63,
+    "ignoredExplicitCases": 4,
+    "binarySha256": "664a93e378a28d43b5dc67c842ab7d289757bef3325998431d342db1fed54ea3"
+  },
+  "explicit": {
+    "totalPassed": 3,
+    "officialSupply": 1,
+    "desktopDispatch": 1,
+    "officialTerminal": 1,
+    "supplyBinarySha256": "da511eb4394e7c2382c37a427fedfb7c97a1b95ce154544d4c224640e407ad56",
+    "terminalBinarySha256": {
+      "isolated-test": "664a93e378a28d43b5dc67c842ab7d289757bef3325998431d342db1fed54ea3",
+      "manager-test": "c25f5b66a9be3653808ec0e6975236e9b67df1159bf000565643f1f02f362e1d"
+    },
+    "descriptorPin": "e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3",
+    "archiveSha256": "5b10c1a888000d54d14783622d9d8330c33f4e1b14a5f163d007337d0424ec7f",
+    "supplyElapsedMs": 76541,
+    "noServicesStarted": true,
+    "officialPackageUnchanged": true,
+    "customConfigBytesUnchanged": true
+  },
+  "officialSourceBoundary": "Supply was checked before the final negative activation-test addition and additional assertions proving fixed file aliases are materialized; production tree code was unchanged. Final ordinary suite and explicit Desktop/official terminal runs use the final rebuilt sources.",
+  "format": "passed",
+  "strictClippyAllTargets": "passed",
+  "verified": [
+    "new image manifest requires treeSha256, computed after fixed bundle dependency placement and candidate normalization",
+    "all regular file bytes/relative names/executable flags and empty directories bound; only root .runtime-image.json excluded from its own digest and separately checked against selected image hash",
+    "entry/depth/file/aggregate limits; sparse oversized file rejected before payload reads",
+    "extra file/empty directory, changed ordinary file/execute flag, symlink/hardlink, changed root manifest and nested manifest differences refused without altering originals",
+    "installer verifies original current image; activation/recovery verify complete before/candidate images before selection writes",
+    "high-frequency verify_current and ordinary read_image retain bounded/critical-file semantics; whole-tree scan is explicit at destructive/action boundaries",
+    "pinned Node npm/npx file aliases materialized from exact descriptor targets into independent files before version relocation; combined materialized/copy size cap preserved",
+    "actual fixed official2.99 supply plus current Desktop dispatch and official version/config-port read keep configuration and image content stable"
+  ],
+  "retainedFailures": [
+    "Initial tree scanner correctly refused symlinks. Four versioned-supply cases exposed that the fixed Node bundle contains reviewed npm/npx file aliases; normalized only descriptor-declared verified regular-file targets before moving/sealing. No unknown-link exception or assertion reduction.",
+    "An initial multiline tool snippet had a malformed backslash character literal; parser refused it before compilation. Corrected to char::from(92) path separator normalization."
+  ],
+  "remaining": [
+    "versioned uninstall still needs reviewed removal plan, terminal revocation, runtime absence and recoverable execution; this change performs no deletion",
+    "same-version damaged-image recovery still needs source/readback and repair transaction wiring",
+    "Windows production lifecycle/CLI/PATH/install-uninstall integration and fixed native candidate still incomplete",
+    "program sealing is local installed-image drift evidence after original source admission, not an upstream signature or an ownership grant for arbitrary directories"
+  ],
+  "dailyConfigTouched": false,
+  "networkDenied": true,
+  "businessSyncOrModelRequests": false,
+  "temporaryFixtureRootsCleaned": true
+}
