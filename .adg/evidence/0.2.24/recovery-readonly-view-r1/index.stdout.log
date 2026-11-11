@@ -1,0 +1,25 @@
+
+running 20 tests
+test infrastructure::macos_client_originals::session_index::tests::a_real_second_process_is_excluded_for_entire_action_and_can_reopen_after_owner_exits ... ok
+test infrastructure::macos_client_originals::session_index::tests::abrupt_process_exit_keeps_captured_references_and_does_not_scan_for_new_ones ... ok
+test infrastructure::macos_client_originals::session_index::tests::action_lock_special_file_or_changed_permissions_are_refused_without_repair ... ok
+test infrastructure::macos_client_originals::session_index::tests::actual_index_recovery_fact_survives_a_failed_service_observation_and_blocks_restart_on_reopen ... ok
+test infrastructure::macos_client_originals::session_index::tests::directory_generation_or_profile_home_change_refuses_prior_index ... ok
+test infrastructure::macos_client_originals::session_index::tests::existing_action_symlink_and_unknown_index_are_not_adopted_or_repaired ... ok
+test infrastructure::macos_client_originals::session_index::tests::failed_capture_is_not_an_empty_or_safe_new_baseline ... ok
+test infrastructure::macos_client_originals::session_index::tests::index_and_event_document_tampering_cannot_supply_new_current_references ... ok
+test infrastructure::macos_client_originals::session_index::tests::malformed_or_early_restore_plan_never_publishes_new_references ... ok
+test infrastructure::macos_client_originals::session_index::tests::observation_does_not_close_a_sqlite_inode_while_a_same_process_writer_holds_it ... ok
+test infrastructure::macos_client_originals::session_index::tests::observation_is_read_only_and_does_not_initialize_a_missing_session ... ok
+test infrastructure::macos_client_originals::session_index::tests::observation_refuses_sidecars_old_schema_and_orphaned_or_newer_events_without_repair ... ok
+test infrastructure::macos_client_originals::session_index::tests::observation_refuses_unsafe_permissions_redirected_context_and_incomplete_initializers ... ok
+test infrastructure::macos_client_originals::session_index::tests::observation_uses_the_exact_unicode_path_instead_of_interpreting_uri_metacharacters ... ok
+test infrastructure::macos_client_originals::session_index::tests::previous_index_schema_is_refused_without_compatibility_or_automatic_migration ... ok
+test infrastructure::macos_client_originals::session_index::tests::references_are_durable_sequential_and_an_unfinished_session_cannot_be_overwritten ... ok
+test infrastructure::macos_client_originals::session_index::tests::restore_plan_references_commit_once_with_same_originals_and_survive_reopen ... ok
+test infrastructure::macos_client_originals::session_index::tests::retained_product_index_reopens_with_final_lock_validation_and_preserves_original_references ... ignored, explicit retained own product fixture; reads existing Stopped index only, no service or new baseline
+test infrastructure::macos_client_originals::session_index::tests::stale_expected_revision_rebase_and_missing_phase_are_rejected_without_changes ... ok
+test infrastructure::macos_client_originals::session_index::tests::stopped_plan_is_observed_after_reopen_without_rebasing_original_references ... ok
+
+test result: ok. 19 passed; 0 failed; 1 ignored; 0 measured; 2281 filtered out; finished in 0.71s
+

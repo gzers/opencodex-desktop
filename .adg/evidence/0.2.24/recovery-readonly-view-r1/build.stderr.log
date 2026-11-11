@@ -1,0 +1,16 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0433]: cannot find module or crate `fs` in this scope
+   --> src/infrastructure/macos_client_session_observation.rs:109:23
+    |
+109 |     let client_path = fs::canonicalize(context.working_directory.join(".codex"))?;
+    |                       ^^ use of unresolved module or unlinked crate `fs`
+    |
+    = help: if you wanted to use a crate named `fs`, use `cargo add fs` to add it to your `Cargo.toml`
+    = note: module `crate::modules::runtime::version_facts::tests::fs` exists but is inaccessible
+help: consider importing this module
+    |
+  5 + use std::fs;
+    |
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

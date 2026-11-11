@@ -1,0 +1,267 @@
+{
+  "accepted": false,
+  "frozenCandidate": false,
+  "scope": "immutable native current-index observation, independent recovery gates in fresh collector, snapshot, tray/menu and UI; not actual file restoration",
+  "rustRelatedChecks": 57,
+  "rustGroups": {
+    "groups": {
+      "index": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 19 passed; 0 failed; 1 ignored; 0 measured; 2281 filtered out; finished in 0.71s"
+        ]
+      },
+      "status": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 2282 filtered out; finished in 0.01s"
+        ]
+      },
+      "recovery-policy": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2300 filtered out; finished in 0.01s"
+        ]
+      },
+      "snapshot": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2296 filtered out; finished in 0.00s"
+        ]
+      },
+      "tray": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 2295 filtered out; finished in 0.00s"
+        ]
+      },
+      "native-menu": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2298 filtered out; finished in 0.00s"
+        ]
+      },
+      "tray-command": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2301 filtered out; finished in 0.00s"
+        ]
+      },
+      "polling": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2298 filtered out; finished in 0.00s"
+        ]
+      }
+    },
+    "binarySha256": "e908c21bbe9e2191a050c04197c9f5f9d3b1a8c647847f69432e930ce7c162d4"
+  },
+  "finalIndex": {
+    "exitCode": 0,
+    "binarySha256": "7be61ef1fd16cf02c2d1bfc6a4abceb7774a5278bd11dad1e6c2e2bae0573c2b"
+  },
+  "uiTests": 64,
+  "uiExitCode": 0,
+  "firstTypecheckExitCode": 2,
+  "finalTypecheckExitCode": 0,
+  "firstCompileExitCode": 101,
+  "finalCompileExitCode": 0,
+  "firstClippyExitCode": 101,
+  "finalClippyExitCode": 0,
+  "nativeRounds": {
+    "native": {
+      "accepted": false,
+      "businessRequests": false,
+      "clientChangedDuringStart": true,
+      "independentOriginalsReferenced": true,
+      "indexedReady": true,
+      "indexedRestorePrepared": false,
+      "indexedRevision": 4,
+      "indexedStopped": false,
+      "nativeClientRestored": {
+        "codex/config.toml": true,
+        "codex/models_cache.json": false,
+        "codex/opencodex-catalog-audit.jsonl": false,
+        "codex/opencodex-catalog.json": false,
+        "grok/config.toml.bak-opencodex": true
+      },
+      "officialVersion": "2.99.0",
+      "pidRecordAbsent": true,
+      "record": {
+        "pid": 58783,
+        "port": 54109
+      },
+      "recordAbsent": true,
+      "reopenedRecoveryGate": true,
+      "reopenedSnapshot": {
+        "can_restart": false,
+        "can_start": false,
+        "can_stop": false,
+        "facts": {
+          "client_recovery": "required",
+          "data_root": "",
+          "health": "unknown",
+          "opencodex_home": "/private/tmp/ocxd024-versioned-lifecycle-g3rfftgh/fixtures/profile/.codex-desktop/opencodex/home/config.json",
+          "protection": "none",
+          "reboot_safe": true,
+          "runtime_label": "bundled",
+          "service_present": null,
+          "shim_present": null,
+          "startup_status": "native",
+          "version_drift": "2.99.0"
+        },
+        "matrix": {
+          "connection": "unconfigured",
+          "operation": "idle",
+          "runtime": "stopped"
+        },
+        "pid": null,
+        "port": 54109,
+        "source": "live"
+      },
+      "reopenedStatusElapsedMs": 794,
+      "result": "failed",
+      "serviceStarted": true,
+      "start": {
+        "canRestart": true,
+        "canStart": false,
+        "canStop": true,
+        "clientRecoveryRequired": false,
+        "lifecycleState": "running",
+        "result": "started"
+      },
+      "startBudgetMs": 30000,
+      "startElapsedMs": 15534,
+      "status": {
+        "pid": "58783",
+        "port": 54109,
+        "ready": true,
+        "status": "running"
+      },
+      "statusBudgetMs": 5000,
+      "statusElapsedMs": 1104,
+      "stop": {
+        "canRestart": false,
+        "canStart": false,
+        "canStop": false,
+        "clientRecoveryRequired": true,
+        "failure": {
+          "code": "client_original_restore_pending",
+          "message": "\u670d\u52a1\u5df2\u6b63\u5e38\u505c\u6b62\uff0c\u5ba2\u6237\u7aef\u914d\u7f6e\u539f\u4ef6\u6062\u590d\u5c1a\u672a\u5b8c\u6210\uff1b\u539f\u4f1a\u8bdd\u548c\u73b0\u573a\u5df2\u4fdd\u7559"
+        },
+        "lifecycleState": "stopped",
+        "result": null
+      },
+      "stopBudgetMs": 10000,
+      "stopElapsedMs": 6005,
+      "stoppedRecoveryObservation": true
+    },
+    "native2": {
+      "accepted": false,
+      "businessRequests": false,
+      "clientChangedDuringStart": true,
+      "independentOriginalsReferenced": true,
+      "indexedReady": true,
+      "indexedRestorePrepared": true,
+      "indexedRevision": 6,
+      "indexedStopped": false,
+      "nativeClientRestored": {
+        "codex/config.toml": true,
+        "codex/models_cache.json": false,
+        "codex/opencodex-catalog-audit.jsonl": false,
+        "codex/opencodex-catalog.json": false,
+        "grok/config.toml.bak-opencodex": true
+      },
+      "officialVersion": "2.99.0",
+      "pidRecordAbsent": true,
+      "record": {
+        "pid": 59065,
+        "port": 54697
+      },
+      "recordAbsent": true,
+      "reopenedRecoveryGate": true,
+      "reopenedSnapshot": {
+        "can_restart": false,
+        "can_start": false,
+        "can_stop": false,
+        "facts": {
+          "client_recovery": "required",
+          "data_root": "",
+          "health": "unknown",
+          "opencodex_home": "/private/tmp/ocxd024-versioned-lifecycle-jbefdozk/fixtures/profile/.codex-desktop/opencodex/home/config.json",
+          "protection": "none",
+          "reboot_safe": true,
+          "runtime_label": "bundled",
+          "service_present": null,
+          "shim_present": null,
+          "startup_status": "native",
+          "version_drift": "2.99.0"
+        },
+        "matrix": {
+          "connection": "unconfigured",
+          "operation": "idle",
+          "runtime": "stopped"
+        },
+        "pid": null,
+        "port": 54697,
+        "source": "live"
+      },
+      "reopenedStatusElapsedMs": 825,
+      "restorePlanMatchesIndependentIndex": true,
+      "result": "failed",
+      "serviceStarted": true,
+      "start": {
+        "canRestart": true,
+        "canStart": false,
+        "canStop": true,
+        "clientRecoveryRequired": false,
+        "lifecycleState": "running",
+        "result": "started"
+      },
+      "startBudgetMs": 30000,
+      "startElapsedMs": 13611,
+      "status": {
+        "pid": "59065",
+        "port": 54697,
+        "ready": true,
+        "status": "running"
+      },
+      "statusBudgetMs": 5000,
+      "statusElapsedMs": 1148,
+      "stop": {
+        "canRestart": false,
+        "canStart": false,
+        "canStop": false,
+        "clientRecoveryRequired": true,
+        "failure": {
+          "code": "client_original_restore_pending",
+          "message": "\u670d\u52a1\u5df2\u6b63\u5e38\u505c\u6b62\uff0c\u5ba2\u6237\u7aef\u914d\u7f6e\u539f\u4ef6\u6062\u590d\u5c1a\u672a\u5b8c\u6210\uff1b\u539f\u4f1a\u8bdd\u548c\u73b0\u573a\u5df2\u4fdd\u7559"
+        },
+        "lifecycleState": "stopped",
+        "result": null
+      },
+      "stopBudgetMs": 10000,
+      "stopElapsedMs": 9904,
+      "stoppedRecoveryObservation": true
+    }
+  },
+  "priorNativeRevision4Failure": "Original underlying error was hidden by prior mapping; diagnostics now preserve fixed phase/code. Fresh follow-up reached revision6; first failure not reproduced or declared fixed.",
+  "cleanup": {
+    "ownedImageProcesses": [],
+    "originalPrimaryPortsAbsent": true,
+    "tcpSnapshotFramingValid": true,
+    "exactDatabasesExclusivelyReacquiredReleased": [
+      "/private/tmp/opencodex-runtime-v1-501/native-write-locks/db138e43fd9ea956e11d7d487baef1d533ab3d0a66c21a4297f912af2c507819.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/db138e43fd9ea956e11d7d487baef1d533ab3d0a66c21a4297f912af2c507819.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/history-write-locks/a6194a24947c1b5bcb43ffcdbf8347f56d74c3706eb6848d6e288b1f69cadcfa.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/native-write-locks/212726f2eabd6f1a3dd4f01e039996055883bfd610250987937061e12e445e6e.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/212726f2eabd6f1a3dd4f01e039996055883bfd610250987937061e12e445e6e.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/history-write-locks/c329a5a106651634d9b48f9f9b0cf38521b2a4c7cfa132696084bff7852e12d2.sqlite"
+    ],
+    "temporaryProfileProgramIndexStageRootsRemoved": true,
+    "testBinariesRemoved": true,
+    "dailyConfigChanged": false,
+    "businessRequests": false
+  },
+  "remaining": "actual full client restoration, full process family/listener/writer authority, explicit recovery/rollback UI, original IMP34 entire remaining scope"
+}

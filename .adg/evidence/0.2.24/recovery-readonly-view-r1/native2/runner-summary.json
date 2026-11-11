@@ -1,0 +1,24 @@
+{
+  "accepted": false,
+  "hypothesis": "Previous native run confirmed reopened Required gate in794ms but unexpectedly stopped at original index revision4 after normal Stop, underlying failure hidden by existing mapping. Add fixed phase/code-only diagnostics, no assertion or timeout change; fresh profile on fully revalidated same immutable image isolates whether failure is coordination/seal/index/prepare. Full restoration still fails; both evidence directories retained, no old profile retries.",
+  "temporaryRoot": "/private/tmp/ocxd024-versioned-lifecycle-jbefdozk",
+  "exactNewCoordinatorFiles": [
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/212726f2eabd6f1a3dd4f01e039996055883bfd610250987937061e12e445e6e.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/212726f2eabd6f1a3dd4f01e039996055883bfd610250987937061e12e445e6e.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/212726f2eabd6f1a3dd4f01e039996055883bfd610250987937061e12e445e6e.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/212726f2eabd6f1a3dd4f01e039996055883bfd610250987937061e12e445e6e.sqlite-shm",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/212726f2eabd6f1a3dd4f01e039996055883bfd610250987937061e12e445e6e.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/212726f2eabd6f1a3dd4f01e039996055883bfd610250987937061e12e445e6e.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/212726f2eabd6f1a3dd4f01e039996055883bfd610250987937061e12e445e6e.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/212726f2eabd6f1a3dd4f01e039996055883bfd610250987937061e12e445e6e.sqlite-shm",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/c329a5a106651634d9b48f9f9b0cf38521b2a4c7cfa132696084bff7852e12d2.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/c329a5a106651634d9b48f9f9b0cf38521b2a4c7cfa132696084bff7852e12d2.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/c329a5a106651634d9b48f9f9b0cf38521b2a4c7cfa132696084bff7852e12d2.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/c329a5a106651634d9b48f9f9b0cf38521b2a4c7cfa132696084bff7852e12d2.sqlite-shm"
+  ],
+  "noBusinessRequests": true,
+  "pid": 59056,
+  "exitCode": 101,
+  "elapsedSeconds": 30.866,
+  "ownedProcessesRemaining": []
+}
