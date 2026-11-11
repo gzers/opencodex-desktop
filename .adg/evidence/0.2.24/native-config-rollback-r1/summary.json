@@ -1,0 +1,43 @@
+{
+  "codeCommit": "e30294a85f6c9ef1104a32796ca2f04dfb05b07f",
+  "rust": {
+    "tests": 10,
+    "passed": 10,
+    "newRollbackCases": 4,
+    "platform": "macOS",
+    "network": "denied",
+    "writes": "isolated temporary root only",
+    "officialService": "not started; test injected service observations"
+  },
+  "frontend": {
+    "testFiles": [
+      "native-config-rollback",
+      "native-config-import",
+      "settings-readonly",
+      "settings-paths-v2",
+      "runtime-port-settings"
+    ],
+    "tests": 44,
+    "passed": 44,
+    "typecheck": "passed"
+  },
+  "verified": [
+    "exact configuration bytes and original port restored",
+    "separate port mode record unchanged; actual mode derived from the recovered port",
+    "pre-rollback bytes protected and available as a second rollback source",
+    "other HOME, malformed backup ID, tampered content, broadened Unix permissions and stale target refused",
+    "cancel and byte-identical no-op do not replace config or add backups",
+    "confirmation independent of ordinary import; local edits survive stale preview"
+  ],
+  "scope": [
+    "complete backups created by native import and native rollback for the active HOME",
+    "Windows ACL verification code is wired; no real Windows execution yet",
+    "manual and pre-upgrade backup source integration, real native candidate, and stale-save explicit reconciliation are pending"
+  ],
+  "harnessFailures": [
+    "An initial Python snippet did not parse because newline escapes were interpolated; no test ran.",
+    "A subsequent launcher used hashlib.file_digest, which is unavailable on the host Python; no test ran. The final launcher uses hashlib.sha256 and preserved the Rust process logs."
+  ],
+  "dailyConfigTouched": false,
+  "temporaryFixturesCleaned": true
+}
