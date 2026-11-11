@@ -101,7 +101,7 @@ pub struct SystemServiceOwnerProofProvider {
 /// Issued only by the complete ordinary Stop path. A preexisting Stopped
 /// observation carries NO newly verified process exit and must never authorize
 /// compensation of an unrelated startup snapshot.
-pub(crate) struct CompletedLifecycleStop {
+pub struct CompletedLifecycleStop {
     context: ProcessContext,
     data_root: PathBuf,
     record_digest: Option<String>,

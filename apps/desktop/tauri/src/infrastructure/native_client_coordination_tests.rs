@@ -287,6 +287,48 @@ fn world_writable_owner_receipt_is_not_admitted_or_repaired_by_hashing_it() {
     assert_eq!(fs::read(path).unwrap(), b"synthetic current owner bytes");
 }
 
+#[test]
+fn native_lease_context_cannot_be_reused_for_another_runtime_profile_home_or_client() {
+    let f = Fixture::new();
+    let lease = acquire(
+        &f.context,
+        &f.record,
+        Instant::now() + Duration::from_secs(5),
+        &|_| Ok(()),
+    )
+    .unwrap();
+    let context = crate::state::ProcessContext {
+        runtime: f.context.runtime.clone(),
+        working_directory: f.context.user_profile.clone(),
+        opencodex_home: f.context.opencodex_home.clone(),
+    };
+    lease
+        .require_context(&context, &f.context.codex_home)
+        .unwrap();
+    let mut changed = context.clone();
+    changed.runtime =
+        crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved();
+    assert!(lease
+        .require_context(&changed, &f.context.codex_home)
+        .is_err());
+    let mut changed = context.clone();
+    changed.working_directory = f.context.user_profile.join("other");
+    assert!(lease
+        .require_context(&changed, &f.context.codex_home)
+        .is_err());
+    let mut changed = context.clone();
+    changed.opencodex_home = f.context.opencodex_home.join("other");
+    assert!(lease
+        .require_context(&changed, &f.context.codex_home)
+        .is_err());
+    assert!(lease
+        .require_context(&context, &f.context.codex_home.join("other"))
+        .is_err());
+    external_probe(&f.record.paths, true);
+    drop(lease);
+    external_probe(&f.record.paths, false);
+}
+
 #[cfg(target_arch = "aarch64")]
 #[test]
 #[ignore = "explicit pinned official299 bundle and new isolated profile; one native handover round only"]

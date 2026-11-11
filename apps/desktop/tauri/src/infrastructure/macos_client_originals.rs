@@ -17,6 +17,8 @@ use std::{
 
 #[path = "macos_client_restore.rs"]
 pub mod restore;
+#[path = "macos_client_session.rs"]
+pub mod session;
 
 const MAX_CONTENT: usize = 2 * 1024 * 1024;
 const MAX_SECURITY: usize = 256 * 1024;

@@ -16,16 +16,36 @@ pub struct NativeLease {
     pins: Vec<CoordinationFilePin>,
     client: PinnedDirectory,
     owner: String,
+    runtime: SharedRuntimeExecutable,
+    profile: PinnedDirectory,
+    home: PinnedDirectory,
     deadline: Instant,
     active: Cell<bool>,
     _not_send_or_sync: PhantomData<*mut ()>,
 }
 impl NativeLease {
+    pub fn require_context(
+        &self,
+        context: &crate::state::ProcessContext,
+        codex_home: &Path,
+    ) -> AppResult<()> {
+        self.check()?;
+        if !std::sync::Arc::ptr_eq(&context.runtime, &self.runtime)
+            || context.working_directory != self.profile.path()
+            || context.opencodex_home != self.home.path()
+            || codex_home != self.client.path()
+        {
+            return Err(fail("client_native_coordination_context"));
+        }
+        Ok(())
+    }
     pub fn check(&self) -> AppResult<()> {
         if !self.active.get() || Instant::now() >= self.deadline {
             return Err(fail("client_native_coordination_expired"));
         }
         self.client.recheck().map_err(io)?;
+        self.profile.recheck().map_err(io)?;
+        self.home.recheck().map_err(io)?;
         for pin in &self.pins {
             pin.recheck().map_err(io)?;
         }
@@ -127,6 +147,9 @@ fn acquire(
         pins,
         client,
         owner: admission.owner.clone(),
+        runtime: context.runtime.clone(),
+        profile: PinnedDirectory::open(&context.user_profile).map_err(io)?,
+        home: PinnedDirectory::open(&context.opencodex_home).map_err(io)?,
         deadline,
         active: Cell::new(true),
         _not_send_or_sync: PhantomData,
