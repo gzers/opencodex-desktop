@@ -1752,6 +1752,34 @@
       "availability": "active",
       "policy": "snapshot_sync_failure",
       "resolves": []
+    },
+    {
+      "id": "model-channels-read-succeeded",
+      "job": "model_config",
+      "object": "configuration",
+      "action": "read",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": "model_read_success",
+      "resolves": []
+    },
+    {
+      "id": "model-channels-read-failed",
+      "job": "model_config",
+      "object": "configuration",
+      "action": "read",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "model_read_failure",
+      "resolves": []
     }
   ],
   "notification_policies": [
@@ -2234,6 +2262,30 @@
       "dedupe": "config-snapshot-sync:failed",
       "lifecycle_preference": false,
       "cooldown_seconds": 86400
+    },
+    {
+      "id": "model_read_success",
+      "level": "info",
+      "category": "system",
+      "source": "user_action",
+      "title": "现有渠道读取完成",
+      "body": "读取结果已加入草稿，保存配置后才生效。",
+      "action": "models",
+      "dedupe": "model-channels:read-succeeded",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 1
+    },
+    {
+      "id": "model_read_failure",
+      "level": "warning",
+      "category": "system",
+      "source": "user_action",
+      "title": "现有渠道未读取",
+      "body": "本次读取未完成，当前输入保留。请回到模型配置核对读取错误后重试。",
+      "action": "models",
+      "dedupe": "model-channels:read-failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 1
     }
   ],
   "emission_sites": [
@@ -2755,6 +2807,16 @@
     {
       "event": "config-export-directory-opened",
       "source": "commands/model_transfer::open_transfer_export_directory bound to the original export receipt",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "model-channels-read-succeeded",
+      "source": "commands/model_config_v2.rs::model_v2_read_existing owned worker after guarded draft read result",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "model-channels-read-failed",
+      "source": "commands/model_config_v2.rs::model_v2_read_existing owned worker after guarded draft read result",
       "wiring": "scoped_terminal"
     }
   ],

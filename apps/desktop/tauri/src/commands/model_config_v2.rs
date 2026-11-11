@@ -320,6 +320,7 @@ pub async fn model_v2_file_snapshot(
 #[tauri::command]
 pub async fn model_v2_read_existing(
     request: crate::modules::model_config::config_file::v2::ReadRequestV2,
+    app: tauri::AppHandle,
     data_root: tauri::State<'_, SharedDataRoot>,
     context: tauri::State<'_, crate::state::SharedProcessContext>,
 ) -> Result<crate::modules::model_config::config_file::v2::ReadResponseV2> {
@@ -328,7 +329,10 @@ pub async fn model_v2_read_existing(
         context.opencodex_home.clone(),
         true,
         move |root, home| {
-            crate::modules::model_config::config_file::v2::read_existing(root, home, request)
+            let result =
+                crate::modules::model_config::config_file::v2::read_existing(root, home, request);
+            crate::modules::model_config::feedback::channel_read_terminal(&app, root, &result);
+            result
         },
     )
     .await

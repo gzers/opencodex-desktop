@@ -186,6 +186,8 @@ pub enum Fact {
 pub enum PolicyId {
     ModelConfigMigrationIncomplete,
     ModelPolicyFailure,
+    ModelReadSuccess,
+    ModelReadFailure,
     ModelPolicyBlocked,
     ModelExternalFailure,
     StartFailure,
@@ -326,6 +328,46 @@ impl BlockedReason {
 pub enum Detail {
     ModelPolicyBlocked(BlockedReason),
     LifecycleFailure(LifecycleFailureReason),
+    ModelReadCounts(ModelReadCounts),
+}
+/// Numeric projection only: channel names, model IDs, URLs and credentials never
+/// enter notification history. Produced from the admitted read response.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ModelReadCounts {
+    pub total: u64,
+    pub matched: u64,
+    pub changed: u64,
+    pub manual_preserved: u64,
+    pub unmatched: u64,
+    pub missing_default: u64,
+    pub missing_dependency: u64,
+    pub conflict: u64,
+    pub protocol_pending: u64,
+}
+impl ModelReadCounts {
+    fn body(self) -> String {
+        format!(
+            "已读取 {} 个模型：自动匹配 {} 项，更新草稿 {} 项，保留人工指定 {} 项，未匹配 {} 项，冲突 {} 项；缺默认版本 {} 项，缺依赖 {} 项，协议待配置 {} 项。保存配置后才生效。",
+            self.total, self.matched, self.changed, self.manual_preserved, self.unmatched,
+            self.conflict, self.missing_default, self.missing_dependency, self.protocol_pending
+        )
+    }
+    fn valid(self) -> bool {
+        self.total > 0
+            && [
+                self.matched,
+                self.manual_preserved,
+                self.unmatched,
+                self.missing_default,
+                self.missing_dependency,
+                self.conflict,
+            ]
+            .into_iter()
+            .try_fold(0_u64, u64::checked_add)
+                == Some(self.total)
+            && self.changed <= self.total
+            && self.protocol_pending <= self.total
+    }
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LifecycleFailureReason {
@@ -419,6 +461,7 @@ fn receipt_success(event: &EventDefinition) -> bool {
             | "sync-connection-succeeded"
             | "sync-endpoint-save-succeeded"
             | "config-export-directory-opened"
+            | "model-channels-read-succeeded"
     )
 }
 /// High-frequency signals validate only the embedded catalog. They never create
@@ -548,6 +591,14 @@ pub fn deliver(
     preferences: NotificationPreferences,
 ) -> Result<DeliveryOutcome, RegistryError> {
     let event = validate(delivery)?;
+    match (event.id.as_str(), delivery.detail) {
+        ("model-channels-read-succeeded", Some(Detail::ModelReadCounts(counts)))
+            if counts.valid() => {}
+        ("model-channels-read-succeeded", _) | (_, Some(Detail::ModelReadCounts(_))) => {
+            return Err(RegistryError::InvalidFact)
+        }
+        _ => {}
+    }
     let mut outcome = DeliveryOutcome::default();
     if event.fact == Fact::Success {
         let resolved_at = delivery.occurred_at.to_rfc3339();
@@ -601,6 +652,9 @@ pub fn deliver(
                     item.action_ref = Some(NotificationAction::SettingsInstallation);
                 }
             }
+            if let Some(Detail::ModelReadCounts(counts)) = delivery.detail {
+                item.body = counts.body();
+            }
             let scope = format!(
                 "{}:{:?}:{:?}:{:?}:{}",
                 delivery.identity.object_id.0,
@@ -619,6 +673,7 @@ pub fn deliver(
             // UI 规范 §38.5：保存被拦下的通知，用户删除后不因再次确认自动复活。
             // 只对该事件生效；其它通知（如运行失败）仍需在条件复现时重新提醒。
             if (event.id == "model-policy-save-blocked"
+                || event.id.starts_with("model-channels-read-")
                 || event.id.starts_with("config-snapshot-export-")
                 || event.id.starts_with("config-snapshot-import-")
                 || event.id.starts_with("config-snapshot-sync-"))
@@ -700,6 +755,10 @@ pub struct EmissionSite {
 
 #[derive(Debug, Deserialize)]
 enum SupportedEvent {
+    #[serde(rename = "model-channels-read-succeeded")]
+    ModelChannelsReadSucceeded,
+    #[serde(rename = "model-channels-read-failed")]
+    ModelChannelsReadFailed,
     #[serde(rename = "model-config-migration-incomplete")]
     ModelConfigMigrationIncomplete,
     #[serde(rename = "model-policy-save-failed")]
