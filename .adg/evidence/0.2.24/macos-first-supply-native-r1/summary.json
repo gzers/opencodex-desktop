@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "code": "7be8d2658e98882b2c0ceb3a146b8b3977a9c746",
+  "productCorrectionCommit": "45f813d799662a36b51fc0033dc9c7cef0a7f527",
+  "scope": "Actual sealed app normal-profile first startup supply, dependency versions and stale pre-supply installation-state invalidation",
+  "accepted": false,
+  "frozenCandidate": false,
+  "nativeLatest": {
+    "schemaVersion": 1,
+    "scope": "actual normal-profile startup supply; no service action",
+    "accepted": false,
+    "result": "passed",
+    "inputApp": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app",
+    "inputBinarySha256": "d398c4e3f67b8ead28fe17f6595cd96731fc5cab32518302d3e6ec1abfcd00eb",
+    "inputSourceDescription": "actual engineering build 45f813d799662a36b51fc0033dc9c7cef0a7f527; contains proxy80afa4418 and status correction, no product source changes; not frozen candidate",
+    "frozenCandidate": false,
+    "normalStartupSupply": true,
+    "testSandboxEnabled": false,
+    "fixtureDataRoot": "current v2 root initialized only to disable auto online/sync actions; runtime absent",
+    "dailyConfigurationModified": false,
+    "serviceActionRequested": false,
+    "businessRequests": false,
+    "temporaryRoot": "/private/tmp/ocxd024-first-supply-vxczlfv_",
+    "scriptSha256": "f3f528eef9c4db6723713e72c6a034e036575131f880bfb078d7349c7b9d53bd",
+    "descriptorSha256": "e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3",
+    "preferencesBeforeSha256": "5d2f35660e1028090e60cbf9ce3146e69b794907b22c6ae47a90d538591d671a",
+    "permissions": {
+      "axTrusted": true,
+      "locked": false,
+      "onConsole": true,
+      "screenCaptureAllowed": true
+    },
+    "kernelNetworkAndDailyHomeDenied": true,
+    "pid": 17632,
+    "uiEnvironmentReadyObserved": true,
+    "staleAbsenceCaptionAfterReady": false,
+    "appStillRunning": true,
+    "processExit": null,
+    "programRootCreated": true,
+    "currentCreated": true,
+    "selection": {
+      "schemaVersion": 1,
+      "version": "2.99.0",
+      "platform": "darwin-arm64",
+      "imageSha256": "cda427c202cbc9c9275f1f2d70ff1de5e6fc9e79e98c4a3b00dbd5473911ecf8"
+    },
+    "runtimeImage": {
+      "version": "2.99.0",
+      "platform": "darwin-arm64",
+      "officialArchiveSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+      "treeSha256": "a29dedc203311ca4d6d4005db94b4a10d4fb84409283669e25272f080756b790"
+    },
+    "tools": {
+      "node": {
+        "exitCode": 0,
+        "version": "v26.8.1"
+      },
+      "npm": {
+        "exitCode": 0,
+        "version": "11.19.0"
+      },
+      "ocx": {
+        "exitCode": 0,
+        "version": "opencodex 2.99.0"
+      }
+    },
+    "configPreserved": true,
+    "runtimePortRecordAbsent": true,
+    "sourceAppBinaryUnchanged": true,
+    "copiedBinaryUnchanged": true,
+    "captureExit": 0,
+    "ownedGuiExit": -15,
+    "ownedGroupResidues": [],
+    "temporaryRootAbsent": true,
+    "elapsedSeconds": 127.647
+  },
+  "nativeFinalStatusText": "未运行 from subsequent real successful collection; no failure-injection claim",
+  "failureFallbackUnitTests": {
+    "totalRelatedPassed": 19,
+    "coverage": "missing source then resolved source with Timeout/Parse/Unreachable, full/light sampling; only then actual stopped success; removal invalidates again"
+  },
+  "build": {
+    "exitCode": 0,
+    "sourceCommit": "45f813d799662a36b51fc0033dc9c7cef0a7f527",
+    "elapsedSeconds": 247.544,
+    "frozenCandidate": false,
+    "argv": [
+      "tauri",
+      "build",
+      "--features",
+      "custom-protocol",
+      "--config",
+      "tauri.runtime-bundle.conf.json",
+      "--bundles",
+      "app"
+    ]
+  },
+  "productApp": {
+    "path": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app",
+    "binarySha256": "d398c4e3f67b8ead28fe17f6595cd96731fc5cab32518302d3e6ec1abfcd00eb",
+    "infoSha256": "ffea19d7f37ca302e2aa81fccbac7c7311ea41e26fb61919b1728563d63e61e1",
+    "notarized": false,
+    "newDmgNotBuilt": true,
+    "previousEngineeringDmgIsOlder": true
+  },
+  "preconditions": {
+    "normalProductStartup": true,
+    "OPENCODEX_SANDBOX": false,
+    "freshPrivateProfileAndNoRuntime": true,
+    "currentV2ConfigFixturePreseededToDisableAutos": true,
+    "systemNodeNotProvidedViaPATH": true,
+    "newRealOsUserSid": false
+  },
+  "checks": {
+    "pythonAst": 0,
+    "signedAppEvidenceOutputNegative": true,
+    "fmt": 0,
+    "strictClippyAllTargets": 0,
+    "diffCheck": 0
+  },
+  "failureEvidence": [
+    "attempt1 uninitialized nonempty D fixture rejected, untouched",
+    "attempt2 actual supply/UIready but independent npm query inherited denied working-directory cwd, exit7 retained",
+    "attempt3 first-supply versions passed but screenshot exposed stale pre-supply absence; original passed supply-only summary retained and umbrella state issue recorded",
+    "product correction unit tests validate failed-query fallback, native4 successful next observation shows stopped; do not say native failure branch was injected"
+  ],
+  "cleanup": {
+    "allOwnedProcessGroupsEmpty": true,
+    "allCopiedAppsRuntimeAndConfigRootsRemoved": true,
+    "statusUnitRootRemoved": true,
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "realServiceModelOrSyncActions": false,
+    "originalEngineeringAppRetainedAtBuildOutput": true,
+    "duplicateReceiptRootRemoved": true
+  },
+  "remaining": [
+    "native service start/stop budgets and client restoration",
+    "source transition scheduling/backoff is not claimed instant from this observation",
+    "Windows W0 HOME/Profile and W1/W2",
+    "P24-NAME",
+    "new official distribution publish verification, README/release closure and fixed final candidate"
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "scope": "actual normal-profile startup supply; no service action",
+  "accepted": false,
+  "result": "passed",
+  "inputApp": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app",
+  "inputBinarySha256": "fda508bfbe7ac3e6ee71512c827d1aeb07ecdd0e0280295e8d9034afef26ea20",
+  "inputSourceDescription": "engineering build09392b38e plus version-source.patch, version a58f03cb9; predates proxy80afa4418; not frozen candidate",
+  "frozenCandidate": false,
+  "normalStartupSupply": true,
+  "testSandboxEnabled": false,
+  "fixtureDataRoot": "current v2 root initialized only to disable auto online/sync actions; runtime absent",
+  "dailyConfigurationModified": false,
+  "serviceActionRequested": false,
+  "businessRequests": false,
+  "temporaryRoot": "/private/tmp/ocxd024-first-supply-8vyzjftv",
+  "scriptSha256": "ff6b7a4299067b8cefde72f90ef48e30c028636610d285b300b911f4462d5caa",
+  "descriptorSha256": "e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3",
+  "preferencesBeforeSha256": "5d2f35660e1028090e60cbf9ce3146e69b794907b22c6ae47a90d538591d671a",
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "kernelNetworkAndDailyHomeDenied": true,
+  "pid": 16257,
+  "uiEnvironmentReadyObserved": true,
+  "appStillRunning": true,
+  "processExit": null,
+  "programRootCreated": true,
+  "currentCreated": true,
+  "selection": {
+    "schemaVersion": 1,
+    "version": "2.99.0",
+    "platform": "darwin-arm64",
+    "imageSha256": "cda427c202cbc9c9275f1f2d70ff1de5e6fc9e79e98c4a3b00dbd5473911ecf8"
+  },
+  "runtimeImage": {
+    "version": "2.99.0",
+    "platform": "darwin-arm64",
+    "officialArchiveSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+    "treeSha256": "a29dedc203311ca4d6d4005db94b4a10d4fb84409283669e25272f080756b790"
+  },
+  "tools": {
+    "node": {
+      "exitCode": 0,
+      "version": "v26.8.1"
+    },
+    "npm": {
+      "exitCode": 0,
+      "version": "11.19.0"
+    },
+    "ocx": {
+      "exitCode": 0,
+      "version": "opencodex 2.99.0"
+    }
+  },
+  "configPreserved": true,
+  "runtimePortRecordAbsent": true,
+  "sourceAppBinaryUnchanged": true,
+  "copiedBinaryUnchanged": true,
+  "captureExit": 0,
+  "ownedGuiExit": -15,
+  "ownedGroupResidues": [],
+  "temporaryRootAbsent": true,
+  "elapsedSeconds": 86.241
+}
