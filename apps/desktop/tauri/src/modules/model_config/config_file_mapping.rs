@@ -778,6 +778,11 @@ pub(super) fn rewrite_provider_references(
         }
     }
     for rename in renames {
+        // Reconciliation visits already-aligned channels too. Their own
+        // discovery observations are not a collision with another provider.
+        if rename.from == rename.to {
+            continue;
+        }
         if config["defaultProvider"] == rename.from {
             config["defaultProvider"] = serde_json::json!(rename.to);
         }

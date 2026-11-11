@@ -427,6 +427,7 @@ fn library_save_and_draft_cas_use_real_model_v2_lock_and_readback() {
         base: base.clone(),
         policy: empty_policy_v2(),
         observed_baseline: None,
+        observed_config_digest: None,
         credential_edits: Default::default(),
     };
     store.stage_draft(None, draft.clone()).unwrap();
@@ -864,6 +865,7 @@ fn baseline_draft_for_test(library_digest: String) -> DraftV2 {
         },
         policy: observed.clone(),
         observed_baseline: Some(observed),
+        observed_config_digest: None,
         credential_edits: Default::default(),
     }
 }

@@ -29,6 +29,7 @@ fn with_draft<T>(
     d: &Path,
     h: &Path,
     expected: &ReadBaseV2,
+    allow_equivalent_for_projection: bool,
     read: impl FnOnce(&StoreSnapshotV2, &DraftV2, Value) -> Result<T>,
 ) -> Result<T> {
     if !d.is_absolute() || !d.is_dir() || !h.is_absolute() || !h.is_dir() {
@@ -76,12 +77,15 @@ fn with_draft<T>(
     let locked = store.lock()?;
     let state = locked.snapshot_unlocked()?;
     let (raw, bytes) = read_raw(h)?;
+    let observed_source = source_digest(&bytes);
     let draft = state
         .draft
         .as_ref()
         .ok_or_else(|| error("model_read_stale"))?;
     if &draft.base != expected
-        || expected.source_digest != source_digest(&bytes)
+        || (expected.source_digest != observed_source
+            && !(allow_equivalent_for_projection
+                && source_matches_draft(draft, &observed_source, &raw, bytes.is_some())))
         || expected.root_revision != root_revision(d, h)?
         || expected.library_digest != state.digests.library
         || expected.policy_digest != policy_semantic_digest_v2(&state.policy)?
@@ -115,7 +119,7 @@ fn with_draft<T>(
     }
     let value = read(&state, draft, raw)?;
     let (_, after) = read_raw(h)?;
-    if source_digest(&after) != expected.source_digest
+    if source_digest(&after) != observed_source
         || root_revision(d, h)? != expected.root_revision
         || locked.snapshot_unlocked()?.digests != state.digests
     {
@@ -298,7 +302,7 @@ pub(super) fn project_trusted_draft(
 /// Public nonwrite intent projection. The original draft remains unchanged.
 pub fn project(d: &Path, h: &Path, request: SaveRequestV2) -> Result<DraftProjectionV2> {
     let expected = request.expected.clone();
-    with_draft(d, h, &expected, |state, draft, raw| {
+    with_draft(d, h, &expected, true, |state, draft, raw| {
         if draft.policy.recovery_id.is_some() {
             super::history::validate_save(d, h, state, draft, &request)?;
         }
@@ -423,7 +427,7 @@ fn capture_typed_intents(
 ) -> ModelResult<CapturedSnapshotV2> {
     validate_capture_request(request)?;
     let expected = intent.expected.clone();
-    with_draft(d, h, &expected, |state, draft, raw| {
+    with_draft(d, h, &expected, false, |state, draft, raw| {
         if intent.edits.is_empty() && intent.channel_intents.is_empty() {
             return capture_locked(d, state, draft, raw, request);
         }

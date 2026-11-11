@@ -138,6 +138,26 @@ fn read_raw(home: &Path) -> Result<(Value, Option<Zeroizing<Vec<u8>>>)> {
 fn source_digest(bytes: &Option<Zeroizing<Vec<u8>>>) -> String {
     digest(bytes.as_deref().map(|v| v.as_slice()).unwrap_or_default())
 }
+fn config_baseline(raw: &Value, present: bool) -> Option<String> {
+    present.then(|| super::manager_view_digest(raw))
+}
+
+/// Accept byte drift only when we can prove the saved input still has the
+/// same meaning. Copies and history restores bind the original bytes, even
+/// if their ordinary editable fields happen to compare equal.
+fn source_matches_draft(draft: &DraftV2, source: &str, raw: &Value, present: bool) -> bool {
+    source == draft.base.source_digest
+        || (draft.policy.recovery_id.is_none()
+            && !draft
+                .policy
+                .channels
+                .iter()
+                .any(|c| c.connection.imported_config.is_some())
+            && draft
+                .observed_config_digest
+                .as_ref()
+                .is_some_and(|expected| config_baseline(raw, present).as_ref() == Some(expected)))
+}
 fn bindings(
     root: &Path,
     raw: &Value,
@@ -246,13 +266,16 @@ fn effective(library: &LibraryV2, policy: &PolicyV2) -> Result<Vec<EffectiveMode
         .map(|(c, m)| matching_v2::resolve_effective_model_v2(library, c, m))
         .collect()
 }
-fn view(state: StoreSnapshotV2, source: String, revision: String) -> Result<FileSnapshotV2> {
+fn view(mut state: StoreSnapshotV2, source: String, revision: String) -> Result<FileSnapshotV2> {
     let policy = state
         .draft
         .as_ref()
         .map(|d| &d.policy)
         .unwrap_or(&state.policy);
     let effective = effective(&state.library, policy)?;
+    if let Some(draft) = &mut state.draft {
+        draft.observed_config_digest = None;
+    }
     Ok(FileSnapshotV2 {
         dto_version: 2,
         library: state.library,
@@ -450,6 +473,7 @@ pub fn read_existing(root: &Path, home: &Path, request: ReadRequestV2) -> Result
                     .map(|d| d.credential_edits.clone())
                     .unwrap_or_default(),
                 observed_baseline: Some(observed_baseline),
+                observed_config_digest: config_baseline(&raw, bytes.is_some()),
                 policy: next,
             },
         )?;
@@ -1034,7 +1058,7 @@ pub fn save_with_credentials(
         .as_ref()
         .ok_or_else(|| error("model_save_stale"))?;
     if draft.base != request.expected
-        || source != request.expected.source_digest
+        || !source_matches_draft(draft, &source, &raw, bytes.is_some())
         || state.digests.library != request.expected.library_digest
         || revision != request.expected.root_revision
         || policy_semantic_digest_v2(&state.policy)? != request.expected.policy_digest
@@ -1216,6 +1240,7 @@ pub fn save_with_credentials(
                     .map(|(id, edit)| (id.clone(), edit.clone()))
                     .collect(),
                 observed_baseline: Some(observation),
+                observed_config_digest: config_baseline(&compiled.next_config, true),
                 policy,
             })?)
         } else {
@@ -1402,6 +1427,10 @@ pub fn stage_connection(
     if source != request.expected_source
         || state.digests.library != request.expected_library
         || state.draft.as_ref().map(|d| &d.base) != request.expected.as_ref()
+        || state
+            .draft
+            .as_ref()
+            .is_some_and(|draft| !source_matches_draft(draft, &source, &raw, bytes.is_some()))
     {
         return Err(error("model_read_stale"));
     }
@@ -1638,6 +1667,7 @@ pub fn stage_connection(
                             )?,
                         )?),
                 ),
+                observed_config_digest: config_baseline(&raw, bytes.is_some()),
                 policy,
             },
         )?;
@@ -1701,6 +1731,7 @@ pub fn begin_draft(root: &Path, home: &Path, request: ReadRequestV2) -> Result<F
                 base,
                 credential_edits: BTreeMap::new(),
                 observed_baseline: Some(policy.clone()),
+                observed_config_digest: config_baseline(&raw, bytes.is_some()),
                 policy,
             },
         )?;
@@ -2294,7 +2325,7 @@ pub fn stage_credential_with_store(
         .clone()
         .ok_or_else(|| error("model_read_stale"))?;
     if draft.base != request.expected
-        || source != request.expected.source_digest
+        || !source_matches_draft(&draft, &source, &raw, bytes.is_some())
         || revision != request.expected.root_revision
         || state.digests.library != request.expected.library_digest
         || policy_semantic_digest_v2(&state.policy)? != request.expected.policy_digest

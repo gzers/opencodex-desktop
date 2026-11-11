@@ -211,8 +211,18 @@ export const useModelsV2Store=defineStore('models-v2',()=>{
   async function viewCredential(channelId:string){if(!channelCapabilities.value.credential)throw serviceUnavailableV2();return modelV2Api.credentialView(channelId)}
   async function stageCredential(channelId:string,action:'replace'|'clear',value?:string){
     if(!channelCapabilities.value.credential||fileBusy.value||!file.value?.draft)throw serviceUnavailableV2()
+    const expected=clone(file.value.draft.base), beforeSource=keySourceGuard(), beforeDisk=file.value.sourceDigest
     fileBusy.value=true;fileError.value=''
-    try{const result=await modelV2Api.stageCredential({expected:clone(file.value.draft.base),channelId,action,...(action==='replace'?{value:value??''}:{})});acceptFile(result);fileGeneration++}
+    try{
+      const result=await modelV2Api.stageCredential({expected,channelId,action,...(action==='replace'?{value:value??''}:{})})
+      const next=result.draft?.base
+      // The server staged against the same draft after checking the new disk
+      // bytes under lock. Advance the other Key buffers only for that receipt.
+      const equivalent=beforeDisk!==result.sourceDigest&&next?.draftId===expected.draftId&&next.draftGeneration===expected.draftGeneration+1&&next.sourceDigest===expected.sourceDigest&&next.policyDigest===expected.policyDigest&&next.rootRevision===result.rootRevision&&next.rootRevision===expected.rootRevision&&next.libraryDigest===result.libraryDigest&&next.libraryDigest===expected.libraryDigest&&result.draft?.credentialEdits?.[channelId]?.kind===action
+      acceptFile(result)
+      if(equivalent)for(const [id,edit] of keyBuffers){if(edit.sourceGuard===beforeSource&&edit.targetGuard===keyTargetGuard(id))edit.sourceGuard=keySourceGuard()}
+      fileGeneration++
+    }
     finally{fileBusy.value=false}
   }
 

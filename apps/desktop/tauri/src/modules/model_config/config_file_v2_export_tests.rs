@@ -114,6 +114,27 @@ impl Fixture {
     }
 }
 #[test]
+fn project_accepts_equivalent_disk_rewrite_without_writing_or_relaxing_real_conflicts() {
+    let f = Fixture::new();
+    let path = f.h.join("config.json");
+    let (mut raw, _) = read_raw(&f.h).unwrap();
+    raw["modelDiscovery"] = json!({"knownModels":{"actual":{"models":["other"]}}});
+    std::fs::write(&path, serde_json::to_vec_pretty(&raw).unwrap()).unwrap();
+    let before = f.bytes();
+    project(&f.d, &f.h, f.intent())
+        .unwrap_or_else(|error| panic!("equivalent projection refused: {error:?}"));
+    assert_eq!(before, f.bytes());
+    raw["unrelated"]["keep"] = json!(false);
+    std::fs::write(&path, serde_json::to_vec(&raw).unwrap()).unwrap();
+    let before = f.bytes();
+    assert_eq!(
+        project(&f.d, &f.h, f.intent()).err().unwrap().code,
+        "model_read_stale"
+    );
+    assert_eq!(before, f.bytes());
+}
+
+#[test]
 fn project_applies_only_explicit_intents_compiles_and_changes_no_business_file() {
     let f = Fixture::new();
     let before = f.bytes();

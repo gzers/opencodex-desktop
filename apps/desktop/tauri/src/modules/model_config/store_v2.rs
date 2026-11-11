@@ -36,6 +36,10 @@ pub struct DraftV2 {
     /// None exists only for this unreleased v2 fixture shape, never v1 migration.
     #[serde(default)]
     pub observed_baseline: Option<PolicyV2>,
+    /// Server-side digest of the exact saved JSON except known runtime bookkeeping.
+    /// Absent evidence keeps the raw-byte conflict check mandatory.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub observed_config_digest: Option<String>,
     /// Server-owned intent only. References carry no key material; clear does
     /// not change authMode and cannot be inferred from a missing/null key.
     #[serde(default)]
@@ -183,6 +187,13 @@ fn validate_draft(draft: &DraftV2) -> Result<()> {
                 return Err(error("model_source_invalid"));
             }
         }
+    }
+    if draft
+        .observed_config_digest
+        .as_deref()
+        .is_some_and(|value| !valid_digest(value))
+    {
+        return Err(error("model_source_invalid"));
     }
     Ok(())
 }

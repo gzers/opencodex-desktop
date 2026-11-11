@@ -2,7 +2,7 @@ import {afterEach,beforeEach,describe,expect,it,vi} from 'vitest'
 import {flushPromises,mount,type VueWrapper} from '@vue/test-utils'
 import ChannelEditor from '@/features/models/ChannelEditor.vue'
 import NewChannelDialog from '@/features/models/NewChannelDialog.vue'
-import {workspaceBackend,workspaceId as id} from './helpers/modelWorkspaceV2'
+import {workspaceBackend,workspaceHash,workspaceId as id} from './helpers/modelWorkspaceV2'
 const ipc=vi.hoisted(()=>vi.fn())
 vi.mock('@tauri-apps/api/core',()=>({invoke:ipc}))
 let backend:ReturnType<typeof workspaceBackend>,s:Awaited<ReturnType<ReturnType<typeof workspaceBackend>['load']>>,wrappers:VueWrapper[]=[]
@@ -13,6 +13,17 @@ function render(){const w=mount(ChannelEditor,{props:{channel:s.channels[0]!,eff
 beforeEach(async()=>{backend=workspaceBackend(ipc,['a']);s=await backend.load()})
 afterEach(()=>{wrappers.forEach(w=>w.unmount());wrappers=[]})
 describe('editing an existing channel Key',()=>{
+ it('keeps a second buffered Key when the first staging receipt verifies equivalent disk drift',async()=>{
+  backend=workspaceBackend(ipc,['a','b']);s=await backend.load()
+  s.setKeyBuffer(id('a'),{action:'replace',value:'fixture-a-new'})
+  s.setKeyBuffer(id('b'),{action:'replace',value:'fixture-b-new'})
+  backend.current={...backend.current,sourceDigest:workspaceHash(7)}
+  await s.saveChannels()
+  expect(s.fileError).toBe('')
+  expect(calls('model_v2_stage_credential').map(c=>c[1].request.channelId)).toEqual([id('a'),id('b')])
+  expect(backend.keys.get(id('a'))).toBe('fixture-a-new')
+  expect(backend.keys.get(id('b'))).toBe('fixture-b-new')
+ })
  it('rebases an untouched B Key intention after this session saves A, so B can be saved explicitly afterwards',async()=>{
   backend=workspaceBackend(ipc,['a','b']);s=await backend.load();s.setKeyBuffer(id('b'),{action:'replace',value:'fixture-pending-b'});s.queueChannel({kind:'rename',channelId:id('a'),name:'A saved'});await s.saveChannels(id('a'));expect(s.fileError).toBe('');expect(backend.keys.get(id('b'))).toBe('fixture-original-b');expect(s.keyBuffer(id('b'))).toMatchObject({value:'fixture-pending-b'});await s.saveChannels(id('b'));expect(s.fileError).toBe('');expect(backend.keys.get(id('b'))).toBe('fixture-pending-b');expect(calls('model_v2_stage_credential')).toHaveLength(1);expect(calls('model_v2_stage_credential')[0]![1].request.channelId).toBe(id('b'))
  })
