@@ -1,0 +1,11 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error: using a non-octal value to set unix file permissions
+   --> src/infrastructure/macos_client_originals_tests.rs:214:61
+    |
+214 |     fs::set_permissions(&target, fs::Permissions::from_mode(0)).unwrap();
+    |                                                             ^ help: consider using an octal literal instead: `0o0`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#non_octal_unix_permissions
+    = note: `#[deny(clippy::non_octal_unix_permissions)]` on by default
+
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

@@ -1,0 +1,22 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0618]: expected function, found `macos_client_originals::Protection`
+   --> src/infrastructure/macos_client_originals.rs:731:20
+    |
+195 | fn protection(file: &File, s: &libc::stat) -> io::Result<Protection> {
+    | -------------------------------------------------------------------- this function of the same name is available here, but it's shadowed by the local binding
+...
+707 |             protection, bytes, ..
+    |             ---------- `protection` has type `macos_client_originals::Protection`
+...
+731 |                 != protection(self.client.file(), &stat(self.client.file())?)?
+    |                    ^^^^^^^^^^------------------------------------------------
+    |                    |
+    |                    call expression requires function
+    |
+   ::: src/modules/backup/manager.rs:713:1
+    |
+713 | fn protection(record: &BackupRecord, related: &BTreeSet<String>) -> Option<String> {
+    | ---------------------------------------------------------------------------------- this function of the same name is available here, but it's shadowed by the local binding
+
+For more information about this error, try `rustc --explain E0618`.
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error
