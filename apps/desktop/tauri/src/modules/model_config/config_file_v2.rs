@@ -1,4 +1,6 @@
 //! Authoritative v2 draft/config boundary. Raw providers never cross IPC.
+#[path = "native_config_import_v2.rs"]
+pub mod native_import;
 #[path = "model_receive_file_v2.rs"]
 pub mod receive;
 #[cfg(test)]

@@ -61,7 +61,7 @@ fn set_exact(
     }
     Ok(())
 }
-fn targets_for(row: &EffectiveModelV2, provider: &str) -> Vec<MaterializedTargetV2> {
+pub(super) fn targets_for(row: &EffectiveModelV2, provider: &str) -> Vec<MaterializedTargetV2> {
     let root = format!("/providers/{}/", escaped(provider));
     let per_model = [
         ("protocol", "modelAdapters"),

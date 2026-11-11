@@ -282,6 +282,7 @@ pub fn run() {
             let runtime_executable: crate::infrastructure::runtime_executable::SharedRuntimeExecutable =
                 runtime.clone();
             app.manage(runtime.clone());
+            app.manage(std::sync::Arc::new(crate::commands::native_config_import::Selections::default()));
             // 托管安装 / 卸载的进行态（取消 + 同一时刻只允许一个写者）。
             let runtime_install = crate::state::SharedRuntimeInstall::new();
             app.manage(runtime_install.clone());
@@ -693,6 +694,8 @@ pub fn run() {
             commands::model_config_v2::model_v2_begin_draft,
             commands::model_config_v2::model_v2_stage_connection,
             commands::model_config_v2::model_v2_file_save,
+            commands::native_config_import::model_v2_native_import_select,
+            commands::native_config_import::model_v2_native_import_apply,
             commands::model_config_v2::model_v2_file_project,
             commands::model_config_v2::model_v2_file_discard,
             commands::model_config_v2::model_v2_file_history,

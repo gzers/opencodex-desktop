@@ -16,9 +16,9 @@ use zeroize::Zeroizing;
 const SETTINGS: &str = "manager-state/runtime-port-settings.json";
 const INTENT: &str = "manager-state/runtime-port-save.json";
 
-struct ConfigMutation(rusqlite::Connection);
+pub(crate) struct ConfigMutation(rusqlite::Connection);
 impl ConfigMutation {
-    fn acquire(home: &Path) -> AppResult<Self> {
+    pub(crate) fn acquire(home: &Path) -> AppResult<Self> {
         let path = home.join("config-mutation.sqlite");
         for suffix in ["", "-journal", "-wal", "-shm"] {
             safety::check_path(

@@ -17,6 +17,7 @@ pub mod migration;
 pub mod model_config;
 pub mod model_config_v2;
 pub mod model_transfer;
+pub mod native_config_import;
 pub mod network;
 pub mod notifications;
 pub mod panel;
