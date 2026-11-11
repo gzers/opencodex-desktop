@@ -6,11 +6,13 @@ import UiDialog from '@/components/ui/UiDialog.vue'
 import { useModelsV2Store } from '@/features/models/store-v2'
 import { useFeedbackStore } from '@/app/feedback/store'
 
-interface Backup { id: string; createdAt: string; bytes: number }
-interface Selection { id: string; preview: { currentPort: number; backupPort: number; targetPath: string } }
+interface Backup { id: string; createdAt: string; bytes: number; purpose?: string; runtimeVersion?: string | null }
+interface Selection { id: string; preview: { currentPort: number | null; backupPort: number; targetPath: string } }
 const models = useModelsV2Store()
 const feedback = useFeedbackStore()
 const open = ref(false)
+const backupOpen = ref(false)
+const backupError = ref('')
 const busy = ref(false)
 const backups = ref<Backup[]>([])
 const backupId = ref('')
@@ -31,6 +33,9 @@ const errors: Record<string, string> = {
   native_import_stale: '备份或本机配置已变化，请重新核对。',
   model_transaction_cas: '本机配置已变化，请重新核对。',
   model_transaction_pending: '上一次配置操作仍需核对，请处理后再回退。',
+  native_config_missing: '当前 HOME 尚无配置文件，未生成备份。',
+  native_config_backup_failed: '配置备份未能完整核验，原文件已保留。',
+  native_config_backup_stale: '配置在备份期间发生变化，请重新备份。',
 }
 function failure(cause: unknown) {
   const code = typeof cause === 'object' && cause !== null && 'code' in cause ? String(cause.code) : ''
@@ -41,7 +46,17 @@ function hasEdits() {
 }
 function backupLabel(backup: Backup) {
   const date = new Date(backup.createdAt).toLocaleString()
-  return date + ' · ' + backup.bytes.toLocaleString() + ' 字节 · ' + backup.id.slice(-8)
+  return date + ' · ' + (backup.runtimeVersion ?? '版本未确认') + ' · ' + backup.bytes.toLocaleString() + ' 字节 · ' + backup.id.slice(-8)
+}
+async function createBackup() {
+  if (busy.value) return
+  busy.value = true; backupError.value = ''
+  try {
+    const result = await invoke<Backup>('model_v2_native_config_backup')
+    backupOpen.value = false
+    feedback.showToast('完整配置已备份并核验，保存 ' + result.bytes.toLocaleString() + ' 字节。')
+  } catch (cause) { backupError.value = failure(cause) }
+  finally { busy.value = false }
 }
 async function show() {
   if (busy.value) return
@@ -73,10 +88,12 @@ async function rollback() {
   busy.value = true; models.fileBusy = true; error.value = ''
   let changed = false
   try {
-    const result = await invoke<{ changed: boolean }>('model_v2_native_rollback_apply', { id: choice.id })
+    const result = await invoke<{ changed: boolean; backupId: string | null }>('model_v2_native_rollback_apply', { id: choice.id })
     changed = result.changed
     open.value = false
-    feedback.showToast(changed ? '已回退配置，回退前的文件已备份。下次启动 OpenCodex 时生效。' : '当前配置与所选备份一致。')
+    feedback.showToast(changed
+      ? (result.backupId ? '已回退配置，回退前的文件已备份。' : '原配置文件不存在，已从备份恢复。') + '下次启动 OpenCodex 时生效。'
+      : '当前配置与所选备份一致。')
   } catch (cause) { error.value = failure(cause) }
   finally { selected.value = null; models.fileBusy = false; busy.value = false }
   if (changed && models.file) await models.reloadSavedFacts().catch(() => undefined)
@@ -87,9 +104,21 @@ async function rollback() {
   <article class="card">
     <div class="card-head">
       <div><h2>OpenCodex 配置备份与恢复</h2><p>从完整备份恢复配置，包括备份中的渠道、密钥和运行端口。</p></div>
-      <UiButton :disabled="busy" @click="show">查看备份与回退</UiButton>
+      <div class="native-backup-actions">
+        <UiButton :disabled="busy" @click="backupError = ''; backupOpen = true">备份完整配置</UiButton>
+        <UiButton :disabled="busy" @click="show">查看备份与回退</UiButton>
+      </div>
     </div>
   </article>
+  <UiDialog :open="backupOpen" title="备份完整 OpenCodex 配置" :busy="busy" @close="backupOpen = false">
+    <p>备份当前 HOME 中已保存的全部配置，包括渠道、模型、配置内密钥和运行端口。草稿、外部账户文件及系统凭据不在备份范围内。</p>
+    <p>备份保存在当前用户的数据目录，生成后核对完整性与文件权限。</p>
+    <p v-if="backupError" class="model-error" role="alert">{{ backupError }}</p>
+    <template #actions="{ close }">
+      <UiButton :disabled="busy" @click="close">取消</UiButton>
+      <UiButton variant="primary" :disabled="busy" :loading="busy" @click="createBackup">生成完整备份</UiButton>
+    </template>
+  </UiDialog>
   <UiDialog :open="open" title="整文件回退" :busy="busy" @close="open = false">
     <p v-if="!busy && !backups.length && !error">当前用户尚无可用于整文件回退的原生配置备份。</p>
     <label v-if="backups.length" class="native-rollback-picker">
@@ -101,7 +130,7 @@ async function rollback() {
     </label>
     <template v-if="selected">
       <p>写入目标：<code>{{ selected.preview.targetPath }}</code></p>
-      <p>运行端口：{{ selected.preview.currentPort }} → {{ selected.preview.backupPort }}</p>
+      <p>运行端口：{{ selected.preview.currentPort ?? '未指定或无法读取' }} → {{ selected.preview.backupPort || '未指定' }}</p>
       <p>确认后先备份当前配置，再恢复整份文件。端口模式记录、外部账户文件和系统凭据不在回退范围内。</p>
     </template>
     <p v-if="error" class="model-error" role="alert">{{ error }}</p>
@@ -116,5 +145,6 @@ async function rollback() {
 
 <style scoped>
 .native-rollback-picker { display: grid; gap: var(--space-2); }
+.native-backup-actions { display: flex; gap: var(--space-2); flex-wrap: wrap; }
 code { overflow-wrap: anywhere; }
 </style>

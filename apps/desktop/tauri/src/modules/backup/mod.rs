@@ -101,6 +101,17 @@ pub struct BackupManifest {
     /// Absent on legacy records: never infer transaction ownership from note/path.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub management: Option<manager::Management>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub native_config: Option<NativeConfigSource>,
+}
+
+/// Observed program identity only. Missing facts remain unknown, never inferred
+/// from install history or from the configuration's own content.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct NativeConfigSource {
+    pub runtime_version: String,
+    pub runtime_image_sha256: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -131,6 +142,18 @@ pub fn backup_file(
     payload: &[u8],
     now: DateTime<Utc>,
     note: Option<String>,
+) -> Result<BackupRecord, AppError> {
+    backup_file_with_source(data_root, action, target_path, payload, now, note, None)
+}
+
+pub fn backup_file_with_source(
+    data_root: &Path,
+    action: BackupAction,
+    target_path: &Path,
+    payload: &[u8],
+    now: DateTime<Utc>,
+    note: Option<String>,
+    native_config: Option<NativeConfigSource>,
 ) -> Result<BackupRecord, AppError> {
     validate_target(target_path)?;
     let backup_id = generate_backup_id(now);
@@ -186,6 +209,7 @@ pub fn backup_file(
         restorable: true,
         note,
         management: None,
+        native_config,
     };
     write_manifest(&directory, &manifest)?;
     safety::sync_directories(data_root, &directory)?;

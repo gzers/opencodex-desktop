@@ -37,8 +37,9 @@ struct Prepared {
 fn remember(
     selections: &Selections,
     runtime: SelectedProgram,
-    selection: native_import::Selection,
+    mut selection: native_import::Selection,
 ) -> Result<String> {
+    selection.bind_program_source(program_source(&runtime));
     let id = uuid::Uuid::new_v4().to_string();
     *selections
         .0
@@ -57,6 +58,48 @@ fn remember(
 pub struct RollbackSelection {
     pub id: String,
     pub preview: native_import::RollbackPreview,
+}
+
+pub(super) fn program_source(
+    runtime: &SelectedProgram,
+) -> crate::modules::backup::NativeConfigSource {
+    crate::modules::backup::NativeConfigSource {
+        runtime_version: runtime.selection.version.clone(),
+        runtime_image_sha256: runtime.selection.image_sha256.clone(),
+    }
+}
+
+#[tauri::command]
+pub async fn model_v2_native_config_backup(
+    data: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, SharedProcessContext>,
+    runtime: tauri::State<'_, Arc<RuntimeHandle>>,
+) -> Result<native_import::BackupSummary> {
+    let admission = crate::infrastructure::storage_writers::global()
+        .admit()
+        .map_err(|_| schema_v2::error("native_config_backup_failed"))?;
+    let data = data.0.clone();
+    let home = context.opencodex_home.clone();
+    let runtime = runtime.inner().clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        runtime.observe_current();
+        let source = runtime
+            .selected_program()
+            .ok()
+            .flatten()
+            .as_ref()
+            .map(program_source);
+        native_import::backups::create_manual(
+            &data,
+            &native_import::backups::UpgradeRequest {
+                home,
+                program_source: source,
+            },
+        )
+    })
+    .await
+    .map_err(|_| schema_v2::error("native_config_backup_failed"))?
 }
 
 #[tauri::command]

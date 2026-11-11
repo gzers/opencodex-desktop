@@ -44,7 +44,7 @@ describe('native config rollback', () => {
       ['model_v2_native_rollback_list'],
       ['model_v2_native_rollback_select', { backupId }],
     ])
-    invoke.mockResolvedValueOnce({ changed: true })
+    invoke.mockResolvedValueOnce({ changed: true, backupId: 'protection-before' })
     await button('备份当前配置并回退').trigger('click')
     await flushPromises()
     expect(invoke.mock.calls[2]).toEqual(['model_v2_native_rollback_apply', { id: 'reviewed-rollback' }])
@@ -71,4 +71,35 @@ describe('native config rollback', () => {
     expect(invoke).toHaveBeenCalledTimes(2)
     view.unmount()
   })
+})
+
+it('manual backup waits for explicit confirmation and sends no path or credentials', async () => {
+  setActivePinia(createPinia())
+  invoke.mockReset()
+  invoke.mockResolvedValueOnce({id:backupId,createdAt:'2026-11-11T01:02:03Z',bytes:1024})
+  const view = render()
+  const button = (label: string) => view.findAll('button').find(b => b.text() === label)!
+  await button('备份完整配置').trigger('click')
+  expect(view.text()).toContain('草稿、外部账户文件及系统凭据不在备份范围内')
+  expect(invoke).not.toHaveBeenCalled()
+  await button('生成完整备份').trigger('click'); await flushPromises()
+  expect(invoke.mock.calls).toEqual([['model_v2_native_config_backup']])
+  expect(view.text()).not.toContain('生成完整备份')
+  view.unmount()
+})
+
+it('manual backup cancellation makes no call and failure stays in its original dialog', async () => {
+  setActivePinia(createPinia())
+  invoke.mockReset()
+  const view = render()
+  const button = (label: string) => view.findAll('button').find(b => b.text() === label)!
+  await button('备份完整配置').trigger('click')
+  await button('取消').trigger('click')
+  expect(invoke).not.toHaveBeenCalled()
+  await button('备份完整配置').trigger('click')
+  invoke.mockRejectedValueOnce({code:'native_config_backup_failed'})
+  await button('生成完整备份').trigger('click'); await flushPromises()
+  expect(view.get('[role="alert"]').text()).toContain('原文件已保留')
+  expect(view.text()).toContain('生成完整备份')
+  view.unmount()
 })

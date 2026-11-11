@@ -699,6 +699,7 @@ pub fn run() {
             commands::native_config_import::model_v2_native_import_select,
             commands::native_config_import::model_v2_native_import_apply,
             commands::native_config_import::model_v2_native_rollback_list,
+            commands::native_config_import::model_v2_native_config_backup,
             commands::native_config_import::model_v2_native_rollback_select,
             commands::native_config_import::model_v2_native_rollback_apply,
             commands::model_config_v2::model_v2_file_project,

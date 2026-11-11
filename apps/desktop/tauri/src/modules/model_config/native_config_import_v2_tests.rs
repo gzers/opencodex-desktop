@@ -247,7 +247,10 @@ fn rollback_restores_exact_bytes_and_port_and_protects_current_file() {
     fs::write(&settings, &mode).unwrap();
     let (selected, preview) = f.select_backup(&id);
     assert!(selected.is_rollback());
-    assert_eq!((preview.current_port, preview.backup_port), (43456, 41234));
+    assert_eq!(
+        (preview.current_port, preview.backup_port),
+        (Some(43456), 41234)
+    );
     assert_eq!(preview.target_path, target);
     assert_eq!(fs::read(&target).unwrap(), current);
     assert_eq!(list_backups(&f.root, &f.home).unwrap().len(), 1);

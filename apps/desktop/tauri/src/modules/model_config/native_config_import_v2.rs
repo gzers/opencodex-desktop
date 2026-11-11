@@ -9,12 +9,16 @@ use crate::{
     },
 };
 use std::io::Read;
+#[path = "native_config_backup_v2.rs"]
+pub mod backups;
 #[cfg(test)]
 #[path = "native_config_import_v2_tests.rs"]
 mod tests;
 
 const IMPORT_BACKUP_NOTE: &str = "OpenCodex 原生配置导入前完整备份";
 const ROLLBACK_BACKUP_NOTE: &str = "OpenCodex 原生配置回退前完整备份";
+const MANUAL_BACKUP_NOTE: &str = "OpenCodex 原生配置手动完整备份";
+const UPGRADE_BACKUP_NOTE: &str = "OpenCodex 原生配置升级前完整备份";
 
 /// Server-owned selection. No source bytes, credentials or write path travel
 /// through IPC. A controller may issue an opaque, single-use selection ID.
@@ -27,6 +31,7 @@ pub struct Selection {
     port_revision: String,
     store_digests: store_v2::StoreDigestsV2,
     rollback: Option<backup::BackupRecord>,
+    program_source: Option<backup::NativeConfigSource>,
 }
 
 #[derive(Serialize)]
@@ -44,17 +49,22 @@ pub struct BackupSummary {
     pub id: String,
     pub created_at: String,
     pub bytes: u64,
+    pub purpose: String,
+    pub runtime_version: Option<String>,
 }
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RollbackPreview {
-    pub current_port: u16,
+    pub current_port: Option<u16>,
     pub backup_port: u16,
     pub target_path: std::path::PathBuf,
 }
 
 impl Selection {
+    pub fn bind_program_source(&mut self, source: backup::NativeConfigSource) {
+        self.program_source = Some(source);
+    }
     pub fn is_rollback(&self) -> bool {
         self.rollback.is_some()
     }
@@ -62,12 +72,15 @@ impl Selection {
 
 fn native_backup(record: &backup::BackupRecord, home: &Path) -> bool {
     let m = &record.manifest;
-    m.action == BackupAction::Import
-        && m.restorable
+    m.restorable
         && m.management.is_none()
         && matches!(
-            m.note.as_deref(),
-            Some(IMPORT_BACKUP_NOTE | ROLLBACK_BACKUP_NOTE)
+            (m.action, m.note.as_deref()),
+            (
+                BackupAction::Import,
+                Some(IMPORT_BACKUP_NOTE | ROLLBACK_BACKUP_NOTE)
+            ) | (BackupAction::ModelConfig, Some(MANUAL_BACKUP_NOTE))
+                | (BackupAction::Upgrade, Some(UPGRADE_BACKUP_NOTE))
         )
         && Path::new(&m.target_path) == home.join("config.json")
 }
@@ -81,6 +94,8 @@ pub fn list_backups(root: &Path, home: &Path) -> Result<Vec<BackupSummary>> {
             id: record.manifest.backup_id,
             created_at: record.manifest.created_at,
             bytes: record.manifest.bytes,
+            purpose: record.manifest.note.unwrap_or_default(),
+            runtime_version: record.manifest.native_config.map(|s| s.runtime_version),
         })
         .collect::<Vec<_>>();
     rows.sort_unstable_by(|a, b| {
@@ -109,15 +124,44 @@ fn backup_source(
         return Err(invalid());
     }
     chrono::NaiveDateTime::parse_from_str(stamp, "%Y%m%d%H%M%S").map_err(|_| invalid())?;
-    let dir = root
-        .join("backups")
-        .join(&stamp[..4])
-        .join(&stamp[4..6])
-        .join(BackupAction::Import.as_str())
-        .join(id);
+    let parent = root.join("backups").join(&stamp[..4]).join(&stamp[4..6]);
+    let mut matches = Vec::new();
+    for action in [
+        BackupAction::Import,
+        BackupAction::ModelConfig,
+        BackupAction::Upgrade,
+    ] {
+        let path = parent.join(action.as_str()).join(id);
+        safety::check_path(root, &path, true).map_err(|_| invalid())?;
+        match std::fs::symlink_metadata(&path) {
+            Ok(_) => matches.push(path),
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => (),
+            Err(_) => return Err(invalid()),
+        }
+    }
+    if matches.len() != 1 {
+        return Err(invalid());
+    }
+    let dir = matches.pop().unwrap();
     safety::check_path(root, &dir, false).map_err(|_| invalid())?;
     let record = safety::load_record(&dir).map_err(|_| invalid())?;
     if !native_backup(&record, home) || record.manifest.bytes > safety::MAX_PAYLOAD_BYTES {
+        return Err(invalid());
+    }
+    if record
+        .manifest
+        .native_config
+        .as_ref()
+        .is_some_and(|source| {
+            crate::modules::runtime::install::extract_semver(&source.runtime_version).as_deref()
+                != Some(source.runtime_version.as_str())
+                || source.runtime_image_sha256.len() != 64
+                || !source
+                    .runtime_image_sha256
+                    .bytes()
+                    .all(|b| b.is_ascii_hexdigit())
+        })
+    {
         return Err(invalid());
     }
     let path = safety::payload_path(&dir).map_err(|_| invalid())?;
@@ -188,6 +232,14 @@ fn port_snapshot(root: &Path, home: &Path) -> Result<port::Snapshot> {
     }
     Ok(snapshot)
 }
+fn observe_port(root: &Path, home: &Path, rollback: bool) -> Result<(Option<u16>, String)> {
+    if rollback {
+        port::rollback_observation(root, home).map_err(|_| error("native_import_port_required"))
+    } else {
+        let snapshot = port_snapshot(root, home)?;
+        Ok((snapshot.port, snapshot.revision))
+    }
+}
 
 fn candidate(bytes: &[u8], local_port: u16) -> Result<Value> {
     let mut raw = parse_strict_json_v2(bytes).map_err(|_| error("native_import_config_invalid"))?;
@@ -207,9 +259,9 @@ fn effective_payload(
         let raw = parse_strict_json_v2(bytes).map_err(|_| error("native_import_config_invalid"))?;
         let port = raw
             .get("port")
-            .and_then(Value::as_u64)
+            .map(Value::as_u64)
+            .unwrap_or(Some(0))
             .and_then(|n| u16::try_from(n).ok())
-            .filter(|p| *p != 0)
             .ok_or_else(|| error("native_rollback_backup_invalid"))?;
         return Ok((raw, Zeroizing::new(bytes.to_vec()), port));
     }
@@ -333,13 +385,13 @@ fn prepare_source(
     let admission = pending_admission(root)?;
     safety::check_path(home, &home.join("config.json.lock"), true).map_err(io)?;
     let _config = TargetFileLock::lock(&home.join("config.json")).map_err(io)?;
-    let port = port_snapshot(root, home)?;
+    let (current_port, port_revision) = observe_port(root, home, rollback.is_some())?;
     let store = StoreV2::new(root);
     let locked = store.lock()?;
     let state = locked.snapshot_unlocked()?;
     check_draft(&state)?;
-    let current_port = port.port.unwrap();
-    let (raw, projected, backup_port) = effective_payload(bytes, current_port, rollback.is_some())?;
+    let (raw, projected, backup_port) =
+        effective_payload(bytes, current_port.unwrap_or(0), rollback.is_some())?;
     projected_policy(&raw, &digest(&projected))?;
     drop(locked);
     drop(_config);
@@ -355,9 +407,10 @@ fn prepare_source(
             source_digest: digest(bytes),
             candidate_digest: digest(&projected),
             root_revision: revision,
-            port_revision: port.revision,
+            port_revision,
             store_digests: state.digests,
             rollback,
+            program_source: None,
         },
         RollbackPreview {
             current_port,
@@ -417,25 +470,28 @@ pub fn apply(
     let _official_lock = port::ConfigMutation::acquire(home).map_err(io)?;
     safety::check_path(home, &home.join("config.json.lock"), true).map_err(io)?;
     let _config = TargetFileLock::lock(&home.join("config.json")).map_err(io)?;
-    let current_port = port_snapshot(root, home)?;
+    let rollback = selection.rollback.is_some();
+    let (current_port, port_revision) = observe_port(root, home, rollback)?;
     let bytes = recheck_source(root, home, &selection)?;
     let store = StoreV2::new(root);
     let locked = store.lock()?;
     let state = locked.snapshot_unlocked()?;
     check_draft(&state)?;
-    if current_port.revision != selection.port_revision
+    if port_revision != selection.port_revision
         || root_revision(root, home)? != selection.root_revision
         || state.digests != selection.store_digests
     {
         return Err(error("native_import_stale"));
     }
-    let rollback = selection.rollback.is_some();
-    let (raw, after, result_port) =
-        effective_payload(&bytes, current_port.port.unwrap(), rollback)?;
+    let (raw, after, result_port) = effective_payload(&bytes, current_port.unwrap_or(0), rollback)?;
     if digest(&after) != selection.candidate_digest {
         return Err(error("native_import_stale"));
     }
-    let (current, before) = read_raw(home)?;
+    let (current, before) = if rollback {
+        (Value::Null, backups::read(home)?)
+    } else {
+        read_raw(home)?
+    };
     let has_external_auth = external_auth(&raw);
     if if rollback {
         before
@@ -451,8 +507,10 @@ pub fn apply(
             external_auth: has_external_auth,
         });
     }
-    let before = before.ok_or_else(|| error("native_import_stale"))?;
-    if before.len() as u64 > safety::MAX_PAYLOAD_BYTES {
+    if before
+        .as_ref()
+        .is_some_and(|before| before.len() as u64 > safety::MAX_PAYLOAD_BYTES)
+    {
         return Err(error("native_import_backup_failed"));
     }
     let policy = projected_policy(&raw, &digest(&after))?;
@@ -494,43 +552,50 @@ pub fn apply(
         });
     }
     require_stopped().map_err(|_| error("native_import_runtime_not_stopped"))?;
-    let record = backup::backup_file(
-        root,
-        BackupAction::Import,
-        &home.join("config.json"),
-        &before,
-        chrono::Utc::now(),
-        Some(
-            if rollback {
-                ROLLBACK_BACKUP_NOTE
-            } else {
-                IMPORT_BACKUP_NOTE
+    let record = before
+        .as_ref()
+        .map(|before| {
+            let record = backup::backup_file_with_source(
+                root,
+                BackupAction::Import,
+                &home.join("config.json"),
+                before,
+                chrono::Utc::now(),
+                Some(
+                    if rollback {
+                        ROLLBACK_BACKUP_NOTE
+                    } else {
+                        IMPORT_BACKUP_NOTE
+                    }
+                    .into(),
+                ),
+                selection.program_source.clone(),
+            )
+            .map_err(|_| error("native_import_backup_failed"))?;
+            let (verified, _, protected) = backup_source(root, home, &record.manifest.backup_id)
+                .map_err(|_| error("native_import_backup_failed"))?;
+            if verified != record || protected.as_slice() != before.as_slice() {
+                return Err(error("native_import_backup_failed"));
             }
-            .into(),
-        ),
-    )
-    .map_err(|_| error("native_import_backup_failed"))?;
-    let (verified, _, protected) = backup_source(root, home, &record.manifest.backup_id)
-        .map_err(|_| error("native_import_backup_failed"))?;
-    if verified != record || protected.as_slice() != before.as_slice() {
-        return Err(error("native_import_backup_failed"));
-    }
+            Ok(record)
+        })
+        .transpose()?;
     require_stopped().map_err(|_| error("native_import_runtime_not_stopped"))?;
     recheck_source(root, home, &selection)?;
-    if port_snapshot(root, home)?.revision != selection.port_revision {
+    if observe_port(root, home, rollback)?.1 != selection.port_revision {
         return Err(error("native_import_stale"));
     }
     writes.insert(
         0,
         WriteV2 {
             target: TargetV2::OfficialConfig,
-            before: Some(before.to_vec()),
+            before: before.as_ref().map(|before| before.to_vec()),
             after: Some(after.to_vec()),
         },
     );
     model_transaction_v2::commit(root, home, writes)?;
     Ok(Outcome {
-        backup_id: Some(record.manifest.backup_id),
+        backup_id: record.map(|record| record.manifest.backup_id),
         port: result_port,
         changed: true,
         external_auth: has_external_auth,
