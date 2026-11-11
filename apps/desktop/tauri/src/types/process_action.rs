@@ -78,6 +78,11 @@ impl ProcessActionResult {
             }
             crate::errors::AppError::RuntimeManaged { code, detail }
                 if code.starts_with("lifecycle_")
+                    || [
+                        "client_original_restore_pending",
+                        "client_original_session_unconfirmed",
+                    ]
+                    .contains(&code.as_str())
                     || ["port_conflict", "port_permission"].contains(&code.as_str()) =>
             {
                 (code.clone(), detail.clone())
@@ -107,6 +112,26 @@ pub fn validate_action_request(request: &ProcessActionRequest) -> Result<(), &'s
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn stopped_service_with_pending_original_restore_keeps_distinct_actionable_failure() {
+        let error = crate::errors::AppError::RuntimeManaged {
+            code: "client_original_restore_pending".into(),
+            detail: "服务已正常停止，客户端配置原件恢复尚未完成；原会话和现场已保留".into(),
+        };
+        let value =
+            ProcessActionResult::from_state(ProcessLifecycleState::Running).with_failure(&error);
+        assert_eq!(
+            value.failure.as_ref().unwrap().code,
+            "client_original_restore_pending"
+        );
+        assert!(value
+            .failure
+            .as_ref()
+            .unwrap()
+            .message
+            .contains("服务已正常停止"));
+        assert!(value.result.is_none());
+    }
 
     #[test]
     fn stop_timeout_keeps_running_state_and_hides_internal_phase_timings() {

@@ -263,6 +263,18 @@ model_provider = "openai"
         (std::fs::read(client.join("config.toml")).ok() != before["codex/config.toml"]).into();
     write(&report);
     capture("after-start");
+    let indexed_after_start =
+        crate::infrastructure::macos_client_originals::session_index::Index::open(
+            &context, &data, &client,
+        )
+        .unwrap();
+    let after_start = indexed_after_start.head().unwrap().unwrap();
+    report["indexedReady"] = (after_start.state
+        == crate::infrastructure::macos_client_originals::session_index::State::Ready)
+        .into();
+    report["independentOriginalsReferenced"] = after_start.references.is_some().into();
+    drop(indexed_after_start);
+    write(&report);
     let status_started = Instant::now();
     let source = crate::infrastructure::status_source::OfficialStatusSource::new(
         context.runtime.clone(),
@@ -315,6 +327,17 @@ model_provider = "openai"
     report["nativeClientRestored"] = serde_json::to_value(&restored).unwrap();
     report["recordAbsent"] = (!h.join("runtime-port.json").exists()).into();
     report["pidRecordAbsent"] = (!h.join("ocx.pid").exists()).into();
+    let indexed_after_stop =
+        crate::infrastructure::macos_client_originals::session_index::Index::open(
+            &context, &data, &client,
+        )
+        .unwrap();
+    let after_stop = indexed_after_stop.head().unwrap().unwrap();
+    report["indexedStopped"] = (after_stop.state
+        == crate::infrastructure::macos_client_originals::session_index::State::Stopped)
+        .into();
+    report["indexedRevision"] = serde_json::json!(after_stop.revision);
+    drop(indexed_after_stop);
     capture("after-stop");
     if let Ok(bytes) = std::fs::read(log.path()) {
         atomic_write(&evidence.join("runtime.log"), &bytes, 0o600).unwrap();

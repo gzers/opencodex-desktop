@@ -3,6 +3,8 @@
 pub mod about;
 pub mod backup;
 pub mod cleanup;
+#[cfg(target_os = "macos")]
+mod client_session_lifecycle;
 pub mod codex_shim;
 pub mod config_file_transfer_v2;
 pub mod config_sync_v2;
@@ -400,6 +402,12 @@ fn execute_lifecycle<R: ProcessRunner + ?Sized>(
                         && owner.query(context)? == proof
                         && matches!(observed,Ok(Some(ref value)) if value["ready"]==true && value["status"]=="running")
                     {
+                        #[cfg(target_os = "macos")]
+                        if runner.manages_client_originals() && identity.package_version == "2.99.0"
+                        {
+                            client_session_lifecycle::Active::load(context, data_root)?
+                                .verify_ready(context, deadline)?;
+                        }
                         if std::time::Instant::now() >= deadline {
                             return Err(AppError::Timeout);
                         }
@@ -421,13 +429,48 @@ fn execute_lifecycle<R: ProcessRunner + ?Sized>(
     ) {
         let owner =
             runtime_recovery_v2_owner::SystemServiceOwnerProofProvider::new(root, context.clone())?;
+        #[cfg(target_os = "macos")]
+        if runner.manages_client_originals() && identity.package_version == "2.99.0" {
+            // If original references are missing/failed, still run the ordinary
+            // authenticated Stop once, then report unresolved client recovery;
+            // do not strand a live service or invent replacement originals.
+            let active = client_session_lifecycle::Active::load(context, data_root);
+            let mut active = match active {
+                Ok(active) => active,
+                Err(error) => {
+                    owner.stop_lifecycle(context, deadline, data_root)?;
+                    return Err(error);
+                }
+            };
+            if let Err(error) = active.pre_stop(context, deadline) {
+                owner.stop_lifecycle(context, deadline, data_root)?;
+                return Err(error);
+            }
+            let proof = owner.stop_lifecycle_verified(context, deadline, data_root)?;
+            active.stopped(context, &proof, deadline)?;
+            return Err(client_session_lifecycle::pending_restore());
+        }
+        #[cfg(not(target_os = "macos"))]
         owner.stop_lifecycle(context, deadline, data_root)?;
+        #[cfg(target_os = "macos")]
+        if !runner.manages_client_originals() || identity.package_version != "2.99.0" {
+            owner.stop_lifecycle(context, deadline, data_root)?;
+        }
         if command.action == LifecycleAction::Stop {
             return Ok(LifecycleResult::Stopped);
         }
     }
     let mut start = command.clone();
     start.action = LifecycleAction::Start;
+    #[cfg(target_os = "macos")]
+    let mut client_session =
+        if runner.manages_client_originals() && identity.package_version == "2.99.0" {
+            Some(client_session_lifecycle::Active::capture(
+                context, data_root, deadline,
+            )?)
+        } else {
+            None
+        };
     for attempt in 0..3 {
         let saved =
             crate::modules::runtime::port::prepare_start(data_root, &context.opencodex_home)?;
@@ -439,7 +482,15 @@ fn execute_lifecycle<R: ProcessRunner + ?Sized>(
                     && saved.mode == crate::modules::runtime::port::Mode::Auto
                     && attempt < 2
                     && std::time::Instant::now() < deadline => {}
-            _ => return result,
+            _ => {
+                #[cfg(target_os = "macos")]
+                if matches!(result, Ok(LifecycleResult::Started)) {
+                    if let Some(session) = &mut client_session {
+                        session.ready(context, deadline)?;
+                    }
+                }
+                return result;
+            }
         }
     }
     Err(AppError::Timeout)

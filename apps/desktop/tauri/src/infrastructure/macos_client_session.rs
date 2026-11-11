@@ -93,7 +93,7 @@ impl Live {
 /// These are references for the owning transaction to protect independently,
 /// not serialized service authority. Opening with a new observed file digest
 /// or scanning a directory to invent a replacement baseline is forbidden.
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct References {
     pub attempt: String,
@@ -251,6 +251,20 @@ fn fresh_ready(
     Ok((record.0, before, record.2))
 }
 impl StartupSession {
+    pub fn verify_current_ready(
+        &self,
+        context: &ProcessContext,
+        deadline: Instant,
+    ) -> AppResult<()> {
+        let live = self.live(context)?;
+        let generation = live.process()?;
+        if fresh_ready(context, &self.home, deadline)?
+            != (live.record_sha256, generation, live.port)
+        {
+            return Err(error(()));
+        }
+        Ok(())
+    }
     pub fn begin(
         context: &ProcessContext,
         data_root: &Path,

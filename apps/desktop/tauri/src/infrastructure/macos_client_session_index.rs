@@ -1,0 +1,501 @@
+//! Desktop-owned exclusive current-session index. Independent references are
+//! committed here before another application/CLI action may observe them.
+//! No directory scanning, backup discovery or implicit recovery after a crash.
+//! This index is not service ownership or a client mutation permit.
+use super::session::References;
+use super::*;
+use crate::state::ProcessContext;
+use rusqlite::{params, Connection, OptionalExtension};
+
+const FILE: &str = "client-session-index.sqlite";
+const MAX_INDEX: u64 = 16 * 1024 * 1024;
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum State {
+    Preparing,
+    Captured,
+    Ready,
+    StopPrepared,
+    Stopped,
+    Failed,
+}
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct Head {
+    pub revision: u64,
+    pub ticket: String,
+    pub state: State,
+    pub references: Option<References>,
+}
+impl std::fmt::Debug for Head {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Head")
+            .field("revision", &self.revision)
+            .field("state", &self.state)
+            .finish_non_exhaustive()
+    }
+}
+fn valid_hash(value: &str) -> bool {
+    value.len() == 64
+        && value
+            .bytes()
+            .all(|c| c.is_ascii_digit() || (b'a'..=b'f').contains(&c))
+}
+fn validate(head: &Head) -> io::Result<()> {
+    if head.revision == 0
+        || head.revision > i64::MAX as u64
+        || uuid::Uuid::parse_str(&head.ticket)
+            .map(|v| v.to_string() != head.ticket)
+            .unwrap_or(true)
+    {
+        return Err(denied("invalid current session identity"));
+    }
+    let Some(refs) = &head.references else {
+        return if matches!(head.state, State::Preparing | State::Failed) {
+            Ok(())
+        } else {
+            Err(denied("current session original references missing"))
+        };
+    };
+    if uuid::Uuid::parse_str(&refs.attempt)
+        .map(|v| v.to_string() != refs.attempt)
+        .unwrap_or(true)
+        || !valid_hash(&refs.original_sha256)
+        || !valid_hash(&refs.scope_sha256)
+        || refs.live_sha256.as_ref().is_some_and(|v| !valid_hash(v))
+    {
+        return Err(denied("invalid independent original references"));
+    }
+    let order = [Phase::Ready, Phase::PreStop, Phase::Stopped];
+    if refs.phases.len() > 3
+        || refs
+            .phases
+            .iter()
+            .enumerate()
+            .any(|(i, (phase, hash))| *phase != order[i] || !valid_hash(hash))
+    {
+        return Err(denied("current session phase order or hash invalid"));
+    }
+    let expected = match head.state {
+        State::Captured => Some((0, false)),
+        State::Ready => Some((1, true)),
+        State::StopPrepared => Some((2, true)),
+        State::Stopped => Some((3, true)),
+        State::Preparing => return Err(denied("unpublished originals in preparing index")),
+        State::Failed => None,
+    };
+    if expected
+        .is_some_and(|(n, live)| refs.phases.len() != n || refs.live_sha256.is_some() != live)
+    {
+        return Err(denied("current session phase evidence is incomplete"));
+    }
+    Ok(())
+}
+fn decode<T: serde::de::DeserializeOwned>(bytes: &[u8]) -> io::Result<T> {
+    if bytes.len() > 1024 * 1024 {
+        return Err(denied("session index payload over limit"));
+    }
+    serde_json::from_value(
+        parse_strict_json_v2(bytes).map_err(|_| denied("session index JSON is invalid"))?,
+    )
+    .map_err(|_| denied("session index fields invalid"))
+}
+fn database_error(_: rusqlite::Error) -> io::Error {
+    denied("current session index unavailable; original state retained")
+}
+fn scope(
+    context: &ProcessContext,
+    data: &PinnedDirectory,
+    client: &PinnedDirectory,
+) -> io::Result<Vec<u8>> {
+    let profile = PinnedDirectory::open(&context.working_directory)?;
+    let home = PinnedDirectory::open(&context.opencodex_home)?;
+    encode(&(
+        unsafe { libc::geteuid() },
+        data.path(),
+        data.identity(),
+        profile.path(),
+        profile.identity(),
+        home.path(),
+        home.identity(),
+        client.path(),
+        client.identity(),
+    ))
+}
+
+/// Each reference update is its own durable transaction. The separate native
+/// lease on this lock file serializes the ENTIRE application action; dropping
+/// an IPC observer cannot publish references or release a still-running owner.
+pub struct Index {
+    connection: Option<Connection>,
+    pin: CoordinationFilePin,
+    action_file: File,
+    action_parent: PinnedDirectory,
+    action_identity: Identity,
+    action_protection: Protection,
+    binding: Vec<u8>,
+    data: PinnedDirectory,
+    client: PinnedDirectory,
+}
+impl Index {
+    pub fn control_root(&self) -> io::Result<PathBuf> {
+        self.check()?;
+        Ok(self
+            .action_parent
+            .child_private("client-coordination", true)?
+            .path)
+    }
+    pub fn open(
+        context: &ProcessContext,
+        data_root: &Path,
+        client_root: &Path,
+    ) -> io::Result<Self> {
+        let data = PinnedDirectory::open(data_root)?;
+        data.private()?;
+        let client = PinnedDirectory::open(client_root)?;
+        if data_root.starts_with(client_root) || client_root.starts_with(data_root) {
+            return Err(denied("session index/client roots overlap"));
+        }
+        let binding = scope(context, &data, &client)?;
+        let manager = data.child_private("manager-state", true)?;
+        let action_name = "client-session-action.lock";
+        let action_cname = name(OsStr::new(action_name))?;
+        let fd = unsafe {
+            libc::openat(
+                manager.file().as_raw_fd(),
+                action_cname.as_ptr(),
+                libc::O_RDWR
+                    | libc::O_CREAT
+                    | libc::O_NOFOLLOW
+                    | libc::O_CLOEXEC
+                    | libc::O_NONBLOCK,
+                0o600,
+            )
+        };
+        if fd < 0 {
+            return Err(io::Error::last_os_error());
+        }
+        let action_file = unsafe { File::from_raw_fd(fd) };
+        let action_stat = stat(&action_file)?;
+        let action_protection = protection(&action_file, &action_stat)?;
+        if action_stat.st_nlink != 1
+            || action_stat.st_mode & libc::S_IFMT != libc::S_IFREG
+            || action_stat.st_uid != unsafe { libc::geteuid() }
+            || action_stat.st_mode & 0o777 != 0o600
+            || acl(&action_file)?.is_some()
+            || action_protection.flags != 0
+            || action_protection
+                .xattrs
+                .iter()
+                .any(|(k, v)| k != b"com.apple.provenance" || v.len() > 64)
+        {
+            return Err(denied("current session action lock unsafe; not repaired"));
+        }
+        action_file
+            .try_lock()
+            .map_err(|_| denied("another current session action is running"))?;
+        let action_identity = identity(&action_stat);
+        // Reopen/check this separate action lock BEFORE keeping its own handle;
+        // this lock uses flock, not the SQLite fcntl locks on the index inode.
+        let check = open_at(manager.file(), OsStr::new(action_name), false)?;
+        if identity(&stat(&check)?) != action_identity {
+            return Err(denied("session action lock redirected"));
+        }
+        drop(check);
+        let path = manager.path().join(FILE);
+        let mut created = false;
+        match capture_file(&manager, FILE, MAX_INDEX as usize)? {
+            Image::Absent => {
+                let file = crate::infrastructure::platform::create_new_private_file(&path, 0o600)?;
+                file.sync_all()?;
+                drop(file);
+                manager.sync()?;
+                created = true;
+            }
+            Image::File { bytes, .. } if bytes.is_empty() => created = true,
+            Image::File { .. } => {}
+        }
+        for suffix in ["-journal", "-wal", "-shm"] {
+            match capture_file(&manager, &format!("{FILE}{suffix}"), MAX_INDEX as usize)? {
+                Image::Absent => {}
+                Image::File { protection, .. }
+                    if protection.uid == unsafe { libc::geteuid() }
+                        && protection.mode == 0o600
+                        && protection.acl.is_none() => {}
+                _ => return Err(denied("unsafe existing index sidecar")),
+            }
+        }
+        let pin = CoordinationFilePin::open(&path)?;
+        let connection = Connection::open_with_flags(
+            &path,
+            rusqlite::OpenFlags::SQLITE_OPEN_READ_WRITE
+                | rusqlite::OpenFlags::SQLITE_OPEN_NOFOLLOW
+                | rusqlite::OpenFlags::SQLITE_OPEN_NO_MUTEX,
+        )
+        .map_err(database_error)?;
+        connection
+            .busy_timeout(std::time::Duration::ZERO)
+            .map_err(database_error)?;
+        connection
+            .execute_batch("PRAGMA synchronous=FULL; BEGIN IMMEDIATE")
+            .map_err(database_error)?;
+        let version: i64 = connection
+            .query_row("PRAGMA user_version", [], |r| r.get(0))
+            .map_err(database_error)?;
+        let setup = (|| -> io::Result<()> {
+            if version == 0 && created {
+                let tables: i64 = connection
+                    .query_row(
+                        "SELECT count(*) FROM sqlite_master WHERE type='table'",
+                        [],
+                        |r| r.get(0),
+                    )
+                    .map_err(database_error)?;
+                if tables != 0 {
+                    return Err(denied("unknown nonempty session index is not adopted"));
+                }
+                connection.execute_batch("CREATE TABLE binding(singleton INTEGER PRIMARY KEY CHECK(singleton=1), document BLOB NOT NULL); CREATE TABLE current_session(singleton INTEGER PRIMARY KEY CHECK(singleton=1), revision INTEGER NOT NULL CHECK(revision>0), document BLOB NOT NULL); CREATE TABLE events(revision INTEGER PRIMARY KEY, document BLOB NOT NULL); PRAGMA user_version=1;").map_err(database_error)?;
+                connection
+                    .execute(
+                        "INSERT INTO binding(singleton,document) VALUES(1,?1)",
+                        [&binding],
+                    )
+                    .map_err(database_error)?;
+            } else if version != 1 {
+                return Err(denied(
+                    "unsupported session index version or abandoned initializer",
+                ));
+            }
+            let stored: Vec<u8> = connection
+                .query_row("SELECT document FROM binding WHERE singleton=1", [], |r| {
+                    r.get(0)
+                })
+                .map_err(database_error)?;
+            if stored != binding {
+                return Err(denied(
+                    "session index bound to different directory generation or HOME",
+                ));
+            }
+            Ok(())
+        })();
+        if let Err(error) = setup {
+            let _ = connection.execute_batch("ROLLBACK");
+            return Err(error);
+        }
+        connection.execute_batch("COMMIT").map_err(database_error)?;
+        pin.recheck()?;
+        let result = Self {
+            connection: Some(connection),
+            pin,
+            action_file,
+            action_parent: manager,
+            action_identity,
+            action_protection,
+            binding,
+            data,
+            client,
+        };
+        result.head()?;
+        Ok(result)
+    }
+    fn connection(&self) -> io::Result<&Connection> {
+        self.connection
+            .as_ref()
+            .ok_or_else(|| denied("session index closed"))
+    }
+    fn check(&self) -> io::Result<()> {
+        self.data.private()?;
+        self.client.recheck()?;
+        self.action_parent.private()?;
+        self.pin.recheck()?;
+        if identity(&stat(&self.action_file)?) != self.action_identity {
+            return Err(denied("session action owner changed"));
+        }
+        if protection(&self.action_file, &stat(&self.action_file)?)? != self.action_protection {
+            return Err(denied(
+                "session action lock permissions changed; not repaired",
+            ));
+        }
+        let mut current = std::mem::MaybeUninit::uninit();
+        let path = name(OsStr::new("client-session-action.lock"))?;
+        if unsafe {
+            libc::fstatat(
+                self.action_parent.file().as_raw_fd(),
+                path.as_ptr(),
+                current.as_mut_ptr(),
+                libc::AT_SYMLINK_NOFOLLOW,
+            )
+        } != 0
+        {
+            return Err(io::Error::last_os_error());
+        }
+        let current = unsafe { current.assume_init() };
+        if identity(&current) != self.action_identity
+            || current.st_mode & libc::S_IFMT != libc::S_IFREG
+            || current.st_nlink != 1
+            || current.st_uid != unsafe { libc::geteuid() }
+            || current.st_mode & 0o777 != 0o600
+        {
+            return Err(denied("session action lock generation or access changed"));
+        }
+        let mut moved = 1i32;
+        let connection = self.connection()?;
+        let result = unsafe {
+            rusqlite::ffi::sqlite3_file_control(
+                connection.handle(),
+                c"main".as_ptr(),
+                rusqlite::ffi::SQLITE_FCNTL_HAS_MOVED,
+                (&mut moved as *mut i32).cast(),
+            )
+        };
+        if result != rusqlite::ffi::SQLITE_OK || moved != 0 {
+            return Err(denied("session index native database changed"));
+        }
+        Ok(())
+    }
+    pub fn head(&self) -> io::Result<Option<Head>> {
+        self.check()?;
+        let row: Option<(u64, Vec<u8>)> = self
+            .connection()?
+            .query_row(
+                "SELECT revision,document FROM current_session WHERE singleton=1",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?)),
+            )
+            .optional()
+            .map_err(database_error)?;
+        let Some((revision, bytes)) = row else {
+            return Ok(None);
+        };
+        let head: Head = decode(&bytes)?;
+        validate(&head)?;
+        if head.revision != revision {
+            return Err(denied("session index revision mismatch"));
+        }
+        let event: Vec<u8> = self
+            .connection()?
+            .query_row(
+                "SELECT document FROM events WHERE revision=?1",
+                [revision],
+                |r| r.get(0),
+            )
+            .map_err(database_error)?;
+        if event != bytes {
+            return Err(denied("session event and current references differ"));
+        }
+        Ok(Some(head))
+    }
+    pub fn reserve_start(&self) -> io::Result<Head> {
+        if self.head()?.is_some() {
+            return Err(denied(
+                "unfinished original session blocks a new startup baseline",
+            ));
+        }
+        let head = Head {
+            revision: 1,
+            ticket: uuid::Uuid::new_v4().to_string(),
+            state: State::Preparing,
+            references: None,
+        };
+        self.write(None, &head)?;
+        Ok(head)
+    }
+    pub fn advance(
+        &self,
+        expected: &Head,
+        state: State,
+        references: Option<References>,
+    ) -> io::Result<Head> {
+        let allowed = matches!(
+            (expected.state, state),
+            (State::Preparing, State::Captured)
+                | (State::Captured, State::Ready)
+                | (State::Ready, State::StopPrepared)
+                | (State::StopPrepared, State::Stopped)
+        ) || state == State::Failed && expected.state != State::Stopped;
+        if !allowed {
+            return Err(denied("current session transition is not allowed"));
+        }
+        if let Some(before) = &expected.references {
+            let after = references
+                .as_ref()
+                .ok_or_else(|| denied("original references cannot be discarded"))?;
+            if before.attempt != after.attempt
+                || before.original_sha256 != after.original_sha256
+                || before.scope_sha256 != after.scope_sha256
+                || !after.phases.starts_with(&before.phases)
+                || before.live_sha256.is_some() && before.live_sha256 != after.live_sha256
+            {
+                return Err(denied("original session references cannot be rebased"));
+            }
+        }
+        let next = Head {
+            revision: expected
+                .revision
+                .checked_add(1)
+                .ok_or_else(|| denied("session revision overflow"))?,
+            ticket: expected.ticket.clone(),
+            state,
+            references,
+        };
+        self.write(Some(expected), &next)?;
+        Ok(next)
+    }
+    fn write(&self, expected: Option<&Head>, next: &Head) -> io::Result<()> {
+        validate(next)?;
+        self.check()?;
+        let c = self.connection()?;
+        c.execute_batch("BEGIN IMMEDIATE").map_err(database_error)?;
+        let run = (|| -> io::Result<()> {
+            let binding: Vec<u8> = c
+                .query_row("SELECT document FROM binding WHERE singleton=1", [], |r| {
+                    r.get(0)
+                })
+                .map_err(database_error)?;
+            if binding != self.binding || self.head()?.as_ref() != expected {
+                return Err(denied("current session changed before reference commit"));
+            }
+            let bytes = encode(next)?;
+            c.execute(
+                "INSERT INTO events(revision,document) VALUES(?1,?2)",
+                params![next.revision, &bytes],
+            )
+            .map_err(database_error)?;
+            if let Some(expected) = expected {
+                if c.execute("UPDATE current_session SET revision=?1,document=?2 WHERE singleton=1 AND revision=?3 AND document=?4",params![next.revision,&bytes,expected.revision,encode(expected)?]).map_err(database_error)?!=1{return Err(denied("session reference compare-and-swap failed"));}
+            } else {
+                c.execute(
+                    "INSERT INTO current_session(singleton,revision,document) VALUES(1,?1,?2)",
+                    params![next.revision, &bytes],
+                )
+                .map_err(database_error)?;
+            }
+            self.check()?;
+            Ok(())
+        })();
+        if let Err(error) = run {
+            let _ = c.execute_batch("ROLLBACK");
+            return Err(error);
+        }
+        c.execute_batch("COMMIT").map_err(database_error)?;
+        if self.head()?.as_ref() != Some(next) {
+            return Err(denied("session references commit readback differs"));
+        }
+        Ok(())
+    }
+}
+impl Drop for Index {
+    fn drop(&mut self) {
+        // Connection closed before pin FD drops: never release SQLite's fcntl
+        // locks by closing another descriptor while a transaction is live.
+        if let Some(connection) = self.connection.take() {
+            let _ = connection.execute_batch("ROLLBACK");
+            let _ = connection.close();
+        }
+    }
+}
+
+#[cfg(test)]
+#[path = "macos_client_session_index_tests.rs"]
+mod tests;
