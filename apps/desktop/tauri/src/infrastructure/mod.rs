@@ -9,6 +9,8 @@ pub mod keychain;
 pub mod locking;
 #[cfg(target_os = "macos")]
 pub mod macos_client_originals;
+#[cfg(target_os = "macos")]
+pub mod macos_process_exit;
 pub mod official_cli_source;
 #[cfg(target_os = "macos")]
 pub mod official_client_coordination;

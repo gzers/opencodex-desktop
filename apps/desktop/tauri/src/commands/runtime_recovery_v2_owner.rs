@@ -186,6 +186,34 @@ impl SystemServiceOwnerProofProvider {
                     "服务由官方服务管理器托管，未绕过其停止及还原流程",
                 ));
             }
+            #[cfg(target_os = "macos")]
+            let mut native_exit = {
+                use crate::infrastructure::macos_process_exit::{ExitWatch, Generation};
+                let actual = self.host.process(pid)?.ok_or_else(|| {
+                    fail(
+                        "lifecycle_exit_identity",
+                        "原服务进程已无法订阅，未发送停止请求",
+                    )
+                })?;
+                let (seconds, micros) = actual
+                    .created
+                    .split_once(':')
+                    .ok_or_else(|| fail("lifecycle_exit_identity", "原服务进程代次不可核对"))?;
+                let expected = Generation {
+                    pid,
+                    uid: actual
+                        .owner
+                        .parse()
+                        .map_err(|_| fail("lifecycle_exit_identity", "原服务用户不可核对"))?,
+                    start_seconds: seconds
+                        .parse()
+                        .map_err(|_| fail("lifecycle_exit_identity", "原服务创建时间不可核对"))?,
+                    start_micros: micros
+                        .parse()
+                        .map_err(|_| fail("lifecycle_exit_identity", "原服务创建时间不可核对"))?,
+                };
+                ExitWatch::capture(expected)?
+            };
             let wait_budget = remaining()?;
             let verified_stop = tauri::async_runtime::block_on(async {
                 tokio::time::timeout(wait_budget, async {
@@ -256,6 +284,14 @@ impl SystemServiceOwnerProofProvider {
                     if self.host.process(pid)?.is_none()
                         && self.host.port_clear(record.runtime.port)?
                     {
+                        #[cfg(target_os = "macos")]
+                        if native_exit.normal_exit(action_deadline)?.is_none() {
+                            std::thread::sleep(Duration::from_millis(10));
+                            continue;
+                        }
+                        #[cfg(target_os = "macos")]
+                        let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root)
+                            .append_event("stop-proof: original-native-exit confirmed code=0");
                         remaining()?;
                         return Ok(());
                     }
