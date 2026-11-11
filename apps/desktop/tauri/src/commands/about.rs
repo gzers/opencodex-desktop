@@ -184,7 +184,9 @@ async fn query_panel_metadata(
         .state::<std::sync::Arc<crate::modules::runtime::RuntimeHandle>>()
         .inner()
         .clone();
-    let environment = crate::modules::preferences::network_environment_for_app(app, home.0.clone());
+    let mut environment =
+        crate::modules::preferences::network_environment_for_app(app, home.0.clone());
+    let npm_policy = crate::modules::preferences::http_options_for_app(app);
     let working = home.0.clone();
     let cache = app
         .state::<crate::state::SharedDataRoot>()
@@ -195,6 +197,8 @@ async fn query_panel_metadata(
         .0
         .join("logs/runtime-query");
     crate::commands::run_blocking("query panel metadata", move || {
+        crate::modules::network_defaults::npm_proxy::Snapshot::capture(npm_policy.0, npm_policy.1)?
+            .apply_environment(&mut environment);
         crate::commands::runtime::query_runtime_remote_latest(
             &runtime,
             &working,

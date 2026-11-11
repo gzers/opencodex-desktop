@@ -463,7 +463,8 @@ impl RuntimeInstaller<'_> {
             proxy_used: matches!(
                 request.source,
                 InstallSource::Registry { proxy: Some(_), .. }
-            ),
+            ) || matches!(&request.source, InstallSource::Registry { .. })
+                && self.npm.configured_proxy(),
         };
         let same_core = ImageManifest {
             tree_sha256: current.image.tree_sha256.clone(),

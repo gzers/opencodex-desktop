@@ -28,11 +28,11 @@ fn isolated_npm_commands_receive_saved_bypass_and_keep_real_home_and_explicit_ca
     );
     #[cfg(unix)]
     assert_eq!(value(&command, "HOME"), Some(home.into_os_string()));
-    assert!(value(&command, "HTTP_PROXY").is_none());
-    assert!(value(&command, "HTTPS_PROXY").is_none());
+    assert_eq!(value(&command, "HTTP_PROXY"), Some("".into()));
+    assert_eq!(value(&command, "HTTPS_PROXY"), Some("".into()));
     let direct = SystemNpmRunner::new(None, t.path().join("cache"))
         .base_command(Path::new("/fixture/npm"), None);
-    assert_eq!(value(&direct, "npm_config_noproxy"), Some("".into()));
+    assert_eq!(value(&direct, "npm_config_noproxy"), Some(" ".into()));
 }
 #[test]
 #[ignore = "requires explicit unchanged Node/npm inputs; uses loopback registry only, no install"]
@@ -46,13 +46,26 @@ fn actual_npm_registry_metadata_uses_manual_proxy_and_saved_bypass_without_touch
     let node = PathBuf::from(std::env::var_os("OCXD_TEST_NODE").expect("explicit Node"));
     let npm = PathBuf::from(std::env::var_os("OCXD_TEST_NPM").expect("explicit npm"));
     assert!(node.is_absolute() && npm.is_absolute());
-    for bypass in [false, true] {
+    for (system, bypass, direct) in [
+        (false, false, false),
+        (false, true, false),
+        (true, false, false),
+        (true, true, false),
+        (true, true, true),
+    ] {
+        if std::env::var_os("OCXD_TEST_NPM_DIRECT_ONLY").is_some() && !direct {
+            continue;
+        }
+        if std::env::var_os("OCXD_TEST_NPM_SYSTEM_ONLY").is_some() && !system {
+            continue;
+        }
         let t = tempfile::tempdir().unwrap();
         let home = t.path().join("profile");
         let cache = t.path().join("cache/npm");
         std::fs::create_dir(&home).unwrap();
         let userconfig = home.join(".npmrc");
-        std::fs::write(&userconfig, b"# isolated unchanged fixture\n").unwrap();
+        let user_bytes=b"# isolated unchanged fixture\nproxy=http://127.0.0.1:9\nhttps-proxy=http://127.0.0.1:9\nnoproxy=registry.invalid\n";
+        std::fs::write(&userconfig, user_bytes).unwrap();
         let listener = TcpListener::bind("127.0.0.1:0").unwrap();
         let addr = listener.local_addr().unwrap();
         listener.set_nonblocking(true).unwrap();
@@ -71,6 +84,7 @@ fn actual_npm_registry_metadata_uses_manual_proxy_and_saved_bypass_without_touch
                     Err(e) => panic!("fixture accept {e}"),
                 }
             };
+            stream.set_nonblocking(false).unwrap();
             stream
                 .set_read_timeout(Some(Duration::from_secs(2)))
                 .unwrap();
@@ -96,11 +110,28 @@ fn actual_npm_registry_metadata_uses_manual_proxy_and_saved_bypass_without_touch
         } else {
             format!("http://{addr}")
         };
-        let runner = SystemNpmRunner::new(Some(home.clone()), cache).with_no_proxy(if bypass {
+        let mut runner = SystemNpmRunner::new(Some(home.clone()), cache).with_no_proxy(if bypass {
             "127.0.0.1".into()
         } else {
             String::new()
         });
+        if direct {
+            runner = runner
+                .with_network(
+                    crate::modules::preferences::ProxyPolicy::None,
+                    String::new(),
+                )
+                .unwrap();
+        } else if system {
+            runner = runner.with_network_snapshot(
+                crate::modules::network_defaults::npm_proxy::Snapshot::system_fixture(
+                    Some(&proxy),
+                    Some(&proxy),
+                    if bypass { "127.0.0.1" } else { "" },
+                )
+                .unwrap(),
+            );
+        }
         let mut command = runner.base_command(&npm, node.parent());
         command
             .current_dir(t.path())
@@ -113,10 +144,11 @@ fn actual_npm_registry_metadata_uses_manual_proxy_and_saved_bypass_without_touch
                 "--fetch-timeout=2000",
                 "--registry",
                 &registry,
-                "--proxy",
-                &proxy,
             ])
             .env("npm_config_userconfig", &userconfig);
+        if !system {
+            command.args(["--proxy", &proxy, "--https-proxy", &proxy]);
+        }
         let output = command.output().unwrap();
         assert!(
             output.status.success(),
@@ -134,13 +166,10 @@ fn actual_npm_registry_metadata_uses_manual_proxy_and_saved_bypass_without_touch
             }),
             "actual npm route differs"
         );
-        assert_eq!(
-            std::fs::read(&userconfig).unwrap(),
-            b"# isolated unchanged fixture\n"
-        );
+        assert_eq!(std::fs::read(&userconfig).unwrap(), user_bytes);
         println!(
             "REAL_NPM_PROXY {}",
-            serde_json::json!({"bypass":bypass,"actualRegistryRequest":true,"savedConfigurationUnchanged":true,"installed":false})
+            serde_json::json!({"systemSnapshotFixture":system&&!direct,"directPolicy":direct,"nativeOsSettingsMutated":false,"bypass":bypass&&!direct,"actualRegistryRequest":true,"savedConfigurationUnchanged":true,"installed":false})
         );
     }
 }

@@ -151,11 +151,28 @@ fn run_npm_view_with_timeout(
     command.env("npm_config_cache", dunce::simplified(cache));
     command.env("npm_config_update_notifier", "false");
     command.env(
+        "npm_config_proxy",
+        environment
+            .http_proxy
+            .as_deref()
+            .filter(|value| !value.is_empty())
+            .unwrap_or(std::ffi::OsStr::new("false")),
+    );
+    command.env(
+        "npm_config_https_proxy",
+        environment
+            .https_proxy
+            .as_deref()
+            .filter(|value| !value.is_empty())
+            .unwrap_or(std::ffi::OsStr::new("null")),
+    );
+    command.env(
         "npm_config_noproxy",
         environment
             .no_proxy
             .as_deref()
-            .unwrap_or(std::ffi::OsStr::new("")),
+            .filter(|value| !value.is_empty())
+            .unwrap_or(std::ffi::OsStr::new(" ")),
     );
     // 关键：npm 是 `#!/usr/bin/env node` 脚本，env_clear 后必须给出能找到 node 的 PATH。
     // 至少包含 npm 自身所在目录（node 与它同目录），并补系统最小 PATH 兜底，

@@ -611,6 +611,9 @@ pub struct NpmOutcome {
 
 /// npm 调用边界；测试用假实现替换，生产用 [`SystemNpmRunner`]。
 pub trait NpmRunner: Send + Sync {
+    fn configured_proxy(&self) -> bool {
+        false
+    }
     fn pack(
         &self,
         request: &NpmPackRequest,
@@ -807,7 +810,7 @@ pub struct SystemNpmRunner {
     /// 真实用户 HOME；缓存目录独立指定，不通过替换 HOME 重定向。
     pub home: Option<PathBuf>,
     cache: PathBuf,
-    no_proxy: String,
+    network: crate::modules::network_defaults::npm_proxy::Snapshot,
 }
 
 impl SystemNpmRunner {
@@ -815,14 +818,30 @@ impl SystemNpmRunner {
         Self {
             home,
             cache,
-            no_proxy: String::new(),
+            network: Default::default(),
         }
     }
 
     /// Captured at the command boundary; never inherits the process's proxy
     /// environment or writes npm/global/user configuration.
     pub fn with_no_proxy(mut self, no_proxy: String) -> Self {
-        self.no_proxy = no_proxy;
+        self.network = self.network.with_bypass(no_proxy);
+        self
+    }
+    pub fn with_network(
+        self,
+        policy: crate::modules::preferences::ProxyPolicy,
+        bypass: String,
+    ) -> crate::errors::AppResult<Self> {
+        Ok(self.with_network_snapshot(
+            crate::modules::network_defaults::npm_proxy::Snapshot::capture(policy, bypass)?,
+        ))
+    }
+    pub(crate) fn with_network_snapshot(
+        mut self,
+        snapshot: crate::modules::network_defaults::npm_proxy::Snapshot,
+    ) -> Self {
+        self.network = snapshot;
         self
     }
 
@@ -862,8 +881,7 @@ impl SystemNpmRunner {
         command.env("LANG", "C.UTF-8");
         command.env("LC_ALL", "C.UTF-8");
         command.env("npm_config_update_notifier", "false");
-        command.env("npm_config_noproxy", &self.no_proxy);
-        command.env("NO_PROXY", &self.no_proxy);
+        self.network.apply(&mut command);
         command.env("npm_config_fund", "false");
         command.env("npm_config_audit", "false");
         command.env("npm_config_progress", "false");
@@ -890,6 +908,8 @@ impl SystemNpmRunner {
                 vec![
                     std::ffi::OsString::from("--proxy"),
                     std::ffi::OsString::from(proxy.url_without_credential()),
+                    std::ffi::OsString::from("--https-proxy"),
+                    std::ffi::OsString::from(proxy.url_without_credential()),
                 ],
                 None,
             ));
@@ -908,6 +928,9 @@ impl SystemNpmRunner {
 }
 
 impl NpmRunner for SystemNpmRunner {
+    fn configured_proxy(&self) -> bool {
+        self.network.configured_proxy()
+    }
     fn pack(
         &self,
         request: &NpmPackRequest,
@@ -926,6 +949,16 @@ impl NpmRunner for SystemNpmRunner {
         let spec = format!("{OFFICIAL_PACKAGE}@{}", request.version);
 
         let mut command = self.base_command(&request.npm_path, request.node_dir.as_deref());
+        if request.proxy.is_some() {
+            for key in [
+                "npm_config_proxy",
+                "npm_config_https_proxy",
+                "HTTP_PROXY",
+                "HTTPS_PROXY",
+            ] {
+                command.env_remove(key);
+            }
+        }
         command
             .current_dir(dunce::simplified(&request.work_dir))
             .arg("pack")
@@ -996,6 +1029,16 @@ impl NpmRunner for SystemNpmRunner {
         };
 
         let mut command = self.base_command(&request.npm_path, request.node_dir.as_deref());
+        if request.proxy.is_some() {
+            for key in [
+                "npm_config_proxy",
+                "npm_config_https_proxy",
+                "HTTP_PROXY",
+                "HTTPS_PROXY",
+            ] {
+                command.env_remove(key);
+            }
+        }
         command
             .current_dir(dunce::simplified(&request.prefix))
             .arg("install")
@@ -1677,7 +1720,8 @@ impl<'a> RuntimeInstaller<'a> {
             proxy_used: matches!(
                 &request.source,
                 InstallSource::Registry { proxy: Some(_), .. }
-            ),
+            ) || matches!(&request.source, InstallSource::Registry { .. })
+                && self.npm.configured_proxy(),
         };
         if self.installation_root.is_some()
             || source_record.source != super::RuntimeSourceKind::Explicit
@@ -2948,6 +2992,8 @@ mod tests {
             args,
             vec![
                 std::ffi::OsString::from("--proxy"),
+                std::ffi::OsString::from("http://host:8080"),
+                std::ffi::OsString::from("--https-proxy"),
                 std::ffi::OsString::from("http://host:8080"),
             ]
         );
