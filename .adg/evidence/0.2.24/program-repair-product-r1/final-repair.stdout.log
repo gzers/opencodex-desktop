@@ -1,0 +1,11 @@
+
+running 6 tests
+test modules::runtime::program_repair::tests::continuation_refuses_changes_to_original_archive_source_or_new_image ... ok
+test modules::runtime::program_repair::tests::every_repair_interruption_preserves_original_operation_and_can_continue_without_new_baseline ... ok
+test modules::runtime::program_repair::tests::real_official_same_version_repair_preserves_damaged_original_and_configuration ... ignored, requires explicitly pinned official2.99 complete bundle; no service started
+test modules::runtime::program_repair::tests::same_admitted_image_repairs_damaged_missing_or_extra_content_and_keeps_originals ... ok
+test modules::runtime::program_repair::tests::unknown_occupancy_backup_failure_or_configuration_drift_refuse_without_erasing_originals ... ok
+test modules::runtime::program_repair::tests::unregistered_healthy_or_different_source_and_external_drift_are_not_repair_permission ... ok
+
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 2146 filtered out; finished in 6.25s
+

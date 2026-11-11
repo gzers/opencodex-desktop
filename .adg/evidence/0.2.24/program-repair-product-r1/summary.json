@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "code": "8a1fda555c0eabd36a12979bfd40ebc43d7f4947",
+  "scope": "Same admitted immutable image repair from pinned complete resource; retain damaged original, preserve configuration, explicit continuation and settings entry",
+  "accepted": false,
+  "backend": {
+    "uniqueRelatedPassed": 62,
+    "composition": {
+      "repair": 5,
+      "reinstall": 5,
+      "selection": 7,
+      "catalog": 2,
+      "supply": 34,
+      "activationCommand": 4,
+      "removalCommand": 4,
+      "officialCompleteRepair": 1
+    }
+  },
+  "frontend": {
+    "tests": 42,
+    "files": 4,
+    "typecheck": 0
+  },
+  "checks": {
+    "fmt": 0,
+    "strictClippyAllTargets": 0,
+    "diffCheck": 0
+  },
+  "official": {
+    "version": "2.99.0",
+    "elapsedMs": 184411,
+    "configurationAndSourceRecordPreserved": true,
+    "damagedOriginalRetained": true,
+    "actualVersionOutput": "opencodex 2.99.0",
+    "serviceStarted": false,
+    "serviceUnusedProof": "injected isolated fixture"
+  },
+  "visual": {
+    "sizes": [
+      "1040x760",
+      "580x480"
+    ],
+    "nativeIpc": false,
+    "actualComponents": [
+      "RuntimeProgramReinstall repair mode",
+      "UiDialog"
+    ],
+    "memoryListAndNativeCommands": true,
+    "refreshFailure": "intentionally injected fixture; result remains successful"
+  },
+  "failureEvidence": [
+    "initial E0107 impl-Trait function selection compile error retained; replaced with ordinary branching, no product assertion weakening"
+  ],
+  "cleanup": {
+    "fixtureRootsRemoved": true,
+    "uiFixtureAndRunnerRemoved": true,
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "businessRequests": false,
+    "duplicateReceiptRootRemoved": true
+  },
+  "limits": [
+    "Only exact matching pinned complete resource repairs its originally admitted image; no downgrade or arbitrary version source adoption",
+    "Archived damaged image consumes extra storage and is not automatically deleted"
+  ],
+  "remaining": [
+    "other-source image reconstruction if needed by final scope",
+    "Windows W0 HOME/Profile and W1/W2",
+    "native lifecycle and package acceptance",
+    "version/network UI and source drift reconciliation",
+    "P24-NAME",
+    "standard single-app artifacts and final candidate"
+  ]
+}
