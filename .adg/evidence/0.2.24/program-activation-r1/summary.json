@@ -1,0 +1,48 @@
+{
+  "codeCommit": "60e9fc6401701f3300066110c1f1f6d8695dc045",
+  "synthetic": {
+    "activationTests": 5,
+    "firstInstallAndExistingVersionFaultScenarios": 16,
+    "programSelection": 7,
+    "supply": 33,
+    "runtimeConsumers": 2,
+    "totalPassed": 47,
+    "ignoredRealBundleCase": 1,
+    "binarySha256": "06378d55671effed56017867c88aaae96d2607e5b8d0307f33d24a1143a39fd4"
+  },
+  "official299": {
+    "passed": 1,
+    "descriptorPin": "e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3",
+    "archiveSha256": "5b10c1a888000d54d14783622d9d8330c33f4e1b14a5f163d007337d0424ec7f",
+    "officialArchiveSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+    "elapsedMs": 72217,
+    "serviceOrCliExecuted": false,
+    "reusedAfterFinalRevision": "Only recovery D-root pre-lock refusal and module order changed after the official supply run; provisioning path unchanged. Final tree was rebuilt and synthetic supply, selection and recovery rerun. Official launcher did not separately preserve its copied binary hash."
+  },
+  "format": "passed",
+  "strictClippyLibAndTests": "passed",
+  "verified": [
+    "fresh supply commits stable entry, current selection and source mirror with one strict checked journal",
+    "pending prevents ordinary startup consumption and never implicitly resumes",
+    "explicit complete or rollback at Journal, Entry, Current and Record checkpoints for both fresh and existing selection",
+    "retains old and candidate image directories, exact before metadata and terminal transaction receipt",
+    "source mirror unknown fields preserved; rollback restores exact original source bytes",
+    "wrong attempt, changed candidate, malformed journal and external changes in any target refuse without overwrite",
+    "other D rejected before creating a lock in that D",
+    "unknown owner/admission rejection before journal leaves metadata untouched"
+  ],
+  "retainedFailures": [
+    "Initial source mirror projection used camelCase keys while runtime.json uses snake_case; four activation and four supply tests refused before journal. Corrected projection keys, retained original assertions and logs.",
+    "Initial cargo fmt check requested module ordering only; final format and strict checks passed."
+  ],
+  "boundaries": [
+    "source installers must admit candidates through pinned bundle or validated install; read_image retains existing critical-file admission and does not add a new upstream trust policy",
+    "production first supply is wired, explicit switch/rollback is a Rust API; update installer, UI and native service/admission wiring remain pending",
+    "official check measures offline expansion/verification/reopening, not 30/5/10 second lifecycle or query acceptance",
+    "Windows W0 HOME/Profile fix has no new contribution; W1/W2 not released"
+  ],
+  "networkDenied": true,
+  "dailyConfigTouched": false,
+  "official299Modified": false,
+  "temporaryFixtureRootsRemoved": true
+}

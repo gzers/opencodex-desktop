@@ -1,0 +1,40 @@
+
+running 5 tests
+test modules::runtime::program_activation::tests::changes_one_selection_and_source_mirror_without_mutating_or_deleting_either_image ... FAILED
+test modules::runtime::program_activation::tests::every_interruption_stage_can_explicitly_finish_or_restore_exact_before_images ... FAILED
+test modules::runtime::program_activation::tests::recovery_refuses_other_data_roots_tampered_journal_or_changed_candidate_image ... FAILED
+test modules::runtime::program_activation::tests::unknown_value_in_any_recovery_target_is_preserved_before_recovery_writes ... FAILED
+test modules::runtime::program_activation::tests::wrong_baseline_unknown_source_and_admission_refusal_do_not_begin_a_transaction ... ok
+
+failures:
+
+---- modules::runtime::program_activation::tests::changes_one_selection_and_source_mirror_without_mutating_or_deleting_either_image stdout ----
+
+thread 'modules::runtime::program_activation::tests::changes_one_selection_and_source_mirror_without_mutating_or_deleting_either_image' (151919522) panicked at src/modules/runtime/program_activation_tests.rs:160:10:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "runtime_activation_unconfirmed", detail: "目标来源记录无法核验" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- modules::runtime::program_activation::tests::every_interruption_stage_can_explicitly_finish_or_restore_exact_before_images stdout ----
+
+thread 'modules::runtime::program_activation::tests::every_interruption_stage_can_explicitly_finish_or_restore_exact_before_images' (151919523) panicked at src/modules/runtime/program_activation_tests.rs:204:17:
+assertion failed: program_selection::read(&f.i, f.platform(), &f.new.platform).is_err()
+
+---- modules::runtime::program_activation::tests::recovery_refuses_other_data_roots_tampered_journal_or_changed_candidate_image stdout ----
+
+thread 'modules::runtime::program_activation::tests::recovery_refuses_other_data_roots_tampered_journal_or_changed_candidate_image' (151919524) panicked at src/modules/runtime/program_activation_tests.rs:299:45:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "runtime_activation_unconfirmed", detail: "没有待恢复的版本事务" }
+
+---- modules::runtime::program_activation::tests::unknown_value_in_any_recovery_target_is_preserved_before_recovery_writes stdout ----
+
+thread 'modules::runtime::program_activation::tests::unknown_value_in_any_recovery_target_is_preserved_before_recovery_writes' (151919525) panicked at src/modules/runtime/program_activation_tests.rs:266:49:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "runtime_activation_unconfirmed", detail: "没有待恢复的版本事务" }
+
+
+failures:
+    modules::runtime::program_activation::tests::changes_one_selection_and_source_mirror_without_mutating_or_deleting_either_image
+    modules::runtime::program_activation::tests::every_interruption_stage_can_explicitly_finish_or_restore_exact_before_images
+    modules::runtime::program_activation::tests::recovery_refuses_other_data_roots_tampered_journal_or_changed_candidate_image
+    modules::runtime::program_activation::tests::unknown_value_in_any_recovery_target_is_preserved_before_recovery_writes
+
+test result: FAILED. 1 passed; 4 failed; 0 ignored; 0 measured; 2088 filtered out; finished in 0.08s
+
