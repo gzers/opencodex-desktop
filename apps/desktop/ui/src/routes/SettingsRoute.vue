@@ -19,11 +19,12 @@ import UiSegmented from '@/components/ui/UiSegmented.vue'
 import AgentExecutionField from '@/features/models/AgentExecutionField.vue'
 import RuntimeActivationRecovery from '@/features/runtime/RuntimeActivationRecovery.vue'
 import RuntimeTerminalCli from '@/features/runtime/RuntimeTerminalCli.vue'
+import NetworkProbe from '@/features/preferences/NetworkProbe.vue'
 import RuntimeProgramRemoval from '@/features/runtime/RuntimeProgramRemoval.vue'
 import RuntimeProgramReinstall from '@/features/runtime/RuntimeProgramReinstall.vue'
 import RuntimePortSettings from '@/features/runtime/RuntimePortSettings.vue'
 import { settingsSections } from '@/navigation'
-import { checkNetworkProxy, type PreferencesDto } from '@/features/preferences/api'
+import { type PreferencesDto } from '@/features/preferences/api'
 import { getCodexShimStatus, setCodexShim, type CodexShimDto } from '@/features/codex-shim/api'
 import UpdateCenter from '@/features/updates/UpdateCenter.vue'
 import { applyInterfaceScale, clampScale, DEFAULT_INTERFACE_SCALE } from '@/app/appearance/scale'
@@ -524,25 +525,6 @@ function goToNetwork() {
   routes.go('settings', { section: 'general' })
 }
 
-// 网络连通性检查（U-05）：带超时、不改写任何状态；结果如实展示。
-const proxyProbeBusy = ref(false)
-const proxyProbeResult = ref('')
-const proxyProbeOk = ref(false)
-async function runProxyProbe() {
-  if (proxyProbeBusy.value) return
-  proxyProbeBusy.value = true
-  proxyProbeResult.value = ''
-  try {
-    const result = await checkNetworkProxy()
-    proxyProbeOk.value = result.ok
-    proxyProbeResult.value = result.detail
-  } catch {
-    proxyProbeOk.value = false
-    proxyProbeResult.value = '检查失败；未改写任何设置。'
-  } finally {
-    proxyProbeBusy.value = false
-  }
-}
 
 function toggleSelect(key: string) {
   openSelect.value = openSelect.value === key ? '' : key
@@ -744,7 +726,7 @@ function restoreGeneralDefaults() {
           <div v-if="preferences.networkProxyMode === 'manual'" class="setting-row" data-testid="setting-proxy-host"><div><div class="setting-title">主机名与端口</div><div class="setting-desc">例如 127.0.0.1:7890；不接受含空白、@ 或凭据的地址。</div></div><div class="controls"><input class="text-input" type="text" :value="preferences.networkProxyHost" aria-label="代理主机名与端口" placeholder="127.0.0.1:7890" @change="preferences.networkProxyHost = ($event.target as HTMLInputElement).value; saveProxyHost()"></div></div>
           <div v-if="preferences.networkProxyMode === 'manual'" class="setting-row" data-testid="setting-proxy-no-proxy"><div><div class="setting-title">不使用代理的地址</div><div class="setting-desc">逗号分隔的例外，例如 localhost,127.0.0.1,192.168.*。</div></div><div class="controls"><input class="text-input" type="text" :value="preferences.networkNoProxy" aria-label="不使用代理的地址" placeholder="localhost,127.0.0.1" @change="preferences.networkNoProxy = ($event.target as HTMLInputElement).value; saveProxyHost()"></div></div>
           <div class="setting-row"><div><div class="setting-title">应用范围</div><div class="setting-desc">应用自更新、官方版本查询与托管安装共用此代理；TLS 证书校验不可关闭。WebDAV 同步使用其端点自带代理。</div></div><div class="controls"><span class="setting-readonly">本版不含代理鉴权</span></div></div>
-          <div class="setting-row" data-testid="setting-network-probe"><div><div class="setting-title">检查连接</div><div class="setting-desc">{{ proxyProbeResult || '用当前配置对固定地址发一次带超时请求；只回报结果，不改写任何设置。' }}</div></div><div class="controls"><span v-if="proxyProbeResult" class="tag" :class="{ danger: !proxyProbeOk, ok: proxyProbeOk }">{{ proxyProbeOk ? '可用' : '不可用' }}</span><UiButton class="btn ghost" type="button" :disabled="proxyProbeBusy" @click="runProxyProbe()">{{ proxyProbeBusy ? '检查中' : '检查连接' }}</UiButton></div></div>
+          <NetworkProbe :policy-key="JSON.stringify([preferences.networkProxyMode,preferences.networkProxyScheme,preferences.networkProxyHost,preferences.networkNoProxy])" />
         </div>
       </UiCard>
 
@@ -905,7 +887,7 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
         <div class="setting-list">
           <div class="setting-row"><div><div class="setting-title">桌面管理器</div><div class="setting-desc">查看通道版本、更新说明与实时进度；准备就绪后选择重启时机。</div></div><div class="controls"><UiButton class="btn ghost" type="button" @click="openUpdates('manager')">查看管理器更新</UiButton></div></div>
           <div class="setting-row"><div><div class="setting-title">OpenCodex 面板</div><div class="setting-desc">当前 {{ officialVersion }}；升级前必须备份配置。</div></div><div class="controls"><UiButton class="btn ghost" type="button" @click="openUpdates('official')">查看面板更新</UiButton></div></div>
-<div class="setting-row"><div><div class="setting-title">更新通道</div><div class="setting-desc">稳定通道或测试通道；检查、安装与自动调度共用同一通道来源。</div></div><div class="controls"><div class="select" :class="{ open: openSelect === 'appUpdateChannel' }"><button class="select-trigger" :aria-expanded="openSelect === 'appUpdateChannel' ? 'true' : 'false'" aria-haspopup="listbox" aria-label="应用更新通道" @click="toggleSelect('appUpdateChannel')"><span class="select-value">{{ preferences.appUpdateChannel === 'beta' ? '测试通道' : '稳定通道' }}</span></button><UiSelectMenu :open="openSelect === 'appUpdateChannel'" @close="openSelect = ''" role="listbox" aria-label="应用更新通道"><button class="select-option" :class="{ selected: preferences.appUpdateChannel === 'stable' }" type="button" role="option" :aria-selected="preferences.appUpdateChannel === 'stable' ? 'true' : 'false'" @click="chooseUpdateChannel('stable', '稳定通道')">稳定通道</button><button class="select-option" :class="{ selected: preferences.appUpdateChannel === 'beta' }" type="button" role="option" :aria-selected="preferences.appUpdateChannel === 'beta' ? 'true' : 'false'" @click="chooseUpdateChannel('beta', '测试通道')">测试通道</button></UiSelectMenu></div></div></div><div class="setting-row" data-testid="setting-network-shortcut"><div><div class="setting-title">网络连接</div><div class="setting-desc">检查更新失败多为网络问题；可在此跳转配置代理。</div></div><div class="controls"><UiButton class="btn ghost" @click="goToNetwork">配置网络</UiButton></div></div>
+<div class="setting-row"><div><div class="setting-title">更新通道</div><div class="setting-desc">稳定通道或测试通道；检查、安装与自动调度共用同一通道来源。</div></div><div class="controls"><div class="select" :class="{ open: openSelect === 'appUpdateChannel' }"><button class="select-trigger" :aria-expanded="openSelect === 'appUpdateChannel' ? 'true' : 'false'" aria-haspopup="listbox" aria-label="应用更新通道" @click="toggleSelect('appUpdateChannel')"><span class="select-value">{{ preferences.appUpdateChannel === 'beta' ? '测试通道' : '稳定通道' }}</span></button><UiSelectMenu :open="openSelect === 'appUpdateChannel'" @close="openSelect = ''" role="listbox" aria-label="应用更新通道"><button class="select-option" :class="{ selected: preferences.appUpdateChannel === 'stable' }" type="button" role="option" :aria-selected="preferences.appUpdateChannel === 'stable' ? 'true' : 'false'" @click="chooseUpdateChannel('stable', '稳定通道')">稳定通道</button><button class="select-option" :class="{ selected: preferences.appUpdateChannel === 'beta' }" type="button" role="option" :aria-selected="preferences.appUpdateChannel === 'beta' ? 'true' : 'false'" @click="chooseUpdateChannel('beta', '测试通道')">测试通道</button></UiSelectMenu></div></div></div><div class="setting-row" data-testid="setting-network-shortcut"><div><div class="setting-title">网络连接</div><div class="setting-desc">检查 GitHub 与 npm 的连接，或调整应用请求代理。</div></div><div class="controls"><UiButton class="btn ghost" @click="goToNetwork">配置网络</UiButton></div></div>
 <div class="setting-row"><div><div class="setting-title">自动检查更新</div><div class="setting-desc">开启后按通道后台检查；关闭后不影响手动检查。</div></div><div class="controls"><UiSwitch label="自动检查更新" :model-value="preferences.appUpdateAutoCheck" @update:model-value="toggleUpdateAutoCheck()" /></div></div>
         </div>
       </article>

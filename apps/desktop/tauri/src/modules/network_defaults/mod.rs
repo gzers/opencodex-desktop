@@ -70,6 +70,30 @@ pub fn proxy_allowed() -> bool {
     defaults().allow_proxy
 }
 
+/// Apply an already captured preference snapshot. Explicit direct/manual modes
+/// never inherit ambient proxy variables; TLS verification and redirect refusal
+/// remain fixed, independent of the user's address/bypass preferences.
+pub fn http_client(
+    policy: crate::modules::preferences::ProxyPolicy,
+    no_proxy: &str,
+    total: Duration,
+) -> Result<reqwest::Client, reqwest::Error> {
+    use crate::modules::preferences::ProxyPolicy;
+    let builder = reqwest::Client::builder()
+        .user_agent(user_agent())
+        .connect_timeout(connect_timeout())
+        .timeout(total)
+        .redirect(reqwest::redirect::Policy::none());
+    let builder = match policy {
+        ProxyPolicy::None => builder.no_proxy(),
+        ProxyPolicy::System => builder,
+        ProxyPolicy::Manual(url) => builder
+            .no_proxy()
+            .proxy(reqwest::Proxy::all(url)?.no_proxy(reqwest::NoProxy::from_string(no_proxy))),
+    };
+    builder.build()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

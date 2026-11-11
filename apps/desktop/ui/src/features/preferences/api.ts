@@ -61,6 +61,14 @@ export async function restoreDefaultPreferences(): Promise<PreferencesDto> {
 export interface NetworkProbeDto {
   ok: boolean
   detail: string
+  results: NetworkProbeResult[]
+}
+export interface NetworkProbeResult {
+ target:'github'|'npm'
+ state:'ready'|'timeout'|'rate_limited'|'http_error'|'network'|'identity_mismatch'|'too_large'|'invalid_proxy'
+ httpStatus:number|null
+ retryAfterSeconds:number|null
+ checkedAt:string
 }
 
 export async function checkNetworkProxy(): Promise<NetworkProbeDto> {
