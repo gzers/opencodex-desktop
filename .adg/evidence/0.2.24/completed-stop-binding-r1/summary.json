@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "accepted": false,
+  "frozenCandidate": false,
+  "codeCommit": "5a5732524558b3f72c7d24268935451a725379d3",
+  "scope": "Preserve opaque native complete ordinary Stop references for subsequent startup-original association; no client restoration operation added",
+  "passed": {
+    "newInternalReferenceTests": 4,
+    "existingOwnershipRegressions": 10,
+    "ignoredExplicitNodeFixture": 1
+  },
+  "checks": [
+    {
+      "name": "compile-final",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--lib",
+        "completed_stop_binding",
+        "--no-run"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "source": "source.json hashes final actual compiled/executed sources and library binary",
+  "facts": [
+    "stop_lifecycle_verified retains original ProcessContext handle/working profile/HOME, canonical Desktop data-root path, exact checked runtime-record digest, native normal-exit proof when actually observed, and original effective Stop deadline",
+    "Preexisting Stopped observation carries no original record digest and no new native normal-exit proof, and cannot satisfy require_original",
+    "Ordinary product Stop wrapper still runs original official/OS gates then validates the returned references. No changed CLI/HTTP action or weakened assertion",
+    "Reference checks refuse other data-root/HOME/profile/runtimeArc/hash/process birth and malformed digest. Already elapsed original budget cannot be renewed for subsequent work"
+  ],
+  "limits": [
+    "No startup-original reference persistence or automatic Start/Stop client restoration was wired this round. MutationPermit production factory remains absent.",
+    "Two new reference tests construct explicit synthetic internal outer structs with actual own gated-child kernel exit proof; they verify comparison only, not official service Stop issuance or restoration authorization.",
+    "PreexistingStopped result issuance test uses existing FakeHost fixture and proves absence cannot issue fresh authority; this is not a live native service test.",
+    "Original Native kernel7 and official2.99 Start/Status/Stop4433/1092/2392ms evidence from57c201bd7 remains its own source; this internal-result refactor has not rerun or re-signed that full native lifecycle. No current full-candidate/native acceptance claim.",
+    "Data-root context binds canonical path here; actual original directory file identity/phase digest protection still belongs to the existing native Originals session and must be associated before compensation.",
+    "Single original normal-exit proof does not alone establish complete descendants/listeners or config/Grok/Agent/full-client restoration. Ongoing official refresh, missing directories/cross-volume/flags remain in final scope.",
+    "No official2.99 modification/daily config/real business model or sync/no new.app/DMG or Windows native execution."
+  ],
+  "cleanup": {
+    "ownTestProcessesAbsent": true,
+    "nativeServiceStarted": false,
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "ownFixtureAndCopiedTestBinaryRemoved": true,
+    "duplicateReceiptRootRemoved": true
+  }
+}
