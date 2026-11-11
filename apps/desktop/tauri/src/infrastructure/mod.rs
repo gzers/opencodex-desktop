@@ -7,6 +7,8 @@ pub mod discovery_paths;
 pub mod hash;
 pub mod keychain;
 pub mod locking;
+#[cfg(target_os = "macos")]
+pub mod macos_client_originals;
 pub mod official_cli_source;
 pub mod official_version_source;
 pub mod platform;
