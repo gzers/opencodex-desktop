@@ -17,6 +17,9 @@ pub(crate) fn start(
     install: SharedRuntimeInstall,
     ready: impl FnOnce() + Send + 'static,
 ) -> AppResult<()> {
+    if runtime.uses_versioned_programs() {
+        super::program_reinstall::require_idle(&installation)?;
+    }
     if runtime.uses_versioned_programs()
         && super::program_removal::intentionally_removed(&installation, &desktop)?
     {

@@ -297,7 +297,7 @@ pub fn run() {
                         runtime.clone(), runtime_install.clone(),
                         move || crate::commands::runtime::broadcast_source_changed(&source_events),
                     ).is_err() {
-                        record_window_event(&data_root, "integrated runtime provisioning not started; installer busy");
+                        record_window_event(&data_root, "integrated runtime provisioning not started; operation or installation state requires review");
                     }
                 }
             }
@@ -702,6 +702,8 @@ pub fn run() {
             commands::native_config_import::model_v2_native_rollback_list,
             commands::native_config_import::model_v2_native_config_backup,
             commands::runtime_activation::runtime_activation_preview,
+            commands::runtime_builtin::runtime_builtin_preview,
+            commands::runtime_builtin::runtime_builtin_reinstall,
             commands::runtime_activation::runtime_activation_recover,
             commands::runtime_removal::runtime_removal_preview,
             commands::runtime_removal::runtime_removal_apply,

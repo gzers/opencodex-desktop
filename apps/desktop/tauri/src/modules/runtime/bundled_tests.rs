@@ -259,6 +259,84 @@ struct Fixture {
     rows: Vec<(Value, Vec<u8>)>,
     descriptor: Value,
 }
+
+#[test]
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn versioned_explicit_resupply_checks_original_preview_before_reading_archive_and_preserves_failed_source(
+) {
+    for invalid in ["preview", "archive", "none"] {
+        let f = versioned_fixture();
+        let (descriptor, pin) = f.bytes();
+        versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).unwrap();
+        let h = f.root.join("opencodex-home");
+        fs::create_dir(&h).unwrap();
+        let config = br#"{"port":41234,"providers":{}}"#;
+        fs::write(h.join("config.json"), config).unwrap();
+        let removal = super::super::program_removal::prepare_registered(&f.i, &f.d, &h).unwrap();
+        removal
+            .execute(
+                &removal.preview().unwrap().confirmation_digest,
+                || Ok(()),
+                || Ok(()),
+            )
+            .unwrap();
+        let review =
+            super::super::program_reinstall::review(&f.i, &f.d, &h, &pin, "2.99.0").unwrap();
+        if invalid == "archive" {
+            fs::write(&f.archive, b"truncated resource").unwrap();
+        }
+        let archive = if invalid == "preview" {
+            f.root.join("does-not-exist")
+        } else {
+            f.archive.clone()
+        };
+        let result = versioned::reinstall(
+            &f.i,
+            &f.d,
+            versioned::ReinstallRequest {
+                home: &h,
+                confirmation_digest: if invalid == "preview" {
+                    "not-reviewed"
+                } else {
+                    &review.confirmation_digest
+                },
+            },
+            &archive,
+            &descriptor,
+            &pin,
+            || Ok(()),
+        );
+        if invalid == "none" {
+            assert!(
+                matches!(result.unwrap(),ProvisionResult::Installed{version} if version=="2.99.0")
+            );
+            assert_eq!(
+                super::super::program_catalog::inspect(&f.i)
+                    .unwrap()
+                    .selections
+                    .len(),
+                1
+            );
+        } else {
+            let error = result.err().unwrap().to_string();
+            if invalid == "preview" {
+                assert!(error.contains("预览已过期"), "{error}");
+            }
+            assert!(super::super::program_removal::intentionally_removed(&f.i, &f.d).unwrap());
+            assert!(!f
+                .i
+                .join("runtime")
+                .join(super::super::program_reinstall::PENDING)
+                .exists());
+            assert!(fs::read_dir(&f.i).unwrap().all(|p| !p
+                .unwrap()
+                .file_name()
+                .to_string_lossy()
+                .starts_with(".runtime-version-stage-")));
+        }
+        assert_eq!(fs::read(h.join("config.json")).unwrap(), config);
+    }
+}
 impl Fixture {
     fn new() -> Self {
         let temp = tempfile::tempdir().unwrap();

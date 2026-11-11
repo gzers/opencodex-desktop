@@ -64,6 +64,7 @@ pub fn verify_current(program_root: &Path, selected: &SelectedProgram) -> AppRes
     }
     let runtime = program_root.join("runtime");
     require_no_removal(program_root)?;
+    super::program_reinstall::require_idle(program_root)?;
     let pending = runtime.join(ACTIVATION_PENDING);
     safety::check_path(program_root, &pending, true).map_err(|_| invalid("激活路径不可确认"))?;
     match std::fs::symlink_metadata(&pending) {
@@ -229,6 +230,7 @@ fn read_inner(
     require_no_removal(program_root)?;
     let runtime = program_root.join("runtime");
     if !activating {
+        super::program_reinstall::require_idle(program_root)?;
         let pending = runtime.join(ACTIVATION_PENDING);
         safety::check_path(program_root, &pending, true)
             .map_err(|_| invalid("版本激活状态路径不可信"))?;

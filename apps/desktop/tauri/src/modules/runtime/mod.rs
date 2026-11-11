@@ -15,6 +15,7 @@ pub mod program_activation;
 pub mod program_catalog;
 pub mod program_image;
 pub mod program_layout;
+pub(crate) mod program_reinstall;
 pub mod program_removal;
 pub mod program_selection;
 pub(crate) mod protection;

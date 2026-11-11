@@ -113,6 +113,12 @@ pub struct Mutation {
     _file: fs::File,
 }
 impl Mutation {
+    pub(super) fn require_root(&self, root: &Path) -> AppResult<()> {
+        if self.root != root {
+            return Err(fail("程序写者不属于当前安装根"));
+        }
+        Ok(())
+    }
     pub fn acquire(root: &Path) -> AppResult<Self> {
         let lock_path = root.join(".runtime-program.lock");
         safety::check_path(root, &lock_path, true)?;
@@ -133,13 +139,18 @@ impl Mutation {
         data: &Path,
         expected: Option<&CurrentSelection>,
         after: &CurrentSelection,
+        bootstrap: bool,
     ) -> AppResult<Journal> {
         bundled::roots(&self.root, data)?;
         if read(&self.root, &self.pending(), MAX_JOURNAL)?.is_some() {
             return Err(fail("上次版本事务尚未明确恢复"));
         }
         let (target, platform) = program_layout::host_target()?;
-        let before = program_selection::read(&self.root, platform, target)?;
+        let before = if bootstrap {
+            program_selection::read_activating(&self.root, platform, target)?
+        } else {
+            program_selection::read(&self.root, platform, target)?
+        };
         if before.as_ref().map(|s| &s.selection) != expected {
             return Err(fail("当前版本已变化，未切换程序"));
         }
@@ -217,6 +228,128 @@ impl Mutation {
     pub fn pending_summary(&self, data: &Path) -> AppResult<PendingSummary> {
         Inspector { root: &self.root }.summary(data)
     }
+    /// Reinstall's owning journal retains these exact bytes before any selection
+    /// write. The removed source must still be the original unresolved record.
+    pub(super) fn prepare_bootstrap(
+        &self,
+        data: &Path,
+        after: &CurrentSelection,
+        record_digest: &str,
+    ) -> AppResult<Vec<u8>> {
+        let mut journal = self.prepare(data, None, after, true)?;
+        if journal
+            .record
+            .before
+            .as_deref()
+            .map(hash::sha256_hex)
+            .as_deref()
+            != Some(record_digest)
+        {
+            return Err(fail("卸载后的来源记录已变化，未生成新的重装基线"));
+        }
+        let bytes = journal
+            .record
+            .after
+            .as_ref()
+            .ok_or_else(|| fail("重装来源后像缺失"))?;
+        let mut record: RuntimeSourceRecord = decode(bytes)?;
+        record.push_history(super::InstallHistoryEntry {
+            action: "install".into(),
+            result: "succeeded".into(),
+            package: super::OFFICIAL_PACKAGE.into(),
+            version: after.version.clone(),
+            target: program_layout::RuntimeVersionPaths::new(
+                &self.root.join("runtime/versions"),
+                &after.version,
+                program_layout::host_target()?.1,
+            )?
+            .package_root
+            .to_string_lossy()
+            .into_owned(),
+            at: super::now_rfc3339(),
+            reason: None,
+        });
+        let mut document: serde_json::Value = decode(bytes)?;
+        document["history"] =
+            serde_json::to_value(record.history).map_err(|_| fail("重装历史无法编码"))?;
+        journal.record.after = Some(encode(&document)?);
+        self.validate(data, &journal)?;
+        encode(&Envelope {
+            sha256: hash::sha256_hex(&encode(&journal)?),
+            journal,
+        })
+    }
+    /// Completes only the caller's original serialized bootstrap. No new source
+    /// baseline, timestamp, attempt or permission is inferred on continuation.
+    pub(super) fn complete_bootstrap(
+        &self,
+        data: &Path,
+        bytes: &[u8],
+        after: &CurrentSelection,
+        record_digest: &str,
+        admit: impl Fn() -> AppResult<()>,
+        checkpoint: impl Fn(&str) -> AppResult<()>,
+    ) -> AppResult<SelectedProgram> {
+        let envelope: Envelope = decode(bytes)?;
+        let journal = envelope.journal;
+        if bytes.len() as u64 > MAX_JOURNAL
+            || journal.before.is_some()
+            || journal.after != *after
+            || envelope.sha256 != hash::sha256_hex(&encode(&journal)?)
+            || journal
+                .record
+                .before
+                .as_deref()
+                .map(hash::sha256_hex)
+                .as_deref()
+                != Some(record_digest)
+        {
+            return Err(fail("原重装版本事务无法核验"));
+        }
+        self.validate(data, &journal)?;
+        super::program_image::verify(&program_selection::read_image(
+            &self.root,
+            program_layout::host_target()?.1,
+            &after.platform,
+            after,
+        )?)?;
+        let record_path = RuntimeStore::new(data).path().to_path_buf();
+        safety::check_path(
+            data,
+            &crate::infrastructure::locking::lock_path_for(&record_path),
+            true,
+        )?;
+        let _record = TargetFileLock::lock(&record_path)?;
+        audit_targets(&self.root, data, &journal)?;
+        admit()?;
+        match read(&self.root, &self.pending(), MAX_JOURNAL)? {
+            Some(original) if original != bytes => {
+                return Err(fail("存在另一版本事务，未继续重装"))
+            }
+            Some(_) => {}
+            None => {
+                create(&self.pending(), bytes)?;
+                safety::sync_directories(&self.root, &self.root.join("runtime"))?;
+            }
+        }
+        checkpoint("activation_journal")?;
+        self.apply(
+            data,
+            &journal,
+            bytes,
+            Decision::Complete,
+            &admit,
+            &|phase| {
+                checkpoint(match phase {
+                    Checkpoint::Journal => "activation_journal",
+                    Checkpoint::Entry => "entry",
+                    Checkpoint::Current => "current",
+                    Checkpoint::Record => "record",
+                })
+            },
+        )?
+        .ok_or_else(|| fail("重装激活回执缺失"))
+    }
     pub(super) fn activate(
         &self,
         data: &Path,
@@ -241,7 +374,7 @@ impl Mutation {
             true,
         )?;
         let _record = TargetFileLock::lock(&record_path)?;
-        let journal = self.prepare(data, expected, after)?;
+        let journal = self.prepare(data, expected, after, false)?;
         self.commit_prepared(data, journal, admit, checkpoint)
     }
     pub(super) fn activate_install(
@@ -259,7 +392,7 @@ impl Mutation {
             true,
         )?;
         let _record = TargetFileLock::lock(&record_path)?;
-        let mut journal = self.prepare(data, expected, after)?;
+        let mut journal = self.prepare(data, expected, after, false)?;
         let candidate = program_selection::read_image(
             &self.root,
             program_layout::host_target()?.1,
@@ -486,7 +619,7 @@ impl Mutation {
         safety::sync_directories(data, &receipts)?;
         fs::remove_file(self.pending()).map_err(io)?;
         safety::sync_directories(&self.root, &self.root.join("runtime"))?;
-        program_selection::read(&self.root, platform, target)
+        program_selection::read_activating(&self.root, platform, target)
     }
 }
 struct Inspector<'a> {

@@ -70,6 +70,7 @@ fn preview_value(
     })
 }
 fn inspect(program: &Path, data: &Path, home: &Path) -> AppResult<Option<RecoveryPreview>> {
+    crate::modules::runtime::program_reinstall::require_idle(program)?;
     program_activation::inspect_pending(program, data)?
         .map(|s| preview_value(program, data, home, s))
         .transpose()
@@ -81,6 +82,7 @@ fn apply(
     request: RecoveryRequest,
     require_stopped: impl Fn() -> AppResult<()>,
 ) -> AppResult<RecoveryOutcome> {
+    crate::modules::runtime::program_reinstall::require_idle(program)?;
     let mutation = program_activation::Mutation::acquire(program)?;
     let summary = mutation.pending_summary(data)?;
     let preview = preview_value(program, data, home, summary.clone())?;

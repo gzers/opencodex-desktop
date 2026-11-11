@@ -177,17 +177,79 @@ pub(super) fn provision_inner(
     pin: &str,
     inject_activation_failure: bool,
 ) -> AppResult<ProvisionResult> {
+    supply(
+        i,
+        d,
+        archive,
+        descriptor,
+        pin,
+        inject_activation_failure,
+        None,
+    )
+}
+
+struct Resupply<'a> {
+    home: &'a Path,
+    confirmation_digest: &'a str,
+    unused: &'a dyn Fn() -> AppResult<()>,
+}
+pub struct ReinstallRequest<'a> {
+    pub home: &'a Path,
+    pub confirmation_digest: &'a str,
+}
+/// An explicit product action, never called by ordinary startup. The same
+/// pinned archive verification and image builder are used for every attempt.
+pub fn reinstall(
+    i: &Path,
+    d: &Path,
+    request: ReinstallRequest<'_>,
+    archive: &Path,
+    descriptor: &[u8],
+    pin: &str,
+    unused: impl Fn() -> AppResult<()>,
+) -> AppResult<ProvisionResult> {
+    supply(
+        i,
+        d,
+        archive,
+        descriptor,
+        pin,
+        false,
+        Some(Resupply {
+            home: request.home,
+            confirmation_digest: request.confirmation_digest,
+            unused: &unused,
+        }),
+    )
+}
+fn supply(
+    i: &Path,
+    d: &Path,
+    archive: &Path,
+    descriptor: &[u8],
+    pin: &str,
+    inject_activation_failure: bool,
+    resupply: Option<Resupply<'_>>,
+) -> AppResult<ProvisionResult> {
     let (target, platform) = crate::modules::runtime::program_layout::host_target()?;
     #[cfg(target_os = "macos")]
     crate::modules::data_root::layout::validate_macos_installation_root(i, None)?;
     roots(i, d)?;
     // Existing selected programs are read-only inputs. Another OS user or a
     // normal launch from a protected installation must not need a write lock.
-    if let Some(selected) = program_selection::read(i, platform, target)? {
-        persist_entry(d, &selected.stable_entry, &selected.selection.version)?;
-        return Ok(ProvisionResult::AlreadyInstalled {
-            version: selected.selection.version,
-        });
+    if resupply.is_none() {
+        if super::super::program_removal::intentionally_removed(i, d)? {
+            return Err(fail(
+                "runtime_intentionally_removed",
+                "运行程序已由用户卸载，请显式重新安装内置资源",
+            ));
+        }
+        if let Some(selected) = program_selection::read(i, platform, target)? {
+            persist_entry(d, &selected.stable_entry, &selected.selection.version)?;
+            return Ok(ProvisionResult::AlreadyInstalled {
+                version: selected.selection.version,
+            });
+        }
     }
     let plan = load(descriptor, pin)?;
     if plan.descriptor.platform != target {
@@ -200,11 +262,33 @@ pub(super) fn provision_inner(
     )?;
     mkdir(i)?;
     let mutation = super::super::program_activation::Mutation::acquire(i)?;
-    if let Some(selected) = program_selection::read(i, platform, target)? {
-        persist_entry(d, &selected.stable_entry, &selected.selection.version)?;
-        return Ok(ProvisionResult::AlreadyInstalled {
-            version: selected.selection.version,
-        });
+    if let Some(resupply) = &resupply {
+        super::super::program_reinstall::preflight(i, d, resupply.home)?;
+        let review = super::super::program_reinstall::review(
+            i,
+            d,
+            resupply.home,
+            pin,
+            &plan.descriptor.runtime_version,
+        )?;
+        if review.confirmation_digest != resupply.confirmation_digest {
+            return Err(invalid("内置重装预览已过期，请重新核对原操作"));
+        }
+        (resupply.unused)()?;
+    }
+    if resupply.is_none() {
+        if super::super::program_removal::intentionally_removed(i, d)? {
+            return Err(fail(
+                "runtime_intentionally_removed",
+                "运行程序已由用户卸载，请显式重新安装内置资源",
+            ));
+        }
+        if let Some(selected) = program_selection::read(i, platform, target)? {
+            persist_entry(d, &selected.stable_entry, &selected.selection.version)?;
+            return Ok(ProvisionResult::AlreadyInstalled {
+                version: selected.selection.version,
+            });
+        }
     }
     let runtime = i.join("runtime");
     let stage = tempfile::Builder::new()
@@ -291,6 +375,25 @@ pub(super) fn provision_inner(
     mkdir(&runtime)?;
     mkdir(&runtime.join("versions"))?;
     mkdir(&runtime.join("bin"))?;
+    if let Some(resupply) = resupply {
+        let outcome = super::super::program_reinstall::install(
+            super::super::program_reinstall::Candidate {
+                program: i,
+                desktop: d,
+                home: resupply.home,
+                staged_image: &image,
+                selection: &selection,
+                descriptor_pin: pin,
+                source_sha256: &manifest.official_archive_sha256,
+            },
+            &mutation,
+            resupply.unused,
+            |_| Ok(()),
+        )?;
+        return Ok(ProvisionResult::Installed {
+            version: outcome.version,
+        });
+    }
     // Publish only the verified immutable image. Selection/current/entry and D's
     // source mirror are committed by the shared recoverable transaction.
     publish(&image, &version.version_root)?;

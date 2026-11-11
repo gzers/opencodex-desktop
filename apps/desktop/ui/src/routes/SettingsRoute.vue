@@ -20,6 +20,7 @@ import AgentExecutionField from '@/features/models/AgentExecutionField.vue'
 import RuntimeActivationRecovery from '@/features/runtime/RuntimeActivationRecovery.vue'
 import RuntimeTerminalCli from '@/features/runtime/RuntimeTerminalCli.vue'
 import RuntimeProgramRemoval from '@/features/runtime/RuntimeProgramRemoval.vue'
+import RuntimeProgramReinstall from '@/features/runtime/RuntimeProgramReinstall.vue'
 import RuntimePortSettings from '@/features/runtime/RuntimePortSettings.vue'
 import { settingsSections } from '@/navigation'
 import { checkNetworkProxy, type PreferencesDto } from '@/features/preferences/api'
@@ -765,7 +766,7 @@ function restoreGeneralDefaults() {
           <dt>包 / 清单 / 来源</dt><dd v-if="dataRoots.paths">{{ dataRoots.paths.program.packageVersion ?? '未记录' }} / {{ dataRoots.paths.program.manifestVersion ?? '未记录' }} / {{ dataRoots.paths.program.sourceVersion ?? '未记录' }}</dd><dd v-else>尚未读取</dd>
           <dt>程序有效性</dt><dd data-testid="program-validity">{{ programValidity }}</dd>
         </dl>
-        </div><div class="runtime-actions"><UiButton class="btn primary" data-testid="runtime-install" :disabled="protectionBlocked || runtimeProtection.protectionLoading || !runtimeProtection.protection || restartPending" @click="openInstallModal('registry')">安装程序</UiButton><RuntimeActivationRecovery :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" /><RuntimeProgramRemoval :disabled="protectionBlocked||runtimeProtection.protectionLoading||!runtimeProtection.protection||restartPending||app.runtimeInstalling||app.runtimeUninstallBusy" /><UiButton class="btn ghost" data-testid="paths-refresh" @click="refreshPaths">刷新位置</UiButton></div>
+        </div><div class="runtime-actions"><UiButton class="btn primary" data-testid="runtime-install" :disabled="protectionBlocked || runtimeProtection.protectionLoading || !runtimeProtection.protection || restartPending" @click="openInstallModal('registry')">安装程序</UiButton><RuntimeActivationRecovery :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" /><RuntimeProgramRemoval :disabled="protectionBlocked||runtimeProtection.protectionLoading||!runtimeProtection.protection||restartPending||app.runtimeInstalling||app.runtimeUninstallBusy" /><RuntimeProgramReinstall :disabled="protectionBlocked||runtimeProtection.protectionLoading||!runtimeProtection.protection||restartPending||app.runtimeInstalling||app.runtimeUninstallBusy" /><UiButton class="btn ghost" data-testid="paths-refresh" @click="refreshPaths">刷新位置</UiButton></div>
         <div v-if="protectionBlocked || runtimeProtection.protectionLoading || runtimeProtection.protectionFeedback" class="setting-row" data-testid="runtime-protection" :aria-busy="runtimeProtection.protectionLoading || runtimeProtection.protectionRetrying">
           <div>
             <div class="setting-title">面板更新保护核对</div>

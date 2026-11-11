@@ -112,12 +112,14 @@ pub(super) fn register(
 /// Read the explicit ledger first, then compare actual version names. Unknown,
 /// missing or edited rows/images are refusals, not implicit adoption or pruning.
 fn records(root: &Path) -> AppResult<(BTreeMap<String, Admission>, String)> {
-    let directory = root.join(DIRECTORY);
-    safety::check_path(root, &directory, false)?;
+    records_at(root, &root.join(DIRECTORY))
+}
+fn records_at(root: &Path, directory: &Path) -> AppResult<(BTreeMap<String, Admission>, String)> {
+    safety::check_path(root, directory, false)?;
     let mut records = BTreeMap::new();
     let mut selections = BTreeMap::new();
     let mut count = 0usize;
-    for row in fs::read_dir(&directory).map_err(|_| fail())? {
+    for row in fs::read_dir(directory).map_err(|_| fail())? {
         count += 1;
         if count > 1000 {
             return Err(fail());
@@ -167,6 +169,27 @@ fn records(root: &Path) -> AppResult<(BTreeMap<String, Admission>, String)> {
 pub fn revision(root: &Path) -> AppResult<String> {
     records(root).map(|(_, revision)| revision)
 }
+/// Same original ledger bytes after explicit archival; never admits live images.
+pub(super) fn archived_revision(root: &Path, directory: &Path) -> AppResult<String> {
+    records_at(root, directory).map(|(_, revision)| revision)
+}
+pub(super) fn require_only(
+    root: &Path,
+    selection: &CurrentSelection,
+    source: &str,
+) -> AppResult<()> {
+    let (records, _) = records(root)?;
+    if records.len() != 1
+        || records
+            .values()
+            .next()
+            .is_none_or(|a| a.selection != *selection || a.official_archive_sha256 != source)
+    {
+        return Err(fail());
+    }
+    Ok(())
+}
+
 pub fn inspect(root: &Path) -> AppResult<Catalog> {
     let (admissions, revision) = records(root)?;
     for admission in admissions.values() {

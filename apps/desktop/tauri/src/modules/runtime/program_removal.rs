@@ -21,6 +21,52 @@ use std::{
 };
 pub const PENDING: &str = ".removal-pending.json";
 pub const REMOVED: &str = ".runtime-removed.json";
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub(super) struct ReinstallOrigin {
+    pub operation_id: String,
+    pub marker_sha256: String,
+    pub catalog_revision: String,
+    pub record_sha256: String,
+}
+/// Projects the original removal evidence after it has been moved into an
+/// explicit reinstall receipt. The caller separately checks archived ledger
+/// bytes and current state; this does not re-admit any removed program.
+pub(super) fn reinstall_origin(
+    i: &Path,
+    d: &Path,
+    h: &Path,
+    bytes: &[u8],
+) -> AppResult<ReinstallOrigin> {
+    let original: Journal = decode(bytes)?;
+    let p = &original.plan;
+    if p.schema_version != 1
+        || p.program_root != i
+        || p.desktop_root != d
+        || p.home != h
+        || uuid::Uuid::parse_str(&p.operation_id).is_err()
+        || original.sha256 != hash::sha256_hex(&encode(p)?)
+    {
+        return Err(fail("原卸载证据与重装上下文不一致"));
+    }
+    let record: RuntimeSourceRecord = decode(&p.record_after)?;
+    if record.schema_version != super::RUNTIME_SCHEMA_VERSION
+        || record.source != RuntimeSourceKind::Unresolved
+        || record.path.is_some()
+        || record.resolved_version.is_some()
+    {
+        return Err(fail("原卸载来源后像无效"));
+    }
+    Ok(ReinstallOrigin {
+        operation_id: p.operation_id.clone(),
+        marker_sha256: hash::sha256_hex(bytes),
+        catalog_revision: p
+            .catalog_revision
+            .clone()
+            .ok_or_else(|| fail("原卸载没有明确版本登记"))?,
+        record_sha256: hash::sha256_hex(&p.record_after),
+    })
+}
 const MAX_JOURNAL: u64 = 64 * 1024 * 1024;
 fn fail(message: &'static str) -> AppError {
     AppError::RuntimeManaged {
