@@ -4916,3 +4916,6 @@ mod windows_path_tests;
 #[cfg(all(test, unix))]
 #[path = "npm_proxy_tests.rs"]
 mod npm_proxy_tests;
+#[cfg(all(test, unix))]
+#[path = "npm_proxy_transport_tests.rs"]
+mod npm_proxy_transport_tests;

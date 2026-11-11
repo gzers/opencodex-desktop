@@ -159,23 +159,23 @@ impl Snapshot {
     }
 }
 #[cfg(target_os = "macos")]
+use system_configuration::core_foundation::{
+    base::CFType, dictionary::CFDictionary, string::CFString,
+};
+#[cfg(target_os = "macos")]
 fn native() -> AppResult<Snapshot> {
-    use system_configuration::{
-        core_foundation::{
-            array::CFArray,
-            base::{CFType, TCFType},
-            dictionary::CFDictionary,
-            number::CFNumber,
-            string::CFString,
-        },
-        dynamic_store::SCDynamicStoreBuilder,
-    };
+    use system_configuration::dynamic_store::SCDynamicStoreBuilder;
     let store = SCDynamicStoreBuilder::new("OpenCodeX Desktop npm proxy")
         .build()
         .ok_or_else(|| fail("system_store"))?;
     let map = store
         .get_proxies()
         .ok_or_else(|| fail("system_proxy_read"))?;
+    macos_map(&map)
+}
+#[cfg(target_os = "macos")]
+fn macos_map(map: &CFDictionary<CFString, CFType>) -> AppResult<Snapshot> {
+    use system_configuration::core_foundation::{array::CFArray, base::TCFType, number::CFNumber};
     fn flag(map: &CFDictionary<CFString, CFType>, key: &str) -> AppResult<bool> {
         match map.find(CFString::new(key)) {
             None => Ok(false),
@@ -186,11 +186,11 @@ fn native() -> AppResult<Snapshot> {
             },
         }
     }
-    if flag(&map, "ProxyAutoConfigEnable")? || flag(&map, "ProxyAutoDiscoveryEnable")? {
+    if flag(map, "ProxyAutoConfigEnable")? || flag(map, "ProxyAutoDiscoveryEnable")? {
         return Err(fail("automatic_proxy_script"));
     }
     let route = |prefix: &str, scheme: &str| -> AppResult<Option<String>> {
-        if !flag(&map, &format!("{prefix}Enable"))? {
+        if !flag(map, &format!("{prefix}Enable"))? {
             return Ok(None);
         }
         let host = map
@@ -237,7 +237,7 @@ fn native() -> AppResult<Snapshot> {
     Ok(Snapshot {
         http,
         https,
-        bypass: native_bypass(values, flag(&map, "ExcludeSimpleHostnames")?)?,
+        bypass: native_bypass(values, flag(map, "ExcludeSimpleHostnames")?)?,
     })
 }
 #[cfg(any(windows, test))]
@@ -349,6 +349,100 @@ fn native() -> AppResult<Snapshot> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(target_os = "macos")]
+    mod macos_dictionary {
+        use super::*;
+        use system_configuration::core_foundation::{
+            array::CFArray, base::TCFType, number::CFNumber,
+        };
+        fn number(n: i32) -> CFType {
+            CFNumber::from(n).as_CFType()
+        }
+        fn text(s: &str) -> CFType {
+            CFString::new(s).as_CFType()
+        }
+        fn map(values: Vec<(&str, CFType)>) -> CFDictionary<CFString, CFType> {
+            CFDictionary::from_CFType_pairs(
+                &values
+                    .into_iter()
+                    .map(|(k, v)| (CFString::new(k), v))
+                    .collect::<Vec<_>>(),
+            )
+        }
+        fn common() -> Vec<(&'static str, CFType)> {
+            vec![
+                ("HTTPEnable", number(1)),
+                ("HTTPProxy", text("127.0.0.1")),
+                ("HTTPPort", number(8080)),
+                ("HTTPSEnable", number(1)),
+                ("HTTPSProxy", text("127.0.0.1")),
+                ("HTTPSPort", number(8080)),
+            ]
+        }
+        #[test]
+        fn real_cf_dictionary_values_admit_common_proxy_and_socks_with_typed_bypass() {
+            let mut values = common();
+            values.push((
+                "ExceptionsList",
+                CFArray::from_CFTypes(&[
+                    CFString::new("*.example.test"),
+                    CFString::new("127.0.0.1"),
+                ])
+                .as_CFType(),
+            ));
+            let input = map(values);
+            let s = Snapshot::resolve(ProxyPolicy::System, "saved.test".into(), || {
+                macos_map(&input)
+            })
+            .unwrap();
+            assert_eq!(s.http.as_deref(), Some("http://127.0.0.1:8080"));
+            assert_eq!(s.https, s.http);
+            assert_eq!(s.bypass, "example.test,127.0.0.1,saved.test");
+            let input = map(vec![
+                ("SOCKSEnable", number(1)),
+                ("SOCKSProxy", text("::1")),
+                ("SOCKSPort", number(1080)),
+            ]);
+            let s = Snapshot::resolve(ProxyPolicy::System, String::new(), || macos_map(&input))
+                .unwrap();
+            assert_eq!(s.http.as_deref(), Some("socks5h://[::1]:1080"));
+            assert_eq!(s.https, s.http);
+        }
+        #[test]
+        fn real_cf_dictionary_rejects_wrong_types_invalid_flags_pac_and_nonrepresentable_routes() {
+            for (key, value) in [
+                ("HTTPEnable", number(2)),
+                ("HTTPProxy", number(1)),
+                ("HTTPPort", text("8080")),
+                ("HTTPPort", number(0)),
+                ("ProxyAutoConfigEnable", number(1)),
+                ("ProxyAutoDiscoveryEnable", number(1)),
+                ("ExcludeSimpleHostnames", number(1)),
+                ("ExceptionsList", text("wrong type")),
+                (
+                    "ExceptionsList",
+                    CFArray::from_CFTypes(&[CFNumber::from(1)]).as_CFType(),
+                ),
+                (
+                    "ExceptionsList",
+                    CFArray::from_CFTypes(&[CFString::new("169.254/16")]).as_CFType(),
+                ),
+                ("HTTPSProxy", text("other.test")),
+            ] {
+                let mut values = common();
+                values.retain(|(k, _)| *k != key);
+                values.push((key, value));
+                let input = map(values);
+                assert!(
+                    Snapshot::resolve(ProxyPolicy::System, String::new(), || macos_map(&input))
+                        .is_err(),
+                    "{key}"
+                );
+            }
+            let s = macos_map(&map(Vec::new())).unwrap();
+            assert!(!s.configured_proxy());
+        }
+    }
     fn command(s: &Snapshot) -> std::process::Command {
         let mut c = std::process::Command::new("/not-executed");
         s.apply(&mut c);
