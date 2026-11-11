@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "accepted": false,
+  "frozenCandidate": false,
+  "codeCommit": "fc0361bc17d52476a238d78484de3ceafa9fd149",
+  "scope": "Mac native reversible original publication mechanics and persistent complete/rollback of three synthetic client artifacts, not product Stop integration",
+  "passed": {
+    "nativeTests": 13,
+    "actualAbruptExitCases": 11
+  },
+  "checks": [
+    {
+      "name": "compile-archive",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--lib",
+        "macos_client_originals::restore",
+        "--no-run"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "clippy-archive",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "fmt-archive",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "sourceIdentity": "native-final-source.json; same algorithm and tests as final commit",
+  "productBoundary": [
+    "MutationPermit deliberately has no production constructor/default/deserializer. Only private synthetic test seam entered apply_checked; actual service ownership/normal-exit factory and Stop wiring absent.",
+    "Prepared plan is content-classified and phase-digest bound; it is not write authority. Actual runtime exit/service generation and live official coordination must be separately proved.",
+    "Native rename exchange is not an inode-conditioned kernel CAS. A check+rename race with a non-cooperating writer and expiry of an external helper while native work runs are NOT proven closed; factory stays disabled. No actual daily compensation allowed until closed.",
+    "Current engine covers three artifacts only. config/Grok/Agent and full client tree/other locations still required.",
+    "Archives use native same-volume rename only; EXDEV leaves journal/known original stages intact and unconfirmed, without unlink/copy fallback. Cross-volume client/storage support remains unproven.",
+    "Existing nonzero original file flags are refused rather than normalized; new directory absence and active official refresh coordination remain pending.",
+    "Interrupted apply never auto-learns a new original; explicit known plan and all original phase digests required. A failed step leaves pending known generations for explicit continue/rollback, not automatic success or silent rollback.",
+    "No official service/real model/WebDAV request, official package change or new .app/DMG build this round."
+  ],
+  "failuresRetained": [
+    "Initial missing restore test source prevented cargo fmt, diagnostic in conversation only; no product executed.",
+    "First compile projection closure E0271 explicitly recorded, original raw compiler output not captured.",
+    "Clippy needless range loop and unused test field failures raw retained; fixed without disabling lint."
+  ],
+  "cleanup": {
+    "ownTestProcessesAbsent": true,
+    "beforeRemovalNames": [
+      "library-tests",
+      "profile"
+    ],
+    "ownedBinaryAndSyntheticOriginalsStagesArchivesRemoved": true,
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "serviceStarted": false,
+    "duplicateTemporaryReceiptRootRemoved": true
+  }
+}

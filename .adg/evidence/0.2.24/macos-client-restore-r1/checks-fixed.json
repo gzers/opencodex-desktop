@@ -1,0 +1,36 @@
+[
+  {
+    "name": "compile-lint-fixed",
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--lib",
+      "macos_client_originals::restore",
+      "--no-run"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "clippy-fixed",
+    "argv": [
+      "cargo",
+      "clippy",
+      "--offline",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "fmt-fixed",
+    "argv": [
+      "cargo",
+      "fmt",
+      "--check"
+    ],
+    "exitCode": 0
+  }
+]
