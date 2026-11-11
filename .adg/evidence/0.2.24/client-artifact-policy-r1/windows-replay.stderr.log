@@ -1,0 +1,6 @@
+
+thread 'modules::runtime::client_artifact_policy::tests::retained_official_windows_artifact_bytes_replay_without_service_or_writes' (154791066) panicked at src/modules/runtime/client_artifact_policy_tests.rs:418:5:
+assertion `left == right` failed
+  left: Err(Audit)
+ right: Ok(Assessment([(Catalog, RestoreOriginal), (ModelsCache, RestoreOriginal), (CatalogAudit, RestoreOriginal)]))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

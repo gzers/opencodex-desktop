@@ -1,0 +1,22 @@
+
+running 17 tests
+test modules::runtime::client_artifact_policy::tests::a_complete_empty_route_set_is_distinct_from_unknown_discovery ... ok
+test modules::runtime::client_artifact_policy::tests::absence_and_original_cache_bytes_are_preserved_without_format_reinterpretation ... ok
+test modules::runtime::client_artifact_policy::tests::audit_compaction_is_not_mistaken_for_an_owned_suffix ... ok
+test modules::runtime::client_artifact_policy::tests::audit_is_only_a_preserved_prefix_plus_known_own_complete_events ... ok
+test modules::runtime::client_artifact_policy::tests::audit_projection_limit_counts_official_utf16_units_not_utf8_path_bytes ... ok
+test modules::runtime::client_artifact_policy::tests::cached_original_native_projection_is_eligible_but_changed_wrapper_is_not ... ok
+test modules::runtime::client_artifact_policy::tests::content_identity_and_access_changes_after_ready_each_refuse_the_batch ... ok
+test modules::runtime::client_artifact_policy::tests::duplicate_json_keys_or_model_ids_never_hide_a_conflict ... ok
+test modules::runtime::client_artifact_policy::tests::incomplete_audit_records_cannot_gain_eligibility_from_null_index_defaults ... ok
+test modules::runtime::client_artifact_policy::tests::missing_original_native_rows_can_be_restored_but_new_rows_cannot_be_erased ... ok
+test modules::runtime::client_artifact_policy::tests::official_native_subset_controlled_cache_and_own_append_are_content_eligible ... ok
+test modules::runtime::client_artifact_policy::tests::original_bytes_with_new_file_identity_need_no_compensation ... ok
+test modules::runtime::client_artifact_policy::tests::oversize_or_unproven_snapshot_and_unsafe_context_refuse_without_outputting_content ... ok
+test modules::runtime::client_artifact_policy::tests::post_stop_external_access_is_not_repaired_or_adopted ... ok
+test modules::runtime::client_artifact_policy::tests::retained_official_windows_artifact_bytes_replay_without_service_or_writes ... ignored, explicit pinned data-only projection from retained Windows native evidence; not native acceptance
+test modules::runtime::client_artifact_policy::tests::undeclared_ready_route_and_route_native_collision_refuse ... ok
+test modules::runtime::client_artifact_policy::tests::unknown_at_any_stage_or_artifact_never_becomes_absent ... ok
+
+test result: ok. 16 passed; 0 failed; 1 ignored; 0 measured; 2179 filtered out; finished in 0.01s
+
