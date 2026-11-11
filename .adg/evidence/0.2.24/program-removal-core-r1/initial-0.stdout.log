@@ -1,0 +1,22 @@
+
+running 5 tests
+test modules::runtime::program_removal::tests::continuation_refuses_unknown_surviving_content_or_a_foreign_data_root_and_keeps_it ... ok
+test modules::runtime::program_removal::tests::every_removal_phase_has_a_continuable_original_operation_without_recreating_deleted_files ... ok
+test modules::runtime::program_removal::tests::exact_named_images_removed_and_user_configuration_backups_and_unrelated_objects_kept ... ok
+test modules::runtime::program_removal::tests::normal_startup_after_explicit_removal_does_not_resupply_or_require_bundle_files ... FAILED
+test modules::runtime::program_removal::tests::unknown_version_changed_file_confirmation_and_revoke_or_backup_failures_do_not_remove_code ... ok
+
+failures:
+
+---- modules::runtime::program_removal::tests::normal_startup_after_explicit_removal_does_not_resupply_or_require_bundle_files stdout ----
+
+thread 'modules::runtime::program_removal::tests::normal_startup_after_explicit_removal_does_not_resupply_or_require_bundle_files' (154039935) panicked at src/modules/runtime/program_removal_tests.rs:281:6:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "runtime_removal_unconfirmed", detail: "卸载完成状态与实际程序目录不一致" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    modules::runtime::program_removal::tests::normal_startup_after_explicit_removal_does_not_resupply_or_require_bundle_files
+
+test result: FAILED. 4 passed; 1 failed; 0 ignored; 0 measured; 2119 filtered out; finished in 1.25s
+

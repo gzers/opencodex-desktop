@@ -1,0 +1,47 @@
+{
+  "codeCommit": "5e75b0c866e6fc171b1d5d9ea374513a30cc5480",
+  "synthetic": {
+    "removalCore": 6,
+    "imageInventory": 3,
+    "activation": 7,
+    "selection": 7,
+    "supply": 33,
+    "versionedInstall": 4,
+    "consumers": 2,
+    "terminal": 9,
+    "totalPassed": 71,
+    "explicitRealCasesIgnored": 4,
+    "binarySha256": "c16a96ac2598b5d80722568e055da149273ff93928c366c50a89dec4c53a630a"
+  },
+  "format": "passed",
+  "strictClippyAllTargets": "passed",
+  "verified": [
+    "explicit caller-admitted version set only; all actual version names must belong to that set; no arbitrary manifest ownership adoption",
+    "preview freezes exact inventories, current selection/entry/source record and context without backup or deletion",
+    "before first deletion require all-program-unused proof callback, full configuration protection and owned terminal revocation",
+    "metadata detached and named regular files verified individually and removed; directories removed only when empty; no recursive directory wipe",
+    "partial removal may continue only when surviving files are exact members of the original frozen inventory; unknown addition/modification or foreign D refuses",
+    "7 interruption checkpoints: prepared, metadata, file, directory, image, source record and complete marker",
+    "configuration, backups and unrelated runtime/bin objects retained; actual Mac terminal registration revoked, modified foreign command blocks removal",
+    "completed record durably retains original operation and unresolved source/history; normal startup cannot silently resupply removed runtime",
+    "versioned initialization does not rewrite source metadata when no current version exists",
+    "original image inventory digest semantics preserved while file-entry verification reused for linear rather than repeated whole-tree deletion checks"
+  ],
+  "retainedFailures": [
+    "Initial suite: one startup test failed because RuntimeHandle initialization rewrote an unresolved source timestamp, diverging from the exact removal completion after-image. Fixed persist to preserve source records on observed missing selection; original test unchanged.",
+    "Initial Clippy flagged manual modulus check; replaced with is_multiple_of. An early unused import was removed. Original test failure is retained as raw output; compiler/lint observations are recorded here rather than fabricated log files."
+  ],
+  "remaining": [
+    "core Rust API only; installation UI/IPC still use their earlier removal implementation until the new end-to-end orchestrator is ready",
+    "production caller still must obtain trusted complete installed version set from source/activation records, prove ALL named program images unused and bind terminal revoke to the reviewed plan",
+    "full official cleanup/data-removal options, removal continuation UI/command and explicit bundled reinstall after completed removal not wired",
+    "Windows cross-account lifetime, CLI/PATH/installer cleanup still requires its platform backend; injected unused callback is not native proof",
+    "same-version repair, version/network UI, final native candidate and P24-NAME remain pending"
+  ],
+  "networkDenied": true,
+  "official299Modified": false,
+  "dailyConfigTouched": false,
+  "businessSyncOrModelRequests": false,
+  "nativeServiceLaunch": false,
+  "temporaryFixtureRootsCleaned": true
+}
