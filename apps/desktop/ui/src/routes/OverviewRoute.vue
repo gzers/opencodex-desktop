@@ -9,6 +9,7 @@ import { displayPath } from '@/lib/paths'
 //   （左纵向检查 / 右当前指引 + 命令 + 动作）。
 // - 状态形象只消费既有运行投影（`projectMotion`），不引入新的状态来源；环境走既有 presentation。
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import type { LifecycleAction } from '@/types/ui'
 import { useRouteStore } from '@/stores/routes'
 import { useAppStore } from '@/stores/app'
 import { useAppController } from '@/composables/useAppController'
@@ -198,6 +199,7 @@ const gateBlocked = computed(() => environment.value.state === 'checking' || env
 const mode = computed<'ready' | 'setup'>(() => (gateBlocked.value ? 'setup' : 'ready'))
 // 准备态的主线说明与入口按 §25 调整：不充当无效详情入口。
 const caption = computed(() => {
+  if (app.clientRecoveryRequired) return '客户端配置恢复尚未完成，请查看诊断。'
   if (!gateBlocked.value) return motion.value.caption
   return environment.value.state === 'checking' ? '正在确认启动条件' : '启动条件未满足 · 请按下方指引处理'
 })
@@ -221,6 +223,9 @@ const moreActions = computed(() => scenario.value.actions.filter(action => !PRIM
 const lifecycleActions = new Set(['start', 'stop', 'restart'])
 function isLifecycleAction(action: string) {
   return lifecycleActions.has(action)
+}
+function actionBlocked(action: string) {
+  return isLifecycleAction(action) && (app.processActionBusy || app.processActionBlocked(action as LifecycleAction))
 }
 function actionLabel(action: string) {
   if (app.processActionBusy && app.processAction === action) {
@@ -362,7 +367,7 @@ const mods = computed(() => [
           <UiButton
             v-if="primaryAction"
             variant="primary"
-            :disabled="isLifecycleAction(primaryAction) && app.processActionBusy"
+            :disabled="actionBlocked(primaryAction)"
             :loading="isLifecycleAction(primaryAction) && app.processActionBusy && app.processAction === primaryAction"
             @click="controller.runAction(primaryAction)"
           >{{ actionLabel(primaryAction) }}</UiButton>
@@ -370,7 +375,7 @@ const mods = computed(() => [
             v-for="action in secondaryActions"
             :key="action"
             :variant="action === 'stop' ? 'danger' : (action === 'logs' || action === 'advice') ? 'ghost' : 'default'"
-            :disabled="app.processActionBusy"
+            :disabled="app.processActionBusy || actionBlocked(action)"
             :loading="app.processActionBusy && app.processAction === action"
             @click="controller.runAction(action)"
           >{{ actionLabel(action) }}</UiButton>
@@ -382,6 +387,7 @@ const mods = computed(() => [
                 :key="action"
                 type="button"
                 class="btn ghost"
+                :disabled="actionBlocked(action)"
                 @click="controller.runAction(action)"
               >{{ actionLabel(action) }}</UiButton>
             </div>

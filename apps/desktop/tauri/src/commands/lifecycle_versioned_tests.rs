@@ -5,6 +5,51 @@ use crate::modules::runtime::{program_selection::tests::Fixture, RuntimeHandle};
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 struct AdmissionProbe(AtomicUsize);
+
+#[test]
+fn an_error_code_from_a_runner_cannot_forge_a_stopped_native_observation() {
+    struct CodeOnly;
+    impl ProcessRunner for CodeOnly {
+        fn execute(
+            &self,
+            _: &crate::modules::process::ProcessCommand,
+        ) -> AppResult<crate::modules::process::LifecycleResult> {
+            Err(AppError::RuntimeManaged {
+                code: "client_original_restore_pending".into(),
+                detail: "synthetic code only, no native stop".into(),
+            })
+        }
+        fn cancel_pending(&self) -> AppResult<()> {
+            Ok(())
+        }
+    }
+    let temp = tempfile::tempdir().unwrap();
+    let context = ProcessContext {
+        runtime: crate::infrastructure::runtime_executable::FixedRuntimeExecutable::resolved(
+            temp.path().join("not-executed"),
+        ),
+        working_directory: temp.path().to_path_buf(),
+        opencodex_home: temp.path().join("not-opened-home"),
+    };
+    let log = crate::infrastructure::runtime_log::RuntimeLog::new(temp.path());
+    for action in [LifecycleAction::Stop, LifecycleAction::Restart] {
+        let result = process_action_with_runner(
+            ProcessActionRequest {
+                action,
+                confirm: true,
+            },
+            &Mutex::new(CodeOnly),
+            &context,
+            &log,
+            None,
+        )
+        .unwrap();
+        assert_eq!(result.lifecycle_state, ProcessLifecycleState::Running);
+        assert!(!result.client_recovery_required);
+        assert!(result.result.is_none() && result.failure.is_some());
+    }
+    assert!(!context.opencodex_home.exists());
+}
 impl ProcessRunner for AdmissionProbe {
     fn execute(
         &self,
@@ -342,6 +387,27 @@ model_provider = "openai"
         None,
     );
     report["stopElapsedMs"] = serde_json::json!(stopped_at.elapsed().as_millis());
+    if let Ok(value) = &stop {
+        if value.client_recovery_required
+            || value
+                .failure
+                .as_ref()
+                .is_some_and(|e| e.code == "client_original_restore_pending")
+        {
+            let observed = value.lifecycle_state == ProcessLifecycleState::Stopped
+                && value.client_recovery_required
+                && value.result.is_none()
+                && !value.can_start
+                && !value.can_stop
+                && !value.can_restart
+                && value.failure.is_some();
+            report["stoppedRecoveryObservation"] = observed.into();
+            assert!(
+                observed,
+                "verified Stop with incomplete recovery must not remain running or claim success"
+            );
+        }
+    }
     report["stop"] = match &stop {
         Ok(value) => serde_json::to_value(value).unwrap(),
         Err(error) => serde_json::json!({"error":error.to_string()}),

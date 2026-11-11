@@ -54,6 +54,7 @@ export const useLifecycleStore = defineStore("lifecycle", {
     statusSnapshot: null as StatusSnapshot | null,
     stopStatusEventStream: null as (() => void) | null,
     lifecycleState: "stopped" as ProcessLifecycleState,
+    clientRecoveryRequired: false,
     lastStartFailed: false,
     processActionBusy: false,
     processAction: null as LifecycleAction | null,
@@ -75,6 +76,12 @@ export const useLifecycleStore = defineStore("lifecycle", {
     processAutoDismissTimer: null as number | null,
   }),
   actions: {
+    processActionBlocked(action: LifecycleAction) {
+      if (!this.clientRecoveryRequired) return false
+      // A later real running observation may still require an ordinary Stop.
+      // It cannot discharge the independent original-file recovery obligation.
+      return action !== 'stop' || this.statusSnapshot?.can_stop !== true
+    },
     // 状态快照只在真实观测到运行状态迁移时登记一条事件，不臆测结论。
     setStatusSnapshot(snapshot: StatusSnapshot | null) {
       if (snapshot?.matrix.runtime === 'running') this.lastStartFailed=false
@@ -224,7 +231,7 @@ export const useLifecycleStore = defineStore("lifecycle", {
       if (this.processProgressAction) this.processProgressOpen = true
     },
     async requestProcessAction(action: LifecycleAction) {
-      if (this.processActionBusy) return undefined
+      if (this.processActionBusy || this.processActionBlocked(action)) return undefined
       this.processActionBusy = true
       this.processAction = action
       this.processProgressAction = action
@@ -261,7 +268,10 @@ export const useLifecycleStore = defineStore("lifecycle", {
       try {
         const result = await runProcessAction(action)
         this.lifecycleState = result.lifecycleState
-        if (result.failure && action !== 'stop') this.lastStartFailed=true
+        if (result.clientRecoveryRequired) this.clientRecoveryRequired = true
+        else if (result.result === 'started' || result.result === 'stopped') this.clientRecoveryRequired = false
+        if (this.clientRecoveryRequired) this.lastStartFailed=false
+        else if (result.failure && action !== 'stop') this.lastStartFailed=true
         if (result.result==='started') this.lastStartFailed=false
         if (
           result.result === null ||

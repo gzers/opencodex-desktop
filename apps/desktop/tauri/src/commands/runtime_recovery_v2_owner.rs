@@ -109,7 +109,21 @@ pub struct CompletedLifecycleStop {
     #[cfg(target_os = "macos")]
     normal_exit: Option<crate::infrastructure::macos_process_exit::NormalExitProof>,
 }
+/// An action-time observation only. It grants no file mutation or recovery
+/// completion authority and cannot be reconstructed from an error code.
+pub(crate) struct StoppedObservation {
+    _private: (),
+}
 impl CompletedLifecycleStop {
+    #[cfg(target_os = "macos")]
+    pub(crate) fn observation(
+        &self,
+        context: &ProcessContext,
+        data_root: &Path,
+    ) -> AppResult<StoppedObservation> {
+        self.require_context(context, data_root)?;
+        Ok(StoppedObservation { _private: () })
+    }
     fn require_context(&self, context: &ProcessContext, data_root: &Path) -> AppResult<()> {
         if Instant::now() >= self.deadline {
             return Err(fail(

@@ -18,6 +18,7 @@ function backendResult(state: string, result: 'started' | 'stopped' = 'started')
     canStart: state === 'stopped',
     canStop: state === 'running',
     canRestart: state === 'running',
+    clientRecoveryRequired: false,
   }
 }
 
@@ -95,6 +96,43 @@ describe('process action integration', () => {
     await expect(app.requestProcessAction('stop')).rejects.toThrow('backend unavailable')
     expect(app.lifecycleState).toBe('running')
     expect(app.processActionBusy).toBe(false)
+  })
+
+  it('keeps a verified stopped recovery failure distinct from start failure and blocks new launches', async () => {
+    const pending = { ...backendResult('stopped'), result: null, canStart: false,
+      clientRecoveryRequired: true, failure: { code: 'client_original_restore_pending', message: '服务已停止，客户端配置待恢复' } }
+    invoke.mockImplementation((command: string) => Promise.resolve(command === 'process_action' ? pending : snapshot('stopped')))
+    const app = useAppStore(), lifecycle = useLifecycleStore()
+    await app.requestProcessAction('restart')
+    await vi.waitFor(() => expect(app.statusSnapshot?.matrix.runtime).toBe('stopped'))
+    expect(app.lifecycleState).toBe('stopped')
+    expect(app.clientRecoveryRequired).toBe(true)
+    expect(lifecycle.lastStartFailed).toBe(false)
+    expect(app.processProgressCompleted).toBe(false)
+    expect(app.processProgressError).toContain('待恢复')
+    for (const action of ['start', 'restart', 'stop'] as const) {
+      expect(app.processActionBlocked(action)).toBe(true)
+      await expect(app.requestProcessAction(action)).resolves.toBeUndefined()
+    }
+    expect(invoke.mock.calls.filter(([name]) => name === 'process_action')).toHaveLength(1)
+    // A late ordinary stopped observation is not client-file restoration.
+    app.setStatusSnapshot(snapshot('stopped'))
+    expect(app.clientRecoveryRequired).toBe(true)
+  })
+
+  it('retains recovery blocking across an unconfirmed stop while allowing a freshly observed live service to stop', async () => {
+    const app = useAppStore(), lifecycle = useLifecycleStore()
+    lifecycle.clientRecoveryRequired = true
+    app.setStatusSnapshot(snapshot('running'))
+    expect(app.processActionBlocked('stop')).toBe(false)
+    expect(app.processActionBlocked('restart')).toBe(true)
+    invoke.mockImplementation((command: string) => Promise.resolve(command === 'process_action'
+      ? { ...backendResult('running'), result: null, failure: { code: 'lifecycle_timeout', message: '停止未确认' } }
+      : snapshot('running')))
+    await app.requestProcessAction('stop')
+    expect(app.clientRecoveryRequired).toBe(true)
+    expect(app.processProgressCompleted).toBe(false)
+    expect(app.processProgressError).toBe('停止未确认')
   })
 
   it('closes progress immediately when backend preserves observation without a result', async () => {

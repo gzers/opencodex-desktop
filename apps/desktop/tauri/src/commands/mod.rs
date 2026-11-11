@@ -230,7 +230,14 @@ where
         .ok()
     });
     let started_at = std::time::Instant::now();
-    let outcome = execute_lifecycle(runner, &command, context, runtime_log.data_root());
+    let mut observed_stop = None;
+    let outcome = execute_lifecycle_observed(
+        runner,
+        &command,
+        context,
+        runtime_log.data_root(),
+        &mut observed_stop,
+    );
     let duration_ms = started_at.elapsed().as_millis();
     let failed;
     let result = match &outcome {
@@ -279,7 +286,11 @@ where
                 action_log_label(request.action),
                 Err(format!("{}; duration_ms={duration_ms}", error)),
             );
-            Ok(ProcessActionResult::from_state(machine.current()).with_failure(error))
+            let mut value = ProcessActionResult::from_state(machine.current());
+            if let Some(observed) = &observed_stop {
+                value = value.with_stopped_client_recovery(observed);
+            }
+            Ok(value.with_failure(error))
         }
     };
     let verified_success = matches!(
@@ -351,11 +362,21 @@ where
     result
 }
 
+#[cfg(test)]
 fn execute_lifecycle<R: ProcessRunner + ?Sized>(
     runner: &R,
     command: &crate::modules::process::ProcessCommand,
     context: &ProcessContext,
     data_root: &std::path::Path,
+) -> AppResult<crate::modules::process::LifecycleResult> {
+    execute_lifecycle_observed(runner, command, context, data_root, &mut None)
+}
+fn execute_lifecycle_observed<R: ProcessRunner + ?Sized>(
+    runner: &R,
+    command: &crate::modules::process::ProcessCommand,
+    context: &ProcessContext,
+    data_root: &std::path::Path,
+    _observed_stop: &mut Option<runtime_recovery_v2_owner::StoppedObservation>,
 ) -> AppResult<crate::modules::process::LifecycleResult> {
     use crate::modules::process::{restart_limit, runner_start_timeout, LifecycleResult};
     let deadline = std::time::Instant::now()
@@ -438,15 +459,18 @@ fn execute_lifecycle<R: ProcessRunner + ?Sized>(
             let mut active = match active {
                 Ok(active) => active,
                 Err(error) => {
-                    owner.stop_lifecycle(context, deadline, data_root)?;
+                    let proof = owner.stop_lifecycle_verified(context, deadline, data_root)?;
+                    *_observed_stop = Some(proof.observation(context, data_root)?);
                     return Err(error);
                 }
             };
             if let Err(error) = active.pre_stop(context, deadline) {
-                owner.stop_lifecycle(context, deadline, data_root)?;
+                let proof = owner.stop_lifecycle_verified(context, deadline, data_root)?;
+                *_observed_stop = Some(proof.observation(context, data_root)?);
                 return Err(error);
             }
             let proof = owner.stop_lifecycle_verified(context, deadline, data_root)?;
+            *_observed_stop = Some(proof.observation(context, data_root)?);
             active.stopped(context, &proof, deadline)?;
             return Err(client_session_lifecycle::pending_restore());
         }

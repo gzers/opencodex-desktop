@@ -180,6 +180,7 @@ export const useAppStore = defineStore("app", {
     statusError: () => useLifecycleStore().statusError,
     statusSnapshot: () => useLifecycleStore().statusSnapshot,
     lifecycleState: () => useLifecycleStore().lifecycleState,
+    clientRecoveryRequired: () => useLifecycleStore().clientRecoveryRequired,
     processActionBusy: () => useLifecycleStore().processActionBusy,
     processAction: () => useLifecycleStore().processAction,
     processProgressAction: () => useLifecycleStore().processProgressAction,
@@ -223,6 +224,9 @@ export const useAppStore = defineStore("app", {
     },
     requestProcessAction(action: LifecycleAction) {
       return useLifecycleStore().requestProcessAction(action)
+    },
+    processActionBlocked(action: LifecycleAction) {
+      return useLifecycleStore().processActionBlocked(action)
     },
     // —— 运行来源 / 安装 / 卸载功能切片（features/runtime/store.ts）的委托与根壳编排 ——
     /**
