@@ -25,6 +25,7 @@ pub mod preferences;
 pub mod release_details;
 pub mod retired_files;
 pub mod runtime;
+pub mod runtime_activation;
 pub mod runtime_port;
 pub mod runtime_recovery_v2;
 pub mod runtime_recovery_v2_owner;

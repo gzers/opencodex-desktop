@@ -459,6 +459,7 @@ fn service_appearing_during_activation_retains_the_journal_and_allows_explicit_r
         .recover(
             &f.data,
             &pending.attempt_id,
+            &pending.confirmation_digest,
             crate::modules::runtime::program_activation::Decision::Rollback,
             || Ok(()),
         )

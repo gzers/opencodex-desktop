@@ -98,12 +98,13 @@ pub(super) enum Checkpoint {
     Current,
     Record,
 }
-#[derive(Serialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PendingSummary {
     pub attempt_id: String,
     pub from: Option<String>,
     pub to: String,
+    pub confirmation_digest: String,
 }
 
 /// OS-level serialization for I. Read-only consumers never acquire this lock.
@@ -204,95 +205,13 @@ impl Mutation {
         Ok(journal)
     }
     fn validate(&self, data: &Path, journal: &Journal) -> AppResult<()> {
-        bundled::roots(&self.root, data)?;
-        if journal.schema_version != 2
-            || journal.desktop_root != data
-            || uuid::Uuid::parse_str(&journal.attempt_id).is_err()
-        {
-            return Err(fail("恢复记录不属于当前程序或用户数据根"));
-        }
-        let (target, platform) = program_layout::host_target()?;
-        let candidate =
-            program_selection::read_image(&self.root, platform, target, &journal.after)?;
-        let selected: CurrentSelection = decode(
-            journal
-                .current
-                .after
-                .as_deref()
-                .ok_or_else(|| fail("恢复记录缺少目标选择"))?,
-        )?;
-        if selected != journal.after
-            || journal.entry.after.as_deref()
-                != Some(
-                    install::entry_script(Some(&candidate.paths.node), &candidate.script)
-                        .as_bytes(),
-                )
-        {
-            return Err(fail("恢复目标选择与入口身份不符"));
-        }
-        match &journal.before {
-            Some(before) => {
-                let old = program_selection::read_image(&self.root, platform, target, before)?;
-                let selection: CurrentSelection = decode(
-                    journal
-                        .current
-                        .before
-                        .as_deref()
-                        .ok_or_else(|| fail("缺少原版本原件"))?,
-                )?;
-                if selection != *before
-                    || journal.entry.before.as_deref()
-                        != Some(
-                            install::entry_script(Some(&old.paths.node), &old.script).as_bytes(),
-                        )
-                {
-                    return Err(fail("原版本选择或入口无法核验"));
-                }
-            }
-            None if journal.current.before.is_some() || journal.entry.before.is_some() => {
-                return Err(fail("未安装状态不能包含已有程序入口"))
-            }
-            None => (),
-        }
-        if let Some(bytes) = &journal.record.before {
-            let record: RuntimeSourceRecord = decode(bytes)?;
-            if record.schema_version != super::RUNTIME_SCHEMA_VERSION
-                || !record_matches(&record, journal.before.as_ref(), &candidate.stable_entry)
-            {
-                return Err(fail("原本机来源记录无法核验"));
-            }
-        }
-        let record: RuntimeSourceRecord = decode(
-            journal
-                .record
-                .after
-                .as_deref()
-                .ok_or_else(|| fail("缺少目标来源记录"))?,
-        )?;
-        if record.schema_version != super::RUNTIME_SCHEMA_VERSION
-            || !record_matches(&record, Some(&journal.after), &candidate.stable_entry)
-        {
-            return Err(fail("目标来源记录无法核验"));
-        }
-        Ok(())
+        Inspector { root: &self.root }.validate(data, journal)
     }
     fn load(&self, data: &Path) -> AppResult<(Journal, Vec<u8>)> {
-        let bytes = read(&self.root, &self.pending(), MAX_JOURNAL)?
-            .ok_or_else(|| fail("没有待恢复的版本事务"))?;
-        let envelope: Envelope = decode(&bytes)?;
-        if hash::sha256_hex(&encode(&envelope.journal)?) != envelope.sha256 {
-            return Err(fail("版本恢复记录摘要不符"));
-        }
-        self.validate(data, &envelope.journal)?;
-        Ok((envelope.journal, bytes))
+        Inspector { root: &self.root }.load(data)
     }
     pub fn pending_summary(&self, data: &Path) -> AppResult<PendingSummary> {
-        let (journal, _) = self.load(data)?;
-        Ok(PendingSummary {
-            attempt_id: journal.attempt_id,
-            from: journal.before.map(|s| s.version),
-            to: journal.after.version,
-        })
+        Inspector { root: &self.root }.summary(data)
     }
     pub(super) fn activate(
         &self,
@@ -398,11 +317,16 @@ impl Mutation {
         &self,
         data: &Path,
         attempt: &str,
+        confirmation_digest: &str,
         decision: Decision,
         admit: impl Fn() -> AppResult<()>,
     ) -> AppResult<Option<SelectedProgram>> {
         bundled::roots(&self.root, data)?;
         // Reject another user's D before creating even a stable target lock there.
+        let summary = self.pending_summary(data)?;
+        if summary.attempt_id != attempt || summary.confirmation_digest != confirmation_digest {
+            return Err(fail("版本恢复预览已过期，请重新核对"));
+        }
         let (journal, bytes) = self.load(data)?;
         if journal.attempt_id != attempt {
             return Err(fail("恢复确认不属于原版本事务"));
@@ -416,6 +340,9 @@ impl Mutation {
         let _record = TargetFileLock::lock(&record_path)?;
         if read(&self.root, &self.pending(), MAX_JOURNAL)?.as_deref() != Some(bytes.as_slice()) {
             return Err(fail("取得来源锁期间版本事务已变化"));
+        }
+        if self.pending_summary(data)?.confirmation_digest != confirmation_digest {
+            return Err(fail("取得来源锁期间恢复目标已变化"));
         }
         self.apply(data, &journal, &bytes, decision, &admit, &|_| Ok(()))
     }
@@ -546,6 +473,150 @@ impl Mutation {
         program_selection::read(&self.root, platform, target)
     }
 }
+struct Inspector<'a> {
+    root: &'a Path,
+}
+impl Inspector<'_> {
+    fn pending(&self) -> PathBuf {
+        self.root.join("runtime").join(ACTIVATION_PENDING)
+    }
+    fn validate(&self, data: &Path, journal: &Journal) -> AppResult<()> {
+        bundled::roots(self.root, data)?;
+        if journal.schema_version != 2
+            || journal.desktop_root != data
+            || uuid::Uuid::parse_str(&journal.attempt_id).is_err()
+        {
+            return Err(fail("恢复记录不属于当前程序或用户数据根"));
+        }
+        let (target, platform) = program_layout::host_target()?;
+        let candidate = program_selection::read_image(self.root, platform, target, &journal.after)?;
+        let selected: CurrentSelection = decode(
+            journal
+                .current
+                .after
+                .as_deref()
+                .ok_or_else(|| fail("恢复记录缺少目标选择"))?,
+        )?;
+        if selected != journal.after
+            || journal.entry.after.as_deref()
+                != Some(
+                    install::entry_script(Some(&candidate.paths.node), &candidate.script)
+                        .as_bytes(),
+                )
+        {
+            return Err(fail("恢复目标选择与入口身份不符"));
+        }
+        match &journal.before {
+            Some(before) => {
+                let old = program_selection::read_image(self.root, platform, target, before)?;
+                let selection: CurrentSelection = decode(
+                    journal
+                        .current
+                        .before
+                        .as_deref()
+                        .ok_or_else(|| fail("缺少原版本原件"))?,
+                )?;
+                if selection != *before
+                    || journal.entry.before.as_deref()
+                        != Some(
+                            install::entry_script(Some(&old.paths.node), &old.script).as_bytes(),
+                        )
+                {
+                    return Err(fail("原版本选择或入口无法核验"));
+                }
+            }
+            None if journal.current.before.is_some() || journal.entry.before.is_some() => {
+                return Err(fail("未安装状态不能包含已有程序入口"))
+            }
+            None => (),
+        }
+        if let Some(bytes) = &journal.record.before {
+            let record: RuntimeSourceRecord = decode(bytes)?;
+            if record.schema_version != super::RUNTIME_SCHEMA_VERSION
+                || !record_matches(&record, journal.before.as_ref(), &candidate.stable_entry)
+            {
+                return Err(fail("原本机来源记录无法核验"));
+            }
+        }
+        let record: RuntimeSourceRecord = decode(
+            journal
+                .record
+                .after
+                .as_deref()
+                .ok_or_else(|| fail("缺少目标来源记录"))?,
+        )?;
+        if record.schema_version != super::RUNTIME_SCHEMA_VERSION
+            || !record_matches(&record, Some(&journal.after), &candidate.stable_entry)
+        {
+            return Err(fail("目标来源记录无法核验"));
+        }
+        Ok(())
+    }
+    fn load(&self, data: &Path) -> AppResult<(Journal, Vec<u8>)> {
+        let bytes = read(self.root, &self.pending(), MAX_JOURNAL)?
+            .ok_or_else(|| fail("没有待恢复的版本事务"))?;
+        let envelope: Envelope = decode(&bytes)?;
+        if hash::sha256_hex(&encode(&envelope.journal)?) != envelope.sha256 {
+            return Err(fail("版本恢复记录摘要不符"));
+        }
+        self.validate(data, &envelope.journal)?;
+        Ok((envelope.journal, bytes))
+    }
+
+    fn summary(&self, data: &Path) -> AppResult<PendingSummary> {
+        let (journal, bytes) = self.load(data)?;
+        let observed = audit_targets(self.root, data, &journal)?;
+        if read(self.root, &self.pending(), MAX_JOURNAL)?.as_deref() != Some(bytes.as_slice()) {
+            return Err(fail("读取期间版本事务已变化"));
+        }
+        Ok(PendingSummary {
+            attempt_id: journal.attempt_id,
+            from: journal.before.map(|s| s.version),
+            to: journal.after.version,
+            confirmation_digest: hash::sha256_hex(&encode(&(
+                self.root,
+                data,
+                hash::sha256_hex(&bytes),
+                observed,
+            ))?),
+        })
+    }
+}
+fn audit_targets(root: &Path, data: &Path, journal: &Journal) -> AppResult<Vec<Option<Vec<u8>>>> {
+    let (_, platform) = program_layout::host_target()?;
+    let entry = root.join(program_layout::runtime_entry_relative(platform));
+    let current = root.join("runtime").join(program_layout::CURRENT_FILENAME);
+    let record = RuntimeStore::new(data).path().to_path_buf();
+    [
+        (root, &entry, &journal.entry),
+        (root, &current, &journal.current),
+        (data, &record, &journal.record),
+    ]
+    .into_iter()
+    .map(|(root, path, change)| {
+        let observed = read(root, path, MAX_RECORD)?;
+        if observed != change.before && observed != change.after {
+            return Err(fail("版本事务目标包含外部修改，原件和恢复记录保留"));
+        }
+        Ok(observed)
+    })
+    .collect()
+}
+/// Observes only the pending transaction at the explicit I/D; never creates a
+/// program lock, rewrites a source record or resumes interrupted work.
+pub fn inspect_pending(root: &Path, data: &Path) -> AppResult<Option<PendingSummary>> {
+    bundled::roots(root, data)?;
+    match fs::symlink_metadata(root) {
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+        Err(e) => return Err(io(e)),
+        Ok(_) => (),
+    }
+    let inspector = Inspector { root };
+    if read(root, &inspector.pending(), MAX_JOURNAL)?.is_none() {
+        return Ok(None);
+    }
+    inspector.summary(data).map(Some)
+}
 fn record_matches(
     record: &RuntimeSourceRecord,
     selected: Option<&CurrentSelection>,
@@ -567,4 +638,4 @@ fn record_matches(
 
 #[cfg(all(test, unix))]
 #[path = "program_activation_tests.rs"]
-mod tests;
+pub(crate) mod tests;

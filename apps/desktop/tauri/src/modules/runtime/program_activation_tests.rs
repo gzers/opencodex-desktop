@@ -9,16 +9,36 @@ use crate::modules::{
 };
 use std::os::unix::fs::PermissionsExt;
 
-struct Fixture {
+pub(crate) struct Fixture {
     _temp: tempfile::TempDir,
-    i: PathBuf,
-    d: PathBuf,
+    pub(crate) i: PathBuf,
+    pub(crate) d: PathBuf,
     old: CurrentSelection,
     new: CurrentSelection,
     initial: bool,
 }
 impl Fixture {
-    fn new(initial: bool) -> Self {
+    pub(crate) fn interrupt(&self) -> PendingSummary {
+        let mutation = Mutation::acquire(&self.i).unwrap();
+        assert!(mutation
+            .activate_inner(
+                &self.d,
+                self.initial.then_some(&self.old),
+                &self.new,
+                || Ok(()),
+                |phase| {
+                    if phase == Checkpoint::Entry {
+                        Err(fail("injected interruption"))
+                    } else {
+                        Ok(())
+                    }
+                }
+            )
+            .is_err());
+        mutation.pending_summary(&self.d).unwrap()
+    }
+
+    pub(crate) fn new(initial: bool) -> Self {
         let temp = tempfile::tempdir().unwrap();
         let base = temp.path().canonicalize().unwrap();
         let i = base.join("program");
@@ -119,7 +139,7 @@ exit 98
     fn admit(&self, s: &CurrentSelection) -> SelectedProgram {
         program_selection::read_image(&self.i, self.platform(), &s.platform, s).unwrap()
     }
-    fn snapshot(&self) -> Vec<Option<Vec<u8>>> {
+    pub(crate) fn snapshot(&self) -> Vec<Option<Vec<u8>>> {
         [self.entry(), self.current(), self.record()]
             .map(|p| fs::read(p).ok())
             .to_vec()
@@ -206,10 +226,22 @@ fn every_interruption_stage_can_explicitly_finish_or_restore_exact_before_images
                 assert_eq!(pending.to, "3.0.0");
                 assert_eq!(pending.from.as_deref(), initial.then_some("2.99.0"));
                 assert!(mutation
-                    .recover(&f.d, "wrong-attempt", decision, || Ok(()))
+                    .recover(
+                        &f.d,
+                        "wrong-attempt",
+                        &pending.confirmation_digest,
+                        decision,
+                        || Ok(())
+                    )
                     .is_err());
                 mutation
-                    .recover(&f.d, &pending.attempt_id, decision, || Ok(()))
+                    .recover(
+                        &f.d,
+                        &pending.attempt_id,
+                        &pending.confirmation_digest,
+                        decision,
+                        || Ok(()),
+                    )
                     .unwrap();
                 let expected = if decision == Decision::Complete {
                     Some(&f.new)
@@ -263,7 +295,8 @@ fn unknown_value_in_any_recovery_target_is_preserved_before_recovery_writes() {
                 }
             )
             .is_err());
-        let id = mutation.pending_summary(&f.d).unwrap().attempt_id;
+        let preview = mutation.pending_summary(&f.d).unwrap();
+        let id = &preview.attempt_id;
         fs::write(
             [f.entry(), f.current(), f.record()][which].clone(),
             b"foreign user data",
@@ -272,7 +305,13 @@ fn unknown_value_in_any_recovery_target_is_preserved_before_recovery_writes() {
         let before = f.snapshot();
         let pending = fs::read(mutation.pending()).unwrap();
         assert!(mutation
-            .recover(&f.d, &id, Decision::Rollback, || Ok(()))
+            .recover(
+                &f.d,
+                id,
+                &preview.confirmation_digest,
+                Decision::Rollback,
+                || Ok(())
+            )
             .is_err());
         assert_eq!(f.snapshot(), before);
         assert_eq!(fs::read(mutation.pending()).unwrap(), pending);
@@ -296,12 +335,19 @@ fn recovery_refuses_other_data_roots_tampered_journal_or_changed_candidate_image
             }
         )
         .is_err());
-    let id = mutation.pending_summary(&f.d).unwrap().attempt_id;
+    let preview = mutation.pending_summary(&f.d).unwrap();
+    let id = &preview.attempt_id;
     let before = f.snapshot();
     let other = f.d.with_file_name("other-desktop");
     fs::create_dir_all(other.join("manager-state")).unwrap();
     assert!(mutation
-        .recover(&other, &id, Decision::Complete, || Ok(()))
+        .recover(
+            &other,
+            id,
+            &preview.confirmation_digest,
+            Decision::Complete,
+            || Ok(())
+        )
         .is_err());
     assert_eq!(
         fs::read_dir(other.join("manager-state")).unwrap().count(),
@@ -312,13 +358,67 @@ fn recovery_refuses_other_data_roots_tampered_journal_or_changed_candidate_image
     changed.journal.after.version = "4.0.0".into();
     fs::write(mutation.pending(), encode(&changed).unwrap()).unwrap();
     assert!(mutation
-        .recover(&f.d, &id, Decision::Complete, || Ok(()))
+        .recover(
+            &f.d,
+            id,
+            &preview.confirmation_digest,
+            Decision::Complete,
+            || Ok(())
+        )
         .is_err());
     fs::write(mutation.pending(), &pending).unwrap();
     fs::write(f.admit(&f.new).script, b"unknown replacement program").unwrap();
     assert!(mutation
-        .recover(&f.d, &id, Decision::Complete, || Ok(()))
+        .recover(
+            &f.d,
+            id,
+            &preview.confirmation_digest,
+            Decision::Complete,
+            || Ok(())
+        )
         .is_err());
     assert_eq!(f.snapshot(), before);
     assert_eq!(fs::read(mutation.pending()).unwrap(), pending);
+}
+
+#[test]
+fn readonly_preview_creates_no_lock_and_confirmation_binds_even_known_target_transitions() {
+    let t = tempfile::tempdir().unwrap();
+    let root = t.path().canonicalize().unwrap();
+    let program = root.join("program");
+    let data = root.join("desktop");
+    fs::create_dir(&program).unwrap();
+    fs::create_dir(&data).unwrap();
+    assert!(inspect_pending(&program, &data).unwrap().is_none());
+    assert_eq!(fs::read_dir(program).unwrap().count(), 0);
+    let f = Fixture::new(true);
+    let reviewed = f.interrupt();
+    let mutation = Mutation::acquire(&f.i).unwrap();
+    let (journal, bytes) = mutation.load(&f.d).unwrap();
+    // Another valid writer reached the next step of this very same attempt.
+    fs::write(f.current(), journal.current.after.as_ref().unwrap()).unwrap();
+    let before = f.snapshot();
+    assert!(mutation
+        .recover(
+            &f.d,
+            &reviewed.attempt_id,
+            &reviewed.confirmation_digest,
+            Decision::Complete,
+            || Ok(())
+        )
+        .is_err());
+    assert_eq!(f.snapshot(), before);
+    assert_eq!(fs::read(mutation.pending()).unwrap(), bytes);
+    let current = mutation.pending_summary(&f.d).unwrap();
+    assert_ne!(current.confirmation_digest, reviewed.confirmation_digest);
+    mutation
+        .recover(
+            &f.d,
+            &current.attempt_id,
+            &current.confirmation_digest,
+            Decision::Complete,
+            || Ok(()),
+        )
+        .unwrap();
+    f.verify(Some(&f.new));
 }
