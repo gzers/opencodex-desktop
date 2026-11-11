@@ -1,0 +1,12 @@
+
+running 1 test
+test commands::lifecycle_versioned_tests::official299_versioned_start_status_stop_preserves_native_client ... OFFICIAL299_NATIVE_LIFECYCLE {"accepted":false,"businessRequests":false,"clientChangedDuringStart":true,"nativeClientRestored":{"codex/config.toml":true,"codex/models_cache.json":false,"codex/opencodex-catalog-audit.jsonl":false,"codex/opencodex-catalog.json":false,"grok/config.toml.bak-opencodex":true},"officialVersion":"2.99.0","pidRecordAbsent":true,"record":{"pid":43304,"port":61945},"recordAbsent":true,"result":"failed","serviceStarted":true,"start":{"canRestart":true,"canStart":false,"canStop":true,"lifecycleState":"running","result":"started"},"startBudgetMs":30000,"startElapsedMs":4433,"status":{"pid":"43304","port":61945,"ready":true,"status":"running"},"statusBudgetMs":5000,"statusElapsedMs":1092,"stop":{"canRestart":false,"canStart":true,"canStop":false,"lifecycleState":"stopped","result":"stopped"},"stopBudgetMs":10000,"stopElapsedMs":2392}
+FAILED
+
+failures:
+
+failures:
+    commands::lifecycle_versioned_tests::official299_versioned_start_status_stop_preserves_native_client
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2257 filtered out; finished in 83.59s
+

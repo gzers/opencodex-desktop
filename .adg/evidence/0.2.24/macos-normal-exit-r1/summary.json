@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "accepted": false,
+  "frozenCandidate": false,
+  "scope": "Production Mac Stop binds live process generation before official Stop and requires Darwin normal exit status0, in addition to existing ownership/socket/process/record proof",
+  "nativeLatest": {
+    "accepted": false,
+    "businessRequests": false,
+    "clientChangedDuringStart": true,
+    "nativeClientRestored": {
+      "codex/config.toml": true,
+      "codex/models_cache.json": false,
+      "codex/opencodex-catalog-audit.jsonl": false,
+      "codex/opencodex-catalog.json": false,
+      "grok/config.toml.bak-opencodex": true
+    },
+    "officialVersion": "2.99.0",
+    "pidRecordAbsent": true,
+    "record": {
+      "pid": 43304,
+      "port": 61945
+    },
+    "recordAbsent": true,
+    "result": "failed",
+    "serviceStarted": true,
+    "start": {
+      "canRestart": true,
+      "canStart": false,
+      "canStop": true,
+      "lifecycleState": "running",
+      "result": "started"
+    },
+    "startBudgetMs": 30000,
+    "startElapsedMs": 4433,
+    "status": {
+      "pid": "43304",
+      "port": 61945,
+      "ready": true,
+      "status": "running"
+    },
+    "statusBudgetMs": 5000,
+    "statusElapsedMs": 1092,
+    "stop": {
+      "canRestart": false,
+      "canStart": true,
+      "canStop": false,
+      "lifecycleState": "stopped",
+      "result": "stopped"
+    },
+    "stopBudgetMs": 10000,
+    "stopElapsedMs": 2392
+  },
+  "passed": {
+    "kernelExitTests": 7,
+    "existingOwnershipRegressions": 10
+  },
+  "checks": [
+    {
+      "name": "compile-integrated",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--lib",
+        "macos_process_exit",
+        "--no-run"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "nativeKernelProof": "integrated/manager.log original-native-exit confirmed code=0; original exact process-generation event gate is now required by production stop_lifecycle",
+  "knownFailure": "Whole original client byte-restore assertion deliberately still fails101: catalog/cache/audit unchanged known missing production integration; no accepted=true",
+  "scopeLimits": [
+    "ExitWatch proves one retained PID/UID/birth generation, not its controlled descendants or every listener; original process/HOME/manager/port checks remain independently required.",
+    "NormalExitProof is not serializable nor a service/client restore MutationPermit. Current lifecycle consumes it as an extra gate but no client compensation factory wired.",
+    "Kernel API tests include non-direct sameUID child, exit7 and SIGTERM not success, late deadline and pre-exited process not retroactive success. Signal used only on the self-created gated test shell, not official service.",
+    "Actual official2.99 lifecycle used exact original package and fixed complete resource, private synthetic profile and only loopback; new process exit gate passed4433/1092/2392ms under unchanged30/5/10s. Whole client restore remains failed and no release claim.",
+    "Current private profile uses same OS account, not a new real SID. No Windows execution or updated.app/DMG built."
+  ],
+  "cleanup": {
+    "ownTestHelperAndRuntimeProcessesAbsent": true,
+    "nonchildProbeFixturePidAbsent": 42821,
+    "nativePrimaryPortAbsent": 61945,
+    "nativeTcpFramingValidated": true,
+    "exactNewCoordinatorProof": [
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/b4a42ea0fb8b2551734a6f455651ebdb10b0feedb73d00fa75d6d20389669262.sqlite",
+        "exclusiveReacquiredAndReleased": true
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/b4a42ea0fb8b2551734a6f455651ebdb10b0feedb73d00fa75d6d20389669262.sqlite",
+        "exclusiveReacquiredAndReleased": true
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/history-write-locks/667e0ad90345f92ddd0f809d54f7c57721d252b35a115cbd51da322c61386401.sqlite",
+        "exclusiveReacquiredAndReleased": true
+      }
+    ],
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "businessRequests": false,
+    "allOwnedRuntimeProfileAndBinaryRootsRemoved": true,
+    "duplicateReceiptRootRemoved": true
+  },
+  "codeCommit": "57c201bd77e9e08aa6b78773e29daf91d50d885b",
+  "sourceFiles": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_process_exit.rs",
+      "sha256": "3327d6df13042adda00a3e1654d63de1bcfa560a7877aea87b8bd424aaef1546"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_process_exit_tests.rs",
+      "sha256": "67aafd37da79259b0f6dffee24468babe4ab0b4ac1cbd8dc9f6f6a48125ab079"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/runtime_recovery_v2_owner.rs",
+      "sha256": "de008081922f44798f3495c845a36d047b73fa28ed9dd7ce31578ada13564852"
+    }
+  ]
+}
