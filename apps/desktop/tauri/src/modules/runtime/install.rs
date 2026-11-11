@@ -807,11 +807,23 @@ pub struct SystemNpmRunner {
     /// 真实用户 HOME；缓存目录独立指定，不通过替换 HOME 重定向。
     pub home: Option<PathBuf>,
     cache: PathBuf,
+    no_proxy: String,
 }
 
 impl SystemNpmRunner {
     pub fn new(home: Option<PathBuf>, cache: PathBuf) -> Self {
-        Self { home, cache }
+        Self {
+            home,
+            cache,
+            no_proxy: String::new(),
+        }
+    }
+
+    /// Captured at the command boundary; never inherits the process's proxy
+    /// environment or writes npm/global/user configuration.
+    pub fn with_no_proxy(mut self, no_proxy: String) -> Self {
+        self.no_proxy = no_proxy;
+        self
     }
 
     fn log_directory(&self) -> PathBuf {
@@ -850,6 +862,8 @@ impl SystemNpmRunner {
         command.env("LANG", "C.UTF-8");
         command.env("LC_ALL", "C.UTF-8");
         command.env("npm_config_update_notifier", "false");
+        command.env("npm_config_noproxy", &self.no_proxy);
+        command.env("NO_PROXY", &self.no_proxy);
         command.env("npm_config_fund", "false");
         command.env("npm_config_audit", "false");
         command.env("npm_config_progress", "false");
@@ -4852,3 +4866,7 @@ pub fn validate_managed_installation(root: &Path, node: Option<&Path>) -> Result
 #[cfg(all(test, windows))]
 #[path = "install_windows_path_tests.rs"]
 mod windows_path_tests;
+
+#[cfg(all(test, unix))]
+#[path = "npm_proxy_tests.rs"]
+mod npm_proxy_tests;

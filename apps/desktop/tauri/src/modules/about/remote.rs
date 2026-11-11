@@ -150,6 +150,13 @@ fn run_npm_view_with_timeout(
     command.env("OPENCODEX_HOME", &environment.opencodex_home);
     command.env("npm_config_cache", dunce::simplified(cache));
     command.env("npm_config_update_notifier", "false");
+    command.env(
+        "npm_config_noproxy",
+        environment
+            .no_proxy
+            .as_deref()
+            .unwrap_or(std::ffi::OsStr::new("")),
+    );
     // 关键：npm 是 `#!/usr/bin/env node` 脚本，env_clear 后必须给出能找到 node 的 PATH。
     // 至少包含 npm 自身所在目录（node 与它同目录），并补系统最小 PATH 兜底，
     // 不依赖调用方环境的 PATH（与受控安装 `SystemNpmRunner` 同一策略）。
@@ -415,6 +422,8 @@ mod tests {
         let script = r#"#!/bin/sh
 [ "$npm_config_cache" = "$OPENCODEX_HOME/cache/npm" ] || exit 11
 [ "$HOME" = "$OPENCODEX_HOME/user-home" ] || exit 12
+[ "$npm_config_noproxy" = "registry.example.test,127.0.0.1" ] || exit 13
+[ "$NO_PROXY" = "$npm_config_noproxy" ] || exit 14
 echo '{"version":"2.50.0","dist.integrity":"sha512-fixture"}'
 "#;
         std::fs::write(&npm, script).unwrap();
@@ -422,6 +431,7 @@ echo '{"version":"2.50.0","dist.integrity":"sha512-fixture"}'
         let environment = EnvironmentPolicy {
             opencodex_home: root.path().to_owned(),
             home: Some(root.path().join("user-home").into_os_string()),
+            no_proxy: Some("registry.example.test,127.0.0.1".into()),
             ..Default::default()
         };
         let result = query_remote_latest(

@@ -4,6 +4,7 @@
 //! 解析为类型化访问器。用户偏好只决定「用不用代理、用哪个代理」，超时、重试、UA 与 TLS
 //! 约束等安全行为固定在此，不随用户配置放宽。
 
+pub(crate) mod updater_proxy;
 use std::sync::OnceLock;
 use std::time::Duration;
 

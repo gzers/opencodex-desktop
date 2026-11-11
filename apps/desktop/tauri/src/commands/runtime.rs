@@ -600,18 +600,17 @@ async fn install_managed_runtime(
         .clone()
         .unwrap_or_else(|| default_version().to_string());
     // 网络代理（U-05）：本次安装未显式指定代理时，继承用户网络偏好里的手动 HTTP 代理。
-    let proxy = request.proxy().or_else(
-        || match crate::modules::preferences::proxy_policy_for_app(&app) {
-            crate::modules::preferences::ProxyPolicy::Manual(url) => {
-                let (scheme, host) = url.split_once("://")?;
-                let scheme = crate::modules::runtime::install::ProxyScheme::parse(scheme)?;
-                Some(crate::modules::runtime::install::ProxyConfig::new(
-                    scheme, host,
-                ))
-            }
-            _ => None,
-        },
-    );
+    let (proxy_policy, no_proxy) = crate::modules::preferences::http_options_for_app(&app);
+    let proxy = request.proxy().or_else(|| match proxy_policy {
+        crate::modules::preferences::ProxyPolicy::Manual(url) => {
+            let (scheme, host) = url.split_once("://")?;
+            let scheme = crate::modules::runtime::install::ProxyScheme::parse(scheme)?;
+            Some(crate::modules::runtime::install::ProxyConfig::new(
+                scheme, host,
+            ))
+        }
+        _ => None,
+    });
     let source = match source_kind {
         crate::modules::runtime::install::InstallSourceKind::Registry => InstallSource::Registry {
             version: requested_version.clone(),
@@ -683,7 +682,7 @@ async fn install_managed_runtime(
 
                 let (target,platform)=crate::modules::runtime::program_layout::host_target()?;
                 let selected=crate::modules::runtime::program_selection::read(handle_ref.installation_root(),platform,target)?.ok_or(AppError::NotConfigured)?;
-                let npm=crate::modules::runtime::install::SystemNpmRunner::new(Some(home_path.clone()),data_root_path.join("cache/npm"));
+                let npm=crate::modules::runtime::install::SystemNpmRunner::new(Some(home_path.clone()),data_root_path.join("cache/npm")).with_no_proxy(no_proxy.clone());
                 let probe=crate::modules::runtime::install::RealVersionProbe::default();
                 let mut installer=RuntimeInstaller::new(&data_root_path,&npm,Some(home_path.clone()),&sink,&probe,node_path.clone());
                 installer.cancel=mutation.cancel.clone();
@@ -726,7 +725,7 @@ async fn install_managed_runtime(
             let npm = crate::modules::runtime::install::SystemNpmRunner::new(
                 Some(home_path.clone()),
                 data_root_path.join("cache/npm"),
-            );
+            ).with_no_proxy(no_proxy.clone());
             let probe = crate::modules::runtime::install::RealVersionProbe::default();
             let mut installer = RuntimeInstaller::new(
                 &data_root_path,
