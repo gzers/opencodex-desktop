@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "accepted": false,
+  "frozenCandidate": false,
+  "scope": "Actual Mac production application/IPC/tray runner now captures and persists current original sessions throughStartReady->StopPrepared->Stopped. Actual client publication intentionally pending, no false completeStop success",
+  "nativeLatest": {
+    "accepted": false,
+    "businessRequests": false,
+    "clientChangedDuringStart": true,
+    "independentOriginalsReferenced": true,
+    "indexedReady": true,
+    "indexedRevision": 5,
+    "indexedStopped": true,
+    "nativeClientRestored": {
+      "codex/config.toml": true,
+      "codex/models_cache.json": false,
+      "codex/opencodex-catalog-audit.jsonl": false,
+      "codex/opencodex-catalog.json": false,
+      "grok/config.toml.bak-opencodex": true
+    },
+    "officialVersion": "2.99.0",
+    "pidRecordAbsent": true,
+    "record": {
+      "pid": 50116,
+      "port": 55593
+    },
+    "recordAbsent": true,
+    "result": "failed",
+    "serviceStarted": true,
+    "start": {
+      "canRestart": true,
+      "canStart": false,
+      "canStop": true,
+      "lifecycleState": "running",
+      "result": "started"
+    },
+    "startBudgetMs": 30000,
+    "startElapsedMs": 15616,
+    "status": {
+      "pid": "50116",
+      "port": 55593,
+      "ready": true,
+      "status": "running"
+    },
+    "statusBudgetMs": 5000,
+    "statusElapsedMs": 1108,
+    "stop": {
+      "canRestart": true,
+      "canStart": false,
+      "canStop": true,
+      "failure": {
+        "code": "client_original_restore_pending",
+        "message": "服务已正常停止，客户端配置原件恢复尚未完成；原会话和现场已保留"
+      },
+      "lifecycleState": "running",
+      "result": null
+    },
+    "stopBudgetMs": 10000,
+    "stopElapsedMs": 8591
+  },
+  "codeCommit": "595850a24cf4e98235e7c1efe8f16996ae07158c",
+  "checks": [
+    {
+      "name": "compile-retained",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--lib",
+        "session_index",
+        "--no-run"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "clippy-retained",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "fmt-retained",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "passed": {
+    "sessionIndexTests": 9,
+    "retainedProductStoppedIndex": 1,
+    "versionedAdmissionRegressions": 2,
+    "actionResultTests": 9
+  },
+  "realProductExpectedFailedWholeRound": true,
+  "indexedOriginalFrameIntegrity": [
+    {
+      "name": "original.json",
+      "sha256": "32cd9b9e9441c6b0296a4bd6922497402600139f6ca710a202ed184081ca6901",
+      "bytes": 1634,
+      "matchedIndependentIndexReference": true
+    },
+    {
+      "name": "startup-scope.json",
+      "sha256": "e4b99d0aa962ab9c52fee5a76a8f403c7b37d909b65f49ae01e3161855f7bb1a",
+      "bytes": 1241,
+      "matchedIndependentIndexReference": true
+    },
+    {
+      "name": "startup-live.json",
+      "sha256": "9409da256b2958e0e54b3138bc2153d715525716908a986d15cc5ecc5494d72e",
+      "bytes": 318,
+      "matchedIndependentIndexReference": true
+    },
+    {
+      "name": "ready.json",
+      "sha256": "568bc73708a65edf87b6851d057c742ad5519943a3024e3373abd14427d06eeb",
+      "bytes": 22439,
+      "matchedIndependentIndexReference": true
+    },
+    {
+      "name": "pre-stop.json",
+      "sha256": "da6d90a428c615fc43a37f1f1d626047b5b048ae9414290765ca8c9d32f25068",
+      "bytes": 22442,
+      "matchedIndependentIndexReference": true
+    },
+    {
+      "name": "stopped.json",
+      "sha256": "e7ee107befcf418eb397c183e975c29317e1e5c2da01cc3a99acb98727da4371",
+      "bytes": 15190,
+      "matchedIndependentIndexReference": true
+    }
+  ],
+  "sourceBoundaries": [
+    "native/source.json is exact actual product orchestration/build source. After it, index action-lock kind/flags/protection hardening added; final source-final.json/source binary separately recorded,9 index checks passed and same existing productStopped index reopened under final checks without source rebase or newservice. Do not claim entire finalbinary native lifecycle was repeated.",
+    "IndexPreparing/Captured/Ready/StopPrepared/Stopped references persist outside stage frames. SQLite CAS expected document/revision plus independent immutable event readback; action native lock serializes entire owner even between durable reference commits.",
+    "Deterministic ProcessRunner fixtures declare no actual client changes; native productionControlled runner opts in. New native path applied only current admitted managed official2.99 in Mac cfg; Windows native integration not asserted.",
+    "Current stopped unresolved session deliberately blocks a replacement startup baseline and restart. Until recovery completes this engineering branch can report recoverypending; never consider this a publishable completefeature."
+  ],
+  "remaining": [
+    "Actual three-artifact client publication MutationPermit factory/full restoration still not wired; Stop returns explicit pendingRestore with original full byte assertionfailed and refs retained.",
+    "Explicit recovery UI/continue/rollback for Preparing/Captured/StopPrepared/Stopped and active refresh/newCodex directory/crossvolume/flags remain necessary. No scan of originals to invent baseline or automatic index clearing.",
+    "Current singlePID normal exit/HOME absence does not prove every descendant/listener/config/Grok/Agent/full tree restoration; original required scope remains.",
+    "DefaultMac native client must already exist; actual automatic first-user directory creation/撤销 remains required.",
+    "Windows W0 HOME/Profile/W1/W2, NAME, npm System native proxy, official publish verifier/shareddocs/release and finalcandidate remain unfinished.",
+    "No actual.app/DMG rebuild this batch; no business model or WebDAV sync, official2.99 untouched, no newSID or Windows execution."
+  ],
+  "cleanup": {
+    "ownTestHelperAndRuntimeProcessesAbsent": true,
+    "nativeTCPTableFramingValidated": true,
+    "originalPrimaryPortAbsent": 55593,
+    "exactNewCoordinatorProof": [
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/5109771511d0a1a6be9b6ad25d3b2cc8be725e3b28c50674f10a2299b4e14948.sqlite",
+        "exclusiveReacquiredAndReleased": true
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/5109771511d0a1a6be9b6ad25d3b2cc8be725e3b28c50674f10a2299b4e14948.sqlite",
+        "exclusiveReacquiredAndReleased": true
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/history-write-locks/03d9d59b9fcea283466f120283b37062702c65a9dc4671f6b2bddd2bc9cd3bea.sqlite",
+        "exclusiveReacquiredAndReleased": true
+      }
+    ],
+    "exactNewCoordinatorFilesAbsent": true,
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "forcedServiceCleanupUsed": false,
+    "allOwnedProgramProfileAndTestBinaryRootsRemoved": true,
+    "duplicateReceiptRootRemoved": true
+  }
+}

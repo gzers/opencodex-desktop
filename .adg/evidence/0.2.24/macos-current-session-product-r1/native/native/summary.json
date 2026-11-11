@@ -1,0 +1,55 @@
+{
+  "accepted": false,
+  "businessRequests": false,
+  "clientChangedDuringStart": true,
+  "independentOriginalsReferenced": true,
+  "indexedReady": true,
+  "indexedRevision": 5,
+  "indexedStopped": true,
+  "nativeClientRestored": {
+    "codex/config.toml": true,
+    "codex/models_cache.json": false,
+    "codex/opencodex-catalog-audit.jsonl": false,
+    "codex/opencodex-catalog.json": false,
+    "grok/config.toml.bak-opencodex": true
+  },
+  "officialVersion": "2.99.0",
+  "pidRecordAbsent": true,
+  "record": {
+    "pid": 50116,
+    "port": 55593
+  },
+  "recordAbsent": true,
+  "result": "failed",
+  "serviceStarted": true,
+  "start": {
+    "canRestart": true,
+    "canStart": false,
+    "canStop": true,
+    "lifecycleState": "running",
+    "result": "started"
+  },
+  "startBudgetMs": 30000,
+  "startElapsedMs": 15616,
+  "status": {
+    "pid": "50116",
+    "port": 55593,
+    "ready": true,
+    "status": "running"
+  },
+  "statusBudgetMs": 5000,
+  "statusElapsedMs": 1108,
+  "stop": {
+    "canRestart": true,
+    "canStart": false,
+    "canStop": true,
+    "failure": {
+      "code": "client_original_restore_pending",
+      "message": "服务已正常停止，客户端配置原件恢复尚未完成；原会话和现场已保留"
+    },
+    "lifecycleState": "running",
+    "result": null
+  },
+  "stopBudgetMs": 10000,
+  "stopElapsedMs": 8591
+}
