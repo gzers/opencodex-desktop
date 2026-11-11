@@ -1,0 +1,6 @@
+{
+  "accepted": false,
+  "hypothesis": "Native rename does not condition on expected inode. Simulate a late non-cooperating replacement AFTER last state check: unknown payloads must not be accepted/archived as known originals or deleted, and one bounded exact-origin compensation should return them without overwriting a new destination. Unresolved races remain failed/pending.",
+  "testOnlySyntheticAuthority": true,
+  "serviceStarted": false
+}

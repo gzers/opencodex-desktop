@@ -1,0 +1,36 @@
+[
+  {
+    "name": "compile-final",
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--lib",
+      "macos_client_originals::restore",
+      "--no-run"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "clippy",
+    "argv": [
+      "cargo",
+      "clippy",
+      "--offline",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "fmt",
+    "argv": [
+      "cargo",
+      "fmt",
+      "--check"
+    ],
+    "exitCode": 0
+  }
+]

@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "accepted": false,
+  "frozenCandidate": false,
+  "codeCommit": "bfb264eb84209d74a81362464661f0b376af2a9b",
+  "scope": "Race-detection correction for native three-artifact restore core, bounded reverse publication and immutable actual conflict pairs; not product service restoration",
+  "passed": {
+    "finalProductionCoreTests": 19,
+    "additionalAbruptConflictExit": 1,
+    "rawReceiptProbeRecheck": 1,
+    "uniqueTests": 20,
+    "originalAbruptPublishBoundaryCases": 11,
+    "additionalConflictCrashCases": 1
+  },
+  "checks": [
+    {
+      "name": "compile-extra",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--lib",
+        "macos_client_originals::restore",
+        "--no-run"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "clippy-extra",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "fmt-extra",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "source": "source.json proves19-test production algorithm bytes; source-extra.json final algorithm unchanged, added abrupt test/raw receipt output only",
+  "verifiedFailure": "Before correction, all3 exact postcheck native/archive gap tests failed: user catalog unexpectedly moved to stage, user cache/archive-stage no longer at original path. Raw first errors retained.",
+  "actualRawConflictReceipts": [
+    "conflict-crash-receipt.json",
+    "conflict-raw-receipt.json"
+  ],
+  "limits": [
+    "There is no inode-conditioned kernel CAS. This patch detects unknown observed postpairs and attempts one lossless reverse only when exact current pair still matches, preserving failure/no terminal state. No universal no-transient-displacement guarantee.",
+    "Second edits or uncertain/unreadable metadata leave pending conflict and all objects retained; arbitrary same-user or malicious writers and continuous races are not excluded or exhaustively tested.",
+    "Actual external process replacement occurs after last state check, simulated deterministically at a private syscall-boundary seam; two-writer and conflict crash cases are synthetic-only native tests.",
+    "MutationPermit factory remains absent, product Start/Stop still not wired. Evidence/known hashes and partial restore mechanics do not prove native service normal exit or authorize daily restoration.",
+    "Three fixed artifacts only. config/Grok/Agent, active refresh, fresh/missing client directories, cross-volume archives/nonzero flags and all final lifecycle budgets remain required.",
+    "Current native final19 succeeded on exact algorithm; subsequent added conflict-exit test and raw receipt logging separately checked; no irrelevant broad official runtime/service rerun.",
+    "No .app/DMG rebuilt, official2.99/daily configuration untouched, no service/model/business sync."
+  ],
+  "cleanup": {
+    "ownTestAndExternalWriterProcessesAbsent": true,
+    "nativeServicesStarted": false,
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "ownBinaryFixturesStagesArchivesConflictFilesRemoved": true,
+    "duplicateTemporaryReceiptRootRemoved": true
+  }
+}
