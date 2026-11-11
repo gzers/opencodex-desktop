@@ -1,0 +1,101 @@
+{
+  "accepted": false,
+  "frozenCandidate": false,
+  "scope": "truthful action-time stopped observation and in-session UI recovery gates; not actual restore completion or durable snapshot/tray/reopen gating",
+  "unitResults": {
+    "results": {
+      "action-dto": 0,
+      "action-boundary": 101
+    },
+    "binarySha256": "34766b67363ef0bad4ddfc0e1f9e0b869df3c17e04088e78fa5af521306287bf"
+  },
+  "boundaryFixtureRetry": {
+    "exitCode": 0,
+    "reason": "original fixture denied binding the real ephemeral port required by prepare_start; loopback-only allowance, product unchanged, previously passed cases not repeated"
+  },
+  "uiFirstExitCode": 1,
+  "uiBaselineExitCode": 1,
+  "uiFinalExitCode": 0,
+  "uiFinalTests": 59,
+  "typecheckExitCode": 0,
+  "checks": {
+    "fmt": 0,
+    "clippy": 0,
+    "build-exact": 0
+  },
+  "native": {
+    "accepted": false,
+    "businessRequests": false,
+    "clientChangedDuringStart": true,
+    "independentOriginalsReferenced": true,
+    "indexedReady": true,
+    "indexedRestorePrepared": true,
+    "indexedRevision": 6,
+    "indexedStopped": false,
+    "nativeClientRestored": {
+      "codex/config.toml": true,
+      "codex/models_cache.json": false,
+      "codex/opencodex-catalog-audit.jsonl": false,
+      "codex/opencodex-catalog.json": false,
+      "grok/config.toml.bak-opencodex": true
+    },
+    "officialVersion": "2.99.0",
+    "pidRecordAbsent": true,
+    "record": {
+      "pid": 56689,
+      "port": 49640
+    },
+    "recordAbsent": true,
+    "restorePlanMatchesIndependentIndex": true,
+    "result": "failed",
+    "serviceStarted": true,
+    "start": {
+      "canRestart": true,
+      "canStart": false,
+      "canStop": true,
+      "clientRecoveryRequired": false,
+      "lifecycleState": "running",
+      "result": "started"
+    },
+    "startBudgetMs": 30000,
+    "startElapsedMs": 15616,
+    "status": {
+      "pid": "56689",
+      "port": 49640,
+      "ready": true,
+      "status": "running"
+    },
+    "statusBudgetMs": 5000,
+    "statusElapsedMs": 1104,
+    "stop": {
+      "canRestart": false,
+      "canStart": false,
+      "canStop": false,
+      "clientRecoveryRequired": true,
+      "failure": {
+        "code": "client_original_restore_pending",
+        "message": "\u670d\u52a1\u5df2\u6b63\u5e38\u505c\u6b62\uff0c\u5ba2\u6237\u7aef\u914d\u7f6e\u539f\u4ef6\u6062\u590d\u5c1a\u672a\u5b8c\u6210\uff1b\u539f\u4f1a\u8bdd\u548c\u73b0\u573a\u5df2\u4fdd\u7559"
+      },
+      "lifecycleState": "stopped",
+      "result": null
+    },
+    "stopBudgetMs": 10000,
+    "stopElapsedMs": 8515,
+    "stoppedRecoveryObservation": true
+  },
+  "cleanup": {
+    "ownedImageProcesses": [],
+    "primaryPortAbsent": true,
+    "tcpSnapshotFramingValid": true,
+    "exactDatabasesExclusivelyReacquiredReleased": [
+      "/private/tmp/opencodex-runtime-v1-501/native-write-locks/7110efbdb4a074b928020d2987a4b25f6603a356b74c36e4a1d0793d50a3bb2c.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/7110efbdb4a074b928020d2987a4b25f6603a356b74c36e4a1d0793d50a3bb2c.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/history-write-locks/94790345667dbe0cb3a981245edcf0ae1e5c6d20c448d318c6e6518a812b5eb1.sqlite"
+    ],
+    "temporaryProfileProgramIndexStageRemoved": true,
+    "testBinariesRemoved": true,
+    "dailyConfigChanged": false,
+    "businessRequests": false
+  },
+  "remaining": "full process family/listeners/writer authority, actual restoration and durable recovery/status/menu command integration, plus original IMP34 whole remaining scope"
+}

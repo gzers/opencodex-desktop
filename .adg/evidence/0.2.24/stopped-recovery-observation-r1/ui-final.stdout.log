@@ -1,0 +1,17 @@
+
+> opencodex-desktop-ui@0.2.24 test
+> vitest --run tests/process-action.test.ts tests/runtime-port-settings.test.ts tests/overview-status-announce.test.ts tests/overview-motion.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui
+
+
+ Test Files  4 passed (4)
+      Tests  59 passed (59)
+   Start at  02:20:40
+   Duration  1.84s (transform 50%, environment 28%, tests 14%, import 8%)
+
+  Transform  transforming modules took 2.54s · 50% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

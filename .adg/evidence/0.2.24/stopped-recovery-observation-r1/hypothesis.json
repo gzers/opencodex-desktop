@@ -1,0 +1,4 @@
+{
+  "hypothesis": "A verified ordinary Stop with incomplete client recovery currently returns Running and permits another restart. Carry a private action-time observation from CompletedLifecycleStop separately from errors; report Stopped, no success, recovery required, and block relaunch. Unknown/timeouts and code-only failures must not gain stopped authority; late status cannot discharge recovery. No actual restore/apply or original assertion weakening.",
+  "accepted": false
+}
