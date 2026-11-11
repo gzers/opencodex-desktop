@@ -1,0 +1,20 @@
+
+running 3 tests
+test modules::runtime::startup_bundle::state_tests::actual_bundle_callbacks_follow_completed_verification_extract_and_activation_boundaries ... ok
+test modules::runtime::startup_bundle::state_tests::corrupt_archive_never_announces_extract_or_activation_and_existing_pending_requires_review ... ok
+test modules::runtime::startup_bundle::state_tests::failed_first_supply_can_be_retried_only_by_its_current_attempt_and_completes_actual_supply ... FAILED
+
+failures:
+
+---- modules::runtime::startup_bundle::state_tests::failed_first_supply_can_be_retried_only_by_its_current_attempt_and_completes_actual_supply stdout ----
+
+thread 'modules::runtime::startup_bundle::state_tests::failed_first_supply_can_be_retried_only_by_its_current_attempt_and_completes_actual_supply' (154516845) panicked at src/modules/runtime/startup_bundle_state_tests.rs:67:10:
+called `Result::unwrap()` on an `Err` value: Disconnected
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    modules::runtime::startup_bundle::state_tests::failed_first_supply_can_be_retried_only_by_its_current_attempt_and_completes_actual_supply
+
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 2161 filtered out; finished in 0.42s
+

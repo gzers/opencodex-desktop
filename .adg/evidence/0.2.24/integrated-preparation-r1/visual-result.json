@@ -1,0 +1,46 @@
+{
+  "results": [
+    {
+      "width": 1040,
+      "height": 760,
+      "geometry": {
+        "width": 1040,
+        "scroll": 1040
+      },
+      "errors": [],
+      "realPhasePresentation": true,
+      "oneExplicitRetry": true,
+      "noServiceAction": true,
+      "calls": [
+        "runtime_preparation_status",
+        "runtime_preparation_status",
+        "runtime_preparation_retry",
+        "runtime_preparation_status",
+        "runtime_preparation_status",
+        "discover_environment"
+      ]
+    },
+    {
+      "width": 580,
+      "height": 640,
+      "geometry": {
+        "width": 580,
+        "scroll": 580
+      },
+      "errors": [],
+      "realPhasePresentation": true,
+      "oneExplicitRetry": true,
+      "noServiceAction": true,
+      "calls": [
+        "runtime_preparation_status",
+        "runtime_preparation_status",
+        "runtime_preparation_retry",
+        "runtime_preparation_status",
+        "runtime_preparation_status",
+        "discover_environment"
+      ]
+    }
+  ],
+  "nativeIpc": false,
+  "fixture": "actual IntegratedPreparation/UiButton/store; fixed memory stage and discovery IPC"
+}

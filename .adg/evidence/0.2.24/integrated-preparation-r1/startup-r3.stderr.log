@@ -1,0 +1,4 @@
+
+thread 'modules::runtime::startup_bundle::state_tests::failed_first_supply_can_be_retried_only_by_its_current_attempt_and_completes_actual_supply' (154521047) panicked at src/modules/runtime/startup_bundle_state_tests.rs:43:5:
+first attempt must reach the missing archive rather than an uninitialized Desktop root
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
