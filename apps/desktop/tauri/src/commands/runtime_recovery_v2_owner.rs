@@ -97,6 +97,68 @@ pub struct SystemServiceOwnerProofProvider {
     guard: RecoveryStopGuard,
     last_record: Mutex<Option<Record>>,
 }
+
+/// Issued only by the complete ordinary Stop path. A preexisting Stopped
+/// observation carries NO newly verified process exit and must never authorize
+/// compensation of an unrelated startup snapshot.
+pub(crate) struct CompletedLifecycleStop {
+    context: ProcessContext,
+    data_root: PathBuf,
+    record_digest: Option<String>,
+    deadline: Instant,
+    #[cfg(target_os = "macos")]
+    normal_exit: Option<crate::infrastructure::macos_process_exit::NormalExitProof>,
+}
+impl CompletedLifecycleStop {
+    fn require_context(&self, context: &ProcessContext, data_root: &Path) -> AppResult<()> {
+        if Instant::now() >= self.deadline {
+            return Err(fail(
+                "lifecycle_timeout",
+                "原停止预算已过，未将旧停止证明用于后继恢复",
+            ));
+        }
+        if path_key(data_root) != self.data_root
+            || !Arc::ptr_eq(&context.runtime, &self.context.runtime)
+            || path_key(&context.opencodex_home) != path_key(&self.context.opencodex_home)
+            || path_key(&context.working_directory) != path_key(&self.context.working_directory)
+            || self.record_digest.as_ref().is_some_and(|digest| {
+                digest.len() != 64
+                    || !digest
+                        .bytes()
+                        .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+            })
+        {
+            return Err(fail(
+                "client_stop_binding_unknown",
+                "停止证明的上下文或原记录无法核对，未恢复客户端文件",
+            ));
+        }
+        Ok(())
+    }
+    #[cfg(target_os = "macos")]
+    pub(crate) fn require_original(
+        &self,
+        context: &ProcessContext,
+        data_root: &Path,
+        generation: crate::infrastructure::macos_process_exit::Generation,
+        record_digest: &str,
+    ) -> AppResult<()> {
+        self.require_context(context, data_root)?;
+        if path_key(data_root) != self.data_root
+            || self.record_digest.as_deref() != Some(record_digest)
+            || self
+                .normal_exit
+                .as_ref()
+                .is_none_or(|proof| proof.generation() != generation)
+        {
+            return Err(fail(
+                "client_stop_binding_unknown",
+                "正常停止证明不属于该次启动、HOME或原记录，未恢复客户端文件",
+            ));
+        }
+        Ok(())
+    }
+}
 impl SystemServiceOwnerProofProvider {
     /// Removal covers all selected images, including another HOME of this OS
     /// user. Windows shared-install proof must come from its native lifetime
@@ -142,9 +204,26 @@ impl SystemServiceOwnerProofProvider {
         action_deadline: Instant,
         data_root: &Path,
     ) -> AppResult<()> {
+        let proof = self.stop_lifecycle_verified(context, action_deadline, data_root)?;
+        proof.require_context(context, data_root)?;
+        // Exercise the same exact binding check on the existing product path;
+        // this does not claim an absent record had a current process exit.
+        #[cfg(target_os = "macos")]
+        if let (Some(exit), Some(digest)) = (&proof.normal_exit, &proof.record_digest) {
+            proof.require_original(context, data_root, exit.generation(), digest)?;
+        }
+        Ok(())
+    }
+    pub(crate) fn stop_lifecycle_verified(
+        &self,
+        context: &ProcessContext,
+        action_deadline: Instant,
+        data_root: &Path,
+    ) -> AppResult<CompletedLifecycleStop> {
         let started = Instant::now();
         let budget = crate::modules::process::stop_timeout()
             .min(action_deadline.saturating_duration_since(started));
+        let proof_deadline = started + budget;
         let phase = std::cell::Cell::new("context");
         let timings = std::cell::RefCell::new(Vec::with_capacity(16));
         let mark = |next: &'static str| {
@@ -168,7 +247,14 @@ impl SystemServiceOwnerProofProvider {
                 ServiceOwnerProof::Owned { identity, pid } => (identity, pid),
                 ServiceOwnerProof::Stopped => {
                     remaining()?;
-                    return Ok(());
+                    return Ok(CompletedLifecycleStop {
+                        context: context.clone(),
+                        data_root: path_key(data_root),
+                        record_digest: None,
+                        deadline: proof_deadline,
+                        #[cfg(target_os = "macos")]
+                        normal_exit: None,
+                    });
                 }
                 ServiceOwnerProof::Unknown => {
                     return Err(fail(
@@ -272,7 +358,12 @@ impl SystemServiceOwnerProofProvider {
                         {
                             remaining()?;
                             mark("final-os-absence");
-                            return Ok(());
+                            return Ok(CompletedLifecycleStop {
+                                context: context.clone(),
+                                data_root: path_key(data_root),
+                                record_digest: Some(record.digest.clone()),
+                                deadline: proof_deadline,
+                            });
                         }
                     }
                 }
@@ -285,15 +376,25 @@ impl SystemServiceOwnerProofProvider {
                         && self.host.port_clear(record.runtime.port)?
                     {
                         #[cfg(target_os = "macos")]
-                        if native_exit.normal_exit(action_deadline)?.is_none() {
-                            std::thread::sleep(Duration::from_millis(10));
-                            continue;
-                        }
+                        let normal_exit = match native_exit.normal_exit(action_deadline)? {
+                            Some(proof) => proof,
+                            None => {
+                                std::thread::sleep(Duration::from_millis(10));
+                                continue;
+                            }
+                        };
                         #[cfg(target_os = "macos")]
                         let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root)
                             .append_event("stop-proof: original-native-exit confirmed code=0");
                         remaining()?;
-                        return Ok(());
+                        return Ok(CompletedLifecycleStop {
+                            context: context.clone(),
+                            data_root: path_key(data_root),
+                            record_digest: Some(record.digest.clone()),
+                            deadline: proof_deadline,
+                            #[cfg(target_os = "macos")]
+                            normal_exit: Some(normal_exit),
+                        });
                     }
                 }
                 std::thread::sleep(Duration::from_millis(50));

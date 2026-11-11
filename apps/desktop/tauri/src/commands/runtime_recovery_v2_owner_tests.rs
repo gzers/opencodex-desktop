@@ -151,6 +151,171 @@ fn positive_absence_requires_runtime_scan_endpoint_and_service_evidence() {
     );
 }
 
+#[cfg(target_os = "macos")]
+mod completed_stop_binding {
+    use super::*;
+    use crate::infrastructure::macos_process_exit::{ExitWatch, Generation, NormalExitProof};
+    use std::{
+        io::Write,
+        process::{Command, Stdio},
+        time::Duration,
+    };
+
+    fn normal_exit() -> (Generation, NormalExitProof) {
+        let mut child = Command::new("/bin/sh")
+            .args(["-c", "read owned_fixture; exit 0"])
+            .env_clear()
+            .env("PATH", "/usr/bin:/bin")
+            .stdin(Stdio::piped())
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .spawn()
+            .unwrap();
+        let generation = Generation::observe(child.id()).unwrap();
+        let mut watch = ExitWatch::capture(generation).unwrap();
+        child
+            .stdin
+            .take()
+            .unwrap()
+            .write_all(b"continue\n")
+            .unwrap();
+        let deadline = Instant::now() + Duration::from_secs(2);
+        let proof = loop {
+            if let Some(proof) = watch.normal_exit(deadline).unwrap() {
+                break proof;
+            }
+            std::thread::sleep(Duration::from_millis(2));
+        };
+        assert!(child.wait().unwrap().success());
+        (generation, proof)
+    }
+    #[test]
+    fn preexisting_stopped_observation_has_no_fresh_exit_or_compensation_authority() {
+        let f = Fixture::new();
+        let result = f
+            .provider
+            .stop_lifecycle_verified(
+                &f.provider.context,
+                Instant::now() + Duration::from_secs(1),
+                f._root.path(),
+            )
+            .unwrap();
+        result
+            .require_context(&f.provider.context, f._root.path())
+            .unwrap();
+        assert!(result.record_digest.is_none() && result.normal_exit.is_none());
+        assert!(result
+            .require_original(
+                &f.provider.context,
+                f._root.path(),
+                Generation {
+                    pid: 42,
+                    uid: unsafe { libc::geteuid() },
+                    start_seconds: 1,
+                    start_micros: 1
+                },
+                &"a".repeat(64)
+            )
+            .is_err());
+    }
+    #[test]
+    fn fixed_internal_reference_check_binds_runtime_handle_profile_home_digest_and_generation() {
+        // Test only the reference comparison with a real kernel child-exit
+        // proof. The synthetic outer struct here is NOT a service-owned Stop
+        // certificate and never goes through a restoration permit factory.
+        let f = Fixture::new();
+        let context = &f.provider.context;
+        let (generation, normal) = normal_exit();
+        let proof = CompletedLifecycleStop {
+            deadline: Instant::now() + Duration::from_secs(1),
+            context: context.clone(),
+            data_root: path_key(f._root.path()),
+            record_digest: Some("a".repeat(64)),
+            normal_exit: Some(normal),
+        };
+        proof
+            .require_original(context, f._root.path(), generation, &"a".repeat(64))
+            .unwrap();
+        assert!(proof
+            .require_original(
+                context,
+                &f._root.path().join("another-desktop-data-root"),
+                generation,
+                &"a".repeat(64)
+            )
+            .is_err());
+        assert!(proof
+            .require_original(context, f._root.path(), generation, &"b".repeat(64))
+            .is_err());
+        assert!(proof
+            .require_original(
+                context,
+                f._root.path(),
+                Generation {
+                    start_seconds: generation.start_seconds + 1,
+                    ..generation
+                },
+                &"a".repeat(64)
+            )
+            .is_err());
+        let mut other = context.clone();
+        other.working_directory = f._root.path().join("another-profile");
+        assert!(proof
+            .require_original(&other, f._root.path(), generation, &"a".repeat(64))
+            .is_err());
+        let mut other = context.clone();
+        other.opencodex_home = f._root.path().join("another-home");
+        assert!(proof
+            .require_original(&other, f._root.path(), generation, &"a".repeat(64))
+            .is_err());
+        let mut other = context.clone();
+        other.runtime =
+            crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved();
+        assert!(proof
+            .require_original(&other, f._root.path(), generation, &"a".repeat(64))
+            .is_err());
+    }
+    #[test]
+    fn malformed_record_digest_and_a_record_without_native_exit_cannot_authorize_restore() {
+        let f = Fixture::new();
+        let context = &f.provider.context;
+        let (generation, normal) = normal_exit();
+        let proof = CompletedLifecycleStop {
+            deadline: Instant::now() + Duration::from_secs(1),
+            context: context.clone(),
+            data_root: path_key(f._root.path()),
+            record_digest: Some("not-a-runtime-record-sha256".into()),
+            normal_exit: Some(normal),
+        };
+        assert!(proof.require_context(context, f._root.path()).is_err());
+        let no_exit = CompletedLifecycleStop {
+            deadline: Instant::now() + Duration::from_secs(1),
+            context: context.clone(),
+            data_root: path_key(f._root.path()),
+            record_digest: Some("a".repeat(64)),
+            normal_exit: None,
+        };
+        assert!(no_exit
+            .require_original(context, f._root.path(), generation, &"a".repeat(64))
+            .is_err());
+    }
+    #[test]
+    fn completed_stop_reference_never_gets_a_fresh_budget_for_subsequent_work() {
+        let f = Fixture::new();
+        let (generation, normal) = normal_exit();
+        let proof = CompletedLifecycleStop {
+            deadline: Instant::now(),
+            context: f.provider.context.clone(),
+            data_root: path_key(f._root.path()),
+            record_digest: Some("a".repeat(64)),
+            normal_exit: Some(normal),
+        };
+        assert!(
+            matches!(proof.require_original(&f.provider.context,f._root.path(),generation,&"a".repeat(64)),Err(AppError::RuntimeManaged{code,..}) if code=="lifecycle_timeout")
+        );
+    }
+}
+
 #[test]
 fn identity_binds_user_creation_executable_home_record_and_context() {
     let f = Fixture::new();
