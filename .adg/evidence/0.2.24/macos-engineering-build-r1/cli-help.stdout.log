@@ -1,0 +1,20 @@
+Usage: ocxd <command> [options]
+
+Commands:
+  status
+  start --confirm
+  stop --confirm
+  restart --confirm
+  data-root show
+  data-root switch --target <path> [--migrate] --confirm
+  backup create --confirm
+  backup list
+  export --output <path> --confirm
+  import --input <path> [--password-stdin] --confirm
+  sync run --confirm
+  update check
+
+Options:
+  --json              Emit schema-v1 JSON
+  --password-stdin    Read the legacy container passphrase from stdin (only for v1 containers)
+  --help              Show this help
