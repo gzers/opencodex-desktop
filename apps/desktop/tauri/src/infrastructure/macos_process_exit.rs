@@ -1,4 +1,5 @@
 //! Watch the exact live process generation before requesting official Stop.
+//! Fork/exec after subscription invalidate the original single-process proof.
 //! No signal, PID discovery, waitpid/reaping, or disappearance-as-exit-success.
 use crate::errors::{AppError, AppResult};
 use std::{
@@ -114,6 +115,7 @@ pub struct ExitWatch {
     generation: Generation,
     cookie: u64,
     observed: Option<Exit>,
+    invalidated: Option<&'static str>,
 }
 impl ExitWatch {
     pub fn capture(expected: Generation) -> AppResult<Self> {
@@ -141,7 +143,7 @@ impl ExitWatch {
             ident: expected.pid.into(),
             filter: libc::EVFILT_PROC,
             flags: libc::EV_ADD | libc::EV_ENABLE | libc::EV_CLEAR | libc::EV_RECEIPT,
-            fflags: libc::NOTE_EXIT | libc::NOTE_EXITSTATUS,
+            fflags: libc::NOTE_EXIT | libc::NOTE_EXITSTATUS | libc::NOTE_FORK | libc::NOTE_EXEC,
             data: 0,
             udata: cookie,
             ext: [0, 0],
@@ -184,11 +186,15 @@ impl ExitWatch {
             generation: expected,
             cookie,
             observed: None,
+            invalidated: None,
         })
     }
     pub fn normal_exit(&mut self, deadline: Instant) -> AppResult<Option<NormalExitProof>> {
         if Instant::now() >= deadline {
             return Err(fail("lifecycle_timeout"));
+        }
+        if let Some(code) = self.invalidated {
+            return Err(fail(code));
         }
         if self.observed.is_none() {
             let mut event = std::mem::MaybeUninit::<libc::kevent64_s>::uninit();
@@ -221,7 +227,25 @@ impl ExitWatch {
                 || event.udata != self.cookie
                 || event.filter != libc::EVFILT_PROC
                 || event.flags & libc::EV_ERROR != 0
-                || event.flags & libc::EV_EOF == 0
+            {
+                return Err(fail("lifecycle_exit_event_invalid"));
+            }
+            // These flags can coalesce with NOTE_EXIT. Check them before the
+            // exit status, and retain refusal after the event has been read.
+            // Darwin cannot follow child PIDs via NOTE_TRACK/NOTE_CHILD; a fork
+            // is uncertainty, never an invitation to invent a complete family.
+            let changed = if event.fflags & libc::NOTE_FORK != 0 {
+                Some("lifecycle_exit_membership_changed")
+            } else if event.fflags & libc::NOTE_EXEC != 0 {
+                Some("lifecycle_exit_image_changed")
+            } else {
+                None
+            };
+            if let Some(code) = changed {
+                self.invalidated = Some(code);
+                return Err(fail(code));
+            }
+            if event.flags & libc::EV_EOF == 0
                 || event.fflags & (libc::NOTE_EXIT | libc::NOTE_EXITSTATUS)
                     != (libc::NOTE_EXIT | libc::NOTE_EXITSTATUS)
             {

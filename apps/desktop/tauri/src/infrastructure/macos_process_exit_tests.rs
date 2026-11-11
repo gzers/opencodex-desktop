@@ -1,6 +1,6 @@
 use super::*;
 use std::{
-    io::Write,
+    io::{Read, Write},
     path::PathBuf,
     process::{Child, Command, Stdio},
     thread,
@@ -10,22 +10,33 @@ use std::{
 struct OwnedChild(Child);
 impl OwnedChild {
     fn gated(code: u8) -> Self {
-        Self(
+        Self::script("read owned_fixture; exit \"$1\"", code)
+    }
+    fn script(script: &str, code: u8) -> Self {
+        let script = format!("printf R; {script}");
+        let mut child = Self(
             Command::new("/bin/sh")
-                .args([
-                    "-c",
-                    "read owned_fixture; exit \"$1\"",
-                    "owned-fixture",
-                    &code.to_string(),
-                ])
+                .args(["-c", &script, "owned-fixture", &code.to_string()])
                 .env_clear()
                 .env("PATH", "/usr/bin:/bin")
                 .stdin(Stdio::piped())
-                .stdout(Stdio::null())
+                .stdout(Stdio::piped())
                 .stderr(Stdio::null())
                 .spawn()
                 .unwrap(),
-        )
+        );
+        // posix_spawn can return before the initial exec event is delivered.
+        // Subscribe only after the actual image reaches its explicit gate.
+        let mut ready = [0];
+        child
+            .0
+            .stdout
+            .as_mut()
+            .unwrap()
+            .read_exact(&mut ready)
+            .unwrap();
+        assert_eq!(&ready, b"R");
+        child
     }
     fn release(&mut self) {
         self.0
@@ -143,6 +154,68 @@ fn elapsed_budget_never_accepts_a_queued_or_cached_exit_event() {
 }
 
 #[test]
+fn fork_after_subscription_invalidates_even_a_coalesced_zero_exit() {
+    let mut child = OwnedChild::script("read owned_fixture; /bin/sleep 0.02 & wait; exit 0", 0);
+    let mut watch = ExitWatch::capture(Generation::observe(child.0.id()).unwrap()).unwrap();
+    child.release();
+    assert_eq!(child.0.wait().unwrap().code(), Some(0));
+    for _ in 0..2 {
+        assert!(
+            matches!(wait(&mut watch), Err(AppError::RuntimeManaged { code, .. }) if code == "lifecycle_exit_membership_changed"),
+            "a real fork must not become exit authority after its event is consumed"
+        );
+    }
+}
+
+#[test]
+fn exec_after_subscription_invalidates_even_when_birth_and_exit_code_match() {
+    let mut child = OwnedChild::script("read owned_fixture; exec /usr/bin/true", 0);
+    let generation = Generation::observe(child.0.id()).unwrap();
+    let mut watch = ExitWatch::capture(generation).unwrap();
+    child.release();
+    assert_eq!(child.0.wait().unwrap().code(), Some(0));
+    for _ in 0..2 {
+        assert!(
+            matches!(wait(&mut watch), Err(AppError::RuntimeManaged { code, .. }) if code == "lifecycle_exit_image_changed"),
+            "an exec must not reuse the former image's exit authority"
+        );
+    }
+}
+
+#[test]
+fn fork_or_exec_is_refused_while_original_pid_is_still_alive_and_stays_refused() {
+    for (script, code) in [
+        (
+            "read owned_fixture; /bin/sleep 0.02 & wait; read again; exit 0",
+            "lifecycle_exit_membership_changed",
+        ),
+        (
+            "read owned_fixture; exec /bin/cat >/dev/null",
+            "lifecycle_exit_image_changed",
+        ),
+    ] {
+        let mut child = OwnedChild::script(script, 0);
+        let mut watch = ExitWatch::capture(Generation::observe(child.0.id()).unwrap()).unwrap();
+        child
+            .0
+            .stdin
+            .as_mut()
+            .unwrap()
+            .write_all(b"continue\n")
+            .unwrap();
+        assert!(
+            matches!(wait(&mut watch), Err(AppError::RuntimeManaged { code: actual, .. }) if actual == code)
+        );
+        assert!(child.0.try_wait().unwrap().is_none());
+        child.release();
+        assert_eq!(child.0.wait().unwrap().code(), Some(0));
+        assert!(
+            matches!(wait(&mut watch), Err(AppError::RuntimeManaged { code: actual, .. }) if actual == code)
+        );
+    }
+}
+
+#[test]
 fn malformed_wait_status_is_not_a_successful_event() {
     assert_eq!(decode_wait(0).unwrap(), Exit::Normal(0));
     assert_eq!(decode_wait(7 << 8).unwrap(), Exit::Normal(7));
@@ -155,17 +228,51 @@ fn malformed_wait_status_is_not_a_successful_event() {
 #[test]
 fn same_uid_nonchild_process_is_observed_without_waitpid_or_reaping_its_launcher() {
     const CHILD: &str = "OCXD024_EXIT_NONCHILD";
+    const LEAF: &str = "OCXD024_EXIT_NONCHILD_LEAF";
+    const TEST: &str = "infrastructure::macos_process_exit::tests::same_uid_nonchild_process_is_observed_without_waitpid_or_reaping_its_launcher";
+    if let Some(root) = std::env::var_os(LEAF) {
+        let root = PathBuf::from(root);
+        assert!(root.is_absolute() && root.starts_with("/private/tmp"));
+        std::fs::write(root.join("leaf-ready"), b"ready").unwrap();
+        let deadline = Instant::now() + Duration::from_secs(5);
+        while !root.join("release").is_file() {
+            if Instant::now() >= deadline {
+                std::process::exit(91);
+            }
+            thread::sleep(Duration::from_millis(10));
+        }
+        std::process::exit(0);
+    }
     if let Some(root) = std::env::var_os(CHILD) {
         let root = PathBuf::from(root);
         assert!(root.is_absolute() && root.starts_with("/private/tmp"));
-        let release = root.join("release");
-        let child=Command::new("/bin/sh").args(["-c","i=0; while [ ! -f \"$1\" ]; do /bin/sleep 0.02; i=$((i+1)); [ $i -lt 250 ] || exit 91; done; exit 0","owned-fixture"]).arg(release).env_clear().env("PATH","/usr/bin:/bin").current_dir(&root).stdin(Stdio::null()).stdout(Stdio::null()).stderr(Stdio::null()).spawn().unwrap();
+        // Pure Rust wait: a shell invoking sleep would itself fork while the
+        // supposedly stable single-process positive fixture is subscribed.
+        let child = Command::new(std::env::current_exe().unwrap())
+            .args(["--exact", TEST, "--nocapture"])
+            .env_remove(CHILD)
+            .env(LEAF, &root)
+            .current_dir(&root)
+            .stdin(Stdio::null())
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .spawn()
+            .unwrap();
         std::fs::write(root.join("pid"), child.id().to_string()).unwrap();
+        let deadline = Instant::now() + Duration::from_secs(5);
+        while !root.join("leaf-ready").is_file() {
+            assert!(Instant::now() < deadline);
+            thread::sleep(Duration::from_millis(10));
+        }
         std::process::exit(0);
     }
     let root = tempfile::tempdir().unwrap();
     let root = root.path().canonicalize().unwrap();
-    let result=Command::new(std::env::current_exe().unwrap()).args(["--exact","infrastructure::macos_process_exit::tests::same_uid_nonchild_process_is_observed_without_waitpid_or_reaping_its_launcher","--nocapture"]).env(CHILD,&root).output().unwrap();
+    let result = Command::new(std::env::current_exe().unwrap())
+        .args(["--exact", TEST, "--nocapture"])
+        .env(CHILD, &root)
+        .output()
+        .unwrap();
     assert!(
         result.status.success(),
         "{}",
