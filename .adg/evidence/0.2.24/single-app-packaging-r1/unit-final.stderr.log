@@ -1,0 +1,39 @@
+test_changed_source_or_descriptor_pin_is_refused_before_image (test.test_package_macos_024.Package024) ... ok
+test_exact_release_preflight_rejects_any_component_version_drift (test.test_package_macos_024.Package024) ... ERROR
+test_existing_destinations_wrong_version_or_app_symlink_never_replace_original (test.test_package_macos_024.Package024) ... ok
+test_mounted_mutation_or_writable_volume_rejects_and_detaches (test.test_package_macos_024.Package024) ... ok
+test_new_release_pipeline_uses_official_inputs_and_single_app_without_maintenance_generation (test.test_package_macos_024.Package024) ... ok
+test_single_app_readonly_identity_and_immutable_source (test.test_package_macos_024.Package024) ... ok
+test_symlink_or_hardlinked_runtime_resources_and_wrong_application_version_are_refused (test.test_package_macos_024.Package024) ... ok
+test_official_policy_preserves_transitive_lock_and_both_platforms (test.test_stage_runtime_bundle_024.OfficialStageBoundary) ... ok
+test_staging_copies_the_exact_official_source_and_isolated_config (test.test_stage_runtime_bundle_024.OfficialStageBoundary) ... ok
+test_unknown_resource_directory_is_not_overwritten_or_downloaded (test.test_stage_runtime_bundle_024.OfficialStageBoundary) ... ok
+test_wrong_archive_stops_before_build_or_resource_creation (test.test_stage_runtime_bundle_024.OfficialStageBoundary) ... ok
+test_attach_partial_success_is_detached_even_when_plist_is_invalid (test.test_package_macos_023.PackageTests) ... ok
+test_finally_retries_only_own_mount_after_detach_failure (test.test_package_macos_023.PackageTests) ... ok
+test_folder_payload_sealed_bytes_readonly_and_new_asset_basename (test.test_package_macos_023.PackageTests) ... ok
+test_mounted_corruption_and_writable_mount_never_publish_and_always_detach (test.test_package_macos_023.PackageTests) ... ok
+test_output_race_never_replaces_foreign_artifact (test.test_package_macos_023.PackageTests) ... ok
+test_refuses_existing_output_metadata_and_app_destinations (test.test_package_macos_023.PackageTests) ... ok
+test_symlink_escape_refused_before_external_commands (test.test_package_macos_023.PackageTests) ... ok
+test_version_and_signature_fail_before_image_and_do_not_modify_source (test.test_package_macos_023.PackageTests) ... ok
+
+======================================================================
+ERROR: test_exact_release_preflight_rejects_any_component_version_drift (test.test_package_macos_024.Package024)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/test_package_macos_024.py", line 111, in test_exact_release_preflight_rejects_any_component_version_drift
+    spec=importlib.util.spec_from_file_location('verify024',ROOT/'.github/scripts/verify_release_inputs_024.py');verify=importlib.util.module_from_spec(spec);spec.loader.exec_module(verify)
+  File "<frozen importlib._bootstrap_external>", line 846, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 983, in get_code
+  File "<frozen importlib._bootstrap_external>", line 913, in source_to_code
+  File "<frozen importlib._bootstrap>", line 228, in _call_with_frames_removed
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/.github/scripts/verify_release_inputs_024.py", line 17
+    matches=re.findall(r'(?m)^version\s*=\s*"([^"
+                                                 ^
+SyntaxError: EOL while scanning string literal
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.133s
+
+FAILED (errors=1)

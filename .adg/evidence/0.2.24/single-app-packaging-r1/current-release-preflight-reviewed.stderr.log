@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/.github/scripts/verify_release_inputs_024.py", line 36, in <module>
+    print(json.dumps(verify(ROOT, args.tag), indent=2))
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/.github/scripts/verify_release_inputs_024.py", line 24, in verify
+    raise ValueError('actual release source versions do not match the tag; no candidate admitted')
+ValueError: actual release source versions do not match the tag; no candidate admitted
