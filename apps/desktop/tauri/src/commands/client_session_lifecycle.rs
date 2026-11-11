@@ -120,13 +120,27 @@ impl Active {
         deadline: Instant,
     ) -> AppResult<()> {
         let coordination = self.coordination(context)?;
-        with_native_coordination(&coordination, deadline, |lease| {
-            self.session.seal_completed_stop(context, proof, lease)
-        })?;
-        self.head = self
-            .index
-            .advance(&self.head, State::Stopped, Some(self.session.references()?))
-            .map_err(failure)?;
-        Ok(())
+        let result = with_native_coordination(&coordination, deadline, |lease| {
+            self.session.seal_completed_stop(context, proof, lease)?;
+            self.head = self
+                .index
+                .advance(&self.head, State::Stopped, Some(self.session.references()?))
+                .map_err(failure)?;
+            let pending = self
+                .session
+                .prepare_restore(context, proof, lease, deadline)?;
+            self.head = self
+                .index
+                .record_restore_plan(&self.head, pending.id(), pending.sha256())
+                .map_err(failure)?;
+            Ok(())
+        });
+        match result {
+            Ok(()) => Ok(()),
+            Err(error) => Err(match error {
+                AppError::RuntimeManaged { .. } => pending_restore(),
+                other => other,
+            }),
+        }
     }
 }

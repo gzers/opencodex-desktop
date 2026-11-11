@@ -18,6 +18,7 @@ pub enum State {
     Ready,
     StopPrepared,
     Stopped,
+    RestorePrepared,
     Failed,
 }
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -27,6 +28,13 @@ pub struct Head {
     pub ticket: String,
     pub state: State,
     pub references: Option<References>,
+    pub restore_plan: Option<RestorePlan>,
+}
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct RestorePlan {
+    pub id: String,
+    pub sha256: String,
 }
 impl std::fmt::Debug for Head {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -43,6 +51,18 @@ fn valid_hash(value: &str) -> bool {
             .all(|c| c.is_ascii_digit() || (b'a'..=b'f').contains(&c))
 }
 fn validate(head: &Head) -> io::Result<()> {
+    if (head.state == State::RestorePrepared) != head.restore_plan.is_some()
+        || head.restore_plan.as_ref().is_some_and(|plan| {
+            uuid::Uuid::parse_str(&plan.id)
+                .map(|v| v.to_string() != plan.id)
+                .unwrap_or(true)
+                || !valid_hash(&plan.sha256)
+        })
+    {
+        return Err(denied(
+            "restore plan reference missing or unexpected for current phase",
+        ));
+    }
     if head.revision == 0
         || head.revision > i64::MAX as u64
         || uuid::Uuid::parse_str(&head.ticket)
@@ -81,7 +101,7 @@ fn validate(head: &Head) -> io::Result<()> {
         State::Captured => Some((0, false)),
         State::Ready => Some((1, true)),
         State::StopPrepared => Some((2, true)),
-        State::Stopped => Some((3, true)),
+        State::Stopped | State::RestorePrepared => Some((3, true)),
         State::Preparing => return Err(denied("unpublished originals in preparing index")),
         State::Failed => None,
     };
@@ -255,14 +275,14 @@ impl Index {
                 if tables != 0 {
                     return Err(denied("unknown nonempty session index is not adopted"));
                 }
-                connection.execute_batch("CREATE TABLE binding(singleton INTEGER PRIMARY KEY CHECK(singleton=1), document BLOB NOT NULL); CREATE TABLE current_session(singleton INTEGER PRIMARY KEY CHECK(singleton=1), revision INTEGER NOT NULL CHECK(revision>0), document BLOB NOT NULL); CREATE TABLE events(revision INTEGER PRIMARY KEY, document BLOB NOT NULL); PRAGMA user_version=1;").map_err(database_error)?;
+                connection.execute_batch("CREATE TABLE binding(singleton INTEGER PRIMARY KEY CHECK(singleton=1), document BLOB NOT NULL); CREATE TABLE current_session(singleton INTEGER PRIMARY KEY CHECK(singleton=1), revision INTEGER NOT NULL CHECK(revision>0), document BLOB NOT NULL); CREATE TABLE events(revision INTEGER PRIMARY KEY, document BLOB NOT NULL); PRAGMA user_version=2;").map_err(database_error)?;
                 connection
                     .execute(
                         "INSERT INTO binding(singleton,document) VALUES(1,?1)",
                         [&binding],
                     )
                     .map_err(database_error)?;
-            } else if version != 1 {
+            } else if version != 2 {
                 return Err(denied(
                     "unsupported session index version or abandoned initializer",
                 ));
@@ -397,6 +417,7 @@ impl Index {
             ticket: uuid::Uuid::new_v4().to_string(),
             state: State::Preparing,
             references: None,
+            restore_plan: None,
         };
         self.write(None, &head)?;
         Ok(head)
@@ -413,7 +434,8 @@ impl Index {
                 | (State::Captured, State::Ready)
                 | (State::Ready, State::StopPrepared)
                 | (State::StopPrepared, State::Stopped)
-        ) || state == State::Failed && expected.state != State::Stopped;
+        ) || state == State::Failed
+            && !matches!(expected.state, State::Stopped | State::RestorePrepared);
         if !allowed {
             return Err(denied("current session transition is not allowed"));
         }
@@ -438,7 +460,31 @@ impl Index {
             ticket: expected.ticket.clone(),
             state,
             references,
+            restore_plan: None,
         };
+        self.write(Some(expected), &next)?;
+        Ok(next)
+    }
+    /// Reference publication only. This does not authorize applying the plan;
+    /// the native service/family proof and mutation permit remain separate.
+    pub fn record_restore_plan(&self, expected: &Head, id: &str, sha256: &str) -> io::Result<Head> {
+        if expected.state != State::Stopped || expected.restore_plan.is_some() {
+            return Err(denied("restore plan cannot replace prior session decision"));
+        }
+        let next = Head {
+            revision: expected
+                .revision
+                .checked_add(1)
+                .ok_or_else(|| denied("session revision overflow"))?,
+            ticket: expected.ticket.clone(),
+            state: State::RestorePrepared,
+            references: expected.references.clone(),
+            restore_plan: Some(RestorePlan {
+                id: id.into(),
+                sha256: sha256.into(),
+            }),
+        };
+        validate(&next)?;
         self.write(Some(expected), &next)?;
         Ok(next)
     }

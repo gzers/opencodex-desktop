@@ -20,6 +20,7 @@ impl Fixture {
         for path in [&data, &profile, &home, &client] {
             fs::DirBuilder::new().mode(0o700).create(path).unwrap();
         }
+        fs::write(home.join("config.json"), br#"{"providers":{}}"#).unwrap();
         let runtime = crate::modules::runtime::RuntimeHandle::initialize_versioned(&data, &p.root);
         let context = ProcessContext {
             runtime,
@@ -174,6 +175,7 @@ fn persisted_live_reference_is_not_an_endpoint_or_process_authority() {
         record_sha256: "a".repeat(64),
         generation: [42, unsafe { libc::geteuid() }.into(), 1, 1],
         port: 12345,
+        parent_generation: [41, unsafe { libc::geteuid() }.into(), 1, 1],
     };
     let bytes = encode(&live).unwrap();
     create(&session.originals.directory, "startup-live.json", &bytes).unwrap();
@@ -204,6 +206,7 @@ fn ready_generation_fields_and_phase_references_are_bounded_and_typed() {
         record_sha256: "a".repeat(64),
         generation: [42, unsafe { libc::geteuid() }.into(), 1, 1],
         port: 12345,
+        parent_generation: [41, unsafe { libc::geteuid() }.into(), 1, 1],
     };
     assert!(original.process().is_ok());
     for index in 0..4 {
@@ -216,6 +219,66 @@ fn ready_generation_fields_and_phase_references_are_bounded_and_typed() {
     assert!(wrong.process().is_err());
     assert!(parse::<Live>(br#"{"schemaVersion":1,"schemaVersion":1}"#).is_err());
     assert!(fresh_ready(&f.context, &session.home, Instant::now()).is_err());
+}
+
+#[test]
+fn independent_static_route_declaration_uses_official_slash_encoding_and_refuses_alias_collision() {
+    let static_graph = serde_json::json!({"defaultModelAliases":false,"providers":{"Team_One":{"liveModels":false,"defaultAliases":false,"selectedModels":["gpt-6-sol","native/family-5.5"]}}});
+    let bytes = serde_json::to_vec(&static_graph).unwrap();
+    assert_eq!(
+        declaration(&bytes).unwrap(),
+        Some(vec![
+            "Team_One/gpt-6-sol".into(),
+            "Team_One/native-family-5.5".into()
+        ])
+    );
+    let mut normalized = static_graph.clone();
+    normalized["fastRows"] = true.into();
+    assert_eq!(
+        declaration(&serde_json::to_vec(&normalized).unwrap()).unwrap(),
+        declaration(&bytes).unwrap()
+    );
+    normalized["fastRows"] = serde_json::json!("malformed");
+    assert_eq!(
+        declaration(&serde_json::to_vec(&normalized).unwrap()).unwrap(),
+        None
+    );
+    let mut collision = static_graph.clone();
+    collision["providers"]["Team_One"]["selectedModels"] =
+        serde_json::json!(["native/family", "native-family"]);
+    assert_eq!(
+        declaration(&serde_json::to_vec(&collision).unwrap()).unwrap(),
+        None
+    );
+    let mut dynamic = static_graph.clone();
+    dynamic["providers"]["Team_One"]["liveModels"] = true.into();
+    assert_eq!(
+        declaration(&serde_json::to_vec(&dynamic).unwrap()).unwrap(),
+        None
+    );
+    let mut alias = static_graph;
+    alias["customModels"] = serde_json::json!([{"id":"custom"}]);
+    assert_eq!(
+        declaration(&serde_json::to_vec(&alias).unwrap()).unwrap(),
+        None
+    );
+    assert_eq!(declaration(br#"{"providers":null}"#).unwrap(), None);
+    assert_eq!(declaration(br#"{}"#).unwrap(), None);
+    assert_eq!(declaration(br#"{"providers":{}}"#).unwrap(), Some(vec![]));
+    assert!(declaration(br#"{"providers":{},"providers":{}}"#).is_err());
+}
+#[test]
+fn audit_projection_preserves_canonical_private_path_and_refuses_incomplete_secret_redaction() {
+    assert_eq!(
+        audit_home(Path::new("/private/tmp/fixture/profile/opencodex-home")).unwrap(),
+        "/private/tmp/fixture/profile/opencodex-home"
+    );
+    assert_eq!(
+        audit_home(Path::new("/Users/example/.codex-desktop/opencodex/home")).unwrap(),
+        "/Users/[USER]/.codex-desktop/opencodex/home"
+    );
+    assert!(audit_home(Path::new("/Users/example/secret-directory/home")).is_err());
+    assert!(audit_home(Path::new(&format!("/private/tmp/{}", "x".repeat(256)))).is_err());
 }
 
 #[cfg(target_arch = "aarch64")]

@@ -125,7 +125,20 @@ fn official299_versioned_start_status_stop_preserves_native_client() {
     let evidence = root.join("evidence/native");
     std::fs::create_dir_all(root.join("evidence")).unwrap();
     std::fs::create_dir(&evidence).expect("fresh evidence directory");
-    let program = root.join("program 中文 space");
+    let reuse = std::env::var_os("OCXD024_RUNTIME_REUSE").map(PathBuf::from);
+    let program = reuse
+        .clone()
+        .unwrap_or_else(|| root.join("program 中文 space"));
+    if reuse.is_some() {
+        assert!(
+            program.is_absolute()
+                && program.canonicalize().unwrap() == program
+                && program.starts_with("/private/tmp")
+                && program.ancestors().any(|p| p.file_name().is_some_and(|n| n
+                    .to_string_lossy()
+                    .starts_with("ocxd024-versioned-lifecycle-")))
+        );
+    }
     let data = profile.join(".codex-desktop/desktop");
     let h = profile.join(".codex-desktop/opencodex/home");
     let client = profile.join(".codex");
@@ -143,14 +156,28 @@ fn official299_versioned_start_status_stop_preserves_native_client() {
         pin,
         "e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3"
     );
-    runtime::bundled::versioned::provision(
+    if reuse.is_none() {
+        runtime::bundled::versioned::provision(
+            &program,
+            &data,
+            &root.join("resources/runtime-bundle-0.2.24-darwin-arm64.tar.gz"),
+            &descriptor,
+            &pin,
+        )
+        .unwrap();
+    }
+    let selected = runtime::program_selection::read(
         &program,
-        &data,
-        &root.join("resources/runtime-bundle-0.2.24-darwin-arm64.tar.gz"),
-        &descriptor,
-        &pin,
+        crate::modules::data_root::layout::Platform::Macos,
+        "darwin-arm64",
     )
+    .unwrap()
     .unwrap();
+    assert_eq!(
+        selected.image.official_archive_sha256,
+        "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c"
+    );
+    runtime::program_image::verify(&selected).unwrap();
     let config = serde_json::json!({"hostname":"127.0.0.1","port":0,"openaiProviderTierVersion":2,"defaultProvider":"native-fixture","defaultModelAliases":false,"providers":{"native-fixture":{"adapter":"openai-chat","baseUrl":"http://127.0.0.1:1/v1","allowPrivateNetwork":true,"apiKey":"synthetic-unused","models":["native-fixture-model"],"selectedModels":["native-fixture-model"],"liveModels":false,"defaultAliases":false}}});
     atomic_write(
         &h.join("config.json"),
@@ -337,6 +364,20 @@ model_provider = "openai"
         == crate::infrastructure::macos_client_originals::session_index::State::Stopped)
         .into();
     report["indexedRevision"] = serde_json::json!(after_stop.revision);
+    report["indexedRestorePrepared"] = (after_stop.state
+        == crate::infrastructure::macos_client_originals::session_index::State::RestorePrepared)
+        .into();
+    if let Some(plan) = &after_stop.restore_plan {
+        let references = after_stop.references.as_ref().unwrap();
+        let session = crate::infrastructure::macos_client_originals::session::StartupSession::open(
+            &context, &data, &client, references,
+        )
+        .unwrap();
+        session
+            .validate_restore_plan(&context, &plan.id, &plan.sha256)
+            .unwrap();
+        report["restorePlanMatchesIndependentIndex"] = true.into();
+    }
     drop(indexed_after_stop);
     capture("after-stop");
     if let Ok(bytes) = std::fs::read(log.path()) {

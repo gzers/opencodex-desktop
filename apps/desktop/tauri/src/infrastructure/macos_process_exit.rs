@@ -55,6 +55,30 @@ impl Generation {
         })
     }
 }
+pub fn parent_pid(pid: u32) -> AppResult<u32> {
+    if pid == 0 || pid > i32::MAX as u32 {
+        return Err(fail("lifecycle_exit_identity"));
+    }
+    let mut value = std::mem::MaybeUninit::<libc::proc_bsdinfo>::uninit();
+    let size = std::mem::size_of::<libc::proc_bsdinfo>() as i32;
+    let n = unsafe {
+        libc::proc_pidinfo(
+            pid as i32,
+            libc::PROC_PIDTBSDINFO,
+            0,
+            value.as_mut_ptr().cast(),
+            size,
+        )
+    };
+    if n != size {
+        return Err(fail("lifecycle_exit_identity"));
+    }
+    let value = unsafe { value.assume_init() };
+    if value.pbi_pid != pid || value.pbi_ppid == 0 {
+        return Err(fail("lifecycle_exit_identity"));
+    }
+    Ok(value.pbi_ppid)
+}
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Exit {
     Normal(u8),

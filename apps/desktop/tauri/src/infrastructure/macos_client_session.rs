@@ -52,6 +52,7 @@ struct Scope {
     program_root: PathBuf,
     selection: CurrentSelection,
     captured_at: chrono::DateTime<chrono::Utc>,
+    declared_routes: Option<Vec<String>>,
 }
 #[derive(Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -62,8 +63,30 @@ struct Live {
     record_sha256: String,
     generation: [u64; 4],
     port: u16,
+    parent_generation: [u64; 4],
 }
 impl Live {
+    fn parent(&self) -> AppResult<Generation> {
+        let [pid, uid, sec, micros] = self.parent_generation;
+        let pid = u32::try_from(pid).map_err(error)?;
+        let uid = u32::try_from(uid).map_err(error)?;
+        if pid == 0
+            || pid > i32::MAX as u32
+            || uid != unsafe { libc::geteuid() }
+            || sec == 0
+            || sec > i64::MAX as u64
+            || micros >= 1_000_000
+            || pid as u64 == self.generation[0]
+        {
+            return Err(error(()));
+        }
+        Ok(Generation {
+            pid,
+            uid,
+            start_seconds: sec,
+            start_micros: micros,
+        })
+    }
     fn process(&self) -> AppResult<Generation> {
         let [pid, uid, start_seconds, start_micros] = self.generation;
         let pid = u32::try_from(pid).map_err(error)?;
@@ -202,6 +225,114 @@ fn private_runtime(home: &PinnedDirectory) -> AppResult<(String, u32, u16)> {
         .ok_or_else(|| error(()))?;
     Ok((digest(&bytes), pid, port))
 }
+fn declared_routes(home: &PinnedDirectory) -> AppResult<Option<Vec<String>>> {
+    let image = capture_file(home, "config.json", 2 * 1024 * 1024).map_err(error)?;
+    let Image::File { bytes, .. } = image else {
+        return Err(error(()));
+    };
+    declaration(&bytes)
+}
+// Preliminary independent static declaration. Unsupported/dynamic graphs stay
+// unresolved rather than learning route authority from the generated catalog.
+// The actual content policy subsequently requires EXACT ready route coverage.
+fn declaration(bytes: &[u8]) -> AppResult<Option<Vec<String>>> {
+    let bytes = zeroize::Zeroizing::new(bytes.to_vec());
+    let value = parse_strict_json_v2(&bytes).map_err(error)?;
+    let Some(providers) = value
+        .get("providers")
+        .and_then(serde_json::Value::as_object)
+    else {
+        return Ok(None);
+    };
+    if value.get("defaultModelAliases") != Some(&serde_json::Value::Bool(false))
+        && !providers.is_empty()
+    {
+        return Ok(None);
+    }
+    // Official schema defaults omitted fastRows to true. This boolean
+    // normalization does not change independently selected base routes. The
+    // content policy STILL refuses undeclared Fast/effort siblings in Ready.
+    if value.get("fastRows").is_some_and(|v| !v.is_boolean()) {
+        return Ok(None);
+    }
+    for key in ["combos", "customModels", "disabledModels"] {
+        if value.get(key).is_some_and(|v| match v {
+            serde_json::Value::Array(a) => !a.is_empty(),
+            serde_json::Value::Object(o) => !o.is_empty(),
+            _ => true,
+        }) {
+            return Ok(None);
+        }
+    }
+    let mut routes = std::collections::BTreeSet::new();
+    for (provider, entry) in providers {
+        if provider.is_empty()
+            || provider.len() > 256
+            || !provider
+                .bytes()
+                .all(|b| b.is_ascii_alphanumeric() || b == b'-' || b == b'_')
+            || entry.get("liveModels") != Some(&serde_json::Value::Bool(false))
+            || entry.get("defaultAliases") != Some(&serde_json::Value::Bool(false))
+            || entry
+                .get("modelAliases")
+                .is_some_and(|v| !v.as_object().is_some_and(|o| o.is_empty()))
+        {
+            return Ok(None);
+        }
+        let Some(models) = entry
+            .get("selectedModels")
+            .and_then(serde_json::Value::as_array)
+        else {
+            return Ok(None);
+        };
+        for model in models {
+            let Some(model) = model
+                .as_str()
+                .filter(|s| !s.is_empty() && s.len() <= 1024 && !s.chars().any(char::is_control))
+            else {
+                return Ok(None);
+            };
+            // Original 2.99 providers/slug-codec::routedSlug maps inner slash to
+            // hyphen, NOT a blind unencoded provider/model concatenation.
+            if !routes.insert(format!("{provider}/{}", model.replace('/', "-")))
+                || routes.len() > 4096
+            {
+                return Ok(None);
+            }
+        }
+    }
+    Ok(Some(routes.into_iter().collect()))
+}
+fn audit_home(path: &Path) -> AppResult<String> {
+    let raw = path.to_str().ok_or_else(|| error(()))?;
+    // Match the official user-home projection. Refuse sensitive segments and
+    // token-like inputs rather than implement an incomplete secret redactor.
+    let lower = raw.to_ascii_lowercase();
+    if [
+        "secret",
+        "password",
+        "passwd",
+        "token",
+        "api-key",
+        "api_key",
+        "apikey",
+        "credential",
+        "email",
+        "sk-",
+        "eyJ",
+    ]
+    .iter()
+    .any(|key| lower.contains(&key.to_ascii_lowercase()))
+    {
+        return Err(error(()));
+    }
+    let pattern = regex::Regex::new(r"(?i)(/(?:Users|home)/)[^/]+").map_err(error)?;
+    let projected = pattern.replace_all(raw, "$1[USER]").into_owned();
+    if projected.encode_utf16().count() > 256 {
+        return Err(error(()));
+    }
+    Ok(projected)
+}
 fn fresh_ready(
     context: &ProcessContext,
     home: &PinnedDirectory,
@@ -314,6 +445,7 @@ impl StartupSession {
             program_root,
             selection,
             captured_at: chrono::Utc::now(),
+            declared_routes: declared_routes(&home)?,
         };
         let bytes = encode(&scope).map_err(error)?;
         create(&originals.directory, "startup-scope.json", &bytes).map_err(error)?;
@@ -339,6 +471,80 @@ impl StartupSession {
                 .collect(),
             live_sha256: self.live_sha256.clone(),
         })
+    }
+    pub fn restore_evidence(
+        &self,
+        context: &ProcessContext,
+    ) -> AppResult<crate::infrastructure::macos_client_originals::restore::Evidence> {
+        let scope = self.scope(context)?;
+        let live = self.live(context)?;
+        let generation = live.process()?;
+        if declared_routes(&self.home)? != scope.declared_routes {
+            return Err(error(()));
+        }
+        Ok(
+            crate::infrastructure::macos_client_originals::restore::Evidence {
+                declared_routes: scope.declared_routes,
+                retained_pids: vec![generation.pid, live.parent()?.pid],
+                audit_home: audit_home(self.home.path())?,
+                not_before: scope.captured_at,
+                not_after: chrono::Utc::now(),
+            },
+        )
+    }
+    pub fn prepare_restore<'a>(
+        &'a self,
+        context: &ProcessContext,
+        stop: &CompletedLifecycleStop,
+        lease: &NativeLease,
+        deadline: Instant,
+    ) -> AppResult<crate::infrastructure::macos_client_originals::restore::Pending<'a>> {
+        time(deadline)?;
+        lease.require_context(context, &self.originals.client.path)?;
+        let live = self.live(context)?;
+        stop.require_original(
+            context,
+            &self.originals.data.path,
+            live.process()?,
+            &live.record_sha256,
+        )?;
+        self.originals.read(Phase::Stopped).map_err(error)?;
+        if capture_file(&self.home, "runtime-port.json", 4096).map_err(error)? != Image::Absent {
+            return Err(error(()));
+        }
+        let evidence = self.restore_evidence(context)?;
+        let pending = crate::infrastructure::macos_client_originals::restore::Pending::prepare(
+            &self.originals,
+            evidence,
+            lease,
+        )
+        .map_err(error)?;
+        time(deadline)?;
+        stop.require_original(
+            context,
+            &self.originals.data.path,
+            live.process()?,
+            &live.record_sha256,
+        )?;
+        if capture_file(&self.home, "runtime-port.json", 4096).map_err(error)? != Image::Absent {
+            return Err(error(()));
+        }
+        Ok(pending)
+    }
+    pub fn validate_restore_plan(
+        &self,
+        context: &ProcessContext,
+        id: &str,
+        sha256: &str,
+    ) -> AppResult<()> {
+        self.scope(context)?;
+        crate::infrastructure::macos_client_originals::restore::Pending::open(
+            &self.originals,
+            id,
+            sha256,
+        )
+        .map_err(error)?;
+        Ok(())
     }
     pub fn open(
         context: &ProcessContext,
@@ -411,6 +617,7 @@ impl StartupSession {
             return Err(error(()));
         }
         live.process()?;
+        live.parent()?;
         Ok(live)
     }
     /// Fresh signed health/ready/health and unchanged private record, surrounded
@@ -428,10 +635,15 @@ impl StartupSession {
             return Err(error(()));
         }
         let (record_sha256, generation, port) = fresh_ready(context, &self.home, deadline)?;
+        let parent = Generation::observe(crate::infrastructure::macos_process_exit::parent_pid(
+            generation.pid,
+        )?)?;
         let ready_sha256 = self.originals.seal(Phase::Ready).map_err(error)?;
         lease.check()?;
         if private_runtime(&self.home)? != (record_sha256.clone(), generation.pid, port)
             || Generation::observe(generation.pid)? != generation
+            || crate::infrastructure::macos_process_exit::parent_pid(generation.pid)? != parent.pid
+            || Generation::observe(parent.pid)? != parent
         {
             return Err(error(()));
         }
@@ -447,6 +659,12 @@ impl StartupSession {
                 generation.start_micros,
             ],
             port,
+            parent_generation: [
+                parent.pid.into(),
+                parent.uid.into(),
+                parent.start_seconds,
+                parent.start_micros,
+            ],
         };
         let bytes = encode(&live).map_err(error)?;
         time(deadline)?;

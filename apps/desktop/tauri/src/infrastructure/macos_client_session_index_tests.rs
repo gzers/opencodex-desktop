@@ -11,7 +11,10 @@ struct Fixture {
 }
 impl Fixture {
     fn new() -> Self {
-        let temp = tempfile::tempdir().unwrap();
+        let temp = tempfile::Builder::new()
+            .prefix("ocxd024-index-fixture-")
+            .tempdir()
+            .unwrap();
         let root = temp.path().canonicalize().unwrap();
         let data = root.join("desktop");
         let profile = root.join("profile");
@@ -121,7 +124,15 @@ fn a_real_second_process_is_excluded_for_entire_action_and_can_reopen_after_owne
     const CHILD: &str = "OCXD024_SESSION_INDEX_PROBE";
     if let Some(root) = std::env::var_os(CHILD) {
         let root = PathBuf::from(root);
-        assert!(root.starts_with("/private/tmp"));
+        assert!(
+            root.is_absolute()
+                && root.parent() == Some(std::env::temp_dir().canonicalize().unwrap().as_path())
+                && root
+                    .file_name()
+                    .unwrap()
+                    .to_string_lossy()
+                    .starts_with("ocxd024-index-fixture-")
+        );
         let context = ProcessContext {
             runtime: crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved(
             ),
@@ -244,6 +255,87 @@ fn index_and_event_document_tampering_cannot_supply_new_current_references() {
         )
         .unwrap();
     assert!(store.head().is_err());
+}
+
+fn stopped(store: &Index) -> Head {
+    let mut head = store.reserve_start().unwrap();
+    for (state, n) in [
+        (State::Captured, 0),
+        (State::Ready, 1),
+        (State::StopPrepared, 2),
+        (State::Stopped, 3),
+    ] {
+        head = store.advance(&head, state, Some(refs(n))).unwrap();
+    }
+    head
+}
+#[test]
+fn restore_plan_references_commit_once_with_same_originals_and_survive_reopen() {
+    let f = Fixture::new();
+    let store = f.open().unwrap();
+    let stopped = stopped(&store);
+    let id = "88fe6d0a-56fd-475f-bf92-c5f0f813779a";
+    let sha = "e".repeat(64);
+    let planned = store.record_restore_plan(&stopped, id, &sha).unwrap();
+    assert_eq!(planned.state, State::RestorePrepared);
+    assert_eq!(planned.revision, 6);
+    assert!(planned.references == stopped.references);
+    assert!(store
+        .record_restore_plan(&stopped, id, &"f".repeat(64))
+        .is_err());
+    assert!(store.record_restore_plan(&planned, id, &sha).is_err());
+    assert!(store.reserve_start().is_err());
+    assert!(store.advance(&planned, State::Failed, None).is_err());
+    drop(store);
+    let reopened = f.open().unwrap();
+    assert_eq!(reopened.head().unwrap(), Some(planned));
+    assert!(reopened.reserve_start().is_err());
+}
+#[test]
+fn malformed_or_early_restore_plan_never_publishes_new_references() {
+    let f = Fixture::new();
+    let store = f.open().unwrap();
+    let preparing = store.reserve_start().unwrap();
+    assert!(store
+        .record_restore_plan(
+            &preparing,
+            &uuid::Uuid::new_v4().to_string(),
+            &"e".repeat(64)
+        )
+        .is_err());
+    let mut captured = store
+        .advance(&preparing, State::Captured, Some(refs(0)))
+        .unwrap();
+    for (state, n) in [
+        (State::Ready, 1),
+        (State::StopPrepared, 2),
+        (State::Stopped, 3),
+    ] {
+        captured = store.advance(&captured, state, Some(refs(n))).unwrap();
+    }
+    for (id, sha) in [
+        ("../other".to_string(), "a".repeat(64)),
+        (uuid::Uuid::new_v4().to_string(), "invalid".into()),
+    ] {
+        assert!(store.record_restore_plan(&captured, &id, &sha).is_err());
+    }
+    assert_eq!(store.head().unwrap(), Some(captured));
+}
+#[test]
+fn previous_index_schema_is_refused_without_compatibility_or_automatic_migration() {
+    let f = Fixture::new();
+    let index = f.open().unwrap();
+    index.reserve_start().unwrap();
+    index
+        .connection()
+        .unwrap()
+        .execute_batch("PRAGMA user_version=1")
+        .unwrap();
+    drop(index);
+    let path = f.data.join("manager-state").join(FILE);
+    let before = fs::read(&path).unwrap();
+    assert!(f.open().is_err());
+    assert_eq!(fs::read(path).unwrap(), before);
 }
 
 #[test]
