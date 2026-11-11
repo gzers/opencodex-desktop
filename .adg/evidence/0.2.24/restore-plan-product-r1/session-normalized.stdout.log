@@ -1,0 +1,28 @@
+
+running 23 tests
+test infrastructure::macos_client_originals::session::tests::a_coordinator_client_path_is_not_the_effective_home_of_the_cleared_production_runtime ... ok
+test infrastructure::macos_client_originals::session::tests::audit_projection_preserves_canonical_private_path_and_refuses_incomplete_secret_redaction ... ok
+test infrastructure::macos_client_originals::session::tests::immutable_startup_scope_reopens_only_with_independent_original_and_scope_references ... ok
+test infrastructure::macos_client_originals::session::tests::independent_static_route_declaration_uses_official_slash_encoding_and_refuses_alias_collision ... ok
+test infrastructure::macos_client_originals::session::tests::missing_or_untrusted_runtime_record_cannot_create_a_ready_binding ... ok
+test infrastructure::macos_client_originals::session::tests::official299_real_startup_originals_ready_binding_and_completed_stop_roundtrip ... ignored, explicit pinned official299 resources; new private profile; binding only, whole client restore still expected to fail
+test infrastructure::macos_client_originals::session::tests::persisted_live_reference_is_not_an_endpoint_or_process_authority ... ok
+test infrastructure::macos_client_originals::session::tests::ready_generation_fields_and_phase_references_are_bounded_and_typed ... ok
+test infrastructure::macos_client_originals::session::tests::replaced_home_directory_and_tampered_scope_are_preserved_and_rejected ... ok
+test infrastructure::macos_client_originals::session::tests::scope_cannot_move_to_another_home_profile_client_or_program ... ok
+test infrastructure::macos_client_originals::session_index::tests::a_real_second_process_is_excluded_for_entire_action_and_can_reopen_after_owner_exits ... ok
+test infrastructure::macos_client_originals::session_index::tests::abrupt_process_exit_keeps_captured_references_and_does_not_scan_for_new_ones ... ok
+test infrastructure::macos_client_originals::session_index::tests::action_lock_special_file_or_changed_permissions_are_refused_without_repair ... ok
+test infrastructure::macos_client_originals::session_index::tests::directory_generation_or_profile_home_change_refuses_prior_index ... ok
+test infrastructure::macos_client_originals::session_index::tests::existing_action_symlink_and_unknown_index_are_not_adopted_or_repaired ... ok
+test infrastructure::macos_client_originals::session_index::tests::failed_capture_is_not_an_empty_or_safe_new_baseline ... ok
+test infrastructure::macos_client_originals::session_index::tests::index_and_event_document_tampering_cannot_supply_new_current_references ... ok
+test infrastructure::macos_client_originals::session_index::tests::malformed_or_early_restore_plan_never_publishes_new_references ... ok
+test infrastructure::macos_client_originals::session_index::tests::previous_index_schema_is_refused_without_compatibility_or_automatic_migration ... ok
+test infrastructure::macos_client_originals::session_index::tests::references_are_durable_sequential_and_an_unfinished_session_cannot_be_overwritten ... ok
+test infrastructure::macos_client_originals::session_index::tests::restore_plan_references_commit_once_with_same_originals_and_survive_reopen ... ok
+test infrastructure::macos_client_originals::session_index::tests::retained_product_index_reopens_with_final_lock_validation_and_preserves_original_references ... ignored, explicit retained own product fixture; reads existing Stopped index only, no service or new baseline
+test infrastructure::macos_client_originals::session_index::tests::stale_expected_revision_rebase_and_missing_phase_are_rejected_without_changes ... ok
+
+test result: ok. 21 passed; 0 failed; 2 ignored; 0 measured; 2264 filtered out; finished in 0.94s
+
