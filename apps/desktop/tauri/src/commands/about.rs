@@ -23,15 +23,27 @@ pub fn app_about(app: tauri::AppHandle) -> AppResult<AboutAppDto> {
 pub async fn official_project_facts(
     source: tauri::State<'_, SharedOfficialVersionSource>,
     runtime: tauri::State<'_, std::sync::Arc<crate::modules::runtime::RuntimeHandle>>,
+    data: tauri::State<'_, crate::state::SharedDataRoot>,
 ) -> AppResult<OfficialProjectDto> {
     let source = source.inner().clone();
     let runtime = runtime.inner().clone();
-    super::run_blocking("record official project version", move || {
+    let data = data.0.clone();
+    super::run_readonly("observe official project version", move || {
+        if runtime.uses_versioned_programs() {
+            let observed = crate::modules::runtime::version_facts::observe(
+                runtime.installation_root(),
+                &data,
+            )?;
+            return Ok(OfficialProjectDto {
+                display_name: "OpenCodex".into(),
+                version: observed.disk_version,
+                raw_version: String::new(),
+                truncated: false,
+            });
+        }
         let facts = official_project_facts_with_source(&source)?;
-        // `FZ-48` / B1 口径：版本检查读成功后把版本回填到运行来源记录，
-        // 这样 `runtime.json` 与卡片的「版本」对显式 / 发现来源也有事实可依。
-        // 这里**不广播**：广播由前端在来源变化时触发的「读版本 → 重读来源」链路负责，
-        // 避免 `runtime-source-changed` 与版本检查互相触发。
+        // Explicit non-versioned providers retain their previous accounting.
+        // Production versioned observation above is strictly read-only.
         if let Some(version) = facts.version.as_deref() {
             runtime.record_resolved_version(version);
         }
@@ -193,4 +205,46 @@ async fn query_panel_metadata(
         )
     })
     .await
+}
+
+#[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RuntimeVersionFacts {
+    pub disk: crate::modules::runtime::version_facts::DiskFacts,
+    pub running: Option<crate::infrastructure::attested_status::RunningVersion>,
+    pub running_state: &'static str,
+}
+#[tauri::command]
+pub async fn runtime_version_facts(
+    runtime: tauri::State<'_, Arc<crate::modules::runtime::RuntimeHandle>>,
+    data: tauri::State<'_, crate::state::SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> AppResult<RuntimeVersionFacts> {
+    let i = runtime.installation_root().to_path_buf();
+    let d = data.0.clone();
+    let h = context.opencodex_home.clone();
+    let before_i = i.clone();
+    let before_d = d.clone();
+    let before = super::run_readonly("observe actual runtime disk version", move || {
+        crate::modules::runtime::version_facts::observe(&before_i, &before_d)
+    })
+    .await?;
+    let running = crate::infrastructure::attested_status::running_version(h).await;
+    let after = super::run_readonly("recheck runtime version context", move || {
+        crate::modules::runtime::version_facts::observe(&i, &d)
+    })
+    .await?;
+    if before.confirmation_digest != after.confirmation_digest {
+        return Err(AppError::NotConfigured);
+    }
+    let (running, running_state) = match running {
+        Ok(Some(r)) => (Some(r), "attested"),
+        Ok(None) => (None, "no_record"),
+        Err(_) => (None, "unavailable"),
+    };
+    Ok(RuntimeVersionFacts {
+        disk: after,
+        running,
+        running_state,
+    })
 }

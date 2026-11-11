@@ -601,3 +601,63 @@ async fn production_stop_without_lifetime_refuses_before_reusable_token_or_post(
     assert!(!f.home.join("admin-api-token").exists());
     task.await.unwrap();
 }
+#[tokio::test]
+async fn independent_version_observation_accepts_old_attested_process_without_admitting_disk_or_executing_cli(
+) {
+    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let f = Fixture::new(listener.local_addr().unwrap().port());
+    let expected = f.record.clone();
+    let server = tokio::spawn(async move {
+        let (stream, _) = listener.accept().await.unwrap();
+        let mut io = BufReader::new(stream);
+        for index in 0..2 {
+            let mut request = String::new();
+            loop {
+                let mut line = String::new();
+                assert!(io.read_line(&mut line).await.unwrap() > 0);
+                request.push_str(&line);
+                if line == "\r\n" {
+                    break;
+                }
+            }
+            assert!(request.starts_with("GET /healthz HTTP/1.1"));
+            assert!(!request.contains("Authorization"));
+            let challenge = request
+                .lines()
+                .find_map(|l| l.strip_prefix("x-opencodex-attestation-challenge: "))
+                .unwrap();
+            let mut mac =
+                Hmac::<Sha256>::new_from_slice(expected.attestation_secret.as_bytes()).unwrap();
+            mac.update(
+                format!(
+                    "opencodex-local-management-v1\n{challenge}\n{}\n{}",
+                    expected.pid, expected.port
+                )
+                .as_bytes(),
+            );
+            let proof = URL_SAFE_NO_PAD.encode(mac.finalize().into_bytes());
+            let body=json!({"service":"opencodex","status":"ok","pid":42,"port":expected.port,"version":"2.98.0","uptime":10+index}).to_string();
+            let response=format!("HTTP/1.1 200 OK\r\nContent-Length: {}\r\nConnection: keep-alive\r\nx-opencodex-attestation-proof: {proof}\r\n\r\n{body}",body.len());
+            io.get_mut().write_all(response.as_bytes()).await.unwrap();
+        }
+    });
+    let result = running_version(f.home.clone()).await.unwrap().unwrap();
+    assert_eq!(result.version, "2.98.0");
+    assert_eq!(result.pid, 42);
+    assert_eq!(result.port, f.record.port);
+    server.await.unwrap();
+    assert_eq!(record(&f.home).unwrap().1, f.bytes);
+}
+#[tokio::test]
+async fn independent_version_read_refuses_wrong_proof_and_missing_record_is_only_no_record() {
+    let root = tempfile::tempdir().unwrap();
+    assert!(running_version(root.path().canonicalize().unwrap())
+        .await
+        .unwrap()
+        .is_none());
+    assert_eq!(std::fs::read_dir(root.path()).unwrap().count(), 0);
+    let (f, server) = server("key").await;
+    assert!(running_version(f.home.clone()).await.is_err());
+    server.await.unwrap();
+    assert_eq!(record(&f.home).unwrap().1, f.bytes);
+}

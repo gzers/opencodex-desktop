@@ -24,6 +24,7 @@ pub(crate) mod protection;
 pub(crate) mod startup_bundle;
 pub mod terminal_cli;
 pub mod uninstall;
+pub mod version_facts;
 
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};

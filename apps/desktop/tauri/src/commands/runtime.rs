@@ -525,6 +525,7 @@ pub async fn install_runtime(
             data_root_path: data_root.0.clone(),
             home_path: home.0.clone(),
             collector: collector.inner().clone(),
+            expected_version_observation: None,
         },
         install.inner(),
         false,
@@ -538,6 +539,7 @@ struct RuntimeInstallContext {
     data_root_path: PathBuf,
     home_path: PathBuf,
     collector: SharedStatusCollector,
+    expected_version_observation: Option<String>,
 }
 
 /// 受控安装核心（供 install_runtime 与代跑官方更新共用）；不直接接触 Tauri State。
@@ -555,6 +557,7 @@ async fn install_managed_runtime(
         data_root_path,
         home_path,
         collector,
+        expected_version_observation,
     } = context;
     let source_kind = request.source_kind().ok_or(AppError::RuntimeManaged {
         code: "bad_source".to_string(),
@@ -676,6 +679,8 @@ async fn install_managed_runtime(
         let result: AppResult<_> = (|| {
             if handle_ref.uses_versioned_programs() {
                 crate::modules::runtime::protection::ensure_binding_ready(&data_root_path)?;
+                if let Some(digest)=&expected_version_observation {crate::modules::runtime::version_facts::require_confirmation(handle_ref.installation_root(),&data_root_path,digest)?;}
+
                 let (target,platform)=crate::modules::runtime::program_layout::host_target()?;
                 let selected=crate::modules::runtime::program_selection::read(handle_ref.installation_root(),platform,target)?.ok_or(AppError::NotConfigured)?;
                 let npm=crate::modules::runtime::install::SystemNpmRunner::new(Some(home_path.clone()),data_root_path.join("cache/npm"));
@@ -829,6 +834,7 @@ pub fn cancel_runtime_install(install: tauri::State<'_, SharedRuntimeInstall>) -
 #[tauri::command]
 pub async fn install_official_update(
     candidate_version: String,
+    expected_observation: String,
     on_progress: tauri::ipc::Channel<PanelUpdateProgress>,
     app: tauri::AppHandle,
     handle: tauri::State<'_, std::sync::Arc<RuntimeHandle>>,
@@ -837,6 +843,22 @@ pub async fn install_official_update(
     collector: tauri::State<'_, SharedStatusCollector>,
     install: tauri::State<'_, SharedRuntimeInstall>,
 ) -> AppResult<RuntimeInstallOutcomeDto> {
+    let current_handle = handle.inner().clone();
+    let current_data = data_root.0.clone();
+    let expected = expected_observation.clone();
+    super::run_readonly(
+        "recheck reviewed runtime version before update",
+        move || {
+            crate::modules::runtime::version_facts::require_confirmation(
+                current_handle.installation_root(),
+                &current_data,
+                &expected,
+            )?;
+            current_handle.observe_current();
+            Ok(())
+        },
+    )
+    .await?;
     // 1. 只读远端查询：与官方版本卡片（U-03）共用同一来源与代理策略，解析出确定版本。
     let query_handle = handle.inner().clone();
     let environment =
@@ -870,6 +892,7 @@ pub async fn install_official_update(
             data_root_path: data_root.0.clone(),
             home_path: home.0.clone(),
             collector: collector.inner().clone(),
+            expected_version_observation: Some(expected_observation),
         },
         install.inner(),
         true,

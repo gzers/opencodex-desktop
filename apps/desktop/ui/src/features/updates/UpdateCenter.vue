@@ -19,6 +19,7 @@ import { computed, nextTick, ref, watch } from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import ReleaseNotes from './ReleaseNotes.vue'
+import RuntimeVersionFacts from './RuntimeVersionFacts.vue'
 import { useAppStore } from '@/stores/app'
 import { useRuntimeStore } from '@/features/runtime/store'
 import { useUpdatesStore } from './store'
@@ -31,6 +32,7 @@ const props = withDefaults(defineProps<{ open: boolean; target?: Target | null }
 const emit = defineEmits<{ 'update:open': [value: boolean] }>()
 const app = useAppStore()
 const runtime = useRuntimeStore()
+const versions=useUpdatesStore()
 const session = sessionFor(app)
 const selected = ref<Target | null>(props.target)
 const dialogHost = ref<InstanceType<typeof UiDialog> | null>(null)
@@ -46,10 +48,10 @@ const officialFailed = computed(() => session.officialInstallRequested && !!(ses
 const officialOutput = computed(() => officialFailed.value ? session.officialFailureLines : runtime.installLines)
 const busy = computed(() => managerBusy.value || officialBusy.value || session.checking)
 const managerAvailable = computed(() => !session.managerCheckError && !status.value?.error && hasNewerVersion(status.value?.currentVersion ?? null, status.value?.availableVersion ?? null) === true)
-const officialAvailable = computed(() => !app.officialRemoteError && !app.officialProjectError && hasNewerVersion(app.officialProject?.version ?? null, app.officialRemote?.version ?? null) === true)
-const officialQueryError = computed(() => app.officialRemoteError
+const officialAvailable = computed(() => !versions.versionFactsError&&!versions.versionFactsLoading&&versions.versionFacts?.disk.integrity==='consistent'&&!app.officialRemoteError && hasNewerVersion(versions.versionFacts?.disk.diskVersion??null,app.officialRemote?.version??null)===true)
+const officialQueryError = computed(() => versions.versionFactsError|| (versions.versionFacts&&versions.versionFacts.disk.integrity!=='consistent'?'程序来源已变化或尚待核对，请先检查安装配置。':'') || (app.officialRemoteError
   ? app.officialRemoteErrorDetail || '版本查询失败，请检查网络或运行来源后重试。'
-  : app.officialProjectError ? '本地版本读取失败，请检查运行来源后重试。' : '')
+  : ''))
 const managerResult = computed(() => {
   if (managerBusy.value) return '更新中…'
   if (pendingRestart.value) return '更新已准备就绪'
@@ -63,11 +65,11 @@ const managerResult = computed(() => {
 const officialResult = computed(() => {
   if (officialBusy.value) return '更新进行中'
   if (session.officialError || app.officialUpdateError) return '安装失败 · 可重试'
-  if (app.officialRemoteLoading || app.officialProjectLoading) return '正在检查'
-  if (app.officialRemoteError || app.officialProjectError) return '检查失败'
+  if (app.officialRemoteLoading || versions.versionFactsLoading) return '正在检查'
+  if (officialQueryError.value||!versions.versionFacts) return '实际版本待核实'
   if (officialAvailable.value) return '发现新版本'
   if (!app.officialRemote) return '尚未检查'
-  return hasNewerVersion(app.officialProject?.version ?? null, app.officialRemote.version) === false ? '已是最新版本' : '无法比较版本'
+  return hasNewerVersion(versions.versionFacts?.disk.diskVersion??null, app.officialRemote.version) === false ? '已是最新版本' : '无法比较版本'
 })
 /** §39.1：结果页右列的一句说明摘要；取首段，CSS 限制两行。 */
 function summaryOf(text: string | null | undefined) {
@@ -88,10 +90,10 @@ const hasProgressActions = computed(() => selected.value === 'manager'
   ? pendingRestart.value || managerAvailable.value && !managerBusy.value
   : selected.value === 'official' && officialAvailable.value && !officialBusy.value && !session.officialSucceeded)
 const selectedTitle = computed(() => (selected.value === 'manager' ? '桌面管理器' : 'OpenCodex 面板') + (showingProgress.value ? '更新进度' : selectedAvailable.value ? '更新详情与确认' : '更新详情'))
-const selectedCurrent = computed(() => selected.value === 'manager' ? showingProgress.value && session.managerCurrent || status.value?.currentVersion || app.aboutApp?.version || '未知' : showingProgress.value && session.officialCurrent || app.officialProject?.version || '未知')
+const selectedCurrent = computed(() => selected.value === 'manager' ? showingProgress.value && session.managerCurrent || status.value?.currentVersion || app.aboutApp?.version || '未知' : showingProgress.value && session.officialCurrent || versions.versionFacts?.disk.diskVersion || '未知')
 const selectedCandidate = computed(() => selected.value === 'manager'
   ? showingProgress.value ? progress.value?.candidateVersion || status.value?.pendingRestart || session.managerCandidate || status.value?.availableVersion : hasNewerVersion(status.value?.currentVersion ?? null, status.value?.availableVersion ?? null) === false ? null : status.value?.availableVersion
-  : showingProgress.value ? session.officialCandidate || app.officialRemote?.version : hasNewerVersion(app.officialProject?.version ?? null, app.officialRemote?.version ?? null) === false ? null : app.officialRemote?.version)
+  : showingProgress.value ? session.officialCandidate || app.officialRemote?.version : hasNewerVersion(versions.versionFacts?.disk.diskVersion??null,app.officialRemote?.version??null)===false ? null : app.officialRemote?.version)
 
 const selectedSource = computed(() => selected.value === 'manager' ? 'OpenCodex Desktop · ' + (status.value?.channel === 'beta' ? '测试' : '稳定') + '通道' : '官方项目 · @bitkyc08/opencodex')
 const managerUnavailableText = computed(() => session.managerError || progress.value?.stage === 'failed' ? '上次安装未完成，可进入详情重试。' : status.value?.availableVersion && hasNewerVersion(status.value.currentVersion, status.value.availableVersion) === null ? '无法比较版本。' : pendingRestart.value ? '更新已准备就绪，请进入详情重启。' : status.value?.lastCheckedAt ? '当前没有待确认的更新。' : '尚未检查。')
@@ -149,15 +151,17 @@ async function installOfficial() {
   session.officialInstallRequested = false
   session.officialFailureLines = []
   session.officialCandidate = candidateVersion
-  session.officialCurrent = app.officialProject?.version ?? '未知'
+  session.officialCurrent = versions.versionFacts?.disk.diskVersion ?? '未知'
   session.officialError = ''
   try {
+    const reviewed=versions.versionFacts?.disk.confirmationDigest
+    if(!reviewed||!await versions.loadVersions()||versions.versionFacts?.disk.integrity!=='consistent'||versions.versionFacts.disk.confirmationDigest!==reviewed){session.officialError='实际程序在确认前变化，未开始更新，请重新核对。';return}
     // 每次面板更新前备份，失败时阻断安装，不把旧备份冒充本次备份。
     const backup = await useUpdatesStore().createUpgradeBackup()
     if (!backup) { session.officialError = app.upgradeBackupError || '升级前备份失败，尚未安装更新。'; return }
     session.officialBackingUp = false
     session.officialInstallRequested = true
-    const ok = await app.applyOfficialUpdate(candidateVersion)
+    const ok = await app.applyOfficialUpdate(candidateVersion,reviewed)
     session.officialSucceeded = ok
     if (!ok) {
       session.officialFailureLines = runtime.installing ? [] : [...runtime.installLines]
@@ -199,6 +203,7 @@ watch(() => props.open, async open => {
     selected.value = props.target
     // 打开详情只读缓存，反复进入路由不会隐式联网检查或备份。
     void getUpdateStatus().catch(() => {})
+    void versions.loadVersions()
   }
 }, { immediate: true })
 defineExpose({ check })
@@ -207,13 +212,14 @@ defineExpose({ check })
 <template>
   <UiDialog ref="dialogHost" :open="open" :title="selected ? selectedTitle : '检查更新结果'" wide panel-class="update-center" data-testid="update-center" initial-focus="dialog" @close="close">
         <div class="update-center-body">
+          <RuntimeVersionFacts v-if="!selected||selected==='official'" />
           <template v-if="!selected">
             <p class="update-hint">分别查看更新内容与范围，确认后才会开始更新。</p>
             <div class="update-result-rows" data-testid="update-result-rows">
               <section v-for="target in (['manager','official'] as const)" :key="target" class="update-result-row" :data-testid="target + '-update-row'">
                 <div class="update-result-main">
                   <div class="update-result-title"><strong>{{ target === 'manager' ? '桌面管理器' : 'OpenCodex 面板' }}</strong><span class="tag">{{ target === 'manager' ? managerResult : officialResult }}</span></div>
-                  <div class="update-result-version"><span>{{ target === 'manager' ? status?.currentVersion ?? app.aboutApp?.version ?? '未知' : app.officialProject?.version ?? '未知' }}</span><template v-if="target === 'manager' ? managerAvailable : officialAvailable"><span aria-hidden="true">→</span><b>{{ target === 'manager' ? status?.availableVersion : app.officialRemote?.version }}</b></template></div>
+                  <div class="update-result-version"><span>{{ target === 'manager' ? status?.currentVersion ?? app.aboutApp?.version ?? '未知' : versions.versionFacts?.disk.diskVersion ?? '未知' }}</span><template v-if="target === 'manager' ? managerAvailable : officialAvailable"><span aria-hidden="true">→</span><b>{{ target === 'manager' ? status?.availableVersion : app.officialRemote?.version }}</b></template></div>
                   <p class="update-result-source">{{ target === 'manager' ? 'OpenCodex Desktop · ' + (status?.channel ?? 'stable') : '官方项目 · @bitkyc08/opencodex' }}</p>
                   <p v-if="target === 'manager' && managerAvailable && summaryOf(status?.notes)" class="update-result-summary">{{ summaryOf(status?.notes) }}</p>
                   <p v-if="target === 'official' && officialAvailable" class="update-result-summary">{{ summaryOf(officialNotes) }}</p>

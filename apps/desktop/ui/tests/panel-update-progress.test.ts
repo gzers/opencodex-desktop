@@ -7,7 +7,7 @@ describe('panel update channel ownership', () => {
     let complete!: (v: any) => void
     core.invoke.mockImplementation(() => new Promise(resolve => { complete = resolve }))
     const observe = vi.fn()
-    const install = installOfficialUpdate('2.51.0', observe)
+    const install = installOfficialUpdate('2.51.0','reviewed-source', observe)
     await vi.waitFor(() => expect(core.invoke).toHaveBeenCalled())
     const send = (extra = {}) => core.channel.onmessage({ operationId: 'owned', candidateVersion: '2.51.0', sequence: 1, phase: 'downloading', line: 'actual stage', ...extra })
     send({ candidateVersion: 'other' }); send({ sequence: 0 }); send({ phase: 'unknown' })

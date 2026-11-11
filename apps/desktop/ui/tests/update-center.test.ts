@@ -36,6 +36,7 @@ function button(_wrapper: VueWrapper, label: string) {
 function progress(overrides: Partial<UpdateProgress> = {}): UpdateProgress {
   return { operationId: 'op-1', target: 'manager', channel: 'stable', candidateVersion: '0.1.10', generation: 1, sequence: 1, stage: 'downloading', downloadedBytes: 50, totalBytes: null, ...overrides }
 }
+function versionFacts(){return {disk:{diskVersion:'2.50.0',selectedVersion:'2.50.0',recordedVersion:'2.49.0',recordedAt:null,integrity:'consistent',checkedAt:'2026-11-11T00:00:00Z',confirmationDigest:'reviewed-source'},running:null,runningState:'no_record'}}
 beforeEach(() => {
   installNativeDialogStub()
   vi.clearAllMocks()
@@ -45,7 +46,7 @@ beforeEach(() => {
   pinia = createPinia(); setActivePinia(pinia)
   managerUpdateStatus.value = { channel: 'stable', currentVersion: '0.1.9', availableVersion: '0.1.10', lastCheckedAt: '2026-10-10', signatureVerified: false, error: null }
   managerInstallProgress.value = null
-  mocks.invoke.mockImplementation(async (command, args) => command === 'get_update_status' ? managerUpdateStatus.value
+  mocks.invoke.mockImplementation(async (command, args) => command === 'runtime_version_facts'?versionFacts():command === 'get_update_status' ? managerUpdateStatus.value
     : command === 'update_release_details' ? { target: args.target, channel: args.channel, candidateVersion: args.candidateVersion, notesState: 'unavailable',
       notes: null, notesSource: null, releaseUrl: null, fetchedAt: 100, publishedAt: null, cached: false, checkedAt:100, failure:null } : null)
   const updates = useUpdatesStore()
@@ -124,7 +125,7 @@ describe('shared production update center', () => {
   })
   it('renders remote notes as text and only opens validated HTTPS links', async () => {
     managerUpdateStatus.value = { ...managerUpdateStatus.value!, notes: '<img src=x onerror=alert(1)>', releaseUrl: 'https://example.com/unverified', publishedAt: '2026-10-10' }
-    mocks.invoke.mockImplementation(async (command, args) => command === 'get_update_status' ? managerUpdateStatus.value
+    mocks.invoke.mockImplementation(async (command, args) => command === 'runtime_version_facts'?versionFacts():command === 'get_update_status' ? managerUpdateStatus.value
       : command === 'update_release_details' ? { target: args.target, channel: args.channel, candidateVersion: args.candidateVersion, notesState: 'ready',
         notes: managerUpdateStatus.value!.notes, notesSource: 'updater', releaseUrl: 'https://github.com/gzers/opencodex-desktop/releases/tag/v0.1.10', fetchedAt: 100, publishedAt: '2026-10-10', cached: false, checkedAt:100, failure:null } : null)
     const open = vi.spyOn(useAppStore(), 'openExternalLink').mockResolvedValue(true)
@@ -198,11 +199,12 @@ describe('shared production update center', () => {
     useRuntimeStore().install = { phase: 'installing', percent: 65, line: null }
     useRuntimeStore().installLines = ['previous install output']
     await new DOMWrapper(document.body).get('[data-testid="install-official-update"]').trigger('click')
+    await flushPromises()
     expect(new DOMWrapper(document.body).text()).toContain('正在备份配置')
     expect(new DOMWrapper(document.body).text()).not.toContain('previous install output')
     updates.officialRemote!.version = '2.52.0'
     finish({ backupId: 'fresh', directory: '/backup', targetPath: '/config' }); await flushPromises()
-    expect(apply).toHaveBeenCalledWith('2.51.0')
+    expect(apply).toHaveBeenCalledWith('2.51.0','reviewed-source')
     expect(backup).toHaveBeenCalledTimes(2)
   })
   it('uses indeterminate panel progress despite the runtime phase percentage', async () => {
@@ -234,6 +236,7 @@ describe('shared production update center', () => {
     expect(new DOMWrapper(document.body).get('pre[aria-label="面板安装输出"]').text()).toContain('D:\\Update 中文 Spaces\\npm.log')
     expect(new DOMWrapper(document.body).text()).not.toContain('another installation output')
     backup.mockResolvedValueOnce(null)
+    await flushPromises()
     await new DOMWrapper(document.body).get('[data-testid="install-official-update"]').trigger('click'); await flushPromises()
     expect(new DOMWrapper(document.body).find('pre[aria-label="面板安装输出"]').exists()).toBe(false)
   })
@@ -312,4 +315,10 @@ describe('POST-09 update observation exception', () => {
     finish(); await flushPromises()
     expect(mocks.install).toHaveBeenCalledTimes(1)
   })
+})
+
+it('a changed version observation stops before backup or install',async()=>{
+ const base=mocks.invoke.getMockImplementation()!;let reads=0;
+ mocks.invoke.mockImplementation((command,args)=>command==='runtime_version_facts'?Promise.resolve({...versionFacts(),disk:{...versionFacts().disk,confirmationDigest:++reads===1?'reviewed-source':'external-change',integrity:reads===1?'consistent':'changed'}}):base(command,args));
+ const backup=vi.spyOn(useUpdatesStore(),'createUpgradeBackup');const apply=vi.spyOn(useAppStore(),'applyOfficialUpdate');render({target:'official'});await flushPromises();await new DOMWrapper(document.body).get('[data-testid="install-official-update"]').trigger('click');await flushPromises();expect(backup).not.toHaveBeenCalled();expect(apply).not.toHaveBeenCalled();expect(new DOMWrapper(document.body).text()).toContain('实际程序在确认前变化');
 })

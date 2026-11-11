@@ -26,7 +26,7 @@ function render(target: 'official' | 'manager') {
 }
 describe('release detail integration through the shared update center', () => {
   it('loads the exact panel release body without running a version check, backup or install', async () => {
-    mocks.invoke.mockImplementation(async (command, args) => command === 'get_update_status' ? managerUpdateStatus.value
+    mocks.invoke.mockImplementation(async (command, args) => command === 'runtime_version_facts'?{disk:{diskVersion:'2.83.0',selectedVersion:'2.83.0',recordedVersion:'2.83.0',recordedAt:null,integrity:'consistent',checkedAt:'2026-11-11T00:00:00Z',confirmationDigest:'original'},running:null,runningState:'no_record'}:command === 'get_update_status' ? managerUpdateStatus.value
       : command === 'update_release_details' ? { target: args.target, channel: args.channel, candidateVersion: args.candidateVersion, notesState: 'ready', notes: 'official 2.84.0 release body', notesSource: 'github_release', releaseUrl: 'https://github.com/lidge-jun/opencodex/releases/tag/v2.84.0', fetchedAt: 100, publishedAt: null, cached: false, checkedAt:100, failure:null } : null)
     const w = render('official'); await flushPromises()
     expect(mocks.invoke.mock.calls).toContainEqual(['update_release_details', { target: 'official', channel: 'official', candidateVersion: '2.84.0', force: false }])
@@ -35,7 +35,7 @@ describe('release detail integration through the shared update center', () => {
     expect(mocks.invoke.mock.calls.some(call => call[0] === 'create_upgrade_backup' || call[0] === 'official_remote_latest')).toBe(false)
   })
   it('never presents a guessed manager page when the matching Release is absent', async () => {
-    mocks.invoke.mockImplementation(async (command, args) => command === 'get_update_status' ? managerUpdateStatus.value
+    mocks.invoke.mockImplementation(async (command, args) => command === 'runtime_version_facts'?{disk:{diskVersion:'2.83.0',selectedVersion:'2.83.0',recordedVersion:'2.83.0',recordedAt:null,integrity:'consistent',checkedAt:'2026-11-11T00:00:00Z',confirmationDigest:'original'},running:null,runningState:'no_record'}:command === 'get_update_status' ? managerUpdateStatus.value
       : command === 'update_release_details' ? { target: args.target, channel: args.channel, candidateVersion: args.candidateVersion, notesState: 'unavailable', notes: null, notesSource: null, releaseUrl: null, fetchedAt: 100, publishedAt: null, cached: false, checkedAt:100, failure:null } : null)
     const w=render('manager');await flushPromises()
     expect(w.text()).not.toContain('查看网页详情')

@@ -350,6 +350,18 @@ async fn health_proof(
     record: &Record,
     version: &str,
 ) -> Result<(Value, String, Option<String>), CollectError> {
+    let (value, challenge, proof) = health_attested(session, record).await?;
+    if value["version"] != version {
+        return Err(CollectError::Unreachable);
+    }
+    Ok((value, challenge, proof))
+}
+/// Read-only observation can report an old process after an on-disk change.
+/// Lifecycle/status still call health_proof and require their exact admitted version.
+async fn health_attested(
+    session: &mut Session,
+    record: &Record,
+) -> Result<(Value, String, Option<String>), CollectError> {
     let challenge = URL_SAFE_NO_PAD.encode(
         uuid::Uuid::new_v4()
             .as_bytes()
@@ -360,7 +372,12 @@ async fn health_proof(
     );
     let response = session.get("/healthz", Some(&challenge)).await?;
     if response.code != 200
-        || !identity(&response.value, record, version)
+        || response.value["service"] != "opencodex"
+        || response.value["pid"].as_u64() != Some(record.pid.into())
+        || response.value["port"].as_u64() != Some(record.port.into())
+        || !response.value["version"]
+            .as_str()
+            .is_some_and(crate::modules::update::handoff::valid_version)
         || response.value["status"] != "ok"
     {
         return Err(CollectError::Unreachable);
@@ -481,6 +498,63 @@ pub(crate) async fn fetch(
     .await
     .map_err(|_| CollectError::Timeout)?
 }
+#[derive(Debug, Clone, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RunningVersion {
+    pub version: String,
+    pub pid: u32,
+    pub port: u16,
+}
+/// Two challenges over the same connection, private current-H record checked
+/// before/after, no CLI execution, stop, port discovery or readiness assertion.
+pub(crate) async fn running_version(home: PathBuf) -> Result<Option<RunningVersion>, CollectError> {
+    tokio::time::timeout(status_collect_timeout(), async move {
+        let root = home.clone();
+        let prepared = tokio::task::spawn_blocking(move || {
+            match std::fs::symlink_metadata(root.join("runtime-port.json")) {
+                Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(None),
+                Err(_) => Err(CollectError::Unreachable),
+                Ok(_) => record(&root).map(Some),
+            }
+        })
+        .await
+        .map_err(unavailable)??;
+        let Some((r, original)) = prepared else {
+            return Ok(None);
+        };
+        let stream = TcpStream::connect((std::net::Ipv4Addr::LOCALHOST, r.port))
+            .await
+            .map_err(unavailable)?;
+        let mut session = Session {
+            io: BufReader::new(stream),
+            port: r.port,
+        };
+        let (before, _, _) = health_attested(&mut session, &r).await?;
+        let (after, _, _) = health_attested(&mut session, &r).await?;
+        if before["version"] != after["version"]
+            || before["uptime"]
+                .as_f64()
+                .zip(after["uptime"].as_f64())
+                .is_none_or(|(a, b)| !a.is_finite() || !b.is_finite() || a < 0.0 || b < a)
+        {
+            return Err(CollectError::Unreachable);
+        }
+        let readback = tokio::task::spawn_blocking(move || record(&home))
+            .await
+            .map_err(unavailable)??;
+        if readback.1 != original {
+            return Err(CollectError::Unreachable);
+        }
+        Ok(Some(RunningVersion {
+            version: after["version"].as_str().ok_or(CollectError::Parse)?.into(),
+            pid: r.pid,
+            port: r.port,
+        }))
+    })
+    .await
+    .map_err(|_| CollectError::Timeout)?
+}
+
 #[cfg(test)]
 #[path = "attested_status_tests.rs"]
 mod tests;
