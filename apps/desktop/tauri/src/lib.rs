@@ -186,6 +186,7 @@ pub fn run() {
             app.manage(crate::state::SharedSandboxBoundary(sandbox_boundary));
             app.manage(crate::state::InstanceState { locks: std::sync::Mutex::new(locks) });
             app.manage(crate::state::SharedDataRoot(data_root.clone()));
+            app.manage(std::sync::Arc::new(crate::commands::runtime_removal::Reviews::default()));
             #[cfg(windows)]
             if let Some(config) = startup_window {
                 tauri::WebviewWindowBuilder::from_config(app, &config)?.build()?;
@@ -702,6 +703,8 @@ pub fn run() {
             commands::native_config_import::model_v2_native_config_backup,
             commands::runtime_activation::runtime_activation_preview,
             commands::runtime_activation::runtime_activation_recover,
+            commands::runtime_removal::runtime_removal_preview,
+            commands::runtime_removal::runtime_removal_apply,
             commands::terminal_cli::runtime_terminal_preview,
             commands::terminal_cli::runtime_terminal_apply,
             commands::native_config_import::model_v2_native_rollback_select,

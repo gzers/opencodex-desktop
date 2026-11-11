@@ -16,7 +16,7 @@ fn fail(message: &'static str) -> AppError {
         detail: message.into(),
     }
 }
-fn input(
+pub(crate) fn input(
     runtime: &RuntimeHandle,
     data: PathBuf,
     profile: PathBuf,

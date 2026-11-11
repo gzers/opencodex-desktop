@@ -30,6 +30,7 @@ pub mod runtime_port;
 pub mod runtime_recovery_v2;
 pub mod runtime_recovery_v2_owner;
 pub mod runtime_recovery_v2_sources;
+pub mod runtime_removal;
 pub mod scope_backup_v2;
 pub mod sync;
 pub mod terminal_cli;

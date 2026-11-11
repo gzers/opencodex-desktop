@@ -105,7 +105,7 @@ pub enum Action {
     Enable,
     Disable,
 }
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Preview {
     pub action: Action,
@@ -707,6 +707,50 @@ pub fn inspect(c: &Context, shell: &str, search: &[PathBuf]) -> AppResult<Previe
         Action::Enable
     };
     preview(c, action, shell, search)
+}
+/// Read-only owned-terminal part of an uninstall review. No registration is
+/// different from a foreign command at the reserved path; foreign bytes refuse.
+pub fn removal_preview(c: &Context, shell: &str, search: &[PathBuf]) -> AppResult<Option<Preview>> {
+    c.validate()?;
+    if let Some(t) = pending(c)? {
+        if t.action != Action::Disable {
+            return Err(fail("请先完成原终端启用操作，再卸载程序"));
+        }
+        return preview(c, Action::Disable, shell, search).map(Some);
+    }
+    if installed(c)?.is_some() {
+        return preview(c, Action::Disable, shell, search).map(Some);
+    }
+    if read(&c.user_profile, &c.command())?.is_some()
+        || read(&c.program_root, &c.bridge())?.is_some()
+    {
+        return Err(fail("保留位置存在未登记的终端入口，未卸载程序"));
+    }
+    Ok(None)
+}
+pub fn revoke_for_removal(
+    c: &Context,
+    shell: &str,
+    search: &[PathBuf],
+    expected: Option<&str>,
+) -> AppResult<()> {
+    match removal_preview(c, shell, search)? {
+        Some(preview) => {
+            if Some(preview.confirmation_digest.as_str()) != expected {
+                return Err(fail("终端撤销预览变化，请重新核对卸载范围"));
+            }
+            apply(
+                c,
+                Action::Disable,
+                shell,
+                search,
+                &preview.confirmation_digest,
+            )
+            .map(|_| ())
+        }
+        None if expected.is_none() => Ok(()),
+        None => Err(fail("原终端登记在卸载预览后变化，请重新核对")),
+    }
 }
 /// The entry belongs to its explicit D/H. A root switch must not orphan an
 /// enabled command or move a half-written shell transaction to another root.

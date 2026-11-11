@@ -19,6 +19,7 @@ import UiSegmented from '@/components/ui/UiSegmented.vue'
 import AgentExecutionField from '@/features/models/AgentExecutionField.vue'
 import RuntimeActivationRecovery from '@/features/runtime/RuntimeActivationRecovery.vue'
 import RuntimeTerminalCli from '@/features/runtime/RuntimeTerminalCli.vue'
+import RuntimeProgramRemoval from '@/features/runtime/RuntimeProgramRemoval.vue'
 import RuntimePortSettings from '@/features/runtime/RuntimePortSettings.vue'
 import { settingsSections } from '@/navigation'
 import { checkNetworkProxy, type PreferencesDto } from '@/features/preferences/api'
@@ -679,94 +680,6 @@ function openLocalDocument(documentId: 'license' | 'third-party') {
 // ---- 运行来源 / 托管安装 / 卸载（IMP Track B · B5）----
 function openInstallModal(source: InstallSourceKind) { app.requestInstallModal(source) }
 
-const uninstallOpen = ref(false)
-const uninstallScope = ref<'body' | 'full'>('full')
-const uninstallAck = ref(false)
-const uninstallAutoBackup = ref(true)
-const uninstallCleanData = ref(true)
-const uninstallRunning = ref(false)
-const uninstallDone = ref(false)
-
-const uninstallCanConfirm = computed(() => {
-  if (uninstallRunning.value || app.runtimeUninstallBusy) return false
-  if (app.runtimeUninstallPlan?.removable === false) return false
-  return uninstallAck.value
-})
-
-/** 进行中显示计划步骤；完成后换成后端返回的真实步骤与状态。 */
-const uninstallStepRows = computed(() => {
-  const result = app.runtimeUninstallResult
-  if (result && uninstallDone.value) {
-    return result.steps.map(step => ({
-      name: step.name,
-      detail: step.detail ?? '',
-      cls: step.status === 'ok' ? 'ok' : step.status === 'failed' ? 'failed' : 'skip',
-    }))
-  }
-  const planned = uninstallScope.value === 'full'
-    ? ['停止代理', '生成备份', '执行官方 ocx uninstall', '移除包体与入口', '清空 OPENCODEX_HOME 非官方自有残留', '残留核验']
-    : ['停止代理', '生成备份', '移除包体与入口', '残留核验']
-  return planned.map(name => ({ name, detail: '', cls: 'on' }))
-})
-
-const residueOk = computed(() => {
-  const residue = app.runtimeUninstallResult?.residue ?? []
-  return residue.length > 0 && residue.every(item => item.status === 'cleared')
-})
-
-// 与后端共用核验条件：失败、残留未知和证据缺失均不能显示成功。
-const uninstallFailedSteps = computed(() =>
-  (app.runtimeUninstallResult?.steps ?? []).filter(step => step.status === 'failed').length,
-)
-const uninstallVerified = computed(() => {
-  const steps = app.runtimeUninstallResult?.steps ?? []
-  return residueOk.value && steps.some(step => step.status === 'ok')
-    && steps.every(step => step.status !== 'failed')
-})
-const uninstallPartialFailure = computed(() => uninstallDone.value && !uninstallVerified.value)
-
-function residueLabel(status: string) {
-  if (status === 'cleared') return '已清除'
-  if (status === 'present') return '残留'
-  return '未知（未确认清除）'
-}
-
-function openUninstall() {
-  uninstallOpen.value = true
-  uninstallScope.value = 'full'
-  uninstallAck.value = false
-  uninstallCleanData.value = true
-  uninstallRunning.value = false
-  uninstallDone.value = false
-  const runtime = useRuntimeStore()
-  runtime.uninstallResult = null
-  runtime.uninstallError = ''
-  runtime.uninstallPlan = null
-  // 备份只提醒、不阻断：没检测到可复用备份时默认勾选「卸载前自动生成备份」。
-  uninstallAutoBackup.value = true
-  void app.loadUninstallPlan().then(() => {
-    if (app.runtimeUninstallPlan?.backupId) uninstallAutoBackup.value = false
-  })
-}
-
-function closeUninstall() {
-  if (uninstallRunning.value || app.runtimeUninstallBusy) return
-  uninstallOpen.value = false
-}
-
-async function confirmUninstall() {
-  if (!uninstallCanConfirm.value) return
-  uninstallRunning.value = true
-  const ok = await app.uninstallRuntime({
-    scope: uninstallScope.value,
-    autoBackup: uninstallAutoBackup.value,
-    cleanData: uninstallScope.value === 'full' && uninstallCleanData.value,
-    confirmation: 'confirmed',
-  })
-  uninstallRunning.value = false
-  if (ok) uninstallDone.value = true
-}
-
 watch(() => routes.settingsSection, section => {
   if (section === 'installation') {
     if (!app.runtimeSource) void app.loadRuntimeSource()
@@ -852,7 +765,7 @@ function restoreGeneralDefaults() {
           <dt>包 / 清单 / 来源</dt><dd v-if="dataRoots.paths">{{ dataRoots.paths.program.packageVersion ?? '未记录' }} / {{ dataRoots.paths.program.manifestVersion ?? '未记录' }} / {{ dataRoots.paths.program.sourceVersion ?? '未记录' }}</dd><dd v-else>尚未读取</dd>
           <dt>程序有效性</dt><dd data-testid="program-validity">{{ programValidity }}</dd>
         </dl>
-        </div><div class="runtime-actions"><UiButton class="btn primary" data-testid="runtime-install" :disabled="protectionBlocked || runtimeProtection.protectionLoading || !runtimeProtection.protection || restartPending" @click="openInstallModal('registry')">安装程序</UiButton><RuntimeActivationRecovery :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" /><UiButton class="btn ghost" data-testid="paths-refresh" @click="refreshPaths">刷新位置</UiButton></div>
+        </div><div class="runtime-actions"><UiButton class="btn primary" data-testid="runtime-install" :disabled="protectionBlocked || runtimeProtection.protectionLoading || !runtimeProtection.protection || restartPending" @click="openInstallModal('registry')">安装程序</UiButton><RuntimeActivationRecovery :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" /><RuntimeProgramRemoval :disabled="protectionBlocked||runtimeProtection.protectionLoading||!runtimeProtection.protection||restartPending||app.runtimeInstalling||app.runtimeUninstallBusy" /><UiButton class="btn ghost" data-testid="paths-refresh" @click="refreshPaths">刷新位置</UiButton></div>
         <div v-if="protectionBlocked || runtimeProtection.protectionLoading || runtimeProtection.protectionFeedback" class="setting-row" data-testid="runtime-protection" :aria-busy="runtimeProtection.protectionLoading || runtimeProtection.protectionRetrying">
           <div>
             <div class="setting-title">面板更新保护核对</div>
@@ -868,7 +781,7 @@ function restoreGeneralDefaults() {
         <div v-if="app.runtimeSource" class="runtime-actions" data-testid="runtime-source-card">
           <UiButton class="btn ghost" type="button" data-testid="runtime-import-offline" :disabled="protectionBlocked||runtimeProtection.protectionLoading||!runtimeProtection.protection||restartPending" @click="openInstallModal('offline')">导入离线包</UiButton>
           <UiButton v-if="app.runtimeSource.kind==='managed'" class="btn ghost" type="button" @click="routes.go('settings',{section:'upgrade'})">更新面板</UiButton>
-          <UiButton v-if="app.runtimeSource.kind!=='unresolved'" class="btn danger" type="button" data-testid="runtime-uninstall" :disabled="protectionBlocked||runtimeProtection.protectionLoading||!runtimeProtection.protection||restartPending" @click="openUninstall">卸载</UiButton>
+
         </div>
         </section>
       </article>
@@ -1060,90 +973,6 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
     </section>
   </section>
 
-  <UiDialog :open="uninstallOpen" title="卸载 OpenCodex" :busy="uninstallRunning || app.runtimeUninstallBusy" panel-class="wiz wiz-uninstall" data-testid="runtime-uninstall-modal" @close="closeUninstall">
-
-      <template v-if="!uninstallRunning && !uninstallDone">
-        <p class="wiz-hint">按当前运行来源 <code class="local-path">{{ displayPath(app.runtimeUninstallPlan?.sourcePath) || '未解析' }}</code> 卸载；范围越大后果越重。</p>
-        <div class="wiz-choices">
-          <label class="wiz-choice-block" :class="{ on: uninstallScope === 'full' }">
-            <input v-model="uninstallScope" type="radio" value="full" data-testid="uninstall-scope-full">
-            <span><b>完整卸载（推荐）</b><small>先由应用执行官方 <code>ocx uninstall</code> 清理 service / shim / config，再移除包体与入口。</small></span>
-          </label>
-          <label class="wiz-choice-block" :class="{ on: uninstallScope === 'body' }">
-            <input v-model="uninstallScope" type="radio" value="body" data-testid="uninstall-scope-body">
-            <span><b>仅移除包体与入口</b><small>只删包体与入口；<b>不碰</b> service / shim / config / OPENCODEX_HOME。</small></span>
-          </label>
-        </div>
-
-        <p v-if="app.runtimeUninstallPlanLoading" class="wiz-hint">正在读取卸载方案…</p>
-        <p v-else-if="app.runtimeUninstallPlanError" class="wiz-error" data-testid="uninstall-plan-error">{{ app.runtimeUninstallPlanError }}</p>
-        <template v-else-if="app.runtimeUninstallPlan">
-          <p v-if="!app.runtimeUninstallPlan.removable" class="wiz-error" data-testid="uninstall-not-removable">{{ app.runtimeUninstallPlan.reason }}</p>
-
-          <details class="wiz-more" data-testid="uninstall-plan-objects">
-            <summary>将移除的对象：包体 · 入口{{ uninstallScope === 'full' ? ' · 运行态' : '' }}</summary>
-            <ul class="wiz-objects">
-              <li v-for="item in app.runtimeUninstallPlan.removeObjects" :key="item"><code class="local-path">{{ displayPath(item) }}</code></li>
-              <li v-for="item in (uninstallScope === 'full' ? app.runtimeUninstallPlan.runtimeObjects : [])" :key="item"><span class="local-path">{{ displayPath(item) }}</span></li>
-            </ul>
-            <p v-if="app.runtimeUninstallPlan.externalCommand" class="wiz-hint">将执行：<code>{{ app.runtimeUninstallPlan.externalCommand }}</code></p>
-            <p v-if="uninstallScope === 'full' && app.runtimeUninstallPlan.officialCommand" class="wiz-hint">完整卸载将执行：<code>{{ app.runtimeUninstallPlan.officialCommand }}</code></p>
-          </details>
-
-          <p v-if="app.runtimeUninstallPlan.backupId" class="wiz-backup ok" data-testid="uninstall-backup">已检测到可恢复备份 <code>{{ app.runtimeUninstallPlan.backupId }}</code>。</p>
-          <p v-else class="wiz-backup warn" data-testid="uninstall-backup">未检测到可恢复备份；卸载后不可恢复。<b>不阻断卸载</b>，但建议先备份。</p>
-
-          <div class="wiz-opts">
-            <label class="wiz-opt" data-testid="uninstall-auto-backup"><input v-model="uninstallAutoBackup" type="checkbox"> 卸载前自动生成备份</label>
-            <label class="wiz-opt" :class="{ disabled: uninstallScope !== 'full' }" data-testid="uninstall-clean-data"><input v-model="uninstallCleanData" type="checkbox" :disabled="uninstallScope !== 'full'"> 清空 OPENCODEX_HOME 残留{{ uninstallScope === 'full' ? '' : '（仅完整卸载）' }}</label>
-          </div>
-        </template>
-
-
-      </template>
-
-      <template v-else>
-        <div class="wiz-uview">
-          <div class="wiz-uhead">
-            <span
-              class="wiz-spin"
-              :class="{ done: uninstallDone, faulted: uninstallPartialFailure }"
-              aria-hidden="true"
-            >{{ uninstallDone ? (uninstallPartialFailure ? '!' : '✓') : '' }}</span>
-            <b data-testid="uninstall-progress-title">{{ uninstallDone ? (uninstallPartialFailure ? (uninstallFailedSteps > 0 ? `卸载未核验完成：${uninstallFailedSteps} 步失败` : '卸载待核验') : '卸载完成') : '正在卸载 OpenCodex' }}</b>
-            <span class="wiz-umeta">{{ uninstallScope === 'full' ? '完整卸载' : '仅移除包体' }}<template v-if="uninstallDone">{{ uninstallPartialFailure ? (uninstallFailedSteps > 0 ? ` · ${uninstallFailedSteps} 步失败` : ' · 未核验完成') : ' · 100%' }}</template></span>
-          </div>
-          <div class="wiz-ubar" role="progressbar" aria-label="卸载进度"><div class="wiz-ufill" :class="{ done: uninstallDone && !uninstallPartialFailure, faulted: uninstallPartialFailure, run: !uninstallDone }"></div></div>
-          <ul class="wiz-substeps" data-testid="uninstall-steps">
-            <li v-for="row in uninstallStepRows" :key="row.name" :class="row.cls"><span><b>{{ row.name }}</b>{{ row.detail ? ' · ' + row.detail : '' }}</span></li>
-          </ul>
-          <pre v-if="app.runtimeUninstallResult && app.runtimeUninstallResult.officialOutput.length" class="wiz-console wiz-console-fixed" data-testid="uninstall-console">{{ app.runtimeUninstallResult.officialOutput.join('\n') }}</pre>
-        </div>
-        <div v-if="uninstallDone" class="residue-card" data-testid="uninstall-residue">
-          <div class="residue-head"><span class="residue-badge" aria-hidden="true">{{ residueOk ? '✓' : '!' }}</span><b>残留核验</b><small>{{ residueOk ? '0 残留' : ((app.runtimeUninstallResult?.residue ?? []).length ? '有未清除项' : '缺少核验证据') }}</small></div>
-          <ul class="residue-list">
-            <li v-for="item in (app.runtimeUninstallResult?.residue ?? [])" :key="item.path" :class="item.status"><code class="local-path">{{ displayPath(item.path) }}</code><span>{{ residueLabel(item.status) }}</span></li>
-          </ul>
-          <p v-if="app.runtimeUninstallResult?.backupId" class="wiz-hint">备份 <code>{{ app.runtimeUninstallResult.backupId }}</code> · <button class="cli-copy-btn" type="button" @click="copyPath(app.runtimeUninstallResult?.backupDirectory ?? '')"><code class="local-path">{{ displayPath(app.runtimeUninstallResult?.backupDirectory) }}</code></button></p>
-        </div>
-      </template>
-
-      <p v-if="app.runtimeUninstallError" class="wiz-error" data-testid="uninstall-error">{{ app.runtimeUninstallError }}</p>
-
-      <template v-if="!uninstallRunning && !uninstallDone" #actions="{ close }">
-        <div class="uninstall-confirmation">
-        <label class="wiz-ack" :class="{ on: uninstallAck }">
-          <input v-model="uninstallAck" type="checkbox" data-testid="uninstall-ack">
-          <span><b>我已阅读清单并确认继续</b><small>停代理 → 备份{{ uninstallScope === 'full' ? ' → 执行官方 ocx uninstall' : '' }} → 移除包体与入口 → 残留核验（全部由应用代执行）。</small></span>
-        </label>
-        <p v-if="!uninstallAck" class="wiz-ack-hint" data-testid="uninstall-ack-hint">勾选上面这一项，「卸载」才会亮起。</p>
-          <div class="uninstall-actions">
-            <UiButton variant="ghost" type="button" :disabled="app.runtimeUninstallBusy" @click="close">取消</UiButton>
-            <UiButton variant="danger" type="button" data-testid="uninstall-confirm" :disabled="!uninstallCanConfirm" @click="confirmUninstall">卸载</UiButton>
-          </div>
-        </div>
-      </template>
-  </UiDialog>
   <UiDialog v-if="pathDialog" :open="true" :title="pathDialog === 'details' ? '完整路径' : pathDialog === 'initialize' ? '初始化用户目录' : '读取渠道配置说明'" :busy="dataRoots.switching || dataRoots.saving || dataRoots.homeSaving" panel-class="paths-v2-dialog" data-testid="paths-dialog" @close="closePathDialog">
     <div class="paths-v2">
       <p v-if="dataRoots.pathsStale" role="status">上次快照（非最新），请刷新后核对。</p>

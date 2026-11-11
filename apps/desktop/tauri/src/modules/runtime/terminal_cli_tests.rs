@@ -7,6 +7,19 @@ pub(crate) struct Fixture {
     pub(crate) c: Context,
 }
 impl Fixture {
+    pub(crate) fn register_program(&self) {
+        let (target, platform) = program_layout::host_target().unwrap();
+        let image = program_selection::read(&self.c.program_root, platform, target)
+            .unwrap()
+            .unwrap();
+        super::super::program_catalog::register(
+            &self.c.program_root,
+            &image.selection,
+            &image.image.official_archive_sha256,
+        )
+        .unwrap();
+    }
+
     pub(crate) fn new() -> Self {
         let root = tempfile::tempdir().unwrap();
         let base = root.path().canonicalize().unwrap();

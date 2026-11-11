@@ -89,8 +89,9 @@ struct Journal {
     plan: Plan,
 }
 /// Server-owned preparation; no file inventories or source records cross IPC.
+#[derive(Clone)]
 pub struct Prepared(Plan);
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Preview {
     pub operation_id: String,
@@ -107,6 +108,48 @@ pub struct Outcome {
     pub operation_id: String,
     pub removed_versions: Vec<String>,
     pub configuration_preserved: bool,
+}
+/// Read-only recovery preparation. Surviving content must still match the
+/// original removal plan; it never replaces missing objects or writes a lock.
+pub fn inspect_pending(i: &Path, d: &Path, home: &Path) -> AppResult<Option<Prepared>> {
+    bundled::roots(i, d)?;
+    bundled::roots(i, home)?;
+    let Some(bytes) = read(i, &pending(i), MAX_JOURNAL)? else {
+        return Ok(None);
+    };
+    let journal: Journal = decode(&bytes)?;
+    let p = &journal.plan;
+    if p.program_root != i
+        || p.desktop_root != d
+        || p.home != home
+        || journal.sha256 != hash::sha256_hex(&encode(p)?)
+    {
+        return Err(fail("原卸载操作与当前程序或配置目录不一致"));
+    }
+    validate(p)?;
+    check_version_names(p)?;
+    for image in &p.images {
+        remaining(p, image)?;
+    }
+    for (path, before) in [
+        (current(i), &p.current_before),
+        (entry(i)?, &p.entry_before),
+    ] {
+        if read(i, &path, 64 * 1024)?
+            .as_ref()
+            .is_some_and(|v| v != before)
+        {
+            return Err(fail("卸载目标包含外部修改，未继续"));
+        }
+    }
+    let record = read(d, RuntimeStore::new(d).path(), 1024 * 1024)?;
+    if record != p.record_before && record.as_deref() != Some(p.record_after.as_slice()) {
+        return Err(fail("原卸载来源记录发生变化"));
+    }
+    if read(i, &pending(i), MAX_JOURNAL)?.as_deref() != Some(bytes.as_slice()) {
+        return Err(fail("读取期间原卸载操作变化"));
+    }
+    Ok(Some(Prepared(journal.plan)))
 }
 fn entry(i: &Path) -> AppResult<PathBuf> {
     Ok(i.join(program_layout::runtime_entry_relative(
@@ -409,6 +452,25 @@ fn remaining(p: &Plan, image: &Image) -> AppResult<BTreeMap<String, Entry>> {
     Ok(actual)
 }
 impl Prepared {
+    #[cfg(test)]
+    pub(crate) fn interrupt_fixture(
+        &self,
+        phase: &str,
+        revoke: impl FnOnce() -> AppResult<()>,
+    ) -> AppResult<Outcome> {
+        self.execute_inner(
+            &self.preview()?.confirmation_digest,
+            || Ok(()),
+            revoke,
+            |step| {
+                if step == phase {
+                    Err(fail("explicit isolated interruption fixture"))
+                } else {
+                    Ok(())
+                }
+            },
+        )
+    }
     pub fn preview(&self) -> AppResult<Preview> {
         let p = &self.0;
         let mut bytes = 0u64;
