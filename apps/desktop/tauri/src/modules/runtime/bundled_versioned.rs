@@ -3,9 +3,7 @@
 use super::*;
 use crate::modules::runtime::{
     program_layout::RuntimeVersionPaths,
-    program_selection::{
-        self, CurrentSelection, ImageManifest, ACTIVATION_PENDING, IMAGE_MANIFEST,
-    },
+    program_selection::{self, CurrentSelection, ImageManifest, IMAGE_MANIFEST},
 };
 
 fn create_bytes(path: &Path, bytes: &[u8], mode: u32) -> AppResult<()> {
@@ -119,12 +117,7 @@ pub(super) fn provision_inner(
         platform,
     )?;
     mkdir(i)?;
-    let lock_path = i.join(".runtime-program.lock");
-    safety::check_path(i, &lock_path, true)?;
-    let lock = safety::open_file(&lock_path, true)?;
-    safety::require_single_link(&lock)?;
-    lock.try_lock()
-        .map_err(|_| fail("bundle_locked", "运行程序正在操作，请稍后重试"))?;
+    let mutation = super::super::program_activation::Mutation::acquire(i)?;
     if let Some(selected) = program_selection::read(i, platform, target)? {
         persist_entry(d, &selected.stable_entry, &selected.selection.version)?;
         return Ok(ProvisionResult::AlreadyInstalled {
@@ -211,46 +204,33 @@ pub(super) fn provision_inner(
         platform: target.into(),
         image_sha256: hash::sha256_hex(&image_bytes),
     };
-    let current_bytes =
-        serde_json::to_vec_pretty(&selection).map_err(|_| invalid("版本选择序列化失败"))?;
     mkdir(&runtime)?;
     mkdir(&runtime.join("versions"))?;
     mkdir(&runtime.join("bin"))?;
-    let pending = runtime.join(ACTIVATION_PENDING);
-    let journal = serde_json::to_vec(&serde_json::json!({"schemaVersion":1,"attemptId":uuid::Uuid::new_v4().to_string(),"selection":selection,"before":null})).map_err(|_| invalid("激活记录序列化失败"))?;
-    create_bytes(&pending, &journal, 0o600)?;
-    // No-replace publication preserves even an unknown empty version directory.
+    // Publish only the verified immutable image. Selection/current/entry and D's
+    // source mirror are committed by the shared recoverable transaction.
     publish(&image, &version.version_root)?;
     safety::sync_directories(i, &runtime.join("versions"))?;
-    let entry = i.join(crate::modules::runtime::program_layout::runtime_entry_relative(platform));
-    let script = version
-        .package_root
-        .join(install::PACKAGE_SUBPATH)
-        .join(&bin);
-    create_bytes(
-        &entry,
-        install::entry_script(Some(&version.node), &script).as_bytes(),
-        0o755,
-    )?;
+    mkdir(d)?;
+    mkdir(&d.join("manager-state"))?;
     if inject_activation_failure {
-        return Err(fail("bundle_activation_injected", "测试注入版本激活中断"));
+        mutation.activate_inner(
+            d,
+            None,
+            &selection,
+            || Ok(()),
+            |phase| {
+                if phase == super::super::program_activation::Checkpoint::Entry {
+                    Err(fail("bundle_activation_injected", "测试注入版本激活中断"))
+                } else {
+                    Ok(())
+                }
+            },
+        )?;
+    } else {
+        mutation.activate(d, None, &selection, || Ok(()))?;
     }
-    create_bytes(
-        &runtime.join(super::super::program_layout::CURRENT_FILENAME),
-        &current_bytes,
-        0o600,
-    )?;
-    safety::sync_directories(i, &runtime)?;
-    let selected = program_selection::read_activating(i, platform, target)?
-        .ok_or_else(|| invalid("版本激活读回缺失"))?;
-    if selected.selection != selection || read(&pending, MAX_METADATA_FOR_PENDING)? != journal {
-        return Err(invalid("激活读回或操作身份已变化"));
-    }
-    fs::remove_file(&pending).map_err(io)?;
-    safety::sync_directories(i, &runtime)?;
-    persist_entry(d, &entry, &manifest.version)?;
     Ok(ProvisionResult::Installed {
         version: manifest.version,
     })
 }
-const MAX_METADATA_FOR_PENDING: u64 = 64 * 1024;

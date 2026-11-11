@@ -172,7 +172,7 @@ fn absolute(path: &Path) -> AppResult<()> {
     }
     Ok(())
 }
-fn roots(i: &Path, d: &Path) -> AppResult<()> {
+pub(super) fn roots(i: &Path, d: &Path) -> AppResult<()> {
     absolute(i)?;
     absolute(d)?;
     let a = comparison_path(i)?;

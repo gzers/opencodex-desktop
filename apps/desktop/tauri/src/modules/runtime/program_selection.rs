@@ -243,7 +243,57 @@ fn read_inner(
     {
         return Err(invalid("运行程序选择记录身份不符"));
     }
-    let paths = RuntimeVersionPaths::new(&runtime.join("versions"), &selection.version, platform)?;
+    let selected = read_image(program_root, platform, target, &selection)?;
+    let image_bytes = metadata(
+        program_root,
+        &selected.paths.version_root.join(IMAGE_MANIFEST),
+    )?;
+    if hash::sha256_hex(&image_bytes) != selection.image_sha256 {
+        return Err(invalid("校验期间版本清单已变化"));
+    }
+    let paths = &selected.paths;
+    let script = &selected.script;
+    let stable_entry = program_root.join(super::program_layout::runtime_entry_relative(platform));
+    if metadata(program_root, &stable_entry)?
+        != install::entry_script(Some(&paths.node), script).as_bytes()
+    {
+        return Err(invalid("稳定入口未绑定当前版本"));
+    }
+    super::paths::validate_executable(&stable_entry).map_err(|_| invalid("稳定入口不可执行"))?;
+    if metadata(program_root, &current_path)? != current_bytes
+        || metadata(program_root, &paths.version_root.join(IMAGE_MANIFEST))? != image_bytes
+    {
+        return Err(invalid("校验期间运行程序选择已变化"));
+    }
+    Ok(Some(selected))
+}
+
+/// Internal installer admission of a named immutable image; callers must have
+/// established its source through the pinned bundle or verified install path.
+/// This never discovers an arbitrary version or modifies the stable launcher.
+pub(super) fn read_image(
+    program_root: &Path,
+    platform: Platform,
+    target: &str,
+    selection: &CurrentSelection,
+) -> AppResult<SelectedProgram> {
+    if !matches!(
+        (platform, target),
+        (Platform::Macos, "darwin-arm64")
+            | (Platform::Windows, "win32-x64")
+            | (Platform::Unix, "linux-x64" | "linux-arm64")
+    ) || !root_present(program_root)?
+        || selection.schema_version != 1
+        || selection.platform != target
+        || !digest(&selection.image_sha256)
+    {
+        return Err(invalid("候选版本身份或程序根不可确认"));
+    }
+    let paths = RuntimeVersionPaths::new(
+        &program_root.join("runtime/versions"),
+        &selection.version,
+        platform,
+    )?;
     let image_bytes = metadata(program_root, &paths.version_root.join(IMAGE_MANIFEST))?;
     if hash::sha256_hex(&image_bytes) != selection.image_sha256 {
         return Err(invalid("运行程序版本清单已变化"));
@@ -311,25 +361,17 @@ fn read_inner(
     for path in [&paths.node, &paths.bun, &script] {
         super::paths::validate_executable(path).map_err(|_| invalid("所选运行程序不可执行"))?;
     }
-    let stable_entry = program_root.join(super::program_layout::runtime_entry_relative(platform));
-    if metadata(program_root, &stable_entry)?
-        != install::entry_script(Some(&paths.node), &script).as_bytes()
-    {
-        return Err(invalid("稳定入口未绑定当前版本"));
+    if metadata(program_root, &paths.version_root.join(IMAGE_MANIFEST))? != image_bytes {
+        return Err(invalid("校验期间候选版本清单已变化"));
     }
-    super::paths::validate_executable(&stable_entry).map_err(|_| invalid("稳定入口不可执行"))?;
-    if metadata(program_root, &current_path)? != current_bytes
-        || metadata(program_root, &paths.version_root.join(IMAGE_MANIFEST))? != image_bytes
-    {
-        return Err(invalid("校验期间运行程序选择已变化"));
-    }
-    Ok(Some(SelectedProgram {
-        selection,
+
+    Ok(SelectedProgram {
+        selection: selection.clone(),
         image,
         paths,
-        stable_entry,
+        stable_entry: program_root.join(super::program_layout::runtime_entry_relative(platform)),
         script,
-    }))
+    })
 }
 
 #[cfg(all(test, unix))]
