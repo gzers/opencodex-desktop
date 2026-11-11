@@ -694,6 +694,8 @@ pub fn run() {
             commands::model_config_v2::model_v2_begin_draft,
             commands::model_config_v2::model_v2_stage_connection,
             commands::model_config_v2::model_v2_file_save,
+            commands::model_config_v2::model_v2_file_reconcile_preview,
+            commands::model_config_v2::model_v2_file_reconcile_apply,
             commands::native_config_import::model_v2_native_import_select,
             commands::native_config_import::model_v2_native_import_apply,
             commands::native_config_import::model_v2_native_rollback_list,

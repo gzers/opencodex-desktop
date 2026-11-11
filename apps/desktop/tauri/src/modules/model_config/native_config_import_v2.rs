@@ -246,7 +246,7 @@ fn projected_policy(raw: &Value, source: &str) -> Result<PolicyV2> {
     .map_err(|_| error("native_import_config_invalid"))
 }
 
-fn pending_admission(root: &Path) -> Result<Vec<TargetFileLock>> {
+pub(super) fn pending_admission(root: &Path) -> Result<Vec<TargetFileLock>> {
     let names = [
         "saved-file-save-pending.json",
         "provider-rename-pending.json",

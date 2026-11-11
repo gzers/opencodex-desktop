@@ -8,6 +8,7 @@ import {protectedChannel} from './channelActions'
 import ModelPicker from './ModelPicker.vue'
 import NewChannelDialog from './NewChannelDialog.vue'
 import NativeConfigImportDialog from './NativeConfigImportDialog.vue'
+import FileSourceReview from './FileSourceReview.vue'
 import {useModelSaveFeedback} from '@/app/feedback/modelSave'
 import {useFeedbackStore} from '@/app/feedback/store'
 import {useModalStore} from '@/app/modal/store'
@@ -40,7 +41,7 @@ onMounted(()=>{if(props.active!==false&&!models.file)void models.loadChannels()}
   <section class="channels-v2" aria-label="渠道模型配置">
     <p v-if="models.fileError" role="alert" class="model-error">{{models.fileError}}</p>
     <p v-if="models.fileBusy" role="status">正在读取渠道配置…</p>
-    <p v-if="models.fileNeedsReconcile" role="alert" class="model-error">读取期间有新的明确编辑，当前输入保持。请核对来源后重新读取。</p>
+    <FileSourceReview />
     <Teleport defer :to="actionsTarget||'body'" :disabled="!actionsTarget"><div v-if="!editor" class="channel-policy-actions" aria-label="渠道配置保存状态"><span class="tag" role="status">{{models.fileDirty||models.pendingRows.length?'待保存修改':'未修改'}}</span><UiButton :disabled="models.fileBusy||!models.fileDirty&&!models.pendingRows.length" @click="discardLocal">还原修改</UiButton><UiButton variant="primary" data-testid="policy-save" :disabled="props.active===false||!!editor||!models.canSaveFile||!models.fileDirty||!!nameErrors.length||!!models.pendingRows.length" @click="prepareSave()">保存配置</UiButton></div></Teleport>
     <p v-if="models.readResults.length" role="status">上次成功读取 · 自动匹配 {{counts.matched}} · 更新草稿 {{counts.changed}} · 保留人工 {{counts.manualPreserved}} · 未匹配 {{counts.unmatched}} · 缺默认版本 {{counts.missingDefault}} · 缺依赖 {{counts.missingDependency}} · 冲突 {{counts.conflict}} · 协议待配置 {{counts.protocolPending}}。保存配置后才生效。</p>
     <ChannelEditor v-if="editor" :channel="editor" :channels="models.channels" :effective="models.effectiveRows" :busy="models.fileBusy" :dirty="models.channelDirty(editor.id)" :save-disabled="props.active===false||!models.canSaveFile||!models.channelDirty(editor.id)||models.pendingRows.some(row=>row.channel===editor!.id)" @close="models.channelEditorId=''" @save="saveDetail" @intent="models.queueChannel" @edit="models.queueModel" />

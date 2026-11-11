@@ -366,6 +366,44 @@ pub async fn model_v2_stage_connection(
     .await
 }
 #[tauri::command]
+pub async fn model_v2_file_reconcile_preview(
+    request: crate::modules::model_config::config_file::v2::reconcile::ReconcileRequest,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::config_file::v2::reconcile::Preview> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        false,
+        move |root, home| {
+            crate::modules::model_config::config_file::v2::reconcile::preview(root, home, request)
+        },
+    )
+    .await
+}
+#[tauri::command]
+pub async fn model_v2_file_reconcile_apply(
+    request: crate::modules::model_config::config_file::v2::reconcile::ReconcileRequest,
+    review_digest: String,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> Result<crate::modules::model_config::config_file::v2::FileSnapshotV2> {
+    file_work(
+        data_root.0.clone(),
+        context.opencodex_home.clone(),
+        true,
+        move |root, home| {
+            crate::modules::model_config::config_file::v2::reconcile::apply(
+                root,
+                home,
+                request,
+                &review_digest,
+            )
+        },
+    )
+    .await
+}
+#[tauri::command]
 pub async fn model_v2_file_save(
     request: crate::modules::model_config::config_file::v2::SaveRequestV2,
     data_root: tauri::State<'_, SharedDataRoot>,

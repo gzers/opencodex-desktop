@@ -3,6 +3,8 @@
 pub mod native_import;
 #[path = "model_receive_file_v2.rs"]
 pub mod receive;
+#[path = "config_file_v2_reconcile.rs"]
+pub mod reconcile;
 #[cfg(test)]
 #[path = "config_file_v2_tests.rs"]
 mod tests;
@@ -167,6 +169,16 @@ fn bindings(
     draft: Option<&DraftV2>,
     mappings: &MappingFileV2,
 ) -> Result<Vec<ProviderBindingV2>> {
+    observed_bindings(root, raw, policy, draft, mappings, true)
+}
+fn observed_bindings(
+    root: &Path,
+    raw: &Value,
+    policy: &PolicyV2,
+    draft: Option<&DraftV2>,
+    mappings: &MappingFileV2,
+    persist: bool,
+) -> Result<Vec<ProviderBindingV2>> {
     let providers = raw
         .get("providers")
         .map(|v| v.as_object().ok_or_else(|| error("model_source_invalid")))
@@ -254,7 +266,7 @@ fn bindings(
         });
     }
     let after = canonical_bytes(&registry)?;
-    if before_registry.as_deref() != Some(after.as_slice()) {
+    if persist && before_registry.as_deref() != Some(after.as_slice()) {
         crate::infrastructure::atomic_write::atomic_write(&registry_path, &after, 0o600)
             .map_err(io)?;
     }
@@ -277,6 +289,7 @@ fn view(mut state: StoreSnapshotV2, source: String, revision: String) -> Result<
     let effective = effective(&state.library, policy)?;
     if let Some(draft) = &mut state.draft {
         draft.observed_config_digest = None;
+        draft.observed_providers = None;
     }
     Ok(FileSnapshotV2 {
         dto_version: 2,
@@ -476,6 +489,7 @@ pub fn read_existing(root: &Path, home: &Path, request: ReadRequestV2) -> Result
                     .unwrap_or_default(),
                 observed_baseline: Some(observed_baseline),
                 observed_config_digest: config_baseline(&raw, bytes.is_some()),
+                observed_providers: Some(reconcile::provider_observations(&raw)?),
                 policy: next,
             },
         )?;
@@ -751,6 +765,20 @@ fn transform_draft_v2(
     let edited = apply_explicit_edits_v2(&draft.policy, &request.edits)?;
     let mut intended = if let Some(scope) = &request.scope_channel_id {
         let mut p = state.policy.clone();
+        // Refresh already-managed rows from the bound disk observation. A
+        // scoped save must not adopt unrelated unmanaged providers.
+        if let Some(observed) = &draft.observed_baseline {
+            for channel in &mut p.channels {
+                if let Some(current) = observed.channels.iter().find(|c| c.id == channel.id) {
+                    *channel = current.clone();
+                }
+            }
+            p.default_channel_id = observed
+                .default_channel_id
+                .as_ref()
+                .filter(|id| p.channels.iter().any(|channel| &channel.id == *id))
+                .cloned();
+        }
         let channel = edited
             .channels
             .iter()
@@ -1093,7 +1121,12 @@ pub fn save_with_credentials(
             continue;
         }
         project_connection_v2(provider, channel);
-        if let Some(edit) = draft.credential_edits.get(&channel.id) {
+        if let Some(edit) = draft.credential_edits.get(&channel.id).filter(|_| {
+            request
+                .scope_channel_id
+                .as_ref()
+                .is_none_or(|scope| scope == &channel.id)
+        }) {
             match edit {
                 DraftCredentialEditV2::Replace { credential_ref } => {
                     let key = vault.get(credential_ref)?;
@@ -1210,7 +1243,12 @@ pub fn save_with_credentials(
         {
             policy.default_channel_id = compiled.policy.default_channel_id.clone();
         }
-        if policy_semantic_digest_v2(&policy)? != policy_semantic_digest_v2(&compiled.policy)? {
+        if policy_semantic_digest_v2(&policy)? != policy_semantic_digest_v2(&compiled.policy)?
+            || draft
+                .credential_edits
+                .keys()
+                .any(|id| id != scope && policy.channels.iter().any(|c| &c.id == id))
+        {
             let mut base = draft.base.clone();
             base.source_digest = digest(&canonical_bytes(&compiled.next_config)?);
             base.policy_digest = policy_semantic_digest_v2(&compiled.policy)?;
@@ -1243,6 +1281,7 @@ pub fn save_with_credentials(
                     .collect(),
                 observed_baseline: Some(observation),
                 observed_config_digest: config_baseline(&compiled.next_config, true),
+                observed_providers: Some(reconcile::provider_observations(&compiled.next_config)?),
                 policy,
             })?)
         } else {
@@ -1670,6 +1709,7 @@ pub fn stage_connection(
                         )?),
                 ),
                 observed_config_digest: config_baseline(&raw, bytes.is_some()),
+                observed_providers: Some(reconcile::provider_observations(&raw)?),
                 policy,
             },
         )?;
@@ -1734,6 +1774,7 @@ pub fn begin_draft(root: &Path, home: &Path, request: ReadRequestV2) -> Result<F
                 credential_edits: BTreeMap::new(),
                 observed_baseline: Some(policy.clone()),
                 observed_config_digest: config_baseline(&raw, bytes.is_some()),
+                observed_providers: Some(reconcile::provider_observations(&raw)?),
                 policy,
             },
         )?;
@@ -1758,6 +1799,8 @@ struct CopySourceV2 {
     channel_id: String,
     source_provider_id: String,
     source_digest: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    provider_digest: Option<String>,
     reuse_source_key: bool,
     /// Pending replace/clear is fixed by the backend draft, not the source row.
     source_credential_edit: Option<DraftCredentialEditV2>,
@@ -1776,27 +1819,9 @@ fn copied_seed(
     channel: &ChannelV2,
     source: &str,
 ) -> Result<Option<Value>> {
-    let Some(reference) = &channel.connection.imported_config else {
+    let Some((record, source)) = verified_copy_source(root, raw, channel, source)? else {
         return Ok(None);
     };
-    let bytes = safety::read_file(&copy_path(root, &reference.id)?, 65536).map_err(io)?;
-    if digest(&bytes) != reference.digest {
-        return Err(error("model_source_invalid"));
-    }
-    let record: CopySourceV2 =
-        serde_json::from_value(parse_strict_json_v2(&bytes)?).map_err(json_error)?;
-    if record.schema_version != 2
-        || record.channel_id != channel.id
-        || record.source_digest != source
-    {
-        return Err(error("model_save_stale"));
-    }
-    let source = raw["providers"]
-        .get(&record.source_provider_id)
-        .ok_or_else(|| error("model_save_stale"))?;
-    if protected(&record.source_provider_id, source) {
-        return Err(error("model_protected_provider"));
-    }
     let mut value = source.clone();
     if !record.reuse_source_key || record.source_credential_edit.is_some() {
         // Retain public and unknown noncredential source fields, while never
@@ -1815,6 +1840,37 @@ fn copied_seed(
     value["name"] = json!(channel.label);
     value["disabled"] = json!(true);
     Ok(Some(value))
+}
+fn verified_copy_source<'a>(
+    root: &Path,
+    raw: &'a Value,
+    channel: &ChannelV2,
+    source: &str,
+) -> Result<Option<(CopySourceV2, &'a Value)>> {
+    let Some(reference) = &channel.connection.imported_config else {
+        return Ok(None);
+    };
+    let bytes = safety::read_file(&copy_path(root, &reference.id)?, 65536).map_err(io)?;
+    if digest(&bytes) != reference.digest {
+        return Err(error("model_source_invalid"));
+    }
+    let record: CopySourceV2 =
+        serde_json::from_value(parse_strict_json_v2(&bytes)?).map_err(json_error)?;
+    if record.schema_version != 2 || record.channel_id != channel.id {
+        return Err(error("model_save_stale"));
+    }
+    let row = raw["providers"]
+        .get(&record.source_provider_id)
+        .ok_or_else(|| error("model_save_stale"))?;
+    if record.source_digest != source
+        && record.provider_digest.as_ref() != Some(&reconcile::provider_digest(row)?)
+    {
+        return Err(error("model_save_stale"));
+    }
+    if protected(&record.source_provider_id, row) {
+        return Err(error("model_protected_provider"));
+    }
+    Ok(Some((record, row)))
 }
 pub fn copy_channel(root: &Path, home: &Path, request: CopyChannelV2) -> Result<FileSnapshotV2> {
     let _file_admission =
@@ -1909,6 +1965,7 @@ pub fn copy_channel(root: &Path, home: &Path, request: CopyChannelV2) -> Result<
     let record = CopySourceV2 {
         schema_version: 2,
         channel_id: channel.id.clone(),
+        provider_digest: Some(reconcile::provider_digest(&raw["providers"][&source_id])?),
         source_provider_id: source_id,
         source_digest: source.clone(),
         reuse_source_key: request.reuse_source_key,
