@@ -593,3 +593,57 @@ setTimeout(()=>process.exit(77),45000).unref();
         eprintln!("recovery OS owner evidence: {}", log.display());
     }
 }
+
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn versioned_service_owner_uses_selected_image_and_rejects_flat_paths_or_selection_drift() {
+    use crate::modules::runtime::{
+        program_selection::tests::Fixture as ProgramFixture, RuntimeHandle,
+    };
+    let program = ProgramFixture::new();
+    let mut f = Fixture::new();
+    let data = f._root.path().join("desktop");
+    std::fs::create_dir(&data).unwrap();
+    let runtime = RuntimeHandle::initialize_versioned(&data, &program.root);
+    let selected = runtime.selected_program().unwrap().unwrap();
+    f.provider.installation_root = program.root.clone();
+    f.provider.context.runtime = runtime;
+    f.record(4242);
+    let mut process = f.process(4242);
+    process.image = selected.paths.node.clone();
+    process.argv[1] = selected.script.to_string_lossy().into_owned();
+    f.host
+        .processes
+        .lock()
+        .unwrap()
+        .insert(4242, process.clone());
+    assert!(matches!(
+        f.query(),
+        ServiceOwnerProof::Owned { pid: 4242, .. }
+    ));
+    let mut flat = process.clone();
+    flat.image = program.root.join("runtime/node/bin/node");
+    f.host.processes.lock().unwrap().insert(4242, flat);
+    assert_eq!(f.query(), ServiceOwnerProof::Unknown);
+    process.image = selected
+        .paths
+        .package_root
+        .join("node_modules/bun/bin/bun.exe");
+    process.argv[1] = selected
+        .paths
+        .package_root
+        .join("node_modules/@bitkyc08/opencodex/src/cli/index.ts")
+        .to_string_lossy()
+        .into_owned();
+    f.host.processes.lock().unwrap().insert(4242, process);
+    assert!(matches!(
+        f.query(),
+        ServiceOwnerProof::Owned { pid: 4242, .. }
+    ));
+    std::fs::write(
+        program.root.join("runtime/current.json"),
+        b"outside selected image",
+    )
+    .unwrap();
+    assert_eq!(f.query(), ServiceOwnerProof::Unknown);
+}

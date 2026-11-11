@@ -362,14 +362,59 @@ impl SystemServiceOwnerProofProvider {
             return false;
         }
         let image = path_key(&process.image);
-        let prefix = self.installation_root.join("runtime/opencodex");
-        let node =
-            crate::modules::runtime::install::managed_dependency_paths(&self.installation_root).0;
-        let bun = self.installation_root.join(if cfg!(windows) {
-            "runtime/bun/bun.exe"
+        let (prefix, node, bun) = if let Some(root) =
+            self.context.runtime.managed_installation_root()
+        {
+            if path_key(&root) != self.installation_root {
+                return false;
+            }
+            let Ok(program) = self.context.runtime.observed_program_identity() else {
+                return false;
+            };
+            if path_key(&program.installation_root) != self.installation_root {
+                return false;
+            }
+            if program.prefix == root.join("runtime/opencodex") {
+                (
+                    program.prefix,
+                    program.node,
+                    root.join(if cfg!(windows) {
+                        "runtime/bun/bun.exe"
+                    } else {
+                        "runtime/bun/bun"
+                    }),
+                )
+            } else {
+                let Ok((_, platform)) = crate::modules::runtime::program_layout::host_target()
+                else {
+                    return false;
+                };
+                let Ok(paths) = crate::modules::runtime::program_layout::RuntimeVersionPaths::new(
+                    &root.join("runtime/versions"),
+                    &program.package_version,
+                    platform,
+                ) else {
+                    return false;
+                };
+                if program.prefix != paths.package_root || program.node != paths.node {
+                    return false;
+                }
+                (paths.package_root, paths.node, paths.bun)
+            }
         } else {
-            "runtime/bun/bun"
-        });
+            // Explicit non-versioned providers used by the existing isolated
+            // fixture/recovery contract retain their own fixed installation.
+            (
+                self.installation_root.join("runtime/opencodex"),
+                crate::modules::runtime::install::managed_dependency_paths(&self.installation_root)
+                    .0,
+                self.installation_root.join(if cfg!(windows) {
+                    "runtime/bun/bun.exe"
+                } else {
+                    "runtime/bun/bun"
+                }),
+            )
+        };
         let package_bun = prefix.join("node_modules/bun/bin/bun.exe");
         let native_bun = image.starts_with(prefix.join("node_modules/@oven"))
             && matches!(

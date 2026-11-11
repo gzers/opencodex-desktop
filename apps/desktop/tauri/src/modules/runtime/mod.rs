@@ -675,6 +675,22 @@ impl crate::infrastructure::runtime_executable::RuntimeExecutableProvider for Ru
     fn source_problem(&self) -> Option<String> {
         RuntimeHandle::source_problem(self)
     }
+    fn observed_program_identity(
+        &self,
+    ) -> crate::errors::AppResult<install::ManagedRuntimeIdentity> {
+        if !self.uses_versioned_programs() {
+            return install::resolve_managed_installation(self.installation_root())
+                .map_err(Into::into);
+        }
+        let selected = self.selected_program()?.ok_or(AppError::NotConfigured)?;
+        Ok(install::ManagedRuntimeIdentity {
+            installation_root: self.installation_root().into(),
+            prefix: selected.paths.package_root,
+            entry: selected.stable_entry,
+            node: selected.paths.node,
+            package_version: selected.selection.version,
+        })
+    }
     fn managed_program_identity(
         &self,
     ) -> crate::errors::AppResult<install::ManagedRuntimeIdentity> {
