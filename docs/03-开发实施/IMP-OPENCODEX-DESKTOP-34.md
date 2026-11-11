@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 43；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 44；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -393,3 +393,12 @@ mainb92dc31f4新增受保护原索引的immutable只读观察，先共享action 
 mainf5fc1fef0修正上批真实快照暴露的config.json被当HOME、停止仍显示保存端口：核对原官方status.ts，明确paths.config为文件而listen.port不等于运行监听。生产采集器以启动时固定D/H覆盖状态payload路径，并在成功/去抖/失败中保持；纯文件路径不猜HOME。只有明确停止/未发现时清运行port/PID，未知沿用不额外推定缺席，配置保存端口不改。详[路径与运行端点合同](0.2.24-contracts/status-context-paths-r1.md)。
 
 32项相关检查/编译/格式/严格Clippy通过；真实隔离子进程命令夹具消费生产Source/collector，明确不是官方原包服务验收。本轮只核对原tgz源码及前批真实快照，未再启动整套服务。旧test把config文件当HOME的错误断言首错保留、更正后单项通过，其它断言未删；launcher相对路径错误仅原工具输出留证的边界如实记录。证据.adg/evidence/0.2.24/status-context-paths-r1/及manifest、隔离拒绝/清理完整，自有测试/命令/profile/binary/重复根清理。原生产品reopened路径/端点断言加强但本轮未执行，实际恢复及revision4首错仍未闭合；Windows/NAME/System代理/发布验证/固定候选继续，目标未关闭，不发布。
+
+
+## 2026-11-12 npm原生静态代理与旧配置覆盖
+
+main526007952将系统静态代理快照接到安装pack/install及面板npm view共用受控入口；Mac SystemConfiguration/Windows WinHTTP只读，None/Manual不查系统，离线不解析系统代理，显式凭据仍原临时0600文件且环境快照不覆盖它。原包npm不支持两协议独立代理/PAC/CIDR/简单主机例外等语义，当前明确拒绝不可等价配置，不能把此拒绝当完整System已做完。详[npm静态系统代理合同](0.2.24-contracts/npm-system-static-r1.md)。
+
+真实npm暴露Direct的空环境被忽略而使用旧npmrc代理，修为false/null及明确空noproxy覆盖；18项相关检查、5场景实际loopback npm路由/原配置不变、实际Mac只读查询无代理分类、编译/格式/严格Clippy通过。Windows只做最终共享adapter的MSVC目标独立编译（其它DTO结构stub），未实机或整包通过。首CF类型/lint、测试server非阻塞时序及Direct产品首错原输出保留，末轮因Direct/bypass反例改变而重验五路，未删失败；0test误筛选不计通过。证据.adg/evidence/0.2.24/npm-system-static-r1/含摘要/manifest/清理，自有工具副本/进程/profile/npmrc/cache/binary/跨编译target和重复根移除，无日常/系统代理/官方包改动，无真实registry安装或业务请求。
+
+完整System复杂路由、Windows新贡献/原生补验、NAME、实际恢复/完整集合监听写者与revision4首错、官方发布验证/固定候选保持未完；本轮未跑完整服务或出新包，不发布、不关闭目标。

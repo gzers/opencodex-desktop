@@ -1,0 +1,137 @@
+{
+  "accepted": false,
+  "frozenCandidate": false,
+  "scope": "native common static npm proxy snapshot plus Direct/npmrc override; explicit refusal for unrepresentable OS routing",
+  "uniqueChecksPassed": 18,
+  "counts": "3 policy +1 env +1 credential argv +1 tempuserconfig +6 metadata +4 versioned installer +1 real npm(5 scenarios) +1 actual native read classification. No duplicate passing reruns counted; zero-test initial versioned filter excluded.",
+  "results": {
+    "groups": {
+      "policy-publish": {
+        "exitCode": 0,
+        "results": [
+          "test result: ok. 3 passed; 0 failed; 1 ignored; 0 measured; 2306 filtered out; finished in 0.01s"
+        ]
+      },
+      "npm-env-publish": {
+        "exitCode": 0,
+        "results": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2309 filtered out; finished in 0.01s"
+        ]
+      },
+      "metadata-publish": {
+        "exitCode": 0,
+        "results": [
+          "test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 2303 filtered out; finished in 0.25s"
+        ]
+      },
+      "actual-npm-publish": {
+        "exitCode": 0,
+        "results": [
+          "REAL_NPM_PROXY {\"actualRegistryRequest\":true,\"bypass\":true,\"directPolicy\":false,\"installed\":false,\"nativeOsSettingsMutated\":false,\"savedConfigurationUnchanged\":true,\"systemSnapshotFixture\":false}",
+          "REAL_NPM_PROXY {\"actualRegistryRequest\":true,\"bypass\":false,\"directPolicy\":false,\"installed\":false,\"nativeOsSettingsMutated\":false,\"savedConfigurationUnchanged\":true,\"systemSnapshotFixture\":true}",
+          "REAL_NPM_PROXY {\"actualRegistryRequest\":true,\"bypass\":true,\"directPolicy\":false,\"installed\":false,\"nativeOsSettingsMutated\":false,\"savedConfigurationUnchanged\":true,\"systemSnapshotFixture\":true}",
+          "REAL_NPM_PROXY {\"actualRegistryRequest\":true,\"bypass\":false,\"directPolicy\":true,\"installed\":false,\"nativeOsSettingsMutated\":false,\"savedConfigurationUnchanged\":true,\"systemSnapshotFixture\":false}",
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2309 filtered out; finished in 0.94s"
+        ]
+      }
+    },
+    "binarySha256": "87c89692a44f76a9d2b8abdcec5bb915752894bbcfc9a1d6c1f7919a48cd3fc2",
+    "hypothesis": "Direct empty values inherited old npmrc proxy; false/null and explicit blank-string bypass must supersede stale npmrc without rewriting it. Repeat affected Manual/System/Direct routes with stale npmrc noproxy as new counterexample; keep former failures."
+  },
+  "otherChecks": {
+    "groups": {
+      "policy": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 3 passed; 0 failed; 1 ignored; 0 measured; 2306 filtered out; finished in 0.01s"
+        ]
+      },
+      "npm-env": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2309 filtered out; finished in 0.01s"
+        ]
+      },
+      "credentials": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2309 filtered out; finished in 0.01s"
+        ]
+      },
+      "userconfig": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2309 filtered out; finished in 0.00s"
+        ]
+      },
+      "metadata": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 2303 filtered out; finished in 0.24s"
+        ]
+      },
+      "versioned": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2310 filtered out; finished in 0.00s"
+        ]
+      },
+      "actual-npm": {
+        "exitCode": 101,
+        "resultLines": [
+          "FAILED",
+          "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2309 filtered out; finished in 1.74s"
+        ]
+      }
+    },
+    "binarySha256": "99362ccb96046d002a5b6750dd5640238b23cc5f7965e10ce8a34f9f898f7ba6"
+  },
+  "versionedAfterCorrectedFilter": {
+    "groups": {
+      "actual-npm-fixed": 101,
+      "versioned-corrected-filter": 0
+    },
+    "binarySha256": "5fefa04854ceb484590dd21fe73a53b6c903d2f9bd57586294b473b3b9f00bdc",
+    "sourceChange": "final adapter uses lint-corrected borrows and tests add blocking socket/direct scenario only; production routing unchanged after initial related group pass",
+    "preflightPathError": "First copied repo-root-relative target path after tauri-relative Cargo build; failed copy before test, corrected invocation cwd; raw tool output only"
+  },
+  "nativeRead": {
+    "exitCode": 0,
+    "scope": "actual current macOS SystemConfiguration read-only inspection, accepts an explicit supported-or-refused classification; not proof of routing for every OS proxy configuration",
+    "systemSettingsWritten": false
+  },
+  "checks": {
+    "fmt-publish": 0,
+    "clippy-publish": 0,
+    "build-publish": 0
+  },
+  "windowsApiCompileExitCode": 0,
+  "failuresRetained": [
+    "CFArray concrete cast compile",
+    "needless borrowed CFString clippy",
+    "nonblocking socket fixture WouldBlock",
+    "Direct product bug empty npm config ignored and inherited old npmrc proxy",
+    "preflight glob redirection and working-directory file-copy errors raw tool output only"
+  ],
+  "limitations": [
+    "PAC/WPAD not implemented; fail before npm request",
+    "different HTTP/HTTPS or only-one-scheme native route refused",
+    "CIDR, arbitrary wildcard, ExcludeSimpleHostnames or <local> native bypass refused",
+    "Windows native reader only cross-compiled adapter; real current-user WinHTTP route and cleanup require Windows",
+    "Mac actual OS read saw no configured proxy; configured route tests used native snapshot fixture, no OS changes",
+    "no real registry install/update, full goal and lifecycle restoration remain open"
+  ],
+  "cleanup": {
+    "ownedProcessesRemaining": [],
+    "kernelIsolationVerified": {
+      "daily-home": true,
+      "external-network": true
+    },
+    "copiedNodeNpmAndEntirePrivateFixtureRemoved": true,
+    "copiedToolHashesUnchanged": true,
+    "systemProxySettingsWritten": false,
+    "npmUserOrGlobalConfigWritten": false,
+    "businessRequests": false,
+    "actualRequests": "loopback synthetic npm metadata only, no pack/install executed"
+  }
+}

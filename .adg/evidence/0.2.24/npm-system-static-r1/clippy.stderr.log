@@ -1,0 +1,38 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error: the borrowed expression implements the required traits
+   --> src/modules/network_defaults/npm_proxy.rs:168:24
+    |
+168 |         match map.find(&CFString::new(key)) {
+    |                        ^^^^^^^^^^^^^^^^^^^ help: change this to: `CFString::new(key)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrows_for_generic_args
+    = note: `-D clippy::needless-borrows-for-generic-args` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::needless_borrows_for_generic_args)]`
+
+error: the borrowed expression implements the required traits
+   --> src/modules/network_defaults/npm_proxy.rs:185:19
+    |
+185 |             .find(&CFString::new(&format!("{prefix}Proxy")))
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: change this to: `CFString::new(&format!("{prefix}Proxy"))`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrows_for_generic_args
+
+error: the borrowed expression implements the required traits
+   --> src/modules/network_defaults/npm_proxy.rs:190:19
+    |
+190 |             .find(&CFString::new(&format!("{prefix}Port")))
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: change this to: `CFString::new(&format!("{prefix}Port"))`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrows_for_generic_args
+
+error: the borrowed expression implements the required traits
+   --> src/modules/network_defaults/npm_proxy.rs:208:33
+    |
+208 |     let values = match map.find(&CFString::new("ExceptionsList")) {
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: change this to: `CFString::new("ExceptionsList")`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrows_for_generic_args
+
+error: could not compile `opencodex-desktop` (lib) due to 4 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `opencodex-desktop` (lib test) due to 4 previous errors

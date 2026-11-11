@@ -1,0 +1,46 @@
+{
+  "archiveSha256": "5b10c1a888000d54d14783622d9d8330c33f4e1b14a5f163d007337d0424ec7f",
+  "node": "/private/tmp/ocxd024-npm-system-kax5ysqj/fixtures/tools/bin/node",
+  "npm": "/private/tmp/ocxd024-npm-system-kax5ysqj/fixtures/tools/lib/node_modules/npm/bin/npm-cli.js",
+  "nodeSha256": "ebd2d552c7bebde593dd0390530963ad28de56bccde6ce387cdbe55fb0b6fb8e",
+  "npmSha256": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7",
+  "registryProxyExcerpt": [
+    "      proxy: opts.httpsProxy || opts.proxy,"
+  ],
+  "extractedFiles": 1927,
+  "npmProxySourceSha256": "192a78a72232f67d0cbd46fe8f9dbd994f98c197cb345570c312aaac12831111",
+  "npmProxyContractLines": [
+    {
+      "line": 13,
+      "text": "const PROXY_ENV_KEYS = new Set(['https_proxy', 'http_proxy', 'proxy', 'no_proxy'])"
+    },
+    {
+      "line": 46,
+      "text": "  const hostSegments = url.hostname.split('.').reverse()"
+    },
+    {
+      "line": 49,
+      "text": "    const noSegments = no.split('.').filter(Boolean).reverse()"
+    },
+    {
+      "line": 50,
+      "text": "    if (!noSegments.length) {"
+    },
+    {
+      "line": 54,
+      "text": "    for (let i = 0; i < noSegments.length; i++) {"
+    },
+    {
+      "line": 55,
+      "text": "      if (hostSegments[i] !== noSegments[i]) {"
+    },
+    {
+      "line": 69,
+      "text": "      ? PROXY_ENV.https_proxy"
+    },
+    {
+      "line": 70,
+      "text": "      : PROXY_ENV.https_proxy || PROXY_ENV.http_proxy || PROXY_ENV.proxy"
+    }
+  ]
+}
