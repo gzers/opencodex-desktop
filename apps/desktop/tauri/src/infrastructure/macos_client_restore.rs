@@ -372,7 +372,7 @@ impl<'a> Pending<'a> {
     pub fn prepare(
         originals: &'a Originals,
         evidence: Evidence,
-        lease: &crate::infrastructure::official_client_coordination::Lease,
+        lease: &crate::infrastructure::official_client_coordination::native::NativeLease,
     ) -> io::Result<Self> {
         Self::prepare_checked(originals, evidence, &|| {
             lease
@@ -474,7 +474,7 @@ impl<'a> Pending<'a> {
         &self,
         decision: Decision,
         permit: &MutationPermit,
-        lease: &crate::infrastructure::official_client_coordination::Lease,
+        lease: &crate::infrastructure::official_client_coordination::native::NativeLease,
     ) -> io::Result<()> {
         if permit.attempt != self.originals.attempt
             || permit.client != *self.originals.client.identity()

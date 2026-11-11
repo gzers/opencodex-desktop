@@ -339,6 +339,122 @@ impl PinnedDirectory {
     }
 }
 
+/// Kept open BEFORE SQLite acquires process-associated POSIX locks. Never open
+/// and close another descriptor for this inode while its SQLite transaction is
+/// held: closing any such descriptor could release all of this process's locks.
+pub(crate) struct CoordinationFilePin {
+    parent: PinnedDirectory,
+    file: File,
+    name: CString,
+    identity: Identity,
+    protection: Protection,
+}
+impl CoordinationFilePin {
+    pub(crate) fn open(path: &Path) -> io::Result<Self> {
+        let parent =
+            PinnedDirectory::open(path.parent().ok_or_else(|| denied("lock parent missing"))?)?;
+        let root = stat(parent.file())?;
+        let root_protection = protection(parent.file(), &root)?;
+        if root.st_uid != unsafe { libc::geteuid() }
+            || root.st_mode & 0o022 != 0
+            || root_protection.acl.is_some()
+        {
+            return Err(denied("coordination parent access unknown"));
+        }
+        let filename = path
+            .file_name()
+            .ok_or_else(|| denied("lock name missing"))?;
+        let file = open_at(parent.file(), filename, false)?;
+        let s = stat(&file)?;
+        let p = protection(&file, &s)?;
+        if p.uid != unsafe { libc::geteuid() }
+            || p.mode != 0o600
+            || p.acl.is_some()
+            || p.flags != 0
+            || p.xattrs
+                .iter()
+                .any(|(k, v)| k != b"com.apple.provenance" || v.len() > 64)
+        {
+            return Err(denied("unsafe existing native coordination file"));
+        }
+        let result = Self {
+            parent,
+            file,
+            name: name(filename)?,
+            identity: identity(&s),
+            protection: p,
+        };
+        result.recheck()?;
+        Ok(result)
+    }
+    pub(crate) fn key(&self) -> (String, String) {
+        (
+            self.identity.device.to_string(),
+            self.identity.inode.to_string(),
+        )
+    }
+    pub(crate) fn recheck(&self) -> io::Result<()> {
+        self.parent.recheck()?;
+        let s = stat(&self.file)?;
+        let mut path = std::mem::MaybeUninit::uninit();
+        if unsafe {
+            libc::fstatat(
+                self.parent.file().as_raw_fd(),
+                self.name.as_ptr(),
+                path.as_mut_ptr(),
+                libc::AT_SYMLINK_NOFOLLOW,
+            )
+        } != 0
+        {
+            return Err(io::Error::last_os_error());
+        }
+        let path = unsafe { path.assume_init() };
+        if identity(&s) != self.identity
+            || identity(&path) != self.identity
+            || path.st_mode & libc::S_IFMT != libc::S_IFREG
+            || path.st_nlink != 1
+            || s.st_nlink != 1
+            || protection(&self.file, &s)? != self.protection
+            || path.st_uid != s.st_uid
+            || path.st_gid != s.st_gid
+            || path.st_mode != s.st_mode
+            || path.st_flags != s.st_flags
+        {
+            return Err(denied("coordination inode or protection changed"));
+        }
+        Ok(())
+    }
+}
+
+/// Matches the opaque receipt produced by official admission while K is held.
+/// It grants no authority by itself. A native coordination owner compares it
+/// before/after acquisition; paths are fixed here, never taken from a record.
+pub(crate) fn ownership_receipt(root: &PinnedDirectory) -> io::Result<String> {
+    match capture_file(root, "opencodex-journal.json", 1024 * 1024)? {
+        Image::Absent => Ok("absent".into()),
+        Image::File {
+            identity,
+            protection,
+            bytes,
+            ..
+        } => {
+            if protection.mode & 0o022 != 0 || protection.acl.is_some() || protection.flags != 0 {
+                return Err(denied(
+                    "ownership receipt has unknown write access; not repaired",
+                ));
+            }
+            Ok(digest(&encode(&[
+                identity.device.to_string(),
+                identity.inode.to_string(),
+                protection.uid.to_string(),
+                protection.gid.to_string(),
+                protection.mode.to_string(),
+                digest(&bytes),
+            ])?))
+        }
+    }
+}
+
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "state", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Image {

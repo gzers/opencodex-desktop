@@ -24,6 +24,8 @@ const HELPER: &str = include_str!("client_coordination299.mjs");
 const SCHEMA: &str = "ocxd-client-coordination/1";
 const MAX_HOLD: Duration = Duration::from_millis(2000);
 const MAX_RECORD: usize = 2048;
+#[path = "native_client_coordination.rs"]
+pub mod native;
 fn fail(code: &str) -> AppError {
     AppError::RuntimeManaged {
         code: code.into(),
@@ -60,7 +62,7 @@ struct LockIdentity {
     device: String,
     inode: String,
 }
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 struct Record {
     schema: String,
@@ -69,6 +71,8 @@ struct Record {
     pid: u32,
     context_sha256: String,
     locks: [LockIdentity; 3],
+    paths: [PathBuf; 3],
+    owner: String,
 }
 fn record(bytes: &[u8]) -> AppResult<Record> {
     let value = crate::modules::model_config::schema_v2::parse_strict_json_v2(bytes).map_err(io)?;
@@ -98,6 +102,12 @@ fn record(bytes: &[u8]) -> AppResult<Record> {
     }
     let r: Record = serde_json::from_value(value).map_err(io)?;
     if r.schema != SCHEMA
+        || !(r.owner == "absent"
+            || r.owner.len() == 64
+                && r.owner
+                    .bytes()
+                    .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b)))
+        || r.paths.iter().any(|p| !program_layout::clean_absolute(p))
         || !["held", "released"].contains(&r.kind.as_str())
         || r.locks.iter().any(|x| {
             [&x.device, &x.inode]
@@ -162,6 +172,7 @@ pub struct Lease {
     rx: mpsc::Receiver<AppResult<Record>>,
     reader: Option<thread::JoinHandle<()>>,
     released: bool,
+    selected: program_selection::SelectedProgram,
 }
 impl Lease {
     pub fn check(&self) -> AppResult<()> {
@@ -208,10 +219,9 @@ impl Lease {
         self.request_release()?;
         let end = self.receive()?;
         if end.kind != "released"
-            || self
-                .held
-                .as_ref()
-                .is_none_or(|start| start.locks != end.locks)
+            || self.held.as_ref().is_none_or(|start| {
+                start.locks != end.locks || start.paths != end.paths || start.owner != end.owner
+            })
         {
             return Err(fail("client_coordination_release"));
         }
@@ -271,6 +281,19 @@ pub fn with_coordination<T>(
     context: &Context,
     deadline: Instant,
     operation: impl FnOnce(&Lease) -> AppResult<T>,
+) -> AppResult<T> {
+    with_coordination_inner(context, deadline, operation, true)
+}
+
+/// The native handover remains inside one outer operation. It performs the
+/// final complete inventory after native work, rather than duplicate that same
+/// complete inventory immediately before reacquisition. Selection freshness
+/// and every root/identity check still run here before returning the admission.
+fn with_coordination_inner<T>(
+    context: &Context,
+    deadline: Instant,
+    operation: impl FnOnce(&Lease) -> AppResult<T>,
+    final_inventory: bool,
 ) -> AppResult<T> {
     let started = Instant::now();
     if started >= deadline {
@@ -387,6 +410,7 @@ pub fn with_coordination<T>(
         rx,
         reader: Some(reader),
         released: false,
+        selected: selected.clone(),
     };
     let held = lease.receive()?;
     if held.kind != "held" {
@@ -403,7 +427,9 @@ pub fn with_coordination<T>(
         return Err(fail("client_coordination_timeout"));
     }
     program_selection::verify_current(&root, &selected)?;
-    program_image::verify(&selected)?;
+    if final_inventory {
+        program_image::verify(&selected)?;
+    }
     if Instant::now() >= deadline {
         return Err(fail("client_coordination_timeout"));
     }

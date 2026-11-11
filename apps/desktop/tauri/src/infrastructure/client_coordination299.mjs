@@ -1,7 +1,7 @@
 // Desktop-owned bounded lock holder. Imports the admitted official 2.99 files
 // unchanged. No client mutations, credential reads, service commands or network.
 import { createHash } from 'node:crypto';
-import { lstatSync, readFileSync, realpathSync, writeSync } from 'node:fs';
+import { lstatSync, readFileSync, realpathSync, writeSync,openSync,closeSync,fstatSync,readSync,constants } from 'node:fs';
 import { join, isAbsolute } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -19,6 +19,22 @@ function optionalLock(path){
   try{return identity(path);}catch(e){if(e?.code==='ENOENT')return null;throw e;}
 }
 const same=(a,b)=>a.device===b.device&&a.inode===b.inode;
+function ownerReceipt(home) {
+  const path=join(home,'opencodex-journal.json');let before;
+  try{before=lstatSync(path,{bigint:true});}catch(e){if(e?.code==='ENOENT')return 'absent';throw e;}
+  if(!before.isFile()||before.isSymbolicLink()||before.nlink!==1n||before.uid!==BigInt(process.getuid())||before.size>1048576n)throw Error('owner-journal-unavailable');
+  const fd=openSync(path,constants.O_RDONLY|constants.O_NOFOLLOW|constants.O_NONBLOCK);
+  try {
+    const opened=fstatSync(fd,{bigint:true});
+    if(opened.dev!==before.dev||opened.ino!==before.ino||opened.size!==before.size)throw Error('owner-journal-changed');
+    const buffer=Buffer.alloc(1048577);let used=0;
+    while(used<buffer.length){const n=readSync(fd,buffer,used,buffer.length-used,null);if(!n)break;used+=n;}
+    if(used>1048576)throw Error('owner-journal-over-limit');
+    const bytes=buffer.subarray(0,used);const after=lstatSync(path,{bigint:true});
+    if(after.dev!==opened.dev||after.ino!==opened.ino||after.size!==BigInt(bytes.length)||after.mtimeNs!==before.mtimeNs||after.ctimeNs!==before.ctimeNs)throw Error('owner-journal-changed');
+    return createHash('sha256').update(JSON.stringify([String(after.dev),String(after.ino),String(after.uid),String(after.gid),String(after.mode&0o7777n),createHash('sha256').update(bytes).digest('hex')])).digest('hex');
+  }finally{closeSync(fd);}
+}
 try {
   if(process.platform!=='darwin')throw Error('unsupported-platform');
   params=JSON.parse(process.argv.at(-1));
@@ -50,7 +66,8 @@ try {
   // its mode. Never repair an old object's permissions on Desktop's behalf.
   for(const path of [claim,npath,kpath])for(const suffix of ['','-journal','-wal','-shm'])optionalLock(path+suffix);
   const expectedHash=createHash('sha256').update(JSON.stringify([p.packageRoot,p.profile,p.codexHome,p.opencodexHome])).digest('hex');
-  let locks;
+  let locks,owner;
+  const paths=[claim,npath,kpath];
   stage='claim';
   await withNativeMainExclusiveClaim(context,async()=>{
     stage='native';const n=openCodexCoordinatorTransaction(npath);
@@ -59,8 +76,9 @@ try {
       const result=withCatalogWriteSerialization(context.codexHome,()=>{
         acquired=true;stage='held';
         locks=[claim,npath,kpath].map(identity);
+        owner=ownerReceipt(context.codexHome);
         const expires=performance.now()+p.holdMs;
-        emit({schema,kind:'held',operation:p.operation,pid:process.pid,contextSha256:expectedHash,locks});
+        emit({schema,kind:'held',operation:p.operation,pid:process.pid,contextSha256:expectedHash,locks,paths,owner});
         const parent=process.ppid;
         while(performance.now()<expires){
           if(process.ppid!==parent)throw Error('parent-changed');
@@ -76,6 +94,7 @@ try {
         if(!released)throw Error('hold-deadline');
         n.assertStablePath();
         if([claim,npath,kpath].map(identity).some((value,i)=>!same(value,locks[i])))throw Error('lock-replaced');
+        if(ownerReceipt(context.codexHome)!==owner)throw Error('owner-journal-changed');
       },{intent:'restore',writer:'codex-restore'});
       if(result.kind!=='completed')throw Error('catalog-refused');
     }finally{n.rollback();n.close();}
@@ -84,7 +103,7 @@ try {
   stage='released';
   const final=[claim,npath,kpath].map(identity);
   if(final.some((value,i)=>!same(value,locks[i])))throw Error('lock-replaced');
-  emit({schema,kind:'released',operation:p.operation,pid:process.pid,contextSha256:expectedHash,locks:final});
+  emit({schema,kind:'released',operation:p.operation,pid:process.pid,contextSha256:expectedHash,locks:final,paths,owner});
 }catch {
   // No upstream exception text, HOME, credential material or arbitrary argv.
   emit({schema,kind:'failed',stage,acquired,released});

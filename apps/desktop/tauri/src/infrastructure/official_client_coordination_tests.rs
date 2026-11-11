@@ -3,7 +3,7 @@ use serde_json::json;
 use std::os::unix::fs::{DirBuilderExt, MetadataExt, PermissionsExt};
 
 fn message(kind: &str) -> Vec<u8> {
-    serde_json::to_vec(&json!({"schema":SCHEMA,"kind":kind,"operation":"fd510ba0-ec79-47cf-8456-ac2efaa87ce3","pid":42,"contextSha256":"a".repeat(64),"locks":[{"device":"1","inode":"2"},{"device":"1","inode":"3"},{"device":"1","inode":"4"}]})).unwrap()
+    serde_json::to_vec(&json!({"schema":SCHEMA,"kind":kind,"operation":"fd510ba0-ec79-47cf-8456-ac2efaa87ce3","pid":42,"contextSha256":"a".repeat(64),"locks":[{"device":"1","inode":"2"},{"device":"1","inode":"3"},{"device":"1","inode":"4"}],"paths":["/private/claim.sqlite","/private/native.sqlite","/private/catalog.sqlite"],"owner":"absent"})).unwrap()
 }
 
 #[test]
