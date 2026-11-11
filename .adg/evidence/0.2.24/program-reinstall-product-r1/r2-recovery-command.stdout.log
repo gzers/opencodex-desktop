@@ -1,0 +1,21 @@
+
+running 4 tests
+test commands::runtime_activation::tests::backup_failure_or_service_reappearance_cannot_claim_recovery ... ok
+test commands::runtime_activation::tests::preview_is_readonly_and_confirmation_resolves_actual_pending_with_config_protection ... ok
+test commands::runtime_activation::tests::preview_of_absent_program_creates_nothing_and_ipc_rejects_paths ... FAILED
+test commands::runtime_activation::tests::wrong_home_stale_state_and_unknown_owner_leave_originals_without_backup ... ok
+
+failures:
+
+---- commands::runtime_activation::tests::preview_of_absent_program_creates_nothing_and_ipc_rejects_paths stdout ----
+
+thread 'commands::runtime_activation::tests::preview_of_absent_program_creates_nothing_and_ipc_rejects_paths' (154372947) panicked at src/commands/runtime_activation_tests.rs:148:6:
+called `Result::unwrap()` on an `Err` value: FileSystem { operation: "manage backups", detail: "No such file or directory (os error 2)" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    commands::runtime_activation::tests::preview_of_absent_program_creates_nothing_and_ipc_rejects_paths
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 2141 filtered out; finished in 1.59s
+

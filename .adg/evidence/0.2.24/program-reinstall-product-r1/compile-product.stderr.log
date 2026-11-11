@@ -1,0 +1,22 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+warning: type `program_reinstall::Review` is more private than the item `runtime_builtin_preview`
+   --> src/commands/runtime_builtin.rs:64:1
+    |
+ 64 | / pub async fn runtime_builtin_preview(
+ 65 | |     app: tauri::AppHandle,
+ 66 | |     runtime: tauri::State<'_, Arc<RuntimeHandle>>,
+ 67 | |     data: tauri::State<'_, SharedDataRoot>,
+ 68 | |     context: tauri::State<'_, SharedProcessContext>,
+ 69 | | ) -> AppResult<program_reinstall::Review> {
+    | |_________________________________________^ function `runtime_builtin_preview` is reachable at visibility `pub`
+    |
+note: but type `program_reinstall::Review` is only usable at visibility `pub(crate)`
+   --> src/modules/runtime/program_reinstall.rs:219:1
+    |
+219 | pub(crate) struct Review {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: `#[warn(private_interfaces)]` on by default
+
+warning: `opencodex-desktop` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 37.22s
+  Executable unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-58a8535d3845a745)

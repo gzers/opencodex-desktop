@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "code": "f180ee9804facdcbed0ffae784b85fc06554bf41",
+  "scope": "Explicit pinned bundled reinstall after completed registered removal, product commands and settings",
+  "accepted": false,
+  "backend": {
+    "uniqueFinalRelatedTests": 74,
+    "composition": {
+      "supply": 33,
+      "reinstall": 5,
+      "activation": 7,
+      "activationCommand": 4,
+      "removal": 7,
+      "catalog": 2,
+      "removalCommand": 4,
+      "owner": 10,
+      "explicitSupplyEntry": 1,
+      "officialBundleRoundtrip": 1
+    }
+  },
+  "frontend": {
+    "tests": 47,
+    "files": 5,
+    "typecheck": 0
+  },
+  "checks": {
+    "fmt": 0,
+    "clippyAllTargetsWarningsDenied": 0,
+    "diffCheck": 0
+  },
+  "official": {
+    "version": "2.99.0",
+    "actualVersionOutput": "opencodex 2.99.0",
+    "elapsedMs": 194323,
+    "serviceStarted": false,
+    "serviceUnusedProof": "injected isolated fixture",
+    "configurationPreserved": true,
+    "oldRemovalAndCatalogBytesPreserved": true,
+    "terminalAutomaticallyEnabled": false
+  },
+  "visual": {
+    "sizes": [
+      "1040x760",
+      "580x480"
+    ],
+    "nativeIpc": false,
+    "component": "actual RuntimeProgramReinstall/UiDialog and store",
+    "refreshError": "intentionally isolated failure, successful operation retained"
+  },
+  "failuresRetained": [
+    "clippy-product: visibility and redundant borrow, corrected without suppression",
+    "r2-recovery-command: absent-root readonly preview regression, fixed",
+    "r2-supply selected zero tests: not counted; corrected filter r3-supply has 33",
+    "official initial assertion expected bare version; official exact output includes command name",
+    "entry initial fixture used legacy synthetic prerelease; corrected to existing official-version fixture"
+  ],
+  "cleanup": {
+    "fixtureRootsRemoved": true,
+    "uiFixtureRemoved": true,
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "businessSyncOrModelRequests": false,
+    "duplicateReceiptRootRemoved": true
+  },
+  "remaining": [
+    "same-version damaged-image repair",
+    "native official cleanup and optional data scope",
+    "standard single-app/native package acceptance",
+    "Windows HOME/Profile and W1/W2",
+    "version/network UI",
+    "P24-NAME",
+    "fixed integration candidate/final acceptance"
+  ]
+}
