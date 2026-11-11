@@ -1,0 +1,9 @@
+
+running 4 tests
+test modules::runtime::version_facts::tests::absent_roots_and_pending_or_invalid_identity_do_not_invent_installed_versions ... ok
+test modules::runtime::version_facts::tests::concurrent_disk_or_record_changes_invalidate_the_observation_instead_of_mixing_versions ... ok
+test modules::runtime::version_facts::tests::current_observation_is_not_execution_permission_for_unknown_noncritical_content ... ok
+test modules::runtime::version_facts::tests::disk_record_and_selection_are_independent_and_observation_never_rewrites_external_package_or_history ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2166 filtered out; finished in 0.12s
+

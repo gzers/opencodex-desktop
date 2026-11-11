@@ -1,0 +1,89 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/update-center.test.ts > shared production update center > requires a successful fresh panel backup and retains the confirmed version through that await
+TypeError: finish is not a function
+ ❯ tests/update-center.test.ts:205:5
+    203|     expect(new DOMWrapper(document.body).text()).not.toContain('previo…
+    204|     updates.officialRemote!.version = '2.52.0'
+    205|     finish({ backupId: 'fresh', directory: '/backup', targetPath: '/co…
+       |     ^
+    206|     expect(apply).toHaveBeenCalledWith('2.51.0')
+    207|     expect(backup).toHaveBeenCalledTimes(2)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/update-center.test.ts > shared production update center > keeps this panel update output visible after failure and reopen, without stale output on backup failure
+Error: Unable to get [data-testid="install-official-update"] within: <body>
+  <div data-v-app="">
+    <!--teleport start-->
+    <!--teleport end-->
+  </div>
+  <dialog data-v-f2b1bc8e="" data-testid="update-center" class="ui-dialog update-center wide" aria-labelledby="v-0" role="dialog" tabindex="-1" aria-modal="true">
+    <header data-v-f2b1bc8e="" class="ui-dialog-header">
+      <h2 data-v-f2b1bc8e="" id="v-0">OpenCodex 面板更新进度</h2>
+      <div data-v-f2b1bc8e="" class="ui-dialog-header-actions"><button data-v-f2b1bc8e="" type="button" class="icon-btn ui-icon-control modal-close" aria-label="关闭" aria-busy="false" title="关闭"><svg data-v-f2b1bc8e="" viewBox="0 0 24 24" aria-hidden="true">
+            <path data-v-f2b1bc8e="" d="m6 6 12 12M18 6 6 18"></path>
+          </svg></button></div>
+    </header>
+    <div data-v-f2b1bc8e="" class="ui-dialog-content">
+      <div data-v-c975c606="" class="update-center-body">
+        <section data-v-a572675c="" data-v-c975c606="" class="runtime-version-facts" aria-label="OpenCodex 实际版本">
+          <div data-v-a572675c="" class="version-head">
+            <h4 data-v-a572675c="">当前版本事实</h4><button data-v-a572675c="" class="btn btn-sm" type="button" disabled="">
+              <!--v-if--><span class="btn-content">核对中</span>
+            </button>
+          </div>
+          <!--v-if-->
+          <dl data-v-a572675c="">
+            <dt data-v-a572675c="">磁盘包版本</dt>
+            <dd data-v-a572675c="">2.50.0</dd>
+            <dt data-v-a572675c="">运行实例版本</dt>
+            <dd data-v-a572675c="">未核实
+              <!--v-if-->
+            </dd>
+            <dt data-v-a572675c="">上次安装记录</dt>
+            <dd data-v-a572675c="">2.49.0</dd>
+            <dt data-v-a572675c="">来源核对</dt>
+            <dd data-v-a572675c="">入口与版本清单一致</dd>
+          </dl>
+          <!--v-if-->
+        </section>
+        <section data-v-c975c606="" class="update-object" data-testid="official-update-card">
+          <!--v-if-->
+          <div data-v-c975c606="" class="update-version-hero"><span data-v-c975c606="">2.50.0</span><span data-v-c975c606="" aria-hidden="true">→</span><strong data-v-c975c606="">2.51.0</strong></div>
+          <p data-v-c975c606="" class="update-hint">官方项目 · @bitkyc08/opencodex
+            <!--v-if-->
+          </p>
+          <!--v-if-->
+          <!--v-if-->
+          <div data-v-c975c606="" class="update-progress" aria-live="polite" data-testid="official-update-progress"><strong data-v-c975c606="">面板更新失败</strong>
+            <!--v-if--><pre data-v-c975c606="" class="update-console" tabindex="0" aria-label="面板安装输出">npm error E404; 日志：D:\Update 中文 Spaces\npm.log</pre>
+            <!--v-if-->
+            <!--v-if-->
+          </div>
+          <p data-v-c975c606="" class="update-error update-query-error" role="alert">官方更新安装失败；已保留当前版本。</p>
+          <ol data-v-c975c606="" class="update-stage-list" aria-label="更新阶段">
+            <li data-v-c975c606="">准备</li>
+            <li data-v-c975c606="">下载</li>
+            <li data-v-c975c606="">校验</li>
+            <li data-v-c975c606="">应用与核验</li>
+          </ol>
+          <!--v-if-->
+        </section>
+      </div>
+    </div>
+    <!---->
+  </dialog>
+</body>
+ ❯ DOMWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/update-center.test.ts:238:41
+    236|     expect(new DOMWrapper(document.body).text()).not.toContain('anothe…
+    237|     backup.mockResolvedValueOnce(null)
+    238|     await new DOMWrapper(document.body).get('[data-testid="install-off…
+       |                                         ^
+    239|     expect(new DOMWrapper(document.body).find('pre[aria-label="面板安装输出"…
+    240|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

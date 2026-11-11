@@ -1,0 +1,13 @@
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/update-center.test.ts (20 tests | 2 failed) 301ms
+   ❯ shared production update center (16)
+     × requires a successful fresh panel backup and retains the confirmed version through that await 19ms
+     × keeps this panel update output visible after failure and reopen, without stale output on backup failure 15ms
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  2 failed | 26 passed (28)
+   Start at  19:00:45
+   Duration  1.34s (transform 55%, environment 22%, tests 15%, import 8%)
+

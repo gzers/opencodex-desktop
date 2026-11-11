@@ -1,0 +1,5 @@
+
+> opencodex-desktop-ui@0.2.23 typecheck
+> vue-tsc --noEmit
+
+tests/panel-update-progress.test.ts(10,53): error TS2345: Argument of type 'Mock<Procedure>' is not assignable to parameter of type 'string'.

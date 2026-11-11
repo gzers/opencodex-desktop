@@ -1,0 +1,14 @@
+
+running 9 tests
+test infrastructure::attested_status::tests::a_delayed_server_cannot_escape_the_observation_deadline ... ok
+test infrastructure::attested_status::tests::fresh_attested_connection_proves_ready_and_leaves_protection_unknown ... ok
+test infrastructure::attested_status::tests::impostors_record_changes_redirects_and_unsupported_frames_fail_closed ... ok
+test infrastructure::attested_status::tests::independent_version_observation_accepts_old_attested_process_without_admitting_disk_or_executing_cli ... ok
+test infrastructure::attested_status::tests::independent_version_read_refuses_wrong_proof_and_missing_record_is_only_no_record ... ok
+test infrastructure::attested_status::tests::pending_or_failed_official_readiness_never_becomes_healthy ... ok
+test infrastructure::attested_status::tests::real_status_consumer_uses_fresh_proofs_and_rejects_disappearing_service_or_changed_activation ... ok
+test infrastructure::attested_status::tests::stop_uses_one_attested_connection_and_requires_official_client_teardown ... ok
+test infrastructure::attested_status::tests::unowned_public_linked_and_oversized_record_bytes_are_not_trusted ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 2161 filtered out; finished in 2.32s
+

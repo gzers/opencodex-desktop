@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "code": "dadf16e48ae2167ba7809afbc882c42b9d34ce99",
+  "scope": "Independent disk/current-H attested process/history version observations; reviewed update source recheck",
+  "accepted": false,
+  "backend": {
+    "totalRelatedPassed": 17,
+    "composition": {
+      "diskFacts": 4,
+      "attestedStatusAndIndependentVersion": 9,
+      "versionedInstaller": 4
+    }
+  },
+  "frontend": {
+    "files": 5,
+    "tests": 40,
+    "reviewedChangedFiles": {
+      "files": 2,
+      "tests": 25
+    },
+    "typecheck": 0
+  },
+  "checks": {
+    "fmt": 0,
+    "strictClippyAllTargets": 0,
+    "diffCheck": 0
+  },
+  "observations": {
+    "externalPackageVersionOnlyDeclaredNotAdmitted": true,
+    "historyBytesKept": true,
+    "oldAttestedProcessVersionIndependent": true,
+    "noRecordNotStopped": true,
+    "executionRechecksFullImage": true
+  },
+  "visual": {
+    "sizes": [
+      "1040x760",
+      "580x640"
+    ],
+    "nativeIpc": false,
+    "actualComponent": "RuntimeVersionFacts",
+    "memoryObservationIpc": true,
+    "pageErrors": []
+  },
+  "failureEvidence": [
+    "initial progress API fixture lacked required original observation argument",
+    "old update-center fixtures omitted actual version observation; corrected explicit fixture, no production unknown-state fallback",
+    "tests awaiting backup were updated to await added original-source recheck; expected apply includes frozen original digest",
+    "unused test import removed after typecheck failure"
+  ],
+  "cleanup": {
+    "fixtureRootsRemoved": true,
+    "uiFixtureAndRunnerRemoved": true,
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "realUpdateRestartOrBusinessRequests": false,
+    "duplicateReceiptRootRemoved": true
+  },
+  "remaining": [
+    "native complete version drift/update acceptance on fixed candidate",
+    "source-changed executable reconstruction remains strict, no automatic adoption",
+    "Windows W0 HOME/Profile and W1/W2",
+    "P24-NAME",
+    "official cleanup, standard single-app, other HTTP proxy audit and final candidate"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "results": [
+    {
+      "width": 1040,
+      "height": 760,
+      "geometry": {
+        "width": 1040,
+        "scroll": 1040
+      },
+      "errors": [],
+      "separateVersions": true,
+      "failedReadMarkedOld": true,
+      "noInstallOrProcessCall": true,
+      "calls": [
+        "runtime_version_facts",
+        "runtime_version_facts"
+      ]
+    },
+    {
+      "width": 580,
+      "height": 640,
+      "geometry": {
+        "width": 580,
+        "scroll": 580
+      },
+      "errors": [],
+      "separateVersions": true,
+      "failedReadMarkedOld": true,
+      "noInstallOrProcessCall": true,
+      "calls": [
+        "runtime_version_facts",
+        "runtime_version_facts"
+      ]
+    }
+  ],
+  "nativeIpc": false,
+  "fixture": "actual RuntimeVersionFacts/UiButton/store; fixed memory observation IPC"
+}
