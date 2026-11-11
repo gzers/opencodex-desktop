@@ -375,3 +375,11 @@ class ArtifactSignatureTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class OfficialDistributionGateTests(unittest.TestCase):
+    def test_new_official_distribution_cannot_reuse_the_old_maintained_runtime_publication_gate(self):
+        with patch.object(publisher,"gh") as gh:
+            with self.assertRaisesRegex(publisher.PublishError,"Official runtime distribution verification"):
+                publisher.verify_artifacts("example/desktop","v0.2.24",{}, {})
+            gh.assert_not_called()
