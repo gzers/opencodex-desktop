@@ -1,0 +1,58 @@
+
+running 4 tests
+test modules::model_config::config_file::rename_tests::post021_same_key_metadata_rename_cannot_duplicate_another_channel_name ... ok
+test modules::model_config::config_file::rename_tests::post021_unicode_name_with_internal_key_saves_and_reopens_with_exact_references ... ok
+test modules::model_config::config_file::rename_tests::process_exit_recovers_before_first_snapshot ... 
+running 1 test
+test modules::model_config::config_file::rename_tests::process_exit_recovers_before_first_snapshot ... RENAME_PRODUCTION_PASS actual-process-exit-recovery
+ok
+test modules::model_config::config_file::rename_tests::production_provider_rename_transaction_in_memory_credential_process ... 
+running 1 test
+test modules::model_config::config_file::rename_tests::production_provider_rename_transaction_in_memory_credential_process ... RENAME_PRODUCTION_PASS first-rename-without-prior-layout
+RENAME_PRODUCTION_PASS scoped-current-only
+RENAME_PRODUCTION_PASS all-page
+RENAME_PRODUCTION_PASS rollback-prepared
+RENAME_PRODUCTION_PASS rollback-credential:0
+RENAME_PRODUCTION_PASS rollback-credential:1
+RENAME_PRODUCTION_PASS rollback-credential:2
+RENAME_PRODUCTION_PASS rollback-before_file:0
+RENAME_PRODUCTION_PASS rollback-file:0
+RENAME_PRODUCTION_PASS rollback-file:1
+RENAME_PRODUCTION_PASS rollback-file:2
+RENAME_PRODUCTION_PASS rollback-file:3
+RENAME_PRODUCTION_PASS rollback-file:4
+RENAME_PRODUCTION_PASS rollback-readback
+RENAME_PRODUCTION_PASS journal-recover-credential:0
+RENAME_PRODUCTION_PASS journal-recover-file:0
+RENAME_PRODUCTION_PASS journal-recover-file:1
+RENAME_PRODUCTION_PASS journal-recover-file:3
+RENAME_PRODUCTION_PASS journal-recover-file:4
+RENAME_PRODUCTION_PASS journal-recover-readback
+RENAME_PRODUCTION_PASS journal-recover-committed
+RENAME_PRODUCTION_PASS credential-failure-source-read
+RENAME_PRODUCTION_PASS credential-failure-destination-put
+RENAME_PRODUCTION_PASS reject-occupied
+RENAME_PRODUCTION_PASS reject-invalid
+RENAME_PRODUCTION_PASS reject-reserved
+RENAME_PRODUCTION_PASS reject-oauth
+RENAME_PRODUCTION_PASS reject-forward
+RENAME_PRODUCTION_PASS reject-derived
+RENAME_PRODUCTION_PASS reject-foreign-reference
+RENAME_PRODUCTION_PASS reject-occupied-account
+RENAME_PRODUCTION_PASS external-drift-not-overwritten
+RENAME_PRODUCTION_PASS preview-preferences-drift
+RENAME_PRODUCTION_PASS cancel-zero-business-write
+RENAME_PRODUCTION_PASS committed-credential-cleanup-replay
+RENAME_PRODUCTION_PASS compound-rule-and-key-keep
+RENAME_PRODUCTION_PASS compound-rule-and-key-replace
+RENAME_PRODUCTION_PASS compound-rule-and-key-clear
+RENAME_PRODUCTION_PASS portable-import-stable-object-keeps-local-provider-and-keys
+RENAME_PRODUCTION_PASS actual-file-write-permission-failure
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2062 filtered out; finished in 5.26s
+
+ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2059 filtered out; finished in 5.66s
+

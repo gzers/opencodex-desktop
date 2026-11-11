@@ -1,0 +1,11 @@
+
+running 6 tests
+test modules::model_config::config_file::v2::copy_tests::failed_save_keeps_copy_reference_and_pending_replacement_for_exact_retry ... ok
+test modules::model_config::config_file::v2::copy_tests::nonreuse_copy_strips_all_seed_credentials_and_preserves_source_and_unknown_public_bytes ... ok
+test modules::model_config::config_file::v2::copy_tests::omitted_copy_key_is_opt_in_false_and_ui_never_supplies_key_material ... ok
+test modules::model_config::config_file::v2::copy_tests::pending_clear_and_nonreuse_replacement_never_borrow_actual_or_pending_credentials ... ok
+test modules::model_config::config_file::v2::copy_tests::pending_replace_reuse_uses_immutable_intent_without_carrying_old_pool_or_private_refs ... ok
+test modules::model_config::config_file::v2::copy_tests::stale_copy_request_and_source_change_do_not_leave_copy_sources_or_draft_effects ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 2057 filtered out; finished in 2.27s
+

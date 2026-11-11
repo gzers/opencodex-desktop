@@ -1,0 +1,58 @@
+{
+  "checks": [
+    {
+      "label": "save",
+      "filter": "modules::model_config::config_file::v2::tests::",
+      "exit": 0,
+      "result": [
+        "test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 2045 filtered out; finished in 7.44s"
+      ],
+      "passed": 18
+    },
+    {
+      "label": "projection",
+      "filter": "modules::model_config::config_file::v2::export::tests::",
+      "exit": 0,
+      "result": [
+        "test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 2050 filtered out; finished in 1.44s"
+      ],
+      "passed": 13
+    },
+    {
+      "label": "copy",
+      "filter": "modules::model_config::config_file::v2::copy_tests::",
+      "exit": 0,
+      "result": [
+        "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 2057 filtered out; finished in 2.27s"
+      ],
+      "passed": 6
+    },
+    {
+      "label": "consumer",
+      "filter": "modules::model_config::consumer_v2_tests::",
+      "exit": 0,
+      "result": [
+        "test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 2037 filtered out; finished in 2.01s"
+      ],
+      "passed": 26
+    },
+    {
+      "label": "rename",
+      "filter": "modules::model_config::config_file::rename_tests::",
+      "exit": 0,
+      "result": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2062 filtered out; finished in 5.26s",
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2059 filtered out; finished in 5.66s"
+      ],
+      "passed": 1
+    }
+  ],
+  "binarySha256": "51eea8d08966e3be6fac31d371aff7bdcb12c04dc437d1a229976222f31a4522",
+  "temporaryRootAbsent": true,
+  "networkDenied": true,
+  "dailyConfigAccess": false,
+  "previousFailures": [
+    "new digest validator did not admit shared sha256: prefix; reused the existing validator",
+    "projection exposed a self collision when reconciling a channel with unchanged provider key; fixed no-op reference rewrite"
+  ]
+}

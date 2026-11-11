@@ -1,0 +1,45 @@
+{
+  "checks": [
+    {
+      "label": "save",
+      "filter": "modules::model_config::config_file::v2::tests::",
+      "exit": 0,
+      "result": [
+        "test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 2045 filtered out; finished in 7.60s"
+      ],
+      "passed": 0
+    },
+    {
+      "label": "projection",
+      "filter": "modules::model_config::config_file::v2::export::tests::",
+      "exit": 101,
+      "result": [
+        "test result: FAILED. 12 passed; 1 failed; 0 ignored; 0 measured; 2050 filtered out; finished in 1.52s"
+      ],
+      "passed": 0
+    },
+    {
+      "label": "copy",
+      "filter": "modules::model_config::config_file::v2::copy_tests::",
+      "exit": 0,
+      "result": [
+        "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 2057 filtered out; finished in 2.30s"
+      ],
+      "passed": 0
+    },
+    {
+      "label": "consumer",
+      "filter": "modules::model_config::consumer_v2_tests::",
+      "exit": 0,
+      "result": [
+        "test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 2037 filtered out; finished in 2.01s"
+      ],
+      "passed": 0
+    }
+  ],
+  "binarySha256": "f49be67cc14162460e91202bb106827fdd55b724d28a57cfc0d8479988a16b4c",
+  "temporaryRootAbsent": true,
+  "networkDenied": true,
+  "dailyConfigAccess": false,
+  "firstFailure": "new digest validator rejected the shared sha256: prefix before begin; fixed by reusing the existing digest format validator"
+}

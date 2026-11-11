@@ -1,0 +1,23 @@
+
+running 13 tests
+test modules::model_config::config_file::v2::export::tests::copied_draft_export_reuses_actual_public_seed_without_copying_key_or_saving ... ok
+test modules::model_config::config_file::v2::export::tests::draft_capture_exports_selected_typed_edits_exact_dependencies_and_no_credentials ... ok
+test modules::model_config::config_file::v2::export::tests::draft_export_scope_is_local_explicit_and_saved_capture_still_ignores_bad_draft ... ok
+test modules::model_config::config_file::v2::export::tests::exact_base_baseline_and_pending_guards_never_recover_or_mutate ... ok
+test modules::model_config::config_file::v2::export::tests::new_server_staged_channel_uses_template_protocol_without_saving_or_guessing_adapter ... ok
+test modules::model_config::config_file::v2::export::tests::project_accepts_equivalent_disk_rewrite_without_writing_or_relaxing_real_conflicts ... FAILED
+test modules::model_config::config_file::v2::export::tests::project_applies_only_explicit_intents_compiles_and_changes_no_business_file ... ok
+test modules::model_config::config_file::v2::export::tests::project_rejects_actual_alias_collisions_and_invalid_aliases_without_writes ... ok
+test modules::model_config::config_file::v2::export::tests::queued_binding_includes_exact_revision_and_invalid_or_stale_queue_never_writes ... ok
+test modules::model_config::config_file::v2::export::tests::queued_model_and_channel_intents_are_captured_without_staging_or_read_rematching ... ok
+test modules::model_config::config_file::v2::export::tests::real_file_transfer_owner_uses_draft_capture_and_roundtrips_v6_without_business_writes ... ok
+test modules::model_config::config_file::v2::export::tests::real_owner_dispatches_owned_queued_intents_without_persisting_draft_or_reading_credentials ... ok
+test modules::model_config::config_file::v2::export::tests::scoped_project_keeps_other_unsaved_channels_in_the_returned_dto_and_on_disk ... ok
+
+failures:
+
+failures:
+    modules::model_config::config_file::v2::export::tests::project_accepts_equivalent_disk_rewrite_without_writing_or_relaxing_real_conflicts
+
+test result: FAILED. 12 passed; 1 failed; 0 ignored; 0 measured; 2050 filtered out; finished in 1.52s
+

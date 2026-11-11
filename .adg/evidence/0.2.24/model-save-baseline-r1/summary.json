@@ -1,0 +1,28 @@
+{
+  "commit": "b058d9071",
+  "rustPassed": {
+    "save": 18,
+    "projection": 13,
+    "copy": 6,
+    "consumer": 26,
+    "rename": 4
+  },
+  "uiPassed": 58,
+  "uiTestFiles": [
+    "tests/channel-key-edit.test.ts",
+    "tests/model-channel-scoped-save.test.ts"
+  ],
+  "uiCommand": "./node_modules/.bin/vitest run tests/channel-key-edit.test.ts tests/model-channel-scoped-save.test.ts",
+  "uiEvidenceKind": "tool result observed directly, no fabricated raw log",
+  "targetedChanges": [
+    "equivalent saved JSON behind actual v2 draft baseline",
+    "unchanged provider references no longer collide with themselves",
+    "confirmed staged credential receipt preserves other pending buffers"
+  ],
+  "unchangedGuards": [
+    "actual secrets, unknown fields, provider and policy changes remain conflicts",
+    "byte CAS against the latest file at commit",
+    "copy, protected history and draft export retain strict source identity"
+  ],
+  "explicitConflictReconciliationAndNativeImportStillPending": true
+}

@@ -1,0 +1,49 @@
+
+thread 'modules::model_config::config_file::v2::tests::copied_channel_keeps_actual_key_and_unknown_fields_only_on_explicit_save' (151590000) panicked at src/modules/model_config/config_file_v2_tests.rs:24:42:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_source_invalid", issues: [MatchIssueV2 { code: "model_source_invalid", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["inspect_source", "retry_read"] }] }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'modules::model_config::config_file::v2::tests::explicit_delete_removes_only_owned_channel_routes_and_can_keep_other_draft' (151590093) panicked at src/modules/model_config/config_file_v2_tests.rs:24:42:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_source_invalid", issues: [MatchIssueV2 { code: "model_source_invalid", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["inspect_source", "retry_read"] }] }
+
+thread 'modules::model_config::config_file::v2::tests::explicit_key_only_replace_preserves_other_pool_slots_and_clear_keeps_auth_mode' (151590094) panicked at src/modules/model_config/config_file_v2_tests.rs:24:42:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_source_invalid", issues: [MatchIssueV2 { code: "model_source_invalid", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["inspect_source", "retry_read"] }] }
+
+thread 'modules::model_config::config_file::v2::tests::explicit_read_matches_and_repeat_is_idempotent_save_reopen_preserves_source' (151590095) panicked at src/modules/model_config/config_file_v2_tests.rs:185:57:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_source_invalid", issues: [MatchIssueV2 { code: "model_source_invalid", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["inspect_source", "retry_read"] }] }
+
+thread 'modules::model_config::config_file::v2::tests::fresh_read_does_not_turn_old_connection_source_into_manual_override' (151590096) panicked at src/modules/model_config/config_file_v2_tests.rs:24:42:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_source_invalid", issues: [MatchIssueV2 { code: "model_source_invalid", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["inspect_source", "retry_read"] }] }
+
+thread 'modules::model_config::config_file::v2::tests::key_staging_accepts_only_equivalent_source_and_does_not_rebind_after_key_change' (151590097) panicked at src/modules/model_config/config_file_v2_tests.rs:24:42:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_source_invalid", issues: [MatchIssueV2 { code: "model_source_invalid", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["inspect_source", "retry_read"] }] }
+
+thread 'modules::model_config::config_file::v2::tests::library_revision_and_time_commit_together_without_rematching_channel_draft' (151590098) panicked at src/modules/model_config/config_file_v2_tests.rs:24:42:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_source_invalid", issues: [MatchIssueV2 { code: "model_source_invalid", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["inspect_source", "retry_read"] }] }
+
+thread 'modules::model_config::config_file::v2::tests::name_is_actual_provider_authority_even_when_display_label_was_already_changed' (151590099) panicked at src/modules/model_config/config_file_v2_tests.rs:24:42:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_source_invalid", issues: [MatchIssueV2 { code: "model_source_invalid", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["inspect_source", "retry_read"] }] }
+
+thread 'modules::model_config::config_file::v2::tests::node_measurement_uses_explicit_kind_and_only_acknowledged_node_ids' (151590100) panicked at src/modules/model_config/config_file_v2_tests.rs:24:42:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_source_invalid", issues: [MatchIssueV2 { code: "model_source_invalid", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["inspect_source", "retry_read"] }] }
+
+thread 'modules::model_config::config_file::v2::tests::save_rechecks_equivalent_disk_changes_and_preserves_latest_runtime_fields' (151590101) panicked at src/modules/model_config/config_file_v2_tests.rs:24:42:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_source_invalid", issues: [MatchIssueV2 { code: "model_source_invalid", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["inspect_source", "retry_read"] }] }
+
+thread 'modules::model_config::config_file::v2::tests::save_refuses_actual_conflicts_even_when_displayed_policy_is_unchanged' (151590103) panicked at src/modules/model_config/config_file_v2_tests.rs:24:42:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_source_invalid", issues: [MatchIssueV2 { code: "model_source_invalid", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["inspect_source", "retry_read"] }] }
+
+thread 'modules::model_config::config_file::v2::tests::saved_capture_source_identity_is_stable_and_unaffected_by_unsaved_channel_name' (151590109) panicked at src/modules/model_config/config_file_v2_tests.rs:24:42:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_source_invalid", issues: [MatchIssueV2 { code: "model_source_invalid", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["inspect_source", "retry_read"] }] }
+
+thread 'modules::model_config::config_file::v2::tests::saved_times_are_bound_to_exact_semantics_and_committed_with_models' (151590111) panicked at src/modules/model_config/config_file_v2_tests.rs:24:42:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_source_invalid", issues: [MatchIssueV2 { code: "model_source_invalid", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["inspect_source", "retry_read"] }] }
+
+thread 'modules::model_config::config_file::v2::tests::single_channel_save_keeps_other_staged_work_and_rebases_its_guard' (151590114) panicked at src/modules/model_config/config_file_v2_tests.rs:24:42:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_source_invalid", issues: [MatchIssueV2 { code: "model_source_invalid", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["inspect_source", "retry_read"] }] }
+
+thread 'modules::model_config::config_file::v2::tests::staging_new_no_auth_channel_is_draft_only_and_read_preserves_it' (151590116) panicked at src/modules/model_config/config_file_v2_tests.rs:24:42:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_source_invalid", issues: [MatchIssueV2 { code: "model_source_invalid", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["inspect_source", "retry_read"] }] }
+
+thread 'modules::model_config::config_file::v2::tests::stale_source_and_duplicate_raw_json_never_modify_saved_or_draft' (151590117) panicked at src/modules/model_config/config_file_v2_tests.rs:24:42:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_source_invalid", issues: [MatchIssueV2 { code: "model_source_invalid", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["inspect_source", "retry_read"] }] }
