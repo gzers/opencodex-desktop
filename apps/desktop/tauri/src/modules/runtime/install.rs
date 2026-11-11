@@ -1354,11 +1354,35 @@ struct Filled {
 }
 
 /// 托管安装执行器。所有平台交互都经注入的边界，便于隔离测试。
+fn config_protection_error(
+    error: crate::modules::model_config::schema_v2::MatchErrorV2,
+) -> InstallError {
+    let (code, detail) = match error.code.as_str() {
+        "native_config_backup_stale" => (
+            "native_config_backup_stale",
+            "配置在更新期间发生变化，本次更新未完成；原件与保护备份保留",
+        ),
+        "model_transaction_pending" => (
+            "model_transaction_pending",
+            "另一个配置事务尚未完成，未继续更新运行程序",
+        ),
+        _ => (
+            "native_config_backup_failed",
+            "当前 HOME 的完整配置备份未能核验，未继续更新运行程序",
+        ),
+    };
+    recovery_error(code, detail)
+}
+
 pub struct RuntimeInstaller<'a> {
     /// Unique protected update attempt. Unprotected installs have no receipt.
     pub attempt_id: Option<String>,
     pub data_root: &'a Path,
     pub installation_root: Option<PathBuf>,
+    /// Required config protection immediately before the admitted program swap.
+    pub config_backup: Option<
+        crate::modules::model_config::config_file::v2::native_import::backups::UpgradeRequest,
+    >,
     pub npm: &'a dyn NpmRunner,
     /// 用于写路径校验的符号链接检查范围（通常是用户主目录）。
     pub home: Option<PathBuf>,
@@ -1382,6 +1406,7 @@ impl<'a> RuntimeInstaller<'a> {
         Self {
             data_root,
             installation_root: None,
+            config_backup: None,
             attempt_id: None,
             npm,
             home,
@@ -1657,6 +1682,10 @@ impl<'a> RuntimeInstaller<'a> {
             }
             operation.verify_metadata_backup(self)?;
         }
+        let config_protection = self.config_backup.as_ref().map(|request| {
+            crate::modules::model_config::config_file::v2::native_import::backups::protect_upgrade(self.data_root, request)
+                .map_err(config_protection_error)
+        }).transpose()?;
         let retired = recovery.map(|op| op.preview.retained_prefix.as_path());
         let mut replacement = atomic_replace_prefix_retaining(&temp, &prefix, retired)?;
         let activation = (|| {
@@ -1728,6 +1757,9 @@ impl<'a> RuntimeInstaller<'a> {
                     operation: "commit runtime record".into(),
                     detail: "运行来源记录已被外部修改，未覆盖".into(),
                 });
+            }
+            if let Some(config) = &config_protection {
+                config.verify().map_err(config_protection_error)?;
             }
             atomic_write(&record_path, &record_bytes, 0o600).map_err(InstallError::from)?;
             record_written = true;
@@ -3787,6 +3819,112 @@ mod tests {
         }
         std::fs::write(path, b"#!/bin/sh\nexit 0\n").expect("write fixture");
         std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o755)).expect("chmod");
+    }
+    struct ConfigDriftProbe {
+        prefix: PathBuf,
+        config: PathBuf,
+        drift: bool,
+    }
+    impl VersionProbe for ConfigDriftProbe {
+        fn probe(&self, _node: Option<&Path>, script: &Path) -> Option<String> {
+            if self.drift && script.starts_with(&self.prefix) {
+                std::fs::write(&self.config, b"external write ignores configuration locks")
+                    .unwrap();
+            }
+            Some("0.3.1".into())
+        }
+    }
+
+    #[test]
+    fn native_config_protection_is_required_before_program_swap_and_rechecked_before_source_commit()
+    {
+        use crate::modules::model_config::config_file::v2::native_import;
+        for case in ["ok", "backup-blocked", "drift"] {
+            let root = tempfile::tempdir().unwrap();
+            let base = root.path().canonicalize().unwrap();
+            let data = base.join("desktop");
+            let home = base.join("home");
+            std::fs::create_dir_all(data.join("manager-state")).unwrap();
+            std::fs::create_dir(&home).unwrap();
+            let prefix = prefix_of(&data);
+            let archive = official_package(&base, "0.3.0");
+            let npm = FakeNpm::new(archive.clone());
+            let npm_path = base.join("npm");
+            write_executable(&npm_path);
+            let sink = RecordingProgressSink::default();
+            let probe = FixedVersionProbe {
+                version: Some("0.3.0".into()),
+            };
+            installer(&data, &npm, &sink, Some(base.clone()), &probe)
+                .install(&offline_request(prefix.clone(), archive, npm_path.clone()))
+                .unwrap();
+            let old_record = std::fs::read(super::super::RuntimeStore::new(&data).path()).unwrap();
+            let old_package =
+                std::fs::read(prefix.join(PACKAGE_SUBPATH).join("package.json")).unwrap();
+            let original = br#"{ "port":41234, "providers":{}, "apiKey":"fixture-only" }"#;
+            let config = home.join("config.json");
+            std::fs::write(&config, original).unwrap();
+            if case == "backup-blocked" {
+                std::fs::write(data.join("backups"), b"foreign backup obstacle").unwrap();
+            }
+            let archive = official_package(&base, "0.3.1");
+            let npm = FakeNpm::new(archive.clone());
+            let probe = ConfigDriftProbe {
+                prefix: prefix.clone(),
+                config: config.clone(),
+                drift: case == "drift",
+            };
+            let mut next = installer(&data, &npm, &sink, Some(base.clone()), &probe);
+            next.config_backup = Some(native_import::backups::UpgradeRequest {
+                home: home.clone(),
+                program_source: None,
+            });
+            let result = next.install(&offline_request(prefix.clone(), archive, npm_path));
+            if case == "ok" {
+                assert!(result.is_ok());
+                assert_eq!(std::fs::read(&config).unwrap(), original);
+            } else {
+                let error = result.unwrap_err();
+                assert_eq!(
+                    error.code(),
+                    if case == "drift" {
+                        "native_config_backup_stale"
+                    } else {
+                        "native_config_backup_failed"
+                    }
+                );
+                assert!(error.message().contains(if case == "drift" {
+                    "配置在更新期间发生变化"
+                } else {
+                    "完整配置备份未能核验"
+                }));
+                assert_eq!(
+                    std::fs::read(super::super::RuntimeStore::new(&data).path()).unwrap(),
+                    old_record
+                );
+                assert_eq!(
+                    std::fs::read(prefix.join(PACKAGE_SUBPATH).join("package.json")).unwrap(),
+                    old_package
+                );
+                if case == "backup-blocked" {
+                    assert_eq!(std::fs::read(&config).unwrap(), original);
+                } else {
+                    assert_eq!(
+                        std::fs::read(&config).unwrap(),
+                        b"external write ignores configuration locks"
+                    );
+                }
+            }
+            if case != "backup-blocked" {
+                let records = crate::modules::backup::safety::scan(&data.join("backups")).unwrap();
+                assert_eq!(records.len(), 1);
+                assert_eq!(
+                    std::fs::read(records[0].directory.join("config.json")).unwrap(),
+                    original
+                );
+                assert_eq!(native_import::list_backups(&data, &home).unwrap().len(), 1);
+            }
+        }
     }
 }
 

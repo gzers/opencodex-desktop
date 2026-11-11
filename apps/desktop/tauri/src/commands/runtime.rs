@@ -695,6 +695,14 @@ async fn install_managed_runtime(
                 .then(|| handle_ref.installation_root().to_path_buf());
             installer.cancel = mutation.cancel.clone();
             installer.attempt_id = receipt.as_ref().map(|r| r.attempt_id());
+            {
+                // Reinstalling through the installation dialog must not bypass
+                // the same current-HOME protection used by official updates.
+                let home = worker_app.state::<SharedProcessContext>().opencodex_home.clone();
+                let program_source = handle_ref.selected_program().ok().flatten().as_ref()
+                    .map(crate::commands::native_config_import::program_source);
+                installer.config_backup = Some(crate::modules::model_config::config_file::v2::native_import::backups::UpgradeRequest { home, program_source });
+            }
             match installer.install(&install_request) {
                 Ok(outcome) => {
                     handle_ref.refresh();
