@@ -848,6 +848,14 @@ where
                     self.facts = RuntimeFacts::default();
                     self.port = None;
                     self.pid = None;
+                } else if self.matrix.runtime == RuntimeState::NotFound {
+                    // A newly supplied/resolved source disproves the old
+                    // installation-absence fact. A failed service observation
+                    // proves neither stopped nor healthy; don't retain NotFound.
+                    self.matrix.runtime = RuntimeState::Unreachable;
+                    self.facts = RuntimeFacts::default();
+                    self.port = None;
+                    self.pid = None;
                 }
                 self.last_result = Some(Err(error));
                 return Err(error);
@@ -1317,6 +1325,69 @@ mod tests {
         assert_eq!(collector.facts().health, HealthState::Unknown);
         assert_eq!(collector.port(), None);
         assert_eq!(collector.pid(), None);
+    }
+
+    #[test]
+    fn newly_resolved_source_invalidates_pre_supply_absence_without_inventing_service_success() {
+        use std::cell::Cell;
+        struct Source {
+            resolved: Cell<bool>,
+            error: CollectError,
+            successful: Cell<bool>,
+        }
+        impl StatusSource for Source {
+            fn fetch(&self) -> Result<Value, CollectError> {
+                if self.successful.get() {
+                    Ok(
+                        json!({"status":"stopped","dataRoot":"/fixture","startup":{"protection":"none","rebootSafe":false}}),
+                    )
+                } else {
+                    Err(self.error)
+                }
+            }
+            fn resolved(&self) -> bool {
+                self.resolved.get()
+            }
+        }
+        for error in [
+            CollectError::Timeout,
+            CollectError::Unreachable,
+            CollectError::Parse,
+        ] {
+            for light in [false, true] {
+                let mut collector = StatusCollector::new(Source {
+                    resolved: Cell::new(false),
+                    error,
+                    successful: Cell::new(false),
+                });
+                let now = Instant::now();
+                assert_eq!(collector.refresh_at(now).unwrap_err(), error);
+                assert_eq!(collector.matrix().runtime, RuntimeState::NotFound);
+                collector.source.resolved.set(true);
+                let result = if light {
+                    collector.refresh_light_at(now + Duration::from_secs(2))
+                } else {
+                    collector.refresh_at(now + Duration::from_secs(2))
+                };
+                assert_eq!(result.unwrap_err(), error);
+                assert_eq!(collector.matrix().runtime, RuntimeState::Unreachable);
+                assert_eq!(collector.facts().health, HealthState::Unknown);
+                assert_eq!(collector.port(), None);
+                assert_eq!(collector.pid(), None);
+                collector.source.successful.set(true);
+                collector.refresh_at(now + Duration::from_secs(4)).unwrap();
+                assert_eq!(collector.matrix().runtime, RuntimeState::Stopped);
+                collector.source.successful.set(false);
+                collector.source.resolved.set(false);
+                assert_eq!(
+                    collector
+                        .refresh_at(now + Duration::from_secs(6))
+                        .unwrap_err(),
+                    error
+                );
+                assert_eq!(collector.matrix().runtime, RuntimeState::NotFound);
+            }
+        }
     }
 
     #[test]
