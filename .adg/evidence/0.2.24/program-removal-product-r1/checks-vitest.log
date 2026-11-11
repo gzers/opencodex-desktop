@@ -1,0 +1,17 @@
+
+> opencodex-desktop-ui@0.2.23 test
+> vitest --run tests/runtime-program-removal.test.ts tests/settings-uninstall.test.ts tests/settings-paths-v2.test.ts tests/settings-readonly.test.ts tests/runtime-activation-recovery.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui
+
+
+ Test Files  5 passed (5)
+      Tests  45 passed (45)
+   Start at  16:03:55
+   Duration  1.57s (transform 48%, environment 29%, tests 15%, import 8%)
+
+  Transform  transforming modules took 2.44s · 48% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

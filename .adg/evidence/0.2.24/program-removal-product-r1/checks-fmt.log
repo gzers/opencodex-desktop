@@ -1,0 +1,13 @@
+Diff in /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/src/commands/mod.rs:27:
+ pub mod runtime;
+ pub mod runtime_activation;
+ pub mod runtime_port;
+-pub mod runtime_removal;
+ pub mod runtime_recovery_v2;
+ pub mod runtime_recovery_v2_owner;
+ pub mod runtime_recovery_v2_sources;
+Diff in /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/src/commands/mod.rs:34:
++pub mod runtime_removal;
+ pub mod scope_backup_v2;
+ pub mod sync;
+ pub mod terminal_cli;

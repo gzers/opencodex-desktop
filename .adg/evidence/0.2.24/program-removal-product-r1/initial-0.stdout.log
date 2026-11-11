@@ -1,0 +1,21 @@
+
+running 4 tests
+test commands::runtime_removal::tests::ipc_never_accepts_arbitrary_program_paths_or_invented_removal_inventory ... ok
+test commands::runtime_removal::tests::restarted_observer_continues_original_partial_and_marker_phase_removal_with_original_terminal_scope ... ok
+test commands::runtime_removal::tests::review_is_readonly_and_one_use_confirm_removes_registered_program_and_owned_cli_only ... FAILED
+test commands::runtime_removal::tests::terminal_changes_unknown_service_and_wrong_confirmation_refuse_without_code_removal ... ok
+
+failures:
+
+---- commands::runtime_removal::tests::review_is_readonly_and_one_use_confirm_removes_registered_program_and_owned_cli_only stdout ----
+
+thread 'commands::runtime_removal::tests::review_is_readonly_and_one_use_confirm_removes_registered_program_and_owned_cli_only' (154176023) panicked at src/commands/runtime_removal_tests.rs:29:9:
+assertion failed: !c.desktop_root.join("backups").exists()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    commands::runtime_removal::tests::review_is_readonly_and_one_use_confirm_removes_registered_program_and_owned_cli_only
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 2131 filtered out; finished in 1.27s
+

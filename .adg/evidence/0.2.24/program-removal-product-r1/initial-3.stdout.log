@@ -1,0 +1,16 @@
+
+running 11 tests
+test modules::runtime::terminal_cli::tests::bash_profiles_new_terminal_use_same_entry_and_absent_files_are_removed ... ok
+test modules::runtime::terminal_cli::tests::corrupted_pending_cannot_publish_another_script_or_change_unrelated_profile_bytes ... ok
+test modules::runtime::terminal_cli::tests::directory_switch_must_first_disable_cli_and_keeps_registration_on_refusal ... ok
+test modules::runtime::terminal_cli::tests::disable_refuses_modified_owned_script_and_can_restore_an_interrupted_enable ... ok
+test modules::runtime::terminal_cli::tests::enable_is_explicit_new_zsh_resolves_command_and_disable_preserves_user_content ... ok
+test modules::runtime::terminal_cli::tests::existing_commands_foreign_paths_and_stale_preview_never_overwrite ... ok
+test modules::runtime::terminal_cli::tests::forwarding_binds_current_config_program_and_arguments_and_refuses_pending ... ok
+test modules::runtime::terminal_cli::tests::fresh_profile_cancel_and_repeated_enable_do_not_duplicate_path_block ... ok
+test modules::runtime::terminal_cli::tests::real_desktop_dispatch_enters_cli_before_gui_and_preserves_home_args_exit_status ... ignored, requires explicit freshly built Desktop executable; launches only an isolated CLI fixture
+test modules::runtime::terminal_cli::tests::real_official_cli_reports_selected_version_and_reads_the_bound_custom_home ... ignored, requires explicit Desktop binary and pinned official 2.99 bundle; read-only CLI only
+test modules::runtime::terminal_cli::tests::shell_path_conflicts_added_after_enable_remain_authoritative ... ok
+
+test result: ok. 9 passed; 0 failed; 2 ignored; 0 measured; 2124 filtered out; finished in 2.57s
+

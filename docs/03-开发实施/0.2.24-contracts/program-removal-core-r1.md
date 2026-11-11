@@ -35,3 +35,7 @@ resume(I,D,H,confirmation,unused,revoke_terminal)是明确继续，不会自动�
 ## 2026-11-11 已准入来源及Macunused后继
 
 main0954ec6f0 增加prepare_registered、持久版本准入登记及卸载计划catalog revision绑定；main2ab15a9e0 增加Mac同UID程序占用证明，详[登记及原生合同](program-catalog-native-r1.md)。原文“来源集合/unused仍待”更新为这些API已具备，窗口/命令与完整卸载编排、Windows共享程序范围仍未完成，不能把此后API可用当整版通过。
+
+## 2026-11-11 默认保留配置的产品消费者
+
+main716020fac 已接 [卸载产品预览/一次性确认/原操作继续](program-removal-product-r1.md)，消费prepare_registered和Mac全部程序unused及精确终端撤销。原文“窗口仍为旧入口”保留其5e75b0c86时点，不再描述此后Mac默认入口。当前默认按已采用原型保留配置/备份，完整官方清理/数据选择、显式重装和Windows原生范围仍未完成。
