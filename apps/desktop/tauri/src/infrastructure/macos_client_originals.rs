@@ -15,6 +15,9 @@ use std::{
     path::{Component, Path, PathBuf},
 };
 
+#[path = "macos_client_restore.rs"]
+pub mod restore;
+
 const MAX_CONTENT: usize = 2 * 1024 * 1024;
 const MAX_SECURITY: usize = 256 * 1024;
 const MAX_FRAME: usize = 32 * 1024 * 1024;
