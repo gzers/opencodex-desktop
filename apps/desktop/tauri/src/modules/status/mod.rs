@@ -36,6 +36,8 @@ pub fn collect_timeout() -> Duration {
 pub fn max_backoff() -> Duration {
     crate::modules::runtime_defaults::status_max_backoff()
 }
+#[cfg(test)]
+mod client_recovery_gate_tests;
 pub mod polling;
 
 pub fn max_emissions_per_second() -> u32 {
@@ -52,9 +54,28 @@ pub enum HealthState {
     Unknown,
 }
 
-/// 领域模型 §4 的运行事实。
+/// Independent manager recovery gate; it is not an official service status.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[serde(rename_all = "snake_case")]
+pub enum ClientRecoveryState {
+    #[default]
+    NotRequired,
+    Active,
+    Required,
+    Unknown,
+}
+impl ClientRecoveryState {
+    pub fn blocks_start(self) -> bool {
+        self != Self::NotRequired
+    }
+    pub fn blocks_restart(self) -> bool {
+        matches!(self, Self::Required | Self::Unknown)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RuntimeFacts {
+    pub client_recovery: ClientRecoveryState,
     pub health: HealthState,
     pub runtime_label: Option<String>,
     pub opencodex_home: Option<PathBuf>,
@@ -70,6 +91,7 @@ pub struct RuntimeFacts {
 impl Default for RuntimeFacts {
     fn default() -> Self {
         Self {
+            client_recovery: ClientRecoveryState::NotRequired,
             health: HealthState::Unknown,
             runtime_label: None,
             opencodex_home: None,
@@ -109,6 +131,10 @@ pub enum CollectError {
 
 /// 官方采集器边界。真实实现必须在 5 秒内返回或转换为 Timeout。
 pub trait StatusSource {
+    /// Separate native manager fact. Official JSON cannot mint or clear it.
+    fn client_recovery(&self) -> ClientRecoveryState {
+        ClientRecoveryState::NotRequired
+    }
     fn fetch(&self) -> Result<Value, CollectError>;
     fn fetch_light(&self) -> Result<Value, CollectError> {
         self.fetch()
@@ -575,6 +601,7 @@ pub fn map_official_output(
     let version_drift =
         optional_string(report, &["versionDrift", "version_drift"]).or(runtime_version);
     let mut facts = RuntimeFacts {
+        client_recovery: ClientRecoveryState::NotRequired,
         health,
         runtime_label,
         opencodex_home: report
@@ -793,6 +820,7 @@ where
 
     /// 使用注入时钟刷新；去抖期内共享上次结果，不额外调用来源。
     pub fn refresh_at(&mut self, now: Instant) -> Result<MappedOfficialStatus, CollectError> {
+        self.facts.client_recovery = self.source.client_recovery();
         if !self.request_allowed(now)
             && !self.last_was_light
             && self.source.resolved()
@@ -801,17 +829,26 @@ where
             return self
                 .last_result
                 .clone()
-                .unwrap_or(Err(CollectError::Timeout));
+                .unwrap_or(Err(CollectError::Timeout))
+                .map(|mut result| {
+                    result.facts.client_recovery = self.facts.client_recovery;
+                    result
+                });
         }
         self.refresh_with(now, false)
     }
 
     pub fn refresh_light_at(&mut self, now: Instant) -> Result<MappedOfficialStatus, CollectError> {
+        self.facts.client_recovery = self.source.client_recovery();
         if !self.request_allowed(now) && !self.source.source_unknown() {
             return self
                 .last_result
                 .clone()
-                .unwrap_or(Err(CollectError::Timeout));
+                .unwrap_or(Err(CollectError::Timeout))
+                .map(|mut result| {
+                    result.facts.client_recovery = self.facts.client_recovery;
+                    result
+                });
         }
         self.refresh_with(now, true)
     }
@@ -823,11 +860,13 @@ where
     ) -> Result<MappedOfficialStatus, CollectError> {
         self.last_request = Some(now);
         self.last_was_light = light;
-        let payload = match if light {
+        let fetched = if light {
             self.source.fetch_light()
         } else {
             self.source.fetch()
-        } {
+        };
+        let client_recovery = self.source.client_recovery();
+        let payload = match fetched {
             Ok(payload) => payload,
             Err(error) => {
                 self.record_failure();
@@ -857,17 +896,19 @@ where
                     self.port = None;
                     self.pid = None;
                 }
+                self.facts.client_recovery = client_recovery;
                 self.last_result = Some(Err(error));
                 return Err(error);
             }
         };
         let report = OfficialStatusReport::from_value(payload);
-        let mapped = map_official_output(
+        let mut mapped = map_official_output(
             &report,
             Some(self.matrix.runtime),
             self.matrix.connection,
             self.matrix.operation,
         );
+        mapped.facts.client_recovery = client_recovery;
         self.matrix = StatusMatrix {
             runtime: mapped.runtime,
             connection: mapped.connection,

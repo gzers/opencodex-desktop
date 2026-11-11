@@ -7,6 +7,7 @@ function snapshot(runtime: StatusSnapshot['matrix']['runtime']): StatusSnapshot 
   return {
     matrix: { runtime, connection: 'synced', operation: 'idle' },
     facts: {
+      client_recovery: 'not_required',
       health: 'unknown',
       runtime_label: null,
       opencodex_home: null,

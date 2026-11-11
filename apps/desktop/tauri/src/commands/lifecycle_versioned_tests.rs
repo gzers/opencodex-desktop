@@ -445,11 +445,46 @@ model_provider = "openai"
         report["restorePlanMatchesIndependentIndex"] = true.into();
     }
     drop(indexed_after_stop);
+    let reopened_at = Instant::now();
+    let source = crate::infrastructure::status_source::OfficialStatusSource::new(
+        context.runtime.clone(),
+        &profile,
+        crate::modules::process::EnvironmentPolicy {
+            home: Some(profile.clone().into_os_string()),
+            opencodex_home: h.clone(),
+            ..Default::default()
+        },
+    )
+    .with_client_recovery_root(data.clone());
+    let reopened = tauri::async_runtime::block_on(async {
+        tokio::task::spawn_blocking(move || {
+            let mut collector = crate::modules::status::StatusCollector::new(source);
+            status_snapshot_from_collector(&mut collector)
+        })
+        .await
+        .unwrap()
+    });
+    report["reopenedStatusElapsedMs"] = serde_json::json!(reopened_at.elapsed().as_millis());
+    let expects_pending = stop
+        .as_ref()
+        .is_ok_and(|value| value.client_recovery_required);
+    let reopened_gate = matches!(&reopened,Ok(snapshot) if
+        snapshot.matrix.runtime==crate::types::status::RuntimeState::Stopped
+        && !snapshot.can_stop && !snapshot.can_restart
+        && if expects_pending {snapshot.facts.client_recovery==crate::modules::status::ClientRecoveryState::Required && !snapshot.can_start}
+           else {snapshot.facts.client_recovery==crate::modules::status::ClientRecoveryState::NotRequired}
+    ) && reopened_at.elapsed() < std::time::Duration::from_secs(5);
+    report["reopenedRecoveryGate"] = reopened_gate.into();
+    report["reopenedSnapshot"] = match &reopened {
+        Ok(snapshot) => serde_json::to_value(snapshot).unwrap(),
+        Err(error) => serde_json::json!({"error":error.to_string()}),
+    };
     capture("after-stop");
     if let Ok(bytes) = std::fs::read(log.path()) {
         atomic_write(&evidence.join("runtime.log"), &bytes, 0o600).unwrap();
     }
     let passed = started_ok
+        && reopened_gate
         && stop_ok
         && restored.values().all(|v| *v)
         && matches!(&status, Ok(value) if value["ready"]==true && value["status"]=="running")

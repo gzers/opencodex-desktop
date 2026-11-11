@@ -55,6 +55,7 @@ pub const TRAY_STATUS_HEADER: &str = "tray-status";
 /// 托盘状态与动作快照。
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TrayState {
+    pub client_recovery: crate::modules::status::ClientRecoveryState,
     pub runtime: RuntimeState,
     pub health: HealthState,
     pub port: Option<u16>,
@@ -97,9 +98,15 @@ pub fn runtime_address(state: &TrayState) -> Option<String> {
 /// 托盘菜单与应用菜单共用本函数，任何一方私自加白名单都会让两处入口再次分叉。
 pub fn enabled_actions(state: &TrayState) -> [(&'static str, bool); 3] {
     [
-        (TRAY_MENU_START, runtime_can_start(state.runtime)),
+        (
+            TRAY_MENU_START,
+            runtime_can_start(state.runtime) && !state.client_recovery.blocks_start(),
+        ),
         (TRAY_MENU_STOP, runtime_can_stop(state.runtime)),
-        (TRAY_MENU_RESTART, runtime_can_stop(state.runtime)),
+        (
+            TRAY_MENU_RESTART,
+            runtime_can_stop(state.runtime) && !state.client_recovery.blocks_restart(),
+        ),
     ]
 }
 
@@ -109,6 +116,7 @@ mod tests {
 
     fn state(runtime: RuntimeState, port: Option<u16>) -> TrayState {
         TrayState {
+            client_recovery: crate::modules::status::ClientRecoveryState::NotRequired,
             runtime,
             health: HealthState::Unknown,
             port,

@@ -120,27 +120,52 @@ impl Active {
         deadline: Instant,
     ) -> AppResult<()> {
         let coordination = self.coordination(context)?;
+        let phase = std::cell::Cell::new("native-coordination");
         let result = with_native_coordination(&coordination, deadline, |lease| {
+            phase.set("seal-stopped");
             self.session.seal_completed_stop(context, proof, lease)?;
+            phase.set("index-stopped");
             self.head = self
                 .index
                 .advance(&self.head, State::Stopped, Some(self.session.references()?))
                 .map_err(failure)?;
+            phase.set("prepare-plan");
             let pending = self
                 .session
                 .prepare_restore(context, proof, lease, deadline)?;
+            phase.set("index-plan");
             self.head = self
                 .index
                 .record_restore_plan(&self.head, pending.id(), pending.sha256())
                 .map_err(failure)?;
+            phase.set("release-coordination");
             Ok(())
         });
         match result {
             Ok(()) => Ok(()),
-            Err(error) => Err(match error {
-                AppError::RuntimeManaged { .. } => pending_restore(),
-                other => other,
-            }),
+            Err(error) => {
+                let classification = match &error {
+                    AppError::RuntimeManaged { code, .. }
+                        if code.len() <= 96
+                            && code.bytes().all(|b| b.is_ascii_lowercase() || b == b'_') =>
+                    {
+                        code.as_str()
+                    }
+                    AppError::Timeout => "timeout",
+                    AppError::FileSystem { .. } => "filesystem",
+                    _ => "unconfirmed",
+                };
+                let _ = crate::infrastructure::runtime_log::RuntimeLog::new(self.index.data_root())
+                    .append_event(&format!(
+                        "client-stop-recovery: failed phase={} code={}",
+                        phase.get(),
+                        classification
+                    ));
+                Err(match error {
+                    AppError::RuntimeManaged { .. } => pending_restore(),
+                    other => other,
+                })
+            }
         }
     }
 }

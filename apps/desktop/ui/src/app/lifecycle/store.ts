@@ -77,6 +77,10 @@ export const useLifecycleStore = defineStore("lifecycle", {
   }),
   actions: {
     processActionBlocked(action: LifecycleAction) {
+      const recovery = this.statusSnapshot?.facts.client_recovery
+      if (recovery && recovery !== 'not_required') {
+        if (action === 'start' || action === 'restart' && recovery !== 'active') return true
+      }
       if (!this.clientRecoveryRequired) return false
       // A later real running observation may still require an ordinary Stop.
       // It cannot discharge the independent original-file recovery obligation.
@@ -84,6 +88,13 @@ export const useLifecycleStore = defineStore("lifecycle", {
     },
     // 状态快照只在真实观测到运行状态迁移时登记一条事件，不臆测结论。
     setStatusSnapshot(snapshot: StatusSnapshot | null) {
+      const recovery = snapshot?.facts.client_recovery
+      if (recovery === 'required' || recovery === 'active' && snapshot?.matrix.runtime === 'stopped') {
+        this.clientRecoveryRequired = true
+        this.lastStartFailed = false
+      }
+      // A late/stale no-session snapshot cannot discharge an action receipt.
+      // Explicit completed recovery/action results own that transition.
       if (snapshot?.matrix.runtime === 'running') this.lastStartFailed=false
       if (snapshot?.matrix.runtime === 'stopped' && this.lastStartFailed) {
         snapshot={...snapshot,matrix:{...snapshot.matrix,runtime:'starting_failed'}}

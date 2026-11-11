@@ -56,6 +56,253 @@ fn refs(n: usize) -> References {
 }
 
 #[test]
+fn observation_is_read_only_and_does_not_initialize_a_missing_session() {
+    let f = Fixture::new();
+    assert!(inspect(&f.context, &f.data).unwrap().is_none());
+    assert!(!f.data.join("manager-state").exists());
+    let index = f.open().unwrap();
+    drop(index);
+    let path = f.data.join("manager-state").join(FILE);
+    let before = fs::read(&path).unwrap();
+    let entries = fs::read_dir(path.parent().unwrap()).unwrap().count();
+    assert!(inspect(&f.context, &f.data).unwrap().is_none());
+    assert_eq!(fs::read(&path).unwrap(), before);
+    assert_eq!(
+        fs::read_dir(path.parent().unwrap()).unwrap().count(),
+        entries
+    );
+}
+
+#[test]
+fn retained_originals_without_current_references_are_unknown_and_cannot_initialize_or_reserve() {
+    let f = Fixture::new();
+    let index = f.open().unwrap();
+    let manager = f.data.join("manager-state");
+    fs::create_dir(manager.join("client-originals")).unwrap();
+    fs::write(
+        manager.join("client-originals/retained-proof"),
+        b"owned original must remain",
+    )
+    .unwrap();
+    assert!(index.reserve_start().is_err());
+    drop(index);
+    assert!(inspect(&f.context, &f.data).is_err());
+    fs::remove_file(manager.join(FILE)).unwrap();
+    fs::remove_file(manager.join("client-session-action.lock")).unwrap();
+    assert!(inspect(&f.context, &f.data).is_err());
+    assert!(f.open().is_err());
+    assert!(!manager.join(FILE).exists() && !manager.join("client-session-action.lock").exists());
+    assert_eq!(
+        fs::read(manager.join("client-originals/retained-proof")).unwrap(),
+        b"owned original must remain"
+    );
+}
+
+#[test]
+fn observation_uses_the_exact_unicode_path_instead_of_interpreting_uri_metacharacters() {
+    let mut f = Fixture::new();
+    let path = f.root.join("desktop 中文 ?#%");
+    fs::rename(&f.data, &path).unwrap();
+    f.data = path;
+    let index = f.open().unwrap();
+    let head = index.reserve_start().unwrap();
+    drop(index);
+    assert_eq!(inspect(&f.context, &f.data).unwrap(), Some(head));
+}
+
+#[test]
+fn stopped_plan_is_observed_after_reopen_without_rebasing_original_references() {
+    let f = Fixture::new();
+    let index = f.open().unwrap();
+    let mut head = index.reserve_start().unwrap();
+    for (state, n) in [
+        (State::Captured, 0),
+        (State::Ready, 1),
+        (State::StopPrepared, 2),
+        (State::Stopped, 3),
+    ] {
+        head = index.advance(&head, state, Some(refs(n))).unwrap();
+    }
+    head = index
+        .record_restore_plan(
+            &head,
+            "77f2af67-cdcc-42da-b5e4-e218416063a9",
+            &"e".repeat(64),
+        )
+        .unwrap();
+    drop(index);
+    let path = f.data.join("manager-state").join(FILE);
+    let before = fs::read(&path).unwrap();
+    assert_eq!(inspect(&f.context, &f.data).unwrap(), Some(head));
+    assert_eq!(fs::read(&path).unwrap(), before);
+}
+
+#[test]
+fn observation_does_not_close_a_sqlite_inode_while_a_same_process_writer_holds_it() {
+    const CHILD: &str = "OCXD024_INDEX_READONLY_SQLITE_PROBE";
+    const TEST:&str="infrastructure::macos_client_originals::session_index::tests::observation_does_not_close_a_sqlite_inode_while_a_same_process_writer_holds_it";
+    if let Some(path) = std::env::var_os(CHILD) {
+        let path = PathBuf::from(path);
+        assert!(path.starts_with("/private/tmp"));
+        let connection = Connection::open_with_flags(
+            path,
+            rusqlite::OpenFlags::SQLITE_OPEN_READ_WRITE | rusqlite::OpenFlags::SQLITE_OPEN_NOFOLLOW,
+        )
+        .unwrap();
+        connection.busy_timeout(std::time::Duration::ZERO).unwrap();
+        assert!(
+            matches!(connection.execute_batch("BEGIN IMMEDIATE"),Err(rusqlite::Error::SqliteFailure(error,_)) if error.code == rusqlite::ErrorCode::DatabaseBusy),
+            "observer must not release the parent's POSIX writer lock"
+        );
+        println!("SQLITE_PARENT_LOCK_RETAINED");
+        return;
+    }
+    let f = Fixture::new();
+    let index = f.open().unwrap();
+    index
+        .connection()
+        .unwrap()
+        .execute_batch("BEGIN IMMEDIATE")
+        .unwrap();
+    assert!(inspect(&f.context, &f.data).is_err());
+    let result = std::process::Command::new(std::env::current_exe().unwrap())
+        .args(["--exact", TEST, "--nocapture"])
+        .env(CHILD, f.data.join("manager-state").join(FILE))
+        .output()
+        .unwrap();
+    assert!(
+        result.status.success(),
+        "{} {}",
+        String::from_utf8_lossy(&result.stdout),
+        String::from_utf8_lossy(&result.stderr)
+    );
+    assert!(String::from_utf8_lossy(&result.stdout).contains("SQLITE_PARENT_LOCK_RETAINED"));
+    println!("{}", String::from_utf8_lossy(&result.stdout));
+    index
+        .connection()
+        .unwrap()
+        .execute_batch("ROLLBACK")
+        .unwrap();
+}
+
+#[test]
+fn observation_refuses_unsafe_permissions_redirected_context_and_incomplete_initializers() {
+    let f = Fixture::new();
+    drop(f.open().unwrap());
+    let path = f.data.join("manager-state").join(FILE);
+    let original = fs::read(&path).unwrap();
+    fs::set_permissions(&path, fs::Permissions::from_mode(0o644)).unwrap();
+    assert!(inspect(&f.context, &f.data).is_err());
+    assert_eq!(
+        fs::metadata(&path).unwrap().permissions().mode() & 0o777,
+        0o644
+    );
+    assert_eq!(fs::read(&path).unwrap(), original);
+    fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+    let mut changed = f.context.clone();
+    changed.opencodex_home = f.root.join("another-home");
+    fs::create_dir(&changed.opencodex_home).unwrap();
+    assert!(inspect(&changed, &f.data).is_err());
+    assert_eq!(fs::read(&path).unwrap(), original);
+    fs::remove_file(&path).unwrap();
+    assert!(inspect(&f.context, &f.data).is_err());
+    assert!(
+        !path.exists(),
+        "read-only observation must not recreate an abandoned initializer"
+    );
+}
+
+#[test]
+fn observation_refuses_sidecars_old_schema_and_orphaned_or_newer_events_without_repair() {
+    for mutation in ["sidecar", "schema", "view", "orphan", "ahead", "wal"] {
+        let f = Fixture::new();
+        let index = f.open().unwrap();
+        index.reserve_start().unwrap();
+        drop(index);
+        let path = f.data.join("manager-state").join(FILE);
+        if mutation == "sidecar" {
+            fs::write(
+                path.with_file_name(format!("{FILE}-journal")),
+                b"unconfirmed original journal",
+            )
+            .unwrap();
+        } else {
+            let connection = Connection::open(&path).unwrap();
+            connection.execute_batch(match mutation {
+                "schema"=>"PRAGMA user_version=1",
+                "view"=>"CREATE VIEW unfamiliar AS SELECT * FROM events",
+                "orphan"=>"DELETE FROM current_session",
+                "ahead"=>"INSERT INTO events(revision,document) SELECT 2,document FROM events WHERE revision=1",
+                "wal"=>"PRAGMA journal_mode=WAL",_=>unreachable!(),
+            }).unwrap();
+            connection.close().unwrap();
+        }
+        let before = fs::read(&path).unwrap();
+        assert!(inspect(&f.context, &f.data).is_err(), "{mutation}");
+        assert_eq!(fs::read(&path).unwrap(), before, "{mutation}");
+        if mutation == "sidecar" {
+            assert_eq!(
+                fs::read(path.with_file_name(format!("{FILE}-journal"))).unwrap(),
+                b"unconfirmed original journal"
+            );
+        }
+        if mutation == "wal" {
+            assert!(!path.with_file_name(format!("{FILE}-shm")).exists());
+        }
+    }
+}
+
+#[test]
+fn actual_index_recovery_fact_survives_a_failed_service_observation_and_blocks_restart_on_reopen() {
+    use crate::modules::status::{ClientRecoveryState as Recovery, StatusCollector, StatusSource};
+    #[derive(Debug)]
+    struct Managed(PathBuf);
+    impl crate::infrastructure::runtime_executable::RuntimeExecutableProvider for Managed {
+        fn executable(&self) -> Option<PathBuf> {
+            Some(self.0.join("not-executed"))
+        }
+        fn managed_installation_root(&self) -> Option<PathBuf> {
+            Some(self.0.clone())
+        }
+    }
+    let f = Fixture::new();
+    let index = f.open().unwrap();
+    let head = index.reserve_start().unwrap();
+    drop(index);
+    let build = || {
+        crate::infrastructure::status_source::OfficialStatusSource::new(
+            std::sync::Arc::new(Managed(f.root.clone())),
+            f.context.working_directory.clone(),
+            crate::modules::process::EnvironmentPolicy {
+                opencodex_home: f.context.opencodex_home.clone(),
+                ..Default::default()
+            },
+        )
+    };
+    assert_eq!(
+        build().client_recovery(),
+        Recovery::Unknown,
+        "missing explicit D must not guess a recovery root"
+    );
+    let source = build().with_client_recovery_root(f.data.clone());
+    assert_eq!(source.client_recovery(), Recovery::Required);
+    let mut collector = StatusCollector::new(source);
+    assert!(collector.refresh().is_err()); // no runtime/CLI is executed here
+    assert_eq!(collector.facts().client_recovery, Recovery::Required);
+    let snapshot = crate::types::runtime_status::snapshot_from_matrix(
+        collector.matrix(),
+        collector.facts(),
+        None,
+        None,
+        crate::types::runtime_status::StatusSource::Fixture,
+    );
+    assert!(!snapshot.can_start && !snapshot.can_restart);
+    let tray = crate::commands::tray::tray_state_from_parts(&collector, &f.data).unwrap();
+    assert!(!tray.can_start && !tray.can_stop && !tray.can_restart);
+    assert_eq!(inspect(&f.context, &f.data).unwrap(), Some(head));
+}
+
+#[test]
 fn references_are_durable_sequential_and_an_unfinished_session_cannot_be_overwritten() {
     let f = Fixture::new();
     let store = f.open().unwrap();

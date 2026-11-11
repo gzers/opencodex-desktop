@@ -200,6 +200,7 @@ const mode = computed<'ready' | 'setup'>(() => (gateBlocked.value ? 'setup' : 'r
 // 准备态的主线说明与入口按 §25 调整：不充当无效详情入口。
 const caption = computed(() => {
   if (app.clientRecoveryRequired) return '客户端配置恢复尚未完成，请查看诊断。'
+  if (!app.processActionBusy && app.statusSnapshot?.facts.client_recovery === 'unknown') return '客户端恢复状态待核对，请查看诊断。'
   if (!gateBlocked.value) return motion.value.caption
   return environment.value.state === 'checking' ? '正在确认启动条件' : '启动条件未满足 · 请按下方指引处理'
 })

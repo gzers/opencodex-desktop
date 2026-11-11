@@ -26,6 +26,7 @@ pub struct OfficialStatusSource {
     environment: crate::modules::process::EnvironmentPolicy,
     cache: Mutex<Option<CachedStatus>>,
     mutation: Option<crate::state::SharedRuntimeInstall>,
+    client_recovery_root: Option<PathBuf>,
 }
 #[derive(Debug, Clone)]
 struct CachedStatus {
@@ -48,6 +49,7 @@ impl OfficialStatusSource {
             environment,
             cache: Mutex::new(None),
             mutation: None,
+            client_recovery_root: None,
         }
     }
 
@@ -56,6 +58,10 @@ impl OfficialStatusSource {
     /// CLI that competes with boot or keeps an own-H process alive during stop.
     pub fn with_mutation_gate(mut self, mutation: crate::state::SharedRuntimeInstall) -> Self {
         self.mutation = Some(mutation);
+        self
+    }
+    pub fn with_client_recovery_root(mut self, root: PathBuf) -> Self {
+        self.client_recovery_root = Some(root);
         self
     }
     fn mutation_in_progress(&self) -> bool {
@@ -383,6 +389,35 @@ async fn probe_local(port: u16) -> Result<(serde_json::Value, serde_json::Value)
 }
 
 impl StatusSource for OfficialStatusSource {
+    fn client_recovery(&self) -> crate::modules::status::ClientRecoveryState {
+        use crate::modules::status::ClientRecoveryState as State;
+        if self.runtime.managed_installation_root().is_none() {
+            return State::NotRequired;
+        }
+        if self.client_recovery_root.is_none() {
+            return State::Unknown;
+        }
+        #[cfg(target_os = "macos")]
+        if let Some(data) = &self.client_recovery_root {
+            use crate::infrastructure::macos_client_originals::session_index::{
+                inspect, State as Phase,
+            };
+            let context = crate::state::ProcessContext {
+                runtime: self.runtime.clone(),
+                working_directory: self.working_directory.clone(),
+                opencodex_home: self.environment.opencodex_home.clone(),
+            };
+            return match inspect(&context, data) {
+                Ok(None) => State::NotRequired,
+                Ok(Some(head)) if head.state == Phase::Ready => State::Active,
+                Ok(Some(_)) => State::Required,
+                Err(_) => State::Unknown,
+            };
+        }
+        // No native backend/input means unknown, including unsupported managed
+        // platforms. Do not substitute an absent JSON field or a guessed path.
+        State::Unknown
+    }
     fn fetch_light(&self) -> Result<serde_json::Value, CollectError> {
         tokio::runtime::Handle::try_current().map_err(|_| CollectError::Unreachable)?;
         tokio::task::block_in_place(|| {

@@ -112,9 +112,9 @@ pub fn snapshot_from_matrix(
     source: StatusSource,
 ) -> StatusSnapshotDto {
     StatusSnapshotDto {
-        can_start: matrix.can_start(),
+        can_start: matrix.can_start() && !facts.client_recovery.blocks_start(),
         can_stop: matrix.can_stop(),
-        can_restart: matrix.can_stop(),
+        can_restart: matrix.can_stop() && !facts.client_recovery.blocks_restart(),
         matrix,
         facts: facts.clone(),
         port,
@@ -137,6 +137,51 @@ pub fn health_label(health: HealthState) -> &'static str {
 mod tests {
     use super::*;
     use crate::types::status::{ConnectionState, OperationState, RuntimeState};
+    #[test]
+    fn recovery_gates_share_native_tray_and_snapshot_policy_without_rewriting_runtime_facts() {
+        use crate::modules::status::ClientRecoveryState as Recovery;
+        for recovery in [
+            Recovery::NotRequired,
+            Recovery::Active,
+            Recovery::Required,
+            Recovery::Unknown,
+        ] {
+            for runtime in [
+                RuntimeState::Running,
+                RuntimeState::Stopped,
+                RuntimeState::Unreachable,
+            ] {
+                let facts = RuntimeFacts {
+                    client_recovery: recovery,
+                    ..Default::default()
+                };
+                let snapshot = snapshot_from_matrix(
+                    matrix(runtime),
+                    &facts,
+                    None,
+                    None,
+                    StatusSource::Fixture,
+                );
+                let tray = crate::infrastructure::tray_controller::tray_state_from_snapshot(
+                    &snapshot,
+                    "/fixtures/D".into(),
+                );
+                let gates = crate::modules::tray::enabled_actions(&tray);
+                assert_eq!(
+                    (snapshot.can_start, snapshot.can_stop, snapshot.can_restart),
+                    (gates[0].1, gates[1].1, gates[2].1)
+                );
+                assert_eq!(snapshot.matrix.runtime, runtime);
+                if recovery != Recovery::NotRequired {
+                    assert!(!snapshot.can_start);
+                }
+                if matches!(recovery, Recovery::Required | Recovery::Unknown) {
+                    assert!(!snapshot.can_restart);
+                }
+                assert_eq!(snapshot.can_stop, matrix(runtime).can_stop());
+            }
+        }
+    }
 
     fn matrix(runtime: RuntimeState) -> StatusMatrix {
         StatusMatrix {

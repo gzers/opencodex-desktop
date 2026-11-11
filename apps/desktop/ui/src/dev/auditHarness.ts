@@ -44,6 +44,7 @@ function overviewSnapshot(runtime: RuntimeState, source: StatusSnapshot['source'
   return {
     matrix: { runtime, connection: 'synced', operation: 'idle' },
     facts: {
+      client_recovery: 'not_required',
       health: running ? 'healthy' : runtime === 'unreachable' ? 'unhealthy' : 'unknown',
       runtime_label: running ? 'codex' : null,
       opencodex_home: '/fixtures/opencodex-home',

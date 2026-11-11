@@ -12,7 +12,7 @@ import type {StatusSnapshot} from '@/contracts/runtimeStatus'
 const invoke=vi.fn()
 vi.mock('@tauri-apps/api/core',()=>({invoke:(...args:unknown[])=>invoke(...args)}))
 let wrapper:VueWrapper|undefined
-const snapshot:StatusSnapshot={matrix:{runtime:'running',connection:'unconfigured',operation:'idle'},facts:{health:'healthy',runtime_label:null,opencodex_home:'/isolated/official',data_root:'/isolated',protection:null,reboot_safe:null,service_present:null,shim_present:null,version_drift:null},port:10100,pid:'123',can_start:false,can_stop:true,can_restart:true,source:'fixture'}
+const snapshot:StatusSnapshot={matrix:{runtime:'running',connection:'unconfigured',operation:'idle'},facts:{client_recovery:'not_required',health:'healthy',runtime_label:null,opencodex_home:'/isolated/official',data_root:'/isolated',protection:null,reboot_safe:null,service_present:null,shim_present:null,version_drift:null},port:10100,pid:'123',can_start:false,can_stop:true,can_restart:true,source:'fixture'}
 const prefs={interfaceScale:100,panelMode:'embedded',theme:'dark',visualEffects:'mid',glowRender:'mesh',themeNeedsImport:false} as PreferencesDto
 beforeEach(()=>{
  vi.useFakeTimers();setActivePinia(createPinia());invoke.mockReset();useLifecycleStore().statusSnapshot=snapshot

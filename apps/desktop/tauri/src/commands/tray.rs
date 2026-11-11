@@ -42,6 +42,7 @@ where
         DtoStatusSource::Live,
     );
     let state = TrayState {
+        client_recovery: snapshot.facts.client_recovery,
         runtime: snapshot.matrix.runtime,
         health: snapshot.facts.health,
         port: snapshot.port,

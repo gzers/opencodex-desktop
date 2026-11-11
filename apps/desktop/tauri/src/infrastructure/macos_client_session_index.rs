@@ -9,6 +9,14 @@ use rusqlite::{params, Connection, OptionalExtension};
 
 const FILE: &str = "client-session-index.sqlite";
 const MAX_INDEX: u64 = 16 * 1024 * 1024;
+const TABLES: [(&str, &str); 3] = [
+    ("binding", "CREATE TABLE binding(singleton INTEGER PRIMARY KEY CHECK(singleton=1), document BLOB NOT NULL)"),
+    ("current_session", "CREATE TABLE current_session(singleton INTEGER PRIMARY KEY CHECK(singleton=1), revision INTEGER NOT NULL CHECK(revision>0), document BLOB NOT NULL)"),
+    ("events", "CREATE TABLE events(revision INTEGER PRIMARY KEY, document BLOB NOT NULL)"),
+];
+#[path = "macos_client_session_observation.rs"]
+mod observation;
+pub use observation::inspect;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -124,6 +132,68 @@ fn decode<T: serde::de::DeserializeOwned>(bytes: &[u8]) -> io::Result<T> {
 fn database_error(_: rusqlite::Error) -> io::Error {
     denied("current session index unavailable; original state retained")
 }
+fn validate_schema(connection: &Connection) -> io::Result<()> {
+    let mut statement = connection
+        .prepare("SELECT name,type,sql FROM sqlite_schema")
+        .map_err(database_error)?;
+    let definitions: Vec<(String, String, String)> = statement
+        .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))
+        .map_err(database_error)?
+        .collect::<Result<_, _>>()
+        .map_err(database_error)?;
+    if definitions.len() != TABLES.len()
+        || definitions.iter().any(|(name, kind, sql)| {
+            kind != "table" || !TABLES.iter().any(|(n, s)| name == n && sql == s)
+        })
+    {
+        return Err(denied("unknown index schema; not adopted"));
+    }
+    Ok(())
+}
+fn read_head(connection: &Connection) -> io::Result<Option<Head>> {
+    let row: Option<(u64, Vec<u8>)> = connection
+        .query_row(
+            "SELECT revision,document FROM current_session WHERE singleton=1",
+            [],
+            |r| Ok((r.get(0)?, r.get(1)?)),
+        )
+        .optional()
+        .map_err(database_error)?;
+    let Some((revision, bytes)) = row else {
+        let events: u64 = connection
+            .query_row("SELECT count(*) FROM events", [], |r| r.get(0))
+            .map_err(database_error)?;
+        return if events == 0 {
+            Ok(None)
+        } else {
+            Err(denied("current references missing with retained events"))
+        };
+    };
+    let head: Head = decode(&bytes)?;
+    validate(&head)?;
+    if head.revision != revision {
+        return Err(denied("session index revision mismatch"));
+    }
+    let event: Vec<u8> = connection
+        .query_row(
+            "SELECT document FROM events WHERE revision=?1",
+            [revision],
+            |r| r.get(0),
+        )
+        .map_err(database_error)?;
+    if event != bytes {
+        return Err(denied("session event and current references differ"));
+    }
+    let latest: u64 = connection
+        .query_row("SELECT max(revision) FROM events", [], |r| r.get(0))
+        .map_err(database_error)?;
+    if latest != revision {
+        return Err(denied(
+            "current references are not the latest committed event",
+        ));
+    }
+    Ok(Some(head))
+}
 fn scope(
     context: &ProcessContext,
     data: &PinnedDirectory,
@@ -159,6 +229,9 @@ pub struct Index {
     client: PinnedDirectory,
 }
 impl Index {
+    pub fn data_root(&self) -> &Path {
+        self.data.path()
+    }
     pub fn control_root(&self) -> io::Result<PathBuf> {
         self.check()?;
         Ok(self
@@ -179,6 +252,13 @@ impl Index {
         }
         let binding = scope(context, &data, &client)?;
         let manager = data.child_private("manager-state", true)?;
+        if observation::entry(&manager, FILE)?.is_none()
+            && observation::entry(&manager, "client-originals")?.is_some()
+        {
+            return Err(denied(
+                "originals without an index cannot initialize a new baseline",
+            ));
+        }
         let action_name = "client-session-action.lock";
         let action_cname = name(OsStr::new(action_name))?;
         let fd = unsafe {
@@ -275,7 +355,12 @@ impl Index {
                 if tables != 0 {
                     return Err(denied("unknown nonempty session index is not adopted"));
                 }
-                connection.execute_batch("CREATE TABLE binding(singleton INTEGER PRIMARY KEY CHECK(singleton=1), document BLOB NOT NULL); CREATE TABLE current_session(singleton INTEGER PRIMARY KEY CHECK(singleton=1), revision INTEGER NOT NULL CHECK(revision>0), document BLOB NOT NULL); CREATE TABLE events(revision INTEGER PRIMARY KEY, document BLOB NOT NULL); PRAGMA user_version=2;").map_err(database_error)?;
+                for (_, sql) in TABLES {
+                    connection.execute_batch(sql).map_err(database_error)?;
+                }
+                connection
+                    .execute_batch("PRAGMA user_version=2")
+                    .map_err(database_error)?;
                 connection
                     .execute(
                         "INSERT INTO binding(singleton,document) VALUES(1,?1)",
@@ -287,6 +372,7 @@ impl Index {
                     "unsupported session index version or abandoned initializer",
                 ));
             }
+            validate_schema(&connection)?;
             let stored: Vec<u8> = connection
                 .query_row("SELECT document FROM binding WHERE singleton=1", [], |r| {
                     r.get(0)
@@ -376,40 +462,17 @@ impl Index {
     }
     pub fn head(&self) -> io::Result<Option<Head>> {
         self.check()?;
-        let row: Option<(u64, Vec<u8>)> = self
-            .connection()?
-            .query_row(
-                "SELECT revision,document FROM current_session WHERE singleton=1",
-                [],
-                |r| Ok((r.get(0)?, r.get(1)?)),
-            )
-            .optional()
-            .map_err(database_error)?;
-        let Some((revision, bytes)) = row else {
-            return Ok(None);
-        };
-        let head: Head = decode(&bytes)?;
-        validate(&head)?;
-        if head.revision != revision {
-            return Err(denied("session index revision mismatch"));
-        }
-        let event: Vec<u8> = self
-            .connection()?
-            .query_row(
-                "SELECT document FROM events WHERE revision=?1",
-                [revision],
-                |r| r.get(0),
-            )
-            .map_err(database_error)?;
-        if event != bytes {
-            return Err(denied("session event and current references differ"));
-        }
-        Ok(Some(head))
+        read_head(self.connection()?)
     }
     pub fn reserve_start(&self) -> io::Result<Head> {
         if self.head()?.is_some() {
             return Err(denied(
                 "unfinished original session blocks a new startup baseline",
+            ));
+        }
+        if observation::entry(&self.action_parent, "client-originals")?.is_some() {
+            return Err(denied(
+                "retained originals cannot become a new startup baseline",
             ));
         }
         let head = Head {

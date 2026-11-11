@@ -29,6 +29,7 @@ function snapshot(runtime: StatusSnapshot['matrix']['runtime'], port: number | n
   return {
     matrix: { runtime, connection: 'synced', operation: 'idle' },
     facts: {
+      client_recovery: 'not_required',
       health: 'healthy',
       runtime_label: null,
       opencodex_home: null,

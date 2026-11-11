@@ -26,6 +26,7 @@ function snapshot(runtime: StatusSnapshot['matrix']['runtime'], pid = '39421'): 
   return {
     matrix: { runtime, connection: 'synced', operation: 'idle' },
     facts: {
+      client_recovery: 'not_required',
       health: runtime === 'running' ? 'healthy' : 'unknown',
       runtime_label: null,
       opencodex_home: '/fixtures/opencodex-home',
@@ -135,6 +136,30 @@ describe('process action integration', () => {
     expect(app.processProgressError).toBe('停止未确认')
   })
 
+  it('reconstructs recovery gates in a fresh UI instance without a previous action receipt', async () => {
+    const app=useAppStore(), state=snapshot('stopped')
+    state.facts.client_recovery='required'
+    expect(app.clientRecoveryRequired).toBe(false)
+    app.setStatusSnapshot(state)
+    expect(app.clientRecoveryRequired).toBe(true)
+    for(const action of ['start','restart','stop'] as const) await expect(app.requestProcessAction(action)).resolves.toBeUndefined()
+    expect(invoke.mock.calls.filter(([name])=>name==='process_action')).toHaveLength(0)
+    app.setStatusSnapshot(snapshot('stopped'))
+    expect(app.clientRecoveryRequired).toBe(true)
+  })
+
+  it('blocks unknown recovery without claiming it is a proven restore failure or that the service stopped', async () => {
+    const app=useAppStore(), state=snapshot('running')
+    state.facts.client_recovery='unknown'
+    app.setStatusSnapshot(state)
+    expect(app.clientRecoveryRequired).toBe(false)
+    expect(app.statusSnapshot?.matrix.runtime).toBe('running')
+    expect(app.processActionBlocked('stop')).toBe(false)
+    await expect(app.requestProcessAction('start')).resolves.toBeUndefined()
+    await expect(app.requestProcessAction('restart')).resolves.toBeUndefined()
+    expect(invoke.mock.calls.filter(([name])=>name==='process_action')).toHaveLength(0)
+  })
+
   it('closes progress immediately when backend preserves observation without a result', async () => {
     const app = useAppStore()
     invoke.mockResolvedValue({
@@ -187,6 +212,7 @@ describe('process action integration', () => {
     const projected = statusScenario(base, {
       matrix: { runtime: 'running', connection: 'synced', operation: 'idle' },
       facts: {
+        client_recovery: 'not_required',
         health: 'healthy',
         runtime_label: 'Running',
         opencodex_home: '/tmp/fixture/opencodex-home',
@@ -282,6 +308,7 @@ describe('process action integration', () => {
     const projected = statusScenario(runtimeScenarios.at_risk, {
       matrix: { runtime: 'at_risk', connection: 'disconnected', operation: 'idle' },
       facts: {
+        client_recovery: 'not_required',
         health: 'unknown',
         runtime_label: null,
         opencodex_home: null,
@@ -306,6 +333,7 @@ describe('process action integration', () => {
     const projected = statusScenario(runtimeScenarios.at_risk, {
       matrix: { runtime: 'at_risk', connection: 'disconnected', operation: 'idle' },
       facts: {
+        client_recovery: 'not_required',
         health: 'healthy',
         runtime_label: null,
         opencodex_home: null,
@@ -326,6 +354,7 @@ describe('process action integration', () => {
     const stopped = statusScenario(runtimeScenarios.stopped, {
       matrix: { runtime: 'stopped', connection: 'disconnected', operation: 'idle' },
       facts: {
+        client_recovery: 'not_required',
         health: 'unknown',
         runtime_label: null,
         opencodex_home: null,
