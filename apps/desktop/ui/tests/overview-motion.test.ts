@@ -351,7 +351,9 @@ describe('overview integrates the motion area', () => {
     const pinia = createPinia()
     setActivePinia(pinia)
     invoke.mockImplementation((command: string) =>
-      command === 'discover_environment'
+      command === 'runtime_preparation_status'
+        ? Promise.resolve({ attemptId: null, revision: 0, phase: 'idle', failedPhase: null, failure: null, retryable: false })
+        : command === 'discover_environment'
         ? Promise.resolve({ node: { found: true, path: '/n', version: null }, npm: { found: true, path: '/n', version: null }, ocx: { found: false, path: null, version: null }, gate: 'missing_ocx', shortCircuited: true, brewFound: true })
         : Promise.resolve(undefined),
     )
