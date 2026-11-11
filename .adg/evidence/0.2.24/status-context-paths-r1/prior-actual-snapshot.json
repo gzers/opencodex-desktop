@@ -1,0 +1,32 @@
+{
+  "source": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.24/recovery-readonly-view-r1/native2/native/summary.json",
+  "sourceSha256": "2adb1e602f8966b98b417ea51ee743f47c7a4cdc1bd1321b49809be38e441eb8",
+  "snapshot": {
+    "can_restart": false,
+    "can_start": false,
+    "can_stop": false,
+    "facts": {
+      "client_recovery": "required",
+      "data_root": "",
+      "health": "unknown",
+      "opencodex_home": "/private/tmp/ocxd024-versioned-lifecycle-jbefdozk/fixtures/profile/.codex-desktop/opencodex/home/config.json",
+      "protection": "none",
+      "reboot_safe": true,
+      "runtime_label": "bundled",
+      "service_present": null,
+      "shim_present": null,
+      "startup_status": "native",
+      "version_drift": "2.99.0"
+    },
+    "matrix": {
+      "connection": "unconfigured",
+      "operation": "idle",
+      "runtime": "stopped"
+    },
+    "pid": null,
+    "port": 54697,
+    "source": "live"
+  },
+  "priorBudgetMs": 825,
+  "scope": "actual previous native product snapshot, not new raw official output"
+}
