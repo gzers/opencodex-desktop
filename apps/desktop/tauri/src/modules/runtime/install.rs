@@ -412,6 +412,9 @@ pub struct InstallRequest {
     pub node_path: Option<PathBuf>,
 }
 
+#[path = "install_versioned.rs"]
+pub mod versioned;
+
 /// 一次成功安装的事实。
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct InstallOutcome {
@@ -959,7 +962,15 @@ impl NpmRunner for SystemNpmRunner {
             None => (Vec::new(), None),
         };
         let masker = masker_for(request.proxy.as_ref());
-        let spec = if Path::new(&request.version).is_absolute() {
+        let local_spec = request
+            .version
+            .strip_prefix("file:sources/")
+            .filter(|name| {
+                !name.is_empty() && !name.contains(['/', '\\', ':']) && name.ends_with(".tgz")
+            });
+        let spec = if local_spec.is_some() {
+            std::ffi::OsString::from(&request.version)
+        } else if Path::new(&request.version).is_absolute() {
             // A validated local tarball is an npm source in its own right.
             // Prefixing it with the registry package name produces an invalid
             // extended Windows path and fails with ENOENT.
@@ -1578,9 +1589,11 @@ impl<'a> RuntimeInstaller<'a> {
         })?;
 
         let filled = match &request.source {
-            InstallSource::Offline { archive } => self.fill_offline(request, &temp, archive)?,
+            InstallSource::Offline { archive } => {
+                self.fill_offline(request, &temp, archive, false)?
+            }
             InstallSource::Registry { version, proxy } => {
-                self.fill_registry(request, &temp, version, proxy.as_ref())?
+                self.fill_registry(request, &temp, version, proxy.as_ref(), false)?
             }
         };
         self.check_cancel()?;
@@ -1822,11 +1835,25 @@ impl<'a> RuntimeInstaller<'a> {
         request: &InstallRequest,
         temp: &Path,
         archive: &Path,
+        versioned: bool,
     ) -> Result<Filled, InstallError> {
         self.emit(InstallPhase::Validating, 8, None);
         // 先做 `FZ-49` 校验：读遍每一条，越界 / 链接 / 超限一律整体拒绝，
         // **在任何展开动作之前**就把不合格的归档挡掉。
         let inspection = archive::inspect(archive, None)?;
+        let pinned = if versioned {
+            Some(self::versioned::pin_archive(temp, archive)?)
+        } else {
+            None
+        };
+        let archive = pinned
+            .as_ref()
+            .map(|(path, _, _)| path.as_path())
+            .unwrap_or(archive);
+        let spec = pinned
+            .as_ref()
+            .map(|(_, spec, _)| spec.clone())
+            .unwrap_or_else(|| archive.to_string_lossy().into_owned());
         self.check_cancel()?;
         self.emit(
             InstallPhase::Extracting,
@@ -1855,7 +1882,7 @@ impl<'a> RuntimeInstaller<'a> {
                 node_dir: node_dir.clone(),
                 prefix: temp.to_path_buf(),
                 // 本地归档路径即安装源；`--offline` 保证只用缓存。
-                version: archive.to_string_lossy().into_owned(),
+                version: spec.clone(),
                 proxy: None,
                 scripts_enabled: false,
                 offline: true,
@@ -1863,6 +1890,9 @@ impl<'a> RuntimeInstaller<'a> {
         )?;
         self.check_cancel()?;
 
+        if versioned {
+            self::versioned::materialize_bun(temp)?;
+        }
         let mut scripts_enabled = false;
         if let Err(error) = verify_package(temp, Some(&inspection.version), self.probe, self.node())
         {
@@ -1881,7 +1911,7 @@ impl<'a> RuntimeInstaller<'a> {
                     npm_path: npm_path.clone(),
                     node_dir,
                     prefix: temp.to_path_buf(),
-                    version: archive.to_string_lossy().into_owned(),
+                    version: spec.clone(),
                     proxy: None,
                     scripts_enabled: true,
                     offline: true,
@@ -1892,6 +1922,10 @@ impl<'a> RuntimeInstaller<'a> {
             self.check_cancel()?;
         }
 
+        if let Some((path, _, sha)) = &pinned {
+            self::versioned::materialize_bun(temp)?;
+            self::versioned::verify_source_after_install(temp, path, sha)?;
+        }
         Ok(Filled {
             tarball_sha256: inspection.sha256,
             scripts_enabled,
@@ -1906,6 +1940,7 @@ impl<'a> RuntimeInstaller<'a> {
         temp: &Path,
         version: &str,
         proxy: Option<&ProxyConfig>,
+        versioned: bool,
     ) -> Result<Filled, InstallError> {
         let npm_path = request.npm_path.clone().ok_or(InstallError::NpmMissing)?;
         if let Some(proxy) = proxy {
@@ -1932,6 +1967,16 @@ impl<'a> RuntimeInstaller<'a> {
 
         // 下载物同样过一遍 `FZ-49` 校验：包名、版本与入口都以此为准。
         let inspection = archive::inspect(&tarball, None)?;
+        let pinned = if versioned {
+            Some(self::versioned::pin_archive(temp, &tarball)?)
+        } else {
+            None
+        };
+        let tarball = pinned.as_ref().map(|(path, _, _)| path).unwrap_or(&tarball);
+        let spec = pinned
+            .as_ref()
+            .map(|(_, spec, _)| spec.clone())
+            .unwrap_or_else(|| tarball.to_string_lossy().into_owned());
 
         self.emit(InstallPhase::Installing, 45, None);
         self.install_with_retry(
@@ -1940,7 +1985,7 @@ impl<'a> RuntimeInstaller<'a> {
                 npm_path: npm_path.clone(),
                 node_dir: node_dir.clone(),
                 prefix: temp.to_path_buf(),
-                version: tarball.to_string_lossy().into_owned(),
+                version: spec.clone(),
                 proxy: proxy.cloned(),
                 scripts_enabled: false,
                 offline: false,
@@ -1948,6 +1993,9 @@ impl<'a> RuntimeInstaller<'a> {
         )?;
         self.check_cancel()?;
 
+        if versioned {
+            self::versioned::materialize_bun(temp)?;
+        }
         let mut scripts_enabled = false;
         if let Err(error) = verify_package(temp, Some(&inspection.version), self.probe, self.node())
         {
@@ -1967,7 +2015,7 @@ impl<'a> RuntimeInstaller<'a> {
                     npm_path: npm_path.clone(),
                     node_dir,
                     prefix: temp.to_path_buf(),
-                    version: tarball.to_string_lossy().into_owned(),
+                    version: spec.clone(),
                     proxy: proxy.cloned(),
                     scripts_enabled: true,
                     offline: false,
@@ -1978,6 +2026,10 @@ impl<'a> RuntimeInstaller<'a> {
             self.check_cancel()?;
         }
 
+        if let Some((path, _, sha)) = &pinned {
+            self::versioned::materialize_bun(temp)?;
+            self::versioned::verify_source_after_install(temp, path, sha)?;
+        }
         Ok(Filled {
             tarball_sha256: inspection.sha256,
             scripts_enabled,

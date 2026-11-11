@@ -560,7 +560,25 @@ async fn install_managed_runtime(
         code: "bad_source".to_string(),
         detail: "安装源必须是 registry 或 offline".to_string(),
     })?;
-    let prefix = if handle.resolver_managed_only() {
+    let prefix = if handle.uses_versioned_programs() {
+        handle.observe_current();
+        let selected = handle
+            .selected_program()?
+            .ok_or_else(|| AppError::RuntimeManaged {
+                code: "managed_dependency_missing".into(),
+                detail: "集成运行程序尚未准备完成，请先恢复内置资源".into(),
+            })?;
+        if request
+            .prefix_path()
+            .is_some_and(|p| p != selected.paths.package_root)
+        {
+            return Err(AppError::RuntimeManaged {
+                code: "invalid_install_root".into(),
+                detail: "运行包位置由当前版本选择确定，请刷新安装配置".into(),
+            });
+        }
+        selected.paths.package_root
+    } else if handle.resolver_managed_only() {
         let expected = handle.installation_root().join("runtime/opencodex");
         if request.prefix_path().is_some_and(|p| p != expected) {
             return Err(AppError::RuntimeManaged {
@@ -656,6 +674,27 @@ async fn install_managed_runtime(
             candidate.to_string().as_bytes(),
         );
         let result: AppResult<_> = (|| {
+            if handle_ref.uses_versioned_programs() {
+                crate::modules::runtime::protection::ensure_binding_ready(&data_root_path)?;
+                let (target,platform)=crate::modules::runtime::program_layout::host_target()?;
+                let selected=crate::modules::runtime::program_selection::read(handle_ref.installation_root(),platform,target)?.ok_or(AppError::NotConfigured)?;
+                let npm=crate::modules::runtime::install::SystemNpmRunner::new(Some(home_path.clone()),data_root_path.join("cache/npm"));
+                let probe=crate::modules::runtime::install::RealVersionProbe::default();
+                let mut installer=RuntimeInstaller::new(&data_root_path,&npm,Some(home_path.clone()),&sink,&probe,node_path.clone());
+                installer.cancel=mutation.cancel.clone();
+                installer.config_backup=Some(crate::modules::model_config::config_file::v2::native_import::backups::UpgradeRequest {
+                    home:worker_app.state::<SharedProcessContext>().opencodex_home.clone(),
+                    program_source:Some(crate::commands::native_config_import::program_source(&selected)),
+                });
+                use crate::commands::runtime_recovery_v2::{ServiceOwnerProof,ServiceOwnerProofProvider};
+                let context=worker_app.state::<SharedProcessContext>().inner().clone();
+                let owner=crate::commands::runtime_recovery_v2_owner::SystemServiceOwnerProofProvider::new(handle_ref.installation_root().into(),context.clone())?;
+                let outcome=installer.install_versioned(handle_ref.installation_root(),&selected,&install_request,||{
+                    if owner.query(&context)?==ServiceOwnerProof::Stopped {Ok(())} else {Err(AppError::NotConfigured)}
+                })?;
+                handle_ref.observe_current();
+                return Ok((outcome.installation,false));
+            }
             // Reconcile before creating another protection backup or replacing the prefix.
             {
                 let guard = crate::modules::backup::manager::acquire_preferences_transaction(&data_root_path)?;

@@ -1126,7 +1126,7 @@ fn directory_identity(path: &Path) -> AppResult<(u64, u64, u64)> {
         ))
     }
 }
-fn publish(source: &Path, target: &Path) -> AppResult<()> {
+pub(super) fn publish(source: &Path, target: &Path) -> AppResult<()> {
     #[cfg(unix)]
     {
         use std::os::unix::ffi::OsStrExt;

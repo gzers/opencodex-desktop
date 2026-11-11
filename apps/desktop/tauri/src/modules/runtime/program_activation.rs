@@ -319,6 +319,59 @@ impl Mutation {
         )?;
         let _record = TargetFileLock::lock(&record_path)?;
         let journal = self.prepare(data, expected, after)?;
+        self.commit_prepared(data, journal, admit, checkpoint)
+    }
+    pub(super) fn activate_install(
+        &self,
+        data: &Path,
+        expected: Option<&CurrentSelection>,
+        after: &CurrentSelection,
+        history: &super::InstallHistoryEntry,
+        admit: impl Fn() -> AppResult<()>,
+    ) -> AppResult<SelectedProgram> {
+        let record_path = RuntimeStore::new(data).path().to_path_buf();
+        safety::check_path(
+            data,
+            &crate::infrastructure::locking::lock_path_for(&record_path),
+            true,
+        )?;
+        let _record = TargetFileLock::lock(&record_path)?;
+        let mut journal = self.prepare(data, expected, after)?;
+        let candidate = program_selection::read_image(
+            &self.root,
+            program_layout::host_target()?.1,
+            &after.platform,
+            after,
+        )?;
+        if history.package != super::OFFICIAL_PACKAGE
+            || history.version != after.version
+            || history.result != "succeeded"
+            || history.action != "install"
+            || Path::new(&history.target) != candidate.paths.package_root
+        {
+            return Err(fail("安装历史不属于本次候选版本"));
+        }
+        let bytes = journal
+            .record
+            .after
+            .as_ref()
+            .ok_or_else(|| fail("目标来源记录缺失"))?;
+        let mut record: RuntimeSourceRecord = decode(bytes)?;
+        record.push_history(history.clone());
+        let mut document: serde_json::Value = decode(bytes)?;
+        document["history"] =
+            serde_json::to_value(record.history).map_err(|_| fail("无法编码安装历史"))?;
+        journal.record.after = Some(encode(&document)?);
+        self.commit_prepared(data, journal, admit, |_| Ok(()))
+    }
+    fn commit_prepared(
+        &self,
+        data: &Path,
+        journal: Journal,
+        admit: impl Fn() -> AppResult<()>,
+        checkpoint: impl Fn(Checkpoint) -> AppResult<()>,
+    ) -> AppResult<SelectedProgram> {
+        self.validate(data, &journal)?;
         admit()?;
         let bytes = encode(&Envelope {
             sha256: hash::sha256_hex(&encode(&journal)?),
