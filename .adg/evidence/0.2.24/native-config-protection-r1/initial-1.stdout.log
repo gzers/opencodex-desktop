@@ -1,0 +1,144 @@
+
+running 35 tests
+test modules::runtime::install::tests::cancel_before_start_leaves_no_trace ... ok
+test modules::runtime::install::tests::credential_proxy_never_reaches_the_command_line ... ok
+test modules::runtime::install::tests::entry_script_falls_back_to_env_node_without_recorded_node ... ok
+test modules::runtime::install::tests::extract_semver_reads_the_first_version_token ... ok
+test modules::runtime::install::tests::failed_launcher_activation_restores_previous_managed_prefix ... FAILED
+test modules::runtime::install::tests::install_error_maps_to_stable_codes ... ok
+test modules::runtime::install::tests::install_target_rejections_surface_system_protection ... ok
+test modules::runtime::install::tests::masker_also_removes_known_secret ... ok
+test modules::runtime::install::tests::native_config_protection_is_required_before_program_swap_and_rechecked_before_source_commit ... FAILED
+test modules::runtime::install::tests::normalize_bin_strips_prefix_and_rejects_escapes ... ok
+test modules::runtime::install::tests::npm_cache_is_explicit_and_does_not_replace_user_home ... ok
+test modules::runtime::install::tests::npm_reason_prefers_the_error_line ... ok
+test modules::runtime::install::tests::offline_install_lands_prefix_manifest_and_entry ... FAILED
+test modules::runtime::install::tests::offline_install_rejects_bad_archive_and_keeps_existing_prefix ... FAILED
+test modules::runtime::install::tests::offline_install_rejects_non_official_package_name ... FAILED
+test modules::runtime::install::tests::outcome_history_entry_and_restart_flag ... ok
+test modules::runtime::install::tests::protected_install_only_marks_and_reconciles_activation_after_successful_probe ... FAILED
+test modules::runtime::install::tests::proxy_forms_match_the_frozen_shape ... ok
+test modules::runtime::install::tests::proxy_validation_rejects_empty_and_credential_hosts ... ok
+test modules::runtime::install::tests::real_version_probe_rejects_nonzero_exit_even_when_stdout_has_version ... ok
+test modules::runtime::install::tests::registry_install_rejects_explicit_version_mismatch ... FAILED
+test modules::runtime::install::tests::registry_install_requires_npm_path ... FAILED
+test modules::runtime::install::tests::registry_install_uses_npm_and_records_provenance ... FAILED
+test modules::runtime::install::tests::rejected_link_target_creates_no_parent_directories ... ok
+test modules::runtime::install::tests::rejects_nonempty_unmanaged_prefix_without_replacing_it ... FAILED
+test modules::runtime::install::tests::scripts_required_then_retried_only_after_explicit_consent ... FAILED
+test modules::runtime::install::tests::source_record_failure_restores_exact_package_launcher_and_record ... FAILED
+test modules::runtime::install::tests::stable_entry_points_at_the_final_prefix_not_the_temporary_one ... FAILED
+test modules::runtime::install::tests::strip_url_credentials_masks_userinfo_only ... ok
+test modules::runtime::install::tests::successful_install_replaces_previous_prefix ... FAILED
+test modules::runtime::install::tests::temp_userconfig_is_0600_and_removed_on_drop ... ok
+test modules::runtime::install::tests::unrunnable_entry_requires_scripts_and_is_retried_after_consent ... FAILED
+test modules::runtime::install::tests::verify_package_rejects_name_and_version_and_missing_bin ... ok
+test modules::runtime::install::tests::version_probe_never_accepts_a_truncated_or_malformed_version ... ok
+test modules::runtime::install::tests::version_probe_preserves_prerelease_and_build_identity ... ok
+
+failures:
+
+---- modules::runtime::install::tests::failed_launcher_activation_restores_previous_managed_prefix stdout ----
+
+thread 'modules::runtime::install::tests::failed_launcher_activation_restores_previous_managed_prefix' (151772968) panicked at src/modules/runtime/install.rs:3229:10:
+initial install: Target(SystemProtected)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- modules::runtime::install::tests::native_config_protection_is_required_before_program_swap_and_rechecked_before_source_commit stdout ----
+
+thread 'modules::runtime::install::tests::native_config_protection_is_required_before_program_swap_and_rechecked_before_source_commit' (151772972) panicked at src/modules/runtime/install.rs:3842:18:
+called `Result::unwrap()` on an `Err` value: Target(SystemProtected)
+
+---- modules::runtime::install::tests::offline_install_lands_prefix_manifest_and_entry stdout ----
+
+thread 'modules::runtime::install::tests::offline_install_lands_prefix_manifest_and_entry' (151772976) panicked at src/modules/runtime/install.rs:2943:10:
+offline install: Target(SystemProtected)
+
+---- modules::runtime::install::tests::offline_install_rejects_bad_archive_and_keeps_existing_prefix stdout ----
+
+thread 'modules::runtime::install::tests::offline_install_rejects_bad_archive_and_keeps_existing_prefix' (151772977) panicked at src/modules/runtime/install.rs:3026:10:
+initial install: Target(SystemProtected)
+
+---- modules::runtime::install::tests::offline_install_rejects_non_official_package_name stdout ----
+
+thread 'modules::runtime::install::tests::offline_install_rejects_non_official_package_name' (151772978) panicked at src/modules/runtime/install.rs:3086:9:
+assertion failed: matches!(error, InstallError::Archive(_))
+
+---- modules::runtime::install::tests::protected_install_only_marks_and_reconciles_activation_after_successful_probe stdout ----
+
+thread 'modules::runtime::install::tests::protected_install_only_marks_and_reconciles_activation_after_successful_probe' (151772980) panicked at src/modules/runtime/install.rs:2751:24:
+called `Result::unwrap()` on an `Err` value: Target(SystemProtected)
+
+---- modules::runtime::install::tests::registry_install_rejects_explicit_version_mismatch stdout ----
+
+thread 'modules::runtime::install::tests::registry_install_rejects_explicit_version_mismatch' (151772989) panicked at src/modules/runtime/install.rs:3541:9:
+assertion failed: matches!(error, InstallError::VersionMismatch { .. })
+
+---- modules::runtime::install::tests::registry_install_requires_npm_path stdout ----
+
+thread 'modules::runtime::install::tests::registry_install_requires_npm_path' (151772990) panicked at src/modules/runtime/install.rs:3460:9:
+assertion `left == right` failed
+  left: Target(SystemProtected)
+ right: NpmMissing
+
+---- modules::runtime::install::tests::registry_install_uses_npm_and_records_provenance stdout ----
+
+thread 'modules::runtime::install::tests::registry_install_uses_npm_and_records_provenance' (151772991) panicked at src/modules/runtime/install.rs:3414:10:
+registry install: Target(SystemProtected)
+
+---- modules::runtime::install::tests::rejects_nonempty_unmanaged_prefix_without_replacing_it stdout ----
+
+thread 'modules::runtime::install::tests::rejects_nonempty_unmanaged_prefix_without_replacing_it' (151772993) panicked at src/modules/runtime/install.rs:3197:9:
+assertion `left == right` failed
+  left: "system_protected"
+ right: "filesystem"
+
+---- modules::runtime::install::tests::scripts_required_then_retried_only_after_explicit_consent stdout ----
+
+thread 'modules::runtime::install::tests::scripts_required_then_retried_only_after_explicit_consent' (151772994) panicked at src/modules/runtime/install.rs:3494:9:
+assertion `left == right` failed
+  left: Target(SystemProtected)
+ right: ScriptsRequired
+
+---- modules::runtime::install::tests::source_record_failure_restores_exact_package_launcher_and_record stdout ----
+
+thread 'modules::runtime::install::tests::source_record_failure_restores_exact_package_launcher_and_record' (151772995) panicked at src/modules/runtime/install.rs:3287:10:
+called `Result::unwrap()` on an `Err` value: Target(SystemProtected)
+
+---- modules::runtime::install::tests::stable_entry_points_at_the_final_prefix_not_the_temporary_one stdout ----
+
+thread 'modules::runtime::install::tests::stable_entry_points_at_the_final_prefix_not_the_temporary_one' (151772996) panicked at src/modules/runtime/install.rs:3119:10:
+install: Target(SystemProtected)
+
+---- modules::runtime::install::tests::successful_install_replaces_previous_prefix stdout ----
+
+thread 'modules::runtime::install::tests::successful_install_replaces_previous_prefix' (151772998) panicked at src/modules/runtime/install.rs:3153:10:
+initial install: Target(SystemProtected)
+
+---- modules::runtime::install::tests::unrunnable_entry_requires_scripts_and_is_retried_after_consent stdout ----
+
+thread 'modules::runtime::install::tests::unrunnable_entry_requires_scripts_and_is_retried_after_consent' (151773000) panicked at src/modules/runtime/install.rs:3657:9:
+assertion `left == right` failed
+  left: Target(SystemProtected)
+ right: ScriptsRequired
+
+
+failures:
+    modules::runtime::install::tests::failed_launcher_activation_restores_previous_managed_prefix
+    modules::runtime::install::tests::native_config_protection_is_required_before_program_swap_and_rechecked_before_source_commit
+    modules::runtime::install::tests::offline_install_lands_prefix_manifest_and_entry
+    modules::runtime::install::tests::offline_install_rejects_bad_archive_and_keeps_existing_prefix
+    modules::runtime::install::tests::offline_install_rejects_non_official_package_name
+    modules::runtime::install::tests::protected_install_only_marks_and_reconciles_activation_after_successful_probe
+    modules::runtime::install::tests::registry_install_rejects_explicit_version_mismatch
+    modules::runtime::install::tests::registry_install_requires_npm_path
+    modules::runtime::install::tests::registry_install_uses_npm_and_records_provenance
+    modules::runtime::install::tests::rejects_nonempty_unmanaged_prefix_without_replacing_it
+    modules::runtime::install::tests::scripts_required_then_retried_only_after_explicit_consent
+    modules::runtime::install::tests::source_record_failure_restores_exact_package_launcher_and_record
+    modules::runtime::install::tests::stable_entry_points_at_the_final_prefix_not_the_temporary_one
+    modules::runtime::install::tests::successful_install_replaces_previous_prefix
+    modules::runtime::install::tests::unrunnable_entry_requires_scripts_and_is_retried_after_consent
+
+test result: FAILED. 20 passed; 15 failed; 0 ignored; 0 measured; 2052 filtered out; finished in 0.13s
+

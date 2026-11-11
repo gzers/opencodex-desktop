@@ -1,0 +1,47 @@
+{
+  "codeCommit": "11dbbdd9ce85b5878690f1eafc70f871afb400d2",
+  "nativeBackupCommit": "0eea7274c1e1dba9f02baa3c4f15835744c77a44",
+  "rust": {
+    "nativeConfig": 16,
+    "installer": 35,
+    "backup": 57,
+    "upgradePreferences": 4,
+    "port": 8,
+    "totalDistinctPassed": 120,
+    "binarySha256": "2a16793ec1490c3d0a0c12178382a330932e1bf2dc5501773fb4e1fb2c62cd73"
+  },
+  "frontend": {
+    "files": 5,
+    "passed": 56,
+    "typecheck": "passed"
+  },
+  "fmt": "passed",
+  "strictClippyLibAndTests": "passed",
+  "verified": [
+    "manual backup writes exact saved bytes, no DTO credentials or caller path",
+    "import, rollback, manual and pre-upgrade config backups share bounded integrity/permission/HOME verification",
+    "backup metadata records verified program image/version when available; unknown remains unknown",
+    "configuration mutation and Desktop target lock retained through existing program swap transaction",
+    "backup failure does not replace program; ignored-lock config drift rolls program back without overwriting external config",
+    "valid backup can restore a malformed or missing target; malformed original bytes protected; absent original never receives fabricated backup ID",
+    "missing or zero backup port is restored exactly and not converted to a fabricated explicit port",
+    "original preferences backup/retention assertions unchanged"
+  ],
+  "failuresRetained": [
+    "Initial installer tests used /private temporary roots, correctly refused as system protected; all 15 related failures retained. Moved only isolated harness roots to the user cache.",
+    "Seven added port regression failures came from the no-network sandbox denying loopback listeners. They passed with only localhost bind/inbound permitted; no outbound network or business/model requests.",
+    "First loopback profile used an unsupported literal address; sandbox rejected profile before tests. Corrected to localhost syntax.",
+    "A test initially placed in the wrong existing Rust test module failed compilation; moved into the fixture-owning module without changing assertions.",
+    "The human-readable install error adapter initially borrowed a non-static code; corrected to explicit stable code/message pairs. Failed Clippy output retained."
+  ],
+  "boundaries": [
+    "old generic installer transaction tested with synthetic official-shaped archives, mocked npm/version probes and isolated config",
+    "versioned program install/update/activation/rollback still pending; this does not declare P24-01/02 complete",
+    "actual official 2.99 native service stopped-proof, native UI and Windows integrated candidate not validated here",
+    "Windows W0 input correction remains pending; no new native acceptance requested"
+  ],
+  "official299Modified": false,
+  "dailyConfigTouched": false,
+  "businessSyncOrModelRequests": false,
+  "temporaryFixtureRootsRemoved": true
+}

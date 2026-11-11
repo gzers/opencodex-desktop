@@ -1,0 +1,20 @@
+
+running 15 tests
+test modules::model_config::config_file::v2::native_import::backups::tests::absent_config_is_an_explicit_upgrade_fact_and_not_a_fabricated_backup ... ok
+test modules::model_config::config_file::v2::native_import::backups::tests::backup_failure_and_pending_transactions_never_modify_original_config ... ok
+test modules::model_config::config_file::v2::native_import::backups::tests::malformed_config_can_be_protected_without_pretending_it_is_restorable ... ok
+test modules::model_config::config_file::v2::native_import::backups::tests::manual_and_upgrade_protect_exact_full_bytes_with_observed_version_and_rollback ... ok
+test modules::model_config::config_file::v2::native_import::backups::tests::protection_detects_ignored_lock_writers_and_retains_the_original_backup ... ok
+test modules::model_config::config_file::v2::native_import::tests::backup_failure_and_unfinished_transaction_cannot_overwrite_config ... ok
+test modules::model_config::config_file::v2::native_import::tests::complete_replace_preserves_port_and_mode_and_exact_original_backup ... ok
+test modules::model_config::config_file::v2::native_import::tests::invalid_selection_or_unproved_stopped_service_leaves_config_and_backups_alone ... ok
+test modules::model_config::config_file::v2::native_import::tests::no_change_or_cancel_never_creates_a_backup ... ok
+test modules::model_config::config_file::v2::native_import::tests::reject_conflicting_source_or_target_without_backup_or_overwrite ... ok
+test modules::model_config::config_file::v2::native_import::tests::rollback_preview_cancel_and_identical_bytes_do_not_write ... ok
+test modules::model_config::config_file::v2::native_import::tests::rollback_rejects_backup_with_broadened_permissions ... ok
+test modules::model_config::config_file::v2::native_import::tests::rollback_rejects_other_home_and_stale_preview_on_either_side ... ok
+test modules::model_config::config_file::v2::native_import::tests::rollback_restores_exact_bytes_and_port_and_protects_current_file ... ok
+test modules::model_config::config_file::v2::native_import::tests::source_change_during_last_service_check_cannot_publish_candidate ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 2072 filtered out; finished in 1.53s
+
