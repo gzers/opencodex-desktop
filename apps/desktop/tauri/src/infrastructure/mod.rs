@@ -10,6 +10,8 @@ pub mod locking;
 #[cfg(target_os = "macos")]
 pub mod macos_client_originals;
 pub mod official_cli_source;
+#[cfg(target_os = "macos")]
+pub mod official_client_coordination;
 pub mod official_version_source;
 pub mod platform;
 pub mod process_runner;

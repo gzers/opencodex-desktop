@@ -312,7 +312,7 @@ impl PinnedDirectory {
         }
         Ok(())
     }
-    fn private(&self) -> io::Result<()> {
+    pub(crate) fn private(&self) -> io::Result<()> {
         self.recheck()?;
         require_private(&protection(self.file(), &stat(self.file())?)?, true)
     }
