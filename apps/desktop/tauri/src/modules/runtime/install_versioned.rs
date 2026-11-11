@@ -513,18 +513,24 @@ impl RuntimeInstaller<'_> {
         }
         safety::sync_directories(program_root, &program_root.join("runtime/versions"))
             .map_err(InstallError::from)?;
-        verify_package(
-            &destination.package_root,
-            Some(&verified.version),
-            self.probe,
-            Some(&destination.node),
-        )?;
         let selection = CurrentSelection {
             schema_version: 1,
             version: verified.version,
             platform: target.into(),
             image_sha256: crate::infrastructure::hash::sha256_hex(&bytes),
         };
+        super::super::program_catalog::register(
+            program_root,
+            &selection,
+            &manifest.official_archive_sha256,
+        )
+        .map_err(InstallError::from)?;
+        verify_package(
+            &destination.package_root,
+            Some(&selection.version),
+            self.probe,
+            Some(&destination.node),
+        )?;
         mutation
             .activate_install(
                 self.data_root,

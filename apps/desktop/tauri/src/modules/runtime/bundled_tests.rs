@@ -63,6 +63,11 @@ fn versioned_supply_verifies_and_selects_one_official_image_without_execution() 
     .unwrap();
     assert_eq!(selected.selection.version, "2.99.0");
     crate::modules::runtime::program_image::verify(&selected).unwrap();
+    let catalog = crate::modules::runtime::program_catalog::inspect(&f.i).unwrap();
+    assert_eq!(
+        catalog.selections,
+        std::slice::from_ref(&selected.selection)
+    );
     assert!(selected
         .paths
         .version_root
@@ -149,6 +154,11 @@ fn real_official299_versioned_supply_reopen_preserves_home_and_source() {
     assert_eq!(handle.kind(), RuntimeSourceKind::Managed);
     let selected = handle.selected_program().unwrap().unwrap();
     crate::modules::runtime::program_image::verify(&selected).unwrap();
+    let catalog = crate::modules::runtime::program_catalog::inspect(&program).unwrap();
+    assert_eq!(
+        catalog.selections,
+        std::slice::from_ref(&selected.selection)
+    );
     assert_eq!(selected.selection.version, "2.99.0");
     let (node, npm) = crate::commands::runtime::managed_executables(&handle).unwrap();
     assert_eq!(node, Some(selected.paths.node.clone()));

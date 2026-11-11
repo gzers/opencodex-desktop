@@ -295,6 +295,7 @@ pub(super) fn provision_inner(
     // source mirror are committed by the shared recoverable transaction.
     publish(&image, &version.version_root)?;
     safety::sync_directories(i, &runtime.join("versions"))?;
+    super::super::program_catalog::register(i, &selection, &manifest.official_archive_sha256)?;
     mkdir(d)?;
     mkdir(&d.join("manager-state"))?;
     if inject_activation_failure {

@@ -346,3 +346,70 @@ fn actual_owned_terminal_revoke_is_part_of_removal_and_foreign_replacement_block
         }
     }
 }
+
+#[test]
+fn registered_preparation_binds_ledger_and_continuation_uses_original_admissions_after_partial_deletion(
+) {
+    let f = Test::new();
+    let (target, platform) = program_layout::host_target().unwrap();
+    for selected in [&f.old, &f.new] {
+        let image =
+            program_selection::read_image(&f.program.root, platform, target, selected).unwrap();
+        super::super::program_catalog::register(
+            &f.program.root,
+            selected,
+            &image.image.official_archive_sha256,
+        )
+        .unwrap();
+    }
+    let plan = prepare_registered(&f.program.root, &f.d, &f.h).unwrap();
+    let preview = plan.preview().unwrap();
+    let path = fs::read_dir(f.program.root.join("runtime/image-admissions"))
+        .unwrap()
+        .next()
+        .unwrap()
+        .unwrap()
+        .path();
+    let original = fs::read(&path).unwrap();
+    let mut changed = original.clone();
+    changed.push(b' ');
+    fs::write(&path, &changed).unwrap();
+    assert!(plan
+        .execute(&preview.confirmation_digest, || Ok(()), || Ok(()))
+        .is_err());
+    f.unchanged();
+    assert!(!pending(&f.program.root).exists());
+    fs::write(&path, &original).unwrap();
+    assert!(plan
+        .execute_inner(
+            &preview.confirmation_digest,
+            || Ok(()),
+            || Ok(()),
+            |phase| if phase == "file" {
+                Err(fail("interrupt"))
+            } else {
+                Ok(())
+            }
+        )
+        .is_err());
+    assert!(super::super::program_catalog::inspect(&f.program.root).is_err());
+    assert_eq!(
+        super::super::program_catalog::revision(&f.program.root).unwrap(),
+        plan.0.catalog_revision.as_ref().unwrap().as_str()
+    );
+    resume(
+        &f.program.root,
+        &f.d,
+        &f.h,
+        &preview.confirmation_digest,
+        || Ok(()),
+        || Ok(()),
+    )
+    .unwrap();
+    f.finished();
+    assert_eq!(
+        fs::read(path).unwrap(),
+        original,
+        "source admissions retained as evidence"
+    );
+}

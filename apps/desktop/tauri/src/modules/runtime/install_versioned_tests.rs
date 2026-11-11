@@ -95,6 +95,12 @@ impl Fixture {
         )
         .unwrap()
         .unwrap();
+        super::super::super::program_catalog::register(
+            &source.root,
+            &current.selection,
+            &current.image.official_archive_sha256,
+        )
+        .unwrap();
         let archive = data.path().join("opencodex-3.0.0.tgz");
         let gzip = flate2::write::GzEncoder::new(
             std::fs::File::create(&archive).unwrap(),
@@ -378,6 +384,13 @@ fn retry_reuses_only_the_full_identical_candidate_after_pre_activation_failure()
     f.old();
     let published = f.source.root.join("runtime/versions/3.0.0");
     assert!(published.exists());
+    let catalog = super::super::super::program_catalog::inspect(&f.source.root).unwrap();
+    assert_eq!(
+        catalog.selections.len(),
+        2,
+        "post-publication probe failure retained explicit source admission"
+    );
+
     let before = tree_digest(&published).unwrap();
     let good = PublishedProbe {
         program_root: f.source.root.clone(),

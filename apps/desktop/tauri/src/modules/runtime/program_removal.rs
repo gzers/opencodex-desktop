@@ -80,6 +80,7 @@ struct Plan {
     entry_before: Vec<u8>,
     record_before: Option<Vec<u8>>,
     record_after: Vec<u8>,
+    catalog_revision: Option<String>,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -279,14 +280,31 @@ pub fn prepare(
         entry_before: read(i, &entry(i)?, 64 * 1024)?.ok_or_else(|| fail("当前入口缺失"))?,
         record_before,
         record_after: encode(&doc)?,
+        catalog_revision: None,
     };
     check_version_names(&plan)?;
     validate(&plan)?;
     Ok(Prepared(plan))
 }
+/// Production preparation consumes the source-admission ledger, never image
+/// names found by scanning the versions directory.
+pub fn prepare_registered(i: &Path, d: &Path, home: &Path) -> AppResult<Prepared> {
+    let catalog = super::program_catalog::inspect(i)?;
+    let mut prepared = prepare(i, d, home, &catalog.selections)?;
+    if super::program_catalog::revision(i)? != catalog.revision {
+        return Err(fail("冻结卸载期间版本登记发生变化"));
+    }
+    prepared.0.catalog_revision = Some(catalog.revision);
+    Ok(prepared)
+}
 fn validate(p: &Plan) -> AppResult<()> {
     bundled::roots(&p.program_root, &p.desktop_root)?;
     bundled::roots(&p.program_root, &p.home)?;
+    if let Some(expected) = &p.catalog_revision {
+        if &super::program_catalog::revision(&p.program_root)? != expected {
+            return Err(fail("原卸载版本登记已变化"));
+        }
+    }
     if p.schema_version != 1
         || uuid::Uuid::parse_str(&p.operation_id).is_err()
         || p.images.is_empty()
@@ -522,6 +540,11 @@ fn finish(
     let check = || -> AppResult<()> {
         unused()?;
         config()?;
+        if let Some(expected) = &p.catalog_revision {
+            if &super::program_catalog::revision(&p.program_root)? != expected {
+                return Err(fail("卸载期间版本登记发生变化"));
+            }
+        }
         if read(&p.program_root, &pending(&p.program_root), MAX_JOURNAL)?.as_deref()
             != Some(journal)
         {
