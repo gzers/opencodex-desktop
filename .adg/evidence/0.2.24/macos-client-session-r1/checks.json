@@ -1,0 +1,27 @@
+[
+  {
+    "name": "compile-fixed",
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--lib",
+      "macos_client_originals::session",
+      "--no-run"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "clippy",
+    "argv": [
+      "cargo",
+      "clippy",
+      "--offline",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exitCode": 101
+  }
+]

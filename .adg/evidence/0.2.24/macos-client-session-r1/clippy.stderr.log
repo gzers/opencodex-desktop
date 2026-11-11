@@ -1,0 +1,14 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error: this creates an owned instance just for comparison
+   --> src/infrastructure/macos_client_session.rs:220:30
+    |
+220 |         || payload["pid"] != record.1.to_string()
+    |                              ^^^^^^^^^^^^^^^^^^^^ help: try: `record.1`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#cmp_owned
+    = note: `-D clippy::cmp-owned` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::cmp_owned)]`
+
+error: could not compile `opencodex-desktop` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

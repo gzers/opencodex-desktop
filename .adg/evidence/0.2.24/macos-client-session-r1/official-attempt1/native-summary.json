@@ -1,0 +1,16 @@
+{
+  "accepted": false,
+  "result": "incomplete",
+  "scope": "official299 native startup originals->signed live binding->real normal Stop binding; no client mutation permit",
+  "start": {
+    "canRestart": false,
+    "canStart": true,
+    "canStop": false,
+    "failure": {
+      "code": "lifecycle_readiness_failed",
+      "message": "官方服务已报告启动未就绪，可能存在客户端配置或服务归属问题；请查看诊断，未放宽校验。"
+    },
+    "lifecycleState": "starting_failed",
+    "result": null
+  }
+}

@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 1,
+  "accepted": false,
+  "frozenCandidate": false,
+  "codeCommit": "4b6943ca71cc240d00feb6cda944e5db06c7fdf5",
+  "helperInitializationFixCommit": "d85f9d1d371da41dc110f6f562960245d2170452",
+  "scope": "Mac create-only startup-original session scope and actual authenticated ready/currentHOME/normalStop generation association; no automatic client publication",
+  "passed": {
+    "sessionReferenceTests": 7,
+    "nativeContextAndCoordinationRelatedTests": 15,
+    "officialNativeSession": 1
+  },
+  "checks": [
+    {
+      "name": "compile-owner-bound",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--lib",
+        "macos_client_originals::session",
+        "--no-run"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "clippy-owner-bound",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "fmt-owner-bound",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "nativeLatest": {
+    "accepted": false,
+    "completedStopBound": true,
+    "ordinaryStopVerified": true,
+    "readyBound": true,
+    "result": "passed-binding-only",
+    "scope": "official299 native startup originals->signed live binding->real normal Stop binding; no client mutation permit",
+    "start": {
+      "canRestart": true,
+      "canStart": false,
+      "canStop": true,
+      "lifecycleState": "running",
+      "result": "started"
+    },
+    "startupTotalMs": 13675,
+    "stopTotalMs": 7833,
+    "threeOriginalByteImagesEqualAfterStop": false
+  },
+  "sessionFrameIntegrity": [
+    {
+      "round": 3,
+      "name": "original.json",
+      "sha256": "2ff33b7dc9e6b50ecfc0fb979525d936f055ef018043aa6571c1e7620af9490f",
+      "bytes": 1416,
+      "mode": "0400",
+      "independentReferenceMatched": true
+    },
+    {
+      "round": 3,
+      "name": "startup-scope.json",
+      "sha256": "9d33b5048101a2a5a387c66fb32ff458d702a5488ae287e88a157f5df8621ad3",
+      "bytes": 1185,
+      "mode": "0400",
+      "independentReferenceMatched": true
+    },
+    {
+      "round": 3,
+      "name": "startup-live.json",
+      "sha256": "e53600c15f1627e0841f19eb84a1ded0ebbccb94cda60740a5462ad8c5fbf7f6",
+      "bytes": 319,
+      "mode": "0400",
+      "independentReferenceMatched": true
+    },
+    {
+      "round": 3,
+      "name": "ready.json",
+      "sha256": "8436d1534d99281af3c75e64a6adeee12e000c763fb0df464416677c527a1ae1",
+      "bytes": 22138,
+      "mode": "0400",
+      "independentReferenceMatched": true
+    },
+    {
+      "round": 3,
+      "name": "pre-stop.json",
+      "sha256": "7a5657959fc860d1d2298ff5b63db51509bbd587ec647931bee94fdd117124bb",
+      "bytes": 22141,
+      "mode": "0400",
+      "independentReferenceMatched": true
+    },
+    {
+      "round": 3,
+      "name": "stopped.json",
+      "sha256": "2f781dbeaa5b93ca52f4928f61e930a908b262459235fcff92a11313b7b7e8fc",
+      "bytes": 14877,
+      "mode": "0400",
+      "independentReferenceMatched": true
+    },
+    {
+      "round": 4,
+      "name": "original.json",
+      "sha256": "145f073f6ddf473662173f922efbd81475a5ce784ddb50ba7e9d5b28fa3d333e",
+      "bytes": 1416,
+      "mode": "0400",
+      "independentReferenceMatched": true
+    },
+    {
+      "round": 4,
+      "name": "startup-scope.json",
+      "sha256": "9c291703393e193c33c7dc57197d8141733c6c9a5c38a5eaff4b4618d653f598",
+      "bytes": 1185,
+      "mode": "0400",
+      "independentReferenceMatched": true
+    },
+    {
+      "round": 4,
+      "name": "startup-live.json",
+      "sha256": "03e3409d2ed0eedcc5ba89afca975c58aca2cbc873cbce5b55343f5dff743f4e",
+      "bytes": 319,
+      "mode": "0400",
+      "independentReferenceMatched": true
+    },
+    {
+      "round": 4,
+      "name": "ready.json",
+      "sha256": "d6ddef0c7b2fa27cc759f059484d4f719bbf81007798ff4b41916533c3bd419a",
+      "bytes": 22138,
+      "mode": "0400",
+      "independentReferenceMatched": true
+    },
+    {
+      "round": 4,
+      "name": "pre-stop.json",
+      "sha256": "a5ec09bc9f5471a91f44e7b4ed6527a020cd4dfb22f17066e46a1152788a6003",
+      "bytes": 22141,
+      "mode": "0400",
+      "independentReferenceMatched": true
+    },
+    {
+      "round": 4,
+      "name": "stopped.json",
+      "sha256": "4965d7dcaf777f1ef55e5acde4e5aeef6697d9dcf58a0c3deb270a44652447b4",
+      "bytes": 14872,
+      "mode": "0400",
+      "independentReferenceMatched": true
+    }
+  ],
+  "failureEvidence": [
+    "First unit5pass/1fail exposed extreme u64 startup birth seconds accepted; bound to i64 temporal range, original failure preserved",
+    "First actual startup failedreadiness; supplied coordinator profile/codex differed from effective cleared production HOME/.codex. Original official resolver and known-PID3-key kernel context confirmed actual default; production session now explicitly rejects mismatched client root. Do not claim mismatch solely explains every readiness failure.",
+    "Second actual Start passed but Ready bind official N refused; exact own N0byte/user_version0 state and official original constructor CodexCoordinatorLegacyAmbiguousError/nativeResidue confirmed helper init rollback bug. Fixed clean first-use successful official initializer commit, no old-state adoption.",
+    "Both failed owned runtimes separately stopped via originalimage+record+dual HMAC sameconnection official POST, reply200/performed; no forced signal, not acceptance.",
+    "Prior third source passed actual binding/startup13444ms/stop7695ms; added managed native ownership check around Ready, final fourth source passed13675ms/7833ms. Distinct input/source receipts retained.",
+    "Clippy PID string comparison failure preserved; parsed typed current PID without disabling lint."
+  ],
+  "scopeLimits": [
+    "Session begin/bind/seal APIs now call real native coordination, native ownership and signatures/normalStop proof; actual full path exercised by explicit native integration test. No commands::execute_lifecycle automatic session creation, active session store, startup observer or production MutationPermit factory wired.",
+    "Protected References are for independent outer transaction retention; this round test writes reference JSON to owned root, product outer lifecycle durable index/locking/failure UX remains to implement.",
+    "Three-original byte images remain unequalafterStop:false coverage is deliberate: actual client file publication/restoration not yet connected, entire version not accepted.",
+    "Single PID exit0/currentHOME source proof does not substitute complete descendant/listener or config/Grok/Agent/full tree restoration. Active refresh may change ready/prestop objects; original content policy must reject or explicitly reconcile, not poll overwrite.",
+    "Effective_client currently matches cleared mac runtime canonical profile/.codex only. Missing client directory safely refused; automatic creation/rollback and other supported client roots still pending.",
+    "Source observation binds current selection but does not replace outer NativeLease complete before/after image admission; metadata/hash reference is not service ownership authority.",
+    "Client and data may reside on different volumes; mechanical archival fallback/nonzero original flags remain unsupported pending actual implementation.",
+    "Latest .app/DMG not rebuilt; no Windows native execution/newSID/real upstream model request/WebDAV sync; official2.99 unchanged."
+  ],
+  "cleanup": {
+    "ownTestHelperAndRuntimeImageProcessesAbsent": true,
+    "exactNewCoordinatorProof": [
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/074eb0f8781569e8975738d61e471e25016aca1fe0f5c2719dd5151827452c72.sqlite",
+        "exclusiveReacquiredAndReleased": true,
+        "userVersion": 0,
+        "hasOfficialNativeTransitionTable": false
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/52c392fb14947e7ef7be000852069a06d1abb5776886a32296b84e131d085b92.sqlite",
+        "exclusiveReacquiredAndReleased": true,
+        "userVersion": 0,
+        "hasOfficialNativeTransitionTable": false
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/8a300784f450c3af43fc84e5438b7f40d778eb944e9368253aab0bd3275422bb.sqlite",
+        "exclusiveReacquiredAndReleased": true,
+        "userVersion": 0,
+        "hasOfficialNativeTransitionTable": false
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/aa5b959bd21b62494a0ac7b47bd7a30873f136d3a6c7f070cf6a1d1ef71fc5b3.sqlite",
+        "exclusiveReacquiredAndReleased": true,
+        "userVersion": 0,
+        "hasOfficialNativeTransitionTable": false
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/history-write-locks/ac319bf94fa36106063bab9bc58cdf3e3349eb7e98854dba7120c9cc2043981f.sqlite",
+        "exclusiveReacquiredAndReleased": true,
+        "userVersion": 0,
+        "hasOfficialNativeTransitionTable": false
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/history-write-locks/ec050054e64ffda9f97e4e5614a0fa10a661c186942ef644c9a0b92a5a1565c2.sqlite",
+        "exclusiveReacquiredAndReleased": true,
+        "userVersion": 0,
+        "hasOfficialNativeTransitionTable": false
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/history-write-locks/ef93e88d04cf30a0fec0c64b9ac679cb8c547ca961a9e10c168165edd0191355.sqlite",
+        "exclusiveReacquiredAndReleased": true,
+        "userVersion": 0,
+        "hasOfficialNativeTransitionTable": false
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/074eb0f8781569e8975738d61e471e25016aca1fe0f5c2719dd5151827452c72.sqlite",
+        "exclusiveReacquiredAndReleased": true,
+        "userVersion": 1,
+        "hasOfficialNativeTransitionTable": true
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/52c392fb14947e7ef7be000852069a06d1abb5776886a32296b84e131d085b92.sqlite",
+        "exclusiveReacquiredAndReleased": true,
+        "userVersion": 0,
+        "hasOfficialNativeTransitionTable": false
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/8a300784f450c3af43fc84e5438b7f40d778eb944e9368253aab0bd3275422bb.sqlite",
+        "exclusiveReacquiredAndReleased": true,
+        "userVersion": 0,
+        "hasOfficialNativeTransitionTable": false
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/aa5b959bd21b62494a0ac7b47bd7a30873f136d3a6c7f070cf6a1d1ef71fc5b3.sqlite",
+        "exclusiveReacquiredAndReleased": true,
+        "userVersion": 1,
+        "hasOfficialNativeTransitionTable": true
+      }
+    ],
+    "exactNewCoordinatorFilesAbsent": true,
+    "nativeTCPFramingValidated": true,
+    "failedInstancePrimaryPortsAbsent": [
+      51328,
+      51883
+    ],
+    "noForcedServiceCleanup": true,
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "businessModelOrWebDAVRequests": false,
+    "allOwnedProgramProfileAndBinaryRootsRemoved": true,
+    "duplicateReceiptRootRemoved": true
+  }
+}
