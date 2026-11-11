@@ -99,6 +99,7 @@ exit 98
         }
         let image = ImageManifest {
             schema_version: 1,
+            tree_sha256: super::super::program_image::content_digest(&paths.version_root).unwrap(),
             package: OFFICIAL_PACKAGE.into(),
             version: version.into(),
             platform: target.into(),
@@ -421,4 +422,43 @@ fn readonly_preview_creates_no_lock_and_confirmation_binds_even_known_target_tra
         )
         .unwrap();
     f.verify(Some(&f.new));
+}
+
+#[test]
+fn activation_and_recovery_refuse_unknown_noncritical_image_files_without_metadata_writes() {
+    for which in ["before", "after"] {
+        let f = Fixture::new(true);
+        let mutation = Mutation::acquire(&f.i).unwrap();
+        let selection = if which == "before" { &f.old } else { &f.new };
+        let image = f.admit(selection);
+        let foreign = image.paths.version_root.join("unknown-user-file");
+        fs::write(&foreign, b"do not delete or adopt").unwrap();
+        let before = f.snapshot();
+        assert!(mutation
+            .activate(&f.d, Some(&f.old), &f.new, || Ok(()))
+            .is_err());
+        assert_eq!(f.snapshot(), before);
+        assert!(!mutation.pending().exists());
+        assert_eq!(fs::read(&foreign).unwrap(), b"do not delete or adopt");
+    }
+    let f = Fixture::new(true);
+    let review = f.interrupt();
+    let before = f.snapshot();
+    let image = f.admit(&f.new);
+    let foreign = image.paths.version_root.join("new-untracked-file");
+    fs::write(&foreign, b"external change after preview").unwrap();
+    let mutation = Mutation::acquire(&f.i).unwrap();
+    let pending = fs::read(mutation.pending()).unwrap();
+    assert!(mutation
+        .recover(
+            &f.d,
+            &review.attempt_id,
+            &review.confirmation_digest,
+            Decision::Complete,
+            || Ok(())
+        )
+        .is_err());
+    assert_eq!(f.snapshot(), before);
+    assert_eq!(fs::read(mutation.pending()).unwrap(), pending);
+    assert_eq!(fs::read(foreign).unwrap(), b"external change after preview");
 }

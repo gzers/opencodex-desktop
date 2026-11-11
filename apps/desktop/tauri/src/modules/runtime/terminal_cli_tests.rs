@@ -359,6 +359,8 @@ fn real_desktop_dispatch_enters_cli_before_gui_and_preserves_home_args_exit_stat
     let mut image: program_selection::ImageManifest =
         serde_json::from_slice(&fs::read(&manifest).unwrap()).unwrap();
     image.node_sha256 = hash::sha256_file(&selected.paths.node).unwrap();
+    image.tree_sha256 =
+        super::super::program_image::content_digest(&selected.paths.version_root).unwrap();
     let bytes = encode(&image).unwrap();
     fs::write(&manifest, &bytes).unwrap();
     let mut choice = selected.selection.clone();
@@ -520,6 +522,7 @@ fn real_official_cli_reports_selected_version_and_reads_the_bound_custom_home() 
             .unwrap(),
         before
     );
+    super::super::program_image::verify(&before).unwrap();
     assert!(!home.join("runtime-port.json").exists());
     let review = preview(&context, Action::Disable, "/bin/zsh", &[]).unwrap();
     apply(

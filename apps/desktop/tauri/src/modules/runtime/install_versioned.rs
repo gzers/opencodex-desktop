@@ -331,6 +331,7 @@ impl RuntimeInstaller<'_> {
     ) -> Result<Outcome, InstallError> {
         let (target, platform) = program_layout::host_target().map_err(InstallError::from)?;
         super::super::bundled::roots(program_root, self.data_root).map_err(InstallError::from)?;
+        super::super::program_image::verify(current).map_err(InstallError::from)?;
         let mutation = Mutation::acquire(program_root).map_err(InstallError::from)?;
         let actual =
             program_selection::read(program_root, platform, target).map_err(InstallError::from)?;
@@ -407,6 +408,8 @@ impl RuntimeInstaller<'_> {
             Some(&candidate.node),
         )?;
         let manifest = ImageManifest {
+            tree_sha256: super::super::program_image::content_digest(&candidate.version_root)
+                .map_err(InstallError::from)?,
             schema_version: 1,
             package: OFFICIAL_PACKAGE.into(),
             version: verified.version.clone(),
@@ -462,7 +465,12 @@ impl RuntimeInstaller<'_> {
                 InstallSource::Registry { proxy: Some(_), .. }
             ),
         };
-        if manifest == current.image {
+        let same_core = ImageManifest {
+            tree_sha256: current.image.tree_sha256.clone(),
+            ..manifest.clone()
+        } == current.image;
+        if same_core {
+            super::super::program_image::verify(current).map_err(InstallError::from)?;
             self.emit(
                 InstallPhase::Done,
                 100,

@@ -43,6 +43,7 @@ impl Fixture {
         fs::set_permissions(&entry, fs::Permissions::from_mode(0o755)).unwrap();
         let image = ImageManifest {
             schema_version: 1,
+            tree_sha256: super::super::program_image::content_digest(&paths.version_root).unwrap(),
             package: OFFICIAL_PACKAGE.into(),
             version: "2.99.0".into(),
             platform: "darwin-arm64".into(),

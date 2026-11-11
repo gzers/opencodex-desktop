@@ -144,6 +144,10 @@ impl Mutation {
             return Err(fail("当前版本已变化，未切换程序"));
         }
         let candidate = program_selection::read_image(&self.root, platform, target, after)?;
+        super::program_image::verify(&candidate)?;
+        if let Some(before) = &before {
+            super::program_image::verify(before)?;
+        }
         let current_path = self
             .root
             .join("runtime")
@@ -330,6 +334,18 @@ impl Mutation {
         let (journal, bytes) = self.load(data)?;
         if journal.attempt_id != attempt {
             return Err(fail("恢复确认不属于原版本事务"));
+        }
+        let (target, platform) = program_layout::host_target()?;
+        super::program_image::verify(&program_selection::read_image(
+            &self.root,
+            platform,
+            target,
+            &journal.after,
+        )?)?;
+        if let Some(before) = &journal.before {
+            super::program_image::verify(&program_selection::read_image(
+                &self.root, platform, target, before,
+            )?)?;
         }
         let record_path = RuntimeStore::new(data).path().to_path_buf();
         safety::check_path(

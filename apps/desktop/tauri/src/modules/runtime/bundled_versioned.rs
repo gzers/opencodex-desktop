@@ -75,6 +75,88 @@ fn copy_npm(raw: &Path, image: &Path, plan: &Plan) -> AppResult<()> {
     Ok(())
 }
 
+/// Verified file aliases are regular, independent files in version images.
+/// Their bytes and mode come from the pinned resolved target, never a live
+/// arbitrary link. This also keeps npm/npx independent after directory moves.
+fn materialize_links(raw: &Path, scratch: &Path, plan: &Plan) -> AppResult<()> {
+    let npm_base = if plan.descriptor.platform == "win32-x64" {
+        "runtime/node/node_modules/npm/"
+    } else {
+        "runtime/node/lib/node_modules/npm/"
+    };
+    let mut total = plan.total;
+    for (name, entry) in &plan.files {
+        if name.starts_with(npm_base) {
+            let resolved = if entry.kind == "symlink" {
+                &plan.files[&plan.targets[name]]
+            } else {
+                entry
+            };
+            total = total
+                .checked_add(
+                    resolved
+                        .bytes
+                        .ok_or_else(|| invalid("npm链接必须映射普通文件"))?,
+                )
+                .ok_or_else(|| invalid("文件副本大小溢出"))?;
+        }
+    }
+    for name in plan.targets.values() {
+        total = total
+            .checked_add(
+                plan.files
+                    .get(name)
+                    .and_then(|e| e.bytes)
+                    .ok_or_else(|| invalid("版本镜像只接受普通文件链接映射"))?,
+            )
+            .ok_or_else(|| invalid("链接副本大小溢出"))?;
+    }
+    if total > MAX_UNPACKED {
+        return Err(invalid("版本落位包含链接副本后超过2GiB"));
+    }
+    mkdir(scratch)?;
+    for (index, (name, target)) in plan.targets.iter().enumerate() {
+        let expected = &plan.files[target];
+        let path = raw.join(name);
+        let meta = fs::symlink_metadata(&path).map_err(io)?;
+        if meta.is_file() {
+            if hash::sha256_file(&path).map_err(io)? != *expected.sha256.as_ref().unwrap() {
+                return Err(invalid("链接映射副本摘要不符"));
+            }
+            continue;
+        }
+        if !meta.file_type().is_symlink()
+            || fs::read_link(&path).map_err(io)?.as_path()
+                != Path::new(plan.files[name].target.as_ref().unwrap())
+        {
+            return Err(invalid("供应链接在实体化前已变化"));
+        }
+        let mut input = regular(&raw.join(target))?;
+        let staged = scratch.join(index.to_string());
+        let mut output = crate::infrastructure::platform::create_new_private_file(
+            &staged,
+            expected.mode.unwrap(),
+        )
+        .map_err(io)?;
+        let count = std::io::copy(
+            &mut std::io::Read::by_ref(&mut input).take(MAX_FILE + 1),
+            &mut output,
+        )
+        .map_err(io)?;
+        output.sync_all().map_err(io)?;
+        drop(output);
+        if count != expected.bytes.unwrap()
+            || hash::sha256_file(&staged).map_err(io)? != *expected.sha256.as_ref().unwrap()
+            || fs::read_link(&path).map_err(io)?.as_path()
+                != Path::new(plan.files[name].target.as_ref().unwrap())
+        {
+            return Err(invalid("链接实体化读回不符"));
+        }
+        crate::infrastructure::platform::rename(&staged, &path).map_err(io)?;
+    }
+    Ok(())
+}
+
 /// Existing unrelated files are never read/adopted. Only fresh reserved paths
 /// are created, and collisions never authorize overwrite or migration.
 pub fn provision(
@@ -152,6 +234,7 @@ pub(super) fn provision_inner(
     mkdir(&image)?;
     mkdir(&image.join("dependencies"))?;
     copy_npm(&raw, &image, &plan)?;
+    materialize_links(&raw, &stage.path().join("link-copies"), &plan)?;
     for (from, to) in [
         ("runtime/opencodex", "opencodex"),
         ("runtime/node", "dependencies/node"),
@@ -180,6 +263,7 @@ pub(super) fn provision_inner(
     let package = image.join("opencodex").join(install::PACKAGE_SUBPATH);
     let manifest = ImageManifest {
         schema_version: 1,
+        tree_sha256: super::super::program_image::content_digest(&image)?,
         package: OFFICIAL_PACKAGE.into(),
         version: plan.descriptor.runtime_version.clone(),
         platform: target.into(),

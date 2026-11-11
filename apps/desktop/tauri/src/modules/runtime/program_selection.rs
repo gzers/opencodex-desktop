@@ -37,6 +37,7 @@ pub struct ImageManifest {
     pub version: String,
     pub platform: String,
     pub official_archive_sha256: String,
+    pub tree_sha256: String,
     pub bin: String,
     pub package_sha256: String,
     pub bin_sha256: String,
@@ -306,6 +307,7 @@ pub(super) fn read_image(
         || image.platform != selection.platform
         || [
             &image.official_archive_sha256,
+            &image.tree_sha256,
             &image.package_sha256,
             &image.bin_sha256,
             &image.node_sha256,

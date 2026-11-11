@@ -62,11 +62,22 @@ fn versioned_supply_verifies_and_selects_one_official_image_without_execution() 
     .unwrap()
     .unwrap();
     assert_eq!(selected.selection.version, "2.99.0");
+    crate::modules::runtime::program_image::verify(&selected).unwrap();
     assert!(selected
         .paths
         .version_root
         .ends_with("runtime/versions/2.99.0"));
     assert!(selected.paths.npm.is_file());
+    for name in ["npm", "npx"] {
+        let path = selected
+            .paths
+            .version_root
+            .join("dependencies/node/bin")
+            .join(name);
+        if path.exists() {
+            assert!(fs::symlink_metadata(path).unwrap().is_file());
+        }
+    }
     assert!(!f.i.join("runtime/opencodex").exists());
     assert!(!f.i.join("runtime/.selection-pending.json").exists());
     let snapshot = tree_snapshot(&f.i);
@@ -137,6 +148,7 @@ fn real_official299_versioned_supply_reopen_preserves_home_and_source() {
     let handle = RuntimeHandle::initialize_versioned(&data, &program);
     assert_eq!(handle.kind(), RuntimeSourceKind::Managed);
     let selected = handle.selected_program().unwrap().unwrap();
+    crate::modules::runtime::program_image::verify(&selected).unwrap();
     assert_eq!(selected.selection.version, "2.99.0");
     let (node, npm) = crate::commands::runtime::managed_executables(&handle).unwrap();
     assert_eq!(node, Some(selected.paths.node.clone()));
