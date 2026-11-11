@@ -47,7 +47,7 @@ beforeEach(() => {
   managerInstallProgress.value = null
   mocks.invoke.mockImplementation(async (command, args) => command === 'get_update_status' ? managerUpdateStatus.value
     : command === 'update_release_details' ? { target: args.target, channel: args.channel, candidateVersion: args.candidateVersion, notesState: 'unavailable',
-      notes: null, notesSource: null, releaseUrl: null, fetchedAt: 100, publishedAt: null, cached: false } : null)
+      notes: null, notesSource: null, releaseUrl: null, fetchedAt: 100, publishedAt: null, cached: false, checkedAt:100, failure:null } : null)
   const updates = useUpdatesStore()
   updates.officialProject = { displayName: 'OpenCodex', version: '2.50.0', rawVersion: '2.50.0', truncated: false }
   updates.officialRemote = { tag: 'latest', version: '2.51.0', integrity: null }
@@ -126,7 +126,7 @@ describe('shared production update center', () => {
     managerUpdateStatus.value = { ...managerUpdateStatus.value!, notes: '<img src=x onerror=alert(1)>', releaseUrl: 'https://example.com/unverified', publishedAt: '2026-10-10' }
     mocks.invoke.mockImplementation(async (command, args) => command === 'get_update_status' ? managerUpdateStatus.value
       : command === 'update_release_details' ? { target: args.target, channel: args.channel, candidateVersion: args.candidateVersion, notesState: 'ready',
-        notes: managerUpdateStatus.value!.notes, notesSource: 'updater', releaseUrl: 'https://github.com/gzers/opencodex-desktop/releases/tag/v0.1.10', fetchedAt: 100, publishedAt: '2026-10-10', cached: false } : null)
+        notes: managerUpdateStatus.value!.notes, notesSource: 'updater', releaseUrl: 'https://github.com/gzers/opencodex-desktop/releases/tag/v0.1.10', fetchedAt: 100, publishedAt: '2026-10-10', cached: false, checkedAt:100, failure:null } : null)
     const open = vi.spyOn(useAppStore(), 'openExternalLink').mockResolvedValue(true)
     render(); await flushPromises()
     await new DOMWrapper(document.body).get('[data-testid="manager-update-detail"]').trigger('click')
