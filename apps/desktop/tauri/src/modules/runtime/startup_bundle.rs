@@ -19,6 +19,7 @@ pub(crate) fn start(
 ) -> AppResult<()> {
     if runtime.uses_versioned_programs() {
         super::program_reinstall::require_idle(&installation)?;
+        super::program_repair::require_idle(&installation)?;
     }
     if runtime.uses_versioned_programs()
         && super::program_removal::intentionally_removed(&installation, &desktop)?

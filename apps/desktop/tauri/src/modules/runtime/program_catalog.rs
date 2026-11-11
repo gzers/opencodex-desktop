@@ -169,6 +169,49 @@ fn records_at(root: &Path, directory: &Path) -> AppResult<(BTreeMap<String, Admi
 pub fn revision(root: &Path) -> AppResult<String> {
     records(root).map(|(_, revision)| revision)
 }
+/// Original installer authority for the explicitly selected damaged image.
+/// The current JSON and immutable ledger must agree; damage is never scanned
+/// into a fresh ownership baseline. Other admitted versions still verify fully.
+pub(super) fn repair_admission(
+    root: &Path,
+) -> AppResult<(CurrentSelection, String, String, Vec<u8>)> {
+    let (records, revision) = records(root)?;
+    let bytes = read(
+        root,
+        &root.join("runtime").join(program_layout::CURRENT_FILENAME),
+    )?;
+    let value = crate::modules::model_config::schema_v2::parse_strict_json_v2(&bytes)
+        .map_err(|_| fail())?;
+    let selection: CurrentSelection = serde_json::from_value(value).map_err(|_| fail())?;
+    let row = records
+        .get(&selection.version)
+        .filter(|a| a.selection == selection)
+        .ok_or_else(fail)?;
+    let source = row.official_archive_sha256.clone();
+    for a in records.values().filter(|a| a.selection != selection) {
+        admitted(root, a)?;
+    }
+    let dir = root.join("runtime/versions");
+    safety::check_path(root, &dir, false)?;
+    let mut count = 0;
+    for row in fs::read_dir(&dir).map_err(|_| fail())? {
+        count += 1;
+        if count > 1000 {
+            return Err(fail());
+        }
+        let path = row.map_err(|_| fail())?.path();
+        let name = path.file_name().and_then(|n| n.to_str()).ok_or_else(fail)?;
+        if !records.contains_key(name) || !safety::inspect(&path)?.is_dir() {
+            return Err(fail());
+        }
+    }
+    for name in records.keys().filter(|v| **v != selection.version) {
+        if !root.join("runtime/versions").join(name).is_dir() {
+            return Err(fail());
+        }
+    }
+    Ok((selection, source, revision, bytes))
+}
 /// Same original ledger bytes after explicit archival; never admits live images.
 pub(super) fn archived_revision(root: &Path, directory: &Path) -> AppResult<String> {
     records_at(root, directory).map(|(_, revision)| revision)

@@ -28,3 +28,11 @@ it('close and remount observe one retained in-flight install',async()=>{
 it('wrong receipt or failed preview never produces installation success',async()=>{
  invoke.mockResolvedValueOnce(review()).mockResolvedValueOnce({version:'3.0.0',configurationPreserved:true}).mockRejectedValueOnce(new Error('program still in use'));const {view,button}=render();await button('重装内置程序')!.trigger('click');await flushPromises();await button('确认重新安装')!.trigger('click');await flushPromises();expect(view.get('[role="alert"]').text()).toContain('不一致');expect(source).not.toHaveBeenCalled();expect(button('确认重新安装')).toBeUndefined();await button('重新核对')!.trigger('click');await flushPromises();expect(useProgramReinstallStore().outcome).toBeNull();expect(button('确认重新安装')).toBeUndefined()
 })
+it('repair confirms only its own admitted-image API and never dispatches reinstall',async()=>{
+ invoke.mockResolvedValueOnce(review()).mockResolvedValueOnce({version:'2.99.0',configurationPreserved:true})
+ const view=mount(RuntimeProgramReinstall,{props:{repair:true},global:{stubs:{UiDialog:{props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'}}}});views.push(view)
+ await view.get('[data-testid="runtime-builtin-repair"]').trigger('click');await flushPromises();expect(view.text()).toContain('原目录将保留')
+ await view.findAll('button').find(b=>b.text()==='确认修复程序')!.trigger('click');await flushPromises()
+ expect(invoke.mock.calls).toEqual([['runtime_builtin_repair_preview'],['runtime_builtin_repair',{request:{confirmationDigest:'original-bundle-review'}}]])
+ expect(view.text()).toContain('2.99.0 已修复');expect(source).toHaveBeenCalledOnce()
+})

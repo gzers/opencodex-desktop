@@ -1,7 +1,7 @@
 //! Explicit, reviewed restoration of the app's own pinned offline resource.
 use crate::{
     errors::{AppError, AppResult},
-    modules::runtime::{bundled, program_reinstall, RuntimeHandle},
+    modules::runtime::{bundled, program_reinstall, program_repair, RuntimeHandle},
     state::{SharedDataRoot, SharedProcessContext, SharedRuntimeInstall},
 };
 use serde::{Deserialize, Serialize};
@@ -20,6 +20,7 @@ struct Resource {
     descriptor: Vec<u8>,
     archive: PathBuf,
     version: String,
+    source: String,
     pin: &'static str,
 }
 fn resource(root: &Path) -> AppResult<Resource> {
@@ -42,7 +43,12 @@ fn resource(root: &Path) -> AppResult<Resource> {
         .as_str()
         .ok_or_else(|| fail("内置资源版本缺失"))?
         .to_string();
+    let source = v["runtimeArchiveSha256"]
+        .as_str()
+        .ok_or_else(|| fail("内置官方来源摘要缺失"))?
+        .to_string();
     Ok(Resource {
+        source,
         archive: root.join(name),
         descriptor,
         version,
@@ -89,6 +95,48 @@ pub async fn runtime_builtin_reinstall(
     context: tauri::State<'_, SharedProcessContext>,
     install: tauri::State<'_, SharedRuntimeInstall>,
 ) -> AppResult<Outcome> {
+    restore(request, app, runtime, data, context, install, false).await
+}
+#[tauri::command]
+pub async fn runtime_builtin_repair_preview(
+    app: tauri::AppHandle,
+    runtime: tauri::State<'_, Arc<RuntimeHandle>>,
+    data: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, SharedProcessContext>,
+) -> AppResult<program_repair::Review> {
+    if !runtime.uses_versioned_programs() {
+        return Err(fail("当前程序来源不支持同版本修复"));
+    }
+    let i = runtime.installation_root().to_path_buf();
+    let d = data.0.clone();
+    let h = context.opencodex_home.clone();
+    let resources = app.path().resource_dir()?.join("runtime-bundle");
+    super::run_readonly("preview same-version runtime repair", move || {
+        let r = resource(&resources)?;
+        program_repair::review(&i, &d, &h, r.pin, &r.version, &r.source)
+    })
+    .await
+}
+#[tauri::command]
+pub async fn runtime_builtin_repair(
+    request: Request,
+    app: tauri::AppHandle,
+    runtime: tauri::State<'_, Arc<RuntimeHandle>>,
+    data: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, SharedProcessContext>,
+    install: tauri::State<'_, SharedRuntimeInstall>,
+) -> AppResult<Outcome> {
+    restore(request, app, runtime, data, context, install, true).await
+}
+async fn restore(
+    request: Request,
+    app: tauri::AppHandle,
+    runtime: tauri::State<'_, Arc<RuntimeHandle>>,
+    data: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, SharedProcessContext>,
+    install: tauri::State<'_, SharedRuntimeInstall>,
+    repair: bool,
+) -> AppResult<Outcome> {
     if !cfg!(target_os = "macos") || !runtime.uses_versioned_programs() {
         return Err(fail("当前平台完整程序占用证明尚未接入，未执行重装"));
     }
@@ -114,18 +162,35 @@ pub async fn runtime_builtin_reinstall(
             runtime.installation_root().into(),
             context.clone(),
         )?;
-        let result = bundled::versioned::reinstall(
-            runtime.installation_root(),
-            &d,
-            bundled::versioned::ReinstallRequest {
+        let supply = |repair: bool| {
+            let request = bundled::versioned::ReinstallRequest {
                 home: &context.opencodex_home,
                 confirmation_digest: &request.confirmation_digest,
-            },
-            &r.archive,
-            &r.descriptor,
-            r.pin,
-            || owner.require_program_unused(&context),
-        );
+            };
+            let unused = || owner.require_program_unused(&context);
+            if repair {
+                bundled::versioned::repair(
+                    runtime.installation_root(),
+                    &d,
+                    request,
+                    &r.archive,
+                    &r.descriptor,
+                    r.pin,
+                    unused,
+                )
+            } else {
+                bundled::versioned::reinstall(
+                    runtime.installation_root(),
+                    &d,
+                    request,
+                    &r.archive,
+                    &r.descriptor,
+                    r.pin,
+                    unused,
+                )
+            }
+        };
+        let result = supply(repair);
         runtime.observe_current();
         match result? {
             bundled::ProvisionResult::Installed { version } => {

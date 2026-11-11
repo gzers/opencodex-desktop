@@ -188,7 +188,13 @@ pub(super) fn provision_inner(
     )
 }
 
+#[derive(Clone, Copy)]
+enum RestoreMode {
+    Reinstall,
+    Repair,
+}
 struct Resupply<'a> {
+    mode: RestoreMode,
     home: &'a Path,
     confirmation_digest: &'a str,
     unused: &'a dyn Fn() -> AppResult<()>,
@@ -216,6 +222,32 @@ pub fn reinstall(
         pin,
         false,
         Some(Resupply {
+            mode: RestoreMode::Reinstall,
+            home: request.home,
+            confirmation_digest: request.confirmation_digest,
+            unused: &unused,
+        }),
+    )
+}
+/// Same pinned, complete resource builder; only the transaction authority differs.
+pub fn repair(
+    i: &Path,
+    d: &Path,
+    request: ReinstallRequest<'_>,
+    archive: &Path,
+    descriptor: &[u8],
+    pin: &str,
+    unused: impl Fn() -> AppResult<()>,
+) -> AppResult<ProvisionResult> {
+    supply(
+        i,
+        d,
+        archive,
+        descriptor,
+        pin,
+        false,
+        Some(Resupply {
+            mode: RestoreMode::Repair,
             home: request.home,
             confirmation_digest: request.confirmation_digest,
             unused: &unused,
@@ -263,16 +295,31 @@ fn supply(
     mkdir(i)?;
     let mutation = super::super::program_activation::Mutation::acquire(i)?;
     if let Some(resupply) = &resupply {
-        super::super::program_reinstall::preflight(i, d, resupply.home)?;
-        let review = super::super::program_reinstall::review(
-            i,
-            d,
-            resupply.home,
-            pin,
-            &plan.descriptor.runtime_version,
-        )?;
-        if review.confirmation_digest != resupply.confirmation_digest {
-            return Err(invalid("内置重装预览已过期，请重新核对原操作"));
+        let digest = match resupply.mode {
+            RestoreMode::Reinstall => {
+                super::super::program_reinstall::review(
+                    i,
+                    d,
+                    resupply.home,
+                    pin,
+                    &plan.descriptor.runtime_version,
+                )?
+                .confirmation_digest
+            }
+            RestoreMode::Repair => {
+                super::super::program_repair::review(
+                    i,
+                    d,
+                    resupply.home,
+                    pin,
+                    &plan.descriptor.runtime_version,
+                    &plan.descriptor.runtime_archive_sha256,
+                )?
+                .confirmation_digest
+            }
+        };
+        if digest != resupply.confirmation_digest {
+            return Err(invalid("固定程序恢复预览已过期，请重新核对原操作"));
         }
         (resupply.unused)()?;
     }
@@ -376,23 +423,52 @@ fn supply(
     mkdir(&runtime.join("versions"))?;
     mkdir(&runtime.join("bin"))?;
     if let Some(resupply) = resupply {
-        let outcome = super::super::program_reinstall::install(
-            super::super::program_reinstall::Candidate {
-                program: i,
-                desktop: d,
-                home: resupply.home,
-                staged_image: &image,
-                selection: &selection,
-                descriptor_pin: pin,
-                source_sha256: &manifest.official_archive_sha256,
-            },
-            &mutation,
-            resupply.unused,
-            |_| Ok(()),
-        )?;
-        return Ok(ProvisionResult::Installed {
-            version: outcome.version,
-        });
+        let version = match resupply.mode {
+            RestoreMode::Reinstall => {
+                super::super::program_reinstall::install(
+                    super::super::program_reinstall::Candidate {
+                        program: i,
+                        desktop: d,
+                        home: resupply.home,
+                        staged_image: &image,
+                        selection: &selection,
+                        descriptor_pin: pin,
+                        source_sha256: &manifest.official_archive_sha256,
+                    },
+                    &mutation,
+                    resupply.unused,
+                    |_| Ok(()),
+                )?
+                .version
+            }
+            RestoreMode::Repair => {
+                let entry_after = install::entry_script(
+                    Some(&version.node),
+                    &version
+                        .package_root
+                        .join(install::PACKAGE_SUBPATH)
+                        .join(&manifest.bin),
+                );
+                super::super::program_repair::execute(
+                    super::super::program_repair::Candidate {
+                        program: i,
+                        desktop: d,
+                        home: resupply.home,
+                        image: &image,
+                        selection: &selection,
+                        source: &manifest.official_archive_sha256,
+                        pin,
+                        confirmation: resupply.confirmation_digest,
+                        entry_after: entry_after.as_bytes(),
+                    },
+                    &mutation,
+                    resupply.unused,
+                    |_| Ok(()),
+                )?
+                .version
+            }
+        };
+        return Ok(ProvisionResult::Installed { version });
     }
     // Publish only the verified immutable image. Selection/current/entry and D's
     // source mirror are committed by the shared recoverable transaction.
