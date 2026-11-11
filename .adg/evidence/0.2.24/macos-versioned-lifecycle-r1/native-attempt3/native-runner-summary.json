@@ -1,0 +1,30 @@
+{
+  "accepted": false,
+  "hypothesis": "Native2 Start succeeded within30s. Its Stop was refused because official history restoration could not open the unlisted exact private history coordination DB; official restore diagnostic confirmed this. Allow only canonical private HOME/state_5 length-prefixed hash and sidecars, enter actual runtime worker for status, use actual Grok backup path. Product byte restoration and30/5/10s assertions unchanged.",
+  "locks": [
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/7886e698606fd596f5cefcfe1807d404b775a3b33f41eecc4e09e0d03b963948.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/7886e698606fd596f5cefcfe1807d404b775a3b33f41eecc4e09e0d03b963948.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/7886e698606fd596f5cefcfe1807d404b775a3b33f41eecc4e09e0d03b963948.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/7886e698606fd596f5cefcfe1807d404b775a3b33f41eecc4e09e0d03b963948.sqlite-shm",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/7886e698606fd596f5cefcfe1807d404b775a3b33f41eecc4e09e0d03b963948.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/7886e698606fd596f5cefcfe1807d404b775a3b33f41eecc4e09e0d03b963948.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/7886e698606fd596f5cefcfe1807d404b775a3b33f41eecc4e09e0d03b963948.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/7886e698606fd596f5cefcfe1807d404b775a3b33f41eecc4e09e0d03b963948.sqlite-shm",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/74465bcbd45b570f587a75fc22f67abc039ef0991b0349545cf097447e49ade9.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/74465bcbd45b570f587a75fc22f67abc039ef0991b0349545cf097447e49ade9.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/74465bcbd45b570f587a75fc22f67abc039ef0991b0349545cf097447e49ade9.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/74465bcbd45b570f587a75fc22f67abc039ef0991b0349545cf097447e49ade9.sqlite-shm"
+  ],
+  "kernelBoundary": "all daily HOME reads and external network/write denied; only own profile, synthetic loopback endpoint and exact catalog coordinator database allowed",
+  "cleanup": {
+    "ownedProcessesAfterNative": [],
+    "forcedCleanupUsed": false,
+    "fixtureRetained": false,
+    "fixtureAbsent": true,
+    "exactNewCoordinatorFilesAbsent": true
+  },
+  "unitPassedEvidence": "native-attempt2/after-fix.stdout.log; unchanged product source and admission tests",
+  "testPid": 23403,
+  "nativeExitCode": 101,
+  "elapsedSeconds": 85.401
+}

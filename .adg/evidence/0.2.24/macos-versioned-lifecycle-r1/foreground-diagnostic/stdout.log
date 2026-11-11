@@ -1,0 +1,10 @@
+🚀 opencodex proxy running on http://localhost:49228
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+🔐 Claude intercept proxy active on http://127.0.0.1:49328 (CONNECT api.anthropic.com → local TLS)
+   + 1 models appended to Codex catalog (/private/tmp/ocxd024-versioned-lifecycle-ihwdax9o/foreground-fixture/profile/.codex/opencodex-catalog.json)
+   Target Codex home: /private/tmp/ocxd024-versioned-lifecycle-ihwdax9o/foreground-fixture/profile/.codex
+Client startup work complete.

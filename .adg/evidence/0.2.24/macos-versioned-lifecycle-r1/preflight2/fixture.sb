@@ -1,0 +1,8 @@
+(version 1)
+(allow default)
+(deny network*)
+(deny file-write*)
+(allow file-write* (subpath "/private/tmp/ocxd024-versioned-lifecycle-ihwdax9o/fixtures"))
+(allow file-write* (literal "/dev/null"))
+(deny file-read* (subpath "/Users/ezio/.codex") (subpath "/Users/ezio/.codex-desktop") (subpath "/Users/ezio/.opencodex") (subpath "/Users/ezio/Library/Keychains"))
+(deny mach-lookup (global-name "com.apple.securityd"))
