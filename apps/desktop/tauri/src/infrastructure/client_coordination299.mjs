@@ -70,7 +70,15 @@ try {
   const paths=[claim,npath,kpath];
   stage='claim';
   await withNativeMainExclusiveClaim(context,async()=>{
+    // The official constructor initializes a clean first-use database inside
+    // its transaction. Rolling that initialization back leaves an empty N
+    // which the next legitimate startup can no longer admit after routing was
+    // published. Persist ONLY that official clean initial row after successful
+    // coordination; existing versions/failed callbacks still roll back.
+    let freshNative=false;
+    try{freshNative=lstatSync(npath).size===0;}catch(e){if(e?.code==='ENOENT')freshNative=true;else throw e;}
     stage='native';const n=openCodexCoordinatorTransaction(npath);
+    const nativeBefore=n.version();let nativeCommitted=false;
     try {
       stage='catalog';
       const result=withCatalogWriteSerialization(context.codexHome,()=>{
@@ -97,7 +105,12 @@ try {
         if(ownerReceipt(context.codexHome)!==owner)throw Error('owner-journal-changed');
       },{intent:'restore',writer:'codex-restore'});
       if(result.kind!=='completed')throw Error('catalog-refused');
-    }finally{n.rollback();n.close();}
+      if(freshNative){
+        const current=n.version();
+        if(nativeBefore.nativeGeneration!==0||nativeBefore.currentTxId!==null||current.nativeGeneration!==0||current.currentTxId!==null)throw Error('initial-native-state-changed');
+        n.assertStablePath();n.commit();nativeCommitted=true;
+      }
+    }finally{if(!nativeCommitted)n.rollback();n.close();}
   },{waitMs:0});
   // Emitted only after every official callback's finally has released its lock.
   stage='released';
