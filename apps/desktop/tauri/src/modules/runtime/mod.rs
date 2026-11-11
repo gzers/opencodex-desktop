@@ -540,11 +540,11 @@ impl RuntimeHandle {
     /// 记录并持久化最新的已知版本（由版本检查在读取成功后回填）。
     pub fn record_resolved_version(&self, version: &str) {
         if self.uses_versioned_programs()
-            && !self
+            && self
                 .selected_program()
                 .ok()
                 .flatten()
-                .is_some_and(|p| p.selection.version == version)
+                .is_none_or(|p| p.selection.version != version)
         {
             return;
         }

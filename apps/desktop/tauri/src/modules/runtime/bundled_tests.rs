@@ -87,7 +87,7 @@ fn versioned_existing_image_needs_no_program_write_access_or_bundle_archive() {
     versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).unwrap();
     let snapshot = tree_snapshot(&f.i);
     let lock = f.i.join(".runtime-program.lock");
-    fs::set_permissions(&lock, fs::Permissions::from_mode(0)).unwrap();
+    fs::set_permissions(&lock, fs::Permissions::from_mode(0o0)).unwrap();
     fs::set_permissions(&f.i, fs::Permissions::from_mode(0o500)).unwrap();
     let other = f.root.join("user-b/desktop");
     let result = versioned::provision(
