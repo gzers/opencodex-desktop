@@ -352,6 +352,146 @@ pub struct Pending<'a> {
     sha256: String,
 }
 impl<'a> Pending<'a> {
+    /// A check then rename is not kernel CAS. On a detected race, preserve the
+    /// complete actual pair in an immutable conflict receipt BEFORE attempting
+    /// one reverse move. A reverse operation never grants a successful restore
+    /// result. A further race remains pending; no retry learns a new baseline.
+    fn preserve_publication_conflict(
+        &self,
+        plan: &Plan,
+        c: &[Capture; 4],
+        i: usize,
+        wanted_after: bool,
+        check: &impl Fn() -> io::Result<()>,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+    ) -> io::Result<()> {
+        let actual = self.pair(i)?;
+        let expected = Self::expected(plan, c, i, wanted_after);
+        let receipt = encode(
+            &serde_json::json!({"schemaVersion":1,"planSha256":self.sha256,
+            "artifact":i,"wantedAfter":wanted_after,"target":actual.0,"stage":actual.1}),
+        )?;
+        create(
+            &self.originals.directory,
+            &format!("restore-{}-conflict-{}.json", self.id, uuid::Uuid::new_v4()),
+            &receipt,
+        )?;
+        check()?;
+        checkpoint("compensation_gap")?;
+        if self.pair(i)? != actual {
+            return Err(denied(
+                "late conflict changed again; all observed objects retained",
+            ));
+        }
+        let stage = format!(".ocxd-restore-{}-{i}", self.id);
+        match plan.kinds[i] {
+            // Only our known original was installed into target. The other
+            // complete regular object can be returned by another lossless swap.
+            Kind::Swap
+                if same(&actual.0, &expected.0, false)
+                    && matches!(actual.1, Image::File { .. }) =>
+            {
+                rename(
+                    &self.originals.client,
+                    &stage,
+                    &self.originals.client,
+                    NAMES[i],
+                    libc::RENAME_SWAP,
+                )?;
+            }
+            // A vanished original means target is now absent. EXCL guarantees
+            // a newly created target cannot be overwritten by compensation.
+            Kind::Remove
+                if wanted_after
+                    && actual.0 == Image::Absent
+                    && matches!(actual.1, Image::File { .. }) =>
+            {
+                rename(
+                    &self.originals.client,
+                    &stage,
+                    &self.originals.client,
+                    NAMES[i],
+                    libc::RENAME_EXCL,
+                )?;
+            }
+            Kind::Publish
+                if !wanted_after
+                    && actual.0 == Image::Absent
+                    && matches!(actual.1, Image::File { .. }) =>
+            {
+                rename(
+                    &self.originals.client,
+                    &stage,
+                    &self.originals.client,
+                    NAMES[i],
+                    libc::RENAME_EXCL,
+                )?;
+            }
+            _ => {
+                return Err(denied(
+                    "publication conflict cannot be reversed without guessing",
+                ))
+            }
+        }
+        let returned = self.pair(i)?;
+        if !same(&returned.0, &actual.1, false) || !same(&returned.1, &actual.0, false) {
+            return Err(denied(
+                "reverse publication changed; no further mutation or success",
+            ));
+        }
+        Err(denied(
+            "late external object returned; original operation remains failed",
+        ))
+    }
+    fn preserve_archive_conflict(
+        &self,
+        i: usize,
+        archive_name: &str,
+        check: &impl Fn() -> io::Result<()>,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+    ) -> io::Result<()> {
+        let archived = capture_file(&self.originals.directory, archive_name, MAX_CONTENT)?;
+        let stage_name = format!(".ocxd-restore-{}-{i}", self.id);
+        let staged = capture_file(&self.originals.client, &stage_name, MAX_CONTENT)?;
+        let receipt = encode(
+            &serde_json::json!({"schemaVersion":1,"planSha256":self.sha256,
+            "artifact":i,"archive":archived,"stage":staged}),
+        )?;
+        create(
+            &self.originals.directory,
+            &format!("restore-{}-conflict-{}.json", self.id, uuid::Uuid::new_v4()),
+            &receipt,
+        )?;
+        if staged != Image::Absent || !matches!(archived, Image::File { .. }) {
+            return Err(denied(
+                "archive conflict retained; no safe vacant return path",
+            ));
+        }
+        check()?;
+        checkpoint("compensation_gap")?;
+        if capture_file(&self.originals.directory, archive_name, MAX_CONTENT)? != archived
+            || capture_file(&self.originals.client, &stage_name, MAX_CONTENT)? != Image::Absent
+        {
+            return Err(denied("archive conflict changed again; retained"));
+        }
+        rename(
+            &self.originals.directory,
+            archive_name,
+            &self.originals.client,
+            &stage_name,
+            libc::RENAME_EXCL,
+        )?;
+        if !same(
+            &capture_file(&self.originals.client, &stage_name, MAX_CONTENT)?,
+            &archived,
+            false,
+        ) {
+            return Err(denied("archive return changed; retained without retry"));
+        }
+        Err(denied(
+            "late archive source returned to stage; transaction remains failed",
+        ))
+    }
     pub fn id(&self) -> &str {
         &self.id
     }
@@ -625,6 +765,7 @@ impl<'a> Pending<'a> {
                     return Err(denied("target changed before native publication"));
                 }
                 check()?;
+                checkpoint("native_gap")?;
                 match plan.kinds[i] {
                     Kind::Swap => rename(
                         &self.originals.client,
@@ -665,10 +806,9 @@ impl<'a> Pending<'a> {
                 }
                 checkpoint("after_native")?;
                 check()?;
-                if self.state(&plan, &c, i)? != want {
-                    return Err(denied(
-                        "native publication did not match retained generations",
-                    ));
+                if self.state(&plan, &c, i).ok() != Some(want) {
+                    return self
+                        .preserve_publication_conflict(&plan, &c, i, want, check, checkpoint);
                 }
             }
             checkpoint("step")?;
@@ -694,6 +834,7 @@ impl<'a> Pending<'a> {
                 }
                 let to = format!("restore-{}-old-{i}", self.id);
                 check()?;
+                checkpoint("archive_gap")?;
                 rename(
                     &self.originals.client,
                     &format!(".ocxd-restore-{}-{i}", self.id),
@@ -703,9 +844,7 @@ impl<'a> Pending<'a> {
                 )?;
                 let archived = capture_file(&self.originals.directory, &to, MAX_CONTENT)?;
                 if !same(&archived, &expected, false) {
-                    return Err(denied(
-                        "archived generation differs; retained without deletion",
-                    ));
+                    return self.preserve_archive_conflict(i, &to, check, checkpoint);
                 }
             }
             checkpoint("archive")?;

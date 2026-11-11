@@ -415,6 +415,289 @@ fn unknown_preexisting_archive_destination_refuses_before_any_target_mutation() 
 }
 
 #[test]
+fn late_catalog_replacement_after_final_check_is_preserved_at_original_path_and_refused() {
+    let f = Fixture::new();
+    let pending = f.prepare();
+    let once = Cell::new(false);
+    let target = f.originals.client.path().join(NAMES[0]);
+    assert!(pending
+        .apply_checked(Decision::Complete, &|| Ok(()), &|p| {
+            if p == "native_gap" && !once.replace(true) {
+                let saved = target.with_extension("pre-race");
+                fs::rename(&target, &saved)?;
+                fs::write(&target, b"late user catalog")?;
+            }
+            Ok(())
+        })
+        .is_err());
+    assert_eq!(fs::read(&target).unwrap(), b"late user catalog");
+    assert!(!f
+        .originals
+        .directory
+        .path()
+        .join(format!("restore-{}-outcome.json", pending.id()))
+        .exists());
+}
+
+#[test]
+fn late_cache_edit_in_remove_gap_is_returned_without_overwriting_a_new_destination() {
+    let f = Fixture::new();
+    let pending = f.prepare();
+    let number = Cell::new(0);
+    let target = f.originals.client.path().join(NAMES[1]);
+    assert!(pending
+        .apply_checked(Decision::Complete, &|| Ok(()), &|p| {
+            if p == "native_gap" {
+                number.set(number.get() + 1);
+                if number.get() == 2 {
+                    fs::write(&target, b"late user cache")?;
+                }
+            }
+            Ok(())
+        })
+        .is_err());
+    assert_eq!(fs::read(&target).unwrap(), b"late user cache");
+}
+
+#[test]
+fn late_archive_source_replacement_is_returned_to_stage_and_never_committed_as_original() {
+    let f = Fixture::new();
+    let pending = f.prepare();
+    let once = Cell::new(false);
+    let stage = f
+        .originals
+        .client
+        .path()
+        .join(format!(".ocxd-restore-{}-0", pending.id()));
+    assert!(pending
+        .apply_checked(Decision::Complete, &|| Ok(()), &|p| {
+            if p == "archive_gap" && !once.replace(true) {
+                let saved = stage.with_extension("pre-race");
+                fs::rename(&stage, &saved)?;
+                fs::write(&stage, b"late user archive-stage")?;
+            }
+            Ok(())
+        })
+        .is_err());
+    assert_eq!(fs::read(&stage).unwrap(), b"late user archive-stage");
+}
+
+#[test]
+fn a_second_writer_in_compensation_gap_keeps_both_payloads_and_no_terminal_result() {
+    let f = Fixture::new();
+    let pending = f.prepare();
+    let number = Cell::new(0);
+    let target = f.originals.client.path().join(NAMES[1]);
+    assert!(pending
+        .apply_checked(Decision::Complete, &|| Ok(()), &|p| {
+            if p == "native_gap" {
+                number.set(number.get() + 1);
+                if number.get() == 2 {
+                    fs::write(&target, b"first late cache")?;
+                }
+            }
+            if p == "compensation_gap" {
+                fs::write(&target, b"second independent cache")?;
+            }
+            Ok(())
+        })
+        .is_err());
+    assert_eq!(fs::read(&target).unwrap(), b"second independent cache");
+    let staged = f
+        .originals
+        .client
+        .path()
+        .join(format!(".ocxd-restore-{}-1", pending.id()));
+    assert_eq!(fs::read(staged).unwrap(), b"first late cache");
+    assert!(!f
+        .originals
+        .directory
+        .path()
+        .join(format!("restore-{}-outcome.json", pending.id()))
+        .exists());
+}
+
+#[test]
+fn actual_external_process_replacement_in_native_gap_is_returned_and_conflict_is_durable() {
+    const CHILD: &str = "OCXD_RESTORE_LATE_WRITER";
+    if let Some(path) = std::env::var_os(CHILD) {
+        let path = PathBuf::from(path);
+        assert!(path.is_absolute() && path.starts_with("/private/tmp"));
+        let original = path.with_extension("external-displaced");
+        fs::rename(&path, original).unwrap();
+        fs::write(path, b"other OS process catalog").unwrap();
+        std::process::exit(0);
+    }
+    let f = Fixture::new();
+    let pending = f.prepare();
+    let target = f.originals.client.path().join(NAMES[0]);
+    let once = Cell::new(false);
+    assert!(pending.apply_checked(Decision::Complete,&||Ok(()),&|p|{
+        if p=="native_gap"&&!once.replace(true){let output=std::process::Command::new(std::env::current_exe().unwrap()).args(["--exact","infrastructure::macos_client_originals::restore::tests::actual_external_process_replacement_in_native_gap_is_returned_and_conflict_is_durable"]).env(CHILD,&target).output()?;assert!(output.status.success(),"{}",String::from_utf8_lossy(&output.stderr));}Ok(())
+    }).is_err());
+    assert_eq!(fs::read(&target).unwrap(), b"other OS process catalog");
+    let entries = fs::read_dir(f.originals.directory.path())
+        .unwrap()
+        .map(|p| p.unwrap().path())
+        .filter(|p| {
+            p.file_name()
+                .unwrap()
+                .to_string_lossy()
+                .contains("-conflict-")
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(entries.len(), 1);
+    let bytes = fs::read(&entries[0]).unwrap();
+    assert_eq!(
+        fs::metadata(&entries[0]).unwrap().permissions().mode() & 0o777,
+        0o400
+    );
+    let value: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
+    assert_eq!(value["planSha256"], pending.sha256());
+    assert_eq!(value["artifact"], 0);
+    let stage = &value["stage"]["bytes"];
+    let actual = stage
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|b| b.as_u64().unwrap() as u8)
+        .collect::<Vec<_>>();
+    assert_eq!(actual, b"other OS process catalog");
+    println!(
+        "SYNTHETIC_RACE_CONFLICT_RECEIPT {}",
+        serde_json::to_string(&value).unwrap()
+    );
+    assert!(pending
+        .apply_checked(Decision::Complete, &|| Ok(()), &|_| Ok(()))
+        .is_err());
+}
+
+#[test]
+fn late_stage_replacement_does_not_reverse_over_an_unknown_published_object() {
+    let f = Fixture::new();
+    let pending = f.prepare();
+    let target = f.originals.client.path().join(NAMES[0]);
+    let stage = f
+        .originals
+        .client
+        .path()
+        .join(format!(".ocxd-restore-{}-0", pending.id()));
+    let once = Cell::new(false);
+    assert!(pending
+        .apply_checked(Decision::Complete, &|| Ok(()), &|p| {
+            if p == "native_gap" && !once.replace(true) {
+                let saved = stage.with_extension("owned-original");
+                fs::rename(&stage, saved)?;
+                fs::write(&stage, b"outside stage payload")?;
+            }
+            Ok(())
+        })
+        .is_err());
+    assert_eq!(fs::read(&target).unwrap(), b"outside stage payload");
+    assert!(stage.exists());
+    assert!(!f
+        .originals
+        .directory
+        .path()
+        .join(format!("restore-{}-outcome.json", pending.id()))
+        .exists());
+}
+
+#[test]
+fn abrupt_exit_after_conflict_receipt_preserves_unknown_bytes_and_cannot_resume_as_success() {
+    const CHILD: &str = "OCXD_RESTORE_CONFLICT_CRASH";
+    if let Some(root) = std::env::var_os(CHILD) {
+        let root = PathBuf::from(root);
+        let f = Fixture::at(root.clone());
+        let pending = f.prepare();
+        let phases = f.originals.known.lock().unwrap().clone();
+        let note = json!({"attempt":f.originals.attempt(),"original":f.originals.original_sha256(),"phases":phases,"plan":pending.id(),"planSha256":pending.sha256()});
+        let mut receipt = File::create(root.join("independent-receipt.json")).unwrap();
+        receipt.write_all(&wire(note)).unwrap();
+        receipt.sync_all().unwrap();
+        let target = f.originals.client.path().join(NAMES[0]);
+        let once = Cell::new(false);
+        let _ = pending.apply_checked(Decision::Complete, &|| Ok(()), &|point| {
+            if point == "native_gap" && !once.replace(true) {
+                fs::write(&target, b"unknown before abrupt conflict exit")?;
+            }
+            if point == "compensation_gap" {
+                std::process::exit(91);
+            }
+            Ok(())
+        });
+        panic!("conflict exit boundary not reached");
+    }
+    let temp = tempfile::tempdir().unwrap();
+    let root = temp.path().canonicalize().unwrap();
+    let output=std::process::Command::new(std::env::current_exe().unwrap()).args(["--exact","infrastructure::macos_client_originals::restore::tests::abrupt_exit_after_conflict_receipt_preserves_unknown_bytes_and_cannot_resume_as_success","--nocapture"]).env(CHILD,&root).output().unwrap();
+    assert_eq!(
+        output.status.code(),
+        Some(91),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let n: serde_json::Value =
+        serde_json::from_slice(&fs::read(root.join("independent-receipt.json")).unwrap()).unwrap();
+    let phases = [Phase::Ready, Phase::PreStop, Phase::Stopped]
+        .into_iter()
+        .enumerate()
+        .map(|(i, p)| (p, n["phases"][i + 1].as_str().unwrap().to_owned()))
+        .collect::<Vec<_>>();
+    let originals = Originals::open(
+        &root.join("desktop"),
+        &root.join("codex 中文 space"),
+        n["attempt"].as_str().unwrap(),
+        n["original"].as_str().unwrap(),
+        &phases,
+    )
+    .unwrap();
+    let pending = Pending::open(
+        &originals,
+        n["plan"].as_str().unwrap(),
+        n["planSha256"].as_str().unwrap(),
+    )
+    .unwrap();
+    assert!(pending
+        .apply_checked(Decision::Complete, &|| Ok(()), &|_| Ok(()))
+        .is_err());
+    assert!(pending
+        .apply_checked(Decision::Rollback, &|| Ok(()), &|_| Ok(()))
+        .is_err());
+    let stage = originals
+        .client
+        .path()
+        .join(format!(".ocxd-restore-{}-0", pending.id()));
+    assert_eq!(
+        fs::read(&stage).unwrap(),
+        b"unknown before abrupt conflict exit"
+    );
+    let conflicts = fs::read_dir(originals.directory.path())
+        .unwrap()
+        .map(|p| p.unwrap().path())
+        .filter(|p| {
+            p.file_name()
+                .unwrap()
+                .to_string_lossy()
+                .contains("-conflict-")
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(conflicts.len(), 1);
+    let raw = fs::read(&conflicts[0]).unwrap();
+    let conflict: serde_json::Value = serde_json::from_slice(&raw).unwrap();
+    assert_eq!(conflict["planSha256"], pending.sha256());
+    println!(
+        "SYNTHETIC_CRASH_CONFLICT_RECEIPT {}",
+        serde_json::to_string(&conflict).unwrap()
+    );
+    assert!(!originals
+        .directory
+        .path()
+        .join(format!("restore-{}-outcome.json", pending.id()))
+        .exists());
+}
+
+#[test]
 fn actual_subprocess_exit_at_every_publication_boundary_preserves_resumable_known_generations() {
     const CHILD: &str = "OCXD024_RESTORE_CRASH";
     if let Some(root) = std::env::var_os(CHILD) {
