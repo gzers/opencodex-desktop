@@ -1,0 +1,17 @@
+
+> opencodex-desktop-ui@0.2.23 test
+> vitest --run tests/model-source-review.test.ts tests/model-channels-v2.test.ts tests/channel-detail-save-flow.test.ts tests/channel-key-edit.test.ts tests/channels-view-copy.test.ts tests/post05-channel-list.test.ts tests/native-config-import.test.ts tests/native-config-rollback.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui
+
+
+ Test Files  8 passed (8)
+      Tests  67 passed (67)
+   Start at  09:32:54
+   Duration  992ms (transform 47%, environment 31%, tests 15%, import 7%)
+
+  Transform  transforming modules took 2.49s · 47% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
