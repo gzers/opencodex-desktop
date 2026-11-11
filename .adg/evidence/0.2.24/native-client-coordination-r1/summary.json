@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "accepted": false,
+  "frozenCandidate": false,
+  "codeCommit": "c6bda959547882fda0e7e81cdcd1c71923130a0e",
+  "scope": "Official299 helper admission handover into same-process Rust SQLite ownership; native locks remain held until mutation stack unwinds, including deadline failure. No service or actual client restoration.",
+  "passed": {
+    "relatedTests": 14,
+    "substantiveTests": 13,
+    "probeHarnessEntryIncluded": 1,
+    "realOfficialNativeHandover": 1
+  },
+  "nativeLatest": {
+    "accepted": false,
+    "elapsedMs": 6900,
+    "externalWriterExcludedBeforeAndAfterOld2sWindow": true,
+    "nativeConnectionsReleasedBeforeRawFdPins": true,
+    "nativeResult": true,
+    "originalOwnershipBytesPreserved": true,
+    "result": "passed",
+    "scope": "real official299 admission then same-process SQLite ownership; no service or client restore",
+    "snapshotReadsDidNotReleaseLocks": true
+  },
+  "checks": [
+    {
+      "name": "compile-final-all",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--lib",
+        "official_client_coordination",
+        "--no-run"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "clippy-final-all",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "fmt-final-all",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/client_coordination299.mjs",
+      "sha256": "cb48bfc33a358c7d9525b73011ae44d5ffacf17f07bb4a9699bda06ce8d6adc8"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_originals.rs",
+      "sha256": "62b3807e7aa789ec0bf060c089d0ee80435ae8168bc8dcbaa5c6a1ce8bb75aab"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_restore.rs",
+      "sha256": "c324ff2972247ca461c54b0832d5df9d82fe465ceb2bef44652e349491becf05"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/native_client_coordination.rs",
+      "sha256": "f4bed3e8ce3d592babf8f817d0605b7981ae94ac99f5e434495e43ae4d27f934"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/native_client_coordination_tests.rs",
+      "sha256": "c907ff5849219fb3fc3871b28e2b917a6b7913327e0ec52a18cf319e8748864c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/official_client_coordination.rs",
+      "sha256": "c4fefc827b6ae68826199ac187c29d758c8d65cd168d96133e2996d259362471"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/official_client_coordination_tests.rs",
+      "sha256": "a6bb48081da3ca798283866acc6d68b0239ae86eb1531f6d0af7330c3a7e1841"
+    }
+  ],
+  "verification": [
+    "Real second OS process blocked on all3 SQLite DBs after own original reads and after old2s helper window; original owner journal bytes preserved, locks reacquired after scope",
+    "Independent100ms-deadline test holds Rust RAII locks past expiry until scope ends; expiry fails check but cannot unlock while callback remains",
+    "SQLite VFS HAS_MOVED verifies its actual open DB inode and NOFOLLOW open flags reject redirected final components; native fd pins never open/close extra DB descriptors during SQLite ownership",
+    "All SQLite connections rollback/close before native file pin destructors; original snapshots do not release fcntl locks",
+    "Handover rejects any coordinator inode/protection or opaque official owner receipt change, no new baseline. Real official initializer supplies N schema; no copied/migrated schema or namespace",
+    "Whole-operation full tree inventory before helper admission and after final native work retained. Duplicate intermediate full scan removed only from private handover; public helper-only function retains its original final inventory. Native8.697s before dedup, final6.900s including2.1s deliberate held work; not completeStop10s acceptance."
+  ],
+  "failureEvidence": [
+    "official-attempt1 correct native refusal after invalid synthetic preparation: preseeded owner journal with no official N coordinator. Actual official diagnostic confirms CodexCoordinatorLegacyAmbiguousError/nativeResidue. No product admission weakened.",
+    "official-attempt2 proper clean new coordinator initialized via actual official constructor/commit then synthetic own journal, immutable image reused; passed before inventory dedup. Original success retained."
+  ],
+  "remaining": [
+    "Normal service-generation/exit MutationPermit factory and production Start/Stop wiring remain absent",
+    "Native lock lifetime gap closed for this same-process RAII scope. Non-cooperating client pathname check/rename race from restore-r1 remains unresolved and production mutation permit remains closed",
+    "config/Grok/Agent/full client tree, active refresh, missing CODEX_HOME, cross-volume restoration and all final lifecycle budgets still to close",
+    "Windows W0 HOME/Profile/W1/W2, NAME, npm System native proxy resolution, official publish verifier and fixed final candidate remain incomplete"
+  ],
+  "cleanup": {
+    "ownTestAndHelperProcessesAbsent": true,
+    "exactNewCoordinatorProof": [
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/76abf25b654ab5bdd3345719e978df1f946b79e834fe2f0eefbc66fe453088b9.sqlite",
+        "inode": 440199790,
+        "exclusiveReacquiredAndReleased": true
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/837f7f8f88e9172c22dd35faab507f8bc06305215ee12d5556ab30120dc2adf6.sqlite",
+        "inode": 440192718,
+        "exclusiveReacquiredAndReleased": true
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/00b7f9a9c06cfdc20f62bd521a73d3be42292998d03d50362c2e1d7929521f37.sqlite",
+        "inode": 440190972,
+        "exclusiveReacquiredAndReleased": true
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/76abf25b654ab5bdd3345719e978df1f946b79e834fe2f0eefbc66fe453088b9.sqlite",
+        "inode": 440199776,
+        "exclusiveReacquiredAndReleased": true
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/837f7f8f88e9172c22dd35faab507f8bc06305215ee12d5556ab30120dc2adf6.sqlite",
+        "inode": 440192694,
+        "exclusiveReacquiredAndReleased": true
+      }
+    ],
+    "exactNewCoordinatorFilesAbsent": true,
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "serviceStarted": false,
+    "ownFixtureProgramProfileAndBinariesRemoved": true,
+    "duplicateTemporaryReceiptRootRemoved": true
+  }
+}
