@@ -647,3 +647,130 @@ fn versioned_service_owner_uses_selected_image_and_rejects_flat_paths_or_selecti
     .unwrap();
     assert_eq!(f.query(), ServiceOwnerProof::Unknown);
 }
+
+#[cfg(target_os = "macos")]
+#[test]
+fn removal_proof_rejects_another_home_using_this_program_and_preserves_unrelated_processes() {
+    let f = Fixture::new();
+    assert!(f
+        .provider
+        .require_program_unused(&f.provider.context)
+        .is_ok());
+    let mut process = f.process(4242);
+    process.home = Some(f.provider.context.working_directory.join("other-home"));
+    f.host
+        .processes
+        .lock()
+        .unwrap()
+        .insert(4242, process.clone());
+    assert_eq!(
+        f.query(),
+        ServiceOwnerProof::Stopped,
+        "current HOME absence alone was insufficient"
+    );
+    assert!(f
+        .provider
+        .require_program_unused(&f.provider.context)
+        .is_err());
+    process.image = PathBuf::from("/fixture/unrelated/node");
+    process.argv = vec!["node".into(), "/fixture/unrelated/tool.js".into()];
+    f.host.processes.lock().unwrap().insert(4242, process);
+    f.provider
+        .require_program_unused(&f.provider.context)
+        .unwrap();
+}
+
+#[cfg(target_os = "macos")]
+#[test]
+fn actual_current_user_image_scan_detects_a_renamed_owned_program_without_service_mutation() {
+    let t = tempfile::tempdir().unwrap();
+    let root = t.path().canonicalize().unwrap();
+    let i = root.join("I");
+    let h = root.join("H");
+    std::fs::create_dir_all(i.join("runtime/versions/test")).unwrap();
+    std::fs::create_dir(&h).unwrap();
+    let image = i.join("runtime/versions/test/renamed-helper");
+    std::fs::copy("/bin/sleep", &image).unwrap();
+    // The copied system binary's original signature is not valid at this test
+    // inode. Ad-hoc signing affects this isolated fixture only, no release keys.
+    let signed = std::process::Command::new("/usr/bin/codesign")
+        .args(["--force", "--sign", "-"])
+        .arg(&image)
+        .output()
+        .unwrap();
+    assert!(
+        signed.status.success(),
+        "{}",
+        String::from_utf8_lossy(&signed.stderr)
+    );
+
+    struct Child(std::process::Child);
+    impl Drop for Child {
+        fn drop(&mut self) {
+            let _ = self.0.kill();
+            let _ = self.0.wait();
+        }
+    }
+    let mut child = Child(
+        std::process::Command::new(&image)
+            .arg("30")
+            .spawn()
+            .unwrap(),
+    );
+    let host = PlatformHost;
+    let processes = host
+        .program_processes(&path_key(&i.join("runtime")))
+        .unwrap();
+    assert!(
+        processes
+            .iter()
+            .any(|process| process.pid == child.0.id()
+                && path_key(&process.image) == path_key(&image))
+    );
+    std::thread::sleep(Duration::from_millis(100));
+    let before_unlink = child.0.try_wait().unwrap();
+    assert!(
+        before_unlink.is_none(),
+        "owned process must be running before unlink: {before_unlink:?}"
+    );
+    // A live, exclusively test-owned executable may lose its disk path. That
+    // must preserve a positive in-use observation or refuse proof, never absence.
+    std::fs::remove_file(&image).unwrap();
+    let observed = host.program_processes(&path_key(&i.join("runtime")));
+    assert!(
+        child.0.try_wait().unwrap().is_none(),
+        "unlinked signed fixture must remain live during absence check"
+    );
+    assert!(
+        !matches!(observed,Ok(processes) if !processes.iter().any(|process|process.pid==child.0.id()))
+    );
+    drop(child);
+    let processes = host
+        .program_processes(&path_key(&i.join("runtime")))
+        .unwrap();
+    assert!(!processes
+        .iter()
+        .any(|process| path_key(&process.image) == path_key(&image)));
+}
+
+#[cfg(target_os = "macos")]
+#[test]
+fn removal_kernel_path_decoder_uses_exec_header_not_caller_argv_or_environment() {
+    let mut bytes = 2i32.to_ne_bytes().to_vec();
+    bytes.extend_from_slice(b"/fixture/runtime/versions/2.99.0/dependencies/node/bin/node\0\0unrelated-spoofed-argv0\0/other/tool.js\0OPENCODEX_HOME=/other/home\0");
+    assert_eq!(
+        native::exec_path_from_procargs(&bytes).unwrap(),
+        PathBuf::from("/fixture/runtime/versions/2.99.0/dependencies/node/bin/node")
+    );
+    for payload in [
+        b"".as_slice(),
+        b"node\0caller-argv",
+        b"/absolute-with-no-terminator",
+        b"/absolute/../escape\0",
+        b"/with\ncontrol\0",
+    ] {
+        let mut frame = 1i32.to_ne_bytes().to_vec();
+        frame.extend_from_slice(payload);
+        assert!(native::exec_path_from_procargs(&frame).is_err());
+    }
+}

@@ -80,6 +80,9 @@ trait Host: Send + Sync {
     fn process(&self, pid: u32) -> AppResult<Option<ProcessIdentity>>;
     /// Enumerate this user's runtime-shaped executables with OS argv/environment.
     fn processes(&self) -> AppResult<Vec<ProcessIdentity>>;
+    fn program_processes(&self, _root: &Path) -> AppResult<Vec<ProcessIdentity>> {
+        self.processes()
+    }
     /// Whole-OS listening TCP table (IPv4 + IPv6), not a connection refusal.
     fn port_clear(&self, port: u16) -> AppResult<bool>;
     /// Read-only query of the official per-user service namespaces.
@@ -95,6 +98,42 @@ pub struct SystemServiceOwnerProofProvider {
     last_record: Mutex<Option<Record>>,
 }
 impl SystemServiceOwnerProofProvider {
+    /// Removal covers all selected images, including another HOME of this OS
+    /// user. Windows shared-install proof must come from its native lifetime
+    /// backend; do not turn the current-H observer into an all-SID assertion.
+    pub(crate) fn require_program_unused(&self, context: &ProcessContext) -> AppResult<()> {
+        self.same_context(context)?;
+        if !cfg!(target_os = "macos") {
+            return Err(fail(
+                "removal_platform_proof_unavailable",
+                "当前平台的完整程序占用证明尚未接入，未卸载",
+            ));
+        }
+        if self.query_inner()? != ServiceOwnerProof::Stopped {
+            return Err(fail(
+                "removal_service_unconfirmed",
+                "当前OpenCodex服务尚未确认停止，未卸载",
+            ));
+        }
+        let root = path_key(&self.installation_root.join("runtime"));
+        for process in self.host.program_processes(&root)? {
+            if process.zombie {
+                continue;
+            }
+            let using = path_key(&process.image).starts_with(&root)
+                || process.argv.iter().skip(1).any(|arg| {
+                    let path = Path::new(arg);
+                    path.is_absolute() && path_key(path).starts_with(&root)
+                });
+            if using {
+                return Err(fail(
+                    "removal_program_in_use",
+                    "当前用户的其它进程仍使用本安装目录，未卸载",
+                ));
+            }
+        }
+        Ok(())
+    }
     /// Ordinary lifecycle stop retains the official connected-client teardown.
     /// Unlike an installation handover it never writes a deferral receipt.
     pub(crate) fn stop_lifecycle(
@@ -1398,7 +1437,7 @@ mod native {
         buffer.truncate(buffer.iter().position(|b| *b == 0).unwrap_or(n as usize));
         Ok(PathBuf::from(std::ffi::OsString::from_vec(buffer)))
     }
-    fn arguments(pid: u32) -> AppResult<(Vec<String>, Option<PathBuf>)> {
+    fn raw_procargs(pid: u32) -> AppResult<Zeroizing<Vec<u8>>> {
         let mut mib = [libc::CTL_KERN, libc::KERN_PROCARGS2, pid as i32];
         let mut bytes = Zeroizing::new(vec![0u8; 1024 * 1024]);
         let mut size = bytes.len();
@@ -1418,7 +1457,43 @@ mod native {
                 std::io::Error::last_os_error(),
             ));
         }
-        parse_procargs(&bytes[..size])
+        if size > bytes.len() {
+            return Err(fail("removal_process_framing", "内核进程路径记录超过上限"));
+        }
+        bytes.truncate(size);
+        Ok(bytes)
+    }
+    fn arguments(pid: u32) -> AppResult<(Vec<String>, Option<PathBuf>)> {
+        parse_procargs(&raw_procargs(pid)?)
+    }
+    // KERN_PROCARGS2 includes the original executable path before argv/environment.
+    // Read only that header for classification when the vnode path is gone; the
+    // bounded backing buffer is zeroized and never logged or treated as a key.
+    pub(super) fn kernel_exec_path(pid: u32) -> AppResult<PathBuf> {
+        exec_path_from_procargs(&raw_procargs(pid)?)
+    }
+    pub(super) fn exec_path_from_procargs(bytes: &[u8]) -> AppResult<PathBuf> {
+        use std::os::unix::ffi::OsStringExt;
+        if bytes.len() < 6 {
+            return Err(fail("removal_process_framing", "内核执行路径记录无效"));
+        }
+        let argc = i32::from_ne_bytes(bytes[..4].try_into().unwrap());
+        if !(1..=16384).contains(&argc) {
+            return Err(fail("removal_process_framing", "内核执行路径参数个数无效"));
+        }
+        let end = bytes[4..]
+            .iter()
+            .position(|b| *b == 0)
+            .filter(|n| *n > 0 && *n <= 4096)
+            .ok_or_else(|| fail("removal_process_framing", "内核执行路径边界无效"))?;
+        let path = PathBuf::from(std::ffi::OsString::from_vec(bytes[4..4 + end].to_vec()));
+        if !crate::modules::runtime::program_layout::clean_absolute(&path) {
+            return Err(fail(
+                "removal_process_framing",
+                "内核执行路径不是明确的绝对路径",
+            ));
+        }
+        Ok(path)
     }
     pub(super) fn parse_procargs(bytes: &[u8]) -> AppResult<(Vec<String>, Option<PathBuf>)> {
         if bytes.len() < 5 {
@@ -1531,6 +1606,116 @@ mod native {
                 }
                 if let Some(process) = self.process(*pid as u32)? {
                     result.push(process);
+                }
+            }
+            Ok(result)
+        }
+        fn program_processes(&self, root: &Path) -> AppResult<Vec<ProcessIdentity>> {
+            let mut pids = vec![0i32; 65536];
+            // The kernel restricts this enumeration to the current UID. Image
+            // inspection comes before name filtering, so a renamed process in
+            // this runtime directory cannot disappear from the removal proof.
+            let count = unsafe {
+                libc::proc_listpids(
+                    4,
+                    libc::geteuid(),
+                    pids.as_mut_ptr().cast(),
+                    (pids.len() * 4) as i32,
+                )
+            };
+            if count <= 0 || count as usize >= pids.len() * 4 {
+                return Err(fail(
+                    "removal_process_list",
+                    "当前用户程序占用列表无法完整读取",
+                ));
+            }
+            let mut result = vec![];
+            for pid in &pids[..count as usize / 4] {
+                if *pid <= 0 {
+                    continue;
+                }
+                let Some(info) = bsd(*pid as u32)? else {
+                    continue;
+                };
+                if info.pbi_status == 5 {
+                    continue;
+                }
+                let mut observed = None;
+                for attempt in 0..3 {
+                    match image(*pid as u32) {
+                        Ok(path) => {
+                            observed = Some(path);
+                            break;
+                        }
+                        Err(error) => {
+                            let Some(after) = bsd(*pid as u32)? else {
+                                break;
+                            };
+                            if after.pbi_status == 5 {
+                                break;
+                            }
+                            if (after.pbi_uid, after.pbi_start_tvsec, after.pbi_start_tvusec)
+                                != (info.pbi_uid, info.pbi_start_tvsec, info.pbi_start_tvusec)
+                            {
+                                return Err(fail(
+                                    "removal_process_reused",
+                                    "核对程序占用期间PID代次发生变化",
+                                ));
+                            }
+                            if let Ok(path) = kernel_exec_path(*pid as u32) {
+                                observed = Some(path);
+                                break;
+                            }
+                            if attempt == 2 {
+                                return Err(error);
+                            }
+                            std::thread::sleep(Duration::from_millis(5));
+                        }
+                    }
+                }
+                let Some(executable) = observed else {
+                    continue;
+                };
+                let Some(after) = bsd(*pid as u32)? else {
+                    continue;
+                };
+                if after.pbi_status == 5 {
+                    continue;
+                }
+                if (after.pbi_uid, after.pbi_start_tvsec, after.pbi_start_tvusec)
+                    != (info.pbi_uid, info.pbi_start_tvsec, info.pbi_start_tvusec)
+                {
+                    return Err(fail(
+                        "removal_process_reused",
+                        "读取程序路径期间PID代次发生变化",
+                    ));
+                }
+                let relevant = path_key(&executable).starts_with(root)
+                    || matches!(
+                        executable.file_name().and_then(|n| n.to_str()),
+                        Some("node" | "bun" | "bun.exe" | "ocx" | "opencodex")
+                    );
+                if relevant {
+                    match self.process(*pid as u32) {
+                        Ok(Some(process)) => {
+                            if process.owner != info.pbi_uid.to_string()
+                                || process.created
+                                    != format!("{}:{}", info.pbi_start_tvsec, info.pbi_start_tvusec)
+                            {
+                                return Err(fail(
+                                    "removal_process_reused",
+                                    "读取程序参数期间PID代次发生变化",
+                                ));
+                            }
+                            result.push(process)
+                        }
+                        Ok(None) => (),
+                        Err(error) => {
+                            if bsd(*pid as u32)?.is_some_and(|info| info.pbi_status != 5) {
+                                return Err(error);
+                            }
+                        }
+                    }
                 }
             }
             Ok(result)

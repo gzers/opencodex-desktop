@@ -58,7 +58,7 @@ fn invalid(detail: &str) -> AppError {
     }
 }
 
-pub(super) fn clean_absolute(path: &Path) -> bool {
+pub(crate) fn clean_absolute(path: &Path) -> bool {
     path.is_absolute()
         && path.to_str().is_some()
         && !path.to_string_lossy().chars().any(char::is_control)

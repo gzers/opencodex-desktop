@@ -690,6 +690,7 @@ async fn install_managed_runtime(
                 let context=worker_app.state::<SharedProcessContext>().inner().clone();
                 let owner=crate::commands::runtime_recovery_v2_owner::SystemServiceOwnerProofProvider::new(handle_ref.installation_root().into(),context.clone())?;
                 let outcome=installer.install_versioned(handle_ref.installation_root(),&selected,&install_request,||{
+                    if cfg!(target_os="macos") {return owner.require_program_unused(&context);}
                     if owner.query(&context)?==ServiceOwnerProof::Stopped {Ok(())} else {Err(AppError::NotConfigured)}
                 })?;
                 handle_ref.observe_current();
