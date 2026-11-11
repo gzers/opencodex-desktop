@@ -1,0 +1,10 @@
+
+running 5 tests
+test infrastructure::official_client_coordination::tests::bounded_fixed_coordination_protocol_rejects_unknown_duplicate_and_bad_lock_identity ... ok
+test infrastructure::official_client_coordination::tests::expired_deadline_refuses_before_source_or_control_access ... ok
+test infrastructure::official_client_coordination::tests::failure_protocol_retains_only_fixed_stages_not_upstream_payloads ... ok
+test infrastructure::official_client_coordination::tests::official299_real_coordinator_excludes_other_connections_and_releases_after_failure ... ignored, explicit pinned official299 complete resource, private root and kernel boundary; no service
+test infrastructure::official_client_coordination::tests::synthetic_or_unknown_archive_identity_never_runs_official_coordination ... ok
+
+test result: ok. 4 passed; 0 failed; 1 ignored; 0 measured; 2215 filtered out; finished in 0.02s
+

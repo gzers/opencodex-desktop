@@ -1,0 +1,109 @@
+{
+  "accepted": false,
+  "frozenCandidate": false,
+  "scope": "Actual official299 Mac claim/N/K exclusion, bounded helper release and native originals capture; no client restoration or service action",
+  "native": {
+    "accepted": false,
+    "businessRequests": false,
+    "callbackFailurePreservedAndLocksReleased": true,
+    "configAndCatalogPreserved": true,
+    "existingUnsafeLockRefusedWithoutRepair": true,
+    "expiredCallbackCannotReturnSuccess": true,
+    "firstElapsedMs": 4705,
+    "foreignHomeOwnershipRefused": true,
+    "officialVersion": "2.99.0",
+    "originalsCapturedUnderThreeOfficialLocks": true,
+    "realSqliteOtherConnectionExclusionAndReacquisition": true,
+    "result": "passed",
+    "scope": "real official299 coordination only; no service or restoration",
+    "stableLockIdentitiesPreserved": true
+  },
+  "checks": [
+    {
+      "name": "compile-final",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--lib",
+        "official_client_coordination",
+        "--no-run"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "protocolPassed": 5,
+  "nativePassed": 1,
+  "sourceBoundary": "Native run uses exact product/helper source from source.json, based on a19669114 plus this patch. Only one extra pipe-reader unit test was added afterward; product/helper algorithms unchanged, broad native not repeated. Final protocol5 passed.",
+  "limitations": [
+    "Mac only; Windows backend integration and final native proof remain",
+    "Scope-held helper borrow is not the official in-process CatalogWritePermit and does not prove service ownership or authorize client writes",
+    "Helper code imports actual official299 functions; no runtime package patch, alternative namespace or global service discovery",
+    "Helper callback max2s; complete operation retains caller deadline including admission/release/final full image checks. Actual first operation4705ms against explicit5s test deadline is not complete Stop10s acceptance.",
+    "POSIX mode/uid/link checks refuse existing unsafe coordination files before official mode hardening. Separate native ACL/ancestor and service-generation requirements remain necessary before compensation.",
+    "Bounded failure cleanup may terminate only the direct lock-only helper; cannot count as normal client/service Stop. Production cleanup outcome still needs outer lifecycle evidence integration.",
+    "Originals capture inside locks is proven; original digest persistence in outer lifecycle and actual client CAS mutation/rollback remain incomplete.",
+    "Official per-user namespace directories already existed in this private-HOME test. Fresh namespace creation not claimed here."
+  ],
+  "cleanup": {
+    "ownProgramAndTestProcessesAbsent": true,
+    "exactNewCoordinatorExclusionProved": [
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/cf83f2a411274dbe02c6a897212bca4aaa680cbd2c828a13fe67dca47b1b07d9.sqlite",
+        "exclusiveReacquiredAndReleased": true,
+        "inode": 440133340
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/cf83f2a411274dbe02c6a897212bca4aaa680cbd2c828a13fe67dca47b1b07d9.sqlite",
+        "exclusiveReacquiredAndReleased": true,
+        "inode": 440133342
+      }
+    ],
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "serviceStarted": false,
+    "ownFixtureAndCopiedImageRemoved": true,
+    "duplicateTemporaryReceiptRootRemoved": true
+  },
+  "codeCommit": "6dece428ad3e790b1d4d7efcb9ed070371c45e9b",
+  "sourceFiles": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/client_coordination299.mjs",
+      "sha256": "a3c50ffd5ab4d1ae45b66bc45c771adfe413512432c0d861d4761dcdc419766c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/official_client_coordination.rs",
+      "sha256": "601b6ceea07c0222525a7ac26f367127e70f7c1e612180c868e4bf1b45014d32"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/official_client_coordination_tests.rs",
+      "sha256": "c7633dce96531dcdb4d10fe1e6e37308910b1ec125c1566b9b8cae1763d33084"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_originals.rs",
+      "sha256": "68cb8e152a85e238c1f2d05f4fcdc142f1a512f08061e92885fce5470f8d179d"
+    }
+  ]
+}
