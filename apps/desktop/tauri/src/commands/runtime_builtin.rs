@@ -205,3 +205,71 @@ async fn restore(
     })
     .await
 }
+
+#[tauri::command]
+pub fn runtime_preparation_status(
+    runtime: tauri::State<'_, Arc<RuntimeHandle>>,
+) -> AppResult<crate::modules::runtime::preparation::Snapshot> {
+    runtime.preparation.snapshot()
+}
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct PreparationRetry {
+    attempt_id: String,
+}
+#[tauri::command]
+pub async fn runtime_preparation_retry(
+    request: PreparationRetry,
+    app: tauri::AppHandle,
+    runtime: tauri::State<'_, Arc<RuntimeHandle>>,
+    data: tauri::State<'_, SharedDataRoot>,
+    install: tauri::State<'_, SharedRuntimeInstall>,
+) -> AppResult<crate::modules::runtime::preparation::Snapshot> {
+    let runtime = runtime.inner().clone();
+    let install = install.inner().clone();
+    let d = data.0.clone();
+    let root = app.path().resource_dir()?.join("runtime-bundle");
+    super::run_blocking("retry first runtime preparation", move || {
+        {
+            let update = app.state::<super::update::SharedUpdateStatus>();
+            let state = update.lock().map_err(|_| fail("无法核对更新状态"))?;
+            if state.installing || state.pending_restart.is_some() {
+                return Err(fail("请先完成管理器更新"));
+            }
+        }
+        let pin = option_env!("OCXD_BUNDLED_RUNTIME_DESCRIPTOR_SHA256")
+            .ok_or_else(|| fail("当前应用没有固定运行资源"))?;
+        let source_app = app.clone();
+        crate::modules::runtime::startup_bundle::retry(
+            d,
+            root,
+            pin,
+            runtime.clone(),
+            install,
+            request.attempt_id,
+            move || super::runtime::broadcast_source_changed(&source_app),
+        )?;
+        runtime.preparation.snapshot()
+    })
+    .await
+}
+
+#[cfg(test)]
+mod preparation_input_tests {
+    use super::*;
+    #[test]
+    fn retry_accepts_only_the_observed_attempt_not_paths_or_runtime_versions() {
+        assert!(serde_json::from_value::<PreparationRetry>(
+            serde_json::json!({"attemptId":"observed","programRoot":"arbitrary"})
+        )
+        .is_err());
+        assert!(serde_json::from_value::<PreparationRetry>(
+            serde_json::json!({"attemptId":"observed","version":"other"})
+        )
+        .is_err());
+        assert!(serde_json::from_value::<PreparationRetry>(
+            serde_json::json!({"attemptId":"observed"})
+        )
+        .is_ok());
+    }
+}

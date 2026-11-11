@@ -1160,7 +1160,7 @@ pub(super) fn publish(source: &Path, target: &Path) -> AppResult<()> {
 
 #[cfg(all(test, unix))]
 #[path = "bundled_tests.rs"]
-mod bundled_tests;
+pub(crate) mod bundled_tests;
 
 #[cfg(all(test, windows))]
 #[path = "bundled_windows_tests.rs"]

@@ -11,6 +11,7 @@ pub mod install;
 pub(crate) mod offline_drop;
 pub mod paths;
 pub mod port;
+pub(crate) mod preparation;
 pub mod program_activation;
 pub mod program_catalog;
 pub mod program_image;
@@ -406,6 +407,7 @@ pub struct RuntimeHandle {
     resolver: RuntimeResolver,
     explicit: Mutex<Option<PathBuf>>,
     current: Mutex<RuntimeObservation>,
+    pub(crate) preparation: preparation::Preparation,
 }
 
 impl RuntimeHandle {
@@ -421,6 +423,7 @@ impl RuntimeHandle {
         let resolver = RuntimeResolver::new(data_root, discovered);
         let resolution = resolver.resolve(explicit.as_deref());
         let handle = Arc::new(Self {
+            preparation: Default::default(),
             store,
             resolver,
             explicit: Mutex::new(explicit),
@@ -465,6 +468,7 @@ impl RuntimeHandle {
         };
         let current = resolver.observe(None);
         let handle = Arc::new(Self {
+            preparation: Default::default(),
             store,
             resolver,
             explicit: Mutex::new(None),

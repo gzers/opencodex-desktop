@@ -7,7 +7,7 @@ const VERSION: &str = "2.97.0-desktop023.names.1";
 const PACKAGE: &str = "runtime/opencodex/node_modules/@bitkyc08/opencodex";
 
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-fn versioned_fixture() -> Fixture {
+pub(crate) fn versioned_fixture() -> Fixture {
     let mut f = Fixture::new();
     f.descriptor["runtimeVersion"] = json!("2.99.0");
     let package = f
@@ -250,12 +250,12 @@ fn invalid_versioned_archive_cannot_publish_a_current_selection() {
     assert!(!f.i.join("runtime/versions/2.99.0").exists());
     assert!(!RuntimeStore::new(&f.d).path().exists());
 }
-struct Fixture {
+pub(crate) struct Fixture {
     _temp: tempfile::TempDir,
     root: PathBuf,
-    i: PathBuf,
-    d: PathBuf,
-    archive: PathBuf,
+    pub(crate) i: PathBuf,
+    pub(crate) d: PathBuf,
+    pub(crate) archive: PathBuf,
     rows: Vec<(Value, Vec<u8>)>,
     descriptor: Value,
 }
@@ -444,7 +444,7 @@ impl Fixture {
         self.descriptor["archiveBytes"] = json!(fs::metadata(&self.archive).unwrap().len());
         self.descriptor["archiveSha256"] = json!(hash::sha256_file(&self.archive).unwrap());
     }
-    fn bytes(&self) -> (Vec<u8>, String) {
+    pub(crate) fn bytes(&self) -> (Vec<u8>, String) {
         let bytes = serde_json::to_vec(&self.descriptor).unwrap();
         let digest = hash::sha256_hex(&bytes);
         (bytes, digest)

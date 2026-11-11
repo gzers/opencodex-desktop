@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import UiButton from '@/components/ui/UiButton.vue'
+import IntegratedPreparation from './IntegratedPreparation.vue'
 // 概览「环境准备」门禁卡（UI规范 §25.1 / §25.3）。
 //
 // 结构对齐已确认原型 `#envGate`：标题 + 通过计数；左列纵向检查，右列当前指引 +
@@ -14,6 +15,7 @@ import { useEnvironmentStore } from '../store'
 import type { InstallSourceKind } from '@/features/runtime/api'
 
 const props = defineProps<{ onRecheck?: () => void }>()
+const integrated=ref(false)
 const app = useAppStore()
 const routes = useRouteStore()
 // 门禁要读运行来源：托管安装落在数据根内、不在发现候选里，只按「自动发现」
@@ -106,6 +108,8 @@ function installManaged(source: InstallSourceKind) {
 
 <template>
   <section class="card env-gate" data-testid="environment-gate">
+    <IntegratedPreparation @observing="integrated=$event" />
+    <template v-if="!integrated">
     <div class="overview-gate-head">
       <div>
         <h2>{{ title }}</h2>
@@ -155,5 +159,6 @@ function installManaged(source: InstallSourceKind) {
       <button type="button" @click="guide">完整指引 ›</button>
     </div>
 
+    </template>
   </section>
 </template>

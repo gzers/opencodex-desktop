@@ -703,6 +703,8 @@ pub fn run() {
             commands::native_config_import::model_v2_native_config_backup,
             commands::runtime_activation::runtime_activation_preview,
             commands::runtime_builtin::runtime_builtin_preview,
+            commands::runtime_builtin::runtime_preparation_status,
+            commands::runtime_builtin::runtime_preparation_retry,
             commands::runtime_builtin::runtime_builtin_repair_preview,
             commands::runtime_builtin::runtime_builtin_repair,
             commands::runtime_builtin::runtime_builtin_reinstall,

@@ -35,6 +35,14 @@ export const useEnvironmentStore = defineStore('environment', {
         // Failed current discovery invalidates an older MissingNode/ready claim.
         // An error is not evidence of missing system tools or bundle preparation.
         this.report = null
+        try {
+          const {invoke}=await import('@tauri-apps/api/core')
+          const state=await invoke<{phase:string}>('runtime_preparation_status')
+          if(generation!==this.requestGeneration)return true
+          if(state&&['checking','preparing','verifying','extracting','assembling','activating'].includes(state.phase)){
+            this.setLoading(false);return true
+          }
+        }catch{ /* missing preparation observation never becomes a ready fact */ }
         this.error = '集成运行程序检查未就绪，可稍后重新检查或查看安装状态。'
         this.setLoading(false)
         return false

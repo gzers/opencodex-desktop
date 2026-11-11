@@ -183,8 +183,11 @@ pub(super) fn provision_inner(
         archive,
         descriptor,
         pin,
-        inject_activation_failure,
-        None,
+        SupplyOptions {
+            inject_activation_failure,
+            resupply: None,
+            observe: &|_| {},
+        },
     )
 }
 
@@ -192,6 +195,27 @@ pub(super) fn provision_inner(
 enum RestoreMode {
     Reinstall,
     Repair,
+}
+pub(crate) fn provision_observed(
+    i: &Path,
+    d: &Path,
+    archive: &Path,
+    descriptor: &[u8],
+    pin: &str,
+    observe: &dyn Fn(super::super::preparation::Phase),
+) -> AppResult<ProvisionResult> {
+    supply(
+        i,
+        d,
+        archive,
+        descriptor,
+        pin,
+        SupplyOptions {
+            inject_activation_failure: false,
+            resupply: None,
+            observe,
+        },
+    )
 }
 struct Resupply<'a> {
     mode: RestoreMode,
@@ -220,13 +244,16 @@ pub fn reinstall(
         archive,
         descriptor,
         pin,
-        false,
-        Some(Resupply {
-            mode: RestoreMode::Reinstall,
-            home: request.home,
-            confirmation_digest: request.confirmation_digest,
-            unused: &unused,
-        }),
+        SupplyOptions {
+            inject_activation_failure: false,
+            resupply: Some(Resupply {
+                mode: RestoreMode::Reinstall,
+                home: request.home,
+                confirmation_digest: request.confirmation_digest,
+                unused: &unused,
+            }),
+            observe: &|_| {},
+        },
     )
 }
 /// Same pinned, complete resource builder; only the transaction authority differs.
@@ -245,14 +272,22 @@ pub fn repair(
         archive,
         descriptor,
         pin,
-        false,
-        Some(Resupply {
-            mode: RestoreMode::Repair,
-            home: request.home,
-            confirmation_digest: request.confirmation_digest,
-            unused: &unused,
-        }),
+        SupplyOptions {
+            inject_activation_failure: false,
+            resupply: Some(Resupply {
+                mode: RestoreMode::Repair,
+                home: request.home,
+                confirmation_digest: request.confirmation_digest,
+                unused: &unused,
+            }),
+            observe: &|_| {},
+        },
     )
+}
+struct SupplyOptions<'a> {
+    inject_activation_failure: bool,
+    resupply: Option<Resupply<'a>>,
+    observe: &'a dyn Fn(super::super::preparation::Phase),
 }
 fn supply(
     i: &Path,
@@ -260,9 +295,13 @@ fn supply(
     archive: &Path,
     descriptor: &[u8],
     pin: &str,
-    inject_activation_failure: bool,
-    resupply: Option<Resupply<'_>>,
+    options: SupplyOptions<'_>,
 ) -> AppResult<ProvisionResult> {
+    let SupplyOptions {
+        inject_activation_failure,
+        resupply,
+        observe,
+    } = options;
     let (target, platform) = crate::modules::runtime::program_layout::host_target()?;
     #[cfg(target_os = "macos")]
     crate::modules::data_root::layout::validate_macos_installation_root(i, None)?;
@@ -283,6 +322,8 @@ fn supply(
             });
         }
     }
+    use super::super::preparation::Phase;
+    observe(Phase::Preparing);
     let plan = load(descriptor, pin)?;
     if plan.descriptor.platform != target {
         return Err(invalid("运行资源平台与本机不一致"));
@@ -357,9 +398,12 @@ fn supply(
     if count != plan.descriptor.archive_bytes {
         return Err(invalid("归档读取期间变化"));
     }
+    observe(Phase::Verifying);
     check_archive(&copy, &plan)?;
+    observe(Phase::Extracting);
     unpack(&copy, &plan, Some(&raw))?;
     verify_staged(&raw, &plan)?;
+    observe(Phase::Assembling);
     let bin = package_bin(&raw, &plan)?;
     let image = stage.path().join("image");
     mkdir(&image)?;
@@ -477,6 +521,7 @@ fn supply(
     super::super::program_catalog::register(i, &selection, &manifest.official_archive_sha256)?;
     mkdir(d)?;
     mkdir(&d.join("manager-state"))?;
+    observe(Phase::Activating);
     if inject_activation_failure {
         mutation.activate_inner(
             d,
