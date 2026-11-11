@@ -1,0 +1,39 @@
+
+running 34 tests
+test modules::runtime::bundled::bundled_tests::activation_failure_compensates_only_own_install_and_allows_retry ... ok
+test modules::runtime::bundled::bundled_tests::actual_activation_proof_failure_after_launcher_is_compensated ... ok
+test modules::runtime::bundled::bundled_tests::complete_tree_install_reopen_and_second_user_preserve_program_and_home ... ok
+test modules::runtime::bundled::bundled_tests::compressed_single_file_total_and_count_limits_fail_without_truncation ... ok
+test modules::runtime::bundled::bundled_tests::corrupt_user_store_preserved_and_program_can_be_adopted_after_explicit_fix ... ok
+test modules::runtime::bundled::bundled_tests::descriptor_duplicate_dot_absolute_hardlink_special_and_reserved_entries_rejected ... ok
+test modules::runtime::bundled::bundled_tests::descriptor_maintenance_source_hash_must_match_the_copied_tgz ... ok
+test modules::runtime::bundled::bundled_tests::exclusive_installation_lock_refuses_another_first_installer ... ok
+test modules::runtime::bundled::bundled_tests::existing_unknown_empty_corrupt_and_missing_manifest_are_preserved ... ok
+test modules::runtime::bundled::bundled_tests::existing_valid_version_retained_even_if_bundle_is_unavailable_or_older ... ok
+test modules::runtime::bundled::bundled_tests::hardlinked_archive_lock_or_installed_file_refused_without_changing_alias ... ok
+test modules::runtime::bundled::bundled_tests::hidden_tar_after_end_marker_and_broken_gzip_crc_refused ... ok
+test modules::runtime::bundled::bundled_tests::installed_unsafe_links_and_record_hardlinks_are_preserved_and_refused ... ok
+test modules::runtime::bundled::bundled_tests::interrupted_pending_checks_only_named_stage_and_never_adopts_tree ... ok
+test modules::runtime::bundled::bundled_tests::interrupted_version_activation_remains_unknown_and_never_reports_installed ... ok
+test modules::runtime::bundled::bundled_tests::invalid_versioned_archive_cannot_publish_a_current_selection ... ok
+test modules::runtime::bundled::bundled_tests::mac_container_rejected_before_archive_lock_stage_runtime_or_store_write ... ok
+test modules::runtime::bundled::bundled_tests::mac_whole_folder_under_personal_applications_installs_and_reopens_read_only ... ok
+test modules::runtime::bundled::bundled_tests::package_name_version_and_bin_identity_must_match_without_execution ... ok
+test modules::runtime::bundled::bundled_tests::pinned_descriptor_and_archive_tamper_rejected_without_program_or_store ... ok
+test modules::runtime::bundled::bundled_tests::publish_never_replaces_even_an_empty_unknown_directory ... ok
+test modules::runtime::bundled::bundled_tests::raw_tar_hardlink_fifo_device_pax_gnu_and_dot_paths_refused ... ok
+test modules::runtime::bundled::bundled_tests::real_official299_versioned_supply_reopen_preserves_home_and_source ... ignored, requires explicit official2.99 complete platform bundle
+test modules::runtime::bundled::bundled_tests::safe_link_chains_and_in_runtime_directory_targets_remain_valid ... ok
+test modules::runtime::bundled::bundled_tests::separated_absolute_roots_reject_overlap_traversal_and_symlinks ... ok
+test modules::runtime::bundled::bundled_tests::staging_must_be_exact_before_atomic_publication ... ok
+test modules::runtime::bundled::bundled_tests::tar_missing_extra_duplicate_and_mode_or_hash_drift_rejected ... ok
+test modules::runtime::bundled::bundled_tests::unexpected_published_content_prevents_compensation_and_is_preserved ... ok
+test modules::runtime::bundled::bundled_tests::unsafe_links_cycles_missing_targets_and_parent_link_paths_rejected ... ok
+test modules::runtime::bundled::bundled_tests::versioned_existing_image_needs_no_program_write_access_or_bundle_archive ... ok
+test modules::runtime::bundled::bundled_tests::versioned_reserved_target_collision_preserves_unknown_content ... ok
+test modules::runtime::bundled::bundled_tests::versioned_supply_only_creates_new_paths_without_adopting_unrelated_programs ... ok
+test modules::runtime::bundled::bundled_tests::versioned_supply_verifies_and_selects_one_official_image_without_execution ... ok
+test modules::runtime::bundled::bundled_tests::windows_descriptor_preview_uses_real_builder_paths_and_preserves_file_modes ... ok
+
+test result: ok. 33 passed; 0 failed; 1 ignored; 0 measured; 2096 filtered out; finished in 4.55s
+

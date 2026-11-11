@@ -1,0 +1,4 @@
+
+thread 'commands::runtime_recovery_v2_owner::tests::actual_current_user_image_scan_detects_a_renamed_owned_program_without_service_mutation' (154139292) panicked at src/commands/runtime_recovery_v2_owner_tests.rs:718:5:
+owned process must be running before unlink
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

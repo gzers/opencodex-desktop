@@ -1,0 +1,56 @@
+{
+  "codeCommit": "0954ec6f0e30a8aa6d5f79b2dc503029667d4daf",
+  "nativeProofCommit": "2ab15a9e0a298ed7244b009ee310925f63a9b791",
+  "finalRun": "ocxd024-catalog-native-id197qxb",
+  "rust": {
+    "catalog": 2,
+    "removal": 7,
+    "activation": 7,
+    "supply": 33,
+    "install": 4,
+    "ownerNative": 10,
+    "commandConsumers": 9,
+    "totalPassed": 72,
+    "explicitCasesIgnored": 3,
+    "binarySha256": "7ffec47029cb749b02b715e95d014e44507cbc9f909a3fe3a743b118bec7b9c7"
+  },
+  "official299": {
+    "passed": 1,
+    "binarySha256": "7ffec47029cb749b02b715e95d014e44507cbc9f909a3fe3a743b118bec7b9c7",
+    "descriptorPin": "e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3",
+    "archiveSha256": "5b10c1a888000d54d14783622d9d8330c33f4e1b14a5f163d007337d0424ec7f",
+    "elapsedMs": 86145,
+    "processExecuted": false
+  },
+  "format": "passed",
+  "strictClippyAllTargets": "passed",
+  "verified": [
+    "installer-only immutable admission ledger written after source-verified image publication and before post-publication version probe",
+    "read ledger before enumerating versions; unknown row/name/source/image or extra version refuses, no ownership inference from arbitrary image manifest",
+    "registered removal binds original catalog revision through partial deletion and preserves admissions as evidence",
+    "candidate failed after publication remains registered and retryable, not an unowned implicit adoption",
+    "Mac same-user image scan covers another HOME and renamed executable; stable PID owner/creation checked before/after classification",
+    "proc_pidpath failure can use bounded zeroized KERN_PROCARGS2 executable header; no argv0 or environment path as identity",
+    "live/unlinked ad-hoc-signed helper remains in-use or proof refused; reaped child becomes absent",
+    "versioned Mac installation uses program-unused proof, not only current-H endpoint absence"
+  ],
+  "failuresAndCorrections": [
+    "Compiler initially caught moved candidate version after admission-before-probe reordering; probe now uses immutable selection.version.",
+    "Initial native test exposed proc_pidpath ENOENT on still-running unrelated helpers whose original image path moved; added kernel exec header classification, unchanged strict refusal when still unknown.",
+    "First copied /bin/sleep fixture was killed by macOS code-signing validation even outside sandbox. Ad-hoc signed only this temporary fixture; tests assert it is live before and after unlink and never weaken the absence assertion.",
+    "Intermediate test diagnostic briefly printed broad process argv; it was removed from source and that one raw diagnostic line was replaced with an explicit omission marker before evidence retention because it contained unrelated process arguments. Original failure assertion remains.",
+    "A diagnostic Python copy2 hit system chflags on copied sleep; copyfile/chmod and isolated adhoc test used instead; all temporary probes removed."
+  ],
+  "boundaries": [
+    "Mac current-UID program occupancy only, Windows shared installation/all-SID proof explicitly unavailable until native backend integration",
+    "the kernel exposes argv/environment in bounded buffer used for official HOME proof; no user config/credential files read or written",
+    "ledger is local drift/source bookkeeping after installer admission, not an upstream signature or blanket ownership grant",
+    "source collection and native occupancy API ready; new uninstall product command/UI and full official cleanup/reinstall still pending",
+    "official test verifies offline supply and catalog only, not native service launch or lifecycle timing budgets"
+  ],
+  "dailyConfigTouched": false,
+  "official299Modified": false,
+  "businessSyncOrModelRequests": false,
+  "outboundNetworkDenied": true,
+  "temporaryFixtureRootsRemoved": true
+}
