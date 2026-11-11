@@ -1,0 +1,11 @@
+
+running 1 test
+test modules::runtime::install::npm_proxy_transport_tests::actual_npm_https_connect_and_socks_remote_dns_keep_strict_certificate_validation ... NPM_PROXY_TRANSPORT {"exitCode":0,"fixtureSystemSnapshot":true,"https":true,"nativeOsSettingsModified":false,"route":"HTTP_CONNECT registry.invalid:443","scheme":"http","strictSsl":true,"testCaTrusted":true,"userConfigUnchanged":true}
+NPM_PROXY_TRANSPORT {"exitCode":0,"fixtureSystemSnapshot":true,"https":false,"nativeOsSettingsModified":false,"route":"SOCKS5_DOMAIN registry.invalid:80","scheme":"socks5h","strictSsl":true,"testCaTrusted":true,"userConfigUnchanged":true}
+NPM_PROXY_TRANSPORT {"exitCode":0,"fixtureSystemSnapshot":true,"https":true,"nativeOsSettingsModified":false,"route":"SOCKS5_DOMAIN registry.invalid:443","scheme":"socks5h","strictSsl":true,"testCaTrusted":true,"userConfigUnchanged":true}
+NPM_PROXY_TLS_REJECTION UNABLE_TO_VERIFY_LEAF_SIGNATURE
+NPM_PROXY_TRANSPORT {"exitCode":1,"fixtureSystemSnapshot":true,"https":true,"nativeOsSettingsModified":false,"route":"HTTP_CONNECT registry.invalid:443","scheme":"http","strictSsl":true,"testCaTrusted":false,"userConfigUnchanged":true}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2312 filtered out; finished in 0.80s
+
