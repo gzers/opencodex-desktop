@@ -1,0 +1,27 @@
+{
+  "codeCommit": "00cfc36a4255d6fb5d4e8e2275c05551b4b1d774",
+  "isolatedTransactionCases": 6,
+  "official299Cases": 1,
+  "frontendCases": 20,
+  "frontendTypeCheck": "passed",
+  "officialConfigValidationIsReadOnly": true,
+  "productionStopProof": "wired but not native candidate validated; real package test substitutes stopped fixture",
+  "tested": [
+    "complete replacement except local port and settings",
+    "exact original backup verified before commit",
+    "cancel and equivalent no-op without backup",
+    "source or target drift refused",
+    "source drift during final service check refused",
+    "backup failure and unknown service do not overwrite",
+    "official schema rejected invalid section",
+    "single layer selection and apply IPC view"
+  ],
+  "retainedFailures": [
+    "initial attempt lacked per-field observation pointers for imported models",
+    "official descriptor outside the private read scope",
+    "unknown adapter text is permitted by official validator, so a strict schema error is used for the negative case"
+  ],
+  "nativeRollbackUiAndExplicitConflictReconciliationPending": true,
+  "dailyConfigTouched": false,
+  "temporaryFixturesCleaned": true
+}
