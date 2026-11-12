@@ -83,6 +83,37 @@ fn early_captured_originals_close_without_replay_and_remain_independently_verifi
         fs::write(f.client.join(".ocxd-restore-foreign"), b"unindexed stage").unwrap();
         assert!(unchanged::fixture_readback(&session.originals, &captured, deadline).is_err());
         fs::remove_file(f.client.join(".ocxd-restore-foreign")).unwrap();
+        drop(index);
+        let p = inspect_preview(&f.context, &f.data);
+        assert!(
+            p.can_finish_unchanged
+                && !p.can_continue
+                && !p.can_rollback
+                && !p.can_finalize
+                && !p.can_rearm
+        );
+        assert_eq!(p.plan_evidence, Evidence::NotRecorded);
+        let early_receipt = format!("unchanged-readback-{}.json", captured.revision);
+        create(&session.originals.directory, &early_receipt, b"{}").unwrap();
+        let refused = inspect_preview(&f.context, &f.data);
+        assert_eq!(refused.status, Status::Unknown);
+        assert!(!refused.can_finish_unchanged);
+        assert_eq!(
+            fs::read(session.originals.directory.path().join(&early_receipt)).unwrap(),
+            b"{}"
+        );
+        fs::remove_file(session.originals.directory.path().join(early_receipt)).unwrap();
+        let request = unchanged::review(&f.context, &f.data).unwrap().unwrap();
+        assert_eq!(
+            p.unchanged_digest.as_deref(),
+            Some(request.confirmation_digest.as_str())
+        );
+        let wire = serde_json::to_string(&p).unwrap();
+        assert!(
+            !wire.contains("original user configuration")
+                && !wire.contains(f.client.to_str().unwrap())
+        );
+        let index = Index::open_existing(&f.context, &f.data, &f.client).unwrap();
         assert!(super::super::session_index::unresolved_after_failure(
             &f.context, &f.data
         ));
@@ -200,6 +231,14 @@ fn unchanged_early_readback_preserves_each_original_phase_and_refuses_unbound_pr
             }
         }
         assert_eq!(head.state, state);
+        drop(index);
+        let p = super::super::session_index::preview::inspect_preview(&f.context, &f.data);
+        assert!(p.can_finish_unchanged);
+        assert_eq!(
+            p.status,
+            super::super::session_index::preview::Status::Pending
+        );
+        let index = Index::open_existing(&f.context, &f.data, &f.client).unwrap();
         let proof = unchanged::fixture_readback(&session.originals, &head, deadline).unwrap();
         let closed = index.close_unchanged(&head, &proof).unwrap();
         assert!(closed.references == head.references);
@@ -548,7 +587,11 @@ fn recovery_preview_validates_bound_frames_scope_plan_and_never_adopts_unregiste
         .unwrap();
     drop(index);
     let preview = inspect_preview(&f.context, &f.data);
-    assert_eq!(preview.status, Status::Active);
+    // This storage-only fixture has not changed any original clients. A ready
+    // reference alone cannot assert a live service; finish still needs fresh
+    // native absence at execution and never reuses this synthetic PID as proof.
+    assert_eq!(preview.status, Status::Pending);
+    assert!(preview.can_finish_unchanged);
     assert_eq!(preview.original_evidence, Evidence::Verified);
     let serialized = serde_json::to_string(&preview).unwrap();
     assert!(

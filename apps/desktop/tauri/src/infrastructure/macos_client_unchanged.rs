@@ -132,6 +132,27 @@ fn review_objects(originals: &Originals, head: &Head) -> io::Result<Option<Revie
             }
         }
     }
+    // A previously written, unregistered readback is not silently adopted or
+    // repaired. It may only be reused if it already binds this exact head and
+    // the complete current readback; no execution authority comes from it.
+    match capture_file(&originals.directory, &receipt_name(head)?, MAX_FRAME)? {
+        Image::Absent => {}
+        Image::File {
+            bytes, protection, ..
+        } => {
+            require_private(&protection, false)?;
+            let expected = encode(&Receipt {
+                schema_version: 1,
+                original_head: head.clone(),
+                codex_tree_sha256: digest(&encode(&codex)?),
+                grok_tree_sha256: digest(&encode(&grok)?),
+                stable_locks: stable.clone(),
+            })?;
+            if bytes != expected {
+                return Err(denied("unregistered early readback differs; not adopted"));
+            }
+        }
+    }
     let fingerprint = digest(&encode(&(
         head,
         originals.data.identity(),
@@ -147,6 +168,9 @@ fn review_objects(originals: &Originals, head: &Head) -> io::Result<Option<Revie
         stable,
         fingerprint,
     }))
+}
+pub(super) fn confirmation(originals: &Originals, head: &Head) -> io::Result<Option<String>> {
+    Ok(review_objects(originals, head)?.map(|r| r.fingerprint))
 }
 pub fn review(context: &ProcessContext, data: &Path) -> AppResult<Option<Request>> {
     observation::inspect_map(context, data, |head| {

@@ -34,6 +34,8 @@ pub struct Preview {
     pub can_rollback: bool,
     pub can_finalize: bool,
     pub can_rearm: bool,
+    pub can_finish_unchanged: bool,
+    pub unchanged_digest: Option<String>,
     pub rollback_digest: Option<String>,
     pub rearm_digest: Option<String>,
     pub confirmation_digest: Option<String>,
@@ -56,6 +58,8 @@ impl Preview {
             can_rollback: false,
             can_finalize: false,
             can_rearm: false,
+            can_finish_unchanged: false,
+            unchanged_digest: None,
             rollback_digest: None,
             rearm_digest: None,
             confirmation_digest: None,
@@ -81,6 +85,8 @@ pub(super) fn project(
             can_rollback: false,
             can_finalize: false,
             can_rearm: false,
+            can_finish_unchanged: false,
+            unchanged_digest: None,
             rollback_digest: None,
             rearm_digest: None,
             confirmation_digest: None,
@@ -105,6 +111,8 @@ pub(super) fn project(
         can_rollback: false,
         can_finalize: false,
         can_rearm: false,
+        can_finish_unchanged: false,
+        unchanged_digest: None,
         rollback_digest: None,
         rearm_digest: None,
         confirmation_digest: None,
@@ -171,6 +179,22 @@ pub(super) fn project(
                     } else {
                         Evidence::Unregistered
                     };
+            }
+        }
+        preview.unchanged_digest = unchanged::confirmation(&originals, head)?;
+        preview.can_finish_unchanged = preview.unchanged_digest.is_some();
+        if preview.can_finish_unchanged {
+            preview.status = Status::Pending;
+            match capture_file(
+                &originals.directory,
+                &format!("unchanged-readback-{}.json", head.revision),
+                MAX_FRAME,
+            )? {
+                Image::Absent => {}
+                Image::File { protection, .. } => {
+                    require_private(&protection, false)?;
+                    preview.completion_evidence = Evidence::Unregistered;
+                }
             }
         }
         if head.state == State::RestoreRolledBack {
