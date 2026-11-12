@@ -1,0 +1,10 @@
+
+running 4 tests
+test infrastructure::macos_client_originals::tree::archive::tests::actual_process_exit_after_durable_blob_preserves_it_for_same_independent_tree ... TREE_BYTE_ARCHIVE_CRASH exit=91 sameIndependentTree=true durableBlobVerified=true sourceUnchanged=true
+ok
+test infrastructure::macos_client_originals::tree::archive::tests::changed_original_during_copy_retains_the_created_blob_but_refuses_a_new_archive ... ok
+test infrastructure::macos_client_originals::tree::archive::tests::complete_tree_bytes_are_private_deduplicated_and_read_from_the_original_after_source_changes ... ok
+test infrastructure::macos_client_originals::tree::archive::tests::missing_partial_unsafe_or_redirected_content_never_gets_repaired_from_current_files ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2327 filtered out; finished in 0.30s
+

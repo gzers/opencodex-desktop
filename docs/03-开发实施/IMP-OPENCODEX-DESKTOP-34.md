@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 47；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 48；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -427,3 +427,12 @@ main70d2a2778闭合新collector的Required但Loading回归：展示映射正确�
 修改前既有3项准入1过2失败；修后31项相关/编译/格式/严格Clippy通过。新的实际原包Start15245ms/Status1092ms/Stop含计划8412ms过原30/5/10，新collector782ms明确Stopped+Required、D/H及空运行端点正确、三动作false/reopenedGate=true；独立RestorePrepared/revision6/phase/tree/plan/stage吻合。修复这个新回归，不外推旧revision4首错已消失；实际三件未恢复、原assert仍exit101/accepted=false，完整恢复许可未开放。
 
 证据.adg/evidence/0.2.24/stopped-cli-admission-r1/及manifest保留原失败与新快照/原件/准确来源；原主端点、自有镜像/测试/全部精确新协调DB/程序/profile/binary/索引/stage/重复根清理，未改日常或官方/业务无操作。完整可恢复范围/进程集合监听写者/Grok外部Agent/显式恢复等原范围及Windows/NAME/System/发布验证/固定候选继续，目标active，不发布。
+
+
+## 2026-11-12 阶段树字节归档与原生准入计时
+
+main39fe025d5将schema3阶段帧引用的每个.codex普通文件保存为原attempt内0400/create-only/SHA对象，原FD/保护/长度/哈希/全树前后核对、对象及父目录fsync；同内容去重，已有对象也重新核对同步，不修补缺失/损坏原件。原阶段读取可独立取回config/Agent字节，重开必须所有原对象匹配。schema1/2不迁移。协调claim/sidecars仍metadata-only，真实锁内归档外部probe仍busy。详[树字节归档合同](0.2.24-contracts/client-tree-bytes-r1.md)，完整Grok/外部Agent/写回及许可尚未接，不能缩范围。
+
+首原包因client_coordination_expired在归档前失败，源码/时钟检查确认spawn导入被误算为Rust helper借用窗口这一过度拒绝（不能凭单错误码认定唯一原因）。独立mainda2fa5939将私有native准入固定为仅取metadata、正常released/exit0后再原生重获全部锁；公开借用Rust两秒、物理helper两秒和原30/5/10/完整性/busy门槛保持，helper字节未改。99相关项及最终增量/编译/格式/严格Clippy通过，首错/来源不覆盖。
+
+新profile第2轮真实Start13760ms/Status1105ms/Stop含归档计划9374ms，新collector805ms Stopped+Required、三门槛false。四schema3 frame/独立索引revision6/plan/stage及11内容对象SHA/0400/长度匹配，最终算法一致仅注释后改。实际三件仍未还原，原assert保留exit101/accepted=false，Stop贴近10秒，后继apply仍同预算。证据.adg/evidence/0.2.24/client-tree-bytes-r1/含匹配表及固定合成config，不输出动态令牌原字节；自有程序/profile/全部blob/索引/stage/binary/精确协调DB/重复根清理，日常/官方/业务未改。完整进程集合监听写者/实际补偿及原全范围、旧revision4首错、Windows/NAME/System/发布验证/固定候选继续，目标active，不发布。
